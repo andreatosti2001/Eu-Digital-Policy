@@ -1,0 +1,731 @@
+/* ============================================================
+   Regulatory DNA comparison + the applicability engine.
+   Same manuscript system, same pigments: lapis for what binds,
+   cinnabar for what is contested, gold for the reader's position.
+   ============================================================ */
+
+body{
+  --tool-meta:#B0A695;
+  --tool-line:var(--line);
+  --yes:#8FB98A;      /* verdigris — an obligation that stands */
+  --maybe:var(--live);
+  --no:var(--paper-dim);
+  --undet:#C0705A;
+}
+body[data-theme="light"]{
+  --tool-meta:#584D52;
+  --yes:#2C6B3F;
+  --maybe:#6B520C;
+  --no:#4E4352;
+  /* same 4.39:1 shortfall as --pipe-not, corrected the same way */
+  --undet:#96311D;
+}
+
+/* ---------------------------------------------------------- shared page shell */
+.tool-shell{max-width:1120px;margin:0 auto;padding:0 32px 110px}
+.tool-top{display:flex;flex-wrap:wrap;gap:14px;align-items:baseline;padding:26px 0 18px;border-bottom:1px solid var(--line)}
+.tool-top a.back{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--mech);text-decoration:none}
+.tool-top a.back:hover{color:var(--live)}
+.tool-top .tt-brand{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--tool-meta)}
+.tool-top .tt-sp{margin-left:auto}
+.tool-head{padding:52px 0 8px}
+.tool-head h1{font-family:var(--display);font-weight:400;font-size:clamp(32px,5.6vw,56px);line-height:1.05;letter-spacing:-.015em;margin:0;color:var(--paper);text-wrap:balance;max-width:20ch}
+.tool-head .lede{font-family:var(--body);font-size:17px;line-height:1.6;color:var(--paper-dim);max-width:64ch;margin:18px 0 0}
+.tool-stats{display:flex;flex-wrap:wrap;gap:0 32px;margin:24px 0 0;font-family:var(--mono);font-size:11px;color:var(--tool-meta)}
+.tool-stats b{color:var(--paper);font-weight:500}
+
+/* ---------------------------------------------------------- DNA table */
+.dna-wrap{overflow-x:auto;border:1px solid var(--line);background:var(--ink-1)}
+.dna-table{border-collapse:collapse;width:100%;min-width:720px;font-size:13px}
+.dna-table th,.dna-table td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+.dna-table thead th{
+  font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--paper);font-weight:500;border-bottom:1px solid var(--ink-3);background:var(--ink-2);
+  position:sticky;top:0;z-index:2;
+}
+.dna-table tbody th{
+  font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--tool-meta);font-weight:500;white-space:normal;width:150px;background:var(--ink-1);
+}
+.dna-table tbody td{color:var(--paper-dim);line-height:1.55}
+.dna-table tbody tr:last-child th,.dna-table tbody tr:last-child td{border-bottom:0}
+.dna-table tbody tr:hover td,.dna-table tbody tr:hover th{background:var(--ink-2)}
+
+.dna-note{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;
+  text-transform:none;color:var(--tool-meta);margin-top:4px;line-height:1.45}
+.dna-unknown{font-family:var(--mono);font-size:10.5px;color:var(--undet);font-style:italic}
+.dna-more{font-family:var(--mono);font-size:9.5px;color:var(--tool-meta);margin-left:5px}
+.dna-proposal{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--crit);margin-top:4px}
+.dna-derived{
+  display:inline-block;font-family:var(--mono);font-size:8.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--mech);border:1px solid var(--mech);padding:1px 5px;margin-bottom:7px;cursor:help;
+}
+.dna-auth,.dna-date{display:block;margin-bottom:7px}
+.dna-auth:last-child,.dna-date:last-child{margin-bottom:0}
+.dna-auth b,.dna-date b{color:var(--paper);font-weight:500}
+.dna-date b.future{color:var(--maybe)}
+.dna-role{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--tool-meta);margin-top:2px}
+.dna-role[data-e="entry-into-force"]{color:var(--mech)}
+.dna-role[data-e="application"]{color:var(--maybe)}
+.dna-role[data-e="transposition"]{color:var(--crit)}
+.mount-fallback{font-family:var(--mono);font-size:11px;color:var(--tool-meta)}
+
+.dna-controls{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin:34px 0 18px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.dna-controls .dc-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--tool-meta)}
+.dna-chip{
+  all:unset;cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+  padding:4px 9px;border:1px solid var(--ink-3);color:var(--paper-dim);
+}
+.dna-chip[aria-pressed="true"]{border-color:var(--mech);color:var(--mech);background:var(--mech-dim)}
+.dna-chip:focus-visible{outline:1px solid var(--live);outline-offset:2px}
+
+/* ---------------------------------------------------------- applicability */
+.ap-layout{display:grid;grid-template-columns:340px 1fr;gap:34px;align-items:start;margin-top:34px}
+@media (max-width:940px){.ap-layout{grid-template-columns:1fr}}
+
+#ap-form{display:grid;gap:22px;position:sticky;top:20px}
+@media (max-width:940px){#ap-form{position:static}}
+.ap-group{border:1px solid var(--line);background:var(--ink-1);padding:16px 18px 18px;margin:0}
+.ap-group legend{font-family:var(--display);font-size:17px;color:var(--paper);padding:0 6px;margin-left:-6px}
+.ap-help{font-size:12.5px;line-height:1.5;color:var(--tool-meta);margin:6px 0 12px}
+.ap-opts{display:grid;gap:2px}
+.ap-opt{
+  display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:baseline;
+  padding:7px 8px;cursor:pointer;border:1px solid transparent;font-size:13.5px;line-height:1.4;color:var(--paper-dim);
+  /* the label is the target, not the 13px box the browser draws for the
+     checkbox, so it has to clear the minimum on its own */
+  min-height:32px;align-content:center;
+}
+.ap-opt input{width:16px;height:16px;accent-color:var(--mech)}
+.ap-opt:focus-within{outline:2px solid var(--live);outline-offset:1px}
+.ap-opt:hover{background:var(--ink-2)}
+.ap-opt.on{border-color:var(--mech);background:var(--mech-dim);color:var(--paper)}
+.ap-opt input{accent-color:var(--mech);margin:0}
+.ap-opt input:focus-visible{outline:2px solid var(--live);outline-offset:2px}
+.ap-optnote{grid-column:2;font-family:var(--mono);font-size:9.5px;line-height:1.45;color:var(--tool-meta);margin-top:3px}
+.ap-actions{display:flex;gap:10px}
+#ap-reset{
+  /* all:unset wipes the target-size rule set further down this file — an id
+     selector outranks it — so the minimum is restated here rather than left
+     to a !important war */
+  all:unset;cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--tool-meta);border-bottom:1px solid var(--ink-3);
+  display:inline-flex;align-items:center;min-height:24px;
+}
+#ap-reset:hover{color:var(--crit);border-bottom-color:var(--crit)}
+#ap-reset:focus-visible{outline:1px solid var(--live);outline-offset:3px}
+
+.ap-empty{font-family:var(--body);font-size:15px;line-height:1.6;color:var(--tool-meta);
+  border:1px dashed var(--ink-3);padding:26px 24px;margin:0}
+
+.ap-summary{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
+.ap-badge{
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  padding:4px 10px;border:1px solid currentColor;white-space:nowrap;
+}
+.ap-badge[data-v="yes"]{color:var(--yes)}
+.ap-badge[data-v="maybe"]{color:var(--maybe)}
+.ap-badge[data-v="no"]{color:var(--no)}
+.ap-badge[data-v="undet"]{color:var(--undet)}
+
+.ap-result{border:1px solid var(--line);background:var(--ink-1);margin:0 0 16px}
+.ap-result[data-v="yes"]{border-left:3px solid var(--yes)}
+.ap-result[data-v="maybe"]{border-left:3px solid var(--maybe)}
+.ap-result[data-v="no"]{border-left:3px solid var(--no)}
+.ap-res-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline;padding:14px 18px;border-bottom:1px solid var(--line)}
+.ap-res-head h3{font-family:var(--display);font-size:22px;font-weight:400;color:var(--paper);margin:0}
+.ap-full{font-size:12px;color:var(--tool-meta);width:100%;line-height:1.45}
+.ap-status{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;padding:2px 7px;border:1px solid currentColor;color:var(--tool-meta)}
+.ap-status[data-s="applicable"],.ap-status[data-s="in-force"]{color:var(--mech)}
+.ap-status[data-s="partly-applicable"],.ap-status[data-s="transposition-pending"]{color:var(--maybe)}
+.ap-status[data-s="proposal"],.ap-status[data-s="stalled"]{color:var(--crit)}
+.ap-proposal{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--crit)}
+
+.ap-hit{padding:16px 18px;border-bottom:1px solid var(--line)}
+.ap-hit:last-child{border-bottom:0}
+.ap-hit-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline;margin-bottom:10px}
+.ap-verdict{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase}
+.ap-verdict[data-v="yes"]{color:var(--yes)}
+.ap-verdict[data-v="maybe"]{color:var(--maybe)}
+.ap-verdict[data-v="no"]{color:var(--no)}
+.ap-conf{font-size:12px;color:var(--tool-meta);font-style:italic}
+.ap-downgraded{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--undet);border:1px solid var(--undet);padding:1px 5px;cursor:help}
+.ap-ruleid{font-family:var(--mono);font-size:9.5px;color:var(--tool-meta);margin-left:auto}
+.ap-rationale{font-family:var(--body);font-size:14.5px;line-height:1.6;color:var(--paper);margin:0 0 12px;max-width:70ch}
+
+.ap-field{margin:12px 0 0}
+.ap-field h4{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tool-meta);margin:0 0 6px;font-weight:500}
+.ap-field.warn h4{color:var(--crit)}
+.ap-provs{display:flex;flex-wrap:wrap;gap:6px 10px}
+.ap-prov,.ap-auth,.ap-date{
+  font-size:12.5px;line-height:1.45;color:var(--paper-dim);
+  border:1px solid var(--ink-3);padding:5px 9px;display:inline-block;max-width:100%;
+}
+.ap-prov b,.ap-auth b,.ap-date b{color:var(--paper);font-weight:500;font-family:var(--mono);font-size:11px}
+.ap-date b.future{color:var(--maybe)}
+.ap-role{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--tool-meta);margin-top:2px}
+.ap-list{margin:0;padding-left:17px;font-size:12.5px;line-height:1.55;color:var(--paper-dim)}
+.ap-list li{margin-bottom:4px}
+.ap-field.warn .ap-list{color:var(--paper)}
+.ap-cites{list-style:none;margin:0;padding:0;font-size:12px;line-height:1.5;color:var(--paper-dim);display:grid;gap:5px}
+.ap-cites a{color:var(--mech);text-decoration:underline;text-underline-offset:2px;word-break:break-word}
+.ap-why-down{border-left:2px solid var(--undet);padding:8px 0 8px 12px;margin:0 0 12px}
+.ap-why-down b{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--undet);margin-bottom:5px}
+.ap-why-down ul{margin:0;padding-left:16px;font-size:12.5px;line-height:1.55;color:var(--paper-dim)}
+.ap-verified{margin-top:12px;font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:var(--tool-meta)}
+.ap-never{color:var(--crit)}
+
+.ap-undet{border:1px solid var(--undet);border-left:3px solid var(--undet);background:var(--crit-dim);padding:18px 20px;margin:20px 0 0}
+.ap-undet h3{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--undet);margin:0 0 9px;font-weight:500}
+.ap-undet p{font-size:13.5px;line-height:1.6;color:var(--paper);margin:0;max-width:72ch}
+.ap-undet b{color:var(--paper);font-weight:500}
+.ap-undet strong{color:var(--undet);font-weight:500}
+
+/* the standing disclaimer — never collapsed, never dismissible */
+.ap-caveat{
+  border:1px solid var(--crit);border-left:3px solid var(--crit);
+  padding:20px 24px;margin:30px 0 0;background:var(--ink-1);
+}
+.ap-caveat h2{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--crit);margin:0 0 11px;font-weight:500}
+.ap-caveat p{font-size:13.5px;line-height:1.65;color:var(--paper-dim);margin:0 0 10px;max-width:74ch}
+.ap-caveat p:last-child{margin-bottom:0}
+.ap-caveat b{color:var(--paper);font-weight:500}
+.ap-caveat ul{margin:10px 0 0;padding-left:18px;font-size:13px;line-height:1.6;color:var(--paper-dim);max-width:74ch}
+.ap-caveat li{margin-bottom:6px}
+
+/* in-article link out to the tools, kept to one quiet line */
+.tool-link{
+  display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;
+  margin:14px 0 0;padding:11px 14px;border:1px solid var(--line);background:var(--ink-1);
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tool-meta);
+}
+.tool-link a{color:var(--mech);text-decoration:none;border-bottom:1px solid transparent}
+.tool-link a:hover{color:var(--live);border-bottom-color:var(--live)}
+.tool-link .tl-sp{margin-left:auto}
+
+@media print{
+  #ap-form,.dna-controls,.tool-link{display:none !important}
+  .ap-caveat{border-color:#000}
+}
+
+/* ============================================================
+   Institutional map + enforcement observatory (Phase 4)
+   ============================================================ */
+
+body{
+  --role-legislates:#9B8FD4; --role-supervises:var(--mech);   --role-investigates:#7FB0C4;
+  --role-fines:var(--crit);  --role-guidance:var(--live);      --role-transposes:#C08A5E;
+  --role-appeals:#8FA9C9;    --role-interprets:#A98FC4;
+  --pipe-reached:#8FB98A;    --pipe-not:#C0705A;               --pipe-unknown:#7C7488;
+}
+body[data-theme="light"]{
+  --role-legislates:#4C3F86; --role-investigates:#2A5C70;      --role-transposes:#7A4A1E;
+  --role-appeals:#33547A;    --role-interprets:#5B3A7A;
+  /* the global --crit and --live clear AA on body text but not at 9px pill size */
+  --role-fines:#8E2F19;      --role-guidance:#6B520C;
+  /* --pipe-not was #9A3A22 and measured 4.39:1 on the day panel at 10.5px,
+     just under AA; taken down to 4.65:1 on the darkest day surface */
+  /* #2C6B3F measured 4.39:1 on the day panel and 3.90:1 on a raised surface,
+     both under AA at 10.5px; #245B35 clears 4.88:1 on the darkest of them */
+  --pipe-reached:#245B35;    --pipe-not:#96311D;               --pipe-unknown:#565064;
+}
+
+/* ---------------------------------------------------------- institutional map */
+.im-legend{display:grid;gap:6px;margin:22px 0 0;padding:16px 18px;border:1px solid var(--line);background:var(--ink-1)}
+.im-legend-row{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:baseline;font-size:12.5px;line-height:1.5;color:var(--paper-dim)}
+@media (max-width:640px){.im-legend-row{grid-template-columns:1fr;gap:2px}}
+
+.im-pill{
+  font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  padding:2px 7px;border:1px solid currentColor;white-space:nowrap;display:inline-block;
+}
+.im-pill[data-role="legislates"]{color:var(--role-legislates)}
+.im-pill[data-role="supervises"]{color:var(--role-supervises)}
+.im-pill[data-role="investigates"]{color:var(--role-investigates)}
+.im-pill[data-role="fines"]{color:var(--role-fines)}
+.im-pill[data-role="issues-guidance"]{color:var(--role-guidance)}
+.im-pill[data-role="transposes"]{color:var(--role-transposes)}
+.im-pill[data-role="hears-appeals"]{color:var(--role-appeals)}
+.im-pill[data-role="interprets"]{color:var(--role-interprets)}
+.im-pill[data-role="designates"],.im-pill[data-role="coordinates"],.im-pill[data-role="advises"]{color:var(--tool-meta)}
+
+.im-body{border:1px solid var(--line);background:var(--ink-1);padding:18px 20px;margin:0 0 14px;scroll-margin-top:24px}
+.im-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline}
+.im-head h2,.im-head h3{font-family:var(--display);font-size:23px;font-weight:400;color:var(--paper);margin:0}
+.im-type{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tool-meta)}
+.im-ms{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--mech);border:1px solid var(--mech);padding:1px 5px}
+.im-roles{display:flex;flex-wrap:wrap;gap:5px;width:100%;margin-top:4px}
+.im-full{font-size:12.5px;color:var(--tool-meta);margin:7px 0 0;line-height:1.45}
+.im-rel{font-size:12.5px;color:var(--paper-dim);margin:8px 0 0;line-height:1.5}
+.im-rel a{color:var(--mech);text-decoration:none;border-bottom:1px solid var(--ink-3)}
+.im-rel a:hover{color:var(--live);border-bottom-color:var(--live)}
+
+.im-comps{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.im-comp{background:var(--ink-1);padding:10px 13px;display:grid;grid-template-columns:150px 1fr;gap:5px 14px;align-items:baseline;font-size:12.5px;line-height:1.5}
+.im-comp .im-role{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tool-meta)}
+.im-comp[data-role="supervises"] .im-role{color:var(--role-supervises)}
+.im-comp[data-role="fines"] .im-role{color:var(--role-fines)}
+.im-comp[data-role="legislates"] .im-role{color:var(--role-legislates)}
+.im-comp[data-role="interprets"] .im-role{color:var(--role-interprets)}
+.im-comp[data-role="hears-appeals"] .im-role{color:var(--role-appeals)}
+.im-comp[data-role="transposes"] .im-role{color:var(--role-transposes)}
+.im-inst{color:var(--paper);font-weight:500}
+.im-excl{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--crit);border:1px solid var(--crit);padding:1px 5px;margin-left:7px;cursor:help}
+.im-bases,.im-nobasis,.im-scope,.im-note,.im-unver{grid-column:2}
+.im-basis{font-family:var(--mono);font-size:10px;color:var(--mech);border:1px solid var(--ink-3);padding:1px 6px;margin-right:5px;display:inline-block}
+.im-nobasis{font-family:var(--mono);font-size:9.5px;color:var(--tool-meta);font-style:italic}
+.im-scope{display:block;color:var(--paper-dim);margin-top:3px}
+.im-note{display:block;color:var(--tool-meta);font-size:11.5px;margin-top:3px}
+.im-unver{display:block;color:var(--undet);font-size:11.5px;margin-top:3px}
+@media (max-width:640px){.im-comp{grid-template-columns:1fr}.im-bases,.im-nobasis,.im-scope,.im-note,.im-unver{grid-column:1}}
+
+.im-rolegroup{border:1px solid var(--line);background:var(--ink-1);padding:16px 18px;margin:0 0 14px}
+.im-rolehead{display:flex;gap:12px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:10px}
+.im-rolehead h2,.im-rolehead h3{font-family:var(--display);font-size:21px;font-weight:400;color:var(--paper);margin:0}
+.im-count{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--tool-meta);margin-left:auto}
+.im-rolebodies{display:grid;gap:1px;background:var(--line);margin-top:12px;border:1px solid var(--line)}
+.im-rolebody{background:var(--ink-1);padding:10px 13px;display:grid;grid-template-columns:190px 1fr;gap:14px;font-size:12.5px;line-height:1.5}
+.im-rolename{font-family:var(--mono);font-size:11px;color:var(--mech);text-decoration:none;border-bottom:1px solid transparent}
+.im-rolename:hover{color:var(--live);border-bottom-color:var(--live)}
+.im-rolewhat{color:var(--paper-dim)}
+@media (max-width:640px){.im-rolebody{grid-template-columns:1fr;gap:3px}}
+
+/* ---------------------------------------------------------- enforcement */
+.enf-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:26px 0 0}
+.agg{background:var(--ink-1);padding:16px 18px;display:grid;gap:5px;align-content:start}
+.agg-n{font-family:var(--display);font-size:30px;line-height:1;color:var(--paper);font-variant-numeric:tabular-nums}
+.agg-unknown{font-family:var(--mono);font-size:19px;color:var(--undet);letter-spacing:.04em}
+.agg-l{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tool-meta)}
+.agg-c{font-size:11.5px;line-height:1.45;color:var(--paper-dim)}
+.agg-c b{color:var(--undet);font-weight:500}
+
+.funnel{margin:30px 0 0;border:1px solid var(--line);background:var(--ink-1);padding:20px 22px}
+.funnel h2{font-family:var(--display);font-size:22px;font-weight:400;color:var(--paper);margin:0 0 8px}
+.funnel-lede{font-size:13px;line-height:1.6;color:var(--paper-dim);margin:0 0 18px;max-width:74ch}
+.funnel-lede b{color:var(--paper)}
+.fn-row{display:grid;grid-template-columns:160px 1fr 130px;gap:14px;align-items:center;padding:5px 0}
+.fn-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tool-meta)}
+.fn-bar{display:flex;height:16px;background:var(--ink-0);border:1px solid var(--line)}
+.fn-seg{height:100%}
+.fn-seg.reached{background:var(--pipe-reached)}
+.fn-seg.unknown{background:var(--pipe-unknown);opacity:.45}
+.fn-seg.na{background:var(--ink-3)}
+.fn-n{font-family:var(--mono);font-size:11px;color:var(--paper);font-variant-numeric:tabular-nums;text-align:right}
+.fn-u{color:var(--tool-meta);font-size:9.5px}
+@media (max-width:700px){.fn-row{grid-template-columns:1fr;gap:3px}.fn-n{text-align:left}}
+
+.enf-rec{border:1px solid var(--line);background:var(--ink-1);padding:18px 20px;margin:0 0 14px}
+.enf-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:11px}
+.enf-head h2,.enf-head h3{font-family:var(--display);font-size:22px;font-weight:400;color:var(--paper);margin:0}
+.enf-inst,.enf-auth,.enf-date{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tool-meta)}
+.enf-inst{color:var(--mech)}
+.enf-fine{font-family:var(--mono);font-size:12px;color:var(--paper);margin-left:auto;font-variant-numeric:tabular-nums}
+.enf-fine.none{color:var(--tool-meta);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+.enf-action{font-family:var(--body);font-size:14px;line-height:1.55;color:var(--paper-dim);margin:12px 0 14px}
+
+.pipe{display:flex;flex-wrap:wrap;gap:1px;background:var(--line);border:1px solid var(--line);margin:0 0 2px}
+.pipe-stage{
+  all:unset;cursor:pointer;flex:1 1 92px;background:var(--ink-0);padding:8px 6px;
+  display:grid;gap:3px;justify-items:center;text-align:center;
+}
+.pipe-stage:hover{background:var(--ink-2)}
+.pipe-stage:focus-visible{outline:2px solid var(--live);outline-offset:-2px}
+.pipe-dot{width:8px;height:8px;border-radius:50%;background:var(--pipe-unknown)}
+.pipe-stage[data-state="reached"] .pipe-dot{background:var(--pipe-reached)}
+.pipe-stage[data-state="not-reached"] .pipe-dot{background:var(--pipe-not)}
+.pipe-stage[data-state="na"] .pipe-dot{background:var(--ink-3)}
+.pipe-name{font-family:var(--mono);font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:var(--paper-dim)}
+.pipe-state{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:var(--tool-meta)}
+.pipe-stage[data-state="reached"] .pipe-state{color:var(--pipe-reached)}
+.pipe-stage[data-state="not-reached"] .pipe-state{color:var(--pipe-not)}
+.pipe-stage[data-state="unknown"] .pipe-state{color:var(--undet)}
+.pipe-detail{border:1px solid var(--line);border-top:0;background:var(--ink-0);padding:12px 14px}
+.pipe-detail h5{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--paper);margin:0 0 6px;font-weight:500}
+.pipe-detail h5 span[data-state="reached"]{color:var(--pipe-reached)}
+.pipe-detail h5 span[data-state="not-reached"]{color:var(--pipe-not)}
+.pipe-detail h5 span[data-state="unknown"]{color:var(--undet)}
+.pipe-note{font-size:12.5px;line-height:1.55;color:var(--paper-dim);margin:0 0 7px}
+.pipe-why{font-size:11.5px;line-height:1.55;color:var(--tool-meta);margin:0}
+.pipe-why b{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mech);display:block;margin-bottom:3px}
+
+.enf-axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:14px 0 0}
+.enf-axis{background:var(--ink-1);padding:9px 12px;display:grid;gap:4px}
+.enf-axis dt{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--tool-meta)}
+.enf-axis dd{margin:0}
+.enf-state{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--paper)}
+.enf-state[data-s="collected"],.enf-state[data-s="paid"],.enf-state[data-s="final"],.enf-state[data-s="implemented"]{color:var(--pipe-reached)}
+.enf-state[data-s="annulled"],.enf-state[data-s="not-payable"],.enf-state[data-s="unpaid"]{color:var(--pipe-not)}
+.enf-state[data-s="unknown"]{color:var(--undet)}
+.enf-state[data-s="appealed"],.enf-state[data-s="pending"],.enf-state[data-s="announced"]{color:var(--maybe)}
+.enf-state{display:block}
+.enf-axis-note{display:block;font-size:11px;line-height:1.45;color:var(--tool-meta);margin-top:4px}
+
+.enf-sub{font-size:12.5px;line-height:1.6;color:var(--paper-dim);margin:12px 0 0;max-width:76ch}
+.enf-sub b{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--tool-meta);margin-right:7px}
+.enf-quiet{color:var(--tool-meta);font-size:11.5px}
+.enf-unknown{color:var(--undet);font-family:var(--mono);font-size:11.5px}
+.enf-field{margin:12px 0 0}
+.enf-field h3,.enf-field h4{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--tool-meta);margin:0 0 6px;font-weight:500}
+.enf-field.warn{border-left:2px solid var(--crit);padding-left:11px}
+.enf-field.warn h4{color:var(--crit)}
+.enf-field.warn p{font-size:12.5px;line-height:1.55;color:var(--paper);margin:0}
+.enf-chips{display:flex;flex-wrap:wrap;gap:5px}
+.enf-chip{font-family:var(--mono);font-size:10px;color:var(--mech);border:1px solid var(--ink-3);padding:2px 7px}
+.enf-sources{margin:12px 0 0}
+.enf-sources summary{cursor:pointer;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tool-meta);list-style:none}
+.enf-sources summary::-webkit-details-marker{display:none}
+.enf-sources summary::before{content:"▸ ";font-size:8px}
+.enf-sources[open] summary::before{content:"▾ "}
+.enf-sources summary:hover{color:var(--paper)}
+.enf-sources summary:focus-visible{outline:1px solid var(--live);outline-offset:3px}
+.enf-sources ul{list-style:none;margin:9px 0 0;padding:0;display:grid;gap:6px;font-size:12px;line-height:1.5;color:var(--paper-dim)}
+.enf-sources a{color:var(--mech);text-decoration:underline;text-underline-offset:2px;word-break:break-word}
+.enf-verified{margin-top:13px;font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:var(--tool-meta)}
+.enf-empty{font-family:var(--mono);font-size:12px;color:var(--tool-meta);padding:26px 0}
+.enf-count{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--tool-meta)}
+#enfControls,#imControls{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin:28px 0 0;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+#enfControls label,#imControls label{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--tool-meta)}
+#enfControls select,#imControls select{font-family:var(--mono);font-size:11px;color:var(--paper);background:var(--ink-2);border:1px solid var(--line);padding:5px 8px}
+#enfControls select:focus-visible,#imControls select:focus-visible{outline:1px solid var(--live);outline-offset:1px}
+
+/* a class of national bodies, distinguished from a named member of that class */
+.im-class{
+  font-family:var(--mono); font-size:8.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--mech); border:1px solid var(--mech); padding:1px 5px; margin-left:7px; cursor:help;
+}
+.im-memberof{ display:block; font-family:var(--mono); font-size:9.5px; color:var(--tool-meta); margin-top:2px }
+
+/* ============================================================
+   PHASE 5 — entity search, the glossary graph, and the
+   accessibility affordances both of them need.
+   Tokens are declared on `body`, not on :root, because the light
+   palette is [data-theme="light"] on <body>: a token defined at
+   :root resolves against the dark palette in day mode and stays
+   dark. That defect shipped once in Phase 2; it does not recur.
+   ============================================================ */
+
+/* visually hidden but announced — used by the palette's live region */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+
+/* ---- palette rows: a kind mark, a title, a badge, a snippet ---- */
+.cmdk-item .cbody{min-width:0}
+.cmdk-item .ct{display:block}
+.cmdk-badge,.cmdk-item .cbadge{display:inline-block;margin-left:8px;padding:1px 5px;
+  font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--paper-faint);border:1px solid var(--line);vertical-align:2px;white-space:nowrap}
+.cmdk-item .cbadge.unver{color:var(--crit);border-color:var(--crit)}
+.cmdk-item[data-kind] .cr{color:var(--mech)}
+.cmdk-item[data-kind="enforcement"] .cr,
+.cmdk-item[data-kind="authority"] .cr{color:var(--live)}
+.cmdk-item[data-kind="concept"] .cr{color:var(--paper-dim)}
+.cmdk-item:focus-visible{outline:2px solid var(--live);outline-offset:-2px}
+
+/* ---- the glossary as a graph ---- */
+.gp-entries{display:block}
+.gg-links{margin-top:9px;padding-top:9px;border-top:1px solid var(--line);display:grid;gap:5px}
+.gg-row{display:grid;grid-template-columns:82px 1fr;gap:9px;align-items:baseline}
+/* "ENFORCEMENT" is one long word and was being clipped by the label column;
+   min-width:0 lets the grid item shrink and overflow-wrap breaks it */
+.gg-key{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--paper-faint);line-height:1.7;min-width:0;overflow-wrap:anywhere;hyphens:auto}
+.gg-vals{display:flex;flex-wrap:wrap;gap:5px}
+.gg-link{display:inline-block;padding:2px 7px;min-height:24px;line-height:19px;
+  font-family:var(--mono);font-size:10.5px;color:var(--mech);text-decoration:none;
+  border:1px solid var(--ink-3);background:var(--ink-2)}
+.gg-link:hover{color:var(--live);border-color:var(--live)}
+.gg-link:focus-visible{outline:2px solid var(--live);outline-offset:1px}
+.gg-rel{color:var(--paper-dim);font-family:var(--body);font-size:12px}
+.gg-class{margin-left:5px;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--paper-faint)}
+.gg-flat{display:inline-block;padding:2px 7px;font-family:var(--mono);font-size:10.5px;
+  color:var(--paper-faint);border:1px dashed var(--ink-3)}
+.gloss-entry.lit{outline:1px solid var(--live);outline-offset:3px}
+
+/* the popover gains one line of provenance and a way into the panel */
+.gloss-pop-meta{display:block;margin-top:8px;padding-top:7px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:var(--paper-faint);line-height:1.6}
+.gloss-pop-more{display:inline-block;margin-top:8px;min-height:24px;line-height:24px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mech);text-decoration:none;border-bottom:1px solid var(--ink-3)}
+.gloss-pop-more:hover,.gloss-pop-more:focus-visible{color:var(--live);border-bottom-color:var(--live)}
+
+/* ---- touch: every interactive target clears 24px, and 44px where the
+        layout has room. WCAG 2.2 target size (minimum) is 24×24 CSS px. ---- */
+@media (max-width:700px){
+  .gg-row{grid-template-columns:1fr}
+  .gg-link,.gg-flat{min-height:32px;line-height:27px;padding:2px 9px}
+  .cmdk-item{padding:13px 12px}
+}
+@media (pointer:coarse){
+  .gg-link,.gg-flat,.gloss-pop-more{min-height:32px;line-height:27px}
+  .cmdk-item{min-height:44px}
+  .langmenu li{min-height:44px;align-items:center}
+}
+
+/* ---- reduced motion: nothing that moves is essential to reading ---- */
+@media (prefers-reduced-motion:reduce){
+  .gloss-entry.lit{transition:none}
+}
+
+/* a record or column arrived at from a search result announces itself briefly */
+.enf-lit,.im-lit{outline:2px solid var(--live);outline-offset:4px}
+.dna-lit{outline:2px solid var(--live);outline-offset:-2px}
+.enf-lit:focus-visible,.im-lit:focus-visible{outline:2px solid var(--live)}
+@media (prefers-reduced-motion:no-preference){
+  .enf-lit,.im-lit,.dna-lit{transition:outline-color .3s}
+}
+.gg-yr{color:var(--paper-faint);font-size:9px;margin-left:3px}
+
+/* The section links became a <nav> landmark. display:contents keeps them as
+   direct flex children of the header, so the landmark is added without moving
+   a single pixel. */
+.tool-top > nav,.bib-top > nav{display:contents}
+
+/* Skip link: the first thing in the tab order, visible only when focused.
+   Without it a keyboard reader tabs through the whole header on every page. */
+.skip-link{position:absolute;left:-9999px;top:0;z-index:400;
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  /* inverted against the page rather than tinted, so it clears AA in both
+     palettes — the gold on vellum pairing came out at 3.47 in day mode */
+  background:var(--paper);color:var(--ink-0);border:1px solid var(--paper);
+  padding:10px 16px;text-decoration:none}
+.skip-link:focus,.skip-link:focus-visible{left:12px;top:12px;outline:2px solid var(--live);outline-offset:2px}
+.skip-link:hover{background:var(--paper);color:var(--ink-0)}
+
+/* The shortcuts card is a real dialog now, with a heading and a close button. */
+.shortcuts-list{margin:0;display:grid;gap:2px}
+.shortcuts-list dt{margin:0}
+.shortcuts-list dd{margin:0}
+.shortcuts-close{margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--paper-dim);background:none;border:1px solid var(--line);
+  padding:8px 14px;min-height:32px;cursor:pointer}
+.shortcuts-close:hover{color:var(--paper);border-color:var(--mech)}
+.shortcuts-close:focus-visible{outline:2px solid var(--live);outline-offset:2px}
+
+/* Focus must be visible on every interactive thing, including the ones that
+   were styled as bare text. */
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,
+summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--live);outline-offset:2px}
+.gloss:focus-visible{outline:2px solid var(--live);outline-offset:1px}
+
+/* Section links sat at 17px tall — under the 24px minimum target size.
+   inline-flex with a min-height grows the target without moving the
+   baseline the header aligns on. */
+.tool-top a.back,.bib-top a.back,.tool-top .themebtn,.bib-top .themebtn{
+  display:inline-flex;align-items:center;min-height:24px}
+@media (pointer:coarse){
+  .tool-top a.back,.bib-top a.back{min-height:32px}
+}
+
+/* ------------------------------------------------------------------
+   Target size, WCAG 2.2 §2.5.8 (minimum, 24×24).
+
+   Applied to standalone controls. Links running inside a sentence are
+   left alone: the specification exempts them, and padding them out
+   would open up the line spacing of the prose the whole site exists
+   to make readable. What is fixed here is everything that stands on
+   its own — legend links, disclosure buttons, form buttons, chips.
+   ------------------------------------------------------------------ */
+.evi-legend a,.tool-link a,.ap-actions button,.cal-more,.dna-chip,
+.enf-chips a,.im-basis,.bib-url,.gg-link{
+  display:inline-flex;align-items:center;min-height:24px}
+.ap-opt input{width:18px;height:18px}
+@media (pointer:coarse){
+  .evi-legend a,.tool-link a,.ap-actions button,.cal-more,.dna-chip{min-height:32px}
+  /* inline glossary buttons get the same invisible hit area as footnote
+     markers: the layout box stays where the typography wants it */
+  .gloss{position:relative}
+  .gloss::before{content:"";position:absolute;left:50%;top:50%;
+    width:24px;height:24px;transform:translate(-50%,-50%);z-index:1}
+}
+
+/* ------------------------------------------------------------------
+   Palette contrast.
+
+   The results list reuses --paper-faint for its metadata, and that
+   token was never meant to carry 9px uppercase text: it measures
+   4.14:1 on the night panel and 3.29:1 on the day panel, both under
+   AA. The selected row adds a 10% gold wash on top, which darkens the
+   day background further.
+
+   These are scoped tokens with headroom for that wash, declared on
+   `body` — never on :root, because the day palette is an attribute on
+   <body> and a token declared at :root resolves against the night
+   values in day mode. That is the bug that shipped in Phase 2.
+   ------------------------------------------------------------------ */
+body{
+  --cmdk-meta:#9A8F80;   /* 5.48:1 on the night panel */
+  --cmdk-unver:var(--crit);
+  --cmdk-mark:var(--mech);
+}
+body[data-theme="light"]{
+  --cmdk-meta:#5E5357;   /* 5.05:1 on the day panel */
+  --cmdk-unver:#96311D;  /* 5.23:1 */
+  --cmdk-mark:#22447A;   /* 6.62:1 */
+}
+.cmdk-group{color:var(--cmdk-meta)}
+.cmdk-item .cs{color:var(--cmdk-meta)}
+.cmdk-item .cbadge{color:var(--cmdk-meta);border-color:var(--cmdk-meta)}
+.cmdk-item .cbadge.unver{color:var(--cmdk-unver);border-color:var(--cmdk-unver)}
+.cmdk-item .cr,.cmdk-item[data-kind] .cr{color:var(--cmdk-mark)}
+.cmdk-item[data-kind="enforcement"] .cr,
+.cmdk-item[data-kind="authority"] .cr{color:var(--live)}
+.cmdk-item[data-kind="concept"] .cr{color:var(--paper-dim)}
+
+/* ------------------------------------------------------------------
+   Gold on small text, day mode.
+
+   --live is #8A6A14 in the day palette. Against the vellum surfaces it
+   measures 3.85:1 on the page, 3.47:1 on a panel and 3.08:1 on a
+   raised surface — under AA everywhere it is used at 9–11px. It is
+   fine at display sizes, which is where it was designed to live.
+
+   --live-text is the same hue taken down until it clears 4.5:1 on the
+   darkest of the three day surfaces. Night mode keeps --live: gold on
+   aubergine already passes comfortably.
+   ------------------------------------------------------------------ */
+body{ --live-text:var(--live) }
+body[data-theme="light"]{ --live-text:#68500E }   /* 4.67:1 on the darkest day surface */
+
+.cmdk-item[data-kind="enforcement"] .cr,
+.cmdk-item[data-kind="authority"] .cr{color:var(--live-text)}
+.enf-state[data-s="imposed"],.enf-state[data-s="appealed"],
+.enf-state[data-s="reduced"],.enf-state[data-s="ordered"],
+.enf-state[data-s="pending"]{color:var(--live-text)}
+.bib-url[data-s="url:paywalled"]{color:var(--live-text);border-color:var(--live-text)}
+.gg-link:hover,.gloss-pop-more:hover,.gloss-pop-more:focus-visible{color:var(--live-text)}
+
+/* The rota's event type, held apart from the obligation sentence: entry into
+   force is not application, and the wheel should not blur the two. */
+.rota-type{display:inline-block;margin-top:6px;padding:2px 7px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--mech);border:1px solid var(--mech)}
+.rota-type[hidden]{display:none}
+
+/* ============================================================
+   VISUAL REFINEMENT — tool-page chrome on small screens
+
+   The header wrapped onto four lines and consumed roughly 400px
+   before the page's own title, on a viewport 844px tall. Nearly
+   half the first screen was navigation.
+
+   Below 760px the section links become one horizontally scrollable
+   strip — the pattern every reader already knows from a tab bar —
+   and the brand line, which repeats what the tab already says,
+   steps out of the way.
+   ============================================================ */
+@media (max-width:760px){
+  .tool-shell,.bib-shell{padding-left:18px;padding-right:18px}
+  .tool-top,.bib-top{
+    flex-wrap:nowrap;gap:0;align-items:center;
+    padding:10px 0 0;border-bottom:0;
+    position:sticky;top:0;z-index:60;
+    background:var(--ink-0);
+  }
+  .tool-top .tt-brand,.bib-top .bt-brand{display:none}
+  .tool-top .tt-sp,.bib-top .bt-sp{display:none}
+  .tool-top > a.back:first-of-type,.bib-top > a.back:first-of-type{
+    flex:none;padding-right:12px;margin-right:10px;border-right:1px solid var(--line)}
+  .tool-top > nav,.bib-top > nav{
+    display:flex;flex:1 1 auto;min-width:0;gap:16px;
+    overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    scroll-snap-type:x proximity;
+    /* the strip fades at its right edge so it reads as scrollable */
+    -webkit-mask-image:linear-gradient(to right,#000 88%,transparent);
+            mask-image:linear-gradient(to right,#000 88%,transparent);
+  }
+  .tool-top > nav::-webkit-scrollbar,.bib-top > nav::-webkit-scrollbar{display:none}
+  .tool-top > nav a.back,.bib-top > nav a.back{white-space:nowrap;scroll-snap-align:start}
+  .tool-top .themebtn,.bib-top .themebtn{flex:none;margin-left:10px;padding:7px 10px}
+  .tool-top .themebtn{min-width:44px;justify-content:center}
+
+  /* the page's own title is the thing the reader came for */
+  .tool-head,.bib-head{padding:26px 0 4px}
+  .tool-head h1,.bib-head h1{font-size:clamp(27px,8.4vw,38px);line-height:1.08;max-width:none}
+  .tool-head .lede,.bib-head p{font-size:15.5px;line-height:1.58;margin-top:14px}
+  .tool-stats,.bib-stats{gap:0 20px;margin-top:18px;font-size:10.5px}
+}
+
+/* ============================================================
+   FILTER BARS AND TABLES
+
+   Every filter row was a wrapping flex list of bare labels and bare
+   selects. When it wrapped — which it did at any width below about
+   1000px — a label ended one line and its control began the next, so
+   "Instrument" sat above a select belonging to nothing. Each pair is
+   now one unit that wraps whole, and on a narrow screen the label
+   sits above its own control rather than beside it.
+   ============================================================ */
+.flt{display:inline-flex;align-items:center;gap:7px;min-width:0}
+.flt label{white-space:nowrap}
+.flt select{max-width:100%}
+.cal-controls,#enfControls,#imControls{align-items:center;gap:10px 16px}
+
+@media (max-width:760px){
+  .cal-controls,#enfControls,#imControls{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 12px}
+  .flt{display:grid;gap:4px;align-items:start}
+  .flt select{width:100%;min-height:38px}
+  .cal-count,.enf-count,.im-total{grid-column:1/-1;margin-left:0}
+}
+
+/* ---- tables that carry their weight ----
+
+   A sticky column header was tried here and removed. These tables sit
+   in a container with overflow-x:auto, which makes that box the scroll
+   parent in *both* axes, so `position:sticky; top:0` sticks to a box
+   that never scrolls vertically — the header still slides away with
+   the page. It looked like a feature and did nothing, so it is gone
+   rather than left in as decoration.
+
+   What does work, and is genuinely useful, is the horizontal case: the
+   dimension label in the DNA table stays put while you scroll across
+   the instrument columns, which is the axis that actually scrolls.
+
+   The calendar solves the same problem better anyway: every row states
+   its own event type on the row, so it does not need a header to
+   follow it down the page. */
+.tbl-scroll,.dna-wrap{position:relative}
+.dna-table tbody th[scope="row"]{position:sticky;left:0;z-index:1;background:var(--ink-1);
+  box-shadow:inset -1px 0 0 var(--line)}
+.tbl-scroll table tbody tr:nth-child(odd of :not(.cal-detail)){background:rgba(128,128,128,.035)}
+.dna-table tbody tr:hover td{background:rgba(217,169,60,.05)}
+.cal-row:hover > td{background:rgba(217,169,60,.05)}
+
+/* the scroll container announces that there is more to the right */
+.tbl-scroll,.dna-wrap{scrollbar-width:thin}
+.tbl-scroll::after,.dna-wrap::after{content:"";position:absolute;top:0;right:0;bottom:0;width:26px;
+  pointer-events:none;background:linear-gradient(to right,transparent,var(--ink-0));opacity:.9}
+
+/* ============================================================
+   THE SAME LANGUAGE ON THE TOOL PAGES
+
+   These pages had one texture: an uppercase mono label, a hairline
+   box, a number, repeat. That sameness is what made the site read as
+   assembled rather than composed. The motifs below are the ones the
+   frontispiece establishes — a double rule under a title, figures set
+   in the display face, glosses in italic serif rather than a fourth
+   shade of grey — applied so the whole thing holds together.
+   ============================================================ */
+
+/* a title carries a double rule, as on the frontispiece */
+.tool-head,.bib-head{border-bottom:0;position:relative}
+.tool-head::after,.bib-head::after{content:"";display:block;height:0;margin:22px 0 0;
+  border-top:2px solid var(--paper-faint);border-bottom:1px solid var(--line);padding-bottom:4px}
+.tool-head h1,.bib-head h1{font-weight:600;font-variation-settings:'opsz' 96;
+  font-size:clamp(30px,4.4vw,52px);line-height:1.0;letter-spacing:-.02em;max-width:17ch}
+.tool-head .lede,.bib-head p{font-size:16px;line-height:1.55;max-width:66ch}
+
+/* the stats row becomes the same dense line of fact the frontispiece uses */
+.tool-stats,.bib-stats{gap:2px 20px;font-size:11px;color:var(--paper-dim);align-items:baseline}
+.tool-stats b,.bib-stats b{font-family:var(--display);font-size:15px;font-weight:500;
+  color:var(--paper);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+
+/* figures anywhere on these pages are set in the display face, not in mono
+   at a slightly larger size — that is what made every number look the same */
+.agg-line b,.enf-fine,.im-count{font-variant-numeric:tabular-nums}
+
+/* glosses and caveats go to italic serif; grey-on-grey mono was doing too
+   much work and none of it was tone */
+.im-scope,.dna-note,.pipe-note,.enf-axis-note,.ap-why,.bib-note{
+  font-family:var(--body);font-style:italic}

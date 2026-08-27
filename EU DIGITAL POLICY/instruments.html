@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Regulatory DNA — The European Legal Framework for the Digital World</title>
+<meta content="Compare any set of EU digital instruments across eleven dimensions — regulated actor, protected party, objective, risk logic, obligations, competent authority, enforcement mechanism, sanctions, territorial reach, implementation model and key dates — generated from canonical data." name="description"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%230B0E11%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%279%27 fill=%27none%27 stroke=%27%23D9A93C%27 stroke-width=%272%27/%3E%3Ccircle cx=%2716%27 cy=%277%27 r=%272%27 fill=%27%23D9A93C%27/%3E%3C/svg%3E"/>
+<link href="style.css" rel="stylesheet"/>
+<link href="css/evidence.css" rel="stylesheet"/>
+<link href="css/tools.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&amp;display=swap" rel="stylesheet"/>
+</head>
+<body>
+<a class="skip-link" href="#maincontent">Skip to content</a>
+<div class="tool-shell">
+  <header class="tool-top" role="banner">
+    <a class="back" href="index.html">← The brief</a>
+    <span class="tt-sp"></span>
+    <nav aria-label="Sections of this project"><a class="back" href="applies.html">What applies to me?</a>
+    <a class="back" href="institutions.html">Institutions</a>
+    <a class="back" href="enforcement.html">Enforcement</a>
+    <a class="back" href="bibliography.html">Bibliography</a>
+    </nav><button class="themebtn" id="themeToggle" type="button">Theme</button>
+  </header>
+
+  <div class="tool-head">
+    <h1>Regulatory DNA</h1>
+    <p class="lede">Every instrument in the rulebook instantiates the same slots. Fill them in and the
+      differences between the regimes stop being a matter of tone and become a matter of record.
+      Nine of these eleven dimensions are stored on the instrument; <b>competent authority</b> and
+      <b>key dates</b> are derived from the institutions and timeline records, because storing them
+      twice is how two copies of one fact come to disagree.</p>
+    <div class="tool-stats" id="dnaStats"></div>
+  </div>
+
+  <div class="dna-controls" id="dnaInstruments" role="group" aria-label="Instruments to compare">
+    <span class="dc-label">Instruments</span>
+  </div>
+  <div class="dna-controls" id="dnaDimensions" role="group" aria-label="Dimensions to show">
+    <span class="dc-label">Dimensions</span>
+  </div>
+
+  <main id="dnaTable"><p class="mount-fallback">Loading the comparison…</p></main>
+
+  <section class="ap-caveat" style="border-color:var(--line);border-left-color:var(--mech)">
+    <h2 style="color:var(--mech)">How to read this</h2>
+    <p><b>Sanctions are ceilings, not tariffs.</b> A percentage of global turnover is the maximum a
+      regulator may impose, and the brief's own argument is that announced figures and collected
+      figures are very different quantities.</p>
+    <p><b>Competent authority is not one answer.</b> The Commission supervises the DSA only for VLOPs
+      and VLOSEs; national Digital Services Coordinators supervise everything below that tier. The
+      DMA is the Commission alone. The AI Act splits between the AI Office for general-purpose models
+      and national authorities for everything else. Those distinctions are visible here because they
+      are stored as separate competence edges rather than flattened into a single field.</p>
+    <p><b>Implementation model decides where the date that matters actually is.</b> For a Regulation
+      the application date is European. For a Directive it is national, and the brief records that
+      NIS2 transposition is materially incomplete.</p>
+  </section>
+</div>
+
+<script>
+  (function(){
+    var K='eupolicy:theme', saved=null;
+    try{ saved=localStorage.getItem(K); }catch(e){}
+    if(!saved) saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.body.dataset.theme=saved;
+    var b=document.getElementById('themeToggle');
+    if(b) b.addEventListener('click',function(){
+      var t=document.body.dataset.theme==='light'?'dark':'light';
+      document.body.dataset.theme=t;
+      try{ localStorage.setItem(K,t); }catch(e){}
+    });
+  })();
+</script>
+<script src="js/instruments-page.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,1221 @@
+{
+  "$schema_version": "1.0.0",
+  "$description": "Controlled vocabularies. Every enum-valued field in every other dataset resolves to a term here. IDs are namespaced <dimension>:<slug> and are never renamed.",
+  "$last_verified": "2026-08-27",
+  "actor": [
+    {
+      "id": "actor:controller",
+      "label": "Controller",
+      "definition_ref": null,
+      "parent": null,
+      "note": "GDPR Art. 4(7)."
+    },
+    {
+      "id": "actor:processor",
+      "label": "Processor",
+      "definition_ref": null,
+      "parent": null,
+      "note": "GDPR Art. 4(8)."
+    },
+    {
+      "id": "actor:data-subject",
+      "label": "Data subject",
+      "definition_ref": null,
+      "parent": null,
+      "note": "The protected party under the GDPR."
+    },
+    {
+      "id": "actor:intermediary",
+      "label": "Intermediary service",
+      "definition_ref": null,
+      "parent": null,
+      "note": "DSA base tier: mere conduit, caching, hosting."
+    },
+    {
+      "id": "actor:hosting-provider",
+      "label": "Hosting service",
+      "definition_ref": null,
+      "parent": "actor:intermediary",
+      "note": null
+    },
+    {
+      "id": "actor:online-platform",
+      "label": "Online platform",
+      "definition_ref": null,
+      "parent": "actor:hosting-provider",
+      "note": null
+    },
+    {
+      "id": "actor:vlop",
+      "label": "Very large online platform",
+      "definition_ref": "gl-vlop",
+      "parent": "actor:online-platform",
+      "note": "45m+ average monthly active EU recipients, designated by the Commission."
+    },
+    {
+      "id": "actor:vlose",
+      "label": "Very large online search engine",
+      "definition_ref": "gl-vlose",
+      "parent": "actor:intermediary",
+      "note": null
+    },
+    {
+      "id": "actor:gatekeeper",
+      "label": "Gatekeeper",
+      "definition_ref": "gl-gatekeeper",
+      "parent": null,
+      "note": "DMA Art. 3 designation."
+    },
+    {
+      "id": "actor:business-user",
+      "label": "Business user",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Protected party under the DMA."
+    },
+    {
+      "id": "actor:end-user",
+      "label": "End user",
+      "definition_ref": null,
+      "parent": null,
+      "note": null
+    },
+    {
+      "id": "actor:recipient-of-service",
+      "label": "Recipient of the service",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Protected party under the DSA."
+    },
+    {
+      "id": "actor:trader",
+      "label": "Trader",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Marketplace seller subject to DSA traceability duties."
+    },
+    {
+      "id": "actor:minor",
+      "label": "Minor",
+      "definition_ref": null,
+      "parent": null,
+      "note": null
+    },
+    {
+      "id": "actor:ai-provider",
+      "label": "AI provider",
+      "definition_ref": null,
+      "parent": null,
+      "note": "AI Act Art. 3(3)."
+    },
+    {
+      "id": "actor:ai-deployer",
+      "label": "AI deployer",
+      "definition_ref": null,
+      "parent": null,
+      "note": "AI Act Art. 3(4)."
+    },
+    {
+      "id": "actor:ai-importer",
+      "label": "AI importer",
+      "definition_ref": null,
+      "parent": null,
+      "note": null
+    },
+    {
+      "id": "actor:ai-distributor",
+      "label": "AI distributor",
+      "definition_ref": null,
+      "parent": null,
+      "note": null
+    },
+    {
+      "id": "actor:gpai-provider",
+      "label": "GPAI model provider",
+      "definition_ref": "gl-gpai",
+      "parent": "actor:ai-provider",
+      "note": "AI Act Chapter V."
+    },
+    {
+      "id": "actor:affected-person",
+      "label": "Affected person",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Protected party under the AI Act."
+    },
+    {
+      "id": "actor:data-holder",
+      "label": "Data holder",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Data Act."
+    },
+    {
+      "id": "actor:data-recipient",
+      "label": "Data recipient",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Data Act."
+    },
+    {
+      "id": "actor:user",
+      "label": "User",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Protected party under the Data Act."
+    },
+    {
+      "id": "actor:cloud-provider",
+      "label": "Provider of data processing services",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Data Act Chapter VI; covers IaaS, PaaS and SaaS."
+    },
+    {
+      "id": "actor:manufacturer",
+      "label": "Manufacturer",
+      "definition_ref": null,
+      "parent": null,
+      "note": null
+    },
+    {
+      "id": "actor:connected-product-provider",
+      "label": "Connected-product provider",
+      "definition_ref": null,
+      "parent": "actor:manufacturer",
+      "note": "Data Act Art. 3."
+    },
+    {
+      "id": "actor:pde-manufacturer",
+      "label": "Manufacturer of a product with digital elements",
+      "definition_ref": null,
+      "parent": "actor:manufacturer",
+      "note": "Cyber Resilience Act."
+    },
+    {
+      "id": "actor:essential-entity",
+      "label": "Essential entity",
+      "definition_ref": null,
+      "parent": null,
+      "note": "NIS2 Annex I."
+    },
+    {
+      "id": "actor:important-entity",
+      "label": "Important entity",
+      "definition_ref": null,
+      "parent": null,
+      "note": "NIS2 Annex II."
+    },
+    {
+      "id": "actor:critical-entity",
+      "label": "Critical entity",
+      "definition_ref": null,
+      "parent": null,
+      "note": "CER Directive."
+    },
+    {
+      "id": "actor:financial-entity",
+      "label": "Financial entity",
+      "definition_ref": null,
+      "parent": null,
+      "note": "DORA."
+    },
+    {
+      "id": "actor:ict-third-party-provider",
+      "label": "ICT third-party service provider",
+      "definition_ref": null,
+      "parent": null,
+      "note": "DORA; includes critical ICT providers subject to the oversight framework."
+    },
+    {
+      "id": "actor:sme",
+      "label": "SME",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Small or medium-sized enterprise as defined in Recommendation 2003/361/EC."
+    },
+    {
+      "id": "actor:large-company",
+      "label": "Large company",
+      "definition_ref": null,
+      "parent": null,
+      "note": null
+    },
+    {
+      "id": "actor:public-authority",
+      "label": "Public authority",
+      "definition_ref": null,
+      "parent": null,
+      "note": null
+    },
+    {
+      "id": "actor:researcher",
+      "label": "Researcher",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Including vetted researchers under DSA Art. 40(4)."
+    },
+    {
+      "id": "actor:member-state",
+      "label": "Member State",
+      "definition_ref": null,
+      "parent": null,
+      "note": null
+    },
+    {
+      "id": "actor:critical-sector",
+      "label": "Critical-sector organisation",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Umbrella term used by the applicability engine. Covers NIS2 essential and important entities and CER critical entities; which of those an organisation is depends on sector and size."
+    }
+  ],
+  "activity": [
+    {
+      "id": "activity:processing-personal-data",
+      "label": "Processing personal data"
+    },
+    {
+      "id": "activity:hosting-user-content",
+      "label": "Hosting user content"
+    },
+    {
+      "id": "activity:online-platform-activity",
+      "label": "Operating an online platform"
+    },
+    {
+      "id": "activity:marketplace-activity",
+      "label": "Operating an online marketplace"
+    },
+    {
+      "id": "activity:recommender-systems",
+      "label": "Operating recommender systems"
+    },
+    {
+      "id": "activity:online-advertising",
+      "label": "Serving online advertising"
+    },
+    {
+      "id": "activity:search",
+      "label": "Operating a search engine"
+    },
+    {
+      "id": "activity:social-networking",
+      "label": "Operating a social networking service"
+    },
+    {
+      "id": "activity:video-sharing",
+      "label": "Operating a video-sharing platform"
+    },
+    {
+      "id": "activity:communications-services",
+      "label": "Providing interpersonal communications services"
+    },
+    {
+      "id": "activity:operating-systems",
+      "label": "Providing an operating system"
+    },
+    {
+      "id": "activity:browsers",
+      "label": "Providing a web browser"
+    },
+    {
+      "id": "activity:virtual-assistants",
+      "label": "Providing a virtual assistant"
+    },
+    {
+      "id": "activity:ai-development",
+      "label": "Developing AI systems"
+    },
+    {
+      "id": "activity:ai-deployment",
+      "label": "Deploying AI systems"
+    },
+    {
+      "id": "activity:gpai-provision",
+      "label": "Placing a general-purpose AI model on the market"
+    },
+    {
+      "id": "activity:cloud-services",
+      "label": "Cloud or data processing services"
+    },
+    {
+      "id": "activity:connected-products",
+      "label": "Placing connected products on the market"
+    },
+    {
+      "id": "activity:product-with-digital-elements",
+      "label": "Placing products with digital elements on the market"
+    },
+    {
+      "id": "activity:digital-identity",
+      "label": "Providing digital identity services"
+    },
+    {
+      "id": "activity:critical-infrastructure-operation",
+      "label": "Critical cybersecurity / essential infrastructure"
+    },
+    {
+      "id": "activity:financial-services-ict",
+      "label": "Operating ICT for financial services"
+    }
+  ],
+  "sector": [
+    {
+      "id": "sector:manufacturing",
+      "label": "Manufacturing"
+    },
+    {
+      "id": "sector:automotive",
+      "label": "Automotive"
+    },
+    {
+      "id": "sector:energy",
+      "label": "Energy"
+    },
+    {
+      "id": "sector:transport",
+      "label": "Transport"
+    },
+    {
+      "id": "sector:banking",
+      "label": "Banking"
+    },
+    {
+      "id": "sector:financial-market-infrastructure",
+      "label": "Financial market infrastructure"
+    },
+    {
+      "id": "sector:health",
+      "label": "Health"
+    },
+    {
+      "id": "sector:water",
+      "label": "Drinking and waste water"
+    },
+    {
+      "id": "sector:digital-infrastructure",
+      "label": "Digital infrastructure"
+    },
+    {
+      "id": "sector:ict-service-management",
+      "label": "ICT service management"
+    },
+    {
+      "id": "sector:public-administration",
+      "label": "Public administration"
+    },
+    {
+      "id": "sector:space",
+      "label": "Space"
+    },
+    {
+      "id": "sector:postal",
+      "label": "Postal and courier services"
+    },
+    {
+      "id": "sector:waste",
+      "label": "Waste management"
+    },
+    {
+      "id": "sector:chemicals",
+      "label": "Chemicals"
+    },
+    {
+      "id": "sector:food",
+      "label": "Food"
+    },
+    {
+      "id": "sector:research",
+      "label": "Research"
+    },
+    {
+      "id": "sector:retail",
+      "label": "Retail and e-commerce"
+    },
+    {
+      "id": "sector:media",
+      "label": "Media and online platforms"
+    },
+    {
+      "id": "sector:cross-sector",
+      "label": "Cross-sector"
+    }
+  ],
+  "territory": [
+    {
+      "id": "territory:eu-established",
+      "label": "Established in the EU"
+    },
+    {
+      "id": "territory:eea",
+      "label": "Established in the EEA"
+    },
+    {
+      "id": "territory:non-eu-serving-eu",
+      "label": "Outside the EU, serving EU users"
+    }
+  ],
+  "instrument_kind": [
+    {
+      "id": "kind:regulation",
+      "label": "Regulation",
+      "note": "Directly applicable in all Member States. No transposition."
+    },
+    {
+      "id": "kind:directive",
+      "label": "Directive",
+      "note": "Requires national transposition. Obligations bite at national, not EU, dates."
+    },
+    {
+      "id": "kind:proposal",
+      "label": "Proposal",
+      "note": "Not binding law. Must never be presented as an Act."
+    },
+    {
+      "id": "kind:delegated-regulation",
+      "label": "Delegated regulation"
+    },
+    {
+      "id": "kind:implementing-decision",
+      "label": "Implementing decision"
+    },
+    {
+      "id": "kind:code-of-practice",
+      "label": "Code of practice",
+      "note": "Voluntary unless and until made binding."
+    },
+    {
+      "id": "kind:treaty-provision",
+      "label": "Treaty provision"
+    },
+    {
+      "id": "kind:report",
+      "label": "Report or communication",
+      "note": "Not legislation."
+    }
+  ],
+  "status": [
+    {
+      "id": "status:proposal",
+      "label": "Proposal",
+      "note": "Published by the Commission. Not law."
+    },
+    {
+      "id": "status:parliament-position",
+      "label": "Parliament position adopted"
+    },
+    {
+      "id": "status:council-position",
+      "label": "Council position or general approach"
+    },
+    {
+      "id": "status:trilogue",
+      "label": "In trilogue"
+    },
+    {
+      "id": "status:political-agreement",
+      "label": "Political agreement reached"
+    },
+    {
+      "id": "status:adopted",
+      "label": "Adopted"
+    },
+    {
+      "id": "status:published",
+      "label": "Published in the Official Journal"
+    },
+    {
+      "id": "status:in-force",
+      "label": "In force",
+      "note": "Legally binding. NOT the same as applicable: obligations may not yet bite, in whole or in part."
+    },
+    {
+      "id": "status:applicable",
+      "label": "Applicable",
+      "note": "Obligations bite. For staggered instruments, see milestones rather than this scalar."
+    },
+    {
+      "id": "status:partly-applicable",
+      "label": "Partly applicable",
+      "note": "Some tranches of obligations apply and others do not. Use milestones to see which."
+    },
+    {
+      "id": "status:transposition-pending",
+      "label": "Transposition pending",
+      "note": "Directives only. See the per-Member-State transposition block."
+    },
+    {
+      "id": "status:amended",
+      "label": "Amended"
+    },
+    {
+      "id": "status:repealed",
+      "label": "Repealed"
+    },
+    {
+      "id": "status:withdrawn",
+      "label": "Withdrawn"
+    },
+    {
+      "id": "status:stalled",
+      "label": "Stalled",
+      "note": "In the legislative process but without a path forward at the recorded date."
+    }
+  ],
+  "scope_class": [
+    {
+      "id": "scope:core",
+      "label": "Core",
+      "note": "Analysed at length in this brief."
+    },
+    {
+      "id": "scope:adjacent",
+      "label": "Adjacent",
+      "note": "Part of the EU digital acquis, mapped and profiled here but not analysed at length."
+    },
+    {
+      "id": "scope:referenced",
+      "label": "Referenced",
+      "note": "Named and placed, but outside this brief's analytical scope."
+    },
+    {
+      "id": "scope:out-of-scope",
+      "label": "Outside current scope",
+      "note": "Explicitly not covered."
+    }
+  ],
+  "event_type": [
+    {
+      "id": "event:entry-into-force",
+      "label": "Entry into force",
+      "note": "The instrument becomes legally binding. Distinct from application."
+    },
+    {
+      "id": "event:application",
+      "label": "Application date",
+      "note": "Obligations begin to bite. Distinct from entry into force."
+    },
+    {
+      "id": "event:transposition",
+      "label": "Transposition deadline",
+      "note": "Directives only. The date by which Member States must have transposed."
+    },
+    {
+      "id": "event:compliance-deadline",
+      "label": "Compliance deadline"
+    },
+    {
+      "id": "event:reporting-deadline",
+      "label": "Reporting deadline"
+    },
+    {
+      "id": "event:delegated-act",
+      "label": "Delegated act"
+    },
+    {
+      "id": "event:implementing-act",
+      "label": "Implementing act"
+    },
+    {
+      "id": "event:guidance",
+      "label": "Guidance or code of practice"
+    },
+    {
+      "id": "event:designation",
+      "label": "Designation decision"
+    },
+    {
+      "id": "event:enforcement",
+      "label": "Enforcement action"
+    },
+    {
+      "id": "event:judicial",
+      "label": "Judicial event"
+    },
+    {
+      "id": "event:review",
+      "label": "Statutory review"
+    },
+    {
+      "id": "event:proposal",
+      "label": "Legislative proposal"
+    },
+    {
+      "id": "event:market-investigation",
+      "label": "Market investigation"
+    }
+  ],
+  "date_precision": [
+    {
+      "id": "precision:day",
+      "label": "Exact date"
+    },
+    {
+      "id": "precision:month",
+      "label": "Month only",
+      "note": "Stored as the first of the month. The day is not published."
+    },
+    {
+      "id": "precision:quarter",
+      "label": "Quarter only"
+    },
+    {
+      "id": "precision:year",
+      "label": "Year only"
+    }
+  ],
+  "claim_type": [
+    {
+      "id": "claim-type:law",
+      "label": "Law",
+      "note": "The legal instrument provides X."
+    },
+    {
+      "id": "claim-type:fact",
+      "label": "Fact",
+      "note": "The evidence shows Y."
+    },
+    {
+      "id": "claim-type:interpretation",
+      "label": "Interpretation",
+      "note": "A reading of what the law or the evidence means."
+    },
+    {
+      "id": "claim-type:critique",
+      "label": "Critique",
+      "note": "The author argues Z."
+    },
+    {
+      "id": "claim-type:forecast",
+      "label": "Forecast",
+      "note": "A statement about what will or may happen."
+    }
+  ],
+  "source_tier": [
+    {
+      "id": "tier:1",
+      "label": "Primary law and courts",
+      "note": "EUR-Lex, regulations, directives, CJEU, General Court, official Commission decisions and legislative documents."
+    },
+    {
+      "id": "tier:2",
+      "label": "Regulators and EU institutions",
+      "note": "EDPB, EDPS, ENISA, national regulators and competent authorities, European Parliament, Council."
+    },
+    {
+      "id": "tier:3",
+      "label": "Research",
+      "note": "Peer-reviewed research and established academic institutions."
+    },
+    {
+      "id": "tier:4",
+      "label": "Industry, advocacy and press",
+      "note": "Industry bodies, advocacy organisations, commentary and journalism. Never to be presented as equivalent to primary law."
+    }
+  ],
+  "source_type": [
+    {
+      "id": "source-type:regulation",
+      "label": "Regulation or directive"
+    },
+    {
+      "id": "source-type:judgment",
+      "label": "Judgment"
+    },
+    {
+      "id": "source-type:court-press-release",
+      "label": "Court press release"
+    },
+    {
+      "id": "source-type:decision",
+      "label": "Administrative decision"
+    },
+    {
+      "id": "source-type:press-release",
+      "label": "Institutional press release"
+    },
+    {
+      "id": "source-type:opinion",
+      "label": "Regulatory opinion"
+    },
+    {
+      "id": "source-type:guidance",
+      "label": "Guidance"
+    },
+    {
+      "id": "source-type:legislative-document",
+      "label": "Legislative document"
+    },
+    {
+      "id": "source-type:report",
+      "label": "Official report"
+    },
+    {
+      "id": "source-type:regulator-statement",
+      "label": "Regulator statement"
+    },
+    {
+      "id": "source-type:research",
+      "label": "Research publication"
+    },
+    {
+      "id": "source-type:commentary",
+      "label": "Commentary"
+    },
+    {
+      "id": "source-type:journalism",
+      "label": "Journalism"
+    }
+  ],
+  "url_status": [
+    {
+      "id": "url:live",
+      "label": "Live",
+      "note": "Fetched or seen in search results at the accessed date."
+    },
+    {
+      "id": "url:unchecked",
+      "label": "Unchecked",
+      "note": "Recorded but not yet confirmed to resolve."
+    },
+    {
+      "id": "url:paywalled",
+      "label": "Paywalled"
+    },
+    {
+      "id": "url:moved",
+      "label": "Moved"
+    },
+    {
+      "id": "url:dead",
+      "label": "Dead"
+    },
+    {
+      "id": "url:none",
+      "label": "No URL recorded",
+      "note": "The source is identified but no citable URL has been located."
+    }
+  ],
+  "supports": [
+    {
+      "id": "supports:direct",
+      "label": "Directly supports",
+      "note": "The source states the proposition."
+    },
+    {
+      "id": "supports:partial",
+      "label": "Partially supports",
+      "note": "The source establishes part of the proposition, a narrower case, or the components from which it is computed."
+    },
+    {
+      "id": "supports:context",
+      "label": "Context only",
+      "note": "Informs the claim without establishing it. Not a citation."
+    }
+  ],
+  "action_status": [
+    {
+      "id": "action:announced",
+      "label": "Announced",
+      "note": "Preliminary findings or an opened proceeding. No decision yet."
+    },
+    {
+      "id": "action:imposed",
+      "label": "Imposed",
+      "note": "A decision has been adopted."
+    },
+    {
+      "id": "action:final",
+      "label": "Final",
+      "note": "No longer subject to appeal."
+    },
+    {
+      "id": "action:appealed",
+      "label": "Under appeal"
+    },
+    {
+      "id": "action:reduced",
+      "label": "Reduced on appeal"
+    },
+    {
+      "id": "action:annulled",
+      "label": "Annulled"
+    },
+    {
+      "id": "action:withdrawn",
+      "label": "Withdrawn"
+    },
+    {
+      "id": "action:commitments",
+      "label": "Closed by binding commitments",
+      "note": "No fine. Compliance secured by commitment."
+    }
+  ],
+  "payment_status": [
+    {
+      "id": "payment:unknown",
+      "label": "Unknown",
+      "note": "Researched. Not publicly determinable."
+    },
+    {
+      "id": "payment:not-payable",
+      "label": "Not yet payable",
+      "note": "Typically because the decision is annulled or under appeal."
+    },
+    {
+      "id": "payment:unpaid",
+      "label": "Unpaid"
+    },
+    {
+      "id": "payment:paid",
+      "label": "Paid"
+    },
+    {
+      "id": "payment:collected",
+      "label": "Collected"
+    },
+    {
+      "id": "payment:not-applicable",
+      "label": "Not applicable",
+      "note": "No monetary penalty was imposed."
+    }
+  ],
+  "remedy_status": [
+    {
+      "id": "remedy:unknown",
+      "label": "Unknown",
+      "note": "Researched. Not publicly determinable."
+    },
+    {
+      "id": "remedy:none",
+      "label": "No remedy ordered"
+    },
+    {
+      "id": "remedy:ordered",
+      "label": "Remedy ordered"
+    },
+    {
+      "id": "remedy:implemented",
+      "label": "Remedy implemented"
+    }
+  ],
+  "transposition_state": [
+    {
+      "id": "transposition:complete",
+      "label": "Complete"
+    },
+    {
+      "id": "transposition:partial",
+      "label": "Partial"
+    },
+    {
+      "id": "transposition:pending",
+      "label": "Pending"
+    },
+    {
+      "id": "transposition:referred",
+      "label": "Referred to the Court of Justice"
+    },
+    {
+      "id": "transposition:unknown",
+      "label": "Unknown",
+      "note": "Not established at the recorded verification date."
+    }
+  ],
+  "relationship_kind": [
+    {
+      "id": "rel-kind:overlap",
+      "label": "Overlaps with",
+      "note": "Both instruments reach the same conduct."
+    },
+    {
+      "id": "rel-kind:complement",
+      "label": "Complements"
+    },
+    {
+      "id": "rel-kind:sequence",
+      "label": "Sequences with",
+      "note": "One applies before or feeds into the other."
+    },
+    {
+      "id": "rel-kind:conflict",
+      "label": "In tension with"
+    },
+    {
+      "id": "rel-kind:carve-out",
+      "label": "Carves out from"
+    },
+    {
+      "id": "rel-kind:amends",
+      "label": "Amends"
+    },
+    {
+      "id": "rel-kind:repeals",
+      "label": "Repeals"
+    },
+    {
+      "id": "rel-kind:implements",
+      "label": "Implements or specifies"
+    },
+    {
+      "id": "rel-kind:lex-specialis",
+      "label": "Is lex specialis to"
+    },
+    {
+      "id": "rel-kind:legal-basis",
+      "label": "Is the legal basis for"
+    }
+  ],
+  "competence_role": [
+    {
+      "id": "role:legislates",
+      "label": "Legislates"
+    },
+    {
+      "id": "role:supervises",
+      "label": "Supervises"
+    },
+    {
+      "id": "role:investigates",
+      "label": "Investigates"
+    },
+    {
+      "id": "role:fines",
+      "label": "Imposes fines"
+    },
+    {
+      "id": "role:issues-guidance",
+      "label": "Issues guidance"
+    },
+    {
+      "id": "role:transposes",
+      "label": "Transposes"
+    },
+    {
+      "id": "role:hears-appeals",
+      "label": "Hears appeals"
+    },
+    {
+      "id": "role:interprets",
+      "label": "Interprets"
+    },
+    {
+      "id": "role:coordinates",
+      "label": "Coordinates"
+    },
+    {
+      "id": "role:advises",
+      "label": "Advises"
+    },
+    {
+      "id": "role:designates",
+      "label": "Designates"
+    }
+  ],
+  "institution_type": [
+    {
+      "id": "inst-type:eu-institution",
+      "label": "EU institution"
+    },
+    {
+      "id": "inst-type:eu-body",
+      "label": "EU body or office"
+    },
+    {
+      "id": "inst-type:eu-agency",
+      "label": "EU agency"
+    },
+    {
+      "id": "inst-type:court",
+      "label": "Court"
+    },
+    {
+      "id": "inst-type:national-authority",
+      "label": "National authority"
+    },
+    {
+      "id": "inst-type:network",
+      "label": "Network of national authorities"
+    },
+    {
+      "id": "inst-type:directorate-general",
+      "label": "Directorate-General"
+    }
+  ],
+  "outcome": [
+    {
+      "id": "outcome:applies",
+      "label": "Yes",
+      "note": "On the facts given, this instrument applies."
+    },
+    {
+      "id": "outcome:likely",
+      "label": "Potentially applicable",
+      "note": "Applies on the most common reading of these facts, but turns on a condition the questionnaire has not established."
+    },
+    {
+      "id": "outcome:possible",
+      "label": "Potentially applicable",
+      "note": "May apply. Depends on facts this questionnaire does not ask for."
+    },
+    {
+      "id": "outcome:unlikely",
+      "label": "Probably not",
+      "note": "On the facts given this instrument probably does not apply — but absence of an obligation is not a safe harbour."
+    },
+    {
+      "id": "outcome:undetermined",
+      "label": "Not determined",
+      "note": "No rule in this dataset covers the combination selected. That is absence of knowledge, NOT evidence of non-applicability."
+    }
+  ],
+  "dna_dimension": [
+    {
+      "id": "dna:regulated_actor",
+      "label": "Regulated actor",
+      "note": "Who the instrument places obligations on."
+    },
+    {
+      "id": "dna:protected_party",
+      "label": "Protected party",
+      "note": "Whose interests it exists to protect."
+    },
+    {
+      "id": "dna:objective",
+      "label": "Regulatory objective",
+      "note": null
+    },
+    {
+      "id": "dna:risk_logic",
+      "label": "Risk logic",
+      "note": "The organising idea by which obligations scale."
+    },
+    {
+      "id": "dna:obligations",
+      "label": "Obligations",
+      "note": "The anchor provisions carrying the substantive duties."
+    },
+    {
+      "id": "dna:authority",
+      "label": "Competent authority",
+      "note": "DERIVED from institutions.json rather than stored on the instrument."
+    },
+    {
+      "id": "dna:enforcement_mechanism",
+      "label": "Enforcement mechanism",
+      "note": null
+    },
+    {
+      "id": "dna:sanction",
+      "label": "Sanctions",
+      "note": "Ceiling, not tariff."
+    },
+    {
+      "id": "dna:territorial_scope",
+      "label": "Territorial reach",
+      "note": null
+    },
+    {
+      "id": "dna:implementation_model",
+      "label": "Implementation model",
+      "note": "Directly applicable, or requiring national transposition."
+    },
+    {
+      "id": "dna:key_dates",
+      "label": "Key dates",
+      "note": "DERIVED from timeline.json via the instrument's milestones."
+    }
+  ],
+  "appeal_status": [
+    {
+      "id": "appeal:none",
+      "label": "No appeal route engaged",
+      "note": "Nothing to appeal — typically preliminary findings, or a matter closed by commitments."
+    },
+    {
+      "id": "appeal:not-lodged",
+      "label": "No appeal lodged",
+      "note": "Established that no appeal was brought within the period."
+    },
+    {
+      "id": "appeal:pending",
+      "label": "Under appeal",
+      "note": "An appeal has been lodged and not yet decided."
+    },
+    {
+      "id": "appeal:decided",
+      "label": "Appeal decided",
+      "note": "See the judicial record for the outcome."
+    },
+    {
+      "id": "appeal:unknown",
+      "label": "Unknown",
+      "note": "Researched. Whether an appeal was lodged is not publicly determinable, or has not been established here."
+    }
+  ],
+  "pipeline_stage": [
+    {
+      "id": "stage:law",
+      "label": "Law on paper",
+      "note": "The obligation exists and applies."
+    },
+    {
+      "id": "stage:investigation",
+      "label": "Investigation",
+      "note": "Proceedings opened against a named entity."
+    },
+    {
+      "id": "stage:action",
+      "label": "Enforcement action",
+      "note": "The authority has acted — preliminary findings count here, a decision does not yet exist."
+    },
+    {
+      "id": "stage:decision",
+      "label": "Decision",
+      "note": "A decision has been adopted. Preliminary findings are NOT a decision."
+    },
+    {
+      "id": "stage:final",
+      "label": "Final decision",
+      "note": "No longer subject to appeal."
+    },
+    {
+      "id": "stage:payment",
+      "label": "Payment / collection",
+      "note": "Money has actually moved. The brief's central point is that this is a different quantity from the announced figure."
+    },
+    {
+      "id": "stage:remedy",
+      "label": "Remedy",
+      "note": "Conduct was ordered to change."
+    },
+    {
+      "id": "stage:behaviour",
+      "label": "Behavioural change",
+      "note": "Conduct is documented to have changed."
+    }
+  ],
+  "stage_state": [
+    {
+      "id": "state:reached",
+      "label": "Reached",
+      "note": "The record supports this stage having been reached."
+    },
+    {
+      "id": "state:not-reached",
+      "label": "Not reached",
+      "note": "The record supports this stage NOT having been reached."
+    },
+    {
+      "id": "state:unknown",
+      "label": "Unknown",
+      "note": "Researched or derivable in principle, but not determinable from the record. NEVER rendered as zero, and never counted as either reached or not reached."
+    },
+    {
+      "id": "state:na",
+      "label": "Not applicable",
+      "note": "The stage cannot arise for this kind of action — an appeal stage for preliminary findings, a payment stage where no fine was imposed."
+    }
+  ]
+}
