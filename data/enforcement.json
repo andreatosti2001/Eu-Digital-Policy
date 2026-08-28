@@ -1,0 +1,639 @@
+{
+ "$schema_version": "1.0.0",
+ "$description": "Enforcement actions. Three orthogonal status axes: action_status (what the authority did and whether it stands), payment_status (whether money moved), remedy_status (whether behaviour changed). Nothing in this schema permits 'fine imposed' to imply 'fine collected'.",
+ "$last_verified": "2026-08-27",
+ "$note": "null means the question has not been researched. 'unknown' means it has been researched and is not publicly determinable. These are different states and must never be rendered alike. No aggregate totals are stored here: any total shown to a user is computed from these records at render time. The pipeline stages shown in the interface are DERIVED from these fields by a documented rule set (js/pipeline.js), not stored, so no stage can be asserted that the record does not support. A stage the record cannot settle is Unknown, and Unknown is never counted as zero.",
+ "enforcement": [
+  {
+   "id": "enf-amazon-cnpd-2021",
+   "entity": "Amazon Europe Core S.à r.l.",
+   "entity_type": "actor:large-company",
+   "instrument": "gdpr",
+   "legal_basis": [
+    "gdpr:art-6",
+    "gdpr:art-83"
+   ],
+   "authority": "dpa-lu",
+   "opened": null,
+   "decision_date": "2021-07-16",
+   "action": "Administrative fine",
+   "fine_eur": 746000000,
+   "action_status": "action:annulled",
+   "payment_status": "payment:not-payable",
+   "remedy_status": "remedy:unknown",
+   "behavioural_outcome": null,
+   "judicial": {
+    "forum": "Luxembourg Court of Appeal",
+    "date": "2026-03-12",
+    "outcome": "Annulled on procedural grounds — the authority had not adequately assessed intent, negligence and proportionality. The underlying violations were upheld and the matter referred back to the authority for reassessment.",
+    "case_ref": null
+   },
+   "timeline_events": [],
+   "claims": [
+    "clm-amazon-annulment",
+    "clm-announced-vs-collected"
+   ],
+   "sources": [
+    "src-mlex-2026-amazon-annulment",
+    "src-linarilaw-2026-amazon"
+   ],
+   "requires_verification": true,
+   "verification_note": "No primary source for the Luxembourg Court of Appeal judgment has been located. The decision date of 16 July 2021 is taken from general knowledge and is not confirmed here. Retrieve the judgment and the original CNPD decision.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:decided",
+    "lodged_by": "Amazon Europe Core S.à r.l.",
+    "forum": "Luxembourg Court of Appeal",
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Decided 12 March 2026: the fine was annulled and the matter remitted. Whether the authority has appealed that annulment further is not established."
+   }
+  },
+  {
+   "id": "enf-openai-garante-2024",
+   "entity": "OpenAI",
+   "entity_type": "actor:large-company",
+   "instrument": "gdpr",
+   "legal_basis": [
+    "gdpr:art-83"
+   ],
+   "authority": "dpa-it",
+   "opened": null,
+   "decision_date": "2024-12-20",
+   "action": "Administrative fine",
+   "fine_eur": 15000000,
+   "action_status": "action:annulled",
+   "payment_status": "payment:not-payable",
+   "remedy_status": "remedy:none",
+   "behavioural_outcome": "unknown",
+   "judicial": {
+    "forum": "Tribunale di Roma",
+    "date": "2026-03",
+    "outcome": "Voided on a pure jurisdiction point: once OpenAI established an Irish subsidiary, the Irish DPC became lead authority under the one-stop-shop. Nine months of investigative work produced no ruling on whether the conduct was lawful.",
+    "case_ref": null
+   },
+   "timeline_events": [],
+   "claims": [
+    "clm-openai-fine-voided",
+    "clm-one-stop-shop"
+   ],
+   "sources": [
+    "src-europeanlawblog-openai-rome"
+   ],
+   "requires_verification": true,
+   "verification_note": "The judgment itself has not been retrieved; only academic analysis of it. The decision date of 20 December 2024 is taken from general knowledge and is not confirmed here. The judicial date is recorded at month precision because the brief gives only 'March 2026'.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:decided",
+    "lodged_by": "OpenAI",
+    "forum": "Tribunale di Roma",
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Decided March 2026 on jurisdiction. Whether the Garante has appealed is not established."
+   }
+  },
+  {
+   "id": "enf-x-ec-2025",
+   "entity": "X (Twitter)",
+   "entity_type": "actor:vlop",
+   "instrument": "dsa",
+   "legal_basis": [
+    "dsa:art-25",
+    "dsa:art-39",
+    "dsa:art-40",
+    "dsa:art-74"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2025-12-05",
+   "action": "Non-compliance decision and fine",
+   "fine_eur": 120000000,
+   "action_status": "action:imposed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:ordered",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-x-fine",
+    "clm-x-data-access-staffing",
+    "clm-x-legal-basis-fragility",
+    "clm-press-release-governance"
+   ],
+   "sources": [
+    "src-ec-x-fine-2025",
+    "src-eucrim-x-first-fine"
+   ],
+   "requires_verification": true,
+   "verification_note": "Whether the decision has been appealed is not established. The Commission press release confirms the amount and all three grounds — deceptive design in the paid blue checkmark, non-functional ad repository, obstruction of researcher access — but does not use the phrase 'first DSA fine'; that framing rests on commentary. The '183-page decision' detail and the seventeen-month gap from preliminary findings are not confirmed from a primary source.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:unknown",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Whether X has brought an action for annulment before the General Court is not established in this build."
+   }
+  },
+  {
+   "id": "enf-temu-ec-2026",
+   "entity": "Temu",
+   "entity_type": "actor:vlop",
+   "instrument": "dsa",
+   "legal_basis": [
+    "dsa:art-34",
+    "dsa:art-35",
+    "dsa:art-74"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2026-05-28",
+   "action": "Non-compliance decision and fine",
+   "fine_eur": 200000000,
+   "action_status": "action:imposed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:ordered",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-temu-fine"
+   ],
+   "sources": [
+    "src-ec-temu-fine-2026",
+    "src-techpolicypress-temu"
+   ],
+   "requires_verification": true,
+   "verification_note": "'Largest DSA fine to date' is not supported by the Commission text, which contains no ranking language; it rests on commentary. Appeal status not established.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:unknown",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Not established in this build."
+   }
+  },
+  {
+   "id": "enf-tiktok-ec-2025-commitments",
+   "entity": "TikTok",
+   "entity_type": "actor:vlop",
+   "instrument": "dsa",
+   "legal_basis": [
+    "dsa:art-39"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2025-12-05",
+   "action": "Commitments made binding",
+   "fine_eur": null,
+   "action_status": "action:commitments",
+   "payment_status": "payment:not-applicable",
+   "remedy_status": "remedy:ordered",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-commission-prefers-compliance"
+   ],
+   "sources": [
+    "src-ec-tiktok-commitments-2025"
+   ],
+   "requires_verification": false,
+   "verification_note": "Ad-repository failings cured by binding commitment rather than fine. Whether the commitments have been implemented is not established.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:none",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Closed by binding commitments. There is no penalty decision to appeal."
+   }
+  },
+  {
+   "id": "enf-tiktok-ec-2026-addictive",
+   "entity": "TikTok",
+   "entity_type": "actor:vlop",
+   "instrument": "dsa",
+   "legal_basis": [
+    "dsa:art-34",
+    "dsa:art-35"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2026-02-06",
+   "action": "Preliminary findings",
+   "fine_eur": null,
+   "action_status": "action:announced",
+   "payment_status": "payment:not-applicable",
+   "remedy_status": "remedy:unknown",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-first-architecture-enforcement"
+   ],
+   "sources": [
+    "src-ec-tiktok-addictive-2026"
+   ],
+   "requires_verification": false,
+   "verification_note": "Preliminary findings are not a decision. Infinite scroll, autoplay and personalised recommenders — platform architecture rather than illegal content.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:none",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Preliminary findings are not a decision and are not appealable."
+   }
+  },
+  {
+   "id": "enf-meta-ec-2026-addictive",
+   "entity": "Meta (Instagram and Facebook)",
+   "entity_type": "actor:vlop",
+   "instrument": "dsa",
+   "legal_basis": [
+    "dsa:art-34",
+    "dsa:art-35"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2026-07-10",
+   "action": "Preliminary findings",
+   "fine_eur": null,
+   "action_status": "action:announced",
+   "payment_status": "payment:not-applicable",
+   "remedy_status": "remedy:unknown",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [],
+   "sources": [
+    "src-ec-meta-addictive-2026"
+   ],
+   "requires_verification": false,
+   "verification_note": "Preliminary findings are not a decision. Proposed remedies include disabling autoplay and infinite scroll by default.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:none",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Preliminary findings are not a decision and are not appealable."
+   }
+  },
+  {
+   "id": "enf-tiktok-ec-2026-minors",
+   "entity": "TikTok",
+   "entity_type": "actor:vlop",
+   "instrument": "dsa",
+   "legal_basis": [
+    "dsa:art-34",
+    "dsa:art-35"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2026-07-24",
+   "action": "Preliminary findings",
+   "fine_eur": null,
+   "action_status": "action:announced",
+   "payment_status": "payment:not-applicable",
+   "remedy_status": "remedy:unknown",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [],
+   "sources": [
+    "src-ec-tiktok-minors-2026"
+   ],
+   "requires_verification": false,
+   "verification_note": "Preliminary findings are not a decision. Minors' accounts default to public; 16–17 year-olds' content recommended in the For You feed.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:none",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Preliminary findings are not a decision and are not appealable."
+   }
+  },
+  {
+   "id": "enf-apple-ec-2025",
+   "entity": "Apple",
+   "entity_type": "actor:gatekeeper",
+   "instrument": "dma",
+   "legal_basis": [
+    "dma:art-5",
+    "dma:art-30"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2025-04-23",
+   "action": "Non-compliance decision and fine under Art. 5(4)",
+   "fine_eur": 500000000,
+   "action_status": "action:appealed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:ordered",
+   "behavioural_outcome": "EU iPhone users can set rival browsers and payment apps as defaults, install applications outside the App Store, and use third-party payment solutions.",
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-apple-proactive-enablement",
+    "clm-dma-consumer-benefit-modest"
+   ],
+   "sources": [
+    "src-ec-apple-meta-dma-2025"
+   ],
+   "requires_verification": true,
+   "verification_note": "The brief states the decision is on appeal; the appeal has not been separately verified here. The behavioural outcome recorded is the brief's own characterisation and is not independently sourced. Retrieve the non-confidential decision published 26 May 2025.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:pending",
+    "lodged_by": "Apple",
+    "forum": "General Court of the European Union",
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "The brief states the decision is on appeal. The action has not been independently verified here and no case number is recorded.",
+    "requires_verification": true
+   }
+  },
+  {
+   "id": "enf-meta-ec-2025",
+   "entity": "Meta",
+   "entity_type": "actor:gatekeeper",
+   "instrument": "dma",
+   "legal_basis": [
+    "dma:art-5",
+    "dma:art-30"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2025-04-23",
+   "action": "Non-compliance decision and fine under Art. 5(2)",
+   "fine_eur": 200000000,
+   "action_status": "action:appealed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:ordered",
+   "behavioural_outcome": "Meta subsequently announced a three-tier advertising model for EU users effective January 2026.",
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-meta-pay-or-consent"
+   ],
+   "sources": [
+    "src-ec-apple-meta-dma-2025"
+   ],
+   "requires_verification": true,
+   "verification_note": "The binary pay-or-consent model was found not to provide the genuinely equivalent, less data-intensive alternative Art. 5(2) requires. Appeal status and the three-tier model announcement are stated by the brief and not independently sourced here.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:pending",
+    "lodged_by": "Meta",
+    "forum": "General Court of the European Union",
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "The brief states the decision is on appeal. Not independently verified here.",
+    "requires_verification": true
+   }
+  },
+  {
+   "id": "enf-apple-gc-2026-designation",
+   "entity": "Apple",
+   "entity_type": "actor:gatekeeper",
+   "instrument": "dma",
+   "legal_basis": [
+    "dma:art-3"
+   ],
+   "authority": "gc",
+   "opened": null,
+   "decision_date": "2026-07-08",
+   "action": "Judgment dismissing gatekeeper-designation challenges",
+   "fine_eur": null,
+   "action_status": "action:final",
+   "payment_status": "payment:not-applicable",
+   "remedy_status": "remedy:none",
+   "behavioural_outcome": null,
+   "judicial": {
+    "forum": "General Court of the European Union",
+    "date": "2026-07-08",
+    "outcome": "Apple's designation challenges dismissed in full. App Store and iOS obligations confirmed; iMessage pleas held inadmissible; App Store versions treated as a single core platform service. Closes the route by which designated gatekeepers could contest interoperability obligations at the designation stage, but leaves the substance of Art. 6(7) untested.",
+    "case_ref": "Joined Cases T-1079/23, T-1080/23 and T-214/24"
+   },
+   "timeline_events": [],
+   "claims": [
+    "clm-gc-apple-designation-upheld"
+   ],
+   "sources": [
+    "src-gc-apple-designation-2026"
+   ],
+   "requires_verification": false,
+   "verification_note": "Whether an appeal to the Court of Justice has been lodged is not established.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:unknown",
+    "lodged_by": null,
+    "forum": "Court of Justice of the European Union",
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Whether Apple has appealed the General Court's judgment to the Court of Justice is not established."
+   }
+  },
+  {
+   "id": "enf-supervisory-fee-gc-2025",
+   "entity": "Meta Platforms Ireland and TikTok Technology",
+   "entity_type": "actor:vlop",
+   "instrument": "dsa",
+   "legal_basis": [],
+   "authority": "gc",
+   "opened": null,
+   "decision_date": "2025-09-10",
+   "action": "Annulment of the DSA supervisory-fee implementing decisions",
+   "fine_eur": null,
+   "action_status": "action:annulled",
+   "payment_status": "payment:not-applicable",
+   "remedy_status": "remedy:none",
+   "behavioural_outcome": null,
+   "judicial": {
+    "forum": "General Court of the European Union",
+    "date": "2025-09-10",
+    "outcome": "The implementing decisions setting the supervisory fee were annulled because the methodology should have been adopted by delegated act. Effects provisionally maintained for up to twelve months. This is an annulment of the fee decisions, not of the fee mechanism as such.",
+    "case_ref": "Cases T-55/24 Meta Platforms Ireland and T-58/24 TikTok Technology"
+   },
+   "timeline_events": [],
+   "claims": [
+    "clm-gc-supervisory-fee-annulled"
+   ],
+   "sources": [
+    "src-gc-supervisory-fee-2025"
+   ],
+   "requires_verification": true,
+   "verification_note": "The brief states the Commission's appeals are pending; that has not been separately verified here.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:pending",
+    "lodged_by": "European Commission",
+    "forum": "Court of Justice of the European Union",
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "The brief states the Commission's appeals are pending. Not independently verified here.",
+    "requires_verification": true
+   }
+  },
+  {
+   "id": "enf-google-ec-2025-adtech",
+   "entity": "Google",
+   "entity_type": "actor:gatekeeper",
+   "instrument": "tfeu",
+   "legal_basis": [
+    "tfeu:art-102"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2025-09-05",
+   "action": "Antitrust decision and fine under Article 102 TFEU",
+   "fine_eur": 2950000000,
+   "action_status": "action:imposed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:ordered",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-dma-alongside-102"
+   ],
+   "sources": [
+    "src-ec-google-adtech-2025"
+   ],
+   "requires_verification": false,
+   "verification_note": "Case AT.40670. This is an Article 102 TFEU decision, NOT a DMA decision. Recorded here to keep the distinction visible: the DMA operates alongside Articles 101 and 102, not instead of them. Appeal status not established.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:unknown",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Not established in this build."
+   }
+  },
+  {
+   "id": "enf-nis2-first-fines",
+   "entity": "unknown",
+   "entity_type": null,
+   "instrument": "nis2",
+   "legal_basis": [],
+   "authority": "nca-*",
+   "opened": null,
+   "decision_date": null,
+   "action": "First NIS2 fines reported in Belgium, Italy and Hungary",
+   "fine_eur": null,
+   "action_status": "action:imposed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:unknown",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-nis2-enforcement-despite-transposition"
+   ],
+   "sources": [
+    "src-brief-original"
+   ],
+   "requires_verification": true,
+   "verification_note": "PLACEHOLDER RECORD. The brief states that first NIS2 fines have landed in Belgium, Italy and Hungary, but names no entity, date, amount or authority. This record exists so the claim is traceable and the gap visible; it must be split into individual records or removed once the underlying decisions are identified. Do not render as a countable enforcement action.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:unknown",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "No underlying decision has been identified, so no appeal position can be recorded."
+   }
+  },
+  {
+   "id": "enf-hungary-commission-none",
+   "entity": "Hungary",
+   "entity_type": "actor:member-state",
+   "instrument": "ai-act",
+   "legal_basis": [
+    "ai-act:art-5"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": null,
+   "action": "No infringement proceedings opened",
+   "fine_eur": null,
+   "action_status": null,
+   "payment_status": "payment:not-applicable",
+   "remedy_status": "remedy:none",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-hungary-no-infringement",
+    "clm-hungary-biometric-breach",
+    "clm-enforcement-asymmetry"
+   ],
+   "sources": [
+    "src-ecnl-hungary-ai-act",
+    "src-edri-hungary-ai-act"
+   ],
+   "requires_verification": true,
+   "verification_note": "A NEGATIVE record: it asserts the absence of enforcement, which is true only at an instant. action_status is null because no action exists to describe. Civil-society legal analysis concluding a breach of AI Act Art. 5 and of the Charter is sourced; the absence of Commission action is corroborated by the same sources reporting continued calls for infringement proceedings, and no contrary evidence was found on 27 August 2026. This record must be re-verified on every publication.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:none",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "No action exists, so no appeal can arise. This record asserts an absence."
+   }
+  },
+  {
+   "id": "enf-google-ec-2026-dma",
+   "entity": "Google",
+   "entity_type": "actor:gatekeeper",
+   "instrument": "dma",
+   "legal_basis": [],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2026-07-23",
+   "action": "Non-compliance decision and fine under the Digital Markets Act, for self-preferencing in Google Search and anti-steering in Google Play. Reported as EUR 460 million for the Search infringement and EUR 430 million for the Play infringement; the Commission ordered compliance within 60 days.",
+   "fine_eur": 890000000,
+   "action_status": "action:imposed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:ordered",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [
+    "tl-dma-2026-07-23-enforcement"
+   ],
+   "claims": [
+    "clm-google-dma-fine-2026"
+   ],
+   "sources": [
+    "src-ec-google-dma-fine-2026",
+    "src-ec-google-dma-fine-2026-ip"
+   ],
+   "requires_verification": true,
+   "verification_note": "requires verification: the EUR 890 million total and the 23 July 2026 date are confirmed against the Commission's DMA portal and press release IP/26/1670. Three things are NOT established in this build: the reported EUR 460m / EUR 430m component split against the decision text; the specific DMA articles found to be breached; and whether an appeal has been lodged. Reporting at the time recorded that Google was weighing an appeal, which is not the same as one having been filed.",
+   "last_verified": "2026-08-27",
+   "appeal": {
+    "status": "appeal:unknown",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Not established. Contemporary reporting described Google as considering an appeal; no filing is recorded here."
+   }
+  }
+ ]
+}

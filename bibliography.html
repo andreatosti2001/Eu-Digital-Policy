@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Bibliography — The European Legal Framework for the Digital World</title>
+<meta content="Every source cited in the brief, in Chicago style, ranked by the source hierarchy: primary law and courts, regulators, research, then press and advocacy." name="description"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%230B0E11%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%279%27 fill=%27none%27 stroke=%27%23D9A93C%27 stroke-width=%272%27/%3E%3Ccircle cx=%2716%27 cy=%277%27 r=%272%27 fill=%27%23D9A93C%27/%3E%3C/svg%3E"/>
+<link href="css/tokens.css" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<link href="css/evidence.css" rel="stylesheet"/>
+<link href="css/tools.css" rel="stylesheet"/>
+</head>
+<body data-page="evidence" data-crumb="Evidence and sources">
+<script>
+/* Pre-paint theme bootstrap. This has to run before the first paint or the
+   wrong palette flashes, which is why it is inline and why it is the only
+   thing left inline: the control itself is rendered by js/shell.js. */
+(function(){var K='eupolicy:theme',s=null;try{s=localStorage.getItem(K);}catch(e){}
+if(!s)s=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+document.body.dataset.theme=s;})();
+</script>
+<a class="skip-link" href="#maincontent">Skip to content</a>
+<div class="bib-shell">
+
+  <div class="bib-head">
+    <h1>Bibliography</h1>
+    <p>Every source the brief relies on, in Chicago style, ordered by the hierarchy the
+       project uses to weigh them: primary law and courts first, then regulators and EU
+       institutions, then research, then press and advocacy. A source that carries no
+       locatable URL is listed anyway, and marked as such — the gap is part of the record.</p>
+    <div class="bib-stats" id="bibStats"></div>
+  </div>
+
+  <main id="bib"><p class="bib-empty">Loading the bibliography…</p></main>
+
+  <section class="bib-method">
+    <h2>A note on method</h2>
+    <p><b>What a citation here means.</b> Each note in the brief records not only which
+       source is attached to a claim but what that source actually does for it: whether it
+       <b>states</b> the proposition, <b>supports it in part</b> — establishing a narrower
+       case, or the components a figure is computed from — or is only <b>context</b>, which
+       is not a citation at all. A URL alone was never treated as evidence.</p>
+    <p><b>Where a source is missing.</b> Some works the brief refers to could not be pinned
+       to a specific publication during the source pass. Those entries appear with
+       <b>no public URL located</b> rather than being quietly dropped or replaced with a
+       loosely related substitute.</p>
+    <p><b>Verification dates.</b> Every claim carries a verification date of its own, and
+       every one of them currently reads the same day — the day the dataset was compiled.
+       The field is per-record so that claims can be re-checked individually, but no
+       claim has yet been re-checked on a different day from any other, and the reader
+       should read these dates as one compilation date rather than as evidence of
+       independent checking. Negative claims — statements that something has
+       <em>not</em> happened — are true only at an instant, and that instant is the
+       compilation date for all of them.</p>
+
+    <p><b>What the notes actually rest on.</b> <span id="bibSelf">Counting…</span></p>
+
+    <p><b>How each claim is graded.</b> A single "requires verification" flag was doing
+       five jobs at once, and it made an argument — which no citation can ever settle —
+       look like a fact still waiting for a source. Every claim is now graded on what
+       actually carries it. The grade is derived from the claim's type and its sources on
+       every load, never stored, so it cannot drift away from the evidence it describes.</p>
+    <ul class="bib-grades" id="bibGrades"></ul>
+  </section>
+</div>
+
+<script>
+  /* theme, shared with the brief through the same localStorage key */
+  (function(){
+    var K='eupolicy:theme', saved=null;
+    try{ saved=localStorage.getItem(K); }catch(e){}
+    if(!saved) saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.body.dataset.theme=saved;
+    var b=document.getElementById('themeToggle');
+    if(b) b.addEventListener('click',function(){
+      var t=document.body.dataset.theme==='light'?'dark':'light';
+      document.body.dataset.theme=t;
+      try{ localStorage.setItem(K,t); }catch(e){}
+    });
+  })();
+</script>
+<script src="js/boot.js" type="module"></script>
+<script src="js/bibliography.js" type="module"></script>
+</body>
+</html>

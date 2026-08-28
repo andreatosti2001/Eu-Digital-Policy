@@ -1,0 +1,440 @@
+/* ============================================================
+   Evidence layer, regulatory status and the regulatory calendar.
+   Extends the existing manuscript system — it does not replace it.
+   Pigments are the site's own: lapis = binding law, cinnabar = the
+   author's argument, gold = the reader's own position in the book.
+   ============================================================ */
+
+/* Tokens are declared on BODY, not :root. The site's light palette is
+   defined as [data-theme="light"] — which matches <body> — so a token
+   aliased at :root would resolve against the dark palette and stay dark
+   in day mode. Anything defined here must sit at or below body. */
+body{
+  /* --paper-faint fails WCAG AA (3.42:1 dark / 3.04:1 light) and is used
+     across the existing chrome; new text must not inherit that defect, so
+     metadata here uses a lifted value. The global token is left alone. */
+  --evi-meta:#B0A695;
+  /* the marker sits on the page ground rather than on a panel, so the
+     lapis is lifted a step to clear AA at footnote size */
+  --evi-law:#93B0E2;
+  --evi-fact:var(--paper-dim);
+  --evi-arg:#E07A62;
+  /* gold at small sizes: the global --live clears AA on a panel but not on
+     the page ground in day mode, and these chips are 9px */
+  --evi-gold:var(--live);
+}
+body[data-theme="light"]{
+  --evi-meta:#584D52;
+  --evi-law:#254B84;
+  --evi-arg:#98311B;
+  --evi-gold:#6B520C;
+}
+
+/* ---------------------------------------------------------- footnote markers */
+.fn{
+  all:unset;
+  cursor:pointer;
+  font-family:var(--mono);
+  font-size:.58em;
+  font-variant-numeric:tabular-nums;
+  line-height:0;
+  vertical-align:super;
+  padding:0 .12em 0 .18em;
+  letter-spacing:.02em;
+  color:var(--evi-fact);
+  border-bottom:1px solid transparent;
+  transition:color .12s, border-color .12s, background-color .12s;
+}
+.fn + .fn{ padding-left:.06em }
+.fn[data-family="law"]{ color:var(--evi-law) }
+.fn[data-family="argument"]{ color:var(--evi-arg) }
+.fn:hover, .fn:focus-visible{
+  color:var(--live);
+  border-bottom-color:var(--live);
+  background:var(--live-dim);
+}
+.fn:focus-visible{ outline:1px solid var(--live); outline-offset:2px }
+.fn[aria-expanded="true"]{ color:var(--live); background:var(--live-dim) }
+/* an unresolved claim is marked honestly rather than silently */
+.fn[data-unverified="1"]::after{ content:"?"; opacity:.75 }
+
+/* the argument pigment must never read as the law pigment, even for
+   readers who cannot distinguish the two hues */
+.fn[data-family="argument"]{ font-style:italic }
+
+/* ---------------------------------------------------------- evidence drawer */
+.evi-scrim{
+  position:fixed; inset:0; background:rgba(10,8,14,.5);
+  opacity:0; pointer-events:none; transition:opacity .22s; z-index:78;
+}
+.evi-scrim.show{ opacity:1; pointer-events:auto }
+
+.evi{
+  position:fixed; top:0; right:0; bottom:0; width:min(430px,92vw);
+  background:var(--ink-1); border-left:1px solid var(--line);
+  box-shadow:var(--shadow); z-index:79;
+  transform:translateX(102%); transition:transform .26s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column;
+}
+.evi.open{ transform:none }
+@media (prefers-reduced-motion:reduce){
+  .evi{ transition:none } .evi-scrim{ transition:none }
+}
+
+.evi-head{
+  padding:22px 26px 16px; border-bottom:1px solid var(--line);
+  display:grid; gap:9px; flex:none;
+}
+.evi-eyebrow{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--evi-meta);
+}
+.evi-type{
+  font-family:var(--mono); font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; padding:3px 9px; justify-self:start;
+  border:1px solid currentColor;
+}
+.evi-type[data-t="law"]{ color:var(--mech); background:var(--mech-dim) }
+.evi-type[data-t="fact"]{ color:var(--paper); background:var(--ink-2) }
+.evi-type[data-t="interpretation"],
+.evi-type[data-t="critique"],
+.evi-type[data-t="forecast"]{ color:var(--crit); background:var(--crit-dim) }
+.evi-type-note{ font-size:12px; color:var(--evi-meta); line-height:1.45; margin:0 }
+
+.evi-statement{
+  font-family:var(--body); font-size:15px; line-height:1.55;
+  color:var(--paper); margin:0;
+}
+
+.evi-close{
+  all:unset; cursor:pointer; position:absolute; top:16px; right:18px;
+  font-family:var(--mono); font-size:17px; line-height:1; color:var(--evi-meta);
+  padding:5px 8px;
+}
+.evi-close:hover{ color:var(--paper) }
+.evi-close:focus-visible{ outline:1px solid var(--live); outline-offset:2px }
+
+.evi-body{ overflow-y:auto; padding:20px 26px 34px; display:grid; gap:22px }
+
+.evi-sec{ display:grid; gap:8px }
+.evi-sec > h4{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--evi-meta); margin:0; font-weight:500;
+}
+.evi-row{ display:grid; grid-template-columns:88px 1fr; gap:12px; font-size:13px; line-height:1.5 }
+.evi-row dt{ font-family:var(--mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--evi-meta); padding-top:2px }
+.evi-row dd{ margin:0; color:var(--paper-dim) }
+.evi-row dd b{ color:var(--paper); font-weight:500 }
+dl.evi-dl{ margin:0; display:grid; gap:9px }
+
+/* source cards */
+.evi-src{
+  border:1px solid var(--line); border-left:3px solid var(--line);
+  padding:12px 14px; display:grid; gap:7px; background:var(--ink-0);
+}
+.evi-src[data-supports="direct"]{ border-left-color:var(--mech) }
+.evi-src[data-supports="partial"]{ border-left-color:var(--live) }
+.evi-src[data-supports="context"]{ border-left-color:var(--ink-3) }
+.evi-src-top{ display:flex; flex-wrap:wrap; gap:8px; align-items:center }
+.evi-tier{
+  font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase;
+  padding:2px 6px; border:1px solid var(--ink-3); color:var(--evi-meta); white-space:nowrap;
+}
+.evi-tier[data-tier="tier:1"]{ color:var(--mech); border-color:var(--mech) }
+.evi-tier[data-tier="tier:2"]{ color:var(--paper-dim); border-color:var(--paper-dim) }
+.evi-supports{
+  font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase;
+}
+.evi-src[data-supports="direct"] .evi-supports{ color:var(--mech) }
+.evi-src[data-supports="partial"] .evi-supports{ color:var(--live) }
+.evi-src[data-supports="context"] .evi-supports{ color:var(--evi-meta) }
+.evi-cite{ font-family:var(--body); font-size:12.5px; line-height:1.5; color:var(--paper-dim); margin:0 }
+.evi-cite i{ color:var(--paper) }
+.evi-cite a{ color:var(--mech); text-decoration:underline; text-underline-offset:2px; word-break:break-word }
+.evi-cite a:hover{ color:var(--live) }
+.evi-nourl{ font-family:var(--mono); font-size:10.5px; color:var(--crit-text) }
+
+.evi-warn{
+  border:1px solid var(--crit); background:var(--crit-dim);
+  padding:11px 13px; font-size:12.5px; line-height:1.5; color:var(--paper);
+}
+.evi-warn b{ font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--crit); display:block; margin-bottom:5px }
+
+.evi-foot{
+  border-top:1px solid var(--line); padding-top:14px;
+  font-family:var(--mono); font-size:10.5px; line-height:1.7; color:var(--evi-meta);
+}
+.evi-foot a{ color:var(--mech) }
+
+/* ---------------------------------------------------------- per-part notes */
+.part-notes{
+  margin-top:34px; border-top:1px solid var(--line); padding-top:4px;
+}
+.part-notes > summary{
+  cursor:pointer; list-style:none; padding:11px 0;
+  font-family:var(--mono); font-size:10px; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--evi-meta);
+  display:flex; gap:10px; align-items:baseline;
+}
+.part-notes > summary::-webkit-details-marker{ display:none }
+.part-notes > summary::before{ content:"▸"; font-size:9px; transition:transform .15s }
+.part-notes[open] > summary::before{ transform:rotate(90deg) }
+.part-notes > summary:hover{ color:var(--paper) }
+.part-notes > summary:focus-visible{ outline:1px solid var(--live); outline-offset:3px }
+.part-notes .pn-count{ color:var(--evi-meta); letter-spacing:.06em }
+.part-notes ol{
+  list-style:none; margin:2px 0 20px; padding:0;
+  display:grid; gap:11px; counter-reset:none;
+}
+.part-notes li{
+  display:grid; grid-template-columns:2.1em 1fr; gap:6px;
+  font-size:12.5px; line-height:1.55; color:var(--paper-dim);
+}
+.part-notes .pn-n{
+  font-family:var(--mono); font-size:10.5px; font-variant-numeric:tabular-nums;
+  color:var(--evi-meta); padding-top:2px;
+}
+.part-notes .pn-n[data-family="law"]{ color:var(--mech) }
+.part-notes .pn-n[data-family="argument"]{ color:var(--crit) }
+.part-notes .pn-body a{ color:var(--mech); text-decoration:underline; text-underline-offset:2px; word-break:break-word }
+.part-notes .pn-tag{
+  font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--evi-meta); margin-right:7px;
+}
+.part-notes .pn-tag[data-t="law"]{ color:var(--mech) }
+.part-notes .pn-tag[data-t="interpretation"],
+.part-notes .pn-tag[data-t="critique"],
+.part-notes .pn-tag[data-t="forecast"]{ color:var(--crit) }
+
+/* ---------------------------------------------------------- status strip */
+.instr-status{
+  margin:0 0 26px; border:1px solid var(--line); background:var(--ink-1);
+  display:grid; gap:0;
+}
+.is-head{
+  display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center;
+  padding:13px 16px; border-bottom:1px solid var(--line);
+}
+.is-name{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--paper) }
+.is-kind{ font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--evi-meta) }
+.is-pill{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase;
+  padding:3px 9px; border:1px solid currentColor; white-space:nowrap;
+}
+.is-pill[data-s="in-force"]{ color:var(--mech); background:var(--mech-dim) }
+.is-pill[data-s="applicable"]{ color:var(--mech); background:var(--mech-dim) }
+.is-pill[data-s="partly-applicable"]{ color:var(--live-text); background:var(--live-dim) }
+.is-pill[data-s="transposition-pending"]{ color:var(--live-text); background:var(--live-dim) }
+.is-pill[data-s="proposal"],
+.is-pill[data-s="stalled"],
+.is-pill[data-s="withdrawn"]{ color:var(--crit-text); background:var(--crit-dim) }
+.is-pill[data-s="unknown"]{ color:var(--evi-meta) }
+.is-asof{ font-family:var(--mono); font-size:9.5px; color:var(--evi-meta); margin-left:auto }
+.is-note{ padding:0 16px 12px; font-size:12.5px; line-height:1.5; color:var(--paper-dim); margin:11px 0 0 }
+.is-note.warn{ color:var(--crit-text) }
+
+.is-mile{ display:grid; gap:1px; background:var(--line) }
+.is-m{
+  background:var(--ink-1); padding:10px 16px;
+  display:grid; grid-template-columns:96px 132px 1fr; gap:14px; align-items:baseline;
+  font-size:12.5px; line-height:1.45;
+}
+.is-m .m-date{ font-family:var(--mono); font-size:11px; font-variant-numeric:tabular-nums; color:var(--paper) }
+.is-m .m-date.future{ color:var(--evi-gold) }
+.is-m .m-type{ font-family:var(--mono); font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--evi-meta) }
+.is-m .m-type[data-e="entry-into-force"]{ color:var(--mech) }
+.is-m .m-type[data-e="application"]{ color:var(--evi-gold) }
+.is-m .m-type[data-e="transposition"]{ color:var(--crit-text) }
+.is-m .m-what{ color:var(--paper-dim) }
+@media (max-width:700px){ .is-m{ grid-template-columns:1fr; gap:3px } }
+
+/* ---------------------------------------------------------- calendar */
+.cal-controls{
+  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+  margin:0 0 16px; padding-bottom:14px; border-bottom:1px solid var(--line);
+}
+.cal-controls label{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--evi-meta);
+}
+.cal-controls select{
+  font-family:var(--mono); font-size:11px; color:var(--paper);
+  background:var(--ink-2); border:1px solid var(--line); padding:5px 8px;
+}
+.cal-controls select:focus-visible{ outline:1px solid var(--live); outline-offset:1px }
+.cal-count{ font-family:var(--mono); font-size:10px; color:var(--evi-meta); margin-left:auto }
+
+#annex-a table tbody tr.cal-row > td{ vertical-align:top }
+.cal-row .c-date{ font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap }
+.cal-row .c-date .c-approx{ color:var(--evi-meta); font-size:.85em; display:block }
+.cal-row.past .c-date{ color:var(--evi-meta) }
+.cal-etype{
+  font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase;
+  display:inline-block; margin-bottom:5px; padding:1px 6px; border:1px solid currentColor;
+  color:var(--evi-meta);
+}
+.cal-etype[data-e="entry-into-force"]{ color:var(--mech) }
+.cal-etype[data-e="application"]{ color:var(--evi-gold) }
+.cal-etype[data-e="transposition"]{ color:var(--crit) }
+.cal-etype[data-e="reporting-deadline"],
+.cal-etype[data-e="compliance-deadline"]{ color:var(--evi-gold) }
+.cal-etype[data-e="judicial"],
+.cal-etype[data-e="enforcement"]{ color:var(--crit) }
+.cal-more{
+  all:unset; cursor:pointer; font-family:var(--mono); font-size:9.5px;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--evi-meta);
+  border-bottom:1px solid var(--ink-3); margin-top:8px; display:inline-block;
+}
+.cal-more:hover{ color:var(--live); border-bottom-color:var(--live) }
+.cal-more:focus-visible{ outline:1px solid var(--live); outline-offset:2px }
+.cal-detail > td{ padding-top:0 !important }
+.cal-detail dl{
+  margin:0 0 6px; display:grid; grid-template-columns:130px 1fr; gap:6px 14px;
+  font-size:12.5px; line-height:1.5;
+}
+.cal-detail dt{ font-family:var(--mono); font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--evi-meta); padding-top:2px }
+.cal-detail dd{ margin:0; color:var(--paper-dim) }
+.cal-detail dd.unknown{ color:var(--evi-meta); font-style:italic }
+.cal-detail a{ color:var(--mech); text-decoration:underline; text-underline-offset:2px }
+@media (max-width:700px){ .cal-detail dl{ grid-template-columns:1fr; gap:2px 0 } .cal-detail dt{ margin-top:7px } }
+
+.cal-fallback{
+  font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+  color:var(--live); margin-left:6px;
+}
+
+/* ---------------------------------------------------------- legend + errors */
+.evi-legend{
+  display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center;
+  margin:0 0 20px; padding:11px 14px; border:1px solid var(--line); background:var(--ink-1);
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--evi-meta);
+}
+.evi-legend b{ font-weight:500 }
+.evi-legend .lg-law{ color:var(--mech) }
+.evi-legend .lg-fact{ color:var(--paper-dim) }
+.evi-legend .lg-arg{ color:var(--crit-text); font-style:italic }
+.evi-legend a{ color:var(--mech); text-decoration:none; border-bottom:1px solid transparent }
+.evi-legend a:hover{ color:var(--live); border-bottom-color:var(--live) }
+.evi-legend a:first-of-type{ margin-left:auto }
+
+.data-error{
+  border:1px solid var(--crit); border-left:3px solid var(--crit);
+  background:var(--crit-dim); padding:14px 16px; font-size:13px; line-height:1.55; color:var(--paper);
+}
+.data-error b{ font-family:var(--mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--crit); display:block; margin-bottom:6px }
+.data-error code{ font-family:var(--mono); font-size:11.5px; color:var(--paper-dim) }
+.data-error button{
+  all:unset; cursor:pointer; margin-top:9px; font-family:var(--mono); font-size:10px;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--live); border-bottom:1px solid var(--live);
+}
+
+/* print: notes become real footnotes, drawer disappears */
+@media print{
+  .evi, .evi-scrim, .cal-controls, .evi-legend{ display:none !important }
+  .part-notes[open], .part-notes{ display:block }
+  .part-notes > summary{ list-style:none }
+  .fn{ color:#000 }
+}
+
+/* milestone whose date has not been confirmed against a primary source */
+.is-unver{
+  font-family:var(--mono); font-size:9px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--crit-text); margin-left:6px;
+}
+
+/* ------------------------------------------------------------------
+   Footnote marker hit area.
+
+   The marker sets line-height:0 so a superscript does not open up the
+   line it sits in — which is right typographically and leaves the
+   button with a box 13px wide and 1px tall. On a mouse that is a
+   nuisance; on a phone it is untappable, and the whole evidence layer
+   is unreachable from a touch device.
+
+   The fix keeps the layout box at zero and grows only the hit area,
+   through a positioned pseudo-element that participates in hit
+   testing and in nothing else. It is applied on coarse pointers,
+   where a 24px target is the requirement (WCAG 2.2 §2.5.8) and where
+   an overlap with the neighbouring word costs less than a control
+   nobody can press.
+   ------------------------------------------------------------------ */
+.fn{ position:relative }
+@media (pointer:coarse){
+  .fn::before{
+    content:"";
+    position:absolute;
+    left:50%; top:50%;
+    width:24px; height:24px;
+    transform:translate(-50%,-50%);
+    z-index:1;
+  }
+}
+
+/* self-reference is not a source tier; it is marked as the absence of one */
+.evi-tier[data-tier="self"]{color:var(--crit);border-color:var(--crit)}
+
+/* ============================================================
+   EVIDENCE GRADE
+
+   Five states where there used to be one flag. The colour follows the
+   existing pigments rather than adding a sixth: lapis for what the law
+   and the institutions carry, gold for the author's own reading,
+   cinnabar for what is unresolved.
+   ============================================================ */
+.evi-grade{display:inline-block;margin-left:8px;padding:2px 7px;
+  font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;
+  border:1px solid currentColor;vertical-align:2px}
+.evi-grade[data-g="primary"]{color:var(--mech)}
+.evi-grade[data-g="official"]{color:var(--mech)}
+.evi-grade[data-g="secondary"]{color:var(--paper-faint)}
+.evi-grade[data-g="interpretation"]{color:var(--live-text)}
+.evi-grade[data-g="unresolved"]{color:var(--crit)}
+.evi-grade-note{font-family:var(--body);font-style:italic;font-size:12.5px;line-height:1.45;
+  color:var(--paper-faint);margin:5px 0 0}
+/* an open question on an otherwise sourced record is not the same alarm as
+   an unresolved one, and should not shout as loudly */
+.evi-warn-soft{border-left-color:var(--live-text)}
+.evi-warn-soft b{color:var(--live-text)}
+
+/* the marker itself: unresolved is the only state that gets a mark in the
+   running text, because it is the only one that says "do not rely on this" */
+.fn[data-grade="unresolved"]::after{content:"?";opacity:.75}
+.fn[data-unverified="1"]:not([data-grade="unresolved"])::after{content:""}
+
+/* the tally on the bibliography */
+.bib-grades{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px;max-width:74ch}
+.bg-row{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:baseline}
+.bg-n{font-family:var(--display);font-size:22px;font-weight:500;text-align:right;
+  color:var(--paper);font-variant-numeric:tabular-nums;line-height:1}
+.bg-row[data-g="primary"] .bg-n,.bg-row[data-g="official"] .bg-n{color:var(--mech)}
+.bg-row[data-g="interpretation"] .bg-n{color:var(--live-text)}
+.bg-row[data-g="unresolved"] .bg-n{color:var(--crit)}
+.bg-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--paper);display:block}
+.bg-gloss{font-family:var(--body);font-style:italic;font-size:12.5px;line-height:1.45;
+  color:var(--paper-faint);display:block;margin-top:2px}
+
+/* --crit is #A93A22 in day mode and measures 4.34:1 on the bibliography
+   panel — under AA at 22px, which is not "large text" by the specification
+   (that needs 24px, or 18.66px bold). The grade numerals take the darker
+   cinnabar already used for --pipe-not and --undet. */
+body[data-theme="light"] .bg-row[data-g="unresolved"] .bg-n{color:var(--undet)}
+body[data-theme="light"] .evi-grade[data-g="unresolved"]{color:var(--undet)}
+
+/* ---------------------------------------------------------------
+   The compact density of the shared source card (js/evidence-view.js),
+   used where thirty of these sit one under another and the Chicago
+   note and the accessed date would be noise rather than apparatus.
+   --------------------------------------------------------------- */
+.evi-src.is-compact{padding:8px 10px;display:grid;gap:5px}
+.evi-src.is-compact .evi-cite{margin:0;font-size:12.5px;line-height:1.5}
+.evi-src.is-compact .evi-when,
+.evi-src.is-compact .evi-loc,
+.evi-src.is-compact .evi-nourl{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;color:var(--paper-dim);
+}
+.evi-src.is-compact .evi-nourl{
+  border:1px dotted currentColor;padding:1px 4px;margin-left:6px;cursor:help;
+}
+.ev .evi-src-top{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
