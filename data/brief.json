@@ -1,0 +1,210 @@
+{
+ "$schema_version": "1.0.0",
+ "$description": "The document's own structure. Canonical for part identity, ordering, titles, deks and reading times, and for the reading-order graph drawn by the Tree of Life. This is a NAVIGATION graph between parts of the document, deliberately kept separate from the legal relationships between instruments in instruments.json.",
+ "$last_verified": "2026-08-27",
+ "meta": {
+  "title": "The European Legal Framework for the Digital World",
+  "subtitle": "GDPR, DSA, DMA, AI Act, Data Act and the cyber layer — structure, key provisions, compliance consequences and the case against each",
+  "standfirst": "Six regulations, one directive family and a live reform package now govern almost every commercial act performed through a screen in Europe. They were drafted separately, they overlap deliberately, and they are enforced by institutions of wildly unequal capacity. This brief reads them as a single system: what each one actually requires, where the requirements collide, what enforcement has really produced as opposed to what was announced, and where the serious objections lie — including the ones coming from inside the European institutions themselves.",
+  "dateline": "Analytical brief · State of play as of 19 August 2026",
+  "note": "This document is an analytical synthesis, not legal advice; for any live matter, verify against the consolidated text on EUR-Lex and take qualified advice in the relevant jurisdiction.",
+  "howto": "Each Part is self-contained enough to consult on its own, but the argument is cumulative: Part I supplies the grammar every later Part uses, Part II establishes the enforcement baseline against which every later enforcement claim should be discounted, and Part IX depends on all of them. Shaded boxes in green set out mechanics; shaded boxes in orange set out criticism. Where a claim is contested, both positions are given."
+ },
+ "parts": [
+  {
+   "id": "part-1",
+   "roman": "I",
+   "title": "The architecture: how Europe decided to regulate software",
+   "dek": "Legal basis and what it forces · the GDPR template replicated · four design choices · the structural critique",
+   "reading_minutes": 3,
+   "kind": "part"
+  },
+  {
+   "id": "part-2",
+   "roman": "II",
+   "title": "GDPR: the gravitational centre, and the cracks in it",
+   "dek": "What it requires · compliance reality · the one-stop-shop pathology · announced vs collected · the competitiveness critique",
+   "reading_minutes": 5,
+   "kind": "part"
+  },
+  {
+   "id": "part-3",
+   "roman": "III",
+   "title": "DSA: the platform constitution and its enforcement problem",
+   "dek": "The four-tier pyramid · Articles 16, 34-35 and 40 · the enforcement record · four serious objections",
+   "reading_minutes": 4,
+   "kind": "part"
+  },
+  {
+   "id": "part-4",
+   "roman": "IV",
+   "title": "DMA: ex ante competition law, and the limits of proceduralism",
+   "dek": "Designation and Articles 5-7 · what the Apple and Meta decisions established · the 2026 review · the case against",
+   "reading_minutes": 5,
+   "kind": "part"
+  },
+  {
+   "id": "part-5",
+   "roman": "V",
+   "title": "AI Act: the risk pyramid, the compute threshold, and the delay",
+   "dek": "Four tiers · Chapter V and general-purpose AI · the compute-threshold argument · the AI Omnibus and what actually moved",
+   "reading_minutes": 5,
+   "kind": "part"
+  },
+  {
+   "id": "part-6",
+   "roman": "VI",
+   "title": "Data Act: prising open the machine economy",
+   "dek": "The chapters · cloud switching · phasing · the trade-secret tension",
+   "reading_minutes": 1,
+   "kind": "part"
+  },
+  {
+   "id": "part-7",
+   "roman": "VII",
+   "title": "The cyber layer: NIS2, CER, DORA, CRA — and the transposition failure",
+   "dek": "Four instruments · Article 20 management liability · what the transposition failure proves",
+   "reading_minutes": 1,
+   "kind": "part"
+  },
+  {
+   "id": "part-8",
+   "roman": "VIII",
+   "title": "The simplification turn: the Digital Omnibus and what it reveals",
+   "dek": "Two tracks · the regulators' pushback · the Council stall · the Omnibus as diagnostic · what is still coming",
+   "reading_minutes": 2,
+   "kind": "part"
+  },
+  {
+   "id": "part-9",
+   "roman": "IX",
+   "title": "Synthesis: six structural tensions, and how to read the system",
+   "dek": "The analytical takeaways worth retaining",
+   "reading_minutes": 2,
+   "kind": "part"
+  },
+  {
+   "id": "part-10",
+   "roman": "X",
+   "title": "Innovation and the future: can Europe regulate and build at the same time?",
+   "dek": "The Draghi diagnosis · the Tech Sovereignty Package · what Europe should actually do · three trajectories to 2030",
+   "reading_minutes": 2,
+   "kind": "part"
+  },
+  {
+   "id": "part-11",
+   "roman": "XI",
+   "title": "Assessment: does the EU do what it claims — and does it restrain the state?",
+   "dek": "A scorecard against its own claims · the competence ceiling · the Hungary test · Chat Control and the identity wallet · the counterweights",
+   "reading_minutes": 3,
+   "kind": "part"
+  },
+  {
+   "id": "annex-a",
+   "roman": "A",
+   "title": "Compliance calendar: what lands when",
+   "dek": null,
+   "reading_minutes": 1,
+   "kind": "annex"
+  },
+  {
+   "id": "annex-b",
+   "roman": "B",
+   "title": "A note on method",
+   "dek": null,
+   "reading_minutes": 1,
+   "kind": "annex"
+  },
+  {
+   "id": "annex-c",
+   "roman": "C",
+   "kind": "annex",
+   "title": "Method, and the use of AI in building this",
+   "dek": "How the project was built, what was delegated and what was not.",
+   "reading_minutes": 2
+  }
+ ],
+ "reading_graph": [
+  {
+   "from": "annex-a",
+   "to": "annex-b"
+  },
+  {
+   "from": "annex-a",
+   "to": "part-11"
+  },
+  {
+   "from": "annex-b",
+   "to": "part-11"
+  },
+  {
+   "from": "part-1",
+   "to": "part-2"
+  },
+  {
+   "from": "part-1",
+   "to": "part-3"
+  },
+  {
+   "from": "part-1",
+   "to": "part-6"
+  },
+  {
+   "from": "part-10",
+   "to": "part-11"
+  },
+  {
+   "from": "part-10",
+   "to": "part-8"
+  },
+  {
+   "from": "part-10",
+   "to": "part-9"
+  },
+  {
+   "from": "part-11",
+   "to": "part-9"
+  },
+  {
+   "from": "part-2",
+   "to": "part-3"
+  },
+  {
+   "from": "part-2",
+   "to": "part-4"
+  },
+  {
+   "from": "part-3",
+   "to": "part-5"
+  },
+  {
+   "from": "part-4",
+   "to": "part-5"
+  },
+  {
+   "from": "part-4",
+   "to": "part-6"
+  },
+  {
+   "from": "part-5",
+   "to": "part-6"
+  },
+  {
+   "from": "part-6",
+   "to": "part-7"
+  },
+  {
+   "from": "part-6",
+   "to": "part-8"
+  },
+  {
+   "from": "part-7",
+   "to": "part-8"
+  },
+  {
+   "from": "part-7",
+   "to": "part-9"
+  }
+ ],
+ "$note": "Parts carry no instrument or claim lists. Those are reverse-derived at load from the brief_part field on instruments.json and claims.json, so the association is stored exactly once."
+}
