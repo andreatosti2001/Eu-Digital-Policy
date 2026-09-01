@@ -14,8 +14,17 @@ Start every session by reading, in order:
 3. `docs/CURRENT-ARCHITECTURE.md`
 4. `docs/AI-SAFE-BOUNDARIES.md`
 5. `docs/HANDOVER.md`
+6. `docs/AUDIT-2026-09-01.md` — where the architecture above is not enforced
 
 Then invoke the `project-context` skill in `.agents/skills/`.
+
+`AGENTS.md` links the five operating policies in `docs/` — autonomy classes, agent
+contracts, data governance, source policy, verification policy. Read the one your task
+touches.
+
+**Before you conclude anything about what this repository contains, run
+`git fetch --all && git branch -a`.** Branches here move while a session is working, and an
+earlier one reported four existing documents as missing by checking an unfetched tree.
 
 **The one thing to carry in before you read anything else:** this is a production site about
 what EU law requires of people. Never fabricate a citation, date, article number, fine or

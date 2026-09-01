@@ -28,7 +28,23 @@ the evidence it describes.
 | `docs/CURRENT-ARCHITECTURE.md` | Rendering model, module topology, dependency map, tooling baseline |
 | `docs/AI-SAFE-BOUNDARIES.md` | Green / amber / red tiers; the absolute prohibitions |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
+| `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
 | `README.md` | The author's own account, including eight stated limitations |
+
+**The operating policies** (SESSION 01) sit under the boundaries document and refine it.
+Read the one you need; do not re-derive its contents here.
+
+| Policy | Governs |
+|---|---|
+| `docs/AUTONOMY-POLICY.md` | The four autonomy classes A/B/C/D, the prohibited automatic actions, the rollback requirement |
+| `docs/AGENT-ROLES.md` | Ten agent roles, what each may never do, and the handoff rules |
+| `docs/DATA-GOVERNANCE.md` | One home per fact, derivation over storage, the three states, the known second homes |
+| `docs/SOURCE-POLICY.md` | What may be cited, what a citation can support, self-citation, the asterisk |
+| `docs/VERIFICATION-POLICY.md` | What each validator does and does **not** prove; reproducibility |
+
+**A/B/C/D refine the green/amber/red tiers in `docs/AI-SAFE-BOUNDARIES.md`; they do not
+replace them.** A and B split green, C is amber, D is red. Where the two could be read
+differently, the stricter reading governs.
 
 Skills live in `.agents/skills/`: `project-context`, `repository-audit`, `data-governance`,
 `git-workflow`. Invoke `project-context` at the start of every session.
@@ -119,6 +135,22 @@ patches, not checks. **Do not re-run** the latter two.
   validators by hand.
 - **The validators do not read prose.** A false statement in `index.html` passes every check
   in this repository.
+- **A passing validator proves less than it looks.** `design-qa.mjs` harvests CSS token
+  declarations out of JavaScript by regex, so a `--foo:` in any JS string or comment
+  silences a real error. `freshness.mjs` prints a `SOURCE REACHABILITY` heading but performs
+  no network I/O — **no URL here has ever been fetched**. `validate.mjs` carries one check
+  that can never fire and treats every wildcard reference as resolving. Detail and evidence:
+  `docs/AUDIT-2026-09-01.md` F-10, F-11, F-12.
+- **Derived output depends on the reader's clock.** `isPast` compares against
+  `new Date().toISOString()` in UTC, so pipeline stages, the calendar and the status strips
+  change with when and where a page is opened. Date every report (F-15).
+- **`git blame` answers nothing.** The pre-SESSION 00 history is 47 bulk uploads and
+  deletions with no message that explains a change, so the rollback path a destructive script
+  assumes does not exist. Your commits are the first real provenance this repository has
+  (F-06).
+- **Your base may be stale.** Run `git fetch --all && git branch -a` before concluding
+  anything about what this repository contains. An earlier session reported four existing
+  documents as missing by running `ls docs` on an unfetched branch (F-01).
 
 ## Git
 
