@@ -14,17 +14,33 @@ constitution. Complete.**
 No production code, data, markup, styles or tooling was modified.
 `git status --porcelain` shows additions and `docs/` edits only.
 
-## Deviation from the SESSION 00 plan — recorded, not silently absorbed
+## Concurrent sessions — three branches were live at once
 
-SESSION 00's handover set the next objective as **the agent observability
-layer**. The instruction that opened this session set it as **an independent
-architectural audit plus the permanent AI operating constitution**. The
-instruction governs, and this session did what it was asked.
+This session did not run alone, and the record should say so rather than imply a
+clean sequence. As of 1 September 2026 11:00 UTC:
 
-**The observability layer remains unbuilt and is still the highest-value next
-objective.** Nothing here substitutes for it: this session produced governance
-documents, not instrumentation. SESSION 00's scoping for it stands unchanged and
-is preserved in the archived record below.
+| Branch | Commit | What it did |
+|---|---|---|
+| `main` | `064469c` | SESSION 00, plus `AGENTS.md` / `CLAUDE.md` added at 10:57 |
+| `claude/eu-digital-policy-protocol-kye69t` | `63a22ac` | **SESSION 02 — the observability layer.** Built at 10:24. Branched from `c2e62c7`; **not merged.** |
+| `claude/repo-architectural-audit-v45psd` | this branch | SESSION 01 — the audit and the operating policies |
+
+**On the objective.** SESSION 00's handover set the next objective as the
+observability layer. The instruction that opened this session set it as an
+independent architectural audit plus the AI operating constitution. The
+instruction governed. SESSION 02 has since built the observability layer on its
+own branch, so the objective is met — by a different session, not by this one.
+This session instrumented nothing and does not claim to have.
+
+**On `AGENTS.md` and `CLAUDE.md`.** Both this session and the session that
+produced `064469c` wrote them, independently and within an hour of each other.
+`064469c` reached `main` first and is canonical. Its design decision is the
+better one and is adopted here in full: **`AGENTS.md` holds the rules and
+`CLAUDE.md` points to it**, because duplicating them would create the second
+home for a fact that this project's first principle forbids. This session's
+versions are discarded, not merged in parallel; what survives from them is
+folded into the canonical files as *links* to the five operating policies and as
+five hazard lines carrying audit findings the canonical file did not yet have.
 
 ## Implementation
 
@@ -46,12 +62,14 @@ could be read differently, the stricter reading governs.
 
 ## Files changed
 
-**Added (8):** `AGENTS.md`, `CLAUDE.md`, `docs/AUDIT-2026-09-01.md`,
-`docs/DATA-GOVERNANCE.md`, `docs/SOURCE-POLICY.md`,
-`docs/VERIFICATION-POLICY.md`, `docs/AUTONOMY-POLICY.md`,
-`docs/AGENT-CONTRACTS.md`.
+**Added (6):** `docs/AUDIT-2026-09-01.md`, `docs/DATA-GOVERNANCE.md`,
+`docs/SOURCE-POLICY.md`, `docs/VERIFICATION-POLICY.md`,
+`docs/AUTONOMY-POLICY.md`, `docs/AGENT-CONTRACTS.md`.
 
-**Modified (1):** `docs/HANDOVER.md` — this record. SESSION 00's entry is
+**Modified (3):** `AGENTS.md` and `CLAUDE.md` — the canonical versions from
+`064469c`, extended with links to the five policies above and with five hazard
+lines from the audit (F-01, F-06, F-10, F-11, F-12, F-15). No rule from those
+files was restated. `docs/HANDOVER.md` — this record; SESSION 00's entry is
 preserved below in full.
 
 **Untouched:** all HTML, JS, CSS, `data/`, `i18n/`, `tools/`, `README.md`, and
@@ -149,17 +167,23 @@ See F-03.
 
 ## Next session
 
-**SESSION 02 — the agent observability layer.** SESSION 00's scoping is
-unchanged and still correct: a run-record schema; a zero-dependency writer; a
-location and retention rule for run artifacts; and retrofitting the four
-validators to emit a structured record alongside their human-readable output,
-without changing what they print or their exit codes.
+**First: merge the three live branches.** SESSION 02's observability layer
+(`63a22ac`) branched from `c2e62c7` and does not include `064469c` or this
+branch. Three sessions have now written governance documents in parallel, and
+the repository has no mechanism that made any of them aware of the others. That
+is itself the finding — see F-01 and the concurrent-sessions table above.
 
-**Recommended addition, from this audit:** land the CI gate (F-02) in the same
-session. It is green-tier, it closes SESSION 00's unresolved issue 3, and it is
-the thing that makes every other check in this repository mean something. A
-run-record layer that nothing triggers automatically has the same problem the
-validators have today.
+**Then: the CI gate (audit F-02).** It is green-tier, it closes SESSION 00's
+unresolved issue 3, and it is the thing that makes every other check in this
+repository mean something. A run-record layer that nothing triggers
+automatically has exactly the problem the four validators have today: it is
+opt-in, and nothing notices when it is skipped. Wiring the validators — and
+SESSION 02's run-record writer — into a workflow is the single highest-value
+change available.
+
+**Then: audit F-04.** Extend `validate.mjs` to parse `__CONTENT__` out of
+`index.html` and diff it against `brief.json` and `instruments.json`. Highest-
+value new check in the repository; closes SESSION 00's unresolved issues 1 and 2.
 
 ## Next-session instructions
 
@@ -198,8 +222,13 @@ production code was modified.
 
 ## Implementation
 
-Six new documents. Nothing else.
+Ten new documents. Nothing else.
 
+- `AGENTS.md` — the canonical agent entry point: what the project is, the reading order, the
+  rules that matter most, the architecture that must not be rebuilt, the validators and
+  their baseline, the known hazards, git discipline, and when to stop and ask.
+- `CLAUDE.md` — a pointer to `AGENTS.md`. Deliberately holds no rules of its own, so the
+  entry point does not become the second home for a fact.
 - `docs/PROJECT-CONTEXT.md` — what the project is, its provenance, the seven governing
   principles enforced by `tools/`, the factual-vs-analytical split, the measured evidence
   position, audience and stakes, licence position.
@@ -217,8 +246,10 @@ Six new documents. Nothing else.
 
 ## Files changed
 
-**Added (7):**
+**Added (10):**
 ```
+AGENTS.md
+CLAUDE.md
 docs/PROJECT-CONTEXT.md
 docs/CURRENT-ARCHITECTURE.md
 docs/AI-SAFE-BOUNDARIES.md
@@ -242,6 +273,9 @@ touched. Verified by `git status --porcelain`.
    author's decision and is outside a reconnaissance boundary.
 3. **Skills placed at `.agents/skills/<name>/SKILL.md`**, matching the path the session
    protocol instructs agents to read.
+3a. **`AGENTS.md` is canonical and `CLAUDE.md` points to it.** Duplicating the instructions
+   across both would create exactly the second home for a fact that this project's first
+   principle forbids, in the file that teaches the principle.
 4. **The validator baseline is written into the architecture document**, including the five
    pre-existing `design-qa` warnings by file and line, so a later session can distinguish a
    new warning from an inherited one.
