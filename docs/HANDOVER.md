@@ -1,261 +1,376 @@
 # HANDOVER
 
-**Last updated:** SESSION 02 · 1 September 2026 (merged forward to include `064469c`)
-**Branch:** `claude/eu-digital-policy-protocol-kye69t`
-**Base commit:** `c2e62c7` on `main` (SESSION 00), merged with `064469c` (`AGENTS.md` /
-`CLAUDE.md`)
+**Last updated:** SESSION 04 · 1 September 2026
+**Branch:** `claude/inter-agent-contract-schemas-o6dfc7`
+**Base commit:** `4bd1f0d` on `main` (merge of the SESSION 02 observability work)
 
 ---
 
 ## Current milestone
 
-**SESSION 02 — Build the observability foundation. Complete.**
+**SESSION 04 — Define the inter-agent contracts. Complete.**
 
-This is the session SESSION 00 recommended as "SESSION 01 — design and implement the agent
-observability layer". The numbering differs; the objective is the same one, and it is now
-done. No legal agent was built, and none should be until the next session.
+The reference document is **`docs/AGENT-CONTRACTS.md`**. This file is the handover
+only.
 
-The reference document is **`docs/OBSERVABILITY.md`**. This file is the handover only.
+**No agent was built, and none should be until the next session.** The brief was
+explicit about that and it was kept: nothing in `agent/schemas/` runs an agent,
+retrieves a source, or touches `data/`.
+
+### Discrepancy with the previous handover — reported, not reconciled
+
+SESSION 02's handover recommends **SESSION 03 — instrument one real read-only
+agent (the Scout)** as the next objective. This session's brief was **SESSION 04
+— define the inter-agent contracts**, and the Scout was not built.
+
+This is a divergence in ordering, not a conflict between the handover and the
+code: the repository contains no Scout and claims none. The contracts were
+defined first, which is the safer order — an agent built before its interface
+exists has to be retrofitted to it, and the retrofit is where a distinction like
+fact-versus-inference gets lost. The Scout is still the next objective and is
+carried forward below, now with an interface to speak.
+
+**A second, smaller discrepancy, not fixed:**
+`.agents/skills/git-workflow/SKILL.md` hard-codes
+`claude/eu-digital-policy-protocol-ntyhqc` as "the session's designated branch".
+That branch is neither SESSION 02's (`…kye69t`) nor this session's
+(`…o6dfc7`). The skill is stale by construction — it names a per-session value in
+a durable document. It was left alone rather than updated to this session's
+branch, which would only make it stale again next session. **Recommendation for
+the author:** replace the hard-coded name with "the session's designated branch".
+That is a one-line change to a skill and is the author's call, not an agent's.
 
 ## Implementation
 
-`agent/observability/` — the instrumentation layer the future multi-agent system runs on.
-Zero dependencies, no build step, nothing wired into the site.
+`agent/schemas/` — fourteen machine-readable contracts, a validator that enforces
+them, and a gate no agent can hand a record through without passing. Zero
+dependencies, no build step, nothing wired into the site.
 
-- **Model.** An append-only JSONL event log, one file per trace. `span.start` / `span.end`
-  build the execution tree; nine event types hang off the spans — `observation`, `decision`,
-  `artifact`, `handoff`, `approval`, `provenance`, `usage`, `error`, `website_change`.
-  Nothing derived is ever stored, matching the rule the data model already keeps.
-- **Identifiers.** W3C Trace Context shapes — `trace_id` 32 hex, `span_id` 16 hex.
-  `run_id` **is** the `span_id` of an orchestrator/agent span, so a run is not a second home
-  for a fact. `parent_run_id` skips tool spans. A tool span carries the `run_id` and the
-  name of the agent that called it.
-- **Observations, not log lines.** The layer offers no logging call at all. Every meaningful
-  operation writes a structured claim with subject, summary, data, confidence, risk and refs.
-- **Redaction** happens at the sink on the way *in*, by key and by value, and the count is
-  written onto every record.
-- **Read model** (`query.mjs`) derives the tree, token/cost/latency rollups, the queues, and
-  the `source → verification → decision → implementation → deployment` chain — which reports
-  its own gaps rather than omitting them.
-- **Export** (`otlp.mjs`) emits OTLP/JSON with OpenInference attributes.
-- **Development view** — `node:http` on loopback plus a static page: running, completed,
-  degraded and failed traces, open handoffs, pending human approvals, artifacts, decisions,
-  provenance, website changes, errors.
-- **Demonstrator** — a fully simulated Scout → Verifier → Change Detector run.
-
-Also merged into this branch after the observability work was committed: `AGENTS.md` and
-`CLAUDE.md`, added directly to `main` in a parallel commit (`064469c`,
-"Add AGENTS.md and CLAUDE.md — the missing agent entry points") to close the gap this
-session's own unresolved issues had flagged — see **Unresolved issues** below. They were not
-authored in this session; they arrived by merge, at the user's explicit request, once
-published. `AGENTS.md` is now the canonical agent entry point; `CLAUDE.md` holds no rules of
-its own and points to it.
+- **The fourteen**, in the order the brief named them: `SourceCandidate`,
+  `VerificationRecord`, `ClaimEvidence`, `ChangeRecord`, `DataGap`,
+  `ArchitectureProposal`, `EditorialProposal`, `UXProposal`,
+  `ImplementationProposal`, `QAResult`, `ApprovalRequest`, `AgentObservation`,
+  `AgentRun`, `WebsiteChange`. 303 fields, 47 forbidden fields with their
+  reasons, 69 contract-specific cross-field rules.
+- **A contract is data, not code** — a plain object per contract, in a field
+  vocabulary with an interpreter of about 150 lines. Every field carries its own
+  documentation, kind, nullability, and what it is *capable of asserting*.
+- **The envelope, on every record:** `contract`, `contract_version`, `agent`,
+  `created_at`, `affected_entities`, `evidence`, `epistemic`, `trace_ref`,
+  `simulated`. A record names its own contract, so whoever receives it can
+  validate it without being told what it is.
+- **The twelve, on every substantive proposal:** `proposal_id`, `agent`,
+  `created_at`, `affected_entities`, `reason`, `evidence`, `confidence`, `risk`,
+  `autonomy_class`, `proposed_change`, `validation_requirements`,
+  `rollback_plan`. The suite asserts all twelve are present and required on each
+  of the four `*Proposal` contracts.
+- **The four epistemic states are separated and enforced:** a factual field must
+  cite evidence capable of bearing it; an inference must say what it was
+  concluded from and by what method; an interpretation must say whose it is;
+  `unresolved` must say what is missing and which kind of absence it is. A
+  statement filed under two states at once is refused.
+- **`null`, `"unknown"` and `no_rule_matched` are three states**, checked field by
+  field against the `epistemic.unresolved` entry that names them.
+- **Autonomy is checked, not declared.** `autonomous` / `review_required` /
+  `human_only` map onto the green / amber / red tiers, and the validator reads
+  what a record actually touches: a legal-record entity cannot be `autonomous`; a
+  red target (`js/format.js`, `js/pipeline.js`, `tools/_footer.mjs`,
+  `claim_type`, a licence, the non-affiliation or no-legal-advice text, the
+  README's known limitations) forces `human_only`; a blocking open question or an
+  irreversible rollback plan forbids autonomous action; a proposal touching
+  `data/`, `js/`, `css/`, `i18n/`, `tools/` or any `.html` must name all four
+  validators.
+- **The gate** (`gateway.mjs`) — `emit`, `receive`, `handoff`. None has a flag
+  that skips validation. What reaches the trace is a pointer and a sha256, never
+  a copy of the record body.
+- **JSON Schema is an export**, derived on demand by `cli.mjs export`, never
+  committed.
 
 ## Files changed
 
-All new and additive. **No file the website ships was modified.** Confirmed by
+All new and additive except `docs/HANDOVER.md`. **No file the website ships was
+modified, and no file of the observability layer was modified.** Confirmed by
 `git status --porcelain`.
 
 ```
-.gitignore                              (new — ignores the trace store only)
-docs/OBSERVABILITY.md                   (new)
+docs/AGENT-CONTRACTS.md                 (new — the reference document)
 docs/HANDOVER.md                        (rewritten for this session)
-agent/observability/README.md
-agent/observability/ids.mjs
-agent/observability/redact.mjs
-agent/observability/schema.mjs
-agent/observability/sink.mjs
-agent/observability/tracer.mjs
-agent/observability/query.mjs
-agent/observability/otlp.mjs
-agent/observability/server.mjs
-agent/observability/cli.mjs
-agent/observability/selftest.mjs
-agent/observability/demo/workflow.mjs
-agent/observability/viewer/{index.html,viewer.css,viewer.js}
+agent/schemas/README.md
+agent/schemas/types.mjs
+agent/schemas/fields.mjs
+agent/schemas/common.mjs
+agent/schemas/define.mjs
+agent/schemas/registry.mjs
+agent/schemas/validate.mjs
+agent/schemas/gateway.mjs
+agent/schemas/export.mjs
+agent/schemas/fixtures.mjs
+agent/schemas/cli.mjs
+agent/schemas/selftest.mjs
+agent/schemas/contracts/source-candidate.mjs
+agent/schemas/contracts/verification-record.mjs
+agent/schemas/contracts/claim-evidence.mjs
+agent/schemas/contracts/change-record.mjs
+agent/schemas/contracts/data-gap.mjs
+agent/schemas/contracts/architecture-proposal.mjs
+agent/schemas/contracts/editorial-proposal.mjs
+agent/schemas/contracts/ux-proposal.mjs
+agent/schemas/contracts/implementation-proposal.mjs
+agent/schemas/contracts/qa-result.mjs
+agent/schemas/contracts/approval-request.mjs
+agent/schemas/contracts/agent-observation.mjs
+agent/schemas/contracts/agent-run.mjs
+agent/schemas/contracts/website-change.mjs
 ```
-
-**Merged in from `origin/main`, not authored here:** `AGENTS.md`, `CLAUDE.md`, and a small
-addendum to `docs/HANDOVER.md`'s SESSION 00 record acknowledging them (see
-`git show 064469c` for that commit on its own).
 
 ## Architecture decisions
 
-1. **No dependency, no build step, no `package.json`.** `node:test` and `node:http` cover
-   the suite and the server. This is the repository's rule and a RED-tier prohibition in
-   `docs/AI-SAFE-BOUNDARIES.md` §3; it was kept.
-2. **Neither Langfuse nor Phoenix was installed.** The canonical store is the local JSONL
-   log; `otlp.mjs` exports to either, so adoption later is a decision about where to POST.
-   Phoenix is the recommended first backend — local-first, no account, OpenInference-native.
-   Langfuse becomes the better answer once there are prompts to version, evaluation suites
-   to score and more than one annotator, and then self-hosted, because of what the traces
-   contain. Full reasoning in `docs/OBSERVABILITY.md`.
-3. **`run_id` is a span id, not a separate identifier.** One home per fact.
-4. **`degraded` is derived, never stored** — a root that finished ok over a failed child.
-   `ok` would hide the failure; `failed` would be the kind of red nobody reads twice.
-5. **Redaction on the write path.** A store written clean cannot be un-redacted later.
-6. **The viewer does not import `css/tokens.css` or `style.css`.** A tool used to debug the
-   site must not break when the site's component layer changes, and must not become a hidden
-   consumer of tokens `design-qa.mjs` believes only the site uses.
-7. **The demonstrator is aggressively marked simulated** — `example.invalid` hosts,
-   `simulated: true` on every record, a banner in the interface, and tests that assert it.
-   Under §0.1 of the boundaries, fixture data that reads as research would be a worse defect
-   than no demonstrator.
-8. **A missing link in an audit chain is reported, never omitted.** The same discipline as
-   the asterisk in the running text.
-9. **`agent/observability/runs/` is git-ignored.** Run records are build artifacts, not
-   canonical data — SESSION 00's instruction, kept. They hold run inputs and outputs and are
-   regenerable.
-10. **`AGENTS.md` is canonical; `CLAUDE.md` holds no rules of its own and points to it** —
-    merged in from `064469c`, not authored in this session, and kept exactly as published:
-    one home per fact applied to the agent-facing documentation itself.
+1. **Contracts are data with a hand-written interpreter, not JSON Schema.**
+   Validating JSON Schema needs a validator, and a dependency is a RED-tier
+   prohibition. JSON Schema also cannot express what these contracts are for —
+   that a fact must cite evidence, that `"unknown"` is not `null`, that an
+   autonomy class must match what a record touches. JSON Schema is an export, and
+   the suite asserts no `.schema.json` is committed, because a committed copy
+   would be a second home for every field definition.
+2. **A record is self-describing.** `contract` and `contract_version` are on the
+   record, so validation needs no out-of-band knowledge. An unrecognised contract
+   name is refused rather than skipped — that is what makes "no agent may bypass
+   these contracts" a function rather than a policy sentence.
+3. **Shapes are closed, and forbidden fields answer with the objection.** A
+   field the contract does not declare is refused; a field it explicitly forbids
+   is refused *with the reason*, which is almost always that the value is derived
+   or already has a home.
+4. **Vocabularies are borrowed, never copied.** `supports`, `source_type`,
+   `source_tier`, `url_status` are read from `data/taxonomy.json` at load;
+   `RISKS`, `APPROVAL_STATES`, `PROVENANCE_ROLES` are re-exported from
+   `agent/observability/schema.mjs`. The suite asserts object identity, not
+   equality, so a copy would fail.
+5. **Entity kinds and autonomy classes were NOT added to `data/taxonomy.json`.**
+   That file is the site's legal vocabulary, which a reader's page resolves
+   against; the agent layer's own bookkeeping has no business in it.
+6. **The epistemic requirement applies to top-level fields only.** An annotation
+   deeper inside a record describes that sub-object rather than what the record
+   asserts. This is a judgment about legibility and is the check most likely to
+   need revisiting.
+7. **The trace gets a pointer, not a copy.** `emit` writes the record's id, its
+   contract name and a sha256 of its canonical form. The hash makes the pointer
+   checkable: a record edited after emission no longer matches the trace.
+   `ApprovalRequest` additionally emits the observability `approval` event — id
+   and state only — so a pending approval appears in the viewer, which is the
+   failure that layer exists to prevent.
+8. **`WebsiteChange` carries no file list.** The files live on the `ChangeRecord`
+   it references. One home per fact, applied to the agent layer's own records.
+9. **A missing link in an audit chain must be named.** `WebsiteChange` refuses an
+   empty link array unless `chain_gaps` says why it is empty — the asterisk
+   discipline, and the same rule the observability layer's `chain` command
+   already follows.
+10. **Fixtures are aggressively marked simulated** — `example.invalid` hosts,
+    `simulated: true` on every record and every evidence entry, and `validate()`
+    refuses a simulated record unless the caller explicitly asks. The suite
+    asserts the markers rather than trusting them.
 
 ## Tests
 
-Run in this session, from the repository root, on the rebased tree at `c2e62c7`:
+Run in this session, from the repository root, on the tree at `4bd1f0d`:
 
 | Command | Result |
 |---|---|
-| `node --test agent/observability/selftest.mjs` | **13 pass · 0 fail** |
-| `node agent/observability/cli.mjs validate` | 56 records · 0 invalid · 0 unparseable · exit 0 |
-| `node tools/validate.mjs` | 0 errors · exit 0 — matches the §12 baseline |
-| `node tools/i18n-audit.mjs` | 0 errors · 0 warnings — matches |
-| `node tools/design-qa.mjs` | 0 errors · **5 warnings** · exit 0 — the same five listed in §12 |
-| `node tools/freshness.mjs` | reports only · exit 0 — matches |
+| `node --test agent/schemas/selftest.mjs` | **61 pass · 0 fail** |
+| `node agent/schemas/cli.mjs check` | 14 contracts · 14 satisfiable by their fixture · exit 0 |
+| `node --test agent/observability/selftest.mjs` | 13 pass · 0 fail — unchanged |
+| `node agent/observability/cli.mjs validate` | 0 records · 0 invalid · exit 0 |
+| `node tools/validate.mjs` | 0 errors · exit 0 |
+| `node tools/i18n-audit.mjs` | 0 errors · 0 warnings |
+| `node tools/design-qa.mjs` | 0 errors · **5 warnings** · exit 0 — the same five in §12 |
+| `node tools/freshness.mjs` | reports only · exit 0 |
 
-No new warning. The four validators' output is byte-identical to the run taken before any
-file was added.
+**The four validators' output is byte-identical to the run taken before any file
+was added** (compared with `diff`, not by eye). No new warning.
 
-**Browser** — headless Chromium via Playwright, against the local server: all ten tabs
-render, the execution tree shows 14 spans, no console error, one `<h1>`, `lang` set, no
-duplicate id, no heading-level jump, every control has an accessible name, the skip link is
-the first tab stop and moves focus to `<main>`, both themes compute. A run started with
-`--live` was observed in the `running` state mid-flight and settled to `degraded`.
+The 61 tests cover: the fourteen contracts exist, are documented and carry the
+envelope · all twelve proposal fields on all four proposals · vocabularies are
+the site's and the trace's rather than copies · every contract is satisfiable by
+its fixture · every fixture is unmistakably simulated · identity, closed shapes
+and forbidden fields · each of the four epistemic states and the rules that keep
+them apart · `null` vs `"unknown"` in both directions · evidence that cannot bear
+what cites it · every governance rule · at least one rule per contract · the gate
+refusing an invalid record, hashing rather than copying, and refusing a handoff ·
+the JSON Schema export.
 
-**Not run:** no screen reader, no non-Chromium browser, no real-device testing — the same
-limitation the site itself declares. No live OTLP collector ingested an export.
+**Not run:** no agent has used these contracts, because none exists. No record
+has been produced by anything other than a fixture.
 
 ## Observability
 
-The demonstrator is instrumented end to end: run id, parent run id, agent, task, start and
-end, status, inputs, outputs, tool calls, observations, decisions with their rejected
-alternatives, confidence, risk, artifacts with sha256, handoffs, human approvals, provenance
-with a verification block, token/cost/latency, errors, and a website change with its audit
-chain. Every record passes the schema validator on the way into the store.
-
-**What was not instrumented:** the four validators in `tools/` still write to stdout only.
-SESSION 00 suggested retrofitting them to emit a structured record alongside their
-human-readable output. That was deliberately **not** done here — this session's brief scoped
-the work to the multi-agent foundation, and changing four scripts whose exact output is the
-recorded baseline is a separate, reviewable change. It is the smallest useful next
-increment after the Scout.
+**No file in `agent/observability/` was modified.** The contract layer is a
+consumer of it: `gateway.mjs` writes through `tracer.mjs`'s existing `artifact`,
+`approval` and `handoff` events, and the suite asserts that every record the gate
+emits satisfies `agent/observability/schema.mjs` unchanged. The record vocabulary
+did not need extending, which was the intended outcome — a contract record is an
+artifact with an id and a hash, not a new kind of trace event.
 
 ## Known limitations
 
-1. No real agent is instrumented, because none exists.
-2. The store is per-developer; no aggregation, no retention policy.
-3. Concurrent writers are untested — appends are synchronous and per-trace.
-4. The viewer polls every 2s; no streaming.
-5. The OTLP export is written to the spec and asserted in the suite, but no Phoenix or
-   Langfuse instance has ingested one.
-6. GitHub Pages serves the repository at root, so the viewer's HTML is reachable at
-   `/agent/observability/viewer/`. Nothing links to it, no trace data is committed, and
-   without the local API it renders an explanation rather than a broken page — but it is
-   reachable, and excluding `agent/` from the deployment is a decision not yet taken.
-7. `cost_usd` is whatever the caller passes. There is no price table.
+1. No agent implements these contracts, because none exists. The first real agent
+   will almost certainly find a field that is the wrong shape.
+2. The epistemic requirement is enforced on top-level fields only (decision 6).
+3. Only 4 fields across the fourteen contracts are typed `factual`, 5
+   `inference`, 2 `interpretation`; the other 292 are structural. That is
+   correct — most fields are bookkeeping — but the epistemic machinery is
+   exercised by a small number of fields, and the suite checks that every field
+   declares a class, not that the class is right.
+4. The red-target list is matched as substrings against an entity's path, field
+   or id. It catches `js/format.js:TIER_GRADE`; it will not catch a red-tier
+   change described only in prose in a `reason` field.
+5. Cross-record references are checked only within a batch, and reported rather
+   than failed, because the referenced record may legitimately live elsewhere.
+6. **Nothing stores contract records.** The gate hashes them into the trace;
+   where the records themselves live is undecided, and it must not be `data/`.
+7. `AgentObservation` and the tracer's `observe()` overlap: an agent emitting
+   both writes the summary twice. Whether the trace record should become a
+   pointer too is unresolved.
 
 ## Unresolved issues
 
-Carried forward from SESSION 00 and still open — none was in this session's scope:
+Carried forward and still open — none was in this session's scope:
 
-1. **`data/brief.json` is canonical but never consumed**; its content ships instead as the
-   inline `window.__CONTENT__` blob at `index.html:361`. Two homes for one set of facts.
-2. **The two copies have already drifted** — `meta.standfirst` differs. Which is correct is
-   the author's decision; an agent must not pick one.
-3. **No deploy gate.** A push to `main` publishes; the validators do not run in CI.
-4. **106 records carry an unverified or requires-verification note.** The project's largest
-   open body of work.
+1. **`data/brief.json` is canonical but never consumed**; its content ships as
+   the inline `window.__CONTENT__` blob at `index.html:361`. Two homes for one
+   set of facts. `EditorialProposal.content_blob_checked` now forces an agent to
+   *declare* it checked both — it does not fix the drift, and must not be taken
+   to have fixed it.
+2. **The two copies have already drifted** — `meta.standfirst` differs. Which is
+   correct is the author's decision; an agent must not pick one.
+3. **No deploy gate.** A push to `main` publishes; the validators do not run in
+   CI.
+4. **106 records carry an unverified or requires-verification note.** The
+   project's largest open body of work.
+5. **No decision on excluding `agent/` from the Pages deployment.** This session
+   adds a second directory under it. Nothing here is reachable as a page — the
+   `.mjs` files are not HTML and nothing links to them — but the directory is
+   served, and the decision is still not taken.
 
 New, from this session:
 
-5. ~~There is no agent contract yet.~~ **Resolved after this session's own work was
-   committed.** `AGENTS.md` and `CLAUDE.md` were added directly to `main` (`064469c`) and
-   merged into this branch at the user's request. `AGENTS.md` is now the canonical agent
-   entry point; the observability half this session built and the contract half now both
-   exist. Left as a struck-through entry rather than deleted, so the sequence of events stays
-   legible: the gap was real when this session flagged it.
-6. **No decision on excluding `agent/` from the Pages deployment** (limitation 6 above).
+6. **Neither `docs/OBSERVABILITY.md` nor `docs/AGENT-CONTRACTS.md` is referenced
+   from `AGENTS.md`.** `AGENTS.md` is the canonical entry point and its "Read
+   these first" table does not mention either. An agent that reads only the
+   entry point will not learn that the contracts exist, which undercuts "no agent
+   may bypass these contracts". **This session deliberately did not edit
+   `AGENTS.md`** — SESSION 02 set the precedent of not touching it, and what
+   belongs in the author's entry point is the author's decision. It is a real
+   gap and it is recorded here rather than closed unilaterally.
+7. **`.agents/skills/git-workflow/SKILL.md` names a stale branch.** See the
+   discrepancy note above.
+8. **Where contract records are stored is undecided** (limitation 6).
 
 ## Next session
 
-**SESSION 03 — instrument one real read-only agent against the now-published contract.**
+**SESSION 05 — instrument one real read-only agent against these contracts.**
 
-`AGENTS.md` exists (merged in from `064469c` after this session's own work; see
-**Unresolved issues** above). Build **one** agent: the Scout, **read-only**, against real
-sources, emitting through `agent/observability/tracer.mjs` and appearing in the viewer with
-real provenance, held to the rules `AGENTS.md` and `docs/AI-SAFE-BOUNDARIES.md` already
-state.
+This is SESSION 02's recommended next objective, unchanged and now with an
+interface to speak. Build **one** agent: the Scout, **read-only**, against real
+sources, emitting through `agent/observability/tracer.mjs` and
+`agent/schemas/gateway.mjs`, producing real `SourceCandidate` and `DataGap`
+records, appearing in the viewer with real provenance.
 
-Do not build the Verifier or the Change Detector in the same session, and do not let any
-agent write to `data/*.json`.
+Do not build the Verifier or the Change Detector in the same session, and do not
+let any agent write to `data/*.json`.
+
+## Exact next objective
+
+A Scout that, given a statement already present in the brief, retrieves candidate
+sources, and emits — through the gate, so nothing unvalidated leaves it —
+`SourceCandidate` records for what it found and `DataGap` records for what it
+could not find, with `AgentRun` and `AgentObservation` records for the run
+itself. It verifies nothing, proposes nothing, and writes to no dataset. Its
+first real output will show which of these contracts is the wrong shape; fix the
+contract and its tests in the same commit.
 
 ## Next-session instructions
 
-- Read `AGENTS.md` first — it is the canonical entry point — then invoke `project-context`
-  and read `docs/PROJECT-CONTEXT.md`, `docs/CURRENT-ARCHITECTURE.md`,
-  `docs/AI-SAFE-BOUNDARIES.md` and this file, then `docs/OBSERVABILITY.md` before writing any
+- Read `AGENTS.md` first — it is the canonical entry point — then invoke
+  `project-context` and read `docs/PROJECT-CONTEXT.md`,
+  `docs/CURRENT-ARCHITECTURE.md`, `docs/AI-SAFE-BOUNDARIES.md` and this file,
+  then `docs/OBSERVABILITY.md` and `docs/AGENT-CONTRACTS.md` before writing any
   agent.
-- Re-run the four validators and confirm the §12 baseline before changing anything.
-- Instrument through `tracer.mjs`. Do not add a second logging path, and do not use
-  `console.log` as the observability mechanism.
-- A real provenance record must carry a `url` or a `locator`; the schema refuses it
-  otherwise unless it is marked `simulated`, and **nothing outside the demonstrator may be
-  marked simulated**.
-- `provenance.role` uses the same vocabulary as `data/claims.json` deliberately. Keep it
-  reconcilable with the bibliography.
-- Extending the record vocabulary means extending `schema.mjs` **and its tests** in the same
-  commit. A record type the validator does not know is a record the viewer will not render.
-- Before declaring done: `node --test agent/observability/selftest.mjs`,
-  `node agent/observability/cli.mjs validate`, and the four validators in `tools/`.
+- Re-run the four validators and confirm the §12 baseline before changing
+  anything.
+- **Every record an agent produces goes through `agent/schemas/gateway.mjs`.** Do
+  not construct a record and pass it on directly; do not add a second path that
+  skips validation. If a contract refuses something an agent legitimately needs
+  to say, that is a finding about the contract — change the contract and its
+  tests, do not route around it.
+- **Nothing outside the fixtures may be marked `simulated`.** A real Scout's
+  records are real records or they are not written.
+- A real provenance record must carry a `url` or a `locator`; both the trace
+  schema and these contracts refuse it otherwise.
+- Extending the contract vocabulary means extending the contract **and its
+  tests** in the same commit, exactly as the observability layer already
+  requires.
+- Before declaring done: `node --test agent/schemas/selftest.mjs`,
+  `node agent/schemas/cli.mjs check`,
+  `node --test agent/observability/selftest.mjs`,
+  `node agent/observability/cli.mjs validate`, and the four validators in
+  `tools/`.
 
 ## Do not
 
-Carried forward from SESSION 00, unchanged and still binding:
+Carried forward from SESSION 00 and SESSION 02, unchanged and still binding:
 
-- **Do not rebuild the site.** No framework, no bundler, no build step, no dependency, no
-  service worker, no server-side rendering.
+- **Do not rebuild the site.** No framework, no bundler, no build step, no
+  dependency, no service worker, no server-side rendering.
 - **Do not fix the `__CONTENT__` / `brief.json` drift on your own initiative.**
 - **Do not modify `data/*.json`** in a session not scoped for data work.
-- **Do not touch** the footer's non-affiliation or no-legal-advice text, `TIER_GRADE` in
-  `js/format.js`, the derivation rules in `js/pipeline.js`, or the `BASE` constant in
-  `tools/_footer.mjs`.
+- **Do not touch** the footer's non-affiliation or no-legal-advice text,
+  `TIER_GRADE` in `js/format.js`, the derivation rules in `js/pipeline.js`, or
+  the `BASE` constant in `tools/_footer.mjs`.
 - **Do not declare a licence.**
-- **Do not soften** the README's known limitations or the unverified-record count.
+- **Do not soften** the README's known limitations or the unverified-record
+  count.
 - **Do not re-run** `tools/_refsweep.mjs` or `tools/_review10.mjs`.
+- **Do not change the id shapes in `agent/observability/ids.mjs`.** They are the
+  OTLP export contract.
+- **Do not move redaction to the read path.**
+- **Do not remove the demonstrator's simulation markers**, and do not point it at
+  a real source.
+- **Do not commit anything under `agent/observability/runs/`.**
+- **Do not install Langfuse or Phoenix without re-reading the evaluation** in
+  `docs/OBSERVABILITY.md`.
 
 Added by this session:
 
-- **Do not change the id shapes in `ids.mjs`.** They are the OTLP export contract.
-- **Do not move redaction to the read path.**
-- **Do not remove the demonstrator's simulation markers**, and do not point it at a real
-  source. If a real Scout is wanted, write one — do not repurpose the fixture.
-- **Do not commit anything under `agent/observability/runs/`.** It holds run inputs and
-  outputs.
-- **Do not install Langfuse or Phoenix without re-reading the evaluation** in
-  `docs/OBSERVABILITY.md`. Both remain viable; neither is a dependency of this layer.
+- **Do not add a validation bypass.** No `skip`, no `force`, no `strict: false`
+  on `validate`. The single flag that exists, `allowSimulated`, admits a fixture
+  and nothing else.
+- **Do not commit a `.schema.json`.** JSON Schema is derived on demand; a
+  committed copy is a second home for every field definition, and the suite
+  fails if one appears.
+- **Do not copy a contract record's body into the trace.** The trace gets an id
+  and a hash. Copying the body makes the trace a second home for every fact the
+  record carries.
+- **Do not add a field for a substitute value** to `DataGap` or anywhere else,
+  under any name. A gap is closed by finding the source.
+- **Do not relax `supports:context`.** A fact resting only on context evidence is
+  refused in three places, deliberately.
+- **Do not copy a vocabulary** out of `data/taxonomy.json` or
+  `agent/observability/schema.mjs` into `agent/schemas/`. They are imported, and
+  the suite asserts identity.
+- **Do not mark anything outside `fixtures.mjs` as `simulated`.**
 
 ---
 
 ## What must NOT be rebuilt
 
-SESSION 00's closing statement stands unchanged, and this session was built to respect it:
-**the architecture is not technical debt, it is the argument.** The zero-build,
-zero-dependency, client-rendered model; `js/data.js` as the sole fetch point; the derivation
-layer; the one-home-per-fact data model; the taxonomy as universal enum authority; the
-`null` / `unknown` distinction; `js/shell.js` and `js/evidence-view.js` as single renderers;
-the seven duplicated footers; and the four validators — none of these was touched, and none
-should be. The full statement and its reasoning are in the SESSION 00 section of the
-repository history (`git show c2e62c7:docs/HANDOVER.md`).
+SESSION 00's closing statement stands unchanged: **the architecture is not
+technical debt, it is the argument.** The zero-build, zero-dependency,
+client-rendered model; `js/data.js` as the sole fetch point; the derivation
+layer; the one-home-per-fact data model; the taxonomy as universal enum
+authority; the `null` / `unknown` distinction; `js/shell.js` and
+`js/evidence-view.js` as single renderers; the seven duplicated footers; and the
+four validators — none of these was touched, and none should be. The full
+statement is in `git show c2e62c7:docs/HANDOVER.md`.
 
-The observability layer was built to the same standard: no dependency, no build step,
-derived state never stored, and every record able to say what it cannot support.
+The contract layer was built to the same standard, and to the observability
+layer's: no dependency, no build step, derived state never stored, vocabularies
+borrowed rather than copied, and every record able to say what it cannot support.
