@@ -2,87 +2,85 @@
 /* ============================================================
    agent/scout/cli.mjs
 
-     node agent/scout/cli.mjs claims            # claims it can scout
-     node agent/scout/cli.mjs run <claim-id>    # scout one claim
-     node agent/scout/cli.mjs show <trace-id>   # the records it stored
+     node agent/scout/cli.mjs --mock          # the fixture corpus (default)
+     node agent/scout/cli.mjs --live          # the registered real endpoints
+     node agent/scout/cli.mjs --live --dry    # live, but store nothing
 
-   Zero dependencies, like everything else here. `run` exits non-zero
-   only when the AGENT failed — never because a document could not be
-   retrieved. A retrieval that is refused is a finding the run
-   records and reports; treating it as a crash would be the same
-   category error the DataGap contract exists to prevent.
+   --mock is the default on purpose. A run that reaches out to five
+   regulators should be something you asked for in as many words.
+
+   Everything the run produces goes to agent/records/<trace_id>.jsonl
+   and the trace to agent/observability/runs/<trace_id>.jsonl, both
+   git-ignored. Nothing is written to data/, and this agent has no
+   code path that could.
    ============================================================ */
 
-import { ContractStore } from '../schemas/store.mjs';
-import * as corpus from './corpus.mjs';
-import { scoutClaim } from './scout.mjs';
+import { Tracer } from '../observability/tracer.mjs';
+import { JsonlSink } from '../observability/sink.mjs';
+import { Scout, SCOUT_AGENT } from './scout.mjs';
+import { HttpTransport, MockTransport } from './transport.mjs';
+import { RecordStore, MemoryRecordStore } from './store.mjs';
+import { MOCK_DOCUMENTS, MOCK_ENDPOINTS } from './fixtures.mjs';
+import { endpointsByPriority } from './authorities.mjs';
 
-const [, , cmd = 'claims', arg] = process.argv;
+const argv = process.argv.slice(2);
+const has = (f) => argv.includes(f);
+const live = has('--live');
+const dry = has('--dry');
 const out = (s = '') => process.stdout.write(`${s}\n`);
 
-function claims() {
-  const ids = corpus.claimIds();
-  out();
-  out(`  ${ids.length} claims in data/claims.json`);
-  out('  ' + '─'.repeat(74));
-  for (const id of ids) {
-    const c = corpus.claim(id);
-    const plan = corpus.retrievalPlan(c);
-    const flags = [
-      plan.retrievable.length ? `${plan.retrievable.length} retrievable` : '',
-      plan.placeholders.length ? `${plan.placeholders.length} placeholder` : '',
-      plan.dangling.length ? `${plan.dangling.length} dangling` : '',
-    ].filter(Boolean).join(' · ') || 'no sources cited';
-    out(`  ${id.padEnd(38)} ${flags}`);
+const limitArg = argv.find((a) => a.startsWith('--max-docs='));
+const max_documents_per_endpoint = limitArg ? Number(limitArg.split('=')[1]) : undefined;
+
+const transport = live ? new HttpTransport() : new MockTransport(MOCK_DOCUMENTS);
+const endpoints = live ? endpointsByPriority() : MOCK_ENDPOINTS;
+const store = dry
+  ? new MemoryRecordStore({ allowSimulated: !live })
+  : new RecordStore({ allowSimulated: !live });
+
+const tracer = new Tracer({ service: 'eu-digital-policy', sink: new JsonlSink(), attributes: { agent: SCOUT_AGENT } });
+
+out();
+out(live
+  ? '  LIVE — attempting the registered real endpoints. Read-only.'
+  : '  MOCK — the fixture corpus. Every host is .invalid and every record is marked simulated.');
+out(`  ${endpoints.length} endpoint(s)${dry ? ' · dry run, nothing stored' : ''}`);
+out();
+
+const scout = new Scout({
+  tracer,
+  transport,
+  store,
+  endpoints,
+  limits: max_documents_per_endpoint ? { max_documents_per_endpoint } : {},
+});
+
+try {
+  const r = await scout.run();
+
+  out('  CANDIDATES');
+  if (!r.candidates.length) out('    none');
+  for (const c of r.candidates) {
+    out(`    ${c.candidate_id}  conf ${c.confidence}  ${c.authority_class ?? 'authority unplaced'}  ${c.tier_estimate ?? 'tier not established'}`);
+    out(`      ${c.title ?? '(the document titles itself nothing)'}`);
+    out(`      ${c.url}`);
+    out(`      published: ${c.publication_date}${c.publication_date === 'unknown' ? '  ← stated by nothing in the document' : ''}`);
+    out(`      about: ${c.affected_entities.map((e) => e.id).join(', ')}`);
+    if (c.duplicate_candidate_ids.length) out(`      duplicates: ${c.duplicate_candidate_ids.join(', ')}`);
   }
   out();
+  out('  GAPS');
+  if (!r.gaps.length) out('    none');
+  for (const g of r.gaps) out(`    ${g.gap_id}  ${g.gap_kind}  ${g.what_is_missing}`);
+  out();
+  out(`  ${r.candidates.length} candidate(s) · ${r.gaps.length} gap(s) · ${r.screened_out} screened out · ${r.fetched} retrieval attempt(s)`);
+  if (r.blocked) out(`  ${r.blocked} retrieval(s) refused before reaching the origin — reported as gaps, not as nothing.`);
+  out(`  trace ${r.trace_id}`);
+  out(dry ? '  nothing stored (--dry)' : `  records agent/records/${r.trace_id}.jsonl`);
+  out();
+  out('  Nothing was published, no canonical fact was changed, and data/ was not written to.');
+  out();
+} catch (err) {
+  out(`  the run failed: ${err.message}`);
+  process.exitCode = 1;
 }
-
-async function run(claimId) {
-  if (!claimId) { out('  usage: node agent/scout/cli.mjs run <claim-id>'); process.exit(2); }
-
-  const result = await scoutClaim({ claim_id: claimId });
-
-  out();
-  out(`  SCOUT · ${claimId}`);
-  out('  ' + '─'.repeat(74));
-  out(`  trace   ${result.trace_id}`);
-  out(`  run     ${result.run_id}`);
-  out(`  store   ${result.store_path}`);
-  out();
-
-  if (result.outcomes.length === 0) {
-    out('  No retrieval attempted — the corpus records no citable URL for this claim.');
-  } else {
-    out('  RETRIEVAL');
-    for (const o of result.outcomes) {
-      out(`    ${o.outcome.padEnd(15)} ${o.source_id}`);
-      out(`    ${' '.repeat(15)} ${o.url}`);
-      if (o.detail) out(`    ${' '.repeat(15)} ${o.detail.slice(0, 160)}`);
-    }
-  }
-  out();
-  out('  RECORDS EMITTED (every one through agent/schemas/gateway.mjs)');
-  for (const p of result.produced) out(`    ${p.contract.padEnd(20)} ${p.id}`);
-  out();
-
-  const gaps = result.records.filter((r) => r.contract === 'DataGap');
-  if (gaps.length) {
-    out('  GAPS');
-    for (const g of gaps) out(`    ${g.gap_kind} / ${g.absence_kind}${g.blocking ? ' · blocking' : ''}\n      ${g.what_is_missing.slice(0, 200)}`);
-    out();
-  }
-}
-
-function show(traceId) {
-  if (!traceId) { out('  usage: node agent/scout/cli.mjs show <trace-id>'); process.exit(2); }
-  const store = new ContractStore();
-  const { records, broken } = store.read(traceId);
-  if (!records.length) { out(`  no records stored for trace ${traceId}`); process.exit(1); }
-  for (const r of records) out(JSON.stringify(r, null, 2));
-  if (broken.length) out(`  ${broken.length} unparseable line(s)`);
-}
-
-const main = { claims, run, show }[cmd];
-if (!main) { out(`  unknown command "${cmd}" — try: claims · run · show`); process.exit(2); }
-await main(arg);

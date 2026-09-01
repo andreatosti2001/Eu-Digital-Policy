@@ -400,49 +400,10 @@ test('ClaimEvidence: context is never a citation, and a direct support must be l
   refuses({ ...fx('ClaimEvidence'), established_by: null }, 'an unverified link has an open question');
 });
 
-test('DataGap: the four kinds of absence are kept apart', () => {
+test('DataGap: the three kinds of absence are kept apart', () => {
   refuses({ ...fx('DataGap'), gap_kind: 'no_rule_matched' }, 'the answer is NOT DETERMINED, never a negative finding');
   refuses({ ...fx('DataGap'), gap_kind: 'not_publicly_determinable' }, 'researched-and-unavailable is not the same as not researched');
   refuses({ ...fx('DataGap'), state: 'closed_by_verification', blocking: false }, 'name the verification that closed it');
-});
-
-/* Added in SESSION 05. The first real agent ran behind a network the
-   environment blocks, and found that the three original absence kinds
-   could not say "this document is published and I could not reach
-   it". The danger is specifically the second one: an agent that files
-   an unreachable Official Journal page as "not publicly determinable"
-   has turned its own network failure into a false finding about EU
-   law. These tests hold that door shut. */
-test('DataGap: a blocked retrieval is never dressed up as an undeterminable answer', () => {
-  const blocked = {
-    ...fx('DataGap'),
-    gap_kind: 'retrieval_blocked',
-    absence_kind: 'retrieval_failed',
-    epistemic: {
-      fact: [], inference: [], interpretation: [],
-      unresolved: [{
-        field: null,
-        question: 'What does the document at the cited URL say?',
-        missing: 'The document itself, retrieved and read.',
-        absence_kind: 'retrieval_failed',
-        blocks: true,
-      }],
-    },
-  };
-  assert.deepEqual(V(blocked), [], 'a correctly paired retrieval gap should be accepted');
-
-  refuses(
-    { ...blocked, absence_kind: 'unknown_not_determinable' },
-    'would make a claim about the world out of a network failure',
-  );
-  refuses(
-    { ...blocked, absence_kind: 'null_not_researched' },
-    'would make a claim about the world out of a network failure',
-  );
-  refuses(
-    { ...blocked, gap_kind: 'not_publicly_determinable' },
-    'a failed retrieval is recorded as what it is',
-  );
 });
 
 test('ArchitectureProposal: architectural replacement is red tier', () => {
@@ -633,4 +594,71 @@ test('an unknownable field exports as itself, null, or the word unknown — neve
   const s = toJsonSchema('SourceCandidate');
   const variants = s.properties.publication_date.anyOf.map((v) => v.const ?? v.type);
   assert.deepEqual(variants, ['string', 'null', 'unknown']);
+});
+
+/* ---------------------------------------------------------- SESSION 05
+   Added when the first real agent — the Source Scout — met these
+   contracts and found three fields missing and one gap kind absent.
+   The contract changed; these hold the new behaviour down.        */
+
+test('the authority hierarchy is ordered, and the order is the priority order', async () => {
+  const { AUTHORITY_CLASSES, SECONDARY_AUTHORITY } = await import('./types.mjs');
+  assert.equal(AUTHORITY_CLASSES.length, 9, 'the brief names nine levels');
+  assert.equal(AUTHORITY_CLASSES[0], 'authority:eur-lex', 'EUR-Lex and the Official Journal come first');
+  assert.equal(AUTHORITY_CLASSES.at(-1), SECONDARY_AUTHORITY, 'secondary expert sources come last');
+  assert.equal(new Set(AUTHORITY_CLASSES).size, 9);
+});
+
+test('SourceCandidate: a secondary source is never presented as primary law or a regulator', () => {
+  for (const tier of ['tier:1', 'tier:2']) {
+    const r = fx('SourceCandidate');
+    r.tier_estimate = tier;
+    r.authority_class = 'authority:secondary-expert';
+    refuses(r, 'never presented as equivalent to primary law or a regulator');
+  }
+  const ok = fx('SourceCandidate');
+  ok.tier_estimate = 'tier:4';
+  ok.authority_class = 'authority:secondary-expert';
+  assert.deepEqual(V(ok), []);
+});
+
+test('SourceCandidate: an unplaceable authority is a finding, never a quiet "secondary"', () => {
+  const r = fx('SourceCandidate');
+  r.authority_class = null;
+  r.epistemic.inference = r.epistemic.inference.filter((i) => i.field !== 'authority_class');
+  refuses(r, 'an unplaceable source is a finding');
+
+  r.epistemic.unresolved.push({
+    field: 'authority_class', question: 'Who issued this?', missing: 'An identifiable issuing body on the document.',
+    absence_kind: 'null_not_researched', blocks: false,
+  });
+  assert.deepEqual(V(r), []);
+});
+
+test('SourceCandidate: a duplicate list cannot name the candidate itself', () => {
+  const r = fx('SourceCandidate');
+  r.duplicate_candidate_ids = [r.candidate_id];
+  refuses(r, 'names this candidate itself');
+});
+
+test('SourceCandidate: the retrieval date and the fingerprint have one home, on the evidence', () => {
+  const c = getContract('SourceCandidate');
+  assert.ok(!('retrieval_date' in c.fields), 'the retrieval date belongs to the retrieval, not to the document');
+  assert.ok(!('retrieved_at' in c.fields));
+  assert.ok(!('content_fingerprint' in c.fields), 'the fingerprint belongs to the bytes that were fetched');
+  const ev = c.fields.evidence.of.shape;
+  assert.ok('retrieved_at' in ev && 'checksum' in ev, 'both must exist on the evidence reference');
+  refuses({ ...fx('SourceCandidate'), content_fingerprint: 'abc' }, 'not declared by this contract');
+});
+
+test('DataGap: a document nobody could reach has not been read', () => {
+  const r = fx('DataGap');
+  r.gap_kind = 'retrieval_blocked';
+  r.absence_kind = 'unknown_not_determinable';
+  r.state = 'open';
+  refuses(r, 'has not been read, which is not the same as one that was read and found wanting');
+
+  const ok = fx('DataGap');
+  ok.gap_kind = 'retrieval_blocked';
+  assert.deepEqual(V(ok), [], 'retrieval_blocked with absence_kind null_not_researched must be valid');
 });

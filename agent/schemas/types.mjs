@@ -82,23 +82,11 @@ export const FIELD_EPISTEMICS = ['structural', 'factual', 'inference', 'interpre
  * missing rule is a third state and is never a negative finding
  * (§0.5). Naming them separately is what stops a downstream agent
  * from collapsing them.
- *
- * `retrieval_failed` is the fourth, added in SESSION 05 by the first
- * real agent to run against these contracts. It is a statement about
- * THIS AGENT'S REACH, not about the world: the document is published
- * and citable, and the agent could not get to it. The other three
- * cannot hold that. Recording it as `null_not_researched` would say
- * nobody looked, when somebody did; recording it as
- * `unknown_not_determinable` is worse still, because that asserts the
- * answer is not publicly determinable — a claim about the world, and
- * a false one, made on the strength of a network failure. A blocked
- * fetch is evidence about the fetcher and never about the law.
  */
 export const ABSENCE_KINDS = [
   'null_not_researched',        // nobody has looked
   'unknown_not_determinable',   // researched, not publicly determinable
   'no_rule_matched',            // NOT DETERMINED — never "probably not"
-  'retrieval_failed',           // published and citable; this agent could not reach it
 ];
 
 /** The sentinel value for researched-and-not-determinable. Same word
@@ -162,6 +150,39 @@ export const RED_TARGETS = [
   'known limitations',
 ];
 
+/* ---------------------------------------------------------- authorities
+
+   The issuing-authority hierarchy the Source Scout searches in.
+   THE ARRAY ORDER IS THE PRIORITY ORDER — index 0 is searched and
+   trusted first — so the ranking has one home rather than living
+   both as a list and as a separate table of numbers that could
+   disagree with it.
+
+   This is a vocabulary about WHO PUBLISHED something, which is not
+   the same question as what evidence tier the document sits in.
+   A Commission legislative document and a Commission press release
+   come from the same authority and do not carry the same weight, so
+   the tier is estimated from the document type as well as the
+   authority — see agent/scout/authorities.mjs — and is left null
+   when neither settles it.                                        */
+
+export const AUTHORITY_CLASSES = [
+  'authority:eur-lex',            // 1 · EUR-Lex and the Official Journal
+  'authority:commission',         // 2 · the European Commission
+  'authority:edpb',               // 3 · European Data Protection Board
+  'authority:edps',               // 4 · European Data Protection Supervisor
+  'authority:enisa',              // 5 · EU Agency for Cybersecurity
+  'authority:eu-agency',          // 6 · other EU agencies and bodies
+  'authority:national-authority', // 7 · national competent authorities
+  'authority:court',              // 8 · the CJEU, the General Court, national courts
+  'authority:secondary-expert',   // 9 · everything else, and never presented as more
+];
+
+/** Anything at this class is secondary and must say so. The brief
+ *  permits secondary sources to be discovered; it does not permit
+ *  them to arrive unlabelled. */
+export const SECONDARY_AUTHORITY = 'authority:secondary-expert';
+
 /* ---------------------------------------------------------- evidence
 
    What a record is standing on. `absent` is a first-class kind, not
@@ -199,7 +220,7 @@ export const GAP_KINDS = [
   'no_rule_matched',           // no applicability rule fires — NOT DETERMINED
   'coverage_gap',              // an area the corpus does not reach at all
   'stale_verification',        // checked once, past its stated interval
-  'retrieval_blocked',         // located, attempted, refused — the gap is in this agent's reach
+  'retrieval_blocked',         // the address is known, retrieval was attempted, and it failed
 ];
 
 export const GAP_STATES = ['open', 'closed_by_verification', 'declared_unknown', 'withdrawn'];

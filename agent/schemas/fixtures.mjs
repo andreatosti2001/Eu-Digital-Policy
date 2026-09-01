@@ -81,7 +81,10 @@ export const sourceCandidateFixture = () => envelope('SourceCandidate', {
   source_type: 'source-type:report',
   url_status: 'url:live',
   tier_estimate: 'tier:3',
+  authority_class: 'authority:secondary-expert',
   relevance: 'A fixture. It bears on nothing, and is here only to show what a filled-in candidate looks like.',
+  confidence: 0.3,
+  duplicate_candidate_ids: [],
   matches_existing_source_id: null,
   verification_ref: null,
   state: 'proposed',
@@ -96,6 +99,7 @@ export const sourceCandidateFixture = () => envelope('SourceCandidate', {
     ],
     inference: [
       { field: 'tier_estimate', statement: 'It belongs in tier 3.', from: ['ev-1'], method: 'Publisher class and document type compared against the tier definitions in data/taxonomy.json.' },
+      { field: 'authority_class', statement: 'It was issued by no registered authority, so it is secondary.', from: ['ev-1'], method: 'The host is on no registered authority endpoint, and the document is a fixture.' },
     ],
     interpretation: [
       { field: 'relevance', statement: 'It bears on nothing, being a fixture.', held_by: 'fixture-agent', basis: 'The document does not exist.', contested: false },

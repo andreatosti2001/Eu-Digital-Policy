@@ -3,339 +3,366 @@
 
        node --test agent/scout/selftest.mjs
 
-   node:test, so this needs nothing installed — the same constraint
-   the four validators in tools/, the observability suite and the
-   contract suite work under.
+   node:test, no network, no installation.
 
-   What it holds down, in the order the Scout would fail:
+   What it holds down, in the order the Scout would do damage:
 
-     · it emits only the contracts a Scout is allowed to emit, and
-       never a verification, a proposal or a change
-     · every record it produces satisfies its contract with
-       allowSimulated OFF — the Scout's records are real or they are
-       not written
-     · nothing it produces is marked simulated
-     · a retrieval this environment refuses becomes a DataGap with
-       the right kind of absence, and never a claim about the URL,
-       the publisher or the law
-     · a retrieval that succeeds is recorded differently, in every
-       place where the difference matters
-     · what it says it read, it read: facts about the corpus cite
-       the corpus, and facts about a document cite the document
-
-   The success path cannot be exercised against the live network from
-   inside this environment, so it is driven with a stub fetch. That
-   is a test double for the transport, not simulated evidence: the
-   records it produces are checked, not stored, and nothing in
-   agent/runs/ comes from here.
+     · it never writes to data/ — asserted by hashing the directory
+       around a full run
+     · it never invents a publication date, a publisher or an
+       authority
+     · "no stated date" comes out as unknown with an open question,
+       never as a date taken from the address
+     · a refused retrieval becomes a named gap, never silence and
+       never a candidate
+     · a secondary source is labelled secondary and cannot claim a
+       primary tier
+     · every record it emits satisfies its contract, and an invalid
+       one cannot reach the store
    ============================================================ */
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { readdirSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { Tracer } from '../observability/tracer.mjs';
 import { MemorySink } from '../observability/sink.mjs';
-import { MemoryContractStore } from '../schemas/store.mjs';
+import { deterministicClock, deterministicIds } from '../observability/ids.mjs';
+import { validateRecord as validateTraceRecord } from '../observability/schema.mjs';
 import { validate } from '../schemas/validate.mjs';
-import { CONTRACT_NAMES } from '../schemas/registry.mjs';
-import { scoutClaim, AGENT } from './scout.mjs';
-import { attempt, titleFrom, explain, failed, OUTCOMES } from './retrieve.mjs';
-import * as corpus from './corpus.mjs';
+import { AUTHORITY_CLASSES, SECONDARY_AUTHORITY } from '../schemas/types.mjs';
 
-/* ---------------------------------------------------------- harness */
+import { Scout, SCOUT_AGENT, loadInstruments } from './scout.mjs';
+import { MockTransport, HttpTransport, DEFAULT_LIMITS } from './transport.mjs';
+import { MemoryRecordStore } from './store.mjs';
+import { MOCK_DOCUMENTS, MOCK_ENDPOINTS } from './fixtures.mjs';
+import { ENDPOINTS, authorityForUrl, authorityRank, endpointsByPriority, estimateTier } from './authorities.mjs';
+import { extractLinks, extractPublicationDate, extractPublisher, extractTitle, instrumentTerms, matchInstruments, textOf } from './extract.mjs';
+import { findDuplicates, normaliseTitle, normaliseUrl } from './dedupe.mjs';
 
-/** A run that writes nowhere: memory sink, memory store. */
-function harness() {
-  const sink = new MemorySink();
-  const tracer = new Tracer({ service: 'scout-selftest', sink });
-  const store = new MemoryContractStore();
-  return { sink, tracer, store };
+const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
+
+async function runMock({ endpoints = MOCK_ENDPOINTS, documents = MOCK_DOCUMENTS, limits = {} } = {}) {
+  const tracer = new Tracer({
+    sink: new MemorySink({ strict: true }),
+    ids: deterministicIds(11),
+    clock: deterministicClock('2026-09-01T12:00:00.000Z', 100),
+  });
+  const store = new MemoryRecordStore({ allowSimulated: true });
+  const scout = new Scout({ tracer, transport: new MockTransport(documents), store, endpoints, limits });
+  const result = await scout.run();
+  return { result, store, tracer };
 }
 
-/** A fetch that never touches the network. Node's Response does not
- *  let `url` be set through the constructor, so it is defined on the
- *  instance. */
-function responseWith({ status = 200, body = '', headers = {}, url }) {
-  const res = new Response(body, { status, headers });
-  Object.defineProperty(res, 'url', { value: url, configurable: true });
-  return res;
-}
+const candidateFor = (store, urlPart) =>
+  store.written.find((r) => r.contract === 'SourceCandidate' && r.url.includes(urlPart));
 
-const okFetch = (body, url = 'https://example.invalid/doc') => async () => responseWith({ status: 200, body, url });
-const deniedFetch = async (req) => responseWith({
-  status: 403,
-  body: `Host not in allowlist: ${new URL(req).host}.`,
-  headers: { 'x-deny-reason': 'host_not_allowed' },
-  url: req,
-});
-const originRefusedFetch = async (req) => responseWith({ status: 403, body: 'Forbidden', url: req });
-const deadFetch = async () => { throw new TypeError('fetch failed'); };
+/* ---------------------------------------------------------- the boundary */
 
-/** A claim the corpus cites at least one URL for. */
-function claimWithUrl() {
-  for (const id of corpus.claimIds()) {
-    const c = corpus.claim(id);
-    if (corpus.retrievalPlan(c).retrievable.length) return id;
-  }
-  throw new Error('no claim in data/claims.json cites a retrievable source');
-}
-
-/** A claim resting only on the brief's own placeholder. */
-function claimWithPlaceholderOnly() {
-  for (const id of corpus.claimIds()) {
-    const c = corpus.claim(id);
-    const p = corpus.retrievalPlan(c);
-    if (p.placeholders.length && !p.retrievable.length) return id;
-  }
-  throw new Error('no claim in data/claims.json rests only on a placeholder');
-}
-
-/* ---------------------------------------------------------- retrieve */
-
-test('an egress denial is never recorded as the publisher refusing us', async () => {
-  const denied = await attempt('https://eur-lex.europa.eu/x', { fetchImpl: deniedFetch });
-  assert.equal(denied.outcome, 'policy_denied');
-  assert.match(explain(denied), /says nothing about the document/);
-
-  const refused = await attempt('https://eur-lex.europa.eu/x', { fetchImpl: originRefusedFetch });
-  assert.equal(refused.outcome, 'http_error', 'a 403 with no egress header is the origin answering, and is reported as that');
-
-  const dead = await attempt('https://eur-lex.europa.eu/x', { fetchImpl: deadFetch });
-  assert.equal(dead.outcome, 'network_error');
-
-  for (const o of [denied, refused, dead]) {
-    assert.ok(failed(o));
-    assert.equal(o.body, null, 'a failed attempt never carries a document body');
-    assert.ok(OUTCOMES.includes(o.outcome));
-    assert.ok(Date.parse(o.attempted_at) > 0, 'every attempt is dated, or it cannot be re-checked');
-  }
+test('the Scout does not write to data/ — the whole directory is unchanged by a run', async () => {
+  const hashDir = () => {
+    const dir = join(REPO, 'data');
+    return readdirSync(dir).sort().map((f) => `${f}:${createHash('sha256').update(readFileSync(join(dir, f))).digest('hex')}`).join('\n');
+  };
+  const before = hashDir();
+  await runMock();
+  assert.equal(hashDir(), before, 'a file in data/ changed during a Scout run');
 });
 
-test('a title is read from the document or not at all', () => {
-  assert.equal(titleFrom('<html><head><title> Regulation  (EU)  2016/679 </title>'), 'Regulation (EU) 2016/679');
-  assert.equal(titleFrom('<html><head><title>A &amp; B</title>'), 'A & B');
-  assert.equal(titleFrom('<html><head></head><body>no title here</body></html>'), null);
-  assert.equal(titleFrom('<title></title>'), null, 'an empty title element yields nothing, never a manufactured one');
-});
-
-/* ---------------------------------------------------------- the corpus */
-
-test('the corpus reader keeps "what the record says" apart from "what the document says"', () => {
-  const c = corpus.claim(claimWithUrl());
-  const plan = corpus.retrievalPlan(c);
-  const src = plan.retrievable[0].source;
-
-  /* The fields are named for what they are: the corpus's account. */
-  assert.ok('recorded_title' in src && 'recorded_url' in src && 'recorded_tier' in src);
-  assert.ok(!('title' in src), 'a bare `title` would read as the document\'s own');
-  assert.match(src._locator, /^data\/sources\.json#/);
-  assert.match(c._locator, /^data\/claims\.json#/);
-});
-
-/* ---------------------------------------------------------- the agent */
-
-test('the Scout emits only what a Scout may emit', async () => {
-  const { tracer, store } = harness();
-  const result = await scoutClaim({ claim_id: claimWithUrl(), tracer, store, fetchImpl: deniedFetch });
-
-  const allowed = new Set(['SourceCandidate', 'DataGap', 'AgentObservation', 'AgentRun']);
-  const emitted = new Set(result.records.map((r) => r.contract));
-
-  for (const c of emitted) assert.ok(allowed.has(c), `the Scout emitted ${c}, which is not its to emit`);
-
-  /* Named explicitly, because these are the ones the session brief
-     forbids by name and a regression here would be quiet. */
-  for (const forbidden of ['VerificationRecord', 'ChangeRecord', 'WebsiteChange', 'ClaimEvidence',
-    ...CONTRACT_NAMES.filter((n) => n.endsWith('Proposal'))]) {
-    assert.ok(!emitted.has(forbidden), `the Scout must not emit ${forbidden}`);
-  }
-  assert.ok(emitted.has('AgentRun') && emitted.has('AgentObservation'));
-});
-
-test('every record the Scout produces is real, and valid as a real record', async () => {
-  const { tracer, store } = harness();
-  const result = await scoutClaim({ claim_id: claimWithUrl(), tracer, store, fetchImpl: deniedFetch });
-
-  assert.ok(result.records.length > 0);
-  for (const r of result.records) {
-    /* allowSimulated OFF. A record that only passes as a fixture is
-       not a record this agent may write. */
-    assert.deepEqual(validate(r), [], `${r.contract} failed its contract:\n${validate(r).join('\n')}`);
-    assert.equal(r.simulated, false, 'nothing outside fixtures.mjs may be marked simulated');
-    assert.equal(r.agent, AGENT);
-    assert.ok(r.trace_ref && r.trace_ref.trace_id === result.trace_id);
-    for (const ev of r.evidence) assert.equal(ev.simulated, false);
-  }
-});
-
-test('a blocked retrieval becomes a gap, not a finding about the law', async () => {
-  const { tracer, store } = harness();
-  const result = await scoutClaim({ claim_id: claimWithUrl(), tracer, store, fetchImpl: deniedFetch });
-
-  const gaps = result.records.filter((r) => r.contract === 'DataGap' && r.gap_kind === 'retrieval_blocked');
-  assert.ok(gaps.length > 0, 'a refused retrieval must leave a gap behind');
-
-  for (const g of gaps) {
-    assert.equal(g.absence_kind, 'retrieval_failed');
-    assert.equal(g.state, 'open');
-    assert.ok(g.evidence.some((e) => e.kind === 'absent'), 'the record says in its own body that it has nothing');
-    assert.ok(g.epistemic.unresolved.length > 0);
-    /* The gap must not assert the document is unobtainable in
-       general — only that this agent did not obtain it. */
-    assert.ok(!/not publicly (available|determinable)/i.test(g.why_open));
-    /* And there is nowhere to put a substitute. */
-    for (const banned of ['substitute', 'best_guess', 'assumed_value', 'plausible_value', 'likely_answer', 'default_value']) {
-      assert.ok(!(banned in g), `a gap record carrying ${banned} would be the substitute this contract refuses`);
-    }
-  }
-
-  const candidates = result.records.filter((r) => r.contract === 'SourceCandidate');
-  for (const c of candidates) {
-    assert.equal(c.url_status, 'url:unchecked', 'a refused attempt establishes nothing about the URL');
-    assert.notEqual(c.url_status, 'url:dead');
-    assert.equal(c.state, 'duplicate', 're-reading sources.json is not a new find');
-    assert.ok(c.matches_existing_source_id, 'a duplicate names what it duplicates');
-    assert.equal(c.verification_ref, null, 'the Scout verifies nothing');
-    assert.equal(c.tier_estimate, null, 'a tier estimate is a judgment about a document that has been read');
-    /* Nothing it asserts may cite a document it never opened. */
-    assert.ok(!c.evidence.some((e) => e.kind === 'retrieved_document'),
-      'a failed attempt must never appear as retrieved_document evidence');
-    for (const f of c.epistemic.fact) {
-      const kinds = f.evidence_refs.map((id) => c.evidence.find((e) => e.evidence_id === id).kind);
-      assert.ok(kinds.every((k) => k === 'dataset_record' || k === 'repository_file'),
-        'with nothing retrieved, every fact must rest on the corpus and say so');
-      assert.match(f.statement, /the corpus records|data\/claims\.json/,
-        'a fact about the corpus is stated as one');
+test('the Scout module contains no write path to data/', () => {
+  const here = dirname(fileURLToPath(import.meta.url));
+  for (const f of readdirSync(here).filter((x) => x.endsWith('.mjs') && x !== 'selftest.mjs')) {
+    const src = readFileSync(join(here, f), 'utf8');
+    /* readFileSync of data/instruments.json is expected and read-only;
+       nothing may write. */
+    for (const forbidden of ['writeFileSync', 'appendFileSync(join(', 'createWriteStream', 'rmSync', 'unlinkSync']) {
+      if (f === 'store.mjs' && forbidden === 'appendFileSync(join(') continue;
+      assert.ok(!src.includes(forbidden), `${f} contains ${forbidden}`);
     }
   }
 });
 
-test('a successful retrieval is recorded differently everywhere it matters', async () => {
-  const { tracer, store } = harness();
-  const body = '<html><head><title>Regulation (EU) 2016/679</title></head><body>text</body></html>';
-  const result = await scoutClaim({ claim_id: claimWithUrl(), tracer, store, fetchImpl: okFetch(body) });
+/* ---------------------------------------------------------- extraction */
 
-  for (const r of result.records) assert.deepEqual(validate(r), [], `${r.contract}: ${validate(r).join('; ')}`);
-
-  const candidates = result.records.filter((r) => r.contract === 'SourceCandidate');
-  assert.ok(candidates.length > 0);
-  for (const c of candidates) {
-    assert.equal(c.url_status, 'url:live');
-    const doc = c.evidence.find((e) => e.kind === 'retrieved_document');
-    assert.ok(doc, 'a retrieved document is cited as one');
-    assert.ok(doc.retrieved_at && doc.checksum, 'with a real date and a checksum over the bytes');
-    assert.ok(c.epistemic.fact.some((f) => /HTML title/.test(f.statement)),
-      'what was read off the document is recorded as read off the document');
-  }
-
-  /* Retrieval is still not verification, and the run says so. */
-  const gaps = result.records.filter((r) => r.contract === 'DataGap');
-  assert.ok(gaps.every((g) => g.gap_kind !== 'retrieval_blocked'));
-  assert.ok(gaps.some((g) => g.gap_kind === 'unverified_record'),
-    'having fetched a document leaves the verification question open, and it is recorded');
+test('a title is read from the document, and nothing else', () => {
+  assert.equal(extractTitle('<title> Spaced  title </title>').value, 'Spaced title');
+  assert.equal(extractTitle('<meta property="og:title" content="OG"><title>T</title>').value, 'OG');
+  assert.equal(extractTitle('<html><body>no title</body></html>'), null);
 });
 
-test('a claim resting only on the brief is an honest empty result, not a manufactured one', async () => {
-  const { tracer, store } = harness();
-  const result = await scoutClaim({ claim_id: claimWithPlaceholderOnly(), tracer, store, fetchImpl: deniedFetch });
-
-  assert.equal(result.outcomes.length, 0, 'there was nothing to retrieve, so nothing was attempted');
-  assert.equal(result.records.filter((r) => r.contract === 'SourceCandidate').length, 0,
-    'no document, no candidate — a Scout that reached nothing proposes nothing');
-
-  const gaps = result.records.filter((r) => r.contract === 'DataGap');
-  assert.equal(gaps.length, 1);
-  assert.equal(gaps[0].gap_kind, 'missing_source');
-  assert.equal(gaps[0].absence_kind, 'null_not_researched',
-    'nobody has looked is not the same state as looked-and-blocked');
-  assert.ok(gaps[0].closes_with.includes('red tier'),
-    'the gap says who may create the source record, because it is not this agent');
+test('a publication date is read only from a machine-readable field, never from the URL or from prose', () => {
+  assert.equal(extractPublicationDate('<meta property="article:published_time" content="2026-04-15">').value, '2026-04-15');
+  assert.equal(extractPublicationDate('<meta name="DC.date" content="2026-05">').value, '2026-05', 'a month-precision date is kept at month precision');
+  assert.equal(extractPublicationDate('<time datetime="2026-01-02">2 January</time>').value, '2026-01-02');
+  assert.equal(extractPublicationDate('<p>Published on 4 March 2026.</p>'), null, 'a date in prose is not a machine-readable date');
+  assert.equal(extractPublicationDate('<a href="/2026/03/04/doc">x</a>'), null, 'a date in a URL is not a publication date');
 });
 
-/* ---------------------------------------------------------- the trace */
+test('a publisher is what the document says, never the host it was served by', () => {
+  assert.equal(extractPublisher('<meta property="og:site_name" content="EDPB">').value, 'EDPB');
+  assert.equal(extractPublisher('<html><title>served by edpb.europa.eu</title></html>'), null);
+});
 
-test('the run is traced, with real provenance and a decision that names what it refused', async () => {
-  const { sink, tracer, store } = harness();
-  const result = await scoutClaim({ claim_id: claimWithUrl(), tracer, store, fetchImpl: deniedFetch });
+test('links are same-host, absolute and capped', () => {
+  const html = '<a href="/a">a</a><a href="https://other.invalid/b">b</a><a href="mailto:x@y">c</a><a href="/a#frag">a again</a>';
+  assert.deepEqual(extractLinks(html, 'https://host.invalid/'), ['https://host.invalid/a']);
+  const many = Array.from({ length: 50 }, (_, i) => `<a href="/p${i}">x</a>`).join('');
+  assert.equal(extractLinks(many, 'https://host.invalid/', { limit: 5 }).length, 5);
+});
 
-  const byType = (t) => sink.records.filter((r) => r.type === t);
-  assert.equal(sink.invalid.length, 0, 'every trace record passes the observability schema');
+test('instrument matching uses the repository\'s own terms and prefers the more specific one', () => {
+  const terms = instrumentTerms(loadInstruments(REPO));
+  const byCelex = matchInstruments(textOf('<p>See 32022R2065 and the DSA.</p>'), terms);
+  assert.equal(byCelex[0].instrument_id, 'dsa');
+  assert.equal(byCelex[0].match_kind, 'celex', 'a CELEX number identifies an instrument; three letters could be anything');
+  assert.deepEqual(matchInstruments('a notice about municipal parking', terms), []);
+});
 
-  const runSpan = byType('span.start').find((r) => r.kind === 'agent');
-  assert.equal(runSpan.agent, AGENT);
-  assert.equal(runSpan.run_id, result.run_id);
-  assert.equal(runSpan.run_id, runSpan.span_id, 'a run IS a span');
+/* ---------------------------------------------------------- authorities */
 
-  /* Real provenance: a real locator and a real retrieved_at, and no
-     URL attached to a document that was never opened. */
-  const prov = byType('provenance');
-  assert.ok(prov.length > 0);
-  for (const p of prov) {
-    assert.equal(p.simulated, false);
-    assert.ok(p.url || p.locator, 'a real provenance record needs a url or a locator');
-    assert.ok(Date.parse(p.retrieved_at) > 0);
-    assert.equal(p.url, null, 'nothing was retrieved here, so no URL is presented as though it had been');
-    assert.match(p.locator, /^data\/sources\.json#/);
-  }
+test('the priority hierarchy has one home, and rank is derived from it', () => {
+  assert.equal(authorityRank('authority:eur-lex'), 1);
+  assert.equal(authorityRank(SECONDARY_AUTHORITY), 9);
+  assert.equal(authorityRank('authority:not-a-class'), AUTHORITY_CLASSES.length + 1);
+  const ranks = endpointsByPriority().map((e) => authorityRank(e.authority_class));
+  assert.deepEqual(ranks, [...ranks].sort((a, b) => a - b), 'endpoints must come back most authoritative first');
+});
 
-  /* The refusal to substitute is itself recorded, with what it
-     rejected — an unrecorded alternative is how a decision becomes
-     indistinguishable from an accident. */
-  const decisions = byType('decision');
-  assert.ok(decisions.length > 0);
-  assert.ok(decisions.every((d) => d.alternatives.length >= 3));
-  assert.ok(decisions.some((d) => d.alternatives.some((a) => /Substitute a different/.test(a))));
-
-  /* The contract records reach the trace as pointers, not copies. */
-  const artifacts = byType('artifact');
-  assert.equal(artifacts.length, result.records.length);
-  for (const a of artifacts) {
-    assert.match(a.artifact_type, /^contract:/);
-    assert.match(a.sha256, /^[0-9a-f]{64}$/);
-    assert.equal(a.preview, null, 'the trace holds a pointer, never a second copy of the record');
+test('every registered endpoint declares itself an unverified hypothesis', () => {
+  for (const ep of ENDPOINTS) {
+    assert.equal(ep.endpoint_verified, false, `${ep.id} claims to be verified, and nothing in this repository has verified it`);
+    assert.ok(AUTHORITY_CLASSES.includes(ep.authority_class));
+    assert.doesNotThrow(() => new URL(ep.url));
   }
 });
 
-/* A regression. The first working version let `run.step` capture a
-   tool's return value wholesale, and because the corpus reader
-   returned the parsed dataset alongside the claim, one span output
-   carried a 74 KB copy of data/claims.json into the trace. Nothing
-   failed — it was just the second home for the entire corpus,
-   arriving through an output capture. */
-test('neither the corpus nor a document body is copied into the trace', async () => {
-  const { sink, tracer, store } = harness();
-  const body = `<html><head><title>T</title></head><body>${'x'.repeat(50000)}</body></html>`;
-  await scoutClaim({ claim_id: claimWithUrl(), tracer, store, fetchImpl: okFetch(body) });
-
-  for (const r of sink.records) {
-    const line = JSON.stringify(r);
-    assert.ok(line.length < 8000, `a ${line.length}-byte trace record (${r.type}) is carrying a payload it should be pointing at`);
-    assert.ok(!line.includes('$schema_version'), 'a parsed dataset has been copied into the trace');
-    assert.ok(!line.includes('x'.repeat(1000)), 'a document body has been copied into the trace');
-  }
+test('a tier is estimated only where the taxonomy settles it, and is null otherwise', () => {
+  assert.equal(estimateTier({ authority_class: 'authority:eur-lex', source_type: null }).tier, 'tier:1');
+  assert.equal(estimateTier({ authority_class: 'authority:edpb', source_type: null }).tier, 'tier:2');
+  const commission = estimateTier({ authority_class: 'authority:commission', source_type: null });
+  assert.equal(commission.tier, null, 'the Commission spans two tiers and the document type is unknown');
+  assert.match(commission.method, /two tiers/);
+  assert.equal(estimateTier({ authority_class: SECONDARY_AUTHORITY, source_type: null }).tier, null);
+  assert.equal(estimateTier({ authority_class: SECONDARY_AUTHORITY, source_type: 'source-type:research' }).tier, 'tier:3');
 });
 
-test('the store is not a way around the gate', async () => {
-  const store = new MemoryContractStore();
-  assert.throws(
-    () => store.append('0'.repeat(32), { contract: 'DataGap', contract_version: 1 }),
-    /does not satisfy its contract/,
-    'an invalid record must die at the store boundary, not three agents later',
+test('an unregistered host resolves to no authority rather than to "secondary"', () => {
+  assert.equal(authorityForUrl('https://www.edpb.europa.eu/news/x')?.authority_class, 'authority:edpb');
+  assert.equal(authorityForUrl('https://someone.example.invalid/x'), null);
+  assert.equal(authorityForUrl('not a url'), null);
+});
+
+/* ---------------------------------------------------------- duplicates */
+
+test('URL normalisation collapses the addresses that mean the same document', () => {
+  assert.equal(
+    normaliseUrl('https://WWW.Example.invalid/a/?utm_source=x&b=1#frag'),
+    normaliseUrl('https://example.invalid/a?b=1'),
   );
-  assert.throws(
-    () => store.append('0'.repeat(32), { contract: 'NotAContract' }),
-    /unknown contract/,
-  );
+  assert.notEqual(normaliseUrl('https://example.invalid/a'), normaliseUrl('https://example.invalid/b'));
+  assert.equal(normaliseTitle('Guidelines 01/2026 — On Something'), 'guidelines 01 2026 on something');
 });
 
-test('the Scout writes nothing into data/', async () => {
-  const { tracer, store } = harness();
-  const before = corpus.dataset('claims').checksum;
-  await scoutClaim({ claim_id: claimWithUrl(), tracer, store, fetchImpl: deniedFetch });
-  const { readFileSync } = await import('node:fs');
-  const { join } = await import('node:path');
-  const { REPO_ROOT } = await import('../schemas/types.mjs');
-  const { sha256 } = await import('./retrieve.mjs');
-  assert.equal(sha256(readFileSync(join(REPO_ROOT, 'data', 'claims.json'))), before,
-    'data/ is the legal record and this agent does not touch it');
+test('duplicates are graded: identical bytes are proof, identical titles are a suggestion', () => {
+  const d = findDuplicates([
+    { candidate_id: 'a', url: 'https://x.invalid/1', title: 'T', fingerprint: 'ff' },
+    { candidate_id: 'b', url: 'https://x.invalid/2', title: 'T', fingerprint: 'ff' },
+    { candidate_id: 'c', url: 'https://x.invalid/3', title: 'T', fingerprint: 'zz' },
+    { candidate_id: 'd', url: 'https://x.invalid/4', title: 'Other', fingerprint: 'yy' },
+  ]);
+  assert.match(d.get('a')[0].basis, /fingerprint/);
+  assert.match(d.get('c').find((x) => x.candidate_id === 'a').basis, /suggestion, not proof/);
+  assert.deepEqual(d.get('d'), []);
+  assert.ok(!d.get('a').some((x) => x.candidate_id === 'a'), 'nothing duplicates itself');
+});
+
+/* ---------------------------------------------------------- the run */
+
+test('every record a mock run produces satisfies its contract', async () => {
+  const { store } = await runMock();
+  assert.ok(store.written.length >= 12);
+  for (const r of store.written) {
+    assert.deepEqual(validate(r, { allowSimulated: true }), [], `${r.contract} ${JSON.stringify(r).slice(0, 200)}`);
+  }
+});
+
+test('a document that states no date yields "unknown" and an open question, not a date', async () => {
+  const { store } = await runMock();
+  const c = candidateFor(store, '/doc/undated');
+  assert.equal(c.publication_date, 'unknown');
+  assert.ok(!c.epistemic.fact.some((f) => f.field === 'publication_date'), 'an undated document must assert no date as fact');
+  const open = c.epistemic.unresolved.find((u) => u.field === 'publication_date');
+  assert.equal(open.absence_kind, 'unknown_not_determinable', 'the document was read and states none — that is not "nobody looked"');
+  assert.match(open.missing, /does not take a date from a URL/);
+});
+
+test('a dated document records the date exactly as printed, at the precision printed', async () => {
+  const { store } = await runMock();
+  assert.equal(candidateFor(store, '/doc/dated').publication_date, '2026-04-15');
+  assert.equal(candidateFor(store, '/opinion/1').publication_date, '2026-05', 'a month-precision date is never widened into a day');
+});
+
+test('being served by a host is never recorded as the document naming a publisher', async () => {
+  const { store } = await runMock();
+  const c = candidateFor(store, '/report/1');
+  assert.equal(c.publisher, null, 'the ENISA fixture names no publisher, so none is recorded');
+  assert.equal(c.authority_class, 'authority:enisa', 'the host still yields an authority class, as an inference');
+  const inf = c.epistemic.inference.find((i) => i.field === 'authority_class');
+  assert.match(inf.method, /served by a host registered to this authority/);
+  assert.ok(c.epistemic.unresolved.some((u) => u.field === 'publisher'));
+});
+
+test('a secondary source is labelled secondary and cannot claim a primary tier', async () => {
+  const { store } = await runMock();
+  const c = candidateFor(store, 'commentary.example.invalid');
+  assert.equal(c.authority_class, SECONDARY_AUTHORITY);
+  assert.equal(c.tier_estimate, null, 'research and commentary are different tiers and the type is not established');
+  const forced = { ...c, tier_estimate: 'tier:1' };
+  assert.ok(validate(forced, { allowSimulated: true }).some((e) => /never presented as equivalent to primary law/.test(e)));
+});
+
+test('the same document at two addresses is named in both directions, and no winner is picked', async () => {
+  const { store } = await runMock();
+  const a = candidateFor(store, '/doc/dated');
+  const b = candidateFor(store, '/doc/mirror');
+  assert.deepEqual(a.duplicate_candidate_ids, [b.candidate_id]);
+  assert.deepEqual(b.duplicate_candidate_ids, [a.candidate_id]);
+  assert.equal(a.state, 'proposed');
+  assert.equal(b.state, 'proposed');
+  assert.ok(a.epistemic.unresolved.some((u) => /does not choose between them/.test(u.missing)));
+});
+
+test('a document mentioning nothing this repository tracks becomes no candidate at all', async () => {
+  const { store, result } = await runMock();
+  assert.equal(candidateFor(store, '/doc/unrelated'), undefined);
+  assert.ok(result.screened_out >= 1);
+});
+
+test('a refused retrieval becomes a named gap, never silence and never a candidate', async () => {
+  const { store, result } = await runMock();
+  const gap = store.written.find((r) => r.contract === 'DataGap');
+  assert.equal(gap.gap_kind, 'retrieval_blocked');
+  assert.equal(gap.absence_kind, 'null_not_researched', 'a document nobody could reach has not been read');
+  assert.equal(gap.evidence[0].kind, 'absent');
+  assert.deepEqual(gap.candidate_leads, ['https://commission.example.invalid/']);
+  assert.match(gap.why_open, /egress policy, not a statement about the document/);
+  assert.equal(result.candidates.filter((c) => c.url.includes('commission.example.invalid')).length, 0);
+  assert.ok(!gap.epistemic.fact.length, 'nothing was read, so nothing is asserted as fact');
+});
+
+test('confidence falls when less was established', async () => {
+  const { store } = await runMock();
+  const full = candidateFor(store, '/doc/dated');
+  const thin = candidateFor(store, '/report/1');
+  assert.ok(full.confidence > thin.confidence, 'a document that names itself, its publisher and its date is worth more');
+  for (const c of store.written.filter((r) => r.contract === 'SourceCandidate')) {
+    assert.ok(c.confidence < 1, 'the Scout has verified nothing and never claims certainty');
+  }
+});
+
+/* ---------------------------------------------------------- the run record */
+
+test('the AgentRun is the span, and names everything it produced', async () => {
+  const { store, result } = await runMock();
+  const run = store.written.find((r) => r.contract === 'AgentRun');
+  assert.equal(run.run_id, run.trace_ref.span_id);
+  assert.equal(run.run_id, result.run_id);
+  assert.equal(run.status, 'ok');
+  assert.equal(run.agent, SCOUT_AGENT);
+  assert.equal(run.autonomy_class, 'autonomous', 'a read-only discovery run changes nothing');
+  assert.deepEqual(run.affected_entities, [], 'it affected no entity; what it is about lives on the candidates');
+  const producedIds = run.produced.map((p) => p.id).sort();
+  const emitted = store.written.filter((r) => ['SourceCandidate', 'DataGap'].includes(r.contract))
+    .map((r) => r.candidate_id ?? r.gap_id).sort();
+  assert.deepEqual(producedIds, emitted);
+  assert.ok(run.epistemic.unresolved.some((u) => /Is the candidate set complete/.test(u.question)),
+    'a run with a failed retrieval must not imply its candidate set is complete');
+});
+
+test('every record carries a trace_ref into the same trace', async () => {
+  const { store, result } = await runMock();
+  for (const r of store.written) {
+    assert.equal(r.trace_ref.trace_id, result.trace_id);
+    assert.equal(r.trace_ref.run_id, result.run_id);
+  }
+});
+
+/* ---------------------------------------------------------- instrumentation */
+
+test('every meaningful operation reaches the trace, and the trace is valid', async () => {
+  const { tracer, store } = await runMock();
+  const recs = tracer.sink.records;
+  for (const r of recs) assert.deepEqual(validateTraceRecord(r), [], JSON.stringify(r));
+
+  const kinds = (t) => recs.filter((r) => r.type === t);
+  const fetches = recs.filter((r) => r.type === 'span.start' && r.name === 'scout.fetch');
+  assert.equal(fetches.length, 12, 'one span per retrieval attempt, successes and failures alike');
+  assert.ok(kinds('observation').length >= MOCK_ENDPOINTS.length + 1,
+    'at least one observation per endpoint, plus the run opening one');
+  assert.ok(kinds('observation').some((o) => /Screened out/.test(o.summary)),
+    'a document screened out is an observation, not a silent drop');
+  assert.ok(kinds('provenance').length >= 4, 'a retrieved listing page is provenance');
+  assert.ok(kinds('usage').length >= 12, 'network latency is recorded per fetch');
+  assert.equal(kinds('artifact').length, store.written.length, 'every contract record is registered in the trace');
+  assert.ok(kinds('artifact').every((a) => a.artifact_type.startsWith('contract:')));
+  assert.equal(kinds('error').length, 0);
+
+  const root = recs.find((r) => r.type === 'span.start' && r.kind === 'agent');
+  assert.equal(root.agent, SCOUT_AGENT);
+  assert.equal(root.run_id, root.span_id);
+});
+
+test('the trace holds a pointer to each record, not a copy of it', async () => {
+  const { tracer, store } = await runMock();
+  const written = JSON.stringify(tracer.sink.records);
+  const candidate = store.written.find((r) => r.contract === 'SourceCandidate');
+  assert.ok(!written.includes(candidate.relevance), 'the candidate body was copied into the trace');
+  const art = tracer.sink.records.find((r) => r.type === 'artifact' && r.artifact_id === candidate.candidate_id);
+  assert.match(art.sha256, /^[0-9a-f]{64}$/);
+});
+
+/* ---------------------------------------------------------- the store */
+
+test('an invalid record cannot reach the store', () => {
+  const store = new MemoryRecordStore({ allowSimulated: true });
+  assert.throws(() => store.write({ contract: 'SourceCandidate', contract_version: 1 }), /refusing to store an invalid SourceCandidate/);
+  assert.equal(store.written.length, 0);
+});
+
+test('a simulated record cannot reach a store that was not asked for fixtures', async () => {
+  const strict = new MemoryRecordStore({ allowSimulated: false });
+  const { store } = await runMock();
+  const rec = store.written.find((r) => r.contract === 'SourceCandidate');
+  assert.equal(rec.simulated, true);
+  assert.throws(() => strict.write(rec), /marked simulated/);
+});
+
+/* ---------------------------------------------------------- live mode wiring */
+
+test('mock mode marks everything simulated; live mode does not, and the flag comes from the transport', async () => {
+  const { store } = await runMock();
+  assert.ok(store.written.every((r) => r.simulated === true));
+  for (const r of store.written) {
+    for (const u of JSON.stringify(r).match(/https?:\/\/[^"\\]+/g) ?? []) {
+      assert.ok(new URL(u).hostname.endsWith('.invalid'), `a mock record cites ${u}`);
+    }
+  }
+  const liveScout = new Scout({
+    tracer: new Tracer({ sink: new MemorySink({ strict: true }) }),
+    transport: new HttpTransport(),
+    store: new MemoryRecordStore(),
+  });
+  assert.equal(liveScout.simulated, false, 'a live run must not be able to mark its findings simulated');
+});
+
+test('the live transport is polite and identifies itself, and never disables TLS verification', () => {
+  assert.ok(DEFAULT_LIMITS.delay_ms >= 500, 'a scout that hammers a regulator gets the repository blocked');
+  assert.match(DEFAULT_LIMITS.user_agent, /EuDigitalPolicyScout/);
+  assert.ok(DEFAULT_LIMITS.max_bytes > 0 && DEFAULT_LIMITS.timeout_ms > 0);
+  const src = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'transport.mjs'), 'utf8');
+  assert.ok(!src.includes('rejectUnauthorized'), 'TLS verification is never turned off to make a fetch succeed');
+  assert.ok(!src.includes('NODE_TLS_REJECT_UNAUTHORIZED'));
 });

@@ -2,8 +2,6 @@
 # It holds run inputs/outputs; nothing in it belongs in the repository.
 agent/observability/runs/
 
-# The contract record store, on the same reasoning: one JSONL file per run,
-# records appended and never rewritten. These are an agent's findings, not the
-# legal record — data/ is the legal record, and a contract record never goes
-# there. Regenerable by re-running the agent; nothing in it is committed.
-agent/runs/
+# Contract records written by agents. Run artifacts, not canonical data:
+# the legal record lives in data/, and nothing reaches it without a human.
+agent/records/
