@@ -1,376 +1,392 @@
 # HANDOVER
 
-**Last updated:** SESSION 04 · 1 September 2026
-**Branch:** `claude/inter-agent-contract-schemas-o6dfc7`
-**Base commit:** `4bd1f0d` on `main` (merge of the SESSION 02 observability work)
+**Last updated:** SESSION 05 · 1 September 2026
+**Branch:** `claude/scout-agent-implementation-wsa31u`
+**Base commit:** `68805c8` (SESSION 04, on `claude/inter-agent-contract-schemas-o6dfc7`) —
+**not** `main`. See the discrepancy below; this matters more than anything else in this file.
 
 ---
 
 ## Current milestone
 
-**SESSION 04 — Define the inter-agent contracts. Complete.**
+**SESSION 05 — Instrument the Scout, read-only, against the contracts. Complete.**
 
-The reference document is **`docs/AGENT-CONTRACTS.md`**. This file is the handover
-only.
+One agent exists: `agent/scout/`. It is read-only, it runs against real sources, and in this
+environment it retrieved nothing, because the environment refuses every outbound host. That
+is recorded as a finding rather than worked around.
 
-**No agent was built, and none should be until the next session.** The brief was
-explicit about that and it was kept: nothing in `agent/schemas/` runs an agent,
-retrieves a source, or touches `data/`.
+The reference documents are **`agent/scout/README.md`** and **`docs/AGENT-CONTRACTS.md`**.
+This file is the handover only.
 
-### Discrepancy with the previous handover — reported, not reconciled
+---
 
-SESSION 02's handover recommends **SESSION 03 — instrument one real read-only
-agent (the Scout)** as the next objective. This session's brief was **SESSION 04
-— define the inter-agent contracts**, and the Scout was not built.
+## Discrepancy with the repository — READ THIS FIRST
 
-This is a divergence in ordering, not a conflict between the handover and the
-code: the repository contains no Scout and claims none. The contracts were
-defined first, which is the safer order — an agent built before its interface
-exists has to be retrofitted to it, and the retrofit is where a distinction like
-fact-versus-inference gets lost. The Scout is still the next objective and is
-carried forward below, now with an interface to speak.
+**The session brief was written against `agent/schemas/`, which does not exist on `main`.**
 
-**A second, smaller discrepancy, not fixed:**
-`.agents/skills/git-workflow/SKILL.md` hard-codes
-`claude/eu-digital-policy-protocol-ntyhqc` as "the session's designated branch".
-That branch is neither SESSION 02's (`…kye69t`) nor this session's
-(`…o6dfc7`). The skill is stale by construction — it names a per-session value in
-a durable document. It was left alone rather than updated to this session's
-branch, which would only make it stale again next session. **Recommendation for
-the author:** replace the hard-coded name with "the session's designated branch".
-That is a one-line change to a skill and is the author's call, not an agent's.
+SESSION 04's work is real and complete, but it was never merged. Four session branches have
+diverged in parallel and only SESSION 02 has ever reached `main`:
+
+| Session | Branch | On `main`? |
+|---|---|---|
+| 00, 02 (governance + observability) | `main` @ `4bd1f0d` | — it *is* `main` |
+| audit + constitution | `claude/repo-architectural-audit-v45psd` @ `cfe5d54` | **No** |
+| 03 — shared skill library (16 skills, `docs/SKILL-MAP.md`) | `claude/shared-skill-library-djn1oo` @ `feac219` | **No** |
+| 04 — the fourteen contracts | `claude/inter-agent-contract-schemas-o6dfc7` @ `68805c8` | **No** |
+| 05 — the Scout (this session) | `claude/scout-agent-implementation-wsa31u` @ `45fec5d` | **No** |
+
+SESSION 05 cannot be done without SESSION 04 — the brief names `gateway.mjs`, `fixtures.mjs`,
+`allowSimulated` and the contracts by name. So **this branch was fast-forwarded onto
+`68805c8`** (whose merge-base with `main` *is* `main`, so this was a clean fast-forward, not a
+merge) and the Scout was built on top. SESSION 03 was deliberately **not** pulled in: it is
+out of this session's scope, and sweeping 2,240 lines of unrelated skills into this commit
+would have been the defect `git-workflow` warns about.
+
+**This is the author's decision to make, and it is now the largest open question in the
+project.** Four parallel lines of work, none merged, all touching `AGENTS.md`,
+`docs/HANDOVER.md` and `.gitignore`. Known conflicts when they are merged:
+
+- **`docs/HANDOVER.md`** — SESSION 03 and SESSION 04 each rewrote it wholesale, and so did
+  this session. Three-way conflict, guaranteed.
+- **`AGENTS.md`** — SESSION 03 rewrote the skills paragraph; this session added two rows to
+  the table just above it. Adjacent, probably auto-mergeable, worth reading.
+- **`.gitignore`** — SESSION 03 added five lines; this session added `agent/runs/`.
+- **`.agents/skills/git-workflow/SKILL.md`** — **both** SESSION 03 and this session fixed the
+  stale branch name, differently. **Take SESSION 03's version**: it is the richer fix (it also
+  says to confirm with `git branch --show-current`, and states why the branch is named in the
+  brief and not in the skill). This session's is the one-line fix its brief specified, made
+  because SESSION 03 is unmerged and its fix is therefore not present on this line of work.
 
 ## Implementation
 
-`agent/schemas/` — fourteen machine-readable contracts, a validator that enforces
-them, and a gate no agent can hand a record through without passing. Zero
-dependencies, no build step, nothing wired into the site.
+`agent/scout/` — the first real agent. Zero dependencies, no build step, nothing wired into
+the site.
 
-- **The fourteen**, in the order the brief named them: `SourceCandidate`,
-  `VerificationRecord`, `ClaimEvidence`, `ChangeRecord`, `DataGap`,
-  `ArchitectureProposal`, `EditorialProposal`, `UXProposal`,
-  `ImplementationProposal`, `QAResult`, `ApprovalRequest`, `AgentObservation`,
-  `AgentRun`, `WebsiteChange`. 303 fields, 47 forbidden fields with their
-  reasons, 69 contract-specific cross-field rules.
-- **A contract is data, not code** — a plain object per contract, in a field
-  vocabulary with an interpreter of about 150 lines. Every field carries its own
-  documentation, kind, nullability, and what it is *capable of asserting*.
-- **The envelope, on every record:** `contract`, `contract_version`, `agent`,
-  `created_at`, `affected_entities`, `evidence`, `epistemic`, `trace_ref`,
-  `simulated`. A record names its own contract, so whoever receives it can
-  validate it without being told what it is.
-- **The twelve, on every substantive proposal:** `proposal_id`, `agent`,
-  `created_at`, `affected_entities`, `reason`, `evidence`, `confidence`, `risk`,
-  `autonomy_class`, `proposed_change`, `validation_requirements`,
-  `rollback_plan`. The suite asserts all twelve are present and required on each
-  of the four `*Proposal` contracts.
-- **The four epistemic states are separated and enforced:** a factual field must
-  cite evidence capable of bearing it; an inference must say what it was
-  concluded from and by what method; an interpretation must say whose it is;
-  `unresolved` must say what is missing and which kind of absence it is. A
-  statement filed under two states at once is refused.
-- **`null`, `"unknown"` and `no_rule_matched` are three states**, checked field by
-  field against the `epistemic.unresolved` entry that names them.
-- **Autonomy is checked, not declared.** `autonomous` / `review_required` /
-  `human_only` map onto the green / amber / red tiers, and the validator reads
-  what a record actually touches: a legal-record entity cannot be `autonomous`; a
-  red target (`js/format.js`, `js/pipeline.js`, `tools/_footer.mjs`,
-  `claim_type`, a licence, the non-affiliation or no-legal-advice text, the
-  README's known limitations) forces `human_only`; a blocking open question or an
-  irreversible rollback plan forbids autonomous action; a proposal touching
-  `data/`, `js/`, `css/`, `i18n/`, `tools/` or any `.html` must name all four
-  validators.
-- **The gate** (`gateway.mjs`) — `emit`, `receive`, `handoff`. None has a flag
-  that skips validation. What reaches the trace is a pointer and a sha256, never
-  a copy of the record body.
-- **JSON Schema is an export**, derived on demand by `cli.mjs export`, never
-  committed.
+- **What it does.** Reads a claim from `data/claims.json`; resolves every source it cites
+  against `data/sources.json`; **actually attempts** an HTTP retrieval of each cited URL;
+  emits `SourceCandidate` for what it located, `DataGap` for what it could not retrieve and
+  for claims the corpus itself says have no external source, `AgentObservation` for what the
+  run established, and an `AgentRun` for the run — all through `agent/schemas/gateway.mjs`.
+- **What it does not do.** No `VerificationRecord` — verifying is the Verifier's contract, and
+  an agent that verifies its own findings has verified nothing. No `*Proposal`, no
+  `ChangeRecord`, no `WebsiteChange`. No write to `data/*.json`, and no `sources.json` record:
+  creating one from anything but a retrieved document is red tier. The suite asserts all of
+  this by name.
+- **The distinction it exists to keep.** What `data/sources.json` *records* about a document
+  (a fact about the corpus, evidenced by the corpus, at a real locator) is not what the
+  *document says* (a fact about the world, requiring having opened it). With retrieval
+  blocked only the first is available, so those candidates cite `dataset_record` evidence
+  rather than `retrieved_document`, phrase every fact as a fact about the corpus in so many
+  words, carry `url_status: "url:unchecked"`, set `tier_estimate: null`, and are filed as
+  `duplicate` of the source record they came from. **A re-read of `sources.json` is not a
+  find, and must never read as one.**
+- **Retrieval outcomes are classified, not reduced to a boolean** — `retrieved` /
+  `policy_denied` / `http_error` / `network_error`. The middle two arrive as the same HTTP
+  403, so `retrieve.mjs` reads response headers rather than status codes alone.
+- **Traced end to end**: agent span, one retriever span per attempt, real `provenance` records
+  with a real locator and a real `retrieved_at`, and a `decision` record per failed retrieval
+  naming the three alternatives it rejected — including "substitute a different, reachable
+  document", rejected outright.
+
+`agent/schemas/store.mjs` — where a contract record lives (decision 0.1 below).
 
 ## Files changed
 
-All new and additive except `docs/HANDOVER.md`. **No file the website ships was
-modified, and no file of the observability layer was modified.** Confirmed by
-`git status --porcelain`.
+```
+NEW
+  agent/scout/README.md               what it does, and the network reality it ran into
+  agent/scout/scout.mjs               the agent
+  agent/scout/retrieve.mjs            one HTTP attempt, honestly classified
+  agent/scout/corpus.mjs              read-only reads of data/*.json
+  agent/scout/cli.mjs                 claims · run · show
+  agent/scout/selftest.mjs            12 tests
+  agent/schemas/store.mjs             agent/runs/, written through the gate
 
+MODIFIED
+  agent/schemas/types.mjs             + absence_kind retrieval_failed, + gap_kind retrieval_blocked
+  agent/schemas/contracts/data-gap.mjs  + the two pairing rules, and why
+  agent/schemas/selftest.mjs          + the test for them (61 → 62)
+  agent/schemas/README.md             an agent speaks these contracts now
+  docs/AGENT-CONTRACTS.md             the storage decision, retrieval_failed, limitations 1/5/6
+  AGENTS.md                           two rows: AGENT-CONTRACTS.md, OBSERVABILITY.md
+  .gitignore                          + agent/runs/
+  .agents/skills/git-workflow/SKILL.md  the stale branch name, one line
+  docs/HANDOVER.md                    this file
 ```
-docs/AGENT-CONTRACTS.md                 (new — the reference document)
-docs/HANDOVER.md                        (rewritten for this session)
-agent/schemas/README.md
-agent/schemas/types.mjs
-agent/schemas/fields.mjs
-agent/schemas/common.mjs
-agent/schemas/define.mjs
-agent/schemas/registry.mjs
-agent/schemas/validate.mjs
-agent/schemas/gateway.mjs
-agent/schemas/export.mjs
-agent/schemas/fixtures.mjs
-agent/schemas/cli.mjs
-agent/schemas/selftest.mjs
-agent/schemas/contracts/source-candidate.mjs
-agent/schemas/contracts/verification-record.mjs
-agent/schemas/contracts/claim-evidence.mjs
-agent/schemas/contracts/change-record.mjs
-agent/schemas/contracts/data-gap.mjs
-agent/schemas/contracts/architecture-proposal.mjs
-agent/schemas/contracts/editorial-proposal.mjs
-agent/schemas/contracts/ux-proposal.mjs
-agent/schemas/contracts/implementation-proposal.mjs
-agent/schemas/contracts/qa-result.mjs
-agent/schemas/contracts/approval-request.mjs
-agent/schemas/contracts/agent-observation.mjs
-agent/schemas/contracts/agent-run.mjs
-agent/schemas/contracts/website-change.mjs
-```
+
+**No file the website ships was modified.** Confirmed by `git status --porcelain`. No run
+output is committed.
+
+## The three decisions carried forward from SESSION 04
+
+**0.1 — Contract records live in `agent/runs/`.** One JSONL file per run, named by `trace_id`,
+appended and never rewritten, git-ignored, on the same reasoning `agent/observability/runs/`
+already gives. **Not `data/`**: that is the legal record, and a contract record is an agent's
+unverified finding — a `SourceCandidate` is not a source, and putting one where sources live
+is how the two stop being distinguishable. Written into `docs/AGENT-CONTRACTS.md` and
+`.gitignore`. **The store is not a second path around the gate**: `ContractStore.append` calls
+the gateway's own `receive`, which validates and throws, and a test asserts an invalid record
+dies at the store boundary.
+
+**0.2 — `AGENTS.md` now points at `docs/AGENT-CONTRACTS.md` and `docs/OBSERVABILITY.md`.** Two
+rows in the "Read these first" table and nothing else. Restating a rule there would create the
+second home that file exists to prevent.
+
+**0.3 — `.agents/skills/git-workflow/SKILL.md` no longer hard-codes a branch name.** One line.
+Nothing else in that skill was touched. See the merge note above: SESSION 03 fixed this
+differently and better, and its version should win.
 
 ## Architecture decisions
 
-1. **Contracts are data with a hand-written interpreter, not JSON Schema.**
-   Validating JSON Schema needs a validator, and a dependency is a RED-tier
-   prohibition. JSON Schema also cannot express what these contracts are for —
-   that a fact must cite evidence, that `"unknown"` is not `null`, that an
-   autonomy class must match what a record touches. JSON Schema is an export, and
-   the suite asserts no `.schema.json` is committed, because a committed copy
-   would be a second home for every field definition.
-2. **A record is self-describing.** `contract` and `contract_version` are on the
-   record, so validation needs no out-of-band knowledge. An unrecognised contract
-   name is refused rather than skipped — that is what makes "no agent may bypass
-   these contracts" a function rather than a policy sentence.
-3. **Shapes are closed, and forbidden fields answer with the objection.** A
-   field the contract does not declare is refused; a field it explicitly forbids
-   is refused *with the reason*, which is almost always that the value is derived
-   or already has a home.
-4. **Vocabularies are borrowed, never copied.** `supports`, `source_type`,
-   `source_tier`, `url_status` are read from `data/taxonomy.json` at load;
-   `RISKS`, `APPROVAL_STATES`, `PROVENANCE_ROLES` are re-exported from
-   `agent/observability/schema.mjs`. The suite asserts object identity, not
-   equality, so a copy would fail.
-5. **Entity kinds and autonomy classes were NOT added to `data/taxonomy.json`.**
-   That file is the site's legal vocabulary, which a reader's page resolves
-   against; the agent layer's own bookkeeping has no business in it.
-6. **The epistemic requirement applies to top-level fields only.** An annotation
-   deeper inside a record describes that sub-object rather than what the record
-   asserts. This is a judgment about legibility and is the check most likely to
-   need revisiting.
-7. **The trace gets a pointer, not a copy.** `emit` writes the record's id, its
-   contract name and a sha256 of its canonical form. The hash makes the pointer
-   checkable: a record edited after emission no longer matches the trace.
-   `ApprovalRequest` additionally emits the observability `approval` event — id
-   and state only — so a pending approval appears in the viewer, which is the
-   failure that layer exists to prevent.
-8. **`WebsiteChange` carries no file list.** The files live on the `ChangeRecord`
-   it references. One home per fact, applied to the agent layer's own records.
-9. **A missing link in an audit chain must be named.** `WebsiteChange` refuses an
-   empty link array unless `chain_gaps` says why it is empty — the asterisk
-   discipline, and the same rule the observability layer's `chain` command
-   already follows.
-10. **Fixtures are aggressively marked simulated** — `example.invalid` hosts,
-    `simulated: true` on every record and every evidence entry, and `validate()`
-    refuses a simulated record unless the caller explicitly asks. The suite
-    asserts the markers rather than trusting them.
+1. **The branch was based on SESSION 04, not `main`.** The alternative was to deliver nothing.
+   Recorded above as the project's largest open question rather than resolved silently.
+2. **A contract was changed rather than routed around** — see below. SESSION 04's §3 authorised
+   exactly this, and required the contract, its tests and the documentation to move together.
+   They did, in one commit.
+3. **Retrieval outcomes are classified rather than booleaned.** `policy_denied` vs
+   `http_error` is the distinction that matters: an egress proxy denying a request answers
+   with the same 403 an origin uses to refuse a bot, and recording ours as theirs would be a
+   false statement about a publisher inside a record that looks like research.
+4. **A failed candidate is `duplicate`, never `proposed`.** It re-derived a citation the corpus
+   already holds. `proposed` would say the Scout found something new.
+5. **`url_status` is `url:unchecked` on a refused attempt** — never `url:live` (nothing was
+   fetched) and never `url:dead` (that is a claim about the URL made out of our own failure).
+6. **`role: "unresolved"` on the Scout's evidence and provenance records.** The provenance role
+   of a document is exactly what the agent failed to establish; claiming one would be the
+   inference the record exists to avoid. See known limitation 4.
+7. **The Scout does not hand off.** `handed_off_to: []`. There is no Verifier, and creating a
+   queue entry addressed to an agent that does not exist would imply one does.
+8. **The parsed corpus never leaves `corpus.mjs`.** See "one defect found" below.
+9. **`AgentRun.status` is `ok` on a run that retrieved nothing.** The agent did not fail; the
+   network did, and that is what the `DataGap` records are for. A `failed` run would say the
+   Scout malfunctioned.
+
+## The contract that turned out to be the wrong shape
+
+SESSION 04 predicted the first real agent would find one. It did.
+
+**`absence_kind` gained `retrieval_failed`; `GAP_KINDS` gained `retrieval_blocked`; `DataGap`
+gained two rules pairing them in both directions.**
+
+With only the three original absence kinds, a document the Scout cannot reach had to be filed
+as either `null_not_researched` — which says nobody looked, when somebody did — or
+`unknown_not_determinable`, which is much worse: **that one asserts the answer is not publicly
+determinable, which is a claim about the world, and a false one manufactured out of a network
+failure.** The Official Journal is published whether or not this process can open a socket.
+
+The general rule: **an agent must never be able to turn its own failure into a finding about
+EU law.** `VERIFICATION_VERDICTS` already had `source_unavailable`, so SESSION 04 had seen
+this state for the Verifier's verdict and not for the absence taxonomy — which is why this
+reads as a gap in the contract rather than a disagreement with it.
+
+Contract, rules, tests and `docs/AGENT-CONTRACTS.md` changed in the same commit. Rule count
+went 69 → 71; the schema suite went 61 → 62 tests.
+
+## Network reality — reported, not papered over
+
+**Every outbound host is refused in this environment.** The egress proxy answers HTTP 403 with
+`x-deny-reason: host_not_allowed` and a body reading `Host not in allowlist: <host>`, for
+EUR-Lex, for `andreatosti2001.github.io`, for `example.com` — everything. Confirmed directly
+against the proxy's own status endpoint, which logs each refusal as
+`connect_rejected · gateway answered 403 to CONNECT (policy denial)`.
+
+This is the environment's egress allowlist, **not** EUR-Lex refusing us, and the Scout records
+it as such. Consequences:
+
+- **Zero documents were retrieved.** Every retrievable source became a `DataGap` with
+  `gap_kind: retrieval_blocked` / `absence_kind: retrieval_failed`.
+- **Nothing was invented to compensate**, and the demonstrator's simulated fixtures were not
+  reused. The success path is exercised only by a stub `fetch` in the suite — a test double
+  for the transport, whose records are checked and never stored.
+- SESSION 00 recorded HTTP 403 on the live site. This is the same wall, now measured
+  precisely and given a contract shape.
+
+**The single highest-value change to what this agent can do is not a code change.** Adding
+`eur-lex.europa.eu` (and the handful of regulator hosts `data/sources.json` cites) to the
+environment's network egress allowlist would let the Scout do the job it was built for. Until
+then it can locate leads and name gaps, and it cannot open a document.
 
 ## Tests
 
-Run in this session, from the repository root, on the tree at `4bd1f0d`:
+Run from the repository root, on `45fec5d`:
 
 | Command | Result |
 |---|---|
-| `node --test agent/schemas/selftest.mjs` | **61 pass · 0 fail** |
-| `node agent/schemas/cli.mjs check` | 14 contracts · 14 satisfiable by their fixture · exit 0 |
-| `node --test agent/observability/selftest.mjs` | 13 pass · 0 fail — unchanged |
-| `node agent/observability/cli.mjs validate` | 0 records · 0 invalid · exit 0 |
+| `node --test agent/schemas/selftest.mjs` | **62 pass · 0 fail** (was 61; +1 for the contract change) |
+| `node agent/schemas/cli.mjs check` | 14 contracts, 14 satisfiable, exit 0 |
+| `node --test agent/observability/selftest.mjs` | **13 pass · 0 fail** |
+| `node agent/observability/cli.mjs validate` | 0 invalid · 0 unparseable · exit 0 |
+| `node --test agent/scout/selftest.mjs` | **12 pass · 0 fail** |
 | `node tools/validate.mjs` | 0 errors · exit 0 |
 | `node tools/i18n-audit.mjs` | 0 errors · 0 warnings |
-| `node tools/design-qa.mjs` | 0 errors · **5 warnings** · exit 0 — the same five in §12 |
-| `node tools/freshness.mjs` | reports only · exit 0 |
+| `node tools/design-qa.mjs` | 0 errors · **5 warnings** · exit 0 — the same five as §12 |
+| `node tools/freshness.mjs` | reports only · exit 0 · "Nothing past its stated interval" |
 
-**The four validators' output is byte-identical to the run taken before any file
-was added** (compared with `diff`, not by eye). No new warning.
+**The four validators' output is byte-identical to the baseline** taken before any file was
+changed, compared with `diff`. No new warning.
 
-The 61 tests cover: the fourteen contracts exist, are documented and carry the
-envelope · all twelve proposal fields on all four proposals · vocabularies are
-the site's and the trace's rather than copies · every contract is satisfiable by
-its fixture · every fixture is unmistakably simulated · identity, closed shapes
-and forbidden fields · each of the four epistemic states and the rules that keep
-them apart · `null` vs `"unknown"` in both directions · evidence that cannot bear
-what cites it · every governance rule · at least one rule per contract · the gate
-refusing an invalid record, hashing rather than copying, and refusing a handoff ·
-the JSON Schema export.
+Also run live: `node agent/scout/cli.mjs run clm-dpc-collected` (3 cited URLs, 3
+`policy_denied`, 9 records emitted) and `run clm-dpc-staff-growth` (placeholder-only, 0
+retrievals attempted, 0 candidates, 1 `missing_source` gap) — the honest-empty path.
 
-**Not run:** no agent has used these contracts, because none exists. No record
-has been produced by anything other than a fixture.
+**Not run:** no browser or viewer testing of the Scout's traces (the viewer was verified in
+SESSION 02 and its code is unchanged); no successful live retrieval of any kind, because none
+is possible here; no concurrent runs.
 
 ## Observability
 
-**No file in `agent/observability/` was modified.** The contract layer is a
-consumer of it: `gateway.mjs` writes through `tracer.mjs`'s existing `artifact`,
-`approval` and `handoff` events, and the suite asserts that every record the gate
-emits satisfies `agent/observability/schema.mjs` unchanged. The record vocabulary
-did not need extending, which was the intended outcome — a contract record is an
-artifact with an id and a hash, not a new kind of trace event.
+The run is traced end to end through `tracer.mjs`: one agent span (`run_id` = its `span_id`),
+a `corpus.claim` tool span, one `http.get` retriever span per attempt with a `usage` record
+carrying real latency, a `provenance` record per source with a real locator and a real
+`retrieved_at`, a `decision` record per failed retrieval with three named rejected
+alternatives, and an `artifact` pointer per contract record — id, contract name and sha256,
+never a copy of the body. `console.log` is not used as the observability mechanism anywhere;
+the CLI writes to stdout for a human, which is a different thing.
+
+## One defect found and fixed while building
+
+Letting `run.step` capture a tool's return value wholesale put a **74 KB copy of
+`data/claims.json` into a single trace line**, because the corpus reader returned the parsed
+dataset alongside the claim. Nothing failed — it was simply the second home for the entire
+corpus, arriving through an output capture rather than a schema. The parsed corpus no longer
+leaves `corpus.mjs`, spans close with explicit compact outputs, and a regression test asserts
+no trace record exceeds 8 KB and that neither a dataset nor a document body appears in one.
+Max trace line went from 74,292 bytes to 1,483.
 
 ## Known limitations
 
-1. No agent implements these contracts, because none exists. The first real agent
-   will almost certainly find a field that is the wrong shape.
-2. The epistemic requirement is enforced on top-level fields only (decision 6).
-3. Only 4 fields across the fourteen contracts are typed `factual`, 5
-   `inference`, 2 `interpretation`; the other 292 are structural. That is
-   correct — most fields are bookkeeping — but the epistemic machinery is
-   exercised by a small number of fields, and the suite checks that every field
-   declares a class, not that the class is right.
-4. The red-target list is matched as substrings against an entity's path, field
-   or id. It catches `js/format.js:TIER_GRADE`; it will not catch a red-tier
-   change described only in prose in a `reason` field.
-5. Cross-record references are checked only within a batch, and reported rather
-   than failed, because the referenced record may legitimately live elsewhere.
-6. **Nothing stores contract records.** The gate hashes them into the trace;
-   where the records themselves live is undecided, and it must not be `data/`.
-7. `AgentObservation` and the tracer's `observe()` overlap: an agent emitting
-   both writes the summary twice. Whether the trace record should become a
-   pointer too is unresolved.
+1. **The Scout has never successfully retrieved anything.** The whole `retrieved` path is
+   proven by tests with a stub `fetch` and by nothing else. The first run in an environment
+   with real egress should be watched closely.
+2. **It scouts one claim per run.** No batching, no scheduling, no resumption, and no
+   cross-run deduplication of gaps: scouting the same claim twice writes two `DataGap` records
+   with two ids and no relationship between them.
+3. **It only looks where the corpus already points.** It resolves the sources a claim cites; it
+   does not search for sources the corpus does not name. For the 20 claims resting only on the
+   brief's own placeholder, it can therefore say only "no external source is recorded" — which
+   is true and useful, and is not the same as having looked for one.
+4. **`role: "unresolved"` is doing work the vocabulary was not designed for.** `PROVENANCE_ROLES`
+   describes how a *legal source* stands; the Scout uses `unresolved` for a corpus record, a
+   measurement of its own run, and an unopened document. It is defensible in each case and it
+   is not obviously right. Expanding that vocabulary would touch the observability layer's
+   re-exported enum and risk drift with `data/claims.json`, so it was left alone deliberately.
+5. **`retrieval_failed` carries no field-value rule.** The other two absence kinds constrain
+   the field they name (`null_not_researched` forbids a value, `unknown_not_determinable`
+   requires `"unknown"`). `retrieval_failed` constrains nothing, because a field could
+   legitimately carry a value obtained another way. Whether that is right is unproven.
+6. **The `<title>` reader is the only thing that parses a retrieved document**, and it is
+   deliberately crude. Anything more would be extraction, which is the Verifier's problem.
+7. **Only four of the fourteen contracts have been exercised** by a real agent. The other ten
+   remain unproven, and the next one built will probably find its own wrong-shaped field.
+8. Carried forward: the store is per-developer; there is no retention policy; concurrent
+   writers are untested.
 
 ## Unresolved issues
 
-Carried forward and still open — none was in this session's scope:
+Carried forward and still open:
 
-1. **`data/brief.json` is canonical but never consumed**; its content ships as
-   the inline `window.__CONTENT__` blob at `index.html:361`. Two homes for one
-   set of facts. `EditorialProposal.content_blob_checked` now forces an agent to
-   *declare* it checked both — it does not fix the drift, and must not be taken
-   to have fixed it.
-2. **The two copies have already drifted** — `meta.standfirst` differs. Which is
-   correct is the author's decision; an agent must not pick one.
-3. **No deploy gate.** A push to `main` publishes; the validators do not run in
-   CI.
-4. **106 records carry an unverified or requires-verification note.** The
-   project's largest open body of work.
-5. **No decision on excluding `agent/` from the Pages deployment.** This session
-   adds a second directory under it. Nothing here is reachable as a page — the
-   `.mjs` files are not HTML and nothing links to them — but the directory is
-   served, and the decision is still not taken.
+1. **`data/brief.json` is canonical but never consumed**; its content ships as the inline
+   `window.__CONTENT__` blob at `index.html:361`. Two homes for one set of facts.
+2. **The two copies have already drifted** — `meta.standfirst` differs. The author's decision.
+3. **No deploy gate.** A push to `main` publishes; the validators do not run in CI.
+4. **106 records carry an unverified or requires-verification note.** The project's largest
+   open body of work — and the thing the Scout was built to start chipping at, which it cannot
+   do until it can reach a document.
+5. **No decision on excluding `agent/` from the Pages deployment.** Now slightly larger:
+   `agent/scout/` joins `agent/observability/` and `agent/schemas/` under the published root.
+   Nothing links to it and no run data is committed, but it is reachable.
 
 New, from this session:
 
-6. **Neither `docs/OBSERVABILITY.md` nor `docs/AGENT-CONTRACTS.md` is referenced
-   from `AGENTS.md`.** `AGENTS.md` is the canonical entry point and its "Read
-   these first" table does not mention either. An agent that reads only the
-   entry point will not learn that the contracts exist, which undercuts "no agent
-   may bypass these contracts". **This session deliberately did not edit
-   `AGENTS.md`** — SESSION 02 set the precedent of not touching it, and what
-   belongs in the author's entry point is the author's decision. It is a real
-   gap and it is recorded here rather than closed unilaterally.
-7. **`.agents/skills/git-workflow/SKILL.md` names a stale branch.** See the
-   discrepancy note above.
-8. **Where contract records are stored is undecided** (limitation 6).
+6. **Four unmerged parallel session branches.** See the discrepancy section. This is now the
+   project's biggest structural risk: the longer they diverge, the worse the `docs/HANDOVER.md`
+   conflict gets.
+7. **The environment's egress allowlist is the binding constraint on every future research
+   agent**, not just this one. The Verifier will hit exactly the same wall, and it has less to
+   do without a document than the Scout does.
 
 ## Next session
 
-**SESSION 05 — instrument one real read-only agent against these contracts.**
+**SESSION 06 — the Verifier, against a document the Scout can actually retrieve.**
 
-This is SESSION 02's recommended next objective, unchanged and now with an
-interface to speak. Build **one** agent: the Scout, **read-only**, against real
-sources, emitting through `agent/observability/tracer.mjs` and
-`agent/schemas/gateway.mjs`, producing real `SourceCandidate` and `DataGap`
-records, appearing in the viewer with real provenance.
+Prerequisite, and it is a real one: **either the egress allowlist is opened for the source
+hosts `data/sources.json` cites, or SESSION 06 is a different session.** A Verifier's entire
+contract is comparing a statement against a retrieved document. With retrieval blocked it can
+produce exactly one verdict — `source_unavailable` — which the Scout's `DataGap` records
+already say more precisely. Building it into a blocked network would produce a component that
+looks finished and has never done its job once.
 
-Do not build the Verifier or the Change Detector in the same session, and do not
-let any agent write to `data/*.json`.
+If egress cannot be opened, the better next objective is the one SESSION 02 named and nobody
+has taken: **retrofit the four validators in `tools/` to emit a structured record alongside
+their human-readable output.** It needs no network, it is the smallest useful increment, and
+`QAResult` is the contract it would exercise — a fifth of the fourteen, proven.
 
-## Exact next objective
+### Exact next objective
 
-A Scout that, given a statement already present in the brief, retrieves candidate
-sources, and emits — through the gate, so nothing unvalidated leaves it —
-`SourceCandidate` records for what it found and `DataGap` records for what it
-could not find, with `AgentRun` and `AgentObservation` records for the run
-itself. It verifies nothing, proposes nothing, and writes to no dataset. Its
-first real output will show which of these contracts is the wrong shape; fix the
-contract and its tests in the same commit.
+Ask the author to decide the merge question in the discrepancy section **before** writing any
+code. Every branch listed there rewrites `docs/HANDOVER.md`, and a fifth parallel line makes
+it worse. Then, depending on the egress answer, build the Verifier or instrument the
+validators — one of the two, not both.
 
-## Next-session instructions
+## Anything the next agent must know
 
-- Read `AGENTS.md` first — it is the canonical entry point — then invoke
-  `project-context` and read `docs/PROJECT-CONTEXT.md`,
-  `docs/CURRENT-ARCHITECTURE.md`, `docs/AI-SAFE-BOUNDARIES.md` and this file,
-  then `docs/OBSERVABILITY.md` and `docs/AGENT-CONTRACTS.md` before writing any
-  agent.
-- Re-run the four validators and confirm the §12 baseline before changing
-  anything.
-- **Every record an agent produces goes through `agent/schemas/gateway.mjs`.** Do
-  not construct a record and pass it on directly; do not add a second path that
-  skips validation. If a contract refuses something an agent legitimately needs
-  to say, that is a finding about the contract — change the contract and its
-  tests, do not route around it.
-- **Nothing outside the fixtures may be marked `simulated`.** A real Scout's
-  records are real records or they are not written.
-- A real provenance record must carry a `url` or a `locator`; both the trace
-  schema and these contracts refuse it otherwise.
-- Extending the contract vocabulary means extending the contract **and its
-  tests** in the same commit, exactly as the observability layer already
-  requires.
-- Before declaring done: `node --test agent/schemas/selftest.mjs`,
-  `node agent/schemas/cli.mjs check`,
-  `node --test agent/observability/selftest.mjs`,
-  `node agent/observability/cli.mjs validate`, and the four validators in
-  `tools/`.
+- **The repository is the source of truth, and `main` is not the whole repository.** Run
+  `git ls-remote --heads origin` before believing anything about what exists.
+- The Scout's records are **real** — `simulated: false` throughout, validated with
+  `allowSimulated` off. Nothing outside `fixtures.mjs` may be marked simulated, and the suite
+  asserts it.
+- `agent/runs/` and `agent/observability/runs/` are both git-ignored. Do not commit either.
+- The gate is `agent/schemas/gateway.mjs` and the store calls into it. If you need a record
+  somewhere new, route it through `emit` or `receive`; do not add a third door.
+- A `403` is not evidence about a publisher. Read the headers before writing down whose
+  refusal it was.
 
-## Do not
+## Anything the next agent must NOT change
 
-Carried forward from SESSION 00 and SESSION 02, unchanged and still binding:
+Carried forward, unchanged and still binding:
 
-- **Do not rebuild the site.** No framework, no bundler, no build step, no
-  dependency, no service worker, no server-side rendering.
+- **Do not rebuild the site.** No framework, no bundler, no build step, no dependency, no
+  service worker, no server-side rendering.
 - **Do not fix the `__CONTENT__` / `brief.json` drift on your own initiative.**
 - **Do not modify `data/*.json`** in a session not scoped for data work.
-- **Do not touch** the footer's non-affiliation or no-legal-advice text,
-  `TIER_GRADE` in `js/format.js`, the derivation rules in `js/pipeline.js`, or
-  the `BASE` constant in `tools/_footer.mjs`.
-- **Do not declare a licence.**
-- **Do not soften** the README's known limitations or the unverified-record
-  count.
-- **Do not re-run** `tools/_refsweep.mjs` or `tools/_review10.mjs`.
-- **Do not change the id shapes in `agent/observability/ids.mjs`.** They are the
-  OTLP export contract.
-- **Do not move redaction to the read path.**
-- **Do not remove the demonstrator's simulation markers**, and do not point it at
-  a real source.
-- **Do not commit anything under `agent/observability/runs/`.**
-- **Do not install Langfuse or Phoenix without re-reading the evaluation** in
-  `docs/OBSERVABILITY.md`.
+- **Do not touch** the footer's non-affiliation or no-legal-advice text, `TIER_GRADE` in
+  `js/format.js`, the derivation rules in `js/pipeline.js`, or `BASE` in `tools/_footer.mjs`.
+- **Do not declare a licence.** **Do not soften** the README's known limitations or the
+  unverified-record count. **Do not re-run** `tools/_refsweep.mjs` or `tools/_review10.mjs`.
+- **Do not change the id shapes in `ids.mjs`**, and do not move redaction to the read path.
+- **Do not remove the demonstrator's simulation markers**, and do not point it at a real
+  source.
 
 Added by this session:
 
-- **Do not add a validation bypass.** No `skip`, no `force`, no `strict: false`
-  on `validate`. The single flag that exists, `allowSimulated`, admits a fixture
-  and nothing else.
-- **Do not commit a `.schema.json`.** JSON Schema is derived on demand; a
-  committed copy is a second home for every field definition, and the suite
-  fails if one appears.
-- **Do not copy a contract record's body into the trace.** The trace gets an id
-  and a hash. Copying the body makes the trace a second home for every fact the
-  record carries.
-- **Do not add a field for a substitute value** to `DataGap` or anywhere else,
-  under any name. A gap is closed by finding the source.
-- **Do not relax `supports:context`.** A fact resting only on context evidence is
-  refused in three places, deliberately.
-- **Do not copy a vocabulary** out of `data/taxonomy.json` or
-  `agent/observability/schema.mjs` into `agent/schemas/`. They are imported, and
-  the suite asserts identity.
-- **Do not mark anything outside `fixtures.mjs` as `simulated`.**
+- **Do not let the Scout write to `data/`, verify anything, or propose anything.** The suite
+  asserts all three by contract name; if a test there starts failing, the agent has grown a
+  second job and needs splitting, not a looser test.
+- **Do not collapse `retrieval_failed` back into the other absence kinds**, and do not
+  weaken the two `DataGap` pairing rules. They exist to stop a network failure being written
+  down as a finding about EU law.
+- **Do not give `DataGap` a field for a substitute** under any name. The forbidden list is the
+  contract, and the Scout's suite re-checks it independently.
+- **Do not let a span capture a dataset or a document body.** Close spans with explicit
+  compact outputs; the 8 KB regression test is there because this already happened once.
+- **Do not mark `url_status` as `url:live` or `url:dead` on an attempt that never reached the
+  origin**, and do not attach a URL to a `provenance` record for a document that was not
+  opened.
+- **Do not merge SESSION 03's branch by taking this session's `git-workflow` fix.** Theirs is
+  better; this one exists only because theirs is unmerged.
 
 ---
 
 ## What must NOT be rebuilt
 
-SESSION 00's closing statement stands unchanged: **the architecture is not
-technical debt, it is the argument.** The zero-build, zero-dependency,
-client-rendered model; `js/data.js` as the sole fetch point; the derivation
-layer; the one-home-per-fact data model; the taxonomy as universal enum
-authority; the `null` / `unknown` distinction; `js/shell.js` and
-`js/evidence-view.js` as single renderers; the seven duplicated footers; and the
-four validators — none of these was touched, and none should be. The full
-statement is in `git show c2e62c7:docs/HANDOVER.md`.
+SESSION 00's closing statement stands, and SESSION 02's and SESSION 04's restatements of it
+stand with it: **the architecture is not technical debt, it is the argument.** The zero-build,
+zero-dependency, client-rendered model; `js/data.js` as the sole fetch point; the derivation
+layer; the one-home-per-fact data model; the taxonomy as universal enum authority; the `null` /
+`unknown` distinction; `js/shell.js` and `js/evidence-view.js` as single renderers; the seven
+duplicated footers; and the four validators — none of these was touched, and none should be.
 
-The contract layer was built to the same standard, and to the observability
-layer's: no dependency, no build step, derived state never stored, vocabularies
-borrowed rather than copied, and every record able to say what it cannot support.
+The Scout was built to the same standard: no dependency, no build step, derived state never
+stored, every record able to say what it cannot support — and, when the contracts could not
+express what was actually true, the contract was changed in the open rather than the record
+bent to fit it.
