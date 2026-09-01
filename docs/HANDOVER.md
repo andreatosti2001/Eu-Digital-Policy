@@ -1,261 +1,247 @@
 # HANDOVER
 
-**Last updated:** SESSION 02 · 1 September 2026 (merged forward to include `064469c`)
-**Branch:** `claude/eu-digital-policy-protocol-kye69t`
-**Base commit:** `c2e62c7` on `main` (SESSION 00), merged with `064469c` (`AGENTS.md` /
-`CLAUDE.md`)
+**Last updated:** SESSION 03 · 1 September 2026
+**Branch:** `claude/shared-skill-library-djn1oo`
+**Base commit:** `4bd1f0d` on `main` (the SESSION 02 merge)
 
 ---
 
 ## Current milestone
 
-**SESSION 02 — Build the observability foundation. Complete.**
+**SESSION 03 — Build the shared skill library. Complete.**
 
-This is the session SESSION 00 recommended as "SESSION 01 — design and implement the agent
-observability layer". The numbering differs; the objective is the same one, and it is now
-done. No legal agent was built, and none should be until the next session.
+`.agents/skills/` now holds sixteen skills, and `docs/SKILL-MAP.md` records what each owns
+and which agent role uses it. **No file the website ships was modified.**
 
-The reference document is **`docs/OBSERVABILITY.md`**. This file is the handover only.
+### Discrepancy between the brief and the previous handover — reported, not reconciled
 
-## Implementation
+SESSION 02 recommended that SESSION 03 be *"instrument one real read-only agent — the
+Scout"*. **This session's brief instructed something different**: build the shared skill
+library. The brief was followed, as the more recent instruction, and the recommendation is
+**not lost** — it is carried forward below as the next objective, which the library was
+written to serve. The numbering now matches the brief; the Scout is the next session's work.
+Recording the divergence here rather than silently renumbering, per the rule that a handover
+which has drifted from the instruction is itself a finding.
 
-`agent/observability/` — the instrumentation layer the future multi-agent system runs on.
-Zero dependencies, no build step, nothing wired into the site.
+## Work performed
 
-- **Model.** An append-only JSONL event log, one file per trace. `span.start` / `span.end`
-  build the execution tree; nine event types hang off the spans — `observation`, `decision`,
-  `artifact`, `handoff`, `approval`, `provenance`, `usage`, `error`, `website_change`.
-  Nothing derived is ever stored, matching the rule the data model already keeps.
-- **Identifiers.** W3C Trace Context shapes — `trace_id` 32 hex, `span_id` 16 hex.
-  `run_id` **is** the `span_id` of an orchestrator/agent span, so a run is not a second home
-  for a fact. `parent_run_id` skips tool spans. A tool span carries the `run_id` and the
-  name of the agent that called it.
-- **Observations, not log lines.** The layer offers no logging call at all. Every meaningful
-  operation writes a structured claim with subject, summary, data, confidence, risk and refs.
-- **Redaction** happens at the sink on the way *in*, by key and by value, and the count is
-  written onto every record.
-- **Read model** (`query.mjs`) derives the tree, token/cost/latency rollups, the queues, and
-  the `source → verification → decision → implementation → deployment` chain — which reports
-  its own gaps rather than omitting them.
-- **Export** (`otlp.mjs`) emits OTLP/JSON with OpenInference attributes.
-- **Development view** — `node:http` on loopback plus a static page: running, completed,
-  degraded and failed traces, open handoffs, pending human approvals, artifacts, decisions,
-  provenance, website changes, errors.
-- **Demonstrator** — a fully simulated Scout → Verifier → Change Detector run.
+Twelve new skills, four existing ones amended, one map, two scripts.
 
-Also merged into this branch after the observability work was committed: `AGENTS.md` and
-`CLAUDE.md`, added directly to `main` in a parallel commit (`064469c`,
-"Add AGENTS.md and CLAUDE.md — the missing agent entry points") to close the gap this
-session's own unresolved issues had flagged — see **Unresolved issues** below. They were not
-authored in this session; they arrived by merge, at the user's explicit request, once
-published. `AGENTS.md` is now the canonical agent entry point; `CLAUDE.md` holds no rules of
-its own and points to it.
+**New** — `eu-legal-research`, `source-provenance`, `legal-source-verification`,
+`regulatory-change-detection`, `data-completeness`, `knowledge-architecture`,
+`legal-editorial`, `ux-audit`, `frontend-implementation`, `legal-site-qa`, `observability`,
+`autonomy-governance`.
+
+**Amended** — `project-context` (pointer to the map; boundary line),
+`data-governance` (scope boundary against its three new siblings; the deliberate-duplication
+note), `repository-audit` (scope boundary), `git-workflow` (boundary line, plus the fix
+below).
+
+**Fixed** — `git-workflow` named `claude/eu-digital-policy-protocol-ntyhqc` as "the session's
+designated branch". That branch belonged to SESSION 00; the name had gone stale and would
+have sent a later session to the wrong branch. The branch is a session fact, so it now lives
+only in the session brief and in this file, and the skill tells the agent to confirm it with
+`git branch --show-current`.
 
 ## Files changed
 
-All new and additive. **No file the website ships was modified.** Confirmed by
-`git status --porcelain`.
-
 ```
-.gitignore                              (new — ignores the trace store only)
-docs/OBSERVABILITY.md                   (new)
-docs/HANDOVER.md                        (rewritten for this session)
-agent/observability/README.md
-agent/observability/ids.mjs
-agent/observability/redact.mjs
-agent/observability/schema.mjs
-agent/observability/sink.mjs
-agent/observability/tracer.mjs
-agent/observability/query.mjs
-agent/observability/otlp.mjs
-agent/observability/server.mjs
-agent/observability/cli.mjs
-agent/observability/selftest.mjs
-agent/observability/demo/workflow.mjs
-agent/observability/viewer/{index.html,viewer.css,viewer.js}
+.agents/skills/eu-legal-research/SKILL.md                          (new)
+.agents/skills/eu-legal-research/references/source-registers.md    (new)
+.agents/skills/source-provenance/SKILL.md                          (new)
+.agents/skills/source-provenance/references/source-record.md       (new)
+.agents/skills/legal-source-verification/SKILL.md                  (new)
+.agents/skills/legal-source-verification/references/verification-protocol.md (new)
+.agents/skills/regulatory-change-detection/SKILL.md                (new)
+.agents/skills/regulatory-change-detection/references/decay-surfaces.md (new)
+.agents/skills/data-completeness/SKILL.md                          (new)
+.agents/skills/data-completeness/scripts/gaps.mjs                  (new)
+.agents/skills/knowledge-architecture/SKILL.md                     (new)
+.agents/skills/legal-editorial/SKILL.md                            (new)
+.agents/skills/legal-editorial/references/house-register.md        (new)
+.agents/skills/ux-audit/SKILL.md                                   (new)
+.agents/skills/ux-audit/references/manual-checks.md                (new)
+.agents/skills/frontend-implementation/SKILL.md                    (new)
+.agents/skills/legal-site-qa/SKILL.md                              (new)
+.agents/skills/legal-site-qa/scripts/baseline.mjs                  (new)
+.agents/skills/observability/SKILL.md                              (new)
+.agents/skills/autonomy-governance/SKILL.md                        (new)
+.agents/skills/autonomy-governance/references/escalation-record.md (new)
+.agents/skills/project-context/SKILL.md                            (amended)
+.agents/skills/data-governance/SKILL.md                            (amended)
+.agents/skills/repository-audit/SKILL.md                           (amended)
+.agents/skills/git-workflow/SKILL.md                               (amended — stale branch)
+docs/SKILL-MAP.md                                                  (new)
+AGENTS.md                                                          (skills paragraph)
+.gitignore                                                         (+ the QA snapshot path)
 ```
-
-**Merged in from `origin/main`, not authored here:** `AGENTS.md`, `CLAUDE.md`, and a small
-addendum to `docs/HANDOVER.md`'s SESSION 00 record acknowledging them (see
-`git show 064469c` for that commit on its own).
 
 ## Architecture decisions
 
-1. **No dependency, no build step, no `package.json`.** `node:test` and `node:http` cover
-   the suite and the server. This is the repository's rule and a RED-tier prohibition in
-   `docs/AI-SAFE-BOUNDARIES.md` §3; it was kept.
-2. **Neither Langfuse nor Phoenix was installed.** The canonical store is the local JSONL
-   log; `otlp.mjs` exports to either, so adoption later is a decision about where to POST.
-   Phoenix is the recommended first backend — local-first, no account, OpenInference-native.
-   Langfuse becomes the better answer once there are prompts to version, evaluation suites
-   to score and more than one annotator, and then self-hosted, because of what the traces
-   contain. Full reasoning in `docs/OBSERVABILITY.md`.
-3. **`run_id` is a span id, not a separate identifier.** One home per fact.
-4. **`degraded` is derived, never stored** — a root that finished ok over a failed child.
-   `ok` would hide the failure; `failed` would be the kind of red nobody reads twice.
-5. **Redaction on the write path.** A store written clean cannot be un-redacted later.
-6. **The viewer does not import `css/tokens.css` or `style.css`.** A tool used to debug the
-   site must not break when the site's component layer changes, and must not become a hidden
-   consumer of tokens `design-qa.mjs` believes only the site uses.
-7. **The demonstrator is aggressively marked simulated** — `example.invalid` hosts,
-   `simulated: true` on every record, a banner in the interface, and tests that assert it.
-   Under §0.1 of the boundaries, fixture data that reads as research would be a worse defect
-   than no demonstrator.
-8. **A missing link in an audit chain is reported, never omitted.** The same discipline as
-   the asterisk in the running text.
-9. **`agent/observability/runs/` is git-ignored.** Run records are build artifacts, not
-   canonical data — SESSION 00's instruction, kept. They hold run inputs and outputs and are
-   regenerable.
-10. **`AGENTS.md` is canonical; `CLAUDE.md` holds no rules of its own and points to it** —
-    merged in from `064469c`, not authored in this session, and kept exactly as published:
-    one home per fact applied to the agent-facing documentation itself.
+1. **Portable by construction.** `SKILL.md` with `name` and `description` front matter and
+   plain Markdown below, at `.agents/skills/<name>/SKILL.md`. No assistant-specific front
+   matter field is used, so Claude Code discovers them by path and any agent reachable through
+   `AGENTS.md` reads them as files.
+2. **One home per rule, applied to the instructions themselves.** Skills point at
+   `docs/AI-SAFE-BOUNDARIES.md` §0 rather than copying it; the tiers, the architecture, the
+   recorded validator baseline, the taxonomy definitions and the branch name each keep their
+   existing single home. `docs/SKILL-MAP.md` §4 lists what is deliberately not duplicated.
+3. **One deliberate exception, recorded rather than hidden.** `data-governance` still restates
+   the prohibitions, because it is invoked at the moment of highest risk and a pointer there
+   costs a file read at exactly the wrong time. The exception is stated in that skill and in
+   the map, so the principle stays legible. The existing wording was left untouched: trimming
+   a safety section was judged the wrong risk to take in a session scoped to build a library.
+4. **Every skill declares a scope boundary.** A table or a sentence naming the sibling that
+   owns what this skill does not. That is the anti-overlap mechanism, and it is what lets the
+   evidence pipeline stay four separate acts — detect, retrieve, verify, record — instead of
+   collapsing into one.
+5. **Every skill states Done-when and Refusal conditions.** Observable criteria (a validator
+   result, a number that moved, a file that exists) rather than advice. That is what "testable"
+   means for a prose skill.
+6. **Scripts only where they add a number nothing else prints.** Two, both zero-dependency in
+   the style of `tools/`. No script was written for regulatory decay, because
+   `tools/freshness.mjs` already reports it, and a second implementation would be a second
+   home.
+7. **`gaps.mjs` imports the site's own derivation.** `evidenceGrade` is loaded from
+   `js/format.js` — via a `data:` URL, because a browser ES module in a repository with no
+   `package.json` cannot be imported by path — so the census cannot disagree with what the
+   page renders. Its output reproduces the README's stated figure of 22 unresolved claims
+   without that figure appearing anywhere in the script.
+8. **`baseline.mjs` asserts nothing of its own.** It holds no expected counts. It compares
+   against a snapshot the session takes, so the recorded baseline keeps its home in
+   `docs/CURRENT-ARCHITECTURE.md` §12. Its snapshot is a session artifact and is git-ignored,
+   for the same reason `agent/observability/runs/` is.
+9. **The map names agent roles that do not exist yet**, and says so. The allocation is
+   intended, not observed; the useful column is "never", which is where a role's boundary is
+   enforced by what it may not load.
 
 ## Tests
 
-Run in this session, from the repository root, on the rebased tree at `c2e62c7`:
-
 | Command | Result |
 |---|---|
-| `node --test agent/observability/selftest.mjs` | **13 pass · 0 fail** |
-| `node agent/observability/cli.mjs validate` | 56 records · 0 invalid · 0 unparseable · exit 0 |
-| `node tools/validate.mjs` | 0 errors · exit 0 — matches the §12 baseline |
-| `node tools/i18n-audit.mjs` | 0 errors · 0 warnings — matches |
-| `node tools/design-qa.mjs` | 0 errors · **5 warnings** · exit 0 — the same five listed in §12 |
-| `node tools/freshness.mjs` | reports only · exit 0 — matches |
+| `node tools/validate.mjs` | 0 errors · 0 warnings · 106 unverified · exit 0 |
+| `node tools/i18n-audit.mjs` | 0 errors · 0 warnings · exit 0 |
+| `node tools/design-qa.mjs` | 0 errors · **5 warnings** (the same five) · exit 0 |
+| `node tools/freshness.mjs` | nothing past its stated interval · exit 0 |
+| `node agent/observability/cli.mjs validate` | 0 invalid · 0 unparseable · exit 0 (empty store) |
+| `node .agents/skills/data-completeness/scripts/gaps.mjs` | runs; `--json` valid; exit 0 |
+| `node .agents/skills/legal-site-qa/scripts/baseline.mjs --save/--check` | no change · exit 0; verified to exit 1 and name the field on an injected difference |
 
-No new warning. The four validators' output is byte-identical to the run taken before any
-file was added.
+Run before and after the work. **Identical to the `docs/CURRENT-ARCHITECTURE.md` §12
+baseline; no new warning.** `git status --porcelain` confirms no file the website ships was
+touched.
 
-**Browser** — headless Chromium via Playwright, against the local server: all ten tabs
-render, the execution tree shows 14 spans, no console error, one `<h1>`, `lang` set, no
-duplicate id, no heading-level jump, every control has an accessible name, the skip link is
-the first tab stop and moves focus to `<main>`, both themes compute. A run started with
-`--live` was observed in the `running` state mid-flight and settled to `degraded`.
+Cross-checks that the two scripts agree with the existing tools rather than restating them:
+`gaps.mjs` reports 7 payment-unknown enforcement records against `freshness.mjs`'s "7 of 16
+payment unknown", and 22 unresolved claims against the README's stated figure.
 
-**Not run:** no screen reader, no non-Chromium browser, no real-device testing — the same
-limitation the site itself declares. No live OTLP collector ingested an export.
+**Not run:** no browser, no screen reader, no live agent. Nothing in this session is runtime
+code for the site.
 
 ## Observability
 
-The demonstrator is instrumented end to end: run id, parent run id, agent, task, start and
-end, status, inputs, outputs, tool calls, observations, decisions with their rejected
-alternatives, confidence, risk, artifacts with sha256, handoffs, human approvals, provenance
-with a verification block, token/cost/latency, errors, and a website change with its audit
-chain. Every record passes the schema validator on the way into the store.
-
-**What was not instrumented:** the four validators in `tools/` still write to stdout only.
-SESSION 00 suggested retrofitting them to emit a structured record alongside their
-human-readable output. That was deliberately **not** done here — this session's brief scoped
-the work to the multi-agent foundation, and changing four scripts whose exact output is the
-recorded baseline is a separate, reviewable change. It is the smallest useful next
-increment after the Scout.
+No new instrumentation. The `observability` skill documents the existing surface in
+`agent/observability/tracer.mjs` for the agents that will use it, and `baseline.mjs` includes
+`cli.mjs validate` in the one-pass check so the trace store is verified alongside the four
+validators. `agent/observability/**` itself is unchanged.
 
 ## Known limitations
 
-1. No real agent is instrumented, because none exists.
-2. The store is per-developer; no aggregation, no retention policy.
-3. Concurrent writers are untested — appends are synchronous and per-trace.
-4. The viewer polls every 2s; no streaming.
-5. The OTLP export is written to the spec and asserted in the suite, but no Phoenix or
-   Langfuse instance has ingested one.
-6. GitHub Pages serves the repository at root, so the viewer's HTML is reachable at
-   `/agent/observability/viewer/`. Nothing links to it, no trace data is committed, and
-   without the local API it renders an explanation rather than a broken page — but it is
-   reachable, and excluding `agent/` from the deployment is a decision not yet taken.
-7. `cost_usd` is whatever the caller passes. There is no price table.
+1. **Prose skills are untested until an agent follows one.** The two scripts run; the other
+   fourteen skills are tested by use, and the first session to follow one will find where a
+   procedure is wrong.
+2. **`gaps.mjs` loads `js/format.js` through a `data:` URL.** It works, and it avoids a second
+   copy of the grading rule, but it will break if `format.js` ever gains an import — at which
+   point the import chain would need resolving too. It imports `evidenceGrade` and
+   `gradeTally` only.
+3. **`baseline.mjs` digests the output of three checks and not `freshness.mjs`**, whose text
+   legitimately changes with the date. A change in freshness's prose that does not move its
+   overdue count will not be caught.
+4. **The agent roles in `docs/SKILL-MAP.md` §3 are intended, not implemented.**
+5. **The skill library does not cover translation work.** `i18n` discipline appears inside
+   `legal-editorial` and `frontend-implementation`; no session has yet needed a translator
+   skill, and one should not be written speculatively.
+6. **`data-governance` still duplicates the §0 prohibitions.** Deliberate and recorded, but it
+   is a second copy, and if §0 changes both must change.
 
 ## Unresolved issues
 
-Carried forward from SESSION 00 and still open — none was in this session's scope:
+Carried forward, none in this session's scope:
 
-1. **`data/brief.json` is canonical but never consumed**; its content ships instead as the
-   inline `window.__CONTENT__` blob at `index.html:361`. Two homes for one set of facts.
+1. **`data/brief.json` is canonical but never consumed**; its content ships as the inline
+   `window.__CONTENT__` blob at `index.html:361`. Two homes for one set of facts.
 2. **The two copies have already drifted** — `meta.standfirst` differs. Which is correct is
-   the author's decision; an agent must not pick one.
+   the author's decision.
 3. **No deploy gate.** A push to `main` publishes; the validators do not run in CI.
 4. **106 records carry an unverified or requires-verification note.** The project's largest
-   open body of work.
+   open body of work. `gaps.mjs` now breaks it down: 22 claims grade *Unresolved*, 40 rest
+   directly on the brief itself alone, 10 carry an explicit reference gap.
+5. **No decision on excluding `agent/` from the Pages deployment** (SESSION 02, limitation 6).
 
 New, from this session:
 
-5. ~~There is no agent contract yet.~~ **Resolved after this session's own work was
-   committed.** `AGENTS.md` and `CLAUDE.md` were added directly to `main` (`064469c`) and
-   merged into this branch at the user's request. `AGENTS.md` is now the canonical agent
-   entry point; the observability half this session built and the contract half now both
-   exist. Left as a struck-through entry rather than deleted, so the sequence of events stays
-   legible: the gap was real when this session flagged it.
-6. **No decision on excluding `agent/` from the Pages deployment** (limitation 6 above).
+6. **`AGENTS.md` §"The rules that matter most" summarises `docs/AI-SAFE-BOUNDARIES.md` §0.**
+   That is a pre-existing second copy, and deliberate — the entry point has to carry the rules
+   an agent needs before it has read anything. It was left alone, but it means §0 now has
+   three homes counting `data-governance`. If §0 is ever amended, all three must be.
 
 ## Next session
 
-**SESSION 03 — instrument one real read-only agent against the now-published contract.**
+**SESSION 04 — instrument one real read-only agent: the Scout.**
 
-`AGENTS.md` exists (merged in from `064469c` after this session's own work; see
-**Unresolved issues** above). Build **one** agent: the Scout, **read-only**, against real
-sources, emitting through `agent/observability/tracer.mjs` and appearing in the viewer with
-real provenance, held to the rules `AGENTS.md` and `docs/AI-SAFE-BOUNDARIES.md` already
-state.
+This is SESSION 02's recommendation, unchanged, and the library now exists to serve it. Build
+**one** agent, **read-only**, against real sources, emitting through
+`agent/observability/tracer.mjs` and appearing in the viewer with real provenance.
 
-Do not build the Verifier or the Change Detector in the same session, and do not let any
-agent write to `data/*.json`.
+Do not build the Verifier or the Change Detector in the same session, and **do not let any
+agent write to `data/*.json`.**
 
 ## Next-session instructions
 
-- Read `AGENTS.md` first — it is the canonical entry point — then invoke `project-context`
-  and read `docs/PROJECT-CONTEXT.md`, `docs/CURRENT-ARCHITECTURE.md`,
-  `docs/AI-SAFE-BOUNDARIES.md` and this file, then `docs/OBSERVABILITY.md` before writing any
-  agent.
-- Re-run the four validators and confirm the §12 baseline before changing anything.
-- Instrument through `tracer.mjs`. Do not add a second logging path, and do not use
-  `console.log` as the observability mechanism.
-- A real provenance record must carry a `url` or a `locator`; the schema refuses it
-  otherwise unless it is marked `simulated`, and **nothing outside the demonstrator may be
-  marked simulated**.
-- `provenance.role` uses the same vocabulary as `data/claims.json` deliberately. Keep it
-  reconcilable with the bibliography.
-- Extending the record vocabulary means extending `schema.mjs` **and its tests** in the same
-  commit. A record type the validator does not know is a record the viewer will not render.
+- Read `AGENTS.md`, invoke `project-context`, then read `docs/PROJECT-CONTEXT.md`,
+  `docs/CURRENT-ARCHITECTURE.md`, `docs/AI-SAFE-BOUNDARIES.md`, this file and
+  `docs/OBSERVABILITY.md`.
+- Then load, from `docs/SKILL-MAP.md` §3, the Scout's row: `observability`,
+  `regulatory-change-detection`, `eu-legal-research`, `autonomy-governance`. Its "never"
+  column is binding — a Scout proposes; it does not edit.
+- Take the baseline first: `node .agents/skills/legal-site-qa/scripts/baseline.mjs --save`,
+  and `--check` before declaring done.
+- A real provenance record must carry a `url` or a `locator`; the schema refuses it otherwise
+  unless marked `simulated`, and **nothing outside the demonstrator may be marked simulated**.
+- Extending the record vocabulary means extending `agent/observability/schema.mjs` **and its
+  tests** in the same commit.
 - Before declaring done: `node --test agent/observability/selftest.mjs`,
   `node agent/observability/cli.mjs validate`, and the four validators in `tools/`.
+- **Report which skills you used and where one was wrong.** The library is untested prose
+  until a session follows it; a skill that had to be contradicted is a finding for the session
+  after, not a rule to bend quietly.
 
 ## Do not
 
-Carried forward from SESSION 00, unchanged and still binding:
+Carried forward, unchanged and still binding:
 
 - **Do not rebuild the site.** No framework, no bundler, no build step, no dependency, no
   service worker, no server-side rendering.
 - **Do not fix the `__CONTENT__` / `brief.json` drift on your own initiative.**
 - **Do not modify `data/*.json`** in a session not scoped for data work.
 - **Do not touch** the footer's non-affiliation or no-legal-advice text, `TIER_GRADE` in
-  `js/format.js`, the derivation rules in `js/pipeline.js`, or the `BASE` constant in
-  `tools/_footer.mjs`.
+  `js/format.js`, the derivation rules in `js/pipeline.js`, or `BASE` in `tools/_footer.mjs`.
 - **Do not declare a licence.**
 - **Do not soften** the README's known limitations or the unverified-record count.
 - **Do not re-run** `tools/_refsweep.mjs` or `tools/_review10.mjs`.
+- **Do not change the id shapes in `ids.mjs`**, move redaction to the read path, remove the
+  demonstrator's simulation markers, or commit anything under `agent/observability/runs/`.
 
 Added by this session:
 
-- **Do not change the id shapes in `ids.mjs`.** They are the OTLP export contract.
-- **Do not move redaction to the read path.**
-- **Do not remove the demonstrator's simulation markers**, and do not point it at a real
-  source. If a real Scout is wanted, write one — do not repurpose the fixture.
-- **Do not commit anything under `agent/observability/runs/`.** It holds run inputs and
-  outputs.
-- **Do not install Langfuse or Phoenix without re-reading the evaluation** in
-  `docs/OBSERVABILITY.md`. Both remain viable; neither is a dependency of this layer.
-
----
-
-## What must NOT be rebuilt
-
-SESSION 00's closing statement stands unchanged, and this session was built to respect it:
-**the architecture is not technical debt, it is the argument.** The zero-build,
-zero-dependency, client-rendered model; `js/data.js` as the sole fetch point; the derivation
-layer; the one-home-per-fact data model; the taxonomy as universal enum authority; the
-`null` / `unknown` distinction; `js/shell.js` and `js/evidence-view.js` as single renderers;
-the seven duplicated footers; and the four validators — none of these was touched, and none
-should be. The full statement and its reasoning are in the SESSION 00 section of the
-repository history (`git show c2e62c7:docs/HANDOVER.md`).
-
-The observability layer was built to the same standard: no dependency, no build step,
-derived state never stored, and every record able to say what it cannot support.
+- **Do not copy a rule into a skill that already has a home.** The library's value is that
+  sixteen files do not have to be kept in agreement with each other. `docs/SKILL-MAP.md` §4
+  lists what must never be duplicated; add to that list rather than to the skills.
+- **Do not hardcode the recorded validator baseline into a script.** `baseline.mjs` compares
+  against a session snapshot for exactly this reason.
+- **Do not reimplement `evidenceGrade`, the pipeline rules or the unverified tally** in a
+  skill script. Import the site's function, or call the tool that owns the number.
+- **Do not add a skill speculatively.** Sixteen is already a lot to keep true. A new one is
+  justified when a session had to work outside the library, and it says so in its handover.
+- **Do not let a skill grow into a second architecture document.** If a skill needs three
+  paragraphs of background, the background belongs in `docs/` and the skill points at it.
