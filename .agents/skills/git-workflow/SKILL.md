@@ -5,6 +5,13 @@ description: Branch, commit and push discipline for Eu-Digital-Policy. Use befor
 
 # git-workflow
 
+**Boundaries:** `docs/AI-SAFE-BOUNDARIES.md` §0 applies in full and is not restated here.
+
+## Scope boundary
+
+Branch, diff, commit and push discipline. Whether a change may be made at all is
+`autonomy-governance`; whether the checks passed is `legal-site-qa`.
+
 ## Purpose
 
 A push to `main` publishes to the public site. There is no CI, no deploy gate and no review
@@ -12,9 +19,10 @@ step between a commit and a reader. The validators are advisory, so the discipli
 
 ## The rules
 
-**Branch.** Develop on the session's designated branch — currently
-`claude/eu-digital-policy-protocol-ntyhqc`. Create it locally if absent. **Never push to
-`main` or any other branch without explicit permission.**
+**Branch.** Develop on the branch the session brief designates. Create it locally if absent,
+and confirm it with `git branch --show-current` before the first commit — the branch is a
+session fact, so it is named in the brief and in `docs/HANDOVER.md`, and never a second time
+in this file. **Never push to `main` or any other branch without explicit permission.**
 
 **Never push without running the validators.** All four, every time, on any commit touching
 data, markup, styles or scripts:

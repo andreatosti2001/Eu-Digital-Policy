@@ -16,6 +16,18 @@ skill governs every change that alters what the site asserts.
 Before editing anything in `data/`, any claim or source record, the evidence grading rules,
 the pipeline derivation, or any factual statement in the brief's prose.
 
+## Scope boundary
+
+This skill answers **may this value change, and what must accompany it**. Its siblings own the
+steps around it: finding the document is `eu-legal-research`; checking that it establishes the
+proposition is `legal-source-verification`; the source record and the `supports` qualifier are
+`source-provenance`; where a fact belongs in the model is `knowledge-architecture`; measuring
+what is still missing is `data-completeness`.
+
+The prohibitions below are the one duplication this library keeps. They live canonically in
+`docs/AI-SAFE-BOUNDARIES.md` §0 and are repeated here on purpose: this is the skill invoked at
+the moment of highest risk, and a pointer costs a file read at exactly the wrong time.
+
 ## The absolute prohibitions
 
 1. **Never fabricate a legal fact.** No citation, URL, date, CELEX number, article number,

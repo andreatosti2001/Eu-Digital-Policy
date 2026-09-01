@@ -1,3 +1,8 @@
 # The agent trace store is local, per-developer and regenerable.
 # It holds run inputs/outputs; nothing in it belongs in the repository.
 agent/observability/runs/
+
+# QA baseline snapshots taken by .agents/skills/legal-site-qa/scripts/baseline.mjs.
+# A session artifact recording what the checks said at a point in time, not a
+# second home for the recorded baseline in docs/CURRENT-ARCHITECTURE.md §12.
+.agents/.qa-baseline.json

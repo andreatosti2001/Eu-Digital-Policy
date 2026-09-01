@@ -30,8 +30,10 @@ the evidence it describes.
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `README.md` | The author's own account, including eight stated limitations |
 
-Skills live in `.agents/skills/`: `project-context`, `repository-audit`, `data-governance`,
-`git-workflow`. Invoke `project-context` at the start of every session.
+Skills live in `.agents/skills/` — sixteen of them, listed with their scope and their
+intended agent role in **`docs/SKILL-MAP.md`**. Invoke `project-context` at the start of every
+session, then load the skills the task actually needs; each one names the sibling that owns
+what it does not.
 
 **The repository is the source of truth.** If `docs/HANDOVER.md` conflicts with the code,
 **stop and report the discrepancy** rather than reconciling it silently.
