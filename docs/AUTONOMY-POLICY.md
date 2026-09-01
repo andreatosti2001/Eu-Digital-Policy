@@ -3,6 +3,21 @@
 **Status:** binding. Defines the four autonomy classes, what is prohibited
 outright, and the rollback requirement.
 
+**Relationship to `AI-SAFE-BOUNDARIES.md`.** That document (SESSION 00) defines
+green / amber / red tiers and eight absolute prohibitions. It remains in force.
+These four classes are a **refinement of it, not a replacement**:
+
+| Class | Tier | Difference |
+|---|---|---|
+| **A** | green | Read-only and `docs/`-only. Narrower than green: A may not add a validator or a derived view — those are B. |
+| **B** | green | Green work that a validator can *prove* correct, with a revert obligation if it cannot. |
+| **C** | amber | Identical in scope. "Prepare it; a human approves it." |
+| **D** | red | Identical in scope, plus: running the two one-shot patch scripts, and pushing to `main`. |
+
+Where the two documents could be read differently, **the stricter reading
+governs**. The eight prohibitions in `AI-SAFE-BOUNDARIES.md` §0 are absolute and
+are restated in the prohibited-actions list below.
+
 **Default when unsure: the higher class.** An agent that cannot confidently
 place a change escalates. Misclassifying downward is the failure this document
 exists to prevent.

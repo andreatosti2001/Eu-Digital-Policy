@@ -137,12 +137,22 @@ patterns to follow (audit F-04, F-14):
 
 | Duplicate | Canonical | Guarded by |
 |---|---|---|
-| `__CONTENT__.nav[].title` in `index.html` | `data/brief.json` | **nothing** |
+| `__CONTENT__.nav[].title` in `index.html` | `data/brief.json` — **validated but never fetched** | **nothing** |
+| `__CONTENT__.meta.standfirst` — **already drifted** | `data/brief.json` (holds the pre-correction text) | **nothing** |
 | `__CONTENT__.nodes[]` names/parts | `data/instruments.json` | **nothing** |
 | `__CONTENT__.search[].text` | the markup of `index.html` | **nothing** |
 | Footer + `<noscript>` × 7 pages | `tools/_footer.mjs` | `design-qa.mjs` (drift is an error) |
 | Grade counts in `README.md` prose | derived by `gradeTally()` | **nothing** |
 | "As of" date in README / footer / `__CONTENT__.meta.dateline` | — | **nothing** |
+
+**`data/brief.json` is the extreme case.** `validate.mjs` checks its parts and
+reading graph in full, and **no module fetches it** — the only four `'brief'`
+occurrences in `js/` are nav-model IDs in `js/shell.js`. The canonical file is
+dead; the inlined copy is what the reader sees. `meta.standfirst` has already
+diverged, because `tools/_review10.mjs` corrected that sentence in `index.html`
+and never opens `brief.json`. **Which copy is correct is the author's decision**
+(`docs/HANDOVER.md`, unresolved issue 2) — an agent must not pick one. See
+`AUDIT-2026-09-01.md` F-04 for the provenance.
 
 The footer duplication is **deliberate and correct**: a non-affiliation
 statement that only appears when JavaScript runs is not a statement of

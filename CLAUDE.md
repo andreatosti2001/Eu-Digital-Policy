@@ -1,7 +1,13 @@
 # CLAUDE.md
 
 **Read `AGENTS.md` first — it is the operating constitution and it binds you.**
-This file adds only what is specific to working here with Claude Code.
+It sends you to the four SESSION 00 documents in `docs/`; read those too, in the
+order it gives. This file adds only what is specific to working here with
+Claude Code.
+
+**Start every session with `git fetch --all && git branch -a`.** This branch was
+cut before SESSION 00 landed on `main`, and the first version of this audit
+reported four existing documents as missing because of it.
 
 ## Orientation
 
@@ -40,19 +46,32 @@ disagree, **the code is what ships.**
 ## Before you change anything
 
 ```
+git fetch --all && git branch -a
 node tools/validate.mjs && node tools/i18n-audit.mjs && \
 node tools/freshness.mjs && node tools/design-qa.mjs
 ```
 
 Run all four before *and* after. Report both, warnings included. If a warning
-count moved, say which and why.
+count moved, say which and why. The baseline to beat is in
+`docs/CURRENT-ARCHITECTURE.md` §12: 0 errors, and exactly five `design-qa`
+warnings — 3 inline handlers in `index.html`, `#000` in `css/evidence.css`,
+`#000` in `css/tools.css`, `--tx`/`--ty` unset in `style.css`. Anything else is
+yours.
 
 ## Traps specific to this repository
 
-- **`index.html` holds a second copy of the facts.** ~60 KB of
-  `window.__CONTENT__` at line 361: all 14 part titles (byte-identical to
-  `brief.json`), instrument names, and a full copy of the prose. **No validator
-  reads it.** Change prose and you must change both.
+- **`index.html` holds a second copy of the facts, and it is the copy that
+  ships.** ~60 KB of `window.__CONTENT__` at line 361: all 14 part titles
+  (still byte-identical to `brief.json`), instrument names, and a full copy of
+  the prose. **`data/brief.json` is validated but never fetched** — no module
+  loads it — so the uncontrolled copy is what the reader sees and the canonical
+  one is dead. **No validator reads it.** Change prose and you must change both.
+- **They have already drifted, and the cause is known.** `meta.standfirst`
+  differs. `tools/_review10.mjs` rewrote that sentence in `index.html` on
+  28 Aug 2026 to correct a miscount the external review flagged, and never opens
+  `data/brief.json` — so `brief.json` still holds the wrong version. **Do not
+  fix this on your own initiative:** which copy ships is the author's call, and
+  `docs/HANDOVER.md` reserves it.
 - **It uses different IDs.** `aiact` / `dataact` there; `ai-act` / `data-act`
   canonically, and neither short form is a declared alias.
 - **`tools/_refsweep.mjs` and `tools/_review10.mjs` are loaded guns.** One-shot

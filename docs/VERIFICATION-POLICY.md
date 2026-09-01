@@ -70,6 +70,23 @@ An agent may not report "validated" or "verified" on the strength of exit code 0
 It may report "the four validators pass", which is a different and smaller
 claim.
 
+## 3a. Verify your base before you verify anything else
+
+```
+git fetch --all && git branch -a
+```
+
+A feature branch shows no signal that its base is stale: no CI, no branch
+protection, and `git log` shows only its own ancestry. The first version of
+`AUDIT-2026-09-01.md` opened with a P0 finding that four existing documents did
+not exist, because `ls docs` was run on a tree cut before they landed. An
+absence observed on an unfetched branch is not a fact about the repository.
+
+Then compare the four validators against the recorded baseline in
+`docs/CURRENT-ARCHITECTURE.md` §12 — 0 errors, five named `design-qa` warnings,
+106 unverified records — so a new warning is distinguishable from an inherited
+one.
+
 ## 4. Reproducibility
 
 **Every substantive AI change must be reproducible**: another agent, given the

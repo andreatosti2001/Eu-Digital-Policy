@@ -1,10 +1,193 @@
 # HANDOVER
 
-**Last updated:** SESSION 00 · 31 August 2026
-**Branch:** `claude/eu-digital-policy-protocol-ntyhqc`
-**Base commit audited:** `7248290` on `main`
+**Last updated:** SESSION 01 · 1 September 2026
+**Branch:** `claude/repo-architectural-audit-v45psd`
+**Base commit:** `c2e62c7` on `main` (SESSION 00)
 
 ---
+
+## Current milestone
+
+**SESSION 01 — Independent architectural audit, and the AI operating
+constitution. Complete.**
+
+No production code, data, markup, styles or tooling was modified.
+`git status --porcelain` shows additions and `docs/` edits only.
+
+## Deviation from the SESSION 00 plan — recorded, not silently absorbed
+
+SESSION 00's handover set the next objective as **the agent observability
+layer**. The instruction that opened this session set it as **an independent
+architectural audit plus the permanent AI operating constitution**. The
+instruction governs, and this session did what it was asked.
+
+**The observability layer remains unbuilt and is still the highest-value next
+objective.** Nothing here substitutes for it: this session produced governance
+documents, not instrumentation. SESSION 00's scoping for it stands unchanged and
+is preserved in the archived record below.
+
+## Implementation
+
+**An independent adversarial audit** — `docs/AUDIT-2026-09-01.md`. Sixteen
+findings in three priority bands, each with the command or `file:line` that
+produced it. Read from code and data first; `README.md` and the SESSION 00
+documents treated as claims to be tested.
+
+**The constitution** — `AGENTS.md`, `CLAUDE.md` and five policies in `docs/`:
+`DATA-GOVERNANCE.md`, `SOURCE-POLICY.md`, `VERIFICATION-POLICY.md`,
+`AUTONOMY-POLICY.md`, `AGENT-CONTRACTS.md`. Four autonomy classes (A/B/C/D),
+nineteen prohibited automatic actions, ten agent roles, ten handoff rules.
+
+The constitution **builds on the SESSION 00 layer and does not replace it**.
+A/B/C/D refine green/amber/red rather than substituting for them
+(`AUTONOMY-POLICY.md` opening table); the eight absolute prohibitions in
+`AI-SAFE-BOUNDARIES.md` §0 are restated, not rewritten; where two documents
+could be read differently, the stricter reading governs.
+
+## Files changed
+
+**Added (8):** `AGENTS.md`, `CLAUDE.md`, `docs/AUDIT-2026-09-01.md`,
+`docs/DATA-GOVERNANCE.md`, `docs/SOURCE-POLICY.md`,
+`docs/VERIFICATION-POLICY.md`, `docs/AUTONOMY-POLICY.md`,
+`docs/AGENT-CONTRACTS.md`.
+
+**Modified (1):** `docs/HANDOVER.md` — this record. SESSION 00's entry is
+preserved below in full.
+
+**Untouched:** all HTML, JS, CSS, `data/`, `i18n/`, `tools/`, `README.md`, and
+the three SESSION 00 documents.
+
+## A correction this session had to make about itself
+
+This branch was cut from `7248290`, **before** SESSION 00 landed at `c2e62c7`.
+The first version of the audit therefore opened with a P0 finding that
+`docs/PROJECT-CONTEXT.md`, `docs/CURRENT-ARCHITECTURE.md` and
+`docs/AI-SAFE-BOUNDARIES.md` did not exist. They did. `ls docs` was run on a
+stale tree and the result reported as a property of the repository, without
+`git fetch`.
+
+F-01 is retracted in place and replaced with the finding that survives: **a
+feature branch gives an agent no signal that its base is stale.** No CI, no
+branch protection, and `git log` shows only the branch's own ancestry. The
+mitigation is now the first step of `AGENTS.md` and of
+`VERIFICATION-POLICY.md` §3a.
+
+SESSION 00's own `repository-audit` skill opens with `git branch -a`. Following
+it would have prevented this.
+
+## Tests
+
+All four validators, before and after. Identical to the SESSION 00 baseline at
+`docs/CURRENT-ARCHITECTURE.md` §12:
+
+| Validator | Result |
+|---|---|
+| `node tools/validate.mjs` | 0 errors · 0 warnings · 106 unverified · exit 0 |
+| `node tools/i18n-audit.mjs` | 0 errors · 0 warnings |
+| `node tools/design-qa.mjs` | 0 errors · 5 warnings · exit 0 |
+| `node tools/freshness.mjs` | reports only · exit 0 |
+
+The five `design-qa` warnings are the pre-existing ones, unchanged. This session
+added only Markdown, which no validator reads, so an unchanged baseline is the
+expected result rather than evidence of care.
+
+**No browser or accessibility test was run** — no markup changed, and there is
+no test runner in this repository.
+
+## Observability
+
+**This session instrumented nothing.** Stating that plainly. It produced
+documents, and documents are not instrumentation.
+
+What it added to the observability *baseline* is a written account of what the
+existing signals do not cover — `AUDIT-2026-09-01.md` F-12 and F-14, and
+`docs/AGENT-CONTRACTS.md` §10: no URL has ever been fetched despite a
+`SOURCE REACHABILITY` heading; a stale *present* translation key is undetectable;
+the README's four derived counts are checked by nothing; post-deployment failures
+reach `console.error` and no one; a 404 on a locale file is swallowed by design.
+
+## Known limitations
+
+1. **The deployed site was not inspected.** Unchanged from SESSION 00.
+2. **The audit is a static read.** No page was opened in a browser; no
+   derivation was exercised against a rendered DOM. Findings about runtime
+   behaviour are read from source.
+3. **Grade tallies were recomputed by re-implementing `evidenceGrade` in a
+   throwaway script**, not by running the site. The counts matched the README
+   exactly, which is corroboration rather than proof.
+4. **The constitution is untested by use.** No session has yet worked under it.
+   Its autonomy classes are a judgement about this repository's risks, and the
+   first session to hit an awkward boundary should report it rather than
+   route around it.
+
+## Unresolved issues
+
+SESSION 00's four remain open and unchanged. This session adds provenance to
+the second and evidence to the third:
+
+**1. `data/brief.json` is canonical but never consumed.** Open. Unchanged.
+
+**2. The two copies have drifted — the cause is now established.**
+`tools/_review10.mjs:54` rewrote that sentence in `index.html` on 28 Aug 2026 to
+correct the miscount the external review raised as P2.1 ("the six subjects are
+not six regulations"), and the script opens only `index.html` and
+`i18n/locales.json` — never `data/brief.json`. `brief.json`'s standfirst begins
+with the script's `from` string, not its `to` string. So the canonical file
+holds the text the review already ruled wrong.
+**Still the author's decision, and deliberately not made here.** The evidence is
+in `AUDIT-2026-09-01.md` F-04.
+
+**3. No deploy gate.** Open, and now the audit's top remediation item (F-02).
+
+**4. 106 records carry an unverified note.** Open. `SOURCE-POLICY.md` and
+`VERIFICATION-POLICY.md` §6 govern how that number may and may not move.
+
+**5. NEW — the one-shot patch scripts have already corrupted canonical data
+once.** Issue 2 is the demonstration. `_refsweep.mjs` and `_review10.mjs` remain
+runnable, hardcoded to `2026-08-28`, with no dry-run or backup. Classed D.
+See F-03.
+
+## Next session
+
+**SESSION 02 — the agent observability layer.** SESSION 00's scoping is
+unchanged and still correct: a run-record schema; a zero-dependency writer; a
+location and retention rule for run artifacts; and retrofitting the four
+validators to emit a structured record alongside their human-readable output,
+without changing what they print or their exit codes.
+
+**Recommended addition, from this audit:** land the CI gate (F-02) in the same
+session. It is green-tier, it closes SESSION 00's unresolved issue 3, and it is
+the thing that makes every other check in this repository mean something. A
+run-record layer that nothing triggers automatically has the same problem the
+validators have today.
+
+## Next-session instructions
+
+- `git fetch --all && git branch -a` **first**. Then invoke `project-context`.
+- Read `AGENTS.md`, then the four SESSION 00 documents, then
+  `docs/AUDIT-2026-09-01.md`.
+- Re-run the four validators and confirm the §12 baseline before changing
+  anything.
+- Run records are build artifacts. **They do not belong in `data/`** — that
+  directory is reserved for the legal record.
+- Classify every change under `docs/AUTONOMY-POLICY.md` and say which class, and
+  why, in the commit.
+
+## Do not
+
+SESSION 00's "Do not" list stands in full and is reproduced in the archived
+record below. Added by this session:
+
+- **Do not treat a passing validator as verification.** Say "the four
+  validators pass", which is smaller and true.
+- **Do not conclude a file is absent without having fetched.**
+- **Do not fix the `brief.json` / `__CONTENT__` standfirst drift**, even though
+  this session established which copy is stale. Knowing which is wrong is not
+  authority to choose what ships.
+
+---
+
+# SESSION 00 — archived record
 
 ## Current milestone
 

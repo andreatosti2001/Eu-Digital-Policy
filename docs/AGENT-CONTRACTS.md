@@ -8,8 +8,15 @@ one session; it must then satisfy each contract separately and must not use one
 role's authority to discharge another's obligation. **In particular: an agent
 may not verify its own scouting.**
 
-Every role is bound by `AUTONOMY-POLICY.md`. Nothing below grants authority it
-withholds.
+Every role is bound by `AUTONOMY-POLICY.md` and by the eight absolute
+prohibitions in `AI-SAFE-BOUNDARIES.md` §0. Nothing below grants authority
+either withholds.
+
+**Existing skills that already implement parts of these contracts** (SESSION 00,
+`.agents/skills/`): `project-context` (the mandatory session-start read),
+`repository-audit` (Scout and Change Detector procedure), `data-governance`
+(Verifier and Data Depth), `git-workflow` (Implementation/QA and Orchestrator).
+Invoke them rather than re-deriving their steps.
 
 ---
 
@@ -27,7 +34,9 @@ a lead, not a finding** — its default autonomy is Class A, and it becomes Clas
 only once a Verifier has taken it.
 
 **Failure mode to avoid:** returning something plausible and topical because
-nothing exact was found. An empty result is a correct result.
+nothing exact was found. An empty result is a correct result — and so is
+"absent", provided the absence was established on a fetched, current base
+(`AUDIT-2026-09-01.md` F-01).
 
 ## 2 · Verifier — turns a candidate into a fact, or refuses to
 

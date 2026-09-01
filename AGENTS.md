@@ -3,12 +3,31 @@
 Binding on every AI agent working in this repository. Detailed policy lives in
 `docs/`; this page is the part you must not need to look up.
 
-**Provenance.** Derived on 1 September 2026 from the code, the data and
-`README.md`. The three documents the founding session named —
+**Provenance.** Written in SESSION 01 (1 September 2026), on top of SESSION 00's
 `docs/PROJECT-CONTEXT.md`, `docs/CURRENT-ARCHITECTURE.md`,
-`docs/AI-SAFE-BOUNDARIES.md` — **do not exist in this repository** and were not
-invented. Where this constitution states a rule, that rule was read out of
-working code or observed data. See `docs/AUDIT-2026-09-01.md`.
+`docs/AI-SAFE-BOUNDARIES.md` and `docs/HANDOVER.md`, and on an independent
+adversarial audit of the code and data (`docs/AUDIT-2026-09-01.md`). Every rule
+here was read out of working code, observed data, or one of those documents.
+This page **adds to** the SESSION 00 layer; it does not supersede it.
+
+## Read these first, in this order
+
+1. `docs/PROJECT-CONTEXT.md` — what the project is, and why a fabricated fact
+   here harms a reader.
+2. `docs/CURRENT-ARCHITECTURE.md` — how it is actually built, the dependency
+   map, the validator baseline, and the `__CONTENT__` bypass (§8).
+3. `docs/AI-SAFE-BOUNDARIES.md` — the eight absolute prohibitions and the
+   green/amber/red tiers.
+4. `docs/HANDOVER.md` — the last session's state and the current objective.
+5. `docs/AUDIT-2026-09-01.md` — where the architecture above is **not enforced**.
+6. `README.md` — the author's own account and its eight known limitations.
+
+`.agents/skills/project-context` walks this. Invoke it at the start of every
+session.
+
+**Before you conclude anything about what this repository contains, run
+`git fetch --all && git branch -a`.** This audit's own F-01 was a false P0
+finding caused by reading a stale feature branch as if it were the repository.
 
 ## What this project is
 
@@ -51,6 +70,11 @@ reason. Do not redesign the website.
 
 ## Autonomy — full text in `docs/AUTONOMY-POLICY.md`
 
+These four classes **refine** the green/amber/red tiers in
+`docs/AI-SAFE-BOUNDARIES.md`; they do not replace them. A→green, B→green with a
+proof obligation, C→amber, D→red. Where the two could be read differently, the
+stricter reading governs.
+
 | | |
 |---|---|
 | **A** Fully autonomous | Read, run validators, write reports under `docs/`. No writes to `data/`, `i18n/`, `js/`, `css/`, `*.html`, `tools/`. |
@@ -91,9 +115,14 @@ human · say what you did **not** do.
 ## Before proposing anything
 
 ```
+git fetch --all && git branch -a          # your base may be stale — see F-01
 node tools/validate.mjs && node tools/i18n-audit.mjs && \
 node tools/freshness.mjs && node tools/design-qa.mjs
 ```
+
+Compare against the recorded baseline in `docs/CURRENT-ARCHITECTURE.md` §12
+(0 errors; 5 named `design-qa` warnings; 106 unverified records). **A new
+warning is a finding, not noise.**
 
 A passing validator is necessary, never sufficient. **Do not report "verified"
 on the strength of exit code 0** — say "the four validators pass", which is a
