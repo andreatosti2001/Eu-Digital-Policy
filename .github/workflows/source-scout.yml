@@ -1,0 +1,339 @@
+# ============================================================
+# Source Scout — scheduled source discovery
+#
+# OPERATING MODE:  DISCOVER → OBSERVE → REPORT → PR
+# NEVER:           DISCOVER → DIRECT PRODUCTION EDIT
+#
+# The Scout reads public feeds published by EU institutions,
+# records what it retrieved, and proposes candidates a human might
+# want to add to the bibliography. It never writes data/*.json, it
+# never edits the site, and it cannot merge its own proposal.
+#
+# THE SPLIT BELOW IS THE POINT. Two jobs, and the separation is a
+# permission boundary rather than a convention:
+#
+#   discover   touches the network, has NO write permission at all
+#              (contents: read). A Scout that was compromised by a
+#              malicious feed still cannot commit anything, because
+#              the job it runs in holds no token that can.
+#
+#   propose    holds contents: write and pull-requests: write, and
+#              makes no network request beyond github.com. It takes
+#              the report files out of an artifact, checks them
+#              against an allowlist, and opens a pull request.
+#
+# So the credential and the untrusted input are never in the same
+# job. See docs/AGENT-RUNBOOK.md for operation, and
+# docs/AI-SAFE-BOUNDARIES.md for why a Scout that could write to
+# data/*.json would be a RED-tier violation rather than a feature.
+# ============================================================
+
+name: Source Scout
+
+on:
+  schedule:
+    # 06:17 UTC every Monday. Off the hour deliberately: a job on
+    # the hour queues behind everyone else's job on the hour.
+    - cron: '17 6 * * 1'
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run everything but write no report and open no pull request'
+        type: boolean
+        default: false
+      open_pr:
+        description: 'auto = open a PR only when there is something for a human to do'
+        type: choice
+        options: [auto, always, never]
+        default: auto
+      fail_on:
+        description: 'When to fail the run. degraded = a dead feed turns the run red.'
+        type: choice
+        options: [failed, degraded, never]
+        default: failed
+      limit:
+        description: 'Maximum candidates carried per watchlist entry'
+        type: string
+        default: '60'
+      timeout_ms:
+        description: 'Per-request timeout in milliseconds'
+        type: string
+        default: '20000'
+
+# Least privilege by default. Each job widens this for itself, and
+# only the job that needs it does.
+permissions:
+  contents: read
+
+# One Scout at a time. cancel-in-progress is false on purpose: a
+# half-cancelled run leaves a partial report, and the report is the
+# deliverable. A queued run waiting behind a live one is correct.
+concurrency:
+  group: source-scout
+  cancel-in-progress: false
+
+env:
+  # Inputs are attacker-controllable on a public repository, so they
+  # are bound to environment variables here and read as "$VAR" inside
+  # run: blocks. They are never interpolated into a shell command,
+  # where a crafted value would be executed rather than passed.
+  SCOUT_DRY_RUN: ${{ inputs.dry_run || false }}
+  SCOUT_OPEN_PR: ${{ inputs.open_pr || 'auto' }}
+  SCOUT_FAIL_ON: ${{ inputs.fail_on || 'failed' }}
+  SCOUT_LIMIT: ${{ inputs.limit || '60' }}
+  SCOUT_TIMEOUT_MS: ${{ inputs.timeout_ms || '20000' }}
+
+jobs:
+  # ----------------------------------------------------------
+  # 1. DISCOVER + OBSERVE — network in, no write permission
+  # ----------------------------------------------------------
+  discover:
+    name: Discover and observe
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # Not inherited: stated, so a later edit that widens the
+    # top-level block does not silently widen this job.
+    permissions:
+      contents: read
+
+    # A fork running this on a schedule would poll public
+    # regulators' servers on the author's behalf, weekly, forever.
+    if: github.event_name != 'schedule' || github.repository == 'andreatosti2001/Eu-Digital-Policy'
+
+    outputs:
+      status: ${{ steps.scout.outputs.status }}
+      report_id: ${{ steps.scout.outputs.report_id }}
+      trace_id: ${{ steps.scout.outputs.trace_id }}
+      new_candidates: ${{ steps.scout.outputs.new_candidates }}
+      high_relevance: ${{ steps.scout.outputs.high_relevance }}
+      duplicates: ${{ steps.scout.outputs.duplicates }}
+      failed_retrievals: ${{ steps.scout.outputs.failed_retrievals }}
+      unresolved_problems: ${{ steps.scout.outputs.unresolved_problems }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          # This job has no business pushing anything, so it does not
+          # keep a credential in .git/config where the Scout's own
+          # process could reach it.
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Show the toolchain
+        run: |
+          echo "node $(node --version)"
+          echo "runner ${RUNNER_OS}"
+          echo "This repository has no dependencies and no build step. Nothing is installed."
+
+      # The Scout's own suite, before the Scout runs. A parser that
+      # regressed produces a plausible-looking empty report, which is
+      # the failure mode hardest to notice.
+      - name: Test the Scout
+        run: node --test agent/scout/selftest.mjs
+
+      - name: Test the observability layer
+        run: node --test agent/observability/selftest.mjs
+
+      - name: Confirm the working tree is clean before the run
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error title=Dirty tree::The checkout was not clean before the Scout ran."
+            echo "The path guard compares the tree after the run against the tree now, so it"
+            echo "cannot tell the Scout's writes from pre-existing ones."
+            git status --porcelain
+            exit 1
+          fi
+          echo "clean"
+
+      - name: Run the Source Scout
+        id: scout
+        run: |
+          ARGS="run --limit $SCOUT_LIMIT --timeout-ms $SCOUT_TIMEOUT_MS --fail-on $SCOUT_FAIL_ON"
+          if [ "$SCOUT_DRY_RUN" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          echo "node agent/scout/cli.mjs $ARGS"
+          node agent/scout/cli.mjs $ARGS
+
+      # The structural enforcement of the operating mode. If the
+      # Scout wrote anything outside agent/scout/reports/, this fails
+      # and nothing is proposed.
+      - name: Enforce the read-only boundary
+        if: always() && env.SCOUT_DRY_RUN != 'true'
+        run: node agent/scout/guard.mjs
+
+      - name: Validate the trace the run emitted
+        if: always()
+        run: node agent/observability/cli.mjs validate
+
+      # ---- artifact storage -------------------------------------
+      # Always, including on failure: a failed run's report and trace
+      # are the only evidence of why it failed.
+      - name: Store the discovery report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-scout-report
+          path: |
+            agent/scout/reports/*.json
+            agent/scout/reports/*.md
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Store the observability trace
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-scout-trace
+          path: agent/observability/runs/*.jsonl
+          if-no-files-found: warn
+          retention-days: 90
+
+      # ---- clear failure reporting ------------------------------
+      - name: Report the outcome
+        if: always()
+        env:
+          STATUS: ${{ steps.scout.outputs.status }}
+          FAILED: ${{ steps.scout.outputs.failed_retrievals }}
+          PROBLEMS: ${{ steps.scout.outputs.unresolved_problems }}
+          NEW_CANDIDATES: ${{ steps.scout.outputs.new_candidates }}
+        run: |
+          case "$STATUS" in
+            ok)
+              echo "::notice title=Source Scout::Clean run — ${NEW_CANDIDATES} new candidate(s)." ;;
+            degraded)
+              echo "::warning title=Source Scout degraded::${FAILED} retrieval(s) failed and ${PROBLEMS} problem(s) are unresolved. The report was still written; see the job summary." ;;
+            failed)
+              echo "::error title=Source Scout failed::No usable report. ${FAILED} retrieval(s) failed. A watchlist entry may have moved or been withdrawn — see docs/AGENT-RUNBOOK.md." ;;
+            *)
+              echo "::error title=Source Scout::The run ended without reporting a status, which means it threw before writing a report." ;;
+          esac
+
+  # ----------------------------------------------------------
+  # 2. REPORT → PR — write permission, no network beyond GitHub
+  # ----------------------------------------------------------
+  propose:
+    name: Propose by pull request
+    needs: discover
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    # Only when there is something for a human to do, unless an
+    # operator asked otherwise. `always` still respects a dry run.
+    if: >-
+      ${{ !cancelled()
+          && inputs.dry_run != true
+          && (inputs.open_pr || 'auto') != 'never'
+          && needs.discover.outputs.report_id != ''
+          && ((inputs.open_pr || 'auto') == 'always'
+              || needs.discover.outputs.new_candidates != '0'
+              || needs.discover.outputs.unresolved_problems != '0') }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Download the discovery report
+        uses: actions/download-artifact@v4
+        with:
+          name: source-scout-report
+          path: agent/scout/reports
+
+      # The same allowlist the discover job applied, applied again on
+      # the other side of the artifact boundary. An artifact is
+      # attacker-influenced input to this job; checking once, in the
+      # job without the token, would not be checking.
+      - name: Enforce the read-only boundary
+        run: node agent/scout/guard.mjs
+
+      - name: Open the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPORT_ID: ${{ needs.discover.outputs.report_id }}
+          STATUS: ${{ needs.discover.outputs.status }}
+          NEW_CANDIDATES: ${{ needs.discover.outputs.new_candidates }}
+          HIGH_RELEVANCE: ${{ needs.discover.outputs.high_relevance }}
+          DUPLICATES: ${{ needs.discover.outputs.duplicates }}
+          FAILED_RETRIEVALS: ${{ needs.discover.outputs.failed_retrievals }}
+          UNRESOLVED: ${{ needs.discover.outputs.unresolved_problems }}
+          TRACE_ID: ${{ needs.discover.outputs.trace_id }}
+        run: |
+          set -euo pipefail
+
+          BRANCH="scout/report-${REPORT_ID}"
+          SUMMARY="agent/scout/reports/${REPORT_ID}.md"
+
+          if [ ! -f "$SUMMARY" ]; then
+            echo "::error title=No summary::${SUMMARY} is not in the artifact; nothing to propose."
+            exit 1
+          fi
+
+          git config user.name  "source-scout[bot]"
+          git config user.email "source-scout@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add agent/scout/reports
+
+          if git diff --cached --quiet; then
+            echo "::notice title=Nothing to propose::The report is already in the repository."
+            exit 0
+          fi
+
+          # The commit message states what the run found and nothing
+          # about what it means. A commit that reads as a finding is
+          # how a proposal starts being treated as a conclusion.
+          # Built with printf so the YAML indentation above does not
+          # end up inside the message body.
+          printf '%s\n' \
+            "Source Scout: discovery report ${REPORT_ID}" \
+            "" \
+            "${NEW_CANDIDATES} new candidate(s), ${HIGH_RELEVANCE} at band high, ${DUPLICATES} duplicate(s)" \
+            "suppressed, ${FAILED_RETRIEVALS} failed retrieval(s), ${UNRESOLVED} unresolved problem(s)." \
+            "" \
+            "Produced by a read-only agent. No dataset was modified and no candidate is a" \
+            "source record: promoting one requires a human to open the document and read it." \
+            > /tmp/commit-message.txt
+          git commit --file=/tmp/commit-message.txt
+
+          git push -u origin "$BRANCH"
+
+          # The PR body is the summary the Scout wrote, with a header
+          # naming what a reviewer is being asked to decide.
+          {
+            echo "Automated discovery report from the scheduled Source Scout."
+            echo
+            echo "**This pull request adds two files and changes nothing else.** It does not touch"
+            echo "\`data/*.json\`, the brief, the locale register or the validators — the workflow"
+            echo "fails if the Scout writes anything outside \`agent/scout/reports/\`."
+            echo
+            echo "**What a reviewer is being asked to do:** read the candidates below and decide"
+            echo "which, if any, are worth opening. A candidate becomes a source record only after"
+            echo "a person reads the document — see \`docs/AI-SAFE-BOUNDARIES.md\` §3 and"
+            echo "\`docs/AGENT-RUNBOOK.md\`. Merging this pull request records what the Scout saw."
+            echo "It does not accept any candidate."
+            echo
+            echo "Run status: \`${STATUS}\` · trace \`${TRACE_ID}\`"
+            echo
+            echo "---"
+            echo
+            cat "$SUMMARY"
+          } > /tmp/pr-body.md
+
+          gh pr create \
+            --title "Source Scout: ${NEW_CANDIDATES} new candidate(s) — ${REPORT_ID}" \
+            --body-file /tmp/pr-body.md \
+            --base "${GITHUB_REF_NAME}" \
+            --head "$BRANCH"
+
+          # A label is a convenience. A repository that has not created
+          # it must not lose the pull request over it.
+          gh pr edit "$BRANCH" --add-label "source-scout" \
+            || echo "::notice title=Label not applied::Create a 'source-scout' label to group these pull requests."
