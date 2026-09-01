@@ -15,8 +15,13 @@ production code was modified.
 
 ## Implementation
 
-Six new documents. Nothing else.
+Ten new documents. Nothing else.
 
+- `AGENTS.md` — the canonical agent entry point: what the project is, the reading order, the
+  rules that matter most, the architecture that must not be rebuilt, the validators and
+  their baseline, the known hazards, git discipline, and when to stop and ask.
+- `CLAUDE.md` — a pointer to `AGENTS.md`. Deliberately holds no rules of its own, so the
+  entry point does not become the second home for a fact.
 - `docs/PROJECT-CONTEXT.md` — what the project is, its provenance, the seven governing
   principles enforced by `tools/`, the factual-vs-analytical split, the measured evidence
   position, audience and stakes, licence position.
@@ -34,8 +39,10 @@ Six new documents. Nothing else.
 
 ## Files changed
 
-**Added (7):**
+**Added (10):**
 ```
+AGENTS.md
+CLAUDE.md
 docs/PROJECT-CONTEXT.md
 docs/CURRENT-ARCHITECTURE.md
 docs/AI-SAFE-BOUNDARIES.md
@@ -59,6 +66,9 @@ touched. Verified by `git status --porcelain`.
    author's decision and is outside a reconnaissance boundary.
 3. **Skills placed at `.agents/skills/<name>/SKILL.md`**, matching the path the session
    protocol instructs agents to read.
+3a. **`AGENTS.md` is canonical and `CLAUDE.md` points to it.** Duplicating the instructions
+   across both would create exactly the second home for a fact that this project's first
+   principle forbids, in the file that teaches the principle.
 4. **The validator baseline is written into the architecture document**, including the five
    pre-existing `design-qa` warnings by file and line, so a later session can distinguish a
    new warning from an inherited one.
