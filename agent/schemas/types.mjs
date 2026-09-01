@@ -150,6 +150,39 @@ export const RED_TARGETS = [
   'known limitations',
 ];
 
+/* ---------------------------------------------------------- authorities
+
+   The issuing-authority hierarchy the Source Scout searches in.
+   THE ARRAY ORDER IS THE PRIORITY ORDER — index 0 is searched and
+   trusted first — so the ranking has one home rather than living
+   both as a list and as a separate table of numbers that could
+   disagree with it.
+
+   This is a vocabulary about WHO PUBLISHED something, which is not
+   the same question as what evidence tier the document sits in.
+   A Commission legislative document and a Commission press release
+   come from the same authority and do not carry the same weight, so
+   the tier is estimated from the document type as well as the
+   authority — see agent/scout/authorities.mjs — and is left null
+   when neither settles it.                                        */
+
+export const AUTHORITY_CLASSES = [
+  'authority:eur-lex',            // 1 · EUR-Lex and the Official Journal
+  'authority:commission',         // 2 · the European Commission
+  'authority:edpb',               // 3 · European Data Protection Board
+  'authority:edps',               // 4 · European Data Protection Supervisor
+  'authority:enisa',              // 5 · EU Agency for Cybersecurity
+  'authority:eu-agency',          // 6 · other EU agencies and bodies
+  'authority:national-authority', // 7 · national competent authorities
+  'authority:court',              // 8 · the CJEU, the General Court, national courts
+  'authority:secondary-expert',   // 9 · everything else, and never presented as more
+];
+
+/** Anything at this class is secondary and must say so. The brief
+ *  permits secondary sources to be discovered; it does not permit
+ *  them to arrive unlabelled. */
+export const SECONDARY_AUTHORITY = 'authority:secondary-expert';
+
 /* ---------------------------------------------------------- evidence
 
    What a record is standing on. `absent` is a first-class kind, not
@@ -187,6 +220,7 @@ export const GAP_KINDS = [
   'no_rule_matched',           // no applicability rule fires — NOT DETERMINED
   'coverage_gap',              // an area the corpus does not reach at all
   'stale_verification',        // checked once, past its stated interval
+  'retrieval_blocked',         // the address is known, retrieval was attempted, and it failed
 ];
 
 export const GAP_STATES = ['open', 'closed_by_verification', 'declared_unknown', 'withdrawn'];

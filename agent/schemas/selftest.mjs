@@ -595,3 +595,70 @@ test('an unknownable field exports as itself, null, or the word unknown — neve
   const variants = s.properties.publication_date.anyOf.map((v) => v.const ?? v.type);
   assert.deepEqual(variants, ['string', 'null', 'unknown']);
 });
+
+/* ---------------------------------------------------------- SESSION 05
+   Added when the first real agent — the Source Scout — met these
+   contracts and found three fields missing and one gap kind absent.
+   The contract changed; these hold the new behaviour down.        */
+
+test('the authority hierarchy is ordered, and the order is the priority order', async () => {
+  const { AUTHORITY_CLASSES, SECONDARY_AUTHORITY } = await import('./types.mjs');
+  assert.equal(AUTHORITY_CLASSES.length, 9, 'the brief names nine levels');
+  assert.equal(AUTHORITY_CLASSES[0], 'authority:eur-lex', 'EUR-Lex and the Official Journal come first');
+  assert.equal(AUTHORITY_CLASSES.at(-1), SECONDARY_AUTHORITY, 'secondary expert sources come last');
+  assert.equal(new Set(AUTHORITY_CLASSES).size, 9);
+});
+
+test('SourceCandidate: a secondary source is never presented as primary law or a regulator', () => {
+  for (const tier of ['tier:1', 'tier:2']) {
+    const r = fx('SourceCandidate');
+    r.tier_estimate = tier;
+    r.authority_class = 'authority:secondary-expert';
+    refuses(r, 'never presented as equivalent to primary law or a regulator');
+  }
+  const ok = fx('SourceCandidate');
+  ok.tier_estimate = 'tier:4';
+  ok.authority_class = 'authority:secondary-expert';
+  assert.deepEqual(V(ok), []);
+});
+
+test('SourceCandidate: an unplaceable authority is a finding, never a quiet "secondary"', () => {
+  const r = fx('SourceCandidate');
+  r.authority_class = null;
+  r.epistemic.inference = r.epistemic.inference.filter((i) => i.field !== 'authority_class');
+  refuses(r, 'an unplaceable source is a finding');
+
+  r.epistemic.unresolved.push({
+    field: 'authority_class', question: 'Who issued this?', missing: 'An identifiable issuing body on the document.',
+    absence_kind: 'null_not_researched', blocks: false,
+  });
+  assert.deepEqual(V(r), []);
+});
+
+test('SourceCandidate: a duplicate list cannot name the candidate itself', () => {
+  const r = fx('SourceCandidate');
+  r.duplicate_candidate_ids = [r.candidate_id];
+  refuses(r, 'names this candidate itself');
+});
+
+test('SourceCandidate: the retrieval date and the fingerprint have one home, on the evidence', () => {
+  const c = getContract('SourceCandidate');
+  assert.ok(!('retrieval_date' in c.fields), 'the retrieval date belongs to the retrieval, not to the document');
+  assert.ok(!('retrieved_at' in c.fields));
+  assert.ok(!('content_fingerprint' in c.fields), 'the fingerprint belongs to the bytes that were fetched');
+  const ev = c.fields.evidence.of.shape;
+  assert.ok('retrieved_at' in ev && 'checksum' in ev, 'both must exist on the evidence reference');
+  refuses({ ...fx('SourceCandidate'), content_fingerprint: 'abc' }, 'not declared by this contract');
+});
+
+test('DataGap: a document nobody could reach has not been read', () => {
+  const r = fx('DataGap');
+  r.gap_kind = 'retrieval_blocked';
+  r.absence_kind = 'unknown_not_determinable';
+  r.state = 'open';
+  refuses(r, 'has not been read, which is not the same as one that was read and found wanting');
+
+  const ok = fx('DataGap');
+  ok.gap_kind = 'retrieval_blocked';
+  assert.deepEqual(V(ok), [], 'retrieval_blocked with absence_kind null_not_researched must be valid');
+});

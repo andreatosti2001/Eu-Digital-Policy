@@ -84,9 +84,15 @@ nothing open, made explicitly so somebody can disagree with it.
 | `AgentRun` | run | an agent's own account of one execution |
 | `WebsiteChange` | record | a change that reaches a reader, with its audit chain |
 
-303 fields, 47 forbidden fields with their reasons, 69 contract-specific
+306 fields, 47 forbidden fields with their reasons, 73 contract-specific
 cross-field rules, on top of the generic identity, shape, epistemic, evidence
 and governance checks in `validate.mjs`.
+
+**Amended in SESSION 05**, when the first real agent met them. `SourceCandidate`
+gained `authority_class`, `duplicate_candidate_ids` and `confidence`; `DataGap`
+gained the gap kind `retrieval_blocked`. Each change came with its tests in the
+same commit, which is the rule these contracts set for themselves. What forced
+each one is in `docs/SOURCE-SCOUT.md`.
 
 ### The envelope
 
@@ -302,7 +308,7 @@ agent/schemas/selftest.mjs      the suite
 ## Checks
 
 ```
-node --test agent/schemas/selftest.mjs     # 61 tests
+node --test agent/schemas/selftest.mjs     # 67 tests
 node agent/schemas/cli.mjs check           # every contract satisfiable by its fixture
 node agent/schemas/cli.mjs validate <file> # exits 1 on an invalid record
 ```
@@ -321,7 +327,7 @@ unchanged from the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
    requiring a block entry for every one would bury the entries that matter. It
    is a judgment about legibility, and it is the check most likely to need
    revisiting.
-3. **Only four fields across the fourteen contracts are typed `factual`**, five
+3. **Only four fields across the fourteen contracts are typed `factual`**, six
    `inference` and two `interpretation`; the rest are structural. That is
    correct — most fields are bookkeeping — but it means the epistemic machinery
    is exercised by a small number of fields, and a contract author adding a
@@ -334,10 +340,18 @@ unchanged from the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
    reports what it cannot resolve rather than failing it, because the referenced
    record may legitimately live elsewhere — but nothing yet holds the store that
    would let it resolve.
-6. **Nothing stores contract records.** The gate hashes them into the trace; where
-   the records themselves live is the next design decision, and it should not be
-   `data/`, which is reserved for the legal record.
-7. **`AgentObservation` and the tracer's `observe()` overlap.** The contract is the
+6. ~~**Nothing stores contract records.**~~ **Closed in SESSION 05.** They live in
+   `agent/records/<trace_id>.jsonl` — append-only, git-ignored, written through
+   `agent/scout/store.mjs`, which validates on the way in and throws rather than
+   accept an invalid one. It is deliberately not `data/`, which is the legal
+   record and which nothing reaches without a human.
+7. **The governance check keys off `affected_entities`**, which the contracts
+   define as "what this record is about". For a record that only *reads* the
+   things it names, those are not the same thing, and the check cannot tell them
+   apart — so a read-only `AgentRun` records no affected entities in order to
+   claim the autonomy it actually has. The distinction between "about" and
+   "changes" is not in the contract, and probably should be.
+8. **`AgentObservation` and the tracer's `observe()` overlap.** The contract is the
    handoff-safe form and carries the epistemic block the trace record does not;
    an agent emitting both writes the summary twice. Whether the trace record
    should become a pointer too is unresolved.

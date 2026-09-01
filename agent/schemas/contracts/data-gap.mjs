@@ -63,6 +63,9 @@ export const DataGap = defineContract({
     (r) => (r.gap_kind === 'not_publicly_determinable' && r.absence_kind !== 'unknown_not_determinable'
       ? ['gap_kind is "not_publicly_determinable" but absence_kind is not "unknown_not_determinable": researched-and-unavailable is not the same as not researched']
       : []),
+    (r) => (r.gap_kind === 'retrieval_blocked' && r.absence_kind !== 'null_not_researched'
+      ? ['gap_kind is "retrieval_blocked" but absence_kind is not "null_not_researched": a document nobody could reach has not been read, which is not the same as one that was read and found wanting']
+      : []),
     (r) => (r.state === 'closed_by_verification' && !r.closed_by
       ? ['state is "closed_by_verification" but closed_by is null: name the verification that closed it']
       : []),

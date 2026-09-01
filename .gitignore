@@ -1,3 +1,7 @@
 # The agent trace store is local, per-developer and regenerable.
 # It holds run inputs/outputs; nothing in it belongs in the repository.
 agent/observability/runs/
+
+# Contract records written by agents. Run artifacts, not canonical data:
+# the legal record lives in data/, and nothing reaches it without a human.
+agent/records/
