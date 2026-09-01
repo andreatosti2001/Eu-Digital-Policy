@@ -400,10 +400,49 @@ test('ClaimEvidence: context is never a citation, and a direct support must be l
   refuses({ ...fx('ClaimEvidence'), established_by: null }, 'an unverified link has an open question');
 });
 
-test('DataGap: the three kinds of absence are kept apart', () => {
+test('DataGap: the four kinds of absence are kept apart', () => {
   refuses({ ...fx('DataGap'), gap_kind: 'no_rule_matched' }, 'the answer is NOT DETERMINED, never a negative finding');
   refuses({ ...fx('DataGap'), gap_kind: 'not_publicly_determinable' }, 'researched-and-unavailable is not the same as not researched');
   refuses({ ...fx('DataGap'), state: 'closed_by_verification', blocking: false }, 'name the verification that closed it');
+});
+
+/* Added in SESSION 05. The first real agent ran behind a network the
+   environment blocks, and found that the three original absence kinds
+   could not say "this document is published and I could not reach
+   it". The danger is specifically the second one: an agent that files
+   an unreachable Official Journal page as "not publicly determinable"
+   has turned its own network failure into a false finding about EU
+   law. These tests hold that door shut. */
+test('DataGap: a blocked retrieval is never dressed up as an undeterminable answer', () => {
+  const blocked = {
+    ...fx('DataGap'),
+    gap_kind: 'retrieval_blocked',
+    absence_kind: 'retrieval_failed',
+    epistemic: {
+      fact: [], inference: [], interpretation: [],
+      unresolved: [{
+        field: null,
+        question: 'What does the document at the cited URL say?',
+        missing: 'The document itself, retrieved and read.',
+        absence_kind: 'retrieval_failed',
+        blocks: true,
+      }],
+    },
+  };
+  assert.deepEqual(V(blocked), [], 'a correctly paired retrieval gap should be accepted');
+
+  refuses(
+    { ...blocked, absence_kind: 'unknown_not_determinable' },
+    'would make a claim about the world out of a network failure',
+  );
+  refuses(
+    { ...blocked, absence_kind: 'null_not_researched' },
+    'would make a claim about the world out of a network failure',
+  );
+  refuses(
+    { ...blocked, gap_kind: 'not_publicly_determinable' },
+    'a failed retrieval is recorded as what it is',
+  );
 });
 
 test('ArchitectureProposal: architectural replacement is red tier', () => {

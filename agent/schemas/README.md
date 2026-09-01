@@ -2,8 +2,12 @@
 
 The inter-agent contracts. Fourteen machine-readable schemas, a validator that
 enforces them, and a gate no agent can hand a record through without passing.
-Zero dependencies, no build step, nothing wired into the website. **No agent is
-built yet, and none should be built until these are the interface it speaks.**
+Zero dependencies, no build step, nothing wired into the website.
+
+One agent speaks them: the **Scout** (`agent/scout/`), which emits
+`SourceCandidate`, `DataGap`, `AgentObservation` and `AgentRun` through
+`gateway.mjs` and stores them in `agent/runs/` via `store.mjs`. The other ten
+contracts have not yet been exercised by a real agent.
 
 ```
 node agent/schemas/cli.mjs list                  # the fourteen

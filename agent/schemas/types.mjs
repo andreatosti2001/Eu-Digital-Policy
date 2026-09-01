@@ -82,11 +82,23 @@ export const FIELD_EPISTEMICS = ['structural', 'factual', 'inference', 'interpre
  * missing rule is a third state and is never a negative finding
  * (§0.5). Naming them separately is what stops a downstream agent
  * from collapsing them.
+ *
+ * `retrieval_failed` is the fourth, added in SESSION 05 by the first
+ * real agent to run against these contracts. It is a statement about
+ * THIS AGENT'S REACH, not about the world: the document is published
+ * and citable, and the agent could not get to it. The other three
+ * cannot hold that. Recording it as `null_not_researched` would say
+ * nobody looked, when somebody did; recording it as
+ * `unknown_not_determinable` is worse still, because that asserts the
+ * answer is not publicly determinable — a claim about the world, and
+ * a false one, made on the strength of a network failure. A blocked
+ * fetch is evidence about the fetcher and never about the law.
  */
 export const ABSENCE_KINDS = [
   'null_not_researched',        // nobody has looked
   'unknown_not_determinable',   // researched, not publicly determinable
   'no_rule_matched',            // NOT DETERMINED — never "probably not"
+  'retrieval_failed',           // published and citable; this agent could not reach it
 ];
 
 /** The sentinel value for researched-and-not-determinable. Same word
@@ -187,6 +199,7 @@ export const GAP_KINDS = [
   'no_rule_matched',           // no applicability rule fires — NOT DETERMINED
   'coverage_gap',              // an area the corpus does not reach at all
   'stale_verification',        // checked once, past its stated interval
+  'retrieval_blocked',         // located, attempted, refused — the gap is in this agent's reach
 ];
 
 export const GAP_STATES = ['open', 'closed_by_verification', 'declared_unknown', 'withdrawn'];

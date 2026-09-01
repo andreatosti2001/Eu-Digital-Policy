@@ -16,10 +16,21 @@
    evidence: a lead is somewhere to look, and writing one down does
    not narrow the gap by one word.
 
-   `absence_kind` is the field that keeps three states apart which
+   `absence_kind` is the field that keeps four states apart which
    every other system collapses: nobody looked · somebody looked and
    it is not publicly determinable · no rule covers the case, so the
-   answer is NOT DETERMINED and never "probably not".
+   answer is NOT DETERMINED and never "probably not" · and the
+   document is published but this agent could not reach it.
+
+   The fourth was added in SESSION 05, by the first real agent to run
+   against these contracts, and it earns its place by what it stops
+   an agent saying. A Scout behind a blocked network that had only
+   the first three would have to file every unreachable source as
+   either "nobody looked" or "not publicly determinable". The second
+   is a claim about the world, and it is false: the Official Journal
+   is published whether or not this process can open a socket. An
+   agent must never be able to turn its own failure into a finding
+   about EU law.
    ============================================================ */
 
 import { F } from '../fields.mjs';
@@ -34,7 +45,7 @@ export const DataGap = defineContract({
   fields: {
     gap_id: F.id('This gap\'s id.'),
     gap_kind: F.enum(GAP_KINDS, 'What sort of absence this is.'),
-    absence_kind: F.enum(ABSENCE_KINDS, 'Not researched · researched and not publicly determinable · no rule matched. Three different states that must never render alike.'),
+    absence_kind: F.enum(ABSENCE_KINDS, 'Not researched · researched and not publicly determinable · no rule matched · retrieval failed. Four different states that must never render alike.'),
     what_is_missing: F.text('Exactly what is absent, in terms specific enough that finding it would be recognisable.'),
     why_open: F.text('Why it cannot be closed now — not looked yet, not published, sources disagree, outside the corpus.'),
     closes_with: F.text('What would close it: the publication to find, the confirmation to obtain, the decision to be taken. "More research" is not an answer.'),
@@ -62,6 +73,12 @@ export const DataGap = defineContract({
       : []),
     (r) => (r.gap_kind === 'not_publicly_determinable' && r.absence_kind !== 'unknown_not_determinable'
       ? ['gap_kind is "not_publicly_determinable" but absence_kind is not "unknown_not_determinable": researched-and-unavailable is not the same as not researched']
+      : []),
+    (r) => (r.gap_kind === 'retrieval_blocked' && r.absence_kind !== 'retrieval_failed'
+      ? ['gap_kind is "retrieval_blocked" but absence_kind is not "retrieval_failed": a document this agent could not reach is not thereby undeterminable, and saying so would make a claim about the world out of a network failure']
+      : []),
+    (r) => (r.absence_kind === 'retrieval_failed' && r.gap_kind !== 'retrieval_blocked'
+      ? [`absence_kind is "retrieval_failed" but gap_kind is "${r.gap_kind}": a failed retrieval is recorded as what it is, not filed under an absence in the corpus`]
       : []),
     (r) => (r.state === 'closed_by_verification' && !r.closed_by
       ? ['state is "closed_by_verification" but closed_by is null: name the verification that closed it']

@@ -12,9 +12,8 @@ step between a commit and a reader. The validators are advisory, so the discipli
 
 ## The rules
 
-**Branch.** Develop on the session's designated branch — currently
-`claude/eu-digital-policy-protocol-ntyhqc`. Create it locally if absent. **Never push to
-`main` or any other branch without explicit permission.**
+**Branch.** Develop on the session's designated branch. Create it locally if absent. **Never
+push to `main` or any other branch without explicit permission.**
 
 **Never push without running the validators.** All four, every time, on any commit touching
 data, markup, styles or scripts:

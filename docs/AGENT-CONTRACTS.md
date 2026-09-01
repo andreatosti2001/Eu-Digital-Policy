@@ -1,6 +1,7 @@
 # Agent contracts
 
-The interface between the agents this project has not built yet.
+The interface the agents of this project speak. One agent speaks it so far — the
+Scout, in `agent/scout/`; the rest are still unbuilt.
 
 Nothing here is wired into the website. `agent/schemas/` is a development
 subsystem: it adds no dependency, changes no page, and `tools/design-qa.mjs`
@@ -84,7 +85,7 @@ nothing open, made explicitly so somebody can disagree with it.
 | `AgentRun` | run | an agent's own account of one execution |
 | `WebsiteChange` | record | a change that reaches a reader, with its audit chain |
 
-303 fields, 47 forbidden fields with their reasons, 69 contract-specific
+303 fields, 47 forbidden fields with their reasons, 71 contract-specific
 cross-field rules, on top of the generic identity, shape, epistemic, evidence
 and governance checks in `validate.mjs`.
 
@@ -194,7 +195,31 @@ permission:
   `"unknown"` is refused;
 - `no_rule_matched` is a third `absence_kind`, and `DataGap` refuses to record a
   `no_rule_matched` gap under any other. Where no applicability rule fires the
-  answer is NOT DETERMINED, never "probably not".
+  answer is NOT DETERMINED, never "probably not";
+- `retrieval_failed` is a fourth, added in SESSION 05 — see below.
+
+### `retrieval_failed`, and why a fourth state was needed
+
+SESSION 04 predicted that the first real agent would find a field these contracts
+got wrong. It did, and this was it.
+
+The Scout runs behind a network whose egress policy refuses most hosts. With only
+the three original absence kinds, every unreachable source would have had to be
+filed as either `null_not_researched` — which says nobody looked, when somebody
+did — or `unknown_not_determinable`, which is far worse: **that one asserts the
+answer is not publicly determinable, which is a claim about the world, and a
+false one, manufactured out of a network failure.** The Official Journal is
+published whether or not this process can open a socket.
+
+So `retrieval_failed` says what is actually true: the document is published and
+citable, and *this agent* could not reach it. It is a statement about the agent's
+reach and never about the source. `DataGap` pairs it with a matching
+`gap_kind: retrieval_blocked` and refuses either one without the other, in both
+directions — a blocked fetch cannot be dressed up as an undeterminable answer,
+and an undeterminable answer cannot be excused as a blocked fetch.
+
+The general rule this is an instance of: **an agent must never be able to turn
+its own failure into a finding about EU law.**
 
 ---
 
@@ -238,6 +263,37 @@ layer's own `approval` event carrying the id and the state and nothing else.
 That is still a pointer, and it is what puts a pending approval in front of a
 human in the viewer. A pending approval nobody can see is the failure the
 observability layer was built to prevent.
+
+---
+
+## Where the records live
+
+SESSION 04 left this open: the gate hashes a record into the trace as a pointer,
+and a pointer needs something to point at. **The store is `agent/runs/`**, one
+JSONL file per run, named by `trace_id`, records appended and never rewritten —
+the same model, and the same reasoning, as `agent/observability/runs/`. A run
+that crashed halfway leaves exactly the records it managed to write.
+
+`agent/schemas/store.mjs` holds it, with a `MemoryContractStore` for tests and
+dry runs.
+
+**It is not `data/`, and that is the point of the decision.** `data/` is the
+legal record — what the site tells a reader EU law requires. A contract record is
+an agent's finding about the world: a different kind of thing, held to a
+different standard, and not yet verified by anyone. A `SourceCandidate` is not a
+source, and putting one where sources live is how the two stop being
+distinguishable.
+
+**It is git-ignored**, like the trace store, for the reason the trace store gives:
+the records are regenerable by re-running the agent, they carry run inputs and
+outputs, and committing them would make the repository assert findings nobody has
+checked.
+
+**The store is not a second path around the gate.** `ContractStore.append` calls
+the gateway's own `receive`, which validates and throws — so a record cannot
+reach the store without satisfying its contract. `receive` is the right half to
+use here for the reason the gateway already gives: "I wrote it" is not a property
+the receiver can check, so the store checks it anyway.
 
 ---
 
@@ -293,6 +349,7 @@ agent/schemas/contracts/*.mjs   the fourteen, one per file
 agent/schemas/registry.mjs      the registry a record's `contract` field resolves against
 agent/schemas/validate.mjs      the gate: identity, shape, epistemic, governance
 agent/schemas/gateway.mjs       emit / receive / handoff, and the trace pointer
+agent/schemas/store.mjs         where a record lives: agent/runs/, through the gate
 agent/schemas/export.mjs        JSON Schema, derived on demand
 agent/schemas/fixtures.mjs      one simulated example per contract
 agent/schemas/cli.mjs           list · show · validate · export · fixture · check
@@ -302,7 +359,7 @@ agent/schemas/selftest.mjs      the suite
 ## Checks
 
 ```
-node --test agent/schemas/selftest.mjs     # 61 tests
+node --test agent/schemas/selftest.mjs     # 62 tests
 node agent/schemas/cli.mjs check           # every contract satisfiable by its fixture
 node agent/schemas/cli.mjs validate <file> # exits 1 on an invalid record
 ```
@@ -312,9 +369,13 @@ unchanged from the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
 
 ## Known limitations
 
-1. **No agent implements these contracts**, because no agent exists. Nothing has
-   yet been discovered by using them in anger, and the first real agent will
-   almost certainly find a field that is the wrong shape.
+1. ~~**No agent implements these contracts**, because no agent exists.~~
+   **Closed in SESSION 05.** The Scout (`agent/scout/`) emits `SourceCandidate`,
+   `DataGap`, `AgentObservation` and `AgentRun` through the gate. The prediction
+   in the second half of this entry held: it found `absence_kind` unable to
+   express a blocked retrieval, and that was fixed in the open rather than routed
+   around — see `retrieval_failed` above. Only four of the fourteen contracts
+   have now been exercised by a real agent; the other ten remain unproven.
 2. **The epistemic requirement is enforced on top-level fields only.** An
    epistemic annotation deeper inside a record — on an evidence reference's own
    title, say — describes that evidence rather than what the record asserts, and
@@ -332,11 +393,12 @@ unchanged from the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
    red-tier change described only in prose in the `reason` field.
 5. **Cross-record references are checked only within a batch.** `validateBatch`
    reports what it cannot resolve rather than failing it, because the referenced
-   record may legitimately live elsewhere — but nothing yet holds the store that
-   would let it resolve.
-6. **Nothing stores contract records.** The gate hashes them into the trace; where
-   the records themselves live is the next design decision, and it should not be
-   `data/`, which is reserved for the legal record.
+   record may legitimately live elsewhere. `agent/runs/` now holds the records,
+   but nothing reads across runs to resolve a reference into an earlier one, so
+   in practice the check is still batch-local.
+6. ~~**Nothing stores contract records.**~~ **Closed in SESSION 05** — see
+   "Where the records live" above. `agent/runs/`, git-ignored, written through
+   `receive` so the store is not a way around the gate.
 7. **`AgentObservation` and the tracer's `observe()` overlap.** The contract is the
    handoff-safe form and carries the epistemic block the trace record does not;
    an agent emitting both writes the summary twice. Whether the trace record
