@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Agent observability — EU Digital Policy</title>
+<meta name="description" content="Local development view over the agent trace store. Not part of the published site."/>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="stylesheet" href="viewer.css"/>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the trace</a>
+
+<header class="top">
+  <div class="brand">
+    <strong>Agent observability</strong>
+    <span class="sub">EU Digital Policy · local development view</span>
+  </div>
+  <div class="top-tools">
+    <label class="live"><input type="checkbox" id="autorefresh" checked/> auto-refresh</label>
+    <button id="refresh" type="button">Refresh</button>
+    <button id="theme" type="button" aria-pressed="false">Light</button>
+  </div>
+</header>
+
+<div id="banner" class="banner" hidden></div>
+
+<div class="tiles" id="tiles" role="status" aria-live="polite"></div>
+
+<div class="layout">
+  <nav class="rail" aria-label="Traces">
+    <div class="rail-head">
+      <span id="railCount">—</span>
+      <select id="statusFilter" aria-label="Filter traces by status">
+        <option value="">all</option>
+        <option value="running">running</option>
+        <option value="ok">completed</option>
+        <option value="degraded">degraded</option>
+        <option value="failed">failed</option>
+      </select>
+    </div>
+    <ul id="runList" class="runs"></ul>
+    <section class="rail-block" id="queues"></section>
+  </nav>
+
+  <main id="main" class="main" tabindex="-1">
+    <div id="traceHead"></div>
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div id="panel" class="panel"></div>
+  </main>
+</div>
+
+<script type="module" src="viewer.js"></script>
+</body>
+</html>
