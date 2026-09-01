@@ -27,6 +27,8 @@ the evidence it describes.
 | `docs/PROJECT-CONTEXT.md` | What the project is; the seven governing principles |
 | `docs/CURRENT-ARCHITECTURE.md` | Rendering model, module topology, dependency map, tooling baseline |
 | `docs/AI-SAFE-BOUNDARIES.md` | Green / amber / red tiers; the absolute prohibitions |
+| `docs/AGENT-CONTRACTS.md` | The fourteen inter-agent contracts and the gate no record bypasses |
+| `docs/OBSERVABILITY.md` | The trace model every agent run is instrumented through |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
 | `README.md` | The author's own account, including eight stated limitations |

@@ -6,3 +6,7 @@ agent/observability/runs/
 # A session artifact recording what the checks said at a point in time, not a
 # second home for the recorded baseline in docs/CURRENT-ARCHITECTURE.md §12.
 .agents/.qa-baseline.json
+
+# Contract records written by agents. Run artifacts, not canonical data:
+# the legal record lives in data/, and nothing reaches it without a human.
+agent/records/
