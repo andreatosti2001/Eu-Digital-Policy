@@ -1,8 +1,9 @@
 # HANDOVER
 
-**Last updated:** SESSION 02 · 1 September 2026
+**Last updated:** SESSION 02 · 1 September 2026 (merged forward to include `064469c`)
 **Branch:** `claude/eu-digital-policy-protocol-kye69t`
-**Base commit:** `c2e62c7` on `main` (SESSION 00)
+**Base commit:** `c2e62c7` on `main` (SESSION 00), merged with `064469c` (`AGENTS.md` /
+`CLAUDE.md`)
 
 ---
 
@@ -42,6 +43,14 @@ Zero dependencies, no build step, nothing wired into the site.
   provenance, website changes, errors.
 - **Demonstrator** — a fully simulated Scout → Verifier → Change Detector run.
 
+Also merged into this branch after the observability work was committed: `AGENTS.md` and
+`CLAUDE.md`, added directly to `main` in a parallel commit (`064469c`,
+"Add AGENTS.md and CLAUDE.md — the missing agent entry points") to close the gap this
+session's own unresolved issues had flagged — see **Unresolved issues** below. They were not
+authored in this session; they arrived by merge, at the user's explicit request, once
+published. `AGENTS.md` is now the canonical agent entry point; `CLAUDE.md` holds no rules of
+its own and points to it.
+
 ## Files changed
 
 All new and additive. **No file the website ships was modified.** Confirmed by
@@ -65,6 +74,10 @@ agent/observability/selftest.mjs
 agent/observability/demo/workflow.mjs
 agent/observability/viewer/{index.html,viewer.css,viewer.js}
 ```
+
+**Merged in from `origin/main`, not authored here:** `AGENTS.md`, `CLAUDE.md`, and a small
+addendum to `docs/HANDOVER.md`'s SESSION 00 record acknowledging them (see
+`git show 064469c` for that commit on its own).
 
 ## Architecture decisions
 
@@ -93,6 +106,9 @@ agent/observability/viewer/{index.html,viewer.css,viewer.js}
 9. **`agent/observability/runs/` is git-ignored.** Run records are build artifacts, not
    canonical data — SESSION 00's instruction, kept. They hold run inputs and outputs and are
    regenerable.
+10. **`AGENTS.md` is canonical; `CLAUDE.md` holds no rules of its own and points to it** —
+    merged in from `064469c`, not authored in this session, and kept exactly as published:
+    one home per fact applied to the agent-facing documentation itself.
 
 ## Tests
 
@@ -162,31 +178,33 @@ Carried forward from SESSION 00 and still open — none was in this session's sc
 
 New, from this session:
 
-5. **There is no agent contract yet.** The protocol requires every agent to operate through
-   "the project's agent contracts and observability layer". The observability half now
-   exists; the contract half is unwritten. There is no `AGENTS.md` and no `CLAUDE.md` in the
-   repository.
+5. ~~There is no agent contract yet.~~ **Resolved after this session's own work was
+   committed.** `AGENTS.md` and `CLAUDE.md` were added directly to `main` (`064469c`) and
+   merged into this branch at the user's request. `AGENTS.md` is now the canonical agent
+   entry point; the observability half this session built and the contract half now both
+   exist. Left as a struck-through entry rather than deleted, so the sequence of events stays
+   legible: the gap was real when this session flagged it.
 6. **No decision on excluding `agent/` from the Pages deployment** (limitation 6 above).
 
 ## Next session
 
-**SESSION 03 — write the agent contract, and instrument one real read-only agent against
-it.**
+**SESSION 03 — instrument one real read-only agent against the now-published contract.**
 
-Define, in `AGENTS.md`, what an agent in this project may do, what it must emit, and what it
-may never do — the boundaries document already supplies most of the content; what is missing
-is the contract an agent's *code* is held to. Then build **one** agent: the Scout,
-**read-only**, against real sources, emitting through `agent/observability/tracer.mjs` and
-appearing in the viewer with real provenance.
+`AGENTS.md` exists (merged in from `064469c` after this session's own work; see
+**Unresolved issues** above). Build **one** agent: the Scout, **read-only**, against real
+sources, emitting through `agent/observability/tracer.mjs` and appearing in the viewer with
+real provenance, held to the rules `AGENTS.md` and `docs/AI-SAFE-BOUNDARIES.md` already
+state.
 
 Do not build the Verifier or the Change Detector in the same session, and do not let any
 agent write to `data/*.json`.
 
 ## Next-session instructions
 
-- Invoke `project-context` first. Read `docs/PROJECT-CONTEXT.md`,
-  `docs/CURRENT-ARCHITECTURE.md`, `docs/AI-SAFE-BOUNDARIES.md` and this file before code —
-  then `docs/OBSERVABILITY.md` before writing any agent.
+- Read `AGENTS.md` first — it is the canonical entry point — then invoke `project-context`
+  and read `docs/PROJECT-CONTEXT.md`, `docs/CURRENT-ARCHITECTURE.md`,
+  `docs/AI-SAFE-BOUNDARIES.md` and this file, then `docs/OBSERVABILITY.md` before writing any
+  agent.
 - Re-run the four validators and confirm the §12 baseline before changing anything.
 - Instrument through `tracer.mjs`. Do not add a second logging path, and do not use
   `console.log` as the observability mechanism.
