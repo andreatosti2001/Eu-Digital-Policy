@@ -5,6 +5,10 @@ description: Load the mandatory context for the Eu-Digital-Policy repository bef
 
 # project-context
 
+**Boundaries:** `docs/AI-SAFE-BOUNDARIES.md` §0 holds the absolute prohibitions. Skills in
+this library point at them rather than copying them — with one deliberate exception, recorded
+in `data-governance` and in `docs/SKILL-MAP.md` §4.
+
 ## Purpose
 
 This repository has strict invariants that are not obvious from the code, and a public
@@ -43,6 +47,10 @@ after a long gap or after context has been summarised.
 
 4. **Read the `$description` and `$note`** of any dataset you intend to touch before
    touching it. The non-obvious invariant lives in the `$note`.
+
+5. **Load the skill you need, not all of them.** `docs/SKILL-MAP.md` lists the library, what
+   each skill owns, and which agent role uses which. Each skill is narrow on purpose: it
+   states its own scope boundary and names the sibling that owns what it does not.
 
 ## The five things to internalise
 

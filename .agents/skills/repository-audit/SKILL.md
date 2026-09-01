@@ -16,6 +16,12 @@ that instructed contributors to run three build scripts which did not exist.
 Scoping a new session; verifying a handover; investigating a suspected discrepancy; before
 any change whose blast radius is unclear.
 
+## Scope boundary
+
+Whether the **repository** is what it is said to be. What the **corpus** does not yet
+establish is `data-completeness`; whether the **checks** pass is `legal-site-qa`; whether the
+**interface** reads correctly is `ux-audit`.
+
 ## Procedure
 
 **1. Ground truth**
