@@ -32,11 +32,11 @@ import { fileURLToPath } from 'node:url';
 
 import { CONTRACT_LIST, CONTRACTS, CONTRACT_NAMES, PROPOSAL_CONTRACTS, getContract } from './registry.mjs';
 import { validate, assertValid, validateBatch } from './validate.mjs';
-import { FIXTURES } from './fixtures.mjs';
+import { FIXTURES, simEvidence } from './fixtures.mjs';
 import { toJsonSchema } from './export.mjs';
 import { emit, handoff, receive, sha256Of, canonicalJson } from './gateway.mjs';
 import { ENVELOPE_FIELDS, PROPOSAL_FIELDS } from './common.mjs';
-import { EPISTEMIC_STATUS, FIELD_EPISTEMICS, taxonomyIds, RISKS, APPROVAL_STATES, PROVENANCE_ROLES } from './types.mjs';
+import { EPISTEMIC_STATUS, FIELD_EPISTEMICS, taxonomyIds, RISKS, APPROVAL_STATES, PROVENANCE_ROLES, LEGAL_STATUSES, LEGAL_STATUS_TAXONOMY } from './types.mjs';
 import * as obsSchema from '../observability/schema.mjs';
 import { Tracer } from '../observability/tracer.mjs';
 import { MemorySink } from '../observability/sink.mjs';
@@ -389,7 +389,120 @@ test('VerificationRecord: a verdict is gated on what the evidence can carry', ()
   const c = fx('VerificationRecord');
   c.verdict = 'not_determinable';
   c.residual_gap = 'The document does not address it.';
+  /* The fixture carries an open question of its own, so it is cleared
+     here: what this case exercises is an unsettled verdict with NO
+     open question, which is the state the rule refuses. */
+  c.epistemic.unresolved = [];
+  c.applicability_date = null;
   refuses(c, 'an unsettled check has an open question by definition');
+});
+
+test('the twelve legal statuses exist, and each says whether the site has a word for it', () => {
+  const required = [
+    'proposed', 'adopted', 'published', 'entered_into_force', 'applicable', 'amended',
+    'corrected', 'repealed', 'annulled', 'under_judicial_review', 'guidance', 'non_binding_commentary',
+  ];
+  assert.deepEqual(LEGAL_STATUSES, required);
+
+  /* Where the site already has the term, the agent layer points at
+     it rather than keeping a second copy that could drift. */
+  const siteStatuses = taxonomyIds('status');
+  for (const [status, id] of Object.entries(LEGAL_STATUS_TAXONOMY)) {
+    if (id === null) continue;
+    assert.ok(siteStatuses.includes(id), `LEGAL_STATUS_TAXONOMY maps "${status}" to "${id}", which data/taxonomy.json does not have`);
+  }
+
+  /* And where it does not, the null is the finding. These five are
+     distinctions the Verifier must draw and the site's vocabulary
+     does not carry; filing one under a taxonomy term that means
+     something else is the failure this asserts against. */
+  const unmapped = LEGAL_STATUSES.filter((s) => LEGAL_STATUS_TAXONOMY[s] === null);
+  assert.deepEqual(unmapped, ['corrected', 'annulled', 'under_judicial_review', 'guidance', 'non_binding_commentary']);
+});
+
+test('entering into force and applying are different fields, and neither can be "unknown" undeclared', () => {
+  const f = CONTRACTS.VerificationRecord.fields;
+  for (const name of ['entry_into_force_date', 'applicability_date', 'publication_date']) {
+    assert.ok(f[name], `VerificationRecord has no ${name}`);
+    assert.equal(f[name].epistemic, 'factual', `${name} must carry an evidence burden`);
+    assert.ok(f[name].unknownable, `${name} must be able to say "researched and not determinable"`);
+  }
+  /* The one that gets collapsed in practice. */
+  assert.notEqual(f.entry_into_force_date.doc, f.applicability_date.doc);
+});
+
+test('VerificationRecord: the outcome class is derived, and refused as a stored field', () => {
+  refuses({ ...fx('VerificationRecord'), outcome_class: 'resolved' }, 'derived from the verdict');
+  refuses({ ...fx('VerificationRecord'), tier: 'tier:1' }, 'settled in data/sources.json');
+  refuses({ ...fx('VerificationRecord'), binding: true }, 'does not become law because a field said true');
+});
+
+test('VerificationRecord: a conflict names both sides, and never resolves itself', () => {
+  const conflicted = () => {
+    const r = fx('VerificationRecord');
+    r.evidence = [simEvidence('ev-1'), simEvidence('ev-2')];
+    r.verdict = 'conflict';
+    r.residual_gap = 'Two simulated sources give different simulated dates, and neither displaces the other.';
+    r.conflicting_evidence = [{
+      evidence_refs: ['ev-1', 'ev-2'],
+      disagreement: 'One says one simulated thing; the other says a different simulated thing.',
+      unreconciled_because: 'Both are simulated, and the fixture does not rank simulations.',
+    }];
+    r.epistemic.inference.push({
+      field: 'conflicting_evidence',
+      statement: 'The two entries disagree about the same question.',
+      from: ['ev-1', 'ev-2'],
+      method: 'Compared the value each states for the same attribute of the same act.',
+    });
+    r.epistemic.unresolved.push({
+      field: null, question: 'Which of the two is right?', missing: 'A source that displaces one of them.',
+      absence_kind: 'null_not_researched', blocks: true,
+    });
+    return r;
+  };
+
+  assert.deepEqual(V(conflicted()), []);
+
+  const a = conflicted(); a.conflicting_evidence = [];
+  refuses(a, 'name the entries that disagree');
+
+  const b = conflicted(); b.conflicting_evidence[0].evidence_refs = ['ev-1', 'ev-nowhere'];
+  refuses(b, 'resolves to nothing in this record');
+
+  const c = conflicted();
+  c.epistemic.inference = c.epistemic.inference.filter((e) => e.field !== 'conflicting_evidence');
+  refuses(c, 'concluding that two sources disagree is a judgement');
+
+  /* The whole point of the verdict: it cannot be quietly upgraded. */
+  const d = conflicted(); d.verdict = 'confirmed'; d.residual_gap = null;
+  refuses(d, 'a proposition sitting on unreconciled authority is not confirmed');
+});
+
+test('VerificationRecord: nothing is located inside a document nobody fetched', () => {
+  const r = fx('VerificationRecord');
+  r.evidence = [{ ...simEvidence('ev-1'), kind: 'dataset_record', url: null, locator: 'data/claims.json#simulated' }];
+  refuses(r, 'no evidence entry is a retrieved_document');
+});
+
+test('VerificationRecord: "applicable" without a date must at least say the date is open', () => {
+  const r = fx('VerificationRecord');
+  r.legal_status = 'applicable';
+  r.applicability_date = null;
+  r.epistemic.unresolved = [];
+  r.epistemic.inference.find((e) => e.field === 'legal_status').statement = 'The act applies.';
+  refuses(r, 'saying an act applies without saying from when');
+
+  /* Declaring it open is the honest form, and it passes. */
+  const ok = fx('VerificationRecord');
+  ok.legal_status = 'applicable';
+  ok.applicability_date = null;
+  ok.epistemic.unresolved = [{
+    field: 'applicability_date', question: 'From when does it apply?',
+    missing: 'A stated application date. The simulated document gives none.',
+    absence_kind: 'null_not_researched', blocks: false,
+  }];
+  ok.epistemic.inference.find((e) => e.field === 'legal_status').statement = 'The act applies.';
+  assert.deepEqual(V(ok), []);
 });
 
 test('ClaimEvidence: context is never a citation, and a direct support must be locatable', () => {

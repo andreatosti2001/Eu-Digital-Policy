@@ -208,7 +208,85 @@ export const VERIFICATION_VERDICTS = [
   'contradicted',          // the source says otherwise
   'not_determinable',      // researched; the source cannot settle it
   'source_unavailable',    // the document could not be retrieved
+  'conflict',              // two authoritative sources disagree, and neither displaces the other
 ];
+
+/* ---------------------------------------------------------- legal status
+
+   The twelve states a legal act can be in, as SESSION 07's brief
+   requires the Legal Verifier to tell them apart. Collapsing any two
+   of these is the failure mode the whole contract exists to prevent:
+   an act that has ENTERED INTO FORCE is not yet APPLICABLE, and a
+   reader told otherwise may act two years early.
+
+   SEVEN OF THE TWELVE ALREADY HAVE A HOME. data/taxonomy.json's
+   `status` dimension is the site's own vocabulary for exactly this,
+   and the mapping below points at it rather than copying its ids:
+   one home per fact, and a renamed taxonomy term fails the suite
+   instead of silently disagreeing with the agent layer.
+
+   THE OTHER FIVE HAVE NONE, and the null says so. `corrected`,
+   `annulled`, `under_judicial_review`, `guidance` and
+   `non_binding_commentary` are distinctions the Verifier must draw
+   and the site's vocabulary does not carry. They are NOT added to
+   data/taxonomy.json here: that file is the enum authority a
+   reader's page resolves against, changing it is data work, and this
+   session is not scoped for it. A null is an honest finding —
+   the term is missing — and never a licence to file the status
+   under a taxonomy id that means something else.
+
+   The keys are bare snake_case rather than `status:`-prefixed ids,
+   deliberately: an agent-layer value that LOOKED like a taxonomy id
+   would eventually be written into a dataset by something that did
+   not check.                                                       */
+
+export const LEGAL_STATUS_TAXONOMY = {
+  proposed: 'status:proposal',
+  adopted: 'status:adopted',
+  published: 'status:published',
+  entered_into_force: 'status:in-force',
+  applicable: 'status:applicable',
+  amended: 'status:amended',
+  corrected: null,
+  repealed: 'status:repealed',
+  annulled: null,
+  under_judicial_review: null,
+  guidance: null,
+  non_binding_commentary: null,
+};
+
+export const LEGAL_STATUSES = Object.keys(LEGAL_STATUS_TAXONOMY);
+
+/**
+ * What KIND of state each status is. Two statuses in the same kind
+ * are refinements of one another; two in different kinds are
+ * different things about the act, and an agent that finds signals
+ * for both has found an ambiguity rather than a stronger answer.
+ */
+export const LEGAL_STATUS_KIND = {
+  proposed: 'legislative_progress',
+  adopted: 'legislative_progress',
+  published: 'legislative_progress',
+  entered_into_force: 'in_effect',
+  applicable: 'in_effect',
+  amended: 'modified',
+  corrected: 'modified',
+  repealed: 'terminated',
+  annulled: 'terminated',
+  under_judicial_review: 'contested',
+  guidance: 'non_binding',
+  non_binding_commentary: 'non_binding',
+};
+
+/** Neither of these can establish a binding obligation, however
+ *  plainly it is worded. A proposition drawn from one is confirmed
+ *  as WHAT THE SOURCE SAYS and never as what the law requires. */
+export const NON_BINDING_STATUSES = LEGAL_STATUSES.filter((s) => LEGAL_STATUS_KIND[s] === 'non_binding');
+
+/** The three outcomes SESSION 07's brief names. DERIVED from the
+ *  verdict, never stored beside it — a second copy is a second thing
+ *  to be wrong, and VerificationRecord forbids the field. */
+export const VERIFICATION_OUTCOME_CLASSES = ['resolved', 'unresolved', 'conflict'];
 
 export const QA_VERDICTS = ['pass', 'pass_with_findings', 'fail'];
 

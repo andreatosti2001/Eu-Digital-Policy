@@ -37,7 +37,7 @@ const envelope = (contract, over = {}) => ({
 });
 
 /** A retrieved-document evidence entry that is unmistakably fake. */
-const simEvidence = (id, over = {}) => ({
+export const simEvidence = (id, over = {}) => ({
   evidence_id: id,
   kind: 'retrieved_document',
   source_id: null,
@@ -115,19 +115,40 @@ export const verificationRecordFixture = () => envelope('VerificationRecord', {
   statement: 'A simulated statement, checked against a simulated document.',
   method: 'Read the named section of the retrieved document and compared its wording against the statement.',
   verdict: 'confirmed',
+  confidence: 0.8,
   checked_at: AT,
   checked_by_kind: 'agent',
   checked_by: 'fixture-agent',
+  document_id: 'SIMULATED-0000-000',
+  source_tier: 'tier:1',
+  supporting_location: { raw: 'section 1', article: null, paragraph: null, page: null },
+  legal_status: 'entered_into_force',
+  publication_date: '2026-01-02',
+  entry_into_force_date: '2026-01-22',
+  applicability_date: 'unknown',
+  conflicting_evidence: [],
   residual_gap: null,
   supersedes: null,
   recheck_after: null,
   affected_entities: [{ kind: 'claim', id: 'simulated:claim', path: 'data/claims.json', field: null, note: null }],
   evidence: [simEvidence('ev-1')],
   epistemic: {
-    fact: [{ field: null, statement: 'The document states the proposition in the words quoted.', evidence_refs: ['ev-1'] }],
-    inference: [{ field: 'verdict', statement: 'The statement is confirmed.', from: ['ev-1'], method: 'The quoted wording states the proposition without qualification.' }],
+    fact: [
+      { field: null, statement: 'The document states the proposition in the words quoted.', evidence_refs: ['ev-1'] },
+      { field: 'document_id', statement: 'The document identifies itself as SIMULATED-0000-000.', evidence_refs: ['ev-1'] },
+      { field: 'supporting_location', statement: 'The proposition is carried at section 1.', evidence_refs: ['ev-1'] },
+      { field: 'publication_date', statement: 'The document states it was published on 2026-01-02.', evidence_refs: ['ev-1'] },
+      { field: 'entry_into_force_date', statement: 'The document states it entered into force on 2026-01-22.', evidence_refs: ['ev-1'] },
+    ],
+    inference: [
+      { field: 'verdict', statement: 'The statement is confirmed.', from: ['ev-1'], method: 'The quoted wording states the proposition without qualification.' },
+      { field: 'legal_status', statement: 'The act is in force.', from: ['ev-1'], method: 'The simulated document uses entry-into-force wording and no applicability, repeal or annulment wording. Whether the stated date has arrived is not decided here: that answer would change with when the fixture is read.' },
+      { field: 'source_tier', statement: 'The cited source is being treated as tier 1.', from: ['ev-1'], method: 'A fixture. Nothing was classified, because nothing exists to classify.' },
+    ],
     interpretation: [],
-    unresolved: [],
+    unresolved: [
+      { field: 'applicability_date', question: 'From when does the simulated act apply?', missing: 'A stated application date. The simulated document gives none, and this fixture will not compute one.', absence_kind: 'unknown_not_determinable', blocks: false },
+    ],
   },
 });
 
