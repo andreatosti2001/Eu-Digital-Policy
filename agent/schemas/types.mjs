@@ -322,3 +322,54 @@ export const REQUIRED_VALIDATORS = [
   'tools/design-qa.mjs',
   'tools/freshness.mjs',
 ];
+
+/* ---------------------------------------------------------- data proposals
+
+   SESSION 08's brief: "Any proposed factual modification must first
+   become a proposal object", and "do not automatically merge
+   substantive legal changes."
+
+   None of the four proposal contracts could hold one. An
+   EditorialProposal is about the brief's prose; an
+   ImplementationProposal is about code and would have recorded a
+   change to data/claims.json under `files` and `modules`, which is
+   filing a legal change as a code change. So DataProposal was added
+   as a fifteenth contract rather than routed around — the course
+   SESSION 05 and SESSION 07 both took, and the reasoning is in
+   docs/VERIFICATION-INTEGRATION.md.                                */
+
+/**
+ * What a proposal would do to a canonical record. Deliberately
+ * narrow: each kind carries a different burden, and the contract
+ * rules attach to the kind rather than to a free-text description
+ * an agent could word its way past.
+ */
+export const DATA_OPERATION_KINDS = [
+  'attach_evidence',  // add a source reference to an existing record's sources[]
+  'create_source',    // a new data/sources.json record, for a document actually retrieved and read
+  'create_claim',     // a new data/claims.json record, for a statement already present in the prose
+  'amend_field',      // change the value a field carries on an existing record
+  'annotate',         // add to a verification_note or a gap_note without changing any value
+];
+
+/**
+ * What becomes of a provenance field on the record a proposal
+ * touches. There is deliberately NO `removed` and no bare
+ * `replaced`: removing an asterisk, a reference gap, a
+ * requires_verification flag or a verification_note is red tier
+ * under AI-SAFE-BOUNDARIES §3, and a vocabulary that offered the
+ * word would be an invitation to use it.
+ *
+ * `replaced_human_only` exists because a verification_note written
+ * before the source was found does genuinely need rewriting once it
+ * has been. It is not the same permission: the rules refuse it on
+ * anything but a substantive, human_only proposal, and the operation
+ * must carry the current text verbatim so the diff shows what is
+ * being written over.
+ */
+export const PROVENANCE_DISPOSITIONS = [
+  'unchanged',
+  'extended',            // the existing text is kept and added to
+  'set_first_time',      // the field was null and nobody had looked
+  'replaced_human_only',
+];

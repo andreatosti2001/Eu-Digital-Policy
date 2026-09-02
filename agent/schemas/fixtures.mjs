@@ -480,6 +480,50 @@ export const websiteChangeFixture = () => envelope('WebsiteChange', {
 });
 
 /** Every fixture, keyed by contract name. */
+export const dataProposalFixture = () => envelope('DataProposal', {
+  proposal_id: 'prop-data-simulated-001',
+  reason: 'A simulated verification read a simulated document and the claim it bears on cites nothing external. This fixture proposes attaching the one to the other, and nothing else.',
+  confidence: 0.6,
+  risk: 'medium',
+  autonomy_class: 'review_required',
+  proposed_change: {
+    summary: 'Add one source reference to one claim in data/claims.json.',
+    operations: [{
+      op: 'add',
+      target: 'data/claims.json claims[simulated:claim].sources[]',
+      current: null,
+      proposed: '{ "source_id": "simulated:source", "supports": "supports:direct", "locator": "section 1" }',
+      rationale: 'The verification read the passage at the stated locator and it states the claim\'s proposition.',
+    }],
+    scope_note: 'It does not touch the claim\'s statement, its type, its verification_note or any existing source reference.',
+  },
+  validation_requirements: fourValidators,
+  rollback_plan: rollback(),
+  dataset: 'data/claims.json',
+  record_kind: 'claim',
+  record_id: 'simulated:claim',
+  operation_kind: 'attach_evidence',
+  existing_search: null,
+  preserves_record_id: true,
+  provenance_disposition: [
+    { field: 'last_verified', disposition: 'unchanged', current: '2026-08-27', why: 'This fixture attaches evidence; it does not assert that the record was re-read on a new date.' },
+    { field: 'verification_note', disposition: 'unchanged', current: 'A simulated note.', why: 'The note describes what is still open, and attaching one source does not close it.' },
+  ],
+  substantive: false,
+  verification_refs: ['ver-simulated-001'],
+  prose_anchor: null,
+  retrieved_and_read: true,
+  supersedes: null,
+  affected_entities: [{ kind: 'claim', id: 'simulated:claim', path: 'data/claims.json', field: 'sources', note: 'The claim the evidence would be attached to.' }],
+  evidence: [simEvidence('ev-1')],
+  epistemic: {
+    fact: [{ field: null, statement: 'data/claims.json carries a record with this id, and its sources array does not already contain this source_id.', evidence_refs: ['ev-1'] }],
+    inference: [{ field: 'substantive', statement: 'Adding a source reference does not change what the claim asserts; it changes what the claim can be shown to rest on.', from: ['ev-1'], method: 'The operation adds an entry to sources[] and touches no other field. The claim\'s statement, type and verification_note are unchanged, and the evidence grade is derived at render time rather than stored, so nothing is written that could disagree with it.' }],
+    interpretation: [],
+    unresolved: [{ field: null, question: 'Does the source support the whole of the claim or only part of it?', missing: 'A reading of the claim against the passage by a human. This fixture asserts nothing about a real document.', absence_kind: 'null_not_researched', blocks: false }],
+  },
+});
+
 export const FIXTURES = {
   SourceCandidate: sourceCandidateFixture,
   VerificationRecord: verificationRecordFixture,
@@ -495,4 +539,5 @@ export const FIXTURES = {
   AgentObservation: agentObservationFixture,
   AgentRun: agentRunFixture,
   WebsiteChange: websiteChangeFixture,
+  DataProposal: dataProposalFixture,
 };

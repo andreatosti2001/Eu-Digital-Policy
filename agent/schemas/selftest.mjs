@@ -9,7 +9,7 @@
 
    What it holds down, in the order the contract layer would fail:
 
-     · the fourteen contracts exist, are documented, and carry the
+     · the fifteen contracts exist, are documented, and carry the
        envelope the session specified
      · every substantive proposal carries all twelve required fields
      · the vocabularies are the site's and the observability
@@ -36,7 +36,7 @@ import { FIXTURES, simEvidence } from './fixtures.mjs';
 import { toJsonSchema } from './export.mjs';
 import { emit, handoff, receive, sha256Of, canonicalJson } from './gateway.mjs';
 import { ENVELOPE_FIELDS, PROPOSAL_FIELDS } from './common.mjs';
-import { EPISTEMIC_STATUS, FIELD_EPISTEMICS, taxonomyIds, RISKS, APPROVAL_STATES, PROVENANCE_ROLES, LEGAL_STATUSES, LEGAL_STATUS_TAXONOMY } from './types.mjs';
+import { EPISTEMIC_STATUS, FIELD_EPISTEMICS, taxonomyIds, RISKS, APPROVAL_STATES, PROVENANCE_ROLES, LEGAL_STATUSES, LEGAL_STATUS_TAXONOMY, LEGAL_ENTITY_KINDS } from './types.mjs';
 import * as obsSchema from '../observability/schema.mjs';
 import { Tracer } from '../observability/tracer.mjs';
 import { MemorySink } from '../observability/sink.mjs';
@@ -59,16 +59,20 @@ function refuses(record, fragment) {
   );
 }
 
-/* ---------------------------------------------------------- the fourteen */
+/* ---------------------------------------------------------- the fifteen */
 
-test('the fourteen contracts the session named all exist', () => {
+test('the fifteen contracts the sessions named all exist', () => {
   const required = [
     'SourceCandidate', 'VerificationRecord', 'ClaimEvidence', 'ChangeRecord', 'DataGap',
     'ArchitectureProposal', 'EditorialProposal', 'UXProposal', 'ImplementationProposal',
     'QAResult', 'ApprovalRequest', 'AgentObservation', 'AgentRun', 'WebsiteChange',
+    /* SESSION 08. Appended rather than slotted in beside the other
+       proposals: the order is the order they were named, and
+       reordering it would change what CONTRACT_LIST[n] means. */
+    'DataProposal',
   ];
   assert.deepEqual(CONTRACT_NAMES, required);
-  assert.equal(CONTRACT_LIST.length, 14);
+  assert.equal(CONTRACT_LIST.length, 15);
 });
 
 test('every field of every contract is documented and epistemically typed', () => {
@@ -100,7 +104,7 @@ test('every substantive proposal carries all twelve required fields', () => {
     'proposal_id', 'agent', 'created_at', 'affected_entities', 'reason', 'evidence',
     'confidence', 'risk', 'autonomy_class', 'proposed_change', 'validation_requirements', 'rollback_plan',
   ];
-  assert.equal(PROPOSAL_CONTRACTS.length, 4);
+  assert.equal(PROPOSAL_CONTRACTS.length, 5);
   for (const c of PROPOSAL_CONTRACTS) {
     for (const key of twelve) {
       assert.ok(key in c.fields, `${c.name} is missing the required proposal field "${key}"`);
@@ -113,7 +117,7 @@ test('every substantive proposal carries all twelve required fields', () => {
 });
 
 test('a contract name is unique and every contract has a fixture', () => {
-  assert.equal(new Set(CONTRACT_NAMES).size, 14);
+  assert.equal(new Set(CONTRACT_NAMES).size, 15);
   for (const name of CONTRACT_NAMES) assert.ok(typeof FIXTURES[name] === 'function', `${name} has no fixture`);
   assert.deepEqual(Object.keys(FIXTURES).sort(), [...CONTRACT_NAMES].sort());
 });
@@ -774,4 +778,180 @@ test('DataGap: a document nobody could reach has not been read', () => {
   const ok = fx('DataGap');
   ok.gap_kind = 'retrieval_blocked';
   assert.deepEqual(V(ok), [], 'retrieval_blocked with absence_kind null_not_researched must be valid');
+});
+
+/* ---------------------------------------------------------- DataProposal
+
+   SESSION 08. The contract exists so that a proposed factual
+   modification is a record before it is an edit, and these are the
+   three burdens it was added to carry.                             */
+
+test('DataProposal: a new record is proposed only after looking for the one already there', () => {
+  const r = fx('DataProposal');
+  r.operation_kind = 'create_source';
+  r.record_id = null;
+  r.dataset = 'data/sources.json';
+  r.record_kind = 'source';
+  r.affected_entities = [{ kind: 'source', id: null, path: 'data/sources.json', field: null, note: 'A source record that does not exist yet.' }];
+  refuses(r, 'a new record is proposed only after looking for the one that is already there');
+
+  r.existing_search = {
+    performed: false, strategies: ['normalised_url'], candidates_considered: 0,
+    best_candidate_id: null, best_score: null, why_not_that_one: null,
+  };
+  r.epistemic.inference.push({ field: 'existing_search', statement: 'Nothing matched.', from: ['ev-1'], method: 'Compared the normalised URL against every source record.' });
+  refuses(r, 'the search is the thing that stops a second home');
+});
+
+test('DataProposal: the closest existing record is answered, not scored past', () => {
+  const r = fx('DataProposal');
+  r.operation_kind = 'create_source';
+  r.record_id = null;
+  r.dataset = 'data/sources.json';
+  r.record_kind = 'source';
+  r.affected_entities = [{ kind: 'source', id: null, path: 'data/sources.json', field: null, note: null }];
+  r.existing_search = {
+    performed: true, strategies: ['normalised_url', 'title_and_publisher'], candidates_considered: 77,
+    best_candidate_id: 'simulated:source', best_score: 0.71, why_not_that_one: null,
+  };
+  r.epistemic.inference.push({ field: 'existing_search', statement: 'The closest record is a different document.', from: ['ev-1'], method: 'Compared normalised URLs and then normalised titles against every source record.' });
+  refuses(r, 'does not say why it is not this record');
+});
+
+test('DataProposal: an existing record keeps the id it has', () => {
+  const r = fx('DataProposal');
+  r.preserves_record_id = false;
+  refuses(r, 'IDs are never renamed here');
+
+  const moved = fx('DataProposal');
+  moved.proposed_change.operations[0].target = 'data/claims.json claims[simulated:claim].id';
+  refuses(moved, 'an id is stable, and renaming one dangles every reference to it');
+});
+
+test('DataProposal: provenance is not removed, and there is no word for removing it', () => {
+  const spec = getContract('DataProposal').fields.provenance_disposition.of.shape.disposition;
+  assert.ok(!spec.values.includes('removed'), 'a vocabulary that offered the word would be an invitation to use it');
+  assert.ok(!spec.values.includes('replaced'), 'a bare "replaced" would let a note be written over on an agent\'s own authority');
+
+  const r = fx('DataProposal');
+  r.proposed_change.operations.push({
+    op: 'remove', target: 'data/claims.json claims[simulated:claim].verification_note',
+    current: 'A simulated note.', proposed: null, rationale: 'It looks resolved now.',
+  });
+  refuses(r, 'is red tier under AI-SAFE-BOUNDARIES §3');
+});
+
+test('DataProposal: writing over a provenance value is a substantive change a human authors', () => {
+  const r = fx('DataProposal');
+  r.provenance_disposition[1].disposition = 'replaced_human_only';
+  refuses(r, 'writing over an existing provenance value is a substantive change a human authors');
+});
+
+test('DataProposal: "set for the first time" is refused where somebody had already looked', () => {
+  const r = fx('DataProposal');
+  r.provenance_disposition[0].disposition = 'set_first_time';
+  refuses(r, 'null means nobody looked, and a field with a value has been looked at');
+});
+
+test('DataProposal: a substantive legal change is red tier and cannot be merged automatically', () => {
+  const r = fx('DataProposal');
+  r.substantive = true;
+  r.autonomy_class = 'review_required';
+  refuses(r, 'an agent may propose it and nothing more');
+
+  const c = getContract('DataProposal');
+  for (const key of ['auto_merge', 'apply_automatically', 'merge_on_approval', 'merged', 'applied']) {
+    assert.ok(key in c.forbidden, `DataProposal must refuse "${key}" with the objection, not with "unknown field"`);
+    refuses({ ...fx('DataProposal'), [key]: true }, c.forbidden[key]);
+  }
+});
+
+test('DataProposal: changing a value is presumed substantive until a method says otherwise', () => {
+  const r = fx('DataProposal');
+  r.operation_kind = 'amend_field';
+  r.epistemic.inference = r.epistemic.inference.filter((i) => i.field !== 'substantive');
+  refuses(r, 'changing the value a field carries is presumed substantive');
+
+  r.epistemic.inference.push({
+    field: 'substantive', statement: 'The field is a formatting normalisation and asserts nothing new.',
+    from: ['ev-1'], method: 'Compared the rendered output before and after; the claim asserts the same proposition.',
+  });
+  assert.deepEqual(V(r), []);
+});
+
+test('DataProposal: a source record comes from a document actually read', () => {
+  const base = () => {
+    const r = fx('DataProposal');
+    r.operation_kind = 'create_source';
+    r.record_id = null;
+    r.dataset = 'data/sources.json';
+    r.record_kind = 'source';
+    r.affected_entities = [{ kind: 'source', id: null, path: 'data/sources.json', field: null, note: null }];
+    r.existing_search = {
+      performed: true, strategies: ['normalised_url'], candidates_considered: 77,
+      best_candidate_id: null, best_score: null, why_not_that_one: null,
+    };
+    r.epistemic.inference.push({ field: 'existing_search', statement: 'No existing record matched.', from: ['ev-1'], method: 'Compared the normalised URL against every source record.' });
+    return r;
+  };
+
+  const unread = base();
+  unread.retrieved_and_read = false;
+  refuses(unread, 'never from a title, an abstract, a snippet or model knowledge');
+
+  const noDoc = base();
+  noDoc.evidence = [{
+    evidence_id: 'ev-1', kind: 'agent_output', source_id: null, url: null, locator: 'a prior record',
+    title: null, publisher: null, quote: null, retrieved_at: null, checksum: null,
+    supports: 'supports:context', role: 'secondary', simulated: true,
+  }];
+  refuses(noDoc, 'nothing was read, so there is nothing to write a source record from');
+});
+
+test('DataProposal: a new claim with no sentence behind it is blocked', () => {
+  const r = fx('DataProposal');
+  r.operation_kind = 'create_claim';
+  r.record_id = null;
+  r.record_kind = 'claim';
+  r.prose_anchor = null;
+  r.existing_search = {
+    performed: true, strategies: ['statement_exact', 'statement_overlap'], candidates_considered: 91,
+    best_candidate_id: null, best_score: null, why_not_that_one: null,
+  };
+  r.epistemic.inference.push({ field: 'existing_search', statement: 'No existing claim carries this proposition.', from: ['ev-1'], method: 'Compared the normalised statement against every claim, then compared token overlap.' });
+  refuses(r, 'a claim with no sentence behind it would be the site asserting something it does not say');
+
+  r.epistemic.unresolved.push({
+    field: 'prose_anchor', question: 'Which sentence in the brief carries this statement?',
+    missing: 'The sentence itself, located in index.html. No new claims were written for this corpus and none is written here.',
+    absence_kind: 'null_not_researched', blocks: true,
+  });
+  r.autonomy_class = 'human_only';
+  assert.deepEqual(V(r), []);
+});
+
+test('DataProposal: attaching evidence names the verification that read the source', () => {
+  const r = fx('DataProposal');
+  r.verification_refs = [];
+  refuses(r, 'name the verification that read the source');
+});
+
+test('DataProposal: it changes a dataset, and says which file that entity lives in', () => {
+  const r = fx('DataProposal');
+  r.dataset = 'agent/records/whatever.jsonl';
+  refuses(r, 'that is a path under data/ ending in .json');
+
+  const mismatched = fx('DataProposal');
+  mismatched.dataset = 'data/sources.json';
+  refuses(mismatched, 'no affected entity names that path');
+});
+
+test('DataProposal: it cannot be autonomous, because every record kind it touches is a legal one', () => {
+  const c = getContract('DataProposal');
+  for (const v of c.fields.record_kind.values) {
+    assert.ok(LEGAL_ENTITY_KINDS.includes(v), `record_kind offers "${v}", which is not a legal-record kind`);
+  }
+  const r = fx('DataProposal');
+  r.autonomy_class = 'autonomous';
+  refuses(r, 'which is amber at best');
 });

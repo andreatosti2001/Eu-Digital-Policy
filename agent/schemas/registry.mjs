@@ -1,11 +1,17 @@
 /* ============================================================
-   agent/schemas/registry.mjs — the fourteen contracts
+   agent/schemas/registry.mjs — the fifteen contracts
 
    The single place that knows what contracts exist. A record names
    its own contract in its `contract` field, so validation needs no
    out-of-band knowledge of what it was handed: an agent that
-   invents a fifteenth contract is told the name is unknown rather
+   invents a sixteenth contract is told the name is unknown rather
    than having its record accepted by a validator that skipped it.
+
+   DataProposal is the fifteenth, added in SESSION 08 and appended
+   rather than slotted in beside the other proposals: the list order
+   is the order the contracts were named, and reordering it would
+   silently change what `CONTRACT_LIST[n]` means to anything that
+   indexed it.
    ============================================================ */
 
 import { SourceCandidate } from './contracts/source-candidate.mjs';
@@ -22,8 +28,9 @@ import { ApprovalRequest } from './contracts/approval-request.mjs';
 import { AgentObservation } from './contracts/agent-observation.mjs';
 import { AgentRun } from './contracts/agent-run.mjs';
 import { WebsiteChange } from './contracts/website-change.mjs';
+import { DataProposal } from './contracts/data-proposal.mjs';
 
-/** In the order the session named them. */
+/** In the order the sessions named them. */
 export const CONTRACT_LIST = [
   SourceCandidate,
   VerificationRecord,
@@ -39,18 +46,19 @@ export const CONTRACT_LIST = [
   AgentObservation,
   AgentRun,
   WebsiteChange,
+  DataProposal,
 ];
 
 export const CONTRACTS = Object.fromEntries(CONTRACT_LIST.map((c) => [c.name, c]));
 
 export const CONTRACT_NAMES = CONTRACT_LIST.map((c) => c.name);
 
-/** The four the session requires to carry the full proposal envelope. */
+/** The proposals — the ones that carry the full twelve-field envelope. */
 export const PROPOSAL_CONTRACTS = CONTRACT_LIST.filter((c) => c.kind === 'proposal');
 
 export function getContract(name) {
   const c = CONTRACTS[name];
-  if (!c) throw new Error(`unknown contract "${name}" — the fourteen are: ${CONTRACT_NAMES.join(', ')}`);
+  if (!c) throw new Error(`unknown contract "${name}" — the fifteen are: ${CONTRACT_NAMES.join(', ')}`);
   return c;
 }
 

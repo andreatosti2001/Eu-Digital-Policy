@@ -1,105 +1,113 @@
 # HANDOVER
 
-**Last updated:** SESSION 07 · 2 September 2026
-**Branch:** `claude/eu-digital-policy-audit-y0n89z`, cut from `origin/main` at `2752c78`.
-**Base commit:** `2752c78` on `main` ("Fix the digest artifact glob catching README.md").
-
-> **The branch name says "audit" and this session did not perform one.** The session prompt
-> carried a large read-only audit brief above a SESSION 07 build brief, and the two are
-> incompatible. The build brief was taken as the live instruction: `git log` shows SESSION 06
-> (the Source Scout and its schedule) already merged into `main`, so "SESSION 07 — Build Agent
-> 2: Legal Verifier" is the next objective in sequence and the audit text is boilerplate
-> carried down from an earlier session. **This is a judgement call and it is flagged here
-> rather than buried.** If an audit was actually wanted, nothing in this branch is in the way:
-> it adds `agent/verifier/` and extends one contract, and touches no page, dataset, style or
-> validator.
+**Last updated:** SESSION 08 · 2 September 2026
+**Branch:** `claude/verification-existing-data-qer8u5`, cut from `origin/main` at `cef6b58`.
+**Base commit:** `cef6b58` on `main` ("Merge the Legal Verifier branch (be45ee2)").
 
 ---
 
 ## Current milestone
 
-**SESSION 07 — Agent 2, the Legal Verifier. Complete**, with the same honest caveat every
-agent in this repository carries: **it has never read a real document.** Every registered
-endpoint is refused by this environment's egress policy, so the Verifier has only ever run
-against the adversarial corpus this session wrote for it.
+**SESSION 08 — integrate verification with the existing data. Complete.**
 
-The reference document is **`docs/LEGAL-VERIFIER.md`**. This file is the handover only.
+The Legal Verifier produces a `VerificationRecord`. Nothing in that record
+touches `data/`. This session built the layer that gets from one to the other —
+`agent/integrate/` — and it carries the same honest caveat every agent here
+does: **it has never seen a real `VerificationRecord`**, because the Verifier has
+never read a real document. The *corpus* it matches against is real; the
+verifications are fixtures.
 
-## Work performed
+The reference document is **`docs/VERIFICATION-INTEGRATION.md`**. This file is
+the handover only.
 
-Built `agent/verifier/` — Agent 2. Input `SourceCandidate`, output `VerificationRecord`.
+## What the session was told, and what was done
 
-1. **`decompose.mjs`** — source material into discrete propositions, with materiality stated
-   as a rule and immaterial sentences counted with their reason rather than dropped.
-2. **`statuses.mjs`** — the twelve legal statuses from signal phrases, each carrying the exact
-   phrase it matched. The lifecycle stages are treated as cumulative; two statuses off that
-   lifecycle are a real ambiguity and yield null.
-3. **`dates.mjs`** — publication, entry into force and application, read separately and
-   returned exactly as printed. Refuses to compute a date from the twentieth-day formula, and
-   refuses to pick one of two staged application dates.
-4. **`locate.mjs`** — article, paragraph and page, or the recorded admission that nothing
-   governs the passage.
-5. **`judge.mjs`** — the ordered verdict test, most damaging error checked first.
-6. **`conflict.mjs`** — disagreement between two authoritative sources, found and never
-   resolved. Keeps apart a genuine conflict, a lower tier outranked by a higher, and two
-   precisions of one date.
-7. **`doctype.mjs`** — the document's own self-description to a `source_type`, or null.
-8. **`outcome.mjs`** — the three outcome classes, the protocol word, and the confidence
-   formula. All derived; none stored.
-9. **`build.mjs`** — a record builder whose fields and epistemic block cannot drift apart.
-10. **`verifier.mjs`**, **`cli.mjs`**, **`fixtures.mjs`** (eleven adversarial cases),
-    **`selftest.mjs`** (42 tests), **`README.md`**.
+> Study the existing data. **Do not replace the current data model.** Create an
+> adapter between Verification Records and the current canonical datasets. Find
+> an existing claim before creating a new one; find an existing source before
+> creating a duplicate; attach evidence to the canonical record; detect
+> unsupported claims; detect stale verification; detect conflicting evidence;
+> preserve existing IDs; preserve existing provenance. Any proposed factual
+> modification must first become a proposal object. Do not automatically merge
+> substantive legal changes.
 
-And extended one contract, with its tests — see "Contract changes" below.
+**The data model was not replaced, extended, migrated or shadowed.** No file was
+added to `data/`. No field was added to any dataset. Not one byte of `data/`
+changed — asserted by hashing the directory around a full non-dry run, by
+`git status --porcelain`, and by a test that scans every module in
+`agent/integrate/` for a write call.
+
+| | Requirement | Module |
+|---|---|---|
+| 1 | find an existing claim before creating a new one | `agent/integrate/claims.mjs` |
+| 2 | find an existing source before creating a duplicate | `agent/integrate/sources.mjs` |
+| 3 | attach evidence to the canonical record | `agent/integrate/evidence.mjs` |
+| 4 | detect unsupported claims | `agent/integrate/unsupported.mjs` |
+| 5 | detect stale verification | `agent/integrate/stale.mjs` |
+| 6 | detect conflicting evidence | `agent/integrate/conflicts.mjs` |
+| 7 | preserve existing IDs | `agent/integrate/preserve.mjs` + the contract |
+| 8 | preserve existing provenance | `agent/integrate/preserve.mjs` + the contract |
 
 ## Files changed
 
 ```
-agent/verifier/*                                 (new — 11 modules + README, 42 tests)
-agent/schemas/types.mjs                          (LEGAL_STATUSES + mapping; "conflict" verdict)
-agent/schemas/contracts/verification-record.mjs  (9 new fields, 6 new rules, 3 new forbidden)
-agent/schemas/fixtures.mjs                       (VerificationRecord fixture updated; simEvidence exported)
-agent/schemas/selftest.mjs                       (6 new tests; one existing case adjusted — see below)
-docs/LEGAL-VERIFIER.md                           (new — the reference document)
-docs/AGENT-RUNBOOK.md                            (one addendum to §7)
+agent/integrate/*                                (new — 13 modules + README, 61 tests)
+agent/schemas/contracts/data-proposal.mjs        (new — the fifteenth contract)
+agent/schemas/registry.mjs                       (DataProposal registered)
+agent/schemas/types.mjs                          (DATA_OPERATION_KINDS, PROVENANCE_DISPOSITIONS)
+agent/schemas/fixtures.mjs                       (dataProposalFixture)
+agent/schemas/selftest.mjs                       (13 new tests; fourteen → fifteen)
+agent/schemas/common.mjs, export.mjs             (comment counts only)
+agent/schemas/README.md                          (three agents now speak the contracts)
+tools/freshness.mjs                              (EXPECTED exported; audit body guarded — see below)
+docs/VERIFICATION-INTEGRATION.md                 (new — the reference document)
+docs/AGENT-CONTRACTS.md                          (the fifteenth, and a stale count corrected)
+AGENTS.md                                        (the agent suites, and the three agent docs)
 docs/HANDOVER.md                                 (this file)
 ```
 
-**Not touched:** every file under `agent/scout/`, every file under `agent/observability/`,
-every `data/*.json`, every page, style, `js/` module, `i18n/` file and `tools/` validator.
-Confirmed by `git status --porcelain` and, structurally, by the Verifier's own suite hashing
-the whole of `data/` around a full run.
+**Not touched:** every `data/*.json`, every page, every file under `js/`, `css/`
+and `i18n/`, `tools/validate.mjs`, `tools/i18n-audit.mjs`, `tools/design-qa.mjs`,
+and every file under `agent/scout/`, `agent/verifier/` and
+`agent/observability/`.
 
-## Contract changes this agent forced
+## The contract change this forced, and it is a Class C one
 
-The brief requires fifteen things recorded per proposition. Six had a home on
-`VerificationRecord`; **nine did not**, and each was added to the contract with its tests
-rather than routed around — the course SESSION 05 took for the Scout, recorded the same way in
-`docs/SOURCE-SCOUT.md`.
+**`DataProposal` is a fifteenth contract.** Flagged here rather than buried.
 
-Added: `legal_status`, `publication_date`, `entry_into_force_date`, `applicability_date`,
-`document_id`, `source_tier`, `supporting_location`, `conflicting_evidence`, `confidence`.
-Plus `conflict` in `VERIFICATION_VERDICTS`, six new cross-field rules, two existing rules
-extended to cover the new verdict, and four new `forbidden` entries (`outcome_class`, `tier`,
-`grade`, `binding`).
+The session requires that any proposed factual modification first become a
+proposal object. The fourteen had no home for one. `EditorialProposal` is about
+prose; `ImplementationProposal` is about code and would have recorded a change
+to what the site says about EU law as a change to a script; `ClaimEvidence` is a
+link, not a proposal, and cannot express "create a source record" at all; and
+doing it outside the contract layer would have put the one operation that
+reaches the legal record outside the one gate that checks anything.
 
-**This is a Class C change to the contract layer and it is flagged as one.** The full
-reasoning, including why the fields are flat rather than nested and which one was deliberately
-*not* added, is in `docs/LEGAL-VERIFIER.md`, "Contract changes this agent forced".
+So it was added with its tests in the same commit — the course SESSION 05 took
+for the Scout and SESSION 07 for the Verifier. The full reasoning, and what was
+considered and rejected, is in `docs/VERIFICATION-INTEGRATION.md` §3.
 
-**`CONTRACT_SCHEMA_VERSION` was deliberately NOT bumped**, following SESSION 05's precedent —
-the constant is global across all fourteen contracts and bumping it would invalidate every
-fixture and every stored record in the repository. The consequence is real and worth naming: a
-`VerificationRecord` written before this session would now fail validation. Nothing in the
-repository is broken by that, because contract records live in git-ignored `agent/records/`
-and are regenerable run artifacts. **The contract layer has no per-contract versioning, and
-this session did not add one.**
+**`CONTRACT_SCHEMA_VERSION` was deliberately NOT bumped**, on both earlier
+sessions' precedent. Adding a contract invalidates nothing that already exists —
+no record names `DataProposal` unless something wrote one — so the case is
+weaker here than it was for either earlier amendment. **The contract layer still
+has no per-contract versioning, and this session did not add one.**
 
-**One existing test was adjusted, not weakened.** `agent/schemas/selftest.mjs`, case `c` of
-"VerificationRecord: a verdict is gated on what the evidence can carry": the enriched fixture
-now carries an open question of its own, so the case clears `epistemic.unresolved` to still
-exercise the rule it was written for — an unsettled verdict with *no* open question. The
-rule and the assertion are unchanged.
+## The one validator that was changed, and why
+
+`tools/freshness.mjs` now `export`s its `EXPECTED` interval table, and its audit
+body runs only when the file is the entry point.
+
+`agent/integrate/stale.mjs` asks the same question of the same datasets. A
+second table of intervals in the agent layer would be a second home for a fact,
+and the two would disagree the first time somebody tightened one. Importing the
+module previously ran the whole audit and called `process.exit`.
+
+**Its output is byte-identical.** Verified by diffing a run against a fixed date
+before and after the change; the diff is empty and the exit code is unchanged.
+Under `AI-SAFE-BOUNDARIES` §1 that is a green-tier refactor within one module —
+behaviour, output and the four validator results unchanged — and it is named
+here so nobody has to discover it in a diff.
 
 ## Tests
 
@@ -107,191 +115,242 @@ Run in this session, from the repository root:
 
 | Command | Result |
 |---|---|
-| `node --test agent/verifier/selftest.mjs` | **42 pass · 0 fail** (new) |
-| `node --test agent/schemas/selftest.mjs` | **73 pass · 0 fail** (67 before; 6 new) |
-| `node --test agent/scout/selftest.mjs` | 30 pass · 0 fail — unchanged, confirms Agent 1 was not touched |
+| `node --test agent/integrate/selftest.mjs` | **61 pass · 0 fail** (new) |
+| `node --test agent/schemas/selftest.mjs` | **86 pass · 0 fail** (73 before; 13 new) |
+| `node --test agent/verifier/selftest.mjs` | 42 pass · 0 fail — unchanged |
+| `node --test agent/scout/selftest.mjs` | 30 pass · 0 fail — unchanged |
 | `node --test agent/scout/schedule/selftest.mjs` | 18 pass · 0 fail — unchanged |
 | `node --test agent/observability/selftest.mjs` | 13 pass · 0 fail — unchanged |
-| `node agent/schemas/cli.mjs check` | 14/14 satisfiable, exit 0 |
-| `node tools/validate.mjs` | **0 errors, 106 unverified records** — matches the §12 baseline exactly |
+| `node agent/schemas/cli.mjs check` | 15/15 satisfiable, exit 0 |
+| `node tools/validate.mjs` | **0 errors, 0 warnings, 106 unverified records** — matches the §12 baseline exactly |
 | `node tools/i18n-audit.mjs` | 0 errors, 0 warnings — matches |
 | `node tools/design-qa.mjs` | 0 errors, **5 warnings** — the same five as §12, by file and line |
-| `node tools/freshness.mjs` | reports only, "nothing past its stated interval", exit 0 |
+| `node tools/freshness.mjs 2026-09-02` | "Nothing past its stated interval", exit 0 — byte-identical to the same run before the refactor |
 
-**176 tests across the five suites, all passing** (128 before this session).
+**250 tests across the six suites, all passing** (176 before this session).
 
-**`data/` was verified untouched in both directions:** a full non-dry run
-(`node agent/verifier/cli.mjs --mock`) left every `data/*.json` byte-identical by sha256, and
-`git status --porcelain` shows no dataset modified. A test asserts the same thing by hashing
-the directory around a run, and a second scans every module in `agent/verifier/` for
-`writeFileSync`, `appendFileSync`, `createWriteStream`, `rmSync`, `unlinkSync` and `mkdirSync`.
+**`data/` was verified untouched in both directions**: a full non-dry run
+(`node agent/integrate/cli.mjs --mock`) left every `data/*.json` byte-identical
+by sha256, and `git status --porcelain` shows no dataset modified.
 
-**The adversarial corpus was exercised end to end.** A `--mock` run produces 23 verifications
-over 21 propositions from 11 documents: 8 confirmed, 11 partially confirmed, 2 not
-determinable, 1 source unavailable, 1 conflict — and one candidate refused at intake for
-being this agent's own.
+**The integration tests run against the real `data/`, not a mock corpus.** That
+is deliberate and it is the one thing that distinguishes this suite from the
+other five: an adapter to the canonical datasets tested only against a corpus
+this session invented would prove nothing about the corpus it will meet. The
+fixtures' real ids and URLs are looked up from `data/` at load rather than typed
+in, so a renamed record fails the fixtures loudly instead of quietly testing
+nothing.
 
-## Four defects the tests found, and what they were
+## Four defects the tests found
 
-Recorded because the next session should know the suite earns its keep:
+1. **The CELEX pattern matched nothing at all** — it omitted the sector digit,
+   so every EUR-Lex address fell through to the weaker URL strategy.
+2. **Five identical attach proposals for one reference.** Applied in order they
+   would have put one source in one claim's bibliography five times.
+3. **A `conflict` verdict was founding a source record.** No verdict outside
+   `confirmed` and `partially_confirmed` now produces any proposal at all.
+4. **The compilation-date signal was binary, and wrong for the dataset it
+   mattered most for.** `data/claims.json` carries two distinct `last_verified`
+   values across 84 records; an "are they all identical" test reported it as a
+   per-record field, which is the opposite of what `VERIFICATION-POLICY` §5
+   records.
 
-1. **A repeal attached to the wrong act.** A proposition stating a status but naming no
-   instrument was being related to whatever instrument the document mentioned elsewhere, so a
-   regulation repealing a predecessor *while amending the DSA* reported the DSA repealed. Now
-   no instrument is attached and the unresolved subject is recorded.
-2. **Silent truncation.** `max_candidates` dropped the thirteenth fixture without a word — and
-   that fixture was the self-verification refusal case, so the refusal never fired and nothing
-   said so. Dropped candidates are now counted, named, and carried into the run record's open
-   questions.
-3. **Four identical conflict records** for one disagreement, because each document states its
-   date in several propositions. Deduplicated on the instrument, the attribute and the two
-   documents — never on the values.
-4. **Nulls set without being declared** on the unreachable-document and conflict records,
-   which the contract permits but the project's own discipline does not.
+Detail in `docs/VERIFICATION-INTEGRATION.md` §13.
 
-## Observability
+## What this layer will not do
 
-Every step is a span — `verifier.intake`, `verifier.retrieve`, `verifier.decompose`,
-`verifier.proposition`, `verifier.crosscheck`. Every verdict is a `decision` event carrying
-the verdicts *not* chosen and why. Every document read leaves a `provenance` event with the
-verification block. `agent/observability/cli.mjs show <trace-id>` renders a Verifier run
-exactly as it does a Scout run; no second logging path was added.
+Each of these is a test, not a promise:
+
+- resolve a conflict, or rank two authorities
+- pick one of two candidates from an ambiguity
+- strengthen a `supports` qualifier beyond what the verdict carries
+- attach a source a claim already cites, or the same pair twice in one run
+- create a source record from anything but a document actually fetched and read
+- draft the text of a new claim, or mint an id
+- set `last_verified` on anything
+- remove a `verification_note`, a `reference_gap` or a `requires_verification`
+  flag
+- read a clock in a judging path
+- write to `data/`, or merge anything
 
 ## Known limitations
 
-Stated in full in `docs/LEGAL-VERIFIER.md`, "Known limitations". The four that matter most:
+Stated in full in `docs/VERIFICATION-INTEGRATION.md` §14. The four that matter
+most:
 
-1. **It has never read a real document.** Everything below the contract layer is verified
-   against a corpus this session wrote. Inherited from the egress-policy finding, unchanged.
-2. **Decomposition is sentence-level pattern matching, and status detection is English-only
-   signal phrases.** Neither parses legal language. A document in French or German yields no
-   status and an open question — correct behaviour, and a large coverage gap for a corpus
-   about EU law.
-3. **The verdict ordering is a judgement about which error is worst**, not a derivation from
-   anything. It is in one place and testable; a different ordering would give different
-   verdicts on the same document.
-4. **No `ApprovalRequest` is emitted.** A verification is Class C and a human gate belongs in
-   front of it. This session built the checking half of `AGENT-ROLES.md` §2, not the gate.
+1. **It has never seen a real `VerificationRecord`**, because the Verifier has
+   never read a real document. Inherited from the egress-policy finding,
+   unchanged since SESSION 05.
+2. **Matching is English-only and lexical.** A corpus about EU law contains
+   documents in twenty-three other languages, and `overlap` would score two
+   French sentences on their punctuation.
+3. **Only claims and sources are matched.** A verification bearing on a timeline
+   event, an enforcement action or a provision resolves to no claim; the
+   `against_canonical` conflict check is the only thing that reads those
+   datasets.
+4. **Nothing applies a proposal.** There is no path from an approved
+   `ApprovalRequest` to a `ChangeRecord` to an edit. Deliberate for this session,
+   and it means the loop is not closed: a human applies a change by hand and this
+   layer does not know they did.
 
 ## Unresolved issues, carried forward unchanged
 
 None of these was touched by this session:
 
-1. `data/brief.json` is canonical but never consumed; `index.html`'s inline `window.__CONTENT__`
-   blob has already drifted from it.
+1. `data/brief.json` is canonical but never consumed; `index.html`'s inline
+   `window.__CONTENT__` blob has already drifted from it.
 2. No deploy gate — a push to `main` publishes; the validators do not run in CI.
-3. `docs/AGENT-ROLES.md` and `docs/AGENT-CONTRACTS.md` describe overlapping ground at different
-   altitudes, uncross-checked.
-4. The five operating-policy documents have not been cross-checked against `agent/schemas/`.
-5. 106 records carry an unverified or requires-verification note. **This session did not move
-   that number and was not trying to** — it built the agent that could eventually help, and
-   that agent has read nothing real.
-6. `agent/records/` and `agent/observability/runs/` remain per-developer, no retention policy,
-   concurrent writers untested.
-7. The Source Scout workflow has still never executed on GitHub Actions (SESSION 06's
-   objective A, not attempted here).
+3. `docs/AGENT-ROLES.md` and `docs/AGENT-CONTRACTS.md` describe overlapping
+   ground at different altitudes, uncross-checked.
+4. The five operating-policy documents have not been cross-checked against
+   `agent/schemas/`.
+5. **106 records carry an unverified or requires-verification note. This session
+   did not move that number and was not trying to.** It built the layer that
+   could eventually help a human move it, and that layer has read nothing real.
+6. `agent/records/` and `agent/observability/runs/` remain per-developer, no
+   retention policy, concurrent writers untested.
+7. The Source Scout workflow has still never executed on GitHub Actions.
+8. The `conflicting` provenance word is a sixth where
+   `.agents/skills/legal-source-verification/references/verification-protocol.md`
+   documents five. Carried forward from SESSION 07, still unreconciled.
+9. Five of the Verifier's twelve legal statuses map to nothing in
+   `data/taxonomy.json`. This session reports them as a coverage gap and
+   deliberately did not add them.
 
 ## Next session
 
-Three candidates, in the order that unblocks the most:
+**A — dispatch the Source Scout workflow on a real runner.** Unchanged from
+SESSION 07 and now more valuable still: two agents and an adapter exist, and
+none of them has seen a real document. `mode: mock` first, then `mode: live`
+with `dry_run: true`. **Everything downstream is blocked on one real retrieval
+succeeding**, and the chain is now complete behind it —
+`scout → verifier → integrate → a proposal in front of a human`.
 
-**A — dispatch the Source Scout workflow on a real runner** (SESSION 06's unfinished objective
-A, unchanged and now more valuable): `mode: mock` first, then `mode: live` with
-`dry_run: true`. **Everything downstream is still blocked on a real retrieval ever
-succeeding** — including this session's Verifier, which now exists and has nothing real to
-read. This remains the single highest-leverage next step.
+**B — close the loop.** `ApprovalRequest → ChangeRecord → an applied edit`. This
+session produces the approval and stops. The half that is missing is the one
+that writes, and it is the half that needs the most care: it is the only code in
+this repository that would ever touch `data/` on an agent's initiative, and
+`AUTONOMY-POLICY` reserves that to a human. What is genuinely missing is not the
+write — it is the record that a human applied one, so the next run does not
+propose it again.
 
-**B — decide whether the five unmapped legal statuses belong in `data/taxonomy.json`.**
-`corrected`, `annulled`, `under_judicial_review`, `guidance` and `non_binding_commentary` are
-distinctions the Verifier draws and the site's vocabulary does not carry. That is a deliberate,
-reviewed data change under `docs/DATA-GOVERNANCE.md` in a session scoped for data work — not
-something to retrofit from the agent layer, which is why this session left the mapping null
-and said so.
-
-**C — the human approval gate.** `ApprovalRequest` in front of anything that would act on a
-`VerificationRecord`. The observability layer already renders a pending approval; nothing
-currently requests one.
+**C — decide whether the five unmapped legal statuses belong in
+`data/taxonomy.json`.** Unchanged from SESSION 07. `corrected`, `annulled`,
+`under_judicial_review`, `guidance`, `non_binding_commentary`. A deliberate data
+change in a session scoped for data work — not something to retrofit from the
+agent layer, which is why two sessions have now left it and said so.
 
 ### Exact next objective
 
-**A.** Dispatch **Source Scout** manually with `mode: mock`, `dry_run: true`, confirm the
-workflow's mechanics on a real GitHub-hosted runner, then decide with the repository owner
-whether to proceed to a live dispatch. If a live retrieval succeeds, the immediate follow-on
-is `node agent/verifier/cli.mjs --records <trace-id>` — the first time either agent will have
-seen a real document.
+**A.** Dispatch **Source Scout** manually with `mode: mock`, `dry_run: true`,
+confirm the workflow's mechanics on a real GitHub-hosted runner, then decide with
+the repository owner whether to proceed to a live dispatch. If a live retrieval
+succeeds, the follow-on is now two steps rather than one:
+`node agent/verifier/cli.mjs --records <trace-id>` and then
+`node agent/integrate/cli.mjs --records <trace-id> --as-of <date>` — the first
+time anything in this repository will have taken a real document all the way to
+a proposal a human can read.
 
 ## Anything the next agent must know
 
-- **`agent/verifier/` never writes anything.** It stores through `agent/scout/store.mjs` and
-  its own suite fails if any module in the directory contains a write call. If a task seems to
-  need one, that is a different change with its own review path.
-- **The six verdicts are not a quality scale.** `not_determinable` and `conflict` are correct
-  answers. A future session that "improves" the Verifier by reducing how often it returns them
-  has damaged it, in exactly the way `docs/VERIFICATION-POLICY.md` §6 describes for the
-  unverified-record count.
-- **The tense rule in `statuses.mjs` is load-bearing.** "Shall apply from" deliberately
-  produces no applicability signal. Adding one would make the Verifier report acts as
-  applicable years before they are, which is the most consequential error available here.
-- **Nothing in the judging path may read a clock.** A test asserts it, with comments stripped
-  so the files can go on discussing clocks at length.
-- **The `conflicting` provenance word is a sixth**, where
-  `.agents/skills/legal-source-verification/references/verification-protocol.md` documents
-  five. That reference is skill-layer material and was deliberately not edited from a session
-  scoped to build an agent. A later session owns reconciling it.
-- Before declaring anything done: the five `--test` suites above, then the four validators in
-  `tools/`, compared against the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
+- **`agent/integrate/` never writes anything.** It stores through
+  `agent/scout/store.mjs` and its suite fails if any module in the directory
+  contains a write call. If a task seems to need one, that is a different change
+  with its own review path — see next-session candidate B.
+- **Two gates run on every `DataProposal`, and neither can be turned off.** The
+  contract in `agent/schemas/validate.mjs`, and `checkPreservation` against the
+  corpus. The suite asserts `adapter.mjs` contains exactly one call to the store
+  and exactly one to the preservation check.
+- **`ambiguous` is a correct answer.** So is a gap, and so is a conflict. A
+  future session that "improves" the matcher by making it decide more often has
+  damaged it, in exactly the way `VERIFICATION-POLICY` §6 describes for the
+  unverified-record count and `docs/LEGAL-VERIFIER.md` describes for the six
+  verdicts.
+- **The verdict-to-qualifier mapping in `evidence.mjs` only ever weakens.** It is
+  the highest-leverage line in the directory: only `supports:direct` raises a
+  grade, and the grade is what a reader uses to judge how much to trust a
+  sentence.
+- **`asOf` is an argument, everywhere.** `Integrator` and `staleVerification`
+  throw without it and the CLI refuses to run. A test strips comments from every
+  judging module and asserts none contains `new Date()` or `Date.now()`.
+- **`js/format.js` imports cleanly in Node**, and this layer uses `familyOf` and
+  `evidenceGrade` from it rather than reimplementing either. If a future session
+  needs a graded claim in the agent layer, it imports the same function.
+- Before declaring anything done: the six `--test` suites, `agent/schemas/cli.mjs
+  check`, then the four validators in `tools/`, compared against the
+  `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
 
 ## Anything the next agent must NOT change
 
 Carried forward, still binding:
 
-- Do not rebuild the site. No framework, no bundler, no build step, no dependency, no service
-  worker, no server-side rendering.
+- Do not rebuild the site. No framework, no bundler, no build step, no
+  dependency, no service worker, no server-side rendering.
 - Do not fix the `__CONTENT__` / `brief.json` drift on your own initiative.
 - Do not modify `data/*.json` in a session not scoped for data work.
-- Do not touch the footer's non-affiliation or no-legal-advice text, `TIER_GRADE` in
-  `js/format.js`, the derivation rules in `js/pipeline.js`, or `BASE` in `tools/_footer.mjs`.
+- Do not touch the footer's non-affiliation or no-legal-advice text, `TIER_GRADE`
+  in `js/format.js`, the derivation rules in `js/pipeline.js`, or `BASE` in
+  `tools/_footer.mjs`.
 - Do not declare a licence. Do not soften the README's known limitations or the
-  unverified-record count. Do not re-run `tools/_refsweep.mjs` or `tools/_review10.mjs`.
-- Do not change the id shapes in `agent/observability/ids.mjs`; do not move redaction to the
-  read path.
+  unverified-record count. Do not re-run `tools/_refsweep.mjs` or
+  `tools/_review10.mjs`.
+- Do not change the id shapes in `agent/observability/ids.mjs`; do not move
+  redaction to the read path.
 - Do not commit anything under `agent/records/` or `agent/observability/runs/`.
-- Do not add a validation bypass to `agent/schemas/validate.mjs`. No `skip`, no `force`, no
-  `strict: false`.
+- Do not add a validation bypass to `agent/schemas/validate.mjs`. No `skip`, no
+  `force`, no `strict: false`.
 - Do not add a field for a substitute value to `DataGap` or anywhere else.
 - Do not resurrect the retired Scouts from their old branches.
-- Do not let `agent/scout/schedule/` write to anything but `agent/scout/digests/*.{json,md}`.
-- Do not write a report-layer annotation back into a `SourceCandidate` or `DataGap`.
+- Do not let `agent/scout/schedule/` write to anything but
+  `agent/scout/digests/*.{json,md}`.
+- Do not write a report-layer annotation back into a `SourceCandidate` or
+  `DataGap`.
 - Do not gitignore `agent/scout/digests/`.
+- Do not store `outcome_class`, `tier`, `grade` or `binding` on a
+  `VerificationRecord`.
+- Do not merge `entry_into_force_date` and `applicability_date`, and do not let
+  either become the other's default.
+- Do not teach `dates.mjs` to compute the twentieth-day date.
+- Do not add a ranking, a tie-break or a "most recent wins" to
+  `agent/verifier/conflict.mjs`.
+- Do not raise the Verifier's confidence ceiling above 0.9.
+- Do not remove the self-verification refusal at intake, in either agent.
 
 Added by this session:
 
-- **Do not store `outcome_class`, `tier`, `grade` or `binding` on a `VerificationRecord`.**
-  All four are `forbidden` with the reason on the contract. The first three are derived; the
-  fourth is not a boolean an agent sets — a guidance document does not become law because a
-  field said `true`.
-- **Do not merge `entry_into_force_date` and `applicability_date`**, and do not let either
-  become the other's default. The protocol reference records a field in this repository that
-  has already made exactly that mistake.
-- **Do not teach `dates.mjs` to compute the twentieth-day date.** The refusal is the feature.
-  A computed date presented as a read one is a fabricated legal fact.
-- **Do not add a ranking, a tie-break or a "most recent wins" to `conflict.mjs`.** Each of
-  those is a rule about which regulator to believe, and `AGENT-ROLES.md` reserves it to a
-  human.
-- **Do not raise the confidence ceiling above 0.9.** A rule-based verifier reading signal
-  phrases has not read the document the way a lawyer would.
-- **Do not remove the self-verification refusal at intake**, and do not let the Verifier write
-  `state: "accepted"` onto a `SourceCandidate`.
+- **Do not add a write path to `agent/integrate/`**, and do not add a bypass to
+  either of its two gates.
+- **Do not let the integrator resolve a conflict.** No ranking, no tie-break, no
+  "most recent wins", no "the primary source governs". Each is a rule about which
+  regulator to believe, and `AGENT-ROLES` H7 reserves it to a human.
+- **Do not let a matcher pick a winner from an ambiguity.** The highest score is
+  the closest candidate, not the right answer.
+- **Do not give the provenance vocabulary a word for removal**, and do not let
+  `replaced_human_only` be used outside a substantive, `human_only` proposal.
+- **Do not let anything in `agent/integrate/` set `last_verified`.** Attaching
+  evidence does not make a record freshly verified, and bulk-stamping the field
+  is prohibited outright.
+- **Do not reimplement `evidenceGrade`, `familyOf`, `compareValues`,
+  `normaliseUrl` or `normaliseTitle`.** All five are imported from the module
+  that owns them, and a second copy is the drift this repository exists to
+  prevent.
+- **Do not re-add the audit body of `tools/freshness.mjs` outside its `isMain`
+  guard.** Importing it must define constants and do nothing else.
+- **Do not let a `create_claim` proposal draft claim text.** The brief says what
+  the brief says; if no sentence carries a proposition, there is no claim to
+  write.
 
 ---
 
 ## What must NOT be rebuilt
 
-Unchanged since SESSION 00: **the architecture is not technical debt, it is the argument.**
-Nothing in `js/`, `css/`, `data/`, `i18n/`, `tools/`, the seven pages,
-`agent/observability/`, or Agent 1's own files was touched by this session.
+Unchanged since SESSION 00: **the architecture is not technical debt, it is the
+argument.** Nothing in `js/`, `css/`, `data/`, `i18n/`, the seven pages,
+`agent/observability/`, `agent/scout/` or `agent/verifier/` was touched by this
+session, and the three validators that were not changed were not changed at all.
 
-Agent 2 was built to the same standard as everything it wraps: no dependency, no build step,
-derived state never stored twice, `null` and `unknown` kept apart, and every record — including
-one that says two regulators disagree and this agent will not choose between them — able to
-say exactly what it cannot support.
+The adapter was built to the same standard as everything it wraps: no
+dependency, no build step, derived state imported rather than recomputed, `null`
+and `unknown` kept apart, an ambiguity left as an ambiguity, and every record —
+including one that says two sources disagree and this layer will not choose
+between them — able to say exactly what it cannot support.
