@@ -2,8 +2,15 @@
 
 **Last updated:** SESSION 09 · 2 September 2026
 **Branch:** `claude/verification-existing-data-qer8u5`, carrying SESSION 08 and
-SESSION 09. Cut from `origin/main` at `cef6b58`; **not yet merged**.
+SESSION 09. Cut from `origin/main` at `cef6b58`.
 **Base commit:** `cef6b58` on `main` ("Merge the Legal Verifier branch (be45ee2)").
+**Merged into `main` at `0ae2cda`** — with the repository owner's explicit
+instruction, which is what AGENTS.md requires for any push to `main`, because a
+push to `main` publishes to the live site and there is no deploy gate.
+**The live site is byte-for-byte unchanged by that merge:** the diff was checked
+by path first and contains no `data/*.json`, no page, and nothing under `js/`,
+`css/`, `i18n/` or `fonts/`. All four validators produce output identical to
+what they produced on `cef6b58`, compared file by file rather than by eye.
 
 ---
 
@@ -206,8 +213,16 @@ Full list in `docs/CHANGE-DETECTOR.md` §9. The four that matter most:
    least one taxonomy term — `status:partly-applicable` — has no agent status
    (SESSION 09). Three sessions have now left this and said so; it is a data
    decision for a session scoped for data work.
-10. **SESSION 08 and SESSION 09 are both unmerged**, on one branch cut from
-    `cef6b58`.
+10. ~~**SESSION 08 and SESSION 09 are both unmerged.**~~ **Closed.** Merged into
+    `main` at `0ae2cda` on the owner's instruction. The branch is left in place
+    rather than deleted.
+11. **`RegulatoryChange` versus `ChangeRecord` is settled in code and open as a
+    decision.** SESSION 09's brief named `ChangeRecord` for the detector's
+    output; that contract means a change made to this repository, so a
+    sixteenth contract was added instead and the two now refuse each other's
+    fields by name. Merging did not resolve the question — if the brief meant
+    the word literally, the rename is mechanical and is described in
+    `docs/CHANGE-DETECTOR.md` §1.
 
 ## Next session
 
