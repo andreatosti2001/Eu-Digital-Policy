@@ -181,12 +181,18 @@ jobs:
       # records and the trace are git-ignored by design
       # (agent/records/, agent/observability/runs/) — this is the
       # only place either leaves the runner.
+      # "digest-*" and not "*" — agent/scout/digests/README.md matches the
+      # naive glob too, and a dry run that produces no real digest was
+      # observed uploading the README as if it were one. Confirmed by the
+      # first live dispatch of this workflow (run 33578425162): the *.json
+      # step correctly warned "no files found" while the unqualified *.md
+      # step found and uploaded README.md instead.
       - name: Store the digest
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: source-scout-digest
-          path: agent/scout/digests/*.json
+          path: agent/scout/digests/digest-*.json
           if-no-files-found: warn
           retention-days: 90
 
@@ -195,7 +201,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: source-scout-digest-summary
-          path: agent/scout/digests/*.md
+          path: agent/scout/digests/digest-*.md
           if-no-files-found: warn
           retention-days: 90
 
