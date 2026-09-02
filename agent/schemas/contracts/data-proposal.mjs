@@ -42,6 +42,18 @@
       A proposal does not record its own landing: that is a
       ChangeRecord, behind an ApprovalRequest.
 
+   SESSION 12 ADDED A FOURTH BURDEN, TO ONE KIND.
+   `create_taxonomy_term` proposes a term into data/taxonomy.json —
+   the enum authority every other dataset resolves against, whose ids
+   are never renamed. Its class is FORCED to human_only rather than
+   checked against what the agent claimed, its dimension must be one
+   the file actually carries, and the find-it-first search above
+   applies to it unchanged: a term added without looking becomes a
+   second word for something the vocabulary already says. It was made
+   a kind rather than a nineteenth contract because the burden is
+   precisely this contract's burden; the reasoning is in
+   agent/schemas/types.mjs beside TAXONOMY_OPERATION_KIND.
+
    WHAT IS NOT HERE. No `new_value` shortcut beside
    `proposed_change.operations` — the operations array is the one
    home for what would change, and a second copy would be a second
@@ -54,9 +66,22 @@
 
 import { F } from '../fields.mjs';
 import { defineProposal } from '../define.mjs';
-import { DATA_OPERATION_KINDS, PROVENANCE_DISPOSITIONS, LEGAL_ENTITY_KINDS } from '../types.mjs';
+import { DATA_OPERATION_KINDS, PROVENANCE_DISPOSITIONS, LEGAL_ENTITY_KINDS, taxonomy } from '../types.mjs';
 
-const CREATE_KINDS = ['create_source', 'create_claim'];
+/* Every kind that brings a record into existence carries the
+   find-it-first burden below. `create_taxonomy_term` is in the list
+   for exactly the reason the other two are: a term added without
+   looking becomes a second word for something the vocabulary already
+   says, and data/taxonomy.json is what every other dataset resolves
+   against. */
+const CREATE_KINDS = ['create_source', 'create_claim', 'create_taxonomy_term'];
+
+/** The dimensions data/taxonomy.json actually has, read from the file
+ *  rather than listed here. A proposal naming a dimension the enum
+ *  authority does not carry is proposing a term into nothing, and
+ *  copying the list of dimensions into this contract would be the
+ *  second home the whole architecture exists to prevent. */
+const taxonomyDimensions = () => Object.keys(taxonomy()).filter((k) => Array.isArray(taxonomy()[k]));
 
 export const DataProposal = defineProposal({
   name: 'DataProposal',
@@ -128,6 +153,47 @@ export const DataProposal = defineProposal({
     (r) => (!CREATE_KINDS.includes(r.operation_kind) && !r.record_id
       ? [`operation_kind is "${r.operation_kind}" with a null record_id: name the canonical record this changes`]
       : []),
+
+    /* ---- 1b · a taxonomy term is proposed, never created ----
+
+       SESSION 12's brief, word for word: "If a new taxonomy term
+       appears necessary: create a taxonomy proposal; do not silently
+       create it." These four rules are that sentence, made
+       unbypassable.
+
+       The class is FORCED rather than checked. Everywhere else in
+       this contract the proposing agent states a class and a rule
+       refuses it if it is too low; here the answer does not depend on
+       the proposal at all. data/taxonomy.json is the enum authority
+       every other dataset resolves against and every rendered label
+       comes from — AGENTS.md states its ids are never renamed — so a
+       term arriving in it is structural change, and
+       docs/AGENT-ROLES.md §4 is explicit that structural change is
+       never Class B. */
+
+    (r) => (r.operation_kind === 'create_taxonomy_term' && r.dataset !== 'data/taxonomy.json'
+      ? [`operation_kind is "create_taxonomy_term" but dataset is "${r.dataset}": a taxonomy term has one home, and it is data/taxonomy.json`]
+      : []),
+    (r) => (r.operation_kind === 'create_taxonomy_term' && r.record_kind !== 'taxonomy_term'
+      ? [`operation_kind is "create_taxonomy_term" but record_kind is "${r.record_kind}": say what sort of record this is, and it is a taxonomy term`]
+      : []),
+    (r) => (r.operation_kind === 'create_taxonomy_term' && r.autonomy_class !== 'human_only'
+      ? [`operation_kind is "create_taxonomy_term" with autonomy_class "${r.autonomy_class}": data/taxonomy.json is the enum authority every other dataset resolves against, so adding a term to it is structural change — and structural change is never Class B (docs/AGENT-ROLES.md §4)`]
+      : []),
+    (r) => {
+      if (r.operation_kind !== 'create_taxonomy_term') return [];
+      const dims = taxonomyDimensions();
+      /* The dimension is read off the operation's own target rather
+         than taken from a field beside it: the target is what a
+         reviewer opens, and a second copy of the dimension name is a
+         second thing to be wrong. */
+      const bad = (r.proposed_change?.operations ?? [])
+        .map((o) => String(o?.target ?? ''))
+        .filter((t) => !dims.some((d) => t.includes(d)));
+      return bad.length
+        ? [`proposed_change.operations targets ${bad.join(', ')}, and no dimension in data/taxonomy.json is named there: the ${dims.length} dimensions it carries are ${dims.join(', ')}`]
+        : [];
+    },
 
     /* ---- 2 · the id and the provenance survive ---- */
 

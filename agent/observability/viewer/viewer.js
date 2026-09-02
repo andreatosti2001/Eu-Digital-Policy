@@ -74,6 +74,10 @@ function renderTiles(s) {
        AI-SAFE-BOUNDARIES §0.5 — absence read as a negative finding. */
     ['depth gaps', (s.depth ?? []).reduce((n, d) => n + (d.reported ?? 0), 0), (s.depth ?? []).some((d) => (d.by_impact?.reader_could_be_misled ?? 0) > 0) ? 'warn' : null],
     ['editorial impacts', (s.editorial_impacts ?? []).length, (s.editorial_impacts ?? []).length ? 'warn' : null],
+    /* The refusal count, not the proposal count. Most gaps cannot
+       become a proposal here, and a tile that showed only what was
+       authored would report the work as more complete than it is. */
+    ['gaps not proposable', (s.proposals ?? []).reduce((n, x) => n + (x.refused ?? 0), 0), (s.proposals ?? []).some((x) => (x.refused ?? 0) > 0) ? 'warn' : null],
   ];
   $('#tiles').replaceChildren(...tiles.map(([label, n, tone]) =>
     el('div', { class: 'tile', 'data-tone': tone }, el('b', { text: String(n) }), el('span', { text: label }))));
@@ -143,6 +147,7 @@ const TABS = [
   ['changes', 'Website changes', (t) => t.website_changes.length],
   ['impact', 'Regulatory impact', (t) => (t.impact ?? []).length],
   ['depth', 'Data depth', (t) => t.depth?.reported ?? null],
+  ['proposals', 'Gap proposals', (t) => t.proposals?.proposed ?? null],
   ['errors', 'Errors', (t) => t.errors.length],
 ];
 
@@ -382,6 +387,43 @@ function renderPanel(t) {
       d.gaps.length
         ? el('p', { class: 'gaps', text: `GAPS — ${d.gaps.join('; ')}` })
         : el('p', { class: 'mono', text: 'no gaps: the census, the ordering decision and every suppression reason are all on this trace' }),
+    ));
+  }
+  if (state.tab === 'proposals') {
+    const r = t.proposals;
+    if (!r) return p.replaceChildren(el('p', { class: 'empty', text: 'no gap routing ran on this trace' }));
+    return p.replaceChildren(el('div', { class: 'chain' },
+      el('h3', {}, `${r.proposed} proposal(s) authored, ${r.refused} gap(s) not proposable here `, r.simulated ? badge('simulated') : null),
+      el('p', { class: 'mono', text: `${r.routed} gap(s) routed as at ${r.as_of ?? '?'} · ${r.evidence_questions} evidence question(s) handed to the Verifier · ${r.pending_approvals} approval(s) pending · ${r.merged ?? '?'} merged · ${r.applied ?? '?'} applied` }),
+      r.by_route ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Where each gap went' }),
+        el('pre', { text: Object.entries(r.by_route).map(([k, n]) => `${k.padEnd(22)} ${n}`).join('\n') })) : null,
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: 'By route — a route nothing took is a result' }),
+        el('pre', { text: r.routes.map((x) => `${x.route.padEnd(22)} ${String(x.gaps).padStart(2)} gap(s)  ${String(x.proposals).padStart(2)} proposal(s)  ${String(x.data_gaps).padStart(2)} evidence  ${String(x.refused).padStart(2)} refused`).join('\n') })),
+      /* The refusal panel is the point of this view, in the same way
+         the set-aside panel is the point of the depth view. Closing
+         most of these gaps means writing a legal fact from a document
+         nobody has read, and showing only the proposals would present
+         that limit as though it did not exist. */
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: `Not proposable here — ${r.refused} gap(s), and why` }),
+        r.routes.some((x) => x.refused_detail.length)
+          ? el('ul', { class: 'queue' }, ...r.routes.flatMap((x) => x.refused_detail.map((d) => el('li', {},
+              el('code', { text: `${x.route}:${d.gap_id}` }), ' ', el('div', { class: 'none', text: d.why })))))
+          : el('p', { class: 'mono', text: r.refused ? 'the run refused gaps and recorded no reasons — see GAPS below' : 'nothing was refused' })),
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Handed on' }),
+        el('pre', { text: r.routes.flatMap((x) => x.handoffs.map((h) => `${x.route.padEnd(22)} → ${h.to_agent}  ${(h.artifact_ids ?? []).join(', ')}`)).join('\n') || 'nothing was handed to another agent' })),
+      r.routing ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Routing' }),
+        el('p', { text: r.routing.decision }),
+        el('p', { class: 'none', text: r.routing.rationale }),
+        el('pre', { text: (r.routing.alternatives ?? []).join('\n') })) : null,
+      el('p', { class: 'mono', text: `records — ${r.proposal_ids.length} DataProposal, ${r.approval_ids.length} ApprovalRequest, ${r.data_gap_ids.length} DataGap` }),
+      r.gaps.length
+        ? el('p', { class: 'gaps', text: `GAPS — ${r.gaps.join('; ')}` })
+        : el('p', { class: 'mono', text: 'no gaps: the census, the routing decision, every refusal reason and the "nothing merged" claim are all on this trace' }),
     ));
   }
   if (state.tab === 'errors') {

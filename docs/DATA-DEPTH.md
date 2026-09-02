@@ -283,7 +283,8 @@ suppression nobody can check.
 1. **It does not modify canonical data.** There is no write path in `agent/depth/`; the suite
    scans every module for one and hashes `data/` around a full run.
 2. **It does not propose.** A gap is a question. The answer is a `DataProposal` behind an
-   `ApprovalRequest`, and the contract forbids the fields that would let a gap carry an edit.
+   `ApprovalRequest` — written by `agent/proposals/data/` since SESSION 12, never here — and
+   the contract forbids the fields that would let a gap carry an edit.
 3. **It has never read a document.** Every `candidate_evidence` entry is somewhere to look.
    This is the same blocking dependency every agent here has carried since SESSION 05.
 4. **It does not read prose.** Two detectors read a *recorded string* — a source's title, an
@@ -326,8 +327,12 @@ initiative — which the whole approval chain exists to gate.
    index both read prose somebody wrote. Both are narrowed by the source *type* the corpus
    recorded — which is what stopped a press release announcing a delegated act being reported
    as one — and both carry lower confidence with the reason stated.
-4. **Nothing consumes a `KnowledgeGap` yet.** The chain still ends at a finding in front of a
-   human, exactly as `ImpactAssessment` does.
+4. **Superseded by SESSION 12.** This limitation read *"nothing consumes a `KnowledgeGap`
+   yet"*. `agent/proposals/data/` now does — see `docs/GAP-PROPOSALS.md`. What it consumes
+   them into is mostly a handoff rather than a proposal, and for the reason this whole
+   document names: closing most of these gaps means writing a value read from a document, and
+   nothing here has retrieved one. Of the 57 gaps, 14 become a proposal and 43 are routed to
+   the Verifier, to Editorial or to the repository owner, each with its reason.
 5. **The scope filter is only as good as `scope_class`.** An act mis-classified as
    `scope:referenced` disappears from four detectors silently. The suppression is printed, so
    it is visible, but nothing here checks that a scope class is correct.

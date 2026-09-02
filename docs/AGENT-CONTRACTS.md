@@ -160,6 +160,20 @@ about EU law as a change to a script. **This is a Class C change to the contract
 layer and it is flagged as one.** The reasoning, and what was considered and
 rejected, is in `docs/VERIFICATION-INTEGRATION.md`.
 
+**And widened by one operation kind in SESSION 12.** `DataProposal` gained
+`create_taxonomy_term`, and no nineteenth contract was added. SESSION 12's brief
+requires that a needed taxonomy term be *proposed* and never silently created,
+and there was no way to say it: `amend_field` would have filed a change to the
+enum authority in the same shape as a corrected date. A new contract would have
+been worse — the burden a term carries **is** `DataProposal`'s burden (find the
+existing one first, keep the id, never merge automatically), and a second
+contract would have been a second set of rules about the same thing. Four rules
+carry the instruction instead: the dataset must be `data/taxonomy.json`, the
+record kind `taxonomy_term`, the dimension must be one the file actually carries
+(read from the file, not listed in the contract), and `autonomy_class` is
+**forced** to `human_only` rather than checked against what the proposing agent
+claimed. Reasoning: `docs/GAP-PROPOSALS.md` §4.
+
 `CONTRACT_SCHEMA_VERSION` was **not** bumped, following the precedent SESSION 05
 and SESSION 07 both set and recorded: the constant is global across every
 contract, and bumping it would invalidate every fixture and every stored record

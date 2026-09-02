@@ -345,12 +345,38 @@ export const REQUIRED_VALIDATORS = [
  * an agent could word its way past.
  */
 export const DATA_OPERATION_KINDS = [
-  'attach_evidence',  // add a source reference to an existing record's sources[]
-  'create_source',    // a new data/sources.json record, for a document actually retrieved and read
-  'create_claim',     // a new data/claims.json record, for a statement already present in the prose
-  'amend_field',      // change the value a field carries on an existing record
-  'annotate',         // add to a verification_note or a gap_note without changing any value
+  'attach_evidence',       // add a source reference to an existing record's sources[]
+  'create_source',         // a new data/sources.json record, for a document actually retrieved and read
+  'create_claim',          // a new data/claims.json record, for a statement already present in the prose
+  'amend_field',           // change the value a field carries on an existing record
+  'annotate',              // add to a verification_note or a gap_note without changing any value
+  'create_taxonomy_term',  // a new term in data/taxonomy.json's enum authority — SESSION 12
 ];
+
+/**
+ * SESSION 12 added `create_taxonomy_term`, and it is the one kind
+ * here that does not describe a legal record at all.
+ *
+ * The brief's instruction is exact: **if a new taxonomy term appears
+ * necessary, create a taxonomy proposal; do not silently create it.**
+ * There was no way to say that. `amend_field` would have been a lie —
+ * a term is not a field on an existing record, and filing it as one
+ * would have put a change to the enum authority into the same shape
+ * as a corrected date. Adding a nineteenth contract would have been
+ * worse: the burden a taxonomy term carries is exactly DataProposal's
+ * burden — find the existing term first, keep the id, never merge
+ * automatically — and a second contract would have been a second set
+ * of rules about the same thing.
+ *
+ * So it is a kind, and the rules attached to it in
+ * `contracts/data-proposal.mjs` carry the instruction: the search
+ * through the dimension's existing terms is mandatory, the class is
+ * forced to human_only whatever the proposing agent thinks, and the
+ * target must be a dimension that data/taxonomy.json actually has.
+ * `data/taxonomy.json` is what every other dataset resolves against;
+ * a term added quietly is a vocabulary change nobody reviewed.
+ */
+export const TAXONOMY_OPERATION_KIND = 'create_taxonomy_term';
 
 /**
  * What becomes of a provenance field on the record a proposal
@@ -531,3 +557,56 @@ export const CANDIDATE_EVIDENCE_KINDS = [
   'official_register',  // a public register, database or portal to search
   'none_identified',    // nothing to point at — and the gap says so
 ];
+
+/* ---------------------------------------------------------- gap routes
+
+   SESSION 12's brief: extend Data Depth so that each identified gap
+   can become a structured proposal — and it names three of the five
+   answers itself. If a new taxonomy term appears necessary, propose
+   it rather than creating it. If the item is interpretive, route it
+   to Editorial. If the evidence is inadequate, route it to Verifier.
+
+   THE FIFTH ANSWER IS THE ONE THE BRIEF DOES NOT NAME, and it has to
+   exist. `stale_record`'s recommended home is a field no dataset has,
+   across all ten of them. That is not a taxonomy term, not an
+   interpretation and not a document anybody could read: it is a
+   schema decision with the widest reach in the corpus, and
+   docs/AGENT-ROLES.md §4 is explicit that structural change is never
+   Class B. Folding it into one of the other four would have filed a
+   decision for the repository owner as work for an agent.
+
+   THE FIRST IS THE ONE THAT DOES THE SESSION'S ACTUAL WORK. A gap
+   whose only honest edit asserts nothing about EU law — a note on a
+   record that already carries a note field, stating what the CORPUS
+   does — can become a DataProposal today, behind an ApprovalRequest,
+   with no document read and no legal fact written.
+
+   A route is never a merge. Two of the five author a proposal, two
+   hand the gap to somebody who can do what this agent cannot, and one
+   is a refusal. All five are recorded, and the run reports the
+   refusals beside the proposals: a run that authored ten proposals
+   and said nothing about the forty-seven gaps it could not touch
+   would have told its reader something false about its own coverage. */
+
+export const GAP_ROUTES = [
+  'data_proposal',      // an edit exists that asserts nothing about EU law
+  'taxonomy_proposal',  // closing it needs a term the enum authority does not have
+  'editorial',          // the item is a reading, and a reading is the author's
+  'verifier',           // a document has to be read before anything can be written
+  'owner_decision',     // a schema decision, and never an agent's to take
+];
+
+/** Who each route hands the gap to. A route with no recipient is a
+ *  finding filed in a drawer. `null` is the repository owner: not an
+ *  agent, which is exactly why that route authors nothing. */
+export const GAP_ROUTE_RECIPIENT = {
+  data_proposal: 'human reviewer, through an ApprovalRequest',
+  taxonomy_proposal: 'human reviewer, through an ApprovalRequest',
+  editorial: 'editorial',
+  verifier: 'legal-verifier',
+  owner_decision: null,
+};
+
+/** The routes that author a proposal record here. The rest hand the
+ *  gap on or refuse it, and say so. */
+export const PROPOSING_ROUTES = ['data_proposal', 'taxonomy_proposal'];

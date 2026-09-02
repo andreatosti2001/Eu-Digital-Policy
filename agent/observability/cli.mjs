@@ -7,6 +7,7 @@
      node agent/observability/cli.mjs chain [--file f] [--change c] [--trace t]
      node agent/observability/cli.mjs impact [--trace t] [--change c] [--graph]
      node agent/observability/cli.mjs depth  [--trace t] [--aside]
+     node agent/observability/cli.mjs proposals [--trace t] [--refused]
      node agent/observability/cli.mjs validate
      node agent/observability/cli.mjs export <trace-id> [--provenance]
      node agent/observability/cli.mjs serve [--port 7801] [--open]
@@ -189,6 +190,41 @@ function cmdDepth() {
   if (!found) console.log('no depth analysis in the store. `node agent/depth/cli.mjs --as-of <date>` writes one.');
 }
 
+/**
+ * The gap-routing runs in the store.
+ *
+ * SESSION 12's brief asks that each gap can become a structured
+ * proposal. IT PRINTS THE REFUSALS BESIDE THE PROPOSALS, because on
+ * this corpus most gaps cannot become one: closing them means writing
+ * a legal fact read from a document, and nothing in this repository
+ * has ever retrieved one. A view that showed only the proposals would
+ * report the session as more complete than it is.
+ */
+function cmdProposals() {
+  const wantTrace = flag('trace');
+  const traces = typeof wantTrace === 'string' ? [wantTrace] : listRuns(DIR).map((r) => r.trace_id);
+  let found = 0;
+
+  for (const id of traces) {
+    const t = loadTrace(id, DIR);
+    if (!t?.proposals) continue;
+    const p = t.proposals;
+    found++;
+    console.log(`\n${p.trace_id} — ${p.proposed} proposal(s) authored, ${p.evidence_questions} evidence question(s) handed on, ${p.refused} not proposable here, of ${p.routed} gap(s) routed${p.simulated ? ' — SIMULATED' : ''}`);
+    console.log(`  as of ${p.as_of ?? '?'}   ${p.pending_approvals} approval(s) pending · ${p.merged ?? '?'} merged · ${p.applied ?? '?'} applied`);
+    if (p.by_route) console.log(`  routes   ${Object.entries(p.by_route).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+    console.log(`  no gap took: ${p.routes_with_no_gap.length ? p.routes_with_no_gap.join(', ') : 'every route took at least one'}`);
+    if (p.routing) console.log(`  routed by ${p.routing.decision}`);
+    for (const r of p.routes) {
+      console.log(`    ${pad(r.route, 20)} ${String(r.gaps).padStart(2)} gap(s)  ${String(r.proposals).padStart(2)} proposal(s)  ${String(r.data_gaps).padStart(2)} evidence question(s)  ${String(r.refused).padStart(2)} refused`);
+      for (const h of r.handoffs) console.log(`        → ${pad(h.to_agent, 20)} ${(h.artifact_ids ?? []).join(', ')}`);
+      if (flag('refused')) for (const x of r.refused_detail) console.log(`        − ${pad(x.gap_id, 40)} ${x.why}`);
+    }
+    console.log(p.gaps.length ? `  GAPS: ${p.gaps.join('; ')}` : '  no gaps: the census, the routing decision, every refusal reason and the "nothing merged" claim are all on this trace');
+  }
+  if (!found) console.log('no gap routing in the store. `node agent/proposals/data/cli.mjs --as-of <date>` writes one.');
+}
+
 function cmdValidate() {
   let records = 0, bad = 0, broken = 0;
   for (const f of listTraceFiles(DIR)) {
@@ -228,11 +264,12 @@ switch (cmd) {
   case 'chain': cmdChain(); break;
   case 'impact': cmdImpact(); break;
   case 'depth': cmdDepth(); break;
+  case 'proposals': cmdProposals(); break;
   case 'validate': cmdValidate(); break;
   case 'export': cmdExport(argv[1]); break;
   case 'summary': console.log(JSON.stringify(overview(DIR), null, 2)); break;
   case 'serve': serve({ port: Number(flag('port', 7801)), dir: DIR }); break;
   default:
-    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | validate | export <id> | summary | serve`);
+    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | validate | export <id> | summary | serve`);
     process.exit(1);
 }

@@ -36,7 +36,7 @@ import { FIXTURES, simEvidence } from './fixtures.mjs';
 import { toJsonSchema } from './export.mjs';
 import { emit, handoff, receive, sha256Of, canonicalJson } from './gateway.mjs';
 import { ENVELOPE_FIELDS, PROPOSAL_FIELDS } from './common.mjs';
-import { EPISTEMIC_STATUS, FIELD_EPISTEMICS, taxonomyIds, RISKS, APPROVAL_STATES, PROVENANCE_ROLES, LEGAL_STATUSES, LEGAL_STATUS_TAXONOMY, LEGAL_ENTITY_KINDS, REGULATORY_CHANGE_KINDS, DEPTH_GAP_KINDS, DEPTH_IMPACT_LEVELS } from './types.mjs';
+import { EPISTEMIC_STATUS, FIELD_EPISTEMICS, taxonomyIds, RISKS, APPROVAL_STATES, PROVENANCE_ROLES, LEGAL_STATUSES, LEGAL_STATUS_TAXONOMY, LEGAL_ENTITY_KINDS, REGULATORY_CHANGE_KINDS, DEPTH_GAP_KINDS, DEPTH_IMPACT_LEVELS, DATA_OPERATION_KINDS, GAP_ROUTES, GAP_ROUTE_RECIPIENT, PROPOSING_ROUTES } from './types.mjs';
 import * as obsSchema from '../observability/schema.mjs';
 import { Tracer } from '../observability/tracer.mjs';
 import { MemorySink } from '../observability/sink.mjs';
@@ -873,6 +873,131 @@ test('DataProposal: a substantive legal change is red tier and cannot be merged 
     assert.ok(key in c.forbidden, `DataProposal must refuse "${key}" with the objection, not with "unknown field"`);
     refuses({ ...fx('DataProposal'), [key]: true }, c.forbidden[key]);
   }
+});
+
+/* ---------------------------------------------------------- SESSION 12
+   create_taxonomy_term — a term is proposed, never created
+
+   The brief's instruction is one sentence and these tests are it:
+   "If a new taxonomy term appears necessary: create a taxonomy
+   proposal; do not silently create it." What makes that checkable
+   rather than aspirational is that the class is FORCED rather than
+   stated, the dimension is checked against the file, and the
+   find-it-first search applies unchanged.                          */
+
+/** A DataProposal shaped as a taxonomy-term proposal, from the
+ *  fixture, so these tests exercise the rules rather than a
+ *  hand-built record that might satisfy them by accident. */
+function taxonomyProposalFixture() {
+  const r = fx('DataProposal');
+  r.operation_kind = 'create_taxonomy_term';
+  r.dataset = 'data/taxonomy.json';
+  r.record_kind = 'taxonomy_term';
+  r.record_id = null;
+  r.autonomy_class = 'human_only';
+  r.substantive = false;
+  r.retrieved_and_read = false;
+  r.verification_refs = [];
+  r.provenance_disposition = [];
+  r.existing_search = {
+    performed: true,
+    strategies: ['dimension_scan', 'decisive_word_test'],
+    candidates_considered: 10,
+    best_candidate_id: 'rel-kind:overlap',
+    best_score: 0.17,
+    why_not_that_one: 'Every term in this dimension characterises how two acts relate; the concept here is that two source records are one document, which is a statement about the bibliography rather than about EU law.',
+  };
+  r.proposed_change = {
+    summary: 'Add one term to data/taxonomy.json relationship_kind[].',
+    operations: [{
+      op: 'add',
+      target: 'data/taxonomy.json relationship_kind[]',
+      current: null,
+      proposed: '{"id":"rel-kind:same-document","label":"Is the same document as","definition_ref":null,"note":null}',
+      rationale: 'The id follows the dimension\'s own prefix convention. The definition is left for the author.',
+    }],
+    scope_note: 'It proposes a word and nothing else.',
+  };
+  r.affected_entities = [{ kind: 'taxonomy_term', id: 'rel-kind:same-document', path: 'data/taxonomy.json', field: 'relationship_kind', note: 'The term proposed. It does not exist.' }];
+  r.epistemic.inference = r.epistemic.inference.filter((i) => i.field !== 'substantive');
+  r.epistemic.inference.push({
+    field: 'existing_search',
+    statement: 'All ten existing terms were compared and none expresses the concept.',
+    from: ['ev-1'],
+    method: 'Token overlap against each term\'s id, label and note, then a decisive-word test.',
+  });
+  return r;
+}
+
+test('DataProposal: a taxonomy term proposal is accepted when it has done the work', () => {
+  assert.deepEqual(V(taxonomyProposalFixture()), []);
+});
+
+test('DataProposal: a taxonomy term is human_only, whatever the agent claimed', () => {
+  const r = taxonomyProposalFixture();
+  r.autonomy_class = 'review_required';
+  refuses(r, 'structural change is never Class B');
+  const auto = taxonomyProposalFixture();
+  auto.autonomy_class = 'autonomous';
+  refuses(auto, 'structural change is never Class B');
+});
+
+test('DataProposal: a taxonomy term has one home, and it is data/taxonomy.json', () => {
+  const r = taxonomyProposalFixture();
+  r.dataset = 'data/instruments.json';
+  r.affected_entities = [{ kind: 'taxonomy_term', id: 'rel-kind:same-document', path: 'data/instruments.json', field: null, note: null }];
+  refuses(r, 'a taxonomy term has one home');
+});
+
+test('DataProposal: a taxonomy term says it is one', () => {
+  const r = taxonomyProposalFixture();
+  r.record_kind = 'claim';
+  refuses(r, 'say what sort of record this is, and it is a taxonomy term');
+});
+
+test('DataProposal: a term proposed into a dimension the file does not have is refused', () => {
+  const r = taxonomyProposalFixture();
+  r.proposed_change.operations[0].target = 'data/taxonomy.json rel_kinds[]';
+  refuses(r, 'no dimension in data/taxonomy.json is named there');
+});
+
+test('DataProposal: a taxonomy term is not created without looking for the one already there', () => {
+  const r = taxonomyProposalFixture();
+  r.existing_search = null;
+  refuses(r, 'a new record is proposed only after looking for the one that is already there');
+
+  const unperformed = taxonomyProposalFixture();
+  unperformed.existing_search.performed = false;
+  refuses(unperformed, 'the search is the thing that stops a second home');
+
+  const unanswered = taxonomyProposalFixture();
+  unanswered.existing_search.why_not_that_one = null;
+  refuses(unanswered, 'does not say why it is not this record');
+});
+
+test('DataProposal: a taxonomy term proposal carries no record id, because nothing exists yet', () => {
+  const r = taxonomyProposalFixture();
+  r.record_id = 'rel-kind:same-document';
+  refuses(r, 'a record that already has an id is not being created');
+});
+
+test('create_taxonomy_term is in the operation vocabulary and nothing else was disturbed', () => {
+  for (const k of ['attach_evidence', 'create_source', 'create_claim', 'amend_field', 'annotate', 'create_taxonomy_term']) {
+    assert.ok(DATA_OPERATION_KINDS.includes(k), `the operation vocabulary lost "${k}"`);
+  }
+  assert.equal(DATA_OPERATION_KINDS.length, 6);
+});
+
+test('the five gap routes exist, and every one names who it hands to or why nobody', () => {
+  assert.deepEqual(GAP_ROUTES, ['data_proposal', 'taxonomy_proposal', 'editorial', 'verifier', 'owner_decision']);
+  for (const r of GAP_ROUTES) {
+    assert.ok(r in GAP_ROUTE_RECIPIENT, `route "${r}" hands to nobody and does not say so`);
+  }
+  /* The owner route is the one with no agent, deliberately: a schema
+     decision is not an agent's to take, which is exactly why that
+     route authors nothing. */
+  assert.equal(GAP_ROUTE_RECIPIENT.owner_decision, null);
+  for (const r of PROPOSING_ROUTES) assert.ok(GAP_ROUTES.includes(r));
 });
 
 test('DataProposal: changing a value is presumed substantive until a method says otherwise', () => {

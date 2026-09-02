@@ -155,6 +155,7 @@ export function loadTrace(traceId, dir = DEFAULT_RUN_DIR) {
     website_changes: root ? collectEvents(root, 'website_change') : [],
     impact: root ? impactState(root, traceId) : [],
     depth: root ? depthState(root, traceId) : null,
+    proposals: root ? proposalState(root, traceId) : null,
   };
 }
 
@@ -356,6 +357,7 @@ export function overview(dir = DEFAULT_RUN_DIR) {
   const impact = [];
   const editorialImpacts = [];
   const depth = [];
+  const proposals = [];
   for (const r of runs) {
     const t = loadTrace(r.trace_id, dir);
     if (!t) continue;
@@ -386,7 +388,23 @@ export function overview(dir = DEFAULT_RUN_DIR) {
         simulated: t.depth.simulated, gaps: t.depth.gaps,
       });
     }
+    /* A routing run belongs on the overview because of what it
+       CANNOT do: most gaps cannot become a proposal here, and the
+       refusal count is the honest headline. The pending-approval
+       count travels with it — a proposal nobody has looked at is the
+       state this layer exists to surface. */
+    if (t.proposals) {
+      proposals.push({
+        trace_id: r.trace_id, as_of: t.proposals.as_of,
+        routed: t.proposals.routed, proposed: t.proposals.proposed,
+        evidence_questions: t.proposals.evidence_questions, refused: t.proposals.refused,
+        pending_approvals: t.proposals.pending_approvals,
+        merged: t.proposals.merged, applied: t.proposals.applied,
+        by_route: t.proposals.by_route, simulated: t.proposals.simulated, gaps: t.proposals.gaps,
+      });
+    }
   }
+
   return {
     generated_at: new Date().toISOString(),
     run_dir: dir,
@@ -402,6 +420,7 @@ export function overview(dir = DEFAULT_RUN_DIR) {
     impact,
     editorial_impacts: editorialImpacts,
     depth,
+    proposals,
     runs,
   };
 }
@@ -573,6 +592,128 @@ export function depthState(root, traceId = null) {
     detectors,
     gap_ids: artifacts.map((a) => a.artifact_id),
     ordering: ordering ? { decision: ordering.decision, rationale: ordering.rationale, alternatives: ordering.alternatives } : null,
+    gaps,
+  };
+}
+
+
+/* ------------------------------------------------------- gap proposals */
+
+/**
+ * What a routing run made of the gaps it was handed.
+ *
+ * SESSION 12's brief asks that each identified gap can become a
+ * structured proposal, and the honest answer is that most cannot
+ * become one here — nothing in this repository has ever retrieved a
+ * document, and the value that would close a gap is usually a legal
+ * fact. So the interesting number in this view is not the proposals.
+ * **It is the refusals**, and they are derived beside the proposals
+ * rather than left to a summary line: a run that authored fourteen
+ * proposals and said nothing about the forty-three gaps it could not
+ * touch would have told its reader something false about its own
+ * coverage.
+ *
+ * Derived at read time from what the run emitted, like everything
+ * else here. The router writes onto each route span:
+ *
+ *   a span `propose.<route>`   with gaps, proposals, data_gaps, refused
+ *   `observation`s NO PROPOSAL one per gap it refused, with the reason
+ *   `artifact`s                every DataProposal, ApprovalRequest, DataGap
+ *   `handoff`s                 the edges to editorial and legal-verifier
+ *   a `decision`               the routing table, with what it refused to do
+ *   two `observation`s         the census, and that nothing was merged
+ *
+ * Nothing is recomputed and nothing is second-guessed. A run that
+ * authored a proposal and no approval for it is reported as a gap in
+ * the view, in the same way traceChain reports a missing approval,
+ * because a proposal nobody has to look at is exactly the state this
+ * whole layer exists to make impossible to miss.
+ */
+export function proposalState(root, traceId = null) {
+  const routeSpans = [];
+  (function walk(s) {
+    if (String(s.name ?? '').startsWith('propose.')) routeSpans.push(s);
+    for (const c of s.children ?? []) walk(c);
+  })(root);
+  if (!routeSpans.length) return null;
+
+  const observations = collectEvents(root, 'observation');
+  const decisions = collectEvents(root, 'decision');
+  const artifacts = collectEvents(root, 'artifact');
+  const approvals = approvalState(root);
+  const handoffs = handoffState(root);
+
+  const census = observations.find((o) => String(o.summary).startsWith('PROPOSAL CENSUS'));
+  const merged = observations.find((o) => String(o.summary).startsWith('NOTHING MERGED'));
+  const routing = decisions.find((d) => String(d.decision).toLowerCase().includes('routed by its kind'));
+  const refusalObs = observations.filter((o) => String(o.summary).startsWith('NO PROPOSAL'));
+
+  const routes = routeSpans.map((s) => {
+    const route = String(s.name).replace(/^propose\./, '');
+    return {
+      route,
+      status: s.status,
+      gaps: s.outputs?.gaps ?? null,
+      proposals: s.outputs?.proposals ?? null,
+      approvals: s.outputs?.approvals ?? null,
+      data_gaps: s.outputs?.data_gaps ?? null,
+      refused: s.outputs?.refused ?? null,
+      risk: s.risk ?? null,
+      /* Named rather than counted, for the reason the depth view
+         names its suppressions: "twenty-one refused" is a number;
+         "these twenty-one, because a reading is the author's" is a
+         finding a reviewer can disagree with. */
+      refused_detail: refusalObs.filter((o) => o.span_id === s.span_id).map((o) => ({ gap_id: o.subject, why: o.data?.why ?? null })),
+      handoffs: handoffs.filter((h) => h.span_id === s.span_id).map((h) => ({ to_agent: h.to_agent, artifact_ids: h.artifact_ids, reason: h.reason })),
+    };
+  }).sort((a, b) => a.route.localeCompare(b.route));
+
+  const byType = (t) => artifacts.filter((a) => a.artifact_type === `contract:${t}`).map((a) => a.artifact_id);
+  const proposals = byType('DataProposal');
+  const requests = byType('ApprovalRequest');
+  const dataGaps = byType('DataGap');
+
+  const gaps = [];
+  if (!census) gaps.push('no proposal census observation recorded — the run\'s own totals are not on this trace');
+  if (!routing) gaps.push('no routing decision recorded — what this run routed by, and what it refused to do, is not on this trace');
+  if (!merged) gaps.push('no "nothing merged" observation recorded — that no proposal was applied is the claim this run most needs to be able to prove');
+  if (proposals.length > requests.length) {
+    gaps.push(`${proposals.length} proposal(s) and only ${requests.length} approval request(s): a proposal nobody has to look at is an unapproved change that looks approved`);
+  }
+  for (const a of approvals) {
+    if (!a.pending) gaps.push(`approval ${a.approval_id} is "${a.state}" inside the run that requested it: an agent may not approve its own proposal`);
+  }
+  for (const r of routes) {
+    if (r.refused && !r.refused_detail.length && r.route !== 'editorial') {
+      gaps.push(`${r.route} refused ${r.refused} gap(s) and recorded no reasons: a refusal nobody can see is a refusal nobody can check`);
+    }
+  }
+
+  return {
+    trace_id: traceId,
+    as_of: census?.data?.as_of ?? null,
+    simulated: artifacts.some((a) => a.simulated === true),
+    /* The COUNTS come from the route spans' own outputs, never from
+       the length of the artifact list — the artifact list is what the
+       trace store happened to keep, and the counts describe what the
+       run actually did. */
+    routed: routes.reduce((n, r) => n + (r.gaps ?? 0), 0),
+    proposed: routes.reduce((n, r) => n + (r.proposals ?? 0), 0),
+    evidence_questions: routes.reduce((n, r) => n + (r.data_gaps ?? 0), 0),
+    refused: routes.reduce((n, r) => n + (r.refused ?? 0), 0),
+    by_route: census?.data?.by_route ?? null,
+    by_kind_route: census?.data?.by_kind_route ?? null,
+    routes_with_no_gap: census?.data?.routes_with_no_gap ?? [],
+    /* Two zeros that are the point of the session rather than an
+       absence of activity. */
+    merged: census?.data?.merged ?? null,
+    applied: census?.data?.applied ?? null,
+    pending_approvals: approvals.filter((a) => a.pending).length,
+    routes,
+    proposal_ids: proposals,
+    approval_ids: requests,
+    data_gap_ids: dataGaps,
+    routing: routing ? { decision: routing.decision, rationale: routing.rationale, alternatives: routing.alternatives } : null,
     gaps,
   };
 }

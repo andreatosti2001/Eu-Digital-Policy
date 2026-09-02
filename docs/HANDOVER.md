@@ -1,217 +1,214 @@
 # HANDOVER
 
-**Last updated:** SESSION 11 · 2 September 2026
-**Branch:** `claude/build-data-depth-agent-sjjfcr`, cut from `main` at `d1044a7`.
-**Base commit:** `d1044a7` on `main` ("Record in the handover that SESSION 10 is merged").
-**Merged into `main` at `95173b4`** — with the repository owner's explicit
-instruction, which is what AGENTS.md requires for any push to `main`, because a
-push to `main` publishes to the live site and there is no deploy gate. The branch
-is left in place rather than deleted.
+**Last updated:** SESSION 12 · 2 September 2026
+**Branch:** `claude/data-gaps-proposals-4pjepp`, cut from `main` at `45dcc57`.
+**Base commit:** `45dcc57` on `main` ("Record in the handover that SESSION 11 is merged").
+**Not merged into `main`.** A push to `main` publishes to the live site and there
+is no deploy gate, so AGENTS.md requires the repository owner's explicit
+instruction. This branch is waiting for it.
 
-**A note for the next session, because the same trap caught this one too.** The
-local `main` in this container was **34 commits behind** `origin/main` — it sat at
-`7248290`, a bulk upload from before SESSION 00. Merging into it would have
-silently reverted seven sessions of work. SESSION 10 left this warning and it was
-still needed. `git fetch --all && git branch -a` before concluding anything, and
-check `git log origin/main..main` **and** `main..origin/main` before merging into
-a local branch you did not just create.
+**The trap that has caught three sessions running:** the local `main` in a fresh
+container can be dozens of commits behind `origin/main`. Run
+`git fetch --all && git branch -a` before concluding anything, and check
+`git log origin/main..main` **and** `main..origin/main` before merging into a
+local branch you did not just create.
 
 **The live site is byte-for-byte unchanged by this work**, and this was checked
-rather than asserted: the incoming diff contains nothing under `data/`, no
-`*.html`, and nothing under `js/`, `css/`, `i18n/`, `fonts/` or `tools/`; the
-Data Depth Agent's own suite hashes the whole of `data/` before and after a full
-run against the real corpus and asserts it is byte-identical; and all four
-validators produce output matching the `docs/CURRENT-ARCHITECTURE.md` §12
-baseline exactly — 0 errors, 106 unverified, the same five `design-qa` warnings
-by file and line.
+rather than asserted: the diff contains nothing under `data/`, no `*.html`, and
+nothing under `js/`, `css/`, `i18n/`, `fonts/` or `tools/`; the new agent's suite
+hashes the whole of `data/` before and after a full run against the real corpus
+and asserts it is byte-identical; and all four validators produce output matching
+the `docs/CURRENT-ARCHITECTURE.md` §12 baseline exactly.
 
-**Everything worked before the session started, and it was checked first:** 339
-tests across seven suites, 17/17 contracts satisfiable, and all four validators
-at the §12 baseline.
+**Everything worked before the session started, and it was checked first:** 397
+tests across eight suites, 18/18 contracts satisfiable, all four validators at
+the §12 baseline.
 
 ---
 
 ## Current milestone
 
-**SESSION 11 — Agent 4, the Data Depth Agent. Complete**, with the caveat every
-agent here still carries: **none of them has ever seen a real document.** This
-agent is the first whose *entire* input is the real corpus rather than a fixture,
-so that caveat bites it less than the others — but every `candidate_evidence`
-entry it emits is still somewhere to look rather than something read.
+**SESSION 12 — Agent 5, the gap router. Complete.** `agent/proposals/data/`
+consumes the `KnowledgeGap` records `agent/depth/` produces and turns each one
+into either a structured proposal or a routed handoff with its reason.
 
-The reference document is **`docs/DATA-DEPTH.md`**. This file is the handover only.
+The reference document is **`docs/GAP-PROPOSALS.md`**. This file is the handover
+only.
 
 ## What the session was told, and what was done
 
-> Build the Data Depth Agent. Determine what important legal/regulatory knowledge
-> is missing from the current structured representation. Look for thirteen kinds
-> of gap. **Do not reward quantity. Prioritise meaningful semantic gaps.** Every
-> gap must carry nine named fields. Do not directly modify canonical data.
-> Instrument the analysis.
+> Extend Data Depth so that each identified gap can become a structured proposal.
+> Respect one home per fact, derivation over storage, existing IDs and existing
+> vocabularies. If a new taxonomy term appears necessary, create a taxonomy
+> proposal; do not silently create it. If a proposed item is interpretive, route
+> it to Editorial. If evidence is inadequate, route it to Verifier. Create
+> `agent/proposals/data/`. Add schema validation and tests. **Do not merge any
+> substantive additions automatically.**
 
-All thirteen kinds have a detector; a kind with no detector, or a detector
-claiming a kind outside the vocabulary, throws at module load. All nine fields
-are on the contract — eight as fields, and `affected_entity` as the envelope's
-existing `affected_entities`, because a singular field beside it would be the
-second home this architecture exists to prevent. `data/` was read and never
-written. The analysis is instrumented end to end.
+All of it, with one thing the brief did not name and that had to exist: a fifth
+route for the gap whose recommended home is a field no dataset has. Nothing was
+merged and nothing was applied.
 
-**Against the real corpus: 88 absences examined, 57 reported, 31 set aside** —
-and the 31 are printed with their reasons in the CLI, on the trace, in
-`agent/observability/cli.mjs depth --aside`, and in the viewer.
+**Against the real corpus: 57 gaps routed → 14 proposals, 21 evidence questions
+handed to the Verifier, 21 handed to Editorial, 1 to the repository owner.**
 
 ## Files changed
 
 ```
-agent/schemas/contracts/knowledge-gap.mjs   (new — the eighteenth contract)
-agent/schemas/types.mjs                     (DEPTH_GAP_KINDS, DEPTH_IMPACT_LEVELS,
-                                             DEPTH_IMPACT_RANK, CANDIDATE_EVIDENCE_KINDS)
-agent/schemas/{registry,fixtures}.mjs       (KnowledgeGap registered and given a fixture)
-agent/schemas/{common,export}.mjs           (seventeen → eighteen, in the prose only)
-agent/schemas/selftest.mjs                  (13 new tests)
+agent/schemas/types.mjs                     (create_taxonomy_term + TAXONOMY_OPERATION_KIND;
+                                             GAP_ROUTES, GAP_ROUTE_RECIPIENT, PROPOSING_ROUTES)
+agent/schemas/contracts/data-proposal.mjs   (create_taxonomy_term in CREATE_KINDS, four new rules)
+agent/schemas/selftest.mjs                  (9 new tests)
 agent/schemas/README.md
 
-agent/depth/lens.mjs        (new — the corpus, indexed; the graph borrowed not rebuilt)
-agent/depth/demand.mjs      (new — the load-bearing test, and what it sets aside)
-agent/depth/detectors.mjs   (new — the thirteen)
-agent/depth/rank.mjs        (new — autonomy and confidence, two stated tables)
-agent/depth/depth.mjs       (new — Agent 4)
-agent/depth/cli.mjs         (new)
-agent/depth/selftest.mjs    (new — 40 tests, against the real data/)
-agent/depth/README.md       (new)
+agent/proposals/data/route.mjs      (new — the routing table and the two one-way overrides)
+agent/proposals/data/annotate.mjs   (new — the one edit authorable with an empty hand)
+agent/proposals/data/taxonomy.mjs   (new — establishing a term is needed before proposing one)
+agent/proposals/data/proposals.mjs  (new — Agent 5)
+agent/proposals/data/cli.mjs        (new)
+agent/proposals/data/selftest.mjs   (new — 47 tests, against the real data/)
+agent/proposals/data/README.md      (new)
 
-agent/observability/query.mjs      (depthState, wired into loadTrace and overview)
-agent/observability/cli.mjs        (the `depth` command, and --aside)
-agent/observability/server.mjs     (GET /api/depth)
-agent/observability/viewer/viewer.js (the Data depth panel and the overview rail)
-agent/observability/selftest.mjs   (5 new tests)
+agent/observability/query.mjs        (proposalState, wired into loadTrace and overview)
+agent/observability/cli.mjs          (the `proposals` command, and --refused)
+agent/observability/server.mjs       (GET /api/proposals)
+agent/observability/viewer/viewer.js (the Gap proposals panel and the overview tile)
+agent/observability/selftest.mjs     (6 new tests)
 
-docs/DATA-DEPTH.md          (new — the reference document)
-docs/AGENT-CONTRACTS.md · docs/OBSERVABILITY.md · docs/SKILL-MAP.md
+docs/GAP-PROPOSALS.md   (new — the reference document)
+docs/AGENT-CONTRACTS.md · docs/OBSERVABILITY.md · docs/SKILL-MAP.md · docs/DATA-DEPTH.md
 AGENTS.md · docs/HANDOVER.md
 ```
 
 **Not touched:** every `data/*.json`, every page, everything under `js/`, `css/`,
 `i18n/` and `fonts/`, all four validators in `tools/`, and every file under
-`agent/scout/`, `agent/verifier/`, `agent/integrate/` and `agent/detector/`.
+`agent/scout/`, `agent/verifier/`, `agent/integrate/`, `agent/detector/` and
+`agent/depth/` (except two paragraphs of `docs/DATA-DEPTH.md` that had become
+false).
 
-## The three things worth knowing
+## The four things worth knowing
 
-**1 · "Do not reward quantity" is a mechanism, not an intention.** Counting
-absences is trivial and already done — `.agents/skills/data-completeness/scripts/gaps.mjs`
-is the census. So a finding is reported only where a record in the corpus *leans
-on* the missing concept, derived from the dependency graph
-`agent/detector/graph.mjs` already builds. The contract enforces the same thing
-independently, by refusing any `KnowledgeGap` whose evidence carries no
-`dataset_record`. **And what is set aside is never dropped silently:** every
-suppression carries its reason into the run result, the trace, the CLI and the
-viewer. A run that reported 57 and dropped 31 made a judgement 31 times.
+**1 · "Each gap can become a proposal" is mostly false, and saying so is the
+work.** Closing a knowledge gap means writing the value the corpus lacks, and for
+eleven of the thirteen kinds that value is an article number, a date, a
+competence, a fine or a status — read from a document, and nothing here has
+retrieved one. So the run asks two questions and keeps them apart: **who can act
+next** (the route) and **what can be authored now** (a proposal, or a refusal
+with its reason). Conflating them produces either a proposal with no value, which
+is not a proposal, or one with a value nobody read, which is a fabrication. The
+run records that on its trace as the alternative it refused, so the refusal is
+checkable rather than a claim in a comment.
 
-**2 · The sharpest filter is the corpus's own declaration.**
-`data/taxonomy.json` defines `scope:referenced` as *"named and placed, but
-outside this brief's analytical scope"*. An act the site has said it is not
-analysing, modelled thinly, is the site doing what it said. Thirteen of the
-thirty-one suppressions are that, and none of it is this agent's taste — the
-corpus states its intent in its own enum authority and the agent reads it. It is
-checked *before* demand, because such an act still accumulates references from
-claims that name it in passing.
+**2 · The one edit this repository can author is a note about itself.** A
+sentence on a record that already exists, stating something about *this corpus*
+rather than about EU law. Thirteen of the fourteen proposals are that. The
+sharpest is `unsupported_claim`: seven claims typed `claim-type:law` rest on the
+brief citing itself and *other records are built on them* — SESSION 11
+established it and had nowhere to put it. **The text is composed, not written**:
+`annotate.mjs#noteFor` is a pure function of ids and counts read off the gap's
+evidence, and the suite recomputes every note a run emitted and asserts it is
+character-identical. `verification_note` is rendered by four modules in `js/`,
+which is why this is amber and approval-gated rather than green.
 
-**3 · The most valuable finding is a pairing nothing else could have seen.**
-`ai-act` records a maximum fine of **7% of global turnover / EUR 35 000 000** and
-**no institution in the corpus holds `role:fines` over it**; `nis2` records 2% /
-EUR 10 000 000 with the same hole. Both acts *are* supervised, so a detector that
-asked only "does anything enforce this" would have found nothing. The fines role
-is checked independently of the general case for exactly that reason, and the
-finding survives because the DNA's own ceiling is the record leaning on it.
+**3 · The taxonomy term was proposed with the search that could have stopped
+it.** `relationship_kind` has ten terms and none of them means "these two records
+are one document". Establishing that is the whole burden — an agent that decided
+a term was needed without looking would give an existing distinction a second
+home in the enum authority every dataset resolves against. The search reuses
+`DataProposal.existing_search` unchanged, and **the suite asks it about a concept
+the dimension does carry** and asserts it finds it: a search that could never
+come back empty-handed is not a search. What is proposed is an id and a label;
+the definition is not, because that is the site's own words.
 
-## The finding that is "the question cannot be asked"
+**4 · No nineteenth contract.** `create_taxonomy_term` is a sixth
+`DATA_OPERATION_KINDS` value with four rules, because the burden a term carries
+*is* `DataProposal`'s burden. The class is **forced** to `human_only` rather than
+checked against what the proposing agent claimed — the only rule in that contract
+that works that way, and it does because `data/taxonomy.json` is what every other
+dataset resolves against.
 
-`stale_record` is worth reading in full (`docs/DATA-DEPTH.md` §6). The obvious
-detector walks the graph for a record verified earlier than something it depends
-on, and produces **nineteen** findings on this corpus. Every one is an artefact:
-`agent/integrate/canonical.mjs` already establishes that every dataset's
-`last_verified` is a *compilation* date — 39 instrument records on one date, 84
-claims on two — and `VERIFICATION-POLICY` §5 records that the field is per-record
-and the practice is not.
+## Nothing merged, and the run can prove it
 
-So the detector reports **one** gap, about the field rather than about the
-records, and names the nineteen as the cases where the question would have been
-askable and cannot be answered. That is what refusing quantity looks like when
-the quantity is available and wrong.
+Six independent things, not one:
 
-## The two zeros, and why they are results
-
-`missing_instrument` and `incomplete_timeline` report nothing on this corpus, and
-both are answers rather than untested branches:
-
-- **`missing_instrument`** initially reported `src-oj-aild-withdrawal-2025` — an
-  Official Journal notice *withdrawing* the AI Liability Directive, filed as an
-  unmodelled act. The fix is derived rather than a title heuristic: a primary
-  document is not evidence of an unmodelled act if the claims citing it are
-  already about an act the corpus models. With that, the detector reports zero,
-  which is correct.
-- **`incomplete_timeline`**'s only candidates are the three treaty provisions,
-  and the corpus has declared those `scope:referenced`.
-
-Both are carried through the run result, the trace and the viewer, because a
-reader who cannot tell *looked and found nothing* from *did not look* has been
-told nothing.
+- every proposal carries an `ApprovalRequest` in the `requested` state, and
+  `ApprovalRequest` refuses a decision whose `decided_by` is the requesting agent;
+- `DataProposal` forbids `auto_merge`, `apply_automatically`, `merge_on_approval`,
+  `merged` and `applied` by name, and the suite asserts no record carries one;
+- no proposal is `substantive`, because the only value written is a note about the
+  corpus — and `substantive: true` would force `human_only` anyway;
+- the run emits a `NOTHING MERGED` observation with `applied: 0` and
+  `data_dir_written: false`, and the read model reports a **gap in the view**
+  where it is missing;
+- the CLI hashes the whole of `data/` before and after and prints which;
+- `selftest.mjs` scans every module in the directory for a write call.
 
 ## Tests
 
 | Command | Result |
 |---|---|
-| `node --test agent/depth/selftest.mjs` | **40 pass · 0 fail** (new) |
-| `node --test agent/schemas/selftest.mjs` | **121 pass · 0 fail** (108 before) |
-| `node --test agent/observability/selftest.mjs` | **22 pass · 0 fail** (17 before) |
+| `node --test agent/proposals/data/selftest.mjs` | **47 pass · 0 fail** (new) |
+| `node --test agent/schemas/selftest.mjs` | **130 pass · 0 fail** (121 before) |
+| `node --test agent/observability/selftest.mjs` | **28 pass · 0 fail** (22 before) |
+| `node --test agent/depth/selftest.mjs` | 40 pass · 0 fail — unchanged |
 | `node --test agent/detector/selftest.mjs` | 63 pass · 0 fail — unchanged |
 | `node --test agent/integrate/selftest.mjs` | 61 pass · 0 fail — unchanged |
 | `node --test agent/verifier/selftest.mjs` | 42 pass · 0 fail — unchanged |
 | `node --test agent/scout/selftest.mjs` | 30 pass · 0 fail — unchanged |
 | `node --test agent/scout/schedule/selftest.mjs` | 18 pass · 0 fail — unchanged |
 | `node agent/schemas/cli.mjs check` | **18/18** satisfiable, exit 0 |
-| `node agent/observability/cli.mjs validate` | 0 invalid, 0 unparseable, over this session's traces |
-| `node tools/validate.mjs` | **0 errors, 106 unverified** — matches the §12 baseline exactly |
+| `node tools/validate.mjs` | **0 errors, 0 warnings, 106 unverified** — matches §12 exactly |
 | `node tools/i18n-audit.mjs` | 0 errors, 0 warnings — matches |
 | `node tools/design-qa.mjs` | 0 errors, **5 warnings** — the same five as §12, by file and line |
 | `node tools/freshness.mjs 2026-09-02` | "Nothing past its stated interval", exit 0 |
 
-**397 tests across the eight suites, all passing** (339 before this session).
+**459 tests across the nine suites, all passing** (397 before this session).
+
+## Observability
+
+Every route is a span (`propose.<route>`) with its own counts; every refusal an
+observation with the gap and the reason; every proposal, approval and data gap an
+artifact pointer; every handoff an edge; the routing a decision with its
+alternatives; and two closing observations — the census, and that nothing was
+merged. `proposalState()` in `query.mjs` derives the view at read time and stores
+nothing twice, exposed as `cli.mjs proposals [--refused]`, `GET /api/proposals`
+and the **Gap proposals** panel in the viewer. The overview tile counts the gaps
+that could **not** become a proposal, not the ones that could.
 
 ## Known limitations
 
-Full list in `docs/DATA-DEPTH.md` §12. The four that matter most:
+Full list in `docs/GAP-PROPOSALS.md` §9. The four that matter most:
 
 1. **No agent here has read a real document.** Unchanged since SESSION 05, and now
-   the blocking dependency for seven sessions of work. Every
-   `candidate_evidence` entry this agent emits is somewhere to look.
-2. **`missing_glossary_concept` produces 17 of the 57 findings** — the longest
-   list, and the one most likely to read as bulk. Its threshold is derived per
-   kind of record from the glossary's own lowest-covered concept, which is the
-   corpus's own standard rather than a chosen number. Saying so is better than
-   tuning it until the count looks right.
-3. **Demand is not importance.** An act nothing points at may be the most
-   important omission in the corpus; the model cannot tell. That is why every run
-   prints what it set aside rather than only what it found.
-4. **Nothing consumes a `KnowledgeGap` yet.** The chain still ends at a finding in
-   front of a human, exactly as `ImpactAssessment` does.
+   the blocking dependency for eight sessions of work. It is why 43 of 57 gaps are
+   a handoff rather than a proposal.
+2. **Fourteen proposals, thirteen of them notes.** The honest description of this
+   session's output is that it made two absences visible on production pages and
+   proposed one word. That ratio is the retrieval dependency, not something to tune.
+3. **A second run proposes the same notes again.** There is no record that a human
+   applied one, so nothing can tell a proposal that was accepted from one nobody
+   looked at. The SESSION 11 handover named exactly this as what closing the loop
+   needs, and this session did not build it.
+4. **Nothing consumes a `DataProposal` yet.** The chain now runs
+   gap → proposal → approval and stops. The half still missing is the one that
+   applies an approved proposal and records that a human did — the only code here
+   that would ever write to `data/` on an agent's initiative.
 
 ## Unresolved issues, carried forward
 
 1. `data/brief.json` is canonical but never consumed; `index.html`'s inline
    `window.__CONTENT__` blob has already drifted from it.
 2. No deploy gate — a push to `main` publishes; the validators do not run in CI.
-3. `docs/AGENT-ROLES.md` and `docs/AGENT-CONTRACTS.md` describe overlapping
-   ground at different altitudes, uncross-checked. **Partly addressed:**
-   `docs/DATA-DEPTH.md` §11 reconciles the Data Depth role in §4 against the
-   agent actually built — the agent occupies the analysis half of the role and
-   leaves the authoring half unbuilt, and says so rather than diverging silently.
+3. `docs/AGENT-ROLES.md` and `docs/AGENT-CONTRACTS.md` describe overlapping ground
+   at different altitudes, uncross-checked. **Partly addressed twice:**
+   `docs/DATA-DEPTH.md` §11 for the Data Depth role, and now `docs/SKILL-MAP.md`,
+   which gains a **Gap router** row rather than stretching an existing one.
 4. The five operating-policy documents have not been cross-checked against
    `agent/schemas/`.
 5. **106 records carry an unverified or requires-verification note.** No session
-   since SESSION 07 has moved that number, and none was trying to. SESSION 11 now
-   says which of them are load-bearing: seven `claim-type:law` records rest on
-   nothing external and other records are built on them.
+   since SESSION 07 has moved that number. SESSION 12 does not move it either — it
+   proposes notes recording which of them are load-bearing, and a note is not a
+   verification.
 6. `agent/records/` and `agent/observability/runs/` remain per-developer, no
    retention policy, concurrent writers untested.
 7. The Source Scout workflow has still never executed on GitHub Actions.
@@ -219,80 +216,78 @@ Full list in `docs/DATA-DEPTH.md` §12. The four that matter most:
    reference documents five. Carried from SESSION 07, still unreconciled.
 9. **The agent-layer status vocabulary and `data/taxonomy.json` disagree in both
    directions.** Five agent statuses have no taxonomy term (SESSION 07);
-   `status:partly-applicable` has no agent status (SESSION 09). Five sessions
-   have now left this and said so.
+   `status:partly-applicable` has no agent status (SESSION 09). Six sessions have
+   now left this and said so.
 10. **`RegulatoryChange` versus `ChangeRecord` is settled in code and open as a
     decision.** See `docs/CHANGE-DETECTOR.md` §1.
 11. **Two fields in `data/` whose name says reference and whose value is prose** —
     `timeline.events[].supersedes` and `applicability.rules[].depends_on`.
 12. **`GOVERNANCE_PERMITS` is empty**, and nothing in `docs/` opens it.
-13. **New: `data/sources.json` has no way to say two records are one document.**
-    `data/instruments.json` has a `relationships` array for exactly this problem;
-    sources have nothing equivalent, and the corpus currently holds
-    `src-eurlex-ai-omnibus` and `src-eli-ai-omnibus-2026-1744` as two records for
-    one act. Reported as the one gap on this corpus whose recommended home does
-    not exist in the schema. A data decision, not an agent-layer one.
-14. **New: the taxonomy declares four `instrument_kind` terms no record uses** —
+13. **`data/sources.json` has no way to say two records are one document.** Now
+    backed by a concrete proposal — `prop-taxonomy-*` proposes the missing word —
+    but the **shape** is still missing and is deliberately not bundled with it.
+    Adding a `relationships[]` array to `data/sources.json` is a decision for the
+    repository owner.
+14. **The taxonomy declares four `instrument_kind` terms no record uses** —
     `kind:delegated-regulation`, `kind:implementing-decision`,
     `kind:code-of-practice` and `kind:report` — and two `event_type` terms,
-    `event:compliance-deadline` and `event:implementing-act`. The model has a
-    place for subordinate acts and nothing occupies it, while
-    `src-eurlex-dsa-da-2050` records one as a source. A data decision.
+    `event:compliance-deadline` and `event:implementing-act`. A data decision.
+15. **New: fourteen proposals now exist and nothing decides them.** Each is behind
+    a pending `ApprovalRequest` addressed to "the repository owner", and pending is
+    never granted. Until somebody decides, every re-run regenerates them.
 
 ## Next session
 
 **A — dispatch the Source Scout workflow on a real runner.** Unchanged since
-SESSION 06 and now the blocking dependency for everything built since. Six
+SESSION 06 and now the blocking dependency for everything built since. Seven
 sessions of agent work exist and none has read a real document. `mode: mock`
 first, then `mode: live` with `dry_run: true`.
 
-**B — close the loop.** `ImpactAssessment`/`KnowledgeGap` → `DataProposal` →
-`ApprovalRequest` → an applied edit. The half that is missing is the one that
-writes, and it is the only code in this repository that would ever touch `data/`
-on an agent's initiative. What is genuinely needed is not the write — it is the
-record that a human applied one, so the next run does not propose it again.
+**B — the applied half, and the record that a human applied it.** The chain now
+runs `KnowledgeGap` → `DataProposal` → `ApprovalRequest` and stops. What is
+missing is not the write: it is the `ChangeRecord` that says a human applied one,
+so the next run does not propose it again. That record is what makes the loop a
+loop rather than a generator.
 
-**C — the data decisions this session surfaced.** Issues 13 and 14 above, plus
-issue 9. All three are now backed by evidence from more than one direction, and
-all three are decisions for the repository owner rather than for an agent.
+**C — decide the fourteen proposals this session produced.** Thirteen notes and
+one word. They are the first proposals in this repository's history that a human
+could actually accept or reject, and until somebody does, issue 15 above grows on
+every run.
 
 ### Exact next objective
 
 **A.** Dispatch **Source Scout** manually with `mode: mock`, `dry_run: true`,
 confirm the workflow's mechanics on a real GitHub-hosted runner, then decide with
-the repository owner whether to proceed to a live dispatch. If a live retrieval
-succeeds, the follow-on is:
+the repository owner whether to proceed to a live dispatch. The full chain, once
+a live retrieval succeeds:
 
 ```
-node agent/verifier/cli.mjs  --records <trace-id>
-node agent/integrate/cli.mjs --records <trace-id> --as-of <date>
-node agent/detector/cli.mjs  --records <trace-id> --as-of <date>
-node agent/depth/cli.mjs     --as-of <date> --changes <trace-id>
-node agent/observability/cli.mjs impact --trace <trace-id> --graph
-node agent/observability/cli.mjs depth  --trace <trace-id> --aside
+node agent/verifier/cli.mjs        --records <trace-id>
+node agent/integrate/cli.mjs       --records <trace-id> --as-of <date>
+node agent/detector/cli.mjs        --records <trace-id> --as-of <date>
+node agent/depth/cli.mjs           --as-of <date> --changes <trace-id>
+node agent/proposals/data/cli.mjs  --as-of <date> --gaps <depth-trace-id> --refusals
+node agent/observability/cli.mjs   proposals --refused
 ```
 
 ## Anything the next agent must know
 
-- **`agent/depth/` never writes anything**, and the suite scans every module in it
-  for a write call as well as hashing `data/` around a full run.
+- **`agent/proposals/data/` never writes anything and never merges**, and the
+  suite scans every module in it for a write call as well as hashing `data/`
+  around a full run.
 - **`asOf` is an argument, everywhere.** Unchanged.
-- **A finding with no demand is not censored — it is a census entry.** If you find
-  yourself inventing demand for a finding so that it will be reported, the finding
-  belongs in `gaps.mjs`, not here.
-- **A suppression without a reason is a test failure**, both in
-  `agent/depth/selftest.mjs` and as a reported gap in the observability view.
-- **A detector that finds nothing must still appear** in the run result, the trace
-  and the viewer. Removing it because it reports zero destroys the distinction
-  between *looked and found nothing* and *did not look*.
-- **A change record may never create a gap or raise one's impact.** A change is
-  not an absence, and the suite asserts it.
-- **`CO_CITATION_FLOOR` is the only tuned number in `detectors.mjs`.** It is
-  exported and the suite asserts it, so changing it is a visible decision.
-- **The glossary threshold is per kind of record and derived from the glossary.**
-  A single floor across kinds would report every mid-sized instrument against a
-  standard set for articles.
-- Before declaring anything done: the eight `--test` suites,
+- **A refusal is a deliverable.** A gap that produced nothing is counted, reasoned,
+  on the trace and in the read model. The suite asserts that every gap either
+  authored a record or was recorded as a refusal — a gap that did neither has
+  vanished.
+- **The note is composed, never written.** If you find yourself editing a sentence
+  in `NOTE_FOR_KIND` to read better, you are writing prose that will appear on a
+  production page. Add a template deliberately or not at all.
+- **Both routing overrides are one-way**, and the suite asserts neither can promote
+  a gap into a proposal its kind did not allow.
+- **The taxonomy search must be able to fail.** The test that asks it about
+  `rel-kind:repeals` is the one that proves the decisive-word test does anything.
+- Before declaring anything done: the nine `--test` suites,
   `agent/schemas/cli.mjs check`, then the four validators in `tools/`, compared
   against the §12 baseline.
 
@@ -300,12 +295,13 @@ node agent/observability/cli.mjs depth  --trace <trace-id> --aside
 
 Carried forward, still binding:
 
-- Do not rebuild the site. No framework, no bundler, no build step, no
-  dependency, no service worker, no server-side rendering.
+- Do not rebuild the site. No framework, no bundler, no build step, no dependency,
+  no service worker, no server-side rendering.
 - Do not fix the `__CONTENT__` / `brief.json` drift on your own initiative.
-- Do not modify `data/*.json` in a session not scoped for data work. **The 57
-  gaps this session reported are questions, not a work order** — closing any of
-  them means writing a legal fact, and 36 of the 57 are `human_only`.
+- Do not modify `data/*.json` in a session not scoped for data work. **The 14
+  proposals this session produced are proposals, not a work order** — each is
+  behind a pending approval, and applying one without a decision is exactly the
+  failure the whole chain exists to prevent.
 - Do not touch the footer's non-affiliation or no-legal-advice text, `TIER_GRADE`
   in `js/format.js`, the derivation rules in `js/pipeline.js`, or `BASE` in
   `tools/_footer.mjs`.
@@ -316,6 +312,10 @@ Carried forward, still binding:
   redaction to the read path, and do not raise `MAX_STRING` to fit a payload.
 - **Do not add an entry to `GOVERNANCE_PERMITS`** without the repository owner
   naming the document that grants it.
-- **Do not add a `KnowledgeGap` field for the missing value**, under any of the
-  six names the contract forbids, and do not relax the rule that a gap is never
-  `autonomous`. Closing a knowledge gap writes a legal fact.
+- **Do not relax the rule that `create_taxonomy_term` is `human_only`**, and do not
+  make the class depend on what the proposing agent claims. Do not add a
+  `definition` to what a taxonomy proposal proposes — a definition is the site's
+  own words.
+- **Do not add a note composer for a gap kind whose note would state anything about
+  EU law.** The test that every clause is checkable in this repository is the whole
+  of what keeps this route from being a back door.

@@ -28,7 +28,7 @@ import { validateRecord } from './schema.mjs';
 import { Tracer } from './tracer.mjs';
 import { MemorySink, JsonlSink } from './sink.mjs';
 import { deterministicIds, deterministicClock } from './ids.mjs';
-import { buildTree, loadTrace, traceChain, deriveStatus, collectRuns, summarise, impactState, depthState } from './query.mjs';
+import { buildTree, loadTrace, traceChain, deriveStatus, collectRuns, summarise, impactState, depthState, proposalState } from './query.mjs';
 import { toOtlp, toProvenanceLedger } from './otlp.mjs';
 import { runDemo } from './demo/workflow.mjs';
 
@@ -459,4 +459,114 @@ test('a depth view missing its census or its ordering decision reports the gap r
 
 test('a trace with no depth analysis reports nothing rather than an empty analysis', () => {
   assert.equal(depthState(impactTrace(), 'trace-under-test'), null);
+});
+
+/* ------------------------------------------- gap proposals (SESSION 12) */
+
+/** A trace shaped the way the gap router shapes one: a span per
+ *  route carrying its own counts, a NO PROPOSAL observation wherever
+ *  a gap was refused, handoffs to the agents that can do what it
+ *  cannot, a census, a routing decision, and the claim that nothing
+ *  was merged. */
+function proposalTrace({ withCensus = true, withRouting = true, withMerged = true, withApproval = true, withReasons = true } = {}) {
+  const t = fixture();
+  const run = t.startRun({ kind: 'agent', agent: 'proposal-router', task: 'route knowledge gaps' });
+
+  const a = run.startTool({ name: 'propose.data_proposal', inputs: { route: 'data_proposal' } });
+  a.artifact({ artifact_id: 'prop-annotate-001', artifact_type: 'contract:DataProposal', sha256: 'c'.repeat(64) });
+  if (withApproval) {
+    a.artifact({ artifact_id: 'appr-001', artifact_type: 'contract:ApprovalRequest', sha256: 'd'.repeat(64) });
+    a.approval({ approval_id: 'appr-001', state: 'requested', subject: 'a note on a claim', requested_of: 'the repository owner', artifact_ids: ['prop-annotate-001'], risk: 'medium' });
+  }
+  a.end({ status: 'ok', outputs: { gaps: 1, proposals: 1, approvals: withApproval ? 1 : 0, data_gaps: 0, refused: 0 } });
+
+  const b = run.startTool({ name: 'propose.owner_decision', inputs: { route: 'owner_decision' } });
+  if (withReasons) {
+    b.observe({
+      summary: 'NO PROPOSAL — kg-stale-record-057 is a decision for the repository owner',
+      subject: 'kg-stale-record-057',
+      data: { route: 'owner_decision', why: 'What last_verified means across ten datasets is a schema decision with the widest reach in the corpus.' },
+    });
+  }
+  b.end({ status: 'ok', outputs: { gaps: 1, proposals: 0, approvals: 0, data_gaps: 0, refused: 1 } });
+
+  const c = run.startTool({ name: 'propose.verifier', inputs: { route: 'verifier' } });
+  c.artifact({ artifact_id: 'dg-from-depth-001', artifact_type: 'contract:DataGap', sha256: 'e'.repeat(64) });
+  c.handoff({ to_agent: 'legal-verifier', reason: 'a document has to be read first', artifact_ids: ['dg-from-depth-001'] });
+  c.end({ status: 'ok', outputs: { gaps: 1, proposals: 0, approvals: 0, data_gaps: 1, refused: 0 } });
+
+  if (withCensus) {
+    run.observe({
+      summary: 'PROPOSAL CENSUS — 1 proposal(s) authored, 1 gap(s) not proposable here, 3 routed, as at 2026-09-02',
+      subject: 'data/',
+      data: {
+        as_of: '2026-09-02',
+        by_route: { data_proposal: 1, taxonomy_proposal: 0, editorial: 0, verifier: 1, owner_decision: 1 },
+        routes_with_no_gap: ['taxonomy_proposal', 'editorial'],
+        merged: 0, applied: 0,
+      },
+    });
+  }
+  if (withRouting) {
+    run.decide({
+      decision: 'Each gap is routed by its kind, from a stated table.',
+      rationale: 'nothing here has ever retrieved a document',
+      alternatives: ['Author a DataProposal for every gap, leaving the value blank — rejected.'],
+    });
+  }
+  if (withMerged) {
+    run.observe({ summary: 'NOTHING MERGED — 1 approval(s) emitted in the "requested" state', subject: 'governance', data: { applied: 0, data_dir_written: false } });
+  }
+  run.end({ status: 'ok' });
+  return buildTree(t.sink.records).roots[0];
+}
+
+test('a routing run is read off the trace, with what it refused as well as what it proposed', () => {
+  const p = proposalState(proposalTrace(), 'trace-under-test');
+  assert.equal(p.routed, 3);
+  assert.equal(p.proposed, 1);
+  assert.equal(p.evidence_questions, 1);
+  assert.equal(p.refused, 1, 'a run that authored one proposal and refused one gap has told its reader something false unless both numbers travel');
+  assert.equal(p.as_of, '2026-09-02');
+  assert.equal(p.merged, 0);
+  assert.equal(p.applied, 0);
+  assert.equal(p.pending_approvals, 1);
+  assert.deepEqual(p.routes_with_no_gap, ['taxonomy_proposal', 'editorial']);
+  assert.deepEqual(p.gaps, [], `expected no gaps in the view, got: ${p.gaps.join('; ')}`);
+});
+
+test('a refusal reaches the view with its reason, not as a bare count', () => {
+  const p = proposalState(proposalTrace(), 'trace-under-test');
+  const owner = p.routes.find((r) => r.route === 'owner_decision');
+  assert.equal(owner.refused, 1);
+  assert.equal(owner.refused_detail.length, 1);
+  assert.equal(owner.refused_detail[0].gap_id, 'kg-stale-record-057');
+  assert.ok(owner.refused_detail[0].why.length > 40);
+
+  const silent = proposalState(proposalTrace({ withReasons: false }), 'trace-under-test');
+  assert.ok(silent.gaps.some((g) => /recorded no reasons/.test(g)),
+    'a refusal nobody can see is a refusal nobody can check, and the view must say so rather than showing a bare count');
+});
+
+test('a proposal with no approval request is reported as a gap in the view', () => {
+  const p = proposalState(proposalTrace({ withApproval: false }), 'trace-under-test');
+  assert.ok(p.gaps.some((g) => /unapproved change that looks approved/.test(g)));
+});
+
+test('a routing view missing its census, its decision or its "nothing merged" claim says so', () => {
+  assert.ok(proposalState(proposalTrace({ withCensus: false }), 't').gaps.some((g) => /census/.test(g)));
+  assert.ok(proposalState(proposalTrace({ withRouting: false }), 't').gaps.some((g) => /routing decision/.test(g)));
+  assert.ok(proposalState(proposalTrace({ withMerged: false }), 't').gaps.some((g) => /nothing merged/.test(g)));
+});
+
+test('the handoffs to other agents are carried, so a refusal is not a dead end', () => {
+  const p = proposalState(proposalTrace(), 'trace-under-test');
+  const verifier = p.routes.find((r) => r.route === 'verifier');
+  assert.equal(verifier.handoffs.length, 1);
+  assert.equal(verifier.handoffs[0].to_agent, 'legal-verifier');
+  assert.deepEqual(verifier.handoffs[0].artifact_ids, ['dg-from-depth-001']);
+});
+
+test('a trace with no routing reports nothing rather than an empty routing', () => {
+  assert.equal(proposalState(depthTrace(), 'trace-under-test'), null);
 });
