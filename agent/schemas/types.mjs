@@ -439,3 +439,95 @@ export const REGULATORY_CHANGE_KINDS = [
 export const MATERIALITY_LEVELS = ['none', 'metadata_only', 'substantive', 'reader_acts_on_it'];
 
 export const MATERIALITY_RANK = { none: 0, metadata_only: 1, substantive: 2, reader_acts_on_it: 3 };
+
+/* ---------------------------------------------------------- data depth
+
+   SESSION 11's brief names thirteen things that can be missing from
+   the structured representation. They are the Data Depth Agent's own
+   vocabulary and, like the detector's change kinds above, they are
+   deliberately NOT added to data/taxonomy.json: that file is the enum
+   authority a reader's page resolves against, and "the model is
+   thinner here than the corpus needs" is not something the site says
+   about EU law.
+
+   THE THIRTEEN ARE THE BRIEF'S THIRTEEN, ONE FOR ONE, AND THE ORDER
+   IS THE BRIEF'S ORDER. A kind with no detector, or a detector
+   claiming a kind that is not here, fails agent/depth/selftest.mjs.
+   That is the check that keeps this list from becoming a wish list:
+   naming a kind of gap and never looking for it would be a claim of
+   coverage the code does not have.
+
+   `missing_subordinate_instrument` is the brief's "missing
+   implementation/delegated/technical instruments", named for what
+   those three have in common — an act made under a parent act — so
+   the kind does not have to be re-read as a list every time.       */
+
+export const DEPTH_GAP_KINDS = [
+  'missing_instrument',
+  'missing_provision',
+  'incomplete_timeline',
+  'incomplete_applicability',
+  'missing_institution',
+  'missing_competence',
+  'incomplete_enforcement',
+  'unsupported_claim',
+  'missing_source_relationship',
+  'missing_instrument_relationship',
+  'missing_glossary_concept',
+  'missing_subordinate_instrument',
+  'stale_record',
+];
+
+/**
+ * What the ABSENCE costs, which is a different question from what a
+ * CHANGE costs, and is deliberately not MATERIALITY_LEVELS.
+ *
+ * A change has a before and an after and can be weighed by how far
+ * the value moved. An absence has neither. What can be weighed is
+ * how a reader meets it: as nothing at all, as a view that renders
+ * less than the corpus knows, as a hole where the site's own
+ * structure implied something, or — the worst, and the one this
+ * project names as its single most damaging failure — as a negative
+ * finding, where absence of a rule reads as "probably not"
+ * (AI-SAFE-BOUNDARIES §0.5).
+ *
+ * `representation_only` is the level that earns its place, for the
+ * same reason `metadata_only` earns its place in the materiality
+ * ladder: a model that is thinner than the corpus and that no view
+ * and no reader ever reaches is a real observation and not a call to
+ * act, and a list that weighs it alongside a missing enforcement
+ * competence trains its reader to stop reading the list.
+ *
+ * Ordered, and the order is the order of harm to a reader.
+ */
+export const DEPTH_IMPACT_LEVELS = [
+  'representation_only',
+  'analysis_incomplete',
+  'reader_finds_nothing',
+  'reader_could_be_misled',
+];
+
+export const DEPTH_IMPACT_RANK = {
+  representation_only: 0,
+  analysis_incomplete: 1,
+  reader_finds_nothing: 2,
+  reader_could_be_misled: 3,
+};
+
+/**
+ * What a candidate piece of evidence IS. Every one of these is
+ * somewhere to look; none of them is a value, and none of them has
+ * established anything.
+ *
+ * `none_identified` is the one that must exist. A gap for which the
+ * corpus offers nowhere to look is the honest shape of some gaps,
+ * and a vocabulary without the word would push an agent into
+ * inventing a lead to fill the array — which is the substitute
+ * prohibition (§0.2) arriving through a side door.
+ */
+export const CANDIDATE_EVIDENCE_KINDS = [
+  'corpus_record',      // a record already in data/ that names the missing thing
+  'cited_document',     // a document already in data/sources.json
+  'official_register',  // a public register, database or portal to search
+  'none_identified',    // nothing to point at — and the gap says so
+];

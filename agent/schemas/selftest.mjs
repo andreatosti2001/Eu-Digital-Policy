@@ -9,7 +9,7 @@
 
    What it holds down, in the order the contract layer would fail:
 
-     · the seventeen contracts exist, are documented, and carry the
+     · the eighteen contracts exist, are documented, and carry the
        envelope the session specified
      · every substantive proposal carries all twelve required fields
      · the vocabularies are the site's and the observability
@@ -36,7 +36,7 @@ import { FIXTURES, simEvidence } from './fixtures.mjs';
 import { toJsonSchema } from './export.mjs';
 import { emit, handoff, receive, sha256Of, canonicalJson } from './gateway.mjs';
 import { ENVELOPE_FIELDS, PROPOSAL_FIELDS } from './common.mjs';
-import { EPISTEMIC_STATUS, FIELD_EPISTEMICS, taxonomyIds, RISKS, APPROVAL_STATES, PROVENANCE_ROLES, LEGAL_STATUSES, LEGAL_STATUS_TAXONOMY, LEGAL_ENTITY_KINDS, REGULATORY_CHANGE_KINDS } from './types.mjs';
+import { EPISTEMIC_STATUS, FIELD_EPISTEMICS, taxonomyIds, RISKS, APPROVAL_STATES, PROVENANCE_ROLES, LEGAL_STATUSES, LEGAL_STATUS_TAXONOMY, LEGAL_ENTITY_KINDS, REGULATORY_CHANGE_KINDS, DEPTH_GAP_KINDS, DEPTH_IMPACT_LEVELS } from './types.mjs';
 import * as obsSchema from '../observability/schema.mjs';
 import { Tracer } from '../observability/tracer.mjs';
 import { MemorySink } from '../observability/sink.mjs';
@@ -59,9 +59,9 @@ function refuses(record, fragment) {
   );
 }
 
-/* -------------------------------------------------------- the seventeen */
+/* -------------------------------------------------------- the eighteen */
 
-test('the seventeen contracts the sessions named all exist', () => {
+test('the eighteen contracts the sessions named all exist', () => {
   const required = [
     'SourceCandidate', 'VerificationRecord', 'ClaimEvidence', 'ChangeRecord', 'DataGap',
     'ArchitectureProposal', 'EditorialProposal', 'UXProposal', 'ImplementationProposal',
@@ -75,9 +75,13 @@ test('the seventeen contracts the sessions named all exist', () => {
        RegulatoryChange is about the WORLD; it references the
        detection by change_id and restates none of it. */
     'ImpactAssessment',
+    /* SESSION 11. KnowledgeGap is about REPRESENTATION where DataGap
+       is about EVIDENCE: a concept the model has no place for, not a
+       value that exists and is unsupported. */
+    'KnowledgeGap',
   ];
   assert.deepEqual(CONTRACT_NAMES, required);
-  assert.equal(CONTRACT_LIST.length, 17);
+  assert.equal(CONTRACT_LIST.length, 18);
 });
 
 test('every field of every contract is documented and epistemically typed', () => {
@@ -122,7 +126,7 @@ test('every substantive proposal carries all twelve required fields', () => {
 });
 
 test('a contract name is unique and every contract has a fixture', () => {
-  assert.equal(new Set(CONTRACT_NAMES).size, 17);
+  assert.equal(new Set(CONTRACT_NAMES).size, 18);
   for (const name of CONTRACT_NAMES) assert.ok(typeof FIXTURES[name] === 'function', `${name} has no fixture`);
   assert.deepEqual(Object.keys(FIXTURES).sort(), [...CONTRACT_NAMES].sort());
 });
@@ -1206,4 +1210,128 @@ test('ImpactAssessment: it references the detection rather than restating it', (
     assert.ok(f in c.forbidden, `${f} would make an assessment into a proposal or an edit`);
   }
   assert.ok('change_id' in c.fields, 'the reference to the detection is the whole mechanism');
+});
+
+/* ---------------------------------------------------------- KnowledgeGap
+   (SESSION 11)
+
+   The rules worth a test here are the ones that carry the brief's
+   two hardest instructions: "do not reward quantity" and "do not
+   directly modify canonical data". Both are enforced on the record
+   rather than trusted to the agent that writes it.               */
+
+test('KnowledgeGap: a gap nothing in the corpus leans on is a wish, not a finding', () => {
+  const r = fx('KnowledgeGap');
+  r.evidence = [simEvidence('ev-1')];   // a retrieved document, not a corpus record
+  refuses(r, 'no corpus record leaning on the missing concept');
+});
+
+test('KnowledgeGap: closing one is never something an agent may do unattended', () => {
+  const r = fx('KnowledgeGap');
+  r.autonomy_class = 'autonomous';
+  refuses(r, 'closing a knowledge gap means writing a legal fact');
+});
+
+test('KnowledgeGap: a gap needing a schema change is structural work, never Class B', () => {
+  const r = fx('KnowledgeGap');
+  r.recommended_data_location = { ...r.recommended_data_location, shape_exists: false };
+  r.autonomy_class = 'review_required';
+  refuses(r, 'structural change is never Class B');
+
+  r.autonomy_class = 'human_only';
+  assert.deepEqual(V(r), []);
+});
+
+test('KnowledgeGap: no rule matched is never rendered as a negative finding', () => {
+  const r = fx('KnowledgeGap');
+  r.absence_kind = 'no_rule_matched';
+  r.impact = 'analysis_incomplete';
+  refuses(r, 'NOT DETERMINED');
+});
+
+test('KnowledgeGap: a lead that was actually read is a verification, not a gap', () => {
+  const r = fx('KnowledgeGap');
+  r.candidate_evidence = [{ ...r.candidate_evidence[0], retrieved: true }];
+  refuses(r, 'produces a VerificationRecord');
+});
+
+test('KnowledgeGap: an empty pointer reads as coverage and is refused', () => {
+  const r = fx('KnowledgeGap');
+  r.candidate_evidence = [{ kind: 'corpus_record', where: null, what_it_would_establish: 'Something.', retrieved: false }];
+  refuses(r, 'Use "none_identified" rather than an empty pointer');
+});
+
+test('KnowledgeGap: "nowhere to look" and "somewhere to look" are not said together', () => {
+  const r = fx('KnowledgeGap');
+  r.candidate_evidence = [
+    r.candidate_evidence[0],
+    { kind: 'none_identified', where: null, what_it_would_establish: 'Nothing — there is nowhere to look.', retrieved: false },
+  ];
+  refuses(r, 'either there is somewhere to look or there is not');
+});
+
+test('KnowledgeGap: there is no field for the missing value, under any name', () => {
+  const c = getContract('KnowledgeGap');
+  for (const f of ['missing_value', 'substitute', 'best_guess', 'assumed_value', 'plausible_value', 'likely_answer', 'default_value']) {
+    assert.ok(f in c.forbidden, `${f} must be forbidden by name, with the reason`);
+  }
+  for (const f of ['missing_value', 'substitute']) {
+    assert.ok(c.forbidden[f].length > 40, `${f}'s objection must say why, not just no`);
+  }
+  const r = fx('KnowledgeGap');
+  r.missing_value = 'Article 83';
+  refuses(r, 'fabricates a legal fact');
+});
+
+test('KnowledgeGap: it is a question, and carries no edit and no count', () => {
+  const c = getContract('KnowledgeGap');
+  for (const f of ['proposed_change', 'occurrences', 'severity_score']) {
+    assert.ok(f in c.forbidden, `${f} must be forbidden by name`);
+  }
+  const r = fx('KnowledgeGap');
+  r.occurrences = 15;
+  refuses(r, 'quantity this contract refuses to reward');
+});
+
+test('KnowledgeGap is not DataGap, and each points at the other\'s ground', () => {
+  const kg = getContract('KnowledgeGap');
+  const dg = getContract('DataGap');
+  assert.ok('what_is_missing' in kg.forbidden, 'DataGap\'s word must be refused by name');
+  assert.ok(kg.forbidden.what_is_missing.includes('DataGap'), 'and the objection must name the contract that was wanted');
+  assert.ok('recommended_data_location' in kg.fields, 'naming the home is what makes this a representation gap');
+  assert.ok(!('recommended_data_location' in dg.fields), 'and DataGap does not carry it — that is the difference');
+});
+
+test('KnowledgeGap: the thirteen kinds the session named all exist, in the brief\'s order', () => {
+  assert.deepEqual(DEPTH_GAP_KINDS, [
+    'missing_instrument', 'missing_provision', 'incomplete_timeline',
+    'incomplete_applicability', 'missing_institution', 'missing_competence',
+    'incomplete_enforcement', 'unsupported_claim', 'missing_source_relationship',
+    'missing_instrument_relationship', 'missing_glossary_concept',
+    'missing_subordinate_instrument', 'stale_record',
+  ]);
+  assert.equal(DEPTH_GAP_KINDS.length, 13);
+  assert.equal(new Set(DEPTH_GAP_KINDS).size, 13);
+  assert.deepEqual(getContract('KnowledgeGap').fields.gap_kind.values, DEPTH_GAP_KINDS);
+});
+
+test('KnowledgeGap: the impact ladder is about absence, not about a change', () => {
+  /* MATERIALITY_LEVELS weighs how far a value moved. An absence has
+     no before and no after, so the ladders are deliberately
+     different vocabularies and neither may be substituted for the
+     other. */
+  assert.equal(DEPTH_IMPACT_LEVELS.length, 4);
+  for (const level of DEPTH_IMPACT_LEVELS) {
+    assert.ok(!['none', 'metadata_only', 'substantive', 'reader_acts_on_it'].includes(level),
+      `"${level}" is a materiality level: an absence is not weighed on the ladder for a change`);
+  }
+  assert.equal(DEPTH_IMPACT_LEVELS[3], 'reader_could_be_misled', 'the worst level is the §0.5 failure');
+});
+
+test('KnowledgeGap: a home is inside data/, and nowhere else', () => {
+  const values = getContract('KnowledgeGap').fields.recommended_data_location.shape.dataset.values;
+  for (const v of values) assert.ok(v.startsWith('data/') && v.endsWith('.json'), `${v} is not a canonical home`);
+  const r = fx('KnowledgeGap');
+  r.recommended_data_location = { ...r.recommended_data_location, dataset: 'index.html' };
+  refuses(r, 'is not one of');
 });

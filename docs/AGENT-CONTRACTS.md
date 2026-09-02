@@ -65,7 +65,7 @@ nothing open, made explicitly so somebody can disagree with it.
 
 ---
 
-## The seventeen
+## The eighteen
 
 | Contract | Kind | Answers |
 |---|---|---|
@@ -86,16 +86,18 @@ nothing open, made explicitly so somebody can disagree with it.
 | `DataProposal` | proposal | a proposed factual modification to a record in `data/*.json` |
 | `RegulatoryChange` | finding | a detected divergence between what the datasets assert and what a document says |
 | `ImpactAssessment` | finding | what one confirmed change reaches inside this website, split into the half a machine may act on and the half it may not |
+| `KnowledgeGap` | finding | a concept the structured representation cannot express, with what in the corpus leans on it and where the fact would live |
 
-390 top-level fields — 1,289 counting every nested one — 90 forbidden fields
-with their reasons, and 135 contract-specific cross-field rules, on top of the
+410 top-level fields — 1,360 counting every nested one — 101 forbidden fields
+with their reasons, and 144 contract-specific cross-field rules, on top of the
 generic identity, shape, epistemic, evidence and governance checks in
 `validate.mjs`. Counted from `CONTRACT_LIST` rather than tallied by hand, so it
 is reproducible: sum `Object.keys(c.fields).length` for the first figure and
 `walkShape` for the second. *The figure this paragraph carried before SESSION 08
 was 306 / 47 / 73, and it had been stale since SESSION 07 added nine fields and
 six rules to `VerificationRecord` without updating it. SESSION 10 recomputed it
-the same way rather than incrementing the previous figure.*
+the same way rather than incrementing the previous figure, and SESSION 11 did
+the same again.*
 
 **Amended in SESSION 05**, when the first real agent met them. `SourceCandidate`
 gained `authority_class`, `duplicate_candidate_ids` and `confidence`; `DataGap`
@@ -129,6 +131,25 @@ own terms. It references the detection by `change_id` and restates none of it �
 forbidden by name — and a test asserts the two share no field outside the
 envelope but `change_id` and `autonomy_class`. Full reasoning in
 `docs/REGULATORY-IMPACT-MAPPING.md` §9.
+
+**And extended by one in SESSION 11.** `KnowledgeGap` is the eighteenth, and it
+is the pair with `DataGap` that is easiest to confuse. `DataGap` is about
+**evidence** — a value on a record that exists and is unsupported, closed by
+finding the publication. `KnowledgeGap` is about **representation** — a concept
+the model has no place for at all, closed by a decision about where the fact
+would live and then by the verification work that fills it. It carries
+`recommended_data_location` and `DataGap` does not, because naming the home is
+half the answer; and it forbids `what_is_missing` by name with a pointer to the
+other contract, so an agent reaching for the wrong one is told which it wanted.
+
+Three of its rules carry SESSION 11's brief into the shape rather than trusting
+the agent that writes it: a record whose evidence carries no `dataset_record` is
+refused (*a gap with nothing in the corpus leaning on it is a wish, not a
+finding* — this is "do not reward quantity", enforced); `autonomy_class` may
+never be `autonomous`, because closing a knowledge gap means writing a legal
+fact; and a gap whose recommended home does not exist in the schema is forced to
+`human_only`, because structural change is never Class B. Full reasoning in
+`docs/DATA-DEPTH.md` §7.
 
 **And extended by one in SESSION 08.** `DataProposal` is the fifteenth contract.
 The four proposal contracts covered architecture, prose, interface and code; a
@@ -268,7 +289,7 @@ so a provenance judgment an agent makes is reconcilable with the bibliography
 instead of needing a translation table. And `supports:context` behaves the way
 the data model says it does: **a fact whose every cited source is `context` is
 refused**, in `VerificationRecord`, in `ClaimEvidence`, and in the generic check
-that applies to all seventeen. Context informs a claim without establishing it,
+that applies to all eighteen. Context informs a claim without establishing it,
 and is not a citation.
 
 ---
@@ -347,7 +368,7 @@ agent/schemas/fields.mjs        the field DSL and its interpreter
 agent/schemas/common.mjs        the envelope, the evidence ref, the epistemic block,
                                 the twelve proposal fields
 agent/schemas/define.mjs        defineContract / defineProposal
-agent/schemas/contracts/*.mjs   the seventeen, one per file
+agent/schemas/contracts/*.mjs   the eighteen, one per file
 agent/schemas/registry.mjs      the registry a record's `contract` field resolves against
 agent/schemas/validate.mjs      the gate: identity, shape, epistemic, governance
 agent/schemas/gateway.mjs       emit / receive / handoff, and the trace pointer
@@ -382,7 +403,7 @@ unchanged from the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
    requiring a block entry for every one would bury the entries that matter. It
    is a judgment about legibility, and it is the check most likely to need
    revisiting.
-3. **Only a handful of fields across the seventeen contracts are typed `factual`**, and few more are
+3. **Only a handful of fields across the eighteen contracts are typed `factual`**, and few more are
    `inference` or `interpretation`; the rest are structural. That is
    correct — most fields are bookkeeping — but it means the epistemic machinery
    is exercised by a small number of fields, and a contract author adding a

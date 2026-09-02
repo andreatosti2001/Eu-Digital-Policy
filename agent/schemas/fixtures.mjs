@@ -665,6 +665,65 @@ export const impactAssessmentFixture = () => envelope('ImpactAssessment', {
   },
 });
 
+/* ------------------------------------------------------------------
+   KnowledgeGap — SESSION 11.
+
+   The fixture is deliberately a gap the corpus LEANS on: a simulated
+   instrument whose simulated applicability rule says it applies, and
+   which no simulated institution supervises. A fixture that named a
+   record nothing depends on would demonstrate the wrong thing —
+   the load-bearing rule is the whole contract.                     */
+
+export const knowledgeGapFixture = () => envelope('KnowledgeGap', {
+  gap_id: 'kg-simulated-001',
+  gap_kind: 'missing_competence',
+  absence_kind: 'null_not_researched',
+  missing_concept: 'No institution in the simulated corpus holds a supervisory or enforcement role for the simulated instrument, so the question "who enforces this" has no answer in the model.',
+  why_it_matters: 'A simulated applicability rule tells a simulated reader that the instrument applies to them. The corpus can say that and cannot say who would enforce it, which is the half a reader acts on. Argued from what the corpus does with the missing thing, not from how many records share the finding.',
+  candidate_evidence: [{
+    kind: 'corpus_record',
+    where: 'simulated:rule',
+    what_it_would_establish: 'Which authority the simulated rule already names, if any — a place to look, and nothing more.',
+    retrieved: false,
+  }],
+  confidence: 0.6,
+  recommended_data_location: {
+    dataset: 'data/institutions.json',
+    container: 'institutions[].competences',
+    field: 'instrument',
+    shape_exists: true,
+    why_here: 'Competence is an edge from an institution to an instrument and has exactly one home. Recording a supervisor field on the instrument would be the second copy the architecture exists to prevent.',
+  },
+  impact: 'reader_finds_nothing',
+  autonomy_class: 'human_only',
+  as_of: '2026-09-01',
+  affected_entities: [
+    { kind: 'instrument', id: 'simulated:instrument', path: 'data/instruments.json', field: null, note: 'A fixture instrument. Not an act.' },
+  ],
+  evidence: [{
+    evidence_id: 'ev-demand',
+    kind: 'dataset_record',
+    source_id: null, url: null,
+    locator: 'data/applicability.json#simulated:rule',
+    title: null, publisher: null,
+    quote: null, retrieved_at: null, checksum: null,
+    /* What a dataset_record entry supports is a proposition about
+       THE CORPUS — "this rule exists and names no authority" — and
+       never a proposition about EU law. The record states that
+       directly, so the qualifier is direct; it establishes nothing
+       whatever about what the law requires. */
+    supports: 'supports:direct', role: 'unresolved', simulated: true,
+  }],
+  epistemic: {
+    fact: [],
+    inference: [
+      { field: 'missing_concept', statement: 'No competence edge in the simulated corpus names the simulated instrument.', from: ['ev-demand'], method: 'Indexed every competence entry by the instrument it names and looked the instrument up. A fixture: nothing was indexed.' },
+    ],
+    interpretation: [],
+    unresolved: [{ field: null, question: 'Which authority actually supervises it?', missing: 'The article of the act that designates a competent authority, read from the act itself.', absence_kind: 'null_not_researched', blocks: false }],
+  },
+});
+
 export const FIXTURES = {
   SourceCandidate: sourceCandidateFixture,
   VerificationRecord: verificationRecordFixture,
@@ -683,4 +742,5 @@ export const FIXTURES = {
   DataProposal: dataProposalFixture,
   RegulatoryChange: regulatoryChangeFixture,
   ImpactAssessment: impactAssessmentFixture,
+  KnowledgeGap: knowledgeGapFixture,
 };

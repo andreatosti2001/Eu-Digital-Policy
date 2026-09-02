@@ -71,6 +71,23 @@ export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR }
         }
         return json(res, { impact: maps });
       }
+      if (p === '/api/depth') {
+        /* The depth analyses, exposed. `?trace=` narrows to one run;
+           with nothing it is every depth analysis in the store.
+           Every entry carries what the run SET ASIDE as well as what
+           it reported — a view that showed only the reported gaps
+           would present this agent's thirty-one judgements as if
+           they were the corpus. */
+        const trace = url.searchParams.get('trace');
+        if (trace && !/^[0-9a-f]{32}$/.test(trace)) return json(res, { error: 'bad trace id' }, 400);
+        const traces = trace ? [trace] : listRuns(dir).map((r) => r.trace_id);
+        const analyses = [];
+        for (const id of traces) {
+          const t = loadTrace(id, dir);
+          if (t?.depth) analyses.push(t.depth);
+        }
+        return json(res, { depth: analyses });
+      }
       if (p === '/api/chain') {
         return json(res, {
           chains: traceChain({

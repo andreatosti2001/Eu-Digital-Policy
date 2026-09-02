@@ -1,19 +1,27 @@
 /* ============================================================
-   agent/schemas/registry.mjs — the seventeen contracts
+   agent/schemas/registry.mjs — the eighteen contracts
 
    The single place that knows what contracts exist. A record names
    its own contract in its `contract` field, so validation needs no
    out-of-band knowledge of what it was handed: an agent that
-   invents a seventeenth contract is told the name is unknown rather
+   invents a nineteenth contract is told the name is unknown rather
    than having its record accepted by a validator that skipped it.
 
    DataProposal is the fifteenth, added in SESSION 08,
    RegulatoryChange the sixteenth, added in SESSION 09, and
-   ImpactAssessment the seventeenth, added in SESSION 10. Each is
+   ImpactAssessment the seventeenth, added in SESSION 10, and
+   KnowledgeGap the eighteenth, added in SESSION 11. Each is
    appended rather than slotted in beside its nearest relatives: the
    list order is the order the contracts were named, and reordering
    it would silently change what `CONTRACT_LIST[n]` means to anything
    that indexed it.
+
+   KnowledgeGap is NOT DataGap, and they are the pair most easily
+   confused here. DataGap is about EVIDENCE — a value that exists and
+   is unsupported. KnowledgeGap is about REPRESENTATION — a concept
+   the model has no place for. KnowledgeGap forbids `what_is_missing`
+   with a pointer to the other, so an agent reaching for the wrong
+   one is told which it wanted.
 
    ImpactAssessment is about the SITE where RegulatoryChange is about
    the WORLD, and it references the detection by change_id rather
@@ -44,6 +52,7 @@ import { WebsiteChange } from './contracts/website-change.mjs';
 import { DataProposal } from './contracts/data-proposal.mjs';
 import { RegulatoryChange } from './contracts/regulatory-change.mjs';
 import { ImpactAssessment } from './contracts/impact-assessment.mjs';
+import { KnowledgeGap } from './contracts/knowledge-gap.mjs';
 
 /** In the order the sessions named them. */
 export const CONTRACT_LIST = [
@@ -64,6 +73,7 @@ export const CONTRACT_LIST = [
   DataProposal,
   RegulatoryChange,
   ImpactAssessment,
+  KnowledgeGap,
 ];
 
 export const CONTRACTS = Object.fromEntries(CONTRACT_LIST.map((c) => [c.name, c]));
@@ -75,7 +85,7 @@ export const PROPOSAL_CONTRACTS = CONTRACT_LIST.filter((c) => c.kind === 'propos
 
 export function getContract(name) {
   const c = CONTRACTS[name];
-  if (!c) throw new Error(`unknown contract "${name}" — the seventeen are: ${CONTRACT_NAMES.join(', ')}`);
+  if (!c) throw new Error(`unknown contract "${name}" — the eighteen are: ${CONTRACT_NAMES.join(', ')}`);
   return c;
 }
 

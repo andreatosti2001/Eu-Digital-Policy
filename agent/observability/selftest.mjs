@@ -28,7 +28,7 @@ import { validateRecord } from './schema.mjs';
 import { Tracer } from './tracer.mjs';
 import { MemorySink, JsonlSink } from './sink.mjs';
 import { deterministicIds, deterministicClock } from './ids.mjs';
-import { buildTree, loadTrace, traceChain, deriveStatus, collectRuns, summarise, impactState } from './query.mjs';
+import { buildTree, loadTrace, traceChain, deriveStatus, collectRuns, summarise, impactState, depthState } from './query.mjs';
 import { toOtlp, toProvenanceLedger } from './otlp.mjs';
 import { runDemo } from './demo/workflow.mjs';
 
@@ -367,4 +367,96 @@ test('a truncated impact graph is a gap, never a graph of zero nodes', () => {
   assert.equal(i.nodes, 0);
   assert.ok(i.gaps.some((g) => /did not parse/.test(g)),
     'a graph that did not parse must say so; zero nodes with no gap reads as a change that reached nothing');
+});
+
+/* ------------------------------------------------ data depth (SESSION 11) */
+
+/** A trace shaped the way the Data Depth Agent shapes one: a span
+ *  per detector carrying its own counts, a SET ASIDE observation
+ *  wherever a detector suppressed something, a census observation
+ *  and an ordering decision. */
+function depthTrace({ withCensus = true, withOrdering = true, withAsideDetail = true } = {}) {
+  const t = fixture();
+  const run = t.startRun({ kind: 'agent', agent: 'data-depth', task: 'depth analysis' });
+
+  const a = run.startTool({ name: 'depth.missing_competence', inputs: { kind: 'missing_competence' } });
+  a.artifact({ artifact_id: 'kg-missing-competence-001', artifact_type: 'contract:KnowledgeGap', sha256: 'b'.repeat(64) });
+  if (withAsideDetail) {
+    a.observe({
+      summary: 'SET ASIDE — 2 missing competences finding(s) not reported',
+      subject: 'missing_competence',
+      data: { suppressed: [
+        { subject: 'chips-act', why: 'nothing in the corpus leans on the missing concept. The absence is real and is in the census.' },
+        { subject: 'charter', why: 'the corpus records this act as scope:referenced, which the taxonomy defines as outside this brief\'s analytical scope.' },
+      ] },
+    });
+  }
+  a.end({ status: 'ok', outputs: { reported: 1, set_aside: 2, examined: 3 } });
+
+  const b = run.startTool({ name: 'depth.missing_instrument', inputs: { kind: 'missing_instrument' } });
+  b.end({ status: 'ok', outputs: { reported: 0, set_aside: 0, examined: 0 } });
+
+  if (withCensus) {
+    run.observe({
+      summary: 'DEPTH CENSUS — 1 gap(s) reported, 2 set aside, as at 2026-09-02',
+      subject: 'data/',
+      data: {
+        as_of: '2026-09-02',
+        by_kind: { missing_competence: 1, missing_instrument: 0 },
+        by_impact: { reader_could_be_misled: 1 },
+        by_autonomy: { human_only: 1 },
+        kinds_with_no_finding: ['missing_instrument'],
+        corpus: { records: 651, edges: 3070 },
+      },
+    });
+  }
+  if (withOrdering) {
+    run.decide({
+      decision: 'Findings are ordered by what the absence costs a reader.',
+      rationale: 'the brief refuses quantity',
+      alternatives: ['Order by the number of records affected — rejected: that IS the quantity ranking.'],
+    });
+  }
+  run.end({ status: 'ok' });
+  return buildTree(t.sink.records).roots[0];
+}
+
+test('a depth analysis is read off the trace, with what it set aside as well as what it reported', () => {
+  const d = depthState(depthTrace(), 'trace-under-test');
+  assert.equal(d.reported, 1);
+  assert.equal(d.set_aside, 2, 'a run that reported one gap and dropped two has told its reader something false unless both numbers travel');
+  assert.equal(d.examined, 3);
+  assert.equal(d.as_of, '2026-09-02');
+  assert.equal(d.gap_ids.length, 1);
+  assert.deepEqual(d.kinds_with_no_finding, ['missing_instrument']);
+  assert.ok(d.ordering);
+  assert.deepEqual(d.gaps, [], `expected no gaps in the view, got: ${d.gaps.join('; ')}`);
+});
+
+test('a detector that found nothing is carried, so "looked" can be told from "did not look"', () => {
+  const d = depthState(depthTrace(), 'trace-under-test');
+  const nothing = d.detectors.find((x) => x.kind === 'missing_instrument');
+  assert.ok(nothing, 'a detector that found nothing must still appear');
+  assert.equal(nothing.reported, 0);
+  assert.equal(nothing.examined, 0);
+});
+
+test('a suppression with no reason on the trace is reported as a gap in the view', () => {
+  const d = depthState(depthTrace({ withAsideDetail: false }), 'trace-under-test');
+  assert.ok(d.gaps.some((g) => /set 2 finding\(s\) aside and recorded no reasons/.test(g)),
+    'a suppression nobody can see is a suppression nobody can check, and the view must say so rather than showing a bare count');
+});
+
+test('a depth view missing its census or its ordering decision reports the gap rather than omitting it', () => {
+  const noCensus = depthState(depthTrace({ withCensus: false }), 'trace-under-test');
+  assert.ok(noCensus.gaps.some((g) => /census/.test(g)));
+  assert.equal(noCensus.as_of, null, 'the as-of date is not invented when the run did not record one');
+
+  const noOrdering = depthState(depthTrace({ withOrdering: false }), 'trace-under-test');
+  assert.ok(noOrdering.gaps.some((g) => /ordering decision/.test(g)));
+  assert.equal(noOrdering.ordering, null);
+});
+
+test('a trace with no depth analysis reports nothing rather than an empty analysis', () => {
+  assert.equal(depthState(impactTrace(), 'trace-under-test'), null);
 });

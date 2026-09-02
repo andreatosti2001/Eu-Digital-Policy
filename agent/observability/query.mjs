@@ -154,6 +154,7 @@ export function loadTrace(traceId, dir = DEFAULT_RUN_DIR) {
     errors: root ? collectEvents(root, 'error') : [],
     website_changes: root ? collectEvents(root, 'website_change') : [],
     impact: root ? impactState(root, traceId) : [],
+    depth: root ? depthState(root, traceId) : null,
   };
 }
 
@@ -354,6 +355,7 @@ export function overview(dir = DEFAULT_RUN_DIR) {
   const websiteChanges = [];
   const impact = [];
   const editorialImpacts = [];
+  const depth = [];
   for (const r of runs) {
     const t = loadTrace(r.trace_id, dir);
     if (!t) continue;
@@ -368,6 +370,21 @@ export function overview(dir = DEFAULT_RUN_DIR) {
     for (const i of t.impact) {
       impact.push({ trace_id: r.trace_id, change_id: i.change_id, nodes: i.nodes, edges: i.edges, routing: i.routing, surfaces: i.surfaces, simulated: i.simulated, gaps: i.gaps });
       for (const e of i.editorial) editorialImpacts.push({ trace_id: r.trace_id, change_id: i.change_id, ...e });
+    }
+    /* A depth analysis belongs on the overview for the same reason
+       an editorial impact does: what it reports is a hole in what the
+       site can say about EU law, and the state that matters most is
+       the one nobody has looked at. The SET-ASIDE count travels with
+       it, because a summary that carried only the reported number
+       would let the agent's judgement disappear into a total. */
+    if (t.depth) {
+      depth.push({
+        trace_id: r.trace_id, as_of: t.depth.as_of,
+        reported: t.depth.reported, set_aside: t.depth.set_aside, examined: t.depth.examined,
+        by_impact: t.depth.by_impact, by_autonomy: t.depth.by_autonomy,
+        kinds_with_no_finding: t.depth.kinds_with_no_finding,
+        simulated: t.depth.simulated, gaps: t.depth.gaps,
+      });
     }
   }
   return {
@@ -384,6 +401,7 @@ export function overview(dir = DEFAULT_RUN_DIR) {
     website_changes: websiteChanges,
     impact,
     editorial_impacts: editorialImpacts,
+    depth,
     runs,
   };
 }
@@ -448,4 +466,113 @@ export function traceChain({ file = null, change_id = null, trace_id = null }, d
     }
   }
   return chains;
+}
+
+/* ---------------------------------------------------- data depth */
+
+/**
+ * The depth analysis a trace carries, if it ran one.
+ *
+ * SESSION 11's brief asks for the analysis to be instrumented. It is
+ * exposed the way everything else here is — DERIVED AT READ TIME
+ * from what the run actually emitted, never stored a second time.
+ * The Data Depth Agent writes four kinds of thing onto its spans:
+ *
+ *   one span per detector          named depth.<kind>, whose outputs
+ *                                  carry reported / set_aside /
+ *                                  examined
+ *   an `observation` per detector  the findings it SET ASIDE, with
+ *     that set anything aside      the reason for each
+ *   `artifact`s of type            one per KnowledgeGap emitted
+ *     contract:KnowledgeGap
+ *   one census `observation`       the run's totals, by kind, by
+ *     and one `decision`           impact, by autonomy — and the
+ *                                  ordering decision with the
+ *                                  alternatives it did not take
+ *
+ * This function joins them. Nothing is recomputed and nothing is
+ * second-guessed: what the run did not emit comes back as a named
+ * gap in the view, in the same way traceChain reports a missing
+ * approval, because a view that quietly fills in the hole reads as
+ * an audit.
+ *
+ * THE SET-ASIDE COUNT IS THE POINT OF THIS VIEW. A depth run that
+ * reported nine gaps and dropped thirty-one told its reader
+ * something false about its own coverage unless the thirty-one are
+ * visible. They are visible here, with the reason, and the census
+ * carries both numbers.
+ */
+export function depthState(root, traceId = null) {
+  const runs = collectRuns(root);
+  const detectorSpans = [];
+  (function walk(s) {
+    if (String(s.name ?? '').startsWith('depth.')) detectorSpans.push(s);
+    for (const c of s.children ?? []) walk(c);
+  })(root);
+  if (!detectorSpans.length) return null;
+
+  const observations = collectEvents(root, 'observation');
+  const decisions = collectEvents(root, 'decision');
+  const artifacts = collectEvents(root, 'artifact').filter((a) => a.artifact_type === 'contract:KnowledgeGap');
+
+  const census = observations.find((o) => String(o.summary).startsWith('DEPTH CENSUS'));
+  const setAside = observations.filter((o) => String(o.summary).startsWith('SET ASIDE'));
+  const ordering = decisions.find((d) => String(d.decision).toLowerCase().includes('ordered by'));
+
+  const detectors = detectorSpans.map((s) => {
+    const kind = String(s.name).replace(/^depth\./, '');
+    const aside = setAside.find((o) => o.subject === kind);
+    return {
+      kind,
+      status: s.status,
+      reported: s.outputs?.reported ?? null,
+      set_aside: s.outputs?.set_aside ?? null,
+      examined: s.outputs?.examined ?? null,
+      risk: s.risk ?? null,
+      /* Named rather than counted. "Eleven set aside" is a number;
+         "these eleven, because nothing in the corpus leans on them"
+         is a finding a reviewer can disagree with. */
+      set_aside_detail: aside?.data?.suppressed ?? [],
+    };
+  }).sort((a, b) => a.kind.localeCompare(b.kind));
+
+  const gaps = [];
+  if (!census) gaps.push('no depth census observation recorded — the run\'s own totals are not on this trace');
+  if (!ordering) gaps.push('no ordering decision recorded — what this run ranked by, and what it refused to rank by, is not on this trace');
+  if (!artifacts.length) gaps.push('no KnowledgeGap artifacts recorded');
+  for (const d of detectors) {
+    if (d.set_aside && !d.set_aside_detail.length) {
+      gaps.push(`${d.kind} set ${d.set_aside} finding(s) aside and recorded no reasons: a suppression nobody can see is a suppression nobody can check`);
+    }
+  }
+
+  const reported = detectors.reduce((n, d) => n + (d.reported ?? 0), 0);
+  const aside = detectors.reduce((n, d) => n + (d.set_aside ?? 0), 0);
+
+  return {
+    trace_id: traceId,
+    as_of: census?.data?.as_of ?? null,
+    agent: runs.find((r) => r.agent === 'data-depth')?.agent ?? null,
+    simulated: artifacts.some((a) => a.simulated === true),
+    /* The COUNTS come from the detector spans' own outputs, never
+       from the length of the artifact list — the artifact list is
+       what the trace store happened to keep, and the counts describe
+       what the run actually did. */
+    reported,
+    set_aside: aside,
+    examined: detectors.reduce((n, d) => n + (d.examined ?? 0), 0),
+    by_kind: census?.data?.by_kind ?? null,
+    by_impact: census?.data?.by_impact ?? null,
+    by_autonomy: census?.data?.by_autonomy ?? null,
+    /* A detector that found nothing is a result. Carrying it means a
+       reader can tell "looked and found nothing" from "did not
+       look", which is the same distinction the datasets draw between
+       unknown and null. */
+    kinds_with_no_finding: census?.data?.kinds_with_no_finding ?? [],
+    corpus: census?.data?.corpus ?? null,
+    detectors,
+    gap_ids: artifacts.map((a) => a.artifact_id),
+    ordering: ordering ? { decision: ordering.decision, rationale: ordering.rationale, alternatives: ordering.alternatives } : null,
+    gaps,
+  };
 }
