@@ -190,6 +190,20 @@ The digest's `authority_class` and `tier_estimate` are the Scout's own *inferenc
 typed as such in the contract. They are not a citable fact about the document and must not be
 copied into a record unread.
 
+### Agent 2 assists steps 1 and 2. It does not replace them.
+
+`node agent/verifier/cli.mjs --records <trace-id>` runs the **Legal Verifier** over the
+`SourceCandidate` records of a Scout run: it opens each document, decomposes it into
+propositions, and records for each one what the source establishes, the legal status, the
+three dates, the exact location, and what it could not settle. See `docs/LEGAL-VERIFIER.md`.
+
+**This does not lower the bar in steps 1–4 by one inch.** A `VerificationRecord` is Class C —
+an agent's proposal for a human, never a merge — and the Verifier is a rule-based reader of
+signal phrases, not a lawyer. Its `legal_status`, `source_tier` and `verdict` are *inference*,
+typed as such in the contract, and are exactly as uncopiable into a record unread as the
+Scout's `tier_estimate` is. What it usefully gives a human doing step 2 is the passage, the
+locator, and a written statement of what the check did **not** settle.
+
 ---
 
 ## 8. When something goes wrong
