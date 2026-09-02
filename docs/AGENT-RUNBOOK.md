@@ -1,49 +1,26 @@
 # AGENT RUNBOOK
 
-**Status:** written in SESSION 06, describing a Source Scout implementation that has since
-been **retired**, not this repository's current one. Kept as design documentation, not as an
-operating manual for code that exists: the scheduling model, the permission-split GitHub
-Actions jobs and the `guard.mjs` write-boundary check below describe real, sound engineering
-that no code in this repository currently implements.
+**Status:** rewritten in the SESSION 06 follow-up (2 September 2026) to describe the system
+that actually runs today. The version before this one documented a Scout implementation that
+had been retired during the SESSION 00–06 reconciliation, kept only as design reference. That
+design — the scheduling model, the permission-split GitHub Actions jobs, the write-boundary
+guard — has now been ported onto the contract-backed Scout that replaced it. This document
+describes real, running code.
 
-**Read with:** `docs/AI-SAFE-BOUNDARIES.md` (what an agent may do) and `docs/OBSERVABILITY.md`
-(how a run is recorded).
-
-## Why the implementation was retired
-
-SESSION 06 built its Source Scout on a fork that predates `agent/schemas/` — the fourteen
-inter-agent contracts and the `gateway.mjs` gate that "no agent may bypass these contracts"
-now means in practice (see `docs/AGENT-CONTRACTS.md`). Its Scout writes plain JSON reports to
-`agent/scout/reports/` rather than `SourceCandidate` and `DataGap` records through the gate,
-so it cannot be reconciled with the two other Scouts a parallel session built against the
-contracts and already cross-validated against each other (see `docs/HANDOVER.md`, "two Scouts
-were built, and one was chosen"). Rather than run three incompatible Scouts, or hand-graft
-contract emission onto code that was never designed to produce it, the contract-backed Scout
-in `agent/scout/` was kept and this one's implementation removed: `scout.mjs`, `http.mjs`,
-`feed.mjs`, `dedupe.mjs`, `relevance.mjs`, `report.mjs`, `guard.mjs`, `registry.json`,
-`reports/`, `selftest.mjs`, `cli.mjs`, and `.github/workflows/source-scout.yml`.
-
-**What was not thrown away.** The scheduling and security design below is real and unrelated
-to which Scout implementation runs inside it — `discover`/`propose` job splitting so the
-credential and the untrusted input are never in the same job, and a write-boundary guard run
-in both jobs. Porting that design onto the contract-backed Scout (whose write boundary is
-`agent/records/`, not `agent/scout/reports/`, and whose candidates are `SourceCandidate`
-records, not report JSON) is real work — different guard logic, a different CLI surface, a PR
-step that does not exist yet — and is recorded as a next-session objective rather than
-attempted inside this reconciliation.
-
-Currently no agent is scheduled. This document describes the model a future scheduling
-session should reuse, not what runs today.
+**Read with:** `docs/SOURCE-SCOUT.md` (the agent this schedules), `docs/AGENT-CONTRACTS.md`
+(the contracts it emits through), `docs/AI-SAFE-BOUNDARIES.md` (what an agent may do) and
+`docs/OBSERVABILITY.md` (how a run is recorded).
 
 ---
 
-## 1. What the Source Scout is
+## 1. What is scheduled
 
-A read-only discovery agent. Once a week it reads public feeds published by EU institutions,
-records exactly what it retrieved, works out which documents this repository has not already
-seen, ranks them for reading order, and opens a pull request containing a report.
+**Agent 1, the Source Scout** (`agent/scout/scout.mjs`) — read-only, contract-backed, unchanged
+by this document. It finds documents that bear on the instruments this repository tracks and
+emits `SourceCandidate` and `DataGap` records through `agent/schemas/gateway.mjs`. Full detail:
+`docs/SOURCE-SCOUT.md`.
 
-**It proposes. It never decides, and it never edits.**
+**This document is about the layer around it**, `agent/scout/schedule/`, which:
 
 ```
 DISCOVER  →  OBSERVE  →  REPORT  →  PR
@@ -55,205 +32,216 @@ and never
 DISCOVER  →  DIRECT PRODUCTION EDIT
 ```
 
-The distinction is not stylistic. `docs/AI-SAFE-BOUNDARIES.md` §3 puts "creating a
-`sources.json` record from anything other than a document actually retrieved and read" in the
-RED tier — human control only. The Scout retrieves a *listing*; it does not read the document
-behind it. Nothing it produces may enter `data/sources.json` until a person has opened the URL.
+**The scheduling layer never modifies the Scout it wraps.** `agent/scout/schedule/guard.mjs`
+fails the run if any path outside `agent/scout/digests/*.{json,md}` changes — including
+`agent/scout/scout.mjs` itself, `agent/schemas/`, and `data/*.json`. This is the same
+discipline `agent/scout/selftest.mjs` already applies to the Scout's relationship with
+`data/` (hash the directory, don't trust the code), aimed one layer further out.
 
-### Why the workflow has two jobs
+### Why a wrapper, not a change to the Scout
 
-`.github/workflows/source-scout.yml` splits the work along a permission boundary:
-
-| Job | Permission | Touches |
-|---|---|---|
-| `discover` | `contents: read` — **no write token at all** | the open internet |
-| `propose` | `contents: write`, `pull-requests: write` | GitHub only |
-
-The credential and the untrusted input are never in the same job. A Scout subverted by a
-malicious feed is running in a job that holds nothing it could use, and `discover` checks out
-with `persist-credentials: false` so there is no token in `.git/config` either.
-
-Both jobs run `agent/scout/guard.mjs`, which fails if any path outside `agent/scout/reports/`
-changed. It runs twice on purpose: an artifact is attacker-influenced input to the job that
-*does* hold the token, so checking only in the job that does not would not be checking.
+The reconciliation that preceded this (`docs/HANDOVER.md`, "Read this first — five parallel
+lines, reconciled into one") retired a Scout for the same reason a second one nearly
+duplicated the first: **it could not be reconciled without a rewrite.** A wrapper that never
+touches `agent/scout/*.mjs` or `agent/schemas/` cannot have that problem — a future session can
+delete `agent/scout/schedule/` entirely without touching the agent itself.
 
 ---
 
-## 2. Schedule and manual operation
+## 2. What the scheduling layer adds
 
-**Scheduled:** `17 6 * * 1` — 06:17 UTC every Monday. Off the hour deliberately: a job on the
-hour queues behind everyone else's. Scheduled runs are pinned to
-`andreatosti2001/Eu-Digital-Policy`, so a fork does not poll public regulators' servers weekly
-on the author's behalf.
+Three things the Scout itself does not do, none of them changing what the Scout asserts:
+
+1. **A committed digest** (`agent/scout/schedule/digest.mjs`) — a human/machine preview of a
+   run, written to `agent/scout/digests/`. It is a **pointer summary, not the record**: the
+   same rule `agent/schemas/gateway.mjs` applies to the trace ("copying the body into the trace
+   would make the trace a second home for every fact the record carries") applies here one
+   level up. The full `SourceCandidate` / `DataGap` bodies live only in
+   `agent/records/<trace_id>.jsonl` — regenerable, git-ignored, attached to the run's workflow
+   artifact.
+
+2. **Two duplicate checks the Scout itself does not perform**, both read-only and both
+   explicitly labelled as report-layer annotations rather than Scout findings — the Scout's own
+   `matches_existing_source_id` field stays `null`, exactly as `docs/SOURCE-SCOUT.md` known
+   limitation 6 describes:
+   - against `data/sources.json` — is the bibliography already aware of this document?
+   - against every earlier committed digest — was this exact candidate already proposed?
+
+   Matching is CELEX, then normalised URL, then normalised title (weak), using
+   `normaliseUrl`/`normaliseTitle` **imported from the Scout's own `dedupe.mjs`**, not
+   reimplemented.
+
+3. **Scheduling, concurrency control, and a pull request** — the subject of the rest of this
+   document.
+
+---
+
+## 3. Schedule and manual operation
+
+**Scheduled:** `17 6 * * 1` — 06:17 UTC every Monday, off the hour deliberately. Pinned to
+`andreatosti2001/Eu-Digital-Policy`, so a fork does not poll public regulators weekly on the
+author's behalf.
 
 **Manual:** Actions → *Source Scout* → *Run workflow*.
 
 | Input | Default | What it does |
 |---|---|---|
-| `dry_run` | `false` | Runs everything; writes no report and opens no pull request. Use this after changing the watchlist. |
-| `open_pr` | `auto` | `auto` opens a pull request only when there is something for a human to do — a new candidate, or an unresolved problem. `always` opens one regardless. `never` leaves the artifacts only. |
-| `fail_on` | `failed` | `failed` = red only when the run produced nothing usable. `degraded` = red when any feed is dead. `never` = never red. |
-| `limit` | `60` | Maximum candidates carried per watchlist entry. |
-| `timeout_ms` | `20000` | Per-request timeout. |
+| `mode` | `live` | `live` = the five registered endpoints (`agent/scout/authorities.mjs`). `mock` = the fixture corpus, to test the workflow itself without touching the network. |
+| `dry_run` | `false` | Runs everything; writes no digest and opens no pull request. |
+| `open_pr` | `auto` | `auto` opens a PR only when there is a candidate new against the bibliography or against an earlier digest. `always` / `never` override this. |
+| `fail_on` | `ok` | `ok` = only a thrown run reddens the job. `degraded` = any failed retrieval reddens it — today, that is **every** live run, because every registered endpoint is refused by this environment's egress policy (§6). |
+| `max_docs` | `4` | Documents followed per endpoint, passed straight to the Scout's own `--max-docs=`. |
 
-**Concurrency:** the group is `source-scout` with `cancel-in-progress: false`. One Scout at a
-time; a queued run waits rather than killing a live one, because a half-cancelled run leaves a
-partial report and the report is the deliverable.
+**Concurrency:** group `source-scout`, `cancel-in-progress: false`. One run at a time; a queued
+run waits rather than killing a live one, because a half-cancelled run leaves a partial digest.
 
 ### Why `degraded` exits 0 by default
 
-A dead feed must not turn the schedule red every week until someone disables the workflow to
-stop the noise. It must not vanish either — so it lands in the report, in the job summary as a
-`::warning`, and in the pull request. Escalating it to a failure is a policy an operator sets
-with `fail_on: degraded`, not a default that trains people to ignore a red run.
+Every registered endpoint is currently refused before it reaches the origin (§6). That is a
+fact about this environment's network, reported honestly on every run, and it must not turn
+the schedule red every week until someone disables the workflow to silence it. It also must not
+vanish: it lands in the digest, in a `::warning` annotation, and in the pull request body.
+Escalating it to red is `fail_on: degraded`, an operator's explicit choice — the moment a real
+GitHub-hosted runner reaches even one endpoint, this stops being the steady state and is worth
+re-examining.
 
-### Exit codes
+### Exit codes (`agent/scout/schedule/run.mjs`)
 
 | Code | Meaning |
 |---|---|
-| 0 | A report was produced — including a degraded one |
-| 1 | Nothing usable: every retrieval failed, or the Scout threw |
+| 0 | A digest was produced — including a degraded one |
+| 1 | The Scout threw before producing one |
 | 2 | `--fail-on degraded` was set and the run was degraded |
 
 ---
 
-## 3. Reading a report
+## 4. The two-job permission split
 
-Every run writes two files to `agent/scout/reports/`:
+```
+discover   contents: read, no write token, persist-credentials: false
+             ↓ (upload-artifact: digest, records, trace)
+propose    contents: write, pull-requests: write, no network beyond github.com
+```
 
-- `scout-<instant>.json` — machine-readable. The next run reads it, which is how a candidate
-  proposed last week is recognised rather than re-proposed as new. **This is why reports are
-  committed**: they are the cross-run duplicate-detection memory.
-- `scout-<instant>.md` — the human summary, and the body of the pull request.
+The credential and the untrusted input are never in the same job. A Scout subverted by a
+hostile response from a compromised endpoint is running in a job that holds nothing it could
+use to act on that. `agent/scout/schedule/guard.mjs` runs in **both** jobs — once against the
+live working tree in `discover`, once against a downloaded artifact in `propose` — because an
+artifact is attacker-influenced input to the job that holds the token, so checking only in the
+job that does not hold it would not be checking.
 
-Both are also uploaded as workflow artifacts (`source-scout-report`), as is the observability
-trace (`source-scout-trace`), on success **and on failure** — a failed run's trace is the only
-evidence of why it failed. Retention 90 days.
+**Artifact storage.** Every run uploads four artifacts, on success *and on failure* — a failed
+run's records and trace are the only evidence of why it failed:
 
-The summary always carries five sections, **written even when empty**. A section that
-disappears when its count is zero teaches a reader to skim, and then the week it reappears it
-is missed.
+| Artifact | Contents | Committed? |
+|---|---|---|
+| `source-scout-digest` | `agent/scout/digests/*.json` | Yes, by the `propose` job |
+| `source-scout-digest-summary` | `agent/scout/digests/*.md` | Yes, by the `propose` job |
+| `source-scout-records` | `agent/records/*.jsonl` — the full contract records | No — git-ignored by design |
+| `source-scout-trace` | `agent/observability/runs/*.jsonl` | No — git-ignored by design |
+
+---
+
+## 5. Reading a digest
+
+Two files per run in `agent/scout/digests/`: `<digest_id>.json` (machine-readable) and
+`<digest_id>.md` (human-readable, and the pull request body). Five sections are always
+present, written even when empty:
 
 | Section | What it is | What to do |
 |---|---|---|
-| **High-relevance candidates** | Band `high`: an exact instrument identifier, or several independent signals | Read these first. The matched terms are printed so you can audit the band. |
-| **New sources** | Everything not already known, in reading order | Skim. Anything worth having, open — see §4. |
-| **Duplicate sources** | Suppressed as already known, with the key that matched | Glance at any matched on `title` — that key is weak and two documents may honestly share a title. |
-| **Failed retrievals** | An endpoint that could not be read this run | One week is noise. The same entry three weeks running is a dead feed — see §5. |
-| **Unresolved retrieval problems** | Resolved but produced nothing usable: a feed that changed shape, a truncated body, a content type that did not match | These need an operator, not a re-run. |
-
-### What a relevance band is not
-
-It is reading order. It is **not** evidence, and it is not a legal judgement. Band `high` means
-the title or summary contained the string; it does not mean the document is about the
-instrument, that it is authoritative, or that it supports anything. The vocabulary is derived
-from `data/instruments.json` at run time — add an instrument to the dataset and the Scout
-starts watching for it.
-
-Band `unknown` with a `null` score means the publisher supplied neither title nor summary, so
-relevance **could not be assessed**. It is counted separately and never folded into `none`:
-unknown is not zero, here as everywhere else in this repository.
+| **High-relevance candidates** | The Scout's own `confidence` ≥ 0.75 (`docs/SOURCE-SCOUT.md` "Confidence") | Read first. Not a legal judgement — a reading-order signal against the Scout's own stated formula. |
+| **New sources** | Not matched against the bibliography or an earlier digest | Skim; anything worth having, open — see §7. |
+| **Duplicate sources** | Three signals, each named: `within-run` (Scout-asserted), `bibliography`, `prior-digest` (both report-layer only) | A `title`-only match is weak — glance at it. |
+| **Failed retrievals** | Every `DataGap` this run produced | One week is unsurprising given §6. Watch for a `blocked_by_egress_policy: false` row — that is a *different* kind of failure and worth investigating. |
+| **Unresolved retrieval problems** | What `DataGap.closes_with` says would close each gap | Never a substitute for the document — `AI-SAFE-BOUNDARIES.md` §0.2. |
 
 ---
 
-## 4. Promoting a candidate to a source record
+## 6. Network reality
 
-This is the step the whole design exists to keep manual. **Merging the Scout's pull request
-records what the Scout saw. It accepts nothing.**
+At the time this was written, every one of the five registered endpoints
+(`eur-lex.europa.eu`, `digital-strategy.ec.europa.eu`, `www.edpb.europa.eu`,
+`www.edps.europa.eu`, `www.enisa.europa.eu`) is refused with HTTP 403 on `CONNECT` at this
+environment's egress proxy — `docs/SOURCE-SCOUT.md` "FINDING". A scheduled run today is
+expected to produce `0` candidates and `5` gaps, all `blocked_by_egress_policy: true`. **That
+is not a broken Scout or a broken workflow; it is the honest current state of this
+environment's network**, and the digest says so on every run rather than going quiet about it.
 
-1. **Open the URL and read the document.** Not the feed entry — the document. If you cannot
-   reach it, stop: `docs/AI-SAFE-BOUNDARIES.md` §0.1.
-2. **Confirm it says what you are about to claim it says.** A loosely related substitute is
-   worse than an admitted gap because it looks resolved (§0.2).
-3. **Write the `sources.json` record by hand**, on a branch, in a session scoped for data work:
-   `tier` and `type` from `data/taxonomy.json`; `published` and `accessed` as you actually
-   found them; `url_status` per that dataset's `$note`; `publisher` **null if not researched**,
-   never invented.
-4. **Run the four validators** and compare against the baseline in
-   `docs/CURRENT-ARCHITECTURE.md` §12.
-
-The Scout's `expected_tier` and `expected_type` fields are the operator's prior about a
-*publisher*. They are not a claim about the individual document and must not be copied into a
-record unread.
+A GitHub-hosted runner may have different network reach than the environment this was built
+in. The first run that reaches even one real endpoint is worth reading closely — nothing in
+this repository has yet seen what any of these sites currently publish.
 
 ---
 
-## 5. When something goes wrong
+## 7. Promoting a candidate to a source record
 
-**Every retrieval failed (status `failed`, exit 1).** Usually the runner's network or a
-watchlist gone stale. Check whether the URLs resolve from a browser. If a single publisher
-moved, fix that entry in `agent/scout/registry.json`; if all six failed at once, suspect the
-runner, and re-run before editing anything.
+**Merging the Scout's pull request records what the Scout saw. It accepts nothing.**
 
-**One entry fails every week.** The feed moved or was withdrawn. Fix the URL or set
-`"enabled": false` with a note saying why and when. Do not delete the entry — a silently
-shorter watchlist is a coverage loss nobody can see.
+1. **Open the URL and read the document.** Not the digest preview — the document. If you
+   cannot reach it, stop (`AI-SAFE-BOUNDARIES.md` §0.1).
+2. **Confirm it says what you are about to claim it says.**
+3. **Write the `sources.json` record by hand**, on a branch, in a session scoped for data
+   work — Class C under `docs/AUTONOMY-POLICY.md`: prepared, validated, and put to a human,
+   never committed by an agent on its own authority.
+4. Run the four validators in `tools/` and compare against the §12 baseline.
 
-**`content-type-mismatch`.** The server returned HTML where the watchlist expected a feed.
-Often a consent interstitial or an error page served with a 200. Open the URL and look.
+The digest's `authority_class` and `tier_estimate` are the Scout's own *inference*, already
+typed as such in the contract. They are not a citable fact about the document and must not be
+copied into a record unread.
 
-**A feed returns entries but the report shows none.** A shape change. `agent/scout/feed.mjs`
-handles RSS 2.0 and Atom; anything else needs the parser extended, with a test in the same
-commit.
+---
 
-**The guard failed.** The Scout wrote outside `agent/scout/reports/`. Nothing was committed.
-This is either a defect or an instruction the Scout should have refused — investigate before
-re-running. Do not widen the allowlist to make it pass.
+## 8. When something goes wrong
 
-**The run threw.** No report was written; the job summary carries the message and the trace
-artifact carries the run up to the throw. `node agent/observability/cli.mjs show <trace-id>`.
+**Every retrieval failed with `blocked_by_egress_policy: true`.** Expected — see §6.
+
+**A retrieval failed with `blocked_by_egress_policy: false`.** A real problem: the origin
+itself refused, moved, or timed out. Open the URL by hand and check
+`agent/scout/authorities.mjs` for whether the endpoint moved.
+
+**The guard failed.** The run wrote outside `agent/scout/digests/`. Nothing was committed.
+This is either a defect in `agent/scout/schedule/run.mjs` or a sign the Scout it wraps changed
+underneath it — investigate before re-running. **Never widen the allowlist to make it pass.**
+
+**The run threw.** No digest was written; the job summary carries the message, and the
+`source-scout-records` / `source-scout-trace` artifacts carry the run up to the throw.
 
 ### Watching a run
 
 ```
-node agent/observability/cli.mjs list           # every run
-node agent/observability/cli.mjs show <trace>   # the execution tree
-node agent/observability/cli.mjs validate       # the store is well-formed
-node agent/observability/cli.mjs serve          # the viewer, on loopback
+node agent/observability/cli.mjs list
+node agent/observability/cli.mjs show <trace-id>
+node agent/schemas/cli.mjs check
 ```
 
-The Scout emits one orchestrator span, one agent span, a tool span per retrieval, and
-`observation` / `decision` / `artifact` / `provenance` / `handoff` / `approval` records. Every
-run leaves a **pending approval** addressed to the maintainer — that is the correct steady
-state, not a bug. A Scout that granted its own approval would not be a Scout.
+Every scheduled run emits the same instrumentation as a manual `agent/scout/cli.mjs --live`
+run — this wrapper adds no second logging path.
 
 ---
 
-## 6. Maintaining the watchlist
+## 9. Maintaining the endpoint registry
 
-`agent/scout/registry.json`. It is **agent configuration, not a dataset**: nothing in it is a
-source record and nothing in it is cited by the site.
-
-Every entry carries `url_status: "url:unchecked"` and **keeps it**. The Scout does not rewrite
-its own registry from a run: a live endpoint today is not a fact about the endpoint tomorrow,
-and a config file that edits itself becomes a second home for a fact the report already holds.
-Which entries actually resolved is recorded per run, in that run's report.
-
-Adding an entry: give it an `id`, a `publisher_name`, a `kind` (`feed` or `page`), the `url`,
-and a `note` saying where the URL came from and whether it was confirmed. Set `publisher` to
-an id that already exists in `data/sources.json`, or to `null` — **never mint one**. Then run
-`node agent/scout/cli.mjs run --dry-run` and read the failed-retrievals section before
-committing.
-
-> **The watchlist shipped unverified.** It was authored in an environment with no outbound
-> access to `europa.eu`, so not one of the six URLs was confirmed to resolve. Each entry says
-> so in its own `note`, and `watch-eurlex-oj-l-digital` is expected to fail until an operator
-> regenerates the feed from EUR-Lex — those feed ids are session-scoped. **The first
-> successful scheduled run is what establishes which entries work.** Treat a wholesale failure
-> on the first run as the expected outcome, not as a broken Scout.
+`agent/scout/authorities.mjs`. **This document does not own that file** — it belongs to Agent
+1, and changing it is changing what the Scout searches, not how it is scheduled. See
+`docs/SOURCE-SCOUT.md` "The priority hierarchy" and known limitation 2 (the registry is five
+unverified root URLs).
 
 ---
 
-## 7. What must not change
+## 10. What must not change
 
-- **The Scout must never gain write access to `data/*.json`**, directly or through a widened
-  guard allowlist. If a future agent is to write data, it is a different agent with a
-  different review path, not a relaxed Scout.
-- **The two-job split must stay split.** Merging `discover` and `propose` to save a minute of
-  runner time puts the write token in the job that parses untrusted input.
-- **`cancel-in-progress` stays `false`.** A cancelled run leaves a partial report.
-- **The five report sections stay mandatory**, written when empty.
-- **Nothing the Scout emits is ever marked `simulated`.** That flag belongs to the
-  observability demonstrator alone.
-- **The reports directory stays committed.** It is the duplicate-detection memory; gitignoring
-  it makes every run propose everything again.
+- **The scheduling layer must never gain write access to `agent/scout/*.mjs`,
+  `agent/schemas/`, or `data/*.json`**, directly or through a widened guard allowlist. The
+  guard's test suite (`agent/scout/schedule/selftest.mjs`) asserts each of these paths is
+  refused by name — extending the allowlist without extending that test is the failure mode to
+  watch for.
+- **The two-job permission split must stay split.**
+- **`cancel-in-progress` stays `false`.**
+- **The five digest sections stay mandatory**, written when empty.
+- **`agent/scout/digests/` stays committed.** It is the only memory this layer has between
+  runs; git-ignoring it makes every run propose everything again.
+- **Report-layer duplicate annotations are never written back into a `SourceCandidate`.** If a
+  future session decides the Scout itself should compare against `data/sources.json`
+  (`docs/SOURCE-SCOUT.md` known limitation 6), that is a change to `agent/scout/scout.mjs` and
+  its contract, made deliberately — not something this wrapper should do by accident.

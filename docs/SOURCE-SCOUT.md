@@ -255,7 +255,12 @@ byte-identical to the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
    Commission and for every secondary source. Classifying document type is the
    obvious next increment.
 6. **Duplicate detection is within a single run.** It does not compare against
-   `data/sources.json`, so `matches_existing_source_id` is always null.
+   `data/sources.json`, so `matches_existing_source_id` is always null. **Partially mitigated,
+   not resolved, outside this agent:** `agent/scout/schedule/digest.mjs` performs the same two
+   comparisons — against `data/sources.json` and against every earlier run — read-only, at the
+   reporting layer, for a scheduled run's digest. That annotation is never written back into
+   the `SourceCandidate` record; `matches_existing_source_id` stays null here, exactly as
+   before. See `docs/AGENT-RUNBOOK.md` §2.
 7. **The governance check keys off `affected_entities`**, which the contracts use
    to mean "what this record is about". For a read-only run those are not the
    same thing, and the `AgentRun` therefore records no affected entities — true,
