@@ -251,6 +251,40 @@ Full account: `docs/REGULATORY-IMPACT-MAPPING.md` §8.
 
 ---
 
+## Data depth — the analysis, exposed with what it set aside
+
+SESSION 11 asked for the Data Depth Agent's analysis to be instrumented. It is
+exposed the same way everything else here is: **derived at read time** from what
+the run emitted, stored nowhere twice.
+
+| Emitted by `agent/depth/` | Carrying |
+|---|---|
+| one span per detector, named `depth.<kind>` | `reported`, `set_aside` and `examined` on its own outputs |
+| an `observation` beginning `SET ASIDE —` | every finding that detector did **not** report, with the reason for each |
+| an `artifact` of type `contract:KnowledgeGap` | one per gap emitted |
+| an `observation` beginning `DEPTH CENSUS —` | the run's totals: by kind, by impact, by autonomy, and the kinds that found nothing |
+| a `decision` | what the run ordered by, with the alternatives it did not take |
+
+`depthState()` in `query.mjs` joins them. **The set-aside half is the point of
+this view.** A run that reported 57 gaps and dropped 31 made a judgement 31
+times, and a view showing only the 57 would present that judgement as though it
+were the corpus. So a detector that set findings aside and recorded no reasons is
+reported as a **gap in the view** — a suppression nobody can see is a suppression
+nobody can check — and a detector that found nothing is carried through, because
+a reader who cannot tell *looked and found nothing* from *did not look* has been
+told nothing.
+
+```
+node agent/observability/cli.mjs depth [--trace t] [--aside]
+GET /api/depth?trace=
+```
+
+The viewer has a **Data depth** panel with the same content, and the overview
+rail counts reported gaps — warning where any of them sit at
+`reader_could_be_misled`, which is `AI-SAFE-BOUNDARIES` §0.5: an absence
+available to be read as a negative finding.
+
+
 ## The development view
 
 `node agent/observability/cli.mjs serve` → `http://127.0.0.1:7801`.
@@ -264,7 +298,7 @@ failed traces; open handoffs; pending human approvals; website changes; and
 per trace — the execution tree, a timeline, the agents with their confidence
 and risk, decisions with their rejected alternatives, artifacts with hashes
 and previews, handoffs, approvals, the provenance ledger, the audit chain,
-the regulatory impact maps, and errors.
+the regulatory impact maps, the data-depth analysis, and errors.
 
 Two behaviours are the point rather than a detail:
 
@@ -290,6 +324,7 @@ The API:
 | `GET /api/runs/:trace_id` | one trace, fully derived |
 | `GET /api/chain?trace=&file=&change=` | the audit chain |
 | `GET /api/impact?trace=&change=` | the regulatory impact maps, with their graphs, routing and gaps |
+| `GET /api/depth?trace=` | the depth analyses, with what each run reported **and** what it set aside |
 | `GET /api/export?trace=&kind=` | OTLP/JSON, or the provenance ledger |
 
 ---

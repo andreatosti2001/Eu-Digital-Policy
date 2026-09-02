@@ -67,8 +67,12 @@ work; `observability` records that it happened; `autonomy-governance` decides wh
 
 The agent roles are the ones the observability demonstrator already models
 (`agent/observability/demo/workflow.mjs`) plus the roles the repository's own work implies.
-**None of these agents exists yet.** This is the intended allocation, not a description of
-running code.
+**Five of these agents now exist** — Source Scout (`agent/scout/`), Legal Verifier
+(`agent/verifier/`), the verification integrator (`agent/integrate/`), Regulatory Change
+Detector (`agent/detector/`) and Data Depth (`agent/depth/`), built in SESSIONS 06 to 11. The
+rest of the table is still the intended allocation rather than a description of running code.
+*This paragraph said "none of these agents exists yet" until SESSION 11; it had been stale
+since SESSION 06.*
 
 | Agent | Always | Per task | Never |
 |---|---|---|---|
@@ -76,6 +80,7 @@ running code.
 | **Scout** (read-only) | `project-context`, `observability` | `regulatory-change-detection`, `eu-legal-research` | `data-governance` — a scout proposes, never edits |
 | **Verifier** | `project-context`, `observability` | `legal-source-verification`, `eu-legal-research`, `source-provenance` | `legal-editorial` — it does not rewrite the prose it checks |
 | **Change detector** | `project-context`, `observability` | `regulatory-change-detection`, `data-completeness` | closing any gap it finds |
+| **Data depth** (read-only) | `project-context`, `observability` | `data-completeness`, `knowledge-architecture`, `data-governance` | closing a gap, or writing to `data/` at all — it asks where a fact would live and never puts one there |
 | **Data editor** (human-approved) | `project-context`, `autonomy-governance`, `git-workflow` | `data-governance`, `source-provenance`, `knowledge-architecture`, `legal-site-qa` | authoring a fact from model knowledge |
 | **Editor** (prose) | `project-context`, `autonomy-governance`, `git-workflow` | `legal-editorial`, `legal-site-qa` | changing a claim record to fit a sentence |
 | **Frontend** | `project-context`, `git-workflow` | `frontend-implementation`, `legal-site-qa`, `ux-audit` | touching `data/` or the derivation rules |

@@ -6,6 +6,7 @@
      node agent/observability/cli.mjs show <trace-id>
      node agent/observability/cli.mjs chain [--file f] [--change c] [--trace t]
      node agent/observability/cli.mjs impact [--trace t] [--change c] [--graph]
+     node agent/observability/cli.mjs depth  [--trace t] [--aside]
      node agent/observability/cli.mjs validate
      node agent/observability/cli.mjs export <trace-id> [--provenance]
      node agent/observability/cli.mjs serve [--port 7801] [--open]
@@ -149,6 +150,45 @@ function cmdImpact() {
   if (!found) console.log('no impact map matches. `node agent/detector/cli.mjs --mock` writes some.');
 }
 
+/**
+ * The depth analyses in the store.
+ *
+ * SESSION 11's brief asks for the analysis to be instrumented. This
+ * is the terminal half; `/api/depth` and the Data depth panel in the
+ * viewer are the other.
+ *
+ * IT PRINTS WHAT THE RUN SET ASIDE, NOT ONLY WHAT IT REPORTED, and
+ * `--aside` names each one. That is the whole discipline of this
+ * agent made visible: a run that found eighty-eight absences and
+ * reported fifty-seven has made a judgement thirty-one times, and a
+ * view that showed only the fifty-seven would present that judgement
+ * as if it were the corpus.
+ */
+function cmdDepth() {
+  const wantTrace = flag('trace');
+  const traces = typeof wantTrace === 'string' ? [wantTrace] : listRuns(DIR).map((r) => r.trace_id);
+  let found = 0;
+
+  for (const id of traces) {
+    const t = loadTrace(id, DIR);
+    if (!t?.depth) continue;
+    const d = t.depth;
+    found++;
+    console.log(`\n${d.trace_id} — ${d.reported} gap(s) reported, ${d.set_aside} set aside, of ${d.examined} examined${d.simulated ? ' — SIMULATED' : ''}`);
+    console.log(`  as of ${d.as_of ?? '?'}${d.corpus ? `   corpus ${d.corpus.records} record(s), ${d.corpus.edges} edge(s)` : ''}`);
+    if (d.by_impact) console.log(`  impact   ${Object.entries(d.by_impact).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+    if (d.by_autonomy) console.log(`  autonomy ${Object.entries(d.by_autonomy).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+    console.log(`  found nothing: ${d.kinds_with_no_finding.length ? d.kinds_with_no_finding.join(', ') : 'every kind found something'}`);
+    if (d.ordering) console.log(`  ordered by ${d.ordering.decision}`);
+    for (const det of d.detectors) {
+      console.log(`    ${pad(det.kind, 34)} ${String(det.reported).padStart(2)} reported  ${String(det.set_aside).padStart(2)} set aside`);
+      if (flag('aside')) for (const a of det.set_aside_detail) console.log(`        − ${pad(a.subject, 40)} ${a.why}`);
+    }
+    console.log(d.gaps.length ? `  GAPS: ${d.gaps.join('; ')}` : '  no gaps: the census, the ordering decision and every suppression reason are all on this trace');
+  }
+  if (!found) console.log('no depth analysis in the store. `node agent/depth/cli.mjs --as-of <date>` writes one.');
+}
+
 function cmdValidate() {
   let records = 0, bad = 0, broken = 0;
   for (const f of listTraceFiles(DIR)) {
@@ -187,11 +227,12 @@ switch (cmd) {
   case 'show': cmdShow(argv[1]); break;
   case 'chain': cmdChain(); break;
   case 'impact': cmdImpact(); break;
+  case 'depth': cmdDepth(); break;
   case 'validate': cmdValidate(); break;
   case 'export': cmdExport(argv[1]); break;
   case 'summary': console.log(JSON.stringify(overview(DIR), null, 2)); break;
   case 'serve': serve({ port: Number(flag('port', 7801)), dir: DIR }); break;
   default:
-    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | validate | export <id> | summary | serve`);
+    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | validate | export <id> | summary | serve`);
     process.exit(1);
 }

@@ -69,6 +69,10 @@ function renderTiles(s) {
     ['pending approvals', s.pending_approvals.length, s.pending_approvals.length ? 'warn' : null],
     ['website changes', s.website_changes.length, null],
     ['impact maps', (s.impact ?? []).length, null],
+    /* Reported gaps carry a warn where any of them could mislead a
+       reader: that is the top of the depth impact ladder and it is
+       AI-SAFE-BOUNDARIES §0.5 — absence read as a negative finding. */
+    ['depth gaps', (s.depth ?? []).reduce((n, d) => n + (d.reported ?? 0), 0), (s.depth ?? []).some((d) => (d.by_impact?.reader_could_be_misled ?? 0) > 0) ? 'warn' : null],
     ['editorial impacts', (s.editorial_impacts ?? []).length, (s.editorial_impacts ?? []).length ? 'warn' : null],
   ];
   $('#tiles').replaceChildren(...tiles.map(([label, n, tone]) =>
@@ -138,6 +142,7 @@ const TABS = [
   ['provenance', 'Provenance', (t) => t.provenance.length],
   ['changes', 'Website changes', (t) => t.website_changes.length],
   ['impact', 'Regulatory impact', (t) => (t.impact ?? []).length],
+  ['depth', 'Data depth', (t) => t.depth?.reported ?? null],
   ['errors', 'Errors', (t) => t.errors.length],
 ];
 
@@ -342,6 +347,42 @@ function renderPanel(t) {
         ? el('p', { class: 'gaps', text: `GAPS — ${i.gaps.join('; ')}` })
         : el('p', { class: 'mono', text: 'no gaps: the graph, the routing and the summary are all on this trace' }),
     )));
+  }
+  if (state.tab === 'depth') {
+    const d = t.depth;
+    if (!d) return p.replaceChildren(el('p', { class: 'empty', text: 'no depth analysis ran on this trace' }));
+    return p.replaceChildren(el('div', { class: 'chain' },
+      el('h3', {}, `${d.reported} gap(s) reported, ${d.set_aside} set aside `, d.simulated ? badge('simulated') : null),
+      el('p', { class: 'mono', text: `of ${d.examined} absence(s) examined · as at ${d.as_of ?? '?'}${d.corpus ? ` · corpus ${d.corpus.records} record(s), ${d.corpus.edges} reference(s)` : ''}` }),
+      d.by_impact ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'What the absence costs a reader' }),
+        el('pre', { text: Object.entries(d.by_impact).map(([k, n]) => `${k.padEnd(26)} ${n}`).join('\n') })) : null,
+      d.by_autonomy ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'What may be done about it — never autonomous' }),
+        el('pre', { text: Object.entries(d.by_autonomy).map(([k, n]) => `${k.padEnd(26)} ${n}`).join('\n') })) : null,
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: 'By detector — a detector that found nothing is a result' }),
+        el('pre', { text: d.detectors.map((x) => `${x.kind.padEnd(34)} ${String(x.reported).padStart(2)} reported  ${String(x.set_aside).padStart(2)} set aside`).join('\n') })),
+      /* The set-aside panel is the point of this view. A run that
+         reported fifty-seven gaps and dropped thirty-one made a
+         judgement thirty-one times, and showing only the fifty-seven
+         would present that judgement as though it were the corpus. */
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: `Set aside — ${d.set_aside} finding(s) not reported, and why` }),
+        d.set_aside
+          ? el('ul', { class: 'queue' }, ...d.detectors.flatMap((x) => x.set_aside_detail.map((a) => el('li', {},
+              el('code', { text: `${x.kind}:${a.subject}` }), ' ', el('div', { class: 'none', text: a.why })))))
+          : el('p', { class: 'mono', text: 'nothing was set aside' })),
+      d.ordering ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Ordering' }),
+        el('p', { text: d.ordering.decision }),
+        el('p', { class: 'none', text: d.ordering.rationale }),
+        el('pre', { text: (d.ordering.alternatives ?? []).join('\n') })) : null,
+      el('p', { class: 'mono', text: d.kinds_with_no_finding.length ? `found nothing: ${d.kinds_with_no_finding.join(', ')} — looked, and there was nothing, which is not the same as not looking` : 'every kind found something' }),
+      d.gaps.length
+        ? el('p', { class: 'gaps', text: `GAPS — ${d.gaps.join('; ')}` })
+        : el('p', { class: 'mono', text: 'no gaps: the census, the ordering decision and every suppression reason are all on this trace' }),
+    ));
   }
   if (state.tab === 'errors') {
     return p.replaceChildren(table([

@@ -1,7 +1,7 @@
 /* ============================================================
    agent/schemas/common.mjs — the envelope every contract carries
 
-   Three structures appear in all seventeen contracts, and they are
+   Three structures appear in all eighteen contracts, and they are
    defined once here rather than repeated per contract, for the
    reason the datasets already give: one home per fact.
 
