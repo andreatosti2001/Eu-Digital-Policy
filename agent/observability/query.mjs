@@ -153,7 +153,88 @@ export function loadTrace(traceId, dir = DEFAULT_RUN_DIR) {
     observations: root ? collectEvents(root, 'observation') : [],
     errors: root ? collectEvents(root, 'error') : [],
     website_changes: root ? collectEvents(root, 'website_change') : [],
+    impact: root ? impactState(root, traceId) : [],
   };
+}
+
+/* ------------------------------------------------- regulatory impact */
+
+/**
+ * The impact maps a trace carries, one per confirmed regulatory
+ * change.
+ *
+ * SESSION 10 asked for the dependency/impact graph to be exposed
+ * through observability. It is exposed the way everything else here
+ * is — DERIVED AT READ TIME from what the run actually emitted,
+ * never stored a second time. The Change Detector writes three
+ * things onto the span that mapped a change:
+ *
+ *   an `artifact` of type `impact-graph`  the subgraph that carried
+ *                                         the change, as JSON
+ *   a `decision`                          where the impacts routed,
+ *                                         with the alternatives it
+ *                                         did not take
+ *   `observation`s at risk: high          one per editorial finding
+ *
+ * This function joins them by the change id the artifact is named
+ * for. Nothing is recomputed and nothing is second-guessed: a trace
+ * that emitted an impact graph and no routing decision reports the
+ * decision as missing, in the same way `traceChain` reports a
+ * missing approval, because a view that quietly fills in the gap
+ * reads as an audit.
+ */
+export function impactState(root, traceId = null) {
+  const artifacts = collectEvents(root, 'artifact').filter((a) => a.artifact_type === 'impact-graph');
+  const decisions = collectEvents(root, 'decision');
+  const observations = collectEvents(root, 'observation');
+
+  return artifacts.map((a) => {
+    const change_id = String(a.artifact_id).replace(/^impact-graph-/, '');
+    let graph = null;
+    let parse_error = null;
+    try { graph = a.preview ? JSON.parse(a.preview) : null; }
+    catch (err) { parse_error = err.message; }
+
+    const inSpan = (e) => e.span_id === a.span_id;
+    const routing = decisions.filter(inSpan);
+    const editorial = observations.filter((o) => inSpan(o) && String(o.summary).startsWith('EDITORIAL —'));
+    const summary = observations.find((o) => inSpan(o) && o.subject === change_id && !String(o.summary).startsWith('EDITORIAL —'));
+
+    const gaps = [];
+    if (!graph) gaps.push(parse_error ? `the impact graph did not parse: ${parse_error}` : 'no impact graph recorded');
+    if (!routing.length) gaps.push('no routing decision recorded — what may be done about these impacts without a human is not on this trace');
+    if (!summary) gaps.push('no summary observation recorded');
+    if (graph && (graph.dropped_nodes || graph.dropped_edges)) {
+      gaps.push(`the graph on this trace is a bounded preview: ${graph.dropped_nodes} node(s) and ${graph.dropped_edges} edge(s) are not on it. The complete graph is the ImpactAssessment record's factual array; sha256 ${graph.sha256} is over the whole subgraph`);
+    }
+
+    return {
+      trace_id: traceId,
+      change_id,
+      span_id: a.span_id,
+      agent: a._span?.agent ?? null,
+      simulated: a.simulated === true,
+      /* The COUNTS, from the graph's own header — never the length
+         of the preview's node list. The preview is bounded to fit
+         the trace store's string cap, so counting what it happens to
+         carry would report a change reaching twenty-nine records
+         when it reached a hundred and seventy-five. */
+      nodes: graph?.counts?.nodes ?? 0,
+      edges: graph?.counts?.edges ?? 0,
+      by_depth: graph?.counts?.by_depth ?? null,
+      shown: { nodes: graph?.nodes?.length ?? 0, edges: graph?.edges?.length ?? 0 },
+      dropped: { nodes: graph?.dropped_nodes ?? 0, edges: graph?.dropped_edges ?? 0 },
+      graph_sha256: graph?.sha256 ?? null,
+      bytes: a.bytes ?? null,
+      roots: graph?.roots ?? [],
+      graph,
+      surfaces: summary?.data?.surfaces ?? null,
+      routing: summary?.data?.routing ?? null,
+      decision: routing.map((d) => ({ decision: d.decision, rationale: d.rationale, alternatives: d.alternatives, risk: d.risk })),
+      editorial: editorial.map((o) => ({ subject: o.subject, summary: o.summary, data: o.data, risk: o.risk })),
+      gaps,
+    };
+  });
 }
 
 /** running > failed(root) > degraded > root's own status */
@@ -211,6 +292,8 @@ export function summarise(root, traceId) {
       approval: collectEvents(root, 'approval').length,
       provenance: collectEvents(root, 'provenance').length,
       website_change: collectEvents(root, 'website_change').length,
+      impact_graph: collectEvents(root, 'artifact').filter((a) => a.artifact_type === 'impact-graph').length,
+      editorial_impact: collectEvents(root, 'observation').filter((o) => String(o.summary).startsWith('EDITORIAL —')).length,
     },
     simulated: collectEvents(root).some((e) => e.simulated === true),
   };
@@ -269,12 +352,23 @@ export function overview(dir = DEFAULT_RUN_DIR) {
   const openHandoffs = [];
   const pendingApprovals = [];
   const websiteChanges = [];
+  const impact = [];
+  const editorialImpacts = [];
   for (const r of runs) {
     const t = loadTrace(r.trace_id, dir);
     if (!t) continue;
     for (const h of t.handoffs) if (!h.accepted) openHandoffs.push({ trace_id: r.trace_id, ...h });
     for (const a of t.approvals) if (a.pending) pendingApprovals.push({ trace_id: r.trace_id, ...a });
     for (const c of t.website_changes) websiteChanges.push({ trace_id: r.trace_id, ...c });
+    /* An editorial impact is a sentence on a production site about
+       EU law that may now be false, and nothing in this repository
+       reads prose. It belongs on the same rail as a pending approval
+       — the state that matters most is the one nobody has looked
+       at. */
+    for (const i of t.impact) {
+      impact.push({ trace_id: r.trace_id, change_id: i.change_id, nodes: i.nodes, edges: i.edges, routing: i.routing, surfaces: i.surfaces, simulated: i.simulated, gaps: i.gaps });
+      for (const e of i.editorial) editorialImpacts.push({ trace_id: r.trace_id, change_id: i.change_id, ...e });
+    }
   }
   return {
     generated_at: new Date().toISOString(),
@@ -288,6 +382,8 @@ export function overview(dir = DEFAULT_RUN_DIR) {
     open_handoffs: openHandoffs,
     pending_approvals: pendingApprovals,
     website_changes: websiteChanges,
+    impact,
+    editorial_impacts: editorialImpacts,
     runs,
   };
 }

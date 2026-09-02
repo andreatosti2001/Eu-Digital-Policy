@@ -9,7 +9,7 @@
 
    What it holds down, in the order the contract layer would fail:
 
-     · the sixteen contracts exist, are documented, and carry the
+     · the seventeen contracts exist, are documented, and carry the
        envelope the session specified
      · every substantive proposal carries all twelve required fields
      · the vocabularies are the site's and the observability
@@ -59,9 +59,9 @@ function refuses(record, fragment) {
   );
 }
 
-/* ---------------------------------------------------------- the sixteen */
+/* -------------------------------------------------------- the seventeen */
 
-test('the sixteen contracts the sessions named all exist', () => {
+test('the seventeen contracts the sessions named all exist', () => {
   const required = [
     'SourceCandidate', 'VerificationRecord', 'ClaimEvidence', 'ChangeRecord', 'DataGap',
     'ArchitectureProposal', 'EditorialProposal', 'UXProposal', 'ImplementationProposal',
@@ -71,9 +71,13 @@ test('the sixteen contracts the sessions named all exist', () => {
        were named, and reordering it would change what
        CONTRACT_LIST[n] means. */
     'DataProposal', 'RegulatoryChange',
+    /* SESSION 10. ImpactAssessment is about the SITE where
+       RegulatoryChange is about the WORLD; it references the
+       detection by change_id and restates none of it. */
+    'ImpactAssessment',
   ];
   assert.deepEqual(CONTRACT_NAMES, required);
-  assert.equal(CONTRACT_LIST.length, 16);
+  assert.equal(CONTRACT_LIST.length, 17);
 });
 
 test('every field of every contract is documented and epistemically typed', () => {
@@ -118,7 +122,7 @@ test('every substantive proposal carries all twelve required fields', () => {
 });
 
 test('a contract name is unique and every contract has a fixture', () => {
-  assert.equal(new Set(CONTRACT_NAMES).size, 16);
+  assert.equal(new Set(CONTRACT_NAMES).size, 17);
   for (const name of CONTRACT_NAMES) assert.ok(typeof FIXTURES[name] === 'function', `${name} has no fixture`);
   assert.deepEqual(Object.keys(FIXTURES).sort(), [...CONTRACT_NAMES].sort());
 });
@@ -1133,4 +1137,73 @@ test('RegulatoryChange: the fourteen kinds the session named all exist', () => {
   ];
   assert.deepEqual(REGULATORY_CHANGE_KINDS, required);
   assert.equal(getContract('RegulatoryChange').fields.change_kind.values.length, 14);
+});
+
+/* ------------------------------------------- ImpactAssessment (SESSION 10) */
+
+test('ImpactAssessment: an editorial impact may not be automatically actionable without a named permit', () => {
+  const r = fx('ImpactAssessment');
+  r.editorial[0].automatically_actionable = true;
+  r.counts.automatically_actionable = 2;
+  refuses(r, 'no governance_permit');
+
+  /* And the permit is what makes it legal, so the mechanism the
+     brief's "unless governance explicitly permits otherwise"
+     requires actually exists rather than being a refusal wearing a
+     clause. */
+  const ok = fx('ImpactAssessment');
+  ok.editorial[0].automatically_actionable = true;
+  ok.editorial[0].governance_permit = 'a hypothetical policy, for the scope it names';
+  ok.counts.automatically_actionable = 2;
+  assert.deepEqual(validate(ok, { allowSimulated: true }), []);
+});
+
+test('ImpactAssessment: prose never sits in factual, and a reference never in editorial', () => {
+  const a = fx('ImpactAssessment');
+  a.factual[0].field_class = 'prose';
+  refuses(a, 'nothing here reads prose');
+
+  const b = fx('ImpactAssessment');
+  b.editorial[0].field_class = 'reference';
+  refuses(b, 'editorial means prose');
+});
+
+test('ImpactAssessment: an editorial finding without a quote belongs in open_questions', () => {
+  const r = fx('ImpactAssessment');
+  r.editorial[0].quote = null;
+  refuses(r, 'carries no quote');
+});
+
+test('ImpactAssessment: prose is never routed as something the site recomputes', () => {
+  const r = fx('ImpactAssessment');
+  r.editorial[0].route = 'propagates_by_derivation';
+  refuses(r, 'a sentence is not recomputed when a page is opened');
+});
+
+test('ImpactAssessment: the count of what an agent may do unattended cannot drift', () => {
+  const r = fx('ImpactAssessment');
+  r.counts.automatically_actionable = 99;
+  refuses(r, 'this is the number that says what an agent may do unattended');
+});
+
+test('ImpactAssessment: a map that omits its blind spots is refused', () => {
+  const r = fx('ImpactAssessment');
+  r.caveats = [];
+  refuses(r, 'reads as coverage');
+
+  const u = fx('ImpactAssessment');
+  u.unresolved_roots = ['some:record-not-in-the-corpus'];
+  refuses(u, 'a silence in this map, not an absence of impact');
+});
+
+test('ImpactAssessment: it references the detection rather than restating it', () => {
+  const c = getContract('ImpactAssessment');
+  for (const f of ['change_kind', 'old_value', 'new_value', 'materiality', 'affected_pages']) {
+    assert.ok(f in c.forbidden, `${f} must be forbidden by name, with the reason`);
+    assert.ok(c.forbidden[f].length > 40, `${f}'s objection must say why, not just no`);
+  }
+  for (const f of ['proposed_change', 'operations', 'applied_at', 'resolved']) {
+    assert.ok(f in c.forbidden, `${f} would make an assessment into a proposal or an edit`);
+  }
+  assert.ok('change_id' in c.fields, 'the reference to the detection is the whole mechanism');
 });

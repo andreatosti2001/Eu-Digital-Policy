@@ -36,6 +36,7 @@
    ============================================================ */
 
 import { loadCorpus } from '../integrate/canonical.mjs';
+import { datesIn, monthNames } from './impact.mjs';
 
 const TRACE = 'ba'.repeat(16);
 const SPAN = 'dc'.repeat(8);
@@ -144,6 +145,7 @@ export function buildFixtures(corpus = loadCorpus()) {
 
   const URL_A = 'https://eur-lex.example.invalid/simulated-act-a';
   const URL_B = 'https://eur-lex.example.invalid/simulated-act-b';
+  const URL_C = 'https://eur-lex.example.invalid/simulated-act-c';
   const HASH_1 = '1'.repeat(64);
   const HASH_2 = '2'.repeat(64);
 
@@ -358,6 +360,53 @@ export function buildFixtures(corpus = loadCorpus()) {
     },
   });
 
+  /* ============================================================
+     12 · A CHANGE WHOSE OLD VALUE IS RESTATED IN THE CORPUS'S OWN
+          PROSE  (SESSION 10 — the editorial half)
+
+     Every other fixture here exercises the classifier. This one
+     exists for the impact map, and specifically for the half of it
+     no validator can do: a sentence in data/ that states the value
+     that moved and that nothing in this repository reads.
+
+     THE OLD DATE IS READ OUT OF THE CORPUS, NOT TYPED. It exists
+     only inside prose — data/timeline.json's `supersedes` field
+     holds "Originally 2 August 2027; deferred by the AI Omnibus."
+     rather than an id — so the fixture extracts it with the same
+     prose date reader the impact map uses. Typing it would be
+     authoring a legal date from model knowledge, and reading it
+     means that if the corpus's sentence changes, this fixture
+     changes with it or fails loudly rather than testing nothing.
+     ============================================================ */
+  const deferred = corpus.events.find((e) => e.instrument === 'ai-act'
+    && typeof e.supersedes === 'string'
+    && datesIn(e.supersedes, monthNames()).length > 0);
+  if (!deferred) {
+    throw new Error('agent/detector/fixtures.mjs assumes data/timeline.json still records an AI Act application date as having been deferred, with the previous date written into the event\'s `supersedes` prose. It no longer does, and the editorial-impact fixture would test nothing.');
+  }
+  const supersededDate = datesIn(deferred.supersedes, monthNames())[0].iso;
+
+  const proseRestatedBefore = ver({
+    verification_id: 'ver-det-prose-0',
+    checked_at: T0,
+    statement: 'A simulated reading of a document stating an application date the corpus records as having been superseded.',
+    legal_status: 'entered_into_force',
+    applicability_date: supersededDate,
+    affected_entities: [instrumentEntity('ai-act')],
+    evidence: [doc('ev-doc', { url: URL_C, checksum: HASH_1, title: 'A simulated act, first reading', at: T0 })],
+    epistemic: block({ status: 'entered_into_force', dates: { applicability_date: supersededDate } }),
+  });
+  const proseRestatedAfter = ver({
+    ...proseRestatedBefore,
+    verification_id: 'ver-det-prose-1',
+    checked_at: T1,
+    created_at: T1,
+    statement: 'The same document, read again, now stating a simulated later date.',
+    applicability_date: '9 September 2099',
+    evidence: [doc('ev-doc', { url: URL_C, checksum: HASH_2, title: 'A simulated act, second reading', at: T1 })],
+    epistemic: block({ status: 'entered_into_force', dates: { applicability_date: '9 September 2099' } }),
+  });
+
   /* A record this agent claims to have produced itself. */
   const self = ver({
     ...amendment,
@@ -372,6 +421,7 @@ export function buildFixtures(corpus = loadCorpus()) {
     dateChange, amendment, correction, contradictory,
     courtBefore, courtAfter,
     seised, brought_forward, staged, unreachable, self,
+    proseRestatedBefore, proseRestatedAfter,
   };
 
   return {
@@ -385,6 +435,8 @@ export function buildFixtures(corpus = loadCorpus()) {
       gdprApplyEvent: gdprApply.id,
       gdprApplyDate: gdprApply.date,
       aiActApplicationCount: aiActApplications.length,
+      supersededEvent: deferred.id,
+      supersededDate,
     },
     cases,
     all: Object.values(cases),

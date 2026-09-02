@@ -125,6 +125,7 @@ function datasetsIn(src) {
  *
  * @returns {{pageToDatasets: Map<string, Set<string>>,
  *            datasetToPages: Map<string, string[]>,
+ *            pageToModules: Map<string, Set<string>>,
  *            moduleDatasets: Map<string, Set<string>>,
  *            unresolved: string[]}}
  *   `unresolved` names any module a page loads that could not be
@@ -171,17 +172,34 @@ export function buildPageMap({ root = REPO_ROOT } = {}) {
   }
 
   const pageToDatasets = new Map();
+  const pageToModules = new Map();
   for (const page of pages) {
     const html = readFileSync(join(root, page), 'utf8');
     const set = new Set();
+    const mods = new Set();
     for (const src of entryModulesOf(html)) {
       if (!src.startsWith('js/')) continue;            // app.js: no dataset gateway
       const name = src.slice(3);
       if (readModule(name) === null) { unresolved.push(`${page} → ${src}`); continue; }
       if (CHROME_MODULES.includes(name)) continue;     // counted apart, see above
       for (const d of datasetsFor(name, { seen: new Set() })) set.add(d);
+      /* the modules a page runs, entry points and everything they
+         statically import, with the same stop at the chrome. The
+         impact map needs to name the VIEW that renders a changed
+         value, and a page-level answer cannot: index.html runs nine
+         of them. */
+      const walk = (mod, seen = new Set()) => {
+        if (seen.has(mod) || CHROME_MODULES.includes(mod)) return;
+        seen.add(mod);
+        const src2 = readModule(mod);
+        if (src2 === null) return;
+        mods.add(mod);
+        for (const dep of importsOf(src2)) walk(dep, seen);
+      };
+      walk(name);
     }
     pageToDatasets.set(page, set);
+    pageToModules.set(page, mods);
   }
 
   const datasetToPages = new Map();
@@ -193,7 +211,7 @@ export function buildPageMap({ root = REPO_ROOT } = {}) {
   }
   for (const [, list] of datasetToPages) list.sort();
 
-  return { pageToDatasets, datasetToPages, moduleDatasets, chromeDatasets, unresolved };
+  return { pageToDatasets, datasetToPages, pageToModules, moduleDatasets, chromeDatasets, unresolved };
 }
 
 /* One read per process. The map is a property of the code on disk,

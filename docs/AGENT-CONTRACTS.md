@@ -65,7 +65,7 @@ nothing open, made explicitly so somebody can disagree with it.
 
 ---
 
-## The sixteen
+## The seventeen
 
 | Contract | Kind | Answers |
 |---|---|---|
@@ -85,15 +85,17 @@ nothing open, made explicitly so somebody can disagree with it.
 | `WebsiteChange` | record | a change that reaches a reader, with its audit chain |
 | `DataProposal` | proposal | a proposed factual modification to a record in `data/*.json` |
 | `RegulatoryChange` | finding | a detected divergence between what the datasets assert and what a document says |
+| `ImpactAssessment` | finding | what one confirmed change reaches inside this website, split into the half a machine may act on and the half it may not |
 
-367 top-level fields — 1,186 counting every nested one — 81 forbidden fields
-with their reasons, and 117 contract-specific cross-field rules, on top of the
+390 top-level fields — 1,289 counting every nested one — 90 forbidden fields
+with their reasons, and 135 contract-specific cross-field rules, on top of the
 generic identity, shape, epistemic, evidence and governance checks in
 `validate.mjs`. Counted from `CONTRACT_LIST` rather than tallied by hand, so it
 is reproducible: sum `Object.keys(c.fields).length` for the first figure and
 `walkShape` for the second. *The figure this paragraph carried before SESSION 08
 was 306 / 47 / 73, and it had been stale since SESSION 07 added nine fields and
-six rules to `VerificationRecord` without updating it.*
+six rules to `VerificationRecord` without updating it. SESSION 10 recomputed it
+the same way rather than incrementing the previous figure.*
 
 **Amended in SESSION 05**, when the first real agent met them. `SourceCandidate`
 gained `authority_class`, `duplicate_candidate_ids` and `confidence`; `DataGap`
@@ -114,6 +116,19 @@ branch, a commit. A regulation entering into force is none of those. The two are
 now mutually un-confusable: each names the other's distinguishing fields in its
 `forbidden` block with the reason, and a test asserts they share no field
 outside the envelope. Full reasoning in `docs/CHANGE-DETECTOR.md` §1.
+
+**And extended by one in SESSION 10.** `ImpactAssessment` is the seventeenth. It
+answers what a confirmed `RegulatoryChange` reaches inside this website, and it
+is a record of its own rather than fields on the detection for three reasons:
+the two are about different subjects (the world, and this repository); they go
+stale on different clocks (the impact of a change moves whenever the *site*
+moves, and detections are never edited); and this is the record that says what
+may be done without a human, which has to be arguable and supersedable on its
+own terms. It references the detection by `change_id` and restates none of it —
+`change_kind`, `old_value`, `new_value`, `materiality` and `affected_pages` are
+forbidden by name — and a test asserts the two share no field outside the
+envelope but `change_id` and `autonomy_class`. Full reasoning in
+`docs/REGULATORY-IMPACT-MAPPING.md` §9.
 
 **And extended by one in SESSION 08.** `DataProposal` is the fifteenth contract.
 The four proposal contracts covered architecture, prose, interface and code; a
@@ -253,7 +268,7 @@ so a provenance judgment an agent makes is reconcilable with the bibliography
 instead of needing a translation table. And `supports:context` behaves the way
 the data model says it does: **a fact whose every cited source is `context` is
 refused**, in `VerificationRecord`, in `ClaimEvidence`, and in the generic check
-that applies to all sixteen. Context informs a claim without establishing it,
+that applies to all seventeen. Context informs a claim without establishing it,
 and is not a citation.
 
 ---
@@ -332,7 +347,7 @@ agent/schemas/fields.mjs        the field DSL and its interpreter
 agent/schemas/common.mjs        the envelope, the evidence ref, the epistemic block,
                                 the twelve proposal fields
 agent/schemas/define.mjs        defineContract / defineProposal
-agent/schemas/contracts/*.mjs   the sixteen, one per file
+agent/schemas/contracts/*.mjs   the seventeen, one per file
 agent/schemas/registry.mjs      the registry a record's `contract` field resolves against
 agent/schemas/validate.mjs      the gate: identity, shape, epistemic, governance
 agent/schemas/gateway.mjs       emit / receive / handoff, and the trace pointer
@@ -367,7 +382,7 @@ unchanged from the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
    requiring a block entry for every one would bury the entries that matter. It
    is a judgment about legibility, and it is the check most likely to need
    revisiting.
-3. **Only a handful of fields across the sixteen contracts are typed `factual`**, and few more are
+3. **Only a handful of fields across the seventeen contracts are typed `factual`**, and few more are
    `inference` or `interpretation`; the rest are structural. That is
    correct — most fields are bookkeeping — but it means the epistemic machinery
    is exercised by a small number of fields, and a contract author adding a

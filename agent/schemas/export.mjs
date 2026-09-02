@@ -84,7 +84,7 @@ export function toJsonSchema(name) {
   };
 }
 
-/** All sixteen, keyed by name. */
+/** All seventeen, keyed by name. */
 export function allJsonSchemas() {
   return Object.fromEntries(CONTRACT_LIST.map((c) => [c.name, toJsonSchema(c.name)]));
 }

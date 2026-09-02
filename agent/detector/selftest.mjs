@@ -30,6 +30,9 @@
      · a staged act is not compared against one of its stages
      · every page named is derived, and agrees with §5
      · data/ is never written to
+
+   SESSION 10 added the impact map, and its tests sit at the end of
+   this file under their own heading.
    ============================================================ */
 
 import { test } from 'node:test';
@@ -56,6 +59,17 @@ import { snapshotFor, byDocument, corpusStatusOf, eventsOf, EVENT_TYPE_FOR } fro
 import { buildPageMap, affectedPages, affectedDatasets, CHROME_MODULES } from './surfaces.mjs';
 import { retrievedDocumentOf } from '../integrate/sources.mjs';
 import { buildFixtures, ver, doc, FIXTURE_AS_OF } from './fixtures.mjs';
+import { buildGraph, referenceFieldsByKind } from './graph.mjs';
+import { fieldsOf, PROSE_FIELDS } from './fields.mjs';
+import {
+  mapImpact, graphPreview, routeOf, labelAmbiguity, proseMentions, datesIn,
+  monthNames, indexKeys, MODULE_SURFACE, INDEX_KEY_KIND, SURFACE_KINDS, GOVERNANCE_PERMITS,
+} from './impact.mjs';
+import { impactState, buildTree } from '../observability/query.mjs';
+import { AUTONOMY_RANK } from '../schemas/types.mjs';
+import { ENVELOPE_FIELDS } from '../schemas/common.mjs';
+
+const ENVELOPE_KEYS = new Set([...Object.keys(ENVELOPE_FIELDS), 'contract', 'contract_version']);
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -76,19 +90,29 @@ function harness() {
 }
 
 const detector = (over = {}) => {
-  const { tracer, store } = harness();
-  return { it: new Detector({ tracer, store, corpus: CORPUS, asOf: FIXTURE_AS_OF, simulated: true, ...over }), store };
+  const { tracer, store, sink } = harness();
+  return { it: new Detector({ tracer, store, corpus: CORPUS, asOf: FIXTURE_AS_OF, simulated: true, ...over }), store, sink };
 };
+
+/** The sink the last full run wrote to, so the observability tests
+ *  can read the trace the run actually emitted rather than a second
+ *  one built for them. */
+let LAST_SINK = null;
 
 /** Run just these verifications, so a test asserts about its own
  *  case rather than about the whole corpus of fixtures. */
 const runOn = async (cases) => {
-  const { it } = detector();
-  return it.run({ verifications: cases });
+  const { it, sink } = detector();
+  const out = await it.run({ verifications: cases });
+  LAST_SINK = sink;
+  return out;
 };
 
 const HASH_BEFORE = hashDataDir();
 const FULL = await runOn(FX.all);
+/* The trace the full run emitted, captured here rather than read
+   from LAST_SINK inside a test: later runOn calls overwrite it. */
+const FULL_SINK = LAST_SINK;
 const HASH_AFTER = hashDataDir();
 
 const changeOf = (result, kind) => result.changes.find((c) => c.change_kind === kind);
@@ -620,4 +644,358 @@ test('the seven cases the session named all produce their outcome in one run', (
   assert.ok(changeOf(FULL, 'ANNULLED'), 'court reversal');
   assert.equal(FULL.unchanged.length, 1, 'unchanged source');
   assert.equal(FULL.conflicts.length, 1, 'contradictory source');
+});
+
+/* ============================================================
+   SESSION 10 — the impact map
+
+   The brief: for every confirmed change identify the affected
+   dataset, instrument, timeline, compliance calendar, comparison
+   views, applicability logic, evidence displays, glossary
+   relationships and potentially stale analytical pages; separate
+   FACTUAL from EDITORIAL impact; a factual impact MAY become
+   automatically actionable, an editorial impact MUST become a review
+   proposal unless governance explicitly permits otherwise; expose
+   the dependency graph through observability.
+
+   The tests below hold that to the things it must not quietly do:
+   declare an edge it did not derive, treat prose as a value, mark an
+   editorial impact automatically actionable, assert staleness it
+   cannot quote, or report a bounded preview as the whole graph.
+   ============================================================ */
+
+test('every reference field in the graph is derived, and a nested record is not walked twice', () => {
+  const g = buildGraph({ corpus: CORPUS });
+  assert.ok(g.counts.nodes > 500, `the corpus should hold hundreds of records; the graph found ${g.counts.nodes}`);
+  assert.equal(g.collisions.length, 0, `two records claim one id: ${JSON.stringify(g.collisions)}`);
+
+  /* provisions live inside their instrument and are nodes in their
+     own right. If the instrument's walk descended into them, the
+     instrument would carry its articles' source edges as well. */
+  const gdprSources = g.edges.filter((e) => e.from === 'gdpr' && e.field === 'provisions.sources');
+  assert.equal(gdprSources.length, 0, 'the instrument walk descended into its provisions: every provision edge would be counted twice');
+  assert.ok(g.edges.some((e) => e.from === 'gdpr' && e.field === 'provisions.id'),
+    'the containment edge instrument → provision is missing');
+  assert.ok(g.edges.some((e) => e.from_kind === 'provision' && e.field === 'sources'),
+    'a provision carries its own source edges');
+});
+
+test('a wildcard is expanded and said to be a wildcard, and "*" is never an edge to everything', () => {
+  const g = buildGraph({ corpus: CORPUS });
+  assert.ok(g.unresolvedWildcards.length > 0, 'data/institutions.json uses "*" for a general competence; it should be reported');
+  for (const w of g.unresolvedWildcards) {
+    assert.match(w.why, /F-12|wildcard/, 'a wildcard edge nobody has checked must say so');
+  }
+  assert.equal(g.edges.filter((e) => e.to === '*').length, 0, '"*" is not a record and must never be an edge target');
+});
+
+test('the field register classifies every field on every record in the live data', () => {
+  const g = buildGraph({ corpus: CORPUS });
+  const refs = referenceFieldsByKind(g);
+  const unregistered = [];
+  for (const node of g.nodes.values()) {
+    for (const f of fieldsOf(node.record, {
+      kind: node.kind, isNode: (x) => g.nodes.has(x),
+      referenceFields: refs.get(node.kind) ?? new Set(), rootId: node.id,
+    })) {
+      if (!f.registered) unregistered.push(`${node.kind}.${f.field} (e.g. ${node.id})`);
+    }
+  }
+  assert.deepEqual([...new Set(unregistered)], [],
+    'a dataset grew a field nothing in agent/detector/fields.mjs classifies. It defaults to editorial, which is the safe half — but an unclassified field is a decision nobody made, and the decision is whether an agent may act on it unattended');
+});
+
+test('reference fields are derived per KIND, not per record', () => {
+  /* instruments[].brief_part holds an id on most acts and null on at
+     least one. Asking whether one RECORD produced an edge would make
+     the same field a reference on one act and an unclassified value
+     on the next. */
+  const g = buildGraph({ corpus: CORPUS });
+  const refs = referenceFieldsByKind(g);
+  assert.ok(refs.get('instrument').has('brief_part'));
+  const nullish = CORPUS.instruments.find((i) => i.brief_part === null || i.brief_part === undefined);
+  if (nullish) {
+    const f = fieldsOf(nullish, { kind: 'instrument', isNode: (x) => g.nodes.has(x), referenceFields: refs.get('instrument'), rootId: nullish.id })
+      .find((x) => x.field === 'brief_part');
+    assert.equal(f.class, 'reference', 'a field is a reference because of what the schema does with it, not because one row filled it in');
+  }
+});
+
+test('an array of prose keeps every one of its sentences', () => {
+  const g = buildGraph({ corpus: CORPUS });
+  const rule = CORPUS.db.applicability.rules.find((r) => (r.exemptions ?? []).length > 1);
+  assert.ok(rule, 'data/applicability.json should carry a rule with more than one exemption');
+  const f = fieldsOf(rule, { kind: 'applicability_rule', isNode: (x) => g.nodes.has(x), referenceFields: new Set(), rootId: rule.id })
+    .find((x) => x.field === 'exemptions');
+  assert.equal(f.class, 'prose');
+  assert.equal(f.values.length, rule.exemptions.length,
+    'only the first exemption was kept: a stale carve-out in position two would be invisible');
+});
+
+test('the two fields whose NAME says reference and whose VALUE is prose are registered as prose', () => {
+  /* Both are findings about this corpus rather than about the code.
+     timeline.events[].supersedes holds "Originally 2 August 2027;
+     deferred by the AI Omnibus." and applicability.rules[].depends_on
+     holds a sentence. A register that assumed the name would have
+     classified the one field recording that a date MOVED as a
+     checkable reference. */
+  assert.equal(PROSE_FIELDS.timeline_event.supersedes ? 'prose' : null, 'prose');
+  assert.equal(PROSE_FIELDS.applicability_rule.depends_on ? 'prose' : null, 'prose');
+  const supersedes = CORPUS.events.filter((e) => typeof e.supersedes === 'string');
+  assert.ok(supersedes.length > 0, 'the corpus should still carry at least one superseded date as prose');
+  for (const e of supersedes) {
+    assert.ok(!CORPUS.eventById.has(e.supersedes), `${e.id}.supersedes now holds an id — reclassify it as a reference`);
+  }
+});
+
+test('every module in js/ is classified exactly once, and the ones that render nothing are named', () => {
+  const onDisk = readdirSync(join(HERE, '..', '..', 'js')).filter((f) => f.endsWith('.js')).sort();
+  const registered = Object.keys(MODULE_SURFACE).sort();
+  assert.deepEqual(registered, onDisk,
+    'a module in js/ is not in MODULE_SURFACE, or MODULE_SURFACE names one that does not exist. A new view must not be able to appear without somebody deciding what surface it is');
+  for (const [name, spec] of Object.entries(MODULE_SURFACE)) {
+    assert.ok(spec.why && spec.why.length > 20, `${name} is assigned a surface with no reason`);
+    if (spec.surface !== null) {
+      assert.ok(SURFACE_KINDS.includes(spec.surface), `${name} names surface "${spec.surface}", which is not one of the nine plus other`);
+    }
+  }
+});
+
+test('the index-key register covers exactly the keys js/data.js builds', () => {
+  const keys = indexKeys().sort();
+  assert.ok(keys.length > 5, `index() should build several maps; found ${keys.length}`);
+  const unmapped = keys.filter((k) => !(k in INDEX_KEY_KIND));
+  assert.deepEqual(unmapped, [],
+    'js/data.js builds an index nothing in INDEX_KEY_KIND maps onto an entity kind, so a view reading it would render records this map cannot see');
+  const phantom = Object.keys(INDEX_KEY_KIND).filter((k) => !keys.includes(k));
+  assert.deepEqual(phantom, [], 'INDEX_KEY_KIND names an index the gateway does not build');
+});
+
+test('the month names come from js/format.js rather than from a second list', () => {
+  const months = monthNames();
+  assert.equal(months.length, 12);
+  const src = readFileSync(join(HERE, '..', '..', 'js', 'format.js'), 'utf8');
+  for (const m of months) assert.ok(src.includes(`'${m}'`), `${m} was not read from js/format.js`);
+});
+
+test('a date is read out of prose at every ordering a person might have typed', () => {
+  const months = monthNames();
+  const iso = (t) => datesIn(t, months).map((d) => d.iso);
+  assert.ok(iso('applies from 25 May 2018').includes('2018-05-25'));
+  assert.ok(iso('applies from May 25, 2018').includes('2018-05-25'));
+  assert.ok(iso('applies from 2018-05-25').includes('2018-05-25'));
+  assert.ok(iso('applies from May 2018').includes('2018-05'));
+  assert.deepEqual(iso('applies from the twenty-fifth'), [],
+    'a date nobody wrote as a date is not read as one');
+});
+
+test('prose at a coarser precision than the value still refers to it, and the reverse is not assumed', () => {
+  const months = monthNames();
+  assert.equal(proseMentions('the act applied from May 2018', '2018-05-25', { months }).length, 1,
+    '"May 2018" is a sentence about 2018-05-25');
+  assert.equal(proseMentions('the act applied from 25 May 2018', '2019-05-25', { months }).length, 0,
+    'a different year is not a match');
+});
+
+test('a taxonomy label that is also ordinary English cannot establish an editorial finding', () => {
+  const g = buildGraph({ corpus: CORPUS });
+  const applicable = g.nodes.get('status:applicable');
+  assert.ok(applicable, 'data/taxonomy.json should still carry status:applicable');
+  const amb = labelAmbiguity(g, applicable.id, applicable.record.label);
+  assert.equal(amb.ambiguous, true,
+    '"Applicable" occurs in prose on records that do not carry status:applicable — "The DMA becomes applicable." A match for it cannot tell the term from the word');
+  assert.match(amb.why, /ordinary English/);
+
+  const map = mapImpact({
+    change: {
+      change_id: 'test-label', as_of: FIXTURE_AS_OF,
+      attribute: 'legislative_status', old_value: 'status:applicable',
+      affected_entities: [{ kind: 'instrument', id: 'dsa' }],
+    },
+    g,
+  });
+  for (const e of map.editorial) {
+    assert.notEqual(String(e.matched).toLowerCase(), 'applicable',
+      'an ambiguous label produced an editorial finding: a review list with false entries in it is a review list nobody finishes');
+  }
+  assert.ok(map.open_questions.some((q) => q.quote), 'the ambiguous matches must survive as open questions carrying their sentence, not be dropped');
+});
+
+test('an editorial finding is quotable, and the quote contains the value that moved', () => {
+  const deferred = CORPUS.events.find((e) => typeof e.supersedes === 'string' && datesIn(e.supersedes, monthNames()).length);
+  assert.ok(deferred, 'the corpus should still record a deferred date in prose');
+  const was = datesIn(deferred.supersedes, monthNames())[0].iso;
+  const map = mapImpact({
+    change: {
+      change_id: 'test-editorial', as_of: FIXTURE_AS_OF,
+      attribute: 'date', old_value: was, new_value: deferred.date,
+      affected_entities: [{ kind: 'timeline_event', id: deferred.id }],
+    },
+  });
+  const hit = map.editorial.find((e) => e.node_id === deferred.id && e.field === 'supersedes');
+  assert.ok(hit, 'the sentence on the changed record itself states the date that moved and was not found');
+  assert.equal(hit.depth, 0, 'the changed record is depth 0 — its own prose is the likeliest place a stale sentence is');
+  assert.ok(hit.quote.includes(hit.matched));
+  assert.equal(hit.route, 'review_proposal');
+  assert.equal(hit.automatically_actionable, false);
+});
+
+test('the nine surfaces the brief names are all reachable, and the site\'s others are not folded into them', () => {
+  const map = mapImpact({
+    change: {
+      change_id: 'test-surfaces', as_of: FIXTURE_AS_OF,
+      attribute: 'date', old_value: '2018-05-25',
+      affected_entities: [{ kind: 'timeline_event', id: 'tl-gdpr-2018-05-25-application' }],
+    },
+  });
+  for (const k of ['dataset', 'instrument', 'timeline', 'compliance_calendar', 'applicability', 'evidence', 'glossary', 'analytical_page']) {
+    assert.ok(map.surfaces[k].entries.length || map.surfaces[k].modules.length, `surface "${k}" was not reached by a GDPR application-date change, which reaches nearly everything`);
+  }
+  assert.ok(map.surfaces.comparison.modules.some((m) => m.module === 'js/dna.js'));
+  assert.ok(map.surfaces.other.modules.some((m) => m.module === 'js/enforcement-page.js'),
+    'the enforcement page is not one of the brief\'s nine and must be reported under its own name, not folded into the nearest');
+  assert.equal(map.surfaces.compliance_calendar.modules[0].module, 'js/calendar.js');
+  assert.ok(/clock/.test(map.surfaces.compliance_calendar.entries[0].why),
+    'the calendar filters against the reader\'s own clock and the map must say so rather than assert what a reader is shown');
+});
+
+test('a factual impact on a reference needs no edit; a stored copy of the value does', () => {
+  const free = routeOf({ field_class: 'reference', dataset: 'data/claims.json', field: 'instruments', restates_old_value: false });
+  assert.equal(free.route, 'propagates_by_derivation');
+  assert.equal(free.automatically_actionable, true);
+
+  const copy = routeOf({ field_class: 'value', dataset: 'data/instruments.json', field: 'status_as_of', restates_old_value: true });
+  assert.equal(copy.route, 'review_proposal');
+  assert.equal(copy.automatically_actionable, false);
+  assert.match(copy.why, /One home per fact/);
+});
+
+test('an editorial impact is a review proposal, and only a named governance permit changes that', () => {
+  const e = routeOf({ field_class: 'prose', dataset: 'data/claims.json', field: 'statement', restates_old_value: false });
+  assert.equal(e.route, 'review_proposal');
+  assert.equal(e.automatically_actionable, false);
+
+  assert.deepEqual(GOVERNANCE_PERMITS, [],
+    'nothing in docs/ permits an agent to act on prose unattended: AUTONOMY-POLICY puts it at Class C, and Class B\'s own test is that a change a human would have to check a source to validate is not Class B');
+
+  /* The mechanism has to work if a permit is ever granted, or
+     "unless governance explicitly permits otherwise" is not
+     implemented, it is just refused. */
+  const permitted = routeOf({
+    field_class: 'prose', dataset: 'data/claims.json', field: 'statement', restates_old_value: false,
+    permits: [{ dataset: 'data/claims.json', field: 'statement', granted_by: 'a hypothetical policy', scope: 'a hypothetical scope' }],
+  });
+  assert.equal(permitted.automatically_actionable, true);
+  assert.equal(permitted.route, 'review_proposal', 'the proposal is still written; the permit is what lets it be applied');
+});
+
+test('a provenance field is human_only whatever else is true', () => {
+  const r = routeOf({ field_class: 'reference', dataset: 'data/claims.json', field: 'requires_verification', restates_old_value: false });
+  assert.equal(r.route, 'human_only');
+  assert.equal(r.automatically_actionable, false);
+  assert.match(r.why, /AI-SAFE-BOUNDARIES/);
+});
+
+test('the graph preview fits the trace store\'s string cap and says what it dropped', () => {
+  const map = mapImpact({
+    change: {
+      change_id: 'test-preview', as_of: FIXTURE_AS_OF,
+      attribute: 'legislative_status', old_value: 'status:applicable',
+      affected_entities: [{ kind: 'instrument', id: 'gdpr' }],
+    },
+  });
+  const preview = graphPreview(map.graph);
+  assert.ok(JSON.stringify(preview).length <= 7000,
+    'the preview exceeds the cap agent/observability/redact.mjs applies, and a truncated JSON string parses as nothing at all');
+  assert.equal(preview.counts.nodes, map.graph.nodes.length,
+    'the counts must describe the WHOLE graph; counting the preview reports a change reaching twenty-nine records when it reached a hundred and seventy-five');
+  assert.ok(preview.dropped_nodes + preview.dropped_edges > 0, 'a two-hop walk from the GDPR does not fit in 7000 characters');
+  assert.match(preview.note, /ImpactAssessment record/);
+  assert.match(preview.sha256, /^[0-9a-f]{64}$/);
+  assert.equal(preview.nodes[0].depth, 0, 'nearest first: a cap must never eat the direct dependencies');
+});
+
+test('an entity the corpus does not hold is a silence in the map, not an absence of impact', () => {
+  const map = mapImpact({
+    change: {
+      change_id: 'test-new', as_of: FIXTURE_AS_OF,
+      attribute: null, old_value: null,
+      affected_entities: [{ kind: 'instrument', id: 'not-a-record-in-this-corpus' }],
+    },
+  });
+  assert.deepEqual(map.unresolved_roots, ['not-a-record-in-this-corpus']);
+  assert.ok(map.caveats.some((c) => c.includes('not-a-record-in-this-corpus')),
+    'an entity that could not be walked must be named in the caveats, or the empty map reads as a clearance');
+});
+
+/* ---------- the assessments the full run produced ---------- */
+
+test('every confirmed change carries an ImpactAssessment that satisfies its contract', () => {
+  assert.equal(FULL.assessments.length, FULL.changes.length,
+    'a confirmed change with no impact assessment is a change nobody mapped onto the site');
+  for (const a of FULL.assessments) {
+    const errs = validate(a, { allowSimulated: true });
+    assert.deepEqual(errs, [], `${a.assessment_id}: ${errs.join('; ')}`);
+    assert.equal(a.contract, 'ImpactAssessment');
+    assert.ok(FULL.changes.some((c) => c.change_id === a.change_id));
+  }
+});
+
+test('an assessment never lets a change be handled more freely than the detection', () => {
+  for (const a of FULL.assessments) {
+    const change = FULL.changes.find((c) => c.change_id === a.change_id);
+    assert.ok(AUTONOMY_RANK[a.autonomy_class] >= AUTONOMY_RANK[change.autonomy_class],
+      `${a.assessment_id} sits at ${a.autonomy_class} for a change at ${change.autonomy_class}: an assessment that relaxed the class would be a way round the gate`);
+    assert.notEqual(a.autonomy_class, 'autonomous',
+      'an impact map is about what a production site tells a reader about EU law; it is never green tier');
+  }
+});
+
+test('the assessment restates none of the detection\'s own fields', () => {
+  const contract = getContract('ImpactAssessment');
+  for (const f of ['change_kind', 'old_value', 'new_value', 'materiality', 'affected_pages']) {
+    assert.ok(f in contract.forbidden, `${f} must be forbidden by name, with the reason, so an agent reaching for it is told which contract it wanted`);
+    assert.equal(f in contract.fields, false);
+  }
+  const change = getContract('RegulatoryChange');
+  const shared = Object.keys(contract.fields).filter((k) => k in change.fields && !ENVELOPE_KEYS.has(k));
+  assert.deepEqual(shared.sort(), ['autonomy_class', 'change_id'],
+    'the two contracts share a field outside the envelope other than change_id — which is the reference, and the whole point — and autonomy_class, which each computes about a different question');
+});
+
+test('the run record counts the impact, and an editorial finding anywhere stops the run being autonomous', () => {
+  const o = FULL.run_record.outputs;
+  assert.equal(o.impact_assessments, FULL.assessments.length);
+  assert.equal(o.editorial_impacts, FULL.assessments.reduce((n, a) => n + a.counts.editorial_impacts, 0));
+  assert.ok(o.editorial_impacts > 0,
+    'the fixture corpus includes a change whose old value is restated in the corpus\'s own prose; if this is zero the editorial half is not being exercised at all');
+  assert.equal(FULL.run_record.autonomy_class, 'review_required');
+});
+
+test('the impact graph, the routing and the editorial findings are all on the trace', () => {
+  /* Read off the trace the full run ACTUALLY emitted. A test that
+     built a second trace for itself would prove that impactState can
+     read a trace, never that the detector writes one. */
+  const root = buildTree(FULL_SINK.records).roots[0];
+  assert.ok(root, 'the full run emitted no span tree');
+  const impact = impactState(root);
+  assert.equal(impact.length, FULL.changes.length, 'a confirmed change with no impact graph on the trace is not exposed through observability at all');
+  for (const i of impact) {
+    assert.ok(i.graph, `${i.change_id}: the impact graph did not parse off the trace`);
+    assert.ok(i.decision.length, `${i.change_id}: no routing decision on the trace`);
+    assert.ok(i.routing, `${i.change_id}: no routing summary on the trace`);
+    assert.ok(i.decision[0].alternatives.length >= 3,
+      'a decision without the alternatives it did not take is a conclusion, not a decision');
+  }
+  assert.ok(impact.some((i) => i.editorial.length), 'no editorial finding reached the trace');
+});
+
+test('nothing in the impact modules writes anything', () => {
+  const forbidden = ['writeFileSync', 'appendFileSync', 'createWriteStream', 'rmSync', 'unlinkSync', 'mkdirSync'];
+  for (const f of ['graph.mjs', 'fields.mjs', 'impact.mjs']) {
+    const src = readFileSync(join(HERE, f), 'utf8');
+    for (const bad of forbidden) {
+      assert.equal(src.includes(bad), false, `agent/detector/${f} contains ${bad}: this directory reads and never writes`);
+    }
+  }
 });

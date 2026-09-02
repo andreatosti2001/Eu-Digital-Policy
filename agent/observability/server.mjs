@@ -20,7 +20,7 @@
 import { createServer } from 'node:http';
 import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join, extname, resolve } from 'node:path';
-import { listRuns, loadTrace, overview, traceChain } from './query.mjs';
+import { listRuns, loadTrace, overview, traceChain, impactState } from './query.mjs';
 import { toOtlp, toProvenanceLedger } from './otlp.mjs';
 import { DEFAULT_RUN_DIR, OBS_ROOT } from './sink.mjs';
 
@@ -48,6 +48,28 @@ export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR }
         if (!/^[0-9a-f]{32}$/.test(id)) return json(res, { error: 'bad trace id' }, 400);
         const t = loadTrace(id, dir);
         return t ? json(res, t) : json(res, { error: 'no such trace' }, 404);
+      }
+      if (p === '/api/impact') {
+        /* The dependency/impact graph, exposed. `?trace=` narrows to
+           one run, `?change=` to one detected change; with neither
+           it is every impact map in the store. Same shape as the
+           chain endpoint, and like it, an impact map missing its
+           routing decision reports the gap rather than omitting
+           it. */
+        const trace = url.searchParams.get('trace');
+        const change = url.searchParams.get('change');
+        if (trace && !/^[0-9a-f]{32}$/.test(trace)) return json(res, { error: 'bad trace id' }, 400);
+        const traces = trace ? [trace] : listRuns(dir).map((r) => r.trace_id);
+        const maps = [];
+        for (const id of traces) {
+          const t = loadTrace(id, dir);
+          if (!t) continue;
+          for (const i of t.impact) {
+            if (change && i.change_id !== change) continue;
+            maps.push(i);
+          }
+        }
+        return json(res, { impact: maps });
       }
       if (p === '/api/chain') {
         return json(res, {

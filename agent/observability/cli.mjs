@@ -5,6 +5,7 @@
      node agent/observability/cli.mjs list
      node agent/observability/cli.mjs show <trace-id>
      node agent/observability/cli.mjs chain [--file f] [--change c] [--trace t]
+     node agent/observability/cli.mjs impact [--trace t] [--change c] [--graph]
      node agent/observability/cli.mjs validate
      node agent/observability/cli.mjs export <trace-id> [--provenance]
      node agent/observability/cli.mjs serve [--port 7801] [--open]
@@ -99,6 +100,55 @@ function cmdChain() {
   }
 }
 
+/**
+ * The regulatory impact maps in the store.
+ *
+ * SESSION 10's brief asks for the dependency/impact graph to be
+ * exposed through observability. This is the terminal half of that;
+ * `/api/impact` and the Impact panel in the viewer are the other
+ * half.
+ *
+ * It prints the routing before the graph, deliberately. The graph is
+ * the interesting object and the routing is the one somebody has to
+ * act on — and an editorial impact is a sentence on a production
+ * site about EU law that may now be false, which nothing in this
+ * repository will catch.
+ */
+function cmdImpact() {
+  const wantTrace = flag('trace');
+  const wantChange = flag('change');
+  const traces = typeof wantTrace === 'string' ? [wantTrace] : listRuns(DIR).map((r) => r.trace_id);
+  let found = 0;
+
+  for (const id of traces) {
+    const t = loadTrace(id, DIR);
+    if (!t) continue;
+    for (const i of t.impact) {
+      if (typeof wantChange === 'string' && i.change_id !== wantChange) continue;
+      found++;
+      const shown = i.dropped.nodes || i.dropped.edges ? `, ${i.shown.nodes}/${i.shown.edges} on this trace` : '';
+      console.log(`\n${i.change_id} — ${i.nodes} node(s), ${i.edges} edge(s)${shown}${i.simulated ? ' — SIMULATED' : ''}`);
+      console.log(`  trace: ${i.trace_id}   agent: ${i.agent ?? '?'}`);
+      if (i.routing) {
+        console.log(`  routing  ${Object.entries(i.routing).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+      }
+      if (i.surfaces) {
+        const hit = Object.entries(i.surfaces).filter(([, n]) => n > 0);
+        console.log(`  surfaces ${hit.length ? hit.map(([k, n]) => `${k} ${n}`).join(' · ') : '(none carrying a record)'}`);
+      }
+      for (const d of i.decision) console.log(`  decision ${d.decision}`);
+      for (const e of i.editorial) console.log(`  ⚑ ${e.summary}`);
+      if (flag('graph') && i.graph) {
+        console.log(`  GRAPH  ${i.dropped.nodes || i.dropped.edges ? `(nearest first; ${i.dropped.nodes} node(s) and ${i.dropped.edges} edge(s) not carried on the trace)` : '(complete)'}`);
+        for (const n of i.graph.nodes) console.log(`      ${n.depth === 0 ? '●' : '·'} ${pad(n.id, 44)} ${pad(n.kind, 20)} ${n.dataset}`);
+        for (const e of i.graph.edges) console.log(`      ${e.from} → ${e.to}  (${e.field}${e.via_wildcard ? ', via wildcard' : ''})`);
+      }
+      console.log(i.gaps.length ? `  GAPS: ${i.gaps.join('; ')}` : '  no gaps: the graph, the routing and the summary are all on this trace');
+    }
+  }
+  if (!found) console.log('no impact map matches. `node agent/detector/cli.mjs --mock` writes some.');
+}
+
 function cmdValidate() {
   let records = 0, bad = 0, broken = 0;
   for (const f of listTraceFiles(DIR)) {
@@ -136,11 +186,12 @@ switch (cmd) {
   case 'list': cmdList(); break;
   case 'show': cmdShow(argv[1]); break;
   case 'chain': cmdChain(); break;
+  case 'impact': cmdImpact(); break;
   case 'validate': cmdValidate(); break;
   case 'export': cmdExport(argv[1]); break;
   case 'summary': console.log(JSON.stringify(overview(DIR), null, 2)); break;
   case 'serve': serve({ port: Number(flag('port', 7801)), dir: DIR }); break;
   default:
-    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | validate | export <id> | summary | serve`);
+    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | validate | export <id> | summary | serve`);
     process.exit(1);
 }
