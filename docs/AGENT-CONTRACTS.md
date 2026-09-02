@@ -65,7 +65,7 @@ nothing open, made explicitly so somebody can disagree with it.
 
 ---
 
-## The fourteen
+## The sixteen
 
 | Contract | Kind | Answers |
 |---|---|---|
@@ -83,16 +83,53 @@ nothing open, made explicitly so somebody can disagree with it.
 | `AgentObservation` | observation | a structured claim about the world, in handoff-safe form |
 | `AgentRun` | run | an agent's own account of one execution |
 | `WebsiteChange` | record | a change that reaches a reader, with its audit chain |
+| `DataProposal` | proposal | a proposed factual modification to a record in `data/*.json` |
+| `RegulatoryChange` | finding | a detected divergence between what the datasets assert and what a document says |
 
-306 fields, 47 forbidden fields with their reasons, 73 contract-specific
-cross-field rules, on top of the generic identity, shape, epistemic, evidence
-and governance checks in `validate.mjs`.
+367 top-level fields — 1,186 counting every nested one — 81 forbidden fields
+with their reasons, and 117 contract-specific cross-field rules, on top of the
+generic identity, shape, epistemic, evidence and governance checks in
+`validate.mjs`. Counted from `CONTRACT_LIST` rather than tallied by hand, so it
+is reproducible: sum `Object.keys(c.fields).length` for the first figure and
+`walkShape` for the second. *The figure this paragraph carried before SESSION 08
+was 306 / 47 / 73, and it had been stale since SESSION 07 added nine fields and
+six rules to `VerificationRecord` without updating it.*
 
 **Amended in SESSION 05**, when the first real agent met them. `SourceCandidate`
 gained `authority_class`, `duplicate_candidate_ids` and `confidence`; `DataGap`
 gained the gap kind `retrieval_blocked`. Each change came with its tests in the
 same commit, which is the rule these contracts set for themselves. What forced
 each one is in `docs/SOURCE-SCOUT.md`.
+
+**Amended again in SESSION 07**, when the Legal Verifier met them:
+`VerificationRecord` gained nine fields, six cross-field rules and four
+forbidden entries, and `conflict` was added to the verdict vocabulary. What
+forced each one is in `docs/LEGAL-VERIFIER.md`.
+
+**And extended by one in SESSION 09.** `RegulatoryChange` is the sixteenth, and
+it exists because of a naming collision worth reading in full: SESSION 09's
+brief specified `ChangeRecord` as the change detector's output, and that
+contract already means **a change made to this repository** — a file list, a
+branch, a commit. A regulation entering into force is none of those. The two are
+now mutually un-confusable: each names the other's distinguishing fields in its
+`forbidden` block with the reason, and a test asserts they share no field
+outside the envelope. Full reasoning in `docs/CHANGE-DETECTOR.md` §1.
+
+**And extended by one in SESSION 08.** `DataProposal` is the fifteenth contract.
+The four proposal contracts covered architecture, prose, interface and code; a
+proposed change to `data/*.json` — attaching evidence to a claim, creating a
+source record for a document that was read — had no home, and filing one as an
+`ImplementationProposal` would have recorded a change to what the site says
+about EU law as a change to a script. **This is a Class C change to the contract
+layer and it is flagged as one.** The reasoning, and what was considered and
+rejected, is in `docs/VERIFICATION-INTEGRATION.md`.
+
+`CONTRACT_SCHEMA_VERSION` was **not** bumped, following the precedent SESSION 05
+and SESSION 07 both set and recorded: the constant is global across every
+contract, and bumping it would invalidate every fixture and every stored record
+in the repository. Adding a contract invalidates nothing that already exists —
+no record names `DataProposal` unless something wrote one — so the case for
+bumping is weaker here than it was for either earlier amendment.
 
 ### The envelope
 
@@ -115,7 +152,7 @@ confidence · risk · autonomy_class · proposed_change · validation_requiremen
 rollback_plan`
 
 Four of them come from the envelope; the suite asserts all twelve are present
-and required on each of the four `*Proposal` contracts, however they got there.
+and required on each of the five `*Proposal` contracts, however they got there.
 
 The four proposals are the substantive ones. A `SourceCandidate` is a finding, a
 `QAResult` is a measurement, an `ApprovalRequest` points at proposals rather than
@@ -216,7 +253,7 @@ so a provenance judgment an agent makes is reconcilable with the bibliography
 instead of needing a translation table. And `supports:context` behaves the way
 the data model says it does: **a fact whose every cited source is `context` is
 refused**, in `VerificationRecord`, in `ClaimEvidence`, and in the generic check
-that applies to all fourteen. Context informs a claim without establishing it,
+that applies to all sixteen. Context informs a claim without establishing it,
 and is not a citation.
 
 ---
@@ -295,7 +332,7 @@ agent/schemas/fields.mjs        the field DSL and its interpreter
 agent/schemas/common.mjs        the envelope, the evidence ref, the epistemic block,
                                 the twelve proposal fields
 agent/schemas/define.mjs        defineContract / defineProposal
-agent/schemas/contracts/*.mjs   the fourteen, one per file
+agent/schemas/contracts/*.mjs   the sixteen, one per file
 agent/schemas/registry.mjs      the registry a record's `contract` field resolves against
 agent/schemas/validate.mjs      the gate: identity, shape, epistemic, governance
 agent/schemas/gateway.mjs       emit / receive / handoff, and the trace pointer
@@ -308,7 +345,7 @@ agent/schemas/selftest.mjs      the suite
 ## Checks
 
 ```
-node --test agent/schemas/selftest.mjs     # 67 tests
+node --test agent/schemas/selftest.mjs     # 101 tests
 node agent/schemas/cli.mjs check           # every contract satisfiable by its fixture
 node agent/schemas/cli.mjs validate <file> # exits 1 on an invalid record
 ```
@@ -318,17 +355,20 @@ unchanged from the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
 
 ## Known limitations
 
-1. **No agent implements these contracts**, because no agent exists. Nothing has
-   yet been discovered by using them in anger, and the first real agent will
-   almost certainly find a field that is the wrong shape.
+1. ~~**No agent implements these contracts**, because no agent exists.~~
+   **Overtaken by events.** Four agents now do — the Source Scout (SESSION 05),
+   the Legal Verifier (SESSION 07), the verification integrator (SESSION 08) and
+   the Regulatory Change Detector (SESSION 09) — and each one found the shape the
+   contracts were missing, exactly as this note predicted. Every amendment above
+   came from a real agent meeting them.
 2. **The epistemic requirement is enforced on top-level fields only.** An
    epistemic annotation deeper inside a record — on an evidence reference's own
    title, say — describes that evidence rather than what the record asserts, and
    requiring a block entry for every one would bury the entries that matter. It
    is a judgment about legibility, and it is the check most likely to need
    revisiting.
-3. **Only four fields across the fourteen contracts are typed `factual`**, six
-   `inference` and two `interpretation`; the rest are structural. That is
+3. **Only a handful of fields across the sixteen contracts are typed `factual`**, and few more are
+   `inference` or `interpretation`; the rest are structural. That is
    correct — most fields are bookkeeping — but it means the epistemic machinery
    is exercised by a small number of fields, and a contract author adding a
    factual field has to remember to type it as one. The suite checks that every

@@ -27,6 +27,8 @@
    ============================================================ */
 
 import { readFileSync, readdirSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const AS_OF = process.argv[2] || new Date().toISOString().slice(0, 10);
 const DAY = 86400000;
@@ -37,8 +39,16 @@ const arr = (x) => (Array.isArray(x) ? x : []);
 
 /* How often each kind of fact actually moves in the world. These are the
    intervals the dataset is promising to keep up with; exceeding one is not
-   an error, it is a statement that the promise is now overdue. */
-const EXPECTED = {
+   an error, it is a statement that the promise is now overdue.
+
+   EXPORTED, and the audit below runs only when this file is the entry
+   point. agent/integrate/stale.mjs asks the same question of the same
+   datasets, and a second table of intervals in the agent layer would be
+   a second home for a fact — the two would disagree the first time
+   somebody tightened one. Importing this module now costs nothing: it
+   defines the constants and stops. Nothing else about the script
+   changed, and its output is byte-identical. */
+export const EXPECTED = {
   enforcement: { days: 45, why: 'regulators announce actions continuously; a quarter-old enforcement set is visibly behind' },
   timeline: { days: 90, why: 'application and transposition dates move less often, but they move' },
   instruments: { days: 90, why: 'legislative status changes on adoption, entry into force and application' },
@@ -47,119 +57,127 @@ const EXPECTED = {
   sources: { days: 180, why: 'URLs rot; the accessed date is the only evidence they were ever reachable' },
 };
 
-let overdue = 0;
-const line = (s) => console.log(s);
-const flag = (s) => { overdue++; console.log('  ! ' + s); };
+/* The audit itself. Guarded so that `node tools/freshness.mjs` behaves
+   exactly as it always has, and an import of this module gets the
+   intervals without running an audit, printing a report or calling
+   process.exit. */
+const isMain = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
-line('\nFRESHNESS AUDIT  as of ' + AS_OF);
-line('='.repeat(64));
+if (isMain) {
+  let overdue = 0;
+  const line = (s) => console.log(s);
+  const flag = (s) => { overdue++; console.log('  ! ' + s); };
 
-/* ---------------------------------------------------------- 1. dates */
+  line('\nFRESHNESS AUDIT  as of ' + AS_OF);
+  line('='.repeat(64));
 
-line('\nVERIFICATION DATES');
-const files = readdirSync('data').filter((f) => f.endsWith('.json'));
-const allDates = [];
-for (const f of files) {
-  const d = read(f);
-  const name = f.replace('.json', '');
-  const per = [];
-  (function walk(o) {
-    if (Array.isArray(o)) return o.forEach(walk);
-    if (o && typeof o === 'object') {
-      for (const [k, v] of Object.entries(o)) {
-        if (k === 'last_verified' && typeof v === 'string') per.push(v);
-        else walk(v);
+  /* ---------------------------------------------------------- 1. dates */
+
+  line('\nVERIFICATION DATES');
+  const files = readdirSync('data').filter((f) => f.endsWith('.json'));
+  const allDates = [];
+  for (const f of files) {
+    const d = read(f);
+    const name = f.replace('.json', '');
+    const per = [];
+    (function walk(o) {
+      if (Array.isArray(o)) return o.forEach(walk);
+      if (o && typeof o === 'object') {
+        for (const [k, v] of Object.entries(o)) {
+          if (k === 'last_verified' && typeof v === 'string') per.push(v);
+          else walk(v);
+        }
       }
-    }
-  })(d);
-  const file = d.$last_verified || null;
-  const uniq = [...new Set(per)].sort();
-  allDates.push(...per, ...(file ? [file] : []));
-  const age = file ? days(file, AS_OF) : null;
-  const spread = uniq.length === 0 ? 'no per-record dates'
-    : uniq.length === 1 ? `all ${per.length} records share ${uniq[0]}`
-      : `${per.length} records across ${uniq.length} distinct dates (${uniq[0]} … ${uniq[uniq.length - 1]})`;
-  line(`  ${name.padEnd(15)} file ${String(file).padEnd(12)} ${age == null ? '' : age + 'd old'}`);
-  line(`  ${''.padEnd(15)} ${spread}`);
-  const exp = EXPECTED[name];
-  if (exp && age != null && age > exp.days) flag(`${name} is ${age} days old, past its ${exp.days}-day interval — ${exp.why}`);
-}
+    })(d);
+    const file = d.$last_verified || null;
+    const uniq = [...new Set(per)].sort();
+    allDates.push(...per, ...(file ? [file] : []));
+    const age = file ? days(file, AS_OF) : null;
+    const spread = uniq.length === 0 ? 'no per-record dates'
+      : uniq.length === 1 ? `all ${per.length} records share ${uniq[0]}`
+        : `${per.length} records across ${uniq.length} distinct dates (${uniq[0]} … ${uniq[uniq.length - 1]})`;
+    line(`  ${name.padEnd(15)} file ${String(file).padEnd(12)} ${age == null ? '' : age + 'd old'}`);
+    line(`  ${''.padEnd(15)} ${spread}`);
+    const exp = EXPECTED[name];
+    if (exp && age != null && age > exp.days) flag(`${name} is ${age} days old, past its ${exp.days}-day interval — ${exp.why}`);
+  }
 
-const uniqAll = [...new Set(allDates)];
-if (uniqAll.length === 1) {
-  line('');
-  flag(`every verification date in the repository is ${uniqAll[0]}. The field is per-record but has never been used per-record: read it as a compilation date, and do not present it as evidence of independent re-checking.`);
-}
+  const uniqAll = [...new Set(allDates)];
+  if (uniqAll.length === 1) {
+    line('');
+    flag(`every verification date in the repository is ${uniqAll[0]}. The field is per-record but has never been used per-record: read it as a compilation date, and do not present it as evidence of independent re-checking.`);
+  }
 
-/* ---------------------------------------------------------- 2. passed events */
+  /* ---------------------------------------------------------- 2. passed events */
 
-line('\nEVENTS THAT HAVE PASSED');
-const tl = read('timeline.json');
-const tlVer = tl.$last_verified;
-const passedSince = arr(tl.events)
-  .filter((e) => e.date > (tlVer || '0000-00-00') && e.date <= AS_OF);
-if (!passedSince.length) line(`  none between ${tlVer} and ${AS_OF}`);
-else passedSince.forEach((e) => flag(`${e.date} ${e.instrument} — ${e.event_type} fell due after the last verification: ${String(e.obligation || '').slice(0, 80)}`));
+  line('\nEVENTS THAT HAVE PASSED');
+  const tl = read('timeline.json');
+  const tlVer = tl.$last_verified;
+  const passedSince = arr(tl.events)
+    .filter((e) => e.date > (tlVer || '0000-00-00') && e.date <= AS_OF);
+  if (!passedSince.length) line(`  none between ${tlVer} and ${AS_OF}`);
+  else passedSince.forEach((e) => flag(`${e.date} ${e.instrument} — ${e.event_type} fell due after the last verification: ${String(e.obligation || '').slice(0, 80)}`));
 
-const nextUp = arr(tl.events).filter((e) => e.date > AS_OF)
-  .sort((a, b) => a.date.localeCompare(b.date)).slice(0, 3);
-line('  next due:');
-nextUp.forEach((e) => line(`    ${e.date} (${days(AS_OF, e.date)}d) ${e.instrument} — ${String(e.obligation || '').slice(0, 62)}`));
+  const nextUp = arr(tl.events).filter((e) => e.date > AS_OF)
+    .sort((a, b) => a.date.localeCompare(b.date)).slice(0, 3);
+  line('  next due:');
+  nextUp.forEach((e) => line(`    ${e.date} (${days(AS_OF, e.date)}d) ${e.instrument} — ${String(e.obligation || '').slice(0, 62)}`));
 
-/* ---------------------------------------------------------- 3. provisional */
+  /* ---------------------------------------------------------- 3. provisional */
 
-line('\nRECORDS EXPECTED TO CHANGE');
-const enf = arr(read('enforcement.json').enforcement);
-const prov = {
-  'preliminary / announced only': enf.filter((r) => r.action_status === 'action:announced'),
-  'appeal pending or unknown': enf.filter((r) => ['appeal:pending', 'appeal:unknown'].includes(r.appeal?.status)),
-  'payment unknown': enf.filter((r) => !r.payment_status || r.payment_status === 'payment:unknown'),
-  'flagged requires_verification': enf.filter((r) => r.requires_verification),
-};
-for (const [k, v] of Object.entries(prov)) {
-  line(`  ${String(v.length).padStart(3)} of ${enf.length}  ${k}`);
-  if (v.length && v.length <= 4) v.forEach((r) => line(`         ${r.id}`));
-}
-
-/* the newest thing in the enforcement set, which is the number a reader
-   would actually use to judge whether the observatory is current */
-const newest = enf.map((r) => r.decision_date).filter(Boolean).sort().pop();
-line(`\n  newest enforcement decision recorded: ${newest} (${days(newest, AS_OF)} days before ${AS_OF})`);
-if (days(newest, AS_OF) > EXPECTED.enforcement.days)
-  flag(`the most recent enforcement action recorded is ${days(newest, AS_OF)} days old — check for decisions taken since`);
-
-/* ---------------------------------------------------------- 4. url rot */
-
-line('\nSOURCE REACHABILITY');
-const srcs = arr(read('sources.json').sources);
-const byStatus = {};
-for (const s of srcs) byStatus[s.url_status] = (byStatus[s.url_status] || 0) + 1;
-line('  ' + Object.entries(byStatus).map(([k, v]) => `${v} ${k}`).join(' · '));
-const noUrl = srcs.filter((s) => !s.url);
-if (noUrl.length) {
-  /* Two different failures live in this list and they need different work.
-     A missing URL can be found by looking. A source that was never pinned to
-     a named publication cannot: the reference has to be identified first, and
-     attaching a plausible-looking document to it would be exactly the
-     "loosely related substitute" the method note refuses. */
-  const groups = {
-    'url-not-located': 'publication identified, no stable URL found — findable by searching',
-    'publication-not-identified': 'no specific publication named — cannot be fixed by finding a link',
-    'self-reference': 'not a source at all',
+  line('\nRECORDS EXPECTED TO CHANGE');
+  const enf = arr(read('enforcement.json').enforcement);
+  const prov = {
+    'preliminary / announced only': enf.filter((r) => r.action_status === 'action:announced'),
+    'appeal pending or unknown': enf.filter((r) => ['appeal:pending', 'appeal:unknown'].includes(r.appeal?.status)),
+    'payment unknown': enf.filter((r) => !r.payment_status || r.payment_status === 'payment:unknown'),
+    'flagged requires_verification': enf.filter((r) => r.requires_verification),
   };
-  line(`  ${noUrl.length} sources carry no URL. Claims resting only on one of these are not reproducible by a reader.`);
-  for (const [key, why] of Object.entries(groups)) {
-    const g = noUrl.filter((s) => s.resolution === key);
-    if (!g.length) continue;
-    line(`\n    ${g.length} · ${key} — ${why}`);
-    g.forEach((s) => line(`        ${s.id.padEnd(38)} ${String(s.publisher_name || '').slice(0, 38)}`));
+  for (const [k, v] of Object.entries(prov)) {
+    line(`  ${String(v.length).padStart(3)} of ${enf.length}  ${k}`);
+    if (v.length && v.length <= 4) v.forEach((r) => line(`         ${r.id}`));
   }
-  const un = noUrl.filter((s) => !s.resolution);
-  if (un.length) {
-    flag(`${un.length} URL-less source(s) carry no \`resolution\` field, so it is not recorded why they cannot be linked: ${un.map((s) => s.id).join(', ')}`);
-  }
-}
 
-line('\n' + '='.repeat(64));
-line(overdue ? `${overdue} item(s) need attention.` : 'Nothing past its stated interval.');
-process.exit(overdue ? 1 : 0);
+  /* the newest thing in the enforcement set, which is the number a reader
+     would actually use to judge whether the observatory is current */
+  const newest = enf.map((r) => r.decision_date).filter(Boolean).sort().pop();
+  line(`\n  newest enforcement decision recorded: ${newest} (${days(newest, AS_OF)} days before ${AS_OF})`);
+  if (days(newest, AS_OF) > EXPECTED.enforcement.days)
+    flag(`the most recent enforcement action recorded is ${days(newest, AS_OF)} days old — check for decisions taken since`);
+
+  /* ---------------------------------------------------------- 4. url rot */
+
+  line('\nSOURCE REACHABILITY');
+  const srcs = arr(read('sources.json').sources);
+  const byStatus = {};
+  for (const s of srcs) byStatus[s.url_status] = (byStatus[s.url_status] || 0) + 1;
+  line('  ' + Object.entries(byStatus).map(([k, v]) => `${v} ${k}`).join(' · '));
+  const noUrl = srcs.filter((s) => !s.url);
+  if (noUrl.length) {
+    /* Two different failures live in this list and they need different work.
+       A missing URL can be found by looking. A source that was never pinned to
+       a named publication cannot: the reference has to be identified first, and
+       attaching a plausible-looking document to it would be exactly the
+       "loosely related substitute" the method note refuses. */
+    const groups = {
+      'url-not-located': 'publication identified, no stable URL found — findable by searching',
+      'publication-not-identified': 'no specific publication named — cannot be fixed by finding a link',
+      'self-reference': 'not a source at all',
+    };
+    line(`  ${noUrl.length} sources carry no URL. Claims resting only on one of these are not reproducible by a reader.`);
+    for (const [key, why] of Object.entries(groups)) {
+      const g = noUrl.filter((s) => s.resolution === key);
+      if (!g.length) continue;
+      line(`\n    ${g.length} · ${key} — ${why}`);
+      g.forEach((s) => line(`        ${s.id.padEnd(38)} ${String(s.publisher_name || '').slice(0, 38)}`));
+    }
+    const un = noUrl.filter((s) => !s.resolution);
+    if (un.length) {
+      flag(`${un.length} URL-less source(s) carry no \`resolution\` field, so it is not recorded why they cannot be linked: ${un.map((s) => s.id).join(', ')}`);
+    }
+  }
+
+  line('\n' + '='.repeat(64));
+  line(overdue ? `${overdue} item(s) need attention.` : 'Nothing past its stated interval.');
+  process.exit(overdue ? 1 : 0);
+}

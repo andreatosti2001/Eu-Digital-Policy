@@ -27,8 +27,9 @@ the evidence it describes.
 | `docs/PROJECT-CONTEXT.md` | What the project is; the seven governing principles |
 | `docs/CURRENT-ARCHITECTURE.md` | Rendering model, module topology, dependency map, tooling baseline |
 | `docs/AI-SAFE-BOUNDARIES.md` | Green / amber / red tiers; the absolute prohibitions |
-| `docs/AGENT-CONTRACTS.md` | The fourteen inter-agent contracts and the gate no record bypasses |
+| `docs/AGENT-CONTRACTS.md` | The sixteen inter-agent contracts and the gate no record bypasses |
 | `docs/OBSERVABILITY.md` | The trace model every agent run is instrumented through |
+| `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` | The four agents that exist, what each refuses, and what none of them may do |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
 | `README.md` | The author's own account, including eight stated limitations |
@@ -122,6 +123,21 @@ Zero-dependency Node scripts; run from the repository root.
 **Baseline** (`docs/CURRENT-ARCHITECTURE.md` §12 records this in full): 0 errors across all
 four, 106 unverified records, and 5 pre-existing `design-qa` warnings listed by file and
 line. **A new warning is a finding, not noise.**
+
+The agent layer has its own suites, and a change to `agent/` runs these as well:
+
+```
+node --test agent/schemas/selftest.mjs         # the contracts
+node --test agent/scout/selftest.mjs           # Agent 1
+node --test agent/scout/schedule/selftest.mjs
+node --test agent/verifier/selftest.mjs        # Agent 2
+node --test agent/integrate/selftest.mjs       # the adapter, against the real data/
+node --test agent/detector/selftest.mjs        # Agent 3, against the real data/
+node --test agent/observability/selftest.mjs
+node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
+```
+
+**303 tests across the seven suites**, all passing as of SESSION 09.
 
 `tools/_footer.mjs`, `_refsweep.mjs` and `_review10.mjs` are generators and applied one-shot
 patches, not checks. **Do not re-run** the latter two.

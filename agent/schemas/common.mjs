@@ -1,14 +1,14 @@
 /* ============================================================
    agent/schemas/common.mjs — the envelope every contract carries
 
-   Three structures appear in all fourteen contracts, and they are
+   Three structures appear in all sixteen contracts, and they are
    defined once here rather than repeated per contract, for the
    reason the datasets already give: one home per fact.
 
    AFFECTED ENTITY  what a record is about — an instrument, a claim,
                     a page, a module. Named the same way in every
                     contract so a query for "everything that touched
-                    gdpr:art-3" is one query, not fourteen.
+                    gdpr:art-3" is one query, not sixteen.
 
    EVIDENCE REF     what the record stands on. `absent` is a first-
                     class kind: a record that has nothing must say

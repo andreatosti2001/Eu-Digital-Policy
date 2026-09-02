@@ -322,3 +322,120 @@ export const REQUIRED_VALIDATORS = [
   'tools/design-qa.mjs',
   'tools/freshness.mjs',
 ];
+
+/* ---------------------------------------------------------- data proposals
+
+   SESSION 08's brief: "Any proposed factual modification must first
+   become a proposal object", and "do not automatically merge
+   substantive legal changes."
+
+   None of the four proposal contracts could hold one. An
+   EditorialProposal is about the brief's prose; an
+   ImplementationProposal is about code and would have recorded a
+   change to data/claims.json under `files` and `modules`, which is
+   filing a legal change as a code change. So DataProposal was added
+   as a fifteenth contract rather than routed around — the course
+   SESSION 05 and SESSION 07 both took, and the reasoning is in
+   docs/VERIFICATION-INTEGRATION.md.                                */
+
+/**
+ * What a proposal would do to a canonical record. Deliberately
+ * narrow: each kind carries a different burden, and the contract
+ * rules attach to the kind rather than to a free-text description
+ * an agent could word its way past.
+ */
+export const DATA_OPERATION_KINDS = [
+  'attach_evidence',  // add a source reference to an existing record's sources[]
+  'create_source',    // a new data/sources.json record, for a document actually retrieved and read
+  'create_claim',     // a new data/claims.json record, for a statement already present in the prose
+  'amend_field',      // change the value a field carries on an existing record
+  'annotate',         // add to a verification_note or a gap_note without changing any value
+];
+
+/**
+ * What becomes of a provenance field on the record a proposal
+ * touches. There is deliberately NO `removed` and no bare
+ * `replaced`: removing an asterisk, a reference gap, a
+ * requires_verification flag or a verification_note is red tier
+ * under AI-SAFE-BOUNDARIES §3, and a vocabulary that offered the
+ * word would be an invitation to use it.
+ *
+ * `replaced_human_only` exists because a verification_note written
+ * before the source was found does genuinely need rewriting once it
+ * has been. It is not the same permission: the rules refuse it on
+ * anything but a substantive, human_only proposal, and the operation
+ * must carry the current text verbatim so the diff shows what is
+ * being written over.
+ */
+export const PROVENANCE_DISPOSITIONS = [
+  'unchanged',
+  'extended',            // the existing text is kept and added to
+  'set_first_time',      // the field was null and nobody had looked
+  'replaced_human_only',
+];
+
+/* ---------------------------------------------------------- regulatory change
+
+   SESSION 09's brief names fourteen kinds of change the Regulatory
+   Change Detector must tell apart. They are the agent layer's own
+   vocabulary and are deliberately NOT added to data/taxonomy.json:
+   that file is the enum authority a reader's page resolves against,
+   and "the detector noticed a document moved" is not something the
+   site says about EU law.
+
+   SEVEN OF THE FOURTEEN ARE A LEGAL STATUS ARRIVING. `amended`,
+   `corrected`, `entered_into_force`, `applicable`, `repealed`,
+   `annulled` and `guidance` are all in LEGAL_STATUSES above, and the
+   detector reaches those kinds by comparing the status the corpus
+   records against the status a verification read. The mapping is in
+   agent/detector/classify.mjs and it is a table rather than a
+   cascade of conditions, so a reviewer can read every transition it
+   claims to know about — and so the ones it does NOT know about are
+   visible as blanks rather than falling through to a default.
+
+   The other seven are about the document or the record rather than
+   about the act: something the corpus has no record of at all, a
+   document that changed without changing what it says, a date that
+   moved later, an enforcement axis that moved, a court deciding, a
+   relationship between two instruments changing, and one document
+   being replaced by another.                                       */
+
+export const REGULATORY_CHANGE_KINDS = [
+  'NEW',                  // the corpus has no record of this at all
+  'UPDATED',              // the document changed; nothing it asserts did
+  'AMENDED',              // an amending act has changed the act
+  'CORRECTED',            // a corrigendum
+  'DELAYED',              // a date the corpus records has moved LATER
+  'ENTERED_INTO_FORCE',
+  'APPLICABLE',
+  'REPEALED',
+  'ANNULLED',
+  'GUIDANCE_UPDATED',     // a non-binding document the corpus cites has changed
+  'ENFORCEMENT_UPDATED',  // an action, payment, remedy or appeal axis has moved
+  'COURT_OUTCOME',        // a court has decided something the corpus records as open
+  'RELATIONSHIP_CHANGED', // an edge between two instruments — amends, repeals, replaces
+  'SOURCE_REPLACED',      // the corpus cites document A; the authority now publishes B
+];
+
+/**
+ * What a change costs a reader, which is not the same question as
+ * how large its diff is. Ordered, and the order is the order of
+ * harm.
+ *
+ * `metadata_only` is the one that earns its place. A regulator
+ * re-publishing a page with a new footer changes the bytes and
+ * changes nothing a reader acts on, and a detector that reported it
+ * at the same weight as a moved application date would train its
+ * reader to ignore the list — which is the failure
+ * tools/validate.mjs's own duplicate-fine warning was narrowed to
+ * avoid.
+ *
+ * `reader_acts_on_it` is reserved for the values a person changes
+ * their behaviour because of: the date an obligation begins, whether
+ * an act binds them at all, whether a fine stands. It is not a
+ * severity ladder for the agent's convenience; it is a statement
+ * about somebody outside this repository.
+ */
+export const MATERIALITY_LEVELS = ['none', 'metadata_only', 'substantive', 'reader_acts_on_it'];
+
+export const MATERIALITY_RANK = { none: 0, metadata_only: 1, substantive: 2, reader_acts_on_it: 3 };
