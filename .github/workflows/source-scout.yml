@@ -1,0 +1,359 @@
+# ============================================================
+# Source Scout — scheduled discovery
+#
+# OPERATING MODE:  DISCOVER → OBSERVE → REPORT → PR
+# NEVER:           DISCOVER → DIRECT PRODUCTION EDIT
+#
+# Runs Agent 1, the Source Scout (agent/scout/scout.mjs,
+# docs/SOURCE-SCOUT.md), against the registered EU endpoints, and
+# opens a pull request carrying a digest — a human-reviewable preview
+# of what it found. It never writes data/*.json, never edits the
+# site, and cannot merge its own proposal.
+#
+# THIS WORKFLOW WRAPS AGENT 1. IT DOES NOT REPLACE IT. Everything
+# that decides what a candidate is, what counts as a duplicate, and
+# what is still unresolved belongs to agent/scout/scout.mjs and the
+# contracts in agent/schemas/ — reconciled onto main after three
+# independent Scouts were built in parallel (docs/HANDOVER.md, "Read
+# this first"). This workflow adds only scheduling, a write-boundary
+# guard, and a digest for human triage
+# (agent/scout/schedule/, docs/AGENT-RUNBOOK.md).
+#
+# THE TWO-JOB SPLIT IS A PERMISSION BOUNDARY. `discover` touches the
+# open internet holding contents:read and no write token at all — a
+# Scout subverted by a hostile response is running in a job that
+# holds nothing it could use. `propose` holds the write token and
+# makes no request beyond github.com. The credential and the
+# untrusted input are never in the same job.
+# ============================================================
+
+name: Source Scout
+
+on:
+  schedule:
+    # 06:17 UTC every Monday. Off the hour deliberately.
+    - cron: '17 6 * * 1'
+
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'live = the registered EU endpoints. mock = the fixture corpus, to test the workflow itself.'
+        type: choice
+        options: [live, mock]
+        default: live
+      dry_run:
+        description: 'Run everything but write no digest and open no pull request'
+        type: boolean
+        default: false
+      open_pr:
+        description: 'auto = open a PR only when there is something new for a human to see'
+        type: choice
+        options: [auto, always, never]
+        default: auto
+      fail_on:
+        description: 'When to redden the job. degraded = any failed retrieval fails the run (today, that is every live run — see docs/SOURCE-SCOUT.md "FINDING").'
+        type: choice
+        options: [ok, degraded]
+        default: ok
+      max_docs:
+        description: 'Maximum documents followed per endpoint'
+        type: string
+        default: '4'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-scout
+  cancel-in-progress: false
+
+env:
+  # Attacker-controllable on a public repository. Bound to env vars
+  # and read as "$VAR" in run: blocks — never interpolated into a
+  # shell command where a crafted value would be executed.
+  SCOUT_MODE: ${{ inputs.mode || 'live' }}
+  SCOUT_DRY_RUN: ${{ inputs.dry_run || false }}
+  SCOUT_OPEN_PR: ${{ inputs.open_pr || 'auto' }}
+  SCOUT_FAIL_ON: ${{ inputs.fail_on || 'ok' }}
+  SCOUT_MAX_DOCS: ${{ inputs.max_docs || '4' }}
+
+jobs:
+  # ----------------------------------------------------------
+  # 1. DISCOVER + OBSERVE — network in, no write permission
+  # ----------------------------------------------------------
+  discover:
+    name: Discover and observe
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+
+    # A fork running this on schedule would poll public regulators on
+    # the author's behalf, weekly, forever.
+    if: github.event_name != 'schedule' || github.repository == 'andreatosti2001/Eu-Digital-Policy'
+
+    outputs:
+      status: ${{ steps.run.outputs.status }}
+      digest_id: ${{ steps.run.outputs.digest_id }}
+      trace_id: ${{ steps.run.outputs.trace_id }}
+      candidates: ${{ steps.run.outputs.candidates }}
+      new_against_bibliography: ${{ steps.run.outputs.new_against_bibliography }}
+      new_against_prior_digests: ${{ steps.run.outputs.new_against_prior_digests }}
+      high_relevance: ${{ steps.run.outputs.high_relevance }}
+      gaps: ${{ steps.run.outputs.gaps }}
+      failed_by_egress_policy: ${{ steps.run.outputs.failed_by_egress_policy }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          # This job has no business pushing anything, so it keeps no
+          # credential in .git/config where the Scout's own process
+          # could reach it.
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Show the toolchain
+        run: |
+          echo "node $(node --version)"
+          echo "runner ${RUNNER_OS}"
+          echo "No dependencies, no build step. Nothing is installed."
+
+      # Agent 1's own suite, the contract suite, the observability
+      # suite, and this wrapper's own suite — before any of them run
+      # for real. A parser or a contract rule that regressed produces
+      # a plausible-looking empty digest, which is the failure mode
+      # hardest to notice.
+      - name: Test the inter-agent contracts
+        run: node --test agent/schemas/selftest.mjs
+
+      - name: Test the Source Scout
+        run: node --test agent/scout/selftest.mjs
+
+      - name: Test the observability layer
+        run: node --test agent/observability/selftest.mjs
+
+      - name: Test the scheduling layer
+        run: node --test agent/scout/schedule/selftest.mjs
+
+      - name: Check the contracts are satisfiable
+        run: node agent/schemas/cli.mjs check
+
+      - name: Confirm the working tree is clean before the run
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error title=Dirty tree::The checkout was not clean before the Scout ran."
+            echo "The guard compares the tree after the run against the tree now, so a"
+            echo "pre-existing change would be misread as something the Scout wrote."
+            git status --porcelain
+            exit 1
+          fi
+          echo "clean"
+
+      - name: Run the Source Scout
+        id: run
+        run: |
+          ARGS="--max-docs=$SCOUT_MAX_DOCS --fail-on $SCOUT_FAIL_ON"
+          if [ "$SCOUT_MODE" = "live" ]; then ARGS="$ARGS --live"; fi
+          if [ "$SCOUT_DRY_RUN" = "true" ]; then ARGS="$ARGS --dry"; fi
+          echo "node agent/scout/schedule/run.mjs $ARGS"
+          node agent/scout/schedule/run.mjs $ARGS
+
+      # The structural enforcement of the operating mode. If the run
+      # wrote anything outside agent/scout/digests/ — including a
+      # rewrite of agent/scout/*.mjs itself — this fails and nothing
+      # is proposed.
+      - name: Enforce the write boundary
+        if: always() && env.SCOUT_DRY_RUN != 'true'
+        run: node agent/scout/schedule/guard.mjs
+
+      - name: Validate the trace this run emitted
+        if: always()
+        run: node agent/observability/cli.mjs validate
+
+      # ---- artifact storage --------------------------------------
+      # Always, including on failure: a failed run's records and
+      # trace are the only evidence of why it failed. The contract
+      # records and the trace are git-ignored by design
+      # (agent/records/, agent/observability/runs/) — this is the
+      # only place either leaves the runner.
+      - name: Store the digest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-scout-digest
+          path: agent/scout/digests/*.json
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Store the digest summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-scout-digest-summary
+          path: agent/scout/digests/*.md
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Store the full contract records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-scout-records
+          path: agent/records/*.jsonl
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Store the observability trace
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-scout-trace
+          path: agent/observability/runs/*.jsonl
+          if-no-files-found: warn
+          retention-days: 90
+
+      # ---- clear failure reporting --------------------------------
+      - name: Report the outcome
+        if: always()
+        env:
+          STATUS: ${{ steps.run.outputs.status }}
+          GAPS: ${{ steps.run.outputs.gaps }}
+          EGRESS: ${{ steps.run.outputs.failed_by_egress_policy }}
+          CANDIDATES: ${{ steps.run.outputs.candidates }}
+        run: |
+          case "$STATUS" in
+            ok)
+              echo "::notice title=Source Scout::Clean run — ${CANDIDATES} candidate(s), no failed retrievals." ;;
+            degraded)
+              echo "::warning title=Source Scout degraded::${GAPS} failed retrieval(s), ${EGRESS} refused by egress policy. The digest was still written; see the job summary." ;;
+            failed)
+              echo "::error title=Source Scout failed::No digest was produced — the run threw. See docs/AGENT-RUNBOOK.md." ;;
+            *)
+              echo "::error title=Source Scout::The run ended without reporting a status." ;;
+          esac
+
+  # ----------------------------------------------------------
+  # 2. REPORT → PR — write permission, no network beyond GitHub
+  # ----------------------------------------------------------
+  propose:
+    name: Propose by pull request
+    needs: discover
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+
+    if: >-
+      ${{ !cancelled()
+          && inputs.dry_run != true
+          && (inputs.open_pr || 'auto') != 'never'
+          && needs.discover.outputs.digest_id != ''
+          && ((inputs.open_pr || 'auto') == 'always'
+              || needs.discover.outputs.new_against_bibliography != '0'
+              || needs.discover.outputs.new_against_prior_digests != '0') }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Download the digest
+        uses: actions/download-artifact@v4
+        with:
+          name: source-scout-digest
+          path: agent/scout/digests
+
+      - name: Download the digest summary
+        uses: actions/download-artifact@v4
+        with:
+          name: source-scout-digest-summary
+          path: agent/scout/digests
+
+      # The same allowlist the discover job applied, applied again on
+      # the other side of the artifact boundary. A downloaded artifact
+      # is attacker-influenced input to the job that holds the token,
+      # so checking only in the job that does not would not be
+      # checking.
+      - name: Enforce the write boundary
+        run: node agent/scout/schedule/guard.mjs
+
+      - name: Open the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIGEST_ID: ${{ needs.discover.outputs.digest_id }}
+          STATUS: ${{ needs.discover.outputs.status }}
+          CANDIDATES: ${{ needs.discover.outputs.candidates }}
+          NEW_BIB: ${{ needs.discover.outputs.new_against_bibliography }}
+          NEW_PRIOR: ${{ needs.discover.outputs.new_against_prior_digests }}
+          HIGH_RELEVANCE: ${{ needs.discover.outputs.high_relevance }}
+          GAPS: ${{ needs.discover.outputs.gaps }}
+          TRACE_ID: ${{ needs.discover.outputs.trace_id }}
+        run: |
+          set -euo pipefail
+
+          BRANCH="scout/digest-${DIGEST_ID}"
+          SUMMARY="agent/scout/digests/${DIGEST_ID}.md"
+
+          if [ ! -f "$SUMMARY" ]; then
+            echo "::error title=No summary::${SUMMARY} is not in the artifact; nothing to propose."
+            exit 1
+          fi
+
+          git config user.name  "source-scout[bot]"
+          git config user.email "source-scout@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add agent/scout/digests
+
+          if git diff --cached --quiet; then
+            echo "::notice title=Nothing to propose::The digest is already in the repository."
+            exit 0
+          fi
+
+          printf '%s\n' \
+            "Source Scout: discovery digest ${DIGEST_ID}" \
+            "" \
+            "${CANDIDATES} candidate(s), ${NEW_BIB} new against the bibliography, ${NEW_PRIOR} new" \
+            "against earlier digests, ${HIGH_RELEVANCE} at band high, ${GAPS} failed retrieval(s)." \
+            "" \
+            "Produced by Agent 1, the Source Scout (agent/scout/scout.mjs), read-only and" \
+            "contract-backed. No dataset was modified and no candidate is a source record:" \
+            "promoting one requires a human to open the document and read it." \
+            > /tmp/commit-message.txt
+          git commit --file=/tmp/commit-message.txt
+
+          git push -u origin "$BRANCH"
+
+          {
+            echo "Automated discovery digest from the scheduled Source Scout."
+            echo
+            echo "**This pull request adds two files and changes nothing else.** It does not touch"
+            echo "\`data/*.json\`, the brief, the locale register, the validators, or the Scout it"
+            echo "wraps — the workflow fails if the run writes anything outside"
+            echo "\`agent/scout/digests/\`."
+            echo
+            echo "**What a reviewer is being asked to do:** read the candidates below and decide"
+            echo "which, if any, are worth opening. A candidate becomes a source record only after"
+            echo "a person reads the document — see \`docs/AI-SAFE-BOUNDARIES.md\` §3 and"
+            echo "\`docs/AGENT-RUNBOOK.md\`. Merging this pull request records what the Scout saw."
+            echo "It does not accept any candidate."
+            echo
+            echo "Run status: \`${STATUS}\` · trace \`${TRACE_ID}\`"
+            echo
+            echo "---"
+            echo
+            cat "$SUMMARY"
+          } > /tmp/pr-body.md
+
+          gh pr create \
+            --title "Source Scout: ${NEW_BIB} new candidate(s) — ${DIGEST_ID}" \
+            --body-file /tmp/pr-body.md \
+            --base "${GITHUB_REF_NAME}" \
+            --head "$BRANCH"
+
+          gh pr edit "$BRANCH" --add-label "source-scout" \
+            || echo "::notice title=Label not applied::Create a 'source-scout' label to group these pull requests."

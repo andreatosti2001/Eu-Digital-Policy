@@ -1,226 +1,271 @@
 # HANDOVER
 
-**Last updated:** Reconciliation session · 1 September 2026
-**Branch:** `main` — every prior parallel line merged here in one session, at the user's
-explicit instruction, after four sessions had diverged without ever seeing each other.
-**Base:** `4bd1f0d` (the last commit previously on `main`, end of SESSION 02).
+**Last updated:** SESSION 06 follow-up · 2 September 2026
+**Branch:** `claude/source-scout-scheduled-workflow-5s645a`, restarted from `origin/main` at
+`82fc692` (the reconciliation session's own final commit) — not stacked on this branch's own
+earlier, now-superseded history. See "What happened to the earlier attempt" below.
+**Base commit:** `82fc692` on `main`.
 
 ---
 
-## Read this first — five parallel lines, reconciled into one
+## Read this first — this branch was built twice, and the first build was retired
 
-Every session after SESSION 02 forked from the **same stale point** on `main` (`4bd1f0d`),
-because no session's branch was ever merged back before the next one started. Five lines of
-work accumulated in parallel, none aware the others existed:
+A session on this same designated branch (`ff84fe3`) built a Source Scout **before**
+`agent/schemas/` existed on `main`. A separate reconciliation session merged five parallel
+lines of work into `main` (`docs/HANDOVER.md`'s previous revision, "five parallel lines,
+reconciled into one") and, in doing so, **retired that Scout and everything it wrote** —
+`agent/scout/{scout,http,feed,dedupe,relevance,report,guard,cli,selftest}.mjs`,
+`agent/scout/registry.json`, `agent/scout/reports/`, and
+`.github/workflows/source-scout.yml` — in favour of a contract-backed Scout two other sessions
+had already built and cross-validated against `agent/schemas/`.
 
-| Line | Branch | What it was |
-|---|---|---|
-| Governance layer | `…repo-architectural-audit-v45psd` @ `cfe5d54` | An independent architectural audit (17 findings) and five operating-policy documents |
-| Skill library | `…shared-skill-library-djn1oo` @ `feac219` | Sixteen agent skills and `docs/SKILL-MAP.md` |
-| Contracts + Scout A | `…inter-agent-contract-schemas-o6dfc7` @ `2995328` | The fourteen inter-agent contracts (`agent/schemas/`) and the **Source Scout** — already internally reconciled against a second, competing Scout built in the same session window (see below) |
-| Scout A's competitor | `…scout-agent-implementation-wsa31u` @ `7fcf0c5` | A claim-scoped citation resolver, retired in favour of the Source Scout before this reconciliation began |
-| Scout B | `…source-scout-scheduled-workflow-5s645a` @ `ff84fe3` | A **third**, independently built Scout — forked *before* the contracts existed, so it bypassed them entirely — plus a scheduling and security design worth keeping even though its code was retired |
+The repository's own record of that decision (`git show ef92201`) is plain that the retired
+work was not bad — "real, careful engineering: a permission-split GitHub Actions workflow…
+and `guard.mjs`, which fails the run if anything outside the report directory changed" — only
+that it bypassed the contract layer entirely and could not be reconciled with it. It also
+recorded, explicitly, that porting that design onto the surviving Scout was **real work for a
+future session, not attempted during the reconciliation.**
 
-All four remaining lines (the fifth, Scout A's competitor, was already folded into Scout A's
-branch before this session) are now merged into `main` as a sequence of real merge commits,
-each keeping both parents' history:
+This session is that future session. The user asked me to confirm sessions 00–05 had actually
+landed on `main` (they had — verified with `git merge-base --is-ancestor`, not assumed) and
+then to redo this branch's objective against the repository as it now stands. Per
+`AGENTS.md`'s "if the PR for your designated branch has already been merged, restart the
+branch" instruction, the branch was reset to `origin/main` rather than built on top of its own
+retired commit — the retired commit is still in `main`'s history (inside the merge at
+`ef92201`), but nothing on this branch depends on it.
 
-```
-fe404e8  Merge the architectural audit branch (cfe5d54)
-399a51d  Merge the shared skill library branch (feac219)
-498fba5  Merge the contracts and reconciled Source Scout branch (9d5308e)
-ef92201  Merge and reconcile the third Scout branch (ff84fe3): retire its implementation
-```
+**Everything below is new work against the surviving Scout.** No file inside
+`agent/scout/{scout,authorities,extract,dedupe,fixtures,store,cli,selftest}.mjs` or
+`agent/schemas/` was touched.
 
-**Nothing here should need to happen again.** Going forward, a new session should fork from
-`main` *after* the previous session's work has actually landed there — not from a stale
-point — or this exact failure repeats. See "Do not" at the end of this file.
+---
 
-## What was decided, and why
+## Current milestone
 
-### Two `docs/AGENT-CONTRACTS.md` — a rename, not a collision
+**SESSION 06, redone — schedule the Source Scout, this time against `agent/schemas/`.
+Complete**, with the same honest caveat the reconciliation already recorded: every registered
+endpoint is refused by this environment's egress policy, so the schedule has never yet
+retrieved a real document. See §6 below and `docs/AGENT-RUNBOOK.md` §6.
 
-The audit branch wrote a prose document at `docs/AGENT-CONTRACTS.md`: ten agent roles, what
-each owns, what each may never do. The contracts branch later wrote a completely different,
-code-backed document at the same path: the fourteen machine-readable JS contract schemas and
-the gate that enforces them. These are not the same thing at different levels of finish —
-one is policy prose, the other is an enforced validator — and neither should destroy the
-other. The audit branch's document was renamed to **`docs/AGENT-ROLES.md`** before the
-contracts branch was merged, with every cross-reference in the repository updated in the same
-commit. Both documents now exist, distinct, at their intended names.
+The reference document is **`docs/AGENT-RUNBOOK.md`**, rewritten in full this session. This
+file is the handover only.
 
-### Two Scouts inside one branch, already reconciled before this session
+## Work performed
 
-The contracts branch (`2995328`) and its immediate competitor (`7fcf0c5`) were built in the
-same session window and both produced a complete Scout. That reconciliation happened in an
-earlier session and is preserved verbatim in this file's own git history (`git log -p --
-docs/HANDOVER.md` around commit `9d5308e`), not restated here. Short version: the **Source
-Scout** was kept — it discovers documents from an authority hierarchy rather than only
-re-resolving citations the corpus already held, and it is the stronger implementation (30
-tests vs 12). A `DataGap` contract disagreement between the two (`retrieval_blocked` paired
-with a new `retrieval_failed` absence kind, vs. the existing `null_not_researched`) was
-decided in the adopted branch's favour on one-home-per-fact grounds: `gap_kind:
-retrieval_blocked` already records that retrieval was attempted and refused, so a second
-field recording the same fact would be a second home for it.
+Built `agent/scout/schedule/` — a wrapper around Agent 1 (`agent/scout/scout.mjs`) that adds
+scheduling without modifying the agent it schedules:
 
-### A third Scout, found in this session, retired for the same reason
+1. **`digest.mjs`** — turns a completed run into a committed preview (`agent/scout/digests/`):
+   a pointer/summary of each `SourceCandidate` and `DataGap`, never the full record body, on
+   the same reasoning `agent/schemas/gateway.mjs` already applies to the trace. Adds two
+   duplicate checks the Scout itself does not perform (against `data/sources.json` and against
+   every earlier digest), explicitly labelled as report-layer annotations and never written
+   back into a contract record.
+2. **`guard.mjs`** — the write boundary, enforced against the actual working tree: only
+   `agent/scout/digests/*.{json,md}` may change. An allowlist, and it names
+   `agent/scout/scout.mjs` and `agent/schemas/` explicitly among what it refuses, so the
+   scheduling layer cannot rewrite the agent it wraps.
+3. **`run.mjs`** — what the workflow invokes. Runs the same `Scout` class
+   `agent/scout/cli.mjs` runs, the same way (`--mock` default, `--live` explicit), and adds a
+   committed digest plus GitHub Actions step outputs.
+4. **`selftest.mjs`** — 18 tests, `node:test`, no network.
+5. **`.github/workflows/source-scout.yml`** — rebuilt against `run.mjs` and `guard.mjs`.
+   Same two-job permission split as the retired design (`discover`: `contents: read`, no write
+   token, network; `propose`: `contents: write`, `pull-requests: write`, no network beyond
+   GitHub) and the same reasoning for it.
+6. **`docs/AGENT-RUNBOOK.md`** — rewritten in full as a live operating manual, replacing the
+   "describes retired code" framing.
+7. **`docs/SOURCE-SCOUT.md`** — one addendum to known limitation 6, pointing at where it is
+   partially mitigated (the digest's report-layer duplicate check) without softening the
+   limitation itself, which still holds inside the Scout.
 
-`ff84fe3` (SESSION 06) forked from `main` **before `agent/schemas/` existed**, so it built a
-third, independent Scout with no contract awareness at all: it writes plain JSON reports to
-`agent/scout/reports/`, traced through the observability layer but never through
-`agent/schemas/gateway.mjs`. Its own suite passed cleanly on its own branch (41/41, verified
-before merging), and it came with real, careful engineering — a GitHub Actions workflow that
-splits `discover` (read-only, no write token) from `propose` (write token, no untrusted
-input), and `guard.mjs`, which fails the run if anything outside the report directory
-changed.
-
-It was retired anyway, on the same principle as the prior reconciliation: this repository's
-governance is now built around `agent/schemas/` — "no agent may bypass these contracts" is
-that module, not a policy sentence — and a Scout that cannot be reconciled with it undermines
-the reason the other two were reconciled in the first place. Running three Scouts, one of
-which writes outside the contract system entirely, is not a stable end state.
-
-**What was not thrown away:** `docs/AGENT-RUNBOOK.md` is kept, rewritten at the top to say
-plainly it describes retired code, because the scheduling and security design in it — the
-job-permission split, the write-boundary guard, the weekly cadence — is sound and independent
-of which Scout implementation runs inside it. Porting that design onto the contract-backed
-Scout (a different write boundary, `agent/records/` not `agent/scout/reports/`; different
-candidate records, `SourceCandidate` not report JSON; a PR step that does not exist yet) is
-real work, recorded below as a next-session objective, not attempted inside this
-reconciliation.
-
-## Current state of the repository
+## Files changed
 
 ```
-agent/
-  observability/   the trace layer — spans, events, the JSONL store, the viewer
-  schemas/         the fourteen inter-agent contracts, the validator, the gateway
-  scout/           the Source Scout — read-only, contract-backed, 30 tests
-.agents/skills/     sixteen skills — see docs/SKILL-MAP.md for scope and role
-docs/
-  AGENT-CONTRACTS.md   the fourteen contracts (code-backed) — reference for agent/schemas/
-  AGENT-ROLES.md       ten agent roles (prose) — the audit branch's contribution
-  AGENT-RUNBOOK.md     a retired Scout's scheduling design, kept for reuse
-  AI-SAFE-BOUNDARIES.md   green/amber/red tiers, the eight absolute prohibitions
-  AUDIT-2026-09-01.md     17 independent findings, F-01 self-retracted
-  AUTONOMY-POLICY.md      autonomy classes A/B/C/D, refining the tiers above
-  DATA-GOVERNANCE.md      one home per fact, derivation over storage
-  SOURCE-POLICY.md        what may be cited, what a citation can support
-  VERIFICATION-POLICY.md  what each validator proves and does not
-  SOURCE-SCOUT.md         the Source Scout's own reference document
-  SKILL-MAP.md            the sixteen skills, scope and intended role
-  CURRENT-ARCHITECTURE.md, OBSERVABILITY.md, PROJECT-CONTEXT.md   unchanged
+agent/scout/schedule/digest.mjs      (new)
+agent/scout/schedule/guard.mjs       (new)
+agent/scout/schedule/run.mjs         (new)
+agent/scout/schedule/selftest.mjs    (new — 18 tests)
+agent/scout/schedule/README.md       (new)
+agent/scout/digests/README.md        (new — the directory itself is committed on purpose)
+.github/workflows/source-scout.yml   (new)
+docs/AGENT-RUNBOOK.md                (rewritten in full)
+docs/SOURCE-SCOUT.md                 (one addendum, known limitation 6)
+docs/HANDOVER.md                     (rewritten for this session)
 ```
 
-No file the website ships (`index.html` and its siblings, `js/`, `css/`, `data/`, `i18n/`,
-`fonts/`) was touched by any of the four merges. Confirmed with `git status --porcelain`
-after each one and again at the end.
+**Not touched:** `agent/scout/{scout,authorities,extract,dedupe,fixtures,store,cli,selftest}.mjs`,
+every file under `agent/schemas/`, every file under `agent/observability/`, and no
+`data/*.json`. Confirmed by `git status --porcelain` and, structurally, by
+`agent/scout/schedule/guard.mjs` refusing every one of those paths by name in its own test
+suite.
 
-## Tests, run at the end of this reconciliation, from `main`'s HEAD
+## Architecture decisions
+
+1. **A wrapper, never a modification.** The reconciliation's own diagnosis of the retired
+   Scout was that it "cannot be reconciled with [the contracts] without being substantially
+   rewritten." A wrapper that imports the Scout's own classes and functions rather than
+   reimplementing anything cannot have that problem — deleting `agent/scout/schedule/` entirely
+   would leave Agent 1 exactly as this session found it.
+2. **A digest is a pointer, not a second home for the record.** Directly copying
+   `gateway.mjs`'s own justification for why the trace carries only an id and a hash: "Copying
+   the body into the trace would make the trace a second home for every fact the record
+   carries." The digest carries id, url, title, confidence and the other fields a human needs
+   to triage — never `epistemic` or `evidence`. A test (`selftest.mjs`, "pointer, not the
+   record") asserts this directly.
+3. **Two duplicate checks live at the report layer, not inside the Scout.** Cross-referencing
+   `data/sources.json` and prior digests is genuinely useful and was an explicit requirement of
+   this session's original brief, but it is not something SESSION 05 built into the contract
+   (`docs/SOURCE-SCOUT.md` limitation 6), and extending `SourceCandidate` or `scout.mjs` was out
+   of this session's scope and risked exactly the kind of unreviewed contract change
+   `docs/AUTONOMY-POLICY.md` Class C reserves for a human decision. So the check is read-only,
+   built fresh in `digest.mjs` (reusing `normaliseUrl`/`normaliseTitle` from the Scout's own
+   `dedupe.mjs` rather than reimplementing them), and never written back into a
+   `SourceCandidate`. `matches_existing_source_id` stays `null`, exactly as the limitation
+   describes. This is flagged as a judgement call, not a settled design — see "Anything the
+   next agent must know."
+4. **The guard is an allowlist that names the Scout's own files.** Not just "everything outside
+   `agent/scout/digests/`" — the guard's `NAMED` table and its test suite explicitly call out
+   `agent/scout/scout.mjs` and `agent/schemas/` by name, so a future reader of a failed guard
+   run sees "the Source Scout core" or "no agent may bypass these contracts" rather than a bare
+   path.
+5. **`--live` is the schedule's default mode**, `--mock` opt-in via `workflow_dispatch`,
+   inverting `agent/scout/cli.mjs`'s own default (which stays `--mock`, unchanged). The CLI's
+   default protects an interactive session from an accidental live run; a *scheduled* workflow
+   whose entire purpose is periodic live discovery is the "asked for it in as many words" case
+   `docs/SOURCE-SCOUT.md` describes.
+6. **`degraded` exits 0 by default**, same reasoning as the retired design and restated because
+   it is currently the expected outcome of every run: every registered endpoint is refused by
+   egress policy (§6), and that must not redden the schedule every week until it is disabled.
+7. **The two-job permission split and the double guard check are carried over unchanged.** The
+   reconciliation's own commit message called this "real, careful engineering" worth reusing;
+   it needed no rework, only repointing at the new write boundary and the new run entry point.
+
+## Tests
+
+Run in this session, from the repository root, on the branch restarted from `82fc692`:
 
 | Command | Result |
 |---|---|
-| `node --test agent/scout/selftest.mjs` | 30 pass · 0 fail |
-| `node --test agent/schemas/selftest.mjs` | 67 pass · 0 fail |
-| `node --test agent/observability/selftest.mjs` | 13 pass · 0 fail |
+| `node --test agent/scout/schedule/selftest.mjs` | **18 pass · 0 fail** (new) |
+| `node --test agent/schemas/selftest.mjs` | 67 pass · 0 fail — unchanged, confirms the contracts were not touched |
+| `node --test agent/scout/selftest.mjs` | 30 pass · 0 fail — unchanged, confirms Agent 1 was not touched |
+| `node --test agent/observability/selftest.mjs` | 13 pass · 0 fail — unchanged |
 | `node agent/schemas/cli.mjs check` | 14/14 satisfiable, exit 0 |
-| `node agent/observability/cli.mjs validate` | 0 invalid, exit 0 |
-| `node agent/scout/cli.mjs --live` | exit 0 — 0 candidates, 5 gaps (egress still blocked) |
-| `node tools/validate.mjs` | 0 errors |
-| `node tools/i18n-audit.mjs` | 0 errors, 0 warnings |
-| `node tools/design-qa.mjs` | 0 errors, **5 warnings** — the same five as the §12 baseline |
+| `node tools/validate.mjs` | 0 errors — matches the §12 baseline |
+| `node tools/i18n-audit.mjs` | 0 errors, 0 warnings — matches |
+| `node tools/design-qa.mjs` | 0 errors, **5 warnings** — the same five as §12 |
 | `node tools/freshness.mjs` | reports only, exit 0 |
 
-**The four validators' output is byte-identical to the baseline recorded on `main`'s `4bd1f0d`
-before any branch was merged**, compared with `diff`, for every one of the four merges in
-sequence and again at the end. No new warning at any point.
+**128 tests total across the four suites, all passing.** No new `design-qa` warning.
 
-Also checked: `git status --porcelain` clean after the final merge; no dangling reference to
-any retired file (`agent/scout/{http,feed,guard,relevance,report}.mjs`,
-`agent/scout/registry.json`, `agent/scout/reports/`, `.github/workflows/source-scout.yml`)
-anywhere in the tree except `docs/AGENT-RUNBOOK.md`'s own explanation of what was removed and
-why.
+**The guard was verified in both directions, on the real working tree:**
+- a real mock run (`node agent/scout/schedule/run.mjs`) wrote exactly two files under
+  `agent/scout/digests/`, and the guard reported `ok`;
+- with a stray byte appended to `data/sources.json`, the guard exited 1 and named it "a
+  canonical dataset — RED tier, docs/AI-SAFE-BOUNDARIES.md §3" alongside every other legitimate
+  but not-yet-committed change on the branch, proving it does not special-case its own output.
 
-## Network reality — unchanged
+**A live run was also exercised** (`node agent/scout/schedule/run.mjs --live --dry
+--max-docs=1`): five gaps, all `blocked_by_egress_policy: true`, identical in substance to what
+`docs/SOURCE-SCOUT.md` "FINDING" already recorded before this session. Nothing new was learned
+about network reachability; the wrapper reproduces the Scout's own documented behaviour
+faithfully.
 
-Outbound access is still refused by this environment's egress policy — HTTP 403 with
-`x-deny-reason: host_not_allowed` for every host tried, EUR-Lex included. The Source Scout's
-live run therefore still produces 0 candidates and 5 `DataGap` records, each naming the real
-proxy response and stating plainly that this is the environment's policy and not a statement
-about the document. Nothing was invented to compensate. See `docs/SOURCE-SCOUT.md` for detail
-and `docs/AI-SAFE-BOUNDARIES.md` for why that discipline is non-negotiable here.
+**Test digests from these runs were deliberately not committed** — they are fixture-corpus and
+sandbox-live output, not real proposals, and committing them would seed
+`agent/scout/digests/`'s cross-run memory with nothing.
+
+**The workflow itself has never executed on GitHub Actions.** Verified statically only: the
+YAML parses, every `run:` block passes `bash -n`, job permissions and the concurrency block
+were asserted by parsing the file.
+
+## Observability
+
+Every scheduled run emits through the same path a manual `agent/scout/cli.mjs --live` run
+does — `agent/scout/schedule/run.mjs` constructs the same `Scout`, `Tracer` and `RecordStore`
+classes and adds no second logging path. `agent/observability/cli.mjs show <trace-id>` renders
+a scheduled run exactly as it would a manual one.
 
 ## Known limitations
 
-1. **The Source Scout has still never successfully retrieved a real document.** Every
-   `retrieved` code path is proven by mock fixtures and nothing else. The first live run in an
-   environment with open egress should be watched closely.
-2. **`docs/AGENT-ROLES.md` and `docs/AGENT-CONTRACTS.md` describe overlapping ground at
-   different altitudes** — ten roles in prose vs. fourteen machine contracts — and nothing
-   currently checks that a role's obligations in the former are actually enforceable through
-   the latter. That reconciliation was not attempted here; it is a documentation-consistency
-   question, not a code conflict, and belongs to a session that reads both closely.
-3. **The five operating-policy documents (`AUTONOMY-POLICY.md`, `DATA-GOVERNANCE.md`,
-   `SOURCE-POLICY.md`, `VERIFICATION-POLICY.md`, `AGENT-ROLES.md`) have not been cross-checked
-   against `agent/schemas/`** for the same reason — they were written before the contracts
-   existed, in prose, by a different session. Where they agree, that is not yet verified;
-   where they might disagree, nothing would currently catch it.
-4. **No agent is scheduled.** `docs/AGENT-RUNBOOK.md` describes a design, not a running
-   system. See the next objective below.
-5. **106 records carry an unverified or requires-verification note** — unchanged, and still
-   the project's largest open body of work, still blocked on the same egress policy that
-   blocks the Scout.
-6. Carried forward: the record store (`agent/records/`) is per-developer, no retention
-   policy, concurrent writers untested.
+1. **The workflow has never run on GitHub Actions.** Everything about it is verified
+   statically, same caveat the retired design carried and for the same reason: this session had
+   no means to dispatch it.
+2. **Every registered endpoint is still refused by this environment's egress policy.** Nothing
+   about that changed this session; it is inherited from `docs/SOURCE-SCOUT.md`, unmodified.
+3. **The report-layer duplicate check (decision 3 above) is new and unexercised against a real
+   corpus of prior digests** — the test suite covers it with synthetic fixtures, but no real
+   scheduled run has yet produced two digests to cross-reference.
+4. **Digests will accumulate with no retention policy**, the same limitation the retired
+   design's reports carried, now stated up front rather than discovered later.
+5. **Whether the report-layer duplicate check belongs at this layer at all, versus as a
+   proper extension to `SourceCandidate` and `scout.mjs`, is a judgement call this session made
+   under scope pressure, not a settled architectural decision.** See "Anything the next agent
+   must know."
+6. Every limitation `docs/SOURCE-SCOUT.md` already states about Agent 1 itself (link-following
+   one level deep, relevance as string matching, no `source_type` classification, no
+   `robots.txt` handling) is unchanged and out of this session's scope.
 
-## Unresolved issues, carried forward
+## Unresolved issues, carried forward unchanged
+
+From the reconciliation's own handover, none touched by this session:
 
 1. `data/brief.json` is canonical but never consumed; `index.html`'s inline
-   `window.__CONTENT__` blob has already drifted from it (`meta.standfirst` differs).
-2. No deploy gate. A push to `main` publishes; the validators do not run in CI.
-3. GitHub Pages serves the repository at root, so `agent/` is reachable even though nothing
-   links to it and no run data is committed.
+   `window.__CONTENT__` blob has already drifted from it.
+2. No deploy gate — a push to `main` publishes; the validators do not run in CI. **This
+   session's workflow does not address this**; it schedules Agent 1, not a validator gate.
+3. `docs/AGENT-ROLES.md` and `docs/AGENT-CONTRACTS.md` describe overlapping ground at different
+   altitudes, uncross-checked.
+4. The five operating-policy documents have not been cross-checked against `agent/schemas/`.
+5. 106 records carry an unverified or requires-verification note.
+6. `agent/records/` and `agent/observability/runs/` remain per-developer, no retention policy,
+   concurrent writers untested.
 
 ## Next session
 
-**Two candidate objectives, and they do not depend on each other:**
+**Two candidate objectives, unchanged in substance from what the reconciliation already
+recommended, now that scheduling exists to make the first one automatic:**
 
-**A — open the egress policy for the hosts `data/sources.json` and the Source Scout's
-registered endpoints cite**, then run `node agent/scout/cli.mjs --live` and see what the
-first real candidates say about the contracts. This is the single highest-leverage next step
-in the whole project: everything downstream (verification, the 106 unverified records) is
-blocked on it.
+**A — dispatch the workflow manually with `mode: mock` first**, to confirm it runs cleanly on
+a real GitHub-hosted runner (this session could not test that), then with `mode: live` and
+`dry_run: true`, and read what it reports about the five endpoints from a real runner's network
+position — which may differ from this development environment's. This is the single
+highest-leverage next step: everything downstream (verification, the 106 unverified records)
+is still blocked on a real retrieval ever succeeding.
 
-**B — reconcile the policy documents against the code contracts** (limitation 2 and 3 above):
-read `docs/AGENT-ROLES.md`, `docs/AUTONOMY-POLICY.md`, `docs/DATA-GOVERNANCE.md`,
-`docs/SOURCE-POLICY.md`, `docs/VERIFICATION-POLICY.md` against `agent/schemas/` and
-`docs/AGENT-CONTRACTS.md`, and report — do not silently paper over — anywhere they disagree
-about what an agent may do.
-
-Do not build the Verifier yet. It needs a document the Scout can actually open, which is
-objective A.
+**B — decide whether the report-layer duplicate check (decision 3) should move into
+`SourceCandidate` and `scout.mjs` itself.** If a future session wants the Scout's own
+`matches_existing_source_id` populated, that is a deliberate, reviewed change to a contract
+Class C requires — not something to retrofit into the wrapper.
 
 ### Exact next objective
 
-Ask the repository owner which of A or B to prioritise, or whether to do the reachable parts
-of B (a read-only audit) while waiting on a decision about A (which is an infrastructure
-change outside this session's authority).
+Dispatch **Source Scout** manually with `mode: mock`, `dry_run: true` first (to prove the
+workflow's own mechanics on a real runner without touching any endpoint or committing
+anything), then decide with the repository owner whether to proceed to a live dispatch.
 
 ## Anything the next agent must know
 
-- **Fork from the actual current `main`, not from memory of an earlier commit.** Run
-  `git fetch origin main && git log --oneline -3 origin/main` before believing anything about
-  what exists. This reconciliation exists because five sessions did not do that.
-- The repository's governance is `agent/schemas/`. An agent that does not emit through
-  `gateway.mjs` will not be reconcilable with the rest of the project, however good its code
-  is — ask the third Scout.
-- `agent/records/` and `agent/observability/runs/` are both git-ignored. Never commit either.
-- `docs/AGENT-RUNBOOK.md` is design documentation for retired code, not an operating manual.
-  Read its opening section before acting on anything in it.
+- **This branch was restarted from `main`, not built on its own earlier commit.** If a session
+  after this one finds itself confused about `ff84fe3` or `9d5308e` in the log, `git log
+  --graph` — they are real history, already reconciled, and not this session's starting point.
+- **`agent/scout/schedule/` never touches `agent/scout/scout.mjs` or `agent/schemas/`.** If a
+  task seems to require changing either from inside this wrapper, stop — that is a different,
+  larger change with its own review path, not a scheduling change.
+- **The report-layer duplicate check is a judgement call, flagged as one** (known limitation
+  5). It was the most defensible design available without touching the contracts, not
+  necessarily the only one. A future session revisiting it should read
+  `agent/scout/schedule/digest.mjs`'s own opening comment before changing it.
+- **Every registered endpoint being refused is the expected state, not a bug to fix from
+  inside this repository.** It is a property of the environment the Scout runs in.
+- Before declaring anything done: `node --test agent/scout/schedule/selftest.mjs`,
+  `node --test agent/schemas/selftest.mjs`, `node --test agent/scout/selftest.mjs`,
+  `node --test agent/observability/selftest.mjs`, and the four validators in `tools/`.
 
-## Do not
+## Anything the next agent must NOT change
 
-Carried forward and still binding:
+Carried forward from the reconciliation, unchanged and still binding:
 
 - Do not rebuild the site. No framework, no bundler, no build step, no dependency, no service
   worker, no server-side rendering.
@@ -230,42 +275,38 @@ Carried forward and still binding:
   `js/format.js`, the derivation rules in `js/pipeline.js`, or `BASE` in `tools/_footer.mjs`.
 - Do not declare a licence. Do not soften the README's known limitations or the
   unverified-record count. Do not re-run `tools/_refsweep.mjs` or `tools/_review10.mjs`.
-- Do not change the id shapes in `agent/observability/ids.mjs`, and do not move redaction to
-  the read path.
+- Do not change the id shapes in `agent/observability/ids.mjs`; do not move redaction to the
+  read path.
 - Do not commit anything under `agent/records/` or `agent/observability/runs/`.
 - Do not add a validation bypass to `agent/schemas/validate.mjs`. No `skip`, no `force`, no
-  `strict: false`. `allowSimulated` admits a fixture and nothing else.
+  `strict: false`.
 - Do not add a field for a substitute value to `DataGap` or anywhere else.
+- Do not resurrect the retired Scouts from their old branches.
+- Do not start a new session's branch from anything other than the current tip of `main`.
 
-Added by this reconciliation:
+Added by this session:
 
-- **Do not resurrect the retired Scouts.** Neither the claim-scoped citation resolver
-  (`…scout-agent-implementation-wsa31u` @ `7fcf0c5`) nor the report-based third Scout
-  (`…source-scout-scheduled-workflow-5s645a` @ `ff84fe3`) should be rebuilt from their
-  branches. Both were deliberately retired; the reasoning is above, and it does not weaken
-  with time.
-- **Do not treat `docs/AGENT-RUNBOOK.md` as a live operating manual.** Its scheduling design
-  is worth porting; its file paths and CLI invocations refer to code that has been deleted.
-- **Do not start a new session's branch from anything other than the current tip of `main`.**
-  This entire session exists because that rule was not followed for four sessions running.
-- **Do not re-litigate the two contract decisions already made** (the `docs/AGENT-CONTRACTS.md`
-  rename, and `retrieval_blocked` pairing with `null_not_researched` rather than a new
-  `retrieval_failed` kind) without reopening the reasoning recorded above and in this file's
-  own history — both were argued, not defaulted to.
+- **Do not let `agent/scout/schedule/` write to anything but `agent/scout/digests/*.{json,md}`.**
+  Extending its allowlist without extending `guard.mjs`'s own test suite in the same commit is
+  the failure mode to watch for.
+- **Do not write a report-layer annotation back into a `SourceCandidate` or `DataGap`.** If
+  that check is ever promoted into the contract, it is a Class C change to `agent/schemas/` and
+  `agent/scout/scout.mjs`, made deliberately, with its own tests — not a quiet addition from the
+  wrapper.
+- **Do not treat a digest's `relevance_band` as a legal or editorial judgement.** It is the
+  Scout's own `confidence` number against a stated threshold, nothing more.
+- **Do not gitignore `agent/scout/digests/`.** It is the only memory this scheduling layer has
+  between runs.
 
 ---
 
 ## What must NOT be rebuilt
 
-Unchanged since SESSION 00, and every session since has respected it: **the architecture is
-not technical debt, it is the argument.** The zero-build, zero-dependency, client-rendered
-model; `js/data.js` as the sole fetch point; the derivation layer; the one-home-per-fact data
-model; the taxonomy as universal enum authority; the `null` / `unknown` distinction;
-`js/shell.js` and `js/evidence-view.js` as single renderers; the seven duplicated footers; and
-the four validators — none of these was touched by any of the four merges in this session,
-and none should be.
+Unchanged since SESSION 00 and every session since: **the architecture is not technical debt,
+it is the argument.** Nothing in `js/`, `css/`, `data/`, `i18n/`, `tools/`, the seven pages,
+`agent/observability/`, `agent/schemas/`, or Agent 1's own files was touched by this session.
 
-The agent layer this session reconciled was built to the same standard on every line that
-contributed to it: no dependency, no build step, derived state never stored, every record
-able to say what it cannot support. Where two lines disagreed about what a record may assert,
-the disagreement was settled on that same principle rather than by which branch was newer.
+The scheduling layer was built to the same standard as everything it wraps: no dependency, no
+build step, derived state never stored twice, `null` and `unknown` kept apart, and every
+record — including a digest describing a run in which every retrieval failed — able to say
+exactly what it cannot support.
