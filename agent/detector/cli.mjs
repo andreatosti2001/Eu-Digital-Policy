@@ -2,7 +2,7 @@
 /* ============================================================
    agent/detector/cli.mjs
 
-     node agent/detector/cli.mjs --mock [--as-of YYYY-MM-DD]
+     node agent/detector/cli.mjs --mock [--as-of YYYY-MM-DD] [--depth N]
      node agent/detector/cli.mjs --mock --dry
      node agent/detector/cli.mjs --records <trace-id> --as-of YYYY-MM-DD
 
@@ -41,6 +41,11 @@ const valueOf = (flag) => {
 };
 
 const dry = has('--dry');
+/* How far the impact map walks out from a changed record. Two hops
+   already reaches most of this corpus; further is available and is
+   never the default, because a map that names most of the corpus
+   every time distinguishes nothing. */
+const depth = Number(valueOf('--depth') ?? 2);
 const traceArg = valueOf('--records');
 const live = has('--records') || Boolean(traceArg);
 const out = (s = '') => process.stdout.write(`${s}\n`);
@@ -83,7 +88,7 @@ out();
 const before = hashDataDir();
 
 try {
-  const detector = new Detector({ tracer, store, corpus, asOf, simulated: !live });
+  const detector = new Detector({ tracer, store, corpus, asOf, simulated: !live, impactDepth: depth });
   const r = await detector.run({ verifications });
 
   out('  CHANGES');
@@ -94,6 +99,25 @@ try {
     out(`      datasets ${c.affected_datasets.join(', ') || 'none'}   pages ${c.affected_pages.join(', ') || 'none'}   ${c.autonomy_class}`);
   }
   if (!r.changes.length) out('    none');
+
+  if (r.assessments.length) {
+    out();
+    out('  IMPACT ON THIS WEBSITE  — what each confirmed change reaches, and which half a machine may act on');
+    for (const a of r.assessments) {
+      const c = a.counts;
+      out(`    ${a.assessment_id}  for ${a.change_id}  ·  ${c.reached_records} record(s) reached at depth ${a.depth}  ·  ${a.autonomy_class}`);
+      out(`      FACTUAL   ${String(c.factual_impacts).padStart(3)}  of which ${c.automatically_actionable} need no edit anywhere (the site derives them at render time)`);
+      out(`      EDITORIAL ${String(c.editorial_impacts).padStart(3)}  ${c.editorial_impacts ? '←  prose that states the value that moved; nothing here reads prose' : ''}`);
+      out(`      OPEN      ${String(c.open_questions).padStart(3)}  prose that may be stale and cannot be shown to be`);
+      for (const s of a.surfaces) {
+        out(`        ${(s.label ?? s.surface).padEnd(20)} ${s.records.length ? `${s.records.length} record(s)` : ''} ${s.modules.join(' ')} ${s.pages.join(' ')}`.replace(/\s+$/, ''));
+      }
+      for (const e of a.editorial) {
+        out(`        ⚑ ${e.node_id}.${e.field}  →  ${e.route}`);
+        out(`          "${String(e.quote).slice(0, 120)}"`);
+      }
+    }
+  }
 
   if (r.unchanged.length) {
     out();
@@ -129,7 +153,7 @@ try {
   const untouched = JSON.stringify(before) === JSON.stringify(after);
 
   out();
-  out(`  ${r.changes.length} change(s) · ${r.gaps.length} unclassified · ${r.unchanged.length} unchanged · ${r.not_compared.length} not compared · ${r.conflicts.length} conflict(s) set aside`);
+  out(`  ${r.changes.length} change(s) · ${r.assessments.length} impact assessment(s) · ${r.gaps.length} unclassified · ${r.unchanged.length} unchanged · ${r.not_compared.length} not compared · ${r.conflicts.length} conflict(s) set aside`);
   out(`  by kind:        ${Object.entries(r.by_kind).map(([k, n]) => `${k} ${n}`).join(' · ') || 'none'}`);
   out(`  by materiality: ${Object.entries(r.by_materiality).map(([k, n]) => `${k} ${n}`).join(' · ') || 'none'}`);
   out(`  trace ${r.trace_id}`);

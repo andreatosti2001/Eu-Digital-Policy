@@ -4,6 +4,9 @@
 refuses to say.
 **Built:** SESSION 09, 2 September 2026.
 **Code:** `agent/detector/`. **Contract:** `agent/schemas/contracts/regulatory-change.mjs`.
+**Extended:** SESSION 10 — `docs/REGULATORY-IMPACT-MAPPING.md`, which is where the
+impact map, the factual/editorial split and the dependency graph are documented.
+This document stops at the detection; that one starts at it.
 **Companions:** `docs/LEGAL-VERIFIER.md` (what produces its input),
 `docs/VERIFICATION-INTEGRATION.md` (what happens to its output),
 `.agents/skills/regulatory-change-detection/` (the skill it implements).
@@ -256,6 +259,31 @@ the same as a page rendering it.
 has already drifted (`CURRENT-ARCHITECTURE` §8). Claiming `index.html` renders
 `brief.json` would be claiming the bypass is resolved. The exclusion comes back
 as a caveat rather than being silent.
+
+## 7a. What a change reaches — SESSION 10
+
+`affected_pages` above answers "which pages render the changed value". It does not
+answer what else in the corpus depends on it, which prose restates it, or what a
+machine may do about any of it. SESSION 10 added that as a record of its own:
+**`ImpactAssessment`**, one per confirmed change, produced in a `detector.impact`
+span and exposed through observability.
+
+- `agent/detector/graph.mjs` — the corpus dependency graph, 651 records and 3070
+  references, every edge derived by testing whether a string a record holds **is**
+  the id of another record.
+- `agent/detector/fields.mjs` — which fields carry a fact and which carry an
+  argument, exhaustive against the live data and failing the suite when it is not.
+- `agent/detector/impact.mjs` — the nine surfaces, the factual/editorial split, and
+  the governance gate.
+
+**The full account is `docs/REGULATORY-IMPACT-MAPPING.md`.** Two things from it
+belong here because they change how this agent's output is read:
+
+- **The detection's `affected_datasets` and the assessment's `datasets_reached` are
+  different questions.** The first is where the changed fact lives; the second is
+  what depends on it, which is strictly wider.
+- **An assessment is never lower than the detection's own autonomy class**, and an
+  editorial finding anywhere in a run stops the whole run reporting as autonomous.
 
 ## 8. Tests
 

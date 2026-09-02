@@ -204,6 +204,53 @@ behaviours are visible on the first run.
 
 ---
 
+## Regulatory impact — the dependency graph, exposed
+
+SESSION 10 asked for the Change Detector's dependency/impact graph to be exposed
+through this layer. It is exposed the way everything else here is: **derived at
+read time from what the run actually emitted**, never stored a second time.
+
+The detector writes three things onto the span that mapped a change:
+
+| record | carries |
+|---|---|
+| `artifact` of type `impact-graph` | the subgraph that carried the change — roots, per-depth counts, the direct dependencies, and a `sha256` over the whole |
+| `decision` | where the impacts routed, with the alternatives it did not take |
+| `observation` at `risk: high` | one per editorial finding, with the sentence quoted |
+
+`impactState()` in `query.mjs` joins them by the change id the artifact is named
+for, and reports **gaps** the way `traceChain` does: a trace that emitted an
+impact graph and no routing decision says the decision is missing. A view that
+quietly fills in the gap reads as an audit.
+
+```
+node agent/observability/cli.mjs impact [--trace t] [--change c] [--graph]
+GET /api/impact?trace=&change=
+```
+
+Two behaviours are the point rather than a detail:
+
+- **Editorial impacts are a rail, beside pending approvals and open handoffs.** An
+  editorial impact is a sentence on a production site about EU law that may now be
+  false, and nothing in this repository reads prose. It belongs with the state
+  nobody has looked at.
+- **A bounded preview is never reported as the whole graph.** The redaction cap
+  below applies to the graph like everything else, so the trace carries the shape
+  and the identity while the complete graph stays on the `ImpactAssessment` record.
+  `nodes` and `edges` come from the graph's own header; `shown` and `dropped` say
+  what is on the trace, and a preview that dropped anything reports it as a gap
+  with the hash to check against.
+
+The failure that shaped this is worth keeping: the first version inlined the whole
+subgraph, `redact.mjs` truncated the string at 8000 characters, and the viewer
+showed **a graph of zero nodes for a change that reached a hundred and seventy-five
+records**. A cap silently producing a confident zero is exactly the failure this
+layer must not have, and there is now a test named for it.
+
+Full account: `docs/REGULATORY-IMPACT-MAPPING.md` §8.
+
+---
+
 ## The development view
 
 `node agent/observability/cli.mjs serve` → `http://127.0.0.1:7801`.
@@ -217,7 +264,7 @@ failed traces; open handoffs; pending human approvals; website changes; and
 per trace — the execution tree, a timeline, the agents with their confidence
 and risk, decisions with their rejected alternatives, artifacts with hashes
 and previews, handoffs, approvals, the provenance ledger, the audit chain,
-and errors.
+the regulatory impact maps, and errors.
 
 Two behaviours are the point rather than a detail:
 
@@ -242,6 +289,7 @@ The API:
 | `GET /api/runs` | one summary per trace |
 | `GET /api/runs/:trace_id` | one trace, fully derived |
 | `GET /api/chain?trace=&file=&change=` | the audit chain |
+| `GET /api/impact?trace=&change=` | the regulatory impact maps, with their graphs, routing and gaps |
 | `GET /api/export?trace=&kind=` | OTLP/JSON, or the provenance ledger |
 
 ---

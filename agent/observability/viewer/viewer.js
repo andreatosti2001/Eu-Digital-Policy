@@ -68,6 +68,8 @@ function renderTiles(s) {
     ['open handoffs', s.open_handoffs.length, s.open_handoffs.length ? 'warn' : null],
     ['pending approvals', s.pending_approvals.length, s.pending_approvals.length ? 'warn' : null],
     ['website changes', s.website_changes.length, null],
+    ['impact maps', (s.impact ?? []).length, null],
+    ['editorial impacts', (s.editorial_impacts ?? []).length, (s.editorial_impacts ?? []).length ? 'warn' : null],
   ];
   $('#tiles').replaceChildren(...tiles.map(([label, n, tone]) =>
     el('div', { class: 'tile', 'data-tone': tone }, el('b', { text: String(n) }), el('span', { text: label }))));
@@ -101,6 +103,18 @@ function renderRail() {
           el('div', { text: h.reason ?? '' }),
           el('div', { class: 'id mono', text: short(h.trace_id) }))))
       : el('p', { class: 'none', text: 'none' }),
+    /* An editorial impact is a sentence on a production site about
+       EU law that may now be false, and no check in this repository
+       reads prose. It sits on the rail for the same reason a pending
+       approval does: the state that matters most is the one nobody
+       has looked at. */
+    el('h3', { text: 'Editorial impacts — prose nothing here reads' }),
+    (s.editorial_impacts ?? []).length
+      ? el('ul', { class: 'queue' }, ...s.editorial_impacts.map((e) => el('li', {},
+          riskBadge(e.risk), ' ', el('span', { class: 'mono', text: e.change_id }),
+          el('div', { text: e.summary }),
+          el('div', { class: 'id mono', text: `${e.data?.dataset ?? ''} · ${e.data?.route ?? ''} · ${short(e.trace_id)}` }))))
+      : el('p', { class: 'none', text: 'none' }),
     el('h3', { text: 'Website changes' }),
     s.website_changes.length
       ? el('ul', { class: 'queue' }, ...s.website_changes.map((c) => el('li', {},
@@ -123,6 +137,7 @@ const TABS = [
   ['approvals', 'Approvals', (t) => t.approvals.length],
   ['provenance', 'Provenance', (t) => t.provenance.length],
   ['changes', 'Website changes', (t) => t.website_changes.length],
+  ['impact', 'Regulatory impact', (t) => (t.impact ?? []).length],
   ['errors', 'Errors', (t) => t.errors.length],
 ];
 
@@ -297,6 +312,36 @@ function renderPanel(t) {
           : el('p', { class: 'mono', text: 'no gaps: source → verification → decision → implementation → deployment is complete' }),
       )));
     });
+  }
+  if (state.tab === 'impact') {
+    const maps = t.impact ?? [];
+    if (!maps.length) return p.replaceChildren(el('p', { class: 'empty', text: 'no regulatory change on this trace was mapped onto the site' }));
+    return p.replaceChildren(...maps.map((i) => el('div', { class: 'chain' },
+      el('h3', {}, `${i.change_id} `, i.simulated ? badge('simulated') : null),
+      el('p', { class: 'mono', text: `${i.nodes} record(s), ${i.edges} reference(s) reached${i.dropped.nodes || i.dropped.edges ? ` · ${i.shown.nodes}/${i.shown.edges} carried on this trace` : ''}${i.graph_sha256 ? ` · sha256 ${i.graph_sha256.slice(0, 12)}…` : ''}` }),
+      i.routing ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Routing — what may be done without a human' }),
+        el('pre', { text: Object.entries(i.routing).map(([k, n]) => `${k.padEnd(28)} ${n}`).join('\n') })) : null,
+      i.surfaces ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Surfaces reached' }),
+        el('pre', { text: Object.entries(i.surfaces).filter(([, n]) => n > 0).map(([k, n]) => `${k.padEnd(24)} ${n} record(s)`).join('\n') || 'no surface carries a reached record' })) : null,
+      ...i.decision.map((d) => el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Decision' }),
+        el('p', { text: d.decision }),
+        el('p', { class: 'none', text: d.rationale }),
+        el('pre', { text: (d.alternatives ?? []).map((a) => `not taken: ${a.option}\n            ${a.why_not}`).join('\n') }))),
+      i.editorial.length
+        ? el('div', { class: 'chain-stage' },
+            el('h4', { text: `Editorial — ${i.editorial.length} sentence(s) state the value that moved` }),
+            el('ul', { class: 'queue' }, ...i.editorial.map((e) => el('li', {}, riskBadge(e.risk), ' ', el('div', { text: e.summary })))))
+        : el('p', { class: 'mono', text: 'no sentence in data/ was found to state the value that moved. That is not a clearance: nothing in this repository reads prose, and the open questions are on the ImpactAssessment record.' }),
+      i.graph ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Dependency graph' }),
+        el('pre', { text: (i.graph.nodes ?? []).map((n) => `${n.depth === 0 ? '●' : '·'} ${n.id}  ${n.kind}  ${n.dataset}`).join('\n') })) : null,
+      i.gaps.length
+        ? el('p', { class: 'gaps', text: `GAPS — ${i.gaps.join('; ')}` })
+        : el('p', { class: 'mono', text: 'no gaps: the graph, the routing and the summary are all on this trace' }),
+    )));
   }
   if (state.tab === 'errors') {
     return p.replaceChildren(table([

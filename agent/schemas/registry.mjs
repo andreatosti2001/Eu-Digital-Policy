@@ -1,5 +1,5 @@
 /* ============================================================
-   agent/schemas/registry.mjs — the sixteen contracts
+   agent/schemas/registry.mjs — the seventeen contracts
 
    The single place that knows what contracts exist. A record names
    its own contract in its `contract` field, so validation needs no
@@ -7,12 +7,18 @@
    invents a seventeenth contract is told the name is unknown rather
    than having its record accepted by a validator that skipped it.
 
-   DataProposal is the fifteenth, added in SESSION 08, and
-   RegulatoryChange the sixteenth, added in SESSION 09. Both are
-   appended rather than slotted in beside their nearest relatives:
-   the list order is the order the contracts were named, and
-   reordering it would silently change what `CONTRACT_LIST[n]` means
-   to anything that indexed it.
+   DataProposal is the fifteenth, added in SESSION 08,
+   RegulatoryChange the sixteenth, added in SESSION 09, and
+   ImpactAssessment the seventeenth, added in SESSION 10. Each is
+   appended rather than slotted in beside its nearest relatives: the
+   list order is the order the contracts were named, and reordering
+   it would silently change what `CONTRACT_LIST[n]` means to anything
+   that indexed it.
+
+   ImpactAssessment is about the SITE where RegulatoryChange is about
+   the WORLD, and it references the detection by change_id rather
+   than restating any of it — the four fields that would have been a
+   second copy are named in its `forbidden` block.
 
    RegulatoryChange is NOT ChangeRecord, and the two are easy to
    confuse: one is a change in the world, the other a change to this
@@ -37,6 +43,7 @@ import { AgentRun } from './contracts/agent-run.mjs';
 import { WebsiteChange } from './contracts/website-change.mjs';
 import { DataProposal } from './contracts/data-proposal.mjs';
 import { RegulatoryChange } from './contracts/regulatory-change.mjs';
+import { ImpactAssessment } from './contracts/impact-assessment.mjs';
 
 /** In the order the sessions named them. */
 export const CONTRACT_LIST = [
@@ -56,6 +63,7 @@ export const CONTRACT_LIST = [
   WebsiteChange,
   DataProposal,
   RegulatoryChange,
+  ImpactAssessment,
 ];
 
 export const CONTRACTS = Object.fromEntries(CONTRACT_LIST.map((c) => [c.name, c]));
@@ -67,7 +75,7 @@ export const PROPOSAL_CONTRACTS = CONTRACT_LIST.filter((c) => c.kind === 'propos
 
 export function getContract(name) {
   const c = CONTRACTS[name];
-  if (!c) throw new Error(`unknown contract "${name}" — the sixteen are: ${CONTRACT_NAMES.join(', ')}`);
+  if (!c) throw new Error(`unknown contract "${name}" — the seventeen are: ${CONTRACT_NAMES.join(', ')}`);
   return c;
 }
 

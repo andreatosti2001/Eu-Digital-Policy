@@ -27,9 +27,10 @@ the evidence it describes.
 | `docs/PROJECT-CONTEXT.md` | What the project is; the seven governing principles |
 | `docs/CURRENT-ARCHITECTURE.md` | Rendering model, module topology, dependency map, tooling baseline |
 | `docs/AI-SAFE-BOUNDARIES.md` | Green / amber / red tiers; the absolute prohibitions |
-| `docs/AGENT-CONTRACTS.md` | The sixteen inter-agent contracts and the gate no record bypasses |
+| `docs/AGENT-CONTRACTS.md` | The seventeen inter-agent contracts and the gate no record bypasses |
 | `docs/OBSERVABILITY.md` | The trace model every agent run is instrumented through |
 | `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` | The four agents that exist, what each refuses, and what none of them may do |
+| `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
 | `README.md` | The author's own account, including eight stated limitations |
@@ -137,7 +138,7 @@ node --test agent/observability/selftest.mjs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**303 tests across the seven suites**, all passing as of SESSION 09.
+**339 tests across the seven suites**, all passing as of SESSION 10.
 
 `tools/_footer.mjs`, `_refsweep.mjs` and `_review10.mjs` are generators and applied one-shot
 patches, not checks. **Do not re-run** the latter two.

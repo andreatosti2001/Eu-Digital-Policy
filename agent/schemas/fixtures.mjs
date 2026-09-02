@@ -563,6 +563,108 @@ export const regulatoryChangeFixture = () => envelope('RegulatoryChange', {
   },
 });
 
+export const impactAssessmentFixture = () => envelope('ImpactAssessment', {
+  assessment_id: 'imp-simulated-001',
+  change_id: 'chg-simulated-001',
+  depth: 2,
+  roots: ['simulated:event'],
+  unresolved_roots: [],
+  datasets_reached: ['data/timeline.json', 'data/applicability.json', 'data/claims.json'],
+  surfaces: [
+    {
+      surface: 'timeline',
+      label: null,
+      records: ['simulated:event'],
+      modules: [],
+      pages: [],
+      note: 'The changed record itself. A simulated event; nothing here is about a real act.',
+    },
+    {
+      surface: 'compliance_calendar',
+      label: null,
+      records: ['simulated:event'],
+      modules: ['js/calendar.js'],
+      pages: ['index.html'],
+      note: 'The calendar renders the same events through a horizon filter compared against the reader\'s own clock, so which of them a reader is shown is not a property of this assessment.',
+    },
+    {
+      surface: 'applicability',
+      label: null,
+      records: ['simulated:rule'],
+      modules: ['js/applies.js'],
+      pages: ['applies.html'],
+      note: 'A simulated rule cites the simulated event as one of its dates.',
+    },
+  ],
+  factual: [
+    {
+      node_id: 'simulated:rule',
+      kind: 'applicability_rule',
+      dataset: 'data/applicability.json',
+      field: 'dates',
+      field_class: 'reference',
+      depth: 1,
+      route: 'propagates_by_derivation',
+      automatically_actionable: true,
+      why: 'The rule points at the event rather than restating its date, and this site derives at render time — so once the event is corrected there is nothing to edit here. A fixture; no rule was read.',
+      quote: null,
+      governance_permit: null,
+    },
+  ],
+  editorial: [
+    {
+      node_id: 'simulated:event',
+      kind: 'timeline_event',
+      dataset: 'data/timeline.json',
+      field: 'supersedes',
+      field_class: 'prose',
+      depth: 0,
+      route: 'review_proposal',
+      automatically_actionable: false,
+      why: 'Editorial: nothing in this repository reads the sentence, and GOVERNANCE_PERMITS is empty. A fixture, and it asserts nothing about any act.',
+      quote: 'Originally a simulated date; deferred in this fixture.',
+      governance_permit: null,
+    },
+  ],
+  open_questions: [
+    {
+      node_id: 'simulated:rule',
+      field: 'rationale',
+      question: 'Does the simulated rule\'s rationale still read true after this simulated change?',
+      missing: 'The old value does not appear in the sentence, so nothing establishes that it is stale — and nothing here reads prose, so nothing clears it either.',
+    },
+  ],
+  counts: {
+    reached_records: 2,
+    factual_impacts: 1,
+    editorial_impacts: 1,
+    open_questions: 1,
+    automatically_actionable: 1,
+    review_proposals_required: 1,
+  },
+  autonomy_class: 'review_required',
+  assessed_at: AT,
+  caveats: [
+    'Walked to depth 2. Anything further from the change than that is outside this map by construction.',
+    'index.html renders part of its content from the inlined window.__CONTENT__ blob rather than from data/brief.json, so which of the two homes a stale sentence lives in is not answered here.',
+    'A fixture. Every record is marked simulated and none of it is a legal fact.',
+  ],
+  affected_entities: [
+    { kind: 'timeline_event', id: 'simulated:event', path: 'data/timeline.json', field: 'date', note: 'The simulated record the change is about.' },
+    { kind: 'applicability_rule', id: 'simulated:rule', path: 'data/applicability.json', field: 'dates', note: 'A simulated record that depends on it.' },
+  ],
+  evidence: [simEvidence('ev-1')],
+  epistemic: {
+    fact: [],
+    inference: [
+      { field: 'datasets_reached', statement: 'Three simulated datasets carry a record depending on the simulated change.', from: ['ev-1'], method: 'Walked inbound through the corpus dependency graph in agent/detector/graph.mjs, whose edges are derived from the ids the records hold rather than from a table of which field references what. A fixture: nothing was walked.' },
+      { field: 'surfaces', statement: 'Three surfaces of the site are reached.', from: ['ev-1'], method: 'Which module renders which entity kind is read from the js/data.js index keys and the db reads in each module, and which page runs which module from the <script src> entry points and their static imports. A fixture.' },
+    ],
+    interpretation: [],
+    unresolved: [{ field: null, question: 'Does the simulated rule\'s rationale still read true?', missing: 'A human reading the sentence. Nothing in this repository reads prose.', absence_kind: 'unknown_not_determinable', blocks: false }],
+  },
+});
+
 export const FIXTURES = {
   SourceCandidate: sourceCandidateFixture,
   VerificationRecord: verificationRecordFixture,
@@ -580,4 +682,5 @@ export const FIXTURES = {
   WebsiteChange: websiteChangeFixture,
   DataProposal: dataProposalFixture,
   RegulatoryChange: regulatoryChangeFixture,
+  ImpactAssessment: impactAssessmentFixture,
 };

@@ -13,6 +13,8 @@
      · a run that never closed must read as running, not as ok
      · the audit chain must report its own gaps
      · the OTLP export must keep W3C id shapes
+     · an impact map must report its own gaps, and must never
+       report a bounded preview as the whole graph (SESSION 10)
    ============================================================ */
 
 import { test } from 'node:test';
@@ -26,7 +28,7 @@ import { validateRecord } from './schema.mjs';
 import { Tracer } from './tracer.mjs';
 import { MemorySink, JsonlSink } from './sink.mjs';
 import { deterministicIds, deterministicClock } from './ids.mjs';
-import { buildTree, loadTrace, traceChain, deriveStatus, collectRuns, summarise } from './query.mjs';
+import { buildTree, loadTrace, traceChain, deriveStatus, collectRuns, summarise, impactState } from './query.mjs';
 import { toOtlp, toProvenanceLedger } from './otlp.mjs';
 import { runDemo } from './demo/workflow.mjs';
 
@@ -278,4 +280,91 @@ test('a deterministic run is byte-identical to itself', async (t) => {
   /* the deployment record stamps a wall-clock time; everything else must match */
   const strip = (s) => s.replace(/"at":"[^"]+"/g, '"at":"—"');
   assert.equal(strip(runs[0]), strip(runs[1]));
+});
+
+/* ------------------------------------------- regulatory impact (SESSION 10) */
+
+/** A trace shaped the way the Change Detector shapes one: an
+ *  impact-graph artifact, a routing decision, a summary observation
+ *  and an editorial finding, all on one tool span. */
+function impactTrace({ withDecision = true, dropped = 0 } = {}) {
+  const t = fixture();
+  const run = t.startRun({ kind: 'agent', agent: 'regulatory-change-detector', task: 'detect' });
+  const tool = run.startTool({ name: 'detector.impact', inputs: { change_id: 'rchg-001' } });
+  tool.artifact({
+    artifact_id: 'impact-graph-rchg-001',
+    artifact_type: 'impact-graph',
+    sha256: 'a'.repeat(64),
+    bytes: 40000,
+    preview: JSON.stringify({
+      roots: ['tl-x'],
+      counts: { nodes: 175, edges: 900, by_depth: { 0: 1, 1: 40, 2: 134 } },
+      nodes: [{ id: 'tl-x', kind: 'timeline_event', dataset: 'data/timeline.json', depth: 0 }],
+      edges: [],
+      dropped_nodes: dropped, dropped_edges: dropped,
+      sha256: 'a'.repeat(64),
+      note: 'Shape and identity only. The complete graph is the ImpactAssessment record.',
+    }),
+  });
+  tool.observe({
+    summary: 'rchg-001 reaches 175 record(s).',
+    subject: 'rchg-001',
+    data: { surfaces: { timeline: 1 }, routing: { propagates_by_derivation: 40, review_proposal: 1, human_only: 0, automatically_actionable: 40 } },
+  });
+  tool.observe({ summary: 'EDITORIAL — tl-x.supersedes states the value that moved: "Originally 2 August 2027"', subject: 'tl-x', risk: 'high', data: { dataset: 'data/timeline.json', route: 'review_proposal' } });
+  if (withDecision) {
+    tool.decide({
+      decision: '1 impact becomes a review proposal',
+      rationale: 'nothing here reads prose',
+      alternatives: [{ option: 'action it automatically', why_not: 'no governance permit' }],
+    });
+  }
+  tool.end({ status: 'ok' });
+  run.end({ status: 'ok' });
+  return buildTree(t.sink.records).roots[0];
+}
+
+test('an impact map is read off the trace with its routing, its decision and its editorial findings', () => {
+  const [i] = impactState(impactTrace(), 'trace-under-test');
+  assert.equal(i.change_id, 'rchg-001');
+  assert.equal(i.nodes, 175, 'the count must come from the graph\'s own header');
+  assert.equal(i.edges, 900);
+  assert.equal(i.shown.nodes, 1, 'and the preview must be reported separately from the count');
+  assert.equal(i.routing.review_proposal, 1);
+  assert.equal(i.editorial.length, 1);
+  assert.equal(i.decision.length, 1);
+  assert.deepEqual(i.gaps, [], 'the graph, the routing and the summary are all here');
+});
+
+test('an impact map missing its routing decision reports the gap rather than omitting it', () => {
+  const [i] = impactState(impactTrace({ withDecision: false }));
+  assert.ok(i.gaps.some((g) => /no routing decision/.test(g)),
+    'what may be done about an impact without a human is the point of the record; its absence is a gap, not a blank');
+});
+
+test('a bounded graph preview is never reported as the whole graph', () => {
+  const [i] = impactState(impactTrace({ dropped: 20 }));
+  assert.equal(i.nodes, 175);
+  assert.equal(i.dropped.nodes, 20);
+  assert.ok(i.gaps.some((g) => /bounded preview/.test(g) && /sha256/.test(g)),
+    'a preview that dropped nodes must say so and must carry the hash of the whole graph, or a viewer reads it as complete');
+});
+
+test('a truncated impact graph is a gap, never a graph of zero nodes', () => {
+  /* The failure this test exists for actually happened: the first
+     version inlined a two-hop subgraph, redact.mjs truncated the
+     string at 8000 characters, and the viewer showed 0 nodes for a
+     change that reached 175 records. A cap that silently produces a
+     confident zero is the one failure this layer must not have. */
+  const t = fixture();
+  const run = t.startRun({ kind: 'agent', agent: 'regulatory-change-detector', task: 'detect' });
+  const tool = run.startTool({ name: 'detector.impact', inputs: {} });
+  tool.artifact({ artifact_id: 'impact-graph-rchg-002', artifact_type: 'impact-graph', preview: '{"nodes":[{"id":"tl-' });
+  tool.end({ status: 'ok' });
+  run.end({ status: 'ok' });
+
+  const [i] = impactState(buildTree(t.sink.records).roots[0]);
+  assert.equal(i.nodes, 0);
+  assert.ok(i.gaps.some((g) => /did not parse/.test(g)),
+    'a graph that did not parse must say so; zero nodes with no gap reads as a change that reached nothing');
 });

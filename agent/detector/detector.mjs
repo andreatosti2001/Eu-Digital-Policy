@@ -52,6 +52,7 @@ import { emit, receive } from '../schemas/gateway.mjs';
 import { loadCorpus, HOME_OF } from '../integrate/canonical.mjs';
 import { retrievedDocumentOf } from '../integrate/sources.mjs';
 import { RecordBuilder } from '../verifier/build.mjs';
+import { AUTONOMY_RANK } from '../schemas/types.mjs';
 import { sameDate } from '../verifier/dates.mjs';
 import { classify, compareDates, STATUS_FROM_TAXONOMY } from './classify.mjs';
 import { materialityOf, confidenceOf, autonomyFor, MATERIALITY_RANK } from './materiality.mjs';
@@ -60,6 +61,8 @@ import {
   EVENT_TYPE_FOR, VERIFIED_ATTRIBUTES,
 } from './snapshots.mjs';
 import { affectedDatasets, affectedPages } from './surfaces.mjs';
+import { mapImpact, graphPreview, SURFACE_KINDS } from './impact.mjs';
+import { graph } from './graph.mjs';
 
 export const DETECTOR_AGENT = 'regulatory-change-detector';
 
@@ -68,13 +71,13 @@ const ISO_DATE = /^\d{4}-\d{2}-\d{2}/;
 export class Detector {
   /**
    * @param {{tracer:object, store:object, corpus?:object, asOf:string,
-   *          simulated?:boolean}} opts
+   *          simulated?:boolean, impactDepth?:number}} opts
    *   `asOf` is mandatory. A change report without the date its
    *   corpus position was read as true at cannot be told from a
    *   stale change report — the regulatory-change-detection skill
    *   states it, and audit F-15 is why.
    */
-  constructor({ tracer, store, corpus, asOf, simulated = false }) {
+  constructor({ tracer, store, corpus, asOf, simulated = false, impactDepth = 2 }) {
     if (!asOf || !ISO_DATE.test(String(asOf))) {
       throw new Error('Detector needs an explicit asOf date (YYYY-MM-DD). "Nothing has decayed" and "nobody has looked" are different findings, and only a stated as-of date tells them apart (docs/AUDIT-2026-09-01.md F-15).');
     }
@@ -83,6 +86,13 @@ export class Detector {
     this.corpus = corpus ?? loadCorpus();
     this.asOf = String(asOf).slice(0, 10);
     this.simulated = simulated === true;
+    /* How far the impact map walks. An argument, and small: two hops
+       from a timeline event already reaches most of this corpus, and
+       a map that names most of the corpus every time distinguishes
+       nothing. Stated on the record so a reader knows what bounds
+       the answer. */
+    this.impactDepth = Number.isInteger(impactDepth) ? impactDepth : 2;
+    this.graph = graph();
     this.seq = 0;
     this.refused = [];
   }
@@ -433,6 +443,146 @@ export class Detector {
     return this.#ship(span, b.build(), [verification.verification_id]);
   }
 
+  /* ------------------------------------------------ impact mapping */
+
+  /**
+   * What a confirmed change reaches inside this website.
+   *
+   * SESSION 10. Produced per confirmed change, as a record of its
+   * own rather than as fields on the detection — the reasoning is at
+   * the top of `agent/schemas/contracts/impact-assessment.mjs`, and
+   * the short version is that the detection is about the world and
+   * this is about the site, and the site moves under it.
+   *
+   * IT IS EMITTED INTO THE TRACE AS WELL AS STORED. The brief asks
+   * for the dependency graph to be exposed through observability, so
+   * the subgraph that carried this change goes onto the span as an
+   * `artifact`, the routing decision as a `decision` with the
+   * alternatives it did not take, and the editorial findings as
+   * observations at `risk: high` — because an editorial impact is a
+   * sentence on a production site about EU law that may now be
+   * false, and nothing in this repository will catch it.
+   */
+  #impactAssessment(span, { verification, change, map }) {
+    const b = this.#builder('ImpactAssessment', span);
+
+    b.addEvidence({
+      evidence_id: 'ev-change', kind: 'agent_output',
+      source_id: null, url: null,
+      locator: `RegulatoryChange ${change.change_id}`,
+      title: null, publisher: null, quote: null,
+      retrieved_at: change.detected_at ?? null, checksum: null,
+      supports: 'supports:direct', role: 'primary', simulated: this.simulated,
+    });
+    b.addEvidence({
+      evidence_id: 'ev-corpus-graph', kind: 'dataset_record',
+      source_id: null, url: null,
+      locator: `the corpus dependency graph: ${this.graph.counts.nodes} records, ${this.graph.counts.edges} references, read from data/`,
+      title: null, publisher: null,
+      quote: null, retrieved_at: null, checksum: null,
+      supports: 'supports:direct', role: 'primary', simulated: this.simulated,
+    });
+
+    /* The entities: the changed records, and the records that depend
+       on them. An assessment about nothing has assessed nothing, so
+       the roots are always named even where nothing was reached. */
+    for (const e of change.affected_entities ?? []) b.addEntity(e);
+    const seen = new Set((change.affected_entities ?? []).map((e) => e.id));
+    for (const i of [...map.factual, ...map.editorial]) {
+      if (seen.has(i.node_id)) continue;
+      seen.add(i.node_id);
+      b.addEntity({
+        kind: i.kind, id: i.node_id, path: i.dataset, field: i.field,
+        note: `Depends on the change through ${i.field}, ${i.depth} hop(s) out.`,
+      });
+    }
+
+    /* The class this sits at: the highest any single impact needs,
+       and never below the detection's own. An assessment that let a
+       change be handled more freely than the detection would be a
+       way round the gate. */
+    const needsHuman = [...map.factual, ...map.editorial].some((i) => i.route === 'human_only');
+    const assessed = needsHuman ? 'human_only' : 'review_required';
+    const autonomy = AUTONOMY_RANK[change.autonomy_class] > AUTONOMY_RANK[assessed]
+      ? change.autonomy_class : assessed;
+
+    const surfaces = SURFACE_KINDS
+      .map((k) => ({ k, s: map.surfaces[k] }))
+      .filter(({ s }) => s.entries.length || s.modules.length)
+      .map(({ k, s }) => ({
+        surface: k,
+        label: s.modules.find((m) => m.label)?.label ?? null,
+        records: s.entries.map((e) => String(e.id)).filter((id) => !/\.(html|json)$/.test(id)),
+        modules: s.modules.map((m) => m.module),
+        pages: [...new Set([...s.pages, ...s.entries.map((e) => String(e.id)).filter((id) => id.endsWith('.html'))])].sort(),
+        note: k === 'analytical_page'
+          ? s.entries.map((e) => e.why).join(' ') || null
+          : (s.modules[0]?.why ?? s.entries[0]?.why ?? null),
+      }));
+
+    const strip = (i) => ({
+      node_id: i.node_id, kind: i.kind, dataset: i.dataset, field: i.field,
+      field_class: i.field_class ?? 'prose', depth: i.depth,
+      route: i.route, automatically_actionable: i.automatically_actionable,
+      why: i.why, quote: i.quote ?? null, governance_permit: i.governance_permit ?? null,
+    });
+    const factual = map.factual.map(strip);
+    const editorial = map.editorial.map(strip);
+
+    b.set('assessment_id', this.#id('imp'));
+    b.set('change_id', change.change_id);
+    b.set('depth', map.depth);
+    b.set('roots', map.roots);
+    b.set('unresolved_roots', map.unresolved_roots);
+    b.set('datasets_reached', map.surfaces.dataset.entries.map((e) => e.id));
+    b.set('surfaces', surfaces);
+    b.set('factual', factual);
+    b.set('editorial', editorial);
+    b.set('open_questions', map.open_questions.map((q) => ({
+      node_id: q.node_id, field: q.field, question: q.question, missing: q.missing,
+    })));
+    b.set('counts', {
+      reached_records: map.counts.reached_records,
+      factual_impacts: factual.length,
+      editorial_impacts: editorial.length,
+      open_questions: map.open_questions.length,
+      automatically_actionable: [...factual, ...editorial].filter((i) => i.automatically_actionable).length,
+      review_proposals_required: [...factual, ...editorial].filter((i) => i.route === 'review_proposal').length,
+    });
+    b.set('autonomy_class', autonomy);
+    b.set('assessed_at', this.#now());
+    b.set('caveats', map.caveats);
+
+    /* `undefined` rather than the value: the field is already set
+       above, and RecordBuilder.inference writes the field when it is
+       handed one. Passing a summary here would overwrite the field
+       with the summary. */
+    b.inference('datasets_reached', undefined,
+      `${map.surfaces.dataset.entries.length} dataset(s) carry a record that depends on this change.`,
+      ['ev-corpus-graph'],
+      'Walked inbound through the corpus dependency graph in agent/detector/graph.mjs. Its edges are derived by testing every string a record holds against the index of record ids, rather than from a table of which field references what — so a dataset that grows a reference field is in the graph the day it does. Wider than the detection\'s own affected_datasets, which names where the changed fact LIVES rather than what depends on it.');
+
+    b.inference('surfaces', undefined,
+      `${surfaces.length} surface(s) of the site are reached: ${surfaces.map((x) => x.surface).join(', ')}.`,
+      ['ev-corpus-graph'],
+      'Which module renders which entity kind is read from the js/data.js index keys each module touches and the datasets it takes off db directly; which page runs which module from the <script src> entry points and their static imports, with the shared chrome excluded — the same call sites docs/CURRENT-ARCHITECTURE.md §5 says its table was read from. Modules that render nothing of their own (the gateway, the derivation modules, the chrome) are excluded by name in MODULE_SURFACE, and the site\'s surfaces that are none of the nine the brief lists are reported under "other" rather than folded into the nearest.');
+
+    if (editorial.length) {
+      b.inference('editorial', undefined,
+        `${editorial.length} sentence(s) restate the value that moved.`,
+        ['ev-change'],
+        'Established by finding the OLD value inside the prose — a date at any rendering, or the taxonomy label a reader would actually have read — and each entry carries the sentence so the finding can be checked rather than taken. Fields are classified factual or editorial in agent/detector/fields.mjs by whether anything in this repository can prove them wrong; the validators do not read prose, which is the whole reason this half exists.');
+    }
+
+    /* An assessment always carries the open question the routing
+       cannot close: prose nothing here can read. */
+    b.openUnknown(null,
+      'Which of the sentences this change reaches are now false?',
+      'A human reading them. No check in this repository reads prose — tools/validate.mjs resolves references and enums and has never read a sentence — so the editorial findings below are the ones that could be QUOTED, never the ones that exist.');
+
+    return this.#ship(span, b.build(), [change.change_id, verification.verification_id]);
+  }
+
   /** A change this detector has no word for. Reported as a gap
    *  rather than filed under the nearest kind. */
   #unclassifiedGap(span, { verification, candidate, classification }) {
@@ -473,6 +623,83 @@ export class Detector {
     return this.#ship(span, b.build(), [verification.verification_id]);
   }
 
+  /**
+   * Map one confirmed change onto the site and record what it
+   * reaches — into the trace, and as an `ImpactAssessment`.
+   *
+   * OBSERVABILITY IS THE POINT OF THE SPAN, NOT A SIDE EFFECT. The
+   * brief asks for the dependency graph to be exposed through
+   * observability, so what goes onto the trace is the graph itself
+   * (as an artifact, with the subgraph that carried this change),
+   * the routing as a decision carrying the alternatives it did not
+   * take, and every editorial finding as its own observation at
+   * `risk: high` — a sentence on a production site about EU law that
+   * may now be false, which nothing in this repository will catch.
+   */
+  #mapAndAssess(span, { verification, change }) {
+    const tool = span.startTool({
+      name: 'detector.impact',
+      inputs: { change_id: change.change_id, depth: this.impactDepth },
+    });
+    try {
+      const map = mapImpact({ change, depth: this.impactDepth, g: this.graph });
+
+      const preview = graphPreview(map.graph);
+      tool.artifact({
+        artifact_id: `impact-graph-${change.change_id}`,
+        artifact_type: 'impact-graph',
+        sha256: preview.sha256,
+        bytes: JSON.stringify(map.graph).length,
+        preview: JSON.stringify(preview),
+        derived_from: [change.change_id],
+        simulated: this.simulated,
+      });
+
+      tool.observe({
+        summary: `${change.change_id} reaches ${map.counts.reached_records} record(s) across ${map.counts.surfaces_touched} surface(s): ${map.counts.factual_impacts} factual, ${map.counts.editorial_impacts} editorial, ${map.counts.open_questions} open question(s).`,
+        subject: change.change_id,
+        data: { surfaces: Object.fromEntries(SURFACE_KINDS.map((k) => [k, map.surfaces[k].entries.length])), routing: map.routing },
+        confidence: 0.7, risk: map.counts.editorial_impacts ? 'high' : 'medium',
+        simulated: this.simulated,
+      });
+
+      tool.decide({
+        decision: map.routing.review_proposal
+          ? `${map.routing.review_proposal} impact(s) become a review proposal; ${map.routing.propagates_by_derivation} need no edit anywhere`
+          : `${map.routing.propagates_by_derivation} impact(s) need no edit anywhere`,
+        rationale: 'A factual impact on a reference needs no edit because this site derives at render time: once the changed record is corrected, everything downstream of the reference recomputes when a page is next opened. A factual impact on a stored copy of the value, and every editorial impact, goes to a human — nothing in this repository reads prose, so nothing can prove a rewrite of a sentence right.',
+        alternatives: [
+          { option: 'action the editorial impacts automatically', why_not: 'GOVERNANCE_PERMITS is empty. docs/AUTONOMY-POLICY.md puts prose at Class C, and Class B\'s own test is that a change a human would have to check a source to validate is not Class B.' },
+          { option: 'report every reached record as needing review', why_not: 'It would bury the findings that do need a human under the far larger number that cannot be wrong, which is how a review list stops being read.' },
+          { option: 'report the prose that could not be quoted as stale', why_not: '"This sentence might be wrong" and "this sentence says 25 May 2018" are different claims. The unquotable ones are open questions and are reported as such.' },
+        ],
+        confidence: 0.7,
+        risk: map.counts.editorial_impacts ? 'high' : 'low',
+        inputs_ref: [change.change_id],
+      });
+
+      for (const e of map.editorial) {
+        tool.observe({
+          summary: `EDITORIAL — ${e.node_id}.${e.field} states the value that moved: "${String(e.quote).slice(0, 160)}"`,
+          subject: e.node_id,
+          data: { dataset: e.dataset, field: e.field, matched: e.matched, route: e.route, automatically_actionable: e.automatically_actionable },
+          confidence: 0.75, risk: 'high', simulated: this.simulated,
+        });
+      }
+
+      const record = this.#impactAssessment(tool, { verification, change, map });
+      tool.end({ status: 'ok', outputs: { assessment_id: record.assessment_id, factual: map.counts.factual_impacts, editorial: map.counts.editorial_impacts } });
+      return record;
+    } catch (err) {
+      /* A mapping that fails is a mapping that failed. It does not
+         become "no impact", which would read as a clearance. */
+      tool.error(err, { fatal: false });
+      tool.end({ status: 'failed', outputs: { change_id: change.change_id } });
+      this.refused.push({ what: change.change_id, stage: 'impact', reason: err.message });
+      return null;
+    }
+  }
+
   /* ---------------------------------------------------------- the run */
 
   async run({ verifications, task = 'Detect where the canonical datasets and the documents behind them have diverged, and classify each divergence.' } = {}) {
@@ -489,6 +716,7 @@ export class Detector {
     });
 
     const changes = [];
+    const assessments = [];
     const gaps = [];
     const unchanged = [];
     const notCompared = [];
@@ -616,8 +844,18 @@ export class Detector {
             continue;
           }
 
-          changes.push(this.#changeRecord(span, { verification: v, candidate, snapshot, classification }));
+          const change = this.#changeRecord(span, { verification: v, candidate, snapshot, classification });
+          changes.push(change);
           produced++;
+
+          /* SESSION 10: what the confirmed change reaches inside
+             this website, and which half of it a machine may act on.
+             It runs in its own span so that a mapping that fails
+             does not take the detection down with it — the detection
+             is the finding, and an impact map is a second question
+             about it. */
+          const a = this.#mapAndAssess(span, { verification: v, change });
+          if (a) assessments.push(a);
         }
 
         span.end({ status: 'ok', outputs: { candidates: candidates.length, produced } });
@@ -627,15 +865,15 @@ export class Detector {
       const runRecord = this.#runRecord(run, {
         task, started_at, ended_at,
         verifications: verifications ?? [],
-        changes, gaps, unchanged, notCompared, conflicts,
+        changes, assessments, gaps, unchanged, notCompared, conflicts,
       });
 
-      run.end({ status: 'ok', outputs: { changes: changes.length, gaps: gaps.length, unchanged: unchanged.length } });
+      run.end({ status: 'ok', outputs: { changes: changes.length, assessments: assessments.length, gaps: gaps.length, unchanged: unchanged.length } });
 
       return {
         trace_id: run.trace_id,
         as_of: this.asOf,
-        changes, gaps, unchanged,
+        changes, assessments, gaps, unchanged,
         not_compared: notCompared,
         conflicts,
         refused: this.refused,
@@ -650,7 +888,7 @@ export class Detector {
     }
   }
 
-  #runRecord(span, { task, started_at, ended_at, verifications, changes, gaps, unchanged, notCompared, conflicts }) {
+  #runRecord(span, { task, started_at, ended_at, verifications, changes, assessments = [], gaps, unchanged, notCompared, conflicts }) {
     const b = this.#builder('AgentRun', span);
     b.addEvidence({
       evidence_id: 'ev-run', kind: 'measurement',
@@ -670,6 +908,10 @@ export class Detector {
     b.set('inputs', { verifications: verifications.length, as_of: this.asOf });
     b.set('outputs', {
       changes: changes.length,
+      impact_assessments: assessments.length,
+      editorial_impacts: assessments.reduce((n, a) => n + a.counts.editorial_impacts, 0),
+      automatically_actionable: assessments.reduce((n, a) => n + a.counts.automatically_actionable, 0),
+      review_proposals_required: assessments.reduce((n, a) => n + a.counts.review_proposals_required, 0),
       by_kind: tally(changes.map((c) => c.change_kind)),
       by_materiality: tally(changes.map((c) => c.materiality)),
       unclassified: gaps.length,
@@ -681,10 +923,15 @@ export class Detector {
     });
     b.set('produced', [
       ...changes.map((c) => ({ contract: 'RegulatoryChange', id: c.change_id })),
+      ...assessments.map((a) => ({ contract: 'ImpactAssessment', id: a.assessment_id })),
       ...gaps.map((g) => ({ contract: 'DataGap', id: g.gap_id })),
     ]);
     b.set('affected_entities', []);
-    b.set('autonomy_class', material.length ? 'review_required' : 'autonomous');
+    /* An editorial impact anywhere in the run is a sentence on a
+       production site that may now be false and that no check here
+       reads. That is not something a run reports as autonomous. */
+    const editorial = assessments.reduce((n, a) => n + a.counts.editorial_impacts, 0);
+    b.set('autonomy_class', material.length || editorial ? 'review_required' : 'autonomous');
     b.set('confidence', changes.length ? 0.6 : 0.4);
     b.set('risk', 'low');
     b.set('handed_off_to', []);
