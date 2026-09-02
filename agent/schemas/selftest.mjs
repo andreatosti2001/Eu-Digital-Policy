@@ -9,7 +9,7 @@
 
    What it holds down, in the order the contract layer would fail:
 
-     · the fifteen contracts exist, are documented, and carry the
+     · the sixteen contracts exist, are documented, and carry the
        envelope the session specified
      · every substantive proposal carries all twelve required fields
      · the vocabularies are the site's and the observability
@@ -36,7 +36,7 @@ import { FIXTURES, simEvidence } from './fixtures.mjs';
 import { toJsonSchema } from './export.mjs';
 import { emit, handoff, receive, sha256Of, canonicalJson } from './gateway.mjs';
 import { ENVELOPE_FIELDS, PROPOSAL_FIELDS } from './common.mjs';
-import { EPISTEMIC_STATUS, FIELD_EPISTEMICS, taxonomyIds, RISKS, APPROVAL_STATES, PROVENANCE_ROLES, LEGAL_STATUSES, LEGAL_STATUS_TAXONOMY, LEGAL_ENTITY_KINDS } from './types.mjs';
+import { EPISTEMIC_STATUS, FIELD_EPISTEMICS, taxonomyIds, RISKS, APPROVAL_STATES, PROVENANCE_ROLES, LEGAL_STATUSES, LEGAL_STATUS_TAXONOMY, LEGAL_ENTITY_KINDS, REGULATORY_CHANGE_KINDS } from './types.mjs';
 import * as obsSchema from '../observability/schema.mjs';
 import { Tracer } from '../observability/tracer.mjs';
 import { MemorySink } from '../observability/sink.mjs';
@@ -59,20 +59,21 @@ function refuses(record, fragment) {
   );
 }
 
-/* ---------------------------------------------------------- the fifteen */
+/* ---------------------------------------------------------- the sixteen */
 
-test('the fifteen contracts the sessions named all exist', () => {
+test('the sixteen contracts the sessions named all exist', () => {
   const required = [
     'SourceCandidate', 'VerificationRecord', 'ClaimEvidence', 'ChangeRecord', 'DataGap',
     'ArchitectureProposal', 'EditorialProposal', 'UXProposal', 'ImplementationProposal',
     'QAResult', 'ApprovalRequest', 'AgentObservation', 'AgentRun', 'WebsiteChange',
-    /* SESSION 08. Appended rather than slotted in beside the other
-       proposals: the order is the order they were named, and
-       reordering it would change what CONTRACT_LIST[n] means. */
-    'DataProposal',
+    /* SESSION 08 and SESSION 09. Appended rather than slotted in
+       beside their nearest relatives: the order is the order they
+       were named, and reordering it would change what
+       CONTRACT_LIST[n] means. */
+    'DataProposal', 'RegulatoryChange',
   ];
   assert.deepEqual(CONTRACT_NAMES, required);
-  assert.equal(CONTRACT_LIST.length, 15);
+  assert.equal(CONTRACT_LIST.length, 16);
 });
 
 test('every field of every contract is documented and epistemically typed', () => {
@@ -117,7 +118,7 @@ test('every substantive proposal carries all twelve required fields', () => {
 });
 
 test('a contract name is unique and every contract has a fixture', () => {
-  assert.equal(new Set(CONTRACT_NAMES).size, 15);
+  assert.equal(new Set(CONTRACT_NAMES).size, 16);
   for (const name of CONTRACT_NAMES) assert.ok(typeof FIXTURES[name] === 'function', `${name} has no fixture`);
   assert.deepEqual(Object.keys(FIXTURES).sort(), [...CONTRACT_NAMES].sort());
 });
@@ -954,4 +955,182 @@ test('DataProposal: it cannot be autonomous, because every record kind it touche
   const r = fx('DataProposal');
   r.autonomy_class = 'autonomous';
   refuses(r, 'which is amber at best');
+});
+
+/* ---------------------------------------------------------- RegulatoryChange
+
+   SESSION 09. The contract exists because the brief's word for its
+   output — "ChangeRecord" — was already taken by a contract meaning
+   something else. These tests hold the two apart, and hold this one
+   to the three things a detection must not quietly become: an edit,
+   an agreement it never established, and a substantive change filed
+   as a cosmetic one.                                                */
+
+test('RegulatoryChange and ChangeRecord cannot be mistaken for one another', () => {
+  const rc = getContract('RegulatoryChange');
+  const cr = getContract('ChangeRecord');
+
+  /* Each refuses the other's distinguishing fields, with the reason. */
+  for (const key of ['files', 'diff_summary', 'branch', 'commit', 'applied_at']) {
+    assert.ok(key in rc.forbidden, `RegulatoryChange must refuse ChangeRecord's "${key}"`);
+    assert.ok(/ChangeRecord|Same/.test(rc.forbidden[key]), `and say which contract wanted it`);
+    refuses({ ...fx('RegulatoryChange'), [key]: 'x' }, rc.forbidden[key]);
+  }
+  for (const key of ['change_kind', 'materiality', 'old_value', 'new_value']) {
+    assert.ok(key in cr.forbidden, `ChangeRecord must refuse RegulatoryChange's "${key}"`);
+    refuses({ ...fx('ChangeRecord'), [key]: 'x' }, cr.forbidden[key]);
+  }
+
+  /* And they share no field beyond the envelope and their id. */
+  const envelope = new Set([...Object.keys(ENVELOPE_FIELDS), 'contract', 'contract_version', 'change_id', 'supersedes']);
+  const shared = Object.keys(rc.fields).filter((k) => k in cr.fields && !envelope.has(k));
+  assert.deepEqual(shared, [], `the two contracts share ${shared.join(', ')} outside the envelope`);
+});
+
+test('RegulatoryChange: a detection carries no edit', () => {
+  const c = getContract('RegulatoryChange');
+  for (const key of ['proposed_change', 'operations', 'proposed']) {
+    assert.ok(key in c.forbidden);
+    refuses({ ...fx('RegulatoryChange'), [key]: {} }, 'A detection carries no edit');
+  }
+  assert.ok(!('autonomy_class' in c.forbidden), 'it does carry an autonomy class — the brief requires one and validate.mjs checks it');
+});
+
+test('RegulatoryChange: a change with no side to it is not a change', () => {
+  const r = fx('RegulatoryChange');
+  r.old_value = null;
+  r.new_value = null;
+  r.epistemic.fact = r.epistemic.fact.filter((f) => !['old_value', 'new_value'].includes(f.field));
+  refuses(r, 'a change with no side to it is not a change');
+});
+
+test('RegulatoryChange: NEW has nothing on the old side', () => {
+  const r = fx('RegulatoryChange');
+  r.change_kind = 'NEW';
+  refuses(r, 'a record the corpus does not have has nothing on the old side');
+});
+
+test('RegulatoryChange: two identical values is UPDATED or it is nothing', () => {
+  const r = fx('RegulatoryChange');
+  r.new_value = r.old_value;
+  refuses(r, 'if nothing the corpus asserts moved, the kind is UPDATED');
+});
+
+test('RegulatoryChange: UPDATED cannot swallow a substantive change', () => {
+  const r = fx('RegulatoryChange');
+  r.change_kind = 'UPDATED';
+  r.old_value = 'the same string';
+  r.new_value = 'the same string';
+  refuses(r, 'filing it here is how a substantive change becomes invisible');
+
+  /* And UPDATED must have established that the document moved. */
+  const q = fx('RegulatoryChange');
+  q.change_kind = 'UPDATED';
+  q.old_value = 'x';
+  q.new_value = 'x';
+  q.materiality = 'metadata_only';
+  q.source_snapshot = { ...q.source_snapshot, bytes_changed: null, previous_checksum: null };
+  refuses(q, 'is not something this detection established');
+});
+
+test('RegulatoryChange: an absent comparison is never reported as agreement', () => {
+  const r = fx('RegulatoryChange');
+  r.change_kind = 'UPDATED';
+  r.old_value = 'x';
+  r.new_value = 'x';
+  r.materiality = 'metadata_only';
+  r.source_snapshot = { previous_verification_id: null, previous_checksum: null, current_checksum: 'c'.repeat(64), bytes_changed: false, note: 'nothing to compare' };
+  refuses(r, 'an absence of comparison is not a finding of no change');
+});
+
+test('RegulatoryChange: materiality states the method it was reached by', () => {
+  const r = fx('RegulatoryChange');
+  r.epistemic.inference = r.epistemic.inference.filter((i) => i.field !== 'materiality');
+  refuses(r, 'no epistemic.inference entry states the method it was reached by');
+});
+
+test('RegulatoryChange: a substantive change is not acted on unattended', () => {
+  const r = fx('RegulatoryChange');
+  r.autonomy_class = 'autonomous';
+  refuses(r, 'is not something an agent acts on unattended');
+});
+
+test('RegulatoryChange: a substantive change names the file a correction would touch', () => {
+  const r = fx('RegulatoryChange');
+  r.affected_datasets = [];
+  r.affected_pages = [];
+  refuses(r, 'name the file a correction would touch');
+});
+
+test('RegulatoryChange: a dataset is a data/ path and a page is an .html file', () => {
+  refuses({ ...fx('RegulatoryChange'), affected_datasets: ['agent/records/x.jsonl'] }, 'a canonical dataset is a path under data/');
+  refuses({ ...fx('RegulatoryChange'), affected_pages: ['js/main.js'] }, 'a page is an .html file at the repository root');
+
+  const orphan = fx('RegulatoryChange');
+  orphan.affected_datasets = [];
+  orphan.materiality = 'metadata_only';
+  orphan.change_kind = 'UPDATED';
+  orphan.old_value = 'x';
+  orphan.new_value = 'x';
+  refuses(orphan, 'a page renders a dataset');
+});
+
+test('RegulatoryChange: "the world has probably moved by now" is not a detection', () => {
+  /* The legitimate shape of a candidate nobody has retrieved a
+     document for: the corpus side is established from the corpus,
+     the document side is empty, and the record says nobody looked.
+     Without that open question it is a claim the detection never
+     made — which is the refusal condition the
+     regulatory-change-detection skill states in words. */
+  const r = fx('RegulatoryChange');
+  r.new_value = null;
+  r.source_snapshot = null;
+  r.evidence = [
+    { ...simEvidence('ev-corpus'), kind: 'dataset_record', url: null, locator: 'data/instruments.json simulated:instrument', quote: null, retrieved_at: null },
+    {
+      evidence_id: 'ev-absent', kind: 'absent',
+      source_id: null, url: null, locator: null, title: null, publisher: null,
+      quote: null, retrieved_at: null, checksum: null,
+      supports: null, role: 'unresolved', simulated: true,
+    },
+  ];
+  r.epistemic.fact = [{ field: 'old_value', statement: 'The simulated instrument record carries status:in-force.', evidence_refs: ['ev-corpus'] }];
+  r.epistemic.unresolved = [];
+  refuses(r, 'the candidate is that nobody has looked since a stated date');
+
+  /* With the open question, the same record is a legitimate candidate. */
+  r.epistemic.unresolved = [{
+    field: null, question: 'Has the act become applicable since the corpus was last checked?',
+    missing: 'A retrieval of the act\'s own record. Nobody has looked since the stated as-of date.',
+    absence_kind: 'null_not_researched', blocks: false,
+  }];
+  assert.deepEqual(V(r), []);
+});
+
+test('RegulatoryChange: a court\'s own record settles what a court decided', () => {
+  const r = fx('RegulatoryChange');
+  r.change_kind = 'COURT_OUTCOME';
+  r.evidence = [simEvidence('ev-1', { role: 'secondary', supports: 'supports:partial' })];
+  r.epistemic.unresolved = [];
+  refuses(r, 'a report of one is not the one');
+});
+
+test('RegulatoryChange: it is about the legal record, not about a module', () => {
+  const r = fx('RegulatoryChange');
+  r.affected_entities = [{ kind: 'module', id: null, path: 'js/dna.js', field: null, note: null }];
+  refuses(r, 'a regulatory change is about the legal record');
+
+  const empty = fx('RegulatoryChange');
+  empty.affected_entities = [];
+  refuses(empty, 'a detection that is about nothing has detected nothing');
+});
+
+test('RegulatoryChange: the fourteen kinds the session named all exist', () => {
+  const required = [
+    'NEW', 'UPDATED', 'AMENDED', 'CORRECTED', 'DELAYED', 'ENTERED_INTO_FORCE', 'APPLICABLE',
+    'REPEALED', 'ANNULLED', 'GUIDANCE_UPDATED', 'ENFORCEMENT_UPDATED', 'COURT_OUTCOME',
+    'RELATIONSHIP_CHANGED', 'SOURCE_REPLACED',
+  ];
+  assert.deepEqual(REGULATORY_CHANGE_KINDS, required);
+  assert.equal(getContract('RegulatoryChange').fields.change_kind.values.length, 14);
 });

@@ -373,3 +373,69 @@ export const PROVENANCE_DISPOSITIONS = [
   'set_first_time',      // the field was null and nobody had looked
   'replaced_human_only',
 ];
+
+/* ---------------------------------------------------------- regulatory change
+
+   SESSION 09's brief names fourteen kinds of change the Regulatory
+   Change Detector must tell apart. They are the agent layer's own
+   vocabulary and are deliberately NOT added to data/taxonomy.json:
+   that file is the enum authority a reader's page resolves against,
+   and "the detector noticed a document moved" is not something the
+   site says about EU law.
+
+   SEVEN OF THE FOURTEEN ARE A LEGAL STATUS ARRIVING. `amended`,
+   `corrected`, `entered_into_force`, `applicable`, `repealed`,
+   `annulled` and `guidance` are all in LEGAL_STATUSES above, and the
+   detector reaches those kinds by comparing the status the corpus
+   records against the status a verification read. The mapping is in
+   agent/detector/classify.mjs and it is a table rather than a
+   cascade of conditions, so a reviewer can read every transition it
+   claims to know about — and so the ones it does NOT know about are
+   visible as blanks rather than falling through to a default.
+
+   The other seven are about the document or the record rather than
+   about the act: something the corpus has no record of at all, a
+   document that changed without changing what it says, a date that
+   moved later, an enforcement axis that moved, a court deciding, a
+   relationship between two instruments changing, and one document
+   being replaced by another.                                       */
+
+export const REGULATORY_CHANGE_KINDS = [
+  'NEW',                  // the corpus has no record of this at all
+  'UPDATED',              // the document changed; nothing it asserts did
+  'AMENDED',              // an amending act has changed the act
+  'CORRECTED',            // a corrigendum
+  'DELAYED',              // a date the corpus records has moved LATER
+  'ENTERED_INTO_FORCE',
+  'APPLICABLE',
+  'REPEALED',
+  'ANNULLED',
+  'GUIDANCE_UPDATED',     // a non-binding document the corpus cites has changed
+  'ENFORCEMENT_UPDATED',  // an action, payment, remedy or appeal axis has moved
+  'COURT_OUTCOME',        // a court has decided something the corpus records as open
+  'RELATIONSHIP_CHANGED', // an edge between two instruments — amends, repeals, replaces
+  'SOURCE_REPLACED',      // the corpus cites document A; the authority now publishes B
+];
+
+/**
+ * What a change costs a reader, which is not the same question as
+ * how large its diff is. Ordered, and the order is the order of
+ * harm.
+ *
+ * `metadata_only` is the one that earns its place. A regulator
+ * re-publishing a page with a new footer changes the bytes and
+ * changes nothing a reader acts on, and a detector that reported it
+ * at the same weight as a moved application date would train its
+ * reader to ignore the list — which is the failure
+ * tools/validate.mjs's own duplicate-fine warning was narrowed to
+ * avoid.
+ *
+ * `reader_acts_on_it` is reserved for the values a person changes
+ * their behaviour because of: the date an obligation begins, whether
+ * an act binds them at all, whether a fine stands. It is not a
+ * severity ladder for the agent's convenience; it is a statement
+ * about somebody outside this repository.
+ */
+export const MATERIALITY_LEVELS = ['none', 'metadata_only', 'substantive', 'reader_acts_on_it'];
+
+export const MATERIALITY_RANK = { none: 0, metadata_only: 1, substantive: 2, reader_acts_on_it: 3 };

@@ -58,6 +58,16 @@ export const ChangeRecord = defineContract({
     deployed: 'Deployment is a separate fact with its own record. A change in the working tree has not reached a reader.',
     published: 'Same. See WebsiteChange.',
     verified: 'A change is not verified; the statements it carries are. See VerificationRecord.',
+
+    /* The other half of the pair. RegulatoryChange holds a change in
+       the WORLD; this holds a change to this REPOSITORY, and the two
+       are easy to reach for by mistake. Each names the other's
+       fields with the reason, so the mistake is answered rather than
+       reported as "unknown field". */
+    change_kind: 'That is RegulatoryChange\'s field. A regulation entering into force is a change in the world; this contract records a change made to this repository, and one record cannot be both.',
+    materiality: 'Same. What a change costs a reader is a property of the regulatory change, not of the commit that responded to it.',
+    old_value: 'Same. A ChangeRecord\'s before-and-after is its diff, and the file list is the only home for it.',
+    new_value: 'Same.',
   },
   rules: [
     (r) => (r.state === 'applied' && !r.applied_at

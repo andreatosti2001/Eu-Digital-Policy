@@ -27,9 +27,9 @@ the evidence it describes.
 | `docs/PROJECT-CONTEXT.md` | What the project is; the seven governing principles |
 | `docs/CURRENT-ARCHITECTURE.md` | Rendering model, module topology, dependency map, tooling baseline |
 | `docs/AI-SAFE-BOUNDARIES.md` | Green / amber / red tiers; the absolute prohibitions |
-| `docs/AGENT-CONTRACTS.md` | The fifteen inter-agent contracts and the gate no record bypasses |
+| `docs/AGENT-CONTRACTS.md` | The sixteen inter-agent contracts and the gate no record bypasses |
 | `docs/OBSERVABILITY.md` | The trace model every agent run is instrumented through |
-| `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` | The three agents that exist, what each refuses, and what none of them may do |
+| `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` | The four agents that exist, what each refuses, and what none of them may do |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
 | `README.md` | The author's own account, including eight stated limitations |
@@ -132,11 +132,12 @@ node --test agent/scout/selftest.mjs           # Agent 1
 node --test agent/scout/schedule/selftest.mjs
 node --test agent/verifier/selftest.mjs        # Agent 2
 node --test agent/integrate/selftest.mjs       # the adapter, against the real data/
+node --test agent/detector/selftest.mjs        # Agent 3, against the real data/
 node --test agent/observability/selftest.mjs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**250 tests across the six suites**, all passing as of SESSION 08.
+**303 tests across the seven suites**, all passing as of SESSION 09.
 
 `tools/_footer.mjs`, `_refsweep.mjs` and `_review10.mjs` are generators and applied one-shot
 patches, not checks. **Do not re-run** the latter two.
