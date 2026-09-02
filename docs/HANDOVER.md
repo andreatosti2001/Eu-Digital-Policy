@@ -4,13 +4,25 @@
 **Branch:** `claude/regulatory-impact-mapping-ydbg4a`, cut from `main` at `aca6d46`.
 **Base commit:** `aca6d46` on `main` ("Record in the handover that SESSIONS 08 and 09 are
 merged").
-**Not merged.** Merging is a decision for the repository owner, and a push to
-`main` publishes to the live site with no deploy gate.
+**Merged into `main` at `e4672d9`** — with the repository owner's explicit
+instruction, which is what AGENTS.md requires for any push to `main`, because a
+push to `main` publishes to the live site and there is no deploy gate. The branch
+is left in place rather than deleted.
 
-**The live site is byte-for-byte unchanged.** `git status` after this session
-lists nothing under `data/`, no `*.html`, and nothing under `js/`, `css/`,
-`i18n/`, `fonts/` or `tools/`. The Detector was run in full against the real
-corpus and `data/` hashed identically before and after.
+**The live site is byte-for-byte unchanged by that merge**, and this was checked
+three ways rather than asserted: the incoming diff was listed by path and
+contains nothing under `data/`, no `*.html`, and nothing under `js/`, `css/`,
+`i18n/`, `fonts/` or `tools/`; every published file was sha256'd at `aca6d46`
+and again at the merge commit and every hash matches; and the Detector was run in
+full against the real corpus with `data/` hashed identically before and after.
+All four validators produce output identical to what they produced on `aca6d46`.
+
+**A note for the next session, because it nearly bit here.** The local `main` in
+this container was 27 commits behind `origin/main` — it sat at `4bd1f0d`, a
+merge from before SESSION 03. Merging into it would have silently reverted six
+sessions of work. `git fetch --all && git branch -a` before concluding anything,
+as AGENTS.md says, and check `git log origin/main..main` **and** `main..origin/main`
+before merging into a local branch you did not just create.
 
 ---
 
