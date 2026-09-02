@@ -3,10 +3,18 @@
 **Last updated:** SESSION 11 · 2 September 2026
 **Branch:** `claude/build-data-depth-agent-sjjfcr`, cut from `main` at `d1044a7`.
 **Base commit:** `d1044a7` on `main` ("Record in the handover that SESSION 10 is merged").
-**Merged into `main`** — with the repository owner's explicit instruction, which is
-what AGENTS.md requires for any push to `main`, because a push to `main` publishes
-to the live site and there is no deploy gate. The branch is left in place rather
-than deleted.
+**Merged into `main` at `95173b4`** — with the repository owner's explicit
+instruction, which is what AGENTS.md requires for any push to `main`, because a
+push to `main` publishes to the live site and there is no deploy gate. The branch
+is left in place rather than deleted.
+
+**A note for the next session, because the same trap caught this one too.** The
+local `main` in this container was **34 commits behind** `origin/main` — it sat at
+`7248290`, a bulk upload from before SESSION 00. Merging into it would have
+silently reverted seven sessions of work. SESSION 10 left this warning and it was
+still needed. `git fetch --all && git branch -a` before concluding anything, and
+check `git log origin/main..main` **and** `main..origin/main` before merging into
+a local branch you did not just create.
 
 **The live site is byte-for-byte unchanged by this work**, and this was checked
 rather than asserted: the incoming diff contains nothing under `data/`, no
