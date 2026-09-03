@@ -1,250 +1,232 @@
 # HANDOVER
 
-**Last updated:** SESSIONS 14 and 15 · 3 September 2026
-**Branch:** `claude/eu-digital-policy-protocol-qaipyg`, cut from `main` at `936aa2d`.
-**Base commit:** `936aa2d` on `main` ("Record in the handover that SESSION 13 is merged").
-**Merged into `main`** at `b152957` — the session prompt instructed it
-explicitly, in both halves ("At the end of the session, merge everything into
-branch main"). That is the authorisation `AGENTS.md` requires for a push to
-`main`, because `main` publishes to the live site and there is no deploy gate.
-All eleven suites, the contract check and all four validators were re-run **on
-the merged tree** before the push, not only on the branch: 610 pass, 18/18
-satisfiable, 0 errors, 106 unverified, the same five `design-qa` warnings. The
-branch is left in place rather than deleted. `git diff 936aa2d..HEAD` over
-`data/`, `js/`, `css/`, `i18n/`, `fonts/`, `tools/`, every `*.html`, `style.css`,
-`app.js` and `README.md` is **empty** — checked on the merged tree, not asserted.
+**Last updated:** SESSIONS 16 and 17 · 3 September 2026
+**Branch:** `claude/ux-ui-auditor-agent-sy99b6`, cut from `main` at `bcc0426`.
+**Base commit:** `bcc0426` on `main` ("Record in the handover that SESSIONS 14
+and 15 are merged").
 
-**The stale-`main` trap caught this session too, and the number is still
-growing.** The local `main` in this container was **45 commits behind**
-`origin/main` (40 in SESSION 13, 32 in SESSION 12), sitting at `7248290` — the
-pre-SESSION 00 bulk upload. Merging into it would have silently reverted every
-session of work this repository has. It was reset to `origin/main` rather than
-merged into. `git log main..origin/main` and `origin/main..main` were both run
-before the merge, and the first is the one that caught it — an earlier draft of
-this very paragraph claimed the trap had missed, written before the check was
-run, and it was wrong. Run `git fetch --all && git branch -a` before concluding
-anything, and check both directions before merging into a local branch you did
-not just create.
+**The stale-`main` trap caught this session too, for the fourth session running.**
+The local `main` in this container was **44 commits behind** `origin/main` (45 in
+SESSIONS 14/15, 40 in 13, 32 in 12), sitting at `4bd1f0d` — the observability
+foundation, before the whole agent layer. Merging into it would have silently
+reverted every session of work since. It was reset to `origin/main` rather than
+merged into, and `git log main..origin/main` and `origin/main..main` were both
+run before the merge. The number is not growing because the container is getting
+staler; it is growing because `main` is. **Run `git fetch --all && git branch -a`
+and check BOTH directions before merging into a local branch you did not just
+create.**
 
-**This session had TWO objectives, and they landed in ONE commit.** SESSION 14
-built the Editorial Agent; SESSION 15 extended it to detect stale editorial prose.
-They are reported separately below, and `docs/EDITORIAL-AGENT.md` says which half
-is which — but they are **not** two commits, and claiming they were would be a
-fabricated history. SESSION 15's triage is what SESSION 14's three proposal types
-exist *for*: a SESSION-14-only tree would have had `editorial.mjs` importing a
-`staleness.mjs` that did not exist, and splitting it would have meant writing a
-version of the agent nobody ran. The previous two sessions did split, because
-their two halves were genuinely independent; these two are not.
+**This session had TWO objectives, and they landed in ONE commit.** SESSION 16
+built the UX/UI Audit Agent; SESSION 17 extended it to turn the high-priority
+findings into testable proposals. They are reported separately below and
+`docs/UX-AUDIT.md` says which half is which — but they are **not** two commits,
+and claiming they were would be a fabricated history. The reason is the one
+SESSIONS 14 and 15 gave: a SESSION-16-only tree would have had `auditor.mjs`
+importing a `proposals.mjs` that did not exist, and splitting it would have meant
+writing a version of the agent nobody ran. SESSION 17 is also what SESSION 16's
+severity model exists *for*: without a derived backlog there is no "high-priority
+finding" to write a proposal about.
 
 **The live site is byte-for-byte unchanged**, and this was checked rather than
-asserted: nothing in the diff is under `data/`, no `*.html`, and nothing under
-`js/`, `css/`, `i18n/`, `fonts/` or `tools/`. The only exception to "nothing
-under `js/`" is `agent/observability/viewer/viewer.js`, which is the development
-viewer and is not served by any page.
+asserted: `git diff --stat` over `data/`, `js/`, `css/`, `i18n/`, `fonts/`,
+`tools/`, every `*.html`, `style.css`, `app.js`, `README.md` and `CLAUDE.md` is
+**empty**. The only file under `js/` in the diff is none: this session touched
+`agent/observability/viewer/viewer.js`, which is the development viewer and is
+not served by any page.
 
 **No discrepancy between the handover and the code.** `docs/HANDOVER.md` at
-`936aa2d` described `main` accurately, and every number in it was re-measured
-rather than trusted: **549 tests across ten suites, 18/18 contracts satisfiable,
-0 errors and 106 unverified records across the four validators, the same five
-`design-qa` warnings by file and line.**
+`bcc0426` described `main` accurately, and every number in it was re-measured
+rather than trusted: **610 tests across eleven suites, 18/18 contracts
+satisfiable, 0 errors and 106 unverified records across the four validators, the
+same five `design-qa` warnings by file and line.**
 
 ---
 
 ## Current milestone
 
-**SESSIONS 14 and 15 — complete, in two parts.**
+**SESSIONS 16 and 17 — complete, in two parts.**
 
-**SESSION 14 — Agent 7, the Editorial Agent** (`agent/proposals/editorial/`).
-**SESSION 15 — stale editorial prose**, in the same directory.
+**SESSION 16 — Agent 8, the UX/UI Auditor** (`agent/ux/`).
+**SESSION 17 — testable proposals**, in the same directory.
 
-The reference document is **`docs/EDITORIAL-AGENT.md`**; this file is the
-handover only.
+The reference document is **`docs/UX-AUDIT.md`**; this file is the handover only.
 
 ---
 
-# SESSION 14 — the Editorial Agent
+# SESSION 16 — the UX/UI Audit Agent
 
 ## What was built
 
-The seventh agent, and the first thing in this repository that reads a sentence.
-`docs/AGENT-ROLES.md` §6 has described the Editorial role since SESSION 01 and
-nothing had filled it.
+The eighth agent, and the first thing here that asks what the INTERFACE does to a
+reader. `docs/AGENT-ROLES.md` §7 has described the UX role since SESSION 01, the
+`ux-audit` skill has carried its 31-item checklist since then, and nothing had
+filled it.
 
-**No nineteenth contract.** `EditorialProposal` has existed since SESSION 03 and
-had been produced by nothing. It gained three fields — `proposal_kind`,
-`editorial_state`, `staleness` — plus `caveats_preserved` and a `home` on each
-prose location, and seven rules that make the session's discipline checkable
-rather than conventional. Each is a field rather than a convention because a rule
-cannot be written against a convention.
+**It is Agent 8, not Agent 7.** The brief calls it Agent 7; Agent 7 is the
+Editorial Agent (SESSION 14). The brief's numbering predates it, exactly as
+SESSION 13's did. Recorded rather than resolved by renumbering somebody else.
 
-## The four distinctions, and where they already lived
+**No nineteenth contract.** `UXProposal` has existed since SESSION 03 and had
+been produced by nothing — precisely where `EditorialProposal` stood before
+SESSION 14. It gained five fields (`proposal_kind`, `finding_class`, `severity`,
+`affected_journey`, `success_criterion`), six more for SESSION 17, and **two
+forbidden fields**: `priority`, because the backlog position is derived and a
+stored one is a second home for an ordering; and `users_affected`, because this
+project has no analytics and a number there could only be invented.
 
-The site draws them in three places and this agent invented no fourth:
-`data/claims.json`'s `type`, `js/format.js`'s `familyOf`/`evidenceGrade` (imported,
-never reimplemented — the grading rules are red tier), and the markup's own
-`data-tone="crit"` / `CRITIQUE` box labels. What is new is the **subject**: a
-claim record describes a proposition, and nothing in `data/` describes a block of
-prose.
+## The ten questions, and what they found
 
-Hence five words rather than four. `not_attributed` is what the agent says about a
-block carrying no claim record, and the contract refuses a `factual_update` over
-one. Measured on the real site:
+Measured on the real site, as at 2026-09-03:
 
 ```
-387 authored blocks  ·  markup 324 · __CONTENT__ blob 34 · data/brief.json 29
-fact 18 · interpretation 9 · critique 24 · unresolved 19 · not_attributed 317
-59 blocks carry a claim record — every data-claim attribution in the markup
-0 close tags unmatched by the scanner
+10 findings · 12 open questions · 1 lens answering no · 5 testable proposals
+7 pages · 4 stylesheets · 26 modules · 1,613 CSS rules · 10 journeys
+
+critical 1 · high 4 · medium 5
+information_architecture 2 · usability 2 · interaction 2 · accessibility 1
+discoverability 1 · enhancement 2
 ```
 
-## What "drafted automatically" was allowed to mean
+The three that matter:
 
-**Substitution, and nothing else.** One occurrence of the value a verification
-read from a document, replaced by the value the same verification read from the
-same document, with no other byte moved:
+1. **The status rule is stated once, implemented once, and bypassed by 26
+   components.** `css/tokens.css` says in its own header that status is never
+   carried by hue alone; `.badge` keeps it with eight glyph rules and four border
+   styles; 26 other components draw a multi-state status varying `color` and
+   nothing else. For **nine** of them this agent could not establish from the
+   source that a sibling element carries the state's word — and that count IS the
+   finding: the rule holds where somebody remembered it and nothing catches a
+   lapse.
+2. **Five of the seven pages are linked from no markup anywhere.** `js/shell.js`
+   consolidated five drifted headers, which was right, and moved every link
+   between pages into a module. The `<noscript>` notice on every page lists eight
+   things that will not appear without scripting; navigation is not one of them.
+3. **One dialog contract, two implementations, diverged on two behaviours.** Only
+   `js/dialog.js` inerts every top-level element rather than a named list, and
+   only it decides focusability by `getClientRects`. Separately, the theme
+   control exists in both and only `js/shell.js`'s exposes `aria-pressed` and an
+   `aria-label` — the brief's own toggle has neither.
 
-```
-current.split(matched).join(replacement) === proposed,  matched occurs exactly once
-```
+**Question 3 found nothing, and that is a result.** Every class the stylesheets
+declare pressable lands on an operable element.
 
-The suite asserts it over every draft a full run produces, together with the
-load-bearing attribute fingerprint and every caveat the sentence carried. Five
-named refusals: split by inline markup · more than one occurrence · an attribute
-would move · a caveat would be lost · the replacement is `null` or `"unknown"`.
-A refused substitution becomes a recommendation naming the reason rather than
-vanishing.
+## The three false positives that shaped the checks
 
-## The intake gate
+Recorded because they are why the lenses are shaped as they are, and the next
+session should not "simplify" them back:
 
-Three admissible contracts, and **what each entitles the agent to do differs** —
-only `RegulatoryChange` carries both sides of a move, so only it can produce a
-correction. Four refusals, each a deliverable: not one of the three · rejected by
-the contract gateway · a verdict that settled nothing (`conflict` explicitly:
-H7 says contradictions go to a human) · materiality `none`.
+- A word boundary treats `chrome-btn-word` as carrying `chrome-btn`. The first
+  draft of question 3 reported the chrome's own buttons as unreachable `<span>`s.
+  Class attributes are TOKENISED now.
+- The markup writes `role="button"` and the `el()` helper writes `role: 'button'`.
+  The second draft reported the compliance dial's dots — which carry a role, a
+  tabindex and an `aria-label` — as unreachable `<circle>`s. Both syntaxes are
+  read now.
+- A container that renders `list.length` and then `esc(b.short)` renders both a
+  number and the state's own word. A check that stopped at the first `.length`
+  reported the status band as carrying its meaning in hue. Mixed is UNDECIDABLE
+  now, and becomes an open question rather than a finding.
 
-## What it found with no input at all
+## Two evidence kinds produced for the first time
 
-22 editorial recommendations, nothing drafted, every one `human_only` behind a
-pending approval:
-
-1. **`meta.standfirst` differs between its two homes.** Reported, never
-   reconciled — the drift is the author's decision. This is the editorial half;
-   `agent/architect/` raised the shape half in SESSION 13, and each proposal says
-   so about the other.
-2. **Two CRITIQUE boxes whose every claim is typed law or fact** —
-   `index.html` `part-2.div2` and `part-3.div1`. The markup and `data/claims.json`
-   disagree about what a passage is, and nothing in this repository checks for it.
-3. **Nineteen sentences reading as settled over claims graded Unresolved.** The
-   `legal-editorial` skill's one rule that outranks style. Marked
-   `contested: true`, because a sentence can be appropriately confident with none
-   of the register's markers in it.
-
-And one result that is a result: **every `data-claim` in the markup resolves to a
-record in `data/claims.json`. Zero dangling**, recorded as looked-and-found-nothing.
+`repository_file` and `measurement` have been in `EVIDENCE_KINDS` since SESSION
+03 and neither had ever been emitted. The distinction is load-bearing: "no page
+links to this one" is not a string in any file, and filing it as a quoted extract
+behind a real `file:line` would be a fabricated quote with a checkable-looking
+locator. **The suite's byte-check — every quote read back out of the file it
+names — is what found two lenses doing exactly that.**
 
 ---
 
-# SESSION 15 — stale editorial prose
+# SESSION 17 — testable proposals
 
-## The distinction the session asked for
+## Where the judgement lives
 
-> distinguish certain contradiction from possible staleness
+Everything SESSION 16 produced was derived: a lens read a file and the finding
+quoted it. **A hypothesis cannot be.** It is a belief about a reader, and this
+repository has no analytics, no telemetry and no user research.
 
-`contradicted` — the value is **in** the sentence, quoted, so a reviewer checks
-the finding rather than taking it. `possibly_stale` — the sentence depends on the
-record and does not state the value; nothing here can show it is wrong and nothing
-may edit it. The contract refuses a quote on a `possibly_stale` finding and
-refuses a correction on anything but a `contradicted` one.
+So the judgement is recorded once, as a **recipe per lens**, and each recipe is
+filled from the finding's own evidence — the files, the counts and the tokens are
+read off the extracts, and only the reader problem and the hypothesis are the
+agent's. The hypothesis is typed as a **contested interpretation** whose basis
+says nothing measured it.
 
-Three derived dependency mechanisms: the sentence contains the value · a claim
-attached to the block references the changed record · the sentence names the
-record under a name a string match can distinguish. **The third is tested for
-ambiguity against the site's own prose**, the same discipline `labelAmbiguity`
-applies to taxonomy labels; an ambiguous match becomes an open question with its
-sentence attached, never a finding.
+**A high-priority finding whose lens has no recipe is refused by name, on the
+trace.** It does not become a proposal with a plausible hypothesis, which is the
+failure that file is arranged against.
 
-**The reading rules were imported, not rewritten.** `proseMentions`, `datesIn`,
-`monthNames` and `labelAmbiguity` come from `agent/detector/impact.mjs`.
+## The four things every proposal survives
 
-## The triage table, and the three deliverables
+1. All four validators, `tools/design-qa.mjs` among them, as SESSION 17 requires
+   — with this agent's reasons rather than the data agent's, because for an
+   interface change `i18n-audit` is the check most likely to fail rather than the
+   one proving no prose moved.
+2. `agent/ux/tokens.mjs`, which refuses a proposal naming a custom property no
+   stylesheet declares. The contract independently refuses one that ADDS a token
+   without an open question saying what the existing system could not hold. In
+   practice this agent adds none.
+3. The contract, which refuses a `testable_proposal` missing a metric, a
+   regression risk, an accessibility check, a browser test or a hypothesis.
+4. The honesty rule: every browser test carries a null `harness` and says a
+   person runs it, because there is no browser harness here.
 
-Ten rows, one per state × strength, throwing at module load if any row ever routes
-an argument to a correction.
-
-| deliverable | record | when |
-|---|---|---|
-| factual correction proposal | `EditorialProposal` `factual_update` | FACT × contradicted, and only there |
-| analytical review proposal | `EditorialProposal` `analytical_update` | any argument, either strength — never drafted |
-| no-change explanation | **`AgentObservation`** | the sentence does not state the value that moved |
-
-**The no-change explanation is not a proposal**, and that is a contract fact: a
-proposal with no operations is a suggestion, and `proposed_change.operations` has
-a minimum of one. It carries the sentence and the value the sentence does *not*
-contain, so both halves are checkable.
-
-**Why FACT × not-quoted is *no change* rather than a review item:** this site
-derives at render time, so correcting the record corrects everything the reader
-sees there. Same finding SESSION 10 made about the factual half of its impact map.
-
-## Regression tests for all three cases
-
-All three run the whole agent over the **real** `index.html` and the **real**
-`data/`, not a mock page:
-
-| case | fixture | asserts |
-|---|---|---|
-| factual correction | a change to `tl-dsa-2025-10-29-delegated-act`, whose date `index.html` `part-3.p7` states as "29 October 2025" | the substitution arithmetic, the attribute fingerprint, every caveat, three locale keys declared, `review_required`, an amber approval |
-| analytical review | a change to `gdpr.legislative_status` | every proposal over an argument carries `proposed: null` and `human_only`, behind a red approval |
-| no-change | the same change | every explanation is an `AgentObservation`, carries the sentence, and states the open question that a paraphrase is invisible |
+`autonomy_class` is `review_required` only where **no reader would meet the
+change** — a judgement recorded per recipe, because it cannot be read off an
+operation's target. The first draft derived amber from "the target starts with
+`tools/`" and made a change that regenerates all seven published pages reviewable
+rather than the author's.
 
 ---
 
 ## Files changed
 
 ```
-SESSION 14
-agent/schemas/types.mjs                          (EDITORIAL_STATES, EDITORIAL_PROPOSAL_KINDS,
-                                                  EDITORIAL_STALENESS_KINDS, PROSE_HOMES)
-agent/schemas/contracts/editorial-proposal.mjs   (three fields, seven rules)
-agent/schemas/fixtures.mjs                       (the EditorialProposal fixture)
-agent/proposals/editorial/prose.mjs              (new — the site's prose, read as a structure)
-agent/proposals/editorial/register.mjs           (new — the four distinctions, for a sentence)
-agent/proposals/editorial/intake.mjs             (new — only verified inputs)
-agent/proposals/editorial/drafts.mjs             (new — the one edit it may compose)
-agent/proposals/editorial/drafts-dir.mjs         (new — where a draft lives)
-agent/proposals/editorial/editorial.mjs          (new — Agent 7)
-agent/proposals/editorial/cli.mjs                (new)
-agent/proposals/editorial/README.md              (new)
-.gitignore                                       (the drafts directory)
+SESSION 16
+agent/schemas/types.mjs                      (UX_FINDING_CLASSES, UX_SEVERITIES,
+                                              UX_SEVERITY_RANK, UX_PROPOSAL_KINDS,
+                                              UX_NON_DEFECT_CLASS, UX_DRAFTABLE_KIND)
+agent/schemas/contracts/ux-proposal.mjs      (eleven fields, ten rules, two forbidden)
+agent/schemas/fixtures.mjs                   (the UXProposal fixture)
+agent/ux/surface.mjs                         (new — the interface, read as a structure)
+agent/ux/journeys.mjs                        (new — the reader journeys, parsed from js/shell.js)
+agent/ux/lenses.mjs                          (new — the ten questions)
+agent/ux/boundary.mjs                        (new — whose finding is it)
+agent/ux/severity.mjs                        (new — derived severity, the backlog)
+agent/ux/auditor.mjs                         (new — Agent 8)
+agent/ux/cli.mjs                             (new)
+agent/ux/README.md                           (new)
 
-SESSION 15
-agent/proposals/editorial/staleness.mjs          (new — contradiction vs staleness, the triage table)
-agent/proposals/editorial/selftest.mjs           (new — 61 tests, against the real pages and data/)
+SESSION 17
+agent/ux/tokens.mjs                          (new — the design system, and the refusal)
+agent/ux/proposals.mjs                       (new — seven recipes)
+agent/ux/selftest.mjs                        (new — 73 tests, against the real site)
 
 BOTH
-agent/observability/query.mjs        (editorialState, into loadTrace and overview)
-agent/observability/cli.mjs          (the `editorial` command, and --no-change)
-agent/observability/server.mjs       (GET /api/editorial)
-agent/observability/viewer/viewer.js (the Editorial panel and two tiles)
-docs/EDITORIAL-AGENT.md              (new — the reference document)
-docs/AGENT-CONTRACTS.md · docs/OBSERVABILITY.md · docs/SKILL-MAP.md
-docs/GAP-PROPOSALS.md · docs/DATA-DEPTH.md       (two now-false statements, corrected in place)
+agent/observability/query.mjs                (uxState, into loadTrace and overview)
+agent/observability/cli.mjs                  (the `ux` command, --backlog and --open)
+agent/observability/server.mjs               (GET /api/ux)
+agent/observability/viewer/viewer.js         (the UX audit panel and two tiles)
+docs/UX-AUDIT.md                             (new — the reference document)
+docs/AGENT-CONTRACTS.md · docs/OBSERVABILITY.md · docs/SKILL-MAP.md · docs/AGENT-ROLES.md
 AGENTS.md · agent/schemas/README.md
-.agents/skills/legal-editorial/SKILL.md
+.agents/skills/ux-audit/SKILL.md
 ```
 
 **Not touched:** every `data/*.json`, every page, everything under `js/`, `css/`,
-`i18n/` and `fonts/`, all four validators in `tools/`.
+`i18n/` and `fonts/`, all four validators in `tools/`, `style.css`, `app.js`,
+`README.md`.
 
 ## Tests
 
 | Command | Result |
 |---|---|
-| `node --test agent/proposals/editorial/selftest.mjs` | **61 pass · 0 fail** (new) |
+| `node --test agent/ux/selftest.mjs` | **73 pass · 0 fail** (new) |
 | `node --test agent/schemas/selftest.mjs` | 139 — unchanged |
 | `node --test agent/observability/selftest.mjs` | 40 — unchanged |
 | `node --test agent/detector/selftest.mjs` | 66 — unchanged |
 | `node --test agent/integrate/selftest.mjs` | 64 — unchanged |
+| `node --test agent/proposals/editorial/selftest.mjs` | 61 — unchanged |
 | `node --test agent/architect/selftest.mjs` | 52 — unchanged |
 | `node --test agent/proposals/data/selftest.mjs` | 50 — unchanged |
 | `node --test agent/verifier/selftest.mjs` | 45 — unchanged |
@@ -256,141 +238,136 @@ AGENTS.md · agent/schemas/README.md
 | `node tools/i18n-audit.mjs` | 0 errors, 0 warnings — matches |
 | `node tools/design-qa.mjs` | 0 errors, **5 warnings** — the same five as §12, by file and line |
 | `node tools/freshness.mjs 2026-09-03` | "Nothing past its stated interval" |
-| `node agent/observability/cli.mjs validate` | 577 records from this session's real runs, 0 invalid |
+| `node agent/observability/cli.mjs validate` | 0 invalid records from this session's real runs |
 
-**610 tests across eleven suites, all passing** (549 before this session).
+**683 tests across twelve suites, all passing** (610 before this session).
 
-Also run as live verification, outside the standing suites: `editorial` with no
-input (22 recommendations), `editorial --mock` (12 inputs admitted, 92 proposals,
-74 no-change explanations, 57 open questions), and the chain
-`detector --mock` → `editorial --changes <trace>` (chained, `parent_run_id`
-populated, handoff recorded on the upstream trace).
+Also run as live verification, outside the standing suites:
+`node agent/ux/cli.mjs --as-of 2026-09-03` (10 findings, 12 open questions),
+`--propose` (5 testable proposals, 15 pending approvals), `--open`, `--backlog`,
+and `node agent/observability/cli.mjs ux --backlog --open`.
 
 ## Architecture decisions
 
-1. **No nineteenth contract; three fields instead.** `EditorialProposal` already
-   carried the burden a change to the brief carries. Each new field exists because
-   a rule had to be written against it — `proposal_kind` so "only a factual update
-   may be drafted" is enforceable, `editorial_state` so "an argument is never
-   corrected" is, `staleness` so "a correction quotes what it corrects" is.
-2. **`editorial_state` is about a SENTENCE, which is why it is not a second home
-   for `claims.json`'s `type`.** Nothing in `data/` describes a block of prose, and
-   `not_attributed` is a state no claim record could express.
-3. **"Drafted" means substitution, and the guarantee is arithmetic.** The one
-   place an agent here composes text a reader will see, and the only defensible
-   form for it. Everything else carries a null replacement, as
-   `agent/architect/` already does for schemas.
-4. **The no-change explanation is an `AgentObservation`, not a proposal.** A
-   proposal with no operations is a suggestion; the contract already said so.
-5. **The drafts go to `agent/proposals/editorial/drafts/`**, which is the record
-   store pointed somewhere else. There is no patch file: writing the replacement
-   out a second time would be a second home for the sentence being proposed.
-6. **The site-level findings need no verified input**, and they are separated on
-   the trace from the change-driven ones. Without them SESSION 14 would have
-   delivered a framework that produced nothing on the real corpus.
+1. **No nineteenth contract; five fields, six more, and two forbidden.**
+   `UXProposal` already carried the burden an interface change carries. Each new
+   field exists because a rule had to be written against it — the reasoning is in
+   `docs/AGENT-CONTRACTS.md`'s closing section.
+2. **Severity is DERIVED and `critical` is reserved for one thing.** An absence
+   of knowledge a reader can take for a negative finding. Without the reserved
+   ceiling, three ordinary escalations also reach it and the word means "several
+   things at once". `enhancement` is capped at `medium` by the model AND by the
+   contract, because either check alone could be edited away.
+3. **A finding that reaches every page is filed against the site**, not the
+   highest-stake journey it touches. Otherwise every shared-stylesheet finding is
+   filed against the applicability tool and the field says "this matters" rather
+   than "this is where the reader meets it".
+4. **A count is a `measurement`, not a quote.** See above; the suite's byte-check
+   is what enforces it.
+5. **An open question is a deliverable.** This agent produces more of them than
+   findings, and both the view and the CLI put them beside the findings. Deleting
+   one to shorten a report turns "could not be settled without opening a page"
+   into "nothing there".
+6. **`js/shell.js` is parsed, not imported.** It touches `document` at load and a
+   DOM here would be a dependency. The suite asserts the parsed nav model matches
+   the literal in the file.
 
 ## Observability
 
-Five span kinds (`editorial.intake`, `.prose`, `.site`, `.change.*`,
-`.verification.*`); an observation per intake refusal with its reason; an
-observation per no-change explanation carrying the sentence and the value it does
-not contain; an observation per open question; the triage as a decision with four
-alternatives; a census; and `NOTHING APPLIED` with `sentences_authored: 0`.
-`editorialState()` derives the view at read time and stores nothing twice —
-`cli.mjs editorial [--no-change]`, `GET /api/editorial`, the **Editorial** panel,
-and two overview tiles (*prose corrections drafted* beside *prose examined, no
-change*, because a tile showing only the first would report "examined and clear"
-as "not looked at").
+Ten lens spans (`ux.<lens>`) plus `ux.proposals`; an observation per lens with
+what it examined, found and set aside; an observation per open question with the
+bytes and what would close it; a handoff per routed finding; the ordering as a
+decision with four alternatives; a census; the BACKLOG as an observation; and
+`NOTHING RESTYLED` with five zeros. `uxState()` derives the view at read time —
+`cli.mjs ux [--backlog] [--open]`, `GET /api/ux`, the **UX audit** panel, and two
+overview tiles (*UX defects at critical* beside *UX questions unanswerable from
+source*).
 
-The view reports gaps rather than filling them: a run that drafted over an
-analytical passage, proposed without an approval, refused without a reason, or
-claims to have authored a sentence is a gap.
+The view reports gaps: a run with no census, no backlog, no ordering decision or
+no "nothing restyled" claim — or one claiming to have opened a page, written a
+stylesheet or invented a token. The suite forges a trace making all three claims
+and asserts the view catches every one.
 
 ## Known limitations
 
-Full list in `docs/EDITORIAL-AGENT.md` §10. The four that matter most:
+Full list in `docs/UX-AUDIT.md` §10. The four that matter most:
 
-1. **No agent here has read a real document.** Unchanged since SESSION 05, and it
-   bounds this agent more tightly than most: the value a correction substitutes IN
-   is only ever as good as the verification that carried it, and every approval
-   says so.
-2. **A paraphrase of a value is invisible.** Every no-change explanation carries
-   that as an open question — it says the value is *not present*, never that the
-   sentence is unaffected.
-3. **A `factual_update` never fired on the detector's own fixtures.** The
-   adversarial corpus does not happen to produce a fact-state sentence quoting a
-   moved value. The path is exercised against the real `index.html` by the suite's
-   first regression test, over a real timeline event and a real sentence.
-4. **The word threshold and the caveat list are judgements**, each in one place
-   with a reason. The caveat list is used only to REFUSE a substitution — it never
-   adds a hedge and never decides what a sentence means.
+1. **Nothing has been rendered.** Every finding is about a source file. The
+   twelve open questions are where that bites hardest, and every record carries
+   README limitation 7 as a blocking open question, quoted whole.
+2. **No contrast was computed.** `css/tokens.css` carries ratios its author
+   measured; quoting one as this run's measurement would be a fabricated
+   measurement.
+3. **Question 2 scopes a behaviour by proximity to a marker**, at a span recorded
+   per contract. It understates rather than overstates.
+4. **Question 10's classification of which manual checks are automatable is a
+   judgement**, in one place with a reason per section; an unclassified section
+   becomes an open question rather than a guess.
 
 ## Unresolved issues, carried forward
 
-SESSION 13's 1–18 stand unless noted.
+SESSION 15's 1–22 stand unless noted.
 
-1. `data/brief.json` is canonical and fetched by nothing. **Now also an editorial
-   finding**: `meta.standfirst` differs between its two homes, and that is a
-   sentence a reader sees rather than only a shape. Still not to be fixed on an
-   agent's initiative.
 2. No deploy gate; the validators do not run in CI.
-5. **106 records carry an unverified note.** No session since SESSION 07 has moved
-   it; this one does not either.
+5. **106 records carry an unverified note.** No session since SESSION 07 has
+   moved it; this one does not either.
 7. The Source Scout workflow has still never executed on GitHub Actions.
-12. `GOVERNANCE_PERMITS` is empty and nothing in `docs/` opens it. **This agent
-    depends on that**: an editorial impact becomes a review proposal absent a named
-    permit, and none exists.
+12. `GOVERNANCE_PERMITS` is empty and nothing in `docs/` opens it.
 15. Fourteen gap-router proposals exist and nothing decides them.
 16. Twenty architecture proposals exist and nothing decides them.
 18. `rel-kind:complement` is stored as both symmetric and asymmetric. Still the
-    cheapest real decision on this list, and still nobody's but the owner's.
-19. **New: twenty-two editorial recommendations exist and nothing decides them**,
-    from a run with no input at all. Each is behind a pending approval.
-20. **New: the markup and `data/claims.json` disagree about what two passages
-    are.** `index.html` `part-2.div2` is in a box the author labelled CRITIQUE and
-    its only claim, `clm-cjeu-pseudonymised-data`, is typed `claim-type:law`;
-    `part-3.div1` is the same shape over `clm-x-data-access-staffing`. One of the
-    two homes is wrong about each, `claim_type` is the highest-leverage field in
-    the repository, and no agent may decide it.
-21. **New: nineteen sentences read as settled over claims graded Unresolved.**
-    The two available fixes are verification (the Verifier's) and rewording (the
-    author's). Neither is an agent's.
-22. **New: `docs/OBSERVABILITY.md`'s first stated limitation was false and was
-    corrected in place.** It read *"No agent is instrumented, because no agent
-    exists"* — stale since SESSION 05, with eight agents now instrumented through
-    that layer. The real limitation underneath it was preserved verbatim: nothing
-    here has retrieved a real document. **This is the one edit in this session
-    that touched a stated limitation**, it corrected a falsehood rather than
-    softening a finding, and it is flagged here so the next session can disagree
-    with it.
+    cheapest real decision on the list.
+19. Twenty-two editorial recommendations exist and nothing decides them.
+20. The markup and `data/claims.json` disagree about what two passages are.
+21. Nineteen sentences read as settled over claims graded Unresolved.
+23. **New: ten UX findings and five testable proposals exist and nothing decides
+    them.** Each is behind a pending approval. **They are proposals, not a work
+    order**, and five of them are `human_only` because they change what a reader
+    sees on a site with no deploy gate.
+24. **New: nine components draw a status this agent could not establish is
+    legible without colour.** Not a defect and not a clearance — an open
+    question, and the only thing that closes it is somebody opening the page.
+    `node agent/ux/cli.mjs --as-of <date> --open` lists them with the bytes.
+25. **New: the site has no navigation in its markup, and the `<noscript>` notice
+    does not say so.** Finding 3. This is the one on the list a reader can meet
+    today with scripting off.
+26. **New: `index.html` has no pre-paint theme bootstrap.** The six tool pages
+    carry one inline; the brief consults `prefers-color-scheme` in `app.js`
+    instead. Noticed while narrowing question 2's false positive and NOT filed
+    as a finding — no lens establishes what it costs a reader, and filing it
+    would have been an observation dressed as a measurement. Recorded here so the
+    next session can decide whether it is one.
 
 ## Next session
 
-**A — decide something.** There are now **fifty-six** proposals outstanding across
-three agents (14 gap-router, 20 architecture, 22 editorial) and not one has ever
-been decided. The chain runs finding → proposal → `ApprovalRequest` and stops.
-Issue 18 remains the cheapest: one field, five records, one word's meaning.
+**A — decide something.** There are now **seventy-one** proposals outstanding
+across four agents (14 gap-router, 20 architecture, 22 editorial, 15 UX) and not
+one has ever been decided. The chain runs finding → proposal → `ApprovalRequest`
+and stops. Issue 18 remains the cheapest: one field, five records, one word.
 
 **B — dispatch the Source Scout workflow on a real runner.** Unchanged since
-SESSION 06 and now the blocking dependency for everything built since, this agent
-included: it is why not one `factual_update` in this session stands on a document
-anybody read.
+SESSION 06 and still the blocking dependency for everything built since.
 
 **C — the applied half, and the record that a human applied it.** Still missing:
 the `ChangeRecord` saying a human applied a proposal, so the next run does not
-propose it again. Stable ids make it possible; nothing has built it.
+propose it again.
+
+**D — new: do the manual pass.** `agent/ux/` decided what a static read can
+decide and produced twelve open questions saying what it could not. Somebody
+running `.agents/skills/ux-audit/references/manual-checks.md` against
+`python3 -m http.server 8000` would close most of them, and it needs no code.
 
 ### Exact next objective
 
-**B**, then **C**. A is one decision by the repository owner and needs no code.
+**B**, then **C**. A and D are decisions and a pass, and neither needs code.
 B is:
 
 ```
 gh workflow run source-scout.yml -f mode=mock -f dry_run=true
 ```
 
-then, once a live retrieval succeeds, the full chain — every step of which carries
-`parent_run_id` and records its handoff:
+then, once a live retrieval succeeds, the full chain, every step carrying
+`parent_run_id`:
 
 ```
 node agent/verifier/cli.mjs             --records <trace-id>
@@ -400,67 +377,80 @@ node agent/depth/cli.mjs                --as-of <date> --changes <trace-id>
 node agent/proposals/data/cli.mjs       --as-of <date> --gaps <depth-trace-id> --refusals
 node agent/architect/cli.mjs            --as-of <date> --gaps <depth-trace-id> --aside
 node agent/proposals/editorial/cli.mjs  --as-of <date> --changes <detector-trace-id> --no-change
-node agent/observability/cli.mjs        editorial --no-change
+node agent/ux/cli.mjs                   --as-of <date> --propose --open
+node agent/observability/cli.mjs        ux --backlog --open
 ```
 
 ## Anything the next agent must know
 
-- **`agent/proposals/editorial/` writes no sentence, and the guarantee is
-  arithmetic rather than editorial.** If you are tempted to let it compose one —
-  to add a hedge, to reword a paragraph whose premise moved, to fill in a null
-  `proposed` — you are deciding what a production site about EU law says. The
-  suite asserts the substitution identity over every draft; loosening it is the
-  one change in this directory that cannot be made safely.
-- **Contradiction and staleness are different claims, and the contract enforces
-  it.** A finding that cannot quote what it corrects is not a correction.
-- **A no-change explanation is a deliverable.** Deleting one to shorten a report
-  turns "examined and clear" into "not looked at".
-- **`not_attributed` is an answer.** 317 of 387 blocks carry no claim record.
-  Assigning them one of the four would be an absence of knowledge presented as a
-  finding.
-- **The reading rules live in `agent/detector/impact.mjs`.** Do not write a second
-  prose reader.
+- **`agent/ux/` opens no page, and every record says so in a blocking open
+  question.** If you are tempted to soften that — to write "screen readers
+  announce this as…", to fill in a contrast ratio from a comment in
+  `css/tokens.css`, to describe how something looks — you are making this
+  project's own honesty worse than whatever you found. `boundary.mjs` refuses
+  the phrasing and the suite proves the refusal fires.
+- **An open question is a deliverable, and there are more of them than
+  findings.** Deleting one to shorten a report turns "could not be settled
+  without opening a page" into "nothing there".
+- **A count is not a quote.** Two lenses filed a composed sentence behind a real
+  `file:line` and the suite's byte-check caught both. `measurement` is the kind
+  for a count, and the locator says what was counted over.
+- **The three false positives above are why the checks are shaped as they are.**
+  Tokenised class matching, both attribute syntaxes, and "mixed is undecidable"
+  each exist because a draft without them reported a defect that was not there.
+- **The hypothesis is the one thing in this directory that is not derived**, and
+  it is typed as a contested interpretation for that reason. A recipe per lens is
+  where it lives; a finding whose lens has no recipe is refused rather than
+  improvised.
 - **`asOf` is an argument, everywhere.** Unchanged.
-- Before declaring anything done: the eleven `--test` suites,
+- Before declaring anything done: the twelve `--test` suites,
   `agent/schemas/cli.mjs check`, then the four validators in `tools/`, compared
-  against the §12 baseline.
+  against the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
 
 ## Anything the next agent must NOT change
 
 Carried forward, still binding, plus this session's:
 
-- Do not rebuild the site. No framework, no bundler, no build step, no dependency,
-  no service worker, no server-side rendering.
-- Do not fix the `__CONTENT__` / `brief.json` drift on your own initiative. It is
-  now a measured *architecture* finding AND a measured *editorial* finding behind
-  two pending approvals, which makes it twice reported and no more a work order
-  than before.
+- Do not rebuild the site. No framework, no bundler, no build step, no
+  dependency, no service worker, no server-side rendering.
+- **Do not act on a UX proposal because it exists.** Fifteen records are
+  outstanding, five of them `human_only` changes to what a reader sees, on a site
+  where a push to `main` publishes and there is no deploy gate. They are
+  proposals, not a work order.
+- Do not fix the `__CONTENT__` / `brief.json` drift on your own initiative. It
+  now has THREE reports — an architecture finding, an editorial finding, and this
+  session's measurement of what it costs — and three reports are no more a work
+  order than one.
 - Do not modify `data/*.json` or any page in a session not scoped for that work.
-  **The 56 proposals now outstanding are proposals, not a work order.**
 - Do not touch the footer's non-affiliation or no-legal-advice text, `TIER_GRADE`
   in `js/format.js`, the derivation rules in `js/pipeline.js`, or `BASE` in
   `tools/_footer.mjs`.
 - Do not declare a licence. Do not soften the README's known limitations or the
   unverified-record count. Do not re-run `tools/_refsweep.mjs` or
   `tools/_review10.mjs`.
-- **Do not reimplement `evidenceGrade` or `familyOf` in the agent layer.** They are
-  imported from `js/format.js` and the suite fails if any module in
-  `agent/proposals/editorial/` so much as names `TIER_GRADE`.
-- **Do not add `retrieved_document` to `MINTABLE_EVIDENCE`.** A citation reaches a
-  record in that directory only by being carried across from the verification that
-  read the document.
-- **Do not let a triage row route an argument to a correction.** `staleness.mjs`
-  throws at module load, and the contract refuses one independently. Both checks
-  exist because either alone could be edited away.
-- **Do not turn a no-change explanation into a proposal.** It has no operation by
-  definition, and a proposal with no operations is a suggestion.
+- **Do not let a UX finding carry a drafted value.** The contract refuses it, the
+  suite asserts it over every record, and SESSION 16's brief says the agent does
+  not redesign the site. Loosening it is the one change in `agent/ux/` that
+  cannot be made safely.
+- **Do not let a proposal invent a design token.** Two checks exist because
+  either alone could be edited away: `agent/ux/tokens.mjs` reads the stylesheets,
+  and the contract requires an open question for any token added.
+- **Do not remove the `measurement` evidence kind from this agent's output** by
+  making every extract a `repository_file`. A count filed as a quote is a
+  fabrication with a checkable-looking locator.
+- **Do not turn an open question into a finding** to make the audit look more
+  decisive, and do not turn one into a clearance. Nine components are neither
+  legible nor illegible on this evidence, and saying either would be inventing a
+  result.
+- Do not reimplement `evidenceGrade` or `familyOf` in the agent layer.
+- Do not add `retrieved_document` to `MINTABLE_EVIDENCE`.
 - Do not add an id store, and do not change the id shapes in
   `agent/observability/ids.mjs`.
 - Do not relax the contract gateway's rejection of anything malformed or
   `simulated`.
 - Do not move `degraded` into a stored field. Do not move redaction to the read
   path, and do not raise `MAX_STRING`.
-- **Do not add an entry to `GOVERNANCE_PERMITS`** without the repository owner
-  naming the document that grants it.
-- Do not relax the rule that `create_taxonomy_term` is `human_only`, and do not let
-  `agent/architect/` propose a taxonomy term.
+- Do not add an entry to `GOVERNANCE_PERMITS` without the repository owner naming
+  the document that grants it.
+- Do not relax the rule that `create_taxonomy_term` is `human_only`, and do not
+  let `agent/architect/` propose a taxonomy term.

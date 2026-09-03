@@ -153,6 +153,14 @@ JavaScript by regex, so its "undeclared property" error can be silenced by a
 stray `--foo:` in any JS string or comment (audit F-10). A clean run is weaker
 evidence than it looks.
 
+**Filled by `agent/ux/` since SESSIONS 16 and 17 — for the OBSERVING half only.**
+Agent 8 audits the interface and produces `UXProposal` findings and testable
+proposals, each behind a pending approval. It restyles nothing, drafts no value
+and adds no design token, and it opens no page: every record it writes carries
+README limitation 7 as a blocking open question. The *never* list above is
+unchanged and still binds whoever acts on one of its proposals — this agent
+cannot act on them. `docs/UX-AUDIT.md`.
+
 ## 8 · Implementation/QA — writes the code and proves it
 
 **Owns:** `js/*.js`, `app.js`, `tools/*.mjs`; running the validators; the

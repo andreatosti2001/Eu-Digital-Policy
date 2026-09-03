@@ -13,16 +13,26 @@ integrator** (`agent/integrate/`) emits `ClaimEvidence`, `DataProposal`,
 the **Data Depth Agent** (`agent/depth/`) emits `KnowledgeGap`; the **gap
 router** (`agent/proposals/data/`) emits `DataProposal`, `ApprovalRequest` and
 `DataGap`; the **Knowledge Architect** (`agent/architect/`) emits
-`ArchitectureProposal` and `ApprovalRequest`; and the **Editorial Agent**
+`ArchitectureProposal` and `ApprovalRequest`; the **Editorial Agent**
 (`agent/proposals/editorial/`) emits `EditorialProposal`, `ApprovalRequest` and
-`AgentObservation`. All of them go through `gateway.mjs` and are stored via
+`AgentObservation`; and the **UX/UI Auditor** (`agent/ux/`) emits `UXProposal`
+and `ApprovalRequest`. All of them go through `gateway.mjs` and are stored via
 `agent/scout/store.mjs` — in `agent/records/`, except the Editorial Agent's,
 which go to `agent/proposals/editorial/drafts/` because SESSION 14 said to draft
 there. The remaining contracts have not yet been exercised by
 a real agent. See `docs/SOURCE-SCOUT.md`, `docs/LEGAL-VERIFIER.md`,
 `docs/VERIFICATION-INTEGRATION.md`, `docs/CHANGE-DETECTOR.md`,
 `docs/REGULATORY-IMPACT-MAPPING.md`, `docs/DATA-DEPTH.md`,
-`docs/GAP-PROPOSALS.md` and `docs/KNOWLEDGE-ARCHITECTURE.md`.
+`docs/GAP-PROPOSALS.md`, `docs/KNOWLEDGE-ARCHITECTURE.md`,
+`docs/EDITORIAL-AGENT.md` and `docs/UX-AUDIT.md`.
+
+**`agent/ux/` is the first producer of two evidence kinds.**
+`repository_file` — a file in this repository quoted at a line — and
+`measurement` — something this run counted, over a named set of files. Both have
+been in `EVIDENCE_KINDS` since SESSION 03 and neither had ever been emitted. The
+distinction between them is not cosmetic: "no page links to this one" is not a
+string in any file, and filing it as a quoted extract behind a real `file:line`
+would be a fabricated quote with a checkable-looking locator on it.
 
 `DataProposal` is the fifteenth, added in SESSION 08. Why the fourteen had no
 home for a proposed change to `data/*.json`, and what was considered and
@@ -72,6 +82,23 @@ against a convention: only a `factual_update` may carry a drafted replacement,
 only a `contradicted` finding may be corrected, and a `factual_update` that
 cannot name the claim record its sentence hangs on has orphaned it.
 `docs/AGENT-CONTRACTS.md`'s closing section and `docs/EDITORIAL-AGENT.md` §6
+have the reasoning.
+
+**SESSIONS 16 and 17 added no nineteenth either, and added five FIELDS.** Agent
+8, the UX/UI Auditor (`agent/ux/`), emits `UXProposal` — which has existed since
+SESSION 03 and had been produced by nothing, in exactly the position
+`EditorialProposal` was in before SESSION 14. What it gained is `proposal_kind`,
+`finding_class`, `severity`, `affected_journey` and `success_criterion`, plus
+the six SESSION 17 fields that make a proposal testable, and each is a field
+because a rule had to be written against it: a `finding` never drafts a value,
+an `enhancement` is never `critical` or `high`, a `critical` finding must stand
+on something quoted, and a success criterion may not restate the change.
+
+It also gained two FORBIDDEN fields, and both are about invented numbers:
+`priority`, because the backlog position is derived and a stored one is a second
+home for an ordering; and `users_affected`, because this project has no
+analytics, no telemetry and no user research, so a number there could only be
+made up. `docs/AGENT-CONTRACTS.md`'s closing section and `docs/UX-AUDIT.md` §3
 have the reasoning.
 
 It also added `identity.mjs`, which is

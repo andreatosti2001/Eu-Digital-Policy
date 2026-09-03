@@ -29,6 +29,13 @@ specific to one assistant: Claude Code discovers them by path, and any agent rea
 | `legal-editorial` | The prose: register, hedging, asterisks, the three homes of an English string | `references/house-register.md` |
 | `frontend-implementation` | Building views inside the architecture's invariants | — |
 | `ux-audit` | The judgment the validators cannot make | `references/manual-checks.md` |
+
+> `agent/ux/` (SESSIONS 16 and 17) now automates the part of `ux-audit` that a static read can
+> decide — questions 1, 3, 4 and 6 of `docs/UX-AUDIT.md` come straight off this skill's
+> checklist. It reads `references/manual-checks.md` rather than restating it, and the suite
+> asserts `agent/ux/lenses.mjs` contains none of its item text. **It replaces nothing in this
+> skill:** it opens no page, so every item under *Failure and empty states* and *What was not
+> tested*, and most of *Keyboard and focus*, still needs a person.
 | `legal-site-qa` | Running the checks and reporting them honestly | `scripts/baseline.mjs` |
 | `observability` | Instrumenting an agent through `tracer.mjs` | — |
 | `git-workflow` | Branch, diff, commit and push discipline | — |

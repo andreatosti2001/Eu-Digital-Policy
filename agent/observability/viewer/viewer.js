@@ -94,6 +94,17 @@ function renderTiles(s) {
        correcting. "Looked and found nothing" and "did not look" are
        different findings, and only the first of them is on a tile. */
     ['prose examined, no change', (s.editorial ?? []).reduce((n, x) => n + (x.no_change ?? 0), 0), null],
+    /* THE CRITICAL COUNT, not the finding count. `critical` means one
+       thing in the UX severity model — a reader can take an absence
+       of knowledge for a negative finding — and it is the number a
+       reader should meet before any other. A tile totalling all four
+       severities would bury it under the enhancements. */
+    ['UX defects at critical', (s.ux ?? []).reduce((n, x) => n + (x.by_severity?.critical ?? 0), 0), (s.ux ?? []).some((x) => (x.by_severity?.critical ?? 0) > 0) ? 'warn' : null],
+    /* And beside it, what the audit could NOT settle from the source.
+       Nothing here opens a browser, so an audit that answered
+       everything would be an audit that had overstated itself; this
+       tile is where that shows. */
+    ['UX questions unanswerable from source', (s.ux ?? []).reduce((n, x) => n + (x.open_questions ?? 0), 0), null],
   ];
   $('#tiles').replaceChildren(...tiles.map(([label, n, tone]) =>
     el('div', { class: 'tile', 'data-tone': tone }, el('b', { text: String(n) }), el('span', { text: label }))));
@@ -166,6 +177,7 @@ const TABS = [
   ['proposals', 'Gap proposals', (t) => t.proposals?.proposed ?? null],
   ['architecture', 'Knowledge architecture', (t) => t.architecture?.proposed ?? null],
   ['editorial', 'Editorial', (t) => t.editorial?.proposals ?? null],
+  ['ux', 'UX audit', (t) => t.ux?.findings ?? null],
   ['errors', 'Errors', (t) => t.errors.length],
 ];
 
@@ -537,6 +549,68 @@ function renderPanel(t) {
       e.gaps.length
         ? el('p', { class: 'gaps', text: `GAPS — ${e.gaps.join('; ')}` })
         : el('p', { class: 'mono', text: 'no gaps: the census, the triage decision, every intake refusal, every no-change explanation and the "nothing applied" claim are on this trace' }),
+    ));
+  }
+  if (state.tab === 'ux') {
+    const u = t.ux;
+    if (!u) return p.replaceChildren(el('p', { class: 'empty', text: 'no UX audit on this trace' }));
+    const sev = Object.entries(u.by_severity ?? {});
+    const cls = Object.entries(u.by_class ?? {});
+    return p.replaceChildren(el('div', { class: 'chain' },
+      el('h3', {}, `${u.findings} finding(s), ${u.open_questions} open question(s), ${u.testable_proposals} testable proposal(s) `, u.simulated ? badge('simulated') : null),
+      el('p', { class: 'mono', text: `as at ${u.as_of ?? '?'} · ${u.surface ? `${u.surface.pages} pages, ${u.surface.stylesheets} stylesheets, ${u.surface.modules} modules, ${u.surface.css_rules} CSS rules, ${u.surface.journeys} journeys · ` : ''}${u.pending_approvals} approval(s) pending · ${u.applied ?? '?'} applied · ${u.stylesheets_written ?? '?'} stylesheet(s) written · ${u.pages_opened ?? '?'} page(s) opened · ${u.tokens_invented ?? '?'} token(s) invented` }),
+      /* THE SEVERITY SPREAD. `critical` is reserved for one thing and
+         a bar that did not say so would read as a four-point scale
+         somebody chose. */
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Severity — critical is reserved for an absence a reader can take for a negative finding' }),
+        sev.length
+          ? el('pre', { text: sev.map(([k, n]) => `${String(k).padEnd(10)} ${String(n).padStart(4)}${k === 'critical' ? '   ← AGENTS.md rules 5 and 6' : ''}`).join('\n') })
+          : el('p', { class: 'mono', text: 'no findings' })),
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: 'The seven kinds — an enhancement is never a defect' }),
+        cls.length
+          ? el('pre', { text: cls.map(([k, n]) => `${String(k).padEnd(26)} ${String(n).padStart(4)}${k === 'enhancement' ? '   capped at medium, by construction' : ''}`).join('\n') })
+          : el('p', { class: 'mono', text: 'no findings' })),
+      /* THE BACKLOG, which is the deliverable. The rank is derived at
+         read time and stored on no record: UXProposal forbids a
+         priority field, because a stored position is a second home
+         for an ordering. */
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: `The backlog — ${u.high_priority} of ${u.findings} at critical or high` }),
+        u.backlog.length
+          ? el('ul', { class: 'queue' }, ...u.backlog.map((e) => el('li', {},
+              el('code', { text: `${e.rank}. ${e.severity}` }), ' ', el('code', { text: e.finding_class }), ' ',
+              el('div', { text: e.subject }),
+              el('div', { class: 'none', text: `${e.journey} · ${e.success_criterion}` }))))
+          : el('p', { class: 'mono', text: 'nothing found' })),
+      /* THE PANEL THAT IS THE POINT OF THIS VIEW, as the no-change
+         panel is the point of the editorial one. Nothing here opened
+         a page, and these are the questions that cost. */
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: `Could not be settled from the source — ${u.open_questions}` }),
+        u.open_questions_named.length
+          ? el('ul', { class: 'queue' }, ...u.open_questions_named.map((q) => el('li', {},
+              el('code', { text: q.subject }), q.lens ? el('code', { text: ` ${q.lens}` }) : null,
+              el('div', { text: q.question ?? '' }), el('div', { class: 'none', text: q.missing ?? '' }))))
+          : el('p', { class: 'mono', text: 'every question this audit asked was answerable from the files' })),
+      u.no_proposal.length ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'High-priority findings that got no testable proposal' }),
+        el('ul', { class: 'queue' }, ...u.no_proposal.map((n) => el('li', {},
+          el('code', { text: n.subject }), el('div', { class: 'none', text: n.why ?? '' }))))) : null,
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: 'The ten questions' }),
+        el('pre', { text: u.lenses.map((l) => `q${String(l.question ?? '?').padEnd(3)} ${String(l.lens).padEnd(24)} ${String(l.examined ?? '').padStart(4)} examined  ${String(l.reported ?? '').padStart(2)} found  ${String(l.open_questions ?? '').padStart(2)} open  ${String(l.set_aside ?? '').padStart(2)} aside`).join('\n') }),
+        u.questions_answered_no.length ? el('p', { class: 'none', text: `Answered no: ${u.questions_answered_no.map((q) => `q${q}`).join(', ')}. "Looked and found nothing" is a result.` }) : null),
+      u.ordering ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'How the backlog was ranked' }),
+        el('p', { text: u.ordering.decision }),
+        el('p', { class: 'none', text: u.ordering.rationale }),
+        el('pre', { text: (u.ordering.alternatives ?? []).join('\n') })) : null,
+      el('p', { class: 'mono', text: `records — ${u.proposal_ids.length} UXProposal, ${u.approval_ids.length} ApprovalRequest. No finding drafts a value, no proposal invents a design token, and nothing here opened a page.` }),
+      u.gaps.length
+        ? el('p', { class: 'gaps', text: `GAPS — ${u.gaps.join('; ')}` })
+        : el('p', { class: 'mono', text: 'no gaps: the census, the backlog, the ordering decision, every open question and the "nothing restyled" claim are on this trace' }),
     ));
   }
   if (state.tab === 'errors') {

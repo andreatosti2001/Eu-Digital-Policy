@@ -76,7 +76,7 @@ nothing open, made explicitly so somebody can disagree with it.
 | `DataGap` | finding | something the corpus cannot support, named rather than filled |
 | `ArchitectureProposal` | proposal | a change to how the system is built |
 | `EditorialProposal` | proposal | a change to what the brief says, typed by what it is — a factual update, an analytical update or an editorial recommendation — of which only the first may carry a drafted replacement |
-| `UXProposal` | proposal | a change to how the site presents itself |
+| `UXProposal` | proposal | a **finding** about how the site presents itself, or a **testable proposal** to change it — of which only the second carries a hypothesis and the tests that would prove it, and neither carries a drafted value |
 | `ImplementationProposal` | proposal | a change to the code |
 | `QAResult` | result | what the checks actually said, against their baseline |
 | `ApprovalRequest` | request | an agent asking a human to decide |
@@ -531,3 +531,57 @@ carry a replacement. `docs/EDITORIAL-AGENT.md` §6 has the reasoning behind each
 time from the claim behind the sentence and the grade `js/format.js` computes for it — and
 where the block carries no claim, the answer is `not_attributed`, which no claim record could
 ever express.
+
+
+---
+
+## SESSIONS 16 and 17 — five fields on `UXProposal`, and the two forbidden ones
+
+The same situation as SESSION 14, one contract along. `UXProposal` has existed since
+SESSION 03 and was produced by nothing until `agent/ux/` (Agent 8). Building it added five
+fields rather than a nineteenth contract: the burden the contract already carried — pages,
+components, tokens, the two red-tier booleans, a four-part accessibility block, a motion
+note, four validators and a rollback — is exactly the burden a change to the interface
+carries.
+
+What it could not hold was the difference between **a finding** and **a proposal**, whose
+journey a defect sits on, how bad it is, and how anyone would know it had been fixed.
+
+| field | what it holds | why it could not be a convention |
+|---|---|---|
+| `proposal_kind` | `finding` · `testable_proposal` | "A finding never drafts a value" is the whole of SESSION 16's brief — the agent observes and proposes and does not redesign the site. Without the field, no rule can be written against it |
+| `finding_class` | the session's seven kinds, of which `enhancement` is the one that is not a defect | It is what makes "an opportunity never outranks a defect" enforceable rather than a habit, and the backlog stops being a ranking without it |
+| `severity` | `critical` · `high` · `medium` · `low`, **derived** by `agent/ux/severity.mjs` and never assigned | A backlog ordered by a number an agent chose by feel is a backlog ordered by nothing. The field is typed `inference`, so a record carrying one must also carry the steps that produced it |
+| `affected_journey` | the journey, its pages, and why the defect sits on it | A defect attached to a file says where the code is; a defect attached to a journey says who is affected. The journeys are parsed out of `js/shell.js`'s own nav model rather than written down twice |
+| `success_criterion` | how anyone would know it had been fixed, stated so it could fail | A rule refuses one that repeats `proposed_change.summary` word for word: a criterion that restates the change says nothing about whether the change worked |
+
+SESSION 17 added the testable half on the same contract — `hypothesis`, `success_metrics`,
+`regression_risks`, `accessibility_checks`, `browser_tests` and `tokens_used` — under
+`proposal_kind: "testable_proposal"`. A `finding` carries none of them, a
+`testable_proposal` must carry all of them, and both rules are enforced, so a query cannot
+confuse the two.
+
+**Ten rules follow.** A finding drafts no value, adds no token and carries none of the
+testable half; an enhancement is never `critical` or `high`; `critical` requires a `fact`
+entry, because the worst class of finding here says a reader may be misled and that claim
+may not rest on an inference; a success criterion may not repeat the change;
+`screen_reader_checked: true` requires a note saying which one, because README limitation 7
+is that none has ever been run; a testable proposal missing a metric, a regression risk, an
+accessibility check, a browser test or a hypothesis is refused; and a proposal adding a
+design token must carry an open question saying what the existing system could not hold.
+`docs/UX-AUDIT.md` §3 and §8 have the reasoning behind each.
+
+**Two forbidden fields are new, and both are about invented numbers.**
+
+`priority` — the backlog position is derived at read time from severity, the journey's
+stake and how much the finding is standing on. A stored position is a second home for an
+ordering, and the two disagree the moment anything is re-run.
+
+`users_affected` — this project has no analytics, no telemetry and no user research. A
+number there could only be invented, and an invented number is the most persuasive kind of
+fabrication available to an agent auditing an interface.
+
+**`severity` is not a second home for `risk`.** They are different axes: severity is how bad
+the defect is for a reader, risk is what it costs if the *finding* is wrong. Blending them
+produces a number that is neither, and the suite asserts no record copies one into the
+other.

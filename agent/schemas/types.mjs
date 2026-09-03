@@ -681,3 +681,76 @@ export const EDITORIAL_STALENESS_KINDS = ['contradicted', 'possibly_stale'];
  *  SKILL.md names them; this is the same list, in the form a record
  *  can carry, and `data/brief.json` is a home nothing fetches. */
 export const PROSE_HOMES = ['markup', 'content_blob', 'brief_json'];
+
+/* ---------------------------------------------------------- the interface
+
+   SESSION 16. `UXProposal` has existed since SESSION 03 and had been
+   produced by nothing, which is exactly where `EditorialProposal`
+   stood before SESSION 14. It is extended here rather than joined by
+   a nineteenth contract, for the reason SESSION 14 gave: a proposal
+   about the interface already carries the burden a change to the
+   interface carries, and a second contract because a new agent
+   exists is the second home this architecture is built to prevent.
+
+   What it could NOT carry is the shape SESSION 16 asks for — a
+   FINDING. A proposal says what should change; a finding says what
+   is wrong, on whose journey, how badly, and how anyone would know
+   it had been fixed. Five fields close that gap, and each one exists
+   because a rule had to be written against it.                     */
+
+/**
+ * What KIND of defect a finding is. The session's own seven, and no
+ * eighth: an agent that could invent a category could file anything.
+ *
+ * The order is not alphabetical and is not a ranking of importance —
+ * it is the order the classes are DERIVED in, from the most
+ * mechanically checkable to the least. `enhancement` is last because
+ * it is the only one that is not a defect at all, and the severity
+ * model refuses to let it outrank one.
+ */
+export const UX_FINDING_CLASSES = [
+  'accessibility_defect',    // a reader using a keyboard, a screen reader or no colour cannot get the meaning
+  'usability_defect',        // the interface can be operated and still says the wrong thing to a reader
+  'interaction_problem',     // the behaviour of a control, or two controls that behave differently
+  'information_architecture',// where a thing lives, and what it is filed under
+  'discoverability',         // it exists, it works, and nobody finds it
+  'visual',                  // a treatment that is inconsistent, illegible, or breaks at a size
+  'enhancement',             // nothing is wrong; something could be better. Never a defect.
+];
+
+/** The one class that is not a defect. Named rather than indexed so
+ *  an eighth class added later does not silently become one. */
+export const UX_NON_DEFECT_CLASS = 'enhancement';
+
+/**
+ * How bad it is, DERIVED rather than assigned — `agent/ux/severity.mjs`
+ * computes it from the class, the journey it sits on and how many
+ * surfaces carry it, and records the computation as a decision.
+ *
+ * `critical` is reserved for one thing, and it is this project's own
+ * thesis turned on its interface: an absence of knowledge that reads
+ * as a negative finding. A reader who takes "no rule matched" for
+ * "no obligation" may act on it, and that is not a usability
+ * complaint — it is the failure the whole site exists to prevent
+ * (AGENTS.md rule 6, docs/AI-SAFE-BOUNDARIES.md §0.5).
+ */
+export const UX_SEVERITIES = ['critical', 'high', 'medium', 'low'];
+
+export const UX_SEVERITY_RANK = { critical: 0, high: 1, medium: 2, low: 3 };
+
+/**
+ * SESSION 16 produces findings; SESSION 17 turns the worst of them
+ * into testable proposals. Both are `UXProposal` records and the
+ * kind is what tells them apart — the same move SESSION 14 made with
+ * `EditorialProposal.proposal_kind`, for the same reason: a rule
+ * cannot be written against a convention.
+ *
+ * A `finding` NEVER carries a drafted value. Every operation on one
+ * has `proposed: null`, exactly as `agent/architect/` does, because
+ * SESSION 16's brief is explicit that the agent observes and
+ * proposes and does not redesign the website.
+ */
+export const UX_PROPOSAL_KINDS = ['finding', 'testable_proposal'];
+
+/** The kind that may name a concrete change. Named, not indexed. */
+export const UX_DRAFTABLE_KIND = 'testable_proposal';

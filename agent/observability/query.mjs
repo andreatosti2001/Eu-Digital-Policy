@@ -158,6 +158,7 @@ export function loadTrace(traceId, dir = DEFAULT_RUN_DIR) {
     proposals: root ? proposalState(root, traceId) : null,
     architecture: root ? architectureState(root, traceId) : null,
     editorial: root ? editorialState(root, traceId) : null,
+    ux: root ? uxState(root, traceId) : null,
   };
 }
 
@@ -398,6 +399,7 @@ export function overview(dir = DEFAULT_RUN_DIR) {
   const proposals = [];
   const architecture = [];
   const editorial = [];
+  const ux = [];
   for (const r of runs) {
     const t = loadTrace(r.trace_id, dir);
     if (!t) continue;
@@ -483,6 +485,26 @@ export function overview(dir = DEFAULT_RUN_DIR) {
         simulated: t.editorial.simulated, gaps: t.editorial.gaps,
       });
     }
+    /* A UX audit belongs on the overview for a number no other tile
+       carries: how much of this interface could not be settled
+       without opening a page. The findings and the OPEN QUESTIONS
+       travel together, because a tile showing only the findings would
+       report an audit that could answer ten of its twenty-two
+       questions as an audit that found ten things wrong and nothing
+       else. */
+    if (t.ux) {
+      ux.push({
+        trace_id: r.trace_id, as_of: t.ux.as_of,
+        findings: t.ux.findings, open_questions: t.ux.open_questions,
+        set_aside: t.ux.set_aside, by_severity: t.ux.by_severity,
+        by_class: t.ux.by_class, by_journey: t.ux.by_journey,
+        high_priority: t.ux.high_priority, testable_proposals: t.ux.testable_proposals,
+        pending_approvals: t.ux.pending_approvals,
+        applied: t.ux.applied, stylesheets_written: t.ux.stylesheets_written,
+        pages_opened: t.ux.pages_opened, tokens_invented: t.ux.tokens_invented,
+        simulated: t.ux.simulated, gaps: t.ux.gaps,
+      });
+    }
   }
 
   return {
@@ -497,6 +519,7 @@ export function overview(dir = DEFAULT_RUN_DIR) {
     open_handoffs: openHandoffs,
     pending_approvals: pendingApprovals,
     website_changes: websiteChanges,
+    ux,
     impact,
     editorial_impacts: editorialImpacts,
     depth,
@@ -1056,6 +1079,124 @@ export function editorialState(root, traceId = null) {
        the list is the deliverable. */
     explanations: noChange.map((o) => ({ subject: o.subject, summary: o.summary, state: o.data?.editorial_state ?? null, how: o.data?.how_reached ?? null })),
     triage: triage ? { decision: triage.decision, rationale: triage.rationale, alternatives: triage.alternatives } : null,
+    gaps,
+  };
+}
+
+/* ============================================================
+   the UX audit view (SESSION 16 / 17)
+
+   Derived at read time and stored nowhere twice. The three numbers
+   that matter are deliberately kept apart: what was FOUND, what was
+   left as an OPEN QUESTION, and what was NOT REPORTED because it
+   belongs to another agent. A view that showed only the first would
+   report an audit that could not settle nine of its own questions as
+   an audit that found nothing to settle.
+   ============================================================ */
+
+export function uxState(root, traceId = null) {
+  const spans = [];
+  (function walk(s) {
+    if (String(s.name ?? '').startsWith('ux.')) spans.push(s);
+    for (const c of s.children ?? []) walk(c);
+  })(root);
+  if (!spans.length) return null;
+
+  const observations = collectEvents(root, 'observation');
+  const decisions = collectEvents(root, 'decision');
+  const artifacts = collectEvents(root, 'artifact');
+  const approvals = approvalState(root);
+
+  const census = observations.find((o) => String(o.summary).startsWith('UX CENSUS'));
+  const backlog = observations.find((o) => String(o.summary).startsWith('UX BACKLOG'));
+  const restyled = observations.find((o) => String(o.summary).startsWith('NOTHING RESTYLED'));
+  const ordering = decisions.find((d) => String(d.decision).toLowerCase().includes('backlog is ordered'));
+  const open = observations.filter((o) => String(o.summary).startsWith('OPEN QUESTION'));
+  const aside = observations.filter((o) => String(o.summary).startsWith('NOT REPORTED'));
+  const noProposal = observations.filter((o) => String(o.summary).startsWith('NO PROPOSAL'));
+
+  const lenses = spans.filter((s) => s.name !== 'ux.proposals').map((s) => {
+    const id = String(s.name).replace(/^ux\./, '');
+    const answer = observations.find((o) => o.span_id === s.span_id && /^Q\d+ — /.test(String(o.summary)));
+    return {
+      lens: id,
+      question: answer?.data?.question ?? null,
+      asks: answer?.data?.asks ?? null,
+      status: s.status,
+      examined: s.outputs?.examined ?? null,
+      reported: s.outputs?.reported ?? null,
+      set_aside: s.outputs?.set_aside ?? null,
+      open_questions: s.outputs?.open_questions ?? null,
+      risk: s.risk ?? null,
+      /* Named rather than counted. "Nine open questions" is a
+         number; "nine components whose legibility could not be
+         settled from the source, and here they are" is something a
+         reviewer can act on. */
+      questions: open.filter((o) => o.span_id === s.span_id).map((o) => ({ subject: o.subject, question: o.data?.question ?? null, missing: o.data?.missing ?? null })),
+      routed: aside.filter((o) => o.span_id === s.span_id).map((o) => ({ subject: o.subject, route: o.data?.route ?? null })),
+    };
+  }).sort((a, b) => (a.question ?? 99) - (b.question ?? 99));
+
+  const byType = (t) => artifacts.filter((a) => a.artifact_type === `contract:${t}`).map((a) => a.artifact_id);
+  const proposals = byType('UXProposal');
+  const requests = byType('ApprovalRequest');
+  const entries = backlog?.data?.entries ?? [];
+
+  const gaps = [];
+  if (!census) gaps.push('no UX census observation recorded — the run\'s own totals are not on this trace');
+  if (!backlog) gaps.push('no backlog observation recorded — the ranking this session exists to produce is not on this trace');
+  if (!ordering) gaps.push('no ordering decision recorded — how the backlog was ranked, and what it was not ranked by, is not on this trace');
+  if (!restyled) gaps.push('no "nothing restyled" observation recorded — that no stylesheet and no page was written is the claim this run most needs to be able to prove');
+  if (restyled && (restyled.data?.stylesheets_written || restyled.data?.pages_written || restyled.data?.data_dir_written)) {
+    gaps.push('the run reports writing a stylesheet, a page or data/: this agent observes and proposes, and a write is the thing it exists not to do');
+  }
+  if (restyled && restyled.data?.pages_opened) {
+    gaps.push(`the run reports opening ${restyled.data.pages_opened} page(s): nothing here has a browser, and a run claiming otherwise is claiming coverage README limitation 7 says this project does not have`);
+  }
+  if (restyled && restyled.data?.tokens_invented) {
+    gaps.push(`the run reports inventing ${restyled.data.tokens_invented} design token(s): SESSION 17's rule is that a proposal uses the existing design system`);
+  }
+  if (proposals.length > requests.length) {
+    gaps.push(`${proposals.length} proposal(s) and only ${requests.length} approval request(s): a change to what a reader sees that nobody has to look at is an unapproved change that looks approved`);
+  }
+  for (const a of approvals) {
+    if (!a.pending) gaps.push(`approval ${a.approval_id} is "${a.state}" inside the run that requested it: an agent may not approve its own proposal`);
+  }
+  if (census && !census.data?.open_questions && open.length) {
+    gaps.push('the census reports no open questions and the trace carries some: a run that hides what it could not settle overstates its own coverage');
+  }
+
+  return {
+    trace_id: traceId,
+    as_of: census?.data?.as_of ?? null,
+    simulated: artifacts.some((a) => a.simulated === true),
+    /* THREE NUMBERS, KEPT APART, for the reason the header gives. */
+    findings: entries.length || (census?.data?.findings ?? proposals.length),
+    open_questions: census?.data?.open_questions ?? open.length,
+    set_aside: census?.data?.set_aside ?? aside.length,
+    by_class: census?.data?.by_class ?? null,
+    by_severity: census?.data?.by_severity ?? null,
+    by_journey: census?.data?.by_journey ?? null,
+    by_question: census?.data?.by_question ?? null,
+    questions_answered_no: census?.data?.questions_answered_no ?? [],
+    high_priority: census?.data?.high_priority ?? entries.filter((e) => e.high_priority).length,
+    testable_proposals: census?.data?.testable_proposals ?? 0,
+    surface: census ? { pages: census.data?.pages ?? null, stylesheets: census.data?.stylesheets ?? null, modules: census.data?.modules ?? null, css_rules: census.data?.css_rules ?? null, journeys: census.data?.journeys ?? null } : null,
+    /* The four zeros that are the point of the session rather than
+       an absence of activity. */
+    applied: restyled?.data?.applied ?? null,
+    stylesheets_written: restyled?.data?.stylesheets_written ?? null,
+    pages_opened: restyled?.data?.pages_opened ?? null,
+    tokens_invented: restyled?.data?.tokens_invented ?? null,
+    values_drafted: restyled?.data?.values_drafted ?? null,
+    pending_approvals: approvals.filter((a) => a.pending).length,
+    backlog: entries,
+    lenses,
+    proposal_ids: proposals,
+    approval_ids: requests,
+    open_questions_named: open.map((o) => ({ subject: o.subject, lens: o.data?.lens ?? null, question: o.data?.question ?? null, missing: o.data?.missing ?? null })),
+    no_proposal: noProposal.map((o) => ({ subject: o.subject, why: o.data?.why ?? null })),
+    ordering: ordering ? { decision: ordering.decision, rationale: ordering.rationale, alternatives: ordering.alternatives } : null,
     gaps,
   };
 }
