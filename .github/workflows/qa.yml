@@ -1,0 +1,264 @@
+# ============================================================
+# QA — the checks this repository has never had run automatically
+#
+# docs/AUDIT-2026-09-01.md F-02: "there is no CI, no package.json and
+# no git hook. Nothing runs unless somebody runs it." This workflow
+# is the answer to the first third of that. It installs nothing —
+# there is still no package.json, and adding one would be a red-tier
+# architectural change (docs/AUTONOMY-POLICY.md Class D).
+#
+# IT IS NOT A DEPLOY GATE. Deployment is GitHub Pages serving `main`
+# at the repository root and there is no mechanism between a push and
+# the live site. This workflow makes a failure VISIBLE; it cannot
+# make it blocking. Say so rather than implying otherwise: a green
+# tick here means the checks ran and passed, not that the site was
+# gated on them. Making it a gate needs a branch protection rule,
+# which is repository configuration outside this tree.
+#
+# THE BROWSER JOB IS THE POINT OF SESSION 19. It runs the repository's
+# own browser suite against a browser the runner already has. If no
+# browser is found the suite exits 2 and `--require-browser` turns
+# that into a hard failure — because a suite that goes green when it
+# could not open a browser teaches this pipeline that green means
+# checked.
+# ============================================================
+
+name: QA
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      quick:
+        description: 'Run the browser suite in --quick mode'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ----------------------------------------------------------
+  # 1. The four validators — this project's test suite
+  # ----------------------------------------------------------
+  validators:
+    name: The four validators
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Show the toolchain
+        run: |
+          echo "node $(node --version)"
+          echo "No dependencies, no build step, no package.json. Nothing is installed."
+
+      # Each named separately so the job summary says WHICH one failed.
+      - name: validate.mjs — data integrity
+        run: node tools/validate.mjs
+
+      - name: i18n-audit.mjs — the locale register against the live DOM
+        run: node tools/i18n-audit.mjs
+
+      - name: design-qa.mjs — markup and stylesheets
+        run: node tools/design-qa.mjs
+
+      - name: freshness.mjs — how stale the datasets are
+        run: node tools/freshness.mjs
+
+      # The comparison the four validators cannot make themselves:
+      # against the recorded baseline in docs/CURRENT-ARCHITECTURE.md
+      # §12. A new warning is a finding, not noise.
+      - name: Against the recorded baseline
+        run: node agent/implement/cli.mjs check --as-of "$(date -u +%Y-%m-%d)"
+
+  # ----------------------------------------------------------
+  # 2. The agent suites and the contracts
+  # ----------------------------------------------------------
+  agents:
+    name: The agent suites
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: The inter-agent contracts
+        run: node --test agent/schemas/selftest.mjs
+
+      - name: Every agent suite
+        run: |
+          set -e
+          for s in \
+            agent/scout/selftest.mjs \
+            agent/scout/schedule/selftest.mjs \
+            agent/verifier/selftest.mjs \
+            agent/integrate/selftest.mjs \
+            agent/detector/selftest.mjs \
+            agent/depth/selftest.mjs \
+            agent/proposals/data/selftest.mjs \
+            agent/architect/selftest.mjs \
+            agent/proposals/editorial/selftest.mjs \
+            agent/ux/selftest.mjs \
+            agent/observability/selftest.mjs \
+            agent/implement/selftest.mjs
+          do
+            echo "::group::$s"
+            node --test "$s"
+            echo "::endgroup::"
+          done
+
+      - name: Every contract is satisfiable by its fixture
+        run: node agent/schemas/cli.mjs check
+
+      # The tree must be byte-identical afterwards. Every suite here
+      # hashes what it reads; this checks the claim from outside all
+      # of them, which is the only place it is worth checking.
+      - name: Nothing was written
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error title=The suites wrote to the repository::A read-only suite changed the tree."
+            git status --porcelain
+            exit 1
+          fi
+          echo "clean"
+
+  # ----------------------------------------------------------
+  # 3. The public/private boundary
+  # ----------------------------------------------------------
+  boundary:
+    name: Public website / private control plane
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Fails on a credential in a file the website loads, or in any
+      # published file that is not a declared test fixture. The
+      # control-plane exposure this repository has today is reported
+      # as a warning on every run: it is a standing architectural
+      # fact, not something a given change introduced.
+      - name: Scan the published surface
+        run: node agent/implement/cli.mjs boundary
+
+  # ----------------------------------------------------------
+  # 4. SESSION 19 — the browser suite
+  # ----------------------------------------------------------
+  browser:
+    name: Browser regression suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      QA_QUICK: ${{ inputs.quick && '--quick' || '' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # ubuntu-latest ships Chromium via snap, which headless Chrome
+      # cannot always start from. apt is the reliable route and it is
+      # a RUNNER dependency, not a repository one: nothing is added to
+      # the tree and `node agent/browser/cli.mjs` still runs on any
+      # machine that already has a browser.
+      - name: Install a browser on the runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends chromium-browser \
+            || sudo apt-get install -y --no-install-recommends chromium
+          echo "BROWSER_QA_CHROME=$(command -v chromium-browser || command -v chromium)" >> "$GITHUB_ENV"
+
+      - name: Report which browser this run used
+        run: |
+          echo "BROWSER_QA_CHROME=$BROWSER_QA_CHROME"
+          "$BROWSER_QA_CHROME" --version
+
+      - name: The suite's own suite
+        run: node --test agent/browser/selftest.mjs
+
+      # --require-browser: a missing browser is a hard failure here,
+      # not the exit 2 a developer gets locally. In CI there is no
+      # human to read "skipped".
+      - name: Run the browser regression suite
+        run: node agent/browser/cli.mjs --require-browser $QA_QUICK
+
+      - name: Store the machine-readable result
+        if: always()
+        run: node agent/browser/cli.mjs --json --require-browser $QA_QUICK > browser-qa.json || true
+
+      - name: Upload it
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-qa
+          path: browser-qa.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Nothing was written
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error title=The browser suite wrote to the repository::"
+            git status --porcelain
+            exit 1
+          fi
+          echo "clean"
+
+  # ----------------------------------------------------------
+  # 5. What did NOT run, said out loud
+  # ----------------------------------------------------------
+  report:
+    name: What this workflow does not prove
+    needs: [validators, agents, boundary, browser]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say it
+        run: |
+          {
+            echo "### What a green tick here means"
+            echo
+            echo "The four validators returned to the recorded baseline in"
+            echo '`docs/CURRENT-ARCHITECTURE.md` §12, every agent suite passed, every contract is'
+            echo "satisfiable by its fixture, no credential is in the published surface, and the"
+            echo "browser suite opened every page."
+            echo
+            echo "### What it does not mean"
+            echo
+            echo "- **It is not a deploy gate.** Deployment is GitHub Pages serving \`main\` at the"
+            echo "  repository root. Nothing sits between a push and the live site; a failure here is"
+            echo "  visible, not blocking. Making it blocking needs a branch protection rule."
+            echo "- **The validators do not read prose.** A false statement in \`index.html\` passes"
+            echo "  every check in this repository."
+            echo "- **No URL has ever been fetched.** \`freshness.mjs\` prints a SOURCE REACHABILITY"
+            echo "  heading and performs no network I/O (AUDIT F-12)."
+            echo "- **No contrast was computed and no screen reader was run.** README limitation 7."
+            echo "- **106 records carry an unverified note.** They are changed by doing the"
+            echo "  verification work, not by a passing check."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -29,7 +29,8 @@ the evidence it describes.
 | `docs/AI-SAFE-BOUNDARIES.md` | Green / amber / red tiers; the absolute prohibitions |
 | `docs/AGENT-CONTRACTS.md` | The eighteen inter-agent contracts and the gate no record bypasses |
 | `docs/OBSERVABILITY.md` | The trace model every agent run is instrumented through |
-| `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` · `docs/DATA-DEPTH.md` · `docs/GAP-PROPOSALS.md` · `docs/KNOWLEDGE-ARCHITECTURE.md` · `docs/EDITORIAL-AGENT.md` · `docs/UX-AUDIT.md` | The nine agents that exist, what each refuses, and what none of them may do |
+| `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` · `docs/DATA-DEPTH.md` · `docs/GAP-PROPOSALS.md` · `docs/KNOWLEDGE-ARCHITECTURE.md` · `docs/EDITORIAL-AGENT.md` · `docs/UX-AUDIT.md` · `docs/IMPLEMENTATION-QA.md` | The ten agents that exist, what each refuses, and what none of them may do |
+| `docs/BROWSER-QA.md` | The browser regression suite — coverage, the three defects it found, and what it still cannot see |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
@@ -139,11 +140,30 @@ node --test agent/proposals/data/selftest.mjs  # Agent 5, against the real data/
 node --test agent/architect/selftest.mjs       # Agent 6, against the real data/ and js/
 node --test agent/proposals/editorial/selftest.mjs   # Agent 7, against the real pages and data/
 node --test agent/ux/selftest.mjs              # Agent 8, against the real pages, sheets and modules
+node --test agent/browser/selftest.mjs         # the browser suite's own suite
+node --test agent/implement/selftest.mjs       # Agent 9, incl. SESSION 18's eight required proofs
 node --test agent/observability/selftest.mjs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**683 tests across the twelve suites**, all passing as of SESSIONS 16 and 17 (610 before them).
+**756 tests across the fourteen suites**, all passing as of SESSIONS 18 and 19 (683 before
+them).
+
+**There is now CI.** `.github/workflows/qa.yml` runs all four validators against the recorded
+baseline, every agent suite, the contract check, the public/private boundary check and the
+browser suite, on every push. **It is not a deploy gate** — a push to `main` still publishes,
+and making the workflow blocking needs a branch protection rule, which is repository
+configuration outside this tree.
+
+The browser suite opens the site in a real browser and is the first thing here that ever has:
+
+```
+node agent/browser/cli.mjs                     # exit 0 pass · 1 fail · 2 NO BROWSER, did not run
+node agent/browser/cli.mjs --require-browser   # a missing browser is a hard failure
+```
+
+It installs nothing — no `package.json`, no Playwright — and drives a browser already on the
+machine over the DevTools protocol. `docs/BROWSER-QA.md`.
 
 `tools/_footer.mjs`, `_refsweep.mjs` and `_review10.mjs` are generators and applied one-shot
 patches, not checks. **Do not re-run** the latter two.
@@ -157,17 +177,24 @@ patches, not checks. **Do not re-run** the latter two.
 - **Superseded translations.** Correcting an English string without declaring its key
   `superseded` in `i18n/locales.json` leaves the it/fr/es editions asserting the thing you
   just corrected. This has already happened once.
-- **No deploy gate.** A push to `main` publishes to the live site. There is no CI. Run the
-  validators by hand.
+- **No deploy gate.** A push to `main` publishes to the live site. `.github/workflows/qa.yml`
+  now runs the checks on every push, so a failure is **visible** — it is not **blocking**, and
+  nothing sits between a commit and the public site. Run the validators by hand as well.
 - **The validators do not read prose.** A false statement in `index.html` passes every check
   in this repository. `agent/proposals/editorial/` is the first thing here that reads a
   sentence at all, and it is **not a check**: it runs only when somebody runs it, it produces
   proposals in front of a human, and it can only find what it can quote.
-- **Nothing here has ever opened a page.** `agent/ux/` reads the markup, the stylesheets and
-  the modules and audits the interface from them; it runs no browser, no screen reader and
-  no contrast calculation, and every record it writes says so as a blocking open question
-  quoting README limitation 7. Its twelve open questions are the measure of how much of this
-  interface cannot be judged without opening it — see `docs/UX-AUDIT.md` §7.
+- **`agent/ux/` has never opened a page, and `agent/browser/` now does.** Agent 8 reads the
+  markup, the stylesheets and the modules and audits the interface from them; every record it
+  writes says so as a blocking open question quoting README limitation 7, and that has not
+  changed. SESSION 19's browser suite closes some of its twelve open questions by measurement
+  and **found three defects none of the four validators can see**: with scripting off the
+  site has no navigation and the `<noscript>` notice does not say so; the skip link is the
+  tenth focusable element in the rendered page because `js/shell.js:258` inserts the chrome
+  ahead of it; and `enforcement.html` jumps h2 → h5 in its rendered outline. **None is
+  fixed** — each is Class C interface work needing a proposal and a human decision.
+  `docs/BROWSER-QA.md` §4. Still not closed: contrast, screen readers, pixels, any browser
+  but Chromium.
 - **A passing validator proves less than it looks.** `design-qa.mjs` harvests CSS token
   declarations out of JavaScript by regex, so a `--foo:` in any JS string or comment
   silences a real error. `freshness.mjs` prints a `SOURCE REACHABILITY` heading but performs
@@ -181,6 +208,20 @@ patches, not checks. **Do not re-run** the latter two.
   deletions with no message that explains a change, so the rollback path a destructive script
   assumes does not exist. Your commits are the first real provenance this repository has
   (F-06).
+- **An `ApprovalRequest` in `agent/records/` is a request, not a grant.** Agents write that
+  directory, and it is git-ignored. A grant exists only in
+  `agent/implement/decisions/decisions.jsonl`, written by `agent/implement/cli.mjs decide`,
+  which requires a named human and binds the decision to the proposal's hash. **Not one
+  proposal in this repository has ever been decided** — seventy-one across four agents by
+  `docs/HANDOVER.md`'s count, thirty-five of them measured in SESSION 18's own run. Agent 9
+  refuses every one by name, and reports which gate refused it.
+  `docs/IMPLEMENTATION-QA.md` §3.
+- **The whole repository is inside the public deployment.** GitHub Pages serves `main` at the
+  repository root, with no `_config.yml`, no `.nojekyll` and no exclude list, so `agent/`,
+  `docs/` and the approval ledger are published alongside `index.html`. A Control Room page
+  dropped in this tree would be public the moment it was pushed.
+  `node agent/implement/cli.mjs boundary` reports it on demand;
+  `docs/IMPLEMENTATION-QA.md` §6 carries it as the standing finding it is.
 - **Your base may be stale.** Run `git fetch --all && git branch -a` before concluding
   anything about what this repository contains. An earlier session reported four existing
   documents as missing by running `ls docs` on an unfetched branch (F-01).

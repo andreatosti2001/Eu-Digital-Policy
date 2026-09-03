@@ -448,6 +448,59 @@ function cmdValidate() {
   process.exit(bad || broken ? 1 : 0);
 }
 
+function cmdImplement() {
+  const wantTrace = flag('trace');
+  const traces = typeof wantTrace === 'string' ? [wantTrace] : listRuns(DIR).map((r) => r.trace_id);
+  let found = 0;
+
+  for (const id of traces) {
+    const t = loadTrace(id, DIR);
+    if (!t?.implement) continue;
+    const i = t.implement;
+    found++;
+    console.log(`\n${i.trace_id} — ${i.considered} proposal(s) considered · ${i.applied} implemented · ${i.reverted} reverted · ${i.refused} refused${i.simulated ? ' — SIMULATED' : ''}`);
+    if (i.by_approval_state) console.log(`  approval  ${Object.entries(i.by_approval_state).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+    if (i.by_agent) console.log(`  produced  ${Object.entries(i.by_agent).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+    console.log(`  ledger    ${i.ledger_decisions ?? '?'} decision(s), ${i.ledger_malformed.length} unparseable line(s)`);
+    console.log(`  records   ${i.qa_result_ids.length} QAResult(s) · ${i.change_record_ids.length} ChangeRecord(s)`);
+    console.log(`  tree      ${i.working_tree_dirty_paths ?? '?'} changed path(s) in the working tree`);
+
+    if (Object.keys(i.refusals_by_gate).length) {
+      console.log('  WHICH GATE REFUSES — the cheapest thing to fix, and nothing else reports it');
+      for (const [g, n] of Object.entries(i.refusals_by_gate).sort((a, b) => b[1] - a[1])) {
+        console.log(`    ${pad(g, 26)} ${String(n).padStart(4)} proposal(s)`);
+      }
+    }
+
+    if (flag('refusals')) {
+      for (const r of i.refusals) {
+        console.log(`    ✗ ${r.proposal_id}`);
+        r.why.forEach((w, n) => {
+          console.log(`        ${r.gates[n]}: ${String(w).slice(0, 150)}`);
+          console.log(`        → ${String(r.closes[n]).slice(0, 150)}`);
+        });
+      }
+    }
+
+    if (i.discarded_approval_claims.length) {
+      console.log(`  ${i.discarded_approval_claims.length} APPROVAL CLAIM(S) IN agent/records/ WERE DISCARDED`);
+      for (const c of i.discarded_approval_claims.slice(0, 8)) {
+        console.log(`    · ${c.approval_id} claims "${c.claimed_state}" by "${c.claimed_by ?? 'nobody'}", written by ${c.written_by_agent}`);
+      }
+    }
+
+    for (const q of i.qa) console.log(`  QA        ${q.checks} check(s)${q.failing.length ? ` — FAILING: ${q.failing.join(', ')}` : ''}${q.baseline_source ? ` · against ${q.baseline_source}` : ''}`);
+    for (const c of i.contexts) console.log(`  context   ${c.branch} at ${String(c.commit).slice(0, 8)} · ${c.permitted.length} permitted path(s)`);
+    for (const r of i.rollbacks) console.log(`  rollback  ${r.verified ? 'VERIFIED — every permitted path re-hashes to its pre-change state' : `NOT VERIFIED — ${r.mismatches} mismatch(es)`}`);
+    if (i.decision) console.log(`  decided   ${i.decision.decision} — ${String(i.decision.rationale).slice(0, 140)}`);
+
+    console.log(i.gaps.length
+      ? `  GAPS: ${i.gaps.join('; ')}`
+      : '  no gaps: the census, what was and was not applied, every refusal and every discarded approval claim are on this trace');
+  }
+  if (!found) console.log('no implementation run in the store. `node agent/implement/cli.mjs run --as-of <date>` writes one.');
+}
+
 function cmdExport(id) {
   if (!id) { console.error('export needs a trace id'); process.exit(1); }
   const out = flag('provenance') ? toProvenanceLedger(id, DIR) : toOtlp(id, DIR);
@@ -465,11 +518,12 @@ switch (cmd) {
   case 'architecture': cmdArchitecture(); break;
   case 'editorial': cmdEditorial(); break;
   case 'ux': cmdUx(); break;
+  case 'implement': cmdImplement(); break;
   case 'validate': cmdValidate(); break;
   case 'export': cmdExport(argv[1]); break;
   case 'summary': console.log(JSON.stringify(overview(DIR), null, 2)); break;
   case 'serve': serve({ port: Number(flag('port', 7801)), dir: DIR }); break;
   default:
-    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | architecture | editorial | ux | validate | export <id> | summary | serve`);
+    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | architecture | editorial | ux | implement | validate | export <id> | summary | serve`);
     process.exit(1);
 }
