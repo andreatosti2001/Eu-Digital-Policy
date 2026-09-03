@@ -156,6 +156,7 @@ export function loadTrace(traceId, dir = DEFAULT_RUN_DIR) {
     impact: root ? impactState(root, traceId) : [],
     depth: root ? depthState(root, traceId) : null,
     proposals: root ? proposalState(root, traceId) : null,
+    architecture: root ? architectureState(root, traceId) : null,
   };
 }
 
@@ -394,6 +395,7 @@ export function overview(dir = DEFAULT_RUN_DIR) {
   const editorialImpacts = [];
   const depth = [];
   const proposals = [];
+  const architecture = [];
   for (const r of runs) {
     const t = loadTrace(r.trace_id, dir);
     if (!t) continue;
@@ -439,6 +441,24 @@ export function overview(dir = DEFAULT_RUN_DIR) {
         by_route: t.proposals.by_route, simulated: t.proposals.simulated, gaps: t.proposals.gaps,
       });
     }
+    /* An architecture run belongs on the overview for what its
+       ANSWERS say, not for its proposal count: the questions it
+       answered "no" to are the model working, and a tile that
+       carried only the proposals would report the model as nothing
+       but its defects. */
+    if (t.architecture) {
+      architecture.push({
+        trace_id: r.trace_id, as_of: t.architecture.as_of,
+        questions: t.architecture.questions,
+        answered_yes: t.architecture.answered_yes, answered_no: t.architecture.answered_no,
+        examined: t.architecture.examined, reported: t.architecture.reported,
+        set_aside: t.architecture.set_aside, proposed: t.architecture.proposed,
+        pending_approvals: t.architecture.pending_approvals,
+        merged: t.architecture.merged, applied: t.architecture.applied,
+        schemas_changed: t.architecture.schemas_changed,
+        simulated: t.architecture.simulated, gaps: t.architecture.gaps,
+      });
+    }
   }
 
   return {
@@ -457,6 +477,7 @@ export function overview(dir = DEFAULT_RUN_DIR) {
     editorial_impacts: editorialImpacts,
     depth,
     proposals,
+    architecture,
     runs,
   };
 }
@@ -750,6 +771,142 @@ export function proposalState(root, traceId = null) {
     approval_ids: requests,
     data_gap_ids: dataGaps,
     routing: routing ? { decision: routing.decision, rationale: routing.rationale, alternatives: routing.alternatives } : null,
+    gaps,
+  };
+}
+
+/* --------------------------------------------- knowledge architecture */
+
+/**
+ * What a Knowledge Architect run concluded about the information
+ * model.
+ *
+ * SESSION 13's brief asks that the agent's REASONING be instrumented
+ * and its conclusions exposed here. So the interesting object in this
+ * view is not the proposals: it is **the eight answers**. A run that
+ * emitted twenty proposals and could not tell its reader which of the
+ * eight questions it answered "no" to would have hidden its own
+ * coverage behind its own output — and "looked and found nothing" is
+ * a result this project keeps carefully apart from "did not look".
+ *
+ * Derived at read time from what the run emitted, like everything
+ * else here. The architect writes onto each lens span:
+ *
+ *   a span `architect.<lens>`  with examined, found, reported, set_aside
+ *   an `observation` Q<n> —    the answer to that question, with what
+ *                              was examined and what was reported
+ *   `observation`s NOT REPORTED  one per finding set aside, with the
+ *                              reason and the agent it belongs to
+ *   `handoff`s                 the edges to the agents that own them
+ *   `artifact`s                every ArchitectureProposal and ApprovalRequest
+ *   a `decision`               the ordering, with what it did not choose
+ *   two `observation`s         the census, and that nothing was merged
+ *
+ * Nothing is recomputed and nothing is second-guessed. A run that
+ * authored a proposal and no approval for it, or whose proposal
+ * carries a drafted schema, is reported as a gap in the view.
+ */
+export function architectureState(root, traceId = null) {
+  const lensSpans = [];
+  (function walk(s) {
+    if (String(s.name ?? '').startsWith('architect.')) lensSpans.push(s);
+    for (const c of s.children ?? []) walk(c);
+  })(root);
+  if (!lensSpans.length) return null;
+
+  const observations = collectEvents(root, 'observation');
+  const decisions = collectEvents(root, 'decision');
+  const artifacts = collectEvents(root, 'artifact');
+  const approvals = approvalState(root);
+  const handoffs = handoffState(root);
+
+  const census = observations.find((o) => String(o.summary).startsWith('ARCHITECTURE CENSUS'));
+  const merged = observations.find((o) => String(o.summary).startsWith('NOTHING MERGED'));
+  const ordering = decisions.find((d) => String(d.decision).toLowerCase().includes('leaning on the missing shape'));
+  const notReported = observations.filter((o) => String(o.summary).startsWith('NOT REPORTED'));
+  const answers = observations.filter((o) => /^Q\d+ — /.test(String(o.summary)));
+
+  const lenses = lensSpans.map((s) => {
+    const id = String(s.name).replace(/^architect\./, '');
+    const answer = answers.find((o) => o.subject === id);
+    return {
+      lens: id,
+      question: answer?.data?.question ?? s.inputs?.question ?? null,
+      asks: answer?.data?.asks ?? s.inputs?.asks ?? null,
+      /* THE ANSWER, and it is a word rather than a count, because
+         "no" is the result that a count of zero hides. */
+      answer: answer?.data?.answer ?? null,
+      status: s.status,
+      examined: s.outputs?.examined ?? null,
+      found: s.outputs?.found ?? null,
+      reported: s.outputs?.reported ?? null,
+      set_aside: s.outputs?.set_aside ?? null,
+      proposals: s.outputs?.proposals ?? null,
+      risk: s.risk ?? null,
+      subjects: answer?.data?.subjects ?? [],
+      /* Named rather than counted. "Nine set aside" is a number;
+         "these nine, and this one is agent/depth/'s" is a finding a
+         reviewer can disagree with. */
+      not_reported: notReported.filter((o) => o.span_id === s.span_id).map((o) => ({ subject: o.subject, why: o.data?.why ?? null, route: o.data?.route ?? null })),
+      handoffs: handoffs.filter((h) => h.span_id === s.span_id).map((h) => ({ to_agent: h.to_agent, reason: h.reason })),
+    };
+  }).sort((a, b) => (a.question ?? 99) - (b.question ?? 99));
+
+  const byType = (t) => artifacts.filter((a) => a.artifact_type === `contract:${t}`).map((a) => a.artifact_id);
+  const proposals = byType('ArchitectureProposal');
+  const requests = byType('ApprovalRequest');
+
+  const gaps = [];
+  if (!census) gaps.push('no architecture census observation recorded — the run\'s own totals are not on this trace');
+  if (!ordering) gaps.push('no ordering decision recorded — what this run ranked by, and what it refused to rank by, is not on this trace');
+  if (!merged) gaps.push('no "nothing merged" observation recorded — that no schema was changed is the claim this run most needs to be able to prove');
+  if (merged && merged.data?.values_proposed) {
+    gaps.push(`the run reports ${merged.data.values_proposed} proposed value(s): this agent proposes shapes and never values, and a drafted schema is the thing it exists not to write`);
+  }
+  if (proposals.length > requests.length) {
+    gaps.push(`${proposals.length} proposal(s) and only ${requests.length} approval request(s): a model change nobody has to look at is an unapproved change that looks approved`);
+  }
+  for (const a of approvals) {
+    if (!a.pending) gaps.push(`approval ${a.approval_id} is "${a.state}" inside the run that requested it: an agent may not approve its own proposal`);
+  }
+  for (const l of lenses) {
+    if (l.set_aside && !l.not_reported.length) {
+      gaps.push(`${l.lens} set ${l.set_aside} finding(s) aside and recorded no reasons: a finding that vanished without a reason is a finding nobody can check`);
+    }
+    if (l.answer === null) gaps.push(`${l.lens} recorded no answer to its question: a lens that ran and did not say what it concluded has told its reader nothing`);
+  }
+
+  return {
+    trace_id: traceId,
+    as_of: census?.data?.as_of ?? null,
+    simulated: artifacts.some((a) => a.simulated === true),
+    /* The COUNTS come from the lens spans' own outputs, never from
+       the length of the artifact list — the artifact list is what the
+       trace store happened to keep, and the counts describe what the
+       run actually did. */
+    examined: lenses.reduce((n, l) => n + (l.examined ?? 0), 0),
+    reported: lenses.reduce((n, l) => n + (l.reported ?? 0), 0),
+    set_aside: lenses.reduce((n, l) => n + (l.set_aside ?? 0), 0),
+    proposed: lenses.reduce((n, l) => n + (l.proposals ?? 0), 0),
+    /* The headline of this view. A question answered "no" is a
+       result — the model CAN represent that — and it is carried
+       beside the yeses rather than left to be inferred from a zero. */
+    questions: lenses.length,
+    answered_yes: lenses.filter((l) => l.answer === 'yes').map((l) => l.question),
+    answered_no: lenses.filter((l) => l.answer === 'no').map((l) => l.question),
+    by_question: census?.data?.by_question ?? null,
+    model: census?.data ? { containers: census.data.containers ?? null, vocabularies: census.data.vocabularies ?? null, pages: census.data.pages ?? null } : null,
+    /* Three zeros that are the point of the session rather than an
+       absence of activity. */
+    merged: merged?.data?.merged ?? null,
+    applied: merged?.data?.applied ?? null,
+    schemas_changed: merged?.data?.schemas_changed ?? null,
+    values_proposed: merged?.data?.values_proposed ?? null,
+    pending_approvals: approvals.filter((a) => a.pending).length,
+    lenses,
+    proposal_ids: proposals,
+    approval_ids: requests,
+    ordering: ordering ? { decision: ordering.decision, rationale: ordering.rationale, alternatives: ordering.alternatives } : null,
     gaps,
   };
 }

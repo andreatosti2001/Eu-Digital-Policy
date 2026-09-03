@@ -458,7 +458,10 @@ unchanged from the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
    the Legal Verifier (SESSION 07), the verification integrator (SESSION 08) and
    the Regulatory Change Detector (SESSION 09) — and each one found the shape the
    contracts were missing, exactly as this note predicted. Every amendment above
-   came from a real agent meeting them.
+   came from a real agent meeting them. **Seven now do**, with the Data Depth
+   Agent (SESSION 11), the gap router (SESSION 12) and the Knowledge Architect
+   (SESSION 13); the last two added no contract, which is the more useful
+   result — the burden they carry was already somebody's.
 2. **The epistemic requirement is enforced on top-level fields only.** An
    epistemic annotation deeper inside a record — on an evidence reference's own
    title, say — describes that evidence rather than what the record asserts, and

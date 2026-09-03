@@ -239,6 +239,13 @@ missing routing decision, a missing nothing-merged claim, and — the one that m
 5. **It cannot tell you whether a gap is worth closing.** It can tell you who could close it
    and what it would take. Demand is not importance — `docs/DATA-DEPTH.md` §10 — and routing
    does not add a judgement the depth analysis could not make.
+6. **It does not propose a SHAPE.** `create_taxonomy_term` proposes a *word* into a dimension
+   that already exists; a dimension that does not, or a container, or a field, is
+   `agent/architect/`'s and comes back as an `ArchitectureProposal`. SESSION 12's unresolved
+   issue 13 was exactly that split — `prop-taxonomy-*` proposed the missing word for
+   `data/sources.json` and deliberately left the shape open — and SESSION 13 built the agent
+   that asks the other half. Neither may do the other's job: the architect routes a finding
+   whose answer is a term to here, and this agent proposes no container.
 
 ## 9 · Known limitations
 

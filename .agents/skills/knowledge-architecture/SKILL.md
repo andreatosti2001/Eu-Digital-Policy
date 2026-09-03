@@ -13,6 +13,13 @@ The *structure* of the knowledge, as distinct from its content. This skill answe
 does this fact live, is it stored or derived, and what happens to everything that resolves
 against it.
 
+**An agent now asks part of this automatically.** `agent/architect/` (SESSION 13)
+runs eight structural questions over `data/`, `js/` and the pages and emits
+`ArchitectureProposal` records — it names a shape that cannot hold what the corpus is
+saying and deliberately drafts no replacement, because that decision is the repository
+owner's. `docs/KNOWLEDGE-ARCHITECTURE.md` has what it found and what it refuses. This
+skill is still what a human or agent invokes to make the decision the agent stops short of.
+
 ## When to invoke
 
 Adding a field to a dataset, a new dataset, a taxonomy term, or an event/record type. Being

@@ -393,6 +393,43 @@ rail counts the gaps that could **not** become a proposal — not the ones that
 could, because a tile showing only what was authored would report the work as
 more complete than it is.
 
+## Knowledge architecture — the eight answers, exposed
+
+SESSION 13's Knowledge Architect asks eight questions of the information model
+and its brief requires the **reasoning** to be instrumented, not only the
+output. So the interesting object in `architectureState()` is not the proposal
+count: it is **the eight answers**, each one an observation of its own, carrying
+the answer as a word and what the lens examined beside it. A question answered
+"no" is the model working, and a run that could not say which of the eight it
+answered "no" to would have hidden its own coverage behind its own output.
+
+The architect writes onto each lens span:
+
+```
+a span  architect.<lens>     examined · found · reported · set_aside · proposals
+an observation  Q<n> — …     the answer, with what was examined and reported
+observations  NOT REPORTED   one per finding set aside, with the reason and
+                             the agent it belongs to
+handoffs                     the edges to the agents that own them
+artifacts                    every ArchitectureProposal and ApprovalRequest
+a decision                   the ordering, with what it did not choose
+two observations             the census, and that nothing was merged
+```
+
+Derived at read time and stored nowhere twice. Exposed as
+`cli.mjs architecture [--trace t] [--aside]`, `GET /api/architecture`, and the
+**Knowledge architecture** panel in the viewer. The overview tile counts the
+questions the model **handles**, not the ones it fails.
+
+The view reports a gap in itself where a run failed to say something: no census,
+no ordering decision, no "nothing merged" claim, a lens that recorded no answer,
+findings set aside with no reasons, more proposals than approvals, or an
+approval granted inside the run that requested it. The suite proves that check
+does something by stripping the `NOT REPORTED` observations from a real trace
+and asserting the view notices.
+
+---
+
 ## The development view
 
 `node agent/observability/cli.mjs serve` → `http://127.0.0.1:7801`.
@@ -549,7 +586,7 @@ node agent/observability/demo/workflow.mjs --deterministic  # fixed ids and cloc
 | `otlp.mjs` | OTLP/JSON + OpenInference export, and the provenance ledger |
 | `server.mjs` | the loopback dev server and its JSON API |
 | `viewer/` | the development view |
-| `cli.mjs` | `list · show · chain · validate · export · summary · serve`, with the exit codes in **Status** above |
+| `cli.mjs` | `list · show · chain · impact · depth · proposals · architecture · validate · export · summary · serve`, with the exit codes in **Status** above |
 | `demo/workflow.mjs` | the simulated Scout → Verifier → Change Detector run |
 | `selftest.mjs` | `node --test agent/observability/selftest.mjs` |
 | `runs/` | the store. Git-ignored: it holds run inputs and outputs, and it is regenerable |

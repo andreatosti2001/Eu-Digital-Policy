@@ -8,6 +8,7 @@
      node agent/observability/cli.mjs impact [--trace t] [--change c] [--graph]
      node agent/observability/cli.mjs depth  [--trace t] [--aside]
      node agent/observability/cli.mjs proposals [--trace t] [--refused]
+     node agent/observability/cli.mjs architecture [--trace t] [--aside]
      node agent/observability/cli.mjs validate
      node agent/observability/cli.mjs export <trace-id> [--provenance]
      node agent/observability/cli.mjs serve [--port 7801] [--open]
@@ -297,6 +298,44 @@ function cmdProposals() {
   if (!found) console.log('no gap routing in the store. `node agent/proposals/data/cli.mjs --as-of <date>` writes one.');
 }
 
+/**
+ * What a Knowledge Architect run concluded about the information
+ * model.
+ *
+ * SESSION 13's brief asks for the agent's reasoning to be exposed
+ * here. IT PRINTS THE EIGHT ANSWERS FIRST, before the proposals,
+ * because a question answered "no" is the model working and a view
+ * that led with the defect count would report the model as nothing
+ * but its defects. What each lens EXAMINED travels with its answer,
+ * so "looked and found nothing" is never confusable with "did not
+ * look".
+ */
+function cmdArchitecture() {
+  const wantTrace = flag('trace');
+  const traces = typeof wantTrace === 'string' ? [wantTrace] : listRuns(DIR).map((r) => r.trace_id);
+  let found = 0;
+
+  for (const id of traces) {
+    const t = loadTrace(id, DIR);
+    if (!t?.architecture) continue;
+    const a = t.architecture;
+    found++;
+    console.log(`\n${a.trace_id} — ${a.answered_yes.length} of ${a.questions} question(s) answered yes, ${a.proposed} proposal(s), ${a.set_aside} set aside${a.simulated ? ' — SIMULATED' : ''}`);
+    console.log(`  as of ${a.as_of ?? '?'}   ${a.pending_approvals} approval(s) pending · ${a.merged ?? '?'} merged · ${a.applied ?? '?'} applied · ${a.schemas_changed ?? '?'} schema(s) changed · ${a.values_proposed ?? '?'} value(s) proposed`);
+    if (a.model) console.log(`  model    ${a.model.containers ?? '?'} container(s) · ${a.model.vocabularies ?? '?'} vocabular${a.model.vocabularies === 1 ? 'y' : 'ies'} · ${a.model.pages ?? '?'} page(s)`);
+    console.log(`  answered no: ${a.answered_no.length ? a.answered_no.map((q) => `q${q}`).join(', ') : 'every question found something'}`);
+    if (a.ordering) console.log(`  ranked by ${a.ordering.decision}`);
+    for (const l of a.lenses) {
+      console.log(`    q${l.question} ${pad(l.lens, 22)} ${String(l.answer ?? '?').toUpperCase().padEnd(4)} ${String(l.examined).padStart(4)} examined  ${String(l.reported).padStart(2)} reported  ${String(l.set_aside).padStart(2)} set aside`);
+      for (const s of l.subjects) console.log(`          + ${s}`);
+      for (const h of l.handoffs) console.log(`          → ${pad(h.to_agent, 20)} ${String(h.reason ?? '').slice(0, 90)}`);
+      if (flag('aside')) for (const x of l.not_reported) console.log(`          − ${pad(x.subject, 46)} ${String(x.why).slice(0, 90)}`);
+    }
+    console.log(a.gaps.length ? `  GAPS: ${a.gaps.join('; ')}` : '  no gaps: the census, the ordering decision, all eight answers, every set-aside reason and the "nothing merged" claim are on this trace');
+  }
+  if (!found) console.log('no architecture analysis in the store. `node agent/architect/cli.mjs --as-of <date>` writes one.');
+}
+
 function cmdValidate() {
   let records = 0, bad = 0, broken = 0;
   for (const f of listTraceFiles(DIR)) {
@@ -337,11 +376,12 @@ switch (cmd) {
   case 'impact': cmdImpact(); break;
   case 'depth': cmdDepth(); break;
   case 'proposals': cmdProposals(); break;
+  case 'architecture': cmdArchitecture(); break;
   case 'validate': cmdValidate(); break;
   case 'export': cmdExport(argv[1]); break;
   case 'summary': console.log(JSON.stringify(overview(DIR), null, 2)); break;
   case 'serve': serve({ port: Number(flag('port', 7801)), dir: DIR }); break;
   default:
-    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | validate | export <id> | summary | serve`);
+    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | architecture | validate | export <id> | summary | serve`);
     process.exit(1);
 }

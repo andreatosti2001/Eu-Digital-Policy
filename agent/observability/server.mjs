@@ -105,6 +105,23 @@ export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR }
         }
         return json(res, { proposals: routings });
       }
+      if (p === '/api/architecture') {
+        /* What each Knowledge Architect run concluded about the
+           information model. `?trace=` narrows to one run. Every
+           entry carries the questions answered NO as well as the
+           ones answered yes: a question the model handles is the
+           model working, and a view that carried only the defects
+           would report it as nothing but them. */
+        const trace = url.searchParams.get('trace');
+        if (trace && !/^[0-9a-f]{32}$/.test(trace)) return json(res, { error: 'bad trace id' }, 400);
+        const traces = trace ? [trace] : listRuns(dir).map((r) => r.trace_id);
+        const analyses = [];
+        for (const id of traces) {
+          const t = loadTrace(id, dir);
+          if (t?.architecture) analyses.push(t.architecture);
+        }
+        return json(res, { architecture: analyses });
+      }
       if (p === '/api/chain') {
         return json(res, {
           chains: traceChain({
