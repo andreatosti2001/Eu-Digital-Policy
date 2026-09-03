@@ -3,12 +3,17 @@
 **Last updated:** SESSION 12 · 2 September 2026
 **Branch:** `claude/data-gaps-proposals-4pjepp`, cut from `main` at `45dcc57`.
 **Base commit:** `45dcc57` on `main` ("Record in the handover that SESSION 11 is merged").
-**Not merged into `main`.** A push to `main` publishes to the live site and there
-is no deploy gate, so AGENTS.md requires the repository owner's explicit
-instruction. This branch is waiting for it.
+**Merged into `main`** with the repository owner's explicit instruction, which is
+what AGENTS.md requires for any push to `main`, because a push to `main`
+publishes to the live site and there is no deploy gate. The branch is left in
+place rather than deleted. All nine suites, the contract check and all four
+validators were re-run **on the merged tree** before the push, not only on the
+branch.
 
-**The trap that has caught three sessions running:** the local `main` in a fresh
-container can be dozens of commits behind `origin/main`. Run
+**The trap caught this session too, and the warning is still needed.** The local
+`main` in this container was **32 commits behind** `origin/main` — it sat at a
+pre-SESSION 08 commit, and merging into it would have silently reverted five
+sessions of work. It was reset to `origin/main` rather than merged into. Run
 `git fetch --all && git branch -a` before concluding anything, and check
 `git log origin/main..main` **and** `main..origin/main` before merging into a
 local branch you did not just create.
