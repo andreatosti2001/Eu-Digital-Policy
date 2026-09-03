@@ -181,7 +181,11 @@ patches, not checks. **Do not re-run** the latter two.
 Develop on the session's designated branch; **never push to `main` without explicit
 permission.** Read the full `git diff` before committing — a one-character `null` → `"unknown"`
 edit changes what a record asserts. Do not open a pull request unless asked. Do not include a
-model identifier in any commit message or pushed artifact. See
+model identifier in any commit message or pushed artifact. **`origin/main` can move while a
+session runs — re-fetch and diff against it again immediately before the session's final
+write to `docs/HANDOVER.md` or any merge, not only at session start.** This has happened, not
+hypothetically: `docs/AUDIT-2026-09-03.md`'s opening correction records a session that skipped
+this and would have silently erased a concurrently-merged session's handover. See
 `.agents/skills/git-workflow/SKILL.md`.
 
 ## When to stop and ask

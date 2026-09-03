@@ -41,6 +41,30 @@ confirm no unrelated file moved. A one-character edit can change what a record a
 **Scope the commit.** One session's objective per commit series. Do not sweep in unrelated
 tidying; an unrelated file in the diff is a defect in the commit.
 
+**Re-fetch immediately before the final write, not only at session start.** `origin/main`
+can move while a session is running — another session merging is not hypothetical, it has
+happened (`docs/AUDIT-2026-09-03.md`'s opening correction is the record). The fetch-before-
+concluding rule in `AGENTS.md` covers what a session *reads*; this covers what it *writes*.
+Specifically, right before writing `docs/HANDOVER.md` for the last time and before any merge:
+
+```
+git fetch --all
+git log origin/main..HEAD --oneline     # what this branch adds
+git log HEAD..origin/main --oneline     # what this branch is missing
+git diff origin/main -- docs/HANDOVER.md
+```
+
+If `origin/main` has moved, **merge it into the session branch before writing**
+(`git reset --hard` is destructive and typically blocked — use `git merge origin/main`, or
+rebase if the branch has no reviewer yet). Resolve a `docs/HANDOVER.md` conflict by taking
+the incoming version whole and layering this session's changes on top as an edit, never by
+overwriting the whole file from the session's original, now-stale base — `HANDOVER.md` is
+rewritten narrative, not an append-only log, so a stale full-file rewrite silently deletes
+whatever a concurrent session recorded. If a concurrent session has already claimed the
+session number this session intended to use, do not reuse it — retitle this session's own
+record (a dated `docs/AUDIT-*.md`-style document, or the next free number) rather than
+colliding.
+
 **Push:**
 ```
 git push -u origin <branch-name>
@@ -68,3 +92,8 @@ title or body, or any other artifact pushed to the repository.
 - Do not force-push a branch someone else may have checked out.
 - Do not commit a whole-file JSON reformat alongside a factual change.
 - Do not claim in a message that a check passed if it was not run.
+- Do not write the session's final `docs/HANDOVER.md` or merge to `main` without re-fetching
+  and diffing against the current `origin/main` first — a base read at session start is not
+  current by session end.
+- Do not overwrite `docs/HANDOVER.md` wholesale when `origin/main` has moved since the
+  branch point. Merge forward and take the incoming version as the base instead.
