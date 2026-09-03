@@ -501,6 +501,76 @@ function cmdImplement() {
   if (!found) console.log('no implementation run in the store. `node agent/implement/cli.mjs run --as-of <date>` writes one.');
 }
 
+function cmdHealth() {
+  const wantTrace = flag('trace');
+  const traces = typeof wantTrace === 'string' ? [wantTrace] : listRuns(DIR).map((r) => r.trace_id);
+  let found = 0;
+
+  for (const id of traces) {
+    const t = loadTrace(id, DIR);
+    if (!t?.health) continue;
+    const h = t.health;
+    found++;
+    console.log(`\n${h.trace_id} — ${h.total_metrics} metric(s) across ${Object.keys(h.domains).length} domain(s), as of ${h.as_of ?? '?'}`);
+
+    if (h.coverage) {
+      console.log(`  coverage  validators ${h.coverage.validators_run ? 'ran' : 'did NOT run'} · browser ${h.coverage.browser_status} · loopback probe ${h.coverage.probe_ran ? 'ran' : 'did NOT run'}`);
+      console.log(`            ${h.coverage.datasets_parsed} dataset(s) · ${h.coverage.traces_in_store} trace(s) · ${h.coverage.records_in_store} record(s) in store`);
+    }
+
+    /* Three lines, never a fourth that adds them. */
+    for (const [d, s] of Object.entries(h.by_domain)) {
+      console.log(`  ${pad(d, 16)} ${String(s.metrics_with_findings).padStart(3)} metric(s) with findings · ${s.measured} measured · ${s.unmeasurable} unmeasurable · ${s.not_applicable} n/a · ${s.not_a_score} not a score`);
+      if (flag('domains')) console.log(`                   ${s.stake}`);
+    }
+
+    if (flag('readings')) {
+      for (const [d, dom] of Object.entries(h.domains)) {
+        console.log(`  ${d}`);
+        for (const r of dom.readings) {
+          const v = r.state === 'measured' ? `${r.value}${r.unit ? ` ${r.unit}` : ''}` : r.state.toUpperCase();
+          console.log(`    ${pad(r.name ?? r.id, 46)} ${pad(v, 34)} [${r.visibility}] [${r.direction}]`);
+        }
+      }
+    }
+
+    if (h.unmeasurable.length) {
+      console.log(`  ${h.unmeasurable.length} UNMEASURABLE — reported rather than dropped, because "nothing here can see this" is not "nothing here is wrong"`);
+      for (const u of h.unmeasurable) console.log(`    ? ${pad(u.id, 52)} ${String(u.why).slice(0, 78)}`);
+    }
+    if (h.not_applicable.length) {
+      for (const n of h.not_applicable) console.log(`    − ${pad(n.id, 52)} NOT APPLICABLE: ${String(n.why).slice(0, 66)}`);
+    }
+    if (h.threw.length) console.log(`  ${h.threw.length} METRIC(S) THREW: ${h.threw.join(', ')} — a defect in the monitor, reported as unmeasurable so it cannot read as a clean result`);
+
+    if (h.public_subset) {
+      const pubCount = Object.values(h.public_subset.publishable ?? {}).reduce((n, x) => n + x.length, 0);
+      console.log(`  subset    ${pubCount} publishable · ${h.public_subset.withheld} withheld · ${(h.public_subset.leaked ?? []).length} leaked`);
+    }
+
+    if (h.movement && h.movement.comparable) {
+      console.log(`  movement  since ${h.movement.since}: ${h.movement.changes.length} moved · ${h.movement.not_a_score_changes.length} not-a-score moved · ${h.movement.coverage_changes.length} coverage change(s)`);
+      for (const c of h.movement.changes) console.log(`    ${pad(c.id, 52)} ${c.was} → ${c.now}`);
+      for (const c of h.movement.not_a_score_changes) console.log(`  = ${pad(c.id, 52)} ${c.was} → ${c.now}  NOT A SCORE`);
+    } else if (h.movement) {
+      console.log(`  movement  ${h.movement.why}`);
+    }
+
+    if (h.nothing_changed) {
+      console.log(h.nothing_changed.unchanged
+        ? '  the monitor changed nothing it measures'
+        : `  THE MONITOR CHANGED THE REPOSITORY: ${(h.nothing_changed.changed ?? []).join(', ')}`);
+    }
+
+    console.log(h.no_overall_score
+      ? '  no overall score: the three domains answer different questions with different consequences and are never summed'
+      : '  WARNING: this run recorded no decision refusing an overall score');
+
+    console.log(h.gaps.length ? `  GAPS: ${h.gaps.join('; ')}` : '  no gaps: the census, the coverage, the public subset, the score refusal and the "nothing changed" claim are all on this trace');
+  }
+  if (!found) console.log('no health run in the store. `node agent/health/cli.mjs --as-of <date>` writes one.');
+}
+
 function cmdExport(id) {
   if (!id) { console.error('export needs a trace id'); process.exit(1); }
   const out = flag('provenance') ? toProvenanceLedger(id, DIR) : toOtlp(id, DIR);
@@ -519,11 +589,12 @@ switch (cmd) {
   case 'editorial': cmdEditorial(); break;
   case 'ux': cmdUx(); break;
   case 'implement': cmdImplement(); break;
+  case 'health': cmdHealth(); break;
   case 'validate': cmdValidate(); break;
   case 'export': cmdExport(argv[1]); break;
   case 'summary': console.log(JSON.stringify(overview(DIR), null, 2)); break;
   case 'serve': serve({ port: Number(flag('port', 7801)), dir: DIR }); break;
   default:
-    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | architecture | editorial | ux | implement | validate | export <id> | summary | serve`);
+    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | architecture | editorial | ux | implement | health | validate | export <id> | summary | serve`);
     process.exit(1);
 }

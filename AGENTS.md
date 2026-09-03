@@ -29,8 +29,8 @@ the evidence it describes.
 | `docs/AI-SAFE-BOUNDARIES.md` | Green / amber / red tiers; the absolute prohibitions |
 | `docs/AGENT-CONTRACTS.md` | The eighteen inter-agent contracts and the gate no record bypasses |
 | `docs/OBSERVABILITY.md` | The trace model every agent run is instrumented through |
-| `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` · `docs/DATA-DEPTH.md` · `docs/GAP-PROPOSALS.md` · `docs/KNOWLEDGE-ARCHITECTURE.md` · `docs/EDITORIAL-AGENT.md` · `docs/UX-AUDIT.md` · `docs/IMPLEMENTATION-QA.md` | The ten agents that exist, what each refuses, and what none of them may do |
-| `docs/BROWSER-QA.md` | The browser regression suite — coverage, the three defects it found, and what it still cannot see |
+| `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` · `docs/DATA-DEPTH.md` · `docs/GAP-PROPOSALS.md` · `docs/KNOWLEDGE-ARCHITECTURE.md` · `docs/EDITORIAL-AGENT.md` · `docs/UX-AUDIT.md` · `docs/IMPLEMENTATION-QA.md` · `docs/HEALTH-MONITOR.md` | The eleven agents that exist, what each refuses, and what none of them may do |
+| `docs/BROWSER-QA.md` · `docs/HEALTH-MONITOR.md` | The browser regression suite and the three health domains — what each measures, and what neither can see |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
@@ -142,12 +142,13 @@ node --test agent/proposals/editorial/selftest.mjs   # Agent 7, against the real
 node --test agent/ux/selftest.mjs              # Agent 8, against the real pages, sheets and modules
 node --test agent/browser/selftest.mjs         # the browser suite's own suite
 node --test agent/implement/selftest.mjs       # Agent 9, incl. SESSION 18's eight required proofs
+node --test agent/health/selftest.mjs          # Agent 10, incl. planted security-boundary failures
 node --test agent/observability/selftest.mjs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**756 tests across the fourteen suites**, all passing as of SESSIONS 18 and 19 (683 before
-them).
+**812 tests across the fifteen suites**, all passing as of SESSION 20 (756 after SESSIONS 18
+and 19; 683 before them).
 
 **There is now CI.** `.github/workflows/qa.yml` runs all four validators against the recorded
 baseline, every agent suite, the contract check, the public/private boundary check and the
@@ -164,6 +165,20 @@ node agent/browser/cli.mjs --require-browser   # a missing browser is a hard fai
 
 It installs nothing — no `package.json`, no Playwright — and drives a browser already on the
 machine over the DevTools protocol. `docs/BROWSER-QA.md`.
+
+The health monitor reports the state of the whole system in three domains that are **never
+summed**:
+
+```
+node agent/health/cli.mjs --as-of YYYY-MM-DD    # 44 metrics, three domains
+node agent/health/cli.mjs --metrics             # the register, runs nothing
+node agent/observability/cli.mjs health
+```
+
+**There is no overall health score.** `agent/health/model.mjs overallScore()` throws, with the
+reasoning. Five metrics are marked `not_a_score` because the only legitimate way to move them
+is verification work the monitor cannot see, and every cheap route down is a prohibited
+action. `docs/HEALTH-MONITOR.md`.
 
 `tools/_footer.mjs`, `_refsweep.mjs` and `_review10.mjs` are generators and applied one-shot
 patches, not checks. **Do not re-run** the latter two.
@@ -216,12 +231,33 @@ patches, not checks. **Do not re-run** the latter two.
   `docs/HANDOVER.md`'s count, thirty-five of them measured in SESSION 18's own run. Agent 9
   refuses every one by name, and reports which gate refused it.
   `docs/IMPLEMENTATION-QA.md` §3.
+- **The privileged API has no authentication and no authorization.**
+  `agent/observability/server.mjs` serves eleven `/api/` endpoints over the whole trace
+  store — agent inputs and outputs, decisions, approvals, provenance — and checks nothing.
+  Its only control is that `host` DEFAULTS to `127.0.0.1`, and a default is not a control:
+  `serve({ host })` accepts any value. Measured rather than inferred — the health monitor
+  starts it on an ephemeral loopback port and finds **nine of the eleven routes return data
+  to a request with no credential**. Defensible for a local development viewer, which is
+  what it is; **SESSION 21's Control Room must not inherit it**.
+  `docs/HEALTH-MONITOR.md` §6.
+
+- **A lower number is not automatically healthier, and five metrics say so in their own
+  definition.** The 106 unverified records, the provenance gaps, the verification gaps, the
+  blocking open questions and the rejected proposals are marked `not_a_score`:
+  `agent/health/model.mjs` refuses to let any of them be re-labelled as a defect count,
+  because every cheap route down — clearing `requires_verification`, attaching a plausible
+  substitute, bulk-stamping `last_verified`, removing a `blocks` flag — is a prohibited
+  action rather than an improvement. **A rise in the first four is usually good news.**
+
 - **The whole repository is inside the public deployment.** GitHub Pages serves `main` at the
   repository root, with no `_config.yml`, no `.nojekyll` and no exclude list, so `agent/`,
   `docs/` and the approval ledger are published alongside `index.html`. A Control Room page
   dropped in this tree would be public the moment it was pushed.
   `node agent/implement/cli.mjs boundary` reports it on demand;
-  `docs/IMPLEMENTATION-QA.md` §6 carries it as the standing finding it is.
+  `docs/IMPLEMENTATION-QA.md` §6 carries it as the standing finding it is. What IS excluded
+  is anything git does not track — `agent/records/`, `agent/observability/runs/` and
+  `agent/health/history/` have never been in a commit — and that is an **ignore rule, not a
+  boundary**: one `git add -f` undoes it and nothing here would object.
 - **Your base may be stale.** Run `git fetch --all && git branch -a` before concluding
   anything about what this repository contains. An earlier session reported four existing
   documents as missing by running `ls docs` on an unfetched branch (F-01).

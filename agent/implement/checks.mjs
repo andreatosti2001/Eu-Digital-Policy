@@ -49,6 +49,7 @@ export const AGENT_SUITES = [
   'agent/observability/selftest.mjs',
   'agent/browser/selftest.mjs',
   'agent/implement/selftest.mjs',
+  'agent/health/selftest.mjs',
 ];
 
 /** Run a command, capturing everything, never throwing. A checker

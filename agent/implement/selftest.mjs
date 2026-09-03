@@ -504,16 +504,50 @@ test('R5 · the surface separates what is READ from the tree from what is INFERR
 });
 
 test('R5 · a git-ignored control-plane directory is reported as ignored, NOT as excluded', () => {
+  /* SESSION 20 sharpened this. publicSurface() now models what `main`
+     carries — git ls-files — rather than what is on the developer's
+     disk, because publication is GitHub Pages serving main and a
+     git-ignored run artifact has never been in a commit. The two
+     reasons a directory can be absent from the published set are
+     therefore very different, and collapsing them would overstate the
+     protection: a dotfile directory is excluded by the DEPLOYMENT,
+     which is a real boundary; a git-ignored one is absent because
+     nobody committed it, which one `git add -f` undoes. */
   const e = controlPlaneExposure();
-  const ignored = e.ignored_not_excluded.map((x) => x.prefix);
-  for (const p of ['agent/records/', 'agent/observability/runs/']) {
-    if (ignored.includes(p)) {
-      const entry = e.ignored_not_excluded.find((x) => x.prefix === p);
-      assert.match(entry.note, /not the same as excluded/);
-    }
+  const ignored = e.ignored_not_excluded;
+  assert.ok(ignored.length > 0, 'some control-plane directory must be outside the published set');
+
+  for (const entry of ignored) {
+    assert.ok(entry.reason && entry.reason.length > 40, `${entry.prefix} must say WHY it is not published`);
+    assert.equal(typeof entry.present_on_disk, 'boolean');
   }
-  assert.ok(CONTROL_PLANE_DIRS.some(([p]) => p === 'agent/implement/decisions/'),
-    'the approval ledger is control-plane data and must be named as such');
+
+  for (const p of ['agent/records/', 'agent/observability/runs/']) {
+    const entry = ignored.find((x) => x.prefix === p);
+    if (!entry) continue;
+    assert.match(entry.reason, /IGNORE RULE, not a publication boundary/,
+      `${p} is absent only because git does not track it, and that must not read as a boundary`);
+    assert.match(entry.reason, /git add -f/);
+  }
+});
+
+test('R5 · the published surface is what git tracks, not what is on this machine', () => {
+  const s = publicSurface();
+  assert.equal(s.git_consulted, true, 'publication is GitHub Pages serving main, and main carries tracked files only');
+  assert.ok(s.files_on_disk >= s.total, 'the working tree holds at least as many files as git tracks');
+  assert.match(s.source_of_truth, /git ls-files/);
+  /* Run artifacts hold control-plane data and exist locally the
+     moment anything runs. Reporting them as published is a false
+     alarm, and a security check that cries wolf is one people learn
+     to ignore. */
+  for (const prefix of ['agent/records/', 'agent/observability/runs/']) {
+    assert.deepEqual(s.published.filter((f) => f.startsWith(prefix)), [],
+      `${prefix} is git-ignored and has never been in a commit, so it is not published`);
+  }
+  /* agent/health/history/ carries a tracked README explaining why its
+     CONTENTS are not tracked. The data is what must not be published;
+     the document saying so must be. */
+  assert.deepEqual(s.published.filter((f) => f.startsWith('agent/health/history/') && f.endsWith('.jsonl')), []);
 });
 
 test('R5 · a Control Room page dropped into the tree would be inside the public surface', () => {
@@ -588,9 +622,15 @@ test('R6 · a validator that could not be executed is exit 127, never a pass', (
 });
 
 test('R6 · this suite is in the list the agent runs for a change under agent/ or tools/', () => {
-  assert.ok(AGENT_SUITES.includes('agent/implement/selftest.mjs'));
-  assert.ok(AGENT_SUITES.includes('agent/browser/selftest.mjs'));
-  assert.equal(AGENT_SUITES.length, 14, 'twelve suites before this session, plus browser and implement');
+  for (const s of ['agent/implement/selftest.mjs', 'agent/browser/selftest.mjs', 'agent/health/selftest.mjs']) {
+    assert.ok(AGENT_SUITES.includes(s), `${s} must be in AGENT_SUITES, or a change under agent/ would land without running it`);
+  }
+  /* The count is asserted, not just the membership. A suite silently
+     dropped from this list is a suite that stops gating changes, and
+     nothing else would notice — this assertion has already caught
+     the list growing once, in SESSION 20. */
+  assert.equal(AGENT_SUITES.length, 15,
+    'twelve suites before SESSION 18, plus browser, implement (18/19) and health (20)');
 });
 
 /* ============================================================

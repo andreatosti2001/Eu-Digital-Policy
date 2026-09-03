@@ -1,317 +1,225 @@
 # HANDOVER
 
-**Last updated:** SESSIONS 18 and 19 · 3 September 2026
-**Branch:** `claude/agent-8-implementation-qa-4l2tam`, cut from `main` at `8eaf398`.
-**Base commit:** `8eaf398` on `main` ("Record in the handover that SESSIONS 16 and 17
-are merged").
-**Merged into `main`** — the session prompt instructed it explicitly ("At the end of
-the session, merge everything into branch main"). That is the authorisation
-`AGENTS.md` requires for a push to `main`, because `main` publishes to the live
-site and, until this session, there was no CI at all. All fourteen suites, the
-contract check and all four validators were re-run **on the merged tree** before the
-push: 756 pass, 18/18 satisfiable, 0 errors, 106 unverified, the same five
-`design-qa` warnings by file and line.
+**Last updated:** SESSION 20 · 3 September 2026
+**Branch:** `claude/agent-8-implementation-qa-4l2tam`, cut from `main` at `2736ae6`.
+**Base commit:** `2736ae6` on `main` ("Merge SESSIONS 18 and 19: Agent 9 and the
+browser suite").
+**Merged into `main`** — the session prompt instructed it ("Merge to main only
+after existing validators and relevant tests pass"). That is the authorisation
+`AGENTS.md` requires for a push to `main`. All fifteen suites, the contract check
+and all four validators were re-run **on the merged tree**: 812 pass, 18/18
+satisfiable, 0 errors, 106 unverified, the same five `design-qa` warnings by file
+and line.
 
-**The stale-`main` trap caught this session too, for the fifth session running,
-and it is now the worst it has been.** The local `main` in this container was **47
-commits behind** `origin/main` (44 in SESSIONS 16/17, 45 in 14/15, 40 in 13, 32 in
-12), sitting at `4bd1f0d` — "Merge pull request #1: Add the agent observability
-foundation", which is *before the entire agent layer*. Merging into it would have
-silently reverted every session from 03 onward.
+**The stale-`main` check was run on `main` itself this time.** SESSION 18/19's
+first draft claimed the trap had not fired, on the strength of the working branch
+being current — a different question — and local `main` turned out to be 47
+commits behind. This session ran `git log main..origin/main` and
+`git log origin/main..main` before touching anything, and both were empty.
 
-**An earlier draft of this very file said the trap had not fired.** That draft was
-written after checking `git branch -a` and seeing the working branch at
-`origin/main`, which is a different question from where local `main` is. It was
-corrected before the merge, by running `git log main..origin/main` and
-`git log origin/main..main` — both directions, as this file has said to for four
-sessions — and finding 47 and 0. `main` was reset to `origin/main` rather than
-merged into.
+**THE LIVE SITE IS BYTE-FOR-BYTE UNCHANGED**, checked rather than asserted:
+`git diff 2736ae6..HEAD` over `data/`, `js/`, `css/`, `i18n/`, `fonts/`, `tools/`,
+every `*.html`, `style.css`, `app.js`, `README.md` and `CLAUDE.md` is **empty**.
+The monitor hashes the whole tree around every run and reports whether it changed;
+it did not.
 
-**The check is only the check if you run it on `main` itself.** The branch being
-current says nothing.
-
-**This session had TWO objectives and they landed in ONE commit**, for the reason
-SESSIONS 14/15 and 16/17 both gave. SESSION 18 built the Implementation and QA
-agent; SESSION 19 built the browser regression suite. They are not separable: a
-SESSION-18-only tree would have had `agent/implement/checks.mjs` importing a
-`agent/browser/runner.mjs` that did not exist, because SESSION 18's own requirement
-7 — "browser QA cannot be silently skipped when required" — has nothing to enforce
-until SESSION 19's suite exists. Splitting it would have meant writing a version of
-the agent nobody ran.
-
-**THE LIVE SITE IS BYTE-FOR-BYTE UNCHANGED**, and this was checked rather than
-asserted: `git status --porcelain` over `data/`, `js/`, `css/`, `i18n/`, `fonts/`,
-`tools/`, every `*.html`, `style.css`, `app.js`, `README.md` and `CLAUDE.md` is
-**empty**. The browser suite hashes the whole tree around every run and reports
-whether it changed; it did not.
-
-**Three real defects were found and NONE was fixed.** See "What the browser found"
-below. Each is Class C interface work needing a proposal and a human decision —
-which is precisely what SESSION 18's agent refuses to act without. Fixing them
-inside the session that built the gate would have been the first thing the gate
-exists to prevent.
-
-**No discrepancy between the handover and the code.** Every number in
-`docs/HANDOVER.md` at `8eaf398` was re-measured rather than trusted: 683 tests
-across twelve suites, 18/18 contracts satisfiable, 0 errors and 106 unverified
-across the four validators, the same five `design-qa` warnings.
+**Nothing was fixed that the monitor found.** Three defects from SESSION 19 stand,
+the security finding in §6 stands, and the fifteen duplicated facts stand. A
+measured defect is not an authorisation, and a session that built the instrument
+and then acted on its first readings would have skipped the decision the whole
+governance chain exists to require.
 
 ---
 
 ## Current milestone
 
-**SESSIONS 18 and 19 — complete, in two parts.**
-
-**SESSION 18 — Agent 9, Implementation and QA** (`agent/implement/`).
-**SESSION 19 — the browser regression suite** (`agent/browser/`).
-
-The reference documents are **`docs/IMPLEMENTATION-QA.md`** and **`docs/BROWSER-QA.md`**;
-this file is the handover only.
+**SESSION 20 — complete.** The Website Health Monitor, `agent/health/`, Agent 10.
+The reference document is **`docs/HEALTH-MONITOR.md`**; this file is the handover only.
 
 ---
 
-# SESSION 18 — the Implementation and QA Agent
+# SESSION 20 — the Website Health Monitor
 
 ## What was built
 
-The tenth agent, and the only one that may write to this repository. `docs/AGENT-ROLES.md`
-§8 has described the Implementation/QA role since SESSION 01 and nothing had filled it.
-Everything upstream ends in a proposal behind a pending approval; **this is the first agent
-whose output is a decision about whether to act.**
+The eleventh agent, and the first whose subject is the SYSTEM rather than any part of it:
+the site a reader loads, the corpus that site argues from, and the machinery that produced
+both. `docs/AGENT-ROLES.md` §10 has described the Observability role since SESSION 01;
+`agent/observability/` gave it a trace model, and this gives it the numbers.
 
-**It is Agent 9, not Agent 8.** The brief calls it Agent 8; Agent 8 is the UX/UI Auditor
-(SESSIONS 16/17). The brief's numbering predates it, exactly as SESSION 13's and SESSION
-16's did. This is the third session to make the note. Recorded rather than resolved by
-renumbering somebody else.
+**Forty-four metrics across three domains that are never summed.** 10 public website, 10
+knowledge, 24 control plane — the last including the seven security-boundary checks, filed
+there because that is what they protect.
 
-**No nineteenth contract.** `ImplementationProposal`, `QAResult`, `ChangeRecord`,
-`WebsiteChange` and `ApprovalRequest` have all existed since SESSION 04 and three of them
-had been produced by nothing. Two contract rules found real bugs in the agent during
-construction and are worth naming: `QAResult` refuses an evidence entry with a null
-`supports`, and it refuses a `verdict` with no `epistemic.inference` entry saying how it was
-reached. Both were defects in `implementer.mjs`, caught by the gate rather than by a test
-somebody remembered to write.
+## The three refusals this session is built around
 
-## Where an approval actually lives — the hard part
+**1 · THERE IS NO OVERALL SCORE.** `agent/health/model.mjs` exports `overallScore()`, and it
+**throws**, with the reasoning, at the exact place somebody would reach for one. The three
+domains fail differently: a broken link costs a reader a click, a false statement about EU
+law costs them a decision they cannot take back, and an unaudited approval costs the system
+its provenance and is invisible to every reader. A mean says none of that and invites raising
+the number by improving the cheapest domain. The refusal is also recorded as a decision on
+every run's trace, with the three alternatives that were not taken, so it can be seen to have
+held rather than taken on trust.
 
-The brief's sentence is *"the approval state MUST be treated as governed system state. Do
-not rely on a prompt instruction, filename, comment, frontend state, or manually supplied
-flag."*
+**2 · `unmeasurable` IS NEVER ZERO.** Three states — `measured`, `unmeasurable`,
+`not_applicable` — and an unmeasurable carries a **null** value, a `why`, and what would be
+needed. Two metrics can never be measured here and reporting either as 0 would be the exact
+substitution `AI-SAFE-BOUNDARIES` §0.3 and §0.4 prohibit:
 
-The problem is concrete. Every `ApprovalRequest` in this system lives in
-`agent/records/*.jsonl`, which is **written by agents** and git-ignored. An agent that
-wanted an approval could append a record with `state: "granted"` naming anybody.
+- **Deployment failures.** No telemetry, and nothing has ever fetched the deployed origin —
+  the network policy refuses it.
+- **Authentication failures.** A 0 would read as "no failed logins" when the truth is "there
+  is no login". The metric points at the MISSING CONTROL instead, which is where a missing
+  control belongs.
+- **Control Room availability** is `not_applicable`: SESSION 21 builds it, and neither 0% nor
+  100% would be true. `agent/observability/server.mjs` is a development viewer, and calling
+  it a Control Room would overstate both what exists and what is protected.
 
-So **an `ApprovalRequest` in the agent record store is read as a REQUEST and never as a
-GRANT**, whatever its `state` says — and every agent-written approval claim is **reported**
-rather than silently ignored, because silently ignoring one looks identical to not having
-checked. A grant lives only in `agent/implement/decisions/decisions.jsonl`: git-**tracked**,
-written by one command, requiring a named human who is not an agent, and **bound to the
-sha256 of the proposal**. Edit the proposal afterwards and the approval is void, not carried
-onto a wider scope.
+Six more public-website metrics report unmeasurable whenever the browser suite did not run. A
+report saying "0 console errors" because nobody opened a page would be the worst line this
+monitor could produce.
 
-**The fingerprint deliberately excludes `trace_ref` and `created_at`.** Ids here are
-content-derived (SESSION 13), so re-running a producing agent over an unchanged corpus mints
-the same proposal with a fresh trace. An approval that went void for that would be an
-approval nobody could ever keep — and the suite asserts both halves.
+**3 · A LOWER NUMBER IS NOT AUTOMATICALLY HEALTHIER.** Five metrics carry
+`direction: 'not_a_score'`, and `defineMetric` **throws** if one is re-labelled — the
+unverified count, the provenance gaps, the verification gaps, the blocking open questions and
+the rejected proposals. Every cheap route down is a prohibited action under
+`AUTONOMY-POLICY.md`: clearing `requires_verification`, attaching a plausible substitute,
+bulk-stamping `last_verified`, removing a `blocks` flag. **A rise in the first four is usually
+good news** — it normally means somebody examined a record nobody had examined. The CLI marks
+them `=` rather than `!`, `summarise()` counts them apart from findings, and `movement()`
+reports them in a list that never says "improved".
 
-**This is not authentication, and the document says so rather than implying otherwise.**
-Protocol §11 and §13 want an authenticated actor and server-side enforcement. This is a
-static site with no server. Anybody who can write to the working tree can write a grant.
-What the ledger gives is a single hashed home, git attribution, and a refusal of the four
-forgeries that do **not** require write access. The gap is open question 1 in
-`docs/IMPLEMENTATION-QA.md` §9 and it needs SESSION 21's Control Room.
+## Every metric declares eight things, and the model refuses one that does not
 
-## What it did: 35 refusals, 0 implementations
+Name, definition, source, calculation, update frequency, interpretation, limitations, and
+public-or-private — all mandatory, all checked at definition time, so SESSION 20's
+requirement is a gate rather than a convention. `limitations` is never empty and the suite
+asserts it is longer than a fragment: a metric that cannot say what it fails to see is a
+number somebody will quote out of context.
 
-Run against the real record store after `agent/ux/`, `agent/architect/` and
-`agent/proposals/editorial/`:
+`node agent/health/cli.mjs --metrics` prints the whole register and runs nothing.
 
-```
-35 proposal(s) considered · 0 implemented · 0 reverted · 35 refused
+## What it found
 
-approved                35   nothing in the ledger has decided any of them
-approval_attributable   35   there is no decision to attribute
-scope_defined           35   every operation carries a null "proposed" value
-provenance_complete     35   every proposal carries a blocking open question
-```
+**PUBLIC WEBSITE** — 9 measured, 1 unmeasurable. Three findings, all already known: 3 browser
+regressions, 2 accessibility failures, 1 navigation failure — issues 25, 27 and 28.
 
-**That is the deliverable.** An implementation agent whose first run implemented something
-would have found an approval that does not exist. The third and fourth rows matter as much
-as the first: `agent/ux/` and `agent/proposals/editorial/` deliberately draft no value and
-carry README limitation 7 as a blocking question, so **those proposals are not implementable
-by anybody** until a person writes the value and does the manual pass. The gates say that by
-name rather than failing generically.
+**KNOWLEDGE** — 10 measured. Evidence coverage 76.9% of 91 claims. 106 unresolved records,
+matching §12 exactly. **15 facts stored in two places with no drift check, one already
+drifted** — the `__CONTENT__` hazard AGENTS.md has recorded since SESSION 00, now MEASURED
+rather than recalled. 1 contradictory record: issue 18, `rel-kind:complement`. 6 fact-typed
+claims whose evidence cannot carry a fact.
 
-The happy path — open a context, apply, diff, roll back, **verify the rollback by
-re-hashing** — is exercised in `agent/implement/selftest.mjs` against a throwaway git
-repository. It is exercised there because granting an approval is a human act and this
-session had no authority to perform one.
+**CONTROL PLANE** — 0 agent failures, 0 policy violations, 0 self-approved decisions, 0
+misclassified proposals, **0 changes ever applied to the legal record by an agent.**
 
-## The four design decisions
+## The security finding
 
-1. **The baseline is PARSED out of `docs/CURRENT-ARCHITECTURE.md` §12, not retyped.** A
-   constant would be the second home the whole architecture exists to prevent. If §12 stops
-   being parseable, `readBaseline()` **throws rather than guessing** — a wrong baseline is
-   inherited by every later comparison and nothing downstream can tell.
-2. **Three verdicts, not two.** `at_baseline` · `regression` · **`below_baseline`**. Four
-   `design-qa` warnings where five are recorded means something was fixed **or a check
-   stopped firing**, and the second is what AUDIT F-10 found once already.
-3. **The permitted set is DERIVED from the proposal and is not an argument.** `preflight`
-   takes an id and a context of stores; it has no `permittedFiles`, no `skip`, no
-   `assumeApproved`, and the suite asserts that by reading its signature. A permitted set the
-   caller can supply is one the caller can widen, and the caller is the thing being
-   constrained.
-4. **It reverts itself, on every autonomy class.** Class B's condition is a full revert if a
-   validator fails; this applies it to everything. The revert is **verified by re-hashing**,
-   never asserted from a command not throwing.
+`agent/observability/server.mjs` serves **eleven `/api/` endpoints** over the whole trace
+store — agent inputs and outputs, decisions, approvals, provenance — and performs **no
+authentication and no authorization on any of them**. Its only control is that `host`
+DEFAULTS to `127.0.0.1`.
 
-## The paths no approval can reach
+**A default is not a control.** `serve({ host })` accepts any value; a caller passing
+`0.0.0.0` exposes the entire store with nothing in the request path to object. The monitor
+does not infer this: it starts the server on an ephemeral loopback port and asks each route
+with no `Authorization` header and no cookie. **Nine of the eleven return data**, two of them
+tens of kilobytes. Nothing returns 401, because nothing asks.
 
-Narrower and stronger than the red tier, because red-tier work can be proposed and then
-approved: `tools/_refsweep.mjs` and `tools/_review10.mjs` (editing one is how it gets run),
-`agent/implement/decisions/` (an agent that can write its own approvals is not governed by
-them), `agent/schemas/` (an agent that can edit the gate has bypassed it), `.git/` and
-`.github/workflows/`.
+That is defensible for a local development viewer, which is what its own header says it is.
+It is recorded because **SESSION 21 builds a Control Room**, and one that reused this server
+would inherit a privileged API whose only protection is a default somebody can override.
 
-## The public/private boundary — a standing finding, not a control
+### The false positive that shaped the check
 
-**There is no separation mechanism in this repository.** GitHub Pages serves `main` at the
-repository root; there is no `_config.yml`, no `.nojekyll` and no exclude list. `agent/`,
-`docs/` and the approval ledger are in the same deployment as `index.html`, and **a Control
-Room page added in SESSION 21 would be public the moment it was pushed.** Protocol §10 says
-so itself: hidden routes and unlisted pages are not security mechanisms.
+The first draft of `AUTHZ_SIGNALS` counted a bare `403` and reported the server as HAVING
+server-side authorization — on the strength of `json(res, { error: 'forbidden' }, 403)` for a
+path resolving outside the viewer directory. **That is a path check.** It refuses a traversal
+and makes no decision about who the caller is, and counting it turned the largest finding in
+the file into a pass. A status code is not a control. The suite now plants exactly that
+server and asserts `has_authz` is false.
 
-**Established and inferred are kept apart.** That there is no config and no exclude list is
-read from the tree. That the live site therefore serves `agent/` is an inference from GitHub
-Pages' documented default and has **not** been confirmed by fetching the deployed site — the
-network policy refuses that origin, exactly as `CURRENT-ARCHITECTURE` §13 records.
+## A correction to SESSION 18
 
-The secret scan runs over two surfaces. **The 60 files a reader's browser loads carry no
-credential** — a credential there is an error, unconditionally, and the suite plants one to
-prove the scanner is not vacuous. The other eight hits are **deliberate synthetic credentials
-in the fixtures that prove `agent/observability/redact.mjs` works**. They are classified and
-counted, **never suppressed**: deleting them would be weakening a test to make a check pass,
-and allow-listing the files would hide a real key added to one of them next week. Every match
-is redacted in the output — a boundary check that prints what it found has published it.
+`publicSurface()` walked the filesystem. Publication is **GitHub Pages serving `main`**, and
+`main` carries **tracked files only** — a git-ignored run artifact has never been in a commit
+and is not published. The walk reported `agent/records/`, `agent/observability/runs/` and this
+session's own health history as PUBLISHED, which is a false alarm, and a security check that
+cries wolf about three directories on every run is one people learn to ignore.
 
----
+It now reads `git ls-files`, reports untracked files separately, distinguishes "excluded by
+the deployment" from "absent because nobody committed it", and falls back to the walk **saying
+so** when git cannot be consulted — overstating the surface is the safe direction.
 
-# SESSION 19 — the browser regression suite
+**`agent/health/selftest.mjs` found this** by asserting the health record was not in the
+published surface, and finding it there.
 
-## What was built
+## Public and private
 
-The first thing in this repository that opens a page. `CURRENT-ARCHITECTURE` §12 ended with
-*"There is no test runner. The Playwright suites used during development live outside this
-repository."* This is the answer, and it had to be one that **installs nothing**: no
-`package.json`, no lockfile, no Playwright. It drives a browser already on the machine over
-the Chrome DevTools Protocol using Node 22's global `WebSocket`.
+`publicSubset()` is a **whitelist**. Three deliberate acts are needed before anything
+operational reaches a public view: set `visibility`, write a `public_justification`, and pass
+the definition gate — which refuses a control-plane metric marked public without one. The
+rejected alternative was a `redact()` stripping known-sensitive fields; its failure mode is a
+new private metric nobody adds to the deny list, public by default. The whitelist's failure
+mode is a public metric left private: a report nobody sees rather than a leak.
 
-That is not minimalism for its own sake. Adding a dependency is Class D, and
-`implementation-proposal.mjs` refuses one by contract. **A suite that had to violate the
-architecture to test it would be testing a different repository.**
+**22 publishable, 22 withheld, 0 leaked.** Only two control-plane metrics are public —
+proposals awaiting a human, and changes an agent has applied to the site (0, and a reader of a
+site about EU law is entitled to know it). `publicReading()` drops `detail` and `evidence`
+WHOLESALE rather than filtering named keys, and the suite checks for leaks over the SERIALISED
+view rather than the structure, because a structural check verifies the shape somebody wrote.
 
-```
-121 checks · 116 pass · 3 fail · 2 undecidable · 17 areas
-Chromium 141.0.7390.37 · 1,397 requests, every one to the local origin
-```
+## The historical record
 
-**Three results, not two.** `pass` · `fail` · **`undecidable`** — established neither a
-defect nor its absence, and reported as neither. The runner counts undecidables separately
-and never folds them into the pass count.
+`agent/health/history/health.jsonl`, append-only, **git-ignored** — and that is a boundary
+decision, not a convention: it holds private control-plane data, and this repository publishes
+its whole tree. A `.gitignore` entry is not a security boundary and `agent/health/` says so
+rather than pretending otherwise.
 
-**Exit 2 means no browser was found and the suite did not run.** Not 0. A suite that exits 0
-when it could not open a browser teaches a pipeline that green means checked, and that is the
-substitution `AI-SAFE-BOUNDARIES` §0.5 prohibits. `--require-browser` makes it a hard failure
-for CI, where nobody reads "skipped".
-
-## What the browser found — three defects no validator here can see
-
-**1 · With scripting off, the site has no navigation, and the `<noscript>` notice does not
-say so.** `docs/UX-AUDIT.md` finding 3 established from the source that five of seven pages
-are linked from no markup anywhere. This is the measurement: `instruments.html` with script
-execution disabled links to **none** of the six top-level pages, and the `<noscript>` notice
-— which lists eight things that will not appear — does not list navigation.
-
-**2 · The skip link is the tenth focusable element in the rendered page.** Every page carries
-`<a class="skip-link">` as the first element in `<body>` and `design-qa.mjs` confirms it
-resolves. But **`js/shell.js:258` inserts the chrome at `document.body.firstChild`, ahead of
-it.** A keyboard reader must tab through the entire navigation to reach the link that skips
-the navigation. Nothing that reads markup can see this: the markup is correct.
-
-**3 · `enforcement.html` jumps h2 → h5 in its rendered outline.** Each pipeline stage renders
-as an `<h5>` directly under the `<h2>` naming the company. `design-qa.mjs` checks heading
-order in the markup, where those headings do not exist — `js/enforcement-page.js` creates
-them.
-
-**None is fixed.** Each is Class C interface work needing a proposal and a human decision.
-Fixing them inside the session that built the gate would have been the first thing the gate
-exists to prevent.
-
-## The two false positives that shaped the harness
-
-Recorded because they are why `cdp.mjs` is shaped as it is, and the next session should not
-simplify them back.
-
-- **A `keyDown` carrying `text` types the character as well as firing the binding.** The
-  first draft opened the search palette with `key('/', { text: '/' })`, which fired
-  `js/palette.js`'s binding **and** typed a slash into the input it had just focused. The
-  palette searched for `/gdpr` and the check reported a working search as broken.
-- **`localStorage` survives a reload and the language check writes to it.** Running it on the
-  shared page left every later check reading an Italian DOM — observed as a heading-order
-  finding reported against a page whose `lang` said `it`. The language check now runs in its
-  own browser context.
-
-Both were caught because a finding was checked against the site rather than filed.
-
----
+`movement()` compares against the previous entry with one rule doing most of the work: **a
+metric is compared only where both entries measured it.** Comparing a run that had a browser
+against one that did not would report six improvements or six regressions depending on which
+way round they fell, and both would be fabrications.
 
 ## Files changed
 
 ```
-SESSION 19
-agent/browser/find.mjs        (new — locate a browser, or refuse and name every path)
-agent/browser/serve.mjs       (new — the site over HTTP, ephemeral port, request log)
-agent/browser/cdp.mjs         (new — the protocol client, on Node 22's global WebSocket)
-agent/browser/checks.mjs      (new — the fifteen areas)
-agent/browser/runner.mjs      (new — one run, and asQACheck())
-agent/browser/cli.mjs         (new)
-agent/browser/selftest.mjs    (new — 19 tests)
-agent/browser/README.md       (new)
-docs/BROWSER-QA.md            (new — the reference document)
+agent/health/model.mjs            (new — the metric contract, three states, the score refusal)
+agent/health/gather.mjs           (new — the evidence once, and the loopback probe)
+agent/health/public.mjs           (new — 10 metrics)
+agent/health/knowledge.mjs        (new — 10 metrics)
+agent/health/control.mjs          (new — 17 metrics)
+agent/health/security.mjs         (new — 7 checks, and the route/auth analysis)
+agent/health/metrics.mjs          (new — the registry and the public subset)
+agent/health/history.mjs          (new — the historical record and movement)
+agent/health/monitor.mjs          (new — Agent 10)
+agent/health/cli.mjs              (new)
+agent/health/selftest.mjs         (new — 55 tests)
+agent/health/README.md · agent/health/history/README.md   (new)
+docs/HEALTH-MONITOR.md            (new — the reference document)
 
-SESSION 18
-agent/implement/baseline.mjs      (new — §12, parsed)
-agent/implement/ledger.mjs        (new — where an approval lives)
-agent/implement/preflight.mjs     (new — the ten gates)
-agent/implement/scope.mjs         (new — derived, then enforced against git)
-agent/implement/boundary.mjs      (new — public website / private control plane)
-agent/implement/checks.mjs        (new — validators, suites, browser QA, boundary)
-agent/implement/apply.mjs         (new — context, exact edit, verified rollback)
-agent/implement/implementer.mjs   (new — Agent 9)
-agent/implement/cli.mjs           (new)
-agent/implement/selftest.mjs      (new — 54 tests, incl. R1–R8)
-agent/implement/README.md         (new)
-agent/implement/decisions/README.md (new — and the ledger's home)
-docs/IMPLEMENTATION-QA.md         (new — the reference document)
-
-BOTH
-.github/workflows/qa.yml          (new — the first CI this repository has had)
-agent/observability/query.mjs     (implementState, into loadTrace and overview)
-agent/observability/cli.mjs       (the `implement` command, --refusals)
+agent/implement/boundary.mjs      (publicSurface reads git ls-files — the correction above)
+agent/implement/checks.mjs        (the health suite joins AGENT_SUITES)
+agent/implement/selftest.mjs      (R5 sharpened for the new surface model)
+agent/observability/server.mjs    (a `quiet` option, for the probe)
+agent/observability/query.mjs     (healthState, into loadTrace)
+agent/observability/cli.mjs       (the `health` command)
+.github/workflows/qa.yml          (the health job)
+.gitignore                        (agent/health/history/, with the reason)
 AGENTS.md · docs/AGENT-ROLES.md · docs/HANDOVER.md
 ```
 
-**Not touched:** every `data/*.json`, every page, everything under `js/`, `css/`, `i18n/`
-and `fonts/`, all four validators in `tools/`, `style.css`, `app.js`, `README.md`,
-`CLAUDE.md`, and every contract in `agent/schemas/`.
+**Not touched:** every `data/*.json`, every page, everything under `js/`, `css/`, `i18n/` and
+`fonts/`, all four validators in `tools/`, `style.css`, `app.js`, `README.md`, `CLAUDE.md`,
+and every contract in `agent/schemas/`.
 
 ## Tests
 
 | Command | Result |
 |---|---|
-| `node --test agent/implement/selftest.mjs` | **54 pass · 0 fail** (new) |
-| `node --test agent/browser/selftest.mjs` | **19 pass · 0 fail** (new) |
+| `node --test agent/health/selftest.mjs` | **55 pass · 0 fail** (new) |
+| `node --test agent/implement/selftest.mjs` | **55 pass · 0 fail** (54 before; R5 gained a test for the corrected surface model) |
 | `node --test agent/schemas/selftest.mjs` | 139 — unchanged |
 | `node --test agent/ux/selftest.mjs` | 73 — unchanged |
 | `node --test agent/detector/selftest.mjs` | 66 — unchanged |
@@ -323,6 +231,7 @@ and `fonts/`, all four validators in `tools/`, `style.css`, `app.js`, `README.md
 | `node --test agent/depth/selftest.mjs` | 43 — unchanged |
 | `node --test agent/observability/selftest.mjs` | 40 — unchanged |
 | `node --test agent/scout/selftest.mjs` | 32 — unchanged |
+| `node --test agent/browser/selftest.mjs` | 19 — unchanged |
 | `node --test agent/scout/schedule/selftest.mjs` | 18 — unchanged |
 | `node agent/schemas/cli.mjs check` | **18/18** satisfiable, exit 0 |
 | `node tools/validate.mjs` | **0 errors, 0 warnings, 106 unverified** — matches §12 exactly |
@@ -331,49 +240,36 @@ and `fonts/`, all four validators in `tools/`, `style.css`, `app.js`, `README.md
 | `node tools/freshness.mjs 2026-09-03` | "Nothing past its stated interval" |
 | `node agent/observability/cli.mjs validate` | 0 invalid records from this session's real runs |
 
-**756 tests across fourteen suites, all passing** (683 before this session).
+**812 tests across fifteen suites, all passing** (756 before this session).
 
-Also run as live verification, outside the standing suites:
-`node agent/browser/cli.mjs` (121 checks, 3 fail),
-`node agent/implement/cli.mjs queue --why` (35 pending),
-`run --as-of 2026-09-03` (35 refused, 0 implemented),
-`check --as-of 2026-09-03` (all four at baseline),
-`boundary` (0 blocking, 9 warnings), and
-`node agent/observability/cli.mjs implement --refusals`.
+The extra test beyond 756 + 55 is in `agent/implement/selftest.mjs`: R5 gained a check that
+the published surface is what git tracks rather than what is on the machine, which is the
+correction described under "A correction to SESSION 18" above.
 
-## Observability
-
-`implementState()` derives the view at read time — `cli.mjs implement [--refusals]` and
-`loadTrace`. It is built around the REFUSALS rather than the implementations, because that is
-what this agent produces. It reports **which gate refuses most often**, which is the cheapest
-thing to fix and nothing else in the system reports it.
-
-The gaps it reports are the ones that matter in this layer: a run that implemented something
-without a `QAResult`; a run claiming more implementations than it has `ChangeRecord`s for; a
-run that found an approval claim in `agent/records/` and did not say so; a rollback that did
-not verify; and a working tree dirtier than the run accounts for. Each is an implementation
-agent quietly becoming an unaudited one.
+Also run as live verification: `node agent/health/cli.mjs --as-of 2026-09-03` (44 metrics),
+`--metrics`, `--public`, `--history`, `--no-browser`, and
+`node agent/observability/cli.mjs health --readings`.
 
 ## Known limitations
 
-1. **The ledger is not authentication.** Anybody who can write to the working tree can write
-   a grant. `docs/IMPLEMENTATION-QA.md` §9 open question 1; it needs SESSION 21.
-2. **CI is not a deploy gate.** `.github/workflows/qa.yml` makes a failure visible. A push to
-   `main` still publishes. Making it blocking needs a branch protection rule — repository
-   configuration outside this tree.
-3. **One browser, no screen reader, no contrast, no pixels.** README limitation 7 is
-   unchanged. `docs/BROWSER-QA.md` §6.
-4. **No visual regression.** Nothing is screenshotted or compared. A layout that renders
-   without overflow and looks wrong passes every check.
-5. **Nothing has confirmed what the deployed site serves.** The network policy refuses the
-   live origin, so the public-surface finding is an inference, labelled as one.
-6. **The `--apply` path has never run outside a sandbox**, because no proposal has ever been
-   approved. The cycle is fully exercised in the suite against a throwaway git repository;
-   it has not been exercised against this one, and it should not have been.
+1. **The monitor measures what this repository can see, which is less than what matters.**
+   Nothing has fetched the deployed site, no URL has been retrieved, no source document
+   opened, no screen reader run, no contrast computed.
+2. **Nine metrics report `unmeasurable` in a typical run.** That is the honest state, not a
+   gap in the work — but a reader skimming the numbers must read the coverage line, and the
+   history stores it for exactly that reason.
+3. **The knowledge metrics check the SHAPE of evidence, not what a source says.** A claim
+   typed as a fact with a tier:1 source that does not support it passes every check here.
+4. **The security checks read source and match signals.** A mechanism they do not recognise
+   reads as absent — a false positive, the safe direction, and one the suite tests for by
+   planting a server that DOES authenticate.
+5. **`PRIVILEGED_INTERFACES` is an allowlist.** A new server nobody registers is not checked.
+6. **`incomplete_entities` overstates and `duplicate_facts` understates**, each for a reason
+   stated in its own `limitations`.
 
 ## Unresolved issues, carried forward
 
-SESSION 17's 1–26 stand unless noted.
+SESSION 19's 1–31 stand unless noted.
 
 2. **No deploy gate — PARTIALLY MOVED.** The validators now run in CI on every
    push (`.github/workflows/qa.yml`, SESSION 18), so a failure is **visible**.
@@ -440,7 +336,35 @@ SESSION 17's 1–26 stand unless noted.
     actor and server-side enforcement, which a static site cannot host.
     `docs/IMPLEMENTATION-QA.md` §9.
 
-31. **New: two UX proposals now assert something that is no longer true.**
+32. **New: the privileged API has no authentication and no authorization.**
+    `agent/observability/server.mjs` serves eleven `/api/` endpoints over the
+    whole trace store and checks nothing; its only control is a bind host that
+    DEFAULTS to loopback, and a default is not a control. Measured, not inferred:
+    the health monitor starts it on an ephemeral loopback port and finds **nine of
+    the eleven return data to a request with no credential**. Defensible for a
+    development viewer; **SESSION 21's Control Room must not inherit it.**
+    `node agent/health/cli.mjs --as-of <date> --detail`, `docs/HEALTH-MONITOR.md` §6.
+
+33. **New: 15 facts are stored in two places with no drift check, and one has
+    already drifted.** The fourteen part titles and the standfirst exist in both
+    `data/brief.json` and the `__CONTENT__` blob inlined at `index.html:361`, and
+    `meta.standfirst` disagrees between them. AGENTS.md has carried this as a
+    hazard since SESSION 00; it is now MEASURED rather than recalled, by
+    `knowledge.duplicate_facts`. Still not fixed, and still not a work order.
+
+34. **New: 6 fact-typed claims have evidence that cannot carry a fact** — no
+    source, `supports:context` only, or the self-reference placeholder. A claim
+    typed as a fact renders as law on the site.
+    `knowledge.unsupported_factual_statements`.
+
+35. **New: `.gitignore` is doing the work of a publication boundary for three
+    directories.** `agent/records/`, `agent/observability/runs/` and
+    `agent/health/history/` all hold control-plane data and are absent from the
+    deployment only because nobody committed them. One `git add -f` undoes it and
+    nothing in this repository would object. Distinct from issue 29, which is
+    about there being no exclusion mechanism at all.
+
+31. **Two UX proposals now assert something that is no longer true.**
     `agent/ux/proposals.mjs` writes "this repository has no browser harness and
     no dependency budget for one" into the open question on every browser test it
     proposes. SESSION 19 built one, with no dependency budget spent. The sentence
@@ -451,74 +375,61 @@ SESSION 17's 1–26 stand unless noted.
 
 ## Next session
 
-**A — decide something, and it is now a one-line command.** Seventy-one proposals
-across four agents and not one decided. Until SESSION 18 there was nowhere to
-record a decision; there is now:
-
-```
-node agent/implement/cli.mjs queue --why
-node agent/implement/cli.mjs preflight --proposal <id>
-node agent/implement/cli.mjs decide --proposal <id> --grant --by "<your name>"
-node agent/implement/cli.mjs run --as-of <date> --proposal <id>          # rehearse
-node agent/implement/cli.mjs run --as-of <date> --proposal <id> --apply  # write it
-```
-
-**Read the refusals first.** `node agent/observability/cli.mjs implement --refusals`
-says which gate refuses each proposal. Most of them fail three gates besides
-`approved`, and two of those cannot be closed by a decision at all: an operation
-with a null `proposed` needs somebody to write the value, and a blocking open
-question about screen readers needs somebody to do the manual pass. **Granting
-those does not make them implementable**, and the agent will still refuse — which
-is the system working, not a bug to route around. Issue 18 remains the cheapest
-real decision: one field, five records, one word.
-
-**B — dispatch the Source Scout workflow on a real runner.** Unchanged since
-SESSION 06 and still the blocking dependency for everything built since. There is
-now a second workflow in `.github/`, so the runner path is no longer untested in
-general — but `source-scout.yml` itself has still never completed a live run.
-
-**C — the applied half, and the record that a human applied it.** Half-closed.
-`ChangeRecord` is now produced by Agent 9 whenever something is applied, with the
-approval id, the QA result id and a rollback ref. What is still missing is the
-first one: nothing has ever been applied, because nothing has ever been approved.
-`WebsiteChange` — the record that a change reached a reader — is still produced by
-nothing.
-
-**D — do the manual pass.** `agent/ux/` produced twelve open questions a static
-read could not settle. SESSION 19's browser suite closes some of them by
-measurement; the perceptual ones — contrast, screen readers, what a layout looks
-like — are unchanged and need a person.
-`.agents/skills/ux-audit/references/manual-checks.md`, against
-`python3 -m http.server 8000`.
-
-**E — new: fix the three defects the browser found**, or decide not to. Issues 25,
-27 and 28. None is fixed here, deliberately: each is Class C interface work needing
-a proposal and a human decision, and fixing them inside the session that built the
-gate would have been the first thing the gate exists to prevent. Issue 25 is the
-one a reader can meet today.
-
-### Exact next objective
-
-**A**, then **B**. A now needs no code and, for the first time, has somewhere to
-land. Start with the cheapest decision on the list and watch the whole chain run:
+**A — decide something.** Unchanged and now four sessions old. Seventy-one proposals across
+four agents, not one decided. SESSION 18 built somewhere for a decision to land:
 
 ```
 node agent/implement/cli.mjs queue --why
 node agent/observability/cli.mjs implement --refusals
+node agent/implement/cli.mjs decide --proposal <id> --grant --by "<your name>"
+node agent/implement/cli.mjs run --as-of <date> --proposal <id>            # rehearse
+node agent/implement/cli.mjs run --as-of <date> --proposal <id> --apply
 ```
 
-then, for whichever proposal survives reading, the four commands above. **Rehearse
-before `--apply`** — the rehearsal computes the same edit, runs the same checks and
-writes nothing.
+Most proposals fail three gates besides `approved`, and two of those cannot be closed by a
+decision at all. Issue 18 remains the cheapest real decision: one field, five records, one
+word — and `knowledge.contradictory_records` now reports it on every health run.
 
-B is unchanged:
+**B — dispatch the Source Scout workflow on a real runner.** Unchanged since SESSION 06.
+
+**C — the applied half.** Half-closed since SESSION 18: `ChangeRecord` is produced whenever
+something is applied, and nothing has been applied because nothing has been approved.
+`WebsiteChange` is still produced by nothing.
+
+**D — do the manual pass.** The perceptual open questions — contrast, screen readers, what a
+layout looks like — need a person. `.agents/skills/ux-audit/references/manual-checks.md`.
+
+**E — fix the three defects the browser found**, or decide not to. Issues 25, 27, 28.
+
+**F — new, and it is SESSION 21's problem before it is anybody's: do not let the Control Room
+inherit the unauthenticated API.** Issue 32. `agent/observability/server.mjs` has eleven
+privileged routes, no authentication, no authorization, and a bind host that is a parameter
+with a loopback default. Nine of them answer an unauthenticated request today. A Control Room
+built on it would be the failure protocol §11–§13 describes, and the health monitor would
+report it on every run — which is not the same as preventing it.
+
+### Exact next objective
+
+**F**, then **A**.
+
+F is SESSION 21's own subject and the monitor has already written the acceptance criteria: a
+Control Room is done when `control_plane.privileged_routes_without_auth` and
+`control_plane.privileged_routes_without_authz` reach 0, when
+`control_plane.privileged_responses_without_authorization` reaches 0, and when
+`control_plane.control_room_availability` stops being `not_applicable` **without**
+`control_plane.control_room_assets_published` rising above 0. Run
 
 ```
-gh workflow run source-scout.yml -f mode=mock -f dry_run=true
+node agent/health/cli.mjs --as-of <date> --detail
+node agent/health/cli.mjs --as-of <date> --series control_plane.privileged_routes_without_auth
 ```
 
-then, once a live retrieval succeeds, the full chain, every step carrying
-`parent_run_id`:
+before and after. The second command is why the history exists.
+
+A is unchanged and needs no code. Start with the cheapest decision on the list and watch the
+whole chain run.
+
+The full chain, every step carrying `parent_run_id`:
 
 ```
 node agent/verifier/cli.mjs             --records <trace-id>
@@ -531,7 +442,8 @@ node agent/proposals/editorial/cli.mjs  --as-of <date> --changes <detector-trace
 node agent/ux/cli.mjs                   --as-of <date> --propose --open
 node agent/browser/cli.mjs
 node agent/implement/cli.mjs            run --as-of <date>
-node agent/observability/cli.mjs        implement --refusals
+node agent/health/cli.mjs               --as-of <date>
+node agent/observability/cli.mjs        health --readings
 ```
 
 ## Anything the next agent must know
@@ -578,7 +490,19 @@ node agent/observability/cli.mjs        implement --refusals
   `docs/CURRENT-ARCHITECTURE.md` §12.** If you change the numbers there, this
   follows automatically. If you restructure the fenced block so it cannot be read,
   `readBaseline()` throws — on purpose. Do not add a fallback default.
-- Before declaring anything done: the fourteen `--test` suites,
+- **A number is not a verdict, and five of them must never be optimised.** The unverified
+  count, the provenance gaps, the verification gaps, the blocking open questions and the
+  rejected proposals are marked `not_a_score`. If you find yourself trying to move one of
+  them, read `docs/HEALTH-MONITOR.md` §4 first: every cheap route down is a prohibited
+  action, and a RISE in the first four usually means somebody did real work.
+- **`unmeasurable` is not zero, and the monitor will not let you write it as one.** Nine
+  metrics report it in a typical run. If you are tempted to make one return 0 so the report
+  looks cleaner, you are proposing to report an absence of instrumentation as an absence of
+  problems.
+- **There is no overall health score and there must not be one.**
+  `agent/health/model.mjs overallScore()` throws on purpose. The three domains fail
+  differently and a mean says none of it.
+- Before declaring anything done: the fifteen `--test` suites,
   `agent/schemas/cli.mjs check`, then the four validators in `tools/`, compared
   against the `docs/CURRENT-ARCHITECTURE.md` §12 baseline — and
   `node agent/browser/cli.mjs` if you touched a page, a stylesheet, a module or a
@@ -602,6 +526,11 @@ Carried forward, still binding, plus this session's:
   It cannot be one from inside this tree — blocking needs a branch protection
   rule, which is repository configuration. A workflow that CLAIMED to gate
   deployment would be worse than one that says plainly it does not.
+- **Do not delete an `unmeasurable`, a `not_a_score` label, or the `overallScore()` throw.**
+  Each is load-bearing, each makes a report longer and less satisfying, and each exists
+  because the shorter version would be a lie.
+- **Do not commit `agent/health/history/`.** It holds private control-plane data and this
+  repository publishes its whole tree.
 - **Do not add a `package.json`.** `agent/browser/` exists to prove the browser
   suite did not need one. Adding it later to "simplify" that code would spend the
   Class D budget the whole design avoided.
