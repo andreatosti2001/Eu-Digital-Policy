@@ -1,287 +1,326 @@
 # HANDOVER
 
-**Last updated:** SESSION 12 · 3 September 2026
-**Branch:** `claude/foundation-verification-audit-40ozpo`, cut from `main` at `45dcc57`.
+**Last updated:** SESSION 12 · 2 September 2026
+**Branch:** `claude/data-gaps-proposals-4pjepp`, cut from `main` at `45dcc57`.
 **Base commit:** `45dcc57` on `main` ("Record in the handover that SESSION 11 is merged").
-**Not merged into `main`, and there is nothing to merge.** This session changed no
-tracked file except this document — it was a read-only verification audit, not a
-build session. `git status` was clean before the audit and is clean now.
+**Merged into `main`** with the repository owner's explicit instruction, which is
+what AGENTS.md requires for any push to `main`, because a push to `main`
+publishes to the live site and there is no deploy gate. The branch is left in
+place rather than deleted. All nine suites, the contract check and all four
+validators were re-run **on the merged tree** before the push, not only on the
+branch.
 
-**A note for the next session, because the same trap has now caught four in a
-row.** `git fetch --all && git branch -a` before concluding anything about what
-this repository contains, and check `git log origin/main..main` **and**
-`main..origin/main` before merging into a local branch you did not just create.
+**The trap caught this session too, and the warning is still needed.** The local
+`main` in this container was **32 commits behind** `origin/main` — it sat at a
+pre-SESSION 08 commit, and merging into it would have silently reverted five
+sessions of work. It was reset to `origin/main` rather than merged into. Run
+`git fetch --all && git branch -a` before concluding anything, and check
+`git log origin/main..main` **and** `main..origin/main` before merging into a
+local branch you did not just create.
+
+**The live site is byte-for-byte unchanged by this work**, and this was checked
+rather than asserted: the diff contains nothing under `data/`, no `*.html`, and
+nothing under `js/`, `css/`, `i18n/`, `fonts/` or `tools/`; the new agent's suite
+hashes the whole of `data/` before and after a full run against the real corpus
+and asserts it is byte-identical; and all four validators produce output matching
+the `docs/CURRENT-ARCHITECTURE.md` §12 baseline exactly.
+
+**Everything worked before the session started, and it was checked first:** 397
+tests across eight suites, 18/18 contracts satisfiable, all four validators at
+the §12 baseline.
 
 ---
 
 ## Current milestone
 
-**SESSION 12 — Foundation verification & pre-Knowledge-Architect audit. Complete.**
+**SESSION 12 — Agent 5, the gap router. Complete.** `agent/proposals/data/`
+consumes the `KnowledgeGap` records `agent/depth/` produces and turns each one
+into either a structured proposal or a routed handoff with its reason.
 
-The repository owner asked for a rigorous read-only verification of everything
-built in Sessions 02–12 — observability, the four agents (Scout, Verifier, Change
-Detector, Data Depth), the 18-contract gateway, CI/CD, the data model, security —
-before authorizing **SESSION 13 (Agent 5, the Knowledge Architect)**. Fifteen
-phases were run against the actual repository rather than trusted from
-documentation: all eight test suites, all four `tools/` validators, the contract
-gateway tested adversarially, a live Scout run against the real EU endpoints, a
-chained Scout → Verifier run, and independent re-derivation of three validator
-defects `docs/AUDIT-2026-09-01.md` already claimed — all three reproduced, not
-merely re-quoted.
+The reference document is **`docs/GAP-PROPOSALS.md`**. This file is the handover
+only.
 
-**Verdict: B — READY WITH TARGETED REMEDIATION.** The foundation is coherent and
-its safety properties are enforced by code, not merely documented — see "What was
-verified as genuinely sound" below. Three findings specifically block what
-SESSION 13 needs (durable node identity and cross-run linkage, for a knowledge
-*graph*) without requiring any restructuring. **SESSION 13 should not start until
-these three are fixed.** They are additive, not architectural.
+## What the session was told, and what was done
 
-## What was verified as genuinely sound (do not re-litigate)
+> Extend Data Depth so that each identified gap can become a structured proposal.
+> Respect one home per fact, derivation over storage, existing IDs and existing
+> vocabularies. If a new taxonomy term appears necessary, create a taxonomy
+> proposal; do not silently create it. If a proposed item is interpretive, route
+> it to Editorial. If evidence is inadequate, route it to Verifier. Create
+> `agent/proposals/data/`. Add schema validation and tests. **Do not merge any
+> substantive additions automatically.**
 
-- **The contract gateway rejects malformed input.** Tested adversarially: raw
-  JSON with no `contract` field, an unknown contract name, a known contract with
-  an empty body, a known contract with an extra unrecognised field, `null`, a
-  bare string, an array — **7/7 correctly rejected** by
-  `agent/schemas/gateway.mjs`. No skip flag exists.
-- **A failed retrieval becomes a `DataGap`, never a candidate.** Verified against
-  the real network, not a fixture: `agent/scout/cli.mjs --live --dry` against all
-  five registered EU endpoints, blocked by the session's egress policy, produced
-  **5 gaps, 0 candidates, 0 false positives.**
-- **`simulated` records are correctly refused as never-actionable.** Chaining a
-  real mock Scout run into the Verifier (`--records <trace-id>`) had all 6
-  candidates refused at intake for exactly this reason — the refusal is the
-  feature working, not a bug to route around.
-- **The CI write boundary holds.** Two-job split (network access with no write
-  token / write token with no network beyond github.com), `guard.mjs` as an
-  allowlist enforced on both sides of the artifact boundary, attacker-controlled
-  inputs bound to `env:` and never interpolated into shell.
-- **No agent writes to `data/`.** Every suite hashes the directory before and
-  after a full run against the real corpus and asserts byte-identity; this
-  session's own runs (Scout mock + live, Verifier, Integrator, Detector, Depth,
-  all against real `data/` where applicable) left it untouched.
-- **`data/brief.json` vs. `index.html`'s inline `__CONTENT__` drift is real and
-  already documented (F-04).** Independently re-measured this session:
-  `meta.standfirst` differs between the two homes; nothing loads `brief.json` at
-  runtime. Not a new finding — confirmed, not touched.
+All of it, with one thing the brief did not name and that had to exist: a fifth
+route for the gap whose recommended home is a field no dataset has. Nothing was
+merged and nothing was applied.
 
-## The three findings that gate SESSION 13
-
-**1 · Record ids have no identity beyond one run.** All five agents mint ids from
-a per-run counter — `#id(prefix) → prefix-NNN` in `agent/depth/depth.mjs:109`,
-and the same pattern in `agent/detector/detector.mjs`,
-`agent/integrate/adapter.mjs`, `agent/scout/scout.mjs`,
-`agent/verifier/verifier.mjs`. Run the same analysis twice and every `gap_id`
-changes. Measured against the real corpus: 57 `KnowledgeGap` records, 57 distinct
-`gap_id`, but only **56 distinct** `(gap_kind, entity)` natural keys —
-`missing_instrument_relationship|ai-act` collides, so even the obvious fallback
-key is not quite sufficient. A knowledge graph is a structure of stable nodes;
-this is the specific prerequisite it is missing.
-
-**2 · No agent CLI populates cross-agent trace linkage.** `Span.handoff()` and
-`gateway.handoff()` exist and are implemented correctly, but the only callers
-outside tests are in `agent/observability/demo/workflow.mjs`. Verified by
-chaining a real Scout trace into a real Verifier run: the Verifier's `AgentRun`
-record came back `parent_run_id: null`, `handed_off_to: []`, and its trace
-contains **zero** references to the Scout trace it consumed. "Can this execution
-be correlated with another agent's?" is unanswerable in every real code path
-today.
-
-**3 · A run whose entire input was refused at intake still reports `ok`.** In the
-chained run above, all 6 candidates were correctly refused; six child spans
-closed `failed`; six `error` records were written — and the root span still
-closed `status: ok`, and `agent/observability/cli.mjs list` still renders
-`✓ ok`. The per-record epistemics are honest (`epistemic.unresolved` names all
-six); the aggregate signal is not. `degraded` is already defined in the schema
-and computed at read time for exactly this shape — it just doesn't reach the
-summary line or the exit code.
-
-Two more, worth doing soon but not gating: no trace carries a commit sha (question
-"which code ran" is unanswerable); the Scout → Verifier boundary has never been
-exercised with a real, non-simulated record, only within each agent's own
-fixtures.
+**Against the real corpus: 57 gaps routed → 14 proposals, 21 evidence questions
+handed to the Verifier, 21 handed to Editorial, 1 to the repository owner.**
 
 ## Files changed
 
-None, except this document. No agent module, contract, dataset, workflow, or page
-was edited. Two git-ignored directories (`agent/records/`,
-`agent/observability/runs/`) gained real run output from verification — not
-committed, per `.gitignore`, and not the repository's concern.
+```
+agent/schemas/types.mjs                     (create_taxonomy_term + TAXONOMY_OPERATION_KIND;
+                                             GAP_ROUTES, GAP_ROUTE_RECIPIENT, PROPOSING_ROUTES)
+agent/schemas/contracts/data-proposal.mjs   (create_taxonomy_term in CREATE_KINDS, four new rules)
+agent/schemas/selftest.mjs                  (9 new tests)
+agent/schemas/README.md
+
+agent/proposals/data/route.mjs      (new — the routing table and the two one-way overrides)
+agent/proposals/data/annotate.mjs   (new — the one edit authorable with an empty hand)
+agent/proposals/data/taxonomy.mjs   (new — establishing a term is needed before proposing one)
+agent/proposals/data/proposals.mjs  (new — Agent 5)
+agent/proposals/data/cli.mjs        (new)
+agent/proposals/data/selftest.mjs   (new — 47 tests, against the real data/)
+agent/proposals/data/README.md      (new)
+
+agent/observability/query.mjs        (proposalState, wired into loadTrace and overview)
+agent/observability/cli.mjs          (the `proposals` command, and --refused)
+agent/observability/server.mjs       (GET /api/proposals)
+agent/observability/viewer/viewer.js (the Gap proposals panel and the overview tile)
+agent/observability/selftest.mjs     (6 new tests)
+
+docs/GAP-PROPOSALS.md   (new — the reference document)
+docs/AGENT-CONTRACTS.md · docs/OBSERVABILITY.md · docs/SKILL-MAP.md · docs/DATA-DEPTH.md
+AGENTS.md · docs/HANDOVER.md
+```
+
+**Not touched:** every `data/*.json`, every page, everything under `js/`, `css/`,
+`i18n/` and `fonts/`, all four validators in `tools/`, and every file under
+`agent/scout/`, `agent/verifier/`, `agent/integrate/`, `agent/detector/` and
+`agent/depth/` (except two paragraphs of `docs/DATA-DEPTH.md` that had become
+false).
+
+## The four things worth knowing
+
+**1 · "Each gap can become a proposal" is mostly false, and saying so is the
+work.** Closing a knowledge gap means writing the value the corpus lacks, and for
+eleven of the thirteen kinds that value is an article number, a date, a
+competence, a fine or a status — read from a document, and nothing here has
+retrieved one. So the run asks two questions and keeps them apart: **who can act
+next** (the route) and **what can be authored now** (a proposal, or a refusal
+with its reason). Conflating them produces either a proposal with no value, which
+is not a proposal, or one with a value nobody read, which is a fabrication. The
+run records that on its trace as the alternative it refused, so the refusal is
+checkable rather than a claim in a comment.
+
+**2 · The one edit this repository can author is a note about itself.** A
+sentence on a record that already exists, stating something about *this corpus*
+rather than about EU law. Thirteen of the fourteen proposals are that. The
+sharpest is `unsupported_claim`: seven claims typed `claim-type:law` rest on the
+brief citing itself and *other records are built on them* — SESSION 11
+established it and had nowhere to put it. **The text is composed, not written**:
+`annotate.mjs#noteFor` is a pure function of ids and counts read off the gap's
+evidence, and the suite recomputes every note a run emitted and asserts it is
+character-identical. `verification_note` is rendered by four modules in `js/`,
+which is why this is amber and approval-gated rather than green.
+
+**3 · The taxonomy term was proposed with the search that could have stopped
+it.** `relationship_kind` has ten terms and none of them means "these two records
+are one document". Establishing that is the whole burden — an agent that decided
+a term was needed without looking would give an existing distinction a second
+home in the enum authority every dataset resolves against. The search reuses
+`DataProposal.existing_search` unchanged, and **the suite asks it about a concept
+the dimension does carry** and asserts it finds it: a search that could never
+come back empty-handed is not a search. What is proposed is an id and a label;
+the definition is not, because that is the site's own words.
+
+**4 · No nineteenth contract.** `create_taxonomy_term` is a sixth
+`DATA_OPERATION_KINDS` value with four rules, because the burden a term carries
+*is* `DataProposal`'s burden. The class is **forced** to `human_only` rather than
+checked against what the proposing agent claimed — the only rule in that contract
+that works that way, and it does because `data/taxonomy.json` is what every other
+dataset resolves against.
+
+## Nothing merged, and the run can prove it
+
+Six independent things, not one:
+
+- every proposal carries an `ApprovalRequest` in the `requested` state, and
+  `ApprovalRequest` refuses a decision whose `decided_by` is the requesting agent;
+- `DataProposal` forbids `auto_merge`, `apply_automatically`, `merge_on_approval`,
+  `merged` and `applied` by name, and the suite asserts no record carries one;
+- no proposal is `substantive`, because the only value written is a note about the
+  corpus — and `substantive: true` would force `human_only` anyway;
+- the run emits a `NOTHING MERGED` observation with `applied: 0` and
+  `data_dir_written: false`, and the read model reports a **gap in the view**
+  where it is missing;
+- the CLI hashes the whole of `data/` before and after and prints which;
+- `selftest.mjs` scans every module in the directory for a write call.
 
 ## Tests
 
-Every existing suite and validator was re-run, not trusted from documentation.
-All matched the SESSION 11 baseline exactly:
-
 | Command | Result |
 |---|---|
-| `node --test agent/observability/selftest.mjs` | 22 pass · 0 fail |
-| `node --test agent/schemas/selftest.mjs` | 121 pass · 0 fail |
-| `node --test agent/scout/selftest.mjs` | 30 pass · 0 fail |
-| `node --test agent/scout/schedule/selftest.mjs` | 18 pass · 0 fail |
-| `node --test agent/verifier/selftest.mjs` | 42 pass · 0 fail |
-| `node --test agent/integrate/selftest.mjs` | 61 pass · 0 fail |
-| `node --test agent/detector/selftest.mjs` | 63 pass · 0 fail |
-| `node --test agent/depth/selftest.mjs` | 40 pass · 0 fail |
-| `node agent/schemas/cli.mjs check` | 18/18 satisfiable |
-| `node tools/validate.mjs` | 0 errors, 106 unverified — matches §12 baseline |
-| `node tools/i18n-audit.mjs` | 0 errors, 0 warnings |
-| `node tools/design-qa.mjs` | 0 errors, 5 warnings — same five, by file and line |
-| `node tools/freshness.mjs` | "Nothing past its stated interval" |
-| `node agent/observability/cli.mjs validate` | 735 records (this session's real runs), 0 invalid |
+| `node --test agent/proposals/data/selftest.mjs` | **47 pass · 0 fail** (new) |
+| `node --test agent/schemas/selftest.mjs` | **130 pass · 0 fail** (121 before) |
+| `node --test agent/observability/selftest.mjs` | **28 pass · 0 fail** (22 before) |
+| `node --test agent/depth/selftest.mjs` | 40 pass · 0 fail — unchanged |
+| `node --test agent/detector/selftest.mjs` | 63 pass · 0 fail — unchanged |
+| `node --test agent/integrate/selftest.mjs` | 61 pass · 0 fail — unchanged |
+| `node --test agent/verifier/selftest.mjs` | 42 pass · 0 fail — unchanged |
+| `node --test agent/scout/selftest.mjs` | 30 pass · 0 fail — unchanged |
+| `node --test agent/scout/schedule/selftest.mjs` | 18 pass · 0 fail — unchanged |
+| `node agent/schemas/cli.mjs check` | **18/18** satisfiable, exit 0 |
+| `node tools/validate.mjs` | **0 errors, 0 warnings, 106 unverified** — matches §12 exactly |
+| `node tools/i18n-audit.mjs` | 0 errors, 0 warnings — matches |
+| `node tools/design-qa.mjs` | 0 errors, **5 warnings** — the same five as §12, by file and line |
+| `node tools/freshness.mjs 2026-09-02` | "Nothing past its stated interval", exit 0 |
 
-**397 tests, unchanged from SESSION 11 — the baseline held.**
-
-Additionally executed as live verification, outside the standing suite:
-`agent/scout/cli.mjs --mock`, `agent/scout/cli.mjs --live --dry` (real EU
-endpoints), `agent/verifier/cli.mjs --records <scout-trace-id>`,
-`agent/integrate/cli.mjs --mock`, `agent/detector/cli.mjs --mock`,
-`agent/depth/cli.mjs --as-of 2026-09-02` (run twice — deterministic, modulo the
-trace id).
+**459 tests across the nine suites, all passing** (397 before this session).
 
 ## Observability
 
-Nothing was instrumented this session — no agent was built. What was verified is
-that the existing instrumentation is real, not decorative: redaction was tested
-by running `agent/observability/demo/workflow.mjs`, which deliberately embeds a
-fake API key, and confirming the string reached no trace file on disk; the trace
-store was schema-validated after six real runs (735 records, 0 invalid, 0
-unparseable).
+Every route is a span (`propose.<route>`) with its own counts; every refusal an
+observation with the gap and the reason; every proposal, approval and data gap an
+artifact pointer; every handoff an edge; the routing a decision with its
+alternatives; and two closing observations — the census, and that nothing was
+merged. `proposalState()` in `query.mjs` derives the view at read time and stores
+nothing twice, exposed as `cli.mjs proposals [--refused]`, `GET /api/proposals`
+and the **Gap proposals** panel in the viewer. The overview tile counts the gaps
+that could **not** become a proposal, not the ones that could.
 
 ## Known limitations
 
-SESSION 11's own limitations list (`docs/DATA-DEPTH.md` §12) is unchanged — Depth
-was not touched. This session's own limitations are findings 1–3 above and issues
-15–19 below.
+Full list in `docs/GAP-PROPOSALS.md` §9. The four that matter most:
+
+1. **No agent here has read a real document.** Unchanged since SESSION 05, and now
+   the blocking dependency for eight sessions of work. It is why 43 of 57 gaps are
+   a handoff rather than a proposal.
+2. **Fourteen proposals, thirteen of them notes.** The honest description of this
+   session's output is that it made two absences visible on production pages and
+   proposed one word. That ratio is the retrieval dependency, not something to tune.
+3. **A second run proposes the same notes again.** There is no record that a human
+   applied one, so nothing can tell a proposal that was accepted from one nobody
+   looked at. The SESSION 11 handover named exactly this as what closing the loop
+   needs, and this session did not build it.
+4. **Nothing consumes a `DataProposal` yet.** The chain now runs
+   gap → proposal → approval and stops. The half still missing is the one that
+   applies an approved proposal and records that a human did — the only code here
+   that would ever write to `data/` on an agent's initiative.
 
 ## Unresolved issues, carried forward
 
-Items 1–14 are SESSION 11's and stand unchanged. New from this session's
-independent, code-level verification:
-
-15. **No trace carries a commit sha or code version.** "Which code state ran" is
-    unanswerable from any trace today. `Tracer` already accepts free-form
-    `attributes`; no CLI populates one.
-16. **No CLI populates `parent_run_id` or calls `handoff()` across agents**,
-    despite both existing correctly in `agent/schemas/gateway.mjs` and
-    `agent/observability/tracer.mjs`. Confirmed by a real chained Scout →
-    Verifier run. **Gates SESSION 13 — see Next session.**
-17. **A root run can close `status: ok` over 100% failed children.** `degraded`
-    is defined in the schema and computed at read time for exactly this shape,
-    but does not reach `agent/observability/cli.mjs list`'s summary line or drive
-    the process exit code.
-18. **Record ids have no identity across runs** — a per-run counter, not
-    content-derived. Confirmed against the real corpus: 57 `KnowledgeGap`
-    records, only 56 distinct natural keys. **Gates SESSION 13 — see Next
-    session.**
-19. **The Scout → Verifier boundary has never been exercised with a real,
-    non-simulated record**, only within each agent's own fixtures. The gateway
-    correctly refuses `simulated` records as never-actionable — which is exactly
-    what blocked the live chain this session ran — and there is no path that
-    keeps a real record's `simulated` flag propagating end to end without either
-    laundering a fixture or reaching a live document.
+1. `data/brief.json` is canonical but never consumed; `index.html`'s inline
+   `window.__CONTENT__` blob has already drifted from it.
+2. No deploy gate — a push to `main` publishes; the validators do not run in CI.
+3. `docs/AGENT-ROLES.md` and `docs/AGENT-CONTRACTS.md` describe overlapping ground
+   at different altitudes, uncross-checked. **Partly addressed twice:**
+   `docs/DATA-DEPTH.md` §11 for the Data Depth role, and now `docs/SKILL-MAP.md`,
+   which gains a **Gap router** row rather than stretching an existing one.
+4. The five operating-policy documents have not been cross-checked against
+   `agent/schemas/`.
+5. **106 records carry an unverified or requires-verification note.** No session
+   since SESSION 07 has moved that number. SESSION 12 does not move it either — it
+   proposes notes recording which of them are load-bearing, and a note is not a
+   verification.
+6. `agent/records/` and `agent/observability/runs/` remain per-developer, no
+   retention policy, concurrent writers untested.
+7. The Source Scout workflow has still never executed on GitHub Actions.
+8. The `conflicting` provenance word is a sixth where the verification-protocol
+   reference documents five. Carried from SESSION 07, still unreconciled.
+9. **The agent-layer status vocabulary and `data/taxonomy.json` disagree in both
+   directions.** Five agent statuses have no taxonomy term (SESSION 07);
+   `status:partly-applicable` has no agent status (SESSION 09). Six sessions have
+   now left this and said so.
+10. **`RegulatoryChange` versus `ChangeRecord` is settled in code and open as a
+    decision.** See `docs/CHANGE-DETECTOR.md` §1.
+11. **Two fields in `data/` whose name says reference and whose value is prose** —
+    `timeline.events[].supersedes` and `applicability.rules[].depends_on`.
+12. **`GOVERNANCE_PERMITS` is empty**, and nothing in `docs/` opens it.
+13. **`data/sources.json` has no way to say two records are one document.** Now
+    backed by a concrete proposal — `prop-taxonomy-*` proposes the missing word —
+    but the **shape** is still missing and is deliberately not bundled with it.
+    Adding a `relationships[]` array to `data/sources.json` is a decision for the
+    repository owner.
+14. **The taxonomy declares four `instrument_kind` terms no record uses** —
+    `kind:delegated-regulation`, `kind:implementing-decision`,
+    `kind:code-of-practice` and `kind:report` — and two `event_type` terms,
+    `event:compliance-deadline` and `event:implementing-act`. A data decision.
+15. **New: fourteen proposals now exist and nothing decides them.** Each is behind
+    a pending `ApprovalRequest` addressed to "the repository owner", and pending is
+    never granted. Until somebody decides, every re-run regenerates them.
 
 ## Next session
 
-**This is not SESSION 13, even though the repository owner has that prompt ready
-(Agent 5, the Knowledge Architect).** A knowledge graph is a structure of stable
-nodes and durable edges; issues 16 and 18 above are the specific prerequisites of
-that deliverable, not general technical debt to defer. Do SESSION 13 on top of
-them, not before them.
+**A — dispatch the Source Scout workflow on a real runner.** Unchanged since
+SESSION 06 and now the blocking dependency for everything built since. Seven
+sessions of agent work exist and none has read a real document. `mode: mock`
+first, then `mode: live` with `dry_run: true`.
 
-### Exact next objective — remediation, before SESSION 13 starts
+**B — the applied half, and the record that a human applied it.** The chain now
+runs `KnowledgeGap` → `DataProposal` → `ApprovalRequest` and stops. What is
+missing is not the write: it is the `ChangeRecord` that says a human applied one,
+so the next run does not propose it again. That record is what makes the loop a
+loop rather than a generator.
 
-1. **Content-derived stable ids.** Replace the per-run `#id(prefix)` counter in
-   `agent/depth/depth.mjs`, `agent/detector/detector.mjs`,
-   `agent/integrate/adapter.mjs`, `agent/scout/scout.mjs` and
-   `agent/verifier/verifier.mjs` with an id derived from content (the finding's
-   kind/type + the full sorted affected-entity set + subject, hashed or encoded),
-   so the same finding gets the same id across runs. **Do not add an id store** —
-   a lookup table mapping old ids to new would be the second home this
-   architecture exists to prevent; the id itself must be reproducible from the
-   finding's own content.
-2. **Populate cross-agent trace linkage in the four `--records` CLIs**
-   (`agent/verifier/cli.mjs`, `agent/integrate/cli.mjs`,
-   `agent/detector/cli.mjs`, `agent/depth/cli.mjs`): pass the upstream trace's
-   run id through as `parent_run_id`, and call the `handoff()` the gateway
-   already provides when accepting records from it. The contract fields
-   (`parent_run_id`, `trace_ref`, `handed_off_to`) already model this correctly —
-   only the CLIs fail to populate them.
-3. **Surface `degraded` in the run summary** (`agent/observability/query.mjs`,
-   read by `cli.mjs list`) when a root closes `ok` over one or more failed
-   children, and give total-intake-refusal a non-zero exit in the affected CLIs.
+**C — decide the fourteen proposals this session produced.** Thirteen notes and
+one word. They are the first proposals in this repository's history that a human
+could actually accept or reject, and until somebody does, issue 15 above grows on
+every run.
 
-Each item is additive: no schema change, no new dependency, nothing under
-`data/`. Validate with the same eight suites plus a re-run of the Scout →
-Verifier chain, confirming `parent_run_id` and a `handoff` record now appear on
-the downstream trace.
+### Exact next objective
 
-**Then, and only then, proceed to SESSION 13** as the repository owner has
-scoped it.
+**A.** Dispatch **Source Scout** manually with `mode: mock`, `dry_run: true`,
+confirm the workflow's mechanics on a real GitHub-hosted runner, then decide with
+the repository owner whether to proceed to a live dispatch. The full chain, once
+a live retrieval succeeds:
 
-**One instruction in the SESSION 13 prompt needs a standing correction before
-it is used:** it ends "At the end of the session, merge the new implementations
-into branch `main`." `AGENTS.md`'s Git section requires the repository owner's
-**explicit instruction, given at the time**, for any push to `main` — because
-`main` publishes to the live site and there is no deploy gate. SESSION 10 and
-SESSION 11 both record that this instruction was obtained when it happened, not
-assumed from a prompt template. The session that runs SESSION 13 should develop
-on its own branch as every prior session has, and stop to ask for that
-instruction before merging — not merge because the prompt said to.
+```
+node agent/verifier/cli.mjs        --records <trace-id>
+node agent/integrate/cli.mjs       --records <trace-id> --as-of <date>
+node agent/detector/cli.mjs        --records <trace-id> --as-of <date>
+node agent/depth/cli.mjs           --as-of <date> --changes <trace-id>
+node agent/proposals/data/cli.mjs  --as-of <date> --gaps <depth-trace-id> --refusals
+node agent/observability/cli.mjs   proposals --refused
+```
 
 ## Anything the next agent must know
 
-- **The three remediation items above are additive.** None requires a schema
-  change, a new dependency, or touching `data/`. `AgentRun.forbidden` already
-  bans storing anything `query.mjs` can derive — `degraded` is one of those, so
-  item 3 is a read-model fix, not a new stored field.
-- **Do not weaken the `simulated` refusal to make issue 19 easier to test.** A
-  fixture must stay never-actionable under any circumstance; a real fix keeps a
-  real record's `simulated` flag propagating rather than adding a way to bypass
-  the check.
-- Before declaring remediation complete: the eight `--test` suites,
-  `agent/schemas/cli.mjs check`, the four validators — compared against this
-  document's Tests section — plus the Scout → Verifier chain re-run to confirm
-  `parent_run_id` and the handoff now appear on the downstream trace.
-- SESSION 11's own device-specific notes for `agent/depth/` — never writes
-  anything and the suite scans for it; `asOf` is an argument everywhere; a
-  finding with no demand is a census entry, not a censored one; a suppression
-  without a reason is a test failure; a detector that finds nothing must still
-  appear in the run result; a change record may never create or raise a gap;
-  `CO_CITATION_FLOOR` is the one tuned number and the suite asserts it; the
-  glossary threshold is per kind of record and derived from the glossary itself
-  — all still apply unchanged; Depth was not touched this session.
+- **`agent/proposals/data/` never writes anything and never merges**, and the
+  suite scans every module in it for a write call as well as hashing `data/`
+  around a full run.
+- **`asOf` is an argument, everywhere.** Unchanged.
+- **A refusal is a deliverable.** A gap that produced nothing is counted, reasoned,
+  on the trace and in the read model. The suite asserts that every gap either
+  authored a record or was recorded as a refusal — a gap that did neither has
+  vanished.
+- **The note is composed, never written.** If you find yourself editing a sentence
+  in `NOTE_FOR_KIND` to read better, you are writing prose that will appear on a
+  production page. Add a template deliberately or not at all.
+- **Both routing overrides are one-way**, and the suite asserts neither can promote
+  a gap into a proposal its kind did not allow.
+- **The taxonomy search must be able to fail.** The test that asks it about
+  `rel-kind:repeals` is the one that proves the decisive-word test does anything.
+- Before declaring anything done: the nine `--test` suites,
+  `agent/schemas/cli.mjs check`, then the four validators in `tools/`, compared
+  against the §12 baseline.
 
 ## Anything the next agent must NOT change
 
-- **Do not add an id store or any second home for a record's identity.** Ids
-  must stay derivable from content, not looked up.
-- **Do not relax the contract gateway's rejection of anything malformed or
-  `simulated`.** Tested adversarially this session — arbitrary JSON, an unknown
-  contract name, an empty body, an extra field, `null`, a string, an array, 7/7
-  correctly rejected — it is the single most load-bearing safety property this
-  audit verified.
-- **Do not merge to `main` without the repository owner's explicit instruction
-  given at the time**, regardless of what a session prompt's closing line says.
-- Do not rebuild the site. No framework, no bundler, no build step, no
-  dependency, no service worker, no server-side rendering.
-- Do not fix the `__CONTENT__` / `brief.json` drift on your own initiative — it
-  is a data/editorial decision, not a code defect.
-- Do not modify `data/*.json` in a session not scoped for data work. The 57
-  `KnowledgeGap` findings from SESSION 11 are questions, not a work order.
+Carried forward, still binding:
+
+- Do not rebuild the site. No framework, no bundler, no build step, no dependency,
+  no service worker, no server-side rendering.
+- Do not fix the `__CONTENT__` / `brief.json` drift on your own initiative.
+- Do not modify `data/*.json` in a session not scoped for data work. **The 14
+  proposals this session produced are proposals, not a work order** — each is
+  behind a pending approval, and applying one without a decision is exactly the
+  failure the whole chain exists to prevent.
 - Do not touch the footer's non-affiliation or no-legal-advice text, `TIER_GRADE`
   in `js/format.js`, the derivation rules in `js/pipeline.js`, or `BASE` in
   `tools/_footer.mjs`.
 - Do not declare a licence. Do not soften the README's known limitations or the
   unverified-record count. Do not re-run `tools/_refsweep.mjs` or
   `tools/_review10.mjs`.
-- Do not change the id *shapes* in `agent/observability/ids.mjs` (trace/span hex
-  widths) while fixing remediation item 1 above — that is about
-  contract-record ids (`gap_id`, `cand_id`, etc.), not observability ids, which
-  are a separate, already-correct W3C-Trace-Context-shaped system.
-- Do not move redaction to the read path, and do not raise `MAX_STRING` to fit a
-  payload.
+- Do not change the id shapes in `agent/observability/ids.mjs`; do not move
+  redaction to the read path, and do not raise `MAX_STRING` to fit a payload.
 - **Do not add an entry to `GOVERNANCE_PERMITS`** without the repository owner
   naming the document that grants it.
-- **Do not add a `KnowledgeGap` field for a missing value**, under any of the
-  six names the contract forbids, and do not relax the rule that a gap is never
-  `autonomous`. Closing a knowledge gap writes a legal fact.
+- **Do not relax the rule that `create_taxonomy_term` is `human_only`**, and do not
+  make the class depend on what the proposing agent claims. Do not add a
+  `definition` to what a taxonomy proposal proposes — a definition is the site's
+  own words.
+- **Do not add a note composer for a gap kind whose note would state anything about
+  EU law.** The test that every clause is checkable in this repository is the whole
+  of what keeps this route from being a back door.

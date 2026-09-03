@@ -39,6 +39,15 @@ refuses `what_is_missing` by name and points at the other contract, and it
 carries `recommended_data_location`, which is the field that makes the
 difference. `docs/DATA-DEPTH.md` §7 has the reasoning.
 
+**SESSION 12 added no nineteenth.** It needed a way to say "this taxonomy term
+appears necessary, and I am proposing it rather than creating it", and that
+burden is `DataProposal`'s burden already — find the existing one first, keep
+the id, never merge automatically. So it is a sixth `DATA_OPERATION_KINDS`
+value, `create_taxonomy_term`, with four rules of its own: the dataset must be
+`data/taxonomy.json`, the record kind `taxonomy_term`, the dimension must be one
+the file actually carries, and the class is **forced** to `human_only` rather
+than checked. `docs/GAP-PROPOSALS.md` §4 has the reasoning.
+
 ```
 node agent/schemas/cli.mjs list                  # the eighteen
 node agent/schemas/cli.mjs show DataGap          # one contract, field by field
