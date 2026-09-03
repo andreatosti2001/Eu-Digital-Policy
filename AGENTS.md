@@ -33,6 +33,7 @@ the evidence it describes.
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
+| `docs/AUDIT-2026-09-03.md` | Foundation verification before SESSION 13 — what gates it and why |
 | `README.md` | The author's own account, including eight stated limitations |
 
 **The operating policies** (SESSION 01) sit under the boundaries document and refine it.

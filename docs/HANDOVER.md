@@ -240,8 +240,62 @@ Full list in `docs/GAP-PROPOSALS.md` §9. The four that matter most:
 15. **New: fourteen proposals now exist and nothing decides them.** Each is behind
     a pending `ApprovalRequest` addressed to "the repository owner", and pending is
     never granted. Until somebody decides, every re-run regenerates them.
+16. **Record ids have no identity beyond the run that minted them, in all six
+    record-producing agents including the gap router.** A per-run counter, not
+    content-derived. Measured against the real corpus: 57 `KnowledgeGap` records,
+    only 56 distinct natural keys. Full evidence: `docs/AUDIT-2026-09-03.md` F-18.
+17. **No agent CLI populates cross-agent trace linkage.** `parent_run_id` and
+    `handoff()` exist and are correct in the contracts and in
+    `agent/observability/tracer.mjs`, but no `--records`/`--gaps` CLI — Verifier,
+    Integrator, Detector, Depth, or the gap router — calls them. Confirmed by
+    chaining a real Scout trace into a real Verifier run.
+    `docs/AUDIT-2026-09-03.md` F-19.
+18. **A run whose entire input is refused at intake still reports `status: ok`.**
+    `degraded` is defined and computed at read time for exactly this shape but
+    never reaches the run summary or the exit code. `docs/AUDIT-2026-09-03.md`
+    F-20.
+19. **No trace carries a commit sha.** "Which code state ran" is unanswerable
+    from any trace today. `docs/AUDIT-2026-09-03.md` F-21.
+
+## A foundation verification audit ran independently, in parallel with SESSION 12
+
+**`docs/AUDIT-2026-09-03.md` — read it before starting SESSION 13.** It was
+commissioned separately from the gap router, branched from the same base
+(`45dcc57`) before the gap router merged, and originally titled its own work
+"SESSION 12" too — a collision with this session's real number, caught and
+corrected before publication; see that document's opening correction for what
+happened and why it now carries no session number. Its findings (issues 16–19
+above) were re-verified against the merged tree that includes the gap router,
+not against the stale base the audit branched from, and two of them —
+unstable record ids and missing cross-agent trace linkage — turned out to
+already apply to `agent/proposals/data/` as well, independently of the audit
+having been written before that module existed.
+
+**Fix issues 16–18 before SESSION 13 (the Knowledge Architect) starts.** A
+knowledge graph is a structure of stable nodes and durable edges; those three
+are its specific prerequisites, not general debt to defer. All three are
+additive — no schema change, nothing under `data/` — see
+`docs/AUDIT-2026-09-03.md` for the recommended direction on each. Issue 19 is
+worth doing in the same pass but does not gate.
+
+**One correction the audit makes to how a future session should read a
+prompt prepared in advance:** if a session's brief says to merge to `main` at
+the end, that is still subject to `AGENTS.md`'s Git section — the repository
+owner's explicit instruction, given at the time, because `main` publishes to
+the live site and there is no deploy gate. Every session so far (SESSION 12
+included) has obtained that instruction when it happened rather than merging
+because a template said to; do the same regardless of what a prepared prompt's
+closing line says.
 
 ## Next session
+
+**Before A, B or C below, and before SESSION 13: fix issues 16–18** (unstable
+record ids, missing cross-agent trace linkage, `degraded` not surfaced —
+`docs/AUDIT-2026-09-03.md` F-18/F-19/F-20). They are additive, gate SESSION 13
+specifically, and touch the same six modules this handover already names —
+doing them first does not conflict with A, B or C, and B (the applied half)
+will itself need stable ids and trace linkage to record which run a human
+decision applied to.
 
 **A — dispatch the Source Scout workflow on a real runner.** Unchanged since
 SESSION 06 and now the blocking dependency for everything built since. Seven

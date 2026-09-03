@@ -15,6 +15,8 @@ Start every session by reading, in order:
 4. `docs/AI-SAFE-BOUNDARIES.md`
 5. `docs/HANDOVER.md`
 6. `docs/AUDIT-2026-09-01.md` — where the architecture above is not enforced
+7. `docs/AUDIT-2026-09-03.md` — foundation verification before SESSION 13; read this before
+   starting it
 
 Then invoke the `project-context` skill in `.agents/skills/`.
 
