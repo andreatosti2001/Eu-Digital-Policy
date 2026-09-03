@@ -44,6 +44,7 @@
 
 import { isoOf } from '../observability/ids.mjs';
 import { emit, receive } from '../schemas/gateway.mjs';
+import { IdMinter } from '../schemas/identity.mjs';
 import { loadCorpus, HOME_OF, SELF_SOURCE_ID } from './canonical.mjs';
 import { resolveClaim } from './claims.mjs';
 import { resolveSource, draftSourceRecord } from './sources.mjs';
@@ -74,7 +75,9 @@ export class Integrator {
     this.asOf = String(asOf).slice(0, 10);
     this.requestedOf = requestedOf;
     this.simulated = simulated === true;
-    this.seq = 0;
+    /* Ids are derived from the record's own content, never from a
+       counter — agent/schemas/identity.mjs says why. */
+    this.ids = new IdMinter();
     /* Refusals, so a run that produced nothing can say why rather
        than looking like a run that found nothing. */
     this.refused = [];
@@ -83,7 +86,6 @@ export class Integrator {
   }
 
   #now() { return isoOf(this.tracer.clock.now()); }
-  #id(prefix) { return `${prefix}-${String(++this.seq).padStart(3, '0')}`; }
   #builder(contract, span) { return builderFor(contract, { span, now: this.#now(), simulated: this.simulated }); }
 
   /** Validate against the contract, register in the trace, store.
@@ -302,7 +304,18 @@ export class Integrator {
     b.addEntity({ kind: 'claim', id: built.link.claim_id, path: 'data/claims.json', field: 'sources', note: 'The claim this edge is about.' });
     b.addEntity({ kind: 'source', id: built.link.source_id, path: 'data/sources.json', field: null, note: 'The source record the document resolved to.' });
 
-    b.set('link_id', this.#id('link'));
+    /* One edge per (claim, source, verification): re-running the
+       integrator over the same verification produces the same edge,
+       not a second one. */
+    b.set('link_id', this.ids.mint('link', {
+      kind: 'claim_evidence',
+      entities: [
+        { kind: 'claim', id: built.link.claim_id, path: 'data/claims.json' },
+        { kind: 'source', id: built.link.source_id, path: 'data/sources.json' },
+      ],
+      subject: built.link.locator,
+      discriminator: verification.verification_id,
+    }));
     b.set('claim_id', built.link.claim_id);
     b.set('source_id', built.link.source_id);
     b.set('role', built.link.role);
@@ -334,7 +347,15 @@ export class Integrator {
     }));
     b.addEntity({ kind: 'claim', id: claim.claim_id, path: 'data/claims.json', field: 'sources', note: 'One entry would be added to this claim\'s sources array. Nothing else on the record changes.' });
 
-    b.set('proposal_id', this.#id('prop-attach'));
+    b.set('proposal_id', this.ids.mint('prop-attach', {
+      kind: 'attach_evidence',
+      entities: [
+        { kind: 'claim', id: claim.claim_id, path: 'data/claims.json' },
+        { kind: 'source', id: built.link.source_id, path: 'data/sources.json' },
+      ],
+      subject: claim.claim_id,
+      discriminator: verification.verification_id,
+    }));
     b.set('dataset', 'data/claims.json');
     b.set('record_kind', 'claim');
     b.set('record_id', claim.claim_id);
@@ -379,7 +400,12 @@ export class Integrator {
     b.addEvidence(verificationEvidence('ev-verification', verification, { simulated: this.simulated }));
     b.addEntity({ kind: 'source', id: null, path: 'data/sources.json', field: null, note: 'A source record for a document the bibliography does not carry.' });
 
-    b.set('proposal_id', this.#id('prop-source'));
+    b.set('proposal_id', this.ids.mint('prop-source', {
+      kind: 'create_source',
+      entities: [{ kind: 'source', id: null, path: 'data/sources.json' }],
+      subject: doc?.url ?? null,
+      discriminator: verification.verification_id,
+    }));
     b.set('dataset', 'data/sources.json');
     b.set('record_kind', 'source');
     b.set('record_id', null);
@@ -443,7 +469,12 @@ export class Integrator {
     }));
     b.addEntity({ kind: 'claim', id: null, path: 'data/claims.json', field: null, note: 'A claim record for a proposition no existing claim carries.' });
 
-    b.set('proposal_id', this.#id('prop-claim'));
+    b.set('proposal_id', this.ids.mint('prop-claim', {
+      kind: 'create_claim',
+      entities: [{ kind: 'claim', id: null, path: 'data/claims.json' }],
+      subject: verification.statement,
+      discriminator: verification.verification_id,
+    }));
     b.set('dataset', 'data/claims.json');
     b.set('record_kind', 'claim');
     b.set('record_id', null);
@@ -492,7 +523,10 @@ export class Integrator {
     const b = this.#builder('DataGap', span);
     for (const e of evidence) b.addEvidence(e);
     for (const e of entities) b.addEntity(e);
-    b.set('gap_id', this.#id('gap'));
+    /* `what` is composed from the finding, not written, so it is
+       part of what the gap IS. Two integrator gaps about the same
+       records for the same reason are one node. */
+    b.set('gap_id', this.ids.mint('gap', { kind: gap_kind, entities, subject: what }));
     b.set('gap_kind', gap_kind);
     b.set('absence_kind', absence_kind);
     b.set('what_is_missing', what);
@@ -819,7 +853,10 @@ export class Integrator {
 
     approvalOver({
       builder: b,
-      approval_id: this.#id('appr'),
+      approval_id: this.ids.mint('appr', {
+        kind: 'approval',
+        subject: proposals.map((p) => p.proposal_id).sort().join(' '),
+      }),
       proposal_ids: proposals.map((p) => p.proposal_id),
       tier,
       requested_of: this.requestedOf,

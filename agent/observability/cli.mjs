@@ -2,12 +2,13 @@
 /* ============================================================
    agent/observability/cli.mjs
 
-     node agent/observability/cli.mjs list
+     node agent/observability/cli.mjs list [--fail-on ok|degraded|failed|never]
      node agent/observability/cli.mjs show <trace-id>
      node agent/observability/cli.mjs chain [--file f] [--change c] [--trace t]
      node agent/observability/cli.mjs impact [--trace t] [--change c] [--graph]
      node agent/observability/cli.mjs depth  [--trace t] [--aside]
      node agent/observability/cli.mjs proposals [--trace t] [--refused]
+     node agent/observability/cli.mjs architecture [--trace t] [--aside]
      node agent/observability/cli.mjs validate
      node agent/observability/cli.mjs export <trace-id> [--provenance]
      node agent/observability/cli.mjs serve [--port 7801] [--open]
@@ -15,6 +16,23 @@
    Zero dependencies, like the four validators in tools/. `validate`
    exits 1 on a malformed store, so it can gate a commit the same
    way design-qa.mjs does.
+
+   EXIT CODES, and why they differ between `show` and `list`
+   (SESSION 13). `degraded` is derived by query.mjs for a root that
+   closed `ok` over a failed child; until SESSION 13 it reached
+   neither the summary nor the exit code, and a run whose entire
+   input was refused reported `✓ ok` and exited 0.
+
+     show <trace-id>   asks about ONE run, so it answers with that
+                       run: 0 ok · 2 degraded · 1 failed or running.
+     list              is the history of the store, which accumulates
+                       every run ever made. A failed run from March
+                       is not a statement about today, so it exits 0
+                       by default and prints the census. `--fail-on
+                       degraded` (exit 2) or `--fail-on failed`
+                       (exit 1) is an operator's decision, spelled
+                       the same way agent/scout/schedule/run.mjs
+                       already spells it.
    ============================================================ */
 
 import { listTraceFiles, readTrace, DEFAULT_RUN_DIR } from './sink.mjs';
@@ -35,6 +53,10 @@ const GLYPH = { ok: '✓', failed: '✗', degraded: '!', running: '·', cancelle
 const pad = (s, n) => String(s ?? '').padEnd(n).slice(0, n);
 const dur = (ms) => (ms == null ? '     —' : ms >= 1000 ? `${(ms / 1000).toFixed(1)}s`.padStart(6) : `${ms}ms`.padStart(6));
 
+const FAIL_ON = new Set(['ok', 'degraded', 'failed', 'never']);
+/** Rank, so `--fail-on degraded` catches `failed` too. */
+const SEVERITY = { ok: 0, skipped: 0, cancelled: 0, running: 1, degraded: 2, failed: 3, unreadable: 3 };
+
 function cmdList() {
   const runs = listRuns(DIR);
   if (!runs.length) {
@@ -45,6 +67,37 @@ function cmdList() {
   console.log(`  ${pad('status', 9)}${pad('trace id', 34)}${pad('agent', 14)}${pad('runs', 6)}${pad('dur', 8)}task`);
   for (const r of runs) {
     console.log(`  ${GLYPH[r.status] ?? '?'} ${pad(r.status, 9)}${pad(r.trace_id, 34)}${pad(r.agent, 14)}${pad(r.runs, 6)}${dur(r.latency_ms)}  ${r.simulated ? 'SIMULATED · ' : ''}${r.task ?? ''}`);
+  }
+
+  /* THE SUMMARY LINE. A count of what the statuses above add up to,
+     with `degraded` named rather than folded into `ok` — a run that
+     closed ok over a failed child is not a run that succeeded, and
+     a reader scanning fifteen rows should not have to work that out
+     one row at a time. */
+  const census = {};
+  for (const r of runs) census[r.status] = (census[r.status] ?? 0) + 1;
+  const order = ['failed', 'degraded', 'running', 'ok', 'skipped', 'cancelled', 'unreadable'];
+  const parts = order.filter((k) => census[k]).map((k) => `${census[k]} ${k}`);
+  for (const k of Object.keys(census)) if (!order.includes(k)) parts.push(`${census[k]} ${k}`);
+  console.log(`\n  ${runs.length} trace(s): ${parts.join(' · ')}`);
+
+  const failOn = String(flag('fail-on', 'never'));
+  if (!FAIL_ON.has(failOn)) {
+    console.error(`  unknown --fail-on "${failOn}". One of: ${[...FAIL_ON].join(', ')}`);
+    process.exitCode = 1;
+    return;
+  }
+  if (failOn === 'never') {
+    if (census.degraded || census.failed) {
+      console.log(`  This history is not a health check — a run that failed in March is not a statement about today.`);
+      console.log(`  "--fail-on degraded" exits 2 and "--fail-on failed" exits 1, where a caller wants one.`);
+    }
+    return;
+  }
+  const worst = runs.reduce((m, r) => Math.max(m, SEVERITY[r.status] ?? 0), 0);
+  if (worst >= (SEVERITY[failOn] ?? 99)) {
+    console.error(`\n  --fail-on ${failOn} is set and the store is worse than that.`);
+    process.exitCode = worst >= SEVERITY.failed ? 1 : 2;
   }
 }
 
@@ -84,7 +137,27 @@ function cmdShow(id) {
     console.log(`\n  OPEN HANDOFFS`);
     for (const h of open) console.log(`    → ${h.from_agent} → ${h.to_agent}: ${h.reason ?? ''}`);
   }
+  /* The chained runs: an edge whose payload names the trace that
+     took the records. This is the answer to "can this execution be
+     correlated with another agent's?" in the downstream direction;
+     `parent_run_id` on the receiving run is the same edge read the
+     other way. */
+  const chained = t.handoffs.filter((h) => h.downstream_trace_id);
+  if (chained.length) {
+    console.log(`\n  HANDED ON`);
+    for (const h of chained) {
+      console.log(`    → ${h.from_agent} → ${h.to_agent}: trace ${h.downstream_trace_id}${h.payload?.simulated ? ' — SIMULATED chain' : ''} (${h.artifact_ids?.length ?? 0} record(s))`);
+    }
+  }
   if (t.broken_lines.length) console.log(`\n  ${t.broken_lines.length} unparseable line(s)`);
+
+  /* ONE run, so the exit code is that run's answer. */
+  if (s.status === 'degraded') {
+    console.log(`\n  degraded — this run closed "ok" over at least one failed child span. Exit 2.`);
+    process.exitCode = 2;
+  } else if (s.status === 'failed' || s.status === 'running') {
+    process.exitCode = 1;
+  }
 }
 
 function cmdChain() {
@@ -225,6 +298,44 @@ function cmdProposals() {
   if (!found) console.log('no gap routing in the store. `node agent/proposals/data/cli.mjs --as-of <date>` writes one.');
 }
 
+/**
+ * What a Knowledge Architect run concluded about the information
+ * model.
+ *
+ * SESSION 13's brief asks for the agent's reasoning to be exposed
+ * here. IT PRINTS THE EIGHT ANSWERS FIRST, before the proposals,
+ * because a question answered "no" is the model working and a view
+ * that led with the defect count would report the model as nothing
+ * but its defects. What each lens EXAMINED travels with its answer,
+ * so "looked and found nothing" is never confusable with "did not
+ * look".
+ */
+function cmdArchitecture() {
+  const wantTrace = flag('trace');
+  const traces = typeof wantTrace === 'string' ? [wantTrace] : listRuns(DIR).map((r) => r.trace_id);
+  let found = 0;
+
+  for (const id of traces) {
+    const t = loadTrace(id, DIR);
+    if (!t?.architecture) continue;
+    const a = t.architecture;
+    found++;
+    console.log(`\n${a.trace_id} — ${a.answered_yes.length} of ${a.questions} question(s) answered yes, ${a.proposed} proposal(s), ${a.set_aside} set aside${a.simulated ? ' — SIMULATED' : ''}`);
+    console.log(`  as of ${a.as_of ?? '?'}   ${a.pending_approvals} approval(s) pending · ${a.merged ?? '?'} merged · ${a.applied ?? '?'} applied · ${a.schemas_changed ?? '?'} schema(s) changed · ${a.values_proposed ?? '?'} value(s) proposed`);
+    if (a.model) console.log(`  model    ${a.model.containers ?? '?'} container(s) · ${a.model.vocabularies ?? '?'} vocabular${a.model.vocabularies === 1 ? 'y' : 'ies'} · ${a.model.pages ?? '?'} page(s)`);
+    console.log(`  answered no: ${a.answered_no.length ? a.answered_no.map((q) => `q${q}`).join(', ') : 'every question found something'}`);
+    if (a.ordering) console.log(`  ranked by ${a.ordering.decision}`);
+    for (const l of a.lenses) {
+      console.log(`    q${l.question} ${pad(l.lens, 22)} ${String(l.answer ?? '?').toUpperCase().padEnd(4)} ${String(l.examined).padStart(4)} examined  ${String(l.reported).padStart(2)} reported  ${String(l.set_aside).padStart(2)} set aside`);
+      for (const s of l.subjects) console.log(`          + ${s}`);
+      for (const h of l.handoffs) console.log(`          → ${pad(h.to_agent, 20)} ${String(h.reason ?? '').slice(0, 90)}`);
+      if (flag('aside')) for (const x of l.not_reported) console.log(`          − ${pad(x.subject, 46)} ${String(x.why).slice(0, 90)}`);
+    }
+    console.log(a.gaps.length ? `  GAPS: ${a.gaps.join('; ')}` : '  no gaps: the census, the ordering decision, all eight answers, every set-aside reason and the "nothing merged" claim are on this trace');
+  }
+  if (!found) console.log('no architecture analysis in the store. `node agent/architect/cli.mjs --as-of <date>` writes one.');
+}
+
 function cmdValidate() {
   let records = 0, bad = 0, broken = 0;
   for (const f of listTraceFiles(DIR)) {
@@ -265,11 +376,12 @@ switch (cmd) {
   case 'impact': cmdImpact(); break;
   case 'depth': cmdDepth(); break;
   case 'proposals': cmdProposals(); break;
+  case 'architecture': cmdArchitecture(); break;
   case 'validate': cmdValidate(); break;
   case 'export': cmdExport(argv[1]); break;
   case 'summary': console.log(JSON.stringify(overview(DIR), null, 2)); break;
   case 'serve': serve({ port: Number(flag('port', 7801)), dir: DIR }); break;
   default:
-    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | validate | export <id> | summary | serve`);
+    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | architecture | validate | export <id> | summary | serve`);
     process.exit(1);
 }

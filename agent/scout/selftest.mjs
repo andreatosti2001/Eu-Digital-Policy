@@ -33,6 +33,7 @@ import { MemorySink } from '../observability/sink.mjs';
 import { deterministicClock, deterministicIds } from '../observability/ids.mjs';
 import { validateRecord as validateTraceRecord } from '../observability/schema.mjs';
 import { validate } from '../schemas/validate.mjs';
+import { contentId } from '../schemas/identity.mjs';
 import { AUTHORITY_CLASSES, SECONDARY_AUTHORITY } from '../schemas/types.mjs';
 
 import { Scout, SCOUT_AGENT, loadInstruments } from './scout.mjs';
@@ -365,4 +366,34 @@ test('the live transport is polite and identifies itself, and never disables TLS
   const src = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'transport.mjs'), 'utf8');
   assert.ok(!src.includes('rejectUnauthorized'), 'TLS verification is never turned off to make a fetch succeed');
   assert.ok(!src.includes('NODE_TLS_REJECT_UNAUTHORIZED'));
+});
+
+/* --------------------------------- node identity (SESSION 13) */
+
+test('a candidate id is the document it points at, not its position in the queue', async () => {
+  const a = await runMock();
+  const b = await runMock();
+  assert.deepEqual(
+    a.result.candidates.map((c) => c.candidate_id).sort(),
+    b.result.candidates.map((c) => c.candidate_id).sort(),
+  );
+  assert.deepEqual(a.result.gaps.map((g) => g.gap_id).sort(), b.result.gaps.map((g) => g.gap_id).sort());
+});
+
+test('a candidate id is recomputable from the record alone, with nothing to look up', async () => {
+  /* The rule the audit was emphatic about: no id store. Anyone
+     holding the record can derive its id again — which is what this
+     test does, from the fields the record carries and nothing
+     else. */
+  const { result } = await runMock();
+  const ids = result.candidates.map((c) => c.candidate_id);
+  assert.equal(new Set(ids).size, ids.length, 'two candidates share an id');
+  for (const c of result.candidates) {
+    const recomputed = contentId('cand', {
+      kind: 'source_candidate',
+      entities: c.affected_entities.map((e) => ({ kind: e.kind, id: e.id, path: e.path })),
+      subject: c.url,
+    });
+    assert.equal(c.candidate_id, recomputed, `${c.candidate_id} cannot be re-derived from its own record`);
+  }
 });

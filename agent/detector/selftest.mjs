@@ -999,3 +999,38 @@ test('nothing in the impact modules writes anything', () => {
     }
   }
 });
+
+/* --------------------------------- node identity (SESSION 13) */
+
+test('a change id is the transition itself, not the sighting of it', async () => {
+  /* The id is derived from the kind, the records, the attribute and
+     the two values — deliberately NOT from the verification that
+     surfaced it. Two documents reporting the same move are one
+     change, which is what makes `supersedes` and a change history
+     mean anything rather than being a list of sightings. */
+  const a = await runOn(FX.all);
+  const b = await runOn(FX.all);
+  assert.deepEqual(a.changes.map((c) => c.change_id).sort(), b.changes.map((c) => c.change_id).sort());
+  assert.deepEqual(a.assessments.map((x) => x.assessment_id).sort(), b.assessments.map((x) => x.assessment_id).sort());
+});
+
+test('detecting over a subset does not renumber the changes it shares with the whole', async () => {
+  const some = FX.all.slice(3);
+  const part = await runOn(some);
+  const key = (c) => `${c.change_kind}|${c.affected_entities.map((e) => e.id ?? '').sort().join(',')}|${c.attribute}|${c.old_value}|${c.new_value}`;
+  const whole = new Map(FULL.changes.map((c) => [key(c), c.change_id]));
+  let compared = 0;
+  for (const c of part.changes) {
+    if (!whole.has(key(c))) continue;
+    compared++;
+    assert.equal(c.change_id, whole.get(key(c)), `${c.change_kind} was renumbered by looking at fewer verifications`);
+  }
+  assert.ok(compared > 0, 'the subset shared no change with the whole, so this proved nothing');
+});
+
+test('every change and assessment id in a run is distinct', () => {
+  const ids = FULL.changes.map((c) => c.change_id);
+  assert.equal(new Set(ids).size, ids.length, 'two changes share an id');
+  const aids = FULL.assessments.map((a) => a.assessment_id);
+  assert.equal(new Set(aids).size, aids.length, 'two impact assessments share an id');
+});

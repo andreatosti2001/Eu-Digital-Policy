@@ -49,6 +49,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { isoOf } from '../observability/ids.mjs';
 import { emit } from '../schemas/gateway.mjs';
+import { IdMinter } from '../schemas/identity.mjs';
 import { authorityForUrl, authorityRank, endpointsByPriority, estimateTier } from './authorities.mjs';
 import { extractLinks, extractPublicationDate, extractPublisher, extractTitle, instrumentTerms, matchInstruments, textOf } from './extract.mjs';
 import { findDuplicates } from './dedupe.mjs';
@@ -110,11 +111,12 @@ export class Scout {
     this.terms = instrumentTerms(this.instruments);
     this.limits = { ...DEFAULT_SCOUT_LIMITS, ...limits };
     this.simulated = transport.simulated === true;
-    this.seq = 0;
+    /* Ids are derived from the finding's own content, never from a
+       counter — agent/schemas/identity.mjs says why. */
+    this.ids = new IdMinter();
   }
 
   #now() { return isoOf(this.tracer.clock.now()); }
-  #id(prefix) { return `${prefix}-${String(++this.seq).padStart(3, '0')}`; }
 
   #envelope(contract, span, over = {}) {
     return {
@@ -156,7 +158,16 @@ export class Scout {
   #gapForFailure(span, { url, res, endpoint, purpose }) {
     const blocked = res.blocked_by === 'egress_policy';
     const gap = this.#envelope('DataGap', span, {
-      gap_id: this.#id('gap'),
+      /* The same URL, unread for the same purpose, is the same gap
+         on every run — which is what lets a reader see that a
+         retrieval has been failing for six weeks rather than see
+         six weeks of new gaps. */
+      gap_id: this.ids.mint('gap', {
+        kind: 'retrieval_blocked',
+        entities: [{ kind: 'source', id: endpoint?.id ?? null, path: null }],
+        subject: url,
+        discriminator: purpose,
+      }),
       gap_kind: 'retrieval_blocked',
       absence_kind: 'null_not_researched',
       what_is_missing: `The document at ${url} has not been read. Retrieval was attempted and did not succeed.`,
@@ -300,7 +311,13 @@ export class Scout {
     });
 
     return this.#envelope('SourceCandidate', span, {
-      candidate_id: this.#id('cand'),
+      /* A candidate IS a URL read against the instruments it
+         mentions. Two runs over the same page produce one node. */
+      candidate_id: this.ids.mint('cand', {
+        kind: 'source_candidate',
+        entities: matches.map((m) => ({ kind: 'instrument', id: m.instrument_id, path: 'data/instruments.json' })),
+        subject: url,
+      }),
       url,
       locator: null,
       title: title?.value ?? null,
@@ -332,7 +349,7 @@ export class Scout {
 
   #observe(span, { subject, summary, data, confidence, risk, facts = [], unresolved = [] }) {
     const rec = this.#envelope('AgentObservation', span, {
-      observation_id: this.#id('obs'),
+      observation_id: this.ids.mint('obs', { kind: 'observation', subject, discriminator: summary }),
       subject,
       summary,
       data,

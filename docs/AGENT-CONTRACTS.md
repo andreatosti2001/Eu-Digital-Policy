@@ -195,6 +195,53 @@ receives it can validate it without being told what it is. That is what makes
 "no agent may bypass these contracts" checkable rather than aspirational — an
 unrecognised contract name is refused, not skipped.
 
+### The id, and why it is derived rather than counted
+
+Every contract names one `id_field` — `gap_id`, `candidate_id`,
+`verification_id`, `change_id` and the rest — and `F.id` fixes its shape:
+`^[a-z0-9][a-z0-9._:/-]{2,119}$`, because ids travel through filenames, URLs
+and log lines.
+
+Until SESSION 13 every agent minted one from a per-run counter,
+`prefix-NNN`. Two runs over an unchanged corpus did reproduce the same ids,
+which is why it survived seven sessions — but the number is a **queue
+position**, not an identity. Measured against the real corpus: removing one
+unrelated instrument from `data/` renumbered **37 of the 55** depth findings
+that were otherwise untouched, because every id after the deleted one shifted
+by the number of findings that vanished before it. Nothing downstream could
+tell "this is the finding I saw last week" from "this is the finding that
+happens to be fourteenth this time" — and a knowledge graph is a structure of
+stable nodes.
+
+`agent/schemas/identity.mjs` derives the id from what the record **is**: its
+kind, the full sorted set of entities it is about, its subject, and where
+those three are genuinely not enough, a named discriminator. The entity set
+is the whole set — the corpus contains two `missing_instrument_relationship`
+findings that share `ai-act` as a first entity and differ in the second, so
+the first-entity shorthand merges two nodes into one. `field` and `note` are
+excluded: they are the finding's *description* of a record rather than which
+record it is, and rewording a note must not mint a new node.
+
+**There is no id store, and there must never be one.** A table mapping an old
+id to a new one is the second home this architecture exists to prevent. The
+id is recomputed from content every time, by anyone, in any process, with
+nothing to load — the same rule the site's own data follows. `IdMinter` is
+not that store: it never supplies an id and is never consulted before minting
+one; it remembers, for the length of a single run, which content produced
+which id, so two *different* findings landing on one id fail loudly instead
+of quietly becoming one node. Delete it and every id is unchanged.
+
+The same reasoning applies to the observability layer's cross-trace
+`handoff_id` (`agent/observability/chain.mjs`), for a concrete reason: the
+default `ho-<span_id>-<n>` counts within one span, and two downstream agents
+reading one upstream trace each attach with a fresh counter, so both minted
+`ho-<same span>-1` and one trace carried two different edges under one id.
+
+It does **not** apply to `trace_id` and `span_id`, which are a separate and
+already-correct W3C-Trace-Context-shaped system in
+`agent/observability/ids.mjs`. Those name an execution, not a finding, and
+two runs of the same analysis are two executions.
+
 ### The twelve, on every substantive proposal
 
 `proposal_id · agent · created_at · affected_entities · reason · evidence ·
@@ -386,6 +433,7 @@ agent/schemas/contracts/*.mjs   the eighteen, one per file
 agent/schemas/registry.mjs      the registry a record's `contract` field resolves against
 agent/schemas/validate.mjs      the gate: identity, shape, epistemic, governance
 agent/schemas/gateway.mjs       emit / receive / handoff, and the trace pointer
+agent/schemas/identity.mjs      a record's id, derived from its own content. No store.
 agent/schemas/export.mjs        JSON Schema, derived on demand
 agent/schemas/fixtures.mjs      one simulated example per contract
 agent/schemas/cli.mjs           list · show · validate · export · fixture · check
@@ -395,7 +443,7 @@ agent/schemas/selftest.mjs      the suite
 ## Checks
 
 ```
-node --test agent/schemas/selftest.mjs     # 101 tests
+node --test agent/schemas/selftest.mjs     # the suite
 node agent/schemas/cli.mjs check           # every contract satisfiable by its fixture
 node agent/schemas/cli.mjs validate <file> # exits 1 on an invalid record
 ```
@@ -410,7 +458,10 @@ unchanged from the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
    the Legal Verifier (SESSION 07), the verification integrator (SESSION 08) and
    the Regulatory Change Detector (SESSION 09) — and each one found the shape the
    contracts were missing, exactly as this note predicted. Every amendment above
-   came from a real agent meeting them.
+   came from a real agent meeting them. **Seven now do**, with the Data Depth
+   Agent (SESSION 11), the gap router (SESSION 12) and the Knowledge Architect
+   (SESSION 13); the last two added no contract, which is the more useful
+   result — the burden they carry was already somebody's.
 2. **The epistemic requirement is enforced on top-level fields only.** An
    epistemic annotation deeper inside a record — on an evidence reference's own
    title, say — describes that evidence rather than what the record asserts, and

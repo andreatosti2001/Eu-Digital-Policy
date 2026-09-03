@@ -35,6 +35,7 @@ import { validate, assertValid, validateBatch } from './validate.mjs';
 import { FIXTURES, simEvidence } from './fixtures.mjs';
 import { toJsonSchema } from './export.mjs';
 import { emit, handoff, receive, sha256Of, canonicalJson } from './gateway.mjs';
+import { contentId, contentKey, entityKeys, IdMinter } from './identity.mjs';
 import { ENVELOPE_FIELDS, PROPOSAL_FIELDS } from './common.mjs';
 import { EPISTEMIC_STATUS, FIELD_EPISTEMICS, taxonomyIds, RISKS, APPROVAL_STATES, PROVENANCE_ROLES, LEGAL_STATUSES, LEGAL_STATUS_TAXONOMY, LEGAL_ENTITY_KINDS, REGULATORY_CHANGE_KINDS, DEPTH_GAP_KINDS, DEPTH_IMPACT_LEVELS, DATA_OPERATION_KINDS, GAP_ROUTES, GAP_ROUTE_RECIPIENT, PROPOSING_ROUTES } from './types.mjs';
 import * as obsSchema from '../observability/schema.mjs';
@@ -1459,4 +1460,84 @@ test('KnowledgeGap: a home is inside data/, and nowhere else', () => {
   const r = fx('KnowledgeGap');
   r.recommended_data_location = { ...r.recommended_data_location, dataset: 'index.html' };
   refuses(r, 'is not one of');
+});
+
+/* ------------------------------------- record identity (SESSION 13) */
+
+/** An id derived from a finding's own content, not from where the
+ *  finding happened to sit in a queue. The defect these hold down:
+ *  every agent minted ids from a per-run counter, so removing one
+ *  unrelated instrument from data/ renumbered 37 of the 55 depth
+ *  findings that were otherwise untouched. */
+
+test('identity: the same content mints the same id, in any process, with nothing to load', () => {
+  const parts = { kind: 'missing_competence', entities: [{ kind: 'instrument', id: 'dora', path: 'data/instruments.json' }], subject: 'dora' };
+  assert.equal(contentId('kg-missing-competence', parts), contentId('kg-missing-competence', { ...parts }));
+});
+
+test('identity: the id satisfies F.id, because ids travel through filenames and URLs', () => {
+  const pattern = new RegExp(getContract('KnowledgeGap').fields.gap_id.pattern);
+  for (const prefix of ['kg-missing-competence', 'cand', 'ver', 'rchg', 'imp', 'prop-annotate', 'dg-from-depth', 'appr', 'link', 'gap']) {
+    const id = contentId(prefix, { kind: 'k', subject: 's' });
+    assert.match(id, pattern, `${id} is not a shape this repository's ids may take`);
+  }
+});
+
+test('identity: the WHOLE entity set is the key, not the first entity', () => {
+  /* The audit measured 57 KnowledgeGap records against only 56
+     distinct (gap_kind, first entity) keys — missing_instrument_
+     relationship about ai-act appears twice, once paired with one
+     instrument and once with another. Keying on the first entity
+     alone would merge two findings into one node. */
+  const a = contentId('kg', { kind: 'missing_instrument_relationship', entities: [{ kind: 'instrument', id: 'ai-act' }, { kind: 'instrument', id: 'gdpr' }] });
+  const b = contentId('kg', { kind: 'missing_instrument_relationship', entities: [{ kind: 'instrument', id: 'ai-act' }, { kind: 'instrument', id: 'dsa' }] });
+  assert.notEqual(a, b, 'two findings sharing a first entity collapsed into one id');
+});
+
+test('identity: the entity set is a SET — order and repetition are not identity', () => {
+  const a = contentId('kg', { kind: 'k', entities: [{ id: 'a' }, { id: 'b' }] });
+  const b = contentId('kg', { kind: 'k', entities: [{ id: 'b' }, { id: 'a' }, { id: 'b' }] });
+  assert.equal(a, b);
+});
+
+test('identity: rewording a note does not mint a new node', () => {
+  /* `field` and `note` are the finding's description of an entity,
+     not which record it is. A knowledge graph whose node ids move
+     when prose is edited is not a graph of stable nodes. */
+  const a = contentId('kg', { kind: 'k', entities: [{ kind: 'claim', id: 'clm-x', path: 'data/claims.json', field: 'sources', note: 'one wording' }] });
+  const b = contentId('kg', { kind: 'k', entities: [{ kind: 'claim', id: 'clm-x', path: 'data/claims.json', field: 'note', note: 'another wording entirely' }] });
+  assert.equal(a, b);
+});
+
+test('identity: a subject cannot impersonate a separator', () => {
+  /* The key is canonical JSON rather than a delimiter-joined
+     string, so a value containing the delimiter cannot forge the
+     key of a different finding. */
+  const a = contentId('kg', { kind: 'k', subject: 'a', discriminator: 'b' });
+  const b = contentId('kg', { kind: 'k', subject: 'a","b', discriminator: null });
+  assert.notEqual(a, b);
+});
+
+test('identity: an id derived from no kind is derived from nothing, and is refused', () => {
+  assert.throws(() => contentKey({ kind: null, subject: 's' }), /needs a kind/);
+  assert.throws(() => contentId('', { kind: 'k' }), /prefix/);
+});
+
+test('identity: the minter refuses a collision instead of merging two findings', () => {
+  const m = new IdMinter();
+  const parts = { kind: 'k', subject: 's' };
+  assert.equal(m.mint('gap', parts), m.mint('gap', { ...parts }), 'the same finding twice is one node, not two');
+  assert.equal(m.size, 1);
+  /* Force the contradiction the guard exists for. */
+  const forced = new IdMinter();
+  forced.seen.set(contentId('gap', parts), 'a different content key entirely');
+  assert.throws(() => forced.mint('gap', parts), /id collision/);
+});
+
+test('identity: the minter is not an id store — deleting it changes no id', () => {
+  /* The rule the audit was emphatic about: an id must be
+     reproducible from content, never looked up. `contentId` takes
+     no state and is what every mint call returns. */
+  const parts = { kind: 'k', entities: [{ id: 'x' }], subject: 's' };
+  assert.equal(new IdMinter().mint('gap', parts), contentId('gap', parts));
 });

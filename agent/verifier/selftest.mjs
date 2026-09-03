@@ -620,3 +620,40 @@ test('a run limit that drops candidates says so rather than looking complete', a
   assert.ok(run.epistemic.unresolved.some((u) => /did not reach/.test(u.question)));
   assert.ok(result.records.length < 23);
 });
+
+/* --------------------------------- node identity (SESSION 13) */
+
+test('a verification id is derived from what was checked, not from a counter', async () => {
+  /* Two runs over the same candidates and the same documents are
+     the same verifications, and carry the same ids. Under the
+     per-run counter this was true only by accident of ordering:
+     verify a subset and every id shifted. */
+  const a = await runMock();
+  const b = await runMock();
+  assert.deepEqual(
+    a.result.records.map((r) => r.verification_id).sort(),
+    b.result.records.map((r) => r.verification_id).sort(),
+  );
+});
+
+test('verifying a subset does not renumber the verifications it shares with the whole', async () => {
+  const whole = await runMock();
+  const some = ALL_CANDIDATES.slice(2);
+  const part = await runMock(some);
+
+  const key = (r) => `${r.statement}|${r.affected_entities.map((e) => e.id ?? '').sort().join(',')}`;
+  const first = new Map(whole.result.records.map((r) => [key(r), r.verification_id]));
+  let compared = 0;
+  for (const r of part.result.records) {
+    if (!first.has(key(r))) continue;
+    compared++;
+    assert.equal(r.verification_id, first.get(key(r)), `${key(r).slice(0, 60)} was renumbered by verifying fewer candidates`);
+  }
+  assert.ok(compared > 0, 'the subset shared no verification with the whole, so this proved nothing');
+});
+
+test('every verification id in a run is distinct', async () => {
+  const { result } = await runMock();
+  const ids = result.records.map((r) => r.verification_id);
+  assert.equal(new Set(ids).size, ids.length, 'two verifications share an id');
+});

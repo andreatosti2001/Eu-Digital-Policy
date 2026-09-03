@@ -22,6 +22,7 @@
 
 import { Tracer } from '../observability/tracer.mjs';
 import { JsonlSink } from '../observability/sink.mjs';
+import { upstreamOf, recordHandoff } from '../observability/chain.mjs';
 import { Verifier, VERIFIER_AGENT } from './verifier.mjs';
 import { HttpTransport, MockTransport } from '../scout/transport.mjs';
 import { RecordStore, MemoryRecordStore, readRecords } from '../scout/store.mjs';
@@ -59,7 +60,17 @@ const store = dry
   ? new MemoryRecordStore({ allowSimulated: !live })
   : new RecordStore({ allowSimulated: !live });
 
-const tracer = new Tracer({ service: 'eu-digital-policy', sink: new JsonlSink(), attributes: { agent: VERIFIER_AGENT } });
+/* The run that produced these candidates, read off the candidates
+   themselves. Passed to the tracer so every span this run opens
+   carries it and the AgentRun's parent_run_id is populated from one
+   place rather than copied into a second. */
+const upstream = live ? upstreamOf(candidates) : null;
+const tracer = new Tracer({
+  service: 'eu-digital-policy',
+  sink: new JsonlSink(),
+  attributes: { agent: VERIFIER_AGENT },
+  parent_run_id: upstream && !upstream.ambiguous ? upstream.run_id : null,
+});
 
 out();
 out(live
@@ -95,6 +106,23 @@ try {
     for (const p of r.precision_differences) out(`    ${p.a.instrument_id} ${p.attribute}: "${p.a.value}" vs "${p.b.value}" — a difference of precision, not of substance`);
   }
 
+  /* THE EDGE, on the upstream trace. Recording it here rather than
+     before the run means it names the trace this run actually
+     produced, so the two runs are navigable in both directions. */
+  if (upstream) {
+    const edge = recordHandoff({
+      upstream,
+      to_agent: VERIFIER_AGENT,
+      records: candidates,
+      downstream_trace_id: r.trace_id,
+      reason: `Checking what ${candidates.length} candidate document(s) actually establish.`,
+    });
+    out();
+    out(edge.emitted
+      ? `  CHAIN  ${upstream.trace_id} → ${r.trace_id}. parent_run_id ${upstream.run_id}; handoff ${edge.handoff_id} recorded on the upstream trace.`
+      : `  CHAIN  no handoff recorded on the upstream trace — ${edge.why}`);
+  }
+
   out();
   out(`  ${r.records.length} verification(s) · ${r.propositions_checked} proposition(s) checked · ${r.set_aside} sentence(s) set aside as immaterial`);
   out(`  by verdict:  ${Object.entries(r.by_verdict).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
@@ -104,6 +132,18 @@ try {
   out();
   out('  Nothing was published, no canonical fact was changed, and data/ was not written to.');
   out('  Every unresolved and conflict outcome is a result, not a failure.');
+
+  /* TOTAL INTAKE REFUSAL IS NOT A SUCCESSFUL RUN. Every candidate
+     refused and nothing checked is a run that produced nothing from
+     its input, and it exited 0 until SESSION 13. An unresolved
+     verdict is a result and still exits 0; this is the different
+     case where there was no verdict to reach. */
+  if (candidates.length && r.refused.length === candidates.length) {
+    out();
+    out(`  ALL ${candidates.length} candidate(s) were refused at intake and nothing was checked. Exit 2.`);
+    out('  The refusals above are the reason. This is the intake gate working, and it is not a run that succeeded.');
+    process.exitCode = 2;
+  }
   out();
 } catch (err) {
   out(`  the run failed: ${err.message}`);

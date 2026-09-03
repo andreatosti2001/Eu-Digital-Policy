@@ -19,7 +19,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -28,8 +28,12 @@ import { validateRecord } from './schema.mjs';
 import { Tracer } from './tracer.mjs';
 import { MemorySink, JsonlSink } from './sink.mjs';
 import { deterministicIds, deterministicClock } from './ids.mjs';
-import { buildTree, loadTrace, traceChain, deriveStatus, collectRuns, summarise, impactState, depthState, proposalState } from './query.mjs';
+import { buildTree, loadTrace, traceChain, deriveStatus, collectRuns, summarise, impactState, depthState, proposalState, handoffState } from './query.mjs';
 import { toOtlp, toProvenanceLedger } from './otlp.mjs';
+import { upstreamOf, recordHandoff } from './chain.mjs';
+import { readTrace } from './sink.mjs';
+import { receive } from '../schemas/gateway.mjs';
+import { FIXTURES } from '../schemas/fixtures.mjs';
 import { runDemo } from './demo/workflow.mjs';
 
 const fixture = () => new Tracer({
@@ -569,4 +573,198 @@ test('the handoffs to other agents are carried, so a refusal is not a dead end',
 
 test('a trace with no routing reports nothing rather than an empty routing', () => {
   assert.equal(proposalState(depthTrace(), 'trace-under-test'), null);
+});
+
+/* ------------------- honest run status and cross-agent linkage (SESSION 13) */
+
+test('a root that closed ok over a failed TOOL span reads as degraded', () => {
+  /* The exact shape the audit found and the read model missed: a
+     Verifier run whose six candidates were all refused closed six
+     `verifier.intake` spans failed, wrote six error records — and
+     reported ok, because deriveStatus only looked at run spans and
+     an intake span is a tool span. */
+  const t = fixture();
+  const run = t.startRun({ kind: 'agent', agent: 'legal-verifier', task: 'check six candidates' });
+  for (let i = 0; i < 6; i++) {
+    const intake = run.startTool({ name: 'verifier.intake' });
+    intake.error(new Error('this record is marked simulated: it is a fixture and is never actionable'));
+    intake.end({ status: 'failed' });
+  }
+  run.end({ status: 'ok' });
+
+  const root = buildTree(t.sink.records).roots[0];
+  assert.equal(deriveStatus(root, collectRuns(root)), 'degraded');
+  assert.equal(summarise(root, 'trace-under-test').status, 'degraded');
+});
+
+test('a clean run is still ok — degraded is not a synonym for "had a tool call"', () => {
+  const t = fixture();
+  const run = t.startRun({ kind: 'agent', agent: 'data-depth', task: 'thirteen detectors' });
+  const tool = run.startTool({ name: 'depth.missing_provision' });
+  tool.end({ status: 'ok' });
+  run.end({ status: 'ok' });
+  const root = buildTree(t.sink.records).roots[0];
+  assert.equal(deriveStatus(root, collectRuns(root)), 'ok');
+});
+
+test('a failed root is failed, not degraded — the ladder keeps its order', () => {
+  const t = fixture();
+  const run = t.startRun({ kind: 'agent', agent: 'source-scout', task: 'poll' });
+  const tool = run.startTool({ name: 'scout.fetch' });
+  tool.end({ status: 'failed' });
+  run.end({ status: 'failed' });
+  const root = buildTree(t.sink.records).roots[0];
+  assert.equal(deriveStatus(root, collectRuns(root)), 'failed');
+});
+
+test('attaching to a stored run appends an event and opens no second span', () => {
+  /* `attachToRun` is how a later process records, on the UPSTREAM
+     trace, that a downstream agent took its records. A second
+     span.start for a span that already exists would be a second
+     home for the same fact. */
+  const t = fixture();
+  const run = t.startRun({ kind: 'agent', agent: 'source-scout', task: 'discover' });
+  run.end({ status: 'ok' });
+  const startsBefore = t.sink.records.filter((r) => r.type === 'span.start').length;
+
+  const attached = t.attachToRun({ trace_id: run.trace_id, run_id: run.span_id, agent: 'source-scout' });
+  attached.handoff({ to_agent: 'legal-verifier', artifact_ids: ['cand-abc'], payload: { downstream_trace_id: 'f'.repeat(32) } });
+  attached.end({ status: 'failed' });
+
+  assert.equal(t.sink.records.filter((r) => r.type === 'span.start').length, startsBefore, 'attaching opened a second span');
+  assert.equal(t.sink.records.filter((r) => r.type === 'span.end').length, 1, 'attaching closed somebody else\'s span');
+  const ho = t.sink.records.filter((r) => r.type === 'handoff');
+  assert.equal(ho.length, 1);
+  assert.equal(ho[0].span_id, run.span_id, 'the event did not land on the run it names');
+});
+
+test('a cross-trace handoff is accepted, not left forever open', () => {
+  /* `accepted` used to ask "did an agent of that name start in THIS
+     trace?", which answers no for a run that started in another
+     one — so every chained run would show a permanently open
+     handoff, and a panel that is always warning is a panel nobody
+     reads. The payload naming the downstream trace is the receipt. */
+  const t = fixture();
+  const run = t.startRun({ kind: 'agent', agent: 'source-scout', task: 'discover' });
+  run.handoff({ to_agent: 'legal-verifier', artifact_ids: ['cand-abc'], payload: { downstream_trace_id: 'a'.repeat(32) } });
+  run.handoff({ to_agent: 'nobody-yet', artifact_ids: ['cand-def'] });
+  run.end({ status: 'ok' });
+
+  const trace = { handoffs: handoffState(buildTree(t.sink.records).roots[0]) };
+  const chained = trace.handoffs.find((h) => h.to_agent === 'legal-verifier');
+  assert.equal(chained.accepted, true, 'a handoff whose receipt names the downstream trace is not open');
+  assert.equal(chained.downstream_trace_id, 'a'.repeat(32));
+  const queued = trace.handoffs.find((h) => h.to_agent === 'nobody-yet');
+  assert.equal(queued.accepted, false, 'a handoff nobody took must still read as a queue entry');
+  assert.equal(queued.downstream_trace_id, null);
+});
+
+/* ------------------------------------------- the chain (SESSION 13) */
+
+/** A stored upstream trace, in a throwaway directory, plus the
+ *  contract records it produced. Real records from the schema
+ *  fixtures, not a hand-shaped imitation of one. */
+let upstreamSeed = 7;
+function storedUpstream() {
+  const dir = mkdtempSync(join(tmpdir(), 'eudp-chain-'));
+  /* A fresh seed per call: two runs that shared a trace id would
+     not be two runs. */
+  const t = new Tracer({ sink: new JsonlSink({ dir }), ids: deterministicIds(++upstreamSeed), clock: deterministicClock('2026-01-01T00:00:00.000Z', 100) });
+  const run = t.startRun({ kind: 'agent', agent: 'source-scout', task: 'discover' });
+  const records = [FIXTURES.SourceCandidate(), FIXTURES.DataGap()].map((r) => ({
+    ...r,
+    trace_ref: { trace_id: run.trace_id, span_id: run.span_id, run_id: run.span_id },
+    agent: 'source-scout',
+  }));
+  run.end({ status: 'ok' });
+  return { dir, trace_id: run.trace_id, run_id: run.span_id, records };
+}
+
+test('the upstream run is read off the records, not guessed', () => {
+  const { trace_id, run_id, records } = storedUpstream();
+  const up = upstreamOf(records);
+  assert.equal(up.trace_id, trace_id);
+  assert.equal(up.run_id, run_id);
+  assert.equal(up.agent, 'source-scout');
+  assert.equal(up.simulated, true, 'every fixture is simulated, and a chain of fixtures is recorded as one');
+  assert.equal(upstreamOf([]), null, 'records with no trace reference name no upstream run');
+});
+
+test('records from two different runs are reported as ambiguous rather than resolved by picking one', () => {
+  const a = storedUpstream();
+  const b = storedUpstream();
+  const up = upstreamOf([...a.records, ...b.records]);
+  assert.equal(up.ambiguous, true);
+  assert.match(up.why, /different runs/);
+});
+
+test('the handoff lands on the upstream trace and names the downstream one', () => {
+  const { dir, trace_id, run_id, records } = storedUpstream();
+  const downstream = 'd'.repeat(32);
+  const edge = recordHandoff({ upstream: upstreamOf(records), to_agent: 'legal-verifier', records, downstream_trace_id: downstream, reason: 'checking what they establish', dir });
+
+  assert.equal(edge.emitted, true, edge.why);
+  const stored = readTrace(trace_id, dir).records.filter((r) => r.type === 'handoff');
+  assert.equal(stored.length, 1);
+  assert.equal(stored[0].span_id, run_id, 'the edge did not land on the upstream run');
+  assert.equal(stored[0].from_agent, 'source-scout');
+  assert.equal(stored[0].to_agent, 'legal-verifier');
+  assert.equal(stored[0].payload.downstream_trace_id, downstream);
+  assert.equal(stored[0].payload.simulated, true);
+
+  /* And no second copy of what the upstream run already emitted. */
+  assert.equal(readTrace(trace_id, dir).records.filter((r) => r.type === 'artifact').length, 0,
+    'the edge re-emitted artifact pointers onto a trace that already carries them');
+});
+
+test('a missing upstream trace is reported, not thrown, and writes no orphan', () => {
+  const { records } = storedUpstream();
+  const empty = mkdtempSync(join(tmpdir(), 'eudp-chain-empty-'));
+  const edge = recordHandoff({ upstream: upstreamOf(records), to_agent: 'legal-verifier', records, downstream_trace_id: 'e'.repeat(32), dir: empty });
+  assert.equal(edge.emitted, false);
+  assert.match(edge.why, /no trace file/);
+  assert.equal(readdirSync(empty).length, 0, 'an edge was written onto a trace that does not exist');
+});
+
+test('the chain does not weaken the refusal that makes a fixture never-actionable', () => {
+  /* Recording that records were READ is not a statement that they
+     may be ACTED ON. The intake gate is unchanged and still refuses
+     every one of them. */
+  const { dir, records } = storedUpstream();
+  const edge = recordHandoff({ upstream: upstreamOf(records), to_agent: 'legal-verifier', records, downstream_trace_id: 'f'.repeat(32), dir });
+  assert.equal(edge.emitted, true);
+  for (const r of records) {
+    assert.throws(() => receive(r, { allowSimulated: false }), /simulated/,
+      'a record became actionable because a handoff edge was recorded for it');
+  }
+});
+
+test('a record that does not satisfy its contract is not handed on', () => {
+  const { dir, records } = storedUpstream();
+  const broken = [...records.slice(0, 1), { ...records[1], state: 'nope' }];
+  const edge = recordHandoff({ upstream: upstreamOf(records), to_agent: 'legal-verifier', records: broken, downstream_trace_id: 'a'.repeat(32), dir });
+  assert.equal(edge.emitted, false);
+  assert.match(edge.why, /do not satisfy their contract/);
+});
+
+test('two downstream runs reading the same upstream trace do not share a handoff id', () => {
+  /* `Span.handoff()` defaults to `ho-<span_id>-<n>` off a counter
+     the span holds. That is right within one run and wrong across
+     processes: an attached span starts its counter at zero, so the
+     Integrator and the Detector both reading one Verifier trace
+     each minted `ho-<same span>-1` and the trace carried two
+     different edges under one id. */
+  const { dir, trace_id, records } = storedUpstream();
+  const up = upstreamOf(records);
+  const a = recordHandoff({ upstream: up, to_agent: 'verification-integrator', records, downstream_trace_id: 'a'.repeat(32), dir });
+  const b = recordHandoff({ upstream: up, to_agent: 'regulatory-change-detector', records, downstream_trace_id: 'b'.repeat(32), dir });
+  assert.equal(a.emitted && b.emitted, true);
+  assert.notEqual(a.handoff_id, b.handoff_id);
+
+  const stored = readTrace(trace_id, dir).records.filter((r) => r.type === 'handoff');
+  assert.equal(new Set(stored.map((h) => h.handoff_id)).size, stored.length, 'two edges on one trace share an id');
+
+  /* And the same downstream run recorded twice is the same edge. */
+  const again = recordHandoff({ upstream: up, to_agent: 'verification-integrator', records, downstream_trace_id: 'a'.repeat(32), dir });
+  assert.equal(again.handoff_id, a.handoff_id);
 });

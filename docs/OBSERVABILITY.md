@@ -126,6 +126,77 @@ ok but something under it failed. A root reporting ok over a failed child is
 the kind of green that hides a defect; a whole trace reported failed because
 one retryable poller died is the kind of red nobody reads twice.
 
+**SESSION 13 fixed the half of this that was not true.** `degraded` was
+defined, derived and documented, and the derivation walked only the *run*
+spans. The case a SESSION 12 audit found went straight through it: a Verifier
+run whose six candidates were all refused closed six `verifier.intake` spans
+`failed` and wrote six `error` records, and reported `✓ ok` — because an
+intake span is a **tool** span. `deriveStatus()` now walks every span under
+the root, so a root that closed ok over a failed child of any kind reads as
+`degraded`.
+
+It also reaches a process now, which it did not before:
+
+| where | behaviour |
+|---|---|
+| `cli.mjs show <trace>` | one run, so its own answer: **0** ok · **2** degraded · **1** failed or still running |
+| `cli.mjs list` | the store's history, which accumulates every run ever made. Prints a census line naming `degraded` separately, and exits 0 — a run that failed in March is not a statement about today. `--fail-on degraded` (exit 2) or `--fail-on failed` (exit 1) is an operator's decision, spelled as `agent/scout/schedule/run.mjs` already spells it |
+| the agent CLIs | **total intake refusal exits 2**. Every input record refused and nothing produced from them is not a successful run. An unresolved verdict, a conflict, a gap and an unclassified transition are results and still exit 0 |
+
+`degraded` remains **derived and never stored**: `AgentRun.forbidden` bans it
+by name, because a stored copy could not know about a child that failed after
+the record was written.
+
+### Correlating two agents' runs
+
+Two questions, two homes, and they are not the same fact:
+
+| question | where the answer lives |
+|---|---|
+| what run caused this one? | `parent_run_id` on the downstream run's spans and its `AgentRun` |
+| where did this run's output go? | a `handoff` event on the **upstream** run, whose `payload.downstream_trace_id` names the trace that took it |
+
+`Span.handoff()` and `gateway.handoff()` have been correct since SESSION 02
+and, until SESSION 13, no real CLI called either: chaining a real Scout trace
+into a real Verifier run produced `parent_run_id: null`, `handed_off_to: []`
+and no reference at all to the trace it had just read. `chain.mjs` is what the
+five chained CLIs now call.
+
+- `upstreamOf(records)` reads the producing run **off the records**, from
+  their own `trace_ref`. Records from two different runs are reported as
+  ambiguous rather than resolved by picking one.
+- The CLI passes that run to `new Tracer({ parent_run_id })`, so every span
+  the run opens carries it and the `AgentRun` field is populated from one
+  place rather than copied into a second.
+- `recordHandoff(...)` appends **one** `handoff` event to the upstream run,
+  using `Tracer#attachToRun` — which emits no `span.start` and whose `end()`
+  is a no-op, because that span was opened and closed by somebody else and a
+  second start would be a second home for one fact.
+
+Three things it deliberately does not do. It does not call
+`gateway.handoff()`, which re-emits an artifact pointer per record: right when
+the records are new to a trace, wrong here, where the upstream run already
+emitted every one. It does not make anything actionable — a `simulated`
+record stays never-actionable, the downstream intake refuses it unchanged, and
+the edge carries `simulated: true` so a chain of fixtures cannot be misread as
+a chain of documents. And it writes nothing when the upstream trace file is
+gone: it reports why, rather than leaving an orphan event on a trace that does
+not exist.
+
+`handoffState()` reads a cross-trace edge as **accepted**. Its old question —
+"did an agent of that name start in this trace?" — answers no for a run that
+started in another one, so every chained run would have shown a permanently
+open handoff, and a queue panel that always warns is a panel nobody reads. A
+payload naming the downstream trace is the receipt; without one, the old
+question is still the right one.
+
+**`AgentRun.handed_off_to` is still empty on a chained run, and that is not a
+bug this session left unfixed.** A run closes before anything downstream
+exists, so it cannot know at close time who will later take its records.
+Back-filling the stored field would mean rewriting a closed record — the
+second home this architecture exists to prevent. The durable answer is the
+handoff event on the trace, derived by `handoffState()` at read time.
+
 ---
 
 ## Provenance
@@ -322,6 +393,43 @@ rail counts the gaps that could **not** become a proposal — not the ones that
 could, because a tile showing only what was authored would report the work as
 more complete than it is.
 
+## Knowledge architecture — the eight answers, exposed
+
+SESSION 13's Knowledge Architect asks eight questions of the information model
+and its brief requires the **reasoning** to be instrumented, not only the
+output. So the interesting object in `architectureState()` is not the proposal
+count: it is **the eight answers**, each one an observation of its own, carrying
+the answer as a word and what the lens examined beside it. A question answered
+"no" is the model working, and a run that could not say which of the eight it
+answered "no" to would have hidden its own coverage behind its own output.
+
+The architect writes onto each lens span:
+
+```
+a span  architect.<lens>     examined · found · reported · set_aside · proposals
+an observation  Q<n> — …     the answer, with what was examined and reported
+observations  NOT REPORTED   one per finding set aside, with the reason and
+                             the agent it belongs to
+handoffs                     the edges to the agents that own them
+artifacts                    every ArchitectureProposal and ApprovalRequest
+a decision                   the ordering, with what it did not choose
+two observations             the census, and that nothing was merged
+```
+
+Derived at read time and stored nowhere twice. Exposed as
+`cli.mjs architecture [--trace t] [--aside]`, `GET /api/architecture`, and the
+**Knowledge architecture** panel in the viewer. The overview tile counts the
+questions the model **handles**, not the ones it fails.
+
+The view reports a gap in itself where a run failed to say something: no census,
+no ordering decision, no "nothing merged" claim, a lens that recorded no answer,
+findings set aside with no reasons, more proposals than approvals, or an
+approval granted inside the run that requested it. The suite proves that check
+does something by stripping the `NOT REPORTED` observations from a real trace
+and asserting the view notices.
+
+---
+
 ## The development view
 
 `node agent/observability/cli.mjs serve` → `http://127.0.0.1:7801`.
@@ -472,12 +580,13 @@ node agent/observability/demo/workflow.mjs --deterministic  # fixed ids and cloc
 | `redact.mjs` | secret redaction, by key and by value, counted |
 | `schema.mjs` | the record vocabulary and the validator both write and read paths use |
 | `sink.mjs` | the append-only JSONL store, plus in-memory and multi sinks |
-| `tracer.mjs` | the API an agent uses: spans, events, `step()` |
+| `tracer.mjs` | the API an agent uses: spans, events, `step()`, and `attachToRun` for appending one event to a run another process already closed |
+| `chain.mjs` | the edge between two runs: the upstream run read off the records, and the handoff written onto its trace |
 | `query.mjs` | the read model — tree, rollups, queues, audit chain. Nothing derived is stored |
 | `otlp.mjs` | OTLP/JSON + OpenInference export, and the provenance ledger |
 | `server.mjs` | the loopback dev server and its JSON API |
 | `viewer/` | the development view |
-| `cli.mjs` | `list · show · chain · validate · export · summary · serve` |
+| `cli.mjs` | `list · show · chain · impact · depth · proposals · architecture · validate · export · summary · serve`, with the exit codes in **Status** above |
 | `demo/workflow.mjs` | the simulated Scout → Verifier → Change Detector run |
 | `selftest.mjs` | `node --test agent/observability/selftest.mjs` |
 | `runs/` | the store. Git-ignored: it holds run inputs and outputs, and it is regenerable |
@@ -485,7 +594,7 @@ node agent/observability/demo/workflow.mjs --deterministic  # fixed ids and cloc
 ## Checks
 
 ```
-node --test agent/observability/selftest.mjs   # 13 tests
+node --test agent/observability/selftest.mjs   # the suite
 node agent/observability/cli.mjs validate      # exits 1 on a malformed store
 ```
 

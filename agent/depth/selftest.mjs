@@ -502,3 +502,52 @@ test('a demand entry becomes evidence about the corpus, never about EU law', () 
   assert.equal(e.url, null);
   assert.equal(e.checksum, null);
 });
+
+/* --------------------------------- node identity (SESSION 13) */
+
+test('a gap id is derived from the finding, not from where it sat in the queue', async () => {
+  /* THE MEASUREMENT THAT MADE THIS A PREREQUISITE. Under the old
+     per-run counter, removing one unrelated instrument from the
+     corpus renumbered 37 of the 55 findings that survived the
+     removal untouched — every id after the deleted one shifted by
+     the number of findings that disappeared before it. A knowledge
+     graph is a structure of stable nodes; an id that moves when a
+     different record is edited is not one.
+
+     The perturbation is in memory. data/ is not touched, here or
+     anywhere in this directory. */
+  const perturbed = loadCorpus();
+  perturbed.instruments = perturbed.instruments.filter((i) => i.id !== 'dora');
+  perturbed.instrumentById.delete('dora');
+
+  const baseline = await runAgent().agent.run();
+  const after = await runAgent({ corpus: perturbed }).agent.run();
+
+  const key = (g) => `${g.gap_kind}|${g.affected_entities.map((e) => e.id ?? e.path).sort().join(',')}`;
+  const before = new Map(baseline.gaps.map((g) => [key(g), g.gap_id]));
+  const now = new Map(after.gaps.map((g) => [key(g), g.gap_id]));
+
+  const shared = [...before.keys()].filter((k) => now.has(k));
+  assert.ok(shared.length > 40, `expected the perturbation to leave most findings standing, ${shared.length} survived`);
+  const moved = shared.filter((k) => before.get(k) !== now.get(k));
+  assert.deepEqual(moved, [], `${moved.length} finding(s) changed id because a different record was edited`);
+});
+
+test('two runs over an unchanged corpus produce the same gap ids', async () => {
+  const a = await runAgent().agent.run();
+  const b = await runAgent().agent.run();
+  assert.deepEqual(a.gaps.map((g) => g.gap_id).sort(), b.gaps.map((g) => g.gap_id).sort());
+});
+
+test('every gap id is distinct, and the whole entity set is why', async () => {
+  const r = await runAgent().agent.run();
+  const ids = r.gaps.map((g) => g.gap_id);
+  assert.equal(new Set(ids).size, ids.length, 'two findings share an id');
+
+  /* The first-entity shorthand is NOT sufficient, and the corpus
+     proves it: missing_instrument_relationship about ai-act appears
+     twice with different partners. Keying on it would have merged
+     them. */
+  const firstOnly = new Set(r.gaps.map((g) => `${g.gap_kind}|${g.affected_entities[0]?.id ?? ''}`));
+  assert.ok(firstOnly.size < ids.length, 'the corpus no longer contains the collision this test exists to prove the key survives');
+});

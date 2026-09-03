@@ -41,13 +41,20 @@ export class Tracer {
    * @param {{service?:string, sink?:object, ids?:object, clock?:object,
    *          env?:string, attributes?:object}} opts
    */
-  constructor({ service = 'eu-digital-policy', sink, ids = randomIds, clock = systemClock, env = 'local', attributes = {} } = {}) {
+  constructor({ service = 'eu-digital-policy', sink, ids = randomIds, clock = systemClock, env = 'local', attributes = {}, parent_run_id = null } = {}) {
     this.service = service;
     this.sink = sink ?? new JsonlSink();
     this.ids = ids;
     this.clock = clock;
     this.env = env;
     this.attributes = attributes;
+    /* The run that caused this one, where a CLI knows it — a chained
+       run consuming another agent's stored records. The agent
+       classes call `startRun()` themselves and do not take this as
+       an argument, so it is set once on the tracer the CLI builds
+       and every run it opens inherits it. Null for a root, which is
+       the ordinary case. */
+    this.parent_run_id = parent_run_id;
     /* Monotonic within a tracer, so two records written in the same
        millisecond still read in the order they happened. Per-tracer
        rather than per-process: a global counter makes two runs of
@@ -61,7 +68,7 @@ export class Tracer {
     return new Span(this, {
       trace_id: traceId,
       parent_span_id: null,
-      parent_run_id: opts.parent_run_id ?? null,
+      parent_run_id: opts.parent_run_id ?? this.parent_run_id ?? null,
       kind: opts.kind ?? 'orchestrator',
       ...opts,
     });
@@ -70,6 +77,35 @@ export class Tracer {
   /** Re-enters an existing trace — a second process, a resumed run. */
   continueRun({ trace_id, parent_span_id = null, parent_run_id = null, ...opts }) {
     return new Span(this, { trace_id, parent_span_id, parent_run_id, kind: opts.kind ?? 'agent', ...opts });
+  }
+
+  /**
+   * Re-attach to a span that ALREADY EXISTS in a stored trace, so a
+   * later process can append one event to it.
+   *
+   * The difference from `continueRun` is the whole point: that opens
+   * a new span, this one opens nothing. It emits no `span.start` and
+   * its `end()` is a no-op, because the span it names was started
+   * and closed by somebody else and a second start would be a second
+   * home for the same fact. `buildTree` attaches an event to its
+   * span by `span_id` alone, so the event lands where it belongs.
+   *
+   * Used for exactly one thing: recording, on the UPSTREAM trace,
+   * that a downstream agent took its records — the edge that makes
+   * "can this execution be correlated with another agent's?"
+   * answerable in both directions.
+   */
+  attachToRun({ trace_id, run_id, parent_span_id = null, agent = null, name = null }) {
+    return new Span(this, {
+      trace_id,
+      span_id: run_id,
+      run_id,
+      parent_span_id,
+      kind: 'agent',
+      agent,
+      name: name ?? agent ?? 'attached run',
+      attached: true,
+    });
   }
 
   emit(record) { return this.sink.write({ ...record, seq: this.seq++ }); }
@@ -92,9 +128,14 @@ export class Span {
     this.task = opts.task ?? null;
     this.name = opts.name ?? opts.task ?? opts.agent ?? this.kind;
     this.start_time = isoOf(t);
-    this.ended = false;
+    /* An attached span is somebody else's to open and to close. It
+       emits no span.start below, and `end()` returns immediately. */
+    this.attached = opts.attached === true;
+    this.ended = this.attached;
     this.children = 0;
     this.counts = { observation: 0, decision: 0, artifact: 0, handoff: 0, approval: 0, provenance: 0, error: 0, tool: 0 };
+
+    if (this.attached) return;
 
     const { value: inputs, redactions } = redact(opts.inputs ?? null);
     this.tracer.emit({

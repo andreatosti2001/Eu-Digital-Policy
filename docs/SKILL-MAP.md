@@ -83,6 +83,7 @@ since SESSION 06.*
 | **Change detector** | `project-context`, `observability` | `regulatory-change-detection`, `data-completeness` | closing any gap it finds |
 | **Data depth** (read-only) | `project-context`, `observability` | `data-completeness`, `knowledge-architecture`, `data-governance` | closing a gap, or writing to `data/` at all — it asks where a fact would live and never puts one there |
 | **Gap router** (read-only) | `project-context`, `observability` | `data-governance`, `autonomy-governance`, `data-completeness` | writing a value it has not read, merging anything, or writing the argument — an interpretive gap goes to Editorial with nothing attached |
+| **Knowledge architect** (read-only) | `project-context`, `observability` | `knowledge-architecture`, `data-governance`, `autonomy-governance` | changing a schema, drafting a shape, proposing a taxonomy term, or reporting what a record would close — the first three are the repository owner's and the fourth is Data Depth's |
 | **Data editor** (human-approved) | `project-context`, `autonomy-governance`, `git-workflow` | `data-governance`, `source-provenance`, `knowledge-architecture`, `legal-site-qa` | authoring a fact from model knowledge |
 | **Editor** (prose) | `project-context`, `autonomy-governance`, `git-workflow` | `legal-editorial`, `legal-site-qa` | changing a claim record to fit a sentence |
 | **Frontend** | `project-context`, `git-workflow` | `frontend-implementation`, `legal-site-qa`, `ux-audit` | touching `data/` or the derivation rules |

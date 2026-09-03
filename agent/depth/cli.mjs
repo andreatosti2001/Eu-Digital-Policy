@@ -29,6 +29,7 @@
    ============================================================ */
 
 import { Tracer } from '../observability/tracer.mjs';
+import { upstreamOf, recordHandoff } from '../observability/chain.mjs';
 import { JsonlSink } from '../observability/sink.mjs';
 import { RecordStore, MemoryRecordStore, readRecords } from '../scout/store.mjs';
 import { loadCorpus, hashDataDir } from '../integrate/canonical.mjs';
@@ -75,7 +76,16 @@ if (changesTrace) {
 }
 
 const store = dry ? new MemoryRecordStore({ allowSimulated: false }) : new RecordStore({ allowSimulated: false });
-const tracer = new Tracer({ service: 'eu-digital-policy', sink: new JsonlSink(), attributes: { agent: DEPTH_AGENT } });
+/* The Detector run whose change records this one consumed, where
+   one was given. A depth run without --changes is a root and this
+   is null, which is the ordinary case. */
+const upstream = changesTrace ? upstreamOf(changes) : null;
+const tracer = new Tracer({
+  service: 'eu-digital-policy',
+  sink: new JsonlSink(),
+  attributes: { agent: DEPTH_AGENT },
+  parent_run_id: upstream && !upstream.ambiguous ? upstream.run_id : null,
+});
 
 const before = hashDataDir();
 
@@ -133,6 +143,20 @@ try {
   out(`  no finding:   ${r.kinds_with_no_finding.join(', ') || 'every kind found something'}`);
   out(`  trace ${r.trace_id}`);
   out(dry ? '  nothing stored (--dry)' : `  records agent/records/${r.trace_id}.jsonl`);
+
+  if (upstream) {
+    const edge = recordHandoff({
+      upstream,
+      to_agent: DEPTH_AGENT,
+      records: changes,
+      downstream_trace_id: r.trace_id,
+      reason: `Noting which depth findings sit on records ${changes.length} regulatory change(s) have recently moved. A change is not an absence.`,
+    });
+    out();
+    out(edge.emitted
+      ? `  CHAIN  ${upstream.trace_id} → ${r.trace_id}. parent_run_id ${upstream.run_id}; handoff ${edge.handoff_id} recorded on the upstream trace.`
+      : `  CHAIN  no handoff recorded on the upstream trace — ${edge.why}`);
+  }
 
   const after = hashDataDir();
   const untouched = JSON.stringify(before) === JSON.stringify(after);

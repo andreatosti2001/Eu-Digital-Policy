@@ -4,18 +4,22 @@ The inter-agent contracts. Eighteen machine-readable schemas, a validator that
 enforces them, and a gate no agent can hand a record through without passing.
 Zero dependencies, no build step, nothing wired into the website.
 
-Five agents speak them. The **Source Scout** (`agent/scout/`) emits
+Six agents speak them. The **Source Scout** (`agent/scout/`) emits
 `SourceCandidate`, `DataGap`, `AgentObservation` and `AgentRun`; the **Legal
 Verifier** (`agent/verifier/`) emits `VerificationRecord`; the **verification
 integrator** (`agent/integrate/`) emits `ClaimEvidence`, `DataProposal`,
 `DataGap` and `ApprovalRequest`; the **Regulatory Change Detector**
 (`agent/detector/`) emits `RegulatoryChange`, `ImpactAssessment` and `DataGap`;
-the **Data Depth Agent** (`agent/depth/`) emits `KnowledgeGap`. All of them go
+the **Data Depth Agent** (`agent/depth/`) emits `KnowledgeGap`; the **gap
+router** (`agent/proposals/data/`) emits `DataProposal`, `ApprovalRequest` and
+`DataGap`; and the **Knowledge Architect** (`agent/architect/`) emits
+`ArchitectureProposal` and `ApprovalRequest`. All of them go
 through `gateway.mjs` and are stored in `agent/records/` via
 `agent/scout/store.mjs`. The remaining contracts have not yet been exercised by
 a real agent. See `docs/SOURCE-SCOUT.md`, `docs/LEGAL-VERIFIER.md`,
 `docs/VERIFICATION-INTEGRATION.md`, `docs/CHANGE-DETECTOR.md`,
-`docs/REGULATORY-IMPACT-MAPPING.md` and `docs/DATA-DEPTH.md`.
+`docs/REGULATORY-IMPACT-MAPPING.md`, `docs/DATA-DEPTH.md`,
+`docs/GAP-PROPOSALS.md` and `docs/KNOWLEDGE-ARCHITECTURE.md`.
 
 `DataProposal` is the fifteenth, added in SESSION 08. Why the fourteen had no
 home for a proposed change to `data/*.json`, and what was considered and
@@ -47,6 +51,21 @@ value, `create_taxonomy_term`, with four rules of its own: the dataset must be
 `data/taxonomy.json`, the record kind `taxonomy_term`, the dimension must be one
 the file actually carries, and the class is **forced** to `human_only` rather
 than checked. `docs/GAP-PROPOSALS.md` §4 has the reasoning.
+
+**SESSION 13 added no nineteenth either**, twice over. Agent 6, the Knowledge
+Architect, emits `ArchitectureProposal` — which has existed since SESSION 04 and
+whose burden (modules affected, invariants touched, dependency impact, the three
+red-tier booleans, a migration, a rollback plan) is exactly the burden a change
+to the information model carries. `docs/KNOWLEDGE-ARCHITECTURE.md` §3 has the
+reasoning.
+
+It also added `identity.mjs`, which is
+not a contract: it derives a record's `id_field` value from the record's own
+content — kind, the full sorted entity set, subject — replacing the per-run
+counter every agent used. There is deliberately **no id store**; the id is
+recomputable by anyone holding the record, with nothing to load.
+`docs/AGENT-CONTRACTS.md` "The id, and why it is derived rather than counted"
+has the measurement that made it a prerequisite.
 
 ```
 node agent/schemas/cli.mjs list                  # the eighteen

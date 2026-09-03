@@ -78,6 +78,12 @@ function renderTiles(s) {
        become a proposal here, and a tile that showed only what was
        authored would report the work as more complete than it is. */
     ['gaps not proposable', (s.proposals ?? []).reduce((n, x) => n + (x.refused ?? 0), 0), (s.proposals ?? []).some((x) => (x.refused ?? 0) > 0) ? 'warn' : null],
+    /* The questions the MODEL HANDLES, not the ones it fails. A
+       tile counting only the defects would report the information
+       model as nothing but them, and "the model can represent this"
+       is the result a reader most needs to be able to see. */
+    ['model questions handled', (s.architecture ?? []).reduce((n, x) => n + (x.answered_no ?? []).length, 0), null],
+    ['model shapes proposed', (s.architecture ?? []).reduce((n, x) => n + (x.proposed ?? 0), 0), (s.architecture ?? []).some((x) => (x.proposed ?? 0) > 0) ? 'warn' : null],
   ];
   $('#tiles').replaceChildren(...tiles.map(([label, n, tone]) =>
     el('div', { class: 'tile', 'data-tone': tone }, el('b', { text: String(n) }), el('span', { text: label }))));
@@ -148,6 +154,7 @@ const TABS = [
   ['impact', 'Regulatory impact', (t) => (t.impact ?? []).length],
   ['depth', 'Data depth', (t) => t.depth?.reported ?? null],
   ['proposals', 'Gap proposals', (t) => t.proposals?.proposed ?? null],
+  ['architecture', 'Knowledge architecture', (t) => t.architecture?.proposed ?? null],
   ['errors', 'Errors', (t) => t.errors.length],
 ];
 
@@ -278,6 +285,11 @@ function renderPanel(t) {
       ['from', (h) => h.from_agent, 'mono'],
       ['to', (h) => h.to_agent, 'mono'],
       ['reason', (h) => h.reason],
+      /* Where it went. A cross-trace handoff names the downstream
+         trace the receiving run opened; an intra-run one does not,
+         and the dash says so rather than leaving the column blank
+         as though the question had not been asked. */
+      ['downstream trace', (h) => h.downstream_trace_id ?? '—', 'mono'],
       ['artifacts', (h) => (h.artifact_ids ?? []).join(', '), 'mono'],
       ['at', (h) => stamp(h), 'mono'],
     ], t.handoffs));
@@ -424,6 +436,46 @@ function renderPanel(t) {
       r.gaps.length
         ? el('p', { class: 'gaps', text: `GAPS — ${r.gaps.join('; ')}` })
         : el('p', { class: 'mono', text: 'no gaps: the census, the routing decision, every refusal reason and the "nothing merged" claim are all on this trace' }),
+    ));
+  }
+  if (state.tab === 'architecture') {
+    const a = t.architecture;
+    if (!a) return p.replaceChildren(el('p', { class: 'empty', text: 'no architecture analysis on this trace' }));
+    return p.replaceChildren(el('div', { class: 'chain' },
+      el('h3', {}, `${a.answered_yes.length} of ${a.questions} question(s) answered yes, ${a.proposed} shape(s) proposed `, a.simulated ? badge('simulated') : null),
+      el('p', { class: 'mono', text: `as at ${a.as_of ?? '?'} · ${a.examined} thing(s) examined · ${a.reported} finding(s) · ${a.set_aside} set aside · ${a.pending_approvals} approval(s) pending · ${a.merged ?? '?'} merged · ${a.applied ?? '?'} applied · ${a.schemas_changed ?? '?'} schema(s) changed · ${a.values_proposed ?? '?'} value(s) proposed` }),
+      /* THE EIGHT ANSWERS FIRST. A question answered "no" is the
+         model working, and what each lens EXAMINED travels with its
+         answer so "looked and found nothing" is never confusable
+         with "did not look". */
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: 'The eight questions — a "no" is the model working' }),
+        el('pre', { text: a.lenses.map((l) => `q${l.question} ${String(l.asks ?? l.lens).padEnd(64)} ${String(l.answer ?? '?').toUpperCase().padEnd(4)} ${String(l.examined).padStart(4)} examined  ${String(l.reported).padStart(2)} reported  ${String(l.set_aside).padStart(2)} aside`).join('\n') })),
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: 'What each question found' }),
+        a.lenses.some((l) => l.subjects.length)
+          ? el('ul', { class: 'queue' }, ...a.lenses.flatMap((l) => l.subjects.map((sub) => el('li', {},
+              el('code', { text: `q${l.question}` }), ' ', el('code', { text: sub })))))
+          : el('p', { class: 'mono', text: 'nothing was found' })),
+      /* The set-aside panel is the point of this view, as the
+         refusal panel is the point of the gap-proposal view: a
+         finding this agent handed to another is not a finding it
+         hid. */
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: `Not reported here — ${a.set_aside} finding(s), and whose they are` }),
+        a.lenses.some((l) => l.not_reported.length)
+          ? el('ul', { class: 'queue' }, ...a.lenses.flatMap((l) => l.not_reported.map((x) => el('li', {},
+              el('code', { text: x.subject }), x.route ? el('code', { text: ` → ${x.route}` }) : null, el('div', { class: 'none', text: x.why })))))
+          : el('p', { class: 'mono', text: a.set_aside ? 'findings were set aside and no reasons recorded — see GAPS below' : 'nothing was set aside' })),
+      a.ordering ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Ordering' }),
+        el('p', { text: a.ordering.decision }),
+        el('p', { class: 'none', text: a.ordering.rationale }),
+        el('pre', { text: (a.ordering.alternatives ?? []).join('\n') })) : null,
+      el('p', { class: 'mono', text: `records — ${a.proposal_ids.length} ArchitectureProposal, ${a.approval_ids.length} ApprovalRequest. Every proposed operation carries a null "proposed": this agent names a shape and drafts none.` }),
+      a.gaps.length
+        ? el('p', { class: 'gaps', text: `GAPS — ${a.gaps.join('; ')}` })
+        : el('p', { class: 'mono', text: 'no gaps: the census, the ordering decision, all eight answers, every set-aside reason and the "nothing merged" claim are on this trace' }),
     ));
   }
   if (state.tab === 'errors') {

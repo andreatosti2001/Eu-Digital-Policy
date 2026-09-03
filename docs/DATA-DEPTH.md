@@ -312,6 +312,15 @@ unbuilt. A future session that builds the authoring half should read §4 first, 
 note that it would be the first code in this repository that writes to `data/` on an agent's
 initiative — which the whole approval chain exists to gate.
 
+**SESSION 13 took the other half of the structural question, and it is a different agent.**
+`agent/architect/` asks whether the *shape* can hold what the corpus is saying, and this
+agent asks what *record* the corpus lacks. The boundary is one test —
+**would writing a record close this?** — and it is a mechanism rather than an agreement:
+every finding the architect's lenses produce declares `closes_by`, and one a record would
+close is set aside and handed here rather than reported there. On the real corpus that
+handoff fires. `docs/KNOWLEDGE-ARCHITECTURE.md` §1 states it from the other side; neither
+agent may report the other's finding.
+
 ## 12 · Known limitations
 
 1. **`missing_glossary_concept` produces the longest list — 17 of the 57.** The threshold is
