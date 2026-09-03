@@ -49,6 +49,7 @@
 
 import { isoOf } from '../observability/ids.mjs';
 import { emit, receive } from '../schemas/gateway.mjs';
+import { IdMinter } from '../schemas/identity.mjs';
 import { loadCorpus, HOME_OF } from '../integrate/canonical.mjs';
 import { retrievedDocumentOf } from '../integrate/sources.mjs';
 import { RecordBuilder } from '../verifier/build.mjs';
@@ -93,12 +94,13 @@ export class Detector {
        the answer. */
     this.impactDepth = Number.isInteger(impactDepth) ? impactDepth : 2;
     this.graph = graph();
-    this.seq = 0;
+    /* Ids are derived from the change itself, never from a counter —
+       agent/schemas/identity.mjs says why. */
+    this.ids = new IdMinter();
     this.refused = [];
   }
 
   #now() { return isoOf(this.tracer.clock.now()); }
-  #id(prefix) { return `${prefix}-${String(++this.seq).padStart(3, '0')}`; }
   #builder(contract, span) {
     return new RecordBuilder({ contract, agent: DETECTOR_AGENT, now: this.#now(), span, simulated: this.simulated });
   }
@@ -374,7 +376,18 @@ export class Detector {
     const autonomy = autonomyFor(mat.level);
 
     /* --- the fields ---------------------------------------------- */
-    b.set('change_id', this.#id('rchg'));
+    /* THE CHANGE, NOT THE DETECTION OF IT. The id is the transition
+       — this kind, on these records, at this attribute, from this
+       value to that one — and deliberately not the verification
+       that happened to surface it. Two documents reporting the same
+       move are one change; that is what makes `supersedes` and a
+       change history meaningful rather than a list of sightings. */
+    b.set('change_id', this.ids.mint('rchg', {
+      kind: classification.kind,
+      entities,
+      subject: candidate.attribute,
+      discriminator: `${candidate.old_value ?? ''} -> ${candidate.new_value ?? ''}`,
+    }));
     b.set('attribute', candidate.attribute);
     b.set('source_snapshot', snapshot.block);
     b.set('confidence', confidence);
@@ -529,7 +542,12 @@ export class Detector {
     const factual = map.factual.map(strip);
     const editorial = map.editorial.map(strip);
 
-    b.set('assessment_id', this.#id('imp'));
+    b.set('assessment_id', this.ids.mint('imp', {
+      kind: 'impact_assessment',
+      entities: change.affected_entities,
+      subject: change.change_id,
+      discriminator: String(map.depth),
+    }));
     b.set('change_id', change.change_id);
     b.set('depth', map.depth);
     b.set('roots', map.roots);
@@ -600,7 +618,12 @@ export class Detector {
       b.addEntity({ kind: 'instrument', id: null, path: 'data/instruments.json', field: candidate.attribute, note: 'The unclassified change names no single record.' });
     }
 
-    b.set('gap_id', this.#id('gap'));
+    b.set('gap_id', this.ids.mint('gap', {
+      kind: 'coverage_gap',
+      entities: candidate.entities.map((id) => ({ kind: candidate.entity_kind ?? 'instrument', id, path: HOME_OF[candidate.entity_kind] ?? null })),
+      subject: candidate.attribute,
+      discriminator: `${candidate.old_value ?? ''} -> ${candidate.new_value ?? ''}`,
+    }));
     b.set('gap_kind', 'coverage_gap');
     b.set('absence_kind', 'no_rule_matched');
     b.set('what_is_missing', `A kind for the change "${candidate.old_value ?? 'nothing'}" → "${candidate.new_value ?? 'nothing'}"${candidate.attribute ? ` at ${candidate.attribute}` : ''}, detected from ${verification.verification_id}.`);

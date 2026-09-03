@@ -49,6 +49,7 @@
 import { createHash } from 'node:crypto';
 import { isoOf } from '../observability/ids.mjs';
 import { emit, receive } from '../schemas/gateway.mjs';
+import { IdMinter } from '../schemas/identity.mjs';
 import { authorityForUrl, estimateTier } from '../scout/authorities.mjs';
 import { instrumentTerms, matchInstruments, textOf, extractPublicationDate, extractTitle } from '../scout/extract.mjs';
 import { loadInstruments } from '../scout/scout.mjs';
@@ -97,11 +98,14 @@ export class Verifier {
     this.terms = instrumentTerms(this.instruments);
     this.limits = { ...DEFAULT_VERIFIER_LIMITS, ...limits };
     this.simulated = transport.simulated === true;
-    this.seq = 0;
+    /* Ids are derived from what was checked, never from a counter —
+       agent/schemas/identity.mjs says why. A verification of the
+       same proposition in the same document is one node however
+       many times it is re-run. */
+    this.ids = new IdMinter();
   }
 
   #now() { return isoOf(this.tracer.clock.now()); }
-  #id(prefix) { return `${prefix}-${String(++this.seq).padStart(3, '0')}`; }
 
   #builder(contract, span) {
     return new RecordBuilder({ contract, agent: VERIFIER_AGENT, now: this.#now(), span, simulated: this.simulated });
@@ -174,7 +178,11 @@ export class Verifier {
       note: 'The candidate under check. It was not retrieved, so nothing it asserts has been verified.',
     });
 
-    b.set('verification_id', this.#id('ver'));
+    b.set('verification_id', this.ids.mint('ver', {
+      kind: 'source_unavailable',
+      entities: [{ kind: 'document', id: candidate.candidate_id, path: null }],
+      subject: candidate.url,
+    }));
     b.set('statement', statement);
     b.set('method', `Attempted to retrieve ${candidate.url} and read it. ${blocked ? `The retrieval was refused before it reached the origin: ${res.reason}. That is this environment's egress policy and not a statement about the document.` : `The retrieval failed: ${res.reason}${res.status ? ` (status ${res.status})` : ''}.`} Nothing was read, so nothing is asserted about the contents.`);
     b.inference('verdict', 'source_unavailable', 'The document could not be retrieved, so the proposition was not checked.', ['ev-absent'], 'A GET of the candidate\'s URL did not return a document. This is a statement about the retrieval, not about the proposition, which remains exactly as unverified as it was.');
@@ -307,7 +315,14 @@ export class Verifier {
         note: 'The candidate whose document this proposition was read from.',
       });
 
-      b.set('verification_id', this.#id('ver'));
+      b.set('verification_id', this.ids.mint('ver', {
+        kind: 'proposition',
+        entities: [
+          { kind: 'document', id: candidate.candidate_id, path: null },
+          ...aboutInstruments.map((m) => ({ kind: 'instrument', id: m.instrument_id, path: 'data/instruments.json' })),
+        ],
+        subject: proposition.text,
+      }));
       b.set('statement', proposition.text);
       b.set('method', [
         `Retrieved ${candidate.url} and read it.`,
@@ -496,7 +511,14 @@ export class Verifier {
     });
 
     const readable = conflict.attribute.replace(/_/g, ' ');
-    bd.set('verification_id', this.#id('ver'));
+    bd.set('verification_id', this.ids.mint('ver', {
+      kind: 'conflict',
+      entities: [{ kind: 'instrument', id: conflict.instrument_id, path: 'data/instruments.json' }],
+      subject: conflict.attribute,
+      /* The two sides, in a fixed order, so the id is the same
+         whichever way round the pair was compared. */
+      discriminator: [`${a.url} ${a.value}`, `${b_.url} ${b_.value}`].sort().join(' | '),
+    }));
     bd.set('statement', `The ${readable} of ${conflict.instrument_id} is a single settled value.`);
     bd.set('method', `Compared what two separately retrieved documents state for the ${readable} of ${conflict.instrument_id}. ${a.url} states "${a.value}"; ${b_.url} states "${b_.value}". No ranking was applied between them.`);
     bd.inference('verdict', 'conflict', 'Two authoritative sources state different values, and this check does not choose between them.', ['ev-side-a', 'ev-side-b'],

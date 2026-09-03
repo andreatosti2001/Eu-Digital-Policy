@@ -48,6 +48,14 @@ value, `create_taxonomy_term`, with four rules of its own: the dataset must be
 the file actually carries, and the class is **forced** to `human_only` rather
 than checked. `docs/GAP-PROPOSALS.md` §4 has the reasoning.
 
+**SESSION 13 added no nineteenth either.** It added `identity.mjs`, which is
+not a contract: it derives a record's `id_field` value from the record's own
+content — kind, the full sorted entity set, subject — replacing the per-run
+counter every agent used. There is deliberately **no id store**; the id is
+recomputable by anyone holding the record, with nothing to load.
+`docs/AGENT-CONTRACTS.md` "The id, and why it is derived rather than counted"
+has the measurement that made it a prerequisite.
+
 ```
 node agent/schemas/cli.mjs list                  # the eighteen
 node agent/schemas/cli.mjs show DataGap          # one contract, field by field

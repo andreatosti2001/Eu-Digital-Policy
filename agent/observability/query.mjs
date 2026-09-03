@@ -239,11 +239,33 @@ export function impactState(root, traceId = null) {
   });
 }
 
-/** running > failed(root) > degraded > root's own status */
+/** Every span under `root`, itself included. */
+function allSpans(span, out = []) {
+  out.push(span);
+  span.children.forEach((c) => allSpans(c, out));
+  return out;
+}
+
+/**
+ * running > failed(root) > degraded > root's own status
+ *
+ * SESSION 13: the walk is over EVERY span, not only the runs.
+ * Until then this looked at `collectRuns()` alone, and the case the
+ * audit found slipped straight through it: a Verifier run whose six
+ * candidates were all refused closed six `verifier.intake` spans
+ * `failed`, wrote six `error` records — and reported `ok`, because
+ * an intake span is a TOOL span and no run span had failed. A root
+ * that reported ok over a failed child of any kind is the sort of
+ * green that hides a defect, which is the thing `degraded` was
+ * defined for.
+ *
+ * `runs` stays in the signature: it is what answers "is anything
+ * still running", and callers already have it.
+ */
 export function deriveStatus(root, runs) {
   if (root.status === 'running' || runs.some((r) => r.status === 'running')) return 'running';
   if (root.status === 'failed') return 'failed';
-  if (runs.some((r) => r.status === 'failed')) return 'degraded';
+  if (allSpans(root).some((s) => s.status === 'failed')) return 'degraded';
   return root.status;
 }
 
@@ -301,15 +323,29 @@ export function summarise(root, traceId) {
   };
 }
 
-/** A handoff is open until the agent it names has actually started. */
+/**
+ * A handoff is open until the agent it names has actually started.
+ *
+ * SESSION 13 adds the cross-trace case. A handoff recorded by
+ * `agent/observability/chain.mjs` names the downstream trace the
+ * receiving run opened, and that run is by definition NOT in this
+ * trace — so "did an agent of that name start here?" answers no for
+ * a handoff that was in fact taken. A payload naming a downstream
+ * trace is the receipt, and it closes the edge; without one the
+ * old question is still the right one.
+ */
 export function handoffState(root) {
   const started = new Set(collectRuns(root).map((r) => r.agent));
   const startedAfter = (agent, ts) => collectRuns(root).some((r) => r.agent === agent && r.start_time && Date.parse(r.start_time) >= Date.parse(ts));
-  return collectEvents(root, 'handoff').map((h) => ({
-    ...h,
-    accepted: startedAfter(h.to_agent, h.ts),
-    known_agent: started.has(h.to_agent),
-  }));
+  return collectEvents(root, 'handoff').map((h) => {
+    const downstream_trace_id = h.payload?.downstream_trace_id ?? null;
+    return {
+      ...h,
+      downstream_trace_id,
+      accepted: Boolean(downstream_trace_id) || startedAfter(h.to_agent, h.ts),
+      known_agent: Boolean(downstream_trace_id) || started.has(h.to_agent),
+    };
+  });
 }
 
 /** An approval is pending until a later record resolves its id. */

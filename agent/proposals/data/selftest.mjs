@@ -511,3 +511,54 @@ test('the agent name and the tier map are the ones the rest of the layer uses', 
 test('create_taxonomy_term is in the operation vocabulary exactly once', () => {
   assert.equal(DATA_OPERATION_KINDS.filter((k) => k === 'create_taxonomy_term').length, 1);
 });
+
+/* --------------------------------- node identity (SESSION 13) */
+
+test('a proposal id is derived from the gap it answers, not from a counter', async () => {
+  /* This agent was built after the audit that found the counter and
+     inherited the same defect. It matters here more than anywhere:
+     a proposal whose id moves cannot be the thing a human decided
+     about last week, and issue 15 — fourteen proposals nobody has
+     decided — grows on every re-run precisely because nothing can
+     match a new proposal to an old decision. A stable id is the
+     first half of that; the ChangeRecord saying a human applied one
+     is still the missing half. */
+  const second = await routeOnce();
+  assert.deepEqual(
+    second.result.proposals.map((p) => p.proposal_id).sort(),
+    result.proposals.map((p) => p.proposal_id).sort(),
+  );
+  assert.deepEqual(
+    second.result.approvals.map((a) => a.approval_id).sort(),
+    result.approvals.map((a) => a.approval_id).sort(),
+  );
+  assert.deepEqual(
+    second.result.data_gaps.map((g) => g.gap_id).sort(),
+    result.data_gaps.map((g) => g.gap_id).sort(),
+  );
+});
+
+test('routing a subset of the gaps does not renumber the proposals it shares with the whole', async () => {
+  const tracer2 = newTracer();
+  const store2 = new MemoryRecordStore({ allowSimulated: false });
+  const part = await new ProposalRouter({ tracer: tracer2, store: store2, corpus, gaps: gaps.slice(5), asOf: AS_OF }).run();
+  const whole = new Map(result.proposals.map((p) => [`${p.operation_kind}|${p.dataset}|${p.record_id}`, p.proposal_id]));
+  let compared = 0;
+  for (const p of part.proposals) {
+    const k = `${p.operation_kind}|${p.dataset}|${p.record_id}`;
+    if (!whole.has(k)) continue;
+    compared++;
+    assert.equal(p.proposal_id, whole.get(k), `${k} was renumbered by routing fewer gaps`);
+  }
+  assert.ok(compared > 0, 'the subset shared no proposal with the whole, so this proved nothing');
+});
+
+test('every proposal, approval and data gap id in a run is distinct', () => {
+  for (const [what, ids] of [
+    ['proposal', result.proposals.map((p) => p.proposal_id)],
+    ['approval', result.approvals.map((a) => a.approval_id)],
+    ['data gap', result.data_gaps.map((g) => g.gap_id)],
+  ]) {
+    assert.equal(new Set(ids).size, ids.length, `two ${what} records share an id`);
+  }
+});

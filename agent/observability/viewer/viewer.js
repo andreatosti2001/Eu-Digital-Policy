@@ -278,6 +278,11 @@ function renderPanel(t) {
       ['from', (h) => h.from_agent, 'mono'],
       ['to', (h) => h.to_agent, 'mono'],
       ['reason', (h) => h.reason],
+      /* Where it went. A cross-trace handoff names the downstream
+         trace the receiving run opened; an intra-run one does not,
+         and the dash says so rather than leaving the column blank
+         as though the question had not been asked. */
+      ['downstream trace', (h) => h.downstream_trace_id ?? '—', 'mono'],
       ['artifacts', (h) => (h.artifact_ids ?? []).join(', '), 'mono'],
       ['at', (h) => stamp(h), 'mono'],
     ], t.handoffs));

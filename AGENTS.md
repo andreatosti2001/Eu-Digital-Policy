@@ -140,7 +140,7 @@ node --test agent/observability/selftest.mjs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**459 tests across the nine suites**, all passing as of SESSION 12.
+**496 tests across the nine suites**, all passing as of SESSION 13 (459 before it).
 
 `tools/_footer.mjs`, `_refsweep.mjs` and `_review10.mjs` are generators and applied one-shot
 patches, not checks. **Do not re-run** the latter two.

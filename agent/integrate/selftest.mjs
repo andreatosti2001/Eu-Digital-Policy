@@ -792,3 +792,38 @@ test('the provenance field list covers every dataset a proposal can name', () =>
     assert.ok(home in PROVENANCE_FIELDS, `${kind} lives in ${home}, which declares no provenance fields`);
   }
 });
+
+/* --------------------------------- node identity (SESSION 13) */
+
+test('link, proposal, gap and approval ids are derived from content, not from a counter', async () => {
+  const { it } = integrator();
+  const again = await it.run({ verifications: FX.all });
+  assert.deepEqual(again.links.map((l) => l.link_id).sort(), RESULT.links.map((l) => l.link_id).sort());
+  assert.deepEqual(again.proposals.map((p) => p.proposal_id).sort(), RESULT.proposals.map((p) => p.proposal_id).sort());
+  assert.deepEqual(again.gaps.map((g) => g.gap_id).sort(), RESULT.gaps.map((g) => g.gap_id).sort());
+  assert.equal(again.approval?.approval_id, RESULT.approval?.approval_id);
+});
+
+test('integrating a subset does not renumber the proposals it shares with the whole', async () => {
+  const { it } = integrator();
+  const part = await it.run({ verifications: FX.all.slice(2) });
+  const key = (p) => `${p.operation_kind}|${p.dataset}|${p.record_id}|${(p.verification_refs ?? []).join(',')}`;
+  const whole = new Map(RESULT.proposals.map((p) => [key(p), p.proposal_id]));
+  let compared = 0;
+  for (const p of part.proposals) {
+    if (!whole.has(key(p))) continue;
+    compared++;
+    assert.equal(p.proposal_id, whole.get(key(p)), `${p.operation_kind} was renumbered by integrating fewer verifications`);
+  }
+  assert.ok(compared > 0, 'the subset shared no proposal with the whole, so this proved nothing');
+});
+
+test('every id a run produced is distinct within its kind', () => {
+  for (const [what, ids] of [
+    ['link', RESULT.links.map((l) => l.link_id)],
+    ['proposal', RESULT.proposals.map((p) => p.proposal_id)],
+    ['gap', RESULT.gaps.map((g) => g.gap_id)],
+  ]) {
+    assert.equal(new Set(ids).size, ids.length, `two ${what} records share an id`);
+  }
+});

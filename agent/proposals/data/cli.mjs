@@ -23,6 +23,7 @@
    ============================================================ */
 
 import { Tracer } from '../../observability/tracer.mjs';
+import { upstreamOf, recordHandoff } from '../../observability/chain.mjs';
 import { JsonlSink } from '../../observability/sink.mjs';
 import { RecordStore, MemoryRecordStore, readRecords } from '../../scout/store.mjs';
 import { loadCorpus, hashDataDir } from '../../integrate/canonical.mjs';
@@ -58,7 +59,27 @@ if (onlyRoute && !GAP_ROUTES.includes(onlyRoute)) {
 
 const corpus = loadCorpus();
 const store = dry ? new MemoryRecordStore({ allowSimulated: false }) : new RecordStore({ allowSimulated: false });
-const tracer = new Tracer({ service: 'eu-digital-policy', sink: new JsonlSink(), attributes: { agent: PROPOSER_AGENT } });
+
+/* The gaps are read BEFORE the tracer is built, because the Depth
+   run that produced them is this run's parent and a tracer cannot
+   be told that after its first span is open. Without --gaps the
+   depth analysis happens inside this run and there is no parent. */
+let storedGaps = null;
+if (gapsTrace) {
+  storedGaps = readRecords(gapsTrace).filter((r) => r.contract === 'KnowledgeGap');
+  if (!storedGaps.length) {
+    out(`  no KnowledgeGap records in agent/records/${gapsTrace}.jsonl`);
+    out('  `node agent/depth/cli.mjs --as-of <date>` writes some.');
+    process.exit(1);
+  }
+}
+const upstream = storedGaps ? upstreamOf(storedGaps) : null;
+const tracer = new Tracer({
+  service: 'eu-digital-policy',
+  sink: new JsonlSink(),
+  attributes: { agent: PROPOSER_AGENT },
+  parent_run_id: upstream && !upstream.ambiguous ? upstream.run_id : null,
+});
 
 const before = hashDataDir();
 
@@ -67,13 +88,8 @@ out('  GAP PROPOSALS — what each knowledge gap can honestly become. Read-only.
 
 try {
   let gaps;
-  if (gapsTrace) {
-    gaps = readRecords(gapsTrace).filter((r) => r.contract === 'KnowledgeGap');
-    if (!gaps.length) {
-      out(`  no KnowledgeGap records in agent/records/${gapsTrace}.jsonl`);
-      out('  `node agent/depth/cli.mjs --as-of <date>` writes some.');
-      process.exit(1);
-    }
+  if (storedGaps) {
+    gaps = storedGaps;
     out(`  as of ${asOf} · ${gaps.length} gap(s) from ${gapsTrace}${dry ? ' · dry run, nothing stored' : ''}`);
   } else {
     const depth = await new DepthAgent({ tracer, store, corpus, asOf }).run();
@@ -136,6 +152,20 @@ try {
   out(`  no gap took:  ${r.routes_with_no_gap.join(', ') || 'every route took at least one'}`);
   out(`  trace ${r.trace_id}`);
   out(dry ? '  nothing stored (--dry)' : `  records agent/records/${r.trace_id}.jsonl`);
+
+  if (upstream) {
+    const edge = recordHandoff({
+      upstream,
+      to_agent: PROPOSER_AGENT,
+      records: gaps,
+      downstream_trace_id: r.trace_id,
+      reason: `Routing ${gaps.length} knowledge gap(s) into a proposal, a handoff, or a stated refusal.`,
+    });
+    out();
+    out(edge.emitted
+      ? `  CHAIN  ${upstream.trace_id} → ${r.trace_id}. parent_run_id ${upstream.run_id}; handoff ${edge.handoff_id} recorded on the upstream trace.`
+      : `  CHAIN  no handoff recorded on the upstream trace — ${edge.why}`);
+  }
 
   const after = hashDataDir();
   const untouched = JSON.stringify(before) === JSON.stringify(after);

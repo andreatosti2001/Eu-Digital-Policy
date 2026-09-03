@@ -2,7 +2,7 @@
 /* ============================================================
    agent/observability/cli.mjs
 
-     node agent/observability/cli.mjs list
+     node agent/observability/cli.mjs list [--fail-on ok|degraded|failed|never]
      node agent/observability/cli.mjs show <trace-id>
      node agent/observability/cli.mjs chain [--file f] [--change c] [--trace t]
      node agent/observability/cli.mjs impact [--trace t] [--change c] [--graph]
@@ -15,6 +15,23 @@
    Zero dependencies, like the four validators in tools/. `validate`
    exits 1 on a malformed store, so it can gate a commit the same
    way design-qa.mjs does.
+
+   EXIT CODES, and why they differ between `show` and `list`
+   (SESSION 13). `degraded` is derived by query.mjs for a root that
+   closed `ok` over a failed child; until SESSION 13 it reached
+   neither the summary nor the exit code, and a run whose entire
+   input was refused reported `✓ ok` and exited 0.
+
+     show <trace-id>   asks about ONE run, so it answers with that
+                       run: 0 ok · 2 degraded · 1 failed or running.
+     list              is the history of the store, which accumulates
+                       every run ever made. A failed run from March
+                       is not a statement about today, so it exits 0
+                       by default and prints the census. `--fail-on
+                       degraded` (exit 2) or `--fail-on failed`
+                       (exit 1) is an operator's decision, spelled
+                       the same way agent/scout/schedule/run.mjs
+                       already spells it.
    ============================================================ */
 
 import { listTraceFiles, readTrace, DEFAULT_RUN_DIR } from './sink.mjs';
@@ -35,6 +52,10 @@ const GLYPH = { ok: '✓', failed: '✗', degraded: '!', running: '·', cancelle
 const pad = (s, n) => String(s ?? '').padEnd(n).slice(0, n);
 const dur = (ms) => (ms == null ? '     —' : ms >= 1000 ? `${(ms / 1000).toFixed(1)}s`.padStart(6) : `${ms}ms`.padStart(6));
 
+const FAIL_ON = new Set(['ok', 'degraded', 'failed', 'never']);
+/** Rank, so `--fail-on degraded` catches `failed` too. */
+const SEVERITY = { ok: 0, skipped: 0, cancelled: 0, running: 1, degraded: 2, failed: 3, unreadable: 3 };
+
 function cmdList() {
   const runs = listRuns(DIR);
   if (!runs.length) {
@@ -45,6 +66,37 @@ function cmdList() {
   console.log(`  ${pad('status', 9)}${pad('trace id', 34)}${pad('agent', 14)}${pad('runs', 6)}${pad('dur', 8)}task`);
   for (const r of runs) {
     console.log(`  ${GLYPH[r.status] ?? '?'} ${pad(r.status, 9)}${pad(r.trace_id, 34)}${pad(r.agent, 14)}${pad(r.runs, 6)}${dur(r.latency_ms)}  ${r.simulated ? 'SIMULATED · ' : ''}${r.task ?? ''}`);
+  }
+
+  /* THE SUMMARY LINE. A count of what the statuses above add up to,
+     with `degraded` named rather than folded into `ok` — a run that
+     closed ok over a failed child is not a run that succeeded, and
+     a reader scanning fifteen rows should not have to work that out
+     one row at a time. */
+  const census = {};
+  for (const r of runs) census[r.status] = (census[r.status] ?? 0) + 1;
+  const order = ['failed', 'degraded', 'running', 'ok', 'skipped', 'cancelled', 'unreadable'];
+  const parts = order.filter((k) => census[k]).map((k) => `${census[k]} ${k}`);
+  for (const k of Object.keys(census)) if (!order.includes(k)) parts.push(`${census[k]} ${k}`);
+  console.log(`\n  ${runs.length} trace(s): ${parts.join(' · ')}`);
+
+  const failOn = String(flag('fail-on', 'never'));
+  if (!FAIL_ON.has(failOn)) {
+    console.error(`  unknown --fail-on "${failOn}". One of: ${[...FAIL_ON].join(', ')}`);
+    process.exitCode = 1;
+    return;
+  }
+  if (failOn === 'never') {
+    if (census.degraded || census.failed) {
+      console.log(`  This history is not a health check — a run that failed in March is not a statement about today.`);
+      console.log(`  "--fail-on degraded" exits 2 and "--fail-on failed" exits 1, where a caller wants one.`);
+    }
+    return;
+  }
+  const worst = runs.reduce((m, r) => Math.max(m, SEVERITY[r.status] ?? 0), 0);
+  if (worst >= (SEVERITY[failOn] ?? 99)) {
+    console.error(`\n  --fail-on ${failOn} is set and the store is worse than that.`);
+    process.exitCode = worst >= SEVERITY.failed ? 1 : 2;
   }
 }
 
@@ -84,7 +136,27 @@ function cmdShow(id) {
     console.log(`\n  OPEN HANDOFFS`);
     for (const h of open) console.log(`    → ${h.from_agent} → ${h.to_agent}: ${h.reason ?? ''}`);
   }
+  /* The chained runs: an edge whose payload names the trace that
+     took the records. This is the answer to "can this execution be
+     correlated with another agent's?" in the downstream direction;
+     `parent_run_id` on the receiving run is the same edge read the
+     other way. */
+  const chained = t.handoffs.filter((h) => h.downstream_trace_id);
+  if (chained.length) {
+    console.log(`\n  HANDED ON`);
+    for (const h of chained) {
+      console.log(`    → ${h.from_agent} → ${h.to_agent}: trace ${h.downstream_trace_id}${h.payload?.simulated ? ' — SIMULATED chain' : ''} (${h.artifact_ids?.length ?? 0} record(s))`);
+    }
+  }
   if (t.broken_lines.length) console.log(`\n  ${t.broken_lines.length} unparseable line(s)`);
+
+  /* ONE run, so the exit code is that run's answer. */
+  if (s.status === 'degraded') {
+    console.log(`\n  degraded — this run closed "ok" over at least one failed child span. Exit 2.`);
+    process.exitCode = 2;
+  } else if (s.status === 'failed' || s.status === 'running') {
+    process.exitCode = 1;
+  }
 }
 
 function cmdChain() {

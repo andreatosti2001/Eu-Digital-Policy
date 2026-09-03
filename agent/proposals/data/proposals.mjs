@@ -46,6 +46,7 @@
 
 import { isoOf } from '../../observability/ids.mjs';
 import { emit, handoff } from '../../schemas/gateway.mjs';
+import { IdMinter } from '../../schemas/identity.mjs';
 import { loadCorpus } from '../../integrate/canonical.mjs';
 import { RecordBuilder } from '../../verifier/build.mjs';
 import { FOUR_VALIDATORS, ROLLBACK, datasetEvidence } from '../../integrate/propose.mjs';
@@ -102,11 +103,16 @@ export class ProposalRouter {
     this.corpus = corpus ?? loadCorpus();
     this.asOf = String(asOf).slice(0, 10);
     this.simulated = simulated === true;
-    this.seq = { prop: 0, appr: 0, dg: 0 };
+    /* Ids are derived from the gap being routed, never from a
+       counter — agent/schemas/identity.mjs says why. This agent was
+       built after the audit that found the counter, so it inherited
+       the same defect; it is fixed here for the same reason, and
+       because a proposal whose id moves cannot be the thing a human
+       decided about last week. */
+    this.ids = new IdMinter();
   }
 
   #now() { return isoOf(this.tracer.clock.now()); }
-  #id(kind, bucket) { return `${kind}-${String(++this.seq[bucket]).padStart(3, '0')}`; }
 
   /** Validate against the contract, register in the trace, store.
    *  One way out, and no second one. */
@@ -181,7 +187,12 @@ export class ProposalRouter {
     for (const e of arr(gap.affected_entities)) b.addEntity(e);
     b.addEntity({ kind: target.record_kind, id: target.record_id, path: target.dataset, field: target.field, note: 'The field the note would be added to. No value on the record changes.' });
 
-    const proposal_id = this.#id('prop-annotate', 'prop');
+    const proposal_id = this.ids.mint('prop-annotate', {
+      kind: 'annotate',
+      entities: [{ kind: target.record_kind, id: target.record_id, path: target.dataset }],
+      subject: target.field,
+      discriminator: gap.gap_id,
+    });
     b.set('proposal_id', proposal_id);
     b.set('dataset', target.dataset);
     b.set('record_kind', target.record_kind);
@@ -263,7 +274,12 @@ export class ProposalRouter {
     for (const e of arr(gap.affected_entities)) b.addEntity(e);
     b.addEntity({ kind: 'taxonomy_term', id: need.proposed_term.id, path: 'data/taxonomy.json', field: need.dimension, note: 'The term proposed. It does not exist, and this proposal does not create it.' });
 
-    const proposal_id = this.#id('prop-taxonomy', 'prop');
+    const proposal_id = this.ids.mint('prop-taxonomy', {
+      kind: 'create_taxonomy_term',
+      entities: [{ kind: 'taxonomy_term', id: need.proposed_term.id, path: 'data/taxonomy.json' }],
+      subject: need.dimension,
+      discriminator: gap.gap_id,
+    });
     b.set('proposal_id', proposal_id);
     b.set('dataset', 'data/taxonomy.json');
     b.set('record_kind', 'taxonomy_term');
@@ -320,7 +336,7 @@ export class ProposalRouter {
 
   #approvalFor(span, proposal, gap, { what_to_check, consequence }) {
     const b = this.#builder('ApprovalRequest', span);
-    const approval_id = this.#id('appr', 'appr');
+    const approval_id = this.ids.mint('appr', { kind: 'approval', subject: proposal.proposal_id });
 
     b.addEvidence({
       evidence_id: 'ev-proposal',
@@ -382,7 +398,11 @@ export class ProposalRouter {
     const leanRefs = this.#carriedDemand(b, gap);
     for (const e of arr(gap.affected_entities)) b.addEntity(e);
 
-    const gap_id = this.#id('dg-from-depth', 'dg');
+    const gap_id = this.ids.mint('dg-from-depth', {
+      kind: gap_kind,
+      entities: gap.affected_entities,
+      subject: gap.gap_id,
+    });
     b.set('gap_id', gap_id);
     b.set('gap_kind', gap_kind);
     b.set('absence_kind', gap.absence_kind);

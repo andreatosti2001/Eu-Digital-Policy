@@ -53,6 +53,7 @@
 
 import { isoOf } from '../observability/ids.mjs';
 import { emit } from '../schemas/gateway.mjs';
+import { IdMinter } from '../schemas/identity.mjs';
 import { loadCorpus } from '../integrate/canonical.mjs';
 import { RecordBuilder } from '../verifier/build.mjs';
 import { DEPTH_GAP_KINDS, DEPTH_IMPACT_RANK } from '../schemas/types.mjs';
@@ -102,11 +103,26 @@ export class DepthAgent {
        not an absence. */
     this.changes = Array.isArray(changes) ? changes : [];
     this.lens = buildLens({ corpus: this.corpus });
-    this.seq = 0;
+    /* Ids are derived from the finding's own content, never from a
+       counter. See agent/schemas/identity.mjs for why, and for why
+       this minter is not the id store that module forbids. */
+    this.ids = new IdMinter();
   }
 
   #now() { return isoOf(this.tracer.clock.now()); }
-  #id(kind) { return `kg-${kind.replace(/_/g, '-')}-${String(++this.seq).padStart(3, '0')}`; }
+  /** The natural key of a depth finding: its kind, the full sorted
+   *  set of entities it is about, and its subject. The entity SET
+   *  matters — `missing_instrument_relationship` about (ai-act,
+   *  gdpr) and about (ai-act, dsa) share a first entity and are two
+   *  findings, which is exactly the case the first-entity shorthand
+   *  collides on. */
+  #id(finding) {
+    return this.ids.mint(`kg-${finding.gap_kind.replace(/_/g, '-')}`, {
+      kind: finding.gap_kind,
+      entities: finding.entities,
+      subject: finding.subject,
+    });
+  }
 
   /** Validate against the contract, register in the trace, store.
    *  One way out, and no second one. */
@@ -121,7 +137,7 @@ export class DepthAgent {
   #build(span, finding) {
     const { autonomy_class, why: autonomyWhy, escalated } = autonomyFor(finding);
     const { confidence, basis } = confidenceFor(finding);
-    const gap_id = this.#id(finding.gap_kind);
+    const gap_id = this.#id(finding);
 
     const b = new RecordBuilder({ contract: 'KnowledgeGap', agent: DEPTH_AGENT, now: this.#now(), span, simulated: this.simulated });
 

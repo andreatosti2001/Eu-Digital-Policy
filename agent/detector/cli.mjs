@@ -24,6 +24,7 @@
    ============================================================ */
 
 import { Tracer } from '../observability/tracer.mjs';
+import { upstreamOf, recordHandoff } from '../observability/chain.mjs';
 import { JsonlSink } from '../observability/sink.mjs';
 import { RecordStore, MemoryRecordStore, readRecords } from '../scout/store.mjs';
 import { Detector, DETECTOR_AGENT } from './detector.mjs';
@@ -76,7 +77,16 @@ if (live) {
 }
 
 const store = dry ? new MemoryRecordStore({ allowSimulated: !live }) : new RecordStore({ allowSimulated: !live });
-const tracer = new Tracer({ service: 'eu-digital-policy', sink: new JsonlSink(), attributes: { agent: DETECTOR_AGENT } });
+/* The run that produced these verifications, read off the records
+   themselves, so this run's spans and its AgentRun carry the edge
+   back to it from one place. */
+const upstream = live ? upstreamOf(verifications) : null;
+const tracer = new Tracer({
+  service: 'eu-digital-policy',
+  sink: new JsonlSink(),
+  attributes: { agent: DETECTOR_AGENT },
+  parent_run_id: upstream && !upstream.ambiguous ? upstream.run_id : null,
+});
 
 out();
 out(live
@@ -149,6 +159,20 @@ try {
     for (const x of r.refused) out(`    ${x.what}: ${x.reason}`);
   }
 
+  if (upstream) {
+    const edge = recordHandoff({
+      upstream,
+      to_agent: DETECTOR_AGENT,
+      records: verifications,
+      downstream_trace_id: r.trace_id,
+      reason: `Comparing ${verifications.length} verification(s) against what the corpus currently holds.`,
+    });
+    out();
+    out(edge.emitted
+      ? `  CHAIN  ${upstream.trace_id} → ${r.trace_id}. parent_run_id ${upstream.run_id}; handoff ${edge.handoff_id} recorded on the upstream trace.`
+      : `  CHAIN  no handoff recorded on the upstream trace — ${edge.why}`);
+  }
+
   const after = hashDataDir();
   const untouched = JSON.stringify(before) === JSON.stringify(after);
 
@@ -163,8 +187,20 @@ try {
     ? '  data/ is byte-identical to before this run. Nothing was edited, proposed or applied.'
     : '  data/ CHANGED DURING THIS RUN. This agent has no code path that writes there — treat every record it produced as suspect.');
   out('  Every unclassified transition and every "not compared" is a result, not a failure.');
+
+  /* TOTAL INTAKE REFUSAL IS NOT A SUCCESSFUL RUN. An unclassified
+     transition and a "not compared" are results and still exit 0;
+     every input refused at intake is a run that produced nothing
+     from what it was given. */
+  const refusedAtIntake = r.refused.filter((x) => x.stage === 'intake').length;
+  const totalRefusal = verifications.length > 0 && refusedAtIntake === verifications.length;
+  if (totalRefusal) {
+    out();
+    out(`  ALL ${verifications.length} verification(s) were refused at intake and nothing was compared. Exit 2.`);
+    out('  This is the intake gate working, and it is not a run that succeeded.');
+  }
   out();
-  process.exitCode = untouched ? 0 : 1;
+  process.exitCode = untouched ? (totalRefusal ? 2 : 0) : 1;
 } catch (err) {
   out(`  the run failed: ${err.message}`);
   process.exitCode = 1;
