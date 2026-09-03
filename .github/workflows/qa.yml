@@ -118,7 +118,8 @@ jobs:
             agent/proposals/editorial/selftest.mjs \
             agent/ux/selftest.mjs \
             agent/observability/selftest.mjs \
-            agent/implement/selftest.mjs
+            agent/implement/selftest.mjs \
+            agent/health/selftest.mjs
           do
             echo "::group::$s"
             node --test "$s"
@@ -163,6 +164,64 @@ jobs:
       # fact, not something a given change introduced.
       - name: Scan the published surface
         run: node agent/implement/cli.mjs boundary
+
+  # ----------------------------------------------------------
+  # 3b. SESSION 20 — the health monitor
+  #
+  # It runs WITHOUT the browser here, because the browser job below
+  # already runs the suite and running it twice doubles the slowest
+  # step to re-derive numbers the health monitor would only be
+  # reporting. The six browser-sourced public-website metrics come
+  # back `unmeasurable` in this job and SAY SO — which is the whole
+  # design, and is why running it this way is honest rather than a
+  # shortcut: the report states what it could not see.
+  # ----------------------------------------------------------
+  health:
+    name: Website health monitor
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: The metric register
+        run: node agent/health/cli.mjs --metrics
+
+      # --no-record: a CI runner is thrown away, so a history entry
+      # written here would be lost, and a history with one entry per
+      # push and no continuity is worse than none.
+      - name: Measure the three domains
+        run: node agent/health/cli.mjs --as-of "$(date -u +%Y-%m-%d)" --no-browser --no-record
+
+      # The public-safe subset, as an artifact rather than as a
+      # commit. Publishing is a decision; this makes the subset
+      # available to whoever takes it.
+      - name: Produce the public-safe subset
+        run: node agent/health/cli.mjs --as-of "$(date -u +%Y-%m-%d)" --no-browser --no-record --publish health-public.json > /dev/null
+
+      - name: Upload it
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-public
+          path: health-public.json
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Nothing was written to the repository
+        run: |
+          rm -f health-public.json
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error title=The health monitor wrote to the repository::A monitor that alters what it measures is the least trustworthy thing in the system."
+            git status --porcelain
+            exit 1
+          fi
+          echo "clean"
 
   # ----------------------------------------------------------
   # 4. SESSION 19 — the browser suite
@@ -235,7 +294,7 @@ jobs:
   # ----------------------------------------------------------
   report:
     name: What this workflow does not prove
-    needs: [validators, agents, boundary, browser]
+    needs: [validators, agents, boundary, health, browser]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -261,4 +320,7 @@ jobs:
             echo "- **No contrast was computed and no screen reader was run.** README limitation 7."
             echo "- **106 records carry an unverified note.** They are changed by doing the"
             echo "  verification work, not by a passing check."
+            echo "- **There is no overall health score, and a green tick is not one.** The health"
+            echo "  monitor reports three domains separately and never sums them; nine of its"
+            echo "  metrics report \`unmeasurable\` in this job because the browser does not run in it."
           } >> "$GITHUB_STEP_SUMMARY"

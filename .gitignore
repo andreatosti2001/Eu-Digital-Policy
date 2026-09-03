@@ -15,3 +15,24 @@ agent/records/
 # produces, written where SESSION 14 said to write them; the site is not
 # changed because an agent was confident.
 agent/proposals/editorial/drafts/
+
+# The health monitor's historical record. Run artifacts, and — the reason this
+# entry is not merely conventional — it holds PRIVATE CONTROL PLANE HEALTH DATA:
+# which routes answer unauthenticated requests, which approvals were void, which
+# gate refused what. This repository has no publication boundary (GitHub Pages
+# serves main at the repository root with no _config.yml and no exclude list), so
+# a git-tracked health record would be a health record on the public web.
+#
+# A .gitignore entry is not a security boundary, and agent/health/ says so rather
+# than pretending otherwise. It is the strongest control available in a repository
+# whose deployment unit is the whole tree.
+#
+# The public-safe subset is a separate artifact: node agent/health/cli.mjs --publish
+#
+# Everything in the directory, with the README negated back in — the reasoning for
+# the rule belongs in the repository even though nothing it describes does. The
+# glob is `*` rather than `*.jsonl` so a future artifact is ignored by DEFAULT:
+# an ignore list that only covers the extension somebody thought of is the same
+# shape of mistake as a denylist.
+agent/health/history/*
+!agent/health/history/README.md

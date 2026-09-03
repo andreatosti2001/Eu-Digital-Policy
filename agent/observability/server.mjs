@@ -27,7 +27,16 @@ import { DEFAULT_RUN_DIR, OBS_ROOT } from './sink.mjs';
 const VIEWER = join(OBS_ROOT, 'viewer');
 const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml' };
 
-export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR } = {}) {
+/**
+ * @param {{port?:number, host?:string, dir?:string, quiet?:boolean}} opts
+ *
+ * `quiet` suppresses the startup banner. It exists for
+ * agent/health/gather.mjs, which starts this server on an ephemeral
+ * loopback port to check whether its privileged routes answer an
+ * unauthenticated request, and then shuts it down — three lines of
+ * banner in the middle of a health report is noise, not information.
+ */
+export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR, quiet = false } = {}) {
   const json = (res, body, code = 200) => {
     const s = JSON.stringify(body);
     res.writeHead(code, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'content-length': Buffer.byteLength(s) });
@@ -188,6 +197,7 @@ export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR }
   });
 
   server.listen(port, host, () => {
+    if (quiet) return;
     console.log(`observability view → http://${host}:${port}`);
     console.log(`  store: ${dir}`);
     console.log(`  ctrl-c to stop`);

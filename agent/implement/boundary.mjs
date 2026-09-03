@@ -47,6 +47,7 @@
    ============================================================ */
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { join, relative } from 'node:path';
 import { REPO_ROOT } from './baseline.mjs';
 
@@ -133,10 +134,17 @@ export function classifyHit(path) {
   return { class: 'unclassified', severity: 'error', why: 'in the published tree, in a file that is neither a website asset nor a declared test fixture. Treated as a real credential until somebody says otherwise.' };
 }
 
-const SKIP_DIRS = new Set(['.git', 'node_modules', 'runs', 'records', 'drafts']);
+/* Only the two that are enormous and never relevant. The run-artifact
+   directories used to be listed here as well, which made `untracked`
+   silently incomplete — a directory skipped by the walk cannot be
+   reported as present on disk. Now that `publicSurface` filters by
+   git tracking, the walk's job is to say what EXISTS, and skipping
+   things it should be reporting was the wrong shape for it. */
+const SKIP_DIRS = new Set(['.git', 'node_modules']);
 const BINARY_EXT = new Set(['.woff', '.woff2', '.ttf', '.otf', '.png', '.jpg', '.jpeg', '.webp', '.ico', '.gif', '.pdf', '.zip']);
 
-/** Every file in the tree, repository-relative. */
+/** Every file in the tree, repository-relative. Includes untracked
+ *  and git-ignored files; `publicSurface` filters them out. */
 export function allFiles({ root = REPO_ROOT } = {}) {
   const out = [];
   const walk = (dir) => {
@@ -154,26 +162,78 @@ export function allFiles({ root = REPO_ROOT } = {}) {
 }
 
 /**
+ * Every file git actually tracks.
+ *
+ * THIS IS THE CORRECTION SESSION 20 FORCED. `publicSurface()`
+ * originally walked the filesystem, which models "every file present
+ * on this machine" — and publication is not that. Deployment is
+ * GitHub Pages serving `main`, and `main` contains TRACKED FILES
+ * ONLY. A git-ignored run artifact is on the developer's disk and
+ * has never been in a commit, so it is not published.
+ *
+ * The difference is not academic: `agent/records/`,
+ * `agent/observability/runs/` and `agent/health/history/` all hold
+ * control-plane data and all exist locally the moment anything runs.
+ * The filesystem walk reported them as PUBLISHED, which is a false
+ * alarm — and a security check that cries wolf about three
+ * directories on every run is a security check people learn to
+ * ignore. agent/health/selftest.mjs caught it by asserting the
+ * health record was not in the published surface, and finding it
+ * there.
+ *
+ * A failure to run git is NOT silently treated as "everything is
+ * tracked": it returns null, and the caller falls back to the
+ * filesystem walk and SAYS SO, because overstating the published
+ * surface is the safe direction for a boundary check.
+ */
+export function trackedFiles({ root = REPO_ROOT } = {}) {
+  try {
+    const out = execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+    const files = out.split('\0').filter(Boolean);
+    return files.length ? files : null;
+  } catch { return null; }
+}
+
+/**
  * What a GitHub Pages deployment from the repository root would
  * serve — with the epistemic status of the answer attached, because
  * this has NOT been confirmed against the live site.
  */
 export function publicSurface({ root = REPO_ROOT } = {}) {
-  const files = allFiles({ root });
+  const tracked = trackedFiles({ root });
+  const onDisk = allFiles({ root });
+  /* Tracked files are what `main` carries and therefore what Pages
+     serves. When git cannot be consulted, fall back to the whole
+     tree — overstating the published surface is the safe direction
+     for a boundary check — and say which happened. */
+  const files = tracked ?? onDisk;
+
   const excludedByDefault = files.filter((f) => JEKYLL_DEFAULT_EXCLUDES.some((e) => f === e || f.startsWith(`${e}/`)));
   const dotfiles = files.filter((f) => f.split('/').some((seg) => seg.startsWith('_') || seg.startsWith('.')));
   const published = files.filter((f) => !excludedByDefault.includes(f) && !dotfiles.includes(f));
+  const trackedSet = new Set(files);
+  const untracked = tracked ? onDisk.filter((f) => !trackedSet.has(f)) : [];
 
   return {
     total: files.length,
     published,
     excluded: [...new Set([...excludedByDefault, ...dotfiles])],
+    /* Present on this machine and never committed, so never
+       published. Reported rather than dropped: several of these
+       hold control-plane data, and "not published because git
+       ignores it" is a different and weaker fact from "not
+       published because the deployment excludes it". */
+    untracked,
+    source_of_truth: tracked ? 'git ls-files — what `main` carries, which is what GitHub Pages serves' : 'the filesystem walk — GIT COULD NOT BE CONSULTED, so this OVERSTATES the published surface by including untracked and ignored files',
+    git_consulted: Boolean(tracked),
+    files_on_disk: onDisk.length,
     has_config: existsSync(join(root, '_config.yml')),
     has_nojekyll: existsSync(join(root, '.nojekyll')),
     established: [
       `there is no _config.yml in the repository root${existsSync(join(root, '_config.yml')) ? ' — CORRECTION: there is one, and this module has not read its exclude list' : ''}`,
       `there is no .nojekyll${existsSync(join(root, '.nojekyll')) ? ' — CORRECTION: there is one' : ''}`,
       'no file in the tree declares an exclude list for publication',
+      tracked ? `${files.length} file(s) are tracked by git and therefore in the deployment unit; ${onDisk.length - files.length} more exist on this machine and are not` : 'git could not be consulted, so this reads the filesystem and overstates',
     ],
     inferred: 'that the deployed site therefore serves every path above is inferred from GitHub Pages\' documented default behaviour and from docs/CURRENT-ARCHITECTURE.md §13 ("Deployment is GitHub Pages serving main at the repository root"). It has NOT been confirmed by fetching the deployed site.',
     unresolved: 'outbound access to andreatosti2001.github.io is refused by this environment\'s network policy (HTTP 403 on CONNECT, recorded in docs/CURRENT-ARCHITECTURE.md §13). Nothing in this repository has ever fetched the live site, so what it actually serves is not established here.',
@@ -204,7 +264,23 @@ export function controlPlaneExposure({ root = REPO_ROOT } = {}) {
        web with no error anywhere. */
     ignored_not_excluded: CONTROL_PLANE_DIRS
       .filter(([prefix]) => !surface.published.some((f) => f.startsWith(prefix)))
-      .map(([prefix, why]) => ({ prefix, why, note: 'not present in the tree today. It is git-ignored, which is not the same as excluded from publication: a `git add -f` would publish it and nothing here would object.' })),
+      .map(([prefix, why]) => {
+        const onDisk = surface.untracked.some((f) => f.startsWith(prefix));
+        const excludedByJekyll = surface.excluded.some((f) => f.startsWith(prefix));
+        return {
+          prefix,
+          why,
+          present_on_disk: onDisk,
+          /* Two very different reasons to be absent from the
+             published set, and collapsing them would overstate the
+             protection. A dotfile directory is excluded by the
+             DEPLOYMENT; a git-ignored directory is absent because
+             nobody committed it, which one `git add -f` undoes. */
+          reason: excludedByJekyll
+            ? 'excluded from publication by the deployment: paths beginning with "." or "_" are not served. That is a real boundary, and it is the only one this repository has.'
+            : 'not in the deployment unit because git does not track it. That is an IGNORE RULE, not a publication boundary: a single `git add -f` would put it in `main` and nothing in this repository would object.',
+        };
+      }),
     surface,
   };
 }

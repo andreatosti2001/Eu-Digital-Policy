@@ -160,6 +160,7 @@ export function loadTrace(traceId, dir = DEFAULT_RUN_DIR) {
     editorial: root ? editorialState(root, traceId) : null,
     ux: root ? uxState(root, traceId) : null,
     implement: root ? implementState(root, traceId) : null,
+    health: root ? healthState(root, traceId) : null,
   };
 }
 
@@ -1094,6 +1095,108 @@ export function editorialState(root, traceId = null) {
    report an audit that could not settle nine of its own questions as
    an audit that found nothing to settle.
    ============================================================ */
+
+/* ============================================================
+   healthState — SESSION 20, Agent 10
+
+   The view is built around WHAT THE RUN COULD SEE, because that is
+   the question a health report is most often read without asking.
+   A run with no browser reports six public-website metrics as
+   unmeasurable; a reader skimming the numbers three months later
+   has no way to tell that from a clean bill of health unless the
+   coverage travels with them.
+
+   And it carries no total. `overallScore()` in agent/health/model.mjs
+   throws; this view would be the obvious place to reintroduce one by
+   accident, so it reports the three domains as three objects and the
+   gap list checks that nothing has added a fourth number summing
+   them.
+   ============================================================ */
+
+export function healthState(root, traceId = null) {
+  const spans = [];
+  (function walk(s) {
+    if (String(s.name ?? '').startsWith('health.')) spans.push(s);
+    for (const c of s.children ?? []) walk(c);
+  })(root);
+  if (!spans.length && root.agent !== 'health-monitor') return null;
+
+  const observations = collectEvents(root, 'observation');
+  const decisions = collectEvents(root, 'decision');
+
+  const census = observations.find((o) => o.subject === 'census');
+  const coverage = observations.find((o) => o.subject === 'coverage');
+  const subset = observations.find((o) => o.subject === 'public subset');
+  const moved = observations.find((o) => o.subject === 'movement');
+  const unchanged = observations.find((o) => o.subject === 'NOTHING CHANGED');
+  const score = decisions.find((d) => String(d.decision).includes('no overall score'));
+
+  const readings = observations.filter((o) => o.data && typeof o.data.state === 'string' && o.data.definition);
+
+  const domains = {};
+  for (const s of spans.filter((x) => x.name !== 'health.gather')) {
+    const id = String(s.name).replace(/^health\./, '');
+    domains[id] = {
+      label: s.task ?? null,
+      status: s.status,
+      metrics: s.outputs?.metrics ?? null,
+      measured: s.outputs?.measured ?? null,
+      unmeasurable: s.outputs?.unmeasurable ?? null,
+      not_applicable: s.outputs?.not_applicable ?? null,
+      metrics_with_findings: s.outputs?.metrics_with_findings ?? null,
+      readings: readings
+        .filter((o) => o.span_id === s.span_id)
+        .map((o) => ({
+          id: o.subject,
+          name: o.data.name,
+          state: o.data.state,
+          value: o.data.value,
+          unit: o.data.unit,
+          of: o.data.of,
+          direction: o.data.direction,
+          visibility: o.data.visibility,
+          why: o.data.why,
+          needs: o.data.needs,
+        })),
+    };
+  }
+
+  const gaps = [];
+  if (!census) gaps.push('no health census recorded — the run\'s own totals are not on this trace');
+  if (!coverage) gaps.push('no coverage observation recorded — what the run could and could not see is the first thing a later reader needs, and it is not here');
+  if (!subset) gaps.push('no public-subset observation recorded — whether anything private reached the public view is not on this trace');
+  if (!score) gaps.push('no decision recorded refusing an overall score. SESSION 20 forbids collapsing the three domains, and a run that did not record the refusal cannot show it held');
+  if (!unchanged) gaps.push('no "NOTHING CHANGED" observation recorded — that the monitor did not alter what it measures is the claim it most needs to be able to prove');
+  if (unchanged && unchanged.data && unchanged.data.unchanged === false) {
+    gaps.push(`the monitor CHANGED the repository during its run: ${(unchanged.data.changed ?? []).join(', ')}. A monitor that alters what it measures is the least trustworthy thing in the system.`);
+  }
+  if (subset && (subset.data?.leaked ?? []).length) {
+    gaps.push(`the public subset leaked ${subset.data.leaked.length} private metric(s): ${subset.data.leaked.join(', ')}. This is a boundary failure, not a finding.`);
+  }
+  const byDomain = census?.data?.by_domain ?? {};
+  if (Object.keys(byDomain).length && Object.keys(byDomain).length !== 3) {
+    gaps.push(`the census reports ${Object.keys(byDomain).length} domains; SESSION 20 defines three and they are never summed`);
+  }
+
+  return {
+    trace_id: traceId,
+    as_of: census?.data?.as_of ?? null,
+    total_metrics: census?.data?.total_metrics ?? readings.length,
+    /* Three objects. Never a total — see the header. */
+    by_domain: byDomain,
+    domains,
+    coverage: coverage?.data ?? null,
+    unmeasurable: census?.data?.unmeasurable ?? [],
+    not_applicable: census?.data?.not_applicable ?? [],
+    not_a_score: census?.data?.not_a_score ?? [],
+    threw: census?.data?.threw ?? [],
+    public_subset: subset?.data ?? null,
+    movement: moved?.data ?? null,
+    nothing_changed: unchanged?.data ?? null,
+    no_overall_score: score ? { decision: score.decision, rationale: score.rationale, alternatives: score.alternatives } : null,
+    gaps,
+  };
+}
 
 /* ============================================================
    implementState — SESSION 18, Agent 9

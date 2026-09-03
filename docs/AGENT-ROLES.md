@@ -248,11 +248,39 @@ produced it; celebrates a shrinking unverified report without establishing that
 it shrank through genuine verification.
 
 **Standing blind spots this role must keep visible** (audit F-02, F-05, F-08,
-F-12, F-14): nothing runs automatically; no URL has ever been tested; a stale
-*present* translation key is undetectable; the README's four derived counts are
-typed by hand and checked by nothing; failures after deployment are
-`console.error` only and reach no one; a 404 on a locale file is swallowed to
-`{}` by design.
+F-12, F-14): no URL has ever been tested; a stale *present* translation key is
+undetectable; the README's four derived counts are typed by hand and checked by
+nothing; failures after deployment are `console.error` only and reach no one; a
+404 on a locale file is swallowed to `{}` by design. "Nothing runs
+automatically" moved in SESSION 18: `.github/workflows/qa.yml` runs the checks on
+every push, which makes a failure **visible** and not **blocking**.
+
+**Filled by `agent/health/` since SESSION 20, as Agent 10.** Forty-four metrics
+across **three domains that are never summed** — the public website, the
+knowledge corpus, and the private control plane — because a broken link costs a
+reader a click, a false statement about EU law costs them a decision they cannot
+take back, and an unaudited approval costs the system its provenance. There is no
+overall score: `agent/health/model.mjs overallScore()` throws, and the refusal is
+recorded as a decision on every run's trace.
+
+**Every metric declares eight things** — name, definition, source, calculation,
+frequency, interpretation, limitations, public-or-private — and `defineMetric`
+refuses one that omits any. This role's *never* list is enforced by the model
+rather than remembered: a reading is `measured`, `unmeasurable` or
+`not_applicable`, and an unmeasurable carries a **null** value plus what would be
+needed. Nine report unmeasurable in a typical run and two can never be measured
+here — deployment failures, because nothing has ever fetched the deployed origin,
+and authentication failures, because there is no authentication.
+
+**Five metrics are marked `not_a_score`** and the model refuses to let them be
+re-labelled: the unverified count, the provenance gaps, the verification gaps, the
+blocking open questions and the rejected proposals. Every cheap route down is a
+prohibited action under `AUTONOMY-POLICY.md`, and a rise in the first four usually
+means somebody examined a record nobody had examined.
+
+**The public/private split is a whitelist.** A control-plane metric can only be
+published with a written justification the model checks, and a public reading
+carries no detail, no evidence and no paths. `docs/HEALTH-MONITOR.md`.
 
 ---
 
