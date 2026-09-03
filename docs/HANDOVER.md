@@ -4,6 +4,16 @@
 **Branch:** `claude/ux-ui-auditor-agent-sy99b6`, cut from `main` at `bcc0426`.
 **Base commit:** `bcc0426` on `main` ("Record in the handover that SESSIONS 14
 and 15 are merged").
+**Merged into `main`** at `18a2cbb` — the session prompt instructed it explicitly,
+in both halves ("At the end of the session, merge everything into branch main").
+That is the authorisation `AGENTS.md` requires for a push to `main`, because
+`main` publishes to the live site and there is no deploy gate. All twelve suites,
+the contract check and all four validators were re-run **on the merged tree**
+before the push, not only on the branch: 683 pass, 18/18 satisfiable, 0 errors,
+106 unverified, the same five `design-qa` warnings. `git diff bcc0426..HEAD` over
+`data/`, `js/`, `css/`, `i18n/`, `fonts/`, `tools/`, every `*.html`, `style.css`,
+`app.js`, `README.md` and `CLAUDE.md` is **empty** — checked on the merged tree,
+not asserted. The branch is left in place rather than deleted.
 
 **The stale-`main` trap caught this session too, for the fourth session running.**
 The local `main` in this container was **44 commits behind** `origin/main` (45 in
