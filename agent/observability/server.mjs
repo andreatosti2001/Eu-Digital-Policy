@@ -88,6 +88,23 @@ export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR }
         }
         return json(res, { depth: analyses });
       }
+      if (p === '/api/proposals') {
+        /* What each routing run made of the gaps it was handed.
+           `?trace=` narrows to one run. Every entry carries what the
+           run REFUSED as well as what it proposed: on this corpus
+           most gaps cannot become a proposal, and a view that showed
+           only the proposals would report the work as more complete
+           than it is. */
+        const trace = url.searchParams.get('trace');
+        if (trace && !/^[0-9a-f]{32}$/.test(trace)) return json(res, { error: 'bad trace id' }, 400);
+        const traces = trace ? [trace] : listRuns(dir).map((r) => r.trace_id);
+        const routings = [];
+        for (const id of traces) {
+          const t = loadTrace(id, dir);
+          if (t?.proposals) routings.push(t.proposals);
+        }
+        return json(res, { proposals: routings });
+      }
       if (p === '/api/chain') {
         return json(res, {
           chains: traceChain({

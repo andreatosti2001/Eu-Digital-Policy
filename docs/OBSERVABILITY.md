@@ -285,6 +285,43 @@ rail counts reported gaps — warning where any of them sit at
 available to be read as a negative finding.
 
 
+---
+
+## Gap proposals — the routing, exposed with what it refused
+
+SESSION 12 asked that each knowledge gap can become a structured proposal. On
+this corpus most cannot — closing them means writing a value read from a
+document, and nothing here has retrieved one — so **the refusals are the half
+this view exists to show**, in the same way the set-aside half is the point of
+the depth view above.
+
+| Emitted by `agent/proposals/data/` | Carrying |
+|---|---|
+| one span per route, named `propose.<route>` | `gaps`, `proposals`, `approvals`, `data_gaps` and `refused` on its own outputs |
+| an `observation` beginning `NO PROPOSAL —` | one per gap that produced nothing, with the reason |
+| `artifact`s of type `contract:DataProposal`, `contract:ApprovalRequest`, `contract:DataGap` | one per record emitted |
+| `handoff`s to `editorial` and `legal-verifier` | the gaps this agent cannot act on, and what went with them |
+| an `observation` beginning `PROPOSAL CENSUS —` | the run's totals: by route, by kind and route, and the routes nothing took |
+| an `observation` beginning `NOTHING MERGED —` | `applied: 0` and `data_dir_written: false` |
+| a `decision` | what the run routed by, with the alternatives it did not take — including *"author a proposal for every gap, leaving the value blank"* |
+
+`proposalState()` in `query.mjs` joins them. Four states are reported as **gaps
+in the view** rather than smoothed over: a missing census, a missing routing
+decision, a missing nothing-merged claim, and — the one that matters most — a
+proposal with no approval request, which is an unapproved change that looks
+approved. A route nothing took is carried through, for the reason a detector
+that found nothing is.
+
+```
+node agent/observability/cli.mjs proposals [--trace t] [--refused]
+GET /api/proposals?trace=
+```
+
+The viewer has a **Gap proposals** panel with the same content, and the overview
+rail counts the gaps that could **not** become a proposal — not the ones that
+could, because a tile showing only what was authored would report the work as
+more complete than it is.
+
 ## The development view
 
 `node agent/observability/cli.mjs serve` → `http://127.0.0.1:7801`.
@@ -298,7 +335,7 @@ failed traces; open handoffs; pending human approvals; website changes; and
 per trace — the execution tree, a timeline, the agents with their confidence
 and risk, decisions with their rejected alternatives, artifacts with hashes
 and previews, handoffs, approvals, the provenance ledger, the audit chain,
-the regulatory impact maps, the data-depth analysis, and errors.
+the regulatory impact maps, the data-depth analysis, the gap routing, and errors.
 
 Two behaviours are the point rather than a detail:
 
@@ -325,6 +362,7 @@ The API:
 | `GET /api/chain?trace=&file=&change=` | the audit chain |
 | `GET /api/impact?trace=&change=` | the regulatory impact maps, with their graphs, routing and gaps |
 | `GET /api/depth?trace=` | the depth analyses, with what each run reported **and** what it set aside |
+| `GET /api/proposals?trace=` | the gap routings, with what each run proposed **and** what it refused |
 | `GET /api/export?trace=&kind=` | OTLP/JSON, or the provenance ledger |
 
 ---
