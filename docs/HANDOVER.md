@@ -10,11 +10,17 @@ to the live site and there is no deploy gate. All eleven suites, the contract
 check and all four validators were re-run **on the merged tree** before the push,
 not only on the branch.
 
-**The stale-`main` trap did not catch this session, and the check is still
-worth running.** `git log origin/main..main` and `main..origin/main` were both
-run before merging. Local `main` was at `936aa2d`, identical to `origin/main`.
-Two earlier sessions found it 32 and 40 commits behind; run
-`git fetch --all && git branch -a` before concluding anything.
+**The stale-`main` trap caught this session too, and the number is still
+growing.** The local `main` in this container was **45 commits behind**
+`origin/main` (40 in SESSION 13, 32 in SESSION 12), sitting at `7248290` — the
+pre-SESSION 00 bulk upload. Merging into it would have silently reverted every
+session of work this repository has. It was reset to `origin/main` rather than
+merged into. `git log main..origin/main` and `origin/main..main` were both run
+before the merge, and the first is the one that caught it — an earlier draft of
+this very paragraph claimed the trap had missed, written before the check was
+run, and it was wrong. Run `git fetch --all && git branch -a` before concluding
+anything, and check both directions before merging into a local branch you did
+not just create.
 
 **This session had TWO objectives, and they landed in ONE commit.** SESSION 14
 built the Editorial Agent; SESSION 15 extended it to detect stale editorial prose.
