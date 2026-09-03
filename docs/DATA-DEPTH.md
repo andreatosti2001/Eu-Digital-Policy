@@ -341,7 +341,10 @@ agent may report the other's finding.
    them into is mostly a handoff rather than a proposal, and for the reason this whole
    document names: closing most of these gaps means writing a value read from a document, and
    nothing here has retrieved one. Of the 57 gaps, 14 become a proposal and 43 are routed to
-   the Verifier, to Editorial or to the repository owner, each with its reason.
+   the Verifier, to Editorial or to the repository owner, each with its reason. *SESSION 14
+   note: Editorial is now an agent (`agent/proposals/editorial/`, Agent 7) rather than only a
+   role — and it authors no definition either, for the reason `docs/GAP-PROPOSALS.md` §4
+   gives.*
 5. **The scope filter is only as good as `scope_class`.** An act mis-classified as
    `scope:referenced` disappears from four detectors silently. The suppression is printed, so
    it is visible, but nothing here checks that a scope class is correct.

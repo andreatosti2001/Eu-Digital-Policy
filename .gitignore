@@ -10,3 +10,8 @@ agent/observability/runs/
 # Contract records written by agents. Run artifacts, not canonical data:
 # the legal record lives in data/, and nothing reaches it without a human.
 agent/records/
+
+# Editorial drafts. Run artifacts in the shape every other agent here
+# produces, written where SESSION 14 said to write them; the site is not
+# changed because an agent was confident.
+agent/proposals/editorial/drafts/

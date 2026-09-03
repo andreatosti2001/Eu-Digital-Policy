@@ -84,6 +84,16 @@ function renderTiles(s) {
        is the result a reader most needs to be able to see. */
     ['model questions handled', (s.architecture ?? []).reduce((n, x) => n + (x.answered_no ?? []).length, 0), null],
     ['model shapes proposed', (s.architecture ?? []).reduce((n, x) => n + (x.proposed ?? 0), 0), (s.architecture ?? []).some((x) => (x.proposed ?? 0) > 0) ? 'warn' : null],
+    /* THE DRAFTED COUNT, not the proposal count. A drafted
+       substitution is the only text an editorial run composes, and
+       it is the one number a reader should see before any other. A
+       tile totalling all three kinds would bury it under a queue of
+       things nobody wrote. */
+    ['prose corrections drafted', (s.editorial ?? []).reduce((n, x) => n + (x.drafted ?? 0), 0), (s.editorial ?? []).some((x) => (x.drafted ?? 0) > 0) ? 'warn' : null],
+    /* And beside it, the sentences examined and found not to need
+       correcting. "Looked and found nothing" and "did not look" are
+       different findings, and only the first of them is on a tile. */
+    ['prose examined, no change', (s.editorial ?? []).reduce((n, x) => n + (x.no_change ?? 0), 0), null],
   ];
   $('#tiles').replaceChildren(...tiles.map(([label, n, tone]) =>
     el('div', { class: 'tile', 'data-tone': tone }, el('b', { text: String(n) }), el('span', { text: label }))));
@@ -155,6 +165,7 @@ const TABS = [
   ['depth', 'Data depth', (t) => t.depth?.reported ?? null],
   ['proposals', 'Gap proposals', (t) => t.proposals?.proposed ?? null],
   ['architecture', 'Knowledge architecture', (t) => t.architecture?.proposed ?? null],
+  ['editorial', 'Editorial', (t) => t.editorial?.proposals ?? null],
   ['errors', 'Errors', (t) => t.errors.length],
 ];
 
@@ -476,6 +487,56 @@ function renderPanel(t) {
       a.gaps.length
         ? el('p', { class: 'gaps', text: `GAPS — ${a.gaps.join('; ')}` })
         : el('p', { class: 'mono', text: 'no gaps: the census, the ordering decision, all eight answers, every set-aside reason and the "nothing merged" claim are on this trace' }),
+    ));
+  }
+  if (state.tab === 'editorial') {
+    const e = t.editorial;
+    if (!e) return p.replaceChildren(el('p', { class: 'empty', text: 'no editorial analysis on this trace' }));
+    const kinds = Object.entries(e.by_kind ?? {});
+    return p.replaceChildren(el('div', { class: 'chain' },
+      el('h3', {}, `${e.proposals} proposal(s), of which ${e.drafted ?? 0} drafted; ${e.no_change} sentence(s) needing no change `, e.simulated ? badge('simulated') : null),
+      el('p', { class: 'mono', text: `as at ${e.as_of ?? '?'} · ${e.inputs_admitted ?? '?'} verified input(s) admitted, ${e.inputs_refused ?? '?'} refused · ${e.blocks_reached ?? '?'} block(s) reached · ${e.open_questions} open question(s) · ${e.pending_approvals} approval(s) pending · ${e.merged ?? '?'} merged · ${e.applied ?? '?'} applied · ${e.sentences_authored ?? '?'} sentence(s) authored` }),
+      /* THE THREE KINDS, KEPT APART. Only the first may carry a
+         drafted replacement, and collapsing them into one total
+         would hide the only one that put words on a page. */
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: 'The three kinds — only a factual update may be drafted' }),
+        kinds.length
+          ? el('pre', { text: kinds.map(([k, n]) => `${String(k).padEnd(26)} ${String(n).padStart(4)}${k === 'factual_update' ? '   ← the only kind that carries a replacement' : '   nothing drafted, by construction'}`).join('\n') })
+          : el('p', { class: 'mono', text: 'no proposals' })),
+      /* How much of the site's prose carries provenance at all. The
+         four states plus the fifth: a block with no claim record,
+         about which this agent says so rather than guessing. */
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: 'What the site\'s prose is — derived, never stored' }),
+        e.by_state
+          ? el('pre', { text: Object.entries(e.by_state).map(([k, n]) => `${String(k).padEnd(18)} ${String(n).padStart(4)}`).join('\n') })
+          : el('p', { class: 'mono', text: 'no register recorded' }),
+        el('p', { class: 'none', text: `${e.attributed ?? '?'} block(s) carry a claim record; ${e.unattributed ?? '?'} carry none. "not_attributed" is what this agent says about those rather than a guess.` })),
+      /* The no-change panel is the point of this view, as the
+         set-aside panel is the point of the architecture view. A
+         sentence examined and found clear is a finding. */
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: `Examined and needing no change — ${e.no_change}` }),
+        e.explanations.length
+          ? el('ul', { class: 'queue' }, ...e.explanations.map((x) => el('li', {},
+              el('code', { text: x.subject }), x.state ? el('code', { text: ` ${x.state}` }) : null, el('div', { class: 'none', text: x.how ?? x.summary }))))
+          : el('p', { class: 'mono', text: 'nothing was examined and cleared' })),
+      el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Refused at intake — only verified inputs reach this agent' }),
+        e.stages.some((x) => x.refused.length)
+          ? el('ul', { class: 'queue' }, ...e.stages.flatMap((st) => st.refused.map((r) => el('li', {},
+              el('code', { text: r.subject }), el('div', { class: 'none', text: r.why })))))
+          : el('p', { class: 'mono', text: 'nothing was refused at intake' })),
+      e.triage ? el('div', { class: 'chain-stage' },
+        el('h4', { text: 'Triage' }),
+        el('p', { text: e.triage.decision }),
+        el('p', { class: 'none', text: e.triage.rationale }),
+        el('pre', { text: (e.triage.alternatives ?? []).join('\n') })) : null,
+      el('p', { class: 'mono', text: `records — ${e.proposal_ids.length} EditorialProposal, ${e.approval_ids.length} ApprovalRequest, ${e.no_change_ids.length} AgentObservation. Nothing but a factual update carries a replacement, and no sentence was authored.` }),
+      e.gaps.length
+        ? el('p', { class: 'gaps', text: `GAPS — ${e.gaps.join('; ')}` })
+        : el('p', { class: 'mono', text: 'no gaps: the census, the triage decision, every intake refusal, every no-change explanation and the "nothing applied" claim are on this trace' }),
     ));
   }
   if (state.tab === 'errors') {

@@ -75,7 +75,7 @@ nothing open, made explicitly so somebody can disagree with it.
 | `ChangeRecord` | record | a change actually made to this repository |
 | `DataGap` | finding | something the corpus cannot support, named rather than filled |
 | `ArchitectureProposal` | proposal | a change to how the system is built |
-| `EditorialProposal` | proposal | a change to what the brief says |
+| `EditorialProposal` | proposal | a change to what the brief says, typed by what it is — a factual update, an analytical update or an editorial recommendation — of which only the first may carry a drafted replacement |
 | `UXProposal` | proposal | a change to how the site presents itself |
 | `ImplementationProposal` | proposal | a change to the code |
 | `QAResult` | result | what the checks actually said, against their baseline |
@@ -496,3 +496,38 @@ unchanged from the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
    handoff-safe form and carries the epistemic block the trace record does not;
    an agent emitting both writes the summary twice. Whether the trace record
    should become a pointer too is unresolved.
+
+
+---
+
+## SESSION 14 — three fields on `EditorialProposal`, and why each is a field
+
+The contract has existed since SESSION 03 and was produced by nothing until
+`agent/proposals/editorial/` (Agent 7). Building the agent added three fields rather than a
+nineteenth contract: the burden `EditorialProposal` already carried — every prose location,
+every claim affected, both homes of the string, a disposition for every locale key, and the
+red-tier `changes_what_a_claim_asserts` flag — is exactly the burden a change to the brief
+carries, and adding a contract because a new agent exists would be the second home this
+architecture exists to prevent.
+
+| field | what it holds | why it could not be a convention |
+|---|---|---|
+| `proposal_kind` | `factual_update` · `analytical_update` · `editorial_recommendation` | "Only a factual update may be drafted" is the whole permission this agent has. Without the field it lives in an agent's head and no rule can be written against it |
+| `editorial_state` | `fact` · `interpretation` · `critique` · `unresolved` · `not_attributed` | It is a statement about a **sentence**, and no record in `data/` describes one — `claims.json` types propositions. It is what makes "an argument is never corrected because a factual input moved" checkable rather than trusted |
+| `staleness` | `contradicted` (with the sentence quoted) or `possibly_stale` | Certain contradiction and possible staleness are different claims, and the rules refuse to let the weaker one produce an edit |
+
+`caveats_preserved` and `prose_locations[].home` were added beside them: the first so a rule
+can refuse a substitution that drops a hedge the record itself lists, the second so a location
+says which of the three homes of an English string it is.
+
+**Seven rules follow, and they are the session's discipline rather than the agent's.** Nothing
+but a `factual_update` may carry a non-null `proposed`; an `analytical_update` and an
+`editorial_recommendation` are `human_only`; a `factual_update` may not sit over an argument,
+over unresolved evidence, or over prose carrying no claim record; it must name the claim record
+the sentence hangs on; it must quote what it corrects; and a `possibly_stale` finding may never
+carry a replacement. `docs/EDITORIAL-AGENT.md` §6 has the reasoning behind each.
+
+**`editorial_state` is not a second home for `claims.json`'s `type`.** It is derived at read
+time from the claim behind the sentence and the grade `js/format.js` computes for it — and
+where the block carries no claim, the answer is `not_attributed`, which no claim record could
+ever express.

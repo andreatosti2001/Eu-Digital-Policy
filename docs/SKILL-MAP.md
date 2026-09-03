@@ -86,6 +86,7 @@ since SESSION 06.*
 | **Knowledge architect** (read-only) | `project-context`, `observability` | `knowledge-architecture`, `data-governance`, `autonomy-governance` | changing a schema, drafting a shape, proposing a taxonomy term, or reporting what a record would close — the first three are the repository owner's and the fourth is Data Depth's |
 | **Data editor** (human-approved) | `project-context`, `autonomy-governance`, `git-workflow` | `data-governance`, `source-provenance`, `knowledge-architecture`, `legal-site-qa` | authoring a fact from model knowledge |
 | **Editor** (prose) | `project-context`, `autonomy-governance`, `git-workflow` | `legal-editorial`, `legal-site-qa` | changing a claim record to fit a sentence |
+| **Editorial agent** (read-only) | `project-context`, `observability` | `legal-editorial`, `data-governance`, `autonomy-governance` | writing a sentence, rewriting an argument because a factual input moved, minting a citation, or correcting a sentence that carries no claim record — the first two are the author's, the third is the Verifier's, and the fourth is a missing provenance to report rather than a value to fix |
 | **Frontend** | `project-context`, `git-workflow` | `frontend-implementation`, `legal-site-qa`, `ux-audit` | touching `data/` or the derivation rules |
 | **Auditor** | `project-context` | `repository-audit`, `data-completeness`, `ux-audit`, `legal-site-qa` | fixing anything it finds |
 | **Any session** | `project-context` first; `git-workflow` before committing; `legal-site-qa` before and after | — | — |

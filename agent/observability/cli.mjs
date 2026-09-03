@@ -9,6 +9,7 @@
      node agent/observability/cli.mjs depth  [--trace t] [--aside]
      node agent/observability/cli.mjs proposals [--trace t] [--refused]
      node agent/observability/cli.mjs architecture [--trace t] [--aside]
+     node agent/observability/cli.mjs editorial [--trace t] [--no-change]
      node agent/observability/cli.mjs validate
      node agent/observability/cli.mjs export <trace-id> [--provenance]
      node agent/observability/cli.mjs serve [--port 7801] [--open]
@@ -336,6 +337,50 @@ function cmdArchitecture() {
   if (!found) console.log('no architecture analysis in the store. `node agent/architect/cli.mjs --as-of <date>` writes one.');
 }
 
+/**
+ * What an Editorial Agent run did to the site's prose, and — the
+ * half that matters more — what it did not.
+ *
+ * IT PRINTS THE THREE KINDS SEPARATELY AND THE DRAFTED COUNT FIRST,
+ * because they are not the same risk. A drafted substitution is the
+ * only text this agent composes; an analytical flag and a
+ * recommendation are a reviewer's queue. Collapsing them into one
+ * "proposals" number would hide the only one a reader should look at
+ * before anything else.
+ *
+ * The no-change explanations are printed too, for the reason the
+ * depth view names its suppressions: "looked and found nothing" and
+ * "did not look" are different findings, and a view showing only the
+ * proposals reports the first as the second.
+ */
+function cmdEditorial() {
+  const wantTrace = flag('trace');
+  const traces = typeof wantTrace === 'string' ? [wantTrace] : listRuns(DIR).map((r) => r.trace_id);
+  let found = 0;
+
+  for (const id of traces) {
+    const t = loadTrace(id, DIR);
+    if (!t?.editorial) continue;
+    const e = t.editorial;
+    found++;
+    console.log(`\n${e.trace_id} — ${e.proposals} proposal(s), of which ${e.drafted ?? '?'} drafted; ${e.no_change} needing no change${e.simulated ? ' — SIMULATED' : ''}`);
+    console.log(`  as of ${e.as_of ?? '?'}   ${e.pending_approvals} approval(s) pending · ${e.merged ?? '?'} merged · ${e.applied ?? '?'} applied · ${e.sentences_authored ?? '?'} sentence(s) authored`);
+    console.log(`  inputs   ${e.inputs_admitted ?? '?'} admitted · ${e.inputs_refused ?? '?'} refused at intake`);
+    console.log(`  prose    ${e.attributed ?? '?'} block(s) carry a claim record, ${e.unattributed ?? '?'} carry none${e.by_home ? ` · homes ${Object.entries(e.by_home).map(([k, n]) => `${k} ${n}`).join(' · ')}` : ''}`);
+    if (e.by_state) console.log(`  states   ${Object.entries(e.by_state).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+    if (e.by_kind) console.log(`  by kind  ${Object.entries(e.by_kind).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+    console.log(`  reached  ${e.blocks_reached ?? '?'} block(s) · ${e.open_questions} open question(s) — a sentence containing the word, and a reading no agent here makes`);
+    if (e.triage) console.log(`  triaged by ${e.triage.decision}`);
+    for (const s of e.stages) {
+      console.log(`    ${pad(s.stage, 34)} ${String(s.examined ?? '').padStart(4)} examined  ${String(s.reached ?? '').padStart(3)} reached  ${String(s.proposed ?? '').padStart(2)} proposed  ${String(s.no_change ?? '').padStart(2)} no change`);
+      for (const r of s.refused) console.log(`          − ${pad(r.subject, 30)} ${String(r.why).slice(0, 96)}`);
+    }
+    if (flag('no-change')) for (const x of e.explanations) console.log(`    = ${pad(x.subject, 52)} ${String(x.state)} · ${String(x.how).slice(0, 70)}`);
+    console.log(e.gaps.length ? `  GAPS: ${e.gaps.join('; ')}` : '  no gaps: the census, the triage decision, every intake refusal, every no-change explanation and the "nothing applied" claim are on this trace');
+  }
+  if (!found) console.log('no editorial analysis in the store. `node agent/proposals/editorial/cli.mjs --as-of <date>` writes one.');
+}
+
 function cmdValidate() {
   let records = 0, bad = 0, broken = 0;
   for (const f of listTraceFiles(DIR)) {
@@ -377,11 +422,12 @@ switch (cmd) {
   case 'depth': cmdDepth(); break;
   case 'proposals': cmdProposals(); break;
   case 'architecture': cmdArchitecture(); break;
+  case 'editorial': cmdEditorial(); break;
   case 'validate': cmdValidate(); break;
   case 'export': cmdExport(argv[1]); break;
   case 'summary': console.log(JSON.stringify(overview(DIR), null, 2)); break;
   case 'serve': serve({ port: Number(flag('port', 7801)), dir: DIR }); break;
   default:
-    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | architecture | validate | export <id> | summary | serve`);
+    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | architecture | editorial | validate | export <id> | summary | serve`);
     process.exit(1);
 }

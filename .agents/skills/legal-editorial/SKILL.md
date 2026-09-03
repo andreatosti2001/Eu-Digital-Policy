@@ -26,6 +26,17 @@ error message a reader sees; correcting a fact in the running text; changing a h
 | Register, hedging, asterisks | The `claims.json` record behind it — `data-governance` |
 | The English string's three homes | The markup and locale machinery — `frontend-implementation` |
 
+## The agent that reads this prose, and what it may not do
+
+`agent/proposals/editorial/` (Agent 7, `docs/EDITORIAL-AGENT.md`) is the only thing in this
+repository that reads a sentence. It produces proposals in front of a human and **writes
+nothing**: its one permitted edit is a substitution of one verified value for another inside a
+sentence that already exists, and everything else it produces carries a null replacement.
+
+If you are working through that agent, its refusals are this skill's rules in executable form
+and nothing here overrides them. If you are editing by hand, its output is a queue and not a
+work order.
+
 ## Whose text this is
 
 **Editing the argument is the author's work.** An agent may correct a fact it has verified,

@@ -12,10 +12,13 @@ integrator** (`agent/integrate/`) emits `ClaimEvidence`, `DataProposal`,
 (`agent/detector/`) emits `RegulatoryChange`, `ImpactAssessment` and `DataGap`;
 the **Data Depth Agent** (`agent/depth/`) emits `KnowledgeGap`; the **gap
 router** (`agent/proposals/data/`) emits `DataProposal`, `ApprovalRequest` and
-`DataGap`; and the **Knowledge Architect** (`agent/architect/`) emits
-`ArchitectureProposal` and `ApprovalRequest`. All of them go
-through `gateway.mjs` and are stored in `agent/records/` via
-`agent/scout/store.mjs`. The remaining contracts have not yet been exercised by
+`DataGap`; the **Knowledge Architect** (`agent/architect/`) emits
+`ArchitectureProposal` and `ApprovalRequest`; and the **Editorial Agent**
+(`agent/proposals/editorial/`) emits `EditorialProposal`, `ApprovalRequest` and
+`AgentObservation`. All of them go through `gateway.mjs` and are stored via
+`agent/scout/store.mjs` — in `agent/records/`, except the Editorial Agent's,
+which go to `agent/proposals/editorial/drafts/` because SESSION 14 said to draft
+there. The remaining contracts have not yet been exercised by
 a real agent. See `docs/SOURCE-SCOUT.md`, `docs/LEGAL-VERIFIER.md`,
 `docs/VERIFICATION-INTEGRATION.md`, `docs/CHANGE-DETECTOR.md`,
 `docs/REGULATORY-IMPACT-MAPPING.md`, `docs/DATA-DEPTH.md`,
@@ -58,6 +61,18 @@ whose burden (modules affected, invariants touched, dependency impact, the three
 red-tier booleans, a migration, a rollback plan) is exactly the burden a change
 to the information model carries. `docs/KNOWLEDGE-ARCHITECTURE.md` §3 has the
 reasoning.
+
+**SESSIONS 14 and 15 added no nineteenth either, and added three FIELDS
+instead.** Agent 7, the Editorial Agent (`agent/proposals/editorial/`), emits
+`EditorialProposal` — which has existed since SESSION 03 and had been produced
+by nothing. What it gained is `proposal_kind`, `editorial_state` and
+`staleness`, plus `caveats_preserved` and a `home` on each prose location, and
+each is a field rather than a convention because a rule cannot be written
+against a convention: only a `factual_update` may carry a drafted replacement,
+only a `contradicted` finding may be corrected, and a `factual_update` that
+cannot name the claim record its sentence hangs on has orphaned it.
+`docs/AGENT-CONTRACTS.md`'s closing section and `docs/EDITORIAL-AGENT.md` §6
+have the reasoning.
 
 It also added `identity.mjs`, which is
 not a contract: it derives a record's `id_field` value from the record's own

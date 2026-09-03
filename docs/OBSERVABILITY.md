@@ -603,8 +603,10 @@ is otherwise over — legitimate while a run is live, a defect once it is not.
 
 ## Known limitations
 
-1. **No agent is instrumented, because no agent exists.** Everything here is
-   exercised by a simulated workflow only.
+1. **No agent is instrumented, because no agent exists.** *Stale since SESSION 05:
+   eight agents now exist and every one is instrumented through this layer.
+   Everything here is still exercised against fixtures, because no agent in this
+   repository has retrieved a real document.*
 2. **The store is per-developer and not shared.** Two machines produce two
    stores; there is no aggregation and no retention policy.
 3. **Concurrency is untested.** Appends are synchronous and per-trace, which
@@ -620,3 +622,35 @@ is otherwise over — legitimate while a run is live, a defect once it is not.
    instead of a broken page — but it is reachable, and if that is not wanted
    the directory needs excluding from the deployment.
 7. **`cost_usd` is whatever the caller passes.** There is no price table.
+
+
+---
+
+## SESSION 15 — the editorial view
+
+`editorialState()` joins what an Editorial Agent run (`agent/proposals/editorial/`, Agent 7)
+emitted, at read time, storing nothing twice. Reachable three ways:
+
+```
+node agent/observability/cli.mjs editorial [--trace t] [--no-change]
+GET /api/editorial?trace=
+the Editorial panel in the viewer, plus two overview tiles
+```
+
+**It answers two things and keeps them apart**, because collapsing them is the failure the
+agent itself is built against:
+
+| | |
+|---|---|
+| what it proposed | and, of the three kinds, **how many were DRAFTED**. A drafted substitution is the only text this agent composes, and it is the one number a reader should see before any other |
+| what it did not | the no-change explanations and the open questions. "Looked and found nothing" and "did not look" are different findings, and a view showing only the proposals reports the first as the second |
+
+**Two tiles, not one.** *Prose corrections drafted* counts text a machine put on a page;
+*prose examined, no change* sits beside it for the reason above.
+
+**The view reports gaps rather than filling them.** A run that drafted a replacement over an
+analytical passage, proposed without an approval, refused an input without recording why, or
+claims to have authored a sentence is reported as a gap — the same shape `traceChain` uses for
+a missing approval. A view that quietly fills in the gap reads as an audit.
+
+`docs/EDITORIAL-AGENT.md` §8 lists exactly what the agent writes onto the trace.
