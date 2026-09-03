@@ -12,12 +12,23 @@ contract check and all four validators were re-run **on the merged tree** before
 push: 756 pass, 18/18 satisfiable, 0 errors, 106 unverified, the same five
 `design-qa` warnings by file and line.
 
-**The stale-`main` trap: checked, and it did not fire this time.** `git fetch --all`
-was run first, both `main..origin/main` and `origin/main..main` were checked, and
-the working branch was already at `origin/main` (`8eaf398`). Four consecutive
-sessions found local `main` between 32 and 45 commits behind. **Keep running the
-check** — the reason it did not fire is that this container was fresh, not that the
-trap is gone.
+**The stale-`main` trap caught this session too, for the fifth session running,
+and it is now the worst it has been.** The local `main` in this container was **47
+commits behind** `origin/main` (44 in SESSIONS 16/17, 45 in 14/15, 40 in 13, 32 in
+12), sitting at `4bd1f0d` — "Merge pull request #1: Add the agent observability
+foundation", which is *before the entire agent layer*. Merging into it would have
+silently reverted every session from 03 onward.
+
+**An earlier draft of this very file said the trap had not fired.** That draft was
+written after checking `git branch -a` and seeing the working branch at
+`origin/main`, which is a different question from where local `main` is. It was
+corrected before the merge, by running `git log main..origin/main` and
+`git log origin/main..main` — both directions, as this file has said to for four
+sessions — and finding 47 and 0. `main` was reset to `origin/main` rather than
+merged into.
+
+**The check is only the check if you run it on `main` itself.** The branch being
+current says nothing.
 
 **This session had TWO objectives and they landed in ONE commit**, for the reason
 SESSIONS 14/15 and 16/17 both gave. SESSION 18 built the Implementation and QA
