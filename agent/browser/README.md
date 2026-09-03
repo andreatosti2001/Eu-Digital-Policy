@@ -33,3 +33,35 @@ already refuses one.
 | `selftest.mjs` | 19 tests, including the proof a skip never becomes a pass |
 
 Full documentation, coverage table and limitations: **`docs/BROWSER-QA.md`**.
+
+---
+
+## `--propose` — a measured defect, turned into something a human can decide
+
+```
+node agent/browser/cli.mjs --propose --as-of YYYY-MM-DD [--dry]
+```
+
+The suite measures. `proposals.mjs` turns a measured **failure** into an
+`ImplementationProposal` and the `ApprovalRequest` that asks a person to decide it. Until this
+existed the three defects of `docs/BROWSER-QA.md` §4 had nowhere to go: `agent/implement/`
+implements proposals, and nothing in this repository had ever produced an
+`ImplementationProposal`.
+
+| Derived, and refused if it cannot be | This agent's judgement |
+|---|---|
+| which defects become proposals — only a check that **failed in the run being read** | the drafted `proposed` value, typed as a contested interpretation |
+| every operation's `current`, read out of the file and required to occur **exactly once** | — |
+| the permitted file set (`files`, read by `agent/implement/scope.mjs`) | — |
+| the autonomy class, from `agent/schemas/types.mjs` `RED_TARGETS` | — |
+
+**An undecidable is never proposed against.** `keyboard:focus-visible` and `a11y:bound`
+established neither a defect nor its absence; a change that turned one into a pass would be
+manufacturing a clearance this suite cannot give (`docs/BROWSER-QA.md` §5).
+
+**The open questions here do not block**, and that is a deliberate difference from
+`agent/ux/`. Agent 8 blocks because nothing it found had ever been opened in a browser.
+Everything here was, and re-running the suite is what tells anyone whether the fix worked.
+
+**Nothing here is an approval.** The records go to `agent/records/`, which agents write and
+git ignores. A grant exists only in `agent/implement/decisions/decisions.jsonl`.

@@ -31,6 +31,14 @@ import { PAGES, NAV_FILES, VIEWPORTS } from './checks.mjs';
 import { CHROME_FLAGS } from './cdp.mjs';
 import { validate } from '../schemas/validate.mjs';
 import { QAResult } from '../schemas/contracts/qa-result.mjs';
+import {
+  RECIPES, resolveEdits, redTargetsAmong, entityKindOf, countOccurrences,
+  proposalsForRun, ProposalRefused, BROWSER_QA_AGENT,
+} from './proposals.mjs';
+import { proposalFingerprint } from '../implement/ledger.mjs';
+import { permittedFiles } from '../implement/scope.mjs';
+import { applyOperation } from '../implement/apply.mjs';
+import { RED_TARGETS } from '../schemas/types.mjs';
 
 /* ============================================================
    1 · the honest refusal
@@ -257,6 +265,230 @@ test('the suite makes no request that leaves the local origin', async (t) => {
   /* Either it passed (and is not in failed/undecided), or it is here
      with the foreign origins named. */
   assert.ok(!net || net.status !== 'fail', `the site made a third-party request: ${JSON.stringify(net?.data)}`);
+});
+
+/* ============================================================
+   6 · --propose: a measured defect, turned into something a human
+       can decide
+
+   These are the properties that make the proposals GOVERNABLE, and
+   each one is a way the arrangement could quietly fail:
+
+     · a proposal exists only for a MEASURED failure;
+     · every operation's `current` is in the file exactly once, so
+       agent/implement/apply.mjs can apply it exactly;
+     · the permitted set agent/implement/scope.mjs derives is the set
+       the proposal names, and nothing wider;
+     · re-running the producer over an unchanged tree mints the SAME
+       fingerprint, because agent/records/ is git-ignored and an
+       approval that went void every session would be an approval
+       nobody could keep;
+     · the autonomy class is derived from RED_TARGETS, not chosen;
+     · nothing here writes an approval.
+   ============================================================ */
+
+/** A failure in the shape runner.mjs produces, so these tests do not
+ *  need a browser. The ids and summaries are the real ones. */
+const FAKE_FAILURES = {
+  'nav:noscript': { id: 'nav:noscript', area: 'navigation', status: 'fail', summary: 'with scripting off, instruments.html links to none of the 6 top-level pages, and its <noscript> notice does not say navigation is among what will not appear', data: {} },
+  'keyboard:skip-first': { id: 'keyboard:skip-first', area: 'accessibility', status: 'fail', summary: 'the skip link is the 10th focusable element in the RENDERED page', data: {} },
+  'a11y:headings:enforcement.html': { id: 'a11y:headings:enforcement.html', area: 'accessibility', status: 'fail', summary: 'the enforcement register jumps h2 → h5 once rendered', data: {} },
+};
+
+function fakeRun(ids) {
+  const failed = ids.map((i) => FAKE_FAILURES[i]);
+  return { status: 'ok', failed, undecided: [{ id: 'a11y:bound' }, { id: 'keyboard:focus-visible' }], results: failed };
+}
+
+/** A context that stores in memory and traces into nothing. The
+ *  records are still validated: `emit` is the real gate. */
+function memoryCtx() {
+  const written = [];
+  return {
+    written,
+    now: () => '2026-09-03T00:00:00.000Z',
+    simulated: false,
+    ids: { mint: (prefix, parts) => `${prefix}-${Buffer.from(JSON.stringify(parts)).toString('hex').slice(0, 12)}` },
+    ship: (_span, record) => {
+      const errs = validate(record, { allowSimulated: false });
+      assert.equal(errs.length, 0, `the producer wrote an invalid ${record.contract}:\n  · ${errs.join('\n  · ')}`);
+      written.push(record);
+      return record;
+    },
+  };
+}
+
+/** A span in the shape `RecordBuilder` and `emit` need — the trace
+ *  ids are what a record carries to say where it came from, and a
+ *  record with none is refused by the gate. */
+const nullSpan = () => ({
+  trace_id: 'a'.repeat(32),
+  span_id: 'b'.repeat(16),
+  run_id: 'c'.repeat(16),
+  observe() {}, decide() {}, end() {}, artifact() {}, approval() {},
+});
+
+test('every recipe anchor is in its file exactly once, right now', () => {
+  for (const [id, recipe] of Object.entries(RECIPES)) {
+    const edits = resolveEdits(recipe);
+    assert.ok(edits.length > 0, `${id} resolves no edit`);
+    for (const e of edits) {
+      const content = readFileSync(join(REPO_ROOT, e.path), 'utf8');
+      assert.equal(countOccurrences(content, e.anchor), 1,
+        `${id}: the text it would edit is not in ${e.path} exactly once. agent/implement/apply.mjs applies an edit only where its "current" occurs exactly once, so this recipe would produce a proposal guaranteed to be refused after somebody approved it.`);
+    }
+  }
+});
+
+test('a recipe whose anchor is not in the file produces NO proposal, by name', () => {
+  const broken = { ...RECIPES['keyboard:skip-first'], edits: [{ path: 'js/shell.js', anchor: 'this string is not in js/shell.js', proposed: 'x', rationale: 'y' }] };
+  assert.throws(() => resolveEdits(broken), ProposalRefused);
+});
+
+test('only a MEASURED failure becomes a proposal', () => {
+  const ctx = memoryCtx();
+  const r = proposalsForRun({ run: fakeRun([]), ctx, span: nullSpan() });
+  assert.equal(r.proposals.length, 0, 'a run with no failures proposes nothing');
+  assert.equal(ctx.written.length, 0);
+});
+
+test('an undecidable is never proposed against', () => {
+  const ctx = memoryCtx();
+  const r = proposalsForRun({ run: fakeRun(['keyboard:skip-first']), ctx, span: nullSpan() });
+  /* The two undecidables are in the run and neither has a recipe.
+     A change that made one of them PASS would be manufacturing a
+     clearance this suite cannot give (docs/BROWSER-QA.md §5). */
+  for (const id of ['a11y:bound', 'keyboard:focus-visible']) {
+    assert.equal(RECIPES[id], undefined, `${id} is undecidable and must have no recipe`);
+    assert.ok(!r.proposals.some((p) => JSON.stringify(p).includes(`→ ${id}`)), `${id} was proposed against`);
+  }
+});
+
+test('a failure with no recipe is refused by name rather than dropped', () => {
+  const ctx = memoryCtx();
+  const run = { status: 'ok', failed: [{ id: 'made:up', area: 'navigation', status: 'fail', summary: 'x', data: {} }], undecided: [] };
+  const r = proposalsForRun({ run, ctx, span: nullSpan() });
+  assert.equal(r.proposals.length, 0);
+  assert.equal(r.refused.length, 1);
+  assert.equal(r.refused[0].what, 'made:up');
+  assert.match(r.refused[0].reason, /no recipe/);
+});
+
+test('a skipped browser run proposes nothing and says why', () => {
+  const ctx = memoryCtx();
+  const r = proposalsForRun({ run: { status: 'skipped', skipReason: 'no browser', failed: [] }, ctx, span: nullSpan() });
+  assert.equal(r.proposals.length, 0);
+  assert.match(r.refused[0].reason, /nothing was measured/);
+});
+
+test('every operation can actually be applied by agent/implement/apply.mjs', () => {
+  const ctx = memoryCtx();
+  const r = proposalsForRun({ run: fakeRun(Object.keys(RECIPES)), ctx, span: nullSpan() });
+  assert.equal(r.proposals.length, 3);
+  for (const p of r.proposals) {
+    for (const op of p.proposed_change.operations) {
+      const content = readFileSync(join(REPO_ROOT, op.target), 'utf8');
+      const next = applyOperation(content, op);
+      assert.notEqual(next, content, `${p.proposal_id}: applying ${op.op} on ${op.target} changed nothing`);
+      assert.ok(next.includes(op.proposed), 'the proposed text is in the result');
+    }
+  }
+});
+
+test('the permitted set agent/implement/ derives is exactly what the proposal names', () => {
+  const ctx = memoryCtx();
+  const r = proposalsForRun({ run: fakeRun(Object.keys(RECIPES)), ctx, span: nullSpan() });
+  for (const p of r.proposals) {
+    const scope = permittedFiles(p);
+    assert.deepEqual(scope.permitted, [...p.files].sort(), `${p.proposal_id}: the derived permitted set is not the file list`);
+    assert.equal(scope.refusals.length, 0, `${p.proposal_id} names a path this agent may never write: ${JSON.stringify(scope.refusals)}`);
+    for (const op of p.proposed_change.operations) {
+      assert.ok(scope.permitted.includes(op.target), `${op.target} is outside the permitted set`);
+    }
+  }
+});
+
+test('the autonomy class is DERIVED from RED_TARGETS, not chosen', () => {
+  const ctx = memoryCtx();
+  const r = proposalsForRun({ run: fakeRun(Object.keys(RECIPES)), ctx, span: nullSpan() });
+  for (const p of r.proposals) {
+    const red = redTargetsAmong(p.files);
+    assert.equal(p.autonomy_class, red.length ? 'human_only' : 'review_required',
+      `${p.proposal_id} touches ${red.join(', ') || 'no red target'} and is "${p.autonomy_class}"`);
+  }
+  /* And the one that touches the footer generator IS red, so this
+     test is not vacuous. */
+  const footer = r.proposals.find((p) => p.files.includes('tools/_footer.mjs'));
+  assert.ok(footer, 'the noscript proposal names tools/_footer.mjs');
+  assert.ok(RED_TARGETS.includes('tools/_footer.mjs'));
+  assert.equal(footer.autonomy_class, 'human_only');
+});
+
+test('re-running the producer over an unchanged tree mints the same fingerprint', () => {
+  /* agent/records/ is git-ignored, so a session that regenerates the
+     proposals must regenerate the SAME ones or every approval in the
+     ledger goes void. proposalFingerprint excludes trace_ref and
+     created_at for exactly this reason; this asserts the rest of the
+     record is stable too. */
+  const a = proposalsForRun({ run: fakeRun(Object.keys(RECIPES)), ctx: memoryCtx(), span: nullSpan() });
+  const b = proposalsForRun({ run: fakeRun(Object.keys(RECIPES)), ctx: memoryCtx(), span: nullSpan() });
+  assert.deepEqual(a.proposals.map((p) => p.proposal_id), b.proposals.map((p) => p.proposal_id));
+  assert.deepEqual(a.proposals.map(proposalFingerprint), b.proposals.map(proposalFingerprint));
+});
+
+test('nothing the producer writes is an approval', () => {
+  const ctx = memoryCtx();
+  proposalsForRun({ run: fakeRun(Object.keys(RECIPES)), ctx, span: nullSpan() });
+  const requests = ctx.written.filter((r) => r.contract === 'ApprovalRequest');
+  assert.equal(requests.length, 3);
+  for (const req of requests) {
+    assert.equal(req.state, 'requested', 'a producer that wrote "granted" would be writing its own approval');
+    assert.equal(req.decision, null);
+    assert.ok(req.what_to_check.length >= 4, '"please review" delegates the thinking back to the reviewer');
+    assert.ok(req.what_to_check.some((c) => /undecidable/i.test(c)), 'the reviewer is asked to confirm the undecidables stayed undecidable');
+  }
+});
+
+test('no proposal adds a dependency, a build step or a second data gateway', () => {
+  const ctx = memoryCtx();
+  const r = proposalsForRun({ run: fakeRun(Object.keys(RECIPES)), ctx, span: nullSpan() });
+  for (const p of r.proposals) {
+    assert.deepEqual(p.new_dependencies, []);
+    assert.equal(p.adds_build_step, false);
+    assert.equal(p.adds_fetch_call, false);
+    assert.deepEqual(p.fetch_modules, []);
+    assert.equal(p.validator_impact.expected_new_errors, 0);
+    assert.equal(p.validator_impact.expected_new_warnings, 0);
+  }
+});
+
+test('every proposal names the browser suite as the check that would prove it', () => {
+  const ctx = memoryCtx();
+  const r = proposalsForRun({ run: fakeRun(Object.keys(RECIPES)), ctx, span: nullSpan() });
+  for (const p of r.proposals) {
+    const cmds = p.validation_requirements.map((v) => v.command).join(' ');
+    assert.ok(cmds.includes(BROWSER_QA_COMMAND), 'the only check that can see the defect is named');
+    for (const v of ['tools/validate.mjs', 'tools/i18n-audit.mjs', 'tools/design-qa.mjs', 'tools/freshness.mjs']) {
+      assert.ok(cmds.includes(v), `${v} is not named`);
+    }
+  }
+});
+
+test('entityKindOf reads the kind off the path rather than being told it', () => {
+  assert.equal(entityKindOf('index.html'), 'page');
+  assert.equal(entityKindOf('css/tools.css'), 'stylesheet');
+  assert.equal(entityKindOf('tools/_footer.mjs'), 'tool');
+  assert.equal(entityKindOf('js/shell.js'), 'module');
+});
+
+test('the producer agent is not a name any decision may carry', () => {
+  /* agent/implement/ledger.mjs refuses a decision whose decided_by is
+     any agent in the system. This asserts the producer has a name at
+     all, which is what makes that refusal reachable. */
+  assert.equal(BROWSER_QA_AGENT, 'browser-qa');
+  const ctx = memoryCtx();
+  proposalsForRun({ run: fakeRun(Object.keys(RECIPES)), ctx, span: nullSpan() });
+  for (const rec of ctx.written) assert.equal(rec.agent, BROWSER_QA_AGENT);
 });
 
 /* ---------------------------------------------------------- helpers */
