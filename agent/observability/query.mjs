@@ -159,6 +159,7 @@ export function loadTrace(traceId, dir = DEFAULT_RUN_DIR) {
     architecture: root ? architectureState(root, traceId) : null,
     editorial: root ? editorialState(root, traceId) : null,
     ux: root ? uxState(root, traceId) : null,
+    implement: root ? implementState(root, traceId) : null,
   };
 }
 
@@ -1093,6 +1094,113 @@ export function editorialState(root, traceId = null) {
    report an audit that could not settle nine of its own questions as
    an audit that found nothing to settle.
    ============================================================ */
+
+/* ============================================================
+   implementState — SESSION 18, Agent 9
+
+   The view answers one question the other views cannot: WHAT WAS
+   ALLOWED TO HAPPEN, and on whose authority. Everything upstream
+   ends in a proposal behind a pending approval; this is the first
+   agent whose output is a decision about whether to act, so the
+   view is built around the refusals rather than around the
+   implementations.
+
+   THE GAPS IT REPORTS ARE THE ONES THAT MATTER MOST IN THIS LAYER.
+   A run that implemented something without a QAResult; a run that
+   claims to have implemented more than it has ChangeRecords for; a
+   run that found an approval claim in agent/records/ and did not
+   say so; and a run that reports no census at all. Each of those is
+   an implementation agent quietly becoming an unaudited one.
+   ============================================================ */
+
+export function implementState(root, traceId = null) {
+  const spans = [];
+  (function walk(s) {
+    if (s.agent === 'implementation-qa') spans.push(s);
+    for (const c of s.children ?? []) walk(c);
+  })(root);
+  if (!spans.length) return null;
+
+  const observations = collectEvents(root, 'observation');
+  const decisions = collectEvents(root, 'decision');
+  const artifacts = collectEvents(root, 'artifact');
+
+  const census = observations.find((o) => String(o.summary).startsWith('CENSUS'));
+  const nothing = observations.find((o) => o.subject === 'NOTHING APPLIED');
+  const forged = observations.find((o) => o.subject === 'approval forgery');
+  const ledgerBad = observations.find((o) => o.subject === 'ledger integrity');
+  const preflights = observations.filter((o) => String(o.summary).startsWith('PREFLIGHT'));
+  const qaRuns = observations.filter((o) => o.subject === 'checks');
+  const contexts = observations.filter((o) => o.subject === 'change context');
+  const rollbacks = observations.filter((o) => o.subject === 'rollback');
+
+  const byType = (t) => artifacts.filter((a) => a.artifact_type === `contract:${t}`).map((a) => a.artifact_id);
+  const qaResults = byType('QAResult');
+  const changeRecords = byType('ChangeRecord');
+
+  const refusals = preflights
+    .filter((o) => (o.data?.failed ?? []).length > 0)
+    .map((o) => ({
+      proposal_id: o.subject,
+      gates: (o.data.failed ?? []).map((g) => g.gate),
+      why: (o.data.failed ?? []).map((g) => g.why),
+      closes: (o.data.failed ?? []).map((g) => g.closes),
+    }));
+
+  /* Which gate refuses most often. It is the cheapest thing to fix
+     and nothing else in the system reports it. */
+  const byGate = {};
+  for (const r of refusals) for (const g of new Set(r.gates)) byGate[g] = (byGate[g] ?? 0) + 1;
+
+  const applied = Number(nothing?.data?.applied ?? 0);
+  const gaps = [];
+  if (!census) gaps.push('no census observation recorded — how many proposals this run considered, and in what approval state, is not on this trace');
+  if (!nothing) gaps.push('no "NOTHING APPLIED" observation recorded — what this run did and did not write is the claim it most needs to be able to prove');
+  if (applied > 0 && qaResults.length === 0) {
+    gaps.push(`the run reports ${applied} implementation(s) and emitted no QAResult: a change that landed without a recorded check is a change nobody can show was checked`);
+  }
+  if (applied > changeRecords.length) {
+    gaps.push(`the run reports ${applied} implementation(s) and emitted ${changeRecords.length} ChangeRecord(s): the file list has no home for the difference`);
+  }
+  if (nothing?.data?.working_tree_dirty_paths > 0 && applied === 0) {
+    gaps.push(`the working tree carries ${nothing.data.working_tree_dirty_paths} changed path(s) and the run implemented nothing: either something else wrote them, or this run wrote outside what it reported`);
+  }
+  for (const r of rollbacks) {
+    if (r.data && r.data.verified === false) gaps.push(`a rollback did not verify: ${(r.data.mismatches ?? []).length} path(s) do not hash back to their pre-change state`);
+  }
+
+  return {
+    trace_id: traceId,
+    simulated: artifacts.some((a) => a.simulated === true),
+    considered: census?.data?.proposals ?? preflights.length,
+    by_approval_state: census?.data?.by_approval_state ?? null,
+    by_agent: census?.data?.by_agent ?? null,
+    by_contract: census?.data?.by_contract ?? null,
+    ledger_decisions: census?.data?.ledger_decisions ?? null,
+    ledger_malformed: ledgerBad?.data?.malformed ?? [],
+    /* The four numbers, kept apart. "Refused" is the deliverable
+       here, not a shortfall. */
+    applied,
+    reverted: Number(nothing?.data?.reverted ?? 0),
+    refused: Number(nothing?.data?.refused ?? refusals.length),
+    working_tree_dirty_paths: nothing?.data?.working_tree_dirty_paths ?? null,
+    refusals,
+    refusals_by_gate: byGate,
+    discarded_approval_claims: forged?.data?.claims ?? [],
+    qa_result_ids: qaResults,
+    change_record_ids: changeRecords,
+    qa: qaRuns.map((o) => ({
+      checks: (o.data?.checks ?? []).length,
+      failing: (o.data?.checks ?? []).filter((c) => c.errors > 0 || c.exit !== 0).map((c) => c.name),
+      baseline_source: o.data?.baseline_source ?? null,
+      summary: o.summary,
+    })),
+    contexts: contexts.map((o) => ({ branch: o.data?.branch ?? null, commit: o.data?.commit ?? null, permitted: o.data?.permitted ?? [] })),
+    rollbacks: rollbacks.map((o) => ({ verified: o.data?.verified ?? null, mismatches: (o.data?.mismatches ?? []).length })),
+    decision: decisions.find((d) => String(d.decision).startsWith('implement ')) ?? null,
+    gaps,
+  };
+}
 
 export function uxState(root, traceId = null) {
   const spans = [];

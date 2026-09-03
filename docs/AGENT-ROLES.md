@@ -153,6 +153,14 @@ JavaScript by regex, so its "undeclared property" error can be silenced by a
 stray `--foo:` in any JS string or comment (audit F-10). A clean run is weaker
 evidence than it looks.
 
+**Since SESSION 19 there is a browser.** `agent/browser/` opens every page,
+drives the search palette, the glossary, the comparison, the applicability tool
+and the language switch, and reads the RENDERED DOM. It closes some of Agent 8's
+twelve open questions by measurement and it found three defects the four
+validators cannot see (`docs/BROWSER-QA.md` §4). It still computes no contrast,
+runs no screen reader and compares no pixels, and it is Chromium only — README
+limitation 7 is unchanged.
+
 **Filled by `agent/ux/` since SESSIONS 16 and 17 — for the OBSERVING half only.**
 Agent 8 audits the interface and produces `UXProposal` findings and testable
 proposals, each behind a pending approval. It restyles nothing, drafts no value
@@ -176,8 +184,35 @@ F-03); adds a dependency, build step or service worker; reports "verified" on
 the strength of exit code 0; leaves a new module unwired from `boot.js` while
 describing it as shipped.
 
-**Must know:** there is no CI, no `package.json` and no git hook. Nothing runs
-unless this role runs it (audit F-02).
+**Must know:** there is no `package.json` and no git hook, and until SESSION 18
+there was no CI either. `.github/workflows/qa.yml` now runs all four validators
+against the recorded baseline, every agent suite, the contract check, the
+public/private boundary check and the browser suite on every push — **which makes
+a failure visible, not blocking.** A push to `main` still publishes.
+
+**Filled by `agent/implement/` since SESSION 18 — as Agent 9, not the brief's
+Agent 8** (Agent 8 is the UX/UI Auditor; the brief's numbering predates it, as
+SESSION 13's and SESSION 16's did). It verifies ten mechanical gates before
+writing anything, derives the permitted file set from the proposal rather than
+taking it as an argument, enforces scope against git afterwards, runs the four
+validators against the baseline parsed out of `CURRENT-ARCHITECTURE.md` §12, makes
+browser QA a blocking requirement where the validators cannot see what changed,
+and reverts itself if anything comes back worse — verifying the revert by
+re-hashing rather than asserting it.
+
+**Approval is governed system state.** An `ApprovalRequest` in `agent/records/` is
+a REQUEST whatever its `state` says, because agents write that directory. A grant
+lives only in `agent/implement/decisions/`, requires a named human who is not an
+agent, and is bound to the proposal's hash — so editing the proposal afterwards
+voids the approval rather than carrying it onto a wider scope. Run against the
+real store it implements nothing and refuses everything, which is the correct
+result: not one proposal in this repository has ever been decided.
+`docs/IMPLEMENTATION-QA.md`.
+
+**The *never* list above is unchanged and binds this agent too.** In particular it
+may never write `tools/_refsweep.mjs` or `tools/_review10.mjs`, `agent/schemas/`,
+or its own approval ledger — no approval can authorise any of them, because doing
+them mechanically is the harm.
 
 ## 9 · Orchestrator — sequences the work and holds the line on autonomy
 
