@@ -122,6 +122,23 @@ export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR }
         }
         return json(res, { architecture: analyses });
       }
+      if (p === '/api/editorial') {
+        /* What each Editorial Agent run proposed for the site's
+           prose, and what it examined and left alone. `?trace=`
+           narrows to one run. The no-change explanations travel
+           with the proposals: a view carrying only what an agent
+           wanted changed reports "examined and clear" as "not
+           looked at". */
+        const trace = url.searchParams.get('trace');
+        if (trace && !/^[0-9a-f]{32}$/.test(trace)) return json(res, { error: 'bad trace id' }, 400);
+        const traces = trace ? [trace] : listRuns(dir).map((r) => r.trace_id);
+        const runs = [];
+        for (const id of traces) {
+          const t = loadTrace(id, dir);
+          if (t?.editorial) runs.push(t.editorial);
+        }
+        return json(res, { editorial: runs });
+      }
       if (p === '/api/chain') {
         return json(res, {
           chains: traceChain({

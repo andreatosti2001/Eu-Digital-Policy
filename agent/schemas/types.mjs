@@ -610,3 +610,74 @@ export const GAP_ROUTE_RECIPIENT = {
 /** The routes that author a proposal record here. The rest hand the
  *  gap on or refuse it, and say so. */
 export const PROPOSING_ROUTES = ['data_proposal', 'taxonomy_proposal'];
+
+/* ---------------------------------------------------------- editorial
+
+   SESSION 14. The four distinctions the brief already draws, named
+   so a machine can be held to them.
+
+   THE SITE ALREADY DRAWS THEM, IN THREE PLACES, AND THIS IS NOT A
+   FOURTH. `data/claims.json` types a claim law · fact ·
+   interpretation · critique · forecast; `js/format.js` derives a
+   grade from the type and the sources, and answers `unresolved`
+   when no external source directly carries the claim; and the
+   markup labels its own critique boxes. What none of them holds is
+   the state of A SENTENCE — prose lives in `index.html` and in the
+   six tool pages, and nothing in `data/` has a record for it.
+
+   That is why this vocabulary is not a second home for the claim
+   type. It is about the prose block, it is DERIVED at read time
+   from the claim record where the block carries one, and where the
+   block carries none the answer is `not_attributed` — a state no
+   claim record could ever express, and a finding in its own right.  */
+
+export const EDITORIAL_STATES = [
+  'fact',            // a directly supported legal or institutional proposition
+  'interpretation',  // a reasoned understanding of implications
+  'critique',        // an analytical judgement
+  'unresolved',      // evidence insufficient or conflicting
+  'not_attributed',  // the block carries no claim record: which of the four it is
+                     // cannot be derived, and guessing is how a reading becomes law
+];
+
+/** The three the editorial agent may produce, and the only three.
+ *  The first may be DRAFTED — the agent composes the replacement by
+ *  substituting one verified value for another inside the sentence
+ *  that is already there. The other two carry a null `proposed`
+ *  under every circumstance, because filling one in would be an
+ *  agent writing the argument. */
+export const EDITORIAL_PROPOSAL_KINDS = [
+  'factual_update',
+  'analytical_update',
+  'editorial_recommendation',
+];
+
+/** The one that may be drafted. Named rather than indexed, so a
+ *  fourth kind added later does not silently become draftable. */
+export const DRAFTABLE_EDITORIAL_KIND = 'factual_update';
+
+/**
+ * SESSION 15. Why this sentence is being reported, and the whole
+ * point is that the two are different claims.
+ *
+ * `contradicted`   the value that moved is IN the sentence, quoted.
+ *                  A reviewer can check the finding rather than take
+ *                  it, and a substitution is well defined.
+ * `possibly_stale` the sentence depends on the record that changed —
+ *                  through the claim attached to it, or by naming the
+ *                  entity — and does not state the value. Nothing here
+ *                  can show it is wrong, and nothing may edit it.
+ *
+ * "This paragraph might be wrong" and "this paragraph says 25 May
+ * 2018" are different claims, and nothing in this repository lets
+ * the second stand in for the first (docs/REGULATORY-IMPACT-MAPPING
+ * §5). A sentence the change does not reach is neither: it is a
+ * no-change explanation, which is an AgentObservation and not a
+ * proposal, because a proposal with no operations is a suggestion.
+ */
+export const EDITORIAL_STALENESS_KINDS = ['contradicted', 'possibly_stale'];
+
+/** The three homes one English string can have. `legal-editorial`'s
+ *  SKILL.md names them; this is the same list, in the form a record
+ *  can carry, and `data/brief.json` is a home nothing fetches. */
+export const PROSE_HOMES = ['markup', 'content_blob', 'brief_json'];

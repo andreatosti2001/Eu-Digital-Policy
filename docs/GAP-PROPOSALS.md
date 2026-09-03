@@ -261,8 +261,14 @@ missing routing decision, a missing nothing-merged claim, and — the one that m
    methods over prose somebody wrote, which is why the proposal is `human_only`, why the
    ranking score is stated as being on the matcher's own scale, and why `why_not_that_one` is
    written out rather than left as a number.
-4. **The editorial route produces nothing an Editorial agent could execute.** There is no
-   Editorial agent. The handoff is to a role, and the role is a human today.
+4. **The editorial route produces nothing an Editorial agent could execute.** *Half
+   superseded by SESSION 14: `agent/proposals/editorial/` (Agent 7) now exists.* The
+   limitation stands anyway, and for a reason worth keeping: that agent writes no sentence
+   either. It corrects a value inside a sentence that already exists and refuses to author
+   one, so an interpretive gap — a missing glossary definition, an uncharacterised
+   relationship between two acts — is still handed to a role, and the role is still a human.
+   The handoff now has a named recipient that can receive it and will decline it for the same
+   reason this route sends it.
 5. **Nothing consumes a `DataProposal` yet.** The chain now runs gap → proposal → approval and
    stops there. The half that is still missing is the one that *applies* an approved proposal
    and records that a human did — which is the only code in this repository that would ever

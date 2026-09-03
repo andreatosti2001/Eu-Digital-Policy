@@ -157,6 +157,7 @@ export function loadTrace(traceId, dir = DEFAULT_RUN_DIR) {
     depth: root ? depthState(root, traceId) : null,
     proposals: root ? proposalState(root, traceId) : null,
     architecture: root ? architectureState(root, traceId) : null,
+    editorial: root ? editorialState(root, traceId) : null,
   };
 }
 
@@ -396,6 +397,7 @@ export function overview(dir = DEFAULT_RUN_DIR) {
   const depth = [];
   const proposals = [];
   const architecture = [];
+  const editorial = [];
   for (const r of runs) {
     const t = loadTrace(r.trace_id, dir);
     if (!t) continue;
@@ -459,6 +461,28 @@ export function overview(dir = DEFAULT_RUN_DIR) {
         simulated: t.architecture.simulated, gaps: t.architecture.gaps,
       });
     }
+    /* An editorial run belongs on the overview for the number no
+       other tile carries: how many sentences on a production site
+       about EU law this repository now believes may be wrong, and
+       how many of those a machine was willing to correct. The
+       no-change count travels with it, because a tile showing only
+       the proposals would report "examined and clear" as "not
+       looked at". */
+    if (t.editorial) {
+      editorial.push({
+        trace_id: r.trace_id, as_of: t.editorial.as_of,
+        proposals: t.editorial.proposals, by_kind: t.editorial.by_kind,
+        drafted: t.editorial.drafted, no_change: t.editorial.no_change,
+        open_questions: t.editorial.open_questions,
+        blocks_examined: t.editorial.blocks_examined, blocks_reached: t.editorial.blocks_reached,
+        by_state: t.editorial.by_state, attributed: t.editorial.attributed,
+        inputs_admitted: t.editorial.inputs_admitted, inputs_refused: t.editorial.inputs_refused,
+        pending_approvals: t.editorial.pending_approvals,
+        merged: t.editorial.merged, applied: t.editorial.applied,
+        sentences_authored: t.editorial.sentences_authored,
+        simulated: t.editorial.simulated, gaps: t.editorial.gaps,
+      });
+    }
   }
 
   return {
@@ -478,6 +502,7 @@ export function overview(dir = DEFAULT_RUN_DIR) {
     depth,
     proposals,
     architecture,
+    editorial,
     runs,
   };
 }
@@ -907,6 +932,130 @@ export function architectureState(root, traceId = null) {
     proposal_ids: proposals,
     approval_ids: requests,
     ordering: ordering ? { decision: ordering.decision, rationale: ordering.rationale, alternatives: ordering.alternatives } : null,
+    gaps,
+  };
+}
+
+/* --------------------------------------------------- editorial */
+
+/**
+ * What an Editorial Agent run concluded about the site's prose.
+ *
+ * SESSIONS 14 and 15 ask for two things this view has to be able to
+ * answer separately, because collapsing them is the failure the
+ * whole agent is built against:
+ *
+ *   WHAT IT PROPOSED   and of the three kinds, how many were
+ *                      DRAFTED. A drafted replacement is the only
+ *                      text this agent composes, and the number of
+ *                      them is the number a reader should look at
+ *                      first.
+ *   WHAT IT DID NOT    the no-change explanations, and the open
+ *                      questions. "Looked and found nothing" and
+ *                      "did not look" are different findings, and a
+ *                      view that showed only the proposals would
+ *                      report the first as the second.
+ *
+ * Derived at read time from what the run emitted, like everything
+ * else here. Nothing is recomputed and nothing is second-guessed: a
+ * run that drafted a replacement over an analytical passage, or
+ * proposed without an approval, or refused an input without saying
+ * why, is reported as a gap in the view rather than quietly shown.
+ */
+export function editorialState(root, traceId = null) {
+  const spans = [];
+  (function walk(s) {
+    if (String(s.name ?? '').startsWith('editorial.')) spans.push(s);
+    for (const c of s.children ?? []) walk(c);
+  })(root);
+  if (!spans.length) return null;
+
+  const observations = collectEvents(root, 'observation');
+  const decisions = collectEvents(root, 'decision');
+  const artifacts = collectEvents(root, 'artifact');
+  const approvals = approvalState(root);
+
+  const census = observations.find((o) => String(o.summary).startsWith('EDITORIAL CENSUS'));
+  const applied = observations.find((o) => String(o.summary).startsWith('NOTHING APPLIED'));
+  const triage = decisions.find((d) => String(d.decision).toLowerCase().includes('triaged by what the sentence'));
+  const refusals = observations.filter((o) => String(o.summary).startsWith('REFUSED AT INTAKE'));
+  const noChange = observations.filter((o) => String(o.summary).startsWith('NO CHANGE NEEDED'));
+  const openQ = observations.filter((o) => String(o.summary).startsWith('OPEN QUESTION'));
+  const prose = observations.find((o) => String(o.summary).startsWith('PROSE READ'));
+
+  const stages = spans.map((s) => {
+    const id = String(s.name).replace(/^editorial\./, '');
+    return {
+      stage: id,
+      status: s.status,
+      examined: s.outputs?.examined ?? s.outputs?.blocks ?? null,
+      reached: s.outputs?.reached ?? null,
+      proposed: s.outputs?.proposed ?? s.outputs?.recommendations ?? null,
+      no_change: s.outputs?.no_change ?? null,
+      open_questions: s.outputs?.open_questions ?? null,
+      risk: s.risk ?? null,
+      /* Named rather than counted. "Two refused" is a number; "these
+         two, and one because two regulators disagree" is a finding a
+         reviewer can check. */
+      refused: refusals.filter((o) => o.span_id === s.span_id).map((o) => ({ subject: o.subject, why: o.data?.why ?? null })),
+    };
+  }).sort((a, b) => a.stage.localeCompare(b.stage));
+
+  const byType = (t) => artifacts.filter((a) => a.artifact_type === `contract:${t}`).map((a) => a.artifact_id);
+  const proposals = byType('EditorialProposal');
+  const requests = byType('ApprovalRequest');
+  const explanations = byType('AgentObservation');
+
+  const gaps = [];
+  if (!census) gaps.push('no editorial census observation recorded — the run\'s own totals are not on this trace');
+  if (!triage) gaps.push('no triage decision recorded — what this run corrected, what it only flagged, and why, is not on this trace');
+  if (!applied) gaps.push('no "nothing applied" observation recorded — that no sentence was edited is the claim this run most needs to be able to prove');
+  if (applied && applied.data?.sentences_authored) {
+    gaps.push(`the run reports ${applied.data.sentences_authored} authored sentence(s): this agent composes substitutions and never sentences, and a written sentence is the thing it exists not to write`);
+  }
+  if (proposals.length > requests.length) {
+    gaps.push(`${proposals.length} proposal(s) and only ${requests.length} approval request(s): a change to prose nobody has to look at is an unapproved change that looks approved`);
+  }
+  for (const a of approvals) {
+    if (!a.pending) gaps.push(`approval ${a.approval_id} is "${a.state}" inside the run that requested it: an agent may not approve its own proposal`);
+  }
+  if (!prose) gaps.push('no prose observation recorded — how much of the site was read, and how much of it carries provenance, is not on this trace');
+
+  return {
+    trace_id: traceId,
+    as_of: census?.data?.as_of ?? null,
+    simulated: artifacts.some((a) => a.simulated === true),
+    /* THE HEADLINE, and it is deliberately three numbers rather than
+       one: what was corrected, what was only flagged, and what was
+       examined and found not to need correcting. */
+    by_kind: census?.data?.by_kind ?? null,
+    drafted: applied?.data?.substitutions_drafted ?? null,
+    proposals: proposals.length,
+    no_change: explanations.length,
+    open_questions: census?.data?.open_questions ?? openQ.length,
+    blocks_examined: census?.data?.blocks_examined ?? prose?.data?.by_home ?? null,
+    blocks_reached: census?.data?.blocks_reached ?? null,
+    by_state: census?.data?.by_state ?? prose?.data?.by_state ?? null,
+    by_home: prose?.data?.by_home ?? null,
+    attributed: prose?.data?.attributed ?? null,
+    unattributed: prose?.data?.unattributed ?? null,
+    inputs_admitted: census?.data?.inputs_admitted ?? null,
+    inputs_refused: census?.data?.inputs_refused ?? null,
+    site_findings: census?.data?.site_findings ?? null,
+    /* Three zeros that are the point of the session rather than an
+       absence of activity. */
+    merged: applied?.data?.merged ?? null,
+    applied: applied?.data?.applied ?? null,
+    sentences_authored: applied?.data?.sentences_authored ?? null,
+    pending_approvals: approvals.filter((a) => a.pending).length,
+    stages,
+    proposal_ids: proposals,
+    approval_ids: requests,
+    no_change_ids: explanations,
+    /* The explanations, named. A count of them reads as a silence;
+       the list is the deliverable. */
+    explanations: noChange.map((o) => ({ subject: o.subject, summary: o.summary, state: o.data?.editorial_state ?? null, how: o.data?.how_reached ?? null })),
+    triage: triage ? { decision: triage.decision, rationale: triage.rationale, alternatives: triage.alternatives } : null,
     gaps,
   };
 }
