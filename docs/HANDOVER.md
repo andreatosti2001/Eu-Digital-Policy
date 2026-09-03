@@ -3,11 +3,25 @@
 **Last updated:** SESSION 13 · 3 September 2026
 **Branch:** `claude/eu-digital-policy-remediation-juj86j`, cut from `main` at `16ec83a`.
 **Base commit:** `16ec83a` on `main` ("Record in the handover that SESSION 12 is merged").
-**Not merged into `main`.** `AGENTS.md`'s Git section requires the repository
-owner's explicit instruction, given at the time, for any push to `main`, because
-`main` publishes to the live site and there is no deploy gate. The SESSION 13
-prompt's closing line said to merge; that line is superseded, and this session
-stopped to ask rather than merging because a prompt template said to.
+**Merged into `main`** at `09c6e49`, with the repository owner's explicit
+instruction given at the time — which is what `AGENTS.md` requires for any push
+to `main`, because `main` publishes to the live site and there is no deploy
+gate. The session stopped and asked rather than merging because the SESSION 13
+prompt's closing line said to; that line is superseded, and the instruction was
+obtained, not assumed. The branch is left in place rather than deleted. All ten
+suites, the contract check and all four validators were re-run **on the merged
+tree** before the push, not only on the branch.
+
+**The trap caught this session too, and the warning is still needed — the number
+is growing.** The local `main` in this container was **40 commits behind**
+`origin/main` (32 in SESSION 12), sitting at a pre-SESSION 08 commit; merging
+into it would have silently reverted six sessions of work. It was reset to
+`origin/main` rather than merged into. Run `git fetch --all && git branch -a`
+before concluding anything, and check `git log origin/main..main` **and**
+`main..origin/main` before merging into a local branch you did not just create.
+It also caught one verification command in this session — a `git diff main..HEAD`
+run against the stale local `main` reported `tools/freshness.mjs` as changed by
+this work, which it is not.
 
 **This session had TWO objectives, and they are two.** Phase 0 was remediation
 of three findings a SESSION 12 audit named as prerequisites; Phase 1 was
