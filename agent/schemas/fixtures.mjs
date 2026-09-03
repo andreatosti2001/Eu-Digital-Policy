@@ -286,6 +286,26 @@ export const uxProposalFixture = () => envelope('UXProposal', {
   },
   validation_requirements: fourValidators,
   rollback_plan: rollback(),
+  /* A testable_proposal rather than a finding, because it is the
+     heavier of the two shapes: the finding rules are refusals, and a
+     fixture that took the lighter branch would leave four of them
+     unexercised by `agent/schemas/cli.mjs check`. */
+  proposal_kind: 'testable_proposal',
+  finding_class: 'visual',
+  severity: 'low',
+  affected_journey: {
+    id: 'simulated_journey',
+    label: 'A simulated reader doing a simulated thing.',
+    pages: ['index.html'],
+    why: 'A fixture. No reader is affected by it, because nothing renders it.',
+  },
+  success_criterion: 'The simulated token resolves to a value in both themes, checked by node tools/design-qa.mjs reporting no undeclared custom property.',
+  hypothesis: 'A fixture holds no belief about a reader. This string exists so the contract rule that a testable proposal states one is exercised rather than assumed.',
+  success_metrics: [{ metric: 'Undeclared custom properties reported by design-qa.mjs', how_measured: 'node tools/design-qa.mjs', baseline: '0 errors, 5 warnings — docs/CURRENT-ARCHITECTURE.md §12.' }],
+  regression_risks: [{ risk: 'A token declared in one theme only renders against the wrong palette in the other.', watch: 'node tools/design-qa.mjs, which errors on a theme-dependent token declared at :root.', mitigation: 'Both themes, on body, which is what declared_on already forces.' }],
+  accessibility_checks: [{ check: 'Nothing about this fixture is conveyed by hue alone.', how: 'Nothing renders it, so there is nothing to convey.', tool: null }],
+  browser_tests: [{ name: 'simulated', page: 'index.html', steps: ['Nothing is driven. This is a fixture.'], expected: 'Nothing.', harness: null }],
+  tokens_used: ['--ink-0'],
   pages: ['index.html'],
   components: ['simulated-component'],
   tokens_added: [{ token: '--simulated-token', light: 'a simulated light value', dark: 'a simulated dark value', declared_on: 'body' }],
@@ -303,9 +323,12 @@ export const uxProposalFixture = () => envelope('UXProposal', {
   evidence: [simEvidence('ev-1', { kind: 'repository_file', url: null, locator: 'css/tokens.css', quote: null, supports: 'supports:direct', role: 'primary' })],
   epistemic: {
     fact: [{ field: null, statement: 'Theme-dependent tokens in this repository are declared on body.', evidence_refs: ['ev-1'] }],
-    inference: [],
-    interpretation: [],
-    unresolved: [{ field: null, question: 'How does the new token read to a screen-reader user?', missing: 'A screen-reader pass, which this project has never run.', absence_kind: 'null_not_researched', blocks: false }],
+    inference: [{ field: 'severity', statement: 'A fixture that renders nowhere reaches no reader, so it takes the lowest severity available.', from: ['ev-1'], method: 'The severity model in agent/ux/severity.mjs, run over a finding whose class is visual and whose journey touches nothing a reader can open.' }],
+    interpretation: [{ field: 'hypothesis', statement: 'A fixture holds no belief about a reader; the string is there so the rule requiring one is exercised.', held_by: 'the fixture', basis: 'Nothing renders this proposal, so there is no reader to hold a belief about.', contested: false }],
+    unresolved: [
+      { field: null, question: 'How does the new token read to a screen-reader user?', missing: 'A screen-reader pass, which this project has never run.', absence_kind: 'null_not_researched', blocks: false },
+      { field: null, question: 'What could the existing design system not hold, that this new token is needed for?', missing: 'Nothing: this is a fixture, and it adds a token so that the rule requiring a new token to be explained is exercised rather than assumed.', absence_kind: 'null_not_researched', blocks: false },
+    ],
   },
 });
 

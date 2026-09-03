@@ -139,6 +139,24 @@ export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR }
         }
         return json(res, { editorial: runs });
       }
+      if (p === '/api/ux') {
+        /* What each UX audit found, what it could not settle from the
+           source, and what it routed to another agent. `?trace=`
+           narrows to one run. The open questions travel with the
+           findings for the same reason the no-change explanations
+           travel with the editorial proposals: a view carrying only
+           what an agent found reports "could not be settled without
+           opening a page" as "nothing there". */
+        const trace = url.searchParams.get('trace');
+        if (trace && !/^[0-9a-f]{32}$/.test(trace)) return json(res, { error: 'bad trace id' }, 400);
+        const traces = trace ? [trace] : listRuns(dir).map((r) => r.trace_id);
+        const runs = [];
+        for (const id of traces) {
+          const t = loadTrace(id, dir);
+          if (t?.ux) runs.push(t.ux);
+        }
+        return json(res, { ux: runs });
+      }
       if (p === '/api/chain') {
         return json(res, {
           chains: traceChain({

@@ -42,6 +42,23 @@ can ship.
 - An empty state says which question returned nothing. A dataset failure shows an error and
   leaves the static content alone; it never renders fallback data.
 
+## What is now automated, and what is not
+
+`agent/ux/` (SESSIONS 16 and 17) decides the part of this skill a static read can decide —
+status legibility, whether a styled control is operable, whether a control declares a name,
+and whether a renderer's fallback says which absence it is standing for. It reads
+`references/manual-checks.md` rather than restating it, and it reports what it could NOT
+settle as open questions with the bytes attached.
+
+**It replaces nothing here, because it opens no page.** Everything under *Failure and empty
+states*, everything under *What was not tested*, most of *Keyboard and focus*, and every
+item that turns on how something looks still needs a person. Run it first — it will tell you
+which components it could not judge — then do the pass.
+
+```
+node agent/ux/cli.mjs --as-of <date> --open
+```
+
 ## The rest of the checklist
 
 `references/manual-checks.md` carries the full pass: keyboard path, focus management and

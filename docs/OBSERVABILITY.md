@@ -654,3 +654,43 @@ claims to have authored a sentence is reported as a gap — the same shape `trac
 a missing approval. A view that quietly fills in the gap reads as an audit.
 
 `docs/EDITORIAL-AGENT.md` §8 lists exactly what the agent writes onto the trace.
+
+---
+
+## SESSIONS 16 and 17 — the UX audit view
+
+`uxState()` joins what a UX/UI Audit run (`agent/ux/`, Agent 8) emitted, at read time,
+storing nothing twice. Reachable three ways:
+
+```
+node agent/observability/cli.mjs ux [--trace t] [--backlog] [--open]
+GET /api/ux?trace=
+the UX audit panel in the viewer, plus two overview tiles
+```
+
+**It answers three things and keeps them apart**, because collapsing them would overstate
+the audit's own coverage:
+
+| | |
+|---|---|
+| what it found | ranked, with the severity spread beside it. `critical` means one thing in this model — a reader can take an absence of knowledge for a negative finding — so the panel says so next to the count rather than presenting a four-point scale somebody chose |
+| what it could NOT settle | the open questions, each with the bytes it read and what would close it. **Nothing here opens a page**, so an audit that answered everything would be an audit that had overstated itself; this is where that shows |
+| what it declined to report | the findings routed to `agent/depth/`, `agent/architect/`, `agent/proposals/editorial/` or `tools/design-qa.mjs`, each with the reason and a handoff to the agent that owns it |
+
+**The backlog is the deliverable and it is an observation on the trace**, not a table in a
+CLI nobody keeps. The ordering is a `decision` carrying the four alternatives it did not
+take — including "store the rank on each proposal", which the contract forbids because a
+stored position is a second home for a derived ordering.
+
+**Two tiles, not one.** *UX defects at critical* counts the one severity that means a reader
+may be misled; *UX questions unanswerable from source* sits beside it, because a tile showing
+only the findings would report an audit that could answer ten of its twenty-two questions as
+one that found ten things and nothing else.
+
+**The view reports gaps rather than filling them.** A run with no census, no backlog, no
+ordering decision or no "nothing restyled" claim is a gap — and so is a run that claims to
+have **opened a page**, **written a stylesheet** or **invented a design token**, because
+those three are what this agent exists not to do. `agent/ux/selftest.mjs` forges a trace
+making all three claims and asserts the view catches every one.
+
+`docs/UX-AUDIT.md` §9 lists exactly what the agent writes onto the trace.

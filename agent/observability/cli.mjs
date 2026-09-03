@@ -10,6 +10,7 @@
      node agent/observability/cli.mjs proposals [--trace t] [--refused]
      node agent/observability/cli.mjs architecture [--trace t] [--aside]
      node agent/observability/cli.mjs editorial [--trace t] [--no-change]
+     node agent/observability/cli.mjs ux [--trace t] [--open] [--backlog]
      node agent/observability/cli.mjs validate
      node agent/observability/cli.mjs export <trace-id> [--provenance]
      node agent/observability/cli.mjs serve [--port 7801] [--open]
@@ -381,6 +382,46 @@ function cmdEditorial() {
   if (!found) console.log('no editorial analysis in the store. `node agent/proposals/editorial/cli.mjs --as-of <date>` writes one.');
 }
 
+/**
+ * What each UX audit run found, what it could not settle, and what
+ * it declined to report as somebody else's.
+ *
+ * The three are printed side by side on purpose. An audit that
+ * reported ten findings and could not settle twelve of its own
+ * questions has told you something about the site AND something
+ * about how much of the site is answerable without opening it, and a
+ * view that showed only the first would read as coverage.
+ */
+function cmdUx() {
+  const wantTrace = flag('trace');
+  const traces = typeof wantTrace === 'string' ? [wantTrace] : listRuns(DIR).map((r) => r.trace_id);
+  let found = 0;
+
+  for (const id of traces) {
+    const t = loadTrace(id, DIR);
+    if (!t?.ux) continue;
+    const u = t.ux;
+    found++;
+    console.log(`\n${u.trace_id} — ${u.findings} finding(s), ${u.open_questions} open question(s), ${u.testable_proposals} testable proposal(s)${u.simulated ? ' — SIMULATED' : ''}`);
+    console.log(`  as of ${u.as_of ?? '?'}   ${u.pending_approvals} approval(s) pending · ${u.applied ?? '?'} applied · ${u.stylesheets_written ?? '?'} stylesheet(s) written · ${u.pages_opened ?? '?'} page(s) opened · ${u.tokens_invented ?? '?'} token(s) invented`);
+    if (u.surface) console.log(`  surface  ${u.surface.pages} pages · ${u.surface.stylesheets} stylesheets · ${u.surface.modules} modules · ${u.surface.css_rules} CSS rules · ${u.surface.journeys} journeys`);
+    if (u.by_severity) console.log(`  severity ${Object.entries(u.by_severity).map(([k, n]) => `${k} ${n}`).join(' · ')}   (${u.high_priority} at critical or high)`);
+    if (u.by_class) console.log(`  class    ${Object.entries(u.by_class).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+    if (u.by_journey) console.log(`  journey  ${Object.entries(u.by_journey).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+    console.log(`  answered no: ${u.questions_answered_no.length ? u.questions_answered_no.map((q) => `q${q}`).join(' · ') : 'every question found something'}`);
+    if (u.ordering) console.log(`  ranked by ${u.ordering.decision}`);
+    for (const l of u.lenses) {
+      console.log(`    ${pad(`q${l.question ?? '?'} ${l.lens}`, 34)} ${String(l.examined ?? '').padStart(4)} examined  ${String(l.reported ?? '').padStart(2)} found  ${String(l.open_questions ?? '').padStart(2)} open  ${String(l.set_aside ?? '').padStart(2)} aside`);
+      for (const r of l.routed) console.log(`          → ${pad(r.subject, 30)} ${r.route ?? 'no owner named'}`);
+    }
+    if (flag('backlog')) for (const e of u.backlog) console.log(`    ${String(e.rank).padStart(3)}. [${e.severity}] ${pad(e.finding_class, 26)} ${String(e.subject).slice(0, 72)}`);
+    if (flag('open')) for (const q of u.open_questions_named) console.log(`    ? ${pad(q.subject, 40)} ${String(q.missing).slice(0, 80)}`);
+    for (const n of u.no_proposal) console.log(`    − no proposal: ${pad(n.subject, 44)} ${String(n.why).slice(0, 70)}`);
+    console.log(u.gaps.length ? `  GAPS: ${u.gaps.join('; ')}` : '  no gaps: the census, the backlog, the ordering decision, every open question and the "nothing restyled" claim are on this trace');
+  }
+  if (!found) console.log('no UX audit in the store. `node agent/ux/cli.mjs --as-of <date>` writes one.');
+}
+
 function cmdValidate() {
   let records = 0, bad = 0, broken = 0;
   for (const f of listTraceFiles(DIR)) {
@@ -423,11 +464,12 @@ switch (cmd) {
   case 'proposals': cmdProposals(); break;
   case 'architecture': cmdArchitecture(); break;
   case 'editorial': cmdEditorial(); break;
+  case 'ux': cmdUx(); break;
   case 'validate': cmdValidate(); break;
   case 'export': cmdExport(argv[1]); break;
   case 'summary': console.log(JSON.stringify(overview(DIR), null, 2)); break;
   case 'serve': serve({ port: Number(flag('port', 7801)), dir: DIR }); break;
   default:
-    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | architecture | editorial | validate | export <id> | summary | serve`);
+    console.error(`unknown command "${cmd}"\n  list | show <id> | chain | impact | depth | proposals | architecture | editorial | ux | validate | export <id> | summary | serve`);
     process.exit(1);
 }

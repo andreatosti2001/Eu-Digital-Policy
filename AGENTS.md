@@ -29,7 +29,7 @@ the evidence it describes.
 | `docs/AI-SAFE-BOUNDARIES.md` | Green / amber / red tiers; the absolute prohibitions |
 | `docs/AGENT-CONTRACTS.md` | The eighteen inter-agent contracts and the gate no record bypasses |
 | `docs/OBSERVABILITY.md` | The trace model every agent run is instrumented through |
-| `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` · `docs/DATA-DEPTH.md` · `docs/GAP-PROPOSALS.md` · `docs/KNOWLEDGE-ARCHITECTURE.md` · `docs/EDITORIAL-AGENT.md` | The eight agents that exist, what each refuses, and what none of them may do |
+| `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` · `docs/DATA-DEPTH.md` · `docs/GAP-PROPOSALS.md` · `docs/KNOWLEDGE-ARCHITECTURE.md` · `docs/EDITORIAL-AGENT.md` · `docs/UX-AUDIT.md` | The nine agents that exist, what each refuses, and what none of them may do |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
@@ -138,11 +138,12 @@ node --test agent/depth/selftest.mjs           # Agent 4, against the real data/
 node --test agent/proposals/data/selftest.mjs  # Agent 5, against the real data/
 node --test agent/architect/selftest.mjs       # Agent 6, against the real data/ and js/
 node --test agent/proposals/editorial/selftest.mjs   # Agent 7, against the real pages and data/
+node --test agent/ux/selftest.mjs              # Agent 8, against the real pages, sheets and modules
 node --test agent/observability/selftest.mjs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**610 tests across the eleven suites**, all passing as of SESSION 15 (549 before it).
+**683 tests across the twelve suites**, all passing as of SESSIONS 16 and 17 (610 before them).
 
 `tools/_footer.mjs`, `_refsweep.mjs` and `_review10.mjs` are generators and applied one-shot
 patches, not checks. **Do not re-run** the latter two.
@@ -162,6 +163,11 @@ patches, not checks. **Do not re-run** the latter two.
   in this repository. `agent/proposals/editorial/` is the first thing here that reads a
   sentence at all, and it is **not a check**: it runs only when somebody runs it, it produces
   proposals in front of a human, and it can only find what it can quote.
+- **Nothing here has ever opened a page.** `agent/ux/` reads the markup, the stylesheets and
+  the modules and audits the interface from them; it runs no browser, no screen reader and
+  no contrast calculation, and every record it writes says so as a blocking open question
+  quoting README limitation 7. Its twelve open questions are the measure of how much of this
+  interface cannot be judged without opening it — see `docs/UX-AUDIT.md` §7.
 - **A passing validator proves less than it looks.** `design-qa.mjs` harvests CSS token
   declarations out of JavaScript by regex, so a `--foo:` in any JS string or comment
   silences a real error. `freshness.mjs` prints a `SOURCE REACHABILITY` heading but performs
