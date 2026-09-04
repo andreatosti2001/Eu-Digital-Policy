@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Control Room — sign in</title>
+<link rel="stylesheet" href="/login.css">
+</head>
+<body>
+<main class="card">
+  <h1>Control Room</h1>
+  <p class="sub">The European Legal Framework for the Digital World — private control plane.</p>
+
+  <!-- Which form is shown is decided by the server's answer to
+       /api/session's environment block; both are rendered and the
+       script hides one. Neither is a security control: the endpoint
+       each posts to refuses outright when its provider is not the
+       configured one. -->
+  <form id="oidc" method="get" action="/auth/login" hidden>
+    <input type="hidden" name="next" id="oidc-next" value="/">
+    <button type="submit">Sign in with your identity provider</button>
+    <p class="note">You will be sent to the configured OpenID Connect provider. Multi-factor authentication, password policy and account recovery are handled there.</p>
+  </form>
+
+  <form id="local" hidden>
+    <label for="subject">Subject</label>
+    <input id="subject" name="subject" autocomplete="username" required>
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required>
+    <button type="submit">Sign in</button>
+    <p class="note"><strong>Development provider.</strong> It runs only on loopback, only with <code>CONTROL_ROOM_ENV=development</code>, and the server refuses to start in any other shape. There is no default account: the first administrator is created with <code>node .control-room/cli.mjs provision</code>.</p>
+  </form>
+
+  <p id="error" class="error" role="alert" hidden></p>
+</main>
+<script type="module" src="/login.js"></script>
+</body>
+</html>

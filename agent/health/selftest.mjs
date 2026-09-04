@@ -75,6 +75,10 @@ function fakeCtx(over = {}) {
     proposals: [],
     runs: [], traces: [], trace_errors: [],
     probe: null,
+    /* Absent by default, which is the ordinary case: the Control
+       Room audit trail is git-ignored private state, so a fresh
+       clone and a CI runner have none. */
+    control_room_audit: { present: false, dir: '(none)', entries: [], malformed: 0, why: 'no Control Room audit trail exists on this machine.' },
     ...over,
   };
 }
@@ -161,20 +165,60 @@ test('deployment failures is unmeasurable, and would be a lie as a zero', () => 
   assert.ok(r.needs.length > 40);
 });
 
-test('Control Room availability is not_applicable, which is not the same as unmeasurable', () => {
+test('Control Room availability moved from not_applicable to unmeasurable, and 100% would be the worse lie', () => {
+  /* SESSION 21 CHANGED THIS METRIC, and the change is the point.
+     Before, it was NOT_APPLICABLE: there was no Control Room, so
+     there was nothing to be available. There is one now, and nothing
+     here measures whether an instance of it is running — so the
+     honest state is UNMEASURABLE. Leaving the old reading in place
+     would have been a metric asserting the absence of a thing this
+     session built. */
   const r = BY_ID.get('control_plane.control_room_availability').measure(fakeCtx());
-  assert.equal(r.state, 'not_applicable');
+  assert.equal(r.state, 'unmeasurable');
   assert.equal(r.value, null);
-  assert.match(r.why, /SESSION 21|no Control Room/);
-  /* And the local viewer must not be described as one. */
-  assert.match(r.why, /development viewer/);
+  assert.match(r.why, /SESSION 21|\.control-room/);
+  assert.match(r.why, /100% would read as "checked and up"/,
+    'the metric must say why the optimistic reading is the dangerous one');
+  /* And when something does measure it, bare reachability is the
+     wrong definition: a Control Room that is up and answering
+     everybody is worse than one that is down. */
+  assert.match(r.needs, /FAILURE rather than as availability/);
+  assert.ok(r.needs.length > 40);
 });
 
-test('authentication failures is unmeasurable, and points at the MISSING CONTROL instead', () => {
-  const r = BY_ID.get('control_plane.authn_authz_failures').measure(fakeCtx());
-  assert.equal(r.state, 'unmeasurable');
-  assert.match(r.why, /there is no login|no authentication/i);
-  assert.match(r.needs, /privileged_routes_without_auth/);
+test('authentication failures is measurable now, and is still never zero for want of a trail', () => {
+  /* Also changed by SESSION 21. The old reading — "there is no
+     login" — was true when it was written and is not any more, so
+     the metric now counts refusals from the Control Room audit
+     trail. What has NOT changed is the refusal to report an absent
+     trail as zero. */
+  const absent = BY_ID.get('control_plane.authn_authz_failures').measure(fakeCtx());
+  assert.equal(absent.state, 'unmeasurable', 'a machine with no Control Room trail has no reading, not a reading of 0');
+  assert.notEqual(absent.value, 0);
+  assert.match(absent.why, /different fact from nobody having been refused/);
+  assert.match(absent.needs, /git-ignored private state/);
+
+  /* And with a trail, it counts — split by kind, because a denial is
+     the authorization layer working and a run of failed logins is
+     not the same event. */
+  const trail = {
+    present: true, malformed: 0, dir: '/tmp/fake', why: null,
+    entries: [
+      { action: 'session.login', actor_subject: 'a@b' },
+      { action: 'session.login_failed', actor_subject: 'a@b' },
+      { action: 'session.login_failed', actor_subject: 'a@b' },
+      { action: 'authz.denied', actor_subject: 'c@d' },
+      { action: 'proposal.approved', actor_subject: 'c@d' },
+    ],
+  };
+  const measured_ = BY_ID.get('control_plane.authn_authz_failures').measure(fakeCtx({ control_room_audit: trail }));
+  assert.equal(measured_.state, 'measured');
+  assert.equal(measured_.value, 3);
+  assert.equal(measured_.of, 5);
+  assert.equal(measured_.detail.failed_logins, 2);
+  assert.equal(measured_.detail.authorization_denials, 1);
+  assert.equal(measured_.detail.distinct_subjects_failing_login, 1);
+  assert.match(measured_.detail.chain_note, /does not verify the hash chain/);
 });
 
 test('a browser-sourced metric returns unmeasurable rather than 0 when the browser did not run', () => {

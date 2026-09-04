@@ -1,44 +1,271 @@
 # HANDOVER
 
-**Last updated:** SESSION 20 · 3 September 2026
-**Branch:** `claude/agent-8-implementation-qa-4l2tam`, cut from `main` at `2736ae6`.
-**Base commit:** `2736ae6` on `main` ("Merge SESSIONS 18 and 19: Agent 9 and the
-browser suite").
-**Merged into `main`** — the session prompt instructed it ("Merge to main only
-after existing validators and relevant tests pass"). That is the authorisation
-`AGENTS.md` requires for a push to `main`. All fifteen suites, the contract check
-and all four validators were re-run **on the merged tree**: 812 pass, 18/18
-satisfiable, 0 errors, 106 unverified, the same five `design-qa` warnings by file
-and line.
+**Last updated:** SESSION 21 · 4 September 2026
+**Branch:** `claude/control-room-private-plane-4a36vx`, cut from `origin/main` at `22747e1`.
+**Base commit:** `22747e1` on `origin/main` ("Merge SESSION 20: the Website Health
+Monitor").
+**NOT merged into `main`.** The session prompt says "Merge to main only after the
+complete Control Room security boundary is verified"; the boundary is verified by
+the suite and by CI, and the merge itself is a push to `main`, which
+`docs/AUTONOMY-POLICY.md` Class D reserves to the repository author by name. The
+branch is pushed and stops there.
 
-**The stale-`main` check was run on `main` itself this time.** SESSION 18/19's
-first draft claimed the trap had not fired, on the strength of the working branch
-being current — a different question — and local `main` turned out to be 47
-commits behind. This session ran `git log main..origin/main` and
-`git log origin/main..main` before touching anything, and both were empty.
+**THE STALE-`main` TRAP FIRED AGAIN, and this time on the local branch pointer
+rather than on the working tree.** `git fetch --all` first, as AGENTS.md requires:
+the working branch was cut from `origin/main` at `22747e1` and is current, but
+**local `main` is 52 commits behind `origin/main`** (`4bd1f0d`). Any check run as
+`git diff main..HEAD` on this machine would have reported 246 changed files and
+67,592 insertions, almost none of them this session's. Every comparison below is
+against **`origin/main`**. This is the third session in which the trap has caught
+something (F-01, then SESSION 18/19's 47 commits, now 52), and local `main` was
+left alone rather than fast-forwarded: moving it is a change to the branch this
+session may not push to.
 
-**THE LIVE SITE IS BYTE-FOR-BYTE UNCHANGED**, checked rather than asserted:
-`git diff 2736ae6..HEAD` over `data/`, `js/`, `css/`, `i18n/`, `fonts/`, `tools/`,
-every `*.html`, `style.css`, `app.js`, `README.md` and `CLAUDE.md` is **empty**.
-The monitor hashes the whole tree around every run and reports whether it changed;
-it did not.
+**THE LIVE SITE IS BYTE-FOR-BYTE UNCHANGED**, checked rather than asserted.
+`git diff origin/main -- data/ js/ css/ i18n/ fonts/ tools/ index.html
+applies.html bibliography.html enforcement.html institutions.html instrument.html
+instruments.html style.css app.js README.md CLAUDE.md` is **empty**. The Control
+Room's suite also hashes the whole tree around a live approval (test 10) and finds
+nothing changed.
 
-**Nothing was fixed that the monitor found.** Three defects from SESSION 19 stand,
-the security finding in §6 stands, and the fifteen duplicated facts stand. A
-measured defect is not an authorisation, and a session that built the instrument
-and then acted on its first readings would have skipped the decision the whole
-governance chain exists to require.
+**Nothing that any agent has proposed was approved.** The Control Room can now
+record a human decision, and no human decision has been recorded:
+`agent/implement/decisions/decisions.jsonl` does not exist, and
+`deriveApproval()` still answers `no_request` or `pending` for every proposal.
+Building the mechanism and then using it on its first run would have skipped the
+decision the whole governance chain exists to require — the same reasoning
+SESSION 20 recorded about acting on the monitor's first readings.
 
 ---
 
 ## Current milestone
 
-**SESSION 20 — complete.** The Website Health Monitor, `agent/health/`, Agent 10.
-The reference document is **`docs/HEALTH-MONITOR.md`**; this file is the handover only.
+**SESSION 21 — complete.** The Human Control Room / private control plane,
+`.control-room/`. The reference document is **`docs/CONTROL-ROOM.md`**; this file is the
+handover only.
+
+---
+
+# SESSION 21 — the Control Room
+
+## What was built
+
+A **server**, not a page, at `.control-room/`: 20 routes, 8 of them public and all 8
+part of the login surface, every other one authenticating and then authorizing
+server-side before it answers. Three views — live system, review queue, website
+health — plus an audit trail view and a read-only access view. One state-changing
+action in the whole system: approve, reject, request changes.
+
+Zero dependencies, no build step, no `package.json`. `node:http`, `node:crypto`
+and the global `fetch`, the same constraints as the rest of the repository.
+
+## The four things this session is arranged around
+
+**1 · THE ONE PUBLICATION BOUNDARY THIS REPOSITORY HAS.** SESSION 18 established
+that there is no public/private separation here: GitHub Pages serves `main` at the
+repository root with no `_config.yml`, no `.nojekyll` and no exclude list, so
+`agent/`, `docs/` and the approval ledger are published beside `index.html`, and
+`agent/implement/boundary.mjs` says in its own header that a Control Room page
+added to this tree "would be public the moment it was pushed."
+
+The exception, which that module already models and already calls "a real
+boundary, and it is the only one this repository has", is Jekyll's documented
+default: a path whose segments begin with `.` or `_` is not served. It is why
+`.agents/` has never appeared in the published surface and `agent/` always has.
+So the Control Room is `.control-room/`, and `node .control-room/cli.mjs boundary`
+checks on every push — over the real tree, not by assertion — that it is still
+outside.
+
+**No `_config.yml` was added.** Adding one would change how the live site is
+processed, on a production website with no deploy gate, to solve a problem the
+existing exclusion already solves. That is a Class D change to the deployment and
+it is not this session's to make.
+
+**2 · THE DOT PREFIX IS NOT A SECURITY CONTROL, AND NOTHING RELIES ON IT BEING
+ONE.** Protocol §10 is explicit that a hidden route, a hidden link, `robots.txt`,
+a frontend check and an unlisted page are not security mechanisms. Every
+privileged request is authenticated and then authorized whether or not anybody
+finds the server; `.control-room/state/` is git-ignored as well; and the suite
+proves the request boundary against a **running server over real HTTP**, not by
+calling functions. The publication boundary is why a mistake in the request
+boundary would not already have published an audit trail — it is the second line,
+not the first.
+
+**3 · A DEFAULT IS NOT A CONTROL — SESSION 20's FINDING, TURNED INTO REFUSALS.**
+The health monitor measured `agent/observability/server.mjs` and found nine of
+eleven privileged routes answering an unauthenticated request, its only protection
+being that `host` DEFAULTS to loopback. So every dangerous configuration here is a
+**refusal to start**, not a default somebody can override: the development
+provider in production; the development provider off loopback in any environment
+(two independent refusals, so changing one variable does not get round it); any
+non-loopback bind outside production; production without an https origin; OIDC
+without an issuer or client id; an insecure issuer in production; an idle timeout
+that could never fire; and **an empty operator registry**.
+
+**4 · APPROVAL IS AN AUTHORIZATION, NOT AN IMPLEMENTATION.** Approving writes one
+line, to `agent/implement/decisions/decisions.jsonl`, through the same
+`recordDecision` the CLI calls — one home for the fact of a decision. It changes
+no dataset, no page, no stylesheet, no locale; it runs no validator, no build, no
+deployment; it touches no git. `git_ref` on the audit entry is `null` at decision
+time **by design**: a value there would mean the approval published something.
+Test 10 hashes the whole repository before and after a real approval and asserts
+nothing changed.
+
+## What is genuinely proved, and how
+
+Sixteen numbered proofs, each against a running server where the claim is about a
+request. Two shapes the suite is arranged to avoid:
+
+- **A test that passes for the wrong reason.** Every negative asserts the status
+  AND the reason, and each is paired with a positive proving the same path works
+  for somebody who is allowed. An authorization test that only ever sees 403
+  cannot tell "correctly refused" from "broken", and three of these tests failed
+  in draft for exactly that reason — `fetch` follows redirects by default, so
+  `GET /` "answered 200" while actually serving the login page.
+- **A test weakened to make a check pass.** The eight synthetic credentials in the
+  suite exist to prove the secret scan fires; `boundary.mjs` names the file as one
+  of its **two** exemptions — named files, not a directory, so a real key added
+  beside them is still found.
+
+**One of the eight was reshaped, and it is worth knowing why.** The planted Slack
+token was written in the exact `digits-digits-alnum24` shape a real one has, and
+**GitHub's push protection refused the push** — which is a scanner above this
+repository's own doing its job, on a value that was synthetic but indistinguishable
+from a live one at a glance. It now carries an obviously-not-a-token string after the
+`xoxb-` prefix — still matched by `SECRET_PATTERNS`' `slack-token` pattern, which is
+what the test is for, and the assertion fails if that ever stops being true. The
+literal is deliberately **not** reproduced here: `docs/` IS in the published surface,
+and `agent/implement/selftest.mjs` R4 caught the first draft of this paragraph for
+exactly that reason — a credential shape in a published file is an error whether or
+not it is synthetic. The other seven were not touched, and none of them may be deleted
+to make a check clean.
+
+The OIDC provider is exercised against a local stub with a **real RSA key pair**:
+a genuine login succeeds, and a forged signature, `alg: none`, HS256, a wrong
+issuer, a wrong audience, an expired token and a wrong nonce are each refused by
+name. That is a real test of the verification path. It is **not** a test against a
+real identity provider, and `docs/CONTROL-ROOM.md` §11 says so first rather than
+in a footnote.
+
+## Two existing assertions were changed, and why
+
+Both in `agent/health/selftest.mjs`, and both because **the world changed**, not
+because they were inconvenient. Named here so a reader can disagree:
+
+- `control_plane.control_room_availability` asserted `not_applicable` with the
+  reason "there is no Control Room. SESSION 21 builds it." There is one now, so
+  that reading became a metric asserting the absence of a thing this session
+  built. It is `unmeasurable` — nothing here measures whether an instance is
+  running — and the new assertion is **stricter**: it requires the metric to say
+  that 100% would read as "checked and up", and that a bare reachability probe
+  would be worse than none, because a Control Room that is up and answering
+  everybody is worse than one that is down.
+- `control_plane.authn_authz_failures` asserted `unmeasurable` because "there is
+  no login". There is one now, and it logs its decisions, so the metric counts
+  refusals from the Control Room audit trail — split into failed logins and
+  authorization denials, because **a denial is the authorization layer working**
+  and a total invites reading that as a problem. What did **not** change is the
+  refusal to report an absent trail as zero: the trail is git-ignored per-machine
+  state, so a CI runner and a fresh clone have none, and the new test asserts both
+  halves.
+
+One metric's IMPLEMENTATION was also brought into line with its own definition.
+`control_plane.privileged_endpoints_exposed` is defined as routes "whose only
+protection against public reachability is a default that a caller can override",
+and it was counting every interface whose bind host is a parameter. Until this
+session nothing in the repository had authentication, so the two could not come
+apart. They can now: an interface that authenticates and authorizes is not
+protected BY the default. The signal lists were not touched, the planted-failure
+tests still fire, and the observability viewer is still counted — the finding
+against it is unchanged.
+
+## Files changed
+
+**New — `.control-room/`, 20 files:** `config.mjs`, `identity.mjs`, `authn.mjs`,
+`authz.mjs`, `audit.mjs`, `decide.mjs`, `views.mjs`, `server.mjs`, `boundary.mjs`,
+`cli.mjs`, `selftest.mjs`, `README.md`, `config.example.env`, `state/README.md`,
+and `ui/` (login and app: two pages, two stylesheets, two scripts).
+
+**New — `docs/CONTROL-ROOM.md`**, the reference document.
+
+**Modified, all of it control-plane:**
+
+| File | What |
+|---|---|
+| `agent/health/security.mjs` | `.control-room/server.mjs` registered in `PRIVILEGED_INTERFACES`; `privileged_endpoints_exposed` brought into line with its definition; `why_zero` on the approval-action metric now names both callers of `recordDecision` |
+| `agent/health/control.mjs` | the two metrics above |
+| `agent/health/gather.mjs` | `readControlRoomAudit()` — reads the trail **by path, not by import**, so the monitor cannot be prevented from running by the thing it measures |
+| `agent/health/selftest.mjs` | the two changed assertions, and `control_room_audit` in `fakeCtx` |
+| `agent/implement/boundary.mjs` | `.control-room/` added to `CONTROL_PLANE_DIRS` — it reports as excluded by the deployment, which is the first control-plane directory that has ever done so |
+| `.github/workflows/qa.yml` | the suite, the Control Room boundary check, the route table, and two more lines in "what this workflow does not prove" |
+| `.gitignore` | `.control-room/state/*`, README negated back in |
+| `AGENTS.md` | the read list, the suite list, and three hazards that were no longer accurate |
+
+**Not modified:** `data/`, `js/`, `css/`, `i18n/`, `fonts/`, `tools/`, every page,
+`style.css`, `app.js`, `README.md`, `CLAUDE.md`.
+
+## Tests
+
+**867 across sixteen suites, 0 failures** (812 across fifteen before). 55 are new;
+no existing test count changed. 18/18 contracts satisfiable by their fixture. The
+four validators are at the `docs/CURRENT-ARCHITECTURE.md` §12 baseline: 0 errors,
+106 unverified, the same five `design-qa` warnings by file and line, and the
+boundary check at 0 blocking / 11 warnings.
+
+The Control Room suite writes nothing to the repository: temporary state, record
+and ledger directories per test, verified from outside by `git status` afterwards.
+
+## A discrepancy found and NOT reconciled
+
+`docs/CURRENT-ARCHITECTURE.md` §13 still says "**No CI.** There is no `.github/`
+directory, no workflow". `.github/workflows/qa.yml` has existed since SESSION 19,
+and `AGENTS.md` says "There is now CI." The two disagree. It is reported here
+rather than edited, because AGENTS.md's rule is to stop and report a conflict
+between the documentation and the code rather than reconciling it silently, and
+because §13 is not this session's section. The same paragraph's other claims —
+Pages serving `main` from the root, no `_config.yml`, no `.nojekyll` — were
+re-read against the tree and are **still true**, which matters because the
+Control Room's placement depends on them.
+
+## Known limitations
+
+Every one of these is in `docs/CONTROL-ROOM.md` §11 in full. The four worth
+carrying at the front:
+
+1. **No real identity provider has ever been contacted**, and this environment's
+   network policy means none could. Refresh tokens, back-channel logout, token
+   revocation and `end_session` are not implemented.
+2. **No deployed Control Room has ever been reached.** The suite starts one on an
+   ephemeral loopback port. `control_plane.control_room_availability` reports
+   `unmeasurable` for exactly this reason.
+3. **The publication boundary is inferred, not confirmed.** It follows from Pages'
+   documented default and from reading the tree; the deployed origin has never
+   been fetched (the same limitation as AUDIT F-12, one layer down).
+4. **Nothing here has been penetration-tested**, there is no rate limiting and no
+   account lockout. Under OIDC both belong to the identity provider; under the
+   local provider they are absent, which is one more reason it may not serve
+   production.
+
+## Next session
+
+SESSION 22 — the Master Orchestrator. Two things it inherits:
+
+- **The Control Room is not a command console, and §14 of the protocol says the
+  Orchestrator must not treat a UI action as unconditional authority.** What the
+  Control Room produces is a governed event: a line in the decision ledger, bound
+  to a proposal hash, attributable to an authenticated actor. The Orchestrator
+  re-derives it — `deriveApproval()` already does, and already discards
+  agent-written approval claims by name.
+- **`decide.mjs` runs the Implementation Agent's own gates before granting**, so a
+  proposal that cannot be implemented cannot be approved. If the Orchestrator
+  grows a path that bypasses `preflight()`, that property is gone.
 
 ---
 
 # SESSION 20 — the Website Health Monitor
+
+*(the previous milestone, kept for its findings and its refusals. The reference
+document is `docs/HEALTH-MONITOR.md`.)*
 
 ## What was built
 
@@ -448,6 +675,33 @@ node agent/observability/cli.mjs        health --readings
 
 ## Anything the next agent must know
 
+**SESSION 21's, first:**
+
+- **`git fetch --all` before comparing anything, and compare against
+  `origin/main`.** Local `main` on this machine is 52 commits behind. The trap in
+  AGENTS.md has now caught something in three separate sessions.
+- **An approval is an authorization for a scope, and nothing else happens.** If
+  you find yourself expecting the site to change because somebody clicked
+  Approve, read `docs/CONTROL-ROOM.md` §6: the Implementation Agent re-derives the
+  authorization from the ledger through its own ten gates, and no proposal in this
+  repository has ever been decided.
+- **A decision is bound to the proposal's fingerprint.** Editing a proposal after
+  it was approved VOIDS the approval — deliberately, because it is what stops
+  approving something small and then widening it. The fix is a fresh decision
+  against the scope the proposal now has, never a re-hash.
+- **Roles are re-read from the registry on every request**, not taken from the
+  session. `roles_at_login` exists for the audit trail and is never used for a
+  decision. If you cache the actor, you have removed that property.
+- **The Control Room audit trail is private per-machine state.** It is git-ignored
+  and does not travel with a checkout, which is why
+  `control_plane.authn_authz_failures` reports `unmeasurable` in CI rather than 0.
+  A 0 there would read as "nobody was turned away".
+- **The suite proves the boundary behaves as specified.** It proves nothing about
+  whether a proposal a human approved through it was a good idea — which is the
+  whole reason the human is there. `docs/CONTROL-ROOM.md` §11 has the rest.
+
+Carried forward:
+
 - **`agent/ux/` opens no page, and every record says so in a blocking open
   question.** If you are tempted to soften that — to write "screen readers
   announce this as…", to fill in a contrast ratio from a comment in
@@ -510,7 +764,47 @@ node agent/observability/cli.mjs        health --readings
 
 ## Anything the next agent must NOT change
 
-Carried forward, still binding, plus this session's:
+Carried forward, still binding. **SESSION 21's, first:**
+
+- **Do not put a Control Room page in the published tree.** Not under `docs/`, not
+  at the root, not as an `admin.html`. The dot prefix is the only publication
+  boundary this repository has, and a page outside it is public the moment it is
+  pushed — linked or not. If a future session needs a broader boundary, that is a
+  `_config.yml` exclude list, which changes how the live site is processed and is
+  a Class D deployment change, not a convenience.
+- **Do not add a default account, a seeded administrator, or a "first run"
+  bootstrap that creates one.** The refusal to start with an empty registry is the
+  feature. Protocol §11 forbids `"admin"` / `"admin"` or any equivalent from
+  existing at all, so none may be created either.
+- **Do not let the interface become the authority.** `visibleActions()` is
+  cosmetic and says so in its own header. Every privileged request is authorized
+  server-side, and test 5 sends the request a hidden button would have prevented.
+- **Do not add a route that can deploy, delete, apply, publish or execute.**
+  `PROHIBITED_ROUTE_WORDS` and test 10b make that a failing check rather than a
+  discussion, and `server.mjs` deliberately imports nothing that could write to
+  the tree — no `child_process`, no `writeFileSync`, not the applier.
+- **Do not add a second writer of a grant.** `recordDecision` has exactly two
+  callers and one home. A third would put the fact of a decision in two places.
+- **Do not make `request_changes` a ledger state.** It is a review annotation, it
+  leaves `deriveApproval()` reporting `pending`, and that is what is true.
+- **Do not relax `DECIDABLE_STATES`.** Approving over a denial through the same
+  endpoint makes the denial advisory.
+- **Do not remove the strict unknown-field check on the review body.** Silently
+  ignoring an unexpected field is safe today and stops being safe the first time
+  somebody adds a field with that name. It is what makes "scope cannot be expanded
+  through request manipulation" a refusal rather than a hope.
+- **Do not let the local development provider out of loopback development.** Both
+  refusals are load-bearing; removing either leaves the other looking sufficient.
+- **Do not delete the eight planted credentials in `.control-room/selftest.mjs`,**
+  and do not allow-list a directory in `.control-room/boundary.mjs` — the two
+  exemptions are named FILES, so a real key added beside them is still found.
+- **Do not commit `.control-room/state/`.**
+- **Do not "fix" `agent/observability/server.mjs` by bolting a token onto it.** It
+  is a local development viewer and its own header says so; the finding against it
+  stands, unchanged, and merging it with the Control Room would give a development
+  tool a security model nobody tests.
+
+Everything from before, still binding:
 
 - Do not rebuild the site. No framework, no bundler, no build step, no
   dependency, no service worker, no server-side rendering.

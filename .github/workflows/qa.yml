@@ -119,7 +119,8 @@ jobs:
             agent/ux/selftest.mjs \
             agent/observability/selftest.mjs \
             agent/implement/selftest.mjs \
-            agent/health/selftest.mjs
+            agent/health/selftest.mjs \
+            .control-room/selftest.mjs
           do
             echo "::group::$s"
             node --test "$s"
@@ -164,6 +165,23 @@ jobs:
       # fact, not something a given change introduced.
       - name: Scan the published surface
         run: node agent/implement/cli.mjs boundary
+
+      # SESSION 21. The Control Room lives behind the ONE publication
+      # boundary this repository has — a GitHub Pages deployment with
+      # no _config.yml does not serve a path whose segments begin with
+      # "." — and this asks whether that is still true, on the actual
+      # tree, rather than assuming it. It also fails on a credential
+      # in the Control Room's own files, on any private state that has
+      # become git-tracked, and on a route that could deploy, delete
+      # or publish.
+      #
+      # It provisions nobody and starts no server, so it needs no
+      # configuration.
+      - name: The Control Room boundary
+        run: node .control-room/cli.mjs boundary
+
+      - name: Every route, and the permission it needs
+        run: node .control-room/cli.mjs routes
 
   # ----------------------------------------------------------
   # 3b. SESSION 20 — the health monitor
@@ -320,6 +338,15 @@ jobs:
             echo "- **No contrast was computed and no screen reader was run.** README limitation 7."
             echo "- **106 records carry an unverified note.** They are changed by doing the"
             echo "  verification work, not by a passing check."
+            echo "- **No Control Room instance was reached.** The suite starts one on an ephemeral"
+            echo "  loopback port and proves the boundary against it; nothing here has ever spoken"
+            echo "  to a deployed one, and \`control_plane.control_room_availability\` reports"
+            echo "  \`unmeasurable\` for that reason."
+            echo "- **No real identity provider was contacted.** The OIDC flow is proved against a"
+            echo "  local stub with a real key pair — signature, issuer, audience, expiry, nonce,"
+            echo "  PKCE and state are genuinely checked, and a forged signature and \`alg: none\`"
+            echo "  are genuinely refused — but nothing here has spoken to Auth0, Okta, Entra or"
+            echo "  Keycloak, and this environment's network policy means nothing could."
             echo "- **There is no overall health score, and a green tick is not one.** The health"
             echo "  monitor reports three domains separately and never sums them; nine of its"
             echo "  metrics report \`unmeasurable\` in this job because the browser does not run in it."

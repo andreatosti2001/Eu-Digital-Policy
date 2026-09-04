@@ -67,6 +67,7 @@ export const CONTROL_PLANE_DIRS = [
   ['agent/records/', 'contract records: what agents found, proposed and refused. Git-ignored, so not published today, and that is an ignore rule rather than a boundary.'],
   ['agent/observability/runs/', 'operational traces. Git-ignored, same caveat.'],
   ['.agents/', 'skills — the agent operating instructions.'],
+  ['.control-room/', 'the Control Room: the private administrative interface, its authentication and authorization, and its audit trail. SESSION 21. It is dot-prefixed BECAUSE of this check — the deployment does not serve a path whose segments begin with "." or "_", and that is the only publication boundary this repository has. Its private state (.control-room/state/) is git-ignored as well, so it is outside on both counts.'],
 ];
 
 /** Shapes that are credentials. Each carries what it matches so a

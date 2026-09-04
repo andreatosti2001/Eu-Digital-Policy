@@ -59,6 +59,18 @@ export const PRIVILEGED_INTERFACES = [
     what: 'the trace store: agent inputs and outputs, decisions, approvals, provenance, and every artifact pointer',
     route_prefix: '/api/',
   },
+  /* SESSION 21. Registered here rather than left to the standing
+     weakness of an allowlist, and deliberately WITHOUT relaxing any
+     signal below: the same parser that found nine of eleven
+     observability routes answering an unauthenticated request now
+     reads the Control Room too, and reports what it finds about it.
+     The ORDER matters — probePrivilegedRoutes() and the suite both
+     take analyseAll()[0], which stays the observability viewer. */
+  {
+    path: '.control-room/server.mjs',
+    what: 'the private control plane: the review queue with its full provenance, the audit trail, the operator registry, and the one action that records a human approval',
+    route_prefix: '/api/',
+  },
 ];
 
 /** Shapes that would constitute an authentication check in a
@@ -215,15 +227,21 @@ export const SECURITY_METRICS = [
     domain: 'control_plane',
     definition: 'Privileged HTTP routes whose only protection against public reachability is a default that a caller can override.',
     source: 'agent/health/security.mjs analyseInterface(), parsing agent/observability/server.mjs',
-    calculation: 'For each privileged interface, the routes under its privileged prefix, counted when the bind host is a PARAMETER with a loopback default rather than a fixed loopback bind. A default is not a control.',
+    calculation: 'For each privileged interface, the routes under its privileged prefix, counted when the bind host is a PARAMETER with a loopback default rather than a fixed loopback bind AND the interface performs neither authentication nor authorization. A default is not a control; an authenticated and authorized route is not protected BY the default, so it is not what this metric counts. SESSION 21 brought the calculation into line with the definition it always had — until then nothing in this repository had authentication, so the two could not come apart.',
     frequency: 'per_commit',
     interpretation: 'Above 0 means the code permits a caller to expose those routes to a network, and nothing in the request path would object if they did. That is a defensible design for a local development viewer, which is what agent/observability/server.mjs says it is. It becomes a real exposure the moment anything reuses it — and SESSION 21 builds a Control Room.',
-    limitations: 'It reads the code, not a running process. It cannot tell whether anybody has ever started the server with a non-loopback host, and it does not probe the network. It also only checks interfaces listed in PRIVILEGED_INTERFACES: a new server nobody adds to that list is not checked, which is the standing weakness of every allowlist.',
+    limitations: 'It reads the code, not a running process. It cannot tell whether anybody has ever started the server with a non-loopback host, and it does not probe the network. It also only checks interfaces listed in PRIVILEGED_INTERFACES: a new server nobody adds to that list is not checked, which is the standing weakness of every allowlist. And it treats the PRESENCE of an authentication or authorization signal as protection: it cannot judge whether either is correct, which is why the loopback probe below and .control-room/selftest.mjs exist alongside it rather than instead of it.',
     visibility: 'private',
     direction: 'lower_is_better',
     measure(ctx) {
       const ifaces = analyseAll(ctx.root);
-      const exposed = ifaces.filter((i) => i.exists && i.host_is_a_parameter);
+      /* An interface that authenticates AND authorizes is not one
+         whose ONLY protection is an overridable default, which is
+         what this metric is defined to count. Counting it anyway
+         would report a server that refuses unauthenticated callers
+         identically to one that answers them, and that is the
+         distinction the whole domain exists to make. */
+      const exposed = ifaces.filter((i) => i.exists && i.host_is_a_parameter && !(i.has_auth && i.has_authz));
       return measured(exposed.reduce((n, i) => n + i.privileged_routes.length, 0), {
         unit: 'routes whose only control is an overridable default',
         detail: {
@@ -235,7 +253,10 @@ export const SECURITY_METRICS = [
             host_is_a_parameter: i.host_is_a_parameter,
             serves: i.what ?? null,
           })),
-          note: 'the bind address is a PARAMETER with a loopback default. serve({ host }) accepts any value, and a caller passing 0.0.0.0 exposes the whole trace store with nothing in the request path to refuse.',
+          counted: exposed.map((i) => i.path),
+          not_counted: ifaces.filter((i) => i.exists && !exposed.includes(i))
+            .map((i) => ({ path: i.path, why: i.has_auth && i.has_authz ? 'it authenticates and authorizes every privileged request, so the bind default is not its only protection' : 'its bind address is not a parameter' })),
+          note: 'for a COUNTED interface the bind address is a PARAMETER with a loopback default. serve({ host }) accepts any value, and a caller passing 0.0.0.0 exposes the whole store with nothing in the request path to refuse.',
         },
         evidence: ['agent/observability/server.mjs'],
       });
@@ -370,7 +391,7 @@ export const SECURITY_METRICS = [
         detail: {
           interfaces_exposing_an_approval_action: offenders,
           website_assets_exposing_one: publishedWithActions,
-          why_zero: 'the only code path that writes a grant is `node agent/implement/cli.mjs decide`, a CLI command. No HTTP interface in this repository can reach it, and no page carries one.',
+          why_zero: 'a grant is written by exactly one function — agent/implement/ledger.mjs recordDecision — and exactly two things call it: `node agent/implement/cli.mjs decide`, a CLI command, and the Control Room\'s POST /api/review, which authenticates the caller, authorizes them against the proposal\'s own autonomy class, binds the decision to the proposal\'s fingerprint and audits it. The second is an approval action over HTTP and it is counted here as protected rather than as absent, because what this metric counts is an approval action reachable WITHOUT an authorization decision. No page carries one.',
           not_covered: 'a person editing agent/implement/decisions/decisions.jsonl directly. That is not an HTTP exposure and this metric cannot find it — docs/IMPLEMENTATION-QA.md §9 open question 1.',
         },
         evidence: ['agent/implement/cli.mjs', 'agent/observability/server.mjs'],

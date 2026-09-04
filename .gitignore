@@ -36,3 +36,21 @@ agent/proposals/editorial/drafts/
 # shape of mistake as a denylist.
 agent/health/history/*
 !agent/health/history/README.md
+
+# The Control Room's private state: the operator registry and its password
+# hashes, live sessions, the approval audit trail, review notes and in-flight
+# OIDC logins. None of it belongs in a repository, and this one publishes its
+# whole tree.
+#
+# .control-room/ is ALREADY outside the published surface — a GitHub Pages
+# deployment with no _config.yml does not serve a path whose segments begin with
+# "." — so this entry is not what keeps the state private on the web. It is what
+# keeps it out of git, which is a different and equally necessary thing: an
+# operator registry committed by accident is an operator registry in every clone,
+# in every fork and in the history forever.
+#
+# The glob is `*` with the README negated back in, for the same reason
+# agent/health/history/ uses that shape: an ignore list that covers only the
+# files somebody thought of is the same mistake as a denylist.
+.control-room/state/*
+!.control-room/state/README.md

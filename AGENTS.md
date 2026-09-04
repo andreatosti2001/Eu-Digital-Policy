@@ -31,6 +31,7 @@ the evidence it describes.
 | `docs/OBSERVABILITY.md` | The trace model every agent run is instrumented through |
 | `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` · `docs/DATA-DEPTH.md` · `docs/GAP-PROPOSALS.md` · `docs/KNOWLEDGE-ARCHITECTURE.md` · `docs/EDITORIAL-AGENT.md` · `docs/UX-AUDIT.md` · `docs/IMPLEMENTATION-QA.md` · `docs/HEALTH-MONITOR.md` | The eleven agents that exist, what each refuses, and what none of them may do |
 | `docs/BROWSER-QA.md` · `docs/HEALTH-MONITOR.md` | The browser regression suite and the three health domains — what each measures, and what neither can see |
+| `docs/CONTROL-ROOM.md` | The private control plane: the two security domains, authentication, authorization, the seven approval gates, the audit trail — and §11, what none of it proves |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
@@ -55,6 +56,11 @@ Skills live in `.agents/skills/` — sixteen of them, listed with their scope an
 intended agent role in **`docs/SKILL-MAP.md`**. Invoke `project-context` at the start of every
 session, then load the skills the task actually needs; each one names the sibling that owns
 what it does not.
+
+**The Control Room is not an agent.** `.control-room/` is the private administrative interface
+a PERSON uses — observe, review, decide. It is behind a dot prefix because that is the one
+publication boundary this repository has, and behind server-side authentication and
+authorization because that boundary is **not** a security control. `docs/CONTROL-ROOM.md`.
 
 **The repository is the source of truth.** If `docs/HANDOVER.md` conflicts with the code,
 **stop and report the discrepancy** rather than reconciling it silently.
@@ -144,11 +150,16 @@ node --test agent/browser/selftest.mjs         # the browser suite's own suite
 node --test agent/implement/selftest.mjs       # Agent 9, incl. SESSION 18's eight required proofs
 node --test agent/health/selftest.mjs          # Agent 10, incl. planted security-boundary failures
 node --test agent/observability/selftest.mjs
+node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**812 tests across the fifteen suites**, all passing as of SESSION 20 (756 after SESSIONS 18
-and 19; 683 before them).
+**867 tests across the sixteen suites**, all passing as of SESSION 21 (812 after SESSION 20;
+756 after SESSIONS 18 and 19; 683 before them). SESSION 21 added 55 and **changed two existing
+assertions** in `agent/health/selftest.mjs` — both because the world changed rather than
+because they were inconvenient: a Control Room now exists, so the metric that said there was
+none, and the one that said there was no login, were asserting something false.
+`docs/HANDOVER.md` names both.
 
 **There is now CI.** `.github/workflows/qa.yml` runs all four validators against the recorded
 baseline, every agent suite, the contract check, the public/private boundary check and the
@@ -225,21 +236,29 @@ patches, not checks. **Do not re-run** the latter two.
   (F-06).
 - **An `ApprovalRequest` in `agent/records/` is a request, not a grant.** Agents write that
   directory, and it is git-ignored. A grant exists only in
-  `agent/implement/decisions/decisions.jsonl`, written by `agent/implement/cli.mjs decide`,
-  which requires a named human and binds the decision to the proposal's hash. **Not one
+  `agent/implement/decisions/decisions.jsonl`, through `agent/implement/ledger.mjs
+  recordDecision`, which requires a named human and binds the decision to the proposal's
+  hash. **Two things call it**, and only two: `agent/implement/cli.mjs decide`, and the
+  Control Room's `POST /api/review`, which authenticates the caller, authorizes them against
+  the proposal's own autonomy class and audits the result before it does. One home for the
+  fact of a decision — do not add a third writer. **Not one
   proposal in this repository has ever been decided** — seventy-one across four agents by
   `docs/HANDOVER.md`'s count, thirty-five of them measured in SESSION 18's own run. Agent 9
   refuses every one by name, and reports which gate refused it.
   `docs/IMPLEMENTATION-QA.md` §3.
-- **The privileged API has no authentication and no authorization.**
+- **The privileged API has no authentication and no authorization — and it is still there.**
   `agent/observability/server.mjs` serves eleven `/api/` endpoints over the whole trace
   store — agent inputs and outputs, decisions, approvals, provenance — and checks nothing.
   Its only control is that `host` DEFAULTS to `127.0.0.1`, and a default is not a control:
   `serve({ host })` accepts any value. Measured rather than inferred — the health monitor
   starts it on an ephemeral loopback port and finds **nine of the eleven routes return data
   to a request with no credential**. Defensible for a local development viewer, which is
-  what it is; **SESSION 21's Control Room must not inherit it**.
-  `docs/HEALTH-MONITOR.md` §6.
+  what it is. **SESSION 21's Control Room did not inherit it**: `.control-room/server.mjs` is
+  a separate server that authenticates and then authorizes every privileged request, and the
+  finding above stands unchanged against the viewer. Do not point a Control Room at the
+  viewer's routes, and do not "fix" the viewer by bolting a token onto it — they exist for
+  different purposes, and merging them would give a development tool a security model nobody
+  tests. `docs/HEALTH-MONITOR.md` §6 · `docs/CONTROL-ROOM.md` §1.
 
 - **A lower number is not automatically healthier, and five metrics say so in their own
   definition.** The 106 unverified records, the provenance gaps, the verification gaps, the
@@ -249,15 +268,25 @@ patches, not checks. **Do not re-run** the latter two.
   substitute, bulk-stamping `last_verified`, removing a `blocks` flag — is a prohibited
   action rather than an improvement. **A rise in the first four is usually good news.**
 
-- **The whole repository is inside the public deployment.** GitHub Pages serves `main` at the
-  repository root, with no `_config.yml`, no `.nojekyll` and no exclude list, so `agent/`,
-  `docs/` and the approval ledger are published alongside `index.html`. A Control Room page
-  dropped in this tree would be public the moment it was pushed.
+- **Almost the whole repository is inside the public deployment.** GitHub Pages serves `main`
+  at the repository root, with no `_config.yml`, no `.nojekyll` and no exclude list, so
+  `agent/`, `docs/` and the approval ledger are published alongside `index.html`. A Control
+  Room page dropped in *that* part of the tree would be public the moment it was pushed.
   `node agent/implement/cli.mjs boundary` reports it on demand;
-  `docs/IMPLEMENTATION-QA.md` §6 carries it as the standing finding it is. What IS excluded
-  is anything git does not track — `agent/records/`, `agent/observability/runs/` and
-  `agent/health/history/` have never been in a commit — and that is an **ignore rule, not a
-  boundary**: one `git add -f` undoes it and nothing here would object.
+  `docs/IMPLEMENTATION-QA.md` §6 carries it as the standing finding it is.
+
+  **The one real exclusion is the dot prefix.** A path whose segments begin with `.` or `_`
+  is not served by a Pages deployment with no `_config.yml` — which is why `.agents/` has
+  never been in the published surface and `agent/` always has. SESSION 21 put
+  `.control-room/` behind it deliberately, and `node .control-room/cli.mjs boundary` checks
+  on every push that it is still true. **Do not read that as "the Control Room is safe
+  because nobody can find it."** Protocol §10 and `docs/CONTROL-ROOM.md` §1 both say the
+  opposite, and every privileged request there is authenticated and authorized regardless.
+
+  What is merely UNTRACKED is weaker still: `agent/records/`, `agent/observability/runs/`,
+  `agent/health/history/` and `.control-room/state/` have never been in a commit, and that is
+  an **ignore rule, not a boundary** — one `git add -f` undoes it and nothing here would
+  object.
 - **Your base may be stale.** Run `git fetch --all && git branch -a` before concluding
   anything about what this repository contains. An earlier session reported four existing
   documents as missing by running `ls docs` on an unfetched branch (F-01).
