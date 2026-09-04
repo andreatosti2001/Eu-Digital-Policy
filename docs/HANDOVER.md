@@ -4,11 +4,19 @@
 **Branch:** `claude/control-room-private-plane-4a36vx`, cut from `origin/main` at `22747e1`.
 **Base commit:** `22747e1` on `origin/main` ("Merge SESSION 20: the Website Health
 Monitor").
-**NOT merged into `main`.** The session prompt says "Merge to main only after the
-complete Control Room security boundary is verified"; the boundary is verified by
-the suite and by CI, and the merge itself is a push to `main`, which
-`docs/AUTONOMY-POLICY.md` Class D reserves to the repository author by name. The
-branch is pushed and stops there.
+**Merged into `main`.** The session prompt says "Merge to main only after the
+complete Control Room security boundary is verified". The boundary was verified,
+the branch was pushed, and the merge — a push to `main`, which
+`docs/AUTONOMY-POLICY.md` Class D reserves to the repository author by name — was
+then **explicitly authorised by the repository author in the session**, after being
+shown what was being authorised. That is the permission `AGENTS.md` requires; the
+session did not take it on its own reading of the prompt.
+
+**Everything was re-run ON THE MERGED TREE before it was pushed**, not only on the
+branch: all sixteen suites (867 pass), the contract check (18/18 satisfiable), the
+four validators against the `docs/CURRENT-ARCHITECTURE.md` §12 baseline (0 errors,
+106 unverified, the same five `design-qa` warnings by file and line), and both
+boundary checks (0 blocking).
 
 **THE STALE-`main` TRAP FIRED AGAIN, and this time on the local branch pointer
 rather than on the working tree.** `git fetch --all` first, as AGENTS.md requires:
@@ -16,17 +24,27 @@ the working branch was cut from `origin/main` at `22747e1` and is current, but
 **local `main` is 52 commits behind `origin/main`** (`4bd1f0d`). Any check run as
 `git diff main..HEAD` on this machine would have reported 246 changed files and
 67,592 insertions, almost none of them this session's. Every comparison below is
-against **`origin/main`**. This is the third session in which the trap has caught
-something (F-01, then SESSION 18/19's 47 commits, now 52), and local `main` was
-left alone rather than fast-forwarded: moving it is a change to the branch this
-session may not push to.
+against **`origin/main`**, never against local `main`. This is the third session in
+which the trap has caught something (F-01, then SESSION 18/19's 47 commits, now
+52).
 
-**THE LIVE SITE IS BYTE-FOR-BYTE UNCHANGED**, checked rather than asserted.
-`git diff origin/main -- data/ js/ css/ i18n/ fonts/ tools/ index.html
+Local `main` was fast-forwarded to `origin/main` **only at merge time**, once the
+author had authorised the merge, and only after `git rev-list --count
+origin/main..main` was confirmed to be **0** — that is, the stale pointer carried no
+commit of its own that a reset could have destroyed. Check that before resetting a
+stale branch; a non-zero count there means somebody's work is about to be lost.
+
+**THE LIVE SITE IS BYTE-FOR-BYTE UNCHANGED**, checked on the merged tree rather
+than asserted. `git diff 22747e1 -- data/ js/ css/ i18n/ fonts/ tools/ index.html
 applies.html bibliography.html enforcement.html institutions.html instrument.html
 instruments.html style.css app.js README.md CLAUDE.md` is **empty**. The Control
 Room's suite also hashes the whole tree around a live approval (test 10) and finds
 nothing changed.
+
+**So this merge publishes nothing to readers.** Every file it adds is either inside
+`.control-room/`, which the deployment does not serve, or in `docs/` and `agent/`,
+which are published but which no reader's browser loads. A push to `main` publishes,
+and this one changes no page, no dataset, no stylesheet and no locale.
 
 **Nothing that any agent has proposed was approved.** The Control Room can now
 record a human decision, and no human decision has been recorded:
