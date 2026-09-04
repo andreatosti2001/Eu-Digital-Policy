@@ -32,7 +32,7 @@
    "where observable", is the hook these hang on.
    ============================================================ */
 
-import { defineMetric, measured, unmeasurable, notApplicable } from './model.mjs';
+import { defineMetric, measured, unmeasurable } from './model.mjs';
 import { allSpans, allEvents, allAgentRuns, allRecords } from './gather.mjs';
 import { getContract } from '../schemas/registry.mjs';
 import { validate } from '../schemas/validate.mjs';
@@ -476,17 +476,18 @@ export const CONTROL_METRICS = [
     id: 'control_plane.control_room_availability',
     name: 'Control Room availability',
     domain: 'control_plane',
-    definition: 'Whether the private administrative interface is reachable and serving.',
-    source: 'nothing. There is no Control Room in this repository.',
-    calculation: 'None is possible. SESSION 21 builds the Control Room; nothing here is one. agent/observability/server.mjs is a LOCAL DEVELOPMENT VIEWER — it is not an administrative interface, it exposes no approval action, and calling it a Control Room would misdescribe both.',
+    definition: 'Whether the private administrative interface is reachable and correctly refusing unauthenticated callers.',
+    source: 'nothing. SESSION 21 built the Control Room; nothing measures whether an instance of it is up.',
+    calculation: 'None is possible from this repository. The Control Room is a server somebody runs — on a workstation, or behind an identity-aware proxy — and nothing here knows an origin to ask, has ever asked one, or records an answer. Uptime is a property of a deployment, and this monitor reads a tree.',
     frequency: 'continuous',
-    interpretation: 'NOT_APPLICABLE, and reporting it as 0% available or 100% available would both be wrong. There is nothing to be available. This metric is declared rather than omitted because SESSION 20 asks for it and because SESSION 21 will need somewhere for the answer to land.',
-    limitations: 'Everything. When a Control Room exists, this metric will also need an availability definition that distinguishes "reachable" from "reachable and correctly refusing unauthenticated callers" — the second is the one that matters, and the first on its own would be a worse answer than none.',
+    interpretation: 'UNMEASURABLE. It changed from NOT_APPLICABLE in SESSION 21, and the change is the news: before, there was nothing to be available; now there is something, and this still cannot see it. Neither 0% nor 100% would be true, and 100% would be the worse of the two — it would read as "checked and up".',
+    limitations: 'When something does measure this, "reachable" is the wrong definition on its own. The reading that matters is "reachable AND refusing an unauthenticated caller", because a Control Room that is up and answering everybody is worse than one that is down. .control-room/selftest.mjs proves the refusal against a running server; it proves nothing about any deployed instance.',
     visibility: 'private',
     direction: 'higher_is_better',
     measure() {
-      return notApplicable(
-        'there is no Control Room. SESSION 21 builds it. agent/observability/server.mjs is a local development viewer bound to 127.0.0.1, not an administrative interface — it exposes no approval action and no privileged mutation, and describing it as a Control Room would overstate both what exists and what is protected.',
+      return unmeasurable(
+        'the Control Room exists (.control-room/, SESSION 21) and nothing measures whether an instance of it is running. There is no configured origin here, nothing in this repository has ever fetched one, and no uptime is recorded. Reporting 100% would read as "checked and up"; reporting 0% would read as "checked and down".',
+        'an origin to ask, permission to ask it, and a probe that treats "answered an unauthenticated request" as a FAILURE rather than as availability. The bare reachability check is the one that would be worse than none.',
       );
     },
   }),
@@ -496,18 +497,39 @@ export const CONTROL_METRICS = [
     name: 'Authentication and authorization failures',
     domain: 'control_plane',
     definition: 'Failed authentication attempts and denied authorization decisions on privileged interfaces, where observable.',
-    source: 'nothing. There is no authentication anywhere in this repository, and no privileged interface that performs an authorization check.',
-    calculation: 'None is possible. agent/observability/server.mjs serves eleven /api/ endpoints over the trace store and performs NO authentication and NO authorization on any of them; its only control is the default bind address. There is therefore no auth event to count.',
+    source: 'the Control Room audit trail at .control-room/state/audit/, read by path in agent/health/gather.mjs readControlRoomAudit(). agent/observability/server.mjs contributes nothing: it still performs no authentication and no authorization, so it produces no decision to count.',
+    calculation: 'Entries whose action is session.login_failed or authz.denied, counted over every audit file on this machine, against the total number of entries. SESSION 21 made this countable; before it, there was no login to fail.',
     frequency: 'continuous',
-    interpretation: 'UNMEASURABLE, and a 0 here would be actively misleading: it would read as "no failed logins" when the truth is "there is no login". SESSION 20 says "where observable", and the honest answer is that nothing is. The ABSENCE of the mechanism is not silence here — it is reported by control_plane.privileged_routes_without_auth in agent/health/security.mjs, which is where a missing control belongs.',
-    limitations: 'When authentication exists, this metric will need a log to count from, and that log is itself privileged data — it records who tried to get in. It must never become part of any public subset.',
+    interpretation: 'A rise means somebody is being refused. That is not by itself bad news — a refused viewer is the authorization layer working — so the split between the two actions matters more than the total: repeated session.login_failed against one subject is a different event from an operator meeting a permission they do not hold. UNMEASURABLE where no trail exists on this machine, which is the ordinary case for a CI runner and a fresh clone: the trail is git-ignored private state and does not travel with a checkout. A 0 there would read as "nobody was turned away" when the truth is "this machine has never run one".',
+    limitations: 'It counts what ONE machine\'s Control Room recorded. It cannot see another deployment\'s trail, and it cannot see an attempt that never reached a server. It also cannot distinguish a person mistyping a password from an attack, and nothing here should be read as if it could. The trail itself is privileged data — it records who tried to get in — and this metric is private for that reason; it must never enter a public subset.',
     visibility: 'private',
     direction: 'lower_is_better',
-    measure() {
-      return unmeasurable(
-        'there is no authentication anywhere in this repository and no privileged interface performs an authorization check, so there is no auth event to count. Reporting 0 would read as "no failed logins" when the truth is "there is no login".',
-        'an authentication mechanism on the privileged interface, and a log of its decisions. SESSION 21. Until then the finding is the MISSING CONTROL, reported by control_plane.privileged_routes_without_auth, not a count of failures against a control that does not exist.',
-      );
+    measure(ctx) {
+      const trail = ctx.control_room_audit;
+      if (!trail || !trail.present) {
+        return unmeasurable(
+          `${trail?.why ?? 'no Control Room audit trail was gathered'} There IS an authentication mechanism now (.control-room/, SESSION 21) — this machine simply has no record of it having refused anybody, which is a different fact from nobody having been refused.`,
+          'a Control Room that has run on this machine, at .control-room/state/audit/. The trail is git-ignored private state by design: an audit trail naming who decided what about EU law does not belong in a repository that publishes its whole tree.',
+        );
+      }
+      const failedLogins = trail.entries.filter((e) => e.action === 'session.login_failed');
+      const denied = trail.entries.filter((e) => e.action === 'authz.denied');
+      return measured(failedLogins.length + denied.length, {
+        unit: 'refusals',
+        of: trail.entries.length,
+        detail: {
+          failed_logins: failedLogins.length,
+          authorization_denials: denied.length,
+          /* Split, not summed. The two mean different things and a
+             total invites reading a working authorization layer as a
+             problem. */
+          note: 'a denial is the authorization layer working. What is worth looking at is a run of failed logins against one subject, or one operator repeatedly meeting a permission they do not hold.',
+          distinct_subjects_failing_login: [...new Set(failedLogins.map((e) => e.actor_subject).filter(Boolean))].length,
+          malformed_lines: trail.malformed,
+          chain_note: 'this counts lines; it does not verify the hash chain. node .control-room/cli.mjs audit --verify does that, and a broken chain makes every count here suspect.',
+        },
+        evidence: ['.control-room/state/audit/'],
+      });
     },
   }),
 

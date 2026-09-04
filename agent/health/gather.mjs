@@ -25,7 +25,7 @@
    ============================================================ */
 
 import { execFileSync } from 'node:child_process';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { REPO_ROOT, readBaseline } from '../implement/baseline.mjs';
 import { runValidators } from '../implement/checks.mjs';
@@ -109,6 +109,7 @@ export async function gather({ asOf, root = REPO_ROOT, browser = true, quick = f
   }
 
   const probeResult = probe ? await probePrivilegedRoutes({ root }) : null;
+  const controlRoom = readControlRoomAudit({ root });
 
   return {
     as_of: asOf,
@@ -127,6 +128,8 @@ export async function gather({ asOf, root = REPO_ROOT, browser = true, quick = f
     browser_requested: browser,
     browser: browserRun,
     browser_error: browserError,
+
+    control_room_audit: controlRoom,
 
     surface: publicSurface({ root }),
     secrets: scanSecrets({ root }),
@@ -195,6 +198,39 @@ export async function probePrivilegedRoutes({ root = REPO_ROOT } = {}) {
   } finally {
     if (server) await new Promise((ok) => server.close(ok));
   }
+}
+
+
+/**
+ * The Control Room's authentication and authorization decisions, if
+ * this machine has any.
+ *
+ * READ BY PATH RATHER THAN BY IMPORT, deliberately. The health
+ * monitor must not depend on the Control Room's modules: a monitor
+ * that cannot run because the thing it measures failed to load is a
+ * monitor that goes quiet exactly when it is needed. Reading JSONL
+ * off disk degrades to "there is no trail here", which is a reading.
+ *
+ * ABSENT IS NOT ZERO. The trail is private per-machine state — it is
+ * git-ignored and never travels with a checkout — so a CI runner and
+ * a fresh clone have none, and the metric that consumes this reports
+ * `unmeasurable` rather than "no failed logins". The distinction is
+ * the whole of SESSION 20's second refusal.
+ */
+export function readControlRoomAudit({ root = REPO_ROOT } = {}) {
+  const dir = join(root, '.control-room', 'state', 'audit');
+  if (!existsSync(dir)) {
+    return { present: false, dir, entries: [], malformed: 0, why: 'no Control Room audit trail exists on this machine. It is git-ignored private state, so a fresh checkout and a CI runner have none.' };
+  }
+  const entries = [];
+  let malformed = 0;
+  for (const f of readdirSync(dir).filter((n) => /^audit-\d{4}-\d{2}\.jsonl$/.test(n)).sort()) {
+    for (const line of readFileSync(join(dir, f), 'utf8').split('\n')) {
+      if (!line.trim()) continue;
+      try { entries.push(JSON.parse(line)); } catch { malformed++; }
+    }
+  }
+  return { present: true, dir, entries, malformed, why: null };
 }
 
 /* ---------------------------------------------------------- helpers
