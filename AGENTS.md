@@ -35,6 +35,7 @@ the evidence it describes.
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
+| `docs/SECURITY-VERIFICATION-2026-09-08.md` | SESSION 23.5's adversarial gate: 65 attacks, what held, the two findings, and the two boundaries this environment cannot test |
 | `README.md` | The author's own account, including eight stated limitations |
 
 **The operating policies** (SESSION 01) sit under the boundaries document and refine it.
@@ -57,6 +58,13 @@ Skills live in `.agents/skills/` — sixteen of them, listed with their scope an
 intended agent role in **`docs/SKILL-MAP.md`**. Invoke `project-context` at the start of every
 session, then load the skills the task actually needs; each one names the sibling that owns
 what it does not.
+
+**The verification gate is not a test suite.** `agent/policy/verify/` attacks the boundaries
+rather than asserting them, and it has four outcomes rather than two: an attempt that could not
+be carried out here is `undecidable`, **never a pass**. `node agent/policy/verify/cli.mjs` runs
+it; `docs/SECURITY-VERIFICATION-2026-09-08.md` is the report. Two findings stand and **neither
+was fixed** — SESSION 23.5 is a gate, and a session that both finds and fixes leaves no record
+of what the system was like before it was told. **Do not silently repair either of them.**
 
 **The autonomy policy is not an agent either.** `agent/policy/` is the executable form of
 `docs/AUTONOMY-POLICY.md`'s classes and protocol §18's twelve mandatory conditions: it answers,
@@ -160,18 +168,20 @@ node --test agent/implement/selftest.mjs       # Agent 9, incl. SESSION 18's eig
 node --test agent/health/selftest.mjs          # Agent 10, incl. planted security-boundary failures
 node --test agent/observability/selftest.mjs
 node --test agent/policy/selftest.mjs           # the autonomy policy, incl. SESSION 23's twenty required proofs
+node --test agent/policy/verify/selftest.mjs   # SESSION 23.5's gate, run twice, asserting it is reproducible
 node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**901 tests across the seventeen suites**, all passing as of SESSION 23 (867 after SESSION 21;
+**909 tests across the eighteen suites**, all passing as of SESSION 23.5 (867 after SESSION 21;
 812 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before them). SESSION 23 added 34 and
 **changed two existing assertions** — `agent/implement/selftest.mjs` R6, which asserted the
 suite list held fifteen entries and now holds sixteen, and `agent/detector/impact.mjs`'s
 `MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`.
 Both are the world having changed rather than a test being inconvenient, and both are named in
-`docs/HANDOVER.md`. SESSION 21 changed two in `agent/health/selftest.mjs` for the same kind of
-reason.
+`docs/HANDOVER.md`. SESSION 23.5 added 8 more and changed the same suite-count assertion again,
+from sixteen to seventeen. SESSION 21 changed two in `agent/health/selftest.mjs` for the same
+kind of reason.
 
 **There is now CI.** `.github/workflows/qa.yml` runs all four validators against the recorded
 baseline, every agent suite, the contract check, the public/private boundary check and the

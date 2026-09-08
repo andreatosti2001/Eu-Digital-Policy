@@ -121,6 +121,7 @@ jobs:
             agent/implement/selftest.mjs \
             agent/health/selftest.mjs \
             agent/policy/selftest.mjs \
+            agent/policy/verify/selftest.mjs \
             .control-room/selftest.mjs
           do
             echo "::group::$s"

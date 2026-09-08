@@ -629,8 +629,8 @@ test('R6 · this suite is in the list the agent runs for a change under agent/ o
      dropped from this list is a suite that stops gating changes, and
      nothing else would notice — this assertion has already caught
      the list growing twice, in SESSION 20 and again in SESSION 23. */
-  assert.equal(AGENT_SUITES.length, 16,
-    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20) and policy (23)');
+  assert.equal(AGENT_SUITES.length, 17,
+    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the policy (23) and the verification gate (23.5)');
 });
 
 /* ============================================================

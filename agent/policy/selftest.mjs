@@ -57,6 +57,16 @@ import { permissionsOf } from '../../.control-room/authz.mjs';
 import { isThreshold, thresholdProvider, controlRoomHref, THRESHOLD_TRIGGERS, passage } from '../../js/threshold.js';
 
 const REPO = join(import.meta.dirname, '..', '..');
+/* The local provider's test passphrase, the same one
+   .control-room/selftest.mjs uses. Naming it PASSWORD is deliberate,
+   and it costs a warning: agent/implement/boundary.mjs matches
+   `password = "<12+ chars>"` and reports it as a test fixture, which
+   takes the boundary check from 11 warnings to 12. It is left as it
+   is rather than renamed, because renaming it would hide a
+   password-shaped literal from the scanner that is meant to find
+   password-shaped literals — and the value really is a passphrase in
+   a published file. The rise is recorded in docs/HANDOVER.md rather
+   than engineered away. */
 const PASSWORD = 'a sufficiently long passphrase';
 const temps = [];
 const tempDir = (p = 'pol-') => { const d = mkdtempSync(join(tmpdir(), p)); temps.push(d); return d; };
@@ -799,4 +809,8 @@ test('31 · the policy suite is registered where every other agent suite is, so 
   assert.ok(checks.includes('agent/policy/selftest.mjs'), 'a suite Agent 9 does not run is a suite a change to agent/ does not run');
   const workflow = readFileSync(join(REPO, '.github', 'workflows', 'qa.yml'), 'utf8');
   assert.ok(workflow.includes('agent/policy/selftest.mjs'), 'and a suite CI does not run is a suite nobody runs');
+  /* SESSION 23.5's gate as well: a verification that only runs when
+     somebody remembers is a verification that stops running. */
+  assert.ok(checks.includes('agent/policy/verify/selftest.mjs'));
+  assert.ok(workflow.includes('agent/policy/verify/selftest.mjs'));
 });

@@ -1,66 +1,277 @@
 # HANDOVER
 
-**Last updated:** SESSION 21 · 4 September 2026
-**Branch:** `claude/control-room-private-plane-4a36vx`, cut from `origin/main` at `22747e1`.
-**Base commit:** `22747e1` on `origin/main` ("Merge SESSION 20: the Website Health
-Monitor").
-**Merged into `main`.** The session prompt says "Merge to main only after the
-complete Control Room security boundary is verified". The boundary was verified,
-the branch was pushed, and the merge — a push to `main`, which
-`docs/AUTONOMY-POLICY.md` Class D reserves to the repository author by name — was
-then **explicitly authorised by the repository author in the session**, after being
-shown what was being authorised. That is the permission `AGENTS.md` requires; the
-session did not take it on its own reading of the prompt.
+**Last updated:** SESSIONS 23 and 23.5 · 8 September 2026
+**Branch:** `claude/agent-governance-protocol-gfbgfb`, cut from `origin/main` at `c43b7a9`.
+**Base commit:** `c43b7a9` on `origin/main` ("Record in the handover that SESSION 21 is
+merged, and on whose authorisation").
+**NOT merged into `main`.** The session prompts say to merge "only after policy tests
+and all existing project validators pass" and "only after the verification process
+itself is reproducible". Both conditions are met and **the merge has not been made**,
+because a push to `main` is `docs/AUTONOMY-POLICY.md` Class D and AGENTS.md reserves it
+to the repository author by name. The branch is pushed and the merge is the author's to
+authorise, as it was in SESSION 21.
 
-**Everything was re-run ON THE MERGED TREE before it was pushed**, not only on the
-branch: all sixteen suites (867 pass), the contract check (18/18 satisfiable), the
-four validators against the `docs/CURRENT-ARCHITECTURE.md` §12 baseline (0 errors,
-106 unverified, the same five `design-qa` warnings by file and line), and both
-boundary checks (0 blocking).
+**SESSION 22 WAS NEVER BUILT, AND THIS IS THE FIRST THING TO CARRY FORWARD.** The
+roadmap runs 21 → 22 (Master Orchestrator) → 23 (autonomy and authorization policy) →
+23.5 (security gate). `origin/main` is at SESSION 21 and there is no
+`agent/orchestrator/` anywhere in the tree. SESSIONS 23 and 23.5 were done over that
+gap rather than pretending it was closed:
 
-**THE STALE-`main` TRAP FIRED AGAIN, and this time on the local branch pointer
-rather than on the working tree.** `git fetch --all` first, as AGENTS.md requires:
-the working branch was cut from `origin/main` at `22747e1` and is current, but
-**local `main` is 52 commits behind `origin/main`** (`4bd1f0d`). Any check run as
-`git diff main..HEAD` on this machine would have reported 246 changed files and
-67,592 insertions, almost none of them this session's. Every comparison below is
-against **`origin/main`**, never against local `main`. This is the third session in
-which the trap has caught something (F-01, then SESSION 18/19's 47 commits, now
-52).
+- `agent/policy/actors.mjs` defines what an Orchestrator may and may not do — six
+  capabilities, six named refusals — and that row is a **specification**, not a
+  description of anything running.
+- `agent/policy/verify/` attack AB-06 reports the Orchestrator boundary as
+  **`undecidable`**: there is nothing to attack. It is not counted as a pass.
+- `docs/AUTONOMY-AUTHORIZATION-POLICY.md` §10.3 says the same in the reference
+  document rather than in a footnote.
 
-Local `main` was fast-forwarded to `origin/main` **only at merge time**, once the
-author had authorised the merge, and only after `git rev-list --count
-origin/main..main` was confirmed to be **0** — that is, the stale pointer carried no
-commit of its own that a reset could have destroyed. Check that before resetting a
-stale branch; a non-zero count there means somebody's work is about to be lost.
+**Everything was re-run on the final tree.** All eighteen suites (909 pass, 0 fail),
+the contract check (18/18 satisfiable), the four validators against the
+`docs/CURRENT-ARCHITECTURE.md` §12 baseline (0 errors, 106 unverified, the same five
+`design-qa` warnings by file and line), the browser suite (125 pass, 3 fail — the same
+three pre-existing defects SESSION 19 found and nobody has fixed), and both boundary
+checks.
 
-**THE LIVE SITE IS BYTE-FOR-BYTE UNCHANGED**, checked on the merged tree rather
-than asserted. `git diff 22747e1 -- data/ js/ css/ i18n/ fonts/ tools/ index.html
-applies.html bibliography.html enforcement.html institutions.html instrument.html
-instruments.html style.css app.js README.md CLAUDE.md` is **empty**. The Control
-Room's suite also hashes the whole tree around a live approval (test 10) and finds
-nothing changed.
+**One number moved and it is not the baseline: `node agent/implement/cli.mjs boundary`
+now reports 0 blocking / 12 warnings, where SESSION 21 recorded 11.** The twelfth is
+`agent/policy/selftest.mjs:60` — `const PASSWORD = 'a sufficiently long passphrase'`,
+the same test passphrase `.control-room/selftest.mjs` uses, matched as a test-fixture
+warning by the `assigned-secret` pattern. It is **left as it is**: renaming the constant
+would hide a password-shaped literal from the scanner whose job is to find
+password-shaped literals, and the value really is a passphrase in a published file. The
+comment above the line says so. `agent/ is inside the public surface` also moved from
+180 files to 188, which is this session's own files being counted.
 
-**So this merge publishes nothing to readers.** Every file it adds is either inside
-`.control-room/`, which the deployment does not serve, or in `docs/` and `agent/`,
-which are published but which no reader's browser loads. A push to `main` publishes,
-and this one changes no page, no dataset, no stylesheet and no locale.
-
-**Nothing that any agent has proposed was approved.** The Control Room can now
-record a human decision, and no human decision has been recorded:
-`agent/implement/decisions/decisions.jsonl` does not exist, and
-`deriveApproval()` still answers `no_request` or `pending` for every proposal.
-Building the mechanism and then using it on its first run would have skipped the
-decision the whole governance chain exists to require — the same reasoning
-SESSION 20 recorded about acting on the monitor's first readings.
+**A one-off test failure was observed and never reproduced, and it is recorded rather
+than dismissed.** In one batched run of all eighteen suites, `.control-room/selftest.mjs`
+reported `54 pass · 1 fail`. The failing test's name was not captured. Twelve subsequent
+runs — alone, in sequence, and in the same full batch — all reported `55 pass · 0 fail`.
+It is **not** being called a flake, because nothing here established what it was. If it
+recurs, capture the `not ok` line before anything else.
 
 ---
 
 ## Current milestone
 
-**SESSION 21 — complete.** The Human Control Room / private control plane,
-`.control-room/`. The reference document is **`docs/CONTROL-ROOM.md`**; this file is the
-handover only.
+**SESSION 23 — complete.** The executable autonomy and authorization policy,
+`agent/policy/`. The reference document is **`docs/AUTONOMY-AUTHORIZATION-POLICY.md`**.
+
+**SESSION 23.5 — complete.** The adversarial verification gate, `agent/policy/verify/`.
+The report is **`docs/SECURITY-VERIFICATION-2026-09-08.md`**. **Two findings stand and
+neither was fixed.**
+
+---
+
+# SESSION 23 — the policy, executable
+
+## What was built
+
+Five modules and a CLI under `agent/policy/`, answering the question none of the three
+existing layers could: *may this specific act happen without a person?*
+`docs/AUTONOMY-POLICY.md` is a document, `agent/implement/preflight.mjs` checks a
+proposal's paperwork, `.control-room/authz.mjs` decides whether a person may press
+approve — and protocol §18's twelve mandatory conditions had no home at all.
+
+| File | What it owns |
+|---|---|
+| `categories.mjs` | 18 action categories, the policy object, the derivation of a category from a proposal |
+| `actors.mjs` | 84 rows: actor × action × resource × environment × path × risk |
+| `conditions.mjs` | the twelve mandatory conditions and the human-review triggers |
+| `rollback.mjs` | six elements, not a boolean |
+| `engine.mjs` | `evaluate()` → a route; `mayExecute()` → whether it may happen now |
+| `cli.mjs` | `policy` · `matrix` · `categories` · `evaluate --proposal <id>` |
+
+## The four things this session is arranged around
+
+**1 · NOTHING IS SWITCHED ON, AND THAT IS THE DELIVERABLE.**
+`DEFAULT_POLICY.enabled_categories` is `[]` and so is the path allowlist. No act in this
+repository can reach the automatic route, and tests 1b and 29 assert it stays that way.
+The prompt is explicit — "Do NOT enable automatic production merge in this session" — and
+filling either list is a governance change protocol §24 forbids the system making to
+itself. The suite proves the permitting half against `SIMULATION_POLICY`, a fixture
+marked `simulated: true` enabling one category over `docs/`, and then proves the
+identical act refused under the shipped policy. **A suite that could only ever see a
+refusal cannot tell "correctly refused" from "broken"** — the failure
+`.control-room/selftest.mjs` was arranged against, and the reason test 1 exists.
+
+**2 · THREE ROUTES, AND `blocked` IS NOT A SOFTER `human_review`.** `blocked` means an
+approval would not help, which is protocol §8 as code: approval "does not override
+provenance requirements; validation requirements; security requirements; scope
+restrictions; mandatory policy conditions". A proposal with missing provenance is not
+waiting for a reviewer; it is waiting for the agent that owns it.
+
+**3 · UNKNOWN BLOCKS.** Three verdicts, not two. Eight of the twelve conditions are read
+off the proposal and **cannot be supplied**; four are measurements that default to
+`unknown`, and `unknown` refuses exactly as a failure does. The project's own §0.3 rule,
+applied where getting it wrong would let a machine write to a website about EU law. What
+is NOT closed, and is said in the module header rather than discovered later: within one
+process a caller can supply a false fact.
+
+**4 · IT IS ENFORCED, NOT DESCRIBED.** `agent/implement/implementer.mjs` calls the engine
+twice per proposal — before a line is written, and again on the measured validators,
+browser suite and git scope enforcement. A `blocked` route is a refusal in the first
+case and a reason to revert in the second. Tests 30 and 31 assert both call sites exist
+and that the suite runs in CI.
+
+## The hidden Control Room entry
+
+`js/threshold.js`. Typing `thirty-two paths` into the search palette offers one extra
+result; choosing it draws a wheel — three concentric bands divided 3 · 7 · 12,
+twenty-two Hebrew letters, fine lines in the site's own ink — and offers a link to a
+login page.
+
+It authenticates nothing, authorizes nothing, and holds no credential, no endpoint and
+no privileged state. **The phrase is not a credential**: it is in a file served to every
+reader, protocol §10 says obscurity is not a control, and anybody who finds it meets the
+same login. It reads its target from `<meta name="eu-control-room">` and **never invents
+one**; no published page declares that tag, so on the live site the passage ends at a
+statement rather than a navigation. **Do not add the meta tag, or a server route that
+reads the phrase, without deciding to.**
+
+The wheel is not decoration: the Sefer Yetzirah tradition's twenty-two letters are an
+**enum authority**, a closed vocabulary from which everything else is composed, which is
+what `data/taxonomy.json` is to every other dataset here.
+
+Nine new browser checks measure it in a real Chromium, including that opening it issues
+**no network request at all**. One of them, `threshold:no-globals`, is measured against
+a blank document in the same browser — the naive form reported `sessionStorage` and
+`credentialless`, which are Chromium's own, as defects in the site.
+
+## Two existing assertions changed, and why
+
+Both because the world changed, not because they were inconvenient:
+
+- `agent/implement/selftest.mjs` R6 asserted `AGENT_SUITES.length === 15`. There are
+  seventeen now — the policy suite and the verification gate. The assertion is kept and
+  updated, because a suite silently dropped from that list stops gating changes and
+  nothing else would notice.
+- `agent/detector/impact.mjs` `MODULE_SURFACE` must name every module in `js/` and did
+  not name `threshold.js`. It does now, classified `surface: null` — chrome, reached only
+  through the palette, rendering no record.
+
+## A defect the suite found in the policy itself
+
+`agent/policy/selftest.mjs` test 5 caught it, and it is the kind of thing this whole
+layer exists to catch. A condition's `data` object carrying a key named `verdict`
+**overwrote the condition's own verdict**, turning `failed` into a word the engine
+matched as neither satisfied nor unmet — so an act that should have been blocked
+evaluated as **`automatic`**. It is fixed, the validator run's own verdict is now
+reported under `run_verdict`, and `evaluateConditions()` throws on any verdict outside
+the four it defines so it cannot recur elsewhere.
+
+---
+
+# SESSION 23.5 — the verification gate
+
+## What was built
+
+`agent/policy/verify/` — a catalogue of **65 attacks across seven areas**, each carried
+out against something real: a Control Room running on an ephemeral loopback port, the
+tracked tree as git reports it, or the policy and ledger modules themselves.
+
+```
+node agent/policy/verify/cli.mjs                the report
+node agent/policy/verify/cli.mjs --json         the whole record
+node --test agent/policy/verify/selftest.mjs    is the gate reproducible
+```
+
+**Result: 61 failed safely · 0 succeeded · 2 partial · 2 undecidable.** The repository
+was byte-identical afterwards, measured by hashing the tree around the run.
+
+## Four outcomes, not two
+
+`failed_safely` · `succeeded` · `partial` · `undecidable`. **An `undecidable` is not a
+pass.** Two of the boundaries the prompt names cannot be tested here at all, and a gate
+with only pass and fail would have had to call them passed.
+
+## The two findings, NEITHER FIXED
+
+**F-23.5-01 (HIGH) — the control-plane directories are inside the published surface.**
+188 files under `agent/` are published. No operational record is published today, but two
+tracked placeholder READMEs prove the directories are in the deployment, and the only
+thing keeping the records out is a `.gitignore` rule. **An ignore rule is not a
+boundary**: one `git add -f agent/implement/decisions/decisions.jsonl` publishes the
+approval ledger. Pre-existing — `docs/IMPLEMENTATION-QA.md` §6 — and re-measured rather
+than quoted.
+
+**F-23.5-02 (HIGH) — `agent/observability/server.mjs` authenticates nothing.** Eleven
+`/api/` routes over the whole trace store, protected only by a `host` **default**. The
+gate confirmed the module is unchanged and **did not re-run the measurement**, and says
+so rather than reporting a number it did not take.
+
+## The two undecidables
+
+**U-23.5-01 — the deployed origin has never been fetched.** The network policy refuses
+it. So the publication boundary, F-23.5-01 included, is **inferred** from Jekyll's
+documented default and from reading the tree.
+
+**U-23.5-02 — there is no Master Orchestrator to attack.** SESSION 22 was not built.
+
+## Two defects in the gate itself, found and corrected before the report
+
+Recorded in `docs/SECURITY-VERIFICATION-2026-09-08.md` §7 because a verification whose
+own errors are invisible is not a verification. Both are the SESSION 19 shape — a check
+that fails for the wrong reason:
+
+1. **HE-01 cried CRITICAL over a sentence.** It substring-matched forbidden words over
+   the whole of `js/threshold.js`, whose own header says *"It holds no token, no session,
+   no credential"* — so `token` matched. It now strips comments and keeps string
+   literals, because a credential would be one.
+2. **PP-08 reported two READMEs as leaked decisions.** It now separates *is a record
+   published* (no) from *is the directory inside the published surface* (yes), and the
+   second is the real finding.
+
+## What the gate does not establish
+
+Fully in `docs/SECURITY-VERIFICATION-2026-09-08.md` §8. The one to carry: **this is an
+automated gate written by the same session that built what it attacks.** It is
+independent of the implementation — separate module, separate vocabulary, attacks rather
+than assertions — and it is **not** independent of the author. Nothing here has been
+penetration-tested by a person.
+
+## Files changed, SESSIONS 23 and 23.5
+
+**New:** `agent/policy/` (`categories.mjs`, `actors.mjs`, `conditions.mjs`,
+`rollback.mjs`, `engine.mjs`, `cli.mjs`, `selftest.mjs`, `README.md`),
+`agent/policy/verify/` (`harness.mjs`, `attacks.mjs`, `cli.mjs`, `selftest.mjs`),
+`js/threshold.js`, `docs/AUTONOMY-AUTHORIZATION-POLICY.md`,
+`docs/SECURITY-VERIFICATION-2026-09-08.md`.
+
+**Modified:** `agent/implement/implementer.mjs` (the two policy call sites),
+`agent/implement/checks.mjs` and `.github/workflows/qa.yml` (the two new suites),
+`agent/implement/selftest.mjs` (the suite count), `agent/detector/impact.mjs`
+(`threshold.js` classified), `agent/browser/checks.mjs` and `agent/browser/runner.mjs`
+(the nine threshold checks), `js/palette.js` (nine lines), `style.css` (the threshold
+block, appended), `AGENTS.md`.
+
+**Not modified:** `data/`, `i18n/`, `css/`, `fonts/`, `tools/`, every `.html` page,
+`app.js`, `README.md`, `CLAUDE.md`, `.control-room/`.
+
+## Next session
+
+**SESSION 22, out of order — the Master Orchestrator.** It is the gap in the roadmap and
+two artifacts now point at it by name: `agent/policy/actors.mjs`'s orchestrator row is a
+specification nothing satisfies, and attack AB-06 is `undecidable` because there is
+nothing to attack.
+
+Three things it inherits:
+
+- **`agent/policy/engine.mjs` is the enforcement point it must call.** §14 of the
+  protocol says the Orchestrator must not treat a UI action as unconditional authority;
+  `mayExecute()` re-derives the approval from the ledger and takes no approval parameter,
+  which is that rule already implemented. An Orchestrator that routed around it would
+  undo the whole of SESSION 23.
+- **Its capability row already exists and is deny-by-default.** It may route, enforce
+  policy, read and write records. It may not propose, approve, write the ledger,
+  implement or publish, and each refusal names its reason.
+- **SESSION 24 must not silently repair SESSION 23.5's findings.** The prompt says so and
+  so does `docs/SECURITY-VERIFICATION-2026-09-08.md`. They are decisions for the
+  repository author.
+
+### Exact next objective
+
+Build `agent/orchestrator/`. Then re-run `node agent/policy/verify/cli.mjs` and turn
+AB-06 from `undecidable` into a real result, whichever way it goes.
 
 ---
 

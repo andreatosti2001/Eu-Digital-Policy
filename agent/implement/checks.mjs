@@ -51,6 +51,7 @@ export const AGENT_SUITES = [
   'agent/implement/selftest.mjs',
   'agent/health/selftest.mjs',
   'agent/policy/selftest.mjs',
+  'agent/policy/verify/selftest.mjs',
 ];
 
 /** Run a command, capturing everything, never throwing. A checker
