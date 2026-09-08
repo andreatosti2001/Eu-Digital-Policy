@@ -40,14 +40,18 @@ import { preflight } from '../../implement/preflight.mjs';
 import { evaluate, mayExecute } from '../engine.mjs';
 import { authorizeActor, ESCALATION_PARAMETERS, ACTIONS, CAPABILITIES } from '../actors.mjs';
 import { DEFAULT_POLICY, SIMULATION_POLICY } from '../categories.mjs';
+import { CONDITIONS as CONDITIONS_CANON } from '../conditions.mjs';
 import { isThreshold, thresholdProvider, controlRoomHref, THRESHOLD_TRIGGERS, passage } from '../../../js/threshold.js';
+import { autonomyPermits, requiresHumanReview, MANDATORY_AUTONOMY_CONDITIONS, APPROVED_AUTONOMOUS_CATEGORIES } from '../../orchestrator/policy.mjs';
+import { capabilityOf, grantFor, checkOutput, MAY_DECIDE, MAY_IMPLEMENT, AGENT_NAMES } from '../../orchestrator/capabilities.mjs';
 
 const REFUSED = [401, 403, 302, 404, 400, 405, 409, 501];
 
-/** Where the Master Orchestrator actually is. It is NOT in this
- *  working tree — see AB-06 — and these two constants exist so that
- *  the report says where it is rather than that it does not exist,
- *  which is what an earlier draft of this gate said and was wrong. */
+/** The Master Orchestrator is now IN this tree — SESSION 22 was
+ *  merged in. Two earlier states of this file are worth remembering:
+ *  it once said the Orchestrator had never been built, which was
+ *  false, and then said it existed on a branch, which was true and
+ *  meant AB-06 could not run. It runs now. */
 export const ORCHESTRATOR_BRANCH = 'claude/agent-governance-protocol-tx6mu1';
 export const ORCHESTRATOR_COMMIT = '74e9a4a';
 const body = async (res) => { try { return await res.text(); } catch { return ''; } };
@@ -179,7 +183,7 @@ export async function publicPrivate(w) {
     const a = attack('PP-08', 'public_private', 'read a trace, a decision, an operator record or a health reading out of the published surface', 'high');
     const surface = publicSurface({ root: REPO_ROOT });
     const published = surface.published ?? [];
-    const controlPlanePaths = published.filter((f) => /^agent\/(records|observability\/runs|health\/history)\//.test(f) || f.startsWith('agent/implement/decisions/'));
+    const controlPlanePaths = published.filter((f) => /^agent\/(records|observability\/runs|health\/history|orchestrator\/state)\//.test(f) || f.startsWith('agent/implement/decisions/'));
     /* A README explaining why a directory is empty is not an
        operational record, and reporting one as a leaked decision
        would be this gate crying wolf — which it did on its first
@@ -193,7 +197,7 @@ export async function publicPrivate(w) {
       ? succeeded(a, `${records.length} control-plane RECORD file(s) are inside the published surface: ${records.slice(0, 6).join(', ')}`, { files: records.slice(0, 20) })
       : placeholders.length
         ? partial(a,
-          `no operational record is published today — agent/records/, agent/observability/runs/, agent/health/history/ and the decision ledger are all untracked — but ${placeholders.length} placeholder README(s) show that those DIRECTORIES are inside the published surface (${placeholders.join(', ')}). The ignore rule is what keeps the records out, and an ignore rule is not a boundary: one \`git add -f\` of agent/implement/decisions/decisions.jsonl publishes the approval ledger, and nothing here would object. ${dirsPublished.length} file(s) under agent/ and docs/ are published, including the whole agent layer's source.`,
+          `no operational record is published today — agent/records/, agent/observability/runs/, agent/health/history/, agent/orchestrator/state/ and the decision ledger are all untracked — but ${placeholders.length} placeholder README(s) show that those DIRECTORIES are inside the published surface (${placeholders.join(', ')}). The ignore rule is what keeps the records out, and an ignore rule is not a boundary: one \`git add -f\` of agent/implement/decisions/decisions.jsonl publishes the approval ledger, and nothing here would object. ${dirsPublished.length} file(s) under agent/ and docs/ are published, including the whole agent layer's source.`,
           { published_directories: placeholders, published_control_plane_source: dirsPublished.length, sample: dirsPublished.slice(0, 8), note: 'docs/IMPLEMENTATION-QA.md §6\'s standing finding, re-measured today rather than quoted' },
           'high')
         : partial(a,
@@ -556,13 +560,130 @@ export function agentBoundaries() {
       : safely(a, `${ESCALATION_PARAMETERS.length} parameter names × 4 component/action pairs: none carried a capability, and every attempt was recorded on the decision.`));
   }
 
-  /* AB-06 · the missing Orchestrator. */
+  /* AB-06 · the Orchestrator that actually exists. Was `undecidable`
+     twice — once because this gate wrongly believed SESSION 22 had
+     never been built, and once because it had been built on a branch
+     this tree did not carry. It is here now, so it is attacked. */
   {
-    const a = attack('AB-06', 'agent_boundaries', 'attack the running Master Orchestrator', 'high');
-    out.push(undecidable(a,
-      `SESSION 22 BUILT ONE AND IT IS NOT IN THIS TREE. agent/orchestrator/ exists on branch ${ORCHESTRATOR_BRANCH} at ${ORCHESTRATOR_COMMIT}, twelve modules and a 1,010-line suite, cut from the same base commit as this branch and NOT merged into main. This working tree does not contain it, so there is nothing here to attack: AB-02 above exercises the POLICY ROW in agent/policy/actors.mjs that describes what an orchestrator may do, which is a specification, and it is not a measurement of the module that exists on that branch.`,
-      `bringing ${ORCHESTRATOR_BRANCH} into a tree with agent/policy/ in it, and then re-running this gate. Until that happens, no claim in this report is a claim about the Orchestrator that was actually written.`,
-      { orchestrator_branch: ORCHESTRATOR_BRANCH, orchestrator_commit: ORCHESTRATOR_COMMIT, present_in_this_tree: false }));
+    const a = attack('AB-06', 'agent_boundaries', 'make the Orchestrator permit an automatic execution the policy engine refuses', 'critical');
+    const probe = {
+      contract: 'DataProposal', proposal_id: 'prop-verify-orch', agent: 'data-proposal-agent',
+      risk: 'none', autonomy_class: 'autonomous', substantive: false,
+      proposed_change: { summary: 'a probe', operations: [{ op: 'replace', target: 'data/sources.json', current: 'a', proposed: 'b', rationale: 'a probe' }], scope_note: 'a probe' },
+      affected_entities: [{ kind: 'source', id: null, path: 'data/sources.json', field: null, note: null }],
+      evidence: [{ evidence_id: 'ev-1', kind: 'retrieved_document', role: 'primary', simulated: false, source_id: null, url: null, locator: null, quote: null, retrieved_at: null, checksum: null, supports: 'supports:direct', title: null, publisher: null }],
+      epistemic: { fact: [], inference: [], interpretation: [], unresolved: [] },
+      rollback_plan: { method: 'git_revert', steps: ['revert'], verification: 'the four validators return to baseline', irreversible_reason: null },
+      trace_ref: { trace_id: 'a1'.repeat(16), span_id: 'b2'.repeat(8), run_id: 'c3'.repeat(8) },
+    };
+    /* Everything the workflow layer can be handed, handed to it in
+       the most permissive shape a caller could construct: a clean
+       verification, no conflicts, validators at baseline, no browser
+       requirement, a derivable scope, and human review reporting that
+       it is not required. If the Orchestrator can be talked into
+       `permitted`, this is the shape that would do it. */
+    const generous = autonomyPermits({
+      proposal: probe,
+      records: [probe, { contract: 'VerificationRecord', verdict: 'confirmed', evidence: [{ evidence_id: 'e', kind: 'retrieved_document' }], epistemic: { unresolved: [] } }],
+      conflicts: [],
+      validators: { ok: true, summary: 'at baseline' },
+      browser: { status: 'pass' },
+      scope: { permitted: ['data/sources.json'], refusals: [], requires_browser_qa: false },
+      humanReview: { required: false, reasons: [] },
+      category: 'source_metadata_maintenance',
+    });
+    out.push(generous.permitted
+      ? succeeded(a, `the Orchestrator returned permitted=true: ${generous.summary}`, { summary: generous.summary, engine: generous.policy_engine })
+      : safely(a,
+        `refused even on the most permissive input this gate can construct. The workflow layer's twelve conditions and agent/policy/engine.mjs are BOTH consulted and permitted requires both: the engine reports route "${generous.policy_engine.route}" (${generous.policy_engine.failed.concat(generous.policy_engine.unknown).join(', ') || 'no condition named'}), and ${generous.failed.length} workflow condition(s) fail. An Orchestrator that could permit what the engine refuses would be the bypass protocol §14 forbids, in one line of code.`,
+        { permitted: generous.permitted, engine_route: generous.policy_engine.route, engine_permitted: generous.policy_engine.permitted, workflow_failed: generous.failed.map((c) => c.condition) }));
+  }
+
+  /* AB-07 · the Orchestrator's own capability layer. */
+  {
+    const a = attack('AB-07', 'agent_boundaries', 'find an agent the Orchestrator would let decide, implement or publish', 'critical');
+    const deciders = [...MAY_DECIDE];
+    const implementers = [...MAY_IMPLEMENT];
+    /* `human` is EXCLUDED, and the exclusion is the finding this
+       probe nearly reported. `human` is in AGENT_NAMES and carries
+       may_decide: true, which is the whole design — a person decides
+       — and the first version of this attack reported it as a
+       CRITICAL breach. What is being looked for is a MACHINE actor
+       that may decide or publish. That `human` is the only one is
+       asserted positively below rather than filtered away silently. */
+    const machines = AGENT_NAMES.filter((n) => n !== 'human');
+    const rogue = machines.filter((n) => {
+      const c = capabilityOf(n);
+      return c.may_decide === true || c.may_publish === true || c.may_deploy === true;
+    });
+    const humanMayDecide = capabilityOf('human').may_decide === true;
+    out.push(deciders.length || rogue.length || implementers.length !== 1 || !humanMayDecide
+      ? succeeded(a, `MAY_DECIDE=${JSON.stringify(deciders)}, MAY_IMPLEMENT=${JSON.stringify(implementers)}, ${rogue.length} machine agent(s) claim a deciding or publishing capability${humanMayDecide ? '' : ', and the human actor may NOT decide, which would leave nobody who can'}`, { deciders, implementers, rogue, humanMayDecide })
+      : safely(a, `none of the ${machines.length} machine agents may decide, publish or deploy; exactly one may implement (${implementers[0]}); MAY_DECIDE is empty; and the one actor that may decide is "human", which is the point rather than a defect.`, { machine_agents: machines.length, implementers, human_may_decide: humanMayDecide }));
+  }
+
+  /* AB-08 · a grant used outside the stage it was issued for. */
+  {
+    const a = attack('AB-08', 'agent_boundaries', 'use an Orchestrator grant to emit a contract the agent may not produce', 'high');
+    /* `grantFor` returns { grant, refusals } — the first version of
+       this probe passed the WRAPPER to checkOutput, got a TypeError,
+       and reported it as a safe refusal. A gate that reads its own
+       crash as the system defending itself is worse than no gate, so
+       the call is made correctly and a throw is now reported as
+       `undecidable` rather than as a pass. */
+    let outcome = null;
+    let detail = null;
+    try {
+      /* A REAL stage object, and one the scout can actually be
+         granted: `stage.needs` is a list of contracts, and the grant
+         is the INTERSECTION of that with what the agent produces. A
+         probe that asked for a stage the scout cannot serve at all
+         would get an empty grant and prove nothing about what a
+         VALID grant permits — which is what the first two versions of
+         this attack did. */
+      const scoutProduces = capabilityOf('source-scout').produces;
+      const stage = { stage: 'scout', needs: [scoutProduces[0]] };
+      const { grant, refusals } = grantFor({ agent: 'source-scout', stage, workflow_id: 'wf-verify' });
+      if (!grant) { outcome = 'no_grant'; detail = { refusals, stage }; } else {
+        /* The attack: a valid grant, used to emit something outside
+           it. DataProposal is not among what the scout produces. */
+        const r = checkOutput(grant, { contract: 'DataProposal', proposal_id: 'x', agent: 'source-scout' }, { workflow_id: 'wf-verify' });
+        outcome = r && r.ok === true ? 'allowed' : 'refused';
+        detail = { result: r, granted: grant.contracts ?? grant.permitted ?? null, stage };
+      }
+    } catch (e) { outcome = 'threw'; detail = { error: e.message }; }
+
+    out.push(outcome === 'allowed'
+      ? succeeded(a, 'a scout grant accepted a DataProposal, which the scout may not produce', { detail })
+      : outcome === 'threw'
+        ? undecidable(a, `this probe could not be carried out: ${detail.error}`, 'a correct call into agent/orchestrator/capabilities.mjs. A crash in the attack is not a defence by the system.', detail)
+        : outcome === 'no_grant'
+          ? safely(a, `no grant was issued at all: ${JSON.stringify(detail).slice(0, 200)}`, { detail })
+          : safely(a, `the grant refused the output: ${String(detail?.why ?? detail?.reason ?? JSON.stringify(detail)).slice(0, 220)}. A grant is bound to an agent, a stage and a workflow, and checked against what that agent may produce.`, { detail }));
+  }
+
+  /* AB-09 · human review, turned off from the outside. */
+  {
+    const a = attack('AB-09', 'agent_boundaries', 'get requiresHumanReview() to report "not required" for a record carrying an interpretation', 'critical');
+    const withInterpretation = {
+      contract: 'EditorialProposal', proposal_id: 'p', agent: 'editorial',
+      epistemic: { interpretation: [{ statement: 'On this reading the duty applies.', held_by: 'x', basis: 'y', contested: true }], fact: [], inference: [], unresolved: [] },
+      affected_entities: [], proposed_change: { operations: [] },
+    };
+    const hr = requiresHumanReview({ workflow: { id: 'wf', completes_without_human: 'always' }, records: [withInterpretation], conflicts: [], autonomy: { permitted: true, failed: [] } });
+    out.push(hr.required === false
+      ? succeeded(a, 'human review was reported as not required for a record carrying an interpretation', { hr })
+      : safely(a, `refused: ${hr.reasons.length} trigger(s) fired — ${[...new Set(hr.reasons.map((r) => r.code))].join(', ')} — even with the workflow declaring it completes without a human and the autonomy layer reporting permitted. No argument in the call turns a trigger off.`, { codes: [...new Set(hr.reasons.map((r) => r.code))] }));
+  }
+
+  /* AB-10 · one home for the policy vocabulary. */
+  {
+    const a = attack('AB-10', 'agent_boundaries', 'find a second, drifting copy of the autonomy policy inside the Orchestrator', 'medium');
+    const sameConditions = JSON.stringify([...MANDATORY_AUTONOMY_CONDITIONS]) === JSON.stringify([...CONDITIONS_CANON]);
+    const sameApproved = JSON.stringify([...APPROVED_AUTONOMOUS_CATEGORIES]) === JSON.stringify([...DEFAULT_POLICY.enabled_categories]);
+    out.push(!sameConditions || !sameApproved
+      ? succeeded(a, `the Orchestrator's copy has drifted: conditions ${sameConditions ? 'agree' : 'DISAGREE'}, approved categories ${sameApproved ? 'agree' : 'DISAGREE'}`, { orchestrator: [...MANDATORY_AUTONOMY_CONDITIONS], policy: [...CONDITIONS_CANON] })
+      : safely(a, `the Orchestrator re-exports the twelve conditions and the empty approved-category list from agent/policy/ rather than keeping its own. The two branches merged here each had a copy and they HAD drifted — one listed five §20 categories and the other four — which is why there is now one list.`, { conditions: MANDATORY_AUTONOMY_CONDITIONS.length }));
   }
 
   return out;

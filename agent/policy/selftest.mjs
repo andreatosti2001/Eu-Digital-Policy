@@ -731,7 +731,13 @@ test('25 · every category declares what it is, what it costs, and whether any p
     assert.equal(typeof meta.automatable, 'boolean', `${name}.automatable`);
     if (!meta.automatable) assert.ok(meta.human_review, `${name} must name the clause that reserves it`);
   }
-  assert.equal(AUTOMATABLE_CATEGORIES.length, 4, 'protocol §20 names four, and a fifth is a governance change');
+  /* FIVE, not four. The first version of this assertion said four
+     and it was wrong: protocol §20 names five, and the fifth —
+     governed_metadata_maintenance — was missing from
+     ACTION_CATEGORIES until SESSION 22's independent list of the
+     same five was merged in and disagreed. A sixth is a governance
+     change. */
+  assert.equal(AUTOMATABLE_CATEGORIES.length, 5, 'protocol §20 names five, and a sixth is a governance change');
   assert.ok(HUMAN_ONLY_CATEGORIES.length >= 13);
 });
 
@@ -813,4 +819,66 @@ test('31 · the policy suite is registered where every other agent suite is, so 
      somebody remembers is a verification that stops running. */
   assert.ok(checks.includes('agent/policy/verify/selftest.mjs'));
   assert.ok(workflow.includes('agent/policy/verify/selftest.mjs'));
+});
+
+/* ============================================================
+   32 · ONE HOME — the Orchestrator does not keep a second copy
+   ============================================================ */
+
+test('32 · the Orchestrator re-exports the policy vocabulary rather than restating it', async () => {
+  const orch = await import('../orchestrator/policy.mjs');
+
+  /* The three facts that were duplicated when SESSIONS 22 and 23 were
+     merged. Each is now a view onto agent/policy/, and this test is
+     the drift check docs/DATA-GOVERNANCE.md §5 requires of anything
+     that looks like a second copy. */
+  assert.deepEqual([...orch.MANDATORY_AUTONOMY_CONDITIONS], [...CONDITIONS],
+    'the twelve conditions have one home. They were written out twice, in the same order with seven different spellings, and the spellings agent/policy/ returns are the ones the verification gate attacks.');
+  assert.deepEqual([...orch.LOW_RISK_CATEGORIES], [...AUTOMATABLE_CATEGORIES],
+    'protocol §20\'s categories have one home. The two branches drifted by an entry — this list had five and ACTION_CATEGORIES had four — which is exactly what a second home produces.');
+  assert.deepEqual([...orch.APPROVED_AUTONOMOUS_CATEGORIES], [...DEFAULT_POLICY.enabled_categories]);
+  assert.deepEqual([...orch.APPROVED_AUTONOMOUS_CATEGORIES], [],
+    'and it is still empty on both sides of the view');
+
+  /* The module must not have grown a literal list back. Asserted
+     against the source, because a re-export that was quietly turned
+     into an array literal again would pass every assertion above on
+     the day it was written and drift the week after. */
+  const src = readFileSync(join(REPO, 'agent', 'orchestrator', 'policy.mjs'), 'utf8');
+  assert.ok(src.includes("from '../policy/conditions.mjs'"), 'it must import the conditions');
+  assert.ok(src.includes("from '../policy/categories.mjs'"), 'it must import the categories');
+  assert.ok(!/MANDATORY_AUTONOMY_CONDITIONS = Object\.freeze\(\[\s*'/.test(src),
+    'MANDATORY_AUTONOMY_CONDITIONS must be a view, not a literal list');
+  assert.ok(!/LOW_RISK_CATEGORIES = Object\.freeze\(\[\s*'/.test(src),
+    'LOW_RISK_CATEGORIES must be a view, not a literal list');
+});
+
+test('33 · the Orchestrator enforces the policy engine, and cannot permit what the engine refuses', async () => {
+  const orch = await import('../orchestrator/policy.mjs');
+  const src = readFileSync(join(REPO, 'agent', 'orchestrator', 'policy.mjs'), 'utf8');
+  assert.ok(src.includes("from '../policy/engine.mjs'"),
+    'SESSION 23: "the implementation layer AND Orchestrator must enforce it mechanically". The implementation layer has since SESSION 23; this is the other half.');
+
+  /* Behaviourally: a proposal the engine refuses cannot come back
+     permitted, however the workflow conditions read. */
+  const refused = orch.autonomyPermits({ proposal: cleanProposal(), records: [], conflicts: [] });
+  assert.equal(refused.permitted, false);
+  assert.equal(refused.policy_engine.permitted, false);
+  assert.equal(refused.policy_engine.policy_id, DEFAULT_POLICY.policy_id);
+  assert.ok(refused.policy_engine.route, 'the engine\'s route must be reported, not swallowed');
+
+  /* And the twelve stay twelve: the engine's verdict is reported
+     beside them, never as a thirteenth protocol §18 condition. */
+  assert.deepEqual(refused.conditions.map((c) => c.condition), [...CONDITIONS]);
+
+  /* THE ENGINE MUST HAVE ACTUALLY EVALUATED SOMETHING. The first
+     version of this wiring asked the engine about the ORCHESTRATOR's
+     act of enforcing the policy — a read — and `evaluate()` routes a
+     read straight to "automatic" without touching the twelve. It came
+     back permitted having checked nothing, and this assertion is what
+     caught it: a refusal with no failed and no unknown condition is a
+     refusal that did not look. */
+  assert.ok(refused.policy_engine.failed.length + refused.policy_engine.unknown.length > 0,
+    'the engine must report which conditions it refused on. A route with an empty verdict means it was asked about the wrong act.');
+  assert.notEqual(refused.policy_engine.route, 'automatic');
 });

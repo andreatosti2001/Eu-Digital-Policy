@@ -233,6 +233,29 @@ which are assumed. The most common failure in this repository's history is an
 assumption inherited as a fact — see audit F-01, where three named input
 documents did not exist at all.
 
+**Filled by `agent/orchestrator/` since SESSION 22, as the Master Orchestrator.**
+Ten workflow types declared as data, five end states, and a capability register in
+which a grant is the **intersection** of what an agent holds and what a stage asks
+for — so a stage cannot widen an agent by asking for more, and being routed a task
+grants nothing. Approval is re-derived from `agent/implement/decisions/` on every
+routing decision; every approval-shaped field on an incoming event is stripped at
+intake and **named**, because silently ignoring a forged claim looks identical to
+not having checked.
+
+**The *never* list above is unchanged and binds this agent too**, and three of its
+items are now mechanical rather than remembered. It cannot let one agent verify its
+own output: a record handed to the agent that wrote it is refused at the handoff.
+It cannot downgrade a class: `class_lowered` is one of the six conflict shapes, and
+a conflict stops the chain. It cannot merge or publish: every one of the ten
+workflow types ends at a human stage and `workflows.mjs` refuses to load one that
+does not.
+
+**It does not replace specialist reasoning** — §14 of the governance protocol — so
+every gate it runs is mechanical and it refuses a record rather than repairing one.
+**No dispatcher is wired**, so a run today reports `not_dispatched` and ends
+`unresolved`: the first end-to-end execution is the simulation protocol §25 puts at
+SESSION 24. `docs/ORCHESTRATOR.md`.
+
 ## 10 · Observability — owns what is knowable after the fact
 
 **Owns:** the validators' output over time, the freshness signal, the unverified

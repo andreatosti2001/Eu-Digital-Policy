@@ -91,6 +91,19 @@ export const ACTION_CATEGORIES = {
     human_review: null,
     automatable: true,
   },
+  /* THE FIFTH, AND IT WAS MISSING. Protocol §20 lists five
+     categories as candidates for controlled autonomy and the first
+     draft of this file wrote down four — the omission was found by
+     SESSION 22's own `LOW_RISK_CATEGORIES`, which had all five, when
+     the two branches were merged. Two independent lists disagreeing
+     is exactly what a second home for a fact produces, and it is why
+     there is now one list and this one is it. */
+  governed_metadata_maintenance: {
+    what: 'maintenance of a metadata field that is itself under a governance rule — a scheduled re-check interval, a retrieval cadence, a freshness window — where the rule is unchanged and only the bookkeeping under it moves.',
+    costs: 'a schedule drifting from what somebody agreed. It changes no proposition about EU law, and the rule it operates under is not this category.',
+    human_review: null,
+    automatable: true,
+  },
 
   /* ---- everything protocol §19 reserves to a human ---- */
   legal_interpretation: {

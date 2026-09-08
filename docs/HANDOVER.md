@@ -65,9 +65,11 @@ checks.
 
 **One number moved and it is not the baseline: `node agent/implement/cli.mjs boundary`
 now reports 0 blocking / 12 warnings, where SESSION 21 recorded 11.** The twelfth is
-`agent/policy/selftest.mjs:60` — `const PASSWORD = 'a sufficiently long passphrase'`,
-the same test passphrase `.control-room/selftest.mjs` uses, matched as a test-fixture
-warning by the `assigned-secret` pattern. It is **left as it is**: renaming the constant
+`agent/policy/selftest.mjs:60` — a `PASSWORD` constant holding the same synthetic test
+passphrase `.control-room/selftest.mjs` uses, matched as a test-fixture warning by the
+`assigned-secret` pattern. **The literal is deliberately not reproduced here**:
+`docs/` is inside the published surface, and `agent/implement/selftest.mjs` R4 caught
+SESSION 21's draft handover for writing a credential shape into it. It is **left as it is**: renaming the constant
 would hide a password-shaped literal from the scanner whose job is to find
 password-shaped literals, and the value really is a passphrase in a published file. The
 comment above the line says so. `agent/ is inside the public surface` also moved from
@@ -325,7 +327,272 @@ so AB-06 stops being `undecidable`.
 
 ---
 
+**SESSION 22 — complete.** The Master Orchestrator, `agent/orchestrator/`. The
+reference document is **`docs/ORCHESTRATOR.md`**; this file is the handover only.
+
+---
+
+# SESSION 22 — the Master Orchestrator
+
+## What was built
+
+The twelfth thing in `agent/`, and the first whose subject is the other eleven. Nine
+modules, a CLI, a suite, and one read-only view in the Control Room.
+
+Zero dependencies, no build step, no `package.json` — `node:fs`, `node:crypto`,
+`node:path`, the same constraints as the rest of the repository.
+
+| File | What it owns |
+|---|---|
+| `capabilities.mjs` | the capability register for all fourteen actors, and `grantFor()` |
+| `workflows.mjs` | the ten workflow types as data, the five end states, `classify()` |
+| `state.mjs` | the workflow state machine and the append-only journal it is replayed from |
+| `events.mjs` | intake: the whitelist, and the fields stripped and named at the door |
+| `approval.mjs` | the eight routing checks, re-derived from the decision ledger |
+| `conflict.mjs` | six conflict shapes, and no resolver |
+| `policy.mjs` | the ten human-review triggers, protocol §18's twelve conditions, the provenance and rollback gates |
+| `orchestrator.mjs` | the Orchestrator |
+| `cli.mjs` · `selftest.mjs` · `README.md` · `state/README.md` | |
+
+## The five things this session is arranged around
+
+**1 · A GRANT IS AN INTERSECTION, NEVER A UNION.** SESSION 22 names three ways an
+agent must not gain permission: because another agent asked, because the
+Orchestrator routed a task, or because somebody clicked a button. All three have the
+same shape — authority arriving with the REQUEST rather than being held by the
+ACTOR. So `grantFor()` returns what is in BOTH the agent's registered capability and
+the stage's declared need. A stage asking for more produces an **empty grant** and a
+refusal naming the difference, not a grant covering the stage's need. Nothing in the
+module reads an argument about permission: there is no `extra`, no `also`, no
+`permissions`, and `checkOutput` has no `force`.
+
+The register is **frozen all the way down**. A shallow freeze left `produces` a
+mutable array, and `CAPABILITIES['legal-verifier'].produces.push('UXProposal')`
+widened an agent at runtime — the suite planted that push, it succeeded, and the
+fix was a deep freeze. That is the suite finding a real defect rather than
+confirming a design.
+
+**2 · APPROVAL IS RE-DERIVED, AND THE FORGERY IS NAMED RATHER THAN IGNORED.**
+`events.mjs` strips every approval-shaped field at intake — `approved`,
+`authorized`, `granted`, `decided_by`, `outcome`, `approval_id`, `permitted_files`,
+`roles`, `force`, `skip_checks`, `deploy`, `git_ref` and twenty more — and reports
+each one on the event AND on the trace. Silently ignoring them would look identical
+to not having checked, which is the reasoning `agent/implement/ledger.mjs` already
+established about agent-written approval claims, applied one layer up. An **unknown**
+field is refused outright with its name.
+
+`approval.mjs` then performs the eight checks the session names, five of them
+**lifted from `agent/implement/preflight.mjs` rather than re-derived** so a gate
+tightened there tightens this too. It does not reimplement `deriveApproval()`.
+
+**3 · THE EIGHTH CHECK IS THE ONE NOTHING ELSE PERFORMS.** Implementation scope must
+match approved scope. `preflight` derives the permitted set from the proposal and
+`apply.mjs` enforces it afterwards against git; neither compares the set against
+WHAT WAS ASKED FOR, because nothing was previously in a position to ask. A routing
+request naming a file the proposal does not is **refused with the difference named**
+— never intersected down to the permitted set and run anyway, which would let a
+caller learn the permitted set by asking for the whole tree and reading what came
+back.
+
+**4 · THE CONFLICT DETECTOR HAS NO RESOLVER.** H7: a contradiction is never resolved
+by seniority, recency or convenience. So there is no `resolve()`, no
+`preferMostRecent()`, no confidence comparison and no tie-break, and the suite
+asserts those exports do not exist. The temptation is specific: a verifier's
+`contradicted` beside a proposal that asserts the value anyway has an obvious
+answer, and taking it would be an agent deciding a question about EU law by rule of
+thumb.
+
+**5 · THE AUTONOMY ANSWER IS ALWAYS NO, AND ALL TWELVE CONDITIONS ARE STILL
+EVALUATED.** `APPROVED_AUTONOMOUS_CATEGORIES` is empty, because no governance
+decision in this repository has approved one and §24 forbids the system from taking
+that decision itself. That could have been a single early `return false`, and
+deliberately is not: the interesting fact is not "autonomy is off", it is WHICH
+conditions a given piece of work would have failed. A system that only ever prints
+"not permitted" teaches nobody anything, and the first session that enables a
+category would be enabling it blind.
+
+## Two things the suite corrected in the design
+
+Both were wrong in code and right in the suite, and both are named here so a reader
+can disagree.
+
+**`same_agent_forbidden` named AGENTS, and the rule fired when the design was
+HONOURED.** Written as agent-name pairs — `['regulatory-change-detector',
+'legal-verifier']` — the H3 check refused the verifier stage precisely because the
+detector had just run, which is the intended sequence, not a collision. The pairs
+now name **STAGES** (`['detect', 'verify']`), which is what H3 actually says:
+whoever runs `detect` may not also run `verify`. The load check refuses a pair
+naming a stage the workflow does not have, and the suite asserts the two stages in
+every pair are assigned to different agents today. A **second** check now carries
+the real case: an agent handed a record it produced itself is refused before any
+reasoning happens.
+
+**`legal-verifier` could not consume a `RegulatoryChange`, which made `LEGAL_CHANGE`
+unroutable.** The capability register said the verifier consumes `SourceCandidate`
+only, so the handoff from `detect` to `verify` was refused as broken on every run of
+that workflow type. `RegulatoryChange` was added to its `consumes`. That is the
+register being corrected by the thing that uses it, rather than the workflow being
+bent around the register.
+
+## What is genuinely proved, and how
+
+**65 tests in a new suite**, arranged as the six regressions the session names —
+R1 incorrect routing, R2 forged approval, R3 scope expansion, R4 missing provenance,
+R5 failed handoff, R6 unauthorized execution — plus the state machine, the
+conflicts, the human-review triggers and the registers.
+
+Two shapes it is arranged to avoid:
+
+- **A test that passes because nothing happened.** Every refusal is paired with a
+  positive proving the same path works when it should. Three of these failed in
+  draft for exactly that reason: the R4 provenance test wired only the verifier, so
+  the gate it was named for never ran.
+- **A test asserting the shape somebody wrote.** The end-state assertions read the
+  JOURNAL, because that is what the Control Room and a later session read, and an
+  in-memory field can be right while the persisted record is wrong.
+
+**Every fixture is about a file called `tools/example.mjs` that exists only in the
+suite.** Nothing in it asserts anything about EU law. The records that must not be
+`simulated` — because `preflight` refuses a simulated record as unactionable — are
+safe to write only because their subject is a fixture path.
+
+**Three fixtures the suite got wrong, and the contracts said so.** A hand-built
+`VerificationRecord` did not satisfy its contract, so every test using it was
+passing for the wrong reason — the gate refused it as *invalid* and the test read
+that as the refusal it was looking for. They are now built from
+`agent/schemas/fixtures.mjs`. A `RegulatoryChange` about a `tool` was refused
+because a regulatory change is about the legal record. And the positive half of the
+provenance test tried to use a `DataGap` with its blocking question deleted, which
+is asserting that a record stops being a gap when you remove the part that makes it
+one; it uses a `ClaimEvidence` now.
+
+## The Control Room exposure
+
+One route: `GET /api/workflows`, behind a new `workflows:read` permission that every
+role holding `live:read` also holds. **There is no route that starts a workflow,
+retries a stage, dispatches an agent or reopens a terminal one, and the absence is
+the control** — not a check inside a route, because a check can be moved. The
+Control Room does not import the `Orchestrator` class or the event intake, and two
+new tests assert both: a server that could construct one could run one.
+
+## Files changed
+
+**New — `agent/orchestrator/`, 12 files:** `capabilities.mjs`, `workflows.mjs`,
+`state.mjs`, `events.mjs`, `approval.mjs`, `conflict.mjs`, `policy.mjs`,
+`orchestrator.mjs`, `cli.mjs`, `selftest.mjs`, `README.md`, `state/README.md`.
+
+**New — `docs/ORCHESTRATOR.md`**, the reference document.
+
+| File | What |
+|---|---|
+| `.control-room/authz.mjs` | `workflows:read`, granted to every role that holds `live:read`; `visibleActions().workflows` |
+| `.control-room/views.mjs` | `workflowsView()` — the journal, the three registers, and `no_console` |
+| `.control-room/server.mjs` | one route, `GET /api/workflows` |
+| `.control-room/ui/app.html` · `ui/app.js` | the Workflows tab and its renderer |
+| `.control-room/selftest.mjs` | tests 10c and 10d — the window-not-console assertions |
+| `agent/implement/checks.mjs` | the orchestrator suite joins `AGENT_SUITES` |
+| `agent/implement/selftest.mjs` | **one existing assertion changed** — see below |
+| `.github/workflows/qa.yml` | the suite, the three register commands, and one more line in "what this workflow does not prove" |
+| `.gitignore` | `agent/orchestrator/state/*`, README negated back in |
+| `AGENTS.md` | the read list, the suite list, the test count, the Orchestrator paragraph, and the untracked-directories hazard |
+| `docs/AGENT-ROLES.md` | §9 — the role is now filled, and three of its *never* items are mechanical rather than remembered |
+
+**Not modified:** `data/`, `js/`, `css/`, `i18n/`, `fonts/`, `tools/`, every page,
+`style.css`, `app.js`, `README.md`, `CLAUDE.md`.
+
+## The one existing assertion that changed
+
+`agent/implement/selftest.mjs` R6 asserts `AGENT_SUITES.length`. It was 15 and is
+now 16, because the orchestrator suite joined the list. **The assertion caught the
+change**, which is what it is for — its own comment says it had already caught the
+list growing once, in SESSION 20, and this is the second time. Nothing was weakened:
+the membership check was extended to name `agent/orchestrator/selftest.mjs`
+explicitly as well.
+
+No other existing assertion was touched, and no test was deleted, skipped or
+relaxed.
+
+## Tests and validators — run, not asserted
+
+**934 across seventeen suites, 0 failures** (867 across sixteen before; SESSION 22
+adds 65 in the new suite and 2 to `.control-room/selftest.mjs` — 867 + 67 = 934). No
+existing suite's test COUNT changed; one existing ASSERTION did, and it is named
+above. 18/18 contracts satisfiable by their fixture.
+
+The four validators are at the `docs/CURRENT-ARCHITECTURE.md` §12 baseline: **0
+errors, 0 warnings on `validate.mjs` and `i18n-audit.mjs`, 0 errors and the same
+five `design-qa` warnings by file and line, 106 unverified records.**
+`node agent/implement/cli.mjs check` reports `at_baseline` on all four.
+
+Both boundary checks: `agent/implement/cli.mjs boundary` at **0 blocking / 11
+warnings**, and `.control-room/cli.mjs boundary` at **0 errors**, 21 routes, 8
+public, 0 production controls.
+
+The browser suite ran against a real Chromium: **116 pass · 3 fail · 2 undecidable
+across 121 checks**. The three failures are the ones SESSION 19 found and nobody has
+fixed — issues 25, 27 and 28 — and this session did not touch the interface.
+
+The health monitor ran: 44 metrics, three domains, no overall score, repository
+byte-identical afterwards.
+
+The orchestrator suite writes nothing to the repository: it uses a memory journal
+throughout, and one test checks `git status --porcelain` from outside for anything
+under `agent/orchestrator/state/`.
+
+## What was run against the real stores, and what it found
+
+`node agent/orchestrator/cli.mjs survey` reads the real record store and the real
+decision ledger. On this machine it reports **no proposal in the record store** —
+`agent/records/` is git-ignored run state, so a fresh clone and a CI runner have
+none. The CLI says that in those words rather than printing "0 proposals", because
+those are different facts.
+
+One demonstration workflow was opened, with a memory journal, against a proposal id
+that does not exist. It ended `human_review_required` with **ten of the twelve
+mandatory autonomy conditions failing** and the three routing checks that do not
+depend on later stages refusing by name. Nothing was published and nothing was
+written.
+
+## Known limitations
+
+Every one is in `docs/ORCHESTRATOR.md` §13 in full. The four worth carrying at the
+front:
+
+1. **No specialist has ever been dispatched by the Orchestrator.** Every end-to-end
+   path in the suite is driven by a fixture dispatcher. §12.
+2. **The capability register is a boundary at the handoff, not process isolation.**
+   Nothing stops a module calling `writeFileSync`; this repository has no sandbox
+   and the module says so rather than implying a stronger control.
+3. **The journal is neither tamper-evident nor private.** `readJournal()` reports a
+   sequence gap and cannot prevent one; the directory is git-ignored, and one
+   `git add -f` undoes that.
+4. **The conflict detector sees six shapes.** Two records can disagree in prose that
+   nothing in this repository reads.
+
+## Next session
+
+**SESSION 23 — the autonomy and authorization policy**, then 23.5, the security and
+control-plane verification that gates the end-to-end simulation. Three things it
+inherits:
+
+- **`APPROVED_AUTONOMOUS_CATEGORIES` is empty and must stay empty until a person
+  fills it.** Protocol §24 reserves the decision; an agent appending to that array
+  would be taking it. The five categories §20 names are already written down beside
+  it, so the decision has somewhere to land.
+- **The twelve mandatory conditions are already evaluated and reported on every
+  run.** Turning a category on means deciding which of the twelve a given category
+  can satisfy, not building the check.
+- **The dispatch seam is where SESSION 24's simulation attaches.** A dispatcher
+  receives the grant, the event and the records handed to it — never the workflow,
+  the journal or the ledger — and its output is validated against its contract and
+  then against its grant before it travels.
+
+---
+
 # SESSION 21 — the Control Room
+
+*(the previous milestone, kept for its findings and its refusals. The reference
+document is `docs/CONTROL-ROOM.md`.)*
 
 ## What was built
 
@@ -1111,6 +1378,29 @@ Everything from before, still binding:
   now has THREE reports — an architecture finding, an editorial finding, and this
   session's measurement of what it costs — and three reports are no more a work
   order than one.
+- **Do not add an entry to `APPROVED_AUTONOMOUS_CATEGORIES`.** It is empty because no
+  governance decision in this repository has approved an autonomous action category,
+  and protocol §24 reserves that decision to a person. An agent appending to it would
+  be taking the decision the protocol exists to withhold — not implementing one.
+- **Do not give `agent/orchestrator/conflict.mjs` a resolver.** H7: a contradiction is
+  never resolved by seniority, recency or convenience. The suite asserts that
+  `resolve`, `preferMostRecent` and `tieBreak` are not exported, and the reason it
+  can is that none of them exists.
+- **Do not make a grant a union.** `grantFor()` returns the intersection of what the
+  agent holds and what the stage asks for. A union lets any workflow author widen any
+  agent by writing a more ambitious stage, which is one of the three leaks SESSION 22
+  names by hand.
+- **Do not add a Control Room route that starts, retries, dispatches or resumes a
+  workflow.** The absence of the route is the control; a check inside one can be
+  moved. §14 is explicit that a Control Room action creates a governed event and the
+  Orchestrator decides independently whether it is permitted.
+- **Do not let a workflow type end anywhere but a human stage**, and do not remove the
+  load check in `workflows.mjs` that refuses one which does. Five types may complete
+  without a person ONLY when they proposed nothing at all.
+- **Do not narrow a scope request down to the permitted set.** A request naming a path
+  the proposal does not is refused with the difference named. Narrowing it would let a
+  caller discover the permitted set by asking for the whole tree and reading what came
+  back.
 - Do not modify `data/*.json` or any page in a session not scoped for that work.
 - Do not touch the footer's non-affiliation or no-legal-advice text, `TIER_GRADE`
   in `js/format.js`, the derivation rules in `js/pipeline.js`, or `BASE` in
