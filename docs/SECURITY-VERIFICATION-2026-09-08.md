@@ -288,7 +288,7 @@ carries both a reason and what would close it (OB-04).
 
 ---
 
-## 7 · Four defects in the gate itself, and one in its reporting
+## 7 · Five defects in the checks themselves, and one in this gate's reporting
 
 Recorded because a verification whose own errors are invisible is not a verification, and both
 are the same failure shape the browser suite hit in SESSION 19: **a check that fails for the
@@ -314,6 +314,20 @@ wrong reason.**
    reported "refused safely". A throw is now `undecidable`, never a pass — and the probe was
    rewritten to construct a stage the scout can actually be granted, because a probe that asks
    for a grant that cannot exist proves nothing about what a valid one permits.
+
+5. **A SESSION-FORGERY ASSERTION IN SESSION 21's SUITE PASSED FOR THE WRONG REASON ABOUT ONCE
+   IN THIRTEEN RUNS.** Not this gate's, but the same class, and found while merging.
+   `.control-room/selftest.mjs` test 15 builds six client-side forgeries; the third was the
+   real session token with its last character replaced by `A`. Whenever the real token
+   already ended in `A` — measured at 3 of 40 logins — the "forgery" was byte-identical to the
+   real cookie, the server correctly returned 200, and the suite failed with
+   **"a forged cookie was accepted"**, which reads exactly like a session-forgery breach.
+   It was not one: no forgery was ever possible, and the other five forgeries and the four
+   spoofed identity headers were refused on every run, including the failing ones. The
+   replacement character now differs from the one it replaces. **The lesson is the shape, not
+   the bug**: an intermittent failure whose message describes a breach is the single most
+   likely thing in this repository to be dismissed as a flake, and the earlier handover's
+   refusal to call it one is why it was found.
 
 **And one about this gate's own reporting, which is the most important item in this section.**
 SESSION 23.5 reported "909 tests across eighteen suites, 0 failures" for its branch.

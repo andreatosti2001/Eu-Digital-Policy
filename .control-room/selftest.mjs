@@ -860,6 +860,13 @@ test('14 · knowing the URL is not access — the shell, the client and every vi
        client-side state
    ============================================================ */
 
+/** The same token with its final character replaced by a DIFFERENT
+ *  one. A mutation that might not mutate is not a forgery. */
+function mutateLastChar(token) {
+  const last = token.slice(-1);
+  return token.slice(0, -1) + (last === 'A' ? 'B' : 'A');
+}
+
 test('15 · a session is a server-side record; nothing a client can write becomes one', async () => {
   const w = world();
   const s = await running(w);
@@ -871,7 +878,17 @@ test('15 · a session is a server-side record; nothing a client can write become
     const forgeries = [
       'cr_session=administrator',
       'cr_session=' + Buffer.from(JSON.stringify({ subject: 'admin@example.org', roles: ['administrator'] })).toString('base64url'),
-      `cr_session=${real.cookie.split('=')[1].slice(0, -1)}A`,      // one character changed
+      /* ONE CHARACTER CHANGED — and it has to actually change.
+         This was `slice(0, -1) + 'A'`, which is a no-op whenever the
+         real token already ends in "A". Session tokens are random, so
+         the suite failed intermittently — measured at 3 in 40 logins
+         — with the message "a forged cookie was accepted", which
+         reads exactly like a session-forgery breach and was not one:
+         the server was correctly accepting its own valid cookie. The
+         replacement character is now chosen to differ from the one it
+         replaces, so the assertion is meaningful on every run instead
+         of on most of them. */
+      `cr_session=${mutateLastChar(real.cookie.split('=')[1])}`,
       'cr_session=' + 'A'.repeat(43),
       'cr_session=; cr_role=administrator',
       'cr_session=x; authenticated=true',

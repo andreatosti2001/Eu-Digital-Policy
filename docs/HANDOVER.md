@@ -83,11 +83,42 @@ were added: this session's test passphrase in `agent/policy/selftest.mjs`, and t
 constant in `agent/policy/verify/harness.mjs`. `agent/ is inside the public surface` moved
 from 180 files to 204, which is SESSIONS 22, 23 and 23.5 being counted.
 
-**A one-off test failure was observed and never reproduced, and it is recorded rather than
-dismissed.** In one batched run, `.control-room/selftest.mjs` reported one failure whose name
-was not captured. Every run since — alone, in sequence and in full batches — reports all
-passing. It is **not** being called a flake, because nothing established what it was. If it
-recurs, capture the `not ok` line before anything else.
+**THE ONE-OFF TEST FAILURE WAS FOUND, IDENTIFIED AND FIXED — AND IT WAS NOT A FLAKE.**
+An earlier version of this handover recorded a `.control-room/selftest.mjs` failure that had
+been seen once and never reproduced, with its name uncaptured. It reappeared while merging to
+`main`, and this is what it was:
+
+```
+15 · a session is a server-side record; nothing a client can write becomes one
+    a forged cookie was accepted: cr_session=...   200 !== 401
+```
+
+That message reads as a session-forgery breach. **It was not one.** The test builds six
+client-side forgeries, and the third is the real session token with its last character
+replaced by `A`:
+
+```js
+`cr_session=${real.cookie.split('=')[1].slice(0, -1)}A`   // "one character changed"
+```
+
+**Whenever the real token already ends in `A`, that is not a forgery — it is the real
+cookie**, and the server returned 200 because it was correctly accepting its own valid
+session. Measured rather than assumed: 3 of 40 logins produced a token ending in `A`.
+`.control-room/selftest.mjs` now replaces the final character with one that differs from it,
+so the assertion is meaningful on every run instead of on most of them.
+
+**The evidence that it is fixed is the construction, not the runs.** Eighteen consecutive
+runs pass, and eighteen runs would not settle it on their own: at a 7.5% failure rate, an
+unfixed test survives eighteen runs about a quarter of the time. What settles it is that
+`mutateLastChar()` returns `'B'` when the last character is `'A'` and `'A'` otherwise, so the
+mutated token can no longer equal the original for any input.
+
+Two things worth carrying forward. **The Control Room was never wrong here** — no session
+forgery was ever possible, and the other five forgeries and the four spoofed identity headers
+were refused on every run including the failing ones. And **the earlier handover's refusal to
+call it a flake was right**: it was a real defect with a probabilistic trigger, and calling it
+noise would have left a security assertion silently passing for the wrong reason about once in
+every thirteen runs.
 
 ---
 
