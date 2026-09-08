@@ -63,7 +63,7 @@ boundaries SESSION 23.5 names.
 | Public / private boundary | 9 | 7 failed safely · 1 partial · 1 undecidable |
 | Hidden Control Room entry | 8 | 8 failed safely |
 | Authorization | 10 | 10 failed safely |
-| Agent boundaries | 6 | 5 failed safely · 1 undecidable |
+| Agent boundaries | 6 | 5 failed safely · 1 undecidable (the Orchestrator is on another branch) |
 | Autonomy policy | 22 | 22 failed safely (including one control) |
 | Approval integrity | 5 | 5 failed safely |
 | Observability | 5 | 4 failed safely · 1 partial |
@@ -149,15 +149,31 @@ is about.
 **Would settle it:** an environment with outbound access to the deployed origin, requesting
 `.control-room/`, `agent/records/` and `agent/implement/decisions/` against it.
 
-### U-23.5-02 · There is no Master Orchestrator to attack
+### U-23.5-02 · The Master Orchestrator is not in this working tree
 
-**Attack AB-06.** SESSION 22 was not built. There is no `agent/orchestrator/`, and AGENTS.md
-lists eleven agents with no coordinator among them. Attack AB-02 exercises the **policy row**
-that describes what an orchestrator may and may not do — six privileged actions, all refused —
-and that row is a **specification**, not a description of anything running.
+**Attack AB-06.** **An earlier draft of this report said SESSION 22 was never built. That was
+wrong, and the correction is recorded here rather than edited away.** `agent/orchestrator/`
+exists — twelve modules and a 1,010-line suite — on branch
+`claude/agent-governance-protocol-tx6mu1` at `74e9a4a`, cut from the same base commit
+(`c43b7a9`) as this one and **not merged into `main`**. This working tree does not contain it,
+so the gate had nothing to attack.
 
-**Would settle it:** SESSION 22. Until then, every claim about orchestrator behaviour in
-`docs/AUTONOMY-AUTHORIZATION-POLICY.md` §7 should be read as a specification.
+Attack AB-02 exercises the **policy row** in `agent/policy/actors.mjs` that describes what an
+orchestrator may and may not do — six privileged actions, all refused. That row is a
+**specification**, and it is **not a measurement of the module that exists on that branch.**
+
+**Would settle it:** bringing that branch into a tree that also contains `agent/policy/`, and
+re-running this gate. Until that happens, no statement in this report is a statement about the
+Orchestrator that was actually written.
+
+**And there is a second thing that branch changes, which is not a security finding but is the
+larger issue:** `agent/orchestrator/policy.mjs` contains its own implementation of protocol
+§18's mandatory conditions, §19's human-review triggers, and an empty
+`APPROVED_AUTONOMOUS_CATEGORIES`; `agent/orchestrator/capabilities.mjs` contains its own
+capability matrix. `agent/policy/` contains all four. **Two homes for one fact**, which is the
+thing `docs/DATA-GOVERNANCE.md` §5 and this project's first principle exist to prevent. It is
+reported, not reconciled: which of the two is the home is an architectural decision for the
+repository author, not for the session that wrote one of them.
 
 ---
 

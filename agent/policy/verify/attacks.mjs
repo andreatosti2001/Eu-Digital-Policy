@@ -11,9 +11,9 @@
 
    1 · AN ATTACK THAT COULD NOT BE CARRIED OUT IS `undecidable`, NOT
        A PASS. Two of the boundaries SESSION 23.5 names cannot be
-       tested from here at all — the deployed origin has never been
-       fetched, and there is no Orchestrator to attack because
-       SESSION 22 was not built. Both are reported as what they are.
+       tested from here — the deployed origin has never been fetched,
+       and the Master Orchestrator is not in this working tree. Both
+       are reported as what they are.
 
    2 · A KNOWN WEAKNESS IS STILL A FINDING. Several of the results
        below restate something `docs/AUDIT-2026-09-01.md`,
@@ -43,6 +43,13 @@ import { DEFAULT_POLICY, SIMULATION_POLICY } from '../categories.mjs';
 import { isThreshold, thresholdProvider, controlRoomHref, THRESHOLD_TRIGGERS, passage } from '../../../js/threshold.js';
 
 const REFUSED = [401, 403, 302, 404, 400, 405, 409, 501];
+
+/** Where the Master Orchestrator actually is. It is NOT in this
+ *  working tree — see AB-06 — and these two constants exist so that
+ *  the report says where it is rather than that it does not exist,
+ *  which is what an earlier draft of this gate said and was wrong. */
+export const ORCHESTRATOR_BRANCH = 'claude/agent-governance-protocol-tx6mu1';
+export const ORCHESTRATOR_COMMIT = '74e9a4a';
 const body = async (res) => { try { return await res.text(); } catch { return ''; } };
 
 /* ============================================================
@@ -553,8 +560,9 @@ export function agentBoundaries() {
   {
     const a = attack('AB-06', 'agent_boundaries', 'attack the running Master Orchestrator', 'high');
     out.push(undecidable(a,
-      'there is no Orchestrator. SESSION 22 was not built: there is no agent/orchestrator/, and AGENTS.md lists eleven agents with no coordinator among them. AB-02 above tests the POLICY ROW that describes what an orchestrator may do, which is a specification rather than a description of anything running.',
-      'SESSION 22. Until it exists, every claim about orchestrator behaviour in docs/AUTONOMY-AUTHORIZATION-POLICY.md §7 is a specification.'));
+      `SESSION 22 BUILT ONE AND IT IS NOT IN THIS TREE. agent/orchestrator/ exists on branch ${ORCHESTRATOR_BRANCH} at ${ORCHESTRATOR_COMMIT}, twelve modules and a 1,010-line suite, cut from the same base commit as this branch and NOT merged into main. This working tree does not contain it, so there is nothing here to attack: AB-02 above exercises the POLICY ROW in agent/policy/actors.mjs that describes what an orchestrator may do, which is a specification, and it is not a measurement of the module that exists on that branch.`,
+      `bringing ${ORCHESTRATOR_BRANCH} into a tree with agent/policy/ in it, and then re-running this gate. Until that happens, no claim in this report is a claim about the Orchestrator that was actually written.`,
+      { orchestrator_branch: ORCHESTRATOR_BRANCH, orchestrator_commit: ORCHESTRATOR_COMMIT, present_in_this_tree: false }));
   }
 
   return out;

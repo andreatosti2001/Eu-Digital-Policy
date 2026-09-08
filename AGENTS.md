@@ -59,6 +59,17 @@ intended agent role in **`docs/SKILL-MAP.md`**. Invoke `project-context` at the 
 session, then load the skills the task actually needs; each one names the sibling that owns
 what it does not.
 
+**SESSION 22 IS ON A BRANCH, NOT IN `main`, AND IT DUPLICATES SESSION 23.** The Master
+Orchestrator exists — `agent/orchestrator/`, twelve modules and `docs/ORCHESTRATOR.md` — on
+`claude/agent-governance-protocol-tx6mu1` at `74e9a4a`, unmerged. It carries **its own**
+implementation of protocol §18's mandatory conditions, §19's human-review triggers, an empty
+approved-categories list and a capability matrix; `agent/policy/` carries all four. That is a
+second home for one fact, which `docs/DATA-GOVERNANCE.md` §5 permits only with a generator and
+a drift check, and there is neither. **Do not merge the two branches without deciding which
+module is the home** — `docs/HANDOVER.md` sets out the three options. And run
+`git branch -a` before concluding anything about what exists: an earlier version of this file
+said SESSION 22 had never been built.
+
 **The verification gate is not a test suite.** `agent/policy/verify/` attacks the boundaries
 rather than asserting them, and it has four outcomes rather than two: an attempt that could not
 be carried out here is `undecidable`, **never a pass**. `node agent/policy/verify/cli.mjs` runs

@@ -302,9 +302,17 @@ that the document's own subject is not overstating what a mechanism establishes.
    mitigated and does not claim it is closed.
 2. **No act has ever taken the automatic route**, here or anywhere, because no category is
    enabled. Everything the suite proves about that route is proved against a fixture policy.
-3. **The Orchestrator does not exist.** SESSION 22 was not built; `agent/policy/actors.mjs`
-   defines what an orchestrator may and may not do, and nothing currently occupies the role.
-   The row is a specification, not a description.
+3. **The Orchestrator exists, and it is not in this tree.** SESSION 22 built
+   `agent/orchestrator/` on branch `claude/agent-governance-protocol-tx6mu1` at `74e9a4a`,
+   cut from the same base as this branch and unmerged. So `agent/policy/actors.mjs`'s
+   orchestrator row is a **specification that has never been checked against the module that
+   occupies the role** — and SESSION 23's requirement that "the implementation layer **and
+   Orchestrator** must enforce it mechanically" is half met: the implementation layer calls
+   the engine twice per proposal (§8), and nothing has yet been done about the other half.
+   **That branch also carries its own implementation of §18's conditions, §19's triggers and a
+   capability matrix** (`agent/orchestrator/policy.mjs`, `capabilities.mjs`), which is a second
+   home for what this document describes. Which of the two is the home is an architectural
+   decision, and it has not been taken.
 4. **`categoriseProposal()` reads records, not prose.** It cannot tell that a proposal
    described as a metadata correction in fact changes what a claim asserts, beyond what the
    record's own fields say. The four validators cannot read prose either

@@ -11,19 +11,50 @@ because a push to `main` is `docs/AUTONOMY-POLICY.md` Class D and AGENTS.md rese
 to the repository author by name. The branch is pushed and the merge is the author's to
 authorise, as it was in SESSION 21.
 
-**SESSION 22 WAS NEVER BUILT, AND THIS IS THE FIRST THING TO CARRY FORWARD.** The
-roadmap runs 21 → 22 (Master Orchestrator) → 23 (autonomy and authorization policy) →
-23.5 (security gate). `origin/main` is at SESSION 21 and there is no
-`agent/orchestrator/` anywhere in the tree. SESSIONS 23 and 23.5 were done over that
-gap rather than pretending it was closed:
+**A CORRECTION, AND IT IS THE FIRST THING TO CARRY FORWARD. An earlier version of this
+handover said "SESSION 22 was never built". That was wrong.** SESSION 22 exists:
+`agent/orchestrator/` — twelve modules, a 1,010-line suite and `docs/ORCHESTRATOR.md` —
+on branch **`claude/agent-governance-protocol-tx6mu1` at `74e9a4a`**, cut from the same
+base commit (`c43b7a9`) as this branch. It is **not in `origin/main`**: `git merge-base
+--is-ancestor` says no, and `git ls-tree -r origin/main | grep orchestr` returns nothing.
+It is one unmerged commit on a sibling branch. The earlier claim came from checking the
+tree and `origin/main` and not the other branches, which is the trap AGENTS.md names and
+this is the fourth session it has caught.
 
-- `agent/policy/actors.mjs` defines what an Orchestrator may and may not do — six
-  capabilities, six named refusals — and that row is a **specification**, not a
-  description of anything running.
-- `agent/policy/verify/` attack AB-06 reports the Orchestrator boundary as
-  **`undecidable`**: there is nothing to attack. It is not counted as a pass.
-- `docs/AUTONOMY-AUTHORIZATION-POLICY.md` §10.3 says the same in the reference
-  document rather than in a footnote.
+**Two things follow, and neither is closed.**
+
+1. **SESSION 23's brief says "the implementation layer AND Orchestrator must enforce it
+   mechanically", and only the implementation layer does.** `implementer.mjs` calls
+   `agent/policy/engine.mjs` twice per proposal. Nothing connects the policy to the
+   Orchestrator, because the Orchestrator was not in the tree it was written against.
+   `agent/policy/verify/` attack AB-06 is `undecidable` for the same reason and now says
+   where the module actually is instead of saying it does not exist.
+
+2. **THERE ARE NOW TWO HOMES FOR THE AUTONOMY POLICY, AND THAT IS THE REAL ISSUE.** Not
+   a merge conflict — a violation of this project's first principle:
+
+   | Fact | SESSION 22 | SESSION 23 |
+   |---|---|---|
+   | protocol §18's mandatory conditions | `orchestrator/policy.mjs` `MANDATORY_AUTONOMY_CONDITIONS`, `autonomyPermits()` | `policy/conditions.mjs` `CONDITIONS`, `evaluateConditions()` |
+   | protocol §19's human-review triggers | `HUMAN_REVIEW_TRIGGERS` (ten) | `humanReviewTriggers()` (thirteen) |
+   | the enabled autonomous categories | `APPROVED_AUTONOMOUS_CATEGORIES = []` | `DEFAULT_POLICY.enabled_categories = []` |
+   | the low-risk categories | `LOW_RISK_CATEGORIES` | `AUTOMATABLE_CATEGORIES` |
+   | who may do what | `orchestrator/capabilities.mjs` `CAPABILITIES` | `policy/actors.mjs` `CAPABILITIES` |
+   | provenance and rollback gates | `provenanceGate()`, `rollbackGate()` | `provenanceComplete()`, `assessRollback()` |
+
+   Both are empty in the same place and for the same stated reason, which is reassuring
+   and is not the point: `docs/DATA-GOVERNANCE.md` §5 requires a second copy of a fact to
+   have both a generator and a drift check, and these have neither. **Which of the two is
+   the home is an architectural decision and it has NOT been taken here.** It is reported
+   rather than reconciled, because AGENTS.md's rule is to stop and report rather than
+   reconcile silently, and because a session that wrote one of the two implementations is
+   the worst possible judge of which should survive.
+
+   The two branches also both edit five of the same files — `AGENTS.md`,
+   `docs/HANDOVER.md`, `agent/implement/checks.mjs`, `agent/implement/selftest.mjs` and
+   `.github/workflows/qa.yml` — and in the same places: the suite list, the suite-count
+   assertion and the test totals. A merge will conflict in all five, and every conflict is
+   a count.
 
 **Everything was re-run on the final tree.** All eighteen suites (909 pass, 0 fail),
 the contract check (18/18 satisfiable), the four validators against the
@@ -205,7 +236,9 @@ so rather than reporting a number it did not take.
 it. So the publication boundary, F-23.5-01 included, is **inferred** from Jekyll's
 documented default and from reading the tree.
 
-**U-23.5-02 — there is no Master Orchestrator to attack.** SESSION 22 was not built.
+**U-23.5-02 — the Master Orchestrator is not in this working tree.** It exists on
+`claude/agent-governance-protocol-tx6mu1`; this branch does not carry it, so the gate had
+nothing to attack. The report records the correction rather than editing it away.
 
 ## Two defects in the gate itself, found and corrected before the report
 
@@ -249,12 +282,28 @@ block, appended), `AGENTS.md`.
 
 ## Next session
 
-**SESSION 22, out of order — the Master Orchestrator.** It is the gap in the roadmap and
-two artifacts now point at it by name: `agent/policy/actors.mjs`'s orchestrator row is a
-specification nothing satisfies, and attack AB-06 is `undecidable` because there is
-nothing to attack.
+**Reconcile SESSION 22 and SESSION 23 — and that is a decision before it is a task.**
+Both branches are cut from `c43b7a9` and neither is merged. The question to settle first
+is which module is the home for the autonomy policy, because the answer decides the shape
+of everything else:
 
-Three things it inherits:
+- **`agent/policy/` is the home, and the Orchestrator calls it.** `orchestrator/policy.mjs`
+  and `orchestrator/capabilities.mjs` become thin adapters over `evaluate()` and
+  `authorizeActor()`, and SESSION 23's "the implementation layer and Orchestrator must
+  enforce it mechanically" is then true of both halves. The Orchestrator keeps what is
+  genuinely its own: workflow state, routing, handoffs, conflict detection, events.
+- **`agent/orchestrator/policy.mjs` is the home, and `agent/policy/` is reduced** to what
+  SESSION 22 does not have — the action categories, the six-element rollback assessment,
+  the actor × action × resource × environment × path × risk matrix, and the verification
+  gate.
+- **Both stay, with a generator and a drift check**, which `docs/DATA-GOVERNANCE.md` §5
+  permits and nothing here has built.
+
+Whichever is chosen, two things follow immediately: connect the policy to the Orchestrator,
+and re-run `node agent/policy/verify/cli.mjs` so AB-06 becomes a real adversarial result
+instead of an `undecidable`.
+
+Three things a reconciliation inherits from SESSION 23:
 
 - **`agent/policy/engine.mjs` is the enforcement point it must call.** §14 of the
   protocol says the Orchestrator must not treat a UI action as unconditional authority;
@@ -270,8 +319,9 @@ Three things it inherits:
 
 ### Exact next objective
 
-Build `agent/orchestrator/`. Then re-run `node agent/policy/verify/cli.mjs` and turn
-AB-06 from `undecidable` into a real result, whichever way it goes.
+Take the one-home decision above. Then merge the two branches, make the losing module an
+adapter rather than a second implementation, and re-run `node agent/policy/verify/cli.mjs`
+so AB-06 stops being `undecidable`.
 
 ---
 
