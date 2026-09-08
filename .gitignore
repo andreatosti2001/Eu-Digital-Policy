@@ -54,3 +54,20 @@ agent/health/history/*
 # files somebody thought of is the same mistake as a denylist.
 .control-room/state/*
 !.control-room/state/README.md
+
+# The Orchestrator's workflow journals. One append-only file per workflow,
+# holding the ROUTING: which specialist refused what, which gate blocked which
+# proposal, which approval was found void. Run artifacts, and control-plane
+# ones — this repository publishes its whole tree, so a tracked journal would
+# be an operational trace on the public web.
+#
+# The state is REPLAYED from these files rather than stored, so losing them
+# loses history and no authority: a grant lives in
+# agent/implement/decisions/decisions.jsonl, which is tracked, and nothing
+# here is a second home for it.
+#
+# The glob is `*` with the README negated back in, the same shape
+# agent/health/history/ and .control-room/state/ use, and for the same reason:
+# an ignore list covering only the files somebody thought of is a denylist.
+agent/orchestrator/state/*
+!agent/orchestrator/state/README.md

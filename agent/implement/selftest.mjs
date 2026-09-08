@@ -622,15 +622,16 @@ test('R6 · a validator that could not be executed is exit 127, never a pass', (
 });
 
 test('R6 · this suite is in the list the agent runs for a change under agent/ or tools/', () => {
-  for (const s of ['agent/implement/selftest.mjs', 'agent/browser/selftest.mjs', 'agent/health/selftest.mjs']) {
+  for (const s of ['agent/implement/selftest.mjs', 'agent/browser/selftest.mjs', 'agent/health/selftest.mjs', 'agent/orchestrator/selftest.mjs']) {
     assert.ok(AGENT_SUITES.includes(s), `${s} must be in AGENT_SUITES, or a change under agent/ would land without running it`);
   }
   /* The count is asserted, not just the membership. A suite silently
      dropped from this list is a suite that stops gating changes, and
-     nothing else would notice — this assertion has already caught
-     the list growing once, in SESSION 20. */
-  assert.equal(AGENT_SUITES.length, 15,
-    'twelve suites before SESSION 18, plus browser, implement (18/19) and health (20)');
+     nothing else would notice — this assertion has now caught the
+     list growing twice, in SESSION 20 and again in SESSION 22, which
+     is the assertion doing its job rather than being in the way. */
+  assert.equal(AGENT_SUITES.length, 16,
+    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20) and the orchestrator (22)');
 });
 
 /* ============================================================

@@ -32,6 +32,7 @@ the evidence it describes.
 | `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` · `docs/DATA-DEPTH.md` · `docs/GAP-PROPOSALS.md` · `docs/KNOWLEDGE-ARCHITECTURE.md` · `docs/EDITORIAL-AGENT.md` · `docs/UX-AUDIT.md` · `docs/IMPLEMENTATION-QA.md` · `docs/HEALTH-MONITOR.md` | The eleven agents that exist, what each refuses, and what none of them may do |
 | `docs/BROWSER-QA.md` · `docs/HEALTH-MONITOR.md` | The browser regression suite and the three health domains — what each measures, and what neither can see |
 | `docs/CONTROL-ROOM.md` | The private control plane: the two security domains, authentication, authorization, the seven approval gates, the audit trail — and §11, what none of it proves |
+| `docs/ORCHESTRATOR.md` | The Master Orchestrator: the ten workflow types, the five end states, the capability register, the eight routing checks, the six conflict shapes — and §13, what none of it proves |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
@@ -56,6 +57,15 @@ Skills live in `.agents/skills/` — sixteen of them, listed with their scope an
 intended agent role in **`docs/SKILL-MAP.md`**. Invoke `project-context` at the start of every
 session, then load the skills the task actually needs; each one names the sibling that owns
 what it does not.
+
+**The Orchestrator does not replace a specialist.** `agent/orchestrator/` receives events,
+routes them through the ten workflow types, enforces the handoffs and the autonomy boundary,
+and stops at a person — every one of the ten types ends at a human stage and the module
+refuses to load one that does not. It performs no legal, editorial or evidential reasoning:
+every gate it runs is mechanical, and it refuses a record rather than repairing one. **No
+dispatcher is wired**, so a run today reports `not_dispatched` and ends `unresolved` — the
+first end-to-end execution is the simulation protocol §25 puts at SESSION 24.
+`docs/ORCHESTRATOR.md`.
 
 **The Control Room is not an agent.** `.control-room/` is the private administrative interface
 a PERSON uses — observe, review, decide. It is behind a dot prefix because that is the one
@@ -149,17 +159,19 @@ node --test agent/ux/selftest.mjs              # Agent 8, against the real pages
 node --test agent/browser/selftest.mjs         # the browser suite's own suite
 node --test agent/implement/selftest.mjs       # Agent 9, incl. SESSION 18's eight required proofs
 node --test agent/health/selftest.mjs          # Agent 10, incl. planted security-boundary failures
+node --test agent/orchestrator/selftest.mjs    # the Master Orchestrator, incl. SESSION 22's six regressions
 node --test agent/observability/selftest.mjs
 node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**867 tests across the sixteen suites**, all passing as of SESSION 21 (812 after SESSION 20;
-756 after SESSIONS 18 and 19; 683 before them). SESSION 21 added 55 and **changed two existing
-assertions** in `agent/health/selftest.mjs` — both because the world changed rather than
-because they were inconvenient: a Control Room now exists, so the metric that said there was
-none, and the one that said there was no login, were asserting something false.
-`docs/HANDOVER.md` names both.
+**934 tests across the seventeen suites**, all passing as of SESSION 22 (867 after SESSION 21;
+812 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before them). SESSION 22 added 65 in a
+new suite and 2 to `.control-room/selftest.mjs`, and **changed one existing assertion**:
+`agent/implement/selftest.mjs` R6 asserts `AGENT_SUITES.length`, which went from 15 to 16
+when the orchestrator suite joined the list. The assertion CAUGHT the change, which is what
+it is for — the second time it has, after SESSION 20 — and the membership check beside it was
+extended rather than relaxed. `docs/HANDOVER.md` names it.
 
 **There is now CI.** `.github/workflows/qa.yml` runs all four validators against the recorded
 baseline, every agent suite, the contract check, the public/private boundary check and the
@@ -284,9 +296,9 @@ patches, not checks. **Do not re-run** the latter two.
   opposite, and every privileged request there is authenticated and authorized regardless.
 
   What is merely UNTRACKED is weaker still: `agent/records/`, `agent/observability/runs/`,
-  `agent/health/history/` and `.control-room/state/` have never been in a commit, and that is
-  an **ignore rule, not a boundary** — one `git add -f` undoes it and nothing here would
-  object.
+  `agent/health/history/`, `agent/orchestrator/state/` and `.control-room/state/` have never
+  been in a commit, and that is an **ignore rule, not a boundary** — one `git add -f` undoes
+  it and nothing here would object.
 - **Your base may be stale.** Run `git fetch --all && git branch -a` before concluding
   anything about what this repository contains. An earlier session reported four existing
   documents as missing by running `ls docs` on an unfetched branch (F-01).

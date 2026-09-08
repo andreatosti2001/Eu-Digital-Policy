@@ -1,7 +1,7 @@
 /* ============================================================
    .control-room/views.mjs — the three views, assembled server-side
 
-   LIVE SYSTEM · REVIEW QUEUE · WEBSITE HEALTH.
+   LIVE SYSTEM · WORKFLOWS · REVIEW QUEUE · WEBSITE HEALTH.
 
    Each is built here, on the server, from the same modules the CLIs
    read. The browser receives JSON it may render; it computes no
@@ -35,6 +35,15 @@
    absence of problems, and a view that undid that in its rendering
    would be the same mistake one layer up.
 
+   THE WORKFLOWS VIEW IS A WINDOW, NOT A CONSOLE. SESSION 22
+   requires the Orchestrator to expose workflow state here, and
+   exposing it is the whole of the requirement. There is no route
+   that starts a workflow, retries a stage, dispatches an agent or
+   resumes a terminal one — §14 says a Control Room action must not
+   become direct agent execution, and the way that is honoured is by
+   the route not existing rather than by a check somebody could
+   move. The view reads the journal and adds nothing to it.
+
    PUBLIC-SAFE AND PRIVATE ARE MARKED, PER METRIC. Every reading
    carries the `visibility` its metric declares, and the health view
    reports the two counts separately, so somebody deciding what to
@@ -48,6 +57,10 @@ import { ALL_METRICS, BY_ID } from '../agent/health/metrics.mjs';
 import { DOMAINS, DOMAIN_LABEL, DOMAIN_STAKE } from '../agent/health/model.mjs';
 import { read as readHistory, previousEntry, movement } from '../agent/health/history.mjs';
 import { analyseAll } from '../agent/health/security.mjs';
+import { survey as surveyWorkflows, DEFAULT_STATE_DIR } from '../agent/orchestrator/state.mjs';
+import { describeWorkflows, END_STATE_MEANING, WORKFLOW_TYPES } from '../agent/orchestrator/workflows.mjs';
+import { describeCapabilities } from '../agent/orchestrator/capabilities.mjs';
+import { HUMAN_REVIEW_TRIGGERS, MANDATORY_AUTONOMY_CONDITIONS, APPROVED_AUTONOMOUS_CATEGORIES, AUTONOMY_NOTE } from '../agent/orchestrator/policy.mjs';
 import { reviewQueue } from './decide.mjs';
 import { listOperators } from './identity.mjs';
 import { describeConfig, isLoopback } from './config.mjs';
@@ -153,6 +166,79 @@ export function reviewQueueView(cfg, ctx = {}) {
     approval_effect: 'Approval records an authorization in agent/implement/decisions/decisions.jsonl. It publishes nothing.',
   };
 }
+
+/* ============================================================
+   2b · WORKFLOWS — the Orchestrator's state
+   ============================================================ */
+
+export function workflowsView(cfg, { dir = DEFAULT_STATE_DIR } = {}) {
+  const registers = {
+    types: describeWorkflows(),
+    end_states: END_STATE_MEANING,
+    capabilities: describeCapabilities(),
+    policy: {
+      human_review_triggers: HUMAN_REVIEW_TRIGGERS,
+      mandatory_autonomy_conditions: MANDATORY_AUTONOMY_CONDITIONS,
+      approved_autonomous_categories: [...APPROVED_AUTONOMOUS_CATEGORIES],
+      note: AUTONOMY_NOTE,
+    },
+  };
+
+  let workflows = [];
+  let readError = null;
+  try { workflows = surveyWorkflows({ dir }); }
+  catch (e) { readError = e.message; }
+
+  if (readError || !workflows.length) {
+    return {
+      view: 'workflows',
+      store: dir,
+      /* Not "0 workflows". Nothing has run where this server can
+         see, and those are different facts — the same distinction
+         the live view draws about the trace store, for the same
+         reason. */
+      state: readError ? 'unreadable' : 'no_workflows',
+      why: readError
+        ? `the workflow journal directory could not be read: ${readError}`
+        : 'no workflow journal exists on this machine. The directory is git-ignored per-machine run state, so a fresh clone and a CI runner have none — which is not the same as no workflow having run.',
+      needs: 'run: node agent/orchestrator/cli.mjs run --type <TYPE> --subject <Contract>:<id>',
+      counts: null,
+      workflows: [],
+      registers,
+      no_console: NO_CONSOLE,
+    };
+  }
+
+  const byState = {};
+  for (const w of workflows) byState[w.state] = (byState[w.state] ?? 0) + 1;
+
+  return {
+    view: 'workflows',
+    store: dir,
+    state: 'measured',
+    counts: {
+      total: workflows.length,
+      by_state: byState,
+      open: workflows.filter((w) => !w.terminal).length,
+      awaiting_human: workflows.filter((w) => w.state === 'human_review_required').length,
+      unresolved: workflows.filter((w) => w.state === 'unresolved').length,
+      failed: workflows.filter((w) => w.state === 'failed').length,
+      journals_with_gaps: workflows.filter((w) => w.gaps?.length).length,
+      journals_with_malformed_lines: workflows.filter((w) => w.malformed?.length).length,
+    },
+    workflows: workflows.slice(-80).reverse(),
+    registers,
+    /* A workflow that is still open is not the same as one nobody
+       finished. `blocked` and `in_progress` are non-terminal and a
+       run that died leaves one behind — which reads as what it is,
+       because the state is replayed from an append-only journal
+       rather than stored. */
+    note: 'A non-terminal workflow is either running or was interrupted. The state is replayed from the journal, so a run that died mid-stage reads as what happened up to the moment it died rather than as a status nobody updated.',
+    no_console: NO_CONSOLE,
+  };
+}
+
+export const NO_CONSOLE = 'This view reads the Orchestrator\'s journal and adds nothing to it. There is no route here that starts a workflow, retries a stage, dispatches an agent or reopens a terminal one, and that is not a check somebody could move — the routes do not exist. Protocol §14: a Control Room action creates a governed event, and the Orchestrator independently decides whether it is permitted.';
 
 /* ============================================================
    3 · WEBSITE HEALTH

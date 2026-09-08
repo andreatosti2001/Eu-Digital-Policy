@@ -32,8 +32,8 @@ import { REPO_ROOT, VALIDATORS, readBaseline, compare } from './baseline.mjs';
 import { boundaryCheck } from './boundary.mjs';
 import { runBrowserQA, asQACheck as browserQACheck } from '../browser/runner.mjs';
 
-/** The twelve agent suites AGENTS.md lists, plus this session's two.
- *  A change under `agent/` runs these as well. */
+/** The agent suites AGENTS.md lists. A change under `agent/` runs
+ *  these as well. SESSION 22 appends the Orchestrator's. */
 export const AGENT_SUITES = [
   'agent/schemas/selftest.mjs',
   'agent/scout/selftest.mjs',
@@ -50,6 +50,7 @@ export const AGENT_SUITES = [
   'agent/browser/selftest.mjs',
   'agent/implement/selftest.mjs',
   'agent/health/selftest.mjs',
+  'agent/orchestrator/selftest.mjs',
 ];
 
 /** Run a command, capturing everything, never throwing. A checker
