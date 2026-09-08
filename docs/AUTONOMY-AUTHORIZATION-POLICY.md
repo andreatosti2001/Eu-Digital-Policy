@@ -24,7 +24,7 @@ and the protocol's §18 list of twelve mandatory conditions had no home at all.
 
 | File | What it owns |
 |---|---|
-| `categories.mjs` | The action categories, the policy object, and the derivation of a category from a proposal |
+| `categories.mjs` | The action categories, the policy object, and the derivation of a category from a proposal. **The one home**: `agent/orchestrator/policy.mjs` re-exports from here rather than keeping its own list |
 | `actors.mjs` | The capability matrix: actor × action × resource × environment × path × risk |
 | `conditions.mjs` | The twelve mandatory conditions, and the mandatory human-review triggers |
 | `rollback.mjs` | "Rollback available" as six elements a machine could execute, not a boolean |
@@ -137,11 +137,11 @@ near this.
 
 ## 5 · The categories
 
-Eighteen, of which **four are eligible for autonomy** — the four protocol §20 names — and
+Nineteen, of which **five are eligible for autonomy** — the five protocol §20 names — and
 **fourteen may never be automated by any policy**. Eligible is not enabled.
 
-**Eligible:** `source_metadata_maintenance` · `retrieval_metadata` · `source_url_correction` ·
-`machine_derived_field`.
+**Eligible (the five protocol §20 names):** `source_metadata_maintenance` · `retrieval_metadata` ·
+`source_url_correction` · `machine_derived_field` · `governed_metadata_maintenance`.
 
 **Never:** `legal_interpretation` · `legal_conclusion` · `critique` ·
 `substantive_analytical_change` · `substantive_editorial_change` · `schema_change` ·
@@ -302,17 +302,13 @@ that the document's own subject is not overstating what a mechanism establishes.
    mitigated and does not claim it is closed.
 2. **No act has ever taken the automatic route**, here or anywhere, because no category is
    enabled. Everything the suite proves about that route is proved against a fixture policy.
-3. **The Orchestrator exists, and it is not in this tree.** SESSION 22 built
-   `agent/orchestrator/` on branch `claude/agent-governance-protocol-tx6mu1` at `74e9a4a`,
-   cut from the same base as this branch and unmerged. So `agent/policy/actors.mjs`'s
-   orchestrator row is a **specification that has never been checked against the module that
-   occupies the role** — and SESSION 23's requirement that "the implementation layer **and
-   Orchestrator** must enforce it mechanically" is half met: the implementation layer calls
-   the engine twice per proposal (§8), and nothing has yet been done about the other half.
-   **That branch also carries its own implementation of §18's conditions, §19's triggers and a
-   capability matrix** (`agent/orchestrator/policy.mjs`, `capabilities.mjs`), which is a second
-   home for what this document describes. Which of the two is the home is an architectural
-   decision, and it has not been taken.
+3. **The Orchestrator is here, and it enforces this policy — but nothing dispatches yet.**
+   SESSION 22's `agent/orchestrator/` was merged in, `autonomyPermits()` calls `evaluate()`,
+   and `permitted` requires both to agree, so SESSION 23's "the implementation layer **and**
+   Orchestrator" is satisfied on both halves. What is still true: **no dispatcher is wired**,
+   so a workflow run reports `not_dispatched` and ends `unresolved`. The enforcement path has
+   been exercised by tests and by the verification gate, and by no real run.
+
 4. **`categoriseProposal()` reads records, not prose.** It cannot tell that a proposal
    described as a metadata correction in fact changes what a claim asserts, beyond what the
    record's own fields say. The four validators cannot read prose either

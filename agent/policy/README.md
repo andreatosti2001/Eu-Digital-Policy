@@ -12,7 +12,9 @@ node --test agent/policy/selftest.mjs              34 tests
 
 - `categories.mjs` — the action categories, the policy object, and the derivation of a
   category from a proposal. `DEFAULT_POLICY.enabled_categories` is **empty** and filling it is
-  a governance change.
+  a governance change. **This is the one home**: `agent/orchestrator/policy.mjs` re-exports
+  the conditions, the low-risk categories and the empty enabled list from here, and
+  `selftest.mjs` test 32 is the drift check.
 - `actors.mjs` — actor × action × resource × environment × path × risk, deny by default. No
   `on_behalf_of`: there is no parameter through which a privilege travels.
 - `conditions.mjs` — the twelve mandatory conditions. Eight are derived from the proposal and
@@ -22,4 +24,6 @@ node --test agent/policy/selftest.mjs              34 tests
   ledger and takes no approval parameter.
 
 `agent/implement/implementer.mjs` calls the engine twice per proposal: once before anything is
-written, once on the measured facts. A policy that is only a document is not a policy.
+written, once on the measured facts. `agent/orchestrator/policy.mjs` calls it too, and its
+`permitted` requires both the workflow conditions and the engine to agree. A policy that is
+only a document is not a policy, and a policy with two implementations is not one policy.

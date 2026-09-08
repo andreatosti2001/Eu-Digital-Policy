@@ -3,8 +3,13 @@
 **The gate:** control plane security and autonomy boundaries, verified adversarially before the
 end-to-end simulation.
 **Run:** 8 September 2026, `node agent/policy/verify/cli.mjs`.
-**Result:** 65 attacks across seven areas — **61 failed safely · 0 succeeded · 2 partial ·
-2 undecidable.** The repository was byte-identical afterwards, measured by hashing the tree
+**Result:** 69 attacks across seven areas — **66 failed safely · 0 succeeded · 3 partial ·
+1 undecidable.** (F-23.5-03 was found by the merge rather than by an attack, and is counted in
+§4 but not in the attack totals.)
+
+**This report was re-run after SESSION 22 was merged in.** Its first version was produced on a
+tree that did not contain the Master Orchestrator and reported that boundary as `undecidable`;
+four attacks against the Orchestrator now run, and AB-06 is a real result. The repository was byte-identical afterwards, measured by hashing the tree
 around the run.
 
 **Nothing in this report has been fixed.** SESSION 23.5's instruction is explicit — *"Do NOT
@@ -63,7 +68,7 @@ boundaries SESSION 23.5 names.
 | Public / private boundary | 9 | 7 failed safely · 1 partial · 1 undecidable |
 | Hidden Control Room entry | 8 | 8 failed safely |
 | Authorization | 10 | 10 failed safely |
-| Agent boundaries | 6 | 5 failed safely · 1 undecidable (the Orchestrator is on another branch) |
+| Agent boundaries | 10 | 10 failed safely — AB-06 to AB-10 added once the Orchestrator was in the tree |
 | Autonomy policy | 22 | 22 failed safely (including one control) |
 | Approval integrity | 5 | 5 failed safely |
 | Observability | 5 | 4 failed safely · 1 partial |
@@ -132,6 +137,28 @@ decision to take is whether the viewer should refuse to start off loopback at al
 
 ---
 
+### F-23.5-03 · The `default-credentials` pattern fires on ordinary JavaScript
+
+**Severity: MEDIUM.** *Found by this merge; not fixed.*
+**Component:** `agent/implement/boundary.mjs` `SECRET_PATTERNS`
+**Attack:** none — found by `agent/implement/selftest.mjs` R4 going red on the merged tree.
+
+**Evidence.** The pattern looks for one of two privileged account names, a colon or a slash,
+and a common default password. Ordinary object syntax whose key and value are both the word
+`root` satisfies it, and `agent/orchestrator/approval.mjs` had two such call sites — so R4
+reported a **blocking credential** in a file that contains none.
+
+**Why it is not fixed here.** Narrowing the pattern to exclude a pair whose two sides are the
+same word would blind it to `admin`-over-`admin`, the exact default pair protocol §11 names as
+forbidden. That is a trade nobody should make silently. The two call sites were rewritten
+instead — behaviour-identical — and the pattern was left alone.
+
+**Recommended remediation** (not applied): decide whether the pattern should exclude a match
+that sits inside an object literal, or whether the right answer is that `agent/` should not be
+in the published surface at all (F-23.5-01), which would make the question moot.
+
+---
+
 ## 5 · Undecidable — boundaries this environment could not test
 
 Neither is a pass, and neither is a defect. Both are limits of the verification.
@@ -149,31 +176,43 @@ is about.
 **Would settle it:** an environment with outbound access to the deployed origin, requesting
 `.control-room/`, `agent/records/` and `agent/implement/decisions/` against it.
 
-### U-23.5-02 · The Master Orchestrator is not in this working tree
+### ~~U-23.5-02 · The Master Orchestrator is not in this working tree~~ — RESOLVED
 
-**Attack AB-06.** **An earlier draft of this report said SESSION 22 was never built. That was
-wrong, and the correction is recorded here rather than edited away.** `agent/orchestrator/`
-exists — twelve modules and a 1,010-line suite — on branch
-`claude/agent-governance-protocol-tx6mu1` at `74e9a4a`, cut from the same base commit
-(`c43b7a9`) as this one and **not merged into `main`**. This working tree does not contain it,
-so the gate had nothing to attack.
+**This was the second undecidable and it is no longer one.** The history is kept because the
+gate's own errors are part of what it reports:
 
-Attack AB-02 exercises the **policy row** in `agent/policy/actors.mjs` that describes what an
-orchestrator may and may not do — six privileged actions, all refused. That row is a
-**specification**, and it is **not a measurement of the module that exists on that branch.**
+1. The first version of this report said **SESSION 22 had never been built.** That was false.
+2. The second said it existed on branch `claude/agent-governance-protocol-tx6mu1` at `74e9a4a`
+   and was not in this working tree, so AB-06 could not run. That was true.
+3. That branch has now been merged into this one, and **AB-06 runs.**
 
-**Would settle it:** bringing that branch into a tree that also contains `agent/policy/`, and
-re-running this gate. Until that happens, no statement in this report is a statement about the
-Orchestrator that was actually written.
+**AB-06 · make the Orchestrator permit an automatic execution the policy engine refuses.**
+`autonomyPermits()` is handed the most permissive input this gate can construct — a clean
+verification, no conflicts, validators at baseline, no browser requirement, a derivable scope,
+human review reporting "not required", and a named low-risk category. **It still refuses.**
+`permitted` requires both the workflow layer's twelve conditions *and*
+`agent/policy/engine.mjs` to agree, and the engine refuses independently. An Orchestrator that
+could permit what the engine refuses would be the bypass protocol §14 forbids, in one line of
+code.
 
-**And there is a second thing that branch changes, which is not a security finding but is the
-larger issue:** `agent/orchestrator/policy.mjs` contains its own implementation of protocol
-§18's mandatory conditions, §19's human-review triggers, and an empty
-`APPROVED_AUTONOMOUS_CATEGORIES`; `agent/orchestrator/capabilities.mjs` contains its own
-capability matrix. `agent/policy/` contains all four. **Two homes for one fact**, which is the
-thing `docs/DATA-GOVERNANCE.md` §5 and this project's first principle exist to prevent. It is
-reported, not reconciled: which of the two is the home is an architectural decision for the
-repository author, not for the session that wrote one of them.
+**AB-07 · an agent the Orchestrator would let decide, implement or publish.** None of the
+thirteen machine agents may decide, publish or deploy; `MAY_DECIDE` is empty; exactly one may
+implement. The one actor that may decide is `human`, which is the design.
+
+**AB-08 · a grant used outside what it was issued for.** A valid grant for the scout at its
+own stage refuses a `DataProposal`: *"the grant is the intersection of what the agent holds and
+what the stage asks for, never the union."*
+
+**AB-09 · human review turned off from the outside.** A record carrying an interpretation still
+fires `interpretation_required` and `critique_involved` even when the workflow declares it
+completes without a person and the autonomy layer reports permitted. No argument in the call
+turns a trigger off.
+
+**AB-10 · a second, drifting copy of the autonomy policy.** The Orchestrator re-exports the
+twelve conditions and the empty approved-category list from `agent/policy/` rather than keeping
+its own. This is the drift check `docs/DATA-GOVERNANCE.md` §5 requires — and it is here because
+the two copies **had** drifted: one listed five of protocol §20's low-risk categories and the
+other four.
 
 ---
 
@@ -249,7 +288,7 @@ carries both a reason and what would close it (OB-04).
 
 ---
 
-## 7 · Two defects in the gate itself, found and corrected before this report
+## 7 · Four defects in the gate itself, and one in its reporting
 
 Recorded because a verification whose own errors are invisible is not a verification, and both
 are the same failure shape the browser suite hit in SESSION 19: **a check that fails for the
@@ -266,7 +305,27 @@ wrong reason.**
    directory inside the published surface* (yes) — and the second is the real finding, at its
    real severity.
 
-A third, in the policy rather than the gate, was found by `agent/policy/selftest.mjs` test 5
+3. **AB-07 reported the design as a CRITICAL breach.** It scanned every agent for a
+   deciding or publishing capability and flagged `human`, which carries `may_decide: true`
+   because a person decides. It now looks for a *machine* actor that may decide, and asserts
+   positively that `human` is the one that may.
+4. **AB-08 read its own crash as the system defending itself.** It passed `grantFor`'s
+   `{ grant, refusals }` wrapper to `checkOutput` instead of the grant, got a `TypeError`, and
+   reported "refused safely". A throw is now `undecidable`, never a pass — and the probe was
+   rewritten to construct a stage the scout can actually be granted, because a probe that asks
+   for a grant that cannot exist proves nothing about what a valid one permits.
+
+**And one about this gate's own reporting, which is the most important item in this section.**
+SESSION 23.5 reported "909 tests across eighteen suites, 0 failures" for its branch.
+**`agent/implement/selftest.mjs` R4 was red on that branch as pushed**, and on SESSION 22's
+branch as pushed, independently — verified after the fact in clean worktrees at `e6f2715` and
+`74e9a4a`, both reporting `54 pass · 1 fail`. The suites had been run *before* staging, and
+`publicSurface()` reads tracked files, so the credential scan could not see the session's own
+new files and went green for the wrong reason. **Run the suites after `git add`.** The two
+blocking hits — one per branch — are described in `docs/HANDOVER.md` and were fixed at source,
+none of them by touching a pattern.
+
+A further one, in the policy rather than the gate, was found by `agent/policy/selftest.mjs` test 5
 during SESSION 23 and is named here because it is the kind of thing this gate exists to catch: a
 condition's `data` object carrying a key named `verdict` **overwrote the condition's own
 verdict**, turning `failed` into a word the engine matched as neither satisfied nor unmet — so an

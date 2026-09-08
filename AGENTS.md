@@ -179,7 +179,7 @@ node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**TEST_TOTAL_PLACEHOLDER tests across the nineteen suites**, all passing as of SESSION 23.5
+**978 tests across the nineteen suites**, all passing as of SESSION 23.5
 (934 after SESSION 22 on its own branch; 909 after SESSION 23.5 on its own; 867 after
 SESSION 21; 812 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before them). The two
 branches were merged here, so neither of those figures is the total on its own.
