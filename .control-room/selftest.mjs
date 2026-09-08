@@ -55,6 +55,7 @@ import { generateKeyPairSync, sign as cryptoSign, createHash } from 'node:crypto
 import { readConfig, configRefusals, describeConfig, assertConfig, isLoopback, CONTROL_ROOM_ROOT, REPO_ROOT } from './config.mjs';
 import { provisionOperator, setRoles, setDisabled, registryRefusals, listOperators, verifyPassword, hashPassword, passwordRefusal, REFUSED_PASSWORDS, ProvisioningRefused } from './identity.mjs';
 import { authorize, permissionsOf, approvalPermissionFor, ROLES, ROLE_PERMISSIONS, PERMISSIONS, visibleActions } from './authz.mjs';
+import { workflowsView } from './views.mjs';
 import { AuditLog, AUDIT_ACTIONS, REQUIRED_FIELDS } from './audit.mjs';
 import { SessionStore, resolveSession, OidcProvider, sanitiseReturnTo, parseCookies, safeEqual, ACCEPTED_JWT_ALGS } from './authn.mjs';
 import { serve, ROUTES, PUBLIC_ROUTES, PROHIBITED_ROUTE_WORDS, routeFor, parseStrictJson, MAX_BODY_BYTES } from './server.mjs';
@@ -629,6 +630,46 @@ test('10b · there is no route that could deploy, delete, apply, publish or exec
   }
 });
 
+test('10c · SESSION 22 · the workflow view is a window on the Orchestrator, not a console over it', () => {
+  /* The requirement is "expose workflow state to the private
+     Control Room", and exposing it is the whole of it. The control
+     that keeps it that way is the ABSENCE of a route, not a check
+     inside one — a check can be moved. */
+  const workflowRoutes = ROUTES.filter((r) => /workflow/.test(r.path));
+  assert.equal(workflowRoutes.length, 1);
+  assert.equal(workflowRoutes[0].method, 'GET');
+  assert.equal(workflowRoutes[0].permission, 'workflows:read');
+
+  /* No route, by any name, could start a run or dispatch an agent. */
+  for (const r of ROUTES) {
+    for (const word of ['start', 'dispatch', 'retry', 'resume', 'reopen', 'advance']) {
+      assert.ok(!r.path.toLowerCase().includes(word), `${r.method} ${r.path} names "${word}"`);
+    }
+  }
+
+  /* And the Control Room does not import the Orchestrator itself —
+     only its read-side modules. A server that could construct one
+     could run one. */
+  const src = readFileSync(join(CONTROL_ROOM_ROOT, 'views.mjs'), 'utf8') + readFileSync(join(CONTROL_ROOM_ROOT, 'server.mjs'), 'utf8');
+  assert.ok(!/orchestrator\/orchestrator\.mjs/.test(src), 'the Control Room imports the Orchestrator class, which would let a request run one');
+  assert.ok(!/orchestrator\/events\.mjs/.test(src), 'the Control Room imports the event intake, which would let a request open a workflow');
+
+  const view = workflowsView({});
+  assert.ok(view.no_console.includes('do not exist'));
+  assert.equal(view.registers.types.length, 10);
+  /* An empty store is "no workflow journal exists here", never 0. */
+  if (view.state !== 'measured') assert.match(view.why, /not the same as no workflow having run/);
+});
+
+test('10d · every role that can see the live system can see the workflow state, and none can change it', () => {
+  for (const role of ROLES) {
+    const held = permissionsOf([role]);
+    if (held.includes('live:read')) assert.ok(held.includes('workflows:read'), `${role} sees runs but not the workflows they belong to`);
+  }
+  /* There is no write permission to hold. */
+  assert.ok(!PERMISSIONS.some((p) => /^workflow.*:(write|run|start|dispatch)$/.test(p)));
+});
+
 /* ============================================================
    11 · every approval is attributable to an authenticated actor
    ============================================================ */
@@ -819,6 +860,13 @@ test('14 · knowing the URL is not access — the shell, the client and every vi
        client-side state
    ============================================================ */
 
+/** The same token with its final character replaced by a DIFFERENT
+ *  one. A mutation that might not mutate is not a forgery. */
+function mutateLastChar(token) {
+  const last = token.slice(-1);
+  return token.slice(0, -1) + (last === 'A' ? 'B' : 'A');
+}
+
 test('15 · a session is a server-side record; nothing a client can write becomes one', async () => {
   const w = world();
   const s = await running(w);
@@ -830,7 +878,17 @@ test('15 · a session is a server-side record; nothing a client can write become
     const forgeries = [
       'cr_session=administrator',
       'cr_session=' + Buffer.from(JSON.stringify({ subject: 'admin@example.org', roles: ['administrator'] })).toString('base64url'),
-      `cr_session=${real.cookie.split('=')[1].slice(0, -1)}A`,      // one character changed
+      /* ONE CHARACTER CHANGED — and it has to actually change.
+         This was `slice(0, -1) + 'A'`, which is a no-op whenever the
+         real token already ends in "A". Session tokens are random, so
+         the suite failed intermittently — measured at 3 in 40 logins
+         — with the message "a forged cookie was accepted", which
+         reads exactly like a session-forgery breach and was not one:
+         the server was correctly accepting its own valid cookie. The
+         replacement character is now chosen to differ from the one it
+         replaces, so the assertion is meaningful on every run instead
+         of on most of them. */
+      `cr_session=${mutateLastChar(real.cookie.split('=')[1])}`,
       'cr_session=' + 'A'.repeat(43),
       'cr_session=; cr_role=administrator',
       'cr_session=x; authenticated=true',

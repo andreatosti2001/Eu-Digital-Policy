@@ -1196,3 +1196,105 @@ body.i18n-busy .readwrap,body.i18n-busy .portal,body.i18n-busy .hero{opacity:.45
   .sop-ticker{justify-content:flex-start;gap:2px 14px}
   .pf-head{text-align:left;margin:0}
 }
+
+/* ============================================================
+   THE THRESHOLD — the transition between the public record and the
+   statement that a private control plane exists.
+
+   Drawn in the site's own ink, on the site's own ground, with the
+   site's own hairline. It is the palette's aesthetic one layer
+   quieter: fine strokes, no fill, no glow, one slow rotation. The
+   letters are set in the body serif at metadata size and the wheel
+   never exceeds a third of the viewport, because the panel beside
+   it is the part that carries the meaning.
+
+   Every duration is a token. The whole animation is the presence of
+   .thr-run, so removing the element mid-way — which Escape and a
+   click both do — cannot leave anything half-applied, and
+   .thr-still is the finished state with no motion at all for a
+   reader who asked for none.
+   ============================================================ */
+
+.thr-scrim{
+  position:fixed;inset:0;z-index:var(--z-dialog);
+  display:flex;align-items:center;justify-content:center;gap:var(--s-7);
+  flex-wrap:wrap;padding:var(--s-6) var(--s-5);
+  background:color-mix(in srgb, var(--ink-0) 92%, transparent);
+  backdrop-filter:blur(6px);
+}
+
+.thr-figure{flex:0 0 auto;width:min(38vh,300px)}
+.thr-wheel{display:block;width:100%;height:auto;overflow:visible}
+
+.thr-ring,.thr-spoke{fill:none;stroke:var(--line);stroke-width:.75;vector-effect:non-scaling-stroke}
+.thr-ring.thr-b1{stroke:var(--mech)}
+.thr-gate{fill:none;stroke:var(--live);stroke-width:1;vector-effect:non-scaling-stroke}
+.thr-letter{
+  font-family:var(--body);font-size:11px;
+  fill:var(--paper-faint);
+  /* Hebrew is right-to-left and these are single glyphs on a radial
+     grid, so the run direction is stated rather than inherited from
+     a page that is left-to-right. */
+  direction:rtl;
+}
+.thr-letter.thr-b1{fill:var(--mech);font-size:13px}
+.thr-letter.thr-b2{fill:var(--paper-dim)}
+
+/* The still state: everything visible, nothing moving. This is also
+   what an interrupted transition leaves behind, and what a browser
+   with no animation support shows from the first frame. */
+.thr-scrim .thr-wheel,.thr-scrim .thr-panel{opacity:1}
+
+.thr-run .thr-wheel{animation:thr-in var(--dur-3) var(--ease) both}
+.thr-run .thr-wheel>g{animation:thr-turn 24s linear infinite}
+.thr-run .thr-ring{stroke-dasharray:1000;stroke-dashoffset:1000;animation:thr-draw 1100ms var(--ease) forwards}
+.thr-run .thr-ring.thr-b2{animation-delay:160ms}
+.thr-run .thr-ring.thr-b1{animation-delay:320ms}
+.thr-run .thr-letter,.thr-run .thr-spoke{opacity:0;animation:thr-fade 700ms var(--ease) 620ms forwards}
+.thr-run .thr-gate{opacity:0;animation:thr-fade 900ms var(--ease) 1000ms forwards}
+.thr-run .thr-panel{animation:thr-rise 520ms var(--ease) 900ms both}
+
+@keyframes thr-draw{to{stroke-dashoffset:0}}
+@keyframes thr-fade{to{opacity:1}}
+@keyframes thr-in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+@keyframes thr-turn{to{transform:rotate(360deg)}}
+@keyframes thr-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.thr-panel{flex:1 1 340px;max-width:46ch}
+.thr-kicker{
+  font-family:var(--mono);font-size:var(--t-micro);line-height:var(--lh-micro);
+  letter-spacing:var(--tr-micro);text-transform:uppercase;
+  color:var(--live);margin:0 0 var(--s-3)
+}
+.thr-title{
+  font-family:var(--display);font-size:var(--t-h2);line-height:var(--lh-h2);
+  font-weight:400;color:var(--paper);margin:0 0 var(--s-4)
+}
+.thr-body{
+  font-family:var(--body);font-size:var(--t-body-sm);line-height:var(--lh-body-sm);
+  color:var(--paper-dim);margin:0 0 var(--s-4)
+}
+.thr-body.thr-quiet{color:var(--paper-faint);font-size:var(--t-support);line-height:var(--lh-support)}
+.thr-actions{display:flex;gap:var(--s-4);align-items:center;flex-wrap:wrap;margin-top:var(--s-5)}
+.thr-go,.thr-back{
+  font-family:var(--mono);font-size:var(--t-meta);line-height:var(--lh-meta);
+  letter-spacing:var(--tr-meta);text-transform:uppercase;
+  padding:var(--s-2) var(--s-4);min-height:var(--hit);
+  border:var(--border-std);background:none;cursor:pointer
+}
+.thr-go{color:var(--live);border-color:var(--live);text-decoration:none}
+.thr-back{color:var(--paper-faint)}
+.thr-go:hover{background:var(--live-dim)}
+.thr-back:hover{color:var(--paper-dim)}
+
+@media (prefers-reduced-motion:reduce){
+  .thr-run .thr-wheel,.thr-run .thr-wheel>g,.thr-run .thr-ring,
+  .thr-run .thr-letter,.thr-run .thr-spoke,.thr-run .thr-gate,.thr-run .thr-panel{
+    animation:none;opacity:1;stroke-dashoffset:0;transform:none
+  }
+}
+
+@media (max-width:640px){
+  .thr-scrim{flex-direction:column;gap:var(--s-5);align-content:center}
+  .thr-figure{width:min(30vh,210px)}
+}

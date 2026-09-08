@@ -125,7 +125,23 @@ export const isWebsiteAsset = (f) => WEBSITE_SURFACE.some((m) => m(f));
  * allow-listing the files would hide a real key added to one of them
  * next week. Classifying and counting does neither.
  */
-export const TEST_FIXTURE_PATHS = [/(^|\/)selftest\.mjs$/, /(^|\/)fixtures\.mjs$/, /(^|\/)demo\//];
+export const TEST_FIXTURE_PATHS = [
+  /(^|\/)selftest\.mjs$/,
+  /(^|\/)fixtures\.mjs$/,
+  /(^|\/)demo\//,
+  /* SESSION 23.5's verification gate splits its fixtures across two
+     files: `selftest.mjs`, which this list already covered, and
+     `harness.mjs`, which builds the worlds the attacks run against
+     and holds the local provider's test passphrase. It exists only
+     to be imported by that suite and by `verify/cli.mjs`, so calling
+     it a test fixture is a true classification rather than an
+     exemption — and classification is not suppression: the hit is
+     still found, still reported and still counted, at warning
+     severity beside the other ten. This is a change to a check, and
+     `docs/AUTONOMY-POLICY.md` puts that at Class C: it is recorded
+     in docs/HANDOVER.md so a reader can disagree with it. */
+  /(^|\/)verify\/harness\.mjs$/,
+];
 
 export function classifyHit(path) {
   if (isWebsiteAsset(path)) return { class: 'website_asset', severity: 'error', why: 'in a file a reader\'s browser loads. A credential here reaches a reader.' };

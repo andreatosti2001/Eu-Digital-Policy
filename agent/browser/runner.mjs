@@ -36,7 +36,7 @@ import {
   PAGES, checkPageLoads, checkNavigation, checkInternalLinks, checkSearch, checkGlossary,
   checkComparison, checkEvidence, checkApplicability, checkInstrumentView,
   checkLanguageSwitching, checkViewports, checkKeyboard, checkDialogs,
-  checkNoThirdParty, checkAccessibility,
+  checkNoThirdParty, checkAccessibility, checkThreshold,
 } from './checks.mjs';
 
 export const BROWSER_QA_COMMAND = 'node agent/browser/cli.mjs';
@@ -134,6 +134,7 @@ export async function runBrowserQA({ only = null, pages = PAGES, quick = false, 
       try { results.push(...await checkLanguageSwitching(langPage, site.origin)); }
       finally { await langPage.close(); }
     }
+    if (wants('threshold')) results.push(...await checkThreshold(page, site.origin));
     if (wants('keyboard')) results.push(...await checkKeyboard(page, site.origin));
     if (wants('dialogs')) results.push(...await checkDialogs(page, site.origin));
     if (wants('responsive')) results.push(...await checkViewports(page, site.origin, { pages: quick ? pages.slice(0, 2) : pages.slice(0, 5) }));

@@ -53,7 +53,7 @@ import { SessionStore, OidcProvider, resolveSession, authenticateLocal, parseCoo
 import { authorize, visibleActions } from './authz.mjs';
 import { AuditLog } from './audit.mjs';
 import { decide, proposalDetail, DecisionRefused } from './decide.mjs';
-import { liveSystem, reviewQueueView, websiteHealth, operatorsView } from './views.mjs';
+import { liveSystem, workflowsView, reviewQueueView, websiteHealth, operatorsView } from './views.mjs';
 import { Tracer } from '../agent/observability/tracer.mjs';
 import { JsonlSink } from '../agent/observability/sink.mjs';
 
@@ -98,6 +98,13 @@ export const ROUTES = [
 
   /* -------- authenticated and authorized -------- */
   { method: 'GET', path: '/api/live', permission: 'live:read', what: 'view 1 — agent runs, events, discoveries, verification decisions, handoffs, downstream effects, failures.' },
+  /* SESSION 22. A WINDOW ON THE ORCHESTRATOR, NOT A CONSOLE OVER IT:
+     there is no route that starts a workflow, retries a stage,
+     dispatches an agent or reopens a terminal one, and the absence
+     is the control. §14 — a Control Room action creates a governed
+     event, and the Orchestrator decides independently whether it is
+     permitted. */
+  { method: 'GET', path: '/api/workflows', permission: 'workflows:read', what: 'the Orchestrator\'s workflow state — types, stages, refusals, end states, and the capability and policy registers. Read-only: nothing here starts, retries or resumes anything.' },
   { method: 'GET', path: '/api/queue', permission: 'queue:read', what: 'view 2 — proposals awaiting a human decision, each with its full trace.' },
   { method: 'GET', path: '/api/proposal', permission: 'queue:read', what: 'one proposal, by ?id=. The same trace, alone.' },
   { method: 'GET', path: '/api/health', permission: 'health:read', what: 'view 3 — the last recorded health run, with every reading marked public-safe or private.' },
@@ -390,8 +397,9 @@ export function serve({ cfg, quiet = false, tracer = null } = {}) {
         });
       }
 
-      /* ---- the three views ---- */
+      /* ---- the four views ---- */
       if (path === '/api/live') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'live_system' }); return send(res, 200, liveSystem(cfg)); }
+      if (path === '/api/workflows') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'workflows' }); return send(res, 200, workflowsView(cfg)); }
       if (path === '/api/queue') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'review_queue' }); return send(res, 200, reviewQueueView(cfg)); }
       if (path === '/api/health') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'website_health' }); return send(res, 200, websiteHealth(cfg, { root: cfg.root })); }
 

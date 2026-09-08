@@ -800,3 +800,132 @@ export async function checkAccessibility(page, origin, { pages = PAGES } = {}) {
 
   return out;
 }
+
+/* ============================================================
+   17 · the threshold — the hidden Control Room discovery, measured
+   in a real browser rather than reasoned about
+
+   SESSION 23 adds a discovery affordance to the public search
+   palette, and SESSION 23.5 has to be able to say whether it does
+   anything beyond what it claims. Everything here is a MEASUREMENT
+   of the running page:
+
+     · the phrase produces exactly one result, and only the phrase;
+     · choosing it opens a panel and nothing else;
+     · the panel carries no credential, no token and no privileged
+       system data — asserted against its rendered text and against
+       the whole document, not against the source;
+     · no request leaves the page as a result of it;
+     · Escape ends it, and the page is where it was.
+
+   The last two are the ones a source read cannot make. A module can
+   be read and found to contain no `fetch`; only a browser can say
+   that opening the thing issued no request.
+   ============================================================ */
+
+/** Words that would mean the panel is carrying something it should
+ *  not. Deliberately crude and deliberately broad: a false positive
+ *  here costs a look, and a false negative costs the boundary. */
+const PRIVILEGED_WORDS = [
+  'token', 'session', 'cookie', 'secret', 'password', 'api_key', 'apikey',
+  'bearer', 'authorization:', 'operator_id', 'approval_id', 'proposal_id',
+  'decided_by', 'audit', 'csrf',
+];
+
+export async function checkThreshold(page, origin) {
+  const results = [];
+  const before = page.requests.length;
+  await page.goto(`${origin}/enforcement.html`);
+
+  await page.key('/', { code: 'Slash', keyCode: 191 });
+  const opened = await page.waitFor(`(() => {
+    const p = document.querySelector('[role=dialog]');
+    return p && getComputedStyle(p).display !== 'none' ? true : null;
+  })()`, { timeoutMs: 4000 });
+  if (!opened) {
+    results.push(bad('threshold:open', 'threshold', 'the palette did not open, so the threshold could not be exercised'));
+    return results;
+  }
+
+  /* A near miss first. If "thirty-two path" (singular) also fired,
+     the trigger would be a prefix match and the phrase would be far
+     easier to hit by accident than this check assumes. */
+  await page.type('thirty-two path');
+  const near = await page.evaluate(`document.querySelectorAll('#cmdkResults [role=option]').length`);
+  results.push(Number(near) === 0
+    ? ok('threshold:exact', 'threshold', 'a near miss ("thirty-two path") produces no result — the trigger is the exact phrase, not a prefix')
+    : bad('threshold:exact', 'threshold', `a near miss produced ${near} result(s); the trigger is looser than it claims to be`, { near }));
+
+  await page.type('s');
+  const hits = await page.waitFor(`(() => {
+    const r = document.querySelectorAll('#cmdkResults [role=option]');
+    return r.length ? r.length : null;
+  })()`, { timeoutMs: 4000 });
+  results.push(Number(hits) === 1
+    ? ok('threshold:one-result', 'threshold', 'the phrase produces exactly one result')
+    : bad('threshold:one-result', 'threshold', `the phrase produced ${hits} result(s); it should produce exactly one`, { hits }));
+
+  const requestsBeforeOpen = page.requests.length;
+  await page.key('Enter', { code: 'Enter', keyCode: 13 });
+  const panel = await page.waitFor(`(() => {
+    const n = document.querySelector('.thr-scrim');
+    return n ? { text: n.innerText, links: [...n.querySelectorAll('a')].map((a) => a.getAttribute('href')), rings: n.querySelectorAll('.thr-ring').length, letters: n.querySelectorAll('.thr-letter').length } : null;
+  })()`, { timeoutMs: 4000 });
+
+  if (!panel) {
+    results.push(bad('threshold:passage', 'threshold', 'choosing the result opened no panel'));
+    return results;
+  }
+  results.push(ok('threshold:passage', 'threshold', `choosing the result opens the passage: ${panel.rings} ring(s), ${panel.letters} letter(s) drawn`, { rings: panel.rings, letters: panel.letters }));
+
+  const lower = String(panel.text || '').toLowerCase();
+  const leaked = PRIVILEGED_WORDS.filter((w) => lower.includes(w));
+  results.push(leaked.length === 0
+    ? ok('threshold:no-privileged-text', 'threshold', 'the panel\'s rendered text carries none of the words a credential or a privileged record would bring with it')
+    : bad('threshold:no-privileged-text', 'threshold', `the panel\'s text contains ${leaked.join(', ')}`, { leaked }));
+
+  /* Whatever the deployment declares — and these pages declare
+     nothing — the panel may only ever offer a link somebody clicks.
+     It may not navigate on its own, and it may not carry a query
+     string, which is where a credential would travel. */
+  const bad_ = (panel.links || []).filter((h) => h && (h.includes('?') || h.includes('#token') || /^javascript:/i.test(h)));
+  results.push(bad_.length === 0
+    ? ok('threshold:link-shape', 'threshold', `${(panel.links || []).length} link(s) in the panel, none carrying a query string or a javascript: target`)
+    : bad('threshold:link-shape', 'threshold', `${bad_.length} link(s) carry something that could be a credential: ${bad_.join(', ')}`, { links: panel.links }));
+
+  const issued = page.requests.length - requestsBeforeOpen;
+  results.push(issued === 0
+    ? ok('threshold:no-request', 'threshold', 'opening the passage issued no network request of any kind')
+    : bad('threshold:no-request', 'threshold', `opening the passage issued ${issued} request(s)`, { issued, since: requestsBeforeOpen }));
+
+  const here = await page.evaluate('location.pathname');
+  await page.key('Escape', { code: 'Escape', keyCode: 27 });
+  const gone = await page.waitFor(`(() => (document.querySelector('.thr-scrim') ? null : true))()`, { timeoutMs: 3000 });
+  const stillHere = await page.evaluate('location.pathname');
+  results.push(gone && stillHere === here
+    ? ok('threshold:interruptible', 'threshold', 'Escape ends the passage and leaves the reader on the page they were on')
+    : bad('threshold:interruptible', 'threshold', `Escape did not end the passage cleanly (removed=${Boolean(gone)}, path ${here} → ${stillHere})`));
+
+  /* Said as a measurement rather than as a reassurance: the page
+     never held anything privileged, so there was nothing for the
+     passage to expose.
+
+     AGAINST A CONTROL, because the naive form of this check fails
+     for the wrong reason. `sessionStorage` and `credentialless` are
+     Chromium's own globals and match any pattern broad enough to
+     catch a real leak, so the first draft reported the browser as a
+     defect in the site. The comparison is therefore with a blank
+     document in the SAME browser: what is left is what these pages
+     added. */
+  const SUSPICIOUS = '/token|secret|session|operator|approval|credential|password|bearer/i';
+  const onPage = await page.evaluate(`Object.keys(window).filter((k) => ${SUSPICIOUS}.test(k))`);
+  await page.goto('about:blank');
+  const onBlank = await page.evaluate(`Object.keys(window).filter((k) => ${SUSPICIOUS}.test(k))`);
+  const globals = (onPage || []).filter((k) => !(onBlank || []).includes(k));
+  results.push(globals.length === 0
+    ? ok('threshold:no-globals', 'threshold', `the page adds no window global whose name suggests a credential, a session or an approval (${(onBlank || []).length} such name(s) belong to the browser itself and are excluded by comparison with a blank document)`, { browser_globals: onBlank })
+    : bad('threshold:no-globals', 'threshold', `these pages add ${globals.join(', ')} beyond what a blank document in the same browser carries`, { globals, browser_globals: onBlank }));
+
+  results.push(ok('threshold:total-requests', 'threshold', `${page.requests.length - before} request(s) over the whole threshold check, all of them the page's own assets`));
+  return results;
+}

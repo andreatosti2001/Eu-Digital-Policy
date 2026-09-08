@@ -32,9 +32,11 @@ the evidence it describes.
 | `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` · `docs/DATA-DEPTH.md` · `docs/GAP-PROPOSALS.md` · `docs/KNOWLEDGE-ARCHITECTURE.md` · `docs/EDITORIAL-AGENT.md` · `docs/UX-AUDIT.md` · `docs/IMPLEMENTATION-QA.md` · `docs/HEALTH-MONITOR.md` | The eleven agents that exist, what each refuses, and what none of them may do |
 | `docs/BROWSER-QA.md` · `docs/HEALTH-MONITOR.md` | The browser regression suite and the three health domains — what each measures, and what neither can see |
 | `docs/CONTROL-ROOM.md` | The private control plane: the two security domains, authentication, authorization, the seven approval gates, the audit trail — and §11, what none of it proves |
+| `docs/ORCHESTRATOR.md` | The Master Orchestrator: the ten workflow types, the five end states, the capability register, the eight routing checks, the six conflict shapes — and §13, what none of it proves |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
+| `docs/SECURITY-VERIFICATION-2026-09-08.md` | SESSION 23.5's adversarial gate: 65 attacks, what held, the two findings, and the two boundaries this environment cannot test |
 | `README.md` | The author's own account, including eight stated limitations |
 
 **The operating policies** (SESSION 01) sit under the boundaries document and refine it.
@@ -47,6 +49,7 @@ Read the one you need; do not re-derive its contents here.
 | `docs/DATA-GOVERNANCE.md` | One home per fact, derivation over storage, the three states, the known second homes |
 | `docs/SOURCE-POLICY.md` | What may be cited, what a citation can support, self-citation, the asterisk |
 | `docs/VERIFICATION-POLICY.md` | What each validator does and does **not** prove; reproducibility |
+| `docs/AUTONOMY-AUTHORIZATION-POLICY.md` | SESSION 23: the **executable** policy — the twelve mandatory conditions, the eighteen action categories, the 84-row capability matrix, the six rollback elements, and the hidden Control Room entry |
 
 **A/B/C/D refine the green/amber/red tiers in `docs/AI-SAFE-BOUNDARIES.md`; they do not
 replace them.** A and B split green, C is amber, D is red. Where the two could be read
@@ -57,6 +60,25 @@ intended agent role in **`docs/SKILL-MAP.md`**. Invoke `project-context` at the 
 session, then load the skills the task actually needs; each one names the sibling that owns
 what it does not.
 
+**The Orchestrator does not replace a specialist.** `agent/orchestrator/` receives events,
+routes them through the ten workflow types, enforces the handoffs and the autonomy boundary,
+and stops at a person — every one of the ten types ends at a human stage and the module
+refuses to load one that does not. It performs no legal, editorial or evidential reasoning:
+every gate it runs is mechanical, and it refuses a record rather than repairing one. **No
+dispatcher is wired**, so a run today reports `not_dispatched` and ends `unresolved` — the
+first end-to-end execution is the simulation protocol §25 puts at SESSION 24.
+`docs/ORCHESTRATOR.md`.
+
+**The autonomy policy has ONE home, and it is `agent/policy/`.** SESSIONS 22 and 23 were
+written on sibling branches from the same base and each implemented protocol §18's mandatory
+conditions and §19's human-review triggers. That was a second home for one fact, which this
+project's first principle forbids. The merge resolved it in the direction protocol §14 states:
+the Orchestrator's responsibilities are workflow state, routing, handoffs, conflict detection
+and **policy enforcement** — not policy definition. So `agent/orchestrator/policy.mjs` now
+delegates to `agent/policy/engine.mjs` and keeps only what is genuinely the Orchestrator's.
+Do not re-implement a condition or a trigger there.
+
+**The verification gate is not a test suite.** 
 **The Control Room is not an agent.** `.control-room/` is the private administrative interface
 a PERSON uses — observe, review, decide. It is behind a dot prefix because that is the one
 publication boundary this repository has, and behind server-side authentication and
@@ -149,17 +171,26 @@ node --test agent/ux/selftest.mjs              # Agent 8, against the real pages
 node --test agent/browser/selftest.mjs         # the browser suite's own suite
 node --test agent/implement/selftest.mjs       # Agent 9, incl. SESSION 18's eight required proofs
 node --test agent/health/selftest.mjs          # Agent 10, incl. planted security-boundary failures
+node --test agent/orchestrator/selftest.mjs    # the Master Orchestrator, incl. SESSION 22's six regressions
 node --test agent/observability/selftest.mjs
+node --test agent/policy/selftest.mjs           # the autonomy policy, incl. SESSION 23's twenty required proofs
+node --test agent/policy/verify/selftest.mjs   # SESSION 23.5's gate, run twice, asserting it is reproducible
 node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**867 tests across the sixteen suites**, all passing as of SESSION 21 (812 after SESSION 20;
-756 after SESSIONS 18 and 19; 683 before them). SESSION 21 added 55 and **changed two existing
-assertions** in `agent/health/selftest.mjs` — both because the world changed rather than
-because they were inconvenient: a Control Room now exists, so the metric that said there was
-none, and the one that said there was no login, were asserting something false.
-`docs/HANDOVER.md` names both.
+**978 tests across the nineteen suites**, all passing as of SESSION 23.5
+(934 after SESSION 22 on its own branch; 909 after SESSION 23.5 on its own; 867 after
+SESSION 21; 812 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before them). The two
+branches were merged here, so neither of those figures is the total on its own.
+
+**`agent/implement/selftest.mjs` R6 has now caught the suite list growing four times** —
+SESSION 20, SESSION 22, SESSION 23, and again at this merge, where the two branches had each
+updated the same assertion to a different number. That is the assertion doing its job. It
+asserts eighteen suites. SESSION 23 also changed `agent/detector/impact.mjs`'s
+`MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`;
+SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
+changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
 
 **There is now CI.** `.github/workflows/qa.yml` runs all four validators against the recorded
 baseline, every agent suite, the contract check, the public/private boundary check and the
@@ -284,9 +315,22 @@ patches, not checks. **Do not re-run** the latter two.
   opposite, and every privileged request there is authenticated and authorized regardless.
 
   What is merely UNTRACKED is weaker still: `agent/records/`, `agent/observability/runs/`,
-  `agent/health/history/` and `.control-room/state/` have never been in a commit, and that is
-  an **ignore rule, not a boundary** — one `git add -f` undoes it and nothing here would
+  `agent/health/history/`, `agent/orchestrator/state/` and `.control-room/state/` have never
+  been in a commit, and that is an **ignore rule, not a boundary** — one `git add -f` undoes it and nothing here would
   object.
+- **The public site now has one affordance that is not about EU law.** Typing
+  `thirty-two paths` into the search palette offers a passage to a private control plane:
+  `js/threshold.js`, styled at the end of `style.css`, drawn as an original Sefer
+  Yetzirah-style wheel. It authenticates nothing, authorizes nothing and holds no credential,
+  no endpoint and no privileged state — `agent/policy/selftest.mjs` tests 18–20 assert that
+  string by string, and `agent/browser/checks.mjs checkThreshold` measures nine properties of
+  it in a real browser, including that opening it issues **no network request at all**. The
+  phrase is **not a credential**: it is in a file served to every reader, protocol §10 says
+  obscurity is not a control, and anyone who finds it meets the same login. It reads its
+  target from `<meta name="eu-control-room">` and **never invents one**; no page here declares
+  it, so on the published site the passage ends at a statement. Do not add the meta tag, or a
+  server route that reads the phrase, without deciding to.
+
 - **Your base may be stale.** Run `git fetch --all && git branch -a` before concluding
   anything about what this repository contains. An earlier session reported four existing
   documents as missing by running `ls docs` on an unfetched branch (F-01).

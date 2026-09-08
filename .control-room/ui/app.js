@@ -254,6 +254,62 @@ function renderHealth(d) {
   return out;
 }
 
+function renderWorkflows(d) {
+  const out = [el('h2', { text: 'Workflows' })];
+  out.push(el('p', { class: 'note', text: d.no_console }));
+
+  if (d.state !== 'measured') {
+    out.push(el('p', { class: 'empty', text: d.why }));
+    if (d.needs) out.push(el('p', { class: 'note', text: d.needs }));
+  } else {
+    out.push(el('div', { class: 'cards' },
+      stat('workflows', d.counts.total),
+      stat('still open', d.counts.open),
+      stat('awaiting a person', d.counts.awaiting_human),
+      stat('unresolved', d.counts.unresolved),
+      stat('failed', d.counts.failed),
+      stat('journals with gaps', d.counts.journals_with_gaps)));
+    out.push(el('p', { class: 'note', text: d.note }));
+
+    out.push(...d.workflows.map((w) => el('div', { class: 'item' },
+      el('h3', { text: `${w.declared_type ?? 'unclassified'} — ${w.workflow_id}` }),
+      el('div', { class: 'meta' },
+        el('span', { class: `pill ${w.state === 'failed' ? 'error' : w.terminal ? 'ok' : 'warn'}`, text: w.state }),
+        el('span', { text: w.opened_at ?? '' }),
+        el('span', { text: `${w.entries} journal entr${w.entries === 1 ? 'y' : 'ies'}` })),
+      w.transitions?.length ? dump(`${w.transitions.length} transition(s)`, w.transitions) : null,
+      w.stages?.length ? dump(`${w.stages.length} stage outcome(s)`, w.stages) : null,
+      w.malformed?.length ? el('p', { class: 'bound', text: `${w.malformed.length} malformed journal line(s), reported and not repaired.` }) : null,
+      w.gaps?.length ? el('p', { class: 'bound', text: `${w.gaps.length} sequence gap(s): a line was removed, reordered, or written by a second process.` }) : null)));
+  }
+
+  /* The registers are shown whether or not anything has run: they
+     are definitions, not measurements, and they are what makes a
+     workflow state readable in context. */
+  out.push(el('h3', { text: 'The ten workflow types' }));
+  out.push(el('div', { class: 'scroll' }, el('table', {},
+    el('thead', {}, el('tr', {}, el('th', { text: 'type' }), el('th', { text: 'stages' }), el('th', { text: 'completes without a person' }), el('th', { text: 'never' }))),
+    el('tbody', {}, ...d.registers.types.map((t) => el('tr', {},
+      el('td', {}, el('code', { text: t.type })),
+      el('td', { text: t.stages.map((x) => `${x.stage}(${x.kind})`).join(' → ') }),
+      el('td', { text: t.completes_without_human }),
+      el('td', { text: t.never })))))));
+
+  out.push(el('h3', { text: 'Who may produce what' }));
+  out.push(el('div', { class: 'scroll' }, el('table', {},
+    el('thead', {}, el('tr', {}, el('th', { text: 'agent' }), el('th', { text: 'produces' }), el('th', { text: 'ceiling' }), el('th', { text: 'may decide' }), el('th', { text: 'may implement' }))),
+    el('tbody', {}, ...d.registers.capabilities.map((c) => el('tr', {},
+      el('td', {}, el('code', { text: c.agent })),
+      el('td', { text: c.produces.join(', ') || '—' }),
+      el('td', { text: c.autonomy_ceiling }),
+      el('td', {}, el('span', { class: `pill ${c.may_decide ? 'warn' : 'ok'}`, text: String(c.may_decide) })),
+      el('td', {}, el('span', { class: `pill ${c.may_implement ? 'warn' : 'ok'}`, text: String(c.may_implement) }))))))));
+
+  out.push(el('p', { class: 'bound', text: d.registers.policy.note }));
+  out.push(dump('The ten human-review triggers and the twelve mandatory conditions', d.registers.policy));
+  return out;
+}
+
 function renderAudit(d) {
   const out = [el('h2', { text: 'Audit trail' })];
   out.push(el('div', { class: 'cards' },
@@ -297,8 +353,8 @@ function renderOperators(d) {
 
 /* ---------------------------------------------------------- shell */
 
-const RENDER = { live: renderLive, queue: renderQueue, health: renderHealth, audit: renderAudit, operators: renderOperators };
-const ENDPOINT = { live: '/api/live', queue: '/api/queue', health: '/api/health', audit: '/api/audit', operators: '/api/operators' };
+const RENDER = { live: renderLive, workflows: renderWorkflows, queue: renderQueue, health: renderHealth, audit: renderAudit, operators: renderOperators };
+const ENDPOINT = { live: '/api/live', workflows: '/api/workflows', queue: '/api/queue', health: '/api/health', audit: '/api/audit', operators: '/api/operators' };
 
 async function load(view) {
   state.view = view;
@@ -334,7 +390,7 @@ try {
      refuses it regardless; this only stops offering a door that
      does not open. */
   const may = session.interface;
-  const allowed = { live: may.live, queue: may.queue, health: may.health, audit: may.audit, operators: may.operators };
+  const allowed = { live: may.live, workflows: may.workflows, queue: may.queue, health: may.health, audit: may.audit, operators: may.operators };
   for (const tab of document.querySelectorAll('.tab')) if (!allowed[tab.dataset.view]) tab.remove();
   const first = document.querySelector('.tab');
   await load(first ? first.dataset.view : 'live');

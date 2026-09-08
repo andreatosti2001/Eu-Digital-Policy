@@ -29,6 +29,7 @@
 
 import { createDialog } from './dialog.js';
 import { initSearch } from './search.js';
+import { isThreshold, thresholdProvider } from './threshold.js';
 
 const KIND_MARK = {
   concept: '§', instrument: '■', provision: '¶', authority: '◆',
@@ -119,6 +120,13 @@ function announce(msg) {
 function collect(q) {
   const groups = [];
   const ql = q.trim().toLowerCase();
+
+  /* The threshold answers before the index does, and alone. It is a
+     UX event and nothing else — js/threshold.js holds no credential,
+     no endpoint and no privileged state — but a reader who typed the
+     phrase meant it, and mixing it into ordinary results would read
+     as a coincidence rather than as an answer. */
+  if (isThreshold(q)) return thresholdProvider(q);
 
   if (ql && entities) {
     try {
