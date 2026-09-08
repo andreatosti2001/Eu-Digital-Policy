@@ -126,6 +126,7 @@ export const MODULE_SURFACE = {
   'shell.js': { surface: null, why: 'The site chrome, rendered on every page from one nav model.' },
   'palette.js': { surface: null, why: 'The command palette. Chrome — site-wide discoverability, which surfaces.mjs carries as a caveat rather than as a page.' },
   'search.js': { surface: null, why: 'The palette\'s entity index. Reached only through the chrome.' },
+  'threshold.js': { surface: null, why: 'SESSION 23\'s discovery affordance: one phrase in the palette, a drawn transition, and a link to a login page that is not part of this deployment. It renders no record, reads no dataset, and is reached only through the chrome. A regulatory change cannot reach it, which is the point of classifying it rather than leaving it unnamed.' },
 };
 
 /**

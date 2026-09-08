@@ -120,6 +120,7 @@ jobs:
             agent/observability/selftest.mjs \
             agent/implement/selftest.mjs \
             agent/health/selftest.mjs \
+            agent/policy/selftest.mjs \
             .control-room/selftest.mjs
           do
             echo "::group::$s"

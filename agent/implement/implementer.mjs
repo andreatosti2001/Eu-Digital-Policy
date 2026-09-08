@@ -49,6 +49,8 @@ import { preflight, GATES } from './preflight.mjs';
 import { readAgentRecords, readLedger, surveyProposals } from './ledger.mjs';
 import { changedPaths, enforceScope, touchesLegalRecord, requiresBrowserQA } from './scope.mjs';
 import { openContext, applyProposal, rollback, diffSummary, ApplyRefused } from './apply.mjs';
+import { evaluate as evaluatePolicy } from '../policy/engine.mjs';
+import { DEFAULT_POLICY } from '../policy/categories.mjs';
 import {
   runValidators, runAgentSuites, runContractCheck, runBrowserCheck, runBoundaryCheck,
   verdictFor, blockingFindings,
@@ -224,6 +226,60 @@ export class Implementer {
         return { proposal_id: item.proposal_id, contract: item.contract, agent: item.agent, outcome: 'refused', preflight: pre, why: pre.summary };
       }
 
+      /* ------------------------------------- the autonomy policy
+         SESSION 23 requires the policy to be enforced mechanically
+         by the implementation layer rather than described in a
+         document. This is the first of the two places it runs. It
+         is asked the question it can answer BEFORE anything is
+         written — what route does this act take — and it answers it
+         from the proposal, the actor and the policy in force, with
+         the measured facts still `unknown`, which is what they are.
+
+         A `blocked` route stops here: those are the conditions
+         protocol §8 says an approval does not override, and this
+         proposal has an approval. A `human_review` route continues,
+         because that is what the grant in the ledger IS. An
+         `automatic` route is unreachable while
+         DEFAULT_POLICY.enabled_categories is empty, and this session
+         does not fill it. */
+      const policyBefore = evaluatePolicy({
+        actor: { kind: 'implementation_qa', id: IMPLEMENT_AGENT },
+        action: 'implement.apply',
+        environment: 'local',
+        resource: { kind: 'canonical_data', id: item.proposal_id },
+        proposal: pre.proposal,
+        policy: DEFAULT_POLICY,
+        facts: {},
+      });
+      span.observe({
+        summary: `POLICY — route "${policyBefore.route}" under ${policyBefore.policy_id}; category "${policyBefore.category.category}"`,
+        subject: 'autonomy policy',
+        data: {
+          route: policyBefore.route,
+          category: policyBefore.category.category,
+          effective_class: policyBefore.category.effective_class?.effective ?? null,
+          failed: policyBefore.failed,
+          unknown: policyBefore.unknown,
+          human_review_triggers: policyBefore.human_review_triggers.map((t) => t.trigger),
+          why: policyBefore.why,
+        },
+        risk: policyBefore.route === 'blocked' ? 'low' : 'medium',
+      });
+      if (policyBefore.route === 'blocked') {
+        span.decide({
+          decision: `REFUSE ${item.proposal_id} — the autonomy policy blocks it`,
+          rationale: policyBefore.why,
+          alternatives: [
+            { option: 'proceed on the grant alone', why_not: 'protocol §8: human approval does not override provenance, validation, security or scope requirements. A blocked route means an approval would not help.' },
+            { option: 'enable the category in the policy', why_not: 'protocol §24: the system must not autonomously rewrite its own governance policy. Enabling one is a governance proposal a human decides.' },
+          ],
+          confidence: 1,
+          risk: 'low',
+        });
+        span.end({ status: 'ok', outputs: { outcome: 'refused', stage: 'policy' } });
+        return { proposal_id: item.proposal_id, contract: item.contract, agent: item.agent, outcome: 'refused', preflight: pre, policy: policyBefore, why: `the autonomy policy blocks this: ${policyBefore.why}` };
+      }
+
       /* --------------------------------------------- the change */
       const context = openContext({ permitted: pre.scope.permitted, root: this.root });
       const dirtyBefore = changedPaths({ cwd: this.root });
@@ -254,14 +310,44 @@ export class Implementer {
         cwd: this.root,
       });
 
-      const regressed = qa.verdict === 'fail' || !scopeResult.ok;
+      /* The second place the policy runs, and the one that has
+         something to read: the validators, the browser suite and the
+         scope enforcement have all happened, so the four supplied
+         conditions are measurements rather than unknowns. A policy
+         that refuses NOW is a reason to revert, on the same footing
+         as a failed check — which is the point of evaluating it
+         against measured facts rather than against a proposal. */
+      const policyAfter = evaluatePolicy({
+        actor: { kind: 'implementation_qa', id: IMPLEMENT_AGENT },
+        action: 'implement.apply',
+        environment: 'local',
+        resource: { kind: 'canonical_data', id: item.proposal_id },
+        proposal: pre.proposal,
+        policy: DEFAULT_POLICY,
+        facts: {
+          context,
+          validators: { verdict: qa.verdict, checks: qa.checks, blocking_findings: qa.blocking_findings },
+          browser_qa: qa.browser_required
+            ? { ran: Boolean(qa.browser.run) && qa.browser.run.status !== 'skipped', skipped: qa.browser.run?.status === 'skipped', verdict: qa.browser.run?.status === 'ok' ? 'pass' : 'fail', why: qa.browser.run?.skipReason ?? null }
+            : undefined,
+          scope_enforcement: scopeResult,
+        },
+      });
+      span.observe({
+        summary: `POLICY (measured) — route "${policyAfter.route}"; ${policyAfter.failed.length} failed, ${policyAfter.unknown.length} unknown`,
+        subject: 'autonomy policy',
+        data: { route: policyAfter.route, failed: policyAfter.failed, unknown: policyAfter.unknown, why: policyAfter.why },
+        risk: policyAfter.route === 'blocked' ? 'high' : 'low',
+      });
+
+      const regressed = qa.verdict === 'fail' || !scopeResult.ok || policyAfter.route === 'blocked';
 
       let reverted = null;
       if (this.doApply && regressed) {
         reverted = rollback(context, { root: this.root });
         span.observe({
           summary: reverted.verified
-            ? `REVERTED — the checks came back ${qa.verdict}${scopeResult.ok ? '' : ' and the change left its approved scope'}; every permitted path re-hashes to its pre-change state`
+            ? `REVERTED — the checks came back ${qa.verdict}${scopeResult.ok ? '' : ' and the change left its approved scope'}${policyAfter.route === 'blocked' ? ' and the autonomy policy blocked it on the measured facts' : ''}; every permitted path re-hashes to its pre-change state`
             : `REVERT INCOMPLETE — ${reverted.mismatches.length} path(s) do not hash back to their pre-change state. Do not push.`,
           subject: 'rollback',
           risk: reverted.verified ? 'medium' : 'high',
@@ -292,6 +378,8 @@ export class Implementer {
         agent: item.agent,
         outcome,
         preflight: pre,
+        policy: policyAfter,
+        policy_before: policyBefore,
         context,
         change,
         qa,

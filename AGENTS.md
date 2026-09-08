@@ -47,6 +47,7 @@ Read the one you need; do not re-derive its contents here.
 | `docs/DATA-GOVERNANCE.md` | One home per fact, derivation over storage, the three states, the known second homes |
 | `docs/SOURCE-POLICY.md` | What may be cited, what a citation can support, self-citation, the asterisk |
 | `docs/VERIFICATION-POLICY.md` | What each validator does and does **not** prove; reproducibility |
+| `docs/AUTONOMY-AUTHORIZATION-POLICY.md` | SESSION 23: the **executable** policy — the twelve mandatory conditions, the eighteen action categories, the 84-row capability matrix, the six rollback elements, and the hidden Control Room entry |
 
 **A/B/C/D refine the green/amber/red tiers in `docs/AI-SAFE-BOUNDARIES.md`; they do not
 replace them.** A and B split green, C is amber, D is red. Where the two could be read
@@ -56,6 +57,14 @@ Skills live in `.agents/skills/` — sixteen of them, listed with their scope an
 intended agent role in **`docs/SKILL-MAP.md`**. Invoke `project-context` at the start of every
 session, then load the skills the task actually needs; each one names the sibling that owns
 what it does not.
+
+**The autonomy policy is not an agent either.** `agent/policy/` is the executable form of
+`docs/AUTONOMY-POLICY.md`'s classes and protocol §18's twelve mandatory conditions: it answers,
+for one act, whether it may happen without a person, and `agent/implement/implementer.mjs`
+calls it twice per proposal — before anything is written, and again on the measured facts.
+**Nothing is switched on**: `DEFAULT_POLICY.enabled_categories` is empty, no act can reach the
+automatic route, and filling that list is a governance change a human decides (protocol §24).
+`docs/AUTONOMY-AUTHORIZATION-POLICY.md`.
 
 **The Control Room is not an agent.** `.control-room/` is the private administrative interface
 a PERSON uses — observe, review, decide. It is behind a dot prefix because that is the one
@@ -150,16 +159,19 @@ node --test agent/browser/selftest.mjs         # the browser suite's own suite
 node --test agent/implement/selftest.mjs       # Agent 9, incl. SESSION 18's eight required proofs
 node --test agent/health/selftest.mjs          # Agent 10, incl. planted security-boundary failures
 node --test agent/observability/selftest.mjs
+node --test agent/policy/selftest.mjs           # the autonomy policy, incl. SESSION 23's twenty required proofs
 node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**867 tests across the sixteen suites**, all passing as of SESSION 21 (812 after SESSION 20;
-756 after SESSIONS 18 and 19; 683 before them). SESSION 21 added 55 and **changed two existing
-assertions** in `agent/health/selftest.mjs` — both because the world changed rather than
-because they were inconvenient: a Control Room now exists, so the metric that said there was
-none, and the one that said there was no login, were asserting something false.
-`docs/HANDOVER.md` names both.
+**901 tests across the seventeen suites**, all passing as of SESSION 23 (867 after SESSION 21;
+812 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before them). SESSION 23 added 34 and
+**changed two existing assertions** — `agent/implement/selftest.mjs` R6, which asserted the
+suite list held fifteen entries and now holds sixteen, and `agent/detector/impact.mjs`'s
+`MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`.
+Both are the world having changed rather than a test being inconvenient, and both are named in
+`docs/HANDOVER.md`. SESSION 21 changed two in `agent/health/selftest.mjs` for the same kind of
+reason.
 
 **There is now CI.** `.github/workflows/qa.yml` runs all four validators against the recorded
 baseline, every agent suite, the contract check, the public/private boundary check and the
@@ -287,6 +299,19 @@ patches, not checks. **Do not re-run** the latter two.
   `agent/health/history/` and `.control-room/state/` have never been in a commit, and that is
   an **ignore rule, not a boundary** — one `git add -f` undoes it and nothing here would
   object.
+- **The public site now has one affordance that is not about EU law.** Typing
+  `thirty-two paths` into the search palette offers a passage to a private control plane:
+  `js/threshold.js`, styled at the end of `style.css`, drawn as an original Sefer
+  Yetzirah-style wheel. It authenticates nothing, authorizes nothing and holds no credential,
+  no endpoint and no privileged state — `agent/policy/selftest.mjs` tests 18–20 assert that
+  string by string, and `agent/browser/checks.mjs checkThreshold` measures nine properties of
+  it in a real browser, including that opening it issues **no network request at all**. The
+  phrase is **not a credential**: it is in a file served to every reader, protocol §10 says
+  obscurity is not a control, and anyone who finds it meets the same login. It reads its
+  target from `<meta name="eu-control-room">` and **never invents one**; no page here declares
+  it, so on the published site the passage ends at a statement. Do not add the meta tag, or a
+  server route that reads the phrase, without deciding to.
+
 - **Your base may be stale.** Run `git fetch --all && git branch -a` before concluding
   anything about what this repository contains. An earlier session reported four existing
   documents as missing by running `ls docs` on an unfetched branch (F-01).
