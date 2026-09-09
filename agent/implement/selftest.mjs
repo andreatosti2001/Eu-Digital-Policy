@@ -632,9 +632,11 @@ test('R6 · this suite is in the list the agent runs for a change under agent/ o
      growing three times now: SESSION 20, SESSION 22 and SESSION 23.
      Each time it caught a real omission rather than being in the
      way, and the two branches merged here had each updated it to a
-     different number, which is the fourth time it has been useful. */
-  assert.equal(AGENT_SUITES.length, 18,
-    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23) and the verification gate (23.5)');
+     different number, which is the fourth time it has been useful.
+     SESSION 24 is the fifth: the simulation harness would otherwise
+     have landed without ever gating a change under agent/. */
+  assert.equal(AGENT_SUITES.length, 19,
+    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5) and the simulation harness (24)');
 });
 
 /* ============================================================

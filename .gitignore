@@ -71,3 +71,15 @@ agent/health/history/*
 # an ignore list covering only the files somebody thought of is a denylist.
 agent/orchestrator/state/*
 !agent/orchestrator/state/README.md
+
+# SESSION 24's simulation traces, when a run is asked to keep one
+# (`node agent/simulation/cli.mjs run --trace <dir>`). By default the run
+# writes into a mkdtemp directory and deletes it, so this entry covers only the
+# case where somebody deliberately keeps the trace inside the tree.
+#
+# Every record in such a trace is marked simulated and asserts nothing about EU
+# law — but it is still a run artifact, and this repository publishes its whole
+# tree. The glob is `*` with the README negated back in, the same shape
+# agent/health/history/, .control-room/state/ and agent/orchestrator/state/ use.
+agent/simulation/runs/*
+!agent/simulation/runs/README.md

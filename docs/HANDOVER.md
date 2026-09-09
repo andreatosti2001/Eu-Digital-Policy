@@ -1,11 +1,80 @@
 # HANDOVER
 
-**Last updated:** SESSIONS 22, 23 and 23.5 · 8 September 2026
+**Last updated:** SESSION 24 · 9 September 2026
+**Branch:** `claude/system-simulation-end-to-end-98g5p0`, cut from `origin/main` at `8f1b411`
+(the merge of SESSIONS 22, 23 and 23.5).
+
+---
+
+## SESSION 24 — the first end-to-end run, in simulation
+
+**What was asked:** run one complete simulated cycle across the whole agent graph, produce
+an end-to-end trace, simulate the hidden Control Room discovery flow as a separate
+UX/security path, define the intended visual sequence without implementing it, and then
+identify what is missing, ambiguous, redundant, unvalidated, misrouted or insecure —
+**without fixing any of it.**
+
+**What was built:** `agent/simulation/`, nine files, twenty tests. It wires twelve
+**simulated** specialists into the real Orchestrator and walks eight of the ten workflow
+types once, with a real `.control-room/` process on the authorization leg — a real login, a
+real authorization refusal for the wrong role, a real fingerprint check, a real CSRF
+refusal, and one real ledger line written into a temporary decision directory.
+
+**What ran for real:** the event intake and its stripping, classification, the capability
+register and every grant, every handoff check, H3, the contract gateway, all six conflict
+detectors, the provenance and rollback gates, the twelve autonomy conditions, the journal,
+the tracer, `preflight`'s ten gates, the ledger, and the Control Room's seven decision gates.
+
+**What was simulated:** the eleven specialists' domain reasoning. **No source was read, no
+page was opened by a specialist, no dataset was examined, no sentence was judged.** A green
+leg means the machinery routed a fixture.
+
+**What it changed:** nothing, measured. `agent/simulation/world.mjs` fingerprints all 362
+files in the working tree before and after; test 1 asserts the difference is empty and that
+the real decision ledger still holds zero lines. **Not one proposal in this repository has
+ever been decided, and this run did not change that.**
+
+**What it found: twenty-three findings, none fixed.** `docs/FIRST-END-TO-END-AUDIT.md`. The
+four to carry:
+
+| | |
+|---|---|
+| **V-1** | `orchestrator.mjs:495` calls `receive(record, { allowSimulated: true })`, hard coded. **Every workflow admits a simulated record** and routes it to a person. Only `preflight` gate 2 stops one, and that runs on `IMPLEMENTATION_REQUEST` alone. |
+| **V-3** | **The rollback gate has never examined a record.** On `IMPLEMENTATION_REQUEST` every stage before it is a gate, so it receives `[]` and passes; on `QA_FAILURE` it receives a `QAResult`, which has no `proposed_change` and is skipped. The trace reads *"0 rollback plan(s), each naming a method, steps and a verification"*. |
+| **V-2** | **Nothing re-checks a `ChangeRecord`'s files against the approved scope after the dispatch.** Leg 6 approved a proposal scoped to `index.html` and admitted a `ChangeRecord` declaring a change to `tools/simulated-check.mjs`. `apply.mjs` still enforces the permitted set against git, so the site is protected — the Orchestrator's own record of what happened is not. |
+| **I-1 / I-2** | Two conflict detectors have **no ordering constraint and no sibling exclusion**. Leg 1's trace names the upstream agent as the downstream one; leg 2 refused a workflow because one agent's proposal "softened" the blocking question in the `ApprovalRequest` it returned in the same call. |
+
+**The discovery flow.** All six separations were measured and hold: the animation is separate
+from authentication, authorization, approval, orchestration, execution and deployment.
+`js/threshold.js` imports nothing at all. The real browser suite ran the nine threshold
+checks in a real Chromium and all nine pass — including that opening the passage issues **no
+network request of any kind**, and that the wheel draws 3 rings and 22 letters.
+
+**The visual sequence** is declared as data in `agent/simulation/threshold.mjs`
+(`VISUAL_SEQUENCE`), so intended-versus-actual is a comparison a machine performs. Three of
+six phases do not match, and **one of the three must stay unmatched**: the brief's phase 6
+("reveal CONTROL ROOM followed by the normal authentication interface") must never be
+implemented as a login form on the published page. That would be a credential prompt in the
+public tree. The refusal is written into the specification's own `must_not`, and
+`selftest.mjs` test 6 asserts no page in the repository carries a `type="password"` field.
+
+**The suite list grew to nineteen**, which `agent/implement/selftest.mjs` R6 caught for the
+fifth time. **998 tests across twenty suites**, all passing. The four validators are at the
+`docs/CURRENT-ARCHITECTURE.md` §12 baseline: 0 errors, 106 unverified, 5 design-qa warnings.
+The browser suite is at its recorded state: the same three known failures (issues 25, 27 and
+28) and two undecidable, none of them touched.
+
+**Nothing in `data/`, `i18n/`, `js/`, `css/` or any page was changed, and no finding was
+repaired.** Protocol §25 asks this session to observe and document rather than silently
+repair, and a suite that pinned a defect would turn it into a requirement.
+
+---
+
+## SESSIONS 22, 23 and 23.5 — carried forward
+
 **Branch:** `claude/agent-governance-protocol-gfbgfb`, cut from `origin/main` at `c43b7a9`,
-with `claude/agent-governance-protocol-tx6mu1` (SESSION 22) merged into it.
-**NOT merged into `main`.** Both session prompts' merge conditions are met. The merge to
-`main` has not been made, because a push to `main` is `docs/AUTONOMY-POLICY.md` Class D and
-AGENTS.md reserves it to the repository author by name.
+with `claude/agent-governance-protocol-tx6mu1` (SESSION 22) merged into it. **Merged into
+`main` at `8f1b411`.**
 
 **WHAT THIS BRANCH NOW CARRIES.** Three sessions, on one tree:
 
@@ -1248,7 +1317,33 @@ node agent/observability/cli.mjs        health --readings
 
 ## Anything the next agent must know
 
-**SESSION 21's, first:**
+**SESSION 24's, first:**
+
+- **A simulated pass is not evidence.** Every leg of `agent/simulation/` is driven by a
+  fixture dispatcher. If you find yourself citing a green leg as proof that the Scout
+  works, the Verifier works, or the site is correct, you are citing the machinery having
+  routed a fixture.
+- **A simulated `QAResult` is indistinguishable from a measured one downstream.** That is
+  finding A-4 and M-4, and it is the reason the browser dispatcher is the one to distrust
+  most. The real browser suite was run for the discovery path only.
+- **The twenty-three findings are not a work order.** Protocol §25 asked SESSION 24 to
+  observe rather than repair, and every one of them is a change to `agent/` that needs its
+  own reasoning. Several are load-bearing in ways a quick fix would break: `allowSimulated:
+  true` (V-1) is what lets every existing suite drive the Orchestrator with fixtures, so
+  removing it breaks nineteen suites before it fixes anything.
+- **`agent/simulation/selftest.mjs` asserts the DISCIPLINE, not the findings.** It asserts
+  that the tree is byte-identical, that no dispatcher can write, that every fixture is
+  marked, that nothing was published, and that three visual phases do not match. It does
+  **not** assert V-1, V-2, V-3, I-1 or I-2 — pinning a defect turns it into a requirement.
+- **The count of three mismatched visual phases IS asserted.** If you implement phase 2 or
+  phase 5, `selftest.mjs` test 6 fails and you come here and say so. That is the assertion
+  doing its job, the same way R6 does.
+- **The one unmarked record in the whole harness is `unmarkedControlFixture()`**, and it
+  exists because `preflight` gate 2 refuses a simulated proposal. It lives in a `mkdtemp`
+  record store, it is never offered to `data/`, and its reason is finding V-1 in the audit
+  rather than a convenience in the code.
+
+**SESSION 21's:**
 
 - **`git fetch --all` before comparing anything, and compare against
   `origin/main`.** Local `main` on this machine is 52 commits behind. The trap in
@@ -1337,7 +1432,32 @@ Carried forward:
 
 ## Anything the next agent must NOT change
 
-Carried forward, still binding. **SESSION 21's, first:**
+Carried forward, still binding. **SESSION 24's, first:**
+
+- **Do not implement the brief's phase 6 literally.** "Reveal CONTROL ROOM followed by the
+  normal authentication interface" must never become a login form on a published page. A
+  credential prompt in the public tree is a phishing surface and a second home for a login
+  that `.control-room/` already serves behind its own origin. The refusal is written into
+  `VISUAL_SEQUENCE` phase 6's `must_not`, and `agent/simulation/selftest.mjs` test 6
+  asserts no `.html` file here carries a `type="password"` field. Do not delete either.
+- **Do not give a simulation dispatcher the ability to write, spawn or fetch.** Test 1
+  reads `dispatchers.mjs` and refuses the eight primitives by name. A dispatcher that could
+  write is a simulation that could change production.
+- **Do not delete the tree fingerprint.** "This run changed nothing" is the only claim the
+  harness makes about production, and it is a measurement. An assurance in its place would
+  be worth nothing.
+- **Do not turn a finding into an assertion.** `agent/simulation/selftest.mjs` deliberately
+  asserts none of the twenty-three. Pinning one makes the defect a requirement and the fix
+  a test failure.
+- **Do not clear the `simulated` mark on anything but the one control fixture**, and do not
+  move that fixture out of `mkdtemp`. It is the one place in this repository where a record
+  claims not to be simulated when it is, it is in the open with its reason, and it never
+  touches the tree.
+- **Do not describe SESSION 24's run as an end-to-end execution of the agents.** It is an
+  end-to-end execution of the ROUTING. `docs/ORCHESTRATOR.md` §13 now says so in the same
+  words, and softening it would make the strongest claim in that document false.
+
+**SESSION 21's:**
 
 - **Do not put a Control Room page in the published tree.** Not under `docs/`, not
   at the root, not as an `admin.html`. The dot prefix is the only publication

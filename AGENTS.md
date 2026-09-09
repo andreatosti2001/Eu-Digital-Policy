@@ -33,6 +33,7 @@ the evidence it describes.
 | `docs/BROWSER-QA.md` · `docs/HEALTH-MONITOR.md` | The browser regression suite and the three health domains — what each measures, and what neither can see |
 | `docs/CONTROL-ROOM.md` | The private control plane: the two security domains, authentication, authorization, the seven approval gates, the audit trail — and §11, what none of it proves |
 | `docs/ORCHESTRATOR.md` | The Master Orchestrator: the ten workflow types, the five end states, the capability register, the eight routing checks, the six conflict shapes — and §13, what none of it proves |
+| `docs/FIRST-END-TO-END-AUDIT.md` | SESSION 24's simulated end-to-end cycle: what ran, what was simulated, the Control Room discovery path, the intended visual sequence — and **twenty-three findings, none fixed** |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
@@ -65,9 +66,25 @@ routes them through the ten workflow types, enforces the handoffs and the autono
 and stops at a person — every one of the ten types ends at a human stage and the module
 refuses to load one that does not. It performs no legal, editorial or evidential reasoning:
 every gate it runs is mechanical, and it refuses a record rather than repairing one. **No
-dispatcher is wired**, so a run today reports `not_dispatched` and ends `unresolved` — the
-first end-to-end execution is the simulation protocol §25 puts at SESSION 24.
-`docs/ORCHESTRATOR.md`.
+production dispatcher is wired**, so a run outside the simulation reports `not_dispatched`
+and ends `unresolved`.
+
+**SESSION 24 ran the first end-to-end cycle, in simulation, and fixed nothing it found.**
+`agent/simulation/` wires twelve SIMULATED specialists into the real Orchestrator and walks
+eight of the ten workflow types once, with a real Control Room process on the authorization
+leg. Everything in `agent/orchestrator/`, `agent/policy/`, `agent/schemas/` and
+`.control-room/` ran for real; **the eleven specialists' domain reasoning did not**, so a
+green leg means the machinery routed a fixture — not that anything about EU law is true. The
+run changed nothing, and that is a measurement: it fingerprints the working tree before and
+after, and the suite asserts the difference is empty. It produced **twenty-three findings**,
+and protocol §25's instruction to observe rather than repair is why none is fixed:
+`docs/FIRST-END-TO-END-AUDIT.md`. Four are worth carrying in your head, because they are
+places this system is weaker than its own documents read: the Orchestrator admits a
+`simulated` record into every workflow (`allowSimulated: true`, hard coded at
+`orchestrator.mjs:495`); **the rollback gate has never examined a record** on either type
+that declares it; nothing re-checks a `ChangeRecord`'s files against the approved scope
+after the dispatch; and two conflict detectors have no ordering constraint and reported one
+relationship backwards. `docs/ORCHESTRATOR.md`.
 
 **The autonomy policy has ONE home, and it is `agent/policy/`.** SESSIONS 22 and 23 were
 written on sibling branches from the same base and each implemented protocol §18's mandatory
@@ -175,18 +192,21 @@ node --test agent/orchestrator/selftest.mjs    # the Master Orchestrator, incl. 
 node --test agent/observability/selftest.mjs
 node --test agent/policy/selftest.mjs           # the autonomy policy, incl. SESSION 23's twenty required proofs
 node --test agent/policy/verify/selftest.mjs   # SESSION 23.5's gate, run twice, asserting it is reproducible
+node --test agent/simulation/selftest.mjs      # SESSION 24's simulation, incl. the byte-identical-tree assertion
 node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**978 tests across the nineteen suites**, all passing as of SESSION 23.5
-(934 after SESSION 22 on its own branch; 909 after SESSION 23.5 on its own; 867 after
-SESSION 21; 812 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before them). The two
-branches were merged here, so neither of those figures is the total on its own.
+**998 tests across the twenty suites**, all passing as of SESSION 24
+(978 across nineteen after SESSION 23.5; 934 after SESSION 22 on its own branch; 909 after
+SESSION 23.5 on its own; 867 after SESSION 21; 812 after SESSION 20; 756 after SESSIONS 18
+and 19; 683 before them). SESSIONS 22, 23 and 23.5 were merged, so none of those middle
+figures is a total on its own.
 
-**`agent/implement/selftest.mjs` R6 has now caught the suite list growing four times** —
-SESSION 20, SESSION 22, SESSION 23, and again at this merge, where the two branches had each
-updated the same assertion to a different number. That is the assertion doing its job. It
+**`agent/implement/selftest.mjs` R6 has now caught the suite list growing five times** —
+SESSION 20, SESSION 22, SESSION 23, the merge where the two branches had each updated the
+same assertion to a different number, and SESSION 24, whose simulation harness would
+otherwise have landed without ever gating a change under `agent/`. That is the assertion doing its job. It
 asserts eighteen suites. SESSION 23 also changed `agent/detector/impact.mjs`'s
 `MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`;
 SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
@@ -330,6 +350,15 @@ patches, not checks. **Do not re-run** the latter two.
   target from `<meta name="eu-control-room">` and **never invents one**; no page here declares
   it, so on the published site the passage ends at a statement. Do not add the meta tag, or a
   server route that reads the phrase, without deciding to.
+
+  **SESSION 24 simulated the discovery flow as a separate UX/security path and measured all
+  six separations**: the animation is separate from authentication, authorization, approval,
+  orchestration, execution and deployment, and `js/threshold.js` imports nothing at all, so
+  it can reach no other module. It also compared the code against an intended six-phase
+  visual sequence and found **three phases that do not match**. One of the three is
+  deliberate and must stay: "reveal CONTROL ROOM followed by the normal authentication
+  interface" must NOT be implemented as a login form on the published page, because that
+  would be a credential prompt in the public tree. `docs/FIRST-END-TO-END-AUDIT.md` §6.
 
 - **Your base may be stale.** Run `git fetch --all && git branch -a` before concluding
   anything about what this repository contains. An earlier session reported four existing

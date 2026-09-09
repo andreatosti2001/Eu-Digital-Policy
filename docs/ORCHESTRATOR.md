@@ -340,18 +340,28 @@ it, because there is no permission to hold.
 
 ---
 
-## 12 · No dispatcher is wired, and why that is the deliverable
+## 12 · No dispatcher is wired, and what SESSION 24 attached to the seam
 
-A **dispatcher** is the function that actually runs a specialist. This session wires none.
-`new Orchestrator({...})` with no `dispatchers` reaches every dispatch stage, refuses it as
-`not_dispatched`, and ends the workflow `unresolved` — which is the true answer to "what did
-the specialists find" when nothing ran them.
+A **dispatcher** is the function that actually runs a specialist. **SESSION 22 wired none,
+and none is wired in production now.** `new Orchestrator({...})` with no `dispatchers`
+reaches every dispatch stage, refuses it as `not_dispatched`, and ends the workflow
+`unresolved` — which is the true answer to "what did the specialists find" when nothing ran
+them.
 
 Protocol §25 puts the first complete end-to-end cycle in **simulation**, at SESSION 24, and
 asks that it "observe and document defects rather than silently repairing them". A session
 that wired the eleven agents into automatic execution here would be running that simulation
 early, against the real record store, without the observation discipline §25 requires. The
-seam is the deliverable; filling it is the next session's work.
+seam was the deliverable.
+
+**SESSION 24 attached a simulation to it, and nothing else.** `agent/simulation/` wires
+twelve SIMULATED specialists — pure functions returning fixtures, which cannot write, spawn
+or fetch — and walks the lifecycle once across eight of the ten workflow types. Everything
+in this module ran for real; the specialists' domain reasoning did not. The run changed
+nothing: every store it writes is a `mkdtemp` directory, and the harness fingerprints the
+whole working tree before and after so "nothing changed" is a measurement.
+**It found twenty-three things, and repaired none of them.**
+`docs/FIRST-END-TO-END-AUDIT.md`.
 
 The suite drives the Orchestrator with **fixture specialists** — dispatchers that return
 records from `agent/schemas/fixtures.mjs` — so every path through it is exercised without
@@ -361,11 +371,19 @@ anything real running.
 
 ## 13 · What this does not prove
 
-1. **No specialist has ever been dispatched by it.** §12. Every end-to-end path in the suite
-   is driven by a fixture dispatcher, and the real agents have never been called from here.
+1. **No REAL specialist has ever been dispatched by it.** §12. Every end-to-end path in the
+   suite, and every leg of SESSION 24's simulation, is driven by a fixture dispatcher. The
+   eleven agents in `agent/` have never been called from here.
 2. **No workflow has ever been run against the real record store with dispatchers attached.**
    `node agent/orchestrator/cli.mjs survey` reads that store and reports; it dispatches
-   nothing.
+   nothing. SESSION 24's run used a temporary record store and a temporary ledger, both
+   deleted at the end.
+2b. **Four properties SESSION 24 measured and this document previously implied.** The
+   rollback gate has never examined a record on either type that declares it; two conflict
+   detectors have no ordering constraint and reported one relationship backwards; sibling
+   records from a single dispatch conflict with each other; and `receive()` is called with
+   `allowSimulated: true`, hard coded, so every workflow admits a simulated record.
+   `docs/FIRST-END-TO-END-AUDIT.md` §7, findings V-3, I-1, I-2 and V-1. **None is fixed.**
 3. **The conflict detector sees six shapes.** Two records can disagree in prose that nothing
    in this repository reads — the validators do not read prose either.
 4. **The provenance gate checks that provenance is internally complete**, not that the

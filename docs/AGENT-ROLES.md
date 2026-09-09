@@ -252,9 +252,11 @@ does not.
 
 **It does not replace specialist reasoning** — §14 of the governance protocol — so
 every gate it runs is mechanical and it refuses a record rather than repairing one.
-**No dispatcher is wired**, so a run today reports `not_dispatched` and ends
-`unresolved`: the first end-to-end execution is the simulation protocol §25 puts at
-SESSION 24. `docs/ORCHESTRATOR.md`.
+**No production dispatcher is wired**, so a run outside the simulation reports
+`not_dispatched` and ends `unresolved`. The first end-to-end execution — the simulation
+protocol §25 puts at SESSION 24 — is `agent/simulation/`, and it drives twelve simulated
+specialists rather than the eleven real ones. `docs/ORCHESTRATOR.md` ·
+`docs/FIRST-END-TO-END-AUDIT.md`.
 
 ## 10 · Observability — owns what is knowable after the fact
 
