@@ -1,8 +1,58 @@
 # HANDOVER
 
-**Last updated:** SESSION 24 · 9 September 2026
-**Branch:** `claude/system-simulation-end-to-end-98g5p0`, cut from `origin/main` at `8f1b411`
-(the merge of SESSIONS 22, 23 and 23.5).
+**Last updated:** SESSION 25 · 9 September 2026
+**Branch:** `claude/first-controlled-real-world-run-wyz3k2`, cut from `origin/main` at the
+SESSION 24 merge.
+
+---
+
+## SESSION 25 — the first controlled real-world run
+
+**What was asked:** run the whole pipeline OBSERVE + PROPOSE ONLY against the small, already
+-registered set of real EU sources (`agent/scout/authorities.mjs`), through discovery,
+verification, change detection, gap identification, affected-page and editorial/UX implications,
+Control Room discovery impact, QA simulation and the full trace, ending in a prioritized human
+review queue. Full report: **`docs/SESSION-25-FIRST-REAL-WORLD-RUN.md`**.
+
+**What happened at the network boundary, and it is the headline finding.** `agent/scout/cli.mjs
+--live` attempted all five registered endpoints (EUR-Lex, the Commission's digital-strategy
+site, EDPB, EDPS, ENISA) for the first time this project has ever asked it to. **All five were
+refused by this environment's own egress policy** — confirmed independently with `curl` and
+`WebFetch` against the same hostnames, neither of which is part of this repository. The Scout
+recorded five `retrieval_blocked` gaps, real trace `3431281084fa9129b4689b82cb7043e8`, and
+invented nothing. **This turns U-23.5-01 and AUDIT F-12 — "the deployed origin has never been
+fetched, the network policy refuses it" — from an inference into a measurement**, for the first
+time. Verification, integration and live-path change detection chained off that trace and
+correctly found nothing to do (§3 of the report) rather than falling back to the mock corpus.
+
+**What ran against the real corpus and real pages, and found real findings.** Data Depth (57
+gaps), the Knowledge Architect (20 findings, all eight questions answered yes), the Gap
+Proposals router (14 `DataProposal`s + 22 refused-and-named), Editorial (22
+`editorial_recommendation`s over 387 real prose blocks), UX/UI (10 findings, 1 critical), and a
+real-Chromium Browser QA run (125 pass · 3 fail · 2 undecidable — the same three SESSION 19
+defects, unchanged). **48 proposals now sit in the record store, 0 decided, 0 routable to
+implementation** — `agent/orchestrator/cli.mjs survey` refuses every one by the same four
+`preflight` gates, which is those gates working as designed on records nobody has approved.
+
+**The hidden Control Room entry was evaluated as instructed and found one relevant finding.**
+`js/threshold.js` implements the modal/dialog contract independently of `js/dialog.js` and
+`app.js` — an accessibility-consistency finding (`prop-ux-two-implementations-a364f0ff9dd6`),
+explicitly **not** a security finding. Nothing else in this run's records touches search
+behavior, hidden-entry detection, animation, Control Room login routing, the public/private
+boundary, or a privileged interface. `docs/SESSION-25-FIRST-REAL-WORLD-RUN.md` §6.
+
+**What it changed:** nothing in `data/`, `i18n/`, `js/`, `css/` or any page.
+`git status --porcelain` was empty throughout, checked before this document was written. The
+four validators are at the recorded baseline (0 errors, 106 unverified, 5 `design-qa`
+warnings), both boundary checks are unchanged (0 blocking / 13 and 0 / 0), and
+`agent/implement/decisions/decisions.jsonl` remains empty. A curated, prioritized review queue —
+not all 48, by instruction — is in the report's closing section, ready for a human decision.
+
+**The one thing SESSION 26 inherits that is new:** the network boundary in §2 of the report is
+now a measured fact about *this* environment rather than a documented default. It will
+reproduce identically on a rerun here. Advancing step 1 needs either a different network policy
+or a person retrieving one document by hand and handing its text to the Verifier via
+`--records`.
 
 ---
 
