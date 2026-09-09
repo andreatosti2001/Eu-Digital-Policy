@@ -869,14 +869,20 @@ export async function checkThreshold(page, origin) {
   await page.key('Enter', { code: 'Enter', keyCode: 13 });
   const panel = await page.waitFor(`(() => {
     const n = document.querySelector('.thr-scrim');
-    return n ? { text: n.innerText, links: [...n.querySelectorAll('a')].map((a) => a.getAttribute('href')), rings: n.querySelectorAll('.thr-ring').length, letters: n.querySelectorAll('.thr-letter').length } : null;
+    return n ? {
+      text: n.innerText,
+      links: [...n.querySelectorAll('a')].map((a) => a.getAttribute('href')),
+      rings: n.querySelectorAll('.thr-ring').length,
+      marks: n.querySelectorAll('.thr-tick, .thr-node, .thr-spoke, .thr-chord, .thr-ray').length,
+      rotors: n.querySelectorAll('.thr-rotor').length,
+    } : null;
   })()`, { timeoutMs: 4000 });
 
   if (!panel) {
     results.push(bad('threshold:passage', 'threshold', 'choosing the result opened no panel'));
     return results;
   }
-  results.push(ok('threshold:passage', 'threshold', `choosing the result opens the passage: ${panel.rings} ring(s), ${panel.letters} letter(s) drawn`, { rings: panel.rings, letters: panel.letters }));
+  results.push(ok('threshold:passage', 'threshold', `choosing the result opens the passage: ${panel.rings} ring(s), ${panel.rotors} rotor(s), ${panel.marks} graduated mark(s) drawn`, { rings: panel.rings, rotors: panel.rotors, marks: panel.marks }));
 
   const lower = String(panel.text || '').toLowerCase();
   const leaked = PRIVILEGED_WORDS.filter((w) => lower.includes(w));

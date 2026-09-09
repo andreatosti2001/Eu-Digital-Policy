@@ -252,9 +252,12 @@ discovery mechanism": search bar → a phrase → a transition → the Control R
 `js/threshold.js` is it, and the whole of it.
 
 **What it is.** A reader who types `thirty-two paths` into the palette gets one extra result.
-Choosing it draws a wheel — three concentric bands divided 3 · 7 · 12, twenty-two Hebrew
-letters set around them, fine lines in the site's own ink — and then offers a link to a login
-page.
+Choosing it draws a wheel — four chord lattices nested inside one another, twenty-two points
+on the rim, then twelve, then seven, then three, each point joined to every other so that the
+chords themselves weave the figure; a stack of concentric rules and sixty-six graduations
+around the rim; a radiant aperture at the centre and four rosettes held outside it; two rotors
+turning opposite ways against a fixed frame — fine lines in the site's own ink, no glyph
+anywhere on it — and then offers a link to a login page.
 
 **What it is not.** It does not authenticate, authorize, approve, execute, or read anything
 privileged. `js/threshold.js` contains no `fetch`, no `XMLHttpRequest`, no `localStorage`, no
@@ -271,11 +274,16 @@ deployment does not serve. The module reads an address from
 18 walks every `.html` file and asserts so), so on the live site the passage ends at a
 statement rather than a navigation.
 
-**Why the wheel is not decoration.** The Sefer Yetzirah tradition's twenty-two letters are an
-*enum authority* — a closed vocabulary from which everything else is said to be composed —
-which is what `data/taxonomy.json` is to every other dataset on this site. The transition says:
-a closed vocabulary, recognised, and a door behind it. No terminal green, no neon, no
-arbitrary symbols; it is the palette's aesthetic one layer quieter.
+**Why the wheel is not decoration.** Its division — 3 · 7 · 12 · 22, the same partition the
+Sefer Yetzirah tradition gives the alphabet, three mothers and seven doubles and twelve simples
+and twenty-two in all — is kept as a division of *marks* rather than of letters, because a
+closed set of divisions everything else is drawn from is an *enum authority*, which is what
+`data/taxonomy.json` is to every other dataset on this site. The transition says: a closed
+vocabulary, recognised, and a door behind it. The visual language is the one the brief named —
+circular geometry, radial division, the diagrammatic manuscript tradition, fine lines and a
+restrained palette — reconstructed as original SVG geometry rather than copied from any
+artwork. No terminal green, no neon, no arbitrary symbols, and no glyph a reader has to be
+able to read.
 
 **It is interruptible and it degrades.** Escape or a click ends it; `prefers-reduced-motion`
 skips to the end state; a browser without inline SVG gets the panel and the link. No state

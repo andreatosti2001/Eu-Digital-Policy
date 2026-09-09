@@ -33,17 +33,27 @@
    `<meta name="eu-control-room">` navigates anywhere. Nothing here
    invents one, and the published pages declare none.
 
-   THE VISUAL LANGUAGE. A wheel: three concentric bands divided
-   3 · 7 · 12, twenty-two letters set around them, drawn in fine
-   lines in the site's own ink. It is an original construction in
-   the diagrammatic manner of the Sefer Yetzirah wheels, and the
-   division is the reason it is here rather than decoration: that
-   tradition's twenty-two letters are an ENUM AUTHORITY — a closed
-   vocabulary from which everything else is said to be composed —
-   which is exactly what `data/taxonomy.json` is to every other
-   dataset on this site. The transition says: a closed vocabulary,
-   recognised, and a door behind it. It does not say hacking, and
-   there is deliberately nothing here of the terminal-green kind.
+   THE VISUAL LANGUAGE. A wheel, drawn the way the Sefer Yetzirah
+   diagrams and the volvelles in their margins are drawn: points set
+   evenly on a circle and joined to every other point, so that the
+   chords themselves weave the figure. Four such lattices sit inside
+   one another — twenty-two points on the rim, then twelve, then
+   seven, then three — inside a stack of concentric rules, with a
+   radiant aperture at the centre and four rosettes held outside the
+   rim. Fine lines, the site's own ink, one warm accent at the
+   centre. There is not a single letter anywhere in it, and nothing
+   in it is meant to be read.
+
+   The counts are the point. 3 · 7 · 12 · 22 is the partition those
+   diagrams give the alphabet — three mothers, seven doubles, twelve
+   simples, twenty-two in all — kept here as a division of MARKS
+   rather than of letters, because the reason it is here at all is
+   not decorative. A closed set of divisions that everything else is
+   drawn from is an ENUM AUTHORITY, which is exactly what
+   `data/taxonomy.json` is to every other dataset on this site. The
+   transition says: a closed vocabulary, recognised, and a door
+   behind it. It does not say hacking, and there is deliberately
+   nothing here of the terminal-green kind.
 
    IT IS INTERRUPTIBLE AND IT DEGRADES. Escape or a click ends it at
    any point; `prefers-reduced-motion` skips straight to the end
@@ -58,9 +68,15 @@
    not secret and nothing depends on it being unguessable. */
 const TRIGGERS = ['thirty-two paths', 'thirty two paths', '32 paths'];
 
-const MOTHERS = ['א', 'מ', 'ש'];
-const DOUBLES = ['ב', 'ג', 'ד', 'כ', 'פ', 'ר', 'ת'];
-const SIMPLES = ['ה', 'ו', 'ז', 'ח', 'ט', 'י', 'ל', 'נ', 'ס', 'ע', 'צ', 'ק'];
+/* The divisions, kept as counts rather than as an alphabet. Each is
+   a number of points on a circle; the drawing is what joining them
+   to one another produces. */
+const RIM_COUNT = 22;
+const OUTER_COUNT = 12;
+const MID_COUNT = 7;
+const CORE_COUNT = 3;
+const GRADUATIONS = 66;
+const RAY_COUNT = 44;
 
 const NS = 'http://www.w3.org/2000/svg';
 
@@ -90,35 +106,131 @@ function el(name, attrs) {
   return n;
 }
 
-/** One band: a ring, its radial divisions, and its letters. */
-function band(g, { r, count, letters, klass }) {
+const angleAt = (i, count) => (i / count) * Math.PI * 2 - Math.PI / 2;
+const pointAt = (angle, r) => [Math.cos(angle) * r, Math.sin(angle) * r];
+
+/** A plain rule: one concentric circle, nothing on it. */
+function rule(g, r, klass) {
   g.appendChild(el('circle', { cx: 0, cy: 0, r, class: 'thr-ring ' + klass }));
-  for (let i = 0; i < count; i++) {
-    const a = (i / count) * Math.PI * 2 - Math.PI / 2;
-    const inner = r - 26;
-    g.appendChild(el('line', {
-      x1: Math.cos(a) * inner, y1: Math.sin(a) * inner,
-      x2: Math.cos(a) * r, y2: Math.sin(a) * r,
-      class: 'thr-spoke ' + klass,
-    }));
-    const mid = a + (Math.PI / count);
-    const t = el('text', {
-      x: Math.cos(mid) * (r - 13), y: Math.sin(mid) * (r - 13),
-      class: 'thr-letter ' + klass, 'text-anchor': 'middle', 'dominant-baseline': 'central',
+}
+
+/** One radial mark, at a given angle, between two radii. */
+function tick(g, { angle, rInner, rOuter, klass }) {
+  const [x1, y1] = pointAt(angle, rInner);
+  const [x2, y2] = pointAt(angle, rOuter);
+  g.appendChild(el('line', { x1, y1, x2, y2, class: klass }));
+}
+
+/** The figure this whole drawing is made of: `count` points set
+ *  evenly on a circle of radius `r`, every point joined to every
+ *  other. Twenty-two points give two hundred and thirty-one chords,
+ *  twelve give sixty-six, seven give twenty-one, three give three —
+ *  and the weave that produces is the thing, not any one line in it.
+ *  `skip` drops the shortest chords where the ring should read as a
+ *  lattice rather than as a filled disc. The chords go in their own
+ *  group so the transition can raise the whole web at once instead
+ *  of animating each line. Returns the points, for a caller that
+ *  wants to brace one ring against another. */
+function rose(g, { r, count, klass, nodeR = 1.9, skip = 1, chords = true }) {
+  const pts = [];
+  for (let i = 0; i < count; i++) pts.push(pointAt(angleAt(i, count), r));
+  if (chords) {
+    const web = el('g', { class: 'thr-web ' + klass });
+    for (let i = 0; i < count; i++) {
+      for (let j = i + skip; j < count; j++) {
+        web.appendChild(el('line', {
+          x1: pts[i][0], y1: pts[i][1], x2: pts[j][0], y2: pts[j][1], class: 'thr-chord',
+        }));
+      }
+    }
+    g.appendChild(web);
+  }
+  for (const [x, y] of pts) g.appendChild(el('circle', { cx: x, cy: y, r: nodeR, class: 'thr-node ' + klass }));
+  return pts;
+}
+
+/** The rim: three close-set rules, sixty-six graduations between the
+ *  outer two, and the twenty-two-point lattice hung inside them. */
+function rim(g) {
+  rule(g, 158, 'thr-b4');
+  rule(g, 150, 'thr-b4');
+  rule(g, 138, 'thr-b4');
+  for (let i = 0; i < GRADUATIONS; i++) {
+    const major = i % 3 === 0;
+    tick(g, {
+      angle: angleAt(i, GRADUATIONS),
+      rInner: major ? 150 : 153,
+      rOuter: 158,
+      klass: 'thr-tick ' + (major ? 'thr-tick-major ' : '') + 'thr-b4',
     });
-    t.textContent = letters[i % letters.length];
-    g.appendChild(t);
+  }
+  const pts = rose(g, { r: 138, count: RIM_COUNT, klass: 'thr-b4', skip: 1, nodeR: 2.2 });
+  for (const [x, y] of pts) g.appendChild(el('line', { x1: x, y1: y, x2: x * (150 / 138), y2: y * (150 / 138), class: 'thr-spoke thr-b4' }));
+}
+
+/** The inner wheels: twelve, seven, three — each a lattice of its
+ *  own, each on its own rule, turning together against the rim. A
+ *  band of forty-four fine marks divides the space between the first
+ *  two, so the eye has something to read the rotation against once
+ *  the chords behind it have gone still. */
+function wheels(g) {
+  rule(g, 118, 'thr-b3');
+  rose(g, { r: 112, count: OUTER_COUNT, klass: 'thr-b3', skip: 1 });
+  for (let i = 0; i < RAY_COUNT; i++) {
+    tick(g, { angle: angleAt(i, RAY_COUNT), rInner: i % 4 === 0 ? 100 : 105, rOuter: 112, klass: 'thr-tick thr-b3' });
+  }
+  rule(g, 96, 'thr-b2');
+  rose(g, { r: 76, count: MID_COUNT, klass: 'thr-b2', skip: 1, nodeR: 2.4 });
+  rule(g, 62, 'thr-b1');
+  rose(g, { r: 46, count: CORE_COUNT, klass: 'thr-b1', skip: 1, nodeR: 2.8 });
+}
+
+/** A rosette: a small lattice on its own, set outside the rim on a
+ *  diagonal. Four of them hold the square of the figure against the
+ *  circle of it — the corner ornaments those diagrams carry, drawn
+ *  from the same construction as everything else rather than as a
+ *  separate device. */
+function rosette(g, { cx, cy, r, count }) {
+  const holder = el('g', { class: 'thr-rosette', transform: `translate(${cx} ${cy})` });
+  rule(holder, r, 'thr-b2');
+  rose(holder, { r: r * 0.78, count, klass: 'thr-b2', skip: 1, nodeR: 1.2 });
+  g.appendChild(holder);
+}
+
+/** The fixed frame: the aperture at the centre with its radiance,
+ *  and the four rosettes outside the rim. Neither wheel touches
+ *  these; they hold still while both turn. */
+function frame(g) {
+  for (let i = 0; i < RAY_COUNT; i++) {
+    const long = i % 4 === 0;
+    tick(g, { angle: angleAt(i, RAY_COUNT), rInner: long ? 9 : 14, rOuter: long ? 26 : 21, klass: 'thr-ray' });
+  }
+  g.appendChild(el('circle', { cx: 0, cy: 0, r: 26, class: 'thr-gate' }));
+  g.appendChild(el('circle', { cx: 0, cy: 0, r: 8, class: 'thr-gate' }));
+  g.appendChild(el('circle', { cx: 0, cy: 0, r: 2, class: 'thr-gate-dot' }));
+  /* Far enough out that a rosette clears the rim rather than
+     straddling it: the corners of the square are where these belong,
+     holding the figure's four sides against its one circle. */
+  const d = 133;
+  for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+    rosette(g, { cx: sx * d, cy: sy * d, r: 15, count: 7 });
   }
 }
 
 function wheel() {
-  const svg = el('svg', { viewBox: '-160 -160 320 320', class: 'thr-wheel', 'aria-hidden': 'true', focusable: 'false' });
-  const g = el('g', {});
-  band(g, { r: 148, count: 12, letters: SIMPLES, klass: 'thr-b3' });
-  band(g, { r: 104, count: 7, letters: DOUBLES, klass: 'thr-b2' });
-  band(g, { r: 62, count: 3, letters: MOTHERS, klass: 'thr-b1' });
-  g.appendChild(el('circle', { cx: 0, cy: 0, r: 20, class: 'thr-gate' }));
-  svg.appendChild(g);
+  const svg = el('svg', { viewBox: '-180 -180 360 360', class: 'thr-wheel', 'aria-hidden': 'true', focusable: 'false' });
+  const outer = el('g', { class: 'thr-rotor thr-rotor-a' });
+  rim(outer);
+  svg.appendChild(outer);
+
+  const inner = el('g', { class: 'thr-rotor thr-rotor-b' });
+  wheels(inner);
+  svg.appendChild(inner);
+
+  const fixed = el('g', { class: 'thr-fixed' });
+  frame(fixed);
+  svg.appendChild(fixed);
+
   return svg;
 }
 
@@ -238,7 +350,7 @@ export function thresholdProvider(q) {
     label: 'Threshold',
     items: [{
       kind: 'threshold',
-      mark: 'א',
+      mark: '⊙',
       title: 'The thirty-two paths',
       sub: 'A private control plane, behind its own login. This page grants no access to it.',
       action: () => passage(),

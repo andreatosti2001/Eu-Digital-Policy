@@ -1203,10 +1203,10 @@ body.i18n-busy .readwrap,body.i18n-busy .portal,body.i18n-busy .hero{opacity:.45
 
    Drawn in the site's own ink, on the site's own ground, with the
    site's own hairline. It is the palette's aesthetic one layer
-   quieter: fine strokes, no fill, no glow, one slow rotation. The
-   letters are set in the body serif at metadata size and the wheel
-   never exceeds a third of the viewport, because the panel beside
-   it is the part that carries the meaning.
+   quieter: fine strokes, no fill, no glow — two rotors turning
+   against each other over a fixed frame, and the wheel never exceeds
+   a third of the viewport, because the panel beside it is the part
+   that carries the meaning.
 
    Every duration is a token. The whole animation is the presence of
    .thr-run, so removing the element mid-way — which Escape and a
@@ -1223,22 +1223,33 @@ body.i18n-busy .readwrap,body.i18n-busy .portal,body.i18n-busy .hero{opacity:.45
   backdrop-filter:blur(6px);
 }
 
-.thr-figure{flex:0 0 auto;width:min(38vh,300px)}
+.thr-figure{flex:0 0 auto;width:min(56vh,400px)}
 .thr-wheel{display:block;width:100%;height:auto;overflow:visible}
 
-.thr-ring,.thr-spoke{fill:none;stroke:var(--line);stroke-width:.75;vector-effect:non-scaling-stroke}
-.thr-ring.thr-b1{stroke:var(--mech)}
+/* Base strokes. Four tiers carry the site's own colour logic
+   inward: b4 (the rim) and b3 (the twelve) in the plain hairline,
+   b2 (the seven, and the rosettes) in dimmed paper, b1 (the three,
+   innermost) in lapis. Nothing in any tier is a glyph. */
+.thr-ring,.thr-tick,.thr-spoke{fill:none;stroke:var(--line);stroke-width:.65;vector-effect:non-scaling-stroke}
+.thr-tick-major{stroke-width:1.1}
+.thr-b1{stroke:var(--mech)}
+.thr-b2{stroke:var(--paper-dim)}
+/* The weave. Each lattice is one group, so its colour is set once
+   and the chords inherit it, and so the transition can raise the
+   whole web in a single animation instead of two hundred and
+   thirty-one of them. The chords are deliberately below the weight
+   of a hairline: what should read is the interference between them,
+   not any single line. */
+.thr-web{stroke:var(--line);opacity:.62}
+.thr-web.thr-b1{opacity:.85}
+.thr-chord{fill:none;stroke-width:.6;vector-effect:non-scaling-stroke}
+.thr-node{stroke:none;fill:var(--line);vector-effect:non-scaling-stroke}
+.thr-node.thr-b1{fill:var(--mech)}
+.thr-node.thr-b2{fill:var(--paper-dim)}
+.thr-rosette{opacity:.55}
 .thr-gate{fill:none;stroke:var(--live);stroke-width:1;vector-effect:non-scaling-stroke}
-.thr-letter{
-  font-family:var(--body);font-size:11px;
-  fill:var(--paper-faint);
-  /* Hebrew is right-to-left and these are single glyphs on a radial
-     grid, so the run direction is stated rather than inherited from
-     a page that is left-to-right. */
-  direction:rtl;
-}
-.thr-letter.thr-b1{fill:var(--mech);font-size:13px}
-.thr-letter.thr-b2{fill:var(--paper-dim)}
+.thr-gate-dot{fill:var(--live);stroke:none}
+.thr-ray{fill:none;stroke:var(--live);stroke-width:.65;opacity:.75;vector-effect:non-scaling-stroke}
 
 /* The still state: everything visible, nothing moving. This is also
    what an interrupted transition leaves behind, and what a browser
@@ -1246,18 +1257,43 @@ body.i18n-busy .readwrap,body.i18n-busy .portal,body.i18n-busy .hero{opacity:.45
 .thr-scrim .thr-wheel,.thr-scrim .thr-panel{opacity:1}
 
 .thr-run .thr-wheel{animation:thr-in var(--dur-3) var(--ease) both}
-.thr-run .thr-wheel>g{animation:thr-turn 24s linear infinite}
+/* Two rotors, opposite directions, deliberately uneven periods — an
+   instrument's rete over its mater, or two gears of different
+   sizes, never lining back up on a beat a reader could anticipate. */
+.thr-run .thr-rotor-a{animation:thr-turn 34s linear infinite}
+.thr-run .thr-rotor-b{animation:thr-turn-rev 46s linear infinite}
 .thr-run .thr-ring{stroke-dasharray:1000;stroke-dashoffset:1000;animation:thr-draw 1100ms var(--ease) forwards}
-.thr-run .thr-ring.thr-b2{animation-delay:160ms}
-.thr-run .thr-ring.thr-b1{animation-delay:320ms}
-.thr-run .thr-letter,.thr-run .thr-spoke{opacity:0;animation:thr-fade 700ms var(--ease) 620ms forwards}
-.thr-run .thr-gate{opacity:0;animation:thr-fade 900ms var(--ease) 1000ms forwards}
+.thr-run .thr-ring.thr-b3{animation-delay:120ms}
+.thr-run .thr-ring.thr-b2{animation-delay:240ms}
+.thr-run .thr-ring.thr-b1{animation-delay:360ms}
+/* A rosette's rule is a fifteen-unit circle: the shared 1000-unit
+   dash above would keep it hidden for nine tenths of its own draw,
+   so it fades in with the rest of the ornament instead. Placed after
+   that rule on purpose — the two selectors weigh the same, and this
+   one has to win. */
+.thr-run .thr-rosette .thr-ring{stroke-dasharray:none;stroke-dashoffset:0;animation:thr-fade 700ms var(--ease) 760ms forwards;opacity:0}
+.thr-run .thr-tick,.thr-run .thr-spoke,.thr-run .thr-node{
+  opacity:0;animation:thr-fade 700ms var(--ease) 620ms forwards
+}
+/* The webs raise to their resting veil, not to full opacity: their
+   own rules set .62 (and .85 for the innermost), and an animation
+   that ended at 1 would erase that. */
+.thr-run .thr-web{opacity:0;animation:thr-veil 900ms var(--ease) 700ms forwards}
+.thr-run .thr-web.thr-b1{animation-name:thr-veil-core}
+.thr-run .thr-rosette{opacity:0;animation:thr-veil-corner 700ms var(--ease) 760ms forwards}
+.thr-run .thr-gate,.thr-run .thr-gate-dot{opacity:0;animation:thr-fade 900ms var(--ease) 1000ms forwards}
+.thr-run .thr-ray{opacity:0;animation:thr-veil-ray 900ms var(--ease) 1000ms forwards}
 .thr-run .thr-panel{animation:thr-rise 520ms var(--ease) 900ms both}
 
 @keyframes thr-draw{to{stroke-dashoffset:0}}
 @keyframes thr-fade{to{opacity:1}}
+@keyframes thr-veil{to{opacity:.62}}
+@keyframes thr-veil-core{to{opacity:.85}}
+@keyframes thr-veil-corner{to{opacity:.55}}
+@keyframes thr-veil-ray{to{opacity:.75}}
 @keyframes thr-in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 @keyframes thr-turn{to{transform:rotate(360deg)}}
+@keyframes thr-turn-rev{to{transform:rotate(-360deg)}}
 @keyframes thr-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 .thr-panel{flex:1 1 340px;max-width:46ch}
@@ -1288,13 +1324,30 @@ body.i18n-busy .readwrap,body.i18n-busy .portal,body.i18n-busy .hero{opacity:.45
 .thr-back:hover{color:var(--paper-dim)}
 
 @media (prefers-reduced-motion:reduce){
-  .thr-run .thr-wheel,.thr-run .thr-wheel>g,.thr-run .thr-ring,
-  .thr-run .thr-letter,.thr-run .thr-spoke,.thr-run .thr-gate,.thr-run .thr-panel{
+  .thr-run .thr-wheel,.thr-run .thr-rotor-a,.thr-run .thr-rotor-b,.thr-run .thr-ring,
+  .thr-run .thr-tick,.thr-run .thr-spoke,.thr-run .thr-node,
+  .thr-run .thr-gate,.thr-run .thr-gate-dot,.thr-run .thr-panel{
     animation:none;opacity:1;stroke-dashoffset:0;transform:none
   }
+  /* Kept apart from the block above, and each given its own resting
+     opacity rather than 1. These rest below full — the webs at .4
+     and .6, the rosettes at .55, the rays at .75 — and the running
+     rules above start them at 0, so cancelling the animation without
+     naming a value would leave them invisible rather than finished.
+     Reduced motion means no animation, not a different finished
+     appearance and certainly not a missing one. */
+  .thr-run .thr-web,.thr-run .thr-rosette,.thr-run .thr-ray,
+  .thr-run .thr-rosette .thr-ring{
+    animation:none;stroke-dashoffset:0;transform:none
+  }
+  .thr-run .thr-web{opacity:.62}
+  .thr-run .thr-web.thr-b1{opacity:.85}
+  .thr-run .thr-rosette{opacity:.55}
+  .thr-run .thr-ray{opacity:.75}
+  .thr-run .thr-rosette .thr-ring{opacity:1}
 }
 
 @media (max-width:640px){
   .thr-scrim{flex-direction:column;gap:var(--s-5);align-content:center}
-  .thr-figure{width:min(30vh,210px)}
+  .thr-figure{width:min(36vh,260px)}
 }

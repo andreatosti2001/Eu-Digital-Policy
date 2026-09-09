@@ -319,9 +319,22 @@ and that the suite runs in CI.
 ## The hidden Control Room entry
 
 `js/threshold.js`. Typing `thirty-two paths` into the search palette offers one extra
-result; choosing it draws a wheel — three concentric bands divided 3 · 7 · 12,
-twenty-two Hebrew letters, fine lines in the site's own ink — and offers a link to a
-login page.
+result; choosing it draws a wheel — four nested chord lattices, twenty-two points on
+the rim and then twelve, seven and three, every point joined to every other so the
+chords weave the figure, inside a stack of concentric rules with a radiant aperture at
+the centre and four rosettes outside the rim, turning as two independent rotors
+against a fixed frame, fine lines in the site's own ink and no glyph anywhere on it —
+and offers a link to a login page.
+
+**Revised twice.** The first draft drew twenty-two Hebrew letterforms into the
+divisions; the letters read as decoration a reader could not parse rather than as
+geometry, and they went. The second went too far the other way — a sparse instrument
+face, a graduated bezel over two polygons, correct but thin, with none of the density
+the brief's visual language actually has. The third is the chord lattice above: the
+same closed divisions, drawn the way those diagrams are actually drawn. Through all
+three the 3 · 7 · 12 · 22 division survives, because the enum-authority argument in
+`docs/AUTONOMY-AUTHORIZATION-POLICY.md` §9 is the reason it is there at all — and
+through all three there is not one letter in it.
 
 It authenticates nothing, authorizes nothing, and holds no credential, no endpoint and
 no privileged state. **The phrase is not a credential**: it is in a file served to every
