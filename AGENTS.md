@@ -35,6 +35,7 @@ the evidence it describes.
 | `docs/ORCHESTRATOR.md` | The Master Orchestrator: the ten workflow types, the five end states, the capability register, the eight routing checks, the six conflict shapes — and §13, what none of it proves |
 | `docs/FIRST-END-TO-END-AUDIT.md` | SESSION 24's simulated end-to-end cycle: what ran, what was simulated, the Control Room discovery path, the intended visual sequence — and **twenty-three findings, none fixed** |
 | `docs/LIMITED-AUTONOMY.md` | SESSION 26: the governance grant that switched five low-risk categories on, what a grant may never say, the six gates and the seven steps — and §7, what none of it proves |
+| `docs/CONTINUOUS-IMPROVEMENT.md` | SESSION 27: the loop — eight observers, one as-of date, the tracked cycle ledger, and the rule that an observer which did not run resolves nothing. **§4 is the finding that matters: no proposal can pass the autonomy gate ladder, and it is not fixed** |
 | `docs/SESSION-25-FIRST-REAL-WORLD-RUN.md` | SESSION 25's first non-simulated run — `--live` against the five registered real endpoints, all five refused by this environment's network policy, and what ran for real against the actual corpus and pages once that boundary was hit — with a prioritized human review queue, none of it decided |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
@@ -105,6 +106,33 @@ the two eligible ones, a never-automatic field (`tier`, `role`, `supports`, `las
 so a line written around `recordGrant` is not honoured either. `agent/policy/` is itself on
 the never-automatic path list, so **no grant can widen the rules that admitted it**.
 `docs/LIMITED-AUTONOMY.md`.
+
+**AND SESSION 27 FOUND THAT NO PROPOSAL CAN PASS THE GATE LADDER AT ALL.** Take a proposal
+with nothing wrong with it, in a category the grant enables, over a path the grant names: five
+of the six autonomy gates pass and the sixth, `policy_route_pre`, fails on one condition.
+`rollback_mechanical` reads the branch, base commit and per-file pre-change hashes that
+`agent/implement/apply.mjs openContext()` records in **step 2** of the seven, and gate 3 runs
+**before step 1**. Four of its six elements are `unknown` for every proposal ever written, and
+it is not one of the four `MEASURED_CONDITIONS` gate 3 exempts. So
+`docs/LIMITED-AUTONOMY.md` §7.1's "nothing produces a proposal in an enabled category" is true
+and is **not the binding constraint**: the permitting half is unreachable, not merely
+unexercised. It is **not fixed** — changing what a gate proves is Class C work on the
+governance layer — and the two available repairs are different judgements about how much a
+rollback must be established before a change is made, not one obvious correction.
+`docs/CONTINUOUS-IMPROVEMENT.md` §4 carries the reproduction.
+
+**THE LOOP IS `agent/improve/`, AND IT CHANGES NOTHING.** Eight observers in one process
+against one corpus position with one as-of date; five produce identified findings and three
+produce counts, and the two are never mixed because a count has no identity to follow. Its one
+governing rule is that **an observer that did not run is not an observer that found nothing** —
+movement is computed per observer, and anything owned by an observer that did not run in BOTH
+cycles is `undetermined`, never `resolved`. Its triage is **not** the gate ladder: it answers a
+weaker question, and `eligible` means only "worth handing to the runner". Its cycle ledger,
+`agent/improve/cycles/cycles.jsonl`, is **the one run store here that is git-tracked**, because
+a loop whose memory does not survive a clone is not a loop — and it carries only public
+readings, enforced by a refusal to write rather than by a convention. First recorded cycle: 210
+findings, 0 referable, 66 to a person, 144 proposing no act.
+`docs/CONTINUOUS-IMPROVEMENT.md`.
 
 **`agent/autonomy/` is the runner, and a grant replaces exactly two gates.**
 `agent/implement/preflight.mjs`'s `approved` and `approval_attributable`, and nothing else;
@@ -224,25 +252,27 @@ node --test agent/policy/selftest.mjs           # the autonomy policy, incl. SES
 node --test agent/policy/verify/selftest.mjs   # SESSION 23.5's gate, run twice, asserting it is reproducible
 node --test agent/simulation/selftest.mjs      # SESSION 24's simulation, incl. the byte-identical-tree assertion
 node --test agent/autonomy/selftest.mjs       # SESSION 26's limited-autonomy runner, incl. the git half against a real temporary repository
+node --test agent/improve/selftest.mjs         # SESSION 27's improvement loop, incl. two real cycles over the real corpus
 node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**1036 tests across the twenty-one suites**, all passing as of SESSION 26 — 1035 with one
+**1067 tests across the twenty-two suites**, all passing as of SESSION 27 — 1066 with one
 skipped when the working tree is on `main`, because `agent/autonomy/selftest.mjs` test 28
 rehearses the real cycle and the cycle refuses to run there
-(998 across twenty after SESSION 24; 978 across nineteen after SESSION 23.5; 934 after
+(1036 across twenty-one after SESSION 26; 998 across twenty after SESSION 24; 978 across nineteen after SESSION 23.5; 934 after
 SESSION 22 on its own branch; 909 after SESSION 23.5 on its own; 867 after SESSION 21; 812
 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before them). SESSIONS 22, 23 and 23.5
 were merged, so none of those middle figures is a total on its own.
 
-**`agent/implement/selftest.mjs` R6 has now caught the suite list growing six times** —
+**`agent/implement/selftest.mjs` R6 has now caught the suite list growing seven times** —
 SESSION 20, SESSION 22, SESSION 23, the merge where the two branches had each updated the
 same assertion to a different number, SESSION 24, whose simulation harness would otherwise
 have landed without ever gating a change under `agent/`, and SESSION 26, where it mattered
 most: the autonomy runner is the first thing here that can write a file without a person, and
-a suite for it that nothing ran would have been a gate on nothing. That is the assertion
-doing its job. It asserts twenty suites. SESSION 23 also changed `agent/detector/impact.mjs`'s
+a suite for it that nothing ran would have been a gate on nothing; and SESSION 27, whose loop
+reads every other agent's output and routes it. That is the assertion doing its job. It
+asserts twenty-one suites. SESSION 23 also changed `agent/detector/impact.mjs`'s
 `MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`;
 SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
 changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
@@ -283,6 +313,18 @@ node agent/autonomy/cli.mjs actions             every attempt: merged, reverted,
 ```
 
 Both register commands run on every push. Neither writes anything.
+
+One pass over the whole system, and the comparison with the pass before:
+
+```
+node agent/improve/cli.mjs cycle --as-of YYYY-MM-DD [--record] [--store]
+node agent/improve/cli.mjs observers        the register, runs nothing
+node agent/improve/cli.mjs reach            what the grant can actually reach, measured
+node agent/improve/cli.mjs history          every recorded cycle, and the movement between them
+```
+
+`cycle` **without `--record` writes nothing**, and no flag in the module can touch `data/`,
+`i18n/`, `js/`, `css/` or a page. `reach` runs on every push.
 
 **There is no overall health score.** `agent/health/model.mjs overallScore()` throws, with the
 reasoning. Five metrics are marked `not_a_score` because the only legitimate way to move them
@@ -406,6 +448,18 @@ patches, not checks. **Do not re-run** the latter two.
   deliberate and must stay: "reveal CONTROL ROOM followed by the normal authentication
   interface" must NOT be implemented as a login form on the published page, because that
   would be a credential prompt in the public tree. `docs/FIRST-END-TO-END-AUDIT.md` §6.
+
+- **Every run store here is git-ignored EXCEPT one, and the exception is deliberate.**
+  `agent/improve/cycles/cycles.jsonl` is tracked, because a loop whose memory does not survive
+  a clone is not a loop: every other store is per-machine, so cross-session movement would
+  otherwise be a comparison against the previous session's PROSE in `docs/HANDOVER.md` — a
+  second home for those facts, which has already drifted once (`docs/LIMITED-AUTONOMY.md` §7c).
+  The precedent is the grant ledger and the decision ledger, not the health history. What pays
+  for it is a rule rather than a promise: a signal classified `private` by
+  `agent/health/model.mjs` is withheld and the withholding is recorded, the health monitor's
+  own `collectLeaks()` runs over the serialised entry against the real private metric register,
+  and a path under `.control-room/` anywhere in an entry is a **refusal to write**, not a
+  redaction. Nothing records without `--record`.
 
 - **The autonomy layer's action ledger is git-ignored, and the COMMIT is the durable record.**
   `agent/autonomy/actions/actions.jsonl` holds one line per attempt — merged, reverted and

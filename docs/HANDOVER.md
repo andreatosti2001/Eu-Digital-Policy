@@ -1,8 +1,125 @@
 # HANDOVER
 
-**Last updated:** SESSION 26 · 9 September 2026
-**Branch:** `claude/limited-autonomy-activation-ovbrf7`, cut from `origin/main` at the
-SESSION 25 merge.
+**Last updated:** SESSION 27 · 9 September 2026
+**Branch:** `claude/continuous-improvement-loop-vpd2u1`, cut from `origin/main` at the
+SESSION 26 merge (`aaf6691`).
+
+---
+
+## SESSION 27 — the continuous improvement loop, and what it found
+
+**What was built:** `agent/improve/`, eight files, thirty-one tests. Eight observers run in one
+process against one corpus position with one as-of date; the pass is compared with the last
+recorded one; every record is routed to a desk; the whole thing ends at a person. Full report:
+**`docs/CONTINUOUS-IMPROVEMENT.md`**.
+
+**THE FINDING THAT MATTERS, AND IT IS NOT FIXED: no proposal can pass the autonomy gate
+ladder.** Take an `ImplementationProposal` with nothing wrong with it — one file under `docs/`,
+which is a path the grant names and `machine_derived_field`, which the grant enables; real
+evidence, no interpretation, no blocking question, `low` risk, a rollback plan. Under the real
+policy in force, five of the six gates pass and `policy_route_pre` fails on **one** condition.
+
+`rollback_mechanical` reads a change context — the branch, the base commit and the per-file
+pre-change hashes `agent/implement/apply.mjs openContext()` records. That context is produced in
+**step 2** of the seven steps. `agent/autonomy/cycle.mjs` evaluates gate 3 **before step 1**. So
+four of its six elements (`previous_known_good_state`, `branch_or_commit`,
+`execution_mechanism`, `post_rollback_validation`) are `unknown` for every proposal that has
+ever been written, and it is not one of the four `MEASURED_CONDITIONS` gate 3 exempts.
+
+**So `docs/LIMITED-AUTONOMY.md` §7.1 is true and is not the binding constraint.** "Nothing in
+this repository currently produces a proposal in one of the five enabled categories" is a fact
+about producers. The stronger fact is that the permitting half is **unreachable**, not merely
+unexercised. This is consistent with SESSION 26's own §6, which shows gate 3 refusing a real
+proposal with "4 of six rollback elements absent" among five reasons — four other gates refused
+each of the fourteen too, so that fifth reason was never the one that mattered and nothing was
+in a position to notice.
+
+**Why it was not fixed.** Changing what a gate proves is Class C work on the governance layer,
+in front of a person, and `agent/policy/` is on the never-automatic path list on purpose. The
+two obvious repairs are not equivalent and choosing between them is a judgement, not a bug fix:
+adding `rollback_mechanical` to `MEASURED_CONDITIONS` makes it an unknown gate 3 tolerates and
+step 6 re-checks on the measured facts; evaluating gate 3 after `isolate` keeps it binding but
+moves the gate behind the branch cut, changing what "before anything is written" means. A third
+reading is that the refusal is correct. `docs/CONTINUOUS-IMPROVEMENT.md` §4 has the
+reproduction, in three steps, and `agent/improve/selftest.mjs` test 17 pins it so the day
+somebody changes the gate, it fails and says why.
+
+**The loop reports the blocker rather than routing around it.** `triage()` separates the case
+where the only refusal is that condition and emits
+`triage.blocked_only_by_prerun_condition` on every cycle. It does **not** refer such a proposal:
+referring what the runner would refuse would make the loop's answer disagree with the answer
+that governs.
+
+**A SECOND FINDING, measured rather than inferred: six of the eight fields the grant allowlists
+have never existed in `data/sources.json`.** `last_retrieved`, `retrieved_at`, `checksum`,
+`content_hash`, `recheck_interval` and `freshness_window` appear nowhere in the file — not on a
+record, not in `$description`, not in `$note`. Only `url` and `url_status` are there, on all 77
+records. So `retrieval_metadata` has no surface to write to at all. This is not a defect: a
+permission over nothing is inert, and §7.6 already says absence is the safe direction for the
+opposite case. It is **not repaired**, and repairing it would be the failure it looks like a fix
+for — adding `checksum` to `data/sources.json` is a schema decision about the legal record taken
+to make an autonomy demonstration possible. `node agent/improve/cli.mjs reach` measures it on
+every push. `docs/CONTINUOUS-IMPROVEMENT.md` §5.
+
+**THE ONE RULE THE LOOP TURNS ON.** An observer that did not run is not an observer that found
+nothing. A finding absent this cycle was either fixed or its observer did not run, and the
+finding lists cannot tell those apart — so movement is per observer, and an observer that did
+not run in BOTH cycles yields `undetermined` for everything it owns. Never `resolved`, never
+counted as an improvement. Tests 5 to 8 are that case from four directions, including the
+mirror image: an observer absent from the PREVIOUS cycle makes nothing new. A first cycle
+reports nothing new at all.
+
+**THE CYCLE LEDGER IS TRACKED, AND IT IS THE ONLY RUN STORE HERE THAT IS.** Every other one is
+ignored and argues for it in `.gitignore`; the argument is good and this is the exception,
+because a loop whose memory does not survive a clone is not a loop. The precedent is the grant
+ledger and the decision ledger, not the health history. What pays for it is a rule: a signal
+classified `private` by `agent/health/model.mjs` is withheld with the reason recorded, the
+health monitor's own `collectLeaks()` runs over the serialised entry against the real private
+metric register, and a path under `.control-room/` is a **refusal to write** rather than a
+redaction. Nothing records without `--record`, for the reason
+`agent/health/history.mjs writePublic()` gives about publishing.
+
+**THE FIRST RECORDED CYCLE.** `cycle-9f20d795beea`, trace
+`dbd43f16b2f34bf1fa0d2e7e3183f522`. 8 of 8 observers ran, **210 findings** — depth 57,
+data-proposals 49, editorial 44, architect 40, ux 20. Triage: **0 referable to the autonomy
+runner · 66 to a person · 144 proposing no act.** All 66 are refused by a category no policy may
+ever automate: `legal_interpretation` 30, `architecture_change` 16, `substantive_data_change`
+13, `taxonomy_change` 5, `schema_change` 2. `triage.blocked_only_by_prerun_condition` is 0 and
+that zero means "no proposal got that far", not "the blocker is gone" — nothing in the real
+corpus is refused later than the category gate, which is why the finding above needed a
+well-formed fixture to surface.
+
+**One existing assertion changed, and it is the R6 shape.**
+
+| | |
+|---|---|
+| `agent/implement/selftest.mjs` R6 | `AGENT_SUITES.length` 20 → 21. **Seventh catch.** The loop reads every other agent's output and routes it, so a change that broke the routing would otherwise have landed with nothing running the suite that checks it. The membership list gains `agent/improve/selftest.mjs` explicitly as well. |
+
+No other existing assertion was touched, and no test was deleted, skipped or relaxed.
+
+**Everything was re-run after `git add`, not before.** **1067 tests across twenty-two suites, 0
+failures**, measured on this session's branch (1036 across twenty-one before; the loop adds 31).
+18/18 contracts satisfiable. The four validators: `validate.mjs` 0 errors, `i18n-audit.mjs` 0
+errors 0 warnings, `design-qa.mjs` 0 errors and the same five warnings by file and line, 106
+unverified records. `agent/implement/cli.mjs boundary` at **0 blocking / 13 warnings**,
+unchanged, with `agent/ is inside the public surface` at **236 files** where SESSION 26 recorded
+225 — this session's eleven files being counted. `.control-room/cli.mjs boundary` at 0 errors,
+22 routes, 8 public, 0 production controls, unchanged. The browser suite in a real Chromium:
+**125 pass · 3 fail · 2 undecidable**, the same three SESSION 19 defects, untouched.
+
+**`freshness.mjs` still exits 1** on the same "1 item(s) need attention" SESSIONS 24, 25 and 26
+all recorded. It is not this session's regression and it is not fixed. It is the sole reason
+`validators.at_baseline` reads false in the recorded cycle.
+
+**Nothing in `data/`, `i18n/`, `js/`, `css/` or any page was changed**, and
+`agent/improve/selftest.mjs` test 20 runs two real cycles and asserts it from outside.
+
+**What SESSION 28 inherits.** The decision in §4 is the whole of the next objective and it is a
+person's. Until it is taken, the honest statement about limited autonomy is stronger than
+SESSION 26's: not "nothing produces a proposal in an enabled category" but "no proposal can pass
+gate 3". Second: the loop now has one recorded cycle, and the second one is where it starts
+being worth something — the first comparison this repository can make from a measurement rather
+than from a recollection.
 
 ---
 

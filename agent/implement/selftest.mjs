@@ -624,7 +624,7 @@ test('R6 · a validator that could not be executed is exit 127, never a pass', (
 test('R6 · this suite is in the list the agent runs for a change under agent/ or tools/', () => {
   for (const s of ['agent/implement/selftest.mjs', 'agent/browser/selftest.mjs', 'agent/health/selftest.mjs',
     'agent/orchestrator/selftest.mjs', 'agent/policy/selftest.mjs', 'agent/policy/verify/selftest.mjs',
-    'agent/autonomy/selftest.mjs']) {
+    'agent/autonomy/selftest.mjs', 'agent/improve/selftest.mjs']) {
     assert.ok(AGENT_SUITES.includes(s), `${s} must be in AGENT_SUITES, or a change under agent/ would land without running it`);
   }
   /* The count is asserted, not just the membership. A suite silently
@@ -639,9 +639,12 @@ test('R6 · this suite is in the list the agent runs for a change under agent/ o
      is the SIXTH, and the one where it mattered most: the autonomy
      runner is the first thing in this repository that can write a
      file without a person, and a suite for it that nothing ran would
-     have been a gate on nothing. */
-  assert.equal(AGENT_SUITES.length, 20,
-    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24) and the limited-autonomy runner (26)');
+     have been a gate on nothing. SESSION 27 is the SEVENTH: the
+     continuous improvement loop reads every other agent's output and
+     routes it, so a change that broke the routing would otherwise
+     have landed with nothing running the suite that checks it. */
+  assert.equal(AGENT_SUITES.length, 21,
+    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24), the limited-autonomy runner (26) and the continuous improvement loop (27)');
 });
 
 /* ============================================================
