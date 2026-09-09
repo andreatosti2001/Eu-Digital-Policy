@@ -237,6 +237,15 @@ and it is named here and in `docs/HANDOVER.md` so a reader can disagree with it.
 
 ---
 
+## 7c · A note on the test count
+
+**1036 tests across twenty-one suites, 0 failures**, measured on this session's branch. On
+`main` it is 1035 with one skipped: `agent/autonomy/selftest.mjs` test 28 rehearses the real
+cycle, and the cycle refuses to run on `main` because a push there publishes to the live site
+and there is no deploy gate. The test skips itself rather than passing for the wrong reason.
+
+---
+
 ## 8 · Commands
 
 ```

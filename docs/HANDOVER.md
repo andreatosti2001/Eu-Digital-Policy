@@ -94,7 +94,10 @@ listed nineteen — `agent/simulation/selftest.mjs` had never been in CI. Both i
 is switched on to do on every push.
 
 **Everything was re-run after `git add`, not before.** **1036 tests across twenty-one suites,
-0 failures** (998 across twenty before; the autonomy suite adds 38, and three earlier tests
+0 failures, measured on this session's branch.** On `main` the figure is 1035 with one
+skipped: `agent/autonomy/selftest.mjs` test 28 rehearses the real cycle, and the cycle
+refuses to run on `main`, so the test skips itself rather than passing for the wrong reason.
+That is the assertion being honest about where it can and cannot establish anything. (998 across twenty before; the autonomy suite adds 38, and three earlier tests
 gained assertions rather than counts — the orchestrator's R6 split into three claims). 18/18 contracts
 satisfiable. The four validators at the `docs/CURRENT-ARCHITECTURE.md` §12 baseline: 0 errors
 on `validate.mjs` and `i18n-audit.mjs`, 0 errors and the same five `design-qa` warnings by

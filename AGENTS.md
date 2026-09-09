@@ -228,7 +228,9 @@ node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**1036 tests across the twenty-one suites**, all passing as of SESSION 26
+**1036 tests across the twenty-one suites**, all passing as of SESSION 26 — 1035 with one
+skipped when the working tree is on `main`, because `agent/autonomy/selftest.mjs` test 28
+rehearses the real cycle and the cycle refuses to run there
 (998 across twenty after SESSION 24; 978 across nineteen after SESSION 23.5; 934 after
 SESSION 22 on its own branch; 909 after SESSION 23.5 on its own; 867 after SESSION 21; 812
 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before them). SESSIONS 22, 23 and 23.5
