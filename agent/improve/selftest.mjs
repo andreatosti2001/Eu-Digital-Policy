@@ -47,6 +47,7 @@ import { MemorySink } from '../observability/sink.mjs';
 import { DEFAULT_POLICY, ACTION_CATEGORIES, categoriseProposal } from '../policy/categories.mjs';
 import { policyInForce, GRANTABLE_FIELDS, NEVER_AUTOMATIC_FIELD_NAMES } from '../policy/governance.mjs';
 import { privateMetrics } from '../health/metrics.mjs';
+import { evaluate as evaluatePolicy } from '../policy/engine.mjs';
 import { FIXTURES } from '../schemas/fixtures.mjs';
 import { MEASURED_CONDITIONS } from '../autonomy/cycle.mjs';
 
@@ -57,7 +58,7 @@ import {
   entryFor, writeCycle, readCycles, previousCycle, publicationRefusals, cycleId,
   CycleRefused, CYCLE_LEDGER_VERSION, CYCLE_DIR, cycleLedgerPath, FORBIDDEN_IN_ENTRY,
 } from './ledger.mjs';
-import { triage, runImprovementCycle, PROPOSAL_CONTRACTS, DESTINATIONS, IMPROVE_AGENT, PRE_RUN_UNSATISFIABLE } from './cycle.mjs';
+import { triage, runImprovementCycle, PROPOSAL_CONTRACTS, DESTINATIONS, IMPROVE_AGENT } from './cycle.mjs';
 
 const REPO = new URL('../..', import.meta.url).pathname.replace(/\/$/, '');
 const tracer = () => new Tracer({ sink: new MemorySink(), attributes: { agent: IMPROVE_AGENT } });
@@ -504,67 +505,71 @@ test('16c · the cycle ledger is the one store here that is NOT git-ignored', ()
    17–19 · THE TRIAGE
    =============================================================== */
 
-test('17 · SESSION 27\'s finding: a flawless proposal is refused by a condition no proposal can satisfy', () => {
-  /* THE POSITIVE THIS SUITE NEEDS, AND WHAT IT ACTUALLY FOUND.
-     `machine_derived_field` over docs/ is enabled by the real grant
-     in agent/policy/governance/grants.jsonl. The fixture is a
-     well-formed ImplementationProposal writing one file under docs/,
-     with real evidence, no interpretation and nothing blocking — and
-     it is STILL refused, under the policy actually in force, by
-     exactly one condition.
+test('17 · the gate SESSION 27 found unpassable now passes, and only for the right reason', () => {
+  /* WHAT THIS TEST USED TO ASSERT, AND WHY IT CHANGED.
 
-     That condition is `rollback_mechanical`. It reads the branch, the
-     base commit and the per-file pre-change hashes that
-     agent/implement/apply.mjs openContext() records in step 2 of the
-     seven; agent/autonomy/cycle.mjs evaluates it in gate 3, which
-     runs before step 1. Four of its six elements are therefore
-     `unknown` for every proposal at that point, and it is not one of
-     the four MEASURED_CONDITIONS that are allowed to be.
+     It pinned a finding: a flawless proposal in an enabled category
+     over a granted path was refused by `rollback_mechanical`, a
+     condition that reads a change context `openContext()` produces in
+     STEP 2 while gate 3 runs before STEP 1. Four of its six elements
+     were `unknown` for every proposal ever written, the condition
+     reported `failed`, and no proposal could pass the ladder.
 
-     So the permitting half of limited autonomy is not merely
-     unexercised, as docs/LIMITED-AUTONOMY.md §7.1 says — on this
-     evidence it is unreachable. This test pins the finding so that
-     the day somebody changes the gate, it fails and says why.
-     It is NOT fixed here: changing what a gate proves is Class C
-     work on the governance layer, and agent/policy/ is on the
-     never-automatic path list on purpose. */
+     The repository author gave an explicit warrant to change what
+     that gate proves (docs/CONTINUOUS-IMPROVEMENT.md §4a). Two things
+     moved: the condition now returns `unknown` rather than `failed`
+     when nothing is ESTABLISHED missing, and it joined
+     `MEASURED_CONDITIONS`. So the test now asserts the fix, and
+     asserts the two ways it could silently rot. */
   const inForce = policyInForce({}).policy;
   const t = triage(cleanDocsProposal(), inForce);
 
   assert.equal(t.category, 'machine_derived_field');
   assert.ok(inForce.enabled_categories.includes('machine_derived_field'),
     'the real grant no longer enables machine_derived_field, so this test is about a category nobody switched on');
-  assert.equal(t.destination, 'human_queue');
-  assert.equal(t.blocked_only_by_prerun_condition, true,
-    `the refusal is no longer the single pre-run condition, so SESSION 27's finding has moved: ${t.why}`);
-  assert.deepEqual(t.failed_conditions, [PRE_RUN_UNSATISFIABLE]);
-  assert.ok(!MEASURED_CONDITIONS.includes(PRE_RUN_UNSATISFIABLE),
-    `${PRE_RUN_UNSATISFIABLE} is now one of the measured conditions, which would close this finding. Delete it from cycle.mjs and from docs/CONTINUOUS-IMPROVEMENT.md §4 rather than leaving both.`);
-  assert.match(t.why, /step 2|openContext/);
+  assert.equal(t.destination, 'autonomy_runner',
+    `a flawless proposal in an enabled category over a granted path is still not referable: ${t.why}`);
+
+  /* ROT 1 · the condition sliding back to `failed` before a run.
+     That is the original defect, and it would make the ladder
+     unpassable again without any test naming it. */
+  const conds = evaluatePolicy({
+    actor: { kind: 'implementation_qa', id: 'autonomy-runner' },
+    action: 'implement.apply', environment: 'local',
+    proposal: cleanDocsProposal(), policy: inForce, facts: {},
+  }).conditions;
+  const rb = conds.find((c) => c.condition === 'rollback_mechanical');
+  assert.equal(rb.verdict, 'unknown',
+    'rollback_mechanical reads `failed` before a run again. Nothing has been established missing at that point — this is the §0.3 error that made the gate unpassable. docs/CONTINUOUS-IMPROVEMENT.md §4.');
+  assert.deepEqual(rb.absent, [], 'nothing can be established missing before a change context exists');
+
+  /* ROT 2 · every referral must rest only on unknowns the runner has
+     declared it will measure and re-check. An unknown outside that
+     list reaching a referral is a condition switched off. */
+  assert.ok((t.unknown_conditions ?? []).every((c) => MEASURED_CONDITIONS.includes(c)),
+    `a referral rests on an unknown that is not a measurement: ${(t.unknown_conditions ?? []).join(', ')}`);
 });
 
-test('17b · the referring path is not dead code', () => {
-  /* A suite that could only ever see a refusal cannot tell
-     "correctly refused" from "broken" — the reason
-     agent/policy/selftest.mjs test 1 exists. The pre-run condition
-     above is supplied here as a measured fact, which is what a real
-     run does at step 6, and the SAME proposal then refers. */
-  const withContext = triage(cleanDocsProposal(), policyInForce({}).policy);
-  assert.equal(withContext.destination, 'human_queue');
+test('17b · the fix did not weaken the gate: an established-missing element still refuses', () => {
+  /* THE NEGATIVE THIS SUITE NEEDS. Making the condition `unknown`
+     before a run must not make it `unknown` when a plan is genuinely
+     broken — otherwise a change could merge with no way back, which
+     is the harm the condition exists to prevent. `absent` is checked
+     before `unknown` in agent/policy/conditions.mjs, and this is that
+     ordering asserted from the outside. */
+  const inForce = policyInForce({}).policy;
 
-  const t = triage(cleanDocsProposal(), policyInForce({}).policy, {
-    context: {
-      branch: 'improve-selftest-branch',
-      commit: 'f'.repeat(40),
-      permitted: ['docs/IMPROVE-SELFTEST-NOTE.md'],
-      before: { 'docs/IMPROVE-SELFTEST-NOTE.md': { exists: false, sha256: null, bytes: 0 } },
-      rollback: { method: 'git checkout <commit> -- <permitted paths>', command: 'git checkout' },
-    },
-  });
-  assert.equal(t.destination, 'autonomy_runner', `the referring path is broken: ${t.why}`);
-  assert.ok(t.why.includes('agent/autonomy/'), 'a referral must name what actually decides');
-  assert.ok(t.unknown_conditions.every((c) => MEASURED_CONDITIONS.includes(c)),
-    'a referral was made with an unknown that is not one of the four measurements');
+  const irreversible = triage(cleanDocsProposal({
+    rollback_plan: { method: 'not_reversible', steps: [], verification: null, irreversible_reason: 'a fixture' },
+  }), inForce);
+  assert.equal(irreversible.destination, 'human_queue',
+    'a proposal whose rollback plan cannot be executed was referred to the autonomy runner');
+  assert.ok((irreversible.failed_conditions ?? []).includes('rollback_mechanical'),
+    'the refusal did not come from the rollback condition, so this test is not measuring what it names');
+
+  const noPlan = triage(cleanDocsProposal({ rollback_plan: null }), inForce);
+  assert.equal(noPlan.destination, 'human_queue', 'a proposal with no rollback plan at all was referred');
+  assert.ok((noPlan.failed_conditions ?? []).includes('rollback_mechanical'));
 });
 
 test('18 · the same proposal is refused where no grant enables its category', () => {
@@ -576,8 +581,8 @@ test('18 · the same proposal is refused where no grant enables its category', (
   assert.equal(t.destination, 'human_queue');
   assert.equal(t.category, 'machine_derived_field');
   assert.match(t.why, /no governance grant enables it/);
-  assert.notEqual(t.blocked_only_by_prerun_condition, true,
-    'a category refusal must not be reported as the pre-run condition, which is a different and much narrower finding');
+  assert.ok(!(t.failed_conditions ?? []).length,
+    'a category refusal must be reported as a category refusal, not as a failed mandatory condition');
 });
 
 test('19 · a never-automatic field is refused however the proposal describes itself', () => {

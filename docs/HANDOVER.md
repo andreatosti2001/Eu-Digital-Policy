@@ -13,42 +13,68 @@ process against one corpus position with one as-of date; the pass is compared wi
 recorded one; every record is routed to a desk; the whole thing ends at a person. Full report:
 **`docs/CONTINUOUS-IMPROVEMENT.md`**.
 
-**THE FINDING THAT MATTERS, AND IT IS NOT FIXED: no proposal can pass the autonomy gate
-ladder.** Take an `ImplementationProposal` with nothing wrong with it — one file under `docs/`,
-which is a path the grant names and `machine_derived_field`, which the grant enables; real
-evidence, no interpretation, no blocking question, `low` risk, a rollback plan. Under the real
-policy in force, five of the six gates pass and `policy_route_pre` fails on **one** condition.
+**THE FINDING THAT MATTERS: the autonomy gate ladder was unpassable. It is now repaired, under
+an explicit warrant from the repository author.** Take an `ImplementationProposal` with nothing
+wrong with it — one file under `docs/`, a path the grant names and `machine_derived_field`,
+which the grant enables; real evidence, no interpretation, no blocking question, `low` risk, a
+rollback plan. Under the real policy in force, five of the six gates passed and
+`policy_route_pre` refused. It had **two independent locks on the same door**, and the second
+was invisible until the first was picked.
 
-`rollback_mechanical` reads a change context — the branch, the base commit and the per-file
-pre-change hashes `agent/implement/apply.mjs openContext()` records. That context is produced in
-**step 2** of the seven steps. `agent/autonomy/cycle.mjs` evaluates gate 3 **before step 1**. So
-four of its six elements (`previous_known_good_state`, `branch_or_commit`,
-`execution_mechanism`, `post_rollback_validation`) are `unknown` for every proposal that has
-ever been written, and it is not one of the four `MEASURED_CONDITIONS` gate 3 exempts.
+**Lock 1.** `rollback_mechanical` reads a change context — the branch, the base commit and the
+per-file pre-change hashes `agent/implement/apply.mjs openContext()` records in **step 2**;
+gate 3 runs **before step 1**. Four of its six elements were therefore `unknown` for every
+proposal ever written. `assessRollback()` has always distinguished `unknown` (not established)
+from `absent` (established missing); `rollbackMechanical()` collapsed both into `failed`, which
+is this repository's §0.3 error.
 
-**So `docs/LIMITED-AUTONOMY.md` §7.1 is true and is not the binding constraint.** "Nothing in
-this repository currently produces a proposal in one of the five enabled categories" is a fact
-about producers. The stronger fact is that the permitting half is **unreachable**, not merely
-unexercised. This is consistent with SESSION 26's own §6, which shows gate 3 refusing a real
-proposal with "4 of six rollback elements absent" among five reasons — four other gates refused
-each of the fourteen too, so that fifth reason was never the one that mattered and nothing was
-in a position to notice.
+**Lock 2.** Gate 3's third clause read `route !== 'blocked'`. There are two ways the engine
+returns `blocked` — an unauthorized actor, or an unmet condition on `NOT_WAIVABLE_BY_APPROVAL`
+— and **every measured condition is on that list**, so the clause was unsatisfiable before a
+run *independently of lock 1*. Fixing only the rollback condition moved the refusal from clause
+1 to clause 3 and changed nothing a caller could see: the gate then reported "0 condition(s)
+fail and 0 non-measurement condition(s) are unknown" **and failed anyway**.
 
-**Why it was not fixed.** Changing what a gate proves is Class C work on the governance layer,
-in front of a person, and `agent/policy/` is on the never-automatic path list on purpose. The
-two obvious repairs are not equivalent and choosing between them is a judgement, not a bug fix:
-adding `rollback_mechanical` to `MEASURED_CONDITIONS` makes it an unknown gate 3 tolerates and
-step 6 re-checks on the measured facts; evaluating gate 3 after `isolate` keeps it binding but
-moves the gate behind the branch cut, changing what "before anything is written" means. A third
-reading is that the refusal is correct. `docs/CONTINUOUS-IMPROVEMENT.md` §4 has the
-reproduction, in three steps, and `agent/improve/selftest.mjs` test 17 pins it so the day
-somebody changes the gate, it fails and says why.
+**So `docs/LIMITED-AUTONOMY.md` §7.1 was true and was not the binding constraint.** "Nothing
+produces a proposal in an enabled category" is a fact about producers. The permitting half was
+**unreachable**. That is consistent with SESSION 26's §6, which shows gate 3 refusing with "4 of
+six rollback elements absent" among five reasons — four other gates refused each of the fourteen
+too, so this reason was never the one that mattered and nothing was in a position to notice.
 
-**The loop reports the blocker rather than routing around it.** `triage()` separates the case
-where the only refusal is that condition and emits
-`triage.blocked_only_by_prerun_condition` on every cycle. It does **not** refer such a proposal:
-referring what the runner would refuse would make the loop's answer disagree with the answer
-that governs.
+**THE WARRANT.** `docs/AUTONOMY-POLICY.md` reserves a governance-layer change to a person, and
+this session reported the finding and did not repair it. The repository author then gave the
+warrant, on 9 September 2026, in these words: *"Changing what a gate proves is Class C work / I
+give u the warrant"*. It is quoted in `docs/CONTINUOUS-IMPROVEMENT.md` §4a and **not** recorded
+as a governance grant — a grant is read at runtime by `policyInForce()` and needs a ledger; this
+is code, which `git blame` attributes. Nothing was enabled by it: no grant was written or
+widened, `DEFAULT_POLICY.enabled_categories` is still `[]`, and no proposal was merged.
+
+**NO CHECK WAS WEAKENED, and that is asserted rather than claimed.** An element established
+missing still fails, and that check runs first — `not_reversible`, a context on `main`, and
+nothing supplied at all all still FAIL. An unauthorized actor is still refused, and gate 3's new
+clause is the only thing there that catches it: the engine returns `conditions: []` for one, so
+clauses 1 and 2 both count zero and both pass. Step 6 still re-evaluates every condition with
+`facts.context` from the real run and merges only on route `automatic`.
+
+**WHAT IT NOW DOES.** All six gates pass; the cycle reaches the measured evaluation;
+`outcome: rehearsed` where it was `refused`; `would_merge: false` on
+`verification_succeeded (unknown)` and `validators_pass (failed)`. **The refusal moved from a
+structural impossibility to two real measurements**, the second being `freshness.mjs`'s
+pre-existing exit 1. **No autonomous change has merged anything and this session did not make
+one.**
+
+**A THIRD FINDING, NOT THIS SESSION'S AND NOT REPAIRED: the adversarial gate has been red since
+SESSION 24.** `node agent/policy/verify/cli.mjs` reports **65 failed safely · 1 SUCCEEDED · 2
+partial · 1 undecidable**. `AGENTS.md` and `docs/SECURITY-VERIFICATION-2026-09-08.md` both said
+0 succeeded. HE-04 (CRITICAL) finds the trigger phrase in `agent/simulation/threshold.mjs`.
+Measured at `aaf6691` in a clean worktree, so it predates this session entirely. The module uses
+the phrase as a **probe** — the line the attack hits is the separation check that searches
+Control Room source to prove the phrase is absent from it — so this is very probably the HE-01
+shape SESSION 23.5 corrected once, with an exclusion list that went stale when SESSION 24 added
+a fourth legitimate prober. Left red deliberately: a CRITICAL suppressed is worse than a
+CRITICAL explained, and the gate's own posture is that a remediation is a later session's to
+decide. **The standing lesson is that the gate is not in CI.**
+`docs/CONTINUOUS-IMPROVEMENT.md` §4b.
 
 **A SECOND FINDING, measured rather than inferred: six of the eight fields the grant allowlists
 have never existed in `data/sources.json`.** `last_retrieved`, `retrieved_at`, `checksum`,
@@ -89,16 +115,26 @@ that zero means "no proposal got that far", not "the blocker is gone" — nothin
 corpus is refused later than the category gate, which is why the finding above needed a
 well-formed fixture to surface.
 
-**One existing assertion changed, and it is the R6 shape.**
+**Six existing assertions changed, and every one is named.**
 
 | | |
 |---|---|
-| `agent/implement/selftest.mjs` R6 | `AGENT_SUITES.length` 20 → 21. **Seventh catch.** The loop reads every other agent's output and routes it, so a change that broke the routing would otherwise have landed with nothing running the suite that checks it. The membership list gains `agent/improve/selftest.mjs` explicitly as well. |
+| `agent/implement/selftest.mjs` R6 | `AGENT_SUITES.length` 20 → 21. **Seventh catch.** The loop reads every other agent's output and routes it. |
+| `agent/policy/selftest.mjs` 7 | the pre-run `rollback_mechanical` verdict `failed` → `unknown`. The route is still asserted `blocked` **first**, and the three cases the test is named for all still FAIL. Element-level assertions added so it cannot regress into "everything is unknown". |
+| `agent/autonomy/selftest.mjs` 17 | `MEASURED_CONDITIONS` four → five, asserted exactly. |
+| `agent/autonomy/selftest.mjs` 17b | **new** — gate 3 tolerates an unmeasured rollback; the measured evaluation still refuses one that is genuinely not mechanical, and one on `main`. |
+| `agent/autonomy/selftest.mjs` 17c | **new** — an unauthorized actor is still refused at gate 3, with the empty condition list planted explicitly. |
+| `agent/autonomy/selftest.mjs` 28 | ran a proposal whose simulated evidence is refused at gate 2, and accepted `refused` OR `rehearsed` — so it could never tell "correctly refused" from "the ladder cannot be passed". It now runs a clean fixture and asserts every gate passes. |
+
+`agent/improve/` also **lost** code: the triage's special case for the pre-run condition, and
+the signal that counted it. The case no longer arises, and code describing a world that has
+changed is worse than no code. An assertion replaces it.
 
 No other existing assertion was touched, and no test was deleted, skipped or relaxed.
 
-**Everything was re-run after `git add`, not before.** **1067 tests across twenty-two suites, 0
-failures**, measured on this session's branch (1036 across twenty-one before; the loop adds 31).
+**Everything was re-run after `git add`, not before.** **1069 tests across twenty-two suites, 0
+failures**, measured on this session's branch (1036 across twenty-one before; the loop adds 31
+and the gate repair adds 2).
 18/18 contracts satisfiable. The four validators: `validate.mjs` 0 errors, `i18n-audit.mjs` 0
 errors 0 warnings, `design-qa.mjs` 0 errors and the same five warnings by file and line, 106
 unverified records. `agent/implement/cli.mjs boundary` at **0 blocking / 13 warnings**,
@@ -107,6 +143,13 @@ unchanged, with `agent/ is inside the public surface` at **236 files** where SES
 22 routes, 8 public, 0 production controls, unchanged. The browser suite in a real Chromium:
 **125 pass · 3 fail · 2 undecidable**, the same three SESSION 19 defects, untouched.
 
+**THE LOOP MADE ITS FIRST REAL COMPARISON.** A second cycle, `cycle-df155e5eac10`, recorded
+after the repair at `fa67b3ab`: **0 new · 210 persisting · 0 resolved · 0 undetermined**, all
+eight observers comparable. Two passes an hour apart at different commits over an unchanged
+corpus produced the same 210 findings under the same 210 ids — which is the reproducibility the
+content-derived ids buy, and the thing eleven separate CLIs could not do.
+`docs/CONTINUOUS-IMPROVEMENT.md` §6b.
+
 **`freshness.mjs` still exits 1** on the same "1 item(s) need attention" SESSIONS 24, 25 and 26
 all recorded. It is not this session's regression and it is not fixed. It is the sole reason
 `validators.at_baseline` reads false in the recorded cycle.
@@ -114,128 +157,12 @@ all recorded. It is not this session's regression and it is not fixed. It is the
 **Nothing in `data/`, `i18n/`, `js/`, `css/` or any page was changed**, and
 `agent/improve/selftest.mjs` test 20 runs two real cycles and asserts it from outside.
 
-**What SESSION 28 inherits.** The decision in §4 is the whole of the next objective and it is a
-person's. Until it is taken, the honest statement about limited autonomy is stronger than
-SESSION 26's: not "nothing produces a proposal in an enabled category" but "no proposal can pass
-gate 3". Second: the loop now has one recorded cycle, and the second one is where it starts
-being worth something — the first comparison this repository can make from a measurement rather
-than from a recollection.
-
----
-
-## SESSION 26 — limited autonomy, activated
-
-**What was asked:** enable automatic implementation for explicitly approved low-risk
-categories only; for every automatic change create an isolated branch, implement, run the
-validators, run browser tests where applicable, record a full observation trace, merge only if
-all policy conditions pass, and retain rollback information; do not let substantive legal
-content auto-merge; report every autonomous action in the Control Room. Full report:
-**`docs/LIMITED-AUTONOMY.md`**.
-
-**The governance decision has a home, and it is not the policy object.** SESSION 23 left every
-category off because filling `DEFAULT_POLICY.enabled_categories` is a governance change
-protocol §24 forbids the system making to itself. SESSION 26 is that decision arriving from
-the repository author, and it is recorded as a **grant** in
-`agent/policy/governance/grants.jsonl` — git-tracked like the decision ledger, because an
-authorization has to be attributable — naming a person, a date, an authority quoted from the
-brief, and an expiry of 9 March 2027. **`DEFAULT_POLICY.enabled_categories` is still `[]`, and
-four suites still assert it at their original strength.** That is the BASE; the policy in
-force is derived from the ledger by `policyInForce()`. Appending five strings to a frozen
-array would have been a fact with no author and a second home for one fact.
-
-**What the grant enables, and it is narrower than the brief allowed.** The five protocol §20
-categories, over exactly two paths — `data/sources.json` and `docs/` — and, on the first,
-exactly eight bookkeeping fields. The path allowlist is the real narrowing and the FIELD
-allowlist is what keeps substantive legal content out of an enabled category: `tier`, `role`,
-`supports`, `last_verified`, `verification_note`, `requires_verification`, `reference_gap`,
-`gap_note`, `title`, `publisher`, `type` and `celex` are on a never-automatic list no grant
-may name. Risk ceiling `low`, environments `local` and `ci`, **never `production`**. Every one
-of those refusals runs again on every READ, and `agent/autonomy/selftest.mjs` test 7 writes a
-forged line straight into a ledger file and asserts nothing it names is honoured.
-
-**What a grant bought: exactly two of `preflight`'s ten gates.** `approved` and
-`approval_attributable`, and nothing else — SESSION 18's own header already said "an
-authorized human OR an explicitly permitted autonomy policy" and left the second half unbuilt.
-`preflight` is not modified and not weakened. `agent/autonomy/` adds six gates in front of it,
-all evaluated always, and the seven steps behind it.
-
-**THE FIRST REAL RUN REFUSED ALL FOURTEEN PROPOSALS, EACH BY FOUR INDEPENDENT GATES.** Data
-Depth and the Gap Proposals router ran against the real corpus (57 gaps, 14 `DataProposal`s);
-`node agent/autonomy/cli.mjs run --as-of 2026-09-09` reports **0 merged · 0 reverted · 14
-refused**, real trace `44b4813604b011a1a490761191704ad8`. Thirteen derived
-`substantive_data_change` and one `taxonomy_change` — none is one of the five enabled. The
-field gate fired on a real proposal whose operation target named `verification_note`, which is
-the record of what was and was not established. Nothing in `data/`, `i18n/`, `js/`, `css/` or
-any page was changed, and all fourteen ledger lines record `wrote_files: false`.
-
-**What it did NOT do, and this is the limitation to carry.** **No autonomous change has ever
-merged anything.** The gate ladder and the rehearsal path run against real proposals, and the
-git mechanics of steps 1 and 6 are driven against a real temporary repository created with
-`git init` (`agent/autonomy/selftest.mjs` tests 34–37: main is refused, an unrelated dirty
-file is not swept into an autonomous commit, the merge is `--no-ff` with two parents and
-`main` does not move, and `abandon` is idempotent and does not discard work it never touched).
-The full seven steps have never run end to end with `--execute` against a proposal that
-passed, because **nothing in this repository currently produces a proposal in one of the five
-enabled categories** — and manufacturing one to demonstrate the mechanism would be a fixture
-dressed as work.
-
-**Three existing assertions changed, all because the world changed, and each is named here so
-a reader can disagree.**
-
-| | |
-|---|---|
-| `agent/orchestrator/selftest.mjs` R6 | Read "no action category is approved for automatic execution" and asserted `category_allowed` refused `source_metadata_maintenance`. A person has since granted that category. The replacement keeps all three original claims and adds two: a category no policy may EVER automate is refused **even under a hand-made policy object whose enabled list names it**, and the granted category satisfies that one condition while the act as a whole is still refused. The second of those caught a real weakness — the condition was a plain `includes()` and would have passed such a policy, leaving the engine as the only thing between a forged policy object and a legal interpretation. `agent/orchestrator/policy.mjs` now reads `automatable` first. |
-| `agent/policy/selftest.mjs` 33 | Asserted the Orchestrator asks the engine about `DEFAULT_POLICY`. It now asks about the policy IN FORCE, because an Orchestrator enforcing a weaker policy than the implementation layer is exactly the drift that test exists to prevent. The replacement asserts the in-force id **and** that it begins with the base id, so a grant extends the base rather than replacing it. |
-| `agent/implement/selftest.mjs` R6 | `AGENT_SUITES.length` 19 → 20. Sixth catch. |
-
-**`agent/orchestrator/policy.mjs`'s `AUTONOMY_NOTE` became a false statement and is now
-derived.** It said "No action category is approved for automatic execution in this
-repository", which was true when written. `autonomyNote()` reads the ledger;
-`AUTONOMY_BASE_NOTE` keeps the base statement.
-
-**A fourth assertion changed, and it is the SESSION 19 shape — a check that passed for the
-wrong reason.** `agent/simulation/selftest.mjs` test 1b's own comment said "the assertion is
-that THIS run added nothing", and its code asserted that `agent/records/`,
-`agent/observability/runs/`, `agent/orchestrator/state/` and `.control-room/state/` were
-EMPTY. Those are different claims. `agent/records/` is git-ignored run state that any agent
-run populates, so the test passed in a fresh clone and in CI and failed the moment this
-session ran Data Depth first to give the autonomy layer something to refuse. It now
-snapshots, runs, and compares — which is **stricter**: the old form could not have caught a
-simulation writing into a directory that already held a file. This is a change to a check,
-which is Class C, and it is recorded here so a reader can disagree with it.
-
-**Two CI omissions were fixed rather than only reported**, and the fix is named because it is
-a change to a gate: `.github/workflows/qa.yml` ran seventeen suites while `AGENT_SUITES`
-listed nineteen — `agent/simulation/selftest.mjs` had never been in CI. Both it and
-`agent/autonomy/selftest.mjs` are in now, plus a register step printing what limited autonomy
-is switched on to do on every push.
-
-**Everything was re-run after `git add`, not before.** **1036 tests across twenty-one suites,
-0 failures, measured on this session's branch.** On `main` the figure is 1035 with one
-skipped: `agent/autonomy/selftest.mjs` test 28 rehearses the real cycle, and the cycle
-refuses to run on `main`, so the test skips itself rather than passing for the wrong reason.
-That is the assertion being honest about where it can and cannot establish anything. (998 across twenty before; the autonomy suite adds 38, and three earlier tests
-gained assertions rather than counts — the orchestrator's R6 split into three claims). 18/18 contracts
-satisfiable. The four validators at the `docs/CURRENT-ARCHITECTURE.md` §12 baseline: 0 errors
-on `validate.mjs` and `i18n-audit.mjs`, 0 errors and the same five `design-qa` warnings by
-file and line, 106 unverified records. `agent/implement/cli.mjs boundary` at **0 blocking / 13
-warnings**, unchanged, with `agent/ is inside the public surface` at 225 files where SESSION
-23.5 recorded 204 — this session's files being counted. `.control-room/cli.mjs boundary` at 0
-errors, **22 routes** (21 before, the new one being `GET /api/autonomy`), 8 public, 0
-production controls. The browser suite in a real Chromium: **125 pass · 3 fail · 2
-undecidable**, the same three SESSION 19 defects, untouched.
-
-**`freshness.mjs` still exits 1** on the same "1 item(s) need attention" SESSIONS 24 and 25
-both recorded, so `agent/implement/cli.mjs check` reports verdict `fail` for that reason and
-that reason alone. It is not this session's regression and it is not fixed.
-
-**What SESSION 27 inherits.** Limited autonomy is on and has merged nothing. The gap between
-those two facts is the whole of the next objective: either an agent that produces a proposal
-in one of the five enabled categories, or a person handing one to `--execute` by hand. Until
-then the honest statement is that the permitting half is proved against fixtures and the
-refusing half against the real corpus. Also inherited: `agent/policy/` is on the
-never-automatic path list on purpose, so widening the grant is Class C work in front of a
-person, not something the system can do to itself.
+**What SESSION 28 inherits.** The gate ladder is passable and **nothing has passed it**.
+`freshness.mjs` exiting 1 makes `validators_pass` fail for every run in this tree, so nothing
+can merge here until that pre-existing item is dealt with — that is now the binding constraint,
+and it is small and concrete where the previous one was a structural impossibility. HE-04 is
+red and its remediation is a decision; the adversarial gate is not in CI. The loop has one
+recorded cycle, taken before the repair; the second is where it starts being worth something.
 
 ---
 

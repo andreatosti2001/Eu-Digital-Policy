@@ -61,7 +61,6 @@ export const SIGNAL_DIRECTION = Object.freeze({
   'boundary.warnings': 'not_a_score',
   'reach.absent_granted_fields': 'not_a_score',
   'reach.categories_without_surface': 'not_a_score',
-  'triage.blocked_only_by_prerun_condition': 'not_a_score',
 });
 
 export const SIGNAL_INTERPRETATION = Object.freeze({
@@ -71,7 +70,6 @@ export const SIGNAL_INTERPRETATION = Object.freeze({
   'boundary.warnings': 'these are standing findings about a repository whose deployment unit is the whole tree. The count rises when a session adds files and that is not a regression.',
   'reach.absent_granted_fields': 'a governance grant naming a field no record carries. Falling to 0 could mean the schema grew or the grant narrowed, and those are opposite events.',
   'reach.categories_without_surface': 'an enabled category with nothing to write to. The same ambiguity as above applies.',
-  'triage.blocked_only_by_prerun_condition': 'above 0 means a proposal cleared everything the triage can check and was refused by a condition no proposal can satisfy at that point. It is a measurement of a structural blocker, not of proposal quality: it does not fall by writing better proposals. docs/CONTINUOUS-IMPROVEMENT.md §4.',
 });
 
 export const FINDING_STATES = Object.freeze(['new', 'persisting', 'resolved', 'undetermined']);

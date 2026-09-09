@@ -67,17 +67,6 @@ export const PROPOSAL_CONTRACTS = Object.freeze([
   'DataProposal', 'EditorialProposal', 'UXProposal', 'ArchitectureProposal', 'ImplementationProposal',
 ]);
 
-/**
- * The one mandatory condition that no proposal can satisfy before a
- * run, because it reads a fact about a change that has not been made.
- *
- * It is named here as a constant rather than matched inline so that
- * `agent/improve/selftest.mjs` test 17 can assert the case is still
- * real — and so that the day somebody moves the gate, or adds this
- * to `MEASURED_CONDITIONS`, the constant is the one place to delete.
- */
-export const PRE_RUN_UNSATISFIABLE = 'rollback_mechanical';
-
 /** The three destinations, and there is no fourth. */
 export const DESTINATIONS = Object.freeze({
   autonomy_runner: 'the derived category is one a governance grant enables and the operation targets name only permitted fields. agent/autonomy/ decides; this is a referral, not a permission.',
@@ -157,15 +146,15 @@ export function triage(record, policy, facts = {}) {
   /* The policy engine's own verdict, asked with the same actor and
      action `agent/autonomy/cycle.mjs` gate 3 uses, and read by the
      SAME rule: no mandatory condition may FAIL, and the only
-     `unknown`s permitted are the four that are measurements taken
-     later in the runner's own cycle.
+     `unknown`s permitted are the measurements the runner takes later
+     in its own cycle.
      `MEASURED_CONDITIONS` is imported from the runner rather than
      restated, so the triage cannot drift into refusing what the
      runner would accept — or, worse, referring what it would not.
      Reading `route === 'blocked'` instead would be the first of
-     those: before a run, every proposal has four unknowns and the
-     route is always `blocked`, so the referring path would be dead
-     code that no test could tell from a correct refusal. */
+     those: before a run every proposal has unknown measurements and
+     the route is always `blocked`, so the referring path would be
+     dead code that no test could tell from a correct refusal. */
   const decision = evaluatePolicy({
     actor: { kind: 'implementation_qa', id: 'autonomy-runner' },
     action: 'implement.apply',
@@ -177,39 +166,27 @@ export function triage(record, policy, facts = {}) {
   const unexpectedUnknown = decision.conditions.filter((c) => c.verdict === 'unknown' && !MEASURED_CONDITIONS.includes(c.condition));
 
   if (failed.length || unexpectedUnknown.length) {
-    /* THE ONE CASE WORTH SEPARATING, AND SESSION 27 FOUND IT BY
-       BUILDING THIS TRIAGE. `rollback_mechanical` reads a CHANGE
-       CONTEXT — the branch, the base commit and the per-file
-       pre-change hashes `agent/implement/apply.mjs openContext()`
-       records. That context is produced in step 2 of the seven, and
-       gate 3 runs before step 1. So four of the six rollback
-       elements are `unknown` for EVERY proposal at this point, the
-       condition fails, and gate 3 refuses. It is not in
-       `MEASURED_CONDITIONS`, so the exemption the other four
-       measurements have does not cover it.
+    /* SESSION 27 CARRIED A SPECIAL CASE HERE AND IT IS GONE, WHICH
+       IS THE RIGHT KIND OF DELETION. It separated the case where the
+       only refusal was `rollback_mechanical` — a condition that, at
+       this point in the cycle, no proposal could satisfy — and
+       reported it per item and as a signal, because a structural
+       blocker somebody can act on is better than a silence.
 
-       This module does NOT work around that. Referring a proposal
-       the runner would refuse would make the loop's answer disagree
-       with the answer that governs, which is the drift the whole
-       arrangement is against. It reports it instead, per item and as
-       a signal on every cycle, so a structural blocker is a
-       measurement a person can act on rather than a silence.
-       `docs/CONTINUOUS-IMPROVEMENT.md` §4 carries it as a finding,
-       and it is not fixed here: changing what a gate proves is Class
-       C work on the governance layer, and `agent/policy/` is on the
-       never-automatic path list on purpose. */
-    const onlyPreRun = !unexpectedUnknown.length
-      && failed.length === 1
-      && failed[0].condition === PRE_RUN_UNSATISFIABLE;
-
+       The repository author gave the warrant, the condition now
+       returns `unknown` rather than `failed` before a run
+       (`agent/policy/conditions.mjs`), and it is one of the five
+       measurements gate 3 tolerates. So the case no longer arises,
+       and code that describes a world that has changed is worse than
+       no code. What replaces it is an assertion rather than a
+       branch: `agent/improve/selftest.mjs` test 17 fails if that
+       condition ever reads `failed` before a run again.
+       docs/CONTINUOUS-IMPROVEMENT.md §4. */
     return {
       destination: 'human_queue',
       category: category.category,
       effective_class: klass.effective,
-      blocked_only_by_prerun_condition: onlyPreRun,
-      why: onlyPreRun
-        ? `everything this triage can check passes, and the single refusal is "${PRE_RUN_UNSATISFIABLE}", which NO proposal can satisfy at this point: it reads the branch, base commit and per-file pre-change hashes that agent/implement/apply.mjs openContext() records in step 2, and agent/autonomy/ evaluates it in gate 3, before step 1. ${failed[0].why ?? ''}`.trim()
-        : `${failed.length} mandatory condition(s) fail and ${unexpectedUnknown.length} non-measurement condition(s) are unknown, and an unknown blocks exactly as a failure does: ${[...failed, ...unexpectedUnknown].map((c) => `${c.condition} (${c.verdict})`).join(', ')}. ${decision.route === 'blocked' ? 'Protocol §8: these are closed by the agent that owns the proposal, not by approving harder.' : ''}`.trim(),
+      why: `${failed.length} mandatory condition(s) fail and ${unexpectedUnknown.length} non-measurement condition(s) are unknown, and an unknown blocks exactly as a failure does: ${[...failed, ...unexpectedUnknown].map((c) => `${c.condition} (${c.verdict})`).join(', ')}. ${decision.route === 'blocked' ? 'Protocol §8: these are closed by the agent that owns the proposal, not by approving harder.' : ''}`.trim(),
       failed_conditions: failed.map((c) => c.condition),
       unknown_conditions: unexpectedUnknown.map((c) => c.condition),
       policy_route: decision.route,
@@ -220,7 +197,7 @@ export function triage(record, policy, facts = {}) {
     destination: 'autonomy_runner',
     category: category.category,
     effective_class: klass.effective,
-    why: `"${category.category}" is enabled by ${(policy.granted_by ?? []).map((g) => g.grant_id).join(', ') || 'a grant'}, every operation target is a permitted field, no mandatory condition fails, and the only unknowns are the ${MEASURED_CONDITIONS.length} that are measurements. agent/autonomy/ runs the six gates and eight preflight checks that decide.`,
+    why: `"${category.category}" is enabled by ${(policy.granted_by ?? []).map((g) => g.grant_id).join(', ') || 'a grant'}, every operation target is a permitted field, no mandatory condition fails, and the only unknowns are the ${MEASURED_CONDITIONS.length} that are measurements taken during a run. agent/autonomy/ runs the six gates and eight preflight checks that decide.`,
     policy_route: decision.route,
     unknown_conditions: decision.conditions.filter((c) => c.verdict === 'unknown').map((c) => c.condition),
   };
@@ -280,23 +257,8 @@ export async function runImprovementCycle({
     const eligible = routed.filter((r) => r.destination === 'autonomy_runner');
     const human = routed.filter((r) => r.destination === 'human_queue');
     const noAct = routed.filter((r) => r.destination === 'no_act_proposed');
-    const preRunBlocked = routed.filter((r) => r.blocked_only_by_prerun_condition === true);
     const byCategory = {};
     for (const r of routed) if (r.category) byCategory[r.category] = (byCategory[r.category] ?? 0) + 1;
-
-    /* Measured on every cycle rather than written down once. A
-       proposal that clears everything the triage can check and is
-       refused by a condition no proposal can satisfy at that point
-       is the difference between "nothing qualifies" and "nothing
-       CAN qualify", and those are very different reports. */
-    observation.signals.push({
-      signal_id: 'triage.blocked_only_by_prerun_condition',
-      value: preRunBlocked.length,
-      unit: 'proposals',
-      why: `proposals that pass every check this triage can make and are refused solely by "${PRE_RUN_UNSATISFIABLE}", which reads a change context that does not exist until step 2 of a cycle gate 3 runs before step 1. docs/CONTINUOUS-IMPROVEMENT.md §4.`,
-      detail: preRunBlocked.map((r) => r.finding_id),
-      visibility: 'public',
-    });
 
     run.observe({
       summary: `TRIAGE — ${eligible.length} referable to the autonomy runner · ${human.length} to a person · ${noAct.length} propose no act. Policy ${policy.policy_id}.`,
@@ -360,7 +322,7 @@ export async function runImprovementCycle({
       movement: moved,
       previous: prev,
       routed,
-      triage: { eligible, human, no_act: noAct, pre_run_blocked: preRunBlocked, by_category: byCategory },
+      triage: { eligible, human, no_act: noAct, by_category: byCategory },
       recorded: written,
       stored,
       /* Said in the return value rather than only in a document,

@@ -94,9 +94,37 @@ export const GATES_REPLACED_BY_GRANT = Object.freeze(['approved', 'approval_attr
 
 /** The conditions that are measurements, and are therefore allowed to
  *  be `unknown` in the BEFORE evaluation. Any other unknown, and any
- *  failure at all, refuses the act before a file is touched. */
+ *  failure at all, refuses the act before a file is touched.
+ *
+ *  `rollback_mechanical` JOINED THIS LIST IN SESSION 27, under an
+ *  explicit warrant from the repository author, quoted with its date
+ *  in `docs/CONTINUOUS-IMPROVEMENT.md` §4a. That warrant is NOT
+ *  recorded as a governance grant, and the difference is the point: a
+ *  grant is read at runtime by `policyInForce()` and so needs a
+ *  ledger, while this is a change to code, which `git blame` now
+ *  attributes — SESSION 00 onward is the first real provenance this
+ *  repository has (AUDIT F-06). A second ledger nothing reads would
+ *  be ceremony, not accountability. It belongs here for the
+ *  same reason the other four do and always did: four of its six
+ *  elements read the change context `agent/implement/apply.mjs
+ *  openContext()` records in STEP 2, and this gate runs before STEP
+ *  1. Its absence from this list was not a stricter policy — it was
+ *  a gate asking a question that could not be answered yet, and
+ *  reading the non-answer as a failure. Measured: with it missing,
+ *  five of the six gates passed for a flawless proposal in an enabled
+ *  category over a granted path and the sixth refused every proposal
+ *  that has ever existed. `docs/CONTINUOUS-IMPROVEMENT.md` §4.
+ *
+ *  THE CHECK DID NOT MOVE, IT STOPPED BEING PRE-EMPTED. Step 6
+ *  evaluates the same condition with `facts.context` supplied by the
+ *  real run, and `mayMerge` requires route `automatic`, which
+ *  requires every mandatory condition SATISFIED. An unknown there
+ *  still refuses. `agent/autonomy/selftest.mjs` tests 13b and 13c
+ *  hold both halves: the pre-run tolerance, and the step-6 refusal
+ *  of a rollback that is genuinely not mechanical. */
 export const MEASURED_CONDITIONS = Object.freeze([
   'verification_succeeded', 'no_unresolved_conflict', 'validators_pass', 'browser_qa',
+  'rollback_mechanical',
 ]);
 
 
@@ -146,8 +174,35 @@ export function autonomyGates({ proposalId, policy, governance, records, ledger 
       { failed: otherFailures.map((g) => ({ gate: g.gate, why: g.why, closes: g.closes })) }));
 
   /* 3 · the policy route, evaluated before anything is measured. The
-        measured four are allowed to be unknown here — that is what
-        they are before the run. Anything else is a refusal. */
+        measurements are allowed to be unknown here — that is what
+        they are before the run. Anything else is a refusal.
+
+        THIS GATE HAD A SECOND LOCK ON THE SAME DOOR, AND SESSION 27
+        FOUND IT ONLY AFTER PICKING THE FIRST. Its third clause read
+        `decision.route !== 'blocked'`, and there are exactly two ways
+        `agent/policy/engine.mjs` returns `blocked`: an unauthorized
+        actor, or an unmet condition on `NOT_WAIVABLE_BY_APPROVAL`.
+        **Every measured condition is on that list**, and before a run
+        every measurement is unknown, so the second way is ALWAYS
+        taken and the clause was unsatisfiable for every proposal that
+        has ever existed — independently of the rollback condition
+        below it. Fixing only that one moved the refusal from clause 1
+        to clause 3 and changed nothing a caller could see.
+
+        The clause is replaced by the half of it that carries real
+        content and is not a measurement: **was the actor authorized
+        at all**. That case is otherwise INVISIBLE here — the engine
+        returns `conditions: []` for an unauthorized actor, so clauses
+        1 and 2 both count zero and both pass. Test 17c plants exactly
+        that and asserts this gate still refuses.
+
+        What is NOT lost: an unmet not-waivable condition is a
+        `failed` or an unexpected `unknown`, and clauses 1 and 2
+        already refuse on both. The measured ones are re-evaluated at
+        step 6 against the real facts, where `mayMerge` requires route
+        `automatic` — which requires no hard block at all. The check
+        did not move; it stopped being asked before it could be
+        answered. docs/CONTINUOUS-IMPROVEMENT.md §4. */
   const decision = evaluatePolicy({
     actor: { kind: 'implementation_qa', id: AUTONOMY_ACTOR },
     action: 'implement.apply',
@@ -157,12 +212,15 @@ export function autonomyGates({ proposalId, policy, governance, records, ledger 
   });
   const hardFailures = decision.conditions.filter((c) => c.verdict === 'failed');
   const unexpectedUnknown = decision.conditions.filter((c) => c.verdict === 'unknown' && !MEASURED_CONDITIONS.includes(c.condition));
-  gates.push(hardFailures.length === 0 && unexpectedUnknown.length === 0 && decision.route !== 'blocked'
-    ? pass('policy_route_pre', `no mandatory condition fails and the only unknowns are the ${MEASURED_CONDITIONS.length} that are measurements: ${decision.unknown.join(', ') || 'none'}. Category "${decision.category.category}" under ${decision.policy_id}.`, { route: decision.route, category: decision.category.category })
+  const authorized = decision.authorization?.allow === true;
+  gates.push(hardFailures.length === 0 && unexpectedUnknown.length === 0 && authorized
+    ? pass('policy_route_pre', `${AUTONOMY_ACTOR} is authorized for this act, no mandatory condition fails, and the only unknowns are the ${MEASURED_CONDITIONS.length} that are measurements taken during the run: ${decision.unknown.join(', ') || 'none'}. Category "${decision.category.category}" under ${decision.policy_id}. The route reads "${decision.route}" and will until those measurements exist; step 6 re-evaluates it on the measured facts and merges only on "automatic".`, { route: decision.route, category: decision.category.category })
     : fail('policy_route_pre',
-      `${hardFailures.length} condition(s) fail and ${unexpectedUnknown.length} non-measurement condition(s) are unknown: ${[...hardFailures, ...unexpectedUnknown].map((c) => `${c.condition} (${c.verdict}) — ${c.why}`).join(' · ')}`,
+      !authorized
+        ? `${AUTONOMY_ACTOR} is not authorized to perform this act at all: ${decision.authorization?.reason ?? 'the capability matrix refuses it'}`
+        : `${hardFailures.length} condition(s) fail and ${unexpectedUnknown.length} non-measurement condition(s) are unknown: ${[...hardFailures, ...unexpectedUnknown].map((c) => `${c.condition} (${c.verdict}) — ${c.why}`).join(' · ')}`,
       'each is closed by the agent that owns the proposal or by a governance decision naming the category and the paths. An unknown blocks exactly as a failure does.',
-      { route: decision.route, failed: decision.failed, unknown: decision.unknown }));
+      { route: decision.route, authorized, failed: decision.failed, unknown: decision.unknown }));
 
   /* 4 · the field gate. THE ONE THAT KEEPS SUBSTANTIVE LEGAL CONTENT
         OUT even where the derived category says "source metadata". */

@@ -275,12 +275,68 @@ export function riskWithinThreshold(proposal, policy) {
     : bad('risk_within_threshold', `declared risk "${risk}" is above the policy ceiling "${ceiling}".`, `the ceiling is raised by a governance decision, not by the proposal. Protocol §24: the system must not autonomously rewrite its own governance policy.`, { risk, ceiling });
 }
 
-/** 9 · rollback, mechanically. Derived. */
+/**
+ * 9 · rollback, mechanically. Derived.
+ *
+ * THREE VERDICTS, NOT TWO, AND SESSION 27 IS WHY.
+ *
+ * `assessRollback()` reports each of the six elements as `present`,
+ * `absent` or `unknown`, and those last two are not the same thing.
+ * `absent` is established: the plan says `not_reversible`, or the
+ * context is on `main`, or nothing names what is being undone.
+ * `unknown` is not established: no change context has been opened
+ * yet, so nothing here knows what the tree looked like before.
+ *
+ * Until SESSION 27 this function collapsed both into `failed`, which
+ * is this repository's own §0.3 error — reporting "I have looked and
+ * it is not there" about something nobody has looked at. The
+ * consequence was structural rather than cosmetic. A change context
+ * is produced by `agent/implement/apply.mjs openContext()` in step 2
+ * of the autonomy cycle, and `agent/autonomy/cycle.mjs` evaluates
+ * this condition in gate 3, which runs before step 1. So four of the
+ * six elements were `unknown` for EVERY proposal ever written, this
+ * condition read `failed`, gate 3 refused, and **no proposal could
+ * pass the autonomy gate ladder however well formed it was.**
+ * `docs/CONTINUOUS-IMPROVEMENT.md` §4 has the measurement.
+ *
+ * NOTHING IS WEAKENED BY THIS, and the order of the checks is what
+ * makes that true: **any `absent` element still fails**, whatever
+ * else is unknown. The three cases `agent/policy/selftest.mjs` test 7
+ * names — `not_reversible`, a context on `main`, and nothing supplied
+ * at all — all carry at least one `absent` element and all still
+ * fail. Only the pre-run case moves, and it moves from a false
+ * statement to a true one.
+ *
+ * `unknown` is not a pass. `agent/policy/engine.mjs` blocks on it
+ * exactly as it blocks on a failure; what changes is that
+ * `agent/autonomy/cycle.mjs` may now list this among the conditions
+ * that are MEASUREMENTS, allowed to be unknown before a run and
+ * re-checked at step 6 on the real context — which is where
+ * `facts.context` exists and where `mayMerge` requires every
+ * mandatory condition satisfied. The binding check did not move; it
+ * simply stopped being pre-empted by a check that could not answer.
+ */
 export function rollbackMechanical(proposal, facts, { permitted = null } = {}) {
   const r = assessRollback({ proposal, context: facts?.context ?? null, permitted });
-  return r.mechanical
-    ? sat('rollback_mechanical', r.why, { elements: r.elements })
-    : bad('rollback_mechanical', r.why, `SESSION 23 names six elements and a boolean is not one of them. Missing: ${r.missing.join(', ')}.`, { missing: r.missing, elements: r.elements });
+  if (r.mechanical) return sat('rollback_mechanical', r.why, { elements: r.elements });
+
+  const absent = r.elements.filter((e) => e.state === 'absent').map((e) => e.element);
+  const unknown = r.elements.filter((e) => e.state === 'unknown').map((e) => e.element);
+
+  /* Checked first, and it is the whole of why this is not a
+     loosening: an element somebody has established is missing is a
+     failure whatever else has not been looked at. */
+  if (absent.length) {
+    return bad('rollback_mechanical',
+      `${r.why} ${absent.length} element(s) are established missing: ${absent.join(', ')}.`,
+      `SESSION 23 names six elements and a boolean is not one of them. Established missing: ${absent.join(', ')}${unknown.length ? `; not yet established: ${unknown.join(', ')}` : ''}.`,
+      { missing: r.missing, absent, unknown, elements: r.elements });
+  }
+
+  return unk('rollback_mechanical',
+    `${r.why} No element is established missing; ${unknown.length} of six are NOT YET ESTABLISHED: ${unknown.join(', ')}. These read a change context, and no change context has been opened.`,
+    'a change context — the branch, the base commit and the per-file pre-change hashes agent/implement/apply.mjs openContext() records. Before a run there is nothing to read, which is why this is unknown rather than failed. Unknown blocks exactly as a failure does, except where a caller has declared this a measurement it takes later and re-checks.',
+    { missing: r.missing, absent, unknown, elements: r.elements });
 }
 
 /** 10 · every target file inside an explicitly permitted scope.

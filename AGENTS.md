@@ -35,7 +35,7 @@ the evidence it describes.
 | `docs/ORCHESTRATOR.md` | The Master Orchestrator: the ten workflow types, the five end states, the capability register, the eight routing checks, the six conflict shapes — and §13, what none of it proves |
 | `docs/FIRST-END-TO-END-AUDIT.md` | SESSION 24's simulated end-to-end cycle: what ran, what was simulated, the Control Room discovery path, the intended visual sequence — and **twenty-three findings, none fixed** |
 | `docs/LIMITED-AUTONOMY.md` | SESSION 26: the governance grant that switched five low-risk categories on, what a grant may never say, the six gates and the seven steps — and §7, what none of it proves |
-| `docs/CONTINUOUS-IMPROVEMENT.md` | SESSION 27: the loop — eight observers, one as-of date, the tracked cycle ledger, and the rule that an observer which did not run resolves nothing. **§4 is the finding that matters: no proposal can pass the autonomy gate ladder, and it is not fixed** |
+| `docs/CONTINUOUS-IMPROVEMENT.md` | SESSION 27: the loop — eight observers, one as-of date, the tracked cycle ledger, and the rule that an observer which did not run resolves nothing. **§4: the autonomy gate ladder was unpassable and is repaired, with the warrant in §4a. §4b: the adversarial gate has been red since SESSION 24** |
 | `docs/SESSION-25-FIRST-REAL-WORLD-RUN.md` | SESSION 25's first non-simulated run — `--live` against the five registered real endpoints, all five refused by this environment's network policy, and what ran for real against the actual corpus and pages once that boundary was hit — with a prioritized human review queue, none of it decided |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
@@ -107,19 +107,36 @@ so a line written around `recordGrant` is not honoured either. `agent/policy/` i
 the never-automatic path list, so **no grant can widen the rules that admitted it**.
 `docs/LIMITED-AUTONOMY.md`.
 
-**AND SESSION 27 FOUND THAT NO PROPOSAL CAN PASS THE GATE LADDER AT ALL.** Take a proposal
-with nothing wrong with it, in a category the grant enables, over a path the grant names: five
-of the six autonomy gates pass and the sixth, `policy_route_pre`, fails on one condition.
-`rollback_mechanical` reads the branch, base commit and per-file pre-change hashes that
-`agent/implement/apply.mjs openContext()` records in **step 2** of the seven, and gate 3 runs
-**before step 1**. Four of its six elements are `unknown` for every proposal ever written, and
-it is not one of the four `MEASURED_CONDITIONS` gate 3 exempts. So
-`docs/LIMITED-AUTONOMY.md` §7.1's "nothing produces a proposal in an enabled category" is true
-and is **not the binding constraint**: the permitting half is unreachable, not merely
-unexercised. It is **not fixed** — changing what a gate proves is Class C work on the
-governance layer — and the two available repairs are different judgements about how much a
-rollback must be established before a change is made, not one obvious correction.
-`docs/CONTINUOUS-IMPROVEMENT.md` §4 carries the reproduction.
+**SESSION 27 FOUND THE GATE LADDER UNPASSABLE, AND REPAIRED IT UNDER AN EXPLICIT WARRANT.**
+Take a proposal with nothing wrong with it, in a category the grant enables over a path the
+grant names: five of the six autonomy gates passed and `policy_route_pre` refused, for **two**
+structural reasons. `rollback_mechanical` reported `failed` about a change context that
+`agent/implement/apply.mjs openContext()` only produces in **step 2**, while gate 3 runs
+**before step 1**; and the gate's third clause asked `route !== 'blocked'`, which is
+unsatisfiable before a run because **every measured condition is on
+`NOT_WAIVABLE_BY_APPROVAL`**. So `docs/LIMITED-AUTONOMY.md` §7.1's "nothing produces a proposal
+in an enabled category" was true and was **not the binding constraint**: the permitting half
+was unreachable.
+
+Both are fixed, and **no check was weakened**: an element `assessRollback()` reports as
+`absent` — established missing — still fails, an unauthorized actor is still refused (the case
+clauses 1 and 2 were blind to, because the engine returns an empty condition list for it), and
+step 6 still re-evaluates every condition on the measured facts and merges only on route
+`automatic`. **The ladder is now passable and nothing has passed it**: a clean fixture reaches
+the measured evaluation and is refused there on `verification_succeeded (unknown)` and
+`validators_pass (failed)`, the latter being `freshness.mjs`'s pre-existing exit 1. **No
+autonomous change has merged anything.** `docs/CONTINUOUS-IMPROVEMENT.md` §4, with the warrant
+quoted in §4a and the five changed assertions named in §4.4.
+
+**THE ADVERSARIAL GATE HAS BEEN RED SINCE SESSION 24 AND THREE DOCUMENTS SAY OTHERWISE.**
+`node agent/policy/verify/cli.mjs` reports **1 SUCCEEDED** — HE-04, CRITICAL, the trigger phrase
+found in `agent/simulation/threshold.mjs`. Measured at `aaf6691` in a clean worktree, so it is
+not this session's. The module uses the phrase as a **probe** — the line the attack hits is the
+separation check that searches Control Room source to prove the phrase is absent from it — so
+this is very probably the HE-01 shape SESSION 23.5 already corrected once, with a stale
+exclusion list. **It is not repaired here**, and the standing lesson is that the gate is **not
+in CI**, which is how a CRITICAL stayed red across three sessions.
+`docs/CONTINUOUS-IMPROVEMENT.md` §4b.
 
 **THE LOOP IS `agent/improve/`, AND IT CHANGES NOTHING.** Eight observers in one process
 against one corpus position with one as-of date; five produce identified findings and three
@@ -257,10 +274,10 @@ node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**1067 tests across the twenty-two suites**, all passing as of SESSION 27 — 1066 with one
+**1069 tests across the twenty-two suites**, all passing as of SESSION 27 — 1068 with one
 skipped when the working tree is on `main`, because `agent/autonomy/selftest.mjs` test 28
 rehearses the real cycle and the cycle refuses to run there
-(1036 across twenty-one after SESSION 26; 998 across twenty after SESSION 24; 978 across nineteen after SESSION 23.5; 934 after
+(1067 earlier in SESSION 27, before the gate repair added two; 1036 across twenty-one after SESSION 26; 998 across twenty after SESSION 24; 978 across nineteen after SESSION 23.5; 934 after
 SESSION 22 on its own branch; 909 after SESSION 23.5 on its own; 867 after SESSION 21; 812
 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before them). SESSIONS 22, 23 and 23.5
 were merged, so none of those middle figures is a total on its own.
