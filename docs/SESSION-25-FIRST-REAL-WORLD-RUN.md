@@ -171,6 +171,41 @@ this run: **0 errors** on `validate.mjs`, `i18n-audit.mjs` and `design-qa.mjs` (
 warnings, unchanged), **106 unverified records** (unchanged — this run could not have changed
 it, §3), `freshness.mjs` unchanged (3 `url:none`, 1 `url:paywalled`, 73 `url:live`).
 
+**CI's own verdict on this push, stated plainly rather than left to be inferred from the local
+runs above.** `.github/workflows/qa.yml` ran on `cdfe375` (this session's commit, on `main`) and
+its overall conclusion is **`failure`**, run
+[34334054392](https://github.com/andreatosti2001/Eu-Digital-Policy/actions/runs/34334054392).
+Four of six jobs pass (`Public website / private control plane`, `The agent suites`, `Website
+health monitor`, `What this workflow does not prove`); two fail:
+
+- **`The four validators`** — the job's own steps for `validate.mjs`, `i18n-audit.mjs` and
+  `design-qa.mjs` all report `success`; the job fails because `freshness.mjs` exits 1. Its own
+  output, read from the CI log, is the same "1 item(s) need attention" reported in §7 above and
+  matches this session's local run exactly — the three already-named sources
+  (`src-us-house-judiciary-dsa-2025`, `src-cdt-ai-act-national-security`, `src-brief-original`).
+  `freshness.mjs` exits non-zero whenever it has something to report, by design; that is not the
+  same fact as the check being broken.
+- **`Browser regression suite`** — fails on the same three pre-existing, already-documented
+  defects listed in §5 (`nav:noscript`, `keyboard:skip-first`,
+  `a11y:headings:enforcement.html`), byte-identical to the CI log for this run.
+
+**Neither failure is new, and neither was caused by this session.** The immediately preceding
+push to `main` — SESSION 24's commit `341ff39`, made before this session started — fails CI in
+the identical two jobs at the identical two steps (run
+[34329668649](https://github.com/andreatosti2001/Eu-Digital-Policy/actions/runs/34329668649)),
+and the merge before that (`8f1b411`) fails the same way too. `AGENTS.md` states this workflow
+"is not a deploy gate" — a push to `main` still publishes regardless of its conclusion, and this
+run's job list matches that pre-existing pattern exactly, not a regression this session
+introduced.
+
+**The correction this note makes:** §9 below and the closing summary of this session originally
+reported the four validators and both boundary checks as "unchanged at baseline" from local
+tool runs alone, without checking GitHub's own CI conclusion for the pushed commit. Both facts
+are true and are not in tension — the local exit codes and the CI job's pass/fail conclusion are
+different measurements of the same underlying, pre-existing, already-documented state — but
+stating only the former reads as a stronger claim ("CI is green") than what was actually
+checked. It is corrected here rather than edited away.
+
 ## 8 · Step 10 — the execution trace
 
 **21 traces total in `agent/observability/runs/` after this session; the ones this session

@@ -48,6 +48,14 @@ warnings), both boundary checks are unchanged (0 blocking / 13 and 0 / 0), and
 `agent/implement/decisions/decisions.jsonl` remains empty. A curated, prioritized review queue —
 not all 48, by instruction — is in the report's closing section, ready for a human decision.
 
+**CI on this push (`cdfe375`) reports `failure`, and that is not this session's regression.**
+Checked against the actual GitHub Actions run rather than left to local exit codes: two of six
+jobs fail — `freshness.mjs` exiting 1 on the same "1 item(s) need attention" reported above, and
+the browser suite failing on the same three pre-existing defects already named. The immediately
+preceding push, SESSION 24's `341ff39`, fails CI in the identical two jobs at the identical
+steps. `AGENTS.md` already says this workflow "is not a deploy gate." Report:
+`docs/SESSION-25-FIRST-REAL-WORLD-RUN.md` §7.
+
 **The one thing SESSION 26 inherits that is new:** the network boundary in §2 of the report is
 now a measured fact about *this* environment rather than a documented default. It will
 reproduce identically on a rerun here. Advancing step 1 needs either a different network policy
