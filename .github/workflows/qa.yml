@@ -123,6 +123,8 @@ jobs:
             agent/orchestrator/selftest.mjs \
             agent/policy/selftest.mjs \
             agent/policy/verify/selftest.mjs \
+            agent/simulation/selftest.mjs \
+            agent/autonomy/selftest.mjs \
             .control-room/selftest.mjs
           do
             echo "::group::$s"
@@ -144,6 +146,18 @@ jobs:
           node agent/orchestrator/cli.mjs workflows
           node agent/orchestrator/cli.mjs capabilities
           node agent/orchestrator/cli.mjs policy
+
+      # SESSION 26. What limited autonomy is switched on to do, printed
+      # on every push. It RUNS NOTHING — no branch is cut, no proposal
+      # is applied, no ledger line is written — and it is here because
+      # a governance grant that changed without anybody noticing is the
+      # thing this whole layer is arranged against. The grant ledger is
+      # git-tracked, so a diff to it is visible in review; this makes
+      # its EFFECT visible too.
+      - name: What limited autonomy is switched on to do
+        run: |
+          node agent/policy/cli.mjs governance
+          node agent/autonomy/cli.mjs status
 
       # The tree must be byte-identical afterwards. Every suite here
       # hashes what it reads; this checks the claim from outside all

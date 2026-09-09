@@ -18,21 +18,26 @@
    fails and reports every one it checked either way — a caller that
    only saw the first failure would fix it and meet the second.
 
-   THE ANSWER TODAY IS ALWAYS NO, AND SAYING SO PLAINLY IS THE
-   POINT. §20 restricts autonomous production action to "explicitly
-   approved low-risk categories", and no governance decision in this
-   repository has approved any: `APPROVED_AUTONOMOUS_CATEGORIES` is
-   empty, and §24 says the system may not rewrite its own governance
-   policy — so nothing here can add to it, and a session that did
-   would be making the change §24 reserves to a person.
+   THE ANSWER WAS ALWAYS NO UNTIL SESSION 26, AND WHAT CHANGED IS
+   NARROW. §20 restricts autonomous production action to "explicitly
+   approved low-risk categories". Until SESSION 26 none was approved,
+   because §24 says the system may not rewrite its own governance
+   policy and nothing here could add one. A person then did: the
+   grant lives in `agent/policy/governance/grants.jsonl`, and
+   `category_allowed` below reads the POLICY IN FORCE — the base plus
+   every active grant — rather than the base constant.
 
-   That could have been implemented as a single early `return
-   false`, and it deliberately is not. The eleven other conditions
-   are evaluated and reported, because the interesting fact is not
-   "autonomy is off" — it is WHICH conditions a given piece of work
-   would have failed if it were on. A system that only ever prints
-   "not permitted" teaches nobody anything, and the first session
-   that turns a category on would be turning it on blind.
+   `APPROVED_AUTONOMOUS_CATEGORIES` is still exported and still
+   empty, because it is the BASE and three suites assert it stays so.
+   `approvedCategories()` is the derived view; use that one to answer
+   "what is switched on".
+
+   THE ELEVEN OTHER CONDITIONS ARE STILL ALL EVALUATED. That was
+   right when the answer was always no — the interesting fact was
+   which conditions a piece of work would have failed if autonomy
+   were on — and it is more obviously right now that it sometimes is:
+   a system that stopped at the first failure would report the
+   cheapest reason rather than the whole of what stood in the way.
 
    WHAT `major_rewrite` MEANS HERE, since the protocol names it and
    defines it nowhere. Two mechanical thresholds, declared as
@@ -47,8 +52,9 @@
 
 import { LEGAL_ENTITY_KINDS, RED_TARGETS, REQUIRED_VALIDATORS } from '../schemas/types.mjs';
 import { CONDITIONS } from '../policy/conditions.mjs';
-import { AUTOMATABLE_CATEGORIES, DEFAULT_POLICY, categoriseProposal } from '../policy/categories.mjs';
+import { ACTION_CATEGORIES, AUTOMATABLE_CATEGORIES, DEFAULT_POLICY, categoriseProposal } from '../policy/categories.mjs';
 import { evaluate as evaluatePolicy } from '../policy/engine.mjs';
+import { policyInForce } from '../policy/governance.mjs';
 
 /* ============================================================
    1 · Human review
@@ -205,10 +211,51 @@ export const MANDATORY_AUTONOMY_CONDITIONS = Object.freeze([...CONDITIONS]);
  */
 export const LOW_RISK_CATEGORIES = Object.freeze([...AUTOMATABLE_CATEGORIES]);
 
-/** Empty, and it is empty in ONE place now: `DEFAULT_POLICY`. */
+/**
+ * The BASE policy's enabled list, which is empty and stays empty. It
+ * is empty in ONE place: `DEFAULT_POLICY`.
+ *
+ * SESSION 26 NOTE — READ THIS BEFORE USING IT AS "WHAT IS SWITCHED
+ * ON". It is not. It is what is switched on when no governance grant
+ * exists, which was the whole story until SESSION 26 and is not any
+ * more. What is actually in force is derived from
+ * `agent/policy/governance/grants.jsonl` by `policyInForce()`, and
+ * `approvedCategories()` below is the view onto it. This constant is
+ * kept, at its original name and its original value, because three
+ * suites assert the BASE stays empty and that assertion is still
+ * exactly the one worth making: a grant is how autonomy is switched
+ * on, and an agent editing a literal is not.
+ */
 export const APPROVED_AUTONOMOUS_CATEGORIES = Object.freeze([...DEFAULT_POLICY.enabled_categories]);
 
-export const AUTONOMY_NOTE = 'No action category is approved for automatic execution in this repository. docs/AUTONOMY-POLICY.md Class B is the nearest thing that exists and it still requires a validator to PROVE the change correct and a revert if any validator fails; §20 of the governance protocol requires an explicit governance decision to enable a category, and §24 reserves that decision to a person. An agent adding one to APPROVED_AUTONOMOUS_CATEGORIES would be taking the decision the protocol reserves.';
+/** What is enabled RIGHT NOW: the base plus every active grant.
+ *  A function rather than a constant because it can change without
+ *  this module being reloaded — somebody records or revokes a grant —
+ *  and a load-time snapshot of a governance fact is a snapshot that
+ *  goes quietly stale. */
+export function approvedCategories(opts = {}) {
+  return [...policyInForce(opts).policy.enabled_categories];
+}
+
+/** The base statement, true when nothing is granted. */
+export const AUTONOMY_BASE_NOTE = 'No action category is approved for automatic execution by the BASE policy. docs/AUTONOMY-POLICY.md Class B is the nearest thing that exists and it still requires a validator to PROVE the change correct and a revert if any validator fails; §20 of the governance protocol requires an explicit governance decision to enable a category, and §24 reserves that decision to a person. An agent adding one to APPROVED_AUTONOMOUS_CATEGORIES would be taking the decision the protocol reserves.';
+
+/**
+ * What to say about autonomy, given what is actually granted.
+ *
+ * A CONSTANT HERE WOULD NOW BE A FALSE STATEMENT. The previous
+ * `AUTONOMY_NOTE` said "No action category is approved for automatic
+ * execution in this repository", which was true when it was written
+ * and stopped being true the moment a person recorded a grant. This
+ * repository's own rule is that a record says what it can support, so
+ * the note is derived from the ledger rather than asserted from a
+ * literal nobody would think to update.
+ */
+export function autonomyNote(opts = {}) {
+  const { policy, active } = policyInForce(opts);
+  if (!active.length) return AUTONOMY_BASE_NOTE;
+  return `${policy.enabled_categories.length} action categor(ies) may execute automatically under ${active.length} governance grant(s): ${policy.enabled_categories.join(', ')}, over ${policy.automatic_path_allowlist.join(', ')}, at risk no higher than "${policy.max_automatic_risk}", in ${policy.automatic_environments.join('/')} and never in production. Granted by ${active.map((g) => `${g.decided_by} on ${g.decided_at} until ${g.expires_at}`).join('; ')}. Every one of protocol §18's twelve mandatory conditions is still evaluated on every act, the fourteen §19 categories may never be granted by any policy, and nothing here deploys: a merge reaches the working branch and stops.`;
+}
 
 const cond = (condition, satisfied, why, needs = null) => ({ condition, satisfied, why, needs });
 
@@ -220,8 +267,20 @@ const cond = (condition, satisfied, why, needs = null) => ({ condition, satisfie
  *          scope?:object|null, humanReview?:object|null,
  *          category?:string|null}} ctx
  */
-export function autonomyPermits({ proposal = null, records = [], conflicts = [], validators = null, browser = null, scope = null, humanReview = null, category = null } = {}) {
+export function autonomyPermits({ proposal = null, records = [], conflicts = [], validators = null, browser = null, scope = null, humanReview = null, category = null, policy = null } = {}) {
   const conditions = [];
+  /* THE POLICY IN FORCE, not the base. SESSION 26: what is switched
+     on is derived from the governance grant ledger, and an
+     Orchestrator that enforced the base policy would refuse acts the
+     implementation layer permits — two enforcement points disagreeing
+     about one fact, which is the drift `docs/DATA-GOVERNANCE.md` §5
+     exists to prevent. It is a PARAMETER so a caller can ask about a
+     different policy without the module reaching for a global; it is
+     not a way to widen anything, because a policy handed in here is
+     still read by the same engine that refuses a never-automatable
+     category before it reads any enabled list. */
+  const inForce = policy ?? policyInForce().policy;
+  const approved = [...(inForce.enabled_categories ?? [])];
   const all = [proposal, ...records].filter(Boolean);
 
   const realEvidence = all.flatMap((r) => (r.evidence ?? []).filter((e) => ['retrieved_document', 'repository_file', 'dataset_record', 'validator_output', 'measurement'].includes(e.kind)));
@@ -287,10 +346,21 @@ export function autonomyPermits({ proposal = null, records = [], conflicts = [],
     scope ? (scopeOk ? `${scope.permitted.length} permitted path(s), derived from the proposal rather than taken as an argument.` : `${(scope.refusals ?? []).length} refused path(s), or none derivable.`) : 'no scope was derived.',
     scopeOk ? null : 'the proposal names the files it touches, and none of them is a path no agent may write.'));
 
-  const categoryOk = category !== null && APPROVED_AUTONOMOUS_CATEGORIES.includes(category);
+  /* Two questions, and the first one no policy may answer for
+     itself: is this category automatable AT ALL, and is it enabled?
+     `agent/policy/categories.mjs` reads `automatable` before it reads
+     any enabled list, and this reads it in the same order — so a
+     hand-made policy object naming `legal_interpretation` in its
+     enabled list is refused here as well as by the engine, rather
+     than passing this condition and being caught only downstream. */
+  const catMeta = category ? ACTION_CATEGORIES[category] : null;
+  const categoryAutomatable = catMeta ? catMeta.automatable === true : false;
+  const categoryOk = category !== null && categoryAutomatable && approved.includes(category);
   conditions.push(cond('category_allowed', categoryOk,
-    `${category ? `the action names category "${category}", and ` : 'the action names no category, and '}APPROVED_AUTONOMOUS_CATEGORIES is empty. ${AUTONOMY_NOTE}`,
-    `a governance decision, taken by a person, enabling one of: ${LOW_RISK_CATEGORIES.join(', ')}. Protocol §24 reserves that decision; nothing in this system may take it.`));
+    category && !categoryAutomatable
+      ? `the action names category "${category}", which no policy may automate${catMeta ? `: ${catMeta.human_review}` : ' because it is not a category this system defines'}. An enabled list naming it does not make it automatable.`
+      : `${category ? `the action names category "${category}", and ` : 'the action names no category, and '}the policy in force (${inForce.policy_id}) enables ${approved.length ? approved.join(', ') : 'no category at all'}.`,
+    categoryOk ? null : `a governance decision, taken by a person, enabling one of: ${LOW_RISK_CATEGORIES.join(', ')}. Protocol §24 reserves that decision; nothing in this system may take it — agent/policy/ is on the never-automatic path list precisely so that no grant can widen itself.`));
 
   const humanOk = Boolean(humanReview) && humanReview.required === false;
   conditions.push(cond('no_mandatory_human_review', humanOk,
@@ -336,7 +406,7 @@ export function autonomyPermits({ proposal = null, records = [], conflicts = [],
       environment: 'local',
       resource: { kind: 'canonical_data', id: proposal.proposal_id ?? null },
       proposal,
-      policy: DEFAULT_POLICY,
+      policy: inForce,
       facts: {},
     })
     : null;
@@ -353,8 +423,8 @@ export function autonomyPermits({ proposal = null, records = [], conflicts = [],
        make. */
     policy_engine: engine
       ? { route: engine.route, category: engine.category.category, permitted: engine.automatic_execution_permitted, why: engine.why, failed: engine.failed, unknown: engine.unknown, policy_id: engine.policy_id }
-      : { route: null, category: null, permitted: false, why: 'no proposal was supplied, so agent/policy/engine.mjs was not asked. A workflow with nothing to execute does not execute.', failed: [], unknown: [], policy_id: DEFAULT_POLICY.policy_id },
-    note: AUTONOMY_NOTE,
+      : { route: null, category: null, permitted: false, why: 'no proposal was supplied, so agent/policy/engine.mjs was not asked. A workflow with nothing to execute does not execute.', failed: [], unknown: [], policy_id: inForce.policy_id },
+    note: autonomyNote(),
     summary: failed.length === 0 && !engineRefuses
       ? 'every mandatory condition is satisfied and agent/policy/engine.mjs agrees. This does NOT mean anything executes: no workflow in this system publishes, and the last stage of every one of the ten is a person.'
       : failed.length === 0

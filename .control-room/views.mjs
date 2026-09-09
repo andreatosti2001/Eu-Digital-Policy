@@ -1,7 +1,7 @@
 /* ============================================================
    .control-room/views.mjs — the three views, assembled server-side
 
-   LIVE SYSTEM · WORKFLOWS · REVIEW QUEUE · WEBSITE HEALTH.
+   LIVE SYSTEM · WORKFLOWS · AUTONOMY · REVIEW QUEUE · WEBSITE HEALTH.
 
    Each is built here, on the server, from the same modules the CLIs
    read. The browser receives JSON it may render; it computes no
@@ -35,6 +35,14 @@
    absence of problems, and a view that undid that in its rendering
    would be the same mistake one layer up.
 
+   THE AUTONOMY VIEW IS A WINDOW TOO, AND IT REPORTS THE REFUSALS.
+   SESSION 26 requires every autonomous action to be reported here.
+   It shows what is switched on, who switched it on and until when,
+   and every action attempted — merged, reverted and refused alike,
+   each with the rollback information it retained. There is no route
+   that records a grant, revokes one, triggers a run or rolls one
+   back, and the absence is the control.
+
    THE WORKFLOWS VIEW IS A WINDOW, NOT A CONSOLE. SESSION 22
    requires the Orchestrator to expose workflow state here, and
    exposing it is the whole of the requirement. There is no route
@@ -60,7 +68,9 @@ import { analyseAll } from '../agent/health/security.mjs';
 import { survey as surveyWorkflows, DEFAULT_STATE_DIR } from '../agent/orchestrator/state.mjs';
 import { describeWorkflows, END_STATE_MEANING, WORKFLOW_TYPES } from '../agent/orchestrator/workflows.mjs';
 import { describeCapabilities } from '../agent/orchestrator/capabilities.mjs';
-import { HUMAN_REVIEW_TRIGGERS, MANDATORY_AUTONOMY_CONDITIONS, APPROVED_AUTONOMOUS_CATEGORIES, AUTONOMY_NOTE } from '../agent/orchestrator/policy.mjs';
+import { HUMAN_REVIEW_TRIGGERS, MANDATORY_AUTONOMY_CONDITIONS, APPROVED_AUTONOMOUS_CATEGORIES, approvedCategories, autonomyNote } from '../agent/orchestrator/policy.mjs';
+import { describeGovernance } from '../agent/policy/governance.mjs';
+import { summariseActions, rollbackInformation } from '../agent/autonomy/ledger.mjs';
 import { reviewQueue } from './decide.mjs';
 import { listOperators } from './identity.mjs';
 import { describeConfig, isLoopback } from './config.mjs';
@@ -179,8 +189,14 @@ export function workflowsView(cfg, { dir = DEFAULT_STATE_DIR } = {}) {
     policy: {
       human_review_triggers: HUMAN_REVIEW_TRIGGERS,
       mandatory_autonomy_conditions: MANDATORY_AUTONOMY_CONDITIONS,
-      approved_autonomous_categories: [...APPROVED_AUTONOMOUS_CATEGORIES],
-      note: AUTONOMY_NOTE,
+      /* The BASE list, which is empty, and the list actually in
+         force, which is derived from the governance grant ledger.
+         Both, because a reader who saw only one of them would be
+         reading either a false reassurance or a number with no
+         statement of what it would be without a grant. */
+      approved_autonomous_categories_base: [...APPROVED_AUTONOMOUS_CATEGORIES],
+      approved_autonomous_categories: approvedCategories(),
+      note: autonomyNote(),
     },
   };
 
@@ -239,6 +255,122 @@ export function workflowsView(cfg, { dir = DEFAULT_STATE_DIR } = {}) {
 }
 
 export const NO_CONSOLE = 'This view reads the Orchestrator\'s journal and adds nothing to it. There is no route here that starts a workflow, retries a stage, dispatches an agent or reopens a terminal one, and that is not a check somebody could move — the routes do not exist. Protocol §14: a Control Room action creates a governed event, and the Orchestrator independently decides whether it is permitted.';
+
+/* ============================================================
+   2c · LIMITED AUTONOMY — what is switched on, and everything it did
+
+   SESSION 26: "Report every autonomous action in the control room."
+   This is that, and it is the whole of it: a READ.
+
+   THERE IS NO ROUTE THAT GRANTS, REVOKES, TRIGGERS OR ROLLS BACK,
+   and the absence is the control rather than a check inside a route,
+   because a check can be moved. A governance grant is written by a
+   person at a command line; an interface that could switch autonomy
+   on is an interface a bug in this server could switch autonomy on
+   through, and protocol §24 reserves that decision to a person.
+
+   IT REPORTS THE REFUSALS TOO. An autonomy view showing only what
+   was changed answers "what did the machine do" and not "what did
+   the machine try", and the second is the question an operator
+   reading a control plane actually has.
+   ============================================================ */
+
+export const AUTONOMY_NO_CONSOLE = 'This view reads the governance grant ledger and the autonomous-action ledger and adds nothing to either. There is no route here that records a grant, revokes one, starts an autonomous run or rolls one back — not a check somebody could move, but a route that does not exist. A grant is written by a person at a command line, because protocol §24 reserves that decision to a person rather than to a button.';
+
+export function autonomyView(cfg, { dir = undefined, actionDir = undefined, now = new Date().toISOString() } = {}) {
+  let governance = null;
+  let readError = null;
+  try { governance = describeGovernance({ dir, now }); }
+  catch (e) { readError = e.message; }
+
+  const actions = summariseActions(actionDir ? { dir: actionDir } : {});
+
+  if (readError) {
+    return {
+      view: 'autonomy',
+      state: 'unreadable',
+      why: `the governance grant ledger could not be read: ${readError}`,
+      no_console: AUTONOMY_NO_CONSOLE,
+    };
+  }
+
+  const active = governance.active;
+  return {
+    view: 'autonomy',
+    state: 'measured',
+    now,
+    /* The two facts an operator needs first, and they are different:
+       whether anything is switched on, and whether anything has
+       happened. Either can be true without the other. */
+    enabled: active.length > 0,
+    policy: {
+      policy_id: governance.policy.policy_id,
+      enabled_categories: [...governance.policy.enabled_categories],
+      automatic_path_allowlist: [...governance.policy.automatic_path_allowlist],
+      automatic_field_allowlist: governance.policy.automatic_field_allowlist ?? {},
+      max_automatic_risk: governance.policy.max_automatic_risk,
+      automatic_environments: [...governance.policy.automatic_environments],
+    },
+    base_policy: {
+      policy_id: governance.base_policy_id,
+      enabled_categories: governance.base_enabled_categories,
+      note: governance.note,
+    },
+    grants: active.map((g) => ({
+      grant_id: g.grant_id,
+      decided_by: g.decided_by,
+      decided_at: g.decided_at,
+      expires_at: g.expires_at,
+      authority: g.authority,
+      rationale: g.rationale,
+      categories: g.categories,
+      path_allowlist: g.path_allowlist,
+      field_allowlist: g.field_allowlist,
+      max_automatic_risk: g.max_automatic_risk,
+      environments: g.environments,
+    })),
+    /* Revoked, expired and invalid are three different facts and
+       none of them is "there is no grant". */
+    inactive_grants: governance.inactive.map((i) => ({ grant_id: i.grant.grant_id, state: i.state, why: i.why, decided_by: i.grant.decided_by })),
+    ledger_malformed: governance.malformed,
+    self_check: governance.self_check,
+    boundaries: {
+      eligible_paths: governance.eligible_paths,
+      never_paths: governance.never_paths,
+      never_fields: governance.never_fields,
+      automatable_categories: governance.automatable_categories,
+    },
+    actions: {
+      store: actions.path,
+      store_exists: actions.exists,
+      /* Not "0 actions". The ledger is git-ignored per-machine run
+         state, so a fresh clone and a CI runner have none — which is
+         not the same fact as an autonomy layer that never acted, and
+         the two are not reported alike. */
+      why: actions.why,
+      counts: actions.counts,
+      malformed: actions.malformed,
+      recent: actions.actions.slice(-60).reverse().map((a) => ({
+        action_id: a.action_id,
+        proposal_id: a.proposal_id,
+        outcome: a.outcome,
+        category: a.category ?? null,
+        started_at: a.started_at,
+        ended_at: a.ended_at ?? null,
+        wrote_files: a.wrote_files === true,
+        files: a.files ?? [],
+        origin_branch: a.origin_branch ?? null,
+        merge_commit: a.merge_commit ?? null,
+        qa_verdict: a.qa_verdict ?? null,
+        refused_by: a.refused_by ?? [],
+        why: a.why ?? null,
+        rollback: rollbackInformation(a),
+      })),
+    },
+    bound: 'This is what the ledgers on THIS machine hold. The grant ledger is git-tracked and travels with the repository; the action ledger is per-machine run state, and the durable record of an autonomous change is the commit it made.',
+    no_console: AUTONOMY_NO_CONSOLE,
+  };
+}
 
 /* ============================================================
    3 · WEBSITE HEALTH

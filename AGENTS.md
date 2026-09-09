@@ -34,6 +34,7 @@ the evidence it describes.
 | `docs/CONTROL-ROOM.md` | The private control plane: the two security domains, authentication, authorization, the seven approval gates, the audit trail — and §11, what none of it proves |
 | `docs/ORCHESTRATOR.md` | The Master Orchestrator: the ten workflow types, the five end states, the capability register, the eight routing checks, the six conflict shapes — and §13, what none of it proves |
 | `docs/FIRST-END-TO-END-AUDIT.md` | SESSION 24's simulated end-to-end cycle: what ran, what was simulated, the Control Room discovery path, the intended visual sequence — and **twenty-three findings, none fixed** |
+| `docs/LIMITED-AUTONOMY.md` | SESSION 26: the governance grant that switched five low-risk categories on, what a grant may never say, the six gates and the seven steps — and §7, what none of it proves |
 | `docs/SESSION-25-FIRST-REAL-WORLD-RUN.md` | SESSION 25's first non-simulated run — `--live` against the five registered real endpoints, all five refused by this environment's network policy, and what ran for real against the actual corpus and pages once that boundary was hit — with a prioritized human review queue, none of it decided |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
@@ -52,6 +53,7 @@ Read the one you need; do not re-derive its contents here.
 | `docs/SOURCE-POLICY.md` | What may be cited, what a citation can support, self-citation, the asterisk |
 | `docs/VERIFICATION-POLICY.md` | What each validator does and does **not** prove; reproducibility |
 | `docs/AUTONOMY-AUTHORIZATION-POLICY.md` | SESSION 23: the **executable** policy — the twelve mandatory conditions, the eighteen action categories, the 84-row capability matrix, the six rollback elements, and the hidden Control Room entry |
+| `docs/LIMITED-AUTONOMY.md` | SESSION 26: the **activation** — the grant ledger, the three allowlists, the six gates and the seven steps |
 
 **A/B/C/D refine the green/amber/red tiers in `docs/AI-SAFE-BOUNDARIES.md`; they do not
 replace them.** A and B split green, C is amber, D is red. Where the two could be read
@@ -86,6 +88,33 @@ places this system is weaker than its own documents read: the Orchestrator admit
 that declares it; nothing re-checks a `ChangeRecord`'s files against the approved scope
 after the dispatch; and two conflict detectors have no ordering constraint and reported one
 relationship backwards. `docs/ORCHESTRATOR.md`.
+
+**LIMITED AUTONOMY IS SWITCHED ON, AND WHAT THAT MEANS IS NARROW.** SESSION 26 recorded the
+first governance grant this repository has ever had: `agent/policy/governance/grants.jsonl`,
+git-tracked, naming the repository author, dated, expiring 9 March 2027, enabling the five
+protocol §20 low-risk categories over exactly two paths — `data/sources.json` and `docs/` —
+and, on the first of those, exactly eight bookkeeping fields.
+**`DEFAULT_POLICY.enabled_categories` is still `[]` and four suites still assert it.** That is
+not a contradiction: it is the BASE — what the policy permits when nobody has decided
+anything — and the policy in force is DERIVED from the grant ledger by
+`agent/policy/governance.mjs policyInForce()`. **Ask that, never `DEFAULT_POLICY`, when the
+question is "what may happen now".** A grant may never name a §19 category, a path outside
+the two eligible ones, a never-automatic field (`tier`, `role`, `supports`, `last_verified`,
+`verification_note`, `requires_verification`, `reference_gap` and five more), a risk above
+`low`, `production`, or no expiry — and every one of those refusals runs again on every READ,
+so a line written around `recordGrant` is not honoured either. `agent/policy/` is itself on
+the never-automatic path list, so **no grant can widen the rules that admitted it**.
+`docs/LIMITED-AUTONOMY.md`.
+
+**`agent/autonomy/` is the runner, and a grant replaces exactly two gates.**
+`agent/implement/preflight.mjs`'s `approved` and `approval_attributable`, and nothing else;
+the other eight must pass unchanged. The cycle is seven steps — a real isolated branch, the
+exact-match apply, the four validators, the browser suite where it is required, the full
+trace, a `--no-ff` merge into the WORKING branch only if every mandatory condition holds on
+the MEASURED facts, and retained rollback information. The default writes nothing: `run`
+without `--execute` rehearses. **Its first real run refused all fourteen proposals in the
+store, each by four independent gates**, and no autonomous change has ever merged anything.
+`docs/LIMITED-AUTONOMY.md` §6 and §7.
 
 **The autonomy policy has ONE home, and it is `agent/policy/`.** SESSIONS 22 and 23 were
 written on sibling branches from the same base and each implemented protocol §18's mandatory
@@ -194,21 +223,24 @@ node --test agent/observability/selftest.mjs
 node --test agent/policy/selftest.mjs           # the autonomy policy, incl. SESSION 23's twenty required proofs
 node --test agent/policy/verify/selftest.mjs   # SESSION 23.5's gate, run twice, asserting it is reproducible
 node --test agent/simulation/selftest.mjs      # SESSION 24's simulation, incl. the byte-identical-tree assertion
+node --test agent/autonomy/selftest.mjs       # SESSION 26's limited-autonomy runner, incl. the git half against a real temporary repository
 node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**998 tests across the twenty suites**, all passing as of SESSION 24
-(978 across nineteen after SESSION 23.5; 934 after SESSION 22 on its own branch; 909 after
-SESSION 23.5 on its own; 867 after SESSION 21; 812 after SESSION 20; 756 after SESSIONS 18
-and 19; 683 before them). SESSIONS 22, 23 and 23.5 were merged, so none of those middle
-figures is a total on its own.
+**1036 tests across the twenty-one suites**, all passing as of SESSION 26
+(998 across twenty after SESSION 24; 978 across nineteen after SESSION 23.5; 934 after
+SESSION 22 on its own branch; 909 after SESSION 23.5 on its own; 867 after SESSION 21; 812
+after SESSION 20; 756 after SESSIONS 18 and 19; 683 before them). SESSIONS 22, 23 and 23.5
+were merged, so none of those middle figures is a total on its own.
 
-**`agent/implement/selftest.mjs` R6 has now caught the suite list growing five times** —
+**`agent/implement/selftest.mjs` R6 has now caught the suite list growing six times** —
 SESSION 20, SESSION 22, SESSION 23, the merge where the two branches had each updated the
-same assertion to a different number, and SESSION 24, whose simulation harness would
-otherwise have landed without ever gating a change under `agent/`. That is the assertion doing its job. It
-asserts eighteen suites. SESSION 23 also changed `agent/detector/impact.mjs`'s
+same assertion to a different number, SESSION 24, whose simulation harness would otherwise
+have landed without ever gating a change under `agent/`, and SESSION 26, where it mattered
+most: the autonomy runner is the first thing here that can write a file without a person, and
+a suite for it that nothing ran would have been a gate on nothing. That is the assertion
+doing its job. It asserts twenty suites. SESSION 23 also changed `agent/detector/impact.mjs`'s
 `MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`;
 SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
 changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
@@ -237,6 +269,18 @@ node agent/health/cli.mjs --as-of YYYY-MM-DD    # 44 metrics, three domains
 node agent/health/cli.mjs --metrics             # the register, runs nothing
 node agent/observability/cli.mjs health
 ```
+
+What limited autonomy is switched on to do, and everything it has attempted:
+
+```
+node agent/policy/cli.mjs governance            the grants in force, and what none may say
+node agent/autonomy/cli.mjs status              what is on, and what it has done
+node agent/autonomy/cli.mjs survey --all        what could run automatically right now
+node agent/autonomy/cli.mjs run --as-of YYYY-MM-DD [--execute]
+node agent/autonomy/cli.mjs actions             every attempt: merged, reverted, refused
+```
+
+Both register commands run on every push. Neither writes anything.
 
 **There is no overall health score.** `agent/health/model.mjs overallScore()` throws, with the
 reasoning. Five metrics are marked `not_a_score` because the only legitimate way to move them
@@ -360,6 +404,15 @@ patches, not checks. **Do not re-run** the latter two.
   deliberate and must stay: "reveal CONTROL ROOM followed by the normal authentication
   interface" must NOT be implemented as a login form on the published page, because that
   would be a credential prompt in the public tree. `docs/FIRST-END-TO-END-AUDIT.md` §6.
+
+- **The autonomy layer's action ledger is git-ignored, and the COMMIT is the durable record.**
+  `agent/autonomy/actions/actions.jsonl` holds one line per attempt — merged, reverted and
+  refused alike — with the branch, the base commit and the per-file pre-change hashes. It is
+  per-machine run state, so a fresh clone and a CI runner have none, and that is not the same
+  fact as no autonomous action having been taken. What survives a clone is the commit an
+  autonomous change made, whose message names the grant, the person who wrote it, the base
+  commit and the exact restore command. **The grant ledger is the opposite and is TRACKED**:
+  an authorization has to be attributable.
 
 - **Your base may be stale.** Run `git fetch --all && git branch -a` before concluding
   anything about what this repository contains. An earlier session reported four existing
