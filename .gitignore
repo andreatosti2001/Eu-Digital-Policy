@@ -83,3 +83,23 @@ agent/orchestrator/state/*
 # agent/health/history/, .control-room/state/ and agent/orchestrator/state/ use.
 agent/simulation/runs/*
 !agent/simulation/runs/README.md
+
+# SESSION 26's autonomous-action ledger. One append-only line per attempt —
+# merged, reverted and refused alike — holding the branch, the base commit, the
+# per-file pre-change hashes and the policy verdict.
+#
+# Run state, and control-plane run state: this repository publishes its whole
+# tree, so a tracked operational trace of what an agent did on a machine would be
+# on the public web. Losing it loses history and NO AUTHORITY — the durable
+# record of an autonomous change is the COMMIT it made, whose message names the
+# grant, the person who wrote it, the base commit and the exact restore command.
+# Derivation over storage, applied to an audit trail.
+#
+# The grant ledger itself is the opposite and is TRACKED: agent/policy/governance/
+# holds authorizations, and an authorization has to be attributable.
+#
+# The glob is `*` with the README negated back in, the same shape
+# agent/health/history/, .control-room/state/, agent/orchestrator/state/ and
+# agent/simulation/runs/ use.
+agent/autonomy/actions/*
+!agent/autonomy/actions/README.md

@@ -46,6 +46,7 @@ import {
 } from './categories.mjs';
 import { CONDITIONS, NOT_WAIVABLE_BY_APPROVAL, VERDICTS, evaluateConditions, humanReviewTriggers } from './conditions.mjs';
 import { assessRollback, ROLLBACK_ELEMENT_NAMES } from './rollback.mjs';
+import { policyInForce } from './governance.mjs';
 
 import { validate } from '../schemas/validate.mjs';
 import { implementationProposalFixture, editorialProposalFixture, approvalRequestFixture } from '../schemas/fixtures.mjs';
@@ -864,7 +865,18 @@ test('33 · the Orchestrator enforces the policy engine, and cannot permit what 
   const refused = orch.autonomyPermits({ proposal: cleanProposal(), records: [], conflicts: [] });
   assert.equal(refused.permitted, false);
   assert.equal(refused.policy_engine.permitted, false);
-  assert.equal(refused.policy_engine.policy_id, DEFAULT_POLICY.policy_id);
+  /* SESSION 26: the Orchestrator asks the engine about the POLICY IN
+     FORCE — the base plus every active governance grant — not the
+     base. Asserting the base id here would now assert that the
+     Orchestrator enforces a weaker policy than the implementation
+     layer, which is the drift this test exists to prevent. What is
+     asserted instead is stronger: the id must be the in-force one,
+     and it must EXTEND the base rather than replace it, so a grant
+     can never substitute a policy of its own. */
+  const inForceId = policyInForce().policy.policy_id;
+  assert.equal(refused.policy_engine.policy_id, inForceId);
+  assert.ok(inForceId.startsWith(DEFAULT_POLICY.policy_id),
+    'the policy in force always begins with the base policy id: a grant adds to the base, it does not replace it');
   assert.ok(refused.policy_engine.route, 'the engine\'s route must be reported, not swallowed');
 
   /* And the twelve stay twelve: the engine's verdict is reported

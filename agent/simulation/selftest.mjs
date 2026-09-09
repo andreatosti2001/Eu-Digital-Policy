@@ -48,17 +48,34 @@ test('1 · a complete cycle leaves the working tree byte-identical', async () =>
   assert.deepEqual(run.repository_changed, [], 'the run reports its own measurement, and it must agree');
 });
 
+/* SESSION 26 CORRECTED THIS TEST, AND IT IS THE SESSION 19 SHAPE: a
+   check that passed for the wrong reason. Its own comment said "the
+   assertion is that THIS run added nothing", and its code asserted
+   the four directories were EMPTY. Those are different claims, and
+   the second one is a claim about the machine rather than about the
+   simulation: `agent/records/` is git-ignored run state that any
+   agent run populates, so the test passed in a fresh clone and in CI
+   and failed the moment somebody ran Data Depth first — which is what
+   happened in SESSION 26, running the real agents to give the
+   autonomy layer something to refuse.
+
+   It now does what its comment always said: snapshot, run, compare.
+   That is STRICTER, not weaker — the old form could not have caught a
+   simulation writing into a directory that already held a file. */
 test('1 · the run writes into none of the repository\'s real stores', async () => {
-  await theRun();
-  /* The five directories a careless simulation would land in. Each
-     is checked for CONTENT rather than for existence, because four
-     of them are git-ignored and may legitimately hold a developer's
-     own runs. The assertion is that THIS run added nothing. */
-  for (const dir of ['agent/records', 'agent/observability/runs', 'agent/orchestrator/state', '.control-room/state']) {
+  const dirs = ['agent/records', 'agent/observability/runs', 'agent/orchestrator/state', '.control-room/state'];
+  const contentsOf = (dir) => {
     const p = join(REPO_ROOT, dir);
-    if (!existsSync(p)) continue;
-    const entries = readdirSync(p).filter((f) => f !== 'README.md' && !f.startsWith('.'));
-    assert.deepEqual(entries, [], `${dir} holds ${entries.length} file(s) after a simulation run: ${entries.join(', ')}`);
+    return existsSync(p) ? readdirSync(p).filter((f) => f !== 'README.md' && !f.startsWith('.')).sort() : [];
+  };
+  const before = Object.fromEntries(dirs.map((d) => [d, contentsOf(d)]));
+  await theRun();
+  for (const dir of dirs) {
+    const after = contentsOf(dir);
+    const added = after.filter((f) => !before[dir].includes(f));
+    const removed = before[dir].filter((f) => !after.includes(f));
+    assert.deepEqual(added, [], `the simulation added ${added.length} file(s) to ${dir}: ${added.join(', ')}`);
+    assert.deepEqual(removed, [], `the simulation removed ${removed.length} file(s) from ${dir}: ${removed.join(', ')}`);
   }
   const ledger = join(REPO_ROOT, 'agent/implement/decisions/decisions.jsonl');
   const lines = existsSync(ledger) ? readFileSync(ledger, 'utf8').split('\n').filter(Boolean) : [];

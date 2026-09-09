@@ -623,7 +623,8 @@ test('R6 · a validator that could not be executed is exit 127, never a pass', (
 
 test('R6 · this suite is in the list the agent runs for a change under agent/ or tools/', () => {
   for (const s of ['agent/implement/selftest.mjs', 'agent/browser/selftest.mjs', 'agent/health/selftest.mjs',
-    'agent/orchestrator/selftest.mjs', 'agent/policy/selftest.mjs', 'agent/policy/verify/selftest.mjs']) {
+    'agent/orchestrator/selftest.mjs', 'agent/policy/selftest.mjs', 'agent/policy/verify/selftest.mjs',
+    'agent/autonomy/selftest.mjs']) {
     assert.ok(AGENT_SUITES.includes(s), `${s} must be in AGENT_SUITES, or a change under agent/ would land without running it`);
   }
   /* The count is asserted, not just the membership. A suite silently
@@ -634,9 +635,13 @@ test('R6 · this suite is in the list the agent runs for a change under agent/ o
      way, and the two branches merged here had each updated it to a
      different number, which is the fourth time it has been useful.
      SESSION 24 is the fifth: the simulation harness would otherwise
-     have landed without ever gating a change under agent/. */
-  assert.equal(AGENT_SUITES.length, 19,
-    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5) and the simulation harness (24)');
+     have landed without ever gating a change under agent/. SESSION 26
+     is the SIXTH, and the one where it mattered most: the autonomy
+     runner is the first thing in this repository that can write a
+     file without a person, and a suite for it that nothing ran would
+     have been a gate on nothing. */
+  assert.equal(AGENT_SUITES.length, 20,
+    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24) and the limited-autonomy runner (26)');
 });
 
 /* ============================================================

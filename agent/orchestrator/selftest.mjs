@@ -67,6 +67,7 @@ import { Orchestrator, ORCHESTRATOR_AGENT } from './orchestrator.mjs';
 
 import { Tracer } from '../observability/tracer.mjs';
 import { proposalFingerprint } from '../implement/ledger.mjs';
+import { DEFAULT_POLICY } from '../policy/categories.mjs';
 import { CONTRACT_NAMES, getContract } from '../schemas/registry.mjs';
 import { REQUIRED_VALIDATORS, AUTONOMY_CLASSES } from '../schemas/types.mjs';
 import { validate } from '../schemas/validate.mjs';
@@ -714,18 +715,65 @@ test('R6 · an unregistered agent has no capability, and none is invented at dis
   });
 });
 
-test('R6 · no action category is approved for automatic execution, and the reason is stated', () => {
-  assert.deepEqual([...APPROVED_AUTONOMOUS_CATEGORIES], []);
+/* SESSION 26 CHANGED THIS ASSERTION, AND IT IS THE WORLD THAT
+   CHANGED. It read "no action category is approved for automatic
+   execution, and the reason is stated", and asserted that
+   `category_allowed` refused `source_metadata_maintenance`. A person
+   has since recorded a governance grant enabling exactly that
+   category (agent/policy/governance/grants.jsonl), so the old
+   assertion asserted the absence of a thing the repository author
+   decided to have.
+
+   NOTHING IS WEAKENED. The three claims worth making are kept and
+   two are added:
+     · the BASE list is still empty, in one place — that is where
+       autonomy starts, and an agent editing a literal is still not
+       how it is switched on;
+     · a category NOBODY granted is still refused, with the reason;
+     · a category no policy may EVER automate is refused even under a
+       hand-made policy object whose enabled list names it. That last
+       one is new, and it caught a real weakness: the condition used
+       to be a plain `includes()` and would have been satisfied by
+       such a policy, leaving the engine as the only thing between a
+       forged policy object and a legal interpretation. */
+test('R6 · the base approves nothing, an ungranted category is refused, and a never-automatable one cannot be granted', () => {
+  assert.deepEqual([...APPROVED_AUTONOMOUS_CATEGORIES], [],
+    'the BASE policy approves nothing and stays that way: autonomy is switched on by a governance grant with an author, not by editing a literal');
   assert.ok(LOW_RISK_CATEGORIES.length >= 5, 'the categories protocol §20 names are still written down');
   /* And they are written down ONCE. This module re-exports them from
      agent/policy/categories.mjs rather than keeping a second list —
      the two branches that merged here each had one, and they had
      drifted by an entry. */
-  const a = autonomyPermits({ proposal: implementationProposal(), category: 'source_metadata_maintenance' });
-  assert.equal(a.permitted, false);
-  const c = a.conditions.find((x) => x.condition === 'category_allowed');
-  assert.equal(c.satisfied, false);
-  assert.match(c.needs, /governance decision/);
+
+  /* 1 · a category no grant covers is refused, with the reason. */
+  const ungranted = autonomyPermits({ proposal: implementationProposal(), category: 'substantive_data_change' });
+  assert.equal(ungranted.permitted, false);
+  const u = ungranted.conditions.find((x) => x.condition === 'category_allowed');
+  assert.equal(u.satisfied, false);
+  assert.match(u.needs, /governance decision/);
+
+  /* 2 · a category NO policy may automate is refused even when a
+         policy object handed in names it in its enabled list. The
+         automatable flag is read BEFORE the enabled list, the same
+         order agent/policy/categories.mjs uses. */
+  const forged = autonomyPermits({
+    proposal: implementationProposal(),
+    category: 'legal_interpretation',
+    policy: { ...DEFAULT_POLICY, enabled_categories: ['legal_interpretation'] },
+  });
+  assert.equal(forged.permitted, false);
+  const f = forged.conditions.find((x) => x.condition === 'category_allowed');
+  assert.equal(f.satisfied, false, 'an enabled list naming a §19 category does not make it automatable');
+  assert.match(f.why, /no policy may automate/);
+
+  /* 3 · and the granted category is allowed by THAT condition while
+         the act as a whole is still refused, because the other
+         eleven are still evaluated. A grant is not a bypass. */
+  const granted = autonomyPermits({ proposal: implementationProposal(), category: 'source_metadata_maintenance' });
+  const g = granted.conditions.find((x) => x.condition === 'category_allowed');
+  assert.equal(g.satisfied, true, 'the category the repository author granted is allowed by this condition');
+  assert.equal(granted.permitted, false, 'and the act is still refused: eleven other mandatory conditions are still evaluated');
+  assert.ok(granted.failed.length > 0);
 });
 
 test('R6 · all twelve mandatory conditions are evaluated, not short-circuited at the first failure', () => {

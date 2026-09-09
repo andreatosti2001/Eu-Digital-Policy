@@ -1,8 +1,124 @@
 # HANDOVER
 
-**Last updated:** SESSION 25 · 9 September 2026
-**Branch:** `claude/first-controlled-real-world-run-wyz3k2`, cut from `origin/main` at the
-SESSION 24 merge.
+**Last updated:** SESSION 26 · 9 September 2026
+**Branch:** `claude/limited-autonomy-activation-ovbrf7`, cut from `origin/main` at the
+SESSION 25 merge.
+
+---
+
+## SESSION 26 — limited autonomy, activated
+
+**What was asked:** enable automatic implementation for explicitly approved low-risk
+categories only; for every automatic change create an isolated branch, implement, run the
+validators, run browser tests where applicable, record a full observation trace, merge only if
+all policy conditions pass, and retain rollback information; do not let substantive legal
+content auto-merge; report every autonomous action in the Control Room. Full report:
+**`docs/LIMITED-AUTONOMY.md`**.
+
+**The governance decision has a home, and it is not the policy object.** SESSION 23 left every
+category off because filling `DEFAULT_POLICY.enabled_categories` is a governance change
+protocol §24 forbids the system making to itself. SESSION 26 is that decision arriving from
+the repository author, and it is recorded as a **grant** in
+`agent/policy/governance/grants.jsonl` — git-tracked like the decision ledger, because an
+authorization has to be attributable — naming a person, a date, an authority quoted from the
+brief, and an expiry of 9 March 2027. **`DEFAULT_POLICY.enabled_categories` is still `[]`, and
+four suites still assert it at their original strength.** That is the BASE; the policy in
+force is derived from the ledger by `policyInForce()`. Appending five strings to a frozen
+array would have been a fact with no author and a second home for one fact.
+
+**What the grant enables, and it is narrower than the brief allowed.** The five protocol §20
+categories, over exactly two paths — `data/sources.json` and `docs/` — and, on the first,
+exactly eight bookkeeping fields. The path allowlist is the real narrowing and the FIELD
+allowlist is what keeps substantive legal content out of an enabled category: `tier`, `role`,
+`supports`, `last_verified`, `verification_note`, `requires_verification`, `reference_gap`,
+`gap_note`, `title`, `publisher`, `type` and `celex` are on a never-automatic list no grant
+may name. Risk ceiling `low`, environments `local` and `ci`, **never `production`**. Every one
+of those refusals runs again on every READ, and `agent/autonomy/selftest.mjs` test 7 writes a
+forged line straight into a ledger file and asserts nothing it names is honoured.
+
+**What a grant bought: exactly two of `preflight`'s ten gates.** `approved` and
+`approval_attributable`, and nothing else — SESSION 18's own header already said "an
+authorized human OR an explicitly permitted autonomy policy" and left the second half unbuilt.
+`preflight` is not modified and not weakened. `agent/autonomy/` adds six gates in front of it,
+all evaluated always, and the seven steps behind it.
+
+**THE FIRST REAL RUN REFUSED ALL FOURTEEN PROPOSALS, EACH BY FOUR INDEPENDENT GATES.** Data
+Depth and the Gap Proposals router ran against the real corpus (57 gaps, 14 `DataProposal`s);
+`node agent/autonomy/cli.mjs run --as-of 2026-09-09` reports **0 merged · 0 reverted · 14
+refused**, real trace `44b4813604b011a1a490761191704ad8`. Thirteen derived
+`substantive_data_change` and one `taxonomy_change` — none is one of the five enabled. The
+field gate fired on a real proposal whose operation target named `verification_note`, which is
+the record of what was and was not established. Nothing in `data/`, `i18n/`, `js/`, `css/` or
+any page was changed, and all fourteen ledger lines record `wrote_files: false`.
+
+**What it did NOT do, and this is the limitation to carry.** **No autonomous change has ever
+merged anything.** The gate ladder and the rehearsal path run against real proposals, and the
+git mechanics of steps 1 and 6 are driven against a real temporary repository created with
+`git init` (`agent/autonomy/selftest.mjs` tests 34–37: main is refused, an unrelated dirty
+file is not swept into an autonomous commit, the merge is `--no-ff` with two parents and
+`main` does not move, and `abandon` is idempotent and does not discard work it never touched).
+The full seven steps have never run end to end with `--execute` against a proposal that
+passed, because **nothing in this repository currently produces a proposal in one of the five
+enabled categories** — and manufacturing one to demonstrate the mechanism would be a fixture
+dressed as work.
+
+**Three existing assertions changed, all because the world changed, and each is named here so
+a reader can disagree.**
+
+| | |
+|---|---|
+| `agent/orchestrator/selftest.mjs` R6 | Read "no action category is approved for automatic execution" and asserted `category_allowed` refused `source_metadata_maintenance`. A person has since granted that category. The replacement keeps all three original claims and adds two: a category no policy may EVER automate is refused **even under a hand-made policy object whose enabled list names it**, and the granted category satisfies that one condition while the act as a whole is still refused. The second of those caught a real weakness — the condition was a plain `includes()` and would have passed such a policy, leaving the engine as the only thing between a forged policy object and a legal interpretation. `agent/orchestrator/policy.mjs` now reads `automatable` first. |
+| `agent/policy/selftest.mjs` 33 | Asserted the Orchestrator asks the engine about `DEFAULT_POLICY`. It now asks about the policy IN FORCE, because an Orchestrator enforcing a weaker policy than the implementation layer is exactly the drift that test exists to prevent. The replacement asserts the in-force id **and** that it begins with the base id, so a grant extends the base rather than replacing it. |
+| `agent/implement/selftest.mjs` R6 | `AGENT_SUITES.length` 19 → 20. Sixth catch. |
+
+**`agent/orchestrator/policy.mjs`'s `AUTONOMY_NOTE` became a false statement and is now
+derived.** It said "No action category is approved for automatic execution in this
+repository", which was true when written. `autonomyNote()` reads the ledger;
+`AUTONOMY_BASE_NOTE` keeps the base statement.
+
+**A fourth assertion changed, and it is the SESSION 19 shape — a check that passed for the
+wrong reason.** `agent/simulation/selftest.mjs` test 1b's own comment said "the assertion is
+that THIS run added nothing", and its code asserted that `agent/records/`,
+`agent/observability/runs/`, `agent/orchestrator/state/` and `.control-room/state/` were
+EMPTY. Those are different claims. `agent/records/` is git-ignored run state that any agent
+run populates, so the test passed in a fresh clone and in CI and failed the moment this
+session ran Data Depth first to give the autonomy layer something to refuse. It now
+snapshots, runs, and compares — which is **stricter**: the old form could not have caught a
+simulation writing into a directory that already held a file. This is a change to a check,
+which is Class C, and it is recorded here so a reader can disagree with it.
+
+**Two CI omissions were fixed rather than only reported**, and the fix is named because it is
+a change to a gate: `.github/workflows/qa.yml` ran seventeen suites while `AGENT_SUITES`
+listed nineteen — `agent/simulation/selftest.mjs` had never been in CI. Both it and
+`agent/autonomy/selftest.mjs` are in now, plus a register step printing what limited autonomy
+is switched on to do on every push.
+
+**Everything was re-run after `git add`, not before.** **1036 tests across twenty-one suites,
+0 failures, measured on this session's branch.** On `main` the figure is 1035 with one
+skipped: `agent/autonomy/selftest.mjs` test 28 rehearses the real cycle, and the cycle
+refuses to run on `main`, so the test skips itself rather than passing for the wrong reason.
+That is the assertion being honest about where it can and cannot establish anything. (998 across twenty before; the autonomy suite adds 38, and three earlier tests
+gained assertions rather than counts — the orchestrator's R6 split into three claims). 18/18 contracts
+satisfiable. The four validators at the `docs/CURRENT-ARCHITECTURE.md` §12 baseline: 0 errors
+on `validate.mjs` and `i18n-audit.mjs`, 0 errors and the same five `design-qa` warnings by
+file and line, 106 unverified records. `agent/implement/cli.mjs boundary` at **0 blocking / 13
+warnings**, unchanged, with `agent/ is inside the public surface` at 225 files where SESSION
+23.5 recorded 204 — this session's files being counted. `.control-room/cli.mjs boundary` at 0
+errors, **22 routes** (21 before, the new one being `GET /api/autonomy`), 8 public, 0
+production controls. The browser suite in a real Chromium: **125 pass · 3 fail · 2
+undecidable**, the same three SESSION 19 defects, untouched.
+
+**`freshness.mjs` still exits 1** on the same "1 item(s) need attention" SESSIONS 24 and 25
+both recorded, so `agent/implement/cli.mjs check` reports verdict `fail` for that reason and
+that reason alone. It is not this session's regression and it is not fixed.
+
+**What SESSION 27 inherits.** Limited autonomy is on and has merged nothing. The gap between
+those two facts is the whole of the next objective: either an agent that produces a proposal
+in one of the five enabled categories, or a person handing one to `--execute` by hand. Until
+then the honest statement is that the permitting half is proved against fixtures and the
+refusing half against the real corpus. Also inherited: `agent/policy/` is on the
+never-automatic path list on purpose, so widening the grant is Class C work in front of a
+person, not something the system can do to itself.
 
 ---
 

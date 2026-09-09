@@ -35,6 +35,17 @@
        not approve a deletion, and that is a permission difference
        rather than a warning in the interface.
 
+   `autonomy:read` IS A READ AND THERE IS NO WRITE BESIDE IT EITHER.
+   SESSION 26 requires every autonomous action to be reported in the
+   Control Room, and the whole of that requirement is observation.
+   There is no permission — because there is no route — that records
+   a governance grant, revokes one, triggers an autonomous run, or
+   rolls one back. A grant is written by a person at a command line
+   (`agent/policy/cli.mjs grant`), which is deliberate: an interface
+   that could switch autonomy on is an interface a session bug could
+   switch autonomy on through, and protocol §24 reserves the decision
+   to a person rather than to a button.
+
    `workflows:read` IS A READ AND THERE IS NO WRITE BESIDE IT.
    SESSION 22 requires the Orchestrator to expose workflow state to
    this Control Room, and the whole of that requirement is
@@ -66,6 +77,7 @@ export const ROLES = ['viewer', 'reviewer', 'approver', 'administrator', 'operat
 export const PERMISSIONS = [
   'live:read',                    // the Live System view: runs, events, handoffs, failures
   'workflows:read',               // the Orchestrator's workflow state — routing, stages, refusals
+  'autonomy:read',                // what limited autonomy is switched on to do, and every action it took
   'queue:read',                   // the Review Queue: proposals and their full trace
   'health:read',                  // the Website Health view, private metrics included
   'audit:read',                   // the approval audit trail
@@ -83,16 +95,16 @@ export const PERMISSIONS = [
  * role cannot affect another, and it can.
  */
 export const ROLE_PERMISSIONS = {
-  viewer: ['live:read', 'workflows:read', 'queue:read', 'health:read'],
+  viewer: ['live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read'],
 
-  reviewer: ['live:read', 'workflows:read', 'queue:read', 'health:read', 'proposal:request_changes'],
+  reviewer: ['live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read', 'proposal:request_changes'],
 
   /* An approver may grant and deny, but not for a human_only
      proposal, and may not change who has access. */
-  approver: ['live:read', 'workflows:read', 'queue:read', 'health:read', 'audit:read', 'proposal:request_changes', 'proposal:reject', 'proposal:approve'],
+  approver: ['live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read', 'audit:read', 'proposal:request_changes', 'proposal:reject', 'proposal:approve'],
 
   administrator: [
-    'live:read', 'workflows:read', 'queue:read', 'health:read', 'audit:read',
+    'live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read', 'audit:read',
     'operators:read', 'operators:write',
     'proposal:request_changes', 'proposal:reject', 'proposal:approve', 'proposal:approve:human_only',
   ],
@@ -101,7 +113,7 @@ export const ROLE_PERMISSIONS = {
      separation is the point — the person who keeps the agents
      running is not thereby a person who may decide what the site
      says about EU law. */
-  operator: ['live:read', 'workflows:read', 'health:read', 'audit:read'],
+  operator: ['live:read', 'workflows:read', 'autonomy:read', 'health:read', 'audit:read'],
 };
 
 /** The autonomy classes a proposal can carry, from
@@ -196,6 +208,7 @@ export function visibleActions(actor) {
   return {
     live: held.includes('live:read'),
     workflows: held.includes('workflows:read'),
+    autonomy: held.includes('autonomy:read'),
     queue: held.includes('queue:read'),
     health: held.includes('health:read'),
     audit: held.includes('audit:read'),

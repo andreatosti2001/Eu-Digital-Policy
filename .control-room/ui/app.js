@@ -254,6 +254,96 @@ function renderHealth(d) {
   return out;
 }
 
+function renderAutonomy(d) {
+  const out = [el('h2', { text: 'Limited autonomy' })];
+  out.push(el('p', { class: 'note', text: d.no_console }));
+
+  if (d.state !== 'measured') {
+    out.push(el('p', { class: 'empty', text: d.why }));
+    return out;
+  }
+
+  /* Two facts first, and they are different: whether anything is
+     switched on, and whether anything has happened. Either can be
+     true without the other. */
+  out.push(el('div', { class: 'cards' },
+    stat('categories enabled', d.policy.enabled_categories.length),
+    stat('grants in force', d.grants.length),
+    stat('actions attempted', d.actions.counts.total),
+    stat('merged', d.actions.counts.merged),
+    stat('reverted', d.actions.counts.reverted),
+    stat('refused', d.actions.counts.refused)));
+
+  if (!d.enabled) {
+    out.push(el('p', { class: 'empty', text: 'No governance grant is in force. Nothing can run automatically, and that is the intended state until a person records one at a command line.' }));
+  }
+
+  if (!d.self_check.ok) {
+    out.push(el('p', { class: 'bound', text: `GOVERNANCE SELF-CHECK FAILED: ${d.self_check.problems.join(' · ')}` }));
+  }
+  if (d.ledger_malformed?.length) {
+    out.push(el('p', { class: 'bound', text: `${d.ledger_malformed.length} unparseable line(s) in the grant ledger, reported and not skipped.` }));
+  }
+
+  out.push(el('h3', { text: 'What is switched on' }));
+  out.push(el('div', { class: 'scroll' }, el('table', {},
+    el('thead', {}, el('tr', {}, el('th', { text: 'grant' }), el('th', { text: 'decided by' }), el('th', { text: 'expires' }), el('th', { text: 'categories' }), el('th', { text: 'paths' }), el('th', { text: 'risk ≤' }))),
+    el('tbody', {}, ...d.grants.map((g) => el('tr', {},
+      el('td', {}, el('code', { text: g.grant_id })),
+      el('td', { text: g.decided_by }),
+      el('td', { text: g.expires_at }),
+      el('td', { text: g.categories.join(', ') }),
+      el('td', { text: g.path_allowlist.join(', ') }),
+      el('td', { text: g.max_automatic_risk })))))));
+  for (const g of d.grants) {
+    out.push(el('div', { class: 'item' },
+      el('h3', { text: g.grant_id }),
+      el('p', { class: 'note', text: `Authority: ${g.authority}` }),
+      g.rationale ? el('p', { class: 'note', text: `Rationale: ${g.rationale}` }) : null,
+      dump('field allowlist, per dataset', g.field_allowlist)));
+  }
+
+  if (d.inactive_grants.length) {
+    out.push(el('h3', { text: 'Recorded and not in force' }));
+    out.push(...d.inactive_grants.map((g) => el('div', { class: 'item' },
+      el('div', { class: 'meta' },
+        el('span', { class: 'pill warn', text: g.state }),
+        el('code', { text: g.grant_id }),
+        el('span', { text: g.decided_by ?? '' })),
+      el('p', { class: 'note', text: g.why }))));
+  }
+
+  out.push(el('h3', { text: 'Every autonomous action attempted' }));
+  out.push(el('p', { class: 'note', text: d.actions.store }));
+  if (!d.actions.store_exists) {
+    out.push(el('p', { class: 'empty', text: d.actions.why }));
+  } else {
+    out.push(...d.actions.recent.map((a) => el('div', { class: 'item' },
+      el('h3', { text: `${a.outcome} — ${a.proposal_id}` }),
+      el('div', { class: 'meta' },
+        el('span', { class: `pill ${a.outcome === 'merged' ? 'ok' : a.outcome === 'refused' ? 'warn' : 'error'}`, text: a.outcome }),
+        el('code', { text: a.action_id }),
+        el('span', { text: a.started_at ?? '' }),
+        el('span', { text: a.category ?? 'uncategorised' }),
+        a.wrote_files ? el('span', { class: 'pill warn', text: 'wrote a file' }) : el('span', { text: 'wrote nothing' })),
+      el('p', { class: 'note', text: a.why ?? '' }),
+      a.refused_by?.length ? el('p', { class: 'note', text: `refused by: ${a.refused_by.join(', ')}` }) : null,
+      a.files?.length ? el('p', { class: 'note', text: `files: ${a.files.join(', ')}` }) : null,
+      dump('rollback information', a.rollback))));
+  }
+
+  out.push(el('h3', { text: 'What no grant may reach' }));
+  out.push(el('div', { class: 'scroll' }, el('table', {},
+    el('thead', {}, el('tr', {}, el('th', { text: 'kind' }), el('th', { text: 'name' }), el('th', { text: 'why' }))),
+    el('tbody', {},
+      ...d.boundaries.never_paths.map((x) => el('tr', {}, el('td', { text: 'path' }), el('td', {}, el('code', { text: x.path })), el('td', { text: x.why }))),
+      ...d.boundaries.never_fields.map((x) => el('tr', {}, el('td', { text: 'field' }), el('td', {}, el('code', { text: x.field })), el('td', { text: x.why })))))));
+
+  out.push(el('p', { class: 'bound', text: d.bound }));
+  out.push(el('p', { class: 'bound', text: `Base policy ${d.base_policy.policy_id} enables ${d.base_policy.enabled_categories.length} categor(ies). ${d.base_policy.note}` }));
+  return out;
+}
+
 function renderWorkflows(d) {
   const out = [el('h2', { text: 'Workflows' })];
   out.push(el('p', { class: 'note', text: d.no_console }));
@@ -353,8 +443,8 @@ function renderOperators(d) {
 
 /* ---------------------------------------------------------- shell */
 
-const RENDER = { live: renderLive, workflows: renderWorkflows, queue: renderQueue, health: renderHealth, audit: renderAudit, operators: renderOperators };
-const ENDPOINT = { live: '/api/live', workflows: '/api/workflows', queue: '/api/queue', health: '/api/health', audit: '/api/audit', operators: '/api/operators' };
+const RENDER = { live: renderLive, workflows: renderWorkflows, autonomy: renderAutonomy, queue: renderQueue, health: renderHealth, audit: renderAudit, operators: renderOperators };
+const ENDPOINT = { live: '/api/live', workflows: '/api/workflows', autonomy: '/api/autonomy', queue: '/api/queue', health: '/api/health', audit: '/api/audit', operators: '/api/operators' };
 
 async function load(view) {
   state.view = view;
@@ -390,7 +480,7 @@ try {
      refuses it regardless; this only stops offering a door that
      does not open. */
   const may = session.interface;
-  const allowed = { live: may.live, workflows: may.workflows, queue: may.queue, health: may.health, audit: may.audit, operators: may.operators };
+  const allowed = { live: may.live, workflows: may.workflows, autonomy: may.autonomy, queue: may.queue, health: may.health, audit: may.audit, operators: may.operators };
   for (const tab of document.querySelectorAll('.tab')) if (!allowed[tab.dataset.view]) tab.remove();
   const first = document.querySelector('.tab');
   await load(first ? first.dataset.view : 'live');
