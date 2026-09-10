@@ -270,6 +270,39 @@ It is the strongest argument on this page for GP-01 and GP-07 over GP-02: the ru
 a session whose whole subject was that rule, and the rule is not what caught it. **A measurement
 caught it.**
 
+## 6b · A register command on `main` has been failing since SESSION 26, and CI said so
+
+Found by reading CI's own conclusion for this session's merge rather than the local exit
+codes — which is GP-02 being applied to the session that proposed it.
+
+`node agent/orchestrator/cli.mjs workflows` and `capabilities` **exit 1 on `main`**, with:
+
+```
+SyntaxError: The requested module './policy.mjs' does not provide an export named 'AUTONOMY_NOTE'
+```
+
+SESSION 26 made that note derived — `autonomyNote()` reads the grant ledger and
+`AUTONOMY_BASE_NOTE` keeps the base statement — and `agent/orchestrator/cli.mjs:50` still
+imports the constant that was replaced. **It predates this session and this session changed
+nothing under `agent/orchestrator/`**: `git show aaf6691:agent/orchestrator/cli.mjs` carries
+the same import against the same `policy.mjs`, and `git diff aaf6691 HEAD -- agent/orchestrator/`
+is empty.
+
+Three things follow, and the third is why it is in this report rather than only in the
+handover.
+
+1. **No suite runs these CLIs.** The Orchestrator's suite passes 65 tests against the module
+   and never invokes the command, so the break is invisible to everything except CI.
+2. **A failing step skips every step after it in the same job.** This session's own governance
+   check was registered *after* the register step and was therefore **skipped on its first
+   run** — a check that does not run, in a session whose subject is checks that do not do what
+   they appear to. The step has been moved ahead of the registers; the register failure is
+   **not repaired**, because `agent/orchestrator/` is outside this brief and choosing what the
+   register should now print is a small judgement about what it asserts.
+3. **It is the argument for GP-04 stated by accident.** CI has been reporting this on every
+   push since 9 September and nothing read it. An evaluation nobody looks at and a check that
+   does not run are the same defect.
+
 ## 7 · What this session did not do, named rather than implied
 
 - **It decided nothing and it changed no policy.** `DEFAULT_POLICY.enabled_categories` is

@@ -89,6 +89,19 @@ into, exactly as `aed63a7` did. **Fifth time the trap has caught a session, and 
 it caught the session writing the pattern about it.** The rule was read and the rule is not
 what caught it; the check was. `docs/GOVERNANCE-PROPOSALS.md` §6a.
 
+**A REGISTER COMMAND ON `main` HAS BEEN FAILING SINCE SESSION 26, AND IT IS NOT THIS
+SESSION'S AND NOT REPAIRED.** `node agent/orchestrator/cli.mjs workflows` and `capabilities`
+exit 1 with *"The requested module './policy.mjs' does not provide an export named
+'AUTONOMY_NOTE'"* — SESSION 26 made that note derived and `agent/orchestrator/cli.mjs:50`
+still imports the constant it replaced. Verified pre-existing: the same import is at
+`aaf6691`, and `git diff aaf6691 HEAD -- agent/orchestrator/` is empty. **No suite runs these
+CLIs**, so only CI sees it, and a failing step skips every step after it in the same job —
+which skipped this session's own governance check on its first run. The check has been moved
+ahead of the registers; the register itself is left for a person, because
+`agent/orchestrator/` is outside this brief and what the register should now print is a
+judgement about what it asserts. It is the cheapest concrete thing SESSION 29 could fix.
+`docs/GOVERNANCE-PROPOSALS.md` §6b.
+
 **One existing assertion changed, and it is the recurring one.**
 `agent/implement/selftest.mjs` R6, `AGENT_SUITES.length` 20 → 21. **Seventh catch**, and the
 first time the thing it caught was a suite whose subject is that assertion's own failure mode.

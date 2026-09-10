@@ -318,6 +318,13 @@ node agent/proposals/governance/cli.mjs check      exit 1 only on an anchor this
 `check` and `corpus` run on every push. Neither writes anything, and there is no verb here
 that decides.
 
+**`node agent/orchestrator/cli.mjs workflows` and `capabilities` currently EXIT 1 on `main`**,
+and have since the SESSION 26 merge: `agent/orchestrator/cli.mjs:50` imports `AUTONOMY_NOTE`,
+which `policy.mjs` stopped exporting when the note became derived. No suite runs these CLIs, so
+only CI sees it — and a failing step skips every step after it in the same job, which is why
+the governance step above is registered ahead of the registers. Not repaired:
+`docs/GOVERNANCE-PROPOSALS.md` §6b.
+
 **There is no overall health score.** `agent/health/model.mjs overallScore()` throws, with the
 reasoning. Five metrics are marked `not_a_score` because the only legitimate way to move them
 is verification work the monitor cannot see, and every cheap route down is a prohibited
