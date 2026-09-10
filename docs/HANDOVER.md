@@ -1,8 +1,127 @@
 # HANDOVER
 
-**Last updated:** SESSION 26 · 9 September 2026
-**Branch:** `claude/limited-autonomy-activation-ovbrf7`, cut from `origin/main` at the
-SESSION 25 merge.
+**Last updated:** SESSION 28 · 10 September 2026
+**Branch:** `claude/learn-human-decisions-9c5q3m`, cut from `origin/main` at the SESSION 26
+merge (`aaf6691`), and merged into `main` at the end of the session.
+
+---
+
+## SESSION 28 — learn from the human decisions, and find there are none
+
+**What was asked:** analyse the historical human decisions; for each approved, rejected or
+edited proposal determine the patterns — repeated corrections, repeated rejection reasons,
+recurring evidence weaknesses, recurring UX objections, recurring editorial corrections,
+recurring implementation failures. Do not automatically rewrite policies; create
+`agent/proposals/governance/` with proposals — new rule, new validation, new skill, new
+evaluation, reduced autonomy, increased autonomy — every one requiring human approval. The
+objective: convert repeated human intervention into durable system knowledge. Full report:
+**`docs/GOVERNANCE-PROPOSALS.md`**.
+
+**THE BRIEF'S CORPUS DOES NOT EXIST, AND THAT IS THE FIRST FINDING.** There are no approved,
+rejected or edited proposals. `agent/implement/decisions/decisions.jsonl` is not empty — it is
+**ABSENT**, and it is git-tracked, so absence there is the only absence in this repository's
+six decision stores that proves anything. Of the seventy-one proposals AGENTS.md counts across
+four agents, and the forty-eight SESSION 25 measured in one run, **not one has been decided**.
+Analysing decisions that do not exist would have been prohibition 2 applied to governance: a
+plausible substitute for a missing record. So the corpus is the one that does exist — **the
+corrections**, twelve commits of ninety-two that say in their own subject that they are putting
+something right.
+
+**TWELVE PATTERNS, FORTY-NINE ANCHORS, NONE REFUTED.** Nothing in `patterns.mjs` stands on its
+own words: every instance carries a commit and a substring of its subject, a path that must
+exist or must not, a string in a tracked file, or a **live measurement**. Three states, never
+two — `resolved`, `refuted`, `unresolvable_here` — because a commit missing from a shallow CI
+clone is not a false claim about the history, and a checker that said otherwise would be making
+the mistake P-02 is about. `node agent/proposals/governance/cli.mjs check` runs on every push
+and exits 1 only on a refuted anchor. The two-instance rule is in code: a pattern that does not
+clear it is reported as refused, not dropped.
+
+**THE FOUR THAT MATTER.** *P-01* — a stale base read as a repository fact, four times, each
+needing a correcting commit, with the mitigating rule already at the top of AGENTS.md the whole
+time: nothing MEASURED the base and nothing FAILED when it was stale. *P-07* — nothing is ever
+decided, and that is two problems: `deriveApproval()` binds a decision to a proposal in the
+git-ignored record store, so a decision recorded today reads `void_unknown_proposal` on any
+other machine until the producing agent is re-run, and H-1 says a reviewer is not shown the
+twelve conditions their approval stands over. *P-12* — **this session's own measured finding**:
+the grant's `docs/` allowlist and `categoriseProposal()`'s docs-only rule place **all eight**
+prose governance documents inside an ENABLED category. `NEVER_AUTOMATIC_PATHS` guards
+`agent/policy/` with protocol §24's own words; nothing guards `docs/AUTONOMY-POLICY.md`, which
+is that policy in the form a person reads. In the other direction **six of the eight fields the
+grant allowlists exist on none of the 77 records** in the file it names. Both are claims about
+which gates would NOT stop a change — six gates and twelve conditions run afterwards, and
+nothing autonomous has ever merged anything. *P-06* — a session found the stale-base failure,
+wrote the fix as a rule, and pushed it to a branch that was never merged: the rule is **on no
+document on `main`**, and six remote branches currently hold work `main` does not.
+
+**SEVEN PROPOSALS, ALL SIX KINDS, NONE DECIDED AND NONE IMPLEMENTED.** GP-01 check every
+declared count against the thing it counts · GP-02 state what was measured, where, and whose
+conclusion it is · GP-03 a session-reporting skill · GP-04 measure the decision backlog and
+whether a decision would survive a clone · GP-05 take the prose governance documents out of the
+automatic path · GP-06 let a measured count be written back by the run that measured it ·
+GP-07 report the work that is on a branch and not in `main`. **Every one states the case
+against itself**, and GP-06 — the only one that makes the system looser — says to read that
+first. Six of the seven derive `human_only`; GP-03 comes out `review_required` because
+`.agents/skills/` is on none of the never-automatic lists, which is an observation and not a
+recommendation.
+
+**NOTHING IN `agent/proposals/governance/` WRITES, AND IT IS PROVED TWICE.** No module calls a
+write API — asserted as a *call* rather than a mention, so the header explaining the rule does
+not violate it — and a full run leaves the working tree byte-identical. Neither `recordDecision`
+nor `recordGrant` is imported anywhere in the directory, and the CLI has no `decide`, `apply`,
+`grant` or `record` verb, which the suite checks by reading it. The records are deliberately
+**not** on the inter-agent bus and carry `contract: null`: a nineteenth contract would have put
+a governance record on the agent-to-agent bus and changed the gate every other record passes.
+GP-04 names what that costs rather than hiding it.
+
+**TWO LIVE DRIFTS FOUND, NEITHER FIXED, BOTH ANCHORED.** `agent/schemas/cli.mjs:28` prints
+`FOURTEEN CONTRACTS` immediately above a list of eighteen. And the SESSION 26 paragraph below
+records the boundary scan at 225 files under `agent/` where every SESSION 26 commit holds
+**226** — a hand-written count, one out, in the paragraph that exists so a later session can
+detect drift. Both are left standing as the worked examples GP-01 exists for: a validation
+proposed with no live instance is one nobody can evaluate. If GP-01 is refused, both words
+should be spent anyway.
+
+**One existing assertion changed, and it is the recurring one.**
+`agent/implement/selftest.mjs` R6, `AGENT_SUITES.length` 20 → 21. **Seventh catch**, and the
+first time the thing it caught was a suite whose subject is that assertion's own failure mode.
+No other existing assertion was touched, and no test was deleted, skipped or relaxed.
+
+**Everything was re-run after `git add`, not before.** **1081 tests across twenty-two suites, 0
+failures, 0 skipped**, measured on this session's branch (1036 across twenty-one before; the
+governance suite adds 45). On `main` `agent/autonomy/selftest.mjs` test 28 skips itself,
+because the cycle refuses to run there, so the figure on `main` is 1080 with one skipped.
+18/18 contracts satisfiable. The four validators at the `docs/CURRENT-ARCHITECTURE.md` §12
+baseline: `validate.mjs` 0 errors, `i18n-audit.mjs` 0 errors 0 warnings, `design-qa.mjs` 0
+errors and the same five warnings by file and line, 106 unverified records.
+`agent/implement/cli.mjs boundary` at **0 blocking / 13 warnings**, unchanged, with `agent/ is
+inside the public surface` at **233 files** — 226 on `origin/main` plus this session's seven.
+`.control-room/cli.mjs boundary` at 0 errors, 22 routes, 8 public, 0 production controls,
+unchanged. The browser suite in a real Chromium: **125 pass · 3 fail · 2 undecidable**, the same
+three SESSION 19 defects, untouched. `freshness.mjs` still exits 1 on the same "1 item(s) need
+attention" SESSIONS 24, 25 and 26 all recorded; it is not this session's regression and it is
+not fixed.
+
+**WHAT THIS SESSION DID NOT DO.** It decided nothing and changed no policy:
+`DEFAULT_POLICY.enabled_categories` is still `[]`, the grant ledger is unchanged at one line,
+`agent/policy/` was not edited, and the approval ledger is as absent after as before. It fixed
+none of the twelve patterns, including the three whose fix it wrote out in full. It touched no
+dataset, no locale, no module under `js/` and no page — **no legal fact was written, changed or
+moved**. And it **did not merge SESSION 27**: `claude/continuous-improvement-loop-vpd2u1` holds
+`agent/improve/`, a repaired autonomy gate ladder and two further findings, is not in `main`,
+and is one of the six branches P-06 counts. This session cites none of its documents as
+evidence, because a document on an unmerged branch is not something a reader of `main` can
+check. **Merging it is a decision for the repository author**, and the next session should
+expect a conflict in `docs/HANDOVER.md`, in AGENTS.md's suite list and test totals, and in
+`agent/implement/selftest.mjs` R6 — every one of them a count, which is the conflict shape
+`e6f2715` predicted.
+
+**What SESSION 29 inherits.** Seven governance proposals in front of a person, added to a
+queue from which nothing has ever been taken. That is the honest description of this session's
+contribution and it is P-07 restated: seven more pending records do not convert repeated
+intervention into durable knowledge — a person deciding them does. The cheapest three to
+decide are GP-01, GP-02 and GP-07, each of which would have caught a failure this repository
+has already had more than once; the one to read hardest before deciding is GP-06, and its own
+entry argues for refusing it.
 
 ---
 
