@@ -303,6 +303,25 @@ handover.
    push since 9 September and nothing read it. An evaluation nobody looks at and a check that
    does not run are the same defect.
 
+## 6c · CI's own conclusion for this session, on `main`
+
+Stated because GP-02 asks for it and because `4fe1952` is the correction that established the
+rule. Run **34482119556**, head `d10b413`, branch `main`: **overall conclusion `failure`**,
+three of six jobs red.
+
+| job / step | conclusion |
+|---|---|
+| The four validators → `freshness.mjs` | **failure** — the same "1 item(s) need attention" SESSIONS 24, 25 and 26 all recorded |
+| The agent suites → every agent suite (22) | success |
+| The agent suites → **the governance evidence** | **success** — the check runs in CI now that it precedes the broken register |
+| The agent suites → the Orchestrator's registers | **failure** — §6b, pre-existing since the SESSION 26 merge |
+| Browser regression suite | **failure** — the same three SESSION 19 defects |
+| Website health monitor · public/private boundary | success |
+
+**None of the three failures is new and none is this session's.** The previous run on `main`
+(`34481538013`, the merge commit) was cancelled by this one after recording the same register
+failure — and on that run the governance step was `skipped`, which is what §6b is about.
+
 ## 7 · What this session did not do, named rather than implied
 
 - **It decided nothing and it changed no policy.** `DEFAULT_POLICY.enabled_categories` is

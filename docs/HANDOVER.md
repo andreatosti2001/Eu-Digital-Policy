@@ -122,6 +122,13 @@ three SESSION 19 defects, untouched. `freshness.mjs` still exits 1 on the same "
 attention" SESSIONS 24, 25 and 26 all recorded; it is not this session's regression and it is
 not fixed.
 
+**CI'S OWN CONCLUSION, NOT THE LOCAL EXIT CODES.** Run 34482119556 on `main` at `d10b413`
+reports overall **`failure`**, three of six jobs red: `freshness.mjs` on the same pre-existing
+item, the browser suite on the same three SESSION 19 defects, and the Orchestrator's registers
+on the SESSION 26 breakage above. **None is new and none is this session's.** The governance
+evidence step reports **success** — it runs in CI now that it precedes the broken register; on
+the merge commit's run it was `skipped`. `docs/GOVERNANCE-PROPOSALS.md` §6c.
+
 **WHAT THIS SESSION DID NOT DO.** It decided nothing and changed no policy:
 `DEFAULT_POLICY.enabled_categories` is still `[]`, the grant ledger is unchanged at one line,
 `agent/policy/` was not edited, and the approval ledger is as absent after as before. It fixed
