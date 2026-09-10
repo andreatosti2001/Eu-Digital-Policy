@@ -49,6 +49,7 @@ export const AGENT_SUITES = [
   'agent/proposals/data/selftest.mjs',
   'agent/architect/selftest.mjs',
   'agent/proposals/editorial/selftest.mjs',
+  'agent/proposals/governance/selftest.mjs',
   'agent/ux/selftest.mjs',
   'agent/observability/selftest.mjs',
   'agent/browser/selftest.mjs',

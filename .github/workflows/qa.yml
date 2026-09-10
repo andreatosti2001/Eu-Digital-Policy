@@ -92,9 +92,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      # SESSION 28. fetch-depth 0 because the governance evidence
+      # check resolves commit anchors: a pattern about the history
+      # cites the commits it reads. On the default shallow checkout
+      # those anchors report `unresolvable_here` rather than failing
+      # — which is correct and is worth nothing, because a check that
+      # cannot see its subject checks nothing.
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -116,6 +123,7 @@ jobs:
             agent/proposals/data/selftest.mjs \
             agent/architect/selftest.mjs \
             agent/proposals/editorial/selftest.mjs \
+            agent/proposals/governance/selftest.mjs \
             agent/ux/selftest.mjs \
             agent/observability/selftest.mjs \
             agent/implement/selftest.mjs \
@@ -158,6 +166,18 @@ jobs:
         run: |
           node agent/policy/cli.mjs governance
           node agent/autonomy/cli.mjs status
+
+      # SESSION 28. Every anchor under every pattern in
+      # agent/proposals/governance/ resolved against the tree of this
+      # commit. It exits 1 only on a REFUTED anchor — a pattern
+      # citing something this tree contradicts — and never on one it
+      # cannot check here. It writes nothing and decides nothing; the
+      # seven proposals it derives all require human approval and
+      # none has been decided.
+      - name: The governance evidence, and what has never been decided
+        run: |
+          node agent/proposals/governance/cli.mjs check
+          node agent/proposals/governance/cli.mjs corpus
 
       # The tree must be byte-identical afterwards. Every suite here
       # hashes what it reads; this checks the claim from outside all

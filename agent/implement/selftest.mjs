@@ -640,8 +640,8 @@ test('R6 · this suite is in the list the agent runs for a change under agent/ o
      runner is the first thing in this repository that can write a
      file without a person, and a suite for it that nothing ran would
      have been a gate on nothing. */
-  assert.equal(AGENT_SUITES.length, 20,
-    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24) and the limited-autonomy runner (26)');
+  assert.equal(AGENT_SUITES.length, 21,
+    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24), the limited-autonomy runner (26) and the governance proposals (28)');
 });
 
 /* ============================================================
