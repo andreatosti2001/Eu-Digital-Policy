@@ -81,6 +81,14 @@ detect drift. Both are left standing as the worked examples GP-01 exists for: a 
 proposed with no live instance is one nobody can evaluate. If GP-01 is refused, both words
 should be spent anyway.
 
+**P-01 FIRED ON THIS SESSION, AT THE MERGE, AND IT IS RECORDED RATHER THAN TIDIED AWAY.**
+Immediately before merging, `git log main..origin/main` reported local `main` **three commits
+behind** — at `4fe1952`, with the whole of SESSION 26 missing. Merging into it would have
+reverted the limited-autonomy activation. It was reset to `origin/main` rather than merged
+into, exactly as `aed63a7` did. **Fifth time the trap has caught a session, and the first time
+it caught the session writing the pattern about it.** The rule was read and the rule is not
+what caught it; the check was. `docs/GOVERNANCE-PROPOSALS.md` §6a.
+
 **One existing assertion changed, and it is the recurring one.**
 `agent/implement/selftest.mjs` R6, `AGENT_SUITES.length` 20 → 21. **Seventh catch**, and the
 first time the thing it caught was a suite whose subject is that assertion's own failure mode.

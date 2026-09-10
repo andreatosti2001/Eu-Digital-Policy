@@ -253,6 +253,23 @@ they are two words a person should decide to spend, in the same review as the ch
 have caught them. If GP-01 is refused, the words should be spent anyway. Both are anchored in
 P-04, so if either is fixed the anchor stops holding and the pattern says so.
 
+## 6a · P-01 fired again, on this session, at the merge
+
+Recorded because leaving it out would be the failure P-02 is about. Immediately before merging
+this work, `git log main..origin/main` reported **local `main` three commits behind** — at
+`4fe1952`, the SESSION 25 correction, with the whole of SESSION 26 missing. Merging into it
+would have reverted the limited-autonomy activation.
+
+It was reset to `origin/main` rather than merged into, which is what `aed63a7` did in the same
+situation. **This is the fifth time the trap has caught a session, and the first time it caught
+the session that was writing the pattern about it.** The check that found it is the one
+AGENTS.md tells every session to run, run on `main` itself rather than on the working branch —
+which is precisely the distinction `f85be54` was written to record.
+
+It is the strongest argument on this page for GP-01 and GP-07 over GP-02: the rule was read, by
+a session whose whole subject was that rule, and the rule is not what caught it. **A measurement
+caught it.**
+
 ## 7 · What this session did not do, named rather than implied
 
 - **It decided nothing and it changed no policy.** `DEFAULT_POLICY.enabled_categories` is
