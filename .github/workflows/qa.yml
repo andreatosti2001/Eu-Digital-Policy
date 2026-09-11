@@ -166,18 +166,16 @@ jobs:
           node agent/proposals/governance/cli.mjs check
           node agent/proposals/governance/cli.mjs corpus
 
-      # SESSION 22. Three tables the rest of the system is checked
-      # against: the ten workflow types, the capability register, and
-      # the policy. Each RUNS NOTHING — no workflow is opened, no
-      # specialist is dispatched, no journal is written — so this is a
-      # readable record of what the Orchestrator would permit, on
-      # every push, at no risk.
-      - name: The Orchestrator's registers
-        run: |
-          node agent/orchestrator/cli.mjs workflows
-          node agent/orchestrator/cli.mjs capabilities
-          node agent/orchestrator/cli.mjs policy
-
+      # SESSION 27, at the merge with SESSION 28. These two steps were
+      # registered AFTER the Orchestrator's registers and were therefore
+      # SKIPPED on every run, because a failing step skips every step
+      # after it in the same job and that register has exited 1 since the
+      # SESSION 26 merge. AGENTS.md and docs/CONTINUOUS-IMPROVEMENT.md
+      # both said "reach runs on every push", which was false for exactly
+      # as long as nobody read the job. Moved ahead of the break, which
+      # is what SESSION 28 did with the governance step and for the same
+      # reason. The register itself is still not repaired:
+      # docs/GOVERNANCE-PROPOSALS.md 6b.
       # SESSION 26. What limited autonomy is switched on to do, printed
       # on every push. It RUNS NOTHING — no branch is cut, no proposal
       # is applied, no ledger line is written — and it is here because
@@ -199,6 +197,18 @@ jobs:
       # is added, this step is where it becomes visible.
       - name: What limited autonomy can reach
         run: node agent/improve/cli.mjs reach
+
+      # SESSION 22. Three tables the rest of the system is checked
+      # against: the ten workflow types, the capability register, and
+      # the policy. Each RUNS NOTHING — no workflow is opened, no
+      # specialist is dispatched, no journal is written — so this is a
+      # readable record of what the Orchestrator would permit, on
+      # every push, at no risk.
+      - name: The Orchestrator's registers
+        run: |
+          node agent/orchestrator/cli.mjs workflows
+          node agent/orchestrator/cli.mjs capabilities
+          node agent/orchestrator/cli.mjs policy
 
       # The tree must be byte-identical afterwards. Every suite here
       # hashes what it reads; this checks the claim from outside all

@@ -349,6 +349,17 @@ this branch merged it in. Three files conflicted.
 `agent/implement/checks.mjs` and `.github/workflows/qa.yml` auto-merged correctly — both suite
 lists hold all 22 entries — and were verified by reading rather than assumed.
 
+**CI ON THE MERGE CAUGHT A FALSE CLAIM OF SESSION 27's, AND IT IS FIXED.** Run 34606107588 on
+`main` at `376bfb9`: **three of six jobs red**, the same three SESSION 28 recorded — the
+validators on `freshness.mjs`, the browser suite on the three SESSION 19 defects, and the agent
+suites on the Orchestrator's registers. None is new. But the third has a consequence that *was*
+new: a failing step skips every step after it in the same job, and SESSION 27 had registered
+**"What limited autonomy can reach" after the broken register**, so it was skipped and never
+ran. `AGENTS.md` and `docs/CONTINUOUS-IMPROVEMENT.md` §5 both said `reach` "runs on every push",
+and that was false for as long as nobody read the job. Both register steps are moved ahead of
+the break — which is what SESSION 28 did with the governance step, for the same reason and one
+session earlier. **"Every agent suite" passed**, so all 22 suites are green in CI.
+
 **Two things SESSION 28 reported that this merge did not touch and did not repair.**
 `node agent/orchestrator/cli.mjs workflows` and `capabilities` exit 1 on `main` and have since
 the SESSION 26 merge, because `cli.mjs:50` imports `AUTONOMY_NOTE` which `policy.mjs` stopped
