@@ -275,6 +275,13 @@ caught it.**
 Found by reading CI's own conclusion for this session's merge rather than the local exit
 codes — which is GP-02 being applied to the session that proposed it.
 
+> **SESSION 29, 11 September 2026: repaired.** `agent/orchestrator/cli.mjs` now calls
+> `autonomyNote()`, and all three verbs exit 0. The repair also removed a false statement:
+> the constant said no action category is approved for automatic execution, which stopped
+> being true when SESSION 26 recorded the grant. The CI ordering this section describes is
+> kept anyway — it costs nothing and the next break will not hide the steps behind it.
+> This section is left as written, because it was true when it was written.
+
 `node agent/orchestrator/cli.mjs workflows` and `capabilities` **exit 1 on `main`**, with:
 
 ```

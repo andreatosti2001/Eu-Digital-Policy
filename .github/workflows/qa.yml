@@ -134,6 +134,7 @@ jobs:
             agent/simulation/selftest.mjs \
             agent/autonomy/selftest.mjs \
             agent/improve/selftest.mjs \
+            agent/production/selftest.mjs \
             .control-room/selftest.mjs
           do
             echo "::group::$s"
@@ -152,15 +153,19 @@ jobs:
       # seven proposals it derives all require human approval and
       # none has been decided.
       #
-      # IT RUNS BEFORE THE REGISTERS BELOW ON PURPOSE. The
-      # Orchestrator's register step has been FAILING on `main` since
-      # the SESSION 26 merge — agent/orchestrator/cli.mjs imports
+      # IT RUNS BEFORE THE REGISTERS BELOW, and the reason has now
+      # been removed rather than worked around. The Orchestrator's
+      # register step exited 1 from the SESSION 26 merge until
+      # SESSION 29 — agent/orchestrator/cli.mjs imported
       # AUTONOMY_NOTE, which policy.mjs stopped exporting when the
       # note became derived — and a failing step skips every step
-      # after it in the same job. A check that does not run checks
-      # nothing, which is the whole subject of the module this step
-      # runs. The register failure is NOT repaired here: it is
-      # docs/GOVERNANCE-PROPOSALS.md §6b.
+      # after it in the same job, which is why this step and the two
+      # below it were moved ahead of it. SESSION 29 repaired the
+      # import: the CLI now calls autonomyNote(), so the note is
+      # derived from the grant ledger instead of asserting that no
+      # category is approved, which stopped being true in SESSION 26.
+      # The ordering is kept anyway. It costs nothing and the next
+      # break will not hide these.
       - name: The governance evidence, and what has never been decided
         run: |
           node agent/proposals/governance/cli.mjs check
@@ -322,6 +327,88 @@ jobs:
           echo "clean"
 
   # ----------------------------------------------------------
+  # 3c. SESSION 23.5 — the adversarial verification gate
+  #
+  # IN A JOB OF ITS OWN, AND THAT IS THE WHOLE DESIGN. The gate has
+  # exited 1 since SESSION 24 on a CRITICAL finding, and a failing
+  # step skips every step after it in the same job — which is
+  # exactly how two other checks came to be registered behind a
+  # break and never run (docs/GOVERNANCE-PROPOSALS.md §6b). A step
+  # that is expected to be red must therefore hide nothing, so it
+  # gets a job to itself.
+  #
+  # SESSION 29 ADDED THIS, and its absence was the standing lesson:
+  # AGENTS.md recorded that a CRITICAL stayed red across five
+  # sessions because the workflow ran the gate's own SUITE and never
+  # the gate. The suite proves the gate is reproducible. It does not
+  # report what the gate FOUND.
+  #
+  # It starts a Control Room on an ephemeral loopback port, attacks
+  # it, and writes nothing.
+  # ----------------------------------------------------------
+  security:
+    name: The adversarial verification gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Sixty-nine attacks against the boundary
+        run: node agent/policy/verify/cli.mjs
+
+      - name: Nothing was written
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error title=The verification gate wrote to the repository::"
+            git status --porcelain
+            exit 1
+          fi
+          echo "clean"
+
+  # ----------------------------------------------------------
+  # 3d. SESSION 29 — production operating mode
+  #
+  # Four read-only verbs. None of them runs an agent, opens a
+  # workflow, writes a record or decides anything, and there is no
+  # verb in that directory that could.
+  #
+  # `trace` IS LAST ON PURPOSE. It exits 1 on a standing finding —
+  # two of the three ways this website can change leave no durable
+  # record naming the evidence — and putting it anywhere but last
+  # would hide the three checks above it.
+  # ----------------------------------------------------------
+  production:
+    name: Production operating mode
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: The operating schedule
+        run: node agent/production/cli.mjs schedule
+
+      - name: The final visual standard for the hidden entry
+        run: node agent/production/cli.mjs visual
+
+      - name: Discovery is not authentication is not authorization
+        run: node agent/production/cli.mjs separations
+
+      - name: What is traceable, and what is not
+        run: node agent/production/cli.mjs trace
+
+  # ----------------------------------------------------------
   # 4. SESSION 19 — the browser suite
   # ----------------------------------------------------------
   browser:
@@ -392,7 +479,7 @@ jobs:
   # ----------------------------------------------------------
   report:
     name: What this workflow does not prove
-    needs: [validators, agents, boundary, health, browser]
+    needs: [validators, agents, boundary, health, security, production, browser]
     if: always()
     runs-on: ubuntu-latest
     steps:

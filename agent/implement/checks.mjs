@@ -35,9 +35,10 @@ import { runBrowserQA, asQACheck as browserQACheck } from '../browser/runner.mjs
 /** Every agent suite AGENTS.md lists: the twelve from before
  *  SESSION 18, the browser and implementation suites, health,
  *  SESSION 22's Orchestrator, SESSION 23's policy and its
- *  verification gate, SESSION 24's simulation harness, and SESSION
- *  26's limited-autonomy runner. A change under `agent/` runs all of
- *  them. */
+ *  verification gate, SESSION 24's simulation harness, SESSION 26's
+ *  limited-autonomy runner, SESSION 27's improvement loop, SESSION
+ *  28's governance proposals and SESSION 29's production operating
+ *  mode. A change under `agent/` runs all of them. */
 export const AGENT_SUITES = [
   'agent/schemas/selftest.mjs',
   'agent/scout/selftest.mjs',
@@ -61,6 +62,7 @@ export const AGENT_SUITES = [
   'agent/simulation/selftest.mjs',
   'agent/autonomy/selftest.mjs',
   'agent/improve/selftest.mjs',
+  'agent/production/selftest.mjs',
 ];
 
 /** Run a command, capturing everything, never throwing. A checker
