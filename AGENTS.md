@@ -37,6 +37,7 @@ the evidence it describes.
 | `docs/LIMITED-AUTONOMY.md` | SESSION 26: the governance grant that switched five low-risk categories on, what a grant may never say, the six gates and the seven steps — and §7, what none of it proves |
 | `docs/CONTINUOUS-IMPROVEMENT.md` | SESSION 27: the loop — eight observers, one as-of date, the tracked cycle ledger, and the rule that an observer which did not run resolves nothing. **§4: the autonomy gate ladder was unpassable and is repaired, with the warrant in §4a. §4b: the adversarial gate has been red since SESSION 24** |
 | `docs/SESSION-25-FIRST-REAL-WORLD-RUN.md` | SESSION 25's first non-simulated run — `--live` against the five registered real endpoints, all five refused by this environment's network policy, and what ran for real against the actual corpus and pages once that boundary was hit — with a prioritized human review queue, none of it decided |
+| `docs/GOVERNANCE-PROPOSALS.md` | SESSION 28: the decision corpus, measured — the approval ledger is ABSENT, not empty — the twelve patterns in what a person has had to correct, and seven governance proposals, none decided |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
@@ -89,6 +90,25 @@ places this system is weaker than its own documents read: the Orchestrator admit
 that declares it; nothing re-checks a `ChangeRecord`'s files against the approved scope
 after the dispatch; and two conflict detectors have no ordering constraint and reported one
 relationship backwards. `docs/ORCHESTRATOR.md`.
+
+**NOTHING HAS EVER BEEN DECIDED, AND SESSION 28 MEASURED WHY THAT IS TWO PROBLEMS RATHER THAN
+ONE.** `agent/proposals/governance/` reads the history and reports what a person has had to
+correct more than once: twelve patterns over forty-nine anchors, each anchored to a commit, a
+path, a string in a tracked file or a live measurement, all re-resolved on every push. The
+first finding is about the corpus — **the approval ledger is not empty, it is ABSENT**, so
+there are no approved, rejected or edited proposals to analyse and the corpus is the
+corrections instead. The second is mechanical: `deriveApproval()` binds a decision to a
+proposal held in the git-ignored record store, so a decision recorded today reads
+`void_unknown_proposal` on any other machine until the producing agent is re-run. **Two
+findings are this session's own and are measured rather than inherited**: the grant's `docs/`
+allowlist and `categoriseProposal()`'s docs-only rule place all eight prose governance
+documents inside an ENABLED category — `NEVER_AUTOMATIC_PATHS` guards `agent/policy/`, and
+nothing guards `docs/AUTONOMY-POLICY.md`, which is the same policy in the form a person reads
+— and six of the eight fields the grant allowlists exist on none of the 77 records in
+`data/sources.json`. Both are claims about which gates would NOT stop a change, not claims
+that one would merge. **Seven governance proposals exist and none is decided**; the module has
+no write path, no decision home and no `automatic` class, and its suite proves the first by
+hashing the tree around a full run. `docs/GOVERNANCE-PROPOSALS.md`.
 
 **LIMITED AUTONOMY IS SWITCHED ON, AND WHAT THAT MEANS IS NARROW.** SESSION 26 recorded the
 first governance grant this repository has ever had: `agent/policy/governance/grants.jsonl`,
@@ -259,6 +279,7 @@ node --test agent/depth/selftest.mjs           # Agent 4, against the real data/
 node --test agent/proposals/data/selftest.mjs  # Agent 5, against the real data/
 node --test agent/architect/selftest.mjs       # Agent 6, against the real data/ and js/
 node --test agent/proposals/editorial/selftest.mjs   # Agent 7, against the real pages and data/
+node --test agent/proposals/governance/selftest.mjs   # SESSION 28, against the real history and the real policy
 node --test agent/ux/selftest.mjs              # Agent 8, against the real pages, sheets and modules
 node --test agent/browser/selftest.mjs         # the browser suite's own suite
 node --test agent/implement/selftest.mjs       # Agent 9, incl. SESSION 18's eight required proofs
@@ -274,22 +295,27 @@ node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**1069 tests across the twenty-two suites**, all passing as of SESSION 27 — 1068 with one
-skipped when the working tree is on `main`, because `agent/autonomy/selftest.mjs` test 28
-rehearses the real cycle and the cycle refuses to run there
-(1067 earlier in SESSION 27, before the gate repair added two; 1036 across twenty-one after SESSION 26; 998 across twenty after SESSION 24; 978 across nineteen after SESSION 23.5; 934 after
-SESSION 22 on its own branch; 909 after SESSION 23.5 on its own; 867 after SESSION 21; 812
-after SESSION 20; 756 after SESSIONS 18 and 19; 683 before them). SESSIONS 22, 23 and 23.5
-were merged, so none of those middle figures is a total on its own.
+**__MERGED_TOTAL__ tests across the twenty-two suites**, all passing on the merged tree of
+SESSIONS 27 and 28 — __MERGED_MAIN__ with one skipped when the working tree is on `main`, because
+`agent/autonomy/selftest.mjs` test 28 rehearses the real cycle and the cycle refuses to run
+there. **Neither session's own figure is the total**: SESSION 27 measured 1069 and SESSION 28
+measured 1081, on sibling branches cut from the same base, and each was right about its own
+tree (1036 across twenty-one after SESSION 26; 998 across twenty after SESSION 24; 978 across
+nineteen after SESSION 23.5; 934 after SESSION 22 on its own branch; 909 after SESSION 23.5 on
+its own; 867 after SESSION 21; 812 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before
+them). SESSIONS 22, 23 and 23.5 were merged, so none of those middle figures is a total on its
+own either.
 
 **`agent/implement/selftest.mjs` R6 has now caught the suite list growing seven times** —
 SESSION 20, SESSION 22, SESSION 23, the merge where the two branches had each updated the
 same assertion to a different number, SESSION 24, whose simulation harness would otherwise
 have landed without ever gating a change under `agent/`, and SESSION 26, where it mattered
 most: the autonomy runner is the first thing here that can write a file without a person, and
-a suite for it that nothing ran would have been a gate on nothing; and SESSION 27, whose loop
-reads every other agent's output and routes it. That is the assertion doing its job. It
-asserts twenty-one suites. SESSION 23 also changed `agent/detector/impact.mjs`'s
+a suite for it that nothing ran would have been a gate on nothing; and SESSIONS 27 and 28,
+which are **one occasion rather than two** — sibling branches from one base, each setting the
+number to 21, neither right about the merged tree. That is the second time this assertion has
+caught exactly that shape, and it is the case it is most worth having for. That is the
+assertion doing its job. It asserts twenty-two suites. SESSION 23 also changed `agent/detector/impact.mjs`'s
 `MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`;
 SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
 changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
@@ -342,6 +368,25 @@ node agent/improve/cli.mjs history          every recorded cycle, and the moveme
 
 `cycle` **without `--record` writes nothing**, and no flag in the module can touch `data/`,
 `i18n/`, `js/`, `css/` or a page. `reach` runs on every push.
+
+What a person has had to correct more than once, and what SESSION 28 asks about it:
+
+```
+node agent/proposals/governance/cli.mjs corpus     every place a decision could be recorded
+node agent/proposals/governance/cli.mjs patterns   the twelve, with every anchor resolved
+node agent/proposals/governance/cli.mjs list       the seven proposals · show <GP-nn> for the case against
+node agent/proposals/governance/cli.mjs check      exit 1 only on an anchor this tree REFUTES
+```
+
+`check` and `corpus` run on every push. Neither writes anything, and there is no verb here
+that decides.
+
+**`node agent/orchestrator/cli.mjs workflows` and `capabilities` currently EXIT 1 on `main`**,
+and have since the SESSION 26 merge: `agent/orchestrator/cli.mjs:50` imports `AUTONOMY_NOTE`,
+which `policy.mjs` stopped exporting when the note became derived. No suite runs these CLIs, so
+only CI sees it — and a failing step skips every step after it in the same job, which is why
+the governance step above is registered ahead of the registers. Not repaired:
+`docs/GOVERNANCE-PROPOSALS.md` §6b.
 
 **There is no overall health score.** `agent/health/model.mjs overallScore()` throws, with the
 reasoning. Five metrics are marked `not_a_score` because the only legitimate way to move them
