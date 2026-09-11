@@ -103,6 +103,39 @@ function docsProposal(over = {}) {
   };
 }
 
+/**
+ * The same docs/ proposal with REAL evidence and a complete epistemic
+ * block — the one this suite lacked until SESSION 27.
+ *
+ * `docsProposal()` above carries the fixture envelope's simulated
+ * evidence, which `authoritative_evidence` and `schema_validation`
+ * refuse by design. That is right for the refusal tests, and it means
+ * no proposal in this suite could reach the far end of the gate
+ * ladder, so "correctly refused" and "structurally unreachable" were
+ * indistinguishable here. SESSION 27 found the second was true.
+ *
+ * The evidence is a file in this repository cited as a primary source
+ * for the only thing it is offered as evidence of — that the file
+ * exists. Nothing in it is a citation, a date, an article number or a
+ * claim about EU law. Same shape as `agent/policy/selftest.mjs`.
+ */
+function cleanDocsProposal(over = {}) {
+  const p = JSON.parse(JSON.stringify(docsProposal()), (k, v) => (k === 'simulated' ? false : v));
+  p.autonomy_class = 'autonomous';
+  p.reason = 'A suite fixture. It proposes writing one note under docs/ and asserts nothing about EU law.';
+  p.evidence = [{
+    evidence_id: 'ev-1', kind: 'repository_file', source_id: null, url: null,
+    locator: 'agent/autonomy/selftest.mjs', title: null, publisher: null,
+    quote: 'This file exists in this repository.', retrieved_at: null, checksum: null,
+    supports: 'supports:direct', role: 'primary', simulated: false,
+  }];
+  p.epistemic = {
+    fact: [{ field: null, statement: 'agent/autonomy/selftest.mjs is a file in this repository.', evidence_refs: ['ev-1'] }],
+    inference: [], interpretation: [], unresolved: [],
+  };
+  return { ...p, ...over };
+}
+
 /** A proposal that edits `tier` on the source register — bookkeeping
  *  by its own description, and a re-tiering in fact. */
 function tierProposal(over = {}) {
@@ -467,11 +500,21 @@ test('16 · a legal-record path reached by a prefix rather than named exactly is
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
-test('17 · the four measured conditions may be unknown before the run; nothing else may', () => {
-  assert.deepEqual([...MEASURED_CONDITIONS], ['verification_succeeded', 'no_unresolved_conflict', 'validators_pass', 'browser_qa']);
-  /* And they are exactly the four `agent/policy/conditions.mjs`
-     documents as supplied. A fifth appearing here would be a
-     condition switched off while appearing to be satisfied. */
+test('17 · the five measured conditions may be unknown before the run; nothing else may', () => {
+  /* SESSION 27 ADDED THE FIFTH, under an explicit warrant from the
+     repository author quoted in docs/CONTINUOUS-IMPROVEMENT.md §4a.
+     `rollback_mechanical` reads a change context that
+     agent/implement/apply.mjs openContext() produces in STEP 2, and
+     this gate runs before STEP 1 — so it was `unknown` for every
+     proposal ever written, read as `failed`, and gate 3 refused all
+     of them. Its absence from this list was not a stricter policy; it
+     was a gate asking a question that could not be answered yet.
+
+     A SIXTH APPEARING HERE WOULD STILL BE A CONDITION SWITCHED OFF
+     WHILE APPEARING TO BE SATISFIED. The list is asserted exactly,
+     and 17b below is the half that stops this being a loosening. */
+  assert.deepEqual([...MEASURED_CONDITIONS],
+    ['verification_succeeded', 'no_unresolved_conflict', 'validators_pass', 'browser_qa', 'rollback_mechanical']);
   const dir = tmp();
   try {
     recordGrant(goodGrant(), { dir, now: () => NOW });
@@ -485,9 +528,103 @@ test('17 · the four measured conditions may be unknown before the run; nothing 
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('17b · gate 3 tolerates an unmeasured rollback; the MEASURED evaluation still refuses a bad one', () => {
+  /* THE HALF THAT STOPS SESSION 27's CHANGE BEING A LOOSENING.
+     Making `rollback_mechanical` a measurement only means gate 3 no
+     longer pre-empts it. The binding check is step 6, which
+     evaluates the same condition with `facts.context` supplied by
+     the real run, and `mayMerge` requires route `automatic`, which
+     requires every mandatory condition SATISFIED — an unknown there
+     refuses exactly as a failure does.
+
+     So: with a context supplied, a GOOD plan is satisfied and a plan
+     that is genuinely not mechanical still fails. If the second of
+     these ever passes, a change could merge with no way back. */
+  const dir = tmp();
+  try {
+    recordGrant(goodGrant(), { dir, now: () => NOW });
+    const { policy } = policyInForce({ dir, now: NOW });
+    const req = (proposal, facts) => ({
+      actor: { kind: 'implementation_qa', id: AUTONOMY_ACTOR },
+      action: 'implement.apply', environment: 'local', proposal, policy, facts,
+    });
+    const context = {
+      branch: 'autonomy/suite-branch', commit: 'f'.repeat(40),
+      permitted: ['docs/EXAMPLE-DOES-NOT-EXIST.md'],
+      before: { 'docs/EXAMPLE-DOES-NOT-EXIST.md': { exists: false, sha256: null, bytes: 0 } },
+      rollback: { method: 'git checkout <commit> -- <permitted paths>', command: 'git checkout' },
+    };
+    const verdict = (d) => d.conditions.find((c) => c.condition === 'rollback_mechanical').verdict;
+
+    /* before the run: unknown, and tolerated by gate 3 */
+    assert.equal(verdict(evaluate(req(docsProposal(), {}))), 'unknown');
+
+    /* at step 6 with the real context: satisfied */
+    assert.equal(verdict(evaluate(req(docsProposal(), { context }))), 'satisfied');
+
+    /* at step 6 with the real context and a plan that cannot be
+       executed: STILL FAILED. This is the assertion that matters. */
+    const irreversible = docsProposal({
+      rollback_plan: { method: 'not_reversible', steps: [], verification: null, irreversible_reason: 'a fixture' },
+    });
+    assert.equal(verdict(evaluate(req(irreversible, { context }))), 'failed',
+      'a rollback that cannot be executed was accepted once a context existed — a change could merge with no way back');
+
+    /* and on main, which openContext() refuses anyway, the element is
+       ESTABLISHED missing rather than merely unanswered */
+    const onMain = evaluate(req(docsProposal(), { context: { ...context, branch: 'main' } }));
+    assert.equal(verdict(onMain), 'failed');
+    assert.ok(onMain.conditions.find((c) => c.condition === 'rollback_mechanical').absent.includes('branch_or_commit'));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
 /* ============================================================
    4 · THE SUPPLIED FACTS — derived, and absent rather than false
    ============================================================ */
+
+test('17c · gate 3 still refuses an actor the capability matrix does not authorize', () => {
+  /* THE PROPERTY SESSION 27's SECOND FIX MUST NOT LOSE.
+
+     Gate 3's third clause used to read `route !== 'blocked'`. That
+     was unsatisfiable before a run — every measured condition is on
+     NOT_WAIVABLE_BY_APPROVAL, so an unmeasured proposal always routes
+     `blocked` — but it WAS the only thing in this gate catching an
+     unauthorized actor, because agent/policy/engine.mjs returns
+     `conditions: []` in that case and clauses 1 and 2 then both count
+     zero and pass. The clause was replaced by an explicit
+     authorization check; this plants the case to prove it holds. */
+  const unauthorized = evaluate({
+    actor: { kind: 'source_scout', id: 'source-scout' },
+    action: 'implement.apply', environment: 'local',
+    proposal: docsProposal(), policy: DEFAULT_POLICY, facts: {},
+  });
+  assert.equal(unauthorized.authorization.allow, false,
+    'the fixture actor is authorized, so this test cannot prove what it names');
+  assert.deepEqual(unauthorized.conditions, [],
+    'the engine no longer returns an empty condition list for an unauthorized actor — the hole this test guards has moved, and the gate needs re-reading');
+
+  /* Clauses 1 and 2 see nothing to refuse: that is the hole. */
+  const hardFailures = unauthorized.conditions.filter((c) => c.verdict === 'failed');
+  const unexpectedUnknown = unauthorized.conditions.filter((c) => c.verdict === 'unknown' && !MEASURED_CONDITIONS.includes(c.condition));
+  assert.equal(hardFailures.length, 0);
+  assert.equal(unexpectedUnknown.length, 0);
+
+  /* And the gate refuses anyway, on the authorization. */
+  const dir = tmp();
+  try {
+    recordGrant(goodGrant(), { dir, now: () => NOW });
+    const governance = policyInForce({ dir, now: NOW });
+    const p = cleanDocsProposal();
+    const r = autonomyGates({
+      proposalId: p.proposal_id, policy: governance.policy, governance,
+      records: storeWith(p), ledger: emptyLedger(),
+    });
+    const gate = r.gates.find((g) => g.gate === 'policy_route_pre');
+    assert.equal(gate.ok, true, `the authorized runner is refused by gate 3: ${gate.why}`);
+    assert.equal(gate.route, 'blocked',
+      'gate 3 must PASS while the route still reads blocked — that is the whole of the fix: the route stays blocked until the measurements exist, and step 6 is where it is re-asked');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
 
 test('18 · an unverified proposal supplies no verification fact, and unknown does not execute', () => {
   const p = docsProposal();
@@ -635,7 +772,20 @@ test('28 · a rehearsal writes nothing, cuts no branch, and says whether it woul
     const branchBefore = execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'], { cwd: REPO_ROOT, encoding: 'utf8' }).trim();
     if (branchBefore === 'main') { t.skip('the working tree is on main; the cycle refuses to run there and this test would prove nothing'); return; }
 
-    const p = docsProposal();
+    /* SESSION 27 CHANGED THE FIXTURE HERE, AND THAT IS THE POINT.
+       This used to run `docsProposal()`, whose simulated evidence is
+       refused at gate 2 — so the test accepted `refused` OR
+       `rehearsed` and could never tell "correctly refused" from "the
+       ladder cannot be passed". It could not be passed: gate 3 asked
+       two questions before a run that only a run can answer.
+       docs/CONTINUOUS-IMPROVEMENT.md §4.
+
+       With a proposal that has nothing wrong with it, all six gates
+       pass and the cycle reaches the MEASURED evaluation. It still
+       does not merge, and the reasons are now real measurements
+       rather than a structural impossibility — which is exactly what
+       this layer is supposed to do. */
+    const p = cleanDocsProposal();
     const run = fakeRun();
     const r = await runCycle({
       proposalId: p.proposal_id, run, asOf: '2026-09-09', execute: false,
@@ -643,7 +793,11 @@ test('28 · a rehearsal writes nothing, cuts no branch, and says whether it woul
       records: storeWith(p), ledger: emptyLedger(),
     });
 
-    assert.ok(['refused', 'rehearsed'].includes(r.outcome));
+    assert.equal(r.outcome, 'rehearsed',
+      `a flawless proposal in an enabled category over a granted path did not reach the rehearsal: ${r.why}`);
+    for (const g of r.gates ?? []) assert.equal(g.ok, true, `gate ${g.gate} refused a flawless proposal: ${g.why}`);
+    assert.equal(typeof r.would_merge, 'boolean',
+      'the cycle must reach the measured evaluation and answer the merge question either way');
     assert.equal(r.wrote_files, false);
     const after = execFileSync('git', ['status', '--porcelain=v1', '--untracked-files=all'], { cwd: REPO_ROOT, encoding: 'utf8' });
     assert.equal(after, before, 'a rehearsal must leave the working tree byte-identical');

@@ -1,9 +1,15 @@
 # HANDOVER
 
-**Last updated:** SESSION 28 · 10 September 2026
-**Branch:** `claude/learn-human-decisions-9c5q3m`, cut from `origin/main` at the SESSION 26
-merge (`aaf6691`), and merged into `main` at the end of the session.
+**Last updated:** SESSION 27 · 11 September 2026, merged with SESSION 28
+**Branch:** `claude/continuous-improvement-loop-vpd2u1`, cut from `origin/main` at the
+SESSION 26 merge (`aaf6691`), and merged into `main` at the end of the session.
 
+**SESSIONS 27 AND 28 ARE SIBLINGS FROM ONE BASE, and this file carries both.** They were cut
+from `aaf6691` independently and neither saw the other. SESSION 28 landed on `main` first;
+SESSION 27 merged into it. Three files conflicted and every resolution is named in SESSION 27's
+section below. The one worth carrying: **both sessions set `AGENT_SUITES.length` to 21 and the
+merged tree has 22** — `agent/implement/selftest.mjs` R6 caught it, which is the second time it
+has caught exactly that shape and the case it is most worth having for.
 ---
 
 ## SESSION 28 — learn from the human decisions, and find there are none
@@ -150,6 +156,211 @@ intervention into durable knowledge — a person deciding them does. The cheapes
 decide are GP-01, GP-02 and GP-07, each of which would have caught a failure this repository
 has already had more than once; the one to read hardest before deciding is GP-06, and its own
 entry argues for refusing it.
+
+---
+
+## SESSION 27 — the continuous improvement loop, and what it found
+
+**What was built:** `agent/improve/`, eight files, thirty-one tests. Eight observers run in one
+process against one corpus position with one as-of date; the pass is compared with the last
+recorded one; every record is routed to a desk; the whole thing ends at a person. Full report:
+**`docs/CONTINUOUS-IMPROVEMENT.md`**.
+
+**THE FINDING THAT MATTERS: the autonomy gate ladder was unpassable. It is now repaired, under
+an explicit warrant from the repository author.** Take an `ImplementationProposal` with nothing
+wrong with it — one file under `docs/`, a path the grant names and `machine_derived_field`,
+which the grant enables; real evidence, no interpretation, no blocking question, `low` risk, a
+rollback plan. Under the real policy in force, five of the six gates passed and
+`policy_route_pre` refused. It had **two independent locks on the same door**, and the second
+was invisible until the first was picked.
+
+**Lock 1.** `rollback_mechanical` reads a change context — the branch, the base commit and the
+per-file pre-change hashes `agent/implement/apply.mjs openContext()` records in **step 2**;
+gate 3 runs **before step 1**. Four of its six elements were therefore `unknown` for every
+proposal ever written. `assessRollback()` has always distinguished `unknown` (not established)
+from `absent` (established missing); `rollbackMechanical()` collapsed both into `failed`, which
+is this repository's §0.3 error.
+
+**Lock 2.** Gate 3's third clause read `route !== 'blocked'`. There are two ways the engine
+returns `blocked` — an unauthorized actor, or an unmet condition on `NOT_WAIVABLE_BY_APPROVAL`
+— and **every measured condition is on that list**, so the clause was unsatisfiable before a
+run *independently of lock 1*. Fixing only the rollback condition moved the refusal from clause
+1 to clause 3 and changed nothing a caller could see: the gate then reported "0 condition(s)
+fail and 0 non-measurement condition(s) are unknown" **and failed anyway**.
+
+**So `docs/LIMITED-AUTONOMY.md` §7.1 was true and was not the binding constraint.** "Nothing
+produces a proposal in an enabled category" is a fact about producers. The permitting half was
+**unreachable**. That is consistent with SESSION 26's §6, which shows gate 3 refusing with "4 of
+six rollback elements absent" among five reasons — four other gates refused each of the fourteen
+too, so this reason was never the one that mattered and nothing was in a position to notice.
+
+**THE WARRANT.** `docs/AUTONOMY-POLICY.md` reserves a governance-layer change to a person, and
+this session reported the finding and did not repair it. The repository author then gave the
+warrant, on 9 September 2026, in these words: *"Changing what a gate proves is Class C work / I
+give u the warrant"*. It is quoted in `docs/CONTINUOUS-IMPROVEMENT.md` §4a and **not** recorded
+as a governance grant — a grant is read at runtime by `policyInForce()` and needs a ledger; this
+is code, which `git blame` attributes. Nothing was enabled by it: no grant was written or
+widened, `DEFAULT_POLICY.enabled_categories` is still `[]`, and no proposal was merged.
+
+**NO CHECK WAS WEAKENED, and that is asserted rather than claimed.** An element established
+missing still fails, and that check runs first — `not_reversible`, a context on `main`, and
+nothing supplied at all all still FAIL. An unauthorized actor is still refused, and gate 3's new
+clause is the only thing there that catches it: the engine returns `conditions: []` for one, so
+clauses 1 and 2 both count zero and both pass. Step 6 still re-evaluates every condition with
+`facts.context` from the real run and merges only on route `automatic`.
+
+**WHAT IT NOW DOES.** All six gates pass; the cycle reaches the measured evaluation;
+`outcome: rehearsed` where it was `refused`; `would_merge: false` on
+`verification_succeeded (unknown)` and `validators_pass (failed)`. **The refusal moved from a
+structural impossibility to two real measurements**, the second being `freshness.mjs`'s
+pre-existing exit 1. **No autonomous change has merged anything and this session did not make
+one.**
+
+**A THIRD FINDING, NOT THIS SESSION'S AND NOT REPAIRED: the adversarial gate has been red since
+SESSION 24.** `node agent/policy/verify/cli.mjs` reports **65 failed safely · 1 SUCCEEDED · 2
+partial · 1 undecidable**. `AGENTS.md` and `docs/SECURITY-VERIFICATION-2026-09-08.md` both said
+0 succeeded. HE-04 (CRITICAL) finds the trigger phrase in `agent/simulation/threshold.mjs`.
+Measured at `aaf6691` in a clean worktree, so it predates this session entirely. The module uses
+the phrase as a **probe** — the line the attack hits is the separation check that searches
+Control Room source to prove the phrase is absent from it — so this is very probably the HE-01
+shape SESSION 23.5 corrected once, with an exclusion list that went stale when SESSION 24 added
+a fourth legitimate prober. Left red deliberately: a CRITICAL suppressed is worse than a
+CRITICAL explained, and the gate's own posture is that a remediation is a later session's to
+decide. **The standing lesson is that the gate is not in CI.**
+`docs/CONTINUOUS-IMPROVEMENT.md` §4b.
+
+**A SECOND FINDING, measured rather than inferred: six of the eight fields the grant allowlists
+have never existed in `data/sources.json`.** `last_retrieved`, `retrieved_at`, `checksum`,
+`content_hash`, `recheck_interval` and `freshness_window` appear nowhere in the file — not on a
+record, not in `$description`, not in `$note`. Only `url` and `url_status` are there, on all 77
+records. So `retrieval_metadata` has no surface to write to at all. This is not a defect: a
+permission over nothing is inert, and §7.6 already says absence is the safe direction for the
+opposite case. It is **not repaired**, and repairing it would be the failure it looks like a fix
+for — adding `checksum` to `data/sources.json` is a schema decision about the legal record taken
+to make an autonomy demonstration possible. `node agent/improve/cli.mjs reach` measures it on
+every push. `docs/CONTINUOUS-IMPROVEMENT.md` §5.
+
+**THE ONE RULE THE LOOP TURNS ON.** An observer that did not run is not an observer that found
+nothing. A finding absent this cycle was either fixed or its observer did not run, and the
+finding lists cannot tell those apart — so movement is per observer, and an observer that did
+not run in BOTH cycles yields `undetermined` for everything it owns. Never `resolved`, never
+counted as an improvement. Tests 5 to 8 are that case from four directions, including the
+mirror image: an observer absent from the PREVIOUS cycle makes nothing new. A first cycle
+reports nothing new at all.
+
+**THE CYCLE LEDGER IS TRACKED, AND IT IS THE ONLY RUN STORE HERE THAT IS.** Every other one is
+ignored and argues for it in `.gitignore`; the argument is good and this is the exception,
+because a loop whose memory does not survive a clone is not a loop. The precedent is the grant
+ledger and the decision ledger, not the health history. What pays for it is a rule: a signal
+classified `private` by `agent/health/model.mjs` is withheld with the reason recorded, the
+health monitor's own `collectLeaks()` runs over the serialised entry against the real private
+metric register, and a path under `.control-room/` is a **refusal to write** rather than a
+redaction. Nothing records without `--record`, for the reason
+`agent/health/history.mjs writePublic()` gives about publishing.
+
+**THE FIRST RECORDED CYCLE.** `cycle-9f20d795beea`, trace
+`dbd43f16b2f34bf1fa0d2e7e3183f522`. 8 of 8 observers ran, **210 findings** — depth 57,
+data-proposals 49, editorial 44, architect 40, ux 20. Triage: **0 referable to the autonomy
+runner · 66 to a person · 144 proposing no act.** All 66 are refused by a category no policy may
+ever automate: `legal_interpretation` 30, `architecture_change` 16, `substantive_data_change`
+13, `taxonomy_change` 5, `schema_change` 2. `triage.blocked_only_by_prerun_condition` is 0 and
+that zero means "no proposal got that far", not "the blocker is gone" — nothing in the real
+corpus is refused later than the category gate, which is why the finding above needed a
+well-formed fixture to surface.
+
+**Six existing assertions changed, and every one is named.**
+
+| | |
+|---|---|
+| `agent/implement/selftest.mjs` R6 | `AGENT_SUITES.length` 20 → 21. **Seventh catch.** The loop reads every other agent's output and routes it. |
+| `agent/policy/selftest.mjs` 7 | the pre-run `rollback_mechanical` verdict `failed` → `unknown`. The route is still asserted `blocked` **first**, and the three cases the test is named for all still FAIL. Element-level assertions added so it cannot regress into "everything is unknown". |
+| `agent/autonomy/selftest.mjs` 17 | `MEASURED_CONDITIONS` four → five, asserted exactly. |
+| `agent/autonomy/selftest.mjs` 17b | **new** — gate 3 tolerates an unmeasured rollback; the measured evaluation still refuses one that is genuinely not mechanical, and one on `main`. |
+| `agent/autonomy/selftest.mjs` 17c | **new** — an unauthorized actor is still refused at gate 3, with the empty condition list planted explicitly. |
+| `agent/autonomy/selftest.mjs` 28 | ran a proposal whose simulated evidence is refused at gate 2, and accepted `refused` OR `rehearsed` — so it could never tell "correctly refused" from "the ladder cannot be passed". It now runs a clean fixture and asserts every gate passes. |
+
+`agent/improve/` also **lost** code: the triage's special case for the pre-run condition, and
+the signal that counted it. The case no longer arises, and code describing a world that has
+changed is worse than no code. An assertion replaces it.
+
+No other existing assertion was touched, and no test was deleted, skipped or relaxed.
+
+**Everything was re-run after `git add`, not before.** **1069 tests across twenty-two suites, 0
+failures**, measured on this session's branch (1036 across twenty-one before; the loop adds 31
+and the gate repair adds 2).
+18/18 contracts satisfiable. The four validators: `validate.mjs` 0 errors, `i18n-audit.mjs` 0
+errors 0 warnings, `design-qa.mjs` 0 errors and the same five warnings by file and line, 106
+unverified records. `agent/implement/cli.mjs boundary` at **0 blocking / 13 warnings**,
+unchanged, with `agent/ is inside the public surface` at **236 files** where SESSION 26 recorded
+225 — this session's eleven files being counted. `.control-room/cli.mjs boundary` at 0 errors,
+22 routes, 8 public, 0 production controls, unchanged. The browser suite in a real Chromium:
+**125 pass · 3 fail · 2 undecidable**, the same three SESSION 19 defects, untouched.
+
+**THE LOOP MADE ITS FIRST REAL COMPARISON.** A second cycle, `cycle-df155e5eac10`, recorded
+after the repair at `fa67b3ab`: **0 new · 210 persisting · 0 resolved · 0 undetermined**, all
+eight observers comparable. Two passes an hour apart at different commits over an unchanged
+corpus produced the same 210 findings under the same 210 ids — which is the reproducibility the
+content-derived ids buy, and the thing eleven separate CLIs could not do.
+`docs/CONTINUOUS-IMPROVEMENT.md` §6b.
+
+**`freshness.mjs` still exits 1** on the same "1 item(s) need attention" SESSIONS 24, 25 and 26
+all recorded. It is not this session's regression and it is not fixed. It is the sole reason
+`validators.at_baseline` reads false in the recorded cycle.
+
+**Nothing in `data/`, `i18n/`, `js/`, `css/` or any page was changed**, and
+`agent/improve/selftest.mjs` test 20 runs two real cycles and asserts it from outside.
+
+**SESSION 28's OWN CHECK CAUGHT A REAL ERROR OF SESSION 27's AT THIS MERGE, AND IT IS RECORDED
+RATHER THAN EDITED AWAY.** `node agent/proposals/governance/cli.mjs check` came back **2
+anchors REFUTED** on the merged tree, both naming strings that should be in `docs/HANDOVER.md`
+and were not: `"at 225 files where SESSION"` (P-04) and `"0 merged · 0 reverted · 14"` (P-08).
+
+The cause was SESSION 27's, not the merge's. Commit `b1b819a` rewrote this file with an
+over-broad text replacement whose end anchor was the SESSION 25 header — **so it deleted the
+entire SESSION 26 section, 113 lines, in passing.** It was not noticed because the staged diff
+read `251 +++++----------` and that was taken for the session's own section being rewritten.
+The section is restored here from `fa67b3a`, verbatim, and the check now reports **49 resolved
+· 0 refuted**.
+
+A second slip of the same family happened at this merge and is recorded for the same reason:
+the merge commit shipped with two unfilled `__MERGED_TOTAL__` placeholders in `AGENTS.md`,
+because the measured figures were written into the working tree **after** `git add` and the
+commit took the staged copy. `AGENTS.md` already says to run the suites after `git add`, not
+before; the sibling rule is to commit what you staged, or stage again. Corrected in the
+following commit rather than amended away.
+
+Three things worth carrying from the deleted section. **A `--stat` line is not a review** — `AGENTS.md` says to
+read the full `git diff` before committing, and a large deletion count on a file you are also
+adding to is exactly what that instruction is for. **The evidence anchors worked as designed**:
+SESSION 28 built them to refuse a pattern citing something the tree contradicts, and the first
+thing they caught was a sibling session deleting the evidence. And **it was caught at the
+merge, by the other session's tool** — neither session's own suite would have noticed, because
+no validator here reads prose.
+
+**THE MERGE WITH SESSION 28, AND EVERY RESOLUTION NAMED.** SESSION 28 landed on `main` first;
+this branch merged it in. Three files conflicted.
+
+| | |
+|---|---|
+| `agent/implement/selftest.mjs` R6 | **Both sessions set `AGENT_SUITES.length` to 21**, each correctly about its own tree. The merged tree has 22. This is the second time this assertion has caught that exact shape — the first was the SESSION 22/23 merge — and it is the case it is most worth having for. The membership list now also names `agent/proposals/governance/selftest.mjs` explicitly, which SESSION 28 had not added. |
+| `AGENTS.md` | Three hunks. The test count keeps both sessions' figures and says neither is the total; the R6 paragraph records 27 and 28 as **one occasion rather than two**; the commands section is a pure addition on both sides and keeps both. |
+| `docs/HANDOVER.md` | Both prepended a session. Both are kept, newest first, with a merged header. |
+
+`agent/implement/checks.mjs` and `.github/workflows/qa.yml` auto-merged correctly — both suite
+lists hold all 22 entries — and were verified by reading rather than assumed.
+
+**Two things SESSION 28 reported that this merge did not touch and did not repair.**
+`node agent/orchestrator/cli.mjs workflows` and `capabilities` exit 1 on `main` and have since
+the SESSION 26 merge, because `cli.mjs:50` imports `AUTONOMY_NOTE` which `policy.mjs` stopped
+exporting when the note became derived. And the seven governance proposals are in front of a
+person in a queue from which nothing has ever been taken. Both are SESSION 29's.
+
+**What SESSION 29 inherits from SESSION 27.** The gate ladder is passable and **nothing has passed it**.
+`freshness.mjs` exiting 1 makes `validators_pass` fail for every run in this tree, so nothing
+can merge here until that pre-existing item is dealt with — that is now the binding constraint,
+and it is small and concrete where the previous one was a structural impossibility. HE-04 is
+red and its remediation is a decision; the adversarial gate is not in CI. The loop has one
+recorded cycle, taken before the repair; the second is where it starts being worth something.
 
 ---
 

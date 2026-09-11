@@ -317,12 +317,34 @@ test('6 · browser QA is required by the paths, not by the caller, and a skipped
    ============================================================ */
 
 test('7 · a rollback that is not mechanically meaningful blocks, and a boolean is not one', () => {
+  /* SESSION 27 CHANGED ONE VERDICT HERE, AND ONLY ONE. With no
+     change context, four of the six elements are `unknown` — not
+     established — and none is `absent`. This asserted `failed`,
+     which said "I have looked and it is not there" about something
+     nobody had looked at, and it is this repository's §0.3 rule that
+     those are different. The consequence was structural: no proposal
+     could pass agent/autonomy/ gate 3, ever.
+     docs/CONTINUOUS-IMPROVEMENT.md §4.
+
+     THE ASSERTION IS NOT WEAKER. `unknown` blocks exactly as a
+     failure does — the route below is still `blocked`, unchanged and
+     asserted first — and the three cases that follow, which are the
+     ones this test is named for, all still FAIL because each carries
+     an element that is established missing. */
   const noContext = evaluate(applyReq({ facts: cleanFacts({ context: undefined }) }));
-  assert.equal(noContext.route, 'blocked');
-  assert.equal(verdictOf(noContext, 'rollback_mechanical'), 'failed');
+  assert.equal(noContext.route, 'blocked', 'unknown must block exactly as a failure does');
+  assert.equal(verdictOf(noContext, 'rollback_mechanical'), 'unknown');
+
+  /* And the distinction is asserted at the element level, so this
+     cannot regress into "everything is unknown". */
+  const nc = noContext.conditions.find((c) => c.condition === 'rollback_mechanical');
+  assert.deepEqual(nc.absent, [], 'nothing is established missing before a run');
+  assert.ok(nc.unknown.length >= 4, 'the elements that read a change context must be reported unknown');
 
   const notReversible = evaluate(applyReq({ proposal: cleanProposal({ rollback_plan: { method: 'not_reversible', steps: [], verification: null, irreversible_reason: 'it deletes a record' } }) }));
   assert.equal(verdictOf(notReversible, 'rollback_mechanical'), 'failed');
+  assert.ok(notReversible.conditions.find((c) => c.condition === 'rollback_mechanical').absent.length,
+    'a not_reversible plan must fail on an ESTABLISHED missing element, not merely on an unanswered one');
 
   const onMain = evaluate(applyReq({ facts: cleanFacts({ context: { branch: 'main', commit: 'a'.repeat(40), permitted: ['docs/x.md'], before: { 'docs/x.md': { exists: false } }, rollback: { method: 'git checkout' } } }) }));
   assert.equal(verdictOf(onMain, 'rollback_mechanical'), 'failed', 'a rollback on main is a rollback of the published site');

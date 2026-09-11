@@ -133,6 +133,7 @@ jobs:
             agent/policy/verify/selftest.mjs \
             agent/simulation/selftest.mjs \
             agent/autonomy/selftest.mjs \
+            agent/improve/selftest.mjs \
             .control-room/selftest.mjs
           do
             echo "::group::$s"
@@ -188,6 +189,16 @@ jobs:
         run: |
           node agent/policy/cli.mjs governance
           node agent/autonomy/cli.mjs status
+
+      # SESSION 27. What the grant can actually REACH, measured against
+      # the tree on this commit rather than inferred from the grant.
+      # It runs nothing and writes nothing. It is here because the
+      # grant names eight fields on data/sources.json and six of them
+      # are not in that file, so a permission can be in force over a
+      # surface that does not exist — and the day one of those fields
+      # is added, this step is where it becomes visible.
+      - name: What limited autonomy can reach
+        run: node agent/improve/cli.mjs reach
 
       # The tree must be byte-identical afterwards. Every suite here
       # hashes what it reads; this checks the claim from outside all

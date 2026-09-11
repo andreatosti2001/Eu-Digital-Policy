@@ -624,7 +624,8 @@ test('R6 · a validator that could not be executed is exit 127, never a pass', (
 test('R6 · this suite is in the list the agent runs for a change under agent/ or tools/', () => {
   for (const s of ['agent/implement/selftest.mjs', 'agent/browser/selftest.mjs', 'agent/health/selftest.mjs',
     'agent/orchestrator/selftest.mjs', 'agent/policy/selftest.mjs', 'agent/policy/verify/selftest.mjs',
-    'agent/autonomy/selftest.mjs']) {
+    'agent/autonomy/selftest.mjs', 'agent/improve/selftest.mjs',
+    'agent/proposals/governance/selftest.mjs']) {
     assert.ok(AGENT_SUITES.includes(s), `${s} must be in AGENT_SUITES, or a change under agent/ would land without running it`);
   }
   /* The count is asserted, not just the membership. A suite silently
@@ -639,9 +640,20 @@ test('R6 · this suite is in the list the agent runs for a change under agent/ o
      is the SIXTH, and the one where it mattered most: the autonomy
      runner is the first thing in this repository that can write a
      file without a person, and a suite for it that nothing ran would
-     have been a gate on nothing. */
-  assert.equal(AGENT_SUITES.length, 21,
-    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24), the limited-autonomy runner (26) and the governance proposals (28)');
+     have been a gate on nothing. SESSION 27 is the SEVENTH and
+     SESSION 28 the EIGHTH — and they are one occasion, not two,
+     because they arrived on sibling branches cut from the same base
+     and EACH SET THIS NUMBER TO 21. That is the SECOND time this
+     assertion has caught exactly that shape — the first was the
+     SESSION 22/23 merge named above — and it is the case the
+     assertion is most worth having for: two sessions, each correct
+     about its own tree, and neither number correct about the merged
+     one. It is 22. The improvement loop reads every other
+     agent's output and routes it; the governance proposals read the
+     decision corpus. A change breaking either would otherwise have
+     landed with nothing running the suite that checks it. */
+  assert.equal(AGENT_SUITES.length, 22,
+    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24), the limited-autonomy runner (26), the continuous improvement loop (27) and the governance proposals (28)');
 });
 
 /* ============================================================

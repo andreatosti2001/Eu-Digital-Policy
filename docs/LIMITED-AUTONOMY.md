@@ -182,6 +182,13 @@ The field gate firing on `verification_note` against a real proposal, rather tha
 is the part worth carrying: that is the record of what was and was not established, and a
 machine writing it is prohibition 2.
 
+**SESSION 27 re-read this table and found the `policy_route_pre` row means more than it
+looks.** Its "4 of six rollback elements absent" was true of these fourteen proposals and of
+every other proposal that could ever be written, because the elements read a change context
+that does not exist when the gate runs. Four other gates refused each of the fourteen, so this
+row was never the one that mattered and nothing was in a position to notice.
+`docs/CONTINUOUS-IMPROVEMENT.md` §4.
+
 **Nothing was written.** `git status --porcelain` was empty of any `data/`, `i18n/`, `js/`,
 `css/` or page change throughout, and all fourteen ledger lines record `wrote_files: false`.
 
@@ -199,6 +206,21 @@ site's own argument is that a record should say what it cannot support.
    passed. Nothing in this repository currently produces a proposal in one of the five
    enabled categories, and manufacturing one to demonstrate the mechanism would be a fixture
    dressed as work.
+
+   > **SESSION 27 CORRECTION, AND IT IS THE IMPORTANT HALF OF THIS ITEM.** The sentence above
+   > is true and it was **not the binding constraint**. Gate 3 (`policy_route_pre`) refused
+   > *every* proposal, however well formed, for two structural reasons: `rollback_mechanical`
+   > reported `failed` about a change context that `openContext()` only produces in step 2,
+   > and the gate's third clause asked `route !== 'blocked'`, which is unsatisfiable before
+   > the measurements exist because every measured condition is on
+   > `NOT_WAIVABLE_BY_APPROVAL`. So the permitting half was **unreachable**, not merely
+   > unexercised. Both are repaired under an explicit warrant from the repository author,
+   > and the repair weakened no check: an established-missing rollback element still fails,
+   > an unauthorized actor is still refused, and step 6 still requires every mandatory
+   > condition satisfied on the measured facts.
+   > **The headline statement is unchanged — no autonomous change has merged anything** — but
+   > the reason has moved from an impossibility to a measurement.
+   > `docs/CONTINUOUS-IMPROVEMENT.md` §4.
 2. **It is not process isolation.** Anything running in this process can call the engine with
    whatever facts it likes. What the design gives instead: an absent fact is `unknown`, eight
    of the twelve conditions cannot be supplied at all, and here the four that can are return
@@ -239,8 +261,8 @@ and it is named here and in `docs/HANDOVER.md` so a reader can disagree with it.
 
 ## 7c · A note on the test count
 
-**1036 tests across twenty-one suites, 0 failures**, measured on this session's branch. On
-`main` it is 1035 with one skipped: `agent/autonomy/selftest.mjs` test 28 rehearses the real
+**1036 tests across twenty-one suites, 0 failures**, measured on SESSION 26's branch (SESSION
+27 took it to 1069 across twenty-two). On `main` it is 1035 with one skipped: `agent/autonomy/selftest.mjs` test 28 rehearses the real
 cycle, and the cycle refuses to run on `main` because a push there publishes to the live site
 and there is no deploy gate. The test skips itself rather than passing for the wrong reason.
 
