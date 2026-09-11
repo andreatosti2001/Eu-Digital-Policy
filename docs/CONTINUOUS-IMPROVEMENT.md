@@ -269,6 +269,23 @@ explained.
 it between SESSION 23.5 and now, which is how a CRITICAL stayed red across three sessions while
 three documents said otherwise.
 
+> **SESSION 29, 11 September 2026 — both halves of this section have moved, and this
+> paragraph is left as written because it was true when it was written.
+>
+> **The gate is now in CI**, in a job of its own (`.github/workflows/qa.yml`, job `security`),
+> because a step expected to be red must hide nothing. By then the CRITICAL had been red across
+> five sessions, not three.
+>
+> **The confirmation this section asks for has been made, mechanically.**
+> `agent/production/separations.mjs` checks the condition HE-04's own finding names — *if any
+> of those reads it as an input, it is a credential* — on two independent halves:
+> `agent/simulation/threshold.mjs` calls none of the twelve granting primitives, and none of
+> its eight occurrences of the phrase sits on either side of an equality test. It is cleared on
+> both. **The exclusion list was still not corrected and HE-04 is still red**, because the fix
+> this section proposes is the stale exclusion list SESSION 23.5 already had to correct once,
+> and choosing it is a person's call rather than an agent's.
+> `docs/PRODUCTION-OPERATING-MODE.md` §4a.
+
 ---
 
 ## 5 · FINDING 2 — six of the eight granted fields have never existed

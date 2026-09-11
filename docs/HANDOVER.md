@@ -1,15 +1,134 @@
 # HANDOVER
 
-**Last updated:** SESSION 27 · 11 September 2026, merged with SESSION 28
-**Branch:** `claude/continuous-improvement-loop-vpd2u1`, cut from `origin/main` at the
-SESSION 26 merge (`aaf6691`), and merged into `main` at the end of the session.
+**Last updated:** SESSION 29 · 11 September 2026
+**Branch:** `claude/production-operating-mode-0ti3hu`, cut from `origin/main` at `a25f0ed`,
+and merged into `main` at the end of the session.
 
-**SESSIONS 27 AND 28 ARE SIBLINGS FROM ONE BASE, and this file carries both.** They were cut
-from `aaf6691` independently and neither saw the other. SESSION 28 landed on `main` first;
+**SESSION 29 is a single branch from `a25f0ed`, with no sibling.** `AGENT_SUITES.length` is
+**23**.
+
+**SESSIONS 27 AND 28 WERE SIBLINGS FROM ONE BASE, and this file still carries both.** They were
+cut from `aaf6691` independently and neither saw the other. SESSION 28 landed on `main` first;
 SESSION 27 merged into it. Three files conflicted and every resolution is named in SESSION 27's
 section below. The one worth carrying: **both sessions set `AGENT_SUITES.length` to 21 and the
-merged tree has 22** — `agent/implement/selftest.mjs` R6 caught it, which is the second time it
-has caught exactly that shape and the case it is most worth having for.
+merged tree had 22** — `agent/implement/selftest.mjs` R6 caught it, which was the second time it
+had caught exactly that shape and the case it is most worth having for.
+
+---
+
+## SESSION 29 — production operating mode, and the checklist that refused
+
+**What was asked:** activate production operation under the existing autonomy policy; define
+the daily cycle (Scout → Verify → Detect Change → Assess Data Depth → Route impact → QA →
+Governance → Publish or Request Approval), the seven weekly reviews and the seven monthly
+reviews; keep the system observable end-to-end, with every website modification traceable to
+its originating evidence and execution trace; confirm that the hidden Control Room discovery
+mechanism may reveal, transition and route but never authenticate, authorize, approve, execute,
+deploy or expose privileged data; verify the final visual standard; **output a final readiness
+checklist and stop if any mandatory condition fails.** Full report:
+**`docs/PRODUCTION-OPERATING-MODE.md`**.
+
+**IT STOPPED, AND THAT IS THE DELIVERABLE.** `node agent/production/cli.mjs readiness` reports
+**`refused`**: twelve of twenty mandatory conditions pass and **eight block**. Production
+operation is **not activated**. The eight, in the words the report uses: the `freshness.mjs`
+baseline disagreement; the adversarial gate's CRITICAL; the browser suite's three SESSION 19
+defects; **no production dispatcher is wired**; **no registered source endpoint is reachable**;
+the decision ledger is absent; two of three website-changing write paths are untraceable; and
+**there is no deploy gate**. Six of those eight are inherited and none is this session's to
+decide. **A mandatory condition that could not be MEASURED blocks exactly as a failure does**,
+which is this repository's own rule about a skipped browser run applied where it matters most.
+
+**`agent/production/` IS THE FIFTEENTH THING IN `agent/`, AND IT WRITES NOTHING.** Five modules
+and a CLI with five verbs: the schedule as data, the ten visual conditions, the six
+separations, the write paths, and twenty-one readiness conditions in ten domains. No module
+calls a write API — asserted as a *call*, so a header explaining the rule does not violate it —
+and a full run of the four read-only verbs leaves the tree byte-identical. **There is no
+`--execute`, no `--record`, no `--force` and no `--activate`**, and the suite reads the CLI to
+prove it. If every condition passed, the report would say a person MAY activate: switching a
+production mode on is a governance decision and protocol §24 reserves it to a person.
+
+**THE SCHEDULE ENDS AT A PERSON AND THE LOADER ENFORCES IT**, which is the refusal
+`agent/orchestrator/workflows.mjs` applies to its ten workflow types. Every stage states **what
+it cannot establish**, and two of the eight cannot do what their names say: Scout reaches no
+endpoint (SESSION 25's five refusals; no URL here has ever been fetched), and Route dispatches
+nothing (there is no `agent/orchestrator/dispatchers.mjs`). All twenty-two scripts the schedule
+names exist, and the fourteen reviews each say what a person must still do with what they
+produced. **Nothing fires on a timer. There is no cron and no daemon in that directory.**
+
+**THE HIDDEN ENTRY PASSES ALL TEN VISUAL CONDITIONS AND ALL SIX SEPARATIONS — AND WAS NOT
+TOUCHED.** `js/threshold.js`, `style.css`, `index.html` and every other page are
+**byte-identical to `a25f0ed`**. The standard was verified, not adjusted. Two of the ten are
+settled only in their mechanical half and say so: whether the drawing *looks* like the rest of
+the site, and whether a practitioner of the source tradition would accept the construction, are
+judgements by people. No contrast was computed, no screen reader was run, no pixels compared.
+
+**HE-04 IS NOW MEASURED RATHER THAN SUSPECTED, AND IS STILL RED.** AGENTS.md carried the
+suspicion that the CRITICAL was a false positive; nothing had checked it.
+`agent/production/separations.mjs` checks the condition the attack's own finding names — *if
+any of those reads it as an input, it is a credential* — on two independent halves.
+`agent/simulation/threshold.mjs` calls **none** of the twelve granting primitives, and **none**
+of its eight occurrences of the phrase sits on either side of an equality test: three are probe
+paths, two are arguments to the client matcher, one is a regex needle, one is prose, one is
+quoted code. It is cleared on both halves. **The attack was not edited and the finding was not
+reclassified.** HE-04's three path exclusions are exactly the stale exclusion list SESSION 23.5
+already had to correct once, and choosing that fix is a person's call. SESSION 27
+§4b set the precondition — correct it *only if* a reader confirms the module reads the phrase as
+data and never as an input — and that confirmation is now on record, with the measurement
+behind it.
+
+**TWO THINGS WERE REPAIRED, AND BOTH ARE OBSERVABILITY DEFECTS.**
+
+1. **The Orchestrator's register commands, dead since the SESSION 26 merge.**
+   `agent/orchestrator/cli.mjs:50` imported `AUTONOMY_NOTE`, which `policy.mjs` stopped
+   exporting when the note became derived, so **every verb of that CLI exited 1**. It now calls
+   `autonomyNote()`. That also removed a **false statement**: the constant said no action
+   category is approved for automatic execution, which stopped being true in SESSION 26, and
+   the derived note reports the five the grant enables. Was `docs/GOVERNANCE-PROPOSALS.md`
+   §6b.
+2. **The adversarial gate is in CI**, in a job of its own, because a failing step skips every
+   step after it in the same job and a step expected to be red must hide nothing. Its absence
+   was the standing lesson: it is how a CRITICAL stayed red across **five** sessions while
+   three documents said otherwise.
+
+**FOUR FALSE POSITIVES WERE FOUND IN THIS SESSION'S OWN CODE, and all four are recorded with a
+test pinned to the input that caused them.** Three are the HE-01 shape — a scan reading a
+module's own denial as a finding: a capability scan that counted the array declaring its
+vocabulary and then the regex that searches for it; a deploy check that failed on the panel
+sentence *"This deployment does not publish its address"*; and a stylesheet line scan that
+reported the minimum hit target absent because its rule spans five lines. **The fourth was
+worse**: `gatherFacts()` read `browserJson.checks` where the suite's JSON calls that array
+`results`, so the **mandatory** `browser_suite_pass` condition **passed while the browser suite
+was exiting 1 on three real reader-facing defects**. A checklist that reports green because it
+read the wrong field is worse than no checklist. It now reads the suite's own
+`qa_check.exit_code`. `docs/PRODUCTION-OPERATING-MODE.md` §7.
+
+**TRACEABILITY IS ONE OF THREE, AND THE WIDEST GAP IS THE MOST LIKELY PATH.** Of the three ways
+a published file can change, only the autonomy runner leaves a durable record naming the
+evidence — its commit message, which is built to be that record because the action ledger is
+git-ignored. A person editing a page and pushing leaves whatever the commit message says, and
+nothing requires or checks it; a Control Room decision would leave a ledger entry, and **the
+ledger is absent**. Requiring evidence in a human commit message is a governance decision about
+how the repository author works, and an agent may not take it.
+
+**A tracked README is not a record.** The first draft of `traceability.mjs` counted
+`agent/implement/decisions/README.md` and reported the decision ledger as durable. Placeholders
+are counted separately now — and those same placeholders are what the gate's PP-08 reports at
+HIGH, for a different reason.
+
+**Baseline unchanged.** 0 errors across the four validators, the five named `design-qa`
+warnings, 106 unverified records. **1166 tests across twenty-three suites**, 0 failures.
+`AGENT_SUITES.length` is **23** and `agent/implement/selftest.mjs` R6 asserts it — the ninth
+time that assertion has mattered, and the first where the suite was added *with* the number
+rather than caught after it.
+
+**What this session did NOT do:** it decided nothing, changed no policy, wrote no grant, and
+recorded no decision. `DEFAULT_POLICY.enabled_categories` is still `[]` and the grant ledger is
+unchanged at one line. **It did not touch `data/`, `i18n/`, `js/`, `css/`, `index.html` or any
+page** — no legal fact, citation, date, article number or status was written, changed or moved.
+It fixed none of SESSION 24's twenty-three findings, none of the three browser defects, and
+neither OB-05 nor PP-08. **It did not activate production operation**, and describing what it
+built as "production operation, activated" would be false: nothing here runs on a cadence.
+
 ---
 
 ## SESSION 28 — learn from the human decisions, and find there are none
@@ -1975,7 +2094,45 @@ Carried forward:
 
 ## Anything the next agent must NOT change
 
-Carried forward, still binding. **SESSION 24's, first:**
+**SESSION 29's, first:**
+
+- **Do not make a mandatory readiness condition non-blocking when it is `unmeasurable`.** That
+  rule is what makes `--quick` useless for a real report, and relaxing it turns "we did not
+  look" into "nothing was wrong". `agent/production/selftest.mjs` asserts it over every
+  mandatory condition, one at a time.
+- **Do not give `agent/production/` a verb that writes, records, decides or activates.** The
+  absence of the verb is the control; a check inside one can be moved. The suite reads the CLI
+  and refuses `decide`, `apply`, `grant`, `record`, `activate`, `deploy` and `publish` by name,
+  and `--execute`, `--force` and `--record` as flags.
+- **Do not add a readiness score.** `assessActivation()` returns `overall_score: null` for the
+  reason `agent/health/model.mjs overallScore()` throws: ten domains that fail differently do
+  not have a mean, and one number on a checklist invites somebody to move the number.
+- **Do not pin a readiness condition's real-world verdict in the suite.** The refusal is driven
+  with synthetic facts on purpose. Asserting "the adversarial gate is red" or "no dispatcher is
+  wired" makes a defect a requirement and its repair a test failure.
+- **Do not silence a classifier by excluding a file path.** `separations.mjs` classifies and
+  reports every file, and the suite asserts that it names neither `selftest.mjs` nor
+  `policy/verify` in its executable code. HE-04's three path exclusions are the failure mode
+  this is arranged against.
+- **Do not delete the `no_path_found` verdict.** Collapsing three states into two forces either
+  "cleared" over a file that can grant, or "uncleared" over the policy suite and the adversarial
+  gate for doing their job. A path not found is not a path proven absent.
+- **Do not remove the `fixture` position, the comment mask, the string mask or the regex mask.**
+  Each exists because a draft without it reported a module's own denial as a security finding,
+  and each has a test pinned to the exact input.
+- **Do not change the hidden entry to make a visual criterion pass.** All ten pass on a tree
+  where `js/threshold.js` and `style.css` are byte-identical to `a25f0ed`. If a criterion ever
+  fails, the question is whether the criterion or the module is wrong, and both answers are a
+  person's.
+- **Do not edit `agent/policy/verify/attacks.mjs` HE-04 on your own initiative.** It is red, it
+  is very probably a false positive, and SESSION 29 measured why. Correcting it means editing a
+  CRITICAL attack, and the proposed fix is the stale exclusion list SESSION 23.5 already had to
+  correct once.
+- **Do not make `.github/workflows/qa.yml`'s `security` job pass by narrowing what it runs.**
+  The job exists to make a red thing visible. A green tick bought by running less is the thing
+  its own five-session history is about.
+
+Carried forward, still binding. **SESSION 24's:**
 
 - **Do not implement the brief's phase 6 literally.** "Reveal CONTROL ROOM followed by the
   normal authentication interface" must never become a login form on a published page. A

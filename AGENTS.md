@@ -37,6 +37,7 @@ the evidence it describes.
 | `docs/LIMITED-AUTONOMY.md` | SESSION 26: the governance grant that switched five low-risk categories on, what a grant may never say, the six gates and the seven steps — and §7, what none of it proves |
 | `docs/CONTINUOUS-IMPROVEMENT.md` | SESSION 27: the loop — eight observers, one as-of date, the tracked cycle ledger, and the rule that an observer which did not run resolves nothing. **§4: the autonomy gate ladder was unpassable and is repaired, with the warrant in §4a. §4b: the adversarial gate has been red since SESSION 24** |
 | `docs/SESSION-25-FIRST-REAL-WORLD-RUN.md` | SESSION 25's first non-simulated run — `--live` against the five registered real endpoints, all five refused by this environment's network policy, and what ran for real against the actual corpus and pages once that boundary was hit — with a prioritized human review queue, none of it decided |
+| `docs/PRODUCTION-OPERATING-MODE.md` | SESSION 29: the daily cycle, the fourteen reviews, the final visual standard, the discovery boundary — and the readiness checklist that **REFUSED**: twelve of twenty mandatory conditions pass and eight block |
 | `docs/GOVERNANCE-PROPOSALS.md` | SESSION 28: the decision corpus, measured — the approval ledger is ABSENT, not empty — the twelve patterns in what a person has had to correct, and seven governance proposals, none decided |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
@@ -110,6 +111,34 @@ that one would merge. **Seven governance proposals exist and none is decided**; 
 no write path, no decision home and no `automatic` class, and its suite proves the first by
 hashing the tree around a full run. `docs/GOVERNANCE-PROPOSALS.md`.
 
+**PRODUCTION OPERATION IS NOT ACTIVATED, AND THE REFUSAL IS MEASURED.** SESSION 29 built
+`agent/production/` — the daily cycle's eight stages, the seven weekly and seven monthly
+reviews as data, the ten conditions of the final visual standard, the six separations the
+hidden entry must hold, every path by which the website can change — and a readiness
+checklist of twenty-one conditions in ten domains. `node agent/production/cli.mjs readiness`
+reports **`refused`**: twelve of twenty mandatory conditions pass and **eight block**. **A
+mandatory condition that could not be MEASURED blocks exactly as a failure does**, because in
+production there is nobody reading "skipped". The eight: the `freshness.mjs` baseline
+disagreement, the adversarial gate's CRITICAL, the browser suite's three SESSION 19 defects,
+no production dispatcher, no reachable source, the absent decision ledger, two of three
+website-changing write paths untraceable, and no deploy gate. **Nothing in that directory
+writes and no verb there can activate anything**: switching a production mode on is a
+governance decision and protocol §24 reserves it to a person.
+`docs/PRODUCTION-OPERATING-MODE.md`.
+
+**THE HIDDEN ENTRY PASSES ALL TEN VISUAL CONDITIONS AND ALL SIX SEPARATIONS, AND WAS NOT
+TOUCHED.** `js/threshold.js`, `style.css` and every page are byte-identical to `a25f0ed`: the
+standard was verified, not adjusted. And **HE-04 is now measured rather than suspected**. The
+attack's own finding names the condition it could not check — *if any of those reads it as an
+input, it is a credential* — and `agent/production/separations.mjs` checks it on two
+independent halves: where each occurrence sits, and whether the file holding it calls any of
+twelve granting primitives. `agent/simulation/threshold.mjs` is **cleared on both**: none of
+its eight occurrences sits where a credential check would, and it can grant nothing.
+**HE-04 is left RED on purpose.** Reclassifying a CRITICAL by editing the thing that reports
+it is the move this architecture is arranged against, and HE-04's three path exclusions are
+exactly the stale exclusion list SESSION 23.5 already had to correct once. A person decides.
+`docs/PRODUCTION-OPERATING-MODE.md` §4a.
+
 **LIMITED AUTONOMY IS SWITCHED ON, AND WHAT THAT MEANS IS NARROW.** SESSION 26 recorded the
 first governance grant this repository has ever had: `agent/policy/governance/grants.jsonl`,
 git-tracked, naming the repository author, dated, expiring 9 March 2027, enabling the five
@@ -154,9 +183,15 @@ found in `agent/simulation/threshold.mjs`. Measured at `aaf6691` in a clean work
 not this session's. The module uses the phrase as a **probe** — the line the attack hits is the
 separation check that searches Control Room source to prove the phrase is absent from it — so
 this is very probably the HE-01 shape SESSION 23.5 already corrected once, with a stale
-exclusion list. **It is not repaired here**, and the standing lesson is that the gate is **not
-in CI**, which is how a CRITICAL stayed red across three sessions.
-`docs/CONTINUOUS-IMPROVEMENT.md` §4b.
+exclusion list. **It is not repaired**, and SESSION 29 measured it rather than
+repeating the suspicion: `agent/simulation/threshold.mjs` calls none of the twelve granting
+primitives and none of its eight occurrences of the phrase sits where a credential check
+would, so the file is cleared on both halves and HE-04 is a false positive of the HE-01
+shape. It is still left RED, because reclassifying a CRITICAL by editing the attack that
+reports it is a person's decision. **The gate is now in CI** — `.github/workflows/qa.yml`
+job `security`, in a job of its own so that a step expected to be red hides nothing. Its
+absence was how a CRITICAL stayed red across five sessions.
+`docs/CONTINUOUS-IMPROVEMENT.md` §4b · `docs/PRODUCTION-OPERATING-MODE.md` §4a.
 
 **THE LOOP IS `agent/improve/`, AND IT CHANGES NOTHING.** Eight observers in one process
 against one corpus position with one as-of date; five produce identified findings and three
@@ -291,14 +326,15 @@ node --test agent/policy/verify/selftest.mjs   # SESSION 23.5's gate, run twice,
 node --test agent/simulation/selftest.mjs      # SESSION 24's simulation, incl. the byte-identical-tree assertion
 node --test agent/autonomy/selftest.mjs       # SESSION 26's limited-autonomy runner, incl. the git half against a real temporary repository
 node --test agent/improve/selftest.mjs         # SESSION 27's improvement loop, incl. two real cycles over the real corpus
+node --test agent/production/selftest.mjs      # SESSION 29's production operating mode, incl. the refusal driven with synthetic facts
 node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**1114 tests across the twenty-two suites**, all passing on the merged tree of
-SESSIONS 27 and 28 — 1113 with one skipped when the working tree is on `main`, because
-`agent/autonomy/selftest.mjs` test 28 rehearses the real cycle and the cycle refuses to run
-there. **Neither session's own figure is the total**: SESSION 27 measured 1069 and SESSION 28
+**1166 tests across the twenty-three suites**, all passing on SESSION 29's tree — 1165 with
+one skipped when the working tree is on `main`, because `agent/autonomy/selftest.mjs` test 28
+rehearses the real cycle and the cycle refuses to run there. It was 1114 across twenty-two on
+the merged tree of SESSIONS 27 and 28. **Neither session's own figure is the total**: SESSION 27 measured 1069 and SESSION 28
 measured 1081, on sibling branches cut from the same base, and each was right about its own
 tree (1036 across twenty-one after SESSION 26; 998 across twenty after SESSION 24; 978 across
 nineteen after SESSION 23.5; 934 after SESSION 22 on its own branch; 909 after SESSION 23.5 on
@@ -315,7 +351,9 @@ a suite for it that nothing ran would have been a gate on nothing; and SESSIONS 
 which are **one occasion rather than two** — sibling branches from one base, each setting the
 number to 21, neither right about the merged tree. That is the second time this assertion has
 caught exactly that shape, and it is the case it is most worth having for. That is the
-assertion doing its job. It asserts twenty-two suites. SESSION 23 also changed `agent/detector/impact.mjs`'s
+assertion doing its job. SESSION 29 is the ninth and is the one it was designed for rather
+than one it caught: the production operating mode was added WITH its suite in the list. It
+asserts twenty-three suites. SESSION 23 also changed `agent/detector/impact.mjs`'s
 `MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`;
 SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
 changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
@@ -369,6 +407,19 @@ node agent/improve/cli.mjs history          every recorded cycle, and the moveme
 `cycle` **without `--record` writes nothing**, and no flag in the module can touch `data/`,
 `i18n/`, `js/`, `css/` or a page. `reach` runs on every push.
 
+Whether production operation may be switched on, and the answer:
+
+```
+node agent/production/cli.mjs readiness        twenty-one conditions, ten domains; exits 1 while any mandatory one is unpassed
+node agent/production/cli.mjs schedule         the daily cycle and the fourteen reviews, runs nothing
+node agent/production/cli.mjs visual           the ten conditions of the final visual standard
+node agent/production/cli.mjs separations      discovery ≠ authentication ≠ authorization
+node agent/production/cli.mjs trace            every way the website can change, and what it leaves
+```
+
+The last four run on every push. **None of them writes, and there is no verb there that could**
+— no `--execute`, no `--record`, no `--force`, no `--activate`.
+
 What a person has had to correct more than once, and what SESSION 28 asks about it:
 
 ```
@@ -381,12 +432,15 @@ node agent/proposals/governance/cli.mjs check      exit 1 only on an anchor this
 `check` and `corpus` run on every push. Neither writes anything, and there is no verb here
 that decides.
 
-**`node agent/orchestrator/cli.mjs workflows` and `capabilities` currently EXIT 1 on `main`**,
-and have since the SESSION 26 merge: `agent/orchestrator/cli.mjs:50` imports `AUTONOMY_NOTE`,
-which `policy.mjs` stopped exporting when the note became derived. No suite runs these CLIs, so
-only CI sees it — and a failing step skips every step after it in the same job, which is why
-the governance step above is registered ahead of the registers. Not repaired:
-`docs/GOVERNANCE-PROPOSALS.md` §6b.
+**`node agent/orchestrator/cli.mjs workflows`, `capabilities` and `policy` exited 1 from the
+SESSION 26 merge until SESSION 29**, because `agent/orchestrator/cli.mjs:50` imported
+`AUTONOMY_NOTE`, which `policy.mjs` stopped exporting when the note became derived. **Repaired:**
+the CLI calls `autonomyNote()`. That fixed a false statement as well as a broken command — the
+constant said no action category is approved for automatic execution, which stopped being true
+in SESSION 26, and the derived note reports the five the grant enables. No suite runs these
+CLIs, so only CI saw it, and a failing step skips every step after it in the same job — which
+is why the governance step above is still registered ahead of the registers. It costs nothing
+and the next break will not hide them. Was `docs/GOVERNANCE-PROPOSALS.md` §6b.
 
 **There is no overall health score.** `agent/health/model.mjs overallScore()` throws, with the
 reasoning. Five metrics are marked `not_a_score` because the only legitimate way to move them

@@ -47,7 +47,7 @@ import { Orchestrator, ORCHESTRATOR_AGENT } from './orchestrator.mjs';
 import { WorkflowJournal, survey as surveyWorkflows, replay, DEFAULT_STATE_DIR } from './state.mjs';
 import { describeWorkflows, WORKFLOW_TYPES, END_STATE_MEANING } from './workflows.mjs';
 import { describeCapabilities } from './capabilities.mjs';
-import { HUMAN_REVIEW_TRIGGERS, MANDATORY_AUTONOMY_CONDITIONS, LOW_RISK_CATEGORIES, APPROVED_AUTONOMOUS_CATEGORIES, AUTONOMY_NOTE, MAJOR_REWRITE_CHARS, MAJOR_REWRITE_PROSE_OPS } from './policy.mjs';
+import { HUMAN_REVIEW_TRIGGERS, MANDATORY_AUTONOMY_CONDITIONS, LOW_RISK_CATEGORIES, APPROVED_AUTONOMOUS_CATEGORIES, autonomyNote, MAJOR_REWRITE_CHARS, MAJOR_REWRITE_PROSE_OPS } from './policy.mjs';
 import { routableProposals, ROUTING_CHECKS } from './approval.mjs';
 
 const argv = process.argv.slice(2);
@@ -143,7 +143,7 @@ if (command === 'policy') {
       low_risk_categories: LOW_RISK_CATEGORIES,
       approved_autonomous_categories: APPROVED_AUTONOMOUS_CATEGORIES,
       routing_checks: ROUTING_CHECKS,
-      note: AUTONOMY_NOTE,
+      note: autonomyNote(),
       thresholds: { major_rewrite_chars: MAJOR_REWRITE_CHARS, major_rewrite_prose_ops: MAJOR_REWRITE_PROSE_OPS },
     });
     process.exit(0);
@@ -172,7 +172,7 @@ if (command === 'policy') {
   out(`  declared by protocol §20:  ${LOW_RISK_CATEGORIES.join(', ')}`);
   out(`  approved in this repository: ${APPROVED_AUTONOMOUS_CATEGORIES.length ? APPROVED_AUTONOMOUS_CATEGORIES.join(', ') : 'NONE'}`);
   out();
-  out(`  ${AUTONOMY_NOTE}`);
+  out(`  ${autonomyNote()}`);
   process.exit(0);
 }
 
