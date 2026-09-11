@@ -322,7 +322,14 @@ read `251 +++++----------` and that was taken for the session's own section bein
 The section is restored here from `fa67b3a`, verbatim, and the check now reports **49 resolved
 · 0 refuted**.
 
-Three things worth carrying from it. **A `--stat` line is not a review** — `AGENTS.md` says to
+A second slip of the same family happened at this merge and is recorded for the same reason:
+the merge commit shipped with two unfilled `__MERGED_TOTAL__` placeholders in `AGENTS.md`,
+because the measured figures were written into the working tree **after** `git add` and the
+commit took the staged copy. `AGENTS.md` already says to run the suites after `git add`, not
+before; the sibling rule is to commit what you staged, or stage again. Corrected in the
+following commit rather than amended away.
+
+Three things worth carrying from the deleted section. **A `--stat` line is not a review** — `AGENTS.md` says to
 read the full `git diff` before committing, and a large deletion count on a file you are also
 adding to is exactly what that instruction is for. **The evidence anchors worked as designed**:
 SESSION 28 built them to refuse a pattern citing something the tree contradicts, and the first

@@ -295,8 +295,8 @@ node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**__MERGED_TOTAL__ tests across the twenty-two suites**, all passing on the merged tree of
-SESSIONS 27 and 28 — __MERGED_MAIN__ with one skipped when the working tree is on `main`, because
+**1114 tests across the twenty-two suites**, all passing on the merged tree of
+SESSIONS 27 and 28 — 1113 with one skipped when the working tree is on `main`, because
 `agent/autonomy/selftest.mjs` test 28 rehearses the real cycle and the cycle refuses to run
 there. **Neither session's own figure is the total**: SESSION 27 measured 1069 and SESSION 28
 measured 1081, on sibling branches cut from the same base, and each was right about its own
