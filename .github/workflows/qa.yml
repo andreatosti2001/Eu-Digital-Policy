@@ -481,8 +481,26 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+      # SESSION 30. `rm -f browser-qa.json` first, exactly as the health
+      # job above has always done with health-public.json. The step
+      # before this one writes that file into the repository root on
+      # purpose and uploads it; counting the workflow's own declared
+      # artifact as "the suite wrote to the repository" tests the
+      # workflow rather than the suite.
+      #
+      # THIS GUARD HAD NEVER RUN, and that is the finding. A failing
+      # step skips every step after it in the same job, and "Run the
+      # browser regression suite" has failed on every push since the job
+      # was added — so this check was SKIPPED every time and its absence
+      # of a failure meant nothing. SESSION 30's fixes made the suite
+      # pass, the guard executed for the first time, and it immediately
+      # reported the artifact. Same shape as
+      # docs/GOVERNANCE-PROPOSALS.md §6b and the SESSION 27 reach
+      # register: a check registered behind a break is a check nobody
+      # runs.
       - name: Nothing was written
         run: |
+          rm -f browser-qa.json
           if [ -n "$(git status --porcelain)" ]; then
             echo "::error title=The browser suite wrote to the repository::"
             git status --porcelain
