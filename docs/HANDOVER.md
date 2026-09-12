@@ -176,6 +176,25 @@ so each page's copy names the page it is on, and `pagesOf()` counted that as an 
 too, so the two levels cannot disagree, and the test lost the `index.html` exemption it used
 to need. The assertion was kept and strengthened, not relaxed.
 
+### CI found one more, and it is the same shape as two earlier ones
+
+Pushing the branch made the browser job's **`Run the browser regression suite`**
+step succeed for the first time — and the step after it, **`Nothing was
+written`**, then failed. Not because the suite writes: the step before the guard
+writes `browser-qa.json` into the repository root on purpose and uploads it, and
+that file is not gitignored, so `git status --porcelain` reports it. The health
+job three blocks above has always done `rm -f health-public.json` first for
+exactly this reason; the browser job did not.
+
+**The guard had never executed.** A failing step skips every step after it in the
+same job, and the browser suite failed on every push from the job being added
+until this branch, so the check was skipped every time and its never having
+failed meant nothing. That is the third occurrence of this shape here, after
+`docs/GOVERNANCE-PROPOSALS.md` §6b and the SESSION 27 reach register. The guard
+is kept and is now real: it still fails on anything the suite itself writes, and
+no longer counts the file the workflow deliberately created and already
+uploaded.
+
 ### What was NOT done, and why
 
 - **`a11y:bound` was not made to pass.** Above.
