@@ -5,9 +5,14 @@ regulatory status, the institutional competences and the enforcement record
 held as data rather than as prose.
 
 No build step. No dependencies. No runtime. No third-party requests: the
-typefaces are self-hosted in `fonts/`, and `design-qa.mjs` fails the build if
-a page adds an external stylesheet or script. Static HTML, CSS, vanilla ES
-modules and JSON, deployable to GitHub Pages or any static host as-is.
+typefaces are self-hosted in `fonts/`, and `design-qa.mjs` fails the build on a
+reference to any origin but this one, anywhere the browser would fetch from —
+a stylesheet or script in a page, an `@import` or an `@font-face src` in the
+CSS, a `fetch`, `import()`, worker or beacon in a module. The claim used to be
+wider than the check, which read double-quoted `href`/`src` in the HTML only;
+`tools/thirdparty.mjs` is the check the claim needs and `tools/selftest.mjs`
+plants each of those to prove it fires. Static HTML, CSS, vanilla ES modules
+and JSON, deployable to GitHub Pages or any static host as-is.
 
 ```
 python3 -m http.server 8000     # then open http://localhost:8000
@@ -207,7 +212,12 @@ wrong.
 Every page carries the same footer: a statement that this is an independent
 project with no affiliation to any EU institution, a statement that nothing
 here is legal advice, and the reuse position. Every page also carries the same
-`<noscript>` notice saying what will not render without scripting.
+`<noscript>` notice saying what will not render without scripting — and, since
+the browser suite measured that a reader with scripting off could reach none of
+the six top-level pages from any page, the six destinations themselves. The
+notice names the navigation among what will not appear and then supplies it.
+The list is read out of the nav model in `js/shell.js` rather than retyped, so
+there is still one home for it.
 
 Both are written into the markup of all seven pages rather than rendered by
 `js/shell.js`, which is the opposite of the rule the chrome follows. The

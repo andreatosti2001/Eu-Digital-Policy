@@ -33,6 +33,8 @@
    7 stands, and `runner.mjs` carries it on every run.
    ============================================================ */
 
+import { serveSite, REPO_ROOT } from './serve.mjs';
+
 /** The seven pages `tools/design-qa.mjs` knows about, plus the one
  *  that is only reachable with a query string. `instrument.html`
  *  with no `?id=` renders a chooser, so both are worth loading. */
@@ -641,21 +643,56 @@ export async function checkKeyboard(page, origin) {
   /* A visible focus indicator. Comparing the focused computed style
      against the blurred one is the strongest thing available without
      rendering pixels — and it is stated as such rather than sold as
-     a WCAG 2.4.7 result. */
+     a WCAG 2.4.7 result.
+
+     THE BLUR IS LOAD-BEARING, and its absence is why this check spent
+     every run reporting `undecidable` about a site that has had a focus
+     ring the whole time. This function presses Tab a few lines above,
+     which focuses the FIRST focusable element; `querySelector('a[href],
+     button')` then returns that same element. Reading a "before" style
+     off it compared a focus ring with itself, so `differs` was false by
+     construction and nothing about the page could ever have changed it.
+     Measured: the element examined is `a.skip-link`, it is already
+     `document.activeElement`, it already matches `:focus-visible`, and
+     its outline already reads `solid 2px` before `el.focus()` is called.
+
+     Blurring first restores the comparison the check was written to
+     make, and it is driven from the keyboard rather than by a bare
+     programmatic focus, because `:focus-visible` — which is what
+     css/tokens.css actually styles — is about how focus arrived. The
+     invariant is unchanged: a keyboard reader must be able to see where
+     focus is. What changed is that the check now measures it. */
   const indicator = await page.evaluate(`(() => {
     const el = document.querySelector('a[href], button');
     if (!el) return null;
+    const seen = { tag: el.tagName, cls: String(el.className || ''), was_active: el === document.activeElement };
+    el.blur();
     const before = getComputedStyle(el);
     const b = { outline: before.outlineStyle + ' ' + before.outlineWidth, shadow: before.boxShadow, border: before.borderColor };
-    el.focus();
-    const after = getComputedStyle(el);
-    const a = { outline: after.outlineStyle + ' ' + after.outlineWidth, shadow: after.boxShadow, border: after.borderColor };
-    return { b, a, differs: JSON.stringify(b) !== JSON.stringify(a) };
+    return { seen, b };
   })()`);
+  if (indicator) {
+    /* A real Tab, not el.focus(): the rule the site is styled against is
+       :focus-visible, and that predicate asks how the focus arrived. */
+    await page.key('Tab', { code: 'Tab', keyCode: 9 });
+    const after = await page.evaluate(`(() => {
+      const el = document.activeElement;
+      if (!el || el === document.body) return null;
+      const cs = getComputedStyle(el);
+      return {
+        tag: el.tagName, cls: String(el.className || ''),
+        focus_visible: el.matches(':focus-visible'),
+        a: { outline: cs.outlineStyle + ' ' + cs.outlineWidth, shadow: cs.boxShadow, border: cs.borderColor },
+      };
+    })()`);
+    indicator.a = after ? after.a : null;
+    indicator.focused = after ? { tag: after.tag, cls: after.cls, focus_visible: after.focus_visible } : null;
+    indicator.differs = Boolean(after) && JSON.stringify(indicator.b) !== JSON.stringify(after.a);
+  }
   out.push(indicator && indicator.differs
-    ? ok('keyboard:focus-visible', 'accessibility', 'focusing a link changes its computed outline, shadow or border', indicator)
+    ? ok('keyboard:focus-visible', 'accessibility', 'tabbing to the first focusable element changes its computed outline, shadow or border. This is a computed-style difference, not a perceptual result: no contrast ratio was computed and no pixels were compared.', indicator)
     : undecidable('keyboard:focus-visible', 'accessibility',
-      'focusing a link produced no change in outline, box-shadow or border-color',
+      'tabbing to the first focusable element produced no change in outline, box-shadow or border-color',
       'This compares computed styles, which is not the same as establishing that a focus indicator is PERCEIVABLE. Contrast is not computed here and no pixels are compared. README limitation 7 stands.', { indicator }));
 
   return out;
@@ -928,4 +965,93 @@ export async function checkThreshold(page, origin) {
 
   results.push(ok('threshold:total-requests', 'threshold', `${page.requests.length - before} request(s) over the whole threshold check, all of them the page's own assets`));
   return results;
+}
+
+/* ============================================================
+   18 · THE SITE AT ITS PUBLISHED ADDRESS
+
+   Deployment is GitHub Pages serving `main` at
+   https://andreatosti2001.github.io/Eu-Digital-Policy/ — a PROJECT
+   site, so everything sits one path segment down. Every browser run
+   before SESSION 30 served the repository at `/`, which is the one
+   layout the deployment is not.
+
+   The difference is small and it is the kind that breaks a static
+   site silently. A root-relative reference — `/css/tokens.css`,
+   `fetch('/data/claims.json')`, `href="/instruments.html"` — resolves
+   at the root and 404s under the prefix. Nothing here is written that
+   way today, so this check passes; it passes as a MEASUREMENT rather
+   than as a coincidence, which is what it is for. The suite could not
+   previously have told the difference, and the next session to write
+   a leading slash would have shipped it.
+
+   It cannot check what a Pages deployment does with `.`-prefixed
+   paths, redirect behaviour, or the real origin's headers: nothing in
+   this repository has ever reached the deployed site
+   (docs/CURRENT-ARCHITECTURE.md §13), and this environment's network
+   policy refuses it. This is the layout, served locally, and it says
+   so.
+   ============================================================ */
+
+export const DEPLOY_BASE_PATH = 'Eu-Digital-Policy';
+
+export async function checkDeployedSubpath(browser, { root = REPO_ROOT, pages = PAGES, quick = false } = {}) {
+  const out = [];
+  const site = await serveSite({ root, basePath: DEPLOY_BASE_PATH });
+  const page = await browser.newPage();
+  try {
+    /* The prefix is real: a request outside it must not be served,
+       or this fixture is still serving the site at the root and the
+       whole check proves nothing. */
+    const rootOrigin = site.origin.slice(0, -`/${DEPLOY_BASE_PATH}`.length);
+    await page.goto(`${rootOrigin}/index.html`);
+    const outside = page.responses.filter((r) => r.url === `${rootOrigin}/index.html`).pop();
+    out.push(outside && outside.status === 404
+      ? ok('deploy:base-enforced', 'deployment', `the fixture serves ONLY under /${DEPLOY_BASE_PATH}/, as a GitHub Pages project site does — the same page at the root is 404`, { status: outside.status })
+      : bad('deploy:base-enforced', 'deployment', 'a path outside the deployment base was served, so this check is measuring a root-served site and proves nothing about the published layout', { seen: outside ?? null }));
+    page.responses.length = 0;
+
+    for (const spec of (quick ? pages.slice(0, 3) : pages)) {
+      await page.goto(`${site.origin}/${spec.file}`);
+      /* "Rendered" is the same condition checkPageLoads uses: the
+         page's own mount point exists and no longer holds the loading
+         fallback the markup ships. NOT the presence of `.chrome-brand`
+         — js/shell.js deliberately leaves the brief's own top bar
+         alone, so that would report index.html as broken on every
+         run. */
+      const state = await page.evaluate(`(() => {
+        const mount = document.querySelector(${JSON.stringify(spec.main)});
+        const text = mount ? (mount.innerText || '') : '';
+        return {
+          title: document.title,
+          mounted: !!mount,
+          fallback: ${JSON.stringify(FALLBACK_TEXT)}.some((t) => text.includes(t)),
+          stylesheets: [...document.styleSheets].length,
+          modulesRan: document.body.dataset.page != null || !!document.querySelector('.chrome-brand, .lens'),
+        };
+      })()`);
+
+      /* Every response this page received, and whether any carries a
+         4xx/5xx. A root-relative asset is a 404 here and a 200 at the
+         root, which is the entire point of serving it twice.
+
+         `responses`, not `failedRequests`: a 404 is a successful
+         exchange carrying a status, not a transport failure, so the
+         existing failed-request list cannot see one. */
+      const failed = page.responses.filter((r) => r.status >= 400);
+      out.push(failed.length === 0
+        ? ok(`deploy:assets:${spec.file}`, 'deployment', `${spec.name} loads under /${DEPLOY_BASE_PATH}/ with all ${page.responses.length} response(s) resolving`, { responses: page.responses.length })
+        : bad(`deploy:assets:${spec.file}`, 'deployment', `${failed.length} request(s) 4xx/5xx under the published path — a reference that resolves at the root and not one segment down is a root-relative path`, { failed: failed.slice(0, 8).map((r) => `${r.status} ${r.url}`) }));
+
+      out.push(state.mounted && !state.fallback && state.stylesheets > 0 && state.modulesRan
+        ? ok(`deploy:render:${spec.file}`, 'deployment', `${spec.name} renders under the published path: its mount point is filled, ${state.stylesheets} stylesheet(s) loaded and its modules ran`, { stylesheets: state.stylesheets })
+        : bad(`deploy:render:${spec.file}`, 'deployment', `${spec.name} did not render under the published path (mount=${state.mounted}, still showing a loading fallback=${state.fallback}, stylesheets=${state.stylesheets}, modules ran=${state.modulesRan})`, state));
+
+      page.responses.length = 0;
+    }
+  } finally {
+    await page.close();
+    await site.close();
+  }
+  return out;
 }

@@ -133,6 +133,52 @@ The `note` on the sources resolved in the August 2026 sweep is the standard:
 what was located, on what date, and how closely it matches the brief's
 characterisation.
 
+### 7a. The contract has ONE home, and it is executable
+
+The list above is prose. **`tools/source-contract.mjs` is the contract**, and
+`tools/validate.mjs` enforces it on every record: 12 required fields, 2
+optional, each with its shape, why it exists, who writes it and who reads it. A
+record missing one, carrying a value of the wrong shape, or carrying a field the
+contract does not name is an ERROR. `tools/selftest.mjs` §B plants a violation
+of every rule in it.
+
+Before SESSION 30 the validator asked whether four values *resolved* — `tier`,
+`type`, `url_status`, `publisher` against the taxonomy and the institutions —
+and never whether a record had the other eight at all. A source with no `title`,
+no `accessed` and no `note` passed every check in this repository.
+
+| | |
+|---|---|
+| **required (12)** | `id` · `tier` · `type` · `publisher` · `publisher_name` · `title` · `url` · `url_status` · `published` · `accessed` · `language` · `note` |
+| **optional (2)** | `resolution` — **required when `url` is null** · `resolution_note` |
+
+`publisher` and `note` are nullable and their null is not a gap: 25 records name
+a non-EU publisher, whose name is in `publisher_name`, and 11 have nothing to
+add beyond the citation. `published` accepts `YYYY`, `YYYY-MM` and
+`YYYY-MM-DD`, because some documents carry only a month or a year and padding
+one to a day would invent precision.
+
+### 7b. Six fields the governance grant names that this dataset does not have
+
+`agent/policy/governance.mjs` allowlists eight fields on `data/sources.json` for
+limited autonomy. Two exist — `url` and `url_status`. Six do not, on any of the
+77 records, in no `$description` and in no `$note`: `last_retrieved`,
+`retrieved_at`, `checksum`, `content_hash`, `recheck_interval`,
+`freshness_window`. `agent/improve/reach.mjs` measured this and
+`tools/source-contract.mjs` records it as **`ABSENT_BY_DESIGN`**.
+
+**They are not a TODO.** Every one asserts that a document was FETCHED, and §8
+below is the reason that cannot honestly be written here: no URL in this
+repository has ever been retrieved. A `checksum` written without retrieving the
+document is a fabricated fact about evidence, which is the first prohibition in
+`AGENTS.md`. A source record carrying one is refused **by name**, with that
+reason, rather than as an unknown key — so a future session reading the grant
+and concluding the fields are simply missing meets the explanation instead.
+
+A permission over a surface that does not exist is not a hazard: it can do
+nothing. What was missing was anybody writing down which of the two lists is the
+data model. This one is.
+
 ## 8. Reachability is asserted, not measured
 
 `url_status` is a **stored assertion by whoever last edited the record**.

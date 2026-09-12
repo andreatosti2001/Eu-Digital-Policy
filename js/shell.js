@@ -255,7 +255,20 @@ export function initShell() {
   const old = document.querySelector('.tool-top, .bib-top');
   const chrome = buildChrome(page);
   if (old) old.replaceWith(chrome);
-  else document.body.insertBefore(chrome, document.body.firstChild);
+  else {
+    /* AFTER the skip link, never before it. Every page ships
+       <a class="skip-link"> as the first element in <body>, and
+       inserting the chrome at document.body.firstChild put nine chrome
+       controls ahead of it in the RENDERED page: a keyboard reader had
+       to tab through the navigation to reach the link that skips the
+       navigation, which is the whole of what a skip link is for.
+       tools/design-qa.mjs reads the markup, where the order is right,
+       and cannot see this; agent/browser/checks.mjs measures the
+       rendered tab order and reported it as keyboard:skip-first. */
+    const skip = document.querySelector('a.skip-link');
+    if (skip && skip.parentNode === document.body) skip.insertAdjacentElement('afterend', chrome);
+    else document.body.insertBefore(chrome, document.body.firstChild);
+  }
 
   /* the chrome is a full-bleed bar; the crumbs belong inside the page shell */
   const shell = document.querySelector('.page-shell, .tool-shell, .bib-shell');

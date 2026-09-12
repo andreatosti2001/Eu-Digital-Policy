@@ -59,7 +59,7 @@ import { validate } from '../schemas/validate.mjs';
 import { buildTree, uxState } from '../observability/query.mjs';
 import { UX_FINDING_CLASSES, UX_SEVERITIES, UX_SEVERITY_RANK } from '../schemas/types.mjs';
 
-import { readSurface, rulesOf, stateSelectorsOf, moduleGraphOf, absenceFieldsOf, manualChecksOf, REPO_ROOT, SHEETS, NON_COLOUR_CHANNELS } from './surface.mjs';
+import { readSurface, rulesOf, stateSelectorsOf, moduleGraphOf, reachabilityOf, absenceFieldsOf, manualChecksOf, REPO_ROOT, SHEETS, NON_COLOUR_CHANNELS } from './surface.mjs';
 import { journeysOf, journeyFor, navModelOf, JOURNEY_STAKES } from './journeys.mjs';
 import { LENSES, carriesItsWord, elementsWith, isOperable, paintedClassOf, contractRegion } from './lenses.mjs';
 import { partition, ownershipOf, standingOf, unverifiablePhrasing, alreadyChecked, evidenceProblems, ALLOWED_EVIDENCE_KINDS, NOT_OURS } from './boundary.mjs';
@@ -468,8 +468,16 @@ test('the link graph counts relative links only', () => {
   for (const p of SURFACE.pages) {
     for (const l of p.links) {
       assert.ok(!/^https?:/.test(l), `${p.page} counts an absolute URL "${l}" as navigation`);
-      assert.ok(!l.includes(p.page) || p.page === 'index.html', `${p.page} counts a link to itself`);
+      /* No exemption for index.html any more. It used to need one
+         because the filter lived only in reachabilityOf(); SESSION 30
+         moved it into pagesOf(), so the rule holds for every page at
+         both levels rather than at one. */
+      assert.notEqual(l, p.page, `${p.page} counts a link to itself`);
     }
+  }
+  /* And the graph built from them agrees: nothing reaches itself. */
+  for (const e of reachabilityOf(SURFACE.pages, SURFACE.modules)) {
+    assert.ok(!e.from_markup.includes(e.page), `${e.page} is reported as reachable from itself`);
   }
 });
 

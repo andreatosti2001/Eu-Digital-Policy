@@ -10,6 +10,18 @@ twenty mandatory conditions pass and **eight block**. Production operation is **
 activated**, and this document is the account of why, what was built, and what was found on
 the way.
 
+> **SESSION 30 · 12 September 2026 — the count moved and the refusal did not.** On that
+> session's tree the same checklist reports **fourteen of twenty passing and six blocking**,
+> and it still exits 1. Two of the eight are closed. `validators_at_baseline` passes because
+> `tools/freshness.mjs`'s exit code now reports defects in the tree rather than the passage of
+> time — the disagreement §4 records as undecided is settled, and the reasoning is in
+> `docs/CURRENT-ARCHITECTURE.md` §12 and the head of `tools/freshness.mjs`.
+> `browser_suite_pass` passes because the three SESSION 19 defects are fixed **in the
+> website**: `docs/BROWSER-QA.md` §4a. **The remaining six are unchanged**, HE-04 included, and
+> none of them is closable by editing a check: the adversarial CRITICAL is left red on purpose
+> (§4a below), and the other five need a governance decision or network access this
+> environment does not have. Nothing in `agent/production/` was edited to move the count.
+
 **Module:** `agent/production/` · **Suite:** `agent/production/selftest.mjs`, 52 tests
 **Measured at:** 11 September 2026, on `claude/production-operating-mode-0ti3hu` cut from
 `origin/main` at `a25f0ed`.

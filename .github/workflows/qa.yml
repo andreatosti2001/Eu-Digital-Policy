@@ -52,11 +52,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -75,8 +75,24 @@ jobs:
       - name: design-qa.mjs — markup and stylesheets
         run: node tools/design-qa.mjs
 
+      # SESSION 30. Its exit code now reports DEFECTS in the tree and
+      # not the passage of time. Everything it reported before it still
+      # reports, in full and by name, and the staleness prompts are
+      # printed and counted — what changed is that a result which flips
+      # with the calendar on unchanged bytes no longer fails a build.
+      # The contract is at the head of tools/freshness.mjs and
+      # tools/selftest.mjs holds it to it from both sides.
       - name: freshness.mjs — how stale the datasets are
         run: node tools/freshness.mjs
+
+      # SESSION 30. The validators' own suite. Until now nothing tested
+      # the four checks that are this project's test suite, and two of
+      # this session's findings were defects in a check rather than in
+      # the thing checked. It plants a Google Fonts @import, a remote
+      # fetch, a preconnect and a missing `resolution` field, and
+      # asserts each is caught.
+      - name: tools/selftest.mjs — the validators' own suite
+        run: node --test tools/selftest.mjs
 
       # The comparison the four validators cannot make themselves:
       # against the recorded baseline in docs/CURRENT-ARCHITECTURE.md
@@ -98,12 +114,12 @@ jobs:
       # those anchors report `unresolvable_here` rather than failing
       # — which is correct and is worth nothing, because a check that
       # cannot see its subject checks nothing.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -235,11 +251,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -284,11 +300,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -309,7 +325,7 @@ jobs:
 
       - name: Upload it
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: health-public
           path: health-public.json
@@ -351,11 +367,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -388,11 +404,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -418,11 +434,11 @@ jobs:
     env:
       QA_QUICK: ${{ inputs.quick && '--quick' || '' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -458,7 +474,7 @@ jobs:
 
       - name: Upload it
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: browser-qa
           path: browser-qa.json

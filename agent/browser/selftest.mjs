@@ -21,14 +21,15 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, cpSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 
 import { findBrowser, CANDIDATE_PATHS, BROWSER_ENV_VARS } from './find.mjs';
 import { serveSite, REPO_ROOT, MIME } from './serve.mjs';
 import { runBrowserQA, asQACheck, verdictOf, BASELINE, BROWSER_QA_COMMAND } from './runner.mjs';
-import { PAGES, NAV_FILES, VIEWPORTS } from './checks.mjs';
-import { CHROME_FLAGS } from './cdp.mjs';
+import { PAGES, NAV_FILES, VIEWPORTS, checkDeployedSubpath, DEPLOY_BASE_PATH } from './checks.mjs';
+import { CHROME_FLAGS, launch } from './cdp.mjs';
 import { validate } from '../schemas/validate.mjs';
 import { QAResult } from '../schemas/contracts/qa-result.mjs';
 
@@ -319,3 +320,71 @@ function rawGet(port, path) {
    `validate` resolves through the registry, and importing it here is
    what proves this suite is checking the real one. */
 assert.equal(QAResult.name, 'QAResult');
+
+/* ============================================================
+   6 · SESSION 30 — the site at its published address
+
+   Deployment is a GitHub Pages PROJECT site at
+   /Eu-Digital-Policy/, and every run before SESSION 30 served the
+   repository at `/`. These hold the new fixture and the new check to
+   the thing that makes them worth having: the check must FAIL on a
+   root-relative reference. One that only ever passes proves the
+   suite ran, not that the layout works.
+   ============================================================ */
+
+test('the fixture can serve the site under the deployed base path, and only under it', async () => {
+  const site = await serveSite({ basePath: DEPLOY_BASE_PATH });
+  try {
+    assert.match(site.origin, new RegExp(`/${DEPLOY_BASE_PATH}$`));
+    assert.equal(site.base, `/${DEPLOY_BASE_PATH}`);
+
+    const page = await fetch(`${site.origin}/index.html`);
+    assert.equal(page.status, 200);
+
+    /* The half that makes it a project site rather than a root site.
+       A root-relative asset reaches here, and on the deployment it
+       404s — so it must 404 here. */
+    const root = await fetch(`${site.origin.replace(`/${DEPLOY_BASE_PATH}`, '')}/css/tokens.css`);
+    assert.equal(root.status, 404,
+      'the fixture served a path outside the base, so it is still a root-served site and the whole check proves nothing');
+  } finally { await site.close(); }
+});
+
+test('the deployed-path check FAILS on a root-relative reference', async (t) => {
+  const found = findBrowser();
+  if (!found.found) { t.skip(`no browser: ${found.reason}`); return; }
+
+  /* A scratch copy of the real tree with ONE reference rewritten to a
+     leading slash — the exact defect this check exists to catch, and
+     the one that is invisible when the site is served at the root. */
+  const dir = mkdtempSync(join(tmpdir(), 'subpath-'));
+  let browser = null;
+  try {
+    cpSync(REPO_ROOT, dir, {
+      recursive: true,
+      filter: (src) => !/(^|\/)(\.git|node_modules|runs|records|drafts)$/.test(src),
+    });
+    const p = join(dir, 'enforcement.html');
+    const html = readFileSync(p, 'utf8');
+    assert.ok(html.includes('href="css/tokens.css"'), 'the fixture expects a relative token sheet to rewrite');
+    writeFileSync(p, html.replace('href="css/tokens.css"', 'href="/css/tokens.css"'));
+
+    browser = await launch({ executable: found.path });
+    const results = await checkDeployedSubpath(browser, { root: dir });
+    const assets = results.find((r) => r.id === 'deploy:assets:enforcement.html');
+    assert.equal(assets.status, 'fail',
+      'a root-relative stylesheet under a project-site base path was not reported — this check cannot catch the defect it is for');
+    assert.match(JSON.stringify(assets.data), /404/);
+
+    /* And the same tree served at the ROOT is clean, which is why the
+       suite could not previously have seen this. */
+    const rootSite = await serveSite({ root: dir });
+    try {
+      const at = await fetch(`${rootSite.origin}/css/tokens.css`);
+      assert.equal(at.status, 200, 'the same reference resolves at the root — that is the whole asymmetry');
+    } finally { await rootSite.close(); }
+  } finally {
+    if (browser) { try { await browser.close(); } catch { /* not a site defect */ } }
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

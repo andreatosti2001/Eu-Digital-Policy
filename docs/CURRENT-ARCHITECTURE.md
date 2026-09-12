@@ -296,10 +296,37 @@ superseded, 12 pending); 60 canonical entity keys, identical across `it`, `fr`, 
 
 | Script | Checks | Exit |
 |---|---|---|
-| `tools/validate.mjs` | 6 sections: files parse · duplicate IDs · referential integrity · **duplicate canonical facts** · status-model discipline · unverified-data report | 1 on error |
-| `tools/design-qa.mjs` | Per page: title/description/viewport, exactly one `<h1>`, no skipped heading level, no duplicate id, skip link resolves, internal hrefs resolve to real files, `<img>` alt, token layer loaded first, no page-local `<style>`, no third-party resource, footer + noscript identical across all 7 pages. Across CSS: no colour literals, no `:root` theme tokens | non-zero on error |
+| `tools/validate.mjs` | 7 sections: files parse · duplicate IDs · referential integrity · **every source record against `tools/source-contract.mjs`** · duplicate canonical facts · status-model discipline · unverified-data report | 1 on error |
+| `tools/design-qa.mjs` | Per page: title/description/viewport, exactly one `<h1>`, no skipped heading level, no duplicate id, skip link resolves, internal hrefs resolve to real files, `<img>` alt, token layer loaded first, no page-local `<style>`, no third-party resource, footer + noscript identical across all 7 pages. Across CSS: no colour literals, no `:root` theme tokens. **Across the whole runtime surface (`tools/thirdparty.mjs`): no foreign origin in any position a browser fetches from — HTML attributes quoted or not, CSS `@import` and `url()`, JS `fetch`/`import()`/`Worker`/`sendBeacon`/`.src`** | non-zero on error |
 | `tools/i18n-audit.mjs` | Register vs disk vs live DOM; declared key counts; no orphan keys; every gap declared and correctly categorised; identical entity IDs across locales; no concatenated paths | non-zero on error |
-| `tools/freshness.mjs` | Verification-date age; per-record vs compilation dates; events that have passed; records whose own text says they are provisional | 0 unless past a stated interval |
+| `tools/freshness.mjs` | Verification-date age; per-record vs compilation dates; events that have passed; records whose own text says they are provisional; sources with no URL and no recorded reason | **1 on a DEFECT in the tree, 0 on a staleness prompt** |
+
+**`freshness.mjs`'s exit code changed in SESSION 30 and what it reports did not.** It
+separates two things it used to sum. A **defect** is a property of the tree — a URL-less
+source with no `resolution`, a per-record verification field never used per-record — whose
+truth does not depend on when the script runs and which a commit closes; those exit 1. A
+**staleness prompt** is a property of the calendar — an interval exceeded, an event that fell
+due, an enforcement set older than 45 days — which would not be reported if the same bytes
+were audited as of the date they record, and which no commit makes permanently false; those
+are printed, counted and exit 0. The old rule made the exit code a function of the reader's
+clock (`docs/AUDIT-2026-09-01.md` F-15), which is why CI carried a red step no commit could
+close for five sessions and `agent/production/readiness.mjs` recorded the disagreement as
+undecided. **Exit 0 is still not evidence of currency**, and the report says so on the line
+that reports it. The prompts are closed by verification work against primary sources and by
+nothing else. `tools/selftest.mjs` F1–F6 holds the classification to that rule from both
+sides.
+
+**The validators now have a suite of their own: `tools/selftest.mjs`.** Until SESSION 30
+nothing tested the four checks that are this project's test suite, and two of that session's
+findings were defects in a check rather than in the thing checked. It plants a Google Fonts
+`@import`, a remote `fetch`, a `preconnect`, a missing required field and a `checksum` on a
+source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change under
+`tools/` runs it.
+
+| Module | What it owns |
+|---|---|
+| `tools/thirdparty.mjs` | The no-third-party-runtime-request invariant, and `ALLOWED_RUNTIME_ORIGINS`, which is **empty**. An external runtime dependency is a Class D decision and goes here with its reason and who decided it. |
+| `tools/source-contract.mjs` | The one contract a `data/sources.json` record satisfies — 12 required fields, 2 optional, each with its shape, why it exists, who writes it and who reads it — and `ABSENT_BY_DESIGN`, the six retrieval-bookkeeping fields the governance grant allowlists and this dataset deliberately does not have. |
 
 **Two generators / one-shot patches — run only when the thing they own changes:**
 
@@ -319,6 +346,14 @@ design-qa.mjs    0 errors · 5 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
 ```
+
+**Unchanged in SESSION 30, and that is the point of recording it.** All four still report
+exactly these numbers. `freshness.mjs` reached `exit 0` by the exit code answering a question
+about the tree instead of about the date — not by any threshold moving, any record being
+stamped, or any finding being silenced: it prints the same three staleness prompts it printed
+at `exit 1`, by name, and counts them. The four extra checks SESSION 30 added
+(the source-record contract, the runtime-surface scan) found nothing on this tree, which is
+what "at baseline" means here.
 
 The five `design-qa` warnings, recorded so a later session can tell new from pre-existing:
 3 inline event handlers in `index.html` (lines 42, 112, 119); a `#000` literal in

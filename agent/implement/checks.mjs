@@ -63,6 +63,16 @@ export const AGENT_SUITES = [
   'agent/autonomy/selftest.mjs',
   'agent/improve/selftest.mjs',
   'agent/production/selftest.mjs',
+  /* The first entry here that is not under agent/, and it belongs: this
+     list is what runs for a change under agent/ OR tools/, and until
+     SESSION 30 nothing tested the four validators that are this
+     project's test suite. Two of that session's findings were defects
+     in a CHECK rather than in the thing checked — design-qa.mjs
+     asserting "no third-party resource" while reading double-quoted
+     href/src in the HTML only, and freshness.mjs exiting 1 on a
+     finding that moves with the calendar. A repair to a validator with
+     no suite behind it is a gate on nothing. */
+  'tools/selftest.mjs',
 ];
 
 /** Run a command, capturing everything, never throwing. A checker

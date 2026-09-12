@@ -118,7 +118,18 @@ export function pagesOf({ root = REPO_ROOT } = {}) {
          this page's own absolute address and are not navigation; a
          graph that counted them would report every page as linking
          to itself and find the site well connected. */
-      links: [...new Set([...src.matchAll(/href="(?!https?:|\/\/|mailto:|data:|#)([^"?#]*?\.html)(?:[?#][^"]*)?"/g)].map((m) => m[1]))].sort(),
+      /* And OUTBOUND, which is what the field says it is: a link to
+         the page you are already on adds no reachability, and
+         `reachabilityOf()` below has always discarded one. SESSION 30
+         moved that filter up here so the two levels cannot disagree.
+         The occasion was the no-JS navigation this agent's own lens
+         asked for (lenses.mjs, "add navigation to the list in the
+         <noscript> notice"): it is one list regenerated into all
+         seven pages from one source, so each page's copy necessarily
+         names the page it is on. That is correct for a reader without
+         scripting and it is not an outbound link. */
+      links: [...new Set([...src.matchAll(/href="(?!https?:|\/\/|mailto:|data:|#)([^"?#]*?\.html)(?:[?#][^"]*)?"/g)]
+        .map((m) => m[1]).filter((h) => h !== page))].sort(),
       i18n_keys: [...src.matchAll(/data-i18n="([^"]+)"/g)].map((m) => m[1]),
       has_skip_link: /class="skip-link"/.test(src),
       /* The one inlined blob, measured. What it SAYS is

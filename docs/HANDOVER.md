@@ -1,11 +1,210 @@
 # HANDOVER
 
-**Last updated:** SESSION 29 · 11 September 2026
-**Branch:** `claude/production-operating-mode-0ti3hu`, cut from `origin/main` at `a25f0ed`,
-and merged into `main` at the end of the session.
+**Last updated:** SESSION 30 · 12 September 2026
+**Branch:** `claude/repo-website-stabilization-0dmm8g`, cut from `origin/main` at `6da38ee`.
+**Not merged. No pull request opened.**
 
-**SESSION 29 is a single branch from `a25f0ed`, with no sibling.** `AGENT_SUITES.length` is
-**23**.
+**SESSION 30 is a single branch from `6da38ee`, with no sibling.** `AGENT_SUITES.length` is
+**24**, and the twenty-fourth entry is the first that is not under `agent/`.
+
+---
+
+## SESSION 30 — the stabilization pass, and the two checks that were wrong about the site
+
+**What was asked:** a forensic stabilization pass — get the browser suite to 0 failures
+without weakening it, resolve `freshness.mjs`'s exit 1 without hiding staleness, settle a
+reported Google Fonts contradiction, make the source-metadata contract coherent, confirm the
+autonomy rollback deadlock is reachable, audit every external dependency, upgrade the Node 20
+Actions, and add regression tests where the suite failed to catch any of it. The standing
+instruction throughout: **do not game the QA system.**
+
+### The state, measured
+
+| | before (`6da38ee`) | after |
+|---|---|---|
+| Browser suite | 125 pass · 3 fail · 2 undecidable · 130 checks | **144 pass · 0 fail · 1 undecidable · 145 checks** |
+| `freshness.mjs` | exit 1 | **exit 0** — and it prints the same three prompts, by name |
+| Four validators against §12 | verdict `fail` | **`pass_with_findings`**, 0 errors, the same 5 `design-qa` warnings |
+| Suites | 1166 tests · 23 suites | **1196 tests · 25 suites** · 0 failures |
+| GitHub Actions | checkout/setup-node/upload v4, download v4 (Node 20) | **v7 / v7 / v7 / v8, all `node24`** |
+
+### The three browser failures were defects in the WEBSITE, and all three are fixed
+
+Not in the suite. Each fix is the smallest change that makes the measured statement false, and
+the full reasoning is in `docs/BROWSER-QA.md` §4a.
+
+1. **`nav:noscript`** — with scripting off, `instruments.html` linked to none of the six
+   top-level pages and the `<noscript>` notice did not say so. The notice now names the
+   navigation among what will not render **and** carries the six destinations.
+   `tools/_footer.mjs` regenerates it into all seven pages from one source, and **reads the
+   list out of `export const NAV` in `js/shell.js`** rather than retyping it, so the nav model
+   keeps one home. The generator throws rather than emitting a plausible list if that array
+   stops being readable. `<noscript>` is inert when scripting is on, so a reader with
+   JavaScript gains no element, no id and no focusable control.
+2. **`keyboard:skip-first`** — `initShell()` inserted the chrome at `document.body.firstChild`,
+   ahead of the skip link, so a keyboard reader had to tab through the navigation to reach the
+   link that skips the navigation. It now inserts **after** the skip link when one is a direct
+   child of `<body>`, falling back to the old behaviour when there is none.
+3. **`a11y:headings:enforcement.html`** — the pipeline stage panels were `<h5>` under the
+   record's `<h2>`. `h5` was a type size chosen in the stylesheet, not a level: they are `h3`
+   now, alongside "Legal basis" and "Requires verification", which already were.
+   `css/tools.css` sizes that heading itself, so **the appearance is unchanged**.
+
+### One undecidable was a defect in the CHECK, and it is now decided
+
+**`keyboard:focus-visible` never measured anything.** `checkKeyboard` presses `Tab`, which
+focuses the first focusable element, and `document.querySelector('a[href], button')` then
+returns *that same element* — so the "before" style was read off an already-focused element
+and compared with itself. `differs` was false by construction. Measured on `instruments.html`
+before changing it: the element examined is `a.skip-link`, it is already
+`document.activeElement`, it already matches `:focus-visible`, and its outline already reads
+`solid 2px` before `el.focus()` is called. The check now blurs, drives focus with a real
+`Tab` — `:focus-visible`, which is what `css/tokens.css` styles, is a question about how focus
+arrived — and compares. The site's focus ring is real and always was: `none 0px` → `solid 2px`.
+
+**`a11y:bound` stays, and the session does not reach "0 undecidable".** It is marked in
+`checks.mjs` as "not a check that can pass": no contrast ratio was computed, no screen reader
+was run, no pixels were compared. Turning it into a pass would render an absence of knowledge
+as a finding, which `docs/AI-SAFE-BOUNDARIES.md` §0.5 forbids. **The acceptance criterion asked
+for zero and the answer is one, deliberately, with the reason stated.**
+
+### `freshness.mjs` exits 0 because the exit code was answering the wrong question
+
+The disagreement `agent/production/readiness.mjs` carried unresolved from SESSION 24 — *either
+`freshness.mjs` should not exit 1, or §12's baseline of 0 for it is wrong* — is settled the
+first way, and the evidence is mechanical rather than editorial: **every finding on this tree
+disappears when only the DATE changes.** `node tools/freshness.mjs 2026-08-28`, the datasets'
+own newest verification date, reports "Nothing past its stated interval" and exits 0 on
+byte-identical data. A result that flips with the calendar on an unchanged tree cannot gate a
+build; `agent/implement/baseline.mjs` already called the script "a report, not a gate", and
+AUDIT F-15 already recorded clock-dependence as a hazard.
+
+So the script now separates two things it used to sum. A **defect** is a property of the tree
+— a URL-less source with no `resolution`, a per-record verification field never used
+per-record — true on every date and closed by a commit: **exit 1**. A **staleness prompt** is a
+property of the calendar: **exit 0**, printed by name, counted, and stated as not waived and
+not evidence of currency.
+
+**Nothing was silenced and no threshold moved.** `EXPECTED` is byte-identical and
+`tools/selftest.mjs` F5 asserts all six intervals. F6 asserts every prompt counted in the
+summary still appears in the body. F1 asserts the tree reports no prompt as of its own
+verification date; F3 asserts a planted defect fails on **every** date. The three prompts
+standing today are unchanged and still owed verification work: the CRA reporting deadline of
+11 September and the Data Act application of 12 September fell due after the last
+verification, and the newest enforcement decision on record is 50 days old against a 45-day
+interval. **None of that is fixable by a session that cannot reach a primary source, and this
+one could not: `andreatosti2001.github.io` and every EU endpoint are refused by this
+environment's network policy with HTTP 403 on CONNECT.**
+
+### The Google Fonts contradiction is not in this tree, and the gap that let it be reported is
+
+**There is no reference to `fonts.googleapis.com` or `fonts.gstatic.com` anywhere in the
+repository, on this branch or on `main`** — no `@import`, no `<link>`, no `preconnect`. The
+dependency was removed before this session: `style.css` records it in a comment, where
+`--display` used to name 'Bodoni Moda'. The typefaces in `fonts/` are Fraunces, Literata and
+IBM Plex Mono, all self-hosted, and the browser suite's `network:first-party` measures on
+every run that every request a page made went to the local origin.
+
+**What was real is the enforcement gap.** `design-qa.mjs` asserted "no third-party resource"
+while reading exactly this:
+
+```
+/(?:href|src)="(https?:\/\/[^"]+)"/g
+```
+
+over the HTML only — double quotes required. It could not see an `@import` or an
+`@font-face src` in a stylesheet, which is the exact path by which Google Fonts returns; a
+`fetch`, `import()`, worker, WebSocket, beacon or `.src =` in a module; a `preconnect`; or any
+of those written with single quotes or none. **The claim was wider than the check in four
+documents.** `tools/thirdparty.mjs` is the check the claim needs, and `tools/selftest.mjs` §A
+plants each of those defects and asserts it is caught, including in a copy of the real tree.
+`ALLOWED_RUNTIME_ORIGINS` is **empty**; `data/` and `i18n/` are deliberately outside the
+surface, because a URL in `data/sources.json` is a citation the page displays and never
+fetches.
+
+### The source-metadata contract now has one home
+
+`tools/source-contract.mjs`: 12 required fields, 2 optional, each with its shape, why it
+exists, who writes it and who reads it. `validate.mjs` enforces it on all 77 records and they
+all pass. Before this, referential integrity asked whether four values *resolved* and nothing
+asked whether a record had the other eight at all — a source with no `title`, no `accessed`
+and no `note` passed every check here.
+
+**The six fields the grant names and the dataset does not have are `ABSENT_BY_DESIGN`, and
+they were not added.** `last_retrieved`, `retrieved_at`, `checksum`, `content_hash`,
+`recheck_interval`, `freshness_window` each assert that a document was FETCHED, and no URL in
+this repository has ever been retrieved (AUDIT F-12). Writing one would be a fabricated fact
+about evidence. A record carrying one is refused **by name with that reason**, so the next
+session to read the grant meets the explanation rather than concluding the fields are simply
+missing. `docs/SOURCE-POLICY.md` §7a and §7b.
+
+### The rollback deadlock was already repaired, and the ladder moved one step further
+
+SESSION 27 fixed it under an explicit warrant and the tests are `agent/improve/selftest.mjs`
+17 (a clean proposal in an enabled category over a granted path reaches the runner) and 17b
+(a `not_reversible` plan and a null plan are both refused on `rollback_mechanical`), with
+`agent/autonomy/selftest.mjs` 17b on the same ground. **§16's tests C and D therefore already
+existed; this session verified them rather than duplicating them.** What moved is a
+consequence of the freshness repair: the clean fixture used to be refused at the measured
+evaluation on `verification_succeeded (unknown)` **and** `validators_pass (failed)`, the
+second being the exit 1 that was never a statement about any proposal. It is now refused on
+`verification_succeeded` alone. **No autonomous change has merged anything and nothing has
+been proposed**: `agent/records/` is git-ignored and empty in a fresh checkout, so
+`survey --all` reports no proposals at all.
+
+### The browser suite now runs at the address the site is deployed to
+
+Deployment is GitHub Pages serving `main` as a **project site** at `/Eu-Digital-Policy/`, and
+every run before this one served the repository at `/`. A root-relative reference resolves at
+the root and 404s one segment down, and the suite could not have told the difference.
+`serveSite({ basePath })` serves the site under the prefix and refuses anything outside it;
+`checkDeployedSubpath` loads all seven pages there. **15 checks, all passing** — nothing here
+is written root-relative. The proof that it can fail is in `agent/browser/selftest.mjs`, which
+copies the tree, rewrites one `href="css/tokens.css"` to `href="/css/tokens.css"`, and asserts
+the check reports the 404 while the same reference resolves 200 at the root.
+
+Reading a 404 needed `Network.responseReceived` in `cdp.mjs`. `Network.loadingFailed`, which
+the harness already had, fires on a **transport** failure and not on a 404 — a 404 is a
+successful exchange carrying a status — so a missing stylesheet was previously
+indistinguishable from a present one.
+
+### One consequence of the no-JS navigation, caught by another agent's suite
+
+`agent/ux/selftest.mjs` 32 failed: the noscript nav is one list regenerated into seven pages,
+so each page's copy names the page it is on, and `pagesOf()` counted that as an outbound link.
+`reachabilityOf()` had **always** discarded a self-link; the filter now lives in `pagesOf()`
+too, so the two levels cannot disagree, and the test lost the `index.html` exemption it used
+to need. The assertion was kept and strengthened, not relaxed.
+
+### What was NOT done, and why
+
+- **`a11y:bound` was not made to pass.** Above.
+- **The six retrieval fields were not added to `data/sources.json`.** Above.
+- **Nothing was merged and no pull request was opened**, per `AGENTS.md`'s git rule.
+- **The live deployment was not verified.** Outbound access to `andreatosti2001.github.io` is
+  refused by this environment (403 on CONNECT, confirmed this session). Everything reported
+  here is read or measured from the repository and a locally served render. **No claim is made
+  about what the live site currently serves.**
+- **HE-04 is still RED.** The adversarial gate still reports 1 SUCCEEDED. SESSION 29 measured
+  it as a false positive of the HE-01 shape and left it red on purpose, because reclassifying
+  a CRITICAL by editing the thing that reports it is a person's decision. That has not changed.
+- **The seven other readiness blockers are untouched**: no production dispatcher, no reachable
+  source, the absent decision ledger, the untraceable write paths, no deploy gate. Each is a
+  governance decision or needs network this environment does not have.
+
+### Regression tests added
+
+| § | Test | Where |
+|---|---|---|
+| A | a third-party runtime resource, in HTML/CSS/JS, quoted or not | `tools/selftest.mjs` A1–A13 |
+| B | every source record against the authoritative contract | `tools/selftest.mjs` B1–B8 |
+| C | a valid limited-autonomy operation passes the gates | `agent/improve/selftest.mjs` 17 *(existing)* |
+| D | an operation with no valid rollback is rejected | `agent/improve/selftest.mjs` 17b *(existing)* |
+| E | invalid workflow transitions are rejected | `agent/orchestrator/selftest.mjs` *(existing)* |
+| F | the site under `/Eu-Digital-Policy/` | `agent/browser/selftest.mjs` + `checkDeployedSubpath` |
+| — | `freshness.mjs`'s exit contract, from both sides | `tools/selftest.mjs` F1–F6 |
+
+---
 
 **SESSIONS 27 AND 28 WERE SIBLINGS FROM ONE BASE, and this file still carries both.** They were
 cut from `aaf6691` independently and neither saw the other. SESSION 28 landed on `main` first;

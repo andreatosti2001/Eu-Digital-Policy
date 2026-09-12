@@ -36,6 +36,7 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { scanRuntimeSurface } from './thirdparty.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const errors = [];
@@ -118,8 +119,12 @@ for (const page of PAGES) {
     err(at, 'has a page-local <style> block — move it to a shared sheet');
   }
 
-  /* third-party resources. A canonical URL and the og:/twitter: tags name
-     the page's own address; nothing is fetched from them, so they are not
+  /* Third-party resources in this page's markup. The whole runtime
+     surface — these pages, the stylesheets and the modules — is scanned
+     below by tools/thirdparty.mjs; this per-page pass stays because it
+     names the page in the error, which is what a reader of the report
+     needs first. A canonical URL and the og:/twitter: tags name the
+     page's own address; nothing is fetched from them, so they are not
      third-party requests and are exempt. Everything else still is. */
   const declaredSelf = html.match(/<link href="(https?:\/\/[^"]+)" rel="canonical"\/>/);
   const selfOrigin = declaredSelf ? new URL(declaredSelf[1]).origin : null;
@@ -256,6 +261,30 @@ for (const f of jsFiles) {
   if (/localStorage\.(get|set)Item/.test(js) && !/try\s*\{/.test(js)) {
     err('js/' + f, 'touches localStorage without a try block (throws in private mode)');
   }
+}
+
+/* -------------------------------------------- third-party runtime surface
+
+   The per-page pass above reads `href="…"` and `src="…"` in the HTML and
+   nothing else, so the claim it was taken to support — "no third-party
+   requests", stated in AGENTS.md, §12 and the README — was broader than
+   the check by some distance. A Google Fonts dependency returns through
+   `@import` or an `@font-face src` in a stylesheet, and this project
+   removed exactly one of those once (style.css, where `--display` used
+   to name 'Bodoni Moda'). Nothing would have reported it coming back.
+
+   tools/thirdparty.mjs scans the pages, the stylesheets and the modules
+   for a foreign origin in any position a browser fetches from, and
+   tools/selftest.mjs plants each of those defects in a scratch tree and
+   asserts it is caught. `data/` and `i18n/` are deliberately not in the
+   surface: a URL in data/sources.json is a citation the page displays,
+   not a resource it loads.                                             */
+
+for (const f of scanRuntimeSurface(ROOT)) {
+  err(f.file, `third-party runtime resource in ${f.position} — ${f.reference}`
+    + (f.tracker ? ` (${f.tracker}: a known font/CDN/analytics host)` : '')
+    + '. The site makes no third-party request; if one is ever adopted deliberately it goes in'
+    + ' ALLOWED_RUNTIME_ORIGINS in tools/thirdparty.mjs with its reason and who decided it.');
 }
 
 /* ---------------------------------------------------------- report */
