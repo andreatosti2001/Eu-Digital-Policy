@@ -36,7 +36,7 @@
    writer that exists.
    ============================================================ */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { REPO_ROOT, readBaseline } from '../implement/baseline.mjs';
@@ -45,6 +45,7 @@ import { SCHEDULE, scheduledCommands, scriptOf } from './schedule.mjs';
 import { visualStandard, visualSummary } from './visual.mjs';
 import { separations, separationSummary, controlPlaneClear } from './separations.mjs';
 import { traceability } from './traceability.mjs';
+import { ENDPOINTS } from '../scout/authorities.mjs';
 
 /** The domains a condition belongs to. Never summed — the same rule
  *  `agent/health/` applies to its three. A checklist with one number
@@ -225,7 +226,7 @@ export const CONDITIONS = Object.freeze([
       return i.uninstrumented.length === 0
         ? pass(`all ${i.total} agent CLIs open a run on the tracer.`)
         : verdict('fail', `${i.instrumented} of ${i.total} agent CLIs import the tracer. ${i.uninstrumented.length} do not: ${i.uninstrumented.join(', ')}. Each of those is a register or a checker that runs nothing and writes nothing, so an untraced run of one changes no state — but "no agent may become invisible simply because it is automated" is a weaker claim here than it reads.`,
-          'Advisory rather than mandatory: none of the seven can write, and instrumenting a command that reports a static table would add a trace with nothing in it. Recorded so that the day one of them gains a write path, this line is already here.');
+          `Advisory rather than mandatory: none of the ${i.uninstrumented.length} can write, and instrumenting a command that reports a static table would add a trace with nothing in it. Recorded so that the day one of them gains a write path, this line is already here.`);
     }),
 
   /* ---------------------------------------------- traceability */
@@ -249,12 +250,24 @@ export const CONDITIONS = Object.freeze([
         : fail('no production dispatcher is wired. agent/orchestrator/ has no dispatchers module; the only one in this repository is agent/simulation/dispatchers.mjs, whose own suite refuses it eight primitives by name so that it cannot write, spawn or fetch. A run outside the simulation reports not_dispatched at every dispatch stage and the workflow ends unresolved. The daily cycle\'s Route stage therefore reports what WOULD be routed and routes nothing.')))),
 
   C('scout_can_reach_a_source', 'dispatch', true,
-    'can the Scout reach any registered source endpoint from this environment?',
-    (f) => (f.network === null
-      ? unmeasurable('source reachability was not measured')
-      : (f.network.reachable > 0
-        ? pass(`${f.network.reachable} of ${f.network.registered} registered endpoint(s) are reachable.`)
-        : fail(`0 of ${f.network.registered} registered endpoint(s) are reachable. SESSION 25 ran --live against the five real endpoints and this environment's network policy refused all five. freshness.mjs prints a SOURCE REACHABILITY heading and performs no network I/O at all: no URL in this repository has ever been fetched (AUDIT F-12). A daily Scout stage that cannot retrieve a document cannot detect a change in the law.`)))),
+    'has a live Scout run retrieved a document from a registered source endpoint?',
+    (f) => {
+      if (f.network === null) return unmeasurable('source reachability was not measured');
+      /* NOT "from this environment". The question the daily cycle needs
+         answered is whether the Scout can retrieve a document where it
+         RUNS, and it runs in GitHub Actions, not in a developer's
+         container. Asking it of the container measures the container.
+         This now reads the Scout's own committed digests. */
+      if (!f.network.measured) {
+        return unmeasurable(`${f.network.why} An unmeasured mandatory condition blocks exactly as a failure does, so this still stops activation — but it stops it for a reason that is true.`,
+          'The evidence this wants is a committed live digest. agent/scout/digests/ is git-tracked so that a scheduled run leaves one; the Source Scout workflow opens a pull request carrying it, and merging that pull request is a person\'s decision.');
+      }
+      const where = f.network.environment ? ` in ${f.network.environment}` : '';
+      return f.network.reachable > 0
+        ? pass(`${f.network.reachable} of ${f.network.registered} registered endpoint(s) yielded a document to the live run recorded in ${f.network.source}${where} on ${f.network.generated_at}: ${f.network.fetched} document(s) fetched, ${f.network.refused_by_egress_policy} refused by egress policy.${f.network.gaps.length ? ` Unretrieved: ${f.network.gaps.join(' · ')}` : ''}`,
+          'A retrieval is not a verification. The Scout locates documents and reads none of them for truth; nothing may enter data/sources.json until a person opens it (docs/AI-SAFE-BOUNDARIES.md §3).')
+        : fail(`0 of ${f.network.registered} registered endpoint(s) yielded a document to the live run recorded in ${f.network.source}${where}: ${f.network.fetched} fetched, ${f.network.refused_by_egress_policy} refused by egress policy.${f.network.gaps.length ? ` ${f.network.gaps.join(' · ')}` : ''} A daily Scout stage that cannot retrieve a document cannot detect a change in the law.`);
+    }),
 
   /* ------------------------------------------------- governance */
   C('decision_ledger_present', 'governance', true,
@@ -358,13 +371,7 @@ export async function gatherFacts({
     lines: existsSync(ledger) ? readFileSync(ledger, 'utf8').split('\n').filter((l) => l.trim()).length : 0,
   };
 
-  /* Source reachability. `freshness.mjs` prints a heading and
-     performs no network I/O, so there is nothing to read a count
-     out of — and SESSION 25's --live run is the only measurement
-     this repository has ever taken. Reported as the measured zero it
-     is, with the registered count read from the scout's own
-     register where one exists. */
-  facts.network = { registered: 5, reachable: 0, source: 'docs/SESSION-25-FIRST-REAL-WORLD-RUN.md, the only live run ever attempted here' };
+  facts.network = sourceReachability({ root });
 
   /* --- expensive --- */
   if (doValidators) {
@@ -418,6 +425,109 @@ function listSuiteFiles(root) {
   const r = run('git', ['ls-files', '--', 'agent/**/selftest.mjs', '.control-room/selftest.mjs'], { cwd: root });
   if (!r.ran || r.exit_code !== 0) return null;
   return r.stdout.split('\n').map((s) => s.trim()).filter(Boolean);
+}
+
+/**
+ * Can the Scout retrieve a document from a registered endpoint?
+ *
+ * THIS USED TO BE A CONSTANT, and the constant was wrong.
+ * `facts.network` was written into this file as
+ * `{ registered: 5, reachable: 0 }` with a comment saying SESSION 25's
+ * `--live` run was "the only measurement this repository has ever
+ * taken". It was not a measurement at all — it was a sentence from a
+ * document, restated as a number, and it reported a FAILURE nothing
+ * had checked. A condition that hard-codes its own answer tests
+ * nothing, which is the defect this whole layer exists to find
+ * elsewhere.
+ *
+ * It is now derived from the Scout's own committed evidence.
+ * `agent/scout/digests/` is git-tracked ON PURPOSE — its README says
+ * why: a digest is the scheduling layer's only memory between runs.
+ * Each one records the environment it ran in, how many documents were
+ * fetched, how many retrievals were refused by egress policy, and every
+ * gap with the origin's own answer. That is exactly the evidence this
+ * question wants, written by a real run rather than inferred.
+ *
+ * WHAT COUNTS AS REACHED. Not "the host answered": eur-lex answering
+ * 202 and EDPS answering 403 are answers, and neither yields a
+ * document. The condition's own reason is that "a daily Scout stage
+ * that cannot retrieve a document cannot detect a change in the law",
+ * so an endpoint counts only where the run produced at least one
+ * candidate from its origin. That undercounts an endpoint fetched
+ * successfully whose documents were all screened out, and undercounting
+ * is the safe direction here.
+ *
+ * NO DIGEST IS `unmeasurable`, NOT ZERO. A tree with no committed
+ * digest has not established that the Scout cannot reach anything; it
+ * has established nothing. The checklist blocks on an unmeasured
+ * mandatory condition exactly as it blocks on a failure, so this is not
+ * a softening — it is the same block with a true reason attached.
+ */
+export function sourceReachability({ root = REPO_ROOT, endpoints = ENDPOINTS } = {}) {
+  const registered = endpoints.length;
+  const origins = new Map();
+  for (const ep of endpoints) {
+    try { origins.set(new URL(ep.url).host.replace(/^www\./, ''), ep.id); } catch { /* a malformed register entry is the register's problem */ }
+  }
+
+  const dir = join(root, 'agent/scout/digests');
+  let files = [];
+  try { files = readdirSync(dir).filter((f) => f.endsWith('.json')).sort(); } catch { files = []; }
+
+  if (!files.length) {
+    return {
+      registered,
+      reachable: null,
+      measured: false,
+      why: `no Source Scout digest is committed to this tree, so whether the Scout can retrieve a document has not been measured here. agent/scout/digests/ is git-tracked precisely so a live run leaves durable evidence; it currently holds only its README. This is NOT a measured zero, and the constant that used to be hard-coded here reported one.`,
+      source: 'agent/scout/digests/, empty of digests',
+    };
+  }
+
+  /* The most recent run by its own generated_at, and only a `live`
+     one: a `mock` run reads the fixture corpus and says nothing about
+     the network. */
+  const runs = [];
+  for (const f of files) {
+    try {
+      const d = JSON.parse(readFileSync(join(dir, f), 'utf8'));
+      if (d && d.mode === 'live') runs.push(d);
+    } catch { /* an unreadable digest is reported by the Scout's own suite */ }
+  }
+  if (!runs.length) {
+    return {
+      registered,
+      reachable: null,
+      measured: false,
+      why: `${files.length} digest(s) are committed and none records mode "live". A mock run reads the fixture corpus and establishes nothing about the network.`,
+      source: 'agent/scout/digests/',
+    };
+  }
+  runs.sort((a, b) => String(a.generated_at ?? '').localeCompare(String(b.generated_at ?? '')));
+  const latest = runs[runs.length - 1];
+
+  const reached = new Set();
+  for (const c of latest.candidates ?? []) {
+    let host;
+    try { host = new URL(c.url).host.replace(/^www\./, ''); } catch { continue; }
+    for (const [known, id] of origins) if (host === known || host.endsWith(`.${known}`)) reached.add(id);
+  }
+
+  const refusedByEgress = Number(latest.totals?.failed_by_egress_policy ?? 0);
+  const gaps = (latest.gaps ?? []).map((g) => `${g.url}: ${g.why_open ?? 'no reason recorded'}`);
+
+  return {
+    registered,
+    reachable: reached.size,
+    measured: true,
+    digest_id: latest.digest_id ?? null,
+    generated_at: latest.generated_at ?? null,
+    environment: latest.environment?.env ?? null,
+    fetched: Number(latest.totals?.fetched ?? 0),
+    refused_by_egress_policy: refusedByEgress,
+    gaps,
+    source: `agent/scout/digests/${latest.digest_id ?? 'unknown'}.json`,
+  };
 }
 
 /* ------------------------------------------------- the verdicts */

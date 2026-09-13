@@ -63,11 +63,32 @@ is a person pushing, and the autonomy runner's merge reaches the working branch 
 Two stages are declared and **cannot do what their names say**, which is why every stage
 carries a `cannot`:
 
-- **Scout** reaches no registered endpoint. SESSION 25 ran `--live` against the five real
-  endpoints and this environment's network policy refused all five. `freshness.mjs` prints a
-  `SOURCE REACHABILITY` heading and performs no network I/O at all. **No URL in this
-  repository has ever been fetched** (AUDIT F-12). A daily Scout that cannot retrieve a
-  document cannot detect a change in the law, and every stage downstream of it inherits that.
+- **Scout** reaches no registered endpoint *from a development container*. SESSION 25 ran
+  `--live` against the five real endpoints and that environment's network policy refused all
+  five; SESSION 30 confirmed the same refusal, including for the deployed site itself.
+  `freshness.mjs` prints a `SOURCE REACHABILITY` heading and performs no network I/O at all,
+  and **no URL in `data/sources.json` has ever been fetched** (AUDIT F-12).
+
+  > **SESSION 30 correction.** *"Scout reaches no registered endpoint"* was stated as a
+  > property of the Scout and it is a property of the **container the check ran in**. The
+  > scheduled workflow runs on a GitHub Actions runner with ordinary egress, and it has
+  > worked: the run of **7 September 2026** fetched **17 documents** with **0 refused by
+  > egress policy**, producing candidates from `www.edpb.europa.eu` and
+  > `www.enisa.europa.eu`, while EUR-Lex answered 202 and the EDPS answered 403 — the
+  > origins' own answers, not a policy denial. The digest recording it is committed on
+  > `scout/digest-digest-2026-09-07T06-38-26Z`, which is **unmerged**.
+  >
+  > `readiness.mjs` reported `0 of 5 reachable` because `facts.network` was a **hard-coded
+  > constant**, not a measurement, whose own comment claimed SESSION 25's run was "the only
+  > measurement this repository has ever taken". It was not. The fact is now derived from
+  > the Scout's committed digests — `agent/scout/digests/` is git-tracked precisely so a live
+  > run leaves durable evidence — and a tree with no digest reports **`unmeasurable`**, which
+  > blocks activation exactly as a failure does. **The verdict did not move: 14 of 20 pass
+  > and 6 block, as before.** What moved is that the reason is now true.
+
+  A daily Scout that cannot retrieve a document cannot detect a change in the law, and every
+  stage downstream of it inherits that — so the question is which environment the daily cycle
+  runs in, and that is a decision, not a defect.
 - **Route impact** dispatches nothing. There is no `agent/orchestrator/dispatchers.mjs`; the
   only dispatcher here is `agent/simulation/dispatchers.mjs`, whose own suite refuses it eight
   primitives by name so that it cannot write, spawn or fetch. A run outside the simulation

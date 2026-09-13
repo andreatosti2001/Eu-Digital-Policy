@@ -195,6 +195,91 @@ is kept and is now real: it still fails on anything the suite itself writes, and
 no longer counts the file the workflow deliberately created and already
 uploaded.
 
+### A second pass over the six remaining blockers, and the one that was not a measurement
+
+Asked to investigate how the remaining blockers could be resolved, this session found that
+one of the six was **not measured at all**.
+
+**`scout_can_reach_a_source` reported `0 of 5` from a hard-coded constant.**
+`agent/production/readiness.mjs` set `facts.network = { registered: 5, reachable: 0 }` with a
+comment claiming SESSION 25's `--live` run was "the only measurement this repository has ever
+taken". That was false. **The scheduled Source Scout has reached real EU endpoints from
+GitHub Actions**: the run of 7 September 2026 fetched **17 documents**, **0 refused by egress
+policy**, producing candidates from `www.edpb.europa.eu` and `www.enisa.europa.eu`; EUR-Lex
+answered 202 and the EDPS answered 403, which are the origins' own answers. The digest saying
+so is committed on the unmerged branch `scout/digest-digest-2026-09-07T06-38-26Z`.
+
+So the condition was measuring **the container the check ran in**, and asserting the result as
+a property of the Scout. It is now derived from the Scout's committed digests, which
+`agent/scout/digests/README.md` says are tracked precisely so a run leaves durable evidence.
+Reached means *yielded a document*, not *answered*: an endpoint counts only where the run
+produced a candidate from its origin, which undercounts and is the safe direction.
+
+**The verdict did not move.** A tree with no committed digest now reports `unmeasurable`, and
+an unmeasured mandatory condition blocks exactly as a failure does — 14 of 20 pass and 6
+block, exit 1, as before. What changed is that the reason is true, and that real evidence can
+now satisfy it: merging the Scout's pull request would.
+
+`agent/production/schedule.mjs` carried the same sentence about the Scout stage and is
+corrected the same way. `agents_instrumented` said "none of the seven can write" while listing
+eight; the count is now derived.
+
+**The other five were investigated and left alone, each for a stated reason.**
+
+| Blocker | Why this session did not close it |
+|---|---|
+| `adversarial_gate_clean` (HE-04) | AGENTS.md and §4a both say it is left RED on purpose and a person decides. New evidence for that person is below. |
+| `website_paths_traceable` | `human_commit` is marked in `traceability.mjs` as one **an agent may not close**: requiring evidence in a commit message is a governance decision about how the author works. `control_room_decision` becomes traceable when a proposal is decided. |
+| `production_dispatcher_wired` | Wiring the eleven specialists so the Orchestrator can invoke them is new capability and a Class D decision, not a stabilization fix. |
+| `decision_ledger_present` | Only a person can decide a proposal. |
+| `deploy_gate_exists` | Repository settings. Two routes are described below; both need the author. |
+
+**HE-04: the hit list has grown, and that is new.** At `a25f0ed` the attack found the phrase in
+exactly **one** file, `agent/simulation/threshold.mjs`. It now finds **three**:
+`agent/production/separations.mjs` and `agent/production/visual.mjs` were added by SESSION 29 —
+the session that measured the first file on two halves and cleared it, while adding two more
+occurrences it did not put through the same check. Read directly, all three are the HE-01
+shape: `separations.mjs` **searches** for the phrase (that is the separation check), and
+`visual.mjs` carries it once inside a **prose sentence** describing a near-miss test. Neither
+reads it as an input. This does not reclassify anything — it gives the person deciding a fact
+they did not have.
+
+**`deploy_gate_exists` has a second route worth naming.** The report says the condition can
+only be satisfied in repository settings, which is true of both routes but hides the more
+useful one:
+
+- **A** — a branch protection rule on `main` requiring the QA checks. Entirely settings.
+- **B** — switch the Pages source from "deploy from a branch" to **GitHub Actions**, and add a
+  deploy workflow whose `needs:` names the QA jobs. Most of the gate then lives **in the tree**,
+  where it is reviewable. It still needs the author to flip the Pages source once, and it
+  changes the deployment mechanism, which is Class D.
+
+Route B has a side effect worth weighing: a workflow deployment publishes an artifact rather
+than the branch, so it could publish the site files alone. That would also close the standing
+finding that `agent/`, `docs/` and `tools/` are inside the public surface, which is what PP-08
+reports. **Neither route was implemented.** AGENTS.md is explicit that an agent must not edit
+the workflow to claim a gate it does not have.
+
+**`control_room_decision` carries a real mechanical defect, described rather than changed.**
+A decision in `agent/implement/decisions/decisions.jsonl` is git-tracked; the proposal it
+decides lives in `agent/records/`, which is git-ignored. `deriveApproval()` returns
+`void_unknown_proposal` when the proposal is absent, so a decision recorded today reads as void
+on any other machine. `readAgentRecords()` already returns `traces`, so the two cases —
+*this machine has no record store at all* and *the store is populated and lacks this proposal*
+— are mechanically distinguishable, and `IMPLEMENTABLE = ['granted']` means a new state is
+refused by default. **It was not changed here**: renaming the state describes the problem
+accurately without fixing it, and how a durable decision should bind to a regenerable proposal
+is an approval-integrity decision rather than a stabilization one.
+
+**`a11y:bound` could be narrowed and not closed.** It names three things not done: no contrast
+ratio, no screen reader, no pixel comparison. Contrast is the only one this harness could
+compute, and computing the *effective* background through transparency and stacked ancestors is
+where a naive implementation produces confident wrong numbers. Closing one third would leave
+the marker standing for the other two, so nothing was built.
+
+**Text scaling** remains as reported: the type scale is in pixels, which follows browser zoom
+but not a changed default font size. Converting it is a redesign, which §14 forbids.
+
 ### What was NOT done, and why
 
 - **`a11y:bound` was not made to pass.** Above.

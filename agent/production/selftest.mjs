@@ -47,7 +47,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { REPO_ROOT } from '../implement/baseline.mjs';
@@ -66,10 +67,12 @@ import {
   maskComments, maskStrings, maskRegexLiterals, GRANTING_PRIMITIVES,
 } from './separations.mjs';
 import { traceability, trackedFilesUnder, PUBLISHED_SURFACE } from './traceability.mjs';
-import { CONDITIONS, DOMAINS, evaluate, assessActivation } from './readiness.mjs';
+import { CONDITIONS, DOMAINS, evaluate, assessActivation, sourceReachability } from './readiness.mjs';
 
 const HERE = join(REPO_ROOT, 'agent/production');
 const MODULES = readdirSync(HERE).filter((f) => f.endsWith('.mjs'));
+/** Every module this directory ships, which is every .mjs but this suite. */
+const PRODUCTION_MODULES = MODULES.filter((f) => f !== 'selftest.mjs');
 
 const gitStatus = () => execFileSync('git', ['status', '--porcelain'], { cwd: REPO_ROOT, encoding: 'utf8' });
 
@@ -149,7 +152,19 @@ const WRITE_CALLS = [
 ];
 
 test('3 · no module in agent/production/ CALLS a write API', () => {
-  for (const f of MODULES) {
+  /* THE SUITE IS NOT ONE OF THE MODULES, and agent/ux/selftest.mjs has
+     drawn that line for the same scan since SESSION 16. This file needs
+     a scratch directory under os.tmpdir() to drive sourceReachability
+     over a real digest, and a test fixture writing to a temp dir is not
+     this directory writing to the repository. The braces on that belt
+     are still fastened: "a full run of every read-only verb leaves the
+     working tree byte-identical" below hashes the tree, so a write that
+     landed in the repository would be caught there whatever this scan
+     excludes. The exclusion is exactly one file, and the assertion
+     below says so. */
+  assert.deepEqual(MODULES.filter((f) => !PRODUCTION_MODULES.includes(f)), ['selftest.mjs'],
+    'the write-API scan may exclude this suite and nothing else');
+  for (const f of PRODUCTION_MODULES) {
     /* Asserted as a CALL: comments, strings and regexes are masked,
        so this file's own header naming the rule does not break it —
        and neither does readiness.mjs quoting recordDecision in the
@@ -550,4 +565,120 @@ test('9 · every domain the register declares carries at least one condition', (
   for (const d of DOMAINS) {
     assert.ok(CONDITIONS.some((c) => c.domain === d), `domain "${d}" has no conditions`);
   }
+});
+
+/* ============================================================
+   10 · SESSION 30 — SOURCE REACHABILITY IS A MEASUREMENT
+
+   `facts.network` was a constant: `{ registered: 5, reachable: 0 }`,
+   with a comment claiming SESSION 25's --live run was "the only
+   measurement this repository has ever taken". It was not a
+   measurement, and the claim was false — a scheduled Source Scout run
+   reached real EU endpoints from GitHub Actions on 7 September 2026
+   and committed the digest that says so. A mandatory condition that
+   hard-codes its own failure tests nothing.
+   ============================================================ */
+
+const scoutTree = (digests = []) => {
+  const dir = mkdtempSync(join(tmpdir(), 'scout-reach-'));
+  mkdirSync(join(dir, 'agent/scout/digests'), { recursive: true });
+  for (const d of digests) writeFileSync(join(dir, 'agent/scout/digests', `${d.digest_id}.json`), JSON.stringify(d));
+  return dir;
+};
+
+const liveDigest = (over = {}) => ({
+  digest_id: 'digest-2026-09-07T06-38-26Z',
+  mode: 'live',
+  generated_at: '2026-09-07T06:38:26.228Z',
+  environment: { env: 'github-actions' },
+  totals: { fetched: 17, failed_by_egress_policy: 0 },
+  candidates: [
+    { url: 'https://www.edpb.europa.eu/documents_en' },
+    { url: 'https://www.enisa.europa.eu/topics/eu-incident-response-and-cyber-crisis-management' },
+  ],
+  gaps: [
+    { url: 'https://eur-lex.europa.eu/', why_open: 'Retrieval failed: origin answered 202 (status 202).' },
+  ],
+  ...over,
+});
+
+test('10 · no committed digest is UNMEASURED, and never a measured zero', () => {
+  const dir = scoutTree();
+  try {
+    const r = sourceReachability({ root: dir });
+    assert.equal(r.measured, false);
+    assert.equal(r.reachable, null, 'an unmeasured reachability must not be reported as the number 0');
+    assert.equal(r.registered, 5, 'the registered count comes from the Scout\'s own register, not from a literal');
+    assert.match(r.why, /NOT a measured zero/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('10 · a live digest is read, and only the endpoints that yielded a document count', () => {
+  const dir = scoutTree([liveDigest()]);
+  try {
+    const r = sourceReachability({ root: dir });
+    assert.equal(r.measured, true);
+    /* Two candidates, from two registered origins. eur-lex ANSWERED
+       202 and that is not a retrieval: the condition exists because a
+       stage that cannot retrieve a document cannot detect a change in
+       the law. */
+    assert.equal(r.reachable, 2);
+    assert.equal(r.environment, 'github-actions');
+    assert.equal(r.fetched, 17);
+    assert.equal(r.refused_by_egress_policy, 0);
+    assert.ok(r.gaps.some((g) => g.includes('eur-lex')));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('10 · a mock digest establishes nothing about the network', () => {
+  const dir = scoutTree([liveDigest({ digest_id: 'digest-mock', mode: 'mock' })]);
+  try {
+    const r = sourceReachability({ root: dir });
+    assert.equal(r.measured, false, 'a run against the fixture corpus is not evidence that a host answered');
+    assert.match(r.why, /mode "live"/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('10 · the most recent live digest wins, and a candidate off the register does not count', () => {
+  const dir = scoutTree([
+    liveDigest({ digest_id: 'digest-old', generated_at: '2026-01-01T00:00:00.000Z', candidates: [{ url: 'https://www.edpb.europa.eu/x' }] }),
+    liveDigest({ digest_id: 'digest-new', generated_at: '2026-09-07T06:38:26.228Z', candidates: [{ url: 'https://example.invalid/x' }] }),
+  ]);
+  try {
+    const r = sourceReachability({ root: dir });
+    assert.equal(r.digest_id, 'digest-new');
+    assert.equal(r.reachable, 0, 'a document from an origin nobody registered is not a registered endpoint being reachable');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('10 · an unmeasured reachability still BLOCKS activation', () => {
+  /* The whole point of reporting `unmeasurable` rather than a false
+     zero is that it changes the REASON and not the outcome. */
+  const c = CONDITIONS.find((x) => x.id === 'scout_can_reach_a_source');
+  const v = c.evaluate({ network: { registered: 5, reachable: null, measured: false, why: 'no digest.' } });
+  assert.equal(v.state, 'unmeasurable');
+  assert.ok(c.mandatory);
+  assert.equal(assessActivation(rows({ scout_can_reach_a_source: 'unmeasurable' })).state, 'refused');
+});
+
+test('10 · a measured reachability above zero passes, and says where it was measured', () => {
+  const c = CONDITIONS.find((x) => x.id === 'scout_can_reach_a_source');
+  const v = c.evaluate({
+    network: {
+      registered: 5, reachable: 2, measured: true, environment: 'github-actions',
+      generated_at: '2026-09-07T06:38:26.228Z', fetched: 17, refused_by_egress_policy: 0,
+      gaps: [], source: 'agent/scout/digests/digest-2026-09-07T06-38-26Z.json',
+    },
+  });
+  assert.equal(v.state, 'pass');
+  assert.match(v.evidence, /github-actions/);
+  assert.match(v.bound, /not a verification/);
+});
+
+test('10 · the question no longer asks about "this environment"', () => {
+  /* It used to, and asking a container whether the network works
+     measures the container. The Scout runs in GitHub Actions. */
+  const c = CONDITIONS.find((x) => x.id === 'scout_can_reach_a_source');
+  assert.doesNotMatch(c.question, /this environment/);
+  assert.match(c.question, /live Scout run/);
 });
