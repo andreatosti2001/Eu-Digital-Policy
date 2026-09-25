@@ -47,9 +47,17 @@ function pipelineHTML(rec, id) {
     '</div>' +
     stages.map((st, i) => {
       const meta = STAGES[i];
+      /* h3, not h5. The record's own heading is the <h2> in .enf-head and
+         the stage panels are its direct subsections, alongside "Legal basis"
+         and "Requires verification" below, which are already h3. h5 was a
+         type size chosen in the stylesheet, and it left the RENDERED outline
+         jumping h2 to h5 — which agent/browser/checks.mjs measures and
+         tools/design-qa.mjs, reading only the markup, cannot see. The
+         appearance is unchanged: css/tools.css sizes this panel's heading
+         itself. */
       return '<div class="pipe-detail" id="' + id + '-s' + i + '" hidden>' +
-        '<h5>' + esc(taxLabel(IX, meta.id)) + ' — <span data-state="' + esc(st.state.split(':').pop()) + '">' +
-          esc(STATE_WORD[st.state]) + '</span></h5>' +
+        '<h3>' + esc(taxLabel(IX, meta.id)) + ' — <span data-state="' + esc(st.state.split(':').pop()) + '">' +
+          esc(STATE_WORD[st.state]) + '</span></h3>' +
         (st.note ? '<p class="pipe-note">' + esc(st.note) + '</p>' : '') +
         '<p class="pipe-why"><b>How this is derived</b> ' + esc(DERIVATION[meta.id]) + '</p>' +
         '</div>';

@@ -105,7 +105,7 @@ jobs:
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # This job has no business pushing anything, so it keeps no
           # credential in .git/config where the Scout's own process
@@ -113,7 +113,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -189,7 +189,7 @@ jobs:
       # step found and uploaded README.md instead.
       - name: Store the digest
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: source-scout-digest
           path: agent/scout/digests/digest-*.json
@@ -198,7 +198,7 @@ jobs:
 
       - name: Store the digest summary
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: source-scout-digest-summary
           path: agent/scout/digests/digest-*.md
@@ -207,7 +207,7 @@ jobs:
 
       - name: Store the full contract records
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: source-scout-records
           path: agent/records/*.jsonl
@@ -216,7 +216,7 @@ jobs:
 
       - name: Store the observability trace
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: source-scout-trace
           path: agent/observability/runs/*.jsonl
@@ -266,16 +266,16 @@ jobs:
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download the digest
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: source-scout-digest
           path: agent/scout/digests
 
       - name: Download the digest summary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: source-scout-digest-summary
           path: agent/scout/digests

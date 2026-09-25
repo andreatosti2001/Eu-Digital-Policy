@@ -67,7 +67,7 @@ export const DAILY_CYCLE = Object.freeze([
     doc: 'docs/SOURCE-SCOUT.md',
     runs: 'node agent/scout/cli.mjs',
     produces: 'SourceCandidate',
-    cannot: 'reach any registered endpoint in this environment. SESSION 25 ran --live against the five real endpoints and this environment\'s network policy refused all five. A scout run here reads the registered corpus, not the web.',
+    cannot: 'reach any registered endpoint from a development container. SESSION 25 ran --live against the five real endpoints and that environment\'s network policy refused all five, and SESSION 30 confirmed the same refusal. A scout run THERE reads the registered corpus, not the web. IT IS NOT A PROPERTY OF THE SCOUT: the scheduled workflow runs on a GitHub Actions runner with ordinary egress, and the run of 7 September 2026 fetched 17 documents with 0 refused by egress policy, two endpoints yielding candidates and two answering 202 and 403 themselves. Which environment the stage runs in decides this, and agent/production/readiness.mjs reads the committed digest rather than assuming either answer.',
   }),
   Object.freeze({
     id: 'verify',

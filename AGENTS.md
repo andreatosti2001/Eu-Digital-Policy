@@ -37,7 +37,7 @@ the evidence it describes.
 | `docs/LIMITED-AUTONOMY.md` | SESSION 26: the governance grant that switched five low-risk categories on, what a grant may never say, the six gates and the seven steps — and §7, what none of it proves |
 | `docs/CONTINUOUS-IMPROVEMENT.md` | SESSION 27: the loop — eight observers, one as-of date, the tracked cycle ledger, and the rule that an observer which did not run resolves nothing. **§4: the autonomy gate ladder was unpassable and is repaired, with the warrant in §4a. §4b: the adversarial gate has been red since SESSION 24** |
 | `docs/SESSION-25-FIRST-REAL-WORLD-RUN.md` | SESSION 25's first non-simulated run — `--live` against the five registered real endpoints, all five refused by this environment's network policy, and what ran for real against the actual corpus and pages once that boundary was hit — with a prioritized human review queue, none of it decided |
-| `docs/PRODUCTION-OPERATING-MODE.md` | SESSION 29: the daily cycle, the fourteen reviews, the final visual standard, the discovery boundary — and the readiness checklist that **REFUSED**: twelve of twenty mandatory conditions pass and eight block |
+| `docs/PRODUCTION-OPERATING-MODE.md` | SESSION 29: the daily cycle, the fourteen reviews, the final visual standard, the discovery boundary — and the readiness checklist that **REFUSED**. SESSION 29 measured twelve of twenty mandatory conditions passing and eight blocking; on SESSION 30's tree it is **fourteen and six**, and it still refuses |
 | `docs/GOVERNANCE-PROPOSALS.md` | SESSION 28: the decision corpus, measured — the approval ledger is ABSENT, not empty — the twelve patterns in what a person has had to correct, and seven governance proposals, none decided |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
@@ -116,12 +116,19 @@ hashing the tree around a full run. `docs/GOVERNANCE-PROPOSALS.md`.
 reviews as data, the ten conditions of the final visual standard, the six separations the
 hidden entry must hold, every path by which the website can change — and a readiness
 checklist of twenty-one conditions in ten domains. `node agent/production/cli.mjs readiness`
-reports **`refused`**: twelve of twenty mandatory conditions pass and **eight block**. **A
+reports **`refused`**. **A
 mandatory condition that could not be MEASURED blocks exactly as a failure does**, because in
-production there is nobody reading "skipped". The eight: the `freshness.mjs` baseline
-disagreement, the adversarial gate's CRITICAL, the browser suite's three SESSION 19 defects,
-no production dispatcher, no reachable source, the absent decision ledger, two of three
-website-changing write paths untraceable, and no deploy gate. **Nothing in that directory
+production there is nobody reading "skipped". SESSION 29 measured twelve of twenty passing and
+eight blocking: the `freshness.mjs` baseline disagreement, the adversarial gate's CRITICAL,
+the browser suite's three SESSION 19 defects, no production dispatcher, no reachable source,
+the absent decision ledger, two of three website-changing write paths untraceable, and no
+deploy gate. **On SESSION 30's tree it is fourteen and six, and it still refuses**: the first
+two of the eight are closed — `validators_at_baseline` passes because `freshness.mjs`'s exit
+code now reports defects in the tree rather than the passage of time, and `browser_suite_pass`
+passes because the three defects are fixed in the website. **The remaining six are unchanged
+and none is this repository's to close by editing a check**: the adversarial CRITICAL is left
+red on purpose, and the other five need a governance decision or network this environment does
+not have. **Nothing in that directory
 writes and no verb there can activate anything**: switching a production mode on is a
 governance decision and protocol §24 reserves it to a person.
 `docs/PRODUCTION-OPERATING-MODE.md`.
@@ -172,10 +179,17 @@ Both are fixed, and **no check was weakened**: an element `assessRollback()` rep
 clauses 1 and 2 were blind to, because the engine returns an empty condition list for it), and
 step 6 still re-evaluates every condition on the measured facts and merges only on route
 `automatic`. **The ladder is now passable and nothing has passed it**: a clean fixture reaches
-the measured evaluation and is refused there on `verification_succeeded (unknown)` and
-`validators_pass (failed)`, the latter being `freshness.mjs`'s pre-existing exit 1. **No
-autonomous change has merged anything.** `docs/CONTINUOUS-IMPROVEMENT.md` §4, with the warrant
-quoted in §4a and the five changed assertions named in §4.4.
+the measured evaluation and is refused there on `verification_succeeded (unknown)` and, until
+SESSION 30, on `validators_pass (failed)` — the latter being `freshness.mjs`'s pre-existing
+exit 1, which was never a statement about any proposal. **SESSION 30 removed that second
+refusal by repairing what the exit code MEANS, not by waiving the condition**: the validators
+now return `pass_with_findings` against §12's baseline, so `validators_pass` is satisfied on
+the measured facts. `verification_succeeded` is still `unknown` and still refuses, and the
+other gates are unchanged. **No autonomous change has merged anything, and nothing has even
+been proposed**: `agent/records/` is git-ignored and empty in a fresh checkout, so
+`node agent/autonomy/cli.mjs survey --all` reports no proposals at all — which is not the same
+fact as nothing being eligible. `docs/CONTINUOUS-IMPROVEMENT.md` §4, with the warrant quoted
+in §4a and the five changed assertions named in §4.4.
 
 **THE ADVERSARIAL GATE HAS BEEN RED SINCE SESSION 24 AND THREE DOCUMENTS SAY OTHERWISE.**
 `node agent/policy/verify/cli.mjs` reports **1 SUCCEEDED** — HE-04, CRITICAL, the trigger phrase
@@ -292,7 +306,8 @@ Run all four before and after any change to data, markup, styles or scripts:
 node tools/validate.mjs        # data integrity — must be 0 errors
 node tools/i18n-audit.mjs      # locale register vs live DOM — must be 0 errors, 0 warnings
 node tools/design-qa.mjs       # markup and stylesheets — must be 0 errors
-node tools/freshness.mjs       # how stale the datasets are — read the report
+node tools/freshness.mjs       # how stale the datasets are — 0 unless the RECORD is defective
+node --test tools/selftest.mjs # the validators' own suite (SESSION 30)
 ```
 
 Zero-dependency Node scripts; run from the repository root.
@@ -300,6 +315,44 @@ Zero-dependency Node scripts; run from the repository root.
 **Baseline** (`docs/CURRENT-ARCHITECTURE.md` §12 records this in full): 0 errors across all
 four, 106 unverified records, and 5 pre-existing `design-qa` warnings listed by file and
 line. **A new warning is a finding, not noise.**
+
+**`freshness.mjs`'s exit code changed in SESSION 30 and its report did not.** It exits 1 on a
+**defect** — a property of the tree, true on every date, closed by a commit: a URL-less source
+with no `resolution`, a per-record verification field never used per-record. It exits 0 on a
+**staleness prompt** — a property of the calendar, which the same tree does not produce when
+audited as of the date it records, and which no commit makes permanently false. The prompts
+are still printed by name and counted; they are closed by verification work against primary
+sources and by nothing else, and **exit 0 is not evidence of currency**. The old rule made the
+result a function of the reader's clock (AUDIT F-15), which is how CI carried a red step no
+commit could close from SESSION 24 to SESSION 29 while `agent/implement/baseline.mjs` called
+the script "a report, not a gate". `tools/selftest.mjs` holds the split to that rule: F1
+asserts this tree reports NO prompt as of its own newest verification date, F3 that a planted
+defect fails on every date, F5 that the intervals were not widened, F6 that every counted
+prompt still appears in the body.
+
+**The four validators now have a suite of their own**, because two of SESSION 30's findings
+were defects in a CHECK rather than in the thing checked. `tools/selftest.mjs` plants a Google
+Fonts `@import`, a remote `fetch`, a `preconnect`, a missing required field and a `checksum`
+on a source record, and asserts each is caught. It is in `AGENT_SUITES`: a change under
+`tools/` runs it.
+
+**`tools/thirdparty.mjs` is what makes "no third-party requests" true of the repository rather
+than of the README.** `design-qa.mjs`'s old check read `href="…"` and `src="…"` in the HTML —
+double quotes only — so an `@import` or an `@font-face src` in a stylesheet was invisible to
+it, which is the exact path by which a Google Fonts dependency returns. The scan now covers
+the pages, the stylesheets and the modules, in every position a browser fetches from.
+`ALLOWED_RUNTIME_ORIGINS` is **empty**; an external runtime dependency is a Class D decision
+and goes there with its reason and who decided it. `data/` and `i18n/` are deliberately out of
+the surface: a URL in `data/sources.json` is a citation the page displays and never fetches.
+
+**`tools/source-contract.mjs` is the one contract a source record satisfies** — 12 required
+fields, 2 optional, each with its shape, why it exists, who writes it and who reads it —
+and `validate.mjs` enforces it. Before SESSION 30 the validator asked whether four values
+RESOLVED and never whether a record had the other eight at all, which is how the governance
+grant could allowlist eight fields of which six exist on none of the 77 records.
+**Those six are `ABSENT_BY_DESIGN` and are not a TODO**: every one asserts a document was
+FETCHED, and no URL here has ever been fetched (AUDIT F-12), so writing one would be a
+fabricated fact about evidence. A record carrying one is refused by name.
 
 The agent layer has its own suites, and a change to `agent/` runs these as well:
 
@@ -328,10 +381,14 @@ node --test agent/autonomy/selftest.mjs       # SESSION 26's limited-autonomy ru
 node --test agent/improve/selftest.mjs         # SESSION 27's improvement loop, incl. two real cycles over the real corpus
 node --test agent/production/selftest.mjs      # SESSION 29's production operating mode, incl. the refusal driven with synthetic facts
 node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
+node --test tools/selftest.mjs                 # SESSION 30, the four validators' own suite, incl. a planted Google Fonts import
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**1166 tests across the twenty-three suites**, all passing on SESSION 29's tree — 1165 with
+**1196 tests across the twenty-five suites**, all passing on SESSION 30's tree — 25 rather
+than 24 because `tools/selftest.mjs` is the first entry in `AGENT_SUITES` that is not under
+`agent/`, and it belongs there because that list is what runs for a change under `agent/` OR
+`tools/`. It was **1166 across twenty-three** on SESSION 29's tree — 1165 with
 one skipped when the working tree is on `main`, because `agent/autonomy/selftest.mjs` test 28
 rehearses the real cycle and the cycle refuses to run there. It was 1114 across twenty-two on
 the merged tree of SESSIONS 27 and 28. **Neither session's own figure is the total**: SESSION 27 measured 1069 and SESSION 28
@@ -352,8 +409,11 @@ which are **one occasion rather than two** — sibling branches from one base, e
 number to 21, neither right about the merged tree. That is the second time this assertion has
 caught exactly that shape, and it is the case it is most worth having for. That is the
 assertion doing its job. SESSION 29 is the ninth and is the one it was designed for rather
-than one it caught: the production operating mode was added WITH its suite in the list. It
-asserts twenty-three suites. SESSION 23 also changed `agent/detector/impact.mjs`'s
+than one it caught: the production operating mode was added WITH its suite in the list.
+SESSION 30 is the TENTH and is the first entry that is not under `agent/`: for thirty sessions
+the four validators that ARE this project's test suite had no suite of their own, and that
+session repaired two of them. It asserts twenty-four suites (twenty-five counting
+`.control-room/`, which the list excludes by prefix). SESSION 23 also changed `agent/detector/impact.mjs`'s
 `MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`;
 SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
 changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
@@ -472,11 +532,22 @@ patches, not checks. **Do not re-run** the latter two.
   changed. SESSION 19's browser suite closes some of its twelve open questions by measurement
   and **found three defects none of the four validators can see**: with scripting off the
   site has no navigation and the `<noscript>` notice does not say so; the skip link is the
-  tenth focusable element in the rendered page because `js/shell.js:258` inserts the chrome
-  ahead of it; and `enforcement.html` jumps h2 → h5 in its rendered outline. **None is
-  fixed** — each is Class C interface work needing a proposal and a human decision.
+  tenth focusable element in the rendered page because `js/shell.js` inserted the chrome
+  ahead of it; and `enforcement.html` jumps h2 → h5 in its rendered outline. **All three are
+  fixed in SESSION 30, under an explicit instruction to repair them at root cause**, and each
+  was a defect in the WEBSITE rather than in the check: the `<noscript>` notice now names the
+  navigation among what will not render and carries the six destinations, read out of
+  `js/shell.js`'s `NAV` by `tools/_footer.mjs` so the nav model keeps one home; `initShell()`
+  inserts the chrome AFTER the skip link instead of at `document.body.firstChild`; and the
+  pipeline stage panels are `h3`, which is their real level under the record's `h2`, with
+  `css/tools.css` unchanged in appearance because it sized that heading itself. A fourth was a
+  defect in the CHECK: `keyboard:focus-visible` reported `undecidable` on every run because it
+  read its "before" style off the element its own preceding `Tab` had already focused, so it
+  compared a focus ring with itself. It now blurs, tabs, and measures — and passes.
   `docs/BROWSER-QA.md` §4. Still not closed: contrast, screen readers, pixels, any browser
-  but Chromium.
+  but Chromium — `a11y:bound` says so on every run and is the one remaining `undecidable`,
+  deliberately: it is a statement of what the suite did not establish, and a green tick in its
+  place would be the thing this repository is arranged against.
 - **A passing validator proves less than it looks.** `design-qa.mjs` harvests CSS token
   declarations out of JavaScript by regex, so a `--foo:` in any JS string or comment
   silences a real error. `freshness.mjs` prints a `SOURCE REACHABILITY` heading but performs

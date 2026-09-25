@@ -36,7 +36,7 @@ import {
   PAGES, checkPageLoads, checkNavigation, checkInternalLinks, checkSearch, checkGlossary,
   checkComparison, checkEvidence, checkApplicability, checkInstrumentView,
   checkLanguageSwitching, checkViewports, checkKeyboard, checkDialogs,
-  checkNoThirdParty, checkAccessibility, checkThreshold,
+  checkNoThirdParty, checkAccessibility, checkThreshold, checkDeployedSubpath,
 } from './checks.mjs';
 
 export const BROWSER_QA_COMMAND = 'node agent/browser/cli.mjs';
@@ -139,6 +139,15 @@ export async function runBrowserQA({ only = null, pages = PAGES, quick = false, 
     if (wants('dialogs')) results.push(...await checkDialogs(page, site.origin));
     if (wants('responsive')) results.push(...await checkViewports(page, site.origin, { pages: quick ? pages.slice(0, 2) : pages.slice(0, 5) }));
     if (wants('accessibility')) results.push(...await checkAccessibility(page, site.origin, { pages: quick ? pages.slice(0, 3) : pages }));
+    /* SESSION 30. The same site, served where it is actually
+       published: GitHub Pages serves `main` as a PROJECT site at
+       /Eu-Digital-Policy/, and every run before this one served the
+       repository at `/`. It gets its own server and its own page
+       because it is a different origin, and it runs before the
+       network claim below so that its requests are not folded into a
+       statement about the shared page's traffic. */
+    if (wants('deployment')) results.push(...await checkDeployedSubpath(browser, { root, quick }));
+
     /* Last, because it is a claim about every request the whole run
        made and it can only be made once they have all been made. */
     if (wants('network')) results.push(...checkNoThirdParty(page, site.origin));

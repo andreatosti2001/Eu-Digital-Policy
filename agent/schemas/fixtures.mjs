@@ -58,7 +58,7 @@ const fourValidators = [
   { check: 'data integrity', command: 'node tools/validate.mjs', expected: '0 errors, and the same 106 unverified records as the baseline', why: 'Referential integrity, duplicate canonical facts, status-model discipline.' },
   { check: 'locale register', command: 'node tools/i18n-audit.mjs', expected: '0 errors, 0 warnings', why: 'A key added or removed without a declared disposition leaves three locale editions asserting the superseded English.' },
   { check: 'markup and stylesheets', command: 'node tools/design-qa.mjs', expected: '0 errors, the same 5 warnings recorded in docs/CURRENT-ARCHITECTURE.md §12', why: 'A sixth warning is a finding, not noise.' },
-  { check: 'freshness', command: 'node tools/freshness.mjs', expected: 'nothing past its stated interval', why: 'Verification dates age; the report says by how much.' },
+  { check: 'freshness', command: 'node tools/freshness.mjs', expected: 'exit 0 with no DEFECT in the freshness record; the staleness prompts are read, not waived', why: 'Verification dates age; the report says by how much. Its exit code reports defects in the tree — a URL-less source with no recorded reason — and not the passage of time, which no commit can make permanently false.' },
 ];
 
 const rollback = (over = {}) => ({

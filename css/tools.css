@@ -340,10 +340,10 @@ body[data-theme="light"]{
 .pipe-stage[data-state="not-reached"] .pipe-state{color:var(--pipe-not)}
 .pipe-stage[data-state="unknown"] .pipe-state{color:var(--undet)}
 .pipe-detail{border:1px solid var(--line);border-top:0;background:var(--ink-0);padding:12px 14px}
-.pipe-detail h5{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--paper);margin:0 0 6px;font-weight:500}
-.pipe-detail h5 span[data-state="reached"]{color:var(--pipe-reached)}
-.pipe-detail h5 span[data-state="not-reached"]{color:var(--pipe-not)}
-.pipe-detail h5 span[data-state="unknown"]{color:var(--undet)}
+.pipe-detail h3{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--paper);margin:0 0 6px;font-weight:500}
+.pipe-detail h3 span[data-state="reached"]{color:var(--pipe-reached)}
+.pipe-detail h3 span[data-state="not-reached"]{color:var(--pipe-not)}
+.pipe-detail h3 span[data-state="unknown"]{color:var(--undet)}
 .pipe-note{font-size:12.5px;line-height:1.55;color:var(--paper-dim);margin:0 0 7px}
 .pipe-why{font-size:11.5px;line-height:1.55;color:var(--tool-meta);margin:0}
 .pipe-why b{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mech);display:block;margin-bottom:3px}
@@ -1150,6 +1150,16 @@ body[data-theme="light"]{
 .noscript-note p{margin:0 0 var(--s-2);font-size:var(--t-body-sm);color:var(--text-2)}
 .noscript-note p:last-child{margin-bottom:0}
 .noscript-note code{font-family:var(--mono);font-size:var(--t-data)}
+
+/* The destinations a reader without scripting is given instead of the
+   header. Rendered only when scripting is off, so this styles markup the
+   ordinary reader never receives. */
+.noscript-nav{margin-top:var(--s-3)}
+.noscript-nav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:var(--s-2) var(--s-4)}
+.noscript-nav a{font-family:var(--mono);font-size:var(--t-data);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--text-2);text-decoration:none;
+  border-bottom:1px solid var(--line);padding-bottom:2px}
+.noscript-nav a:hover,.noscript-nav a:focus-visible{color:var(--text-1);border-bottom-color:var(--text-1)}
 
 @media print{ .noscript-note{display:none} }
 

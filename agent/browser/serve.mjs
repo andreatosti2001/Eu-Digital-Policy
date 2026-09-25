@@ -22,6 +22,17 @@
    TEST FIXTURE, not a deployment: it binds 127.0.0.1 only, and the
    path traversal guard below is what stops a crafted URL reading
    outside the repository.
+
+   `basePath` SERVES THE SITE WHERE IT IS ACTUALLY PUBLISHED. Every run
+   before SESSION 30 served the repository at `/`, and the deployment
+   is GitHub Pages at `/Eu-Digital-Policy/`. The two differ in exactly
+   one way that matters, and it is the way that breaks a static site
+   silently: a root-relative reference — `/css/tokens.css`,
+   `/data/claims.json`, `fetch('/i18n/locales.json')` — resolves at `/`
+   and 404s under a subpath. Everything here is written relative today,
+   so the suite found nothing; it found nothing because it could not
+   have found anything. `checkDeployedSubpath` in checks.mjs opens the
+   site under the published prefix and asks the same questions again.
    ============================================================ */
 
 import { createServer } from 'node:http';
@@ -49,11 +60,14 @@ export const MIME = {
 };
 
 /**
- * @param {{root?:string, host?:string}} opts
- * @returns {Promise<{origin:string, port:number, requests:Array, close:()=>Promise<void>}>}
+ * @param {{root?:string, host?:string, basePath?:string}} opts
+ * @returns {Promise<{origin:string, base:string, port:number, requests:Array, close:()=>Promise<void>}>}
  */
-export async function serveSite({ root = REPO_ROOT, host = '127.0.0.1' } = {}) {
+export async function serveSite({ root = REPO_ROOT, host = '127.0.0.1', basePath = '' } = {}) {
   const requests = [];
+  /* Normalised to "" or "/prefix" — no trailing slash, so the join
+     below is the same expression in both cases. */
+  const base = basePath ? `/${String(basePath).replace(/^\/+|\/+$/g, '')}` : '';
 
   const server = createServer((req, res) => {
     const started = Date.now();
@@ -61,7 +75,24 @@ export async function serveSite({ root = REPO_ROOT, host = '127.0.0.1' } = {}) {
     try { url = new URL(req.url, `http://${host}`); }
     catch { res.writeHead(400).end('bad request'); return; }
 
-    const rel = decodeURIComponent(url.pathname).replace(/^\/+/, '') || 'index.html';
+    let pathname = decodeURIComponent(url.pathname);
+
+    /* Under a base path, anything outside it is not served at all —
+       which is what GitHub Pages does with a project site, and is the
+       half a root-served fixture cannot show. A root-relative
+       `/css/tokens.css` in a page reaches this branch and 404s, exactly
+       as it would on the deployed site. */
+    if (base) {
+      if (pathname === base) pathname = `${base}/`;
+      if (!pathname.startsWith(`${base}/`)) {
+        requests.push({ method: req.method, path: url.pathname, status: 404, bytes: 0, ms: Date.now() - started });
+        res.writeHead(404).end('outside the deployment base path');
+        return;
+      }
+      pathname = pathname.slice(base.length);
+    }
+
+    const rel = pathname.replace(/^\/+/, '') || 'index.html';
 
     /* Traversal guard. normalize() collapses ".."; the resolved path
        is then checked to be inside root rather than assumed to be,
@@ -105,7 +136,13 @@ export async function serveSite({ root = REPO_ROOT, host = '127.0.0.1' } = {}) {
 
   const { port } = server.address();
   return {
-    origin: `http://${host}:${port}`,
+    /* `origin` is where the site is, base path included, so every
+       caller composes `${origin}/page.html` unchanged whether the
+       fixture is serving at the root or under the published prefix.
+       `base` is kept separately for the checks that need to reason
+       about the prefix itself. */
+    origin: `http://${host}:${port}${base}`,
+    base,
     port,
     requests,
     close: () => new Promise((ok) => server.close(ok)),

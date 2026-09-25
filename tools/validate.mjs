@@ -9,10 +9,18 @@
  *
  * Exits 1 if any ERROR is reported. WARNINGs and the unverified-data report do
  * not fail the run: unverified data is an honest state, not a defect.
+ *
+ * SESSION 30 added §3's source-record shape check. Referential integrity
+ * asked whether four fields on a source RESOLVE; nothing asked whether
+ * the record had the other eight at all, so the governance layer could
+ * allowlist eight fields of which six existed nowhere and no validator
+ * could tell. The contract is tools/source-contract.mjs and
+ * tools/selftest.mjs plants a violation of each rule in it.
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { violations as sourceViolations } from './source-contract.mjs';
 
 const DATA = 'data';
 const errors = [];
@@ -172,6 +180,15 @@ function checkRefs(ids) {
     checkOne(w, 'taxonomy', x.type);
     checkOne(w, 'taxonomy', x.url_status);
     checkOne(w, 'institution', x.publisher === 'eu' ? null : x.publisher);
+
+    /* And the record's SHAPE, which the four checks above do not touch.
+       They ask whether four values resolve; a record with no `title`,
+       no `accessed` and no `note` at all resolved just as well and
+       passed every check in this repository. The contract those
+       questions are asked against is tools/source-contract.mjs, which
+       is derived from what the 77 records actually carry and states,
+       per field, why it exists, who writes it and who reads it. */
+    for (const v of sourceViolations(x)) err(`SOURCE "${x.id}" ${v}`);
   }
   for (const x of arr(db.claims?.claims)) {
     const w = `claims/${x.id}`;
