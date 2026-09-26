@@ -62,7 +62,7 @@ function fakeCtx(over = {}) {
     environment: 'node test',
     data: {},
     dataset_errors: [],
-    baseline: { unverified: 109, checks: {} },
+    baseline: { unverified: 110, checks: {} },
     validators: null,
     browser_requested: false,
     browser: null,
@@ -252,7 +252,7 @@ test('overallScore() throws, and says why', () => {
 test('summarise() returns per-domain totals and no score, percentage or grade anywhere', () => {
   const s = summarise([
     { metric: BY_ID.get('knowledge.contradictory_records'), reading: measured(1) },
-    { metric: BY_ID.get('knowledge.unresolved_claims'), reading: measured(109) },
+    { metric: BY_ID.get('knowledge.unresolved_claims'), reading: measured(110) },
   ]);
   const text = JSON.stringify(s);
   for (const forbidden of ['"score"', '"grade"', '"overall"', '"health_score"', '"percentage"']) {
@@ -601,7 +601,7 @@ test('the unverified count matches the recorded baseline in §12', async () => {
   const ctx = await realCtx();
   const r = BY_ID.get('knowledge.unresolved_claims').measure(ctx);
   assert.equal(r.state, 'measured');
-  assert.equal(r.value, 109, 'the canonical count comes from validate.mjs across all ten datasets');
+  assert.equal(r.value, 110, 'the canonical count comes from validate.mjs across all ten datasets');
   assert.ok(r.detail.claims_and_enforcement_only < r.value, 'the narrower direct count must be reported beside it and labelled as narrower');
 });
 
@@ -639,7 +639,7 @@ test('movement is only computed between readings that BOTH measured', () => {
 
 test('a not-a-score metric moving is reported separately and never as an improvement', () => {
   const now = { recorded_at: 'b', coverage: {}, readings: [{ id: 'knowledge.unresolved_claims', domain: 'knowledge', direction: 'not_a_score', state: 'measured', value: 100 }] };
-  const then = { recorded_at: 'a', coverage: {}, readings: [{ id: 'knowledge.unresolved_claims', domain: 'knowledge', direction: 'not_a_score', state: 'measured', value: 109 }] };
+  const then = { recorded_at: 'a', coverage: {}, readings: [{ id: 'knowledge.unresolved_claims', domain: 'knowledge', direction: 'not_a_score', state: 'measured', value: 110 }] };
   const m = movement(now, then);
   assert.equal(m.changes.length, 0, 'a not-a-score metric must never appear in the ordinary changes list');
   assert.equal(m.not_a_score_changes.length, 1);

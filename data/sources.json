@@ -49,6 +49,20 @@
       "note": "Title and number confirmed by fetch."
     },
     {
+      "id": "src-dsa-text-unofficial-arts-14-19",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "eu-digital-services-act.com (unofficial reproduction of the DSA text)",
+      "title": "The Digital Services Act — Article 14 (Terms and conditions) and Article 19 (Exclusion for micro and small enterprises)",
+      "url": "https://www.eu-digital-services-act.com/Digital_Services_Act_Article_19.html",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Privately published reproduction of Regulation (EU) 2022/2065, not an official text; Arts. 14 and 19 (same URL pattern) read on 2026-09-26. Art. 14(4): providers of intermediary services 'shall act in a diligent, objective and proportionate manner' in applying and enforcing restrictions, 'with due regard to the rights and legitimate interests of all parties involved, including the fundamental rights of the recipients of the service'. Art. 19: Section 3 (online platforms), except Art. 24(3), does not apply to micro or small enterprises (and for 12 months after they lose that status), but does apply to any provider designated a VLOP under Art. 33. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+    },
+    {
       "id": "src-ec-vlop-designation-2023",
       "tier": "tier:2",
       "type": "source-type:press-release",

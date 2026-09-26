@@ -9,7 +9,7 @@
    THREE OF THESE TEN ARE `not_a_score`, AND THAT IS THE POINT.
 
    `unresolved_claims`, `verification_gaps` and `provenance_gaps`
-   count the 109 unverified records and the ten reference gaps in the
+   count the 110 unverified records and the ten reference gaps in the
    running text. Those numbers are the project's honesty
    (`docs/AI-SAFE-BOUNDARIES.md` §0.7), and the ONLY legitimate way to
    move them is verification work this monitor cannot see or do.

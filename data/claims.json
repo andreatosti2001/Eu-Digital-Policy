@@ -968,7 +968,7 @@
     {
       "id": "clm-art-16-over-removal-incentive",
       "type": "claim-type:critique",
-      "statement": "Because DSA Art. 16(3) makes a compliant notice give rise to actual knowledge and therefore liability exposure, while over-removal carries no equivalent penalty, the rational response to a borderline notice is removal.",
+      "statement": "Because DSA Art. 16(3) makes a compliant notice give rise to actual knowledge and therefore liability exposure, while over-removal carries no equivalent liability — Article 14(4)'s duty to act diligently, objectively and proportionately gives it a legal cost only in principle — the rational response to a borderline notice is removal.",
       "instruments": [
         "dsa"
       ],
@@ -984,6 +984,11 @@
           "locator": "Art. 16(3)"
         },
         {
+          "source_id": "src-dsa-text-unofficial-arts-14-19",
+          "supports": "supports:partial",
+          "locator": "Art. 14(4)"
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part III"
@@ -994,8 +999,36 @@
       ],
       "brief_part": "part-3",
       "published": "2026-08-19",
-      "last_verified": "2026-08-27",
-      "verification_note": "The provision is verified. The incentive argument is the author's, correctly typed as critique."
+      "last_verified": "2026-09-26",
+      "verification_note": "The provision is verified. The incentive argument is the author's, correctly typed as critique. Qualified on 2026-09-26 (audit T-15): Art. 14(4) does impose a duty of diligence, objectivity and proportionality with regard to users' fundamental rights, so 'no equivalent penalty' overstated the asymmetry. The audit's added phrase 'though one rarely enforced' was not used: no source for how often Art. 14(4) is enforced was found."
+    },
+    {
+      "id": "clm-dsa-micro-small-exemption",
+      "type": "claim-type:law",
+      "statement": "Micro and small enterprises are exempt from most online-platform obligations of the DSA (Art. 19) unless they are designated as very large online platforms.",
+      "instruments": [
+        "dsa"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-dsa",
+          "supports": "supports:partial",
+          "locator": "Art. 19"
+        },
+        {
+          "source_id": "src-dsa-text-unofficial-arts-14-19",
+          "supports": "supports:partial",
+          "locator": "Art. 19"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-3",
+      "published": "2022-10-27",
+      "last_verified": "2026-09-26",
+      "verification_note": "Added on 2026-09-26 (audit T-15). Art. 19 read from an unofficial reproduction (EUR-Lex returns HTTP 202 here): Section 3 of Chapter III, except Art. 24(3), does not apply to micro or small platforms, nor for 12 months after they lose that status, unless designated as VLOPs. 'Most' is used because the exclusion covers Section 3 only, and other sections carry exclusions of their own that were not checked."
     },
     {
       "id": "clm-art-34-open-concept",

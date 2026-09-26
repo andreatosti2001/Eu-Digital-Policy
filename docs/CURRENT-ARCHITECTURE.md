@@ -341,7 +341,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 109 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 110 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 5 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -366,6 +366,7 @@ the corpus being more honest, not less.
 - 107 → 106: T-26: clm-iccl-ireland-bottleneck verified against ICCL's 2021 report (it had no last_verified).
 - 106 → 105: T-17: clm-x-data-access-staffing verified against the X decision text, recital 320 (it had no last_verified).
 - 105 → 109: T-35: four Part IX syntheses recorded as interpretation claims resting on the brief alone (clm-vagueness-is-delegation, -overlap-one-control-set, -rulebook-foreign-policy, -consolidation-contested).
+- 109 → 110: T-15: new clm-dsa-micro-small-exemption rests on an unofficial reproduction of DSA Art. 19 (graded partial, so no external direct source).
 
 The other numbers on this block are unchanged.
 
