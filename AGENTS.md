@@ -665,7 +665,21 @@ patches, not checks. **Do not re-run** the latter two.
 ## Git
 
 Develop on the session's designated branch; **never push to `main` without explicit
-permission.** Read the full `git diff` before committing — a one-character `null` → `"unknown"`
+permission.**
+
+**Branch hygiene (AUDIT-2026-09-25 T-40).**
+- **At the start of every session**, after `git fetch --all`, run
+  `git branch -r --no-merged origin/main`. Report to the author every branch that is
+  neither your own nor recorded in the branch register in `docs/HANDOVER.md`, before you
+  start the work.
+- **At the end of every session**, ask the author whether to open a pull request to `main`,
+  and record the branch's disposition in that register. A session whose work is neither
+  merged nor closed is a finding for the next session, not background.
+
+This is the audit's rule ("every session ends with a PR to main") adapted to the standing
+instruction below: a pull request is opened when the author says so, so the obligation is to
+ask. Twenty-three of the thirty-three remote branches besides `main` on 26 September 2026 were already in
+`main` and had never been deleted. Read the full `git diff` before committing — a one-character `null` → `"unknown"`
 edit changes what a record asserts. Do not open a pull request unless asked. Do not include a
 model identifier in any commit message or pushed artifact. See
 `.agents/skills/git-workflow/SKILL.md`.

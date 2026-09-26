@@ -9,6 +9,28 @@
 
 ---
 
+## Branch register — AUDIT-2026-09-25 T-40, measured 26 September 2026
+
+`git branch -r --no-merged origin/main`, after `git fetch --all`. `main` is `6da38ee`
+(11 September). **No pull request is open.** Each disposition below is a **proposal awaiting
+the author's decision**. No branch has been merged or deleted.
+
+| Branch | Ahead of main | What it holds | Proposed disposition |
+|---|---:|---|---|
+| `claude/new-session-egb0gs` | this session | AUDIT-2026-09-25 remediation, Fasi 1–4. It contains `new-session-e5xmjm` and SESSION 30 (`repo-website-stabilization-0dmm8g`) in full | Open a PR to `main` when the author asks. Merging it also merges the two branches it contains |
+| `claude/new-session-e5xmjm` | 13 | Fase 1, fast-forwarded into the branch above | Delete once the branch above is merged |
+| `claude/repo-website-stabilization-0dmm8g` | 4 | SESSION 30 | Contained in `new-session-egb0gs`; delete once that is merged |
+| `claude/foundation-verification-audit-40ozpo` | 4 | `docs/AUDIT-2026-09-03.md` (the SESSION 12 audit) and a HANDOVER/CLAUDE.md gate on SESSION 13 | Read it first. Merging conflicts in `AGENTS.md` and `docs/HANDOVER.md`, and it is 47 commits behind. If kept, bring the audit document in on its own and close the branch |
+| `claude/agent-governance-protocol-gfbgfb` | 1 | Redraws the threshold wheel (`js/threshold.js`, `style.css`) | A visual change, so the author decides. It merges cleanly, but it has not been run in a browser from this branch |
+| `claude/eu-digital-policy-browser-qa-5f78wc` | 1 | `agent/browser/proposals.mjs`: ImplementationProposals from browser-suite failures | Never reached `main` (the file is absent). It merges cleanly but has not been tested against the current suites. Merge after running them, or close |
+| `claude/ux-ui-auditor-agent-sy99b6` | 1 | A handover note that SESSIONS 16 and 17 are merged | Obsolete, and conflicts in `docs/HANDOVER.md`. Close |
+| `scout/digest-digest-2026-09-{07,14,21}…` | 1 each | One Source Scout digest each | Merge into `main`, or into one `scout/digests` branch. **Side effect:** committed digests change `agent/production/readiness.mjs` source reachability from *unmeasured* to *measured*. Since T-39 the workflow reads these branches anyway, so nothing breaks while they wait |
+
+**Contained in `main`, 23 branches, safe to delete:** every other `claude/*` branch on the
+remote. `git branch -r --merged origin/main` lists them.
+
+---
+
 ## SESSION 30 — the stabilization pass, and the two checks that were wrong about the site
 
 **What was asked:** a forensic stabilization pass — get the browser suite to 0 failures
