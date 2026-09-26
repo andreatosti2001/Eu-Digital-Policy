@@ -497,6 +497,20 @@
       "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text. Art. 2(2) lists as core platform services (a) online intermediation, (b) search engines, (c) social networking, (d) video-sharing, (e) number-independent interpersonal communications, (f) operating systems, (g) web browsers, (h) virtual assistants, (i) cloud computing services and (j) online advertising; generative AI is not listed. Cited because EUR-Lex returns HTTP 202 with no body in this environment; to be replaced by src-eurlex-dma once the consolidated text can be read."
     },
     {
+      "id": "src-dma-text-unofficial-arts-11-39",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "eu-digital-markets-act.com (unofficial reproduction of the DMA text)",
+      "title": "The final text of the Digital Markets Act (DMA) — Articles 11, 13, 14, 15, 38 and 39",
+      "url": "https://www.eu-digital-markets-act.com/Digital_Markets_Act_Article_38.html",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text; one page per article (same URL pattern, Digital_Markets_Act_Article_N.html), each read on 2026-09-26; the URL recorded is Art. 38's. Art. 11 'Reporting': a compliance report within 6 months of designation, updated at least annually. Art. 13 'Anti-circumvention'. Art. 14 'Obligation to inform about concentrations'. Art. 15 'Obligation of an audit': an independently audited description of consumer-profiling techniques. Art. 38(7): a national competition authority may, on its own initiative, investigate possible non-compliance with Arts. 5, 6 and 7 on its territory, and reports its findings 'to support the Commission in its role as sole enforcer'; the Commission's opening of proceedings under Art. 20 ends that possibility. Art. 39 'Cooperation with national courts': national courts in proceedings for the application of the Regulation may ask the Commission for information or its opinion, and may not decide against a Commission decision. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+    },
+    {
       "id": "src-insighteu-whatsapp-interim-2026",
       "tier": "tier:4",
       "type": "source-type:journalism",

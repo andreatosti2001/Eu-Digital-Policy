@@ -1353,7 +1353,7 @@
     {
       "id": "clm-dma-commission-exclusive",
       "type": "claim-type:law",
-      "statement": "The Commission is the exclusive enforcer of the DMA; there is no national enforcement route.",
+      "statement": "The Commission is the sole enforcer of the DMA; national competition authorities may investigate possible non-compliance and report to support the Commission (Art. 38(7)), and national courts may apply the DMA in proceedings before them (Art. 39).",
       "instruments": [
         "dma"
       ],
@@ -1369,6 +1369,11 @@
           "source_id": "src-eurlex-dma",
           "supports": "supports:direct",
           "locator": "Art. 38"
+        },
+        {
+          "source_id": "src-dma-text-unofficial-arts-11-39",
+          "supports": "supports:partial",
+          "locator": "Arts. 38(7), 39"
         }
       ],
       "legal_basis": [
@@ -1376,8 +1381,8 @@
       ],
       "brief_part": "part-4",
       "published": "2022-10-12",
-      "last_verified": "2026-08-27",
-      "verification_note": null
+      "last_verified": "2026-09-26",
+      "verification_note": "Corrected on 2026-09-26 (audit T-10). The earlier statement said there is no national enforcement route; Art. 38(7) lets national competition authorities investigate possible non-compliance with Arts. 5-7 on their territory, reporting to support the Commission 'in its role as sole enforcer', and Art. 39 governs national courts' proceedings for the application of the Regulation. Read from an unofficial reproduction of the text because EUR-Lex returns HTTP 202 with no body here; not yet checked against the Official Journal text. The brief's own sentence (part-4.p2) does not state exclusivity and is unchanged; data/instruments.json enforcement_mechanism is corrected to match."
     },
     {
       "id": "clm-apple-proactive-enablement",
