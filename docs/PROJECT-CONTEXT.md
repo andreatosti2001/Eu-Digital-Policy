@@ -108,7 +108,7 @@ WARNINGS 0
 UNVERIFIED / REQUIRES VERIFICATION  106
 ```
 
-113 records now carry an explicit unverified or requires-verification note. The figure
+111 records now carry an explicit unverified or requires-verification note. The figure
 above is the snapshot at that commit; the count has moved since, in both directions, as
 claims were checked against their sources and as new, not-yet-verified records were added
 (`docs/CURRENT-ARCHITECTURE.md` §12 records every movement). That is

@@ -1178,8 +1178,8 @@
     "src-ec-dma-cloud-mi-2025",
     "src-ec-cloud-gatekeeper-preliminary-2026"
    ],
-   "requires_verification": true,
-   "verification_note": "The date is derived, not published: IP/25/2717 says the Commission 'aims to conclude' within 12 months of 18 November 2025, hence November 2026 at month precision. It is an administrative target, not a deadline in the Regulation. A preliminary position in favour of designation was reached on 25 June 2026 (IP/26/1444). The audit of 2026-09-25 proposes clearing requires_verification; left for a person to clear.",
+   "requires_verification": false,
+   "verification_note": "The date is derived, not published: IP/25/2717 says the Commission 'aims to conclude' within 12 months of 18 November 2025, hence November 2026 at month precision. It is an administrative target, not a deadline in the Regulation. A preliminary position in favour of designation was reached on 25 June 2026 (IP/26/1444). requires_verification cleared on 2026-09-26 by the author's decision: the date and its status as a target both come from the Commission's own press release.",
    "last_verified": "2026-09-26"
   },
   {
@@ -1302,8 +1302,8 @@
    "sources": [
     "src-ec-dma-cloud-mi-2025"
    ],
-   "requires_verification": true,
-   "verification_note": "The date is derived, not published: IP/25/2717 says the final report 'will result' within 18 months of 18 November 2025, hence May 2027 at month precision. It is an administrative target, not a deadline in the Regulation; the report may propose updating the cloud obligations by delegated act (Arts. 12 and 49). The audit of 2026-09-25 proposes clearing requires_verification; left for a person to clear.",
+   "requires_verification": false,
+   "verification_note": "The date is derived, not published: IP/25/2717 says the final report 'will result' within 18 months of 18 November 2025, hence May 2027 at month precision. It is an administrative target, not a deadline in the Regulation; the report may propose updating the cloud obligations by delegated act (Arts. 12 and 49). requires_verification cleared on 2026-09-26 by the author's decision: the date and its status as a target both come from the Commission's own press release.",
    "last_verified": "2026-09-26"
   },
   {

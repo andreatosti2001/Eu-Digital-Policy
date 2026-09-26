@@ -9,7 +9,7 @@
    THREE OF THESE TEN ARE `not_a_score`, AND THAT IS THE POINT.
 
    `unresolved_claims`, `verification_gaps` and `provenance_gaps`
-   count the 113 unverified records and the ten reference gaps in the
+   count the 111 unverified records and the ten reference gaps in the
    running text. Those numbers are the project's honesty
    (`docs/AI-SAFE-BOUNDARIES.md` §0.7), and the ONLY legitimate way to
    move them is verification work this monitor cannot see or do.
@@ -243,7 +243,7 @@ export const KNOWLEDGE_METRICS = [
         const bs = brief.meta?.standfirst;
         const is_ = blob.meta?.standfirst;
         if (bs && is_ && bs !== is_) {
-          disagreements.push({ field: 'meta.standfirst', brief_json: `${bs}`.slice(0, 113), inlined: `${is_}`.slice(0, 113), kind: 'the two copies disagree — this is the drift AGENTS.md records as already having happened' });
+          disagreements.push({ field: 'meta.standfirst', brief_json: `${bs}`.slice(0, 111), inlined: `${is_}`.slice(0, 111), kind: 'the two copies disagree — this is the drift AGENTS.md records as already having happened' });
         }
       }
 

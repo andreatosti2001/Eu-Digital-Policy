@@ -3063,9 +3063,7 @@
       "brief_part": "part-10",
       "published": "2024-09-09",
       "last_verified": "2026-09-26",
-      "verification_note": "Checked against the report text on 2026-09-26. Part A, p. 24, states each of: around 70% of foundational AI models developed in the US since 2017; three US hyperscalers over 65% of the global and European cloud market; the largest European cloud operator just 2% of the EU market; around 22% of worldwide autonomous-robotics activity; around 17% of AI-services activity. The earlier 'European providers under 15%' figure does not appear in the report and has been replaced by Part B, p. 77: EU cloud providers' share decreased to under 16% in 2021 — a share of the EU market, not the global one. Part B, p. 79, gives the foundation-model figure as 73%; the prose follows Part A's 'around 70%'. The reference gap is left set for a person to clear: every percentage in the statement is now located in the report, but removing a gap is not an agent's decision.",
-      "reference_gap": true,
-      "gap_note": "the individual percentages"
+      "verification_note": "Checked against the report text on 2026-09-26. Part A, p. 24, states each of: around 70% of foundational AI models developed in the US since 2017; three US hyperscalers over 65% of the global and European cloud market; the largest European cloud operator just 2% of the EU market; around 22% of worldwide autonomous-robotics activity; around 17% of AI-services activity. The earlier 'European providers under 15%' figure does not appear in the report and has been replaced by Part B, p. 77: EU cloud providers' share decreased to under 16% in 2021 — a share of the EU market, not the global one. Part B, p. 79, gives the foundation-model figure as 73%; the prose follows Part A's 'around 70%'. Reference gap cleared on 2026-09-26 by the author's decision: every percentage in the statement is located in the report, with page numbers."
     },
     {
       "id": "clm-cloud-ai-act-dual-basis",
