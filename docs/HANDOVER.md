@@ -1,8 +1,23 @@
 # HANDOVER
 
-**Last updated:** SESSION 30 · 12 September 2026
-**Branch:** `claude/repo-website-stabilization-0dmm8g`, cut from `origin/main` at `6da38ee`.
-**Not merged. No pull request opened.**
+**Last updated:** AUDIT-2026-09-25 remediation · 26 September 2026
+**Branch:** `claude/new-session-egb0gs`. It contains SESSION 30 (below) in full, and
+`claude/new-session-e5xmjm`. **Open as pull request #3 to `main`; not merged.** The branch
+register directly below records every other branch's disposition. The remediation's own
+account is in the commit messages (one per audit task, T-01 … T-40), in
+`docs/CURRENT-ARCHITECTURE.md` §12 (the unverified count, 106 → 111), and in the PR
+description.
+
+**Two CI jobs are red on PR #3 and were already red on `main` at `6da38ee`:**
+- *The adversarial verification gate*, on finding HE-04, which SESSION 29 left red by
+  decision.
+- *Production operating mode*'s traceability step (1 of 3 website-changing write paths is
+  traceable).
+
+Neither is a regression, and both are a later session's to decide.
+
+*The SESSION 30 header, kept as it was written:* last updated SESSION 30 · 12 September
+2026 · branch `claude/repo-website-stabilization-0dmm8g`, cut from `origin/main` at `6da38ee`.
 
 **SESSION 30 is a single branch from `6da38ee`, with no sibling.** `AGENT_SUITES.length` is
 **24**, and the twenty-fourth entry is the first that is not under `agent/`.

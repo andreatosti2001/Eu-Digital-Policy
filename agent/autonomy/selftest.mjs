@@ -793,6 +793,17 @@ test('28 · a rehearsal writes nothing, cuts no branch, and says whether it woul
       records: storeWith(p), ledger: emptyLedger(),
     });
 
+    /* A pull_request run in CI checks out a detached merge commit, where
+       there is no branch to merge back into. The cycle must refuse there,
+       and say why; asserting that is a stronger test than skipping, and
+       the rehearsal path is still covered by every push run. Found on the
+       first pull request this repository's CI ran (AUDIT-2026-09-25). */
+    if (branchBefore === 'HEAD') {
+      assert.equal(r.outcome, 'refused');
+      assert.match(r.why, /detached HEAD/);
+      return;
+    }
+
     assert.equal(r.outcome, 'rehearsed',
       `a flawless proposal in an enabled category over a granted path did not reach the rehearsal: ${r.why}`);
     for (const g of r.gates ?? []) assert.equal(g.ok, true, `gate ${g.gate} refused a flawless proposal: ${g.why}`);
