@@ -2283,7 +2283,7 @@
     {
       "id": "clm-nis2-management-liability",
       "type": "claim-type:law",
-      "statement": "NIS2 Article 20 requires management bodies to approve the cybersecurity risk-management measures and provides that they can be held personally liable.",
+      "statement": "NIS2 Article 20(1) requires management bodies to approve and oversee the cybersecurity risk-management measures and provides that they can be held liable for the entity's infringements; for essential entities, Article 32(6) additionally requires that the natural persons responsible can be held liable for breaching their duties.",
       "instruments": [
         "nis2"
       ],
@@ -2299,6 +2299,11 @@
           "source_id": "src-eurlex-nis2",
           "supports": "supports:direct",
           "locator": "Art. 20"
+        },
+        {
+          "source_id": "src-nis2-text-unofficial-arts-20-32",
+          "supports": "supports:partial",
+          "locator": "Arts. 20(1), 32(6)"
         }
       ],
       "legal_basis": [
@@ -2306,8 +2311,8 @@
       ],
       "brief_part": "part-7",
       "published": "2022-12-27",
-      "last_verified": "2026-08-27",
-      "verification_note": null
+      "last_verified": "2026-09-26",
+      "verification_note": "Corrected on 2026-09-26 (audit T-12). Art. 20(1) makes management bodies of essential and important entities liable for the entity's infringements of Art. 21, which is not the same as personal liability; personal liability of the natural persons responsible is Art. 32(6), and only for essential entities. Both read from an unofficial reproduction of Directive (EU) 2022/2555 (EUR-Lex returns HTTP 202 with no body here); not yet checked against the Official Journal text. How national transpositions implement either provision is not covered."
     },
     {
       "id": "clm-nis2-only-four-on-time",

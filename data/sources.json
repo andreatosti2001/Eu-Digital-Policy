@@ -119,6 +119,20 @@
       "note": "Title, number and entry into force of 16 January 2023 confirmed by fetch."
     },
     {
+      "id": "src-nis2-text-unofficial-arts-20-32",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "nis-2-directive.com (unofficial reproduction of the NIS2 text)",
+      "title": "The NIS 2 Directive — Article 20 (Governance) and Article 32 (Supervisory and enforcement measures in relation to essential entities)",
+      "url": "https://www.nis-2-directive.com/NIS_2_Directive_Article_20.html",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Privately published reproduction of Directive (EU) 2022/2555, not an official text; Arts. 20 and 32 (same URL pattern) read on 2026-09-26. Art. 20(1): management bodies of essential and important entities approve the Art. 21 risk-management measures, oversee their implementation and can be held liable for infringements by the entities of that Article. Art. 32(6): Member States ensure that natural persons responsible for or representing an essential entity can be held liable for breach of their duties to ensure compliance. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+    },
+    {
       "id": "src-eurlex-cer",
       "tier": "tier:1",
       "type": "source-type:regulation",

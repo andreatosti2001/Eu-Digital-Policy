@@ -1163,7 +1163,7 @@
           "id": "nis2:art-20",
           "number": "20",
           "heading": "Governance",
-          "summary": "Management bodies must approve the cybersecurity risk-management measures and can be held personally liable. The provision that actually changes boardroom behaviour.",
+          "summary": "Management bodies must approve and oversee the cybersecurity risk-management measures and can be held liable for the entity's infringements (Art. 20(1)); at essential entities, the natural persons responsible can also be held liable (Art. 32(6)). The provision that actually changes boardroom behaviour.",
           "obligation_on": [
             "actor:essential-entity",
             "actor:important-entity"

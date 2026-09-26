@@ -460,7 +460,7 @@
         "activity": ["activity:critical-infrastructure-operation"]
       },
       "outcome": "outcome:likely",
-      "rationale": "NIS2 sets ten baseline risk-management measures and a reporting cascade of 24 hours, 72 hours and one month. Article 20 makes management bodies personally liable for approving the measures — the provision that actually changes boardroom behaviour. Whether an organisation is an essential or an important entity turns on its sector and size.",
+      "rationale": "NIS2 sets ten baseline risk-management measures and a reporting cascade of 24 hours, 72 hours and one month. Article 20 makes management bodies approve and oversee the measures and liable for the entity's infringements, and Article 32(6) adds personal liability for those responsible at essential entities — the provision that actually changes boardroom behaviour. Whether an organisation is an essential or an important entity turns on its sector and size.",
       "obligations": ["nis2:art-3", "nis2:art-20", "nis2:art-21", "nis2:art-23"],
       "authority": ["nca-*", "enisa"],
       "dates": ["tl-nis2-2024-10-17-transposition"],
