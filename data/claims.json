@@ -1146,13 +1146,23 @@
           "source_id": "src-gc-supervisory-fee-2025",
           "supports": "supports:direct",
           "locator": null
+        },
+        {
+          "source_id": "src-mlex-2025-dsa-fee-appeal",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
+          "source_id": "src-mlex-2026-dsa-fee-appeal-oj",
+          "supports": "supports:partial",
+          "locator": null
         }
       ],
       "legal_basis": [],
       "brief_part": "part-3",
       "published": "2025-09-10",
-      "last_verified": "2026-08-27",
-      "verification_note": "The annulment was of the implementing decisions on the ground that the methodology should have been adopted by delegated act, with effects maintained for up to twelve months. It is not an annulment of the fee mechanism. Whether the Commission's appeals are pending has not been verified."
+      "last_verified": "2026-09-26",
+      "verification_note": "Re-read CURIA Press Release No 114/25 (10 September 2025) on 2026-09-26: the implementing decisions were annulled because the methodology for counting average monthly active recipients should have been adopted by delegated act; the Court found no error affecting the obligation to pay the 2023 fee and maintained the decisions' effects for up to twelve months from the judgments becoming final. It is not an annulment of the fee mechanism. The prose's statement that the Commission has appealed rests on two paywalled MLex reports (24 November 2025; 12 January 2026, citing two Official Journal notices), of which only the standfirst/summary could be read: tier-4 journalism, and hence only partial support. The appeal case numbers, lodging dates and current state (whether still pending on the date read) are not established; the Official Journal notices could not be retrieved (EUR-Lex returns HTTP 202 with no body; CURIA case search unavailable on 2026-09-26)."
     },
     {
       "id": "clm-press-release-governance",

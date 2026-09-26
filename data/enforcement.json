@@ -509,18 +509,20 @@
     "clm-gc-supervisory-fee-annulled"
    ],
    "sources": [
-    "src-gc-supervisory-fee-2025"
+    "src-gc-supervisory-fee-2025",
+    "src-mlex-2025-dsa-fee-appeal",
+    "src-mlex-2026-dsa-fee-appeal-oj"
    ],
    "requires_verification": true,
-   "verification_note": "The brief states the Commission's appeals are pending; that has not been separately verified here.",
-   "last_verified": "2026-08-27",
+   "verification_note": "That the Commission appealed both judgments is reported by MLex (24 November 2025; 12 January 2026, citing two Official Journal notices) — paywalled tier-4 journalism of which only the standfirst/summary was read. The Official Journal notices, the appeal case numbers and lodging dates, and whether the appeals were still pending on 2026-09-26 are not established from a primary source; EUR-Lex and CURIA's case search could not be read in this environment.",
+   "last_verified": "2026-09-26",
    "appeal": {
     "status": "appeal:pending",
     "lodged_by": "European Commission",
     "forum": "Court of Justice of the European Union",
     "lodged_date": null,
     "case_ref": null,
-    "note": "The brief states the Commission's appeals are pending. Not independently verified here.",
+    "note": "Appeals by the Commission against both judgments reported by MLex on 24 November 2025 and 12 January 2026 (the latter citing two Official Journal notices). Case numbers and lodging dates not retrieved; no primary source read. 'Pending' is the state as reported in January 2026, not verified as current.",
     "requires_verification": true
    }
   },

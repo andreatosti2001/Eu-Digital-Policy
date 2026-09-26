@@ -254,9 +254,37 @@
       "url": "https://curia.europa.eu/site/upload/docs/application/pdf/2025-09/cp250114en.pdf",
       "url_status": "url:live",
       "published": "2025-09-10",
-      "accessed": "2026-08-27",
+      "accessed": "2026-09-26",
       "language": "en",
       "note": "The DSA supervisory-fee implementing decisions were annulled because the methodology should have been adopted by delegated act; effects provisionally maintained for up to 12 months. This is an annulment of the fee decisions, not of the fee mechanism."
+    },
+    {
+      "id": "src-mlex-2025-dsa-fee-appeal",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "MLex",
+      "title": "Meta, TikTok facing EU Commission appeal against supervisory fee court ruling",
+      "url": "https://www.mlex.com/mlex/data-privacy-security/articles/2414639/meta-tiktok-facing-eu-commission-appeal-against-supervisory-fee-court-ruling",
+      "url_status": "url:paywalled",
+      "published": "2025-11-24",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Paywalled; only the standfirst was read: Meta Platforms and TikTok are facing an appeal by the European Commission after the General Court held the Commission used the wrong procedure to set DSA supervisory fees. Gives no case number or lodging date in the part that was read."
+    },
+    {
+      "id": "src-mlex-2026-dsa-fee-appeal-oj",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "MLex",
+      "title": "Meta and TikTok supervisory fee wins appealed by EU Commission",
+      "url": "https://www.mlex.com/mlex/articles/2428819/meta-and-tiktok-supervisory-fee-wins-appealed-by-eu-commission",
+      "url_status": "url:paywalled",
+      "published": "2026-01-12",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Paywalled; only the summary was read: Meta Platforms Ireland and TikTok Technology are facing appeals by the European Commission, as two documents in the Official Journal of the European Union showed. The Official Journal notices themselves (and their case numbers) could not be retrieved: EUR-Lex returns HTTP 202 with no body in this environment and CURIA's case search reported 'temporarily unavailable' on 2026-09-26."
     },
     {
       "id": "src-ec-x-fine-2025",
