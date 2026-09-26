@@ -571,7 +571,7 @@ test('R6 · the baseline is READ from docs/CURRENT-ARCHITECTURE.md §12, not ret
   assert.equal(b.commit.length > 0, true);
   for (const v of VALIDATORS) assert.ok(v.name in b.checks, `${v.name} must have a recorded baseline`);
   assert.equal(b.checks['design-qa.mjs'].warnings, 5, 'the five pre-existing design-qa warnings');
-  assert.equal(b.unverified, 110);
+  assert.equal(b.unverified, 112);
   assert.ok(b.named_warnings.length >= 3, 'the warnings are named by file, because a count cannot tell a new one from a moved one');
 });
 

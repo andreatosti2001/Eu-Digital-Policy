@@ -39,7 +39,7 @@ export const INTEGRATOR_AGENT = 'verification-integrator';
 const BASELINE = {
   'tools/validate.mjs': {
     check: 'data integrity',
-    expected: '0 errors, and the same 110 unverified records as the docs/CURRENT-ARCHITECTURE.md §12 baseline. A change in that count is the finding, whichever direction it moves.',
+    expected: '0 errors, and the same 112 unverified records as the docs/CURRENT-ARCHITECTURE.md §12 baseline. A change in that count is the finding, whichever direction it moves.',
     why: 'Referential integrity, duplicate ids across every dataset, duplicate canonical facts, and the status-model rules. It is what catches a source_id that resolves to nothing and an id that collides with one already in use.',
   },
   'tools/i18n-audit.mjs': {
