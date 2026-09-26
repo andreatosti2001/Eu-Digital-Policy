@@ -53,14 +53,14 @@ recorded so that any closed branch can be restored with `git push origin <sha>:r
 | `eu-digital-policy-browser-qa-5f78wc` | `ad41809` | Merged and tested: 4 browser-suite failures. Its fix recipes target `tools/_footer.mjs` text that SESSION 30 rewrote when it fixed the no-JS navigation, so its proposals are obsolete. Merge aborted. **Close** |
 | `ux-ui-auditor-agent-sy99b6` | `cf84dee` | An obsolete handover note. **Close** |
 | `scout/digest-*` × 3 | `5bdd3fe` `c2548af` `f941ea4` | **Merged into this branch.** Readiness source reachability is now measured: 2 of 6, from the 21 September run |
-| `agent-governance-protocol-gfbgfb` | `ed226d2` | No recommendation was made: a visual change is the author's call. **Left open** |
+| `agent-governance-protocol-gfbgfb` | `ed226d2` | **Not merged. Delete.** Decided on the author's instruction: test-merged onto this branch, it fails the Control Room visual standard (`agent/production/visual.mjs`) on two criteria. **vs-02**: the approved design is three bands 3 · 7 · 12 carrying 22 letters, and the redraw removes the letters. **vs-04**: its new search-result mark `⊙` belongs to no declared enum. The branch was written on 9 September, before SESSION 29 fixed that standard, and it was never checked against it. Without it, every criterion but the unmeasurable vs-08 passes |
 | `new-session-e5xmjm`, `repo-website-stabilization-0dmm8g` | `73a9f23`, `f52e94f` | Contained in this branch. Delete once it is merged into `main` |
 
 **Deleted by the author, 26 September 2026:** the 23 branches contained in `main`, and the six
 closed or carried-forward branches above. The session's git access could not delete them;
 it may push only its own branch. Five branches remain: `main`, `new-session-egb0gs` (PR #3),
 `new-session-e5xmjm`, `repo-website-stabilization-0dmm8g` (delete the last two once PR #3 is
-merged) and `agent-governance-protocol-gfbgfb` (the author's decision).
+merged) and `agent-governance-protocol-gfbgfb` (not merged; delete, see its row above).
 
 ---
 
