@@ -625,8 +625,8 @@
     "src-edri-hungary-ai-act"
    ],
    "requires_verification": true,
-   "verification_note": "A NEGATIVE record: it asserts the absence of enforcement, which is true only at an instant. action_status is null because no action exists to describe. Civil-society legal analysis concluding a breach of AI Act Art. 5 and of the Charter is sourced; the absence of Commission action is corroborated by the same sources reporting continued calls for infringement proceedings, and no contrary evidence was found on 27 August 2026. This record must be re-verified on every publication.",
-   "last_verified": "2026-08-27",
+   "verification_note": "A NEGATIVE record: it asserts the absence of enforcement, which is true only at an instant. action_status is null because no action exists to describe. Civil-society legal analysis concluding a breach of AI Act Art. 5 and of the Charter is sourced; the absence of Commission action is corroborated by the same sources reporting continued calls for infringement proceedings, and no contrary evidence was found on 26 September 2026, after the April 2026 change of government in Hungary. This record must be re-verified on every publication.",
+   "last_verified": "2026-09-26",
    "appeal": {
     "status": "appeal:none",
     "lodged_by": null,

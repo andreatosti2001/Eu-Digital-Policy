@@ -777,6 +777,34 @@
       "note": null
     },
     {
+      "id": "src-euronews-magyar-2026",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "Euronews",
+      "title": "Péter Magyar sworn in as Hungary's new prime minister after landslide April election victory",
+      "url": "https://www.euronews.com/my-europe/2026/05/09/peter-magyar-sworn-in-as-hungarys-new-prime-minister-after-landslide-april-election-victor",
+      "url_status": "url:live",
+      "published": "2026-05-09",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Péter Magyar's Tisza party won the April 2026 parliamentary election, ending Viktor Orbán's government; Magyar took office on 9 May 2026 (formally sworn in on 12 May)."
+    },
+    {
+      "id": "src-euobserver-pride-2026",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "EUobserver",
+      "title": "Budapest free to celebrate Pride again, but Orbán-surveillance machine still in place",
+      "url": "https://euobserver.com/224022/budapest-free-to-celebrate-pride-again-but-orban-surveillance-machine-still-in-place/",
+      "url_status": "url:live",
+      "published": "2026-06-25",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Opinion piece by Eva Simon, Aljosa Ajanovic Andelic and Karolina Iwanska. States that the police officially acknowledged the Budapest Pride march scheduled for 27 June 2026, a reversal from the previous government, but that 'the laws that criminalise Pride participation and enable biometric surveillance of protesters remain in force' — i.e. the March 2025 amendments were not repealed."
+    },
+    {
       "id": "src-edri-hungary-ai-act",
       "tier": "tier:4",
       "type": "source-type:commentary",
@@ -785,10 +813,10 @@
       "title": "Hungary's new biometric surveillance laws violate the AI Act",
       "url": "https://edri.org/our-work/hungarys-new-biometric-surveillance-laws-violate-the-ai-act/",
       "url_status": "url:live",
-      "published": "2025",
-      "accessed": "2026-08-27",
+      "published": "2025-05-06",
+      "accessed": "2026-09-26",
       "language": "en",
-      "note": "Joint legal analysis with ECNL, Liberties and the Hungarian Civil Liberties Union."
+      "note": "Joint legal analysis with ECNL, Liberties and the Hungarian Civil Liberties Union. States its own classification directly: real-time remote biometric identification is prohibited under AI Act Art. 5(1)(h), while retrospective ('post') facial recognition is classified as high-risk rather than prohibited; the analysis argues the Hungarian system's near-immediate processing of newly generated footage places it on the real-time side of that line, which is the contested step."
     },
     {
       "id": "src-cms-enforcement-tracker",

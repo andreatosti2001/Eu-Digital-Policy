@@ -2660,8 +2660,8 @@
       ],
       "brief_part": "part-11",
       "published": "2025",
-      "last_verified": "2026-08-27",
-      "verification_note": "Correctly typed as interpretation: this is the civil-society coalition's legal conclusion, not a judicial finding. The Hungarian legislation itself has not been retrieved. Note the brief's own careful point that Hungary has not invoked the national security exemption, so this is not a hard case about the boundary of Art. 4(2) TEU."
+      "last_verified": "2026-09-26",
+      "verification_note": "Correctly typed as interpretation: this is the civil-society coalition's legal conclusion, not a judicial finding. The Hungarian legislation itself has not been retrieved. Note the brief's own careful point that Hungary has not invoked the national security exemption, so this is not a hard case about the boundary of Art. 4(2) TEU. The classification is itself contested on a narrower point: EDRi's own analysis distinguishes prohibited real-time identification from the merely high-risk retrospective ('post') kind, and rests the 'real-time' characterisation on how quickly the Hungarian system processes newly generated footage — a factual question the coalition's analysis asserts rather than a public technical finding settles."
     },
     {
       "id": "clm-hungary-no-infringement",
@@ -2694,13 +2694,23 @@
           "source_id": "src-edri-hungary-ai-act",
           "supports": "supports:partial",
           "locator": null
+        },
+        {
+          "source_id": "src-euronews-magyar-2026",
+          "supports": "supports:context",
+          "locator": null
+        },
+        {
+          "source_id": "src-euobserver-pride-2026",
+          "supports": "supports:context",
+          "locator": null
         }
       ],
       "legal_basis": [],
       "brief_part": "part-11",
       "published": "2025",
-      "last_verified": "2026-08-28",
-      "verification_note": "Re-checked 28 Aug 2026. Contemporary commentary confirms that civil-society organisations were urging the Commission to open proceedings and that Hungary had not invoked the national-security exemption. The negative half of the claim — that no proceedings have been opened — cannot be proved by any source and is true only at an instant. Re-verify before every publication."
+      "last_verified": "2026-09-26",
+      "verification_note": "Re-checked 26 Sep 2026. Contemporary commentary confirms that civil-society organisations were urging the Commission to open proceedings and that Hungary had not invoked the national-security exemption. The negative half of the claim — that no proceedings have been opened — cannot be proved by any source and is true only at an instant. The political context has changed since the claim was written: Péter Magyar's government took office 9 May 2026 and Budapest Pride went ahead with police acknowledgement in June 2026, but the March 2025 amendments this claim concerns were not repealed and no infringement proceeding was found on this basis. Re-verify before every publication."
     },
     {
       "id": "clm-enforcement-asymmetry",
