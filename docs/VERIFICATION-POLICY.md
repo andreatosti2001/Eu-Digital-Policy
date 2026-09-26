@@ -84,7 +84,7 @@ absence observed on an unfetched branch is not a fact about the repository.
 
 Then compare the four validators against the recorded baseline in
 `docs/CURRENT-ARCHITECTURE.md` §12 — 0 errors, five named `design-qa` warnings,
-105 unverified records — so a new warning is distinguishable from an inherited
+107 unverified records — so a new warning is distinguishable from an inherited
 one.
 
 ## 4. Reproducibility

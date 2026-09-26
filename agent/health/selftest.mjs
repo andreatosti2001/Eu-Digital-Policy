@@ -601,7 +601,7 @@ test('the unverified count matches the recorded baseline in §12', async () => {
   const ctx = await realCtx();
   const r = BY_ID.get('knowledge.unresolved_claims').measure(ctx);
   assert.equal(r.state, 'measured');
-  assert.equal(r.value, 105, 'the canonical count comes from validate.mjs across all ten datasets');
+  assert.equal(r.value, 107, 'the canonical count comes from validate.mjs across all ten datasets');
   assert.ok(r.detail.claims_and_enforcement_only < r.value, 'the narrower direct count must be reported beside it and labelled as narrower');
 });
 

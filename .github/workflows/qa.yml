@@ -537,7 +537,7 @@ jobs:
             echo "- **No URL has ever been fetched.** \`freshness.mjs\` prints a SOURCE REACHABILITY"
             echo "  heading and performs no network I/O (AUDIT F-12)."
             echo "- **No contrast was computed and no screen reader was run.** README limitation 7."
-            echo "- **105 records carry an unverified note.** They are changed by doing the"
+            echo "- **107 records carry an unverified note.** They are changed by doing the"
             echo "  verification work, not by a passing check."
             echo "- **No Control Room instance was reached.** The suite starts one on an ephemeral"
             echo "  loopback port and proves the boundary against it; nothing here has ever spoken"

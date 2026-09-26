@@ -562,6 +562,7 @@
       "milestones": [
         "tl-dma-2022-11-01-entry-into-force",
         "tl-dma-2023-05-01-application",
+        "tl-dma-2024-03-07-compliance",
         "tl-dma-2026-04-28-review",
         "tl-dma-2026-11-01-designation",
         "tl-dma-2027-05-01-market-investigation"
@@ -759,7 +760,8 @@
         "tl-ai-act-2026-08-02-application",
         "tl-ai-act-2026-12-02-application",
         "tl-ai-act-2027-12-02-application",
-        "tl-ai-act-2028-08-02-application"
+        "tl-ai-act-2028-08-02-application",
+        "tl-ai-act-2030-08-02-application"
       ],
       "amended_by": [
         "ai-omnibus"
@@ -1086,8 +1088,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-7",
       "legislative_status": "status:transposition-pending",
-      "status_as_of": "2026-08-19",
-      "status_note": "In force since 2023, but a directive: obligations bite at national dates, and transposition is materially incomplete across the Union.",
+      "status_as_of": "2026-09-26",
+      "status_note": "In force since 2023, but a directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed and transposition is still materially incomplete: the Commission sent letters of formal notice to 23 Member States in November 2024 and referred Ireland, Spain, France and the Netherlands to the Court of Justice in July 2026.",
       "milestones": [
         "tl-nis2-2023-01-16-entry-into-force",
         "tl-nis2-2024-10-17-transposition",
@@ -1240,7 +1242,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-7",
       "legislative_status": "status:transposition-pending",
-      "status_as_of": "2026-08-19",
+      "status_as_of": "2026-09-26",
+      "status_note": "A directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed; on 29 April 2026 the Commission referred Bulgaria, France, Luxembourg, the Netherlands, Poland, Spain and Sweden to the Court of Justice for failing to transpose.",
       "milestones": [
         "tl-cer-2023-01-16-entry-into-force",
         "tl-cer-2024-10-17-transposition"
@@ -1283,7 +1286,8 @@
       "provisions": [],
       "claims": [],
       "sources": [
-        "src-eurlex-cer"
+        "src-eurlex-cer",
+        "src-ec-cer-referral-2026"
       ],
       "last_verified": "2026-08-27",
       "legal_basis": [
@@ -1356,11 +1360,12 @@
       "kind": "kind:regulation",
       "scope_class": "scope:core",
       "brief_part": "part-7",
-      "legislative_status": "status:in-force",
-      "status_as_of": "2026-08-19",
-      "status_note": "In force since December 2024. Vulnerability reporting begins September 2026; full application December 2027. Not yet applicable in substance.",
+      "legislative_status": "status:partly-applicable",
+      "status_as_of": "2026-09-26",
+      "status_note": "In force since December 2024. Chapter IV (notification of conformity assessment bodies) has applied since 11 June 2026 and Article 14 reporting since 11 September 2026; the Regulation as a whole applies from 11 December 2027. The scalar alone is insufficient — read the milestones.",
       "milestones": [
         "tl-cra-2024-12-10-entry-into-force",
+        "tl-cra-2026-06-11-application",
         "tl-cra-2026-09-11-reporting-deadline",
         "tl-cra-2027-12-11-application"
       ],
@@ -1394,7 +1399,8 @@
       "provisions": [],
       "claims": [],
       "sources": [
-        "src-eurlex-cra"
+        "src-eurlex-cra",
+        "src-cra-text-unofficial-art71"
       ],
       "last_verified": "2026-08-27",
       "legal_basis": [
@@ -1408,7 +1414,7 @@
         "com-2025-836",
         "reg-2026-1744"
       ],
-      "celex": null,
+      "celex": "32026R1744",
       "short_name": "AI Omnibus",
       "full_name": "Regulation (EU) 2026/1744 (Digital Omnibus on AI)",
       "kind": "kind:regulation",
@@ -1459,7 +1465,8 @@
       "sources": [
         "src-eurlex-ai-omnibus",
         "src-ec-ai-omnibus-in-force",
-        "src-ep-legtrain-ai-omnibus"
+        "src-ep-legtrain-ai-omnibus",
+        "src-op-ai-omnibus-record"
       ],
       "last_verified": "2026-08-27",
       "legal_basis": [

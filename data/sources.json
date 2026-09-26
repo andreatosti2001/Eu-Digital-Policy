@@ -49,6 +49,34 @@
       "note": "Title and number confirmed by fetch."
     },
     {
+      "id": "src-ec-vlop-designation-2023",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Digital Services Act: Commission designates first set of Very Large Online Platforms and Search Engines (IP/23/2413)",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_23_2413",
+      "url_status": "url:live",
+      "published": "2023-04-25",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Read via the Press Corner API on 2026-09-26. Seventeen VLOPs (including Twitter) and two VLOSEs designated; 'the companies will now have to comply, within four months, with the full set of new obligations under the DSA'."
+    },
+    {
+      "id": "src-op-dsa-vlop-2023-08-25",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": null,
+      "publisher_name": "data.europa.eu (Publications Office of the European Union)",
+      "title": "Digital Services Act takes effect for large online platforms",
+      "url": "https://data.europa.eu/en/news-events/news/digital-services-act-takes-effect-large-online-platforms",
+      "url_status": "url:live",
+      "published": "2023-08-25",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "News item dated 25 August 2023, read on 2026-09-26: 'Today the Digital Services Act (DSA) comes into force for large online platforms', naming 19 platforms and search engines."
+    },
+    {
       "id": "src-eurlex-dma",
       "tier": "tier:1",
       "type": "source-type:regulation",
@@ -89,6 +117,20 @@
       "accessed": "2026-09-26",
       "language": "en",
       "note": "Privately published explorer of Regulation (EU) 2024/1689, marking the Digital Omnibus amendments; not an official text. Art. 2 and Art. 4 pages (same URL pattern) read on 2026-09-26. Art. 2(3): the Regulation does not apply to AI systems where and in so far as they are placed on the market, put into service, or used with or without modification exclusively for military, defence or national security purposes. Art. 4(1), as amended: providers and deployers of AI systems shall take measures to support the development of AI literacy of their staff and others operating AI on their behalf, without being required to guarantee any specific level; new Art. 4(2)-(3) task the Commission, Member States and the Board with supporting it. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+    },
+    {
+      "id": "src-aia-text-unofficial-arts-111-113",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "artificialintelligenceact.eu (unofficial AI Act Explorer)",
+      "title": "EU AI Act Explorer — Articles 101, 111 and 113, as amended",
+      "url": "https://artificialintelligenceact.eu/article/113/",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Privately published explorer of Regulation (EU) 2024/1689 marking the Digital Omnibus amendments; not an official text. Read on 2026-09-26. Art. 113: applies from 2 August 2026; point (b) applies Chapter V and related chapters from 2 August 2025 'with the exception of Article 101'. Art. 101(1): the Commission may fine GPAI model providers up to 3% of worldwide turnover or EUR 15 000 000, whichever is higher. Art. 111(2): providers and deployers of high-risk AI systems intended to be used by public authorities shall comply by 2 August 2030. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
     },
     {
       "id": "src-eurlex-data-act",
@@ -203,6 +245,20 @@
       "note": "Title and number confirmed by fetch."
     },
     {
+      "id": "src-ec-cer-referral-2026",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission decides to refer Bulgaria, France, Luxembourg, the Netherlands, Poland, Spain and Sweden to the Court of Justice for failing to transpose the Directive on critical entities resilience (IP/26/910)",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_26_910",
+      "url_status": "url:live",
+      "published": "2026-04-29",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Read via the Press Corner API on 2026-09-26. Member States had to transpose the CER Directive by 17 October 2024; most have notified complete transposition; Bulgaria, France, Luxembourg, the Netherlands, Poland, Spain and Sweden have not. Letters of formal notice November 2024, reasoned opinions July 2025, referral with a request for financial sanctions."
+    },
+    {
       "id": "src-eurlex-dora",
       "tier": "tier:1",
       "type": "source-type:regulation",
@@ -231,6 +287,20 @@
       "note": "Title, number and entry into force of 10 December 2024 confirmed by fetch."
     },
     {
+      "id": "src-cra-text-unofficial-art71",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "european-cyber-resilience-act.com (unofficial reproduction of the CRA text)",
+      "title": "Cyber Resilience Act, Article 71 — Entry into force and application",
+      "url": "https://www.european-cyber-resilience-act.com/Cyber_Resilience_Act_Article_71.html",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Privately published reproduction of Regulation (EU) 2024/2847, not an official text; read on 2026-09-26. Art. 71(2): applies from 11 December 2027; Article 14 from 11 September 2026; Chapter IV (Articles 35 to 51) from 11 June 2026. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+    },
+    {
       "id": "src-eurlex-pld",
       "tier": "tier:1",
       "type": "source-type:regulation",
@@ -257,6 +327,20 @@
       "accessed": "2026-08-27",
       "language": "en",
       "note": "Directly supports entry into force on 27 July 2026."
+    },
+    {
+      "id": "src-op-ai-omnibus-record",
+      "tier": "tier:2",
+      "type": "source-type:legislative-document",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union",
+      "title": "Regulation (EU) 2026/1744 (Digital Omnibus on AI) — publication record",
+      "url": "https://op.europa.eu/en/publication-detail/-/publication/b459c07f-86fb-11f1-bf5e-01aa75ed71a1/language-en",
+      "url_status": "url:live",
+      "published": "2026-07-24",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "The Publications Office's catalogue record for the act, read on 2026-09-26: 'CELEX : 32026R1744', 'ELI : reg/2026/1744/oj', 'OJ : L_202601744', published 2026-07-24. The act's text itself was not opened here."
     },
     {
       "id": "src-eurlex-dsa-da-2050",
@@ -607,6 +691,48 @@
       "accessed": "2026-09-26",
       "language": "en",
       "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text; one page per article (same URL pattern, Digital_Markets_Act_Article_N.html), each read on 2026-09-26; the URL recorded is Art. 38's. Art. 11 'Reporting': a compliance report within 6 months of designation, updated at least annually. Art. 13 'Anti-circumvention'. Art. 14 'Obligation to inform about concentrations'. Art. 15 'Obligation of an audit': an independently audited description of consumer-profiling techniques. Art. 38(7): a national competition authority may, on its own initiative, investigate possible non-compliance with Arts. 5, 6 and 7 on its territory, and reports its findings 'to support the Commission in its role as sole enforcer'; the Commission's opening of proceedings under Art. 20 ends that possibility. Art. 39 'Cooperation with national courts': national courts in proceedings for the application of the Regulation may ask the Commission for information or its opinion, and may not decide against a Commission decision. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+    },
+    {
+      "id": "src-dma-text-unofficial-art54",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "eu-digital-markets-act.com (unofficial reproduction of the DMA text)",
+      "title": "The final text of the Digital Markets Act (DMA) — Article 54, Entry into force and application",
+      "url": "https://www.eu-digital-markets-act.com/Digital_Markets_Act_Article_54.html",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text; read on 2026-09-26. Art. 54: the Regulation 'shall apply from 2 May 2023', with Art. 3(6)-(7) and Arts. 40 and 46-50 from 1 November 2022 and Arts. 42-43 from 25 June 2023 (postponed to the application date if earlier). Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+    },
+    {
+      "id": "src-ec-dma-designation-2023",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Digital Markets Act: Commission designates six gatekeepers (IP/23/4328)",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_23_4328",
+      "url_status": "url:live",
+      "published": "2023-09-06",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Read via the Press Corner API on 2026-09-26. Alphabet, Amazon, Apple, ByteDance, Meta and Microsoft designated for 22 core platform services; the gatekeepers 'now have six months to comply with the full list of do's and don'ts', though some obligations apply from designation."
+    },
+    {
+      "id": "src-ec-dma-gatekeepers-comply-2024",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Designated gatekeepers must now comply with all obligations under the Digital Markets Act",
+      "url": "https://digital-markets-act.ec.europa.eu/designated-gatekeepers-must-now-comply-all-obligations-under-digital-markets-act-2024-03-07_en",
+      "url_status": "url:live",
+      "published": "2024-03-07",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "News announcement read on 2026-09-26: 'As of today, Apple, Alphabet, Meta, Amazon, Microsoft and ByteDance, the six gatekeepers designated by the Commission in September 2023, have to fully comply with all obligations in the Digital Markets Act.'"
     },
     {
       "id": "src-insighteu-whatsapp-interim-2026",

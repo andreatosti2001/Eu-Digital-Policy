@@ -341,7 +341,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 105 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 107 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 5 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -353,7 +353,14 @@ unverified count went from 106 to 105, and only because verification work was do
 its report source is now `supports:direct`, and it therefore stops appearing as
 `claim (no external direct source)`. Its `reference_gap` is **still set** — clearing that is a
 person's decision — so the claim still carries its asterisk. No note was deleted, no flag was
-cleared and nothing was bulk-stamped. The other numbers on this block are unchanged.
+cleared and nothing was bulk-stamped.
+
+**A second movement (AUDIT-2026-09-25 T-29, 2026-09-26), in the other direction.** The count
+went from 105 to 107 because two NEW timeline events were added — `tl-cra-2026-06-11-application`
+(CRA Chapter IV, Art. 71) and `tl-ai-act-2030-08-02-application` (AI Act Art. 111(2)) — and both
+were read from unofficial reproductions of the text, so both carry `requires_verification`.
+A rise that comes from recording what has not yet been checked against the Official Journal is
+the corpus being more honest, not less. The other numbers on this block are unchanged.
 
 **Unchanged in SESSION 30, and that is the point of recording it.** All four still report
 exactly these numbers. `freshness.mjs` reached `exit 0` by the exit code answering a question
