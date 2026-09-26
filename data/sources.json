@@ -1393,6 +1393,34 @@
       "note": "Advocacy network's account, read 2026-09-26: the Polish President vetoed the draft law adapting Polish law to the DSA in January 2026 (press reports date it 9 January). The President's own announcement on prezydent.pl could not be read: the site served a Cloudflare challenge to every client in this environment."
     },
     {
+      "id": "src-300polityka-pl-dsa-2026",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "300polityka",
+      "title": "Prezydent podpisał 5 ustaw, w tym pierwszą wdrażającą DSA",
+      "url": "https://300polityka.pl/pl/live/2026-09-25/prezydent-podpisal-5-ustaw-w-tym-pierwsza-wdrazajaca-dsa",
+      "url_status": "url:live",
+      "published": "2026-09-25",
+      "accessed": "2026-09-26",
+      "language": "pl",
+      "note": "Read 2026-09-26. On 25 September 2026 the President signed, among five laws, the amendment to the act on providing services by electronic means — one of two DSA-implementing bills sent to the Sejm after the January veto — establishing the Digital Services Coordinator (the President of UKE) and a National Council for Digital Services. Parliament was still working on the second bill, on blocking illegal content, the issue behind the veto. Quotes the presidential spokesman's announcement."
+    },
+    {
+      "id": "src-interia-pl-dsa-2026",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "Interia Biznes",
+      "title": "Nawrocki podpisał ustawę. Polska będzie mogła karać platformy internetowe",
+      "url": "https://biznes.interia.pl/gospodarka/news-nawrocki-podpisal-ustawe-polska-bedzie-mogla-karac-platformy,nId,23549252",
+      "url_status": "url:live",
+      "published": "2026-09",
+      "accessed": "2026-09-26",
+      "language": "pl",
+      "note": "Read 2026-09-26. The President signed the amendment allowing the President of UKE to be appointed Digital Services Coordinator, so that Poland can handle citizens' complaints and bring proceedings against platforms infringing the DSA."
+    },
+    {
       "id": "src-cispe-ceo-letter-2026",
       "tier": "tier:4",
       "type": "source-type:commentary",

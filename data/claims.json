@@ -638,7 +638,7 @@
     {
       "id": "clm-poland-dsa-veto",
       "type": "claim-type:fact",
-      "statement": "In January 2026 the Polish President vetoed the national law implementing the DSA.",
+      "statement": "In January 2026 the Polish President vetoed the national law implementing the DSA; in September 2026 he signed a narrower replacement making the head of UKE the Digital Services Coordinator, while a second bill, on blocking illegal content, was still before parliament.",
       "instruments": [
         "dsa"
       ],
@@ -650,13 +650,23 @@
           "source_id": "src-edri-poland-dsa-veto-2026",
           "supports": "supports:direct",
           "locator": null
+        },
+        {
+          "source_id": "src-300polityka-pl-dsa-2026",
+          "supports": "supports:direct",
+          "locator": null
+        },
+        {
+          "source_id": "src-interia-pl-dsa-2026",
+          "supports": "supports:partial",
+          "locator": null
         }
       ],
       "legal_basis": [],
       "brief_part": "part-3",
       "published": "2026-01",
       "last_verified": "2026-09-26",
-      "verification_note": "Added on 2026-09-26 (audits T-22, T-27). Sourced to EDRi (tier 4); the official announcement on prezydent.pl could not be read here (Cloudflare challenge). Time-sensitive: press reports of 25 September 2026 (not read) say the President has since signed a revised law implementing part of the DSA. The prose's January 2026 statement is still true as history, but the current state should be checked and the prose may need a sentence."
+      "verification_note": "Added on 2026-09-26 (audits T-22, T-27). Sourced to EDRi (tier 4); the official announcement on prezydent.pl could not be read here (Cloudflare challenge). Updated 2026-09-26 by the author's decision: the September 2026 signing is now read (300polityka, 25 September 2026, quoting the presidential spokesman; Interia) and stated in the prose. The President's own site could not be read. Time-sensitive: the second bill is pending."
     },
     {
       "id": "clm-cispe-cloud-ceos-letter",
