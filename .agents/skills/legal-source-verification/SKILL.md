@@ -18,7 +18,7 @@ verification recorded that did not happen cannot be detected by any tool in this
 ## When to invoke
 
 Setting or refreshing `last_verified`. Proposing to remove or reword a `verification_note`,
-a `reference_gap`, or an asterisk in the prose. Working any of the 107 unverified records.
+a `reference_gap`, or an asterisk in the prose. Working any of the 106 unverified records.
 Reviewing a claim that grades **Unresolved**.
 
 ## Scope boundary

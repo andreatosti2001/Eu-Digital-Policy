@@ -341,7 +341,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 107 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 106 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 5 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -360,7 +360,12 @@ went from 105 to 107 because two NEW timeline events were added — `tl-cra-2026
 (CRA Chapter IV, Art. 71) and `tl-ai-act-2030-08-02-application` (AI Act Art. 111(2)) — and both
 were read from unofficial reproductions of the text, so both carry `requires_verification`.
 A rise that comes from recording what has not yet been checked against the Official Journal is
-the corpus being more honest, not less. The other numbers on this block are unchanged.
+the corpus being more honest, not less.
+
+**Later movements, one line each (every one is in the commit that made it):**
+- 107 → 106: T-26: clm-iccl-ireland-bottleneck verified against ICCL's 2021 report (it had no last_verified).
+
+The other numbers on this block are unchanged.
 
 **Unchanged in SESSION 30, and that is the point of recording it.** All four still report
 exactly these numbers. `freshness.mjs` reached `exit 0` by the exit code answering a question

@@ -406,7 +406,7 @@
     {
       "id": "clm-iccl-ireland-bottleneck",
       "type": "claim-type:critique",
-      "statement": "The Irish Council for Civil Liberties has called Ireland the GDPR's worst bottleneck, documenting failure to transmit draft decisions to peer authorities in the great majority of major cross-border cases.",
+      "statement": "In 2021 the Irish Council for Civil Liberties called Ireland the GDPR's worst bottleneck, documenting failure to transmit draft decisions to peer authorities in the great majority of major cross-border cases.",
       "instruments": [
         "gdpr"
       ],
@@ -427,8 +427,38 @@
       "legal_basis": [],
       "brief_part": "part-2",
       "published": null,
-      "last_verified": null,
-      "verification_note": "requires verification — the specific ICCL report has not been identified and no URL located."
+      "last_verified": "2026-09-26",
+      "verification_note": "The report is identified: ICCL, 'Europe's enforcement paralysis: ICCL's 2021 GDPR report', 13 September 2021 (read 2026-09-26). It calls the Irish DPC 'the bottleneck of GDPR enforcement against Big Tech across the EU' and says 98% of major GDPR cases referred to Ireland remain unresolved. 'Worst' is the brief's gloss on 'the bottleneck'; the comparison with Spain in the prose was not found on the report's summary page and was not checked against the full report. The prose now dates the critique to 2021 (audit T-26); it describes Ireland five years ago, not today."
+    },
+    {
+      "id": "clm-icle-law-of-everything",
+      "type": "claim-type:critique",
+      "statement": "The International Center for Law & Economics argues, borrowing Nadezhda Purtova's phrase, that the GDPR has been interpreted into a 'law of everything', and that the EDPB's proportionality analysis tests limitations on data protection without asking whether the scope of data protection remains proportionate to the burdens it imposes.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [
+        "edpb"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-icle-gdpr-law-of-everything",
+          "supports": "supports:direct",
+          "locator": "Section B and footnote 3"
+        },
+        {
+          "source_id": "src-purtova-law-of-everything",
+          "supports": "supports:context",
+          "locator": null
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": "2026-03-13",
+      "last_verified": "2026-09-26",
+      "verification_note": "Added on 2026-09-26 (audit T-26). ICLE's comments on the Digital Omnibus (13 March 2026), read that day, call the GDPR a 'law of everything' and footnote the phrase to Purtova, 'The Law of Everything' (2018) 10 Law Innov Technol 40. Purtova is attached as context only: her conclusion (abandon the personal/non-personal distinction) is not ICLE's (narrow the GDPR's scope). The argument is ICLE's and is typed as critique."
     },
     {
       "id": "clm-breach-notifications-per-day",

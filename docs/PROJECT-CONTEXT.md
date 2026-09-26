@@ -108,10 +108,10 @@ WARNINGS 0
 UNVERIFIED / REQUIRES VERIFICATION  106
 ```
 
-107 records now carry an explicit unverified or requires-verification note — 106 at the
-commit above; one fewer once `clm-draghi-statistics` was checked against the Draghi report, and
-two more once two new, not-yet-verified timeline events were recorded, both on 2026-09-26
-(`docs/CURRENT-ARCHITECTURE.md` §12 records both movements). That is
+106 records now carry an explicit unverified or requires-verification note. The figure
+above is the snapshot at that commit; the count has moved since, in both directions, as
+claims were checked against their sources and as new, not-yet-verified records were added
+(`docs/CURRENT-ARCHITECTURE.md` §12 records every movement). That is
 a declared state, not a defect: the validator reports it without failing, and
 the bibliography page computes and displays the live tally on every load so no
 document can drift from it. The README states the position plainly and this
