@@ -461,6 +461,100 @@
       "verification_note": "Added on 2026-09-26 (audit T-26). ICLE's comments on the Digital Omnibus (13 March 2026), read that day, call the GDPR a 'law of everything' and footnote the phrase to Purtova, 'The Law of Everything' (2018) 10 Law Innov Technol 40. Purtova is attached as context only: her conclusion (abandon the personal/non-personal distinction) is not ICLE's (narrow the GDPR's scope). The argument is ICLE's and is typed as critique."
     },
     {
+      "id": "clm-edpb-cef-2026-transparency",
+      "type": "claim-type:fact",
+      "statement": "The EDPB made transparency and information obligations under GDPR Articles 12 to 14 the subject of its 2026 coordinated enforcement action, with twenty-five data protection authorities taking part.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [
+        "edpb"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-edpb-cef-2026",
+          "supports": "supports:direct",
+          "locator": null
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": "2026-03-19",
+      "last_verified": "2026-09-26",
+      "verification_note": "Added on 2026-09-26 (audits T-22, T-27), from the EDPB's launch announcement of 19 March 2026. The same sentence's link between the CEF topic and CMS-corpus fine categories is the brief's reading, covered by clm-four-categories-94pct, not by this claim."
+    },
+    {
+      "id": "clm-poland-dsa-veto",
+      "type": "claim-type:fact",
+      "statement": "In January 2026 the Polish President vetoed the national law implementing the DSA.",
+      "instruments": [
+        "dsa"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-edri-poland-dsa-veto-2026",
+          "supports": "supports:direct",
+          "locator": null
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-3",
+      "published": "2026-01",
+      "last_verified": "2026-09-26",
+      "verification_note": "Added on 2026-09-26 (audits T-22, T-27). Sourced to EDRi (tier 4); the official announcement on prezydent.pl could not be read here (Cloudflare challenge). Time-sensitive: press reports of 25 September 2026 (not read) say the President has since signed a revised law implementing part of the DSA. The prose's January 2026 statement is still true as history, but the current state should be checked and the prose may need a sentence."
+    },
+    {
+      "id": "clm-cispe-cloud-ceos-letter",
+      "type": "claim-type:fact",
+      "statement": "Twenty-four European cloud CEOs, writing with the chair of CISPE, asked that sovereignty be defined by control — ownership of the technology and protection from foreign jurisdiction — rather than by EU presence, to prevent 'sovereignty washing'.",
+      "instruments": [
+        "cloud-ai-development-act"
+      ],
+      "provisions": [],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-cispe-ceo-letter-2026",
+          "supports": "supports:direct",
+          "locator": "Principle 1; signatories, p. 2"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-10",
+      "published": "2026-03-17",
+      "last_verified": "2026-09-26",
+      "verification_note": "Added on 2026-09-26 (audit T-22). The prose said the CEOs 'demanded absolute technical and legal control requirements'; the letter does not say that, and the sentence now follows its Principle 1. 'Twenty-four' counts the company heads; the 25th signatory is CISPE's chairwoman."
+    },
+    {
+      "id": "clm-draghi-national-champions",
+      "type": "claim-type:fact",
+      "statement": "Draghi cautioned that promoting competitiveness should not lead to policies of defending national champions that can stifle competition and innovation.",
+      "instruments": [],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-ec-draghi-report",
+          "supports": "supports:direct",
+          "locator": "Part A, p. 13"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-10",
+      "published": "2024-09-09",
+      "last_verified": "2026-09-26",
+      "verification_note": "Added on 2026-09-26 (audit T-22). Part A, printed p. 13: competitiveness 'should also not lead to policies of defending \"national champions\" that can stifle competition and innovation'. The prose's next clause, that shielding strategic players from compliance can be read as doing exactly that, is the author's argument and is not covered by this claim."
+    },
+    {
       "id": "clm-breach-notifications-per-day",
       "type": "claim-type:fact",
       "statement": "Regulators are processing an average of 443 breach notifications per day, a 22% year-on-year increase.",

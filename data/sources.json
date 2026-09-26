@@ -1197,6 +1197,48 @@
       "note": "Read on 2026-09-26. Reports an analysis by 'insurance brokerage Alliance Risk': an estimated EUR 7.1 billion of GDPR fines announced over eight years, of which nearly 40%, around EUR 2.8 billion, is already annulled or under active legal challenge; Alliance Risk used the CMS Law GDPR Enforcement Tracker as its primary source, cross-referenced against IAPP, Kiteworks and UniConsent data. Alliance Risk's own publication could not be located; PPC Land describes the firm as a 'cyber risk advisory firm' rather than a brokerage."
     },
     {
+      "id": "src-edpb-cef-2026",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "edpb",
+      "publisher_name": "European Data Protection Board",
+      "title": "CEF 2026: EDPB launches coordinated enforcement action on transparency and information obligations under the GDPR",
+      "url": "https://www.edpb.europa.eu/news/news/2026/cef-2026-edpb-launches-coordinated-enforcement-action-transparency-and-information_en",
+      "url_status": "url:live",
+      "published": "2026-03-19",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Read 2026-09-26. The 2026 Coordinated Enforcement Framework action concerns transparency and information obligations (GDPR Arts. 12, 13 and 14); '25 Data Protection Authorities (DPAs) across Europe will take part'; a consolidated report is to follow."
+    },
+    {
+      "id": "src-edri-poland-dsa-veto-2026",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "European Digital Rights (EDRi)",
+      "title": "President's veto further delays the implementation of the DSA in Poland",
+      "url": "https://edri.org/our-work/presidents-veto-further-delays-the-implementation-of-the-dsa-in-poland/",
+      "url_status": "url:live",
+      "published": "2026-01-21",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Advocacy network's account, read 2026-09-26: the Polish President vetoed the draft law adapting Polish law to the DSA in January 2026 (press reports date it 9 January). The President's own announcement on prezydent.pl could not be read: the site served a Cloudflare challenge to every client in this environment."
+    },
+    {
+      "id": "src-cispe-ceo-letter-2026",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "CISPE (Cloud Infrastructure Services Providers in Europe)",
+      "title": "Joint letter of European cloud CEOs to EVP Virkkunen on the Cloud and AI Development Act, 17 March 2026",
+      "url": "https://www.cispe.cloud/website_cispe/wp-content/uploads/2026/03/Cloud-CEOs-Joint-Letter-March-17-2026-FINAL.pdf",
+      "url_status": "url:live",
+      "published": "2026-03-17",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Industry letter, read 2026-09-26. Principle 1: 'Sovereignty must be defined by control, not by EU presence or cybersecurity', reflecting effective control, ownership of technology and protection from extraterritorial jurisdiction; warns against 'sovereignty washing'. 25 signatories: 24 company heads (CEOs, one co-CEO, one managing director, one without a title) and CISPE's chairwoman. CISPE's own press release says both '24 European digital CEOs' and 'CEOs representing 25' providers."
+    },
+    {
       "id": "src-linarilaw-2026-amazon",
       "tier": "tier:4",
       "type": "source-type:commentary",
