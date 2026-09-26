@@ -244,7 +244,15 @@ export function datesIn(text, months) {
   for (const m of String(text).matchAll(new RegExp(`\\b(${M})\\s+(\\d{1,2}),\\s*(\\d{4})\\b`, 'g'))) {
     push(`${m[3]}-${num(m[1])}-${String(m[2]).padStart(2, '0')}`, m[0], m.index);
   }
+  /* A month-year match INSIDE a full date already found is not a second
+     date: "10 October 2025" contains "October 2025". Counting it made any
+     day in a month match every other day of that month at month
+     precision, so a sentence about 10 October 2025 was reported as
+     stating 29 October 2025. Only a month-year the prose gives on its own
+     is a month-precision date. */
+  const covered = out.map((d) => [d.index, d.index + d.text.length]);
   for (const m of String(text).matchAll(new RegExp(`\\b(${M})\\s+(\\d{4})\\b`, 'g'))) {
+    if (covered.some(([a, b]) => m.index >= a && m.index < b)) continue;
     push(`${m[2]}-${num(m[1])}`, m[0], m.index);
   }
   for (const m of String(text).matchAll(/\b(\d{4}-\d{2}(?:-\d{2})?)\b/g)) {
