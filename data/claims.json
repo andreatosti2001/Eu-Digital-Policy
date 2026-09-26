@@ -97,6 +97,57 @@
       "verification_note": "The Bruegel brief argues for an independent EU enforcement authority and supports the institutional half of the argument. The specific staffing figures are not verified."
     },
     {
+      "id": "clm-also-in-the-rulebook",
+      "type": "claim-type:fact",
+      "statement": "Beyond the six regimes the brief covers, the rulebook includes the European Media Freedom Act (Regulation (EU) 2024/1083, mostly applicable from 8 August 2025), the political advertising regulation (Regulation (EU) 2024/900, fully applicable from 10 October 2025), the Platform Work Directive (Directive (EU) 2024/2831, to be transposed by December 2026), the European Health Data Space (Regulation (EU) 2025/327, in force since 26 March 2025), eIDAS2 (Regulation (EU) 2024/1183, wallets by the end of 2026), and the Commission's 20 January 2026 proposals for a revised Cybersecurity Act and targeted NIS2 amendments.",
+      "instruments": [
+        "eidas2",
+        "nis2"
+      ],
+      "provisions": [],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-ec-emfa-page",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
+          "source_id": "src-ec-political-ads-page",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
+          "source_id": "src-ec-platform-work-page",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
+          "source_id": "src-ec-ehds-page",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
+          "source_id": "src-ec-eudi-page",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
+          "source_id": "src-ec-cyber-package-qa-2026",
+          "supports": "supports:partial",
+          "locator": null
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-1",
+      "published": null,
+      "last_verified": "2026-09-26",
+      "verification_note": "Added on 2026-09-26 (audit T-34), so that 'the six regimes' does not read as the whole rulebook. Every act number and date was read on an official Commission page (the numbers from the EUR-Lex or OJ links those pages carry, because EUR-Lex itself returns HTTP 202 here). Each source supports one row, hence partial. The EHDS's staged application dates are deliberately not stated: they were not read from an official text."
+    },
+    {
       "id": "clm-vagueness-is-delegation",
       "type": "claim-type:interpretation",
       "statement": "The operative standards of the EU digital rulebook — systemic risk, high-impact capabilities, effective interoperability, genuinely equivalent alternative — are almost all open-textured, so the law's effective content is set by Commission guidelines, delegated acts, codes of practice and harmonised standards rather than by the legislature.",

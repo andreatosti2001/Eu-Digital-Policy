@@ -867,7 +867,7 @@ export class Integrator {
         ...proposals.filter((p) => p.operation_kind === 'create_source').map((p) => `${p.proposal_id}: decide the tier, the type, the publisher, the url_status and the id. None of the five was set here, and the estimated source_tier on the verification is an estimate and not the settled tier.`),
         ...(conflicts.length ? [`${conflicts.length} conflict(s) were found and NO proposal was made for any of them. Read each gap record: two sources disagree, or a source disagrees with the site, and deciding which governs is reserved to you.`] : []),
         ...(stale.length ? [`${stale.length} staleness finding(s). Stale is not wrong: the fix is re-reading the source, never stamping last_verified.`] : []),
-        `Confirm the unverified-record count in "node tools/validate.mjs" is unchanged by anything you apply, or say which record moved and why. It stands at 112 in the docs/CURRENT-ARCHITECTURE.md §12 baseline, and ${unsupported.length} claim(s) in this corpus carry a finding from this run's own check.`,
+        `Confirm the unverified-record count in "node tools/validate.mjs" is unchanged by anything you apply, or say which record moved and why. It stands at 113 in the docs/CURRENT-ARCHITECTURE.md §12 baseline, and ${unsupported.length} claim(s) in this corpus carry a finding from this run's own check.`,
       ],
       risk: substantive.length ? 'high' : 'medium',
       consequence: substantive.length

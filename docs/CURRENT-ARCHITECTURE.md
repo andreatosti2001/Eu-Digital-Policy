@@ -341,7 +341,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 112 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 113 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 5 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -368,6 +368,7 @@ the corpus being more honest, not less.
 - 105 → 109: T-35: four Part IX syntheses recorded as interpretation claims resting on the brief alone (clm-vagueness-is-delegation, -overlap-one-control-set, -rulebook-foreign-policy, -consolidation-contested).
 - 109 → 110: T-15: new clm-dsa-micro-small-exemption rests on an unofficial reproduction of DSA Art. 19 (graded partial, so no external direct source).
 - 110 → 112: T-36: two DPC GDPR fines added to the observatory (Meta 2023, TikTok 2025), flagged because their appeal state rests on tier-4 reporting.
+- 112 → 113: T-34: new clm-also-in-the-rulebook, six official sources each supporting one row (partial).
 
 The other numbers on this block are unchanged.
 

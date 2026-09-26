@@ -127,7 +127,7 @@ export const WORKFLOWS = Object.freeze({
 
   VERIFICATION_REQUIRED: {
     id: 'VERIFICATION_REQUIRED',
-    what: 'a record in the corpus asserts something no source has been read for. 112 of them carry an unverified note.',
+    what: 'a record in the corpus asserts something no source has been read for. 113 of them carry an unverified note.',
     entry_contracts: ['DataGap', 'ClaimEvidence'],
     stages: [
       dispatch('scout', 'source-scout', ['SourceCandidate', 'DataGap'],
