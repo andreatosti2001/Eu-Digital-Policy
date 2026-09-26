@@ -399,6 +399,34 @@
       "note": "Case AT.40670. An Article 102 TFEU antitrust decision, not a DMA decision."
     },
     {
+      "id": "src-ec-meta-whatsapp-ai-2025",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission opens antitrust investigation into Meta's new policy regarding AI providers' access to WhatsApp",
+      "url": "https://digital-strategy.ec.europa.eu/en/news/commission-opens-antitrust-investigation-metas-new-policy-regarding-ai-providers-access-whatsapp",
+      "url_status": "url:live",
+      "published": "2025-12-04",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Confirms the 4 December 2025 opening date and that it is an antitrust investigation into a possible breach of EU competition rules over Meta's WhatsApp Business Solution policy (announced October 2025). Does not itself name Article 102 TFEU; see src-insighteu-whatsapp-interim-2026 for that."
+    },
+    {
+      "id": "src-insighteu-whatsapp-interim-2026",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "Insight EU Monitoring",
+      "title": "EU Commission orders Meta to restore free WhatsApp access for rival AI assistants",
+      "url": "https://ieu-monitoring.com/editorial/eu-commission-orders-meta-to-restore-free-whatsapp-access-for-rival-ai-assistants/1243042",
+      "url_status": "url:live",
+      "published": "2026-06-09",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Reports the 9 June 2026 interim-measures decision, tagged 'Article 102 TFEU' by the outlet, and the intermediate procedural steps: a February 2026 Statement of Objections and an April 2026 supplementary Statement of Objections. States the Commission's first-sight finding that Meta holds a dominant position in the EEA-wide consumer-communication-app market and abused it by blocking third-party AI assistants from the WhatsApp Business API from 15 October 2025."
+    },
+    {
       "id": "src-ec-nis2-referral-2026",
       "tier": "tier:1",
       "type": "source-type:press-release",

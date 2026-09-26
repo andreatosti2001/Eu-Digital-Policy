@@ -1498,8 +1498,40 @@
       ],
       "brief_part": "part-4",
       "published": "2026-08-19",
-      "last_verified": "2026-08-27",
-      "verification_note": "The scope list is verified. The claim that a WhatsApp AI-integration investigation is a test case for reaching AI is not sourced."
+      "last_verified": "2026-09-26",
+      "verification_note": "The scope list is verified. The prose no longer frames the WhatsApp/Meta matter as a DMA test case: see clm-whatsapp-ai-art102, which corrects it to an Article 102 TFEU antitrust investigation."
+    },
+    {
+      "id": "clm-whatsapp-ai-art102",
+      "type": "claim-type:fact",
+      "statement": "When Meta restricted rival AI assistants' access to WhatsApp, the Commission acted under Article 102 TFEU rather than the DMA: it opened an antitrust investigation on 4 December 2025, issued a Statement of Objections in February 2026 and ordered interim measures on 9 June 2026.",
+      "instruments": [
+        "dma"
+      ],
+      "provisions": [],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-ec-meta-whatsapp-ai-2025",
+          "supports": "supports:direct",
+          "locator": null
+        },
+        {
+          "source_id": "src-insighteu-whatsapp-interim-2026",
+          "supports": "supports:direct",
+          "locator": null
+        }
+      ],
+      "legal_basis": [
+        "tfeu:art-102"
+      ],
+      "brief_part": "part-4",
+      "published": "2025-12-04",
+      "last_verified": "2026-09-26",
+      "verification_note": "The Commission's own press release confirms the 4 December 2025 opening as an antitrust investigation into a possible breach of EU competition rules; the February 2026 Statement of Objections and the 9 June 2026 interim-measures decision, including their reliance on Article 102 TFEU, are confirmed by Insight EU Monitoring's report on the interim-measures decision, which names the legal basis directly. This is offered as evidence that the DMA's current obligations did not reach the conduct — the Commission used Article 102 precisely because the DMA did not apply — not as a claim about what the DMA itself says."
     },
     {
       "id": "clm-dma-specification-utility-regulation",
