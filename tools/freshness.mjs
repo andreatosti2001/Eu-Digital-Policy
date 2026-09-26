@@ -160,8 +160,14 @@ if (isMain) {
   line('\nEVENTS THAT HAVE PASSED');
   const tl = read('timeline.json');
   const tlVer = tl.$last_verified;
+  /* An event is checked against the LATER of the file's $last_verified
+     and its own last_verified. A record re-read after its date has been
+     verified since it fell due; the file-level stamp alone never said so,
+     and moving that stamp would claim the whole file was re-read.
+     (AUDIT-2026-09-25, open decision I.) */
+  const verifiedAt = (e) => [tlVer, e.last_verified].filter((d) => typeof d === 'string').sort().pop() || '0000-00-00';
   const passedSince = arr(tl.events)
-    .filter((e) => e.date > (tlVer || '0000-00-00') && e.date <= AS_OF);
+    .filter((e) => e.date > verifiedAt(e) && e.date <= AS_OF);
   if (!passedSince.length) line(`  none between ${tlVer} and ${AS_OF}`);
   else passedSince.forEach((e) => flag(`${e.date} ${e.instrument} — ${e.event_type} fell due after the last verification: ${String(e.obligation || '').slice(0, 80)}`));
 

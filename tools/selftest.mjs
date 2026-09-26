@@ -295,6 +295,28 @@ test('F4 · a per-record verification field never used per-record is a DEFECT, n
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('F7 · a passed event re-read after its date is not a prompt; one not re-read still is', () => {
+  /* The per-record date counts, and only in the direction it proves:
+     a record verified on or after its date is current; one verified
+     before it is not, whatever the file-level stamp says. */
+  const dir = dataScratch();
+  try {
+    const p = join(dir, 'data', 'timeline.json');
+    const d = JSON.parse(readFileSync(p, 'utf8'));
+    const e = d.events.find((x) => x.date > d.$last_verified) ?? d.events[0];
+    const asOf = e.date > d.$last_verified ? e.date : d.$last_verified;
+    e.date = asOf; e.obligation = 'PLANTED-F7 event';
+    e.last_verified = asOf;
+    writeFileSync(p, JSON.stringify(d, null, 1));
+    let r = runValidator('freshness.mjs', [asOf], dir);
+    if (asOf > d.$last_verified) assert.doesNotMatch(r.out, /PLANTED-F7 event/, 're-read on its date: not a prompt');
+    e.last_verified = '2000-01-01';
+    writeFileSync(p, JSON.stringify(d, null, 1));
+    r = runValidator('freshness.mjs', [asOf], dir);
+    if (asOf > d.$last_verified) assert.match(r.out, /PLANTED-F7 event/, 'not re-read since: still a prompt');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('F5 · the intervals are not widened — the thresholds are asserted, not trusted', () => {
   /* "Increasing a threshold to hide stale data" is a named prohibition.
      A future change to EXPECTED now has to change this line too, in a
