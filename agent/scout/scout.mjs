@@ -51,7 +51,7 @@ import { isoOf } from '../observability/ids.mjs';
 import { emit } from '../schemas/gateway.mjs';
 import { IdMinter } from '../schemas/identity.mjs';
 import { authorityForUrl, authorityRank, endpointsByPriority, estimateTier } from './authorities.mjs';
-import { extractLinks, extractPublicationDate, extractPublisher, extractTitle, instrumentTerms, matchInstruments, textOf } from './extract.mjs';
+import { extractLinks, rankListingLinks, extractPublicationDate, extractPublisher, extractTitle, instrumentTerms, matchInstruments, textOf } from './extract.mjs';
 import { findDuplicates } from './dedupe.mjs';
 import { AGENT_ROOT } from './store.mjs';
 
@@ -60,7 +60,11 @@ export const SCOUT_AGENT = 'source-scout';
 export const DEFAULT_SCOUT_LIMITS = {
   max_endpoints: 8,
   max_documents_per_endpoint: 4,
-  max_links_considered: 40,
+  /* Links read off a listing, not links fetched. On a live Commission
+     listing on 26 September 2026 the navigation came to 32 links, so
+     40 left eight items in view; 200 is headroom for a longer menu,
+     at no cost in requests. */
+  max_links_considered: 200,
 };
 
 /** Role in the bibliography's vocabulary, from the authority class.
@@ -445,7 +449,8 @@ export class Scout {
         });
 
         const html = listing.bytes.toString('utf8');
-        const links = extractLinks(html, listing.final_url ?? endpoint.url, { limit: this.limits.max_links_considered })
+        const listingUrl = listing.final_url ?? endpoint.url;
+        const links = rankListingLinks(extractLinks(html, listingUrl, { limit: this.limits.max_links_considered }), listingUrl)
           .slice(0, this.limits.max_documents_per_endpoint);
 
         run.observe({

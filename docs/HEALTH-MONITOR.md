@@ -89,7 +89,7 @@ names them, and `defineMetric` **throws** if one is re-labelled:
 
 | Metric | Why it must not be optimised |
 |---|---|
-| `knowledge.unresolved_claims` | The 106 unverified records are the project's honesty (`AI-SAFE-BOUNDARIES` §0.7). Every cheap route down — clearing `requires_verification`, bulk-stamping `last_verified`, deleting the note — is a **prohibited action** under every autonomy class. |
+| `knowledge.unresolved_claims` | The 111 unverified records are the project's honesty (`AI-SAFE-BOUNDARIES` §0.7). Every cheap route down — clearing `requires_verification`, bulk-stamping `last_verified`, deleting the note — is a **prohibited action** under every autonomy class. |
 | `knowledge.provenance_gaps` | §0.2: an asterisk means the reference is **missing**, not doubted. It is removed by finding the publication, never by attaching something related. A fall produced by a plausible substitute is worse than the gap, because it looks resolved. |
 | `knowledge.verification_gaps` | Setting `last_verified` on a record nobody read is prohibited action 2; bulk-stamping is prohibited action 3. |
 | `control_plane.unresolved_conflicts` | A blocking open question is an agent refusing to proceed as if it had settled something. Removing the flag converts *"could not be established"* into *"established"*, silently, across everything downstream. |
@@ -111,7 +111,7 @@ carried in `docs/HANDOVER.md`: 3 browser regressions, 2 accessibility failures, 
 failure. Validation, localization, rendering, search, console errors and internal links are
 clean against their recorded baselines.
 
-**KNOWLEDGE** — 10 measured. Evidence coverage 76.9% of 91 claims; 106 unresolved records
+**KNOWLEDGE** — 10 measured. Evidence coverage 76.9% of 91 claims; 111 unresolved records
 (matching §12 exactly); **15 facts stored in two places with no drift check, one of which has
 already drifted** — the `__CONTENT__` hazard AGENTS.md records, now measured rather than
 recalled; 1 contradictory record (handover issue 18, `rel-kind:complement`); 6 fact-typed

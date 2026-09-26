@@ -2,7 +2,7 @@
  "$schema_version": "1.0.0",
  "$description": "Enforcement actions. Three orthogonal status axes: action_status (what the authority did and whether it stands), payment_status (whether money moved), remedy_status (whether behaviour changed). Nothing in this schema permits 'fine imposed' to imply 'fine collected'.",
  "$last_verified": "2026-08-27",
- "$note": "null means the question has not been researched. 'unknown' means it has been researched and is not publicly determinable. These are different states and must never be rendered alike. No aggregate totals are stored here: any total shown to a user is computed from these records at render time. The pipeline stages shown in the interface are DERIVED from these fields by a documented rule set (js/pipeline.js), not stored, so no stage can be asserted that the record does not support. A stage the record cannot settle is Unknown, and Unknown is never counted as zero.",
+ "$note": "null means the question has not been researched. 'unknown' means it has been researched and is not publicly determinable. These are different states and must never be rendered alike. No aggregate totals are stored here: any total shown to a user is computed from these records at render time. The pipeline stages shown in the interface are DERIVED from these fields by a documented rule set (js/pipeline.js), not stored, so no stage can be asserted that the record does not support. A stage the record cannot settle is Unknown, and Unknown is never counted as zero. AUDIT-2026-09-25 (2026-09-26): records re-read individually against their sources carry that date in their own last_verified; this file's $last_verified is deliberately unchanged, because the file as a whole was not re-read, and moving it would assert that it was.",
  "enforcement": [
   {
    "id": "enf-amazon-cnpd-2021",
@@ -15,18 +15,18 @@
    ],
    "authority": "dpa-lu",
    "opened": null,
-   "decision_date": "2021-07-16",
+   "decision_date": "2021-07-15",
    "action": "Administrative fine",
    "fine_eur": 746000000,
    "action_status": "action:annulled",
    "payment_status": "payment:not-payable",
-   "remedy_status": "remedy:unknown",
-   "behavioural_outcome": null,
+   "remedy_status": "remedy:implemented",
+   "behavioural_outcome": "Amazon now relies on user consent rather than legitimate interest for the disputed advertising processing; at the hearing of 8 January 2026 both parties, including the CNPD, confirmed it was compliant, so the 2021 compliance orders and daily penalty became moot.",
    "judicial": {
-    "forum": "Luxembourg Court of Appeal",
+    "forum": "Cour administrative (Luxembourg)",
     "date": "2026-03-12",
-    "outcome": "Annulled on procedural grounds — the authority had not adequately assessed intent, negligence and proportionality. The underlying violations were upheld and the matter referred back to the authority for reassessment.",
-    "case_ref": null
+    "outcome": "Fine annulled and the case remitted to the CNPD: it had not analysed fault (intent or negligence), required since CJEU C-807/21 Deutsche Wohnen and C-683/21 Nacionalinis, and had imposed a fine almost automatically without weighing the other available measures. The violations were broadly upheld (some elements set aside as unverified; Art. 21 grievances held out of scope). Judgment of 12 March 2026, published 13 March 2026.",
+    "case_ref": "52757C (du rôle)"
    },
    "timeline_events": [],
    "claims": [
@@ -35,18 +35,97 @@
    ],
    "sources": [
     "src-mlex-2026-amazon-annulment",
-    "src-linarilaw-2026-amazon"
+    "src-linarilaw-2026-amazon",
+    "src-justice-lu-amazon-2026",
+    "src-paperjam-amazon-2026",
+    "src-cms-lu-enforcement-2026"
    ],
    "requires_verification": true,
-   "verification_note": "No primary source for the Luxembourg Court of Appeal judgment has been located. The decision date of 16 July 2021 is taken from general knowledge and is not confirmed here. Retrieve the judgment and the original CNPD decision.",
-   "last_verified": "2026-08-27",
+   "verification_note": "Updated 2026-09-26 (audit T-37) from the Luxembourg judiciary's own announcement of the judgment (justice.public.lu, 13 March 2026), with Paperjam and CMS. The CNPD decision date is corrected from 16 to 15 July 2021, which Paperjam gives and the previous note admitted was unconfirmed. The judgment and the CNPD decision themselves have still not been opened, so requires_verification is left set.",
+   "last_verified": "2026-09-26",
    "appeal": {
     "status": "appeal:decided",
     "lodged_by": "Amazon Europe Core S.à r.l.",
-    "forum": "Luxembourg Court of Appeal",
+    "forum": "Cour administrative (Luxembourg)",
+    "lodged_date": null,
+    "case_ref": "52757C (du rôle)",
+    "note": "Decided 12 March 2026: the fine was annulled and the matter remitted. Whether the authority has appealed that annulment further is not established."
+   }
+  },
+  {
+   "id": "enf-meta-dpc-2023-transfers",
+   "entity": "Meta Platforms Ireland Limited",
+   "entity_type": "actor:large-company",
+   "instrument": "gdpr",
+   "legal_basis": [
+    "gdpr:art-83"
+   ],
+   "authority": "dpa-ie",
+   "opened": null,
+   "decision_date": "2023-05-12",
+   "action": "Administrative fine and order to suspend EU-US transfers (Art. 46(1) GDPR infringed)",
+   "fine_eur": 1200000000,
+   "action_status": "action:imposed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:ordered",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-dpc-share-of-fines"
+   ],
+   "sources": [
+    "src-dpc-meta-transfers-2023",
+    "src-csoonline-alliance-risk-2026"
+   ],
+   "requires_verification": true,
+   "verification_note": "Added 2026-09-26 (audit T-36) from the DPC's announcement: decision of 12 May 2023, announced 22 May 2023; Art. 46(1) infringed; fine reflecting the EDPB's binding determination under Art. 65. Legal basis records Art. 83 only, because no Art. 46 provision record exists. Appeal state from tier-4 reporting only, hence requires_verification.",
+   "last_verified": "2026-09-26",
+   "appeal": {
+    "status": "appeal:pending",
+    "lodged_by": null,
+    "forum": null,
     "lodged_date": null,
     "case_ref": null,
-    "note": "Decided 12 March 2026: the fine was annulled and the matter remitted. Whether the authority has appealed that annulment further is not established."
+    "note": "Reported as under active appeal by CSO Online (29 May 2026, citing Alliance Risk); tier-4 reporting. Forum, parties and case numbers are not established."
+   }
+  },
+  {
+   "id": "enf-tiktok-dpc-2025-transfers",
+   "entity": "TikTok Technology Limited",
+   "entity_type": "actor:large-company",
+   "instrument": "gdpr",
+   "legal_basis": [
+    "gdpr:art-83"
+   ],
+   "authority": "dpa-ie",
+   "opened": null,
+   "decision_date": "2025-05-02",
+   "action": "Administrative fines and order to bring China transfers into compliance within six months (Arts. 46(1) and 13(1)(f) GDPR infringed)",
+   "fine_eur": 530000000,
+   "action_status": "action:imposed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:ordered",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-dpc-share-of-fines"
+   ],
+   "sources": [
+    "src-dpc-tiktok-transfers-2025",
+    "src-csoonline-alliance-risk-2026"
+   ],
+   "requires_verification": true,
+   "verification_note": "Added 2026-09-26 (audit T-36) from the DPC's announcement of 2 May 2025 (the decision date is taken as the announcement date; the DPC text does not give a separate adoption date). Infringements of Art. 46(1) and Art. 13(1)(f). Legal basis records Art. 83 only, because no Art. 46 or Art. 13 provision record exists. Appeal state from tier-4 reporting only, hence requires_verification.",
+   "last_verified": "2026-09-26",
+   "appeal": {
+    "status": "appeal:pending",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Reported as under active appeal by CSO Online (29 May 2026, citing Alliance Risk); tier-4 reporting. Forum, parties and case numbers are not established."
    }
   },
   {
@@ -122,18 +201,21 @@
    ],
    "sources": [
     "src-ec-x-fine-2025",
-    "src-eucrim-x-first-fine"
+    "src-eucrim-x-first-fine",
+    "src-ec-x-decision-2025-house-release",
+    "src-euperspectives-x-appeal-2026",
+    "src-doj-x-intervention-2026"
    ],
    "requires_verification": true,
-   "verification_note": "Whether the decision has been appealed is not established. The Commission press release confirms the amount and all three grounds — deceptive design in the paid blue checkmark, non-functional ad repository, obstruction of researcher access — but does not use the phrase 'first DSA fine'; that framing rests on commentary. The '183-page decision' detail and the seventeen-month gap from preliminary findings are not confirmed from a primary source.",
-   "last_verified": "2026-08-27",
+   "verification_note": "Updated 2026-09-26 (audits T-17, T-36). The Commission press release confirms the amount and all three grounds; the decision text (as released by the US House Judiciary Committee, not by the Commission) confirms the 183 pages and the per-infringement fines. The decision is under challenge before the General Court: Case T-114/26 (X Internet and X Holdings v Commission) and Case T-121/26 (Musk v Commission), numbers from the US Department of Justice's announcement of 24 September 2026 that it has applied to intervene. The seventeen-month gap from preliminary findings is not confirmed from a primary source. 'First DSA fine' rests on commentary.",
+   "last_verified": "2026-09-26",
    "appeal": {
-    "status": "appeal:unknown",
-    "lodged_by": null,
-    "forum": null,
+    "status": "appeal:pending",
+    "lodged_by": "X Internet Unlimited Company and X Holdings Corp.; separately Elon Musk",
+    "forum": "General Court of the European Union",
     "lodged_date": null,
-    "case_ref": null,
-    "note": "Whether X has brought an action for annulment before the General Court is not established in this build."
+    "case_ref": "T-114/26; T-121/26 (Musk v Commission)",
+    "note": "Actions for annulment announced by X on 20 February 2026 (reported by EU Perspectives). Case numbers from the US Department of Justice, which on 24 September 2026 applied to intervene in support of annulment. The exact lodging dates, and whether the intervention has been admitted, are not established; the CURIA register could not be searched in this environment."
    }
   },
   {
@@ -165,8 +247,8 @@
     "src-techpolicypress-temu"
    ],
    "requires_verification": true,
-   "verification_note": "'Largest DSA fine to date' is not supported by the Commission text, which contains no ranking language; it rests on commentary. Appeal status not established.",
-   "last_verified": "2026-08-27",
+   "verification_note": "'Largest DSA fine to date' is not supported by the Commission text, which contains no ranking language; it rests on commentary, and is superseded in any case: the Commission fined AliExpress EUR 550 million on 20 July 2026, which is now the largest DSA fine. Appeal status not established.",
+   "last_verified": "2026-09-26",
    "appeal": {
     "status": "appeal:unknown",
     "lodged_by": null,
@@ -174,6 +256,45 @@
     "lodged_date": null,
     "case_ref": null,
     "note": "Not established in this build."
+   }
+  },
+  {
+   "id": "enf-aliexpress-ec-2026",
+   "entity": "AliExpress",
+   "entity_type": "actor:vlop",
+   "instrument": "dsa",
+   "legal_basis": [
+    "dsa:art-34",
+    "dsa:art-35",
+    "dsa:art-74"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2026-07-20",
+   "action": "Non-compliance decision and fine",
+   "fine_eur": 550000000,
+   "action_status": "action:imposed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:ordered",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-aliexpress-fine"
+   ],
+   "sources": [
+    "src-ec-aliexpress-fine-2026"
+   ],
+   "requires_verification": true,
+   "verification_note": "Fine amount, date and ground confirmed by the Commission's own press release. The 20 October 2026 action-plan deadline and the appeal are reported by secondary legal commentary (Lewis Silkin), not by the Commission text itself; no Tribunal case number located.",
+   "last_verified": "2026-09-26",
+   "appeal": {
+    "status": "appeal:unknown",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "AliExpress announced its intention to challenge the decision (reported by Lewis Silkin, 24 July 2026); no case number located."
    }
   },
   {
@@ -380,17 +501,18 @@
    "action_status": "action:appealed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",
-   "behavioural_outcome": "Meta subsequently announced a three-tier advertising model for EU users effective January 2026.",
+   "behavioural_outcome": "On 8 December 2025 the Commission acknowledged Meta's undertaking to give EU users, from January 2026, a choice between fully personalised advertising and a less-personalised option sharing less data; the Commission said it would then seek evidence on uptake.",
    "judicial": null,
    "timeline_events": [],
    "claims": [
     "clm-meta-pay-or-consent"
    ],
    "sources": [
-    "src-ec-apple-meta-dma-2025"
+    "src-ec-apple-meta-dma-2025",
+    "src-ec-meta-ad-choice-2025"
    ],
    "requires_verification": true,
-   "verification_note": "The binary pay-or-consent model was found not to provide the genuinely equivalent, less data-intensive alternative Art. 5(2) requires. Appeal status and the three-tier model announcement are stated by the brief and not independently sourced here.",
+   "verification_note": "The binary pay-or-consent model was found not to provide the genuinely equivalent, less data-intensive alternative Art. 5(2) requires. Appeal status is not independently sourced here. The brief's 'three-tier advertising model' was replaced on 2026-09-26 (audit T-18) by what the Commission's 8 December 2025 statement describes: a two-way choice from January 2026.",
    "last_verified": "2026-08-27",
    "appeal": {
     "status": "appeal:pending",
@@ -470,18 +592,20 @@
     "clm-gc-supervisory-fee-annulled"
    ],
    "sources": [
-    "src-gc-supervisory-fee-2025"
+    "src-gc-supervisory-fee-2025",
+    "src-mlex-2025-dsa-fee-appeal",
+    "src-mlex-2026-dsa-fee-appeal-oj"
    ],
    "requires_verification": true,
-   "verification_note": "The brief states the Commission's appeals are pending; that has not been separately verified here.",
-   "last_verified": "2026-08-27",
+   "verification_note": "That the Commission appealed both judgments is reported by MLex (24 November 2025; 12 January 2026, citing two Official Journal notices) — paywalled tier-4 journalism of which only the standfirst/summary was read. The Official Journal notices, the appeal case numbers and lodging dates, and whether the appeals were still pending on 2026-09-26 are not established from a primary source; EUR-Lex and CURIA's case search could not be read in this environment.",
+   "last_verified": "2026-09-26",
    "appeal": {
     "status": "appeal:pending",
     "lodged_by": "European Commission",
     "forum": "Court of Justice of the European Union",
     "lodged_date": null,
     "case_ref": null,
-    "note": "The brief states the Commission's appeals are pending. Not independently verified here.",
+    "note": "Appeals by the Commission against both judgments reported by MLex on 24 November 2025 and 12 January 2026 (the latter citing two Official Journal notices). Case numbers and lodging dates not retrieved; no primary source read. 'Pending' is the state as reported in January 2026, not verified as current.",
     "requires_verification": true
    }
   },
@@ -523,41 +647,6 @@
    }
   },
   {
-   "id": "enf-nis2-first-fines",
-   "entity": "unknown",
-   "entity_type": null,
-   "instrument": "nis2",
-   "legal_basis": [],
-   "authority": "nca-*",
-   "opened": null,
-   "decision_date": null,
-   "action": "First NIS2 fines reported in Belgium, Italy and Hungary",
-   "fine_eur": null,
-   "action_status": "action:imposed",
-   "payment_status": "payment:unknown",
-   "remedy_status": "remedy:unknown",
-   "behavioural_outcome": null,
-   "judicial": null,
-   "timeline_events": [],
-   "claims": [
-    "clm-nis2-enforcement-despite-transposition"
-   ],
-   "sources": [
-    "src-brief-original"
-   ],
-   "requires_verification": true,
-   "verification_note": "PLACEHOLDER RECORD. The brief states that first NIS2 fines have landed in Belgium, Italy and Hungary, but names no entity, date, amount or authority. This record exists so the claim is traceable and the gap visible; it must be split into individual records or removed once the underlying decisions are identified. Do not render as a countable enforcement action.",
-   "last_verified": "2026-08-27",
-   "appeal": {
-    "status": "appeal:unknown",
-    "lodged_by": null,
-    "forum": null,
-    "lodged_date": null,
-    "case_ref": null,
-    "note": "No underlying decision has been identified, so no appeal position can be recorded."
-   }
-  },
-  {
    "id": "enf-hungary-commission-none",
    "entity": "Hungary",
    "entity_type": "actor:member-state",
@@ -586,8 +675,8 @@
     "src-edri-hungary-ai-act"
    ],
    "requires_verification": true,
-   "verification_note": "A NEGATIVE record: it asserts the absence of enforcement, which is true only at an instant. action_status is null because no action exists to describe. Civil-society legal analysis concluding a breach of AI Act Art. 5 and of the Charter is sourced; the absence of Commission action is corroborated by the same sources reporting continued calls for infringement proceedings, and no contrary evidence was found on 27 August 2026. This record must be re-verified on every publication.",
-   "last_verified": "2026-08-27",
+   "verification_note": "A NEGATIVE record: it asserts the absence of enforcement, which is true only at an instant. action_status is null because no action exists to describe. Civil-society legal analysis concluding a breach of AI Act Art. 5 and of the Charter is sourced; the absence of Commission action is corroborated by the same sources reporting continued calls for infringement proceedings, and no contrary evidence was found on 26 September 2026, after the April 2026 change of government in Hungary. This record must be re-verified on every publication.",
+   "last_verified": "2026-09-26",
    "appeal": {
     "status": "appeal:none",
     "lodged_by": null,

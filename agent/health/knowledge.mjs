@@ -9,7 +9,7 @@
    THREE OF THESE TEN ARE `not_a_score`, AND THAT IS THE POINT.
 
    `unresolved_claims`, `verification_gaps` and `provenance_gaps`
-   count the 106 unverified records and the ten reference gaps in the
+   count the 111 unverified records and the ten reference gaps in the
    running text. Those numbers are the project's honesty
    (`docs/AI-SAFE-BOUNDARIES.md` §0.7), and the ONLY legitimate way to
    move them is verification work this monitor cannot see or do.
@@ -100,8 +100,17 @@ export const KNOWLEDGE_METRICS = [
     measure(ctx) {
       const claims = claimsOf(ctx);
       const enf = enforcementOf(ctx);
-      const direct = claims.filter((c) => c.verification_note || c.requires_verification || c.reference_gap).length
-        + enf.filter((e) => e.verification_note || e.requires_verification).length;
+      /* The same rule tools/validate.mjs unverifiedReport() applies,
+         restricted to claims and enforcement, so this is a true subset
+         of the canonical count. It used to count any record carrying a
+         verification_note, but a note also records HOW a claim was
+         verified; once verified claims carried such notes (AUDIT
+         2026-09-25, Fase 2), the "narrower" count overtook the canonical
+         one, which is the one direction this number must never be
+         wrong in. */
+      const externalDirect = (c) => (c.sources ?? []).some((x) => x.supports === 'supports:direct' && x.source_id !== 'src-brief-original');
+      const direct = claims.filter((c) => !c.last_verified || !externalDirect(c)).length
+        + enf.filter((e) => e.requires_verification).length;
       const excerpt = `${(ctx.validators?.checks ?? []).find((c) => c.name === 'tools/validate.mjs')?.output_excerpt ?? ''}`;
       const fromValidator = Number((excerpt.match(/UNVERIFIED[^\d]*(\d+)/) ?? [])[1] ?? NaN);
       const recorded = ctx.baseline?.unverified ?? null;
@@ -234,7 +243,7 @@ export const KNOWLEDGE_METRICS = [
         const bs = brief.meta?.standfirst;
         const is_ = blob.meta?.standfirst;
         if (bs && is_ && bs !== is_) {
-          disagreements.push({ field: 'meta.standfirst', brief_json: `${bs}`.slice(0, 110), inlined: `${is_}`.slice(0, 110), kind: 'the two copies disagree — this is the drift AGENTS.md records as already having happened' });
+          disagreements.push({ field: 'meta.standfirst', brief_json: `${bs}`.slice(0, 111), inlined: `${is_}`.slice(0, 111), kind: 'the two copies disagree — this is the drift AGENTS.md records as already having happened' });
         }
       }
 

@@ -44,8 +44,24 @@ export const authorityRank = (cls) => {
 
 /**
  * A small number of real authoritative sources, in priority order.
- * Root paths only: a deep link would be a second thing to be wrong
- * about, and the Scout follows links from what it actually receives.
+ *
+ * News listings where one exists, home pages otherwise. Until
+ * September 2026 these were all root paths, on the reasoning that a
+ * deep link is a second thing to be wrong about; in practice a home
+ * page links to its own menus first, and every candidate the live
+ * runs proposed from one was a navigation page (AUDIT-2026-09-25,
+ * T-39). A listing URL below was retrieved on 26 September 2026 in an
+ * editing session and returned a page of dated news items; that is
+ * recorded in the note and is still not `endpoint_verified` — the
+ * Scout has not verified it, and a site can move its listing.
+ *
+ * Not registered, and why: the Commission Press Corner renders its
+ * listing client-side, so the HTML the Scout receives carries no
+ * links to follow; its JSON interface is a different transport this
+ * Scout does not have. EDPS stays on its home page: its home page
+ * answered the September 2026 scheduled runs with HTTP 403, and its
+ * press-release listing refused a scripted request the same way on
+ * 26 September 2026, so there was no listing to prefer.
  */
 export const ENDPOINTS = [
   {
@@ -62,18 +78,27 @@ export const ENDPOINTS = [
     authority_class: 'authority:commission',
     authority_name: 'European Commission',
     institution_id: 'ec',
-    url: 'https://digital-strategy.ec.europa.eu/',
+    url: 'https://digital-strategy.ec.europa.eu/en/news',
     endpoint_verified: false,
-    note: 'Commission digital policy. Tier depends on the document: a decision is tier 1, a policy page is tier 2.',
+    note: 'Commission digital policy news — DSA, AI Act, Data Act and the rest. Tier depends on the document: a decision is tier 1, a policy page is tier 2. Listing observed returning dated items on 26 September 2026.',
+  },
+  {
+    id: 'ep-commission-dma',
+    authority_class: 'authority:commission',
+    authority_name: 'European Commission — Digital Markets Act',
+    institution_id: 'ec',
+    url: 'https://digital-markets-act.ec.europa.eu/news_en',
+    endpoint_verified: false,
+    note: 'DMA news, published on its own host rather than on digital-strategy. Same tier rule as the Commission entry above. Listing observed returning dated items on 26 September 2026.',
   },
   {
     id: 'ep-edpb',
     authority_class: 'authority:edpb',
     authority_name: 'European Data Protection Board',
     institution_id: 'edpb',
-    url: 'https://www.edpb.europa.eu/',
+    url: 'https://www.edpb.europa.eu/news_en',
     endpoint_verified: false,
-    note: 'Guidelines, opinions and consistency decisions.',
+    note: 'Guidelines, opinions and consistency decisions, announced through the news listing. Listing observed returning dated items on 26 September 2026.',
   },
   {
     id: 'ep-edps',
@@ -89,9 +114,9 @@ export const ENDPOINTS = [
     authority_class: 'authority:enisa',
     authority_name: 'EU Agency for Cybersecurity',
     institution_id: 'enisa',
-    url: 'https://www.enisa.europa.eu/',
+    url: 'https://www.enisa.europa.eu/news',
     endpoint_verified: false,
-    note: 'The cyber layer — NIS2, CRA, threat landscape reporting.',
+    note: 'The cyber layer — NIS2, CRA, threat landscape reporting. Listing observed returning dated items on 26 September 2026.',
   },
 ];
 

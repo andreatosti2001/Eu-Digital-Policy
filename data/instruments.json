@@ -2,7 +2,7 @@
   "$schema_version": "1.0.0",
   "$description": "Instruments, their nested provisions, and cross-instrument relationships. Instruments carry NO dates: every date is a timeline record referenced by ID through 'milestones'. Instruments carry NO supervisor field: competence is an edge in institutions.json.",
   "$last_verified": "2026-08-27",
-  "$note": "legislative_status is a scalar describing position in the legislative process. It is deliberately NOT sufficient on its own: for staggered instruments the milestones array is authoritative about what actually applies and when. Entry into force and application are never merged. Treaty articles are modelled as provisions of the 'tfeu' and 'teu' instruments (tfeu:art-114, teu:art-4-2), so a legal basis is always a provision ID and never a special case.",
+  "$note": "legislative_status is a scalar describing position in the legislative process. It is deliberately NOT sufficient on its own: for staggered instruments the milestones array is authoritative about what actually applies and when. Entry into force and application are never merged. Treaty articles are modelled as provisions of the 'tfeu' and 'teu' instruments (tfeu:art-114, teu:art-4-2), so a legal basis is always a provision ID and never a special case. AUDIT-2026-09-25 (2026-09-26): records re-read individually against their sources carry that date in their own last_verified; this file's $last_verified is deliberately unchanged, because the file as a whole was not re-read, and moving it would assert that it was.",
   "instruments": [
     {
       "id": "gdpr",
@@ -562,6 +562,7 @@
       "milestones": [
         "tl-dma-2022-11-01-entry-into-force",
         "tl-dma-2023-05-01-application",
+        "tl-dma-2024-03-07-compliance",
         "tl-dma-2026-04-28-review",
         "tl-dma-2026-11-01-designation",
         "tl-dma-2027-05-01-market-investigation"
@@ -585,7 +586,7 @@
           "dma:art-6",
           "dma:art-7"
         ],
-        "enforcement_mechanism": "Exclusive Commission enforcement. No national enforcement route.",
+        "enforcement_mechanism": "The Commission is the sole enforcer. National competition authorities may investigate possible non-compliance with Arts. 5-7 on their territory and report to support the Commission (Art. 38(7)); national courts may apply the Regulation in proceedings before them (Art. 39).",
         "sanction_ceiling": {
           "pct_global_turnover": 10,
           "fixed_eur": null,
@@ -759,7 +760,8 @@
         "tl-ai-act-2026-08-02-application",
         "tl-ai-act-2026-12-02-application",
         "tl-ai-act-2027-12-02-application",
-        "tl-ai-act-2028-08-02-application"
+        "tl-ai-act-2028-08-02-application",
+        "tl-ai-act-2030-08-02-application"
       ],
       "amended_by": [
         "ai-omnibus"
@@ -802,6 +804,20 @@
         "implementation_model": "Directly applicable"
       },
       "provisions": [
+        {
+          "id": "ai-act:art-2",
+          "number": "2(3)",
+          "heading": "Scope — exclusion of military, defence and national security",
+          "summary": "The Regulation does not apply to AI systems where and in so far as they are placed on the market, put into service, or used with or without modification exclusively for military, defence or national security purposes, regardless of the type of entity carrying out those activities; nor does it affect Member States' competences concerning national security.",
+          "obligation_on": [],
+          "claims": [
+            "clm-art-4-2-teu-carve-out"
+          ],
+          "sources": [
+            "src-eurlex-ai-act",
+            "src-aia-text-unofficial-arts-2-4"
+          ]
+        },
         {
           "id": "ai-act:art-3-63",
           "number": "3(63)",
@@ -1085,9 +1101,9 @@
       "kind": "kind:directive",
       "scope_class": "scope:core",
       "brief_part": "part-7",
-      "legislative_status": "status:transposition-pending",
-      "status_as_of": "2026-08-19",
-      "status_note": "In force since 2023, but a directive: obligations bite at national dates, and transposition is materially incomplete across the Union.",
+      "legislative_status": "status:transposition-overdue",
+      "status_as_of": "2026-09-26",
+      "status_note": "In force since 2023, but a directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed and transposition is still materially incomplete: the Commission sent letters of formal notice to 23 Member States in November 2024 and referred Ireland, Spain, France and the Netherlands to the Court of Justice in July 2026.",
       "milestones": [
         "tl-nis2-2023-01-16-entry-into-force",
         "tl-nis2-2024-10-17-transposition",
@@ -1163,7 +1179,7 @@
           "id": "nis2:art-20",
           "number": "20",
           "heading": "Governance",
-          "summary": "Management bodies must approve the cybersecurity risk-management measures and can be held personally liable. The provision that actually changes boardroom behaviour.",
+          "summary": "Management bodies must approve and oversee the cybersecurity risk-management measures and can be held liable for the entity's infringements (Art. 20(1)); at essential entities, the natural persons responsible can also be held liable (Art. 32(6)). The provision that actually changes boardroom behaviour.",
           "obligation_on": [
             "actor:essential-entity",
             "actor:important-entity"
@@ -1239,8 +1255,9 @@
       "kind": "kind:directive",
       "scope_class": "scope:core",
       "brief_part": "part-7",
-      "legislative_status": "status:transposition-pending",
-      "status_as_of": "2026-08-19",
+      "legislative_status": "status:transposition-overdue",
+      "status_as_of": "2026-09-26",
+      "status_note": "A directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed; on 29 April 2026 the Commission referred Bulgaria, France, Luxembourg, the Netherlands, Poland, Spain and Sweden to the Court of Justice for failing to transpose.",
       "milestones": [
         "tl-cer-2023-01-16-entry-into-force",
         "tl-cer-2024-10-17-transposition"
@@ -1283,7 +1300,8 @@
       "provisions": [],
       "claims": [],
       "sources": [
-        "src-eurlex-cer"
+        "src-eurlex-cer",
+        "src-ec-cer-referral-2026"
       ],
       "last_verified": "2026-08-27",
       "legal_basis": [
@@ -1356,11 +1374,12 @@
       "kind": "kind:regulation",
       "scope_class": "scope:core",
       "brief_part": "part-7",
-      "legislative_status": "status:in-force",
-      "status_as_of": "2026-08-19",
-      "status_note": "In force since December 2024. Vulnerability reporting begins September 2026; full application December 2027. Not yet applicable in substance.",
+      "legislative_status": "status:partly-applicable",
+      "status_as_of": "2026-09-26",
+      "status_note": "In force since December 2024. Chapter IV (notification of conformity assessment bodies) has applied since 11 June 2026 and Article 14 reporting since 11 September 2026; the Regulation as a whole applies from 11 December 2027. The scalar alone is insufficient — read the milestones.",
       "milestones": [
         "tl-cra-2024-12-10-entry-into-force",
+        "tl-cra-2026-06-11-application",
         "tl-cra-2026-09-11-reporting-deadline",
         "tl-cra-2027-12-11-application"
       ],
@@ -1394,7 +1413,8 @@
       "provisions": [],
       "claims": [],
       "sources": [
-        "src-eurlex-cra"
+        "src-eurlex-cra",
+        "src-cra-text-unofficial-art71"
       ],
       "last_verified": "2026-08-27",
       "legal_basis": [
@@ -1408,7 +1428,7 @@
         "com-2025-836",
         "reg-2026-1744"
       ],
-      "celex": null,
+      "celex": "32026R1744",
       "short_name": "AI Omnibus",
       "full_name": "Regulation (EU) 2026/1744 (Digital Omnibus on AI)",
       "kind": "kind:regulation",
@@ -1459,7 +1479,8 @@
       "sources": [
         "src-eurlex-ai-omnibus",
         "src-ec-ai-omnibus-in-force",
-        "src-ep-legtrain-ai-omnibus"
+        "src-ep-legtrain-ai-omnibus",
+        "src-op-ai-omnibus-record"
       ],
       "last_verified": "2026-08-27",
       "legal_basis": [
@@ -1479,8 +1500,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-8",
       "legislative_status": "status:stalled",
-      "status_as_of": "2026-08-19",
-      "status_note": "NOT LAW. A Commission proposal before the Council without an agreed position. Must never be rendered as an Act. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is the informal shorthand used in this brief.",
+      "status_as_of": "2026-09-26",
+      "status_note": "NOT LAW. A Commission proposal before the Council without an agreed position. The Cypriot Presidency withdrew its compromise text from COREPER in late June 2026 for lack of a qualified majority; the file passed to the Irish Presidency, whose revised compromise (ST 12535/26, 3 September 2026, not an official publication) restores an AI legitimate-interest clause and reworks the pseudonymised-data provision. Must never be rendered as an Act. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is the informal shorthand used in this brief.",
       "milestones": [
         "tl-data-omnibus-2025-11-19-proposal"
       ],
@@ -1596,6 +1617,40 @@
       "legal_basis": [
         "tfeu:art-114"
       ]
+    },
+    {
+      "id": "gdpr-procedural",
+      "aliases": [
+        "reg-2025-2518",
+        "gdpr-cross-border-procedure-regulation"
+      ],
+      "celex": "32025R2518",
+      "short_name": "GDPR Procedural Regulation",
+      "full_name": "Regulation (EU) 2025/2518 laying down additional procedural rules relating to the enforcement of Regulation (EU) 2016/679",
+      "kind": "kind:regulation",
+      "scope_class": "scope:adjacent",
+      "brief_part": "part-2",
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-09-26",
+      "status_note": "In force since 1 January 2026 but not yet applicable (applies to complaints lodged from 2 April 2027). Harmonises admissibility criteria for cross-border GDPR complaints, gives parties common procedural rights (including a right to be heard and to see preliminary findings) and sets investigation time limits (15 months for regular cases, 12 for a simplified procedure). CELEX derived from the Official Journal reference reported by eucrim (L 2025/2518 of 12 December 2025); the consolidated EUR-Lex text could not be retrieved directly in this environment (every attempt returns HTTP 202 with no body) and should be checked before this record's status is next revised.",
+      "milestones": [
+        "tl-gdpr-procedural-2026-01-01-entry-into-force",
+        "tl-gdpr-procedural-2027-04-02-application"
+      ],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [
+        "clm-gdpr-procedural-regulation"
+      ],
+      "sources": [
+        "src-eucrim-gdpr-procedural-2026"
+      ],
+      "last_verified": "2026-09-26",
+      "legal_basis": []
     },
     {
       "id": "dga",
@@ -2244,10 +2299,10 @@
       "to": "ai-act",
       "kind": "rel-kind:carve-out",
       "symmetric": false,
-      "summary": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to AI systems used for military, defence or national security purposes. This is the structural source of the asymmetry between constraint on corporate and on state power.",
+      "summary": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to AI systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)). This is the structural source of the asymmetry between constraint on corporate and on state power.",
       "provisions": [
         "teu:art-4-2",
-        "ai-act:art-5"
+        "ai-act:art-2"
       ],
       "claims": [
         "clm-art-4-2-teu-carve-out",

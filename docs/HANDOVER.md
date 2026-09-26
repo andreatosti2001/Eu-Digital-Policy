@@ -1,11 +1,369 @@
 # HANDOVER
 
-**Last updated:** SESSION 29 · 11 September 2026
-**Branch:** `claude/production-operating-mode-0ti3hu`, cut from `origin/main` at `a25f0ed`,
-and merged into `main` at the end of the session.
+**Last updated:** AUDIT-2026-09-25 remediation · 26 September 2026
+**Branch:** `claude/new-session-egb0gs`. It contains SESSION 30 (below) in full, and
+`claude/new-session-e5xmjm`. **Open as pull request #3 to `main`; not merged.** The branch
+register directly below records every other branch's disposition. The remediation's own
+account is in the commit messages (one per audit task, T-01 … T-40), in
+`docs/CURRENT-ARCHITECTURE.md` §12 (the unverified count, 106 → 111), and in the PR
+description.
 
-**SESSION 29 is a single branch from `a25f0ed`, with no sibling.** `AGENT_SUITES.length` is
-**23**.
+**Two CI jobs are red on PR #3 and were already red on `main` at `6da38ee`:**
+- *The adversarial verification gate*, on finding HE-04, which SESSION 29 left red by
+  decision.
+- *Production operating mode*'s traceability step (1 of 3 website-changing write paths is
+  traceable).
+
+Neither is a regression, and both are a later session's to decide.
+
+*The SESSION 30 header, kept as it was written:* last updated SESSION 30 · 12 September
+2026 · branch `claude/repo-website-stabilization-0dmm8g`, cut from `origin/main` at `6da38ee`.
+
+**SESSION 30 is a single branch from `6da38ee`, with no sibling.** `AGENT_SUITES.length` is
+**24**, and the twenty-fourth entry is the first that is not under `agent/`.
+
+---
+
+## Branch register — AUDIT-2026-09-25 T-40, measured 26 September 2026
+
+`git branch -r --no-merged origin/main`, after `git fetch --all`. `main` is `6da38ee`
+(11 September). **No pull request is open.** Each disposition below is a **proposal awaiting
+the author's decision**. No branch has been merged or deleted.
+
+| Branch | Ahead of main | What it holds | Proposed disposition |
+|---|---:|---|---|
+| `claude/new-session-egb0gs` | this session | AUDIT-2026-09-25 remediation, Fasi 1–4. It contains `new-session-e5xmjm` and SESSION 30 (`repo-website-stabilization-0dmm8g`) in full | Open a PR to `main` when the author asks. Merging it also merges the two branches it contains |
+| `claude/new-session-e5xmjm` | 13 | Fase 1, fast-forwarded into the branch above | Delete once the branch above is merged |
+| `claude/repo-website-stabilization-0dmm8g` | 4 | SESSION 30 | Contained in `new-session-egb0gs`; delete once that is merged |
+| `claude/foundation-verification-audit-40ozpo` | 4 | `docs/AUDIT-2026-09-03.md` (the SESSION 12 audit) and a HANDOVER/CLAUDE.md gate on SESSION 13 | Read it first. Merging conflicts in `AGENTS.md` and `docs/HANDOVER.md`, and it is 47 commits behind. If kept, bring the audit document in on its own and close the branch |
+| `claude/agent-governance-protocol-gfbgfb` | 1 | Redraws the threshold wheel (`js/threshold.js`, `style.css`) | A visual change, so the author decides. It merges cleanly, but it has not been run in a browser from this branch |
+| `claude/eu-digital-policy-browser-qa-5f78wc` | 1 | `agent/browser/proposals.mjs`: ImplementationProposals from browser-suite failures | Never reached `main` (the file is absent). It merges cleanly but has not been tested against the current suites. Merge after running them, or close |
+| `claude/ux-ui-auditor-agent-sy99b6` | 1 | A handover note that SESSIONS 16 and 17 are merged | Obsolete, and conflicts in `docs/HANDOVER.md`. Close |
+| `scout/digest-digest-2026-09-{07,14,21}…` | 1 each | One Source Scout digest each | Merge into `main`, or into one `scout/digests` branch. **Side effect:** committed digests change `agent/production/readiness.mjs` source reachability from *unmeasured* to *measured*. Since T-39 the workflow reads these branches anyway, so nothing breaks while they wait |
+
+**Contained in `main`, 23 branches, safe to delete:** every other `claude/*` branch on the
+remote. `git branch -r --merged origin/main` lists them.
+
+**Outcome, same day, on the author's instruction to follow these recommendations.** SHAs are
+recorded so that any closed branch can be restored with `git push origin <sha>:refs/heads/<name>`.
+
+| Branch | Tip | Outcome |
+|---|---|---|
+| `foundation-verification-audit-40ozpo` | `910df63` | Its lasting content was carried into this branch: `docs/AUDIT-2026-09-03.md`, the re-fetch rule in `AGENTS.md` and the git-workflow skill. P-06's anchors were updated. **Close** |
+| `eu-digital-policy-browser-qa-5f78wc` | `ad41809` | Merged and tested: 4 browser-suite failures. Its fix recipes target `tools/_footer.mjs` text that SESSION 30 rewrote when it fixed the no-JS navigation, so its proposals are obsolete. Merge aborted. **Close** |
+| `ux-ui-auditor-agent-sy99b6` | `cf84dee` | An obsolete handover note. **Close** |
+| `scout/digest-*` × 3 | `5bdd3fe` `c2548af` `f941ea4` | **Merged into this branch.** Readiness source reachability is now measured: 2 of 6, from the 21 September run |
+| `agent-governance-protocol-gfbgfb` | `ed226d2` | **Not merged. Delete.** Decided on the author's instruction: test-merged onto this branch, it fails the Control Room visual standard (`agent/production/visual.mjs`) on two criteria. **vs-02**: the approved design is three bands 3 · 7 · 12 carrying 22 letters, and the redraw removes the letters. **vs-04**: its new search-result mark `⊙` belongs to no declared enum. The branch was written on 9 September, before SESSION 29 fixed that standard, and it was never checked against it. Without it, every criterion but the unmeasurable vs-08 passes |
+| `new-session-e5xmjm`, `repo-website-stabilization-0dmm8g` | `73a9f23`, `f52e94f` | Contained in this branch. Delete once it is merged into `main` |
+
+**Deleted by the author, 26 September 2026:** the 23 branches contained in `main`, and the six
+closed or carried-forward branches above. The session's git access could not delete them;
+it may push only its own branch. Five branches remain: `main`, `new-session-egb0gs` (PR #3),
+`new-session-e5xmjm`, `repo-website-stabilization-0dmm8g` (delete the last two once PR #3 is
+merged) and `agent-governance-protocol-gfbgfb` (not merged; delete, see its row above).
+
+---
+
+## SESSION 30 — the stabilization pass, and the two checks that were wrong about the site
+
+**What was asked:** a forensic stabilization pass — get the browser suite to 0 failures
+without weakening it, resolve `freshness.mjs`'s exit 1 without hiding staleness, settle a
+reported Google Fonts contradiction, make the source-metadata contract coherent, confirm the
+autonomy rollback deadlock is reachable, audit every external dependency, upgrade the Node 20
+Actions, and add regression tests where the suite failed to catch any of it. The standing
+instruction throughout: **do not game the QA system.**
+
+### The state, measured
+
+| | before (`6da38ee`) | after |
+|---|---|---|
+| Browser suite | 125 pass · 3 fail · 2 undecidable · 130 checks | **144 pass · 0 fail · 1 undecidable · 145 checks** |
+| `freshness.mjs` | exit 1 | **exit 0** — and it prints the same three prompts, by name |
+| Four validators against §12 | verdict `fail` | **`pass_with_findings`**, 0 errors, the same 5 `design-qa` warnings |
+| Suites | 1166 tests · 23 suites | **1196 tests · 25 suites** · 0 failures |
+| GitHub Actions | checkout/setup-node/upload v4, download v4 (Node 20) | **v7 / v7 / v7 / v8, all `node24`** |
+
+### The three browser failures were defects in the WEBSITE, and all three are fixed
+
+Not in the suite. Each fix is the smallest change that makes the measured statement false, and
+the full reasoning is in `docs/BROWSER-QA.md` §4a.
+
+1. **`nav:noscript`** — with scripting off, `instruments.html` linked to none of the six
+   top-level pages and the `<noscript>` notice did not say so. The notice now names the
+   navigation among what will not render **and** carries the six destinations.
+   `tools/_footer.mjs` regenerates it into all seven pages from one source, and **reads the
+   list out of `export const NAV` in `js/shell.js`** rather than retyping it, so the nav model
+   keeps one home. The generator throws rather than emitting a plausible list if that array
+   stops being readable. `<noscript>` is inert when scripting is on, so a reader with
+   JavaScript gains no element, no id and no focusable control.
+2. **`keyboard:skip-first`** — `initShell()` inserted the chrome at `document.body.firstChild`,
+   ahead of the skip link, so a keyboard reader had to tab through the navigation to reach the
+   link that skips the navigation. It now inserts **after** the skip link when one is a direct
+   child of `<body>`, falling back to the old behaviour when there is none.
+3. **`a11y:headings:enforcement.html`** — the pipeline stage panels were `<h5>` under the
+   record's `<h2>`. `h5` was a type size chosen in the stylesheet, not a level: they are `h3`
+   now, alongside "Legal basis" and "Requires verification", which already were.
+   `css/tools.css` sizes that heading itself, so **the appearance is unchanged**.
+
+### One undecidable was a defect in the CHECK, and it is now decided
+
+**`keyboard:focus-visible` never measured anything.** `checkKeyboard` presses `Tab`, which
+focuses the first focusable element, and `document.querySelector('a[href], button')` then
+returns *that same element* — so the "before" style was read off an already-focused element
+and compared with itself. `differs` was false by construction. Measured on `instruments.html`
+before changing it: the element examined is `a.skip-link`, it is already
+`document.activeElement`, it already matches `:focus-visible`, and its outline already reads
+`solid 2px` before `el.focus()` is called. The check now blurs, drives focus with a real
+`Tab` — `:focus-visible`, which is what `css/tokens.css` styles, is a question about how focus
+arrived — and compares. The site's focus ring is real and always was: `none 0px` → `solid 2px`.
+
+**`a11y:bound` stays, and the session does not reach "0 undecidable".** It is marked in
+`checks.mjs` as "not a check that can pass": no contrast ratio was computed, no screen reader
+was run, no pixels were compared. Turning it into a pass would render an absence of knowledge
+as a finding, which `docs/AI-SAFE-BOUNDARIES.md` §0.5 forbids. **The acceptance criterion asked
+for zero and the answer is one, deliberately, with the reason stated.**
+
+### `freshness.mjs` exits 0 because the exit code was answering the wrong question
+
+The disagreement `agent/production/readiness.mjs` carried unresolved from SESSION 24 — *either
+`freshness.mjs` should not exit 1, or §12's baseline of 0 for it is wrong* — is settled the
+first way, and the evidence is mechanical rather than editorial: **every finding on this tree
+disappears when only the DATE changes.** `node tools/freshness.mjs 2026-08-28`, the datasets'
+own newest verification date, reports "Nothing past its stated interval" and exits 0 on
+byte-identical data. A result that flips with the calendar on an unchanged tree cannot gate a
+build; `agent/implement/baseline.mjs` already called the script "a report, not a gate", and
+AUDIT F-15 already recorded clock-dependence as a hazard.
+
+So the script now separates two things it used to sum. A **defect** is a property of the tree
+— a URL-less source with no `resolution`, a per-record verification field never used
+per-record — true on every date and closed by a commit: **exit 1**. A **staleness prompt** is a
+property of the calendar: **exit 0**, printed by name, counted, and stated as not waived and
+not evidence of currency.
+
+**Nothing was silenced and no threshold moved.** `EXPECTED` is byte-identical and
+`tools/selftest.mjs` F5 asserts all six intervals. F6 asserts every prompt counted in the
+summary still appears in the body. F1 asserts the tree reports no prompt as of its own
+verification date; F3 asserts a planted defect fails on **every** date. The three prompts
+standing today are unchanged and still owed verification work: the CRA reporting deadline of
+11 September and the Data Act application of 12 September fell due after the last
+verification, and the newest enforcement decision on record is 50 days old against a 45-day
+interval. **None of that is fixable by a session that cannot reach a primary source, and this
+one could not: `andreatosti2001.github.io` and every EU endpoint are refused by this
+environment's network policy with HTTP 403 on CONNECT.**
+
+### The Google Fonts contradiction is not in this tree, and the gap that let it be reported is
+
+**There is no reference to `fonts.googleapis.com` or `fonts.gstatic.com` anywhere in the
+repository, on this branch or on `main`** — no `@import`, no `<link>`, no `preconnect`. The
+dependency was removed before this session: `style.css` records it in a comment, where
+`--display` used to name 'Bodoni Moda'. The typefaces in `fonts/` are Fraunces, Literata and
+IBM Plex Mono, all self-hosted, and the browser suite's `network:first-party` measures on
+every run that every request a page made went to the local origin.
+
+**What was real is the enforcement gap.** `design-qa.mjs` asserted "no third-party resource"
+while reading exactly this:
+
+```
+/(?:href|src)="(https?:\/\/[^"]+)"/g
+```
+
+over the HTML only — double quotes required. It could not see an `@import` or an
+`@font-face src` in a stylesheet, which is the exact path by which Google Fonts returns; a
+`fetch`, `import()`, worker, WebSocket, beacon or `.src =` in a module; a `preconnect`; or any
+of those written with single quotes or none. **The claim was wider than the check in four
+documents.** `tools/thirdparty.mjs` is the check the claim needs, and `tools/selftest.mjs` §A
+plants each of those defects and asserts it is caught, including in a copy of the real tree.
+`ALLOWED_RUNTIME_ORIGINS` is **empty**; `data/` and `i18n/` are deliberately outside the
+surface, because a URL in `data/sources.json` is a citation the page displays and never
+fetches.
+
+### The source-metadata contract now has one home
+
+`tools/source-contract.mjs`: 12 required fields, 2 optional, each with its shape, why it
+exists, who writes it and who reads it. `validate.mjs` enforces it on all 77 records and they
+all pass. Before this, referential integrity asked whether four values *resolved* and nothing
+asked whether a record had the other eight at all — a source with no `title`, no `accessed`
+and no `note` passed every check here.
+
+**The six fields the grant names and the dataset does not have are `ABSENT_BY_DESIGN`, and
+they were not added.** `last_retrieved`, `retrieved_at`, `checksum`, `content_hash`,
+`recheck_interval`, `freshness_window` each assert that a document was FETCHED, and no URL in
+this repository has ever been retrieved (AUDIT F-12). Writing one would be a fabricated fact
+about evidence. A record carrying one is refused **by name with that reason**, so the next
+session to read the grant meets the explanation rather than concluding the fields are simply
+missing. `docs/SOURCE-POLICY.md` §7a and §7b.
+
+### The rollback deadlock was already repaired, and the ladder moved one step further
+
+SESSION 27 fixed it under an explicit warrant and the tests are `agent/improve/selftest.mjs`
+17 (a clean proposal in an enabled category over a granted path reaches the runner) and 17b
+(a `not_reversible` plan and a null plan are both refused on `rollback_mechanical`), with
+`agent/autonomy/selftest.mjs` 17b on the same ground. **§16's tests C and D therefore already
+existed; this session verified them rather than duplicating them.** What moved is a
+consequence of the freshness repair: the clean fixture used to be refused at the measured
+evaluation on `verification_succeeded (unknown)` **and** `validators_pass (failed)`, the
+second being the exit 1 that was never a statement about any proposal. It is now refused on
+`verification_succeeded` alone. **No autonomous change has merged anything and nothing has
+been proposed**: `agent/records/` is git-ignored and empty in a fresh checkout, so
+`survey --all` reports no proposals at all.
+
+### The browser suite now runs at the address the site is deployed to
+
+Deployment is GitHub Pages serving `main` as a **project site** at `/Eu-Digital-Policy/`, and
+every run before this one served the repository at `/`. A root-relative reference resolves at
+the root and 404s one segment down, and the suite could not have told the difference.
+`serveSite({ basePath })` serves the site under the prefix and refuses anything outside it;
+`checkDeployedSubpath` loads all seven pages there. **15 checks, all passing** — nothing here
+is written root-relative. The proof that it can fail is in `agent/browser/selftest.mjs`, which
+copies the tree, rewrites one `href="css/tokens.css"` to `href="/css/tokens.css"`, and asserts
+the check reports the 404 while the same reference resolves 200 at the root.
+
+Reading a 404 needed `Network.responseReceived` in `cdp.mjs`. `Network.loadingFailed`, which
+the harness already had, fires on a **transport** failure and not on a 404 — a 404 is a
+successful exchange carrying a status — so a missing stylesheet was previously
+indistinguishable from a present one.
+
+### One consequence of the no-JS navigation, caught by another agent's suite
+
+`agent/ux/selftest.mjs` 32 failed: the noscript nav is one list regenerated into seven pages,
+so each page's copy names the page it is on, and `pagesOf()` counted that as an outbound link.
+`reachabilityOf()` had **always** discarded a self-link; the filter now lives in `pagesOf()`
+too, so the two levels cannot disagree, and the test lost the `index.html` exemption it used
+to need. The assertion was kept and strengthened, not relaxed.
+
+### CI found one more, and it is the same shape as two earlier ones
+
+Pushing the branch made the browser job's **`Run the browser regression suite`**
+step succeed for the first time — and the step after it, **`Nothing was
+written`**, then failed. Not because the suite writes: the step before the guard
+writes `browser-qa.json` into the repository root on purpose and uploads it, and
+that file is not gitignored, so `git status --porcelain` reports it. The health
+job three blocks above has always done `rm -f health-public.json` first for
+exactly this reason; the browser job did not.
+
+**The guard had never executed.** A failing step skips every step after it in the
+same job, and the browser suite failed on every push from the job being added
+until this branch, so the check was skipped every time and its never having
+failed meant nothing. That is the third occurrence of this shape here, after
+`docs/GOVERNANCE-PROPOSALS.md` §6b and the SESSION 27 reach register. The guard
+is kept and is now real: it still fails on anything the suite itself writes, and
+no longer counts the file the workflow deliberately created and already
+uploaded.
+
+### A second pass over the six remaining blockers, and the one that was not a measurement
+
+Asked to investigate how the remaining blockers could be resolved, this session found that
+one of the six was **not measured at all**.
+
+**`scout_can_reach_a_source` reported `0 of 5` from a hard-coded constant.**
+`agent/production/readiness.mjs` set `facts.network = { registered: 5, reachable: 0 }` with a
+comment claiming SESSION 25's `--live` run was "the only measurement this repository has ever
+taken". That was false. **The scheduled Source Scout has reached real EU endpoints from
+GitHub Actions**: the run of 7 September 2026 fetched **17 documents**, **0 refused by egress
+policy**, producing candidates from `www.edpb.europa.eu` and `www.enisa.europa.eu`; EUR-Lex
+answered 202 and the EDPS answered 403, which are the origins' own answers. The digest saying
+so is committed on the unmerged branch `scout/digest-digest-2026-09-07T06-38-26Z`.
+
+So the condition was measuring **the container the check ran in**, and asserting the result as
+a property of the Scout. It is now derived from the Scout's committed digests, which
+`agent/scout/digests/README.md` says are tracked precisely so a run leaves durable evidence.
+Reached means *yielded a document*, not *answered*: an endpoint counts only where the run
+produced a candidate from its origin, which undercounts and is the safe direction.
+
+**The verdict did not move.** A tree with no committed digest now reports `unmeasurable`, and
+an unmeasured mandatory condition blocks exactly as a failure does — 14 of 20 pass and 6
+block, exit 1, as before. What changed is that the reason is true, and that real evidence can
+now satisfy it: merging the Scout's pull request would.
+
+`agent/production/schedule.mjs` carried the same sentence about the Scout stage and is
+corrected the same way. `agents_instrumented` said "none of the seven can write" while listing
+eight; the count is now derived.
+
+**The other five were investigated and left alone, each for a stated reason.**
+
+| Blocker | Why this session did not close it |
+|---|---|
+| `adversarial_gate_clean` (HE-04) | AGENTS.md and §4a both say it is left RED on purpose and a person decides. New evidence for that person is below. |
+| `website_paths_traceable` | `human_commit` is marked in `traceability.mjs` as one **an agent may not close**: requiring evidence in a commit message is a governance decision about how the author works. `control_room_decision` becomes traceable when a proposal is decided. |
+| `production_dispatcher_wired` | Wiring the eleven specialists so the Orchestrator can invoke them is new capability and a Class D decision, not a stabilization fix. |
+| `decision_ledger_present` | Only a person can decide a proposal. |
+| `deploy_gate_exists` | Repository settings. Two routes are described below; both need the author. |
+
+**HE-04: the hit list has grown, and that is new.** At `a25f0ed` the attack found the phrase in
+exactly **one** file, `agent/simulation/threshold.mjs`. It now finds **three**:
+`agent/production/separations.mjs` and `agent/production/visual.mjs` were added by SESSION 29 —
+the session that measured the first file on two halves and cleared it, while adding two more
+occurrences it did not put through the same check. Read directly, all three are the HE-01
+shape: `separations.mjs` **searches** for the phrase (that is the separation check), and
+`visual.mjs` carries it once inside a **prose sentence** describing a near-miss test. Neither
+reads it as an input. This does not reclassify anything — it gives the person deciding a fact
+they did not have.
+
+**`deploy_gate_exists` has a second route worth naming.** The report says the condition can
+only be satisfied in repository settings, which is true of both routes but hides the more
+useful one:
+
+- **A** — a branch protection rule on `main` requiring the QA checks. Entirely settings.
+- **B** — switch the Pages source from "deploy from a branch" to **GitHub Actions**, and add a
+  deploy workflow whose `needs:` names the QA jobs. Most of the gate then lives **in the tree**,
+  where it is reviewable. It still needs the author to flip the Pages source once, and it
+  changes the deployment mechanism, which is Class D.
+
+Route B has a side effect worth weighing: a workflow deployment publishes an artifact rather
+than the branch, so it could publish the site files alone. That would also close the standing
+finding that `agent/`, `docs/` and `tools/` are inside the public surface, which is what PP-08
+reports. **Neither route was implemented.** AGENTS.md is explicit that an agent must not edit
+the workflow to claim a gate it does not have.
+
+**`control_room_decision` carries a real mechanical defect, described rather than changed.**
+A decision in `agent/implement/decisions/decisions.jsonl` is git-tracked; the proposal it
+decides lives in `agent/records/`, which is git-ignored. `deriveApproval()` returns
+`void_unknown_proposal` when the proposal is absent, so a decision recorded today reads as void
+on any other machine. `readAgentRecords()` already returns `traces`, so the two cases —
+*this machine has no record store at all* and *the store is populated and lacks this proposal*
+— are mechanically distinguishable, and `IMPLEMENTABLE = ['granted']` means a new state is
+refused by default. **It was not changed here**: renaming the state describes the problem
+accurately without fixing it, and how a durable decision should bind to a regenerable proposal
+is an approval-integrity decision rather than a stabilization one.
+
+**`a11y:bound` could be narrowed and not closed.** It names three things not done: no contrast
+ratio, no screen reader, no pixel comparison. Contrast is the only one this harness could
+compute, and computing the *effective* background through transparency and stacked ancestors is
+where a naive implementation produces confident wrong numbers. Closing one third would leave
+the marker standing for the other two, so nothing was built.
+
+**Text scaling** remains as reported: the type scale is in pixels, which follows browser zoom
+but not a changed default font size. Converting it is a redesign, which §14 forbids.
+
+### What was NOT done, and why
+
+- **`a11y:bound` was not made to pass.** Above.
+- **The six retrieval fields were not added to `data/sources.json`.** Above.
+- **Nothing was merged and no pull request was opened**, per `AGENTS.md`'s git rule.
+- **The live deployment was not verified.** Outbound access to `andreatosti2001.github.io` is
+  refused by this environment (403 on CONNECT, confirmed this session). Everything reported
+  here is read or measured from the repository and a locally served render. **No claim is made
+  about what the live site currently serves.**
+- **HE-04 is still RED.** The adversarial gate still reports 1 SUCCEEDED. SESSION 29 measured
+  it as a false positive of the HE-01 shape and left it red on purpose, because reclassifying
+  a CRITICAL by editing the thing that reports it is a person's decision. That has not changed.
+- **The seven other readiness blockers are untouched**: no production dispatcher, no reachable
+  source, the absent decision ledger, the untraceable write paths, no deploy gate. Each is a
+  governance decision or needs network this environment does not have.
+
+### Regression tests added
+
+| § | Test | Where |
+|---|---|---|
+| A | a third-party runtime resource, in HTML/CSS/JS, quoted or not | `tools/selftest.mjs` A1–A13 |
+| B | every source record against the authoritative contract | `tools/selftest.mjs` B1–B8 |
+| C | a valid limited-autonomy operation passes the gates | `agent/improve/selftest.mjs` 17 *(existing)* |
+| D | an operation with no valid rollback is rejected | `agent/improve/selftest.mjs` 17b *(existing)* |
+| E | invalid workflow transitions are rejected | `agent/orchestrator/selftest.mjs` *(existing)* |
+| F | the site under `/Eu-Digital-Policy/` | `agent/browser/selftest.mjs` + `checkDeployedSubpath` |
+| — | `freshness.mjs`'s exit contract, from both sides | `tools/selftest.mjs` F1–F6 |
+
+---
 
 **SESSIONS 27 AND 28 WERE SIBLINGS FROM ONE BASE, and this file still carries both.** They were
 cut from `aaf6691` independently and neither saw the other. SESSION 28 landed on `main` first;

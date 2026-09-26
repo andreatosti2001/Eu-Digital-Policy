@@ -92,25 +92,40 @@ export function buildSourceIndex(sources = []) {
   return { byCelex, byUrl, byTitle };
 }
 
-/** Every candidate preview from every earlier committed digest, for
- *  the cross-run memory the Scout itself does not keep. */
+/** Every candidate preview from every earlier digest, for the
+ *  cross-run memory the Scout itself does not keep.
+ *
+ *  `digestsDir` may be one directory or several. The committed
+ *  directory alone was not enough: each weekly run commits its digest
+ *  on its own scout/digest-* branch, none had reached main, and every
+ *  live digest therefore reported prior_digests_read: 0 and called
+ *  every candidate new (AUDIT-2026-09-25, T-39). The workflow now
+ *  copies those branches' digests into a scratch directory and passes
+ *  it here as well. A digest seen in two directories is counted once,
+ *  by its digest_id. */
 export function buildPriorIndex(digestsDir, { excludeTraceId = null } = {}) {
   const byCelex = new Map(), byUrl = new Map(), byTitle = new Map();
   const put = (map, key, ref) => { if (key && !map.has(key)) map.set(key, ref); };
-  if (!existsSync(digestsDir)) return { byCelex, byUrl, byTitle, digests_read: 0, unreadable: [] };
+  const dirs = (Array.isArray(digestsDir) ? digestsDir : [digestsDir]).filter((d) => d && existsSync(d));
   const unreadable = [];
+  const seen = new Set();
   let read = 0;
-  for (const f of readdirSync(digestsDir).filter((x) => x.endsWith('.json')).sort()) {
-    let d;
-    try { d = JSON.parse(readFileSync(join(digestsDir, f), 'utf8')); }
-    catch (err) { unreadable.push({ file: f, message: err.message }); continue; }
-    if (d.trace_id === excludeTraceId) continue;
-    read++;
-    for (const c of d.candidates ?? []) {
-      const ref = { origin: `digest ${d.digest_id ?? f}`, candidate_id: c.candidate_id, title: c.title ?? null, url: c.url ?? null };
-      put(byCelex, celexOf(c.url), ref);
-      put(byUrl, normaliseUrl(c.url), ref);
-      put(byTitle, normaliseTitle(c.title) || null, ref);
+  for (const dir of dirs) {
+    for (const f of readdirSync(dir).filter((x) => x.endsWith('.json')).sort()) {
+      let d;
+      try { d = JSON.parse(readFileSync(join(dir, f), 'utf8')); }
+      catch (err) { unreadable.push({ file: f, message: err.message }); continue; }
+      if (d.trace_id === excludeTraceId) continue;
+      const key = d.digest_id ?? f;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      read++;
+      for (const c of d.candidates ?? []) {
+        const ref = { origin: `digest ${d.digest_id ?? f}`, candidate_id: c.candidate_id, title: c.title ?? null, url: c.url ?? null };
+        put(byCelex, celexOf(c.url), ref);
+        put(byUrl, normaliseUrl(c.url), ref);
+        put(byTitle, normaliseTitle(c.title) || null, ref);
+      }
     }
   }
   return { byCelex, byUrl, byTitle, digests_read: read, unreadable };
@@ -140,15 +155,17 @@ export function digestId(when = new Date()) {
  *   environment  — public run context (no secrets)
  *   sourcesPath  — path to data/sources.json
  *   digestsDir   — path to the committed digests directory
+ *   priorDigestDirs — further directories of earlier digests, read
+ *                  for the cross-run check only (never written)
  * @returns {{digest:object, markdown:string}}
  */
 export function buildDigest({
   result, mode, started_at, finished_at, environment = {},
-  sourcesPath, digestsDir,
+  sourcesPath, digestsDir, priorDigestDirs = [],
 }) {
   const sources = JSON.parse(readFileSync(sourcesPath, 'utf8')).sources ?? [];
   const sourceIndex = buildSourceIndex(sources);
-  const priorIndex = buildPriorIndex(digestsDir, { excludeTraceId: result.trace_id });
+  const priorIndex = buildPriorIndex([digestsDir, ...priorDigestDirs], { excludeTraceId: result.trace_id });
 
   const gapsIsEgress = (g) => /refused before it reached the origin/.test(g.why_open ?? '');
 
@@ -220,7 +237,12 @@ export function buildDigest({
     duration_ms: Date.parse(finished_at) - Date.parse(started_at),
     environment,
 
-    status: 'ok', // set by the caller once it knows whether the run threw
+    /* Decided here, before the markdown is rendered from this same
+       object. It used to be set by the caller afterwards, so the .md
+       of one run said `ok` while its .json said `degraded`
+       (AUDIT-2026-09-25, T-39). A run that threw produces no digest
+       at all, so the only two states a digest can hold are these. */
+    status: gaps.length > 0 ? 'degraded' : 'ok',
 
     totals: {
       candidates: candidates.length,

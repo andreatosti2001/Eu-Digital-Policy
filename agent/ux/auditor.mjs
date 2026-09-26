@@ -386,7 +386,7 @@ export class UXAuditor {
             `Check that every token named in tokens_used is one the design system already declares. agent/ux/tokens.mjs refuses a proposal that names one it does not, and SESSION 17's rule is that a proposal uses the existing design system.`,
           ]
           : [`Decide the change. This finding carries none: every operation's "proposed" is null on purpose, and the recommendation names a direction rather than a value.`]),
-        `Run the four validators before and after anything you apply and compare against the docs/CURRENT-ARCHITECTURE.md §12 baseline: 0 errors, 106 unverified records, 5 design-qa warnings by file and line. tools/i18n-audit.mjs is the one most likely to move — an edit to a string carrying a data-i18n key leaves three locale editions asserting the superseded English unless the key is declared superseded.`,
+        `Run the four validators before and after anything you apply and compare against the docs/CURRENT-ARCHITECTURE.md §12 baseline: 0 errors, 111 unverified records, 5 design-qa warnings by file and line. tools/i18n-audit.mjs is the one most likely to move — an edit to a string carrying a data-i18n key leaves three locale editions asserting the superseded English unless the key is declared superseded.`,
       ],
       risk: proposal.risk === 'critical' ? 'high' : proposal.risk,
       consequence: proposal.severity === 'critical'

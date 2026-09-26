@@ -2,7 +2,7 @@
  "$schema_version": "1.0.0",
  "$description": "Canonical record of every dated regulatory event. Instruments reference these by ID rather than carrying their own copies of dates. Enforcement actions live in enforcement.json and are merged into calendar views by reference, not duplicated here.",
  "$last_verified": "2026-08-27",
- "$note": "event_type is mandatory and distinguishes entry into force from application, transposition, compliance and reporting deadlines, delegated and implementing acts, guidance, designation, judicial events and reviews. date_precision records how precisely the date is published: a month-only event is stored as the first of that month.",
+ "$note": "event_type is mandatory and distinguishes entry into force from application, transposition, compliance and reporting deadlines, delegated and implementing acts, guidance, designation, judicial events and reviews. date_precision records how precisely the date is published: a month-only event is stored as the first of that month. AUDIT-2026-09-25 (2026-09-26): records re-read individually against their sources carry that date in their own last_verified; this file's $last_verified is deliberately unchanged, because the file as a whole was not re-read, and moving it would assert that it was.",
  "events": [
   {
    "id": "tl-gdpr-2016-05-24-entry-into-force",
@@ -59,6 +59,130 @@
    "requires_verification": true,
    "verification_note": "Application date taken from general knowledge, not confirmed against the consolidated text in this build.",
    "last_verified": "2026-08-27"
+  },
+  {
+   "id": "tl-dma-2024-03-07-compliance",
+   "date": "2024-03-07",
+   "date_precision": "precision:day",
+   "event_type": "event:compliance-deadline",
+   "instrument": "dma",
+   "provisions": [
+    "dma:art-5",
+    "dma:art-6",
+    "dma:art-7"
+   ],
+   "affected_actors": [
+    "actor:gatekeeper"
+   ],
+   "sectors": [
+    "sector:media",
+    "sector:retail"
+   ],
+   "obligation": "The six gatekeepers designated on 6 September 2023 (Alphabet, Amazon, Apple, ByteDance, Meta, Microsoft) must comply in full with the DMA obligations for their designated core platform services.",
+   "required_action": null,
+   "authority": [
+    "ec"
+   ],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-ec-dma-designation-2023",
+    "src-ec-dma-gatekeepers-comply-2024"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added on 2026-09-26 (audit T-29) from two Commission sources read that day: the designation release IP/23/4328 (six months to comply) and the DMA website announcement of 7 March 2024 that the six must now comply fully.",
+   "last_verified": "2026-09-26"
+  },
+  {
+   "id": "tl-gdpr-procedural-2026-01-01-entry-into-force",
+   "date": "2026-01-01",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "gdpr-procedural",
+   "provisions": [],
+   "affected_actors": [
+    "actor:controller",
+    "actor:processor"
+   ],
+   "sectors": [
+    "sector:cross-sector"
+   ],
+   "obligation": "Regulation (EU) 2025/2518 enters into force. The regulation itself does not yet apply (see the 2 April 2027 application event).",
+   "required_action": null,
+   "authority": [
+    "dpa-*"
+   ],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [
+    "clm-gdpr-procedural-regulation"
+   ],
+   "sources": [
+    "src-eucrim-gdpr-procedural-2026"
+   ],
+   "requires_verification": true,
+   "verification_note": "Date confirmed by eucrim, a specialist academic newsletter reporting the Official Journal reference; the EUR-Lex consolidated text could not be retrieved directly in this environment.",
+   "last_verified": "2026-09-26"
+  },
+  {
+   "id": "tl-cra-2026-06-11-application",
+   "date": "2026-06-11",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "cra",
+   "provisions": [],
+   "affected_actors": [
+    "actor:manufacturer"
+   ],
+   "sectors": [
+    "sector:cross-sector"
+   ],
+   "obligation": "Chapter IV (Articles 35 to 51), on the notification of conformity assessment bodies, applies.",
+   "required_action": null,
+   "authority": [
+    "nca-*"
+   ],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-cra-text-unofficial-art71"
+   ],
+   "requires_verification": true,
+   "verification_note": "Added on 2026-09-26 (audit T-29) from Art. 71(2), read from an unofficial reproduction of the text because EUR-Lex returns HTTP 202 with no body here. Not yet checked against the Official Journal.",
+   "last_verified": "2026-09-26"
+  },
+  {
+   "id": "tl-gdpr-procedural-2027-04-02-application",
+   "date": "2027-04-02",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "gdpr-procedural",
+   "provisions": [],
+   "affected_actors": [
+    "actor:controller",
+    "actor:processor"
+   ],
+   "sectors": [
+    "sector:cross-sector"
+   ],
+   "obligation": "Regulation (EU) 2025/2518 applies to cross-border GDPR complaints lodged from this date: harmonised admissibility criteria, common procedural rights for complainants and organisations under investigation, and investigation time limits (15 months regular, 12 months simplified).",
+   "required_action": null,
+   "authority": [
+    "dpa-*"
+   ],
+   "status": "scheduled",
+   "supersedes": null,
+   "claims": [
+    "clm-gdpr-procedural-regulation"
+   ],
+   "sources": [
+    "src-eucrim-gdpr-procedural-2026"
+   ],
+   "requires_verification": true,
+   "verification_note": "Date confirmed by eucrim, a specialist academic newsletter reporting the Official Journal reference; the EUR-Lex consolidated text could not be retrieved directly in this environment.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-dma-2022-11-01-entry-into-force",
@@ -194,8 +318,8 @@
   },
   {
    "id": "tl-dma-2023-05-01-application",
-   "date": "2023-05-01",
-   "date_precision": "precision:month",
+   "date": "2023-05-02",
+   "date_precision": "precision:day",
    "event_type": "event:application",
    "instrument": "dma",
    "provisions": [
@@ -219,16 +343,17 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original"
+    "src-eurlex-dma",
+    "src-dma-text-unofficial-art54"
    ],
    "requires_verification": true,
-   "verification_note": "The brief states only 'May 2023', via a paraphrase of a Bruegel policy brief. Stored at month precision.",
-   "last_verified": "2026-08-27"
+   "verification_note": "Corrected on 2026-09-26 (audit T-29): Art. 54 says the Regulation applies from 2 May 2023, so day precision; the brief's 'May 2023' (month precision, stored as the 1st) is replaced. Read from an unofficial reproduction of the text, since EUR-Lex returns HTTP 202 with no body here; not yet checked against the Official Journal. The event ID keeps '05-01' because IDs are never renamed.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-dsa-2023-08-01-application",
-   "date": "2023-08-01",
-   "date_precision": "precision:month",
+   "date": "2023-08-25",
+   "date_precision": "precision:day",
    "event_type": "event:application",
    "instrument": "dsa",
    "provisions": [
@@ -252,11 +377,13 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original"
+    "src-brief-original",
+    "src-ec-vlop-designation-2023",
+    "src-op-dsa-vlop-2023-08-25"
    ],
    "requires_verification": true,
-   "verification_note": "The brief states only 'August 2023', via a paraphrase of a Bruegel policy brief. Stored at month precision. The exact date, which depends on designation plus a four-month period, is not established here.",
-   "last_verified": "2026-08-27"
+   "verification_note": "Corrected on 2026-09-26 (audit T-29): the first VLOPs and VLOSEs, designated on 25 April 2023 with four months to comply (IP/23/2413), became bound on 25 August 2023 (data.europa.eu news item of that date). Day precision replaces the month. The event ID keeps '08-01' because IDs are never renamed.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-data-act-2024-01-11-entry-into-force",
@@ -368,11 +495,12 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original"
+    "src-brief-original",
+    "src-ec-cer-referral-2026"
    ],
    "requires_verification": true,
-   "verification_note": "The brief states the same deadline as NIS2. Not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "verification_note": "The 17 October 2024 deadline is confirmed by the Commission's referral press release IP/26/910 (29 April 2026), read on 2026-09-26, which also records seven Member States still not transposed.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-nis2-2024-10-17-transposition",
@@ -936,7 +1064,7 @@
    "sectors": [
     "sector:cross-sector"
    ],
-   "obligation": "The AI Act's general date of application.",
+   "obligation": "The AI Act's general date of application. Article 101 also applies from this date: the Commission may fine providers of general-purpose AI models up to 3% of annual worldwide turnover or EUR 15 million, whichever is higher (GPAI obligations themselves have applied since 2 August 2025).",
    "required_action": null,
    "authority": [
     "nca-*",
@@ -948,10 +1076,11 @@
    "sources": [
     "src-brief-original",
     "src-ec-ai-act-enforcement-2026",
-    "src-ec-ai-act-framework"
+    "src-ec-ai-act-framework",
+    "src-aia-text-unofficial-arts-111-113"
    ],
    "requires_verification": false,
-   "verification_note": "Resolved as to the date. The Commission confirms 2 August 2026 as the general date of application and began enforcing the transparency obligations on that date. What the AI Omnibus moved out of this tranche is recorded on the Omnibus records rather than here.",
+   "verification_note": "Resolved as to the date. The Commission confirms 2 August 2026 as the general date of application and began enforcing the transparency obligations on that date. What the AI Omnibus moved out of this tranche is recorded on the Omnibus records rather than here. Art. 101 added on 2026-09-26 (audit T-29): Art. 113(b) applies Chapter V from 2 August 2025 'with the exception of Article 101', read from an unofficial explorer of the amended text, not the Official Journal. The audit proposed a separate event; the validator allows one application event per instrument and date, so it is recorded here.",
    "last_verified": "2026-08-27"
   },
   {
@@ -974,16 +1103,17 @@
     "enisa",
     "nca-*"
    ],
-   "status": "scheduled",
+   "status": "occurred",
    "supersedes": null,
    "claims": [],
    "sources": [
     "src-brief-original",
-    "src-eurlex-cra"
+    "src-eurlex-cra",
+    "src-cra-text-unofficial-art71"
    ],
    "requires_verification": true,
-   "verification_note": "Date stated by the brief; not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "verification_note": "The date passed on 11 September 2026. Art. 71(2) read on 2026-09-26 from an unofficial reproduction of the text: Article 14 (reporting obligations) applies from 11 September 2026. Not yet checked against the Official Journal.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-data-act-2026-09-12-application",
@@ -1003,11 +1133,11 @@
     "sector:automotive"
    ],
    "obligation": "The Art. 3(1) design obligation applies: connected products must be built so that product and related service data are accessible to the user by default.",
-   "required_action": "Design and document data-access provision for connected products placed on the market from this date.",
+   "required_action": "Design and document data-access provision for connected products and related services placed on the market after this date.",
    "authority": [
     "nca-*"
    ],
-   "status": "scheduled",
+   "status": "occurred",
    "supersedes": null,
    "claims": [
     "clm-data-act-art-3-application"
@@ -1017,8 +1147,8 @@
     "src-eurlex-data-act"
    ],
    "requires_verification": true,
-   "verification_note": "Date stated by the brief; not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "verification_note": "Art. 50 read on 2026-09-26 from an unofficial reproduction of the text: Art. 3(1) applies to connected products and related services placed on the market after 12 September 2026. Not yet checked against the Official Journal text.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-dma-2026-11-01-designation",
@@ -1036,8 +1166,8 @@
    "sectors": [
     "sector:digital-infrastructure"
    ],
-   "obligation": "Cloud designation decisions due.",
-   "required_action": "Cloud service providers meeting the Art. 3 thresholds should expect designation and the Art. 5–7 obligation set.",
+   "obligation": "Commission's target for concluding the AWS and Azure gatekeeper market investigations (within 12 months of their 18 November 2025 opening) — a target, not a legal deadline.",
+   "required_action": "If AWS and Azure are designated, Amazon and Microsoft would have six months to bring those services into compliance with the DMA obligations.",
    "authority": [
     "ec"
    ],
@@ -1045,11 +1175,12 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original"
+    "src-ec-dma-cloud-mi-2025",
+    "src-ec-cloud-gatekeeper-preliminary-2026"
    ],
-   "requires_verification": true,
-   "verification_note": "From the brief's Annex A. Month precision as published there. No primary source located in this build.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "The date is derived, not published: IP/25/2717 says the Commission 'aims to conclude' within 12 months of 18 November 2025, hence November 2026 at month precision. It is an administrative target, not a deadline in the Regulation. A preliminary position in favour of designation was reached on 25 June 2026 (IP/26/1444). requires_verification cleared on 2026-09-26 by the author's decision: the date and its status as a target both come from the Commission's own press release.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-ai-act-2026-12-02-application",
@@ -1058,7 +1189,8 @@
    "event_type": "event:application",
    "instrument": "ai-act",
    "provisions": [
-    "ai-act:art-50"
+    "ai-act:art-50",
+    "ai-act:art-5"
    ],
    "affected_actors": [
     "actor:ai-provider",
@@ -1067,8 +1199,8 @@
    "sectors": [
     "sector:cross-sector"
    ],
-   "obligation": "Art. 50(2) machine-readable marking of synthetic content; prohibition on AI nudification and CSAM-generating systems.",
-   "required_action": "Implement machine-readable marking for AI-generated or manipulated content.",
+   "obligation": "Two distinct things happen on this date, not one. The new Art. 5(1) prohibitions inserted by the Digital Omnibus (points (ba) and (bb): AI-generated non-consensual intimate imagery, and the same conduct in relation to CSAM material) apply from this date. Separately, providers of synthetic-content-generating AI systems already on the market before 2 August 2026 — the AI Act's general application date, and the date Art. 50(2) marking itself took effect for new systems — must complete Art. 50(2) machine-readable marking by this date: it is the end of a transition period for pre-existing systems, not the marking obligation's own application date.",
+   "required_action": "Implement machine-readable marking for AI-generated or manipulated content already on the market before 2 August 2026; comply with the new Art. 5(1) prohibitions from this date for all systems.",
    "authority": [
     "nca-*"
    ],
@@ -1076,12 +1208,12 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original",
-    "src-ec-ai-act-framework"
+    "src-hunton-ai-omnibus-2026",
+    "src-nicfab-ai-omnibus-2026"
    ],
    "requires_verification": false,
-   "verification_note": "Resolved. The Commission's AI Act material gives 2 December 2026 for the Article 50(2) marking obligation and the prohibitions on AI nudification and CSAM-generating systems. The earlier flag came from reading only the AI Omnibus entry-into-force announcement, which lists the high-risk dates and not this one — an absence in one document, not a contradiction.",
-   "last_verified": "2026-08-27"
+   "verification_note": "Corrected 26 Sep 2026. The previous note treated 2 December 2026 as if it were Art. 50(2)'s own application date; it is not — Art. 50 applies from 2 August 2026 (the AI Act's general application date), and 2 December 2026 is specifically the end of the transition period for marking systems already on the market before that date, confirmed directly by Hunton's key-dates list and by NicFab's detailed article on Regulation (EU) 2026/1744. The same date does separately carry the new Art. 5(1)(ba)/(bb) prohibitions, confirmed by NicFab, which quotes the inserted text directly.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-pld-2026-12-09-application",
@@ -1159,7 +1291,7 @@
    "sectors": [
     "sector:digital-infrastructure"
    ],
-   "obligation": "Conclusion of the cloud market investigation.",
+   "obligation": "Commission's target for publishing the final report of the sector-wide cloud market investigation (within 18 months of its 18 November 2025 opening) — a target, not a legal deadline.",
    "required_action": null,
    "authority": [
     "ec"
@@ -1168,11 +1300,11 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original"
+    "src-ec-dma-cloud-mi-2025"
    ],
-   "requires_verification": true,
-   "verification_note": "From the brief's Annex A. No primary source located in this build.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "The date is derived, not published: IP/25/2717 says the final report 'will result' within 18 months of 18 November 2025, hence May 2027 at month precision. It is an administrative target, not a deadline in the Regulation; the report may propose updating the cloud obligations by delegated act (Arts. 12 and 49). requires_verification cleared on 2026-09-26 by the author's decision: the date and its status as a target both come from the Commission's own press release.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-data-act-2027-09-12-application",
@@ -1302,6 +1434,35 @@
    "requires_verification": false,
    "verification_note": null,
    "last_verified": "2026-08-27"
+  },
+  {
+   "id": "tl-ai-act-2030-08-02-application",
+   "date": "2030-08-02",
+   "date_precision": "precision:day",
+   "event_type": "event:compliance-deadline",
+   "instrument": "ai-act",
+   "provisions": [],
+   "affected_actors": [
+    "actor:ai-provider",
+    "actor:ai-deployer"
+   ],
+   "sectors": [
+    "sector:public-administration"
+   ],
+   "obligation": "Providers and deployers of high-risk AI systems intended to be used by public authorities, already on the market or in service, must comply with the AI Act by this date (Art. 111(2)).",
+   "required_action": null,
+   "authority": [
+    "nca-*"
+   ],
+   "status": "scheduled",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-aia-text-unofficial-arts-111-113"
+   ],
+   "requires_verification": true,
+   "verification_note": "Added on 2026-09-26 (audit T-29) from Art. 111(2) as amended, read from an unofficial explorer of the text, not the Official Journal. The Digital Omnibus changed the cut-off for 'already on the market' systems; the 2 August 2030 date is unchanged in both versions shown.",
+   "last_verified": "2026-09-26"
   }
  ]
 }

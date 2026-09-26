@@ -222,6 +222,15 @@ export class Page {
     /** Every request the page made, with its origin. */
     this.requests = [];
     this.failedRequests = [];
+    /** Every response, with its HTTP status.
+     *
+     *  `failedRequests` is NOT this. `Network.loadingFailed` fires on a
+     *  transport failure — a refused connection, a blocked scheme — and
+     *  a 404 is none of those: it is a successful exchange carrying a
+     *  status that says the file is not there. Without this list a
+     *  missing stylesheet looks exactly like a present one, which is
+     *  what `checkDeployedSubpath` has to be able to tell apart. */
+    this.responses = [];
   }
 
   send(method, params) { return this.browser.rpc.send(method, params, this.sessionId); }
@@ -249,6 +258,10 @@ export class Page {
     r.on('Network.requestWillBeSent', (p, sid) => {
       if (sid !== this.sessionId) return;
       this.requests.push({ url: p.request.url, type: p.type ?? null });
+    });
+    r.on('Network.responseReceived', (p, sid) => {
+      if (sid !== this.sessionId) return;
+      this.responses.push({ url: p.response?.url ?? null, status: p.response?.status ?? null, type: p.type ?? null });
     });
     r.on('Network.loadingFailed', (p, sid) => {
       if (sid !== this.sessionId) return;

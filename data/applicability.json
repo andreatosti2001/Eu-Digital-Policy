@@ -353,7 +353,7 @@
       "obligations": ["ai-act:art-5", "ai-act:art-27"],
       "authority": ["nca-*", "ec"],
       "dates": ["tl-ai-act-2025-02-02-application"],
-      "exemptions": ["Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to systems used for military, defence or national security purposes. The brief argues this carve-out is the structural source of the asymmetry between constraint on corporate and on state power."],
+      "exemptions": ["Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)). The brief argues this carve-out is the structural source of the asymmetry between constraint on corporate and on state power."],
       "depends_on": ["Whether the use is characterised as national security, which the Act does not itself resolve."],
       "claims": ["clm-art-5-binds-states", "clm-art-4-2-teu-carve-out", "clm-enforcement-asymmetry"],
       "sources": ["src-eurlex-ai-act"],
@@ -386,12 +386,12 @@
         "activity": ["activity:cloud-services"]
       },
       "outcome": "outcome:applies",
-      "rationale": "Chapter VI is eight articles out of fifty and carries most of the Regulation's practical weight for the software industry. Providers of data processing services must remove all pre-commercial, commercial, technical, contractual and organisational obstacles to switching, and Article 25 prescribes the mandatory contractual terms.",
+      "rationale": "Chapter VI is nine articles (Arts. 23-31) out of fifty and carries most of the Regulation's practical weight for the software industry. Providers of data processing services must remove all pre-commercial, commercial, technical, contractual and organisational obstacles to switching, and Article 25 prescribes the mandatory contractual terms.",
       "obligations": ["data-act:art-25"],
       "authority": ["nca-*"],
       "dates": ["tl-data-act-2025-09-12-application", "tl-data-act-2027-01-12-application"],
       "exemptions": [],
-      "depends_on": ["Whether Chapter VI reaches contracts concluded before 12 September 2025 was left genuinely open in the text."],
+      "depends_on": ["Whether Chapter VI reaches contracts concluded before 12 September 2025: Article 50 phases in only Chapter IV for such contracts, and practitioner analysis reads the switching right as reaching them; the Commission's FAQ (version 1.4) does not address the point."],
       "claims": ["clm-data-act-switching-numbers", "clm-data-act-retroactivity-open"],
       "sources": ["src-eurlex-data-act"],
       "last_verified": "2026-08-27"
@@ -441,7 +441,7 @@
         "activity": ["activity:cloud-services", "activity:connected-products"]
       },
       "outcome": "outcome:possible",
-      "rationale": "The Data Act governs data as such — predominantly non-personal, industrial and machine-generated — and reallocates control over it by default. An organisation may be a data holder, a user or a data recipient depending on the arrangement, and the obligations differ in each role.",
+      "rationale": "The Data Act governs product and service data as such — personal or not, though predominantly non-personal, industrial and machine-generated, with the GDPR prevailing wherever personal data is involved — and reallocates control over it by default. An organisation may be a data holder, a user or a data recipient depending on the arrangement, and the obligations differ in each role.",
       "obligations": ["data-act:art-3-1", "data-act:art-25"],
       "authority": ["nca-*"],
       "dates": ["tl-data-act-2025-09-12-application", "tl-data-act-2027-09-12-application"],
@@ -460,7 +460,7 @@
         "activity": ["activity:critical-infrastructure-operation"]
       },
       "outcome": "outcome:likely",
-      "rationale": "NIS2 sets ten baseline risk-management measures and a reporting cascade of 24 hours, 72 hours and one month. Article 20 makes management bodies personally liable for approving the measures — the provision that actually changes boardroom behaviour. Whether an organisation is an essential or an important entity turns on its sector and size.",
+      "rationale": "NIS2 sets ten baseline risk-management measures and a reporting cascade of 24 hours, 72 hours and one month. Article 20 makes management bodies approve and oversee the measures and liable for the entity's infringements, and Article 32(6) adds personal liability for those responsible at essential entities — the provision that actually changes boardroom behaviour. Whether an organisation is an essential or an important entity turns on its sector and size.",
       "obligations": ["nis2:art-3", "nis2:art-20", "nis2:art-21", "nis2:art-23"],
       "authority": ["nca-*", "enisa"],
       "dates": ["tl-nis2-2024-10-17-transposition"],

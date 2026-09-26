@@ -571,7 +571,7 @@ test('R6 · the baseline is READ from docs/CURRENT-ARCHITECTURE.md §12, not ret
   assert.equal(b.commit.length > 0, true);
   for (const v of VALIDATORS) assert.ok(v.name in b.checks, `${v.name} must have a recorded baseline`);
   assert.equal(b.checks['design-qa.mjs'].warnings, 5, 'the five pre-existing design-qa warnings');
-  assert.equal(b.unverified, 106);
+  assert.equal(b.unverified, 111);
   assert.ok(b.named_warnings.length >= 3, 'the warnings are named by file, because a count cannot tell a new one from a moved one');
 });
 
@@ -659,9 +659,25 @@ test('R6 · this suite is in the list the agent runs for a change under agent/ o
      eight are written down immediately above. It is 23. That module
      holds the readiness checklist that decides whether production
      operation may be switched on, and a checklist nothing tests is
-     the purest possible gate on nothing. */
-  assert.equal(AGENT_SUITES.length, 23,
-    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24), the limited-autonomy runner (26), the continuous improvement loop (27), the governance proposals (28) and the production operating mode (29)');
+     the purest possible gate on nothing.
+
+     SESSION 30 is the TENTH, and it is the first entry that is not
+     under agent/. This test's own title has always said "for a change
+     under agent/ OR TOOLS/", and for thirty sessions the four
+     validators that ARE this project's test suite had no suite of
+     their own. SESSION 30 repaired two of them — design-qa.mjs, whose
+     "no third-party resource" check read double-quoted href/src in the
+     HTML and could not see an @import or an @font-face src in a
+     stylesheet, which is the exact path by which the Google Fonts
+     dependency this project once removed would return; and
+     freshness.mjs, whose exit code moved with the calendar rather than
+     with the tree. A repair to a validator that nothing tests is a
+     gate on nothing, and tools/selftest.mjs plants each of those
+     defects and asserts it is caught. It is 24. */
+  assert.equal(AGENT_SUITES.length, 24,
+    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24), the limited-autonomy runner (26), the continuous improvement loop (27), the governance proposals (28), the production operating mode (29) and the validators\' own suite (30)');
+  assert.ok(AGENT_SUITES.includes('tools/selftest.mjs'),
+    'the four validators are this project\'s test suite; a change to one of them must run the suite that tests it');
 });
 
 /* ============================================================

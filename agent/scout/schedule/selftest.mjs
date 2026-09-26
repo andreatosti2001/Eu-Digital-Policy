@@ -98,6 +98,25 @@ test('buildPriorIndex reads candidates out of earlier committed digests and excl
   }
 });
 
+test('buildPriorIndex reads further directories too, and counts a digest found in two of them once', () => {
+  const committed = tempDigestsDir();
+  const branches = tempDigestsDir();
+  try {
+    const earlier = { digest_id: 'digest-a', trace_id: 'trace-a',
+      candidates: [{ candidate_id: 'cand-old', url: 'https://example.invalid/doc', title: 'An earlier finding' }] };
+    writeFileSync(join(branches, 'digest-a.json'), JSON.stringify(earlier));
+    writeFileSync(join(branches, 'digest-c.json'), JSON.stringify({ digest_id: 'digest-c', trace_id: 'trace-c',
+      candidates: [{ candidate_id: 'cand-branch', url: 'https://example.invalid/other', title: 'Only on a branch' }] }));
+    writeFileSync(join(committed, 'digest-a.json'), JSON.stringify(earlier));
+    const index = buildPriorIndex([committed, branches, join(branches, 'absent')]);
+    assert.equal(index.digests_read, 2, 'digest-a is in both directories and is one digest');
+    assert.ok(index.byUrl.has('https://example.invalid/other'), 'a digest that exists only on a branch is still memory');
+  } finally {
+    rmSync(committed, { recursive: true, force: true });
+    rmSync(branches, { recursive: true, force: true });
+  }
+});
+
 test('buildPriorIndex reports a corrupt digest rather than silently narrowing the index', () => {
   const dir = tempDigestsDir();
   try {
@@ -205,12 +224,15 @@ test('status reflects gaps: degraded when any retrieval failed, never silently o
   assert.ok(result.gaps.length > 0, 'the mock fixture includes a refused endpoint');
   const dir = tempDigestsDir();
   try {
-    const { digest } = buildDigest({
+    const { digest, markdown } = buildDigest({
       result, mode: 'mock', started_at: '2026-01-01T00:00:00Z', finished_at: '2026-01-01T00:00:01Z',
       sourcesPath: REAL_SOURCES, digestsDir: dir,
     });
     assert.equal(digest.totals.gaps, result.gaps.length);
     assert.equal(digest.totals.failed_by_egress_policy, result.blocked);
+    assert.equal(digest.status, 'degraded');
+    assert.match(markdown, /\*\*Status:\*\* `degraded`/,
+      'the .md and the .json of one run must state the same status — they once said ok and degraded');
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

@@ -1,0 +1,217 @@
+{
+  "$schema_version": 1,
+  "$description": "A rendering of one Source Scout run for human triage. This is a PREVIEW, not the record: every field here is a pointer or a summary of the SourceCandidate / DataGap records the run actually produced, which live only in agent/records/<trace_id>.jsonl (regenerable, git-ignored, uploaded as this run's workflow artifact). A candidate here is not a data/sources.json record and cannot become one until a human opens the document and reads it — AI-SAFE-BOUNDARIES.md §3.",
+  "$boundaries": "Generated read-only from a completed Scout run and from data/sources.json, read but never written. matches_bibliography and matches_prior_digest are REPORT-LAYER annotations — the Scout itself does not compute them (docs/SOURCE-SCOUT.md, known limitation 6) and they are never written back into any contract record.",
+  "digest_id": "digest-2026-09-21T06-37-48Z",
+  "trace_id": "25603fd7f51b257f78cdd9f0b41e16ec",
+  "run_id": "5dc84ae0f5d37954",
+  "mode": "live",
+  "generated_at": "2026-09-21T06:37:48.361Z",
+  "started_at": "2026-09-21T06:37:30.222Z",
+  "duration_ms": 18139,
+  "environment": {
+    "env": "github-actions",
+    "node": "v22.23.2",
+    "runner_os": "Linux",
+    "workflow": "Source Scout",
+    "run_id": "35569279375",
+    "run_attempt": "1",
+    "event_name": "schedule",
+    "ref_name": "main",
+    "sha": "6da38eea51eb76d4d2d003d3d8ed699a7d604ce1"
+  },
+  "status": "degraded",
+  "totals": {
+    "candidates": 6,
+    "new_against_bibliography": 6,
+    "duplicate_of_bibliography": 0,
+    "new_against_prior_digests": 6,
+    "previously_proposed": 0,
+    "high_relevance": 4,
+    "gaps": 2,
+    "failed_by_egress_policy": 0,
+    "failed_other": 2,
+    "screened_out": 6,
+    "fetched": 17,
+    "prior_digests_read": 0
+  },
+  "relevance_thresholds": [
+    {
+      "band": "high",
+      "min": 0.75
+    },
+    {
+      "band": "medium",
+      "min": 0.5
+    },
+    {
+      "band": "low",
+      "min": 0
+    }
+  ],
+  "unreadable_prior_digests": [],
+  "candidates": [
+    {
+      "candidate_id": "cand-270ec770e1b6",
+      "url": "https://www.edpb.europa.eu/topics_en",
+      "title": "Topics | European Data Protection Board",
+      "publisher": null,
+      "publication_date": "unknown",
+      "authority_class": "authority:edpb",
+      "tier_estimate": "tier:2",
+      "confidence": 0.6,
+      "relevance_band": "medium",
+      "relevance": "Mentions gdpr (short_name \"GDPR\", 4×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "gdpr"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": null,
+      "retrieval": {
+        "retrieved_at": "2026-09-21T06:37:39.332Z",
+        "checksum": "5aff0ef8ddc3b83e807909194c738d605dd2a8596072420618e26cd4f90aa382"
+      }
+    },
+    {
+      "candidate_id": "cand-0aeb0ed30657",
+      "url": "https://www.edpb.europa.eu/documents_en",
+      "title": "Documents | European Data Protection Board",
+      "publisher": null,
+      "publication_date": "2026-07-07T12:00:00Z",
+      "authority_class": "authority:edpb",
+      "tier_estimate": "tier:2",
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions gdpr (short_name \"GDPR\", 6×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "gdpr"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": null,
+      "retrieval": {
+        "retrieved_at": "2026-09-21T06:37:40.423Z",
+        "checksum": "d4fed2cb658a68e6d3ff64863253101ab6cfdfb703a63aae597d9dcfe97fca56"
+      }
+    },
+    {
+      "candidate_id": "cand-cd458212c740",
+      "url": "https://www.edpb.europa.eu/registers_en",
+      "title": "Registers | European Data Protection Board",
+      "publisher": null,
+      "publication_date": "unknown",
+      "authority_class": "authority:edpb",
+      "tier_estimate": "tier:2",
+      "confidence": 0.6,
+      "relevance_band": "medium",
+      "relevance": "Mentions gdpr (short_name \"GDPR\", 1×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "gdpr"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": null,
+      "retrieval": {
+        "retrieved_at": "2026-09-21T06:37:41.332Z",
+        "checksum": "152964c89e1d7f4e0edc108d67b94deb6e34bda9a1c4c56e973dcd568d135e45"
+      }
+    },
+    {
+      "candidate_id": "cand-27022cb277f4",
+      "url": "https://www.edpb.europa.eu/public-consultations_en",
+      "title": "Public consultations | European Data Protection Board",
+      "publisher": null,
+      "publication_date": "2026-07-08T12:00:00Z",
+      "authority_class": "authority:edpb",
+      "tier_estimate": "tier:2",
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions gdpr (alias \"general data protection regulation\", 1×); dma (alias \"digital markets act\", 1×); dsa (short_name \"DSA\", 1×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "gdpr",
+        "dma",
+        "dsa"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": null,
+      "retrieval": {
+        "retrieved_at": "2026-09-21T06:37:42.333Z",
+        "checksum": "862046fa1a7567dc754e863091872fcb28741e545bea4eafdfd850b962bfcfb8"
+      }
+    },
+    {
+      "candidate_id": "cand-d896fae0bb4f",
+      "url": "https://www.enisa.europa.eu/audience/national-eu-authorities",
+      "title": "National / EU Authorities | ENISA",
+      "publisher": null,
+      "publication_date": "2026-09-11T12:00:00Z",
+      "authority_class": "authority:enisa",
+      "tier_estimate": "tier:2",
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions cra (alias \"cyber resilience act\", 1×); nis2 (short_name \"NIS2\", 6×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "cra",
+        "nis2"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": null,
+      "retrieval": {
+        "retrieved_at": "2026-09-21T06:37:46.439Z",
+        "checksum": "c89434ace95beb917ac4cb5599700e9506b3e6b67a08595e5406658212320726"
+      }
+    },
+    {
+      "candidate_id": "cand-09ad0df0e7b5",
+      "url": "https://www.enisa.europa.eu/topics/eu-incident-response-and-cyber-crisis-management",
+      "title": "EU incident response and cyber crisis management | ENISA",
+      "publisher": null,
+      "publication_date": "2024-02-28T02:00:00+02:00",
+      "authority_class": "authority:enisa",
+      "tier_estimate": "tier:2",
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions nis2 (short_name \"NIS2\", 1×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "nis2"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": null,
+      "retrieval": {
+        "retrieved_at": "2026-09-21T06:37:48.354Z",
+        "checksum": "5ea5435550ca29b21f806f6d42c0bcd7752fe1e662dac481913432ad727c8265"
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "gap_id": "gap-3d3d635f9c74",
+      "gap_kind": "retrieval_blocked",
+      "url": "https://eur-lex.europa.eu/",
+      "blocked_by_egress": false,
+      "why_open": "Retrieval failed: origin answered 202 (status 202).",
+      "closes_with": "Retrieving https://eur-lex.europa.eu/ successfully and reading what it says.",
+      "state": "open"
+    },
+    {
+      "gap_id": "gap-1f54da14490d",
+      "gap_kind": "retrieval_blocked",
+      "url": "https://www.edps.europa.eu/",
+      "blocked_by_egress": false,
+      "why_open": "Retrieval failed: origin answered 403 (status 403).",
+      "closes_with": "Retrieving https://www.edps.europa.eu/ successfully and reading what it says.",
+      "state": "open"
+    }
+  ],
+  "redactions": 0
+}

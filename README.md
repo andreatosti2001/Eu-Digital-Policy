@@ -5,9 +5,14 @@ regulatory status, the institutional competences and the enforcement record
 held as data rather than as prose.
 
 No build step. No dependencies. No runtime. No third-party requests: the
-typefaces are self-hosted in `fonts/`, and `design-qa.mjs` fails the build if
-a page adds an external stylesheet or script. Static HTML, CSS, vanilla ES
-modules and JSON, deployable to GitHub Pages or any static host as-is.
+typefaces are self-hosted in `fonts/`, and `design-qa.mjs` fails the build on a
+reference to any origin but this one, anywhere the browser would fetch from —
+a stylesheet or script in a page, an `@import` or an `@font-face src` in the
+CSS, a `fetch`, `import()`, worker or beacon in a module. The claim used to be
+wider than the check, which read double-quoted `href`/`src` in the HTML only;
+`tools/thirdparty.mjs` is the check the claim needs and `tools/selftest.mjs`
+plants each of those to prove it fires. Static HTML, CSS, vanilla ES modules
+and JSON, deployable to GitHub Pages or any static host as-is.
 
 ```
 python3 -m http.server 8000     # then open http://localhost:8000
@@ -200,6 +205,16 @@ interface**. It does not replace opening the pages, but it catches the class
 of defect that survives a visual review because nothing about it looks
 wrong.
 
+**Stale content is a warning, not a failure.** On every push, CI runs
+`freshness.mjs`, and each staleness prompt it prints appears on the run as a
+warning titled "Content stale". A prompt is raised when a dated event has
+passed without being re-verified, when a provisional enforcement record has not
+been re-read within its window, or when a dataset is past its interval. The
+build stays green, because the tree is not wrong, only older. A green build is
+therefore not evidence that the content is current. The rule, the thresholds'
+home, and what closes a prompt (re-reading the source, and nothing else) are in
+`docs/CONTENT-FRESHNESS-POLICY.md`.
+
 ---
 
 ## The footer, and why it is duplicated
@@ -207,7 +222,12 @@ wrong.
 Every page carries the same footer: a statement that this is an independent
 project with no affiliation to any EU institution, a statement that nothing
 here is legal advice, and the reuse position. Every page also carries the same
-`<noscript>` notice saying what will not render without scripting.
+`<noscript>` notice saying what will not render without scripting — and, since
+the browser suite measured that a reader with scripting off could reach none of
+the six top-level pages from any page, the six destinations themselves. The
+notice names the navigation among what will not appear and then supplies it.
+The list is read out of the nav model in `js/shell.js` rather than retyped, so
+there is still one home for it.
 
 Both are written into the markup of all seven pages rather than rendered by
 `js/shell.js`, which is the opposite of the rule the chrome follows. The
@@ -231,8 +251,13 @@ what it cannot support:
    bibliography computes and states the current count on every load, so this
    README cannot drift from it. After the sweep of 28 August 2026 the figure
    moved from 45 to 40 claims resting on nothing but the brief itself, with 9
-   more carrying no directly supporting source; 22 claims are graded
-   *Unresolved*, down from 27.
+   more carrying no directly supporting source; 22 claims were graded
+   *Unresolved*, down from 27. As of 26 September 2026, after the
+   AUDIT-2026-09-25 remediation, of 108 claims: 39 rest on nothing but the
+   brief itself, 12 carry no directly supporting source (up from 9: the three
+   claims added in September carry only partial support), and 19
+   are graded *Unresolved*. The bibliography's live count is the one to
+   trust over these.
 2. **Verification dates are a compilation date.** The field is per-record;
    the practice is not yet. `tools/freshness.mjs` says so explicitly.
 3. **Three sources carry no URL** — down from twelve after the reference

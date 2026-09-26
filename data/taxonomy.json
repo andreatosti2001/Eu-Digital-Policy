@@ -546,6 +546,11 @@
       "note": "Directives only. See the per-Member-State transposition block."
     },
     {
+      "id": "status:transposition-overdue",
+      "label": "Transposition overdue",
+      "note": "Directives only. The transposition deadline has passed and transposition is not complete in every Member State; see the status note, the milestones and the per-Member-State transposition block. The obligations that bind a reader are still the national ones."
+    },
+    {
       "id": "status:amended",
       "label": "Amended"
     },

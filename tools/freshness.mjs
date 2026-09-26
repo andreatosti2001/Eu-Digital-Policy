@@ -22,8 +22,46 @@
         findings, pending appeals, unknown payment) and which are
         therefore expected to change.
 
-   Exit code is 0 unless something is past its stated interval; this is
-   a prompt to go and look, not a build break.
+   TWO KINDS OF FINDING, AND THE EXIT CODE SEPARATES THEM.
+
+   Everything above is printed on every run. What the exit code says is
+   narrower, and the distinction is mechanical rather than editorial:
+
+     A DEFECT is a property of THIS TREE. Its truth does not depend on
+     when the script is run, and a commit can make it false: a URL-less
+     source that does not record why it cannot be linked; a per-record
+     verification field that has never once been used per-record.
+     Defects exit 1.
+
+     A STALENESS PROMPT is a property of THE CALENDAR. It is true
+     because time has passed since the datasets were last verified, it
+     would not be reported if the same tree were audited as of the date
+     it records, and no commit makes it permanently false — the
+     enforcement interval returns 45 days after any fix. Prompts exit 0,
+     and are printed exactly as loudly as before.
+
+   THIS IS NOT A DOWNGRADE OF THE PROMPTS AND NOTHING IS WAIVED. What
+   changed is which question the exit code answers. It used to answer
+   "has time passed?", which is not a question a build can fail on: the
+   answer is eventually yes for every tree, including a correct one, and
+   this repository recorded the consequence for five sessions —
+   docs/AUDIT-2026-09-01.md F-12 noted the green line was "7 days from
+   flipping", F-15 recorded that derived output already moves with the
+   reader's clock, agent/implement/baseline.mjs describes this script as
+   "a report, not a gate", and agent/production/readiness.mjs carried the
+   disagreement unresolved in as many words. It now answers "is anything
+   in this tree wrong?", which a commit can act on.
+
+   The staleness prompts are closed by VERIFICATION WORK against primary
+   sources, never by this script and never by a date stamp. Exit 0 is
+   therefore not evidence of currency, and the summary says so on the
+   line that reports it.
+
+   tools/selftest.mjs holds the classification to that rule: it
+   asserts that auditing this tree as of its own newest verification date
+   reports no prompt at all — which is what makes the prompts
+   calendar-driven rather than a category somebody widened — and that a
+   planted tree defect exits 1 on any date.
    ============================================================ */
 
 import { readFileSync, readdirSync } from 'node:fs';
@@ -57,6 +95,24 @@ export const EXPECTED = {
   sources: { days: 180, why: 'URLs rot; the accessed date is the only evidence they were ever reachable' },
 };
 
+/* How long a record whose own text says it will change may go without
+   being re-read. Separate from EXPECTED, which ages whole datasets and
+   which agent/integrate/stale.mjs iterates as a list of files.
+
+   The number lives here and tools/selftest.mjs F5 asserts it;
+   docs/CONTENT-FRESHNESS-POLICY.md gives the rule it belongs to and
+   points here rather than restating it. AUDIT-2026-09-25, T-23. */
+export const RECHECK = {
+  provisional_enforcement: { days: 30, why: 'a preliminary finding, a pending appeal or an unknown payment is the part of the enforcement record most likely to have moved' },
+};
+
+/* In GitHub Actions each prompt is also raised as a workflow warning
+   titled "Content stale", so it shows on the run and on the pull
+   request rather than only in a log. A warning, never an error: the
+   exit code contract above is unchanged. */
+const ANNOTATE = process.env.GITHUB_ACTIONS === 'true';
+const annotation = (s) => `::warning title=Content stale::${s.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A')}`;
+
 /* The audit itself. Guarded so that `node tools/freshness.mjs` behaves
    exactly as it always has, and an import of this module gets the
    intervals without running an audit, printing a report or calling
@@ -64,9 +120,14 @@ export const EXPECTED = {
 const isMain = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (isMain) {
-  let overdue = 0;
+  /* Two counters, never summed. See the contract at the head of this
+     file: `defect` is a statement about the tree, `flag` a statement
+     about the calendar, and only the first can fail a build. */
+  let defects = 0;
+  let prompts = 0;
   const line = (s) => console.log(s);
-  const flag = (s) => { overdue++; console.log('  ! ' + s); };
+  const defect = (s) => { defects++; console.log('  ✗ ' + s); };
+  const flag = (s) => { prompts++; console.log('  ! ' + s); if (ANNOTATE) console.log(annotation(s)); };
 
   line('\nFRESHNESS AUDIT  as of ' + AS_OF);
   line('='.repeat(64));
@@ -105,7 +166,11 @@ if (isMain) {
   const uniqAll = [...new Set(allDates)];
   if (uniqAll.length === 1) {
     line('');
-    flag(`every verification date in the repository is ${uniqAll[0]}. The field is per-record but has never been used per-record: read it as a compilation date, and do not present it as evidence of independent re-checking.`);
+    /* A DEFECT, not a prompt. Whether every date in the tree is the
+       same string is a property of the files: it is the same answer on
+       every date this script is run, and editing the data changes it.
+       docs/AUDIT-2026-09-01.md F-13. */
+    defect(`every verification date in the repository is ${uniqAll[0]}. The field is per-record but has never been used per-record: read it as a compilation date, and do not present it as evidence of independent re-checking.`);
   }
 
   /* ---------------------------------------------------------- 2. passed events */
@@ -113,8 +178,14 @@ if (isMain) {
   line('\nEVENTS THAT HAVE PASSED');
   const tl = read('timeline.json');
   const tlVer = tl.$last_verified;
+  /* An event is checked against the LATER of the file's $last_verified
+     and its own last_verified. A record re-read after its date has been
+     verified since it fell due; the file-level stamp alone never said so,
+     and moving that stamp would claim the whole file was re-read.
+     (AUDIT-2026-09-25, open decision I.) */
+  const verifiedAt = (e) => [tlVer, e.last_verified].filter((d) => typeof d === 'string').sort().pop() || '0000-00-00';
   const passedSince = arr(tl.events)
-    .filter((e) => e.date > (tlVer || '0000-00-00') && e.date <= AS_OF);
+    .filter((e) => e.date > verifiedAt(e) && e.date <= AS_OF);
   if (!passedSince.length) line(`  none between ${tlVer} and ${AS_OF}`);
   else passedSince.forEach((e) => flag(`${e.date} ${e.instrument} — ${e.event_type} fell due after the last verification: ${String(e.obligation || '').slice(0, 80)}`));
 
@@ -136,6 +207,17 @@ if (isMain) {
   for (const [k, v] of Object.entries(prov)) {
     line(`  ${String(v.length).padStart(3)} of ${enf.length}  ${k}`);
     if (v.length && v.length <= 4) v.forEach((r) => line(`         ${r.id}`));
+  }
+
+  /* A provisional record re-read within RECHECK days is current enough;
+     one that is not is a prompt. The record's own last_verified counts
+     where it is later than the file's, as for passed events above. */
+  const enfVer = read('enforcement.json').$last_verified;
+  const recheckedAt = (r) => [enfVer, r.last_verified].filter((d) => typeof d === 'string').sort().pop() || '0000-00-00';
+  const provisional = [...new Set(Object.values(prov).flat())];
+  const overdue = provisional.filter((r) => days(recheckedAt(r), AS_OF) > RECHECK.provisional_enforcement.days);
+  if (overdue.length) {
+    flag(`${overdue.length} of ${provisional.length} provisional enforcement record(s) not re-verified in ${RECHECK.provisional_enforcement.days} days — ${RECHECK.provisional_enforcement.why}: ${overdue.map((r) => r.id).join(', ')}`);
   }
 
   /* the newest thing in the enforcement set, which is the number a reader
@@ -173,11 +255,26 @@ if (isMain) {
     }
     const un = noUrl.filter((s) => !s.resolution);
     if (un.length) {
-      flag(`${un.length} URL-less source(s) carry no \`resolution\` field, so it is not recorded why they cannot be linked: ${un.map((s) => s.id).join(', ')}`);
+      /* A DEFECT, not a prompt. A source with no URL and no recorded
+         reason is a gap in the record itself — true on every date, and
+         closed by writing the reason down rather than by re-checking
+         anything in the world. */
+      defect(`${un.length} URL-less source(s) carry no \`resolution\` field, so it is not recorded why they cannot be linked: ${un.map((s) => s.id).join(', ')}`);
     }
   }
 
   line('\n' + '='.repeat(64));
-  line(overdue ? `${overdue} item(s) need attention.` : 'Nothing past its stated interval.');
-  process.exit(overdue ? 1 : 0);
+  if (!defects && !prompts) {
+    line('Nothing past its stated interval.');
+  } else {
+    if (defects) {
+      line(`${defects} defect(s) in the freshness record itself — marked ✗ above. These are properties of this tree rather than of the date, and a commit closes them.`);
+    }
+    if (prompts) {
+      line(`${prompts} staleness prompt(s) — marked ! above. True because time has passed since the datasets were verified, not because anything in this tree is wrong: this same tree audited as of its own newest verification date reports none of them.`);
+      line('They are closed by verification work against primary sources and by nothing else. NOT waived, NOT excused, and exit 0 is NOT evidence of currency.');
+    }
+  }
+  line(`exit ${defects ? 1 : 0}  ·  ${defects} defect(s), ${prompts} staleness prompt(s). The exit code reports the defects only: a check whose result flips with the calendar on an unchanged tree cannot gate a build, and this one used to.`);
+  process.exit(defects ? 1 : 0);
 }

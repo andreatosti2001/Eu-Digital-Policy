@@ -797,6 +797,21 @@ test('prose at a coarser precision than the value still refers to it, and the re
     'a different year is not a match');
 });
 
+test('a full date is one date: its month-year tail is not a second, coarser one', () => {
+  /* Found in AUDIT-2026-09-25 T-34: "10 October 2025" also yielded
+     "October 2025", so a sentence about 10 October 2025 was reported as
+     stating 29 October 2025 at month precision, and the editorial agent
+     proposed "correcting" a sentence about a different act. */
+  const months = monthNames();
+  assert.deepEqual(datesIn('fully applicable from 10 October 2025', months).map((d) => d.iso), ['2025-10-10']);
+  assert.equal(proseMentions('fully applicable from 10 October 2025', '2025-10-29', { months }).length, 0,
+    'a different day of the same month is not a mention');
+  assert.equal(proseMentions('entered into force on 29 October 2025', '2025-10-29', { months }).length, 1,
+    'the same day is still exactly one mention, not two');
+  assert.equal(proseMentions('adopted in October 2025', '2025-10-29', { months }).length, 1,
+    'a month the prose gives on its own still refers to every day in it');
+});
+
 test('a taxonomy label that is also ordinary English cannot establish an editorial finding', () => {
   const g = buildGraph({ corpus: CORPUS });
   const applicable = g.nodes.get('status:applicable');

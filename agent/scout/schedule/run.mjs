@@ -5,6 +5,13 @@
      node agent/scout/schedule/run.mjs [--live] [--dry]
                                        [--fail-on ok|degraded|never]
                                        [--max-docs=N]
+                                       [--prior-digests=DIR ...]
+
+   --prior-digests names a directory of earlier digests to read for
+   the "new against earlier digests" check, in addition to the
+   committed agent/scout/digests/. Repeatable. The workflow fills one
+   from the scout/digest-* branches, where each weekly digest is
+   committed and from which none had been merged.
 
    --mock is the default, same as agent/scout/cli.mjs and for the
    same reason: reaching out to five regulators should be something
@@ -62,6 +69,7 @@ const dry = has('--dry');
 const failOn = String(flag('fail-on', 'ok'));
 const maxDocsArg = argv.find((a) => a.startsWith('--max-docs='));
 const max_documents_per_endpoint = maxDocsArg ? Number(maxDocsArg.split('=')[1]) : undefined;
+const priorDigestDirs = argv.filter((a) => a.startsWith('--prior-digests=')).map((a) => a.slice('--prior-digests='.length)).filter(Boolean);
 
 function setOutput(key, value) {
   const file = process.env.GITHUB_OUTPUT;
@@ -108,8 +116,8 @@ try {
     result, mode: live ? 'live' : 'mock', started_at, finished_at, environment,
     sourcesPath: join(REPO_ROOT, 'data', 'sources.json'),
     digestsDir: DIGESTS_DIR,
+    priorDigestDirs,
   });
-  digest.status = digest.totals.gaps > 0 ? 'degraded' : 'ok';
 
   let digestPath = null, summaryPath = null;
   if (!dry) {

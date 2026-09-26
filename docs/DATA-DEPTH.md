@@ -18,7 +18,7 @@ The corpus is 651 records and 3070 references across ten datasets. Asking what i
 from it has an easy answer and a hard one.
 
 The easy answer is a census: fifteen instruments carry no provisions, thirteen have no
-applicability rule, seven sources are never cited, 106 records carry an unverified note.
+applicability rule, seven sources are never cited, 111 records carry an unverified note.
 **Every one of those numbers already has a home** — `.agents/skills/data-completeness/scripts/gaps.mjs`
 computes the census, `tools/validate.mjs` owns the unverified tally, `tools/freshness.mjs`
 owns staleness. Recomputing any of them here would be the second copy this architecture

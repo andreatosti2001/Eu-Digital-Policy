@@ -783,7 +783,7 @@ body.i18n-busy .readwrap,body.i18n-busy .portal,body.i18n-busy .hero{opacity:.45
 .sop-seg[data-s="applicable"]{--st-c:var(--mech)}
 .sop-seg[data-s="partly-applicable"]{--st-c:#5E7FB0}
 .sop-seg[data-s="in-force"]{--st-c:var(--live)}
-.sop-seg[data-s="transposition-pending"]{--st-c:#8A7A5C}
+.sop-seg[data-s="transposition-pending"],.sop-seg[data-s="transposition-overdue"]{--st-c:#8A7A5C}
 .sop-seg[data-s="stalled"],.sop-seg[data-s="proposal"]{--st-c:var(--crit)}
 
 .sop-bands{list-style:none;margin:0;padding:0;display:grid;gap:9px}
