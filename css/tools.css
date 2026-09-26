@@ -137,7 +137,7 @@ body[data-theme="light"]{
 .ap-full{font-size:12px;color:var(--tool-meta);width:100%;line-height:1.45}
 .ap-status{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;padding:2px 7px;border:1px solid currentColor;color:var(--tool-meta)}
 .ap-status[data-s="applicable"],.ap-status[data-s="in-force"]{color:var(--mech)}
-.ap-status[data-s="partly-applicable"],.ap-status[data-s="transposition-pending"]{color:var(--maybe)}
+.ap-status[data-s="partly-applicable"],.ap-status[data-s="transposition-pending"],.ap-status[data-s="transposition-overdue"]{color:var(--maybe)}
 .ap-status[data-s="proposal"],.ap-status[data-s="stalled"]{color:var(--crit)}
 .ap-proposal{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--crit)}
 

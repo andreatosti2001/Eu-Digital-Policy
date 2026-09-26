@@ -188,6 +188,7 @@ export const STATUS_NEEDS_EVENT = {
   'status:applicable': 'event:application',
   'status:partly-applicable': 'event:application',
   'status:transposition-pending': 'event:transposition',
+  'status:transposition-overdue': 'event:transposition',
 };
 
 const incompleteTimeline = (lens) => {
