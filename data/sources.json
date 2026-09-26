@@ -553,6 +553,20 @@
       "note": null
     },
     {
+      "id": "src-ec-tiktok-commitments-ip-2025",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission accepts TikTok's commitments on advertising transparency under the Digital Services Act (IP/25/2940)",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_25_2940",
+      "url_status": "url:live",
+      "published": "2025-12-05",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "The full press release behind the news item src-ec-tiktok-commitments-2025, read via the Press Corner API on 2026-09-26. Its quotation: 'The message is clear: our aim is compliance. When platforms engage constructively with the Commission, we are ready to accept solid commitments.' The commitments are binding under DSA Art. 71."
+    },
+    {
       "id": "src-ec-tiktok-addictive-2026",
       "tier": "tier:2",
       "type": "source-type:press-release",

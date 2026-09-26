@@ -1178,6 +1178,11 @@
       ],
       "sources": [
         {
+          "source_id": "src-ec-tiktok-commitments-ip-2025",
+          "supports": "supports:partial",
+          "locator": "Executive Vice-President's quotation"
+        },
+        {
           "source_id": "src-ec-tiktok-commitments-2025",
           "supports": "supports:partial",
           "locator": null
@@ -1186,13 +1191,13 @@
       "legal_basis": [],
       "brief_part": "part-3",
       "published": "2025-12-05",
-      "last_verified": "2026-08-27",
-      "verification_note": "The commitments decision is sourced; the 'compliance not revenue' framing is an inference."
+      "last_verified": "2026-09-26",
+      "verification_note": "The commitments decision is sourced. The Commission's stated priority is now sourced too (audit T-28): IP/25/2940 quotes 'The message is clear: our aim is compliance. When platforms engage constructively with the Commission, we are ready to accept solid commitments.' The 'not revenue' half remains the brief's gloss, which is why the claim stays an interpretation and the source is graded partial."
     },
     {
       "id": "clm-first-architecture-enforcement",
       "type": "claim-type:interpretation",
-      "statement": "The February 2026 TikTok preliminary findings were the first enforcement action targeting platform architecture — infinite scroll, autoplay, personalised recommenders — rather than illegal content.",
+      "statement": "The February 2026 TikTok preliminary findings were among the first enforcement actions targeting platform architecture — infinite scroll, autoplay, personalised recommenders — rather than illegal content.",
       "instruments": [
         "dsa"
       ],
@@ -1216,12 +1221,12 @@
       "legal_basis": [],
       "brief_part": "part-3",
       "published": "2026-02-06",
-      "last_verified": "2026-08-27",
-      "verification_note": "The action is sourced. The 'first' characterisation is not, and is typed as interpretation for that reason."
+      "last_verified": "2026-09-26",
+      "verification_note": "The action is sourced. Softened from 'the first' to 'among the first' on 2026-09-26 (audit T-28): neither the Commission's news item nor its press release IP/26/312 claims primacy, and no other source was found that does."
     },
     {
       "id": "clm-dsa-enforcement-escalation",
-      "type": "claim-type:fact",
+      "type": "claim-type:interpretation",
       "statement": "DSA enforcement escalated across 2025–2026, from the X and Temu fines to preliminary findings against TikTok and Meta on addictive design and minors' safety.",
       "instruments": [
         "dsa"
@@ -1267,8 +1272,8 @@
       "legal_basis": [],
       "brief_part": "part-3",
       "published": "2026-07-24",
-      "last_verified": "2026-08-27",
-      "verification_note": "Each underlying action is directly sourced; the aggregate characterisation is the author's and is computable from the enforcement records."
+      "last_verified": "2026-09-26",
+      "verification_note": "Each underlying action is directly sourced; the aggregate characterisation is the author's and is computable from the enforcement records. Retyped from fact to interpretation on 2026-09-26 (audit T-28): 'escalated' is a reading of the sequence, not a fact any one source states."
     },
     {
       "id": "clm-dsa-commission-vlop-only",
