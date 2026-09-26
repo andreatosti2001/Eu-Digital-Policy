@@ -318,6 +318,11 @@
       ],
       "sources": [
         {
+          "source_id": "src-csoonline-alliance-risk-2026",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part II, Part IX"
@@ -326,8 +331,8 @@
       "legal_basis": [],
       "brief_part": "part-2",
       "published": "2026-08-19",
-      "last_verified": "2026-08-28",
-      "verification_note": "REQUIRES VERIFICATION. The brief attributes the 40% figure to 'analysis published on the regulation's eighth anniversary' without naming it. Source not identified.",
+      "last_verified": "2026-09-26",
+      "verification_note": "The analysis is identified (audit T-25): CSO Online (29 May 2026) attributes the EUR 7.1 billion, ~40% and ~EUR 2.8 billion figures to the insurance brokerage Alliance Risk, drawing mainly on the CMS Enforcement Tracker; the prose now names it. Alliance Risk's own publication could not be located, so this rests on a press report of it, and 'contested' amounts may yet be upheld. The reference gap is left set for a person to clear, since the originating document has still not been read.",
       "reference_gap": true,
       "gap_note": "the ~40% of announced fine value said to be annulled or actively contested. No publication stating that proportion was located; the figure is attributed in the prose to eighth-anniversary analysis that could not be identified."
     },

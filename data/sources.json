@@ -1099,6 +1099,20 @@
       "note": null
     },
     {
+      "id": "src-csoonline-alliance-risk-2026",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "CSO Online",
+      "title": "GDPR set the tone for regulatory action — and the AI fine pushback to come",
+      "url": "https://www.csoonline.com/article/4178001/gdpr-set-the-tone-for-regulatory-action-and-the-ai-fine-pushback-to-come.html",
+      "url_status": "url:live",
+      "published": "2026-05-29",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Read on 2026-09-26. Reports an analysis by 'insurance brokerage Alliance Risk': an estimated EUR 7.1 billion of GDPR fines announced over eight years, of which nearly 40%, around EUR 2.8 billion, is already annulled or under active legal challenge; Alliance Risk used the CMS Law GDPR Enforcement Tracker as its primary source, cross-referenced against IAPP, Kiteworks and UniConsent data. Alliance Risk's own publication could not be located; PPC Land describes the firm as a 'cyber risk advisory firm' rather than a brokerage."
+    },
+    {
       "id": "src-linarilaw-2026-amazon",
       "tier": "tier:4",
       "type": "source-type:commentary",
