@@ -385,6 +385,34 @@
       "note": "EUR 500 million against Apple under Art. 5(4); EUR 200 million against Meta under Art. 5(2)."
     },
     {
+      "id": "src-ec-booking-designation-2024",
+      "tier": "tier:1",
+      "type": "source-type:legislative-document",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission Decision of 13.5.2024 designating Booking Holdings Inc. as a gatekeeper pursuant to Article 3 of Regulation (EU) 2022/1925 (C(2024) 3176 final, Case DMA.100019)",
+      "url": "https://ec.europa.eu/competition/digital_markets_act/cases/202442/DMA_100019_191.pdf",
+      "url_status": "url:live",
+      "published": "2024-05-13",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "The designation decision itself, downloaded from the Commission's own DMA Gatekeepers Portal. States on its face that it designates 'Booking Holdings Inc.' ('BHI') as the gatekeeper undertaking for the online intermediation service Booking.com. The Commission's own gatekeepers-portal page and press release refer to the undertaking only as 'Booking', without the corporate suffix used for every other designated gatekeeper (Alphabet Inc., Amazon.com Inc., Apple Inc., ByteDance Ltd., Meta Platforms, Inc.) — this decision is the primary source for the full legal name."
+    },
+    {
+      "id": "src-thenextweb-ustr-2026",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "TheNextWeb",
+      "title": "US lawmakers press Trump to open trade probe into EU tech rules",
+      "url": "https://thenextweb.com/news/us-lawmakers-eu-tech-rules-trade-probe",
+      "url_status": "url:live",
+      "published": "2026-07-21",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "States that in February 2025 President Trump signed a memorandum directing US agencies to scrutinise foreign digital rules, naming the DMA and DSA specifically, and that in July 2026 a group of US lawmakers wrote urging a formal Section 301 trade investigation into the same two instruments. Does not itself use the word 'objected'; it documents executive and congressional pressure rather than a single formal diplomatic objection."
+    },
+    {
       "id": "src-ec-google-adtech-2025",
       "tier": "tier:1",
       "type": "source-type:press-release",

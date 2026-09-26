@@ -1604,7 +1604,7 @@
     {
       "id": "clm-dma-asymmetry",
       "type": "claim-type:fact",
-      "statement": "Every designated gatekeeper except Booking is US or Chinese-headquartered, and the USTR has formally objected while enforcement proceeded during tariff negotiations.",
+      "statement": "Every designated gatekeeper undertaking is US- or Chinese-headquartered — Booking.com is run from the Netherlands, but the designated undertaking is the US-based Booking Holdings Inc. The US administration has objected: a February 2025 presidential memorandum targeted the DMA and DSA specifically, and in 2026 US lawmakers pressed for a Section 301 trade investigation into both. Enforcement has proceeded regardless.",
       "instruments": [
         "dma"
       ],
@@ -1617,18 +1617,28 @@
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-brief-original",
+          "source_id": "src-ec-booking-designation-2024",
           "supports": "supports:direct",
+          "locator": "designating Booking Holdings Inc. as a gatekeeper"
+        },
+        {
+          "source_id": "src-thenextweb-ustr-2026",
+          "supports": "supports:direct",
+          "locator": null
+        },
+        {
+          "source_id": "src-brief-original",
+          "supports": "supports:context",
           "locator": "Part IV"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-4",
       "published": "2026-08-19",
-      "last_verified": "2026-08-28",
-      "verification_note": "REQUIRES VERIFICATION. The headquarters observation follows from the designation list; the USTR objection is not sourced.",
+      "last_verified": "2026-09-26",
+      "verification_note": "The designated undertaking is now sourced directly to the Commission's own decision (C(2024) 3176 final), which names 'Booking Holdings Inc.' on its face — notably, the Commission's own public-facing gatekeepers-portal page and press release refer to the undertaking only as 'Booking', omitting the corporate suffix every other gatekeeper's entry carries. The US pressure is now sourced to a February 2025 presidential memorandum and a July 2026 congressional letter, both naming the DMA and DSA; neither is a formal diplomatic objection in the narrow sense, so 'has objected' is kept general rather than naming a specific legal instrument of protest.",
       "reference_gap": true,
-      "gap_note": "The headquarters composition is checkable from the gatekeeper register. The USTR objection is not sourced here; no filing or statement was located."
+      "gap_note": "The 'US administration has objected' framing rests on a presidential memorandum and a lawmakers' letter pressing for a Section 301 investigation, not on a formal WTO-style objection or diplomatic note; no such document was located."
     },
     {
       "id": "clm-dma-consumer-benefit-modest",

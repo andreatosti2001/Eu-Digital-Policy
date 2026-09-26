@@ -21,7 +21,7 @@
       "dir": "ltr",
       "file": "i18n/it.json",
       "data": "i18n/it/data.json",
-      "keys": 387,
+      "keys": 386,
       "entity_keys": 60,
       "complete": false,
       "note": "Hand-authored and complete against every string that existed when it was written. The four masthead strings added in the visual refinement phase have not been translated: they fall back to English and are marked EN in the interface.",
@@ -58,6 +58,7 @@
         "part-5.p9",
         "part-7.div1",
         "part-8.p4",
+        "part-9.p7",
         "part-9.p8",
         "portal.p1"
       ]
@@ -68,7 +69,7 @@
       "dir": "ltr",
       "file": "i18n/fr.json",
       "data": "i18n/fr/data.json",
-      "keys": 386,
+      "keys": 385,
       "entity_keys": 60,
       "complete": false,
       "superseded": [
@@ -88,6 +89,7 @@
         "part-5.p9",
         "part-7.div1",
         "part-8.p4",
+        "part-9.p7",
         "part-9.p8",
         "portal.p1"
       ],
@@ -116,7 +118,7 @@
       "dir": "ltr",
       "file": "i18n/es.json",
       "data": "i18n/es/data.json",
-      "keys": 386,
+      "keys": 385,
       "entity_keys": 60,
       "complete": false,
       "superseded": [
@@ -136,6 +138,7 @@
         "part-5.p9",
         "part-7.div1",
         "part-8.p4",
+        "part-9.p7",
         "part-9.p8",
         "portal.p1"
       ],
