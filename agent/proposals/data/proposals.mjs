@@ -489,7 +489,7 @@ export class ProposalRouter {
                 `Read the proposed sentence and confirm every clause in it is checkable in this repository: the record ids it names exist, and each of them references ${r.target.record_id}.`,
                 'Confirm the sentence states nothing about EU law — no date, no article number, no figure, no status, no legal conclusion.',
                 'Decide whether this note belongs on a page a reader acts on, or whether the finding should stay in the agent layer.',
-                `Run all four validators and compare against the docs/CURRENT-ARCHITECTURE.md §12 baseline — 0 errors, 106 unverified, the same five design-qa warnings by file and line.`,
+                `Run all four validators and compare against the docs/CURRENT-ARCHITECTURE.md §12 baseline — 0 errors, 105 unverified, the same five design-qa warnings by file and line.`,
               ],
               consequence: `A reader of ${r.target.dataset === 'data/claims.json' ? 'evidence.html' : 'enforcement.html'} would see a sentence about this record that is wrong about this corpus. It asserts nothing about EU law, so the failure is a false statement about the site rather than about the acquis — but it is on a production page and there is no deploy gate.`,
             });

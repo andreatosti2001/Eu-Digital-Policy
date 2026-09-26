@@ -89,7 +89,7 @@ names them, and `defineMetric` **throws** if one is re-labelled:
 
 | Metric | Why it must not be optimised |
 |---|---|
-| `knowledge.unresolved_claims` | The 106 unverified records are the project's honesty (`AI-SAFE-BOUNDARIES` §0.7). Every cheap route down — clearing `requires_verification`, bulk-stamping `last_verified`, deleting the note — is a **prohibited action** under every autonomy class. |
+| `knowledge.unresolved_claims` | The 105 unverified records are the project's honesty (`AI-SAFE-BOUNDARIES` §0.7). Every cheap route down — clearing `requires_verification`, bulk-stamping `last_verified`, deleting the note — is a **prohibited action** under every autonomy class. |
 | `knowledge.provenance_gaps` | §0.2: an asterisk means the reference is **missing**, not doubted. It is removed by finding the publication, never by attaching something related. A fall produced by a plausible substitute is worse than the gap, because it looks resolved. |
 | `knowledge.verification_gaps` | Setting `last_verified` on a record nobody read is prohibited action 2; bulk-stamping is prohibited action 3. |
 | `control_plane.unresolved_conflicts` | A blocking open question is an agent refusing to proceed as if it had settled something. Removing the flag converts *"could not be established"* into *"established"*, silently, across everything downstream. |

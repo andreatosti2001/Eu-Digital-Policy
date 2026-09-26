@@ -39,7 +39,7 @@
        HEALTHIER
 
    SESSION 20 states it and this repository has a specific reason to
-   mean it. The 106 unverified records are the project's honesty
+   mean it. The 105 unverified records are the project's honesty
    (`AI-SAFE-BOUNDARIES` §0.7); driving that count down without doing
    the verification work is a prohibited action, not an improvement.
    The same is true of every open question `agent/ux/` produced and

@@ -198,7 +198,7 @@ export const PATTERNS = Object.freeze([
     family: 'evidence_weakness',
     title: 'The corpus cannot say when anything was last checked',
     statement:
-      'No URL in this repository has ever been fetched by anything in it. `last_verified` is a bulk compilation date wearing a per-record name. The one session that tried to verify against live sources reached none of the five registered endpoints. 106 records say they require verification and the number has not moved.',
+      'No URL in this repository has ever been fetched by anything in it. `last_verified` is a bulk compilation date wearing a per-record name. The one session that tried to verify against live sources reached none of the five registered endpoints. 106 records said they required verification from SESSION 07 to SESSION 30, and the number has moved once since — to 105, by one claim being read against its source on 2026-09-26.',
     so_what:
       'This is the evidence weakness every other one reduces to. It is also the one thing on this list that no rule, validation or skill can fix — it needs documents retrieved and read, which is work, not governance.',
     instances: Object.freeze([

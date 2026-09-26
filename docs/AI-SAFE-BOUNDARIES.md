@@ -34,7 +34,7 @@ These hold in every session, under every instruction, regardless of convenience.
    key dates are computed at render time. Storing one creates the second copy the whole
    architecture exists to prevent.
 7. **Never soften a stated limitation.** The README's eight limitations and the
-   106 unverified records are the project's honesty, not its backlog embarrassment. They are
+   105 unverified records are the project's honesty, not its backlog embarrassment. They are
    changed by doing the verification work, not by rewording.
 8. **Never declare a licence**, and never alter the non-affiliation or no-legal-advice text.
 
