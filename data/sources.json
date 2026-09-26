@@ -1099,6 +1099,48 @@
       "note": null
     },
     {
+      "id": "src-justice-lu-amazon-2026",
+      "tier": "tier:2",
+      "type": "source-type:court-press-release",
+      "publisher": null,
+      "publisher_name": "Justice Luxembourg (justice.public.lu)",
+      "title": "Arrêt de la Cour administrative en relation avec un des grands acteurs mondiaux au niveau du commerce en ligne",
+      "url": "https://justice.public.lu/fr/actualites/2026/03/arret-cour-administrative-amazon.html",
+      "url_status": "url:live",
+      "published": "2026-03-13",
+      "accessed": "2026-09-26",
+      "language": "fr",
+      "note": "The Luxembourg judiciary's own announcement, read 2026-09-26. Judgment of the Cour administrative of 12 March 2026, no. 52757C du rôle, on appeal from the tribunal administratif judgment of 18 March 2025 (no. 46578). At the hearing of 8 January 2026 counsel for both parties, including the CNPD's, confirmed the company was now compliant on the disputed points, so the coercive measures and daily penalty became moot. Violations broadly upheld (some elements set aside as unverified; Art. 21 grievances out of scope). Remitted to the CNPD because it had not analysed fault (intent or negligence), required since CJEU C-807/21 Deutsche Wohnen and C-683/21 Nacionalinis (5 December 2023), and had imposed a fine almost automatically without weighing the other available measures. The judgment itself was not opened."
+    },
+    {
+      "id": "src-paperjam-amazon-2026",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "Paperjam",
+      "title": "€746m fine: CNPD decision against Amazon overturned",
+      "url": "https://en.paperjam.lu/article/eu746m-fine-cnpd-decision-against-amazon-overturned",
+      "url_status": "url:live",
+      "published": "2026-03-13",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Read 2026-09-26. Ruling delivered Thursday 12 March 2026; annulled the CNPD restricted panel's decision of 15 July 2021; substance of the breaches upheld; case referred back to the CNPD; at the 8 January 2026 hearing the parties confirmed Amazon now relies on consent rather than legitimate interest, which the CNPD considers compliant."
+    },
+    {
+      "id": "src-cms-lu-enforcement-2026",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "CMS",
+      "title": "GDPR Enforcement Tracker Report — Luxembourg",
+      "url": "https://cms.law/en/int/publication/gdpr-enforcement-tracker-report/luxembourg",
+      "url_status": "url:live",
+      "published": "2026-05-21",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Law-firm report, read 2026-09-26. Dates the annulment to 13 March 2026 (the publication date; the judgment is of 12 March) and lists the two grounds: no analysis of intent or negligence (Deutsche Wohnen, Nacionalinis) and no examination of other sanction options."
+    },
+    {
       "id": "src-csoonline-alliance-risk-2026",
       "tier": "tier:4",
       "type": "source-type:journalism",

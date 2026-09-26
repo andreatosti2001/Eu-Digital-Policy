@@ -537,6 +537,11 @@
       ],
       "sources": [
         {
+          "source_id": "src-justice-lu-amazon-2026",
+          "supports": "supports:direct",
+          "locator": null
+        },
+        {
           "source_id": "src-mlex-2026-amazon-annulment",
           "supports": "supports:direct",
           "locator": null
@@ -552,8 +557,8 @@
       ],
       "brief_part": "part-2",
       "published": "2026-03",
-      "last_verified": "2026-08-27",
-      "verification_note": "Verified during the Step 1 audit. The judgment itself has not been retrieved; both sources are tier 4."
+      "last_verified": "2026-09-26",
+      "verification_note": "Verified during the Step 1 audit, and on 2026-09-26 against the Luxembourg judiciary's announcement of judgment no. 52757C (Cour administrative, 12 March 2026; tier 2). The judgment itself has still not been retrieved."
     },
     {
       "id": "clm-openai-fine-voided",

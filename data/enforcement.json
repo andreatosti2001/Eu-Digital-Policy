@@ -15,18 +15,18 @@
    ],
    "authority": "dpa-lu",
    "opened": null,
-   "decision_date": "2021-07-16",
+   "decision_date": "2021-07-15",
    "action": "Administrative fine",
    "fine_eur": 746000000,
    "action_status": "action:annulled",
    "payment_status": "payment:not-payable",
-   "remedy_status": "remedy:unknown",
-   "behavioural_outcome": null,
+   "remedy_status": "remedy:implemented",
+   "behavioural_outcome": "Amazon now relies on user consent rather than legitimate interest for the disputed advertising processing; at the hearing of 8 January 2026 both parties, including the CNPD, confirmed it was compliant, so the 2021 compliance orders and daily penalty became moot.",
    "judicial": {
-    "forum": "Luxembourg Court of Appeal",
+    "forum": "Cour administrative (Luxembourg)",
     "date": "2026-03-12",
-    "outcome": "Annulled on procedural grounds — the authority had not adequately assessed intent, negligence and proportionality. The underlying violations were upheld and the matter referred back to the authority for reassessment.",
-    "case_ref": null
+    "outcome": "Fine annulled and the case remitted to the CNPD: it had not analysed fault (intent or negligence), required since CJEU C-807/21 Deutsche Wohnen and C-683/21 Nacionalinis, and had imposed a fine almost automatically without weighing the other available measures. The violations were broadly upheld (some elements set aside as unverified; Art. 21 grievances held out of scope). Judgment of 12 March 2026, published 13 March 2026.",
+    "case_ref": "52757C (du rôle)"
    },
    "timeline_events": [],
    "claims": [
@@ -35,17 +35,20 @@
    ],
    "sources": [
     "src-mlex-2026-amazon-annulment",
-    "src-linarilaw-2026-amazon"
+    "src-linarilaw-2026-amazon",
+    "src-justice-lu-amazon-2026",
+    "src-paperjam-amazon-2026",
+    "src-cms-lu-enforcement-2026"
    ],
    "requires_verification": true,
-   "verification_note": "No primary source for the Luxembourg Court of Appeal judgment has been located. The decision date of 16 July 2021 is taken from general knowledge and is not confirmed here. Retrieve the judgment and the original CNPD decision.",
-   "last_verified": "2026-08-27",
+   "verification_note": "Updated 2026-09-26 (audit T-37) from the Luxembourg judiciary's own announcement of the judgment (justice.public.lu, 13 March 2026), with Paperjam and CMS. The CNPD decision date is corrected from 16 to 15 July 2021, which Paperjam gives and the previous note admitted was unconfirmed. The judgment and the CNPD decision themselves have still not been opened, so requires_verification is left set.",
+   "last_verified": "2026-09-26",
    "appeal": {
     "status": "appeal:decided",
     "lodged_by": "Amazon Europe Core S.à r.l.",
-    "forum": "Luxembourg Court of Appeal",
+    "forum": "Cour administrative (Luxembourg)",
     "lodged_date": null,
-    "case_ref": null,
+    "case_ref": "52757C (du rôle)",
     "note": "Decided 12 March 2026: the fine was annulled and the matter remitted. Whether the authority has appealed that annulment further is not established."
    }
   },
