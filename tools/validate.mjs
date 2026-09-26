@@ -39,7 +39,17 @@ for (const f of files) {
     err(`PARSE ${path}: ${e.message}`);
   }
 }
-if (errors.length) { report(); process.exit(1); }
+/* A file that does not parse leaves nothing to count or cross-check, and
+   report() depends on helpers and indexes built further down (arr, ids,
+   unverified) — calling it here crashed with a ReferenceError that never
+   named the file. So this path reports the parse errors alone. */
+if (errors.length) {
+  console.log(`\nFILES  ${files.length} found; ${errors.length} did not parse — nothing else was checked`);
+  console.log(`\nERRORS   ${errors.length}`);
+  for (const e of errors) console.log('  ✗ ' + e);
+  console.log('');
+  process.exit(1);
+}
 
 /* ---------- helpers ---------- */
 const arr = (x) => (Array.isArray(x) ? x : []);

@@ -441,6 +441,21 @@ test('B7 · validate.mjs FAILS on a planted contract violation', () => {
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('B9 · a data file that does not parse is REPORTED by name, not a crash', () => {
+  /* Until 2026-09-26 the parse-error path called report() before the
+     helper it uses was declared, so a malformed file ended in a
+     ReferenceError stack trace that never named the file. */
+  const dir = dataScratch();
+  try {
+    const p = join(dir, 'data', 'claims.json');
+    writeFileSync(p, readFileSync(p, 'utf8').replace('"claims": [', '"claims": [ {'));
+    const r = runValidator('validate.mjs', [], dir);
+    assert.equal(r.exit, 1);
+    assert.match(r.out, /PARSE data[\\/]claims\.json/);
+    assert.doesNotMatch(r.out, /ReferenceError/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('B8 · the three URL-less records each record WHY, and the reasons are the closed set', () => {
   const db = JSON.parse(readFileSync(join(ROOT, 'data', 'sources.json'), 'utf8'));
   const noUrl = db.sources.filter((r) => r.url == null);
