@@ -41,7 +41,7 @@ import { MockTransport, HttpTransport, DEFAULT_LIMITS } from './transport.mjs';
 import { MemoryRecordStore } from './store.mjs';
 import { MOCK_DOCUMENTS, MOCK_ENDPOINTS } from './fixtures.mjs';
 import { ENDPOINTS, authorityForUrl, authorityRank, endpointsByPriority, estimateTier } from './authorities.mjs';
-import { extractLinks, extractPublicationDate, extractPublisher, extractTitle, instrumentTerms, matchInstruments, textOf } from './extract.mjs';
+import { documentShape, extractLinks, navigationReason, rankListingLinks, extractPublicationDate, extractPublisher, extractTitle, instrumentTerms, matchInstruments, textOf } from './extract.mjs';
 import { findDuplicates, normaliseTitle, normaliseUrl } from './dedupe.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -112,6 +112,29 @@ test('links are same-host, absolute and capped', () => {
   assert.deepEqual(extractLinks(html, 'https://host.invalid/'), ['https://host.invalid/a']);
   const many = Array.from({ length: 50 }, (_, i) => `<a href="/p${i}">x</a>`).join('');
   assert.equal(extractLinks(many, 'https://host.invalid/', { limit: 5 }).length, 5);
+});
+
+test('a listing\'s navigation is never followed, and document-shaped links are followed first', () => {
+  // The shapes the September 2026 live digests proposed as "candidates",
+  // on hosts that cannot resolve. AUDIT-2026-09-25, T-39.
+  const board = 'https://board.example.invalid/news_en';
+  const nav = ['/news_bg', '/news_en?page=2', '/documents_en', '/topics_en', '/registers_en',
+    '/public-consultations_en', '/home_en', '/audience/national-authorities', '/topics/incident-response']
+    .map((p) => new URL(p, board).toString());
+  for (const u of nav) assert.ok(navigationReason(u, board), `${u} is navigation`);
+  const items = ['/news/the-authority-adopts-simulated-guidelines-on-a-matter_en', '/about-us_en']
+    .map((p) => new URL(p, board).toString());
+  assert.deepEqual(rankListingLinks([...nav, ...items].reverse(), board), [items[0], items[1]]);
+
+  const market = 'https://market.example.invalid/news_en';
+  const links = ['/gatekeepers-portal/resources-for-simulated-gatekeepers-and-others_en', '/about_en',
+    '/commission-publishes-a-simulated-decision-2026-01-02_en'].map((p) => new URL(p, market).toString());
+  assert.equal(rankListingLinks(links, market)[0], links[2], 'a dated path outranks a long slug');
+  assert.equal(documentShape(links[1], market), 0);
+
+  const root = 'https://root.example.invalid/';
+  const flat = ['/doc/a', '/doc/b'].map((p) => new URL(p, root).toString());
+  assert.deepEqual(rankListingLinks(flat, root), flat, 'nothing document-shaped: the page\'s own order stands');
 });
 
 test('instrument matching uses the repository\'s own terms and prefers the more specific one', () => {

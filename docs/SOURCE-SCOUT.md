@@ -153,6 +153,11 @@ and not a statement about the document*, and names what would close it. Nothing
 was invented to make the demonstration look better. **No claim is made in this
 repository about what any of those sites currently publishes.**
 
+*This finding describes the development environment. From GitHub Actions the
+same hosts answered, except EUR-Lex (HTTP 202 with an empty body) and EDPS
+(HTTP 403).
+See known limitation 1.*
+
 The registry entries are marked `endpoint_verified: false` for the same reason:
 they are addresses the Scout will attempt, not citations, and nothing in this
 repository has confirmed that any of them is the right place to look.
@@ -240,10 +245,24 @@ byte-identical to the `docs/CURRENT-ARCHITECTURE.md` §12 baseline.
 1. **Nothing has been retrieved from a real source**, so no candidate in this
    repository has ever been produced from a real document. The live path is
    built, instrumented and exercised; it has only ever returned refusals.
-2. **The endpoint registry is five root URLs, none verified.** They are
-   hypotheses about where to look. A working live run would very likely show
-   that a listing page is the wrong entry point and that each authority needs
-   its own feed.
+   **Update, 26 September 2026:** from GitHub Actions, where the egress
+   policy above does not apply, the scheduled runs of 7, 14 and 21 September
+   2026 did retrieve real pages (17 retrieval attempts and 6 candidates on
+   21 September). All six candidates were navigation pages rather than
+   documents (AUDIT-2026-09-25, T-39). No candidate has been promoted into
+   `data/sources.json`.
+2. **The endpoint registry is six addresses, none verified by the Scout.**
+   The September 2026 live runs confirmed the prediction this item used to make:
+   a home page is the wrong entry point, and every candidate proposed from one
+   was a navigation page. Since T-39, four entries point at news listings
+   (Commission digital strategy, the DMA site, EDPB and ENISA). Each listing
+   returned dated items when retrieved on 26 September 2026, and each entry is
+   still `endpoint_verified: false`. EUR-Lex and EDPS remain home pages, and
+   `agent/scout/authorities.mjs` says why. Links on a listing are filtered and
+   ordered before any is followed: navigation paths, language variants and
+   pagination are dropped, and document-shaped links come first
+   (`rankListingLinks` in `agent/scout/extract.mjs`). That is a URL-shape rule
+   and can still be wrong about a particular page.
 3. **Link-following is one level deep** and capped at four documents per
    endpoint. This is a discovery sketch, not a crawler, and it has no notion of
    what it saw last time — change detection is a different agent.

@@ -143,6 +143,36 @@ jobs:
       - name: Check the contracts are satisfiable
         run: node agent/schemas/cli.mjs check
 
+      # Cross-run memory. Each run's digest is committed on its own
+      # scout/digest-* branch, and until those are merged the committed
+      # agent/scout/digests/ holds none of them — so every live digest
+      # reported prior_digests_read: 0 and called every candidate new
+      # (AUDIT-2026-09-25, T-39). The earlier digests are copied into
+      # $RUNNER_TEMP, outside the working tree, so the clean-tree check
+      # and the write-boundary guard below are unaffected, and they are
+      # read, never proposed: only this run's digest is uploaded.
+      #
+      # The token is this job's own contents:read token, passed to one
+      # git command as a header and never written to .git/config.
+      - name: Collect earlier digests from the scout/digest-* branches
+        env:
+          READ_TOKEN: ${{ github.token }}
+        run: |
+          PRIOR="$RUNNER_TEMP/prior-digests"
+          mkdir -p "$PRIOR"
+          AUTH="$(printf 'x-access-token:%s' "$READ_TOKEN" | base64 -w0)"
+          if git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $AUTH" \
+               fetch --no-tags --depth=1 origin '+refs/heads/scout/digest-*:refs/remotes/origin/scout/digest-*'; then
+            for ref in $(git for-each-ref --format='%(refname)' 'refs/remotes/origin/scout/digest-*'); do
+              for f in $(git ls-tree -r --name-only "$ref" -- agent/scout/digests | grep -E '/digest-[^/]+\.json$'); do
+                git show "$ref:$f" > "$PRIOR/$(basename "$f")"
+              done
+            done
+          else
+            echo "::warning title=Prior digests not read::The scout/digest-* branches could not be fetched. This run's \"new against earlier digests\" counts only the digests committed to this branch."
+          fi
+          echo "Earlier digests collected from branches: $(find "$PRIOR" -name 'digest-*.json' | wc -l)"
+
       - name: Confirm the working tree is clean before the run
         run: |
           if [ -n "$(git status --porcelain)" ]; then
@@ -157,7 +187,7 @@ jobs:
       - name: Run the Source Scout
         id: run
         run: |
-          ARGS="--max-docs=$SCOUT_MAX_DOCS --fail-on $SCOUT_FAIL_ON"
+          ARGS="--max-docs=$SCOUT_MAX_DOCS --fail-on $SCOUT_FAIL_ON --prior-digests=$RUNNER_TEMP/prior-digests"
           if [ "$SCOUT_MODE" = "live" ]; then ARGS="$ARGS --live"; fi
           if [ "$SCOUT_DRY_RUN" = "true" ]; then ARGS="$ARGS --dry"; fi
           echo "node agent/scout/schedule/run.mjs $ARGS"

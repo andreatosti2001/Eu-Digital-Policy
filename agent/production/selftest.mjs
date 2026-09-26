@@ -68,6 +68,7 @@ import {
 } from './separations.mjs';
 import { traceability, trackedFilesUnder, PUBLISHED_SURFACE } from './traceability.mjs';
 import { CONDITIONS, DOMAINS, evaluate, assessActivation, sourceReachability } from './readiness.mjs';
+import { ENDPOINTS } from '../scout/authorities.mjs';
 
 const HERE = join(REPO_ROOT, 'agent/production');
 const MODULES = readdirSync(HERE).filter((f) => f.endsWith('.mjs'));
@@ -608,7 +609,8 @@ test('10 · no committed digest is UNMEASURED, and never a measured zero', () =>
     const r = sourceReachability({ root: dir });
     assert.equal(r.measured, false);
     assert.equal(r.reachable, null, 'an unmeasured reachability must not be reported as the number 0');
-    assert.equal(r.registered, 5, 'the registered count comes from the Scout\'s own register, not from a literal');
+    assert.equal(r.registered, ENDPOINTS.length, 'the registered count comes from the Scout\'s own register, not from a literal');
+    assert.ok(r.registered > 0);
     assert.match(r.why, /NOT a measured zero/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

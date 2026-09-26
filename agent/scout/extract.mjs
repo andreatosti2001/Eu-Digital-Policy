@@ -114,6 +114,83 @@ export function extractLinks(html, baseUrl, { limit = 40 } = {}) {
   return out;
 }
 
+/* ---------------------------------------------------------- listing links
+
+   A listing page links to its own navigation before it links to
+   anything it lists: language switchers, section menus, pagination.
+   Taken in document order, the first four same-host links on a live
+   EDPB or Commission page are exactly those, and four navigation
+   pages were proposed as candidates in the September 2026 digests
+   (AUDIT-2026-09-25, T-39). A candidate has to be a document with
+   its own title and date, not a way of getting to one.
+
+   Two steps, both stated as rules rather than a score:
+     1. DROP links that are provably not documents — the listing
+        itself in another language or with a query string, and the
+        navigation paths named below.
+     2. ORDER what is left so document-shaped links come first: a
+        link under the listing's own path, a link carrying a date in
+        its path, or a link whose last segment is a slug of four or
+        more words — the first two ahead of the third. The order is
+        otherwise the page's own, and nothing else is dropped, so a
+        listing with no document-shaped links behaves exactly as
+        before.
+
+   Neither step reads a date or a title as a fact. A date in a URL
+   orders a link; it is never recorded as a publication date
+   (extractPublicationDate reads machine-readable fields only). */
+
+/** Paths that are navigation on the registered hosts. Matched
+ *  against the path with any language prefix or `_xx` suffix
+ *  removed. Each entry is a page a live digest actually proposed, or
+ *  one of the same kind on the same site. */
+export const NAVIGATION_PATHS = [
+  /^\/(?:home|index|documents|topics|registers|public-consultations|news|latest-news|feed\/news)$/,
+  /^\/audience(?:\/|$)/,
+  /^\/topics\//,
+];
+
+/** A path with its language marker removed: `/en/news` and
+ *  `/news_en` both become `/news`. */
+export function stripLanguage(pathname) {
+  return (pathname.replace(/_[a-z]{2}$/, '').replace(/^\/[a-z]{2}(?=\/|$)/, '') || '/').replace(/(.)\/$/, '$1');
+}
+
+/** Why a link on a listing page is not a document, or null if it
+ *  may be one. */
+export function navigationReason(url, listingUrl) {
+  let u, base;
+  try { u = new URL(url); base = new URL(listingUrl); } catch { return 'unparseable'; }
+  const path = stripLanguage(u.pathname);
+  if (path === stripLanguage(base.pathname)) return 'the listing itself, in another language or with a query string';
+  const hit = NAVIGATION_PATHS.find((re) => re.test(path));
+  return hit ? `navigation path ${hit}` : null;
+}
+
+/** How document-shaped a link is, strongest first:
+ *    2  under the listing's own path, or a date in its path —
+ *       the two shapes live news listings were observed to use;
+ *    1  a last segment that is a slug of four or more words — weaker,
+ *       because section menus use long slugs too;
+ *    0  anything else. */
+export function documentShape(url, listingUrl) {
+  let u, base;
+  try { u = new URL(url); base = new URL(listingUrl); } catch { return 0; }
+  const path = stripLanguage(u.pathname);
+  const stem = stripLanguage(base.pathname);
+  if (stem !== '/' && path.startsWith(`${stem}/`)) return 2;
+  if (/\b\d{4}-\d{2}-\d{2}\b/.test(path)) return 2;
+  const last = path.split('/').filter(Boolean).pop() ?? '';
+  return last.split('-').length >= 4 ? 1 : 0;
+}
+
+/** Step 1 and step 2 above, over links already taken from a listing.
+ *  A stable sort: within one shape, the page's own order stands. */
+export function rankListingLinks(links, listingUrl) {
+  const kept = links.filter((l) => navigationReason(l, listingUrl) === null);
+  return [2, 1, 0].flatMap((shape) => kept.filter((l) => documentShape(l, listingUrl) === shape));
+}
+
 /* ---------------------------------------------------------- relevance */
 
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
