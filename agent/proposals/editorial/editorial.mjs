@@ -411,7 +411,7 @@ export class EditorialAgent {
         ...(proposal.claim_ids_affected.length
           ? [`Confirm the claim record(s) ${proposal.claim_ids_affected.join(', ')} still describe what the sentence asserts after the change. The sentence and the claim are two views of one assertion; changing one and not the other orphans it.`]
           : ['This sentence carries no claim record. Decide whether it should: every material factual sentence on this site retains its provenance, and an unattributed one is invisible to every check in the repository.']),
-        `Run the four validators and compare against the docs/CURRENT-ARCHITECTURE.md §12 baseline: 0 errors, 106 unverified records, 5 design-qa warnings by file and line. tools/i18n-audit.mjs is the one that matters most here.`,
+        `Run the four validators and compare against the docs/CURRENT-ARCHITECTURE.md §12 baseline: 0 errors, 105 unverified records, 5 design-qa warnings by file and line. tools/i18n-audit.mjs is the one that matters most here.`,
       ],
       risk: proposal.risk === 'high' ? 'high' : 'medium',
       consequence: drafting

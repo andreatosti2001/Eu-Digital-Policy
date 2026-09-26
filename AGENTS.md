@@ -266,7 +266,7 @@ authorization because that boundary is **not** a security control. `docs/CONTROL
    not publicly determinable. Never render them alike, never sum unknown into a total.
 6. **No matching rule ≠ no obligation.** Where no applicability rule fires, the answer is
    NOT DETERMINED — never "probably not".
-7. **Never soften a stated limitation.** The 106 unverified records and the README's eight
+7. **Never soften a stated limitation.** The 105 unverified records and the README's eight
    limitations are the project's honesty. They change by doing the verification work.
 8. **Never declare a licence**, and never alter the non-affiliation or no-legal-advice text.
 
@@ -313,7 +313,7 @@ node --test tools/selftest.mjs # the validators' own suite (SESSION 30)
 Zero-dependency Node scripts; run from the repository root.
 
 **Baseline** (`docs/CURRENT-ARCHITECTURE.md` §12 records this in full): 0 errors across all
-four, 106 unverified records, and 5 pre-existing `design-qa` warnings listed by file and
+four, 105 unverified records, and 5 pre-existing `design-qa` warnings listed by file and
 line. **A new warning is a finding, not noise.**
 
 **`freshness.mjs`'s exit code changed in SESSION 30 and its report did not.** It exits 1 on a
@@ -588,7 +588,7 @@ patches, not checks. **Do not re-run** the latter two.
   tests. `docs/HEALTH-MONITOR.md` §6 · `docs/CONTROL-ROOM.md` §1.
 
 - **A lower number is not automatically healthier, and five metrics say so in their own
-  definition.** The 106 unverified records, the provenance gaps, the verification gaps, the
+  definition.** The 105 unverified records, the provenance gaps, the verification gaps, the
   blocking open questions and the rejected proposals are marked `not_a_score`:
   `agent/health/model.mjs` refuses to let any of them be re-labelled as a defect count,
   because every cheap route down — clearing `requires_verification`, attaching a plausible

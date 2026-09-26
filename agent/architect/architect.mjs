@@ -270,7 +270,7 @@ export class KnowledgeArchitect {
         `Decide the replacement shape. This proposal carries none — every operation's "proposed" is null on purpose.`,
         ...(proposal.invariants_touched.length ? [`It touches ${proposal.invariants_touched.join(', ')}. docs/CURRENT-ARCHITECTURE.md's closing section lists what must not be rebuilt; confirm this is not that.`] : []),
         `Confirm none of the three red-tier booleans should be true: this proposal claims it adds no dependency, no build step and no third-party request. If a replacement shape would need any of them, it is a different proposal.`,
-        `Run the four validators before and after anything you apply and compare against the docs/CURRENT-ARCHITECTURE.md §12 baseline: 0 errors, 106 unverified records, 5 design-qa warnings by file and line.`,
+        `Run the four validators before and after anything you apply and compare against the docs/CURRENT-ARCHITECTURE.md §12 baseline: 0 errors, 105 unverified records, 5 design-qa warnings by file and line.`,
       ],
       risk: finding.risk === 'high' ? 'high' : 'medium',
       consequence: `A wrongly approved model change moves a fact to a home that cannot hold it, or splits one that was whole, on a site that tells people what EU law requires of them. ${finding.risk === 'high' ? 'This one is weighed high because the two homes have already diverged and a renderer reads the divergent copy — a reader is being shown one of two answers today.' : 'Nothing renders differently until somebody applies a shape, and no shape is proposed here.'}`,

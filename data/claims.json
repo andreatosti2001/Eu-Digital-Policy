@@ -934,6 +934,11 @@
       ],
       "sources": [
         {
+          "source_id": "src-ec-x-decision-2025-house-release",
+          "supports": "supports:direct",
+          "locator": "Recital 320"
+        },
+        {
           "source_id": "src-ec-x-fine-2025",
           "supports": "supports:partial",
           "locator": null
@@ -947,8 +952,39 @@
       "legal_basis": [],
       "brief_part": "part-3",
       "published": "2025-12-05",
-      "last_verified": null,
-      "verification_note": "REQUIRES VERIFICATION. The detail appears in the full decision rather than the press release; the decision text has not been retrieved."
+      "last_verified": "2026-09-26",
+      "verification_note": "Verified on 2026-09-26 against the decision text (recital 320) as released by the US House Judiciary Committee. The Commission has not published the decision or confirmed that release; the source note says so."
+    },
+    {
+      "id": "clm-x-api-price",
+      "type": "claim-type:fact",
+      "statement": "After X withdrew its free academic API, the Commission found researchers left with X's commercial developer API, whose 'Pro' tier cost USD 5,000 per month.",
+      "instruments": [
+        "dsa"
+      ],
+      "provisions": [
+        "dsa:art-40"
+      ],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [
+        "enf-x-ec-2025"
+      ],
+      "sources": [
+        {
+          "source_id": "src-ec-x-decision-2025-house-release",
+          "supports": "supports:direct",
+          "locator": "Recital 302 and Figure 13"
+        }
+      ],
+      "legal_basis": [
+        "dsa:art-40"
+      ],
+      "brief_part": "part-3",
+      "published": "2025-12-05",
+      "last_verified": "2026-09-26",
+      "verification_note": "Added on 2026-09-26 (audits T-17, T-22). The prose said 'X's academic API is priced at up to USD 5,000 per month'; there is no academic API to price. Corrected from recital 302 of the decision as released by the US House Judiciary Committee; the Commission has not published it. The price is the one the decision records, not X's current price list, which was not checked."
     },
     {
       "id": "clm-x-fine",
@@ -969,6 +1005,11 @@
         "enf-x-ec-2025"
       ],
       "sources": [
+        {
+          "source_id": "src-ec-x-decision-2025-house-release",
+          "supports": "supports:partial",
+          "locator": "Articles 4-6; signature page 183"
+        },
         {
           "source_id": "src-ec-x-fine-2025",
           "supports": "supports:direct",

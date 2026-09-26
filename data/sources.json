@@ -483,6 +483,20 @@
       "note": "Confirms the amount and all three grounds. Does not use the phrase 'first DSA fine'."
     },
     {
+      "id": "src-ec-x-decision-2025-house-release",
+      "tier": "tier:2",
+      "type": "source-type:decision",
+      "publisher": null,
+      "publisher_name": "US House Judiciary Committee (release of the European Commission's decision)",
+      "title": "Commission Decision C(2025) 8630 final of 5.12.2025, Cases DSA.100101, DSA.100102 and DSA.100103 — X (formerly Twitter)",
+      "url": "https://judiciary.house.gov/sites/evo-subsites/republicans-judiciary.house.gov/files/2026-01/ACT_part1.pdf",
+      "url_status": "url:live",
+      "published": "2026-01",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "The Commission has not published this decision; this is the text released by the Republican majority of the US House Judiciary Committee in January 2026, marked 'SENSITIVE'. The Commission has not confirmed or commented on the release, so authenticity rests on the releaser, and the record is tier 2 because tier describes the publisher. Read 2026-09-26. The decision ends on printed page 183 ('Done at Brussels, 5.12.2025', Henna Virkkunen). Recital 320: X 'mentioned only three employees working part-time on assessing data access requests'. Recital 302: the commercial developer API cost USD 5 000 per month for the second most extensive 'Pro' tier; the free Twitter Academic API programme had been discontinued. Fines: EUR 45m (Art. 25(1)), EUR 35m (Art. 39), EUR 40m (Art. 40(12))."
+    },
+    {
       "id": "src-eucrim-x-first-fine",
       "tier": "tier:4",
       "type": "source-type:commentary",

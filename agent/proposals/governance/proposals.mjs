@@ -81,7 +81,7 @@ export const DRAFTS = Object.freeze([
     what_it_would_do:
       'Turn the one assertion that already guards one list into a check that guards all of them. One count is wrong right now and the check would fail on it today, which is the right way for a new check to arrive: with a live example rather than a green tick.',
     what_it_would_not_do:
-      'It cannot check a count stated in prose about something it cannot enumerate — "106 unverified records" is only checkable because a validator prints it, and "the eleven agents" is not checkable at all without a register of agents that does not exist. The proposal is for the mechanical subset, named, not for every number in every document.',
+      'It cannot check a count stated in prose about something it cannot enumerate — "105 unverified records" is only checkable because a validator prints it, and "the eleven agents" is not checkable at all without a register of agents that does not exist. The proposal is for the mechanical subset, named, not for every number in every document.',
     against:
       'A check in `tools/` is the gate rather than the thing the gate checks, and this repository is careful about that: `agent/implement/scope.mjs` refuses to write `tools/` at all. It also adds a way for a session to be blocked by bookkeeping while doing legal work, which is the failure mode that makes people weaken checks.',
     cost: 'one new zero-dependency script, one CI step, and one more thing that must be kept true.',
@@ -161,7 +161,7 @@ export const DRAFTS = Object.freeze([
     what_it_would_do:
       'Remove the hand-written step that has drifted six times in the suite list alone, and once in the contracts banner where it is drifting now. Unlike everything else on this list it makes the system looser, and it is proposed because the evidence for the pattern it answers is the strongest of the twelve.',
     what_it_would_not_do:
-      'It must never touch the 106 unverified records, the provenance gaps, the verification gaps, the blocking open questions or the rejected-proposal count. Those five are marked `not_a_score` precisely because the cheap route down is a prohibited action, and a mechanism that edits numerals must be blind to them by name.',
+      'It must never touch the 105 unverified records, the provenance gaps, the verification gaps, the blocking open questions or the rejected-proposal count. Those five are marked `not_a_score` precisely because the cheap route down is a prohibited action, and a mechanism that edits numerals must be blind to them by name.',
     against:
       'This is the riskiest of the seven and the case against it should be read first. It would let an agent edit AGENTS.md — the file that tells the next agent what it may not do — without a person, and the guard is a character-level diff, which is exactly the kind of guard that looks airtight until somebody finds the input that widens it. A reviewer who refuses everything else here should still consider refusing this one hardest, and GP-01 gets most of the benefit by making the drift VISIBLE rather than by making it self-correcting.',
     cost: 'a widened grant, and a new class of change that happens without anybody reading it.',
