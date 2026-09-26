@@ -2411,7 +2411,7 @@
     {
       "id": "clm-data-omnibus-stalled",
       "type": "claim-type:fact",
-      "statement": "The Data Omnibus remains before the Council without an agreed position: three of the Commission's four principal GDPR reforms were deleted by successive compromise texts, and by late June 2026 the Presidency withdrew its compromise text for lack of a qualified majority.",
+      "statement": "The Data Omnibus has moved in both directions before the Council: by May 2026 successive Cypriot Presidency texts had deleted three of the Commission's four principal GDPR reforms, the Cypriot Presidency withdrew its text from COREPER in late June 2026 for lack of a qualified majority, and the Irish Presidency's revised compromise of 3 September 2026 then restored an AI legitimate-interest clause (as a new Article 88 bis, without the Commission's safeguards) and moved pseudonymised data into a new Article 25a. As of 25 September 2026 the Council has no agreed mandate and trilogues have not begun.",
       "instruments": [
         "data-omnibus"
       ],
@@ -2426,13 +2426,23 @@
           "source_id": "src-privacynext-2026-omnibus",
           "supports": "supports:direct",
           "locator": null
+        },
+        {
+          "source_id": "src-icle-omnibus-2026-06",
+          "supports": "supports:direct",
+          "locator": null
+        },
+        {
+          "source_id": "src-ppcland-omnibus-2026-09",
+          "supports": "supports:direct",
+          "locator": null
         }
       ],
       "legal_basis": [],
       "brief_part": "part-8",
       "published": "2026-07-08",
-      "last_verified": "2026-08-27",
-      "verification_note": "WEAKEST SOURCING IN THE SET. No official Council source located; the claim rests on a single specialist newsletter, with paywalled trade press corroborating only partially. Highly time-sensitive: a Council position could form at any point. Re-verify before every publication."
+      "last_verified": "2026-09-26",
+      "verification_note": "No official Council document has been read directly (documents WK 11020/2026 ADD 4, ST 9547/26 and ST 12535/26 are cited via commentary and specialist press reporting on leaked restricted texts, not via the Council's own register). Highly time-sensitive: a Council mandate could form at any point. Re-verify before every publication."
     },
     {
       "id": "clm-draghi-diagnosis",

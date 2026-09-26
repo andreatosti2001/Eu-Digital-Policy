@@ -721,6 +721,34 @@
       "note": "The only located source stating that the Cyprus Presidency withdrew its compromise text from COREPER II for lack of a qualified majority. No official Council source has been found. This claim rests on commentary alone."
     },
     {
+      "id": "src-icle-omnibus-2026-06",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "International Center for Law & Economics",
+      "title": "EU Digital Omnibus Hands the Wheel to the Referee",
+      "url": "https://laweconcenter.org/resources/eu-digital-omnibus-hands-the-wheel-to-the-referee/",
+      "url_status": "url:live",
+      "published": "2026-06-11",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "States that the Cypriot Presidency's most recent compromise text, Council document 9547/26 of 21 May 2026, deletes three of the Commission's four principal GDPR reforms (the entity-relative personal-data test, the relocation of cookie consent into the GDPR, and the legitimate-interest basis for AI processing) and removes the Commission's proposed pseudonymisation-criteria power. A think-tank commentary, not an official Council document."
+    },
+    {
+      "id": "src-ppcland-omnibus-2026-09",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "PPC Land",
+      "title": "EU Council draft drops unconditional opt-out from GDPR AI clause",
+      "url": "https://ppc.land/eu-council-draft-drops-unconditional-opt-out-from-gdpr-ai-clause/",
+      "url_status": "url:live",
+      "published": "2026-09-26",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Reports on and quotes the Irish Presidency's compromise text ST 12535/26 (dated 3 September 2026, classified LIMITE), circulated ahead of an Antici Group meeting of 11 September 2026, based on restricted Council documents published by noyb. Article 88c becomes 'Article 88 bis' (legitimate-interest basis for AI, with the Commission's safeguards — including the unconditional right to object — struck out); the personal-data definition change is replaced by a new Article 25a on pseudonymised data, modelled on the CJEU's EDPS v SRB judgment; cookie consent is returned to the ePrivacy Directive. A specialist news outlet quoting a leaked restricted document, not an official Council publication."
+    },
+    {
       "id": "src-bruegel-2026-enforcement-authority",
       "tier": "tier:4",
       "type": "source-type:commentary",
