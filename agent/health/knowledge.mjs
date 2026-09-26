@@ -100,8 +100,17 @@ export const KNOWLEDGE_METRICS = [
     measure(ctx) {
       const claims = claimsOf(ctx);
       const enf = enforcementOf(ctx);
-      const direct = claims.filter((c) => c.verification_note || c.requires_verification || c.reference_gap).length
-        + enf.filter((e) => e.verification_note || e.requires_verification).length;
+      /* The same rule tools/validate.mjs unverifiedReport() applies,
+         restricted to claims and enforcement, so this is a true subset
+         of the canonical count. It used to count any record carrying a
+         verification_note, but a note also records HOW a claim was
+         verified; once verified claims carried such notes (AUDIT
+         2026-09-25, Fase 2), the "narrower" count overtook the canonical
+         one, which is the one direction this number must never be
+         wrong in. */
+      const externalDirect = (c) => (c.sources ?? []).some((x) => x.supports === 'supports:direct' && x.source_id !== 'src-brief-original');
+      const direct = claims.filter((c) => !c.last_verified || !externalDirect(c)).length
+        + enf.filter((e) => e.requires_verification).length;
       const excerpt = `${(ctx.validators?.checks ?? []).find((c) => c.name === 'tools/validate.mjs')?.output_excerpt ?? ''}`;
       const fromValidator = Number((excerpt.match(/UNVERIFIED[^\d]*(\d+)/) ?? [])[1] ?? NaN);
       const recorded = ctx.baseline?.unverified ?? null;
