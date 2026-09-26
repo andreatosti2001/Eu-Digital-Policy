@@ -834,6 +834,20 @@
       "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved."
     },
     {
+      "id": "src-legiscope-nis2-tracker-2026",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "Legiscope",
+      "title": "NIS2 Enforcement Tracker 2026: Fines, Audits, Status",
+      "url": "https://www.legiscope.com/blog/nis2-enforcement-tracker-2026.html",
+      "url_status": "url:live",
+      "published": "2026-07-10",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "A GDPR/NIS2 compliance vendor's blog. States its own figures for 'first fines' in Belgium (€185K), Italy (€450K), Hungary (€78K) and Lithuania (€52K), but its own 'On the figures' section says NIS2 enforcement data is fragmented across national authorities, that most do not publish a centralised fine register, and that its amounts 'aggregate reported and estimated figures... they should be treated as directional, not as an authoritative legal record.' No official decision, case number or authority-published figure was located from this source or any other."
+    },
+    {
       "id": "src-iccl-ireland-bottleneck",
       "tier": "tier:4",
       "type": "source-type:report",

@@ -339,9 +339,7 @@
     "enisa",
     "member-states"
    ],
-   "enforcement": [
-    "enf-nis2-first-fines"
-   ],
+   "enforcement": [],
    "actors": [
     "actor:essential-entity",
     "actor:important-entity"

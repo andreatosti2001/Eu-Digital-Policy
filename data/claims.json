@@ -2254,7 +2254,7 @@
     {
       "id": "clm-nis2-enforcement-despite-transposition",
       "type": "claim-type:fact",
-      "statement": "NIS2 enforcement has begun regardless of the transposition failure, with first fines landing in Belgium, Italy and Hungary.",
+      "statement": "Supervision under NIS2 has begun regardless of the transposition failure, but no officially published NIS2 fine decision has been located for this brief; figures circulating for Belgium, Italy and Hungary come from commercial trackers that describe their own numbers as indicative.",
       "instruments": [
         "nis2"
       ],
@@ -2262,23 +2262,21 @@
       "institutions": [
         "nca-*"
       ],
-      "enforcement": [
-        "enf-nis2-first-fines"
-      ],
+      "enforcement": [],
       "sources": [
         {
-          "source_id": "src-brief-original",
-          "supports": "supports:direct",
-          "locator": "Part VII"
+          "source_id": "src-legiscope-nis2-tracker-2026",
+          "supports": "supports:partial",
+          "locator": null
         }
       ],
       "legal_basis": [],
       "brief_part": "part-7",
       "published": "2026-08-19",
-      "last_verified": "2026-08-28",
-      "verification_note": "REQUIRES VERIFICATION. No entity, date, amount or authority is named by the brief and none has been located. The corresponding enforcement record is an explicit placeholder.",
+      "last_verified": "2026-09-26",
+      "verification_note": "REQUIRES VERIFICATION. No entity, date, amount or authority naming an official NIS2 fine decision has been located. The one located source (Legiscope, a commercial NIS2-compliance vendor) explicitly describes its own figures as directional/indicative, not as decisions. The corresponding enforcement record (enf-nis2-first-fines) has been removed rather than kept as a placeholder that could be read as a countable action.",
       "reference_gap": true,
-      "gap_note": "No source located naming any first NIS2 fine in Belgium, Italy or Hungary. The enforcement record already carries this as an explicit placeholder."
+      "gap_note": "No official source located naming any first NIS2 fine in Belgium, Italy or Hungary. The only located source is a vendor tracker that disclaims its own figures as indicative."
     },
     {
       "id": "clm-directives-underperform",

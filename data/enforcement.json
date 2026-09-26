@@ -562,41 +562,6 @@
    }
   },
   {
-   "id": "enf-nis2-first-fines",
-   "entity": "unknown",
-   "entity_type": null,
-   "instrument": "nis2",
-   "legal_basis": [],
-   "authority": "nca-*",
-   "opened": null,
-   "decision_date": null,
-   "action": "First NIS2 fines reported in Belgium, Italy and Hungary",
-   "fine_eur": null,
-   "action_status": "action:imposed",
-   "payment_status": "payment:unknown",
-   "remedy_status": "remedy:unknown",
-   "behavioural_outcome": null,
-   "judicial": null,
-   "timeline_events": [],
-   "claims": [
-    "clm-nis2-enforcement-despite-transposition"
-   ],
-   "sources": [
-    "src-brief-original"
-   ],
-   "requires_verification": true,
-   "verification_note": "PLACEHOLDER RECORD. The brief states that first NIS2 fines have landed in Belgium, Italy and Hungary, but names no entity, date, amount or authority. This record exists so the claim is traceable and the gap visible; it must be split into individual records or removed once the underlying decisions are identified. Do not render as a countable enforcement action.",
-   "last_verified": "2026-08-27",
-   "appeal": {
-    "status": "appeal:unknown",
-    "lodged_by": null,
-    "forum": null,
-    "lodged_date": null,
-    "case_ref": null,
-    "note": "No underlying decision has been identified, so no appeal position can be recorded."
-   }
-  },
-  {
    "id": "enf-hungary-commission-none",
    "entity": "Hungary",
    "entity_type": "actor:member-state",
