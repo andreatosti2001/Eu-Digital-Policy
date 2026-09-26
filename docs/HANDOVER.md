@@ -56,6 +56,12 @@ recorded so that any closed branch can be restored with `git push origin <sha>:r
 | `agent-governance-protocol-gfbgfb` | `ed226d2` | No recommendation was made: a visual change is the author's call. **Left open** |
 | `new-session-e5xmjm`, `repo-website-stabilization-0dmm8g` | `73a9f23`, `f52e94f` | Contained in this branch. Delete once it is merged into `main` |
 
+**Deleted by the author, 26 September 2026:** the 23 branches contained in `main`, and the six
+closed or carried-forward branches above. The session's git access could not delete them;
+it may push only its own branch. Five branches remain: `main`, `new-session-egb0gs` (PR #3),
+`new-session-e5xmjm`, `repo-website-stabilization-0dmm8g` (delete the last two once PR #3 is
+merged) and `agent-governance-protocol-gfbgfb` (the author's decision).
+
 ---
 
 ## SESSION 30 — the stabilization pass, and the two checks that were wrong about the site
