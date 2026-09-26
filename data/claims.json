@@ -943,8 +943,8 @@
       ],
       "brief_part": "part-3",
       "published": "2026-05-28",
-      "last_verified": "2026-08-27",
-      "verification_note": "The amount and ground are directly sourced. The characterisation as the LARGEST DSA fine to date is not in the Commission text and rests on commentary."
+      "last_verified": "2026-09-26",
+      "verification_note": "The amount and ground are directly sourced. The characterisation as the LARGEST DSA fine to date is not in the Commission text, rests on commentary, and is in any case superseded: AliExpress was fined EUR 550 million on 20 July 2026 (clm-aliexpress-fine)."
     },
     {
       "id": "clm-commission-prefers-compliance",
@@ -2870,6 +2870,38 @@
       "last_verified": "2026-08-27",
       "requires_verification": false,
       "verification_note": "A preliminary position is not a designation. Recorded so that the gatekeeper count remains readable as current without implying a decision that has not been taken."
+    },
+    {
+      "id": "clm-aliexpress-fine",
+      "type": "claim-type:fact",
+      "statement": "On 20 July 2026 the Commission fined AliExpress EUR 550 million under the DSA for failure to adequately assess and mitigate systemic risks from the sale of illegal, unsafe and counterfeit products — the largest DSA fine to date.",
+      "instruments": [
+        "dsa"
+      ],
+      "provisions": [
+        "dsa:art-34",
+        "dsa:art-35"
+      ],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [
+        "enf-aliexpress-ec-2026"
+      ],
+      "sources": [
+        {
+          "source_id": "src-ec-aliexpress-fine-2026",
+          "supports": "supports:direct",
+          "locator": null
+        }
+      ],
+      "legal_basis": [
+        "dsa:art-74"
+      ],
+      "brief_part": "part-3",
+      "published": "2026-07-20",
+      "last_verified": "2026-09-26",
+      "verification_note": "The amount, date and ground are directly sourced from the Commission's press release. The 'largest to date' characterisation and the 20 October 2026 action-plan deadline rest on secondary legal commentary (Lewis Silkin, Il Sole 24 Ore, JURIST), not on the Commission text, which contains no ranking language."
     }
   ]
 }

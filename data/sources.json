@@ -1095,6 +1095,20 @@
       "accessed": "2026-08-28",
       "language": "en",
       "note": "Published in the Official Journal 24 July 2026, in force 27 July 2026. Amends the AI Act (2024/1689), the Civil Aviation Regulation (2018/1139) and the Machinery Regulation (2023/1230). Located 28 Aug 2026 in response to an external review that asked whether the instrument was still a proposal — it is not, and the dataset already recorded it as in force."
+    },
+    {
+      "id": "src-ec-aliexpress-fine-2026",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission fines AliExpress EUR 550 million for breaching the Digital Services Act",
+      "url": "https://digital-strategy.ec.europa.eu/en/news/commission-fines-aliexpress-eu550-million-breaching-digital-services-act",
+      "url_status": "url:live",
+      "published": "2026-07-20",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Confirms the EUR 550 million fine, publication date 20 July 2026, and the systemic-risk ground (failure to diligently assess and mitigate risk from illegal, unsafe or counterfeit products). Contains no ranking language and no article numbers or action-plan deadline; those are corroborated by secondary legal commentary (Lewis Silkin, 24 July 2026; Il Sole 24 Ore, 20 July 2026; JURIST, 22 July 2026)."
     }
   ]
 }

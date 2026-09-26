@@ -165,8 +165,8 @@
     "src-techpolicypress-temu"
    ],
    "requires_verification": true,
-   "verification_note": "'Largest DSA fine to date' is not supported by the Commission text, which contains no ranking language; it rests on commentary. Appeal status not established.",
-   "last_verified": "2026-08-27",
+   "verification_note": "'Largest DSA fine to date' is not supported by the Commission text, which contains no ranking language; it rests on commentary, and is superseded in any case: the Commission fined AliExpress EUR 550 million on 20 July 2026, which is now the largest DSA fine. Appeal status not established.",
+   "last_verified": "2026-09-26",
    "appeal": {
     "status": "appeal:unknown",
     "lodged_by": null,
@@ -174,6 +174,45 @@
     "lodged_date": null,
     "case_ref": null,
     "note": "Not established in this build."
+   }
+  },
+  {
+   "id": "enf-aliexpress-ec-2026",
+   "entity": "AliExpress",
+   "entity_type": "actor:vlop",
+   "instrument": "dsa",
+   "legal_basis": [
+    "dsa:art-34",
+    "dsa:art-35",
+    "dsa:art-74"
+   ],
+   "authority": "ec",
+   "opened": null,
+   "decision_date": "2026-07-20",
+   "action": "Non-compliance decision and fine",
+   "fine_eur": 550000000,
+   "action_status": "action:imposed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:ordered",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-aliexpress-fine"
+   ],
+   "sources": [
+    "src-ec-aliexpress-fine-2026"
+   ],
+   "requires_verification": true,
+   "verification_note": "Fine amount, date and ground confirmed by the Commission's own press release. The 20 October 2026 action-plan deadline and the appeal are reported by secondary legal commentary (Lewis Silkin), not by the Commission text itself; no Tribunal case number located.",
+   "last_verified": "2026-09-26",
+   "appeal": {
+    "status": "appeal:unknown",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "AliExpress announced its intention to challenge the decision (reported by Lewis Silkin, 24 July 2026); no case number located."
    }
   },
   {
