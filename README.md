@@ -251,8 +251,13 @@ what it cannot support:
    bibliography computes and states the current count on every load, so this
    README cannot drift from it. After the sweep of 28 August 2026 the figure
    moved from 45 to 40 claims resting on nothing but the brief itself, with 9
-   more carrying no directly supporting source; 22 claims are graded
-   *Unresolved*, down from 27.
+   more carrying no directly supporting source; 22 claims were graded
+   *Unresolved*, down from 27. As of 26 September 2026, after the
+   AUDIT-2026-09-25 remediation, of 108 claims: 39 rest on nothing but the
+   brief itself, 12 carry no directly supporting source (up from 9: the three
+   claims added in September carry only partial support), and 19
+   are graded *Unresolved*. The bibliography's live count is the one to
+   trust over these.
 2. **Verification dates are a compilation date.** The field is per-record;
    the practice is not yet. `tools/freshness.mjs` says so explicitly.
 3. **Three sources carry no URL** — down from twelve after the reference
