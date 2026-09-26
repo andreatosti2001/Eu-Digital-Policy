@@ -61,6 +61,68 @@
    "last_verified": "2026-08-27"
   },
   {
+   "id": "tl-gdpr-procedural-2026-01-01-entry-into-force",
+   "date": "2026-01-01",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "gdpr-procedural",
+   "provisions": [],
+   "affected_actors": [
+    "actor:controller",
+    "actor:processor"
+   ],
+   "sectors": [
+    "sector:cross-sector"
+   ],
+   "obligation": "Regulation (EU) 2025/2518 enters into force. The regulation itself does not yet apply (see the 2 April 2027 application event).",
+   "required_action": null,
+   "authority": [
+    "dpa-*"
+   ],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [
+    "clm-gdpr-procedural-regulation"
+   ],
+   "sources": [
+    "src-eucrim-gdpr-procedural-2026"
+   ],
+   "requires_verification": true,
+   "verification_note": "Date confirmed by eucrim, a specialist academic newsletter reporting the Official Journal reference; the EUR-Lex consolidated text could not be retrieved directly in this environment.",
+   "last_verified": "2026-09-26"
+  },
+  {
+   "id": "tl-gdpr-procedural-2027-04-02-application",
+   "date": "2027-04-02",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "gdpr-procedural",
+   "provisions": [],
+   "affected_actors": [
+    "actor:controller",
+    "actor:processor"
+   ],
+   "sectors": [
+    "sector:cross-sector"
+   ],
+   "obligation": "Regulation (EU) 2025/2518 applies to cross-border GDPR complaints lodged from this date: harmonised admissibility criteria, common procedural rights for complainants and organisations under investigation, and investigation time limits (15 months regular, 12 months simplified).",
+   "required_action": null,
+   "authority": [
+    "dpa-*"
+   ],
+   "status": "scheduled",
+   "supersedes": null,
+   "claims": [
+    "clm-gdpr-procedural-regulation"
+   ],
+   "sources": [
+    "src-eucrim-gdpr-procedural-2026"
+   ],
+   "requires_verification": true,
+   "verification_note": "Date confirmed by eucrim, a specialist academic newsletter reporting the Official Journal reference; the EUR-Lex consolidated text could not be retrieved directly in this environment.",
+   "last_verified": "2026-09-26"
+  },
+  {
    "id": "tl-dma-2022-11-01-entry-into-force",
    "date": "2022-11-01",
    "date_precision": "precision:day",

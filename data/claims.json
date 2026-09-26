@@ -193,6 +193,30 @@
       "verification_note": null
     },
     {
+      "id": "clm-gdpr-procedural-regulation",
+      "type": "claim-type:fact",
+      "statement": "Regulation (EU) 2025/2518, which harmonises admissibility, the parties' procedural rights and investigation deadlines in cross-border GDPR cases, entered into force on 1 January 2026 and applies to complaints lodged from 2 April 2027.",
+      "instruments": [
+        "gdpr-procedural",
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eucrim-gdpr-procedural-2026",
+          "supports": "supports:direct",
+          "locator": null
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": "2026-01-16",
+      "last_verified": "2026-09-26",
+      "verification_note": "Confirmed against eucrim, a specialist newsletter published by the Max Planck Institute for the Study of Crime, Security and Law, reporting the regulation's Official Journal reference and adoption on 26 November 2025. The EUR-Lex consolidated text could not be retrieved directly in this environment: every attempt (multiple URI and PDF endpoints) returns HTTP 202 with no body, which this build's freshness tooling also reports as a standing limitation. Re-verify against EUR-Lex directly when it becomes reachable."
+    },
+    {
       "id": "clm-dpc-share-of-fines",
       "type": "claim-type:fact",
       "statement": "The Irish DPC accounts for about EUR 4.04 billion of cumulative GDPR fine value — roughly 57% of the total — and nine of the ten largest fines.",
@@ -218,6 +242,11 @@
           "locator": null
         },
         {
+          "source_id": "src-dpc-annual-report-2025",
+          "supports": "supports:context",
+          "locator": null
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part II"
@@ -226,8 +255,8 @@
       "legal_basis": [],
       "brief_part": "part-2",
       "published": "2026-01-12",
-      "last_verified": "2026-08-28",
-      "verification_note": "The EUR 4.04bn figure is confirmed against DLA Piper (January 2026). The derived 57% share and the \"nine of the ten largest fines\" ranking are NOT stated by that source and remain the brief's own arithmetic against a total from the same compilation.",
+      "last_verified": "2026-09-26",
+      "verification_note": "The EUR 4.04bn figure is confirmed against DLA Piper (January 2026); the DPC's own Annual Report 2025 confirms the Commission is a genuine three-Commissioner structure and reports roughly EUR 530.77m in fines for 2025 alone, which is consistent with continued growth of the cumulative total but does not itself state EUR 4.04bn or a share percentage. The derived 57% share and the \"nine of the ten largest fines\" ranking are NOT stated by any of these sources and remain the brief's own arithmetic against a total from the DLA Piper compilation.",
       "reference_gap": true,
       "gap_note": "57% share and nine-of-ten ranking"
     },
@@ -335,7 +364,7 @@
     {
       "id": "clm-dpc-staff-growth",
       "type": "claim-type:fact",
-      "statement": "The DPC has grown from roughly 110 staff in 2018 to more than 230 by 2026 and moved to a three-Commissioner structure.",
+      "statement": "The DPC has grown to nearly 300 staff by 2026 and moved to a three-Commissioner structure.",
       "instruments": [
         "gdpr"
       ],
@@ -346,18 +375,28 @@
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-brief-original",
+          "source_id": "src-iapp-sweeney-2026",
           "supports": "supports:direct",
+          "locator": "'With nearly 300 staff, up from 27 in 2014'"
+        },
+        {
+          "source_id": "src-dpc-annual-report-2025",
+          "supports": "supports:partial",
+          "locator": "three Commissioners named"
+        },
+        {
+          "source_id": "src-brief-original",
+          "supports": "supports:context",
           "locator": "Part II"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-2",
-      "published": "2026-08-19",
-      "last_verified": "2026-08-28",
-      "verification_note": "REQUIRES VERIFICATION. No external source located. The DPC annual reports are the obvious primary source.",
+      "published": "2026-04-01",
+      "last_verified": "2026-09-26",
+      "verification_note": "The 'nearly 300' figure is a direct quotation from sitting Commissioner Niamh Sweeney, reported by IAPP (1 April 2026); it is not the DPC's own published headcount figure, and no DPC annual report was located giving a specific number. The original 'roughly 110 staff in 2018' figure has been dropped rather than kept: no DPC 2018 annual report was retrieved to confirm it, and the site's own rule against inventing a comparison year applies here. The three-Commissioner structure is confirmed directly by the DPC's own Annual Report 2025 announcement, which names Des Hogan (Chairperson), Dale Sunderland and Niamh Sweeney.",
       "reference_gap": true,
-      "gap_note": "No DPC annual report was located giving both the 2018 figure and the 2026 figure. The three-Commissioner structure is on the public record; the staffing numbers are not sourced here."
+      "gap_note": "No DPC annual report was located stating a specific staff headcount; the figure rests on a Commissioner's quoted remark rather than a published number, and the pre-2026 baseline (previously '110 in 2018') is now unsourced and has been removed from the statement rather than carried forward unverified."
     },
     {
       "id": "clm-iccl-ireland-bottleneck",

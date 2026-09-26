@@ -693,6 +693,48 @@
       "note": null
     },
     {
+      "id": "src-dpc-annual-report-2025",
+      "tier": "tier:2",
+      "type": "source-type:report",
+      "publisher": "dpa-ie",
+      "publisher_name": "Data Protection Commission (Ireland)",
+      "title": "Data Protection Commission publishes Annual Report for 2025 and results of 'Sharenting' survey",
+      "url": "https://www.dataprotection.ie/en/data-protection-commission-publishes-2025-annual-report",
+      "url_status": "url:live",
+      "published": "2026-06-30",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "The DPC's own summary of its Annual Report 2025 (full PDF linked from this page, not itself retrieved). Confirms the three-Commissioner structure (Des Hogan, Dale Sunderland, Niamh Sweeney) and administrative fines totalling roughly EUR 530.77m for 2025 alone. Does not itself state a staff headcount; see src-iapp-sweeney-2026 for that."
+    },
+    {
+      "id": "src-iapp-sweeney-2026",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "IAPP",
+      "title": "New Irish Data Protection Commissioner Niamh Sweeney addresses scrutiny over her appointment, shares agency priorities",
+      "url": "https://iapp.org/news/a/new-irish-data-protection-commissioner-niamh-sweeney-addresses-scrutiny-over-her-appointment-shares-agency-priorities",
+      "url_status": "url:live",
+      "published": "2026-04-01",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Quotes Commissioner Niamh Sweeney directly: 'With nearly 300 staff, up from 27 in 2014... growth has plateaued.' A direct quotation from a sitting Commissioner, reported by a specialist trade publication, not the DPC's own published figure."
+    },
+    {
+      "id": "src-eucrim-gdpr-procedural-2026",
+      "tier": "tier:3",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "eucrim (Max Planck Institute for the Study of Crime, Security and Law)",
+      "title": "New Regulation Speeds Up Handling of Cross-Border GDPR Complaints",
+      "url": "https://eucrim.eu/news/new-regulation-speeds-up-handling-of-cross-border-gdpr-complaints/",
+      "url_status": "url:live",
+      "published": "2026-01-16",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "States that Regulation (EU) 2025/2518 was adopted 26 November 2025, published in Official Journal L 2025/2518 of 12 December 2025, entered into force 1 January 2026 and applies from 2 April 2027; regular investigations are expected to conclude within 15 months (12 for simplified procedures). EUR-Lex itself could not be retrieved in this environment (returns HTTP 202 with no body on every attempt); this specialist academic-institute newsletter is cited instead, pending direct confirmation of the consolidated text."
+    },
+    {
       "id": "src-mlex-2026-amazon-annulment",
       "tier": "tier:4",
       "type": "source-type:journalism",

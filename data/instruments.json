@@ -1598,6 +1598,40 @@
       ]
     },
     {
+      "id": "gdpr-procedural",
+      "aliases": [
+        "reg-2025-2518",
+        "gdpr-cross-border-procedure-regulation"
+      ],
+      "celex": "32025R2518",
+      "short_name": "GDPR Procedural Regulation",
+      "full_name": "Regulation (EU) 2025/2518 laying down additional procedural rules relating to the enforcement of Regulation (EU) 2016/679",
+      "kind": "kind:regulation",
+      "scope_class": "scope:adjacent",
+      "brief_part": "part-2",
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-09-26",
+      "status_note": "In force since 1 January 2026 but not yet applicable (applies to complaints lodged from 2 April 2027). Harmonises admissibility criteria for cross-border GDPR complaints, gives parties common procedural rights (including a right to be heard and to see preliminary findings) and sets investigation time limits (15 months for regular cases, 12 for a simplified procedure). CELEX derived from the Official Journal reference reported by eucrim (L 2025/2518 of 12 December 2025); the consolidated EUR-Lex text could not be retrieved directly in this environment (every attempt returns HTTP 202 with no body) and should be checked before this record's status is next revised.",
+      "milestones": [
+        "tl-gdpr-procedural-2026-01-01-entry-into-force",
+        "tl-gdpr-procedural-2027-04-02-application"
+      ],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [
+        "clm-gdpr-procedural-regulation"
+      ],
+      "sources": [
+        "src-eucrim-gdpr-procedural-2026"
+      ],
+      "last_verified": "2026-09-26",
+      "legal_basis": []
+    },
+    {
       "id": "dga",
       "aliases": [
         "data-governance-act"
