@@ -268,8 +268,11 @@ test('4e · a path anchor can assert an ABSENCE, and that is a different claim',
 });
 
 test('4f · a contains anchor with max asserts a rule is NOT there', async () => {
-  const notThere = await resolveAnchor({ kind: 'contains', path: 'AGENTS.md', text: 're-fetch', max: 0 });
-  assert.equal(notThere.state, 'resolved', 'the end-of-session re-fetch rule is not on main; P-06 is about exactly that');
+  /* This used to use the end-of-session re-fetch rule, which P-06 said
+     was absent. It reached AGENTS.md on 2026-09-26 (AUDIT-2026-09-25
+     T-40), so the example is now a string absent by construction. */
+  const notThere = await resolveAnchor({ kind: 'contains', path: 'AGENTS.md', text: 'zq-no-such-rule-zq', max: 0 });
+  assert.equal(notThere.state, 'resolved', 'max: 0 holds when the text is absent');
   const isThere = await resolveAnchor({ kind: 'contains', path: 'AGENTS.md', text: 'AGENTS.md', max: 0 });
   assert.equal(isThere.state, 'refuted');
 });

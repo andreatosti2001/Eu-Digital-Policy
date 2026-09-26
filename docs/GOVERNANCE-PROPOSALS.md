@@ -174,7 +174,10 @@ claimed on real main, retitle rather than collide"* — and pushed it to
 `claude/foundation-verification-audit-40ozpo`, which was never merged. **The rule is on no
 document on `main`.** Neither AGENTS.md nor the skill a session is pointed at contains it, and
 `node agent/proposals/governance/cli.mjs check` measures six remote branches currently holding
-work that `main` does not.
+work that `main` does not. *Update, 26 September 2026:* the rule was carried into AGENTS.md
+and the git-workflow skill by AUDIT-2026-09-25 T-40, twenty-three days after it was written.
+It was recovered by a branch audit, not by any session's handover, which is still the
+pattern. P-06's anchors now record both dates.
 
 ## 4 · The seven proposals
 

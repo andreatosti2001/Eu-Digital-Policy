@@ -42,6 +42,7 @@ the evidence it describes.
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
+| `docs/AUDIT-2026-09-03.md` | Foundation verification before SESSION 13, and the concurrent-merge collision that produced the re-fetch rule under **Git** |
 | `docs/SECURITY-VERIFICATION-2026-09-08.md` | SESSION 23.5's adversarial gate: 65 attacks, what held, the two findings, and the two boundaries this environment cannot test |
 | `README.md` | The author's own account, including eight stated limitations |
 
@@ -681,7 +682,11 @@ instruction below: a pull request is opened when the author says so, so the obli
 ask. Twenty-three of the thirty-three remote branches besides `main` on 26 September 2026 were already in
 `main` and had never been deleted. Read the full `git diff` before committing — a one-character `null` → `"unknown"`
 edit changes what a record asserts. Do not open a pull request unless asked. Do not include a
-model identifier in any commit message or pushed artifact. See
+model identifier in any commit message or pushed artifact. **`origin/main` can move while a
+session runs — re-fetch and diff against it again immediately before the session's final
+write to `docs/HANDOVER.md` or any merge, not only at session start.** This has happened, not
+hypothetically: `docs/AUDIT-2026-09-03.md`'s opening correction records a session that skipped
+this and would have silently erased a concurrently-merged session's handover. See
 `.agents/skills/git-workflow/SKILL.md`.
 
 ## When to stop and ask
