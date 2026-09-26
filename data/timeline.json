@@ -1098,8 +1098,8 @@
    "sectors": [
     "sector:digital-infrastructure"
    ],
-   "obligation": "Cloud designation decisions due.",
-   "required_action": "Cloud service providers meeting the Art. 3 thresholds should expect designation and the Art. 5–7 obligation set.",
+   "obligation": "Commission's target for concluding the AWS and Azure gatekeeper market investigations (within 12 months of their 18 November 2025 opening) — a target, not a legal deadline.",
+   "required_action": "If AWS and Azure are designated, Amazon and Microsoft would have six months to bring those services into compliance with the DMA obligations.",
    "authority": [
     "ec"
    ],
@@ -1107,11 +1107,12 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original"
+    "src-ec-dma-cloud-mi-2025",
+    "src-ec-cloud-gatekeeper-preliminary-2026"
    ],
    "requires_verification": true,
-   "verification_note": "From the brief's Annex A. Month precision as published there. No primary source located in this build.",
-   "last_verified": "2026-08-27"
+   "verification_note": "The date is derived, not published: IP/25/2717 says the Commission 'aims to conclude' within 12 months of 18 November 2025, hence November 2026 at month precision. It is an administrative target, not a deadline in the Regulation. A preliminary position in favour of designation was reached on 25 June 2026 (IP/26/1444). The audit of 2026-09-25 proposes clearing requires_verification; left for a person to clear.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-ai-act-2026-12-02-application",
@@ -1222,7 +1223,7 @@
    "sectors": [
     "sector:digital-infrastructure"
    ],
-   "obligation": "Conclusion of the cloud market investigation.",
+   "obligation": "Commission's target for publishing the final report of the sector-wide cloud market investigation (within 18 months of its 18 November 2025 opening) — a target, not a legal deadline.",
    "required_action": null,
    "authority": [
     "ec"
@@ -1231,11 +1232,11 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original"
+    "src-ec-dma-cloud-mi-2025"
    ],
    "requires_verification": true,
-   "verification_note": "From the brief's Annex A. No primary source located in this build.",
-   "last_verified": "2026-08-27"
+   "verification_note": "The date is derived, not published: IP/25/2717 says the final report 'will result' within 18 months of 18 November 2025, hence May 2027 at month precision. It is an administrative target, not a deadline in the Regulation; the report may propose updating the cloud obligations by delegated act (Arts. 12 and 49). The audit of 2026-09-25 proposes clearing requires_verification; left for a person to clear.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-data-act-2027-09-12-application",

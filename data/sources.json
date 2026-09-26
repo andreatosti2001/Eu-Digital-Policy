@@ -469,6 +469,34 @@
       "note": "Confirms the 4 December 2025 opening date and that it is an antitrust investigation into a possible breach of EU competition rules over Meta's WhatsApp Business Solution policy (announced October 2025). Does not itself name Article 102 TFEU; see src-insighteu-whatsapp-interim-2026 for that."
     },
     {
+      "id": "src-ec-dma-cloud-mi-2025",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission launches market investigations on cloud computing services under the Digital Markets Act (IP/25/2717)",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_25_2717",
+      "url_status": "url:live",
+      "published": "2025-11-18",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Read via the Press Corner API on 2026-09-26; the shorter news item on digital-markets-act.ec.europa.eu (18 November 2025) links to it. Three market investigations opened: two on whether Amazon Web Services and Microsoft Azure should be designated as gatekeepers despite not meeting the quantitative thresholds, one on whether the DMA's obligations are effective in the cloud sector. The Commission 'aims to conclude' the AWS and Azure investigations 'within 12 months'; the sector investigation 'will result in a final report to be published within 18 months'. If designated, six months to comply."
+    },
+    {
+      "id": "src-dma-text-unofficial-art2",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "eu-digital-markets-act.com (unofficial reproduction of the DMA text)",
+      "title": "The final text of the Digital Markets Act (DMA) — Article 2, Definitions",
+      "url": "https://www.eu-digital-markets-act.com/Digital_Markets_Act_Article_2.html",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text. Art. 2(2) lists as core platform services (a) online intermediation, (b) search engines, (c) social networking, (d) video-sharing, (e) number-independent interpersonal communications, (f) operating systems, (g) web browsers, (h) virtual assistants, (i) cloud computing services and (j) online advertising; generative AI is not listed. Cited because EUR-Lex returns HTTP 202 with no body in this environment; to be replaced by src-eurlex-dma once the consolidated text can be read."
+    },
+    {
       "id": "src-insighteu-whatsapp-interim-2026",
       "tier": "tier:4",
       "type": "source-type:journalism",
@@ -1162,7 +1190,7 @@
       "url": "https://digital-markets-act.ec.europa.eu/commission-reaches-preliminary-position-amazons-and-microsofts-market-leading-cloud-services-should-2026-06-25_en",
       "url_status": "url:live",
       "published": "2026-06-25",
-      "accessed": "2026-08-27",
+      "accessed": "2026-09-26",
       "language": "en",
       "note": "Preliminary position only. Press release reference IP/26/1444. No designation decision had been adopted at the date recorded here."
     },

@@ -1519,7 +1519,7 @@
     {
       "id": "clm-dma-scope-gap",
       "type": "claim-type:critique",
-      "statement": "The main substantive criticism of the DMA is now its scope gap: generative AI and cloud sit largely outside the core-platform-service list.",
+      "statement": "The main substantive criticism of the DMA is now its scope gap: cloud computing is already a core platform service under Article 2, but neither AWS nor Azure met the quantitative designation thresholds, and generative AI is not listed; the Commission opened market investigations into AWS and Azure on 18 November 2025 and reached a preliminary position in favour of designation on 25 June 2026.",
       "instruments": [
         "dma"
       ],
@@ -1537,6 +1537,21 @@
           "locator": "Art. 2"
         },
         {
+          "source_id": "src-dma-text-unofficial-art2",
+          "supports": "supports:partial",
+          "locator": "Art. 2(2)(i)"
+        },
+        {
+          "source_id": "src-ec-dma-cloud-mi-2025",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
+          "source_id": "src-ec-cloud-gatekeeper-preliminary-2026",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part IV"
@@ -1548,7 +1563,7 @@
       "brief_part": "part-4",
       "published": "2026-08-19",
       "last_verified": "2026-09-26",
-      "verification_note": "The scope list is verified. The prose no longer frames the WhatsApp/Meta matter as a DMA test case: see clm-whatsapp-ai-art102, which corrects it to an Article 102 TFEU antitrust investigation."
+      "verification_note": "Corrected on 2026-09-26 (audit T-09): the earlier statement said cloud sat 'largely outside' the core-platform-service list, but cloud computing services are Art. 2(2)(i). Read from an unofficial reproduction of the text (EUR-Lex returns HTTP 202 with no body here), so graded partial. The two press releases are each graded partial too: each carries only the dated facts, not the critique. The 18 November 2025 opening, and that AWS and Azure do not meet the quantitative thresholds, are from IP/25/2717; the 25 June 2026 preliminary position from IP/26/1444. That the scope gap is the 'main' criticism remains the brief's own critique. The prose no longer frames the WhatsApp/Meta matter as a DMA test case: see clm-whatsapp-ai-art102."
     },
     {
       "id": "clm-whatsapp-ai-art102",
