@@ -38,7 +38,7 @@ import {
   ALLOWED_RUNTIME_ORIGINS, TRACKER_HINTS, NON_FETCHING_URIS,
   foreignOrigin, scanHtml, scanCss, scanJs, scanRuntimeSurface, runtimeSurface,
 } from './thirdparty.mjs';
-import { EXPECTED } from './freshness.mjs';
+import { EXPECTED, RECHECK } from './freshness.mjs';
 import {
   SOURCE_FIELDS, REQUIRED_FIELDS, OPTIONAL_FIELDS, RESOLUTIONS, ABSENT_BY_DESIGN, violations,
 } from './source-contract.mjs';
@@ -47,10 +47,10 @@ const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const SELF = new Set(['https://andreatosti2001.github.io']);
 
 /** Run a validator and report its exit code without throwing. */
-function runValidator(script, args = [], cwd = ROOT) {
+function runValidator(script, args = [], cwd = ROOT, env = {}) {
   try {
     const stdout = execFileSync(process.execPath, [join(ROOT, 'tools', script), ...args],
-      { cwd, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+      { cwd, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, env: { ...process.env, GITHUB_ACTIONS: '', ...env } });
     return { exit: 0, out: stdout };
   } catch (e) {
     return { exit: typeof e.status === 'number' ? e.status : 1, out: `${e.stdout ?? ''}${e.stderr ?? ''}` };
@@ -324,6 +324,44 @@ test('F5 · the intervals are not widened — the thresholds are asserted, not t
   assert.deepEqual(Object.fromEntries(Object.entries(EXPECTED).map(([k, v]) => [k, v.days])), {
     enforcement: 45, timeline: 90, instruments: 90, institutions: 180, claims: 90, sources: 180,
   });
+  assert.deepEqual(Object.fromEntries(Object.entries(RECHECK).map(([k, v]) => [k, v.days])), {
+    provisional_enforcement: 30,
+  });
+});
+
+test('F8 · in GitHub Actions every prompt is also a "Content stale" warning, and still exits 0', () => {
+  /* docs/CONTENT-FRESHNESS-POLICY.md. One annotation per printed prompt:
+     a prompt raised in the log but not on the run is one a reviewer
+     does not see. Outside Actions, no annotation syntax leaks into the
+     report. */
+  const far = '2099-01-01';
+  const ci = runValidator('freshness.mjs', [far], ROOT, { GITHUB_ACTIONS: 'true' });
+  assert.equal(ci.exit, 0);
+  const prompts = ci.out.split('\n').filter((l) => l.trim().startsWith('! ')).length;
+  const warnings = ci.out.split('\n').filter((l) => l.startsWith('::warning title=Content stale::')).length;
+  assert.ok(prompts > 0);
+  assert.equal(warnings, prompts);
+  assert.doesNotMatch(runValidator('freshness.mjs', [far]).out, /::warning/);
+});
+
+test('F9 · a provisional enforcement record re-read within 30 days is not a prompt; one not re-read is', () => {
+  const dir = dataScratch();
+  try {
+    const p = join(dir, 'data', 'enforcement.json');
+    const d = JSON.parse(readFileSync(p, 'utf8'));
+    const r = d.enforcement.find((x) => x.requires_verification);
+    r.id = 'enf-planted-f9';
+    const asOf = '2099-01-31';
+    for (const x of d.enforcement) x.last_verified = asOf;
+    d.$last_verified = asOf;
+    r.last_verified = '2099-01-01';
+    writeFileSync(p, JSON.stringify(d, null, 1));
+    assert.doesNotMatch(runValidator('freshness.mjs', [asOf], dir).out, /enf-planted-f9/, '30 days is inside the window');
+    r.last_verified = '2098-12-31';
+    d.$last_verified = '2098-12-31';
+    writeFileSync(p, JSON.stringify(d, null, 1));
+    assert.match(runValidator('freshness.mjs', [asOf], dir).out, /1 of \d+ provisional enforcement record\(s\) not re-verified in 30 days.*enf-planted-f9/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test('F6 · the prompts are still printed in full — nothing was silenced', () => {

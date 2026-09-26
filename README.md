@@ -205,6 +205,16 @@ interface**. It does not replace opening the pages, but it catches the class
 of defect that survives a visual review because nothing about it looks
 wrong.
 
+**Stale content is a warning, not a failure.** On every push, CI runs
+`freshness.mjs`, and each staleness prompt it prints appears on the run as a
+warning titled "Content stale". A prompt is raised when a dated event has
+passed without being re-verified, when a provisional enforcement record has not
+been re-read within its window, or when a dataset is past its interval. The
+build stays green, because the tree is not wrong, only older. A green build is
+therefore not evidence that the content is current. The rule, the thresholds'
+home, and what closes a prompt (re-reading the source, and nothing else) are in
+`docs/CONTENT-FRESHNESS-POLICY.md`.
+
 ---
 
 ## The footer, and why it is duplicated

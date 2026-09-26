@@ -82,6 +82,11 @@ jobs:
       # with the calendar on unchanged bytes no longer fails a build.
       # The contract is at the head of tools/freshness.mjs and
       # tools/selftest.mjs holds it to it from both sides.
+      #
+      # AUDIT-2026-09-25 T-23: under Actions each prompt is also emitted
+      # as a warning titled "Content stale", so stale content shows on
+      # the run and the pull request, not only in this log. Still a
+      # warning: the step stays green. docs/CONTENT-FRESHNESS-POLICY.md.
       - name: freshness.mjs — how stale the datasets are
         run: node tools/freshness.mjs
 

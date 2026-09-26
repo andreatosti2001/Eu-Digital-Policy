@@ -95,6 +95,24 @@ export const EXPECTED = {
   sources: { days: 180, why: 'URLs rot; the accessed date is the only evidence they were ever reachable' },
 };
 
+/* How long a record whose own text says it will change may go without
+   being re-read. Separate from EXPECTED, which ages whole datasets and
+   which agent/integrate/stale.mjs iterates as a list of files.
+
+   The number lives here and tools/selftest.mjs F5 asserts it;
+   docs/CONTENT-FRESHNESS-POLICY.md gives the rule it belongs to and
+   points here rather than restating it. AUDIT-2026-09-25, T-23. */
+export const RECHECK = {
+  provisional_enforcement: { days: 30, why: 'a preliminary finding, a pending appeal or an unknown payment is the part of the enforcement record most likely to have moved' },
+};
+
+/* In GitHub Actions each prompt is also raised as a workflow warning
+   titled "Content stale", so it shows on the run and on the pull
+   request rather than only in a log. A warning, never an error: the
+   exit code contract above is unchanged. */
+const ANNOTATE = process.env.GITHUB_ACTIONS === 'true';
+const annotation = (s) => `::warning title=Content stale::${s.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A')}`;
+
 /* The audit itself. Guarded so that `node tools/freshness.mjs` behaves
    exactly as it always has, and an import of this module gets the
    intervals without running an audit, printing a report or calling
@@ -109,7 +127,7 @@ if (isMain) {
   let prompts = 0;
   const line = (s) => console.log(s);
   const defect = (s) => { defects++; console.log('  ✗ ' + s); };
-  const flag = (s) => { prompts++; console.log('  ! ' + s); };
+  const flag = (s) => { prompts++; console.log('  ! ' + s); if (ANNOTATE) console.log(annotation(s)); };
 
   line('\nFRESHNESS AUDIT  as of ' + AS_OF);
   line('='.repeat(64));
@@ -189,6 +207,17 @@ if (isMain) {
   for (const [k, v] of Object.entries(prov)) {
     line(`  ${String(v.length).padStart(3)} of ${enf.length}  ${k}`);
     if (v.length && v.length <= 4) v.forEach((r) => line(`         ${r.id}`));
+  }
+
+  /* A provisional record re-read within RECHECK days is current enough;
+     one that is not is a prompt. The record's own last_verified counts
+     where it is later than the file's, as for passed events above. */
+  const enfVer = read('enforcement.json').$last_verified;
+  const recheckedAt = (r) => [enfVer, r.last_verified].filter((d) => typeof d === 'string').sort().pop() || '0000-00-00';
+  const provisional = [...new Set(Object.values(prov).flat())];
+  const overdue = provisional.filter((r) => days(recheckedAt(r), AS_OF) > RECHECK.provisional_enforcement.days);
+  if (overdue.length) {
+    flag(`${overdue.length} of ${provisional.length} provisional enforcement record(s) not re-verified in ${RECHECK.provisional_enforcement.days} days — ${RECHECK.provisional_enforcement.why}: ${overdue.map((r) => r.id).join(', ')}`);
   }
 
   /* the newest thing in the enforcement set, which is the number a reader

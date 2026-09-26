@@ -55,6 +55,7 @@ Read the one you need; do not re-derive its contents here.
 | `docs/DATA-GOVERNANCE.md` | One home per fact, derivation over storage, the three states, the known second homes |
 | `docs/SOURCE-POLICY.md` | What may be cited, what a citation can support, self-citation, the asterisk |
 | `docs/VERIFICATION-POLICY.md` | What each validator does and does **not** prove; reproducibility |
+| `docs/CONTENT-FRESHNESS-POLICY.md` | When the content is called stale, the "Content stale" CI warning, and what alone closes one |
 | `docs/AUTONOMY-AUTHORIZATION-POLICY.md` | SESSION 23: the **executable** policy — the twelve mandatory conditions, the eighteen action categories, the 84-row capability matrix, the six rollback elements, and the hidden Control Room entry |
 | `docs/LIMITED-AUTONOMY.md` | SESSION 26: the **activation** — the grant ledger, the three allowlists, the six gates and the seven steps |
 
