@@ -2,7 +2,7 @@
   "$schema_version": "1.0.0",
   "$description": "Instruments, their nested provisions, and cross-instrument relationships. Instruments carry NO dates: every date is a timeline record referenced by ID through 'milestones'. Instruments carry NO supervisor field: competence is an edge in institutions.json.",
   "$last_verified": "2026-08-27",
-  "$note": "legislative_status is a scalar describing position in the legislative process. It is deliberately NOT sufficient on its own: for staggered instruments the milestones array is authoritative about what actually applies and when. Entry into force and application are never merged. Treaty articles are modelled as provisions of the 'tfeu' and 'teu' instruments (tfeu:art-114, teu:art-4-2), so a legal basis is always a provision ID and never a special case.",
+  "$note": "legislative_status is a scalar describing position in the legislative process. It is deliberately NOT sufficient on its own: for staggered instruments the milestones array is authoritative about what actually applies and when. Entry into force and application are never merged. Treaty articles are modelled as provisions of the 'tfeu' and 'teu' instruments (tfeu:art-114, teu:art-4-2), so a legal basis is always a provision ID and never a special case. AUDIT-2026-09-25 (2026-09-26): records re-read individually against their sources carry that date in their own last_verified; this file's $last_verified is deliberately unchanged, because the file as a whole was not re-read, and moving it would assert that it was.",
   "instruments": [
     {
       "id": "gdpr",

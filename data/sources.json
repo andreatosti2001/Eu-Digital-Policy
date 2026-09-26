@@ -2,7 +2,7 @@
   "$schema_version": "1.0.0",
   "$description": "Canonical source records. One record per document. Referenced by ID from claims, enforcement, timeline, instruments and institutions. A source is never described twice.",
   "$last_verified": "2026-08-28",
-  "$note": "url_status 'url:live' means the URL was fetched or seen in search results on the accessed date during this build. 'url:unchecked' means the reference is recorded but the URL has not been confirmed to resolve. 'url:none' means no citable URL has been located.",
+  "$note": "url_status 'url:live' means the URL was fetched or seen in search results on the accessed date during this build. 'url:unchecked' means the reference is recorded but the URL has not been confirmed to resolve. 'url:none' means no citable URL has been located. AUDIT-2026-09-25 (2026-09-26): records re-read individually against their sources carry that date in their own last_verified; this file's $last_verified is deliberately unchanged, because the file as a whole was not re-read, and moving it would assert that it was.",
   "sources": [
     {
       "id": "src-brief-original",

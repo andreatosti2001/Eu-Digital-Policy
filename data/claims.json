@@ -2,7 +2,7 @@
   "$schema_version": "1.0.0",
   "$description": "Consequential statements drawn from the brief, typed and traced to sources. No new claims were written: every record below corresponds to a statement already present in the prose.",
   "$last_verified": "2026-08-28",
-  "$note": "The 'supports' qualifier on each source reference is the load-bearing field. 'direct' means the source states the proposition; 'partial' means it establishes part of it, a narrower case, or the components from which it is computed; 'context' means it informs the claim without establishing it and is NOT a citation. A claim whose only sources are src-brief-original is by definition unverified, and verification_note says so.",
+  "$note": "The 'supports' qualifier on each source reference is the load-bearing field. 'direct' means the source states the proposition; 'partial' means it establishes part of it, a narrower case, or the components from which it is computed; 'context' means it informs the claim without establishing it and is NOT a citation. A claim whose only sources are src-brief-original is by definition unverified, and verification_note says so. AUDIT-2026-09-25 (2026-09-26): records re-read individually against their sources carry that date in their own last_verified; this file's $last_verified is deliberately unchanged, because the file as a whole was not re-read, and moving it would assert that it was.",
   "claims": [
     {
       "id": "clm-art-114-shapes-everything",

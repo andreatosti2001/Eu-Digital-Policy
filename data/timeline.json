@@ -2,7 +2,7 @@
  "$schema_version": "1.0.0",
  "$description": "Canonical record of every dated regulatory event. Instruments reference these by ID rather than carrying their own copies of dates. Enforcement actions live in enforcement.json and are merged into calendar views by reference, not duplicated here.",
  "$last_verified": "2026-08-27",
- "$note": "event_type is mandatory and distinguishes entry into force from application, transposition, compliance and reporting deadlines, delegated and implementing acts, guidance, designation, judicial events and reviews. date_precision records how precisely the date is published: a month-only event is stored as the first of that month.",
+ "$note": "event_type is mandatory and distinguishes entry into force from application, transposition, compliance and reporting deadlines, delegated and implementing acts, guidance, designation, judicial events and reviews. date_precision records how precisely the date is published: a month-only event is stored as the first of that month. AUDIT-2026-09-25 (2026-09-26): records re-read individually against their sources carry that date in their own last_verified; this file's $last_verified is deliberately unchanged, because the file as a whole was not re-read, and moving it would assert that it was.",
  "events": [
   {
    "id": "tl-gdpr-2016-05-24-entry-into-force",
