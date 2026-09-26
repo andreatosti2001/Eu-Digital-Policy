@@ -341,11 +341,19 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 106 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 105 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 5 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
 ```
+
+**One movement since, recorded with its reason (AUDIT-2026-09-25 T-19, 2026-09-26).** The
+unverified count went from 106 to 105, and only because verification work was done:
+`clm-draghi-statistics` was checked page by page against both parts of the Draghi report,
+its report source is now `supports:direct`, and it therefore stops appearing as
+`claim (no external direct source)`. Its `reference_gap` is **still set** — clearing that is a
+person's decision — so the claim still carries its asterisk. No note was deleted, no flag was
+cleared and nothing was bulk-stamped. The other numbers on this block are unchanged.
 
 **Unchanged in SESSION 30, and that is the point of recording it.** All four still report
 exactly these numbers. `freshness.mjs` reached `exit 0` by the exit code answering a question
