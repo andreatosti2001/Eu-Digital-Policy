@@ -386,12 +386,12 @@
         "activity": ["activity:cloud-services"]
       },
       "outcome": "outcome:applies",
-      "rationale": "Chapter VI is eight articles out of fifty and carries most of the Regulation's practical weight for the software industry. Providers of data processing services must remove all pre-commercial, commercial, technical, contractual and organisational obstacles to switching, and Article 25 prescribes the mandatory contractual terms.",
+      "rationale": "Chapter VI is nine articles (Arts. 23-31) out of fifty and carries most of the Regulation's practical weight for the software industry. Providers of data processing services must remove all pre-commercial, commercial, technical, contractual and organisational obstacles to switching, and Article 25 prescribes the mandatory contractual terms.",
       "obligations": ["data-act:art-25"],
       "authority": ["nca-*"],
       "dates": ["tl-data-act-2025-09-12-application", "tl-data-act-2027-01-12-application"],
       "exemptions": [],
-      "depends_on": ["Whether Chapter VI reaches contracts concluded before 12 September 2025 was left genuinely open in the text."],
+      "depends_on": ["Whether Chapter VI reaches contracts concluded before 12 September 2025: Article 50 phases in only Chapter IV for such contracts, and practitioner analysis reads the switching right as reaching them; the Commission's FAQ (version 1.4) does not address the point."],
       "claims": ["clm-data-act-switching-numbers", "clm-data-act-retroactivity-open"],
       "sources": ["src-eurlex-data-act"],
       "last_verified": "2026-08-27"
@@ -441,7 +441,7 @@
         "activity": ["activity:cloud-services", "activity:connected-products"]
       },
       "outcome": "outcome:possible",
-      "rationale": "The Data Act governs data as such — predominantly non-personal, industrial and machine-generated — and reallocates control over it by default. An organisation may be a data holder, a user or a data recipient depending on the arrangement, and the obligations differ in each role.",
+      "rationale": "The Data Act governs product and service data as such — personal or not, though predominantly non-personal, industrial and machine-generated, with the GDPR prevailing wherever personal data is involved — and reallocates control over it by default. An organisation may be a data holder, a user or a data recipient depending on the arrangement, and the obligations differ in each role.",
       "obligations": ["data-act:art-3-1", "data-act:art-25"],
       "authority": ["nca-*"],
       "dates": ["tl-data-act-2025-09-12-application", "tl-data-act-2027-09-12-application"],

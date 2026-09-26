@@ -1065,7 +1065,7 @@
     "sector:automotive"
    ],
    "obligation": "The Art. 3(1) design obligation applies: connected products must be built so that product and related service data are accessible to the user by default.",
-   "required_action": "Design and document data-access provision for connected products placed on the market from this date.",
+   "required_action": "Design and document data-access provision for connected products and related services placed on the market after this date.",
    "authority": [
     "nca-*"
    ],
@@ -1079,8 +1079,8 @@
     "src-eurlex-data-act"
    ],
    "requires_verification": true,
-   "verification_note": "Date stated by the brief; not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "verification_note": "Art. 50 read on 2026-09-26 from an unofficial reproduction of the text: Art. 3(1) applies to connected products and related services placed on the market after 12 September 2026. Not yet checked against the Official Journal text.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-dma-2026-11-01-designation",

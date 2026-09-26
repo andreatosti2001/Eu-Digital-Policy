@@ -2109,7 +2109,7 @@
     {
       "id": "clm-data-act-non-personal",
       "type": "claim-type:law",
-      "statement": "Where the GDPR governs personal data, the Data Act governs data as such — predominantly non-personal, industrial and machine-generated — and reallocates control over it by default.",
+      "statement": "Where the GDPR governs personal data, the Data Act governs product and service data as such — personal or not, though predominantly non-personal, industrial and machine-generated, with the GDPR prevailing wherever personal data is involved — and reallocates control over it by default.",
       "instruments": [
         "data-act",
         "gdpr"
@@ -2124,6 +2124,11 @@
           "locator": null
         },
         {
+          "source_id": "src-da-text-unofficial-arts-1-50",
+          "supports": "supports:partial",
+          "locator": "Art. 1(2), 1(5)"
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part VI"
@@ -2132,8 +2137,8 @@
       "legal_basis": [],
       "brief_part": "part-6",
       "published": "2023-12-22",
-      "last_verified": "2026-08-27",
-      "verification_note": null
+      "last_verified": "2026-09-26",
+      "verification_note": "Corrected on 2026-09-26 (audit T-13): the earlier wording implied the Data Act concerns non-personal data. Art. 1(2) says it covers personal and non-personal data, and Art. 1(5) that data-protection law prevails in a conflict. Read from an unofficial reproduction (EUR-Lex returns HTTP 202 with no body here). 'Predominantly non-personal, industrial and machine-generated' remains the brief's characterisation."
     },
     {
       "id": "clm-data-act-switching-numbers",
@@ -2172,7 +2177,7 @@
     {
       "id": "clm-data-act-art-3-application",
       "type": "claim-type:law",
-      "statement": "From 12 September 2026 the Data Act Article 3(1) design obligation applies: connected products must be built so that product and related service data are accessible to the user by default.",
+      "statement": "The Data Act Article 3(1) design obligation — connected products must be built so that product and related service data are accessible to the user by default — applies to connected products and related services placed on the market after 12 September 2026.",
       "instruments": [
         "data-act"
       ],
@@ -2190,6 +2195,11 @@
           "locator": "Art. 3(1)"
         },
         {
+          "source_id": "src-da-text-unofficial-arts-1-50",
+          "supports": "supports:partial",
+          "locator": "Art. 50"
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part VI, Annex A"
@@ -2200,8 +2210,8 @@
       ],
       "brief_part": "part-6",
       "published": "2023-12-22",
-      "last_verified": "2026-08-27",
-      "verification_note": "The date is stated by the brief and not confirmed against the consolidated text in this build. Time-critical: this date falls within weeks."
+      "last_verified": "2026-09-26",
+      "verification_note": "Art. 50 read on 2026-09-26 from an unofficial reproduction of the text (EUR-Lex returns HTTP 202 with no body here): 'The obligation resulting from Article 3(1) shall apply to connected products and the services related to them placed on the market after 12 September 2026.' Not yet checked against the Official Journal text."
     },
     {
       "id": "clm-data-act-trade-secret-tension",
@@ -2231,7 +2241,7 @@
     {
       "id": "clm-data-act-retroactivity-open",
       "type": "claim-type:interpretation",
-      "statement": "Whether Data Act Chapter VI applies only to agreements concluded after 12 September 2025 or also to existing contracts was left genuinely open in the text.",
+      "statement": "Data Act Article 50 phases in Chapter IV for pre-existing contracts but contains no equivalent carve-out for Chapter VI, and practitioner analysis reads the switching right as applying to contracts concluded before 12 September 2025 as well; the Commission's Data Act FAQ (version 1.4, January 2026) does not address the point directly.",
       "instruments": [
         "data-act"
       ],
@@ -2242,6 +2252,21 @@
       "enforcement": [],
       "sources": [
         {
+          "source_id": "src-da-text-unofficial-arts-1-50",
+          "supports": "supports:partial",
+          "locator": "Art. 50"
+        },
+        {
+          "source_id": "src-dlapiper-data-act-switching-2025",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
+          "source_id": "src-ec-data-act-faq-v1-4",
+          "supports": "supports:context",
+          "locator": "Questions 42b, 52-58b"
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part VI"
@@ -2250,13 +2275,13 @@
       "legal_basis": [],
       "brief_part": "part-6",
       "published": "2026-08-19",
-      "last_verified": null,
-      "verification_note": "REQUIRES VERIFICATION. A genuine interpretive question, but not anchored in commentary or guidance here."
+      "last_verified": "2026-09-26",
+      "verification_note": "Rewritten on 2026-09-26 (audit T-13). The earlier statement called the point 'genuinely open in the text'; Art. 50 in fact phases in only Chapter IV for pre-existing contracts. Read from an unofficial reproduction of the text (EUR-Lex returns HTTP 202 with no body here). That the switching right reaches earlier contracts is one law firm's reading (DLA Piper, 31 July 2025), not guidance; the Commission's FAQ v1.4 was read and is silent on it. A Digital Omnibus proposal reportedly addresses pre-existing contracts for some services; not read, and not law. The claim ID keeps 'open' because IDs are never renamed."
     },
     {
       "id": "clm-data-act-enforcement-uneven",
       "type": "claim-type:fact",
-      "statement": "Data Act enforcement is national and therefore uneven: Ireland, host to a large share of Europe's cloud infrastructure, was still at the General Scheme stage of its Data Bill in February 2026.",
+      "statement": "Data Act enforcement is national and therefore uneven: Ireland, host to a large share of Europe's cloud infrastructure, published the General Scheme of its Data Bill only on 4 February 2026, designating ComReg and the CCPC, and the Bill was still in pre-legislative scrutiny in mid-2026.",
       "instruments": [
         "data-act"
       ],
@@ -2267,6 +2292,11 @@
       "enforcement": [],
       "sources": [
         {
+          "source_id": "src-matheson-ie-data-bill-2026",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part VI"
@@ -2275,8 +2305,8 @@
       "legal_basis": [],
       "brief_part": "part-6",
       "published": "2026-08-19",
-      "last_verified": "2026-08-28",
-      "verification_note": "REQUIRES VERIFICATION. The Irish Data Bill status is not sourced and is time-sensitive.",
+      "last_verified": "2026-09-26",
+      "verification_note": "The Irish facts are now sourced to Matheson (18 May 2026): General Scheme published 4 February 2026, ComReg and the CCPC appointed, pre-legislative scrutiny continuing. Law-firm commentary, hence partial; the General Scheme itself was not opened, and 'mid-2026' rests on an article dated May. 'Host to a large share of Europe's cloud infrastructure' is still unsourced, so the reference gap is left set.",
       "reference_gap": true,
       "gap_note": "No source located for the position of the Irish Data Bill in February 2026."
     },
