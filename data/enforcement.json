@@ -422,17 +422,18 @@
    "action_status": "action:appealed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",
-   "behavioural_outcome": "Meta subsequently announced a three-tier advertising model for EU users effective January 2026.",
+   "behavioural_outcome": "On 8 December 2025 the Commission acknowledged Meta's undertaking to give EU users, from January 2026, a choice between fully personalised advertising and a less-personalised option sharing less data; the Commission said it would then seek evidence on uptake.",
    "judicial": null,
    "timeline_events": [],
    "claims": [
     "clm-meta-pay-or-consent"
    ],
    "sources": [
-    "src-ec-apple-meta-dma-2025"
+    "src-ec-apple-meta-dma-2025",
+    "src-ec-meta-ad-choice-2025"
    ],
    "requires_verification": true,
-   "verification_note": "The binary pay-or-consent model was found not to provide the genuinely equivalent, less data-intensive alternative Art. 5(2) requires. Appeal status and the three-tier model announcement are stated by the brief and not independently sourced here.",
+   "verification_note": "The binary pay-or-consent model was found not to provide the genuinely equivalent, less data-intensive alternative Art. 5(2) requires. Appeal status is not independently sourced here. The brief's 'three-tier advertising model' was replaced on 2026-09-26 (audit T-18) by what the Commission's 8 December 2025 statement describes: a two-way choice from January 2026.",
    "last_verified": "2026-08-27",
    "appeal": {
     "status": "appeal:pending",

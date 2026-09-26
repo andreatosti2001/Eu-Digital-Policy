@@ -609,6 +609,34 @@
       "note": "EUR 500 million against Apple under Art. 5(4); EUR 200 million against Meta under Art. 5(2)."
     },
     {
+      "id": "src-ec-meta-ad-choice-2025",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Meta commits to give EU users choice on personalised ads under Digital Markets Act",
+      "url": "https://digital-markets-act.ec.europa.eu/meta-commits-give-eu-users-choice-personalised-ads-under-digital-markets-act-2025-12-08_en",
+      "url_status": "url:live",
+      "published": "2025-12-08",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Read 2026-09-26. The Commission acknowledges Meta's undertaking to offer EU users a choice between consenting to share all their data for fully personalised advertising and sharing less data for more limited personalised advertising, presented in January 2026; the Commission will then seek evidence on uptake. Describes a two-way choice; the brief's earlier 'three-tier advertising model' is not in it."
+    },
+    {
+      "id": "src-ec-apple-specification-2025",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission provides guidance under Digital Markets Act to facilitate development of innovative products on Apple's platforms (IP/25/816)",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_25_816",
+      "url_status": "url:live",
+      "published": "2025-03-19",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Read via the Press Corner API on 2026-09-26. On 19 March 2025 the Commission adopted two specification decisions under Art. 6(7): measures for connected-device interoperability and for the process handling developers' interoperability requests; public consultation launched 18 December 2024. The Commission's specification-proceedings Q&A page was also read and mentions no Apple 'waiver' of any features."
+    },
+    {
       "id": "src-ec-booking-designation-2024",
       "tier": "tier:1",
       "type": "source-type:legislative-document",

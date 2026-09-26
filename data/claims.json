@@ -1531,7 +1531,67 @@
       "brief_part": "part-4",
       "published": "2025-04-23",
       "last_verified": "2026-08-27",
-      "verification_note": "The pricing range and the subsequent three-tier model announcement are stated by the brief and not independently sourced."
+      "verification_note": "The pricing range is stated by the brief and not independently sourced. The subsequent ad-model change is now its own claim, clm-meta-ad-choice-2026, sourced to the Commission (audit T-18)."
+    },
+    {
+      "id": "clm-meta-ad-choice-2026",
+      "type": "claim-type:fact",
+      "statement": "In December 2025 the Commission acknowledged Meta's undertaking to give EU users, from January 2026, a choice between fully personalised advertising and a less-personalised option that shares less of their data.",
+      "instruments": [
+        "dma"
+      ],
+      "provisions": [
+        "dma:art-5"
+      ],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [
+        "enf-meta-ec-2025"
+      ],
+      "sources": [
+        {
+          "source_id": "src-ec-meta-ad-choice-2025",
+          "supports": "supports:direct",
+          "locator": null
+        }
+      ],
+      "legal_basis": [
+        "dma:art-5"
+      ],
+      "brief_part": "part-4",
+      "published": "2025-12-08",
+      "last_verified": "2026-09-26",
+      "verification_note": "Added on 2026-09-26 (audits T-18, T-22). Replaces the prose's 'three-tier advertising model', which no source supports: the Commission describes a two-way choice. Whether Meta implemented it as described, and its uptake, are not established."
+    },
+    {
+      "id": "clm-apple-art-6-7-specification",
+      "type": "claim-type:fact",
+      "statement": "In September 2024 the Commission opened Article 6(7) specification proceedings on iOS and iPadOS connectivity features, and on 19 March 2025 adopted two specification decisions setting out how Apple must open those features to third-party devices and handle developers' interoperability requests.",
+      "instruments": [
+        "dma"
+      ],
+      "provisions": [
+        "dma:art-6"
+      ],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-ec-apple-specification-2025",
+          "supports": "supports:direct",
+          "locator": null
+        }
+      ],
+      "legal_basis": [
+        "dma:art-6"
+      ],
+      "brief_part": "part-4",
+      "published": "2025-03-19",
+      "last_verified": "2026-09-26",
+      "verification_note": "Added on 2026-09-26 (audits T-18, T-22). IP/25/816 gives both dates: two specification proceedings opened on 19 September 2024, two decisions adopted on 19 March 2025. The prose's former clause 'Apple invoked a waiver clause for five features and the Commission refused it' was removed: no source was found for it, including the Commission's proceedings page."
     },
     {
       "id": "clm-gc-apple-designation-upheld",
