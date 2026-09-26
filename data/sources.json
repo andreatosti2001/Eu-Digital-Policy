@@ -1559,7 +1559,7 @@
       "accessed": "2026-08-28",
       "language": "en",
       "note": "Located 28 Aug 2026. Records 2,685 fines as at March 2026 and Spain as the most active authority by count (1,048 published fines). CORRECTION SURFACED: the EUR 7.1bn cumulative total and the EUR 4.04bn Irish figure are DLA Piper's, not CMS's — CMS records roughly EUR 6.11bn in directly documented fines. The divergence is exactly what Annex B warns about, and the brief was citing the wrong tracker for those two numbers.",
-      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved."
+      "resolution_note": "Identified and linked: this is the specific publication the brief draws on (see url and note). It is cited as tier-4 commentary: it can support what its authors argue or report, not a legal fact on its own. Rewritten on 2026-09-26 \u2014 the earlier text said no specific publication had been named, which stopped being true when the URL was located."
     },
     {
       "id": "src-legiscope-nis2-tracker-2026",
@@ -1588,7 +1588,7 @@
       "accessed": "2026-08-28",
       "language": "en",
       "note": "Johnny Ryan and Alan Toner, Irish Council for Civil Liberties. Located 28 Aug 2026. Source of both the \"bottleneck\" characterisation and the Spain-issues-ten-times-more-draft-decisions comparison. IMPORTANT: this is a 2021 report. The brief presents the critique in the present tense; the underlying data are five years old and the DPC has since restructured.",
-      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved."
+      "resolution_note": "Identified and linked: this is the specific publication the brief draws on (see url and note). It is cited as tier-4 commentary: it can support what its authors argue or report, not a legal fact on its own. Rewritten on 2026-09-26 \u2014 the earlier text said no specific publication had been named, which stopped being true when the URL was located."
     },
     {
       "id": "src-icle-gdpr-law-of-everything",
@@ -1603,7 +1603,7 @@
       "accessed": "2026-09-26",
       "language": "en",
       "note": "Located 28 Aug 2026. Contains the proportionality-asymmetry argument almost verbatim: the EDPB/EDPS analysis tests whether limitations on data protection are justified without asking whether the scope of data protection remains proportionate to the burdens it imposes. The phrase \"law of everything\" is not ICLE's coinage — see src-purtova-law-of-everything. Re-read 2026-09-26: published 13 March 2026; ICLE itself footnotes the phrase to Purtova (footnote 3: 'The phrase adapts Nadezhda Purtova, The Law of Everything ... (2018) 10 Law Innov Technol 40').",
-      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved."
+      "resolution_note": "Identified and linked: this is the specific publication the brief draws on (see url and note). It is cited as tier-4 commentary: it can support what its authors argue or report, not a legal fact on its own. Rewritten on 2026-09-26 \u2014 the earlier text said no specific publication had been named, which stopped being true when the URL was located."
     },
     {
       "id": "src-algorithmwatch-systemic-risk",
@@ -1618,7 +1618,7 @@
       "accessed": "2026-08-28",
       "language": "en",
       "note": "Oliver Marsh, AlgorithmWatch. Located 28 Aug 2026. The report records that Recitals 79–89 were often not seen as providing clarity and were argued to confuse the Articles further — the brief's claim. Note the report's own headline finding is that practical problems outweigh conceptual ones, which is a slightly different emphasis from the brief's.",
-      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved."
+      "resolution_note": "Identified and linked: this is the specific publication the brief draws on (see url and note). It is cited as tier-3 research: it can support what its authors argue or report, not a legal fact on its own. Rewritten on 2026-09-26 \u2014 the earlier text said no specific publication had been named, which stopped being true when the URL was located."
     },
     {
       "id": "src-cset-gpai-code",
@@ -1633,7 +1633,7 @@
       "accessed": "2026-08-28",
       "language": "en",
       "note": "Mia Hoffmann, Center for Security and Emerging Technology, Georgetown. Located 28 Aug 2026. States that the safety and security chapter sets a minimum standard going beyond current industry practice, provided the Code is widely adopted — which is the brief's claim, including the proviso.",
-      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved."
+      "resolution_note": "Identified and linked: this is the specific publication the brief draws on (see url and note). It is cited as tier-3 research: it can support what its authors argue or report, not a legal fact on its own. Rewritten on 2026-09-26 \u2014 the earlier text said no specific publication had been named, which stopped being true when the URL was located."
     },
     {
       "id": "src-noyb-omnibus",
@@ -1648,7 +1648,7 @@
       "accessed": "2026-08-28",
       "language": "en",
       "note": "Located 28 Aug 2026. noyb states the GDPR and ePrivacy amendments would produce multiple conflicts with the Charter and a clear departure from the GDPR's logic and CJEU case law — the brief's wording tracks this closely. V3 also comments on the EDPB/EDPS joint opinion of 11 Feb 2026.",
-      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved."
+      "resolution_note": "Identified and linked: this is the specific publication the brief draws on (see url and note). It is cited as tier-4 commentary: it can support what its authors argue or report, not a legal fact on its own. Rewritten on 2026-09-26 \u2014 the earlier text said no specific publication had been named, which stopped being true when the URL was located."
     },
     {
       "id": "src-itif-dma-compliance",
@@ -1663,7 +1663,7 @@
       "accessed": "2026-08-28",
       "language": "en",
       "note": "Located 28 Aug 2026. Carries the \"opaque and administratively complex\" characterisation and the argument that a gatekeeper may struggle to know whether it is compliant, let alone deliberately violate. Note that ITIF is itself quoting studies for the first phrase.",
-      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved."
+      "resolution_note": "Identified and linked: this is the specific publication the brief draws on (see url and note). It is cited as tier-4 commentary: it can support what its authors argue or report, not a legal fact on its own. Rewritten on 2026-09-26 \u2014 the earlier text said no specific publication had been named, which stopped being true when the URL was located."
     },
     {
       "id": "src-papakonstantinou-dehert",
@@ -1678,7 +1678,7 @@
       "accessed": "2026-08-28",
       "language": "en",
       "note": "Technology and Regulation, 2022, 48–60. Open access. Located 28 Aug 2026: the paper is the origin of both terms the brief uses, and it identifies the same three phenomena. The authors later expanded it into a Routledge monograph (2024); the brief's characterisation matches the paper.",
-      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved."
+      "resolution_note": "Identified and linked: this is the specific publication the brief draws on (see url and note). It is cited as tier-3 research: it can support what its authors argue or report, not a legal fact on its own. Rewritten on 2026-09-26 \u2014 the earlier text said no specific publication had been named, which stopped being true when the URL was located."
     },
     {
       "id": "src-cdt-ai-act-national-security",
