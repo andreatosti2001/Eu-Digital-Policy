@@ -97,6 +97,105 @@
       "verification_note": "The Bruegel brief argues for an independent EU enforcement authority and supports the institutional half of the argument. The specific staffing figures are not verified."
     },
     {
+      "id": "clm-vagueness-is-delegation",
+      "type": "claim-type:interpretation",
+      "statement": "The operative standards of the EU digital rulebook — systemic risk, high-impact capabilities, effective interoperability, genuinely equivalent alternative — are almost all open-textured, so the law's effective content is set by Commission guidelines, delegated acts, codes of practice and harmonised standards rather than by the legislature.",
+      "instruments": [
+        "dsa",
+        "dma",
+        "ai-act"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-brief-original",
+          "supports": "supports:direct",
+          "locator": "Part IX"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-9",
+      "published": "2026-08-19",
+      "last_verified": null,
+      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. Related, instrument-level: clm-art-34-open-concept."
+    },
+    {
+      "id": "clm-overlap-one-control-set",
+      "type": "claim-type:interpretation",
+      "statement": "A single recommender system can engage the GDPR, the DSA, the AI Act and, for a gatekeeper, the DMA at once, so the rational compliance strategy is one control set mapped to several regimes.",
+      "instruments": [
+        "gdpr",
+        "dsa",
+        "ai-act",
+        "dma"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-brief-original",
+          "supports": "supports:direct",
+          "locator": "Part IX"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-9",
+      "published": "2026-08-19",
+      "last_verified": null,
+      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. The article-level overlap is partly covered by clm-three-impact-assessments; the article lists in the prose have not been checked one by one."
+    },
+    {
+      "id": "clm-rulebook-foreign-policy",
+      "type": "claim-type:interpretation",
+      "statement": "Because every designated gatekeeper undertaking and nearly every VLOP is non-European, the rulebook is a foreign-policy object: this shapes the timing of decisions, the choice between fines and commitments, and the political viability of expanding scope.",
+      "instruments": [
+        "dma",
+        "dsa"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-brief-original",
+          "supports": "supports:direct",
+          "locator": "Part IX"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-9",
+      "published": "2026-08-19",
+      "last_verified": null,
+      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. The gatekeeper half is the sourced fact clm-dma-asymmetry; 'nearly every VLOP' is not separately sourced."
+    },
+    {
+      "id": "clm-consolidation-contested",
+      "type": "claim-type:interpretation",
+      "statement": "2016-2024 was the accumulation phase of EU digital regulation and 2025-2027 is a consolidation phase, but consolidation is contested from within: simplification and expansion are happening in the same instruments.",
+      "instruments": [
+        "gdpr",
+        "ai-act"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-brief-original",
+          "supports": "supports:direct",
+          "locator": "Part IX"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-9",
+      "published": "2026-08-19",
+      "last_verified": null,
+      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. Its two supporting examples are facts recorded elsewhere and time-sensitive: the Council position on the Digital Omnibus (see the T-02 records) and the AI Omnibus prohibitions (tl-ai-act-2026-12-02-application)."
+    },
+    {
       "id": "clm-gdpr-gravitational-centre",
       "type": "claim-type:interpretation",
       "statement": "The GDPR is the instrument every other one either builds on, carves an exception from, or must be reconciled with.",
