@@ -77,6 +77,11 @@ direct** source. Consequences an agent must not attempt to route around:
   quoting studies for the first phrase."*
 - **Adjusting a source's `tier` to raise a claim's grade is falsification.**
   Tier describes the publisher, not the usefulness of the citation.
+- **`tier:1` is enforced, not just described.** `tools/source-contract.mjs`
+  `TIER1_TYPES` admits only regulation, judgment, legislative-document and
+  decision; `tools/validate.mjs` fails on a tier:1 press release, court press
+  release, guidance page or report (AUDIT-2026-09-25 T-31, after 22 such records
+  had to be moved to tier:2 in T-30).
 - A source's `publisher` must resolve to an institution ID (or `eu`), so
   "who says this" is itself structured data.
 

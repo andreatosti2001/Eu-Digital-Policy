@@ -168,6 +168,18 @@ export const SOURCE_FIELDS = Object.freeze({
  *  a different piece of work and "other" would erase the distinction. */
 export const RESOLUTIONS = Object.freeze(['url-not-located', 'publication-not-identified', 'self-reference']);
 
+/** The only document types that may be tier:1 ("Primary law and courts").
+ *  AUDIT-2026-09-25 T-30/T-31: tier:1 is for legislation, acts in the
+ *  Official Journal and judgments. A press release — the Commission's or
+ *  a court's — a policy page, guidance or a report is tier:2 at most,
+ *  because it describes the law rather than being it. Before this rule,
+ *  22 such records were tier:1 and the bibliography's "Primary law" count
+ *  was inflated by them. */
+export const TIER1_TYPES = Object.freeze([
+  'source-type:regulation', 'source-type:judgment',
+  'source-type:legislative-document', 'source-type:decision',
+]);
+
 /**
  * Retrieval-bookkeeping fields `agent/policy/governance.mjs` allowlists
  * for limited autonomy on this dataset and which the dataset does not
@@ -239,6 +251,9 @@ export function violations(rec) {
   if (rec.accessed != null && !ISO_DAY.test(String(rec.accessed))) out.push(`\`accessed\` is not YYYY-MM-DD: ${rec.accessed}`);
   if (rec.published != null && !PUBLISHED.test(String(rec.published))) out.push(`\`published\` is not YYYY, YYYY-MM or YYYY-MM-DD: ${rec.published}`);
   if (rec.language != null && !/^[a-z]{2}$/.test(String(rec.language))) out.push(`\`language\` is not an ISO 639-1 code: ${rec.language}`);
+  if (rec.tier === 'tier:1' && !TIER1_TYPES.includes(rec.type)) {
+    out.push(`is tier:1 but its type is ${rec.type}; tier:1 is only for ${TIER1_TYPES.join(', ')}. A press release, guidance or report describes the law and is tier:2 at most.`);
+  }
 
   return out;
 }

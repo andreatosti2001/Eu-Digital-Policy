@@ -456,6 +456,20 @@ test('B9 · a data file that does not parse is REPORTED by name, not a crash', (
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('B10 · tier:1 is refused for anything that is not law or a judgment', () => {
+  /* AUDIT-2026-09-25 T-31. The base record is a tier:1 regulation and
+     passes; the same record as a press release, a court press release,
+     guidance or a report does not. */
+  const base = { id: 'src-x', tier: 'tier:1', type: 'source-type:regulation', publisher: 'eu',
+    publisher_name: 'EU', title: 'T', url: 'https://e.example/x', url_status: 'url:live',
+    published: '2026-01-01', accessed: '2026-01-02', language: 'en', note: null };
+  assert.deepEqual(violations(base), []);
+  for (const t of ['source-type:press-release', 'source-type:court-press-release', 'source-type:guidance', 'source-type:report']) {
+    assert.ok(violations({ ...base, type: t }).some((x) => /is tier:1 but its type/.test(x)), `${t} at tier:1 was not refused`);
+    assert.deepEqual(violations({ ...base, type: t, tier: 'tier:2' }), [], `${t} at tier:2 must pass`);
+  }
+});
+
 test('B8 · the three URL-less records each record WHY, and the reasons are the closed set', () => {
   const db = JSON.parse(readFileSync(join(ROOT, 'data', 'sources.json'), 'utf8'));
   const noUrl = db.sources.filter((r) => r.url == null);
