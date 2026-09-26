@@ -77,6 +77,20 @@
       "note": "Title and number confirmed by fetch. The metadata field scraped for entry into force returned an application milestone rather than the entry-into-force date; the entry-into-force record is flagged for confirmation against the consolidated text."
     },
     {
+      "id": "src-aia-text-unofficial-arts-2-4",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "artificialintelligenceact.eu (unofficial AI Act Explorer)",
+      "title": "EU AI Act Explorer — Article 2 (Scope) and Article 4 (AI literacy), as amended",
+      "url": "https://artificialintelligenceact.eu/article/2/",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Privately published explorer of Regulation (EU) 2024/1689, marking the Digital Omnibus amendments; not an official text. Art. 2 and Art. 4 pages (same URL pattern) read on 2026-09-26. Art. 2(3): the Regulation does not apply to AI systems where and in so far as they are placed on the market, put into service, or used with or without modification exclusively for military, defence or national security purposes. Art. 4(1), as amended: providers and deployers of AI systems shall take measures to support the development of AI literacy of their staff and others operating AI on their behalf, without being required to guarantee any specific level; new Art. 4(2)-(3) task the Commission, Member States and the Board with supporting it. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+    },
+    {
       "id": "src-eurlex-data-act",
       "tier": "tier:1",
       "type": "source-type:regulation",
@@ -229,6 +243,20 @@
       "accessed": "2026-08-27",
       "language": "en",
       "note": null
+    },
+    {
+      "id": "src-cjeu-c623-17-pr",
+      "tier": "tier:2",
+      "type": "source-type:court-press-release",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "Press Release No 123/20 — Case C-623/17 Privacy International and Joined Cases C-511/18, C-512/18 and C-520/18 La Quadrature du Net and Others",
+      "url": "https://curia.europa.eu/jcms/upload/docs/application/pdf/2020-10/cp200123en.pdf",
+      "url_status": "url:live",
+      "published": "2020-10-06",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Read on 2026-09-26. Several Member States argued that the e-Privacy Directive does not apply to national legislation whose purpose is to safeguard national security, citing the third sentence of Article 4(2) TEU; the Court held that national legislation requiring providers of electronic communications services to retain traffic and location data, or to forward it to security and intelligence authorities, for that purpose falls within the scope of the Directive. Tier 2 under the audit's rule for press releases; the judgment itself was not opened."
     },
     {
       "id": "src-gc-apple-designation-2026",
@@ -562,9 +590,37 @@
       "url": "https://digital-strategy.ec.europa.eu/en/policies/ai-code-practice",
       "url_status": "url:live",
       "published": "2025-07-10",
-      "accessed": "2026-08-27",
+      "accessed": "2026-09-26",
       "language": "en",
       "note": "Confirms the final version was received on 10 July 2025 and sets out the drafting timeline: first draft, second draft (19 Dec 2024), third draft (11 Mar 2025), final version (10 Jul 2025). The brief's 'after four drafts' is only accurate if the final text is counted as the fourth."
+    },
+    {
+      "id": "src-ec-gpai-code-safety-security",
+      "tier": "tier:2",
+      "type": "source-type:guidance",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "General-Purpose AI Code of Practice — Safety and Security chapter (PDF)",
+      "url": "https://ec.europa.eu/newsroom/dae/redirection/document/118119",
+      "url_status": "url:live",
+      "published": "2025-07-10",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Downloaded from the Commission's Code of Practice page and read on 2026-09-26. Appendix 1.4 (p. 37) lists the 'specified systemic risks' every signatory identifies under Measure 2.1(2): (1) chemical, biological, radiological and nuclear; (2) loss of control; (3) cyber offence; (4) harmful manipulation. Hallucination is not among them; Appendix 1.3.2 names a 'tendency to hallucinate, to produce misinformation, or to obscure sources of information' only as a model propensity that may be a source of systemic risk. Drafted by independent experts; published by the Commission."
+    },
+    {
+      "id": "src-ec-gpai-guidelines-2025",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission publishes guidelines for providers of general-purpose AI models",
+      "url": "https://digital-strategy.ec.europa.eu/en/news/commission-publishes-guidelines-providers-general-purpose-ai-models",
+      "url_status": "url:live",
+      "published": "2025-07-18",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "News item read on 2026-09-26, with the Commission's FAQ page on the same guidelines. The guidelines define general-purpose AI models as those trained with more than 10^23 FLOP and able to generate language (text or audio), text-to-image or text-to-video; the FAQ calls this an 'indicative criterion', with possible exceptions. The guidelines themselves were not opened."
     },
     {
       "id": "src-ec-dsa-data-access-2025",

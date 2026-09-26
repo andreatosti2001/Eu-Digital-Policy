@@ -353,7 +353,7 @@
       "obligations": ["ai-act:art-5", "ai-act:art-27"],
       "authority": ["nca-*", "ec"],
       "dates": ["tl-ai-act-2025-02-02-application"],
-      "exemptions": ["Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to systems used for military, defence or national security purposes. The brief argues this carve-out is the structural source of the asymmetry between constraint on corporate and on state power."],
+      "exemptions": ["Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)). The brief argues this carve-out is the structural source of the asymmetry between constraint on corporate and on state power."],
       "depends_on": ["Whether the use is characterised as national security, which the Act does not itself resolve."],
       "claims": ["clm-art-5-binds-states", "clm-art-4-2-teu-carve-out", "clm-enforcement-asymmetry"],
       "sources": ["src-eurlex-ai-act"],

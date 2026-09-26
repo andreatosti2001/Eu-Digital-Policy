@@ -1762,7 +1762,7 @@
     {
       "id": "clm-ai-act-not-all-ai",
       "type": "claim-type:law",
-      "statement": "The AI Act does not regulate all AI: the Commission's position is that the vast majority of AI systems used in the Union — spam filters, AI-enabled video games — fall in the minimal-risk tier with no obligations.",
+      "statement": "The AI Act does not regulate all AI: the Commission's position is that the vast majority of AI systems used in the Union — spam filters, AI-enabled video games — fall in the minimal-risk tier, with no obligations specific to that tier, although the Article 4 AI-literacy duty applies to providers and deployers of all AI systems.",
       "instruments": [
         "ai-act"
       ],
@@ -1780,6 +1780,11 @@
           "locator": "Art. 6"
         },
         {
+          "source_id": "src-aia-text-unofficial-arts-2-4",
+          "supports": "supports:partial",
+          "locator": "Art. 4"
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part V"
@@ -1790,8 +1795,8 @@
       ],
       "brief_part": "part-5",
       "published": "2026-08-19",
-      "last_verified": "2026-08-27",
-      "verification_note": "The tier structure is verified. The Commission's specific position statement is not separately sourced."
+      "last_verified": "2026-09-26",
+      "verification_note": "The tier structure is verified. The Commission's specific position statement is not separately sourced. Corrected on 2026-09-26 (audit T-11): 'no obligations' overstated the minimal-risk tier, because Art. 4 applies to providers and deployers of AI systems generally. Art. 4 as amended by the Digital Omnibus (Reg. (EU) 2026/1744) was read from an unofficial explorer, not the Official Journal: the duty is now to 'take measures to support the development of AI literacy' rather than to ensure a sufficient level of it."
     },
     {
       "id": "clm-art-25-provider-trap",
@@ -1886,7 +1891,7 @@
     {
       "id": "clm-gpai-code-four-drafts",
       "type": "claim-type:fact",
-      "statement": "The GPAI Code of Practice was finalised on 10 July 2025 after four drafts.",
+      "statement": "The GPAI Code of Practice was finalised on 10 July 2025 after three drafts and a final text.",
       "instruments": [
         "ai-act"
       ],
@@ -1907,8 +1912,8 @@
       "legal_basis": [],
       "brief_part": "part-5",
       "published": "2025-07-10",
-      "last_verified": "2026-08-27",
-      "verification_note": "PARTIAL SUPPORT — LIKELY IMPRECISE. The Commission timeline shows a first draft, a second draft (19 December 2024), a third draft (11 March 2025) and the final version (10 July 2025). 'Four drafts' is only accurate if the final text is counted as the fourth. The date is correct. Recommend rewording the prose in a later phase."
+      "last_verified": "2026-09-26",
+      "verification_note": "Re-read on 2026-09-26: the Commission's timeline shows a first draft, a second draft (19 December 2024), a third draft (11 March 2025) and the final version received on 10 July 2025. The statement now matches the prose, which already said 'three drafts and a final text'. The claim ID keeps 'four-drafts' because IDs are never renamed."
     },
     {
       "id": "clm-ai-act-standards-not-ready",
@@ -2675,7 +2680,7 @@
     {
       "id": "clm-art-4-2-teu-carve-out",
       "type": "claim-type:law",
-      "statement": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to AI systems used for military, defence or national security purposes.",
+      "statement": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to AI systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)); the Court of Justice has nonetheless held that national data-retention legislation adopted for national-security purposes falls within EU law (Privacy International, C-623/17).",
       "instruments": [
         "teu",
         "ai-act"
@@ -2692,6 +2697,16 @@
           "locator": "Art. 2 exclusions"
         },
         {
+          "source_id": "src-aia-text-unofficial-arts-2-4",
+          "supports": "supports:partial",
+          "locator": "Art. 2(3)"
+        },
+        {
+          "source_id": "src-cjeu-c623-17-pr",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part XI"
@@ -2702,8 +2717,8 @@
       ],
       "brief_part": "part-11",
       "published": "2026-08-19",
-      "last_verified": "2026-08-27",
-      "verification_note": "The AI Act exclusions have not been checked against the text in this build."
+      "last_verified": "2026-09-26",
+      "verification_note": "Corrected on 2026-09-26 (audit T-11): the exclusion is for systems used 'exclusively' for military, defence or national security purposes, not 'at all'. Art. 2(3) was read from an unofficial explorer of the text, not the Official Journal (EUR-Lex returns HTTP 202 with no body here). The Privacy International counterweight rests on CURIA Press Release No 123/20; the judgment was not opened, and the case concerns the e-Privacy Directive, not the AI Act, so it supports the limit on national-security carve-outs only by analogy. The provision link ai-act:art-5 looks wrong (the exclusion is Art. 2); no ai-act:art-2 provision record exists yet, so it is left for a person to add."
     },
     {
       "id": "clm-art-5-binds-states",
