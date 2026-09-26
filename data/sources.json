@@ -1139,6 +1139,34 @@
       "note": "Press release IP/26/1714."
     },
     {
+      "id": "src-hunton-ai-omnibus-2026",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "Hunton Andrews Kurth LLP",
+      "title": "EU Digital Omnibus on AI Enters Into Force",
+      "url": "https://www.hunton.com/privacy-and-cybersecurity-law-blog/eu-digital-omnibus-on-ai-enters-into-force",
+      "url_status": "url:live",
+      "published": "2026-07-28",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Law firm client alert. States the Digital Omnibus (Regulation (EU) 2026/1744) entered into force 27 July 2026, and gives the key AI Act dates directly: 2 August 2026 transparency obligations enter into force; 2 December 2026 marking obligations apply to systems already on the market before 2 August 2026; 2 December 2027 Annex III stand-alone high-risk; 2 August 2028 Annex I embedded high-risk."
+    },
+    {
+      "id": "src-nicfab-ai-omnibus-2026",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "NicFab",
+      "title": "Digital Omnibus AI: Official Journal (closing article of a ten-part series)",
+      "url": "https://nicfab.eu/en/posts/digital-omnibus-ai-official-journal/",
+      "url_status": "url:live",
+      "published": "2026-07-28",
+      "accessed": "2026-09-26",
+      "language": "en",
+      "note": "Detailed practitioner analysis of Regulation (EU) 2026/1744, published in the Official Journal 24 July 2026 and in force from 27 July 2026. Quotes the inserted Art. 5(1) points (ba) (non-consensual AI-generated intimate imagery, tracking and tightening the GDPR consent standard) and (bb) (the same conduct in relation to material within the meaning of Directive 2011/93/EU, i.e. CSAM), both applying from 2 December 2026, the same date given for the end of the Art. 50(2) marking transition for systems already on the market before 2 August 2026."
+    },
+    {
       "id": "src-dlapiper-gdpr-survey-2026",
       "tier": "tier:4",
       "type": "source-type:report",

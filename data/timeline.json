@@ -1120,7 +1120,8 @@
    "event_type": "event:application",
    "instrument": "ai-act",
    "provisions": [
-    "ai-act:art-50"
+    "ai-act:art-50",
+    "ai-act:art-5"
    ],
    "affected_actors": [
     "actor:ai-provider",
@@ -1129,8 +1130,8 @@
    "sectors": [
     "sector:cross-sector"
    ],
-   "obligation": "Art. 50(2) machine-readable marking of synthetic content; prohibition on AI nudification and CSAM-generating systems.",
-   "required_action": "Implement machine-readable marking for AI-generated or manipulated content.",
+   "obligation": "Two distinct things happen on this date, not one. The new Art. 5(1) prohibitions inserted by the Digital Omnibus (points (ba) and (bb): AI-generated non-consensual intimate imagery, and the same conduct in relation to CSAM material) apply from this date. Separately, providers of synthetic-content-generating AI systems already on the market before 2 August 2026 — the AI Act's general application date, and the date Art. 50(2) marking itself took effect for new systems — must complete Art. 50(2) machine-readable marking by this date: it is the end of a transition period for pre-existing systems, not the marking obligation's own application date.",
+   "required_action": "Implement machine-readable marking for AI-generated or manipulated content already on the market before 2 August 2026; comply with the new Art. 5(1) prohibitions from this date for all systems.",
    "authority": [
     "nca-*"
    ],
@@ -1138,12 +1139,12 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original",
-    "src-ec-ai-act-framework"
+    "src-hunton-ai-omnibus-2026",
+    "src-nicfab-ai-omnibus-2026"
    ],
    "requires_verification": false,
-   "verification_note": "Resolved. The Commission's AI Act material gives 2 December 2026 for the Article 50(2) marking obligation and the prohibitions on AI nudification and CSAM-generating systems. The earlier flag came from reading only the AI Omnibus entry-into-force announcement, which lists the high-risk dates and not this one — an absence in one document, not a contradiction.",
-   "last_verified": "2026-08-27"
+   "verification_note": "Corrected 26 Sep 2026. The previous note treated 2 December 2026 as if it were Art. 50(2)'s own application date; it is not — Art. 50 applies from 2 August 2026 (the AI Act's general application date), and 2 December 2026 is specifically the end of the transition period for marking systems already on the market before that date, confirmed directly by Hunton's key-dates list and by NicFab's detailed article on Regulation (EU) 2026/1744. The same date does separately carry the new Art. 5(1)(ba)/(bb) prohibitions, confirmed by NicFab, which quotes the inserted text directly.",
+   "last_verified": "2026-09-26"
   },
   {
    "id": "tl-pld-2026-12-09-application",
