@@ -3139,7 +3139,7 @@
         "ai-act"
       ],
       "provisions": [
-        "ai-act:art-5"
+        "ai-act:art-2"
       ],
       "institutions": [],
       "enforcement": [],
@@ -3171,7 +3171,7 @@
       "brief_part": "part-11",
       "published": "2026-08-19",
       "last_verified": "2026-09-26",
-      "verification_note": "Corrected on 2026-09-26 (audit T-11): the exclusion is for systems used 'exclusively' for military, defence or national security purposes, not 'at all'. Art. 2(3) was read from an unofficial explorer of the text, not the Official Journal (EUR-Lex returns HTTP 202 with no body here). The Privacy International counterweight rests on CURIA Press Release No 123/20; the judgment was not opened, and the case concerns the e-Privacy Directive, not the AI Act, so it supports the limit on national-security carve-outs only by analogy. The provision link ai-act:art-5 looks wrong (the exclusion is Art. 2); no ai-act:art-2 provision record exists yet, so it is left for a person to add."
+      "verification_note": "Corrected on 2026-09-26 (audit T-11): the exclusion is for systems used 'exclusively' for military, defence or national security purposes, not 'at all'. Art. 2(3) was read from an unofficial explorer of the text, not the Official Journal (EUR-Lex returns HTTP 202 with no body here). The Privacy International counterweight rests on CURIA Press Release No 123/20; the judgment was not opened, and the case concerns the e-Privacy Directive, not the AI Act, so it supports the limit on national-security carve-outs only by analogy. The provision link now points to ai-act:art-2, added on 2026-09-26 at the author's direction (it previously pointed to Art. 5 by mistake)."
     },
     {
       "id": "clm-art-5-binds-states",

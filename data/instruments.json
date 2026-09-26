@@ -805,6 +805,20 @@
       },
       "provisions": [
         {
+          "id": "ai-act:art-2",
+          "number": "2(3)",
+          "heading": "Scope — exclusion of military, defence and national security",
+          "summary": "The Regulation does not apply to AI systems where and in so far as they are placed on the market, put into service, or used with or without modification exclusively for military, defence or national security purposes, regardless of the type of entity carrying out those activities; nor does it affect Member States' competences concerning national security.",
+          "obligation_on": [],
+          "claims": [
+            "clm-art-4-2-teu-carve-out"
+          ],
+          "sources": [
+            "src-eurlex-ai-act",
+            "src-aia-text-unofficial-arts-2-4"
+          ]
+        },
+        {
           "id": "ai-act:art-3-63",
           "number": "3(63)",
           "heading": "Definition of a general-purpose AI model",
@@ -2288,7 +2302,7 @@
       "summary": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to AI systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)). This is the structural source of the asymmetry between constraint on corporate and on state power.",
       "provisions": [
         "teu:art-4-2",
-        "ai-act:art-5"
+        "ai-act:art-2"
       ],
       "claims": [
         "clm-art-4-2-teu-carve-out",
