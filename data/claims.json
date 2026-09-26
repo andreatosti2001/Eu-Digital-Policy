@@ -58,8 +58,8 @@
       "legal_basis": [],
       "brief_part": "part-1",
       "published": null,
-      "last_verified": "2026-08-27",
-      "verification_note": "requires verification — the specific publication by Papakonstantinou and De Hert has not been identified and no URL located."
+      "last_verified": "2026-09-26",
+      "verification_note": "The publication is identified and open: Papakonstantinou and De Hert, 'The Regulation of Digital Technologies in the EU: the law-making phenomena of act-ification, GDPR mimesis and EU law brutality', Technology and Regulation, published 21 May 2022 (techreg.org, read 2026-09-26). Its abstract names act-ification and GDPR mimesis among three phenomena common to most EU technology regulation. The four-element description in the statement (vocabulary, principles, case-specific rights, supervisory apparatus) was not checked against the full text, which was not opened."
     },
     {
       "id": "clm-capacity-ambition-gap",
@@ -2631,14 +2631,9 @@
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-draghi-report-2024",
+          "source_id": "src-ec-draghi-report",
           "supports": "supports:direct",
           "locator": "Part A, p. 24 (70%, 65%, 2%, 22%, 17%); Part B, p. 77 (under 16% in 2021)"
-        },
-        {
-          "source_id": "src-ec-draghi-report",
-          "supports": "supports:context",
-          "locator": null
         },
         {
           "source_id": "src-brief-original",
@@ -2956,18 +2951,13 @@
           "source_id": "src-edpb-jo-2-2026",
           "supports": "supports:direct",
           "locator": null
-        },
-        {
-          "source_id": "src-cjeu-c413-23p",
-          "supports": "supports:partial",
-          "locator": null
         }
       ],
       "legal_basis": [],
       "brief_part": "part-11",
       "published": "2026-02",
-      "last_verified": "2026-08-27",
-      "verification_note": "The Joint Opinions on the Omnibus proposals directly evidence public opposition to Commission proposals."
+      "last_verified": "2026-09-26",
+      "verification_note": "The Joint Opinions on the Omnibus proposals directly evidence public opposition to Commission proposals. The judgment in C-413/23 P (EDPS v SRB, on pseudonymisation and identifiability) was removed on 2026-09-26 (audit T-30): it is litigation against an EU agency about the concept of personal data, not opposition to a Commission legislative proposal."
     },
     {
       "id": "clm-ep-privacy-defender",

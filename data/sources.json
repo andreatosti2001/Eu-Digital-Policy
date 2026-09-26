@@ -386,7 +386,7 @@
     },
     {
       "id": "src-cjeu-c413-23p-pr",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:court-press-release",
       "publisher": "cjeu",
       "publisher_name": "Court of Justice of the European Union",
@@ -414,7 +414,7 @@
     },
     {
       "id": "src-gc-apple-designation-2026",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:court-press-release",
       "publisher": "gc",
       "publisher_name": "General Court of the European Union",
@@ -428,7 +428,7 @@
     },
     {
       "id": "src-gc-supervisory-fee-2025",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:court-press-release",
       "publisher": "gc",
       "publisher_name": "General Court of the European Union",
@@ -470,7 +470,7 @@
     },
     {
       "id": "src-ec-x-fine-2025",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -498,7 +498,7 @@
     },
     {
       "id": "src-ec-temu-fine-2026",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -526,7 +526,7 @@
     },
     {
       "id": "src-ec-tiktok-commitments-2025",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -540,7 +540,7 @@
     },
     {
       "id": "src-ec-tiktok-addictive-2026",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -554,7 +554,7 @@
     },
     {
       "id": "src-ec-meta-addictive-2026",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -568,7 +568,7 @@
     },
     {
       "id": "src-ec-tiktok-minors-2026",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -582,7 +582,7 @@
     },
     {
       "id": "src-ec-apple-meta-dma-2025",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -624,7 +624,7 @@
     },
     {
       "id": "src-ec-google-adtech-2025",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -750,7 +750,7 @@
     },
     {
       "id": "src-ec-nis2-referral-2026",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -764,7 +764,7 @@
     },
     {
       "id": "src-ec-nis2-lfn-2024",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -778,7 +778,7 @@
     },
     {
       "id": "src-ec-gpai-code",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:guidance",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -820,7 +820,7 @@
     },
     {
       "id": "src-ec-dsa-data-access-2025",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -834,7 +834,7 @@
     },
     {
       "id": "src-ec-dsa-data-access-portal",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -848,7 +848,7 @@
     },
     {
       "id": "src-ec-ai-omnibus-in-force",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -862,7 +862,7 @@
     },
     {
       "id": "src-ec-dma-review-2026",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:report",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -876,7 +876,7 @@
     },
     {
       "id": "src-ec-dma-review-qa",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:guidance",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -890,7 +890,7 @@
     },
     {
       "id": "src-ec-dma-consultation-2026",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -904,7 +904,7 @@
     },
     {
       "id": "src-ec-tech-sovereignty-2026",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:press-release",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -932,7 +932,7 @@
     },
     {
       "id": "src-ec-draghi-report",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:report",
       "publisher": "ec",
       "publisher_name": "European Commission",
@@ -940,9 +940,9 @@
       "url": "https://commission.europa.eu/topics/competitiveness/draghi-report_en",
       "url_status": "url:live",
       "published": "2024-09-09",
-      "accessed": "2026-08-27",
+      "accessed": "2026-09-26",
       "language": "en",
-      "note": "Official landing page. The individual statistics cited in Part X have not been checked against the report text and are flagged for verification."
+      "note": "The Commission's Draghi report page. Merged on 2026-09-26 (audit T-30) with the former src-draghi-report-2024, which described the same report through a newsroom URL (ec.europa.eu/newsroom/growth/items/847989). Part A (A competitiveness strategy for Europe) and Part B (In-depth analysis and recommendations). Both PDFs were downloaded from the Commission's Draghi report page (commission.europa.eu/document/download/97e481fd-2dc3-412d-be4c-f152a8232961_en and ec1409c1-d4b4-4882-8bdd-3519f86bbb92_en) and read on 2026-09-26. Part A, printed p. 24, Chapter 2: around 70% of foundational AI models developed in the US since 2017; three US hyperscalers over 65% of the global and European cloud market; the largest European cloud operator just 2% of the EU market; autonomous robotics around 22% of worldwide activity; AI services around 17%. Part B, printed p. 77: EU cloud providers' share of the EU market decreased to under 16% in 2021. Part B, p. 79, gives 73% (not 'around 70%') for foundational models from the US since 2017. No 'under 15%' figure appears in either part."
     },
     {
       "id": "src-ep-legtrain-ai-omnibus",
@@ -1299,7 +1299,7 @@
     {
       "id": "src-icle-gdpr-law-of-everything",
       "tier": "tier:4",
-      "type": "source-type:legislative-document",
+      "type": "source-type:commentary",
       "publisher": null,
       "publisher_name": "International Center for Law & Economics",
       "title": "ICLE Comments to the European Commission on GDPR and ePrivacy in the Digital Omnibus",
@@ -1359,7 +1359,7 @@
     {
       "id": "src-itif-dma-compliance",
       "tier": "tier:4",
-      "type": "source-type:legislative-document",
+      "type": "source-type:commentary",
       "publisher": null,
       "publisher_name": "Information Technology and Innovation Foundation",
       "title": "Comments to the European Commission for Its First Review of the Digital Markets Act",
@@ -1560,31 +1560,17 @@
     },
     {
       "id": "src-oj-aild-withdrawal-2025",
-      "tier": "tier:1",
+      "tier": "tier:2",
       "type": "source-type:legislative-document",
-      "publisher": "eu",
-      "publisher_name": "Official Journal of the European Union",
-      "title": "Withdrawal of Commission proposals, C/2025/5423",
+      "publisher": "ep",
+      "publisher_name": "European Parliament",
+      "title": "European Parliament Legislative Train — AI Liability Directive",
       "url": "https://www.europarl.europa.eu/legislative-train/theme-a-europe-fit-for-the-digital-age/file-ai-liability-directive",
       "url_status": "url:live",
       "published": "2025-10-06",
       "accessed": "2026-08-28",
       "language": "en",
-      "note": "The AI Liability Directive was announced for withdrawal in the Commission Work Programme 2025 (COM(2025) 45, 11 Feb 2025, \"no foreseeable agreement\") and formally withdrawn in the Official Journal on 6 October 2025. Cited here through the Parliament's legislative train file, which carries the OJ reference; the OJ notice itself has not been opened directly."
-    },
-    {
-      "id": "src-draghi-report-2024",
-      "tier": "tier:2",
-      "type": "source-type:report",
-      "publisher": "ec",
-      "publisher_name": "European Commission",
-      "title": "The future of European competitiveness — report by Mario Draghi",
-      "url": "https://ec.europa.eu/newsroom/growth/items/847989",
-      "url_status": "url:live",
-      "published": "2024-09-09",
-      "accessed": "2026-09-26",
-      "language": "en",
-      "note": "Part A (A competitiveness strategy for Europe) and Part B (In-depth analysis and recommendations). Both PDFs were downloaded from the Commission's Draghi report page (commission.europa.eu/document/download/97e481fd-2dc3-412d-be4c-f152a8232961_en and ec1409c1-d4b4-4882-8bdd-3519f86bbb92_en) and read on 2026-09-26. Part A, printed p. 24, Chapter 2: around 70% of foundational AI models developed in the US since 2017; three US hyperscalers over 65% of the global and European cloud market; the largest European cloud operator just 2% of the EU market; autonomous robotics around 22% of worldwide activity; AI services around 17%. Part B, printed p. 77: EU cloud providers' share of the EU market decreased to under 16% in 2021. Part B, p. 79, gives 73% (not 'around 70%') for foundational models from the US since 2017. No 'under 15%' figure appears in either part."
+      "note": "The Parliament's Legislative Train file, which records that the AI Liability Directive was announced for withdrawal in the Commission Work Programme 2025 (COM(2025) 45, 11 Feb 2025, \"no foreseeable agreement\") and formally withdrawn by notice C/2025/5423 in the Official Journal on 6 October 2025. Retitled on 2026-09-26 (audit T-30): the record previously named the OJ notice, which has never been opened; the notice is on EUR-Lex (CELEX 52025XC05423), which returns HTTP 202 with no body in this environment, as did the Legislative Train page on 2026-09-26, so the accessed date is the original one. The ID keeps 'oj' because IDs are never renamed."
     },
     {
       "id": "src-purtova-law-of-everything",
