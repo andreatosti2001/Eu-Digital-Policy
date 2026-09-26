@@ -41,7 +41,6 @@
  "gdpr.short_name": "GDPR",
  "pld.short_name": "Directiva sobre responsabilidad por productos defectuosos",
  "tl-ai-act-2026-12-02-application.date_label": "2 dic 2026",
- "tl-ai-act-2026-12-02-application.obligation": "Art. 50(2) marcado legible por máquina; prohibición de sistemas de desnudado mediante IA y de generación de CSAM.",
  "tl-ai-act-2027-12-02-application.date_label": "2 dic 2027",
  "tl-ai-act-2027-12-02-application.obligation": "Sistemas de alto riesgo autónomos del anexo III.",
  "tl-ai-act-2028-08-02-application.date_label": "2 ago 2028",
@@ -57,9 +56,7 @@
  "tl-data-act-2027-09-12-application.date_label": "12 sep 2027",
  "tl-data-act-2027-09-12-application.obligation": "Las normas sobre cláusulas abusivas del capítulo IV se extienden a los contratos B2B de larga duración preexistentes.",
  "tl-dma-2026-11-01-designation.date_label": "nov 2026",
- "tl-dma-2026-11-01-designation.obligation": "Vencen las decisiones de designación para la nube.",
  "tl-dma-2027-05-01-market-investigation.date_label": "may 2027",
- "tl-dma-2027-05-01-market-investigation.obligation": "Conclusión de la investigación de mercado sobre la nube.",
  "tl-pld-2026-12-09-application.date_label": "dic 2026",
  "tl-pld-2026-12-09-application.obligation": "Se aplica la Directiva revisada — el software y la IA entran en la responsabilidad objetiva por productos."
 }

@@ -22,7 +22,7 @@
       "file": "i18n/it.json",
       "data": "i18n/it/data.json",
       "keys": 383,
-      "entity_keys": 60,
+      "entity_keys": 57,
       "complete": false,
       "note": "Hand-authored and complete against every string that existed when it was written. The four masthead strings added in the visual refinement phase have not been translated: they fall back to English and are marked EN in the interface.",
       "pending_translation": [
@@ -73,7 +73,7 @@
       "file": "i18n/fr.json",
       "data": "i18n/fr/data.json",
       "keys": 382,
-      "entity_keys": 60,
+      "entity_keys": 57,
       "complete": false,
       "superseded": [
         "annex-a.figcaption1",
@@ -125,7 +125,7 @@
       "file": "i18n/es.json",
       "data": "i18n/es/data.json",
       "keys": 382,
-      "entity_keys": 60,
+      "entity_keys": 57,
       "complete": false,
       "superseded": [
         "annex-a.figcaption1",

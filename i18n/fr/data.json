@@ -41,7 +41,6 @@
  "gdpr.short_name": "GDPR",
  "pld.short_name": "Directive sur la responsabilité du fait des produits défectueux",
  "tl-ai-act-2026-12-02-application.date_label": "2 déc. 2026",
- "tl-ai-act-2026-12-02-application.obligation": "Art. 50(2) marquage lisible par machine ; interdiction des systèmes de dénudation par IA et de génération de CSAM.",
  "tl-ai-act-2027-12-02-application.date_label": "2 déc. 2027",
  "tl-ai-act-2027-12-02-application.obligation": "Systèmes à haut risque autonomes de l’annexe III.",
  "tl-ai-act-2028-08-02-application.date_label": "2 août 2028",
@@ -57,9 +56,7 @@
  "tl-data-act-2027-09-12-application.date_label": "12 sept. 2027",
  "tl-data-act-2027-09-12-application.obligation": "Les règles sur les clauses abusives du chapitre IV s’étendent aux contrats B2B de longue durée préexistants.",
  "tl-dma-2026-11-01-designation.date_label": "nov. 2026",
- "tl-dma-2026-11-01-designation.obligation": "Échéance des décisions de désignation pour le cloud.",
  "tl-dma-2027-05-01-market-investigation.date_label": "mai 2027",
- "tl-dma-2027-05-01-market-investigation.obligation": "Conclusion de l’enquête de marché sur le cloud.",
  "tl-pld-2026-12-09-application.date_label": "déc. 2026",
  "tl-pld-2026-12-09-application.obligation": "La directive révisée s’applique — le logiciel et l’IA entrent dans la responsabilité sans faute du fait des produits."
 }
