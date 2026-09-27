@@ -803,6 +803,85 @@ export function checkNoThirdParty(page, origin) {
    15 · basic accessibility, and the honest bound on it
    ============================================================ */
 
+/* The accessibility tree (27 Sep 2026). What a screen reader is handed
+   is not the DOM but the tree the browser computes from it: roles,
+   accessible names, what is ignored. Chromium exposes that tree over CDP,
+   so this reads it rather than inferring it from markup. Two questions,
+   both about the tree as computed on the rendered page:
+     · does every control a person can operate have a name? A button or
+       link with no accessible name is announced as "button" and nothing
+       else;
+     · does the tree carry the main and navigation landmarks a
+       screen-reader user moves by?
+   It is still not a screen reader: reading order, verbosity and how a
+   given reader announces a live region are outside it. */
+const AX_OPERABLE = new Set(['button', 'link', 'textbox', 'searchbox', 'combobox', 'listbox', 'option',
+  'checkbox', 'radio', 'menuitem', 'menuitemradio', 'menuitemcheckbox', 'tab', 'slider', 'switch', 'spinbutton']);
+
+/* Read at a desktop and a phone width: a label hidden by a breakpoint
+   drops out of the accessible name only at that breakpoint, which is how
+   the Contents button came to be announced as a bare "button" on phones
+   (found by this check, fixed with an aria-label, 27 Sep 2026).
+
+   Each control's node is asked for on its own (getPartialAXTree) rather
+   than serialising the whole tree: getFullAXTree stalled past its timeout
+   on the brief at phone width, while the per-node query returns the same
+   computed role and name in about a second for the whole page. The page
+   is loaded AT each width, not resized after loading. */
+const AX_WIDTHS = [{ width: 1280, height: 900, mobile: false }, { width: 390, height: 844, mobile: true }];
+const AX_CANDIDATES = 'button, a[href], input, select, textarea, summary, [role=button], [role=link], [role=tab], [role=option], [role=menuitem], [role=switch], [role=checkbox], [role=radio], [role=combobox], [role=searchbox], [role=slider]';
+
+async function axTree(page, spec, origin) {
+  const role = (n) => n && n.role && n.role.value;
+  const name = (n) => String((n && n.name && n.name.value) || '').trim();
+  const unnamed = [];
+  let operable = 0;
+  const landmarks = { main: false, navigation: false };
+  const before = await page.evaluate('({ width: innerWidth, height: innerHeight })');
+  const axOf = async (nodeId) => ((await page.send('Accessibility.getPartialAXTree', { nodeId, fetchRelatives: false })).nodes || [])[0];
+  try {
+    for (const vp of AX_WIDTHS) {
+      await page.setViewport(vp);
+      await page.goto(`${origin}/${spec.file}`);
+      const { root } = await page.send('DOM.getDocument', { depth: 0 });
+      const { nodeIds } = await page.send('DOM.querySelectorAll', { nodeId: root.nodeId, selector: AX_CANDIDATES });
+      let here = 0;
+      for (const id of nodeIds) {
+        const n = await axOf(id);
+        if (!n || n.ignored || !AX_OPERABLE.has(role(n))) continue;
+        here++;
+        if (name(n)) continue;
+        let html = null;
+        try { html = (await page.send('DOM.getOuterHTML', { nodeId: id })).outerHTML.replace(/\s+/g, ' ').slice(0, 140); } catch (e) { /* named by role and width */ }
+        unnamed.push({ width: vp.width, role: role(n), html });
+      }
+      operable = Math.max(operable, here);
+      if (vp.width === AX_WIDTHS[0].width) {
+        for (const [key, sel] of [['main', 'main, [role=main]'], ['navigation', 'nav, [role=navigation]']]) {
+          const { nodeIds: ids } = await page.send('DOM.querySelectorAll', { nodeId: root.nodeId, selector: sel });
+          for (const id of ids) { const n = await axOf(id); if (n && !n.ignored && role(n) === key) { landmarks[key] = true; break; } }
+        }
+      }
+    }
+  } catch (e) {
+    return [undecidable(`a11y:axtree:${spec.file}`, 'accessibility', `${spec.name}: the accessibility tree could not be read`, String(e.message || e))];
+  } finally {
+    /* the viewport the suite was in, restored so the checks that follow
+       see exactly what they saw before this one existed */
+    try { await page.setViewport({ width: before.width, height: before.height, mobile: before.width < 500 }); } catch (e) { /* best effort */ }
+  }
+  const out = [];
+  out.push(operable === 0
+    ? undecidable(`a11y:axnames:${spec.file}`, 'accessibility', `${spec.name}: no operable control in the accessibility tree`, 'a page with nothing to operate cannot show that its controls are named')
+    : unnamed.length === 0
+      ? ok(`a11y:axnames:${spec.file}`, 'accessibility', `${spec.name}: every operable control in the accessibility tree has a name, at 1280px and at 390px (${operable} controls)`)
+      : bad(`a11y:axnames:${spec.file}`, 'accessibility', `${spec.name}: ${unnamed.length} operable control(s) have no accessible name (${[...new Set(unnamed.map((u) => u.width + 'px'))].join(', ')}) — a screen reader announces the role and nothing else`, { unnamed: unnamed.slice(0, 10) }));
+  out.push(landmarks.main && landmarks.navigation
+    ? ok(`a11y:axlandmarks:${spec.file}`, 'accessibility', `${spec.name}: the accessibility tree carries main and navigation landmarks`, landmarks)
+    : bad(`a11y:axlandmarks:${spec.file}`, 'accessibility', `${spec.name}: the accessibility tree lacks ${Object.keys(landmarks).filter((k) => !landmarks[k]).join(' and ')}`, landmarks));
+  return out;
+}
+
 export async function checkAccessibility(page, origin, { pages = PAGES } = {}) {
   const out = [];
   for (const spec of pages) {
@@ -846,6 +925,8 @@ export async function checkAccessibility(page, origin, { pages = PAGES } = {}) {
     out.push(a.landmarks.main === 1
       ? ok(`a11y:landmarks:${spec.file}`, 'accessibility', `${spec.name} renders exactly one <main>`, a.landmarks)
       : bad(`a11y:landmarks:${spec.file}`, 'accessibility', `${spec.name} renders ${a.landmarks.main} <main> element(s)`, a.landmarks));
+
+    out.push(...await axTree(page, spec, origin));
   }
 
   /* Stated once, on every run. Not a check that can pass. Narrowed on
@@ -853,7 +934,7 @@ export async function checkAccessibility(page, origin, { pages = PAGES } = {}) {
      not established is named, and nothing more is claimed. */
   out.push(undecidable('a11y:bound', 'accessibility',
     'no screen reader was run, no pixels were compared, and contrast was computed only for text over solid colours',
-    'This suite reads the DOM and computed styles of a headless Chromium. checkContrast computes WCAG 2.x contrast from computed colours, not from rendered pixels: text over an image or a gradient other than the page background is counted as not measured, and anti-aliasing, font rendering and a reader\'s own settings are outside it. README limitation 7 stands in its narrowed form, and docs/UX-AUDIT.md §7 lists the open questions a static read could not settle.'));
+    'This suite reads the DOM, the computed styles and — since 27 Sep 2026 — the accessibility tree of a headless Chromium: every operable control is checked for an accessible name at 1280px and 390px, and the main and navigation landmarks are read from the tree. That is what a screen reader is handed, not what one does with it: reading order, verbosity and how a live region is announced are outside it. checkContrast computes WCAG 2.x contrast from computed colours, not from rendered pixels: text over an image or a gradient other than the page background is counted as not measured, and anti-aliasing, font rendering and a reader\'s own settings are outside it. README limitation 7 stands in its narrowed form, and docs/UX-AUDIT.md §7 lists the open questions a static read could not settle.'));
 
   return out;
 }

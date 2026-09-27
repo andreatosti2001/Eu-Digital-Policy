@@ -377,9 +377,13 @@ what it cannot support:
    is not the same thing. Chromium only; no real-device testing.
    *Update, 27 September 2026:* the browser suite now computes WCAG contrast
    for text over solid colours in both themes (it found and fixed one
-   failure) and checks reduced motion and 320px reflow. That narrows this
-   limitation; it does not close it — no screen reader, no pixels, one
-   browser.
+   failure) and checks reduced motion and 320px reflow. It also reads
+   Chromium's **accessibility tree** — the structure a screen reader is
+   handed — and checks that every operable control has an accessible name
+   at desktop and phone width (it found one that did not: the Contents
+   button on phones, now fixed) and that the landmarks are there. That
+   narrows this limitation; it does not close it — no screen reader was
+   run, no pixels, one browser.
 8. **The interface is English.** The entity overlay translates instrument
    names, statuses and event types on every page, so a reader who chose
    Italian on the brief sees those labels in Italian elsewhere too — but the
