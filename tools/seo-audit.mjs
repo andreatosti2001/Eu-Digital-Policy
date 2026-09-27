@@ -201,6 +201,15 @@ export function audit(root = ROOT) {
     }
   }
 
+  /* the record index inside each JavaScript-rendered register names every
+     record the register holds, by the id the full view gives it */
+  for (const [f, list] of [['enforcement.html', db.enforcement.enforcement], ['institutions.html', db.institutions.institutions],
+    ['bibliography.html', db.sources.sources]]) {
+    const html = existsSync(join(root, f)) ? readFileSync(join(root, f), 'utf8') : '';
+    const missing = (list || []).filter((r) => !html.includes(`<li id="${r.id}">`));
+    if (missing.length) err(f, `the static record index omits ${missing.length} record(s), e.g. ${missing[0].id} — run node tools/_footer.mjs`);
+  }
+
   /* ---------------------------------------------------- 4 · canonical and sitemap */
   const smPath = join(root, 'sitemap.xml');
   const sm = existsSync(smPath) ? readFileSync(smPath, 'utf8') : '';

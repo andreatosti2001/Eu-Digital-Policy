@@ -858,6 +858,7 @@ test('S4 · planted defects are caught: title, canonical, hreflang, orphan, stru
     /* the CER page loses every static link that leads to it */
     for (const f of sitePages(dir)) edit(dir, f, (s) => s.replace(/<a href="[^"]*instruments\/cer\/">[^<]*<\/a>/g, '').replace(/<a href="[^"]*instruments\/cer\/"/g, '<a href="#"'));
     edit(dir, 'instruments/cra/index.html', (s) => s.replace('"@type":"Legislation"', '"@type":"Legislation","author":"someone"'));
+    edit(dir, 'enforcement.html', (s) => s.replace(/<li id="enf-[^"]+">[\s\S]*?<\/li>\n/, ''));
     edit(dir, 'sitemap.xml', (s) => s.replace('</urlset>', '  <url><loc>https://andreatosti2001.github.io/Eu-Digital-Policy/instrument.html?id=eprivacy</loc></url>\n</urlset>'));
     const errs = seoAudit(dir).errors.join('\n');
     assert.match(errs, /instruments\/dsa\/index\.html: <title> is not the route model's/);
@@ -866,6 +867,7 @@ test('S4 · planted defects are caught: title, canonical, hreflang, orphan, stru
     assert.match(errs, /hreflang it .* not an indexable, self-canonical page/);
     assert.match(errs, /instruments\/cer\/index\.html: not reachable from the home page/);
     assert.match(errs, /JSON-LD asserts "author"/);
+    assert.match(errs, /enforcement\.html: the static record index omits 1 record/);
     assert.match(errs, /instrument\.html\?id=eprivacy is not the canonical URL of any indexable route/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

@@ -1264,6 +1264,17 @@ body[data-theme="light"]{
 /* The list of instrument pages on instruments.html, and the sentence that
    names the records too thin for a page of their own. */
 .inst-index{margin-top:var(--s-7)}
+
+/* The record index generated into the enforcement, institutions and
+   bibliography mounts (tools/seo.mjs). Seen only until the page's module
+   replaces it with the full view, or by a reader without scripting. */
+.record-index{list-style:none;margin:var(--s-4) 0 var(--s-6);padding:0;max-width:var(--w-text)}
+.record-index li{padding:var(--s-2) 0;border-bottom:var(--border-hair);font-size:var(--t-body-sm);line-height:1.6;color:var(--text-2)}
+.record-index b{color:var(--text-1);font-weight:500}
+.record-index a{color:var(--text-1);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px;overflow-wrap:anywhere}
+.record-index a:hover,.record-index a:focus-visible{text-decoration-color:var(--text-1)}
+.ri-sub{display:block;font-family:var(--mono);font-size:var(--t-meta);color:var(--text-3)}
+h2 .ri-sub{display:inline;margin-left:var(--s-2)}
 .inst-thin{font-size:var(--t-body-sm);line-height:1.6;color:var(--text-2);max-width:var(--w-text);margin-top:var(--s-5)}
 
 /* ============================================================

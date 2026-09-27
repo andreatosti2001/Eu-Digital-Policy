@@ -176,11 +176,14 @@ The tool pages are not translated and must never carry alternates.
 - `lastmod` is the newest verification date among the records a page renders. A layout or
   template change moves no `lastmod`, by design; a record re-read without change does move it,
   because the page shows that date.
-- The enforcement, institutions and bibliography pages carry their method text statically; their
-  record lists are still rendered by JavaScript. The instrument pages carry each instrument's
-  records statically, including the enforcement records and competent authorities filed under
-  each of them (the one enforcement record filed under the TFEU appears only on the observatory). Pre-rendering
-  the three directory lists is the next step if Search Console shows those pages underperforming.
+- The enforcement, institutions and bibliography pages render their full, filterable views with
+  JavaScript. Since the second pass of 27 Sep 2026 each ships a generated **record index** in its
+  HTML — every enforcement record (entity, instrument, authority, date, announced fine, status,
+  appeal), every body with its competences, every source by tier with its citation — linked to the
+  instrument pages and replaced by the full view on load (`tools/seo.mjs` `enforcementIndex`,
+  `institutionsIndex`, `bibliographyIndex`; `seo-audit.mjs` fails if one omits a record). What the
+  index does not carry is what depends on the date or on interaction: the derived pipeline, the
+  aggregates, the filters, the uses of each source.
 - A subdirectory on `github.io` cannot hold a site name, a root `robots.txt` or a Domain
   property, and its links accrue to a shared host. A custom domain removes all three
   (`docs/DISCOVERABILITY-STRATEGY.md` §7). Moving is one line (`BASE` in `tools/_footer.mjs`)

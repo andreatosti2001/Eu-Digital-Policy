@@ -192,6 +192,14 @@ export async function generate(root = HERE_ROOT) {
       s = upsert(s, SEO.LBEGIN, SEO.LEND, SEO.instrumentIndex(routes, ix), (t, blk) =>
         t.replace(/(<\/section>\n)(<\/div>\n\n<script src="js\/boot\.js")/, `$1\n${blk}\n$2`));
     }
+    /* the record index inside each JavaScript-rendered register */
+    const idx = { 'enforcement.html': ['enfList', SEO.enforcementIndex], 'institutions.html': ['imBody', SEO.institutionsIndex],
+      'bibliography.html': ['bib', SEO.bibliographyIndex] }[file];
+    if (idx) {
+      const [mount, fn] = idx;
+      s = upsert(s, SEO.RBEGIN, SEO.REND, fn(ix, db), (t, blk) =>
+        t.replace(new RegExp(`(<main id="${mount}">)<p class="[^"]+">Loading[^<]*</p>(</main>)`), `$1\n${blk}\n$2`));
+    }
     files.set(file, finish(route, s));
   }
 

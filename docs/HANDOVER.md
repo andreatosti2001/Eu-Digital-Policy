@@ -41,6 +41,13 @@ from nowhere.
   know pages below the root; an `<a href>` to another origin is a link, not a request (a
   `<link rel=preconnect>` still is — S6).
 
+**Second pass, same session ("continue"):** the enforcement, institutions and bibliography
+mounts now open with a generated, clock-free record index (every record, linked to the instrument
+pages), replaced by the full view on load; the loading line stays first so the browser suite
+still detects a failed render. Crawlable text in the HTML as served: enforcement 2,048 → 6,026
+characters, institutions 2,014 → 5,351, bibliography 3,564 → 46,486. `seo-audit.mjs` fails if an
+index omits a record (planted in selftest S4).
+
 **Measured at the end:** validators 0 errors / 0 warnings (evidence-audit 11 warnings, as on
 `main`); `seo-audit` 0 / 0; 25 suites pass, 1233 tests (1221 before; tools 52, detector 67 with `instrument-view.js` and
 `routes.js` registered in `MODULE_SURFACE`); browser suite 237 pass · 0 fail · 1 undecidable
