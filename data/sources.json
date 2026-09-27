@@ -2628,6 +2628,34 @@
       "accessed": "2026-09-27",
       "language": "en",
       "note": "The Court's own case register, queried through its search service on 27 Sep 2026: C-1009/26, a reference for a preliminary ruling (procedure type 'RP') named 'Tiktok Technology and TikTok Information Technologies UK', lodged 11 Sep 2026 and recorded as 'Affaire pendante'. The register entry read gives no referring court and no questions, so that it is the reference the Irish High Court proposed in [2026] IEHC 419 is consistent with the parties' names but not established."
+    },
+    {
+      "id": "src-twobirds-ai-omnibus-trilogue-2026",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "Bird & Bird",
+      "title": "Digital Omnibus on AI: Trilogue Stalls Ahead of the AI Act Deadline",
+      "url": "https://www.twobirds.com/en/insights/2026/digital-omnibus-on-ai-trilogue-stalls-ahead-of-the-ai-act-deadline",
+      "url_status": "url:live",
+      "published": "2026-05-05",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Law-firm commentary, read 27 Sep 2026 (publication date from the page's structured data). Opening paragraph: 'On 28 April 2026, the second political trilogue on the Digital Omnibus on AI ended without agreement after roughly twelve hours of negotiation. The breakdown did not concern the most prominent element of the proposal, the postponement of the AI Act's high-risk obligations, but the conformity assessment architecture for AI systems embedded in products that fall under existing EU sectoral safety law (Annex I to the AI Act).'"
+    },
+    {
+      "id": "src-iapp-ai-omnibus-trilogue-2026",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "IAPP",
+      "title": "Notes from the AI Governance Center: AI Act Omnibus: What just happened and what comes next?",
+      "url": "https://iapp.org/news/a/ai-act-omnibus-what-just-happened-and-what-comes-next",
+      "url_status": "url:live",
+      "published": "2026-04-29",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Ashley Casovan (IAPP AI Governance Center), published 29 April 2026, read 27 Sep 2026: 'after 12 hours of negotiations in Brussels fell apart 28 April'; 'The 28 April trilogue was the second and final session scheduled to negotiate the Omnibus package'. It does not state the cause."
     }
   ]
 }

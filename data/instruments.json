@@ -849,8 +849,7 @@
             "actor:ai-deployer"
           ],
           "claims": [
-            "clm-ai-omnibus-art-4-literacy",
-            "clm-ai-act-not-all-ai"
+            "clm-ai-omnibus-art-4-literacy"
           ],
           "sources": [
             "src-eurlex-ai-act",
