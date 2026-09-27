@@ -158,7 +158,7 @@ the `$note` before editing any dataset** — it is where the non-obvious invaria
 |---|---|---|
 | `taxonomy.json` | 28 controlled vocabularies, 243 terms | Every enum-valued field in every other dataset resolves here. IDs are `<dimension>:<slug>` and are **never renamed**. |
 | `instruments.json` | 23 instruments, 60 provisions, 17 relationships | Instruments carry **no dates** (only `milestones` → timeline IDs) and **no supervisor** field. Treaty articles are modelled as provisions of `tfeu`/`teu`, so a legal basis is always a provision ID. |
-| `institutions.json` | 20 bodies, 52 competence edges | Competence edges live here **and nowhere else**. `-*` suffix = the whole class of national bodies. |
+| `institutions.json` | 21 bodies, 55 competence edges | Competence edges live here **and nowhere else**. `-*` suffix = the whole class of national bodies. |
 | `timeline.json` | 42 dated events | Mandatory event type and date precision. Entry into force and application are **never merged**. |
 | `enforcement.json` | 16 records | Three orthogonal axes (action / payment / remedy) + appeal. **No aggregate totals are stored.** `null` ≠ `unknown`. |
 | `claims.json` | 91 claims | The `supports` qualifier (`direct` / `partial` / `context`) is load-bearing. `context` is **not** a citation. |
@@ -341,7 +341,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 52 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 50 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -382,6 +382,7 @@ the corpus being more honest, not less.
 - 62 → 58 (27 Sep 2026): four enforcement records settled from court records. Three appeals read in the Official Journal notices of the actions and confirmed pending in the Court's register (Meta's DMA fine, T-435/25; X's DSA fine, T-114/26, T-120/26 and T-121/26; the Commission's supervisory-fee appeals, C-744/25 P and C-745/25 P); the Amazon/CNPD record against the Luxembourg Cour administrative's judgment itself (52757C, 12 March 2026). Apple's DMA appeal (T-438/25) is established as well, but that record stays flagged: its behavioural outcome is not what the decision is about. The OpenAI/Garante record was corrected from the Garante's own site (decision no. 755 of 2 November 2024, not 20 December 2024) and stays flagged, because the Rome judgment's text has not been read.
 - 58 → 56 (27 Sep 2026): clm-draghi-diagnosis verified against Part A of the Draghi report (printed pp. 5 and 30); clm-four-categories-94pct CORRECTED and retyped as derived: the CMS Enforcement Tracker's own data (refreshed 27 Sep 2026) gives three categories at 94.2% of the EUR 7,159,322,834 total, not four (four make 97.8%), and the prose now says three in all four languages; its four inputs are recorded as claims with the tracker as direct source.
 - 56 → 52 (27 Sep 2026): the 'Also in the rulebook' claim's atomization completed (five items already carried by their own OJ-sourced claims; the record now carries only the 20 January 2026 cyber package, stated directly by the Commission's Q&A); the Temu, AliExpress and Google DMA records verified against the Commission's full press releases (IP/26/1178, IP/26/1654, IP/26/1670) and the Google opening release (IP/24/1689, which names Arts 5(4) and 6(5)). Two corrections: Temu's breach is of risk assessment only (Art. 34), not mitigation, so Art. 35 leaves its legal basis and the prose says so in all four languages; AliExpress's action-plan deadline now rests on the Commission rather than commentary.
+- 52 → 50 (27 Sep 2026): the last two competence edges carrying a requires-verification note (DG CONNECT for the DSA, DG COMP for the DMA) read against the Commission's own pages: DSA supervision sits in DG CONNECT Directorate F, while the powers are the Commission's under DSA Art. 56(2)–(3), read in the Official Journal; the DMA is enforced by a joint DG COMP–DG CONNECT team, so DG COMP's 'operational lead' was stronger than the source and is replaced, and DG CONNECT gains the matching DMA edge.
 
 The other numbers on this block are unchanged.
 

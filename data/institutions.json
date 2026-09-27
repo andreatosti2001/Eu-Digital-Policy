@@ -133,14 +133,25 @@
           "instrument": "dsa",
           "role": "role:supervises",
           "exclusive": false,
-          "scope": "Operational lead within the Commission for DSA supervision of VLOPs.",
+          "scope": "Houses the Commission’s DSA supervision and enforcement team for designated very large online platforms and search engines (Directorate F, Platforms Policy and Enforcement).",
           "basis": [],
-          "note": "requires verification: the internal allocation of DSA enforcement between Commission services is not established from a primary source in this build."
+          "note": "Established 27 Sep 2026 from the Commission’s own pages (src-ec-dsa-enforcement-team-2024): Directorate F at DG CONNECT supports the Commission’s supervisory and enforcement role under the DSA. The Commission, not the directorate-general, holds the powers in law: exclusively for Section 5 of Chapter III (DSA Art. 56(2)) and for the rest of the Regulation against very large online platforms and search engines (Art. 56(3)), read in the Official Journal text 27 Sep 2026. This records where the work sits."
+        },
+        {
+          "instrument": "dma",
+          "role": "role:investigates",
+          "exclusive": false,
+          "scope": "Half of the joint DG COMP–DG CONNECT team responsible for implementing and enforcing the DMA.",
+          "basis": [],
+          "note": "Established 27 Sep 2026 from the DMA portal (src-ec-dma-portal-whos-in-charge): the Commission is the sole enforcer, and a joint team in DG COMP and DG CONNECT implements and enforces the DMA."
         }
       ],
       "claims": [],
-      "sources": [],
-      "last_verified": "2026-08-27"
+      "sources": [
+        "src-ec-dsa-enforcement-team-2024",
+        "src-ec-dma-portal-whos-in-charge"
+      ],
+      "last_verified": "2026-09-27"
     },
     {
       "id": "ec-dg-comp",
@@ -155,9 +166,9 @@
           "instrument": "dma",
           "role": "role:investigates",
           "exclusive": false,
-          "scope": "Operational lead within the Commission for DMA enforcement, jointly with DG CONNECT.",
+          "scope": "Half of the joint DG COMP–DG CONNECT team responsible for implementing and enforcing the DMA.",
           "basis": [],
-          "note": "requires verification: internal allocation not established from a primary source in this build."
+          "note": "Established 27 Sep 2026 from the DMA portal (src-ec-dma-portal-whos-in-charge): the Commission is the sole enforcer, and a joint team in DG COMP and DG CONNECT implements and enforces the DMA. The earlier wording, ‘operational lead’, was stronger than the source and is replaced."
         },
         {
           "instrument": "tfeu",
@@ -174,9 +185,10 @@
         "clm-dma-alongside-102"
       ],
       "sources": [
-        "src-ec-google-adtech-2025"
+        "src-ec-google-adtech-2025",
+        "src-ec-dma-portal-whos-in-charge"
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-09-27"
     },
     {
       "id": "ai-office",

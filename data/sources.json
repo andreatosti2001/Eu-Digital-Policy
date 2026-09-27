@@ -2462,6 +2462,34 @@
       "note": "The actual source of three figures the brief attributed to the CMS tracker: EUR 7.1bn cumulative to 10 Jan 2026, EUR 4.04bn for the Irish DPC, and 443 breach notifications per day (up 22% from 363). A law firm's survey, not a regulator's return — indicative of magnitude, as Annex B says."
     },
     {
+      "id": "src-ec-dma-portal-whos-in-charge",
+      "tier": "tier:2",
+      "type": "source-type:regulator-statement",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "The EU Digital Markets Act — Who's in charge (DMA portal home page)",
+      "url": "https://digital-markets-act.ec.europa.eu/index_en",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026. 'Who's in charge': \"The European Commission is the sole enforcer of the DMA. A joint team in the Directorates-General for Competition (DG COMP) and Communications Networks, Content and Technology (DG CONNECT) is responsible for the implementation and enforcement of the DMA.\""
+    },
+    {
+      "id": "src-ec-dsa-enforcement-team-2024",
+      "tier": "tier:2",
+      "type": "source-type:regulator-statement",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Do you want to help enforce the Digital Services Act? Apply now to be part of the DSA enforcement team!",
+      "url": "https://digital-strategy.ec.europa.eu/en/news/do-you-want-help-enforce-digital-services-act-apply-now-be-part-dsa-enforcement-team",
+      "url_status": "url:live",
+      "published": "2024-01-15",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026: the staff that \"Directorate F (Platforms Policy and Enforcement) at DG CONNECT is hiring will support the Commission's new supervisory and enforcement role related to the DSA\", working in teams \"dealing with designated services\" and investigating potential infringements. The Commission's page of 18 November 2022 likewise says DG CONNECT \"is building a multi-disciplinary enforcement team\" for the DSA."
+    },
+    {
       "id": "src-ec-dma-gatekeepers-portal",
       "tier": "tier:2",
       "type": "source-type:regulator-statement",

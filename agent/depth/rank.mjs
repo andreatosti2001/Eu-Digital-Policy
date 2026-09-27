@@ -52,7 +52,7 @@ export const AUTONOMY_FOR_KIND = {
   incomplete_timeline: ['human_only', 'A date on which an obligation begins is the value a reader is most likely to act on, and §3 names dates among the facts an agent may not author.'],
   incomplete_applicability: ['human_only', 'An applicability rule states the conditions under which an act binds a reader. Writing one is stating what the law requires of them.'],
   missing_institution: ['human_only', 'Naming the authority that took a decision is a legal fact about who exercised a power.'],
-  missing_competence: ['human_only', 'Competence is named by §3 among the facts an agent may not author, and the four competence edges already in the corpus that carry a requires-verification note are why.'],
+  missing_competence: ['human_only', 'Competence is named by §3 among the facts an agent may not author, and the competence edges that carried a requires-verification note until each was read against a primary source are why.'],
   incomplete_enforcement: ['human_only', 'A fine, an action status, a payment status and an appeal state are all legal facts under §3.'],
   unsupported_claim: ['human_only', 'Closing this means attaching a source to a statement of law, which §3 permits only from a document actually retrieved and read — and no agent in this repository has ever retrieved one.'],
   missing_source_relationship: ['review_required', 'Recording that two source records are one document is a statement about the bibliography rather than about EU law. It is still amber: it changes what the site is said to have corroborated, and evidence grades are computed from source references.'],
