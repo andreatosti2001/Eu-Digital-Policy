@@ -60,6 +60,8 @@ Cellar (not held there on 27 Sep 2026; read in the Council's transmission instea
 AI Omnibus trilogue of 28 April is mentioned by no source read and is now its own claim with a
 reference gap.
 
+**The Data Act's status** was re-read against Art. 50 and Art. 29 of the OJ text and its `status_as_of` moved to 27 Sep 2026: still partly applicable; the Art. 3(1) design obligation now applies to products placed on the market after 12 September 2026, the switching-charge ban from 12 January 2027. The audit's `STATUS_PREDATES_MILESTONE` warning is gone.
+
 **Model change (small, tested):** `parseQuantity` reads counts written as words
 ("twenty-three"), so a derivation's input can read back out of the brief's prose. Used once:
 `clm-nis2-only-four-on-time` is now derived, 27 − 23 (the four not named are Belgium, Croatia,
