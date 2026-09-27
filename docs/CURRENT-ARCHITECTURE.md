@@ -341,7 +341,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 62 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 58 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -379,6 +379,7 @@ the corpus being more honest, not less.
 - 101 → 99 (27 Sep 2026): clm-gpai-code-four-drafts now cites the Commission's timeline directly (three drafts, final text received 10 July 2025), and clm-nis2-only-four-on-time is retyped as a derived claim — 27 Member States less the twenty-three the Commission sent letters of formal notice — whose arithmetic re-runs and whose input has a direct Commission source. The split of clm-edps-opposes-commission into two atomic claims left the count unchanged.
 - 99 → 97 (27 Sep 2026): clm-charter-binds-member-states now rests on Charter Art. 51(1) in the Official Journal, its data-retention case line split into three claims each read in its judgment (Digital Rights Ireland, Tele2, La Quadrature du Net); clm-icle-enforcement-architecture now cites ICLE's own June 2026 text, which restates the argument. Both keep their reference_gap flag for a person to clear.
 - 97 → 62 (27 Sep 2026, on the author's instruction to reduce the backlog as far as possible): twenty timeline events read against the dating article of their instrument in the Official Journal and the Publications Office's metadata (GDPR Art. 99, DSA Arts 92-93, DMA Art. 54, DORA Art. 64, CER Arts 26 and 28, Data Act Arts 29 and 50, CRA Art. 71, 2025/2518 Art. 37, AI Act Art. 111(2) as amended); the DGA, ePrivacy Directive, eIDAS2 and Chips Act given an established status from their texts; DORA, CRA, eIDAS2 and Data Act provisions added so that the ENISA and ESA competences, three applicability rules and the FRAND glossary entry point at articles; DORA recital 16 for the NIS2/DORA lex specialis relation; the PLD's transposition deadline (Art. 22(1)); the House Judiciary report's URL; the unsourced '160,000 entities' removed from the NIS2 glossary entry.
+- 62 → 58 (27 Sep 2026): four enforcement records settled from court records. Three appeals read in the Official Journal notices of the actions and confirmed pending in the Court's register (Meta's DMA fine, T-435/25; X's DSA fine, T-114/26, T-120/26 and T-121/26; the Commission's supervisory-fee appeals, C-744/25 P and C-745/25 P); the Amazon/CNPD record against the Luxembourg Cour administrative's judgment itself (52757C, 12 March 2026). Apple's DMA appeal (T-438/25) is established as well, but that record stays flagged: its behavioural outcome is not what the decision is about. The OpenAI/Garante record was corrected from the Garante's own site (decision no. 755 of 2 November 2024, not 20 December 2024) and stays flagged, because the Rome judgment's text has not been read.
 
 The other numbers on this block are unchanged.
 

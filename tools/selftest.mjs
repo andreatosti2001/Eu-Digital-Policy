@@ -363,7 +363,12 @@ test('F9 · a provisional enforcement record re-read within 30 days is not a pro
     d.$last_verified = asOf;
     r.last_verified = '2099-01-01';
     writeFileSync(p, JSON.stringify(d, null, 1));
-    assert.doesNotMatch(runValidator('freshness.mjs', [asOf], dir).out, /enf-planted-f9/, '30 days is inside the window');
+    /* Only the PROMPT lines ('! …') are the contract here. The id may
+       still appear in the risk-based review, which freshness.mjs states is
+       a report and not a prompt: a pending-appeal record is critical-risk
+       and listed there on its own, shorter, interval. */
+    const promptLines = (out) => out.split('\n').filter((l) => l.trim().startsWith('! ')).join('\n');
+    assert.doesNotMatch(promptLines(runValidator('freshness.mjs', [asOf], dir).out), /enf-planted-f9/, '30 days is inside the window');
     r.last_verified = '2098-12-31';
     d.$last_verified = '2098-12-31';
     writeFileSync(p, JSON.stringify(d, null, 1));

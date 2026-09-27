@@ -1262,6 +1262,11 @@
       ],
       "sources": [
         {
+          "source_id": "src-lu-cadm-52757c-judgment",
+          "supports": "supports:direct",
+          "locator": "dispositif, p. 89: \"par réformation du jugement entrepris du 18 mars 2025, annule la décision de la Commission nationale pour la protection des données du 15 juillet 2021 en tous ses volets et renvoie le dossier devant ladite Commission\"; grounds pp. 85–88 (fault not examined; fine the only option considered); merits §§ 5.1–5.2 (Art. 6(1)(f), Arts 12–14 and 15–17 confirmed)"
+        },
+        {
           "source_id": "src-justice-lu-amazon-2026",
           "supports": "supports:direct",
           "locator": "\"Dans son arrêt du 12 mars 2026, la Cour …\""
@@ -1283,7 +1288,7 @@
       "brief_part": "part-2",
       "published": "2026-03",
       "last_verified": "2026-09-27",
-      "verification_note": "Verified during the Step 1 audit, and on 2026-09-26 against the Luxembourg judiciary's announcement of judgment no. 52757C (Cour administrative, 12 March 2026; tier 2). The judgment itself has still not been retrieved. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
+      "verification_note": "Verified 27 Sep 2026 against the judgment itself (52757C, 12 March 2026), read in full. 'The underlying violations were upheld' holds with two limits the judgment states: Arts 16 and 21 were held outside the investigation's scope, and for rectification and erasure the Court found a risk of non-compliance rather than an established infringement. Verified during the Step 1 audit, and on 2026-09-26 against the Luxembourg judiciary's announcement of judgment no. 52757C (Cour administrative, 12 March 2026; tier 2). The judgment itself has still not been retrieved. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-openai-fine-voided",
@@ -1307,6 +1312,11 @@
           "source_id": "src-europeanlawblog-openai-rome",
           "supports": "supports:direct",
           "locator": "\"annulled Decision No. 755 in its entirety on a purely preliminary, jurisdictional ground\"; notes [i]–[ii]: R.G. 4785/2025, decided 18 March 2026; OpenAI Ireland recognised by the DPC as single EEA establishment on 15 February 2024"
+        },
+        {
+          "source_id": "src-garante-openai-2024",
+          "supports": "supports:partial",
+          "locator": "notice at the head of the release: \"Il provvedimento n. 755 del 2 novembre 2024 è stato temporaneamente rimosso ... a seguito della sentenza del Tribunale di Roma n. 4153/2026, pubbl. il 18/03/2026, con la quale è stata accolta l'opposizione\" — the Garante's own record that the decision fell in March 2026; it does not state the ground"
         }
       ],
       "legal_basis": [
@@ -1315,7 +1325,7 @@
       "brief_part": "part-2",
       "published": "2026",
       "last_verified": "2026-09-27",
-      "verification_note": "Tried on 27 Sep 2026: the Garante's site search needs JavaScript and returned no result list, and no text of the Rome tribunal's judgment was located. Still rests on the European Law Blog. Verified during the Step 1 audit. The judgment itself has not been retrieved; the source is academic analysis of it. Re-read 27 Sep 2026 at the blog's new URL (the old one returned 404); the locator quotes the passage that carries the claim."
+      "verification_note": "27 Sep 2026: the Garante's own site now records that decision no. 755 of 2 November 2024 was the subject of the Court of Rome's judgment no. 4153/2026, published 18 March 2026, which upheld OpenAI's opposition — so the fine falling in March 2026 rests on the authority itself. The jurisdictional ground still rests on the European Law Blog: the judgment's text has not been located. Tried on 27 Sep 2026: the Garante's site search needs JavaScript and returned no result list, and no text of the Rome tribunal's judgment was located. Still rests on the European Law Blog. Verified during the Step 1 audit. The judgment itself has not been retrieved; the source is academic analysis of it. Re-read 27 Sep 2026 at the blog's new URL (the old one returned 404); the locator quotes the passage that carries the claim."
     },
     {
       "id": "clm-cjeu-pseudonymised-data",

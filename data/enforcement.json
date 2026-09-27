@@ -101,8 +101,8 @@
    "judicial": {
     "forum": "Cour administrative (Luxembourg)",
     "date": "2026-03-12",
-    "outcome": "Fine annulled and the case remitted to the CNPD: it had not analysed fault (intent or negligence), required since CJEU C-807/21 Deutsche Wohnen and C-683/21 Nacionalinis, and had imposed a fine almost automatically without weighing the other available measures. The violations were broadly upheld (some elements set aside as unverified; Art. 21 grievances held out of scope). Judgment of 12 March 2026, published 13 March 2026.",
-    "case_ref": "52757C (du rôle)",
+    "outcome": "The CNPD's decision was annulled in all its parts and the file remitted to the CNPD: it had not examined fault (intent or at least negligence), which the CJEU requires (C-807/21 Deutsche Wohnen and C-683/21 Nacionalinis: the GDPR sets no strict liability), and it had treated a fine as the only option, without weighing the other measures available under Art. 58. On the merits the Court confirmed, for the practices at the start of the investigation, that Art. 6(1)(f) was not a sufficient legal basis and that Arts 12–14 were breached, and confirmed Arts 15–17 subject to the reservation that rectification and erasure were at risk rather than shown to be infringed; it held that the investigation's scope did not cover Arts 16 and 21. The CNPD itself declared its injunctions moot, the last changes it asked for having been made. Judgment of 12 March 2026 (ECLI:LU:CADM:2026:52757), published 13 March 2026.",
+    "case_ref": "52757C (du rôle), ECLI:LU:CADM:2026:52757",
     "remitted": true
    },
    "timeline_events": [],
@@ -111,22 +111,23 @@
     "clm-announced-vs-collected"
    ],
    "sources": [
+    "src-lu-cadm-52757c-judgment",
     "src-mlex-2026-amazon-annulment",
     "src-linarilaw-2026-amazon",
     "src-justice-lu-amazon-2026",
     "src-paperjam-amazon-2026",
     "src-cms-lu-enforcement-2026"
    ],
-   "requires_verification": true,
-   "verification_note": "Updated 2026-09-26 (audit T-37) from the Luxembourg judiciary's own announcement of the judgment (justice.public.lu, 13 March 2026), with Paperjam and CMS. The CNPD decision date is corrected from 16 to 15 July 2021, which Paperjam gives and the previous note admitted was unconfirmed. The judgment and the CNPD decision themselves have still not been opened, so requires_verification is left set.",
-   "last_verified": "2026-09-26",
+   "requires_verification": false,
+   "verification_note": "Verified 2026-09-27 against the judgment itself (Cour administrative, 52757C, 12 March 2026, 89 pages, read in full text from the Luxembourg administrative courts' site). It confirms the CNPD decision of 15 July 2021, the EUR 746,000,000 fine with a daily penalty of EUR 746,000, the grounds of annulment, the findings on the merits and the injunctions becoming moot, which supports remedy:implemented. The judgment is pseudonymised ('(AA)'); that the appellant is Amazon Europe Core rests on the Luxembourg judiciary's announcement of 13 March 2026 and the press reports that name it. The CNPD decision date was corrected from 16 to 15 July 2021 on 2026-09-26 and is confirmed by the judgment.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:decided",
     "lodged_by": "Amazon Europe Core S.à r.l.",
     "forum": "Cour administrative (Luxembourg)",
-    "lodged_date": null,
+    "lodged_date": "2025-04-25",
     "case_ref": "52757C (du rôle)",
-    "note": "Decided 12 March 2026: the fine was annulled and the matter remitted. Whether the authority has appealed that annulment further is not established."
+    "note": "Appeal lodged on 25 April 2025 against the judgment of the tribunal administratif of 18 March 2025 (no. 46578 du rôle), which had dismissed the challenge to the CNPD decision. Decided 12 March 2026: the decision annulled in all its parts and the file remitted. The Cour administrative describes itself in the judgment as the second and last instance. What the CNPD does on remittal is not established."
    }
   },
   {
@@ -153,10 +154,12 @@
    ],
    "sources": [
     "src-dpc-meta-transfers-2023",
-    "src-csoonline-alliance-risk-2026"
+    "src-csoonline-alliance-risk-2026",
+    "src-oj-t325-23-meta-edpb-action",
+    "src-curia-register-2026-09-27"
    ],
    "requires_verification": true,
-   "verification_note": "Added 2026-09-26 (audit T-36) from the DPC's announcement: decision of 12 May 2023, announced 22 May 2023; Art. 46(1) infringed; fine reflecting the EDPB's binding determination under Art. 65. Legal basis records Art. 83 only, because no Art. 46 provision record exists. Appeal state from tier-4 reporting only, hence requires_verification.",
+   "verification_note": "Added 2026-09-26 (audit T-36) from the DPC's announcement: decision of 12 May 2023, announced 22 May 2023; Art. 46(1) infringed; fine reflecting the EDPB's binding determination under Art. 65. Legal basis records Art. 83 only, because no Art. 46 provision record exists. Appeal state: the DPC decision's own appeal rests on tier-4 reporting only, hence requires_verification; the pending General Court action against the EDPB binding decision (T-325/23) is established (27 Sep 2026).",
    "last_verified": "2026-09-26",
    "appeal": {
     "status": "appeal:pending",
@@ -164,7 +167,7 @@
     "forum": null,
     "lodged_date": null,
     "case_ref": null,
-    "note": "Reported as under active appeal by CSO Online (29 May 2026, citing Alliance Risk); tier-4 reporting. Forum, parties and case numbers are not established."
+    "note": "Reported as under active appeal by CSO Online (29 May 2026, citing Alliance Risk); tier-4 reporting, with no forum or case number. What a primary source establishes, read 27 Sep 2026: Meta Platforms Ireland's action for annulment of the EDPB's Binding Decision 1/2023 — the Art. 65 decision this fine reflects — brought before the General Court on 13 June 2023 (Case T-325/23, OJ 2023/C 271/47) and recorded as pending in the Court's register on 27 Sep 2026. That is a challenge to the EDPB's decision, not to the DPC's; whether the DPC's own decision is under appeal in the Irish courts is not established from a primary source."
    }
   },
   {
@@ -214,8 +217,8 @@
     "gdpr:art-83"
    ],
    "authority": "dpa-it",
-   "opened": null,
-   "decision_date": "2024-12-20",
+   "opened": "2023-03",
+   "decision_date": "2024-11-02",
    "action": "Administrative fine",
    "fine_eur": 15000000,
    "action_status": "action:annulled",
@@ -224,9 +227,9 @@
    "behavioural_outcome": "unknown",
    "judicial": {
     "forum": "Tribunale di Roma",
-    "date": "2026-03",
+    "date": "2026-03-18",
     "outcome": "Voided on a pure jurisdiction point: once OpenAI established an Irish subsidiary, the Irish DPC became lead authority under the one-stop-shop. Nine months of investigative work produced no ruling on whether the conduct was lawful.",
-    "case_ref": null
+    "case_ref": "Tribunale di Roma, judgment no. 4153/2026 (R.G. 4785/2025)"
    },
    "timeline_events": [],
    "claims": [
@@ -234,18 +237,19 @@
     "clm-one-stop-shop"
    ],
    "sources": [
+    "src-garante-openai-2024",
     "src-europeanlawblog-openai-rome"
    ],
    "requires_verification": true,
-   "verification_note": "The judgment itself has not been retrieved; only academic analysis of it. The decision date of 20 December 2024 is taken from general knowledge and is not confirmed here. The judicial date is recorded at month precision because the brief gives only 'March 2026'.",
-   "last_verified": "2026-08-27",
+   "verification_note": "Corrected 2026-09-27 from the Garante's own website. The decision is no. 755 of 2 November 2024 (doc-web 10085455); 20 December 2024, recorded here before, is the date of the Garante's press release announcing it (doc-web 10085432), which confirms the EUR 15 million fine, the six-month information campaign ordered under Art. 166(7) of the Italian Privacy Code, an investigation opened in March 2023, and the transfer of the file to the Irish DPC as lead authority once OpenAI established its European headquarters in Ireland. The same notice records that the Court of Rome's judgment no. 4153/2026, published 18 March 2026, upheld OpenAI's opposition. STILL OPEN: the judgment itself has not been read, so its ground — recorded as a jurisdiction point under the one-stop-shop — rests on academic analysis (European Law Blog). The judicial outcome's 'nine months of investigative work' does not match the Garante's account of an investigation opened in March 2023 and decided in November 2024; what the nine months measure is not established.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:decided",
     "lodged_by": "OpenAI",
     "forum": "Tribunale di Roma",
     "lodged_date": null,
     "case_ref": null,
-    "note": "Decided March 2026 on jurisdiction. Whether the Garante has appealed is not established."
+    "note": "Decided: the Garante's own notice (read 27 Sep 2026) states that the Court of Rome's judgment no. 4153/2026, published 18 March 2026, upheld OpenAI's opposition to decision no. 755, and that the decision has been temporarily removed from the Garante's website. Whether the Garante has appealed is not established."
    }
   },
   {
@@ -281,18 +285,22 @@
     "src-eucrim-x-first-fine",
     "src-ec-x-decision-2025-house-release",
     "src-euperspectives-x-appeal-2026",
-    "src-doj-x-intervention-2026"
+    "src-doj-x-intervention-2026",
+    "src-oj-t114-26-x-action",
+    "src-oj-t120-26-xai-action",
+    "src-oj-t121-26-musk-action",
+    "src-curia-register-2026-09-27"
    ],
-   "requires_verification": true,
-   "verification_note": "Updated 2026-09-26 (audits T-17, T-36). The Commission press release confirms the amount and all three grounds; the decision text (as released by the US House Judiciary Committee, not by the Commission) confirms the 183 pages and the per-infringement fines. The decision is under challenge before the General Court: Case T-114/26 (X Internet and X Holdings v Commission) and Case T-121/26 (Musk v Commission), numbers from the US Department of Justice's announcement of 24 September 2026 that it has applied to intervene. The seventeen-month gap from preliminary findings is not confirmed from a primary source. 'First DSA fine' rests on commentary.",
-   "last_verified": "2026-09-26",
+   "requires_verification": false,
+   "verification_note": "Verified 2026-09-27. Amount and the three grounds from the Commission press release; decision number, date and case numbers from the three Official Journal notices of the actions against it, which also establish the appeals (T-114/26, T-120/26, T-121/26, lodged 16 Feb 2026) and the Court's register (pending, 27 Sep 2026). The per-infringement fines and the 183 pages rest on the decision text as released by the US House Judiciary Committee, not by the Commission. Two framings belong to the linked claims, not to this record, and remain unconfirmed there: the seventeen-month gap from preliminary findings, and 'first DSA fine'.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:pending",
-    "lodged_by": "X Internet Unlimited Company and X Holdings Corp.; separately Elon Musk",
+    "lodged_by": "X Internet ulc and X Holdings Corp. (T-114/26); X.AI Holdings LLC (T-120/26); Elon Musk (T-121/26)",
     "forum": "General Court of the European Union",
-    "lodged_date": null,
-    "case_ref": "T-114/26; T-121/26 (Musk v Commission)",
-    "note": "Actions for annulment announced by X on 20 February 2026 (reported by EU Perspectives). Case numbers from the US Department of Justice, which on 24 September 2026 applied to intervene in support of annulment. The exact lodging dates, and whether the intervention has been admitted, are not established; the CURIA register could not be searched in this environment."
+    "lodged_date": "2026-02-16",
+    "case_ref": "T-114/26; T-120/26; T-121/26",
+    "note": "Three actions for annulment of the Decision of 5 December 2025 in Cases DSA.100101–100103 (C(2025) 8630 final), all brought on 16 February 2026 (OJ C/2026/2390, 2391 and 2392 of 4 May 2026, read on 27 Sep 2026). The decision is addressed to more than one person: X.AI Holdings and Mr Musk each ask, in the alternative, for annulment insofar as it is addressed to them. All three recorded as pending in the Court's register on 27 Sep 2026. Whether the US Department of Justice's application to intervene (24 Sep 2026) has been admitted is not established."
    }
   },
   {
@@ -321,7 +329,8 @@
    ],
    "sources": [
     "src-ec-temu-fine-2026",
-    "src-techpolicypress-temu"
+    "src-techpolicypress-temu",
+    "src-curia-register-2026-09-27"
    ],
    "requires_verification": true,
    "verification_note": "'Largest DSA fine to date' is not supported by the Commission text, which contains no ranking language; it rests on commentary, and is superseded in any case: the Commission fined AliExpress EUR 550 million on 20 July 2026, which is now the largest DSA fine. Appeal status not established.",
@@ -332,7 +341,7 @@
     "forum": null,
     "lodged_date": null,
     "case_ref": null,
-    "note": "Not established in this build."
+    "note": "Not established. The Court's register lists Case T-536/26 Whaleco Technology v Commission, lodged 12 August 2026 and pending (read 27 Sep 2026). The register gives no subject matter and the Official Journal notice of the action was not yet held by the Publications Office, so whether it challenges this decision is not established."
    }
   },
   {
@@ -360,7 +369,8 @@
     "clm-aliexpress-fine"
    ],
    "sources": [
-    "src-ec-aliexpress-fine-2026"
+    "src-ec-aliexpress-fine-2026",
+    "src-curia-register-2026-09-27"
    ],
    "requires_verification": true,
    "verification_note": "Fine amount, date and ground confirmed by the Commission's own press release. The 20 October 2026 action-plan deadline and the appeal are reported by secondary legal commentary (Lewis Silkin), not by the Commission text itself; no Tribunal case number located.",
@@ -371,7 +381,7 @@
     "forum": null,
     "lodged_date": null,
     "case_ref": null,
-    "note": "AliExpress announced its intention to challenge the decision (reported by Lewis Silkin, 24 July 2026); no case number located."
+    "note": "AliExpress announced its intention to challenge the decision (reported by Lewis Silkin, 24 July 2026); no case number located. The Court's register, read 27 Sep 2026, lists no action by the company lodged after the decision of 20 July 2026; the time limit runs from notification, whose date is not published, so this is the register's state on that date and not a finding that no action will be brought."
    }
   },
   {
@@ -531,7 +541,7 @@
     "dma:art-30"
    ],
    "authority": "ec",
-   "opened": null,
+   "opened": "2024-03-25",
    "decision_date": "2025-04-23",
    "action": "Non-compliance decision and fine under Art. 5(4)",
    "fine_eur": 500000000,
@@ -546,19 +556,20 @@
     "clm-dma-consumer-benefit-modest"
    ],
    "sources": [
-    "src-ec-apple-meta-dma-2025"
+    "src-ec-apple-meta-dma-2025",
+    "src-oj-t438-25-apple-action",
+    "src-curia-register-2026-09-27"
    ],
    "requires_verification": true,
-   "verification_note": "The brief states the decision is on appeal; the appeal has not been separately verified here. The behavioural outcome recorded is the brief's own characterisation and is not independently sourced. Retrieve the non-confidential decision published 26 May 2025.",
-   "last_verified": "2026-08-27",
+   "verification_note": "Updated 2026-09-27. The appeal is now established from the Official Journal notice of the action (Case T-438/25, lodged 7 July 2025) and the Court's register (pending on 27 Sep 2026); the investigation's opening date, 25 March 2024, is from the Commission's press release IP/25/1085, read in full the same day. STILL OPEN: the behavioural outcome recorded here reproduces the author's interpretation (clm-dma-consumer-benefit-modest) and is not what this decision is about — the press release describes a steering infringement under Art. 5(4) and an order to remove technical and commercial restrictions on steering within 60 days; it says nothing about default browsers, installation outside the App Store or third-party payment. The same release closed the separate investigation into Apple's user-choice obligations. Establishing what changed for users after this decision needs a Commission compliance assessment, which has not been read.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:pending",
-    "lodged_by": "Apple",
+    "lodged_by": "Apple Inc.",
     "forum": "General Court of the European Union",
-    "lodged_date": null,
-    "case_ref": null,
-    "note": "The brief states the decision is on appeal. The action has not been independently verified here and no case number is recorded.",
-    "requires_verification": true
+    "lodged_date": "2025-07-07",
+    "case_ref": "T-438/25",
+    "note": "Action for annulment of Decision C(2025) 2090 final (case DMA.100109), or annulment or reduction of the fine, brought on 7 July 2025 (OJ C/2025/5215, read in the Official Journal on 27 Sep 2026). Recorded as pending in the Court's register on 27 Sep 2026."
    }
   },
   {
@@ -571,7 +582,7 @@
     "dma:art-30"
    ],
    "authority": "ec",
-   "opened": null,
+   "opened": "2024-03-25",
    "decision_date": "2025-04-23",
    "action": "Non-compliance decision and fine under Art. 5(2)",
    "fine_eur": 200000000,
@@ -586,19 +597,20 @@
    ],
    "sources": [
     "src-ec-apple-meta-dma-2025",
-    "src-ec-meta-ad-choice-2025"
+    "src-ec-meta-ad-choice-2025",
+    "src-oj-t435-25-meta-action",
+    "src-curia-register-2026-09-27"
    ],
-   "requires_verification": true,
-   "verification_note": "The binary pay-or-consent model was found not to provide the genuinely equivalent, less data-intensive alternative Art. 5(2) requires. Appeal status is not independently sourced here. The brief's 'three-tier advertising model' was replaced on 2026-09-26 (audit T-18) by what the Commission's 8 December 2025 statement describes: a two-way choice from January 2026.",
-   "last_verified": "2026-08-27",
+   "requires_verification": false,
+   "verification_note": "Verified 2026-09-27. Decision, date, fine and ground from the Commission's press release IP/25/1085 (read in full): the binary 'Consent or Pay' model did not give users the specific choice of an equivalent service using less personal data, for the period March–November 2024; investigation opened 25 March 2024. The appeal from the Official Journal notice of Case T-435/25 and the Court's register. The behavioural outcome from the Commission's statement of 8 December 2025. The brief's 'three-tier advertising model' was replaced on 2026-09-26 (audit T-18) by that statement's two-way choice.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:pending",
-    "lodged_by": "Meta",
+    "lodged_by": "Meta Platforms, Inc.",
     "forum": "General Court of the European Union",
-    "lodged_date": null,
-    "case_ref": null,
-    "note": "The brief states the decision is on appeal. Not independently verified here.",
-    "requires_verification": true
+    "lodged_date": "2025-07-04",
+    "case_ref": "T-435/25",
+    "note": "Action for annulment of the Decision of 23 April 2025 in Case DMA.100055 Meta – Article 5(2) DMA, and annulment or reduction of the fine, brought on 4 July 2025 (OJ C/2025/5214, read in the Official Journal on 27 Sep 2026). Recorded as pending in the Court's register on 27 Sep 2026."
    }
   },
   {
@@ -672,19 +684,21 @@
    "sources": [
     "src-gc-supervisory-fee-2025",
     "src-mlex-2025-dsa-fee-appeal",
-    "src-mlex-2026-dsa-fee-appeal-oj"
+    "src-mlex-2026-dsa-fee-appeal-oj",
+    "src-oj-c744-25p-fee-appeal",
+    "src-oj-c745-25p-fee-appeal",
+    "src-curia-register-2026-09-27"
    ],
-   "requires_verification": true,
-   "verification_note": "That the Commission appealed both judgments is reported by MLex (24 November 2025; 12 January 2026, citing two Official Journal notices) — paywalled tier-4 journalism of which only the standfirst/summary was read. The Official Journal notices, the appeal case numbers and lodging dates, and whether the appeals were still pending on 2026-09-26 are not established from a primary source; EUR-Lex and CURIA's case search could not be read in this environment.",
-   "last_verified": "2026-09-26",
+   "requires_verification": false,
+   "verification_note": "Verified 2026-09-27. The judgments from the Court's press release; the appeals from the two Official Journal notices (C-744/25 P and C-745/25 P, lodged 20 Nov 2025), which name the contested acts at first instance — Implementing Decisions C(2023) 8176 final (Facebook and Instagram) and C(2023) 8173 final (TikTok) of 27 November 2023 — and the Court's register (pending, 27 Sep 2026). This supersedes the MLex reports of 24 Nov 2025 and 12 Jan 2026, which are kept as the record of how the appeal was first learned of.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:pending",
     "lodged_by": "European Commission",
     "forum": "Court of Justice of the European Union",
-    "lodged_date": null,
-    "case_ref": null,
-    "note": "Appeals by the Commission against both judgments reported by MLex on 24 November 2025 and 12 January 2026 (the latter citing two Official Journal notices). Case numbers and lodging dates not retrieved; no primary source read. 'Pending' is the state as reported in January 2026, not verified as current.",
-    "requires_verification": true
+    "lodged_date": "2025-11-20",
+    "case_ref": "C-744/25 P (against T-55/24, Meta Platforms Ireland); C-745/25 P (against T-58/24, Tiktok Technology)",
+    "note": "Both appeals brought on 20 November 2025 (OJ C/2026/164 and C/2026/165 of 12 January 2026, read on 27 Sep 2026). The Commission asks the Court of Justice to set aside the judgments and give final judgment, or refer the cases back. Recorded as pending in the Court's register on 27 Sep 2026."
    }
   },
   {
@@ -788,7 +802,8 @@
    ],
    "sources": [
     "src-ec-google-dma-fine-2026",
-    "src-ec-google-dma-fine-2026-ip"
+    "src-ec-google-dma-fine-2026-ip",
+    "src-curia-register-2026-09-27"
    ],
    "requires_verification": true,
    "verification_note": "requires verification: the EUR 890 million total and the 23 July 2026 date are confirmed against the Commission's DMA portal and press release IP/26/1670. Three things are NOT established in this build: the reported EUR 460m / EUR 430m component split against the decision text; the specific DMA articles found to be breached; and whether an appeal has been lodged. Reporting at the time recorded that Google was weighing an appeal, which is not the same as one having been filed.",
@@ -799,7 +814,7 @@
     "forum": null,
     "lodged_date": null,
     "case_ref": null,
-    "note": "Not established. Contemporary reporting described Google as considering an appeal; no filing is recorded here."
+    "note": "Not established. Contemporary reporting described Google as considering an appeal; no filing is recorded here. The Court's register, read 27 Sep 2026, lists no action by the company lodged after the decision of 23 July 2026; the time limit runs from notification, whose date is not published, so this is the register's state on that date and not a finding that no action will be brought."
    }
   }
  ]

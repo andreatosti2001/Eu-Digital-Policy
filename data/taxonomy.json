@@ -753,6 +753,10 @@
       "label": "Court press release"
     },
     {
+      "id": "source-type:court-record",
+      "label": "Court register entry or Official Journal notice of a case"
+    },
+    {
       "id": "source-type:decision",
       "label": "Administrative decision"
     },
