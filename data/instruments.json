@@ -820,11 +820,10 @@
           "summary": "The Regulation does not apply to AI systems where and in so far as they are placed on the market, put into service, or used with or without modification exclusively for military, defence or national security purposes, regardless of the type of entity carrying out those activities; nor does it affect Member States' competences concerning national security.",
           "obligation_on": [],
           "claims": [
-            "clm-art-4-2-teu-carve-out"
+            "clm-ai-act-national-security-exclusion"
           ],
           "sources": [
-            "src-eurlex-ai-act",
-            "src-aia-text-unofficial-arts-2-4"
+            "src-eurlex-ai-act"
           ]
         },
         {
@@ -850,7 +849,8 @@
             "actor:ai-deployer"
           ],
           "claims": [
-            "clm-ai-omnibus-art-4-literacy"
+            "clm-ai-omnibus-art-4-literacy",
+            "clm-ai-act-not-all-ai"
           ],
           "sources": [
             "src-eurlex-ai-act",
@@ -1668,13 +1668,13 @@
       ],
       "celex": "32025R2518",
       "short_name": "GDPR Procedural Regulation",
-      "full_name": "Regulation (EU) 2025/2518 laying down additional procedural rules relating to the enforcement of Regulation (EU) 2016/679",
+      "full_name": "Regulation (EU) 2025/2518 laying down additional procedural rules on the enforcement of Regulation (EU) 2016/679",
       "kind": "kind:regulation",
       "scope_class": "scope:adjacent",
       "brief_part": "part-2",
       "legislative_status": "status:in-force",
-      "status_as_of": "2026-09-26",
-      "status_note": "In force since 1 January 2026 but not yet applicable (applies to complaints lodged from 2 April 2027). Harmonises admissibility criteria for cross-border GDPR complaints, gives parties common procedural rights (including a right to be heard and to see preliminary findings) and sets investigation time limits (15 months for regular cases, 12 for a simplified procedure). CELEX derived from the Official Journal reference reported by eucrim (L 2025/2518 of 12 December 2025); the consolidated EUR-Lex text could not be retrieved directly in this environment (every attempt returns HTTP 202 with no body) and should be checked before this record's status is next revised.",
+      "status_as_of": "2026-09-27",
+      "status_note": "In force since 1 January 2026 but not yet applicable: it applies from 2 April 2027 (Art. 37), and its investigation rules to complaints lodged, and ex officio investigations opened, after that date (Art. 36). Harmonises admissibility criteria for cross-border GDPR complaints (Art. 4), gives parties common procedural rights (including a right to be heard on preliminary findings and access to the administrative file, Arts 19 and 24) and sets time limits for the lead authority's draft decision (15 months; 12 under the simple cooperation procedure; Art. 12). Checked against the Official Journal text (OJ L 2025/2518, 12.12.2025, CELEX 32025R2518) on 27 Sep 2026.",
       "milestones": [
         "tl-gdpr-procedural-2025-11-26-adoption",
         "tl-gdpr-procedural-2025-12-12-publication",
@@ -1691,9 +1691,10 @@
         "clm-gdpr-procedural-regulation"
       ],
       "sources": [
+        "src-eurlex-gdpr-procedural",
         "src-eucrim-gdpr-procedural-2026"
       ],
-      "last_verified": "2026-09-26",
+      "last_verified": "2026-09-27",
       "legal_basis": []
     },
     {
@@ -2045,10 +2046,12 @@
           "obligation_on": [],
           "claims": [
             "clm-art-4-2-teu-carve-out",
+            "clm-privacy-international-national-security",
             "clm-enforcement-asymmetry"
           ],
           "sources": [
-            "src-brief-original"
+            "src-eurlex-teu-art-4",
+            "src-cjeu-c623-17"
           ]
         }
       ],

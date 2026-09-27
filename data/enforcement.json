@@ -546,25 +546,26 @@
     "forum": "General Court of the European Union",
     "date": "2026-07-08",
     "outcome": "Apple's designation challenges dismissed in full. App Store and iOS obligations confirmed; iMessage pleas held inadmissible; App Store versions treated as a single core platform service. Closes the route by which designated gatekeepers could contest interoperability obligations at the designation stage, but leaves the substance of Art. 6(7) untested.",
-    "case_ref": "Joined Cases T-1079/23, T-1080/23 and T-214/24"
+    "case_ref": "Joined Cases T-1079/23, T-1080/23 and T-214/24, ECLI:EU:T:2026:451"
    },
    "timeline_events": [],
    "claims": [
     "clm-gc-apple-designation-upheld"
    ],
    "sources": [
-    "src-gc-apple-designation-2026"
+    "src-gc-apple-designation-2026",
+    "src-gc-t1079-23-judgment"
    ],
    "requires_verification": false,
-   "verification_note": "Whether an appeal to the Court of Justice has been lodged is not established. Until 27 Sep 2026 action_status read action:final (\"no longer subject to appeal\"), which this record's own appeal block contradicts; it now reads action:imposed, the decision stands as upheld at first instance, and the pipeline shows its final stage as unknown rather than reached. Establishing whether an appeal was lodged is what would settle it.",
-   "last_verified": "2026-08-27",
+   "verification_note": "Judicial outcome checked on 27 Sep 2026 against the judgment itself (ECLI:EU:T:2026:451): operative part point 2 dismisses the actions; paras 47 and 62 hold the plea of illegality against Art. 6(7) inadmissible at the designation stage; para 99 rejects the plea against treating the App Stores as a single core platform service; para 133 holds the iMessage plea inadmissible; para 148 dismisses the actions in T-1079/23 and T-214/24 as inadmissible. Whether an appeal to the Court of Justice has been lodged is still not established (see appeal.note). Until 27 Sep 2026 action_status read action:final, which the unknown appeal contradicts; it reads action:imposed and the pipeline shows its final stage as unknown rather than reached.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:unknown",
     "lodged_by": null,
     "forum": "Court of Justice of the European Union",
     "lodged_date": null,
     "case_ref": null,
-    "note": "Whether Apple has appealed the General Court's judgment to the Court of Justice is not established."
+    "note": "Not established. Searched on 27 Sep 2026: the Court's case register (InfoCuria, https://infocuria.curia.europa.eu/, whose index then held cases lodged up to 25 Sep 2026) links no appeal to T-1079/23, T-1080/23 or T-214/24, and lists no case with Apple as a party lodged after 8 July 2026. That is not proof that none was brought: the period for an appeal runs from notification of the judgment, which the register does not show, and a lodged appeal may be registered after a delay. Recheck the register before recording appeal:not-lodged or appeal:pending."
    }
   },
   {

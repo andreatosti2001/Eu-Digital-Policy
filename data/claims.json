@@ -508,8 +508,8 @@
     },
     {
       "id": "clm-gdpr-procedural-regulation",
-      "type": "claim-type:fact",
-      "statement": "Regulation (EU) 2025/2518, which harmonises admissibility, the parties' procedural rights and investigation deadlines in cross-border GDPR cases, entered into force on 1 January 2026 and applies to complaints lodged from 2 April 2027.",
+      "type": "claim-type:law",
+      "statement": "Regulation (EU) 2025/2518, which harmonises the admissibility of complaints, the parties' procedural rights and the time limits for draft decisions in cross-border GDPR cases, entered into force on 1 January 2026 and applies from 2 April 2027, its investigation rules to complaints lodged after that date.",
       "instruments": [
         "gdpr-procedural",
         "gdpr"
@@ -518,6 +518,11 @@
       "institutions": [],
       "enforcement": [],
       "sources": [
+        {
+          "source_id": "src-eurlex-gdpr-procedural",
+          "supports": "supports:direct",
+          "locator": "Art. 4(1) (admissibility), Arts 19, 22 and 24 (right to be heard, administrative file), Art. 12(1) and (6) (draft decision within 15 months, 12 under the simple cooperation procedure), Art. 36 (transitional provisions), Art. 37 (entry into force and application)"
+        },
         {
           "source_id": "src-eucrim-gdpr-procedural-2026",
           "supports": "supports:direct",
@@ -528,7 +533,7 @@
       "brief_part": "part-2",
       "published": "2026-01-16",
       "last_verified": "2026-09-27",
-      "verification_note": "Confirmed against eucrim, a specialist newsletter published by the Max Planck Institute for the Study of Crime, Security and Law, reporting the regulation's Official Journal reference and adoption on 26 November 2025. The EUR-Lex consolidated text could not be retrieved directly in this environment: every attempt (multiple URI and PDF endpoints) returns HTTP 202 with no body, which this build's freshness tooling also reports as a standing limitation. Re-verify against EUR-Lex directly when it becomes reachable. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
+      "verification_note": "Read against the Official Journal text on 27 Sep 2026 (OJ L 2025/2518 of 12.12.2025, via the Publications Office's Cellar). Art. 37: entry into force on the twentieth day following publication (1 January 2026) and application from 2 April 2027. Art. 36: Chapters III and IV apply to ex officio investigations opened, and complaint-based investigations whose complaint was lodged, after 2 April 2027. Corrected that day: the statement said the regulation 'applies to complaints lodged from 2 April 2027' and called the time limits 'investigation deadlines'; Art. 12 sets them for the lead authority's draft decision (15 months, extendable once by up to 12; 12 months under the simple cooperation procedure). Retyped from fact to law: the statement is what the instrument provides. Earlier confirmed against eucrim (Max Planck Institute), which reports the same dates."
     },
     {
       "id": "clm-dpc-share-of-fines",
@@ -2352,6 +2357,11 @@
       ],
       "sources": [
         {
+          "source_id": "src-gc-t1079-23-judgment",
+          "supports": "supports:direct",
+          "locator": "Operative part, point 2; paras 47 and 62 (plea of illegality against Art. 6(7) inadmissible at the designation stage), 99 (App Stores a single core platform service), 133-134 (iMessage plea inadmissible; T-1080/23 dismissed in its entirety), 148-149"
+        },
+        {
           "source_id": "src-gc-apple-designation-2026",
           "supports": "supports:direct",
           "locator": "Press Release No 96/26"
@@ -2360,8 +2370,8 @@
       "legal_basis": [],
       "brief_part": "part-4",
       "published": "2026-07-08",
-      "last_verified": "2026-08-27",
-      "verification_note": "Joined Cases T-1079/23, T-1080/23 and T-214/24. The substance of Art. 6(7) interoperability remains untested."
+      "last_verified": "2026-09-27",
+      "verification_note": "Joined Cases T-1079/23, T-1080/23 and T-214/24, ECLI:EU:T:2026:451. Read against the judgment on 27 Sep 2026. The Art. 6(7) plea failed on admissibility (Art. 6(7) is not the legal basis of the designation decision, para 47), so the substance of Art. 6(7) interoperability remains untested. 'Closing the route' generalises from Apple's case: the holding is that a plea of illegality against Art. 6(7) is inadmissible in an action against a designation decision."
     },
     {
       "id": "clm-dma-review-enforce-not-expand",
@@ -2653,7 +2663,8 @@
         "ai-act"
       ],
       "provisions": [
-        "ai-act:art-6"
+        "ai-act:art-6",
+        "ai-act:art-4"
       ],
       "institutions": [
         "ec"
@@ -2661,14 +2672,19 @@
       "enforcement": [],
       "sources": [
         {
+          "source_id": "src-ec-ai-act-framework",
+          "supports": "supports:partial",
+          "locator": "Section 'Minimal or no risk': 'The AI Act does not introduce rules for AI that is deemed minimal or no risk. The vast majority of AI systems currently used in the EU fall into this category.'"
+        },
+        {
+          "source_id": "src-eurlex-ai-omnibus",
+          "supports": "supports:partial",
+          "locator": "Art. 1, point (5), replacing Art. 4 of Regulation (EU) 2024/1689"
+        },
+        {
           "source_id": "src-eurlex-ai-act",
           "supports": "supports:partial",
           "locator": "Art. 6"
-        },
-        {
-          "source_id": "src-aia-text-unofficial-arts-2-4",
-          "supports": "supports:partial",
-          "locator": "Art. 4"
         },
         {
           "source_id": "src-brief-original",
@@ -2681,8 +2697,8 @@
       ],
       "brief_part": "part-5",
       "published": "2026-08-19",
-      "last_verified": "2026-09-26",
-      "verification_note": "The tier structure is verified. The Commission's specific position statement is not separately sourced. Corrected on 2026-09-26 (audit T-11): 'no obligations' overstated the minimal-risk tier, because Art. 4 applies to providers and deployers of AI systems generally. Art. 4 as amended by the Digital Omnibus (Reg. (EU) 2026/1744) was read from an unofficial explorer, not the Official Journal: the duty is now to 'take measures to support the development of AI literacy' rather than to ensure a sufficient level of it."
+      "last_verified": "2026-09-27",
+      "verification_note": "Sourced on 27 Sep 2026. The Commission's position is on its AI Act page (digital-strategy.ec.europa.eu, 'Last update 3 August 2026'), which names AI-enabled video games and spam filters; the page does not mention the Art. 4 exception, so it supports the claim in part. Art. 4 as replaced by the Digital Omnibus on AI was read in the Official Journal text of Regulation (EU) 2026/1744 (Art. 1, point (5)), replacing the unofficial explorer relied on the day before: 'Providers and deployers of AI systems shall take measures to support the development of AI literacy of their staff and other persons dealing with the operation and use of AI systems on their behalf'. No single primary text states the whole proposition, so it remains partial. Corrected on 2026-09-26 (audit T-11): 'no obligations' overstated the minimal-risk tier, because Art. 4 applies to providers and deployers of AI systems generally. Art. 4 as amended by the Digital Omnibus (Reg. (EU) 2026/1744) was read from an unofficial explorer, not the Official Journal: the duty is now to 'take measures to support the development of AI literacy' rather than to ensure a sufficient level of it."
     },
     {
       "id": "clm-art-25-provider-trap",
@@ -2830,8 +2846,8 @@
     },
     {
       "id": "clm-ai-act-delay-scope",
-      "type": "claim-type:fact",
-      "statement": "The AI Omnibus delayed the AI Act's high-risk tier by roughly sixteen months while leaving prohibitions, GPAI duties and transparency close to the original schedule.",
+      "type": "claim-type:law",
+      "statement": "The AI Omnibus delayed the AI Act's high-risk obligations by sixteen months for Annex III systems and twelve for Annex I product-embedded systems, while leaving prohibitions, GPAI duties and transparency close to the original schedule.",
       "instruments": [
         "ai-act",
         "ai-omnibus"
@@ -2845,21 +2861,26 @@
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-ec-ai-omnibus-in-force",
-          "supports": "supports:partial",
-          "locator": null
+          "source_id": "src-eurlex-ai-omnibus",
+          "supports": "supports:direct",
+          "locator": "Art. 1, point (40)(b), replacing Art. 113, third paragraph, point (c); point (40)(a) (Art. 5 additions from 2 December 2026); point (39)(b) (new Art. 111(4), Art. 50(2) by 2 December 2026); recital 40"
         },
         {
-          "source_id": "src-eurlex-ai-omnibus",
+          "source_id": "src-eurlex-ai-act",
           "supports": "supports:partial",
-          "locator": null
+          "locator": "Art. 113 as adopted (general application 2 August 2026; Chapter V from 2 August 2025; Art. 6(1) from 2 August 2027)"
+        },
+        {
+          "source_id": "src-ec-ai-omnibus-in-force",
+          "supports": "supports:partial",
+          "locator": "Annex III high-risk from 2 December 2027; product-embedded high-risk from 2 August 2028"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-5",
       "published": "2026-07-27",
-      "last_verified": "2026-08-27",
-      "verification_note": "The new dates — Annex III high-risk from 2 December 2027, product-embedded from 2 August 2028 — are directly sourced. 'Roughly sixteen months' is a computation from 2 August 2026, not a figure any source states."
+      "last_verified": "2026-09-27",
+      "verification_note": "Read on 27 Sep 2026 against the Official Journal texts of Regulation (EU) 2026/1744 and Regulation (EU) 2024/1689 (Publications Office's Cellar). Chapter III, Sections 1-3 now apply from 2 December 2027 for Annex III systems (originally the general date, 2 August 2026: sixteen months) and from 2 August 2028 for Annex I systems (originally 2 August 2027 under Art. 113(c): twelve months). The month counts are the site's arithmetic on those dates; recital 40 gives the original and new dates but no count. Chapters I and II (prohibitions) keep 2 February 2025, with two added Art. 5 prohibitions from 2 December 2026; Chapter V (GPAI) keeps 2 August 2025; Art. 50 keeps the general date, with a transition to 2 December 2026 for Art. 50(2) for systems already on the market. Corrected that day: the statement said 'roughly sixteen months' for the whole high-risk tier, which is true only of Annex III; the brief's own prose already said sixteen and twelve. Retyped from fact to law."
     },
     {
       "id": "clm-ai-omnibus-in-force",
@@ -3156,7 +3177,7 @@
     {
       "id": "clm-ai-omnibus-legislative-path",
       "type": "claim-type:fact",
-      "statement": "The AI Omnibus was proposed on 19 November 2025; the Council adopted its general approach on 13 March 2026 and Parliament its mandate on 26 March 2026, by 569 votes to 45; agreement was reached on 7 May 2026 after a second trilogue on 28 April collapsed; Parliament approved the text on 16 June and the Council on 29 June 2026.",
+      "statement": "The AI Omnibus was proposed on 19 November 2025; the Council adopted its general approach on 13 March 2026 and Parliament its mandate on 26 March 2026, by 569 votes to 45; agreement was reached on 7 May 2026; Parliament approved the text on 16 June and the Council on 29 June 2026.",
       "instruments": [
         "ai-omnibus",
         "ai-act"
@@ -3170,10 +3191,41 @@
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-ep-legtrain-ai-omnibus",
-          "supports": "supports:partial",
-          "locator": null
+          "source_id": "src-ep-oeil-ai-omnibus",
+          "supports": "supports:direct",
+          "locator": "Key events: 19/11/2025 proposal (COM(2025)0836); 26/03/2026 decision by Parliament, 1st reading (T10-0098/2026), referred back for interinstitutional negotiations; 16/06/2026 decision by Parliament (T10-0198/2026); 29/06/2026 act adopted by Council. Summary of 26/03/2026: 'adopted by 569 votes to 45 against and 23 abstentions'"
         },
+        {
+          "source_id": "src-ep-legtrain-ai-omnibus",
+          "supports": "supports:direct",
+          "locator": "'The Council agreed its general approach on 13 March 2026. The co-legislators reached a trilogue agreement on the file on 7 May 2026'; 'Parliament's plenary approved the agreement on 16 June 2026 ... and the Council adopted the act on 29 June 2026'"
+        },
+        {
+          "source_id": "src-eurlex-ai-omnibus",
+          "supports": "supports:partial",
+          "locator": "Footnote 4: 'Position of the European Parliament of 16 June 2026 ... and decision of the Council of 29 June 2026'"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-5",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Verified on 27 Sep 2026 against Parliament's Legislative Observatory (procedure 2025/0359(COD), key events and the summary of 26 March 2026), the Legislative Train page (information updated 1 August 2026) and footnote 4 of the Official Journal text. Split that day: the collapsed trilogue of 28 April 2026, which no source read here mentions, is now its own claim (clm-ai-omnibus-april-trilogue). The final plenary vote of 16 June was 423 to 57 with 174 abstentions (Legislative Train); the Official Journal gives the adoption date as 8 July 2026, the day the act was signed (tl-ai-omnibus-2026-07-08-adoption)."
+    },
+    {
+      "id": "clm-ai-omnibus-april-trilogue",
+      "type": "claim-type:fact",
+      "statement": "The second political trilogue on the AI Omnibus, on 28 April 2026, ended without agreement after roughly twelve hours, over how the AI Act interlocks with existing sectoral product-safety law rather than over the delay itself.",
+      "instruments": [
+        "ai-omnibus"
+      ],
+      "provisions": [],
+      "institutions": [
+        "ep",
+        "council"
+      ],
+      "enforcement": [],
+      "sources": [
         {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
@@ -3184,7 +3236,9 @@
       "brief_part": "part-5",
       "published": null,
       "last_verified": "2026-09-27",
-      "verification_note": "Registered on 27 Sep 2026 for the sequence in Part V. The Legislative Train page supports the 19 November 2025 proposal date (its note); the other dates and the vote count rest on the brief. The adoption date the Official Journal gives is 8 July 2026 (tl-ai-omnibus-2026-07-08-adoption), after the Council's approval."
+      "verification_note": "Split from clm-ai-omnibus-legislative-path on 27 Sep 2026. Neither Parliament's Legislative Observatory, the Legislative Train page nor Parliament's press release of 7 May 2026 ('Early Thursday morning, Parliament and Council negotiators reached a provisional deal') mentions a failed trilogue on 28 April; the press release does list 'No overlapping rules for machinery product safety' among the outcomes, which is consistent with the stated cause but does not establish it. The Council's press releases returned HTTP 403 in this environment.",
+      "reference_gap": true,
+      "gap_note": "the 28 April 2026 trilogue, its length and its cause — no source stating them has been located"
     },
     {
       "id": "clm-gpai-guidelines-10-23",
@@ -3231,11 +3285,6 @@
           "locator": "Art. 1(2), 1(5)"
         },
         {
-          "source_id": "src-da-text-unofficial-arts-1-50",
-          "supports": "supports:partial",
-          "locator": "Art. 1(2), 1(5)"
-        },
-        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part VI"
@@ -3245,7 +3294,7 @@
       "brief_part": "part-6",
       "published": "2023-12-22",
       "last_verified": "2026-09-27",
-      "verification_note": "Corrected on 2026-09-26 (audit T-13): the earlier wording implied the Data Act concerns non-personal data. Art. 1(2) says it covers personal and non-personal data, and Art. 1(5) that data-protection law prevails in a conflict. Read from an unofficial reproduction (EUR-Lex returns HTTP 202 with no body here). 'Predominantly non-personal, industrial and machine-generated' remains the brief's characterisation. Checked 27 Sep 2026 against the Official Journal text read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32023R2854): Article 1(2) covers personal and non-personal data, and Article 1(5) makes data-protection law prevail in a conflict. \"Predominantly non-personal, industrial and machine-generated\" and \"reallocates control by default\" are the brief's characterisation, so the reference stays partial."
+      "verification_note": "Corrected on 2026-09-26 (audit T-13): the earlier wording implied the Data Act concerns non-personal data. Art. 1(2) says it covers personal and non-personal data, and Art. 1(5) that data-protection law prevails in a conflict. Read from an unofficial reproduction (EUR-Lex returns HTTP 202 with no body here). 'Predominantly non-personal, industrial and machine-generated' remains the brief's characterisation. Checked 27 Sep 2026 against the Official Journal text read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32023R2854): Article 1(2) covers personal and non-personal data, and Article 1(5) makes data-protection law prevail in a conflict. \"Predominantly non-personal, industrial and machine-generated\" and \"reallocates control by default\" are the brief's characterisation, so the reference stays partial. The unofficial reproduction (src-da-text-unofficial-arts-1-50), read for the same two paragraphs on 26 Sep 2026, was removed from this claim on 27 Sep 2026: the Official Journal reading supersedes it and it added no support."
     },
     {
       "id": "clm-data-act-switching-numbers",
@@ -3699,7 +3748,7 @@
     {
       "id": "clm-omnibus-four-gdpr-reforms",
       "type": "claim-type:law",
-      "statement": "The Commission's four principal proposed GDPR reforms were: an entity-relative test for personal data in Art. 4(1); a new Art. 41a empowering the Commission to determine when pseudonymised data ceases to be personal; relocation of cookie consent into a new Art. 88a; and a new Art. 88c providing an explicit legitimate-interest basis for AI model training. None is law.",
+      "statement": "The Commission's four principal proposed GDPR reforms were: an entity-relative test for personal data in Art. 4(1); a new Art. 41a empowering the Commission to set, by implementing acts, the means and criteria for determining when pseudonymised data ceases to be personal; relocation of cookie consent into a new Art. 88a; and a new Art. 88c providing an explicit legitimate-interest basis for AI model training. None is law.",
       "instruments": [
         "data-omnibus",
         "gdpr"
@@ -3712,8 +3761,8 @@
       "sources": [
         {
           "source_id": "src-eurlex-data-omnibus-837",
-          "supports": "supports:partial",
-          "locator": "COM(2025) 837 final"
+          "supports": "supports:direct",
+          "locator": "Art. 3 (amendments to Regulation (EU) 2016/679): point 1(a) (Art. 4(1), added sentences), point 10 (new Art. 41a), point 15 (new Arts 88a and 88c)"
         },
         {
           "source_id": "src-brief-original",
@@ -3724,8 +3773,8 @@
       "legal_basis": [],
       "brief_part": "part-8",
       "published": "2025-11-19",
-      "last_verified": "2026-08-27",
-      "verification_note": "The proposal document is located; the four specific reforms have not been checked against its text in this build."
+      "last_verified": "2026-09-27",
+      "verification_note": "Checked on 27 Sep 2026 against the text of COM(2025) 837 final (the English PDF of the act, retrieved from the Publications Office's Cellar). Art. 3, point 1(a) adds to Art. 4(1) GDPR that information 'shall not be personal for a given entity where that entity cannot identify the natural person'; point 10 inserts Art. 41a ('The Commission may adopt implementing acts to specify means and criteria to determine whether data resulting from pseudonymisation no longer constitutes personal data for certain entities'); point 15 inserts Art. 88a (storing or accessing personal data in terminal equipment only with consent) and Art. 88c (legitimate interests for processing in the development and operation of AI systems and models). Corrected that day in the brief and its three translations: Art. 41a was described as empowering the Commission 'to determine when' pseudonymised data ceases to be personal; it empowers the Commission to set means and criteria for that determination. 'Principal' is the brief's selection."
     },
     {
       "id": "clm-edpb-edps-omnibus-pushback",
@@ -3965,31 +4014,20 @@
     {
       "id": "clm-art-4-2-teu-carve-out",
       "type": "claim-type:law",
-      "statement": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to AI systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)); the Court of Justice has nonetheless held that national data-retention legislation adopted for national-security purposes falls within EU law (Privacy International, C-623/17).",
+      "statement": "Article 4(2) TEU reserves national security to the Member States: it remains the sole responsibility of each Member State.",
       "instruments": [
-        "teu",
-        "ai-act"
+        "teu"
       ],
       "provisions": [
-        "ai-act:art-2"
+        "teu:art-4-2"
       ],
       "institutions": [],
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-eurlex-ai-act",
-          "supports": "supports:partial",
-          "locator": "Art. 2(3)"
-        },
-        {
-          "source_id": "src-aia-text-unofficial-arts-2-4",
-          "supports": "supports:partial",
-          "locator": "Art. 2(3)"
-        },
-        {
-          "source_id": "src-cjeu-c623-17-pr",
-          "supports": "supports:partial",
-          "locator": null
+          "source_id": "src-eurlex-teu-art-4",
+          "supports": "supports:direct",
+          "locator": "Art. 4(2), third sentence"
         },
         {
           "source_id": "src-brief-original",
@@ -4003,7 +4041,72 @@
       "brief_part": "part-11",
       "published": "2026-08-19",
       "last_verified": "2026-09-27",
-      "verification_note": "Corrected on 2026-09-26 (audit T-11): the exclusion is for systems used 'exclusively' for military, defence or national security purposes, not 'at all'. Art. 2(3) was read from an unofficial explorer of the text, not the Official Journal (EUR-Lex returns HTTP 202 with no body here). The Privacy International counterweight rests on CURIA Press Release No 123/20; the judgment was not opened, and the case concerns the e-Privacy Directive, not the AI Act, so it supports the limit on national-security carve-outs only by analogy. The provision link now points to ai-act:art-2, added on 2026-09-26 at the author's direction (it previously pointed to Art. 5 by mistake). Checked 27 Sep 2026 against the Official Journal text read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32024R1689): Article 2(3), second subparagraph, excludes AI systems used exclusively for military, defence or national security purposes. Article 4(2) TEU and the Privacy International judgment were not re-read."
+      "verification_note": "Split on 27 Sep 2026: until then this claim also carried the AI Act's national-security exclusion and the Privacy International holding, each now its own claim (clm-ai-act-national-security-exclusion, clm-privacy-international-national-security) so that each rests on its own primary source. Read that day against the Treaty text in the Official Journal (OJ C 202, 7.6.2016, p. 18, via the Publications Office's Cellar, CELEX 12016M004): 'In particular, national security remains the sole responsibility of each Member State.' Earlier history: corrected on 2026-09-26 (audit T-11) — the AI Act exclusion is for systems used 'exclusively' for those purposes; the provision link was corrected from Art. 5 to Art. 2 at the author's direction."
+    },
+    {
+      "id": "clm-ai-act-national-security-exclusion",
+      "type": "claim-type:law",
+      "statement": "The AI Act does not apply to AI systems placed on the market, put into service or used exclusively for military, defence or national security purposes, regardless of the type of entity carrying out those activities.",
+      "instruments": [
+        "ai-act"
+      ],
+      "provisions": [
+        "ai-act:art-2"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ai-act",
+          "supports": "supports:direct",
+          "locator": "Art. 2(3), second and third subparagraphs"
+        },
+        {
+          "source_id": "src-aia-text-unofficial-arts-2-4",
+          "supports": "supports:partial",
+          "locator": "Art. 2(3)"
+        }
+      ],
+      "legal_basis": [
+        "ai-act:art-2"
+      ],
+      "brief_part": "part-11",
+      "published": "2026-08-19",
+      "last_verified": "2026-09-27",
+      "verification_note": "Split from clm-art-4-2-teu-carve-out on 27 Sep 2026. Read that day against the Official Journal text (CELEX 32024R1689, via the Publications Office's Cellar): Art. 2(3), second subparagraph, excludes AI systems 'where and in so far they are placed on the market, put into service, or used with or without modification exclusively for military, defence or national security purposes'; the third subparagraph excludes systems not placed on the Union market whose output is used in the Union exclusively for those purposes. The Digital Omnibus on AI (Regulation (EU) 2026/1744, Art. 1(2)) replaces Art. 2(2) and (7) and adds Art. 2(13); it does not amend Art. 2(3). The unofficial explorer, read on 26 Sep 2026, agrees and is kept only as a secondary reading."
+    },
+    {
+      "id": "clm-privacy-international-national-security",
+      "type": "claim-type:law",
+      "statement": "In Privacy International (C-623/17) the Court of Justice held that national legislation requiring providers of electronic communications services to forward traffic and location data to security and intelligence agencies for the purpose of safeguarding national security falls within the scope of the e-Privacy Directive, read in the light of Article 4(2) TEU.",
+      "instruments": [
+        "eprivacy",
+        "teu"
+      ],
+      "provisions": [
+        "teu:art-4-2"
+      ],
+      "institutions": [
+        "cjeu"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-cjeu-c623-17",
+          "supports": "supports:direct",
+          "locator": "Operative part, point 1; paras 44 and 49"
+        },
+        {
+          "source_id": "src-cjeu-c623-17-pr",
+          "supports": "supports:direct",
+          "locator": "Press Release No 123/20, first page"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-11",
+      "published": "2020-10-06",
+      "last_verified": "2026-09-27",
+      "verification_note": "Split from clm-art-4-2-teu-carve-out on 27 Sep 2026 and read that day against the judgment (Grand Chamber, 6 October 2020, CELEX 62017CJ0623, via the Publications Office's Cellar). Para 44: 'the mere fact that a national measure has been taken for the purpose of protecting national security cannot render EU law inapplicable'. Corrected that day: the brief said the Court held 'national data-retention measures' within EU law. Privacy International concerned the forwarding (transmission) of traffic and location data to security and intelligence agencies; retention was the question in the joined La Quadrature du Net cases (C-511/18, C-512/18, C-520/18), decided the same day and covered by the same press release but not read here. The case concerns the e-Privacy Directive, not the AI Act: it bears on the AI Act's national-security exclusion by analogy only."
     },
     {
       "id": "clm-art-5-binds-states",

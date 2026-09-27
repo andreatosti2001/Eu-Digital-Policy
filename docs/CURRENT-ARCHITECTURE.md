@@ -341,7 +341,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 104 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 101 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -375,6 +375,7 @@ the corpus being more honest, not less.
 - 104 → 105: clm-dpc-share-of-fines was split into three atomic claims; the "nine of the ten largest fines" ranking (clm-dpc-top-ten-fines) rests on the brief alone and is now counted on its own.
 - 105 → 107: 31 claims were registered for prose no claim recorded (tools/evidence-audit.mjs, prose coverage 37.9% → 100%); two of them rest on the brief — the AI Omnibus legislative sequence and ICLE's enforcement-architecture argument.
 - 107 → 104: three claims of law that leaned on unofficial reproductions (clm-dsa-micro-small-exemption, clm-data-act-switching-numbers, clm-data-act-art-3-application) were read against the Official Journal and now cite it directly with an article locator.
+- 104 → 101 (27 Sep 2026, next phase): four claims now carry a direct primary source with a structural locator — clm-ai-act-delay-scope and clm-ai-omnibus-legislative-path (Regulation (EU) 2026/1744 in the Official Journal; Parliament's Legislative Observatory), clm-art-4-2-teu-carve-out (split into three atomic claims, each read against the Treaty, the AI Act or the Privacy International judgment) and clm-omnibus-four-gdpr-reforms (the text of COM(2025) 837). One new claim, clm-ai-omnibus-april-trilogue, rests on the brief alone: no source read mentions the collapsed trilogue of 28 April 2026.
 
 The other numbers on this block are unchanged.
 

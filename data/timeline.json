@@ -167,7 +167,7 @@
    "sectors": [
     "sector:cross-sector"
    ],
-   "obligation": "Regulation (EU) 2025/2518 applies to cross-border GDPR complaints lodged from this date: harmonised admissibility criteria, common procedural rights for complainants and organisations under investigation, and investigation time limits (15 months regular, 12 months simplified).",
+   "obligation": "Regulation (EU) 2025/2518 applies (Art. 37(2)). Its investigation rules (Chapters III and IV) govern ex officio investigations opened, and cross-border GDPR complaints lodged, after this date (Art. 36): harmonised admissibility criteria, common procedural rights for complainants and parties under investigation, and time limits for the lead authority's draft decision (15 months; 12 under the simple cooperation procedure; Art. 12).",
    "required_action": null,
    "authority": [
     "dpa-*"

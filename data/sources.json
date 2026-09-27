@@ -400,9 +400,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:52025PC0837",
       "url_status": "url:live",
       "published": "2025-11-19",
-      "accessed": "2026-08-27",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "A proposal, not law. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is informal shorthand used in this brief."
+      "note": "A proposal, not law. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is informal shorthand used in this brief. Text read on 27 Sep 2026 from the English PDF of the act held by the Publications Office's Cellar (the CELEX record's first document, 1_EN_ACT_part1_v9.pdf); Art. 3 amends the GDPR."
     },
     {
       "id": "src-cjeu-c413-23p",
@@ -433,6 +433,34 @@
       "note": null
     },
     {
+      "id": "src-cjeu-c623-17",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "Judgment of 6 October 2020, Privacy International, Case C-623/17, EU:C:2020:790",
+      "url": "http://publications.europa.eu/resource/celex/62017CJ0623",
+      "url_status": "url:live",
+      "published": "2020-10-06",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The judgment text (Grand Chamber, CELEX 62017CJ0623), retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Operative part, point 1: national legislation enabling a State authority to require providers of electronic communications services to forward traffic and location data to the security and intelligence agencies for the purpose of safeguarding national security falls within the scope of Directive 2002/58, read in the light of Article 4(2) TEU."
+    },
+    {
+      "id": "src-eurlex-teu-art-4",
+      "tier": "tier:1",
+      "type": "source-type:legislative-document",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Consolidated version of the Treaty on European Union, Article 4 (OJ C 202, 7.6.2016, p. 18)",
+      "url": "http://publications.europa.eu/resource/celex/12016M004",
+      "url_status": "url:live",
+      "published": "2016-06-07",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Treaty text of Article 4 TEU as published in the Official Journal, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Recorded as a legislative document because the source vocabulary has no treaty type. Art. 4(2), third sentence: 'In particular, national security remains the sole responsibility of each Member State.'"
+    },
+    {
       "id": "src-cjeu-c623-17-pr",
       "tier": "tier:2",
       "type": "source-type:court-press-release",
@@ -444,7 +472,7 @@
       "published": "2020-10-06",
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Read on 2026-09-26. Several Member States argued that the e-Privacy Directive does not apply to national legislation whose purpose is to safeguard national security, citing the third sentence of Article 4(2) TEU; the Court held that national legislation requiring providers of electronic communications services to retain traffic and location data, or to forward it to security and intelligence authorities, for that purpose falls within the scope of the Directive. Tier 2 under the audit's rule for press releases; the judgment itself was not opened."
+      "note": "Read on 2026-09-26. Several Member States argued that the e-Privacy Directive does not apply to national legislation whose purpose is to safeguard national security, citing the third sentence of Article 4(2) TEU; the Court held that national legislation requiring providers of electronic communications services to retain traffic and location data, or to forward it to security and intelligence authorities, for that purpose falls within the scope of the Directive. Tier 2 under the audit's rule for press releases. The Privacy International judgment itself was read on 27 Sep 2026 (src-cjeu-c623-17); it concerns forwarding, and the retention limb of this press release comes from the joined La Quadrature du Net cases."
     },
     {
       "id": "src-gc-apple-designation-2026",
@@ -459,6 +487,20 @@
       "accessed": "2026-08-27",
       "language": "en",
       "note": "App Store and iOS gatekeeper designation upheld; iMessage pleas inadmissible; App Store versions treated as a single core platform service."
+    },
+    {
+      "id": "src-gc-t1079-23-judgment",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": "gc",
+      "publisher_name": "General Court of the European Union",
+      "title": "Judgment of 8 July 2026, Apple and Apple Distribution International v Commission, Joined Cases T-1079/23, T-1080/23 and T-214/24, ECLI:EU:T:2026:451",
+      "url": "http://publications.europa.eu/resource/celex/62023TJ1079",
+      "url_status": "url:live",
+      "published": "2026-07-08",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The judgment text (CELEX 62023TJ1079), retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number; ECLI and CELEX confirmed in the Court's own register (InfoCuria). Operative part: the cases are joined and the actions dismissed."
     },
     {
       "id": "src-gc-supervisory-fee-2025",
@@ -1122,6 +1164,20 @@
       "note": "The Commission's Draghi report page. Merged on 2026-09-26 (audit T-30) with the former src-draghi-report-2024, which described the same report through a newsroom URL (ec.europa.eu/newsroom/growth/items/847989). Part A (A competitiveness strategy for Europe) and Part B (In-depth analysis and recommendations). Both PDFs were downloaded from the Commission's Draghi report page (commission.europa.eu/document/download/97e481fd-2dc3-412d-be4c-f152a8232961_en and ec1409c1-d4b4-4882-8bdd-3519f86bbb92_en) and read on 2026-09-26. Part A, printed p. 24, Chapter 2: around 70% of foundational AI models developed in the US since 2017; three US hyperscalers over 65% of the global and European cloud market; the largest European cloud operator just 2% of the EU market; autonomous robotics around 22% of worldwide activity; AI services around 17%. Part B, printed p. 77: EU cloud providers' share of the EU market decreased to under 16% in 2021. Part B, p. 79, gives 73% (not 'around 70%') for foundational models from the US since 2017. No 'under 15%' figure appears in either part."
     },
     {
+      "id": "src-ep-oeil-ai-omnibus",
+      "tier": "tier:2",
+      "type": "source-type:legislative-document",
+      "publisher": "ep",
+      "publisher_name": "European Parliament — Legislative Observatory",
+      "title": "Procedure file 2025/0359(COD): Simplification of the implementation of harmonised rules on artificial intelligence – Digital Omnibus on AI",
+      "url": "https://oeil.secure.europarl.europa.eu/oeil/en/procedure-file?reference=2025/0359(COD)",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Parliament's procedure file, read on 27 Sep 2026 with its summary of the 26 March 2026 decision (document-summary id 1895845). Key events from the proposal (19/11/2025) to publication in the Official Journal (24/07/2026). The summary: 'The European Parliament adopted by 569 votes to 45 against and 23 abstentions, amendments to the proposal ... The issue was sent back to the committee responsible for interinstitutional negotiations.'"
+    },
+    {
       "id": "src-ep-legtrain-ai-omnibus",
       "tier": "tier:2",
       "type": "source-type:legislative-document",
@@ -1131,9 +1187,9 @@
       "url": "https://www.europarl.europa.eu/legislative-train/package-digital-package/file-digital-omnibus-on-ai",
       "url_status": "url:live",
       "published": "2026",
-      "accessed": "2026-08-27",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "Supports the 19 November 2025 publication date and COM(2025) 836."
+      "note": "Supports the 19 November 2025 publication date and COM(2025) 836. Re-read on 27 Sep 2026 (information updated as of 01/08/2026): Council general approach 13 March 2026; trilogue agreement 7 May 2026; Coreper approval 13 May 2026; plenary approval 16 June 2026 (423 in favour, 57 against, 174 abstentions); Council adoption 29 June 2026; final act signed 8 July 2026."
     },
     {
       "id": "src-ep-legtrain-digital-package",
