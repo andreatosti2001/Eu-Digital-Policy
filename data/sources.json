@@ -2131,6 +2131,20 @@
       "resolution_note": "Identified and linked: this is the specific publication the brief draws on (see url and note). It is cited as tier-4 commentary: it can support what its authors argue or report, not a legal fact on its own. Rewritten on 2026-09-26 \u2014 the earlier text said no specific publication had been named, which stopped being true when the URL was located."
     },
     {
+      "id": "src-cms-tracker-insights-2026-09-27",
+      "tier": "tier:4",
+      "type": "source-type:report",
+      "publisher": null,
+      "publisher_name": "CMS",
+      "title": "GDPR Enforcement Tracker — Insights (data refreshed 27 September 2026)",
+      "url": "https://www.enforcementtracker.com/insights",
+      "url_status": "url:live",
+      "published": "2026-09-27",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The live Insights page of CMS's GDPR Enforcement Tracker, read 27 Sep 2026 ('data shown was last refreshed 2026-09-27 13:01 UTC'). Headline: total cases 3,275 across 32 countries; total fines EUR 7,159,322,834; largest single fine EUR 1,200m (Meta Platforms Ireland). Its 'Top violation types' chart, by penalty total, carries these sums in the page's own embedded data: insufficient legal basis EUR 3,124,976,242 (992 cases); non-compliance with general data processing principles EUR 2,649,889,997 (814); insufficient technical and organisational measures to ensure information security EUR 971,797,663 (616); insufficient fulfilment of information obligations EUR 257,948,460 (216); the remaining six categories together about EUR 154m. A live dataset: every figure is its state on the read date. It is a different document from the 7th edition report (src-cms-enforcement-tracker), whose March 2026 total was lower."
+    },
+    {
       "id": "src-legiscope-nis2-tracker-2026",
       "tier": "tier:4",
       "type": "source-type:commentary",
@@ -2286,12 +2300,12 @@
       "publisher": "edpb",
       "publisher_name": "European Data Protection Board",
       "title": "EDPB Guidelines 3/2025 on the interplay between the DSA and the GDPR",
-      "url": "https://www.edpb.europa.eu/our-work-tools/documents/public-consultations/2025/guidelines-32025-interplay-between-dsa-and-gdpr_en",
+      "url": "https://www.edpb.europa.eu/documents/guideline/guidelines-32025-on-the-interplay-between-the-dsa-and-the-gdpr_en",
       "url_status": "url:live",
-      "published": "2025",
-      "accessed": "2026-08-27",
+      "published": "2026-09-17",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "Resolved to the EDPB public-consultation page for Guidelines 3/2025."
+      "note": "Located and read on 27 Sep 2026 on the EDPB's own site. The title recorded here is the official one. Version 1 was put to public consultation from 12 September to 31 October 2025 (its page is now marked 'Obsolete version'); the final version, Guidelines 3/2025 v2, is dated 17 September 2026 and published with a report on the consultation. The URL now points to the final version; the consultation page was the one recorded before."
     },
     {
       "id": "src-ec-google-dma-fine-2026",

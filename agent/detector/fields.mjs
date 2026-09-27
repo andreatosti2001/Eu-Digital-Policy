@@ -175,13 +175,16 @@ export const VALUE_FIELDS = {
      js/evidence-model.js checkDerivation on each run of
      tools/evidence-audit.mjs, and each `as_stated` must read back out of
      its input claim's own statement. Input names are chosen per claim;
-     the live data uses a and b. A new name is a new path, and this
+     the live data uses a, b, c and t (c and t added 27 Sep 2026 with
+     clm-four-categories-94pct). A new name is a new path, and this
      register will say so. */
   claim: ['id', 'published', 'last_verified', 'reference_gap', 'requires_verification', 'sources.locator',
     'derivation.performed_by', 'derivation.formula', 'derivation.result', 'derivation.unit',
     'derivation.rounding.to', 'derivation.rounding.stated_value',
     'derivation.inputs.a.value', 'derivation.inputs.a.as_stated',
-    'derivation.inputs.b.value', 'derivation.inputs.b.as_stated'],
+    'derivation.inputs.b.value', 'derivation.inputs.b.as_stated',
+    'derivation.inputs.c.value', 'derivation.inputs.c.as_stated',
+    'derivation.inputs.t.value', 'derivation.inputs.t.as_stated'],
   source: ['id', 'title', 'publisher_name', 'url', 'language', 'published', 'accessed', 'resolution'],
   timeline_event: ['id', 'date', 'status', 'last_verified', 'requires_verification'],
   enforcement_action: ['id', 'entity', 'opened', 'decision_date', 'fine_eur', 'last_verified', 'requires_verification',

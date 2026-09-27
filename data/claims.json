@@ -1221,8 +1221,8 @@
     },
     {
       "id": "clm-four-categories-94pct",
-      "type": "claim-type:fact",
-      "statement": "Four violation categories account for roughly 94% of all GDPR fine value.",
+      "type": "claim-type:derived",
+      "statement": "Three violation categories account for roughly 94% of all GDPR fine value recorded in the CMS Enforcement Tracker: insufficient legal basis, non-compliance with the general processing principles, and insufficient security measures.",
       "instruments": [
         "gdpr"
       ],
@@ -1231,18 +1231,141 @@
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-cms-enforcement-tracker",
+          "source_id": "src-cms-tracker-insights-2026-09-27",
           "supports": "supports:partial",
-          "locator": null
+          "locator": "the three category totals and the headline total, read back through the input claims"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-2",
-      "published": null,
-      "last_verified": "2026-08-28",
-      "verification_note": "REQUIRES VERIFICATION. Attributed to analysis of the CMS Enforcement Tracker corpus; no URL located.",
-      "reference_gap": true,
-      "gap_note": "The CMS tracker analyses violation categories, but no edition was located stating that four categories account for roughly 94% of fine value."
+      "published": "2026-09-27",
+      "last_verified": "2026-09-27",
+      "verification_note": "CORRECTED 27 Sep 2026. The brief said FOUR categories account for roughly 94%. The CMS Enforcement Tracker's own data, read that day, gives three: legal basis 43.6%, general principles 37.0% and security 13.6% of the EUR 7,159,322,834 total make 94.2%; adding the fourth (information obligations, 3.6%) makes 97.8%. The prose now says three, in all four languages. No source states the percentage; it is this site's arithmetic over figures the tracker states, recorded in the derivation so it can be re-run. The tracker is a live dataset, so the share is its state on that date. The claim ID keeps 'four' because IDs are never renamed. Earlier: attributed to analysis of the CMS corpus with no edition located.",
+      "derivation": {
+        "performed_by": "site",
+        "method": "The fine value of the three largest violation categories, by penalty total, divided by the tracker's total fine value. All four figures come from the same page on the same refresh, so numerator and denominator share one dataset and one cut-off.",
+        "inputs": {
+          "a": {
+            "claim": "clm-cms-fines-legal-basis",
+            "value": 3124976242,
+            "as_stated": "EUR 3,124,976,242"
+          },
+          "b": {
+            "claim": "clm-cms-fines-principles",
+            "value": 2649889997,
+            "as_stated": "EUR 2,649,889,997"
+          },
+          "c": {
+            "claim": "clm-cms-fines-security",
+            "value": 971797663,
+            "as_stated": "EUR 971,797,663"
+          },
+          "t": {
+            "claim": "clm-cms-fines-total",
+            "value": 7159322834,
+            "as_stated": "EUR 7,159,322,834"
+          }
+        },
+        "formula": "(a + b + c) / t",
+        "result": 0.9424,
+        "unit": "ratio",
+        "rounding": {
+          "to": 0.01,
+          "stated_value": 0.94
+        }
+      }
+    },
+    {
+      "id": "clm-cms-fines-total",
+      "type": "claim-type:fact",
+      "statement": "On 27 September 2026 the CMS GDPR Enforcement Tracker recorded total fines of EUR 7,159,322,834 across 3,275 cases.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-cms-tracker-insights-2026-09-27",
+          "supports": "supports:direct",
+          "locator": "Headline: \"Total fines €7.16B €7,159,322,834\"; \"Total cases 3,275\"; \"data shown was last refreshed 2026-09-27 13:01 UTC\""
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": "2026-09-27",
+      "last_verified": "2026-09-27",
+      "verification_note": "Read 27 Sep 2026 from the CMS GDPR Enforcement Tracker's Insights page. An input to clm-four-categories-94pct; recorded as its own claim so the figure has one home and the derivation can read it back. A live dataset: the figure is its state on the read date."
+    },
+    {
+      "id": "clm-cms-fines-legal-basis",
+      "type": "claim-type:fact",
+      "statement": "On 27 September 2026 the CMS GDPR Enforcement Tracker recorded fines totalling EUR 3,124,976,242 for insufficient legal basis for data processing.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-cms-tracker-insights-2026-09-27",
+          "supports": "supports:direct",
+          "locator": "\"Top violation types\", by penalty total: \"Insufficient legal basis for data processing\", sum 3124976242, count 992 (the page's embedded chart data)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": "2026-09-27",
+      "last_verified": "2026-09-27",
+      "verification_note": "Read 27 Sep 2026 from the CMS GDPR Enforcement Tracker's Insights page. An input to clm-four-categories-94pct; recorded as its own claim so the figure has one home and the derivation can read it back. A live dataset: the figure is its state on the read date."
+    },
+    {
+      "id": "clm-cms-fines-principles",
+      "type": "claim-type:fact",
+      "statement": "On 27 September 2026 the CMS GDPR Enforcement Tracker recorded fines totalling EUR 2,649,889,997 for non-compliance with general data processing principles.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-cms-tracker-insights-2026-09-27",
+          "supports": "supports:direct",
+          "locator": "\"Top violation types\", by penalty total: \"Non-compliance with general data processing principles\", sum 2649889997, count 814"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": "2026-09-27",
+      "last_verified": "2026-09-27",
+      "verification_note": "Read 27 Sep 2026 from the CMS GDPR Enforcement Tracker's Insights page. An input to clm-four-categories-94pct; recorded as its own claim so the figure has one home and the derivation can read it back. A live dataset: the figure is its state on the read date."
+    },
+    {
+      "id": "clm-cms-fines-security",
+      "type": "claim-type:fact",
+      "statement": "On 27 September 2026 the CMS GDPR Enforcement Tracker recorded fines totalling EUR 971,797,663 for insufficient technical and organisational measures to ensure information security.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-cms-tracker-insights-2026-09-27",
+          "supports": "supports:direct",
+          "locator": "\"Top violation types\", by penalty total: \"Insufficient technical and organisational measures to ensure information security\", sum 971797663, count 616"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": "2026-09-27",
+      "last_verified": "2026-09-27",
+      "verification_note": "Read 27 Sep 2026 from the CMS GDPR Enforcement Tracker's Insights page. An input to clm-four-categories-94pct; recorded as its own claim so the figure has one home and the derivation can read it back. A live dataset: the figure is its state on the read date."
     },
     {
       "id": "clm-amazon-annulment",
@@ -2327,8 +2450,8 @@
       ],
       "brief_part": "part-3",
       "published": "2026-08-19",
-      "last_verified": null,
-      "verification_note": "requires verification — the practitioner analysis is not named and no source located. Retyped from critique to attributed on 27 Sep 2026: the statement reports what practitioner analysis that this build has not identified said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
+      "last_verified": "2026-09-27",
+      "verification_note": "27 Sep 2026: the Official Journal summaries of the actions against the decision were read (T-114/26, X Internet and X Holdings, six pleas; T-120/26, X.AI Holdings, eight pleas). Both contest the Art. 25(1) finding — X on whether the blue checkmark deceives or manipulates users, X.AI on the reading of 'free and informed decisions' — but neither summary raises the Art. 25(2) exclusion for practices covered by the Unfair Commercial Practices Directive. The argument is therefore not, on the published record, one the addressees have made; the practitioner analysis the brief reports remains unidentified. requires verification — the practitioner analysis is not named and no source located. Retyped from critique to attributed on 27 Sep 2026: the statement reports what practitioner analysis that this build has not identified said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
       "attributed_to": "practitioner analysis that this build has not identified"
     },
     {
@@ -2351,7 +2474,7 @@
         {
           "source_id": "src-edpb-guidelines-3-2025",
           "supports": "supports:context",
-          "locator": null
+          "locator": "Guidelines 3/2025 v2 (final, 17 September 2026) on the EDPB's site; v1 consulted 12 September – 31 October 2025"
         },
         {
           "source_id": "src-brief-original",
@@ -2362,8 +2485,8 @@
       "legal_basis": [],
       "brief_part": "part-3",
       "published": "2026-08-19",
-      "last_verified": null,
-      "verification_note": "requires verification — EDPB Guidelines 3/2025 have not been located and the title as given may not match the official title."
+      "last_verified": "2026-09-27",
+      "verification_note": "27 Sep 2026: EDPB Guidelines 3/2025 located under exactly the title given, on the EDPB's own site; the final version (v2) is dated 17 September 2026, after a public consultation on v1 from 12 September to 31 October 2025. The guidelines are cited as context: that they mediate the DSA–GDPR tension without dissolving it is the author's reading, and the claim is an interpretation whose direct source is the brief."
     },
     {
       "id": "clm-dma-ex-ante",
@@ -4230,15 +4353,15 @@
       "sources": [
         {
           "source_id": "src-ec-draghi-report",
-          "supports": "supports:partial",
-          "locator": null
+          "supports": "supports:direct",
+          "locator": "Part A, Foreword, printed p. 5: \"the productivity gap between the EU and the US is largely explained by the tech sector\"; Part A, Chapter 2, printed p. 30: \"the EU’s regulatory stance towards tech companies hampers innovation: the EU now has around 100 tech-focused laws and over 270 regulators active in digital networks across all Member States\""
         }
       ],
       "legal_basis": [],
       "brief_part": "part-10",
       "published": "2024-09-09",
-      "last_verified": "2026-08-27",
-      "verification_note": "The report is located but its text has not been consulted; the characterisation is not checked against it. Retyped from fact to attributed on 27 Sep 2026: the statement reports what Mario Draghi said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
+      "last_verified": "2026-09-27",
+      "verification_note": "Verified 27 Sep 2026 against Part A of the report (the Commission's PDF), read for this claim: both halves are the report's own statements, quoted in the locator. 'A complex web of overlapping rules' is the brief's paraphrase of the second passage, which speaks of around 100 tech-focused laws, over 270 regulators, heterogeneous requirements and a proliferation of regulatory agencies; the report does not use that phrase. The report is located but its text has not been consulted; the characterisation is not checked against it. Retyped from fact to attributed on 27 Sep 2026: the statement reports what Mario Draghi said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
       "attributed_to": "Mario Draghi, The Future of European Competitiveness (September 2024)"
     },
     {
