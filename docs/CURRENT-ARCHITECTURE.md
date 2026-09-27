@@ -341,7 +341,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 50 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 49 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -383,6 +383,7 @@ the corpus being more honest, not less.
 - 58 → 56 (27 Sep 2026): clm-draghi-diagnosis verified against Part A of the Draghi report (printed pp. 5 and 30); clm-four-categories-94pct CORRECTED and retyped as derived: the CMS Enforcement Tracker's own data (refreshed 27 Sep 2026) gives three categories at 94.2% of the EUR 7,159,322,834 total, not four (four make 97.8%), and the prose now says three in all four languages; its four inputs are recorded as claims with the tracker as direct source.
 - 56 → 52 (27 Sep 2026): the 'Also in the rulebook' claim's atomization completed (five items already carried by their own OJ-sourced claims; the record now carries only the 20 January 2026 cyber package, stated directly by the Commission's Q&A); the Temu, AliExpress and Google DMA records verified against the Commission's full press releases (IP/26/1178, IP/26/1654, IP/26/1670) and the Google opening release (IP/24/1689, which names Arts 5(4) and 6(5)). Two corrections: Temu's breach is of risk assessment only (Art. 34), not mitigation, so Art. 35 leaves its legal basis and the prose says so in all four languages; AliExpress's action-plan deadline now rests on the Commission rather than commentary.
 - 52 → 50 (27 Sep 2026): the last two competence edges carrying a requires-verification note (DG CONNECT for the DSA, DG COMP for the DMA) read against the Commission's own pages: DSA supervision sits in DG CONNECT Directorate F, while the powers are the Commission's under DSA Art. 56(2)–(3), read in the Official Journal; the DMA is enforced by a joint DG COMP–DG CONNECT team, so DG COMP's 'operational lead' was stronger than the source and is replaced, and DG CONNECT gains the matching DMA edge.
+- 50 → 49 (27 Sep 2026): the TikTok/DPC transfers record read against the High Court's two approved judgments ([2026] IEHC 347 and 419, Record No. 2025/248 MCA): the infringement findings and the decision to fine stand, the corrective orders were proposed to be vacated and remitted, and a CJEU reference on the amount was proposed. One correction: the decision is dated 30 April 2025, not 2 May (the announcement). The Meta/DPC transfers record stays flagged: the DPC's 2023 annual report establishes the Irish appeal was brought, but not its current state.
 
 The other numbers on this block are unchanged.
 

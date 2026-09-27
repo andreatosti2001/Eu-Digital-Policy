@@ -2572,6 +2572,62 @@
       "accessed": "2026-09-26",
       "language": "en",
       "note": "Confirms the EUR 550 million fine, publication date 20 July 2026, and the systemic-risk ground (failure to diligently assess and mitigate risk from illegal, unsafe or counterfeit products). Contains no ranking language and no article numbers or action-plan deadline; those are corroborated by secondary legal commentary (Lewis Silkin, 24 July 2026; Il Sole 24 Ore, 20 July 2026; JURIST, 22 July 2026)."
+    },
+    {
+      "id": "src-iehc-2026-347-tiktok",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": null,
+      "publisher_name": "High Court of Ireland (Commercial)",
+      "title": "TikTok Technology Limited and TikTok Information Technologies UK Limited v Data Protection Commission [2026] IEHC 347 (Mulcahy J, 3 June 2026), Record No. 2025/248 MCA",
+      "url": "https://ww2.courts.ie/acc/alfresco/d03be1e0-7395-4ba4-86f5-c331e3670995/2026_IEHC_347.pdf/pdf",
+      "url_status": "url:live",
+      "published": "2026-06-03",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The approved judgment's full text (185 pages), read 27 Sep 2026. §6: the DPC issued its decision on 30 April 2025. §11: TikTok appealed by originating notice of motion issued 27 May 2025, under ss. 142 and 150 of the Data Protection Act 2018. §14: the appeal automatically stayed payment of the fines (s. 142); the corrective orders were stayed by [2025] IEHC 619 (13 Nov 2025), and the Supreme Court continued that stay by [2026] IESC 27 (30 April 2026). §§576-577: all grounds against the Art. 46(1) and Art. 13(1)(f) infringement findings, and against the decision to impose fines, to be dismissed; the amount of the fines left over. §§578, 592: errors in the DPC's assessment of material relevant to the suspension order; the court proposes to vacate the corrective orders and remit them to the DPC, subject to hearing the parties on 11 June 2026 on the final form of order."
+    },
+    {
+      "id": "src-iehc-2026-419-tiktok",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": null,
+      "publisher_name": "High Court of Ireland (Commercial)",
+      "title": "TikTok Technology Limited and TikTok Information Technologies UK Limited v Data Protection Commission [2026] IEHC 419 (Mulcahy J, 30 June 2026), Record No. 2025/248 MCA",
+      "url": "https://www2.courts.ie/acc/alfresco/65d7e861-a6f7-4fa9-b03c-91c1eb07c96c/2026_IEHC_419.pdf/pdf",
+      "url_status": "url:live",
+      "published": "2026-06-30",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The approved judgment's full text (72 pages), read 27 Sep 2026: the judgment on the grounds left over from [2026] IEHC 347, all concerning the calculation of the fines (Art. 83 GDPR). §§238-242: subject to the questions below, the DPC was entitled to treat 2024 as the preceding financial year and to have regard to ByteDance's turnover; its limited errors under Art. 83(2) do not merit revisiting the fines. §243: four questions proposed for a preliminary reference to the CJEU under Art. 267 TFEU (imputation to the parent and its rights of defence; the role of group turnover in setting the amount; aggregation under Art. 83(3)). §244: the parties to prepare a draft Order for Reference; matter listed for 10 July 2026."
+    },
+    {
+      "id": "src-dpc-annual-report-2023",
+      "tier": "tier:2",
+      "type": "source-type:report",
+      "publisher": "dpa-ie",
+      "publisher_name": "Data Protection Commission (Ireland)",
+      "title": "Data Protection Commission — Annual Report 2023",
+      "url": "https://www.dataprotection.ie/sites/default/files/uploads/2024-05/DPC%20EN_AR%202023_Final%20.pdf",
+      "url_status": "url:live",
+      "published": "2024-05-29",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026. On the Meta transfers decision (EDPB decision of 13 April 2023; DPC Final Decision of 12 May 2023; fine of EUR 1.2 billion, suspension and compliance orders): 'The Final Decision is under appeal' (p. 38), and 'Meta initiated three court challenges against the DPC/EDPB: a statutory appeal before the Irish High Court, Judicial Review proceedings before the High Court and annulment proceedings against the EDPB' (p. 41; the report says 'before the Court of Justice', the action being T-325/23 before the General Court). Publication date from the DPC's press release of 29 May 2024."
+    },
+    {
+      "id": "src-curia-register-c1009-26",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "InfoCuria case register — Case C-1009/26, Tiktok Technology and TikTok Information Technologies UK, read 27 September 2026",
+      "url": "https://infocuria.curia.europa.eu/",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Court's own case register, queried through its search service on 27 Sep 2026: C-1009/26, a reference for a preliminary ruling (procedure type 'RP') named 'Tiktok Technology and TikTok Information Technologies UK', lodged 11 Sep 2026 and recorded as 'Affaire pendante'. The register entry read gives no referring court and no questions, so that it is the reference the Irish High Court proposed in [2026] IEHC 419 is consistent with the parties' names but not established."
     }
   ]
 }

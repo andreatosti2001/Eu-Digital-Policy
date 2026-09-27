@@ -154,20 +154,21 @@
    ],
    "sources": [
     "src-dpc-meta-transfers-2023",
+    "src-dpc-annual-report-2023",
     "src-csoonline-alliance-risk-2026",
     "src-oj-t325-23-meta-edpb-action",
     "src-curia-register-2026-09-27"
    ],
    "requires_verification": true,
-   "verification_note": "Added 2026-09-26 (audit T-36) from the DPC's announcement: decision of 12 May 2023, announced 22 May 2023; Art. 46(1) infringed; fine reflecting the EDPB's binding determination under Art. 65. Legal basis records Art. 83 only, because no Art. 46 provision record exists. Appeal state: the DPC decision's own appeal rests on tier-4 reporting only, hence requires_verification; the pending General Court action against the EDPB binding decision (T-325/23) is established (27 Sep 2026).",
-   "last_verified": "2026-09-26",
+   "verification_note": "Added 2026-09-26 (audit T-36) from the DPC's announcement: decision of 12 May 2023, announced 22 May 2023; Art. 46(1) infringed; fine reflecting the EDPB's binding determination under Art. 65. Legal basis records Art. 83 only, because no Art. 46 provision record exists. Appeal state, 27 Sep 2026: that the DPC decision was appealed to the Irish High Court is now established by the DPC itself (Annual Report 2023); the pending General Court action against the EDPB decision (T-325/23) is established from the Court's register. Still flagged because the Irish appeal's CURRENT state is not: the DPC's later reports and its judgments page (read 27 Sep 2026) record no judgment in it, which is not a record that it is still pending.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:pending",
-    "lodged_by": null,
-    "forum": null,
+    "lodged_by": "Meta Platforms Ireland Limited",
+    "forum": "High Court of Ireland (statutory appeal); also judicial review in the High Court, and T-325/23 before the General Court against the EDPB",
     "lodged_date": null,
     "case_ref": null,
-    "note": "Reported as under active appeal by CSO Online (29 May 2026, citing Alliance Risk); tier-4 reporting, with no forum or case number. What a primary source establishes, read 27 Sep 2026: Meta Platforms Ireland's action for annulment of the EDPB's Binding Decision 1/2023 — the Art. 65 decision this fine reflects — brought before the General Court on 13 June 2023 (Case T-325/23, OJ 2023/C 271/47) and recorded as pending in the Court's register on 27 Sep 2026. That is a challenge to the EDPB's decision, not to the DPC's; whether the DPC's own decision is under appeal in the Irish courts is not established from a primary source."
+    "note": "The DPC's Annual Report 2023 states that 'the Final Decision is under appeal' and that Meta brought three challenges: a statutory appeal before the Irish High Court, judicial review proceedings before the High Court, and annulment proceedings against the EDPB. The last is Case T-325/23, brought on 13 June 2023 (OJ 2023/C 271/47) against the EDPB's Binding Decision 1/2023, and recorded as pending in the Court's register on 27 Sep 2026. No record number or lodging date for the Irish proceedings has been read, and no judgment in them appears on the DPC's list of judgments (read 27 Sep 2026); CSO Online (29 May 2026, tier 4) reports the appeal as active."
    }
   },
   {
@@ -180,32 +181,39 @@
    ],
    "authority": "dpa-ie",
    "opened": null,
-   "decision_date": "2025-05-02",
+   "decision_date": "2025-04-30",
    "action": "Administrative fines and order to bring China transfers into compliance within six months (Arts. 46(1) and 13(1)(f) GDPR infringed)",
    "fine_eur": 530000000,
-   "action_status": "action:imposed",
-   "payment_status": "payment:unknown",
+   "action_status": "action:appealed",
+   "payment_status": "payment:not-payable",
    "remedy_status": "remedy:ordered",
    "behavioural_outcome": null,
-   "judicial": null,
+   "judicial": {
+    "forum": "High Court of Ireland (Commercial), Mulcahy J",
+    "date": "2026-06-03",
+    "outcome": "Main judgment of 3 June 2026: every ground against the two infringement findings (Art. 46(1), 29 July 2020 to 17 May 2023; Art. 13(1)(f), 29 July 2020 to 1 December 2022) and against the decision to impose fines to be dismissed; the DPC made no error of law in holding that a controller must verify, and be able to demonstrate, essentially equivalent protection for data transferred. The court found errors in the DPC's assessment of material relevant to the suspension order (an unconsidered expert opinion on Chinese law; no reasons given for rejecting TikTok's Project Clover measures) and proposed to vacate the corrective orders and remit them to the DPC, subject to hearing the parties on the final form of order. The amount of the fines was left over: by a second judgment of 30 June 2026 ([2026] IEHC 419) the court held the DPC entitled, subject to the CJEU's answers, to use ByteDance's turnover and 2024 as the preceding financial year, and proposed four questions for a preliminary reference on Art. 83.",
+    "case_ref": "Record No. 2025/248 MCA; [2026] IEHC 347; [2026] IEHC 419"
+   },
    "timeline_events": [],
    "claims": [
     "clm-dpc-share-of-fines"
    ],
    "sources": [
     "src-dpc-tiktok-transfers-2025",
-    "src-csoonline-alliance-risk-2026"
+    "src-iehc-2026-347-tiktok",
+    "src-iehc-2026-419-tiktok",
+    "src-curia-register-c1009-26"
    ],
-   "requires_verification": true,
-   "verification_note": "Added 2026-09-26 (audit T-36) from the DPC's announcement of 2 May 2025 (the decision date is taken as the announcement date; the DPC text does not give a separate adoption date). Infringements of Art. 46(1) and Art. 13(1)(f). Legal basis records Art. 83 only, because no Art. 46 or Art. 13 provision record exists. Appeal state from tier-4 reporting only, hence requires_verification.",
-   "last_verified": "2026-09-26",
+   "requires_verification": false,
+   "verification_note": "Added 2026-09-26 (audit T-36) from the DPC's announcement of 2 May 2025. Re-read 27 Sep 2026 against the High Court's two approved judgments, which replace the tier-4 reporting the appeal state rested on. Corrected: the decision is dated 30 April 2025 ([2026] IEHC 347 §6), not 2 May 2025, which is the announcement date. Payment is recorded as not yet payable because the appeal stayed it automatically under s. 142 of the Data Protection Act 2018 (§14). Legal basis records Art. 83 only, because no Art. 46 or Art. 13 provision record exists.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:pending",
-    "lodged_by": null,
-    "forum": null,
-    "lodged_date": null,
-    "case_ref": null,
-    "note": "Reported as under active appeal by CSO Online (29 May 2026, citing Alliance Risk); tier-4 reporting. Forum, parties and case numbers are not established."
+    "lodged_by": "TikTok Technology Limited and TikTok Information Technologies UK Limited",
+    "forum": "High Court of Ireland (Commercial)",
+    "lodged_date": "2025-05-27",
+    "case_ref": "2025/248 MCA",
+    "note": "Statutory appeal under ss. 142 and 150 of the Data Protection Act 2018, by originating notice of motion of 27 May 2025 ([2026] IEHC 347 §11). Partly decided: the infringement findings and the decision to fine stand ([2026] IEHC 347, 3 June 2026). Still open: the amount of the fines, on which the court proposed a reference to the CJEU ([2026] IEHC 419, 30 June 2026), and the final form of the order on the corrective orders, which the court proposed to vacate and remit; that order itself has not been read. The corrective orders were stayed pending the appeal ([2025] IEHC 619), a stay the Supreme Court continued ([2026] IESC 27). The CJEU register holds a pending reference named for the same two companies, C-1009/26, lodged 11 Sep 2026; its referring court is not given in the entry read, so the link is not established."
    }
   },
   {
