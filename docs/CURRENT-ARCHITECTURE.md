@@ -49,7 +49,7 @@ Consequences an agent must respect:
 | `institutions.html` | Bodies and competences. |
 | `enforcement.html` | Enforcement observatory with the derived pipeline per record. |
 | `applies.html` | The applicability engine. |
-| `bibliography.html` | Every source, tiered, with the live grade tally. |
+| `bibliography.html` | Every source, tiered, with the live grade tally, and the data-quality panels — open backlog, verification dates, freshness, provenance — computed on load (which is why it loads nine datasets: the backlog reads every one). |
 
 The chrome — navigation, breadcrumbs, theme, skip target, search — is rendered by
 `js/shell.js` on every page from **one nav model** (`NAV`, `js/shell.js:34`). It is not
@@ -118,7 +118,7 @@ Which page loads which dataset — read from the `loadAll` / `load` call sites, 
 | `institutions.html` → `js/institutions-page.js` | taxonomy, instruments, institutions, sources |
 | `enforcement.html` → `js/enforcement-page.js` | taxonomy, instruments, institutions, sources, claims, timeline, enforcement |
 | `applies.html` → `js/applies.js` | taxonomy, instruments, institutions, sources, claims, timeline, applicability |
-| `bibliography.html` → `js/bibliography.js` | taxonomy, instruments, institutions, sources, claims |
+| `bibliography.html` → `js/bibliography.js` | taxonomy, instruments, institutions, sources, claims, enforcement, timeline, glossary, applicability |
 
 `taxonomy` and `instruments` are loaded by every view. **`brief` is loaded by nothing —
 see §8.**

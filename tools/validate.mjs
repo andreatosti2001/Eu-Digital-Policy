@@ -21,7 +21,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { violations as sourceViolations } from './source-contract.mjs';
-import { checkDerivation, claimKind } from '../js/evidence-model.js';
+import { checkDerivation, claimKind, openBacklog } from '../js/evidence-model.js';
 
 const DATA = 'data';
 const errors = [];
@@ -400,42 +400,9 @@ function checkStatusModel() {
 }
 
 /* ---------- 6. unverified data report ---------- */
-function unverifiedReport() {
-  const rows = [];
-  const push = (kind, id, note) => rows.push({ kind, id, note: (note || '').replace(/\s+/g, ' ').slice(0, 150) });
-
-  const claimById = new Map(arr(db.claims?.claims).map((c) => [c.id, c]));
-  const hasExternalDirect = (c) => !!c && arr(c.sources).some((s) => s.supports === 'supports:direct' && s.source_id !== 'src-brief-original');
-  for (const c of arr(db.claims?.claims)) {
-    /* A derived claim carries no source of its own: it is carried by its
-       inputs and its arithmetic. It counts as externally supported only
-       when the derivation re-runs AND every input has an external direct
-       source — so a derivation can never launder a weak input. */
-    const strongest = claimKind(c) === 'derived'
-      ? checkDerivation(c, { claim: claimById }).ok
-        && Object.values(c.derivation.inputs).every((i) => hasExternalDirect(claimById.get(i.claim)))
-      : hasExternalDirect(c);
-    if (!c.last_verified) push('claim (unverified)', c.id, c.verification_note);
-    else if (!strongest) push('claim (no external direct source)', c.id, c.verification_note);
-  }
-  for (const e of arr(db.timeline?.events)) if (e.requires_verification) push('timeline', e.id, e.verification_note);
-  for (const x of arr(db.enforcement?.enforcement)) if (x.requires_verification) push('enforcement', x.id, x.verification_note);
-  for (const i of arr(db.instruments?.instruments)) {
-    if (!i.last_verified) push('instrument (never verified)', i.id, i.status_note);
-    if (i.transposition?.requires_verification) push('transposition', i.id, i.transposition.state_note);
-  }
-  for (const r of arr(db.instruments?.relationships)) if (r.requires_verification) push('relationship', r.id, r.verification_note);
-  for (const g of arr(db.glossary?.terms)) if (g.requires_verification) push('glossary', g.id, g.verification_note);
-  for (const s of arr(db.sources?.sources)) if (s.url_status === 'url:none') push('source (no URL)', s.id, s.note);
-  for (const r of arr(db.applicability?.rules)) if (r.requires_verification) push('applicability rule', r.id, r.verification_note);
-  for (const i of arr(db.instruments?.instruments))
-    for (const p of arr(i.provisions)) if (p.requires_verification) push('provision', p.id, p.verification_note);
-  for (const x of arr(db.institutions?.institutions))
-    for (const c of arr(x.competences))
-      if ((c.note || '').startsWith('requires verification')) push('competence', `${x.id} → ${c.instrument} (${c.role})`, c.note);
-
-  return rows;
-}
+/* The rule itself lives in js/evidence-model.js openBacklog(), shared with
+   the Evidence page so the site and CI count the same thing. */
+const unverifiedReport = () => openBacklog(db);
 
 /* ---------- run ---------- */
 const ids = collectIds();

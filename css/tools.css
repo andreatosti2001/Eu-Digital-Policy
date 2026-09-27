@@ -800,6 +800,42 @@ body[data-theme="light"]{
 .bib-note{padding-left:2.2em;font-size:12.5px;line-height:1.55;color:var(--evi-meta);font-style:italic}
 .bib-empty{padding:30px 0;color:var(--evi-meta);font-family:var(--mono);font-size:12px}
 
+/* Data quality, measured on this load (js/bibliography.js quality()). */
+.dq{margin:44px 0 36px}
+.dq h2{font-family:var(--display);font-weight:500;font-size:22px;margin:0 0 10px;color:var(--paper)}
+.dq-lede{font-size:13.5px;line-height:1.65;color:var(--paper-dim);max-width:74ch;margin:0 0 18px}
+.dq-lede b{color:var(--paper);font-weight:500}
+.dq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:16px}
+.dq-panel{border:1px solid var(--line);background:var(--ink-1);padding:18px 20px;min-width:0}
+.dq-panel h3{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--evi-meta);margin:0 0 12px;font-weight:500}
+.dq-total{font-size:13.5px;color:var(--paper-dim);margin:0 0 10px}
+.dq-total b{font-family:var(--display);font-size:24px;font-weight:500;color:var(--paper);margin-right:4px}
+.dq-list{margin:0;display:grid;gap:8px}
+.dq-row{display:grid;grid-template-columns:3.2em 1fr;gap:10px;align-items:baseline}
+.dq-n{font-family:var(--display);font-size:17px;color:var(--paper);text-align:right}
+.dq-row dd{margin:0;font-size:13px;line-height:1.45;color:var(--paper-dim)}
+.dq-sub{display:block;font-size:11.5px;color:var(--evi-meta);line-height:1.45}
+.dq-foot{font-size:12px;line-height:1.55;color:var(--evi-meta);margin:14px 0 0}
+.dq-block{margin:0 0 12px}
+.dq-block h4{font-size:12.5px;font-weight:500;color:var(--paper);margin:0 0 4px;display:flex;gap:8px;align-items:baseline}
+.dq-block h4 .dq-sub{display:inline}
+.dq-dates{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 16px;font-family:var(--mono);font-size:11px;color:var(--paper-dim)}
+.dq-dates b{color:var(--paper);font-weight:500;margin-left:6px}
+.dq-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.dq-cap{font-size:11.5px;line-height:1.5;color:var(--evi-meta);margin:0 0 10px}
+.dq-table th,.dq-table td{padding:6px 6px;border-bottom:1px solid var(--line);text-align:right;color:var(--paper-dim)}
+.dq-table th[scope=row],.dq-table thead th:first-child{text-align:left;font-weight:500;color:var(--paper)}
+.dq-table thead th{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--evi-meta)}
+.dq-table th[scope=row] .dq-sub{font-weight:400}
+.dq-panel{overflow-x:auto}
+.bib-method a{color:var(--mech);text-decoration:underline;text-underline-offset:2px}
+.bib-method a:hover{color:var(--live)}
+@media (max-width:420px){
+  .dq-panel{padding:14px 12px}
+  .dq-table{font-size:11.5px}
+  .dq-table th,.dq-table td{padding:5px 3px}
+  .dq-table thead th{letter-spacing:.02em}
+}
 .bib-method{margin:70px 0 0;padding:24px 26px;border:1px solid var(--line);background:var(--ink-1)}
 .bib-method h3{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--evi-meta);margin:0 0 12px;font-weight:500}
 .bib-method p{font-size:13.5px;line-height:1.65;color:var(--paper-dim);max-width:74ch;margin:0 0 11px}

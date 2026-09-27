@@ -42,6 +42,7 @@ import { EXPECTED, RECHECK } from './freshness.mjs';
 import { readBaseline } from '../agent/implement/baseline.mjs';
 import { audit, passages, datesIn, DERIVED_FIELDS } from './evidence-audit.mjs';
 import { cspProblems, securityMeta, inlineScripts } from './csp.mjs';
+import { openBacklog } from '../js/evidence-model.js';
 import { build as buildArtifact, refusal } from './pages-artifact.mjs';
 import * as EM from '../js/evidence-model.js';
 import { procedure, contradictions } from '../js/pipeline.js';
@@ -727,6 +728,22 @@ test('I1b · no inline styles: the policy refuses them, and a page or module tha
     const code = readFileSync(join(ROOT, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
     assert.doesNotMatch(code, /\sstyle\s*=\s*\\?["']/, `${f} writes a style attribute`);
   }
+});
+
+test('I1c · the Evidence page and the build count the same backlog', () => {
+  /* One home for the rule: js/evidence-model.js openBacklog(). The page
+     calls it in the browser; validate.mjs prints it. If either grew its
+     own copy, these would drift apart and a reader would see a number
+     CI does not. */
+  const db = {};
+  for (const n of ['claims', 'sources', 'timeline', 'enforcement', 'instruments', 'institutions', 'glossary', 'applicability']) {
+    db[n] = JSON.parse(readFileSync(join(ROOT, 'data', n + '.json'), 'utf8'));
+  }
+  const printed = Number((runValidator('validate.mjs').out.match(/UNVERIFIED \/ REQUIRES VERIFICATION\s+(\d+)/) ?? [])[1]);
+  assert.equal(openBacklog(db).length, printed);
+  const page = readFileSync(join(ROOT, 'js', 'bibliography.js'), 'utf8');
+  assert.match(page, /openBacklog\(db\)/, 'the page counts through the shared function');
+  assert.doesNotMatch(readFileSync(join(ROOT, 'tools', 'validate.mjs'), 'utf8'), /function unverifiedReport\(\)\s*\{/, 'validate.mjs keeps no copy of its own');
 });
 
 test('I2 · the Pages artifact is the website and nothing else', () => {

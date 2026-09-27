@@ -392,3 +392,51 @@ export function remediationCodes(claim, ix, { asOf, enforcementById } = {}) {
   for (const c of claim.remediation || []) codes.add(c);
   return [...codes];
 }
+
+const arrOf = (x) => (Array.isArray(x) ? x : []);
+
+/**
+ * The open backlog: every record that says it has not been established.
+ * One home for the rule — tools/validate.mjs prints this list and the
+ * Evidence page counts it, so the number a reader sees on the site and
+ * the number CI reports are the same computation (moved here from
+ * validate.mjs on 27 Sep 2026). A derived claim counts as externally
+ * supported only when its derivation re-runs AND every input has an
+ * external direct source, so a derivation can never launder a weak input.
+ */
+export function openBacklog(db) {
+  const rows = [];
+  const push = (kind, id, note) => rows.push({ kind, id, note: (note || '').replace(/\s+/g, ' ').slice(0, 150) });
+
+  const claimById = new Map(arrOf(db.claims?.claims).map((c) => [c.id, c]));
+  const hasExternalDirect = (c) => !!c && arrOf(c.sources).some((s) => s.supports === 'supports:direct' && s.source_id !== 'src-brief-original');
+  for (const c of arrOf(db.claims?.claims)) {
+    /* A derived claim carries no source of its own: it is carried by its
+       inputs and its arithmetic. It counts as externally supported only
+       when the derivation re-runs AND every input has an external direct
+       source — so a derivation can never launder a weak input. */
+    const strongest = claimKind(c) === 'derived'
+      ? checkDerivation(c, { claim: claimById }).ok
+        && Object.values(c.derivation.inputs).every((i) => hasExternalDirect(claimById.get(i.claim)))
+      : hasExternalDirect(c);
+    if (!c.last_verified) push('claim (unverified)', c.id, c.verification_note);
+    else if (!strongest) push('claim (no external direct source)', c.id, c.verification_note);
+  }
+  for (const e of arrOf(db.timeline?.events)) if (e.requires_verification) push('timeline', e.id, e.verification_note);
+  for (const x of arrOf(db.enforcement?.enforcement)) if (x.requires_verification) push('enforcement', x.id, x.verification_note);
+  for (const i of arrOf(db.instruments?.instruments)) {
+    if (!i.last_verified) push('instrument (never verified)', i.id, i.status_note);
+    if (i.transposition?.requires_verification) push('transposition', i.id, i.transposition.state_note);
+  }
+  for (const r of arrOf(db.instruments?.relationships)) if (r.requires_verification) push('relationship', r.id, r.verification_note);
+  for (const g of arrOf(db.glossary?.terms)) if (g.requires_verification) push('glossary', g.id, g.verification_note);
+  for (const s of arrOf(db.sources?.sources)) if (s.url_status === 'url:none') push('source (no URL)', s.id, s.note);
+  for (const r of arrOf(db.applicability?.rules)) if (r.requires_verification) push('applicability rule', r.id, r.verification_note);
+  for (const i of arrOf(db.instruments?.instruments))
+    for (const p of arrOf(i.provisions)) if (p.requires_verification) push('provision', p.id, p.verification_note);
+  for (const x of arrOf(db.institutions?.institutions))
+    for (const c of arrOf(x.competences))
+      if ((c.note || '').startsWith('requires verification')) push('competence', `${x.id} → ${c.instrument} (${c.role})`, c.note);
+
+  return rows;
+}

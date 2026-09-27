@@ -72,6 +72,22 @@ document.body.dataset.theme=s;})();
     <div class="bib-stats" id="bibStats"></div>
   </div>
 
+  <section class="dq" aria-labelledby="dqH">
+    <h2 id="dqH">Data quality, measured on this load</h2>
+    <p class="dq-lede">Four views of what the record establishes and what it does not, each
+       computed from <code>data/*.json</code> when this page loads — none of these numbers is
+       written into the page. The open backlog is the same computation the build runs
+       (<code>tools/validate.mjs</code>). It counts records that <b>admit</b> to being
+       unestablished; a record that is wrong and does not say so is invisible to it, and to
+       every check in this project.</p>
+    <div class="dq-grid">
+      <div class="dq-panel"><h3 id="dqBacklogH">The open backlog</h3><div id="dqBacklog"><p class="bib-empty">Counting…</p></div></div>
+      <div class="dq-panel"><h3 id="dqDatesH">Where the verification dates fall</h3><div id="dqDates"><p class="bib-empty">Counting…</p></div></div>
+      <div class="dq-panel"><h3 id="dqFreshH">Freshness, by what a record is about</h3><div id="dqFresh"><p class="bib-empty">Counting…</p></div></div>
+      <div class="dq-panel"><h3 id="dqProvH">Provenance: which sources carry the claims, and how</h3><div id="dqProv"><p class="bib-empty">Counting…</p></div></div>
+    </div>
+  </section>
+
   <main id="bib"><p class="bib-empty">Loading the bibliography…</p></main>
 
   <section class="bib-method">
@@ -85,14 +101,13 @@ document.body.dataset.theme=s;})();
        to a specific publication during the source pass. Those entries appear with
        <b>no public URL located</b> rather than being quietly dropped or replaced with a
        loosely related substitute.</p>
-    <p><b>Verification dates.</b> Every claim carries a verification date of its own, and
-       every one of them currently reads the same day — the day the dataset was compiled.
-       The field is per-record so that claims can be re-checked individually, but no
-       claim has yet been re-checked on a different day from any other, and the reader
-       should read these dates as one compilation date rather than as evidence of
-       independent checking. Negative claims — statements that something has
-       <em>not</em> happened — are true only at an instant, and that instant is the
-       compilation date for all of them.</p>
+    <p><b>Verification dates.</b> Every claim, enforcement record, timeline event and
+       instrument carries a verification date of its own, and the records were not all checked
+       on the same day: the panel <a href="#dqDatesH">where the verification dates fall</a>
+       counts them from the data on every load, so it cannot go stale the way a sentence here
+       did. A date says when a record was last checked, not that it is still true. Negative
+       claims — statements that something has <em>not</em> happened — are true only at an
+       instant, and that instant is their own verification date.</p>
 
     <p><b>What the notes actually rest on.</b> <span id="bibSelf">Counting…</span></p>
 
