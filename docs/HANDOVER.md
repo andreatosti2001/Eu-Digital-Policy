@@ -1,5 +1,78 @@
 # HANDOVER
 
+**Last updated:** evidence-model remediation · 27 September 2026
+**Branch:** `claude/amazing-einstein-yrsu79`, cut from `origin/main` at `179c975` (PR #3's merge).
+Five commits, pushed, **not merged, no pull request open** — the author decides whether to open
+one (AGENTS.md, branch hygiene). `main` did not move during the session (re-fetched before this
+write).
+
+## The 27 September 2026 session — evidence model, Official Journal verification, deploy gate
+
+**Asked:** the author's master remediation prompt: claim ontology and evidence status, claim
+atomization and coverage, source and locator quality, regulatory-status and enforcement models,
+risk-based freshness, a CI deploy gate, security hardening, accessibility, SEO, documentation.
+
+**The one fact that changed what was possible.** This environment could reach the web. EUR-Lex
+still answers with a bot challenge, but the Publications Office's Cellar serves the Official
+Journal text by CELEX number (`docs/SOURCE-POLICY.md` §8). Every legal verification below was
+read from it on 27 Sep 2026 and names the CELEX number. Nothing was written from memory.
+
+### Measured, before → after (same tool, `tools/evidence-audit.mjs --as-of 2026-09-27`)
+
+| | before (`179c975`) | after |
+|---|---:|---:|
+| Substantive passages of the brief registered or classified | 64 of 169 (37.9%) | 167 of 167 (100%) |
+| Claims | 108 | 143 (31 registered for unrecorded prose; the DPC and Alliance Risk composites split) |
+| Claims of law | 26 | 53, each new one with an article locator read in the OJ |
+| Direct external references without a usable locator | 44 of 75 | 10 of 110 |
+| Graded primary law | 16 | 47 |
+| Derived / attributed / disputed claims | 0 / 0 / 0 | 2 / 10 / 1 |
+| Enforcement records that contradict themselves | 1 | 0 |
+| Instruments with adoption → OJ publication → entry into force | 0 | 11 |
+| Provisions with no recorded application date | 17 | 10 |
+| Unverified records (`validate.mjs`) | 111 | 104 |
+| `design-qa` warnings | 5 | 0 (inline handlers now an error) |
+| Tests | 1211, 2 failing | 1221, 0 failing, 25 suites |
+| Browser suite | 144 pass · 1 undecidable · 145 | 185 pass · 1 undecidable · 186 |
+
+### Decisions taken on the author's instruction that a person should review
+
+These are red-tier in `docs/AI-SAFE-BOUNDARIES.md`. They were done because the master prompt
+asked for them, each is in a commit with its reason, and each is reversible:
+
+- **Claim types changed.** Seven claims retyped `attributed` (they report what ICCL, ICLE,
+  Draghi, CISPE, the EDPB/EDPS or an unnamed practitioner said); `clm-dpc-share-of-fines`
+  retyped `derived`. The grading rules gained two grades (derived, attributed).
+- **Flags cleared, each after reading the Official Journal:** five provisions "recorded from
+  general knowledge"; two AI Act events "not confirmed against the text".
+- **Legal facts corrected against the OJ:** the NIS2 Art. 3 and AI Act Art. 3(63) summaries;
+  two sentences of prose (GDPR Art. 3(2) territorial scope; NIS2 Art. 34(4) sets floors, not
+  ceilings), with `part-1.p8` superseded in it/fr/es.
+- **`enf-apple-gc-2026-designation`** read `action:final` while its own appeal block said an
+  appeal was not established; it now reads `action:imposed`. Establishing whether Apple appealed
+  would settle it.
+- **Two governance anchors (P-05, P-06)** measured a live count of unmerged branches, which read
+  0 once the author closed them; they now anchor on the branch register.
+
+### What only the author can do
+
+1. **Switch Pages to GitHub Actions** (Settings → Pages → Source). Until then
+   `.github/workflows/pages.yml` gates nothing and a push to `main` publishes directly.
+2. **Protect `main`** with the required checks listed in `docs/DEPLOYMENT.md` §3.
+3. **Decide on a pull request** for this branch.
+
+### Still open (the audit reports each on every run)
+
+10 direct references without a usable locator (pages that could not be read here: a 403, landing
+pages without the text); 11 possibly composite claims; 23 claims without a direct primary source;
+20 claims graded unresolved; 104 unverified records; the Data Act's `status_as_of` predates its
+12 September 2026 application date; the adversarial gate (HE-04) and the production trace step
+remain red by decision, exactly as before.
+
+---
+
+### The previous header (26 September 2026), kept as it was written
+
 **Last updated:** AUDIT-2026-09-25 remediation · 26 September 2026
 **Branch:** `claude/new-session-egb0gs`. It contains SESSION 30 (below) in full, and
 `claude/new-session-e5xmjm`. **Open as pull request #3 to `main`; not merged.** The branch
@@ -22,7 +95,14 @@ Neither is a regression, and both are a later session's to decide.
 **SESSION 30 is a single branch from `6da38ee`, with no sibling.** `AGENT_SUITES.length` is
 **24**, and the twenty-fourth entry is the first that is not under `agent/`.
 
+
 ---
+
+## Branch register — 27 September 2026
+
+`git branch -r --no-merged origin/main` lists one branch: `claude/amazing-einstein-yrsu79`, this
+session's, five commits ahead of `main` (`179c975`), pushed, no pull request. Everything the
+register below records was closed by the author on 26 September.
 
 ## Branch register — AUDIT-2026-09-25 T-40, measured 26 September 2026
 
