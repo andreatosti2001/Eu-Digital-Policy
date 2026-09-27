@@ -108,7 +108,7 @@ export const RECIPES = {
       ],
       risks: [
         { risk: 'The check fires on a component where colour is decoration rather than status, and somebody silences it by adding a glyph nobody needs.', watch: 'The count of components the check names, against the list in this finding.', mitigation: 'The check should let a component be marked as decoration in the stylesheet, so a silenced rule carries a reason instead of a workaround.' },
-        { risk: 'A new check turns the design-qa baseline red and blocks unrelated work.', watch: 'node tools/design-qa.mjs against the docs/CURRENT-ARCHITECTURE.md §12 baseline: 0 errors, 5 warnings.', mitigation: 'Land it as a warning first, with the components it names listed in §12 the way the five existing warnings are, and promote it to an error once they are resolved.' },
+        { risk: 'A new check turns the design-qa baseline red and blocks unrelated work.', watch: 'node tools/design-qa.mjs against the docs/CURRENT-ARCHITECTURE.md §12 baseline: 0 errors, 0 warnings since 27 Sep 2026.', mitigation: 'Land it as a warning first, with the components it names listed in §12 the way the five existing warnings are, and promote it to an error once they are resolved.' },
       ],
       checks: [
         { check: 'Every component the check names is distinguishable in greyscale after the change.', how: 'Open each page carrying the component and view it with the display in greyscale, then again with the theme switched.', tool: null },

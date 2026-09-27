@@ -681,7 +681,9 @@ test('every proposal names all four validators, design-qa among them', () => {
       assert.ok(cmds.includes(need), `${r.proposal_id} does not name ${need}`);
     }
     const qa = r.validation_requirements.find((v) => v.command === 'node tools/design-qa.mjs');
-    assert.match(qa.expected, /5 warnings|five/i, 'the design-qa baseline is not carried on the proposal');
+    /* the baseline is carried by reference to §12, which holds the number;
+       it was five warnings until 27 Sep 2026 and is none now */
+    assert.match(qa.expected, /§12/, 'the design-qa baseline is not carried on the proposal');
   }
 });
 

@@ -178,3 +178,46 @@ for (const file of PAGES) {
   if (s !== before) writeFileSync(file, s);
 }
 console.log('social meta regenerated from each page\'s own title and description.');
+
+/* ---------------------------------------------------------- security meta
+
+   The Content-Security-Policy and the referrer policy, from tools/csp.mjs.
+   Written LAST, because the policy hashes each page's inline scripts as
+   they now stand, and placed immediately after <meta charset> because a
+   meta policy governs only what follows it. Re-run this script after any
+   edit to an inline script — the theme bootstrap, or the __CONTENT__ blob
+   in index.html — or the browser will refuse to run it; design-qa.mjs
+   fails the page until you do. */
+
+import { SBEGIN as CBEGIN, SEND as CEND, securityMeta } from './csp.mjs';
+
+for (const file of PAGES) {
+  let s = readFileSync(file, 'utf8');
+  const before = s;
+  s = upsert(s, CBEGIN, CEND, securityMeta(s), (t, blk) =>
+    t.replace('<meta charset="utf-8"/>', `<meta charset="utf-8"/>\n${blk}`));
+  if (s !== before) writeFileSync(file, s);
+}
+console.log('security meta (CSP, referrer) regenerated from each page\'s own inline scripts.');
+
+/* ---------------------------------------------------------- sitemap
+
+   The seven pages plus one entry per instrument page, from BASE and from
+   data/instruments.json — so the sitemap cannot name a page or an
+   instrument that does not exist. No <lastmod>: the only date this
+   generator could write is today's, and a lastmod that is merely the date
+   the file was regenerated tells a crawler nothing true. */
+
+const instruments = JSON.parse(readFileSync('data/instruments.json', 'utf8')).instruments
+  .filter((i) => !String(i.kind || '').includes('treaty') && i.id !== 'tfeu' && i.id !== 'teu')
+  .map((i) => i.id);
+const urls = [
+  ...PAGES.filter((p) => p !== 'instrument.html').map((p) => BASE + (p === 'index.html' ? '' : p)),
+  ...instruments.map((id) => `${BASE}instrument.html?id=${encodeURIComponent(id)}`),
+];
+const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  urls.map((u) => `  <url><loc>${u.replace(/&/g, '&amp;')}</loc></url>`).join('\n') +
+  '\n</urlset>\n';
+writeFileSync('sitemap.xml', sitemap);
+console.log(`sitemap.xml: ${urls.length} URL(s).`);

@@ -34,6 +34,7 @@
    ============================================================ */
 
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { cspProblems } from './csp.mjs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { scanRuntimeSurface } from './thirdparty.mjs';
@@ -133,10 +134,19 @@ for (const page of PAGES) {
     err(at, `third-party resource: ${m[1]}`);
   }
 
-  /* inline event handlers are not a design defect but they are a place
-     where behaviour hides from every module that owns it */
-  const inline = (html.match(/\son(?:click|change|input|submit)="/g) || []).length;
-  if (inline) warn(at, `${inline} inline event handler(s)`);
+  /* the Content-Security-Policy (tools/csp.mjs): present, placed where it
+     governs, no unsafe script sources, and every inline script hashed —
+     an unhashed one is a script the browser silently refuses to run */
+  for (const p of cspProblems(html)) err(at, `CSP: ${p}`);
+
+  /* inline event handlers are a place where behaviour hides from every
+     module that owns it, and a Content-Security-Policy without
+     'unsafe-inline' refuses to run them. The three that existed were moved
+     into app.js on 27 Sep 2026, so this is an ERROR now rather than a
+     warning: the next one would be a regression, not a baseline. Any
+     on<event> attribute, in either quote style. */
+  const inline = (html.match(/\son[a-z]+\s*=\s*["']/gi) || []).length;
+  if (inline) err(at, `${inline} inline event handler(s) — move the behaviour into a module (see app.js data-action)`);
 }
 
 /* ---------------------------------------------------------- CSS */

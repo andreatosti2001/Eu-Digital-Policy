@@ -350,6 +350,26 @@ var treeModal = treeScrim ? makeModal(treeScrim, {
 function openTree(){ if (treeModal) treeModal.open(); }
 function closeTree(){ if (treeModal) treeModal.close(); }
 if (openTreeBtn) openTreeBtn.addEventListener('click', openTree);
+
+/* Three controls used to carry inline onclick="" handlers, which a
+   Content-Security-Policy without 'unsafe-inline' refuses to run and which
+   put behaviour in the markup where no module can see it. They now carry a
+   data-action, and this one delegated listener owns them. The scroll to top
+   honours prefers-reduced-motion, which the inline version did not. */
+document.addEventListener('click', function (e) {
+  var t = e.target && e.target.closest ? e.target.closest('[data-action]') : null;
+  if (!t) return;
+  var a = t.getAttribute('data-action');
+  if (a === 'scroll-top') {
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' });
+  } else if (a === 'open-tree') {
+    openTree();
+  } else if (a === 'open-search') {
+    var s = document.getElementById('openSearch');
+    if (s) s.click();
+  }
+});
 if (treeCloseBtn) treeCloseBtn.addEventListener('click', closeTree);
 if (treeScrim) treeScrim.addEventListener('click', function(e){ if (e.target === treeScrim) closeTree(); });
 

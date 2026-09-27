@@ -163,7 +163,7 @@ if (command === 'check') {
   }
   out();
   out(`  verdict: ${verdictFor(checks)}`);
-  out(`  ${v.baseline.unverified} unverified record(s) at the recorded baseline; the five design-qa warnings are named in §12 by file and line.`);
+  out(`  ${v.baseline.unverified} unverified record(s) at the recorded baseline; the design-qa warnings recorded in §12 are named there by file and line.`);
   out();
   out('  A passing validator proves the data is well-formed and the markup consistent. It proves');
   out('  nothing about whether a statement is true (docs/VERIFICATION-POLICY.md §3).');

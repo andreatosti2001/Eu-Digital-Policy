@@ -570,9 +570,14 @@ test('R6 · the baseline is READ from docs/CURRENT-ARCHITECTURE.md §12, not ret
   const b = readBaseline();
   assert.equal(b.commit.length > 0, true);
   for (const v of VALIDATORS) assert.ok(v.name in b.checks, `${v.name} must have a recorded baseline`);
-  assert.equal(b.checks['design-qa.mjs'].warnings, 5, 'the five pre-existing design-qa warnings');
-  assert.equal(b.unverified, 111);
-  assert.ok(b.named_warnings.length >= 3, 'the warnings are named by file, because a count cannot tell a new one from a moved one');
+  /* The values §12 records on 27 Sep 2026: the five design-qa warnings
+     were fixed that day and the unverified count moved 111 -> 104 by
+     verification work. Pinned here on purpose — this test exists to catch
+     §12 being parsed WRONG, and a parse that silently returned 0 would
+     otherwise pass. Move them only together with §12. */
+  assert.equal(b.checks['design-qa.mjs'].warnings, 0, 'the design-qa warnings recorded in §12 — none since 27 Sep 2026');
+  assert.equal(b.unverified, 104);
+  assert.ok(/none/i.test(b.named_warnings.join(' ')), 'with no warnings, §12 still says so in words, because a count cannot tell a new one from a moved one');
 });
 
 test('R6 · readBaseline throws rather than guessing if §12 stops being parseable', () => {
@@ -601,11 +606,16 @@ test('R6 · a proposal that does not name all four validators fails the gate', (
 
 test('R6 · a warning above the recorded baseline is a fail, not noise', () => {
   const b = readBaseline();
-  assert.equal(compare({ errors: 0, warnings: 6 }, b.checks['design-qa.mjs']).verdict, 'regression');
-  assert.equal(compare({ errors: 0, warnings: 5 }, b.checks['design-qa.mjs']).verdict, 'at_baseline');
+  assert.equal(compare({ errors: 0, warnings: 1 }, b.checks['design-qa.mjs']).verdict, 'regression');
+  assert.equal(compare({ errors: 0, warnings: 0 }, b.checks['design-qa.mjs']).verdict, 'at_baseline');
   /* And BELOW the baseline is not a clean pass either: a check that
-     stopped firing looks exactly like a fix. */
-  assert.equal(compare({ errors: 0, warnings: 4 }, b.checks['design-qa.mjs']).verdict, 'below_baseline');
+     stopped firing looks exactly like a fix. The real baseline is now 0,
+     so this half is shown against a recorded baseline of five, which is
+     what §12 carried until 27 Sep 2026. */
+  const five = { errors: 0, warnings: 5 };
+  assert.equal(compare({ errors: 0, warnings: 6 }, five).verdict, 'regression');
+  assert.equal(compare({ errors: 0, warnings: 5 }, five).verdict, 'at_baseline');
+  assert.equal(compare({ errors: 0, warnings: 4 }, five).verdict, 'below_baseline');
 });
 
 test('R6 · verdictFor cannot return a pass over a check that errored, exited non-zero, or rose', () => {

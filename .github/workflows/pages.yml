@@ -1,0 +1,142 @@
+# ============================================================
+# Pages — the deploy gate
+#
+# QA FAIL → NO DEPLOY. This workflow publishes the site ONLY if the
+# checks below pass on the exact commit being published, and it
+# publishes only the website itself (tools/pages-artifact.mjs), never
+# the repository.
+#
+# IT GATES NOTHING UNTIL A PERSON CHANGES ONE SETTING, and that is said
+# here rather than implied. GitHub Pages currently serves `main` from the
+# repository root ("Deploy from a branch"). While that setting stands,
+# every push to `main` is published by GitHub's own Pages build whatever
+# this workflow concludes. To make this the gate:
+#
+#   Settings → Pages → Build and deployment → Source: "GitHub Actions"
+#
+# docs/DEPLOYMENT.md has that step, the branch-protection rule that makes
+# the QA checks required on pull requests, and what each one blocks.
+#
+# WHAT GATES AND WHAT DOES NOT. The gate is the set of checks that say
+# something about the published site: the four validators at their
+# recorded baseline, the evidence audit, the validators' own suite, the
+# public/private boundary, and the browser suite. Two QA jobs are
+# deliberately NOT in it, because they are red on purpose and a gate that
+# is always red publishes nothing: the adversarial verification gate
+# (HE-04, left red by decision — docs/PRODUCTION-OPERATING-MODE.md §4a)
+# and the production-mode traceability step. They still run in qa.yml on
+# every push, where their state stays visible.
+# ============================================================
+
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  gate-data:
+    name: Gate — data, markup and evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: validate.mjs
+        run: node tools/validate.mjs
+      - name: i18n-audit.mjs
+        run: node tools/i18n-audit.mjs
+      - name: design-qa.mjs (includes the CSP and the inline-handler checks)
+        run: node tools/design-qa.mjs
+      - name: freshness.mjs (defects fail; staleness is reported)
+        run: node tools/freshness.mjs
+      - name: evidence-audit.mjs
+        run: node tools/evidence-audit.mjs
+      - name: The validators' own suite
+        run: node --test tools/selftest.mjs
+      - name: Against the recorded baseline
+        run: node agent/implement/cli.mjs check --as-of "$(date -u +%Y-%m-%d)"
+
+  gate-boundary:
+    name: Gate — public / private boundary
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: No credential in the published surface
+        run: node agent/implement/cli.mjs boundary
+      - name: The Control Room stays behind the dot prefix
+        run: node .control-room/cli.mjs boundary
+      - name: The artifact is the website and nothing else
+        run: node tools/pages-artifact.mjs build _site
+
+  gate-browser:
+    name: Gate — browser regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Install a browser on the runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends chromium-browser \
+            || sudo apt-get install -y --no-install-recommends chromium
+          echo "BROWSER_QA_CHROME=$(command -v chromium-browser || command -v chromium)" >> "$GITHUB_ENV"
+      - name: The browser suite (a missing browser is a failure)
+        run: node agent/browser/cli.mjs --require-browser
+
+  build:
+    name: Build the artifact
+    needs: [gate-data, gate-boundary, gate-browser]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: The website, from the allowlist
+        run: node tools/pages-artifact.mjs build _site
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

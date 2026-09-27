@@ -546,7 +546,7 @@ body[data-lens="crit"] .box-mech{opacity:.15;filter:grayscale(.6)}
 @keyframes ptDraw{to{stroke-dashoffset:0}}
 .portal-tree .pt-node{opacity:0;animation:ptKindle .5s cubic-bezier(.2,.7,.3,1) forwards;
   animation-delay:calc(.34s + var(--i) * .072s)}
-@keyframes ptKindle{from{opacity:0;transform:translate(var(--tx,0),var(--ty,0)) scale(.7)}
+@keyframes ptKindle{from{opacity:0;transform:scale(.7)}
   to{opacity:1}}
 
 .portal-caption{font-family:var(--body);font-size:14.5px;line-height:1.55;color:var(--paper-dim);

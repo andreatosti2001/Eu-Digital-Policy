@@ -339,7 +339,7 @@ dl.evi-dl{ margin:0; display:grid; gap:9px }
   .evi, .evi-scrim, .cal-controls, .evi-legend{ display:none !important }
   .part-notes[open], .part-notes{ display:block }
   .part-notes > summary{ list-style:none }
-  .fn{ color:#000 }
+  .fn{ color:var(--print-ink) }
 }
 
 /* milestone whose date has not been confirmed against a primary source */

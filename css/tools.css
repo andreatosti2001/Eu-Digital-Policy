@@ -205,7 +205,7 @@ body[data-theme="light"]{
 
 @media print{
   #ap-form,.dna-controls,.tool-link{display:none !important}
-  .ap-caveat{border-color:#000}
+  .ap-caveat{border-color:var(--print-ink)}
 }
 
 /* ============================================================

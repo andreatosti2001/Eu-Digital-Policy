@@ -342,7 +342,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 
 ```
 validate.mjs     0 errors · 0 warnings · 104 unverified/requires-verification · exit 0
-design-qa.mjs    0 errors · 5 warnings · exit 0
+design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
 ```
@@ -386,10 +386,13 @@ at `exit 1`, by name, and counts them. The four extra checks SESSION 30 added
 (the source-record contract, the runtime-surface scan) found nothing on this tree, which is
 what "at baseline" means here.
 
-The five `design-qa` warnings, recorded so a later session can tell new from pre-existing:
-3 inline event handlers in `index.html` (lines 42, 112, 119); a `#000` literal in
-`css/evidence.css`; a `#000` literal in `css/tools.css`; `--tx` and `--ty` never set in
-`style.css`.
+The `design-qa` warnings, recorded so a later session can tell new from pre-existing: none.
+
+Until 27 Sep 2026 there were five: three inline event handlers in `index.html` (moved into
+`app.js` as `data-action` controls, and the check is now an ERROR so one cannot return), a `#000`
+literal in `css/evidence.css` and one in `css/tools.css` (both print-only, now the `--print-ink`
+token), and `--tx`/`--ty` never set in `style.css` (the keyframe's `translate(0,0)` was a no-op and
+is removed). A new warning is a finding, as it always was.
 
 **There is no test runner.** The Playwright suites used during development live outside this
 repository. What ships here are the four validators, which a contributor can run without

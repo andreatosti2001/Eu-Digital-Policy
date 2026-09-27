@@ -49,7 +49,7 @@ const BASELINE = {
   },
   'tools/design-qa.mjs': {
     check: 'markup and stylesheets',
-    expected: '0 errors and the same 5 warnings recorded in docs/CURRENT-ARCHITECTURE.md §12, by file and line. A sixth is a finding.',
+    expected: '0 errors and exactly the warnings recorded in docs/CURRENT-ARCHITECTURE.md §12, by file and line (none since 27 Sep 2026). A new one is a finding.',
     why: 'It fails on a third-party resource and on footer drift. A data-only change should move nothing here, and a movement would mean the change was not data-only.',
   },
   'tools/freshness.mjs': {
