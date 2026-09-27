@@ -1275,3 +1275,35 @@ body[data-theme="light"]{
      every one is a row in the calendar table directly beneath it, at
      full width. Recorded here so the next audit does not "fix" it. */
 }
+
+/* ============================================================
+   Utilities that replace inline style="" attributes (27 Sep 2026).
+   The CSP's style-src no longer allows 'unsafe-inline', so markup may
+   not carry style attributes. Each rule below stands in for one inline
+   value the pages used to carry, and is !important because an inline
+   style outranked every ordinary rule: the cascade is kept as it was.
+   Values computed at run time are set through the CSSOM instead
+   (js/format.js applyGeometry). tools/design-qa.mjs fails a page or a
+   module that writes a style attribute again.
+   ============================================================ */
+.i-0{--i:0 !important}.i-1{--i:1 !important}.i-2{--i:2 !important}.i-3{--i:3 !important}
+.i-4{--i:4 !important}.i-5{--i:5 !important}.i-6{--i:6 !important}.i-7{--i:7 !important}
+.i-8{--i:8 !important}.i-9{--i:9 !important}.i-10{--i:10 !important}.i-11{--i:11 !important}
+.i-12{--i:12 !important}.i-13{--i:13 !important}.i-14{--i:14 !important}.i-15{--i:15 !important}
+.i-16{--i:16 !important}.i-17{--i:17 !important}.i-18{--i:18 !important}.i-19{--i:19 !important}
+.i-20{--i:20 !important}.i-21{--i:21 !important}
+.fill-mech{fill:var(--mech) !important}
+.fill-mech-dim{fill:var(--mech-dim) !important}
+.fill-crit{fill:var(--crit) !important}
+.fill-crit-dim{fill:var(--crit-dim) !important}
+.fill-paper{fill:var(--paper) !important}
+.fill-paper-faint{fill:var(--paper-faint) !important}
+.fill-ink-2{fill:var(--ink-2) !important}
+.fill-ink-3{fill:var(--ink-3) !important}
+.w-full{width:100% !important}
+.w-half-pct{width:0.5% !important}
+.ap-caveat--mech{border-color:var(--line) !important;border-left-color:var(--mech) !important}
+.txt-mech{color:var(--mech) !important}
+.ev-dim-70{opacity:.7}
+.ev-dim-75{opacity:.75}
+.ev-dim-80{opacity:.8}

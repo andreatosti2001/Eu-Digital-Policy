@@ -714,6 +714,21 @@ test('I1 · the CSP hashes every inline script, and an edited script is caught b
   assert.ok(!/'unsafe-eval'|script-src[^;]*'unsafe-inline'/.test(securityMeta(html)));
 });
 
+test('I1b · no inline styles: the policy refuses them, and a page or module that writes one is caught', () => {
+  /* style-src 'self' since 27 Sep 2026. A style attribute the browser
+     refuses is a silent visual defect, so the check has to be static. */
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  assert.match(securityMeta(html), /style-src 'self';/);
+  assert.doesNotMatch(securityMeta(html), /style-src[^;]*'unsafe-inline'/);
+  assert.ok(cspProblems(html.replace('<body', '<body style="color:red"')).some((p) => /style attribute/.test(p)));
+  assert.ok(cspProblems(html.replace('</head>', '<style>p{}</style></head>')).some((p) => /<style> element/.test(p)));
+  assert.ok(cspProblems(html.replace("style-src 'self'", "style-src 'self' 'unsafe-inline'")).some((p) => /unsafe-inline/.test(p)));
+  for (const f of [...readdirSync(join(ROOT, 'js')).filter((x) => x.endsWith('.js')).map((x) => 'js/' + x), 'app.js']) {
+    const code = readFileSync(join(ROOT, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    assert.doesNotMatch(code, /\sstyle\s*=\s*\\?["']/, `${f} writes a style attribute`);
+  }
+});
+
 test('I2 · the Pages artifact is the website and nothing else', () => {
   const out = scratch('site');
   try {

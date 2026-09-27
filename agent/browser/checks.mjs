@@ -110,6 +110,17 @@ export async function checkPageLoads(page, origin, spec) {
     ? ok(`console:${spec.file}`, 'console', `${spec.name} logged no console error`)
     : bad(`console:${spec.file}`, 'console', `${spec.name} logged ${errors.length} console error(s)`, { errors: errors.slice(0, 8) }));
 
+  /* Content-Security-Policy refusals, recorded in the page by cdp.mjs
+     Page.init. The policy has had no 'unsafe-inline' for styles since
+     27 Sep 2026, so a style attribute that reaches the DOM is refused
+     and the element renders without it — visible to no other check. */
+  const csp = (await page.evaluate('window.__cspViolations || null')) ?? null;
+  results.push(csp === null
+    ? undecidable(`csp:${spec.file}`, 'console', `${spec.name}: CSP refusals could not be read`, 'the violation recorder was not installed in this page')
+    : csp.length === 0
+      ? ok(`csp:${spec.file}`, 'console', `${spec.name}: the Content-Security-Policy refused nothing`)
+      : bad(`csp:${spec.file}`, 'console', `${spec.name}: the Content-Security-Policy refused ${csp.length} thing(s)`, { violations: csp.slice(0, 8) }));
+
   const thrown = page.exceptions.length;
   results.push(thrown === 0
     ? ok(`exception:${spec.file}`, 'console', `${spec.name} threw no uncaught exception`)

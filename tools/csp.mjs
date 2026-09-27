@@ -22,10 +22,13 @@
                js/evidence-model.js reads derivation formulas with its own
                arithmetic parser for exactly this reason, and the three
                inline onclick="" handlers were moved into app.js.
-     styles    'self' 'unsafe-inline'. A deliberate trade-off: several
-               modules build markup carrying style="…" attributes, and a
-               style attribute cannot execute code. Removing it is future
-               work, not a claim made here.
+     styles    'self' only, since 27 Sep 2026. Until then 'unsafe-inline'
+               was a stated trade-off for the style="…" attributes several
+               modules wrote. They are gone: fixed values became classes
+               (css/tools.css, end of file) and values computed at run time
+               are set through the CSSOM (js/format.js applyGeometry), which
+               the policy allows. design-qa fails any page or module that
+               writes a style attribute or a <style> element again.
      network   connect-src 'self' — the only fetch is js/data.js loading
                data/*.json and i18n/*. No third-party origin anywhere,
                which tools/thirdparty.mjs already enforces in the source.
@@ -66,7 +69,7 @@ export function policyFor(html) {
   return [
     "default-src 'self'",
     `script-src 'self' ${hashes.join(' ')}`.trim(),
-    "style-src 'self' 'unsafe-inline'",
+    "style-src 'self'",
     "img-src 'self' data:",
     "font-src 'self'",
     "connect-src 'self'",
@@ -101,6 +104,13 @@ export function cspProblems(html) {
   }
   const scriptSrc = (policy.match(/script-src ([^;]*)/) || [, ''])[1];
   if (/'unsafe-inline'|'unsafe-eval'/.test(scriptSrc)) out.push(`script-src allows ${scriptSrc.match(/'unsafe-[a-z]+'/g).join(', ')}`);
+  const styleSrc = (policy.match(/style-src ([^;]*)/) || [, ''])[1];
+  if (/'unsafe-inline'/.test(styleSrc)) out.push("style-src allows 'unsafe-inline'");
+  /* Without 'unsafe-inline' the browser refuses a style attribute or a
+     <style> element, so one in the markup is a silent visual defect. */
+  const attrs = html.replace(/<script\b[\s\S]*?<\/script>/gi, '').match(/<[a-z][^<>]*\sstyle\s*=\s*["'][^<>]*>/gi) || [];
+  for (const a of attrs.slice(0, 3)) out.push(`a style attribute the CSP will refuse: ${a.slice(0, 80)}`);
+  if (/<style\b/i.test(html)) out.push('a <style> element the CSP will refuse');
   for (const s of inlineScripts(html)) {
     if (!scriptSrc.includes(sha256(s))) out.push(`an inline script (${s.trim().slice(0, 40).replace(/\s+/g, ' ')}…) is not hashed in the policy, so the browser will refuse to run it — run node tools/_footer.mjs`);
   }

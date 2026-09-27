@@ -182,8 +182,8 @@ function renderClaim(entry) {
   const statuses = (c.instruments || []).map(statusFor).filter(Boolean);
   const statusHTML = statuses.length ? statuses.map((s) =>
     '<div class="evi-row"><dt>' + esc(s.name) + '</dt><dd>' +
-    '<b>' + esc(s.status) + '</b>' + (s.asOf ? ' <span style="opacity:.7">as of ' + esc(F.humanDate(s.asOf)) + '</span>' : '') +
-    (s.note ? '<br><span style="opacity:.8">' + esc(s.note) + '</span>' : '') +
+    '<b>' + esc(s.status) + '</b>' + (s.asOf ? ' <span class="ev-dim-70">as of ' + esc(F.humanDate(s.asOf)) + '</span>' : '') +
+    (s.note ? '<br><span class="ev-dim-80">' + esc(s.note) + '</span>' : '') +
     '</dd></div>').join('') : '';
 
   const cards = sourceList(c, IX, 'full');
@@ -218,7 +218,7 @@ function renderClaim(entry) {
       extra +
       (statusHTML ? '<div class="evi-sec"><h4>Regulatory status</h4><dl class="evi-dl">' + statusHTML + '</dl></div>' : '') +
       '<div class="evi-sec"><h4>Basis</h4><dl class="evi-dl">' +
-        row('Legal basis', basis || '<span style="opacity:.7">none — this is not a claim about the text of an instrument</span>') +
+        row('Legal basis', basis || '<span class="ev-dim-70">none — this is not a claim about the text of an instrument</span>') +
         row('Institutions', insts) +
         row('Part', esc(c.brief_part || '—')) +
       '</dl></div>' +
@@ -248,7 +248,7 @@ function derivationHTML(c) {
   const inputs = Object.entries(d.inputs || {}).map(([k, inp]) => {
     const ic = IX.claim.get(inp.claim);
     return '<li><code>' + esc(k) + '</code> = ' + esc(inp.as_stated || String(inp.value)) +
-      ' <span style="opacity:.75">— from “' + esc(ic ? ic.statement : inp.claim) + '” (' +
+      ' <span class="ev-dim-75">— from “' + esc(ic ? ic.statement : inp.claim) + '” (' +
       esc(ic ? F.evidenceGrade(ic, IX).label : 'missing') + ')</span></li>';
   }).join('');
   return '<div class="evi-sec"><h4>How this figure was derived</h4>' +
@@ -274,7 +274,7 @@ function premisesHTML(c) {
   const ps = (c.premises || []).map((id) => IX.claim.get(id)).filter(Boolean);
   if (!ps.length) return '';
   return '<div class="evi-sec"><h4>Built on</h4><ul class="evi-deriv">' + ps.map((p) =>
-    '<li>' + esc(p.statement) + ' <span style="opacity:.75">(' + esc(F.evidenceGrade(p, IX).label) + ')</span></li>').join('') +
+    '<li>' + esc(p.statement) + ' <span class="ev-dim-75">(' + esc(F.evidenceGrade(p, IX).label) + ')</span></li>').join('') +
     '</ul></div>';
 }
 

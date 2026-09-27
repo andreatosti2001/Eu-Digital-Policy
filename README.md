@@ -38,7 +38,7 @@ with its sources, its locator and a grade derived from what those sources can ac
 - **Governed source discovery.** A scheduled Source Scout proposes candidate sources through
   pull requests; nothing an agent finds reaches the site without a person (`docs/SOURCE-SCOUT.md`).
 - **A security boundary that does not rely on obscurity.** A Content-Security-Policy with no
-  `'unsafe-inline'` scripts, no inline handlers, no third-party requests, and a deploy artifact
+  `'unsafe-inline'` scripts or styles, no inline handlers, no third-party requests, and a deploy artifact
   built from an allowlist so private material cannot be published by accident
   (`docs/DEPLOYMENT.md`).
 

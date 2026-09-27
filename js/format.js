@@ -70,6 +70,21 @@ export function citeDate(iso) {
 
 export const isPast = (iso) => !!iso && String(iso).slice(0, 10) < new Date().toISOString().slice(0, 10);
 
+/**
+ * Apply computed geometry that markup cannot carry. The CSP has no
+ * 'unsafe-inline' for styles, so a style="…" attribute written into an
+ * innerHTML string is refused by the browser. A module that needs a
+ * width or a flex share computed at run time writes it as data-w /
+ * data-flex instead, and calls this on the container after inserting
+ * the markup: setting a property through the CSSOM is not an inline
+ * style attribute and the policy allows it.
+ */
+export function applyGeometry(root) {
+  if (!root) return;
+  for (const el of root.querySelectorAll('[data-w]')) el.style.width = el.dataset.w;
+  for (const el of root.querySelectorAll('[data-flex]')) el.style.flex = el.dataset.flex;
+}
+
 /* ---------------------------------------------------------- citations */
 
 const LEGISLATION = new Set(['source-type:regulation']);
