@@ -1,9 +1,42 @@
 # HANDOVER
 
-**Last updated:** primary-source verification, the next phase · 27 September 2026
+**Last updated:** the two red-by-decision CI jobs, decided · 27 September 2026
 **Branch:** `claude/amazing-einstein-yrsu79`, cut from `origin/main` at `179c975` (PR #3's merge).
 **Open as pull request #4 to `main`** (opened on the author's instruction, 27 Sep 2026); not
 merged. `main` did not move during the session (re-fetched before this write).
+
+## The two red-by-decision CI jobs, 27 September 2026 — decided, and green
+
+**Asked:** "Stress them to reduce as much as possible, I give you permission to intervene
+whether there is a 'only user' block". That is the author's decision on the two items this
+repository had left to a person: HE-04 and the untraced write paths. Nothing was reclassified by
+editing a report; each was changed in what it measures, and each change has a test.
+
+- **HE-04 is rewritten, not silenced.** Its three path exclusions are gone; it searches the whole
+  tree and decides from `agent/production/separations.mjs`'s verdicts (`he04Verdict()`): a
+  `read_it` anywhere succeeds, a `no_path_found` is **partial**, only an all-cleared tree is safe.
+  It reports **partial (MEDIUM)** today — `agent/policy/selftest.mjs` and
+  `agent/policy/verify/attacks.mjs` can grant and hold the phrase, no path between them found.
+  The gate: 65 safe · 0 succeeded · 3 partial · 1 undecidable, exit 0. Its suite fails if a path
+  exclusion is re-added. `docs/PRODUCTION-OPERATING-MODE.md` §4a.
+- **A human commit is traceable.** `tools/commit-evidence.mjs`: a non-merge commit that changes a
+  published file carries an `Evidence:` trailer. It runs in `qa.yml` and first in the deploy
+  gate; commits older than the rule are not judged. **Every commit touching `data/`, a page,
+  `js/`, `css/`, `i18n/` from now on needs that trailer**, or CI goes red.
+- **A Control Room decision is traceable on a fresh clone.** A decision now records the proposal
+  itself (`proposal_snapshot`), used only when the working copy is gone and only if it still
+  hashes to `proposal_sha256`; a tampered snapshot voids the approval. Test R2 in
+  `agent/implement/selftest.mjs`.
+- **The adversarial gate is in the deploy gate** (`pages.yml` `gate-security`), and both jobs
+  can now be required on `main` (`docs/DEPLOYMENT.md` §3).
+- **Readiness: 17 of 20, still refused.** What blocks: no production dispatcher (activation,
+  protocol §24), no decision ever recorded (a person's), and whether `pages.yml` is what
+  publishes the site — now **unmeasurable** rather than a false "nothing gates the site".
+
+**What still needs the author, and why an agent cannot do it:** the Pages source and branch
+protection are repository settings (no tool here reaches them); a first Control Room decision
+must be a person's, or the ledger would record a decision nobody took; activating a production
+dispatcher is the step protocol §24 reserves to a person.
 
 ## The next phase, 27 September 2026 — reading the primary texts behind the backlog
 
@@ -177,7 +210,8 @@ asked for them, each is in a commit with its reason, and each is reversible:
 pages without the text); 11 possibly composite claims; 23 claims without a direct primary source;
 20 claims graded unresolved; 104 unverified records; the Data Act's `status_as_of` predates its
 12 September 2026 application date; the adversarial gate (HE-04) and the production trace step
-remain red by decision, exactly as before.
+remain red by decision, exactly as before. *(Superseded the same day: both are green — see the
+first section.)*
 
 ---
 
@@ -213,7 +247,8 @@ Neither is a regression, and both are a later session's to decide.
 `git branch -r --no-merged origin/main` lists one branch: `claude/amazing-einstein-yrsu79`, this
 session's, ahead of `main` (`179c975`), pushed, **open as pull request #4** (27 Sep 2026, on the
 author's instruction). Its CI matches `main`: every job green except the adversarial gate (HE-04)
-and the production trace step, red on `main` too and left red by decision (PR comment of 27 Sep). Everything the
+and the production trace step, red on `main` too and left red by decision (PR comment of 27 Sep).
+*Later that day both were made green on the author's decision (first section).* Everything the
 register below records was closed by the author on 26 September.
 
 ## Branch register — AUDIT-2026-09-25 T-40, measured 26 September 2026

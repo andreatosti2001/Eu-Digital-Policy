@@ -37,13 +37,16 @@
        that cannot grant cannot use a phrase as a credential
        however it reads it.
 
-   The gate is NOT edited here and its finding is NOT reclassified.
+   The gate was NOT edited here and its finding was NOT reclassified.
    Weakening a CRITICAL by editing the thing that reports it is the
    move this repository's whole architecture is arranged against,
    and a stale exclusion list is the specific shape SESSION 23.5
-   already had to correct once. So HE-04 stays red, this module
-   reports what it independently establishes, and
-   `docs/PRODUCTION-OPERATING-MODE.md` carries both.
+   already had to correct once. So HE-04 stayed red until a person
+   decided. On 27 Sep 2026 the author did: HE-04 dropped its path
+   exclusions and now decides from `controlPlaneClear()` and
+   `phraseOccurrences()` below (`he04Verdict()` in attacks.mjs), so
+   the gate and this module can no longer disagree about the same
+   tree. `docs/PRODUCTION-OPERATING-MODE.md` §4a.
 
    THE CLASSIFIER DEFAULTS TO UNDETERMINED, never to safe. An
    occurrence it cannot place is `undetermined` and counts as

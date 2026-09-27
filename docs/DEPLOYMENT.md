@@ -28,14 +28,15 @@ not claim a protection the hosting does not provide.
 
 ## 2. The gate — `.github/workflows/pages.yml`
 
-On a push to `main` (or by hand), three gate jobs run on the exact commit, and the site is
-built and deployed **only if all three pass**:
+On a push to `main` (or by hand), four gate jobs run on the exact commit, and the site is
+built and deployed **only if all four pass**:
 
 | Job | What it runs | Fails on |
 |---|---|---|
-| Gate — data, markup and evidence | `validate.mjs`, `i18n-audit.mjs`, `design-qa.mjs` (incl. the CSP and inline-handler checks), `freshness.mjs`, `evidence-audit.mjs`, `node --test tools/selftest.mjs`, the §12 baseline comparison | any error; a validator above its recorded baseline |
+| Gate — data, markup and evidence | `tools/commit-evidence.mjs` (a commit changing a published file carries an `Evidence:` trailer), `validate.mjs`, `i18n-audit.mjs`, `design-qa.mjs` (incl. the CSP and inline-handler checks), `freshness.mjs`, `evidence-audit.mjs`, `node --test tools/selftest.mjs`, the §12 baseline comparison | any error; a validator above its recorded baseline; a published change without an `Evidence:` trailer |
 | Gate — public / private boundary | `agent/implement/cli.mjs boundary`, `.control-room/cli.mjs boundary`, `tools/pages-artifact.mjs build` | a credential in the published surface; a Control Room file outside the dot prefix; an incomplete or over-inclusive artifact |
 | Gate — browser regression | `agent/browser/cli.mjs --require-browser` | any failing browser check; no browser |
+| Gate — adversarial verification | `agent/policy/verify/cli.mjs` | any attack that SUCCEEDS (a `partial` does not block) |
 
 Then `build` assembles the artifact with `tools/pages-artifact.mjs` — **an allowlist of the
 website's own files** (the seven pages, `app.js`, `style.css`, `css/`, `js/`, `data/`, `i18n/`,
@@ -49,13 +50,19 @@ website. `tools/selftest.mjs` I2 builds the artifact and asserts `.control-room/
 `docs/` and `tools/` are absent. Served on its own on 27 Sep 2026, the artifact rendered all
 seven pages with no console error, and every private path returned 404.
 
-**What is deliberately not in the gate.** Two jobs in `qa.yml` are red on purpose: the
-adversarial verification gate (finding HE-04, left red by decision —
-`docs/PRODUCTION-OPERATING-MODE.md` §4a) and the production-mode traceability step. A gate that
-includes a check that is always red publishes nothing, so they are not in it. They still run on
-every push in `qa.yml`, where their state stays visible. The agent suites are not in the deploy
+**The adversarial gate is in the deploy gate since 27 Sep 2026** (`gate-security`). Until then
+it was red on purpose — finding HE-04 — and a gate that includes a check that is always red
+publishes nothing. The author decided that HE-04 should decide from the separation verdicts
+rather than from a list of skipped paths (`docs/PRODUCTION-OPERATING-MODE.md` §4a); the gate is
+green, and a deploy is now blocked whenever an attack succeeds. A `partial` does not block.
+
+**What is deliberately not in the gate.** The production-mode checks in `qa.yml` — schedule,
+visual standard, separations, traceability — describe how the agent layer operates, not the
+published site; they are green and run on every push. The agent suites are not in the deploy
 gate either: they test the agent layer, which is not part of the published site. They are in
-`qa.yml` and should be required on pull requests (§3).
+`qa.yml` and should be required on pull requests (§3). The evidence-trailer rule
+(`tools/commit-evidence.mjs`, §5 of the operating-mode document) **is** in the gate, as the
+first step of `gate-data`.
 
 ## 3. Manual repository settings required
 
@@ -70,9 +77,9 @@ gate either: they test the agent layer, which is not part of the published site.
    - Require a pull request before merging.
    - Require status checks to pass, and add these check names from `qa.yml`:
      `The four validators`, `The agent suites`, `Public website / private control plane`,
-     `Website health monitor`, `Browser regression suite`.
-     Do **not** require `The adversarial verification gate` or `Production operating mode`
-     while they are red by decision (§2) — requiring them would block every merge.
+     `Website health monitor`, `Browser regression suite`, `The adversarial verification gate`,
+     `Production operating mode`. The last two were red by decision until 27 Sep 2026 and could
+     not be required then; both are green now (§2).
    - Block force pushes. Restrict deletions.
 3. **The `github-pages` environment** (created by the first Actions deployment): Settings →
    Environments → github-pages → Deployment branches: **`main` only**.

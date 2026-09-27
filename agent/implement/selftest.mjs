@@ -296,6 +296,25 @@ test('R2 · a decision for a proposal that does not exist is refused, and void i
   assert.equal(forced.state, 'void_unknown_proposal');
 });
 
+test('R2 · a recorded decision stands on a fresh clone: it carries the proposal, bound by its hash', () => {
+  const p = implementationProposal();
+  const w = world({ proposals: [p], approvals: [approvalRequest(p.proposal_id)] });
+  const dir = mkdtempSync(join(tmpdir(), 'ledger-'));
+  let entry;
+  try { entry = recordDecision({ proposalId: p.proposal_id, outcome: 'granted', decidedBy: 'a person', records: w.records, dir }); }
+  finally { rmSync(dir, { recursive: true, force: true }); }
+  assert.ok(entry.proposal_snapshot, 'the decision carries the proposal it decides');
+  assert.equal(proposalFingerprint(entry.proposal_snapshot), entry.proposal_sha256);
+  const fresh = world({ proposals: [], approvals: [] });
+  const ledger = { decisions: [entry], malformed: [], path: '(memory)' };
+  const d = deriveApproval(p.proposal_id, { records: fresh.records, ledger });
+  assert.equal(d.state, 'granted', 'on a clone with no record store the decision still stands');
+  assert.equal(d.proposal_source, 'ledger_snapshot');
+  const tampered = { ...entry, proposal_snapshot: { ...entry.proposal_snapshot, summary: 'a wider scope' } };
+  const t2 = deriveApproval(p.proposal_id, { records: fresh.records, ledger: { decisions: [tampered], malformed: [], path: '(memory)' } });
+  assert.equal(t2.state, 'void_unknown_proposal', 'a copy edited after the decision authorises nothing');
+});
+
 test('R2 · editing the proposal after the grant VOIDS it — approval does not follow a widened scope', () => {
   const p = implementationProposal();
   const grant = grantFor(p);

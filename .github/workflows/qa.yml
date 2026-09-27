@@ -56,6 +56,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - uses: actions/setup-node@v7
         with:
@@ -67,6 +68,24 @@ jobs:
           echo "No dependencies, no build step, no package.json. Nothing is installed."
 
       # Each named separately so the job summary says WHICH one failed.
+      - name: commit-evidence.mjs — published changes name their evidence
+        # The author's rule of 27 Sep 2026 (docs/PRODUCTION-OPERATING-MODE.md
+        # §5): a commit that changes a published file carries an
+        # "Evidence:" trailer. Commits older than the rule are not judged.
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          node tools/commit-evidence.mjs --self-test
+          HEAD_SHA="$GITHUB_SHA"; BASE=""
+          if [ "$EVENT" = "pull_request" ]; then BASE="$PR_BASE"; HEAD_SHA="$PR_HEAD";
+          elif [ -n "$BEFORE" ] && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then BASE="$BEFORE";
+          else BASE="$(git merge-base origin/main "$GITHUB_SHA" 2>/dev/null || true)"; fi
+          if [ -z "$BASE" ] || [ "$BASE" = "$HEAD_SHA" ]; then echo "Nothing to judge: no earlier commit to compare against."; exit 0; fi
+          node tools/commit-evidence.mjs "$BASE" "$HEAD_SHA"
+
       - name: validate.mjs — data integrity
         run: node tools/validate.mjs
 
@@ -373,13 +392,16 @@ jobs:
   # ----------------------------------------------------------
   # 3c. SESSION 23.5 — the adversarial verification gate
   #
-  # IN A JOB OF ITS OWN, AND THAT IS THE WHOLE DESIGN. The gate has
-  # exited 1 since SESSION 24 on a CRITICAL finding, and a failing
-  # step skips every step after it in the same job — which is
-  # exactly how two other checks came to be registered behind a
-  # break and never run (docs/GOVERNANCE-PROPOSALS.md §6b). A step
-  # that is expected to be red must therefore hide nothing, so it
-  # gets a job to itself.
+  # IN A JOB OF ITS OWN, AND THAT IS THE WHOLE DESIGN. The gate
+  # exited 1 from SESSION 24 to 27 Sep 2026 on a CRITICAL finding,
+  # and a failing step skips every step after it in the same job —
+  # which is exactly how two other checks came to be registered
+  # behind a break and never run (docs/GOVERNANCE-PROPOSALS.md §6b).
+  # A step that can go red must hide nothing, so it keeps a job to
+  # itself. HE-04 now decides from the separation verdicts rather
+  # than from a list of skipped paths, on the author's decision of
+  # 27 Sep 2026 (docs/PRODUCTION-OPERATING-MODE.md §4a), and the
+  # gate is also in the deploy gate (pages.yml gate-security).
   #
   # SESSION 29 ADDED THIS, and its absence was the standing lesson:
   # AGENTS.md recorded that a CRITICAL stayed red across five
@@ -422,10 +444,12 @@ jobs:
   # workflow, writes a record or decides anything, and there is no
   # verb in that directory that could.
   #
-  # `trace` IS LAST ON PURPOSE. It exits 1 on a standing finding —
-  # two of the three ways this website can change leave no durable
-  # record naming the evidence — and putting it anywhere but last
-  # would hide the three checks above it.
+  # `trace` IS LAST ON PURPOSE. It exits 1 when a way this website
+  # can change leaves no durable record naming the evidence, and
+  # putting it anywhere but last would hide the three checks above
+  # it. Since 27 Sep 2026 all three paths are traceable
+  # (docs/PRODUCTION-OPERATING-MODE.md §5), so it is green; it stays
+  # last so that the day one regresses, nothing hides behind it.
   # ----------------------------------------------------------
   production:
     name: Production operating mode

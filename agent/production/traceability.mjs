@@ -120,6 +120,23 @@ export function writePaths({ root = REPO_ROOT } = {}) {
   const namesRollback = /ROLLBACK/.test(commitSrc);
 
   const decisions = trackedFilesUnder('agent/implement/decisions/', { root });
+  const read = (rel) => (existsSync(join(root, rel)) ? readFileSync(join(root, rel), 'utf8') : '');
+  /* The human path: a check exists, and both the QA workflow and the
+     deploy gate run it. */
+  const evidenceTool = existsSync(join(root, 'tools/commit-evidence.mjs'));
+  const qaRuns = /tools\/commit-evidence\.mjs/.test(read('.github/workflows/qa.yml'));
+  const pagesRuns = /tools\/commit-evidence\.mjs/.test(read('.github/workflows/pages.yml'));
+  const humanTraceable = evidenceTool && qaRuns && pagesRuns;
+  /* The Control Room path: judged, like the autonomy runner, on what its
+     durable record CARRIES — the decision ledger is git-tracked, and the
+     entry recordDecision() writes names the proposal, binds it by hash,
+     names the person and what they were asked, and carries the proposal
+     itself so the decision stands on a fresh clone. */
+  const ledgerSrc = read('agent/implement/ledger.mjs');
+  const decisionCarries = ['proposal_id:', 'proposal_sha256:', 'decided_by:', 'what_was_asked:', 'proposal_snapshot:'].every((k) => ledgerSrc.includes(k));
+  const snapshotHonoured = /proposal_source = 'ledger_snapshot'/.test(ledgerSrc);
+  const ledgerTracked = decisions.measurable && (decisions.records.length > 0 || decisions.placeholders.length > 0);
+  const decisionTraceable = decisionCarries && snapshotHonoured && ledgerTracked;
   const grants = trackedFilesUnder('agent/policy/governance/', { root });
   const cycles = trackedFilesUnder('agent/improve/cycles/', { root });
 
@@ -140,25 +157,25 @@ export function writePaths({ root = REPO_ROOT } = {}) {
       id: 'human_commit',
       what: 'a person edits a published file and pushes',
       automatic: false,
-      durable_record: 'the git commit',
-      carries_evidence: false,
-      traceable: false,
-      evidence: 'nothing requires a commit message here to name evidence, and nothing checks one. A push to main publishes: .github/workflows/qa.yml runs the checks on every push and is NOT a deploy gate, and making it one needs a branch protection rule, which is repository configuration outside this tree.',
-      bound: 'This is the widest untraced path in the system and it is the one most likely to be used. It is not an agent defect and an agent may not close it: requiring evidence in a human commit message is a governance decision about how the repository author works.',
+      durable_record: 'the git commit, whose "Evidence:" trailer names what the change rests on',
+      carries_evidence: humanTraceable,
+      traceable: humanTraceable,
+      evidence: humanTraceable
+        ? 'tools/commit-evidence.mjs requires every non-merge commit that changes a published file to carry an "Evidence:" trailer, and both .github/workflows/qa.yml (every push and pull request) and the deploy gate in .github/workflows/pages.yml run it. The rule is the author\'s, adopted on 27 Sep 2026; commits older than it are not judged.'
+        : `the evidence rule is not fully wired: tools/commit-evidence.mjs ${evidenceTool ? 'exists' : 'is absent'}, qa.yml ${qaRuns ? 'runs' : 'does not run'} it, pages.yml ${pagesRuns ? 'runs' : 'does not run'} it.`,
+      bound: 'The check establishes that a published change names its evidence, not that the evidence is good. It blocks a merge only once main requires the QA checks, and blocks a deploy only once Pages publishes through Actions — both repository settings outside this tree (docs/DEPLOYMENT.md §3).',
     },
     {
       id: 'control_room_decision',
       what: 'a person approves a proposal through the Control Room, which records a decision',
       automatic: false,
       durable_record: 'agent/implement/decisions/decisions.jsonl, which is git-tracked',
-      carries_evidence: decisions.measurable && decisions.records.length > 0,
-      traceable: decisions.measurable && decisions.records.length > 0,
-      evidence: decisions.measurable
-        ? (decisions.records.length
-          ? `${decisions.records.length} tracked record file(s) under agent/implement/decisions/: ${decisions.records.join(', ')}`
-          : `the decision ledger is ABSENT, not empty \u2014 ${decisions.placeholders.length} tracked placeholder(s) (${decisions.placeholders.join(', ')}) and no record. It is git-tracked, so absence there is the one absence in this repository\'s decision stores that proves something: no proposal has ever been decided, through the Control Room or otherwise. A decision recorded today would also read void_unknown_proposal on any other machine, because deriveApproval() binds it to a proposal held in the git-ignored record store.`)
-        : `could not be measured: ${decisions.why}`,
-      bound: 'The route exists, authenticates, authorizes and audits. Nothing has ever travelled it.',
+      carries_evidence: decisionCarries && snapshotHonoured,
+      traceable: decisionTraceable,
+      evidence: decisionTraceable
+        ? `recordDecision() writes, to a git-tracked ledger, the proposal id, its sha256 fingerprint, the person who decided, what they were asked to check and the risk if wrong — and, since 27 Sep 2026, the proposal itself, which deriveApproval() honours on a fresh clone only if it still hashes to the recorded fingerprint. ${decisions.records.length ? `${decisions.records.length} tracked record file(s).` : 'No decision has been recorded yet.'}`
+        : `the decision record does not carry everything a durable trace needs (fields: ${decisionCarries}, snapshot honoured: ${snapshotHonoured}, ledger tracked: ${ledgerTracked}).`,
+      bound: 'Like the autonomy runner, this is a property of the record the path writes: the route exists, authenticates, authorizes and audits, and nothing has travelled it yet.',
     },
     {
       id: 'improvement_cycle',

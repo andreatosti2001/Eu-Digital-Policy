@@ -20,12 +20,14 @@
 # WHAT GATES AND WHAT DOES NOT. The gate is the set of checks that say
 # something about the published site: the four validators at their
 # recorded baseline, the evidence audit, the validators' own suite, the
-# public/private boundary, and the browser suite. Two QA jobs are
-# deliberately NOT in it, because they are red on purpose and a gate that
-# is always red publishes nothing: the adversarial verification gate
-# (HE-04, left red by decision — docs/PRODUCTION-OPERATING-MODE.md §4a)
-# and the production-mode traceability step. They still run in qa.yml on
-# every push, where their state stays visible.
+# public/private boundary, the browser suite, and the adversarial
+# verification gate. Until 27 Sep 2026 the adversarial gate was left out
+# because it was red on purpose (HE-04) and a gate that is always red
+# publishes nothing. The author then decided HE-04 is to decide from what
+# the tree establishes (docs/PRODUCTION-OPERATING-MODE.md §4a); the gate
+# is green and now blocks a deploy when an attack succeeds. The
+# production-mode checks stay in qa.yml only: they describe the agent
+# layer's operating mode, not the published site.
 # ============================================================
 
 name: Pages
@@ -51,9 +53,28 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
+      - name: commit-evidence.mjs — published changes name their evidence
+        # The author's rule of 27 Sep 2026 (docs/PRODUCTION-OPERATING-MODE.md
+        # §5): a commit that changes a published file carries an
+        # "Evidence:" trailer. Commits older than the rule are not judged.
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          node tools/commit-evidence.mjs --self-test
+          HEAD_SHA="$GITHUB_SHA"; BASE=""
+          if [ "$EVENT" = "pull_request" ]; then BASE="$PR_BASE"; HEAD_SHA="$PR_HEAD";
+          elif [ -n "$BEFORE" ] && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then BASE="$BEFORE";
+          else BASE="$(git merge-base origin/main "$GITHUB_SHA" 2>/dev/null || true)"; fi
+          if [ -z "$BASE" ] || [ "$BASE" = "$HEAD_SHA" ]; then echo "Nothing to judge: no earlier commit to compare against."; exit 0; fi
+          node tools/commit-evidence.mjs "$BASE" "$HEAD_SHA"
+
       - name: validate.mjs
         run: node tools/validate.mjs
       - name: i18n-audit.mjs
@@ -107,9 +128,23 @@ jobs:
       - name: The browser suite (a missing browser is a failure)
         run: node agent/browser/cli.mjs --require-browser
 
+  gate-security:
+    name: Gate — adversarial verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: No attack against the boundary succeeds
+        run: node agent/policy/verify/cli.mjs
+
   build:
     name: Build the artifact
-    needs: [gate-data, gate-boundary, gate-browser]
+    needs: [gate-data, gate-boundary, gate-browser, gate-security]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

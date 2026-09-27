@@ -132,7 +132,11 @@ code now reports defects in the tree rather than the passage of time, and `brows
 passes because the three defects are fixed in the website. **The remaining six are unchanged
 and none is this repository's to close by editing a check**: the adversarial CRITICAL is left
 red on purpose, and the other five need a governance decision or network this environment does
-not have. **Nothing in that directory
+not have. **On 27 Sep 2026 it is seventeen and three**: HE-04 was rewritten on the author's
+decision, all three write paths are traceable, and the suites pass. What still blocks is a
+production dispatcher (an activation decision), a first recorded decision (a person's), and
+whether `pages.yml` is what publishes the site (a repository setting, unmeasurable from the
+tree). **Nothing in that directory
 writes and no verb there can activate anything**: switching a production mode on is a
 governance decision and protocol §24 reserves it to a person.
 `docs/PRODUCTION-OPERATING-MODE.md`.
@@ -145,10 +149,13 @@ input, it is a credential* — and `agent/production/separations.mjs` checks it 
 independent halves: where each occurrence sits, and whether the file holding it calls any of
 twelve granting primitives. `agent/simulation/threshold.mjs` is **cleared on both**: none of
 its eight occurrences sits where a credential check would, and it can grant nothing.
-**HE-04 is left RED on purpose.** Reclassifying a CRITICAL by editing the thing that reports
-it is the move this architecture is arranged against, and HE-04's three path exclusions are
-exactly the stale exclusion list SESSION 23.5 already had to correct once. A person decides.
-`docs/PRODUCTION-OPERATING-MODE.md` §4a.
+**HE-04 was left RED on purpose until a person decided, and on 27 Sep 2026 the author did.**
+Reclassifying a CRITICAL by editing the thing that reports it is the move this architecture is
+arranged against, and HE-04's three path exclusions were exactly the stale exclusion list
+SESSION 23.5 had to correct once. The rewrite removed the exclusions and made HE-04 decide from
+the separation verdicts (`he04Verdict()`): a `read_it` anywhere succeeds, a `no_path_found` is
+partial, only an all-cleared tree is safe. It now reports **partial (MEDIUM)**, and its suite
+fails if a path exclusion is re-added. `docs/PRODUCTION-OPERATING-MODE.md` §4a.
 
 **LIMITED AUTONOMY IS SWITCHED ON, AND WHAT THAT MEANS IS NARROW.** SESSION 26 recorded the
 first governance grant this repository has ever had: `agent/policy/governance/grants.jsonl`,
@@ -195,7 +202,8 @@ been proposed**: `agent/records/` is git-ignored and empty in a fresh checkout, 
 fact as nothing being eligible. `docs/CONTINUOUS-IMPROVEMENT.md` §4, with the warrant quoted
 in §4a and the five changed assertions named in §4.4.
 
-**THE ADVERSARIAL GATE HAS BEEN RED SINCE SESSION 24 AND THREE DOCUMENTS SAY OTHERWISE.**
+**THE ADVERSARIAL GATE WAS RED FROM SESSION 24 TO 27 SEP 2026** (green since HE-04's rewrite,
+above, and now also in the deploy gate). The record of how it stayed red:
 `node agent/policy/verify/cli.mjs` reports **1 SUCCEEDED** — HE-04, CRITICAL, the trigger phrase
 found in `agent/simulation/threshold.mjs`. Measured at `aaf6691` in a clean worktree, so it is
 not this session's. The module uses the phrase as a **probe** — the line the attack hits is the
