@@ -566,6 +566,46 @@
       "last_verified": "2026-08-27"
     },
     {
+      "id": "dpa-nl",
+      "short_name": "AP",
+      "full_name": "Autoriteit Persoonsgegevens (Netherlands)",
+      "type": "inst-type:national-authority",
+      "member_state": "nl",
+      "parent": "edpb",
+      "children": [],
+      "competences": [
+        {
+          "instrument": "gdpr",
+          "role": "role:supervises",
+          "exclusive": false,
+          "scope": null,
+          "basis": [
+            "gdpr:art-51"
+          ],
+          "note": null
+        },
+        {
+          "instrument": "gdpr",
+          "role": "role:fines",
+          "exclusive": false,
+          "scope": null,
+          "basis": [
+            "gdpr:art-83"
+          ],
+          "note": null
+        }
+      ],
+      "claims": [
+        "clm-ap-uber-2026",
+        "clm-ap-uber-2024"
+      ],
+      "sources": [
+        "src-ap-uber-2026",
+        "src-ap-uber-2024"
+      ],
+      "last_verified": "2026-09-27"
+    },
+    {
       "id": "dpa-lu",
       "short_name": "CNPD",
       "full_name": "Commission nationale pour la protection des données (Luxembourg)",

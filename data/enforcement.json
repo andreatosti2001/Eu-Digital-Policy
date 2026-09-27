@@ -5,6 +5,82 @@
  "$note": "null means the question has not been researched. 'unknown' means it has been researched and is not publicly determinable. These are different states and must never be rendered alike. No aggregate totals are stored here: any total shown to a user is computed from these records at render time. The pipeline stages shown in the interface are DERIVED from these fields by a documented rule set (js/pipeline.js), not stored, so no stage can be asserted that the record does not support. A stage the record cannot settle is Unknown, and Unknown is never counted as zero. AUDIT-2026-09-25 (2026-09-26): records re-read individually against their sources carry that date in their own last_verified; this file's $last_verified is deliberately unchanged, because the file as a whole was not re-read, and moving it would assert that it was.",
  "enforcement": [
   {
+   "id": "enf-uber-ap-2026",
+   "entity": "Uber Technologies Inc.",
+   "entity_type": "actor:large-company",
+   "instrument": "gdpr",
+   "legal_basis": [
+    "gdpr:art-22",
+    "gdpr:art-83"
+   ],
+   "authority": "dpa-nl",
+   "opened": null,
+   "decision_date": "2026-08-21",
+   "action": "Administrative fine for fully automated deactivation of drivers (Art. 22 GDPR) and insufficient information about it",
+   "fine_eur": 824990000,
+   "action_status": "action:imposed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:implemented",
+   "behavioural_outcome": "The authority states that Uber has stopped the violations.",
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-ap-uber-2026"
+   ],
+   "sources": [
+    "src-ap-uber-2026"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added 27 Sep 2026 from the Autoriteit Persoonsgegevens' English release of 21 August 2026 (the decision date is taken as the release date; the release gives no separate adoption date). Lead authority under the one-stop-shop after 171 French drivers complained through the Ligue des droits de l'Homme to the CNIL. The decision itself was not opened.",
+   "last_verified": "2026-09-27",
+   "appeal": {
+    "status": "appeal:pending",
+    "lodged_by": "Uber",
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "The authority's release: 'Uber has filed an appeal against the fine.' Forum and case number are not stated."
+   }
+  },
+  {
+   "id": "enf-uber-ap-2024",
+   "entity": "Uber Technologies Inc. and Uber B.V.",
+   "entity_type": "actor:large-company",
+   "instrument": "gdpr",
+   "legal_basis": [
+    "gdpr:art-83"
+   ],
+   "authority": "dpa-nl",
+   "opened": null,
+   "decision_date": "2024-08-26",
+   "action": "Administrative fine for transferring European drivers' data to the US without appropriate safeguards (Chapter V GDPR)",
+   "fine_eur": 290000000,
+   "action_status": "action:imposed",
+   "payment_status": "payment:unknown",
+   "remedy_status": "remedy:implemented",
+   "behavioural_outcome": "The authority states that Uber has ended the violation.",
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [
+    "clm-ap-uber-2024"
+   ],
+   "sources": [
+    "src-ap-uber-2024",
+    "src-ap-uber-2026"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added 27 Sep 2026 from the Autoriteit Persoonsgegevens' English release of 26 August 2024; the decision date is taken as the release date (CMS's database gives 22 July 2024, which was not confirmed on the authority's page). Legal basis records Art. 83 only, because no Chapter V provision record exists.",
+   "last_verified": "2026-09-27",
+   "appeal": {
+    "status": "appeal:pending",
+    "lodged_by": "Uber",
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "The authority's release of 21 August 2026: 'Uber defends itself against the last two fines; the procedures on this matter are still ongoing.'"
+   }
+  },
+  {
    "id": "enf-amazon-cnpd-2021",
    "entity": "Amazon Europe Core S.à r.l.",
    "entity_type": "actor:large-company",

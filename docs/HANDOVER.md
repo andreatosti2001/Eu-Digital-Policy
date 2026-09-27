@@ -83,6 +83,27 @@ reference gap.
 - Now: 160 claims; primary 66, official 31, unresolved 13; direct references without a locator
   2 of 138; unverified 97; 1221 tests, 0 failing.
 
+**The author's three decisions of 27 Sep 2026, carried out:**
+
+- **The two Dutch Uber fines are enforcement records** (`enf-uber-ap-2026`, EUR 824,990,000,
+  21 August 2026, Art. 22; `enf-uber-ap-2024`, EUR 290m), each `appeal:pending` per the
+  authority's own release, with a new institution record `dpa-nl` (Autoriteit Persoonsgegevens).
+- **Three `reference_gap` flags cleared** (`clm-charter-binds-member-states`,
+  `clm-icle-enforcement-architecture`, `clm-dpc-staff-growth`), each with the reason and the old
+  gap quoted in its note. **The fourth, `clm-dma-asymmetry`, was not cleared**: its gap is that no
+  formal US objection exists, only a memorandum, a fact sheet and a lawmakers' letter, and that
+  is still true. Reading the White House texts corrected the claim instead: the memorandum does
+  not name the DMA or DSA (its fact sheet does), and the brief's "objected formally" and "the US
+  Trade Representative said Section 301 action … was being prepared" had no source and are gone.
+- **The Apple appeal recheck is scheduled for 15 October 2026** (a Routine in this session). The
+  register query, for whoever runs it: POST
+  `https://infocuriaws.curia.europa.eu/elastic-connector/search` with a JSON body
+  `{"searchTerm":"\"T-1079/23\"","tabName":"affair","publishedId":"T-1079/23","isSearchExact":true,
+  "language":"EN","pagination":{"pageNumber":0,"pageSize":20},"sortTermList":[{"sortDirection":"DESC",
+  "sortTerm":"AFF_NUM","sortSourceTab":"affair"}],"multiSearchTerms":[],"advancedFiltersValue":[],
+  "isAllTabsRequest":true,"searchSources":["document","metadata"]}` and read `pourvoiAffIds`; the
+  service refuses a `HeadlessChrome` user agent and accepts one that names itself.
+
 **The Data Act's status** was re-read against Art. 50 and Art. 29 of the OJ text and its `status_as_of` moved to 27 Sep 2026: still partly applicable; the Art. 3(1) design obligation now applies to products placed on the market after 12 September 2026, the switching-charge ban from 12 January 2027. The audit's `STATUS_PREDATES_MILESTONE` warning is gone.
 
 **Model change (small, tested):** `parseQuantity` reads counts written as words

@@ -637,9 +637,11 @@
       ],
       "provisions": [],
       "institutions": [
-        "dpa-*"
+        "dpa-nl"
       ],
-      "enforcement": [],
+      "enforcement": [
+        "enf-uber-ap-2026"
+      ],
       "sources": [
         {
           "source_id": "src-ap-uber-2026",
@@ -651,7 +653,7 @@
       "brief_part": "part-2",
       "published": "2026-08-21",
       "last_verified": "2026-09-27",
-      "verification_note": "Registered on 27 Sep 2026 for the corrected ranking in Part II and read that day in the Dutch authority's English release. 'dpa-*' stands for the authority because the dataset models no Dutch DPA institution record. Not yet an enforcement record in data/enforcement.json."
+      "verification_note": "Registered on 27 Sep 2026 for the corrected ranking in Part II and read that day in the Dutch authority's English release. Linked to its enforcement record and to the Dutch authority's institution record, both added on 27 Sep 2026 at the author's instruction."
     },
     {
       "id": "clm-ap-uber-2024",
@@ -662,9 +664,11 @@
       ],
       "provisions": [],
       "institutions": [
-        "dpa-*"
+        "dpa-nl"
       ],
-      "enforcement": [],
+      "enforcement": [
+        "enf-uber-ap-2024"
+      ],
       "sources": [
         {
           "source_id": "src-ap-uber-2024",
@@ -676,7 +680,7 @@
       "brief_part": "part-2",
       "published": "2024-08-26",
       "last_verified": "2026-09-27",
-      "verification_note": "Registered on 27 Sep 2026 for the corrected ranking in Part II and read that day in the Dutch authority's English release. 'dpa-*' stands for the authority because the dataset models no Dutch DPA institution record. Not yet an enforcement record in data/enforcement.json."
+      "verification_note": "Registered on 27 Sep 2026 for the corrected ranking in Part II and read that day in the Dutch authority's English release. Linked to its enforcement record and to the Dutch authority's institution record, both added on 27 Sep 2026 at the author's instruction."
     },
     {
       "id": "clm-one-stop-shop",
@@ -1014,9 +1018,7 @@
       "brief_part": "part-2",
       "published": "2026-04-01",
       "last_verified": "2026-09-27",
-      "verification_note": "27 Sep 2026: now read in the DPC's own Annual Report 2025 (PDF, published 30 June 2026), which states both halves: a headcount of 295 at the end of 2025 and the move to a three-person Commission. The reference_gap flag is left for a person to clear. The 'nearly 300' figure is a direct quotation from sitting Commissioner Niamh Sweeney, reported by IAPP (1 April 2026); it is not the DPC's own published headcount figure, and no DPC annual report was located giving a specific number. The original 'roughly 110 staff in 2018' figure has been dropped rather than kept: no DPC 2018 annual report was retrieved to confirm it, and the site's own rule against inventing a comparison year applies here. The three-Commissioner structure is confirmed directly by the DPC's own Annual Report 2025 announcement, which names Des Hogan (Chairperson), Dale Sunderland and Niamh Sweeney.",
-      "reference_gap": true,
-      "gap_note": "No DPC annual report was located stating a specific staff headcount; the figure rests on a Commissioner's quoted remark rather than a published number, and the pre-2026 baseline (previously '110 in 2018') is now unsourced and has been removed from the statement rather than carried forward unverified."
+      "verification_note": "reference_gap cleared on 27 Sep 2026 on the author's instruction: the DPC's Annual Report 2025 states the headcount (295) and the three-person Commission. The gap it recorded was: \"No DPC annual report was located stating a specific staff headcount; the figure rests on a Commissioner's quoted remark rather than a published number, and the pre-2026 baseline (previously '110 in 2018') is now unsourced and has been removed from the statement rather than carried forward unverified.\". 27 Sep 2026: now read in the DPC's own Annual Report 2025 (PDF, published 30 June 2026), which states both halves: a headcount of 295 at the end of 2025 and the move to a three-person Commission.  The 'nearly 300' figure is a direct quotation from sitting Commissioner Niamh Sweeney, reported by IAPP (1 April 2026); it is not the DPC's own published headcount figure, and no DPC annual report was located giving a specific number. The original 'roughly 110 staff in 2018' figure has been dropped rather than kept: no DPC 2018 annual report was retrieved to confirm it, and the site's own rule against inventing a comparison year applies here. The three-Commissioner structure is confirmed directly by the DPC's own Annual Report 2025 announcement, which names Des Hogan (Chairperson), Dale Sunderland and Niamh Sweeney."
     },
     {
       "id": "clm-iccl-ireland-bottleneck",
@@ -2796,7 +2798,7 @@
     {
       "id": "clm-dma-asymmetry",
       "type": "claim-type:fact",
-      "statement": "Every designated gatekeeper undertaking is US- or Chinese-headquartered — Booking.com is run from the Netherlands, but the designated undertaking is the US-based Booking Holdings Inc. The US administration has objected: a February 2025 presidential memorandum targeted the DMA and DSA specifically, and in 2026 US lawmakers pressed for a Section 301 trade investigation into both. Enforcement has proceeded regardless.",
+      "statement": "Every designated gatekeeper undertaking is US- or Chinese-headquartered — Booking.com is run from the Netherlands, but the designated undertaking is the US-based Booking Holdings Inc. The US administration has objected: a February 2025 presidential memorandum ordered scrutiny of foreign digital rules, and the White House named the DMA and DSA among them; in July 2026 US lawmakers pressed for a Section 301 trade investigation into both. Enforcement has proceeded regardless.",
       "instruments": [
         "dma"
       ],
@@ -2814,6 +2816,11 @@
           "locator": "designating Booking Holdings Inc. as a gatekeeper"
         },
         {
+          "source_id": "src-whitehouse-dst-factsheet-2025",
+          "supports": "supports:partial",
+          "locator": "'Regulations that dictate how American companies interact with consumers in the European Union, like the Digital Markets Act and the Digital Services Act, will face scrutiny from the Administration.'"
+        },
+        {
           "source_id": "src-thenextweb-ustr-2026",
           "supports": "supports:direct",
           "locator": "\"In February 2025, Trump signed a memorandum … naming the Digital Markets Act and Digital Services Act specifically\""
@@ -2828,7 +2835,7 @@
       "brief_part": "part-4",
       "published": "2026-08-19",
       "last_verified": "2026-09-27",
-      "verification_note": "The designated undertaking is now sourced directly to the Commission's own decision (C(2024) 3176 final), which names 'Booking Holdings Inc.' on its face — notably, the Commission's own public-facing gatekeepers-portal page and press release refer to the undertaking only as 'Booking', omitting the corporate suffix every other gatekeeper's entry carries. The US pressure is now sourced to a February 2025 presidential memorandum and a July 2026 congressional letter, both naming the DMA and DSA; neither is a formal diplomatic objection in the narrow sense, so 'has objected' is kept general rather than naming a specific legal instrument of protest. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim.",
+      "verification_note": "Corrected on 27 Sep 2026 after reading the White House texts of 21 February 2025. The memorandum itself ('Defending American Companies and Innovators From Overseas Extortion and Unfair Fines and Penalties') does not name the DMA or DSA; the fact sheet published with it does. The brief's prose also said the administration had objected 'formally' and that 'the US Trade Representative said Section 301 action on digital rules was being prepared'; no source read supports either — the July 2026 letter is from lawmakers urging an investigation — so the prose now says what the claim and its sources say. The designated undertaking is now sourced directly to the Commission's own decision (C(2024) 3176 final), which names 'Booking Holdings Inc.' on its face — notably, the Commission's own public-facing gatekeepers-portal page and press release refer to the undertaking only as 'Booking', omitting the corporate suffix every other gatekeeper's entry carries. The US pressure is now sourced to a February 2025 presidential memorandum and a July 2026 congressional letter, both naming the DMA and DSA; neither is a formal diplomatic objection in the narrow sense, so 'has objected' is kept general rather than naming a specific legal instrument of protest. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim.",
       "reference_gap": true,
       "gap_note": "The 'US administration has objected' framing rests on a presidential memorandum and a lawmakers' letter pressing for a Section 301 investigation, not on a formal WTO-style objection or diplomatic note; no such document was located."
     },
@@ -4198,9 +4205,7 @@
       "brief_part": "part-8",
       "published": null,
       "last_verified": "2026-09-27",
-      "verification_note": "Source found on 27 Sep 2026: ICLE's June 2026 commentary (src-icle-omnibus-2026-06), re-read that day, restates the argument ICLE says it made in its earlier comments on the Omnibus, in these words. The reference_gap flag is left set for a person to clear. Registered on 27 Sep 2026 for the \"from the competitiveness side\" flank in Part VIII. Neither ICLE record in sources.json (the March 2026 comments and the June 2026 commentary on the Council texts) is recorded as stating this argument, so the attribution rests on the brief until the publication is found.",
-      "reference_gap": true,
-      "gap_note": "the ICLE publication making the enforcement-architecture argument"
+      "verification_note": "reference_gap cleared on 27 Sep 2026 on the author's instruction: ICLE's June 2026 text states the argument. The gap it recorded was: \"the ICLE publication making the enforcement-architecture argument\". Source found on 27 Sep 2026: ICLE's June 2026 commentary (src-icle-omnibus-2026-06), re-read that day, restates the argument ICLE says it made in its earlier comments on the Omnibus, in these words.  Registered on 27 Sep 2026 for the \"from the competitiveness side\" flank in Part VIII. Neither ICLE record in sources.json (the March 2026 comments and the June 2026 commentary on the Council texts) is recorded as stating this argument, so the attribution rests on the brief until the publication is found."
     },
     {
       "id": "clm-draghi-diagnosis",
@@ -4598,9 +4603,7 @@
       "brief_part": "part-11",
       "published": "2026-08-19",
       "last_verified": "2026-09-27",
-      "verification_note": "Split on 27 Sep 2026: the data-retention case line is now three claims of its own (clm-cjeu-digital-rights-ireland, clm-cjeu-tele2, clm-cjeu-la-quadrature), each on its judgment. Read that day against the Charter in the Official Journal (OJ C 202, 7.6.2016, p. 404): Art. 51(1) addresses the Charter 'to the Member States only when they are implementing Union law'. The reference_gap flag, set when no source had been retrieved, is left for a person to clear.",
-      "reference_gap": true,
-      "gap_note": "Article 51(1) of the Charter is the legal basis and is in the dataset; the data-retention case line (Digital Rights Ireland, Tele2, La Quadrature du Net) is not individually sourced here."
+      "verification_note": "reference_gap cleared on 27 Sep 2026 on the author's instruction: the data-retention case line it named is now three claims, each read in its judgment. The gap it recorded was: \"Article 51(1) of the Charter is the legal basis and is in the dataset; the data-retention case line (Digital Rights Ireland, Tele2, La Quadrature du Net) is not individually sourced here.\". Split on 27 Sep 2026: the data-retention case line is now three claims of its own (clm-cjeu-digital-rights-ireland, clm-cjeu-tele2, clm-cjeu-la-quadrature), each on its judgment. Read that day against the Charter in the Official Journal (OJ C 202, 7.6.2016, p. 404): Art. 51(1) addresses the Charter 'to the Member States only when they are implementing Union law'."
     },
     {
       "id": "clm-cjeu-digital-rights-ireland",
