@@ -1126,7 +1126,10 @@
         "clm-data-act-non-personal",
         "clm-data-act-trade-secret-tension",
         "clm-data-act-retroactivity-open",
-        "clm-data-act-enforcement-uneven"
+        "clm-data-act-enforcement-uneven",
+        "clm-ie-data-bill-general-scheme",
+        "clm-ie-data-bill-not-introduced",
+        "clm-ie-data-centre-hub"
       ],
       "sources": [
         "src-eurlex-data-act"

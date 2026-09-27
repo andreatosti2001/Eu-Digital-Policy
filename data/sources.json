@@ -2656,6 +2656,20 @@
       "accessed": "2026-09-27",
       "language": "en",
       "note": "Ashley Casovan (IAPP AI Governance Center), published 29 April 2026, read 27 Sep 2026: 'after 12 hours of negotiations in Brussels fell apart 28 April'; 'The 28 April trilogue was the second and final session scheduled to negotiate the Omnibus package'. It does not state the cause."
+    },
+    {
+      "id": "src-dete-value-of-data-centres-2026",
+      "tier": "tier:3",
+      "type": "source-type:report",
+      "publisher": null,
+      "publisher_name": "Department of Enterprise, Tourism and Employment (Ireland); report prepared by KPMG",
+      "title": "The value of data centres to Ireland — an independent report prepared by KPMG for the Department of Enterprise, Tourism and Employment (March 2026)",
+      "url": "https://enterprise.gov.ie/en/publications/publication-files/the-value-of-data-centres-to-ireland.pdf",
+      "url_status": "url:live",
+      "published": "2026-06-02",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026 (181 pages). Recorded at tier 3, not 2: the Department publishes it, but it is an independent consultancy report and its findings are KPMG's. Executive summary: 'Dublin's concentration of data centres has positioned it as a strategic European data centre hub, alongside Frankfurt, London, Amsterdam, and Paris – collectively known as the FLAP-D markets'; 'Dublin becoming a key European hub for data centres alongside Frankfurt, London, Amsterdam and Paris'. It gives no share of European capacity. Publication date from the Department's news item of 2 June 2026 ('Minister Burke publishes report on the economic value of data centres to Ireland')."
     }
   ]
 }

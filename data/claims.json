@@ -3830,8 +3830,8 @@
     },
     {
       "id": "clm-data-act-enforcement-uneven",
-      "type": "claim-type:fact",
-      "statement": "Data Act enforcement is national and therefore uneven: Ireland, host to a large share of Europe's cloud infrastructure, published the General Scheme of its Data Bill only on 4 February 2026, designating ComReg and the CCPC, and the Bill was still in pre-legislative scrutiny in mid-2026.",
+      "type": "claim-type:interpretation",
+      "statement": "Data Act enforcement is national and therefore uneven: each Member State designates its own competent authorities, and Ireland — one of Europe's main data-centre hubs — published the General Scheme of its Data Bill only on 4 February 2026, with no Bill introduced in the Oireachtas by late September 2026.",
       "instruments": [
         "data-act"
       ],
@@ -3842,19 +3842,9 @@
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-gov-ie-data-bill-2025",
+          "source_id": "src-eurlex-data-act",
           "supports": "supports:partial",
-          "locator": "Publication page: 'Published on: 4 February 2026'; the CCPC and ComReg 'are designated as competent authorities for the Data Act. The CCPC is also designated as the Data Coordinator'"
-        },
-        {
-          "source_id": "src-matheson-ie-data-bill-2026",
-          "supports": "supports:partial",
-          "locator": "Section on the General Scheme: published 4 February 2026; pre-legislative scrutiny continuing after written submissions to the Joint Committee on Enterprise, Tourism and Employment"
-        },
-        {
-          "source_id": "src-oireachtas-bills-2025-2026",
-          "supports": "supports:partial",
-          "locator": "no Data Bill among the 85 bills of 2025 or the 92 of 2026 (register updated to 25 Sep 2026)"
+          "locator": "Art. 37(1): 'Each Member State shall designate one or more competent authorities to be responsible for the application and enforcement of this Regulation'"
         },
         {
           "source_id": "src-brief-original",
@@ -3866,9 +3856,84 @@
       "brief_part": "part-6",
       "published": "2026-08-19",
       "last_verified": "2026-09-27",
-      "verification_note": "27 Sep 2026: the Oireachtas's own bills register shows no Data Bill introduced in 2025 or 2026 (to 25 Sep 2026), which confirms from the parliament itself that the Bill had not left the pre-legislative stage by mid-2026. Still unsourced: 'host to a large share of Europe's cloud infrastructure', so the claim stays without a single source stating it whole. 27 Sep 2026: the publication date and the designations are now read on the Irish government's own page (Department of Enterprise, Tourism and Employment: 'General Scheme of the Data Bill 2025', published 4 February 2026, last updated 10 July 2026). Its official title is the Data Bill 2025. Whether the Bill had left pre-legislative scrutiny by mid-2026 is not stated there, so that part still rests on Matheson (May 2026). The Irish facts are now sourced to Matheson (18 May 2026): General Scheme published 4 February 2026, ComReg and the CCPC appointed, pre-legislative scrutiny continuing. Law-firm commentary, hence partial; the General Scheme itself was not opened, and 'mid-2026' rests on an article dated May. 'Host to a large share of Europe's cloud infrastructure' is still unsourced, so the reference gap is left set.",
-      "reference_gap": true,
-      "gap_note": "No source located for the position of the Irish Data Bill in February 2026."
+      "verification_note": "Atomized and retyped (fact → interpretation) on 27 Sep 2026. Its three factual premises are now their own claims, each on the source that states it: the General Scheme and its designations (clm-ie-data-bill-general-scheme, the Irish government's page), the Bill not yet introduced (clm-ie-data-bill-not-introduced, the Oireachtas register), and Dublin's place among Europe's main data-centre hubs (clm-ie-data-centre-hub, the report the Irish government published). That enforcement is national is Data Act Art. 37(1), read in the Official Journal text (CELEX 32023R2854). What remains here — that national enforcement is therefore uneven — is the brief's argument. Two corrections in the prose (all four languages): 'host to a large share of Europe's cloud infrastructure' became 'one of Europe's main data-centre hubs', because no source gives a share; 'still in pre-legislative scrutiny in mid-2026' became 'no Bill introduced in the Oireachtas by late September 2026', which the parliament's register states. Reference gap cleared: its note named the cloud-share phrase, which is gone. Earlier history: 27 Sep 2026: the Oireachtas's own bills register shows no Data Bill introduced in 2025 or 2026 (to 25 Sep 2026), which confirms from the parliament itself that the Bill had not left the pre-legislative stage by mid-2026. Still unsourced: 'host to a large share of Europe's cloud infrastructure', so the claim stays without a single source stating it whole. 27 Sep 2026: the publication date and the designations are now read on the Irish government's own page (Department of Enterprise, Tourism and Employment: 'General Scheme of the Data Bill 2025', published 4 February 2026, last updated 10 July 2026). Its official title is the Data Bill 2025. Whether the Bill had left pre-legislative scrutiny by mid-2026 is not stated there, so that part still rests on Matheson (May 2026). The Irish facts are now sourced to Matheson (18 May 2026): General Scheme published 4 February 2026, ComReg and the CCPC appointed, pre-legislative scrutiny continuing. Law-firm commentary, hence partial; the General Scheme itself was not opened, and 'mid-2026' rests on an article dated May. 'Host to a large share of Europe's cloud infrastructure' is still unsourced, so the reference gap is left set."
+    },
+    {
+      "id": "clm-ie-data-bill-general-scheme",
+      "type": "claim-type:fact",
+      "statement": "Ireland published the General Scheme of its Data Bill 2025 on 4 February 2026; it designates the CCPC and ComReg as competent authorities for the Data Act, and the CCPC as Data Coordinator.",
+      "instruments": [
+        "data-act"
+      ],
+      "provisions": [],
+      "institutions": [
+        "nca-*"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-gov-ie-data-bill-2025",
+          "supports": "supports:direct",
+          "locator": "Publication page: 'Published on: 4 February 2026'; the CCPC and ComReg 'are designated as competent authorities for the Data Act. The CCPC is also designated as the Data Coordinator'"
+        },
+        {
+          "source_id": "src-matheson-ie-data-bill-2026",
+          "supports": "supports:partial",
+          "locator": "Section on the General Scheme"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-6",
+      "published": "2026-08-19",
+      "last_verified": "2026-09-27",
+      "verification_note": "Split on 27 Sep 2026 out of clm-data-act-enforcement-uneven, which carried four propositions. Read that day on the Department of Enterprise, Tourism and Employment's own page (last updated 10 July 2026)."
+    },
+    {
+      "id": "clm-ie-data-bill-not-introduced",
+      "type": "claim-type:fact",
+      "statement": "No Data Bill had been introduced in the Oireachtas by 25 September 2026: none appears among the bills of 2025 or of 2026 in its register.",
+      "instruments": [
+        "data-act"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-oireachtas-bills-2025-2026",
+          "supports": "supports:direct",
+          "locator": "no Data Bill among the 85 bills of 2025 or the 92 of 2026 (register updated to 25 Sep 2026)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-6",
+      "published": "2026-08-19",
+      "last_verified": "2026-09-27",
+      "verification_note": "Split on 27 Sep 2026 out of clm-data-act-enforcement-uneven. The brief said the Bill 'was still in pre-legislative scrutiny in mid-2026'; that rested on law-firm commentary (Matheson, May 2026). The parliament's own register supports the narrower and later statement recorded here, and the prose now says that instead. A register can only show what has been introduced: it is read on a date, and this claim is true on that date."
+    },
+    {
+      "id": "clm-ie-data-centre-hub",
+      "type": "claim-type:attributed",
+      "statement": "Dublin is one of Europe's main data-centre hubs, alongside Frankfurt, London, Amsterdam and Paris (the 'FLAP-D' markets).",
+      "attributed_to": "KPMG, 'The value of data centres to Ireland', an independent report for the Irish Department of Enterprise, Tourism and Employment (March 2026, published 2 June 2026)",
+      "instruments": [
+        "data-act"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-dete-value-of-data-centres-2026",
+          "supports": "supports:direct",
+          "locator": "Executive summary: 'a strategic European data centre hub, alongside Frankfurt, London, Amsterdam, and Paris – collectively known as the FLAP-D markets'"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-6",
+      "published": "2026-08-19",
+      "last_verified": "2026-09-27",
+      "verification_note": "Split on 27 Sep 2026 out of clm-data-act-enforcement-uneven, which called Ireland 'host to a large share of Europe's cloud infrastructure'. No source read gives Ireland's share of European cloud or data-centre capacity; the report the Irish government published places Dublin among the five main European hubs and gives no share. The prose now says what the source says."
     },
     {
       "id": "clm-nis2-management-liability",
