@@ -412,10 +412,10 @@ test('B2 · the contract is derived from the data, not asserted over it', () => 
   assert.deepEqual(strays, []);
 });
 
-test('B3 · the contract names 12 required and 2 optional fields, and says who writes and reads each', () => {
+test('B3 · the contract names 12 required and 3 optional fields, and says who writes and reads each', () => {
   assert.deepEqual(REQUIRED_FIELDS, ['id', 'tier', 'type', 'publisher', 'publisher_name', 'title',
     'url', 'url_status', 'published', 'accessed', 'language', 'note']);
-  assert.deepEqual(OPTIONAL_FIELDS, ['resolution', 'resolution_note']);
+  assert.deepEqual(OPTIONAL_FIELDS, ['resolution', 'resolution_note', 'reproduces']);
   /* A schema becomes a contract when it answers four questions about
      every field: what shape, why it exists, who writes it, who reads
      it. "a person" is a complete answer to the third; the first two

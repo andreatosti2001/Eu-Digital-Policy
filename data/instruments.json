@@ -19,6 +19,8 @@
       "legislative_status": "status:applicable",
       "status_as_of": "2026-08-19",
       "milestones": [
+        "tl-gdpr-2016-04-27-adoption",
+        "tl-gdpr-2016-05-04-publication",
         "tl-gdpr-2016-05-24-entry-into-force",
         "tl-gdpr-2018-05-25-application"
       ],
@@ -70,8 +72,8 @@
           "sources": [
             "src-eurlex-gdpr"
           ],
-          "requires_verification": true,
-          "verification_note": "Article number and heading recorded from general knowledge of the instrument; confirm the wording against the consolidated text before display."
+          "requires_verification": false,
+          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32016R0679): heading and number match; the summary was checked against paragraphs 1 and 2 (establishment in the Union; offering goods or services to, or monitoring the behaviour of, data subjects in the Union). Paragraph 3 (Member State law applying by virtue of public international law) is not in the summary. The earlier note said the article was recorded from general knowledge."
         },
         {
           "id": "gdpr:art-5",
@@ -196,8 +198,8 @@
           "sources": [
             "src-eurlex-gdpr"
           ],
-          "requires_verification": true,
-          "verification_note": "Article number and heading recorded from general knowledge; confirm against the consolidated text."
+          "requires_verification": false,
+          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32016R0679): heading and number match; the summary was checked against paragraph 1, points (a) to (c): a public authority or body (courts acting in their judicial capacity excepted), regular and systematic monitoring on a large scale, and large-scale processing of special categories. The earlier note said the article was recorded from general knowledge."
         },
         {
           "id": "gdpr:art-51",
@@ -300,6 +302,8 @@
       "legislative_status": "status:applicable",
       "status_as_of": "2026-08-19",
       "milestones": [
+        "tl-dsa-2022-10-19-adoption",
+        "tl-dsa-2022-10-27-publication",
         "tl-dsa-2022-11-16-entry-into-force",
         "tl-dsa-2023-08-01-application",
         "tl-dsa-2024-02-17-application",
@@ -386,8 +390,8 @@
           "sources": [
             "src-eurlex-dsa"
           ],
-          "requires_verification": true,
-          "verification_note": "Article number and heading recorded from general knowledge; confirm against the consolidated text."
+          "requires_verification": false,
+          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32022R2065): heading and number match; the summary was checked against paragraphs 1 and 2. The Regulation's own threshold for the advertising prohibition is that the provider is \"aware with reasonable certainty\" that the recipient is a minor, which the summary shortens to \"known\". The earlier note said the article was recorded from general knowledge."
         },
         {
           "id": "dsa:art-30",
@@ -401,8 +405,8 @@
           "sources": [
             "src-eurlex-dsa"
           ],
-          "requires_verification": true,
-          "verification_note": "Article number and heading recorded from general knowledge; confirm against the consolidated text."
+          "requires_verification": false,
+          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32022R2065): heading and number match; the summary was checked against paragraph 1 (information the platform must obtain before a trader may use it to offer products or services to consumers in the Union). The earlier note said the article was recorded from general knowledge."
         },
         {
           "id": "dsa:art-33",
@@ -560,6 +564,8 @@
       "legislative_status": "status:applicable",
       "status_as_of": "2026-08-19",
       "milestones": [
+        "tl-dma-2022-09-14-adoption",
+        "tl-dma-2022-10-12-publication",
         "tl-dma-2022-11-01-entry-into-force",
         "tl-dma-2023-05-01-application",
         "tl-dma-2024-03-07-compliance",
@@ -753,12 +759,15 @@
       "status_as_of": "2026-08-19",
       "status_note": "In force since 2024. Prohibitions, AI-literacy, GPAI duties and governance apply; the high-risk tier does not yet. The scalar alone is insufficient — read the milestones.",
       "milestones": [
+        "tl-ai-act-2024-06-13-adoption",
+        "tl-ai-act-2024-07-12-publication",
         "tl-ai-act-2024-08-01-entry-into-force",
         "tl-ai-act-2025-02-02-application",
         "tl-ai-act-2025-07-10-guidance",
         "tl-ai-act-2025-08-02-application",
         "tl-ai-act-2026-08-02-application",
         "tl-ai-act-2026-12-02-application",
+        "tl-ai-act-2026-12-02-transition-end",
         "tl-ai-act-2027-12-02-application",
         "tl-ai-act-2028-08-02-application",
         "tl-ai-act-2030-08-02-application"
@@ -822,12 +831,33 @@
           "id": "ai-act:art-3-63",
           "number": "3(63)",
           "heading": "Definition of a general-purpose AI model",
-          "summary": "Trained on broad data, displaying significant generality, capable of competently performing a wide range of distinct tasks and integrable into downstream systems, with an indicative floor around 10^23 training FLOP.",
+          "summary": "Displays significant generality, is capable of competently performing a wide range of distinct tasks and can be integrated into a variety of downstream systems or applications. The Article sets no compute figure: the indicative criterion of more than 10^23 training FLOP comes from the Commission's July 2025 guidelines, not from the Regulation.",
           "obligation_on": [],
           "claims": [],
           "sources": [
             "src-eurlex-ai-act"
-          ]
+          ],
+          "requires_verification": false,
+          "verification_note": "Checked 27 Sep 2026 against Article 3, point (63), of the Official Journal text (Cellar, CELEX 32024R1689). The summary used to attach an indicative 10^23 FLOP floor to the Article; the Article contains no compute figure, and that criterion is the Commission's July 2025 guidelines (src-ec-gpai-guidelines-2025). Corrected the same day."
+        },
+        {
+          "id": "ai-act:art-4",
+          "number": "4",
+          "heading": "AI literacy",
+          "summary": "Providers and deployers of AI systems must take measures to support the development of AI literacy of their staff and of others operating or using AI systems on their behalf. As replaced by the AI Omnibus, the Article does not require them to guarantee any specific level of AI literacy; the original text required measures to ensure a sufficient level.",
+          "obligation_on": [
+            "actor:ai-provider",
+            "actor:ai-deployer"
+          ],
+          "claims": [
+            "clm-ai-omnibus-art-4-literacy"
+          ],
+          "sources": [
+            "src-eurlex-ai-act",
+            "src-eurlex-ai-omnibus"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal texts read that day from the Publications Office's Cellar: Article 4 of Regulation (EU) 2024/1689 (CELEX 32024R1689) as adopted, and Article 1, point (5), of Regulation (EU) 2026/1744 (CELEX 32026R1744), which replaces it."
         },
         {
           "id": "ai-act:art-5",
@@ -1004,6 +1034,8 @@
       "status_as_of": "2026-08-19",
       "status_note": "General application since September 2025; the Art. 3(1) design obligation, the switching-charge ban and the extension of unfair-terms rules to pre-existing contracts arrive later.",
       "milestones": [
+        "tl-data-act-2023-12-13-adoption",
+        "tl-data-act-2023-12-22-publication",
         "tl-data-act-2024-01-11-entry-into-force",
         "tl-data-act-2025-09-12-application",
         "tl-data-act-2026-09-12-application",
@@ -1105,6 +1137,8 @@
       "status_as_of": "2026-09-26",
       "status_note": "In force since 2023, but a directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed and transposition is still materially incomplete: the Commission sent letters of formal notice to 23 Member States in November 2024 and referred Ireland, Spain, France and the Netherlands to the Court of Justice in July 2026.",
       "milestones": [
+        "tl-nis2-2022-12-14-adoption",
+        "tl-nis2-2022-12-27-publication",
         "tl-nis2-2023-01-16-entry-into-force",
         "tl-nis2-2024-10-17-transposition",
         "tl-nis2-2024-11-28-enforcement",
@@ -1163,7 +1197,7 @@
           "id": "nis2:art-3",
           "number": "3",
           "heading": "Essential and important entities",
-          "summary": "Classifies entities as essential (Annex I) or important (Annex II) by sector and size, which determines the supervisory regime that applies.",
+          "summary": "Classifies entities of the types listed in Annexes I and II as essential or important. Annex I entities above the medium-sized-enterprise ceilings, and the special cases the Article lists, are essential; any Annex I or II entity that does not qualify as essential is important. The classification determines the supervisory regime that applies.",
           "obligation_on": [
             "actor:essential-entity",
             "actor:important-entity"
@@ -1172,8 +1206,8 @@
           "sources": [
             "src-eurlex-nis2"
           ],
-          "requires_verification": true,
-          "verification_note": "Article number and heading recorded from general knowledge; confirm against the consolidated text."
+          "requires_verification": false,
+          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32022L2555): heading and number match. The previous summary said entities are essential if in Annex I and important if in Annex II; paragraphs 1 and 2 are narrower, and the summary was corrected to them: an Annex I entity is essential only above the medium-sized-enterprise ceilings (or in the listed special cases), and any Annex I or II entity that does not qualify as essential is important. The earlier note said the article was recorded from general knowledge."
         },
         {
           "id": "nis2:art-20",
@@ -1259,6 +1293,8 @@
       "status_as_of": "2026-09-26",
       "status_note": "A directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed; on 29 April 2026 the Commission referred Bulgaria, France, Luxembourg, the Netherlands, Poland, Spain and Sweden to the Court of Justice for failing to transpose.",
       "milestones": [
+        "tl-cer-2022-12-14-adoption",
+        "tl-cer-2022-12-27-publication",
         "tl-cer-2023-01-16-entry-into-force",
         "tl-cer-2024-10-17-transposition"
       ],
@@ -1322,6 +1358,8 @@
       "legislative_status": "status:applicable",
       "status_as_of": "2026-08-19",
       "milestones": [
+        "tl-dora-2022-12-14-adoption",
+        "tl-dora-2022-12-27-publication",
         "tl-dora-2023-01-16-entry-into-force",
         "tl-dora-2025-01-17-application"
       ],
@@ -1378,6 +1416,8 @@
       "status_as_of": "2026-09-26",
       "status_note": "In force since December 2024. Chapter IV (notification of conformity assessment bodies) has applied since 11 June 2026 and Article 14 reporting since 11 September 2026; the Regulation as a whole applies from 11 December 2027. The scalar alone is insufficient — read the milestones.",
       "milestones": [
+        "tl-cra-2024-10-23-adoption",
+        "tl-cra-2024-11-20-publication",
         "tl-cra-2024-12-10-entry-into-force",
         "tl-cra-2026-06-11-application",
         "tl-cra-2026-09-11-reporting-deadline",
@@ -1438,6 +1478,8 @@
       "status_as_of": "2026-08-19",
       "status_note": "The Commission's own label is 'Digital Omnibus on AI'; 'AI Omnibus' is the informal shorthand used in this brief.",
       "milestones": [
+        "tl-ai-omnibus-2026-07-08-adoption",
+        "tl-ai-omnibus-2026-07-24-publication",
         "tl-ai-omnibus-2025-11-19-proposal",
         "tl-ai-omnibus-2026-07-27-entry-into-force"
       ],
@@ -1634,6 +1676,8 @@
       "status_as_of": "2026-09-26",
       "status_note": "In force since 1 January 2026 but not yet applicable (applies to complaints lodged from 2 April 2027). Harmonises admissibility criteria for cross-border GDPR complaints, gives parties common procedural rights (including a right to be heard and to see preliminary findings) and sets investigation time limits (15 months for regular cases, 12 for a simplified procedure). CELEX derived from the Official Journal reference reported by eucrim (L 2025/2518 of 12 December 2025); the consolidated EUR-Lex text could not be retrieved directly in this environment (every attempt returns HTTP 202 with no body) and should be checked before this record's status is next revised.",
       "milestones": [
+        "tl-gdpr-procedural-2025-11-26-adoption",
+        "tl-gdpr-procedural-2025-12-12-publication",
         "tl-gdpr-procedural-2026-01-01-entry-into-force",
         "tl-gdpr-procedural-2027-04-02-application"
       ],

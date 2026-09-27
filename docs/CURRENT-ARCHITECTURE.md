@@ -341,7 +341,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 111 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 104 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 5 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -370,6 +370,11 @@ the corpus being more honest, not less.
 - 110 → 112: T-36: two DPC GDPR fines added to the observatory (Meta 2023, TikTok 2025), flagged because their appeal state rests on tier-4 reporting.
 - 112 → 113: T-34: new clm-also-in-the-rulebook, six official sources each supporting one row (partial).
 - 113 → 111: Open decision F: the author cleared requires_verification on the two DMA cloud timeline events, both sourced to the Commission's press release.
+- 111 → 106 (27 Sep 2026): five provisions recorded "from general knowledge" (GDPR Arts. 3 and 37, DSA Arts. 28 and 30, NIS2 Art. 3) were read against the Official Journal text, retrieved from the Publications Office's Cellar by CELEX number — the route that works where EUR-Lex answers with a bot challenge. All five headings matched; NIS2 Art. 3's summary was corrected to the Article.
+- 106 → 104: tl-ai-act-2025-02-02-application and tl-ai-act-2025-08-02-application confirmed against AI Act Art. 113(a) and (b) in the Official Journal.
+- 104 → 105: clm-dpc-share-of-fines was split into three atomic claims; the "nine of the ten largest fines" ranking (clm-dpc-top-ten-fines) rests on the brief alone and is now counted on its own.
+- 105 → 107: 31 claims were registered for prose no claim recorded (tools/evidence-audit.mjs, prose coverage 37.9% → 100%); two of them rest on the brief — the AI Omnibus legislative sequence and ICLE's enforcement-architecture argument.
+- 107 → 104: three claims of law that leaned on unofficial reproductions (clm-dsa-micro-small-exemption, clm-data-act-switching-numbers, clm-data-act-art-3-application) were read against the Official Journal and now cite it directly with an article locator.
 
 The other numbers on this block are unchanged.
 

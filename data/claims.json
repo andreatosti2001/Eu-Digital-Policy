@@ -52,14 +52,14 @@
         {
           "source_id": "src-papakonstantinou-dehert",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Abstract: \"three basic phenomena common to all, or most, EU new technology-relevant regulatory initiatives, namely (a) act-ification, (b) GDPR mimesis, and (c) regulatory brutality\""
         }
       ],
       "legal_basis": [],
       "brief_part": "part-1",
       "published": null,
-      "last_verified": "2026-09-26",
-      "verification_note": "The publication is identified and open: Papakonstantinou and De Hert, 'The Regulation of Digital Technologies in the EU: the law-making phenomena of act-ification, GDPR mimesis and EU law brutality', Technology and Regulation, published 21 May 2022 (techreg.org, read 2026-09-26). Its abstract names act-ification and GDPR mimesis among three phenomena common to most EU technology regulation. The four-element description in the statement (vocabulary, principles, case-specific rights, supervisory apparatus) was not checked against the full text, which was not opened."
+      "last_verified": "2026-09-27",
+      "verification_note": "The publication is identified and open: Papakonstantinou and De Hert, 'The Regulation of Digital Technologies in the EU: the law-making phenomena of act-ification, GDPR mimesis and EU law brutality', Technology and Regulation, published 21 May 2022 (techreg.org, read 2026-09-26). Its abstract names act-ification and GDPR mimesis among three phenomena common to most EU technology regulation. The four-element description in the statement (vocabulary, principles, case-specific rights, supervisory apparatus) was not checked against the full text, which was not opened. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-capacity-ambition-gap",
@@ -94,7 +94,12 @@
       "brief_part": "part-1",
       "published": "2026-03-05",
       "last_verified": "2026-08-27",
-      "verification_note": "The Bruegel brief argues for an independent EU enforcement authority and supports the institutional half of the argument. The specific staffing figures are not verified."
+      "verification_note": "The Bruegel brief argues for an independent EU enforcement authority and supports the institutional half of the argument. The specific staffing figures are not verified.",
+      "premises": [
+        "clm-dpc-staff-growth",
+        "clm-iccl-ireland-bottleneck",
+        "clm-dsa-commission-vlop-only"
+      ]
     },
     {
       "id": "clm-also-in-the-rulebook",
@@ -146,6 +151,83 @@
       "published": null,
       "last_verified": "2026-09-26",
       "verification_note": "Added on 2026-09-26 (audit T-34), so that 'the six regimes' does not read as the whole rulebook. Every act number and date was read on an official Commission page (the numbers from the EUR-Lex or OJ links those pages carry, because EUR-Lex itself returns HTTP 202 here). Each source supports one row, hence partial. The EHDS's staged application dates are deliberately not stated: they were not read from an official text."
+    },
+    {
+      "id": "clm-gdpr-art-3-2-reach",
+      "type": "claim-type:law",
+      "statement": "The GDPR applies to controllers and processors not established in the Union when they process personal data of data subjects who are in the Union in connection with offering them goods or services or monitoring their behaviour there.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [
+        "gdpr:art-3"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-gdpr",
+          "supports": "supports:direct",
+          "locator": "Art. 3(2)(a)–(b)"
+        }
+      ],
+      "legal_basis": [
+        "gdpr:art-3"
+      ],
+      "brief_part": "part-1",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32016R0679): Article 3(2), points (a) and (b). The prose used to say the GDPR reaches \"any processing of EU residents' data\"; Article 3(2) turns on data subjects being in the Union, not on residence, and on targeting or monitoring. The prose was corrected to the Article on the same day."
+    },
+    {
+      "id": "clm-ai-act-art-2-1-c-output",
+      "type": "claim-type:law",
+      "statement": "The AI Act applies to providers and deployers of AI systems established or located in a third country where the output produced by the AI system is used in the Union.",
+      "instruments": [
+        "ai-act"
+      ],
+      "provisions": [
+        "ai-act:art-2"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ai-act",
+          "supports": "supports:direct",
+          "locator": "Art. 2(1)(c)"
+        }
+      ],
+      "legal_basis": [
+        "ai-act:art-2"
+      ],
+      "brief_part": "part-1",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32024R1689): Article 2(1)(c), in terms."
+    },
+    {
+      "id": "clm-data-act-art-1-3-f-cloud",
+      "type": "claim-type:law",
+      "statement": "The Data Act applies to providers of data processing services, irrespective of their place of establishment, that provide such services to customers in the Union.",
+      "instruments": [
+        "data-act"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-data-act",
+          "supports": "supports:direct",
+          "locator": "Art. 1(3)(f)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-1",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32023R2854): Article 1(3)(f), in terms. The prose's \"non-EEA SaaS providers with EU customers\" is an instance of it."
     },
     {
       "id": "clm-vagueness-is-delegation",
@@ -220,7 +302,11 @@
       "brief_part": "part-9",
       "published": "2026-08-19",
       "last_verified": null,
-      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. The gatekeeper half is the sourced fact clm-dma-asymmetry; 'nearly every VLOP' is not separately sourced."
+      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. The gatekeeper half is the sourced fact clm-dma-asymmetry; 'nearly every VLOP' is not separately sourced.",
+      "premises": [
+        "clm-dma-asymmetry",
+        "clm-seven-gatekeepers"
+      ]
     },
     {
       "id": "clm-consolidation-contested",
@@ -306,7 +392,85 @@
       "brief_part": "part-2",
       "published": null,
       "last_verified": "2026-08-28",
-      "verification_note": "Resolved 28 Aug 2026 against the DLA Piper survey of January 2026, which is the actual source of the EUR 7.1bn figure — the brief attributed it to the CMS tracker, which records roughly EUR 6.11bn on its own methodology. Both are compilations by law firms from published decisions, not audited totals; Annex B's warning stands and is now demonstrated rather than asserted."
+      "verification_note": "Resolved 28 Aug 2026 against the DLA Piper survey of January 2026, which is the actual source of the EUR 7.1bn figure — the brief attributed it to the CMS tracker, which records roughly EUR 6.11bn on its own methodology. Both are compilations by law firms from published decisions, not audited totals; Annex B's warning stands and is now demonstrated rather than asserted.",
+      "contested": {
+        "note": "The two compilations disagree on the total. DLA Piper's January 2026 survey gives about EUR 7.1bn to 10 January 2026; the CMS Enforcement Tracker Report (March 2026) records roughly EUR 6.11bn in directly documented fines. Both compile published decisions by their own methods; neither is an audited figure (Annex B).",
+        "sources": [
+          "src-dlapiper-gdpr-survey-2026",
+          "src-cms-enforcement-tracker"
+        ]
+      }
+    },
+    {
+      "id": "clm-dpc-cumulative-fines",
+      "type": "claim-type:fact",
+      "statement": "The Irish DPC accounts for about EUR 4.04 billion of cumulative GDPR fine value.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [
+        "gdpr:art-56"
+      ],
+      "institutions": [
+        "dpa-ie"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-dlapiper-gdpr-survey-2026",
+          "supports": "supports:direct",
+          "locator": "EUR 4.04bn, Irish Data Protection Commission"
+        },
+        {
+          "source_id": "src-dpc-fines-page",
+          "supports": "supports:direct",
+          "locator": "\"Total Fines (last updated 10/08/2026) €4,038,832,000\""
+        },
+        {
+          "source_id": "src-rte-2026-dpc-4bn",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
+          "source_id": "src-dpc-annual-report-2025",
+          "supports": "supports:context",
+          "locator": null
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": "2026-01-21",
+      "last_verified": "2026-09-27",
+      "verification_note": "Split on 27 Sep 2026 out of clm-dpc-share-of-fines, which carried three propositions. The EUR 4.04bn figure was confirmed on 2026-09-26 against DLA Piper (January 2026), which states it; RTÉ reports \"over EUR 4 billion\" owed to the DPC. The DPC Annual Report 2025 reports about EUR 530.77m for 2025 alone and states no cumulative figure. Re-read 27 Sep 2026: the DPC's own Fines page states \"Total Fines (last updated 10/08/2026) €4,038,832,000\", which rounds to the EUR 4.04bn in the statement. The figure now rests on the regulator itself, not only on DLA Piper's compilation; the two measure to different dates (August and January 2026)."
+    },
+    {
+      "id": "clm-dpc-top-ten-fines",
+      "type": "claim-type:fact",
+      "statement": "Nine of the ten largest GDPR fines were imposed by the Irish DPC.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [
+        "gdpr:art-56"
+      ],
+      "institutions": [
+        "dpa-ie"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-brief-original",
+          "supports": "supports:direct",
+          "locator": "Part II"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": null,
+      "last_verified": "2026-09-26",
+      "verification_note": "Split on 27 Sep 2026 out of clm-dpc-share-of-fines. The 2026-09-26 check of DLA Piper, RTÉ and the DPC Annual Report found that none of them states the nine-of-ten ranking. It rests on the brief alone.",
+      "reference_gap": true,
+      "gap_note": "the nine-of-ten ranking — no source stating it has been located"
     },
     {
       "id": "clm-one-stop-shop",
@@ -357,19 +521,19 @@
         {
           "source_id": "src-eucrim-gdpr-procedural-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"Regulation 2025/2518 entered into force on 1 January 2026 and it will apply from 2 April 2027\""
         }
       ],
       "legal_basis": [],
       "brief_part": "part-2",
       "published": "2026-01-16",
-      "last_verified": "2026-09-26",
-      "verification_note": "Confirmed against eucrim, a specialist newsletter published by the Max Planck Institute for the Study of Crime, Security and Law, reporting the regulation's Official Journal reference and adoption on 26 November 2025. The EUR-Lex consolidated text could not be retrieved directly in this environment: every attempt (multiple URI and PDF endpoints) returns HTTP 202 with no body, which this build's freshness tooling also reports as a standing limitation. Re-verify against EUR-Lex directly when it becomes reachable."
+      "last_verified": "2026-09-27",
+      "verification_note": "Confirmed against eucrim, a specialist newsletter published by the Max Planck Institute for the Study of Crime, Security and Law, reporting the regulation's Official Journal reference and adoption on 26 November 2025. The EUR-Lex consolidated text could not be retrieved directly in this environment: every attempt (multiple URI and PDF endpoints) returns HTTP 202 with no body, which this build's freshness tooling also reports as a standing limitation. Re-verify against EUR-Lex directly when it becomes reachable. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-dpc-share-of-fines",
-      "type": "claim-type:fact",
-      "statement": "The Irish DPC accounts for about EUR 4.04 billion of cumulative GDPR fine value — roughly 57% of the total — and nine of the ten largest fines.",
+      "type": "claim-type:derived",
+      "statement": "The Irish DPC's share of cumulative GDPR fine value is roughly 57%.",
       "instruments": [
         "gdpr"
       ],
@@ -384,31 +548,37 @@
         {
           "source_id": "src-dlapiper-gdpr-survey-2026",
           "supports": "supports:partial",
-          "locator": "EUR 4.04bn, Irish Data Protection Commission"
-        },
-        {
-          "source_id": "src-rte-2026-dpc-4bn",
-          "supports": "supports:partial",
-          "locator": null
-        },
-        {
-          "source_id": "src-dpc-annual-report-2025",
-          "supports": "supports:context",
-          "locator": null
-        },
-        {
-          "source_id": "src-brief-original",
-          "supports": "supports:direct",
-          "locator": "Part II"
+          "locator": "EUR 4.04bn, Irish Data Protection Commission; aggregate total to 10 January 2026"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-2",
       "published": "2026-01-12",
       "last_verified": "2026-09-26",
-      "verification_note": "The EUR 4.04bn figure is confirmed against DLA Piper (January 2026); the DPC's own Annual Report 2025 confirms the Commission is a genuine three-Commissioner structure and reports roughly EUR 530.77m in fines for 2025 alone, which is consistent with continued growth of the cumulative total but does not itself state EUR 4.04bn or a share percentage. The derived 57% share and the \"nine of the ten largest fines\" ranking are NOT stated by any of these sources and remain the brief's own arithmetic against a total from the DLA Piper compilation.",
-      "reference_gap": true,
-      "gap_note": "57% share and nine-of-ten ranking"
+      "verification_note": "Retyped from fact to derived on 27 Sep 2026, when the three propositions this claim used to carry were split: the EUR 4.04bn is now clm-dpc-cumulative-fines and the nine-of-ten ranking clm-dpc-top-ten-fines. No source states the 57% share; it is this site's arithmetic, 4.04 / 7.1 = 0.569, and the derivation above records it so it can be re-run. The CMS tracker's lower total (clm-gdpr-total-fines) would give a larger share: the figure is only as good as the denominator. Earlier note: The EUR 4.04bn figure is confirmed against DLA Piper (January 2026); the DPC's own Annual Report 2025 confirms the Commission is a genuine three-Commissioner structure and reports roughly EUR 530.77m in fines for 2025 alone, which is consistent with continued growth of the cumulative total but does not itself state EUR 4.04bn or a share percentage. The derived 57% share and the \"nine of the ten largest fines\" ranking are NOT stated by any of these sources and remain the brief's own arithmetic against a total from the DLA Piper compilation.",
+      "derivation": {
+        "performed_by": "site",
+        "method": "The DPC's cumulative fine value divided by the cumulative total of GDPR fines. Both figures come from the same edition of the DLA Piper survey, so the numerator and denominator share one methodology and one cut-off date.",
+        "inputs": {
+          "a": {
+            "claim": "clm-dpc-cumulative-fines",
+            "value": 4040000000,
+            "as_stated": "EUR 4.04 billion"
+          },
+          "b": {
+            "claim": "clm-gdpr-total-fines",
+            "value": 7100000000,
+            "as_stated": "EUR 7.1 billion"
+          }
+        },
+        "formula": "a / b",
+        "result": 0.569,
+        "unit": "ratio",
+        "rounding": {
+          "to": 0.01,
+          "stated_value": 0.57
+        }
+      }
     },
     {
       "id": "clm-dpc-collected",
@@ -428,17 +598,17 @@
         {
           "source_id": "src-dpc-fines-page",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"over €4 billion in fines have been levied … To date, approximately €20 million in fines has been collected\"; \"Collection of Fines\": fines \"do not become payable until they are confirmed in Court\""
         },
         {
           "source_id": "src-thestory-2026-fines-limbo",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"€4.02 billion of it remains uncollected and just €20 million has been paid in fines so far\""
         },
         {
           "source_id": "src-rte-2026-dpc-4bn",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"€4.02 billion of it remains uncollected and just €20m has been paid in fines so far\""
         }
       ],
       "legal_basis": [
@@ -446,13 +616,63 @@
       ],
       "brief_part": "part-2",
       "published": "2026-01-12",
-      "last_verified": "2026-08-27",
-      "verification_note": "Verified during the Step 1 audit. This is the DPC's own published position, corroborated by two independent reports."
+      "last_verified": "2026-09-27",
+      "verification_note": "Verified during the Step 1 audit. This is the DPC's own published position, corroborated by two independent reports. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim. The DPC page also gives the reason in the statement: fines are not payable until confirmed in Court."
+    },
+    {
+      "id": "clm-dpc-collected-share",
+      "type": "claim-type:derived",
+      "statement": "What the DPC has collected is roughly half a percent of what it has levied.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [
+        "gdpr:art-83"
+      ],
+      "institutions": [
+        "dpa-ie"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-dpc-fines-page",
+          "supports": "supports:partial",
+          "locator": null
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for the sentence under the \"number nobody quotes\" box, which states a ratio no source states. It is this site's arithmetic on the two figures in clm-dpc-collected: EUR 20 million over EUR 4 billion is 0.005. Both inputs are orders of magnitude (\"on the order of\", \"more than\"), so the ratio is too.",
+      "derivation": {
+        "performed_by": "site",
+        "method": "Collected divided by levied, both as the DPC states them.",
+        "inputs": {
+          "a": {
+            "claim": "clm-dpc-collected",
+            "value": 20000000,
+            "as_stated": "EUR 20 million"
+          },
+          "b": {
+            "claim": "clm-dpc-collected",
+            "value": 4000000000,
+            "as_stated": "EUR 4 billion"
+          }
+        },
+        "formula": "a / b",
+        "result": 0.005,
+        "unit": "ratio",
+        "rounding": {
+          "to": 0.001,
+          "stated_value": 0.005
+        }
+      }
     },
     {
       "id": "clm-announced-vs-collected",
       "type": "claim-type:interpretation",
-      "statement": "Roughly 40% of the EUR 7.1 billion announced — about EUR 2.8 billion — is either already annulled or actively contested in court; announced enforcement and delivered enforcement are different quantities.",
+      "statement": "Announced enforcement and delivered enforcement are different quantities: headline GDPR fine totals overstate what has been finally imposed and collected.",
       "instruments": [
         "gdpr"
       ],
@@ -468,11 +688,6 @@
       ],
       "sources": [
         {
-          "source_id": "src-csoonline-alliance-risk-2026",
-          "supports": "supports:partial",
-          "locator": null
-        },
-        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part II, Part IX"
@@ -482,7 +697,41 @@
       "brief_part": "part-2",
       "published": "2026-08-19",
       "last_verified": "2026-09-26",
-      "verification_note": "The analysis is identified (audit T-25): CSO Online (29 May 2026) attributes the EUR 7.1 billion, ~40% and ~EUR 2.8 billion figures to the insurance brokerage Alliance Risk, drawing mainly on the CMS Enforcement Tracker; the prose now names it. Alliance Risk's own publication could not be located, so this rests on a press report of it, and 'contested' amounts may yet be upheld. The reference gap is left set for a person to clear, since the originating document has still not been read.",
+      "verification_note": "The author's reading, and typed as one. On 27 Sep 2026 the Alliance Risk figure it used to carry was split into clm-alliance-risk-contested-share, which keeps the reference gap; this claim now carries only the inference, and names the four registered claims it is drawn from.",
+      "premises": [
+        "clm-alliance-risk-contested-share",
+        "clm-dpc-collected",
+        "clm-amazon-annulment",
+        "clm-openai-fine-voided"
+      ]
+    },
+    {
+      "id": "clm-alliance-risk-contested-share",
+      "type": "claim-type:attributed",
+      "statement": "An analysis by the insurance brokerage Alliance Risk found that roughly 40% of the EUR 7.1 billion in announced GDPR fines — about EUR 2.8 billion — is either annulled or actively contested in court.",
+      "attributed_to": "Alliance Risk, as reported by CSO Online on 29 May 2026; the analysis draws mainly on the CMS Enforcement Tracker",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [
+        "gdpr:art-83"
+      ],
+      "institutions": [
+        "dpa-*"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-csoonline-alliance-risk-2026",
+          "supports": "supports:partial",
+          "locator": null
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": "2026-05-29",
+      "last_verified": "2026-09-26",
+      "verification_note": "Split on 27 Sep 2026 out of clm-announced-vs-collected, which carried both this figure and the reading drawn from it. The analysis is identified (audit T-25): CSO Online (29 May 2026) attributes the EUR 7.1 billion, ~40% and ~EUR 2.8 billion figures to the insurance brokerage Alliance Risk, drawing mainly on the CMS Enforcement Tracker; the prose now names it. Alliance Risk's own publication could not be located, so this rests on a press report of it, and 'contested' amounts may yet be upheld. The reference gap is left set for a person to clear, since the originating document has still not been read.",
       "reference_gap": true,
       "gap_note": "the ~40% of announced fine value said to be annulled or actively contested. No publication stating that proportion was located; the figure is attributed in the prose to eighth-anniversary analysis that could not be identified."
     },
@@ -555,7 +804,7 @@
     },
     {
       "id": "clm-iccl-ireland-bottleneck",
-      "type": "claim-type:critique",
+      "type": "claim-type:attributed",
       "statement": "In 2021 the Irish Council for Civil Liberties called Ireland the GDPR's worst bottleneck, documenting failure to transmit draft decisions to peer authorities in the great majority of major cross-border cases.",
       "instruments": [
         "gdpr"
@@ -571,18 +820,19 @@
         {
           "source_id": "src-iccl-ireland-bottleneck",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"Key insights\": \"The Irish Data Protection Commission is the bottleneck of GDPR enforcement against Big Tech across the EU. Almost all (98%) major GDPR cases referred to Ireland remain unresolved\""
         }
       ],
       "legal_basis": [],
       "brief_part": "part-2",
       "published": null,
-      "last_verified": "2026-09-26",
-      "verification_note": "The report is identified: ICCL, 'Europe's enforcement paralysis: ICCL's 2021 GDPR report', 13 September 2021 (read 2026-09-26). It calls the Irish DPC 'the bottleneck of GDPR enforcement against Big Tech across the EU' and says 98% of major GDPR cases referred to Ireland remain unresolved. 'Worst' is the brief's gloss on 'the bottleneck'; the comparison with Spain in the prose was not found on the report's summary page and was not checked against the full report. The prose now dates the critique to 2021 (audit T-26); it describes Ireland five years ago, not today."
+      "last_verified": "2026-09-27",
+      "verification_note": "The report is identified: ICCL, 'Europe's enforcement paralysis: ICCL's 2021 GDPR report', 13 September 2021 (read 2026-09-26). It calls the Irish DPC 'the bottleneck of GDPR enforcement against Big Tech across the EU' and says 98% of major GDPR cases referred to Ireland remain unresolved. 'Worst' is the brief's gloss on 'the bottleneck'; the comparison with Spain in the prose was not found on the report's summary page and was not checked against the full report. The prose now dates the critique to 2021 (audit T-26); it describes Ireland five years ago, not today. Retyped from critique to attributed on 27 Sep 2026: the statement reports what Irish Council for Civil Liberties said; the site does not adopt the position, and the evidence it owes is that actor's own text. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim.",
+      "attributed_to": "Irish Council for Civil Liberties, \"Europe's enforcement paralysis: ICCL's 2021 GDPR report\" (13 September 2021)"
     },
     {
       "id": "clm-icle-law-of-everything",
-      "type": "claim-type:critique",
+      "type": "claim-type:attributed",
       "statement": "The International Center for Law & Economics argues, borrowing Nadezhda Purtova's phrase, that the GDPR has been interpreted into a 'law of everything', and that the EDPB's proportionality analysis tests limitations on data protection without asking whether the scope of data protection remains proportionate to the burdens it imposes.",
       "instruments": [
         "gdpr"
@@ -608,7 +858,8 @@
       "brief_part": "part-2",
       "published": "2026-03-13",
       "last_verified": "2026-09-26",
-      "verification_note": "Added on 2026-09-26 (audit T-26). ICLE's comments on the Digital Omnibus (13 March 2026), read that day, call the GDPR a 'law of everything' and footnote the phrase to Purtova, 'The Law of Everything' (2018) 10 Law Innov Technol 40. Purtova is attached as context only: her conclusion (abandon the personal/non-personal distinction) is not ICLE's (narrow the GDPR's scope). The argument is ICLE's and is typed as critique."
+      "verification_note": "Added on 2026-09-26 (audit T-26). ICLE's comments on the Digital Omnibus (13 March 2026), read that day, call the GDPR a 'law of everything' and footnote the phrase to Purtova, 'The Law of Everything' (2018) 10 Law Innov Technol 40. Purtova is attached as context only: her conclusion (abandon the personal/non-personal distinction) is not ICLE's (narrow the GDPR's scope). The argument is ICLE's and is typed as critique. Retyped from critique to attributed on 27 Sep 2026: the statement reports what International Center for Law & Economics said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
+      "attributed_to": "International Center for Law & Economics, comments on the Digital Omnibus (13 March 2026)"
     },
     {
       "id": "clm-edpb-cef-2026-transparency",
@@ -626,14 +877,14 @@
         {
           "source_id": "src-edpb-cef-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"Next steps\": \"During 2026, 25 Data Protection Authorities (DPAs) across Europe will take part in this initiative\""
         }
       ],
       "legal_basis": [],
       "brief_part": "part-2",
       "published": "2026-03-19",
-      "last_verified": "2026-09-26",
-      "verification_note": "Added on 2026-09-26 (audits T-22, T-27), from the EDPB's launch announcement of 19 March 2026. The same sentence's link between the CEF topic and CMS-corpus fine categories is the brief's reading, covered by clm-four-categories-94pct, not by this claim."
+      "last_verified": "2026-09-27",
+      "verification_note": "Added on 2026-09-26 (audits T-22, T-27), from the EDPB's launch announcement of 19 March 2026. The same sentence's link between the CEF topic and CMS-corpus fine categories is the brief's reading, covered by clm-four-categories-94pct, not by this claim. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-poland-dsa-veto",
@@ -649,12 +900,12 @@
         {
           "source_id": "src-edri-poland-dsa-veto-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Title and dateline: \"President's veto delays the implementation of the DSA in Poland\", 21 January 2026"
         },
         {
           "source_id": "src-300polityka-pl-dsa-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "25 September 2026: \"Prezydent podpisał 5 ustaw, w tym pierwszą wdrażającą DSA\""
         },
         {
           "source_id": "src-interia-pl-dsa-2026",
@@ -665,12 +916,12 @@
       "legal_basis": [],
       "brief_part": "part-3",
       "published": "2026-01",
-      "last_verified": "2026-09-26",
-      "verification_note": "Added on 2026-09-26 (audits T-22, T-27). Sourced to EDRi (tier 4); the official announcement on prezydent.pl could not be read here (Cloudflare challenge). Updated 2026-09-26 by the author's decision: the September 2026 signing is now read (300polityka, 25 September 2026, quoting the presidential spokesman; Interia) and stated in the prose. The President's own site could not be read. Time-sensitive: the second bill is pending."
+      "last_verified": "2026-09-27",
+      "verification_note": "Added on 2026-09-26 (audits T-22, T-27). Sourced to EDRi (tier 4); the official announcement on prezydent.pl could not be read here (Cloudflare challenge). Updated 2026-09-26 by the author's decision: the September 2026 signing is now read (300polityka, 25 September 2026, quoting the presidential spokesman; Interia) and stated in the prose. The President's own site could not be read. Time-sensitive: the second bill is pending. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-cispe-cloud-ceos-letter",
-      "type": "claim-type:fact",
+      "type": "claim-type:attributed",
       "statement": "Twenty-four European cloud CEOs, writing with the chair of CISPE, asked that sovereignty be defined by control — ownership of the technology and protection from foreign jurisdiction — rather than by EU presence, to prevent 'sovereignty washing'.",
       "instruments": [
         "cloud-ai-development-act"
@@ -691,11 +942,12 @@
       "brief_part": "part-10",
       "published": "2026-03-17",
       "last_verified": "2026-09-26",
-      "verification_note": "Added on 2026-09-26 (audit T-22). The prose said the CEOs 'demanded absolute technical and legal control requirements'; the letter does not say that, and the sentence now follows its Principle 1. 'Twenty-four' counts the company heads; the 25th signatory is CISPE's chairwoman."
+      "verification_note": "Added on 2026-09-26 (audit T-22). The prose said the CEOs 'demanded absolute technical and legal control requirements'; the letter does not say that, and the sentence now follows its Principle 1. 'Twenty-four' counts the company heads; the 25th signatory is CISPE's chairwoman. Retyped from fact to attributed on 27 Sep 2026: the statement reports what twenty-four European cloud chief executives and the chair of CISPE said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
+      "attributed_to": "twenty-four European cloud chief executives and the chair of CISPE"
     },
     {
       "id": "clm-draghi-national-champions",
-      "type": "claim-type:fact",
+      "type": "claim-type:attributed",
       "statement": "Draghi cautioned that promoting competitiveness should not lead to policies of defending national champions that can stifle competition and innovation.",
       "instruments": [],
       "provisions": [],
@@ -712,7 +964,8 @@
       "brief_part": "part-10",
       "published": "2024-09-09",
       "last_verified": "2026-09-26",
-      "verification_note": "Added on 2026-09-26 (audit T-22). Part A, printed p. 13: competitiveness 'should also not lead to policies of defending \"national champions\" that can stifle competition and innovation'. The prose's next clause, that shielding strategic players from compliance can be read as doing exactly that, is the author's argument and is not covered by this claim."
+      "verification_note": "Added on 2026-09-26 (audit T-22). Part A, printed p. 13: competitiveness 'should also not lead to policies of defending \"national champions\" that can stifle competition and innovation'. The prose's next clause, that shielding strategic players from compliance can be read as doing exactly that, is the author's argument and is not covered by this claim. Retyped from fact to attributed on 27 Sep 2026: the statement reports what Mario Draghi said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
+      "attributed_to": "Mario Draghi, The Future of European Competitiveness (September 2024)"
     },
     {
       "id": "clm-breach-notifications-per-day",
@@ -793,17 +1046,17 @@
         {
           "source_id": "src-justice-lu-amazon-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"Dans son arrêt du 12 mars 2026, la Cour …\""
         },
         {
           "source_id": "src-mlex-2026-amazon-annulment",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"upheld the … findings that Amazon breached the GDPR, but referred the case back … for a new analysis of whether Amazon had engaged in deliberate conduct or negligence\""
         },
         {
           "source_id": "src-linarilaw-2026-amazon",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Title: \"Luxembourg court of appeal cancels EUR 746 million CNPD fine against Amazon\""
         }
       ],
       "legal_basis": [
@@ -811,8 +1064,8 @@
       ],
       "brief_part": "part-2",
       "published": "2026-03",
-      "last_verified": "2026-09-26",
-      "verification_note": "Verified during the Step 1 audit, and on 2026-09-26 against the Luxembourg judiciary's announcement of judgment no. 52757C (Cour administrative, 12 March 2026; tier 2). The judgment itself has still not been retrieved."
+      "last_verified": "2026-09-27",
+      "verification_note": "Verified during the Step 1 audit, and on 2026-09-26 against the Luxembourg judiciary's announcement of judgment no. 52757C (Cour administrative, 12 March 2026; tier 2). The judgment itself has still not been retrieved. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-openai-fine-voided",
@@ -835,7 +1088,7 @@
         {
           "source_id": "src-europeanlawblog-openai-rome",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"annulled Decision No. 755 in its entirety on a purely preliminary, jurisdictional ground\"; notes [i]–[ii]: R.G. 4785/2025, decided 18 March 2026; OpenAI Ireland recognised by the DPC as single EEA establishment on 15 February 2024"
         }
       ],
       "legal_basis": [
@@ -843,8 +1096,8 @@
       ],
       "brief_part": "part-2",
       "published": "2026",
-      "last_verified": "2026-08-27",
-      "verification_note": "Verified during the Step 1 audit. The judgment itself has not been retrieved; the source is academic analysis of it."
+      "last_verified": "2026-09-27",
+      "verification_note": "Verified during the Step 1 audit. The judgment itself has not been retrieved; the source is academic analysis of it. Re-read 27 Sep 2026 at the blog's new URL (the old one returned 404); the locator quotes the passage that carries the claim."
     },
     {
       "id": "clm-cjeu-pseudonymised-data",
@@ -863,7 +1116,7 @@
         {
           "source_id": "src-cjeu-c413-23p",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Judgment of 4 September 2025, paras 80 and 82: pseudonymised data is not to be regarded \"in all cases and for every person\" as personal data"
         },
         {
           "source_id": "src-cjeu-c413-23p-pr",
@@ -874,8 +1127,8 @@
       "legal_basis": [],
       "brief_part": "part-2",
       "published": "2025-09-04",
-      "last_verified": "2026-08-27",
-      "verification_note": "Grand Chamber judgment of 4 September 2025. Note the case concerns Regulation (EU) 2018/1725 rather than the GDPR directly."
+      "last_verified": "2026-09-27",
+      "verification_note": "Grand Chamber judgment of 4 September 2025. Note the case concerns Regulation (EU) 2018/1725 rather than the GDPR directly. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim. The judgment interprets Regulation (EU) 2018/1725, which governs the EU institutions, not the GDPR; the parallel with the GDPR's identical definitions is the brief's."
     },
     {
       "id": "clm-art-22-predates-ai-act",
@@ -942,6 +1195,195 @@
       "published": "2026-08-19",
       "last_verified": "2026-08-27",
       "verification_note": "The existence of all three provisions is verified; the claim that regulators acknowledge the duplication is not sourced."
+    },
+    {
+      "id": "clm-gdpr-art-5-principles",
+      "type": "claim-type:law",
+      "statement": "Article 5 GDPR sets six principles for processing — lawfulness, fairness and transparency; purpose limitation; data minimisation; accuracy; storage limitation; integrity and confidentiality — and makes the controller responsible for, and able to demonstrate, compliance with them (accountability).",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [
+        "gdpr:art-5"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-gdpr",
+          "supports": "supports:direct",
+          "locator": "Art. 5(1)(a)–(f); Art. 5(2)"
+        }
+      ],
+      "legal_basis": [
+        "gdpr:art-5"
+      ],
+      "brief_part": "part-2",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32016R0679): Article 5(1), points (a) to (f), each naming its principle, and Article 5(2) (accountability)."
+    },
+    {
+      "id": "clm-gdpr-art-6-lawful-bases",
+      "type": "claim-type:law",
+      "statement": "Article 6(1) GDPR makes processing lawful only where at least one of six bases applies: consent, contract, legal obligation, vital interests, public task or legitimate interests.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [
+        "gdpr:art-6"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-gdpr",
+          "supports": "supports:direct",
+          "locator": "Art. 6(1)(a)–(f)"
+        }
+      ],
+      "legal_basis": [
+        "gdpr:art-6"
+      ],
+      "brief_part": "part-2",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32016R0679): Article 6(1): \"Processing shall be lawful only if and to the extent that at least one of the following applies\", points (a) to (f). \"Exhaustive list\" in the prose follows from \"only if\"."
+    },
+    {
+      "id": "clm-gdpr-art-9-special-categories",
+      "type": "claim-type:law",
+      "statement": "Article 9 GDPR prohibits processing of special categories of personal data unless one of the exceptions it lists applies.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [
+        "gdpr:art-9"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-gdpr",
+          "supports": "supports:direct",
+          "locator": "Art. 9(1)–(2)"
+        }
+      ],
+      "legal_basis": [
+        "gdpr:art-9"
+      ],
+      "brief_part": "part-2",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32016R0679): Article 9(1) (the prohibition) and 9(2) (the exceptions). \"Narrow\" in the prose is the author's characterisation of the exceptions, not the text's."
+    },
+    {
+      "id": "clm-gdpr-data-subject-rights",
+      "type": "claim-type:law",
+      "statement": "Chapter III GDPR (Articles 12 to 23) sets out the data subject's rights: information, access, rectification, erasure, restriction, portability, objection, and the Article 22 right not to be subject to a decision based solely on automated processing that produces legal effects concerning the data subject or similarly significantly affects them.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [
+        "gdpr:art-22"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-gdpr",
+          "supports": "supports:direct",
+          "locator": "Arts. 12–22 (Chapter III); Art. 22(1)"
+        }
+      ],
+      "legal_basis": [
+        "gdpr:art-22"
+      ],
+      "brief_part": "part-2",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32016R0679): the headings of Articles 12 to 22 in Chapter III (\"Rights of the data subject\") and Article 22(1). Chapter III runs to Article 23 (restrictions), which the prose does not mention."
+    },
+    {
+      "id": "clm-gdpr-chapter-iv-duties",
+      "type": "claim-type:law",
+      "statement": "Chapter IV GDPR includes data protection by design and by default (Article 25), records of processing activities (Article 30), personal data breach notification and communication (Articles 33 and 34), data protection impact assessment (Article 35) and the data protection officer (Articles 37 to 39).",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [
+        "gdpr:art-25",
+        "gdpr:art-30",
+        "gdpr:art-33",
+        "gdpr:art-35",
+        "gdpr:art-37"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-gdpr",
+          "supports": "supports:direct",
+          "locator": "Arts. 25, 30, 33–35, 37–39 (Chapter IV)"
+        }
+      ],
+      "legal_basis": [
+        "gdpr:art-25"
+      ],
+      "brief_part": "part-2",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32016R0679): the headings of Articles 25, 30, 33, 34, 35, 37, 38 and 39, all in Chapter IV (\"Controller and processor\")."
+    },
+    {
+      "id": "clm-gdpr-chapter-v-transfers",
+      "type": "claim-type:law",
+      "statement": "Chapter V GDPR governs transfers of personal data to third countries and international organisations.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-gdpr",
+          "supports": "supports:direct",
+          "locator": "Chapter V, Arts. 44–50"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32016R0679): the heading of Chapter V and of Articles 44 and 49."
+    },
+    {
+      "id": "clm-gdpr-art-83-two-tiers",
+      "type": "claim-type:law",
+      "statement": "Article 83 GDPR sets two tiers of fine ceilings: up to EUR 10 million or 2% of total worldwide annual turnover, and up to EUR 20 million or 4%, whichever is higher in each case.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [
+        "gdpr:art-83"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-gdpr",
+          "supports": "supports:direct",
+          "locator": "Art. 83(4) and (5)"
+        }
+      ],
+      "legal_basis": [
+        "gdpr:art-83"
+      ],
+      "brief_part": "part-2",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32016R0679): Article 83(4) (EUR 10 000 000 or 2 %) and 83(5) (EUR 20 000 000 or 4 %), each \"whichever is higher\"."
     },
     {
       "id": "clm-eprivacy-miscounted-fines",
@@ -1076,8 +1518,8 @@
       "sources": [
         {
           "source_id": "src-eurlex-dsa",
-          "supports": "supports:partial",
-          "locator": "Art. 19"
+          "supports": "supports:direct",
+          "locator": "Art. 19(1)–(2)"
         },
         {
           "source_id": "src-dsa-text-unofficial-arts-14-19",
@@ -1088,8 +1530,8 @@
       "legal_basis": [],
       "brief_part": "part-3",
       "published": "2022-10-27",
-      "last_verified": "2026-09-26",
-      "verification_note": "Added on 2026-09-26 (audit T-15). Art. 19 read from an unofficial reproduction (EUR-Lex returns HTTP 202 here): Section 3 of Chapter III, except Art. 24(3), does not apply to micro or small platforms, nor for 12 months after they lose that status, unless designated as VLOPs. 'Most' is used because the exclusion covers Section 3 only, and other sections carry exclusions of their own that were not checked."
+      "last_verified": "2026-09-27",
+      "verification_note": "Added on 2026-09-26 (audit T-15). Art. 19 read from an unofficial reproduction (EUR-Lex returns HTTP 202 here): Section 3 of Chapter III, except Art. 24(3), does not apply to micro or small platforms, nor for 12 months after they lose that status, unless designated as VLOPs. 'Most' is used because the exclusion covers Section 3 only, and other sections carry exclusions of their own that were not checked. Checked 27 Sep 2026 against the Official Journal text read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32022R2065): Article 19(1) disapplies Section 3 (online platforms), except Article 24(3), for micro and small enterprises, and 19(2) re-applies it to any provider designated a very large online platform. The EUR-Lex reference is therefore direct; the unofficial reproduction is no longer the only reading of the text."
     },
     {
       "id": "clm-art-34-open-concept",
@@ -1145,17 +1587,17 @@
         {
           "source_id": "src-eurlex-dsa-da-2050",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Art. 3 (DSA data access portal); Art. 6(4)(c) (DSA data catalogues); Art. 16 (entry into force), OJ L series, 2025/2050, 9.10.2025"
         },
         {
           "source_id": "src-ec-dsa-data-access-2025",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"As of 29 October 2025, new rules under the Digital Services Act (DSA) will allow researchers to gain unprecedented access\""
         },
         {
           "source_id": "src-ec-dsa-data-access-portal",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"On 2 July 2025, the Commission published a delegated act\"; \"testing of the DSA Portal\""
         }
       ],
       "legal_basis": [
@@ -1163,8 +1605,8 @@
       ],
       "brief_part": "part-3",
       "published": "2025-10-29",
-      "last_verified": "2026-08-27",
-      "verification_note": "Commission Delegated Regulation (EU) 2025/2050 of 1 July 2025."
+      "last_verified": "2026-09-27",
+      "verification_note": "Commission Delegated Regulation (EU) 2025/2050 of 1 July 2025. Checked 27 Sep 2026 against the Official Journal text (Cellar, CELEX 32025R2050): Article 3 requires the Commission to establish and host a DSA data access portal; Article 6(4)(c) requires data providers to publish a DSA data catalogue; Article 16 provides for entry into force on the twentieth day after publication, and the Journal is dated 9.10.2025, which gives 29 October 2025. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-art-40-underperforming",
@@ -1300,7 +1742,7 @@
         {
           "source_id": "src-ec-x-fine-2025",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"a fine of €120 million … The breaches include the deceptive design of its 'blue checkmark', the lack of transparency of its advertising repository, and the failure to provide access to public data for researchers\""
         },
         {
           "source_id": "src-eucrim-x-first-fine",
@@ -1313,8 +1755,8 @@
       ],
       "brief_part": "part-3",
       "published": "2025-12-05",
-      "last_verified": "2026-08-27",
-      "verification_note": "The amount and all three grounds are directly sourced. The characterisation as the FIRST DSA non-compliance fine is not in the Commission text and rests on commentary."
+      "last_verified": "2026-09-27",
+      "verification_note": "The amount and all three grounds are directly sourced. The characterisation as the FIRST DSA non-compliance fine is not in the Commission text and rests on commentary. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-temu-fine",
@@ -1337,7 +1779,7 @@
         {
           "source_id": "src-ec-temu-fine-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"Temu's risk assessment of 2024 falls short of the standards laid out in the DSA\""
         },
         {
           "source_id": "src-techpolicypress-temu",
@@ -1350,8 +1792,8 @@
       ],
       "brief_part": "part-3",
       "published": "2026-05-28",
-      "last_verified": "2026-09-26",
-      "verification_note": "The amount and ground are directly sourced. The characterisation as the LARGEST DSA fine to date is not in the Commission text, rests on commentary, and is in any case superseded: AliExpress was fined EUR 550 million on 20 July 2026 (clm-aliexpress-fine)."
+      "last_verified": "2026-09-27",
+      "verification_note": "The amount and ground are directly sourced. The characterisation as the LARGEST DSA fine to date is not in the Commission text, rests on commentary, and is in any case superseded: AliExpress was fined EUR 550 million on 20 July 2026 (clm-aliexpress-fine). Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-commission-prefers-compliance",
@@ -1466,7 +1908,12 @@
       "brief_part": "part-3",
       "published": "2026-07-24",
       "last_verified": "2026-09-26",
-      "verification_note": "Each underlying action is directly sourced; the aggregate characterisation is the author's and is computable from the enforcement records. Retyped from fact to interpretation on 2026-09-26 (audit T-28): 'escalated' is a reading of the sequence, not a fact any one source states."
+      "verification_note": "Each underlying action is directly sourced; the aggregate characterisation is the author's and is computable from the enforcement records. Retyped from fact to interpretation on 2026-09-26 (audit T-28): 'escalated' is a reading of the sequence, not a fact any one source states.",
+      "premises": [
+        "clm-x-fine",
+        "clm-temu-fine",
+        "clm-aliexpress-fine"
+      ]
     },
     {
       "id": "clm-dsa-commission-vlop-only",
@@ -1518,7 +1965,7 @@
         {
           "source_id": "src-gc-supervisory-fee-2025",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Press Release No 114/25: \"The General Court annuls the implementing decisions, while maintaining their effects for a provisional period\""
         },
         {
           "source_id": "src-mlex-2025-dsa-fee-appeal",
@@ -1534,8 +1981,8 @@
       "legal_basis": [],
       "brief_part": "part-3",
       "published": "2025-09-10",
-      "last_verified": "2026-09-26",
-      "verification_note": "Re-read CURIA Press Release No 114/25 (10 September 2025) on 2026-09-26: the implementing decisions were annulled because the methodology for counting average monthly active recipients should have been adopted by delegated act; the Court found no error affecting the obligation to pay the 2023 fee and maintained the decisions' effects for up to twelve months from the judgments becoming final. It is not an annulment of the fee mechanism. The prose's statement that the Commission has appealed rests on two paywalled MLex reports (24 November 2025; 12 January 2026, citing two Official Journal notices), of which only the standfirst/summary could be read: tier-4 journalism, and hence only partial support. The appeal case numbers, lodging dates and current state (whether still pending on the date read) are not established; the Official Journal notices could not be retrieved (EUR-Lex returns HTTP 202 with no body; CURIA case search unavailable on 2026-09-26)."
+      "last_verified": "2026-09-27",
+      "verification_note": "Re-read CURIA Press Release No 114/25 (10 September 2025) on 2026-09-26: the implementing decisions were annulled because the methodology for counting average monthly active recipients should have been adopted by delegated act; the Court found no error affecting the obligation to pay the 2023 fee and maintained the decisions' effects for up to twelve months from the judgments becoming final. It is not an annulment of the fee mechanism. The prose's statement that the Commission has appealed rests on two paywalled MLex reports (24 November 2025; 12 January 2026, citing two Official Journal notices), of which only the standfirst/summary could be read: tier-4 journalism, and hence only partial support. The appeal case numbers, lodging dates and current state (whether still pending on the date read) are not established; the Official Journal notices could not be retrieved (EUR-Lex returns HTTP 202 with no body; CURIA case search unavailable on 2026-09-26). Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-press-release-governance",
@@ -1566,7 +2013,7 @@
     },
     {
       "id": "clm-x-legal-basis-fragility",
-      "type": "claim-type:critique",
+      "type": "claim-type:attributed",
       "statement": "Practitioner analysis argues the blue-checkmark finding may have been routed through DSA Article 25 in a way that ignores the Article 25(2) exclusion for practices covered by the Unfair Commercial Practices Directive, making it vulnerable to annulment.",
       "instruments": [
         "dsa"
@@ -1593,7 +2040,8 @@
       "brief_part": "part-3",
       "published": "2026-08-19",
       "last_verified": null,
-      "verification_note": "requires verification — the practitioner analysis is not named and no source located."
+      "verification_note": "requires verification — the practitioner analysis is not named and no source located. Retyped from critique to attributed on 27 Sep 2026: the statement reports what practitioner analysis that this build has not identified said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
+      "attributed_to": "practitioner analysis that this build has not identified"
     },
     {
       "id": "clm-dsa-gdpr-unresolved",
@@ -1845,7 +2293,7 @@
         {
           "source_id": "src-ec-meta-ad-choice-2025",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"Meta will present these new options to users in the EU in January 2026\""
         }
       ],
       "legal_basis": [
@@ -1853,8 +2301,8 @@
       ],
       "brief_part": "part-4",
       "published": "2025-12-08",
-      "last_verified": "2026-09-26",
-      "verification_note": "Added on 2026-09-26 (audits T-18, T-22). Replaces the prose's 'three-tier advertising model', which no source supports: the Commission describes a two-way choice. Whether Meta implemented it as described, and its uptake, are not established."
+      "last_verified": "2026-09-27",
+      "verification_note": "Added on 2026-09-26 (audits T-18, T-22). Replaces the prose's 'three-tier advertising model', which no source supports: the Commission describes a two-way choice. Whether Meta implemented it as described, and its uptake, are not established. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-apple-art-6-7-specification",
@@ -2019,12 +2467,12 @@
         {
           "source_id": "src-ec-meta-whatsapp-ai-2025",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Headline, 4 December 2025: \"Commission opens antitrust investigation into Meta's new policy regarding AI providers' access to WhatsApp\""
         },
         {
           "source_id": "src-insighteu-whatsapp-interim-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "9 June 2026: \"In February 2026, the Commission issued a Statement of Objections\"; \"ordered Meta to restore free access to WhatsApp for rival general-purpose AI assistants\""
         }
       ],
       "legal_basis": [
@@ -2032,8 +2480,8 @@
       ],
       "brief_part": "part-4",
       "published": "2025-12-04",
-      "last_verified": "2026-09-26",
-      "verification_note": "The Commission's own press release confirms the 4 December 2025 opening as an antitrust investigation into a possible breach of EU competition rules; the February 2026 Statement of Objections and the 9 June 2026 interim-measures decision, including their reliance on Article 102 TFEU, are confirmed by Insight EU Monitoring's report on the interim-measures decision, which names the legal basis directly. This is offered as evidence that the DMA's current obligations did not reach the conduct — the Commission used Article 102 precisely because the DMA did not apply — not as a claim about what the DMA itself says."
+      "last_verified": "2026-09-27",
+      "verification_note": "The Commission's own press release confirms the 4 December 2025 opening as an antitrust investigation into a possible breach of EU competition rules; the February 2026 Statement of Objections and the 9 June 2026 interim-measures decision, including their reliance on Article 102 TFEU, are confirmed by Insight EU Monitoring's report on the interim-measures decision, which names the legal basis directly. This is offered as evidence that the DMA's current obligations did not reach the conduct — the Commission used Article 102 precisely because the DMA did not apply — not as a claim about what the DMA itself says. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-dma-specification-utility-regulation",
@@ -2087,7 +2535,7 @@
         {
           "source_id": "src-thenextweb-ustr-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"In February 2025, Trump signed a memorandum … naming the Digital Markets Act and Digital Services Act specifically\""
         },
         {
           "source_id": "src-brief-original",
@@ -2098,8 +2546,8 @@
       "legal_basis": [],
       "brief_part": "part-4",
       "published": "2026-08-19",
-      "last_verified": "2026-09-26",
-      "verification_note": "The designated undertaking is now sourced directly to the Commission's own decision (C(2024) 3176 final), which names 'Booking Holdings Inc.' on its face — notably, the Commission's own public-facing gatekeepers-portal page and press release refer to the undertaking only as 'Booking', omitting the corporate suffix every other gatekeeper's entry carries. The US pressure is now sourced to a February 2025 presidential memorandum and a July 2026 congressional letter, both naming the DMA and DSA; neither is a formal diplomatic objection in the narrow sense, so 'has objected' is kept general rather than naming a specific legal instrument of protest.",
+      "last_verified": "2026-09-27",
+      "verification_note": "The designated undertaking is now sourced directly to the Commission's own decision (C(2024) 3176 final), which names 'Booking Holdings Inc.' on its face — notably, the Commission's own public-facing gatekeepers-portal page and press release refer to the undertaking only as 'Booking', omitting the corporate suffix every other gatekeeper's entry carries. The US pressure is now sourced to a February 2025 presidential memorandum and a July 2026 congressional letter, both naming the DMA and DSA; neither is a formal diplomatic objection in the narrow sense, so 'has objected' is kept general rather than naming a specific legal instrument of protest. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim.",
       "reference_gap": true,
       "gap_note": "The 'US administration has objected' framing rests on a presidential memorandum and a lawmakers' letter pressing for a Section 301 investigation, not on a formal WTO-style objection or diplomatic note; no such document was located."
     },
@@ -2151,6 +2599,11 @@
       ],
       "sources": [
         {
+          "source_id": "src-eurlex-dma",
+          "supports": "supports:direct",
+          "locator": "Art. 1(6)"
+        },
+        {
           "source_id": "src-ec-google-adtech-2025",
           "supports": "supports:direct",
           "locator": "Case AT.40670"
@@ -2159,8 +2612,8 @@
       "legal_basis": [],
       "brief_part": "part-4",
       "published": "2025-09-05",
-      "last_verified": "2026-08-27",
-      "verification_note": null
+      "last_verified": "2026-09-27",
+      "verification_note": "Checked 27 Sep 2026 against the Official Journal text read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32022R1925): Article 1(6) — \"This Regulation is without prejudice to the application of Articles 101 and 102 TFEU.\" The Google fine is carried by the Commission's decision press release."
     },
     {
       "id": "clm-ai-act-product-safety",
@@ -2310,7 +2763,7 @@
         {
           "source_id": "src-ec-gpai-code",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"The Code of Practice details out these rules, representing a voluntary tool prepared by independent experts\""
         }
       ],
       "legal_basis": [
@@ -2318,8 +2771,8 @@
       ],
       "brief_part": "part-5",
       "published": "2025-07-10",
-      "last_verified": "2026-08-27",
-      "verification_note": null
+      "last_verified": "2026-09-27",
+      "verification_note": "Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-gpai-code-four-drafts",
@@ -2430,19 +2883,19 @@
         {
           "source_id": "src-eurlex-ai-omnibus",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Art. 4 (entry into force on the third day following publication); OJ L series, 2026/1744, 24.7.2026"
         },
         {
           "source_id": "src-ec-ai-omnibus-in-force",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"On 27 July 2026, the AI Omnibus enters into force across the EU\""
         }
       ],
       "legal_basis": [],
       "brief_part": "part-8",
       "published": "2026-07-27",
-      "last_verified": "2026-08-28",
-      "verification_note": "Resolved 28 Aug 2026 against the ELI record. Published 24 July 2026, in force 27 July 2026."
+      "last_verified": "2026-09-27",
+      "verification_note": "Resolved 28 Aug 2026 against the ELI record. Published 24 July 2026, in force 27 July 2026. Locator added 27 Sep 2026 from the Official Journal text read that day (Cellar, CELEX 32026R1744): Article 4 provides for entry into force on the third day following publication, and the Journal is dated 24.7.2026, which gives 27 July 2026. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-ai-act-coherence-objection",
@@ -2540,6 +2993,227 @@
       "verification_note": "The brief's Annex A gives only 'Dec 2026'. The precise date comes from the Official Journal text."
     },
     {
+      "id": "clm-ai-act-art-5-prohibitions",
+      "type": "claim-type:law",
+      "statement": "Article 5 AI Act prohibits manipulative or deceptive techniques, exploitation of vulnerabilities due to age, disability or a social or economic situation, social scoring leading to detrimental treatment, criminal-risk prediction based solely on profiling, untargeted scraping of facial images for facial recognition databases, emotion inference in workplaces and education institutions, biometric categorisation deducing sensitive attributes, and real-time remote biometric identification in publicly accessible spaces for law enforcement, save for narrow exceptions.",
+      "instruments": [
+        "ai-act"
+      ],
+      "provisions": [
+        "ai-act:art-5"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ai-act",
+          "supports": "supports:direct",
+          "locator": "Art. 5(1)(a)–(h)"
+        }
+      ],
+      "legal_basis": [
+        "ai-act:art-5"
+      ],
+      "brief_part": "part-5",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32024R1689): Article 5(1), points (a) to (h), as originally adopted. The two prohibitions the AI Omnibus inserts as points (ba) and (bb) apply from 2 December 2026 (tl-ai-act-2026-12-02-application)."
+    },
+    {
+      "id": "clm-ai-act-art-50-transparency",
+      "type": "claim-type:law",
+      "statement": "Article 50 AI Act requires that people be informed when they interact with an AI system, that synthetic audio, image, video or text outputs be marked in a machine-readable format, and that deep fakes and AI-generated text published to inform the public on matters of public interest be disclosed.",
+      "instruments": [
+        "ai-act"
+      ],
+      "provisions": [
+        "ai-act:art-50"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ai-act",
+          "supports": "supports:direct",
+          "locator": "Art. 50(1), (2), (4)"
+        }
+      ],
+      "legal_basis": [
+        "ai-act:art-50"
+      ],
+      "brief_part": "part-5",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32024R1689): Article 50(1), (2) and (4). The text-disclosure duty in 50(4) does not apply where the content has undergone human review or editorial control under someone's editorial responsibility."
+    },
+    {
+      "id": "clm-ai-act-gpai-definition",
+      "type": "claim-type:law",
+      "statement": "Article 3(63) AI Act defines a general-purpose AI model as one that displays significant generality, is capable of competently performing a wide range of distinct tasks and can be integrated into a variety of downstream systems or applications.",
+      "instruments": [
+        "ai-act"
+      ],
+      "provisions": [
+        "ai-act:art-3-63"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ai-act",
+          "supports": "supports:direct",
+          "locator": "Art. 3(63)"
+        }
+      ],
+      "legal_basis": [
+        "ai-act:art-3-63"
+      ],
+      "brief_part": "part-5",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32024R1689): Article 3, point (63)."
+    },
+    {
+      "id": "clm-ai-act-art-53-duties",
+      "type": "claim-type:law",
+      "statement": "Every provider of a general-purpose AI model must keep technical documentation (Annex XI), provide information to downstream providers (Annex XII), put in place a policy to comply with Union copyright law and publish a sufficiently detailed summary of training content; the documentation duties do not apply to models released under a free and open-source licence, except models with systemic risk.",
+      "instruments": [
+        "ai-act"
+      ],
+      "provisions": [
+        "ai-act:art-53"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ai-act",
+          "supports": "supports:direct",
+          "locator": "Art. 53(1)(a)–(d); Art. 53(2)"
+        }
+      ],
+      "legal_basis": [
+        "ai-act:art-53"
+      ],
+      "brief_part": "part-5",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32024R1689): Article 53(1), points (a) to (d), and 53(2), whose last sentence reads \"This exception shall not apply to general-purpose AI models with systemic risks.\""
+    },
+    {
+      "id": "clm-ai-act-art-51-presumption",
+      "type": "claim-type:law",
+      "statement": "Article 51(2) AI Act presumes a general-purpose AI model to have high-impact capabilities, and so systemic risk, when the cumulative compute used for its training exceeds 10^25 floating point operations.",
+      "instruments": [
+        "ai-act"
+      ],
+      "provisions": [
+        "ai-act:art-51"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ai-act",
+          "supports": "supports:direct",
+          "locator": "Art. 51(1)(a), 51(2)"
+        }
+      ],
+      "legal_basis": [
+        "ai-act:art-51"
+      ],
+      "brief_part": "part-5",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32024R1689): Article 51(1)(a) and 51(2)."
+    },
+    {
+      "id": "clm-ai-omnibus-art-4-literacy",
+      "type": "claim-type:law",
+      "statement": "The AI Omnibus replaced Article 4 of the AI Act: providers and deployers must now take measures to support the development of AI literacy of their staff, and the obligation does not require them to guarantee any specific level of AI literacy — where the original text required measures to ensure a sufficient level.",
+      "instruments": [
+        "ai-act",
+        "ai-omnibus"
+      ],
+      "provisions": [
+        "ai-act:art-4"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ai-omnibus",
+          "supports": "supports:direct",
+          "locator": "Art. 1, point (5) (replacing Art. 4 AI Act)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-5",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32026R1744): Article 1, point (5), of Regulation (EU) 2026/1744, and the original Article 4 of Regulation (EU) 2024/1689 (\"take measures to ensure, to their best extent, a sufficient level of AI literacy\")."
+    },
+    {
+      "id": "clm-ai-omnibus-legislative-path",
+      "type": "claim-type:fact",
+      "statement": "The AI Omnibus was proposed on 19 November 2025; the Council adopted its general approach on 13 March 2026 and Parliament its mandate on 26 March 2026, by 569 votes to 45; agreement was reached on 7 May 2026 after a second trilogue on 28 April collapsed; Parliament approved the text on 16 June and the Council on 29 June 2026.",
+      "instruments": [
+        "ai-omnibus",
+        "ai-act"
+      ],
+      "provisions": [],
+      "institutions": [
+        "ec",
+        "ep",
+        "council"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-ep-legtrain-ai-omnibus",
+          "supports": "supports:partial",
+          "locator": null
+        },
+        {
+          "source_id": "src-brief-original",
+          "supports": "supports:direct",
+          "locator": "Part V"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-5",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for the sequence in Part V. The Legislative Train page supports the 19 November 2025 proposal date (its note); the other dates and the vote count rest on the brief. The adoption date the Official Journal gives is 8 July 2026 (tl-ai-omnibus-2026-07-08-adoption), after the Council's approval."
+    },
+    {
+      "id": "clm-gpai-guidelines-10-23",
+      "type": "claim-type:fact",
+      "statement": "The Commission's July 2025 guidelines on general-purpose AI models add an indicative criterion: a model trained with more than 10^23 FLOP that can generate language, text-to-image or text-to-video output.",
+      "instruments": [
+        "ai-act"
+      ],
+      "provisions": [
+        "ai-act:art-3-63"
+      ],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-ec-gpai-guidelines-2025",
+          "supports": "supports:direct",
+          "locator": "Commission news item and FAQ on the GPAI guidelines: \"indicative criterion\""
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-5",
+      "published": "2025-07-18",
+      "last_verified": "2026-09-26",
+      "verification_note": "Registered on 27 Sep 2026 for the clause in Part V. The source record, read on 26 Sep 2026, reports the criterion from the Commission's news item and FAQ, which calls it indicative and allows exceptions; the guidelines themselves were not opened."
+    },
+    {
       "id": "clm-data-act-non-personal",
       "type": "claim-type:law",
       "statement": "Where the GDPR governs personal data, the Data Act governs product and service data as such — personal or not, though predominantly non-personal, industrial and machine-generated, with the GDPR prevailing wherever personal data is involved — and reallocates control over it by default.",
@@ -2554,7 +3228,7 @@
         {
           "source_id": "src-eurlex-data-act",
           "supports": "supports:partial",
-          "locator": null
+          "locator": "Art. 1(2), 1(5)"
         },
         {
           "source_id": "src-da-text-unofficial-arts-1-50",
@@ -2570,8 +3244,8 @@
       "legal_basis": [],
       "brief_part": "part-6",
       "published": "2023-12-22",
-      "last_verified": "2026-09-26",
-      "verification_note": "Corrected on 2026-09-26 (audit T-13): the earlier wording implied the Data Act concerns non-personal data. Art. 1(2) says it covers personal and non-personal data, and Art. 1(5) that data-protection law prevails in a conflict. Read from an unofficial reproduction (EUR-Lex returns HTTP 202 with no body here). 'Predominantly non-personal, industrial and machine-generated' remains the brief's characterisation."
+      "last_verified": "2026-09-27",
+      "verification_note": "Corrected on 2026-09-26 (audit T-13): the earlier wording implied the Data Act concerns non-personal data. Art. 1(2) says it covers personal and non-personal data, and Art. 1(5) that data-protection law prevails in a conflict. Read from an unofficial reproduction (EUR-Lex returns HTTP 202 with no body here). 'Predominantly non-personal, industrial and machine-generated' remains the brief's characterisation. Checked 27 Sep 2026 against the Official Journal text read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32023R2854): Article 1(2) covers personal and non-personal data, and Article 1(5) makes data-protection law prevail in a conflict. \"Predominantly non-personal, industrial and machine-generated\" and \"reallocates control by default\" are the brief's characterisation, so the reference stays partial."
     },
     {
       "id": "clm-data-act-switching-numbers",
@@ -2590,8 +3264,8 @@
       "sources": [
         {
           "source_id": "src-eurlex-data-act",
-          "supports": "supports:partial",
-          "locator": "Art. 25"
+          "supports": "supports:direct",
+          "locator": "Art. 25(2)(a), (d), (g), (h); Art. 25(4)"
         },
         {
           "source_id": "src-brief-original",
@@ -2604,8 +3278,8 @@
       ],
       "brief_part": "part-6",
       "published": "2023-12-22",
-      "last_verified": "2026-08-27",
-      "verification_note": "The article exists and governs switching contract terms; the specific periods have not been checked against the text in this build."
+      "last_verified": "2026-09-27",
+      "verification_note": "The article exists and governs switching contract terms; the specific periods have not been checked against the text in this build. Checked 27 Sep 2026 against the Official Journal text read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32023R2854): Article 25(2)(d) (notice \"shall not exceed two months\"), 25(2)(a) (transitional period of 30 calendar days), 25(4) (alternative period \"which shall not exceed seven months\"), 25(2)(g) (retrieval of at least 30 calendar days) and 25(2)(h) (full erasure)."
     },
     {
       "id": "clm-data-act-art-3-application",
@@ -2624,8 +3298,8 @@
       "sources": [
         {
           "source_id": "src-eurlex-data-act",
-          "supports": "supports:partial",
-          "locator": "Art. 3(1)"
+          "supports": "supports:direct",
+          "locator": "Art. 50, third paragraph"
         },
         {
           "source_id": "src-da-text-unofficial-arts-1-50",
@@ -2643,8 +3317,8 @@
       ],
       "brief_part": "part-6",
       "published": "2023-12-22",
-      "last_verified": "2026-09-26",
-      "verification_note": "Art. 50 read on 2026-09-26 from an unofficial reproduction of the text (EUR-Lex returns HTTP 202 with no body here): 'The obligation resulting from Article 3(1) shall apply to connected products and the services related to them placed on the market after 12 September 2026.' Not yet checked against the Official Journal text."
+      "last_verified": "2026-09-27",
+      "verification_note": "Art. 50 read on 2026-09-26 from an unofficial reproduction of the text (EUR-Lex returns HTTP 202 with no body here): 'The obligation resulting from Article 3(1) shall apply to connected products and the services related to them placed on the market after 12 September 2026.' Not yet checked against the Official Journal text. Checked 27 Sep 2026 against the Official Journal text read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32023R2854): Article 50, third paragraph — \"The obligation resulting from Article 3(1) shall apply to connected products and the services related to them placed on the market after 12 September 2026.\""
     },
     {
       "id": "clm-data-act-trade-secret-tension",
@@ -2821,19 +3495,19 @@
         {
           "source_id": "src-ec-nis2-lfn-2024",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"sending letters of formal notice to the other 23 Member States\""
         },
         {
           "source_id": "src-ec-nis2-referral-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "\"letters of formal notice on 28 November 2024 and reasoned opinions on 7 May 2025\"; \"Spain, France, Ireland and the Netherlands\"; \"a request to the Court to impose financial sanctions\""
         }
       ],
       "legal_basis": [],
       "brief_part": "part-7",
       "published": "2026-07-08",
-      "last_verified": "2026-08-27",
-      "verification_note": "The letters of formal notice and the referral are directly sourced. The intermediate step — nineteen reasoned opinions in May 2025 — is NOT sourced and requires verification."
+      "last_verified": "2026-09-27",
+      "verification_note": "The letters of formal notice and the referral are directly sourced. The intermediate step — nineteen reasoned opinions in May 2025 — is NOT sourced and requires verification. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim. Neither release gives the number of reasoned opinions (\"nineteen\" in the statement); that figure is not located."
     },
     {
       "id": "clm-nis2-enforcement-despite-transposition",
@@ -2893,7 +3567,103 @@
       "brief_part": "part-7",
       "published": "2026-08-19",
       "last_verified": "2026-08-27",
-      "verification_note": "The NIS2 transposition failure is directly sourced and supports the comparison; the generalisation is the author's."
+      "verification_note": "The NIS2 transposition failure is directly sourced and supports the comparison; the generalisation is the author's.",
+      "premises": [
+        "clm-nis2-only-four-on-time",
+        "clm-nis2-transposition-failure"
+      ]
+    },
+    {
+      "id": "clm-nis2-art-21-measures",
+      "type": "claim-type:law",
+      "statement": "Article 21(2) NIS2 lists ten minimum cybersecurity risk-management measures, including risk analysis, incident handling, business continuity, supply-chain security, basic cyber hygiene, cryptography and multi-factor authentication.",
+      "instruments": [
+        "nis2"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-nis2",
+          "supports": "supports:direct",
+          "locator": "Art. 21(2)(a)–(j)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-7",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022L2555): Article 21(2), points (a) to (j)."
+    },
+    {
+      "id": "clm-nis2-art-23-reporting",
+      "type": "claim-type:law",
+      "statement": "Article 23 NIS2 requires an early warning within 24 hours of becoming aware of a significant incident, an incident notification within 72 hours and a final report within one month of the notification.",
+      "instruments": [
+        "nis2"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-nis2",
+          "supports": "supports:direct",
+          "locator": "Art. 23(4)(a), (b), (d)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-7",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022L2555): Article 23(4), points (a), (b) and (d)."
+    },
+    {
+      "id": "clm-nis2-art-32-6-personal-liability",
+      "type": "claim-type:law",
+      "statement": "For essential entities, Article 32(6) NIS2 requires that the natural persons responsible for or representing the entity can be held liable for breach of their duties to ensure compliance.",
+      "instruments": [
+        "nis2"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-nis2",
+          "supports": "supports:direct",
+          "locator": "Art. 32(6)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-7",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022L2555): Article 32(6)."
+    },
+    {
+      "id": "clm-nis2-art-34-4-fines",
+      "type": "claim-type:law",
+      "statement": "For essential entities infringing Article 21 or 23, NIS2 requires Member States to provide for administrative fines with a maximum of at least EUR 10 million or at least 2% of total worldwide annual turnover, whichever is higher.",
+      "instruments": [
+        "nis2"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-nis2",
+          "supports": "supports:direct",
+          "locator": "Art. 34(4)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-7",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022L2555): Article 34(4). The prose used to say the \"ceilings reach\" those amounts; the Directive sets the minimum that each national maximum must reach, not a ceiling. The prose was corrected to the Article on the same day."
     },
     {
       "id": "clm-omnibus-is-a-concession",
@@ -2959,7 +3729,7 @@
     },
     {
       "id": "clm-edpb-edps-omnibus-pushback",
-      "type": "claim-type:fact",
+      "type": "claim-type:attributed",
       "statement": "The EDPB and EDPS adopted Joint Opinion 1/2026 on the AI Omnibus and Joint Opinion 2/2026 on the Data Omnibus, holding that the personal-data definition change goes far beyond a targeted modification and would significantly narrow the concept, that the Art. 41a implementing-act power should not be entrusted to the Commission, and that Art. 88c is unnecessary.",
       "instruments": [
         "data-omnibus",
@@ -2988,7 +3758,8 @@
       "brief_part": "part-8",
       "published": "2026-01-20",
       "last_verified": "2026-08-27",
-      "verification_note": "Both opinions are located. The specific quoted conclusions have not been checked against their text in this build."
+      "verification_note": "Both opinions are located. The specific quoted conclusions have not been checked against their text in this build. Retyped from fact to attributed on 27 Sep 2026: the statement reports what the European Data Protection Board and the European Data Protection Supervisor said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
+      "attributed_to": "the European Data Protection Board and the European Data Protection Supervisor, Joint Opinions 1/2026 and 2/2026"
     },
     {
       "id": "clm-data-omnibus-stalled",
@@ -3027,8 +3798,60 @@
       "verification_note": "No official Council document has been read directly (documents WK 11020/2026 ADD 4, ST 9547/26 and ST 12535/26 are cited via commentary and specialist press reporting on leaked restricted texts, not via the Council's own register). Highly time-sensitive: a Council mandate could form at any point. Re-verify before every publication."
     },
     {
+      "id": "clm-noyb-omnibus-charter",
+      "type": "claim-type:attributed",
+      "statement": "noyb concluded that the Digital Omnibus's GDPR and ePrivacy amendments would produce multiple conflicts with the Charter and a clear departure from the GDPR's logic and CJEU case law.",
+      "attributed_to": "noyb, Digital Omnibus Report V3 (24 February 2026)",
+      "instruments": [
+        "data-omnibus",
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-noyb-omnibus",
+          "supports": "supports:direct",
+          "locator": "\"Our analysis reveals that the parts amending the GDPR and the ePrivacy Directive would lead to multiple conflicts with the EU's Charter of Fundamental Rights … and a clear departure from the current logic of the GDPR or CJEU case law\""
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-8",
+      "published": "2026-02-24",
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for the \"from digital rights\" flank in Part VIII. The source record, read on 28 Aug 2026, says noyb states this and that the brief's wording tracks it closely. No page or section locator was recorded. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
+    },
+    {
+      "id": "clm-icle-enforcement-architecture",
+      "type": "claim-type:attributed",
+      "statement": "ICLE argues that the Digital Omnibus's greatest weakness is its silence on enforcement architecture: without institutional reform, the authorities that read the GDPR expansively will read the new exemptions narrowly.",
+      "attributed_to": "International Center for Law & Economics — the specific publication is not identified in this build",
+      "instruments": [
+        "data-omnibus",
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-brief-original",
+          "supports": "supports:direct",
+          "locator": "Part VIII"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-8",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for the \"from the competitiveness side\" flank in Part VIII. Neither ICLE record in sources.json (the March 2026 comments and the June 2026 commentary on the Council texts) is recorded as stating this argument, so the attribution rests on the brief until the publication is found.",
+      "reference_gap": true,
+      "gap_note": "the ICLE publication making the enforcement-architecture argument"
+    },
+    {
       "id": "clm-draghi-diagnosis",
-      "type": "claim-type:fact",
+      "type": "claim-type:attributed",
       "statement": "Draghi's The Future of European Competitiveness holds that the EU–US productivity divergence is largely explained by the tech sector, and names the rulebook itself as part of the problem: a complex web of overlapping rules producing an innovation gap.",
       "instruments": [],
       "provisions": [],
@@ -3047,7 +3870,8 @@
       "brief_part": "part-10",
       "published": "2024-09-09",
       "last_verified": "2026-08-27",
-      "verification_note": "The report is located but its text has not been consulted; the characterisation is not checked against it."
+      "verification_note": "The report is located but its text has not been consulted; the characterisation is not checked against it. Retyped from fact to attributed on 27 Sep 2026: the statement reports what Mario Draghi said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
+      "attributed_to": "Mario Draghi, The Future of European Competitiveness (September 2024)"
     },
     {
       "id": "clm-draghi-statistics",
@@ -3155,7 +3979,7 @@
         {
           "source_id": "src-eurlex-ai-act",
           "supports": "supports:partial",
-          "locator": "Art. 2 exclusions"
+          "locator": "Art. 2(3)"
         },
         {
           "source_id": "src-aia-text-unofficial-arts-2-4",
@@ -3178,8 +4002,8 @@
       ],
       "brief_part": "part-11",
       "published": "2026-08-19",
-      "last_verified": "2026-09-26",
-      "verification_note": "Corrected on 2026-09-26 (audit T-11): the exclusion is for systems used 'exclusively' for military, defence or national security purposes, not 'at all'. Art. 2(3) was read from an unofficial explorer of the text, not the Official Journal (EUR-Lex returns HTTP 202 with no body here). The Privacy International counterweight rests on CURIA Press Release No 123/20; the judgment was not opened, and the case concerns the e-Privacy Directive, not the AI Act, so it supports the limit on national-security carve-outs only by analogy. The provision link now points to ai-act:art-2, added on 2026-09-26 at the author's direction (it previously pointed to Art. 5 by mistake)."
+      "last_verified": "2026-09-27",
+      "verification_note": "Corrected on 2026-09-26 (audit T-11): the exclusion is for systems used 'exclusively' for military, defence or national security purposes, not 'at all'. Art. 2(3) was read from an unofficial explorer of the text, not the Official Journal (EUR-Lex returns HTTP 202 with no body here). The Privacy International counterweight rests on CURIA Press Release No 123/20; the judgment was not opened, and the case concerns the e-Privacy Directive, not the AI Act, so it supports the limit on national-security carve-outs only by analogy. The provision link now points to ai-act:art-2, added on 2026-09-26 at the author's direction (it previously pointed to Art. 5 by mistake). Checked 27 Sep 2026 against the Official Journal text read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32024R1689): Article 2(3), second subparagraph, excludes AI systems used exclusively for military, defence or national security purposes. Article 4(2) TEU and the Privacy International judgment were not re-read."
     },
     {
       "id": "clm-art-5-binds-states",
@@ -3232,12 +4056,12 @@
         {
           "source_id": "src-edri-hungary-ai-act",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "6 May 2025: the four organisations \"believe that this broadened application of FRT … violates the EU AI Act and the Charter of Fundamental Rights of the EU\""
         },
         {
           "source_id": "src-ecnl-hungary-ai-act",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "30 September 2025: \"urging the European Commission to launch infringement proceedings against Hungary for violating the EU Artificial Intelligence Act\""
         }
       ],
       "legal_basis": [
@@ -3245,8 +4069,8 @@
       ],
       "brief_part": "part-11",
       "published": "2025",
-      "last_verified": "2026-09-26",
-      "verification_note": "Correctly typed as interpretation: this is the civil-society coalition's legal conclusion, not a judicial finding. The Hungarian legislation itself has not been retrieved. Note the brief's own careful point that Hungary has not invoked the national security exemption, so this is not a hard case about the boundary of Art. 4(2) TEU. The classification is itself contested on a narrower point: EDRi's own analysis distinguishes prohibited real-time identification from the merely high-risk retrospective ('post') kind, and rests the 'real-time' characterisation on how quickly the Hungarian system processes newly generated footage — a factual question the coalition's analysis asserts rather than a public technical finding settles."
+      "last_verified": "2026-09-27",
+      "verification_note": "Correctly typed as interpretation: this is the civil-society coalition's legal conclusion, not a judicial finding. The Hungarian legislation itself has not been retrieved. Note the brief's own careful point that Hungary has not invoked the national security exemption, so this is not a hard case about the boundary of Art. 4(2) TEU. The classification is itself contested on a narrower point: EDRi's own analysis distinguishes prohibited real-time identification from the merely high-risk retrospective ('post') kind, and rests the 'real-time' characterisation on how quickly the Hungarian system processes newly generated footage — a factual question the coalition's analysis asserts rather than a public technical finding settles. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-hungary-no-infringement",
@@ -3332,7 +4156,12 @@
       "brief_part": "part-11",
       "published": "2026-08-19",
       "last_verified": "2026-08-27",
-      "verification_note": "The author's central conclusion, correctly typed as critique. It rests on clm-hungary-no-infringement, which is time-sensitive; if that claim decays, this one must be revisited."
+      "verification_note": "The author's central conclusion, correctly typed as critique. It rests on clm-hungary-no-infringement, which is time-sensitive; if that claim decays, this one must be revisited.",
+      "premises": [
+        "clm-art-4-2-teu-carve-out",
+        "clm-hungary-no-infringement",
+        "clm-art-5-binds-states"
+      ]
     },
     {
       "id": "clm-charter-binds-member-states",
@@ -3428,7 +4257,7 @@
         {
           "source_id": "src-ec-google-dma-fine-2026",
           "supports": "supports:direct",
-          "locator": "whole"
+          "locator": "Headline: \"Commission fines Google €890 million for breaches of the Digital Markets Act\"; \"two decisions finding non-compliance … self-preferencing … on Google Search\""
         },
         {
           "source_id": "src-ec-google-dma-fine-2026-ip",
@@ -3437,9 +4266,9 @@
         }
       ],
       "published": "2026-07-23",
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-09-27",
       "requires_verification": false,
-      "verification_note": "Total and date confirmed against the Commission's own DMA portal and press release. The reported component split (EUR 460m Search, EUR 430m Play) is recorded on the enforcement record as reported and has NOT been confirmed against the decision text in this build."
+      "verification_note": "Total and date confirmed against the Commission's own DMA portal and press release. The reported component split (EUR 460m Search, EUR 430m Play) is recorded on the enforcement record as reported and has NOT been confirmed against the decision text in this build. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-cloud-gatekeeper-preliminary-2026",
@@ -3463,13 +4292,117 @@
         {
           "source_id": "src-ec-cloud-gatekeeper-preliminary-2026",
           "supports": "supports:direct",
-          "locator": "whole"
+          "locator": "25 June 2026: \"the Commission preliminarily finds that AWS and Azure … are an important gateway between businesses and their customers\""
         }
       ],
       "published": "2026-06-25",
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-09-27",
       "requires_verification": false,
-      "verification_note": "A preliminary position is not a designation. Recorded so that the gatekeeper count remains readable as current without implying a decision that has not been taken."
+      "verification_note": "A preliminary position is not a designation. Recorded so that the gatekeeper count remains readable as current without implying a decision that has not been taken. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
+    },
+    {
+      "id": "clm-dma-art-5-prohibitions",
+      "type": "claim-type:law",
+      "statement": "Article 5 DMA prohibits a gatekeeper from combining personal data across services without consent (5(2)), requires it to let business users communicate and promote offers to end users free of charge and conclude contracts with them (5(4)), bars it from preventing users raising non-compliance with public authorities (5(6)), and bars it from requiring use of its identification service, web browser engine or payment service (5(7)).",
+      "instruments": [
+        "dma"
+      ],
+      "provisions": [
+        "dma:art-5"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-dma",
+          "supports": "supports:direct",
+          "locator": "Art. 5(2), (4), (6), (7)"
+        }
+      ],
+      "legal_basis": [
+        "dma:art-5"
+      ],
+      "brief_part": "part-4",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022R1925): Article 5, paragraphs 2, 4, 6 and 7."
+    },
+    {
+      "id": "clm-dma-art-6-obligations",
+      "type": "claim-type:law",
+      "statement": "Article 6 DMA holds the obligations susceptible of further specification, including allowing third-party app stores and sideloading (6(4)), no self-preferencing in ranking (6(5)), free and effective interoperability with the hardware and software features available to the gatekeeper's own services (6(7)), data portability (6(9)) and business-user access to their data (6(10)).",
+      "instruments": [
+        "dma"
+      ],
+      "provisions": [
+        "dma:art-6"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-dma",
+          "supports": "supports:direct",
+          "locator": "Art. 6(4), (5), (7), (9), (10)"
+        }
+      ],
+      "legal_basis": [
+        "dma:art-6"
+      ],
+      "brief_part": "part-4",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022R1925): the heading of Article 6 (\"susceptible of being further specified under Article 8\") and paragraphs 4, 5, 7, 9 and 10."
+    },
+    {
+      "id": "clm-dma-art-7-interoperability",
+      "type": "claim-type:law",
+      "statement": "Article 7 DMA imposes interoperability obligations on gatekeepers' number-independent interpersonal communications services.",
+      "instruments": [
+        "dma"
+      ],
+      "provisions": [
+        "dma:art-7"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-dma",
+          "supports": "supports:direct",
+          "locator": "Art. 7"
+        }
+      ],
+      "legal_basis": [
+        "dma:art-7"
+      ],
+      "brief_part": "part-4",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022R1925): the heading of Article 7."
+    },
+    {
+      "id": "clm-dma-arts-11-15-duties",
+      "type": "claim-type:law",
+      "statement": "A gatekeeper must report on its compliance within six months of designation and update the report at least annually (Article 11), is bound by an anti-circumvention duty (Article 13), must inform the Commission of intended concentrations (Article 14) and must submit an independently audited description of its consumer-profiling techniques (Article 15).",
+      "instruments": [
+        "dma"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-dma",
+          "supports": "supports:direct",
+          "locator": "Arts. 11(1)–(2), 13, 14, 15(1)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-4",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022R1925): Article 11(1) and (2), and the headings of Articles 13, 14 and 15 with Article 15(1)."
     },
     {
       "id": "clm-aliexpress-fine",
@@ -3492,7 +4425,7 @@
         {
           "source_id": "src-ec-aliexpress-fine-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Headline: \"Commission fines AliExpress €550 million\"; \"fell short of its obligation … to diligently assess the risk of dissemination of illegal, unsafe, or counterfeit products\""
         }
       ],
       "legal_basis": [
@@ -3500,8 +4433,85 @@
       ],
       "brief_part": "part-3",
       "published": "2026-07-20",
-      "last_verified": "2026-09-26",
-      "verification_note": "The amount, date and ground are directly sourced from the Commission's press release. The 'largest to date' characterisation and the 20 October 2026 action-plan deadline rest on secondary legal commentary (Lewis Silkin, Il Sole 24 Ore, JURIST), not on the Commission text, which contains no ranking language."
+      "last_verified": "2026-09-27",
+      "verification_note": "The amount, date and ground are directly sourced from the Commission's press release. The 'largest to date' characterisation and the 20 October 2026 action-plan deadline rest on secondary legal commentary (Lewis Silkin, Il Sole 24 Ore, JURIST), not on the Commission text, which contains no ranking language. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim. The release does not say \"the largest DSA fine to date\": that comparison is the site's, against the other DSA fines in enforcement.json (X EUR 120m, Temu EUR 200m)."
+    },
+    {
+      "id": "clm-dsa-replaced-ecd-liability",
+      "type": "claim-type:law",
+      "statement": "The DSA deleted the intermediary-liability provisions of the e-Commerce Directive (Articles 12 to 15 of Directive 2000/31/EC) and replaced them with its own conditional exemptions.",
+      "instruments": [
+        "dsa"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-dsa",
+          "supports": "supports:direct",
+          "locator": "Art. 89(1)–(2); Arts. 4–6, 8"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-3",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022R2065): Article 89(1) deletes Articles 12 to 15 of Directive 2000/31/EC; Article 89(2) reads references to them as references to Articles 4, 5, 6 and 8 of the DSA."
+    },
+    {
+      "id": "clm-dsa-art-34-risk-assessment",
+      "type": "claim-type:law",
+      "statement": "Article 34 DSA requires providers of very large online platforms and search engines to identify, analyse and assess systemic risks stemming from the design or functioning of their service, including algorithmic systems, at least once a year and before deploying functionalities likely to have a critical impact: illegal content; negative effects on fundamental rights; on civic discourse, electoral processes and public security; and in relation to gender-based violence, public health, minors and physical and mental well-being — taking into account recommender and other algorithmic systems and intentional manipulation, including inauthentic use.",
+      "instruments": [
+        "dsa"
+      ],
+      "provisions": [
+        "dsa:art-34"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-dsa",
+          "supports": "supports:direct",
+          "locator": "Art. 34(1)(a)–(d); Art. 34(2)"
+        }
+      ],
+      "legal_basis": [
+        "dsa:art-34"
+      ],
+      "brief_part": "part-3",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022R2065): Article 34(1), first and second subparagraphs and points (a) to (d), and Article 34(2), point (a) and the subparagraph on intentional manipulation."
+    },
+    {
+      "id": "clm-dsa-art-35-mitigation",
+      "type": "claim-type:law",
+      "statement": "Article 35 DSA requires reasonable, proportionate and effective mitigation measures tailored to the systemic risks identified; the measures it lists are examples of what they may include.",
+      "instruments": [
+        "dsa"
+      ],
+      "provisions": [
+        "dsa:art-35"
+      ],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-dsa",
+          "supports": "supports:direct",
+          "locator": "Art. 35(1)"
+        }
+      ],
+      "legal_basis": [
+        "dsa:art-35"
+      ],
+      "brief_part": "part-3",
+      "published": null,
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022R2065): Article 35(1): \"Such measures may include, where applicable\". The prose's \"the choice of measures left to the provider\" is a fair reading of \"may include\", and is the author's."
     }
   ]
 }

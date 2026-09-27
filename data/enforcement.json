@@ -26,7 +26,8 @@
     "forum": "Cour administrative (Luxembourg)",
     "date": "2026-03-12",
     "outcome": "Fine annulled and the case remitted to the CNPD: it had not analysed fault (intent or negligence), required since CJEU C-807/21 Deutsche Wohnen and C-683/21 Nacionalinis, and had imposed a fine almost automatically without weighing the other available measures. The violations were broadly upheld (some elements set aside as unverified; Art. 21 grievances held out of scope). Judgment of 12 March 2026, published 13 March 2026.",
-    "case_ref": "52757C (du rôle)"
+    "case_ref": "52757C (du rôle)",
+    "remitted": true
    },
    "timeline_events": [],
    "claims": [
@@ -537,7 +538,7 @@
    "decision_date": "2026-07-08",
    "action": "Judgment dismissing gatekeeper-designation challenges",
    "fine_eur": null,
-   "action_status": "action:final",
+   "action_status": "action:imposed",
    "payment_status": "payment:not-applicable",
    "remedy_status": "remedy:none",
    "behavioural_outcome": null,
@@ -555,7 +556,7 @@
     "src-gc-apple-designation-2026"
    ],
    "requires_verification": false,
-   "verification_note": "Whether an appeal to the Court of Justice has been lodged is not established.",
+   "verification_note": "Whether an appeal to the Court of Justice has been lodged is not established. Until 27 Sep 2026 action_status read action:final (\"no longer subject to appeal\"), which this record's own appeal block contradicts; it now reads action:imposed, the decision stands as upheld at first instance, and the pipeline shows its final stage as unknown rather than reached. Establishing whether an appeal was lodged is what would settle it.",
    "last_verified": "2026-08-27",
    "appeal": {
     "status": "appeal:unknown",
