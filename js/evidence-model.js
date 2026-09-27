@@ -194,10 +194,31 @@ function evaluate(expr, vars) {
 
 const MULT = { billion: 1e9, bn: 1e9, million: 1e6, m: 1e6, thousand: 1e3, k: 1e3 };
 
-/** Read "EUR 4.04 billion", "€20m", "7.1bn", "57%" into a number. */
+const UNITS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+  'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+/** "twenty-three" → 23, "nineteen" → 19, "four" → 4; anything else → null.
+ *  The brief writes small counts as words, and a derivation's input has to
+ *  read back out of the prose it mirrors. Whole numbers below 100 only. */
+function numberWord(text) {
+  const w = String(text || '').trim().toLowerCase();
+  const u = UNITS.indexOf(w);
+  if (u >= 0) return u;
+  const m = w.match(/^([a-z]+)(?:[- ]([a-z]+))?$/);
+  if (!m) return null;
+  const t = TENS.indexOf(m[1]);
+  if (t < 2) return null;
+  if (!m[2]) return t * 10;
+  const r = UNITS.indexOf(m[2]);
+  return r >= 1 && r <= 9 ? t * 10 + r : null;
+}
+
+/** Read "EUR 4.04 billion", "€20m", "7.1bn", "57%" — or a count written as
+ *  a word, "twenty-three" — into a number. */
 export function parseQuantity(text) {
   const m = String(text || '').replace(/,(?=\d{3}\b)/g, '').match(/(\d+(?:\.\d+)?)\s*(billion|bn|million|m\b|thousand|k\b|%)?/i);
-  if (!m) return null;
+  if (!m) return numberWord(text);
   const n = Number(m[1]);
   const u = (m[2] || '').toLowerCase();
   if (u === '%') return n / 100;

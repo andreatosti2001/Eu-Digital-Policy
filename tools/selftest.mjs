@@ -690,6 +690,11 @@ test('H8 · the evidence model: status, locators, composite statements, freshnes
   assert.equal(EM.freshnessState(null, 'risk:low', '2026-09-27'), 'freshness:stale');
   assert.ok(EM.checkDerivation({ type: 'claim-type:derived', derivation: { performed_by: 'site', method: 'm', inputs: {}, formula: 'alert(1)', result: 1, rounding: { to: 1, stated_value: 1 } } }, ix).problems.length > 0,
     'a formula is arithmetic or it is refused — nothing is evaluated');
+  assert.equal(EM.parseQuantity('twenty-three'), 23, 'the brief writes counts as words');
+  assert.equal(EM.parseQuantity('nineteen'), 19);
+  assert.equal(EM.parseQuantity('EUR 4.04 billion'), 4.04e9);
+  assert.equal(EM.parseQuantity('twenty-zero'), null, 'a malformed word is not read as a number');
+  assert.equal(EM.parseQuantity('several'), null);
 });
 
 test('I1 · the CSP hashes every inline script, and an edited script is caught before a browser refuses it', () => {

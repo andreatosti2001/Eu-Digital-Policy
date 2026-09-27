@@ -572,11 +572,11 @@ test('R6 · the baseline is READ from docs/CURRENT-ARCHITECTURE.md §12, not ret
   for (const v of VALIDATORS) assert.ok(v.name in b.checks, `${v.name} must have a recorded baseline`);
   /* The values §12 records on 27 Sep 2026: the five design-qa warnings
      were fixed that day and the unverified count moved 111 -> 104 -> 101
-     by verification work. Pinned here on purpose — this test exists to catch
+     -> 99 by verification work. Pinned here on purpose — this test exists to catch
      §12 being parsed WRONG, and a parse that silently returned 0 would
      otherwise pass. Move them only together with §12. */
   assert.equal(b.checks['design-qa.mjs'].warnings, 0, 'the design-qa warnings recorded in §12 — none since 27 Sep 2026');
-  assert.equal(b.unverified, 101);
+  assert.equal(b.unverified, 99);
   assert.ok(/none/i.test(b.named_warnings.join(' ')), 'with no warnings, §12 still says so in words, because a count cannot tell a new one from a moved one');
 });
 

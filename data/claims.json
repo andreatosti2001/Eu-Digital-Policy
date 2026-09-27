@@ -1126,7 +1126,7 @@
         {
           "source_id": "src-cjeu-c413-23p-pr",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Press Release No 107/25, page 1, paragraph beginning 'In the second place': pseudonymised data 'must not be regarded as constituting, in all cases and for every person, personal data'"
         }
       ],
       "legal_basis": [],
@@ -2267,7 +2267,7 @@
         {
           "source_id": "src-ec-apple-meta-dma-2025",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "IP/25/1085, section 'Non-compliance decision on Meta's “consent or pay” model': the model 'did not give users the required specific choice to opt for a service that uses less of their personal data but is otherwise equivalent'"
         }
       ],
       "legal_basis": [
@@ -2275,8 +2275,8 @@
       ],
       "brief_part": "part-4",
       "published": "2025-04-23",
-      "last_verified": "2026-08-27",
-      "verification_note": "The pricing range is stated by the brief and not independently sourced. The subsequent ad-model change is now its own claim, clm-meta-ad-choice-2026, sourced to the Commission (audit T-18)."
+      "last_verified": "2026-09-27",
+      "verification_note": "Re-read on 27 Sep 2026 in the press corner's text of IP/25/1085 (23 April 2025). The finding covers the period from March 2024, when the DMA obligations became binding, to November 2024, when Meta introduced a further ads model that the Commission was then still assessing. The pricing range is stated by the brief and not independently sourced. The subsequent ad-model change is now its own claim, clm-meta-ad-choice-2026, sourced to the Commission (audit T-18)."
     },
     {
       "id": "clm-meta-ad-choice-2026",
@@ -2312,7 +2312,7 @@
     {
       "id": "clm-apple-art-6-7-specification",
       "type": "claim-type:fact",
-      "statement": "In September 2024 the Commission opened Article 6(7) specification proceedings on iOS and iPadOS connectivity features, and on 19 March 2025 adopted two specification decisions setting out how Apple must open those features to third-party devices and handle developers' interoperability requests.",
+      "statement": "In September 2024 the Commission opened two Article 6(7) specification proceedings on Apple's interoperability obligation for iOS and iPadOS, and on 19 March 2025 adopted two specification decisions: one setting out how Apple must open nine iOS connectivity features to third-party connected devices, the other how it must handle developers' interoperability requests.",
       "instruments": [
         "dma"
       ],
@@ -2327,7 +2327,7 @@
         {
           "source_id": "src-ec-apple-specification-2025",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "IP/25/816, first paragraph (two decisions adopted), sections 'Connected devices' (nine iOS connectivity features) and 'Effective process for interoperability requests', and 'Background' (proceedings opened on 19 September 2024)"
         }
       ],
       "legal_basis": [
@@ -2335,8 +2335,8 @@
       ],
       "brief_part": "part-4",
       "published": "2025-03-19",
-      "last_verified": "2026-09-26",
-      "verification_note": "Added on 2026-09-26 (audits T-18, T-22). IP/25/816 gives both dates: two specification proceedings opened on 19 September 2024, two decisions adopted on 19 March 2025. The prose's former clause 'Apple invoked a waiver clause for five features and the Commission refused it' was removed: no source was found for it, including the Commission's proceedings page."
+      "last_verified": "2026-09-27",
+      "verification_note": "Re-read on 27 Sep 2026 (the press corner's own document service) and corrected: the connectivity decision concerns nine iOS features for connected devices such as smartwatches, headphones and TVs; the second decision concerns the process for interoperability requests for iPhone and iPad features. The earlier wording, 'proceedings on iOS and iPadOS connectivity features', attached iPadOS to the wrong decision. Added on 2026-09-26 (audits T-18, T-22). IP/25/816 gives both dates: two specification proceedings opened on 19 September 2024, two decisions adopted on 19 March 2025. The prose's former clause 'Apple invoked a waiver clause for five features and the Commission refused it' was removed: no source was found for it, including the Commission's proceedings page."
     },
     {
       "id": "clm-gc-apple-designation-upheld",
@@ -2777,6 +2777,11 @@
       "enforcement": [],
       "sources": [
         {
+          "source_id": "src-eurlex-ai-act",
+          "supports": "supports:direct",
+          "locator": "Art. 53(4) and Art. 55(2) (providers 'may rely on codes of practice' to demonstrate compliance; those who do not adhere 'shall demonstrate alternative adequate means of compliance'); Art. 56(2) (codes to cover the obligations in Arts 53 and 55)"
+        },
+        {
           "source_id": "src-ec-gpai-code",
           "supports": "supports:direct",
           "locator": "\"The Code of Practice details out these rules, representing a voluntary tool prepared by independent experts\""
@@ -2788,7 +2793,7 @@
       "brief_part": "part-5",
       "published": "2025-07-10",
       "last_verified": "2026-09-27",
-      "verification_note": "Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
+      "verification_note": "Read on 27 Sep 2026 against the Official Journal text of the AI Act: reliance on a code is optional (Arts 53(4) and 55(2)), and codes are to cover the obligations of Arts 53 and 55 (Art. 56(2)). The Digital Omnibus on AI (Regulation (EU) 2026/1744, Art. 1) replaces Art. 56(6) — the Commission now assesses whether codes cover those obligations — and leaves Arts 53(4) and 55(2) unchanged. The Commission's page calls the Code 'a voluntary tool'. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-gpai-code-four-drafts",
@@ -2807,15 +2812,15 @@
       "sources": [
         {
           "source_id": "src-ec-gpai-code",
-          "supports": "supports:partial",
-          "locator": null
+          "supports": "supports:direct",
+          "locator": "Timeline: '19 December 2024 AI Office publishes the second draft of the Code (first draft)'; '11 March 2025 Third draft of the Code of Practice'; '10 July 2025 The Commission received the final version of the Code'"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-5",
       "published": "2025-07-10",
-      "last_verified": "2026-09-26",
-      "verification_note": "Re-read on 2026-09-26: the Commission's timeline shows a first draft, a second draft (19 December 2024), a third draft (11 March 2025) and the final version received on 10 July 2025. The statement now matches the prose, which already said 'three drafts and a final text'. The claim ID keeps 'four-drafts' because IDs are never renamed."
+      "last_verified": "2026-09-27",
+      "verification_note": "Re-read on 27 Sep 2026 (page 'Last update 25 June 2026'): the timeline links the first draft, lists the second (19 December 2024) and third (11 March 2025) drafts, and records the final version received on 10 July 2025, so the page supports the statement directly. Re-read on 2026-09-26: the Commission's timeline shows a first draft, a second draft (19 December 2024), a third draft (11 March 2025) and the final version received on 10 July 2025. The statement now matches the prose, which already said 'three drafts and a final text'. The claim ID keeps 'four-drafts' because IDs are never renamed."
     },
     {
       "id": "clm-ai-act-standards-not-ready",
@@ -3502,7 +3507,7 @@
     },
     {
       "id": "clm-nis2-only-four-on-time",
-      "type": "claim-type:fact",
+      "type": "claim-type:derived",
       "statement": "Only four of twenty-seven Member States met the NIS2 transposition deadline of 17 October 2024.",
       "instruments": [
         "nis2"
@@ -3517,14 +3522,32 @@
         {
           "source_id": "src-ec-nis2-lfn-2024",
           "supports": "supports:partial",
-          "locator": null
+          "locator": "First paragraph: letters of formal notice to 23 named Member States; 'sending letters of formal notice to the other 23 Member States'"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-7",
       "published": "2024-11-28",
-      "last_verified": "2026-08-27",
-      "verification_note": "PARTIAL SUPPORT. The Commission states that letters of formal notice went to 23 named Member States for failure to fully transpose by the deadline. 'Only four' is the arithmetic complement; no official source phrases it that way. The inference is sound but should be presented as derived."
+      "last_verified": "2026-09-27",
+      "verification_note": "Retyped from fact to derived on 27 Sep 2026, as the earlier note recommended: no official source says 'four'. The Commission's release of 28 November 2024 (re-read that day) names the 23 Member States sent letters of formal notice for failing to fully transpose; the four it does not name are Belgium, Croatia, Italy and Lithuania. 'Met the deadline' is the site's reading of not being pursued: the release establishes that those four were not sent a letter on 28 November 2024, not the date on which each notified full transposition.",
+      "derivation": {
+        "performed_by": "site",
+        "method": "The 27 Member States less the twenty-three the Commission sent letters of formal notice for failing to fully transpose NIS2 by 17 October 2024.",
+        "inputs": {
+          "a": {
+            "claim": "clm-nis2-transposition-failure",
+            "value": 23,
+            "as_stated": "twenty-three"
+          }
+        },
+        "formula": "27 - a",
+        "result": 4,
+        "unit": "Member States",
+        "rounding": {
+          "to": 1,
+          "stated_value": 4
+        }
+      }
     },
     {
       "id": "clm-nis2-transposition-failure",
@@ -3779,7 +3802,7 @@
     {
       "id": "clm-edpb-edps-omnibus-pushback",
       "type": "claim-type:attributed",
-      "statement": "The EDPB and EDPS adopted Joint Opinion 1/2026 on the AI Omnibus and Joint Opinion 2/2026 on the Data Omnibus, holding that the personal-data definition change goes far beyond a targeted modification and would significantly narrow the concept, that the Art. 41a implementing-act power should not be entrusted to the Commission, and that Art. 88c is unnecessary.",
+      "statement": "The EDPB and EDPS adopted Joint Opinion 1/2026 on the AI Omnibus and Joint Opinion 2/2026 on the Data Omnibus, holding in the second that the personal-data definition change goes far beyond a targeted modification and would significantly narrow the concept, that the Art. 41a implementing-act power should not be entrusted to the Commission, and that Art. 88c is unnecessary.",
       "instruments": [
         "data-omnibus",
         "ai-omnibus",
@@ -3793,22 +3816,22 @@
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-edpb-jo-1-2026",
-          "supports": "supports:direct",
-          "locator": null
-        },
-        {
           "source_id": "src-edpb-jo-2-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Paras 17 ('significantly narrowing the concept of personal data') and 21 ('goes far beyond a targeted modification of the GDPR'); paras 23 and 25 (applying the definitions is for supervisory authorities; 'suggest deleting proposed Article 41a GDPR'); para 39 ('it is not necessary to add a specific provision to the GDPR on this point')"
+        },
+        {
+          "source_id": "src-edpb-jo-1-2026",
+          "supports": "supports:partial",
+          "locator": "Title page: Joint Opinion 1/2026 on the Digital Omnibus on AI, adopted on 20 January 2026"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-8",
       "published": "2026-01-20",
-      "last_verified": "2026-08-27",
-      "verification_note": "Both opinions are located. The specific quoted conclusions have not been checked against their text in this build. Retyped from fact to attributed on 27 Sep 2026: the statement reports what the European Data Protection Board and the European Data Protection Supervisor said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
-      "attributed_to": "the European Data Protection Board and the European Data Protection Supervisor, Joint Opinions 1/2026 and 2/2026"
+      "last_verified": "2026-09-27",
+      "verification_note": "Both opinions read on 27 Sep 2026 in the PDFs the EDPB publishes. The three positions are all in Joint Opinion 2/2026 (adopted 10 February 2026); Joint Opinion 1/2026 (adopted 20 January 2026) concerns the AI Omnibus and supports only its own adoption, so it is recorded as partial. Corrected that day: the statement and the brief read as though both opinions held all three positions. 'Should not be entrusted to the Commission' paraphrases para 23 (it 'should be the competence of supervisory authorities, under the control of the competent courts, to apply the definitions of the GDPR') and para 25 (delete Art. 41a). Retyped from fact to attributed on 27 Sep 2026: the statement reports what the European Data Protection Board and the European Data Protection Supervisor said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
+      "attributed_to": "the European Data Protection Board and the European Data Protection Supervisor, Joint Opinion 2/2026 on the Digital Omnibus (10 February 2026)"
     },
     {
       "id": "clm-data-omnibus-stalled",
@@ -3832,19 +3855,19 @@
         {
           "source_id": "src-icle-omnibus-2026-06",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Paragraph citing 'Council document 9547/26' of 21 May: the compromise 'deletes three of the Commission's four principal GDPR reforms'"
         },
         {
           "source_id": "src-ppcland-omnibus-2026-09",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Sections 'The clause, line by line' (ST 12535/26, 3 September 2026; the AI clause renumbered Article 88 bis) and 'Personal data after the SRB judgment' (new Article 25a)"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-8",
       "published": "2026-07-08",
       "last_verified": "2026-09-26",
-      "verification_note": "No official Council document has been read directly (documents WK 11020/2026 ADD 4, ST 9547/26 and ST 12535/26 are cited via commentary and specialist press reporting on leaked restricted texts, not via the Council's own register). Highly time-sensitive: a Council mandate could form at any point. Re-verify before every publication."
+      "verification_note": "No official Council document has been read directly (documents WK 11020/2026 ADD 4, ST 9547/26 and ST 12535/26 are cited via commentary and specialist press reporting on leaked restricted texts, not via the Council's own register). Highly time-sensitive: a Council mandate could form at any point. Re-verify before every publication. Locators added 27 Sep 2026 for the ICLE and PPC Land articles, re-read that day; privacynext.eu reset the connection on two attempts, so the COREPER withdrawal was not re-read and its reference still has no locator."
     },
     {
       "id": "clm-noyb-omnibus-charter",
@@ -3951,7 +3974,7 @@
     {
       "id": "clm-cloud-ai-act-dual-basis",
       "type": "claim-type:law",
-      "statement": "The proposed Cloud and AI Development Act rests on a dual legal basis — Article 114 TFEU (internal market) and Article 173(3) TFEU (industrial competitiveness) — the first time industrial policy has been an explicit co-basis in this field.",
+      "statement": "The proposed Cloud and AI Development Act rests on a dual legal basis — Article 114 TFEU (internal market) and Article 173(3) TFEU (industrial competitiveness) — the same pairing on which the Chips Act (Regulation (EU) 2023/1781) already rests.",
       "instruments": [
         "cloud-ai-development-act",
         "tfeu"
@@ -3966,7 +3989,12 @@
         {
           "source_id": "src-council-cloud-ai-act-2026",
           "supports": "supports:direct",
-          "locator": "ST 10104/2026"
+          "locator": "ST 10104/2026, enclosing COM(2026) 502 final: explanatory memorandum, section 2 'Legal basis' (PDF p. 9: 'the cumulative legal basis of Articles 114 and 173(3) TFEU'); citation of the proposed Regulation (PDF p. 16)"
+        },
+        {
+          "source_id": "src-eurlex-chips-act",
+          "supports": "supports:partial",
+          "locator": "Citation: 'Having regard to the Treaty on the Functioning of the European Union, and in particular Article 173(3) and Article 114 thereof'"
         },
         {
           "source_id": "src-ec-tech-sovereignty-2026",
@@ -3980,8 +4008,8 @@
       ],
       "brief_part": "part-10",
       "published": "2026-06-03",
-      "last_verified": "2026-08-27",
-      "verification_note": "The dual basis is directly sourced from the Council transmission document. The 'first time' characterisation is not sourced."
+      "last_verified": "2026-09-27",
+      "verification_note": "Corrected on 27 Sep 2026. The statement said the dual basis was 'the first time industrial policy has been an explicit co-basis in this field'. The Chips Act, Regulation (EU) 2023/1781 (OJ L 229, 18.9.2023, read that day via the Publications Office's Cellar), already rests on 'Article 173(3) and Article 114' TFEU, and the brief itself counts the Chips Act in the rulebook; the brief and its three translations now say so. The Cloud and AI Development Act's basis was re-read that day in the Council's transmission of COM(2026) 502 final (ST 10104/2026, 4 June 2026). The Commission's own proposal is not in the Publications Office's Cellar under CELEX 52026PC0502 as of that date."
     },
     {
       "id": "clm-sovereignty-vs-interoperability",
@@ -4294,9 +4322,32 @@
       "gap_note": "Article 51(1) of the Charter is the legal basis and is in the dataset; the data-retention case line (Digital Rights Ireland, Tele2, La Quadrature du Net) is not individually sourced here."
     },
     {
+      "id": "clm-edps-supervises-institutions",
+      "type": "claim-type:law",
+      "statement": "The EDPS supervises the EU institutions themselves: it is responsible for ensuring that Union institutions and bodies respect the right to data protection and for monitoring their application of data-protection law.",
+      "instruments": [],
+      "provisions": [],
+      "institutions": [
+        "edps"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-eudpr",
+          "supports": "supports:direct",
+          "locator": "Art. 52(2) and (3)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-11",
+      "published": "2018-11-21",
+      "last_verified": "2026-09-27",
+      "verification_note": "Split from clm-edps-opposes-commission on 27 Sep 2026 and read that day against the Official Journal text of Regulation (EU) 2018/1725 (OJ L 295, 21.11.2018, via the Publications Office's Cellar, CELEX 32018R1725). The instrument is not modelled in data/instruments.json, so no provision is linked."
+    },
+    {
       "id": "clm-edps-opposes-commission",
       "type": "claim-type:fact",
-      "statement": "The EDPS supervises the EU institutions themselves and has publicly opposed the Commission's own legislative proposals.",
+      "statement": "The EDPS has publicly opposed the Commission's own legislative proposals.",
       "instruments": [],
       "provisions": [],
       "institutions": [
@@ -4308,14 +4359,14 @@
         {
           "source_id": "src-edpb-jo-2-2026",
           "supports": "supports:direct",
-          "locator": null
+          "locator": "Paras 21 ('strongly urge the co-legislators to not adopt the proposed changes to the definition of personal data') and 25 ('suggest deleting proposed Article 41a GDPR')"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-11",
       "published": "2026-02",
-      "last_verified": "2026-09-26",
-      "verification_note": "The Joint Opinions on the Omnibus proposals directly evidence public opposition to Commission proposals. The judgment in C-413/23 P (EDPS v SRB, on pseudonymisation and identifiability) was removed on 2026-09-26 (audit T-30): it is litigation against an EU agency about the concept of personal data, not opposition to a Commission legislative proposal."
+      "last_verified": "2026-09-27",
+      "verification_note": "Split on 27 Sep 2026: the EDPS's supervisory role is now its own claim of law (clm-edps-supervises-institutions, Regulation (EU) 2018/1725, Art. 52). Read that day: Joint Opinion 2/2026 (adopted jointly with the EDPB on 10 February 2026) urges the co-legislators not to adopt the Commission's proposed change to the definition of personal data (para 21) and suggests deleting its proposed Art. 41a (para 25). The judgment in C-413/23 P (EDPS v SRB) was removed on 2026-09-26 (audit T-30): it is litigation against an EU agency about the concept of personal data, not opposition to a Commission legislative proposal."
     },
     {
       "id": "clm-ep-privacy-defender",
