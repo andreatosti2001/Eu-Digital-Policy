@@ -236,7 +236,7 @@
    "judicial": {
     "forum": "Tribunale di Roma",
     "date": "2026-03-18",
-    "outcome": "Voided on a pure jurisdiction point: once OpenAI established an Irish subsidiary, the Irish DPC became lead authority under the one-stop-shop. Nine months of investigative work produced no ruling on whether the conduct was lawful.",
+    "outcome": "Annulled on a preliminary, jurisdictional ground (as analysed by the European Law Blog; the judgment's text has not been read here): once OpenAI Ireland was recognised by the Irish DPC as OpenAI's single EEA establishment (15 February 2024), the DPC became lead authority under the one-stop-shop. Some twenty months of investigation, from March 2023 to the November 2024 decision, ended with no court ruling on whether the conduct was lawful.",
     "case_ref": "Tribunale di Roma, judgment no. 4153/2026 (R.G. 4785/2025)"
    },
    "timeline_events": [],
@@ -249,7 +249,7 @@
     "src-europeanlawblog-openai-rome"
    ],
    "requires_verification": true,
-   "verification_note": "Corrected 2026-09-27 from the Garante's own website. The decision is no. 755 of 2 November 2024 (doc-web 10085455); 20 December 2024, recorded here before, is the date of the Garante's press release announcing it (doc-web 10085432), which confirms the EUR 15 million fine, the six-month information campaign ordered under Art. 166(7) of the Italian Privacy Code, an investigation opened in March 2023, and the transfer of the file to the Irish DPC as lead authority once OpenAI established its European headquarters in Ireland. The same notice records that the Court of Rome's judgment no. 4153/2026, published 18 March 2026, upheld OpenAI's opposition. STILL OPEN: the judgment itself has not been read, so its ground — recorded as a jurisdiction point under the one-stop-shop — rests on academic analysis (European Law Blog). The judicial outcome's 'nine months of investigative work' does not match the Garante's account of an investigation opened in March 2023 and decided in November 2024; what the nine months measure is not established.",
+   "verification_note": "Corrected 2026-09-27 from the Garante's own website. The decision is no. 755 of 2 November 2024 (doc-web 10085455); 20 December 2024, recorded here before, is the date of the Garante's press release announcing it (doc-web 10085432), which confirms the EUR 15 million fine, the six-month information campaign ordered under Art. 166(7) of the Italian Privacy Code, an investigation opened in March 2023, and the transfer of the file to the Irish DPC as lead authority once OpenAI established its European headquarters in Ireland. The same notice records that the Court of Rome's judgment no. 4153/2026, published 18 March 2026, upheld OpenAI's opposition. STILL OPEN: the judgment itself has not been read, so its ground — recorded as a jurisdiction point under the one-stop-shop — rests on academic analysis (European Law Blog). CORRECTED 27 Sep 2026: the judicial outcome and the Part II prose (all four languages) said 'nine months of investigative work', which the Garante's own account contradicts — the investigation opened in March 2023 and the decision is of 2 November 2024, some twenty months. Both now say so. (Nine months is roughly the span from OpenAI Ireland's recognition, 15 February 2024, to the decision; the text did not say that, so it is not kept.)",
    "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:decided",
