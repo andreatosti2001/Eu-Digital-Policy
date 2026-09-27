@@ -336,9 +336,12 @@
           "instrument": "cra",
           "role": "role:coordinates",
           "exclusive": false,
-          "scope": "Single reporting platform for actively exploited vulnerabilities.",
-          "basis": [],
-          "note": "requires verification: ENISA's precise CRA role is not established from a primary source in this build."
+          "scope": "Establishes, manages and maintains the single reporting platform; receives manufacturers' notifications alongside the coordinating CSIRT.",
+          "basis": [
+            "cra:art-14",
+            "cra:art-16"
+          ],
+          "note": "Verified 27 Sep 2026 against CRA Arts 14(1) and 16(1) in the Official Journal (CELEX 32024R2847)."
         }
       ],
       "claims": [],
@@ -825,9 +828,11 @@
           "instrument": "dora",
           "role": "role:supervises",
           "exclusive": false,
-          "scope": "Oversight framework for critical ICT third-party service providers.",
-          "basis": [],
-          "note": "requires verification: the precise allocation of the DORA oversight framework between the three ESAs is not established from a primary source in this build."
+          "scope": "Designate critical ICT third-party service providers through the Joint Committee; the ESA responsible for the financial entities with the largest share of total assets among a provider's users is its Lead Overseer.",
+          "basis": [
+            "dora:art-31"
+          ],
+          "note": "Verified 27 Sep 2026 against DORA Art. 31(1) in the Official Journal (CELEX 32022R2554)."
         }
       ],
       "claims": [],

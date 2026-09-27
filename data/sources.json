@@ -713,6 +713,34 @@
       "note": "Read on 27 Sep 2026 with the memorandum it accompanies (whitehouse.gov/presidential-actions/2025/02/defending-american-companies-and-innovators-from-overseas-extortion-and-unfair-fines-and-penalties/). The fact sheet names the DMA and DSA as regulations that 'will face scrutiny from the Administration'; the memorandum's own text does not name them. Recorded at tier 2 as the US executive's own statement; it is evidence of the US position, not of EU law."
     },
     {
+      "id": "src-eurlex-dga",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2022/868 of 30 May 2022 on European data governance (Data Governance Act) (OJ L 152, 3.6.2022, p. 1)",
+      "url": "http://publications.europa.eu/resource/celex/32022R0868",
+      "url_status": "url:live",
+      "published": "2022-06-03",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 38: entry into force on the twentieth day following publication; applies from 24 September 2023."
+    },
+    {
+      "id": "src-eurlex-eprivacy",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Directive 2002/58/EC of 12 July 2002 concerning the processing of personal data and the protection of privacy in the electronic communications sector (OJ L 201, 31.7.2002, p. 37)",
+      "url": "http://publications.europa.eu/resource/celex/32002L0058",
+      "url_status": "url:live",
+      "published": "2002-07-31",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Read from the PDF of the original text: Art. 17(1), transposition before 31 October 2003; Art. 20, entry into force on the day of publication."
+    },
+    {
       "id": "src-cjeu-c623-17",
       "tier": "tier:1",
       "type": "source-type:judgment",
@@ -2077,11 +2105,11 @@
       "url": null,
       "url_status": "url:none",
       "published": null,
-      "accessed": "2026-08-27",
+      "accessed": "2026-09-27",
       "language": "en",
       "note": "Referenced by the brief. Specific publication and URL not yet identified.",
       "resolution": "publication-not-identified",
-      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved."
+      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved. 27 Sep 2026: a web search returns CDT's 'EU AI Act Brief – Pt. 2, Privacy & Surveillance' (https://cdt.org/insights/eu-ai-act-brief-pt-2-privacy-surveillance/) as the likely publication, but cdt.org answered with a Cloudflare block and it could not be opened, so it is not recorded as this source's URL."
     },
     {
       "id": "src-us-house-judiciary-dsa-2025",
@@ -2089,15 +2117,13 @@
       "type": "source-type:report",
       "publisher": null,
       "publisher_name": "US House Judiciary Committee",
-      "title": "Staff report on the Digital Services Act and global censorship",
-      "url": null,
-      "url_status": "url:none",
-      "published": "2025-07",
-      "accessed": "2026-08-27",
+      "title": "The Foreign Censorship Threat: How the European Union's Digital Services Act Compels Global Censorship and Infringes on American Free Speech (Interim Staff Report)",
+      "url": "https://judiciary.house.gov/sites/evo-subsites/republicans-judiciary.house.gov/files/2025-07/DSA_Report%26Appendix%2807.25.25%29.pdf",
+      "url_status": "url:live",
+      "published": "2025-07-25",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "Referenced by the brief. URL not yet identified.",
-      "resolution": "url-not-located",
-      "resolution_note": "The publication is identified (staff report, July 2025) but no stable public URL was located during this build."
+      "note": "Located and opened on 27 Sep 2026 (145-page PDF with appendix): interim staff report of the Committee on the Judiciary of the US House of Representatives, dated 25 July 2025. A partisan committee report (published on the Committee Republicans' site), recorded as evidence of the US congressional position, not of EU law."
     },
     {
       "id": "src-edpb-guidelines-3-2025",

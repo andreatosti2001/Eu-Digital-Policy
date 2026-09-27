@@ -27,9 +27,9 @@
    "sources": [
     "src-eurlex-gdpr"
    ],
-   "requires_verification": true,
-   "verification_note": "Entry-into-force date taken from general knowledge of the instrument, not confirmed against the consolidated EUR-Lex text in this build. Confirm before display.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "Art. 99(1): entry into force on the twentieth day following publication (OJ L 119, 4.5.2016). Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32016R0679). The Publications Office's metadata records the same date. Earlier: Entry-into-force date taken from general knowledge of the instrument, not confirmed against the consolidated EUR-Lex text in this build. Confirm before display.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-gdpr-2018-05-25-application",
@@ -56,9 +56,9 @@
    "sources": [
     "src-eurlex-gdpr"
    ],
-   "requires_verification": true,
-   "verification_note": "Application date taken from general knowledge, not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "Art. 99(2): 'It shall apply from 25 May 2018.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32016R0679). The Publications Office's metadata records the same date. Earlier: Application date taken from general knowledge, not confirmed against the consolidated text in this build.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-dma-2024-03-07-compliance",
@@ -119,11 +119,12 @@
     "clm-gdpr-procedural-regulation"
    ],
    "sources": [
+    "src-eurlex-gdpr-procedural",
     "src-eucrim-gdpr-procedural-2026"
    ],
-   "requires_verification": true,
-   "verification_note": "Date confirmed by eucrim, a specialist academic newsletter reporting the Official Journal reference; the EUR-Lex consolidated text could not be retrieved directly in this environment.",
-   "last_verified": "2026-09-26"
+   "requires_verification": false,
+   "verification_note": "Art. 37(1): entry into force on the twentieth day following publication (OJ L 2025/2518, 12.12.2025). Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32025R2518). The Publications Office's metadata records the same date. Earlier: Date confirmed by eucrim, a specialist academic newsletter reporting the Official Journal reference; the EUR-Lex consolidated text could not be retrieved directly in this environment.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-cra-2026-06-11-application",
@@ -147,11 +148,11 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-cra-text-unofficial-art71"
+    "src-eurlex-cra"
    ],
-   "requires_verification": true,
-   "verification_note": "Added on 2026-09-26 (audit T-29) from Art. 71(2), read from an unofficial reproduction of the text because EUR-Lex returns HTTP 202 with no body here. Not yet checked against the Official Journal.",
-   "last_verified": "2026-09-26"
+   "requires_verification": false,
+   "verification_note": "Art. 71(2), second subparagraph: 'Chapter IV (Articles 35 to 51) shall apply from 11 June 2026.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32024R2847), replacing the unofficial reproduction relied on until then. The Publications Office's metadata records the same date. Earlier: Added on 2026-09-26 (audit T-29) from Art. 71(2), read from an unofficial reproduction of the text because EUR-Lex returns HTTP 202 with no body here. Not yet checked against the Official Journal.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-gdpr-procedural-2027-04-02-application",
@@ -178,11 +179,12 @@
     "clm-gdpr-procedural-regulation"
    ],
    "sources": [
+    "src-eurlex-gdpr-procedural",
     "src-eucrim-gdpr-procedural-2026"
    ],
-   "requires_verification": true,
-   "verification_note": "Date confirmed by eucrim, a specialist academic newsletter reporting the Official Journal reference; the EUR-Lex consolidated text could not be retrieved directly in this environment.",
-   "last_verified": "2026-09-26"
+   "requires_verification": false,
+   "verification_note": "Art. 37(2): 'This Regulation shall apply from 2 April 2027'; Art. 36 for the investigation chapters. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32025R2518). The Publications Office's metadata records the same date. Earlier: Date confirmed by eucrim, a specialist academic newsletter reporting the Official Journal reference; the EUR-Lex consolidated text could not be retrieved directly in this environment.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-dma-2022-11-01-entry-into-force",
@@ -233,9 +235,9 @@
    "sources": [
     "src-eurlex-dsa"
    ],
-   "requires_verification": true,
-   "verification_note": "Not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "Art. 93(1): entry into force on the twentieth day following publication (OJ L 277, 27.10.2022). Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022R2065). The Publications Office's metadata records the same date. Earlier: Not confirmed against the consolidated text in this build.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-cer-2023-01-16-entry-into-force",
@@ -259,9 +261,9 @@
    "sources": [
     "src-eurlex-cer"
    ],
-   "requires_verification": true,
-   "verification_note": "Assumed to share the NIS2 entry-into-force date as a companion directive. Not confirmed in this build.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "Art. 28: entry into force on the twentieth day following publication (OJ L 333, 27.12.2022). Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022L2557). The date is the CER Directive's own, not assumed from NIS2. The Publications Office's metadata records the same date. Earlier: Assumed to share the NIS2 entry-into-force date as a companion directive. Not confirmed in this build.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-dora-2023-01-16-entry-into-force",
@@ -286,9 +288,9 @@
    "sources": [
     "src-eurlex-dora"
    ],
-   "requires_verification": true,
-   "verification_note": "The EUR-Lex document record consulted in this build reported 17 January 2025 in the field scraped for entry into force, which is DORA's application date. Confirm the entry-into-force date against the consolidated text.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "Art. 64, first paragraph: entry into force on the twentieth day following publication (OJ L 333, 27.12.2022); the second paragraph sets application on 17 January 2025. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022R2554). The Publications Office's metadata records the same date. Earlier: The EUR-Lex document record consulted in this build reported 17 January 2025 in the field scraped for entry into force, which is DORA's application date. Confirm the entry-into-force date against the consolidated text.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-nis2-2023-01-16-entry-into-force",
@@ -343,12 +345,11 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-eurlex-dma",
-    "src-dma-text-unofficial-art54"
+    "src-eurlex-dma"
    ],
-   "requires_verification": true,
-   "verification_note": "Corrected on 2026-09-26 (audit T-29): Art. 54 says the Regulation applies from 2 May 2023, so day precision; the brief's 'May 2023' (month precision, stored as the 1st) is replaced. Read from an unofficial reproduction of the text, since EUR-Lex returns HTTP 202 with no body here; not yet checked against the Official Journal. The event ID keeps '05-01' because IDs are never renamed.",
-   "last_verified": "2026-09-26"
+   "requires_verification": false,
+   "verification_note": "Art. 54, second paragraph: 'It shall apply from 2 May 2023.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022R1925). The event ID keeps '05-01' because IDs are never renamed. The Publications Office's metadata records the same date. Earlier: Corrected on 2026-09-26 (audit T-29): Art. 54 says the Regulation applies from 2 May 2023, so day precision; the brief's 'May 2023' (month precision, stored as the 1st) is replaced. Read from an unofficial reproduction of the text, since EUR-Lex returns HTTP 202 with no body here; not yet checked against the Official Journal. The event ID keeps '05-01' because IDs are never renamed.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-dsa-2023-08-01-application",
@@ -377,13 +378,13 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original",
+    "src-eurlex-dsa",
     "src-ec-vlop-designation-2023",
     "src-op-dsa-vlop-2023-08-25"
    ],
-   "requires_verification": true,
-   "verification_note": "Corrected on 2026-09-26 (audit T-29): the first VLOPs and VLOSEs, designated on 25 April 2023 with four months to comply (IP/23/2413), became bound on 25 August 2023 (data.europa.eu news item of that date). Day precision replaces the month. The event ID keeps '08-01' because IDs are never renamed.",
-   "last_verified": "2026-09-26"
+   "requires_verification": false,
+   "verification_note": "Art. 92: the Regulation applies to designated VLOPs and VLOSEs 'from four months after the notification' of designation; the first designations were announced on 25 April 2023 (IP/23/2413, re-read 27 Sep 2026: 'within four months'), hence 25 August 2023. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022R2065). The event ID keeps '08-01' because IDs are never renamed. Earlier: Corrected on 2026-09-26 (audit T-29): the first VLOPs and VLOSEs, designated on 25 April 2023 with four months to comply (IP/23/2413), became bound on 25 August 2023 (data.europa.eu news item of that date). Day precision replaces the month. The event ID keeps '08-01' because IDs are never renamed.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-data-act-2024-01-11-entry-into-force",
@@ -406,12 +407,11 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original",
     "src-eurlex-data-act"
    ],
-   "requires_verification": true,
-   "verification_note": "Date stated by the brief; not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "Art. 50, first paragraph: entry into force on the twentieth day following publication (OJ L 2023/2854, 22.12.2023). Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32023R2854). The Publications Office's metadata records the same date. Earlier: Date stated by the brief; not confirmed against the consolidated text in this build.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-dsa-2024-02-17-application",
@@ -440,9 +440,9 @@
    "sources": [
     "src-eurlex-dsa"
    ],
-   "requires_verification": true,
-   "verification_note": "Not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "Art. 93(2): 'This Regulation shall apply from 17 February 2024.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022R2065). The Publications Office's metadata gives 2022-02-17 for this milestone, an evident typing error; the Official Journal text governs. Earlier: Not confirmed against the consolidated text in this build.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-ai-act-2024-08-01-entry-into-force",
@@ -495,12 +495,12 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original",
+    "src-eurlex-cer",
     "src-ec-cer-referral-2026"
    ],
-   "requires_verification": true,
-   "verification_note": "The 17 October 2024 deadline is confirmed by the Commission's referral press release IP/26/910 (29 April 2026), read on 2026-09-26, which also records seven Member States still not transposed.",
-   "last_verified": "2026-09-26"
+   "requires_verification": false,
+   "verification_note": "Art. 26(1): 'By 17 October 2024, Member States shall adopt and publish the measures necessary to comply with this Directive'; they apply them from 18 October 2024. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022L2557). Earlier: The 17 October 2024 deadline is confirmed by the Commission's referral press release IP/26/910 (29 April 2026), read on 2026-09-26, which also records seven Member States still not transposed.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-nis2-2024-10-17-transposition",
@@ -760,12 +760,11 @@
     "clm-data-act-switching-numbers"
    ],
    "sources": [
-    "src-brief-original",
     "src-eurlex-data-act"
    ],
-   "requires_verification": true,
-   "verification_note": "Date stated by the brief; not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "Art. 50, second paragraph: 'It shall apply from 12 September 2025.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32023R2854). The Publications Office's metadata records the same date. Earlier: Date stated by the brief; not confirmed against the consolidated text in this build.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-dsa-2025-10-29-delegated-act",
@@ -1113,13 +1112,11 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original",
-    "src-eurlex-cra",
-    "src-cra-text-unofficial-art71"
+    "src-eurlex-cra"
    ],
-   "requires_verification": true,
-   "verification_note": "The date passed on 11 September 2026. Art. 71(2) read on 2026-09-26 from an unofficial reproduction of the text: Article 14 (reporting obligations) applies from 11 September 2026. Not yet checked against the Official Journal.",
-   "last_verified": "2026-09-26"
+   "requires_verification": false,
+   "verification_note": "Art. 71(2), second subparagraph: 'Article 14 shall apply from 11 September 2026.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32024R2847). The Publications Office's metadata records the same date. Earlier: The date passed on 11 September 2026. Art. 71(2) read on 2026-09-26 from an unofficial reproduction of the text: Article 14 (reporting obligations) applies from 11 September 2026. Not yet checked against the Official Journal.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-data-act-2026-09-12-application",
@@ -1149,12 +1146,11 @@
     "clm-data-act-art-3-application"
    ],
    "sources": [
-    "src-brief-original",
     "src-eurlex-data-act"
    ],
-   "requires_verification": true,
-   "verification_note": "Art. 50 read on 2026-09-26 from an unofficial reproduction of the text: Art. 3(1) applies to connected products and related services placed on the market after 12 September 2026. Not yet checked against the Official Journal text.",
-   "last_verified": "2026-09-26"
+   "requires_verification": false,
+   "verification_note": "Art. 50, third paragraph: the Art. 3(1) obligation applies to connected products and related services placed on the market after 12 September 2026. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32023R2854). The Publications Office's metadata records the same date. Earlier: Art. 50 read on 2026-09-26 from an unofficial reproduction of the text: Art. 3(1) applies to connected products and related services placed on the market after 12 September 2026. Not yet checked against the Official Journal text.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-dma-2026-11-01-designation",
@@ -1255,6 +1251,34 @@
    "last_verified": "2026-08-27"
   },
   {
+   "id": "tl-pld-2026-12-09-transposition",
+   "date": "2026-12-09",
+   "date_precision": "precision:day",
+   "event_type": "event:transposition",
+   "instrument": "pld",
+   "provisions": [],
+   "affected_actors": [
+    "actor:member-state"
+   ],
+   "sectors": [
+    "sector:cross-sector"
+   ],
+   "obligation": "Member States must bring into force the laws, regulations and administrative provisions needed to comply with the revised Product Liability Directive.",
+   "required_action": null,
+   "authority": [
+    "member-states"
+   ],
+   "status": "scheduled",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-pld"
+   ],
+   "requires_verification": false,
+   "verification_note": "Art. 22(1) of Directive (EU) 2024/2853: 'by 9 December 2026'. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32024L2853).",
+   "last_verified": "2026-09-27"
+  },
+  {
    "id": "tl-data-act-2027-01-12-application",
    "date": "2027-01-12",
    "date_precision": "precision:day",
@@ -1278,12 +1302,11 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original",
     "src-eurlex-data-act"
    ],
-   "requires_verification": true,
-   "verification_note": "Date stated by the brief; not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "Art. 29(1): 'From 12 January 2027, providers of data processing services shall not impose any switching charges on the customer for the switching process.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32023R2854). Earlier: Date stated by the brief; not confirmed against the consolidated text in this build.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-dma-2027-05-01-market-investigation",
@@ -1338,12 +1361,11 @@
     "clm-data-act-retroactivity-open"
    ],
    "sources": [
-    "src-brief-original",
     "src-eurlex-data-act"
    ],
-   "requires_verification": true,
-   "verification_note": "Date stated by the brief; not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "Art. 50, sixth paragraph: Chapter IV applies from 12 September 2027 to contracts concluded on or before 12 September 2025 that are of indefinite duration or due to expire at least ten years from 11 January 2024. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32023R2854). The Publications Office's metadata records the same date. Earlier: Date stated by the brief; not confirmed against the consolidated text in this build.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-ai-act-2027-12-02-application",
@@ -1404,12 +1426,11 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-brief-original",
     "src-eurlex-cra"
    ],
-   "requires_verification": true,
-   "verification_note": "Date stated by the brief; not confirmed against the consolidated text in this build.",
-   "last_verified": "2026-08-27"
+   "requires_verification": false,
+   "verification_note": "Art. 71(2), first subparagraph: 'This Regulation shall apply from 11 December 2027.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32024R2847). The Publications Office's metadata records the same date. Earlier: Date stated by the brief; not confirmed against the consolidated text in this build.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-ai-act-2028-08-02-application",
@@ -1471,11 +1492,11 @@
    "supersedes": null,
    "claims": [],
    "sources": [
-    "src-aia-text-unofficial-arts-111-113"
+    "src-eurlex-ai-omnibus"
    ],
-   "requires_verification": true,
-   "verification_note": "Added on 2026-09-26 (audit T-29) from Art. 111(2) as amended, read from an unofficial explorer of the text, not the Official Journal. The Digital Omnibus changed the cut-off for 'already on the market' systems; the 2 August 2030 date is unchanged in both versions shown.",
-   "last_verified": "2026-09-26"
+   "requires_verification": false,
+   "verification_note": "Art. 111(2) of the AI Act as replaced by Regulation (EU) 2026/1744, Art. 1, point (39)(a): providers and deployers of high-risk AI systems intended to be used by public authorities 'shall take the necessary steps to comply ... by 2 August 2030'. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32026R1744), replacing the unofficial explorer relied on until then. Earlier: Added on 2026-09-26 (audit T-29) from Art. 111(2) as amended, read from an unofficial explorer of the text, not the Official Journal. The Digital Omnibus changed the cut-off for 'already on the market' systems; the 2 August 2030 date is unchanged in both versions shown.",
+   "last_verified": "2026-09-27"
   },
   {
    "id": "tl-gdpr-2016-04-27-adoption",
@@ -1530,6 +1551,32 @@
    "requires_verification": false,
    "verification_note": "Read on 27 Sep 2026 from the Official Journal text (English), retrieved that day from the Publications Office's Cellar by CELEX 32016R0679: the Official Journal header is dated 4.5.2016 (OJ L 119/1). The recorded entry into force, 2016-05-24, is consistent with the act's own entry-into-force clause counted from this date.",
    "last_verified": "2026-09-27"
+  },
+  {
+   "date_precision": "precision:day",
+   "provisions": [],
+   "affected_actors": [
+    "actor:public-authority"
+   ],
+   "sectors": [
+    "sector:cross-sector"
+   ],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-dga"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-09-27",
+   "id": "tl-dga-2022-06-23-entry-into-force",
+   "date": "2022-06-23",
+   "event_type": "event:entry-into-force",
+   "instrument": "dga",
+   "obligation": null,
+   "verification_note": "Art. 38, first paragraph: entry into force on the twentieth day following publication (OJ L 152, 3.6.2022). Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022R0868). The Publications Office's metadata records the same date."
   },
   {
    "id": "tl-dma-2022-09-14-adoption",
@@ -1794,6 +1841,32 @@
    "requires_verification": false,
    "verification_note": "Read on 27 Sep 2026 from the Official Journal text (English), retrieved that day from the Publications Office's Cellar by CELEX 32022R2554: the Official Journal header is dated 27.12.2022 (OJ L 333/1). The recorded entry into force, 2023-01-16, is consistent with the act's own entry-into-force clause counted from this date.",
    "last_verified": "2026-09-27"
+  },
+  {
+   "date_precision": "precision:day",
+   "provisions": [],
+   "affected_actors": [
+    "actor:public-authority"
+   ],
+   "sectors": [
+    "sector:cross-sector"
+   ],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-dga"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-09-27",
+   "id": "tl-dga-2023-09-24-application",
+   "date": "2023-09-24",
+   "event_type": "event:application",
+   "instrument": "dga",
+   "obligation": "The Data Governance Act applies: rules on re-use of protected public-sector data, data intermediation services and data altruism.",
+   "verification_note": "Art. 38, second paragraph: 'It shall apply from 24 September 2023.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022R0868). The Publications Office's metadata records the same date. The obligation line summarises the Regulation's subject matter (Art. 1(1)) in the site's words."
   },
   {
    "id": "tl-data-act-2023-12-13-adoption",

@@ -515,16 +515,16 @@
       },
       "outcome": "outcome:applies",
       "rationale": "DORA has applied since 17 January 2025 as a Regulation, with no transposition patchwork. It governs ICT risk management, incident reporting, digital operational resilience testing and third-party risk arrangements for financial entities.",
-      "obligations": [],
+      "obligations": ["dora:art-5", "dora:art-6", "dora:art-17", "dora:art-19", "dora:art-24", "dora:art-28"],
       "authority": ["esas", "nca-*"],
       "dates": ["tl-dora-2025-01-17-application"],
       "exemptions": [],
       "depends_on": ["Which category of financial entity, which determines the proportionality of the requirements."],
       "claims": ["clm-directives-underperform"],
       "sources": ["src-eurlex-dora"],
-      "last_verified": "2026-08-27",
-      "requires_verification": true,
-      "verification_note": "No provisions are recorded for DORA in instruments.json, so this rule cannot yet point at specific articles. The obligation list is empty rather than invented."
+      "last_verified": "2026-09-27",
+      "requires_verification": false,
+      "verification_note": "Obligations point at DORA Arts 5, 6, 17, 19, 24 and 28, added on 27 Sep 2026 from the Official Journal text (CELEX 32022R2554); application from 17 January 2025 per Art. 64. Earlier: No provisions are recorded for DORA in instruments.json, so this rule cannot yet point at specific articles. The obligation list is empty rather than invented."
     },
     {
       "id": "ap-dora-02",
@@ -535,16 +535,16 @@
       },
       "outcome": "outcome:possible",
       "rationale": "An ICT provider serving financial entities is reached through the contractual requirements DORA imposes on its customers, and — if designated critical — directly through the ESA oversight framework.",
-      "obligations": [],
+      "obligations": ["dora:art-28", "dora:art-31"],
       "authority": ["esas"],
       "dates": ["tl-dora-2025-01-17-application"],
       "exemptions": [],
       "depends_on": ["Whether the provider is designated a critical ICT third-party service provider.", "Whether it serves financial entities at all."],
       "claims": [],
       "sources": ["src-eurlex-dora"],
-      "last_verified": "2026-08-27",
-      "requires_verification": true,
-      "verification_note": "The allocation of the DORA oversight framework between the three ESAs is not established from a primary source in this build."
+      "last_verified": "2026-09-27",
+      "requires_verification": false,
+      "verification_note": "The oversight allocation is now established: under DORA Art. 31(1) the ESAs designate critical ICT third-party service providers through the Joint Committee and appoint as Lead Overseer the ESA responsible for the financial entities holding the largest share of total assets among the provider's users (Official Journal, CELEX 32022R2554, read 27 Sep 2026). Earlier: The allocation of the DORA oversight framework between the three ESAs is not established from a primary source in this build."
     },
 
     {
@@ -556,16 +556,16 @@
       },
       "outcome": "outcome:likely",
       "rationale": "The Cyber Resilience Act sets horizontal cybersecurity requirements for products with digital elements across their lifecycle. Reporting of actively exploited vulnerabilities and serious incidents begins on 11 September 2026; full application follows on 11 December 2027.",
-      "obligations": [],
+      "obligations": ["cra:art-13", "cra:art-14"],
       "authority": ["nca-*", "enisa"],
       "dates": ["tl-cra-2026-09-11-reporting-deadline", "tl-cra-2027-12-11-application"],
       "exemptions": [],
       "depends_on": ["Whether the product is a product with digital elements within the Regulation's definition."],
       "claims": [],
       "sources": ["src-eurlex-cra"],
-      "last_verified": "2026-08-27",
-      "requires_verification": true,
-      "verification_note": "No provisions are recorded for the CRA in instruments.json, so this rule cannot yet point at specific articles."
+      "last_verified": "2026-09-27",
+      "requires_verification": false,
+      "verification_note": "Obligations point at CRA Arts 13 and 14, added on 27 Sep 2026 from the Official Journal text (CELEX 32024R2847); dates per Art. 71(2). Earlier: No provisions are recorded for the CRA in instruments.json, so this rule cannot yet point at specific articles."
     },
 
     {
@@ -594,17 +594,17 @@
         "activity": ["activity:digital-identity"]
       },
       "outcome": "outcome:possible",
-      "rationale": "Digital identity is governed by the European Digital Identity framework, which this dataset maps as adjacent rather than core. The brief does not analyse it, and no primary source has been consulted for this build.",
-      "obligations": [],
-      "authority": [],
+      "rationale": "Under the European Digital Identity framework (Regulation (EU) No 910/2014 as amended by Regulation (EU) 2024/1183), each Member State must provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts under Arts 5a(23) and 5c(6), which entered into force on 24 December 2024. This dataset maps the framework as adjacent: the brief does not analyse it, and the rule covers the wallet obligation only.",
+      "obligations": ["eidas2:art-5a"],
+      "authority": ["member-states"],
       "dates": [],
       "exemptions": [],
-      "depends_on": ["Everything. This instrument's status is not established in this dataset."],
-      "claims": [],
-      "sources": [],
-      "last_verified": null,
-      "requires_verification": true,
-      "verification_note": "PLACEHOLDER. Included so that selecting 'digital identity' does not silently return nothing, which a reader could mistake for non-applicability. The rule states its own emptiness rather than implying coverage."
+      "depends_on": ["Whether the organisation provides or relies on a European Digital Identity Wallet — the obligations on relying parties and trust service providers are not mapped here."],
+      "claims": ["clm-eidas2-wallets"],
+      "sources": ["src-eurlex-eidas2", "src-eurlex-eudi-2024-2981"],
+      "last_verified": "2026-09-27",
+      "requires_verification": false,
+      "verification_note": "Rebuilt on 27 Sep 2026 from the Official Journal texts of Regulation (EU) 2024/1183 (Art. 5a(1) as inserted) and Implementing Regulation (EU) 2024/2981; it replaces a placeholder that stated its own emptiness. Its scope is deliberately narrow: only the Member States' wallet obligation is mapped."
     },
 
     {
