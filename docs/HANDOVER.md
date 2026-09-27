@@ -1,5 +1,326 @@
 # HANDOVER
 
+**Last updated:** competences, Irish court records and prose corrections · 27 September 2026
+**Branch:** `claude/amazing-einstein-yrsu79`, cut from `origin/main` at `179c975` (PR #3's merge).
+**Open as pull request #4 to `main`** (opened on the author's instruction, 27 Sep 2026); not
+merged. `main` did not move during the session (re-fetched before this write).
+
+## Competences, Irish court records, prose corrections — 27 September 2026 (evening)
+
+**Asked:** "continue", "go on", under the standing instruction to reduce the backlog as far as
+possible, with permission to act on user-only blocks. `main` did not move (re-fetched before
+this write: `179c975`). Unverified **52 → 47**. Every commit carries an `Evidence:` trailer and
+passed validators, 25 suites and the browser suite locally.
+
+**Settled from primary sources:**
+- **Competences:** DSA supervision sits in DG CONNECT Directorate F; the powers are the
+  Commission's under DSA Art. 56(2)–(3), read in the OJ. The DMA is enforced by a joint
+  DG COMP–DG CONNECT team. DG COMP's "operational lead" was stronger than the source and is
+  replaced. No competence edge now carries a requires-verification note. Competence is a
+  human-only fact class; this was done under the author's permission.
+- **TikTok/DPC transfers:** read in the High Court's two approved judgments
+  (Record 2025/248 MCA):
+  - [2026] IEHC 347, 3 June 2026: the Art. 46(1) and 13(1)(f) findings and the decision to
+    fine stand; the court proposed to vacate the corrective orders and remit them.
+  - [2026] IEHC 419, 30 June 2026: a CJEU reference on the fine amount was proposed. The CJEU
+    register holds C-1009/26, lodged 11 Sep 2026, under the same parties' names; the link is
+    recorded as not established.
+  - **Correction:** the decision is dated 30 April 2025; 2 May was the announcement.
+- **AI Act minimal tier:** now only the Commission's own sentence, retyped as attributed.
+  - The Art. 4 AI-literacy duty is its own claim.
+  - The Part V thread no longer says the minimal tier has "no obligations" (four languages).
+- **April 2026 AI Omnibus trilogue:** sourced to Bird & Bird and the IAPP. It grades Secondary:
+  the Council's account returns 403 here.
+
+**Prose corrections (all four languages):**
+- OpenAI/Garante: "nine months of investigative work" contradicted the Garante's own account
+  (March 2023 to November 2024). It now says "some twenty months".
+- Data Act, Ireland:
+  - "host to a large share of Europe's cloud infrastructure" (no source gives a share) is now
+    "one of Europe's main data-centre hubs" (the KPMG report the Irish government published);
+  - "still in pre-legislative scrutiny in mid-2026" is now "by late September 2026 no Bill had
+    been introduced in the Oireachtas" (the parliament's register);
+  - the claim is atomized into three sourced facts plus the argument.
+
+**Kept flagged, with the reason recorded:**
+- **Meta/DPC transfers:** the DPC's Annual Report 2023 establishes the Irish statutory appeal
+  was brought, but no source read gives its current state.
+- **OpenAI:** the Rome judgment's text is still unread; commentary describes the reasoning,
+  published in June.
+- **NIS2/CER transposition:**
+  - The Commission's per-country NIS2 pages are dated July 2025.
+  - Its July 2026 release names only the four referred states.
+  - Reading the other 23 as complete from "most complied" would be the plausible-substitute
+    move §0 forbids.
+- **The CDT reference:** the brief names no publication, and a likely candidate is not a
+  source.
+- **The health metric's "narrower" count** had drifted to equal the canonical total, because
+  its hand-copied rule ignored derived claims. It now uses `openBacklog()`.
+
+**Local note:** running `node agent/detector/cli.mjs` wrote a git-ignored record store,
+`agent/records/`. That store makes the governance suite's P-07 anchor read 19 instead of 0 in
+this working tree. My attempt to delete it was blocked, so it is still there; the suite passes
+45/45 in a clean worktree. CI starts from a fresh clone and is unaffected.
+
+## After the CI decisions, 27 September 2026 — backlog, translations, hardening
+
+**Asked:** the same instruction, applied to what was left of the original brief. `main` did not
+move (re-fetched before this write: `179c975`). Unverified **62 → 56**; every commit below
+carries an `Evidence:` trailer and passed CI.
+
+**Evidence, from court records and primary texts.**
+- Appeals read in the Official Journal notices of the actions and confirmed pending in the
+  Court's register: Apple DMA fine (T-438/25), Meta DMA fine (T-435/25), X DSA fine (T-114/26,
+  T-120/26, T-121/26), the Commission's supervisory-fee appeals (C-744/25 P, C-745/25 P), Meta v
+  EDPB (T-325/23). New source type `source-type:court-record` (tier 2).
+- Amazon/CNPD verified against the Cour administrative's judgment itself (52757C): the decision
+  is annulled **in all its parts**, not only the fine; merits largely confirmed; injunctions moot.
+- **Corrections**:
+  - OpenAI/Garante: the decision is no. 755 of **2 November 2024**; 20 December 2024 was the
+    press release (Garante's own site).
+  - The fine-category claim: the CMS tracker's own data gives **three** categories at 94%, not
+    four (four make 98%). The prose is corrected in all four languages, and the claim is
+    re-typed as derived, with four sourced inputs.
+  - Annex A's caption and the Evidence page's method note both said every record shared one
+    verification date; they no longer do.
+- Draghi diagnosis verified (Part A, printed pp. 5 and 30). EDPB Guidelines 3/2025 located
+  (final v2, 17 Sep 2026).
+- **Still flagged, with the reason recorded:**
+  - Apple's behavioural outcome: it is the author's interpretation, and not what the Art. 5(4)
+    decision is about.
+  - Temu: T-536/26 Whaleco v Commission is registered, but its subject is not yet published.
+  - The Rome OpenAI judgment's text; Irish appeals of the DPC's Meta and TikTok decisions.
+  - 25 arguments (interpretation, critique) that no citation can settle.
+
+**Build.**
+- **Translations complete**: it/fr/es 427 of 427, rendered with 0 fallbacks. They are
+  AI-assisted and **not reviewed by a native speaker** (README limitation 5).
+- **CSP `style-src 'self'`**: no `'unsafe-inline'` for styles; the pixel comparison is
+  identical. Three guards stop inline styles coming back.
+- **Data-quality panels** on the Evidence page: backlog, dates, freshness, provenance. The
+  backlog rule has one home (`js/evidence-model.js openBacklog`), shared with `validate.mjs`.
+- **hreflang**: the brief lives at `?lang=it|fr|es`; alternates and sitemap entries come from
+  the register. Stated limit: the text is rendered by JavaScript.
+- **Accessibility-tree check**: it found the Contents button unnamed on phones, now fixed.
+
+**For the author:**
+- **Merging PR #4 publishes the site** — confirm before it happens.
+- The settings in `docs/DEPLOYMENT.md` §3: Pages source, branch protection.
+- A native-speaker read of the translations.
+- The October recheck of the Apple appeal.
+
+## The two red-by-decision CI jobs, 27 September 2026 — decided, and green
+
+**Asked:** "Stress them to reduce as much as possible, I give you permission to intervene
+whether there is a 'only user' block". That is the author's decision on the two items this
+repository had left to a person: HE-04 and the untraced write paths. Nothing was reclassified by
+editing a report; each was changed in what it measures, and each change has a test.
+
+- **HE-04 is rewritten, not silenced.** Its three path exclusions are gone; it searches the whole
+  tree and decides from `agent/production/separations.mjs`'s verdicts (`he04Verdict()`): a
+  `read_it` anywhere succeeds, a `no_path_found` is **partial**, only an all-cleared tree is safe.
+  It reports **partial (MEDIUM)** today — `agent/policy/selftest.mjs` and
+  `agent/policy/verify/attacks.mjs` can grant and hold the phrase, no path between them found.
+  The gate: 65 safe · 0 succeeded · 3 partial · 1 undecidable, exit 0. Its suite fails if a path
+  exclusion is re-added. `docs/PRODUCTION-OPERATING-MODE.md` §4a.
+- **A human commit is traceable.** `tools/commit-evidence.mjs`: a non-merge commit that changes a
+  published file carries an `Evidence:` trailer. It runs in `qa.yml` and first in the deploy
+  gate; commits older than the rule are not judged. **Every commit touching `data/`, a page,
+  `js/`, `css/`, `i18n/` from now on needs that trailer**, or CI goes red.
+- **A Control Room decision is traceable on a fresh clone.** A decision now records the proposal
+  itself (`proposal_snapshot`), used only when the working copy is gone and only if it still
+  hashes to `proposal_sha256`; a tampered snapshot voids the approval. Test R2 in
+  `agent/implement/selftest.mjs`.
+- **The adversarial gate is in the deploy gate** (`pages.yml` `gate-security`), and both jobs
+  can now be required on `main` (`docs/DEPLOYMENT.md` §3).
+- **Readiness: 17 of 20, still refused.** What blocks: no production dispatcher (activation,
+  protocol §24), no decision ever recorded (a person's), and whether `pages.yml` is what
+  publishes the site — now **unmeasurable** rather than a false "nothing gates the site".
+
+**What still needs the author, and why an agent cannot do it:** the Pages source and branch
+protection are repository settings (no tool here reaches them); a first Control Room decision
+must be a person's, or the ledger would record a decision nobody took; activating a production
+dispatcher is the step protocol §24 reserves to a person.
+
+## The next phase, 27 September 2026 — reading the primary texts behind the backlog
+
+**Asked:** open the pull request, then take the recommended next phase: the claims without a
+direct primary source, the unresolved grades, and whether Apple appealed the designation
+judgment. Every text below was read on 27 Sep 2026 (the Official Journal and the Court's
+judgments through the Publications Office's Cellar; the Court's register through InfoCuria's own
+search service; Parliament's Legislative Observatory; the Commission's and the CNIL's releases).
+
+**Measured, continuing the table below** (`tools/evidence-audit.mjs --as-of 2026-09-27`):
+
+| | end of the first half (`763f27a`) | now |
+|---|---:|---:|
+| Claims | 143 | 153 (splits into atomic claims; nothing removed) |
+| Graded primary law / unresolved | 47 / 20 | 61 / 13 |
+| Claims of law / derived | 53 / 2 | 62 / 3 |
+| Claims owing verification without a direct primary source | 23 | 16 |
+| Direct references without a usable locator | 10 | 2 |
+| Unverified records (`validate.mjs`, §12) | 104 | 97 |
+| Tests | 1221, 0 failing | 1221, 0 failing (one assertion added to H8) |
+
+**Seven statements the primary texts contradicted, now corrected** (brief, data, and every
+translation that carried them):
+
+1. *Regulation 2025/2518* "applies to complaints lodged from 2 April 2027": it applies from that
+   date (Art. 37), and its investigation chapters to complaints lodged **after** it (Art. 36); its
+   15/12-month limits are for the draft decision (Art. 12), not the investigation.
+2. *Privacy International* (C-623/17) was said to concern data retention; it concerns
+   **forwarding** data to intelligence agencies (operative part, point 1).
+3. *The AI Omnibus* "delayed the high-risk tier by sixteen months": true of Annex III only;
+   Annex I moved twelve (the claim record lagged the prose, which was right).
+4. *COM(2025) 837*, Art. 41a: it lets the Commission set **means and criteria** by implementing
+   acts, not "determine when" pseudonymised data stops being personal (en, it, fr, es).
+5. *The Cloud and AI Development Act*'s Art. 114 + 173(3) basis was "the first time" industrial
+   policy had been a co-basis in this field; **the Chips Act (Regulation 2023/1781) already rests
+   on both** (two passages, four languages).
+6. *EDPB–EDPS pushback*: all three positions are in Joint Opinion **2/2026**; 1/2026 held none.
+7. *Apple Art. 6(7) specification*: iPadOS belonged to the request-process decision, not to the
+   nine iOS connectivity features (IP/25/816).
+
+Also added: the GDPR rests on **Art. 16** TFEU, not Art. 114 — Part I now names it as the
+principal exception to "almost the entire rulebook".
+
+**Apple's appeal: still not established, and why.** The judgment (ECLI:EU:T:2026:451) is now the
+record's tier-1 source, with paragraph locators. The Court's register, whose index held cases
+lodged up to 25 Sep 2026, links **no appeal** to T-1079/23, T-1080/23 or T-214/24 and lists no
+case with Apple as a party lodged after 8 July 2026. The appeal period runs from notification,
+which the register does not show, so `appeal:unknown` stays; the observation is dated in
+`appeal.note`. **Recheck the register in October** before recording `appeal:not-lodged`.
+
+**What could not be read:** privacynext.eu (connection reset twice), the AlgorithmWatch page
+(a landing page without the text), the Council's press releases (HTTP 403), COM(2026) 502 in the
+Cellar (not held there on 27 Sep 2026; read in the Council's transmission instead). The collapsed
+AI Omnibus trilogue of 28 April is mentioned by no source read and is now its own claim with a
+reference gap.
+
+**Continued the same day, on the author's instruction ("continue with the remaining backlog"):**
+
+- **The DPC's share of the largest fines was out of date.** The brief said nine of the ten
+  largest GDPR fines were the DPC's. That was true on its date among fines still standing
+  (Luxembourg's EUR 746m on Amazon was annulled on 12 March 2026). On **21 August 2026 the
+  Dutch authority fined Uber EUR 824,990,000** (its own release; under appeal), which displaced
+  the DPC's EUR 225m on WhatsApp. Counted from the DPC's fines table, the Dutch releases and
+  CMS's database (3,275 cases) for completeness: **eight of ten**, the other two both Dutch
+  fines on Uber. Corrected in both passages and all four languages; the two Uber fines are
+  claims of their own. **They are not yet enforcement records** — adding the EUR 825m fine to
+  the observatory is the author's call.
+- **EHDS entry into force** is 25 March 2025 (OJ formula and the Publications Office's
+  metadata), not 26 March as the Commission's page and the brief said. The five other
+  instruments in Part I's "also in the rulebook" box were checked article by article (EMFA Art.
+  29, political advertising Art. 30, Platform Work Art. 29, eIDAS2 Art. 5a(1) with the five
+  implementing acts in force 24 December 2024) and each row is now its own claim of law.
+- **Official sources found:** the DPC Annual Report 2025 (headcount 295; three-person
+  Commission), the Irish government's General Scheme of the Data Bill 2025 (published 4 February
+  2026; CCPC and ComReg). **Not found, and recorded on the claim:** prezydent.pl (Cloudflare),
+  the Sejm API (fails mid-list), the Garante's search (needs JavaScript).
+- Now: 160 claims; primary 66, official 31, unresolved 13; direct references without a locator
+  2 of 138; unverified 97; 1221 tests, 0 failing.
+
+**The author's three decisions of 27 Sep 2026, carried out:**
+
+- **The two Dutch Uber fines are enforcement records** (`enf-uber-ap-2026`, EUR 824,990,000,
+  21 August 2026, Art. 22; `enf-uber-ap-2024`, EUR 290m), each `appeal:pending` per the
+  authority's own release, with a new institution record `dpa-nl` (Autoriteit Persoonsgegevens).
+- **Three `reference_gap` flags cleared** (`clm-charter-binds-member-states`,
+  `clm-icle-enforcement-architecture`, `clm-dpc-staff-growth`), each with the reason and the old
+  gap quoted in its note. **The fourth, `clm-dma-asymmetry`, was not cleared**: its gap is that no
+  formal US objection exists, only a memorandum, a fact sheet and a lawmakers' letter, and that
+  is still true. Reading the White House texts corrected the claim instead: the memorandum does
+  not name the DMA or DSA (its fact sheet does), and the brief's "objected formally" and "the US
+  Trade Representative said Section 301 action … was being prepared" had no source and are gone.
+- **The Apple appeal recheck is scheduled for 15 October 2026** (a Routine in this session). The
+  register query, for whoever runs it: POST
+  `https://infocuriaws.curia.europa.eu/elastic-connector/search` with a JSON body
+  `{"searchTerm":"\"T-1079/23\"","tabName":"affair","publishedId":"T-1079/23","isSearchExact":true,
+  "language":"EN","pagination":{"pageNumber":0,"pageSize":20},"sortTermList":[{"sortDirection":"DESC",
+  "sortTerm":"AFF_NUM","sortSourceTab":"affair"}],"multiSearchTerms":[],"advancedFiltersValue":[],
+  "isAllTabsRequest":true,"searchSources":["document","metadata"]}` and read `pourvoiAffIds`; the
+  service refuses a `HeadlessChrome` user agent and accepts one that names itself.
+
+**The Data Act's status** was re-read against Art. 50 and Art. 29 of the OJ text and its `status_as_of` moved to 27 Sep 2026: still partly applicable; the Art. 3(1) design obligation now applies to products placed on the market after 12 September 2026, the switching-charge ban from 12 January 2027. The audit's `STATUS_PREDATES_MILESTONE` warning is gone.
+
+**Model change (small, tested):** `parseQuantity` reads counts written as words
+("twenty-three"), so a derivation's input can read back out of the brief's prose. Used once:
+`clm-nis2-only-four-on-time` is now derived, 27 − 23 (the four not named are Belgium, Croatia,
+Italy and Lithuania).
+
+**For the author:** four claims carry a `reference_gap` flag and also a direct external source
+(`clm-charter-binds-member-states` and `clm-icle-enforcement-architecture`, sourced today;
+`clm-dpc-staff-growth` and `clm-dma-asymmetry`, earlier). Each gap note says what was missing;
+whether a source now closes it, and clearing the flag, is a person's decision.
+
+## The 27 September 2026 session — evidence model, Official Journal verification, deploy gate
+
+**Asked:** the author's master remediation prompt: claim ontology and evidence status, claim
+atomization and coverage, source and locator quality, regulatory-status and enforcement models,
+risk-based freshness, a CI deploy gate, security hardening, accessibility, SEO, documentation.
+
+**The one fact that changed what was possible.** This environment could reach the web. EUR-Lex
+still answers with a bot challenge, but the Publications Office's Cellar serves the Official
+Journal text by CELEX number (`docs/SOURCE-POLICY.md` §8). Every legal verification below was
+read from it on 27 Sep 2026 and names the CELEX number. Nothing was written from memory.
+
+### Measured, before → after (same tool, `tools/evidence-audit.mjs --as-of 2026-09-27`)
+
+| | before (`179c975`) | after |
+|---|---:|---:|
+| Substantive passages of the brief registered or classified | 64 of 169 (37.9%) | 167 of 167 (100%) |
+| Claims | 108 | 143 (31 registered for unrecorded prose; the DPC and Alliance Risk composites split) |
+| Claims of law | 26 | 53, each new one with an article locator read in the OJ |
+| Direct external references without a usable locator | 44 of 75 | 10 of 110 |
+| Graded primary law | 16 | 47 |
+| Derived / attributed / disputed claims | 0 / 0 / 0 | 2 / 10 / 1 |
+| Enforcement records that contradict themselves | 1 | 0 |
+| Instruments with adoption → OJ publication → entry into force | 0 | 11 |
+| Provisions with no recorded application date | 17 | 10 |
+| Unverified records (`validate.mjs`) | 111 | 104 |
+| `design-qa` warnings | 5 | 0 (inline handlers now an error) |
+| Tests | 1211, 2 failing | 1221, 0 failing, 25 suites |
+| Browser suite | 144 pass · 1 undecidable · 145 | 185 pass · 1 undecidable · 186 |
+
+### Decisions taken on the author's instruction that a person should review
+
+These are red-tier in `docs/AI-SAFE-BOUNDARIES.md`. They were done because the master prompt
+asked for them, each is in a commit with its reason, and each is reversible:
+
+- **Claim types changed.** Seven claims retyped `attributed` (they report what ICCL, ICLE,
+  Draghi, CISPE, the EDPB/EDPS or an unnamed practitioner said); `clm-dpc-share-of-fines`
+  retyped `derived`. The grading rules gained two grades (derived, attributed).
+- **Flags cleared, each after reading the Official Journal:** five provisions "recorded from
+  general knowledge"; two AI Act events "not confirmed against the text".
+- **Legal facts corrected against the OJ:** the NIS2 Art. 3 and AI Act Art. 3(63) summaries;
+  two sentences of prose (GDPR Art. 3(2) territorial scope; NIS2 Art. 34(4) sets floors, not
+  ceilings), with `part-1.p8` superseded in it/fr/es.
+- **`enf-apple-gc-2026-designation`** read `action:final` while its own appeal block said an
+  appeal was not established; it now reads `action:imposed`. Establishing whether Apple appealed
+  would settle it.
+- **Two governance anchors (P-05, P-06)** measured a live count of unmerged branches, which read
+  0 once the author closed them; they now anchor on the branch register.
+
+### What only the author can do
+
+1. **Switch Pages to GitHub Actions** (Settings → Pages → Source). Until then
+   `.github/workflows/pages.yml` gates nothing and a push to `main` publishes directly.
+2. **Protect `main`** with the required checks listed in `docs/DEPLOYMENT.md` §3.
+3. **Decide on a pull request** for this branch.
+
+### Still open (the audit reports each on every run)
+
+10 direct references without a usable locator (pages that could not be read here: a 403, landing
+pages without the text); 11 possibly composite claims; 23 claims without a direct primary source;
+20 claims graded unresolved; 104 unverified records; the Data Act's `status_as_of` predates its
+12 September 2026 application date; the adversarial gate (HE-04) and the production trace step
+remain red by decision, exactly as before. *(Superseded the same day: both are green — see the
+first section.)*
+
+---
+
+### The previous header (26 September 2026), kept as it was written
+
 **Last updated:** AUDIT-2026-09-25 remediation · 26 September 2026
 **Branch:** `claude/new-session-egb0gs`. It contains SESSION 30 (below) in full, and
 `claude/new-session-e5xmjm`. **Open as pull request #3 to `main`; not merged.** The branch
@@ -22,7 +343,17 @@ Neither is a regression, and both are a later session's to decide.
 **SESSION 30 is a single branch from `6da38ee`, with no sibling.** `AGENT_SUITES.length` is
 **24**, and the twenty-fourth entry is the first that is not under `agent/`.
 
+
 ---
+
+## Branch register — 27 September 2026
+
+`git branch -r --no-merged origin/main` lists one branch: `claude/amazing-einstein-yrsu79`, this
+session's, ahead of `main` (`179c975`), pushed, **open as pull request #4** (27 Sep 2026, on the
+author's instruction). Its CI matches `main`: every job green except the adversarial gate (HE-04)
+and the production trace step, red on `main` too and left red by decision (PR comment of 27 Sep).
+*Later that day both were made green on the author's decision (first section).* Everything the
+register below records was closed by the author on 26 September.
 
 ## Branch register — AUDIT-2026-09-25 T-40, measured 26 September 2026
 

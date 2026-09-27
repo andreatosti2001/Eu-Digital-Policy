@@ -293,3 +293,25 @@ repository is byte-identical afterwards.
 The workflow's final job prints what a green tick does **not** mean: it is not a deploy gate,
 the validators do not read prose, no URL has ever been fetched, no contrast was computed, and
 111 records still carry an unverified note.
+
+
+## 27 September 2026 — contrast, reduced motion, reflow
+
+The suite grew from 145 to 186 checks, and **`a11y:bound` narrowed rather than closed**:
+
+- **`a11y:contrast:<theme>:<page>`** computes WCAG 2.x contrast (4.5:1; 3:1 for large text)
+  for every visible text element, from its computed colour, alpha and ancestors' opacity,
+  composited over the solid backgrounds behind it, in both themes. Text over an image is
+  counted as not measured; text over the page's own faint gradient is measured against the
+  page colour and reported as such. **It found one real failure**: past milestones on the
+  instrument page were faded with `opacity:.72`, taking their text to 3.2–4.0:1 in both themes.
+  They now keep full contrast and say "past" instead.
+- **`a11y:reduced-motion:<page>`** emulates `prefers-reduced-motion: reduce` and fails on any
+  animation still running for longer than a frame.
+- **Viewports** now include 320px (WCAG 1.4.10 reflow — 1280px at 400% zoom) and 1024px, on
+  all seven pages. **It found one real failure**: the bibliography scrolled sideways by 8px at
+  320px (a grid track sized to a long citation, and a 200px search field). Fixed in
+  `css/tools.css`.
+
+Still not established, and `a11y:bound` says so on every run: no screen reader, no rendered
+pixels, one browser.

@@ -60,7 +60,8 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2022/2065, not an official text; Arts. 14 and 19 (same URL pattern) read on 2026-09-26. Art. 14(4): providers of intermediary services 'shall act in a diligent, objective and proportionate manner' in applying and enforcing restrictions, 'with due regard to the rights and legitimate interests of all parties involved, including the fundamental rights of the recipients of the service'. Art. 19: Section 3 (online platforms), except Art. 24(3), does not apply to micro or small enterprises (and for 12 months after they lose that status), but does apply to any provider designated a VLOP under Art. 33. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+      "note": "Privately published reproduction of Regulation (EU) 2022/2065, not an official text; Arts. 14 and 19 (same URL pattern) read on 2026-09-26. Art. 14(4): providers of intermediary services 'shall act in a diligent, objective and proportionate manner' in applying and enforcing restrictions, 'with due regard to the rights and legitimate interests of all parties involved, including the fundamental rights of the recipients of the service'. Art. 19: Section 3 (online platforms), except Art. 24(3), does not apply to micro or small enterprises (and for 12 months after they lose that status), but does apply to any provider designated a VLOP under Art. 33. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "reproduces": "src-eurlex-dsa"
     },
     {
       "id": "src-ec-vlop-designation-2023",
@@ -130,7 +131,8 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published explorer of Regulation (EU) 2024/1689, marking the Digital Omnibus amendments; not an official text. Art. 2 and Art. 4 pages (same URL pattern) read on 2026-09-26. Art. 2(3): the Regulation does not apply to AI systems where and in so far as they are placed on the market, put into service, or used with or without modification exclusively for military, defence or national security purposes. Art. 4(1), as amended: providers and deployers of AI systems shall take measures to support the development of AI literacy of their staff and others operating AI on their behalf, without being required to guarantee any specific level; new Art. 4(2)-(3) task the Commission, Member States and the Board with supporting it. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+      "note": "Privately published explorer of Regulation (EU) 2024/1689, marking the Digital Omnibus amendments; not an official text. Art. 2 and Art. 4 pages (same URL pattern) read on 2026-09-26. Art. 2(3): the Regulation does not apply to AI systems where and in so far as they are placed on the market, put into service, or used with or without modification exclusively for military, defence or national security purposes. Art. 4(1), as amended: providers and deployers of AI systems shall take measures to support the development of AI literacy of their staff and others operating AI on their behalf, without being required to guarantee any specific level; new Art. 4(2)-(3) task the Commission, Member States and the Board with supporting it. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "reproduces": "src-eurlex-ai-act"
     },
     {
       "id": "src-aia-text-unofficial-arts-111-113",
@@ -144,7 +146,8 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published explorer of Regulation (EU) 2024/1689 marking the Digital Omnibus amendments; not an official text. Read on 2026-09-26. Art. 113: applies from 2 August 2026; point (b) applies Chapter V and related chapters from 2 August 2025 'with the exception of Article 101'. Art. 101(1): the Commission may fine GPAI model providers up to 3% of worldwide turnover or EUR 15 000 000, whichever is higher. Art. 111(2): providers and deployers of high-risk AI systems intended to be used by public authorities shall comply by 2 August 2030. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+      "note": "Privately published explorer of Regulation (EU) 2024/1689 marking the Digital Omnibus amendments; not an official text. Read on 2026-09-26. Art. 113: applies from 2 August 2026; point (b) applies Chapter V and related chapters from 2 August 2025 'with the exception of Article 101'. Art. 101(1): the Commission may fine GPAI model providers up to 3% of worldwide turnover or EUR 15 000 000, whichever is higher. Art. 111(2): providers and deployers of high-risk AI systems intended to be used by public authorities shall comply by 2 August 2030. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "reproduces": "src-eurlex-ai-act"
     },
     {
       "id": "src-eurlex-data-act",
@@ -172,7 +175,8 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2023/2854, not an official text; the article index and the Art. 1 and Art. 50 pages (Data_Act_Article_N.html) read on 2026-09-26. Index: Chapter VI 'Switching between data processing services' is Arts. 23-31 (nine articles); the Regulation has fifty. Art. 1(2): covers personal and non-personal data. Art. 1(5): without prejudice to data-protection law; in a conflict, Union or national data-protection law prevails. Art. 50: applies from 12 September 2025; Art. 3(1) applies to connected products and related services placed on the market after 12 September 2026; Chapter IV applies to contracts concluded after 12 September 2025, and from 12 September 2027 to contracts concluded on or before that date if of indefinite duration or due to expire at least 10 years from 11 January 2024. No equivalent provision for Chapter VI. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+      "note": "Privately published reproduction of Regulation (EU) 2023/2854, not an official text; the article index and the Art. 1 and Art. 50 pages (Data_Act_Article_N.html) read on 2026-09-26. Index: Chapter VI 'Switching between data processing services' is Arts. 23-31 (nine articles); the Regulation has fifty. Art. 1(2): covers personal and non-personal data. Art. 1(5): without prejudice to data-protection law; in a conflict, Union or national data-protection law prevails. Art. 50: applies from 12 September 2025; Art. 3(1) applies to connected products and related services placed on the market after 12 September 2026; Chapter IV applies to contracts concluded after 12 September 2025, and from 12 September 2027 to contracts concluded on or before that date if of indefinite duration or due to expire at least 10 years from 11 January 2024. No equivalent provision for Chapter VI. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "reproduces": "src-eurlex-data-act"
     },
     {
       "id": "src-ec-data-act-faq-v1-4",
@@ -201,6 +205,20 @@
       "accessed": "2026-09-26",
       "language": "en",
       "note": "Law-firm analysis. States that the Data Act grants any in-scope customer a right to terminate regardless of the contract's terms, and that 'this also applies for contracts concluded before September 12, 2025, regardless of any previously agreed minimum contract period'. A practitioner reading, not guidance."
+    },
+    {
+      "id": "src-oireachtas-bills-2025-2026",
+      "tier": "tier:2",
+      "type": "source-type:report",
+      "publisher": null,
+      "publisher_name": "Houses of the Oireachtas",
+      "title": "Oireachtas legislation register — bills of 2025 and 2026 (open data API)",
+      "url": "https://api.oireachtas.ie/v1/legislation?bill_year=2026&limit=500",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Oireachtas's own register of bills, read through its open data API on 27 Sep 2026: 85 bills for 2025 and 92 for 2026 (the latter updated to 25 Sep 2026). Neither year contains a Data Bill, so the Data Bill whose General Scheme was published on 4 February 2026 had not been introduced in either House by that date. The 2026 list does contain the Regulation of Artificial Intelligence Bill 2026, recorded as enacted."
     },
     {
       "id": "src-matheson-ie-data-bill-2026",
@@ -242,7 +260,22 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Directive (EU) 2022/2555, not an official text; Arts. 20 and 32 (same URL pattern) read on 2026-09-26. Art. 20(1): management bodies of essential and important entities approve the Art. 21 risk-management measures, oversee their implementation and can be held liable for infringements by the entities of that Article. Art. 32(6): Member States ensure that natural persons responsible for or representing an essential entity can be held liable for breach of their duties to ensure compliance. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+      "note": "Privately published reproduction of Directive (EU) 2022/2555, not an official text; Arts. 20 and 32 (same URL pattern) read on 2026-09-26. Art. 20(1): management bodies of essential and important entities approve the Art. 21 risk-management measures, oversee their implementation and can be held liable for infringements by the entities of that Article. Art. 32(6): Member States ensure that natural persons responsible for or representing an essential entity can be held liable for breach of their duties to ensure compliance. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "reproduces": "src-eurlex-nis2"
+    },
+    {
+      "id": "src-cellar-nim-nis2-cer-2026-09-27",
+      "tier": "tier:2",
+      "type": "source-type:report",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union",
+      "title": "National implementing measures notified for Directive (EU) 2022/2555 (NIS2) and Directive (EU) 2022/2557 (CER) — Cellar, 27 September 2026",
+      "url": "https://publications.europa.eu/webapi/rdf/sparql",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026 through the Publications Office's SPARQL endpoint: every work whose CELEX begins 72022L2555 (NIS2) or 72022L2557 (CER), i.e. the national measures Member States have notified as transposing each directive (the list EUR-Lex shows under 'National transposition'). NIS2: 304 measures from 25 Member States; none from Ireland or Spain. CER: 219 measures from 24 Member States; none from Bulgaria, Spain or Sweden. A notified measure is not a finding of complete transposition — France and the Netherlands notified NIS2 measures and were still referred on 8 July 2026 — so these lists establish who has notified something, not who has finished. Query: SELECT ?celex WHERE { ?w cdm:resource_legal_id_celex ?celex . FILTER(STRSTARTS(STR(?celex), \"72022L2555\")) }."
     },
     {
       "id": "src-eurlex-cer",
@@ -312,7 +345,8 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2024/2847, not an official text; read on 2026-09-26. Art. 71(2): applies from 11 December 2027; Article 14 from 11 September 2026; Chapter IV (Articles 35 to 51) from 11 June 2026. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+      "note": "Privately published reproduction of Regulation (EU) 2024/2847, not an official text; read on 2026-09-26. Art. 71(2): applies from 11 December 2027; Article 14 from 11 September 2026; Chapter IV (Articles 35 to 51) from 11 June 2026. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "reproduces": "src-eurlex-cra"
     },
     {
       "id": "src-eurlex-pld",
@@ -341,6 +375,20 @@
       "accessed": "2026-08-27",
       "language": "en",
       "note": "Directly supports entry into force on 27 July 2026."
+    },
+    {
+      "id": "src-eurlex-gdpr-procedural",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2025/2518 of 26 November 2025 laying down additional procedural rules on the enforcement of Regulation (EU) 2016/679",
+      "url": "http://publications.europa.eu/resource/celex/32025R2518",
+      "url_status": "url:live",
+      "published": "2025-12-12",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number (the EUR-Lex HTML page answered with a bot challenge that day). The header reads OJ L of 12.12.2025; the enacting terms end \"Done at Strasbourg, 26 November 2025\" and provide for entry into force on the twentieth day following publication."
     },
     {
       "id": "src-op-ai-omnibus-record",
@@ -380,9 +428,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:52025PC0837",
       "url_status": "url:live",
       "published": "2025-11-19",
-      "accessed": "2026-08-27",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "A proposal, not law. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is informal shorthand used in this brief."
+      "note": "A proposal, not law. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is informal shorthand used in this brief. Text read on 27 Sep 2026 from the English PDF of the act held by the Publications Office's Cellar (the CELEX record's first document, 1_EN_ACT_part1_v9.pdf); Art. 3 amends the GDPR."
     },
     {
       "id": "src-cjeu-c413-23p",
@@ -413,6 +461,342 @@
       "note": null
     },
     {
+      "id": "src-eurlex-chips-act",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2023/1781 of 13 September 2023 establishing a framework of measures for strengthening Europe's semiconductor ecosystem (Chips Act) (OJ L 229, 18.9.2023, p. 1)",
+      "url": "http://publications.europa.eu/resource/celex/32023R1781",
+      "url_status": "url:live",
+      "published": "2023-09-18",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Read for its citation only: 'Having regard to the Treaty on the Functioning of the European Union, and in particular Article 173(3) and Article 114 thereof'. The instrument's status is not established from this reading."
+    },
+    {
+      "id": "src-eurlex-eudpr",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2018/1725 of 23 October 2018 on the protection of natural persons with regard to the processing of personal data by the Union institutions, bodies, offices and agencies (OJ L 295, 21.11.2018, p. 39)",
+      "url": "http://publications.europa.eu/resource/celex/32018R1725",
+      "url_status": "url:live",
+      "published": "2018-11-21",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 52 establishes the European Data Protection Supervisor and makes it responsible for monitoring the application of data-protection law by Union institutions and bodies."
+    },
+    {
+      "id": "src-eurlex-charter-art-51",
+      "tier": "tier:1",
+      "type": "source-type:legislative-document",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Charter of Fundamental Rights of the European Union, Article 51 (OJ C 202, 7.6.2016, p. 404)",
+      "url": "http://publications.europa.eu/resource/celex/12016P051",
+      "url_status": "url:live",
+      "published": "2016-06-07",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Charter text of Article 51 as published in the Official Journal, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Recorded as a legislative document because the source vocabulary has no treaty type."
+    },
+    {
+      "id": "src-cjeu-c293-12",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "Judgment of 8 April 2014, Digital Rights Ireland and Seitlinger and Others, Joined Cases C-293/12 and C-594/12, EU:C:2014:238",
+      "url": "http://publications.europa.eu/resource/celex/62012CJ0293",
+      "url_status": "url:live",
+      "published": "2014-04-08",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The judgment text (Grand Chamber, CELEX 62012CJ0293), retrieved on 27 Sep 2026 from the Publications Office's Cellar. Operative part: Directive 2006/24/EC is invalid."
+    },
+    {
+      "id": "src-cjeu-c203-15",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "Judgment of 21 December 2016, Tele2 Sverige and Watson and Others, Joined Cases C-203/15 and C-698/15, EU:C:2016:970",
+      "url": "http://publications.europa.eu/resource/celex/62015CJ0203",
+      "url_status": "url:live",
+      "published": "2016-12-21",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The judgment text (Grand Chamber, CELEX 62015CJ0203), retrieved on 27 Sep 2026 from the Publications Office's Cellar."
+    },
+    {
+      "id": "src-cjeu-c511-18",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "Judgment of 6 October 2020, La Quadrature du Net and Others, Joined Cases C-511/18, C-512/18 and C-520/18, EU:C:2020:791",
+      "url": "http://publications.europa.eu/resource/celex/62018CJ0511",
+      "url_status": "url:live",
+      "published": "2020-10-06",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The judgment text (Grand Chamber, CELEX 62018CJ0511), retrieved on 27 Sep 2026 from the Publications Office's Cellar."
+    },
+    {
+      "id": "src-cnil-google-2025",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": null,
+      "publisher_name": "Commission nationale de l'informatique et des libertés (CNIL)",
+      "title": "Cookies and advertisements inserted between emails: GOOGLE fined 325 million euros by the CNIL",
+      "url": "https://www.cnil.fr/en/cookies-and-advertisements-inserted-between-emails-google-fined-325-million-euros-cnil",
+      "url_status": "url:live",
+      "published": "2025-09-03",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The CNIL's English release of 3 September 2025 on its decision of 1 September 2025, read on 27 Sep 2026. States that cookie and electronic-prospecting operations fall under the ePrivacy rules (Article 82 of the French Data Protection Act; Article L. 34-5 CPCE), not the GDPR, so the one-stop-shop does not apply."
+    },
+    {
+      "id": "src-cnil-shein-2025",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": null,
+      "publisher_name": "Commission nationale de l'informatique et des libertés (CNIL)",
+      "title": "Cookies placed without consent: SHEIN fined 150 million euros by the CNIL",
+      "url": "https://www.cnil.fr/en/cookies-placed-without-consent-shein-fined-150-million-euros-cnil",
+      "url_status": "url:live",
+      "published": "2025-09-03",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The CNIL's English release of 3 September 2025 on its decision of 1 September 2025 against Infinite Styles Services Co. Limited, read on 27 Sep 2026. Article 82 of the French Data Protection Act; the one-stop-shop does not apply."
+    },
+    {
+      "id": "src-ap-uber-2026",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": null,
+      "publisher_name": "Autoriteit Persoonsgegevens (Dutch Data Protection Authority)",
+      "title": "Uber fined nearly 825 million euros for automated driver blocking",
+      "url": "https://www.autoriteitpersoonsgegevens.nl/en/current/uber-fined-nearly-825-million-euros-for-automated-driver-blocking",
+      "url_status": "url:live",
+      "published": "2026-08-21",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026. EUR 824,990,000 for fully automated deactivation of drivers (GDPR Art. 22) and insufficient information about it; lead authority under the one-stop-shop after a complaint lodged with the CNIL; 'Uber has filed an appeal against the fine.' Lists the earlier AP fines on Uber (EUR 600,000 in 2018, EUR 10m in 2023, EUR 290m in 2024)."
+    },
+    {
+      "id": "src-ap-uber-2024",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": null,
+      "publisher_name": "Autoriteit Persoonsgegevens (Dutch Data Protection Authority)",
+      "title": "Dutch DPA imposes a fine of 290 million euro on Uber because of transfers of drivers' data to the US",
+      "url": "https://www.autoriteitpersoonsgegevens.nl/en/current/dutch-dpa-imposes-a-fine-of-290-million-euro-on-uber-because-of-transfers-of-drivers-data-to-the-us",
+      "url_status": "url:live",
+      "published": "2024-08-26",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026. EUR 290 million under the GDPR for transfers of European drivers' data to the US without appropriate safeguards."
+    },
+    {
+      "id": "src-cms-enforcement-tracker-db",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "CMS",
+      "title": "GDPR Enforcement Tracker — case database",
+      "url": "https://www.enforcementtracker.com/",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The law firm's database of published fines, read on 27 Sep 2026 from the dataset embedded in the page (3,275 cases). Used only to check that no GDPR fine other than those the regulators' own pages record exceeds EUR 251 million. It omits the annulled EUR 746m Amazon fine and lists the French ePrivacy decisions alongside GDPR fines."
+    },
+    {
+      "id": "src-eurlex-emfa",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2024/1083 of 11 April 2024 establishing a common framework for media services in the internal market (European Media Freedom Act) (OJ L 2024/1083, 17.4.2024)",
+      "url": "http://publications.europa.eu/resource/celex/32024R1083",
+      "url_status": "url:live",
+      "published": "2024-04-17",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 29: applies from 8 August 2025; Art. 3 from 8 November 2024; Arts 4(1)-(2), 6(3), 7-13 and 28 from 8 February 2025; Arts 14-17 from 8 May 2025; Art. 20 from 8 May 2027."
+    },
+    {
+      "id": "src-eurlex-ttpa",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2024/900 of 13 March 2024 on the transparency and targeting of political advertising (OJ L 2024/900, 20.3.2024)",
+      "url": "http://publications.europa.eu/resource/celex/32024R0900",
+      "url_status": "url:live",
+      "published": "2024-03-20",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 30(2): applies from 10 October 2025; Art. 3 and Art. 5(1) from the date of entry into force."
+    },
+    {
+      "id": "src-eurlex-platform-work",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Directive (EU) 2024/2831 of 23 October 2024 on improving working conditions in platform work (OJ L 2024/2831, 11.11.2024)",
+      "url": "http://publications.europa.eu/resource/celex/32024L2831",
+      "url_status": "url:live",
+      "published": "2024-11-11",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 29(1): transposition by 2 December 2026."
+    },
+    {
+      "id": "src-eurlex-ehds",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2025/327 of 11 February 2025 on the European Health Data Space (OJ L 2025/327, 5.3.2025)",
+      "url": "http://publications.europa.eu/resource/celex/32025R0327",
+      "url_status": "url:live",
+      "published": "2025-03-05",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 105: applies from 26 March 2027, with staged dates in 2029 and 2031 for priority categories of personal electronic health data and EHR systems. The Publications Office's metadata records entry into force on 25 March 2025."
+    },
+    {
+      "id": "src-eurlex-eidas2",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2024/1183 of 11 April 2024 amending Regulation (EU) No 910/2014 as regards establishing the European Digital Identity Framework (OJ L 2024/1183, 30.4.2024)",
+      "url": "http://publications.europa.eu/resource/celex/32024R1183",
+      "url_status": "url:live",
+      "published": "2024-04-30",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Inserted Art. 5a(1): each Member State to provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts under Art. 5a(23) and Art. 5c(6)."
+    },
+    {
+      "id": "src-eurlex-eudi-2024-2981",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Commission Implementing Regulation (EU) 2024/2981 of 28 November 2024 as regards the certification of European Digital Identity Wallets",
+      "url": "http://publications.europa.eu/resource/celex/32024R2981",
+      "url_status": "url:live",
+      "published": "2024-12-04",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Adopted 'in particular' under Article 5c(6) of Regulation (EU) No 910/2014. The Publications Office's metadata records entry into force on 24 December 2024, as for Implementing Regulations 2024/2977, 2024/2979, 2024/2980 and 2024/2982 of the same date."
+    },
+    {
+      "id": "src-gov-ie-data-bill-2025",
+      "tier": "tier:2",
+      "type": "source-type:legislative-document",
+      "publisher": null,
+      "publisher_name": "Government of Ireland — Department of Enterprise, Tourism and Employment",
+      "title": "General Scheme of the Data Bill 2025",
+      "url": "https://www.gov.ie/en/department-of-enterprise-tourism-and-employment/publications/general-scheme-of-the-data-bill-2025/",
+      "url_status": "url:live",
+      "published": "2026-02-04",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The department's publication page, read on 27 Sep 2026 ('Published on: 4 February 2026', 'Last updated on: 10 July 2026'). Following government decisions of 8 October 2024 and 16 December 2025, the CCPC and ComReg are designated as competent authorities for the Data Act and the CCPC as Data Coordinator; the General Scheme empowers both to impose administrative financial sanctions. The General Scheme PDF itself was not opened."
+    },
+    {
+      "id": "src-dpc-annual-report-2025-pdf",
+      "tier": "tier:2",
+      "type": "source-type:report",
+      "publisher": "dpa-ie",
+      "publisher_name": "Data Protection Commission (Ireland)",
+      "title": "Data Protection Commission — Annual Report 2025",
+      "url": "https://www.dataprotection.ie/sites/default/files/uploads/2026-06/DPC-Annual-Report-2025-Digital-AW.pdf",
+      "url_status": "url:live",
+      "published": "2026-06-30",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The full report (140 pages), read on 27 Sep 2026. p. 5: the move 'from a one to three-person Commission' and staff 'increased to 295 by year end'; p. 115: 'By year-end 2025, the DPC had reached a total headcount of 295'; p. 119: 272 employees at the gender-pay-gap snapshot of 20 June 2025."
+    },
+    {
+      "id": "src-whitehouse-dst-factsheet-2025",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": null,
+      "publisher_name": "The White House",
+      "title": "Fact Sheet: President Donald J. Trump Issues Directive to Prevent the Unfair Exploitation of American Innovation",
+      "url": "https://www.whitehouse.gov/fact-sheets/2025/02/fact-sheet-president-donald-j-trump-issues-directive-to-prevent-the-unfair-exploitation-of-american-innovation/",
+      "url_status": "url:live",
+      "published": "2025-02-21",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read on 27 Sep 2026 with the memorandum it accompanies (whitehouse.gov/presidential-actions/2025/02/defending-american-companies-and-innovators-from-overseas-extortion-and-unfair-fines-and-penalties/). The fact sheet names the DMA and DSA as regulations that 'will face scrutiny from the Administration'; the memorandum's own text does not name them. Recorded at tier 2 as the US executive's own statement; it is evidence of the US position, not of EU law."
+    },
+    {
+      "id": "src-eurlex-dga",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2022/868 of 30 May 2022 on European data governance (Data Governance Act) (OJ L 152, 3.6.2022, p. 1)",
+      "url": "http://publications.europa.eu/resource/celex/32022R0868",
+      "url_status": "url:live",
+      "published": "2022-06-03",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 38: entry into force on the twentieth day following publication; applies from 24 September 2023."
+    },
+    {
+      "id": "src-eurlex-eprivacy",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Directive 2002/58/EC of 12 July 2002 concerning the processing of personal data and the protection of privacy in the electronic communications sector (OJ L 201, 31.7.2002, p. 37)",
+      "url": "http://publications.europa.eu/resource/celex/32002L0058",
+      "url_status": "url:live",
+      "published": "2002-07-31",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Read from the PDF of the original text: Art. 17(1), transposition before 31 October 2003; Art. 20, entry into force on the day of publication."
+    },
+    {
+      "id": "src-cjeu-c623-17",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "Judgment of 6 October 2020, Privacy International, Case C-623/17, EU:C:2020:790",
+      "url": "http://publications.europa.eu/resource/celex/62017CJ0623",
+      "url_status": "url:live",
+      "published": "2020-10-06",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The judgment text (Grand Chamber, CELEX 62017CJ0623), retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Operative part, point 1: national legislation enabling a State authority to require providers of electronic communications services to forward traffic and location data to the security and intelligence agencies for the purpose of safeguarding national security falls within the scope of Directive 2002/58, read in the light of Article 4(2) TEU."
+    },
+    {
+      "id": "src-eurlex-teu-art-4",
+      "tier": "tier:1",
+      "type": "source-type:legislative-document",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Consolidated version of the Treaty on European Union, Article 4 (OJ C 202, 7.6.2016, p. 18)",
+      "url": "http://publications.europa.eu/resource/celex/12016M004",
+      "url_status": "url:live",
+      "published": "2016-06-07",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Treaty text of Article 4 TEU as published in the Official Journal, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Recorded as a legislative document because the source vocabulary has no treaty type. Art. 4(2), third sentence: 'In particular, national security remains the sole responsibility of each Member State.'"
+    },
+    {
       "id": "src-cjeu-c623-17-pr",
       "tier": "tier:2",
       "type": "source-type:court-press-release",
@@ -424,7 +808,7 @@
       "published": "2020-10-06",
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Read on 2026-09-26. Several Member States argued that the e-Privacy Directive does not apply to national legislation whose purpose is to safeguard national security, citing the third sentence of Article 4(2) TEU; the Court held that national legislation requiring providers of electronic communications services to retain traffic and location data, or to forward it to security and intelligence authorities, for that purpose falls within the scope of the Directive. Tier 2 under the audit's rule for press releases; the judgment itself was not opened."
+      "note": "Read on 2026-09-26. Several Member States argued that the e-Privacy Directive does not apply to national legislation whose purpose is to safeguard national security, citing the third sentence of Article 4(2) TEU; the Court held that national legislation requiring providers of electronic communications services to retain traffic and location data, or to forward it to security and intelligence authorities, for that purpose falls within the scope of the Directive. Tier 2 under the audit's rule for press releases. The Privacy International judgment itself was read on 27 Sep 2026 (src-cjeu-c623-17); it concerns forwarding, and the retention limb of this press release comes from the joined La Quadrature du Net cases."
     },
     {
       "id": "src-gc-apple-designation-2026",
@@ -441,6 +825,20 @@
       "note": "App Store and iOS gatekeeper designation upheld; iMessage pleas inadmissible; App Store versions treated as a single core platform service."
     },
     {
+      "id": "src-gc-t1079-23-judgment",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": "gc",
+      "publisher_name": "General Court of the European Union",
+      "title": "Judgment of 8 July 2026, Apple and Apple Distribution International v Commission, Joined Cases T-1079/23, T-1080/23 and T-214/24, ECLI:EU:T:2026:451",
+      "url": "http://publications.europa.eu/resource/celex/62023TJ1079",
+      "url_status": "url:live",
+      "published": "2026-07-08",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The judgment text (CELEX 62023TJ1079), retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number; ECLI and CELEX confirmed in the Court's own register (InfoCuria). Operative part: the cases are joined and the actions dismissed."
+    },
+    {
       "id": "src-gc-supervisory-fee-2025",
       "tier": "tier:2",
       "type": "source-type:court-press-release",
@@ -453,6 +851,132 @@
       "accessed": "2026-09-26",
       "language": "en",
       "note": "The DSA supervisory-fee implementing decisions were annulled because the methodology should have been adopted by delegated act; effects provisionally maintained for up to 12 months. This is an annulment of the fee decisions, not of the fee mechanism."
+    },
+    {
+      "id": "src-oj-t438-25-apple-action",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "gc",
+      "publisher_name": "General Court of the European Union",
+      "title": "Action brought on 7 July 2025 – Apple v Commission (Case T-438/25), OJ C/2025/5215",
+      "url": "http://publications.europa.eu/resource/celex/62025TN0438",
+      "url_status": "url:live",
+      "published": "2025-10-06",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read on 27 Sep 2026 from the Publications Office’s Cellar by CELEX number (62025TN0438). Apple Inc. seeks annulment in full or in part of Commission Decision C(2025) 2090 final of 23 April 2025 in case DMA.100109, adopted under Arts 29(1)(a), 30(1)(a) and 31(1)(h) DMA, or annulment or reduction of the fine imposed by its Art. 2. Five pleas; the first alleges misinterpretation and misapplication of Art. 5(4) DMA."
+    },
+    {
+      "id": "src-oj-t435-25-meta-action",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "gc",
+      "publisher_name": "General Court of the European Union",
+      "title": "Action brought on 4 July 2025 – Meta Platforms v Commission (Case T-435/25), OJ C/2025/5214",
+      "url": "http://publications.europa.eu/resource/celex/62025TN0435",
+      "url_status": "url:live",
+      "published": "2025-10-06",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read on 27 Sep 2026 from the Publications Office’s Cellar by CELEX number (62025TN0435). Meta Platforms, Inc. seeks annulment of the Commission’s Decision of 23 April 2025 in Case DMA.100055 Meta – Article 5(2) DMA, and annulment or reduction of the fine imposed by its Art. 2. Four pleas; the first contests the finding that Ads Choice does not comply with Art. 5(2)."
+    },
+    {
+      "id": "src-oj-t114-26-x-action",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "gc",
+      "publisher_name": "General Court of the European Union",
+      "title": "Action brought on 16 February 2026 – X Internet and X Holdings v Commission (Case T-114/26), OJ C/2026/2390",
+      "url": "http://publications.europa.eu/resource/celex/62026TN0114",
+      "url_status": "url:live",
+      "published": "2026-05-04",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read on 27 Sep 2026 from the Publications Office’s Cellar by CELEX number (62026TN0114). X Internet ulc and X Holdings Corp. seek annulment, in whole or in part, of the Commission Decision of 5 December 2025 in Cases DSA.100101, DSA.100102 and DSA.100103 – X (formerly Twitter), or annulment of the amount of the fines imposed by its Art. 4. Six pleas; the first alleges breach of the rights of defence and of good administration."
+    },
+    {
+      "id": "src-oj-t120-26-xai-action",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "gc",
+      "publisher_name": "General Court of the European Union",
+      "title": "Action brought on 16 February 2026 – X.AI Holdings v Commission (Case T-120/26), OJ C/2026/2391",
+      "url": "http://publications.europa.eu/resource/celex/62026TN0120",
+      "url_status": "url:live",
+      "published": "2026-05-04",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read on 27 Sep 2026 from the Publications Office’s Cellar by CELEX number (62026TN0120). X.AI Holdings LLC seeks annulment of the Commission’s decision of 5 December 2025 in Cases DSA.100101, DSA.100102 and DSA.100103 – X (formerly Twitter) (C(2025) 8630 final), or its annulment insofar as it is addressed to the applicant, or of the fines imposed on it under Art. 4. Eight pleas."
+    },
+    {
+      "id": "src-oj-t121-26-musk-action",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "gc",
+      "publisher_name": "General Court of the European Union",
+      "title": "Action brought on 16 February 2026 – Musk v Commission (Case T-121/26), OJ C/2026/2392",
+      "url": "http://publications.europa.eu/resource/celex/62026TN0121",
+      "url_status": "url:live",
+      "published": "2026-05-04",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read on 27 Sep 2026 from the Publications Office’s Cellar by CELEX number (62026TN0121). Elon Musk seeks annulment of the same decision of 5 December 2025 (C(2025) 8630 final), or its annulment insofar as it is addressed to him, or of the fines imposed on him under Art. 4, relying on pleas similar to the eight in Case T-120/26."
+    },
+    {
+      "id": "src-oj-c744-25p-fee-appeal",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "Appeal brought on 20 November 2025 by the European Commission against the judgment of the General Court in Case T-55/24, Meta Platforms Ireland v Commission (Case C-744/25 P), OJ C/2026/164",
+      "url": "http://publications.europa.eu/resource/celex/62025CN0744",
+      "url_status": "url:live",
+      "published": "2026-01-12",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read on 27 Sep 2026 from the Publications Office’s Cellar by CELEX number (62025CN0744). The Commission asks the Court of Justice to set aside the judgment of 10 September 2025 and give final judgment, or refer the case back. The contested act at first instance was Implementing Decision C(2023) 8176 final of 27 November 2023 determining the DSA supervisory fee for Facebook and Instagram."
+    },
+    {
+      "id": "src-oj-c745-25p-fee-appeal",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "Appeal brought on 20 November 2025 by the European Commission against the judgment of the General Court in Case T-58/24, Tiktok Technology v Commission (Case C-745/25 P), OJ C/2026/165",
+      "url": "http://publications.europa.eu/resource/celex/62025CN0745",
+      "url_status": "url:live",
+      "published": "2026-01-12",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read on 27 Sep 2026 from the Publications Office’s Cellar by CELEX number (62025CN0745). Same form of order as C-744/25 P. The contested act at first instance was Implementing Decision C(2023) 8173 final of 27 November 2023 determining the DSA supervisory fee for TikTok."
+    },
+    {
+      "id": "src-oj-t325-23-meta-edpb-action",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "gc",
+      "publisher_name": "General Court of the European Union",
+      "title": "Action brought on 13 June 2023 – Meta Platforms Ireland v EDPB (Case T-325/23), OJ 2023/C 271/47",
+      "url": "http://publications.europa.eu/resource/celex/62023TN0325",
+      "url_status": "url:live",
+      "published": "2023-07-31",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read on 27 Sep 2026 from the Publications Office’s Cellar by CELEX number (62023TN0325). Meta Platforms Ireland seeks annulment of the EDPB’s Binding Decision 1/2023 of 13 April 2023 on data transfers by Meta Platforms Ireland for its Facebook service (Art. 65 GDPR). This is an action against the EDPB’s binding decision, not against the DPC’s own decision, which is a national act."
+    },
+    {
+      "id": "src-curia-register-2026-09-27",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "InfoCuria case register — state of eleven cases, read 27 September 2026",
+      "url": "https://infocuria.curia.europa.eu/",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Court’s own case register, queried through its search service on 27 Sep 2026. Recorded as ‘Affaire pendante’ (pending) on that date: T-438/25 Apple v Commission (lodged 7 Jul 2025); T-435/25 Meta Platforms v Commission (4 Jul 2025); T-114/26 X Internet and X Holdings v Commission, T-120/26 X.AI Holdings v Commission and T-121/26 Musk v Commission (all 16 Feb 2026); C-744/25 P and C-745/25 P, the Commission’s appeals in the supervisory-fee cases (20 Nov 2025); T-325/23 Meta Platforms Ireland v EDPB (13 Jun 2023). Also registered: T-536/26 Whaleco Technology v Commission, lodged 12 Aug 2026 and pending — the register gives no subject matter and no Official Journal notice of the action was yet held by the Publications Office (HTTP 404 for CELEX 62026TN0536), so which decision it challenges is not established. No action by Google or by AliExpress lodged after 23 Jul 2026 and 20 Jul 2026 respectively was found in the register. The register is a live record: ‘pending’ is its state on the read date only."
     },
     {
       "id": "src-mlex-2025-dsa-fee-appeal",
@@ -632,9 +1156,9 @@
       "url": "https://digital-markets-act.ec.europa.eu/commission-finds-apple-and-meta-breach-digital-markets-act-2025-04-23_en",
       "url_status": "url:live",
       "published": "2025-04-23",
-      "accessed": "2026-08-27",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "EUR 500 million against Apple under Art. 5(4); EUR 200 million against Meta under Art. 5(2)."
+      "note": "EUR 500 million against Apple under Art. 5(4); EUR 200 million against Meta under Art. 5(2). Read in full on 27 Sep 2026 as press release IP/25/1085 through the Commission's press corner: investigations opened 25 March 2024; preliminary views 24 June 2024 (Apple) and 1 July 2024 (Meta); compliance required within 60 days; the Meta finding covers March–November 2024; the same day the Commission closed its investigation into Apple's user-choice obligations and found Facebook Marketplace should no longer be designated."
     },
     {
       "id": "src-ec-meta-ad-choice-2025",
@@ -788,7 +1312,7 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Commission policy page, read 2026-09-26: published in the Official Journal on 5 March 2025, entered into force on 26 March 2025, 'marking the beginning of the transition phase towards application'; links OJ L_202500327 (Regulation (EU) 2025/327). The staged application dates were not read from an official text."
+      "note": "Commission policy page, read 2026-09-26: published in the Official Journal on 5 March 2025, entered into force on 26 March 2025, 'marking the beginning of the transition phase towards application'; links OJ L_202500327 (Regulation (EU) 2025/327). On 27 Sep 2026 the Official Journal text and the Publications Office's metadata were read: published 5 March 2025, entry into force on 'the twentieth day following' publication, recorded as 25 March 2025 — one day earlier than this page says. The site follows the Official Journal."
     },
     {
       "id": "src-ec-eudi-page",
@@ -814,9 +1338,9 @@
       "url": "https://digital-strategy.ec.europa.eu/en/faqs/cybersecurity-package-questions-answers",
       "url_status": "url:live",
       "published": "2026-01-20",
-      "accessed": "2026-09-26",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "Commission Q&A, read 2026-09-26: 'On 20 January 2026, the Commission has proposed a new cybersecurity package', including amendments to the NIS2 Directive and a revised Cybersecurity Act. The COM document numbers are not given on the page and were not recorded."
+      "note": "Commission Q&A, read 2026-09-26 and again 2026-09-27: 'On 20 January 2026, the Commission has proposed a new cybersecurity package', including amendments to the NIS2 Directive and a revised Cybersecurity Act. The COM document numbers are not given on the page and were not recorded."
     },
     {
       "id": "src-dma-text-unofficial-art2",
@@ -830,7 +1354,8 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text. Art. 2(2) lists as core platform services (a) online intermediation, (b) search engines, (c) social networking, (d) video-sharing, (e) number-independent interpersonal communications, (f) operating systems, (g) web browsers, (h) virtual assistants, (i) cloud computing services and (j) online advertising; generative AI is not listed. Cited because EUR-Lex returns HTTP 202 with no body in this environment; to be replaced by src-eurlex-dma once the consolidated text can be read."
+      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text. Art. 2(2) lists as core platform services (a) online intermediation, (b) search engines, (c) social networking, (d) video-sharing, (e) number-independent interpersonal communications, (f) operating systems, (g) web browsers, (h) virtual assistants, (i) cloud computing services and (j) online advertising; generative AI is not listed. Cited because EUR-Lex returns HTTP 202 with no body in this environment; to be replaced by src-eurlex-dma once the consolidated text can be read.",
+      "reproduces": "src-eurlex-dma"
     },
     {
       "id": "src-dma-text-unofficial-arts-11-39",
@@ -844,7 +1369,8 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text; one page per article (same URL pattern, Digital_Markets_Act_Article_N.html), each read on 2026-09-26; the URL recorded is Art. 38's. Art. 11 'Reporting': a compliance report within 6 months of designation, updated at least annually. Art. 13 'Anti-circumvention'. Art. 14 'Obligation to inform about concentrations'. Art. 15 'Obligation of an audit': an independently audited description of consumer-profiling techniques. Art. 38(7): a national competition authority may, on its own initiative, investigate possible non-compliance with Arts. 5, 6 and 7 on its territory, and reports its findings 'to support the Commission in its role as sole enforcer'; the Commission's opening of proceedings under Art. 20 ends that possibility. Art. 39 'Cooperation with national courts': national courts in proceedings for the application of the Regulation may ask the Commission for information or its opinion, and may not decide against a Commission decision. Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text; one page per article (same URL pattern, Digital_Markets_Act_Article_N.html), each read on 2026-09-26; the URL recorded is Art. 38's. Art. 11 'Reporting': a compliance report within 6 months of designation, updated at least annually. Art. 13 'Anti-circumvention'. Art. 14 'Obligation to inform about concentrations'. Art. 15 'Obligation of an audit': an independently audited description of consumer-profiling techniques. Art. 38(7): a national competition authority may, on its own initiative, investigate possible non-compliance with Arts. 5, 6 and 7 on its territory, and reports its findings 'to support the Commission in its role as sole enforcer'; the Commission's opening of proceedings under Art. 20 ends that possibility. Art. 39 'Cooperation with national courts': national courts in proceedings for the application of the Regulation may ask the Commission for information or its opinion, and may not decide against a Commission decision. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "reproduces": "src-eurlex-dma"
     },
     {
       "id": "src-dma-text-unofficial-art54",
@@ -858,7 +1384,8 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text; read on 2026-09-26. Art. 54: the Regulation 'shall apply from 2 May 2023', with Art. 3(6)-(7) and Arts. 40 and 46-50 from 1 November 2022 and Arts. 42-43 from 25 June 2023 (postponed to the application date if earlier). Cited because EUR-Lex returns HTTP 202 with no body in this environment."
+      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text; read on 2026-09-26. Art. 54: the Regulation 'shall apply from 2 May 2023', with Art. 3(6)-(7) and Arts. 40 and 46-50 from 1 November 2022 and Arts. 42-43 from 25 June 2023 (postponed to the application date if earlier). Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "reproduces": "src-eurlex-dma"
     },
     {
       "id": "src-ec-dma-designation-2023",
@@ -1099,6 +1626,20 @@
       "note": "The Commission's Draghi report page. Merged on 2026-09-26 (audit T-30) with the former src-draghi-report-2024, which described the same report through a newsroom URL (ec.europa.eu/newsroom/growth/items/847989). Part A (A competitiveness strategy for Europe) and Part B (In-depth analysis and recommendations). Both PDFs were downloaded from the Commission's Draghi report page (commission.europa.eu/document/download/97e481fd-2dc3-412d-be4c-f152a8232961_en and ec1409c1-d4b4-4882-8bdd-3519f86bbb92_en) and read on 2026-09-26. Part A, printed p. 24, Chapter 2: around 70% of foundational AI models developed in the US since 2017; three US hyperscalers over 65% of the global and European cloud market; the largest European cloud operator just 2% of the EU market; autonomous robotics around 22% of worldwide activity; AI services around 17%. Part B, printed p. 77: EU cloud providers' share of the EU market decreased to under 16% in 2021. Part B, p. 79, gives 73% (not 'around 70%') for foundational models from the US since 2017. No 'under 15%' figure appears in either part."
     },
     {
+      "id": "src-ep-oeil-ai-omnibus",
+      "tier": "tier:2",
+      "type": "source-type:legislative-document",
+      "publisher": "ep",
+      "publisher_name": "European Parliament — Legislative Observatory",
+      "title": "Procedure file 2025/0359(COD): Simplification of the implementation of harmonised rules on artificial intelligence – Digital Omnibus on AI",
+      "url": "https://oeil.secure.europarl.europa.eu/oeil/en/procedure-file?reference=2025/0359(COD)",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Parliament's procedure file, read on 27 Sep 2026 with its summary of the 26 March 2026 decision (document-summary id 1895845). Key events from the proposal (19/11/2025) to publication in the Official Journal (24/07/2026). The summary: 'The European Parliament adopted by 569 votes to 45 against and 23 abstentions, amendments to the proposal ... The issue was sent back to the committee responsible for interinstitutional negotiations.'"
+    },
+    {
       "id": "src-ep-legtrain-ai-omnibus",
       "tier": "tier:2",
       "type": "source-type:legislative-document",
@@ -1108,9 +1649,9 @@
       "url": "https://www.europarl.europa.eu/legislative-train/package-digital-package/file-digital-omnibus-on-ai",
       "url_status": "url:live",
       "published": "2026",
-      "accessed": "2026-08-27",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "Supports the 19 November 2025 publication date and COM(2025) 836."
+      "note": "Supports the 19 November 2025 publication date and COM(2025) 836. Re-read on 27 Sep 2026 (information updated as of 01/08/2026): Council general approach 13 March 2026; trilogue agreement 7 May 2026; Coreper approval 13 May 2026; plenary approval 16 June 2026 (423 in favour, 57 against, 174 abstentions); Council adoption 29 June 2026; final act signed 8 July 2026."
     },
     {
       "id": "src-ep-legtrain-digital-package",
@@ -1166,7 +1707,7 @@
       "published": null,
       "accessed": "2026-08-27",
       "language": "en",
-      "note": "The DPC's own published position on imposed and collected fines."
+      "note": "The DPC's own published position on imposed and collected fines. Re-read 27 Sep 2026: \"Total Fines (last updated 10/08/2026) €4,038,832,000\"; \"approximately €20 million in fines has been collected\"; and, under Collection of Fines, fines \"do not become payable until they are confirmed in Court\"."
     },
     {
       "id": "src-thestory-2026-fines-limbo",
@@ -1251,6 +1792,20 @@
       "accessed": "2026-08-27",
       "language": "en",
       "note": null
+    },
+    {
+      "id": "src-lu-cadm-52757c-judgment",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": null,
+      "publisher_name": "Cour administrative du Grand-Duché de Luxembourg",
+      "title": "Cour administrative, arrêt du 12 mars 2026, n° 52757C du rôle, ECLI:LU:CADM:2026:52757",
+      "url": "https://ja.public.lu/50001-55000/52757C.pdf",
+      "url_status": "url:live",
+      "published": "2026-03-12",
+      "accessed": "2026-09-27",
+      "language": "fr",
+      "note": "The judgment's full text (89 pages), read 27 Sep 2026. Appeal of 25 April 2025 against the tribunal administratif's judgment of 18 March 2025 (no. 46578), which had upheld the CNPD's decision of 15 July 2021 (fine of EUR 746,000,000; corrective measures within six months under a daily penalty of EUR 746,000). Operative part: the CNPD's declaration that the injunctions have become moot is recorded; the requested preliminary references are refused; the CNPD decision is annulled 'en tous ses volets' and the file remitted to the CNPD; costs shared. Grounds: no examination of fault (C-807/21, C-683/21) and no real proportionality analysis of choosing a fine. Pseudonymised: the appellant appears as '(AA)'."
     },
     {
       "id": "src-justice-lu-amazon-2026",
@@ -1449,18 +2004,32 @@
       "note": "No primary source for the Luxembourg Court of Appeal judgment has been located; the judgment itself is flagged for retrieval."
     },
     {
+      "id": "src-garante-openai-2024",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "dpa-it",
+      "publisher_name": "Garante per la protezione dei dati personali",
+      "title": "ChatGPT, il Garante privacy chiude l’istruttoria. OpenAI dovrà realizzare una campagna informativa di sei mesi e pagare una sanzione di 15 milioni di euro",
+      "url": "https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/10085432",
+      "url_status": "url:live",
+      "published": "2024-12-20",
+      "accessed": "2026-09-27",
+      "language": "it",
+      "note": "The Garante's press release (doc-web 10085432, 'Roma, 20 dicembre 2024'), read 27 Sep 2026, with its English version on the same page. It now carries the Garante's notice that decision no. 755 of 2 November 2024 (doc-web 10085455) has been temporarily removed from its website following the Court of Rome's judgment no. 4153/2026, published 18 March 2026, which upheld the opposition to it. The release: EUR 15 million fine; six-month information campaign under Art. 166(7) of the Privacy Code; investigation opened March 2023; file transmitted to the Irish DPC as lead authority."
+    },
+    {
       "id": "src-europeanlawblog-openai-rome",
       "tier": "tier:3",
       "type": "source-type:research",
       "publisher": null,
       "publisher_name": "European Law Blog",
       "title": "Establish, Then Escape? How the Court of Rome, the One-Stop-Shop and a Single Word Opened an AI Enforcement Gap",
-      "url": "https://www.europeanlawblog.eu/pub/92oig1ws",
+      "url": "https://europeanlawblog.eu/establish-then-escape-how-the-court-of-rome-the-one-stop-shop-and-a-single-word-opened-an-ai-enforcement-gap/",
       "url_status": "url:live",
-      "published": "2026",
-      "accessed": "2026-08-27",
+      "published": "2026-06-04",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "Academic analysis of the Rome tribunal ruling voiding the Garante's OpenAI fine. The judgment itself is flagged for retrieval."
+      "note": "Academic analysis of the Rome tribunal ruling voiding the Garante's OpenAI fine. The judgment itself is flagged for retrieval. On 27 Sep 2026 the recorded URL (europeanlawblog.eu/pub/92oig1ws) returned HTTP 404; the post was found by the blog's own search at the URL now recorded, dated 4 June 2026, and re-read. Its note [i] identifies the judgment: Tribunale Ordinario di Roma, R.G. 4785/2025, decided 18 March 2026, full grounds public on 28 May 2026."
     },
     {
       "id": "src-privacynext-2026-omnibus",
@@ -1588,6 +2157,20 @@
       "language": "en",
       "note": "Located 28 Aug 2026. Records 2,685 fines as at March 2026 and Spain as the most active authority by count (1,048 published fines). CORRECTION SURFACED: the EUR 7.1bn cumulative total and the EUR 4.04bn Irish figure are DLA Piper's, not CMS's — CMS records roughly EUR 6.11bn in directly documented fines. The divergence is exactly what Annex B warns about, and the brief was citing the wrong tracker for those two numbers.",
       "resolution_note": "Identified and linked: this is the specific publication the brief draws on (see url and note). It is cited as tier-4 commentary: it can support what its authors argue or report, not a legal fact on its own. Rewritten on 2026-09-26 \u2014 the earlier text said no specific publication had been named, which stopped being true when the URL was located."
+    },
+    {
+      "id": "src-cms-tracker-insights-2026-09-27",
+      "tier": "tier:4",
+      "type": "source-type:report",
+      "publisher": null,
+      "publisher_name": "CMS",
+      "title": "GDPR Enforcement Tracker — Insights (data refreshed 27 September 2026)",
+      "url": "https://www.enforcementtracker.com/insights",
+      "url_status": "url:live",
+      "published": "2026-09-27",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The live Insights page of CMS's GDPR Enforcement Tracker, read 27 Sep 2026 ('data shown was last refreshed 2026-09-27 13:01 UTC'). Headline: total cases 3,275 across 32 countries; total fines EUR 7,159,322,834; largest single fine EUR 1,200m (Meta Platforms Ireland). Its 'Top violation types' chart, by penalty total, carries these sums in the page's own embedded data: insufficient legal basis EUR 3,124,976,242 (992 cases); non-compliance with general data processing principles EUR 2,649,889,997 (814); insufficient technical and organisational measures to ensure information security EUR 971,797,663 (616); insufficient fulfilment of information obligations EUR 257,948,460 (216); the remaining six categories together about EUR 154m. A live dataset: every figure is its state on the read date. It is a different document from the 7th edition report (src-cms-enforcement-tracker), whose March 2026 total was lower."
     },
     {
       "id": "src-legiscope-nis2-tracker-2026",
@@ -1718,11 +2301,11 @@
       "url": null,
       "url_status": "url:none",
       "published": null,
-      "accessed": "2026-08-27",
+      "accessed": "2026-09-27",
       "language": "en",
       "note": "Referenced by the brief. Specific publication and URL not yet identified.",
       "resolution": "publication-not-identified",
-      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved."
+      "resolution_note": "The brief refers to this organisation's work without naming a specific publication, so there is no document to link to. This cannot be fixed by searching harder for a URL: the underlying reference has to be pinned to a title and date first. Until then, any claim resting only on this source is unresolved. 27 Sep 2026: a web search returns CDT's 'EU AI Act Brief – Pt. 2, Privacy & Surveillance' (https://cdt.org/insights/eu-ai-act-brief-pt-2-privacy-surveillance/) as the likely publication, but cdt.org answered with a Cloudflare block and it could not be opened, so it is not recorded as this source's URL."
     },
     {
       "id": "src-us-house-judiciary-dsa-2025",
@@ -1730,15 +2313,13 @@
       "type": "source-type:report",
       "publisher": null,
       "publisher_name": "US House Judiciary Committee",
-      "title": "Staff report on the Digital Services Act and global censorship",
-      "url": null,
-      "url_status": "url:none",
-      "published": "2025-07",
-      "accessed": "2026-08-27",
+      "title": "The Foreign Censorship Threat: How the European Union's Digital Services Act Compels Global Censorship and Infringes on American Free Speech (Interim Staff Report)",
+      "url": "https://judiciary.house.gov/sites/evo-subsites/republicans-judiciary.house.gov/files/2025-07/DSA_Report%26Appendix%2807.25.25%29.pdf",
+      "url_status": "url:live",
+      "published": "2025-07-25",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "Referenced by the brief. URL not yet identified.",
-      "resolution": "url-not-located",
-      "resolution_note": "The publication is identified (staff report, July 2025) but no stable public URL was located during this build."
+      "note": "Located and opened on 27 Sep 2026 (145-page PDF with appendix): interim staff report of the Committee on the Judiciary of the US House of Representatives, dated 25 July 2025. A partisan committee report (published on the Committee Republicans' site), recorded as evidence of the US congressional position, not of EU law."
     },
     {
       "id": "src-edpb-guidelines-3-2025",
@@ -1747,12 +2328,26 @@
       "publisher": "edpb",
       "publisher_name": "European Data Protection Board",
       "title": "EDPB Guidelines 3/2025 on the interplay between the DSA and the GDPR",
-      "url": "https://www.edpb.europa.eu/our-work-tools/documents/public-consultations/2025/guidelines-32025-interplay-between-dsa-and-gdpr_en",
+      "url": "https://www.edpb.europa.eu/documents/guideline/guidelines-32025-on-the-interplay-between-the-dsa-and-the-gdpr_en",
       "url_status": "url:live",
-      "published": "2025",
-      "accessed": "2026-08-27",
+      "published": "2026-09-17",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "Resolved to the EDPB public-consultation page for Guidelines 3/2025."
+      "note": "Located and read on 27 Sep 2026 on the EDPB's own site. The title recorded here is the official one. Version 1 was put to public consultation from 12 September to 31 October 2025 (its page is now marked 'Obsolete version'); the final version, Guidelines 3/2025 v2, is dated 17 September 2026 and published with a report on the consultation. The URL now points to the final version; the consultation page was the one recorded before."
+    },
+    {
+      "id": "src-ec-google-dma-opening-2024",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission opens non-compliance investigations against Alphabet, Apple and Meta under the Digital Markets Act (IP/24/1689)",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_24_1689",
+      "url_status": "url:live",
+      "published": "2024-03-25",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read in full 27 Sep 2026 through the Commission's press corner. Names the article for each proceeding: Art. 5(4) (steering) for Alphabet's Google Play and Apple's App Store; Art. 6(5) for self-preferencing on Google Search; Art. 6(3) for Apple's user-choice obligations; Art. 5(2) for Meta's 'pay or consent'."
     },
     {
       "id": "src-ec-google-dma-fine-2026",
@@ -1867,6 +2462,34 @@
       "note": "The actual source of three figures the brief attributed to the CMS tracker: EUR 7.1bn cumulative to 10 Jan 2026, EUR 4.04bn for the Irish DPC, and 443 breach notifications per day (up 22% from 363). A law firm's survey, not a regulator's return — indicative of magnitude, as Annex B says."
     },
     {
+      "id": "src-ec-dma-portal-whos-in-charge",
+      "tier": "tier:2",
+      "type": "source-type:regulator-statement",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "The EU Digital Markets Act — Who's in charge (DMA portal home page)",
+      "url": "https://digital-markets-act.ec.europa.eu/index_en",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026. 'Who's in charge': \"The European Commission is the sole enforcer of the DMA. A joint team in the Directorates-General for Competition (DG COMP) and Communications Networks, Content and Technology (DG CONNECT) is responsible for the implementation and enforcement of the DMA.\""
+    },
+    {
+      "id": "src-ec-dsa-enforcement-team-2024",
+      "tier": "tier:2",
+      "type": "source-type:regulator-statement",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Do you want to help enforce the Digital Services Act? Apply now to be part of the DSA enforcement team!",
+      "url": "https://digital-strategy.ec.europa.eu/en/news/do-you-want-help-enforce-digital-services-act-apply-now-be-part-dsa-enforcement-team",
+      "url_status": "url:live",
+      "published": "2024-01-15",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026: the staff that \"Directorate F (Platforms Policy and Enforcement) at DG CONNECT is hiring will support the Commission's new supervisory and enforcement role related to the DSA\", working in teams \"dealing with designated services\" and investigating potential infringements. The Commission's page of 18 November 2022 likewise says DG CONNECT \"is building a multi-disciplinary enforcement team\" for the DSA."
+    },
+    {
       "id": "src-ec-dma-gatekeepers-portal",
       "tier": "tier:2",
       "type": "source-type:regulator-statement",
@@ -1949,6 +2572,104 @@
       "accessed": "2026-09-26",
       "language": "en",
       "note": "Confirms the EUR 550 million fine, publication date 20 July 2026, and the systemic-risk ground (failure to diligently assess and mitigate risk from illegal, unsafe or counterfeit products). Contains no ranking language and no article numbers or action-plan deadline; those are corroborated by secondary legal commentary (Lewis Silkin, 24 July 2026; Il Sole 24 Ore, 20 July 2026; JURIST, 22 July 2026)."
+    },
+    {
+      "id": "src-iehc-2026-347-tiktok",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": null,
+      "publisher_name": "High Court of Ireland (Commercial)",
+      "title": "TikTok Technology Limited and TikTok Information Technologies UK Limited v Data Protection Commission [2026] IEHC 347 (Mulcahy J, 3 June 2026), Record No. 2025/248 MCA",
+      "url": "https://ww2.courts.ie/acc/alfresco/d03be1e0-7395-4ba4-86f5-c331e3670995/2026_IEHC_347.pdf/pdf",
+      "url_status": "url:live",
+      "published": "2026-06-03",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The approved judgment's full text (185 pages), read 27 Sep 2026. §6: the DPC issued its decision on 30 April 2025. §11: TikTok appealed by originating notice of motion issued 27 May 2025, under ss. 142 and 150 of the Data Protection Act 2018. §14: the appeal automatically stayed payment of the fines (s. 142); the corrective orders were stayed by [2025] IEHC 619 (13 Nov 2025), and the Supreme Court continued that stay by [2026] IESC 27 (30 April 2026). §§576-577: all grounds against the Art. 46(1) and Art. 13(1)(f) infringement findings, and against the decision to impose fines, to be dismissed; the amount of the fines left over. §§578, 592: errors in the DPC's assessment of material relevant to the suspension order; the court proposes to vacate the corrective orders and remit them to the DPC, subject to hearing the parties on 11 June 2026 on the final form of order."
+    },
+    {
+      "id": "src-iehc-2026-419-tiktok",
+      "tier": "tier:1",
+      "type": "source-type:judgment",
+      "publisher": null,
+      "publisher_name": "High Court of Ireland (Commercial)",
+      "title": "TikTok Technology Limited and TikTok Information Technologies UK Limited v Data Protection Commission [2026] IEHC 419 (Mulcahy J, 30 June 2026), Record No. 2025/248 MCA",
+      "url": "https://www2.courts.ie/acc/alfresco/65d7e861-a6f7-4fa9-b03c-91c1eb07c96c/2026_IEHC_419.pdf/pdf",
+      "url_status": "url:live",
+      "published": "2026-06-30",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The approved judgment's full text (72 pages), read 27 Sep 2026: the judgment on the grounds left over from [2026] IEHC 347, all concerning the calculation of the fines (Art. 83 GDPR). §§238-242: subject to the questions below, the DPC was entitled to treat 2024 as the preceding financial year and to have regard to ByteDance's turnover; its limited errors under Art. 83(2) do not merit revisiting the fines. §243: four questions proposed for a preliminary reference to the CJEU under Art. 267 TFEU (imputation to the parent and its rights of defence; the role of group turnover in setting the amount; aggregation under Art. 83(3)). §244: the parties to prepare a draft Order for Reference; matter listed for 10 July 2026."
+    },
+    {
+      "id": "src-dpc-annual-report-2023",
+      "tier": "tier:2",
+      "type": "source-type:report",
+      "publisher": "dpa-ie",
+      "publisher_name": "Data Protection Commission (Ireland)",
+      "title": "Data Protection Commission — Annual Report 2023",
+      "url": "https://www.dataprotection.ie/sites/default/files/uploads/2024-05/DPC%20EN_AR%202023_Final%20.pdf",
+      "url_status": "url:live",
+      "published": "2024-05-29",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026. On the Meta transfers decision (EDPB decision of 13 April 2023; DPC Final Decision of 12 May 2023; fine of EUR 1.2 billion, suspension and compliance orders): 'The Final Decision is under appeal' (p. 38), and 'Meta initiated three court challenges against the DPC/EDPB: a statutory appeal before the Irish High Court, Judicial Review proceedings before the High Court and annulment proceedings against the EDPB' (p. 41; the report says 'before the Court of Justice', the action being T-325/23 before the General Court). Publication date from the DPC's press release of 29 May 2024."
+    },
+    {
+      "id": "src-curia-register-c1009-26",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "InfoCuria case register — Case C-1009/26, Tiktok Technology and TikTok Information Technologies UK, read 27 September 2026",
+      "url": "https://infocuria.curia.europa.eu/",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Court's own case register, queried through its search service on 27 Sep 2026: C-1009/26, a reference for a preliminary ruling (procedure type 'RP') named 'Tiktok Technology and TikTok Information Technologies UK', lodged 11 Sep 2026 and recorded as 'Affaire pendante'. The register entry read gives no referring court and no questions, so that it is the reference the Irish High Court proposed in [2026] IEHC 419 is consistent with the parties' names but not established."
+    },
+    {
+      "id": "src-twobirds-ai-omnibus-trilogue-2026",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "Bird & Bird",
+      "title": "Digital Omnibus on AI: Trilogue Stalls Ahead of the AI Act Deadline",
+      "url": "https://www.twobirds.com/en/insights/2026/digital-omnibus-on-ai-trilogue-stalls-ahead-of-the-ai-act-deadline",
+      "url_status": "url:live",
+      "published": "2026-05-05",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Law-firm commentary, read 27 Sep 2026 (publication date from the page's structured data). Opening paragraph: 'On 28 April 2026, the second political trilogue on the Digital Omnibus on AI ended without agreement after roughly twelve hours of negotiation. The breakdown did not concern the most prominent element of the proposal, the postponement of the AI Act's high-risk obligations, but the conformity assessment architecture for AI systems embedded in products that fall under existing EU sectoral safety law (Annex I to the AI Act).'"
+    },
+    {
+      "id": "src-iapp-ai-omnibus-trilogue-2026",
+      "tier": "tier:4",
+      "type": "source-type:commentary",
+      "publisher": null,
+      "publisher_name": "IAPP",
+      "title": "Notes from the AI Governance Center: AI Act Omnibus: What just happened and what comes next?",
+      "url": "https://iapp.org/news/a/ai-act-omnibus-what-just-happened-and-what-comes-next",
+      "url_status": "url:live",
+      "published": "2026-04-29",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Ashley Casovan (IAPP AI Governance Center), published 29 April 2026, read 27 Sep 2026: 'after 12 hours of negotiations in Brussels fell apart 28 April'; 'The 28 April trilogue was the second and final session scheduled to negotiate the Omnibus package'. It does not state the cause."
+    },
+    {
+      "id": "src-dete-value-of-data-centres-2026",
+      "tier": "tier:3",
+      "type": "source-type:report",
+      "publisher": null,
+      "publisher_name": "Department of Enterprise, Tourism and Employment (Ireland); report prepared by KPMG",
+      "title": "The value of data centres to Ireland — an independent report prepared by KPMG for the Department of Enterprise, Tourism and Employment (March 2026)",
+      "url": "https://enterprise.gov.ie/en/publications/publication-files/the-value-of-data-centres-to-ireland.pdf",
+      "url_status": "url:live",
+      "published": "2026-06-02",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026 (181 pages). Recorded at tier 3, not 2: the Department publishes it, but it is an independent consultancy report and its findings are KPMG's. Executive summary: 'Dublin's concentration of data centres has positioned it as a strategic European data centre hub, alongside Frankfurt, London, Amsterdam, and Paris – collectively known as the FLAP-D markets'; 'Dublin becoming a key European hub for data centres alongside Frankfurt, London, Amsterdam and Paris'. It gives no share of European capacity. Publication date from the Department's news item of 2 June 2026 ('Minister Burke publishes report on the economic value of data centres to Ireland')."
     }
   ]
 }

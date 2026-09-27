@@ -19,6 +19,8 @@
       "legislative_status": "status:applicable",
       "status_as_of": "2026-08-19",
       "milestones": [
+        "tl-gdpr-2016-04-27-adoption",
+        "tl-gdpr-2016-05-04-publication",
         "tl-gdpr-2016-05-24-entry-into-force",
         "tl-gdpr-2018-05-25-application"
       ],
@@ -70,8 +72,8 @@
           "sources": [
             "src-eurlex-gdpr"
           ],
-          "requires_verification": true,
-          "verification_note": "Article number and heading recorded from general knowledge of the instrument; confirm the wording against the consolidated text before display."
+          "requires_verification": false,
+          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32016R0679): heading and number match; the summary was checked against paragraphs 1 and 2 (establishment in the Union; offering goods or services to, or monitoring the behaviour of, data subjects in the Union). Paragraph 3 (Member State law applying by virtue of public international law) is not in the summary. The earlier note said the article was recorded from general knowledge."
         },
         {
           "id": "gdpr:art-5",
@@ -196,8 +198,8 @@
           "sources": [
             "src-eurlex-gdpr"
           ],
-          "requires_verification": true,
-          "verification_note": "Article number and heading recorded from general knowledge; confirm against the consolidated text."
+          "requires_verification": false,
+          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32016R0679): heading and number match; the summary was checked against paragraph 1, points (a) to (c): a public authority or body (courts acting in their judicial capacity excepted), regular and systematic monitoring on a large scale, and large-scale processing of special categories. The earlier note said the article was recorded from general knowledge."
         },
         {
           "id": "gdpr:art-51",
@@ -300,6 +302,8 @@
       "legislative_status": "status:applicable",
       "status_as_of": "2026-08-19",
       "milestones": [
+        "tl-dsa-2022-10-19-adoption",
+        "tl-dsa-2022-10-27-publication",
         "tl-dsa-2022-11-16-entry-into-force",
         "tl-dsa-2023-08-01-application",
         "tl-dsa-2024-02-17-application",
@@ -386,8 +390,8 @@
           "sources": [
             "src-eurlex-dsa"
           ],
-          "requires_verification": true,
-          "verification_note": "Article number and heading recorded from general knowledge; confirm against the consolidated text."
+          "requires_verification": false,
+          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32022R2065): heading and number match; the summary was checked against paragraphs 1 and 2. The Regulation's own threshold for the advertising prohibition is that the provider is \"aware with reasonable certainty\" that the recipient is a minor, which the summary shortens to \"known\". The earlier note said the article was recorded from general knowledge."
         },
         {
           "id": "dsa:art-30",
@@ -401,8 +405,8 @@
           "sources": [
             "src-eurlex-dsa"
           ],
-          "requires_verification": true,
-          "verification_note": "Article number and heading recorded from general knowledge; confirm against the consolidated text."
+          "requires_verification": false,
+          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32022R2065): heading and number match; the summary was checked against paragraph 1 (information the platform must obtain before a trader may use it to offer products or services to consumers in the Union). The earlier note said the article was recorded from general knowledge."
         },
         {
           "id": "dsa:art-33",
@@ -560,6 +564,8 @@
       "legislative_status": "status:applicable",
       "status_as_of": "2026-08-19",
       "milestones": [
+        "tl-dma-2022-09-14-adoption",
+        "tl-dma-2022-10-12-publication",
         "tl-dma-2022-11-01-entry-into-force",
         "tl-dma-2023-05-01-application",
         "tl-dma-2024-03-07-compliance",
@@ -753,12 +759,15 @@
       "status_as_of": "2026-08-19",
       "status_note": "In force since 2024. Prohibitions, AI-literacy, GPAI duties and governance apply; the high-risk tier does not yet. The scalar alone is insufficient — read the milestones.",
       "milestones": [
+        "tl-ai-act-2024-06-13-adoption",
+        "tl-ai-act-2024-07-12-publication",
         "tl-ai-act-2024-08-01-entry-into-force",
         "tl-ai-act-2025-02-02-application",
         "tl-ai-act-2025-07-10-guidance",
         "tl-ai-act-2025-08-02-application",
         "tl-ai-act-2026-08-02-application",
         "tl-ai-act-2026-12-02-application",
+        "tl-ai-act-2026-12-02-transition-end",
         "tl-ai-act-2027-12-02-application",
         "tl-ai-act-2028-08-02-application",
         "tl-ai-act-2030-08-02-application"
@@ -811,23 +820,43 @@
           "summary": "The Regulation does not apply to AI systems where and in so far as they are placed on the market, put into service, or used with or without modification exclusively for military, defence or national security purposes, regardless of the type of entity carrying out those activities; nor does it affect Member States' competences concerning national security.",
           "obligation_on": [],
           "claims": [
-            "clm-art-4-2-teu-carve-out"
+            "clm-ai-act-national-security-exclusion"
           ],
           "sources": [
-            "src-eurlex-ai-act",
-            "src-aia-text-unofficial-arts-2-4"
+            "src-eurlex-ai-act"
           ]
         },
         {
           "id": "ai-act:art-3-63",
           "number": "3(63)",
           "heading": "Definition of a general-purpose AI model",
-          "summary": "Trained on broad data, displaying significant generality, capable of competently performing a wide range of distinct tasks and integrable into downstream systems, with an indicative floor around 10^23 training FLOP.",
+          "summary": "Displays significant generality, is capable of competently performing a wide range of distinct tasks and can be integrated into a variety of downstream systems or applications. The Article sets no compute figure: the indicative criterion of more than 10^23 training FLOP comes from the Commission's July 2025 guidelines, not from the Regulation.",
           "obligation_on": [],
           "claims": [],
           "sources": [
             "src-eurlex-ai-act"
-          ]
+          ],
+          "requires_verification": false,
+          "verification_note": "Checked 27 Sep 2026 against Article 3, point (63), of the Official Journal text (Cellar, CELEX 32024R1689). The summary used to attach an indicative 10^23 FLOP floor to the Article; the Article contains no compute figure, and that criterion is the Commission's July 2025 guidelines (src-ec-gpai-guidelines-2025). Corrected the same day."
+        },
+        {
+          "id": "ai-act:art-4",
+          "number": "4",
+          "heading": "AI literacy",
+          "summary": "Providers and deployers of AI systems must take measures to support the development of AI literacy of their staff and of others operating or using AI systems on their behalf. As replaced by the AI Omnibus, the Article does not require them to guarantee any specific level of AI literacy; the original text required measures to ensure a sufficient level.",
+          "obligation_on": [
+            "actor:ai-provider",
+            "actor:ai-deployer"
+          ],
+          "claims": [
+            "clm-ai-omnibus-art-4-literacy"
+          ],
+          "sources": [
+            "src-eurlex-ai-act",
+            "src-eurlex-ai-omnibus"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal texts read that day from the Publications Office's Cellar: Article 4 of Regulation (EU) 2024/1689 (CELEX 32024R1689) as adopted, and Article 1, point (5), of Regulation (EU) 2026/1744 (CELEX 32026R1744), which replaces it."
         },
         {
           "id": "ai-act:art-5",
@@ -1001,9 +1030,11 @@
       "scope_class": "scope:core",
       "brief_part": "part-6",
       "legislative_status": "status:partly-applicable",
-      "status_as_of": "2026-08-19",
-      "status_note": "General application since September 2025; the Art. 3(1) design obligation, the switching-charge ban and the extension of unfair-terms rules to pre-existing contracts arrive later.",
+      "status_as_of": "2026-09-27",
+      "status_note": "General application since 12 September 2025 (Art. 50). The Art. 3(1) design obligation applies to connected products and related services placed on the market after 12 September 2026; the switching-charge ban from 12 January 2027 (Art. 29(1)); Chapter IV's unfair-terms rules to long-running contracts concluded on or before 12 September 2025 from 12 September 2027 (Art. 50). Re-read against the milestones and the Official Journal text (CELEX 32023R2854) on 27 Sep 2026: still partly applicable.",
       "milestones": [
+        "tl-data-act-2023-12-13-adoption",
+        "tl-data-act-2023-12-22-publication",
         "tl-data-act-2024-01-11-entry-into-force",
         "tl-data-act-2025-09-12-application",
         "tl-data-act-2026-09-12-application",
@@ -1074,13 +1105,31 @@
           "sources": [
             "src-eurlex-data-act"
           ]
+        },
+        {
+          "id": "data-act:art-8",
+          "number": "8",
+          "heading": "Conditions under which data holders make data available to data recipients",
+          "summary": "Where, in business-to-business relations, a data holder is obliged to make data available to a data recipient, it must agree the arrangements on fair, reasonable and non-discriminatory terms and conditions and in a transparent manner.",
+          "obligation_on": [
+            "actor:data-holder"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-data-act"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32023R2854); heading and summary follow the Article's own paragraphs."
         }
       ],
       "claims": [
         "clm-data-act-non-personal",
         "clm-data-act-trade-secret-tension",
         "clm-data-act-retroactivity-open",
-        "clm-data-act-enforcement-uneven"
+        "clm-data-act-enforcement-uneven",
+        "clm-ie-data-bill-general-scheme",
+        "clm-ie-data-bill-not-introduced",
+        "clm-ie-data-centre-hub"
       ],
       "sources": [
         "src-eurlex-data-act"
@@ -1105,6 +1154,8 @@
       "status_as_of": "2026-09-26",
       "status_note": "In force since 2023, but a directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed and transposition is still materially incomplete: the Commission sent letters of formal notice to 23 Member States in November 2024 and referred Ireland, Spain, France and the Netherlands to the Court of Justice in July 2026.",
       "milestones": [
+        "tl-nis2-2022-12-14-adoption",
+        "tl-nis2-2022-12-27-publication",
         "tl-nis2-2023-01-16-entry-into-force",
         "tl-nis2-2024-10-17-transposition",
         "tl-nis2-2024-11-28-enforcement",
@@ -1123,13 +1174,14 @@
           "fr": "transposition:referred",
           "nl": "transposition:referred"
         },
-        "state_note": "Only the four Member States referred to the Court of Justice on 8 July 2026 are recorded, because those are the only per-state positions established from a primary source in this build. The remaining 23 Member States are NOT recorded as complete — their status is simply unknown here. A full per-state tracker is required before this field can be presented to users.",
+        "state_note": "Only the four Member States referred to the Court of Justice on 8 July 2026 are recorded, because those are the only per-state positions established from a primary source in this build. The remaining 23 Member States are NOT recorded as complete — their status is simply unknown here. A full per-state tracker is required before this field can be presented to users. 27 Sep 2026: the national measures notified to the Commission (Cellar, CELEX 72022L2555*) come from 25 Member States; none from Ireland or Spain, both among those referred. France and the Netherlands, also referred, have notified measures, which shows a notified measure is not complete transposition. The other 23 therefore stay unknown rather than being recorded as complete.",
         "requires_verification": true,
         "sources": [
           "src-ec-nis2-referral-2026",
-          "src-ec-nis2-lfn-2024"
+          "src-ec-nis2-lfn-2024",
+          "src-cellar-nim-nis2-cer-2026-09-27"
         ],
-        "last_verified": "2026-08-27"
+        "last_verified": "2026-09-27"
       },
       "dna": {
         "regulated_actor": [
@@ -1163,7 +1215,7 @@
           "id": "nis2:art-3",
           "number": "3",
           "heading": "Essential and important entities",
-          "summary": "Classifies entities as essential (Annex I) or important (Annex II) by sector and size, which determines the supervisory regime that applies.",
+          "summary": "Classifies entities of the types listed in Annexes I and II as essential or important. Annex I entities above the medium-sized-enterprise ceilings, and the special cases the Article lists, are essential; any Annex I or II entity that does not qualify as essential is important. The classification determines the supervisory regime that applies.",
           "obligation_on": [
             "actor:essential-entity",
             "actor:important-entity"
@@ -1172,8 +1224,8 @@
           "sources": [
             "src-eurlex-nis2"
           ],
-          "requires_verification": true,
-          "verification_note": "Article number and heading recorded from general knowledge; confirm against the consolidated text."
+          "requires_verification": false,
+          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32022L2555): heading and number match. The previous summary said entities are essential if in Annex I and important if in Annex II; paragraphs 1 and 2 are narrower, and the summary was corrected to them: an Annex I entity is essential only above the medium-sized-enterprise ceilings (or in the listed special cases), and any Annex I or II entity that does not qualify as essential is important. The earlier note said the article was recorded from general knowledge."
         },
         {
           "id": "nis2:art-20",
@@ -1259,6 +1311,8 @@
       "status_as_of": "2026-09-26",
       "status_note": "A directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed; on 29 April 2026 the Commission referred Bulgaria, France, Luxembourg, the Netherlands, Poland, Spain and Sweden to the Court of Justice for failing to transpose.",
       "milestones": [
+        "tl-cer-2022-12-14-adoption",
+        "tl-cer-2022-12-27-publication",
         "tl-cer-2023-01-16-entry-into-force",
         "tl-cer-2024-10-17-transposition"
       ],
@@ -1267,13 +1321,23 @@
       "repeals": [],
       "transposition": {
         "deadline": "tl-cer-2024-10-17-transposition",
-        "state": {},
-        "state_note": "No per-Member-State position established in this build. The brief states the same deadline and comparable delays to NIS2, but gives no figures.",
+        "state": {
+          "bg": "transposition:referred",
+          "fr": "transposition:referred",
+          "lu": "transposition:referred",
+          "nl": "transposition:referred",
+          "pl": "transposition:referred",
+          "es": "transposition:referred",
+          "se": "transposition:referred"
+        },
+        "state_note": "The seven Member States the Commission referred to the Court of Justice on 29 April 2026 for failing to transpose (IP/26/910) are recorded. The Commission states that most others have notified complete transposition, but it does not name them, so the remaining twenty are not recorded as complete here: their individual status is unknown. 27 Sep 2026: the national measures notified (Cellar, CELEX 72022L2557*) come from 24 Member States; none from Bulgaria, Spain or Sweden, three of the seven referred. France, Luxembourg, the Netherlands and Poland, also referred, have notified some measures. Who has notified something is established; who has transposed completely is not, so the twenty stay unknown.",
         "requires_verification": true,
         "sources": [
-          "src-brief-original"
+          "src-ec-cer-referral-2026",
+          "src-eurlex-cer",
+          "src-cellar-nim-nis2-cer-2026-09-27"
         ],
-        "last_verified": "2026-08-27"
+        "last_verified": "2026-09-27"
       },
       "dna": {
         "regulated_actor": [
@@ -1322,6 +1386,8 @@
       "legislative_status": "status:applicable",
       "status_as_of": "2026-08-19",
       "milestones": [
+        "tl-dora-2022-12-14-adoption",
+        "tl-dora-2022-12-27-publication",
         "tl-dora-2023-01-16-entry-into-force",
         "tl-dora-2025-01-17-application"
       ],
@@ -1352,7 +1418,114 @@
         ],
         "implementation_model": "Directly applicable"
       },
-      "provisions": [],
+      "provisions": [
+        {
+          "id": "dora:art-5",
+          "number": "5",
+          "heading": "Governance and organisation",
+          "summary": "Financial entities must have an internal governance and control framework for the effective and prudent management of ICT risk; the management body defines, approves, oversees and is responsible for the ICT risk management framework.",
+          "obligation_on": [
+            "actor:financial-entity"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dora"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R2554); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "dora:art-6",
+          "number": "6",
+          "heading": "ICT risk management framework",
+          "summary": "Financial entities must have a sound, comprehensive and well-documented ICT risk management framework as part of their overall risk management system.",
+          "obligation_on": [
+            "actor:financial-entity"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dora"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R2554); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "dora:art-17",
+          "number": "17",
+          "heading": "ICT-related incident management process",
+          "summary": "Financial entities must define, establish and implement a process to detect, manage and notify ICT-related incidents.",
+          "obligation_on": [
+            "actor:financial-entity"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dora"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R2554); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "dora:art-19",
+          "number": "19",
+          "heading": "Reporting of major ICT-related incidents and voluntary notification of significant cyber threats",
+          "summary": "Financial entities must report major ICT-related incidents to their competent authority, and may notify significant cyber threats voluntarily.",
+          "obligation_on": [
+            "actor:financial-entity"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dora"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R2554); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "dora:art-24",
+          "number": "24",
+          "heading": "General requirements for the performance of digital operational resilience testing",
+          "summary": "Financial entities other than microenterprises must establish, maintain and review a digital operational resilience testing programme as part of the ICT risk management framework.",
+          "obligation_on": [
+            "actor:financial-entity"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dora"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R2554); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "dora:art-28",
+          "number": "28",
+          "heading": "General principles (ICT third-party risk)",
+          "summary": "Financial entities must manage ICT third-party risk as an integral component of ICT risk within their ICT risk management framework.",
+          "obligation_on": [
+            "actor:financial-entity",
+            "actor:ict-third-party-provider"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dora"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R2554); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "dora:art-31",
+          "number": "31",
+          "heading": "Designation of critical ICT third-party service providers",
+          "summary": "The ESAs, through the Joint Committee and on the Oversight Forum's recommendation, designate critical ICT third-party service providers and appoint as Lead Overseer for each the ESA responsible for the financial entities holding the largest share of total assets among its users.",
+          "obligation_on": [
+            "actor:ict-third-party-provider"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dora"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R2554); heading and summary follow the Article's own paragraphs."
+        }
+      ],
       "claims": [],
       "sources": [
         "src-eurlex-dora"
@@ -1378,6 +1551,8 @@
       "status_as_of": "2026-09-26",
       "status_note": "In force since December 2024. Chapter IV (notification of conformity assessment bodies) has applied since 11 June 2026 and Article 14 reporting since 11 September 2026; the Regulation as a whole applies from 11 December 2027. The scalar alone is insufficient — read the milestones.",
       "milestones": [
+        "tl-cra-2024-10-23-adoption",
+        "tl-cra-2024-11-20-publication",
         "tl-cra-2024-12-10-entry-into-force",
         "tl-cra-2026-06-11-application",
         "tl-cra-2026-09-11-reporting-deadline",
@@ -1410,7 +1585,53 @@
         ],
         "implementation_model": "Directly applicable"
       },
-      "provisions": [],
+      "provisions": [
+        {
+          "id": "cra:art-13",
+          "number": "13",
+          "heading": "Obligations of manufacturers",
+          "summary": "When placing a product with digital elements on the market, manufacturers must ensure it has been designed, developed and produced in accordance with the essential cybersecurity requirements in Part I of Annex I.",
+          "obligation_on": [
+            "actor:manufacturer",
+            "actor:pde-manufacturer"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-cra"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R2847); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "cra:art-14",
+          "number": "14",
+          "heading": "Reporting obligations of manufacturers",
+          "summary": "Manufacturers must notify any actively exploited vulnerability, and severe incidents, simultaneously to the CSIRT designated as coordinator and to ENISA, via the single reporting platform. Applies from 11 September 2026 (Art. 71(2)).",
+          "obligation_on": [
+            "actor:manufacturer",
+            "actor:pde-manufacturer"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-cra"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R2847); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "cra:art-16",
+          "number": "16",
+          "heading": "Establishment of a single reporting platform",
+          "summary": "ENISA establishes the single reporting platform for the notifications under Articles 14 and 15, and manages and maintains its day-to-day operations.",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-cra"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R2847); heading and summary follow the Article's own paragraphs."
+        }
+      ],
       "claims": [],
       "sources": [
         "src-eurlex-cra",
@@ -1438,6 +1659,8 @@
       "status_as_of": "2026-08-19",
       "status_note": "The Commission's own label is 'Digital Omnibus on AI'; 'AI Omnibus' is the informal shorthand used in this brief.",
       "milestones": [
+        "tl-ai-omnibus-2026-07-08-adoption",
+        "tl-ai-omnibus-2026-07-24-publication",
         "tl-ai-omnibus-2025-11-19-proposal",
         "tl-ai-omnibus-2026-07-27-entry-into-force"
       ],
@@ -1571,18 +1794,21 @@
       "legislative_status": "status:transposition-pending",
       "status_as_of": "2026-08-27",
       "milestones": [
-        "tl-pld-2026-12-09-application"
+        "tl-pld-2026-12-09-application",
+        "tl-pld-2026-12-09-transposition"
       ],
       "amended_by": [],
       "amends": [],
       "repeals": [],
       "transposition": {
-        "deadline": null,
+        "deadline": "tl-pld-2026-12-09-transposition",
         "state": {},
-        "state_note": "Not established in this build.",
-        "requires_verification": true,
-        "sources": [],
-        "last_verified": "2026-08-27"
+        "state_note": "The transposition deadline is 9 December 2026 (Art. 22(1)) and has not passed, so no Member State can yet be late; per-state positions will be recorded once it has.",
+        "requires_verification": false,
+        "sources": [
+          "src-eurlex-pld"
+        ],
+        "last_verified": "2026-09-27"
       },
       "dna": {
         "regulated_actor": [
@@ -1626,14 +1852,16 @@
       ],
       "celex": "32025R2518",
       "short_name": "GDPR Procedural Regulation",
-      "full_name": "Regulation (EU) 2025/2518 laying down additional procedural rules relating to the enforcement of Regulation (EU) 2016/679",
+      "full_name": "Regulation (EU) 2025/2518 laying down additional procedural rules on the enforcement of Regulation (EU) 2016/679",
       "kind": "kind:regulation",
       "scope_class": "scope:adjacent",
       "brief_part": "part-2",
       "legislative_status": "status:in-force",
-      "status_as_of": "2026-09-26",
-      "status_note": "In force since 1 January 2026 but not yet applicable (applies to complaints lodged from 2 April 2027). Harmonises admissibility criteria for cross-border GDPR complaints, gives parties common procedural rights (including a right to be heard and to see preliminary findings) and sets investigation time limits (15 months for regular cases, 12 for a simplified procedure). CELEX derived from the Official Journal reference reported by eucrim (L 2025/2518 of 12 December 2025); the consolidated EUR-Lex text could not be retrieved directly in this environment (every attempt returns HTTP 202 with no body) and should be checked before this record's status is next revised.",
+      "status_as_of": "2026-09-27",
+      "status_note": "In force since 1 January 2026 but not yet applicable: it applies from 2 April 2027 (Art. 37), and its investigation rules to complaints lodged, and ex officio investigations opened, after that date (Art. 36). Harmonises admissibility criteria for cross-border GDPR complaints (Art. 4), gives parties common procedural rights (including a right to be heard on preliminary findings and access to the administrative file, Arts 19 and 24) and sets time limits for the lead authority's draft decision (15 months; 12 under the simple cooperation procedure; Art. 12). Checked against the Official Journal text (OJ L 2025/2518, 12.12.2025, CELEX 32025R2518) on 27 Sep 2026.",
       "milestones": [
+        "tl-gdpr-procedural-2025-11-26-adoption",
+        "tl-gdpr-procedural-2025-12-12-publication",
         "tl-gdpr-procedural-2026-01-01-entry-into-force",
         "tl-gdpr-procedural-2027-04-02-application"
       ],
@@ -1647,9 +1875,10 @@
         "clm-gdpr-procedural-regulation"
       ],
       "sources": [
+        "src-eurlex-gdpr-procedural",
         "src-eucrim-gdpr-procedural-2026"
       ],
-      "last_verified": "2026-09-26",
+      "last_verified": "2026-09-27",
       "legal_basis": []
     },
     {
@@ -1657,16 +1886,19 @@
       "aliases": [
         "data-governance-act"
       ],
-      "celex": null,
+      "celex": "32022R0868",
       "short_name": "DGA",
-      "full_name": "Data Governance Act",
+      "full_name": "Regulation (EU) 2022/868 on European data governance (Data Governance Act)",
       "kind": "kind:regulation",
       "scope_class": "scope:adjacent",
       "brief_part": null,
-      "legislative_status": null,
-      "status_as_of": "2026-08-27",
-      "status_note": "Status NOT ESTABLISHED in this build. Recorded for scope-mapping only (§24). No primary source consulted. Must not be rendered with a status until verified.",
-      "milestones": [],
+      "legislative_status": "status:applicable",
+      "status_as_of": "2026-09-27",
+      "status_note": "In force since 23 June 2022 and applicable since 24 September 2023 (Art. 38; OJ L 152, 3.6.2022). Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force.",
+      "milestones": [
+        "tl-dga-2022-06-23-entry-into-force",
+        "tl-dga-2023-09-24-application"
+      ],
       "amended_by": [],
       "amends": [],
       "repeals": [],
@@ -1674,8 +1906,10 @@
       "dna": null,
       "provisions": [],
       "claims": [],
-      "sources": [],
-      "last_verified": null,
+      "sources": [
+        "src-eurlex-dga"
+      ],
+      "last_verified": "2026-09-27",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -1685,15 +1919,15 @@
       "aliases": [
         "eprivacy-directive"
       ],
-      "celex": null,
+      "celex": "32002L0058",
       "short_name": "ePrivacy",
-      "full_name": "ePrivacy Directive",
+      "full_name": "Directive 2002/58/EC on privacy and electronic communications (ePrivacy Directive)",
       "kind": "kind:directive",
       "scope_class": "scope:adjacent",
       "brief_part": null,
-      "legislative_status": null,
-      "status_as_of": "2026-08-27",
-      "status_note": "Status NOT ESTABLISHED in this build. Recorded for scope-mapping only (§24). No primary source consulted. Must not be rendered with a status until verified.",
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-09-27",
+      "status_note": "In force since its publication on 31 July 2002 (Art. 20; OJ L 201, 31.7.2002); transposition was due before 31 October 2003 (Art. 17(1)). Amended by Directive 2009/136/EC, as the Court of Justice's judgments cite it (e.g. C-623/17, operative part); the amending directive itself was not read here. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force.",
       "milestones": [],
       "amended_by": [],
       "amends": [],
@@ -1705,9 +1939,10 @@
         "clm-eprivacy-miscounted-fines"
       ],
       "sources": [
-        "src-brief-original"
+        "src-eurlex-eprivacy",
+        "src-cjeu-c623-17"
       ],
-      "last_verified": null,
+      "last_verified": "2026-09-27",
       "legal_basis": []
     },
     {
@@ -1715,26 +1950,49 @@
       "aliases": [
         "european-digital-identity"
       ],
-      "celex": null,
+      "celex": "32024R1183",
       "short_name": "eIDAS2",
-      "full_name": "European Digital Identity Regulation",
+      "full_name": "Regulation (EU) 2024/1183 amending Regulation (EU) No 910/2014 as regards establishing the European Digital Identity Framework",
       "kind": "kind:regulation",
       "scope_class": "scope:adjacent",
       "brief_part": null,
-      "legislative_status": null,
-      "status_as_of": "2026-08-27",
-      "status_note": "Status NOT ESTABLISHED in this build. Recorded for scope-mapping only (§24). No primary source consulted. Must not be rendered with a status until verified.",
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-09-27",
+      "status_note": "In force since 20 May 2024 (Art. 2; OJ L 2024/1183, 30.4.2024); it amends Regulation (EU) No 910/2014 and sets no separate application date. Each Member State must provide a European Digital Identity Wallet within 24 months of the implementing acts under Arts 5a(23) and 5c(6), in force since 24 December 2024 (clm-eidas2-wallets). Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force.",
       "milestones": [],
       "amended_by": [],
       "amends": [],
       "repeals": [],
       "transposition": null,
       "dna": null,
-      "provisions": [],
+      "provisions": [
+        {
+          "id": "eidas2:art-5a",
+          "number": "5a (of Regulation (EU) No 910/2014, as inserted)",
+          "heading": "European Digital Identity Wallets",
+          "summary": "Each Member State must provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts referred to in Art. 5a(23) and Art. 5c(6).",
+          "obligation_on": [
+            "actor:member-state"
+          ],
+          "claims": [
+            "clm-eidas2-wallets"
+          ],
+          "sources": [
+            "src-eurlex-eidas2"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1183); heading and summary follow the Article's own paragraphs."
+        }
+      ],
       "claims": [],
-      "sources": [],
-      "last_verified": null,
-      "legal_basis": []
+      "sources": [
+        "src-eurlex-eidas2",
+        "src-eurlex-eudi-2024-2981"
+      ],
+      "last_verified": "2026-09-27",
+      "legal_basis": [
+        "tfeu:art-114"
+      ]
     },
     {
       "id": "cloud-ai-development-act",
@@ -1834,15 +2092,15 @@
     {
       "id": "chips-act",
       "aliases": [],
-      "celex": null,
+      "celex": "32023R1781",
       "short_name": "Chips Act",
-      "full_name": "European Chips Act",
+      "full_name": "Regulation (EU) 2023/1781 establishing a framework of measures for strengthening Europe's semiconductor ecosystem (Chips Act)",
       "kind": "kind:regulation",
       "scope_class": "scope:referenced",
       "brief_part": null,
-      "legislative_status": null,
-      "status_as_of": "2026-08-27",
-      "status_note": "Status NOT ESTABLISHED in this build. Recorded for scope-mapping only (§24). No primary source consulted. Must not be rendered with a status until verified.",
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-09-27",
+      "status_note": "In force since 21 September 2023, the third day after publication (Art. 41; OJ L 229, 18.9.2023), with no separate application date. Legal basis Art. 173(3) and Art. 114 TFEU. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force.",
       "milestones": [],
       "amended_by": [],
       "amends": [],
@@ -1851,9 +2109,14 @@
       "dna": null,
       "provisions": [],
       "claims": [],
-      "sources": [],
-      "last_verified": null,
-      "legal_basis": []
+      "sources": [
+        "src-eurlex-chips-act"
+      ],
+      "last_verified": "2026-09-27",
+      "legal_basis": [
+        "tfeu:art-173",
+        "tfeu:art-114"
+      ]
     },
     {
       "id": "ai-liability-directive",
@@ -2001,10 +2264,12 @@
           "obligation_on": [],
           "claims": [
             "clm-art-4-2-teu-carve-out",
+            "clm-privacy-international-national-security",
             "clm-enforcement-asymmetry"
           ],
           "sources": [
-            "src-brief-original"
+            "src-eurlex-teu-art-4",
+            "src-cjeu-c623-17"
           ]
         }
       ],
@@ -2210,9 +2475,9 @@
         "src-eurlex-dora",
         "src-eurlex-nis2"
       ],
-      "last_verified": "2026-08-27",
-      "requires_verification": true,
-      "verification_note": "The lex specialis characterisation is stated by the brief's framing rather than established from a primary source in this build."
+      "last_verified": "2026-09-27",
+      "requires_verification": false,
+      "verification_note": "DORA recital 16: 'this Regulation constitutes lex specialis with regard to Directive (EU) 2022/2555'. Read on 27 Sep 2026 in the Official Journal text (CELEX 32022R2554, via the Publications Office's Cellar). Earlier: The lex specialis characterisation is stated by the brief's framing rather than established from a primary source in this build."
     },
     {
       "id": "rel-cra-nis2",

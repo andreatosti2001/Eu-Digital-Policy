@@ -9,7 +9,7 @@
 
 import { loadAll, index, renderError, label as taxLabel, note as taxNote } from './data.js';
 import * as F from './format.js';
-import { STAGES, DERIVATION, derive, depth, aggregate } from './pipeline.js';
+import { STAGES, DERIVATION, derive, depth, aggregate, procedure } from './pipeline.js';
 import { renderFilterState, syncUrl, readUrl, emptyState } from './filters.js';
 
 const esc = (s) => String(s == null ? '' : s)
@@ -96,6 +96,9 @@ function recordHTML(rec, n) {
 
   const ap = rec.appeal || {};
   const j = rec.judicial;
+  /* where the case IS, and whether it can still change — derived, never
+     stored (js/pipeline.js procedure()); unknown finality is its own state */
+  const proc = procedure(rec);
 
   return '<article class="enf-rec" id="' + esc(rec.id) + '" data-depth="' + d + '" data-id="' + esc(rec.id) + '">' +
     '<header class="enf-head">' +
@@ -112,6 +115,8 @@ function recordHTML(rec, n) {
     pipelineHTML(rec, id) +
 
     '<dl class="enf-axes">' +
+      axis('Procedure', proc.stage) +
+      (proc.finality ? axis('Finality', proc.finality) : '') +
       axis('Action', rec.action_status) +
       axis('Payment', rec.payment_status) +
       axis('Remedy', rec.remedy_status) +
@@ -193,9 +198,9 @@ function funnelHTML(list) {
       return '<div class="fn-row">' +
         '<span class="fn-label">' + esc(taxLabel(IX, s.id)) + '</span>' +
         '<span class="fn-bar">' +
-          '<span class="fn-seg reached" style="width:' + pct(b.reached) + '" title="' + b.reached + ' reached"></span>' +
-          '<span class="fn-seg unknown" style="width:' + pct(b.unknown) + '" title="' + b.unknown + ' unknown"></span>' +
-          '<span class="fn-seg na" style="width:' + pct(b.na) + '" title="' + b.na + ' not applicable"></span>' +
+          '<span class="fn-seg reached" data-w="' + pct(b.reached) + '" title=""' + b.reached + ' reached"></span>' +
+          '<span class="fn-seg unknown" data-w="' + pct(b.unknown) + '" title=""' + b.unknown + ' unknown"></span>' +
+          '<span class="fn-seg na" data-w="' + pct(b.na) + '" title=""' + b.na + ' not applicable"></span>' +
         '</span>' +
         '<span class="fn-n">' + b.reached + '<span class="fn-u"> · ' + b.unknown + ' unknown</span></span>' +
         '</div>';
@@ -277,6 +282,7 @@ function render() {
     .sort((a, b) => String(b.decision_date || '').localeCompare(String(a.decision_date || '')));
   document.getElementById('enfSummary').innerHTML = summaryHTML(list);
   document.getElementById('enfFunnel').innerHTML = funnelHTML(list);
+  F.applyGeometry(document.getElementById('enfFunnel'));
   document.getElementById('enfList').innerHTML = list.length
     ? list.map(recordHTML).join('')
     : emptyState('enforcement records',

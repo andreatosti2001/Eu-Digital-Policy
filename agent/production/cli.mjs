@@ -145,8 +145,8 @@ if (command === 'separations') {
   out();
   out('  THE PHRASE, EVERYWHERE ELSE IN THE TREE');
   out('  Two independent halves: where the occurrence SITS, and whether the file can grant');
-  out('  anything at all. agent/policy/verify/ HE-04 reports the first half\'s subject as a');
-  out('  CRITICAL and could not check the condition its own finding names. This can.');
+  out('  anything at all. agent/policy/verify/ HE-04 decides from these same verdicts: a');
+  out('  read_it succeeds, a no_path_found is partial, only an all-cleared tree is safe.');
   out();
   for (const o of s.occurrences) {
     out(`    [${o.verdict}] ${o.file}`);

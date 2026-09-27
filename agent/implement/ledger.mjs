@@ -89,9 +89,15 @@ const sha256 = (s) => createHash('sha256').update(s).digest('hex');
  *  and an approval that went void because the proposal was
  *  regenerated unchanged would be an approval nobody could ever
  *  keep. */
-export function proposalFingerprint(proposal) {
+/** What a proposal IS, without when or through which run it was
+ *  produced: the part the fingerprint binds. */
+export function proposalSubstance(proposal) {
   const { trace_ref, created_at, ...substance } = proposal ?? {};
-  return sha256(canonicalJson(substance));
+  return substance;
+}
+
+export function proposalFingerprint(proposal) {
+  return sha256(canonicalJson(proposalSubstance(proposal)));
 }
 
 /* ---------------------------------------------------------- reading */
@@ -156,7 +162,7 @@ export function readAgentRecords({ dir = DEFAULT_RECORD_DIR } = {}) {
 export function deriveApproval(proposalId, { records, ledger } = {}) {
   const rec = records ?? readAgentRecords();
   const led = ledger ?? readLedger();
-  const proposal = rec.byId.get(proposalId) ?? null;
+  let proposal = rec.byId.get(proposalId) ?? null;
 
   const requests = rec.approvalRequests.filter((r) => (r.proposal_ids ?? []).includes(proposalId));
 
@@ -190,8 +196,20 @@ export function deriveApproval(proposalId, { records, ledger } = {}) {
     };
   }
 
+  let proposal_source = proposal ? 'record_store' : null;
+  if (!proposal && decision.proposal_snapshot) {
+    /* The store lacks it (a fresh clone, a regenerated store): fall back
+       to the copy the decision carries, but only if it still hashes to
+       the fingerprint the decision was bound to. */
+    if (decision.proposal_sha256 && proposalFingerprint(decision.proposal_snapshot) === decision.proposal_sha256) {
+      proposal = decision.proposal_snapshot;
+      proposal_source = 'ledger_snapshot';
+    } else {
+      return { state: 'void_unknown_proposal', why: `a decision exists for "${proposalId}" and the store does not hold that proposal; the copy the decision carries does not hash to the fingerprint it was bound to, so it was altered after the decision and authorises nothing.`, approval_id: decision.approval_id, decision, discarded, proposal: null };
+    }
+  }
   if (!proposal) {
-    return { state: 'void_unknown_proposal', why: `a decision exists for "${proposalId}" but no agent record store holds that proposal. A decision about something nobody can produce authorises nothing.`, approval_id: decision.approval_id, decision, discarded, proposal: null };
+    return { state: 'void_unknown_proposal', why: `a decision exists for "${proposalId}" but no agent record store holds that proposal, and the decision carries no copy of it. A decision about something nobody can produce authorises nothing.`, approval_id: decision.approval_id, decision, discarded, proposal: null };
   }
 
   if (decision.outcome === 'denied') {
@@ -213,9 +231,9 @@ export function deriveApproval(proposalId, { records, ledger } = {}) {
 
   return {
     state: 'granted',
-    why: `granted by ${decision.decided_by} on ${decision.decided_at}, bound to proposal fingerprint ${now.slice(0, 12)}${decision.note ? `. ${decision.note}` : ''}`,
+    why: `granted by ${decision.decided_by} on ${decision.decided_at}, bound to proposal fingerprint ${now.slice(0, 12)}${proposal_source === 'ledger_snapshot' ? ' (the proposal read from the copy the decision carries, which hashes to that fingerprint)' : ''}${decision.note ? `. ${decision.note}` : ''}`,
     approval_id: decision.approval_id,
-    decision, discarded, proposal,
+    decision, discarded, proposal, proposal_source,
   };
 }
 
@@ -274,6 +292,14 @@ export function recordDecision({ proposalId, outcome, decidedBy, note = null, re
        identified by hash above. */
     what_was_asked: requests[0].what_to_check ?? [],
     risk_if_wrong: requests[0].risk_if_wrong ?? null,
+    /* The proposal itself, as the fingerprint above hashes it, so the
+       decision stands on a fresh clone. agent/records/ is git-ignored
+       and regenerable; without this copy a decision recorded here read
+       "void_unknown_proposal" on every other machine
+       (docs/PRODUCTION-OPERATING-MODE.md §5). The copy is bound by
+       proposal_sha256: deriveApproval() uses it only if it still
+       hashes to that value, so editing it voids the decision. */
+    proposal_snapshot: proposalSubstance(proposal),
   };
 
   mkdirSync(dir, { recursive: true });

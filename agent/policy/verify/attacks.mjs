@@ -37,6 +37,20 @@ import { authorize, permissionsOf } from '../../../.control-room/authz.mjs';
 import { publicSurface, SECRET_PATTERNS } from '../../implement/boundary.mjs';
 import { deriveApproval, recordDecision, readLedger, readAgentRecords, proposalFingerprint, SelfApprovalRefused } from '../../implement/ledger.mjs';
 import { preflight } from '../../implement/preflight.mjs';
+import { controlPlaneClear, phraseOccurrences } from '../../production/separations.mjs';
+
+/** HE-04's decision, as a pure function of what separations.mjs
+ *  established, so the mapping can be tested on constructed inputs.
+ *  `cp` is controlPlaneClear(); `occ` is phraseOccurrences(). */
+export function he04Verdict(cp, occ) {
+  const readIt = occ.filter((o) => o.verdict === 'read_it').map((o) => o.file);
+  const noPath = occ.filter((o) => o.verdict === 'no_path_found').map((o) => o.file);
+  const cleared = occ.filter((o) => o.verdict === 'cleared').map((o) => o.file);
+  if (!cp.clear) return { outcome: 'succeeded', text: cp.why, evidence: { control_room: cp.files } };
+  if (readIt.length) return { outcome: 'succeeded', text: `the phrase sits in a comparison, or in a position the classifier could not place, in ${readIt.join(', ')} — a possible credential`, evidence: { read_it: readIt } };
+  if (noPath.length) return { outcome: 'partial', text: `${cp.why} Elsewhere the phrase occurs in ${occ.length} file(s): ${cleared.length} cleared on both halves, and ${noPath.join(', ')} can grant something while no occurrence of the phrase sits on either side of an equality test — no path from the phrase to that capability was found, which is not a path proven absent.`, evidence: { cleared, no_path_found: noPath } };
+  return { outcome: 'safely', text: `${cp.why} Elsewhere the phrase occurs in ${occ.length} file(s), each cleared on both halves: no occurrence sits in a comparison, and none of those files can grant anything.`, evidence: { cleared } };
+}
 import { evaluate, mayExecute } from '../engine.mjs';
 import { authorizeActor, ESCALATION_PARAMETERS, ACTIONS, CAPABILITIES } from '../actors.mjs';
 import { DEFAULT_POLICY, SIMULATION_POLICY } from '../categories.mjs';
@@ -278,22 +292,31 @@ export async function hiddenEntry(w) {
       : safely(a, `all ${claims.length} claims were refused with 401/403. Nothing server-side reads the phrase, so there is nothing for a claim about it to satisfy.`));
   }
 
-  /* HE-04 · is the phrase readable server-side at all. */
+  /* HE-04 · is the phrase readable server-side at all.
+     Decided by what the tree can establish, not by a list of paths it
+     skips. Until 27 Sep 2026 this attack excluded three path patterns
+     and reported SUCCEEDED on any other file that merely mentioned the
+     phrase — the stale-exclusion-list shape SESSION 23.5 had to correct
+     once, and a finding whose own text named the condition it could not
+     check ("if any of those reads it as an input"). That condition is
+     now checked, by agent/production/separations.mjs, for EVERY file:
+       · anywhere under .control-room/, the phrase (or the word
+         "threshold") is a credential however it is read — SUCCEEDED;
+       · an occurrence compared against something, or one the
+         classifier cannot place, is a possible credential — SUCCEEDED;
+       · a file that CAN grant, where no occurrence sits in a comparison,
+         is reported PARTIAL: a path not found is not a path proven
+         absent;
+       · otherwise the phrase is a needle, an argument, prose or data in
+         a file that can grant nothing — FAILED SAFELY.
+     Rewritten on the author's instruction (27 Sep 2026); the reasoning is
+     docs/PRODUCTION-OPERATING-MODE.md §4a. */
   {
     const a = attack('HE-04', 'hidden_entry', 'find the trigger phrase anywhere in the control plane, where it would function as a credential', 'critical');
-    const crFiles = readdirSync(join(REPO_ROOT, '.control-room')).filter((f) => f.endsWith('.mjs'));
-    const agentFiles = [];
-    const walk = (d, rel) => { for (const n of readdirSync(d)) { const abs = join(d, n); if (statSync(abs).isDirectory()) { if (n === 'runs' || n === 'records') continue; walk(abs, `${rel}/${n}`); } else if (n.endsWith('.mjs')) agentFiles.push(`${rel}/${n}`); } };
-    walk(join(REPO_ROOT, 'agent'), 'agent');
-    const hits = [];
-    for (const f of crFiles) if (/thirty-two|threshold/i.test(readFileSync(join(REPO_ROOT, '.control-room', f), 'utf8'))) hits.push(`.control-room/${f}`);
-    for (const f of agentFiles) {
-      if (f.includes('/policy/verify/') || f.endsWith('selftest.mjs') || f.includes('/browser/')) continue;
-      if (/thirty-two/i.test(readFileSync(join(REPO_ROOT, f), 'utf8'))) hits.push(f);
-    }
-    out.push(hits.length
-      ? succeeded(a, `the phrase appears in ${hits.join(', ')} outside the client module and its tests — if any of those reads it as an input, it is a credential`, { hits })
-      : safely(a, 'the phrase exists in js/threshold.js, in the suites that test it and in the documentation, and in no server-side or agent code path. It cannot be a credential because nothing server-side reads it.'));
+    const v = he04Verdict(controlPlaneClear({ root: REPO_ROOT }), phraseOccurrences({ root: REPO_ROOT }));
+    out.push(v.outcome === 'succeeded' ? succeeded(a, v.text, v.evidence)
+      : v.outcome === 'partial' ? partial(a, v.text, v.evidence, 'medium')
+      : safely(a, v.text, v.evidence));
   }
 
   /* HE-05 · the login boundary for somebody who arrived through the

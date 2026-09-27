@@ -46,7 +46,7 @@ import {
 } from './security.mjs';
 import { entryFor, movement, read as readHistory, append, historyPath, HISTORY_DIR } from './history.mjs';
 import { collectLeaks } from './monitor.mjs';
-import { REPO_ROOT } from '../implement/baseline.mjs';
+import { REPO_ROOT, readBaseline } from '../implement/baseline.mjs';
 import { scanSecrets, publicSurface, isWebsiteAsset } from '../implement/boundary.mjs';
 
 /* ---------------------------------------------------------- fixtures */
@@ -601,7 +601,10 @@ test('the unverified count matches the recorded baseline in §12', async () => {
   const ctx = await realCtx();
   const r = BY_ID.get('knowledge.unresolved_claims').measure(ctx);
   assert.equal(r.state, 'measured');
-  assert.equal(r.value, 111, 'the canonical count comes from validate.mjs across all ten datasets');
+  /* Read from §12 rather than restated: the number moves when verification
+     work is done (111 → 104 on 27 Sep 2026), and a second copy of it in this
+     test would be the second home the project's first principle forbids. */
+  assert.equal(r.value, readBaseline().unverified, 'the canonical count comes from validate.mjs across all ten datasets, and must equal the figure recorded in docs/CURRENT-ARCHITECTURE.md §12');
   assert.ok(r.detail.claims_and_enforcement_only < r.value, 'the narrower direct count must be reported beside it and labelled as narrower');
 });
 

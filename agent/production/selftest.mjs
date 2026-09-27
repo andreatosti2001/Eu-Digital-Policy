@@ -47,7 +47,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -67,7 +67,7 @@ import {
   maskComments, maskStrings, maskRegexLiterals, GRANTING_PRIMITIVES,
 } from './separations.mjs';
 import { traceability, trackedFilesUnder, PUBLISHED_SURFACE } from './traceability.mjs';
-import { CONDITIONS, DOMAINS, evaluate, assessActivation, sourceReachability } from './readiness.mjs';
+import { CONDITIONS, DOMAINS, evaluate, assessActivation, sourceReachability, deployGateWired } from './readiness.mjs';
 import { ENDPOINTS } from '../scout/authorities.mjs';
 
 const HERE = join(REPO_ROOT, 'agent/production');
@@ -534,7 +534,25 @@ test('8 · a human commit is counted as a write path rather than left out', () =
   const human = t.write_paths.find((p) => p.id === 'human_commit');
   assert.ok(human, 'the most likely way this website changes is on the list');
   assert.equal(human.automatic, false);
-  assert.equal(human.traceable, false);
+  /* Traceable exactly when the evidence rule is wired: the check exists
+     and both the QA workflow and the deploy gate run it. */
+  const wired = existsSync(join(REPO_ROOT, 'tools/commit-evidence.mjs'))
+    && /tools\/commit-evidence\.mjs/.test(readFileSync(join(REPO_ROOT, '.github/workflows/qa.yml'), 'utf8'))
+    && /tools\/commit-evidence\.mjs/.test(readFileSync(join(REPO_ROOT, '.github/workflows/pages.yml'), 'utf8'));
+  assert.equal(human.traceable, wired);
+});
+
+test('8 · a deploy gate in the tree is never reported as a gate on the live site', () => {
+  /* pages.yml can exist and gate its own deploy while GitHub Pages still
+     publishes main from a branch. That is a setting no file records, so
+     the condition must come out unmeasurable — never pass. */
+  const pages = readFileSync(join(REPO_ROOT, '.github/workflows/pages.yml'), 'utf8');
+  assert.equal(deployGateWired(pages), true, 'pages.yml builds only after every gate job');
+  assert.equal(deployGateWired(pages.replace(/needs: \[gate-[^\]]*\]/, 'needs: [gate-data]')), false, 'a gate job the build does not wait for is no gate');
+  assert.equal(deployGateWired(null), false);
+  const c = CONDITIONS.find((x) => x.id === 'deploy_gate_exists');
+  assert.equal(c.evaluate({ ciWorkflow: 'x', pagesWorkflow: pages }).state, 'unmeasurable');
+  assert.equal(c.evaluate({ ciWorkflow: 'x', pagesWorkflow: null }).state, 'fail');
 });
 
 test('8 · the published surface names the pages and the directories a reader receives', () => {

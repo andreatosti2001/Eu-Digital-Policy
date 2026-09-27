@@ -55,7 +55,7 @@ function injectMarkers() {
     b.setAttribute('aria-haspopup', 'dialog');
     b.setAttribute('aria-label',
       'Note ' + n + '. ' + F.typeOf(claim) + '. Why this claim?');
-    if (F.isUnverified(claim)) b.dataset.unverified = '1';
+    if (F.isUnverified(claim, IX)) b.dataset.unverified = '1';
     /* a claim can be sourced and still have a named hole in its sourcing —
        the asterisk marks the hole, the drawer says what it is */
     if (claim.reference_gap) b.dataset.refgap = '1';
@@ -80,7 +80,7 @@ function noteLine(entry) {
       (s.supports !== 'supports:direct' ? ' <span class="pn-tag">(' + esc(w) + ')</span>' : '');
   }).filter(Boolean);
   const body = cites.length ? cites.join('; ') : '<span class="evi-nourl">No source recorded.</span>';
-  const unv = F.isUnverified(c)
+  const unv = F.isUnverified(c, IX)
     ? ' <span class="pn-tag" data-t="critique">requires verification</span>' : '';
   return '<li id="note-' + entry.n + '">' +
     '<span class="pn-n" data-family="' + F.familyOf(c) + '">' + entry.n + '.</span>' +
@@ -120,7 +120,10 @@ function injectLegend() {
     '<b>Evidence</b>' +
     '<span class="lg-law">▪ law</span>' +
     '<span class="lg-fact">▪ fact</span>' +
+    '<span class="lg-derived">▪ derived — computed here</span>' +
+    '<span class="lg-attr">▪ attributed — an actor’s view</span>' +
     '<span class="lg-arg">▪ interpretation · critique · forecast</span>' +
+    '<span class="lg-prose"><span aria-hidden="true">◇</span> author’s synthesis, not a sourced finding</span>' +
     '<span>numbers open the source</span>' +
     '<span class="lg-gap"><b>*</b> reference not located</span>' +
     '<a href="applies.html">What applies to me?</a>' +
@@ -161,7 +164,7 @@ const sourceCard = (ref) => sharedSourceCard(ref, IX, 'full');
 function renderClaim(entry) {
   const c = IX.claim.get(entry.claimId);
   const t = F.typeOf(c);
-  const unv = F.isUnverified(c);
+  const unv = F.isUnverified(c, IX);
   const g = F.evidenceGrade(c, IX);
 
   const basis = (c.legal_basis || []).map((p) => {
@@ -179,11 +182,13 @@ function renderClaim(entry) {
   const statuses = (c.instruments || []).map(statusFor).filter(Boolean);
   const statusHTML = statuses.length ? statuses.map((s) =>
     '<div class="evi-row"><dt>' + esc(s.name) + '</dt><dd>' +
-    '<b>' + esc(s.status) + '</b>' + (s.asOf ? ' <span style="opacity:.7">as of ' + esc(F.humanDate(s.asOf)) + '</span>' : '') +
-    (s.note ? '<br><span style="opacity:.8">' + esc(s.note) + '</span>' : '') +
+    '<b>' + esc(s.status) + '</b>' + (s.asOf ? ' <span class="ev-dim-70">as of ' + esc(F.humanDate(s.asOf)) + '</span>' : '') +
+    (s.note ? '<br><span class="ev-dim-80">' + esc(s.note) + '</span>' : '') +
     '</dd></div>').join('') : '';
 
   const cards = sourceList(c, IX, 'full');
+  const es = F.evidenceStatus(c);
+  const extra = derivationHTML(c) + attributionHTML(c) + premisesHTML(c) + contestedHTML(c);
 
   panel.innerHTML =
     '<div class="evi-head">' +
@@ -191,6 +196,7 @@ function renderClaim(entry) {
       '<span class="evi-eyebrow">Note ' + entry.n + ' · why this claim?</span>' +
       '<span class="evi-type" data-t="' + esc(t) + '">' + esc(t) + '</span>' +
       '<span class="evi-grade" data-g="' + esc(g.id) + '">' + esc(g.label) + '</span>' +
+      '<span class="evi-status" data-e="' + esc(es) + '">evidence: ' + esc(F.EVIDENCE_WORD[es] || es) + '</span>' +
       '<p class="evi-type-note">' + esc(F.CLAIM_GLOSS[t] || '') + '</p>' +
       '<p class="evi-grade-note">' + esc(g.gloss) + '</p>' +
       '<p class="evi-statement" id="evi-title">' + esc(c.statement) + '</p>' +
@@ -209,9 +215,10 @@ function renderClaim(entry) {
           ? '<div class="evi-warn evi-warn-soft"><b>Open question on this record</b>' +
             esc(c.verification_note || '') + '</div>'
           : '') +
+      extra +
       (statusHTML ? '<div class="evi-sec"><h4>Regulatory status</h4><dl class="evi-dl">' + statusHTML + '</dl></div>' : '') +
       '<div class="evi-sec"><h4>Basis</h4><dl class="evi-dl">' +
-        row('Legal basis', basis || '<span style="opacity:.7">none — this is not a claim about the text of an instrument</span>') +
+        row('Legal basis', basis || '<span class="ev-dim-70">none — this is not a claim about the text of an instrument</span>') +
         row('Institutions', insts) +
         row('Part', esc(c.brief_part || '—')) +
       '</dl></div>' +
@@ -229,6 +236,79 @@ function renderClaim(entry) {
     '</div>';
 
   panel.querySelector('.evi-close').addEventListener('click', () => dialogApi.close());
+}
+
+/* A derived claim shows its working. "The source says 56.9%" and "this site
+   divided two sourced figures and got 56.9%" are different statements, and
+   the second one is only as good as the arithmetic a reader can check. */
+function derivationHTML(c) {
+  const d = c.derivation;
+  if (!d) return '';
+  const chk = F.checkDerivation(c, IX);
+  const inputs = Object.entries(d.inputs || {}).map(([k, inp]) => {
+    const ic = IX.claim.get(inp.claim);
+    return '<li><code>' + esc(k) + '</code> = ' + esc(inp.as_stated || String(inp.value)) +
+      ' <span class="ev-dim-75">— from “' + esc(ic ? ic.statement : inp.claim) + '” (' +
+      esc(ic ? F.evidenceGrade(ic, IX).label : 'missing') + ')</span></li>';
+  }).join('');
+  return '<div class="evi-sec"><h4>How this figure was derived</h4>' +
+    '<p class="evi-cite">' + esc(d.performed_by === 'site'
+      ? 'Computed by this site. No source states this figure; it follows from the inputs below.'
+      : 'Stated by a source; this site re-ran the arithmetic.') + ' ' + esc(d.method || '') + '</p>' +
+    '<ul class="evi-deriv">' + inputs + '</ul>' +
+    '<p class="evi-cite"><code>' + esc(d.formula) + '</code> = ' + esc(String(chk.computed)) +
+      (d.rounding ? ' → stated as ' + esc(String(d.rounding.stated_value)) + ' (rounded to ' + esc(String(d.rounding.to)) + ')' : '') + '</p>' +
+    (chk.ok ? '' : '<div class="evi-warn"><b>The derivation does not check</b>' + esc(chk.problems.join('; ')) + '</div>') +
+    '</div>';
+}
+
+function attributionHTML(c) {
+  if (F.typeOf(c) !== 'attributed' || !c.attributed_to) return '';
+  return '<div class="evi-sec"><h4>Whose view this is</h4><p class="evi-cite">' + esc(c.attributed_to) +
+    '. The site reports this position; it does not adopt it.</p></div>';
+}
+
+/* An argument's premises: the registered claims it is built on. Following
+   them is how a reader tests the inference rather than the author. */
+function premisesHTML(c) {
+  const ps = (c.premises || []).map((id) => IX.claim.get(id)).filter(Boolean);
+  if (!ps.length) return '';
+  return '<div class="evi-sec"><h4>Built on</h4><ul class="evi-deriv">' + ps.map((p) =>
+    '<li>' + esc(p.statement) + ' <span class="ev-dim-75">(' + esc(F.evidenceGrade(p, IX).label) + ')</span></li>').join('') +
+    '</ul></div>';
+}
+
+function contestedHTML(c) {
+  const k = c.contested;
+  if (!k) return '';
+  const who = (k.sources || []).map((id) => IX.source.get(id)).filter(Boolean)
+    .map((src) => F.citeHTML(src, IX, 'note')).join('; ');
+  return '<div class="evi-warn evi-warn-soft"><b>Sources disagree</b>' + esc(k.note || '') +
+    (who ? '<br>' + who : '') + '</div>';
+}
+
+/* ---------------------------------------------------------- prose classes
+
+   Not every sentence in the brief is a registered claim, and it should not
+   pretend to be. A passage the author marked as synthesis, critique or
+   recommendation gets a small mark of its own, so it is never read with the
+   semantics of a sourced fact. The class lives in the markup
+   (data-prose="prose:synthesis"), is checked by tools/evidence-audit.mjs,
+   and its wording comes from taxonomy.json. */
+function injectProseMarks() {
+  for (const m of document.querySelectorAll('.prose-mark')) m.remove();
+  for (const el of document.querySelectorAll('[data-prose]')) {
+    const cls = el.getAttribute('data-prose');
+    if (!/^prose:(synthesis|critique|recommendation)$/.test(cls)) continue;
+    const m = document.createElement('span');
+    m.className = 'prose-mark';
+    m.dataset.prose = cls.split(':').pop();
+    const lab = taxLabel(IX, cls) || cls;
+    m.title = lab + ' — ' + (taxNote(IX, cls) || '');
+    m.innerHTML = '<span aria-hidden="true">◇</span><span class="sr-only">' + esc(lab) + '</span>';
+    el.appendChild(document.createTextNode(' '));
+    el.appendChild(m);
+  }
 }
 
 function ensureDialog() {
@@ -259,7 +339,7 @@ function openFor(claimId, trigger) {
 
 export function initEvidence(ix) {
   IX = ix;
-  const render = () => { buildOrder(); injectMarkers(); injectPartNotes(); injectLegend(); };
+  const render = () => { buildOrder(); injectMarkers(); injectPartNotes(); injectLegend(); injectProseMarks(); };
   render();
 
   // the i18n layer replaces innerHTML, which erases the markers; put them back

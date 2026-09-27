@@ -23,9 +23,11 @@
    ============================================================ */
 
 import { test } from 'node:test';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import assert from 'node:assert/strict';
 
-import { runAllAttacks } from './attacks.mjs';
+import { runAllAttacks, he04Verdict } from './attacks.mjs';
 import { AREAS, OUTCOMES, SEVERITIES, hashTree, cleanup, REPO_ROOT } from './harness.mjs';
 
 /* One pair of runs, shared by every test below. Running the gate
@@ -103,3 +105,19 @@ test('no attack ran against the repository\'s own records, ledger or Control Roo
     assert.ok(!src.includes(p), `evidence names ${p}; every world is a temporary directory and the repository's own state is never touched`);
   }
 });
+
+test('HE-04 decides from what the tree establishes, never from a list of skipped paths', () => {
+  const cpClear = { clear: true, files: [], why: 'clear.' };
+  const f = (file, verdict) => ({ file, verdict });
+  assert.equal(he04Verdict({ clear: false, files: ['x.mjs'], why: 'in .control-room' }, []).outcome, 'succeeded',
+    'the phrase anywhere under .control-room/ is a credential however it is read');
+  assert.equal(he04Verdict(cpClear, [f('a.mjs', 'cleared'), f('b.mjs', 'read_it')]).outcome, 'succeeded',
+    'a comparison, or an occurrence the classifier cannot place, is a possible credential');
+  assert.equal(he04Verdict(cpClear, [f('a.mjs', 'cleared'), f('c.mjs', 'no_path_found')]).outcome, 'partial',
+    'a path not found is not a path proven absent');
+  assert.equal(he04Verdict(cpClear, [f('a.mjs', 'cleared')]).outcome, 'safely');
+  const src = readFileSync(join(REPO_ROOT, 'agent/policy/verify/attacks.mjs'), 'utf8');
+  const block = src.slice(src.indexOf("attack('HE-04'"), src.indexOf("/* HE-05"));
+  assert.ok(!/selftest\.mjs|\/policy\/verify\/|\/browser\//.test(block), 'HE-04 skips no file by path');
+});
+

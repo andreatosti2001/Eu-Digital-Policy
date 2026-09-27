@@ -67,6 +67,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { riskClass, freshnessState, RISK_TTL_DAYS } from '../js/evidence-model.js';
 
 const AS_OF = process.argv[2] || new Date().toISOString().slice(0, 10);
 const DAY = 86400000;
@@ -261,6 +262,41 @@ if (isMain) {
          anything in the world. */
       defect(`${un.length} URL-less source(s) carry no \`resolution\` field, so it is not recorded why they cannot be linked: ${un.map((s) => s.id).join(', ')}`);
     }
+  }
+
+  /* ---------------------------------------------------------- 5. risk */
+
+  /* The per-record layer (27 Sep 2026). The intervals above are one per
+     DATASET; this reads every record by what it is about — a pending
+     appeal or a preliminary finding moves faster than a 2018 application
+     date — and gives it a review interval from js/evidence-model.js
+     RISK_TTL_DAYS, the one home for those numbers.
+
+     IT IS A REPORT, NOT A PROMPT, AND THAT IS DELIBERATE. Nothing here is
+     counted as a staleness prompt or raised as a "Content stale" warning:
+     the prompt contract above (selftest F1–F6) is unchanged, and a second
+     prompt source would make one count mean two things. What this section
+     adds is the list a person works from. tools/evidence-audit.mjs reports
+     the same states, from the same module. */
+  line('\nRISK-BASED REVIEW (per record)  intervals: ' + Object.entries(RISK_TTL_DAYS).map(([k, v]) => `${k.split(':')[1]} ${v}d`).join(' · '));
+  const enfById = new Map(enf.map((e) => [e.id, e]));
+  const sets = [
+    ['claims', 'claim', arr(read('claims.json').claims)],
+    ['enforcement', 'enforcement', enf],
+    ['timeline', 'event', arr(read('timeline.json').events)],
+    ['instruments', 'instrument', arr(read('instruments.json').instruments)],
+  ];
+  for (const [name, kind, list] of sets) {
+    const rows = list.map((r) => {
+      const risk = riskClass(kind, r, { asOf: AS_OF, enforcementById: enfById });
+      return { id: r.id, risk, state: freshnessState(r.last_verified, risk, AS_OF), at: r.last_verified };
+    });
+    const tally = {};
+    for (const r of rows) tally[r.state] = (tally[r.state] || 0) + 1;
+    line(`  ${name.padEnd(12)} ${Object.entries(tally).map(([k, v]) => `${k.split(':')[1]} ${v}`).join(' · ')}`);
+    const due = rows.filter((r) => (r.risk === 'risk:critical' || r.risk === 'risk:high')
+      && (r.state === 'freshness:review-due' || r.state === 'freshness:stale'));
+    for (const r of due) line(`      · ${r.risk.split(':')[1].padEnd(8)} ${r.state.split(':')[1].padEnd(10)} ${r.id}  (verified ${r.at || 'never'})`);
   }
 
   line('\n' + '='.repeat(64));

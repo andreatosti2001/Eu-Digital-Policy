@@ -88,7 +88,7 @@ function statusLedger(ix, instruments) {
   const bar = live.map((b) => {
     const n = counted.get(b.id).length;
     return '<span class="sop-seg" data-s="' + esc(b.id.split(':').pop()) + '"' +
-      ' style="flex:' + n + '"' +
+      ' data-flex="' + n + '"' +
       ' title="' + esc(n + ' — ' + b.short + '. ' + b.gloss) + '"></span>';
   }).join('');
 
@@ -251,6 +251,7 @@ export async function initMasthead() {
     statusLedger(ix, instruments) +
     nextDue(ix, 3) +
     enforcementLine(ix, records);
+  F.applyGeometry(mount);
 
   const tick = document.querySelector('[data-mount="sop-ticker"]');
   if (tick) tick.innerHTML = ticker(ix, instruments, records);

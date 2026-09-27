@@ -39,6 +39,14 @@ import {
   foreignOrigin, scanHtml, scanCss, scanJs, scanRuntimeSurface, runtimeSurface,
 } from './thirdparty.mjs';
 import { EXPECTED, RECHECK } from './freshness.mjs';
+import { readBaseline } from '../agent/implement/baseline.mjs';
+import { audit, passages, datesIn, DERIVED_FIELDS } from './evidence-audit.mjs';
+import { cspProblems, securityMeta, inlineScripts } from './csp.mjs';
+import { openBacklog } from '../js/evidence-model.js';
+import { build as buildArtifact, refusal } from './pages-artifact.mjs';
+import * as EM from '../js/evidence-model.js';
+import { procedure, contradictions } from '../js/pipeline.js';
+import { statusContradictions, provisionApplication } from '../js/regulatory-model.js';
 import {
   SOURCE_FIELDS, REQUIRED_FIELDS, OPTIONAL_FIELDS, RESOLUTIONS, ABSENT_BY_DESIGN, violations,
 } from './source-contract.mjs';
@@ -356,7 +364,12 @@ test('F9 · a provisional enforcement record re-read within 30 days is not a pro
     d.$last_verified = asOf;
     r.last_verified = '2099-01-01';
     writeFileSync(p, JSON.stringify(d, null, 1));
-    assert.doesNotMatch(runValidator('freshness.mjs', [asOf], dir).out, /enf-planted-f9/, '30 days is inside the window');
+    /* Only the PROMPT lines ('! …') are the contract here. The id may
+       still appear in the risk-based review, which freshness.mjs states is
+       a report and not a prompt: a pending-appeal record is critical-risk
+       and listed there on its own, shorter, interval. */
+    const promptLines = (out) => out.split('\n').filter((l) => l.trim().startsWith('! ')).join('\n');
+    assert.doesNotMatch(promptLines(runValidator('freshness.mjs', [asOf], dir).out), /enf-planted-f9/, '30 days is inside the window');
     r.last_verified = '2098-12-31';
     d.$last_verified = '2098-12-31';
     writeFileSync(p, JSON.stringify(d, null, 1));
@@ -412,10 +425,10 @@ test('B2 · the contract is derived from the data, not asserted over it', () => 
   assert.deepEqual(strays, []);
 });
 
-test('B3 · the contract names 12 required and 2 optional fields, and says who writes and reads each', () => {
+test('B3 · the contract names 12 required and 3 optional fields, and says who writes and reads each', () => {
   assert.deepEqual(REQUIRED_FIELDS, ['id', 'tier', 'type', 'publisher', 'publisher_name', 'title',
     'url', 'url_status', 'published', 'accessed', 'language', 'note']);
-  assert.deepEqual(OPTIONAL_FIELDS, ['resolution', 'resolution_note']);
+  assert.deepEqual(OPTIONAL_FIELDS, ['resolution', 'resolution_note', 'reproduces']);
   /* A schema becomes a contract when it answers four questions about
      every field: what shape, why it exists, who writes it, who reads
      it. "a person" is a complete answer to the third; the first two
@@ -549,6 +562,222 @@ test('G1 · validate.mjs and i18n-audit.mjs exit 0 on this tree, and design-qa h
   assert.equal(runValidator('i18n-audit.mjs').exit, 0);
   const dq = runValidator('design-qa.mjs');
   assert.equal(dq.exit, 0);
-  assert.match(dq.out, /0 errors, 5 warnings/,
-    'docs/CURRENT-ARCHITECTURE.md §12 records five design-qa warnings; a new one is a finding, not noise');
+  const recorded = readBaseline().checks['design-qa.mjs'].warnings;
+  assert.match(dq.out, new RegExp(`0 errors, ${recorded} warnings`),
+    `docs/CURRENT-ARCHITECTURE.md §12 records ${recorded} design-qa warning(s) — five until 27 Sep 2026, none since; a new one is a finding, not noise`);
+});
+
+
+/* ============================================================
+   H · the evidence model (27 Sep 2026)
+
+   tools/evidence-audit.mjs is a gate in .github/workflows/pages.yml, so
+   each rule it enforces is planted here and must be caught. A copy of the
+   real tree is used for the planted defects; the real tree is never
+   written.
+   ============================================================ */
+
+/* named TREE, not ROOT, in this section: the word pair "root", colon, "ROOT" is the shape of a
+   seeded default credential to the boundary scanner (.control-room
+   selftest 16b), and the scanner is right to be that literal. */
+const TREE = ROOT;
+
+function treeCopy() {
+  const dir = scratch('evidence');
+  cpSync(join(ROOT, 'data'), join(dir, 'data'), { recursive: true });
+  cpSync(join(ROOT, 'index.html'), join(dir, 'index.html'));
+  return dir;
+}
+const editJSON = (dir, f, fn) => {
+  const p = join(dir, 'data', f); const d = JSON.parse(readFileSync(p, 'utf8')); fn(d); writeFileSync(p, JSON.stringify(d));
+};
+
+test('H1 · the real tree has no evidence-audit error and every substantive passage is accounted for', () => {
+  const r = audit({ root: TREE, asOf: '2026-09-27' });
+  assert.deepEqual(r.errors, []);
+  assert.equal(r.prose.unclassified, 0);
+  assert.equal(r.prose.coverage_pct, 100);
+  assert.ok(r.prose.total > 150, 'the passage walker must find the brief, not an empty page');
+});
+
+test('H2 · an unclassified passage, an unknown claim id and an unknown prose class are errors', () => {
+  const dir = treeCopy();
+  try {
+    let h = readFileSync(join(dir, 'index.html'), 'utf8');
+    h = h.replace(' data-prose="prose:signpost"', '');                 /* strip one classification */
+    h = h.replace('data-claim="clm-art-114-shapes-everything"', 'data-claim="clm-does-not-exist"');
+    h = h.replace('data-prose="prose:method"', 'data-prose="prose:vibes"');
+    writeFileSync(join(dir, 'index.html'), h);
+    const r = audit({ root: dir, asOf: '2026-09-27' });
+    assert.ok(r.errors.some((e) => /neither registered nor classified/.test(e)));
+    assert.ok(r.errors.some((e) => /clm-does-not-exist/.test(e)));
+    assert.ok(r.errors.some((e) => /prose:vibes/.test(e)));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('H3 · a derivation that does not re-run is an error, and so is a figure that does not read back out of its input', () => {
+  const dir = treeCopy();
+  try {
+    editJSON(dir, 'claims.json', (d) => {
+      const c = d.claims.find((x) => x.id === 'clm-dpc-share-of-fines');
+      c.derivation.result = 0.61;
+      c.derivation.inputs.a.as_stated = 'EUR 5 billion';
+    });
+    const r = audit({ root: dir, asOf: '2026-09-27' });
+    const e = r.errors.filter((x) => x.startsWith('claims/clm-dpc-share-of-fines'));
+    assert.ok(e.some((x) => /recorded result is 0.61/.test(x)));
+    assert.ok(e.some((x) => /does not appear in clm-dpc-cumulative-fines/.test(x)));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('H4 · a stored derived field, a stored mechanical remediation code and an unnamed attribution are errors', () => {
+  const dir = treeCopy();
+  try {
+    editJSON(dir, 'claims.json', (d) => {
+      d.claims[0].evidence_status = 'evidence:direct';
+      d.claims[1].remediation = ['remediation:missing-locator'];
+      delete d.claims.find((x) => x.type === 'claim-type:attributed').attributed_to;
+    });
+    const r = audit({ root: dir, asOf: '2026-09-27' });
+    assert.ok(r.errors.some((e) => /stores "evidence_status"/.test(e)));
+    assert.ok(r.errors.some((e) => /remediation:missing-locator, which is computed/.test(e)));
+    assert.ok(r.errors.some((e) => /must name whose view it is/.test(e)));
+    assert.ok(DERIVED_FIELDS.includes('finality'));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('H5 · a claim of law citing the legal text as direct support needs an article locator', () => {
+  const dir = treeCopy();
+  try {
+    editJSON(dir, 'claims.json', (d) => {
+      d.claims.find((x) => x.id === 'clm-one-stop-shop').sources[0].locator = null;
+    });
+    const r = audit({ root: dir, asOf: '2026-09-27' });
+    assert.ok(r.errors.some((e) => /clm-one-stop-shop: a claim of law cites src-eurlex-gdpr/.test(e)));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('H6 · a table row linked to a record must print that record\'s date and fine', () => {
+  const dir = treeCopy();
+  try {
+    let h = readFileSync(join(dir, 'index.html'), 'utf8');
+    h = h.replace('>28 May 2026<', '>29 May 2026<').replace('Temu fined EUR 200 million', 'Temu fined EUR 250 million');
+    writeFileSync(join(dir, 'index.html'), h);
+    const r = audit({ root: dir, asOf: '2026-09-27' });
+    assert.ok(r.errors.some((e) => /dated 2026-05-29/.test(e)), 'the date column');
+    assert.ok(r.errors.some((e) => /EUR 250 million/.test(e)), 'the fine');
+    assert.deepEqual(datesIn('Nov 2026 and 2 Aug 2028').map((d) => d.iso), ['2026-11', '2028-08-02']);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('H7 · contradictions: an enforcement record and a legislative status that cannot both be true', () => {
+  assert.deepEqual(contradictions({ action_status: 'action:final', appeal: { status: 'appeal:unknown' } }).length, 1);
+  assert.ok(contradictions({ action_status: 'action:annulled', payment_status: 'payment:paid' }).length >= 1);
+  assert.ok(contradictions({ action_status: 'action:announced', fine_eur: 1e6 }).length >= 1);
+  assert.equal(procedure({ action_status: 'action:annulled', judicial: { remitted: true } }).finality, 'finality:not-final');
+  assert.equal(procedure({ action_status: 'action:imposed', appeal: { status: 'appeal:unknown' } }).finality, 'finality:unknown', 'unknown finality is its own state');
+  const ix = { event: new Map([['e1', { id: 'e1', date: '2030-01-01', event_type: 'event:application', provisions: [] }]]) };
+  assert.ok(statusContradictions({ legislative_status: 'status:applicable', milestones: ['e1'], kind: 'kind:regulation' }, ix, '2026-09-27').length >= 1);
+  assert.equal(provisionApplication('x:art-1', { milestones: ['e1'] }, ix, '2026-09-27').state, 'general-scheduled');
+});
+
+test('H8 · the evidence model: status, locators, composite statements, freshness', () => {
+  const ix = { source: new Map([['s1', { id: 's1', tier: 'tier:1' }]]), claim: new Map() };
+  assert.equal(EM.evidenceStatus({ type: 'claim-type:fact', sources: [{ source_id: 'src-brief-original', supports: 'supports:direct' }] }), 'evidence:unverified');
+  assert.equal(EM.evidenceStatus({ type: 'claim-type:fact', sources: [{ source_id: 's1', supports: 'supports:context' }] }), 'evidence:context-only');
+  assert.equal(EM.evidenceStatus({ type: 'claim-type:fact', contested: { note: 'x' }, sources: [] }), 'evidence:disputed');
+  assert.equal(EM.owesVerification({ type: 'claim-type:critique' }), false, 'an argument does not owe verification — it is not "unverified"');
+  assert.equal(EM.locatorQuality('Arts. 56, 60, 65'), 'structural');
+  assert.equal(EM.locatorQuality('Part II'), 'generic');
+  assert.equal(EM.locatorQuality(null), 'none');
+  assert.ok(EM.compositeSignals('The DPC accounts for about EUR 4.04 billion — roughly 57% of the total — and nine of the ten largest fines.').flagged);
+  assert.equal(EM.compositeSignals('The VLOP threshold is 45 million users.').flagged, false);
+  assert.equal(EM.freshnessState('2026-09-01', 'risk:critical', '2026-09-27'), 'freshness:review-due');
+  assert.equal(EM.freshnessState(null, 'risk:low', '2026-09-27'), 'freshness:stale');
+  assert.ok(EM.checkDerivation({ type: 'claim-type:derived', derivation: { performed_by: 'site', method: 'm', inputs: {}, formula: 'alert(1)', result: 1, rounding: { to: 1, stated_value: 1 } } }, ix).problems.length > 0,
+    'a formula is arithmetic or it is refused — nothing is evaluated');
+  assert.equal(EM.parseQuantity('twenty-three'), 23, 'the brief writes counts as words');
+  assert.equal(EM.parseQuantity('nineteen'), 19);
+  assert.equal(EM.parseQuantity('EUR 4.04 billion'), 4.04e9);
+  assert.equal(EM.parseQuantity('twenty-zero'), null, 'a malformed word is not read as a number');
+  assert.equal(EM.parseQuantity('several'), null);
+});
+
+test('I1 · the CSP hashes every inline script, and an edited script is caught before a browser refuses it', () => {
+  for (const f of ['index.html', 'applies.html', 'bibliography.html']) {
+    const html = readFileSync(join(ROOT, f), 'utf8');
+    assert.deepEqual(cspProblems(html), [], f);
+    assert.ok(inlineScripts(html).length >= 1);
+  }
+  const html = readFileSync(join(ROOT, 'applies.html'), 'utf8');
+  assert.ok(cspProblems(html.replace("var K='eupolicy:theme'", "var K='eupolicy:themes'")).some((p) => /not hashed/.test(p)));
+  assert.ok(cspProblems(html.replace("script-src 'self'", "script-src 'self' 'unsafe-inline'")).some((p) => /unsafe-inline/.test(p)));
+  assert.ok(!/'unsafe-eval'|script-src[^;]*'unsafe-inline'/.test(securityMeta(html)));
+});
+
+test('I1b · no inline styles: the policy refuses them, and a page or module that writes one is caught', () => {
+  /* style-src 'self' since 27 Sep 2026. A style attribute the browser
+     refuses is a silent visual defect, so the check has to be static. */
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  assert.match(securityMeta(html), /style-src 'self';/);
+  assert.doesNotMatch(securityMeta(html), /style-src[^;]*'unsafe-inline'/);
+  assert.ok(cspProblems(html.replace('<body', '<body style="color:red"')).some((p) => /style attribute/.test(p)));
+  assert.ok(cspProblems(html.replace('</head>', '<style>p{}</style></head>')).some((p) => /<style> element/.test(p)));
+  assert.ok(cspProblems(html.replace("style-src 'self'", "style-src 'self' 'unsafe-inline'")).some((p) => /unsafe-inline/.test(p)));
+  for (const f of [...readdirSync(join(ROOT, 'js')).filter((x) => x.endsWith('.js')).map((x) => 'js/' + x), 'app.js']) {
+    const code = readFileSync(join(ROOT, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    assert.doesNotMatch(code, /\sstyle\s*=\s*\\?["']/, `${f} writes a style attribute`);
+  }
+});
+
+test('I1c · the Evidence page and the build count the same backlog', () => {
+  /* One home for the rule: js/evidence-model.js openBacklog(). The page
+     calls it in the browser; validate.mjs prints it. If either grew its
+     own copy, these would drift apart and a reader would see a number
+     CI does not. */
+  const db = {};
+  for (const n of ['claims', 'sources', 'timeline', 'enforcement', 'instruments', 'institutions', 'glossary', 'applicability']) {
+    db[n] = JSON.parse(readFileSync(join(ROOT, 'data', n + '.json'), 'utf8'));
+  }
+  const printed = Number((runValidator('validate.mjs').out.match(/UNVERIFIED \/ REQUIRES VERIFICATION\s+(\d+)/) ?? [])[1]);
+  assert.equal(openBacklog(db).length, printed);
+  const page = readFileSync(join(ROOT, 'js', 'bibliography.js'), 'utf8');
+  assert.match(page, /openBacklog\(db\)/, 'the page counts through the shared function');
+  assert.doesNotMatch(readFileSync(join(ROOT, 'tools', 'validate.mjs'), 'utf8'), /function unverifiedReport\(\)\s*\{/, 'validate.mjs keeps no copy of its own');
+});
+
+test('I1d · hreflang: one alternate per shipped language, on the brief only, matching the sitemap', () => {
+  const reg = JSON.parse(readFileSync(join(ROOT, 'i18n', 'locales.json'), 'utf8')).locales
+    .filter((l) => l.code === 'en' || l.file).map((l) => l.code);
+  const index = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  const alt = [...index.matchAll(/<link href="([^"]+)" hreflang="([^"]+)" rel="alternate"\/>/g)].map((m) => [m[2], m[1]]);
+  assert.deepEqual(alt.map(([c]) => c).sort(), [...reg, 'x-default'].sort());
+  for (const [c, href] of alt) {
+    if (c === 'en' || c === 'x-default') assert.doesNotMatch(href, /\?lang=/);
+    else assert.ok(href.endsWith('?lang=' + c), `${c} -> ${href}`);
+  }
+  const sitemap = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
+  for (const c of reg.filter((x) => x !== 'en')) assert.match(sitemap, new RegExp('\\?lang=' + c + '</loc>'));
+  for (const f of ['applies.html', 'bibliography.html', 'instruments.html']) {
+    assert.doesNotMatch(readFileSync(join(ROOT, f), 'utf8'), /hreflang=/, `${f} is not translated and must not advertise alternates`);
+  }
+  /* the page honours the parameter it advertises */
+  assert.match(readFileSync(join(ROOT, 'app.js'), 'utf8'), /searchParams\.get\('lang'\)/);
+});
+
+test('I2 · the Pages artifact is the website and nothing else', () => {
+  const out = scratch('site');
+  try {
+    const r = buildArtifact(out);
+    assert.deepEqual(r.problems, []);
+    const top = readdirSync(out);
+    for (const never of ['.control-room', 'agent', 'docs', 'tools', '.agents', '.github', 'README.md', 'AGENTS.md']) {
+      assert.ok(!top.includes(never), `${never} must not be published`);
+    }
+    for (const must of ['index.html', 'js', 'data', 'css', 'fonts', 'i18n', 'sitemap.xml']) assert.ok(top.includes(must), must);
+    assert.ok(refusal('.control-room/server.mjs'));
+    assert.ok(refusal('agent/health/model.mjs'));
+    assert.ok(refusal('js/.secret'));
+    assert.equal(refusal('js/app.js'), null);
+  } finally { rmSync(out, { recursive: true, force: true }); }
 });

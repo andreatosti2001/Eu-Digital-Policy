@@ -339,7 +339,7 @@ dl.evi-dl{ margin:0; display:grid; gap:9px }
   .evi, .evi-scrim, .cal-controls, .evi-legend{ display:none !important }
   .part-notes[open], .part-notes{ display:block }
   .part-notes > summary{ list-style:none }
-  .fn{ color:#000 }
+  .fn{ color:var(--print-ink) }
 }
 
 /* milestone whose date has not been confirmed against a primary source */
@@ -446,3 +446,27 @@ body[data-theme="light"] .evi-grade[data-g="unresolved"]{color:var(--undet)}
 
 /* the asterisk key in the legend */
 .evi-legend .lg-gap b{ font-family:var(--mono); color:var(--st-unresolved) }
+
+/* ============================================================
+   Derived figures, attributed views and the author's synthesis
+   (js/evidence-model.js). Each carries a cue that is not colour —
+   an overline, a small-caps marker, a hollow lozenge — because the
+   point is that none of them reads as a sourced fact, including for
+   a reader who cannot tell the hues apart.
+   ============================================================ */
+.fn[data-family="derived"]{ color:var(--mech); text-decoration:overline dotted }
+.fn[data-family="attributed"]{ color:var(--paper-dim); font-variant:small-caps }
+.evi-type[data-t="derived"]{ color:var(--mech); background:var(--mech-dim); border:1px dashed currentColor }
+.evi-type[data-t="attributed"]{ color:var(--paper-dim); background:var(--ink-2); border:1px dotted currentColor }
+.evi-legend .lg-derived{ color:var(--mech); text-decoration:overline dotted }
+.evi-legend .lg-attr{ color:var(--paper-dim); font-variant:small-caps }
+.evi-legend .lg-prose{ color:var(--live-text) }
+.evi-grade[data-g="derived"]{color:var(--mech);border-style:dashed}
+.evi-grade[data-g="attributed"]{color:var(--paper-dim);border-style:dotted}
+.bg-row[data-g="derived"] .bg-n{color:var(--mech)}
+.evi-status{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:8.5px;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--evi-meta)}
+.evi-status[data-e="evidence:unverified"],.evi-status[data-e="evidence:disputed"]{color:var(--crit)}
+.evi-deriv{margin:6px 0 8px;padding-left:18px;font-family:var(--body);font-size:12.5px;line-height:1.5;color:var(--paper-dim)}
+.evi-deriv code,.evi-cite code{font-family:var(--mono);font-size:11px}
+.prose-mark{font-family:var(--mono);font-size:10px;color:var(--live-text);vertical-align:1px;cursor:help;white-space:nowrap}

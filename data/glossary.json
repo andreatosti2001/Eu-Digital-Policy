@@ -140,7 +140,9 @@
    "instruments": [
     "data-act"
    ],
-   "provisions": [],
+   "provisions": [
+    "data-act:art-8"
+   ],
    "institutions": [
     "nca-*"
    ],
@@ -154,9 +156,9 @@
    "sources": [
     "src-eurlex-data-act"
    ],
-   "last_verified": "2026-08-27",
-   "requires_verification": true,
-   "verification_note": "The FRAND standard's location in the Data Act text has not been pinned to a provision in this build."
+   "last_verified": "2026-09-27",
+   "requires_verification": false,
+   "verification_note": "Data Act Art. 8(1): data made available in business-to-business relations 'under fair, reasonable and non-discriminatory terms and conditions'. Read on 27 Sep 2026 in the Official Journal text (CELEX 32023R2854). Earlier: The FRAND standard's location in the Data Act text has not been pinned to a provision in this build."
   },
   {
    "id": "gl-dsc",
@@ -325,7 +327,7 @@
    "id": "gl-nis2",
    "term": "NIS2",
    "legacy_dom_id": "gloss-nis2",
-   "definition": "Network and Information Security Directive 2 — the EU's baseline cybersecurity Directive, covering roughly 160,000 entities across 18 sectors.",
+   "definition": "Network and Information Security Directive 2 — the EU's baseline cybersecurity Directive, covering entities in 18 sectors (11 in Annex I, 7 in Annex II).",
    "instruments": [
     "nis2"
    ],
@@ -357,9 +359,9 @@
    "sources": [
     "src-eurlex-nis2"
    ],
-   "last_verified": "2026-08-27",
-   "requires_verification": true,
-   "verification_note": "The figures 'roughly 160,000 entities across 18 sectors' in the definition are not sourced and have not been verified."
+   "last_verified": "2026-09-27",
+   "requires_verification": false,
+   "verification_note": "Corrected on 27 Sep 2026: the 18 sectors are counted from Annexes I and II of the Official Journal text (CELEX 32022L2555). The earlier figure of 'roughly 160,000 entities' was removed rather than carried forward unsourced: no official source for it was found (the Commission's NIS2 policy page and FAQ do not give it). Earlier: The figures 'roughly 160,000 entities across 18 sectors' in the definition are not sourced and have not been verified."
   },
   {
    "id": "gl-cra",

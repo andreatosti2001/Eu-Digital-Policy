@@ -7,13 +7,14 @@
 # there is still no package.json, and adding one would be a red-tier
 # architectural change (docs/AUTONOMY-POLICY.md Class D).
 #
-# IT IS NOT A DEPLOY GATE. Deployment is GitHub Pages serving `main`
-# at the repository root and there is no mechanism between a push and
-# the live site. This workflow makes a failure VISIBLE; it cannot
-# make it blocking. Say so rather than implying otherwise: a green
-# tick here means the checks ran and passed, not that the site was
-# gated on them. Making it a gate needs a branch protection rule,
-# which is repository configuration outside this tree.
+# THIS WORKFLOW IS NOT ITSELF THE DEPLOY GATE. On pull requests it is
+# what branch protection can require (docs/DEPLOYMENT.md). The deploy
+# gate is .github/workflows/pages.yml, which re-runs the checks that
+# concern the published site and deploys only if they pass — once the
+# repository's Pages source is set to "GitHub Actions", which is a
+# setting outside this tree. Until then a push to `main` still
+# publishes through GitHub's branch build, and a green tick here means
+# the checks ran and passed, not that the site was gated on them.
 #
 # THE BROWSER JOB IS THE POINT OF SESSION 19. It runs the repository's
 # own browser suite against a browser the runner already has. If no
@@ -55,6 +56,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - uses: actions/setup-node@v7
         with:
@@ -66,6 +68,24 @@ jobs:
           echo "No dependencies, no build step, no package.json. Nothing is installed."
 
       # Each named separately so the job summary says WHICH one failed.
+      - name: commit-evidence.mjs — published changes name their evidence
+        # The author's rule of 27 Sep 2026 (docs/PRODUCTION-OPERATING-MODE.md
+        # §5): a commit that changes a published file carries an
+        # "Evidence:" trailer. Commits older than the rule are not judged.
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          node tools/commit-evidence.mjs --self-test
+          HEAD_SHA="$GITHUB_SHA"; BASE=""
+          if [ "$EVENT" = "pull_request" ]; then BASE="$PR_BASE"; HEAD_SHA="$PR_HEAD";
+          elif [ -n "$BEFORE" ] && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then BASE="$BEFORE";
+          else BASE="$(git merge-base origin/main "$GITHUB_SHA" 2>/dev/null || true)"; fi
+          if [ -z "$BASE" ] || [ "$BASE" = "$HEAD_SHA" ]; then echo "Nothing to judge: no earlier commit to compare against."; exit 0; fi
+          node tools/commit-evidence.mjs "$BASE" "$HEAD_SHA"
+
       - name: validate.mjs — data integrity
         run: node tools/validate.mjs
 
@@ -89,6 +109,18 @@ jobs:
       # warning: the step stays green. docs/CONTENT-FRESHNESS-POLICY.md.
       - name: freshness.mjs — how stale the datasets are
         run: node tools/freshness.mjs
+
+      # 27 Sep 2026. The evidence model: claim kinds and evidence status,
+      # locators, derivations, the prose coverage of the brief (every
+      # substantive passage registered or classified), table rows checked
+      # against the records they restate, enforcement and regulatory
+      # contradictions. Exit 1 on a defect in the tree; the remediation
+      # backlog and staleness are reported, not failed. Its measurements
+      # go to the job summary as a table — the data-quality dashboard.
+      - name: evidence-audit.mjs — claims, evidence and prose coverage
+        run: |
+          node tools/evidence-audit.mjs
+          node tools/evidence-audit.mjs --markdown >> "$GITHUB_STEP_SUMMARY"
 
       # SESSION 30. The validators' own suite. Until now nothing tested
       # the four checks that are this project's test suite, and two of
@@ -289,6 +321,16 @@ jobs:
       - name: Every route, and the permission it needs
         run: node .control-room/cli.mjs routes
 
+      # 27 Sep 2026. What .github/workflows/pages.yml would publish:
+      # built from an allowlist, complete (every local reference
+      # resolves inside it), and holding no dot path and none of agent/,
+      # docs/, tools/. Deployment through Actions does not run Jekyll, so
+      # this is what replaces Jekyll's dot-prefix rule as the boundary.
+      - name: The Pages artifact is the website and nothing else
+        run: |
+          node tools/pages-artifact.mjs build _site
+          rm -rf _site
+
   # ----------------------------------------------------------
   # 3b. SESSION 20 — the health monitor
   #
@@ -350,13 +392,16 @@ jobs:
   # ----------------------------------------------------------
   # 3c. SESSION 23.5 — the adversarial verification gate
   #
-  # IN A JOB OF ITS OWN, AND THAT IS THE WHOLE DESIGN. The gate has
-  # exited 1 since SESSION 24 on a CRITICAL finding, and a failing
-  # step skips every step after it in the same job — which is
-  # exactly how two other checks came to be registered behind a
-  # break and never run (docs/GOVERNANCE-PROPOSALS.md §6b). A step
-  # that is expected to be red must therefore hide nothing, so it
-  # gets a job to itself.
+  # IN A JOB OF ITS OWN, AND THAT IS THE WHOLE DESIGN. The gate
+  # exited 1 from SESSION 24 to 27 Sep 2026 on a CRITICAL finding,
+  # and a failing step skips every step after it in the same job —
+  # which is exactly how two other checks came to be registered
+  # behind a break and never run (docs/GOVERNANCE-PROPOSALS.md §6b).
+  # A step that can go red must hide nothing, so it keeps a job to
+  # itself. HE-04 now decides from the separation verdicts rather
+  # than from a list of skipped paths, on the author's decision of
+  # 27 Sep 2026 (docs/PRODUCTION-OPERATING-MODE.md §4a), and the
+  # gate is also in the deploy gate (pages.yml gate-security).
   #
   # SESSION 29 ADDED THIS, and its absence was the standing lesson:
   # AGENTS.md recorded that a CRITICAL stayed red across five
@@ -399,10 +444,12 @@ jobs:
   # workflow, writes a record or decides anything, and there is no
   # verb in that directory that could.
   #
-  # `trace` IS LAST ON PURPOSE. It exits 1 on a standing finding —
-  # two of the three ways this website can change leave no durable
-  # record naming the evidence — and putting it anywhere but last
-  # would hide the three checks above it.
+  # `trace` IS LAST ON PURPOSE. It exits 1 when a way this website
+  # can change leaves no durable record naming the evidence, and
+  # putting it anywhere but last would hide the three checks above
+  # it. Since 27 Sep 2026 all three paths are traceable
+  # (docs/PRODUCTION-OPERATING-MODE.md §5), so it is green; it stays
+  # last so that the day one regresses, nothing hides behind it.
   # ----------------------------------------------------------
   production:
     name: Production operating mode
@@ -534,15 +581,17 @@ jobs:
             echo
             echo "### What it does not mean"
             echo
-            echo "- **It is not a deploy gate.** Deployment is GitHub Pages serving \`main\` at the"
-            echo "  repository root. Nothing sits between a push and the live site; a failure here is"
-            echo "  visible, not blocking. Making it blocking needs a branch protection rule."
-            echo "- **The validators do not read prose.** A false statement in \`index.html\` passes"
-            echo "  every check in this repository."
-            echo "- **No URL has ever been fetched.** \`freshness.mjs\` prints a SOURCE REACHABILITY"
-            echo "  heading and performs no network I/O (AUDIT F-12)."
+            echo "- **This workflow is not the deploy gate.** \`.github/workflows/pages.yml\` is: it deploys"
+            echo "  only after the site checks pass, once Settings → Pages → Source is \"GitHub Actions\"."
+            echo "  Until that setting is changed, a push to \`main\` still publishes directly (docs/DEPLOYMENT.md)."
+            echo "- **No check establishes that a sentence is true.** \`evidence-audit.mjs\` checks that every"
+            echo "  passage of the brief is registered as a claim or classified, and that a claim's"
+            echo "  arithmetic and dates agree with its records. A false statement can still pass."
+            echo "- **CI fetches no URL.** \`freshness.mjs\` performs no network I/O (AUDIT F-12). Sources re-read by"
+            echo "  hand record the date they were read; nothing here re-reads them."
             echo "- **No contrast was computed and no screen reader was run.** README limitation 7."
-            echo "- **111 records carry an unverified note.** They are changed by doing the"
+            echo "- **Records still carry unverified notes** (the count is in the validate step and in"
+            echo "  docs/CURRENT-ARCHITECTURE.md §12). They are changed by doing the"
             echo "  verification work, not by a passing check."
             echo "- **No Control Room instance was reached.** The suite starts one on an ephemeral"
             echo "  loopback port and proves the boundary against it; nothing here has ever spoken"

@@ -129,8 +129,13 @@ function authorityCell(instId, ix) {
   return '<span class="dna-derived" title="Derived from institutions.json, not stored on the instrument">derived</span>' + rows.join('');
 }
 
+/* Adoption and publication are part of an instrument's lifecycle, but not
+   dates on which anything becomes binding. A compact cell has room for three
+   dates, and those must be the ones that change what applies. */
+const PRE_OPERATIVE = new Set(['event:adoption', 'event:publication']);
+
 function datesCell(inst, ix, limit) {
-  const evs = datesFor(inst, ix);
+  const evs = datesFor(inst, ix).filter((e) => !limit || !PRE_OPERATIVE.has(e.event_type));
   if (!evs.length) return UNKNOWN;
   const shown = limit ? evs.slice(0, limit) : evs;
   return '<span class="dna-derived" title="Derived from timeline.json via the instrument’s milestones">derived</span>' +

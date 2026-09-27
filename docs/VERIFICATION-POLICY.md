@@ -149,3 +149,16 @@ node tools/freshness.mjs && node tools/design-qa.mjs
 Run all four. Report each outcome, including warnings. If a warning count
 changed, say which warning and why. If a validator was not run, say so
 explicitly — silence is not a pass.
+
+## `tools/evidence-audit.mjs` (27 September 2026)
+
+**Proves:** every substantive passage of the brief is registered as a claim or record, or
+classified as the author's own; every claim names its kind and what carries it; a claim of law
+citing the legal text has an article locator; a derived claim's arithmetic re-runs and its
+inputs read back out of their own statements; a table row linked to a record prints that
+record's date and fine; no record stores a derived field; no enforcement record or legislative
+status contradicts itself.
+
+**Does not prove:** that any sentence is true, that a locator points at the right passage, that
+a classification is the right one, or that a source says what its record says it says. The
+composite-claim heuristic is a heuristic. `docs/EVIDENCE-MODEL.md` §10.

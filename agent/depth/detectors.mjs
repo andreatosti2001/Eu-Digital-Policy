@@ -420,7 +420,7 @@ const missingCompetence = (lens) => {
         kind: arr(i.sources).length ? 'cited_document' : 'none_identified',
         where: arr(i.sources)[0] ?? null,
         what_it_would_establish: arr(i.sources).length
-          ? 'The article designating competent authorities, in the text the instrument already cites. A place to look — and the allocation between services or agencies is frequently not settled by the act alone, which is why four competence edges already in the corpus carry a requires-verification note.'
+          ? 'The article designating competent authorities, in the text the instrument already cites. A place to look — and the allocation between services or agencies is frequently not settled by the act alone, which is why competence edges in the corpus carried a requires-verification note until each was read against a primary source.'
           : 'Nothing. The instrument cites no primary text.',
         retrieved: false,
       }],

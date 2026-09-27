@@ -107,6 +107,9 @@ export const PROSE_FIELDS = {
     statement: 'THE assertion. Every consequential sentence on the site exists as one of these, and it is the field a reader is most directly told something by. Nothing in this repository checks whether it is still true.',
     verification_note: 'What has and has not been established about the claim, in words.',
     gap_note: 'What reference is missing and why it matters. The asterisk\'s explanation.',
+    attributed_to: 'WHOSE view an attributed claim reports, and in which publication. If the actor or the publication is wrong, the site misattributes a position — the one error an attributed view exists to avoid (27 Sep 2026).',
+    'contested.note': 'What two sources disagree about, in words. The disagreement is the finding; a note that no longer describes it tells a reader the dispute is something it is not.',
+    'derivation.method': 'Why the arithmetic is the right arithmetic — which figure is divided by which, and whether they share a methodology and a date. The formula can re-run; this sentence cannot be checked by anything.',
   },
   source: {
     note: 'What this source is and what it can be used for.',
@@ -168,11 +171,24 @@ export const VALUE_FIELDS = {
     'dna', 'transposition', 'dna.sanction_ceiling.fixed_eur', 'dna.sanction_ceiling.pct_global_turnover',
     'transposition.last_verified', 'transposition.requires_verification'],
   relationship: ['id', 'symmetric', 'last_verified', 'requires_verification'],
-  claim: ['id', 'published', 'last_verified', 'reference_gap', 'requires_verification', 'sources.locator'],
+  /* derivation.* (27 Sep 2026): every number here is re-computed by
+     js/evidence-model.js checkDerivation on each run of
+     tools/evidence-audit.mjs, and each `as_stated` must read back out of
+     its input claim's own statement. Input names are chosen per claim;
+     the live data uses a, b, c and t (c and t added 27 Sep 2026 with
+     clm-four-categories-94pct). A new name is a new path, and this
+     register will say so. */
+  claim: ['id', 'published', 'last_verified', 'reference_gap', 'requires_verification', 'sources.locator',
+    'derivation.performed_by', 'derivation.formula', 'derivation.result', 'derivation.unit',
+    'derivation.rounding.to', 'derivation.rounding.stated_value',
+    'derivation.inputs.a.value', 'derivation.inputs.a.as_stated',
+    'derivation.inputs.b.value', 'derivation.inputs.b.as_stated',
+    'derivation.inputs.c.value', 'derivation.inputs.c.as_stated',
+    'derivation.inputs.t.value', 'derivation.inputs.t.as_stated'],
   source: ['id', 'title', 'publisher_name', 'url', 'language', 'published', 'accessed', 'resolution'],
   timeline_event: ['id', 'date', 'status', 'last_verified', 'requires_verification'],
   enforcement_action: ['id', 'entity', 'opened', 'decision_date', 'fine_eur', 'last_verified', 'requires_verification',
-    'judicial', 'judicial.forum', 'judicial.date', 'judicial.case_ref',
+    'judicial', 'judicial.forum', 'judicial.date', 'judicial.case_ref', 'judicial.remitted',
     'appeal.lodged_by', 'appeal.forum', 'appeal.lodged_date', 'appeal.case_ref', 'appeal.requires_verification'],
   glossary_term: ['id', 'term', 'legacy_dom_id', 'new_in_this_build', 'last_verified', 'requires_verification'],
   applicability_rule: ['id', 'last_verified', 'requires_verification',

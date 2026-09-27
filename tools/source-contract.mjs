@@ -162,6 +162,13 @@ export const SOURCE_FIELDS = Object.freeze({
     written_by: 'a person',
     read_by: 'bibliography.html',
   }),
+  reproduces: Object.freeze({
+    required: false,
+    shape: 'the id of a tier:1 source record — the canonical text this record reproduces',
+    why: 'A privately published reproduction of a legal text is useful for reading and linking one article, but it is not the legal text. Naming the canonical record it reproduces keeps the two apart: tools/evidence-audit.mjs refuses a reproduction that carries tier 1 or 2, and js/evidence-model.js flags a claim of law whose only support for the text is a reproduction. Added 27 Sep 2026.',
+    written_by: 'a person, from the reproduction\'s own statement that it is unofficial',
+    read_by: 'js/evidence-model.js remediationCodes; tools/evidence-audit.mjs',
+  }),
 });
 
 /** The three values `resolution` may take. Closed, because each names
@@ -251,6 +258,8 @@ export function violations(rec) {
   if (rec.accessed != null && !ISO_DAY.test(String(rec.accessed))) out.push(`\`accessed\` is not YYYY-MM-DD: ${rec.accessed}`);
   if (rec.published != null && !PUBLISHED.test(String(rec.published))) out.push(`\`published\` is not YYYY, YYYY-MM or YYYY-MM-DD: ${rec.published}`);
   if (rec.language != null && !/^[a-z]{2}$/.test(String(rec.language))) out.push(`\`language\` is not an ISO 639-1 code: ${rec.language}`);
+  if ('reproduces' in rec && !/^src-[a-z0-9-]+$/.test(String(rec.reproduces))) out.push(`\`reproduces\` must name a source id, not "${rec.reproduces}"`);
+  if (rec.reproduces && (rec.tier === 'tier:1' || rec.tier === 'tier:2')) out.push(`reproduces ${rec.reproduces} but is itself ${rec.tier}: an unofficial reproduction takes no tier from the text it copies`);
   if (rec.tier === 'tier:1' && !TIER1_TYPES.includes(rec.type)) {
     out.push(`is tier:1 but its type is ${rec.type}; tier:1 is only for ${TIER1_TYPES.join(', ')}. A press release, guidance or report describes the law and is tier:2 at most.`);
   }

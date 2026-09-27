@@ -68,6 +68,16 @@ const unmeasurable = (e, b) => verdict('unmeasurable', e, b);
  * would ask it, because "readiness: 14/19" tells a reader nothing
  * and "no production dispatcher is wired" tells them everything.
  */
+/** Does pages.yml exist, with a deploy that needs every gate job? */
+export function deployGateWired(pages) {
+  if (!pages) return false;
+  const gates = [...pages.matchAll(/^  (gate-[a-z-]+):/gm)].map((m) => m[1]);
+  const needs = (pages.match(/^  build:[\s\S]*?needs:\s*\[([^\]]*)\]/m) ?? [])[1] ?? '';
+  const deployNeedsBuild = /^  deploy:[\s\S]*?needs:\s*build\b/m.test(pages);
+  return gates.length > 0 && gates.every((g) => needs.includes(g)) && deployNeedsBuild
+    && /upload-pages-artifact/.test(pages) && /deploy-pages/.test(pages);
+}
+
 export const CONDITIONS = Object.freeze([
 
   /* ---------------------------------------------- validators */
@@ -291,7 +301,14 @@ export const CONDITIONS = Object.freeze([
     'is there anything between a commit and the live website?',
     (f) => (f.ciWorkflow === null
       ? unmeasurable('.github/workflows/qa.yml could not be read')
-      : fail('nothing sits between a push and the live site. Deployment is GitHub Pages serving main at the repository root; .github/workflows/qa.yml runs the checks on every push and says in its own header that it is NOT a deploy gate. Making it blocking needs a branch protection rule, which is repository configuration outside this tree and a Class D change. An agent must not edit the workflow to claim otherwise: a workflow that CLAIMED to gate deployment would be worse than one that says plainly it does not.',
+      : deployGateWired(f.pagesWorkflow)
+        /* The workflow is in the tree; whether it is what publishes the
+           site is a repository SETTING (Pages source), which no file here
+           records. A gate that exists and may be bypassed is not measured
+           as a gate: it is unmeasurable, and blocks exactly as a failure. */
+        ? unmeasurable('.github/workflows/pages.yml builds the site only after its gate jobs pass (data and evidence, the public/private boundary, the browser suite, the adversarial gate) and deploys only the allowlisted artifact. Whether it is what PUBLISHES the site is not in this tree: it depends on Settings → Pages → Source being "GitHub Actions". While Pages still serves main from a branch, every push to main is published whatever this workflow concludes.',
+          'This condition can only be settled by the repository author, in repository settings, and by a deployment record showing pages.yml published the live site. docs/DEPLOYMENT.md §3.')
+        : fail('nothing sits between a push and the live site. Deployment is GitHub Pages serving main at the repository root; .github/workflows/qa.yml runs the checks on every push and says in its own header that it is NOT a deploy gate. Making it blocking needs a branch protection rule, which is repository configuration outside this tree and a Class D change. An agent must not edit the workflow to claim otherwise: a workflow that CLAIMED to gate deployment would be worse than one that says plainly it does not.',
         'This condition can only be satisfied by the repository author, in repository settings. It is mandatory because "publish" is the eighth stage of the daily cycle and there is currently no gate on it.'))),
 ]);
 
@@ -319,6 +336,8 @@ export async function gatherFacts({
   /* --- cheap, always --- */
   const ciPath = join(root, '.github/workflows/qa.yml');
   facts.ciWorkflow = existsSync(ciPath) ? readFileSync(ciPath, 'utf8') : null;
+  const pagesPath = join(root, '.github/workflows/pages.yml');
+  facts.pagesWorkflow = existsSync(pagesPath) ? readFileSync(pagesPath, 'utf8') : null;
 
   const sep = separations({ root });
   facts.separations = { raw: sep, summary: separationSummary(sep) };

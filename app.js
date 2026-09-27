@@ -350,6 +350,26 @@ var treeModal = treeScrim ? makeModal(treeScrim, {
 function openTree(){ if (treeModal) treeModal.open(); }
 function closeTree(){ if (treeModal) treeModal.close(); }
 if (openTreeBtn) openTreeBtn.addEventListener('click', openTree);
+
+/* Three controls used to carry inline onclick="" handlers, which a
+   Content-Security-Policy without 'unsafe-inline' refuses to run and which
+   put behaviour in the markup where no module can see it. They now carry a
+   data-action, and this one delegated listener owns them. The scroll to top
+   honours prefers-reduced-motion, which the inline version did not. */
+document.addEventListener('click', function (e) {
+  var t = e.target && e.target.closest ? e.target.closest('[data-action]') : null;
+  if (!t) return;
+  var a = t.getAttribute('data-action');
+  if (a === 'scroll-top') {
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' });
+  } else if (a === 'open-tree') {
+    openTree();
+  } else if (a === 'open-search') {
+    var s = document.getElementById('openSearch');
+    if (s) s.click();
+  }
+});
 if (treeCloseBtn) treeCloseBtn.addEventListener('click', closeTree);
 if (treeScrim) treeScrim.addEventListener('click', function(e){ if (e.target === treeScrim) closeTree(); });
 
@@ -1328,9 +1348,35 @@ document.addEventListener('keydown', function(e){
     });
     current = lang;
     try{ localStorage.setItem(KEY, lang); }catch(e){}
+    syncLangUrl(lang);
     document.dispatchEvent(new CustomEvent('i18n:applied', {
       detail: {lang: lang, missing: missing, total: nodes().length}
     }));
+  }
+
+  /* Each language has its own address: the brief at ?lang=xx (English has
+     none). The URL follows the language so it can be shared, and the
+     canonical and og:url follow it too, the way instrument.html rewrites
+     its canonical to ?id=. tools/_footer.mjs emits the matching hreflang
+     alternates and sitemap entries from the same register. Other query
+     parameters and the #fragment are kept. */
+  function syncLangUrl(lang){
+    try{
+      var u = new URL(location.href);
+      if (lang === 'en') u.searchParams.delete('lang'); else u.searchParams.set('lang', lang);
+      if (u.href !== location.href) history.replaceState(history.state, '', u.href);
+      var canon = document.querySelector('link[rel="canonical"]');
+      if (canon){
+        var base = canon.getAttribute('data-base') || canon.getAttribute('href').split('?')[0];
+        canon.setAttribute('data-base', base);
+        var href = lang === 'en' ? base : base + '?lang=' + lang;
+        canon.setAttribute('href', href);
+        var og = document.querySelector('meta[property="og:url"]');
+        if (og) og.setAttribute('content', href);
+      }
+      var loc = document.querySelector('meta[property="og:locale"]');
+      if (loc) loc.setAttribute('content', lang);
+    }catch(e){ /* a URL the browser will not parse is left as it was */ }
   }
 
   /* a locale whose file will not load is struck from the menu, not silently
@@ -1435,6 +1481,10 @@ document.addEventListener('keydown', function(e){
 
   snapshotEnglish();
   var saved; try{ saved = localStorage.getItem(KEY); }catch(e){}
+  /* an address that names a language wins over the stored preference:
+     a shared ?lang=fr link opens in French for whoever follows it */
+  var asked = null; try{ asked = new URL(location.href).searchParams.get('lang'); }catch(e){}
+  if (asked) saved = asked;
 
   fetch(REGISTER, {cache:'no-cache'})
     .then(function(r){ if(!r.ok) throw new Error('http ' + r.status); return r.json(); })

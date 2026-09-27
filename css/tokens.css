@@ -24,6 +24,10 @@
 
 :root{
 
+  /* Print ink. Not theme-dependent — paper is white in either theme — so it
+     is declared here rather than on body. Used only inside @media print. */
+  --print-ink:#000;
+
   /* ---------------------------------------------------------- type scale
      Eleven roles, each with a size and a line-height. Nothing on any
      page sets a font-size that is not one of these, unless it is a

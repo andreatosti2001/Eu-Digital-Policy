@@ -31,7 +31,7 @@ Consequences an agent must respect:
 | Layer | Count | Location |
 |---|---|---|
 | Pages | 7 | repository root (`*.html`) |
-| ES modules | 25 | `js/` |
+| ES modules | 27 | `js/` (`evidence-model.js` and `regulatory-model.js` added 27 Sep 2026; both pure) |
 | Classic script | 1 | `app.js` (62 KB, `index.html` only, not a module) |
 | Stylesheets | 4 | `style.css`, `css/tokens.css`, `css/evidence.css`, `css/tools.css` |
 | Canonical datasets | 10 | `data/*.json` |
@@ -49,7 +49,7 @@ Consequences an agent must respect:
 | `institutions.html` | Bodies and competences. |
 | `enforcement.html` | Enforcement observatory with the derived pipeline per record. |
 | `applies.html` | The applicability engine. |
-| `bibliography.html` | Every source, tiered, with the live grade tally. |
+| `bibliography.html` | Every source, tiered, with the live grade tally, and the data-quality panels — open backlog, verification dates, freshness, provenance — computed on load (which is why it loads nine datasets: the backlog reads every one). |
 
 The chrome — navigation, breadcrumbs, theme, skip target, search — is rendered by
 `js/shell.js` on every page from **one nav model** (`NAV`, `js/shell.js:34`). It is not
@@ -118,7 +118,7 @@ Which page loads which dataset — read from the `loadAll` / `load` call sites, 
 | `institutions.html` → `js/institutions-page.js` | taxonomy, instruments, institutions, sources |
 | `enforcement.html` → `js/enforcement-page.js` | taxonomy, instruments, institutions, sources, claims, timeline, enforcement |
 | `applies.html` → `js/applies.js` | taxonomy, instruments, institutions, sources, claims, timeline, applicability |
-| `bibliography.html` → `js/bibliography.js` | taxonomy, instruments, institutions, sources, claims |
+| `bibliography.html` → `js/bibliography.js` | taxonomy, instruments, institutions, sources, claims, enforcement, timeline, glossary, applicability |
 
 `taxonomy` and `instruments` are loaded by every view. **`brief` is loaded by nothing —
 see §8.**
@@ -158,7 +158,7 @@ the `$note` before editing any dataset** — it is where the non-obvious invaria
 |---|---|---|
 | `taxonomy.json` | 28 controlled vocabularies, 243 terms | Every enum-valued field in every other dataset resolves here. IDs are `<dimension>:<slug>` and are **never renamed**. |
 | `instruments.json` | 23 instruments, 60 provisions, 17 relationships | Instruments carry **no dates** (only `milestones` → timeline IDs) and **no supervisor** field. Treaty articles are modelled as provisions of `tfeu`/`teu`, so a legal basis is always a provision ID. |
-| `institutions.json` | 20 bodies, 52 competence edges | Competence edges live here **and nowhere else**. `-*` suffix = the whole class of national bodies. |
+| `institutions.json` | 21 bodies, 55 competence edges | Competence edges live here **and nowhere else**. `-*` suffix = the whole class of national bodies. |
 | `timeline.json` | 42 dated events | Mandatory event type and date precision. Entry into force and application are **never merged**. |
 | `enforcement.json` | 16 records | Three orthogonal axes (action / payment / remedy) + appeal. **No aggregate totals are stored.** `null` ≠ `unknown`. |
 | `claims.json` | 91 claims | The `supports` qualifier (`direct` / `partial` / `context`) is load-bearing. `context` is **not** a citation. |
@@ -341,8 +341,8 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 111 unverified/requires-verification · exit 0
-design-qa.mjs    0 errors · 5 warnings · exit 0
+validate.mjs     0 errors · 0 warnings · 47 unverified/requires-verification · exit 0
+design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
 ```
@@ -370,6 +370,21 @@ the corpus being more honest, not less.
 - 110 → 112: T-36: two DPC GDPR fines added to the observatory (Meta 2023, TikTok 2025), flagged because their appeal state rests on tier-4 reporting.
 - 112 → 113: T-34: new clm-also-in-the-rulebook, six official sources each supporting one row (partial).
 - 113 → 111: Open decision F: the author cleared requires_verification on the two DMA cloud timeline events, both sourced to the Commission's press release.
+- 111 → 106 (27 Sep 2026): five provisions recorded "from general knowledge" (GDPR Arts. 3 and 37, DSA Arts. 28 and 30, NIS2 Art. 3) were read against the Official Journal text, retrieved from the Publications Office's Cellar by CELEX number — the route that works where EUR-Lex answers with a bot challenge. All five headings matched; NIS2 Art. 3's summary was corrected to the Article.
+- 106 → 104: tl-ai-act-2025-02-02-application and tl-ai-act-2025-08-02-application confirmed against AI Act Art. 113(a) and (b) in the Official Journal.
+- 104 → 105: clm-dpc-share-of-fines was split into three atomic claims; the "nine of the ten largest fines" ranking (clm-dpc-top-ten-fines) rests on the brief alone and is now counted on its own.
+- 105 → 107: 31 claims were registered for prose no claim recorded (tools/evidence-audit.mjs, prose coverage 37.9% → 100%); two of them rest on the brief — the AI Omnibus legislative sequence and ICLE's enforcement-architecture argument.
+- 107 → 104: three claims of law that leaned on unofficial reproductions (clm-dsa-micro-small-exemption, clm-data-act-switching-numbers, clm-data-act-art-3-application) were read against the Official Journal and now cite it directly with an article locator.
+- 104 → 101 (27 Sep 2026, next phase): four claims now carry a direct primary source with a structural locator — clm-ai-act-delay-scope and clm-ai-omnibus-legislative-path (Regulation (EU) 2026/1744 in the Official Journal; Parliament's Legislative Observatory), clm-art-4-2-teu-carve-out (split into three atomic claims, each read against the Treaty, the AI Act or the Privacy International judgment) and clm-omnibus-four-gdpr-reforms (the text of COM(2025) 837). One new claim, clm-ai-omnibus-april-trilogue, rests on the brief alone: no source read mentions the collapsed trilogue of 28 April 2026.
+- 101 → 99 (27 Sep 2026): clm-gpai-code-four-drafts now cites the Commission's timeline directly (three drafts, final text received 10 July 2025), and clm-nis2-only-four-on-time is retyped as a derived claim — 27 Member States less the twenty-three the Commission sent letters of formal notice — whose arithmetic re-runs and whose input has a direct Commission source. The split of clm-edps-opposes-commission into two atomic claims left the count unchanged.
+- 99 → 97 (27 Sep 2026): clm-charter-binds-member-states now rests on Charter Art. 51(1) in the Official Journal, its data-retention case line split into three claims each read in its judgment (Digital Rights Ireland, Tele2, La Quadrature du Net); clm-icle-enforcement-architecture now cites ICLE's own June 2026 text, which restates the argument. Both keep their reference_gap flag for a person to clear.
+- 97 → 62 (27 Sep 2026, on the author's instruction to reduce the backlog as far as possible): twenty timeline events read against the dating article of their instrument in the Official Journal and the Publications Office's metadata (GDPR Art. 99, DSA Arts 92-93, DMA Art. 54, DORA Art. 64, CER Arts 26 and 28, Data Act Arts 29 and 50, CRA Art. 71, 2025/2518 Art. 37, AI Act Art. 111(2) as amended); the DGA, ePrivacy Directive, eIDAS2 and Chips Act given an established status from their texts; DORA, CRA, eIDAS2 and Data Act provisions added so that the ENISA and ESA competences, three applicability rules and the FRAND glossary entry point at articles; DORA recital 16 for the NIS2/DORA lex specialis relation; the PLD's transposition deadline (Art. 22(1)); the House Judiciary report's URL; the unsourced '160,000 entities' removed from the NIS2 glossary entry.
+- 62 → 58 (27 Sep 2026): four enforcement records settled from court records. Three appeals read in the Official Journal notices of the actions and confirmed pending in the Court's register (Meta's DMA fine, T-435/25; X's DSA fine, T-114/26, T-120/26 and T-121/26; the Commission's supervisory-fee appeals, C-744/25 P and C-745/25 P); the Amazon/CNPD record against the Luxembourg Cour administrative's judgment itself (52757C, 12 March 2026). Apple's DMA appeal (T-438/25) is established as well, but that record stays flagged: its behavioural outcome is not what the decision is about. The OpenAI/Garante record was corrected from the Garante's own site (decision no. 755 of 2 November 2024, not 20 December 2024) and stays flagged, because the Rome judgment's text has not been read.
+- 58 → 56 (27 Sep 2026): clm-draghi-diagnosis verified against Part A of the Draghi report (printed pp. 5 and 30); clm-four-categories-94pct CORRECTED and retyped as derived: the CMS Enforcement Tracker's own data (refreshed 27 Sep 2026) gives three categories at 94.2% of the EUR 7,159,322,834 total, not four (four make 97.8%), and the prose now says three in all four languages; its four inputs are recorded as claims with the tracker as direct source.
+- 56 → 52 (27 Sep 2026): the 'Also in the rulebook' claim's atomization completed (five items already carried by their own OJ-sourced claims; the record now carries only the 20 January 2026 cyber package, stated directly by the Commission's Q&A); the Temu, AliExpress and Google DMA records verified against the Commission's full press releases (IP/26/1178, IP/26/1654, IP/26/1670) and the Google opening release (IP/24/1689, which names Arts 5(4) and 6(5)). Two corrections: Temu's breach is of risk assessment only (Art. 34), not mitigation, so Art. 35 leaves its legal basis and the prose says so in all four languages; AliExpress's action-plan deadline now rests on the Commission rather than commentary.
+- 52 → 50 (27 Sep 2026): the last two competence edges carrying a requires-verification note (DG CONNECT for the DSA, DG COMP for the DMA) read against the Commission's own pages: DSA supervision sits in DG CONNECT Directorate F, while the powers are the Commission's under DSA Art. 56(2)–(3), read in the Official Journal; the DMA is enforced by a joint DG COMP–DG CONNECT team, so DG COMP's 'operational lead' was stronger than the source and is replaced, and DG CONNECT gains the matching DMA edge.
+- 50 → 49 (27 Sep 2026): the TikTok/DPC transfers record read against the High Court's two approved judgments ([2026] IEHC 347 and 419, Record No. 2025/248 MCA): the infringement findings and the decision to fine stand, the corrective orders were proposed to be vacated and remitted, and a CJEU reference on the amount was proposed. One correction: the decision is dated 30 April 2025, not 2 May (the announcement). The Meta/DPC transfers record stays flagged: the DPC's 2023 annual report establishes the Irish appeal was brought, but not its current state.
+- 49 → 47 (27 Sep 2026): clm-ai-act-not-all-ai atomized and retyped as attributed — it now carries only the Commission's own sentence on minimal-risk AI, read on its AI Act page, which states it whole; the Art. 4 AI-literacy duty is its own OJ-sourced claim, and the prose no longer says the minimal tier has 'no obligations' (all four languages). clm-ai-omnibus-april-trilogue now rests on Bird & Bird (5 May 2026) and the IAPP (29 April 2026), which state it directly; both are commentary, so it grades Secondary, and the Council's own account remains unread (HTTP 403 here).
 
 The other numbers on this block are unchanged.
 
@@ -381,30 +396,41 @@ at `exit 1`, by name, and counts them. The four extra checks SESSION 30 added
 (the source-record contract, the runtime-surface scan) found nothing on this tree, which is
 what "at baseline" means here.
 
-The five `design-qa` warnings, recorded so a later session can tell new from pre-existing:
-3 inline event handlers in `index.html` (lines 42, 112, 119); a `#000` literal in
-`css/evidence.css`; a `#000` literal in `css/tools.css`; `--tx` and `--ty` never set in
-`style.css`.
+The `design-qa` warnings, recorded so a later session can tell new from pre-existing: none.
 
-**There is no test runner.** The Playwright suites used during development live outside this
-repository. What ships here are the four validators, which a contributor can run without
-installing anything.
+Until 27 Sep 2026 there were five: three inline event handlers in `index.html` (moved into
+`app.js` as `data-action` controls, and the check is now an ERROR so one cannot return), a `#000`
+literal in `css/evidence.css` and one in `css/tools.css` (both print-only, now the `--print-ink`
+token), and `--tx`/`--ty` never set in `style.css` (the keyframe's `translate(0,0)` was a no-op and
+is removed). A new warning is a finding, as it always was.
+
+**Tests use Node's built-in runner (`node --test`), with no external framework and no
+dependency.** *Corrected 27 Sep 2026: this paragraph used to say "there is no test runner" and
+that the Playwright suites lived outside the repository, which stopped being true when
+`tools/selftest.mjs`, the twenty-four agent suites and the in-repository browser suite
+(`agent/browser/`, driving Chromium over the DevTools protocol) were added.*
+
+**A fifth check, `tools/evidence-audit.mjs` (27 Sep 2026).** Claim types and evidence status,
+locators, derivations, prose coverage of the brief, table rows against their records, and
+enforcement and regulatory contradictions; exit 1 on a defect. `docs/EVIDENCE-MODEL.md`.
 
 ## 13. Build and deployment
 
 - **No build step.** Nothing is compiled, bundled, minified or generated at deploy time.
-- **No CI.** There is no `.github/` directory, no workflow, no `_config.yml`, no `.nojekyll`.
+- **CI exists** (SESSION 19 onwards): `.github/workflows/qa.yml` on every push, and, since
+  27 Sep 2026, `.github/workflows/pages.yml`, a deploy gate that takes effect once the Pages
+  source is set to "GitHub Actions" — `docs/DEPLOYMENT.md`. *This line used to read "No CI".*
 - **Deployment is GitHub Pages serving `main` at the repository root.** This is inferred
   from the canonical URLs written into all seven pages
   (`https://andreatosti2001.github.io/Eu-Digital-Policy/…`) and from the absence of any
   workflow. The Pages source setting is repository configuration outside the tree and was
   **not** readable with the tools available in this session.
 - The remote carries a single branch, `main`, at `7248290`.
-- Publication is therefore a push to `main`. There is no gate between a commit and the
-  public site — **the validators are advisory, not enforced.** Any session that changes data
-  or markup must run them by hand.
+- Publication is therefore a push to `main`, **until the owner switches the Pages source to
+  GitHub Actions** (`docs/DEPLOYMENT.md` §3). Until then the checks are visible, not blocking;
+  run them by hand.
 
-**FINDING — the deployed site was not inspected.** Outbound access to
-`andreatosti2001.github.io` is refused by this environment's network policy (HTTP 403 on
-CONNECT, 5 of 5 attempts). Everything in this document is read from the repository. No claim
-is made here about what the live site currently serves.
+**FINDING — the deployed site was not inspected (SESSION 00).** Outbound access to
+`andreatosti2001.github.io` was refused by that environment's network policy. *On 27 Sep 2026
+it was reachable, and was inspected:* the live pages are byte-identical to `main`, `.control-room/`
+and `.agents/` return 404, and `agent/`, `docs/` and `tools/` are served. `docs/DEPLOYMENT.md` §1.

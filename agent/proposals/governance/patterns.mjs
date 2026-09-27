@@ -141,7 +141,10 @@ export const PATTERNS = Object.freeze([
       Object.freeze({ when: '2026-09-08', what: 'the merge that resolved it, in the direction protocol §14 states: the Orchestrator enforces policy and does not define it.', anchor: { kind: 'commit', sha: 'daba25ac39f81843dca12e702c5cd0810104e21e', subject: 'give the autonomy policy one home' } }),
       Object.freeze({ when: '2026-09-01', what: 'two parallel Scouts, reconciled by adopting one and retiring the other.', anchor: { kind: 'commit', sha: 'ef922015a44e7bd32b3eb324ef25032e3340ce55', subject: 'retire its implementation' } }),
       Object.freeze({ when: 'recorded', what: 'audit F-17: nothing makes concurrent sessions aware of each other.', anchor: { kind: 'contains', path: 'docs/AUDIT-2026-09-01.md', text: 'F-17' } }),
-      Object.freeze({ when: 'now', what: 'the branch list, measured: work that is not in `main` and that a session starting from `main` does not inherit.', anchor: { kind: 'measure', measure: 'unmerged_session_branches', expect: { at_least: 1 } } }),
+      /* Was a `now` measure expecting at least one unmerged branch. On 27 Sep 2026 it measured 0 — the author merged PR #3 and deleted the rest on
+         26 September — so the anchor was refuted by the repository getting better, and the suite's rule is that a refuted anchor is corrected,
+         not left standing. The pattern is about what the branching model produced; the register that recorded it is the durable evidence. */
+      Object.freeze({ when: '2026-09-26', what: 'the branch register, recorded: twenty-three remote branches already in `main` and never deleted, and six more holding work `main` did not have, before the author closed them.', anchor: { kind: 'contains', path: 'docs/HANDOVER.md', text: 'Branch register — AUDIT-2026-09-25 T-40' } }),
     ]),
   }),
 
@@ -152,11 +155,11 @@ export const PATTERNS = Object.freeze([
     statement:
       'A session found the stale-base failure, wrote the fix as a rule into the git-workflow skill and into AGENTS.md, and pushed it to a branch that was never merged. For twenty-three days neither AGENTS.md nor the skill a session reads carried it. It reached them only when a branch audit (AUDIT-2026-09-25 T-40) went looking for unmerged work.',
     so_what:
-      'This is the objective of this session stated as a defect: repeated human intervention becomes durable system knowledge only if it lands where the next session reads. The rule was recovered by an audit, not by the process, and branches still hold work that `main` does not.',
+      'This is the objective of this session stated as a defect: repeated human intervention becomes durable system knowledge only if it lands where the next session reads. The rule was recovered by an audit, not by the process; the branches that held it were closed only on 26 September 2026, when the author merged or deleted them.',
     instances: Object.freeze([
       Object.freeze({ when: '2026-09-03', what: 'the end-of-session re-fetch rule — "re-fetch and diff docs/HANDOVER.md against origin/main immediately before the final write or any merge" — was written on claude/foundation-verification-audit-40ozpo, with the collision that prompted it recorded in the audit it belonged to, and the branch was never merged.', anchor: { kind: 'contains', path: 'docs/AUDIT-2026-09-03.md', text: 'Correction, same day' } }),
       Object.freeze({ when: '2026-09-26', what: 'carried forward by hand into AGENTS.md and the git-workflow skill, twenty-three days later, by the branch audit rather than by any session\'s own handover.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 're-fetch and diff against it again' } }),
-      Object.freeze({ when: 'now', what: 'the branches that hold what `main` does not, counted.', anchor: { kind: 'measure', measure: 'unmerged_session_branches', expect: { at_least: 1 } } }),
+      Object.freeze({ when: '2026-09-26', what: 'the branches that held what `main` did not, closed by the author the same day — recorded, because a count taken now reads 0 and says nothing about how the lesson was lost.', anchor: { kind: 'contains', path: 'docs/HANDOVER.md', text: 'Deleted by the author, 26 September 2026' } }),
     ]),
   }),
 

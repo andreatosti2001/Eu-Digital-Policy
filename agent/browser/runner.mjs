@@ -36,7 +36,7 @@ import {
   PAGES, checkPageLoads, checkNavigation, checkInternalLinks, checkSearch, checkGlossary,
   checkComparison, checkEvidence, checkApplicability, checkInstrumentView,
   checkLanguageSwitching, checkViewports, checkKeyboard, checkDialogs,
-  checkNoThirdParty, checkAccessibility, checkThreshold, checkDeployedSubpath,
+  checkNoThirdParty, checkAccessibility, checkContrast, checkReducedMotion, checkThreshold, checkDeployedSubpath,
 } from './checks.mjs';
 
 export const BROWSER_QA_COMMAND = 'node agent/browser/cli.mjs';
@@ -137,8 +137,12 @@ export async function runBrowserQA({ only = null, pages = PAGES, quick = false, 
     if (wants('threshold')) results.push(...await checkThreshold(page, site.origin));
     if (wants('keyboard')) results.push(...await checkKeyboard(page, site.origin));
     if (wants('dialogs')) results.push(...await checkDialogs(page, site.origin));
-    if (wants('responsive')) results.push(...await checkViewports(page, site.origin, { pages: quick ? pages.slice(0, 2) : pages.slice(0, 5) }));
-    if (wants('accessibility')) results.push(...await checkAccessibility(page, site.origin, { pages: quick ? pages.slice(0, 3) : pages }));
+    if (wants('responsive')) results.push(...await checkViewports(page, site.origin, { pages: quick ? pages.slice(0, 2) : pages }));
+    if (wants('accessibility')) {
+      results.push(...await checkAccessibility(page, site.origin, { pages: quick ? pages.slice(0, 3) : pages }));
+      results.push(...await checkContrast(page, site.origin, { pages: quick ? pages.slice(0, 2) : pages }));
+      results.push(...await checkReducedMotion(page, site.origin, { pages: quick ? pages.slice(0, 2) : pages }));
+    }
     /* SESSION 30. The same site, served where it is actually
        published: GitHub Pages serves `main` as a PROJECT site at
        /Eu-Digital-Policy/, and every run before this one served the

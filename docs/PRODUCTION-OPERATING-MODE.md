@@ -21,6 +21,20 @@ the way.
 > none of them is closable by editing a check: the adversarial CRITICAL is left red on purpose
 > (§4a below), and the other five need a governance decision or network access this
 > environment does not have. Nothing in `agent/production/` was edited to move the count.
+>
+> **27 September 2026 — seventeen of twenty, and it still refuses.** Three more are closed,
+> each by a change the author authorised rather than by editing a check to pass:
+> `adversarial_gate_clean` (HE-04 rewritten to decide from the separation verdicts, §4a),
+> `website_paths_traceable` (the `Evidence:` trailer rule and the decision ledger carrying its
+> proposal, §5), and `agent_suites_pass`. Three block. `production_dispatcher_wired` and
+> `decision_ledger_present` fail: no specialist can be dispatched outside the simulation, and
+> no proposal has ever been decided — the first is an activation decision protocol §24 reserves
+> to a person, the second can only be a person's decision. `deploy_gate_exists` is now
+> **unmeasurable** rather than failing: `.github/workflows/pages.yml` gates its own deploy, but
+> whether it is what publishes the site is a repository setting no file records
+> (`docs/DEPLOYMENT.md` §3). That condition's text was the one thing edited in
+> `agent/production/readiness.mjs`: it said nothing sits between a push and the site, which had
+> stopped being true, and it blocks exactly as before.
 
 **Module:** `agent/production/` · **Suite:** `agent/production/selftest.mjs`, 52 tests
 **Measured at:** 11 September 2026, on `claude/production-operating-mode-0ti3hu` cut from
@@ -162,12 +176,31 @@ it as an input, it is a credential"*. `separations.mjs` checks it, on two indepe
 hits is the separation check that searches Control Room source **to prove the phrase is absent
 from it**.
 
-**HE-04 is left red, and this is a decision rather than an oversight.** Reclassifying a
+**HE-04 was left red, and that was a decision rather than an oversight.** Reclassifying a
 CRITICAL by editing the thing that reports it is the move this architecture is arranged
 against, and a **stale exclusion list** is the specific shape SESSION 23.5 already had to
-correct once — HE-04's three path exclusions are that list. A person decides whether the
-attack is rewritten; the readiness report carries both facts, and `adversarial_gate_clean`
-stays a blocking failure until somebody does.
+correct once — HE-04's three path exclusions were that list. A person had to decide whether
+the attack was rewritten.
+
+**The author decided on 27 Sep 2026, and the attack was rewritten — not reclassified.** What
+changed is *how HE-04 decides*, not what it concludes about any file:
+
+- **The path exclusions are gone.** HE-04 no longer skips `policy/verify/`, `selftest.mjs` or
+  `/browser/`. It searches the whole tree, so a new file holding the phrase cannot fall into a
+  blind spot the way an excluded path could.
+- **It decides from the separation verdicts** (`he04Verdict()` in `attacks.mjs`, a pure
+  function over `controlPlaneClear()` and `phraseOccurrences()`): the phrase anywhere in the
+  Control Room source, or any occurrence in the tree that is `read_it`, is **SUCCEEDED**; any
+  `no_path_found` is **partial**, because a path not found is not a path proven absent; only
+  an all-`cleared` tree fails safely.
+- **Today it reports `partial` (MEDIUM), not safe.** Five files are cleared on both halves;
+  `agent/policy/selftest.mjs` and `agent/policy/verify/attacks.mjs` can grant and hold the
+  phrase, and no path between the two was found. That is reported as what it is.
+- **The rewrite is itself tested**: `agent/policy/verify/selftest.mjs` covers all four verdict
+  shapes and asserts the HE-04 block carries no path exclusion, so re-adding one fails CI.
+
+The gate exits 0 on a partial, so `adversarial_gate_clean` passes, and the gate is now part of
+the deploy gate (`docs/DEPLOYMENT.md` §2).
 
 ### 4b · Three states, never two
 
@@ -194,7 +227,7 @@ intended-sequence mismatches stand unrepaired, including the one that **must** s
 "reveal CONTROL ROOM followed by the normal authentication interface" must never become a login
 form on a published page.
 
-## 5 · Traceability: one of three
+## 5 · Traceability: three of three (one of three until 27 Sep 2026)
 
 **Every website modification must remain traceable to its originating evidence and execution
 trace.** Measured as: enumerate every path by which a file in the published surface can change,
@@ -204,12 +237,23 @@ it.
 | path | traceable | why |
 |---|---|---|
 | the autonomy runner | **yes** | its commit message names the proposal, the agent, the category, the policy, every grant with who wrote it, the files, the check verdict, the base commit and an executable restore command |
-| a person edits a page and pushes | **no** | nothing requires a commit message here to name evidence and nothing checks one |
-| a decision through the Control Room | **no** | the decision ledger is **absent** |
+| a person edits a page and pushes | **yes, since 27 Sep 2026** | `tools/commit-evidence.mjs` requires every non-merge commit that changes a published file to carry an `Evidence:` trailer; `qa.yml` and the deploy gate in `pages.yml` both run it |
+| a decision through the Control Room | **yes, since 27 Sep 2026** | the decision ledger is git-tracked, and each decision now carries the proposal itself (`proposal_snapshot`), honoured on a fresh clone only if it still hashes to the recorded fingerprint |
 
-**The widest untraced path is the most likely one**, and it is not an agent defect. Requiring
-evidence in a human commit message is a governance decision about how the repository author
-works, and an agent may not take it.
+**The widest untraced path was the most likely one**, and it was not an agent defect.
+Requiring evidence in a human commit message is a governance decision about how the repository
+author works, and an agent could not take it. **The author took it on 27 Sep 2026.** The check
+establishes that a published change names its evidence, not that the evidence is good; it
+judges only commits made after the rule existed; and it blocks a merge or a deploy only once
+the repository settings in `docs/DEPLOYMENT.md` §3 are in place.
+
+**Why the Control Room path needed more than a tracked ledger.** A decision recorded the
+proposal's id and fingerprint, but the proposal itself lived in git-ignored run state, so on a
+fresh clone a decision named something nobody could read — and `deriveApproval()` voided it. A
+decision now carries the proposal's substance; `deriveApproval()` falls back to it only when
+the working copy is missing, and refuses it as tampered if it no longer hashes to
+`proposal_sha256`. `agent/implement/selftest.mjs` R2 tests both on a temporary clone. No
+decision has been recorded yet, so this is a property of the ledger code, not of any record.
 
 **A tracked README is not a record.** The first draft of `traceability.mjs` counted
 `agent/implement/decisions/README.md` and reported the decision ledger as durable. It is
@@ -241,7 +285,8 @@ five, by now. The workflow ran the gate's own **suite**, which proves it is repr
 says nothing about what it **found**. It gets a job to itself because a failing step skips every
 step after it in the same job, and a step expected to be red must hide nothing.
 
-**Not repaired, deliberately:** HE-04 (§4a) · the three SESSION 19 browser defects, which are
+**Not repaired, deliberately (at the time):** HE-04 (§4a — rewritten on the author's
+decision of 27 Sep 2026) · the three SESSION 19 browser defects, which are
 Class C interface work and which the handover says explicitly not to fix on an agent's own
 initiative · the `__CONTENT__` drift · OB-05 and PP-08 · the `freshness.mjs` baseline
 disagreement, which is either a tooling defect or a wrong number in

@@ -164,6 +164,7 @@ const TIER_BY_TYPE = {
   'source-type:decision': 'tier:1',
   'source-type:legislative-document': 'tier:1',
   'source-type:court-press-release': 'tier:1',
+  'source-type:court-record': 'tier:2',
   'source-type:opinion': 'tier:2',
   'source-type:guidance': 'tier:2',
   'source-type:regulator-statement': 'tier:2',

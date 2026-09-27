@@ -34,6 +34,7 @@
    ============================================================ */
 
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { cspProblems } from './csp.mjs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { scanRuntimeSurface } from './thirdparty.mjs';
@@ -133,10 +134,19 @@ for (const page of PAGES) {
     err(at, `third-party resource: ${m[1]}`);
   }
 
-  /* inline event handlers are not a design defect but they are a place
-     where behaviour hides from every module that owns it */
-  const inline = (html.match(/\son(?:click|change|input|submit)="/g) || []).length;
-  if (inline) warn(at, `${inline} inline event handler(s)`);
+  /* the Content-Security-Policy (tools/csp.mjs): present, placed where it
+     governs, no unsafe script sources, and every inline script hashed —
+     an unhashed one is a script the browser silently refuses to run */
+  for (const p of cspProblems(html)) err(at, `CSP: ${p}`);
+
+  /* inline event handlers are a place where behaviour hides from every
+     module that owns it, and a Content-Security-Policy without
+     'unsafe-inline' refuses to run them. The three that existed were moved
+     into app.js on 27 Sep 2026, so this is an ERROR now rather than a
+     warning: the next one would be a regression, not a baseline. Any
+     on<event> attribute, in either quote style. */
+  const inline = (html.match(/\son[a-z]+\s*=\s*["']/gi) || []).length;
+  if (inline) err(at, `${inline} inline event handler(s) — move the behaviour into a module (see app.js data-action)`);
 }
 
 /* ---------------------------------------------------------- CSS */
@@ -147,10 +157,10 @@ const cssFiles = ['style.css', ...readdirSync(join(ROOT, 'css')).map((f) => 'css
 const declared = new Set();
 const used = new Map();
 
-/* Custom properties are also set from the markup — the tree animation passes
-   its index and the rota its geometry as inline style attributes. Those are
-   declarations too, and a checker that does not know it will report the whole
-   animation layer as undeclared. */
+/* Custom properties could once be set from the markup through inline style
+   attributes (the tree animation's index). Since 27 Sep 2026 the CSP refuses
+   those and the index is a class (css/tools.css), so this scan should find
+   nothing; it stays so that a checker never reports a declaration it missed. */
 for (const page of PAGES) {
   const html = readFileSync(join(ROOT, page), 'utf8');
   for (const m of html.matchAll(/style="[^"]*?(--[a-z0-9-]+)\s*:/gi)) declared.add(m[1]);
@@ -159,6 +169,14 @@ const JS_SOURCES = [...readdirSync(join(ROOT, 'js')).filter((x) => x.endsWith('.
   ...(existsSync(join(ROOT, 'app.js')) ? ['app.js'] : [])];
 for (const f of JS_SOURCES) {
   const js = readFileSync(join(ROOT, f), 'utf8');
+  /* A module that writes style="…" into markup writes something the CSP
+     (style-src 'self', no 'unsafe-inline') makes the browser refuse: the
+     element renders without it and nothing says so. Computed values go
+     through js/format.js applyGeometry instead. Comments are skipped. */
+  const code = js.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+  const styled = (code.match(/\sstyle\s*=\s*\\?["']/g) || []).length;
+  if (styled) err(f, `${styled} style attribute(s) written into markup — the CSP refuses them; use a class, or data-w / data-flex with applyGeometry`);
+  if (/<style\b/i.test(code)) err(f, 'a <style> element written into markup — the CSP refuses it');
   for (const m of js.matchAll(/setProperty\(\s*['"](--[a-z0-9-]+)/gi)) declared.add(m[1]);
   for (const m of js.matchAll(/(--[a-z0-9-]+)\s*:/gi)) declared.add(m[1]);
 }

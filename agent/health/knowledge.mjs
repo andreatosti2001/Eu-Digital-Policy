@@ -35,6 +35,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { defineMetric, measured, unmeasurable } from './model.mjs';
+import { openBacklog } from '../../js/evidence-model.js';
 import {
   claimsOf, sourcesOf, instrumentsOf, relationshipsOf, institutionsOf,
   enforcementOf, timelineOf, glossaryOf, rulesOf,
@@ -108,9 +109,11 @@ export const KNOWLEDGE_METRICS = [
          2026-09-25, Fase 2), the "narrower" count overtook the canonical
          one, which is the one direction this number must never be
          wrong in. */
-      const externalDirect = (c) => (c.sources ?? []).some((x) => x.supports === 'supports:direct' && x.source_id !== 'src-brief-original');
-      const direct = claims.filter((c) => !c.last_verified || !externalDirect(c)).length
-        + enf.filter((e) => e.requires_verification).length;
+      /* Since derived claims (27 Sep 2026) the rule is the evidence
+         model's own openBacklog(), fed claims and enforcement alone: a
+         derived claim is carried by its inputs, and a hand-copied rule
+         that ignored that counted four records validate.mjs does not. */
+      const direct = openBacklog({ claims: ctx.data.claims, enforcement: ctx.data.enforcement }).length;
       const excerpt = `${(ctx.validators?.checks ?? []).find((c) => c.name === 'tools/validate.mjs')?.output_excerpt ?? ''}`;
       const fromValidator = Number((excerpt.match(/UNVERIFIED[^\d]*(\d+)/) ?? [])[1] ?? NaN);
       const recorded = ctx.baseline?.unverified ?? null;

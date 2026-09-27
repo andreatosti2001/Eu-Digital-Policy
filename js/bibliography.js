@@ -8,6 +8,7 @@
 import { loadAll, index, renderError, label as taxLabel, note as taxNote } from './data.js';
 import * as F from './format.js';
 import { renderFilterState, syncUrl, readUrl, emptyState } from './filters.js';
+import { openBacklog, riskClass, freshnessState, kindInfo } from './evidence-model.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -206,7 +207,7 @@ function stats(db) {
   const none = s.filter((x) => x.url_status === 'url:none').length;
   const t1 = s.filter((x) => x.tier === 'tier:1').length;
   const claims = db.claims.claims;
-  const unver = claims.filter(F.isUnverified).length;
+  const unver = claims.filter((c) => F.isUnverified(c, IX)).length;
 
   /* How many claims rest only on the brief itself.
 
@@ -247,7 +248,7 @@ function stats(db) {
   const grades = document.getElementById('bibGrades');
   if (grades) {
     const t = F.gradeTally(claims, IX);
-    const order = ['primary', 'official', 'secondary', 'interpretation', 'unresolved'];
+    const order = F.GRADE_ORDER;
     grades.innerHTML = order.map((k) => {
       const g = F.GRADE[k];
       return '<li class="bg-row" data-g="' + k + '">' +
@@ -258,13 +259,149 @@ function stats(db) {
   }
 }
 
+/* ============================================================
+   Data quality, measured on this load. Four panels, every number
+   computed here from the datasets: nothing on the page states a count
+   that could outlive the data. The backlog is js/evidence-model.js
+   openBacklog(), the same function tools/validate.mjs prints, so the
+   site and the build cannot disagree about it.
+   ============================================================ */
+
+const today = () => new Date().toISOString().slice(0, 10);
+const arrOf = (x) => (Array.isArray(x) ? x : []);
+const dl = (rows) => '<dl class="dq-list">' + rows.map(([n, label, sub]) =>
+  '<div class="dq-row"><dt class="dq-n">' + n + '</dt><dd>' + label +
+  (sub ? '<span class="dq-sub">' + sub + '</span>' : '') + '</dd></div>').join('') + '</dl>';
+
+const BACKLOG_WORD = {
+  'claim (unverified)': ['Claims never verified', 'no verification date at all'],
+  'enforcement': ['Enforcement records flagged', 'an appeal, a payment or an outcome not established from a primary source'],
+  'timeline': ['Timeline events flagged', null],
+  'transposition': ['Transposition states flagged', 'per-Member-State transposition not established'],
+  'competence': ['Institutional competences flagged', 'no official text states the allocation'],
+  'source (no URL)': ['Sources with no URL located', 'listed anyway, marked as such below'],
+  'instrument (never verified)': ['Instruments never verified', null],
+  'relationship': ['Instrument relationships flagged', null],
+  'glossary': ['Glossary entries flagged', null],
+  'applicability rule': ['Applicability rules flagged', null],
+  'provision': ['Provisions flagged', null],
+};
+
+function dqBacklog(db) {
+  const rows = openBacklog(db);
+  const byKind = new Map();
+  for (const r of rows) byKind.set(r.kind, (byKind.get(r.kind) || 0) + 1);
+  /* "No external direct source" is split by what the claim is. An
+     argument — an interpretation, a critique, a forecast — is not owed a
+     citation that could settle it; a fact, a statement of law or an
+     attribution is. Counting them as one number made the author's voice
+     look like a missing footnote. */
+  const claimById = new Map(arrOf(db.claims.claims).map((c) => [c.id, c]));
+  const noDirect = rows.filter((r) => r.kind === 'claim (no external direct source)').map((r) => claimById.get(r.id)).filter(Boolean);
+  const owed = noDirect.filter((c) => kindInfo(c).owesVerification).length;
+  const args = noDirect.length - owed;
+  const list = [];
+  if (owed) list.push([owed, 'Facts, law and attributions without an external source that states them', 'the ones a source could settle']);
+  if (args) list.push([args, 'Arguments resting on the brief itself', 'interpretations, critiques and forecasts: no citation can settle an argument, so these stay counted rather than being hidden']);
+  for (const [k, n] of [...byKind.entries()].sort((a, b) => b[1] - a[1])) {
+    if (k === 'claim (no external direct source)') continue;
+    const w = BACKLOG_WORD[k] || [k, null];
+    list.push([n, esc(w[0]), w[1] ? esc(w[1]) : null]);
+  }
+  document.getElementById('dqBacklog').innerHTML =
+    '<p class="dq-total"><b>' + rows.length + '</b> records say they are not established.</p>' + dl(list) +
+    '<p class="dq-foot">A rise usually means someone examined a record and found it wanting. A fall is good news only when verification against a primary source produced it.</p>';
+}
+
+function dqDates(db) {
+  const sets = [
+    ['Claims', arrOf(db.claims.claims)],
+    ['Enforcement records', arrOf(db.enforcement.enforcement)],
+    ['Timeline events', arrOf(db.timeline.events)],
+    ['Instruments', arrOf(db.instruments.instruments)],
+  ];
+  document.getElementById('dqDates').innerHTML = sets.map(([name, list]) => {
+    const t = new Map();
+    for (const r of list) { const k = r.last_verified || 'never'; t.set(k, (t.get(k) || 0) + 1); }
+    const keys = [...t.keys()].sort((a, b) => (a === 'never') - (b === 'never') || b.localeCompare(a));
+    return '<div class="dq-block"><h4>' + name + ' <span class="dq-sub">' + list.length + '</span></h4>' +
+      '<ul class="dq-dates">' + keys.map((k) =>
+        '<li><span class="dq-d">' + (k === 'never' ? 'never verified' : esc(F.humanDate(k))) + '</span>' +
+        '<b>' + t.get(k) + '</b></li>').join('') + '</ul></div>';
+  }).join('') +
+  '<p class="dq-foot">' + 'A date is when the record was last checked against its sources, not a promise that it is still true.' + '</p>';
+}
+
+const FRESH_ORDER = ['freshness:fresh', 'freshness:aging', 'freshness:review-due', 'freshness:stale'];
+const FRESH_WORD = { 'freshness:fresh': 'fresh', 'freshness:aging': 'ageing', 'freshness:review-due': 'review due', 'freshness:stale': 'stale' };
+
+function dqFresh(db) {
+  const asOf = today();
+  const enfById = new Map(arrOf(db.enforcement.enforcement).map((e) => [e.id, e]));
+  const sets = [
+    ['Claims', 'claim', arrOf(db.claims.claims)],
+    ['Enforcement records', 'enforcement', arrOf(db.enforcement.enforcement)],
+    ['Timeline events', 'event', arrOf(db.timeline.events)],
+    ['Instruments', 'instrument', arrOf(db.instruments.instruments)],
+  ];
+  const head = '<tr><th scope="col">Dataset</th>' + FRESH_ORDER.map((s) => '<th scope="col">' + FRESH_WORD[s] + '</th>').join('') + '</tr>';
+  const body = sets.map(([name, kind, list]) => {
+    const t = {};
+    for (const r of list) {
+      const st = freshnessState(r.last_verified, riskClass(kind, r, { asOf, enforcementById: enfById }), asOf);
+      t[st] = (t[st] || 0) + 1;
+    }
+    return '<tr><th scope="row">' + name + '</th>' + FRESH_ORDER.map((s) => '<td>' + (t[s] || 0) + '</td>').join('') + '</tr>';
+  }).join('');
+  document.getElementById('dqFresh').innerHTML =
+    '<p class="dq-cap" id="dqFreshCap">As of ' + esc(F.humanDate(asOf)) + ', against a review interval set by what each record is about: a pending appeal is re-read within 14 days, a settled date within a year.</p>' +
+    '<table class="dq-table" aria-describedby="dqFreshCap">' +
+    '<thead>' + head + '</thead><tbody>' + body + '</tbody></table>';
+}
+
+const SUPPORT_ORDER = ['supports:direct', 'supports:partial', 'supports:context'];
+const SUPPORT_HEAD = { 'supports:direct': 'states it', 'supports:partial': 'in part', 'supports:context': 'context only' };
+
+function dqProv(db) {
+  const rows = new Map([...TIERS, 'self', 'none'].map((k) => [k, { 'supports:direct': 0, 'supports:partial': 0, 'supports:context': 0 }]));
+  for (const c of arrOf(db.claims.claims)) {
+    for (const ref of c.sources || []) {
+      const src = IX.source.get(ref.source_id);
+      const key = ref.source_id === SELF_SOURCE ? 'self' : (src && TIERS.includes(src.tier) ? src.tier : 'none');
+      if (rows.get(key)[ref.supports] != null) rows.get(key)[ref.supports] += 1;
+    }
+  }
+  const label = (k) => k === 'self' ? 'The brief itself <span class="dq-sub">provenance, not corroboration</span>'
+    : k === 'none' ? 'Untiered or missing' : esc(TIER_TITLE[k]);
+  const body = [...rows.entries()].filter(([k, v]) => k !== 'none' || SUPPORT_ORDER.some((s) => v[s]))
+    .map(([k, v]) => '<tr><th scope="row">' + label(k) + '</th>' + SUPPORT_ORDER.map((s) => '<td>' + v[s] + '</td>').join('') + '</tr>').join('');
+  document.getElementById('dqProv').innerHTML =
+    '<p class="dq-cap" id="dqProvCap">Every link from a claim to a source, by the source’s tier and by what the source does for the claim. A partial link establishes a narrower case; a context link is not a citation at all.</p>' +
+    '<table class="dq-table" aria-describedby="dqProvCap">' +
+    '<thead><tr><th scope="col">Source tier</th>' + SUPPORT_ORDER.map((s) => '<th scope="col">' + SUPPORT_HEAD[s] + '</th>').join('') + '</tr></thead>' +
+    '<tbody>' + body + '</tbody></table>';
+}
+
+function quality(db) {
+  for (const [fn, id] of [[dqBacklog, 'dqBacklog'], [dqDates, 'dqDates'], [dqFresh, 'dqFresh'], [dqProv, 'dqProv']]) {
+    try { fn(db); } catch (e) {
+      /* one panel failing must not take the bibliography with it, and must say so */
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<p class="bib-empty">This panel could not be computed: ' + esc(e.message) + '</p>';
+      console.error('[quality]', id, e);
+    }
+  }
+}
+
 (async function boot() {
   const host = document.getElementById('bib');
   try {
-    const db = await loadAll(['taxonomy', 'instruments', 'institutions', 'sources', 'claims']);
+    const db = await loadAll(['taxonomy', 'instruments', 'institutions', 'sources', 'claims',
+      'enforcement', 'timeline', 'glossary', 'applicability']);
     IX = index(db);
     buildUsage(db);
     stats(db);
+    quality(db);
     controls();
     render();
     if (location.hash) {

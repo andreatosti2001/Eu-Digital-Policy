@@ -272,6 +272,13 @@ export class Page {
     await this.send('Page.enable');
     await this.send('Network.enable');
     await this.send('DOM.enable');
+    /* A Content-Security-Policy refusal is not a console.* call, so the
+       console listener above never hears it: record every
+       securitypolicyviolation in the page itself, before any of its own
+       scripts run. A refused inline style is otherwise a silent defect. */
+    await this.send('Page.addScriptToEvaluateOnNewDocument', {
+      source: "window.__cspViolations=[];document.addEventListener('securitypolicyviolation',function(e){window.__cspViolations.push({directive:e.violatedDirective,sample:String(e.sample||'').slice(0,80),line:e.lineNumber||null});});",
+    });
   }
 
   /** Navigate, then wait for the page to be quiet. `Page.loadEventFired`

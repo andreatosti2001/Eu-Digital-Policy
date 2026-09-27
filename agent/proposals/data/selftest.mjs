@@ -244,13 +244,32 @@ test('the DataGap kind follows a stated table, with no fall-through', () => {
   }
 });
 
-test('a DataGap with no lead says so rather than inventing one', () => {
+test('a DataGap with no lead says so rather than inventing one', async () => {
+  /* Every lead-less DataGap the real corpus produces must say so. */
   const empty = result.data_gaps.filter((g) => g.candidate_leads.length === 0);
-  assert.ok(empty.length > 0, 'on this corpus some gaps genuinely have nowhere to look; a run in which every one had a lead has probably invented one');
   for (const g of empty) {
     assert.equal(g.gap_kind, 'missing_source');
     assert.ok(/nowhere to look|nothing this repository can name/i.test(g.closes_with));
   }
+  /* The corpus alone cannot be relied on to exercise that path: on 27 Sep
+     2026 the last instruments with no source at all (DGA, eIDAS2, Chips
+     Act) were read against the Official Journal and sourced, and the real
+     run stopped producing lead-less gaps. So the path is exercised on a
+     real verifier-routed gap with its lead removed: the router must hand
+     it on as missing_source, with no lead, rather than inventing one. */
+  const routed = result.routed.find((x) => x.route === 'verifier');
+  assert.ok(routed, 'expected a verifier-routed gap to build the lead-less case from');
+  const leadless = {
+    ...routed.gap,
+    candidate_evidence: [{ kind: 'none_identified', where: null, what_it_would_establish: 'Nothing. Constructed for this test: the corpus offers nowhere to look.', retrieved: false }],
+  };
+  const t2 = newTracer();
+  const r2 = await new ProposalRouter({ tracer: t2, store: new MemoryRecordStore({ allowSimulated: false }), corpus, gaps: [leadless], asOf: AS_OF }).run();
+  assert.equal(r2.data_gaps.length, 1, 'the lead-less gap is still handed to the Verifier');
+  const [dg] = r2.data_gaps;
+  assert.equal(dg.candidate_leads.length, 0, 'no lead was invented');
+  assert.equal(dg.gap_kind, 'missing_source');
+  assert.ok(/nowhere to look|nothing this repository can name/i.test(dg.closes_with));
 });
 
 test('uncertainty survives the handoff at full strength', () => {
