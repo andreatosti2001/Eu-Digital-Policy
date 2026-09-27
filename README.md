@@ -7,6 +7,18 @@ with its sources, its locator and a grade derived from what those sources can ac
 
 **Live site:** https://andreatosti2001.github.io/Eu-Digital-Policy/
 
+**One page per regulation**, each generated from the same records: the
+[GDPR](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/gdpr/),
+[Digital Services Act](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/dsa/),
+[Digital Markets Act](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/dma/),
+[AI Act](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/ai-act/),
+[Data Act](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/data-act/),
+[NIS2](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/nis2/),
+[DORA](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/dora/),
+[Cyber Resilience Act](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/cra/)
+and four more — what each does, where it stands, its dates, provisions, competent authorities,
+enforcement, its interactions with the others, and the graded evidence behind every statement.
+
 ## What this project demonstrates
 
 - **Regulatory data modelling.** Instruments, provisions, dated events, institutions and their
@@ -86,7 +98,7 @@ protocol.
 
 ## How this is actually built
 
-**There is no generator.** An earlier version of this README told you to run
+**There is no build step.** An earlier version of this README told you to run
 `build.py`, `assemble.py` and to edit `content_data.py`. Those files do not
 exist in this repository and have not for several phases; the instruction was
 left behind when the project stopped being a rendering of a PDF and became a
@@ -95,8 +107,17 @@ document that asks to be audited that is a defect rather than an untidiness.
 
 The prose of the brief lives in `index.html` and is edited there directly.
 Everything else — every number, date, status, competence, source and
-enforcement record on the site — is read at runtime from `data/*.json`. The
-HTML contains no copy of any of it.
+enforcement record on the site — is read at runtime from `data/*.json`.
+
+**One exception, and it is checked.** Since 27 September 2026 each substantive
+instrument also has a page of its own at `instruments/<id>/`, so that a search
+engine — or anyone reading the HTML without running scripts — finds the
+substance rather than a loading message. Those pages are written by
+`tools/_footer.mjs`, which calls the same renderer the browser runs
+(`js/instrument-view.js`) and commits the result. They are a *projection* of the
+data, not a second home for it: CI regenerates them on every push and fails if
+the committed file differs, so a data change that was not regenerated cannot
+ship. After changing `data/`, run `node tools/_footer.mjs`.
 
 ### To change the prose
 
@@ -114,9 +135,10 @@ node tools/i18n-audit.mjs      # the locale register against the live DOM
 node tools/freshness.mjs       # how stale the time-sensitive datasets are
 node tools/design-qa.mjs       # the markup, the stylesheets and the CSP
 node tools/evidence-audit.mjs  # claims, evidence, prose coverage, contradictions
+node tools/seo-audit.mjs       # canonical, sitemap, titles, structured data, crawl graph
 ```
 
-All five are zero-dependency Node scripts and must be run from this
+All six are zero-dependency Node scripts and must be run from this
 directory. Each exits non-zero on an error, so each can gate a commit.
 
 Two further scripts in `tools/` are generators rather than checks, and are
@@ -124,16 +146,21 @@ run when the thing they own changes rather than on every commit:
 
 ```
 node tools/_footer.mjs         # rewrites the legal footer, the no-JS
-                               # notice, the social metadata, the JSON-LD,
-                               # the Content-Security-Policy and the
-                               # sitemap in all seven pages from one source
+                               # notice, the titles and social metadata, the
+                               # JSON-LD, the Content-Security-Policy, the
+                               # site index and the sitemap in every page, and
+                               # generates the instrument pages — from the
+                               # route model in tools/seo.mjs and the data
+node tools/og-image.mjs        # renders the social preview cards (img/og/)
+                               # in a local Chromium
 node tools/_refsweep.mjs       # the reference sweep of 28 Aug 2026,
                                # kept so the edits are auditable
 ```
 
 `_footer.mjs` holds the deployed origin in a single `BASE` constant. If the
-site moves, change that line, re-run it, and `design-qa.mjs` will confirm all
-seven canonical URLs agree.
+site moves, change that line, re-run it, and `design-qa.mjs` and
+`seo-audit.mjs` will confirm every canonical URL agrees. `node tools/_footer.mjs
+--check` writes nothing and exits 1 if any generated file is out of date.
 
 ### To change the interface
 
@@ -162,7 +189,8 @@ Two rules in that file exist because both have already shipped as bugs:
 |---|---|
 | `index.html` | The brief. Fourteen parts, the evidence apparatus, the reading tools. |
 | `instruments.html` | The Regulatory DNA comparison — any set of instruments, any dimensions. |
-| `instrument.html?id=…` | One instrument end to end: status, dates, applicability, provisions, enforcement, evidence, how it interacts with other instruments, related entities. The reference implementation for a detail page. |
+| `instruments/<id>/` | One instrument end to end: status, dates, applicability, provisions, enforcement, evidence, how it interacts with other instruments, related entities. Pre-rendered from the data for the twelve instruments whose records pass the indexability gate in `js/routes.js`; the browser re-renders the same view with today's date. |
+| `instrument.html?id=…` | The address every instrument had until 27 Sep 2026. It forwards to `instruments/<id>/`; a record too thin for a page of its own is rendered here and marked `noindex`. |
 | `institutions.html` | Who does what, by body and by competence. |
 | `enforcement.html` | The enforcement observatory, with the derived pipeline per record. |
 | `applies.html` | The applicability engine. |
@@ -262,6 +290,12 @@ English and are marked **EN** in the interface.
 **There is no offline support.** No service worker, nothing precached. The
 first switch to a language fetches its file.
 
+**Search engines are offered English only, for now.** A translation is applied
+by JavaScript over the English HTML and has not been reviewed by a native
+speaker, so `?lang=it|fr|es` keeps working for readers but is not advertised
+with `hreflang` and is not in the sitemap. `docs/SEO-OPERATIONS.md` §6 says what
+would change that.
+
 ---
 
 ## Testing
@@ -275,7 +309,9 @@ The browser regression suite is in this repository too (`agent/browser/`). It in
 it drives a Chromium already on the machine over the DevTools protocol and checks page loads,
 navigation, links, search, the evidence drawer, dialogs and focus, keyboard order, the rendered
 heading outline, landmarks, reflow at 320px and four other widths, WCAG 2.x contrast in both
-themes, reduced motion, localisation, and that no request leaves the site.
+themes, reduced motion, localisation, that no request leaves the site — and that every page says
+the same thing to a crawler before and after its scripts run (title, canonical, `<h1>`,
+sections, structured data), and that the old `instrument.html?id=…` addresses still arrive.
 
 ```
 node agent/browser/cli.mjs --require-browser
@@ -306,6 +342,21 @@ home, and what closes a prompt (re-reading the source, and nothing else) are in
 
 ---
 
+## Search and discoverability
+
+Every address the site answers is in one route model (`tools/seo.mjs`): which
+pages are indexable and why the others are not, each page's title and
+description, its canonical URL, its social card, its structured data and its
+sitemap entry — the last with a `lastmod` that is the newest verification date
+among the records the page shows, never the day the generator ran. Structured
+data names no author, date, licence or legal force, because no page states one.
+`tools/seo-audit.mjs` reads the HTML as a crawler does and fails on any
+disagreement. What only the owner can do — Search Console, the Pages setting, a
+custom domain — is in `docs/SEO-OPERATIONS.md`; the reasoning about audiences,
+entry pages and citation is in `docs/DISCOVERABILITY-STRATEGY.md`.
+
+---
+
 ## The footer, and why it is duplicated
 
 Every page carries the same footer: a statement that this is an independent
@@ -318,12 +369,13 @@ notice names the navigation among what will not appear and then supplies it.
 The list is read out of the nav model in `js/shell.js` rather than retyped, so
 there is still one home for it.
 
-Both are written into the markup of all seven pages rather than rendered by
+Both are written into the markup of every page — the seven hand-written ones
+and each generated instrument page — rather than rendered by
 `js/shell.js`, which is the opposite of the rule the chrome follows. The
 reason is that a statement of non-affiliation which only appears when
 JavaScript runs is not a statement of non-affiliation, and the no-JS notice
-exists precisely for the case where no script has run. The cost is seven
-copies; `design-qa.mjs` fails the build if they stop being identical, and
+exists precisely for the case where no script has run. The cost is one copy
+per page; `design-qa.mjs` fails the build if they stop being identical, and
 `tools/_footer.mjs` regenerates them from one source.
 
 **No licence has been declared.** The footer says so rather than implying one.

@@ -315,3 +315,18 @@ The suite grew from 145 to 186 checks, and **`a11y:bound` narrowed rather than c
 
 Still not established, and `a11y:bound` says so on every run: no screen reader, no rendered
 pixels, one browser.
+
+## 27 September 2026 — the `seo` area
+
+`checkSeo` (31 checks) loads the home page, the five directory pages and four instrument pages and
+asks what `tools/seo-audit.mjs`, which reads HTML without running it, cannot: after every module
+has run, are the title, canonical and `<h1>` still the ones the HTML declared; does the JSON-LD
+parse and name the URL, title, description and visible breadcrumb; do the instrument pages carry
+the same sections and substance before and after scripts. It also measures the compatibility
+route — `instrument.html?id=dsa#sec-enforcement` must arrive at `instruments/dsa/#sec-enforcement`,
+a thin record must render with `noindex` and no canonical, `instrument.html` must reach the
+instrument list — and reads one instrument page as a reader meets it: first Tab on the skip link,
+both themes, no sideways scroll at 390px. `PAGES` now loads `instruments/gdpr/` in place of
+`instrument.html?id=gdpr`, and the fixture server serves a directory's `index.html` at the
+directory's own address and redirects a missing trailing slash, as GitHub Pages does. The first
+full run found two contrast failures in the new link styles; both were fixed before commit.

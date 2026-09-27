@@ -1,9 +1,60 @@
 # HANDOVER
 
-**Last updated:** competences, Irish court records and prose corrections · 27 September 2026
-**Branch:** `claude/amazing-einstein-yrsu79`, cut from `origin/main` at `179c975` (PR #3's merge).
-**Open as pull request #4 to `main`** (opened on the author's instruction, 27 Sep 2026); not
-merged. `main` did not move during the session (re-fetched before this write).
+**Last updated:** SEO, indexing and discoverability · 27 September 2026
+**Branch:** `claude/eu-digital-policy-seo-x4eo8t`, cut from `origin/main` at `24ca0bb` (PR #4's
+merge). Pushed; **no pull request opened** — the author decides. `main` did not move during the
+session (re-fetched before this write).
+
+## SEO, indexing and discoverability — 27 September 2026 (night)
+
+**Asked:** a production-grade SEO, indexing and discoverability audit and implementation that
+sits on top of the evidence architecture without weakening it. Audit first
+(`docs/SEO-AUDIT-2026-09-27.md`, committed before any change, measured raw vs rendered in
+Chromium), then the change, then the tests.
+
+**The defect that mattered:** 21 instrument URLs were one HTML file whose canonical, title, `<h1>`
+and structured data were right only after JavaScript, and whose raw HTML was a loading stub linked
+from nowhere.
+
+**What changed:**
+- `js/instrument-view.js` — the instrument renderer, split out of `instrument-page.js`, pure.
+  `tools/_footer.mjs` calls it in Node (no clock) to write `instruments/<id>/index.html` for the
+  12 instruments that pass the gate in `js/routes.js` (seven criteria, all derived from the
+  record). The browser re-renders the same view with today's date.
+- `instrument.html?id=…` forwards to the page (fragment kept); thin records render with
+  `noindex`; no id forwards to the list now generated into `instruments.html`.
+- `tools/seo.mjs` — the route model: titles, descriptions (derived; one curated facet phrase per
+  instrument, checked against the page text), canonical, OG/Twitter, JSON-LD (WebSite, WebPage /
+  CollectionPage, BreadcrumbList, `Legislation` from the record — no author, date, licence or
+  legal force), sitemap with `lastmod` = newest verification date rendered. Site name "EU Digital
+  Policy", editorial title as alternate.
+- A static site index before every footer; `js/data.js` resolves data and locale paths against
+  its own URL, and `js/shell.js`, `search.js`, `palette.js`, `dna.js`, `interactions.js` link
+  through `js/routes.js`, so pages two levels down work.
+- **hreflang and `?lang=` sitemap entries withdrawn** (reversing a decision of earlier the same
+  day): the translations exist only after JavaScript over English HTML and are unreviewed.
+  `?lang=` still works for readers. Selftest I1d rewritten to the new rule, with the reason.
+- `tools/og-image.mjs` — 13 social cards rendered by the repository's own Chromium driver;
+  staleness checked by input hash.
+- `tools/seo-audit.mjs` — in `qa.yml` and the deploy gate; selftests S1–S6 plant each defect.
+  Browser suite: new `seo` area (31 checks). `design-qa`, `thirdparty` and `pages-artifact` now
+  know pages below the root; an `<a href>` to another origin is a link, not a request (a
+  `<link rel=preconnect>` still is — S6).
+
+**Measured at the end:** validators 0 errors / 0 warnings (evidence-audit 11 warnings, as on
+`main`); `seo-audit` 0 / 0; 25 suites pass, 1233 tests (1221 before; tools 52, detector 67 with `instrument-view.js` and
+`routes.js` registered in `MODULE_SURFACE`); browser suite 237 pass · 0 fail · 1 undecidable
+(`a11y:bound`, as before). No fact in `data/` changed.
+
+**For the author:**
+1. **Search Console** — `docs/SEO-OPERATIONS.md` §3–5: URL-prefix property, verification by meta
+   tag, submit `sitemap.xml`, inspect the representative URLs.
+2. **Repository About box** (description, website, topics, social image) —
+   `docs/DISCOVERABILITY-STRATEGY.md` §6. No tool here can set it.
+3. **Decide on a custom domain** before citations accumulate (§7), and on a **licence** — a
+   citable data snapshot is blocked without one (§9).
+4. **After any data edit, run `node tools/_footer.mjs`** or CI fails on the stale page.
+5. Whether to open a pull request for this branch.
 
 ## Competences, Irish court records, prose corrections — 27 September 2026 (evening)
 
@@ -345,6 +396,11 @@ Neither is a regression, and both are a later session's to decide.
 
 
 ---
+
+## Branch register — 27 September 2026 (night)
+
+`git branch -r --no-merged origin/main` lists one branch: `claude/eu-digital-policy-seo-x4eo8t`,
+this session's, pushed, no pull request. `claude/amazing-einstein-yrsu79` is merged (PR #4).
 
 ## Branch register — 27 September 2026
 

@@ -40,6 +40,7 @@ the evidence it describes.
 | `docs/PRODUCTION-OPERATING-MODE.md` | SESSION 29: the daily cycle, the fourteen reviews, the final visual standard, the discovery boundary — and the readiness checklist that **REFUSED**. SESSION 29 measured twelve of twenty mandatory conditions passing and eight blocking; on SESSION 30's tree it is **fourteen and six**, and it still refuses |
 | `docs/GOVERNANCE-PROPOSALS.md` | SESSION 28: the decision corpus, measured — the approval ledger is ABSENT, not empty — the twelve patterns in what a person has had to correct, and seven governance proposals, none decided |
 | `docs/EVIDENCE-MODEL.md` | 27 Sep 2026: claim types vs evidence status, prose coverage, derived and attributed claims, locators, the remediation taxonomy, freshness by risk, provision dates, enforcement posture |
+| `docs/SEO-AUDIT-2026-09-27.md` · `docs/SEO-OPERATIONS.md` · `docs/DISCOVERABILITY-STRATEGY.md` | 27 Sep 2026: what a crawler saw before, the canonical model and route model now, the indexability gate, what only the owner can do in Search Console, and why |
 | `docs/DEPLOYMENT.md` | 27 Sep 2026: the deploy gate, the settings only the owner can change, the CSP and what Pages cannot send, the Control Room model, measured against the live site |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
@@ -320,6 +321,7 @@ node tools/i18n-audit.mjs      # locale register vs live DOM — must be 0 error
 node tools/design-qa.mjs       # markup and stylesheets — must be 0 errors
 node tools/freshness.mjs       # how stale the datasets are — 0 unless the RECORD is defective
 node tools/evidence-audit.mjs  # claims, evidence, prose coverage, contradictions (27 Sep 2026)
+node tools/seo-audit.mjs       # canonical, sitemap, metadata, crawl graph, structured data (27 Sep 2026)
 node --test tools/selftest.mjs # the validators' own suite (SESSION 30)
 ```
 
@@ -540,6 +542,11 @@ patches, not checks. **Do not re-run** the latter two.
   Settings → Pages → Source to "GitHub Actions". Until then a push to `main` still publishes
   directly and a CI failure is **visible, not blocking**. `docs/DEPLOYMENT.md` §3 lists the
   settings. Run the validators by hand as well.
+- **A data change needs a regeneration.** Since 27 Sep 2026 each substantive instrument has a
+  pre-rendered page at `instruments/<id>/`, generated from `data/` by `node tools/_footer.mjs`
+  (`docs/SEO-OPERATIONS.md`). After editing `data/`, re-run it and commit what it writes, or
+  `seo-audit.mjs` and CI fail on the stale page. Never edit a file under `instruments/` by hand,
+  and never store in `data/` anything to make a page read better: titles live in `tools/seo.mjs`.
 - **An edited inline script is a blocked script.** Every page carries a Content-Security-Policy
   whose `script-src` hashes that page's inline scripts (the theme bootstrap; the `__CONTENT__`
   blob). Edit either and re-run `node tools/_footer.mjs`, or the browser refuses to run it;

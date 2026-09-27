@@ -26,11 +26,19 @@ Consequences an agent must respect:
   no build to re-run.
 - **There is no offline support.** No service worker, nothing precached.
 
+**One exception since 27 Sep 2026, and it is checked.** Each substantive instrument also has a
+static page, `instruments/<id>/index.html`, written by `tools/_footer.mjs` by calling the
+instrument renderer (`js/instrument-view.js`) in Node against the same data and committing the
+output; the browser re-renders it on load with today's date. It is a projection of the records,
+not a second home for them: CI regenerates every such page and fails if the committed one differs
+(`node tools/_footer.mjs --check`, `tools/seo-audit.mjs`). Which instruments get one is derived by
+the gate in `js/routes.js`. Why: `docs/SEO-AUDIT-2026-09-27.md`; how: `docs/SEO-OPERATIONS.md`.
+
 ## 2. Inventory
 
 | Layer | Count | Location |
 |---|---|---|
-| Pages | 7 | repository root (`*.html`) |
+| Pages | 7 + 12 generated | repository root (`*.html`); `instruments/<id>/index.html` (generated, 27 Sep 2026) |
 | ES modules | 27 | `js/` (`evidence-model.js` and `regulatory-model.js` added 27 Sep 2026; both pure) |
 | Classic script | 1 | `app.js` (62 KB, `index.html` only, not a module) |
 | Stylesheets | 4 | `style.css`, `css/tokens.css`, `css/evidence.css`, `css/tools.css` |
@@ -45,7 +53,8 @@ Consequences an agent must respect:
 |---|---|
 | `index.html` | The brief. Fourteen parts, evidence apparatus, reading tools. 210 KB. |
 | `instruments.html` | Regulatory DNA comparison across any set of instruments. |
-| `instrument.html?id=…` | One instrument end to end. The reference implementation for a detail page. |
+| `instruments/<id>/` | One instrument end to end, pre-rendered (27 Sep 2026). The reference implementation for a detail page. |
+| `instrument.html?id=…` | The former address: forwards to `instruments/<id>/`, or renders a record below the gate with `noindex`. |
 | `institutions.html` | Bodies and competences. |
 | `enforcement.html` | Enforcement observatory with the derived pipeline per record. |
 | `applies.html` | The applicability engine. |
@@ -409,6 +418,14 @@ dependency.** *Corrected 27 Sep 2026: this paragraph used to say "there is no te
 that the Playwright suites lived outside the repository, which stopped being true when
 `tools/selftest.mjs`, the twenty-four agent suites and the in-repository browser suite
 (`agent/browser/`, driving Chromium over the DevTools protocol) were added.*
+
+**A sixth check, `tools/seo-audit.mjs` (27 Sep 2026).** Reads every page as a crawler does and
+holds it to the route model (`tools/seo.mjs`): unique non-generic titles and descriptions,
+one canonical per entity, a sitemap of exactly the indexable routes with data-derived `lastmod`,
+every indexable page reachable by static links, JSON-LD that parses and agrees with the page and
+asserts no author, date, licence or legal force, no `hreflang` to a page that is not a real
+alternate, and every generated page and social card current. Exit 1 on an error.
+`docs/SEO-OPERATIONS.md`.
 
 **A fifth check, `tools/evidence-audit.mjs` (27 Sep 2026).** Claim types and evidence status,
 locators, derivations, prose coverage of the brief, table rows against their records, and
