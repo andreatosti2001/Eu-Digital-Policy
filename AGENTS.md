@@ -39,6 +39,8 @@ the evidence it describes.
 | `docs/SESSION-25-FIRST-REAL-WORLD-RUN.md` | SESSION 25's first non-simulated run — `--live` against the five registered real endpoints, all five refused by this environment's network policy, and what ran for real against the actual corpus and pages once that boundary was hit — with a prioritized human review queue, none of it decided |
 | `docs/PRODUCTION-OPERATING-MODE.md` | SESSION 29: the daily cycle, the fourteen reviews, the final visual standard, the discovery boundary — and the readiness checklist that **REFUSED**. SESSION 29 measured twelve of twenty mandatory conditions passing and eight blocking; on SESSION 30's tree it is **fourteen and six**, and it still refuses |
 | `docs/GOVERNANCE-PROPOSALS.md` | SESSION 28: the decision corpus, measured — the approval ledger is ABSENT, not empty — the twelve patterns in what a person has had to correct, and seven governance proposals, none decided |
+| `docs/EVIDENCE-MODEL.md` | 27 Sep 2026: claim types vs evidence status, prose coverage, derived and attributed claims, locators, the remediation taxonomy, freshness by risk, provision dates, enforcement posture |
+| `docs/DEPLOYMENT.md` | 27 Sep 2026: the deploy gate, the settings only the owner can change, the CSP and what Pages cannot send, the Control Room model, measured against the live site |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
@@ -268,7 +270,7 @@ authorization because that boundary is **not** a security control. `docs/CONTROL
    not publicly determinable. Never render them alike, never sum unknown into a total.
 6. **No matching rule ≠ no obligation.** Where no applicability rule fires, the answer is
    NOT DETERMINED — never "probably not".
-7. **Never soften a stated limitation.** The 111 unverified records and the README's eight
+7. **Never soften a stated limitation.** The unverified records (104 on 27 Sep 2026; §12 holds the live figure) and the README's eight
    limitations are the project's honesty. They change by doing the verification work.
 8. **Never declare a licence**, and never alter the non-affiliation or no-legal-advice text.
 
@@ -309,14 +311,17 @@ node tools/validate.mjs        # data integrity — must be 0 errors
 node tools/i18n-audit.mjs      # locale register vs live DOM — must be 0 errors, 0 warnings
 node tools/design-qa.mjs       # markup and stylesheets — must be 0 errors
 node tools/freshness.mjs       # how stale the datasets are — 0 unless the RECORD is defective
+node tools/evidence-audit.mjs  # claims, evidence, prose coverage, contradictions (27 Sep 2026)
 node --test tools/selftest.mjs # the validators' own suite (SESSION 30)
 ```
 
 Zero-dependency Node scripts; run from the repository root.
 
 **Baseline** (`docs/CURRENT-ARCHITECTURE.md` §12 records this in full): 0 errors across all
-four, 111 unverified records, and 5 pre-existing `design-qa` warnings listed by file and
-line. **A new warning is a finding, not noise.**
+four, 104 unverified records, and 0 `design-qa` warnings (five until 27 Sep 2026; §12 names
+them and how each was closed). `tools/evidence-audit.mjs` must report 0 errors: every
+substantive passage of the brief registered or classified. **A new warning is a finding, not
+noise.**
 
 **`freshness.mjs`'s exit code changed in SESSION 30 and its report did not.** It exits 1 on a
 **defect** — a property of the tree, true on every date, closed by a commit: a URL-less source
@@ -420,11 +425,12 @@ session repaired two of them. It asserts twenty-four suites (twenty-five countin
 SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
 changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
 
-**There is now CI.** `.github/workflows/qa.yml` runs all four validators against the recorded
-baseline, every agent suite, the contract check, the public/private boundary check and the
-browser suite, on every push. **It is not a deploy gate** — a push to `main` still publishes,
-and making the workflow blocking needs a branch protection rule, which is repository
-configuration outside this tree.
+**There is CI, and a deploy gate waiting on one setting.** `.github/workflows/qa.yml` runs all
+four validators against the recorded baseline, the evidence audit, every agent suite, the
+contract check, the public/private boundary check and the browser suite, on every push.
+`.github/workflows/pages.yml` is the deploy gate; it takes effect when the owner sets the
+Pages source to "GitHub Actions" and requires the QA checks through branch protection —
+repository configuration outside this tree (`docs/DEPLOYMENT.md` §3).
 
 The browser suite opens the site in a real browser and is the first thing here that ever has:
 
@@ -521,9 +527,15 @@ patches, not checks. **Do not re-run** the latter two.
 - **Superseded translations.** Correcting an English string without declaring its key
   `superseded` in `i18n/locales.json` leaves the it/fr/es editions asserting the thing you
   just corrected. This has already happened once.
-- **No deploy gate.** A push to `main` publishes to the live site. `.github/workflows/qa.yml`
-  now runs the checks on every push, so a failure is **visible** — it is not **blocking**, and
-  nothing sits between a commit and the public site. Run the validators by hand as well.
+- **The deploy gate exists and is not yet switched on.** `.github/workflows/pages.yml` deploys
+  only after the site checks pass, from an allowlisted artifact — but only once the owner sets
+  Settings → Pages → Source to "GitHub Actions". Until then a push to `main` still publishes
+  directly and a CI failure is **visible, not blocking**. `docs/DEPLOYMENT.md` §3 lists the
+  settings. Run the validators by hand as well.
+- **An edited inline script is a blocked script.** Every page carries a Content-Security-Policy
+  whose `script-src` hashes that page's inline scripts (the theme bootstrap; the `__CONTENT__`
+  blob). Edit either and re-run `node tools/_footer.mjs`, or the browser refuses to run it;
+  `design-qa.mjs` fails the page until you do. Inline event handlers are an error.
 - **The validators do not read prose.** A false statement in `index.html` passes every check
   in this repository. `agent/proposals/editorial/` is the first thing here that reads a
   sentence at all, and it is **not a check**: it runs only when somebody runs it, it produces

@@ -75,3 +75,19 @@ of the change, and that is a legitimate outcome.
 - It does not read the prose. A stale sentence in `index.html` with no record behind it
   raises no prompt. The audit of 25 September 2026 counted about a dozen verifiable statements
   that sit outside the record system.
+
+## Per-record review by risk (27 September 2026)
+
+The intervals above are one per dataset. A second, per-record layer reads each record by what
+it is about: a pending appeal or a preliminary finding (critical, 14 days), institutional or
+implementation status (high, 30), general claims of fact and law (medium, 90), history and the
+author's own arguments (low, 365). A record is **fresh**, **aging**, **review due** or
+**stale** against its own `last_verified`. The numbers live in `js/evidence-model.js`
+`RISK_TTL_DAYS` and nowhere else; `docs/EVIDENCE-MODEL.md` §8 has the classes.
+
+`tools/freshness.mjs` prints the critical and high records that are due, under
+**RISK-BASED REVIEW**, as the work list. **They are not counted as staleness prompts and raise no
+"Content stale" warning**: the prompt contract above is unchanged (selftest F1–F6), and two
+sources of prompts would make one count mean two things. `tools/evidence-audit.mjs` reports the
+same states and turns a due claim into the `outdated` remediation code. What closes one is the
+same as before: re-reading the source.

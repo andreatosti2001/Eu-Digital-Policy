@@ -765,7 +765,10 @@ body[data-theme="light"]{
 .bib-controls select,.bib-controls input{min-height:var(--hit-coarse)}
 #bibState{padding:var(--s-3) 0;border-bottom:var(--border-std);margin-bottom:var(--s-5)}
 @media (max-width:640px){
-  .bib-controls{display:grid;grid-template-columns:auto 1fr;gap:var(--s-2) var(--s-3)}
+  .bib-controls{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-2) var(--s-3)}
+  /* at 320px (WCAG reflow, 1280px at 400% zoom) a 200px minimum pushed the
+     row 6px past the viewport; the track now bounds it */
+  .bib-controls input{min-width:0;width:100%}
 }
 .bib-controls label{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--evi-meta)}
 .bib-controls select,.bib-controls input{font-family:var(--mono);font-size:11px;color:var(--paper);background:var(--ink-2);border:1px solid var(--line);padding:5px 8px}
@@ -779,10 +782,12 @@ body[data-theme="light"]{
 .tier-head .th-n{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--evi-meta);margin-left:auto}
 .tier-head p{width:100%;margin:8px 0 0;font-size:13px;line-height:1.55;color:var(--paper-dim);max-width:70ch}
 
-.bib-entry{padding:17px 0;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.bib-entry{padding:17px 0;border-bottom:1px solid var(--line);display:grid;gap:8px;grid-template-columns:minmax(0,1fr)}
 .bib-cite{font-family:var(--body);font-size:14.5px;line-height:1.62;color:var(--paper);margin:0;padding-left:2.2em;text-indent:-2.2em}
-.bib-cite a{color:var(--mech);text-decoration:underline;text-underline-offset:2px;word-break:break-word}
+.bib-cite a{color:var(--mech);text-decoration:underline;text-underline-offset:2px;word-break:break-word;overflow-wrap:anywhere}
 .bib-cite a:hover{color:var(--live)}
+/* source notes quote identifiers and URLs that do not break on their own */
+.bib-note{overflow-wrap:anywhere}
 .bib-meta{display:flex;flex-wrap:wrap;gap:7px 12px;align-items:center;padding-left:2.2em;font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--evi-meta)}
 .bib-url{padding:2px 6px;border:1px solid var(--ink-3)}
 .bib-url[data-s="url:live"]{color:var(--mech);border-color:var(--mech)}
@@ -842,7 +847,14 @@ body[data-theme="light"]{
   padding:var(--s-4) 0;border-top:var(--border-std);
 }
 .ip-tl-item:last-child{border-bottom:var(--border-std)}
-.ip-tl-item.past{opacity:.72}
+/* A past milestone used to be faded with opacity:.72, which took its text
+   to 3.2-4.0:1 — below WCAG AA in both themes (agent/browser checkContrast,
+   27 Sep 2026). "Past" is now said rather than implied: the date steps
+   down to the secondary text colour and carries a label, and nothing in
+   the row loses contrast. */
+.ip-tl-item.past .ip-tl-date{color:var(--text-2)}
+.ip-tl-item.past .ip-tl-date::after{content:"past";display:block;margin-top:3px;
+  font-size:var(--t-micro);letter-spacing:var(--tr-micro);text-transform:uppercase;color:var(--text-3)}
 .ip-tl-date{
   font-family:var(--mono);font-size:var(--t-data);color:var(--text-1);
   font-variant-numeric:tabular-nums;

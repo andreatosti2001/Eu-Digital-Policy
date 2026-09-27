@@ -204,3 +204,30 @@ freshness output as evidence that links work.
   imply, or add a licence — that is the author's decision alone (Class D).
 - The independence disclaimer and the "not legal advice" statement are on every
   page by design and may not be moved into JavaScript-rendered chrome.
+
+## 8. Reading the legal text itself (27 September 2026)
+
+**The Official Journal is retrievable here, by CELEX number, from the Publications Office.**
+EUR-Lex answers this environment with an AWS WAF challenge (HTTP 202, empty body), which is
+why nine source records cite privately published reproductions and say so. The Publications
+Office's Cellar serves the same Official Journal text by content negotiation:
+
+```
+curl -sL -H "Accept: application/xhtml+xml" -H "Accept-Language: eng" \
+  http://publications.europa.eu/resource/celex/32016R0679
+```
+
+Every legal verification made on 27 Sep 2026 used this route and names the CELEX number it
+read. A record that says "read from the Official Journal" means this document, not a
+reproduction of it.
+
+**Primary law takes priority over its reproductions.** A privately published reproduction of a
+legal text now carries `reproduces: <the tier-1 record of the text>` (`tools/source-contract.mjs`).
+It keeps tier 4 — it cannot borrow the tier of what it copies, and `evidence-audit.mjs` refuses
+one that does — and a claim of law whose only support for the text is a reproduction is
+reported as `secondary-reproduction-only` until someone reads the Official Journal. Three
+claims were upgraded that way on 27 Sep 2026; the remediation backlog lists the rest.
+
+**A claim of law citing the legal text needs an article.** Direct support from a tier-1
+legislative source without an article, recital or annex locator is an error in
+`tools/evidence-audit.mjs`. `docs/EVIDENCE-MODEL.md` §3 grades locators.

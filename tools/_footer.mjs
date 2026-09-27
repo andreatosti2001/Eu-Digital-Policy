@@ -166,7 +166,30 @@ export function socialMeta(file, src) {
     '<meta content="summary" name="twitter:card"/>',
     `<meta content="${attr(title)}" name="twitter:title"/>`,
     `<meta content="${desc}" name="twitter:description"/>`,
+    jsonLd(file, title, desc, url),
   ].join('\n');
+}
+
+/* Structured data, from the same title, description and URL as the tags
+   above, so it cannot say something the page does not. It names no author
+   and declares no licence, because the pages do neither (AGENTS.md rule 8).
+   A data block is not executed, so the Content-Security-Policy does not
+   govern it and tools/csp.mjs does not hash it. */
+function jsonLd(file, title, desc, url) {
+  const unesc = (x) => String(x).replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<');
+  const site = { '@type': 'WebSite', '@id': BASE + '#site', name: SITE_NAME, url: BASE, inLanguage: 'en' };
+  const graph = [site, {
+    '@type': 'WebPage', '@id': url + '#page', url, name: unesc(title), description: unesc(desc),
+    inLanguage: 'en', isPartOf: { '@id': BASE + '#site' },
+  }];
+  if (file !== 'index.html') {
+    graph.push({ '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Digital Policy', item: BASE },
+      { '@type': 'ListItem', position: 2, name: unesc(title).split(' — ')[0], item: url },
+    ] });
+  }
+  const json = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
+  return `<script type="application/ld+json">${json}</script>`;
 }
 
 for (const file of PAGES) {

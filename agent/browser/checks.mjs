@@ -26,14 +26,16 @@
    counts undecidables separately and never folds them into the pass
    count.
 
-   WHAT NONE OF THEM MAY DO. No check computes a contrast ratio, and
-   none reports a screen-reader announcement. A headless Chromium can
-   report a computed colour; it cannot tell you what a person with
-   low vision sees, and NVDA is not installed here. README limitation
+   WHAT NONE OF THEM MAY DO. Since 27 Sep 2026 checkContrast computes
+   WCAG contrast ratios — from COMPUTED colours, not rendered pixels —
+   and no check reports a screen-reader announcement. A headless
+   Chromium can report a computed colour; it cannot tell you what a
+   person with low vision sees, and NVDA is not installed here. README limitation
    7 stands, and `runner.mjs` carries it on every run.
    ============================================================ */
 
 import { serveSite, REPO_ROOT } from './serve.mjs';
+import { sleep } from './cdp.mjs';
 
 /** The seven pages `tools/design-qa.mjs` knows about, plus the one
  *  that is only reachable with a query string. `instrument.html`
@@ -543,8 +545,13 @@ export async function checkLanguageSwitching(page, origin) {
    ============================================================ */
 
 export const VIEWPORTS = [
+  /* 320 CSS px is WCAG 2.x 1.4.10 Reflow: the width a 1280px screen
+     presents at 400% zoom. Added 27 Sep 2026, when it found the
+     bibliography scrolling sideways by 8px. */
+  { name: 'reflow', width: 320, height: 800, mobile: true },
   { name: 'phone', width: 390, height: 844, mobile: true },
   { name: 'tablet', width: 820, height: 1180, mobile: true },
+  { name: 'laptop', width: 1024, height: 768, mobile: false },
   { name: 'desktop', width: 1440, height: 900, mobile: false },
 ];
 
@@ -830,11 +837,126 @@ export async function checkAccessibility(page, origin, { pages = PAGES } = {}) {
       : bad(`a11y:landmarks:${spec.file}`, 'accessibility', `${spec.name} renders ${a.landmarks.main} <main> element(s)`, a.landmarks));
   }
 
-  /* Stated once, on every run. Not a check that can pass. */
+  /* Stated once, on every run. Not a check that can pass. Narrowed on
+     27 Sep 2026, when checkContrast began computing ratios: what is still
+     not established is named, and nothing more is claimed. */
   out.push(undecidable('a11y:bound', 'accessibility',
-    'no contrast ratio was computed, no screen reader was run, and no pixels were compared',
-    'This suite reads the DOM and computed styles of a headless Chromium. README limitation 7 stands, and docs/UX-AUDIT.md §7 lists the twelve open questions a static read could not settle — this suite closes some of them and cannot close the perceptual ones.'));
+    'no screen reader was run, no pixels were compared, and contrast was computed only for text over solid colours',
+    'This suite reads the DOM and computed styles of a headless Chromium. checkContrast computes WCAG 2.x contrast from computed colours, not from rendered pixels: text over an image or a gradient other than the page background is counted as not measured, and anti-aliasing, font rendering and a reader\'s own settings are outside it. README limitation 7 stands in its narrowed form, and docs/UX-AUDIT.md §7 lists the open questions a static read could not settle.'));
 
+  return out;
+}
+
+/* ============================================================
+   16b · contrast (27 Sep 2026)
+
+   WCAG 2.x 1.4.3: 4.5:1 for text, 3:1 for large text (24px, or 18.66px
+   bold). Computed from each text element's computed colour — including
+   its alpha and every ancestor's opacity — against the first solid
+   background colour behind it, compositing translucent layers. Both
+   themes, every page.
+
+   Three counts, never merged: measured exactly (solid backgrounds all
+   the way down); measured against the page colour where the page
+   background also carries its decorative gradient (reported, and failed
+   like the others, because the gradient is a faint tint over that
+   colour); and not measured (text over any other image). A failure
+   names the colour pair, so a person can find the token.
+   ============================================================ */
+
+const CONTRAST_PROBE = `(() => {
+  const lin = (x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); };
+  const lum = (c) => 0.2126 * lin(c[0]) + 0.7152 * lin(c[1]) + 0.0722 * lin(c[2]);
+  const parse = (s) => { const m = String(s).match(/rgba?\\(([^)]+)\\)/); if (!m) return null; const p = m[1].split(/[ ,\\/]+/).filter(Boolean).map(Number); return { rgb: p.slice(0, 3), a: p.length > 3 ? p[3] : 1 }; };
+  const page = [document.body, document.documentElement];
+  const bgOf = (el) => {
+    const layers = []; let approx = false;
+    for (let e = el; e; e = e.parentElement) {
+      const cs = getComputedStyle(e);
+      if (cs.backgroundImage && cs.backgroundImage !== 'none') { if (page.includes(e)) approx = true; else return null; }
+      const c = parse(cs.backgroundColor);
+      if (c && c.a > 0) { layers.push(c); if (c.a >= 1) break; }
+    }
+    let base = [255, 255, 255];
+    for (const l of layers.reverse()) base = base.map((v, i) => v * (1 - l.a) + l.rgb[i] * l.a);
+    return { rgb: base, approx };
+  };
+  let exact = 0, approx = 0, unmeasured = 0, min = Infinity; const fails = []; const seen = new Set();
+  for (const el of document.querySelectorAll('body *')) {
+    if (![...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim().length > 1)) continue;
+    if (el.closest('[aria-hidden="true"], .sr-only, noscript, svg, [hidden]')) continue;
+    const cs = getComputedStyle(el); const r = el.getBoundingClientRect();
+    if (cs.visibility === 'hidden' || cs.display === 'none' || !r.width || !r.height) continue;
+    let op = 1; for (let e = el; e; e = e.parentElement) op *= +getComputedStyle(e).opacity;
+    if (op === 0) continue;
+    const fg = parse(cs.color); const bg = bgOf(el);
+    if (!fg || !bg) { unmeasured++; continue; }
+    const a = fg.a * op;
+    const f = fg.rgb.map((v, i) => v * a + bg.rgb[i] * (1 - a));
+    const L1 = lum(f), L2 = lum(bg.rgb); const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+    const size = parseFloat(cs.fontSize); const large = size >= 24 || (+cs.fontWeight >= 700 && size >= 18.66);
+    bg.approx ? approx++ : exact++;
+    min = Math.min(min, ratio);
+    if (ratio < (large ? 3 : 4.5)) {
+      const key = cs.color + ' on rgb(' + bg.rgb.map(Math.round).join(', ') + ')' + (op < 1 ? ' at opacity ' + op.toFixed(2) : '');
+      if (!seen.has(key)) { seen.add(key); fails.push({ pair: key, ratio: +ratio.toFixed(2), need: large ? 3 : 4.5, where: el.tagName.toLowerCase() + (el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\\s+/)[0] : ''), text: el.textContent.trim().slice(0, 40) }); }
+    }
+  }
+  return { exact, approx, unmeasured, min: min === Infinity ? null : +min.toFixed(2), fails: fails.slice(0, 10) };
+})()`;
+
+export async function checkContrast(page, origin, { pages = PAGES } = {}) {
+  const out = [];
+  for (const theme of ['dark', 'light']) {
+    for (const spec of pages) {
+      await page.goto(`${origin}/${spec.file}`);
+      await page.evaluate(`document.body.dataset.theme = '${theme}'`);
+      await sleep(250);
+      const c = await page.evaluate(CONTRAST_PROBE);
+      const id = `a11y:contrast:${theme}:${spec.file}`;
+      out.push(c.fails.length
+        ? bad(id, 'accessibility', `${spec.name}, ${theme} theme: ${c.fails.length} colour pair(s) below WCAG AA — lowest ${c.fails[0].ratio}:1 (${c.fails[0].pair})`, c)
+        : ok(id, 'accessibility', `${spec.name}, ${theme} theme: ${c.exact + c.approx} text element(s) at or above WCAG AA (lowest ${c.min}:1); ${c.unmeasured} over an image not measured`, c));
+    }
+  }
+  return out;
+}
+
+/* ============================================================
+   16c · reduced motion (27 Sep 2026)
+
+   With prefers-reduced-motion: reduce emulated, nothing on the page may
+   still be animating or transitioning for longer than a frame. The
+   stylesheets already say so in several places; this measures that they
+   are obeyed after the page has rendered, including animations a module
+   started.
+   ============================================================ */
+
+export async function checkReducedMotion(page, origin, { pages = PAGES } = {}) {
+  const out = [];
+  await page.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+  try {
+    for (const spec of pages) {
+      await page.goto(`${origin}/${spec.file}`);
+      await sleep(250);
+      const m = await page.evaluate(`(() => {
+        const long = document.getAnimations().filter((a) => {
+          const t = a.effect && a.effect.getComputedTiming ? a.effect.getComputedTiming() : {};
+          return a.playState === 'running' && (t.activeDuration === Infinity || t.duration > 16);
+        });
+        return { reduce: matchMedia('(prefers-reduced-motion: reduce)').matches, running: long.length,
+          sample: long.slice(0, 5).map((a) => (a.animationName || a.transitionProperty || a.constructor.name) + ' on ' + (a.effect && a.effect.target ? a.effect.target.tagName.toLowerCase() + '.' + String(a.effect.target.className || '').split(' ')[0] : '?')) };
+      })()`);
+      const id = `a11y:reduced-motion:${spec.file}`;
+      out.push(!m.reduce
+        ? undecidable(id, 'accessibility', 'the reduced-motion preference could not be emulated', 'Emulation.setEmulatedMedia did not take effect, so nothing was measured.')
+        : m.running
+          ? bad(id, 'accessibility', `${spec.name}: ${m.running} animation(s) still running with reduced motion requested`, m)
+          : ok(id, 'accessibility', `${spec.name}: nothing animates for longer than a frame with reduced motion requested`, m));
+    }
+  } finally {
+    await page.send('Emulation.setEmulatedMedia', { features: [] });
+  }
   return out;
 }
 

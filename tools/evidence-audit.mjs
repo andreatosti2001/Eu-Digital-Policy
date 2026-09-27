@@ -26,7 +26,11 @@
  * cannot disagree. Nothing here writes.
  *
  * Usage:
- *   node tools/evidence-audit.mjs [--as-of YYYY-MM-DD] [--json | --markdown] [--root DIR]
+ *   node tools/evidence-audit.mjs [--as-of YYYY-MM-DD] [--json | --markdown | --graph] [--root DIR]
+ *
+ * --graph prints the provenance graph as JSON: source -[supports, locator]->
+ * claim -[input | premise]-> claim, and passage -[states]-> claim | record.
+ * It is derived from the same records on every run and never stored.
  *
  * Exit 1 on an ERROR — a defect in the tree, true on every date. Staleness
  * and the remediation backlog are reported and do not fail the run: they are
@@ -46,7 +50,7 @@ const args = process.argv.slice(2);
 const opt = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
 const ROOT = resolve(opt('--root') || join(HERE, '..'));
 const AS_OF = opt('--as-of') || new Date().toISOString().slice(0, 10);
-const MODE = args.includes('--json') ? 'json' : args.includes('--markdown') ? 'markdown' : 'text';
+const MODE = args.includes('--graph') ? 'graph' : args.includes('--json') ? 'json' : args.includes('--markdown') ? 'markdown' : 'text';
 
 /* Fields the architecture DERIVES. A record that stores one has created the
    second copy that derivation exists to prevent (docs/DATA-GOVERNANCE.md). */
@@ -403,6 +407,31 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
   return report;
 }
 
+/* ------------------------------------------------------------------ graph */
+
+/** The provenance graph, as nodes and edges. Every edge already exists in
+ *  the records; this only puts them side by side. */
+export function graph({ root = ROOT } = {}) {
+  const db = load(root);
+  const html = readFileSync(join(root, 'index.html'), 'utf8');
+  const claims = db.claims?.claims || [];
+  const nodes = []; const edges = [];
+  for (const s of db.sources?.sources || []) nodes.push({ id: s.id, kind: 'source', tier: s.tier, reproduces: s.reproduces || null });
+  for (const c of claims) {
+    nodes.push({ id: c.id, kind: 'claim', type: M.claimKind(c), evidence: M.evidenceStatus(c) });
+    for (const r of c.sources || []) edges.push({ from: r.source_id, to: c.id, rel: r.supports.split(':')[1], locator: r.locator ?? null });
+    for (const [name, inp] of Object.entries((c.derivation && c.derivation.inputs) || {})) edges.push({ from: inp.claim, to: c.id, rel: 'input', as: name });
+    for (const p of c.premises || []) edges.push({ from: p, to: c.id, rel: 'premise' });
+  }
+  passages(html).forEach((p, i) => {
+    const id = `passage:${p.part}:${p.key || i}`;
+    nodes.push({ id, kind: 'passage', prose: p.prose || null });
+    for (const c of (p.claim || '').split(/\s+/).filter(Boolean)) edges.push({ from: id, to: c, rel: 'states' });
+    for (const r of (p.record || '').split(/\s+/).filter(Boolean)) edges.push({ from: id, to: r, rel: 'restates' });
+  });
+  return { nodes, edges };
+}
+
 /* ------------------------------------------------------------------ output */
 
 function kv(o) { return Object.entries(o).map(([k, v]) => `${String(k).split(':').pop()} ${v}`).join(' · '); }
@@ -466,9 +495,14 @@ function markdown(r) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const r = audit();
-  if (MODE === 'json') console.log(JSON.stringify(r, null, 2));
-  else if (MODE === 'markdown') console.log(markdown(r));
-  else console.log(text(r));
-  process.exit(r.errors.length ? 1 : 0);
+  /* exitCode, never exit(): exit() discards whatever is still buffered on a
+     pipe, which cut --graph off at 64 KB */
+  if (MODE === 'graph') { console.log(JSON.stringify(graph(), null, 1)); }
+  else {
+    const r = audit();
+    if (MODE === 'json') console.log(JSON.stringify(r, null, 2));
+    else if (MODE === 'markdown') console.log(markdown(r));
+    else console.log(text(r));
+    process.exitCode = r.errors.length ? 1 : 0;
+  }
 }

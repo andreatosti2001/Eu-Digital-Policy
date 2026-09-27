@@ -34,7 +34,7 @@ These hold in every session, under every instruction, regardless of convenience.
    key dates are computed at render time. Storing one creates the second copy the whole
    architecture exists to prevent.
 7. **Never soften a stated limitation.** The README's eight limitations and the
-   111 unverified records are the project's honesty, not its backlog embarrassment. They are
+   unverified records (count in `docs/CURRENT-ARCHITECTURE.md` §12) are the project's honesty, not its backlog embarrassment. They are
    changed by doing the verification work, not by rewording.
 8. **Never declare a licence**, and never alter the non-affiliation or no-legal-advice text.
 
@@ -120,8 +120,10 @@ English. Correcting an English string without declaring its key `superseded` lea
 editions asserting the thing that was just corrected. This has already happened once (the
 Annex A captions) and is the reason `tools/_review10.mjs` carries a warning comment about it.
 
-**No deploy gate.** A push to `main` publishes. The validators do not run in CI — there is
-no CI. Run all four by hand before every commit that touches data or markup.
+**No deploy gate until one setting changes.** CI runs every check on every push, and
+`.github/workflows/pages.yml` gates deployment on them — but only once the Pages source is set
+to "GitHub Actions" (`docs/DEPLOYMENT.md` §3). Until then a push to `main` publishes. Run the
+validators by hand before every commit that touches data or markup.
 
 **The validators do not check the prose.** `validate.mjs` sees `data/`; `design-qa.mjs` sees
 markup structure. Neither reads a sentence. A false statement in `index.html` passes every

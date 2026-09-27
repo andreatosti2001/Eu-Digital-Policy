@@ -1,18 +1,78 @@
 # EU Digital Policy
 
-An interactive reading of the EU digital rulebook, with the evidence, the
-regulatory status, the institutional competences and the enforcement record
-held as data rather than as prose.
+An interactive reading of the EU digital rulebook — GDPR, DSA, DMA, AI Act, Data Act and the
+cyber layer — in which **the argument is prose and everything the argument rests on is data**:
+every legal proposition, figure, date, status, competence and enforcement record is a record
+with its sources, its locator and a grade derived from what those sources can actually carry.
 
-No build step. No dependencies. No runtime. No third-party requests: the
-typefaces are self-hosted in `fonts/`, and `design-qa.mjs` fails the build on a
-reference to any origin but this one, anywhere the browser would fetch from —
-a stylesheet or script in a page, an `@import` or an `@font-face src` in the
-CSS, a `fetch`, `import()`, worker or beacon in a module. The claim used to be
-wider than the check, which read double-quoted `href`/`src` in the HTML only;
-`tools/thirdparty.mjs` is the check the claim needs and `tools/selftest.mjs`
-plants each of those to prove it fires. Static HTML, CSS, vanilla ES modules
-and JSON, deployable to GitHub Pages or any static host as-is.
+**Live site:** https://andreatosti2001.github.io/Eu-Digital-Policy/
+
+## What this project demonstrates
+
+- **Regulatory data modelling.** Instruments, provisions, dated events, institutions and their
+  competences, enforcement records and applicability rules as ten linked JSON datasets under one
+  controlled vocabulary (`data/taxonomy.json`). A regulation's status is not one field: each
+  provision's application date is derived from the timeline, with adoption, Official Journal
+  publication, entry into force, staggered application, transitional deadlines and the
+  amending act that inserted a rule (`js/regulatory-model.js`).
+- **Claim-level provenance.** Every substantive passage of the brief is either linked to the
+  claims or records it states, or classified as the author's synthesis, critique,
+  recommendation, signpost or method note — 100% of them, checked on every push. Each claim
+  carries its sources, what each source does for it (states it / part of it / context only) and
+  a locator precise enough to reach the evidence without reading the whole document.
+- **Evidence classification that keeps kinds of statement apart.** Seven claim types — law,
+  fact, *derived* (the site's own arithmetic, recorded and re-run), *attributed* (what a named
+  actor says, reported not adopted), interpretation, critique, forecast — and a separate,
+  derived evidence status (direct, partial, derived, context-only, unverified, disputed). "Not
+  yet verified" is never confused with "not the kind of statement a source could settle".
+- **Enforcement intelligence.** Fines are not totals: each record has independent action,
+  payment, remedy and appeal axes, an eight-stage pipeline and a procedural posture with
+  finality (`final`, `not final`, `unknown` — and unknown is never counted as either), all
+  derived at render time.
+- **Automated QA with teeth.** Zero-dependency validators, an evidence audit, a browser
+  regression suite that drives a real Chromium over the DevTools protocol (keyboard, dialogs,
+  reflow at 320px, WCAG contrast in both themes, reduced motion, localisation), and over
+  1,200 tests on Node's built-in test runner — all in CI.
+- **Freshness monitoring.** Per-record review intervals by risk (a pending appeal is re-read
+  sooner than a 2018 application date), reported as fresh / aging / review due / stale.
+- **Governed source discovery.** A scheduled Source Scout proposes candidate sources through
+  pull requests; nothing an agent finds reaches the site without a person (`docs/SOURCE-SCOUT.md`).
+- **A security boundary that does not rely on obscurity.** A Content-Security-Policy with no
+  `'unsafe-inline'` scripts, no inline handlers, no third-party requests, and a deploy artifact
+  built from an allowlist so private material cannot be published by accident
+  (`docs/DEPLOYMENT.md`).
+
+What it does **not** demonstrate is stated too: see **Known limitations** at the end.
+
+## For a policy researcher
+
+- **The source hierarchy.** Tier 1 is the legal text and the courts; tier 2 regulators and EU
+  institutions; tier 3 research; tier 4 press and advocacy. A privately published reproduction
+  of a legal text is marked as such (`reproduces`) and never counts as the text. Legal texts are
+  read from the Official Journal via the Publications Office (`docs/SOURCE-POLICY.md`).
+- **The method.** Composite statements are split into atomic claims, each with its own source;
+  a figure the site computes (the Irish DPC's share of GDPR fine value, 4.04 / 7.1) is a
+  *derived* claim whose inputs, formula and rounding are shown; where two sources disagree the
+  claim says so. `docs/EVIDENCE-MODEL.md` is the full account.
+- **The honesty rules.** An asterisk means a reference is missing, not that the statement is
+  doubted; a gap is never closed with a plausible substitute; absence of an applicability rule
+  is "not determined", never "probably not".
+
+## For an engineer
+
+Static HTML, vanilla ES modules and JSON — no build step, no package.json, no framework, no
+runtime dependency, no third-party request. `js/data.js` is the only module that fetches;
+derived facts (grades, evidence status, pipeline stages, competent authority, key dates,
+provision application) are computed in pure modules shared by the pages and the validators,
+so the report and the page cannot disagree. `docs/CURRENT-ARCHITECTURE.md` is the map;
+`AGENTS.md` is the entry point for AI agents working here; `docs/DEPLOYMENT.md` covers CI,
+the deploy gate and security.
+
+No third-party requests: the typefaces are self-hosted in `fonts/`, and `design-qa.mjs` fails
+the build on a reference to any origin but this one, anywhere the browser would fetch from —
+a stylesheet or script in a page, an `@import` or an `@font-face src` in the CSS, a `fetch`,
+`import()`, worker or beacon in a module (`tools/thirdparty.mjs`, proved by
+`tools/selftest.mjs`).
 
 ```
 python3 -m http.server 8000     # then open http://localhost:8000
@@ -52,20 +112,21 @@ to be touched: the pages render from the data.
 node tools/validate.mjs        # integrity: IDs, references, status discipline
 node tools/i18n-audit.mjs      # the locale register against the live DOM
 node tools/freshness.mjs       # how stale the time-sensitive datasets are
-node tools/design-qa.mjs       # the markup and the stylesheets
+node tools/design-qa.mjs       # the markup, the stylesheets and the CSP
+node tools/evidence-audit.mjs  # claims, evidence, prose coverage, contradictions
 ```
 
-All four are zero-dependency Node scripts and must be run from this
-directory. `design-qa.mjs` exits non-zero on an error, so it can gate a
-commit.
+All five are zero-dependency Node scripts and must be run from this
+directory. Each exits non-zero on an error, so each can gate a commit.
 
 Two further scripts in `tools/` are generators rather than checks, and are
 run when the thing they own changes rather than on every commit:
 
 ```
 node tools/_footer.mjs         # rewrites the legal footer, the no-JS
-                               # notice and the social metadata in all
-                               # seven pages from one source
+                               # notice, the social metadata, the JSON-LD,
+                               # the Content-Security-Policy and the
+                               # sitemap in all seven pages from one source
 node tools/_refsweep.mjs       # the reference sweep of 28 Aug 2026,
                                # kept so the edits are auditable
 ```
@@ -123,12 +184,12 @@ palette.
 
 | File | Holds |
 |---|---|
-| `taxonomy.json` | Every controlled vocabulary. 243 terms; nothing elsewhere invents a label. |
-| `instruments.json` | Instruments, their nested provisions, relationships, and the Regulatory DNA slots. Instruments carry no dates — only references to timeline events. The 17 cross-instrument relationships each carry a direction, a type, the provisions that carry them and their own sources; they render in Part IX of the brief and on every instrument page. |
+| `taxonomy.json` | Every controlled vocabulary; nothing elsewhere invents a label. |
+| `instruments.json` | Instruments, their nested provisions, relationships, and the Regulatory DNA slots. Instruments carry no dates — only references to timeline events. The cross-instrument relationships each carry a direction, a type, the provisions that carry them and their own sources; they render in Part IX of the brief and on every instrument page. |
 | `institutions.json` | Bodies and their competence edges, each with exclusivity, scope and legal basis. |
 | `timeline.json` | Dated events, each with a mandatory event type and date precision. |
 | `enforcement.json` | Enforcement records on three orthogonal axes (action, payment, remedy) plus an appeal block. |
-| `claims.json` | Every assertion the brief makes, with its sources and what each source does for it. |
+| `claims.json` | Every assertion the brief makes, with its type, its sources, what each source does for it and where in the source; derived claims carry their arithmetic, attributed ones whose view they report. |
 | `sources.json` | The bibliography, tiered. |
 | `applicability.json` | The rules behind "What applies to me?". |
 | `glossary.json` | Terms, with edges to instruments, provisions, institutions and enforcement. |
@@ -152,12 +213,25 @@ and its sources — never stored, so it cannot drift from what it describes:
 - **Primary law** — carried by the legal text or by a court.
 - **Official source** — carried by a regulator or an EU institution.
 - **Secondary only** — carried by research, press or advocacy alone.
+- **Derived by this site** — a figure computed here from other claims, each with its own
+  source. The drawer shows the inputs, the formula and the rounding; it is only as strong as
+  its weakest input.
+- **Attributed view** — what a named actor says, checked against that actor's own
+  publication. Reported, not adopted.
 - **Interpretation** — the author's reading or argument. Sources can support
-  the premises; they cannot settle the conclusion.
+  the premises; they cannot settle the conclusion. Where an argument is built on registered
+  claims, the drawer lists them.
 - **Unresolved** — no directly supporting external source has been located.
 
 The live tally is on the bibliography page. It is not flattering, and it is
 not meant to be.
+
+Separately from the grade, each claim has an **evidence status** — direct, partial, derived,
+context only, unverified or disputed — shown in the drawer, and passages of the brief that
+are the author's synthesis, critique or recommendation carry a small ◇ mark so they are
+never read as a sourced finding. `node tools/evidence-audit.mjs` reports all of it, and the
+remediation backlog by cause (missing primary source, missing locator, secondary sources only,
+unofficial reproduction only, possibly composite, review due, named reference gap).
 
 **An asterisk in the running text means the reference is missing, not that
 the statement is doubted.** It appears on a claim graded *Unresolved*, and
@@ -192,18 +266,33 @@ first switch to a language fetches its file.
 
 ## Testing
 
-There is no test runner in this repository. The suites used during
-development drive a headless Chromium through Playwright and live outside it;
-what ships here are the four validators above, which are the checks a
-contributor needs and can run without installing anything.
+**No external test framework and no dependency: Node's built-in test runner is used.** The
+four validators and the evidence audit above are the data and markup checks; each has its own
+suite (`node --test tools/selftest.mjs`), which plants every defect a check exists to catch and
+asserts it is caught. The agent layer has twenty-four more suites (`AGENTS.md` lists them).
+
+The browser regression suite is in this repository too (`agent/browser/`). It installs nothing:
+it drives a Chromium already on the machine over the DevTools protocol and checks page loads,
+navigation, links, search, the evidence drawer, dialogs and focus, keyboard order, the rendered
+heading outline, landmarks, reflow at 320px and four other widths, WCAG 2.x contrast in both
+themes, reduced motion, localisation, and that no request leaves the site.
+
+```
+node agent/browser/cli.mjs --require-browser
+```
 
 `design-qa.mjs` is the one that catches interface regressions statically —
 heading order, duplicate ids, skip-link targets, internal links that point at
 files which do not exist, missing `alt`, page-local styles, third-party
-resources, and the two CSS mistakes described under **To change the
-interface**. It does not replace opening the pages, but it catches the class
-of defect that survives a visual review because nothing about it looks
-wrong.
+resources, inline event handlers, an inline script the Content-Security-Policy
+would block, and the two CSS mistakes described under **To change the
+interface**.
+
+**CI and deployment.** `.github/workflows/qa.yml` runs everything on every push; its job
+summary carries the evidence audit's measurements. `.github/workflows/pages.yml` deploys the
+site only after the site checks pass — once the repository's Pages source is set to "GitHub
+Actions". Until then a push to `main` publishes directly. `docs/DEPLOYMENT.md` says exactly
+which settings a person has to change.
 
 **Stale content is a warning, not a failure.** On every push, CI runs
 `freshness.mjs`, and each staleness prompt it prints appears on the run as a
@@ -258,6 +347,11 @@ what it cannot support:
    claims added in September carry only partial support), and 19
    are graded *Unresolved*. The bibliography's live count is the one to
    trust over these.
+   *Update, 27 September 2026:* after passages that no claim recorded were
+   registered (143 claims), 39 rest on nothing but the brief itself, 14 carry
+   no directly supporting source, and 20 are graded *Unresolved* — one more
+   than before, because splitting a composite claim exposed a ranking ("nine
+   of the ten largest fines") that no source states.
 2. **Verification dates are a compilation date.** The field is per-record;
    the practice is not yet. `tools/freshness.mjs` says so explicitly.
 3. **Three sources carry no URL** — down from twelve after the reference
@@ -275,6 +369,11 @@ what it cannot support:
 7. **No screen reader has been run against this.** Dialog semantics, focus
    management, landmarks and headings were verified programmatically, which
    is not the same thing. Chromium only; no real-device testing.
+   *Update, 27 September 2026:* the browser suite now computes WCAG contrast
+   for text over solid colours in both themes (it found and fixed one
+   failure) and checks reduced motion and 320px reflow. That narrows this
+   limitation; it does not close it — no screen reader, no pixels, one
+   browser.
 8. **The interface is English.** The entity overlay translates instrument
    names, statuses and event types on every page, so a reader who chose
    Italian on the brief sees those labels in Italian elsewhere too — but the

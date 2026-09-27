@@ -31,7 +31,7 @@ Consequences an agent must respect:
 | Layer | Count | Location |
 |---|---|---|
 | Pages | 7 | repository root (`*.html`) |
-| ES modules | 25 | `js/` |
+| ES modules | 27 | `js/` (`evidence-model.js` and `regulatory-model.js` added 27 Sep 2026; both pure) |
 | Classic script | 1 | `app.js` (62 KB, `index.html` only, not a module) |
 | Stylesheets | 4 | `style.css`, `css/tokens.css`, `css/evidence.css`, `css/tools.css` |
 | Canonical datasets | 10 | `data/*.json` |
@@ -394,25 +394,33 @@ literal in `css/evidence.css` and one in `css/tools.css` (both print-only, now t
 token), and `--tx`/`--ty` never set in `style.css` (the keyframe's `translate(0,0)` was a no-op and
 is removed). A new warning is a finding, as it always was.
 
-**There is no test runner.** The Playwright suites used during development live outside this
-repository. What ships here are the four validators, which a contributor can run without
-installing anything.
+**Tests use Node's built-in runner (`node --test`), with no external framework and no
+dependency.** *Corrected 27 Sep 2026: this paragraph used to say "there is no test runner" and
+that the Playwright suites lived outside the repository, which stopped being true when
+`tools/selftest.mjs`, the twenty-four agent suites and the in-repository browser suite
+(`agent/browser/`, driving Chromium over the DevTools protocol) were added.*
+
+**A fifth check, `tools/evidence-audit.mjs` (27 Sep 2026).** Claim types and evidence status,
+locators, derivations, prose coverage of the brief, table rows against their records, and
+enforcement and regulatory contradictions; exit 1 on a defect. `docs/EVIDENCE-MODEL.md`.
 
 ## 13. Build and deployment
 
 - **No build step.** Nothing is compiled, bundled, minified or generated at deploy time.
-- **No CI.** There is no `.github/` directory, no workflow, no `_config.yml`, no `.nojekyll`.
+- **CI exists** (SESSION 19 onwards): `.github/workflows/qa.yml` on every push, and, since
+  27 Sep 2026, `.github/workflows/pages.yml`, a deploy gate that takes effect once the Pages
+  source is set to "GitHub Actions" — `docs/DEPLOYMENT.md`. *This line used to read "No CI".*
 - **Deployment is GitHub Pages serving `main` at the repository root.** This is inferred
   from the canonical URLs written into all seven pages
   (`https://andreatosti2001.github.io/Eu-Digital-Policy/…`) and from the absence of any
   workflow. The Pages source setting is repository configuration outside the tree and was
   **not** readable with the tools available in this session.
 - The remote carries a single branch, `main`, at `7248290`.
-- Publication is therefore a push to `main`. There is no gate between a commit and the
-  public site — **the validators are advisory, not enforced.** Any session that changes data
-  or markup must run them by hand.
+- Publication is therefore a push to `main`, **until the owner switches the Pages source to
+  GitHub Actions** (`docs/DEPLOYMENT.md` §3). Until then the checks are visible, not blocking;
+  run them by hand.
 
-**FINDING — the deployed site was not inspected.** Outbound access to
-`andreatosti2001.github.io` is refused by this environment's network policy (HTTP 403 on
-CONNECT, 5 of 5 attempts). Everything in this document is read from the repository. No claim
-is made here about what the live site currently serves.
+**FINDING — the deployed site was not inspected (SESSION 00).** Outbound access to
+`andreatosti2001.github.io` was refused by that environment's network policy. *On 27 Sep 2026
+it was reachable, and was inspected:* the live pages are byte-identical to `main`, `.control-room/`
+and `.agents/` return 404, and `agent/`, `docs/` and `tools/` are served. `docs/DEPLOYMENT.md` §1.
