@@ -1,9 +1,66 @@
 # HANDOVER
 
-**Last updated:** backlog, translations and hardening after the CI decisions · 27 September 2026
+**Last updated:** competences, Irish court records and prose corrections · 27 September 2026
 **Branch:** `claude/amazing-einstein-yrsu79`, cut from `origin/main` at `179c975` (PR #3's merge).
 **Open as pull request #4 to `main`** (opened on the author's instruction, 27 Sep 2026); not
 merged. `main` did not move during the session (re-fetched before this write).
+
+## Competences, Irish court records, prose corrections — 27 September 2026 (evening)
+
+**Asked:** "continue", "go on", under the standing instruction to reduce the backlog as far as
+possible, with permission to act on user-only blocks. `main` did not move (re-fetched before
+this write: `179c975`). Unverified **52 → 47**. Every commit carries an `Evidence:` trailer and
+passed validators, 25 suites and the browser suite locally.
+
+**Settled from primary sources:**
+- **Competences:** DSA supervision sits in DG CONNECT Directorate F; the powers are the
+  Commission's under DSA Art. 56(2)–(3), read in the OJ. The DMA is enforced by a joint
+  DG COMP–DG CONNECT team. DG COMP's "operational lead" was stronger than the source and is
+  replaced. No competence edge now carries a requires-verification note. Competence is a
+  human-only fact class; this was done under the author's permission.
+- **TikTok/DPC transfers:** read in the High Court's two approved judgments
+  (Record 2025/248 MCA):
+  - [2026] IEHC 347, 3 June 2026: the Art. 46(1) and 13(1)(f) findings and the decision to
+    fine stand; the court proposed to vacate the corrective orders and remit them.
+  - [2026] IEHC 419, 30 June 2026: a CJEU reference on the fine amount was proposed. The CJEU
+    register holds C-1009/26, lodged 11 Sep 2026, under the same parties' names; the link is
+    recorded as not established.
+  - **Correction:** the decision is dated 30 April 2025; 2 May was the announcement.
+- **AI Act minimal tier:** now only the Commission's own sentence, retyped as attributed.
+  - The Art. 4 AI-literacy duty is its own claim.
+  - The Part V thread no longer says the minimal tier has "no obligations" (four languages).
+- **April 2026 AI Omnibus trilogue:** sourced to Bird & Bird and the IAPP. It grades Secondary:
+  the Council's account returns 403 here.
+
+**Prose corrections (all four languages):**
+- OpenAI/Garante: "nine months of investigative work" contradicted the Garante's own account
+  (March 2023 to November 2024). It now says "some twenty months".
+- Data Act, Ireland:
+  - "host to a large share of Europe's cloud infrastructure" (no source gives a share) is now
+    "one of Europe's main data-centre hubs" (the KPMG report the Irish government published);
+  - "still in pre-legislative scrutiny in mid-2026" is now "by late September 2026 no Bill had
+    been introduced in the Oireachtas" (the parliament's register);
+  - the claim is atomized into three sourced facts plus the argument.
+
+**Kept flagged, with the reason recorded:**
+- **Meta/DPC transfers:** the DPC's Annual Report 2023 establishes the Irish statutory appeal
+  was brought, but no source read gives its current state.
+- **OpenAI:** the Rome judgment's text is still unread; commentary describes the reasoning,
+  published in June.
+- **NIS2/CER transposition:**
+  - The Commission's per-country NIS2 pages are dated July 2025.
+  - Its July 2026 release names only the four referred states.
+  - Reading the other 23 as complete from "most complied" would be the plausible-substitute
+    move §0 forbids.
+- **The CDT reference:** the brief names no publication, and a likely candidate is not a
+  source.
+- **The health metric's "narrower" count** had drifted to equal the canonical total, because
+  its hand-copied rule ignored derived claims. It now uses `openBacklog()`.
+
+**Local note:** running `node agent/detector/cli.mjs` wrote a git-ignored record store,
+`agent/records/`. That store makes the governance suite's P-07 anchor read 19 instead of 0 in
+this working tree. My attempt to delete it was blocked, so it is still there; the suite passes
+45/45 in a clean worktree. CI starts from a fresh clone and is unaffected.
 
 ## After the CI decisions, 27 September 2026 — backlog, translations, hardening
 
