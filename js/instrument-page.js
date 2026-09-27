@@ -23,6 +23,7 @@
 import { loadAll, index, renderError, label as taxLabel, note as taxNote, loadOverlay } from './data.js';
 import * as F from './format.js';
 import { authoritiesFor, datesFor, cell, DIMENSIONS, setOverlay } from './dna.js';
+import { provisionApplication, provisionDeadlines } from './regulatory-model.js';
 import { derive, STAGES } from './pipeline.js';
 import { sourceList, gradeChip, freshness } from './evidence-view.js';
 import { interactionsFor } from './interactions.js';
@@ -72,7 +73,7 @@ function evidenceBlock(claim) {
     '<div class="ev-kicker">' + gradeChip(claim, IX) +
       '<span class="badge" data-st="' + (type === 'law' ? 'verified'
         : type === 'fact' ? 'neutral' : 'interpretation') + '">' + esc(type) + '</span>' +
-      (F.isUnverified(claim) ? '<span class="badge" data-st="unresolved">unverified</span>' : '') +
+      (F.isUnverified(claim, IX) ? '<span class="badge" data-st="unresolved">unverified</span>' : '') +
     '</div>' +
     '<p class="ev-claim">' + esc(claim.statement) + '</p>' +
     '<div class="ev-src">' + sourceList(claim, IX, 'compact') + '</div>' +
@@ -198,6 +199,26 @@ function appliesSection(inst) {
     '<p class="src-line"><a href="applies.html?instrument=' + esc(inst.id) + '">Run these against your situation →</a></p>');
 }
 
+/* When THIS article applies — derived from timeline.json by
+   js/regulatory-model.js, never stored. A date inherited from the whole
+   act says so, because "the Regulation applies from X" and "this Article
+   applies from X" are different statements that happen to share a date. */
+const TODAY = new Date().toISOString().slice(0, 10);
+function appliesCell(p, inst) {
+  const a = provisionApplication(p.id, inst, IX, TODAY);
+  if (a.state === 'not-established') return '<span class="none">no application date recorded for this article</span>';
+  const when = (e) => esc(F.humanDate(e.date, e.date_precision));
+  const amended = (e) => e.introduced_by && IX.instrument.get(e.introduced_by)
+    ? ' <span class="v-sub">inserted by ' + esc(IX.instrument.get(e.introduced_by).short_name) + '</span>' : '';
+  const verb = { applies: 'Applies since', scheduled: 'Applies from', general: 'Applies since', 'general-scheduled': 'Applies from' }[a.state];
+  let html = '<span class="p-when" data-state="' + esc(a.state) + '">' + verb + ' <b>' + when(a.event) + '</b></span>' +
+    amended(a.event) +
+    (a.via === 'instrument' ? '<span class="v-sub">the instrument’s general date; nothing specific to this article is recorded</span>' : '');
+  for (const e of a.later) html += '<span class="v-sub">then from ' + when(e) + ': ' + esc(taxLabel(IX, e.event_type).toLowerCase()) + amended(e) + '</span>';
+  for (const d of provisionDeadlines(p.id, inst, IX)) html += '<span class="v-sub">deadline ' + when(d) + ': ' + esc(d.required_action || d.obligation || '') + '</span>';
+  return html;
+}
+
 function provisionsSection(inst) {
   const provs = inst.provisions || [];
   if (!provs.length) {
@@ -217,6 +238,7 @@ function provisionsSection(inst) {
           ? '<span class="badge badge-long" data-st="unresolved">article number not confirmed against the consolidated text</span>'
           : '') + '</td>' +
       '<td data-label="Binds">' + (on || '<span class="none">not recorded</span>') + '</td>' +
+      '<td data-label="Applies">' + appliesCell(p, inst) + '</td>' +
       '</tr>';
   }).join('');
   return section('provisions', 'Key provisions',
@@ -224,7 +246,7 @@ function provisionsSection(inst) {
     ' recorded. This is what the dataset holds, not the whole instrument — an article that is not here ' +
     'has not been entered, which is a different statement from its not existing.</p>' +
     '<div class="t-scroll"><table class="t-rec prov-table"><thead><tr>' +
-      '<th scope="col">Article</th><th scope="col">Heading</th><th scope="col">Binds</th>' +
+      '<th scope="col">Article</th><th scope="col">Heading</th><th scope="col">Binds</th><th scope="col">Applies</th>' +
     '</tr></thead><tbody>' + rows + '</tbody></table></div>');
 }
 
@@ -304,7 +326,7 @@ function evidenceSection(inst) {
       'No claim in the dataset is tagged to this instrument.'));
   }
   const tally = F.gradeTally(claims, IX);
-  const order = ['primary', 'official', 'secondary', 'interpretation', 'unresolved'];
+  const order = F.GRADE_ORDER;
   const bar = order.filter((k) => tally[k]).map((k) =>
     '<span class="grade-tally" data-g="' + k + '"><b>' + tally[k] + '</b> ' +
     esc(F.GRADE[k].label) + '</span>').join('');

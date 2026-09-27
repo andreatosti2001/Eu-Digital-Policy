@@ -178,3 +178,77 @@ export function aggregate(records, ix) {
   }
   return out;
 }
+
+/* ============================================================
+   The procedural model — where a case IS, as distinct from what the
+   pipeline says it reached.
+
+   The eight stages above answer "how far did enforcement get?". A reader
+   of a live case needs a second answer: "what is its procedural posture,
+   and can it still change?" — investigation → preliminary finding →
+   decision → appeal → judgment → annulment → remittal and re-decision.
+   A fine figure alone collapses all of that into one number.
+
+   Like the pipeline, this is DERIVED from the record's own axes and is
+   never stored. Finality has three values and the third is honest:
+   `finality:unknown` is never counted as final or as not final.
+   ============================================================ */
+
+/**
+ * @returns {{ stage: string, finality: string, notes: string[] }}
+ *   stage     a taxonomy id under procedure:
+ *   finality  finality:final · finality:not-final · finality:unknown, or
+ *             null where no proceedings exist to be final
+ */
+export function procedure(rec) {
+  const a = rec.action_status;
+  const ap = rec.appeal && rec.appeal.status;
+  const j = rec.judicial || null;
+  const notes = [];
+  let stage;
+  if (!a) stage = 'procedure:no-proceedings';
+  else if (a === 'action:announced') stage = rec.decision_date ? 'procedure:preliminary-finding' : (rec.opened ? 'procedure:investigation' : 'procedure:preliminary-finding');
+  else if (a === 'action:commitments') stage = 'procedure:commitments';
+  else if (a === 'action:annulled') stage = j && j.remitted === true ? 'procedure:remitted' : 'procedure:annulled';
+  else if (a === 'action:appealed' || ap === 'appeal:pending') stage = 'procedure:appeal';
+  else if (ap === 'appeal:decided' && j) stage = 'procedure:judgment';
+  else stage = 'procedure:decision';
+
+  let finality;
+  /* no proceedings: there is nothing whose finality could be asked about */
+  if (!a) finality = null;
+  else if (a === 'action:final') finality = 'finality:final';
+  else if (a === 'action:announced') { finality = 'finality:not-final'; notes.push('A preliminary finding can change before any decision is adopted.'); }
+  else if (stage === 'procedure:remitted') { finality = 'finality:not-final'; notes.push('Annulled and remitted: the authority may decide again.'); }
+  else if (ap === 'appeal:pending' || a === 'action:appealed') { finality = 'finality:not-final'; notes.push('Under appeal.'); }
+  else if (a === 'action:commitments' && ap === 'appeal:none') finality = 'finality:final';
+  else if (ap === 'appeal:not-lodged') finality = 'finality:final';
+  else finality = 'finality:unknown';
+  return { stage, finality, notes };
+}
+
+/**
+ * Contradictions between a record's axes that no real case can have.
+ * Each is a defect in the RECORD, never a finding about the case:
+ * tools/evidence-audit.mjs fails on any of them.
+ */
+export function contradictions(rec) {
+  const out = [];
+  const a = rec.action_status;
+  const ap = rec.appeal && rec.appeal.status;
+  const p = rec.payment_status;
+  const paid = p === 'payment:paid' || p === 'payment:collected';
+  if (a === 'action:annulled' && paid) out.push('annulled, yet recorded as paid or collected — a repayment would need recording, not a payment');
+  if (a === 'action:announced' && paid) out.push('preliminary findings only, yet recorded as paid — nothing is payable before a decision');
+  if (a === 'action:announced' && rec.fine_eur != null) out.push('preliminary findings only, yet a fine amount is recorded — a proposed fine is not an imposed one');
+  if (a === 'action:final' && ap === 'appeal:pending') out.push('recorded as final while an appeal is pending');
+  if (a === 'action:final' && ap === 'appeal:unknown') out.push('recorded as final ("no longer subject to appeal") while the appeal block says whether an appeal was lodged is unknown');
+  if (a === 'action:appealed' && (ap === 'appeal:none' || ap === 'appeal:not-lodged')) out.push('recorded as appealed while the appeal block says no appeal was lodged');
+  if (ap === 'appeal:decided' && !rec.judicial) out.push('the appeal is recorded as decided but no judicial record says how');
+  if (a === 'action:commitments' && rec.fine_eur != null) out.push('closed by commitments, yet a fine amount is recorded');
+  if (p === 'payment:not-applicable' && rec.fine_eur != null && a !== 'action:annulled') out.push('a fine is recorded but payment is marked not applicable');
+  if (rec.judicial && rec.judicial.remitted === true && a !== 'action:annulled') out.push('remitted for re-decision, yet the action is not recorded as annulled');
+  if (rec.decision_date && rec.opened && rec.decision_date < rec.opened) out.push('decided before it was opened');
+  if (rec.judicial && rec.judicial.date && rec.decision_date && rec.judicial.date < rec.decision_date) out.push('judgment dated before the decision it rules on');
+  return out;
+}

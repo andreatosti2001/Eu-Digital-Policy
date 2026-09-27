@@ -649,6 +649,16 @@
     {
       "id": "event:market-investigation",
       "label": "Market investigation"
+    },
+    {
+      "id": "event:adoption",
+      "label": "Adoption",
+      "note": "The co-legislators sign the act — the date in its title (\"of 13 June 2024\"). Nothing applies yet."
+    },
+    {
+      "id": "event:publication",
+      "label": "Publication in the Official Journal",
+      "note": "The act is published in the Official Journal. Entry into force is counted from this date, not from adoption."
     }
   ],
   "date_precision": [
@@ -695,6 +705,16 @@
       "id": "claim-type:forecast",
       "label": "Forecast",
       "note": "A statement about what will or may happen."
+    },
+    {
+      "id": "claim-type:derived",
+      "label": "Derived fact",
+      "note": "A figure this site computes from other registered claims. The claim records its inputs, formula, result and rounding, so the arithmetic can be re-run; a source that states the number itself would make it a fact, not a derivation."
+    },
+    {
+      "id": "claim-type:attributed",
+      "label": "Attributed view",
+      "note": "What a named actor states or argues. The site reports the position and does not adopt it; the evidence is the actor's own publication, which settles that the view was held, not that it is right."
     }
   ],
   "source_tier": [
@@ -1221,6 +1241,240 @@
       "id": "state:na",
       "label": "Not applicable",
       "note": "The stage cannot arise for this kind of action — an appeal stage for preliminary findings, a payment stage where no fine was imposed."
+    }
+  ],
+  "evidence_status": [
+    {
+      "id": "evidence:direct",
+      "label": "Direct",
+      "note": "An external source states the proposition. Derived at render time from the claim's source references; never stored."
+    },
+    {
+      "id": "evidence:partial",
+      "label": "Partial",
+      "note": "External sources establish part of the proposition, a narrower case, or the components from which it is computed — but none states it whole."
+    },
+    {
+      "id": "evidence:derived",
+      "label": "Derived",
+      "note": "The proposition is computed by this site from other registered claims. Its strength is that of its inputs and its arithmetic, both of which are recorded."
+    },
+    {
+      "id": "evidence:context-only",
+      "label": "Context only",
+      "note": "External sources inform the claim without establishing any part of it. Context is not a citation."
+    },
+    {
+      "id": "evidence:unverified",
+      "label": "Unverified",
+      "note": "No external source states or part-states the proposition; the only support recorded is the brief itself."
+    },
+    {
+      "id": "evidence:disputed",
+      "label": "Disputed",
+      "note": "Sources recorded on the claim disagree about the proposition itself. The claim carries the disagreement rather than choosing a side silently."
+    }
+  ],
+  "remediation": [
+    {
+      "id": "remediation:missing-primary-source",
+      "label": "Missing primary source",
+      "note": "A claim of law or fact whose strongest external support is not tier 1 or 2. Derived."
+    },
+    {
+      "id": "remediation:missing-locator",
+      "label": "Missing locator",
+      "note": "A direct source reference without a locator specific enough for another person to reach the evidence without reading the whole document. Derived."
+    },
+    {
+      "id": "remediation:self-source-only",
+      "label": "Rests on the brief alone",
+      "note": "A claim that owes verification and whose only direct support is the brief itself. Derived."
+    },
+    {
+      "id": "remediation:secondary-source-only",
+      "label": "Secondary sources only",
+      "note": "Every external source is tier 3 or 4. Derived."
+    },
+    {
+      "id": "remediation:secondary-reproduction-only",
+      "label": "Unofficial reproduction only",
+      "note": "A claim of law whose only external support for the legal text is an unofficial reproduction of it rather than the Official Journal or EUR-Lex. Derived from the source's reproduces field."
+    },
+    {
+      "id": "remediation:derivation-undocumented",
+      "label": "Derivation undocumented",
+      "note": "A derived claim whose inputs, formula or result are missing or do not recompute. Derived."
+    },
+    {
+      "id": "remediation:possibly-composite",
+      "label": "Possibly composite",
+      "note": "Heuristic: the statement carries several propositions or several figures, each of which may need its own source. Derived; never blocking."
+    },
+    {
+      "id": "remediation:outdated",
+      "label": "Review due",
+      "note": "The record is past the review interval of its freshness risk class. Derived."
+    },
+    {
+      "id": "remediation:reference-gap",
+      "label": "Named reference gap",
+      "note": "A person has recorded that part of the claim's sourcing is missing (reference_gap). Cleared only by a person."
+    },
+    {
+      "id": "remediation:claim-too-broad",
+      "label": "Claim too broad",
+      "note": "Judged: the statement asserts more than any recorded source could carry. Stored in the claim's remediation field."
+    },
+    {
+      "id": "remediation:interpretation-as-fact",
+      "label": "Interpretation presented as fact",
+      "note": "Judged: the prose states as fact something the data records as the author's reading. Stored."
+    },
+    {
+      "id": "remediation:contested",
+      "label": "Contested",
+      "note": "Judged: the proposition is disputed between sources or actors. Stored; the claim also carries a contested block."
+    },
+    {
+      "id": "remediation:low-value",
+      "label": "Low value",
+      "note": "Judged: verification effort would exceed what the claim carries in the argument. Stored, never used to hide a gap."
+    }
+  ],
+  "prose_class": [
+    {
+      "id": "prose:synthesis",
+      "label": "Author synthesis",
+      "note": "An inference the author draws across registered facts. Not a sourced finding, and not something a citation could settle."
+    },
+    {
+      "id": "prose:critique",
+      "label": "Author critique",
+      "note": "An analytical or normative assessment by the author."
+    },
+    {
+      "id": "prose:recommendation",
+      "label": "Recommendation",
+      "note": "What the author proposes should be done. Normative by construction."
+    },
+    {
+      "id": "prose:signpost",
+      "label": "Signpost",
+      "note": "Framing or navigation that asserts nothing about the law or the world."
+    },
+    {
+      "id": "prose:method",
+      "label": "Method note",
+      "note": "How the site or this brief was made, or how to read it. A statement by the author about their own work."
+    }
+  ],
+  "freshness_risk": [
+    {
+      "id": "risk:critical",
+      "label": "Critical",
+      "note": "Legal status in motion: a pending appeal, a preliminary finding, an unknown payment, or a scheduled event within 60 days. Its review interval is set in js/evidence-model.js RISK_TTL_DAYS and nowhere else."
+    },
+    {
+      "id": "risk:high",
+      "label": "High",
+      "note": "Institutional status or current implementation: legislative status, transposition, competences, open enforcement. Its review interval is set in js/evidence-model.js RISK_TTL_DAYS and nowhere else."
+    },
+    {
+      "id": "risk:medium",
+      "label": "Medium",
+      "note": "General claims of fact and law that can move but rarely do. Its review interval is set in js/evidence-model.js RISK_TTL_DAYS and nowhere else."
+    },
+    {
+      "id": "risk:low",
+      "label": "Low",
+      "note": "Historical context and the author's own arguments. Its review interval is set in js/evidence-model.js RISK_TTL_DAYS and nowhere else."
+    }
+  ],
+  "freshness_state": [
+    {
+      "id": "freshness:fresh",
+      "label": "Fresh",
+      "note": "Verified within half of its risk class's review interval."
+    },
+    {
+      "id": "freshness:aging",
+      "label": "Aging",
+      "note": "Within its review interval, past half of it."
+    },
+    {
+      "id": "freshness:review-due",
+      "label": "Review due",
+      "note": "Past its review interval, within twice it."
+    },
+    {
+      "id": "freshness:stale",
+      "label": "Stale",
+      "note": "Past twice its review interval, or never verified."
+    }
+  ],
+  "finality": [
+    {
+      "id": "finality:final",
+      "label": "Final",
+      "note": "The act can no longer be challenged, or a challenge has been finally decided. Derived at render time from the enforcement record."
+    },
+    {
+      "id": "finality:not-final",
+      "label": "Not final",
+      "note": "A preliminary step, or a decision under appeal or remitted for re-decision. Derived."
+    },
+    {
+      "id": "finality:unknown",
+      "label": "Finality unknown",
+      "note": "The record cannot settle whether the act is final. Never counted as final or as not final."
+    }
+  ],
+  "procedural_stage": [
+    {
+      "id": "procedure:investigation",
+      "label": "Investigation",
+      "note": "Proceedings opened; no finding yet."
+    },
+    {
+      "id": "procedure:preliminary-finding",
+      "label": "Preliminary finding",
+      "note": "The authority has stated a provisional view. Not a decision."
+    },
+    {
+      "id": "procedure:decision",
+      "label": "Decision",
+      "note": "The authority has adopted a decision."
+    },
+    {
+      "id": "procedure:commitments",
+      "label": "Commitments",
+      "note": "The case was closed by binding commitments rather than a finding of infringement."
+    },
+    {
+      "id": "procedure:appeal",
+      "label": "Under appeal",
+      "note": "The decision is before a court."
+    },
+    {
+      "id": "procedure:judgment",
+      "label": "Judgment",
+      "note": "A court has ruled."
+    },
+    {
+      "id": "procedure:annulled",
+      "label": "Annulled",
+      "note": "A court has annulled the act."
+    },
+    {
+      "id": "procedure:remitted",
+      "label": "Remitted",
+      "note": "Annulled and sent back to the authority for re-decision."
+    },
+    {
+      "id": "procedure:no-proceedings",
+      "label": "No proceedings",
+      "note": "The record documents that no proceedings were opened."
     }
   ]
 }

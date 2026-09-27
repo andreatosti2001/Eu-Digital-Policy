@@ -9,7 +9,7 @@
 
 import { loadAll, index, renderError, label as taxLabel, note as taxNote } from './data.js';
 import * as F from './format.js';
-import { STAGES, DERIVATION, derive, depth, aggregate } from './pipeline.js';
+import { STAGES, DERIVATION, derive, depth, aggregate, procedure } from './pipeline.js';
 import { renderFilterState, syncUrl, readUrl, emptyState } from './filters.js';
 
 const esc = (s) => String(s == null ? '' : s)
@@ -96,6 +96,9 @@ function recordHTML(rec, n) {
 
   const ap = rec.appeal || {};
   const j = rec.judicial;
+  /* where the case IS, and whether it can still change — derived, never
+     stored (js/pipeline.js procedure()); unknown finality is its own state */
+  const proc = procedure(rec);
 
   return '<article class="enf-rec" id="' + esc(rec.id) + '" data-depth="' + d + '" data-id="' + esc(rec.id) + '">' +
     '<header class="enf-head">' +
@@ -112,6 +115,8 @@ function recordHTML(rec, n) {
     pipelineHTML(rec, id) +
 
     '<dl class="enf-axes">' +
+      axis('Procedure', proc.stage) +
+      (proc.finality ? axis('Finality', proc.finality) : '') +
       axis('Action', rec.action_status) +
       axis('Payment', rec.payment_status) +
       axis('Remedy', rec.remedy_status) +

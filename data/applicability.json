@@ -3,10 +3,10 @@
   "$description": "Applicability rules. Declarative data evaluated by a deliberately unintelligent matcher: a rule fires when every dimension it specifies intersects the user's selection, and a dimension the rule omits is a wildcard. There is no decision tree in the JavaScript — the reasoning lives here and is inspectable.",
   "$last_verified": "2026-08-27",
   "$outcomes": {
-    "outcome:applies": "Yes — on the facts given, the instrument applies.",
+    "outcome:applies": "Likely applies — on the facts given, a rule for the instrument fires. A case-specific assessment is still required.",
     "outcome:likely": "Potentially applicable — applies on the ordinary reading, but turns on a condition not established here.",
     "outcome:possible": "Potentially applicable — may apply, depending on facts this questionnaire does not ask for.",
-    "outcome:unlikely": "Probably not — but absence of an obligation here is not a safe harbour.",
+    "outcome:unlikely": "Likely not applicable — but absence of an obligation here is not a safe harbour.",
     "outcome:undetermined": "NOT A RULE OUTCOME. Emitted by the engine when no rule covers the combination. Absence of a rule is absence of knowledge, never evidence of non-applicability."
   },
   "$limits": [

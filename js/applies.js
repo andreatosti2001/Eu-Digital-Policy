@@ -43,11 +43,15 @@ const DOWN = {
   'outcome:possible': 'outcome:possible',
   'outcome:unlikely': 'outcome:unlikely',
 };
+/* The words a reader sees. "Yes" read as a legal conclusion, which this
+   tool cannot give; "Likely applies" says the same thing about the rule and
+   nothing about the reader's case, which is all the data can support. The
+   slugs are unchanged: they are the state, the word is only its label. */
 const VERDICT = {
-  'outcome:applies': { word: 'Yes', slug: 'yes' },
+  'outcome:applies': { word: 'Likely applies', slug: 'yes' },
   'outcome:likely': { word: 'Potentially applicable', slug: 'maybe' },
   'outcome:possible': { word: 'Potentially applicable', slug: 'maybe' },
-  'outcome:unlikely': { word: 'Probably not', slug: 'no' },
+  'outcome:unlikely': { word: 'Likely not applicable', slug: 'no' },
   'outcome:undetermined': { word: 'Not determined', slug: 'undet' },
 };
 const CONFIDENCE = {
@@ -246,7 +250,7 @@ function render() {
   const summary = '<div class="ap-summary" role="status">' +
     ['yes', 'maybe', 'no'].map((s) => counts[s]
       ? '<span class="ap-badge" data-v="' + s + '">' + counts[s] + ' ' +
-        esc({ yes: 'Yes', maybe: 'Potentially applicable', no: 'Probably not' }[s]) + '</span>' : '').join('') +
+        esc({ yes: 'Likely applies', maybe: 'Potentially applicable', no: 'Likely not applicable' }[s]) + '</span>' : '').join('') +
     (undetermined.length ? '<span class="ap-badge" data-v="undet">' + undetermined.length + ' Not determined</span>' : '') +
     '</div>';
 

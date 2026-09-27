@@ -5,28 +5,31 @@
    omitted from the citation rather than guessed at.
    ============================================================ */
 
+import { CLAIM_KINDS, checkDerivation, evidenceStatus, EVIDENCE_WORD } from './evidence-model.js';
+export { evidenceStatus, EVIDENCE_WORD, checkDerivation };
+
 /* ---------------------------------------------------------- claim types */
 
-/** Five types, grouped into three visual families. Interpretation, critique
- *  and forecast share the "argument" family and must never be rendered in
- *  the same way as binding law. */
 /* A private-use codepoint standing in for the URL while the surrounding text
    is escaped, so the link can be re-inserted unescaped afterwards. It was a
    literal NUL, which made this file register as binary to ordinary tooling
    and is the kind of byte a proxy or an editor may silently drop. */
 const SENTINEL = '\uE000';
 
-export const CLAIM_FAMILY = {
-  law: 'law',
-  fact: 'fact',
-  interpretation: 'argument',
-  critique: 'argument',
-  forecast: 'argument',
-};
+/** Seven types in five visual families. Interpretation, critique and
+ *  forecast share the "argument" family and must never be rendered in the
+ *  same way as binding law. A derived figure and an attributed view each
+ *  have a family of their own, because "the site computed this" and "an
+ *  actor says this" are neither a sourced fact nor the author's argument.
+ *  The table lives in js/evidence-model.js, which the validators read too. */
+export const CLAIM_FAMILY = Object.fromEntries(
+  Object.entries(CLAIM_KINDS).map(([k, v]) => [k, v.family]));
 
 export const CLAIM_GLOSS = {
   law: 'What the legal instrument provides.',
   fact: 'What the evidence shows.',
+  derived: 'A figure this site computed from other sourced claims. The inputs, the formula and the rounding are shown, so the arithmetic can be checked.',
+  attributed: 'What a named actor states or argues. Reported, not adopted: the source shows the view was held, not that it is right.',
   interpretation: 'A reading of what the law or the evidence means. The author’s, not the legislator’s.',
   critique: 'An argument the author is making. Not a statement of law or of fact.',
   forecast: 'A statement about what may happen. Not yet a fact.',
@@ -190,10 +193,18 @@ export function tierWord(src) {
   return TIER_WORD[src.tier] || src.tier;
 }
 
-/** True when a claim has no external source that states or part-states it. */
-export function isUnverified(claim) {
+/** True when a claim has no external source that states or part-states it.
+ *  A derived claim is judged by its derivation instead: it is verified when
+ *  the arithmetic re-runs and every input is itself externally supported.
+ *  Without the index that cannot be established, so the answer is "yes". */
+export function isUnverified(claim, ix) {
   if (!claim) return true;
   if (!claim.last_verified) return true;
+  if (typeOf(claim) === 'derived') {
+    if (!ix || typeof ix !== 'object' || !ix.claim) return true;
+    if (!checkDerivation(claim, ix).ok) return true;
+    return Object.values(claim.derivation.inputs).some((inp) => isUnverified(ix.claim.get(inp.claim), ix));
+  }
   return !(claim.sources || []).some(
     (s) => (s.supports === 'supports:direct' || s.supports === 'supports:partial')
       && s.source_id !== 'src-brief-original'
@@ -246,6 +257,14 @@ export const GRADE = {
     id: 'interpretation', label: 'Interpretation',
     gloss: 'The author’s reading or argument. Sources may support the premises; they cannot settle the conclusion.',
   },
+  derived: {
+    id: 'derived', label: 'Derived by this site',
+    gloss: 'Computed here from other claims, each with its own source. As strong as its weakest input and its arithmetic, both of which are shown.',
+  },
+  attributed: {
+    id: 'attributed', label: 'Attributed view',
+    gloss: 'The named actor’s position, checked against the actor’s own publication. Reported, not adopted.',
+  },
   unresolved: {
     id: 'unresolved', label: 'Unresolved',
     gloss: 'No directly supporting source has been located, or the only one is this brief. Treat as unverified.',
@@ -262,12 +281,21 @@ const TIER_GRADE = { 'tier:1': 'primary', 'tier:2': 'official', 'tier:3': 'secon
 export function evidenceGrade(claim, ix) {
   const fam = familyOf(claim);
   if (fam === 'argument') return GRADE.interpretation;
+  if (fam === 'derived') {
+    /* a derivation is only as good as its inputs: one unresolved input,
+       or arithmetic that does not re-run, and the result is unresolved */
+    if (!ix || !ix.claim || !checkDerivation(claim, ix).ok) return GRADE.unresolved;
+    const inputs = Object.values(claim.derivation.inputs).map((i) => ix.claim.get(i.claim));
+    return inputs.every((c) => c && evidenceGrade(c, ix).id !== 'unresolved') ? GRADE.derived : GRADE.unresolved;
+  }
 
   const direct = (claim?.sources || []).filter((s) => s.supports === 'supports:direct');
   if (!direct.length) return GRADE.unresolved;
 
   const external = direct.filter((s) => s.source_id !== SELF_SOURCE_ID);
   if (!external.length) return GRADE.unresolved;
+  /* the evidence for "X says Y" is X's own text, whatever its tier */
+  if (fam === 'attributed') return GRADE.attributed;
 
   let best = 'secondary';
   for (const s of external) {
@@ -278,6 +306,9 @@ export function evidenceGrade(claim, ix) {
   }
   return GRADE[best];
 }
+
+/** Strongest first. One order, so no two pages list the grades differently. */
+export const GRADE_ORDER = ['primary', 'official', 'secondary', 'derived', 'attributed', 'interpretation', 'unresolved'];
 
 /** Counts by grade across a set of claims — used by the bibliography. */
 export function gradeTally(claims, ix) {

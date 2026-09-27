@@ -594,6 +594,14 @@ body[data-theme="light"]{
 .enf-state[data-s="imposed"],.enf-state[data-s="appealed"],
 .enf-state[data-s="reduced"],.enf-state[data-s="ordered"],
 .enf-state[data-s="pending"]{color:var(--live-text)}
+/* procedure and finality (js/pipeline.js procedure()): the label carries the
+   state; the colour only repeats it, as everywhere else on this page */
+.enf-state[data-s="not-final"],.enf-state[data-s="remitted"],
+.enf-state[data-s="preliminary-finding"],.enf-state[data-s="appeal"]{color:var(--maybe)}
+.enf-state[data-s="judgment"],.enf-state[data-s="decision"],.enf-state[data-s="commitments"]{color:var(--live-text)}
+/* provision application (js/regulatory-model.js) on the instrument page */
+.prov-table .p-when{display:block;white-space:nowrap}
+.prov-table .p-when[data-state="scheduled"] b,.prov-table .p-when[data-state="general-scheduled"] b{color:var(--maybe)}
 .bib-url[data-s="url:paywalled"]{color:var(--live-text);border-color:var(--live-text)}
 .gg-link:hover,.gloss-pop-more:hover,.gloss-pop-more:focus-visible{color:var(--live-text)}
 
@@ -929,6 +937,8 @@ body[data-theme="light"]{
 .grade-tally[data-g="primary"],.grade-tally[data-g="official"]{border-color:var(--mech);color:var(--mech)}
 .grade-tally[data-g="interpretation"]{border-color:var(--crit);color:var(--crit);font-style:italic}
 .grade-tally[data-g="unresolved"]{border-style:dotted;border-color:var(--crit);color:var(--crit)}
+.grade-tally[data-g="derived"]{border-style:dashed;border-color:var(--mech);color:var(--mech)}
+.grade-tally[data-g="attributed"]{border-style:dotted;border-color:var(--text-3)}
 .ev-list{display:grid;gap:var(--s-3);margin:var(--s-5) 0 0}
 .ev-loc{font-family:var(--mono);font-size:var(--t-micro);color:var(--text-3)}
 .ev-part{

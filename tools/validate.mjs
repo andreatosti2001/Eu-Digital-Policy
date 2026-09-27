@@ -21,6 +21,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { violations as sourceViolations } from './source-contract.mjs';
+import { checkDerivation, claimKind } from '../js/evidence-model.js';
 
 const DATA = 'data';
 const errors = [];
@@ -403,8 +404,17 @@ function unverifiedReport() {
   const rows = [];
   const push = (kind, id, note) => rows.push({ kind, id, note: (note || '').replace(/\s+/g, ' ').slice(0, 150) });
 
+  const claimById = new Map(arr(db.claims?.claims).map((c) => [c.id, c]));
+  const hasExternalDirect = (c) => !!c && arr(c.sources).some((s) => s.supports === 'supports:direct' && s.source_id !== 'src-brief-original');
   for (const c of arr(db.claims?.claims)) {
-    const strongest = arr(c.sources).some((s) => s.supports === 'supports:direct' && s.source_id !== 'src-brief-original');
+    /* A derived claim carries no source of its own: it is carried by its
+       inputs and its arithmetic. It counts as externally supported only
+       when the derivation re-runs AND every input has an external direct
+       source — so a derivation can never launder a weak input. */
+    const strongest = claimKind(c) === 'derived'
+      ? checkDerivation(c, { claim: claimById }).ok
+        && Object.values(c.derivation.inputs).every((i) => hasExternalDirect(claimById.get(i.claim)))
+      : hasExternalDirect(c);
     if (!c.last_verified) push('claim (unverified)', c.id, c.verification_note);
     else if (!strongest) push('claim (no external direct source)', c.id, c.verification_note);
   }

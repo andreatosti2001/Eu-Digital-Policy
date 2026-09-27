@@ -206,7 +206,7 @@ function stats(db) {
   const none = s.filter((x) => x.url_status === 'url:none').length;
   const t1 = s.filter((x) => x.tier === 'tier:1').length;
   const claims = db.claims.claims;
-  const unver = claims.filter(F.isUnverified).length;
+  const unver = claims.filter((c) => F.isUnverified(c, IX)).length;
 
   /* How many claims rest only on the brief itself.
 
@@ -247,7 +247,7 @@ function stats(db) {
   const grades = document.getElementById('bibGrades');
   if (grades) {
     const t = F.gradeTally(claims, IX);
-    const order = ['primary', 'official', 'secondary', 'interpretation', 'unresolved'];
+    const order = F.GRADE_ORDER;
     grades.innerHTML = order.map((k) => {
       const g = F.GRADE[k];
       return '<li class="bg-row" data-g="' + k + '">' +
