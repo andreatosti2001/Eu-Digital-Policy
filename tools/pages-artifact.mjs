@@ -35,7 +35,9 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 /** The website. Pages, their one classic script, the stylesheets, the
- *  modules, the data they fetch, the locales, the fonts, and the sitemap.
+ *  modules, the data they fetch, the locales, the fonts, the sitemap, the
+ *  instrument pages tools/_footer.mjs generates under instruments/<id>/,
+ *  and the social preview images tools/og-image.mjs renders into img/.
  *  Nothing else is part of the public site. There is deliberately no
  *  robots.txt: this is a project site under /Eu-Digital-Policy/, and
  *  crawlers read robots.txt only at the root of the host, which this
@@ -45,7 +47,7 @@ export const PUBLIC_FILES = Object.freeze([
   'enforcement.html', 'applies.html', 'bibliography.html',
   'app.js', 'style.css', 'sitemap.xml',
 ]);
-export const PUBLIC_DIRS = Object.freeze(['css', 'js', 'data', 'i18n', 'fonts']);
+export const PUBLIC_DIRS = Object.freeze(['css', 'js', 'data', 'i18n', 'fonts', 'instruments', 'img']);
 
 /** Never published, whatever the allowlist says. A name here is a
  *  statement that its contents are private or are working material. */
@@ -73,6 +75,7 @@ export function build(out, { root = ROOT } = {}) {
     cpSync(join(root, f), join(out, f));
   }
   for (const d of PUBLIC_DIRS) {
+    if (!existsSync(join(root, d))) continue;
     for (const p of walk(join(root, d))) {
       const rel = relative(root, p);
       const why = refusal(rel);
@@ -104,7 +107,12 @@ export function verify(out) {
   for (const f of files.filter((x) => x.endsWith('.html'))) {
     const html = readFileSync(join(out, f), 'utf8');
     for (const m of html.matchAll(/\b(?:href|src)="([^"#?]+)/g)) {
-      if (local(m[1]) && !have.has(m[1])) problems.push(`${f} references ${m[1]}, which the artifact does not contain`);
+      if (!local(m[1])) continue;
+      /* relative to the page: an instrument page two levels down reaches
+         the stylesheets through ../../, and links to directories */
+      let target = join(dirname(f), m[1]).split(sep).join('/');
+      if (m[1].endsWith('/') || target === '.') target = (target === '.' ? '' : target.replace(/\/?$/, '/')) + 'index.html';
+      if (!have.has(target)) problems.push(`${f} references ${m[1]}, which the artifact does not contain`);
     }
   }
   for (const f of files.filter((x) => x.endsWith('.css'))) {

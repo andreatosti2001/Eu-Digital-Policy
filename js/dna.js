@@ -15,6 +15,7 @@
 
 import * as F from './format.js';
 import { label as taxLabel, note as taxNote } from './data.js';
+import { instrumentHref } from './routes.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -182,7 +183,7 @@ export function renderTable(mount, ix, opts = {}) {
 
   const head = '<tr><th scope="col">' + esc(tr('dna:slot.label', 'Dimension')) + '</th>' +
     insts.map((i) => '<th scope="col" id="' + esc(i.id) + '">' +
-      '<a class="dna-head-link" href="instrument.html?id=' + esc(i.id) + '">' +
+      '<a class="dna-head-link" href="' + esc(instrumentHref(i, ix)) + '">' +
         esc(tr(i.id + '.short_name', i.short_name)) + '</a>' +
       (i.kind === 'kind:proposal' ? '<span class="dna-proposal">proposal · not law</span>' : '') +
       '</th>').join('') + '</tr>';
@@ -220,7 +221,7 @@ export function renderTable(mount, ix, opts = {}) {
        comparison page directly under the h1 */
     const H = opts.compact ? 'h4' : 'h2';
     return '<article class="dna-rec" id="' + esc(i.id) + '-rec"><' + H + '>' +
-      '<a class="dna-head-link" href="instrument.html?id=' + esc(i.id) + '">' + title + '</a>' +
+      '<a class="dna-head-link" href="' + esc(instrumentHref(i, ix)) + '">' + title + '</a>' +
       (i.kind === 'kind:proposal' ? '<span class="dna-proposal">proposal · not law</span>' : '') +
       '</' + H + '><dl>' + rows + '</dl></article>';
   }).join('');

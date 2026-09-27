@@ -43,6 +43,7 @@ import { readBaseline } from '../agent/implement/baseline.mjs';
 import { audit, passages, datesIn, DERIVED_FIELDS } from './evidence-audit.mjs';
 import { cspProblems, securityMeta, inlineScripts } from './csp.mjs';
 import { openBacklog } from '../js/evidence-model.js';
+import { sitePages } from './thirdparty.mjs';
 import { build as buildArtifact, refusal } from './pages-artifact.mjs';
 import * as EM from '../js/evidence-model.js';
 import { procedure, contradictions } from '../js/pipeline.js';
@@ -746,23 +747,23 @@ test('I1c · the Evidence page and the build count the same backlog', () => {
   assert.doesNotMatch(readFileSync(join(ROOT, 'tools', 'validate.mjs'), 'utf8'), /function unverifiedReport\(\)\s*\{/, 'validate.mjs keeps no copy of its own');
 });
 
-test('I1d · hreflang: one alternate per shipped language, on the brief only, matching the sitemap', () => {
-  const reg = JSON.parse(readFileSync(join(ROOT, 'i18n', 'locales.json'), 'utf8')).locales
-    .filter((l) => l.code === 'en' || l.file).map((l) => l.code);
-  const index = readFileSync(join(ROOT, 'index.html'), 'utf8');
-  const alt = [...index.matchAll(/<link href="([^"]+)" hreflang="([^"]+)" rel="alternate"\/>/g)].map((m) => [m[2], m[1]]);
-  assert.deepEqual(alt.map(([c]) => c).sort(), [...reg, 'x-default'].sort());
-  for (const [c, href] of alt) {
-    if (c === 'en' || c === 'x-default') assert.doesNotMatch(href, /\?lang=/);
-    else assert.ok(href.endsWith('?lang=' + c), `${c} -> ${href}`);
+test('I1d · languages: no alternate is advertised while a translation exists only in JavaScript', () => {
+  /* Until 27 Sep 2026 this asserted the opposite: hreflang alternates at
+     ?lang=it|fr|es, in the sitemap too. docs/SEO-AUDIT-2026-09-27.md A5
+     measured why that was wrong — the raw HTML at every ?lang= address is
+     English and names the English page as canonical, so the alternates were
+     not self-canonical and contradicted the HTML they pointed at — and the
+     translations are unreviewed (README limitation 5). The rule now: no
+     alternate until a pre-rendered, reviewed page exists; the address keeps
+     working for readers. docs/SEO-OPERATIONS.md §6. */
+  for (const f of sitePages(ROOT)) {
+    assert.doesNotMatch(readFileSync(join(ROOT, f), 'utf8'), /hreflang=/, `${f} advertises an alternate language`);
   }
-  const sitemap = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
-  for (const c of reg.filter((x) => x !== 'en')) assert.match(sitemap, new RegExp('\\?lang=' + c + '</loc>'));
-  for (const f of ['applies.html', 'bibliography.html', 'instruments.html']) {
-    assert.doesNotMatch(readFileSync(join(ROOT, f), 'utf8'), /hreflang=/, `${f} is not translated and must not advertise alternates`);
-  }
-  /* the page honours the parameter it advertises */
-  assert.match(readFileSync(join(ROOT, 'app.js'), 'utf8'), /searchParams\.get\('lang'\)/);
+  assert.doesNotMatch(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8'), /\?lang=/, 'a ?lang= address is in the sitemap');
+  const app = readFileSync(join(ROOT, 'app.js'), 'utf8');
+  assert.match(app, /searchParams\.get\('lang'\)/, 'the page still honours the parameter');
+  const sync = app.slice(app.indexOf('function syncLangUrl'), app.indexOf('function demote'));
+  assert.doesNotMatch(sync, /canonical/, 'the canonical is not rewritten after load');
 });
 
 test('I2 · the Pages artifact is the website and nothing else', () => {
@@ -780,4 +781,108 @@ test('I2 · the Pages artifact is the website and nothing else', () => {
     assert.ok(refusal('js/.secret'));
     assert.equal(refusal('js/app.js'), null);
   } finally { rmSync(out, { recursive: true, force: true }); }
+});
+
+/* ============================================================
+   S · the route model, the generator and tools/seo-audit.mjs (27 Sep 2026)
+
+   docs/SEO-AUDIT-2026-09-27.md. The audit reads files the way a crawler
+   does; these tests plant each defect it exists to catch in a scratch copy
+   of the site and assert it is caught, so a check that silently stopped
+   checking would fail here rather than pass forever.
+   ============================================================ */
+
+import { audit as seoAudit, auditAll as seoAuditAll } from './seo-audit.mjs';
+import { generate as generateSite, stale as staleSite } from './_footer.mjs';
+import * as ROUTES from '../js/routes.js';
+import { index as buildIndex } from '../js/data.js';
+
+function siteCopy(name) {
+  const dir = scratch(name);
+  for (const f of readdirSync(ROOT).filter((x) => x.endsWith('.html'))) cpSync(join(ROOT, f), join(dir, f));
+  for (const f of ['sitemap.xml', 'app.js', 'style.css']) cpSync(join(ROOT, f), join(dir, f));
+  for (const d of ['data', 'i18n', 'js', 'img', 'instruments', 'css']) cpSync(join(ROOT, d), join(dir, d), { recursive: true });
+  return dir;
+}
+const edit = (dir, f, fn) => writeFileSync(join(dir, f), fn(readFileSync(join(dir, f), 'utf8')));
+
+test('S1 · this tree: every generated file current, and the SEO audit clean', async () => {
+  assert.deepEqual(await staleSite(ROOT), [], 'run node tools/_footer.mjs');
+  const r = await seoAuditAll(ROOT);
+  assert.deepEqual(r.errors, []);
+  assert.deepEqual(r.warnings, []);
+});
+
+test('S2 · the generator is deterministic and writes nothing that reads the clock', async () => {
+  const a = await generateSite(ROOT);
+  const b = await generateSite(ROOT);
+  assert.deepEqual([...a.files.entries()], [...b.files.entries()]);
+  const pages = [...a.files.keys()].filter((f) => f.startsWith('instruments/'));
+  assert.ok(pages.length >= 1);
+  for (const f of pages) {
+    const html = a.files.get(f);
+    for (const clockBound of ['days ago', 'review recommended', 'Next date', 'Applies since', 'ip-enf-pipe']) {
+      assert.ok(!html.includes(clockBound), `${f} carries "${clockBound}", which depends on the reader's clock`);
+    }
+  }
+});
+
+test('S3 · the gate is derived from the record, and every page it admits meets all seven criteria', () => {
+  const db = {};
+  for (const n of ['taxonomy', 'instruments', 'institutions', 'sources', 'claims', 'timeline', 'enforcement', 'applicability', 'glossary']) {
+    db[n] = JSON.parse(readFileSync(join(ROOT, 'data', n + '.json'), 'utf8'));
+  }
+  const ix = buildIndex(db);
+  for (const inst of ROUTES.entityInstruments(ix)) {
+    assert.ok(ROUTES.gateReport(inst, ix).every((g) => g.met), inst.id);
+    assert.equal(ROUTES.instrumentHref(inst, ix, '../../'), `../../instruments/${inst.id}/`);
+  }
+  const thin = ix.instrument.get('eprivacy');
+  assert.equal(ROUTES.hasEntityPage(thin, ix), false);
+  assert.equal(ROUTES.instrumentHref(thin, ix, ''), 'instrument.html?id=eprivacy');
+  /* a record that loses its objective loses its page */
+  const gdpr = { ...ix.instrument.get('gdpr'), dna: { ...ix.instrument.get('gdpr').dna, objective: '' } };
+  assert.equal(ROUTES.hasEntityPage(gdpr, ix), false);
+  /* a common name is used only while an alias backs it */
+  assert.equal(ROUTES.knownAs({ id: 'dsa', aliases: ['digital-services-act'] }), 'Digital Services Act');
+  assert.equal(ROUTES.knownAs({ id: 'dsa', aliases: [] }), null);
+});
+
+test('S4 · planted defects are caught: title, canonical, hreflang, orphan, structured data, sitemap', () => {
+  const dir = siteCopy('seo');
+  try {
+    edit(dir, 'instruments/dsa/index.html', (s) => s.replace(/<title>[^<]*<\/title>/, '<title>Instrument</title>'));
+    edit(dir, 'instruments/dma/index.html', (s) => s.replace('rel="canonical"', 'rel="canonical-x"')
+      .replace('<meta charset="utf-8"/>', '<meta charset="utf-8"/>\n<link href="https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/gdpr/" rel="canonical"/>'));
+    edit(dir, 'index.html', (s) => s.replace('</head>', '<link href="https://andreatosti2001.github.io/Eu-Digital-Policy/?lang=it" hreflang="it" rel="alternate"/>\n</head>'));
+    /* the CER page loses every static link that leads to it */
+    for (const f of sitePages(dir)) edit(dir, f, (s) => s.replace(/<a href="[^"]*instruments\/cer\/">[^<]*<\/a>/g, '').replace(/<a href="[^"]*instruments\/cer\/"/g, '<a href="#"'));
+    edit(dir, 'instruments/cra/index.html', (s) => s.replace('"@type":"Legislation"', '"@type":"Legislation","author":"someone"'));
+    edit(dir, 'sitemap.xml', (s) => s.replace('</urlset>', '  <url><loc>https://andreatosti2001.github.io/Eu-Digital-Policy/instrument.html?id=eprivacy</loc></url>\n</urlset>'));
+    const errs = seoAudit(dir).errors.join('\n');
+    assert.match(errs, /instruments\/dsa\/index\.html: <title> is not the route model's/);
+    assert.match(errs, /instruments\/dsa\/index\.html: generic title/);
+    assert.match(errs, /claimed by .*instruments\/dma\/index\.html/);
+    assert.match(errs, /hreflang it .* not an indexable, self-canonical page/);
+    assert.match(errs, /instruments\/cer\/index\.html: not reachable from the home page/);
+    assert.match(errs, /JSON-LD asserts "author"/);
+    assert.match(errs, /instrument\.html\?id=eprivacy is not the canonical URL of any indexable route/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('S5 · a data change the pages were not regenerated for is caught as stale', async () => {
+  const dir = siteCopy('stale');
+  try {
+    edit(dir, 'data/instruments.json', (s) => s.replace('"short_name": "DORA"', '"short_name": "DORA Regulation"'));
+    const problems = await staleSite(dir);
+    assert.ok(problems.some((p) => /instruments\/dora\/index\.html is stale/.test(p)), problems.join('\n'));
+    assert.ok(problems.some((p) => /instruments\.html is stale/.test(p)));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('S6 · a link the reader follows is not a request the page makes; a preconnect still is', () => {
+  const origins = new Set(['https://andreatosti2001.github.io']);
+  assert.deepEqual(scanHtml('<p><a class="ext" href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a></p>', 'p.html', origins), []);
+  assert.equal(scanHtml('<link rel="preconnect" href="https://fonts.googleapis.com">', 'p.html', origins).length, 1);
+  assert.equal(scanHtml('<a href="x.html"><img src="https://tracker.example/p.gif" alt=""></a>', 'p.html', origins).length, 1);
 });

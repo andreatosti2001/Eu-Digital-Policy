@@ -37,9 +37,9 @@
 import { serveSite, REPO_ROOT } from './serve.mjs';
 import { sleep } from './cdp.mjs';
 
-/** The seven pages `tools/design-qa.mjs` knows about, plus the one
- *  that is only reachable with a query string. `instrument.html`
- *  with no `?id=` renders a chooser, so both are worth loading. */
+/** The six top-level pages, plus one instrument page. Since 27 Sep 2026
+ *  an instrument is served at instruments/<id>/, pre-rendered;
+ *  instrument.html?id=… forwards there, and checkSeo measures that. */
 export const PAGES = [
   { file: 'index.html', name: 'the brief', main: 'body' },
   { file: 'instruments.html', name: 'the comparison', main: '#dnaTable' },
@@ -47,7 +47,7 @@ export const PAGES = [
   { file: 'enforcement.html', name: 'the enforcement register', main: '#enfList' },
   { file: 'applies.html', name: 'the applicability tool', main: '#ap-results' },
   { file: 'bibliography.html', name: 'the evidence and sources view', main: '#bib' },
-  { file: 'instrument.html?id=gdpr', name: 'one instrument, in full', main: '#instrumentPage' },
+  { file: 'instruments/gdpr/', name: 'one instrument, in full', main: '#instrumentPage' },
 ];
 
 /** A page is "rendered" when its mount point no longer holds the
@@ -447,7 +447,8 @@ export async function checkApplicability(page, origin) {
 }
 
 export async function checkInstrumentView(page, origin, id = 'gdpr') {
-  await page.goto(`${origin}/instrument.html?id=${id}`);
+  await page.goto(`${origin}/instruments/${id}/`);
+  await sleep(400);
   const s = await page.evaluate(`(() => {
     const m = document.querySelector('#instrumentPage');
     return {
@@ -459,17 +460,164 @@ export async function checkInstrumentView(page, origin, id = 'gdpr') {
   })()`);
 
   const out = [s.chars > 400 && s.headings > 0
-    ? ok(`instrument:${id}`, 'instrument-view', `instrument.html?id=${id} renders ${s.chars} characters under ${s.headings} heading(s)`, s)
-    : bad(`instrument:${id}`, 'instrument-view', `instrument.html?id=${id} rendered almost nothing`, s)];
+    ? ok(`instrument:${id}`, 'instrument-view', `instruments/${id}/ renders ${s.chars} characters under ${s.headings} heading(s)`, s)
+    : bad(`instrument:${id}`, 'instrument-view', `instruments/${id}/ rendered almost nothing`, s)];
 
   /* An unknown id must not render a plausible-looking empty
      instrument. */
   await page.goto(`${origin}/instrument.html?id=not-an-instrument`);
+  await sleep(400);
   const missing = await page.evaluate(`(() => (document.querySelector('#instrumentPage')?.textContent ?? '').trim().slice(0, 300))()`);
   out.push(/not|unknown|no such|choose|select/i.test(missing)
     ? ok('instrument:unknown', 'instrument-view', 'an unknown instrument id renders a stated absence rather than an empty page', { text: missing.slice(0, 160) })
     : bad('instrument:unknown', 'instrument-view', 'an unknown instrument id renders no explanation', { text: missing.slice(0, 160) }));
 
+  return out;
+}
+
+/* ============================================================
+   9b · what a crawler is told, measured against what renders
+
+   tools/seo-audit.mjs reads the HTML as served and cannot run a
+   script. These checks load the same pages in a browser and ask the
+   question it cannot: after every module has run, does the page still
+   say what its HTML said — the same title, the same canonical, the same
+   <h1>, the same sections, structured data that parses and names the
+   URL in the address bar? docs/SEO-AUDIT-2026-09-27.md A1 was exactly a
+   page whose answer changed after load. And the address every instrument
+   used to have must still work: forward to the instrument's own page,
+   keep the fragment, and mark a record too thin for a page noindex.
+   ============================================================ */
+
+export const SEO_PAGES = ['', 'instruments.html', 'instruments/ai-act/', 'instruments/gdpr/', 'instruments/dsa/',
+  'instruments/dma/', 'enforcement.html', 'applies.html', 'bibliography.html', 'institutions.html'];
+
+const rawSeo = (html) => {
+  const visible = (html.match(/<body[^>]*>([\s\S]*)<\/body>/) || [, ''])[1]
+    .replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<noscript[\s\S]*?<\/noscript>/g, ' ');
+  return {
+    title: ((html.match(/<title>([\s\S]*?)<\/title>/) || [])[1] || '').replace(/&amp;/g, '&').trim(),
+    canonical: (html.match(/<link href="([^"]+)" rel="canonical"\/>/) || [])[1] || null,
+    h1: [...visible.matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/g)].map((m) => m[1].replace(/<[^>]+>/g, '').trim()),
+    h2: [...visible.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/g)].map((m) => m[1].replace(/<[^>]+>/g, '').trim()),
+    text: visible.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().length,
+  };
+};
+
+async function waitFor(page, expr, ms = 6000) {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    if (await page.evaluate(expr)) return true;
+    await sleep(100);
+  }
+  return false;
+}
+
+export async function checkSeo(page, origin, { pages = SEO_PAGES } = {}) {
+  const out = [];
+  const area = 'seo';
+  for (const file of pages) {
+    const name = file || 'index';
+    const raw = rawSeo(await (await fetch(`${origin}/${file}`)).text());
+    await page.goto(`${origin}/${file}`);
+    await sleep(file.startsWith('instruments/') ? 700 : 300);
+    const r = await page.evaluate(`(() => {
+      const ld = [...document.querySelectorAll('script[type="application/ld+json"]')].map((s) => {
+        try { return JSON.parse(s.textContent); } catch (e) { return { error: String(e) }; } });
+      return {
+        title: document.title,
+        canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href') ?? null,
+        robots: document.querySelector('meta[name="robots"]')?.content ?? null,
+        description: document.querySelector('meta[name="description"]')?.content ?? null,
+        h1: [...document.querySelectorAll('h1')].map((h) => h.textContent.trim()),
+        h2: [...document.querySelectorAll('main h2, .page-shell h2, .tool-shell h2, .bib-shell h2')].map((h) => h.textContent.trim()),
+        crumbs: [...document.querySelectorAll('.crumbs li')].map((li) => li.textContent.trim()),
+        ld,
+        entityLinks: [...document.querySelectorAll('a[href]')].filter((a) => /^(\\.\\.\\/)*instruments\\/[a-z0-9-]+\\/$/.test(a.getAttribute('href') || '')).length,
+      };
+    })()`);
+    const same = r.title === raw.title && r.canonical === raw.canonical && r.h1.length === 1 && r.h1[0] === raw.h1[0];
+    out.push(same && !r.robots
+      ? ok(`seo:${name}:stable`, area, `${name}: title, canonical and <h1> are the same before and after scripts run`, { title: r.title, canonical: r.canonical })
+      : bad(`seo:${name}:stable`, area, `${name}: what the HTML declares changed after load, or the page is noindex`, { raw, rendered: { title: r.title, canonical: r.canonical, h1: r.h1, robots: r.robots } }));
+
+    const docs = r.ld;
+    const graph = docs.length === 1 && docs[0]['@graph'] ? docs[0]['@graph'] : null;
+    const pg = graph && graph.find((x) => x['@id'] && x['@id'].endsWith('#page'));
+    const bc = graph && graph.find((x) => x['@type'] === 'BreadcrumbList');
+    const bcNames = bc ? bc.itemListElement.map((x) => x.name) : [];
+    const crumbsOk = file === '' ? !bc : (bc && bcNames.join(' > ') === r.crumbs.join(' > '));
+    out.push(graph && pg && pg.url === r.canonical && pg.name === r.title && pg.description === r.description && crumbsOk
+      ? ok(`seo:${name}:structured-data`, area, `${name}: JSON-LD parses, names this URL, title and description, and its breadcrumb is the visible one`)
+      : bad(`seo:${name}:structured-data`, area, `${name}: structured data does not match the rendered page`, { ld: docs.map((d) => d.error || (d['@graph'] || []).map((x) => x['@type'])), crumbs: r.crumbs, bcNames }));
+
+    if (file.startsWith('instruments/')) {
+      /* the static page and the rendered page carry the same sections */
+      const sections = raw.h2.join(' | ') === r.h2.join(' | ');
+      out.push(sections && raw.text > 3000
+        ? ok(`seo:${name}:static`, area, `${name}: ${raw.text} characters and the same ${raw.h2.length} sections are in the HTML before any script runs`)
+        : bad(`seo:${name}:static`, area, `${name}: the HTML as served lacks the substance the rendered page has`, { rawH2: raw.h2, renderedH2: r.h2, rawText: raw.text }));
+    }
+    if (file === '') {
+      out.push(r.entityLinks >= 5
+        ? ok('seo:index:entity-links', area, `the home page links to ${r.entityLinks} instrument pages by plain <a href>`)
+        : bad('seo:index:entity-links', area, `the home page links to only ${r.entityLinks} instrument page(s)`));
+    }
+  }
+
+  /* the old addresses */
+  await page.goto(`${origin}/instrument.html?id=dsa#sec-enforcement`);
+  const fwd = await waitFor(page, `location.pathname.endsWith('/instruments/dsa/') && location.hash === '#sec-enforcement'`);
+  const landed = await page.evaluate('location.pathname + location.search + location.hash');
+  out.push(fwd
+    ? ok('seo:compat:forward', area, 'instrument.html?id=dsa#sec-enforcement forwards to instruments/dsa/ and keeps the fragment', { landed })
+    : bad('seo:compat:forward', area, 'instrument.html?id=… does not forward to the instrument\'s own page', { landed }));
+
+  await page.goto(`${origin}/instrument.html?id=eprivacy`);
+  const thinOk = await waitFor(page, `document.querySelector('meta[name="robots"]')?.content === 'noindex, follow' && !document.querySelector('link[rel="canonical"]') && document.querySelectorAll('h1').length === 1`);
+  out.push(thinOk
+    ? ok('seo:compat:thin', area, 'a record below the gate still renders at instrument.html?id=…, marked noindex with no canonical')
+    : bad('seo:compat:thin', area, 'a thin record is not rendered, or not marked noindex'));
+
+  await page.goto(`${origin}/instrument.html`);
+  const chooser = await waitFor(page, `location.pathname.endsWith('/instruments.html') && location.hash === '#instrument-records'`);
+  out.push(chooser
+    ? ok('seo:compat:chooser', area, 'instrument.html with no id forwards to the list of instrument pages')
+    : bad('seo:compat:chooser', area, 'instrument.html with no id does not reach the instrument list'));
+
+  /* one instrument page, as a reader meets it: keyboard first, both themes, a phone */
+  await page.goto(`${origin}/instruments/ai-act/`);
+  await sleep(700);
+  await page.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
+  await page.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
+  const first = await page.evaluate(`(() => { const a = document.activeElement; return { cls: a && a.className, href: a && a.getAttribute('href') }; })()`);
+  out.push(first.cls === 'skip-link' && first.href === '#instrumentPage'
+    ? ok('seo:ai-act:keyboard', area, 'on an instrument page the first Tab reaches the skip link, which targets the pre-rendered view')
+    : bad('seo:ai-act:keyboard', area, 'the first Tab on an instrument page does not reach the skip link', first));
+
+  const themes = [];
+  for (const t of ['light', 'dark']) {
+    await page.evaluate(`document.body.dataset.theme = '${t}'`);
+    await sleep(900); /* the page ground transitions between palettes */
+    themes.push(await page.evaluate(`(() => {
+      const cs = getComputedStyle(document.body); const h = getComputedStyle(document.querySelector('h1'));
+      return { t: '${t}', bg: cs.backgroundColor, ink: h.color }; })()`));
+  }
+  out.push(themes[0].bg !== themes[1].bg && themes.every((x) => x.bg !== x.ink)
+    ? ok('seo:ai-act:themes', area, 'the instrument page renders in both themes with the heading distinct from the ground', { themes })
+    : bad('seo:ai-act:themes', area, 'the instrument page does not change with the theme, or its heading matches its ground', { themes }));
+
+  await page.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 2, mobile: true });
+  try {
+    await page.goto(`${origin}/instruments/ai-act/`);
+    await sleep(700);
+    const m = await page.evaluate('({ sw: document.documentElement.scrollWidth, w: innerWidth, h1: document.querySelector("h1")?.getBoundingClientRect().width || 0 })');
+    out.push(m.sw <= m.w + 1 && m.h1 > 0
+      ? ok('seo:ai-act:phone', area, 'the instrument page fits a 390px phone without sideways scrolling', m)
+      : bad('seo:ai-act:phone', area, 'the instrument page scrolls sideways on a 390px phone', m));
+  } finally {
+    await page.send('Emulation.clearDeviceMetricsOverride');
+  }
   return out;
 }
 

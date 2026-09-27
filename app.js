@@ -1355,25 +1355,24 @@ document.addEventListener('keydown', function(e){
   }
 
   /* Each language has its own address: the brief at ?lang=xx (English has
-     none). The URL follows the language so it can be shared, and the
-     canonical and og:url follow it too, the way instrument.html rewrites
-     its canonical to ?id=. tools/_footer.mjs emits the matching hreflang
-     alternates and sitemap entries from the same register. Other query
-     parameters and the #fragment are kept. */
+     none). The URL follows the language so it can be shared and opens in
+     that language. Other query parameters and the #fragment are kept.
+
+     The canonical does NOT follow it, since 27 Sep 2026. The translation
+     is applied here, over English HTML: a crawler reading the HTML finds
+     English at every ?lang= address, and the translations have not been
+     reviewed by a native speaker (README limitation 5). Rewriting the
+     canonical after load told search engines the opposite of what the HTML
+     said (docs/SEO-AUDIT-2026-09-27.md, A5), so every ?lang= address keeps
+     the English brief as its canonical and none is advertised as an
+     alternate until a pre-rendered, reviewed page exists for it
+     (docs/SEO-OPERATIONS.md §6). og:locale still names the language the
+     reader is looking at. */
   function syncLangUrl(lang){
     try{
       var u = new URL(location.href);
       if (lang === 'en') u.searchParams.delete('lang'); else u.searchParams.set('lang', lang);
       if (u.href !== location.href) history.replaceState(history.state, '', u.href);
-      var canon = document.querySelector('link[rel="canonical"]');
-      if (canon){
-        var base = canon.getAttribute('data-base') || canon.getAttribute('href').split('?')[0];
-        canon.setAttribute('data-base', base);
-        var href = lang === 'en' ? base : base + '?lang=' + lang;
-        canon.setAttribute('href', href);
-        var og = document.querySelector('meta[property="og:url"]');
-        if (og) og.setAttribute('content', href);
-      }
       var loc = document.querySelector('meta[property="og:locale"]');
       if (loc) loc.setAttribute('content', lang);
     }catch(e){ /* a URL the browser will not parse is left as it was */ }

@@ -37,7 +37,8 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { cspProblems } from './csp.mjs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { scanRuntimeSurface } from './thirdparty.mjs';
+import { scanRuntimeSurface, sitePages } from './thirdparty.mjs';
+import { TOP_PAGES, BASE } from './seo.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const errors = [];
@@ -45,7 +46,15 @@ const warnings = [];
 const err = (where, msg) => errors.push(`${where}: ${msg}`);
 const warn = (where, msg) => warnings.push(`${where}: ${msg}`);
 
-const PAGES = readdirSync(ROOT).filter((f) => f.endsWith('.html'));
+/* The hand-written pages at the root and the instrument pages
+   tools/_footer.mjs generates under instruments/<id>/ — the same list the
+   runtime-surface scan reads. */
+const PAGES = sitePages(ROOT);
+
+/* A page below the root reaches everything through "../". Links and
+   stylesheet paths are compared as site paths, so a page two levels down
+   is held to exactly the rules the root pages are. */
+const sitePath = (page, href) => join(dirname(page), href).split('\\').join('/');
 
 /* Files allowed to declare raw colour. Everything else must go through a
    custom property, or a component will look right in one theme only — the
@@ -99,7 +108,9 @@ for (const page of PAGES) {
     if (/^(https?:|mailto:|data:|\/\/)/.test(href)) continue;
     const file = href.split(/[?#]/)[0];
     if (!file) continue;
-    if (!existsSync(join(ROOT, file))) err(at, `link to a file that does not exist: ${file}`);
+    const target = sitePath(page, file);
+    const isDir = file.endsWith('/');
+    if (!existsSync(join(ROOT, target, isDir ? 'index.html' : ''))) err(at, `link to a file that does not exist: ${file}`);
   }
 
   /* images */
@@ -108,7 +119,7 @@ for (const page of PAGES) {
   }
 
   /* the token layer loads before the sheets that consume it */
-  const sheets = [...html.matchAll(/<link[^>]+href="([^"]+\.css)"/g)].map((m) => m[1]);
+  const sheets = [...html.matchAll(/<link[^>]+href="([^"]+\.css)"/g)].map((m) => sitePath(page, m[1]));
   if (sheets.length) {
     const t = sheets.indexOf('css/tokens.css');
     if (t === -1) err(at, 'does not load css/tokens.css');
@@ -127,11 +138,13 @@ for (const page of PAGES) {
      needs first. A canonical URL and the og:/twitter: tags name the
      page's own address; nothing is fetched from them, so they are not
      third-party requests and are exempt. Everything else still is. */
-  const declaredSelf = html.match(/<link href="(https?:\/\/[^"]+)" rel="canonical"\/>/);
-  const selfOrigin = declaredSelf ? new URL(declaredSelf[1]).origin : null;
-  for (const m of html.matchAll(/(?:href|src)="(https?:\/\/[^"]+)"/g)) {
-    if (selfOrigin && m[1].startsWith(selfOrigin)) continue;
-    err(at, `third-party resource: ${m[1]}`);
+  const selfOrigin = new URL(BASE).origin;
+  for (const m of html.matchAll(/<(\w+)\b[^>]*?\b(?:href|src)="(https?:\/\/[^"]+)"/g)) {
+    if (m[2].startsWith(selfOrigin)) continue;
+    /* an <a href> is a link the reader may follow, not a resource the page
+       loads: an instrument page links to its Official Journal text */
+    if (/^(a|area)$/i.test(m[1])) continue;
+    err(at, `third-party resource: ${m[2]}`);
   }
 
   /* the Content-Security-Policy (tools/csp.mjs): present, placed where it
@@ -245,20 +258,27 @@ for (const f of PAGES) {
   const html = readFileSync(join(ROOT, f), 'utf8');
   const foot = between(html, FOOT_A, FOOT_B);
   const nos = between(html, NOS_A, NOS_B);
+  /* a page below the root prefixes its links with "../"; compared without
+     it, every notice must still be one text */
+  const unroot = (x) => x.replace(/(href=")(?:\.\.\/)+/g, '$1');
   if (!foot) err(f, 'no site footer — the independence disclaimer must be on every page');
   else footers.set(f, foot.replace(/^[^>]*-->/, '').trim());
   if (!nos) err(f, 'no <noscript> notice — a JS-rendered page must say so when JS is off');
-  else notices.set(f, nos.replace(/^[^>]*-->/, '').trim());
+  else notices.set(f, unroot(nos.replace(/^[^>]*-->/, '').trim()));
 
   if (foot && !/not affiliated with/i.test(foot)) {
     err(f, 'the footer does not carry the non-affiliation statement');
   }
   if (!/property="og:title"/.test(html)) warn(f, 'no Open Graph title');
+  /* every page names itself as canonical — the address it is served at,
+     with index.html as its directory — except a compatibility route the
+     route model (tools/seo.mjs) declares, which must name none */
   const canon = (html.match(/<link href="([^"]+)" rel="canonical"\/>/) || [])[1];
-  if (!canon) warn(f, 'no canonical URL');
-  else if (!canon.endsWith(f === 'index.html' ? '/' : f)) {
-    err(f, `canonical URL points at ${canon}`);
-  }
+  const compat = TOP_PAGES.some((p) => p.file === f && p.compat);
+  const expected = BASE + f.replace(/(^|\/)index\.html$/, '$1');
+  if (compat) { if (canon) err(f, `a compatibility route declares a canonical (${canon}); it should name none`); }
+  else if (!canon) warn(f, 'no canonical URL');
+  else if (canon !== expected) err(f, `canonical URL points at ${canon}, not ${expected}`);
 }
 const distinct = (m) => new Set([...m.values()]).size;
 if (distinct(footers) > 1) {

@@ -1221,6 +1221,51 @@ body[data-theme="light"]{
 
 @media print{ .noscript-note{display:none} }
 
+/* The site index before the footer (tools/_footer.mjs, from tools/seo.mjs).
+   Plain links to the six destinations and to every instrument page, in the
+   markup of every page, so the site's structure is followable without the
+   header js/shell.js draws — by a reader without scripting and by a crawler.
+   It is quiet on purpose: an index, not a second navigation bar. */
+.site-index{
+  border-top:var(--border-std);
+  margin-top:var(--s-9);
+  padding:var(--s-6) var(--gutter) 0;
+  background:var(--surface-page);
+}
+.site-index + .site-foot{border-top:0;margin-top:0}
+.si-inner{max-width:var(--w-reading);margin:0 auto;display:grid;gap:var(--s-5);grid-template-columns:1fr 2fr}
+.si-label{
+  margin:0 0 var(--s-2);
+  font-family:var(--mono);font-size:var(--t-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);
+}
+.si-col ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:0 var(--s-4)}
+.si-col a{
+  display:inline-block;min-height:24px;padding:var(--s-1) 0;
+  font-size:var(--t-meta);line-height:1.6;color:var(--text-2);text-decoration:none;
+  border-bottom:1px solid transparent;
+}
+.si-col a:hover,.si-col a:focus-visible{color:var(--text-1);border-bottom-color:var(--text-1)}
+@media (max-width:720px){ .si-inner{grid-template-columns:1fr} }
+@media print{ .site-index{display:none} }
+
+/* The instrument page's identification line: the name the act is known by,
+   and a link to its official text, where the records hold one. */
+.inst-ident{
+  font-size:var(--t-body-sm);line-height:1.6;color:var(--text-2);
+  max-width:var(--w-text);margin:calc(-1 * var(--s-2)) 0 var(--s-4);
+}
+.inst-ident .evi-tier{margin-left:var(--s-2)}
+.inst-ident a,.inst-thin a{
+  color:var(--text-1);text-decoration:underline;text-decoration-color:var(--line);
+  text-underline-offset:3px;text-decoration-thickness:1px;
+}
+.inst-ident a:hover,.inst-thin a:hover,.inst-ident a:focus-visible,.inst-thin a:focus-visible{text-decoration-color:var(--text-1)}
+
+/* The list of instrument pages on instruments.html, and the sentence that
+   names the records too thin for a page of their own. */
+.inst-index{margin-top:var(--s-7)}
+.inst-thin{font-size:var(--t-body-sm);line-height:1.6;color:var(--text-2);max-width:var(--w-text);margin-top:var(--s-5)}
+
 /* ============================================================
    Phone pass.
 

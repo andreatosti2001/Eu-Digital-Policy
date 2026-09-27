@@ -34,7 +34,7 @@ import { serveSite, REPO_ROOT } from './serve.mjs';
 import { launch } from './cdp.mjs';
 import {
   PAGES, checkPageLoads, checkNavigation, checkInternalLinks, checkSearch, checkGlossary,
-  checkComparison, checkEvidence, checkApplicability, checkInstrumentView,
+  checkComparison, checkEvidence, checkApplicability, checkInstrumentView, checkSeo, SEO_PAGES,
   checkLanguageSwitching, checkViewports, checkKeyboard, checkDialogs,
   checkNoThirdParty, checkAccessibility, checkContrast, checkReducedMotion, checkThreshold, checkDeployedSubpath,
 } from './checks.mjs';
@@ -121,6 +121,7 @@ export async function runBrowserQA({ only = null, pages = PAGES, quick = false, 
     if (wants('evidence')) results.push(...await checkEvidence(page, site.origin));
     if (wants('applicability')) results.push(...await checkApplicability(page, site.origin));
     if (wants('instrument')) results.push(...await checkInstrumentView(page, site.origin));
+    if (wants('seo')) results.push(...await checkSeo(page, site.origin, { pages: quick ? SEO_PAGES.slice(0, 3) : SEO_PAGES }));
     /* In its own browser context, and this is not tidiness. The
        language choice is written to localStorage under
        `eupolicy:lang` and survives a reload, so running it on the

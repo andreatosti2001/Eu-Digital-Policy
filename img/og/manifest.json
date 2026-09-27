@@ -1,0 +1,46 @@
+{
+  "$description": "The input each social preview card was drawn from, by SHA-256. tools/seo-audit.mjs recomputes it from the data; a mismatch means the card no longer says what the record says. Written by tools/og-image.mjs.",
+  "width": 1200,
+  "height": 630,
+  "cards": {
+    "img/og/site.png": {
+      "input_sha256": "aa1502c891863e7e6d291562874639043a630e1297b1183f141dd83654a80524"
+    },
+    "img/og/gdpr.png": {
+      "input_sha256": "250ef66849d1581dc5004403a34f37749c51f4aa31afe97c9fc999b63c8a8777"
+    },
+    "img/og/dsa.png": {
+      "input_sha256": "7398c66ad5b49fb1dac1ade446a8fc1680f8d3e3e138e325a08ea3efe2bce93d"
+    },
+    "img/og/dma.png": {
+      "input_sha256": "655d3d207205a996f6f7f5ed4b0af5f02b5b83487878e0436ccb5a6e9265fe70"
+    },
+    "img/og/ai-act.png": {
+      "input_sha256": "cafc26cc8b595b8b3c95ce8687694026938471ae1917536f23de065a558f1ee0"
+    },
+    "img/og/data-act.png": {
+      "input_sha256": "72c668fde3f19b2561546134df6e0837723168331186fe3b129c82d302ef7331"
+    },
+    "img/og/nis2.png": {
+      "input_sha256": "f262aaa7bf0d3fd38951767a8f3d43e7dbba1a6449b2c9c150f86361ddc06ccc"
+    },
+    "img/og/cer.png": {
+      "input_sha256": "f153855b3f1eb598a6ad80bc1b779ae556d29d6b184ea85a3ff6ab3143ff686c"
+    },
+    "img/og/dora.png": {
+      "input_sha256": "ab8c5b1421feb462cd9535928094ff92cb6e559fe03a8fbd179fc8fdf3e840a0"
+    },
+    "img/og/cra.png": {
+      "input_sha256": "48411e8ebc6e6901283ae730a4a9a9341fa98e86b85f30f216df2fd5792ab4fe"
+    },
+    "img/og/ai-omnibus.png": {
+      "input_sha256": "f00ed4ab7d9f8c97ec5cf6d5bbb1c384fe4d51656223734da9a4412e830ff1e8"
+    },
+    "img/og/data-omnibus.png": {
+      "input_sha256": "1646ec1ce0fd3e0042cbf5f99cae783526d01ecb2d3c3e9310e9ec1fad244b29"
+    },
+    "img/og/pld.png": {
+      "input_sha256": "2dd9c86b47431e648d3fe88ab95a29f48bf319810fa935e4dcf06b50b0991170"
+    }
+  }
+}

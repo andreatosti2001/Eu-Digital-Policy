@@ -30,6 +30,7 @@
 
 import { loadAll, index, label as taxLabel, loadOverlay } from './data.js';
 import * as F from './format.js';
+import { href as siteHref, instrumentHref } from './routes.js';
 
 /* ---------------------------------------------------------- helpers */
 
@@ -116,7 +117,7 @@ export function buildIndex() {
       body: [inst.celex, inst.dna && inst.dna.objective, (inst.aliases || []).join(' ')].join(' '),
       alias: [inst.short_name, inst.full_name, inst.celex, ...(inst.aliases || [])].filter(Boolean),
       badge: st ? taxLabel(IX, st) : '',
-      href: 'instrument.html?id=' + inst.id,
+      href: instrumentHref(inst, IX),
       note: unverifiedNote(inst),
     });
   }
@@ -131,7 +132,7 @@ export function buildIndex() {
       body: [pr.heading, pr.summary, 'article ' + pr.number, 'art ' + pr.number].join(' '),
       alias: ['Article ' + pr.number, 'Art. ' + pr.number, 'Art ' + pr.number],
       badge: owner ? instName(owner) : '',
-      href: 'instruments.html#' + (owner || ''),
+      href: siteHref('instruments.html#' + (owner || '')),
       note: unverifiedNote(pr),
       artNum: String(pr.number),
     });
@@ -144,7 +145,7 @@ export function buildIndex() {
         sub: pr.summary || pr.heading || '',
         body: [taxLabel(IX, who), pr.heading, pr.summary].join(' '),
         badge: owner ? instName(owner) : '',
-        href: 'instruments.html#' + (owner || ''),
+        href: siteHref('instruments.html#' + (owner || '')),
         note: unverifiedNote(pr),
       });
     }
@@ -160,7 +161,7 @@ export function buildIndex() {
       body: [inst.full_name, inst.member_state, taxLabel(IX, inst.type)].join(' '),
       alias: [inst.short_name, inst.full_name].filter(Boolean),
       badge: taxLabel(IX, inst.type) + (isClass ? ' · class' : ''),
-      href: 'institutions.html#' + inst.id,
+      href: siteHref('institutions.html#' + inst.id),
       note: unverifiedNote(inst),
     });
 
@@ -175,7 +176,7 @@ export function buildIndex() {
         body: [role, c.role.split(':').pop(), what, c.scope, inst.full_name,
           (c.basis || []).map(provRef).join(' ')].join(' '),
         badge: c.exclusive ? 'exclusive' : '',
-        href: 'institutions.html#' + inst.id,
+        href: siteHref('institutions.html#' + inst.id),
         note: String(c.note || '').startsWith('requires verification') ? 'requires verification' : '',
       });
     }
@@ -197,7 +198,7 @@ export function buildIndex() {
         rec.decision_date, rec.behavioural_outcome].join(' '),
       alias: [rec.entity],
       badge: rec.decision_date ? F.humanDate(rec.decision_date, 'precision:day') : '',
-      href: 'enforcement.html#' + rec.id,
+      href: siteHref('enforcement.html#' + rec.id),
       note: unverifiedNote(rec),
     });
   }
@@ -211,7 +212,7 @@ export function buildIndex() {
       body: [ev.date, ev.obligation, ev.required_action, taxLabel(IX, ev.event_type),
         instName(ev.instrument), (ev.provisions || []).map(provRef).join(' ')].join(' '),
       badge: taxLabel(IX, ev.event_type),
-      href: 'index.html#annex-a',
+      href: siteHref('index.html#annex-a'),
       note: unverifiedNote(ev),
       year: String(ev.date || '').slice(0, 4),
     });
@@ -228,7 +229,7 @@ export function buildIndex() {
       body: [c.statement, (c.instruments || []).map(instName).join(' '),
         (c.provisions || []).map(provRef).join(' ')].join(' '),
       badge: fam || taxLabel(IX, c.type),
-      href: 'index.html#' + (c.brief_part || ''),
+      href: siteHref('index.html#' + (c.brief_part || '')),
       claim: c.id,
       note: unverifiedNote(c),
     });
@@ -259,7 +260,7 @@ export function buildIndex() {
         sub: term.note || '',
         body: [term.label, term.note, dim].join(' '),
         badge: dim,
-        href: 'applies.html',
+        href: siteHref('applies.html'),
         note: '',
       });
     }
