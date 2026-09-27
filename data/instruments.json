@@ -1172,13 +1172,14 @@
           "fr": "transposition:referred",
           "nl": "transposition:referred"
         },
-        "state_note": "Only the four Member States referred to the Court of Justice on 8 July 2026 are recorded, because those are the only per-state positions established from a primary source in this build. The remaining 23 Member States are NOT recorded as complete — their status is simply unknown here. A full per-state tracker is required before this field can be presented to users.",
+        "state_note": "Only the four Member States referred to the Court of Justice on 8 July 2026 are recorded, because those are the only per-state positions established from a primary source in this build. The remaining 23 Member States are NOT recorded as complete — their status is simply unknown here. A full per-state tracker is required before this field can be presented to users. 27 Sep 2026: the national measures notified to the Commission (Cellar, CELEX 72022L2555*) come from 25 Member States; none from Ireland or Spain, both among those referred. France and the Netherlands, also referred, have notified measures, which shows a notified measure is not complete transposition. The other 23 therefore stay unknown rather than being recorded as complete.",
         "requires_verification": true,
         "sources": [
           "src-ec-nis2-referral-2026",
-          "src-ec-nis2-lfn-2024"
+          "src-ec-nis2-lfn-2024",
+          "src-cellar-nim-nis2-cer-2026-09-27"
         ],
-        "last_verified": "2026-08-27"
+        "last_verified": "2026-09-27"
       },
       "dna": {
         "regulated_actor": [
@@ -1327,11 +1328,12 @@
           "es": "transposition:referred",
           "se": "transposition:referred"
         },
-        "state_note": "The seven Member States the Commission referred to the Court of Justice on 29 April 2026 for failing to transpose (IP/26/910) are recorded. The Commission states that most others have notified complete transposition, but it does not name them, so the remaining twenty are not recorded as complete here: their individual status is unknown.",
+        "state_note": "The seven Member States the Commission referred to the Court of Justice on 29 April 2026 for failing to transpose (IP/26/910) are recorded. The Commission states that most others have notified complete transposition, but it does not name them, so the remaining twenty are not recorded as complete here: their individual status is unknown. 27 Sep 2026: the national measures notified (Cellar, CELEX 72022L2557*) come from 24 Member States; none from Bulgaria, Spain or Sweden, three of the seven referred. France, Luxembourg, the Netherlands and Poland, also referred, have notified some measures. Who has notified something is established; who has transposed completely is not, so the twenty stay unknown.",
         "requires_verification": true,
         "sources": [
           "src-ec-cer-referral-2026",
-          "src-eurlex-cer"
+          "src-eurlex-cer",
+          "src-cellar-nim-nis2-cer-2026-09-27"
         ],
         "last_verified": "2026-09-27"
       },

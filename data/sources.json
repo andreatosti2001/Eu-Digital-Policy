@@ -207,6 +207,20 @@
       "note": "Law-firm analysis. States that the Data Act grants any in-scope customer a right to terminate regardless of the contract's terms, and that 'this also applies for contracts concluded before September 12, 2025, regardless of any previously agreed minimum contract period'. A practitioner reading, not guidance."
     },
     {
+      "id": "src-oireachtas-bills-2025-2026",
+      "tier": "tier:2",
+      "type": "source-type:report",
+      "publisher": null,
+      "publisher_name": "Houses of the Oireachtas",
+      "title": "Oireachtas legislation register — bills of 2025 and 2026 (open data API)",
+      "url": "https://api.oireachtas.ie/v1/legislation?bill_year=2026&limit=500",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "The Oireachtas's own register of bills, read through its open data API on 27 Sep 2026: 85 bills for 2025 and 92 for 2026 (the latter updated to 25 Sep 2026). Neither year contains a Data Bill, so the Data Bill whose General Scheme was published on 4 February 2026 had not been introduced in either House by that date. The 2026 list does contain the Regulation of Artificial Intelligence Bill 2026, recorded as enacted."
+    },
+    {
       "id": "src-matheson-ie-data-bill-2026",
       "tier": "tier:4",
       "type": "source-type:commentary",
@@ -248,6 +262,20 @@
       "language": "en",
       "note": "Privately published reproduction of Directive (EU) 2022/2555, not an official text; Arts. 20 and 32 (same URL pattern) read on 2026-09-26. Art. 20(1): management bodies of essential and important entities approve the Art. 21 risk-management measures, oversee their implementation and can be held liable for infringements by the entities of that Article. Art. 32(6): Member States ensure that natural persons responsible for or representing an essential entity can be held liable for breach of their duties to ensure compliance. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
       "reproduces": "src-eurlex-nis2"
+    },
+    {
+      "id": "src-cellar-nim-nis2-cer-2026-09-27",
+      "tier": "tier:2",
+      "type": "source-type:report",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union",
+      "title": "National implementing measures notified for Directive (EU) 2022/2555 (NIS2) and Directive (EU) 2022/2557 (CER) — Cellar, 27 September 2026",
+      "url": "https://publications.europa.eu/webapi/rdf/sparql",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read 27 Sep 2026 through the Publications Office's SPARQL endpoint: every work whose CELEX begins 72022L2555 (NIS2) or 72022L2557 (CER), i.e. the national measures Member States have notified as transposing each directive (the list EUR-Lex shows under 'National transposition'). NIS2: 304 measures from 25 Member States; none from Ireland or Spain. CER: 219 measures from 24 Member States; none from Bulgaria, Spain or Sweden. A notified measure is not a finding of complete transposition — France and the Netherlands notified NIS2 measures and were still referred on 8 July 2026 — so these lists establish who has notified something, not who has finished. Query: SELECT ?celex WHERE { ?w cdm:resource_legal_id_celex ?celex . FILTER(STRSTARTS(STR(?celex), \"72022L2555\")) }."
     },
     {
       "id": "src-eurlex-cer",
@@ -1310,9 +1338,9 @@
       "url": "https://digital-strategy.ec.europa.eu/en/faqs/cybersecurity-package-questions-answers",
       "url_status": "url:live",
       "published": "2026-01-20",
-      "accessed": "2026-09-26",
+      "accessed": "2026-09-27",
       "language": "en",
-      "note": "Commission Q&A, read 2026-09-26: 'On 20 January 2026, the Commission has proposed a new cybersecurity package', including amendments to the NIS2 Directive and a revised Cybersecurity Act. The COM document numbers are not given on the page and were not recorded."
+      "note": "Commission Q&A, read 2026-09-26 and again 2026-09-27: 'On 20 January 2026, the Commission has proposed a new cybersecurity package', including amendments to the NIS2 Directive and a revised Cybersecurity Act. The COM document numbers are not given on the page and were not recorded."
     },
     {
       "id": "src-dma-text-unofficial-art2",
@@ -2306,6 +2334,20 @@
       "accessed": "2026-09-27",
       "language": "en",
       "note": "Located and read on 27 Sep 2026 on the EDPB's own site. The title recorded here is the official one. Version 1 was put to public consultation from 12 September to 31 October 2025 (its page is now marked 'Obsolete version'); the final version, Guidelines 3/2025 v2, is dated 17 September 2026 and published with a report on the consultation. The URL now points to the final version; the consultation page was the one recorded before."
+    },
+    {
+      "id": "src-ec-google-dma-opening-2024",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission opens non-compliance investigations against Alphabet, Apple and Meta under the Digital Markets Act (IP/24/1689)",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_24_1689",
+      "url_status": "url:live",
+      "published": "2024-03-25",
+      "accessed": "2026-09-27",
+      "language": "en",
+      "note": "Read in full 27 Sep 2026 through the Commission's press corner. Names the article for each proceeding: Art. 5(4) (steering) for Alphabet's Google Play and Apple's App Store; Art. 6(5) for self-preferencing on Google Search; Art. 6(3) for Apple's user-choice obligations; Art. 5(2) for Meta's 'pay or consent'."
     },
     {
       "id": "src-ec-google-dma-fine-2026",

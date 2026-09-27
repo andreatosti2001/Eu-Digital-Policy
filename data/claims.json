@@ -128,7 +128,7 @@
     {
       "id": "clm-also-in-the-rulebook",
       "type": "claim-type:fact",
-      "statement": "Beyond the six regimes the brief covers, the rulebook includes the European Media Freedom Act (Regulation (EU) 2024/1083, mostly applicable from 8 August 2025), the political advertising regulation (Regulation (EU) 2024/900, fully applicable from 10 October 2025), the Platform Work Directive (Directive (EU) 2024/2831, to be transposed by December 2026), the European Health Data Space (Regulation (EU) 2025/327, in force since 25 March 2025), eIDAS2 (Regulation (EU) 2024/1183, wallets by the end of 2026), and the Commission's 20 January 2026 proposals for a revised Cybersecurity Act and targeted NIS2 amendments.",
+      "statement": "On 20 January 2026 the Commission proposed a cybersecurity package comprising a revised Cybersecurity Act and amendments to the NIS2 Directive; these are proposals, not law.",
       "instruments": [
         "eidas2",
         "nis2"
@@ -140,41 +140,16 @@
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-ec-emfa-page",
-          "supports": "supports:partial",
-          "locator": null
-        },
-        {
-          "source_id": "src-ec-political-ads-page",
-          "supports": "supports:partial",
-          "locator": null
-        },
-        {
-          "source_id": "src-ec-platform-work-page",
-          "supports": "supports:partial",
-          "locator": null
-        },
-        {
-          "source_id": "src-ec-ehds-page",
-          "supports": "supports:partial",
-          "locator": null
-        },
-        {
-          "source_id": "src-ec-eudi-page",
-          "supports": "supports:partial",
-          "locator": null
-        },
-        {
           "source_id": "src-ec-cyber-package-qa-2026",
-          "supports": "supports:partial",
-          "locator": null
+          "supports": "supports:direct",
+          "locator": "opening line: \"On 20 January 2026, the Commission has proposed a new cybersecurity package ... including amendments to the NIS2 Directive\"; Q1: \"the Commission has proposed to revise the Cybersecurity Act\""
         }
       ],
       "legal_basis": [],
       "brief_part": "part-1",
       "published": null,
       "last_verified": "2026-09-27",
-      "verification_note": "Each row is now also its own claim of law read in the Official Journal on 27 Sep 2026 (clm-emfa-dates, clm-political-ads-dates, clm-platform-work-transposition, clm-ehds-dates, clm-eidas2-wallets); the cybersecurity proposals of 20 January 2026 rest on the Commission's Q&A. Corrected that day: the EHDS entered into force on 25 March 2025, not 26 March as the Commission's page says (OJ L 2025/327 of 5.3.2025; the Publications Office's metadata records 25 March). Added on 2026-09-26 (audit T-34), so that 'the six regimes' does not read as the whole rulebook. Every act number and date was read on an official Commission page (the numbers from the EUR-Lex or OJ links those pages carry, because EUR-Lex itself returns HTTP 202 here). Each source supports one row, hence partial. The EHDS's staged application dates are deliberately not stated: they were not read from an official text."
+      "verification_note": "Atomization completed 27 Sep 2026. This record used to carry the whole 'Also in the rulebook' box as one conjunction of six propositions, each partly supported by a Commission page. Five of them now have their own claims on the same passage, each read in the Official Journal: clm-emfa-dates, clm-political-ads-dates, clm-platform-work-transposition, clm-ehds-dates, clm-eidas2-wallets. The one left is the cyber package, which this record now carries alone, re-read that day on the Commission's Q&A. 'Targeted' in the prose is the brief's characterisation of the NIS2 amendments; the Commission's text says 'amendments'. The COM numbers are not on the Q&A page and are not recorded. Earlier statement: Beyond the six regimes the brief covers, the rulebook includes the European Media Freedom Act (Regulation (EU) 2024/1083, mostly applicable from 8 August 2025), the political advertising regulation (Regulation (EU) 2024/900, fully applicable from 10 October 2025), the Platform Work Directive (Directive (EU) 2024/2831, to be transposed by December 2026), the European Health Data Space (Regulation (EU) 2025/327, in force since 25 March 2025), eIDAS2 (Regulation (EU) 2024/1183, wallets by the end of 2026), and the Commission's 20 January 2026 proposals for a revised Cybersecurity Act and targeted NIS2 amendments."
     },
     {
       "id": "clm-emfa-dates",
@@ -2172,7 +2147,7 @@
     {
       "id": "clm-temu-fine",
       "type": "claim-type:fact",
-      "statement": "On 28 May 2026 the Commission fined Temu EUR 200 million under the DSA for failure to adequately assess and mitigate systemic risks from the sale of illegal products.",
+      "statement": "On 28 May 2026 the Commission fined Temu EUR 200 million under the DSA for failing to diligently identify, analyse and assess the systemic risks from the sale of illegal products on its platform.",
       "instruments": [
         "dsa"
       ],
@@ -2190,7 +2165,7 @@
         {
           "source_id": "src-ec-temu-fine-2026",
           "supports": "supports:direct",
-          "locator": "\"Temu's risk assessment of 2024 falls short of the standards laid out in the DSA\""
+          "locator": "IP/26/1178: \"The company failed to diligently identify, analyse, and assess the systemic risks of illegal products being offered on its platform\"; Next steps: the action plan must \"remedy the breach of its risk-assessment obligations\""
         },
         {
           "source_id": "src-techpolicypress-temu",
@@ -2204,7 +2179,7 @@
       "brief_part": "part-3",
       "published": "2026-05-28",
       "last_verified": "2026-09-27",
-      "verification_note": "The amount and ground are directly sourced. The characterisation as the LARGEST DSA fine to date is not in the Commission text, rests on commentary, and is in any case superseded: AliExpress was fined EUR 550 million on 20 July 2026 (clm-aliexpress-fine). Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
+      "verification_note": "CORRECTED 27 Sep 2026 against the Commission's press release IP/26/1178, read in full: the breach found is of the risk-ASSESSMENT obligation only; the release says nothing of mitigation, and the action plan it requires is to 'remedy the breach of its risk-assessment obligations'. The earlier 'assess and mitigate' was carried over from AliExpress's decision, which found both. Prose corrected in all four languages. The amount and ground are directly sourced. The characterisation as the LARGEST DSA fine to date is not in the Commission text, rests on commentary, and is in any case superseded: AliExpress was fined EUR 550 million on 20 July 2026 (clm-aliexpress-fine). Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-commission-prefers-compliance",
@@ -3874,6 +3849,11 @@
           "locator": "Section on the General Scheme: published 4 February 2026; pre-legislative scrutiny continuing after written submissions to the Joint Committee on Enterprise, Tourism and Employment"
         },
         {
+          "source_id": "src-oireachtas-bills-2025-2026",
+          "supports": "supports:partial",
+          "locator": "no Data Bill among the 85 bills of 2025 or the 92 of 2026 (register updated to 25 Sep 2026)"
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part VI"
@@ -3883,7 +3863,7 @@
       "brief_part": "part-6",
       "published": "2026-08-19",
       "last_verified": "2026-09-27",
-      "verification_note": "27 Sep 2026: the publication date and the designations are now read on the Irish government's own page (Department of Enterprise, Tourism and Employment: 'General Scheme of the Data Bill 2025', published 4 February 2026, last updated 10 July 2026). Its official title is the Data Bill 2025. Whether the Bill had left pre-legislative scrutiny by mid-2026 is not stated there, so that part still rests on Matheson (May 2026). The Irish facts are now sourced to Matheson (18 May 2026): General Scheme published 4 February 2026, ComReg and the CCPC appointed, pre-legislative scrutiny continuing. Law-firm commentary, hence partial; the General Scheme itself was not opened, and 'mid-2026' rests on an article dated May. 'Host to a large share of Europe's cloud infrastructure' is still unsourced, so the reference gap is left set.",
+      "verification_note": "27 Sep 2026: the Oireachtas's own bills register shows no Data Bill introduced in 2025 or 2026 (to 25 Sep 2026), which confirms from the parliament itself that the Bill had not left the pre-legislative stage by mid-2026. Still unsourced: 'host to a large share of Europe's cloud infrastructure', so the claim stays without a single source stating it whole. 27 Sep 2026: the publication date and the designations are now read on the Irish government's own page (Department of Enterprise, Tourism and Employment: 'General Scheme of the Data Bill 2025', published 4 February 2026, last updated 10 July 2026). Its official title is the Data Bill 2025. Whether the Bill had left pre-legislative scrutiny by mid-2026 is not stated there, so that part still rests on Matheson (May 2026). The Irish facts are now sourced to Matheson (18 May 2026): General Scheme published 4 February 2026, ComReg and the CCPC appointed, pre-legislative scrutiny continuing. Law-firm commentary, hence partial; the General Scheme itself was not opened, and 'mid-2026' rests on an article dated May. 'Host to a large share of Europe's cloud infrastructure' is still unsourced, so the reference gap is left set.",
       "reference_gap": true,
       "gap_note": "No source located for the position of the Irish Data Bill in February 2026."
     },

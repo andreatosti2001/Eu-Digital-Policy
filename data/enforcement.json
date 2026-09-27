@@ -310,13 +310,12 @@
    "instrument": "dsa",
    "legal_basis": [
     "dsa:art-34",
-    "dsa:art-35",
     "dsa:art-74"
    ],
    "authority": "ec",
-   "opened": null,
+   "opened": "2024-10-31",
    "decision_date": "2026-05-28",
-   "action": "Non-compliance decision and fine",
+   "action": "Non-compliance decision and fine (risk assessment, Art. 34); action plan due by 28 August 2026 under Art. 75",
    "fine_eur": 200000000,
    "action_status": "action:imposed",
    "payment_status": "payment:unknown",
@@ -332,9 +331,9 @@
     "src-techpolicypress-temu",
     "src-curia-register-2026-09-27"
    ],
-   "requires_verification": true,
-   "verification_note": "'Largest DSA fine to date' is not supported by the Commission text, which contains no ranking language; it rests on commentary, and is superseded in any case: the Commission fined AliExpress EUR 550 million on 20 July 2026, which is now the largest DSA fine. Appeal status not established.",
-   "last_verified": "2026-09-26",
+   "requires_verification": false,
+   "verification_note": "Verified 2026-09-27 against IP/26/1178, read in full: EUR 200 million on 28 May 2026; formal proceedings opened 31 October 2024; preliminary findings July 2025; the breach found is of the risk-assessment obligation (Art. 34) only, so Art. 35 is removed from the legal basis it was wrongly listed under; action plan due by 28 August 2026 (Art. 75). 'Largest DSA fine to date' was commentary and is in any case superseded by AliExpress (EUR 550 million, 20 July 2026). The appeal state is left unknown: the register holds T-536/26 Whaleco Technology v Commission (12 Aug 2026), whose subject is not yet published.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:unknown",
     "lodged_by": null,
@@ -355,9 +354,9 @@
     "dsa:art-74"
    ],
    "authority": "ec",
-   "opened": null,
+   "opened": "2024-03-14",
    "decision_date": "2026-07-20",
-   "action": "Non-compliance decision and fine",
+   "action": "Non-compliance decision and fine (risk assessment and mitigation, Arts 34 and 35); action plan due by 20 October 2026",
    "fine_eur": 550000000,
    "action_status": "action:imposed",
    "payment_status": "payment:unknown",
@@ -372,9 +371,9 @@
     "src-ec-aliexpress-fine-2026",
     "src-curia-register-2026-09-27"
    ],
-   "requires_verification": true,
-   "verification_note": "Fine amount, date and ground confirmed by the Commission's own press release. The 20 October 2026 action-plan deadline and the appeal are reported by secondary legal commentary (Lewis Silkin), not by the Commission text itself; no Tribunal case number located.",
-   "last_verified": "2026-09-26",
+   "requires_verification": false,
+   "verification_note": "Verified 2026-09-27 against IP/26/1654, read in full: EUR 550 million on 20 July 2026 for failing to diligently assess AND mitigate systemic risks from illegal, unsafe and counterfeit products; formal proceedings opened 14 March 2024; commitments on other grievances made binding and preliminary findings adopted on 18 June 2025; action plan due by 20 October 2026, now from the Commission's own text rather than commentary. The appeal state is left unknown: AliExpress said it would challenge the decision (Lewis Silkin, 24 July 2026), and no action appeared in the Court's register by 27 Sep 2026.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:unknown",
     "lodged_by": null,
@@ -783,11 +782,15 @@
    "entity": "Google",
    "entity_type": "actor:gatekeeper",
    "instrument": "dma",
-   "legal_basis": [],
+   "legal_basis": [
+    "dma:art-5",
+    "dma:art-6",
+    "dma:art-30"
+   ],
    "authority": "ec",
-   "opened": null,
+   "opened": "2024-03-25",
    "decision_date": "2026-07-23",
-   "action": "Non-compliance decision and fine under the Digital Markets Act, for self-preferencing in Google Search and anti-steering in Google Play. Reported as EUR 460 million for the Search infringement and EUR 430 million for the Play infringement; the Commission ordered compliance within 60 days.",
+   "action": "Two non-compliance decisions and fines: EUR 460 million for self-preferencing in Google Search (Art. 6(5)) and EUR 430 million for anti-steering in Google Play (Art. 5(4)); compliance ordered within 60 days.",
    "fine_eur": 890000000,
    "action_status": "action:imposed",
    "payment_status": "payment:unknown",
@@ -803,11 +806,12 @@
    "sources": [
     "src-ec-google-dma-fine-2026",
     "src-ec-google-dma-fine-2026-ip",
-    "src-curia-register-2026-09-27"
+    "src-curia-register-2026-09-27",
+    "src-ec-google-dma-opening-2024"
    ],
-   "requires_verification": true,
-   "verification_note": "requires verification: the EUR 890 million total and the 23 July 2026 date are confirmed against the Commission's DMA portal and press release IP/26/1670. Three things are NOT established in this build: the reported EUR 460m / EUR 430m component split against the decision text; the specific DMA articles found to be breached; and whether an appeal has been lodged. Reporting at the time recorded that Google was weighing an appeal, which is not the same as one having been filed.",
-   "last_verified": "2026-08-27",
+   "requires_verification": false,
+   "verification_note": "Verified 2026-09-27. IP/26/1670, read in full: two decisions on 23 July 2026, EUR 460 million (Search self-preferencing) and EUR 430 million (Play steering), compliance within 60 days, proceedings opened 25 March 2024, preliminary view 19 March 2025. The articles come from the opening release IP/24/1689, which names Art. 5(4) for Alphabet's steering rules and Art. 6(5) for self-preferencing on Google Search; the 2026 release says the decisions close those two investigations. The appeal state is left unknown: the release says Google 'may decide to appeal', and no action appeared in the Court's register by 27 Sep 2026.",
+   "last_verified": "2026-09-27",
    "appeal": {
     "status": "appeal:unknown",
     "lodged_by": null,
