@@ -31,8 +31,32 @@
       ],
       "brief_part": "part-1",
       "published": "2026-08-19",
-      "last_verified": "2026-08-27",
-      "verification_note": "Unverified against an external source. The proposition is uncontroversial but should be anchored in the legal basis recitals of the individual instruments."
+      "last_verified": "2026-09-27",
+      "verification_note": "Checked on 27 Sep 2026 against the citations of the instruments in the Official Journal texts (Publications Office's Cellar): the DSA, DMA, Data Act, NIS2, CER Directive, DORA and CRA each cite 'Article 114' alone; the AI Act cites 'Articles 16 and 114'; the GDPR cites 'Article 16' only. 'Almost the entire' therefore holds, with the GDPR as the principal exception — now said in the brief and recorded as its own claim (clm-gdpr-legal-basis-art-16). That the choice shapes each instrument's form is the author's reading, so the claim stays an interpretation."
+    },
+    {
+      "id": "clm-gdpr-legal-basis-art-16",
+      "type": "claim-type:law",
+      "statement": "The GDPR rests on Article 16 TFEU, the Union's data-protection competence, not on Article 114.",
+      "instruments": [
+        "gdpr",
+        "tfeu"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-gdpr",
+          "supports": "supports:direct",
+          "locator": "Citation: 'Having regard to the Treaty on the Functioning of the European Union, and in particular Article 16 thereof'"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-1",
+      "published": "2016-05-04",
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for the clause added to Part I that day, read in the Official Journal text of Regulation (EU) 2016/679 (CELEX 32016R0679, via the Publications Office's Cellar). No tfeu:art-16 provision is modelled in data/instruments.json, so no legal_basis link is recorded."
     },
     {
       "id": "clm-gdpr-template-replicated",
@@ -1408,15 +1432,75 @@
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Annex B"
+        },
+        {
+          "source_id": "src-cnil-google-2025",
+          "supports": "supports:partial",
+          "locator": "Section 'The jurisdiction of the CNIL'"
+        },
+        {
+          "source_id": "src-cnil-shein-2025",
+          "supports": "supports:partial",
+          "locator": "Section 'The jurisdiction of the CNIL'"
         }
       ],
       "legal_basis": [],
       "brief_part": "annex-b",
       "published": "2026-08-19",
-      "last_verified": "2026-08-28",
-      "verification_note": "REQUIRES VERIFICATION. No external source located. This is a methodological caveat the brief raises against itself and is worth anchoring in the CNIL decisions.",
+      "last_verified": "2026-09-27",
+      "verification_note": "27 Sep 2026: the legal basis of both decisions is now sourced to the CNIL's own releases and recorded as two claims (clm-cnil-google-2025, clm-cnil-shein-2025): Article 82 of the French Data Protection Act, transposing the ePrivacy Directive, with the GDPR's one-stop-shop not applying. That they are frequently miscounted as GDPR fines remains the brief's own observation. REQUIRES VERIFICATION. No external source located. This is a methodological caveat the brief raises against itself and is worth anchoring in the CNIL decisions.",
       "reference_gap": true,
       "gap_note": "The two French decisions of September 2025 are widely reported, but no source was located that states they are frequently miscounted as GDPR fines — that observation is the brief's own."
+    },
+    {
+      "id": "clm-cnil-google-2025",
+      "type": "claim-type:fact",
+      "statement": "On 1 September 2025 the CNIL fined Google EUR 325 million for cookie and email-advertising breaches under Article 82 of the French Data Protection Act, which transposes the ePrivacy Directive, outside the GDPR's one-stop-shop.",
+      "instruments": [
+        "eprivacy"
+      ],
+      "provisions": [],
+      "institutions": [
+        "dpa-*"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-cnil-google-2025",
+          "supports": "supports:direct",
+          "locator": "Opening paragraph (1 September 2025; EUR 325 million: 200 million against Google LLC, 125 million against Google Ireland Limited) and section 'The jurisdiction of the CNIL' (Article 82; the one-stop-shop 'is not intended to apply')"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "annex-b",
+      "published": "2025-09-03",
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for Annex B and read that day in the CNIL's English release. 'dpa-*' stands for the national authority because the dataset models no CNIL institution record."
+    },
+    {
+      "id": "clm-cnil-shein-2025",
+      "type": "claim-type:fact",
+      "statement": "On 1 September 2025 the CNIL fined Shein's Irish subsidiary EUR 150 million for cookie breaches under Article 82 of the French Data Protection Act, which transposes the ePrivacy Directive, outside the GDPR's one-stop-shop.",
+      "instruments": [
+        "eprivacy"
+      ],
+      "provisions": [],
+      "institutions": [
+        "dpa-*"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-cnil-shein-2025",
+          "supports": "supports:direct",
+          "locator": "Opening paragraph (1 September 2025; EUR 150 million on Infinite Styles Services Co. Limited) and section 'The jurisdiction of the CNIL' (Article 82; the one-stop-shop 'does not apply')"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "annex-b",
+      "published": "2025-09-03",
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for Annex B and read that day in the CNIL's English release. 'dpa-*' stands for the national authority because the dataset models no CNIL institution record."
     },
     {
       "id": "clm-dsa-four-tiers",
@@ -3908,6 +3992,11 @@
       "enforcement": [],
       "sources": [
         {
+          "source_id": "src-icle-omnibus-2026-06",
+          "supports": "supports:direct",
+          "locator": "Opening section: 'Finally, the package’s greatest weakness was its silence on enforcement architecture. Without institutional reform, we argued, the same authorities that had interpreted the GDPR into a “law of everything” would read the new exemptions just as narrowly.'"
+        },
+        {
           "source_id": "src-brief-original",
           "supports": "supports:direct",
           "locator": "Part VIII"
@@ -3917,7 +4006,7 @@
       "brief_part": "part-8",
       "published": null,
       "last_verified": "2026-09-27",
-      "verification_note": "Registered on 27 Sep 2026 for the \"from the competitiveness side\" flank in Part VIII. Neither ICLE record in sources.json (the March 2026 comments and the June 2026 commentary on the Council texts) is recorded as stating this argument, so the attribution rests on the brief until the publication is found.",
+      "verification_note": "Source found on 27 Sep 2026: ICLE's June 2026 commentary (src-icle-omnibus-2026-06), re-read that day, restates the argument ICLE says it made in its earlier comments on the Omnibus, in these words. The reference_gap flag is left set for a person to clear. Registered on 27 Sep 2026 for the \"from the competitiveness side\" flank in Part VIII. Neither ICLE record in sources.json (the March 2026 comments and the June 2026 commentary on the Council texts) is recorded as stating this argument, so the attribution rests on the brief until the publication is found.",
       "reference_gap": true,
       "gap_note": "the ICLE publication making the enforcement-architecture argument"
     },
@@ -4297,7 +4386,7 @@
     {
       "id": "clm-charter-binds-member-states",
       "type": "claim-type:law",
-      "statement": "The Charter of Fundamental Rights binds Member States when implementing EU law, and the CJEU has repeatedly used it against surveillance measures — the data retention line from Digital Rights Ireland through Tele2 to La Quadrature du Net.",
+      "statement": "The Charter of Fundamental Rights binds Member States when they are implementing EU law.",
       "instruments": [
         "charter"
       ],
@@ -4308,18 +4397,95 @@
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-brief-original",
+          "source_id": "src-eurlex-charter-art-51",
           "supports": "supports:direct",
-          "locator": "Part XI"
+          "locator": "Art. 51(1)"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-11",
       "published": "2026-08-19",
-      "last_verified": "2026-08-28",
-      "verification_note": "REQUIRES VERIFICATION. The three named judgments are well known but have not been retrieved or given case numbers here.",
+      "last_verified": "2026-09-27",
+      "verification_note": "Split on 27 Sep 2026: the data-retention case line is now three claims of its own (clm-cjeu-digital-rights-ireland, clm-cjeu-tele2, clm-cjeu-la-quadrature), each on its judgment. Read that day against the Charter in the Official Journal (OJ C 202, 7.6.2016, p. 404): Art. 51(1) addresses the Charter 'to the Member States only when they are implementing Union law'. The reference_gap flag, set when no source had been retrieved, is left for a person to clear.",
       "reference_gap": true,
       "gap_note": "Article 51(1) of the Charter is the legal basis and is in the dataset; the data-retention case line (Digital Rights Ireland, Tele2, La Quadrature du Net) is not individually sourced here."
+    },
+    {
+      "id": "clm-cjeu-digital-rights-ireland",
+      "type": "claim-type:law",
+      "statement": "In Digital Rights Ireland (C-293/12 and C-594/12, 8 April 2014) the Court of Justice declared the Data Retention Directive, Directive 2006/24/EC, invalid, holding that by adopting it the EU legislature had exceeded the limits of proportionality in the light of Articles 7, 8 and 52(1) of the Charter.",
+      "instruments": [
+        "charter"
+      ],
+      "provisions": [],
+      "institutions": [
+        "cjeu"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-cjeu-c293-12",
+          "supports": "supports:direct",
+          "locator": "Operative part; para 69"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-11",
+      "published": "2014-04-08",
+      "last_verified": "2026-09-27",
+      "verification_note": "Split from clm-charter-binds-member-states on 27 Sep 2026 and read that day in the judgment (Grand Chamber, CELEX 62012CJ0293, via the Publications Office's Cellar). The measure struck down was an EU directive; the Member State measures came in the later cases."
+    },
+    {
+      "id": "clm-cjeu-tele2",
+      "type": "claim-type:law",
+      "statement": "In Tele2 Sverige (C-203/15 and C-698/15, 21 December 2016) the Court of Justice held that the e-Privacy Directive, read in the light of Articles 7, 8, 11 and 52(1) of the Charter, precludes national legislation providing, for the purpose of fighting crime, for general and indiscriminate retention of all traffic and location data.",
+      "instruments": [
+        "charter",
+        "eprivacy"
+      ],
+      "provisions": [],
+      "institutions": [
+        "cjeu"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-cjeu-c203-15",
+          "supports": "supports:direct",
+          "locator": "Operative part, point 1"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-11",
+      "published": "2016-12-21",
+      "last_verified": "2026-09-27",
+      "verification_note": "Split from clm-charter-binds-member-states on 27 Sep 2026 and read that day in the judgment (Grand Chamber, CELEX 62015CJ0203, via the Publications Office's Cellar)."
+    },
+    {
+      "id": "clm-cjeu-la-quadrature",
+      "type": "claim-type:law",
+      "statement": "In La Quadrature du Net (C-511/18, C-512/18 and C-520/18, 6 October 2020) the Court of Justice held that the e-Privacy Directive, read in the light of the Charter, precludes legislative measures providing, as a preventive measure, for general and indiscriminate retention of traffic and location data, subject to narrow exceptions such as a genuine and present or foreseeable serious threat to national security.",
+      "instruments": [
+        "charter",
+        "eprivacy"
+      ],
+      "provisions": [],
+      "institutions": [
+        "cjeu"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-cjeu-c511-18",
+          "supports": "supports:direct",
+          "locator": "Operative part, point 1"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-11",
+      "published": "2020-10-06",
+      "last_verified": "2026-09-27",
+      "verification_note": "Split from clm-charter-binds-member-states on 27 Sep 2026 and read that day in the judgment (Grand Chamber, CELEX 62018CJ0511, via the Publications Office's Cellar). The operative part lists further exceptions (targeted retention, IP addresses, civil identity, expedited retention); 'narrow exceptions such as' names only the first."
     },
     {
       "id": "clm-edps-supervises-institutions",

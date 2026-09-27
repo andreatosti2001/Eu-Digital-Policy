@@ -1,10 +1,74 @@
 # HANDOVER
 
-**Last updated:** evidence-model remediation · 27 September 2026
+**Last updated:** primary-source verification, the next phase · 27 September 2026
 **Branch:** `claude/amazing-einstein-yrsu79`, cut from `origin/main` at `179c975` (PR #3's merge).
-Five commits, pushed, **not merged, no pull request open** — the author decides whether to open
-one (AGENTS.md, branch hygiene). `main` did not move during the session (re-fetched before this
-write).
+**Open as pull request #4 to `main`** (opened on the author's instruction, 27 Sep 2026); not
+merged. `main` did not move during the session (re-fetched before this write).
+
+## The next phase, 27 September 2026 — reading the primary texts behind the backlog
+
+**Asked:** open the pull request, then take the recommended next phase: the claims without a
+direct primary source, the unresolved grades, and whether Apple appealed the designation
+judgment. Every text below was read on 27 Sep 2026 (the Official Journal and the Court's
+judgments through the Publications Office's Cellar; the Court's register through InfoCuria's own
+search service; Parliament's Legislative Observatory; the Commission's and the CNIL's releases).
+
+**Measured, continuing the table below** (`tools/evidence-audit.mjs --as-of 2026-09-27`):
+
+| | end of the first half (`763f27a`) | now |
+|---|---:|---:|
+| Claims | 143 | 153 (splits into atomic claims; nothing removed) |
+| Graded primary law / unresolved | 47 / 20 | 61 / 13 |
+| Claims of law / derived | 53 / 2 | 62 / 3 |
+| Claims owing verification without a direct primary source | 23 | 16 |
+| Direct references without a usable locator | 10 | 2 |
+| Unverified records (`validate.mjs`, §12) | 104 | 97 |
+| Tests | 1221, 0 failing | 1221, 0 failing (one assertion added to H8) |
+
+**Seven statements the primary texts contradicted, now corrected** (brief, data, and every
+translation that carried them):
+
+1. *Regulation 2025/2518* "applies to complaints lodged from 2 April 2027": it applies from that
+   date (Art. 37), and its investigation chapters to complaints lodged **after** it (Art. 36); its
+   15/12-month limits are for the draft decision (Art. 12), not the investigation.
+2. *Privacy International* (C-623/17) was said to concern data retention; it concerns
+   **forwarding** data to intelligence agencies (operative part, point 1).
+3. *The AI Omnibus* "delayed the high-risk tier by sixteen months": true of Annex III only;
+   Annex I moved twelve (the claim record lagged the prose, which was right).
+4. *COM(2025) 837*, Art. 41a: it lets the Commission set **means and criteria** by implementing
+   acts, not "determine when" pseudonymised data stops being personal (en, it, fr, es).
+5. *The Cloud and AI Development Act*'s Art. 114 + 173(3) basis was "the first time" industrial
+   policy had been a co-basis in this field; **the Chips Act (Regulation 2023/1781) already rests
+   on both** (two passages, four languages).
+6. *EDPB–EDPS pushback*: all three positions are in Joint Opinion **2/2026**; 1/2026 held none.
+7. *Apple Art. 6(7) specification*: iPadOS belonged to the request-process decision, not to the
+   nine iOS connectivity features (IP/25/816).
+
+Also added: the GDPR rests on **Art. 16** TFEU, not Art. 114 — Part I now names it as the
+principal exception to "almost the entire rulebook".
+
+**Apple's appeal: still not established, and why.** The judgment (ECLI:EU:T:2026:451) is now the
+record's tier-1 source, with paragraph locators. The Court's register, whose index held cases
+lodged up to 25 Sep 2026, links **no appeal** to T-1079/23, T-1080/23 or T-214/24 and lists no
+case with Apple as a party lodged after 8 July 2026. The appeal period runs from notification,
+which the register does not show, so `appeal:unknown` stays; the observation is dated in
+`appeal.note`. **Recheck the register in October** before recording `appeal:not-lodged`.
+
+**What could not be read:** privacynext.eu (connection reset twice), the AlgorithmWatch page
+(a landing page without the text), the Council's press releases (HTTP 403), COM(2026) 502 in the
+Cellar (not held there on 27 Sep 2026; read in the Council's transmission instead). The collapsed
+AI Omnibus trilogue of 28 April is mentioned by no source read and is now its own claim with a
+reference gap.
+
+**Model change (small, tested):** `parseQuantity` reads counts written as words
+("twenty-three"), so a derivation's input can read back out of the brief's prose. Used once:
+`clm-nis2-only-four-on-time` is now derived, 27 − 23 (the four not named are Belgium, Croatia,
+Italy and Lithuania).
+
+**For the author:** four claims carry a `reference_gap` flag and also a direct external source
+(`clm-charter-binds-member-states` and `clm-icle-enforcement-architecture`, sourced today;
+`clm-dpc-staff-growth` and `clm-dma-asymmetry`, earlier). Each gap note says what was missing;
+whether a source now closes it, and clearing the flag, is a person's decision.
 
 ## The 27 September 2026 session — evidence model, Official Journal verification, deploy gate
 
@@ -101,7 +165,9 @@ Neither is a regression, and both are a later session's to decide.
 ## Branch register — 27 September 2026
 
 `git branch -r --no-merged origin/main` lists one branch: `claude/amazing-einstein-yrsu79`, this
-session's, five commits ahead of `main` (`179c975`), pushed, no pull request. Everything the
+session's, ahead of `main` (`179c975`), pushed, **open as pull request #4** (27 Sep 2026, on the
+author's instruction). Its CI matches `main`: every job green except the adversarial gate (HE-04)
+and the production trace step, red on `main` too and left red by decision (PR comment of 27 Sep). Everything the
 register below records was closed by the author on 26 September.
 
 ## Branch register — AUDIT-2026-09-25 T-40, measured 26 September 2026
