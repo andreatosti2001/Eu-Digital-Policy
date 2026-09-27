@@ -1,9 +1,56 @@
 # HANDOVER
 
-**Last updated:** the two red-by-decision CI jobs, decided · 27 September 2026
+**Last updated:** backlog, translations and hardening after the CI decisions · 27 September 2026
 **Branch:** `claude/amazing-einstein-yrsu79`, cut from `origin/main` at `179c975` (PR #3's merge).
 **Open as pull request #4 to `main`** (opened on the author's instruction, 27 Sep 2026); not
 merged. `main` did not move during the session (re-fetched before this write).
+
+## After the CI decisions, 27 September 2026 — backlog, translations, hardening
+
+**Asked:** the same instruction, applied to what was left of the original brief. `main` did not
+move (re-fetched before this write: `179c975`). Unverified **62 → 56**; every commit below
+carries an `Evidence:` trailer and passed CI.
+
+**Evidence, from court records and primary texts.**
+- Appeals read in the Official Journal notices of the actions and confirmed pending in the
+  Court's register: Apple DMA fine (T-438/25), Meta DMA fine (T-435/25), X DSA fine (T-114/26,
+  T-120/26, T-121/26), the Commission's supervisory-fee appeals (C-744/25 P, C-745/25 P), Meta v
+  EDPB (T-325/23). New source type `source-type:court-record` (tier 2).
+- Amazon/CNPD verified against the Cour administrative's judgment itself (52757C): the decision
+  is annulled **in all its parts**, not only the fine; merits largely confirmed; injunctions moot.
+- **Corrections**:
+  - OpenAI/Garante: the decision is no. 755 of **2 November 2024**; 20 December 2024 was the
+    press release (Garante's own site).
+  - The fine-category claim: the CMS tracker's own data gives **three** categories at 94%, not
+    four (four make 98%). The prose is corrected in all four languages, and the claim is
+    re-typed as derived, with four sourced inputs.
+  - Annex A's caption and the Evidence page's method note both said every record shared one
+    verification date; they no longer do.
+- Draghi diagnosis verified (Part A, printed pp. 5 and 30). EDPB Guidelines 3/2025 located
+  (final v2, 17 Sep 2026).
+- **Still flagged, with the reason recorded:**
+  - Apple's behavioural outcome: it is the author's interpretation, and not what the Art. 5(4)
+    decision is about.
+  - Temu: T-536/26 Whaleco v Commission is registered, but its subject is not yet published.
+  - The Rome OpenAI judgment's text; Irish appeals of the DPC's Meta and TikTok decisions.
+  - 25 arguments (interpretation, critique) that no citation can settle.
+
+**Build.**
+- **Translations complete**: it/fr/es 427 of 427, rendered with 0 fallbacks. They are
+  AI-assisted and **not reviewed by a native speaker** (README limitation 5).
+- **CSP `style-src 'self'`**: no `'unsafe-inline'` for styles; the pixel comparison is
+  identical. Three guards stop inline styles coming back.
+- **Data-quality panels** on the Evidence page: backlog, dates, freshness, provenance. The
+  backlog rule has one home (`js/evidence-model.js openBacklog`), shared with `validate.mjs`.
+- **hreflang**: the brief lives at `?lang=it|fr|es`; alternates and sitemap entries come from
+  the register. Stated limit: the text is rendered by JavaScript.
+- **Accessibility-tree check**: it found the Contents button unnamed on phones, now fixed.
+
+**For the author:**
+- **Merging PR #4 publishes the site** — confirm before it happens.
+- The settings in `docs/DEPLOYMENT.md` §3: Pages source, branch protection.
+- A native-speaker read of the translations.
+- The October recheck of the Apple appeal.
 
 ## The two red-by-decision CI jobs, 27 September 2026 — decided, and green
 
