@@ -60,6 +60,29 @@ Cellar (not held there on 27 Sep 2026; read in the Council's transmission instea
 AI Omnibus trilogue of 28 April is mentioned by no source read and is now its own claim with a
 reference gap.
 
+**Continued the same day, on the author's instruction ("continue with the remaining backlog"):**
+
+- **The DPC's share of the largest fines was out of date.** The brief said nine of the ten
+  largest GDPR fines were the DPC's. That was true on its date among fines still standing
+  (Luxembourg's EUR 746m on Amazon was annulled on 12 March 2026). On **21 August 2026 the
+  Dutch authority fined Uber EUR 824,990,000** (its own release; under appeal), which displaced
+  the DPC's EUR 225m on WhatsApp. Counted from the DPC's fines table, the Dutch releases and
+  CMS's database (3,275 cases) for completeness: **eight of ten**, the other two both Dutch
+  fines on Uber. Corrected in both passages and all four languages; the two Uber fines are
+  claims of their own. **They are not yet enforcement records** — adding the EUR 825m fine to
+  the observatory is the author's call.
+- **EHDS entry into force** is 25 March 2025 (OJ formula and the Publications Office's
+  metadata), not 26 March as the Commission's page and the brief said. The five other
+  instruments in Part I's "also in the rulebook" box were checked article by article (EMFA Art.
+  29, political advertising Art. 30, Platform Work Art. 29, eIDAS2 Art. 5a(1) with the five
+  implementing acts in force 24 December 2024) and each row is now its own claim of law.
+- **Official sources found:** the DPC Annual Report 2025 (headcount 295; three-person
+  Commission), the Irish government's General Scheme of the Data Bill 2025 (published 4 February
+  2026; CCPC and ComReg). **Not found, and recorded on the claim:** prezydent.pl (Cloudflare),
+  the Sejm API (fails mid-list), the Garante's search (needs JavaScript).
+- Now: 160 claims; primary 66, official 31, unresolved 13; direct references without a locator
+  2 of 138; unverified 97; 1221 tests, 0 failing.
+
 **The Data Act's status** was re-read against Art. 50 and Art. 29 of the OJ text and its `status_as_of` moved to 27 Sep 2026: still partly applicable; the Art. 3(1) design obligation now applies to products placed on the market after 12 September 2026, the switching-charge ban from 12 January 2027. The audit's `STATUS_PREDATES_MILESTONE` warning is gone.
 
 **Model change (small, tested):** `parseQuantity` reads counts written as words

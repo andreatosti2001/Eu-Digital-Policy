@@ -128,7 +128,7 @@
     {
       "id": "clm-also-in-the-rulebook",
       "type": "claim-type:fact",
-      "statement": "Beyond the six regimes the brief covers, the rulebook includes the European Media Freedom Act (Regulation (EU) 2024/1083, mostly applicable from 8 August 2025), the political advertising regulation (Regulation (EU) 2024/900, fully applicable from 10 October 2025), the Platform Work Directive (Directive (EU) 2024/2831, to be transposed by December 2026), the European Health Data Space (Regulation (EU) 2025/327, in force since 26 March 2025), eIDAS2 (Regulation (EU) 2024/1183, wallets by the end of 2026), and the Commission's 20 January 2026 proposals for a revised Cybersecurity Act and targeted NIS2 amendments.",
+      "statement": "Beyond the six regimes the brief covers, the rulebook includes the European Media Freedom Act (Regulation (EU) 2024/1083, mostly applicable from 8 August 2025), the political advertising regulation (Regulation (EU) 2024/900, fully applicable from 10 October 2025), the Platform Work Directive (Directive (EU) 2024/2831, to be transposed by December 2026), the European Health Data Space (Regulation (EU) 2025/327, in force since 25 March 2025), eIDAS2 (Regulation (EU) 2024/1183, wallets by the end of 2026), and the Commission's 20 January 2026 proposals for a revised Cybersecurity Act and targeted NIS2 amendments.",
       "instruments": [
         "eidas2",
         "nis2"
@@ -173,8 +173,120 @@
       "legal_basis": [],
       "brief_part": "part-1",
       "published": null,
-      "last_verified": "2026-09-26",
-      "verification_note": "Added on 2026-09-26 (audit T-34), so that 'the six regimes' does not read as the whole rulebook. Every act number and date was read on an official Commission page (the numbers from the EUR-Lex or OJ links those pages carry, because EUR-Lex itself returns HTTP 202 here). Each source supports one row, hence partial. The EHDS's staged application dates are deliberately not stated: they were not read from an official text."
+      "last_verified": "2026-09-27",
+      "verification_note": "Each row is now also its own claim of law read in the Official Journal on 27 Sep 2026 (clm-emfa-dates, clm-political-ads-dates, clm-platform-work-transposition, clm-ehds-dates, clm-eidas2-wallets); the cybersecurity proposals of 20 January 2026 rest on the Commission's Q&A. Corrected that day: the EHDS entered into force on 25 March 2025, not 26 March as the Commission's page says (OJ L 2025/327 of 5.3.2025; the Publications Office's metadata records 25 March). Added on 2026-09-26 (audit T-34), so that 'the six regimes' does not read as the whole rulebook. Every act number and date was read on an official Commission page (the numbers from the EUR-Lex or OJ links those pages carry, because EUR-Lex itself returns HTTP 202 here). Each source supports one row, hence partial. The EHDS's staged application dates are deliberately not stated: they were not read from an official text."
+    },
+    {
+      "id": "clm-emfa-dates",
+      "type": "claim-type:law",
+      "statement": "The European Media Freedom Act, Regulation (EU) 2024/1083, entered into force on 7 May 2024 and applies from 8 August 2025, with some provisions applying earlier and Article 20 from 8 May 2027.",
+      "instruments": [],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-emfa",
+          "supports": "supports:direct",
+          "locator": "Art. 29; OJ L 2024/1083 of 17.4.2024"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-1",
+      "published": "2024-04-17",
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a row of the 'also in the rulebook' box in Part I and read that day in the Official Journal text (Publications Office's Cellar). The instrument is not modelled in data/instruments.json. Entry into force is the twentieth day after publication on 17 April 2024."
+    },
+    {
+      "id": "clm-political-ads-dates",
+      "type": "claim-type:law",
+      "statement": "The regulation on the transparency and targeting of political advertising, Regulation (EU) 2024/900, applies from 10 October 2025; its Articles 3 and 5(1) applied from its entry into force.",
+      "instruments": [],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ttpa",
+          "supports": "supports:direct",
+          "locator": "Art. 30(2)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-1",
+      "published": "2024-03-20",
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a row of the 'also in the rulebook' box in Part I and read that day in the Official Journal text (Publications Office's Cellar). The instrument is not modelled in data/instruments.json."
+    },
+    {
+      "id": "clm-platform-work-transposition",
+      "type": "claim-type:law",
+      "statement": "Member States must transpose the Platform Work Directive, Directive (EU) 2024/2831, by 2 December 2026.",
+      "instruments": [],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-platform-work",
+          "supports": "supports:direct",
+          "locator": "Art. 29(1)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-1",
+      "published": "2024-11-11",
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a row of the 'also in the rulebook' box in Part I and read that day in the Official Journal text (Publications Office's Cellar). The instrument is not modelled in data/instruments.json."
+    },
+    {
+      "id": "clm-ehds-dates",
+      "type": "claim-type:law",
+      "statement": "The European Health Data Space Regulation, Regulation (EU) 2025/327, entered into force on 25 March 2025 and applies from 26 March 2027, with provisions on priority categories of health data and EHR systems phased in from 2029 and 2031.",
+      "instruments": [],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ehds",
+          "supports": "supports:direct",
+          "locator": "Art. 105; OJ L 2025/327 of 5.3.2025"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-1",
+      "published": "2025-03-05",
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a row of the 'also in the rulebook' box in Part I and read that day in the Official Journal text (Publications Office's Cellar). The instrument is not modelled in data/instruments.json. Published on 5 March 2025; the Publications Office's metadata records entry into force on 25 March 2025. The Commission's EHDS page says 26 March 2025; the site follows the Official Journal."
+    },
+    {
+      "id": "clm-eidas2-wallets",
+      "type": "claim-type:law",
+      "statement": "Under eIDAS2 each Member State must provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts under Articles 5a(23) and 5c(6) of Regulation (EU) No 910/2014; those acts entered into force on 24 December 2024, which puts the deadline at 24 December 2026.",
+      "instruments": [
+        "eidas2"
+      ],
+      "provisions": [],
+      "institutions": [],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-eidas2",
+          "supports": "supports:direct",
+          "locator": "Art. 1, inserting Art. 5a(1) into Regulation (EU) No 910/2014"
+        },
+        {
+          "source_id": "src-eurlex-eudi-2024-2981",
+          "supports": "supports:partial",
+          "locator": "Citation ('in particular Article 5c(6) thereof'); entry into force 24 December 2024 (Publications Office metadata)"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-1",
+      "published": "2024-04-30",
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for a row of the 'also in the rulebook' box in Part I and read that day in the Official Journal text (Publications Office's Cellar). The implementing acts are Commission Implementing Regulations (EU) 2024/2977, 2024/2979, 2024/2980, 2024/2981 (adopted under Art. 5c(6)) and 2024/2982, all of 28 November 2024; the Publications Office's metadata records each entering into force on 24 December 2024. The 24 December 2026 date is the site's arithmetic on those two texts."
     },
     {
       "id": "clm-gdpr-art-3-2-reach",
@@ -470,7 +582,7 @@
     {
       "id": "clm-dpc-top-ten-fines",
       "type": "claim-type:fact",
-      "statement": "Nine of the ten largest GDPR fines were imposed by the Irish DPC.",
+      "statement": "Eight of the ten largest GDPR fines still standing were imposed by the Irish DPC; the other two are the Dutch authority's, both on Uber.",
       "instruments": [
         "gdpr"
       ],
@@ -483,18 +595,88 @@
       "enforcement": [],
       "sources": [
         {
+          "source_id": "src-dpc-fines-page",
+          "supports": "supports:partial",
+          "locator": "Fines table: EUR 1.2bn (Meta, 12/05/2023), 530m (TikTok), 405m (Instagram), 390m (Meta), 345m (TikTok), 310m (LinkedIn), 265m (Meta), 251m (Meta), 225m (WhatsApp) — nine DPC fines of EUR 225m or more"
+        },
+        {
+          "source_id": "src-ap-uber-2026",
+          "supports": "supports:partial",
+          "locator": "First paragraph: 'imposes a fine of 824,990,000 euros on Uber' (21 August 2026)"
+        },
+        {
+          "source_id": "src-ap-uber-2024",
+          "supports": "supports:partial",
+          "locator": "First paragraph: 'imposes a fine of 290 million euros on Uber' (26 August 2024)"
+        },
+        {
+          "source_id": "src-cms-enforcement-tracker-db",
+          "supports": "supports:partial",
+          "locator": "Case list sorted by fine: no other GDPR fine above EUR 251 million (ETid-3232 Uber 824.99m; ETid-2447 Uber 290m)"
+        },
+        {
           "source_id": "src-brief-original",
-          "supports": "supports:direct",
+          "supports": "supports:context",
           "locator": "Part II"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-2",
       "published": null,
-      "last_verified": "2026-09-26",
-      "verification_note": "Split on 27 Sep 2026 out of clm-dpc-share-of-fines. The 2026-09-26 check of DLA Piper, RTÉ and the DPC Annual Report found that none of them states the nine-of-ten ranking. It rests on the brief alone.",
+      "last_verified": "2026-09-27",
+      "verification_note": "Corrected on 27 Sep 2026. The two Dutch fines are their own claims (clm-ap-uber-2026, clm-ap-uber-2024). The brief said nine of ten, which was true on its date (19 August 2026) among fines still standing: Luxembourg's EUR 746m on Amazon was annulled on 12 March 2026 (enf-amazon-cnpd-2021), and the only non-DPC fine in the top ten was the Dutch authority's EUR 290m on Uber. On 21 August 2026 the Dutch authority fined Uber EUR 824,990,000 (under appeal), which displaced the DPC's EUR 225m on WhatsApp. Counted from the DPC's own fines table, the two Dutch releases, and CMS's enforcement database for completeness (read that day; 3,275 cases; no other GDPR fine above EUR 251m). The EUR 325m and 150m French decisions of September 2025 are ePrivacy fines and are not counted (clm-cnil-google-2025, clm-cnil-shein-2025). If the annulled Amazon fine were counted, the DPC share would be seven of ten. No single source states the ranking: it is this site's count, so every reference is partial. Split on 27 Sep 2026 out of clm-dpc-share-of-fines.",
       "reference_gap": true,
-      "gap_note": "the nine-of-ten ranking — no source stating it has been located"
+      "gap_note": "no source states the ranking itself; it is counted here from the regulators' own records"
+    },
+    {
+      "id": "clm-ap-uber-2026",
+      "type": "claim-type:fact",
+      "statement": "On 21 August 2026 the Dutch data protection authority fined Uber EUR 824,990,000 under the GDPR for fully automated deactivation of drivers; Uber has appealed.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [
+        "dpa-*"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-ap-uber-2026",
+          "supports": "supports:direct",
+          "locator": "First paragraph ('a fine of 824,990,000 euros on Uber'); section 'Amount of the fine for Uber' ('Uber has filed an appeal against the fine')"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": "2026-08-21",
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for the corrected ranking in Part II and read that day in the Dutch authority's English release. 'dpa-*' stands for the authority because the dataset models no Dutch DPA institution record. Not yet an enforcement record in data/enforcement.json."
+    },
+    {
+      "id": "clm-ap-uber-2024",
+      "type": "claim-type:fact",
+      "statement": "In August 2024 the Dutch data protection authority fined Uber EUR 290 million under the GDPR for transferring European drivers' data to the US without appropriate safeguards.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [
+        "dpa-*"
+      ],
+      "enforcement": [],
+      "sources": [
+        {
+          "source_id": "src-ap-uber-2024",
+          "supports": "supports:direct",
+          "locator": "First paragraph ('a fine of 290 million euros on Uber'), 26 August 2024"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-2",
+      "published": "2024-08-26",
+      "last_verified": "2026-09-27",
+      "verification_note": "Registered on 27 Sep 2026 for the corrected ranking in Part II and read that day in the Dutch authority's English release. 'dpa-*' stands for the authority because the dataset models no Dutch DPA institution record. Not yet an enforcement record in data/enforcement.json."
     },
     {
       "id": "clm-one-stop-shop",
@@ -808,6 +990,11 @@
       "enforcement": [],
       "sources": [
         {
+          "source_id": "src-dpc-annual-report-2025-pdf",
+          "supports": "supports:direct",
+          "locator": "p. 5 (Commissioners' foreword: 'completing the move from a one to three-person Commission'; staff 'increased to 295 by year end') and p. 115 ('By year-end 2025, the DPC had reached a total headcount of 295')"
+        },
+        {
           "source_id": "src-iapp-sweeney-2026",
           "supports": "supports:direct",
           "locator": "'With nearly 300 staff, up from 27 in 2014'"
@@ -826,8 +1013,8 @@
       "legal_basis": [],
       "brief_part": "part-2",
       "published": "2026-04-01",
-      "last_verified": "2026-09-26",
-      "verification_note": "The 'nearly 300' figure is a direct quotation from sitting Commissioner Niamh Sweeney, reported by IAPP (1 April 2026); it is not the DPC's own published headcount figure, and no DPC annual report was located giving a specific number. The original 'roughly 110 staff in 2018' figure has been dropped rather than kept: no DPC 2018 annual report was retrieved to confirm it, and the site's own rule against inventing a comparison year applies here. The three-Commissioner structure is confirmed directly by the DPC's own Annual Report 2025 announcement, which names Des Hogan (Chairperson), Dale Sunderland and Niamh Sweeney.",
+      "last_verified": "2026-09-27",
+      "verification_note": "27 Sep 2026: now read in the DPC's own Annual Report 2025 (PDF, published 30 June 2026), which states both halves: a headcount of 295 at the end of 2025 and the move to a three-person Commission. The reference_gap flag is left for a person to clear. The 'nearly 300' figure is a direct quotation from sitting Commissioner Niamh Sweeney, reported by IAPP (1 April 2026); it is not the DPC's own published headcount figure, and no DPC annual report was located giving a specific number. The original 'roughly 110 staff in 2018' figure has been dropped rather than kept: no DPC 2018 annual report was retrieved to confirm it, and the site's own rule against inventing a comparison year applies here. The three-Commissioner structure is confirmed directly by the DPC's own Annual Report 2025 announcement, which names Des Hogan (Chairperson), Dale Sunderland and Niamh Sweeney.",
       "reference_gap": true,
       "gap_note": "No DPC annual report was located stating a specific staff headcount; the figure rests on a Commissioner's quoted remark rather than a published number, and the pre-2026 baseline (previously '110 in 2018') is now unsourced and has been removed from the statement rather than carried forward unverified."
     },
@@ -946,7 +1133,7 @@
       "brief_part": "part-3",
       "published": "2026-01",
       "last_verified": "2026-09-27",
-      "verification_note": "Added on 2026-09-26 (audits T-22, T-27). Sourced to EDRi (tier 4); the official announcement on prezydent.pl could not be read here (Cloudflare challenge). Updated 2026-09-26 by the author's decision: the September 2026 signing is now read (300polityka, 25 September 2026, quoting the presidential spokesman; Interia) and stated in the prose. The President's own site could not be read. Time-sensitive: the second bill is pending. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
+      "verification_note": "Tried again on 27 Sep 2026 for an official source: prezydent.pl still answers with a Cloudflare challenge (HTTP 403); the Sejm's open API (api.sejm.gov.pl) failed partway through its list of legislative processes; and the act signed on 25 September was not yet in the 2026 Journal of Laws index. Still tier 4. Added on 2026-09-26 (audits T-22, T-27). Sourced to EDRi (tier 4); the official announcement on prezydent.pl could not be read here (Cloudflare challenge). Updated 2026-09-26 by the author's decision: the September 2026 signing is now read (300polityka, 25 September 2026, quoting the presidential spokesman; Interia) and stated in the prose. The President's own site could not be read. Time-sensitive: the second bill is pending. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
       "id": "clm-cispe-cloud-ceos-letter",
@@ -1126,7 +1313,7 @@
       "brief_part": "part-2",
       "published": "2026",
       "last_verified": "2026-09-27",
-      "verification_note": "Verified during the Step 1 audit. The judgment itself has not been retrieved; the source is academic analysis of it. Re-read 27 Sep 2026 at the blog's new URL (the old one returned 404); the locator quotes the passage that carries the claim."
+      "verification_note": "Tried on 27 Sep 2026: the Garante's site search needs JavaScript and returned no result list, and no text of the Rome tribunal's judgment was located. Still rests on the European Law Blog. Verified during the Step 1 audit. The judgment itself has not been retrieved; the source is academic analysis of it. Re-read 27 Sep 2026 at the blog's new URL (the old one returned 404); the locator quotes the passage that carries the claim."
     },
     {
       "id": "clm-cjeu-pseudonymised-data",
@@ -3537,9 +3724,14 @@
       "enforcement": [],
       "sources": [
         {
+          "source_id": "src-gov-ie-data-bill-2025",
+          "supports": "supports:partial",
+          "locator": "Publication page: 'Published on: 4 February 2026'; the CCPC and ComReg 'are designated as competent authorities for the Data Act. The CCPC is also designated as the Data Coordinator'"
+        },
+        {
           "source_id": "src-matheson-ie-data-bill-2026",
           "supports": "supports:partial",
-          "locator": null
+          "locator": "Section on the General Scheme: published 4 February 2026; pre-legislative scrutiny continuing after written submissions to the Joint Committee on Enterprise, Tourism and Employment"
         },
         {
           "source_id": "src-brief-original",
@@ -3550,8 +3742,8 @@
       "legal_basis": [],
       "brief_part": "part-6",
       "published": "2026-08-19",
-      "last_verified": "2026-09-26",
-      "verification_note": "The Irish facts are now sourced to Matheson (18 May 2026): General Scheme published 4 February 2026, ComReg and the CCPC appointed, pre-legislative scrutiny continuing. Law-firm commentary, hence partial; the General Scheme itself was not opened, and 'mid-2026' rests on an article dated May. 'Host to a large share of Europe's cloud infrastructure' is still unsourced, so the reference gap is left set.",
+      "last_verified": "2026-09-27",
+      "verification_note": "27 Sep 2026: the publication date and the designations are now read on the Irish government's own page (Department of Enterprise, Tourism and Employment: 'General Scheme of the Data Bill 2025', published 4 February 2026, last updated 10 July 2026). Its official title is the Data Bill 2025. Whether the Bill had left pre-legislative scrutiny by mid-2026 is not stated there, so that part still rests on Matheson (May 2026). The Irish facts are now sourced to Matheson (18 May 2026): General Scheme published 4 February 2026, ComReg and the CCPC appointed, pre-legislative scrutiny continuing. Law-firm commentary, hence partial; the General Scheme itself was not opened, and 'mid-2026' rests on an article dated May. 'Host to a large share of Europe's cloud infrastructure' is still unsourced, so the reference gap is left set.",
       "reference_gap": true,
       "gap_note": "No source located for the position of the Irish Data Bill in February 2026."
     },
