@@ -142,11 +142,17 @@ authenticated server the model requires.
 - **There is no `robots.txt`, deliberately.** This is a project site under `/Eu-Digital-Policy/`;
   crawlers read `robots.txt` only at the root of the host (`andreatosti2001.github.io`), which
   this repository does not control. A file here would look like a policy and be ignored.
-- **Languages.** Italian, French and Spanish are client-side overlays of the same URL. `hreflang`
-  alternates need a distinct URL per language, which would mean pre-rendering `/it/`, `/fr/`,
-  `/es/` pages — a build step, which is a red-tier architectural change in this repository.
-  So no `hreflang` is emitted: an alternate pointing at the same URL is a false statement to a
-  crawler. Every page declares `lang="en"`, and the locale switch sets `lang` on `<html>`.
+- **Languages.** Italian, French and Spanish are client-side overlays of the brief. Since 27 Sep
+  2026 each has its own address without a build step: `?lang=it|fr|es`. `app.js` reads it on load
+  (it wins over the stored preference, so a shared link opens in its language), keeps it in step
+  with the language menu, and rewrites the canonical, `og:url` and `og:locale` to match — the same
+  move `instrument.html` makes for `?id=`. `tools/_footer.mjs` emits the matching `hreflang`
+  alternates (plus `x-default`) on `index.html` and the three URLs in the sitemap, from
+  `i18n/locales.json`, so a language that does not ship is never advertised. **What this does not
+  do:** the translated text is rendered by JavaScript, so a crawler that does not run it sees
+  English at every one of these addresses. Pre-rendered `/it/`, `/fr/`, `/es/` pages would close
+  that, and would be a build step — still a red-tier architectural change here. The tool pages
+  are not translated and carry no alternates.
 
 ## 7. What none of this proves
 

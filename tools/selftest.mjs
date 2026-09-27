@@ -746,6 +746,25 @@ test('I1c · the Evidence page and the build count the same backlog', () => {
   assert.doesNotMatch(readFileSync(join(ROOT, 'tools', 'validate.mjs'), 'utf8'), /function unverifiedReport\(\)\s*\{/, 'validate.mjs keeps no copy of its own');
 });
 
+test('I1d · hreflang: one alternate per shipped language, on the brief only, matching the sitemap', () => {
+  const reg = JSON.parse(readFileSync(join(ROOT, 'i18n', 'locales.json'), 'utf8')).locales
+    .filter((l) => l.code === 'en' || l.file).map((l) => l.code);
+  const index = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  const alt = [...index.matchAll(/<link href="([^"]+)" hreflang="([^"]+)" rel="alternate"\/>/g)].map((m) => [m[2], m[1]]);
+  assert.deepEqual(alt.map(([c]) => c).sort(), [...reg, 'x-default'].sort());
+  for (const [c, href] of alt) {
+    if (c === 'en' || c === 'x-default') assert.doesNotMatch(href, /\?lang=/);
+    else assert.ok(href.endsWith('?lang=' + c), `${c} -> ${href}`);
+  }
+  const sitemap = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
+  for (const c of reg.filter((x) => x !== 'en')) assert.match(sitemap, new RegExp('\\?lang=' + c + '</loc>'));
+  for (const f of ['applies.html', 'bibliography.html', 'instruments.html']) {
+    assert.doesNotMatch(readFileSync(join(ROOT, f), 'utf8'), /hreflang=/, `${f} is not translated and must not advertise alternates`);
+  }
+  /* the page honours the parameter it advertises */
+  assert.match(readFileSync(join(ROOT, 'app.js'), 'utf8'), /searchParams\.get\('lang'\)/);
+});
+
 test('I2 · the Pages artifact is the website and nothing else', () => {
   const out = scratch('site');
   try {
