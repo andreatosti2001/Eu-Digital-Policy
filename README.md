@@ -363,7 +363,13 @@ what it cannot support:
 4. **Enforcement figures are indicative of magnitude, not audited**, and the
    trackers behind the cumulative GDPR totals disagree with each other.
 5. **Translations lag the English.** Declared in the register, marked in the
-   interface.
+   interface. *Update, 27 September 2026:* all 427 strings of the brief are
+   now translated into Italian, French and Spanish, and the register marks
+   nothing pending or superseded. The 75 added that day were written in an
+   AI-assisted editing session from the current English and have **not yet
+   been reviewed by a native speaker** — the legal terminology follows each
+   file's existing usage, but a reviewer should read them. When the English
+   changes again, the lag returns, and the register is where it shows.
 6. This is not legal advice, and the applicability engine asks three questions
    where a lawyer would ask fifty.
 7. **No screen reader has been run against this.** Dialog semantics, focus
