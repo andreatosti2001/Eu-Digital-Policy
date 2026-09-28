@@ -2,7 +2,7 @@
 
 **Last updated:** SEO, indexing and discoverability · 27 September 2026
 **Branch:** `claude/eu-digital-policy-seo-x4eo8t`, cut from `origin/main` at `24ca0bb` (PR #4's
-merge). Pushed; **no pull request opened** — the author decides. `main` did not move during the
+merge). **Open as pull request #5 to `main`** (opened on the author's instruction, 28 Sep 2026). `main` did not move during the
 session (re-fetched before this write).
 
 ## SEO, indexing and discoverability — 27 September 2026 (night)
@@ -61,7 +61,7 @@ index omits a record (planted in selftest S4).
 3. **Decide on a custom domain** before citations accumulate (§7), and on a **licence** — a
    citable data snapshot is blocked without one (§9).
 4. **After any data edit, run `node tools/_footer.mjs`** or CI fails on the stale page.
-5. Whether to open a pull request for this branch.
+5. Merge PR #5 — merging publishes the site.
 
 ## Competences, Irish court records, prose corrections — 27 September 2026 (evening)
 
@@ -407,7 +407,7 @@ Neither is a regression, and both are a later session's to decide.
 ## Branch register — 27 September 2026 (night)
 
 `git branch -r --no-merged origin/main` lists one branch: `claude/eu-digital-policy-seo-x4eo8t`,
-this session's, pushed, no pull request. `claude/amazing-einstein-yrsu79` is merged (PR #4).
+this session's, pushed, **open as pull request #5**. `claude/amazing-einstein-yrsu79` is merged (PR #4).
 
 ## Branch register — 27 September 2026
 
