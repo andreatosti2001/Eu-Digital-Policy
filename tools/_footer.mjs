@@ -5,9 +5,23 @@
    that choice is seven copies; tools/design-qa.mjs checks they are
    identical, so they cannot drift.
 
-   Run:  node tools/_footer.mjs        (from the repository root) */
+   Since 27 Sep 2026 it also writes everything tools/seo.mjs (the route
+   model) says about each address — title, description, canonical, social
+   tags, structured data, the site index, the sitemap — and generates one
+   page per substantive instrument under instruments/<id>/. It is the only
+   writer of any of it, and it is deterministic: the same tree always
+   produces the same bytes, so --check can fail a page that was not
+   regenerated after its data or its markup moved.
 
-import { readFileSync, writeFileSync } from 'node:fs';
+   Run:    node tools/_footer.mjs            (from the repository root)
+   Check:  node tools/_footer.mjs --check    writes nothing; exit 1 if any
+                                             generated file is stale */
+
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync, existsSync, statSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const HERE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 /* The deployed origin. Canonical, og:url and the social tags are all built
    from this, so it is changed here and nowhere else. If the site moves,
@@ -45,7 +59,7 @@ held in <code>data/*.json</code>; every claim carries its own evidence grade.</s
    THROWS rather than emitting a plausible list: a silently wrong
    navigation for the readers who have no other navigation is worse than
    a generator that refuses to run. */
-export function navFromShell(src = readFileSync('js/shell.js', 'utf8')) {
+export function navFromShell(src = readFileSync(join(HERE_ROOT, 'js/shell.js'), 'utf8')) {
   const block = src.match(/export const NAV = \[([\s\S]*?)\n\];/);
   if (!block) {
     throw new Error('tools/_footer.mjs: js/shell.js no longer carries `export const NAV = [ … ];`. '
@@ -77,13 +91,16 @@ const escText = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').re
    admission. <noscript> content is inert when scripting is on, so this
    adds no element, no id and no focusable control to the rendered page a
    reader with JavaScript sees. */
-export const NOSCRIPT_NAV = (nav = navFromShell()) => `<nav class="noscript-nav" aria-label="Sections of this project">
+/* `root` is the path from the page to the site root: "" on the seven
+   top-level pages, "../../" on an instrument page. design-qa compares the
+   notices with the prefix removed, so they are still one text. */
+export const NOSCRIPT_NAV = (nav = navFromShell(), root = '') => `<nav class="noscript-nav" aria-label="Sections of this project">
 <ul>
-${nav.map((n) => `<li><a href="${escAttr(n.file)}">${escText(n.long)}</a></li>`).join('\n')}
+${nav.map((n) => `<li><a href="${escAttr(root + n.file)}">${escText(n.long)}</a></li>`).join('\n')}
 </ul>
 </nav>`;
 
-export const NOSCRIPT = `<noscript>
+export const noscriptFor = (root = '') => `<noscript>
 <div class="noscript-note">
 <p><b>JavaScript is off, so parts of this page are not showing.</b> The written analysis is in
 the HTML and reads normally without scripting. What will not appear: the site navigation in the
@@ -92,11 +109,14 @@ evidence markers and their drawer, the comparison tables, the interactions view,
 glossary panel — all of which are rendered from <code>data/*.json</code> at runtime.</p>
 <p>Every figure behind them is in that directory and can be read directly. The destinations the
 header would carry are linked here instead:</p>
-${NOSCRIPT_NAV()}
+${NOSCRIPT_NAV(navFromShell(), root)}
 </div>
 </noscript>`;
+export const NOSCRIPT = noscriptFor('');
 
-const PAGES = [
+/* The seven hand-written pages. Everything else this writes is generated
+   whole. */
+export const PAGES = [
   'index.html', 'instruments.html', 'instrument.html', 'institutions.html',
   'enforcement.html', 'applies.html', 'bibliography.html',
 ];
@@ -114,147 +134,134 @@ function upsert(src, begin, end, body, place) {
     const e = src.indexOf(end, b);
     return src.slice(0, b) + block(begin, body, end) + src.slice(e + end.length);
   }
-  return place(src, block(begin, body, end));
+  const out = place(src, block(begin, body, end));
+  if (out === src) throw new Error(`tools/_footer.mjs: nowhere to place ${begin.slice(5, 30)}… in a page`);
+  return out;
 }
 
-let touched = 0;
-for (const file of PAGES) {
-  let s = readFileSync(file, 'utf8');
-  const before = s;
+const escHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const escQ = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
-  /* the notice goes immediately after <body> so a reader without scripting
-     meets it before anything that silently failed to render */
-  s = upsert(s, NBEGIN, NEND, NOSCRIPT, (t, blk) =>
-    t.replace(/(<body[^>]*>)/, `$1\n${blk}`));
-
-  /* the footer goes last inside <body>, after every script tag it does not
-     depend on */
-  s = upsert(s, BEGIN, END, FOOTER, (t, blk) =>
-    t.replace(/<\/body>/, `${blk}\n</body>`));
-
-  if (s !== before) { writeFileSync(file, s); touched++; }
-  console.log(`  ${file} ${s !== before ? 'updated' : 'unchanged'}`);
-}
-console.log(`\n${touched} file(s) written.`);
-
-/* ---------------------------------------------------------- social meta
-
-   Title and description are not retyped here: they are read out of each
-   page's existing <title> and meta[name=description], so the social card
-   cannot say something different from the page. There is no og:image
-   because there is no image; twitter:card is therefore "summary" and not
-   "summary_large_image", which would promise a picture that does not
-   exist. */
-
-const SITE_NAME = 'The European Legal Framework for the Digital World';
-const SBEGIN = '<!-- social-meta:begin — generated by tools/_footer.mjs, do not edit in place -->';
-const SEND = '<!-- social-meta:end -->';
-const attr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-
-/* Languages that ship, from the register (i18n/locales.json) — the one
-   place that knows which exist. Only the brief is translated, so only it
-   carries alternates: each language is the same page at ?lang=xx, which
-   app.js reads on load and keeps in step with the language menu. */
-const SHIPPED = JSON.parse(readFileSync('i18n/locales.json', 'utf8')).locales
-  .filter((l) => l.code === 'en' || l.file).map((l) => l.code);
-export const langUrl = (code) => BASE + (code === 'en' ? '' : `?lang=${code}`);
-
-export function socialMeta(file, src) {
-  const title = (src.match(/<title>([\s\S]*?)<\/title>/) || [, file])[1].trim();
-  const desc = (src.match(/<meta content="([^"]*)" name="description"\/>/) || [, ''])[1];
-  const url = BASE + (file === 'index.html' ? '' : file);
-  return [
-    `<link href="${url}" rel="canonical"/>`,
-    `<meta content="${attr(title)}" property="og:title"/>`,
-    `<meta content="${desc}" property="og:description"/>`,
-    '<meta content="article" property="og:type"/>',
-    `<meta content="${url}" property="og:url"/>`,
-    `<meta content="${attr(SITE_NAME)}" property="og:site_name"/>`,
-    '<meta content="en" property="og:locale"/>',
-    '<meta content="summary" name="twitter:card"/>',
-    `<meta content="${attr(title)}" name="twitter:title"/>`,
-    `<meta content="${desc}" name="twitter:description"/>`,
-    jsonLd(file, title, desc, url),
-    ...(file === 'index.html'
-      ? [...SHIPPED.map((c) => `<link href="${langUrl(c)}" hreflang="${c}" rel="alternate"/>`),
-        `<link href="${langUrl('en')}" hreflang="x-default" rel="alternate"/>`]
-      : []),
-  ].join('\n');
+/* The favicon and the pre-paint theme bootstrap, read out of instrument.html
+   so an instrument page carries the same bytes — and therefore the same CSP
+   hash — without a second copy to keep in step. */
+function shellFrom(html) {
+  const favicon = (html.match(/<link rel="icon" href="[^"]*"\/>/) || [])[0];
+  const bootstrap = (html.match(/<script>\n\/\* Pre-paint theme bootstrap[\s\S]*?<\/script>/) || [])[0];
+  if (!favicon || !bootstrap) throw new Error('tools/_footer.mjs: instrument.html no longer carries the favicon link and the theme bootstrap this reads.');
+  return { favicon, bootstrap };
 }
 
-/* Structured data, from the same title, description and URL as the tags
-   above, so it cannot say something the page does not. It names no author
-   and declares no licence, because the pages do neither (AGENTS.md rule 8).
-   A data block is not executed, so the Content-Security-Policy does not
-   govern it and tools/csp.mjs does not hash it. */
-function jsonLd(file, title, desc, url) {
-  const unesc = (x) => String(x).replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<');
-  const site = { '@type': 'WebSite', '@id': BASE + '#site', name: SITE_NAME, url: BASE, inLanguage: 'en' };
-  const graph = [site, {
-    '@type': 'WebPage', '@id': url + '#page', url, name: unesc(title), description: unesc(desc),
-    inLanguage: 'en', isPartOf: { '@id': BASE + '#site' },
-  }];
-  if (file !== 'index.html') {
-    graph.push({ '@type': 'BreadcrumbList', itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Digital Policy', item: BASE },
-      { '@type': 'ListItem', position: 2, name: unesc(title).split(' — ')[0], item: url },
-    ] });
+/**
+ * Every file this generator owns, as it should be on disk.
+ * @returns {{ files: Map<string,string>, remove: string[], routes: object[] }}
+ */
+export async function generate(root = HERE_ROOT) {
+  const SEO = await import('./seo.mjs');
+  const { securityMeta, SBEGIN: CBEGIN, SEND: CEND } = await import('./csp.mjs');
+  const db = SEO.loadDb(root);
+  const { routes, ix } = SEO.buildRoutes(db, root);
+  const nav = navFromShell(readFileSync(join(root, 'js/shell.js'), 'utf8'));
+  const files = new Map();
+  const ctx = { ix, db, routes };
+
+  /* every page, hand-written or generated, gets the same treatment in the
+     same order: notice, index, footer, title, social meta, and the CSP
+     LAST, because it hashes the inline scripts as they then stand */
+  const finish = (route, html) => {
+    const r = route.root || '';
+    let s = html;
+    s = upsert(s, NBEGIN, NEND, noscriptFor(r), (t, blk) => t.replace(/(<body[^>]*>)/, `$1\n${blk}`));
+    /* the index sits immediately before the footer */
+    s = upsert(s, SEO.IBEGIN, SEO.IEND, SEO.siteIndex(routes, ix, nav, r), (t, blk) =>
+      t.includes(BEGIN) ? t.replace(BEGIN, `${blk}\n${BEGIN}`) : t.replace(/<\/body>/, `${blk}\n</body>`));
+    s = upsert(s, BEGIN, END, FOOTER, (t, blk) => t.replace(/<\/body>/, `${blk}\n</body>`));
+    s = s.replace(/<title>[\s\S]*?<\/title>/, `<title>${escHtml(route.title)}</title>`);
+    s = s.replace(/<meta content="[^"]*" name="description"\/>/, `<meta content="${escQ(route.description)}" name="description"/>`);
+    s = upsert(s, SEO.SBEGIN, SEO.SEND, SEO.socialMeta(route, ctx), (t, blk) =>
+      t.replace(new RegExp(`(<link href="${r.replace(/\./g, '\\.')}css/tokens\\.css" rel="stylesheet"/>)`), `${blk}\n$1`));
+    s = upsert(s, CBEGIN, CEND, securityMeta(s), (t, blk) => t.replace('<meta charset="utf-8"/>', `<meta charset="utf-8"/>\n${blk}`));
+    return s;
+  };
+
+  for (const file of PAGES) {
+    const route = routes.find((x) => x.file === file);
+    let s = readFileSync(join(root, file), 'utf8');
+    if (file === 'instruments.html') {
+      /* inside the page shell, after the reading notes */
+      s = upsert(s, SEO.LBEGIN, SEO.LEND, SEO.instrumentIndex(routes, ix), (t, blk) =>
+        t.replace(/(<\/section>\n)(<\/div>\n\n<script src="js\/boot\.js")/, `$1\n${blk}\n$2`));
+    }
+    /* the record index inside each JavaScript-rendered register */
+    const idx = { 'enforcement.html': ['enfList', SEO.enforcementIndex], 'institutions.html': ['imBody', SEO.institutionsIndex],
+      'bibliography.html': ['bib', SEO.bibliographyIndex] }[file];
+    if (idx) {
+      const [mount, fn] = idx;
+      s = upsert(s, SEO.RBEGIN, SEO.REND, fn(ix, db), (t, blk) =>
+        t.replace(new RegExp(`(<main id="${mount}">)<p class="[^"]+">Loading[^<]*</p>(</main>)`), `$1\n${blk}\n$2`));
+    }
+    files.set(file, finish(route, s));
   }
-  const json = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
-  return `<script type="application/ld+json">${json}</script>`;
+
+  const shell = shellFrom(readFileSync(join(root, 'instrument.html'), 'utf8'));
+  for (const route of routes.filter((x) => x.kind === 'instrument')) {
+    files.set(route.file, finish(route, SEO.instrumentPage(route, ctx, shell)));
+  }
+
+  files.set('sitemap.xml', SEO.sitemapXml(routes));
+
+  /* an instrument that fell below the gate loses its page */
+  const remove = [];
+  const dir = join(root, 'instruments');
+  if (existsSync(dir)) {
+    for (const d of readdirSync(dir)) {
+      const f = `instruments/${d}/index.html`;
+      if (statSync(join(dir, d)).isDirectory() && !files.has(f)) remove.push(`instruments/${d}`);
+    }
+  }
+  return { files, remove, routes };
 }
 
-for (const file of PAGES) {
-  let s = readFileSync(file, 'utf8');
-  const before = s;
-  s = upsert(s, SBEGIN, SEND, socialMeta(file, s), (t, blk) =>
-    t.replace('<link href="css/tokens.css" rel="stylesheet"/>',
-      `${blk}\n<link href="css/tokens.css" rel="stylesheet"/>`));
-  if (s !== before) writeFileSync(file, s);
+/** Which generated files differ from what is on disk. Empty means current. */
+export async function stale(root = HERE_ROOT) {
+  const { files, remove } = await generate(root);
+  const out = [];
+  for (const [f, want] of files) {
+    const p = join(root, f);
+    if (!existsSync(p)) out.push(`${f} is missing`);
+    else if (readFileSync(p, 'utf8') !== want) out.push(`${f} is stale`);
+  }
+  for (const d of remove) out.push(`${d}/ is no longer an instrument page (below the gate) and should be removed`);
+  return out;
 }
-console.log('social meta regenerated from each page\'s own title and description.');
 
-/* ---------------------------------------------------------- security meta
-
-   The Content-Security-Policy and the referrer policy, from tools/csp.mjs.
-   Written LAST, because the policy hashes each page's inline scripts as
-   they now stand, and placed immediately after <meta charset> because a
-   meta policy governs only what follows it. Re-run this script after any
-   edit to an inline script — the theme bootstrap, or the __CONTENT__ blob
-   in index.html — or the browser will refuse to run it; design-qa.mjs
-   fails the page until you do. */
-
-import { SBEGIN as CBEGIN, SEND as CEND, securityMeta } from './csp.mjs';
-
-for (const file of PAGES) {
-  let s = readFileSync(file, 'utf8');
-  const before = s;
-  s = upsert(s, CBEGIN, CEND, securityMeta(s), (t, blk) =>
-    t.replace('<meta charset="utf-8"/>', `<meta charset="utf-8"/>\n${blk}`));
-  if (s !== before) writeFileSync(file, s);
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+/* Not a top-level await: tools/seo.mjs imports BASE from this module, so
+   this module has to finish evaluating before generate()'s import of it
+   can resolve. */
+async function main() {
+  const check = process.argv.includes('--check');
+  if (check) {
+    const problems = await stale();
+    for (const p of problems) console.log('  STALE  ' + p);
+    console.log(problems.length
+      ? `\n${problems.length} generated file(s) out of date — run node tools/_footer.mjs`
+      : 'every generated file is current');
+    process.exit(problems.length ? 1 : 0);
+  }
+  const { files, remove, routes } = await generate();
+  let touched = 0;
+  for (const [f, want] of files) {
+    const p = join(HERE_ROOT, f);
+    const have = existsSync(p) ? readFileSync(p, 'utf8') : null;
+    if (have === want) continue;
+    mkdirSync(dirname(p), { recursive: true });
+    writeFileSync(p, want);
+    touched++;
+    console.log(`  ${f} ${have === null ? 'created' : 'updated'}`);
+  }
+  for (const d of remove) { rmSync(join(HERE_ROOT, d), { recursive: true, force: true }); console.log(`  ${d}/ removed`); }
+  const idx = routes.filter((r) => r.indexable).length;
+  console.log(`\n${touched} file(s) written · ${idx} indexable route(s) · ${routes.filter((r) => r.kind === 'instrument').length} instrument page(s).`);
 }
-console.log('security meta (CSP, referrer) regenerated from each page\'s own inline scripts.');
-
-/* ---------------------------------------------------------- sitemap
-
-   The seven pages plus one entry per instrument page, from BASE and from
-   data/instruments.json — so the sitemap cannot name a page or an
-   instrument that does not exist. No <lastmod>: the only date this
-   generator could write is today's, and a lastmod that is merely the date
-   the file was regenerated tells a crawler nothing true. */
-
-const instruments = JSON.parse(readFileSync('data/instruments.json', 'utf8')).instruments
-  .filter((i) => !String(i.kind || '').includes('treaty') && i.id !== 'tfeu' && i.id !== 'teu')
-  .map((i) => i.id);
-const urls = [
-  ...PAGES.filter((p) => p !== 'instrument.html').map((p) => BASE + (p === 'index.html' ? '' : p)),
-  ...instruments.map((id) => `${BASE}instrument.html?id=${encodeURIComponent(id)}`),
-  /* the brief in each shipped translation: a distinct URL per language */
-  ...SHIPPED.filter((c) => c !== 'en').map(langUrl),
-];
-const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-  urls.map((u) => `  <url><loc>${u.replace(/&/g, '&amp;')}</loc></url>`).join('\n') +
-  '\n</urlset>\n';
-writeFileSync('sitemap.xml', sitemap);
-console.log(`sitemap.xml: ${urls.length} URL(s).`);
+if (isMain) main().catch((e) => { console.error(e); process.exit(1); });

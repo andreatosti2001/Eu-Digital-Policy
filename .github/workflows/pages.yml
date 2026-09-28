@@ -85,6 +85,8 @@ jobs:
         run: node tools/freshness.mjs
       - name: evidence-audit.mjs
         run: node tools/evidence-audit.mjs
+      - name: seo-audit.mjs (canonical, sitemap, structured data; generated pages current)
+        run: node tools/seo-audit.mjs
       - name: The validators' own suite
         run: node --test tools/selftest.mjs
       - name: Against the recorded baseline

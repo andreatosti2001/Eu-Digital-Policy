@@ -110,23 +110,31 @@ export async function serveSite({ root = REPO_ROOT, host = '127.0.0.1', basePath
     if (req.method !== 'GET' && req.method !== 'HEAD') { record(405, 0); res.writeHead(405).end('read-only'); return; }
 
     let st;
+    let file = target;
     try { st = statSync(target); } catch { record(404, 0); res.writeHead(404).end('not found'); return; }
     if (st.isDirectory()) {
+      /* As GitHub Pages does it: a directory without its trailing slash is
+         redirected to it, and with the slash its index.html is served AT
+         that address. Serving it under /…/index.html instead would test
+         instruments/<id>/ at a URL no reader or crawler ever sees. */
       const idx = join(target, 'index.html');
-      try { statSync(idx); } catch { record(404, 0); res.writeHead(404).end('no index'); return; }
-      res.writeHead(302, { location: `${url.pathname.replace(/\/*$/, '')}/index.html` }).end();
-      record(302, 0);
-      return;
+      try { st = statSync(idx); } catch { record(404, 0); res.writeHead(404).end('no index'); return; }
+      if (!url.pathname.endsWith('/')) {
+        res.writeHead(301, { location: `${url.pathname}/${url.search}` }).end();
+        record(301, 0);
+        return;
+      }
+      file = idx;
     }
 
     res.writeHead(200, {
-      'content-type': MIME[extname(target).toLowerCase()] ?? 'application/octet-stream',
+      'content-type': MIME[extname(file).toLowerCase()] ?? 'application/octet-stream',
       'content-length': String(st.size),
       'cache-control': 'no-store',
     });
     record(200, st.size);
     if (req.method === 'HEAD') { res.end(); return; }
-    createReadStream(target).pipe(res);
+    createReadStream(file).pipe(res);
   });
 
   await new Promise((ok, fail) => {

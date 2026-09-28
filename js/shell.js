@@ -25,6 +25,7 @@
    ============================================================ */
 
 import { locales } from './data.js';
+import { href } from './routes.js';
 
 /* ---------------------------------------------------------- the nav model
    One list. Order is the conceptual model of the product, not
@@ -114,7 +115,7 @@ async function languageNote() {
   if (!rec) return null;                       /* a language we do not ship is not applied */
   document.documentElement.setAttribute('lang', lang);
   const note = el('a', {
-    class: 'chrome-btn chrome-lang', href: 'index.html',
+    class: 'chrome-btn chrome-lang', href: href('index.html'),
     title: 'Record labels follow ' + (rec.name || lang.toUpperCase()) +
            '. The interface text on this page is English.',
   });
@@ -148,7 +149,7 @@ function buildChrome(page) {
   const nav = el('nav', { class: 'chrome-nav', 'aria-label': 'Sections of this project' });
   const parent = CHILD_OF[page] || page;
   for (const n of NAV) {
-    const a = el('a', { href: n.file, text: n.label });
+    const a = el('a', { href: href(n.file), text: n.label });
     if (n.id === parent) {
       /* aria-current="page" only where it is literally this page; a detail
          page under a section is "true", which is the weaker, correct claim */
@@ -163,7 +164,7 @@ function buildChrome(page) {
     html: SEARCH_ICON + '<span class="chrome-btn-word">Search</span><kbd>⌘K</kbd>',
   });
 
-  const brand = el('a', { href: 'index.html', class: 'chrome-brand', 'aria-label': 'EU Digital Policy — the brief' });
+  const brand = el('a', { href: href('index.html'), class: 'chrome-brand', 'aria-label': 'EU Digital Policy — the brief' });
   brand.append(el('span', { class: 'mark', 'aria-hidden': 'true' }), el('b', { text: 'EU Digital Policy' }));
 
   const tools = el('div', { class: 'chrome-tools' }, [search, themeButton()]);
@@ -178,10 +179,10 @@ function buildChrome(page) {
 function buildCrumbs(page) {
   const parent = CHILD_OF[page];
   const here = document.body.dataset.crumb || document.title.split('—')[0].trim();
-  const items = [el('li', {}, [el('a', { href: 'index.html', text: 'Digital Policy' })])];
+  const items = [el('li', {}, [el('a', { href: href('index.html'), text: 'Digital Policy' })])];
   if (parent) {
     const p = NAV.find((n) => n.id === parent);
-    if (p) items.push(el('li', {}, [el('a', { href: p.file, text: p.label })]));
+    if (p) items.push(el('li', {}, [el('a', { href: href(p.file), text: p.label })]));
   }
   items.push(el('li', {}, [el('span', { 'aria-current': 'page', text: here })]));
   return el('ol', { class: 'crumbs' }, items);

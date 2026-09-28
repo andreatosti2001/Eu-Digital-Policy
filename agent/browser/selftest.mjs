@@ -203,7 +203,7 @@ test('every MIME type the site actually ships is declared', () => {
 
 test('every page the suite loads exists in the repository', () => {
   for (const spec of PAGES) {
-    const file = spec.file.split('?')[0];
+    const file = spec.file.split('?')[0].replace(/\/$/, '/index.html');
     assert.ok(readFileSync(join(REPO_ROOT, file), 'utf8').length > 0, `${file} is in PAGES but not in the repository`);
   }
 });

@@ -173,8 +173,20 @@ export function scanHtml(text, file, selfOrigins) {
   const out = [];
   const html = stripHtmlComments(text);
 
+  /* An <a href> or <area href> is a navigation the READER chooses, not a
+     request the page makes: an instrument page links to its Official
+     Journal text, and a link to EUR-Lex loads nothing from EUR-Lex. Such an
+     href is skipped; every other attribute on those elements, and href on
+     every other element (<link rel=stylesheet|preconnect|preload>, <base>),
+     is still a fetching position. */
+  const tagStart = (i) => html.lastIndexOf('<', i);
   for (const m of html.matchAll(ATTR_RE)) {
     const attr = m[1].toLowerCase();
+    if (attr === 'href') {
+      const start = tagStart(m.index);
+      const tag = html.slice(start, html.indexOf('>', m.index) + 1);
+      if (/^<(a|area)\b/i.test(tag)) continue;
+    }
     const raw = m[2] ?? m[3] ?? m[4] ?? '';
     /* srcset is a comma-separated candidate list, each "url descriptor" */
     const refs = attr === 'srcset' ? raw.split(',').map((c) => c.trim().split(/\s+/)[0]) : [raw];
@@ -266,8 +278,21 @@ export function scanJs(text, file, selfOrigins) {
  * JS scan above is where that shows up, and agent/browser's
  * `network:first-party` measures the result in a real browser.
  */
-export function runtimeSurface(root) {
+/** Every page of the site: the hand-written pages at the root, and the
+ *  instrument pages tools/_footer.mjs generates under instruments/<id>/. */
+export function sitePages(root) {
   const pages = readdirSync(root).filter((f) => f.endsWith('.html'));
+  const dir = join(root, 'instruments');
+  if (existsSync(dir)) {
+    for (const d of readdirSync(dir).sort()) {
+      if (existsSync(join(dir, d, 'index.html'))) pages.push(`instruments/${d}/index.html`);
+    }
+  }
+  return pages;
+}
+
+export function runtimeSurface(root) {
+  const pages = sitePages(root);
   const css = [
     ...(existsSync(join(root, 'style.css')) ? ['style.css'] : []),
     ...(existsSync(join(root, 'css')) ? readdirSync(join(root, 'css')).filter((f) => f.endsWith('.css')).map((f) => `css/${f}`) : []),

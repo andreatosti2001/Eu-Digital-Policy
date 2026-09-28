@@ -4,7 +4,11 @@
    ============================================================ */
 
 const CACHE = new Map();          // name -> Promise<parsed>
-const ROOT = 'data/';
+/* Resolved against this module, not against the page: the same fetch has to
+   work from index.html and from instruments/<id>/index.html, two levels
+   down. js/ and data/ are siblings at the site root on every deployment. */
+const SITE = new URL('../', import.meta.url);
+const ROOT = new URL('data/', SITE).href;
 
 /** Load one dataset. Repeated calls share one request. */
 export function load(name) {
@@ -126,7 +130,7 @@ let REGISTER = null;
  */
 export function locales() {
   if (!REGISTER) {
-    REGISTER = fetch('i18n/locales.json', { cache: 'no-cache' })
+    REGISTER = fetch(new URL('i18n/locales.json', SITE).href, { cache: 'no-cache' })
       .then((r) => (r.ok ? r.json() : { locales: [] }))
       .then((reg) => {
         const by = new Map();
@@ -156,7 +160,8 @@ export function loadOverlay(lang) {
       .then((reg) => {
         const rec = reg.by.get(l);
         if (!rec || !rec.data) return {};
-        return fetch(rec.data, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : {}));
+        /* the register's paths are relative to the site root */
+        return fetch(new URL(rec.data, SITE).href, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : {}));
       })
       .catch(() => ({})));
   }

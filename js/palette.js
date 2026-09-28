@@ -30,6 +30,7 @@
 import { createDialog } from './dialog.js';
 import { initSearch } from './search.js';
 import { isThreshold, thresholdProvider } from './threshold.js';
+import { href as siteHref } from './routes.js';
 
 const KIND_MARK = {
   concept: '§', instrument: '■', provision: '¶', authority: '◆',
@@ -237,7 +238,7 @@ function activate(it) {
   if (it.gloss) {
     /* the brief owns the glossary panel; elsewhere the term is a destination */
     if (typeof window.__EU_OPEN_GLOSSARY__ === 'function') { window.__EU_OPEN_GLOSSARY__(it.gloss); return; }
-    location.href = 'index.html#gloss-' + it.gloss;
+    location.href = siteHref('index.html#gloss-' + it.gloss);
     return;
   }
   const here = location.pathname.split('/').pop() || 'index.html';

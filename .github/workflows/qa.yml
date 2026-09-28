@@ -122,6 +122,16 @@ jobs:
           node tools/evidence-audit.mjs
           node tools/evidence-audit.mjs --markdown >> "$GITHUB_STEP_SUMMARY"
 
+      # 27 Sep 2026. What a crawler is told about every address, read
+      # from the HTML as served: one canonical per entity, a sitemap of
+      # exactly the indexable routes, titles and descriptions that are
+      # unique and supported by the page's own text, structured data that
+      # agrees with the page, every indexable page reachable by plain
+      # links — and every generated page and social card current with the
+      # data it was generated from. docs/SEO-OPERATIONS.md.
+      - name: seo-audit.mjs — canonical, sitemap, metadata, crawl graph, structured data
+        run: node tools/seo-audit.mjs
+
       # SESSION 30. The validators' own suite. Until now nothing tested
       # the four checks that are this project's test suite, and two of
       # this session's findings were defects in a check rather than in

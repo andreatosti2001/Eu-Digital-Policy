@@ -22,6 +22,7 @@
 
 import { load, index, label as taxLabel, note as taxNote, renderError } from './data.js';
 import * as F from './format.js';
+import { instrumentHref, siteRoot } from './routes.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -52,10 +53,10 @@ const shortName = (ix, id) => {
   return i ? i.short_name : id;
 };
 
-const instLink = (ix, id, current) => {
+const instLink = (ix, id, current, root) => {
   const name = esc(shortName(ix, id));
   if (id === current) return '<b class="ix-self">' + name + '</b>';
-  return '<a href="instrument.html?id=' + esc(id) + '">' + name + '</a>';
+  return '<a href="' + esc(instrumentHref(id, ix, root)) + '">' + name + '</a>';
 };
 
 /* ------------------------------------------------------------ one edge */
@@ -65,8 +66,9 @@ const instLink = (ix, id, current) => {
  * @param {object} r   the relationship record
  * @param {object} ix  the built index
  * @param {string} [current]  instrument id to mark as "this one"
+ * @param {string} [root]     path from the page to the site root
  */
-export function interactionBlock(r, ix, current) {
+export function interactionBlock(r, ix, current, root = siteRoot()) {
   const kind = esc(taxLabel(ix, r.kind) || String(r.kind).split(':').pop());
   const kindNote = taxNote(ix, r.kind);
 
@@ -79,7 +81,7 @@ export function interactionBlock(r, ix, current) {
     : '<span class="ix-rel">' + kind + '</span>';
 
   const head = '<p class="ix-head">' +
-    instLink(ix, r.from, current) + ' ' + arrow + ' ' + instLink(ix, r.to, current) +
+    instLink(ix, r.from, current, root) + ' ' + arrow + ' ' + instLink(ix, r.to, current, root) +
     '</p>';
 
   const provisions = (r.provisions || []).map((pid) => {
@@ -146,12 +148,12 @@ export function interactionBlock(r, ix, current) {
  * what to say about that, because "none recorded" is a statement about the
  * dataset and not about the law.
  */
-export function interactionsFor(instrumentId, ix) {
+export function interactionsFor(instrumentId, ix, root = siteRoot()) {
   const rels = (ix.relationship || [])
     .filter((r) => r.from === instrumentId || r.to === instrumentId)
     .sort((a, b) => kindRank(a.kind) - kindRank(b.kind));
   if (!rels.length) return '';
-  return rels.map((r) => interactionBlock(r, ix, instrumentId)).join('');
+  return rels.map((r) => interactionBlock(r, ix, instrumentId, root)).join('');
 }
 
 /* ------------------------------------------------------- the brief mount */
