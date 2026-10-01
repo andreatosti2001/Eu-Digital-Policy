@@ -51,9 +51,11 @@ Established by the audit of 1 September 2026, with evidence in
 - **Nothing runs automatically.** No CI, no `package.json`, no git hooks. Every
   gate the README describes is opt-in (F-02). A green run is a green run
   *somebody chose to do*.
-- **`validate.mjs` never sees `index.html`.** The ~60 KB `__CONTENT__` object,
-  which duplicates part titles and instrument names, is entirely outside data
-  validation (F-04).
+- **`validate.mjs` never sees `index.html`.** The ~60 KB `__CONTENT__` object
+  that duplicated part titles and prose was removed on 30 Sep 2026 and
+  `design-qa.mjs` now fails a script holding a page's text — but the part titles
+  and deks in `data/brief.json` and in the markup's headings are still compared by
+  no validator (`docs/CURRENT-ARCHITECTURE.md` §8).
 - **A wildcard reference can never dangle.** Bare `"*"` and `foo*` refs always
   resolve; that path carries no referential guarantee (F-11).
 - **One competence check is dead code** — `checkOne(…, 'institution', null)`

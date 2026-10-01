@@ -35,7 +35,8 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -154,19 +155,36 @@ test('an element the site itself marks — data-i18n or data-claim — is a bloc
   for (const d of divs) assert.ok(d.i18n_key || d.claim_ids.length, `${d.anchor} is a div with neither marker`);
 });
 
-test('the three homes of the brief\'s prose are read as three', () => {
-  assert.deepEqual(Object.keys(PROSE.by_home).sort(), ['brief_json', 'content_blob', 'markup']);
+test('the homes of the brief\'s prose are read separately — and the inline blob is no longer one of them', () => {
+  /* index.html's window.__CONTENT__ blob was removed on 30 Sep 2026
+     (docs/CURRENT-ARCHITECTURE.md §8). The markup is the prose's home;
+     data/brief.json still holds the part titles and deks beside it. */
+  assert.deepEqual(Object.keys(PROSE.by_home).sort(), ['brief_json', 'markup']);
   for (const h of Object.keys(PROSE.by_home)) assert.ok(PROSE.by_home[h] > 0, `${h} yielded no blocks`);
+  assert.equal(PROSE.blob.present, false);
 });
 
-test('the __CONTENT__ / brief.json divergence is reported and not reconciled', () => {
-  const d = PROSE.divergences.find((x) => x.field === 'meta.standfirst');
-  assert.ok(d, 'meta.standfirst has already drifted between the two homes; a reader that missed it would be wrong about the site');
-  assert.notEqual(d.blob, d.brief_json);
-  const blob = readContentBlob();
-  const { brief } = readBriefJson();
-  assert.equal(blob.content.meta.standfirst, d.blob, 'the reported value is the one in the file');
-  assert.equal(brief.meta.standfirst, d.brief_json);
+test('an inline blob is read if one comes back, and its divergence is reported and not reconciled', () => {
+  /* On this tree there is none, and its absence is the architecture, not
+     a divergence to report. */
+  assert.equal(readContentBlob().present, false);
+  assert.deepEqual(blobDivergences(), []);
+  /* Planted: the reader still sees a blob, and still reports a drifted
+     title without deciding which home is right. */
+  const dir = mkdtempSync(join(tmpdir(), 'editorial-blob-'));
+  try {
+    mkdirSync(join(dir, 'data'));
+    const { brief } = readBriefJson();
+    writeFileSync(join(dir, 'data', 'brief.json'), JSON.stringify(brief));
+    const nav = brief.parts.map((p) => ({ id: p.id, title: p.id === 'part-2' ? 'GDPR, retitled in the blob only' : p.title }));
+    writeFileSync(join(dir, 'index.html'), `<html><body><script>window.__CONTENT__ = ${JSON.stringify({ nav })};</script></body></html>`);
+    assert.equal(readContentBlob({ root: dir }).present, true);
+    const d = blobDivergences({ root: dir });
+    assert.equal(d.length, 1);
+    assert.equal(d[0].field, 'nav[part-2].title');
+    assert.equal(d[0].brief_json, brief.parts.find((p) => p.id === 'part-2').title, 'the reported value is the one in the file');
+    assert.equal(readBriefJson({ root: dir }).brief.parts.find((p) => p.id === 'part-2').title, d[0].brief_json, 'nothing was reconciled');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test('the scanner never walks into a script, a style or a comment', () => {
@@ -681,15 +699,17 @@ test('an as-of date is required, because "not stale" and "nobody looked" are dif
 
 test('a run with no input still reports what the site says that disagrees with itself', async () => {
   const { result } = await runWith([]);
-  assert.ok(result.site.length, 'the two homes of meta.standfirst already differ');
   for (const p of result.site) {
     assert.equal(p.proposal_kind, 'editorial_recommendation');
     assert.equal(p.autonomy_class, 'human_only');
     for (const op of p.proposed_change.operations) assert.equal(op.proposed, null);
   }
-  const drift = result.site.find((p) => /standfirst/.test(p.prose_locations[0].anchor));
-  assert.ok(drift, 'the known divergence is reported');
-  assert.match(drift.proposed_change.scope_note, /does NOT reconcile/);
+  /* The standfirst drift this used to find lived between index.html's
+     __CONTENT__ blob and data/brief.json's meta block. Both copies were
+     removed on 30 Sep 2026 — the masthead in the markup is the one home —
+     so a two-homes finding here would now be a false report. */
+  assert.ok(!result.site.some((p) => /standfirst/.test(p.prose_locations[0].anchor)), 'a drift between two copies that no longer exist was reported');
+  assert.ok(!result.site.some((p) => /^two homes of/.test(p.subject ?? '')));
 });
 
 test('the drafts go where the session said they go', () => {

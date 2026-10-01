@@ -118,8 +118,8 @@ distinction in the text between what the law says and what the author thinks.
 
 **Produces:** prose changes, each carrying: the claim IDs affected, the
 `superseded` declaration for **every** locale holding a translation of the old
-English, and confirmation that `__CONTENT__.search[].text` no longer disagrees
-with the visible text.
+English, and — where a part title or dek changed — the same change in
+`data/brief.json` `parts[]`.
 
 **Never:** states as fact something no claim supports; softens a stated
 limitation to make the project look better; edits a `data-i18n` string without
@@ -128,9 +128,11 @@ captions, and the locales are **already** asymmetric on
 `annex-a.figcaption1` (audit F-05); silently changes a number that appears in
 both prose and data.
 
-**Must know:** the ~60 KB `__CONTENT__` object in `index.html` holds a second
-copy of the prose and of all 14 part titles, and **no validator checks it**
-(audit F-04). Editing prose means editing both copies.
+**Must know:** the prose has one home, the markup of `index.html`; `app.js`
+reads its contents and search index from there, and the `__CONTENT__` copy that
+used to shadow it was removed on 30 Sep 2026 (`docs/CURRENT-ARCHITECTURE.md` §8).
+The 14 part titles and their deks are also held in `data/brief.json`, and **no
+validator compares the two** — change both.
 
 ## 7 · UX/UI — owns the interface, within the existing design
 

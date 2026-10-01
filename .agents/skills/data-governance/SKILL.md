@@ -79,9 +79,9 @@ Authoring or altering any legal fact; creating a source record; **changing a `cl
    the diff.
 3. Run `node tools/validate.mjs` — expect 0 errors — then the other three validators.
 4. Read the full `git diff` line by line before committing.
-5. If the edit changed English prose, check whether the string is duplicated in
-   `window.__CONTENT__` (`index.html:361`) and whether the locale overlays must be declared
-   `superseded`.
+5. If the edit changed English prose, check whether the locale overlays must be declared
+   `superseded`, and — for a part title or dek — make the same change in
+   `data/brief.json` `parts[]` (`docs/CURRENT-ARCHITECTURE.md` §8).
 
 ## Refusal conditions
 

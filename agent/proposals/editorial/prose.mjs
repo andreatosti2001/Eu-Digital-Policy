@@ -22,14 +22,15 @@
    a second home for sentences that already have one, and it would
    go stale the first time somebody edited a paragraph.
 
-   THE THREE HOMES ARE READ AS THREE. `legal-editorial`'s SKILL.md
-   says an English string can live in the markup, in the inline
-   `window.__CONTENT__` blob and in the locale overlays, and that
-   `meta.standfirst` has already drifted between the first two. This
-   module reads the markup AND the blob AND `data/brief.json`,
-   reports what differs, and RECONCILES NOTHING. The drift is the
-   author's decision (docs/HANDOVER.md: do not fix it on your own
-   initiative).
+   THE HOMES ARE READ SEPARATELY. The brief's prose has one home, the
+   markup of index.html. Until 30 Sep 2026 it had a second, the inline
+   `window.__CONTENT__` blob, which had drifted; it was removed and
+   app.js now reads the markup (docs/CURRENT-ARCHITECTURE.md §8).
+   `data/brief.json` still holds the part titles and deks beside the
+   headings. This module reads the markup AND `data/brief.json`, and
+   still looks for an inline blob so that one which came back would be
+   read rather than missed. It reports what differs and RECONCILES
+   NOTHING.
 
    IT IS READ-ONLY, AND THAT IS ENFORCED RATHER THAN PROMISED —
    `selftest.mjs` scans every module in this directory for a write
@@ -269,14 +270,14 @@ export function pageFiles({ root = REPO_ROOT } = {}) {
 }
 
 /**
- * The inline `window.__CONTENT__` blob — the second home of the
- * brief's prose, and the one the reader's contents overlay and
- * search index actually read.
+ * The inline `window.__CONTENT__` blob — the second home the brief's
+ * prose had until 30 Sep 2026 (docs/CURRENT-ARCHITECTURE.md §8).
  *
- * Nothing loads `data/brief.json` at runtime. That is the
- * `__CONTENT__` bypass (docs/CURRENT-ARCHITECTURE.md §8), and this
- * function exists so a proposal can say it checked both rather than
- * promise that somebody will.
+ * It was removed, and `tools/design-qa.mjs` fails a page whose script
+ * copies its text, so on this tree this returns `present: false`. It
+ * still looks, because `EditorialProposal.content_blob_checked` asks
+ * whether it was checked, and "looked and found none" is the only
+ * honest way to say yes.
  */
 export function readContentBlob({ root = REPO_ROOT, file = 'index.html' } = {}) {
   const raw = readFileSync(join(root, file), 'utf8');
@@ -306,7 +307,8 @@ export function readContentBlob({ root = REPO_ROOT, file = 'index.html' } = {}) 
   return { present: true, file, bytes: json.length, content, blocks };
 }
 
-/** `data/brief.json` — canonical, and fetched by nothing. */
+/** `data/brief.json` — the parts' identity and order, fetched by nothing;
+ *  its titles and deks sit beside the headings in the markup. */
 export function readBriefJson({ root = REPO_ROOT } = {}) {
   const path = 'data/brief.json';
   const brief = JSON.parse(readFileSync(join(root, path), 'utf8'));
@@ -328,18 +330,18 @@ export function readBriefJson({ root = REPO_ROOT } = {}) {
 }
 
 /**
- * Where the two homes of the brief's own metadata disagree.
+ * Where an inline blob, if one exists, disagrees with `data/brief.json`.
  *
- * REPORTED, NEVER RECONCILED. `meta.standfirst` has already drifted
- * and the handover is explicit that fixing it is not an agent's to
- * take. What this function buys is that a proposal touching a
- * diverged string can SAY it diverged, which is what
+ * REPORTED, NEVER RECONCILED. With no blob there is nothing to diverge
+ * from, and that is the architecture rather than a finding: an empty
+ * list. What this function buys is that a proposal touching a diverged
+ * string can SAY it diverged, which is what
  * `EditorialProposal.content_blob_divergence` is for.
  */
 export function blobDivergences({ root = REPO_ROOT } = {}) {
   const blob = readContentBlob({ root });
   const { brief } = readBriefJson({ root });
-  if (!blob.present) return [{ field: null, why: 'index.html carries no __CONTENT__ blob', blob: null, brief_json: null }];
+  if (!blob.present) return [];
   const out = [];
   const keys = [...new Set([...Object.keys(blob.content.meta ?? {}), ...Object.keys(brief.meta ?? {})])].sort();
   for (const k of keys) {

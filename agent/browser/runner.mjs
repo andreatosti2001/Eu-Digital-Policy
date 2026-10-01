@@ -33,7 +33,7 @@ import { findBrowser, browserVersion } from './find.mjs';
 import { serveSite, REPO_ROOT } from './serve.mjs';
 import { launch } from './cdp.mjs';
 import {
-  PAGES, checkPageLoads, checkNavigation, checkInternalLinks, checkSearch, checkGlossary,
+  PAGES, checkPageLoads, checkNavigation, checkInternalLinks, checkSearch, checkBriefIndex, checkGlossary,
   checkComparison, checkEvidence, checkApplicability, checkInstrumentView, checkSeo, SEO_PAGES,
   checkLanguageSwitching, checkViewports, checkKeyboard, checkDialogs,
   checkNoThirdParty, checkAccessibility, checkContrast, checkReducedMotion, checkThreshold, checkDeployedSubpath,
@@ -116,6 +116,7 @@ export async function runBrowserQA({ only = null, pages = PAGES, quick = false, 
     if (wants('navigation')) results.push(...await checkNavigation(page, site.origin));
     if (wants('links')) results.push(...await checkInternalLinks(page, site.origin, { pages: quick ? pages.slice(0, 3) : pages }));
     if (wants('search')) results.push(...await checkSearch(page, site.origin));
+    if (wants('search')) results.push(...await checkBriefIndex(page, site.origin));
     if (wants('glossary')) results.push(...await checkGlossary(page, site.origin));
     if (wants('comparison')) results.push(...await checkComparison(page, site.origin));
     if (wants('evidence')) results.push(...await checkEvidence(page, site.origin));

@@ -2,14 +2,6 @@
  "$schema_version": "1.0.0",
  "$description": "The document's own structure. Canonical for part identity, ordering, titles, deks and reading times, and for the reading-order graph drawn by the Tree of Life. This is a NAVIGATION graph between parts of the document, deliberately kept separate from the legal relationships between instruments in instruments.json.",
  "$last_verified": "2026-08-27",
- "meta": {
-  "title": "The European Legal Framework for the Digital World",
-  "subtitle": "GDPR, DSA, DMA, AI Act, Data Act and the cyber layer — structure, key provisions, compliance consequences and the case against each",
-  "standfirst": "Six regulations, one directive family and a live reform package now govern almost every commercial act performed through a screen in Europe. They were drafted separately, they overlap deliberately, and they are enforced by institutions of wildly unequal capacity. This brief reads them as a single system: what each one actually requires, where the requirements collide, what enforcement has really produced as opposed to what was announced, and where the serious objections lie — including the ones coming from inside the European institutions themselves.",
-  "dateline": "Analytical brief · State of play as of 26 September 2026",
-  "note": "This document is an analytical synthesis, not legal advice; for any live matter, verify against the consolidated text on EUR-Lex and take qualified advice in the relevant jurisdiction.",
-  "howto": "Each Part is self-contained enough to consult on its own, but the argument is cumulative: Part I supplies the grammar every later Part uses, Part II establishes the enforcement baseline against which every later enforcement claim should be discounted, and Part IX depends on all of them. Shaded boxes in green set out mechanics; shaded boxes in orange set out criticism. Where a claim is contested, both positions are given."
- },
  "parts": [
   {
    "id": "part-1",

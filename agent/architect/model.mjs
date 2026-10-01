@@ -317,12 +317,11 @@ export function leavesOf(db, { max = 20000 } = {}) {
 /**
  * The page architecture, read as markup.
  *
- * Which pages exist, which modules each loads, and how large the
- * one inlined content blob is. `index.html`'s `window.__CONTENT__`
- * is a known hazard (docs/CURRENT-ARCHITECTURE.md §8): it
- * duplicates `data/brief.json`, nothing loads `brief.json` at
- * runtime, and `meta.standfirst` has already drifted. This measures
- * it rather than restating it.
+ * Which pages exist, which modules each loads, and how large any
+ * inlined content blob is. `index.html` carried one,
+ * `window.__CONTENT__`, until 30 Sep 2026 (docs/CURRENT-ARCHITECTURE.md
+ * §8); it now inlines none, and this keeps measuring so that one which
+ * came back would be seen rather than assumed away.
  */
 export function pagesOf({ root = REPO_ROOT } = {}) {
   const files = readdirSync(root).filter((f) => f.endsWith('.html')).sort();

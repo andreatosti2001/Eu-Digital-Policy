@@ -41,7 +41,8 @@ existing applications: instruments carry no dates (only `milestones` → timelin
 supervisor field (competence is an edge inside `institutions.json`); enforcement stores no
 aggregate totals; a source is described once. `tools/validate.mjs` §4 checks duplicated
 canonical facts — but it cannot see inside HTML, which is how the `__CONTENT__` bypass came
-to exist.
+to exist. That blob was removed on 30 Sep 2026; `design-qa.mjs` now fails a script holding a
+page's text (`tools/prose-homes.mjs`), so its side of HTML is checked.
 
 **2. Derivation over storage.** Four facts are computed at render time and never stored:
 evidence grade (`js/format.js`), the eight-stage enforcement pipeline (`js/pipeline.js`),
@@ -91,7 +92,9 @@ added, or it will collapse them.
 
 - Do not store a derived fact, and do not add a cache of one "for performance". **RED**.
 - Do not rename a taxonomy ID. Add a term; deprecate in a note if needed.
-- Do not resolve the `brief.json` / `__CONTENT__` duplication on your own initiative — which
-  copy is correct is the author's decision, and it is recorded as an open issue.
+- Do not generate the brief's part headings from `brief.json`, or delete its titles and deks,
+  on your own initiative. That is the one second home of the brief's text left
+  (`docs/CURRENT-ARCHITECTURE.md` §8), and closing it changes how the brief is authored —
+  the author's decision.
 - Do not add a field that makes `null` and `unknown` indistinguishable.
 - Do not reformat a whole JSON file to accommodate a new field.

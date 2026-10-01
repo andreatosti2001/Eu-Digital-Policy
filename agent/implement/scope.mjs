@@ -61,7 +61,7 @@ export const NEVER_WRITABLE = [
  *  the same thing from the other side). */
 export const LEGAL_RECORD_PATHS = [
   'data/',
-  'index.html',       // the brief's prose, and the inlined __CONTENT__ copy of it
+  'index.html',       // the brief's prose — its one home since the __CONTENT__ copy was removed
   'i18n/',            // what the it/fr/es editions assert
   'js/format.js',     // TIER_GRADE — the evidence grading rules
   'js/pipeline.js',   // the enforcement pipeline derivation

@@ -313,7 +313,10 @@ each behind a pending approval.
    and fetched by nothing). Reported, **never reconciled**: the drift is the author's decision
    and `docs/HANDOVER.md` says so. This is the *editorial* half of the divergence;
    `agent/architect/` raised the *shape* half in SESSION 13 and the two proposals say so about
-   each other.
+   each other. **No longer produced since 30 Sep 2026:** on the author's instruction the blob
+   and `brief.json`'s `meta` block were removed and the masthead in the markup is the one home
+   (`docs/CURRENT-ARCHITECTURE.md` §8). `prose.mjs` still looks for a blob, so one that came
+   back would be read and a divergence reported; on this tree it finds none.
 2. **Two CRITIQUE boxes whose every claim is typed law or fact** (§3).
 3. **Nineteen sentences that read as settled over claims graded Unresolved.** The
    `legal-editorial` skill's one rule that outranks style: *confidence in the prose must match

@@ -255,10 +255,12 @@ site-wide through search even where no view renders it, which is real and is not
 the same as a page rendering it.
 
 **`data/brief.json` is deliberately excluded.** Nothing fetches it at runtime;
-`index.html` renders the brief from the inlined `window.__CONTENT__` blob, which
-has already drifted (`CURRENT-ARCHITECTURE` §8). Claiming `index.html` renders
-`brief.json` would be claiming the bypass is resolved. The exclusion comes back
-as a caveat rather than being silent.
+`index.html` shows the part titles and deks written in its own markup, and
+`app.js` builds the contents and search index from that markup (the inlined
+`window.__CONTENT__` copy was removed on 30 Sep 2026 — `CURRENT-ARCHITECTURE` §8).
+A title or dek changed in `brief.json` must also be changed in the markup, and
+claiming `index.html` renders `brief.json` would be claiming the two are one. The
+exclusion comes back as a caveat rather than being silent.
 
 ## 7a. What a change reaches — SESSION 10
 

@@ -440,7 +440,11 @@ test('the comparison vocabulary and the comparison data are compared, and disagr
 
 test('the pages are read as markup and never as prose', () => {
   const index = MODEL.pages.find((p) => p.page === 'index.html');
-  assert.ok(index.inline_content_bytes > 0, 'the inlined content blob was not measured');
+  /* The inlined __CONTENT__ blob was removed on 30 Sep 2026; the brief's
+     contents and search index are read from its markup. The measurement
+     stays, so a blob that came back would be measured — and reported by the
+     duplication lens — rather than assumed away. */
+  assert.equal(index.inline_content_bytes, 0, 'index.html inlines a content blob again (docs/CURRENT-ARCHITECTURE.md §8)');
   assert.ok(index.modules.length, 'the page\'s modules were not read');
   /* What the blob SAYS is never read. The model carries its size and
      nothing of its content. */

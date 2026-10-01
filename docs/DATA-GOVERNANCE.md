@@ -119,9 +119,10 @@ constitution requires that any new view preserves it.
 - IDs are stable and namespaced. A provision ID **must** begin with its
   instrument's ID plus `:` — `validate.mjs` errors otherwise (`gdpr:art-3`).
 - IDs are global: `validate.mjs` errors on any duplicate across all datasets.
-- **Do not introduce a second ID namespace.** `__CONTENT__.nodes` in
-  `index.html` already uses `aiact`/`dataact` where the canonical IDs are
-  `ai-act`/`data-act` (audit F-04). This is known debt, not a precedent. New
+- **Do not introduce a second ID namespace.** The system map in `index.html`'s
+  markup (`data-node="aiact"`, `"dataact"`) already uses short forms where the
+  canonical IDs are `ai-act`/`data-act` (audit F-04; the `__CONTENT__.nodes` copy
+  of it was removed on 30 Sep 2026). This is known debt, not a precedent. New
   code uses canonical IDs or a declared `aliases` entry.
 - Wildcard references (`dpa-*`, `nca-*`, `dsc-*`, bare `*`) are a modelling
   device for classes of national bodies. `validate.mjs` cannot make them dangle
@@ -137,22 +138,26 @@ patterns to follow (audit F-04, F-14):
 
 | Duplicate | Canonical | Guarded by |
 |---|---|---|
-| `__CONTENT__.nav[].title` in `index.html` | `data/brief.json` — **validated but never fetched** | **nothing** |
-| `__CONTENT__.meta.standfirst` — **already drifted** | `data/brief.json` (holds the pre-correction text) | **nothing** |
-| `__CONTENT__.nodes[]` names/parts | `data/instruments.json` | **nothing** |
-| `__CONTENT__.search[].text` | the markup of `index.html` | **nothing** |
+| Part titles and deks: `data/brief.json` `parts[]` **and** the headings, tree and spine in `index.html` | neither is generated from the other — **the one second home of the brief's text left** (`docs/CURRENT-ARCHITECTURE.md` §8) | **nothing** keeps them together; `agent/health/` `knowledge.duplicate_facts` counts the pairs |
 | Footer + `<noscript>` × 7 pages | `tools/_footer.mjs` | `design-qa.mjs` (drift is an error) |
 | Grade counts in `README.md` prose | derived by `gradeTally()` | **nothing** |
-| "As of" date in README / footer / `__CONTENT__.meta.dateline` | — | **nothing** |
+| "As of" date in README / footer | — | **nothing** |
+
+**Removed 30 Sep 2026, and guarded against returning:** `index.html`'s inline
+`__CONTENT__` blob (`nav`, `meta`, `nodes`, `search` — copies of the part titles, a
+masthead, the node cards and the prose) and `data/brief.json`'s `meta` block. `app.js`
+reads the brief from its markup. `design-qa.mjs` fails any script holding a page's
+text (`tools/prose-homes.mjs`); `validate.mjs` §4(g) fails a `brief.json` key other
+than `parts` and `reading_graph`.
 
 **`data/brief.json` is the extreme case.** `validate.mjs` checks its parts and
 reading graph in full, and **no module fetches it** — the only four `'brief'`
-occurrences in `js/` are nav-model IDs in `js/shell.js`. The canonical file is
-dead; the inlined copy is what the reader sees. `meta.standfirst` has already
-diverged, because `tools/_review10.mjs` corrected that sentence in `index.html`
-and never opens `brief.json`. **Which copy is correct is the author's decision**
-(`docs/HANDOVER.md`, unresolved issue 2) — an agent must not pick one. See
-`AUDIT-2026-09-01.md` F-04 for the provenance.
+occurrences in `js/` are nav-model IDs in `js/shell.js`. Its part IDs and reading
+graph are what the rest of `data/` resolves against; its titles and deks are the
+second home above. The masthead text it used to carry (`meta`, including the
+standfirst `tools/_review10.mjs` corrected in `index.html` only) was removed on
+30 Sep 2026 on the author's instruction: nothing read it, and the markup is what
+the reader sees. See `AUDIT-2026-09-01.md` F-04 for the provenance.
 
 The footer duplication is **deliberate and correct**: a non-affiliation
 statement that only appears when JavaScript runs is not a statement of

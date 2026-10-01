@@ -232,10 +232,10 @@ counting them would put `js/format.js` in the impact map of every change ever de
   The events are named; which side of the horizon each falls on is not, because that would be
   this map asserting something about the reader's browser.
 - **A markup mention is not staleness.** That `index.html` names an id establishes that the
-  author wrote it down, never that the sentence around it is now wrong. And `index.html`
-  renders part of its content from the inlined `window.__CONTENT__` blob rather than from
-  `data/brief.json` (`CURRENT-ARCHITECTURE` §8), so *which* of the two homes a stale sentence
-  lives in is a question this map does not answer.
+  author wrote it down, never that the sentence around it is now wrong. The brief's prose is
+  written in `index.html`'s markup, and its part titles and deks are held a second time in
+  `data/brief.json`, which no module loads (`CURRENT-ARCHITECTURE` §8), so a stale title or
+  dek may need editing in both, and this map does not say which is right.
 
 ## 8. Exposed through observability
 
@@ -319,7 +319,8 @@ correction never touches.
    same corpus. It is in one place, every entry has a reason, and the suite asserts it is
    exhaustive — which is the most that can be said for it.
 6. **Static imports only, and no dynamic import is followed.** Inherited from `surfaces.mjs`.
-7. **The `__CONTENT__` bypass is not resolved and is not pretended away.** §7.
+7. **The brief's part titles and deks have two homes, and this map does not pretend otherwise.**
+   §7. (The larger `__CONTENT__` bypass was removed on 30 Sep 2026.)
 8. **Nothing downstream consumes an `ImpactAssessment` yet.** The chain still ends at a finding
    in front of a human: `RegulatoryChange → ImpactAssessment → (a DataProposal nobody writes) →
    ApprovalRequest → ChangeRecord`. The two middle arrows are SESSION 11's.

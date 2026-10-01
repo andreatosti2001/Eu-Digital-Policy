@@ -401,7 +401,7 @@ export class EditorialAgent {
           ? [
             `Confirm the substitution is the whole of the edit: exactly one occurrence of "${proposal.staleness?.changed_value?.old}" becomes "${proposal.staleness?.changed_value?.new}" and no other byte moves. The proposal carries the before and after in full.`,
             `Confirm the new value is what the document actually prints. This agent has read no document — it carried the value across from ${proposal.evidence.find((e) => e.kind === 'agent_output')?.locator ?? 'the verified input'}, and the chain behind that is where the fact was established or was not.`,
-            `Sweep the other two homes of this string: the inline __CONTENT__ blob in index.html and data/brief.json. ${proposal.content_blob_divergence ? `They already diverge here — ${proposal.content_blob_divergence}` : 'The proposal reports no divergence at this point, which is not the same as their agreeing everywhere.'}`,
+            `If the string is a part title or dek, edit data/brief.json too: it holds those beside the headings in index.html, and nothing keeps the two in step (docs/CURRENT-ARCHITECTURE.md §8). The brief's prose itself has one home, the markup — app.js reads its contents and search index from there. ${proposal.content_blob_divergence ? `A divergence is recorded here — ${proposal.content_blob_divergence}` : 'The proposal reports no divergence at this point, which is not the same as the two agreeing everywhere.'}`,
             `Declare every i18n key in i18n/locales.json as the proposal's i18n_dispositions state. An undeclared key leaves three locale editions asserting the value you just corrected — this has already happened once.`,
           ]
           : [

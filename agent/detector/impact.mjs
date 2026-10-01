@@ -756,7 +756,7 @@ export function mapImpact({ change, depth = 2, root = REPO_ROOT, g = null } = {}
     why: [
       s.named_ids.length ? `The page's own markup names ${s.named_ids.join(', ')}. That establishes the author wrote the id down, never that the sentence around it is now wrong.` : null,
       s.brief_parts.length ? `A claim reached by this change is attached to ${s.brief_parts.join(', ')}, and the brief's prose in that part is the argument the claim supports.` : null,
-      'index.html renders part of its content from the inlined window.__CONTENT__ blob rather than from data/brief.json (CURRENT-ARCHITECTURE §8), so which of the two homes a stale sentence lives in is a question this map does not answer.',
+      'The brief\'s prose is written in index.html\'s markup, and its part titles and deks are held a second time in data/brief.json, which no module loads (CURRENT-ARCHITECTURE §8); a stale title or dek may need editing in both, and this map does not say which is right.',
     ].filter(Boolean).join(' '),
   }));
   if (surfaces.analytical_page.entries.length) {

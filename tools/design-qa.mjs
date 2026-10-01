@@ -23,6 +23,8 @@
      · no page-local <style> block — those are how two versions of
        one component come to exist
      · no third-party stylesheet or script
+     · no script — inline or module — carries the page's own text
+       (tools/prose-homes.mjs: the text a page shows has one home)
 
    And across the CSS:
      · no colour literal outside the two files allowed to declare
@@ -39,6 +41,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { scanRuntimeSurface, sitePages } from './thirdparty.mjs';
 import { TOP_PAGES, BASE } from './seo.mjs';
+import { proseCopies } from './prose-homes.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const errors = [];
@@ -323,6 +326,22 @@ for (const f of scanRuntimeSurface(ROOT)) {
     + (f.tracker ? ` (${f.tracker}: a known font/CDN/analytics host)` : '')
     + '. The site makes no third-party request; if one is ever adopted deliberately it goes in'
     + ' ALLOWED_RUNTIME_ORIGINS in tools/thirdparty.mjs with its reason and who decided it.');
+}
+
+/* -------------------------------------------- one home for a page's text
+
+   index.html once shipped its prose twice — in the markup, and in a 67 KB
+   inline object, window.__CONTENT__, that app.js read its contents, pagers
+   and search index from. Nothing generated the object and nothing compared
+   the two, and it drifted: a lost Annex, a stale standfirst, search quoting
+   superseded text. It was deleted on 30 Sep 2026 and app.js reads the markup.
+   This keeps it deleted, whatever a second copy is called and wherever it is
+   put (tools/prose-homes.mjs states exactly what counts and what does not). */
+
+for (const c of proseCopies(ROOT)) {
+  err(c.file, `holds a copy of text written in ${c.page}: "${c.text.slice(0, 70)}${c.text.length > 70 ? '…' : ''}". `
+    + 'A page\'s text has one home, its markup; read it from the DOM, or generate it with tools/_footer.mjs '
+    + '(docs/CURRENT-ARCHITECTURE.md §8).');
 }
 
 /* ---------------------------------------------------------- report */
