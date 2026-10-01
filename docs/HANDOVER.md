@@ -2,8 +2,8 @@
 
 **Last updated:** the brief's text, single-sourced · 30 September 2026
 **Branch:** `claude/brief-single-source`, cut from `origin/main` at `cc1f7d0` (PR #5's merge).
-Committed and pushed; **open as pull request #6 to `main`** (on the author's word, 1 Oct 2026). `main` did not
-move during the session (re-fetched before this write).
+**Merged as pull request #6** (`d4065c6`, 1 Oct 2026). A follow-up on the same branch, restarted
+from `d4065c6`, records the evidence the main commit omitted (below).
 
 ## The brief's text, single-sourced — 30 September 2026
 
@@ -63,14 +63,28 @@ the only data edit removes unrendered text.
 5. `agent/proposals/governance/patterns.mjs` P-11 states the duplication in the present tense;
    its anchors still resolve.
 
+**The missing `Evidence:` trailer — recorded here, because `main` is not rewritten.**
+`081ca54`, the commit of this change that touches `app.js`, `data/brief.json` and `index.html`,
+was merged without the trailer `tools/commit-evidence.mjs` requires (the session did not run that
+check before pushing). On the push of `d4065c6` the check failed in QA and in the Pages gate, and
+every later step of the validators job was skipped; the site was still published, because the
+Pages source is still the branch (`docs/DEPLOYMENT.md` §3). The evidence that commit rests on:
+measured on `cc1f7d0` before any change — in Chromium, `window.__CONTENT__.search` against the
+rendered `.part-body` text (Annex C absent, ~9 KB of current prose missing, the closing paragraphs
+of three Parts unfindable by search); `tools/prose-homes.mjs` finds 112 copied blocks on that tree
+and 0 after; `docs/CURRENT-ARCHITECTURE.md` §8 holds the table. No legal fact changed:
+`data/brief.json` lost only its unrendered `meta` block. The check judges each push's own range,
+so the next push to `main` is judged on its own commits; no check was changed to get past it.
+
 **For the author:** (a) the brief shows no dateline anywhere; if it should, it belongs in the
-markup under an i18n key. (b) Decide on item 1 above. (c) Merge PR #6 — merging publishes
-the site.
+markup under an i18n key. (b) Decide on item 1 above. (c) Merge the follow-up — it changes
+only `docs/`, and its push re-runs the validator steps the failure skipped on `main`.
 
 ## Branch register — 30 September 2026
 
 `git branch -r --no-merged origin/main` lists nothing. This session's branch,
-`claude/brief-single-source`, is pushed and **open as pull request #6**.
+`claude/brief-single-source`, was merged as PR #6 and restarted from `d4065c6` for the
+evidence follow-up.
 
 ## SEO, indexing and discoverability — 27 September 2026 (night)
 
