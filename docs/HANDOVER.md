@@ -2,7 +2,7 @@
 
 **Last updated:** the brief's text, single-sourced · 30 September 2026
 **Branch:** `claude/brief-single-source`, cut from `origin/main` at `cc1f7d0` (PR #5's merge).
-Committed and pushed; **no pull request yet** — opened on the author's word. `main` did not
+Committed and pushed; **open as pull request #6 to `main`** (on the author's word, 1 Oct 2026). `main` did not
 move during the session (re-fetched before this write).
 
 ## The brief's text, single-sourced — 30 September 2026
@@ -64,13 +64,13 @@ the only data edit removes unrendered text.
    its anchors still resolve.
 
 **For the author:** (a) the brief shows no dateline anywhere; if it should, it belongs in the
-markup under an i18n key. (b) Decide on item 1 above. (c) A pull request to `main` on your
-word.
+markup under an i18n key. (b) Decide on item 1 above. (c) Merge PR #6 — merging publishes
+the site.
 
 ## Branch register — 30 September 2026
 
 `git branch -r --no-merged origin/main` lists nothing. This session's branch,
-`claude/brief-single-source`, is pushed and not yet merged; no pull request is open.
+`claude/brief-single-source`, is pushed and **open as pull request #6**.
 
 ## SEO, indexing and discoverability — 27 September 2026 (night)
 
