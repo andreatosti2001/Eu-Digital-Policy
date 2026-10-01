@@ -17,8 +17,9 @@
 
    WHAT THE POLICY SAYS
      scripts   'self' plus the SHA-256 of each inline <script> on that page
-               — the pre-paint theme bootstrap and, on the brief, the
-               __CONTENT__ blob. No 'unsafe-inline', no 'unsafe-eval':
+               — the pre-paint theme bootstrap. The brief has none since the
+               __CONTENT__ blob was removed (30 Sep 2026), so its policy is
+               script-src 'self' alone. No 'unsafe-inline', no 'unsafe-eval':
                js/evidence-model.js reads derivation formulas with its own
                arithmetic parser for exactly this reason, and the three
                inline onclick="" handlers were moved into app.js.
@@ -39,7 +40,7 @@
    tools/design-qa.mjs imports this module and fails a page whose inline
    script is not hashed in its own policy — which is what would otherwise
    happen silently, in the browser, the day someone edits the theme
-   bootstrap or the __CONTENT__ blob without regenerating.
+   bootstrap without regenerating.
    ============================================================ */
 
 import { createHash } from 'node:crypto';

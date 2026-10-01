@@ -371,6 +371,17 @@ function checkCanonicalFacts() {
     for (const k of ['supervisor', 'authority', 'competent_authority', 'entry_into_force', 'application_date'])
       if (k in i) err(`instruments/${i.id} carries "${k}" — that fact belongs in institutions.json or timeline.json`);
   }
+
+  // (g) brief.json is the document's STRUCTURE — part identity, order and the
+  //     reading graph — and not its text. It used to carry a `meta` block (title,
+  //     standfirst, dateline…) that no module read, beside the masthead a reader
+  //     sees in index.html, and its standfirst kept a miscount the markup had
+  //     already corrected. The brief's words live in index.html's markup;
+  //     docs/CURRENT-ARCHITECTURE.md §8. A new top-level key is a decision to
+  //     make there, not here.
+  const BRIEF_KEYS = new Set(['$schema_version', '$description', '$last_verified', '$note', 'parts', 'reading_graph']);
+  for (const k of Object.keys(db.brief ?? {}))
+    if (!BRIEF_KEYS.has(k)) err(`brief.json carries "${k}" — the brief's text lives in index.html's markup; brief.json holds only its parts and reading graph`);
 }
 
 /* ---------- 5. status model discipline ---------- */

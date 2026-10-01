@@ -79,6 +79,7 @@ nineteenth area — the site served at its published GitHub Pages subpath, 15 ch
 | every major page loads | `checkPageLoads` | 21 | `design-qa.mjs` can see `<div id="dnaTable">` in the markup. It cannot see whether anything ever put a table in it. |
 | representative instrument views | `checkInstrumentView` | 2 | that `instrument.html?id=gdpr` renders, and that an **unknown** id renders a stated absence rather than a plausible empty page |
 | search | `checkSearch` | 3 | that `/` opens the palette, focus lands in the input, typing produces results, Escape closes it |
+| *(30 Sep 2026)* the brief's own index | `checkBriefIndex` | 4 | on `index.html`, through the prose provider the palette calls: every Part listed in order under the heading the page shows, the **last** paragraph of every Part found by search, every pager naming the heading it leads to, and no `window.__CONTENT__`. Run against the tree before that date, three of the four fail — Annex C was missing and three Parts' own closing paragraphs could not be found (`docs/CURRENT-ARCHITECTURE.md` §8). |
 | glossary | `checkGlossary` | 2 | that clicking a term shows a definition |
 | comparison views | `checkComparison` | 2 | that the DNA grid has rows AND columns, and that toggling a dimension changes it — a control that renders and does nothing is invisible to a static read |
 | evidence interfaces | `checkEvidence` | 3 | that the bibliography renders entries, that the self-citation count resolves past "Counting…", and that the **derived** evidence grades actually derived |
@@ -330,3 +331,17 @@ both themes, no sideways scroll at 390px. `PAGES` now loads `instruments/gdpr/` 
 `instrument.html?id=gdpr`, and the fixture server serves a directory's `index.html` at the
 directory's own address and redirects a missing trailing slash, as GitHub Pages does. The first
 full run found two contrast failures in the new link styles; both were fixed before commit.
+
+## 30 September 2026 — the brief's own index
+
+`checkBriefIndex` (4 checks, in the `search` and `navigation` areas) is the browser half of
+the regression protection for the removed `__CONTENT__` blob (`docs/CURRENT-ARCHITECTURE.md`
+§8). It does not compare the index with any copy of the brief — there is none now — but with
+the page itself, in the browser, after `app.js` has run: the Parts the provider lists against
+the `section.part` headings; a phrase from the last paragraph of each Part against the
+provider's passage hits; each pager against the next heading; and whether the old global is
+defined. `design-qa.mjs` catches a copy coming back statically; this catches an index that no
+longer covers the page, whatever it was built from. Measured against the tree before the
+change with the same check: `search:brief-index`, `search:brief-prose` (3 Parts) and
+`search:brief-one-home` fail, and `search:brief-pagers` passes — the pagers were right, the
+search was not.

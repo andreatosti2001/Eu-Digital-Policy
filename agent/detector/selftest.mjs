@@ -559,8 +559,8 @@ test('the chrome is counted apart, or affected_pages would name every page every
 test('data/brief.json is not claimed to reach a page', () => {
   const { pages, caveats } = affectedPages(['data/brief.json']);
   assert.deepEqual(pages, [], 'nothing fetches brief.json at runtime');
-  assert.ok(caveats.some((c) => /__CONTENT__/.test(c)),
-    'the reason is the known bypass, and saying index.html renders it would claim the bypass is resolved');
+  assert.ok(caveats.some((c) => /index\.html shows the part titles and deks written in its own markup/.test(c) && /nothing keeps the two in step/.test(c)),
+    'the reason is the second home beside the markup, and saying index.html renders brief.json would claim the two are one');
 });
 
 test('a dataset follows from the entity kind, not from the change kind', () => {

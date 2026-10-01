@@ -61,12 +61,12 @@ evidence, the fix is verification, not adverbs.
 A correction in `index.html` is not finished when the page reads correctly.
 
 1. **The markup** — the sentence as the reader sees it.
-2. **`window.__CONTENT__` at `index.html:361`** — a ~59.8 KB inline blob duplicating
-   `data/brief.json` (`meta`, `nodes`, `nav`, `search`). Nothing loads `brief.json` at
-   runtime and no validator compares the two; `meta.standfirst` has **already drifted**. If
-   the string you edited appears there — in a nav entry, a dek, or the search index — it must
-   be edited there too, or the search result and the contents overlay will assert the thing
-   you just corrected.
+2. **`data/brief.json` `parts[]` — for a part title or dek only.** It holds each Part's
+   title and dek beside the headings in the markup, and nothing keeps the two in step
+   (`docs/CURRENT-ARCHITECTURE.md` §8). The brief's prose has no second copy: the
+   `window.__CONTENT__` blob was removed on 30 Sep 2026 and `app.js` builds the contents,
+   pagers and search index from the markup, so a corrected sentence is searchable as
+   corrected. Do not add a copy back — `design-qa.mjs` fails a script holding a page's text.
 3. **The locale overlays** — `i18n/it.json`, `fr.json`, `es.json` hold translations of the
    *previous* English. Correcting the English without declaring the key `superseded` in
    `i18n/locales.json` leaves three editions asserting the corrected error. This has already
@@ -88,7 +88,8 @@ readings identical.
 
 1. Read the sentence, then the claim record behind it, then the claim's grade.
 2. Make the minimal edit. A correction changes what was wrong and nothing else.
-3. Sweep the other two homes (`__CONTENT__`, locales) and declare any superseded key.
+3. Sweep the other homes (`data/brief.json` for a title or dek; the locales) and declare
+   any superseded key.
 4. `node tools/design-qa.mjs` and `node tools/i18n-audit.mjs` — expect the recorded baseline.
 5. Read the full `git diff`. In prose, a diff that is larger than the correction is the
    finding.

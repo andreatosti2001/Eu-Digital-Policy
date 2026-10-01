@@ -282,6 +282,62 @@ export async function checkSearch(page, origin) {
   return results;
 }
 
+/* The brief's own index — its contents, pagers and prose search — is
+   read by app.js out of the markup it is loaded into. Until 30 Sep 2026 it
+   came from window.__CONTENT__, an inline copy with no generator that had
+   lost Annex C and ~9 KB of the current prose, so search could not find
+   what the page said (docs/CURRENT-ARCHITECTURE.md §8). This measures the
+   index against the page in the browser, through the provider js/palette.js
+   calls, rather than against any copy of it: every Part listed in order,
+   every title the heading a reader sees, the LAST paragraph of every Part
+   findable, and every pager naming the heading it leads to. */
+export async function checkBriefIndex(page, origin) {
+  const results = [];
+  await page.goto(`${origin}/index.html`);
+  const r = await page.evaluate(`(() => {
+    const search = window.__EU_PROSE_SEARCH__;
+    if (typeof search !== 'function') return { provider: false };
+    const secs = [...document.querySelectorAll('section.part')];
+    const heads = secs.map((s) => ({ id: s.id, title: (s.querySelector('.part-head h2')?.textContent ?? '').replace(/\\s+/g, ' ').trim() }));
+    const listed = (search('')[0]?.items ?? []).map((i) => ({ id: i.id, title: i.title }));
+    /* a phrase from the last paragraph of each Part: words 2–8, so
+       the query is prose and not the first word of a heading */
+    const unfound = [];
+    for (const s of secs) {
+      const ps = [...s.querySelectorAll('.part-body p')].map((p) => p.textContent.replace(/\\s+/g, ' ').trim()).filter((t) => t.split(' ').length >= 10);
+      if (!ps.length) continue;
+      const q = ps[ps.length - 1].split(' ').slice(1, 8).join(' ');
+      const hit = search(q).some((g) => g.kind === 'passage' && g.items.some((i) => i.id === s.id));
+      if (!hit) unfound.push({ id: s.id, query: q });
+    }
+    const pagers = secs.map((s, i) => {
+      const next = s.querySelector('.pager .pg.next b');
+      const want = secs[i + 1] ? heads[i + 1].title.split(':')[0] : null;
+      return { id: s.id, pagers: s.querySelectorAll('.pager').length, next: next ? next.textContent : null, want };
+    }).filter((x) => x.pagers !== 1 || x.next !== x.want);
+    return { provider: true, heads, listed, unfound, pagers, blob: typeof window.__CONTENT__ !== 'undefined' };
+  })()`);
+
+  if (!r?.provider) {
+    results.push(bad('search:brief-index', 'search', 'index.html exposes no prose search provider (window.__EU_PROSE_SEARCH__)'));
+    return results;
+  }
+  const same = JSON.stringify(r.listed) === JSON.stringify(r.heads);
+  results.push(same
+    ? ok('search:brief-index', 'search', `the brief's search lists all ${r.heads.length} Parts, in order, under the headings the page shows`, { parts: r.heads.length })
+    : bad('search:brief-index', 'search', 'the brief\'s search index does not match the Parts on the page', { listed: r.listed, page: r.heads }));
+  results.push(!r.unfound.length
+    ? ok('search:brief-prose', 'search', 'the last paragraph of every Part is found by the brief\'s search — the index covers the current prose', { parts: r.heads.length })
+    : bad('search:brief-prose', 'search', `${r.unfound.length} Part(s) whose own last paragraph search does not find`, { unfound: r.unfound }));
+  results.push(!r.pagers.length
+    ? ok('search:brief-pagers', 'navigation', 'every Part has one pager, and it names the heading it leads to')
+    : bad('search:brief-pagers', 'navigation', 'a pager is missing, doubled, or names a heading the page does not show', { pagers: r.pagers }));
+  results.push(!r.blob
+    ? ok('search:brief-one-home', 'search', 'no window.__CONTENT__: the index is read from the page, not from a copy of it')
+    : bad('search:brief-one-home', 'search', 'window.__CONTENT__ is defined again — a second copy of the brief (docs/CURRENT-ARCHITECTURE.md §8)'));
+  return results;
+}
+
 /* ============================================================
    5 · glossary
    ============================================================ */

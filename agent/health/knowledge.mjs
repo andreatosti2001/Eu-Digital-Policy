@@ -36,6 +36,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { defineMetric, measured, unmeasurable } from './model.mjs';
 import { openBacklog } from '../../js/evidence-model.js';
+import { proseCopies } from '../../tools/prose-homes.mjs';
 import {
   claimsOf, sourcesOf, instrumentsOf, relationshipsOf, institutionsOf,
   enforcementOf, timelineOf, glossaryOf, rulesOf,
@@ -194,11 +195,11 @@ export const KNOWLEDGE_METRICS = [
     name: 'Duplicate facts',
     domain: 'knowledge',
     definition: 'Facts stored in more than one place, where the two copies can disagree and no generator or drift check keeps them together.',
-    source: 'index.html (the inlined window.__CONTENT__ blob), data/brief.json, and docs/DATA-GOVERNANCE.md §5\'s list of known second homes',
-    calculation: 'The part titles and the standfirst are compared between data/brief.json and the __CONTENT__ blob inlined in index.html. Each disagreement is one duplicate fact that has already drifted; each agreeing pair is a second home that has not drifted YET and is still counted, because the hazard is the second copy and not the disagreement.',
+    source: 'data/brief.json, the part headings in index.html\'s markup, every script tools/prose-homes.mjs reads, and docs/DATA-GOVERNANCE.md §5\'s list of known second homes',
+    calculation: 'Each part title and dek held both in data/brief.json and in the part\'s heading in index.html is one second home; each pair that differs has already drifted. Every block of a page\'s text that a script also holds (tools/prose-homes.mjs proseCopies) is one more. A pair that agrees today is still counted, because the hazard is the second copy and not the disagreement.',
     frequency: 'per_commit',
-    interpretation: 'Above 0 means two copies of a fact exist and nothing checks that they match. AGENTS.md carries this as a known hazard: index.html inlines a ~59.8 KB blob duplicating data/brief.json, nothing loads brief.json at runtime, no validator compares the two, and meta.standfirst HAS ALREADY DRIFTED. A rise means a new second home was created; a fall means one was removed or a generator was added.',
-    limitations: 'It compares the part titles and the standfirst only — the fields whose drift is already established. The blob also holds the prose and a search index, and a prose-level comparison is not attempted here because the two are not stored in comparable form. This metric therefore UNDERSTATES: it is a floor on the duplication, not a measurement of it.',
+    interpretation: 'Above 0 means two copies of a fact exist and nothing keeps them together. Until 30 Sep 2026 the largest was index.html\'s inlined window.__CONTENT__ blob, which duplicated the part titles, the standfirst and the prose, and had drifted; it was removed and app.js reads the markup (docs/CURRENT-ARCHITECTURE.md §8), and design-qa.mjs now fails a script that copies a page\'s text, so the script term should stay 0. What remains is data/brief.json\'s titles and deks beside the headings a reader sees — named in §8 as the one second home left. A rise means a new one was created; a fall means one was removed or a generator was added.',
+    limitations: 'It compares part titles and deks, which are the fields both homes hold. It does not read the it/fr/es overlays, which are declared translations with a register of their own, nor data/claims.json, whose statements correspond to the prose by design and are not copies of it.',
     visibility: 'public',
     direction: 'lower_is_better',
     measure(ctx) {
@@ -208,66 +209,44 @@ export const KNOWLEDGE_METRICS = [
       try { html = readFileSync(join(ctx.root, 'index.html'), 'utf8'); }
       catch { return unmeasurable('index.html could not be read', 'a readable index.html'); }
 
-      /* The blob is one long assignment on a single line, ending at
-         </script>. A lazy regex for a balanced object does not work
-         on 59.8 KB of nested JSON — the first draft of this metric
-         used one, failed to match, and reported "could not be
-         located", which is a worse answer than the real one. Slice
-         to the closing tag and parse. */
-      const at = html.indexOf('window.__CONTENT__');
-      if (at === -1) {
-        return measured(1, {
-          unit: 'second homes',
-          detail: { note: 'no window.__CONTENT__ assignment is in index.html. If the blob was removed, this metric should be rewritten; it is reported as one second home rather than zero, because a failure to find it does not disprove duplication.' },
-          evidence: ['index.html'],
-        });
-      }
-      const rest = html.slice(html.indexOf('=', at) + 1);
-      const raw = rest.slice(0, rest.indexOf('</script>')).trim().replace(/;+$/, '');
-
-      let blob = null;
-      let parseError = null;
-      try { blob = JSON.parse(raw); } catch (e) { parseError = e.message; }
+      /* A part's heading, read from the markup a reader sees. Tags are
+         dropped and whitespace folded; the text is compared, not the HTML. */
+      const plain = (s) => String(s ?? '').replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+      const headOf = (id) => {
+        const at = html.search(new RegExp(`<section\\b[^>]*\\bid="${id}"`));
+        if (at < 0) return null;
+        const sec = html.slice(at, html.indexOf('</section>', at));
+        return {
+          title: plain((sec.match(/<h2\b[^>]*>([\s\S]*?)<\/h2>/) || [])[1]) || null,
+          dek: plain((sec.match(/class="part-dek"[^>]*>([\s\S]*?)<\/p>/) || [])[1]) || null,
+        };
+      };
 
       const parts = brief.parts ?? [];
       const disagreements = [];
-      if (blob) {
-        /* The blob calls them `nav`; data/brief.json calls them
-           `parts`. Same fourteen ids, same titles — which is exactly
-           what makes them two homes for one fact. */
-        const blobParts = blob.nav ?? blob.parts ?? [];
-        for (const p of parts) {
-          const other = blobParts.find?.((q) => q.id === p.id);
-          if (!other) { disagreements.push({ field: `parts[${p.id}]`, brief_json: p.title, inlined: null, kind: 'missing from the inlined copy' }); continue; }
-          if (other.title && p.title && other.title !== p.title) {
-            disagreements.push({ field: `parts[${p.id}].title`, brief_json: p.title, inlined: other.title, kind: 'the two copies disagree' });
-          }
-        }
-        const bs = brief.meta?.standfirst;
-        const is_ = blob.meta?.standfirst;
-        if (bs && is_ && bs !== is_) {
-          disagreements.push({ field: 'meta.standfirst', brief_json: `${bs}`.slice(0, 111), inlined: `${is_}`.slice(0, 111), kind: 'the two copies disagree — this is the drift AGENTS.md records as already having happened' });
+      let second = 0;
+      for (const p of parts) {
+        const h = headOf(p.id);
+        if (!h) { disagreements.push({ field: `parts[${p.id}]`, brief_json: p.title, markup: null, kind: 'no section with this id in index.html' }); continue; }
+        for (const k of ['title', 'dek']) {
+          if (!p[k] && !h[k]) continue;
+          second += 1;
+          if (p[k] !== h[k]) disagreements.push({ field: `parts[${p.id}].${k}`, brief_json: p[k] ?? null, markup: h[k], kind: h[k] ? 'the two copies disagree' : 'held in data/brief.json and shown nowhere' });
         }
       }
 
-      /* Every part title plus the standfirst exists twice. The count
-         is the SECOND HOMES, not the disagreements — the hazard is
-         the duplication, and a pair that agrees today is a pair
-         nothing keeps agreeing tomorrow. */
-      const secondHomes = parts.length + (brief.meta?.standfirst ? 1 : 0);
-      return measured(secondHomes, {
+      const copies = proseCopies(ctx.root);
+      return measured(second + copies.length, {
         unit: 'facts stored in two places with no drift check',
         detail: {
-          part_titles_duplicated: parts.length,
-          standfirst_duplicated: Boolean(brief.meta?.standfirst),
+          part_fields_duplicated: second,
+          script_copies_of_page_text: copies.length,
           already_drifted: disagreements.length,
           disagreements,
-          blob_parsed: Boolean(blob),
-          blob_parse_error: parseError,
-          blob_bytes: raw.length,
-          note: 'Nothing loads data/brief.json at runtime and no validator compares it to the inlined blob. See AGENTS.md, "The __CONTENT__ bypass", and docs/CURRENT-ARCHITECTURE.md §8.',
+          inline_blob_present: html.includes('window.__CONTENT__'),
+          note: 'data/brief.json is loaded by no module; its titles and deks sit beside the headings in index.html\'s markup, which is what a reader sees and what app.js indexes. docs/CURRENT-ARCHITECTURE.md §8.',
         },
-        evidence: ['index.html', 'data/brief.json'],
+        evidence: ['index.html', 'data/brief.json', 'node tools/design-qa.mjs'],
       });
     },
   }),

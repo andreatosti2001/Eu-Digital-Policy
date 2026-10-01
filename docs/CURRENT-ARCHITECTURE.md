@@ -104,8 +104,11 @@ scroll/progress, the reading lens, the theme toggle, the Tree-of-Life contents o
 glossary popovers, the prose search provider, resume positions, the pager, the shortcuts
 overlay, the portal/rota set pieces, and the in-place i18n string swap.
 
-It reads `window.__CONTENT__`, a JSON blob inlined at `index.html:361`. **See §8 — this is
-the one place the data architecture is bypassed.**
+It reads the brief's own structure — each Part's id, numeral, title, dek and prose — out of
+the markup of `index.html`, once, at load, and builds the contents overlay's pagers, the
+resume bar and the prose search index from that. Until 30 Sep 2026 it read them from
+`window.__CONTENT__`, an inline copy; **§8 records why that was removed and what keeps it
+removed.**
 
 `js/main.js` runs after `app.js` deliberately, so the English snapshot the i18n layer takes
 is clean of anything the modules add.
@@ -176,34 +179,71 @@ the `$note` before editing any dataset** — it is where the non-obvious invaria
 | `glossary.json` | 15 terms | Terms carry edges outward, so a definition is an entry point rather than a dead end. |
 | `brief.json` | 14 parts + 20 reading-graph edges | Canonical for part identity, ordering, titles, deks, reading times. **Not consumed at runtime — see §8.** |
 
-## 8. FINDING: the `__CONTENT__` bypass
+## 8. RESOLVED 30 Sep 2026: the `__CONTENT__` bypass — and the one second home left
 
-This is the one place the architecture described above does not hold, and it is recorded
-here because it is a trap for any agent editing the brief.
+**What it was.** `index.html` carried the brief twice. The markup held what a reader sees.
+An inline `<script>` assigned `window.__CONTENT__` — 67 KB of `meta{6}`, `nodes[6]`,
+`nav[14]`, `search[13]` — and `app.js` read its pagers, resume bar and prose search index
+from that. `data/brief.json` carried a third copy of the part titles and a `meta` block.
+Nothing loaded `brief.json`, nothing generated the blob, and nothing compared any of them.
 
-**`data/brief.json` is validated but never fetched.** No module loads it. The only four
-occurrences of `'brief'` in `js/` are nav-model IDs in `js/shell.js` (lines 35, 215, 230,
-247). Instead, the brief's structural data ships as an inline blob at `index.html:361`:
+**Why it existed.** The blob was the output of an HTML-to-JSON extraction whose generator was
+never committed (`app.js` carried a "self-heal" for that generator's empty annex entries —
+AUDIT F-04). After it, every edit was made by hand to whichever copy the editor knew about:
+`tools/_review10.mjs` corrected the standfirst in the markup and the blob and not in
+`brief.json`; T-33 updated a dateline in the blob and `brief.json`, neither of which any
+script rendered. The prose kept moving in the markup and the blob did not follow.
 
-```
-window.__CONTENT__ = { meta{6}, nodes[6], nav[14], search[13] }    ~59.8 KB
-```
+**What it had become, measured before removal:**
 
-So the same facts have two homes, which is exactly what `validate.mjs` §4 exists to prevent —
-but the check cannot see inside `index.html`, so nothing compares them.
+| Copy | Read by | State |
+|---|---|---|
+| `__CONTENT__.meta` (title, subtitle, standfirst, dateline, note, howto) | nothing | a masthead no page shows; the standfirst differed from both `brief.json` and the markup's `portal.p1` |
+| `__CONTENT__.nodes` (6 blurbs) | nothing | copies of the node cards in the markup, under a second ID namespace (`aiact`, `dataact`) |
+| `__CONTENT__.nav` (14) | `app.js` — pagers, resume bar | agreed with the headings |
+| `__CONTENT__.search` (13) | `app.js` — prose search | **stale**: no Annex C at all, and ~9 KB of the current prose missing (part-3: 7,629 characters against 10,639 on the page). In a browser, the last paragraph of three Parts could not be found by searching for it. |
+| `brief.json` `meta` | nothing | outside the file's own `$description`; its standfirst kept the "six regulations" miscount `_review10.mjs` corrected on 28 Aug 2026 |
 
-**They have already drifted.** `meta.standfirst` differs between the two:
+**What was done.** The copies were deleted, not synchronised. `app.js` reads each Part's
+id, numeral, title, dek and prose from the markup it is loaded into, synchronously and before
+the language overlay arrives — so the index is the English brief, as before. The blob and
+`brief.json`'s `meta` block are gone; `index.html` has no inline script and its CSP is
+`script-src 'self'`. One hardcoded copy of Part I's title in `app.js` (the portal's "Read the
+brief" crossing) now reads the same index. Deliberate differences in output: Annex C is
+listed and searchable, the whole current prose is searchable, and the text of drawings (SVG
+labels, such as Annex A's wheel) and `aria-hidden` decoration is no longer indexed as prose.
 
-- `brief.json` — "Six regulations, one directive family and a live reform package now govern…"
-- `__CONTENT__` — "Six regulatory regimes — regulations, a family of directives and a live reform package — now govern…"
+**What keeps it removed** — three checks, each planted in a test:
 
-All 14 `nav` entries still agree with `brief.parts` on `id`, `roman`, `title` and reading
-minutes. The duplication was already known: `tools/_review10.mjs:103` notes that an edited
-string "also appears inside the inlined `__CONTENT__` search index".
+- `tools/design-qa.mjs` runs `tools/prose-homes.mjs`: **no script carries a page's own
+  text.** Every hand-written block of ≥ 6 words on every root page is looked for in that
+  page's inline scripts (any type, JSON included) and in every module the site ships. It
+  detects the duplicated text, not a name, so a blob renamed, moved into
+  `<script type="application/json">`, escaped, or put in a new `js/` module fails the build.
+  Generated regions, `instruments/`, JSON-LD, comments and short labels are not second homes,
+  and the module says why. `tools/selftest.mjs` C1–C4.
+- `tools/validate.mjs` §4(g): **`brief.json` holds only its structure** — `parts` and
+  `reading_graph`. A `meta` block, or any new top-level key, is an error.
+- The browser suite's `search:brief-*` checks (`docs/BROWSER-QA.md`): in a real browser,
+  every Part is listed in order under the heading the page shows, the last paragraph of every
+  Part is found by search, every pager names the heading it leads to, and
+  `window.__CONTENT__` is undefined. Run against the tree before the change, three of the four
+  fail.
 
-**Not fixed in this session** — deciding which standfirst is correct is the author's call,
-and the fix is canonical-data work outside a reconnaissance boundary. Recorded as an
-unresolved issue in `docs/HANDOVER.md`.
+**To change the brief's text** — prose, a part title, a dek, the masthead — edit the markup of
+`index.html` and nothing else in that file; then follow the i18n rule (declare the key
+`superseded` in `i18n/locales.json`). There is nothing to regenerate for the brief's index.
+
+**The one second home left, and it is NOT resolved here.** `data/brief.json` `parts` holds
+each Part's title, dek and reading time, and the markup holds them again — in the section
+heading, in the Tree-of-Life list and SVG, and in the spine's `title` attributes. No module
+loads `brief.json`; `validate.mjs` uses its part IDs to resolve `brief_part` references and its
+`reading_graph`. All fourteen titles agree today; **Annex C's dek is in `brief.json` and shown
+nowhere.** Until one is generated from the other, a part title or dek changed in one must be
+changed in the other, and `agent/health/` `knowledge.duplicate_facts` counts the pairs. The
+smallest structural fix is to generate the part heads, the tree list and the spine from
+`brief.json` in `tools/_footer.mjs`, the way the no-JS navigation is generated from the nav
+model — a change to how the brief's markup is authored, and so the author's decision.
 
 ## 9. Dependency map — canonical record to reader
 
@@ -248,11 +288,12 @@ unresolved issue in `docs/HANDOVER.md`.
                     GitHub Pages  →  reader
 
 
-  ══ THE ONE BYPASS ══════════════════════════════════════════
-  index.html:361  window.__CONTENT__  ──► app.js
-      (meta, nodes, nav, search — inlined, ~59.8 KB)
-      duplicates data/brief.json, which nothing loads.
-      No validator compares them. meta.standfirst has drifted.
+  ══ THE BRIEF'S OWN TEXT (§8) ═══════════════════════════════
+  index.html markup  ──► app.js reads it at load  ──► pagers,
+      (prose, part       resume bar, prose search index
+       headings)
+  data/brief.json — parts + reading graph; loaded by no module.
+      Its titles and deks are the one second home left (§8).
   ════════════════════════════════════════════════════════════
 ```
 
@@ -306,7 +347,7 @@ superseded, 12 pending); 60 canonical entity keys, identical across `it`, `fr`, 
 | Script | Checks | Exit |
 |---|---|---|
 | `tools/validate.mjs` | 7 sections: files parse · duplicate IDs · referential integrity · **every source record against `tools/source-contract.mjs`** · duplicate canonical facts · status-model discipline · unverified-data report | 1 on error |
-| `tools/design-qa.mjs` | Per page: title/description/viewport, exactly one `<h1>`, no skipped heading level, no duplicate id, skip link resolves, internal hrefs resolve to real files, `<img>` alt, token layer loaded first, no page-local `<style>`, no third-party resource, footer + noscript identical across all 7 pages. Across CSS: no colour literals, no `:root` theme tokens. **Across the whole runtime surface (`tools/thirdparty.mjs`): no foreign origin in any position a browser fetches from — HTML attributes quoted or not, CSS `@import` and `url()`, JS `fetch`/`import()`/`Worker`/`sendBeacon`/`.src`** | non-zero on error |
+| `tools/design-qa.mjs` | Per page: title/description/viewport, exactly one `<h1>`, no skipped heading level, no duplicate id, skip link resolves, internal hrefs resolve to real files, `<img>` alt, token layer loaded first, no page-local `<style>`, no third-party resource, footer + noscript identical across all 7 pages. **No script — inline of any type, or module — holds a copy of a page's own text (`tools/prose-homes.mjs`, §8).** Across CSS: no colour literals, no `:root` theme tokens. **Across the whole runtime surface (`tools/thirdparty.mjs`): no foreign origin in any position a browser fetches from — HTML attributes quoted or not, CSS `@import` and `url()`, JS `fetch`/`import()`/`Worker`/`sendBeacon`/`.src`** | non-zero on error |
 | `tools/i18n-audit.mjs` | Register vs disk vs live DOM; declared key counts; no orphan keys; every gap declared and correctly categorised; identical entity IDs across locales; no concatenated paths | non-zero on error |
 | `tools/freshness.mjs` | Verification-date age; per-record vs compilation dates; events that have passed; records whose own text says they are provisional, and those not re-read within `RECHECK`; sources with no URL and no recorded reason. Under Actions each prompt is also a "Content stale" warning (`docs/CONTENT-FRESHNESS-POLICY.md`) | **1 on a DEFECT in the tree, 0 on a staleness prompt** |
 
@@ -335,6 +376,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 | Module | What it owns |
 |---|---|
 | `tools/thirdparty.mjs` | The no-third-party-runtime-request invariant, and `ALLOWED_RUNTIME_ORIGINS`, which is **empty**. An external runtime dependency is a Class D decision and goes here with its reason and who decided it. |
+| `tools/prose-homes.mjs` | The invariant that a page's text has one home, its markup: `proseCopies()` looks for every hand-written block of ≥ 6 words in the page's own inline scripts and in every module the site ships, whatever the copy is called. States what is not a second home (generated regions, `instruments/`, JSON-LD, comments, labels) and why. `design-qa.mjs` runs it; `tools/selftest.mjs` C1–C4 plant each shape. |
 | `tools/source-contract.mjs` | The one contract a `data/sources.json` record satisfies — 12 required fields, 2 optional, each with its shape, why it exists, who writes it and who reads it — and `ABSENT_BY_DESIGN`, the six retrieval-bookkeeping fields the governance grant allowlists and this dataset deliberately does not have. |
 
 **Two generators / one-shot patches — run only when the thing they own changes:**

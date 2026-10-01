@@ -69,7 +69,7 @@ These change what the site asserts. An agent may prepare them; a human must appr
 | `data/taxonomy.json` | New terms may be added. **Existing IDs are never renamed** — every other dataset resolves against them. |
 | `i18n/**` | Any added or removed `data-i18n` key must be reflected in the register, and any gap declared `superseded` or `pending_translation`. Never silently drop a key. |
 | CSS | Only within existing tokens. A new colour goes in `css/tokens.css` in both themes, on `body` not `:root`, never inline. |
-| Prose in `index.html` | Editing the argument is the author's work. An agent may correct a fact it has verified — and must then check whether the same string is duplicated in `window.__CONTENT__` (see §4) and whether the locale overlays now assert the superseded English. |
+| Prose in `index.html` | Editing the argument is the author's work. An agent may correct a fact it has verified — and must then check whether the locale overlays now assert the superseded English, and, for a part title or dek, make the same change in `data/brief.json` (see §4). |
 | `tools/_footer.mjs` `BASE` | Only if the site actually moves; re-run and confirm all seven canonical URLs agree. |
 
 **The amber test:** if getting it wrong would make the site state something false, it is
@@ -109,11 +109,13 @@ An agent must **not** do these on its own initiative. Prepare a proposal; do not
 
 Traps that have already caused, or are positioned to cause, a false statement.
 
-**The `__CONTENT__` bypass.** `index.html:361` inlines a ~59.8 KB blob duplicating
-`data/brief.json` (`meta`, `nodes`, `nav`, `search`). Nothing loads `brief.json` at runtime;
-no validator compares the two; and `meta.standfirst` has **already drifted** between them.
-An agent editing brief prose or part metadata must check both homes, and must not assume
-`brief.json` is what the reader sees. Full detail in `docs/CURRENT-ARCHITECTURE.md` §8.
+**Part titles and deks have two homes.** `data/brief.json` `parts[]` and the headings in
+`index.html`'s markup. Nothing loads `brief.json` at runtime and no validator compares the
+two, so a title or dek changed in one must be changed in the other, and `brief.json` must not
+be assumed to be what the reader sees. The larger hazard — the `__CONTENT__` blob, a stale
+inline copy of the whole brief that search and the pagers read — was **removed on 30 Sep
+2026**; do not reintroduce a copy under any name (`design-qa.mjs` fails it). Full detail in
+`docs/CURRENT-ARCHITECTURE.md` §8.
 
 **Superseded translations.** The `it`/`fr`/`es` overlays hold translations of the *previous*
 English. Correcting an English string without declaring its key `superseded` leaves those

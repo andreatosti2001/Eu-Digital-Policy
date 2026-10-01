@@ -588,13 +588,21 @@ test('the known contradiction in the corpus is found', async () => {
   assert.ok(r.detail.relationship_kinds_stored_both_ways.length >= 1);
 });
 
-test('the __CONTENT__ duplication is found, and the standfirst drift with it', async () => {
+test('duplicate facts: the __CONTENT__ blob is gone, and the second home that remains is still counted', async () => {
   const ctx = await realCtx();
   const r = BY_ID.get('knowledge.duplicate_facts').measure(ctx);
   assert.equal(r.state, 'measured');
-  assert.ok(r.detail.blob_parsed, 'the inlined blob must actually be parsed — the first draft failed to and reported "could not be located", which is a worse answer than the real one');
-  assert.ok(r.value > 10, 'fourteen part titles plus the standfirst exist in two places');
-  assert.ok(r.detail.already_drifted >= 1, 'AGENTS.md records that meta.standfirst has already drifted');
+  /* Removed 30 Sep 2026 (docs/CURRENT-ARCHITECTURE.md §8): no inline blob, and
+     no script anywhere holds a copy of a page's text. */
+  assert.equal(r.detail.inline_blob_present, false);
+  assert.equal(r.detail.script_copies_of_page_text, 0);
+  /* What remains is NOT zero, and the metric must not read as if it were:
+     fourteen part titles, and the deks, sit in data/brief.json beside the
+     headings index.html shows. */
+  assert.ok(r.detail.part_fields_duplicated >= 14, 'fourteen part titles exist in two places');
+  assert.ok(r.value >= 14);
+  /* Annex C's dek is held in data/brief.json and shown nowhere — found, not fixed. */
+  assert.ok(r.detail.disagreements.some((d) => d.field === 'parts[annex-c].dek'));
 });
 
 test('the unverified count matches the recorded baseline in §12', async () => {

@@ -1,6 +1,5 @@
 (function(){
 'use strict';
-var DATA = window.__CONTENT__;
 
 /* ================= one scroll pass =================
    There were three scroll listeners on this page and they did not
@@ -605,15 +604,47 @@ if (scrim) scrim.addEventListener('click', closePanel);
    rule and one set of shortcuts, not two that drift.
    =============================================================== */
 
-/* ---- search index self-heal: some search entries (e.g. annexes) ship with
-   an empty text field from the generator; backfill from the rendered DOM so
-   they remain searchable ---- */
-DATA.search.forEach(function(s){
-  if (!s.text || !s.text.trim()){
-    var sec = document.getElementById(s.id);
-    var body = sec && sec.querySelector('.part-body');
-    if (body) s.text = body.textContent.replace(/\s+/g,' ').trim();
-  }
+/* ---- the brief's own index, read from the page it indexes ----
+   Each Part's id, numeral, title, dek and prose is written once, in the
+   markup of index.html, and is read from there. Until 30 Sep 2026 it came
+   from window.__CONTENT__, a 67 KB inline copy made by a generator that was
+   never committed: it had lost Annex C and about 9 KB of the current prose,
+   so search quoted a brief that no longer existed. There is no second copy
+   to keep in step now, and tools/design-qa.mjs fails a page whose inline
+   script repeats the page's own text (docs/CURRENT-ARCHITECTURE.md §8).
+
+   Read once, synchronously, before the language overlay (fetched further
+   down) replaces any string: the index is the English brief, as the inline
+   copy was. Block boundaries become spaces so that a heading does not run
+   into the paragraph after it; drawings and decoration are not prose. ---- */
+var BLOCK_TAG = /^(p|li|h[1-6]|div|td|th|dt|dd|figcaption|blockquote|tr|br)$/i;
+var NOT_PROSE = /^(script|style|template|svg)$/i;
+function proseOf(el){
+  var out = [];
+  (function walk(n){
+    for (var c = n.firstChild; c; c = c.nextSibling){
+      if (c.nodeType === 3){ out.push(c.nodeValue); continue; }
+      if (c.nodeType !== 1 || NOT_PROSE.test(c.tagName) || c.getAttribute('aria-hidden') === 'true') continue;
+      var block = BLOCK_TAG.test(c.tagName);
+      if (block) out.push(' ');
+      walk(c);
+      if (block) out.push(' ');
+    }
+  })(el);
+  return out.join('').replace(/\s+/g,' ').trim();
+}
+function lineOf(el){ return el ? el.textContent.replace(/\s+/g,' ').trim() : ''; }
+var BRIEF = parts.map(function(sec){
+  var numeral = lineOf(sec.querySelector('.part-roman'));
+  var body = sec.querySelector('.part-body');
+  return {
+    id: sec.id,
+    roman: numeral,
+    mark: sec.classList.contains('annex') ? 'Annex ' + numeral : numeral,
+    title: lineOf(sec.querySelector('.part-head h2')),
+    dek: lineOf(sec.querySelector('.part-dek')),
+    text: body ? proseOf(body) : ''
+  };
 });
 
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
@@ -646,8 +677,8 @@ window.__EU_PROSE_SEARCH__ = function(q){
   /* no query: the Parts themselves, which is the most useful empty state
      the brief can offer — it is its own table of contents */
   if (!ql){
-    return [{ kind:'part', label:'Parts', items: DATA.search.map(function(s){
-      return { mark:s.roman, title:s.title, sub:esc2(s.dek||''), id:s.id };
+    return [{ kind:'part', label:'Parts', items: BRIEF.map(function(s){
+      return { mark:s.mark, title:s.title, sub:esc2(s.dek||''), id:s.id };
     })}];
   }
 
@@ -664,16 +695,16 @@ window.__EU_PROSE_SEARCH__ = function(q){
       }
     });
   }
-  DATA.search.forEach(function(s){
+  BRIEF.forEach(function(s){
     refHitsFor(s, ql, artMatch ? artMatch[1] : null).forEach(function(sent){
-      refHits.push({ id:s.id, mark:s.roman, title:s.title,
+      refHits.push({ id:s.id, mark:s.mark, title:s.title,
         sub: snip(sent, artMatch ? ('Article '+artMatch[1]) : q) });
     });
   });
-  DATA.search.forEach(function(s){
+  BRIEF.forEach(function(s){
     if (s.title.toLowerCase().indexOf(ql) === -1 && s.text.toLowerCase().indexOf(ql) === -1) return;
     var hay = s.title.toLowerCase().indexOf(ql) > -1 ? s.title : s.text;
-    passHits.push({ id:s.id, mark:s.roman, title:s.title, sub: snip(hay, q) });
+    passHits.push({ id:s.id, mark:s.mark, title:s.title, sub: snip(hay, q) });
   });
 
   if (defHits.length) groups.push({ kind:'definition', label:'Definitions', items: defHits.slice(0,5) });
@@ -714,7 +745,7 @@ function timeAgo(ts){
   var recents = getRecents(); if (!recents.length) return;
   var dismissed = false; try{ dismissed = !!sessionStorage.getItem('eupolicy:resumeDismissed'); }catch(e){}
   if (dismissed) return;
-  var nav = {}; DATA.nav.forEach(function(n){ nav[n.id]=n; });
+  var nav = {}; BRIEF.forEach(function(n){ nav[n.id]=n; });
   var items = recents.map(function(r){ return nav[r.id] ? Object.assign({},nav[r.id],{ts:r.ts}) : null; }).filter(Boolean);
   if (!items.length) return;
   var bar = document.createElement('div');
@@ -736,10 +767,10 @@ function timeAgo(ts){
 
 /* ================= pager: previous / next between Parts ================= */
 (function buildPagers(){
-  DATA.nav.forEach(function(n, i){
+  BRIEF.forEach(function(n, i){
     var sec = document.getElementById(n.id);
     if (!sec) return;
-    var prev = DATA.nav[i-1], next = DATA.nav[i+1];
+    var prev = BRIEF[i-1], next = BRIEF[i+1];
     var html = '<div class="pager">';
     html += prev ? '<a class="pg prev" href="#'+prev.id+'"><small>Previous &middot; Part '+prev.roman+'</small><b>'+esc(prev.title.split(':')[0])+'</b></a>' : '<span></span>';
     html += next ? '<a class="pg next" href="#'+next.id+'"><small>Next &middot; Part '+next.roman+'</small><b>'+esc(next.title.split(':')[0])+'</b></a>' : '<span></span>';
@@ -859,8 +890,9 @@ document.addEventListener('keydown', function(e){
   var beginBtn = document.querySelector('[data-portal-enter]');
   if (beginBtn) beginBtn.addEventListener('click', function(e){
     e.preventDefault();
-    cross(beginBtn.getAttribute('data-portal-enter'), 'I',
-      'The architecture: how Europe decided to regulate software');
+    var id = beginBtn.getAttribute('data-portal-enter');
+    var first = BRIEF.filter(function(b){ return b.id === id; })[0] || {};
+    cross(id, first.roman, first.title);
   });
 
   /* Vessels already read stay lit, so the tree records the journey.

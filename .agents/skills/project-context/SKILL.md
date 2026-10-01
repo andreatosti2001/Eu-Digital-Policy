@@ -25,7 +25,8 @@ after a long gap or after context has been summarised.
 1. **Read, in this order:**
    - `docs/PROJECT-CONTEXT.md` — what the project is and the seven governing principles.
    - `docs/CURRENT-ARCHITECTURE.md` — the rendering model, dependency map, derivation layer,
-     tooling baseline, and the `__CONTENT__` bypass in §8.
+     tooling baseline, and §8 — the removed `__CONTENT__` bypass and the one second home of
+     the brief's text that remains.
    - `docs/AI-SAFE-BOUNDARIES.md` — the green/amber/red tiers and the absolute prohibitions.
    - `docs/HANDOVER.md` — the previous session's state and the current objective.
    - `README.md` — the author's own account, including the eight known limitations.

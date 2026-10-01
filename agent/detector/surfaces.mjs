@@ -50,13 +50,13 @@
    divergence (DATA-GOVERNANCE §5).
 
    WHAT THIS DELIBERATELY DOES NOT DO. It does not follow dynamic
-   imports, and it does not know that `index.html` renders part of
-   its content from the inlined `window.__CONTENT__` blob rather
-   than from `data/brief.json`. Both are named as limitations in
-   docs/CHANGE-DETECTOR.md rather than papered over; the second is
-   the known `__CONTENT__` bypass, and a detector that claimed to
-   know what `index.html` renders would be claiming to have resolved
-   it.
+   imports, and it does not read `index.html`'s prose: the brief's
+   text is written in that markup, and `data/brief.json`'s part
+   titles and deks are a second home beside it that no module loads
+   (docs/CURRENT-ARCHITECTURE.md §8 — the inlined `window.__CONTENT__`
+   copy that used to sit between them was removed on 30 Sep 2026).
+   Both are named as limitations in docs/CHANGE-DETECTOR.md rather
+   than papered over.
    ============================================================ */
 
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
@@ -242,11 +242,11 @@ export function affectedDatasets(entities) {
  * Every page that would render a change to these datasets.
  *
  * `data/brief.json` is deliberately excluded even though
- * `index.html` renders the brief: nothing fetches `brief.json` at
- * runtime, and the page reads an inlined copy instead
- * (CURRENT-ARCHITECTURE §8, the `__CONTENT__` bypass). Claiming
- * `index.html` renders it would be claiming the bypass is resolved.
- * The exclusion is returned as a caveat rather than being silent.
+ * `index.html` shows the brief: nothing fetches `brief.json` at
+ * runtime, and the page shows the headings written in its own markup
+ * (CURRENT-ARCHITECTURE §8). Claiming `index.html` renders it would
+ * be claiming the two homes are one. The exclusion is returned as a
+ * caveat rather than being silent.
  */
 export function affectedPages(datasets, { root = REPO_ROOT } = {}) {
   const { datasetToPages, chromeDatasets } = pageMap({ root });
@@ -264,7 +264,7 @@ export function affectedPages(datasets, { root = REPO_ROOT } = {}) {
     const pages = datasetToPages.get(name);
     if (pages) { for (const p of pages) out.add(p); continue; }
     caveats.push(name === 'brief'
-      ? 'data/brief.json is loaded by no module. index.html renders the brief from the inlined window.__CONTENT__ blob instead, which has already drifted from the canonical file (CURRENT-ARCHITECTURE §8). Which pages a change to brief.json reaches is therefore not answerable from the load call sites, and this detector does not guess.'
+      ? 'data/brief.json is loaded by no module, so a change to it reaches no page by itself. index.html shows the part titles and deks written in its own markup, and app.js builds the contents and search index from that markup (the inlined __CONTENT__ copy was removed on 30 Sep 2026). A part title or dek changed in brief.json must be changed in the markup too — nothing keeps the two in step (CURRENT-ARCHITECTURE §8) — and this detector does not claim it is.'
       : `No module loads data/${name}.json, so no page was found for it. That is either a dataset nothing renders or a gap in this map — it is reported rather than resolved.`);
   }
   return { pages: [...out].sort(), caveats };

@@ -48,6 +48,7 @@ import { build as buildArtifact, refusal } from './pages-artifact.mjs';
 import * as EM from '../js/evidence-model.js';
 import { procedure, contradictions } from '../js/pipeline.js';
 import { statusContradictions, provisionApplication } from '../js/regulatory-model.js';
+import { proseCopies, textBlocks, scriptBodies, codeOf, MIN_WORDS, unescapeJs } from './prose-homes.mjs';
 import {
   SOURCE_FIELDS, REQUIRED_FIELDS, OPTIONAL_FIELDS, RESOLUTIONS, ABSENT_BY_DESIGN, violations,
 } from './source-contract.mjs';
@@ -705,11 +706,17 @@ test('H8 · the evidence model: status, locators, composite statements, freshnes
 });
 
 test('I1 · the CSP hashes every inline script, and an edited script is caught before a browser refuses it', () => {
-  for (const f of ['index.html', 'applies.html', 'bibliography.html']) {
+  for (const f of ['applies.html', 'bibliography.html']) {
     const html = readFileSync(join(ROOT, f), 'utf8');
     assert.deepEqual(cspProblems(html), [], f);
     assert.ok(inlineScripts(html).length >= 1);
   }
+  /* The brief carried one inline script, the __CONTENT__ blob, until 30 Sep
+     2026. With it gone the page needs no hash at all: script-src 'self'. */
+  const brief = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  assert.deepEqual(cspProblems(brief), []);
+  assert.equal(inlineScripts(brief).length, 0);
+  assert.match(securityMeta(brief), /script-src 'self';/);
   const html = readFileSync(join(ROOT, 'applies.html'), 'utf8');
   assert.ok(cspProblems(html.replace("var K='eupolicy:theme'", "var K='eupolicy:themes'")).some((p) => /not hashed/.test(p)));
   assert.ok(cspProblems(html.replace("script-src 'self'", "script-src 'self' 'unsafe-inline'")).some((p) => /unsafe-inline/.test(p)));
@@ -887,4 +894,118 @@ test('S6 · a link the reader follows is not a request the page makes; a preconn
   assert.deepEqual(scanHtml('<p><a class="ext" href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a></p>', 'p.html', origins), []);
   assert.equal(scanHtml('<link rel="preconnect" href="https://fonts.googleapis.com">', 'p.html', origins).length, 1);
   assert.equal(scanHtml('<a href="x.html"><img src="https://tracker.example/p.gif" alt=""></a>', 'p.html', origins).length, 1);
+});
+
+/* ============================================================
+   C · the text a page shows has one home: its markup
+
+   index.html carried its prose twice until 30 Sep 2026 — the markup, and
+   window.__CONTENT__, a 67 KB inline object app.js read its contents,
+   pagers and search index from. Nothing generated it and nothing compared
+   the two; it lost Annex C and ~9 KB of the current prose, and search
+   quoted text the brief no longer said. It was deleted rather than
+   synchronised, and tools/prose-homes.mjs keeps it deleted. These plant
+   each shape a second copy could come back in, and each shape that is NOT
+   one, because a check that passes on a clean tree proves only that it did
+   not fire.
+   ============================================================ */
+
+/** A paragraph written in index.html's markup — a long one carrying
+ *  non-ASCII (a dash, a curly quote), so that an escaped copy is a real
+ *  test rather than a vacuous one. */
+function sampleBlock(html) {
+  const block = textBlocks(html).find((t) => /[^\x00-\x7f]/.test(t) && t.split(' ').length > 20);
+  assert.ok(block, 'index.html has a long paragraph with non-ASCII text to copy');
+  return block;
+}
+
+/** The page with a planted <script> holding a copy of that paragraph. */
+function plantedIndex(dir, script) {
+  const html = readFileSync(join(dir, 'index.html'), 'utf8');
+  const block = sampleBlock(html);
+  writeFileSync(join(dir, 'index.html'), html.replace('<script src="app.js">', `${script(block)}\n<script src="app.js">`));
+  return block;
+}
+
+test('C1 · this tree: no script holds a page\'s own text, and the brief carries no inline script at all', () => {
+  assert.deepEqual(proseCopies(ROOT), []);
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  assert.equal(scriptBodies(html).length, 0, 'index.html needs no inline script: app.js reads the Parts from the markup');
+  assert.doesNotMatch(html, /__CONTENT__/);
+  assert.ok(textBlocks(html).length > 150, 'the brief\'s own text was read — a check over nothing passes trivially');
+  const app = codeOf(readFileSync(join(ROOT, 'app.js'), 'utf8'));
+  assert.doesNotMatch(app, /window\.__CONTENT__/, 'app.js reads no content global');
+  assert.match(app, /querySelector\('\.part-body'\)/, 'app.js reads the prose out of the page it is loaded into');
+});
+
+test('C2 · a second copy is caught whatever it is called and wherever it is put', () => {
+  const shapes = {
+    'the old blob, by its old name': (t) => `<script>window.__CONTENT__ = ${JSON.stringify({ search: [{ id: 'part-2', text: t }] })};</script>`,
+    'the same blob, renamed': (t) => `<script>window.__BRIEF__ = ${JSON.stringify({ parts: [{ text: t }] })};</script>`,
+    'a JSON data block nothing executes': (t) => `<script type="application/json" id="brief-data">${JSON.stringify([t])}</script>`,
+    'JSON with every non-ASCII character escaped': (t) => `<script>var B=${JSON.stringify(t).replace(/[\u007f-￿]/g, (c) => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'))};</script>`,
+  };
+  for (const [name, script] of Object.entries(shapes)) {
+    const dir = siteCopy('prose-homes');
+    try {
+      const block = plantedIndex(dir, script);
+      const hits = proseCopies(dir);
+      assert.ok(hits.some((h) => h.file === 'index.html' && h.text === block), `${name}: not caught`);
+    } finally { rmSync(dir, { recursive: true, force: true }); }
+  }
+
+  /* and in a module rather than the page — a string table in js/ */
+  const dir = siteCopy('prose-homes');
+  try {
+    const block = sampleBlock(readFileSync(join(dir, 'index.html'), 'utf8'));
+    writeFileSync(join(dir, 'js', 'brief-text.js'), `// the Parts, for search\nexport const PARTS = [${JSON.stringify(block)}];\n`);
+    assert.ok(proseCopies(dir).some((h) => h.file === 'js/brief-text.js' && h.text === block), 'a module string table was not caught');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('C3 · what is NOT a second home is not reported: comments, JSON-LD, generated regions, labels', () => {
+  const dir = siteCopy('prose-homes');
+  try {
+    const block = sampleBlock(readFileSync(join(dir, 'index.html'), 'utf8'));
+    /* a module comment quoting the prose it works on — js/pyramid.js does */
+    writeFileSync(join(dir, 'js', 'quoting.js'), `/* The prose beside it says "${block}" */\nexport const x = 1;\n// ${block}\n`);
+    /* a JSON-LD block is a description for a crawler, generated from tools/seo.mjs */
+    edit(dir, 'index.html', (s) => s.replace('</head>', `<script type="application/ld+json">${JSON.stringify({ description: block })}</script>\n</head>`));
+    /* a region tools/_footer.mjs generates is derived output, not a source */
+    edit(dir, 'index.html', (s) => s.replace('<!-- site-index:begin — generated by tools/_footer.mjs, do not edit in place -->',
+      `<!-- site-index:begin — generated by tools/_footer.mjs, do not edit in place -->\n<p>${block.split(' ').slice(0, 12).join(' ')} and more generated words here</p>`));
+    /* interface vocabulary shorter than MIN_WORDS */
+    writeFileSync(join(dir, 'js', 'labels.js'), `export const L = ['Contents', 'Keyboard shortcuts', 'Previous'];\n`);
+    assert.deepEqual(proseCopies(dir), []);
+    assert.equal(MIN_WORDS, 6, 'the threshold was not quietly raised');
+    /* a `//` inside a string is not a comment: stripping from it would hide a one-line blob */
+    assert.match(codeOf(`var b = {"u":"https://eur-lex.europa.eu/x","t":"${block}"};`), /eur-lex/);
+    assert.ok(codeOf(`var b = {"u":"https://eur-lex.europa.eu/x","t":"${block}"};`).includes(block));
+    assert.equal(unescapeJs('a \\u2014 b \\u{2019}'), 'a \u2014 b \u2019', 'an escaped dash is read as the dash');
+    assert.equal(unescapeJs('\\u2014abc'), '\u2014abc', 'a bare escape is exactly four hex digits');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('C4 · design-qa.mjs FAILS on a planted copy of the prose, and validate.mjs on a brief.json that regrows its text', () => {
+  const dir = siteCopy('prose-homes');
+  try {
+    cpSync(join(ROOT, 'tools'), join(dir, 'tools'), { recursive: true });
+    for (const d of ['fonts']) cpSync(join(ROOT, d), join(dir, d), { recursive: true });
+    const clean = execFileSync(process.execPath, [join(dir, 'tools', 'design-qa.mjs')], { cwd: dir, encoding: 'utf8' });
+    assert.match(clean, /0 errors/, 'the copied tree must start clean');
+    plantedIndex(dir, (t) => `<script type="application/json">${JSON.stringify({ text: t })}</script>`);
+    let out = ''; let exit = 0;
+    try { execFileSync(process.execPath, [join(dir, 'tools', 'design-qa.mjs')], { cwd: dir, encoding: 'utf8' }); }
+    catch (e) { exit = e.status; out = `${e.stdout ?? ''}`; }
+    assert.equal(exit, 1);
+    assert.match(out, /index\.html: holds a copy of text written in index\.html/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+
+  const data = dataScratch();
+  try {
+    edit(data, 'data/brief.json', (s) => s.replace('"parts": [', '"meta": { "standfirst": "Six regulations, one directive family and a live reform package now govern" },\n "parts": ['));
+    const r = runValidator('validate.mjs', [], data);
+    assert.equal(r.exit, 1);
+    assert.match(r.out, /brief\.json carries "meta"/);
+  } finally { rmSync(data, { recursive: true, force: true }); }
 });
