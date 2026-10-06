@@ -1216,10 +1216,11 @@ body.i18n-busy .readwrap,body.i18n-busy .portal,body.i18n-busy .hero{opacity:.45
 
   /* The ticker stops wrapping like a sentence and becomes a small ledger:
      two even columns, figure over label, set as the full ledger below sets
-     them. A count left alone on its row takes the whole row, centred. */
+     them. Every count is centred in its column, so the ledger mirrors about
+     the page's axis; a count left alone on its row takes the whole row. */
   .sop-ticker{display:grid;grid-template-columns:1fr 1fr;gap:20px 24px;margin:30px 0 0}
   .tk-item{white-space:normal;font-size:9.5px;line-height:1.4;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--paper-dim)}
+    text-transform:uppercase;color:var(--paper-dim);text-align:center}
   .tk-item b{display:block;margin-bottom:6px;font-family:var(--display);font-size:28px;
     font-weight:400;line-height:1;letter-spacing:0}
   .tk-item:nth-child(odd):nth-last-child(3),
