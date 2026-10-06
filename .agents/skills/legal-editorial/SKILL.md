@@ -97,22 +97,31 @@ readings identical.
 
 ## A style rewrite, on the author's instruction
 
-Only when the author has asked for it, and one section at a time.
+Only when the author has asked for it. The author may ask for one section or for the whole
+brief; either way the work is done and committed one section at a time, so that each section
+can be reviewed and reverted on its own. The first whole-brief pass (6 October 2026) followed
+this procedure.
 
 1. Record the section's claim set first: every `data-claim`, `data-record` and `data-prose`
    attribute, each `data-i18n` key, every asterisk, and the hedging markers from Part B's
    table that the section contains.
 2. Rewrite to Part A. Each claim's sentence still asserts what its `claims.json` `statement`
-   says, at the confidence its grade allows. A paragraph that is split keeps its attributes on
-   the paragraph that carries the claim; never duplicate a `data-claim` to keep both halves
-   linked.
+   says, at the confidence its grade allows. The safe default is to keep every element and
+   rewrite only its content: split sentences, not paragraphs. A paragraph that must be split
+   keeps its attributes on the paragraph that carries the claim; never duplicate a
+   `data-claim` to keep both halves linked.
 3. Compare the claim set before and after. Any difference in attributes, asterisks or hedges
-   that was not the author's explicit decision is reverted.
+   that was not the author's explicit decision is reverted. Check each rewritten key in every
+   language as well: the inline markup (glossary buttons, `<b>`, `<br/>`) must match that
+   language's previous version, and the numbers, month names and asterisks must match the
+   English. A rewrite that changes a number has changed a fact.
 4. Every `data-i18n` key whose English changed is declared `superseded` in
    `i18n/locales.json` for each locale, or retranslated. A rewritten section can touch a dozen
    keys; that is the cost, and it is not skipped.
-5. A changed Part title or dek changes in `data/brief.json` too, and in the tree, SVG and
-   spine regions of the markup.
+5. A changed Part title or dek changes in all of its homes: the `<h2>` or dek, the contents
+   list (`contents.spanN`), the tree map's `aria-label`, the spine's `title`, the portal tree's
+   `aria-label`, and `data/brief.json`. Count the occurrences before replacing; a count that
+   differs between titles means one home has already drifted.
 6. Run `node tools/i18n-audit.mjs`, `node tools/design-qa.mjs` and
    `node tools/evidence-audit.mjs`, and expect the recorded baseline. The evidence audit is
    the one that notices a passage which lost its registration.

@@ -1,37 +1,66 @@
 # HANDOVER
 
-**Last updated:** the author's editorial standard · 6 October 2026
+**Last updated:** the brief rewritten to the author's editorial standard · 6 October 2026
 **Branch:** `claude/editorial-standard`, cut from `origin/main` at `fbd173e` (PR #8's merge).
 Not merged; whether to open a pull request is the author's call.
 
-## The author's editorial standard — 6 October 2026
+## The brief rewritten to the author's editorial standard — 6 October 2026
 
-**Asked:** the author supplied a style guide for the brief's prose: serious European policy
-analysis edited by a human, between Bruegel, the FT and The Economist; precision before
-style; fact, then interpretation, then implication; criticism from evidence, not adjectives;
-informative titles; and a list of constructions that make prose read as generated.
+**Asked:** the author supplied a style guide for the brief's prose (serious European policy
+analysis edited by a human, between Bruegel, the FT and The Economist; precision before style;
+fact, then interpretation, then implication; criticism from evidence rather than adjectives;
+informative titles; a list of constructions that make prose read as generated). Then: rewrite
+the whole brief to it, in order, retranslate, and leave the standard recorded.
 
-**Where it lives.** One home: Part A of
+**Where the standard lives.** One home: Part A of
 `.agents/skills/legal-editorial/references/house-register.md`. The file's previous content is
-Part B, unchanged except that the em-dash convention now points at Part A's rationing and two
-of its own em dashes became full stops. The hedging table is untouched and still outranks
-style. `legal-editorial/SKILL.md` gained a procedure for a **style rewrite on the author's
-instruction**: one section at a time, claim set recorded before and compared after, every
-changed `data-i18n` key superseded or retranslated, titles changed in both homes, the
-evidence audit run, the before and after shown to the author. Without that instruction, the
-standard governs new prose only; `docs/AI-SAFE-BOUNDARIES.md` §2 (prose is amber) is
-unchanged. `docs/SKILL-MAP.md`'s row for the skill names the standard.
+Part B, unchanged except that the em-dash convention now points at Part A's rationing and one
+quoted example follows the rewritten sentence. The hedging table is untouched and still
+outranks style. `legal-editorial/SKILL.md` has a procedure for a **style rewrite on the
+author's instruction** (one section or the whole brief, committed section by section; claim set
+compared; per-key parity of markup, numbers, months and asterisks in every language; every
+changed key retranslated or superseded; titles changed in all six homes). Without that
+instruction the standard governs new prose only; `docs/AI-SAFE-BOUNDARIES.md` §2 is unchanged.
 
-**Measured, not changed.** Over the fourteen `section.part` blocks of `index.html` (12,437
-words, about 444 sentences): 202 em dashes, 42 sentences with two or more; 7 sentences with
-"not … but", 18 with ", not "; the other listed phrases close to absent. Per section, the em
-dashes run from 1 (Annex B) to 30 (Part 5). **No sentence of the brief was edited**, so no
-locale key, claim or validator result moved.
+**What changed.** 111 English strings across all fourteen sections, one commit per section,
+then one commit for titles. Every element, `data-claim`, `data-record`, `data-prose` and
+`data-i18n` attribute is where it was; no element was added, removed or split, so no claim
+record, prose registration or locale key moved. Before writing, a script refused any key whose
+inline markup, digits, English month names or asterisks differed from the previous version in
+any of the four languages. What the edits did: em dashes 202 → 38 (most of the rest are list
+bullets), sentences with two or more 42 → 3, "not … but" 7 → 3; "not a technicality", "the
+mechanism working as designed", "the real output", "That proviso is doing real work" and
+similar replaced by direct statements; the second-person instruction in Part IX and the word
+"simply" in Part XI (both barred by Part B) removed. Titles: Part II "its enforcement gap"
+(was "the cracks in it") and its dek and subheading drop "pathology"; Part VI "reallocating
+control over machine data" (was "prising open the machine economy"); the em dashes leave the
+titles of Parts VII and XI, whose portal copies already had the comma form. `data/brief.json`
+changed only in those titles and that dek.
 
-**For the author:** (a) say whether, and in which order, the Parts should be rewritten to the
-standard; each one supersedes most of its locale keys in three languages. (b) Several Part
-titles lean on metaphor ("the platform constitution", "prising open the machine economy");
-A9 asks for informative titles, and each title has two homes. (c) The scout branch below.
+**A translation error fixed in passing.** The it/fr/es translations of `part-1.p10` said the
+GPAI Code was finalised after "four drafts"; the English and `clm-gpai-code-four-drafts` say
+"three drafts and a final text". The retranslation follows the English.
+
+**Translations.** 110 strings changed in each of it, fr and es (one translation already
+matched). Recorded in each locale's note in `i18n/locales.json`; nothing superseded or
+pending. Like the 27 Sep 2026 translations they are AI-assisted and **not reviewed by a native
+speaker**. README limitation 5 describes the 27 Sep batch only; extending it is the author's
+call, because that section is reserved to the author.
+
+**Measured at the end:** validate, i18n-audit, design-qa, seo-audit 0 errors / 0 warnings;
+evidence-audit 0 errors, 11 warnings (the same 11 as on `fbd173e`); 25 suites, **1237 tests,
+all passing**; schemas check exit 0; browser suite **241 pass · 0 fail · 1 undecidable**
+(`a11y:bound`, as before).
+
+**Not done, deliberately:** README limitation 5 (above). Part X's portal label reads "build at
+once?" where its heading reads "at the same time?"; that drift predates this session and was
+left alone. Title deks other than Part II's were not changed. No claim statement in
+`data/claims.json` was edited: the prose was rewritten to keep asserting what each statement
+says, and statements are data, outside a style pass.
+
+**For the author:** (a) read the per-section commits (`git log fbd173e..claude/editorial-standard`)
+and revert any section whose voice is no longer yours; (b) decide on README limitation 5;
+(c) decide on a pull request; (d) the scout branch below.
 
 ## Branch register — 6 October 2026
 

@@ -13,10 +13,14 @@ of the claim behind it.** Part A asks for editorial confidence. It never asks fo
 confidence than the evidence carries.
 
 **Who may apply Part A to existing prose.** All new prose is written to it. Existing prose in
-`index.html` is rewritten to it only when the author asks, one section at a time, under the
-procedure in `../SKILL.md`. A style edit that changes no fact can still orphan a claim record,
-drop a hedge or leave three locale editions translating the old sentence. That is why the
-standard does not, by itself, licence an agent to rewrite the brief.
+`index.html` is rewritten to it only when the author asks, for one section or for the whole
+brief, under the procedure in `../SKILL.md`. A style edit that changes no fact can still orphan
+a claim record, drop a hedge or leave three locale editions translating the old sentence. That
+is why the standard does not, by itself, licence an agent to rewrite the brief.
+
+**The first full pass** was made on the author's instruction on 6 October 2026: all fourteen
+sections, 111 English strings, each retranslated into Italian, French and Spanish, one commit
+per section on `claude/editorial-standard`.
 
 ---
 
@@ -60,11 +64,20 @@ Each of these can work once. Repetition is what makes prose read as generated.
 - stacked abstract nouns
 - a dramatic contrast where a direct statement would be stronger
 
-**Measured on 6 October 2026**, over the fourteen `section.part` blocks of `index.html`
-(12,437 words, about 444 sentences): **202 em dashes**, roughly one for every two sentences,
-with **42 sentences carrying two or more**. Contrast constructions are rarer: 7 sentences hold
-"not … but" and 18 hold ", not ". The other listed phrases are close to absent. The em dash is
-the habit this standard most changes. Re-measure before claiming any movement.
+**Measured on 6 October 2026**, over the fourteen `section.part` blocks of `index.html`:
+
+| | Before the pass | After the pass |
+|---|---|---|
+| Words | 12,437 | 12,356 |
+| Sentences (approx.) | 444 | 521 |
+| Em dashes | 202 | 38 |
+| Sentences with two or more em dashes | 42 | 3 |
+| Sentences with "not … but" | 7 | 3 |
+| Sentences with ", not " | 18 | 14 |
+
+Most of the 38 remaining em dashes are list bullets after a line break, which the markup uses
+as its list marker. The other listed phrases were close to absent before and remain so.
+Re-measure before claiming any further movement.
 
 ### A4. Concrete sentences over impressive ones
 
@@ -178,7 +191,7 @@ licence to rewrite anything into it.
 **States the mechanism, then its limit, in the same breath.**
 
 > The EU has no general competence to legislate on speech, safety or morality. What it has is
-> Article 114 TFEU — the power to harmonise national rules that fragment the internal market.
+> Article 114 TFEU, the power to harmonise national rules that fragment the internal market.
 
 **Names the consequence rather than gesturing at one.**
 
