@@ -2,7 +2,7 @@
 
 **Last updated:** the brief rewritten to the author's editorial standard · 6 October 2026
 **Branch:** `claude/editorial-standard`, cut from `origin/main` at `fbd173e` (PR #8's merge).
-Not merged; whether to open a pull request is the author's call.
+Opened as **pull request #9** to `main` on the author's instruction (6 Oct 2026); not yet merged.
 
 ## The brief rewritten to the author's editorial standard — 6 October 2026
 
@@ -64,7 +64,8 @@ and revert any section whose voice is no longer yours; (b) decide on README limi
 
 ## Branch register — 6 October 2026
 
-`git branch -r --no-merged origin/main` lists `claude/editorial-standard` (this session's) and
+`git branch -r --no-merged origin/main` lists `claude/editorial-standard` (this session's, open as
+PR #9) and
 `origin/scout/digest-digest-2026-10-05T14-47-50Z`, which is in no register entry and was
 reported to the author rather than inspected further.
 
