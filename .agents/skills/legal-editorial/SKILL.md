@@ -1,6 +1,6 @@
 ---
 name: legal-editorial
-description: Write and correct the brief's prose without changing what it claims — the house register, hedging discipline, asterisks, and the three homes an English string can have. Use before editing any sentence a reader sees.
+description: Write and correct the brief's prose without changing what it claims — the author's editorial standard, the house register, hedging discipline, asterisks, and the three homes an English string can have. Use before editing any sentence a reader sees, and before any style rewrite the author asks for.
 ---
 
 # legal-editorial
@@ -45,11 +45,22 @@ emphasis, add a claim, or improve a formulation it merely finds unconvincing. Th
 is not stylistic: the prose and `data/claims.json` are two views of the same assertions, and
 a rewritten sentence silently orphans its claim record.
 
+**The one exception is a style rewrite the author asks for**, under the editorial standard and
+the procedure below. It changes how a passage reads and nothing it asserts. Without that
+instruction, the standard governs new prose only.
+
 ## The register
 
-Read `references/house-register.md`. In summary: declarative, unhedged where the evidence is
-solid, explicitly hedged where it is not, and never selling. The brief's characteristic move
-is to state the mechanism and then state its limit in the same breath.
+Read `references/house-register.md`. It has two parts.
+
+- **Part A, the editorial standard** (the author, 6 October 2026): serious European policy
+  analysis edited by a human. Precision, then clarity, then argument, then style; fact, then
+  interpretation, then implication; criticism built from evidence rather than adjectives;
+  informative titles; rationed contrast formulas, metaphors and em dashes.
+- **Part B, the observed register**: declarative, unhedged where the evidence is solid,
+  explicitly hedged where it is not, and never selling. The brief's characteristic move is to
+  state the mechanism and then state its limit in the same breath. Part B also holds the
+  hedging table.
 
 **The one rule that outranks style:** confidence in the prose must match the grade of the
 claim behind it. A sentence that reads as settled law over a claim graded *Unresolved* is a
@@ -84,6 +95,30 @@ attaching something related, and never by deleting the asterisk. The correspondi
 `reference_gap` and `gap_note` in `claims.json` say exactly what is missing; keep the two
 readings identical.
 
+## A style rewrite, on the author's instruction
+
+Only when the author has asked for it, and one section at a time.
+
+1. Record the section's claim set first: every `data-claim`, `data-record` and `data-prose`
+   attribute, each `data-i18n` key, every asterisk, and the hedging markers from Part B's
+   table that the section contains.
+2. Rewrite to Part A. Each claim's sentence still asserts what its `claims.json` `statement`
+   says, at the confidence its grade allows. A paragraph that is split keeps its attributes on
+   the paragraph that carries the claim; never duplicate a `data-claim` to keep both halves
+   linked.
+3. Compare the claim set before and after. Any difference in attributes, asterisks or hedges
+   that was not the author's explicit decision is reverted.
+4. Every `data-i18n` key whose English changed is declared `superseded` in
+   `i18n/locales.json` for each locale, or retranslated. A rewritten section can touch a dozen
+   keys; that is the cost, and it is not skipped.
+5. A changed Part title or dek changes in `data/brief.json` too, and in the tree, SVG and
+   spine regions of the markup.
+6. Run `node tools/i18n-audit.mjs`, `node tools/design-qa.mjs` and
+   `node tools/evidence-audit.mjs`, and expect the recorded baseline. The evidence audit is
+   the one that notices a passage which lost its registration.
+7. Show the author the before and after of each paragraph. The prose is theirs, and the
+   rewrite is a proposal until they accept it.
+
 ## Procedure
 
 1. Read the sentence, then the claim record behind it, then the claim's grade.
@@ -103,7 +138,8 @@ readings identical.
 
 ## Refusal conditions
 
-- Do not rewrite the argument, reorder it, or add a statement the data does not carry.
+- Do not rewrite the argument, reorder it, or add a statement the data does not carry. A style
+  rewrite the author asked for changes how a passage reads, never what it claims.
 - Do not remove an asterisk, a caveat, a stated limitation or a hedge that the evidence
   requires. **RED** under `docs/AI-SAFE-BOUNDARIES.md` §0.7.
 - Do not alter the footer's non-affiliation, no-legal-advice or reuse text, in the markup or

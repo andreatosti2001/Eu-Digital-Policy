@@ -1,11 +1,49 @@
 # HANDOVER
 
-**Last updated:** the brief's text, single-sourced · 30 September 2026
+**Last updated:** the author's editorial standard · 6 October 2026
+**Branch:** `claude/editorial-standard`, cut from `origin/main` at `fbd173e` (PR #8's merge).
+Not merged; whether to open a pull request is the author's call.
+
+## The author's editorial standard — 6 October 2026
+
+**Asked:** the author supplied a style guide for the brief's prose: serious European policy
+analysis edited by a human, between Bruegel, the FT and The Economist; precision before
+style; fact, then interpretation, then implication; criticism from evidence, not adjectives;
+informative titles; and a list of constructions that make prose read as generated.
+
+**Where it lives.** One home: Part A of
+`.agents/skills/legal-editorial/references/house-register.md`. The file's previous content is
+Part B, unchanged except that the em-dash convention now points at Part A's rationing and two
+of its own em dashes became full stops. The hedging table is untouched and still outranks
+style. `legal-editorial/SKILL.md` gained a procedure for a **style rewrite on the author's
+instruction**: one section at a time, claim set recorded before and compared after, every
+changed `data-i18n` key superseded or retranslated, titles changed in both homes, the
+evidence audit run, the before and after shown to the author. Without that instruction, the
+standard governs new prose only; `docs/AI-SAFE-BOUNDARIES.md` §2 (prose is amber) is
+unchanged. `docs/SKILL-MAP.md`'s row for the skill names the standard.
+
+**Measured, not changed.** Over the fourteen `section.part` blocks of `index.html` (12,437
+words, about 444 sentences): 202 em dashes, 42 sentences with two or more; 7 sentences with
+"not … but", 18 with ", not "; the other listed phrases close to absent. Per section, the em
+dashes run from 1 (Annex B) to 30 (Part 5). **No sentence of the brief was edited**, so no
+locale key, claim or validator result moved.
+
+**For the author:** (a) say whether, and in which order, the Parts should be rewritten to the
+standard; each one supersedes most of its locale keys in three languages. (b) Several Part
+titles lean on metaphor ("the platform constitution", "prising open the machine economy");
+A9 asks for informative titles, and each title has two homes. (c) The scout branch below.
+
+## Branch register — 6 October 2026
+
+`git branch -r --no-merged origin/main` lists `claude/editorial-standard` (this session's) and
+`origin/scout/digest-digest-2026-10-05T14-47-50Z`, which is in no register entry and was
+reported to the author rather than inspected further.
+
+## The brief's text, single-sourced — 30 September 2026 (previous header)
+
 **Branch:** `claude/brief-single-source`, cut from `origin/main` at `cc1f7d0` (PR #5's merge).
 **Merged as pull request #6** (`d4065c6`, 1 Oct 2026). A follow-up on the same branch, restarted
 from `d4065c6`, records the evidence the main commit omitted (below).
-
-## The brief's text, single-sourced — 30 September 2026
 
 **Asked:** remove the duplication between `index.html`'s markup and `window.__CONTENT__` /
 the structured layer by establishing one canonical source — not by synchronising copies — and
