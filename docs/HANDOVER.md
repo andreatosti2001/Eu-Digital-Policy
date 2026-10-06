@@ -2,7 +2,8 @@
 
 **Last updated:** the brief rewritten to the author's editorial standard · 6 October 2026
 **Branch:** `claude/editorial-standard`, cut from `origin/main` at `fbd173e` (PR #8's merge).
-Opened as **pull request #9** to `main` on the author's instruction (6 Oct 2026); not yet merged.
+**Merged as pull request #9** (`4d9279f`, 6 Oct 2026). This follow-up on the same branch,
+restarted from `4d9279f`, corrects the register below, which was written before the merge.
 
 ## The brief rewritten to the author's editorial standard — 6 October 2026
 
@@ -58,16 +59,17 @@ left alone. Title deks other than Part II's were not changed. No claim statement
 `data/claims.json` was edited: the prose was rewritten to keep asserting what each statement
 says, and statements are data, outside a style pass.
 
-**For the author:** (a) read the per-section commits (`git log fbd173e..claude/editorial-standard`)
-and revert any section whose voice is no longer yours; (b) decide on README limitation 5;
-(c) decide on a pull request; (d) the scout branch below.
+**For the author:** (a) read the per-section commits (`git log fbd173e..45324ae`) and revert
+any section whose voice is no longer yours; (b) decide on README limitation 5; (c) the scout
+branch below.
 
 ## Branch register — 6 October 2026
 
-`git branch -r --no-merged origin/main` lists `claude/editorial-standard` (this session's, open as
-PR #9) and
+`git branch -r --no-merged origin/main` lists only
 `origin/scout/digest-digest-2026-10-05T14-47-50Z`, which is in no register entry and was
-reported to the author rather than inspected further.
+reported to the author rather than inspected further. This session's branch,
+`claude/editorial-standard`, was merged as PR #9 and restarted from `4d9279f` for this
+correction.
 
 ## The brief's text, single-sourced — 30 September 2026 (previous header)
 
