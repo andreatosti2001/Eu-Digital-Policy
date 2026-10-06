@@ -1198,6 +1198,60 @@ body.i18n-busy .readwrap,body.i18n-busy .portal,body.i18n-busy .hero{opacity:.45
 }
 
 /* ============================================================
+   FRONTISPIECE ON A PHONE — composed for the page, not compressed
+
+   Below 640px every element of the frontispiece hangs from one pair of
+   margins, --pg, so the title, the standfirst, the ledger, the next date,
+   the transition sentence and the three doors share a single left and a
+   single right edge. Nothing here changes what is said or what it links
+   to; it changes only how the narrow page is set.
+   ============================================================ */
+@media (max-width:640px){
+  .portal{--pg:clamp(18px,5.6vw,24px);padding:30px var(--pg) 40px}
+
+  /* "The European Legal" sets at about 9.3 times the type size, so the
+     size follows the measure: three lines from 320px up, never four. */
+  .portal h1{font-size:clamp(30px,9.2vw,44px);line-height:1.02;max-width:none}
+  .portal-stand{margin:18px 0 0;font-size:15px;line-height:1.55;max-width:36em}
+
+  /* The ticker stops wrapping like a sentence and becomes a small ledger:
+     two even columns, figure over label, set as the full ledger below sets
+     them. A count left alone on its row takes the whole row, centred. */
+  .sop-ticker{display:grid;grid-template-columns:1fr 1fr;gap:20px 24px;margin:30px 0 0}
+  .tk-item{white-space:normal;font-size:9.5px;line-height:1.4;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--paper-dim)}
+  .tk-item b{display:block;margin-bottom:6px;font-family:var(--display);font-size:28px;
+    font-weight:400;line-height:1;letter-spacing:0}
+  .tk-item:nth-child(odd):nth-last-child(3),
+  .tk-item:nth-child(odd):last-child{grid-column:1/-1;justify-self:center;text-align:center}
+  .tk-sep{display:none}
+
+  /* The next date is an event, not a count: its own row, a dateline over a
+     single line of date, instrument and distance. */
+  .tk-next{grid-column:1/-1;display:grid;grid-template-columns:auto auto 1fr;
+    align-items:baseline;column-gap:12px;margin-top:14px;white-space:normal;
+    font-size:11px;letter-spacing:.08em}
+  .tk-next .tk-k{grid-column:1/-1;margin-bottom:8px}
+  .tk-next b{font-family:var(--display);font-size:20px;font-weight:400;letter-spacing:0}
+  .tk-next i{justify-self:end;letter-spacing:.1em;text-transform:uppercase;font-size:10px}
+
+  .portal-masthead::after{margin-top:30px}
+
+  /* The transition sentence is a chapter turn, so it is given air rather
+     than a rule. */
+  .portal-figure{width:100%;align-items:stretch;margin:52px 0 0;padding-top:0;border-top:0}
+  .portal-figure .portal-caption{margin:0;font-family:var(--display);font-size:17.5px;
+    line-height:1.4;text-align:left;color:var(--paper-dim);text-wrap:pretty}
+
+  /* Three doors, one column: identical width, identical height. */
+  .portal-cta{display:grid;grid-template-columns:1fr;gap:10px;justify-self:stretch;
+    width:100%;margin:30px 0 0}
+  .portal-cta .btn{display:flex;align-items:center;justify-content:center;width:100%;
+    height:42px;padding:0 16px;text-align:center}
+  .portal-scrollhint{justify-self:center;margin:10px 0 0}
+}
+
+/* ============================================================
    THE THRESHOLD — the transition between the public record and the
    statement that a private control plane exists.
 
