@@ -1,11 +1,79 @@
 # HANDOVER
 
-**Last updated:** the brief's text, single-sourced · 30 September 2026
+**Last updated:** the brief rewritten to the author's editorial standard · 6 October 2026
+**Branch:** `claude/editorial-standard`, cut from `origin/main` at `fbd173e` (PR #8's merge).
+Opened as **pull request #9** to `main` on the author's instruction (6 Oct 2026); not yet merged.
+
+## The brief rewritten to the author's editorial standard — 6 October 2026
+
+**Asked:** the author supplied a style guide for the brief's prose (serious European policy
+analysis edited by a human, between Bruegel, the FT and The Economist; precision before style;
+fact, then interpretation, then implication; criticism from evidence rather than adjectives;
+informative titles; a list of constructions that make prose read as generated). Then: rewrite
+the whole brief to it, in order, retranslate, and leave the standard recorded.
+
+**Where the standard lives.** One home: Part A of
+`.agents/skills/legal-editorial/references/house-register.md`. The file's previous content is
+Part B, unchanged except that the em-dash convention now points at Part A's rationing and one
+quoted example follows the rewritten sentence. The hedging table is untouched and still
+outranks style. `legal-editorial/SKILL.md` has a procedure for a **style rewrite on the
+author's instruction** (one section or the whole brief, committed section by section; claim set
+compared; per-key parity of markup, numbers, months and asterisks in every language; every
+changed key retranslated or superseded; titles changed in all six homes). Without that
+instruction the standard governs new prose only; `docs/AI-SAFE-BOUNDARIES.md` §2 is unchanged.
+
+**What changed.** 111 English strings across all fourteen sections, one commit per section,
+then one commit for titles. Every element, `data-claim`, `data-record`, `data-prose` and
+`data-i18n` attribute is where it was; no element was added, removed or split, so no claim
+record, prose registration or locale key moved. Before writing, a script refused any key whose
+inline markup, digits, English month names or asterisks differed from the previous version in
+any of the four languages. What the edits did: em dashes 202 → 38 (most of the rest are list
+bullets), sentences with two or more 42 → 3, "not … but" 7 → 3; "not a technicality", "the
+mechanism working as designed", "the real output", "That proviso is doing real work" and
+similar replaced by direct statements; the second-person instruction in Part IX and the word
+"simply" in Part XI (both barred by Part B) removed. Titles: Part II "its enforcement gap"
+(was "the cracks in it") and its dek and subheading drop "pathology"; Part VI "reallocating
+control over machine data" (was "prising open the machine economy"); the em dashes leave the
+titles of Parts VII and XI, whose portal copies already had the comma form. `data/brief.json`
+changed only in those titles and that dek.
+
+**A translation error fixed in passing.** The it/fr/es translations of `part-1.p10` said the
+GPAI Code was finalised after "four drafts"; the English and `clm-gpai-code-four-drafts` say
+"three drafts and a final text". The retranslation follows the English.
+
+**Translations.** 110 strings changed in each of it, fr and es (one translation already
+matched). Recorded in each locale's note in `i18n/locales.json`; nothing superseded or
+pending. Like the 27 Sep 2026 translations they are AI-assisted and **not reviewed by a native
+speaker**. README limitation 5 describes the 27 Sep batch only; extending it is the author's
+call, because that section is reserved to the author.
+
+**Measured at the end:** validate, i18n-audit, design-qa, seo-audit 0 errors / 0 warnings;
+evidence-audit 0 errors, 11 warnings (the same 11 as on `fbd173e`); 25 suites, **1237 tests,
+all passing**; schemas check exit 0; browser suite **241 pass · 0 fail · 1 undecidable**
+(`a11y:bound`, as before).
+
+**Not done, deliberately:** README limitation 5 (above). Part X's portal label reads "build at
+once?" where its heading reads "at the same time?"; that drift predates this session and was
+left alone. Title deks other than Part II's were not changed. No claim statement in
+`data/claims.json` was edited: the prose was rewritten to keep asserting what each statement
+says, and statements are data, outside a style pass.
+
+**For the author:** (a) read the per-section commits (`git log fbd173e..claude/editorial-standard`)
+and revert any section whose voice is no longer yours; (b) decide on README limitation 5;
+(c) decide on a pull request; (d) the scout branch below.
+
+## Branch register — 6 October 2026
+
+`git branch -r --no-merged origin/main` lists `claude/editorial-standard` (this session's, open as
+PR #9) and
+`origin/scout/digest-digest-2026-10-05T14-47-50Z`, which is in no register entry and was
+reported to the author rather than inspected further.
+
+## The brief's text, single-sourced — 30 September 2026 (previous header)
+
 **Branch:** `claude/brief-single-source`, cut from `origin/main` at `cc1f7d0` (PR #5's merge).
 **Merged as pull request #6** (`d4065c6`, 1 Oct 2026). A follow-up on the same branch, restarted
 from `d4065c6`, records the evidence the main commit omitted (below).
-
-## The brief's text, single-sourced — 30 September 2026
 
 **Asked:** remove the duplication between `index.html`'s markup and `window.__CONTENT__` /
 the structured layer by establishing one canonical source — not by synchronising copies — and

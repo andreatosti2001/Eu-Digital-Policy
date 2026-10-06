@@ -26,7 +26,7 @@ specific to one assistant: Claude Code discovers them by path, and any agent rea
 | `knowledge-architecture` | Where a fact lives; store vs derive; the taxonomy as enum authority | — |
 | `data-completeness` | Measuring what the corpus does not establish | `scripts/gaps.mjs` |
 | `regulatory-change-detection` | Noticing that a record may have decayed; producing candidates | `references/decay-surfaces.md` |
-| `legal-editorial` | The prose: register, hedging, asterisks, the three homes of an English string | `references/house-register.md` |
+| `legal-editorial` | The prose: the author's editorial standard, register, hedging, asterisks, the three homes of an English string | `references/house-register.md` |
 | `frontend-implementation` | Building views inside the architecture's invariants | — |
 | `ux-audit` | The judgment the validators cannot make | `references/manual-checks.md` |
 
