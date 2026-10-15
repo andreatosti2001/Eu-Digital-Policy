@@ -1,11 +1,85 @@
 # HANDOVER
 
+**Last updated:** the October 2026 evidence update · 14 October 2026 (reference date)
+**Branch:** `claude/eu-digital-policy-audit-um86no`, cut from `origin/main` at `e37f23b`. Opened
+as pull request #11 on the author's instruction; not yet merged.
+
+## The October 2026 evidence update — 14 October 2026
+
+**Asked:** an evidence-quality audit and controlled implementation against a research brief
+(Digital Omnibus, AI Act and Regulation (EU) 2026/1744, DSA enforcement, the DMA and Google,
+eIDAS, CRA, NIS2/Italy, Gigabit Infrastructure Act, GDPR fine totals, EU–US transfers, new
+initiatives, other figures), reference date 14 October 2026, with the brief treated as a list of
+things to check rather than a source. **The register of what was checked, corrected, left
+unresolved and found on the way is `docs/AUDIT-2026-10-14.md`.** Read it before this summary.
+
+**The network reached the sources this time.** EUR-Lex (with retries past its HTTP 202
+challenge), the Commission, the press corner's API, Parliament's Legislative Observatory, ACN,
+DLA Piper and Agence Europe all answered; every source added or re-read was fetched and read on
+14 Oct 2026. Not reached: the CMS Enforcement Tracker (403), and no Council record of the
+October Coreper meetings was located.
+
+**What changed, by area** (records and keys are listed in the audit document):
+- Data Omnibus: the Coreper II vote planned for 11 Oct 2026 did not happen (Agence Europe, tier 4,
+  graded secondary and said so in the prose); Parliament's stage from OEIL; status note, chip
+  and Part VIII rewritten; no amendment count published, because none was verified.
+- AI Act: every date re-read against the OJ text of 2026/1744 and found right; the Part V chip now
+  carries Aug 2028 as well as Dec 2027; recital 40 anchors the standards premise of a critique.
+- DSA: X's action plan (16 Jul 2026) recorded without disturbing the decision or the appeals;
+  "first non-compliance decision" now sourced to the Commission; Meta/TikTok opening dates; the
+  TikTok minors and addictive-design findings recorded as one proceeding (the brief said
+  otherwise; IP/26/1679 is explicit).
+- DMA: the 16 July 2026 Google specification decisions (Arts 6(7), 6(11)) as two claims, two
+  month-precision compliance dates, and a sentence in Part IV; the gatekeeper count is now dated.
+- eIDAS: wallet deadline stated as 24 Dec 2026; Art. 5f(2) private acceptance from 24 Dec 2027,
+  with its three qualifications, as a claim, a provision, two calendar events and Part I's box.
+- CRA: Art. 14 vs Art. 24(3) vs general application; "severe", not "serious", incidents.
+- GDPR totals: the headline chip and sentence name DLA Piper, its cut-off and what it counts;
+  Alliance Risk's 40% is no longer read as a share of DLA Piper's total.
+- **Two pre-existing temporal errors the brief did not name, both fixed:** every CRA article was
+  derived as applying from 11 June 2026, and Data Act Art. 8 from 12 September 2027, because a
+  provision-less tranche was being read as the general application date. `statusContradictions()`
+  now refuses that shape, and a proposal carrying a status that counts it as law.
+- The masthead's verification line never rendered (it targeted `.portal-head`, which no page has);
+  it now gives the range of per-record verification dates and says what the range does not mean.
+
+**Translations:** 14 strings and 2 calendar obligations retranslated (it/fr/es), AI-assisted and
+not reviewed by a native speaker; recorded in `i18n/locales.json`. Four new calendar events fall
+back to English, marked EN.
+
+**Measured at the end** (14–15 Oct 2026, UTC): validate, i18n-audit, design-qa, seo-audit
+0 errors / 0 warnings; evidence-audit 0 errors, the same 11 warnings as on `e37f23b`; freshness
+0 defects, 3 staleness prompts (as before); 25 suites, **1245 tests, all passing** (1237 + eight
+new in `tools/selftest.mjs`, O1–O8); schemas and governance checks exit 0; browser suite
+**241 pass · 0 fail · 1 undecidable** (`a11y:bound`, as before). The changed passages were also
+captured at 1280px and 390px: no horizontal overflow, no console error.
+
+**Not done, deliberately:** nothing was added for the Gigabit Infrastructure Act, the DPF,
+the Digital Networks Act, the Digital Fairness Act or the EU KIDS ACT, which the site does not
+cover; their status as read is in the audit document §3 for the author's decision. The DMA's
+"not established" provisions (audit §4) need DMA Art. 54 read before they are tagged.
+`docs/CURRENT-ARCHITECTURE.md` §12's unverified count is unchanged at 47.
+
+**For the author:** (a) review the audit document and the per-area commits; (b) decide whether
+any §3 item belongs on the site; (c) re-check AliExpress's action plan after 20 Oct 2026 and the
+Data Omnibus before any further Council meeting; (d) the scout branch below.
+
+## Branch register — 14 October 2026
+
+`git branch -r --no-merged origin/main` lists
+only `origin/scout/digest-digest-2026-10-12T15-34-12Z`, which is in no register entry and is
+reported to the author: a Source Scout digest, two files under `agent/scout/digests/`, read only
+as far as its summary (among its candidates are the Commission's Google specification page,
+which this update read directly, and ENISA's CRA reporting-platform launch, which it did not).
+This session's branch, `claude/eu-digital-policy-audit-um86no`, is pushed and open as pull request #11. The
+scout branch named on 6 Oct (`…2026-10-05T14-47-50Z`) is no longer listed.
+
+## (previous header) The brief rewritten to the author's editorial standard — 6 October 2026
+
 **Last updated:** the brief rewritten to the author's editorial standard · 6 October 2026
 **Branch:** `claude/editorial-standard`, cut from `origin/main` at `fbd173e` (PR #8's merge).
 **Merged as pull request #9** (`4d9279f`, 6 Oct 2026). This follow-up on the same branch,
 restarted from `4d9279f`, corrects the register below, which was written before the merge.
-
-## The brief rewritten to the author's editorial standard — 6 October 2026
 
 **Asked:** the author supplied a style guide for the brief's prose (serious European policy
 analysis edited by a human, between Bruegel, the FT and The Economist; precision before style;

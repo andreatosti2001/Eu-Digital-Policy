@@ -1009,3 +1009,126 @@ test('C4 · design-qa.mjs FAILS on a planted copy of the prose, and validate.mjs
     assert.match(r.out, /brief\.json carries "meta"/);
   } finally { rmSync(data, { recursive: true, force: true }); }
 });
+
+/* ============================================================
+   O · the October 2026 evidence update (audit reference date 14 Oct 2026)
+
+   Each test below holds one correction to what the record now says, read
+   that day from the source named in the record. O1 plants the shapes that
+   produced the errors, so that the check is shown to fire rather than
+   merely to stay quiet on this tree.
+   ============================================================ */
+
+const OCT = '2026-10-14';
+const readData = (f) => JSON.parse(readFileSync(join(ROOT, 'data', f), 'utf8'));
+const octIndex = () => {
+  const events = readData('timeline.json').events;
+  const instruments = readData('instruments.json').instruments;
+  return { ix: { event: new Map(events.map((e) => [e.id, e])) }, inst: (id) => instruments.find((i) => i.id === id), events };
+};
+
+test('O1 · a tranche posing as the general date, and a proposal counted as law, are both caught', () => {
+  const ix = { event: new Map([
+    ['g1', { id: 'g1', date: '2026-06-11', event_type: 'event:application', provisions: [] }],
+    ['g2', { id: 'g2', date: '2027-12-11', event_type: 'event:application', provisions: [] }],
+  ]) };
+  const cra = { kind: 'kind:regulation', legislative_status: 'status:partly-applicable', milestones: ['g1', 'g2'] };
+  assert.ok(statusContradictions(cra, ix, OCT).some((m) => /application dates name no provision/.test(m)), 'two untagged application dates');
+  assert.equal(provisionApplication('x:art-13', cra, ix, OCT).date, '2026-06-11', 'and this is the misdating it causes');
+  assert.ok(statusContradictions({ kind: 'kind:proposal', legislative_status: 'status:in-force', milestones: [] }, ix, OCT)
+    .some((m) => /counts it as law/.test(m)), 'a proposal carrying "in force"');
+  // the CRA as it stood before 14 Oct 2026: the audit must fail it
+  const dir = treeCopy();
+  try {
+    editJSON(dir, 'timeline.json', (d) => { d.events.find((e) => e.id === 'tl-cra-2026-06-11-application').provisions = []; });
+    const r = audit({ root: dir, asOf: OCT });
+    assert.ok(r.errors.some((e) => /instruments\/cra: 2 application dates name no provision/.test(e)), r.errors.join('\n'));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('O2 · CRA and Data Act provisions take the date Art. 71(2) and Art. 50 give them', () => {
+  const { ix, inst } = octIndex();
+  const at = (p, i) => provisionApplication(p, inst(i), ix, OCT);
+  assert.deepEqual([at('cra:art-13', 'cra').state, at('cra:art-13', 'cra').date], ['general-scheduled', '2027-12-11'], 'manufacturers: 11 Dec 2027');
+  assert.deepEqual([at('cra:art-14', 'cra').state, at('cra:art-14', 'cra').date], ['applies', '2026-09-11'], 'Art. 14 reporting: 11 Sep 2026');
+  assert.equal(at('cra:art-24', 'cra').date, '2027-12-11', 'open-source stewards: with the general date, not with Art. 14');
+  assert.equal(at('cra:chapter-iv', 'cra').date, '2026-06-11');
+  assert.deepEqual([at('data-act:art-8', 'data-act').state, at('data-act:art-8', 'data-act').date], ['applies', '2025-09-12']);
+});
+
+test('O3 · AI Act after Regulation (EU) 2026/1744: Article 50 applies now; 2 December 2026 is a transition, not its application', () => {
+  const { ix, inst, events } = octIndex();
+  const ev = (id) => events.find((e) => e.id === id);
+  assert.equal(ev('tl-ai-omnibus-2026-07-27-entry-into-force').date, '2026-07-27');
+  assert.equal(ev('tl-ai-act-2026-12-02-application').date, '2026-12-02', 'new Art. 5(1)(ba)-(bb) prohibitions');
+  assert.equal(ev('tl-ai-act-2027-12-02-application').date, '2027-12-02', 'Annex III');
+  assert.equal(ev('tl-ai-act-2028-08-02-application').date, '2028-08-02', 'Annex I');
+  const t = ev('tl-ai-act-2026-12-02-transition-end');
+  assert.equal(t.event_type, 'event:compliance-deadline', 'the Art. 50(2) date for legacy systems is a deadline, not an application date');
+  const a50 = provisionApplication('ai-act:art-50', inst('ai-act'), ix, OCT);
+  assert.deepEqual([a50.state, a50.date], ['applies', '2026-08-02'], 'Article 50 as a whole is not postponed');
+  const a6 = provisionApplication('ai-act:art-6', inst('ai-act'), ix, OCT);
+  assert.deepEqual([a6.state, a6.date, a6.later.map((e) => e.date)], ['scheduled', '2027-12-02', ['2028-08-02']]);
+});
+
+test('O4 · the Data Omnibus is a proposal: no binding date, and the October Coreper outcome graded as the press report it rests on', () => {
+  const { inst, events } = octIndex();
+  const om = inst('data-omnibus');
+  assert.equal(om.kind, 'kind:proposal');
+  assert.ok(['status:proposal', 'status:stalled', 'status:council-position', 'status:parliament-position', 'status:trilogue'].includes(om.legislative_status));
+  assert.ok(om.status_as_of >= OCT, 'status re-read at the reference date');
+  assert.equal(events.filter((e) => e.instrument === 'data-omnibus' && /entry-into-force|application|compliance/.test(e.event_type)).length, 0,
+    'no proposed GDPR, ePrivacy or Data Act change is dated as an obligation');
+  const claims = readData('claims.json').claims;
+  const sources = new Map(readData('sources.json').sources.map((s) => [s.id, s]));
+  const c = claims.find((x) => x.id === 'clm-data-omnibus-council-october');
+  assert.match(c.statement, /11 October 2026/);
+  assert.deepEqual(c.sources.map((s) => sources.get(s.source_id).tier), ['tier:4'], 'a press report, and recorded as one');
+  assert.doesNotMatch(claims.find((x) => x.id === 'clm-data-omnibus-stalled').statement, /As of 25 September/, 'the superseded state is not repeated');
+  assert.match(readFileSync(join(ROOT, 'index.html'), 'utf8'), /data-i18n="part-8\.span3">Data Omnibus: proposal, no Council mandate</);
+});
+
+test('O5 · DSA: a preliminary finding carries no fine, and an accepted action plan does not undo an infringement decision', () => {
+  const enf = new Map(readData('enforcement.json').enforcement.map((r) => [r.id, r]));
+  for (const id of ['enf-meta-ec-2026-addictive', 'enf-tiktok-ec-2026-minors', 'enf-tiktok-ec-2026-addictive']) {
+    const r = enf.get(id);
+    assert.equal(r.fine_eur, null, id);
+    assert.equal(procedure(r).stage, 'procedure:preliminary-finding', id);
+  }
+  assert.equal(enf.get('enf-tiktok-ec-2026-minors').opened, enf.get('enf-tiktok-ec-2026-addictive').opened, 'one proceeding, two sets of findings');
+  const x = enf.get('enf-x-ec-2025');
+  assert.equal(x.fine_eur, 120000000);
+  assert.equal(x.action_status, 'action:imposed');
+  assert.equal(x.appeal.status, 'appeal:pending');
+  assert.ok(x.sources.includes('src-ec-x-action-plan-2026'));
+  assert.equal(x.behavioural_outcome, 'unknown', 'a plan accepted is not behaviour changed');
+  assert.equal(enf.get('enf-aliexpress-ec-2026').fine_eur, 550000000);
+});
+
+test('O6 · eIDAS: the wallet date binds Member States; the 2027 acceptance duty is qualified, not universal', () => {
+  const { events } = octIndex();
+  const w = events.find((e) => e.id === 'tl-eidas2-2026-12-24-compliance-deadline');
+  assert.deepEqual([w.date, w.affected_actors], ['2026-12-24', ['actor:member-state']]);
+  const p = events.find((e) => e.id === 'tl-eidas2-2027-12-24-compliance-deadline');
+  assert.equal(p.date, '2027-12-24');
+  assert.match(p.obligation, /strong user authentication/);
+  assert.match(p.obligation, /voluntary request/);
+  assert.match(p.obligation, /Microenterprises and small enterprises are excluded/);
+});
+
+test('O7 · counts and totals say whose count, as at when', () => {
+  const claims = new Map(readData('claims.json').claims.map((c) => [c.id, c]));
+  assert.match(claims.get('clm-gdpr-total-fines').statement, /DLA Piper.*10 January 2026/, 'the GDPR total names its tracker and cut-off');
+  assert.match(claims.get('clm-alliance-risk-contested-share').statement, /CMS Enforcement Tracker/, 'and the 40% names its base');
+  assert.match(claims.get('clm-seven-gatekeepers').statement, /^As at 14 October 2026 .*23 core platform services/);
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  assert.match(html, /data-i18n="part-2\.span2">€7\.1bn reported to Jan 2026 \(DLA Piper\)</);
+  assert.doesNotMatch(html, />€7\.1bn total fines</, 'no unattributed headline total');
+});
+
+test('O8 · the masthead says when the records were checked, from the records, where a reader can see it', () => {
+  const src = codeOf(readFileSync(join(ROOT, 'js', 'masthead.js'), 'utf8'));
+  assert.doesNotMatch(src, /\.portal-head/, 'the old line wrote into an element no page has');
+  assert.doesNotMatch(src, /\$last_verified/, 'a file-level date is not a per-record check');
+  assert.match(src, /checkedLine\(instruments, \[\.\.\.ix\.event\.values\(\)\], records\)/);
+});

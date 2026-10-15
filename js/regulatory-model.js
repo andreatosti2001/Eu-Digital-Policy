@@ -95,6 +95,19 @@ export function statusContradictions(inst, ix, asOf) {
   if (/transposition/.test(s || '') && inst.kind !== 'kind:directive')
     out.push(`a transposition status on an instrument that is not a directive (${inst.kind})`);
   if (adopt && pub && pub.date < adopt.date) out.push(`published (${pub.date}) before it was adopted (${adopt.date})`);
+  /* A proposal is counted as a proposal and never as law: the masthead bands
+     an instrument by this scalar alone, so a proposal carrying "in force" would
+     be counted twice over, as a proposal by its kind and as law by its status. */
+  if (inst.kind === 'kind:proposal' && s && !PRE_ADOPTION.has(s))
+    out.push(`a proposal carries status "${s.split(':').pop()}", which counts it as law`);
+  /* provisionApplication() reads an application event that names no provision
+     as the instrument's GENERAL date, and every untagged provision inherits it.
+     Two such events means a tranche is posing as the general date: until
+     14 Oct 2026 the CRA's Chapter IV date (11 June 2026) dated every CRA article,
+     and the Data Act's Chapter IV tranche (12 September 2027) dated Art. 8. */
+  const general = evs.filter((e) => e.event_type === 'event:application' && !(e.provisions || []).length);
+  if (general.length > 1)
+    out.push(`${general.length} application dates name no provision (${general.map((e) => e.date).join(', ')}) — only the general date may; tag each tranche with the provision it governs`);
   for (const e of eif) {
     if (pub && e.date < pub.date) out.push(`in force (${e.date}) before publication in the Official Journal (${pub.date})`);
     for (const a of app) if (a.date < e.date) out.push(`an application date (${a.date}, ${a.id}) precedes entry into force (${e.date})`);

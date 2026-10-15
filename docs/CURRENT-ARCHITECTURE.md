@@ -437,6 +437,8 @@ the corpus being more honest, not less.
 - 50 → 49 (27 Sep 2026): the TikTok/DPC transfers record read against the High Court's two approved judgments ([2026] IEHC 347 and 419, Record No. 2025/248 MCA): the infringement findings and the decision to fine stand, the corrective orders were proposed to be vacated and remitted, and a CJEU reference on the amount was proposed. One correction: the decision is dated 30 April 2025, not 2 May (the announcement). The Meta/DPC transfers record stays flagged: the DPC's 2023 annual report establishes the Irish appeal was brought, but not its current state.
 - 49 → 47 (27 Sep 2026): clm-ai-act-not-all-ai atomized and retyped as attributed — it now carries only the Commission's own sentence on minimal-risk AI, read on its AI Act page, which states it whole; the Art. 4 AI-literacy duty is its own OJ-sourced claim, and the prose no longer says the minimal tier has 'no obligations' (all four languages). clm-ai-omnibus-april-trilogue now rests on Bird & Bird (5 May 2026) and the IAPP (29 April 2026), which state it directly; both are commentary, so it grades Secondary, and the Council's own account remains unread (HTTP 403 here).
 
+- 47 → 47 (14 Oct 2026): the October 2026 evidence update (`docs/AUDIT-2026-10-14.md`) added six claims and four timeline events, every one read that day against its source, and moved no record into or out of the unverified set. One record changed how it is listed there: `clm-ai-act-standards-not-ready` went from "unverified" to "no external direct source", because recital 40 of Regulation (EU) 2026/1744 now partially supports its premise.
+
 The other numbers on this block are unchanged.
 
 **Unchanged in SESSION 30, and that is the point of recording it.** All four still report
