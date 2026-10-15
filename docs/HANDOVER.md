@@ -1,8 +1,8 @@
 # HANDOVER
 
 **Last updated:** the October 2026 evidence update · 14 October 2026 (reference date)
-**Branch:** `claude/eu-digital-policy-audit-um86no`, cut from `origin/main` at `e37f23b`. Not
-merged; no pull request opened (the author has not asked for one).
+**Branch:** `claude/eu-digital-policy-audit-um86no`, cut from `origin/main` at `e37f23b`. Opened
+as pull request #11 on the author's instruction; not yet merged.
 
 ## The October 2026 evidence update — 14 October 2026
 
@@ -71,7 +71,7 @@ only `origin/scout/digest-digest-2026-10-12T15-34-12Z`, which is in no register 
 reported to the author: a Source Scout digest, two files under `agent/scout/digests/`, read only
 as far as its summary (among its candidates are the Commission's Google specification page,
 which this update read directly, and ENISA's CRA reporting-platform launch, which it did not).
-This session's branch, `claude/eu-digital-policy-audit-um86no`, joins that list once pushed. The
+This session's branch, `claude/eu-digital-policy-audit-um86no`, is pushed and open as pull request #11. The
 scout branch named on 6 Oct (`…2026-10-05T14-47-50Z`) is no longer listed.
 
 ## (previous header) The brief rewritten to the author's editorial standard — 6 October 2026
