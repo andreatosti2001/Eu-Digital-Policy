@@ -662,7 +662,7 @@
     "forum": "Court of Justice of the European Union",
     "lodged_date": null,
     "case_ref": null,
-    "note": "Not established. Searched on 27 Sep 2026: the Court's case register (InfoCuria, https://infocuria.curia.europa.eu/, whose index then held cases lodged up to 25 Sep 2026) links no appeal to T-1079/23, T-1080/23 or T-214/24, and lists no case with Apple as a party lodged after 8 July 2026. That is not proof that none was brought: the period for an appeal runs from notification of the judgment, which the register does not show, and a lodged appeal may be registered after a delay. Recheck the register before recording appeal:not-lodged or appeal:pending."
+    "note": "Not established. Rechecked on 15 Oct 2026 in the Court's case register (InfoCuria, https://infocuria.curia.europa.eu/, whose index that day held cases lodged up to 7 Oct 2026 and a closure dated 14 Oct 2026): T-1079/23, T-1080/23 and T-214/24 are recorded as closed on 8 July 2026, joined, with no appeal linked to any of them, and no case with Apple as a party was lodged after 8 July 2026. The same was found on 27 Sep 2026. An appeal lies within two months of notification of the judgment, extended by ten days on account of distance (Statute of the Court of Justice, Art. 56; Rules of Procedure, Art. 51). Had the judgment been notified on the day it was delivered, that period would have ended on 18 September 2026; the register does not show the notification date, so appeal:not-lodged is still not recorded."
    }
   },
   {
