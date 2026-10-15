@@ -227,6 +227,28 @@ function ticker(ix, instruments, records) {
       : '');
 }
 
+/* ---------------------------------------------------------- 4. when checked
+
+   When the records above were last checked against their sources. This used
+   to print a file's $last_verified as "Records verified …", into a
+   `.portal-head` that no page has, so it never rendered; and a file-level date
+   is the wrong fact anyway, because a file's $last_verified is deliberately
+   not moved when only some of its records are re-read. The per-record dates
+   are the evidence, so the line gives their range and says plainly that the
+   newest date is not a re-check of every record. */
+
+function checkedLine(...sets) {
+  const dates = sets.flat()
+    .map((r) => String(r.last_verified || ''))
+    .filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d))
+    .sort();
+  if (!dates.length) return '';
+  const day = (d) => esc(F.humanDate(d, 'precision:day'));
+  return '<p class="sop-foot sop-checked">Instrument, calendar and enforcement records were last checked ' +
+    'against their sources between ' + day(dates[0]) + ' and ' + day(dates[dates.length - 1]) +
+    '. The newest date is not a re-check of every record: each record shows its own.</p>';
+}
+
 /* ---------------------------------------------------------- mount */
 
 export async function initMasthead() {
@@ -250,24 +272,12 @@ export async function initMasthead() {
   mount.innerHTML =
     statusLedger(ix, instruments) +
     nextDue(ix, 3) +
-    enforcementLine(ix, records);
+    enforcementLine(ix, records) +
+    checkedLine(instruments, [...ix.event.values()], records);
   F.applyGeometry(mount);
 
   const tick = document.querySelector('[data-mount="sop-ticker"]');
   if (tick) tick.innerHTML = ticker(ix, instruments, records);
-
-  /* Two dates, and they are not the same fact: the dateline is the document's
-     own state-of-play date, the other is when these records were last checked.
-     The second is appended as its own element so a translated dateline is not
-     disturbed, and it is separated rather than run on to the end of it. */
-  const verified = db.instruments.$last_verified || db.timeline.$last_verified;
-  const kicker = document.querySelector('.portal-head .hero-kicker');
-  if (verified && kicker && !kicker.parentNode.querySelector('.sop-verified')) {
-    const s = document.createElement('span');
-    s.className = 'sop-verified';
-    s.textContent = 'Records verified ' + F.humanDate(verified, 'precision:day');
-    kicker.parentNode.insertBefore(s, kicker.nextSibling);
-  }
 
   document.dispatchEvent(new CustomEvent('masthead:ready', {
     detail: { instruments: instruments.length, events: ix.event.size, records: records.length }
