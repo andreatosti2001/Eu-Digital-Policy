@@ -274,19 +274,20 @@
    "authority": "ec",
    "opened": null,
    "decision_date": "2025-12-05",
-   "action": "Non-compliance decision and fine",
+   "action": "Non-compliance decision and fine; action plan accepted by the Commission on 16 July 2026 (six months to implement, then an independent audit). The acceptance does not replace the decision, which X is challenging.",
    "fine_eur": 120000000,
    "action_status": "action:imposed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",
-   "behavioural_outcome": null,
+   "behavioural_outcome": "unknown",
    "judicial": null,
    "timeline_events": [],
    "claims": [
     "clm-x-fine",
     "clm-x-data-access-staffing",
     "clm-x-legal-basis-fragility",
-    "clm-press-release-governance"
+    "clm-press-release-governance",
+    "clm-x-action-plan"
    ],
    "sources": [
     "src-ec-x-fine-2025",
@@ -297,11 +298,12 @@
     "src-oj-t114-26-x-action",
     "src-oj-t120-26-xai-action",
     "src-oj-t121-26-musk-action",
-    "src-curia-register-2026-09-27"
+    "src-curia-register-2026-09-27",
+    "src-ec-x-action-plan-2026"
    ],
    "requires_verification": false,
-   "verification_note": "Verified 2026-09-27. Amount and the three grounds from the Commission press release; decision number, date and case numbers from the three Official Journal notices of the actions against it, which also establish the appeals (T-114/26, T-120/26, T-121/26, lodged 16 Feb 2026) and the Court's register (pending, 27 Sep 2026). The per-infringement fines and the 183 pages rest on the decision text as released by the US House Judiciary Committee, not by the Commission. Two framings belong to the linked claims, not to this record, and remain unconfirmed there: the seventeen-month gap from preliminary findings, and 'first DSA fine'.",
-   "last_verified": "2026-09-27",
+   "verification_note": "Verified 2026-09-27. Amount and the three grounds from the Commission press release; decision number, date and case numbers from the three Official Journal notices of the actions against it, which also establish the appeals (T-114/26, T-120/26, T-121/26, lodged 16 Feb 2026) and the Court's register (pending, 27 Sep 2026). The per-infringement fines and the 183 pages rest on the decision text as released by the US House Judiciary Committee, not by the Commission. Two framings belong to the linked claims, not to this record, and remain unconfirmed there: the seventeen-month gap from preliminary findings, and 'first DSA fine'. 14 Oct 2026: the Commission's acceptance of X's action plan (16 July 2026) read that day and added; it follows the decision and withdraws nothing, so action_status stays imposed and the appeals stay pending. behavioural_outcome moved from null (not researched) to unknown (researched, not publicly determinable): implementation was due within six months of acceptance and no audit result has been published. The Commission's press release, re-read that day, calls this 'the first non-compliance decision under the DSA'. The appeal state was not re-read on 14 Oct 2026; it is as of 27 Sep 2026.",
+   "last_verified": "2026-10-14",
    "appeal": {
     "status": "appeal:pending",
     "lodged_by": "X Internet ulc and X Holdings Corp. (T-114/26); X.AI Holdings LLC (T-120/26); Elon Musk (T-121/26)",
@@ -380,8 +382,8 @@
     "src-curia-register-2026-09-27"
    ],
    "requires_verification": false,
-   "verification_note": "Verified 2026-09-27 against IP/26/1654, read in full: EUR 550 million on 20 July 2026 for failing to diligently assess AND mitigate systemic risks from illegal, unsafe and counterfeit products; formal proceedings opened 14 March 2024; commitments on other grievances made binding and preliminary findings adopted on 18 June 2025; action plan due by 20 October 2026, now from the Commission's own text rather than commentary. The appeal state is left unknown: AliExpress said it would challenge the decision (Lewis Silkin, 24 July 2026), and no action appeared in the Court's register by 27 Sep 2026.",
-   "last_verified": "2026-09-27",
+   "verification_note": "Verified 2026-09-27 against IP/26/1654, read in full: EUR 550 million on 20 July 2026 for failing to diligently assess AND mitigate systemic risks from illegal, unsafe and counterfeit products; formal proceedings opened 14 March 2024; commitments on other grievances made binding and preliminary findings adopted on 18 June 2025; action plan due by 20 October 2026, now from the Commission's own text rather than commentary. The appeal state is left unknown: AliExpress said it would challenge the decision (Lewis Silkin, 24 July 2026), and no action appeared in the Court's register by 27 Sep 2026. 14 Oct 2026: the action-plan deadline of 20 October 2026 re-read in the full press release IP/26/1654. Whether a plan has been submitted, and the appeal state, were not re-checked that day.",
+   "last_verified": "2026-10-14",
    "appeal": {
     "status": "appeal:unknown",
     "lodged_by": null,
@@ -438,7 +440,7 @@
     "dsa:art-35"
    ],
    "authority": "ec",
-   "opened": null,
+   "opened": "2024-02-19",
    "decision_date": "2026-02-06",
    "action": "Preliminary findings",
    "fine_eur": null,
@@ -455,8 +457,8 @@
     "src-ec-tiktok-addictive-2026"
    ],
    "requires_verification": false,
-   "verification_note": "Preliminary findings are not a decision. Infinite scroll, autoplay and personalised recommenders — platform architecture rather than illegal content.",
-   "last_verified": "2026-08-27",
+   "verification_note": "Preliminary findings are not a decision. Infinite scroll, autoplay and personalised recommenders — platform architecture rather than illegal content. 14 Oct 2026: opening date from IP/26/1679 (24 July 2026), which names these addictive-design findings as part of the formal proceedings opened 19 February 2024; the February 2026 release itself was not re-read.",
+   "last_verified": "2026-10-14",
    "appeal": {
     "status": "appeal:none",
     "lodged_by": null,
@@ -476,7 +478,7 @@
     "dsa:art-35"
    ],
    "authority": "ec",
-   "opened": null,
+   "opened": "2024-05-16",
    "decision_date": "2026-07-10",
    "action": "Preliminary findings",
    "fine_eur": null,
@@ -491,8 +493,8 @@
     "src-ec-meta-addictive-2026"
    ],
    "requires_verification": false,
-   "verification_note": "Preliminary findings are not a decision. Proposed remedies include disabling autoplay and infinite scroll by default.",
-   "last_verified": "2026-08-27",
+   "verification_note": "Preliminary findings are not a decision. Proposed remedies include disabling autoplay and infinite scroll by default. 14 Oct 2026: read with the full press release IP/26/1579. Formal proceedings opened 16 May 2024; 'These preliminary findings do not prejudge the final outcome of the investigation.' The Commission's view at this stage is that Meta needs design changes, for instance disabling autoplay and infinite scroll by default. Not a decision and not a fine: if confirmed, a non-compliance decision could carry a fine of up to 6% of worldwide turnover.",
+   "last_verified": "2026-10-14",
    "appeal": {
     "status": "appeal:none",
     "lodged_by": null,
@@ -512,7 +514,7 @@
     "dsa:art-35"
    ],
    "authority": "ec",
-   "opened": null,
+   "opened": "2024-02-19",
    "decision_date": "2026-07-24",
    "action": "Preliminary findings",
    "fine_eur": null,
@@ -527,8 +529,8 @@
     "src-ec-tiktok-minors-2026"
    ],
    "requires_verification": false,
-   "verification_note": "Preliminary findings are not a decision. Minors' accounts default to public; 16–17 year-olds' content recommended in the For You feed.",
-   "last_verified": "2026-08-27",
+   "verification_note": "Preliminary findings are not a decision. Minors' accounts default to public; 16–17 year-olds' content recommended in the For You feed. 14 Oct 2026: read with the full press release IP/26/1679. Preliminary findings in the formal proceedings opened 19 February 2024 — the same proceedings in which the February 2026 addictive-design findings (enf-tiktok-ec-2026-addictive) were adopted. They are separate findings on separate issues within one proceeding, not a separate investigation, and neither is a decision.",
+   "last_verified": "2026-10-14",
    "appeal": {
     "status": "appeal:none",
     "lodged_by": null,

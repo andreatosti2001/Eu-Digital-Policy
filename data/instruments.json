@@ -571,7 +571,9 @@
         "tl-dma-2024-03-07-compliance",
         "tl-dma-2026-04-28-review",
         "tl-dma-2026-11-01-designation",
-        "tl-dma-2027-05-01-market-investigation"
+        "tl-dma-2027-05-01-market-investigation",
+        "tl-dma-2027-01-01-compliance-deadline",
+        "tl-dma-2027-07-01-compliance-deadline"
       ],
       "amended_by": [],
       "amends": [],
@@ -1120,6 +1122,22 @@
           ],
           "requires_verification": false,
           "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32023R2854); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "data-act:chapter-iv",
+          "number": "13 (Chapter IV)",
+          "heading": "Unfair contractual terms related to data access and use between enterprises",
+          "summary": "Chapter IV applies to contracts concluded after 12 September 2025, and from 12 September 2027 to contracts concluded on or before that date that are of indefinite duration or due to expire at least ten years from 11 January 2024 (Art. 50).",
+          "obligation_on": [
+            "actor:data-holder",
+            "actor:data-recipient"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-data-act"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 14 Oct 2026 so that the 12 September 2027 tranche attaches to the chapter it governs. Before this, the 2027 event carried no provision and js/regulatory-model.js read it as the Data Act's GENERAL application date, so Art. 8 (Chapter III) was shown as applying from 12 September 2027 rather than 12 September 2025. Chapter title and Art. 50 read on EUR-Lex (ELI reg/2023/2854/oj) on 14 Oct 2026; Chapter IV consists of Article 13."
         }
       ],
       "claims": [
@@ -1548,8 +1566,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-7",
       "legislative_status": "status:partly-applicable",
-      "status_as_of": "2026-09-26",
-      "status_note": "In force since December 2024. Chapter IV (notification of conformity assessment bodies) has applied since 11 June 2026 and Article 14 reporting since 11 September 2026; the Regulation as a whole applies from 11 December 2027. The scalar alone is insufficient — read the milestones.",
+      "status_as_of": "2026-10-14",
+      "status_note": "In force since December 2024. Chapter IV (notification of conformity assessment bodies) has applied since 11 June 2026 and Article 14 — manufacturers' reporting of actively exploited vulnerabilities and severe incidents — since 11 September 2026; the Regulation as a whole, including the main obligations on manufacturers, importers and distributors and the reporting obligations of open-source software stewards (Art. 24(3)), applies from 11 December 2027 (Art. 71(2), re-read on EUR-Lex on 14 Oct 2026). The scalar alone is insufficient — read the milestones.",
       "milestones": [
         "tl-cra-2024-10-23-adoption",
         "tl-cra-2024-11-20-publication",
@@ -1630,12 +1648,44 @@
           ],
           "requires_verification": false,
           "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R2847); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "cra:art-24",
+          "number": "24",
+          "heading": "Obligations of open-source software stewards",
+          "summary": "Stewards must have a documented cybersecurity policy and cooperate with market surveillance authorities. Under Art. 24(3) the Art. 14(1) notification obligation applies to them to the extent they are involved in the development of the product, and Art. 14(3) and (8) where severe incidents affect the network and information systems they provide for development. Applies from 11 December 2027, the general date (Art. 71(2)), not from 11 September 2026.",
+          "obligation_on": [
+            "actor:pde-manufacturer"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-cra",
+            "src-ec-cra-reporting"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 14 Oct 2026 from the Official Journal text read that day on EUR-Lex; the application date is confirmed in the same words on the Commission's CRA reporting page. obligation_on uses actor:pde-manufacturer because the taxonomy has no steward actor; stewards are not manufacturers, and the heading says whose duty this is."
+        },
+        {
+          "id": "cra:chapter-iv",
+          "number": "35–51 (Chapter IV)",
+          "heading": "Notification of conformity assessment bodies",
+          "summary": "The rules under which Member States notify the bodies that carry out third-party conformity assessment of products with digital elements. Applies from 11 June 2026 (Art. 71(2)), ahead of the rest of the Regulation, so that notified bodies exist before the main obligations apply on 11 December 2027.",
+          "obligation_on": [
+            "actor:member-state"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-cra"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 14 Oct 2026 so that the 11 June 2026 date attaches to the chapter it governs. Before this, the Chapter IV event carried no provision and js/regulatory-model.js read it as the CRA's GENERAL application date, so every CRA provision — Art. 13 manufacturers' obligations and Art. 14 reporting included — was shown as applying from 11 June 2026. Heading from the chapter title and Art. 71(2) read on EUR-Lex on 14 Oct 2026. 'So that notified bodies exist before …' is the site's reading of the sequence, not a quotation."
         }
       ],
       "claims": [],
       "sources": [
         "src-eurlex-cra",
-        "src-cra-text-unofficial-art71"
+        "src-cra-text-unofficial-art71",
+        "src-ec-cra-reporting"
       ],
       "last_verified": "2026-08-27",
       "legal_basis": [
@@ -1723,8 +1773,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-8",
       "legislative_status": "status:stalled",
-      "status_as_of": "2026-09-26",
-      "status_note": "NOT LAW. A Commission proposal before the Council without an agreed position. The Cypriot Presidency withdrew its compromise text from COREPER in late June 2026 for lack of a qualified majority; the file passed to the Irish Presidency, whose revised compromise (ST 12535/26, 3 September 2026, not an official publication) restores an AI legitimate-interest clause and reworks the pseudonymised-data provision. Must never be rendered as an Act. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is the informal shorthand used in this brief.",
+      "status_as_of": "2026-10-14",
+      "status_note": "NOT LAW. A Commission proposal (COM(2025) 837, 19 November 2025) with no Council negotiating mandate and no Parliament position as at 14 October 2026. Council: the Cypriot Presidency withdrew its compromise text from COREPER in late June 2026 for lack of a qualified majority; the Irish Presidency's revised compromise (ST 12535/26, 3 September 2026, not an official publication) was due for a Coreper II vote on 11 October 2026 but, as reported by Agence Europe, was neither discussed nor voted on, after a postponement on 7 October (clm-data-omnibus-council-october). Parliament: with the joint ITRE–LIBE committee, draft report of 22 June 2026, amendments tabled 27 July 2026, awaiting committee decision (clm-data-omnibus-parliament-stage). No trilogue has begun. Every GDPR, ePrivacy and Data Act change it contains is proposed text, not an obligation. Must never be rendered as an Act. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is the informal shorthand used in this brief.",
       "milestones": [
         "tl-data-omnibus-2025-11-19-proposal"
       ],
@@ -1767,12 +1817,16 @@
       "claims": [
         "clm-data-omnibus-stalled",
         "clm-omnibus-four-gdpr-reforms",
-        "clm-edpb-edps-omnibus-pushback"
+        "clm-edpb-edps-omnibus-pushback",
+        "clm-data-omnibus-council-october",
+        "clm-data-omnibus-parliament-stage"
       ],
       "sources": [
         "src-eurlex-data-omnibus-837",
         "src-ep-legtrain-digital-package",
-        "src-privacynext-2026-omnibus"
+        "src-privacynext-2026-omnibus",
+        "src-agenceurope-omnibus-2026-10-12",
+        "src-oeil-2025-0360"
       ],
       "last_verified": "2026-08-27",
       "legal_basis": [
@@ -1957,9 +2011,12 @@
       "scope_class": "scope:adjacent",
       "brief_part": null,
       "legislative_status": "status:in-force",
-      "status_as_of": "2026-09-27",
-      "status_note": "In force since 20 May 2024 (Art. 2; OJ L 2024/1183, 30.4.2024); it amends Regulation (EU) No 910/2014 and sets no separate application date. Each Member State must provide a European Digital Identity Wallet within 24 months of the implementing acts under Arts 5a(23) and 5c(6), in force since 24 December 2024 (clm-eidas2-wallets). Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force.",
-      "milestones": [],
+      "status_as_of": "2026-10-14",
+      "status_note": "In force since 20 May 2024 (Art. 2; OJ L 2024/1183, 30.4.2024); it amends Regulation (EU) No 910/2014 and sets no separate application date. Two dated duties follow from the implementing acts under Arts 5a(23) and 5c(6), in force since 24 December 2024: each Member State must provide a European Digital Identity Wallet within 24 months, by 24 December 2026 (Art. 5a(1); clm-eidas2-wallets), and private relying parties that must use strong user authentication — except micro and small enterprises — must accept the wallet at the user's voluntary request within 36 months, by 24 December 2027 (Art. 5f(2); clm-eidas2-private-acceptance). The first is a duty on Member States, the second a qualified duty on some businesses, not on all. Re-read on 14 Oct 2026 on EUR-Lex.",
+      "milestones": [
+        "tl-eidas2-2026-12-24-compliance-deadline",
+        "tl-eidas2-2027-12-24-compliance-deadline"
+      ],
       "amended_by": [],
       "amends": [],
       "repeals": [],
@@ -1982,12 +2039,32 @@
           ],
           "requires_verification": false,
           "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1183); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "eidas2:art-5f",
+          "number": "5f (of Regulation (EU) No 910/2014, as inserted)",
+          "heading": "Cross-border reliance on European Digital Identity Wallets",
+          "summary": "Public-sector online services that require electronic identification must also accept the wallet (5f(1)). Private relying parties required by Union or national law, or by contract, to use strong user authentication for online identification — except microenterprises and small enterprises — must also accept it, no later than 36 months from the entry into force of the implementing acts under Arts 5a(23) and 5c(6) and only upon the user's voluntary request (5f(2)). Very large online platforms that require user authentication must accept and facilitate it at the user's voluntary request (5f(3)).",
+          "obligation_on": [
+            "actor:large-company",
+            "actor:public-authority",
+            "actor:vlop"
+          ],
+          "claims": [
+            "clm-eidas2-private-acceptance"
+          ],
+          "sources": [
+            "src-eurlex-eidas2"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 14 Oct 2026 from the Official Journal text read that day on EUR-Lex (ELI reg/2024/1183/oj); heading and summary follow the Article's own paragraphs. obligation_on lists large companies because medium-sized enterprises are covered but micro and small ones are not, and the taxonomy has no 'medium enterprise' actor; read the summary, not the actor list, for the size test."
         }
       ],
       "claims": [],
       "sources": [
         "src-eurlex-eidas2",
-        "src-eurlex-eudi-2024-2981"
+        "src-eurlex-eudi-2024-2981",
+        "src-eurlex-eudi-2024-2977"
       ],
       "last_verified": "2026-09-27",
       "legal_basis": [

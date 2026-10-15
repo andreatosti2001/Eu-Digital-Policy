@@ -329,9 +329,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R2847",
       "url_status": "url:live",
       "published": "2024-11-20",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-14",
       "language": "en",
-      "note": "Title, number and entry into force of 10 December 2024 confirmed by fetch."
+      "note": "Title, number and entry into force of 10 December 2024 confirmed by fetch. Official Journal text re-read on 14 Oct 2026 from EUR-Lex (ELI reg/2024/2847/oj). Art. 71(2): 'This Regulation shall apply from 11 December 2027. However, Article 14 shall apply from 11 September 2026 and Chapter IV (Articles 35 to 51) shall apply from 11 June 2026.' Art. 24(3) applies the Art. 14(1) notification obligation to open-source software stewards to the extent they are involved in development, and Art. 14(3) and (8) where severe incidents affect their own systems; Art. 24 falls under the general date."
     },
     {
       "id": "src-cra-text-unofficial-art71",
@@ -372,9 +372,9 @@
       "url": "https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng",
       "url_status": "url:live",
       "published": "2026-07-08",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-14",
       "language": "en",
-      "note": "Directly supports entry into force on 27 July 2026."
+      "note": "Directly supports entry into force on 27 July 2026. Re-read in full on 14 Oct 2026 (OJ L, 2026/1744, 24.7.2026; Art. 4: entry into force on the third day after publication). Art. 1, point (5), replaces Art. 4 (literacy: 'take measures to support'; 'does not require providers or deployers to guarantee any specific level of AI literacy of any individual'); Art. 1, point (39)(b), adds Art. 111(4) (Art. 50(2) by 2 December 2026 for systems placed on the market before 2 August 2026); Art. 1, point (40), amends Art. 113: Art. 5(1)(ba)-(bb), (1a) and (1b) from 2 December 2026; Chapter III Sections 1-3 from 2 December 2027 (Art. 6(2), Annex III) and 2 August 2028 (Art. 6(1), Annex I). Recital 40 gives the reason for the delay: 'the delayed availability of standards, common specifications, and alternative guidance and the delayed establishment of national competent authorities'."
     },
     {
       "id": "src-eurlex-gdpr-procedural",
@@ -680,9 +680,9 @@
       "url": "http://publications.europa.eu/resource/celex/32024R1183",
       "url_status": "url:live",
       "published": "2024-04-30",
-      "accessed": "2026-09-27",
+      "accessed": "2026-10-14",
       "language": "en",
-      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Inserted Art. 5a(1): each Member State to provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts under Art. 5a(23) and Art. 5c(6)."
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Inserted Art. 5a(1): each Member State to provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts under Art. 5a(23) and Art. 5c(6). Re-read on 14 Oct 2026 from EUR-Lex (ELI reg/2024/1183/oj). Inserted Art. 5f(2): private relying parties, except microenterprises and small enterprises (Recommendation 2003/361/EC), that are required by Union or national law, or by contract, to use strong user authentication for online identification shall, no later than 36 months from the entry into force of the implementing acts under Arts 5a(23) and 5c(6) 'and only upon the voluntary request of the user', also accept European Digital Identity Wallets. Art. 5f(1) concerns public-sector online services; Art. 5f(3) very large online platforms that require user authentication."
     },
     {
       "id": "src-eurlex-eudi-2024-2981",
@@ -1016,9 +1016,9 @@
       "url": "https://digital-strategy.ec.europa.eu/en/news/commission-fines-x-eu120-million-under-digital-services-act",
       "url_status": "url:live",
       "published": "2025-12-05",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-14",
       "language": "en",
-      "note": "Confirms the amount and all three grounds. Does not use the phrase 'first DSA fine'."
+      "note": "Confirms the amount and all three grounds. Does not use the phrase 'first DSA fine'. CORRECTED 14 Oct 2026: the page as read that day (last update 16 January 2026) does state 'This is the first non-compliance decision under the DSA.' The earlier note's 'does not use the phrase' is withdrawn: the phrase 'first DSA fine' does not appear, but the first-decision statement does."
     },
     {
       "id": "src-ec-x-decision-2025-house-release",
@@ -1128,9 +1128,9 @@
       "url": "https://digital-strategy.ec.europa.eu/en/news/commission-preliminarily-finds-addictive-design-instagram-and-facebook-breach-digital-services-act",
       "url_status": "url:live",
       "published": "2026-07-10",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-14",
       "language": "en",
-      "note": null
+      "note": "Read 14 Oct 2026 with the full press release IP/26/1579 (10 July 2026). Preliminary findings in formal proceedings opened 16 May 2024; 'These preliminary findings do not prejudge the final outcome of the investigation.' At this stage the Commission considers Meta needs design changes, 'for instance, by disabling key addictive features such as autoplay and infinite scroll by default'. The same proceedings produced preliminary findings on under-13 age assurance on 29 April 2026."
     },
     {
       "id": "src-ec-tiktok-minors-2026",
@@ -1142,9 +1142,9 @@
       "url": "https://digital-strategy.ec.europa.eu/en/news/commission-preliminary-finds-tiktok-breach-digital-services-act-failing-ensure-safe-accounts-minors",
       "url_status": "url:live",
       "published": "2026-07-24",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-14",
       "language": "en",
-      "note": null
+      "note": "Read 14 Oct 2026 with the full press release IP/26/1679 (24 July 2026). Preliminary findings, not a decision, in the formal proceedings opened 19 February 2024. The release states that the same investigation 'also included TikTok's potentially addictive design, for which preliminary findings were adopted in February', researchers' data access (preliminary findings October 2025) and advertising transparency (closed by binding commitments, December 2025): one proceeding, several separate sets of findings."
     },
     {
       "id": "src-ec-apple-meta-dma-2025",
@@ -2457,9 +2457,9 @@
       "url": "https://www.dlapiper.com/en/insights/publications/2026/01/dla-piper-gdpr-fines-and-data-breach-survey-january-2026",
       "url_status": "url:live",
       "published": "2026-01-21",
-      "accessed": "2026-08-28",
+      "accessed": "2026-10-14",
       "language": "en",
-      "note": "The actual source of three figures the brief attributed to the CMS tracker: EUR 7.1bn cumulative to 10 Jan 2026, EUR 4.04bn for the Irish DPC, and 443 breach notifications per day (up 22% from 363). A law firm's survey, not a regulator's return — indicative of magnitude, as Annex B says."
+      "note": "The actual source of three figures the brief attributed to the CMS tracker: EUR 7.1bn cumulative to 10 Jan 2026, EUR 4.04bn for the Irish DPC, and 443 breach notifications per day (up 22% from 363). A law firm's survey, not a regulator's return — indicative of magnitude, as Annex B says. Re-read 14 Oct 2026. Definition of the headline figure, in DLA Piper's words: 'The aggregate total fines reported since the application of GDPR on 25 May 2018 to 10 January 2026 across all the jurisdictions surveyed now stands at EUR7.1 billion'. Fines reported, not fines upheld on appeal or collected. Also 'approximately EUR1.2 billion' in 2025 and EUR 4.04 billion for the Irish DPC since May 2018."
     },
     {
       "id": "src-ec-dma-portal-whos-in-charge",
@@ -2499,9 +2499,9 @@
       "url": "https://digital-markets-act.ec.europa.eu/gatekeepers-portal_en",
       "url_status": "url:live",
       "published": "2025-04-23",
-      "accessed": "2026-08-28",
+      "accessed": "2026-10-14",
       "language": "en",
-      "note": "The Commission's own register. Six designated 6 Sep 2023; Apple iPadOS added 29 Apr 2024; Booking added 13 May 2024; Facebook Marketplace undesignated 23 Apr 2025. Confirms the seven undertakings the brief names, and gives 23 currently designated core platform services."
+      "note": "The Commission's own register. Six designated 6 Sep 2023; Apple iPadOS added 29 Apr 2024; Booking added 13 May 2024; Facebook Marketplace undesignated 23 Apr 2025. Confirms the seven undertakings the brief names, and gives 23 currently designated core platform services. Re-read 14 Oct 2026: the page still names seven gatekeepers and states 'In total, 23 core platform services provided by those gatekeepers are currently designated'; the 23 listed services were counted that day and agree. AWS and Azure are not listed (preliminary position only, 25 June 2026)."
     },
     {
       "id": "src-oj-aild-withdrawal-2025",
@@ -2569,9 +2569,9 @@
       "url": "https://digital-strategy.ec.europa.eu/en/news/commission-fines-aliexpress-eu550-million-breaching-digital-services-act",
       "url_status": "url:live",
       "published": "2026-07-20",
-      "accessed": "2026-09-26",
+      "accessed": "2026-10-14",
       "language": "en",
-      "note": "Confirms the EUR 550 million fine, publication date 20 July 2026, and the systemic-risk ground (failure to diligently assess and mitigate risk from illegal, unsafe or counterfeit products). Contains no ranking language and no article numbers or action-plan deadline; those are corroborated by secondary legal commentary (Lewis Silkin, 24 July 2026; Il Sole 24 Ore, 20 July 2026; JURIST, 22 July 2026)."
+      "note": "Confirms the EUR 550 million fine, publication date 20 July 2026, and the systemic-risk ground (failure to diligently assess and mitigate risk from illegal, unsafe or counterfeit products). Contains no ranking language and no article numbers or action-plan deadline; those are corroborated by secondary legal commentary (Lewis Silkin, 24 July 2026; Il Sole 24 Ore, 20 July 2026; JURIST, 22 July 2026). Re-read 14 Oct 2026 together with the full press release IP/26/1654 (20 July 2026): 'AliExpress now has until 20 October 2026 to submit an action plan'; the Board then has one month for its opinion and the Commission a further month to decide. The page itself does not carry that detail; the press release does."
     },
     {
       "id": "src-iehc-2026-347-tiktok",
@@ -2670,6 +2670,90 @@
       "accessed": "2026-09-27",
       "language": "en",
       "note": "Read 27 Sep 2026 (181 pages). Recorded at tier 3, not 2: the Department publishes it, but it is an independent consultancy report and its findings are KPMG's. Executive summary: 'Dublin's concentration of data centres has positioned it as a strategic European data centre hub, alongside Frankfurt, London, Amsterdam, and Paris – collectively known as the FLAP-D markets'; 'Dublin becoming a key European hub for data centres alongside Frankfurt, London, Amsterdam and Paris'. It gives no share of European capacity. Publication date from the Department's news item of 2 June 2026 ('Minister Burke publishes report on the economic value of data centres to Ireland')."
+    },
+    {
+      "id": "src-agenceurope-omnibus-2026-10-12",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "Agence Europe (Europe Daily Bulletin No. 13958)",
+      "title": "Future of 'Digital Omnibus' still in limbo as Member States fail to agree",
+      "url": "https://agenceurope.eu/en/bulletin/article/13958/17/future-of-digital-omnibus-still-in-limbo-as-member-states-fail-to-agree",
+      "url_status": "url:live",
+      "published": "2026-10-12",
+      "accessed": "2026-10-14",
+      "language": "en",
+      "note": "Read 14 Oct 2026. Datelined Brussels, 12/10/2026, in the bulletin of 13 October 2026; English version of an original in French by Louis Dubar. States that the Irish Presidency's compromise text 'was supposed to go to a vote at an EU Committee of Permanent Representatives (Coreper II) meeting on Sunday 11 October. But in the end, it wasn't even discussed – or voted on'; that its examination had already been postponed at a Coreper meeting on Wednesday 7 October 'under pressure from Germany and France'; that Berlin's reservations concern the Data Act's provisions on trade secrets; and that 'Ireland may hold further consultations with Member State delegations, a source said'. Specialist press, tier 4. No Council agenda, outcome of proceedings or press release recording either meeting was located on 14 Oct 2026, so the procedural outcome rests on this report and is labelled as reported, not as an official record."
+    },
+    {
+      "id": "src-oeil-2025-0360",
+      "tier": "tier:2",
+      "type": "source-type:legislative-document",
+      "publisher": "ep",
+      "publisher_name": "European Parliament — Legislative Observatory",
+      "title": "Procedure file 2025/0360(COD): Simplification of the digital legislative framework – Digital Omnibus (Omnibus VII)",
+      "url": "https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2025%2F0360%28COD%29",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-10-14",
+      "language": "en",
+      "note": "Parliament's own procedure file, read 14 Oct 2026: status and stage reached 'Awaiting committee decision'; joint committee responsible ITRE and LIBE, rapporteurs Aura Salla (EPP) and Marina Kaljurand (S&D), appointed 25 Feb 2026; committee referral announced 19 Jan 2026; committee draft report PE786.818 of 22 Jun 2026; nine documents of amendments tabled in committee dated 27 Jul 2026 (PE786.820, PE790.967, PE790.968, PE791.071–073, PE791.873, PE791.874, PE791.883). No committee vote, plenary position or trilogue is recorded. The file does not state how many amendments were tabled, and they were not counted here. A live page: what it shows is its state on the accessed date."
+    },
+    {
+      "id": "src-ec-x-action-plan-2026",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission accepts X's action plan to comply with Digital Services Act",
+      "url": "https://digital-strategy.ec.europa.eu/en/news/commission-accepts-xs-action-plan-comply-digital-services-act",
+      "url_status": "url:live",
+      "published": "2026-07-16",
+      "accessed": "2026-10-14",
+      "language": "en",
+      "note": "Read 14 Oct 2026 (publication 16 July 2026, last update 17 July 2026). 'Following the Commission's decision that X is in breach of the DSA and a fine in December 2025', X committed to improve its ad repository and researchers' access to public data; an independent external audit will assess the changes. The Board for Digital Services, in its opinion of 15 June, found the overall plan insufficient; the Commission accepted it and clarified several points. X has six months to implement the measures and must then submit an audit. The acceptance follows the infringement decision and does not withdraw it."
+    },
+    {
+      "id": "src-ec-google-dma-specification-2026",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Commission provides guidance to Google for AI interoperability on Android and sharing of Google Search data under the Digital Markets Act",
+      "url": "https://digital-markets-act.ec.europa.eu/commission-provides-guidance-google-ai-interoperability-android-and-sharing-google-search-data-under-2026-07-16_en",
+      "url_status": "url:live",
+      "published": "2026-07-16",
+      "accessed": "2026-10-14",
+      "language": "en",
+      "note": "Read 14 Oct 2026 on the DMA portal and in the full press release IP/26/1634 (Commission press corner). Two sets of 'binding specification measures': interoperability with features of Google Android for rival AI services (Art. 6(7) DMA) — activation by voice command and acting in apps on the user's behalf, with safeguards for privacy, device integrity and security; and sharing of search data with third-party search engines (Art. 6(11) DMA) — AI chatbots offering search functionalities are eligible, Google must share, subject to anonymisation, the same data it collects to optimise its own search, by a multi-layered anonymisation method, with a prior check of serious cybersecurity and data-protection risks per recipient and a pricing formula. 'Google must start sharing search data with eligible search engine providers from January 2027. Users will start benefitting from the changes to Android as of July 2027.' Specification proceedings 'do not provide for the imposition of fines'; the decisions 'remain subject to independent judicial scrutiny'. Proceedings opened 27 January 2026. The decisions themselves were not read."
+    },
+    {
+      "id": "src-ec-cra-reporting",
+      "tier": "tier:2",
+      "type": "source-type:guidance",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Cyber Resilience Act — Reporting obligations",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/cra-reporting",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-10-14",
+      "language": "en",
+      "note": "Read 14 Oct 2026. 'As of 11 September 2026, manufacturers are required to report actively exploited vulnerabilities and severe incidents impacting the security of products with digital elements.' 'In accordance with Article 71(2) of the CRA, open-source software stewards are subject to reporting obligations (Article 24(3)) from 11 December 2027.' Early warning within 24 hours, notification within 72 hours, final report within 14 days of a corrective measure (vulnerabilities) or one month of the notification (severe incidents); one submission through ENISA's single reporting platform, operational since 11 September 2026."
+    },
+    {
+      "id": "src-eurlex-eudi-2024-2977",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "EUR-Lex",
+      "title": "Commission Implementing Regulation (EU) 2024/2977 of 28 November 2024 as regards person identification data and electronic attestations of attributes issued to European Digital Identity Wallets",
+      "url": "https://eur-lex.europa.eu/eli/reg_impl/2024/2977/oj",
+      "url_status": "url:live",
+      "published": "2024-12-04",
+      "accessed": "2026-10-14",
+      "language": "en",
+      "note": "Official Journal text read 14 Oct 2026 (OJ L, 2024/2977, 4.12.2024). Adopted 'in particular' under Article 5a(23) of Regulation (EU) No 910/2014; 'This Regulation shall enter into force on the twentieth day following that of its publication', which is 24 December 2024. Implementing Regulation (EU) 2024/2981, under Article 5c(6), was published the same day with the same entry-into-force clause, read the same day."
     }
   ]
 }
