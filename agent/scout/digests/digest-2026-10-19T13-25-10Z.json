@@ -1,0 +1,456 @@
+{
+  "$schema_version": 1,
+  "$description": "A rendering of one Source Scout run for human triage. This is a PREVIEW, not the record: every field here is a pointer or a summary of the SourceCandidate / DataGap records the run actually produced, which live only in agent/records/<trace_id>.jsonl (regenerable, git-ignored, uploaded as this run's workflow artifact). A candidate here is not a data/sources.json record and cannot become one until a human opens the document and reads it — AI-SAFE-BOUNDARIES.md §3.",
+  "$boundaries": "Generated read-only from a completed Scout run and from data/sources.json, read but never written. matches_bibliography and matches_prior_digest are REPORT-LAYER annotations — the Scout itself does not compute them (docs/SOURCE-SCOUT.md, known limitation 6) and they are never written back into any contract record.",
+  "digest_id": "digest-2026-10-19T13-25-10Z",
+  "trace_id": "a578939c6bdbc0ace81c4e41d76e2f54",
+  "run_id": "3ff691bd9bf3deea",
+  "mode": "live",
+  "generated_at": "2026-10-19T13:25:10.669Z",
+  "started_at": "2026-10-19T13:24:49.524Z",
+  "duration_ms": 21145,
+  "environment": {
+    "env": "github-actions",
+    "node": "v22.23.3",
+    "runner_os": "Linux",
+    "workflow": "Source Scout",
+    "run_id": "39259910686",
+    "run_attempt": "1",
+    "event_name": "schedule",
+    "ref_name": "main",
+    "sha": "6a2357fafeadceec0aebfc944531720bf7ef6d32"
+  },
+  "status": "degraded",
+  "totals": {
+    "candidates": 12,
+    "new_against_bibliography": 10,
+    "duplicate_of_bibliography": 2,
+    "new_against_prior_digests": 3,
+    "previously_proposed": 9,
+    "high_relevance": 12,
+    "gaps": 2,
+    "failed_by_egress_policy": 0,
+    "failed_other": 2,
+    "screened_out": 4,
+    "fetched": 22,
+    "prior_digests_read": 4
+  },
+  "relevance_thresholds": [
+    {
+      "band": "high",
+      "min": 0.75
+    },
+    {
+      "band": "medium",
+      "min": 0.5
+    },
+    {
+      "band": "low",
+      "min": 0
+    }
+  ],
+  "unreadable_prior_digests": [],
+  "candidates": [
+    {
+      "candidate_id": "cand-6fbeee8a4bf1",
+      "url": "https://digital-strategy.ec.europa.eu/en/news/commission-designates-chatgpt-reddit-roblox-under-digital-services-act",
+      "title": "Commission designates ChatGPT, Reddit, Roblox under Digital Services Act",
+      "publisher": "Shaping Europe’s digital future",
+      "publication_date": "unknown",
+      "authority_class": "authority:commission",
+      "tier_estimate": null,
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions dsa (alias \"digital services act\", 7×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "dsa"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": {
+        "matched_on": "url",
+        "confidence": "exact",
+        "ref": {
+          "origin": "digest digest-2026-10-12T15-34-12Z",
+          "candidate_id": "cand-6fbeee8a4bf1",
+          "title": "Commission designates ChatGPT, Reddit, Roblox under Digital Services Act",
+          "url": "https://digital-strategy.ec.europa.eu/en/news/commission-designates-chatgpt-reddit-roblox-under-digital-services-act"
+        }
+      },
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:24:53.620Z",
+        "checksum": "a2717f48a6c6a4272bc83b0a36cad42af7818963e36aaa4388a5cd8b9b4f77e2"
+      }
+    },
+    {
+      "candidate_id": "cand-a98e785e9faf",
+      "url": "https://digital-markets-act.ec.europa.eu/factsheet-how-dma-ensures-businesses-using-bookingcom-are-free-set-their-prices-and-bookingcom-2026-09-28_en",
+      "title": "Factsheet - How the DMA ensures businesses using Booking.com are free to set their prices on and off Booking.com",
+      "publisher": "Digital Markets Act (DMA)",
+      "publication_date": "unknown",
+      "authority_class": "authority:commission",
+      "tier_estimate": null,
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions dma (alias \"digital markets act\", 6×); dsa (alias \"digital services act\", 1×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "dma",
+        "dsa"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": {
+        "matched_on": "url",
+        "confidence": "exact",
+        "ref": {
+          "origin": "digest digest-2026-10-12T15-34-12Z",
+          "candidate_id": "cand-a98e785e9faf",
+          "title": "Factsheet - How the DMA ensures businesses using Booking.com are free to set their prices on and off Booking.com",
+          "url": "https://digital-markets-act.ec.europa.eu/factsheet-how-dma-ensures-businesses-using-bookingcom-are-free-set-their-prices-and-bookingcom-2026-09-28_en"
+        }
+      },
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:24:56.652Z",
+        "checksum": "e700127df25e0fbf1e4309b1a9aa9cf8b7150a989d5160509bbac6cbc2f42531"
+      }
+    },
+    {
+      "candidate_id": "cand-51ac40bb90d6",
+      "url": "https://digital-markets-act.ec.europa.eu/commission-fines-google-eur890-million-breaches-digital-markets-act-2026-07-23_en",
+      "title": "Commission fines Google €890 million for breaches of the Digital Markets Act",
+      "publisher": "Digital Markets Act (DMA)",
+      "publication_date": "unknown",
+      "authority_class": "authority:commission",
+      "tier_estimate": null,
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions dma (alias \"digital markets act\", 9×); dsa (alias \"digital services act\", 1×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "dma",
+        "dsa"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": {
+        "matched_on": "url",
+        "confidence": "exact",
+        "ref": {
+          "origin": "data/sources.json",
+          "id": "src-ec-google-dma-fine-2026",
+          "title": "Commission fines Google €890 million for breaches of the Digital Markets Act",
+          "url": "https://digital-markets-act.ec.europa.eu/commission-fines-google-eur890-million-breaches-digital-markets-act-2026-07-23_en"
+        }
+      },
+      "matches_prior_digest": {
+        "matched_on": "url",
+        "confidence": "exact",
+        "ref": {
+          "origin": "digest digest-2026-10-12T15-34-12Z",
+          "candidate_id": "cand-51ac40bb90d6",
+          "title": "Commission fines Google €890 million for breaches of the Digital Markets Act",
+          "url": "https://digital-markets-act.ec.europa.eu/commission-fines-google-eur890-million-breaches-digital-markets-act-2026-07-23_en"
+        }
+      },
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:24:58.008Z",
+        "checksum": "a9f862979f173e8bd92ce1aeb39fe02e40c5e7a554faee2ce0a8334277d27a6f"
+      }
+    },
+    {
+      "candidate_id": "cand-25ab34f927c6",
+      "url": "https://digital-markets-act.ec.europa.eu/commission-provides-guidance-google-ai-interoperability-android-and-sharing-google-search-data-under-2026-07-16_en",
+      "title": "Commission provides guidance to Google for AI interoperability on Android and sharing of Google Search data under the Digital Markets Act",
+      "publisher": "Digital Markets Act (DMA)",
+      "publication_date": "unknown",
+      "authority_class": "authority:commission",
+      "tier_estimate": null,
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions dma (alias \"digital markets act\", 8×); dsa (alias \"digital services act\", 1×); gdpr (short_name \"GDPR\", 1×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "dma",
+        "dsa",
+        "gdpr"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": {
+        "matched_on": "url",
+        "confidence": "exact",
+        "ref": {
+          "origin": "data/sources.json",
+          "id": "src-ec-google-dma-specification-2026",
+          "title": "Commission provides guidance to Google for AI interoperability on Android and sharing of Google Search data under the Digital Markets Act",
+          "url": "https://digital-markets-act.ec.europa.eu/commission-provides-guidance-google-ai-interoperability-android-and-sharing-google-search-data-under-2026-07-16_en"
+        }
+      },
+      "matches_prior_digest": {
+        "matched_on": "url",
+        "confidence": "exact",
+        "ref": {
+          "origin": "digest digest-2026-10-12T15-34-12Z",
+          "candidate_id": "cand-25ab34f927c6",
+          "title": "Commission provides guidance to Google for AI interoperability on Android and sharing of Google Search data under the Digital Markets Act",
+          "url": "https://digital-markets-act.ec.europa.eu/commission-provides-guidance-google-ai-interoperability-android-and-sharing-google-search-data-under-2026-07-16_en"
+        }
+      },
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:24:59.008Z",
+        "checksum": "7412b9d99ccf69664bf8d4d39016776b6d8e2a532d79f300a71cb1cfebecf704"
+      }
+    },
+    {
+      "candidate_id": "cand-60c59f9e2689",
+      "url": "https://digital-markets-act.ec.europa.eu/commission-hosted-stakeholder-roundtable-cloud-computing-services-under-digital-markets-act-2026-07-01_en",
+      "title": "Commission hosted a stakeholder roundtable on cloud computing services under the Digital Markets Act",
+      "publisher": "Digital Markets Act (DMA)",
+      "publication_date": "unknown",
+      "authority_class": "authority:commission",
+      "tier_estimate": null,
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions dma (alias \"digital markets act\", 8×); dsa (alias \"digital services act\", 1×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "dma",
+        "dsa"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": {
+        "matched_on": "url",
+        "confidence": "exact",
+        "ref": {
+          "origin": "digest digest-2026-10-12T15-34-12Z",
+          "candidate_id": "cand-60c59f9e2689",
+          "title": "Commission hosted a stakeholder roundtable on cloud computing services under the Digital Markets Act",
+          "url": "https://digital-markets-act.ec.europa.eu/commission-hosted-stakeholder-roundtable-cloud-computing-services-under-digital-markets-act-2026-07-01_en"
+        }
+      },
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:24:59.737Z",
+        "checksum": "632c178ddbe76a0f518effc8e2c71aeac232ab17f33bfbb270fbabe16ece7aaf"
+      }
+    },
+    {
+      "candidate_id": "cand-b01205195708",
+      "url": "https://www.edpb.europa.eu/news/norwegian-dpa-fines-xandr-eur-8-600-000-for-unlawful-processing-of-personal-data_en",
+      "title": "Norwegian DPA fines Xandr EUR 8 600 000 for unlawful processing of personal data | European Data Protection Board",
+      "publisher": null,
+      "publication_date": "2026-10-16T12:00:00Z",
+      "authority_class": "authority:edpb",
+      "tier_estimate": "tier:2",
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions gdpr (short_name \"GDPR\", 6×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "gdpr"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": null,
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:25:01.634Z",
+        "checksum": "b20dccaee1d22f07e43fa7ad3c0cf27bc0a067a9ac9f7f7d84bb159f6d0648ed"
+      }
+    },
+    {
+      "candidate_id": "cand-19a0ad96c059",
+      "url": "https://www.edpb.europa.eu/news/edpb-publishes-statement-on-the-data-protection-challenges-of-smart-glasses_en",
+      "title": "EDPB publishes statement on the data protection challenges of smart glasses | European Data Protection Board",
+      "publisher": null,
+      "publication_date": "2026-10-13T12:00:00Z",
+      "authority_class": "authority:edpb",
+      "tier_estimate": "tier:2",
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions gdpr (short_name \"GDPR\", 3×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "gdpr"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": null,
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:25:02.633Z",
+        "checksum": "d53ebc1ff46b95542d5bded52025da000921e51aeade4ae78b77101814478214"
+      }
+    },
+    {
+      "candidate_id": "cand-2593b7bc3112",
+      "url": "https://www.edpb.europa.eu/news/italian-dpa-fines-iqvia-eur-7-000-000-for-unlawful-processing-of-patients-health-data_en",
+      "title": "Italian DPA fines IQVIA EUR 7 000 000 for unlawful processing of patients’ health data | European Data Protection Board",
+      "publisher": null,
+      "publication_date": "2026-10-09T12:00:00Z",
+      "authority_class": "authority:edpb",
+      "tier_estimate": "tier:2",
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions gdpr (short_name \"GDPR\", 1×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "gdpr"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": {
+        "matched_on": "url",
+        "confidence": "exact",
+        "ref": {
+          "origin": "digest digest-2026-10-12T15-34-12Z",
+          "candidate_id": "cand-2593b7bc3112",
+          "title": "Italian DPA fines IQVIA EUR 7 000 000 for unlawful processing of patients’ health data | European Data Protection Board",
+          "url": "https://www.edpb.europa.eu/news/italian-dpa-fines-iqvia-eur-7-000-000-for-unlawful-processing-of-patients-health-data_en"
+        }
+      },
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:25:03.635Z",
+        "checksum": "5e01566b067e9c1dcca758c60ed6449284704c83105f7b75b6c116b9803ba99a"
+      }
+    },
+    {
+      "candidate_id": "cand-76a2feeff9ce",
+      "url": "https://www.edpb.europa.eu/news/italian-dpa-fines-security-company-eur-39-000-for-violations-concerning-employees-data_en",
+      "title": "Italian DPA fines security company EUR 39 000 for violations concerning employees’ data | European Data Protection Board",
+      "publisher": null,
+      "publication_date": "2026-10-09T12:00:00Z",
+      "authority_class": "authority:edpb",
+      "tier_estimate": "tier:2",
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions gdpr (short_name \"GDPR\", 3×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "gdpr"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": null,
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:25:04.636Z",
+        "checksum": "ef6c2fc8b3daee364edf7b957b1c23c57e6d95446d594bf2175cd9061315095d"
+      }
+    },
+    {
+      "candidate_id": "cand-e11f3e4fe661",
+      "url": "https://www.enisa.europa.eu/news/exploring-the-evolution-of-the-cyber-threat-landscape-how-dependencies-weaken-our-digital-resilience",
+      "title": "Exploring the evolution of the cyber threat landscape: How dependencies weaken our digital resilience | ENISA",
+      "publisher": null,
+      "publication_date": "2026-09-22T13:02:38+03:00",
+      "authority_class": "authority:enisa",
+      "tier_estimate": "tier:2",
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions nis2 (short_name \"NIS2\", 2×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "nis2"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": {
+        "matched_on": "url",
+        "confidence": "exact",
+        "ref": {
+          "origin": "digest digest-2026-10-12T15-34-12Z",
+          "candidate_id": "cand-e11f3e4fe661",
+          "title": "Exploring the evolution of the cyber threat landscape: How dependencies weaken our digital resilience | ENISA",
+          "url": "https://www.enisa.europa.eu/news/exploring-the-evolution-of-the-cyber-threat-landscape-how-dependencies-weaken-our-digital-resilience"
+        }
+      },
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:25:07.654Z",
+        "checksum": "ec19be937c6c1a5b4486541e6239864b4c5f34f33617a4ea2a677e440726aa3c"
+      }
+    },
+    {
+      "candidate_id": "cand-44e9b03047e6",
+      "url": "https://www.enisa.europa.eu/news/the-cra-single-reporting-platform-is-launched",
+      "title": "The CRA Single Reporting Platform is launched | ENISA",
+      "publisher": null,
+      "publication_date": "2026-09-11T12:00:00Z",
+      "authority_class": "authority:enisa",
+      "tier_estimate": "tier:2",
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions cra (alias \"cyber resilience act\", 3×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "cra"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": {
+        "matched_on": "url",
+        "confidence": "exact",
+        "ref": {
+          "origin": "digest digest-2026-10-12T15-34-12Z",
+          "candidate_id": "cand-44e9b03047e6",
+          "title": "The CRA Single Reporting Platform is launched | ENISA",
+          "url": "https://www.enisa.europa.eu/news/the-cra-single-reporting-platform-is-launched"
+        }
+      },
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:25:09.019Z",
+        "checksum": "992862795daf6bb6c711f5b1e529fd7e2ac04c2e38e207acd8761bb2300faadb"
+      }
+    },
+    {
+      "candidate_id": "cand-6486b5df4db7",
+      "url": "https://www.enisa.europa.eu/news/nis360-the-bigger-picture-on-maturity-and-criticality-of-nis-critical-sectors",
+      "title": "NIS360: The bigger picture on maturity and criticality of NIS critical sectors | ENISA",
+      "publisher": null,
+      "publication_date": "2026-05-28T15:00:53+03:00",
+      "authority_class": "authority:enisa",
+      "tier_estimate": "tier:2",
+      "confidence": 0.75,
+      "relevance_band": "high",
+      "relevance": "Mentions nis2 (short_name \"NIS2\", 8×). Whether it is a development in any of them is not established here.",
+      "about": [
+        "nis2"
+      ],
+      "state": "proposed",
+      "duplicate_candidate_ids": [],
+      "matches_bibliography": null,
+      "matches_prior_digest": {
+        "matched_on": "url",
+        "confidence": "exact",
+        "ref": {
+          "origin": "digest digest-2026-10-12T15-34-12Z",
+          "candidate_id": "cand-6486b5df4db7",
+          "title": "NIS360: The bigger picture on maturity and criticality of NIS critical sectors | ENISA",
+          "url": "https://www.enisa.europa.eu/news/nis360-the-bigger-picture-on-maturity-and-criticality-of-nis-critical-sectors"
+        }
+      },
+      "retrieval": {
+        "retrieved_at": "2026-10-19T13:25:10.657Z",
+        "checksum": "a4d9fc377227f3bba6bb879d4261a9b3fabacc99377c73a5c42745a7f30b5ad5"
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "gap_id": "gap-3d3d635f9c74",
+      "gap_kind": "retrieval_blocked",
+      "url": "https://eur-lex.europa.eu/",
+      "blocked_by_egress": false,
+      "why_open": "Retrieval failed: origin answered 202 (status 202).",
+      "closes_with": "Retrieving https://eur-lex.europa.eu/ successfully and reading what it says.",
+      "state": "open"
+    },
+    {
+      "gap_id": "gap-1f54da14490d",
+      "gap_kind": "retrieval_blocked",
+      "url": "https://www.edps.europa.eu/",
+      "blocked_by_egress": false,
+      "why_open": "Retrieval failed: origin answered 403 (status 403).",
+      "closes_with": "Retrieving https://www.edps.europa.eu/ successfully and reading what it says.",
+      "state": "open"
+    }
+  ],
+  "redactions": 0
+}
