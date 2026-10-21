@@ -25,8 +25,11 @@ const HERE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 /* The deployed origin. Canonical, og:url and the social tags are all built
    from this, so it is changed here and nowhere else. If the site moves,
-   change this line and re-run. */
-export const BASE = 'https://andreatosti2001.github.io/Eu-Digital-Policy/';
+   change this line and re-run. It moved on the author's decision of
+   21 Oct 2026 from https://andreatosti2001.github.io/Eu-Digital-Policy/
+   to the custom domain in CNAME; GitHub Pages redirects the old address
+   once the domain is set in Settings → Pages (docs/DEPLOYMENT.md). */
+export const BASE = 'https://eudigitalpolicy.eu/';
 
 /* The author and the licence, as the author declared them on 21 Oct 2026
    (CC BY 4.0, over the whole repository: analysis, datasets and code; the

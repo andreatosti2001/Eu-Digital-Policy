@@ -146,9 +146,10 @@ authenticated server the model requires.
 - `sitemap.xml` lists exactly the 18 indexable routes, each with a `<lastmod>` that is the newest
   verification date among the records the page renders — a date the data holds, not the day the
   generator ran. `tools/seo-audit.mjs` fails on any divergence, in CI and in the deploy gate.
-- **There is still no `robots.txt`, deliberately.** Crawlers read it only at the host root
-  (`andreatosti2001.github.io`), which is served by a user-site repository this project does not
-  have; a file here would be ignored. `docs/SEO-OPERATIONS.md` §2.
+- **There is still no `robots.txt`.** Until 21 Oct 2026 that was forced: crawlers read it only at
+  the host root (`andreatosti2001.github.io`), which this project does not have. On the custom
+  domain (§8) the site is the host root, so a `robots.txt` with a `Sitemap:` line is now possible;
+  it is not yet written. `docs/SEO-OPERATIONS.md` §2.
 - **Languages.** `?lang=it|fr|es` still opens the brief in that language, and the URL follows the
   language menu, but since 27 Sep 2026 the canonical stays the English page, no `hreflang` is
   emitted and the sitemap carries no `?lang=` URL: the translated text exists only after
@@ -156,6 +157,41 @@ authenticated server the model requires.
   page contradicted the HTML. Pre-rendered, reviewed `/it/`-style pages are the route back
   (`docs/SEO-OPERATIONS.md` §6); they would be generated like the instrument pages, not a build
   step.
+
+## 8. The custom domain (21 Oct 2026)
+
+On the author's decision the site moves from `https://andreatosti2001.github.io/Eu-Digital-Policy/`
+to `https://eudigitalpolicy.eu/`, registered by the author on 21 Oct 2026 (it replaced the
+placeholder `eu-digital-policy.eu` the same day).
+In the tree that is two lines: `CNAME` and `BASE` in `tools/_footer.mjs`, then
+`node tools/_footer.mjs`. Every canonical, `og:url`, sitemap entry and JSON-LD `@id` follows; every
+internal link is relative and was already measured under a prefix (`checkDeployedSubpath`), so none
+changes. **Merge it only after the domain answers**: on 21 Oct 2026, just after registration, `eudigitalpolicy.eu` did not
+resolve, and while Pages deploys from the branch, a `CNAME` on `main` sets the custom domain at once.
+
+What only the owner can do, in this order:
+
+1. **Register the domain** — *done 21 Oct 2026, `eudigitalpolicy.eu`, at Porkbun* — and keep it
+   renewed: a lapsed domain is worse for citations than the `github.io` address. Porkbun warns that
+   a `.eu` can be deleted *before* its expiry date, so auto-renew must stay on and there is no grace
+   period to count on. Eligibility (EU/EEA citizenship, residence or establishment) must hold for
+   the domain's whole life. A different name means changing `CNAME` and `BASE` and regenerating.
+2. **Verify it for the account** (Settings → Pages → *Add a domain* under the account's settings),
+   which stops anyone else's repository claiming it.
+3. **DNS at the registrar**, for the apex: four `A` records — `185.199.108.153`,
+   `185.199.109.153`, `185.199.110.153`, `185.199.111.153` — and, for IPv6, four `AAAA` records —
+   `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`;
+   for `www`, a `CNAME` to `andreatosti2001.github.io`. Remove any other `A`/`AAAA`/`ALIAS` on
+   the apex. These are GitHub's published Pages addresses (read from docs.github.com on
+   21 Oct 2026) — check them against GitHub's
+   documentation on the day, not this file.
+4. **Merge `claude/p1-custom-domain`**, then Settings → Pages → Custom domain: the same name, wait
+   for the DNS check, then tick **Enforce HTTPS** once the certificate is issued.
+5. **Search Console:** add a *Domain* property for the new name (DNS TXT verification), submit
+   `https://<domain>/sitemap.xml`, and keep the old URL-prefix property to watch the redirect.
+
+GitHub redirects the old `github.io` address to the custom domain, so existing links keep
+working while the custom domain is set; they stop if it is removed.
 
 ## 7. What none of this proves
 
