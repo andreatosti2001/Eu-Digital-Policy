@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://eudigitalpolicy.eu/</loc><lastmod>2026-10-21</lastmod></url>
-  <url><loc>https://eudigitalpolicy.eu/instruments.html</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://eudigitalpolicy.eu/instruments.html</loc><lastmod>2026-10-21</lastmod></url>
   <url><loc>https://eudigitalpolicy.eu/institutions.html</loc><lastmod>2026-09-27</lastmod></url>
   <url><loc>https://eudigitalpolicy.eu/enforcement.html</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://eudigitalpolicy.eu/applies.html</loc><lastmod>2026-09-27</lastmod></url>
@@ -18,6 +18,6 @@
   <url><loc>https://eudigitalpolicy.eu/instruments/dora/</loc><lastmod>2026-09-27</lastmod></url>
   <url><loc>https://eudigitalpolicy.eu/instruments/cra/</loc><lastmod>2026-10-14</lastmod></url>
   <url><loc>https://eudigitalpolicy.eu/instruments/ai-omnibus/</loc><lastmod>2026-10-14</lastmod></url>
-  <url><loc>https://eudigitalpolicy.eu/instruments/data-omnibus/</loc><lastmod>2026-10-14</lastmod></url>
+  <url><loc>https://eudigitalpolicy.eu/instruments/data-omnibus/</loc><lastmod>2026-10-21</lastmod></url>
   <url><loc>https://eudigitalpolicy.eu/instruments/pld/</loc><lastmod>2026-09-27</lastmod></url>
 </urlset>

@@ -4453,13 +4453,98 @@
           "source_id": "src-ppcland-omnibus-2026-09",
           "supports": "supports:direct",
           "locator": "Sections 'The clause, line by line' (ST 12535/26, 3 September 2026; the AI clause renumbered Article 88 bis) and 'Personal data after the SRB judgment' (new Article 25a)"
+        },
+        {
+          "source_id": "src-council-st-12535-2026",
+          "supports": "supports:partial",
+          "locator": "Annex: 'Article 88c88 bis'; 'Article 29a25a' (renumbering; the deletions are struck through in the original)"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-8",
       "published": "2026-07-08",
       "last_verified": "2026-09-26",
-      "verification_note": "No official Council document has been read directly (documents WK 11020/2026 ADD 4, ST 9547/26 and ST 12535/26 are cited via commentary and specialist press reporting on leaked restricted texts, not via the Council's own register). Highly time-sensitive: a Council mandate could form at any point. Re-verify before every publication. Locators added 27 Sep 2026 for the ICLE and PPC Land articles, re-read that day; privacynext.eu reset the connection on two attempts, so the COREPER withdrawal was not re-read and its reference still has no locator. 14 Oct 2026: the closing sentence ('As of 25 September 2026 the Council has no agreed mandate and trilogues have not begun.') was moved out of this record, which now carries the Council's movements up to September; the later state is in clm-data-omnibus-council-october (Council) and clm-data-omnibus-parliament-stage (Parliament). Nothing else in this record was re-read that day."
+      "verification_note": "No official Council document has been read directly (documents WK 11020/2026 ADD 4, ST 9547/26 and ST 12535/26 are cited via commentary and specialist press reporting on leaked restricted texts, not via the Council's own register). Highly time-sensitive: a Council mandate could form at any point. Re-verify before every publication. Locators added 27 Sep 2026 for the ICLE and PPC Land articles, re-read that day; privacynext.eu reset the connection on two attempts, so the COREPER withdrawal was not re-read and its reference still has no locator. 14 Oct 2026: the closing sentence ('As of 25 September 2026 the Council has no agreed mandate and trilogues have not begun.') was moved out of this record, which now carries the Council's movements up to September; the later state is in clm-data-omnibus-council-october (Council) and clm-data-omnibus-parliament-stage (Parliament). Nothing else in this record was re-read that day. 21 Oct 2026: ST 12535/26 is now on the Council's register and was read there. It confirms the date (3 September 2026) and the renumbering to Article 88 bis and Article 25a; which safeguards are struck cannot be read from its text layer, so it is recorded as partial support and the PPC Land reference stays."
+    },
+    {
+      "id": "clm-data-omnibus-st-13112",
+      "type": "claim-type:fact",
+      "statement": "A further Presidency revised compromise text on the Digital Omnibus, ST 13112/26, was the basis of the Antici Group (Simplification) meeting of 25 September 2026.",
+      "instruments": [
+        "data-omnibus"
+      ],
+      "provisions": [],
+      "institutions": [
+        "council"
+      ],
+      "enforcement": [],
+      "legal_basis": [],
+      "brief_part": "part-8",
+      "last_verified": "2026-10-21",
+      "published": "2026-09-17",
+      "sources": [
+        {
+          "source_id": "src-council-cm-4156-2026",
+          "supports": "supports:direct",
+          "locator": "Item 1: 'Exchange of views based on the Presidency revised compromise text — ST 13112/26 (Presidency revised compromise text – to be issued)'"
+        },
+        {
+          "source_id": "src-council-st-13886-2026",
+          "supports": "supports:partial",
+          "locator": "§7: meetings on '11 September, and 25 September'; 'the Presidency presented two revised compromise texts'"
+        }
+      ],
+      "verification_note": "Registered 21 Oct 2026 (audit item 2), read that day. The agenda names the document but gives it no date of its own; the audit brief's '21 September' is not established by anything read, so the claim dates the meeting, not the text. ST 13112/26 itself was not found on the Council's register."
+    },
+    {
+      "id": "clm-data-omnibus-draft-mandate",
+      "type": "claim-type:fact",
+      "statement": "On 2 October 2026 the Council's General Secretariat put a 163-page draft mandate for negotiations with the European Parliament on the Digital Omnibus, ST 13886/26, to the Permanent Representatives Committee.",
+      "instruments": [
+        "data-omnibus"
+      ],
+      "provisions": [],
+      "institutions": [
+        "council"
+      ],
+      "enforcement": [],
+      "legal_basis": [],
+      "brief_part": "part-8",
+      "last_verified": "2026-10-21",
+      "published": "2026-10-02",
+      "sources": [
+        {
+          "source_id": "src-council-st-13886-2026",
+          "supports": "supports:direct",
+          "locator": "Cover note: 'Brussels, 2 October 2026'; 'To: Permanent Representatives Committee'; '- Mandate for negotiations with the European Parliament'; 163 pages"
+        }
+      ],
+      "verification_note": "Registered 21 Oct 2026 (audit item 2), read that day in the copy Agence Europe distributes; the document is LIMITE and not on the Council's register, so only its cover facts are used (see the source note)."
+    },
+    {
+      "id": "clm-data-omnibus-coreper-21-october",
+      "type": "claim-type:fact",
+      "statement": "According to Agence Europe, a revised version of the Irish Presidency's text, with stronger protection for trade secrets and a Commission report on the proportionality of SMEs' obligations, was due before Coreper on 21 October 2026 with a view to a negotiating mandate; no outcome of that meeting had been published when this was checked on 21 October 2026.",
+      "instruments": [
+        "data-omnibus"
+      ],
+      "provisions": [],
+      "institutions": [
+        "council"
+      ],
+      "enforcement": [],
+      "legal_basis": [],
+      "brief_part": "part-8",
+      "last_verified": "2026-10-21",
+      "published": "2026-10-20",
+      "sources": [
+        {
+          "source_id": "src-agenceurope-omnibus-2026-10-20",
+          "supports": "supports:direct",
+          "locator": "Paragraphs 1-3: 'Coreper is due to examine a revised version on Wednesday 21 October'; 'stronger protection for trade secrets, one of Berlin's red lines'; 'a specific report … the proportionality of the obligations imposed on small and medium-sized enterprises'"
+        }
+      ],
+      "verification_note": "Registered 21 Oct 2026 (audit item 2). The audit brief said the Coreper 'examined it on 21 October'; what was read says only that it was DUE to, in a report written the day before. The Council's own pages answered HTTP 403 to this environment, and no report of the meeting's outcome was found by search on 21 Oct 2026, so the second half is dated and must be replaced the moment an outcome is published. One specialist-press report (tier 4); graded accordingly."
     },
     {
       "id": "clm-data-omnibus-council-october",
@@ -4508,8 +4593,8 @@
       "legal_basis": [],
       "brief_part": "part-8",
       "published": null,
-      "last_verified": "2026-10-14",
-      "verification_note": "Registered 14 Oct 2026 from Parliament's own procedure file, read that day. The number of amendments tabled is not stated in the file and was not counted, so no figure is given. 'Trilogues have not begun' follows from the absence of a committee mandate and of a Council mandate (clm-data-omnibus-council-october); trilogue requires both. A live page: re-verify before every publication."
+      "last_verified": "2026-10-21",
+      "verification_note": "Registered 14 Oct 2026 from Parliament's own procedure file, read that day. The number of amendments tabled is not stated in the file and was not counted, so no figure is given. 'Trilogues have not begun' follows from the absence of a committee mandate and of a Council mandate (clm-data-omnibus-council-october); trilogue requires both. A live page: re-verify before every publication. 21 Oct 2026 (audit item 2): the Legislative Observatory page re-read; stage reached still 'Awaiting committee decision', the documentation gateway unchanged (draft report PE786.818 of 22 June 2026; amendments of 27 July 2026)."
     },
     {
       "id": "clm-noyb-omnibus-charter",
