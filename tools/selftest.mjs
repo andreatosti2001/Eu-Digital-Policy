@@ -800,7 +800,7 @@ test('I2 · the Pages artifact is the website and nothing else', () => {
    ============================================================ */
 
 import { audit as seoAudit, auditAll as seoAuditAll } from './seo-audit.mjs';
-import { generate as generateSite, stale as staleSite } from './_footer.mjs';
+import { generate as generateSite, stale as staleSite, BASE } from './_footer.mjs';
 import * as ROUTES from '../js/routes.js';
 import { index as buildIndex } from '../js/data.js';
 
@@ -885,13 +885,13 @@ test('S4 · planted defects are caught: title, canonical, hreflang, orphan, stru
   try {
     edit(dir, 'instruments/dsa/index.html', (s) => s.replace(/<title>[^<]*<\/title>/, '<title>Instrument</title>'));
     edit(dir, 'instruments/dma/index.html', (s) => s.replace('rel="canonical"', 'rel="canonical-x"')
-      .replace('<meta charset="utf-8"/>', '<meta charset="utf-8"/>\n<link href="https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/gdpr/" rel="canonical"/>'));
-    edit(dir, 'index.html', (s) => s.replace('</head>', '<link href="https://andreatosti2001.github.io/Eu-Digital-Policy/?lang=it" hreflang="it" rel="alternate"/>\n</head>'));
+      .replace('<meta charset="utf-8"/>', `<meta charset="utf-8"/>\n<link href="${BASE}instruments/gdpr/" rel="canonical"/>`));
+    edit(dir, 'index.html', (s) => s.replace('</head>', `<link href="${BASE}?lang=it" hreflang="it" rel="alternate"/>\n</head>`));
     /* the CER page loses every static link that leads to it */
     for (const f of sitePages(dir)) edit(dir, f, (s) => s.replace(/<a href="[^"]*instruments\/cer\/">[^<]*<\/a>/g, '').replace(/<a href="[^"]*instruments\/cer\/"/g, '<a href="#"'));
     edit(dir, 'instruments/cra/index.html', (s) => s.replace('"@type":"Legislation"', '"@type":"Legislation","author":"someone","publisher":"someone"'));
     edit(dir, 'enforcement.html', (s) => s.replace(/<li id="enf-[^"]+">[\s\S]*?<\/li>\n/, ''));
-    edit(dir, 'sitemap.xml', (s) => s.replace('</urlset>', '  <url><loc>https://andreatosti2001.github.io/Eu-Digital-Policy/instrument.html?id=eprivacy</loc></url>\n</urlset>'));
+    edit(dir, 'sitemap.xml', (s) => s.replace('</urlset>', `  <url><loc>${BASE}instrument.html?id=eprivacy</loc></url>\n</urlset>`));
     const errs = seoAudit(dir).errors.join('\n');
     assert.match(errs, /instruments\/dsa\/index\.html: <title> is not the route model's/);
     assert.match(errs, /instruments\/dsa\/index\.html: generic title/);

@@ -97,6 +97,9 @@ The repository is a second front door and currently undersells the project. Sugg
 
 ## 7. The custom domain — a recommendation, not a prerequisite
 
+*21 Oct 2026: decided by the author, prepared on `claude/p1-custom-domain`; the steps only the
+owner can take are `docs/DEPLOYMENT.md` §8.*
+
 At `andreatosti2001.github.io/Eu-Digital-Policy/` the site cannot have a site name in Google
 results (Google does not support site names at the subdirectory level), cannot publish a
 `robots.txt` of its own, cannot be a Search Console *Domain* property, and shares a host with

@@ -38,15 +38,17 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
  *  modules, the data they fetch, the locales, the fonts, the sitemap, the
  *  instrument pages tools/_footer.mjs generates under instruments/<id>/,
  *  and the social preview images tools/og-image.mjs renders into img/.
- *  Nothing else is part of the public site. There is deliberately no
- *  robots.txt: this is a project site under /Eu-Digital-Policy/, and
- *  crawlers read robots.txt only at the root of the host, which this
- *  repository does not control (docs/DEPLOYMENT.md). */
+ *  Nothing else is part of the public site. CNAME names the custom domain
+ *  (21 Oct 2026): GitHub reads it on a branch deployment and ignores it on
+ *  an Actions one, where the domain is the Settings → Pages value, so it
+ *  is published either way. There is still no robots.txt: it became
+ *  possible when the site moved to the root of its own host, and is not
+ *  yet decided (docs/DEPLOYMENT.md §8). */
 export const PUBLIC_FILES = Object.freeze([
   'index.html', 'instruments.html', 'instrument.html', 'institutions.html',
   'enforcement.html', 'applies.html', 'bibliography.html',
   'methodology.html', 'licence.html',
-  'app.js', 'style.css', 'sitemap.xml',
+  'app.js', 'style.css', 'sitemap.xml', 'CNAME',
 ]);
 export const PUBLIC_DIRS = Object.freeze(['css', 'js', 'data', 'i18n', 'fonts', 'instruments', 'img']);
 

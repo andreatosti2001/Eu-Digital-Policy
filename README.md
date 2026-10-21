@@ -5,17 +5,17 @@ cyber layer — in which **the argument is prose and everything the argument res
 every legal proposition, figure, date, status, competence and enforcement record is a record
 with its sources, its locator and a grade derived from what those sources can actually carry.
 
-**Live site:** https://andreatosti2001.github.io/Eu-Digital-Policy/
+**Live site:** https://eu-digital-policy.eu/
 
 **One page per regulation**, each generated from the same records: the
-[GDPR](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/gdpr/),
-[Digital Services Act](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/dsa/),
-[Digital Markets Act](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/dma/),
-[AI Act](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/ai-act/),
-[Data Act](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/data-act/),
-[NIS2](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/nis2/),
-[DORA](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/dora/),
-[Cyber Resilience Act](https://andreatosti2001.github.io/Eu-Digital-Policy/instruments/cra/)
+[GDPR](https://eu-digital-policy.eu/instruments/gdpr/),
+[Digital Services Act](https://eu-digital-policy.eu/instruments/dsa/),
+[Digital Markets Act](https://eu-digital-policy.eu/instruments/dma/),
+[AI Act](https://eu-digital-policy.eu/instruments/ai-act/),
+[Data Act](https://eu-digital-policy.eu/instruments/data-act/),
+[NIS2](https://eu-digital-policy.eu/instruments/nis2/),
+[DORA](https://eu-digital-policy.eu/instruments/dora/),
+[Cyber Resilience Act](https://eu-digital-policy.eu/instruments/cra/)
 and four more — what each does, where it stands, its dates, provisions, competent authorities,
 enforcement, its interactions with the others, and the graded evidence behind every statement.
 
