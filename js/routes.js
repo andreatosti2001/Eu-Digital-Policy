@@ -130,6 +130,15 @@ export function knownAs(inst) {
   return (inst.aliases || []).includes(slug(name)) ? name : null;
 }
 
+/** The name a page is headed and linked by: the alias-backed common name
+ *  with the short name ("Digital Markets Act (DMA)"), or the short name
+ *  alone. The <h1>, the site index, the descriptions and the social cards
+ *  all ask this one function. */
+export function displayName(inst) {
+  const aka = knownAs(inst);
+  return aka && !aka.includes(inst.short_name) ? `${aka} (${inst.short_name})` : inst.short_name;
+}
+
 /* ---------------------------------------------------------- legal text
 
    The instrument's own text, where the data records it: a tier-1 source

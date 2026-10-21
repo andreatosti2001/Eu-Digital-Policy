@@ -149,12 +149,9 @@ export function actNumber(inst) {
   return m ? m[0] : null;
 }
 
-/** A name for links: the alias-backed common name with the short name,
- *  or the short name alone. */
-export function displayName(inst) {
-  const aka = R.knownAs(inst);
-  return aka && !aka.includes(inst.short_name) ? `${aka} (${inst.short_name})` : inst.short_name;
-}
+/** A name for links — defined in js/routes.js, which the renderer's <h1>
+ *  also reads, so the heading and the route model cannot disagree. */
+export const displayName = R.displayName;
 
 function instrumentTitle(inst, ix, db) {
   const cur = INSTRUMENT_TITLE[inst.id];
@@ -299,7 +296,7 @@ export function buildRoutes(db, root = ROOT) {
       title: instrumentTitle(inst, ix, db),
       description: instrumentDescription(inst, ix, db),
       schema: 'WebPage',
-      h1: inst.short_name,
+      h1: displayName(inst),
       breadcrumb: [home, { name: 'Instruments', url: BASE + 'instruments.html' }, { name: inst.short_name, url }],
       lastmod: newest(datesIn(entityRecords(inst, ix, db))),
       image: { path: `img/og/${inst.id}.png`, width: 1200, height: 630,

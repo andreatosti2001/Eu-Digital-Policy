@@ -39,7 +39,7 @@ import { provisionApplication, provisionDeadlines } from './regulatory-model.js'
 import { derive, STAGES } from './pipeline.js';
 import { sourceList, gradeChip, freshness } from './evidence-view.js';
 import { interactionsFor } from './interactions.js';
-import { instrumentHref, knownAs, legalTextSource } from './routes.js';
+import { instrumentHref, knownAs, displayName, legalTextSource } from './routes.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -153,7 +153,8 @@ function headSection(inst) {
     ? [ceiling.pct_global_turnover != null ? ceiling.pct_global_turnover + '% of global turnover' : null,
        ceiling.fixed_eur != null ? F.eur(ceiling.fixed_eur) : null].filter(Boolean).join(' / ')
     : null;
-  const aka = knownAs(inst);
+  /* the common name, only where the <h1> does not already carry it */
+  const aka = displayName(inst) === inst.short_name ? knownAs(inst) : null;
   const text = legalTextSource(inst, IX);
 
   const item = (k, v, mono) =>
@@ -178,7 +179,9 @@ function headSection(inst) {
   return '<div class="page-head">' +
     '<p class="section-kicker">' + kindLine(inst) +
       (inst.celex ? ' · <span class="mono">CELEX ' + esc(inst.celex) + '</span>' : '') + '</p>' +
-    '<h1>' + esc(tr(inst.id + '.short_name', inst.short_name)) + '</h1>' +
+    /* the common name a reader searches for heads the page ("Digital Markets
+       Act (DMA)"); the "Known as" line then has nothing left to add */
+    '<h1>' + esc(tr(inst.id + '.short_name', null) || displayName(inst)) + '</h1>' +
     '<p class="lede">' + esc(tr(inst.id + '.full_name', inst.full_name)) + '</p>' +
     (aka || text
       ? '<p class="inst-ident">' +
