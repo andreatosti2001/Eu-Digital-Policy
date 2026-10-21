@@ -146,10 +146,10 @@ authenticated server the model requires.
 - `sitemap.xml` lists exactly the 18 indexable routes, each with a `<lastmod>` that is the newest
   verification date among the records the page renders — a date the data holds, not the day the
   generator ran. `tools/seo-audit.mjs` fails on any divergence, in CI and in the deploy gate.
-- **There is still no `robots.txt`.** Until 21 Oct 2026 that was forced: crawlers read it only at
-  the host root (`andreatosti2001.github.io`), which this project does not have. On the custom
-  domain (§8) the site is the host root, so a `robots.txt` with a `Sitemap:` line is now possible;
-  it is not yet written. `docs/SEO-OPERATIONS.md` §2.
+- **`robots.txt` exists since 21 Oct 2026.** Until the custom domain (§8) crawlers read it only at
+  the host root (`andreatosti2001.github.io`), which this project did not have. It is generated from
+  `BASE`, names the sitemap, keeps crawlers out of `/agent/`, `/docs/` and `/tools/`, and is in the
+  deploy allowlist. `docs/SEO-OPERATIONS.md` §2.
 - **Languages.** `?lang=it|fr|es` still opens the brief in that language, and the URL follows the
   language menu, but since 27 Sep 2026 the canonical stays the English page, no `hreflang` is
   emitted and the sitemap carries no `?lang=` URL: the translated text exists only after
