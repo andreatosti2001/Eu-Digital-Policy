@@ -807,7 +807,7 @@ import { index as buildIndex } from '../js/data.js';
 function siteCopy(name) {
   const dir = scratch(name);
   for (const f of readdirSync(ROOT).filter((x) => x.endsWith('.html'))) cpSync(join(ROOT, f), join(dir, f));
-  for (const f of ['sitemap.xml', 'app.js', 'style.css']) cpSync(join(ROOT, f), join(dir, f));
+  for (const f of ['sitemap.xml', 'robots.txt', 'app.js', 'style.css']) cpSync(join(ROOT, f), join(dir, f));
   for (const d of ['data', 'i18n', 'js', 'img', 'instruments', 'css']) cpSync(join(ROOT, d), join(dir, d), { recursive: true });
   return dir;
 }
@@ -877,6 +877,16 @@ test('S4b · the author, the licence, the Article and the FAQ are held to what t
     assert.match(errs, /instruments\/gdpr\/index\.html: Article headline "Something else" is not the page's <h1>/);
     assert.match(errs, /instruments\/dsa\/index\.html: the FAQ in the structured data is not the route model's/);
     assert.match(errs, /applies\.html: JSON-LD names Andrea Tosti as author and the page does not/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('S4c · robots.txt names the sitemap and blocks no indexable route', () => {
+  const dir = siteCopy('seo-robots');
+  try {
+    edit(dir, 'robots.txt', (s) => s.replace(/Sitemap: .*/, 'Sitemap: https://example.org/sitemap.xml').replace('Disallow: /tools/', 'Disallow: /tools/\nDisallow: /instruments/'));
+    const errs = seoAudit(dir).errors.join('\n');
+    assert.match(errs, /robots\.txt: does not name .*sitemap\.xml/);
+    assert.match(errs, /robots\.txt: Disallow: \/instruments\/ blocks the indexable route .*instruments\/gdpr\//);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 

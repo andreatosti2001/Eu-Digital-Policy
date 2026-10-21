@@ -41,14 +41,13 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
  *  Nothing else is part of the public site. CNAME names the custom domain
  *  (21 Oct 2026): GitHub reads it on a branch deployment and ignores it on
  *  an Actions one, where the domain is the Settings → Pages value, so it
- *  is published either way. There is still no robots.txt: it became
- *  possible when the site moved to the root of its own host, and is not
- *  yet decided (docs/DEPLOYMENT.md §8). */
+ *  is published either way. robots.txt, generated from the route model,
+ *  became possible when the site moved to the root of its own host. */
 export const PUBLIC_FILES = Object.freeze([
   'index.html', 'instruments.html', 'instrument.html', 'institutions.html',
   'enforcement.html', 'applies.html', 'bibliography.html',
   'methodology.html', 'licence.html',
-  'app.js', 'style.css', 'sitemap.xml', 'CNAME',
+  'app.js', 'style.css', 'sitemap.xml', 'robots.txt', 'CNAME',
 ]);
 export const PUBLIC_DIRS = Object.freeze(['css', 'js', 'data', 'i18n', 'fonts', 'instruments', 'img']);
 

@@ -256,6 +256,22 @@ export function audit(root = ROOT) {
   }
   if (!/noindex/.test(page)) err('js/instrument-page.js', 'a thin record rendered at instrument.html?id=… is no longer marked noindex');
 
+  /* robots.txt (since 21 Oct 2026, at the root of the site's own host):
+     it names this sitemap and no rule in it reaches an indexable route */
+  const robotsPath = join(root, 'robots.txt');
+  if (!existsSync(robotsPath)) err('robots.txt', 'missing — run node tools/_footer.mjs');
+  else {
+    const lines = readFileSync(robotsPath, 'utf8').split('\n').map((l) => l.replace(/#.*$/, '').trim()).filter(Boolean);
+    const sitemaps = lines.filter((l) => /^sitemap:/i.test(l)).map((l) => l.replace(/^sitemap:\s*/i, ''));
+    if (!sitemaps.includes(BASE + 'sitemap.xml')) err('robots.txt', `does not name ${BASE}sitemap.xml`);
+    const blocked = lines.filter((l) => /^disallow:/i.test(l)).map((l) => l.replace(/^disallow:\s*/i, '')).filter(Boolean);
+    const sitePath = '/' + new URL(BASE).pathname.replace(/^\/+/, '');
+    for (const r of indexable) {
+      const p = new URL(r.canonical).pathname;
+      for (const d of blocked) if ((p.startsWith(d) || (d === '/' && p.startsWith(sitePath)))) err('robots.txt', `Disallow: ${d} blocks the indexable route ${r.canonical}`);
+    }
+  }
+
   /* ---------------------------------------------------- 5 · crawl graph */
   const reach = new Set(['index.html']);
   const queue = ['index.html'];

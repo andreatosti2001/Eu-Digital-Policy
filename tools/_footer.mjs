@@ -225,6 +225,7 @@ export async function generate(root = HERE_ROOT) {
   }
 
   files.set('sitemap.xml', SEO.sitemapXml(routes));
+  files.set('robots.txt', SEO.robotsTxt());
 
   /* an instrument that fell below the gate loses its page */
   const remove = [];
