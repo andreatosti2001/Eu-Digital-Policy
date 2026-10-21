@@ -48,6 +48,19 @@ page was captured at 1280px in both themes and at 390px: no console error.
 skipped (`agent/autonomy` test 28, which skips on `main` by design); governance check exit 0;
 browser suite 241 · 0 · 1 undecidable; GDPR's heading checked at 390px, no overflow.
 
+**One commit on `main` breaks the evidence rule, and was left as it is.** `55ac136` (the handover
+commit after the `<h1>` change) also carries `instruments.html`: the generator rewrote its
+JSON-LD instrument names through `displayName()`, and the `<h1>` commit `14a184a` staged
+`instruments/` but not that file. `55ac136` has no `Evidence:` trailer, so
+`tools/commit-evidence.mjs 22a217c 55ac136` exits 1, and the `commit-evidence` step of that push's
+CI run is expected to be red, which in `qa.yml` skips the steps after it in that job. The
+content is right: the file is the generator's output from `data/`, and every validator passes on
+it. The evidence `55ac136` should have named is `14a184a`'s (the author's H1 decision of 21 Oct
+2026; names from `KNOWN_AS` and the records' aliases). The author decided not to rewrite `main`
+to add the trailer. Later pushes are judged on their own range only, so this does not recur. The
+lesson: after `node tools/_footer.mjs`, stage everything it reports writing (`git status`),
+not only `instruments/`.
+
 **For the author:** (a) in Search Console, request indexing for `instruments/dma/` once deployed
 and compare CTR per query after four weeks; (b) send the exact Search Console URL behind
 "instrumlsa" if it is still reported; (c) the Apple appeal record's open question, below.
