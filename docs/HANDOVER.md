@@ -53,6 +53,26 @@ Scout digest, two files under `agent/scout/digests/`, not read beyond its file l
 now carries one commit not in `main` (`ad7dd2d`, "Apple designation appeal: October register
 recheck, still none linked") — reported, not reconciled.
 
+## (previous header) The Apple appeal recheck — 15 October 2026
+
+**Last updated:** the Apple appeal recheck · 15 October 2026
+**Branch:** `claude/amazing-einstein-yrsu79`, restarted from `origin/main` at `6a2357f` (PR #11's
+merge) for this recheck; not opened as a pull request.
+
+**Asked:** the October recheck the author approved on 27 Sep 2026 (a Routine). `main` re-fetched
+before this write: `6a2357f`. Unverified count unchanged at **47**.
+
+- **Register, read 15 Oct 2026** (InfoCuria's search service; index held lodgings to 7 Oct 2026
+  and a closure dated 14 Oct 2026): T-1079/23, T-1080/23 and T-214/24 are closed on 8 July 2026,
+  joined, with **no appeal linked**; no case with Apple as a party was lodged after 8 July 2026.
+- **Recorded:** only the dated observation in `enf-apple-gc-2026-designation` `appeal.note`. It
+  stays `appeal:unknown`. If notified on the day of delivery, the appeal period (Statute Art. 56,
+  two months; Rules of Procedure Art. 51, ten days for distance) ended on 18 September 2026. The
+  register does not show the notification date, so `appeal:not-lodged` is not recorded.
+- **For the author:** to close this record as not appealed, establish the notification date. The
+  Commission or Apple can state it, and a later register read can confirm it. Or decide that the
+  register's silence, three weeks past the earliest possible deadline, is enough.
+
 ## (previous header) The October 2026 evidence update — 14 October 2026
 
 **Last updated:** the October 2026 evidence update · 14 October 2026 (reference date)
