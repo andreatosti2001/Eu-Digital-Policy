@@ -199,9 +199,11 @@ freshness output as evidence that links work.
 - Cite the **consolidated** text on EUR-Lex for anything in force.
 - Quotations from and links to EU legal texts carry those documents' own reuse
   terms, which this site neither extends nor restricts.
-- **No licence has been declared for this repository.** Ordinary copyright
-  applies to the analysis and the datasets by default. No agent may declare,
-  imply, or add a licence — that is the author's decision alone (Class D).
+- **The repository is licensed under CC BY 4.0**, declared by the author on
+  21 October 2026 over the analysis, the datasets and the code (`LICENSE`).
+  It does not reach the EU texts and other publications the site quotes. No
+  agent may change, remove or reinterpret it — that is the author's decision
+  alone (Class D).
 - The independence disclaimer and the "not legal advice" statement are on every
   page by design and may not be moved into JavaScript-rendered chrome.
 

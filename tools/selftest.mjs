@@ -855,6 +855,31 @@ test('S3 · the gate is derived from the record, and every page it admits meets 
   assert.equal(ROUTES.knownAs({ id: 'dsa', aliases: [] }), null);
 });
 
+test('S4b · the author, the licence, the Article and the FAQ are held to what the page shows', () => {
+  const dir = siteCopy('seo-ld');
+  try {
+    /* an FAQ answer the box no longer says, and a licence link that lost rel="license" */
+    edit(dir, 'instruments/dma/index.html', (s) => s.replace('Who it binds:</strong> Gatekeeper', 'Who it binds:</strong> Nobody')
+      .replace('<a rel="license" href=', '<a href='));
+    /* another licence, a date that is not a date, a headline that is not the <h1> */
+    edit(dir, 'instruments/gdpr/index.html', (s) => s.replace('"license":"https://creativecommons.org/licenses/by/4.0/"', '"license":"https://example.org/all-rights-reserved"')
+      .replace('"datePublished":"2026-09-27"', '"datePublished":"27 Sep 2026"')
+      .replace(/"headline":"[^"]*"/, '"headline":"Something else"'));
+    /* an FAQ entry that is not in the route model */
+    edit(dir, 'instruments/dsa/index.html', (s) => s.replace('"mainEntity":[', '"mainEntity":[{"@type":"Question","name":"Is it good?","acceptedAnswer":{"@type":"Answer","text":"Yes."}},'));
+    /* an author the page does not name */
+    edit(dir, 'applies.html', (s) => s.replace(/<body[\s\S]*$/, (b) => b.replaceAll('Andrea Tosti', 'the author')));
+    const errs = seoAudit(dir).errors.join('\n');
+    assert.match(errs, /instruments\/dma\/index\.html: FAQ answer "Who it binds: Gatekeeper" is not on the page/);
+    assert.match(errs, /instruments\/dma\/index\.html: JSON-LD names a licence the page does not link with rel="license"/);
+    assert.match(errs, /instruments\/gdpr\/index\.html: JSON-LD license https:\/\/example\.org\/all-rights-reserved is not the declared licence/);
+    assert.match(errs, /instruments\/gdpr\/index\.html: JSON-LD datePublished "27 Sep 2026" is not a YYYY-MM-DD date/);
+    assert.match(errs, /instruments\/gdpr\/index\.html: Article headline "Something else" is not the page's <h1>/);
+    assert.match(errs, /instruments\/dsa\/index\.html: the FAQ in the structured data is not the route model's/);
+    assert.match(errs, /applies\.html: JSON-LD names Andrea Tosti as author and the page does not/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('S4 · planted defects are caught: title, canonical, hreflang, orphan, structured data, sitemap', () => {
   const dir = siteCopy('seo');
   try {
@@ -864,7 +889,7 @@ test('S4 · planted defects are caught: title, canonical, hreflang, orphan, stru
     edit(dir, 'index.html', (s) => s.replace('</head>', '<link href="https://andreatosti2001.github.io/Eu-Digital-Policy/?lang=it" hreflang="it" rel="alternate"/>\n</head>'));
     /* the CER page loses every static link that leads to it */
     for (const f of sitePages(dir)) edit(dir, f, (s) => s.replace(/<a href="[^"]*instruments\/cer\/">[^<]*<\/a>/g, '').replace(/<a href="[^"]*instruments\/cer\/"/g, '<a href="#"'));
-    edit(dir, 'instruments/cra/index.html', (s) => s.replace('"@type":"Legislation"', '"@type":"Legislation","author":"someone"'));
+    edit(dir, 'instruments/cra/index.html', (s) => s.replace('"@type":"Legislation"', '"@type":"Legislation","author":"someone","publisher":"someone"'));
     edit(dir, 'enforcement.html', (s) => s.replace(/<li id="enf-[^"]+">[\s\S]*?<\/li>\n/, ''));
     edit(dir, 'sitemap.xml', (s) => s.replace('</urlset>', '  <url><loc>https://andreatosti2001.github.io/Eu-Digital-Policy/instrument.html?id=eprivacy</loc></url>\n</urlset>'));
     const errs = seoAudit(dir).errors.join('\n');
@@ -873,7 +898,8 @@ test('S4 · planted defects are caught: title, canonical, hreflang, orphan, stru
     assert.match(errs, /claimed by .*instruments\/dma\/index\.html/);
     assert.match(errs, /hreflang it .* not an indexable, self-canonical page/);
     assert.match(errs, /instruments\/cer\/index\.html: not reachable from the home page/);
-    assert.match(errs, /JSON-LD asserts "author"/);
+    assert.match(errs, /JSON-LD asserts "publisher"/);
+    assert.match(errs, /instruments\/cra\/index\.html: JSON-LD author is not the declared author/);
     assert.match(errs, /enforcement\.html: the static record index omits 1 record/);
     assert.match(errs, /instrument\.html\?id=eprivacy is not the canonical URL of any indexable route/);
   } finally { rmSync(dir, { recursive: true, force: true }); }

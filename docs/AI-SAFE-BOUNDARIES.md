@@ -36,7 +36,8 @@ These hold in every session, under every instruction, regardless of convenience.
 7. **Never soften a stated limitation.** The README's eight limitations and the
    unverified records (count in `docs/CURRENT-ARCHITECTURE.md` §12) are the project's honesty, not its backlog embarrassment. They are
    changed by doing the verification work, not by rewording.
-8. **Never declare a licence**, and never alter the non-affiliation or no-legal-advice text.
+8. **Never change the licence** — CC BY 4.0, declared by the author on 21 Oct 2026 — and never alter
+   the non-affiliation or no-legal-advice text.
 
 ---
 
@@ -94,7 +95,7 @@ An agent must **not** do these on its own initiative. Prepare a proposal; do not
   derivation rules (`js/pipeline.js`). These decide what the whole corpus is said to prove.
 - **The footer's non-affiliation, no-legal-advice or reuse text**, in the markup or in
   `tools/_footer.mjs`.
-- **Declaring a licence.**
+- **Declaring, changing or removing a licence** (CC BY 4.0 since the author's decision of 21 Oct 2026).
 - **Deleting or rewriting the README's "Known limitations" section.**
 - **Architectural replacement** — introducing a framework, a build step, a bundler, a
   dependency, a service worker, server-side rendering, or a third-party script or

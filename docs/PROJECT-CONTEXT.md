@@ -133,8 +133,12 @@ knowledge. See `docs/AI-SAFE-BOUNDARIES.md`.
 
 ## 7. Licence position
 
-No licence has been declared. Ordinary copyright applies to the analysis and the
-datasets by default, and the footer says so rather than implying otherwise.
-Quotations from and links to EU legal texts carry those documents' own reuse
-terms, which this site neither extends nor restricts. **An agent must not
-declare a licence on the author's behalf.**
+**CC BY 4.0, declared by the author on 21 October 2026**, over everything original
+in the repository — the analysis, the datasets and the code (`LICENSE`, verbatim;
+the footer of every page; `licence.html`). Quotations from and links to EU legal
+texts carry those documents' own reuse terms, which the licence neither extends
+nor restricts, and the self-hosted typefaces keep their own licences. Until that
+date no licence was declared and ordinary copyright applied. **An agent must not
+change, remove or reinterpret the licence on the author's behalf**: it is Class D
+(`docs/AUTONOMY-POLICY.md`), and `tools/seo-audit.mjs` fails structured data that
+names any licence but the one `tools/_footer.mjs` declares.

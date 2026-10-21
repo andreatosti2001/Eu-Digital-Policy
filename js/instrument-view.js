@@ -220,9 +220,12 @@ function headSection(inst) {
    clock, exactly as in the head. */
 const ANCHOR_DATES = new Set(['event:entry-into-force', 'event:application', 'event:transposition']);
 
-function inShort(inst) {
+/* The rows, as label, value and the link that follows it. One derivation
+   for the box and for instrumentFaq() below, so the structured data the
+   route model declares cannot say what the box does not. `section` names
+   the section of the page each row expands. */
+function shortRows(inst) {
   const d = inst.dna;
-  if (!d) return '';
   const prop = isProposal(inst);
   const evs = datesFor(inst, IX);
   let key = evs.filter((e) => ANCHOR_DATES.has(e.event_type));
@@ -230,23 +233,66 @@ function inShort(inst) {
   const when = (e) => esc(taxLabel(IX, e.event_type)) + ' <b>' + esc(F.humanDate(e.date, e.date_precision)) + '</b>';
   const next = TODAY ? evs.find((e) => !F.isPast(e.date)) : null;
   const rest = evs.length - key.length;
-  const dates = (key.length ? key.map(when).join(' · ') : '<span class="none">none recorded</span>') +
-    (next ? ' · next: ' + when(next) : '') +
-    (evs.length ? ' <a href="#sec-dates">' +
-      (rest > 0 ? '+' + rest + ' more dated event' + (rest === 1 ? '' : 's') : 'the timeline') + ' →</a>' : '');
   const enf = (DB.enforcement.enforcement || []).filter((r) => r.instrument === inst.id).length;
+  return [
+    { section: 'what', label: 'Objective', value: esc(tr(inst.id + '.dna.objective', d.objective)), more: '' },
+    { section: 'applies', label: prop ? 'Would bind' : 'Who it binds', value: cell('regulated_actor', inst, IX), more: '' },
+    { section: 'applies', label: prop ? 'Would protect' : 'Who it protects', value: cell('protected_party', inst, IX), more: '' },
+    { section: 'provisions', label: prop ? 'Core provisions' : 'Core obligations', value: cell('obligations', inst, IX),
+      more: ' <a href="#sec-provisions">key provisions →</a>' },
+    { section: 'dates', label: 'Key dates',
+      value: (key.length ? key.map(when).join(' · ') : '<span class="none">none recorded</span>') +
+        (next ? ' · next: ' + when(next) : ''),
+      more: evs.length ? ' <a href="#sec-dates">' +
+        (rest > 0 ? '+' + rest + ' more dated event' + (rest === 1 ? '' : 's') : 'the timeline') + ' →</a>' : '' },
+    { section: 'enforcement', label: 'Sanction ceiling', value: cell('sanction', inst, IX),
+      more: ' <a href="#sec-enforcement">' +
+        (enf ? enf + ' enforcement record' + (enf === 1 ? '' : 's') : 'enforcement') + ' →</a>' },
+  ];
+}
+
+function inShort(inst) {
+  if (!inst.dna) return '';
   const row = (k, v) => '<li><strong>' + esc(k) + ':</strong> ' + v + '</li>';
   return '<section class="inst-short" aria-labelledby="sec-short-h">' +
     '<h2 id="sec-short-h">In short: what you need to know</h2><ul>' +
-    row('Objective', esc(tr(inst.id + '.dna.objective', d.objective))) +
-    row(prop ? 'Would bind' : 'Who it binds', cell('regulated_actor', inst, IX)) +
-    row(prop ? 'Would protect' : 'Who it protects', cell('protected_party', inst, IX)) +
-    row(prop ? 'Core provisions' : 'Core obligations', cell('obligations', inst, IX) +
-      ' <a href="#sec-provisions">key provisions →</a>') +
-    row('Key dates', dates) +
-    row('Sanction ceiling', cell('sanction', inst, IX) + ' <a href="#sec-enforcement">' +
-      (enf ? enf + ' enforcement record' + (enf === 1 ? '' : 's') : 'enforcement') + ' →</a>') +
+    shortRows(inst).map((r) => row(r.label, r.value + r.more)).join('') +
     '</ul></section>';
+}
+
+/* Text as tools/seo-audit.mjs read() takes it from the page: tags become
+   spaces, entities are decoded, whitespace collapses. */
+const plain = (html) => String(html).replace(/<[^>]+>/g, ' ')
+  .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&')
+  .replace(/\s+/g, ' ').trim();
+const NOT_ESTABLISHED = /^<span class="(dna-unknown|none)">/;
+
+/**
+ * The "In short" box as questions and answers, for the FAQPage the route
+ * model declares (tools/seo.mjs). Each question is the heading of the
+ * section the rows expand, up to its question mark, so it is on the page;
+ * each answer is made of the rows' text exactly as a crawler reads it,
+ * a note set apart as its own sentence. A row the record does not
+ * establish is left out rather than answered "not established": the
+ * structured data may be silent, it must not offer an unknown as an
+ * answer. Clock-free, like the static page.
+ * @returns {{ question: string, parts: string[] }[]}
+ */
+export function instrumentFaq(inst, ctx) {
+  if (!inst.dna) return [];
+  IX = ctx.ix; DB = ctx.db; OVERLAY = {}; TODAY = null; ROOT = ctx.root || '';
+  H = headings(inst);
+  setOverlay(OVERLAY);
+  const out = [];
+  for (const r of shortRows(inst)) {
+    if (NOT_ESTABLISHED.test(r.value)) continue;
+    const [main, ...notes] = r.value.split('<span class="dna-note">');
+    const parts = [r.label + ': ' + plain(main), ...notes.map(plain)].filter(Boolean);
+    const question = H[r.section].replace(/\?.*$/, '?');
+    const q = out.find((x) => x.question === question);
+    if (q) q.parts.push(...parts); else out.push({ question, parts });
+  }
+  return out;
 }
 
 function whatItDoes(inst) {

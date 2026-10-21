@@ -37,12 +37,12 @@ import { fileURLToPath } from 'node:url';
 import { index, label as taxLabel } from '../js/data.js';
 import * as R from '../js/routes.js';
 import { datesFor, authoritiesFor } from '../js/dna.js';
-import { renderInstrument, instrumentListItem } from '../js/instrument-view.js';
+import { renderInstrument, instrumentListItem, instrumentFaq } from '../js/instrument-view.js';
 import * as F from '../js/format.js';
-import { BASE } from './_footer.mjs';
+import { BASE, AUTHOR, LICENCE } from './_footer.mjs';
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-export { BASE };
+export { BASE, AUTHOR, LICENCE };
 
 /* ---------------------------------------------------------- identity
 
@@ -58,13 +58,26 @@ export const SITE = Object.freeze({
   ogLocale: 'en_GB',
   image: { path: 'img/og/site.png', width: 1200, height: 630,
     alt: 'EU Digital Policy — the European legal framework for the digital world' },
+  author: AUTHOR,
+  licence: LICENCE,
 });
+
+/* When each instrument page was first published: all twelve were written
+   by 176e4b4 on 27 Sep 2026 ("One canonical page per substantive
+   instrument"), read from `git log --diff-filter=A`. Recorded here rather
+   than read from git because the generator must produce the same bytes in
+   a shallow clone. A page added later has no entry until one is written
+   for it, and its Article then states no datePublished rather than a
+   guessed one. */
+export const PAGE_PUBLISHED = Object.freeze(Object.fromEntries(
+  ['ai-act', 'ai-omnibus', 'cer', 'cra', 'data-act', 'data-omnibus', 'dma', 'dora', 'dsa', 'gdpr', 'nis2', 'pld']
+    .map((id) => [id, '2026-09-27'])));
 
 const BRAND = ' | ' + SITE.name;
 
 /* ---------------------------------------------------------- the pages
 
-   The seven hand-written pages. `records` names the datasets whose
+   The nine hand-written pages. `records` names the datasets whose
    verification dates stand for "this page's substance last changed"
    (lastmod); `schema` is the schema.org type of the page as a whole. */
 export const TOP_PAGES = Object.freeze([
@@ -112,6 +125,18 @@ export const TOP_PAGES = Object.freeze([
     file: 'instrument.html', path: 'instrument.html', schema: null, compat: true,
     title: 'Instrument record' + BRAND,
     description: 'One instrument, read end to end: what it does, where it stands, when it lands, who it binds, which provisions carry it, what enforcement it has produced, and what every one of those statements rests on.',
+    records: [],
+  },
+  {
+    file: 'methodology.html', path: 'methodology.html', schema: 'AboutPage',
+    title: 'Methodology: how this analysis of EU digital law is sourced and graded' + BRAND,
+    description: 'How EU Digital Policy is built: its mission, the source hierarchy from the Official Journal and the EU courts down to press and advocacy, how every claim is typed and graded by its evidence, and what the method cannot establish.',
+    records: [],
+  },
+  {
+    file: 'licence.html', path: 'licence.html', schema: 'WebPage',
+    title: 'Licence and reuse: cite and reuse this analysis and its data under CC BY 4.0' + BRAND,
+    description: 'EU Digital Policy is licensed under Creative Commons Attribution 4.0 International: what you may do with the analysis, the datasets and the code, how to credit them, and what the licence does not cover.',
     records: [],
   },
 ]);
@@ -290,15 +315,22 @@ export function buildRoutes(db, root = ROOT) {
   for (const inst of R.entityInstruments(ix)) {
     const path = R.entityPath(inst.id);
     const url = BASE + path;
+    const lastmod = newest(datesIn(entityRecords(inst, ix, db)));
+    const published = PAGE_PUBLISHED[inst.id] || null;
+    const faq = instrumentFaq(inst, { ix, db });
     routes.push({
       kind: 'instrument', id: inst.id, file: path + 'index.html', root: '../../', url,
       canonical: url, indexable: true, reason: null,
       title: instrumentTitle(inst, ix, db),
       description: instrumentDescription(inst, ix, db),
-      schema: 'WebPage',
+      schema: faq.length ? 'FAQPage' : 'WebPage',
       h1: displayName(inst),
       breadcrumb: [home, { name: 'Instruments', url: BASE + 'instruments.html' }, { name: inst.short_name, url }],
-      lastmod: newest(datesIn(entityRecords(inst, ix, db))),
+      lastmod,
+      /* the page cannot have changed before it existed: a record verified
+         earlier than the page was published leaves it unmodified since */
+      published, modified: published && lastmod && lastmod < published ? published : lastmod,
+      faq,
       image: { path: `img/og/${inst.id}.png`, width: 1200, height: 630,
         alt: `${displayName(inst)} — ${inst.full_name}` },
     });
@@ -367,17 +399,23 @@ export function socialMeta(route, ctx) {
   return lines.join('\n');
 }
 
-/* Structured data describes the page it is on and nothing else. It names
-   no author, no publisher, no date of publication and no licence, because
-   no page names any of them (AGENTS.md rule 8); adding one is the author's
-   decision, not a generator's. An instrument page is `about` a
-   schema.org Legislation node built from the record — identifier, type,
-   names and the official text's URL — and asserts no legal force: the
-   site's own model says one scalar cannot carry that, and
-   legislationLegalForce would be exactly that scalar. */
+/* Structured data describes the page it is on and nothing else. The
+   author and the licence are named because the author declared both on
+   21 Oct 2026 and the footer of every page shows them; there is still no
+   publisher. An instrument page is `about` a schema.org Legislation node
+   built from the record — identifier, type, names and the official text's
+   URL — and asserts no legal force: the site's own model says one scalar
+   cannot carry that, and legislationLegalForce would be exactly that
+   scalar. It is also an Article — its headline the <h1>, published when
+   PAGE_PUBLISHED says, modified when its newest rendered record was
+   verified — and, where the record establishes anything, an FAQPage whose
+   questions and answers are the "In short" box (instrumentFaq()). */
+const person = () => ({ '@type': 'Person', name: SITE.author });
+export const faqText = (parts) => parts.map((x) => (/[.!?]$/.test(x) ? x : x + '.')).join(' ');
+
 export function jsonLd(route, { ix, routes } = {}) {
   const site = { '@type': 'WebSite', '@id': BASE + '#site', name: SITE.name, alternateName: SITE.alternateName,
-    url: BASE, inLanguage: SITE.locale };
+    url: BASE, inLanguage: SITE.locale, author: person(), license: SITE.licence.url };
   const page = {
     '@type': route.schema || 'WebPage', '@id': route.url + '#page', url: route.url,
     name: route.title, description: route.description, inLanguage: SITE.locale,
@@ -407,6 +445,19 @@ export function jsonLd(route, { ix, routes } = {}) {
     if (text) leg.url = text.url;
     page.about = { '@id': leg['@id'] };
     graph.push(leg);
+    const article = {
+      '@type': 'Article', '@id': route.url + '#article', headline: route.h1,
+      author: person(), license: SITE.licence.url, inLanguage: SITE.locale,
+      mainEntityOfPage: { '@id': route.url + '#page' }, isPartOf: { '@id': BASE + '#site' },
+      about: { '@id': leg['@id'] },
+    };
+    if (route.published) article.datePublished = route.published;
+    if (route.modified) article.dateModified = route.modified;
+    graph.push(article);
+    if (route.faq && route.faq.length) {
+      page.mainEntity = route.faq.map((q) => ({ '@type': 'Question', name: q.question,
+        acceptedAnswer: { '@type': 'Answer', text: faqText(q.parts) } }));
+    }
   }
   if (route.file === 'instruments.html' && routes) {
     const list = routes.filter((r) => r.kind === 'instrument');
@@ -432,9 +483,13 @@ export function sitemapXml(routes) {
 export const IBEGIN = '<!-- site-index:begin — generated by tools/_footer.mjs, do not edit in place -->';
 export const IEND = '<!-- site-index:end -->';
 
-/** The site index before the footer on every page: the six destinations
- *  and every instrument page, as plain links a crawler can follow and a
- *  reader without the header can use. */
+/** The site index before the footer on every page: the six destinations,
+ *  the two pages about the site itself, and every instrument page, as plain
+ *  links a crawler can follow and a reader without the header can use. */
+export const ABOUT_PAGES = Object.freeze([
+  { file: 'methodology.html', label: 'Methodology' },
+  { file: 'licence.html', label: 'Licence and reuse' },
+]);
 export function siteIndex(routes, ix, nav, root) {
   const insts = routes.filter((r) => r.kind === 'instrument').map((r) => ix.instrument.get(r.id));
   return `<nav class="site-index" aria-label="Site index">
@@ -442,6 +497,10 @@ export function siteIndex(routes, ix, nav, root) {
 <div class="si-col"><p class="si-label">Sections</p>
 <ul>
 ${nav.map((n) => `<li><a href="${attr(root + n.file)}">${text(n.long)}</a></li>`).join('\n')}
+</ul></div>
+<div class="si-col"><p class="si-label">About this site</p>
+<ul>
+${ABOUT_PAGES.map((a) => `<li><a href="${attr(root + a.file)}">${text(a.label)}</a></li>`).join('\n')}
 </ul></div>
 <div class="si-col si-wide"><p class="si-label">Instrument pages</p>
 <ul>

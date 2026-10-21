@@ -282,7 +282,8 @@ authorization because that boundary is **not** a security control. `docs/CONTROL
    NOT DETERMINED — never "probably not".
 7. **Never soften a stated limitation.** The unverified records (104 on 27 Sep 2026; §12 holds the live figure) and the README's eight
    limitations are the project's honesty. They change by doing the verification work.
-8. **Never declare a licence**, and never alter the non-affiliation or no-legal-advice text.
+8. **Never change the licence** — CC BY 4.0, declared by the author on 21 Oct 2026 — and never alter
+   the non-affiliation or no-legal-advice text.
 
 Full detail, including the green/amber/red tiers, is in `docs/AI-SAFE-BOUNDARIES.md`.
 

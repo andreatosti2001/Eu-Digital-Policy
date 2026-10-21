@@ -172,8 +172,9 @@ robots, Open Graph, Twitter, JSON-LD, sitemap entry — agrees with the route mo
 `tools/seo.mjs` and with the page's own visible text; that each entity has exactly one canonical
 URL and the sitemap lists exactly the indexable routes; that every indexable page is reachable
 from the home page by static links; that structured data parses, uses only the declared types and
-asserts no author, date, licence or legal force; and that every generated page and social card is
-current with the data. Selftests S1–S6 plant each defect and assert it is caught.
+asserts no publisher or legal force; that the author, licence, dates and FAQ it does assert (since
+21 Oct 2026) are the declared ones and are on the page; and that every generated page and social
+card is current with the data. Selftests S1–S6 and S4b plant each defect and assert it is caught.
 
 **Does not prove:** that a page is indexed, ranked, cited or summarised correctly by any search
 system (only Search Console can say what Google did); that a derived description is a good

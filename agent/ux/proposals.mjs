@@ -51,6 +51,7 @@
    ============================================================ */
 
 import { RecordBuilder } from '../verifier/build.mjs';
+import { RED_TARGETS } from '../schemas/types.mjs';
 import { ROLLBACK } from '../integrate/propose.mjs';
 import { isHighPriority } from './severity.mjs';
 import { tokensExist, tokensIn, statusVocabulary } from './tokens.mjs';
@@ -452,7 +453,14 @@ function buildProposal({ ctx, span, finding, recipe, surface }) {
      amber from "the target starts with tools/" and made a change that
      rewrites every page in the site reviewable rather than the
      author's. */
-  const invisible = recipe.change.reader_visible === false
+  /* AND NEVER BELOW HUMAN-ONLY ON A RED TARGET. The contract refuses a
+     record whose entities hit RED_TARGETS at any lower class, and until
+     licence.html existed (21 Oct 2026) no finding had cited one, so this
+     threw instead of proposing. Same list, same substring rule as
+     agent/schemas/validate.mjs redTargets(). */
+  const red = [...(finding.pages ?? []), ...files]
+    .some((f) => RED_TARGETS.some((t) => String(f).toLowerCase().includes(t.toLowerCase())));
+  const invisible = !red && recipe.change.reader_visible === false
     && recipe.change.operations.every((o) => /^tools\//.test(String(o.target)));
   b.set('autonomy_class', invisible ? 'review_required' : 'human_only');
   b.set('risk', finding.severity === 'critical' ? 'high' : 'medium');
