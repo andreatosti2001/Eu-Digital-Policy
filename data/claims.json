@@ -5140,9 +5140,139 @@
         }
       ],
       "published": "2026-07-23",
-      "last_verified": "2026-09-27",
+      "last_verified": "2026-10-21",
       "requires_verification": false,
-      "verification_note": "Total and date confirmed against the Commission's own DMA portal and press release. The reported component split (EUR 460m Search, EUR 430m Play) is recorded on the enforcement record as reported and has NOT been confirmed against the decision text in this build. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
+      "verification_note": "Total and date confirmed against the Commission's own DMA portal and press release. The reported component split (EUR 460m Search, EUR 430m Play) is recorded on the enforcement record as reported and has NOT been confirmed against the decision text in this build. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim. 21 Oct 2026 (audit item 1): IP/26/1670 re-read through the Commission press corner. The two fines that make up the total are registered as clm-google-dma-search-fine and clm-google-dma-play-fine. No later DMA fine appears in the press corner as at 21 Oct 2026."
+    },
+    {
+      "id": "clm-google-dma-search-fine",
+      "type": "claim-type:fact",
+      "statement": "One of the two decisions of 23 July 2026 fined Google EUR 460 million for self-preferencing its own services in Google Search, in breach of DMA Article 6(5).",
+      "instruments": [
+        "dma"
+      ],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [
+        "enf-google-ec-2026-dma"
+      ],
+      "legal_basis": [],
+      "brief_part": "part-4",
+      "published": "2026-07-23",
+      "last_verified": "2026-10-21",
+      "provisions": [
+        "dma:art-6"
+      ],
+      "sources": [
+        {
+          "source_id": "src-ec-google-dma-fine-2026-ip",
+          "supports": "supports:direct",
+          "locator": "Paragraph 1: 'self-preferencing its own services on Google Search … the Commission issued Google a fine of €460 million'"
+        },
+        {
+          "source_id": "src-ec-google-dma-opening-2024",
+          "supports": "supports:partial",
+          "locator": "Names Article 6(5) for self-preferencing on Google Search"
+        }
+      ],
+      "verification_note": "Registered 21 Oct 2026 (audit item 1), read that day in IP/26/1670 through the Commission press corner. The release names the conduct but not the article; Article 6(5) comes from the opening release IP/24/1689, as the enforcement record already records."
+    },
+    {
+      "id": "clm-google-dma-play-fine",
+      "type": "claim-type:fact",
+      "statement": "The other decision of 23 July 2026 fined Google EUR 430 million for restricting businesses on Google Play from steering consumers to other purchase channels, in breach of DMA Article 5(4).",
+      "instruments": [
+        "dma"
+      ],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [
+        "enf-google-ec-2026-dma"
+      ],
+      "legal_basis": [],
+      "brief_part": "part-4",
+      "published": "2026-07-23",
+      "last_verified": "2026-10-21",
+      "provisions": [
+        "dma:art-5"
+      ],
+      "sources": [
+        {
+          "source_id": "src-ec-google-dma-fine-2026-ip",
+          "supports": "supports:direct",
+          "locator": "Paragraph 1: 'restrictions on businesses to direct consumers to alternative, often cheaper, purchase channels on Google Play (steering) … a fine of €430 million'"
+        },
+        {
+          "source_id": "src-ec-google-dma-opening-2024",
+          "supports": "supports:partial",
+          "locator": "Names Article 5(4) for Alphabet's steering rules"
+        }
+      ],
+      "verification_note": "Registered 21 Oct 2026 (audit item 1), read that day in IP/26/1670 through the Commission press corner. The release names the conduct but not the article; Article 5(4) comes from the opening release IP/24/1689, as the enforcement record already records."
+    },
+    {
+      "id": "clm-google-dma-largest-total",
+      "type": "claim-type:derived",
+      "statement": "Google's two DMA fines of 23 July 2026 total EUR 890 million, the largest amount the Commission has imposed under the DMA to date; each fine alone is smaller than Apple's EUR 500 million of April 2025.",
+      "instruments": [
+        "dma"
+      ],
+      "provisions": [],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [
+        "enf-google-ec-2026-dma",
+        "enf-apple-ec-2025",
+        "enf-meta-ec-2025"
+      ],
+      "sources": [
+        {
+          "source_id": "src-ec-google-dma-fine-2026-ip",
+          "supports": "supports:partial",
+          "locator": "Paragraph 1: 'a fine of €460 million and a fine of €430 million respectively'"
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-4",
+      "published": "2026-07-23",
+      "last_verified": "2026-10-21",
+      "verification_note": "Registered 21 Oct 2026 (audit item 1). No source states that EUR 890 million is the largest DMA amount: it is this site's comparison across its enforcement records, and the ranking block makes tools/evidence-audit.mjs recompute it from data/enforcement.json on every run, so it fails as soon as a larger DMA record is added. The comparison holds only over the records the observatory holds; on 21 Oct 2026 the Commission's press corner showed no DMA fine other than Apple's and Meta's (23 April 2025) and Google's (23 July 2026). 'Each fine alone is smaller than Apple's' is arithmetic on the same records: EUR 460 million and EUR 430 million against EUR 500 million.",
+      "derivation": {
+        "performed_by": "site",
+        "method": "Sum of the two Google fines as the Commission states them; the 'largest to date' half is the ranking block, recomputed from the enforcement records.",
+        "inputs": {
+          "a": {
+            "claim": "clm-google-dma-search-fine",
+            "value": 460000000,
+            "as_stated": "EUR 460 million"
+          },
+          "b": {
+            "claim": "clm-google-dma-play-fine",
+            "value": 430000000,
+            "as_stated": "EUR 430 million"
+          }
+        },
+        "formula": "a + b",
+        "result": 890000000,
+        "unit": "EUR",
+        "rounding": {
+          "to": 1000000,
+          "stated_value": 890000000
+        }
+      },
+      "ranking": {
+        "dataset": "enforcement",
+        "where": {
+          "instrument": "dma",
+          "authority": "ec"
+        },
+        "by": "fine_eur",
+        "subject": "enf-google-ec-2026-dma",
+        "rank": 1
+      }
     },
     {
       "id": "clm-cloud-gatekeeper-preliminary-2026",

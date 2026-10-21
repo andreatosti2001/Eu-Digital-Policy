@@ -183,6 +183,44 @@ export function recordMismatches(p, ix, enfById) {
   return out;
 }
 
+/* ------------------------------------------------------------------ rankings */
+
+/**
+ * A claim that a record is the largest (or the nth largest) of its kind
+ * "to date" is a comparison across records, not a figure any one source
+ * states. 21 Oct 2026 (audit item 1): such a claim carries a `ranking`
+ * block, and the ranking is RECOMPUTED here from the enforcement records on
+ * every run, so it fails the moment a larger record is added rather than
+ * going quietly false.
+ *
+ *   "ranking": { "dataset": "enforcement", "where": { "instrument": "dma" },
+ *                "by": "fine_eur", "subject": "enf-…", "rank": 1 }
+ *
+ * Records whose `by` value is null are not ranked: an unknown amount is not
+ * a small one, so a ranking over a set that holds one is reported, not
+ * passed. Returns the problems found; an empty list means the claim holds
+ * over the records as they stand. Pure.
+ */
+export function rankingProblems(claim, enforcement) {
+  const r = claim && claim.ranking;
+  if (!r) return [];
+  const out = [];
+  if (r.dataset !== 'enforcement') return [`ranking over "${r.dataset}" is not supported (enforcement only)`];
+  if (!r.by || !r.subject || !Number.isInteger(r.rank) || r.rank < 1) return ['ranking needs by, subject and a positive integer rank'];
+  const where = r.where || {};
+  const pool = enforcement.filter((e) => Object.entries(where).every(([k, v]) => e[k] === v));
+  const subject = pool.find((e) => e.id === r.subject);
+  if (!subject) return [`the subject ${r.subject} is not among the records matching ${JSON.stringify(where)}`];
+  const unknown = pool.filter((e) => e[r.by] == null && e.action_status != null);
+  if (unknown.length) out.push(`${unknown.map((e) => e.id).join(', ')} match but carry no ${r.by}, so the ranking cannot be settled`);
+  const sorted = pool.filter((e) => typeof e[r.by] === 'number').sort((a, b) => b[r.by] - a[r.by]);
+  const at = sorted.findIndex((e) => e.id === r.subject) + 1;
+  if (at !== r.rank) out.push(`${r.subject} ranks ${at || 'nowhere'} by ${r.by} among ${sorted.length} matching records, not ${r.rank} (${sorted.slice(0, 3).map((e) => `${e.id} ${e[r.by]}`).join('; ')})`);
+  if (!arr0(claim.enforcement).includes(r.subject)) out.push(`the claim does not list its subject ${r.subject} in its enforcement array`);
+  return out;
+}
+const arr0 = (x) => (Array.isArray(x) ? x : []);
+
 /* ------------------------------------------------------------------ load */
 
 function load(root) {
@@ -243,6 +281,7 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
       const r = M.checkDerivation(c, ix);
       if (!r.ok) err(`claims/${c.id}: derivation does not check — ${r.problems.join('; ')}`);
     }
+    for (const m of rankingProblems(c, enforcement)) err(`claims/${c.id}: ranking does not hold — ${m}`);
     if (kind === 'attributed' && !c.attributed_to) err(`claims/${c.id}: an attributed view must name whose view it is (attributed_to)`);
     if (c.attributed_to && kind !== 'attributed') err(`claims/${c.id}: attributed_to on a claim typed ${kind}`);
     for (const p of arr(c.premises)) {

@@ -811,7 +811,10 @@
     "tl-dma-2026-07-23-enforcement"
    ],
    "claims": [
-    "clm-google-dma-fine-2026"
+    "clm-google-dma-fine-2026",
+    "clm-google-dma-largest-total",
+    "clm-google-dma-search-fine",
+    "clm-google-dma-play-fine"
    ],
    "sources": [
     "src-ec-google-dma-fine-2026",
