@@ -211,7 +211,9 @@ export function rankingProblems(claim, enforcement) {
   const pool = enforcement.filter((e) => Object.entries(where).every(([k, v]) => e[k] === v));
   const subject = pool.find((e) => e.id === r.subject);
   if (!subject) return [`the subject ${r.subject} is not among the records matching ${JSON.stringify(where)}`];
-  const unknown = pool.filter((e) => e[r.by] == null && e.action_status != null);
+  /* preliminary findings and commitments carry no fine by their nature;
+     only an action that imposes one and records no amount is unknown */
+  const unknown = pool.filter((e) => e[r.by] == null && FINE_BEARING.has(e.action_status));
   if (unknown.length) out.push(`${unknown.map((e) => e.id).join(', ')} match but carry no ${r.by}, so the ranking cannot be settled`);
   const sorted = pool.filter((e) => typeof e[r.by] === 'number').sort((a, b) => b[r.by] - a[r.by]);
   const at = sorted.findIndex((e) => e.id === r.subject) + 1;
@@ -220,6 +222,7 @@ export function rankingProblems(claim, enforcement) {
   return out;
 }
 const arr0 = (x) => (Array.isArray(x) ? x : []);
+const FINE_BEARING = new Set(['action:imposed', 'action:final', 'action:appealed', 'action:reduced']);
 
 /* ------------------------------------------------------------------ load */
 

@@ -5523,7 +5523,17 @@
       "brief_part": "part-3",
       "published": "2026-07-20",
       "last_verified": "2026-09-27",
-      "verification_note": "The amount, date and ground are directly sourced from the Commission's press release. The 'largest to date' characterisation and the 20 October 2026 action-plan deadline rest on secondary legal commentary (Lewis Silkin, Il Sole 24 Ore, JURIST), not on the Commission text, which contains no ranking language. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim. The release does not say \"the largest DSA fine to date\": that comparison is the site's, against the other DSA fines in enforcement.json (X EUR 120m, Temu EUR 200m)."
+      "verification_note": "The amount, date and ground are directly sourced from the Commission's press release. The 'largest to date' characterisation and the 20 October 2026 action-plan deadline rest on secondary legal commentary (Lewis Silkin, Il Sole 24 Ore, JURIST), not on the Commission text, which contains no ranking language. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim. The release does not say \"the largest DSA fine to date\": that comparison is the site's, against the other DSA fines in enforcement.json (X EUR 120m, Temu EUR 200m). 21 Oct 2026 (audit item 5): 'the largest DSA fine to date' now carries a ranking block, which tools/evidence-audit.mjs recomputes from the DSA enforcement records on every run (EUR 550 million against X's EUR 120 million and Temu's EUR 200 million); no later DSA fine appears in the Commission's press corner as at 21 Oct 2026.",
+      "ranking": {
+        "dataset": "enforcement",
+        "where": {
+          "instrument": "dsa",
+          "authority": "ec"
+        },
+        "by": "fine_eur",
+        "subject": "enf-aliexpress-ec-2026",
+        "rank": 1
+      }
     },
     {
       "id": "clm-dsa-replaced-ecd-liability",
