@@ -371,9 +371,7 @@
           "obligation_on": [
             "actor:online-platform"
           ],
-          "claims": [
-            "clm-x-legal-basis-fragility"
-          ],
+          "claims": [],
           "sources": [
             "src-eurlex-dsa"
           ]

@@ -392,7 +392,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 47 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 46 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -438,6 +438,7 @@ the corpus being more honest, not less.
 - 49 → 47 (27 Sep 2026): clm-ai-act-not-all-ai atomized and retyped as attributed — it now carries only the Commission's own sentence on minimal-risk AI, read on its AI Act page, which states it whole; the Art. 4 AI-literacy duty is its own OJ-sourced claim, and the prose no longer says the minimal tier has 'no obligations' (all four languages). clm-ai-omnibus-april-trilogue now rests on Bird & Bird (5 May 2026) and the IAPP (29 April 2026), which state it directly; both are commentary, so it grades Secondary, and the Council's own account remains unread (HTTP 403 here).
 
 - 47 → 47 (14 Oct 2026): the October 2026 evidence update (`docs/AUDIT-2026-10-14.md`) added six claims and four timeline events, every one read that day against its source, and moved no record into or out of the unverified set. One record changed how it is listed there: `clm-ai-act-standards-not-ready` went from "unverified" to "no external direct source", because recital 40 of Regulation (EU) 2026/1744 now partially supports its premise.
+- 47 → 46 (21 Oct 2026): `clm-x-legal-basis-fragility` (Part III objection 3) was REMOVED, not verified. It was attributed to "practitioner analysis" whose only source was the brief itself; the Official Journal summaries of X's actions (T-114/26, T-120/26) raise no Art. 25(2) plea, and searches on 21 Oct 2026 found no analysis making the argument, so on the audit's instruction (item 8) the objection, its claim and its three references were deleted and the box now has three objections in all four languages. The other Phase 1 changes of that day (`docs/AUDIT-2026-10-21.md`) added records read that day against their sources and moved none into or out of the unverified set.
 
 The other numbers on this block are unchanged.
 

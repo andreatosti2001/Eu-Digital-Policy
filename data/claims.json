@@ -2468,38 +2468,6 @@
       "verification_note": "The author's critique. Typed as such."
     },
     {
-      "id": "clm-x-legal-basis-fragility",
-      "type": "claim-type:attributed",
-      "statement": "Practitioner analysis argues the blue-checkmark finding may have been routed through DSA Article 25 in a way that ignores the Article 25(2) exclusion for practices covered by the Unfair Commercial Practices Directive, making it vulnerable to annulment.",
-      "instruments": [
-        "dsa"
-      ],
-      "provisions": [
-        "dsa:art-25"
-      ],
-      "institutions": [
-        "ec"
-      ],
-      "enforcement": [
-        "enf-x-ec-2025"
-      ],
-      "sources": [
-        {
-          "source_id": "src-brief-original",
-          "supports": "supports:direct",
-          "locator": "Part III"
-        }
-      ],
-      "legal_basis": [
-        "dsa:art-25"
-      ],
-      "brief_part": "part-3",
-      "published": "2026-08-19",
-      "last_verified": "2026-09-27",
-      "verification_note": "27 Sep 2026: the Official Journal summaries of the actions against the decision were read (T-114/26, X Internet and X Holdings, six pleas; T-120/26, X.AI Holdings, eight pleas). Both contest the Art. 25(1) finding — X on whether the blue checkmark deceives or manipulates users, X.AI on the reading of 'free and informed decisions' — but neither summary raises the Art. 25(2) exclusion for practices covered by the Unfair Commercial Practices Directive. The argument is therefore not, on the published record, one the addressees have made; the practitioner analysis the brief reports remains unidentified. requires verification — the practitioner analysis is not named and no source located. Retyped from critique to attributed on 27 Sep 2026: the statement reports what practitioner analysis that this build has not identified said; the site does not adopt the position, and the evidence it owes is that actor's own text.",
-      "attributed_to": "practitioner analysis that this build has not identified"
-    },
-    {
       "id": "clm-dsa-gdpr-unresolved",
       "type": "claim-type:interpretation",
       "statement": "The DSA–GDPR interface is unresolved: the DSA tells platforms to be transparent while the GDPR tells them to minimise, and EDPB guidance mediates the conflict without dissolving it.",
