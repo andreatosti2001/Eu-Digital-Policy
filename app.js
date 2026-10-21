@@ -791,8 +791,10 @@ function timeAgo(ts){
     if (!sec) return;
     var prev = BRIEF[i-1], next = BRIEF[i+1];
     var html = '<div class="pager">';
-    html += prev ? '<a class="pg prev" href="#'+prev.id+'"><small>Previous &middot; Part '+prev.roman+'</small><b>'+esc(prev.title.split(':')[0])+'</b></a>' : '<span></span>';
-    html += next ? '<a class="pg next" href="#'+next.id+'"><small>Next &middot; Part '+next.roman+'</small><b>'+esc(next.title.split(':')[0])+'</b></a>' : '<span></span>';
+    /* an annex is an Annex, not a Part (audit of 21 Oct 2026 item 14) */
+    var kind = function(p){ return /^annex-/.test(p.id) ? 'Annex ' : 'Part '; };
+    html += prev ? '<a class="pg prev" href="#'+prev.id+'"><small>Previous &middot; '+kind(prev)+prev.roman+'</small><b>'+esc(prev.title.split(':')[0])+'</b></a>' : '<span></span>';
+    html += next ? '<a class="pg next" href="#'+next.id+'"><small>Next &middot; '+kind(next)+next.roman+'</small><b>'+esc(next.title.split(':')[0])+'</b></a>' : '<span></span>';
     html += '</div>';
     sec.insertAdjacentHTML('beforeend', html);
   });
