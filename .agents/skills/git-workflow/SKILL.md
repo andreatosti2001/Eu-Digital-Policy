@@ -41,6 +41,14 @@ confirm no unrelated file moved. A one-character edit can change what a record a
 **Scope the commit.** One session's objective per commit series. Do not sweep in unrelated
 tidying; an unrelated file in the diff is a defect in the commit.
 
+**Commit everything a generator wrote, in the commit that caused it.** `node tools/_footer.mjs`
+rewrites more than `instruments/` — `instruments.html`, the directory pages, `sitemap.xml`, the
+security and social blocks of every page — and ends by printing the exact `git add` for what it
+wrote. Stage that list, then check `git status --porcelain` is empty of generated files before
+committing. A generated file left behind lands in the next commit, which may carry no
+`Evidence:` trailer: that is how `55ac136` broke `tools/commit-evidence.mjs` on `main` on
+21 Oct 2026 (`docs/HANDOVER.md`).
+
 **Re-fetch immediately before the final write, not only at session start.** `origin/main`
 can move while a session is running — another session merging is not hypothetical, it has
 happened (`docs/AUDIT-2026-09-03.md`'s opening correction is the record). The fetch-before-

@@ -250,18 +250,24 @@ async function main() {
     process.exit(problems.length ? 1 : 0);
   }
   const { files, remove, routes } = await generate();
-  let touched = 0;
+  const written = [];
   for (const [f, want] of files) {
     const p = join(HERE_ROOT, f);
     const have = existsSync(p) ? readFileSync(p, 'utf8') : null;
     if (have === want) continue;
     mkdirSync(dirname(p), { recursive: true });
     writeFileSync(p, want);
-    touched++;
+    written.push(f);
     console.log(`  ${f} ${have === null ? 'created' : 'updated'}`);
   }
   for (const d of remove) { rmSync(join(HERE_ROOT, d), { recursive: true, force: true }); console.log(`  ${d}/ removed`); }
   const idx = routes.filter((r) => r.indexable).length;
-  console.log(`\n${touched} file(s) written · ${idx} indexable route(s) · ${routes.filter((r) => r.kind === 'instrument').length} instrument page(s).`);
+  console.log(`\n${written.length} file(s) written · ${idx} indexable route(s) · ${routes.filter((r) => r.kind === 'instrument').length} instrument page(s).`);
+  /* Everything above belongs in the commit that caused it, not only
+     instruments/: on 21 Oct 2026 an <h1> change rewrote instruments.html
+     too, it was left unstaged, and it landed in the next commit without
+     the Evidence: trailer tools/commit-evidence.mjs requires (55ac136). */
+  const paths = [...written, ...remove.map((d) => d + '/')];
+  if (paths.length) console.log(`Stage all of it with the change that caused it:\n  git add -A -- ${paths.join(' ')}`);
 }
 if (isMain) main().catch((e) => { console.error(e); process.exit(1); });
