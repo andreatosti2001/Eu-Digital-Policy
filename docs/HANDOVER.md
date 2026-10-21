@@ -27,6 +27,9 @@ them; rule 8 now forbids changing it.
   FAQ rather than offered as an answer. The prompt's sample answers were not used (not from `data/`).
   Note: Google shows FAQ rich results only for authoritative government and health sites since
   2023, so the value here is to parsers and answer engines, not a rich result.
+- **The domain, later the same day:** the author registered `eudigitalpolicy.eu` (Porkbun), and
+  `CNAME`, `BASE` and the live-site links on `claude/p1-custom-domain` now name it instead of the
+  placeholder. It did not resolve yet when written; the branch is still unmerged.
 - **The CNAME is not on the mergeable branch.** `eu-digital-policy.eu` did not resolve on 21 Oct
   2026 (DNS answered for github.com from the same container). Pages serves `main` from the branch,
   so a `CNAME` reaching `main` would redirect the live site to a host that does not answer. The

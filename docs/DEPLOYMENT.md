@@ -161,17 +161,21 @@ authenticated server the model requires.
 ## 8. The custom domain (21 Oct 2026)
 
 On the author's decision the site moves from `https://andreatosti2001.github.io/Eu-Digital-Policy/`
-to `https://eu-digital-policy.eu/` — a placeholder, to be replaced by the registered domain.
+to `https://eudigitalpolicy.eu/`, registered by the author on 21 Oct 2026 (it replaced the
+placeholder `eu-digital-policy.eu` the same day).
 In the tree that is two lines: `CNAME` and `BASE` in `tools/_footer.mjs`, then
 `node tools/_footer.mjs`. Every canonical, `og:url`, sitemap entry and JSON-LD `@id` follows; every
 internal link is relative and was already measured under a prefix (`checkDeployedSubpath`), so none
-changes. **Merge it only after the domain answers**: on 21 Oct 2026 `eu-digital-policy.eu` did not
+changes. **Merge it only after the domain answers**: on 21 Oct 2026, just after registration, `eudigitalpolicy.eu` did not
 resolve, and while Pages deploys from the branch, a `CNAME` on `main` sets the custom domain at once.
 
 What only the owner can do, in this order:
 
-1. **Register the domain** and keep it renewed — a lapsed domain is worse for citations than the
-   `github.io` address. If the real name differs, change `CNAME` and `BASE` and regenerate.
+1. **Register the domain** — *done 21 Oct 2026, `eudigitalpolicy.eu`, at Porkbun* — and keep it
+   renewed: a lapsed domain is worse for citations than the `github.io` address. Porkbun warns that
+   a `.eu` can be deleted *before* its expiry date, so auto-renew must stay on and there is no grace
+   period to count on. Eligibility (EU/EEA citizenship, residence or establishment) must hold for
+   the domain's whole life. A different name means changing `CNAME` and `BASE` and regenerating.
 2. **Verify it for the account** (Settings → Pages → *Add a domain* under the account's settings),
    which stops anyone else's repository claiming it.
 3. **DNS at the registrar**, for the apex: four `A` records — `185.199.108.153`,

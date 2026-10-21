@@ -29,7 +29,7 @@ const HERE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
    21 Oct 2026 from https://andreatosti2001.github.io/Eu-Digital-Policy/
    to the custom domain in CNAME; GitHub Pages redirects the old address
    once the domain is set in Settings → Pages (docs/DEPLOYMENT.md). */
-export const BASE = 'https://eu-digital-policy.eu/';
+export const BASE = 'https://eudigitalpolicy.eu/';
 
 /* The author and the licence, as the author declared them on 21 Oct 2026
    (CC BY 4.0, over the whole repository: analysis, datasets and code; the

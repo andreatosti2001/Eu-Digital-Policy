@@ -2,7 +2,7 @@
 
 **Project:** The European Legal Framework for the Digital World
 **Repository:** https://github.com/andreatosti2001/Eu-Digital-Policy
-**Public site:** https://eu-digital-policy.eu/
+**Public site:** https://eudigitalpolicy.eu/
 **Document status:** written in SESSION 00 (reconnaissance). Reflects commit `7248290` on `main`.
 
 ---

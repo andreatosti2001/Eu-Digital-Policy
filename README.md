@@ -5,17 +5,17 @@ cyber layer — in which **the argument is prose and everything the argument res
 every legal proposition, figure, date, status, competence and enforcement record is a record
 with its sources, its locator and a grade derived from what those sources can actually carry.
 
-**Live site:** https://eu-digital-policy.eu/
+**Live site:** https://eudigitalpolicy.eu/
 
 **One page per regulation**, each generated from the same records: the
-[GDPR](https://eu-digital-policy.eu/instruments/gdpr/),
-[Digital Services Act](https://eu-digital-policy.eu/instruments/dsa/),
-[Digital Markets Act](https://eu-digital-policy.eu/instruments/dma/),
-[AI Act](https://eu-digital-policy.eu/instruments/ai-act/),
-[Data Act](https://eu-digital-policy.eu/instruments/data-act/),
-[NIS2](https://eu-digital-policy.eu/instruments/nis2/),
-[DORA](https://eu-digital-policy.eu/instruments/dora/),
-[Cyber Resilience Act](https://eu-digital-policy.eu/instruments/cra/)
+[GDPR](https://eudigitalpolicy.eu/instruments/gdpr/),
+[Digital Services Act](https://eudigitalpolicy.eu/instruments/dsa/),
+[Digital Markets Act](https://eudigitalpolicy.eu/instruments/dma/),
+[AI Act](https://eudigitalpolicy.eu/instruments/ai-act/),
+[Data Act](https://eudigitalpolicy.eu/instruments/data-act/),
+[NIS2](https://eudigitalpolicy.eu/instruments/nis2/),
+[DORA](https://eudigitalpolicy.eu/instruments/dora/),
+[Cyber Resilience Act](https://eudigitalpolicy.eu/instruments/cra/)
 and four more — what each does, where it stands, its dates, provisions, competent authorities,
 enforcement, its interactions with the others, and the graded evidence behind every statement.
 

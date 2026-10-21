@@ -10,7 +10,7 @@ its own, because this project's first principle is one home per fact.
 
 **The European Legal Framework for the Digital World** — an analytical brief on the EU
 digital acquis, published as a static site at
-https://eu-digital-policy.eu/
+https://eudigitalpolicy.eu/
 
 It is a **production website with real readers who may act on what it says about EU law.**
 It is not a prototype and not a scaffold.
