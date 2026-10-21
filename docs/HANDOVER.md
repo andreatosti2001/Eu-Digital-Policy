@@ -3,7 +3,9 @@
 **Last updated:** DMA click-through pass · 21 October 2026
 **Branch:** `claude/seo-dma-ctr`, cut from `origin/main` at `6a2357f` (PR #11's merge). Pushed
 to `main` by fast-forward on the author's explicit instruction ("Push to main"), with no pull
-request; `main` had not moved since the branch was cut.
+request; `main` had not moved since the branch was cut. Then, on the author's decisions of the
+same day, directly on `main`: `claude/amazing-einstein-yrsu79` (the Apple appeal recheck, below)
+and the two October Scout digests merged with `--no-ff`, and the `<h1>` changed (below).
 
 ## DMA click-through pass — 21 October 2026
 
@@ -37,21 +39,28 @@ freshness 0 defects, 3 staleness prompts (as before); 25 suites, **1245 tests, a
 contract check 18/18; browser suite **241 pass · 0 fail · 1 undecidable** (`a11y:bound`). The DMA
 page was captured at 1280px in both themes and at 390px: no console error.
 
+**The `<h1>`, decided by the author afterwards:** each instrument page is headed by
+`displayName()` — "Digital Markets Act (DMA)" — wherever the record's aliases back a common name
+(eight pages; CER, Data Act, DORA and NIS2 keep the short name). `displayName()` moved to
+`js/routes.js` so the renderer and the route model's expected `h1` read one function; the
+"Known as the …" line is dropped where the heading already carries the name. Re-measured on
+`main` after every merge: validators 0 errors / 0 warnings; 25 suites, 1244 passing and 1
+skipped (`agent/autonomy` test 28, which skips on `main` by design); governance check exit 0;
+browser suite 241 · 0 · 1 undecidable; GDPR's heading checked at 390px, no overflow.
+
 **For the author:** (a) in Search Console, request indexing for `instruments/dma/` once deployed
-and compare CTR per query after four weeks; (b) the `<h1>` is still the short name ("DMA") — the
-common name in the H1 would match "digital markets act" better and is a one-line change in
-`headSection()`, left for a decision because it changes all twelve pages' first line; (c) send
-the exact Search Console URL behind "instrumlsa" if it is still reported.
+and compare CTR per query after four weeks; (b) send the exact Search Console URL behind
+"instrumlsa" if it is still reported; (c) the Apple appeal record's open question, below.
 
 ## Branch register — 21 October 2026
 
-`git branch -r --no-merged origin/main` lists three branches besides this one:
-`origin/scout/digest-digest-2026-10-12T15-34-12Z` (reported 14 Oct, still open);
-`origin/scout/digest-digest-2026-10-19T13-25-10Z`, **new and in no register entry** — a Source
-Scout digest, two files under `agent/scout/digests/`, not read beyond its file list; and
-`origin/claude/amazing-einstein-yrsu79`, which the 27 Sep register records as merged (PR #4) but
-now carries one commit not in `main` (`ad7dd2d`, "Apple designation appeal: October register
-recheck, still none linked") — reported, not reconciled.
+At the start `git branch -r --no-merged origin/main` listed three branches besides this one:
+the Scout digests of 12 and 19 Oct 2026, and `claude/amazing-einstein-yrsu79`, recorded as merged
+on 27 Sep (PR #4) but carrying one later commit (`ad7dd2d`, the Apple appeal recheck). **All three
+were merged into `main` on the author's decision** — the digests as candidates only, unverified,
+as the September digests were (`1c903a7`); the recheck after the author approved its data change,
+with the handover conflict resolved by keeping both entries. `claude/seo-dma-ctr` is in `main`.
+None of the four branches was deleted.
 
 ## (previous header) The Apple appeal recheck — 15 October 2026
 
