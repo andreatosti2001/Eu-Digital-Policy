@@ -1,10 +1,62 @@
 # HANDOVER
 
+**Last updated:** DMA click-through pass · 21 October 2026
+**Branch:** `claude/seo-dma-ctr`, cut from `origin/main` at `6a2357f` (PR #11's merge). Pushed;
+no pull request opened.
+
+## DMA click-through pass — 21 October 2026
+
+**Asked:** Search Console showed 830 impressions and 6 clicks (CTR 0.7%) over three months, on
+"digital markets act", "dma third-party obligations", "compliance", "summary"; rename cryptic URLs
+(`…/Eu-Digital-Policy//instrumlsa/` was cited), rewrite DMA titles and descriptions (supplied in
+Italian), add a TL;DR box under the H1, turn H2s into questions, add contextual links.
+
+**Decided with the author before any edit:** English metadata, because the page is `lang="en"`,
+the queries are English and no locale is indexed (`docs/SEO-OPERATIONS.md` §6); one strengthened
+DMA page rather than three new ones, because the strategy forbids a page written for a query.
+
+**Not done, and why:** no URL was renamed. `instrumlsa` exists nowhere in the tree or in any
+branch's history, `instruments/dma/` already earns the impressions and Pages cannot send a 301,
+and instrument IDs are never renamed. The supplied TL;DR snippet's inline `style` would be blocked
+by every page's CSP (`style-src 'self'`); the box uses a class instead.
+
+**What changed:** `tools/seo.mjs` — the DMA title ("gatekeeper obligations, compliance deadlines
+and fines") and the description template for all twelve instrument pages (§7 of
+`docs/SEO-OPERATIONS.md`); `js/instrument-view.js` — question headings and the derived "In short"
+box on every instrument page; `css/tools.css` — its style, tokens only; `index.html` Part IV and
+the three overlays — two links to `instruments/dma/#sec-provisions` and `#sec-enforcement`, the
+same words wrapped in all four languages, no text changed (the overlays replace `innerHTML`, so a
+link in the English alone would vanish in it/fr/es); `instruments/*/index.html` regenerated.
+No fact was authored: every value the box and the descriptions show is read from `data/`.
+
+**Measured at the end** (21 Oct 2026, UTC): validate, i18n-audit, design-qa, seo-audit 0 errors /
+0 warnings (the first draft of the template produced three over-length warnings, closed by
+capping the actor list and the objective, not by raising `MAX_DESC`); evidence-audit 0 errors;
+freshness 0 defects, 3 staleness prompts (as before); 25 suites, **1245 tests, all passing**;
+contract check 18/18; browser suite **241 pass · 0 fail · 1 undecidable** (`a11y:bound`). The DMA
+page was captured at 1280px in both themes and at 390px: no console error.
+
+**For the author:** (a) in Search Console, request indexing for `instruments/dma/` once deployed
+and compare CTR per query after four weeks; (b) the `<h1>` is still the short name ("DMA") — the
+common name in the H1 would match "digital markets act" better and is a one-line change in
+`headSection()`, left for a decision because it changes all twelve pages' first line; (c) send
+the exact Search Console URL behind "instrumlsa" if it is still reported.
+
+## Branch register — 21 October 2026
+
+`git branch -r --no-merged origin/main` lists three branches besides this one:
+`origin/scout/digest-digest-2026-10-12T15-34-12Z` (reported 14 Oct, still open);
+`origin/scout/digest-digest-2026-10-19T13-25-10Z`, **new and in no register entry** — a Source
+Scout digest, two files under `agent/scout/digests/`, not read beyond its file list; and
+`origin/claude/amazing-einstein-yrsu79`, which the 27 Sep register records as merged (PR #4) but
+now carries one commit not in `main` (`ad7dd2d`, "Apple designation appeal: October register
+recheck, still none linked") — reported, not reconciled.
+
+## (previous header) The October 2026 evidence update — 14 October 2026
+
 **Last updated:** the October 2026 evidence update · 14 October 2026 (reference date)
 **Branch:** `claude/eu-digital-policy-audit-um86no`, cut from `origin/main` at `e37f23b`. Opened
 as pull request #11 on the author's instruction; not yet merged.
-
-## The October 2026 evidence update — 14 October 2026
 
 **Asked:** an evidence-quality audit and controlled implementation against a research brief
 (Digital Omnibus, AI Act and Regulation (EU) 2026/1744, DSA enforcement, the DMA and Google,

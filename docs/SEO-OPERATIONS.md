@@ -91,7 +91,8 @@ change that alters an instrument's name, CELEX number or kind, also run `node to
    `instruments/ai-act/`, `instruments/gdpr/`, `instruments/dsa/`, `instruments/dma/`,
    `enforcement.html`, `bibliography.html`:
    - **Test live URL** → **View tested page**: check the rendered HTML contains the `<h1>`, the
-     "What it does" and "Key dates" sections, and the canonical naming the same URL.
+     "In short" box, the "What does … do?" and "When does … apply? Key dates" sections, and the
+     canonical naming the same URL. (Section headings are questions since 21 Oct 2026, §7.)
    - "User-declared canonical" and "Google-selected canonical" should be the same URL.
    - For a new or substantially changed page, **Request indexing** (there is a daily quota; use
      it for the pages that changed, not for all of them).
@@ -166,6 +167,17 @@ The tool pages are not translated and must never carry alternates.
 - **An instrument's title:** edit its entry in `INSTRUMENT_TITLE` (`tools/seo.mjs`). Each facet
   carries a pattern that must match the page's visible text, or `seo-audit.mjs` fails. The
   description is derived from the record and is not edited by hand.
+- **The description's shape** (21 Oct 2026, after the DMA page drew 830 impressions and 6 clicks
+  in three months): what a searcher asks first leads — who it binds, what it requires, key dates
+  and the fine ceiling — then the status with the date it was *assessed* ("status as of", which
+  until then read as an application date), the enforcement count, and the objective up to its
+  colon, dropped rather than truncated when the whole would pass `MAX_DESC`. Every value is read
+  from the record; a regime with no recorded ceiling says "enforcement", never a figure.
+- **Section headings and "In short"** (`js/instrument-view.js` `headings()`, `inShort()`): each
+  section is headed by the reader's question ("When does the DMA apply? Key dates"), in the
+  conditional for a proposal; the box under the head restates six fields the sections render in
+  full — objective, who it binds and protects, load-bearing articles, the dates true on every date,
+  the sanction ceiling — through the same `cell()` formatters, so it cannot say what they do not.
 - **A common name** ("Digital Services Act"): `KNOWN_AS` in `js/routes.js`. It is used only while
   the record carries the matching alias, so a name cannot appear that the data does not hold.
 - **A new instrument page:** complete the record in `data/` (objective, status, dates, evidence),
