@@ -4,7 +4,8 @@
 **Branches:** `claude/p1-licence-geo` (cut from `origin/main` at `05707f5`) and
 `claude/p1-custom-domain` (stacked on it). The first merged into `main` with `--no-ff` on the
 author's instruction of 21 Oct 2026 ("Fai merge solo di claude p1-licence"), no pull request; the
-second is **not merged** and waits for the domain to resolve (`docs/DEPLOYMENT.md` §8).
+second merged into `main` with `--no-ff` the same day, once `eudigitalpolicy.eu` resolved (A,
+AAAA, `www` CNAME and the GitHub challenge TXT read back through dns.google on 21 Oct 2026).
 
 ## P1 — licence, methodology, structured data, custom domain — 21 October 2026
 
@@ -29,7 +30,9 @@ them; rule 8 now forbids changing it.
   2023, so the value here is to parsers and answer engines, not a rich result.
 - **The domain, later the same day:** the author registered `eudigitalpolicy.eu` (Porkbun), and
   `CNAME`, `BASE` and the live-site links on `claude/p1-custom-domain` now name it instead of the
-  placeholder. It did not resolve yet when written; the branch is still unmerged.
+  placeholder. It resolved the same evening and the branch was merged. **Still the author's:**
+  Settings → Pages → Custom domain shows `eudigitalpolicy.eu` and **Enforce HTTPS** once the
+  certificate is issued; verify the domain at github.com/settings/pages; Search Console.
 - **The CNAME is not on the mergeable branch.** `eu-digital-policy.eu` did not resolve on 21 Oct
   2026 (DNS answered for github.com from the same container). Pages serves `main` from the branch,
   so a `CNAME` reaching `main` would redirect the live site to a host that does not answer. The
@@ -70,8 +73,8 @@ longer blocked; (d) `fonts/` carries no licence files for the three typefaces �
 ## Branch register — 21 October 2026 (P1)
 
 At the start `git branch -r --no-merged origin/main` listed nothing besides `main`'s own history.
-`claude/p1-licence-geo` is in `main` (merged `--no-ff`, not deleted). `claude/p1-custom-domain` is
-this session's and **unmerged on purpose**: merging it before DNS answers takes the site offline.
+Both are in `main` (merged `--no-ff`, not deleted). `claude/p1-custom-domain` waited until DNS
+answered, because merging it before would have taken the site offline.
 
 ## DMA click-through pass — 21 October 2026
 
