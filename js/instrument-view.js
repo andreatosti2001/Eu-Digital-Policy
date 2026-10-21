@@ -46,9 +46,33 @@ const esc = (s) => String(s == null ? '' : s)
 
 /* The render context. Set once per renderInstrument() call; the section
    functions read it, exactly as they read module globals before the split. */
-let IX = null, DB = null, OVERLAY = {}, TODAY = null, ROOT = '';
+let IX = null, DB = null, OVERLAY = {}, TODAY = null, ROOT = '', H = {};
 const tr = (k, fb) => (OVERLAY && OVERLAY[k]) || fb;
 const to = (path) => ROOT + path;
+
+/* ---------------------------------------------------------- headings
+
+   Each section is headed by the question a reader arrives with ("When does
+   the DMA apply?") rather than by a catalogue label, because that is the
+   sentence a search or answer engine matches a page against. The label a
+   reader scans for stays after the question, and the subnav keeps the short
+   labels. A proposal creates no obligations (kindLine says so), so its
+   questions are asked in the conditional. Built from the record's own names:
+   the common name only where knownAs() finds it backed by an alias. */
+const isProposal = (inst) => inst.kind === 'kind:proposal';
+function headings(inst) {
+  const name = 'the ' + inst.short_name;
+  const prop = isProposal(inst);
+  return {
+    what: 'What does the ' + (knownAs(inst) || inst.short_name) + (prop ? ' propose?' : ' do?'),
+    dates: (prop ? 'Where does ' + name + ' stand?' : 'When does ' + name + ' apply?') + ' Key dates',
+    applies: prop ? 'Who would ' + name + ' affect?' : 'Who does ' + name + ' apply to?',
+    provisions: (prop ? 'What would ' + name + ' change?' : 'What does ' + name + ' require?') + ' Key provisions',
+    enforcement: prop ? 'How would ' + name + ' be enforced?' : 'How is ' + name + ' enforced?',
+    evidence: 'What is this page based on? Evidence and sources',
+    interactions: 'How does ' + name + ' interact with other EU laws?',
+  };
+}
 
 /** "Last verified …", with the age and the review flag only when there is
  *  a clock to measure them against. */
@@ -179,10 +203,53 @@ function headSection(inst) {
     '</div>';
 }
 
+/* ---------------------------------------------------------- in short
+
+   The answer first: six lines a reader can act on before the sections,
+   each DERIVED from the record those sections render in full — the
+   objective, who it binds and protects, the load-bearing articles, the
+   dates that decide when it bites, and the sanction ceiling — through the
+   same cell() formatters as the comparison table. Nothing is typed for
+   it, so it cannot say what the sections below do not, and where the
+   record holds nothing it says "not established" rather than a guess.
+   The dates are the ones true on every date (entry into force,
+   application, transposition); "next" is added only when there is a
+   clock, exactly as in the head. */
+const ANCHOR_DATES = new Set(['event:entry-into-force', 'event:application', 'event:transposition']);
+
+function inShort(inst) {
+  const d = inst.dna;
+  if (!d) return '';
+  const prop = isProposal(inst);
+  const evs = datesFor(inst, IX);
+  let key = evs.filter((e) => ANCHOR_DATES.has(e.event_type));
+  if (!key.length) key = evs.slice(0, 1);
+  const when = (e) => esc(taxLabel(IX, e.event_type)) + ' <b>' + esc(F.humanDate(e.date, e.date_precision)) + '</b>';
+  const next = TODAY ? evs.find((e) => !F.isPast(e.date)) : null;
+  const rest = evs.length - key.length;
+  const dates = (key.length ? key.map(when).join(' · ') : '<span class="none">none recorded</span>') +
+    (next ? ' · next: ' + when(next) : '') +
+    (evs.length ? ' <a href="#sec-dates">' +
+      (rest > 0 ? '+' + rest + ' more dated event' + (rest === 1 ? '' : 's') : 'the timeline') + ' →</a>' : '');
+  const enf = (DB.enforcement.enforcement || []).filter((r) => r.instrument === inst.id).length;
+  const row = (k, v) => '<li><strong>' + esc(k) + ':</strong> ' + v + '</li>';
+  return '<section class="inst-short" aria-labelledby="sec-short-h">' +
+    '<h2 id="sec-short-h">In short: what you need to know</h2><ul>' +
+    row('Objective', esc(tr(inst.id + '.dna.objective', d.objective))) +
+    row(prop ? 'Would bind' : 'Who it binds', cell('regulated_actor', inst, IX)) +
+    row(prop ? 'Would protect' : 'Who it protects', cell('protected_party', inst, IX)) +
+    row(prop ? 'Core provisions' : 'Core obligations', cell('obligations', inst, IX) +
+      ' <a href="#sec-provisions">key provisions →</a>') +
+    row('Key dates', dates) +
+    row('Sanction ceiling', cell('sanction', inst, IX) + ' <a href="#sec-enforcement">' +
+      (enf ? enf + ' enforcement record' + (enf === 1 ? '' : 's') : 'enforcement') + ' →</a>') +
+    '</ul></section>';
+}
+
 function whatItDoes(inst) {
   const d = inst.dna;
   if (!d) return '';
-  return section('what', 'What it does',
+  return section('what', H.what,
     '<p class="inst-objective">' + esc(tr(inst.id + '.dna.objective', d.objective)) + '</p>' +
     (d.risk_logic ? '<div class="inst-logic"><span class="k">How it allocates obligations</span>' +
       '<p>' + esc(tr(inst.id + '.dna.risk_logic', d.risk_logic)) + '</p></div>' : '') +
@@ -197,7 +264,7 @@ function whatItDoes(inst) {
 function datesSection(inst) {
   const evs = datesFor(inst, IX);
   if (!evs.length) {
-    return section('dates', 'Key dates', empty('No dated events',
+    return section('dates', H.dates, empty('No dated events',
       'No timeline event references this instrument. That is a gap in the dataset, not a statement that nothing is scheduled.'));
   }
   const rows = evs.map((e) => {
@@ -215,7 +282,7 @@ function datesSection(inst) {
         (e.requires_verification ? '<span class="badge" data-st="unresolved">date unverified</span>' : '') +
       '</span></li>';
   }).join('');
-  return section('dates', 'Key dates',
+  return section('dates', H.dates,
     '<p>Entry into force, application and transposition are different events and are kept apart. ' +
     'A date at month precision is shown as a month rather than invented as a day.</p>' +
     '<ol class="ip-tl">' + rows + '</ol>' +
@@ -225,7 +292,7 @@ function datesSection(inst) {
 function appliesSection(inst) {
   const rules = (DB.applicability.rules || []).filter((r) => r.instrument === inst.id);
   if (!rules.length) {
-    return section('applies', 'Who it applies to', empty('No rules recorded',
+    return section('applies', H.applies, empty('No rules recorded',
       'The applicability engine holds no rule for this instrument yet. Absence of a rule is absence of ' +
       'knowledge, not evidence that the instrument does not reach you.') +
       '<p class="src-line"><a href="' + esc(to('applies.html')) + '">Answer three questions instead →</a></p>');
@@ -248,7 +315,7 @@ function appliesSection(inst) {
       verified(r.last_verified) +
       '</article>';
   }).join('');
-  return section('applies', 'Who it applies to',
+  return section('applies', H.applies,
     '<p>' + rules.length + ' rule' + (rules.length === 1 ? '' : 's') +
     ' in the dataset turn on this instrument. They are conditions, not a test: the engine ranks them ' +
     'against what you actually answer, and downgrades rather than excludes where a question is left blank.</p>' +
@@ -280,7 +347,7 @@ function appliesCell(p, inst) {
 function provisionsSection(inst) {
   const provs = inst.provisions || [];
   if (!provs.length) {
-    return section('provisions', 'Key provisions', empty('No provisions recorded',
+    return section('provisions', H.provisions, empty('No provisions recorded',
       'No article of this instrument has been entered into the dataset. The obligations it imposes are ' +
       'therefore described here only in general terms, and the applicability rules for it cannot point at articles.'));
   }
@@ -299,7 +366,7 @@ function provisionsSection(inst) {
       '<td data-label="Applies">' + appliesCell(p, inst) + '</td>' +
       '</tr>';
   }).join('');
-  return section('provisions', 'Key provisions',
+  return section('provisions', H.provisions,
     '<p>' + provs.length + ' provision' + (provs.length === 1 ? '' : 's') +
     ' recorded. This is what the dataset holds, not the whole instrument — an article that is not here ' +
     'has not been entered, which is a different statement from its not existing.</p>' +
@@ -311,7 +378,7 @@ function provisionsSection(inst) {
 function enforcementSection(inst) {
   const recs = (DB.enforcement.enforcement || []).filter((r) => r.instrument === inst.id);
   if (!recs.length) {
-    return section('enforcement', 'Enforcement', empty('No enforcement recorded',
+    return section('enforcement', H.enforcement, empty('No enforcement recorded',
       'This dataset holds no enforcement action under this instrument. That is what the record says; ' +
       'it is not a finding that none has been taken.') +
       '<p class="src-line"><a href="' + esc(to('enforcement.html')) + '">The whole enforcement observatory →</a></p>');
@@ -372,7 +439,7 @@ function enforcementSection(inst) {
         '</article>';
     }).join('');
 
-  return section('enforcement', 'Enforcement',
+  return section('enforcement', H.enforcement,
     '<div class="ip-enf-summary">' +
       '<div class="numstat"><b>' + esc(F.eur(announced)) + '</b><span>announced across ' + recs.length + ' records</span></div>' +
       '<div class="numstat" data-tone="unknown"><b>unknown</b><span>demonstrably collected</span></div>' +
@@ -388,7 +455,7 @@ function evidenceSection(inst) {
     esc(inst.last_verified ? F.humanDate(inst.last_verified) : 'no recorded date') +
     '</b>; every claim below carries its own date.</p>';
   if (!claims.length) {
-    return section('evidence', 'Evidence and sources', recordLine + empty('No claims attached',
+    return section('evidence', H.evidence, recordLine + empty('No claims attached',
       'No claim in the dataset is tagged to this instrument.'));
   }
   const tally = F.gradeTally(claims, IX);
@@ -402,7 +469,7 @@ function evidenceSection(inst) {
   const sorted = claims.slice().sort((a, b) =>
     order.indexOf(F.evidenceGrade(a, IX).id) - order.indexOf(F.evidenceGrade(b, IX).id));
 
-  return section('evidence', 'Evidence and sources',
+  return section('evidence', H.evidence,
     '<p>Every statement this site makes about ' + esc(inst.short_name) +
     ', graded by what actually carries it. The grade is derived from the claim type and its ' +
     'sources, never stored, so it cannot drift from what it describes.</p>' +
@@ -415,12 +482,12 @@ function evidenceSection(inst) {
 function interactionsSection(inst) {
   const blocks = interactionsFor(inst.id, IX, ROOT);
   if (!blocks) {
-    return section('interactions', 'How it interacts', empty('No interaction recorded',
+    return section('interactions', H.interactions, empty('No interaction recorded',
       'No cross-instrument relationship touching ' + esc(inst.short_name) + ' has been recorded in ' +
       'this build. That is a gap in the dataset, not a finding that this instrument stands alone.'));
   }
   const n = (IX.relationship || []).filter((r) => r.from === inst.id || r.to === inst.id).length;
-  return section('interactions', 'How it interacts',
+  return section('interactions', H.interactions,
     '<p>' + n + ' recorded interaction' + (n === 1 ? '' : 's') + ' with other instruments — each with a ' +
     'direction, the provisions that carry it and its own sources. Direction is preserved as recorded: ' +
     'an instrument that amends another is not the same as one amended by it.</p>' +
@@ -499,8 +566,9 @@ function subnav() {
  */
 export function renderInstrument(inst, ctx) {
   IX = ctx.ix; DB = ctx.db; OVERLAY = ctx.overlay || {}; TODAY = ctx.today || null; ROOT = ctx.root || '';
+  H = headings(inst);
   setOverlay(OVERLAY);
-  return headSection(inst) + subnav() +
+  return headSection(inst) + inShort(inst) + subnav() +
     whatItDoes(inst) + datesSection(inst) + appliesSection(inst) +
     provisionsSection(inst) + enforcementSection(inst) +
     evidenceSection(inst) + interactionsSection(inst) + relatedSection(inst);

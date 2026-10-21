@@ -129,7 +129,7 @@ export const TOP_PAGES = Object.freeze([
 export const INSTRUMENT_TITLE = Object.freeze({
   gdpr: { lead: 'GDPR', facets: [['key provisions', 'provision'], ['enforcement', 'enforcement'], ['fines', 'fine']] },
   dsa: { lead: 'Digital Services Act (DSA)', facets: [['obligations', 'obligation'], ['VLOPs', 'VLOP'], ['enforcement', 'enforcement']] },
-  dma: { lead: 'Digital Markets Act (DMA)', facets: [['gatekeepers', 'gatekeeper'], ['obligations', 'obligation'], ['enforcement', 'enforcement']] },
+  dma: { lead: 'Digital Markets Act (DMA)', facets: [['gatekeeper obligations', 'gatekeeper'], ['compliance deadlines', 'compliance deadline'], ['fines', 'fine']] },
   'ai-act': { lead: 'EU AI Act', facets: [['risk tiers', 'risk'], ['obligations', 'obligation'], ['timeline', 'application'], ['enforcement', 'enforcement']] },
   'data-act': { lead: 'EU Data Act', facets: [['data access', 'access to'], ['cloud switching', 'switching'], ['key dates', 'Key dates']] },
   nis2: { lead: 'NIS2 Directive', facets: [['cybersecurity obligations', 'cybersecurity'], ['transposition', 'transposition']] },
@@ -170,25 +170,45 @@ function instrumentTitle(inst, ix, db) {
 
 const plural = (n, one, many = one + 's') => `${n} ${n === 1 ? one : many}`;
 
+/* lower-case a leading capital unless it opens an acronym ("ICT risk
+   management", "VLOP"), so a label or a status runs on mid-sentence */
+const lowerLead = (s) => /^[A-Z](?![A-Z0-9])/.test(s) ? s[0].toLowerCase() + s.slice(1) : s;
+
+/* What a searcher asks first leads — who it binds, what it requires, when,
+   and what non-compliance costs — because a result is judged on the first
+   ~155 characters of its snippet; until 21 Oct 2026 those were spent on the
+   objective's own wording and a count of graded claims, and the DMA page
+   drew 830 impressions and 6 clicks in three months. Every value is still
+   read from the record: the actors through the taxonomy, the ceiling from
+   dna.sanction_ceiling (left out, never guessed, where the record holds no
+   figure), the status with the date it was assessed, then the objective. */
 function instrumentDescription(inst, ix, db) {
   const num = actNumber(inst);
-  const lead = displayName(inst) + (num && !displayName(inst).includes(num) ? `, ${num}` : '');
-  /* the objective as the record writes it, run on after a colon: lower-case
-     its first letter unless it opens an acronym ("ICT risk management") */
-  let obj = String(inst.dna.objective).trim().replace(/\.?$/, '.');
-  if (/^[A-Z](?![A-Z0-9])/.test(obj)) obj = obj[0].toLowerCase() + obj.slice(1);
-  const status = `${taxLabel(ix, inst.legislative_status)} as of ${F.humanDate(inst.status_as_of)}.`;
-  const bits = [];
-  const provs = (inst.provisions || []).length;
-  const dates = datesFor(inst, ix).length;
+  const name = displayName(inst);
+  /* up to three actors by name; a longer list (DSA, AI Act) names two and
+     counts the rest, so it does not spend the snippet; the page names all */
+  const actors = (inst.dna.regulated_actor || []).map((a) => lowerLead(taxLabel(ix, a)));
+  const who = !actors.length ? ''
+    : actors.length > 3 ? ` (${actors.slice(0, 2).join(', ')} and ${actors.length - 2} more)` : ` (${joinFacets(actors)})`;
+  const s = inst.dna.sanction_ceiling || {};
+  const ceiling = [s.pct_global_turnover != null ? s.pct_global_turnover + '% of global turnover' : null,
+    s.fixed_eur != null ? F.eur(s.fixed_eur) : null].filter(Boolean).join(' / ');
+  const what = inst.kind === 'kind:proposal'
+    ? `who it would affect${who}, what it would change and where it stands`
+    : `who it binds${who}, what it requires, key dates and ${ceiling ? `fines of up to ${ceiling}` : 'enforcement'}`;
+  /* "applicable as of 19 August 2026" read as the date it became applicable;
+     it is the date the status was assessed, so it says so */
+  const status = `${taxLabel(ix, inst.legislative_status)} (status as of ${F.humanDate(inst.status_as_of)})`;
   const enf = (db.enforcement.enforcement || []).filter((r) => r.instrument === inst.id).length;
-  const claims = (db.claims.claims || []).filter((c) => (c.instruments || []).includes(inst.id)).length;
-  if (provs) bits.push(plural(provs, 'provision'));
-  if (dates) bits.push(plural(dates, 'dated milestone'));
-  if (enf) bits.push(plural(enf, 'enforcement record'));
-  if (claims) bits.push(plural(claims, 'graded claim'));
-  const tail = bits.length ? ` ${joinFacets(bits)[0].toUpperCase() + joinFacets(bits).slice(1)}, each with its sources.` : '';
-  return `${lead}: ${obj} ${status}${tail}`;
+  /* the objective up to its colon: where a record has one, what follows it
+     is the elaboration the page carries in full */
+  const obj = String(inst.dna.objective).split(/:\s/)[0].trim().replace(/\.?$/, '.');
+  const head = `${name} in short: ${what}. ` +
+    (num && !name.includes(num) ? `${num}, ${lowerLead(status)}` : status) +
+    (enf ? `; ${plural(enf, 'enforcement record')}` : '') + '.';
+  /* the aim only while the whole stays inside what tools/seo-audit.mjs
+     accepts without a warning (MAX_DESC, 420) */
+  return (head + ` Aim: ${obj}`).length <= 420 ? head + ` Aim: ${obj}` : head;
 }
 
 /* ---------------------------------------------------------- lastmod

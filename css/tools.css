@@ -876,6 +876,23 @@ body[data-theme="light"]{
 }
 .inst-logic p{margin:var(--s-2) 0 0;font-size:var(--t-body-sm);line-height:1.6;color:var(--text-2)}
 
+/* "In short" — the derived answer above the sections. The accent rule and
+   the raised surface are existing tokens, so it holds in both themes; the
+   page's CSP forbids the inline style a pasted snippet would carry. */
+.inst-short{
+  margin:var(--s-6) 0 0;padding:var(--s-4) var(--s-5);max-width:var(--w-text);
+  border-left:var(--border-accent);background:var(--surface-raised);
+}
+.inst-short h2{
+  font-family:var(--body);font-size:var(--t-lede);line-height:var(--lh-lede);
+  font-weight:600;margin:0 0 var(--s-2);color:var(--text-1);
+}
+.inst-short ul{margin:0;padding-left:var(--s-5);display:grid;gap:var(--s-2)}
+.inst-short li{font-size:var(--t-body-sm);line-height:var(--lh-body-sm);color:var(--text-2)}
+.inst-short li strong{color:var(--text-1)}
+.inst-short a{color:var(--text-1);text-underline-offset:3px}
+.inst-short .none{font-family:var(--mono);font-size:var(--t-micro);color:var(--text-3);font-style:italic}
+
 /* ---------------------------------------------------------- timeline */
 .ip-tl{list-style:none;margin:var(--s-5) 0 0;padding:0;display:grid;gap:0}
 .ip-tl-item{
