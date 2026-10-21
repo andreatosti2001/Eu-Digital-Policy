@@ -469,6 +469,44 @@
    }
   },
   {
+   "id": "enf-meta-ec-2026-under13",
+   "entity": "Meta (Instagram and Facebook)",
+   "entity_type": "actor:vlop",
+   "instrument": "dsa",
+   "legal_basis": [
+    "dsa:art-28",
+    "dsa:art-34",
+    "dsa:art-35"
+   ],
+   "authority": "ec",
+   "opened": "2024-05-16",
+   "decision_date": "2026-04-29",
+   "action": "Preliminary findings: minors under 13 on Instagram and Facebook",
+   "fine_eur": null,
+   "action_status": "action:announced",
+   "payment_status": "payment:not-applicable",
+   "remedy_status": "remedy:unknown",
+   "behavioural_outcome": null,
+   "judicial": null,
+   "timeline_events": [],
+   "claims": [],
+   "sources": [
+    "src-ec-meta-under13-2026",
+    "src-ec-meta-minors-opening-2024"
+   ],
+   "requires_verification": false,
+   "verification_note": "Registered 21 Oct 2026 (audit item 3) from IP/26/920, read in full that day. Preliminary findings are not a decision. The breach found at this stage: Meta fails 'to diligently identify, assess and mitigate the risks of minors under 13' accessing the services, with no effective check on self-declared birth dates, an ineffective reporting tool and an 'incomplete and arbitrary' risk assessment. The release names no article: the legal basis is the one the opening release IP/24/2664 gives for these proceedings (Arts 28, 34 and 35), which the findings' wording tracks (risk assessment and mitigation; 'a high level of privacy, safety and security for minors'). Not a fine: if confirmed, up to 6% of worldwide turnover.",
+   "last_verified": "2026-10-21",
+   "appeal": {
+    "status": "appeal:none",
+    "lodged_by": null,
+    "forum": null,
+    "lodged_date": null,
+    "case_ref": null,
+    "note": "Preliminary findings are not a decision and are not appealable."
+   }
+  },
+  {
    "id": "enf-meta-ec-2026-addictive",
    "entity": "Meta (Instagram and Facebook)",
    "entity_type": "actor:vlop",

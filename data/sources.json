@@ -1133,6 +1133,34 @@
       "note": "Read 14 Oct 2026 with the full press release IP/26/1579 (10 July 2026). Preliminary findings in formal proceedings opened 16 May 2024; 'These preliminary findings do not prejudge the final outcome of the investigation.' At this stage the Commission considers Meta needs design changes, 'for instance, by disabling key addictive features such as autoplay and infinite scroll by default'. The same proceedings produced preliminary findings on under-13 age assurance on 29 April 2026."
     },
     {
+      "id": "src-ec-meta-under13-2026",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Press release IP/26/920 — Commission preliminarily finds Meta in breach of Digital Services Act for failing to prevent minors under 13 from using Instagram and Facebook",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_26_920",
+      "url_status": "url:live",
+      "published": "2026-04-29",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read in full 21 Oct 2026 through the Commission's press corner. Preliminary findings that Instagram and Facebook breach the DSA 'for failing to diligently identify, assess and mitigate the risks of minors under 13 years old accessing their services': self-declared birth dates with 'no effective controls in place'; a reporting tool 'requiring up to seven clicks'; an 'incomplete and arbitrary risk assessment', against evidence that 'roughly 10-12% of children under 13' use the services. Part of the formal proceedings opened 16 May 2024; 'These findings do not prejudge the final outcome of the investigation.' If confirmed, a non-compliance decision could carry a fine of up to 6% of worldwide turnover. The release names no article; the proceedings' opening release (IP/24/2664) names Articles 28, 34 and 35."
+    },
+    {
+      "id": "src-ec-meta-minors-opening-2024",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Press release IP/24/2664 — Commission opens formal proceedings against Meta under the Digital Services Act related to the protection of minors on Facebook and Instagram",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_24_2664",
+      "url_status": "url:live",
+      "published": "2024-05-16",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read in full 21 Oct 2026 through the Commission's press corner. Opens proceedings on the design of Facebook's and Instagram's interfaces, on 'age-verification tools used by Meta, which may not be reasonable, proportionate and effective', and on default privacy settings for minors: 'If proven, these failures would constitute infringements of Articles 28, 34, and 35 of the DSA.'"
+    },
+    {
       "id": "src-ec-tiktok-minors-2026",
       "tier": "tier:2",
       "type": "source-type:press-release",
