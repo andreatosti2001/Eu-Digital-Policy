@@ -2144,6 +2144,20 @@
       "note": null
     },
     {
+      "id": "src-ec-infringement-package-2026-10",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "INF/26/1760 — October infringements package: key decisions",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/inf_26_1760",
+      "url_status": "url:live",
+      "published": "2026-10-01",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read in full 21 Oct 2026 through the Commission's press corner, with the thirteen earlier packages since the Hungarian amendments of March 2025: INF/25/503 (12 Mar 2025), INF/25/982 (7 May 2025), INF/25/1241 (18 Jun 2025), INF/25/1628 (17 Jul 2025), INF/25/2077 (8 Oct 2025), INF/25/2481 (21 Nov 2025), INF/25/2745 (11 Dec 2025), INF/26/115 (30 Jan 2026), INF/26/431 (11 Mar 2026), INF/26/720 (29 Apr 2026), INF/26/1084 (4 Jun 2026), INF/26/1376 (8 Jul 2026), INF/26/1380 (15 Jul 2026, transposition) and INF/26/1760 (1 Oct 2026). None of the fourteen mentions the AI Act, artificial intelligence, biometric identification or facial recognition. A package lists the Commission's KEY decisions of the cycle, not every one, so an absence here is partial evidence of an absence in the register; the register itself (ec.europa.eu/implementing-eu-law) answered HTTP 404 to its search page from this environment on 21 Oct 2026."
+    },
+    {
       "id": "src-euronews-magyar-2026",
       "tier": "tier:4",
       "type": "source-type:journalism",

@@ -4941,7 +4941,7 @@
     {
       "id": "clm-hungary-no-infringement",
       "type": "claim-type:fact",
-      "statement": "The Commission has not opened infringement proceedings against Hungary on the basis of the biometric surveillance legislation.",
+      "statement": "No infringement decision against Hungary concerning the March 2025 facial-recognition amendments appears in the Commission's monthly infringement packages from 12 March 2025 to 1 October 2026, checked on 21 October 2026.",
       "instruments": [
         "ai-act"
       ],
@@ -4955,6 +4955,11 @@
         "enf-hungary-commission-none"
       ],
       "sources": [
+        {
+          "source_id": "src-ec-infringement-package-2026-10",
+          "supports": "supports:partial",
+          "locator": "Key decisions of the fourteen packages read: INF/25/503 (12 Mar 2025), INF/25/982 (7 May 2025), INF/25/1241 (18 Jun 2025), INF/25/1628 (17 Jul 2025), INF/25/2077 (8 Oct 2025), INF/25/2481 (21 Nov 2025), INF/25/2745 (11 Dec 2025), INF/26/115 (30 Jan 2026), INF/26/431 (11 Mar 2026), INF/26/720 (29 Apr 2026), INF/26/1084 (4 Jun 2026), INF/26/1376 (8 Jul 2026), INF/26/1380 (15 Jul 2026, transposition) and INF/26/1760 (1 Oct 2026); none mentions the AI Act or biometric identification"
+        },
         {
           "source_id": "src-techpolicy-national-security-2026",
           "supports": "supports:partial",
@@ -4984,13 +4989,13 @@
       "legal_basis": [],
       "brief_part": "part-11",
       "published": "2025",
-      "last_verified": "2026-09-26",
-      "verification_note": "Re-checked 26 Sep 2026. Contemporary commentary confirms that civil-society organisations were urging the Commission to open proceedings and that Hungary had not invoked the national-security exemption. The negative half of the claim — that no proceedings have been opened — cannot be proved by any source and is true only at an instant. The political context has changed since the claim was written: Péter Magyar's government took office 9 May 2026 and Budapest Pride went ahead with police acknowledgement in June 2026, but the March 2025 amendments this claim concerns were not repealed and no infringement proceeding was found on this basis. Re-verify before every publication."
+      "last_verified": "2026-10-21",
+      "verification_note": "21 Oct 2026 (audit item 7): reformulated as a dated negative and checked against the Commission's own record rather than NGOs and press. The fourteen monthly infringement packages since the March 2025 amendments were read in full (see the source note); none mentions the AI Act, biometric identification or facial recognition. The packages carry key decisions only, and the Commission's searchable register could not be queried from this environment (its search page answered HTTP 404), so the support is partial and the statement says what was searched and when. Earlier statement: 'The Commission has not opened infringement proceedings against Hungary on the basis of the biometric surveillance legislation.' Re-checked 26 Sep 2026. Contemporary commentary confirms that civil-society organisations were urging the Commission to open proceedings and that Hungary had not invoked the national-security exemption. The negative half of the claim — that no proceedings have been opened — cannot be proved by any source and is true only at an instant. The political context has changed since the claim was written: Péter Magyar's government took office 9 May 2026 and Budapest Pride went ahead with police acknowledgement in June 2026, but the March 2025 amendments this claim concerns were not repealed and no infringement proceeding was found on this basis. Re-verify before every publication."
     },
     {
       "id": "clm-enforcement-asymmetry",
       "type": "claim-type:critique",
-      "statement": "This body of law restrains corporate power far more effectively than it restrains state power, and the enforcement asymmetry between corporate and state addressees is not seriously disputable.",
+      "statement": "This body of law restrains corporate power far more effectively than it restrains state power, and on the record available the enforcement asymmetry between corporate and state addressees is hard to dispute.",
       "instruments": [
         "ai-act",
         "teu",
@@ -5022,7 +5027,7 @@
       "brief_part": "part-11",
       "published": "2026-08-19",
       "last_verified": "2026-08-27",
-      "verification_note": "The author's central conclusion, correctly typed as critique. It rests on clm-hungary-no-infringement, which is time-sensitive; if that claim decays, this one must be revisited.",
+      "verification_note": "The author's central conclusion, correctly typed as critique. It rests on clm-hungary-no-infringement, which is time-sensitive; if that claim decays, this one must be revisited. 21 Oct 2026 (audit, tone stronger than evidence): 'not seriously disputable' attenuated to 'on the record available … hard to dispute', in the claim and in all four languages; the Hungarian premise is now a dated negative (clm-hungary-no-infringement).",
       "premises": [
         "clm-art-4-2-teu-carve-out",
         "clm-hungary-no-infringement",
