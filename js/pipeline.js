@@ -21,6 +21,19 @@
    normal case in this dataset, and saying so is the point.
    ============================================================ */
 
+/* ------------------------------------------------------------
+   Recorded inaction (audit of 21 Oct 2026, item 11). A record whose
+   record_type is record-type:inaction asserts that NO action exists —
+   true only at the date it was checked. It is not an enforcement
+   action: it has no pipeline, no decision date and no fine, and it is
+   excluded from every count, total and funnel. Every counter takes
+   its list through actionsOnly(), so the rule has this one home and
+   tools/validate.mjs holds the records to it.
+   ------------------------------------------------------------ */
+export const isInaction = (rec) => Boolean(rec) && rec.record_type === 'record-type:inaction';
+export const actionsOnly = (records) => (records || []).filter((r) => !isInaction(r));
+export const inactionsOnly = (records) => (records || []).filter(isInaction);
+
 export const STAGES = [
   { id: 'stage:law', short: 'Law' },
   { id: 'stage:investigation', short: 'Investigation' },

@@ -1186,3 +1186,48 @@ test('A1 · a "largest to date" claim is recomputed from the records, and fails 
   const prelim = { ...unknown, action_status: 'action:announced' };
   assert.deepEqual(rankingProblems(g, [...enf, prelim]), [], 'preliminary findings carry no fine and do not unsettle it');
 });
+
+test('A2 · validate.mjs FAILS when an instrument was verified before its status was assessed (item 10)', () => {
+  assert.equal(runValidator('validate.mjs').exit, 0, 'no instrument on this tree has last_verified < status_as_of');
+  const dir = dataScratch();
+  try {
+    const p = join(dir, 'data', 'instruments.json');
+    const d = JSON.parse(readFileSync(p, 'utf8'));
+    const i = d.instruments.find((x) => x.id === 'cra');
+    i.status_as_of = '2026-10-14'; i.last_verified = '2026-08-27';
+    writeFileSync(p, JSON.stringify(d, null, 2));
+    const r = runValidator('validate.mjs', [], dir);
+    assert.equal(r.exit, 1);
+    assert.match(r.out, /instruments\/cra: last_verified 2026-08-27 is earlier than status_as_of 2026-10-14/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('A3 · a recorded inaction is typed, carries nothing an action carries, and is counted nowhere (item 11)', () => {
+  const enf = readData('enforcement.json').enforcement;
+  const none = enf.filter((r) => r.record_type === 'record-type:inaction');
+  assert.ok(none.some((r) => r.id === 'enf-hungary-commission-none'));
+  for (const r of enf) if (r.action_status == null) assert.equal(r.record_type, 'record-type:inaction', `${r.id} has no action and must be typed`);
+  /* planted: an untyped non-action, and a typed inaction carrying a fine */
+  const dir = dataScratch();
+  try {
+    const p = join(dir, 'data', 'enforcement.json');
+    const d = JSON.parse(readFileSync(p, 'utf8'));
+    const h = d.enforcement.find((x) => x.id === 'enf-hungary-commission-none');
+    delete h.record_type;
+    d.enforcement.push({ ...h, id: 'enf-planted-none', record_type: 'record-type:inaction', fine_eur: 1 });
+    writeFileSync(p, JSON.stringify(d, null, 2));
+    const r = runValidator('validate.mjs', [], dir);
+    assert.equal(r.exit, 1);
+    assert.match(r.out, /enf-hungary-commission-none" records no action but is not typed record-type:inaction/);
+    assert.match(r.out, /enf-planted-none" is a recorded inaction but carries fine_eur 1/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+  /* and no counter counts it: the generated AI Act page, whose only record is Hungary's */
+  const page = readFileSync(join(ROOT, 'instruments', 'ai-act', 'index.html'), 'utf8');
+  assert.match(page, /No enforcement recorded/);
+  assert.match(page, /<h3>Recorded inaction<\/h3>/);
+  assert.doesNotMatch(page, /enforcement record\b/, 'the description does not call it an enforcement record');
+  assert.doesNotMatch(page, /across 1 records/);
+  for (const f of ['js/instrument-view.js', 'js/masthead.js', 'js/enforcement-page.js', 'tools/seo.mjs']) {
+    assert.match(readFileSync(join(ROOT, f), 'utf8'), /actionsOnly\(/, `${f} counts through actionsOnly()`);
+  }
+});

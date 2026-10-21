@@ -37,6 +37,7 @@ import { fileURLToPath } from 'node:url';
 import { index, label as taxLabel } from '../js/data.js';
 import * as R from '../js/routes.js';
 import { datesFor, authoritiesFor } from '../js/dna.js';
+import { actionsOnly } from '../js/pipeline.js';
 import { renderInstrument, instrumentListItem, instrumentFaq } from '../js/instrument-view.js';
 import * as F from '../js/format.js';
 import { BASE, AUTHOR, LICENCE } from './_footer.mjs';
@@ -190,7 +191,7 @@ function instrumentTitle(inst, ix, db) {
   return `${inst.short_name} — ${joinFacets(facets)}${BRAND}`;
 }
 
-const plural = (n, one, many = one + 's') => `${n} ${n === 1 ? one : many}`;
+const plural = F.plural;
 
 /* lower-case a leading capital unless it opens an acronym ("ICT risk
    management", "VLOP"), so a label or a status runs on mid-sentence */
@@ -221,7 +222,8 @@ function instrumentDescription(inst, ix, db) {
   /* "applicable as of 19 August 2026" read as the date it became applicable;
      it is the date the status was assessed, so it says so */
   const status = `${taxLabel(ix, inst.legislative_status)} (status as of ${F.humanDate(inst.status_as_of)})`;
-  const enf = (db.enforcement.enforcement || []).filter((r) => r.instrument === inst.id).length;
+  /* recorded inaction is not an enforcement record (js/pipeline.js isInaction) */
+  const enf = actionsOnly(db.enforcement.enforcement).filter((r) => r.instrument === inst.id).length;
   /* the objective up to its colon: where a record has one, what follows it
      is the elaboration the page carries in full */
   const obj = String(inst.dna.objective).split(/:\s/)[0].trim().replace(/\.?$/, '.');

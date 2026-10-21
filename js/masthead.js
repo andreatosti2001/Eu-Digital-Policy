@@ -27,6 +27,7 @@
 
 import { loadAll, index, label as taxLabel, note as taxNote, renderError } from './data.js';
 import * as F from './format.js';
+import { actionsOnly } from './pipeline.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -272,7 +273,8 @@ export async function initMasthead() {
   mount.innerHTML =
     statusLedger(ix, instruments) +
     nextDue(ix, 3) +
-    enforcementLine(ix, records) +
+    /* a recorded absence of action is not an action and is counted nowhere */
+    enforcementLine(ix, actionsOnly(records)) +
     checkedLine(instruments, [...ix.event.values()], records);
   F.applyGeometry(mount);
 

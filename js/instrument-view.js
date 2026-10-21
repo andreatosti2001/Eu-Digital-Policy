@@ -36,7 +36,7 @@ import { label as taxLabel } from './data.js';
 import * as F from './format.js';
 import { authoritiesFor, datesFor, cell, setOverlay } from './dna.js';
 import { provisionApplication, provisionDeadlines } from './regulatory-model.js';
-import { derive, STAGES } from './pipeline.js';
+import { derive, STAGES, actionsOnly, inactionsOnly } from './pipeline.js';
 import { sourceList, gradeChip, freshness } from './evidence-view.js';
 import { interactionsFor } from './interactions.js';
 import { instrumentHref, knownAs, displayName, legalTextSource } from './routes.js';
@@ -233,7 +233,7 @@ function shortRows(inst) {
   const when = (e) => esc(taxLabel(IX, e.event_type)) + ' <b>' + esc(F.humanDate(e.date, e.date_precision)) + '</b>';
   const next = TODAY ? evs.find((e) => !F.isPast(e.date)) : null;
   const rest = evs.length - key.length;
-  const enf = (DB.enforcement.enforcement || []).filter((r) => r.instrument === inst.id).length;
+  const enf = actionsOnly(DB.enforcement.enforcement).filter((r) => r.instrument === inst.id).length;
   return [
     { section: 'what', label: 'Objective', value: esc(tr(inst.id + '.dna.objective', d.objective)), more: '' },
     { section: 'applies', label: prop ? 'Would bind' : 'Who it binds', value: cell('regulated_actor', inst, IX), more: '' },
@@ -424,12 +424,26 @@ function provisionsSection(inst) {
     '</tr></thead><tbody>' + rows + '</tbody></table></div>');
 }
 
+/* A recorded absence of action is not an enforcement action: it is
+   listed under its own heading, dated, and counted nowhere (js/pipeline.js
+   isInaction, audit of 21 Oct 2026 item 11). */
+function inactionHTML(inst) {
+  const none = inactionsOnly(DB.enforcement.enforcement).filter((r) => r.instrument === inst.id);
+  if (!none.length) return '';
+  return '<div class="ip-enf-none"><h3>Recorded inaction</h3>' +
+    '<p class="ip-enf-caveat">Not an enforcement action, and not counted above: each of these records says that ' +
+      'no action had been found when it was last checked, which is true only at that date.</p><ul>' +
+    none.map((r) => '<li><b>' + esc(r.entity) + '.</b> ' + esc(r.action || '') +
+      ' <a href="' + esc(to('enforcement.html#' + r.id)) + '">Record &rarr;</a> ' + verified(r.last_verified) + '</li>').join('') +
+    '</ul></div>';
+}
+
 function enforcementSection(inst) {
-  const recs = (DB.enforcement.enforcement || []).filter((r) => r.instrument === inst.id);
+  const recs = actionsOnly(DB.enforcement.enforcement).filter((r) => r.instrument === inst.id);
   if (!recs.length) {
     return section('enforcement', H.enforcement, empty('No enforcement recorded',
       'This dataset holds no enforcement action under this instrument. That is what the record says; ' +
-      'it is not a finding that none has been taken.') +
+      'it is not a finding that none has been taken.') + inactionHTML(inst) +
       '<p class="src-line"><a href="' + esc(to('enforcement.html')) + '">The whole enforcement observatory →</a></p>');
   }
   /* announced is a sum of what was announced; collected is not a sum at all,
@@ -490,12 +504,12 @@ function enforcementSection(inst) {
 
   return section('enforcement', H.enforcement,
     '<div class="ip-enf-summary">' +
-      '<div class="numstat"><b>' + esc(F.eur(announced)) + '</b><span>announced across ' + recs.length + ' records</span></div>' +
+      '<div class="numstat"><b>' + esc(F.eur(announced)) + '</b><span>announced across ' + esc(F.plural(recs.length, 'record')) + '</span></div>' +
       '<div class="numstat" data-tone="unknown"><b>unknown</b><span>demonstrably collected</span></div>' +
-      '<p class="ip-enf-caveat">' + unknownPay + ' of ' + recs.length +
-        ' records cannot settle whether money moved. That is not zero, and the announced figure is not a total ' +
+      '<p class="ip-enf-caveat">' + unknownPay + ' of ' + F.plural(recs.length, 'record') +
+        ' cannot settle whether money moved. That is not zero, and the announced figure is not a total ' +
         'of anything that has been paid.</p>' +
-    '</div>' + '<div class="ip-enf-cards">' + cards + '</div>');
+    '</div>' + '<div class="ip-enf-cards">' + cards + '</div>' + inactionHTML(inst));
 }
 
 function evidenceSection(inst) {
