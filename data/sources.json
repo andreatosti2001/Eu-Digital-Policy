@@ -1948,6 +1948,20 @@
       "note": "Read on 2026-09-26. Reports an analysis by 'insurance brokerage Alliance Risk': an estimated EUR 7.1 billion of GDPR fines announced over eight years, of which nearly 40%, around EUR 2.8 billion, is already annulled or under active legal challenge; Alliance Risk used the CMS Law GDPR Enforcement Tracker as its primary source, cross-referenced against IAPP, Kiteworks and UniConsent data. Alliance Risk's own publication could not be located; PPC Land describes the firm as a 'cyber risk advisory firm' rather than a brokerage."
     },
     {
+      "id": "src-ppcland-alliance-risk-2026",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "PPC Land",
+      "title": "Eight years of GDPR: 40% of the €7.1B in fines annulled or under challenge",
+      "url": "https://ppc.land/eight-years-of-gdpr-40-of-the-eur7-1b-in-fines-annulled-or-under-challenge/",
+      "url_status": "url:live",
+      "published": "2026-05-30",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read 21 Oct 2026. By Luís Rijo. Attributes the EUR 7.1 billion, ~40% and EUR 2.8 billion figures to 'analysis published this week by Alliance Risk, a cyber risk advisory firm', 'drawn primarily from the CMS Law GDPR Enforcement Tracker'. Its link to Alliance Risk's publication goes to an interactive map (gdpr-interactive-map-2018-2026.netlify.app), which was read the same day: it reports EUR 6.07 billion across 2,879 enforcement actions to May 2026, names no author and contains none of the three figures. A second press report of the same analysis, not the analysis; CSO Online calls the firm an insurance brokerage, PPC Land a cyber risk advisory firm."
+    },
+    {
       "id": "src-edpb-cef-2026",
       "tier": "tier:2",
       "type": "source-type:press-release",

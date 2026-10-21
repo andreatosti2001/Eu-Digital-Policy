@@ -950,13 +950,18 @@
           "source_id": "src-csoonline-alliance-risk-2026",
           "supports": "supports:partial",
           "locator": null
+        },
+        {
+          "source_id": "src-ppcland-alliance-risk-2026",
+          "supports": "supports:partial",
+          "locator": "Opening paragraphs: 'analysis published this week by Alliance Risk'; '€2.8 billion … annulled or under active legal challenge'"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-2",
       "published": "2026-05-29",
-      "last_verified": "2026-09-26",
-      "verification_note": "Split on 27 Sep 2026 out of clm-announced-vs-collected, which carried both this figure and the reading drawn from it. The analysis is identified (audit T-25): CSO Online (29 May 2026) attributes the EUR 7.1 billion, ~40% and ~EUR 2.8 billion figures to the insurance brokerage Alliance Risk, drawing mainly on the CMS Enforcement Tracker; the prose now names it. Alliance Risk's own publication could not be located, so this rests on a press report of it, and 'contested' amounts may yet be upheld. The reference gap is left set for a person to clear, since the originating document has still not been read. 14 Oct 2026: reworded so that Alliance Risk's EUR 7.1 billion, counted mainly from the CMS tracker, is not read as DLA Piper's EUR 7.1 billion (clm-gdpr-total-fines): the two figures coincide in rounding but come from different compilations. The source was not re-read and the reference gap stands. Earlier statement: An analysis by the insurance brokerage Alliance Risk found that roughly 40% of the EUR 7.1 billion in announced GDPR fines — about EUR 2.8 billion — is either annulled or actively contested in court.",
+      "last_verified": "2026-10-21",
+      "verification_note": "Split on 27 Sep 2026 out of clm-announced-vs-collected, which carried both this figure and the reading drawn from it. The analysis is identified (audit T-25): CSO Online (29 May 2026) attributes the EUR 7.1 billion, ~40% and ~EUR 2.8 billion figures to the insurance brokerage Alliance Risk, drawing mainly on the CMS Enforcement Tracker; the prose now names it. Alliance Risk's own publication could not be located, so this rests on a press report of it, and 'contested' amounts may yet be upheld. The reference gap is left set for a person to clear, since the originating document has still not been read. 14 Oct 2026: reworded so that Alliance Risk's EUR 7.1 billion, counted mainly from the CMS tracker, is not read as DLA Piper's EUR 7.1 billion (clm-gdpr-total-fines): the two figures coincide in rounding but come from different compilations. The source was not re-read and the reference gap stands. Earlier statement: An analysis by the insurance brokerage Alliance Risk found that roughly 40% of the EUR 7.1 billion in announced GDPR fines — about EUR 2.8 billion — is either annulled or actively contested in court. 21 Oct 2026 (audit item 6): searched again for Alliance Risk's own publication. CSO Online (John Leyden, 29 May 2026) was re-read: it names 'insurance brokerage Alliance Risk' and links to no analysis. PPC Land (30 May 2026) reports the same figures and links to an interactive map as Alliance Risk's publication; the map reports EUR 6.07 billion across 2,879 actions to May 2026 and carries none of the 40%, EUR 2.8 billion or EUR 7.1 billion figures. No publication by Alliance Risk stating them was located. On the audit's instruction the figure was removed from the Part II chip and from Part IX §2, and kept only where Alliance Risk is named (the Part II box and the Part II thread). The reference gap stays set.",
       "reference_gap": true,
       "gap_note": "the ~40% of announced fine value said to be annulled or actively contested. No publication stating that proportion was located; the figure is attributed in the prose to eighth-anniversary analysis that could not be identified."
     },
