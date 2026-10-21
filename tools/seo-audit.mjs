@@ -31,7 +31,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { stale } from './_footer.mjs';
 import { staleCards } from './og-image.mjs';
-import { BASE, SITE, TOP_PAGES, INSTRUMENT_TITLE, loadDb, buildRoutes, sitemapXml } from './seo.mjs';
+import { BASE, SITE, TOP_PAGES, INSTRUMENT_TITLE, loadDb, buildRoutes, sitemapXml, faqText } from './seo.mjs';
 import { sitePages } from './thirdparty.mjs';
 import * as R from '../js/routes.js';
 
@@ -63,6 +63,8 @@ export function read(html) {
     h1: [...visible.matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/g)].map((m) => m[1].replace(/<[^>]+>/g, '').trim()),
     h2: (visible.match(/<h2[\s>]/g) || []).length,
     links: [...visible.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)].map((m) => m[1]),
+    licences: [...visible.matchAll(/<a\b[^>]*>/g)].map((m) => m[0])
+      .filter((a) => /\brel="[^"]*\blicense\b/.test(a)).map((a) => (a.match(/\bhref="([^"]+)"/) || [])[1]),
     jsonld: [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]),
     crumbs: [...(visible.match(/<ol class="crumbs">([\s\S]*?)<\/ol>/) || [, ''])[1].matchAll(/<li>([\s\S]*?)<\/li>/g)]
       .map((m) => unesc(m[1].replace(/<[^>]+>/g, '').trim())),
@@ -94,13 +96,19 @@ const MAX_TITLE = 110;
 
 /* Structured-data types this site may declare, and properties it may not:
    every one of the second list would assert something no page states —
-   who wrote it, when it was published, what it is licensed under, how it
-   is rated, or a legal force the site's own model says one scalar cannot
-   carry. Adding either is a decision, not a fix. */
-export const LD_TYPES = new Set(['WebSite', 'WebPage', 'CollectionPage', 'BreadcrumbList', 'ListItem',
-  'ItemList', 'Legislation', 'ImageObject']);
-export const LD_FORBIDDEN = ['author', 'creator', 'publisher', 'datePublished', 'dateCreated', 'dateModified',
-  'license', 'aggregateRating', 'review', 'legislationLegalForce', 'legislationDate'];
+   who published it, how it is rated, or a legal force the site's own
+   model says one scalar cannot carry. Adding either is a decision, not a
+   fix. The author, the licence and the dates left this list on the
+   author's decision of 21 Oct 2026, and are held below to what the page
+   shows instead: a licence the page links with rel="license", an author
+   the page names, an FAQ every word of which is on the page. */
+export const LD_TYPES = new Set(['WebSite', 'WebPage', 'CollectionPage', 'AboutPage', 'FAQPage', 'BreadcrumbList',
+  'ListItem', 'ItemList', 'Legislation', 'ImageObject', 'Article', 'Person', 'Question', 'Answer']);
+export const LD_FORBIDDEN = ['creator', 'publisher', 'dateCreated', 'aggregateRating', 'review',
+  'legislationLegalForce', 'legislationDate'];
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+/* a string as it would read in the page's crawlable text */
+const asOnPage = (x) => read(`<body>${String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')}</body>`).text;
 
 export function audit(root = ROOT) {
   const errors = [];
@@ -287,6 +295,16 @@ export function audit(root = ROOT) {
     walk(graph, (o) => {
       if (o['@type'] && !LD_TYPES.has(o['@type'])) err(f, `JSON-LD type ${o['@type']} is not one this site declares`);
       for (const k of LD_FORBIDDEN) if (k in o) err(f, `JSON-LD asserts "${k}", which no page states`);
+      if ('license' in o) {
+        if (o.license !== SITE.licence.url) err(f, `JSON-LD license ${o.license} is not the declared licence ${SITE.licence.url}`);
+        if (!p.licences.includes(o.license)) err(f, 'JSON-LD names a licence the page does not link with rel="license"');
+      }
+      if ('author' in o) {
+        const a = o.author || {};
+        if (a['@type'] !== 'Person' || a.name !== SITE.author) err(f, `JSON-LD author is not the declared author ${SITE.author}`);
+        if (!p.text.includes(SITE.author)) err(f, `JSON-LD names ${SITE.author} as author and the page does not`);
+      }
+      for (const k of ['datePublished', 'dateModified']) if (k in o && !ISO_DATE.test(o[k])) err(f, `JSON-LD ${k} "${o[k]}" is not a YYYY-MM-DD date`);
       for (const [k, v] of Object.entries(o)) {
         if (typeof v === 'string' && /^https?:\/\//.test(v) && v.startsWith(new URL(BASE).origin) && !v.startsWith(BASE)) err(f, `JSON-LD ${k} ${v} is outside the site`);
       }
@@ -323,7 +341,30 @@ export function audit(root = ROOT) {
         if ((leg.url || null) !== (text ? text.url : null)) err(f, 'Legislation url is not the official text the records hold');
         if (!pg.about || pg.about['@id'] !== leg['@id']) err(f, 'the page is not declared to be about the instrument');
       }
-    }
+      const art = graph.find((x) => x['@type'] === 'Article');
+      if (!art) err(f, 'no Article node for the instrument page');
+      else {
+        if (art.headline !== route.h1 || art.headline !== p.h1[0]) err(f, `Article headline "${art.headline}" is not the page's <h1>`);
+        if ((art.datePublished || null) !== route.published) err(f, 'Article datePublished is not the route model\'s');
+        if ((art.dateModified || null) !== route.modified) err(f, 'Article dateModified is not the route model\'s');
+        if (art.datePublished && art.dateModified && art.dateModified < art.datePublished) err(f, 'Article modified before it was published');
+        if (!art.mainEntityOfPage || art.mainEntityOfPage['@id'] !== pg['@id']) err(f, 'the Article is not declared the main entity of this page');
+      }
+      /* the FAQ is the "In short" box: what the route model derived, and
+         every question and every sentence of every answer on the page */
+      const faq = route.faq || [];
+      const qs = Array.isArray(pg.mainEntity) ? pg.mainEntity : [];
+      const want = faq.map((q) => ({ name: q.question, text: faqText(q.parts) }));
+      const have = qs.map((q) => ({ name: q.name, text: q.acceptedAnswer && q.acceptedAnswer.text }));
+      if (JSON.stringify(have) !== JSON.stringify(want)) err(f, 'the FAQ in the structured data is not the route model\'s — run node tools/_footer.mjs');
+      if (qs.some((q) => q['@type'] !== 'Question' || !q.acceptedAnswer || q.acceptedAnswer['@type'] !== 'Answer')) err(f, 'an FAQ entry is not a Question with an Answer');
+      for (const q of faq) {
+        if (!p.text.includes(asOnPage(q.question))) err(f, `FAQ question "${q.question}" is not on the page`);
+        for (const part of q.parts) {
+          if (!p.text.includes(asOnPage(part).replace(/\.$/, ''))) err(f, `FAQ answer "${part}" is not on the page`);
+        }
+      }
+    } else if (Array.isArray(pg.mainEntity)) err(f, 'an FAQ on a page that is not an instrument page');
   }
 
   /* ---------------------------------------------------- 7 · languages */

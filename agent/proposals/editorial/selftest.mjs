@@ -118,7 +118,8 @@ async function runWith(inputs) {
 test('every page at the repository root is read', () => {
   const pages = readdirSync(REPO_ROOT).filter((f) => f.endsWith('.html')).sort();
   assert.deepEqual(PROSE.pages, pages);
-  assert.equal(pages.length, 7, 'the site has seven pages and the reader must see all of them');
+  /* nine since 21 Oct 2026: methodology.html and licence.html */
+  assert.equal(pages.length, 9, 'the site has nine pages and the reader must see all of them');
 });
 
 test('the tag scanner leaves no close tag unmatched on any page', () => {

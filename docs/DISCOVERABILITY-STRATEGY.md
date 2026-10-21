@@ -125,9 +125,10 @@ What makes the site citable already exists: stable, permanent IDs; one URL per i
 on every record; sources with locators. What would widen its reach, in order of fit:
 
 1. **A citable snapshot.** A dated release of `data/` with a DOI (e.g. through Zenodo's GitHub
-   integration) is how datasets are cited in academic work. **This is blocked by the licence
-   question**: the footer states no licence has been declared, and without one a dataset cannot
-   responsibly be deposited for reuse. The licence is the author's decision (AGENTS.md rule 8).
+   integration) is how datasets are cited in academic work. *Was blocked by the licence question;
+   unblocked on 21 Oct 2026*, when the author declared CC BY 4.0 over the analysis, the data and
+   the code (`LICENSE`, `licence.html`). What remains is the author's: creating the release and
+   linking the deposit.
 2. **A short method note** — the evidence model and the provenance discipline — as a working
    paper (SSRN, a university repository). It is the part of the project most likely to be cited
    by people who do not need the legal content.

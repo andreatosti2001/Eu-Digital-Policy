@@ -369,7 +369,7 @@ notice names the navigation among what will not appear and then supplies it.
 The list is read out of the nav model in `js/shell.js` rather than retyped, so
 there is still one home for it.
 
-Both are written into the markup of every page — the seven hand-written ones
+Both are written into the markup of every page — the nine hand-written ones
 and each generated instrument page — rather than rendered by
 `js/shell.js`, which is the opposite of the rule the chrome follows. The
 reason is that a statement of non-affiliation which only appears when
@@ -378,10 +378,13 @@ exists precisely for the case where no script has run. The cost is one copy
 per page; `design-qa.mjs` fails the build if they stop being identical, and
 `tools/_footer.mjs` regenerates them from one source.
 
-**No licence has been declared.** The footer says so rather than implying one.
-Until the author chooses, ordinary copyright applies to the analysis and the
-datasets by default. Quotations from and links to EU legal texts carry those
-documents' own reuse terms, which this site neither extends nor restricts.
+**Licence: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)**, declared by the author,
+Andrea Tosti, on 21 October 2026, over everything original in the repository: the analysis, the
+datasets in `data/` and the code. The legal code is in [`LICENSE`](LICENSE), verbatim. It does not
+cover quotations from and links to EU legal texts and Commission documents, which carry those
+documents' own reuse terms; publications by others that the site quotes; or the self-hosted
+typefaces in `fonts/`, which keep their own licences. The footer of every page states it with a
+`rel="license"` link, and [`licence.html`](licence.html) explains it and how to cite.
 
 ## Known limitations
 

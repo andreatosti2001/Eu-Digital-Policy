@@ -467,7 +467,9 @@ that the Playwright suites lived outside the repository, which stopped being tru
 holds it to the route model (`tools/seo.mjs`): unique non-generic titles and descriptions,
 one canonical per entity, a sitemap of exactly the indexable routes with data-derived `lastmod`,
 every indexable page reachable by static links, JSON-LD that parses and agrees with the page and
-asserts no author, date, licence or legal force, no `hreflang` to a page that is not a real
+asserts no publisher or legal force — and, since 21 Oct 2026, names an author, a licence, dates and
+an FAQ only as the page shows them (the footer's `rel="license"` link and name; the instrument
+page's `<h1>` and "In short" box) — no `hreflang` to a page that is not a real
 alternate, and every generated page and social card current. Exit 1 on an error.
 `docs/SEO-OPERATIONS.md`.
 

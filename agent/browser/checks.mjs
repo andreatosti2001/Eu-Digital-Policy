@@ -48,6 +48,9 @@ export const PAGES = [
   { file: 'applies.html', name: 'the applicability tool', main: '#ap-results' },
   { file: 'bibliography.html', name: 'the evidence and sources view', main: '#bib' },
   { file: 'instruments/gdpr/', name: 'one instrument, in full', main: '#instrumentPage' },
+  /* static prose since 21 Oct 2026: no loading fallback, so "rendered" on load */
+  { file: 'methodology.html', name: 'the methodology', main: '#maincontent' },
+  { file: 'licence.html', name: 'the licence and reuse page', main: '#maincontent' },
 ];
 
 /** A page is "rendered" when its mount point no longer holds the
@@ -546,7 +549,8 @@ export async function checkInstrumentView(page, origin, id = 'gdpr') {
    ============================================================ */
 
 export const SEO_PAGES = ['', 'instruments.html', 'instruments/ai-act/', 'instruments/gdpr/', 'instruments/dsa/',
-  'instruments/dma/', 'enforcement.html', 'applies.html', 'bibliography.html', 'institutions.html'];
+  'instruments/dma/', 'enforcement.html', 'applies.html', 'bibliography.html', 'institutions.html',
+  'methodology.html', 'licence.html'];
 
 const rawSeo = (html) => {
   const visible = (html.match(/<body[^>]*>([\s\S]*)<\/body>/) || [, ''])[1]

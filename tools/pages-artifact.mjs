@@ -45,6 +45,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const PUBLIC_FILES = Object.freeze([
   'index.html', 'instruments.html', 'instrument.html', 'institutions.html',
   'enforcement.html', 'applies.html', 'bibliography.html',
+  'methodology.html', 'licence.html',
   'app.js', 'style.css', 'sitemap.xml',
 ]);
 export const PUBLIC_DIRS = Object.freeze(['css', 'js', 'data', 'i18n', 'fonts', 'instruments', 'img']);

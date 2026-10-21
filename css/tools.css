@@ -1206,6 +1206,11 @@ body[data-theme="light"]{
 }
 .sf-inner p:last-child{margin-bottom:0}
 .sf-disclaimer{color:var(--text-1)}
+/* the footer's one link (the licence, since 21 Oct 2026): the text colour,
+   underlined, because an unstyled link is the browser's blue and fails
+   contrast in the dark theme */
+.sf-inner a,.doc-body a:not(.cc-badge){color:var(--text-1);text-decoration:underline;text-underline-offset:2px}
+.sf-inner a:hover,.sf-inner a:focus-visible,.doc-body a:not(.cc-badge):hover,.doc-body a:not(.cc-badge):focus-visible{text-decoration-thickness:2px}
 .sf-meta{
   display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s-2);
   font-family:var(--mono);font-size:var(--t-micro);
@@ -1250,7 +1255,7 @@ body[data-theme="light"]{
   background:var(--surface-page);
 }
 .site-index + .site-foot{border-top:0;margin-top:0}
-.si-inner{max-width:var(--w-reading);margin:0 auto;display:grid;gap:var(--s-5);grid-template-columns:1fr 2fr}
+.si-inner{max-width:var(--w-reading);margin:0 auto;display:grid;gap:var(--s-5);grid-template-columns:1fr 1fr 2fr}
 .si-label{
   margin:0 0 var(--s-2);
   font-family:var(--mono);font-size:var(--t-micro);letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);
@@ -1416,3 +1421,22 @@ h2 .ri-sub{display:inline;margin-left:var(--s-2)}
 .ev-dim-70{opacity:.7}
 .ev-dim-75{opacity:.75}
 .ev-dim-80{opacity:.8}
+
+/* ---------------------------------------------------------- about pages
+   methodology.html and licence.html: running prose under a tool head.
+   Tokens only. The licence mark is text, not the Creative Commons button
+   image, because that image would be a third-party request. */
+.doc-body{max-width:68ch;padding:8px 0 0;overflow-wrap:anywhere}
+.doc-body h2{font-family:var(--display);font-weight:500;font-size:24px;line-height:1.25;color:var(--paper);margin:40px 0 12px}
+.doc-body p,.doc-body li{font-family:var(--body);font-size:16px;line-height:1.65;color:var(--paper-dim)}
+.doc-body p{margin:0 0 14px}
+.doc-body ul,.doc-body ol{margin:0 0 14px;padding-left:20px}
+.doc-body li{margin-bottom:6px}
+.doc-body b,.doc-body strong{color:var(--paper);font-weight:500}
+.doc-body code{font-family:var(--mono);font-size:.9em}
+.doc-body .doc-cite{border-left:2px solid var(--line);padding:4px 0 4px 14px;margin:0 0 14px}
+.cc-badge{display:inline-flex;align-items:center;gap:8px;margin:18px 0 0;padding:6px 12px;
+  border:1px solid var(--line);border-radius:4px;font-family:var(--mono);font-size:13px;letter-spacing:.04em;
+  color:var(--paper);text-decoration:none}
+.cc-badge b{font-weight:500;border:1px solid var(--paper-dim);border-radius:50%;padding:0 5px;font-size:11px}
+.cc-badge:hover,.cc-badge:focus-visible{border-color:var(--paper)}
