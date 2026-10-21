@@ -40,7 +40,7 @@ import {
 } from './thirdparty.mjs';
 import { EXPECTED, RECHECK } from './freshness.mjs';
 import { readBaseline } from '../agent/implement/baseline.mjs';
-import { audit, passages, datesIn, DERIVED_FIELDS } from './evidence-audit.mjs';
+import { audit, passages, datesIn, DERIVED_FIELDS, rankingProblems } from './evidence-audit.mjs';
 import { cspProblems, securityMeta, inlineScripts } from './csp.mjs';
 import { openBacklog } from '../js/evidence-model.js';
 import { sitePages } from './thirdparty.mjs';
@@ -1167,4 +1167,22 @@ test('O8 · the masthead says when the records were checked, from the records, w
   assert.doesNotMatch(src, /\.portal-head/, 'the old line wrote into an element no page has');
   assert.doesNotMatch(src, /\$last_verified/, 'a file-level date is not a per-record check');
   assert.match(src, /checkedLine\(instruments, \[\.\.\.ix\.event\.values\(\)\], records\)/);
+});
+
+/* ---------------------------------------------- audit of 21 Oct 2026 */
+
+test('A1 · a "largest to date" claim is recomputed from the records, and fails when a larger one is added', () => {
+  const claims = readData('claims.json').claims;
+  const enf = readData('enforcement.json').enforcement;
+  const ranked = claims.filter((c) => c.ranking);
+  assert.ok(ranked.some((c) => c.id === 'clm-google-dma-largest-total') && ranked.some((c) => c.id === 'clm-aliexpress-fine'),
+    'both "largest" claims in the brief carry a ranking block');
+  for (const c of ranked) assert.deepEqual(rankingProblems(c, enf), [], `${c.id} holds over the records as they stand`);
+  const g = ranked.find((c) => c.id === 'clm-google-dma-largest-total');
+  const bigger = { id: 'enf-planted', instrument: 'dma', authority: 'ec', fine_eur: 1e9, action_status: 'action:imposed' };
+  assert.match(rankingProblems(g, [...enf, bigger]).join(' '), /ranks 2/, 'a planted larger DMA fine breaks the ranking');
+  const unknown = { ...bigger, fine_eur: null };
+  assert.match(rankingProblems(g, [...enf, unknown]).join(' '), /cannot be settled/, 'an imposed fine of unknown amount is not a small one');
+  const prelim = { ...unknown, action_status: 'action:announced' };
+  assert.deepEqual(rankingProblems(g, [...enf, prelim]), [], 'preliminary findings carry no fine and do not unsettle it');
 });

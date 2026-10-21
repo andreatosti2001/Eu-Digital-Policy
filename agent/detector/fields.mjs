@@ -177,8 +177,13 @@ export const VALUE_FIELDS = {
      its input claim's own statement. Input names are chosen per claim;
      the live data uses a, b, c and t (c and t added 27 Sep 2026 with
      clm-four-categories-94pct). A new name is a new path, and this
-     register will say so. */
+     register will say so.
+     ranking.* (21 Oct 2026): a "largest to date" claim; tools/evidence-audit.mjs
+     rankingProblems() recomputes the rank from data/enforcement.json on
+     every run. ranking.subject and ranking.where.* are record ids and
+     resolve as references; these three are the values. */
   claim: ['id', 'published', 'last_verified', 'reference_gap', 'requires_verification', 'sources.locator',
+    'ranking.dataset', 'ranking.by', 'ranking.rank',
     'derivation.performed_by', 'derivation.formula', 'derivation.result', 'derivation.unit',
     'derivation.rounding.to', 'derivation.rounding.stated_value',
     'derivation.inputs.a.value', 'derivation.inputs.a.as_stated',
