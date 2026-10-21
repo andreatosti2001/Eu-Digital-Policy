@@ -209,6 +209,25 @@ document.querySelectorAll('.lens button').forEach(function(btn){
   });
 });
 
+/* ================= part counters, from the boxes themselves =================
+   Each Part's eyebrow counts its mechanics, critique and synthesis boxes.
+   The figures were typed by hand and drifted (audit of 21 Oct 2026 item 13:
+   Part I said "0 mechanics" over a MECHANICS box), so they are recounted
+   here from the boxes the Part actually holds — on load, and again after a
+   language swap replaces the eyebrow's text. The static figures in the
+   markup are the same counts, for a reader without JavaScript, and
+   tools/selftest.mjs holds them to the boxes. */
+function countBoxes(){
+  document.querySelectorAll('section.part').forEach(function(sec){
+    sec.querySelectorAll('.part-eyebrow [data-count]').forEach(function(el){
+      var n = String(sec.querySelectorAll('.box[data-tone="' + el.dataset.count + '"]').length);
+      if (el.textContent !== n) el.textContent = n;
+    });
+  });
+}
+countBoxes();
+document.addEventListener('i18n:applied', countBoxes);
+
 /* ================= system map + node cards -> jump to part ================= */
 function jumpTo(id){
   var el = document.getElementById(id);

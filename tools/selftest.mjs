@@ -1231,3 +1231,24 @@ test('A3 · a recorded inaction is typed, carries nothing an action carries, and
     assert.match(readFileSync(join(ROOT, f), 'utf8'), /actionsOnly\(/, `${f} counts through actionsOnly()`);
   }
 });
+
+test('A4 · every Part counter equals the boxes the Part holds, in all four languages (item 13)', () => {
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  const parts = [...html.matchAll(/<section class="part"[^>]*id="([^"]+)"/g)];
+  assert.ok(parts.length >= 11);
+  const loc = Object.fromEntries(['it', 'fr', 'es'].map((c) => [c, JSON.parse(readFileSync(join(ROOT, 'i18n', `${c}.json`), 'utf8'))]));
+  for (const m of parts) {
+    const seg = html.slice(m.index, html.indexOf('</section>', m.index));
+    const eyebrow = (seg.match(/class="part-eyebrow" data-i18n="([^"]+)">([\s\S]*?)<\/span>\s*(?:<|$)/) || [])[0] || '';
+    const key = (seg.match(/class="part-eyebrow" data-i18n="([^"]+)"/) || [])[1];
+    for (const tone of ['mech', 'crit', 'synth']) {
+      const boxes = (seg.match(new RegExp(`class="box [^"]*" data-tone="${tone}"`, 'g')) || []).length;
+      const shown = (src) => { const x = src.match(new RegExp(`data-count="${tone}">(\\d+)<`)); return x ? Number(x[1]) : 0; };
+      assert.equal(shown(seg), boxes, `${m[1]}: the English ${tone} counter`);
+      for (const [c, o] of Object.entries(loc)) assert.equal(shown(o[key] || ''), boxes, `${m[1]}: the ${c} ${tone} counter`);
+    }
+    assert.doesNotMatch(eyebrow, /· \d+ (mechanics|critique)/, `${m[1]}: no hand-typed counter outside a data-count span`);
+  }
+  assert.match(html, /<aside class="box box-synth" data-tone="synth"><span class="box-label" data-i18n="part-11\.span6">SYNTHESIS</, 'Part XI\'s synthesis box is labelled as synthesis');
+  assert.match(readFileSync(join(ROOT, 'app.js'), 'utf8'), /addEventListener\('i18n:applied', countBoxes\)/, 'and the counters are recomputed after a language swap');
+});

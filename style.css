@@ -351,6 +351,10 @@ tbody tr:hover td{background:rgba(255,255,255,.025);color:var(--paper)}
 .box-crit .box-label{color:var(--crit)} .box-crit h3,.box-crit h4{color:var(--paper)}
 body[data-lens="mech"] .box-crit{opacity:.15;filter:grayscale(.6)}
 body[data-lens="crit"] .box-mech{opacity:.15;filter:grayscale(.6)}
+/* synthesis: the author's own conclusion, neither mechanics nor critique (audit of 21 Oct 2026 item 13); each lens shows one category, so it recedes under both */
+.box-synth{border-left:3px solid var(--paper-faint)}
+.box-synth .box-label{color:var(--paper-dim)} .box-synth h3,.box-synth h4{color:var(--paper)}
+body[data-lens="mech"] .box-synth,body[data-lens="crit"] .box-synth{opacity:.15;filter:grayscale(.6)}
 .box{transition:opacity .25s,filter .25s}
 
 /* ---------------------------------------------------------- glossary panel */
