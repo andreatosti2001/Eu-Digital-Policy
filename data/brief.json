@@ -1,6 +1,6 @@
 {
  "$schema_version": "1.0.0",
- "$description": "The document's own structure. Canonical for part identity, ordering, titles, deks and reading times, and for the reading-order graph drawn by the Tree of Life. This is a NAVIGATION graph between parts of the document, deliberately kept separate from the legal relationships between instruments in instruments.json.",
+ "$description": "The document's own structure. Canonical for part identity, ordering, titles, deks and reading times, and for the reading-order graph drawn by the interactive summary. This is a NAVIGATION graph between parts of the document, deliberately kept separate from the legal relationships between instruments in instruments.json.",
  "$last_verified": "2026-08-27",
  "parts": [
   {

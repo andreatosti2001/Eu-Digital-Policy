@@ -786,7 +786,7 @@ shortcutsScrim.innerHTML = '<div class="shortcuts-panel">'+
   '<h2 id="shortcutsTitle">Keyboard shortcuts</h2>'+
   '<dl class="shortcuts-list">'+
   '<div class="shortcuts-row"><dt>Search</dt><dd><kbd>&#8984;K</kbd> <kbd>/</kbd></dd></div>'+
-  '<div class="shortcuts-row"><dt>Contents &middot; Tree of Life</dt><dd><kbd>G</kbd></dd></div>'+
+  '<div class="shortcuts-row"><dt>Contents</dt><dd><kbd>G</kbd></dd></div>'+
   '<div class="shortcuts-row"><dt>Next / previous Part</dt><dd><kbd>]</kbd> <kbd>[</kbd></dd></div>'+
   '<div class="shortcuts-row"><dt>Close anything open</dt><dd><kbd>Esc</kbd></dd></div>'+
   '<div class="shortcuts-row"><dt>This panel</dt><dd><kbd>?</kbd></dd></div>'+
@@ -831,7 +831,7 @@ document.addEventListener('keydown', function(e){
     try{ l.style.setProperty('--len', Math.ceil(l.getTotalLength())); }catch(e){}
   });
 
-  /* caption: the hovered vessel names itself, with its cost in minutes */
+  /* caption: the hovered node names itself, with its cost in minutes */
   var cap = document.getElementById('portalCaption');
   var capDefault = cap ? cap.innerHTML : '';
   function showCap(n){
