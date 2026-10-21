@@ -2,7 +2,9 @@
 
 **Last updated:** P1 — licence, methodology, structured data, custom domain · 21 October 2026
 **Branches:** `claude/p1-licence-geo` (cut from `origin/main` at `05707f5`) and
-`claude/p1-custom-domain` (stacked on it). Neither is merged; no pull request was opened.
+`claude/p1-custom-domain` (stacked on it). The first merged into `main` with `--no-ff` on the
+author's instruction of 21 Oct 2026 ("Fai merge solo di claude p1-licence"), no pull request; the
+second is **not merged** and waits for the domain to resolve (`docs/DEPLOYMENT.md` §8).
 
 ## P1 — licence, methodology, structured data, custom domain — 21 October 2026
 
@@ -65,8 +67,8 @@ longer blocked; (d) `fonts/` carries no licence files for the three typefaces �
 ## Branch register — 21 October 2026 (P1)
 
 At the start `git branch -r --no-merged origin/main` listed nothing besides `main`'s own history.
-`claude/p1-licence-geo` and `claude/p1-custom-domain` are this session's, unmerged, awaiting the
-author.
+`claude/p1-licence-geo` is in `main` (merged `--no-ff`, not deleted). `claude/p1-custom-domain` is
+this session's and **unmerged on purpose**: merging it before DNS answers takes the site offline.
 
 ## DMA click-through pass — 21 October 2026
 
