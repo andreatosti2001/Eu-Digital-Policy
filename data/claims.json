@@ -1754,7 +1754,7 @@
     {
       "id": "clm-eprivacy-miscounted-fines",
       "type": "claim-type:fact",
-      "statement": "Two large September 2025 French decisions (Google EUR 325m, Shein EUR 150m) are frequently miscounted as GDPR fines when they were issued under the French ePrivacy regime rather than through the one-stop-shop.",
+      "statement": "Two large September 2025 French decisions (Google EUR 325m, Shein EUR 150m) were issued under the French ePrivacy regime rather than through the one-stop-shop, so they are not GDPR fines and should not be counted as such.",
       "instruments": [
         "gdpr",
         "eprivacy"
@@ -1766,26 +1766,21 @@
       "enforcement": [],
       "sources": [
         {
-          "source_id": "src-brief-original",
-          "supports": "supports:direct",
-          "locator": "Annex B"
-        },
-        {
           "source_id": "src-cnil-google-2025",
-          "supports": "supports:partial",
+          "supports": "supports:direct",
           "locator": "Section 'The jurisdiction of the CNIL'"
         },
         {
           "source_id": "src-cnil-shein-2025",
-          "supports": "supports:partial",
+          "supports": "supports:direct",
           "locator": "Section 'The jurisdiction of the CNIL'"
         }
       ],
       "legal_basis": [],
       "brief_part": "annex-b",
       "published": "2026-08-19",
-      "last_verified": "2026-09-27",
-      "verification_note": "27 Sep 2026: the legal basis of both decisions is now sourced to the CNIL's own releases and recorded as two claims (clm-cnil-google-2025, clm-cnil-shein-2025): Article 82 of the French Data Protection Act, transposing the ePrivacy Directive, with the GDPR's one-stop-shop not applying. That they are frequently miscounted as GDPR fines remains the brief's own observation. REQUIRES VERIFICATION. No external source located. This is a methodological caveat the brief raises against itself and is worth anchoring in the CNIL decisions.",
+      "last_verified": "2026-10-21",
+      "verification_note": "21 Oct 2026 (audit, evidence item clm-eprivacy-miscounted-fines): rephrased. The claim used to say the two decisions 'are frequently miscounted as GDPR fines', which nothing showed; no two examples of the miscount were sought, and the statement now says only what the CNIL's own releases state — Article 82 of the French Data Protection Act, transposing the ePrivacy Directive, with the GDPR's one-stop-shop not applying — and the consequence for counting. With that scope the two CNIL releases carry it directly, so their references are direct and the brief no longer cites itself. The reference gap is left set for a person to clear. Earlier note: 27 Sep 2026: the legal basis of both decisions is now sourced to the CNIL's own releases and recorded as two claims (clm-cnil-google-2025, clm-cnil-shein-2025): Article 82 of the French Data Protection Act, transposing the ePrivacy Directive, with the GDPR's one-stop-shop not applying. That they are frequently miscounted as GDPR fines remains the brief's own observation. REQUIRES VERIFICATION. No external source located. This is a methodological caveat the brief raises against itself and is worth anchoring in the CNIL decisions.",
       "reference_gap": true,
       "gap_note": "The two French decisions of September 2025 are widely reported, but no source was located that states they are frequently miscounted as GDPR fines — that observation is the brief's own."
     },

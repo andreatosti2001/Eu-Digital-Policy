@@ -187,7 +187,7 @@ Two rules in that file exist because both have already shipped as bugs:
 
 | Page | What it is |
 |---|---|
-| `index.html` | The brief. Fourteen parts, the evidence apparatus, the reading tools. |
+| `index.html` | The brief. Eleven Parts and two Annexes, the evidence apparatus, the reading tools. |
 | `instruments.html` | The Regulatory DNA comparison — any set of instruments, any dimensions. |
 | `instruments/<id>/` | One instrument end to end: status, dates, applicability, provisions, enforcement, evidence, how it interacts with other instruments, related entities. Pre-rendered from the data for the twelve instruments whose records pass the indexability gate in `js/routes.js`; the browser re-renders the same view with today's date. |
 | `instrument.html?id=…` | The address every instrument had until 27 Sep 2026. It forwards to `instruments/<id>/`; a record too thin for a page of its own is rendered here and marked `noindex`. |

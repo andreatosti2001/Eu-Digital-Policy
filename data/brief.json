@@ -102,18 +102,10 @@
   {
    "id": "annex-b",
    "roman": "B",
-   "title": "A note on method",
-   "dek": null,
-   "reading_minutes": 1,
-   "kind": "annex"
-  },
-  {
-   "id": "annex-c",
-   "roman": "C",
-   "kind": "annex",
    "title": "Method, and the use of AI in building this",
-   "dek": "How the project was built, what was delegated and what was not.",
-   "reading_minutes": 2
+   "dek": null,
+   "reading_minutes": 3,
+   "kind": "annex"
   }
  ],
  "reading_graph": [

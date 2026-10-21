@@ -403,6 +403,9 @@ body[data-lens="mech"] .box-synth,body[data-lens="crit"] .box-synth{opacity:.15;
 .pg.next{text-align:right}
 .footnote{max-width:var(--measure);margin:60px 0 0;padding-top:20px;border-top:1px solid var(--line);
   font-family:var(--mono);font-size:11px;color:var(--paper-faint);line-height:1.7}
+/* the reading guide stands before Part I (audit of 21 Oct 2026 item 17); it was a footnote after Annex C */
+.reading-guide{max-width:var(--measure);margin:0 0 40px;padding:0 0 20px;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.6;color:var(--paper-dim)}
+.reading-guide b{color:var(--paper);font-weight:600}
 
 /* ---------------------------------------------------------- mobile */
 @media (max-width:1080px){

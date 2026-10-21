@@ -51,7 +51,7 @@ the gate in `js/routes.js`. Why: `docs/SEO-AUDIT-2026-09-27.md`; how: `docs/SEO-
 
 | Page | Role |
 |---|---|
-| `index.html` | The brief. Fourteen parts, evidence apparatus, reading tools. 210 KB. |
+| `index.html` | The brief. Thirteen sections — eleven Parts and two Annexes since 21 Oct 2026, when Annexes B and C were merged into one method annex — evidence apparatus, reading tools. 210 KB. |
 | `instruments.html` | Regulatory DNA comparison across any set of instruments. |
 | `instruments/<id>/` | One instrument end to end, pre-rendered (27 Sep 2026). The reference implementation for a detail page. |
 | `instrument.html?id=…` | The former address: forwards to `instruments/<id>/`, or renders a record below the gate with `noindex`. |
@@ -177,7 +177,7 @@ the `$note` before editing any dataset** — it is where the non-obvious invaria
 | `sources.json` | 77 sources | One record per document. A source is never described twice. `url_status` distinguishes live / unchecked / none. |
 | `applicability.json` | 33 rules | Declarative; the matcher in `js/applies.js` is deliberately unintelligent. The reasoning lives in the data and is inspectable. |
 | `glossary.json` | 15 terms | Terms carry edges outward, so a definition is an entry point rather than a dead end. |
-| `brief.json` | 14 parts + 20 reading-graph edges | Canonical for part identity, ordering, titles, deks, reading times. **Not consumed at runtime — see §8.** |
+| `brief.json` | 13 parts (11 Parts, 2 Annexes; 14 until 21 Oct 2026) + 20 reading-graph edges | Canonical for part identity, ordering, titles, deks, reading times. **Not consumed at runtime — see §8.** |
 
 ## 8. RESOLVED 30 Sep 2026: the `__CONTENT__` bypass — and the one second home left
 
@@ -392,7 +392,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 46 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 0 warnings · 45 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -439,6 +439,7 @@ the corpus being more honest, not less.
 
 - 47 → 47 (14 Oct 2026): the October 2026 evidence update (`docs/AUDIT-2026-10-14.md`) added six claims and four timeline events, every one read that day against its source, and moved no record into or out of the unverified set. One record changed how it is listed there: `clm-ai-act-standards-not-ready` went from "unverified" to "no external direct source", because recital 40 of Regulation (EU) 2026/1744 now partially supports its premise.
 - 47 → 46 (21 Oct 2026): `clm-x-legal-basis-fragility` (Part III objection 3) was REMOVED, not verified. It was attributed to "practitioner analysis" whose only source was the brief itself; the Official Journal summaries of X's actions (T-114/26, T-120/26) raise no Art. 25(2) plea, and searches on 21 Oct 2026 found no analysis making the argument, so on the audit's instruction (item 8) the objection, its claim and its three references were deleted and the box now has three objections in all four languages. The other Phase 1 changes of that day (`docs/AUDIT-2026-10-21.md`) added records read that day against their sources and moved none into or out of the unverified set.
+- 46 → 45 (21 Oct 2026): `clm-eprivacy-miscounted-fines` no longer says the two French ePrivacy decisions "are frequently miscounted as GDPR fines", which nothing showed; it says what the CNIL's own releases state (Art. 82 of the French Data Protection Act; the one-stop-shop not applying) and that they should therefore not be counted as GDPR fines. With that scope the two CNIL references are direct and the brief no longer cites itself, so the claim leaves the unverified set by re-scoping to its evidence. Its `reference_gap` is still set, for a person to clear (Annex B p1, all four languages).
 
 The other numbers on this block are unchanged.
 
