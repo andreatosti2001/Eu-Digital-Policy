@@ -1,8 +1,9 @@
 # HANDOVER
 
 **Last updated:** DMA click-through pass · 21 October 2026
-**Branch:** `claude/seo-dma-ctr`, cut from `origin/main` at `6a2357f` (PR #11's merge). Pushed;
-no pull request opened.
+**Branch:** `claude/seo-dma-ctr`, cut from `origin/main` at `6a2357f` (PR #11's merge). Pushed
+to `main` by fast-forward on the author's explicit instruction ("Push to main"), with no pull
+request; `main` had not moved since the branch was cut.
 
 ## DMA click-through pass — 21 October 2026
 
