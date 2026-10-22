@@ -105,7 +105,8 @@ function themeButton() {
    the language does not exist or that these pages are translated,
    the chrome carries the language the reader chose on the brief,
    applies it to the entity layer, and says plainly that the
-   interface text around it is English. */
+   interface text around it is English. The note leads back to the
+   brief in that language: its edition page (it/, fr/, es/). */
 async function languageNote() {
   let lang = 'en';
   try { lang = localStorage.getItem('eupolicy:lang') || 'en'; } catch (e) { /* private mode */ }
@@ -115,7 +116,7 @@ async function languageNote() {
   if (!rec) return null;                       /* a language we do not ship is not applied */
   document.documentElement.setAttribute('lang', lang);
   const note = el('a', {
-    class: 'chrome-btn chrome-lang', href: href('index.html'),
+    class: 'chrome-btn chrome-lang', href: href(rec.edition ? rec.edition.path : 'index.html'),
     title: 'Record labels follow ' + (rec.name || lang.toUpperCase()) +
            '. The interface text on this page is English.',
   });

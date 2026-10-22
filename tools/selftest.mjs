@@ -771,9 +771,12 @@ test('I1d · languages: no alternate is advertised for a translation no person h
   }
   assert.doesNotMatch(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8'), /\?lang=/, 'a ?lang= address is in the sitemap');
   const app = readFileSync(join(ROOT, 'app.js'), 'utf8');
-  assert.match(app, /searchParams\.get\('lang'\)/, 'the page still honours the parameter');
-  const sync = app.slice(app.indexOf('function syncLangUrl'), app.indexOf('function demote'));
-  assert.doesNotMatch(sync, /canonical/, 'the canonical is not rewritten after load');
+  const i18n = app.slice(app.indexOf('/* ================= i18n: one page per language'));
+  assert.ok(i18n.length > 1000, 'the language block was found');
+  assert.match(i18n, /searchParams\.get\('lang'\)/, 'an old ?lang= address still works: it forwards to the edition');
+  assert.match(i18n, /location\.replace\(/, 'by replacing, so Back does not loop');
+  assert.doesNotMatch(i18n, /canonical/, 'no head metadata is rewritten after load');
+  assert.doesNotMatch(i18n, /\.innerHTML = map\[|el\.innerHTML = v/, 'and no translation is swapped in place: each language is its own page');
 });
 
 test('I2 · the Pages artifact is the website and nothing else', () => {
