@@ -679,7 +679,7 @@ body.i18n-busy .readwrap,body.i18n-busy .portal,body.i18n-busy .hero{opacity:.45
 .langmenu li[aria-disabled="true"]:hover{background:none}
 /* a locale that does not carry every string says so before you pick it */
 .lm-partial{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--paper-faint);border:1px solid var(--line);padding:1px 4px;margin-left:6px;vertical-align:1px}
+  color:var(--paper-faint);border:1px solid var(--line);padding:1px 4px;margin-left:6px;vertical-align:1px;white-space:nowrap}
 /* and any element that fell back to English is marked in place, so the gap in a
    translation is visible in the interface rather than passing for a translation */
 [data-i18n-fallback]{position:relative}

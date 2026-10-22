@@ -1492,6 +1492,9 @@ document.addEventListener('keydown', function(e){
     menu.innerHTML = list.map(function(l){
       var partial = l.complete === false
         ? ' <span class="lm-partial" title="Some strings fall back to English">partial</span>' : '';
+      /* the brief is translated, the records mostly are not (audit item 21):
+         said in the menu, before the reader chooses */
+      if (l.data_coverage === 'brief') partial += ' <span class="lm-partial" title="The brief is translated; the enforcement observatory, the calendar details and the instrument and tool pages are largely in English">data in English</span>';
       return '<li role="option" tabindex="-1" data-lang="' + l.code + '" aria-selected="' +
         (l.code === current) + '"><b>' + l.code.toUpperCase() + '</b><span>' +
         l.label + partial + '</span></li>';
