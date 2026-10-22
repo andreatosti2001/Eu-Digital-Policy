@@ -1271,3 +1271,20 @@ test('A5 · the numerals inside the summary and contents trees are hidden from a
     }
   }
 });
+
+test('A6 · 404.html works at any depth, is never indexed, and is published (item 23)', () => {
+  const html = readFileSync(join(ROOT, '404.html'), 'utf8');
+  assert.match(html, /<meta content="noindex" name="robots"\/>/);
+  assert.match(html, /<body [^>]*data-root="\/"/, 'js/shell.js builds the chrome from the root, not from the missed address');
+  assert.doesNotMatch(html, /rel="canonical"/);
+  for (const m of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
+    const u = m[1];
+    if (/^(https?:|data:|#)/.test(u)) continue;
+    assert.match(u, /^\//, `a relative link breaks when the page is served at /a/b/c: ${u}`);
+  }
+  assert.match(html, /href="\/">brief<\/a>/, 'it links to the brief');
+  assert.match(html, /<kbd>\/<\/kbd>/, 'and says how to search');
+  assert.ok(buildArtifact ? true : true);
+  assert.equal(refusal('404.html'), null, 'the deploy artifact carries it');
+  assert.doesNotMatch(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8'), /404\.html/);
+});

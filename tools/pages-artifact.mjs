@@ -46,7 +46,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const PUBLIC_FILES = Object.freeze([
   'index.html', 'instruments.html', 'instrument.html', 'institutions.html',
   'enforcement.html', 'applies.html', 'bibliography.html',
-  'methodology.html', 'licence.html',
+  'methodology.html', 'licence.html', '404.html',
   'app.js', 'style.css', 'sitemap.xml', 'robots.txt', 'CNAME',
 ]);
 export const PUBLIC_DIRS = Object.freeze(['css', 'js', 'data', 'i18n', 'fonts', 'instruments', 'img']);
@@ -112,7 +112,8 @@ export function verify(out) {
       if (!local(m[1])) continue;
       /* relative to the page: an instrument page two levels down reaches
          the stylesheets through ../../, and links to directories */
-      let target = join(dirname(f), m[1]).split(sep).join('/');
+      /* …and 404.html, served at any address, reaches everything root-absolute */
+      let target = m[1].startsWith('/') ? m[1].slice(1) || '.' : join(dirname(f), m[1]).split(sep).join('/');
       if (m[1].endsWith('/') || target === '.') target = (target === '.' ? '' : target.replace(/\/?$/, '/')) + 'index.html';
       if (!have.has(target)) problems.push(`${f} references ${m[1]}, which the artifact does not contain`);
     }

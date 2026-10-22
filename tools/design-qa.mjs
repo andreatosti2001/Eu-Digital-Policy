@@ -263,7 +263,9 @@ for (const f of PAGES) {
   const nos = between(html, NOS_A, NOS_B);
   /* a page below the root prefixes its links with "../"; compared without
      it, every notice must still be one text */
-  const unroot = (x) => x.replace(/(href=")(?:\.\.\/)+/g, '$1');
+  /* the same notice at any depth: ../../ on an instrument page, and a root-absolute
+     / on 404.html, which is served at whatever address was missed (21 Oct 2026) */
+  const unroot = (x) => x.replace(/(href=")(?:(?:\.\.\/)+|\/(?!\/))/g, '$1');
   if (!foot) err(f, 'no site footer — the independence disclaimer must be on every page');
   else footers.set(f, foot.replace(/^[^>]*-->/, '').trim());
   if (!nos) err(f, 'no <noscript> notice — a JS-rendered page must say so when JS is off');

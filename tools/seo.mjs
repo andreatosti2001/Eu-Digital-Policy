@@ -135,6 +135,16 @@ export const TOP_PAGES = Object.freeze([
     records: [],
   },
   {
+    /* 21 Oct 2026 (audit item 23). GitHub Pages serves 404.html, with a 404
+       status, at whatever address was missed, at any depth — so every link
+       in it is root-absolute (root '/'), and it is never indexable. */
+    file: '404.html', path: '404.html', schema: null, compat: true, root: '/',
+    reason: 'the not-found page: served by GitHub Pages at any missing address, with a 404 status, and marked noindex',
+    title: 'Page not found' + BRAND,
+    description: 'There is no page at this address on EU Digital Policy. The brief, the instrument pages and the site search are linked from here.',
+    records: [],
+  },
+  {
     file: 'licence.html', path: 'licence.html', schema: 'WebPage',
     title: 'Licence and reuse: cite and reuse this analysis and its data under CC BY 4.0' + BRAND,
     description: 'EU Digital Policy is licensed under Creative Commons Attribution 4.0 International: what you may do with the analysis, the datasets and the code, how to credit them, and what the licence does not cover.',
@@ -302,10 +312,10 @@ export function buildRoutes(db, root = ROOT) {
     const crumb = crumbOf(root, p.file);
     routes.push({
       kind: p.compat ? 'compat' : (p.file === 'index.html' ? 'home' : 'directory'),
-      file: p.file, root: '', url,
+      file: p.file, root: p.root || '', url,
       canonical: p.compat ? null : url,
       indexable: !p.compat,
-      reason: p.compat ? 'compatibility route: forwards to an instrument page, or renders a thin record with noindex' : null,
+      reason: p.compat ? (p.reason || 'compatibility route: forwards to an instrument page, or renders a thin record with noindex') : null,
       title: p.title, description: p.description, schema: p.schema,
       h1: null,
       breadcrumb: p.file === 'index.html' ? [] : [home, { name: crumb || p.title, url }],
