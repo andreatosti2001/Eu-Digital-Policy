@@ -397,8 +397,8 @@
       "legal_basis": [],
       "brief_part": "part-9",
       "published": "2026-08-19",
-      "last_verified": null,
-      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. Related, instrument-level: clm-art-34-open-concept."
+      "last_verified": "2026-10-22",
+      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. Related, instrument-level: clm-art-34-open-concept. 22 Oct 2026 (audit, outdated interpretive claims): re-read against Parts I, III, IV and V as they stand: still consistent; the Google specification decisions under DMA Art. 6(7) and 6(11) (Part IV, July 2026) and the standards-driven AI Act delay (Part V) are current instances of the content being set below the legislature. It still rests on the brief alone, and that is unchanged: re-reading a synthesis against the Parts it synthesises dates the check; it does not source it."
     },
     {
       "id": "clm-overlap-one-control-set",
@@ -423,8 +423,8 @@
       "legal_basis": [],
       "brief_part": "part-9",
       "published": "2026-08-19",
-      "last_verified": null,
-      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. The article-level overlap is partly covered by clm-three-impact-assessments; the article lists in the prose have not been checked one by one."
+      "last_verified": "2026-10-22",
+      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. The article-level overlap is partly covered by clm-three-impact-assessments; the article lists in the prose have not been checked one by one. 22 Oct 2026 (audit, outdated interpretive claims): re-read against Parts II–V as they stand: none of the articles it lists was changed by the edits of 21 Oct 2026; still consistent. It still rests on the brief alone, and that is unchanged: re-reading a synthesis against the Parts it synthesises dates the check; it does not source it."
     },
     {
       "id": "clm-rulebook-foreign-policy",
@@ -447,8 +447,8 @@
       "legal_basis": [],
       "brief_part": "part-9",
       "published": "2026-08-19",
-      "last_verified": null,
-      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. The gatekeeper half is the sourced fact clm-dma-asymmetry; 'nearly every VLOP' is not separately sourced.",
+      "last_verified": "2026-10-22",
+      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. The gatekeeper half is the sourced fact clm-dma-asymmetry; 'nearly every VLOP' is not separately sourced. 22 Oct 2026 (audit, outdated interpretive claims): re-read against Parts III and IV as they stand: still consistent; Part IV states every designated gatekeeper undertaking is US- or Chinese-headquartered (Booking Holdings is US-based), and the VLOPs added since (enforcement and designations in Part III) do not change the \"nearly every\" half. It still rests on the brief alone, and that is unchanged: re-reading a synthesis against the Parts it synthesises dates the check; it does not source it.",
       "premises": [
         "clm-dma-asymmetry",
         "clm-seven-gatekeepers"
@@ -475,8 +475,8 @@
       "legal_basis": [],
       "brief_part": "part-9",
       "published": "2026-08-19",
-      "last_verified": null,
-      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. Its two supporting examples are facts recorded elsewhere and time-sensitive: the Council position on the Digital Omnibus (see the T-02 records) and the AI Omnibus prohibitions (tl-ai-act-2026-12-02-application)."
+      "last_verified": "2026-10-22",
+      "verification_note": "Added on 2026-09-26 (audit T-35) so that the Part IX takeaway is a tracked record rather than untracked prose. It is the author's synthesis across the brief, not a statement any single source makes; it rests on the brief alone and is counted as unverified for that reason. Its two supporting examples are facts recorded elsewhere and time-sensitive: the Council position on the Digital Omnibus (see the T-02 records) and the AI Omnibus prohibitions (tl-ai-act-2026-12-02-application). 22 Oct 2026 (audit, outdated interpretive claims): re-read against Parts V and VIII as they stand: still consistent; Part VIII now records no Council mandate reported as at 21 Oct 2026, and Part V that the AI Omnibus added the Art. 5(1)(ba)-(bb) prohibitions while deferring the high-risk tier. It still rests on the brief alone, and that is unchanged: re-reading a synthesis against the Parts it synthesises dates the check; it does not source it."
     },
     {
       "id": "clm-gdpr-gravitational-centre",
@@ -4755,7 +4755,10 @@
       "brief_part": "part-10",
       "published": "2026-08-19",
       "last_verified": "2026-08-27",
-      "verification_note": "The author's critique. The claim that twenty-four European cloud CEOs demanded absolute technical and legal control requirements is not sourced."
+      "verification_note": "The author's critique. The claim that twenty-four European cloud CEOs demanded absolute technical and legal control requirements is not sourced. 22 Oct 2026 (audit, available support not linked): the claim that supports its premise is now recorded in `premises`, so the evidence drawer shows it; a premise supports part of an argument, and the argument itself still rests on the brief.",
+      "premises": [
+        "clm-cispe-cloud-ceos-letter"
+      ]
     },
     {
       "id": "clm-art-4-2-teu-carve-out",
@@ -5169,7 +5172,7 @@
     {
       "id": "clm-ep-privacy-defender",
       "type": "claim-type:interpretation",
-      "statement": "The European Parliament has been the most consistent institutional defender of privacy across this period.",
+      "statement": "In this brief's reading, the European Parliament has been among the more consistent institutional defenders of privacy across this period.",
       "instruments": [],
       "provisions": [],
       "institutions": [
@@ -5187,7 +5190,7 @@
       "brief_part": "part-11",
       "published": "2026-08-19",
       "last_verified": null,
-      "verification_note": "REQUIRES VERIFICATION. An evaluative claim about institutional behaviour over a decade; not sourced."
+      "verification_note": "22 Oct 2026 (audit, tone stronger than evidence): 'the most consistent institutional defender' was a superlative no record here measures — no plenary votes or positions were compiled. Attenuated to an explicit reading ('in this brief's reading … among the more consistent') in all four languages, rather than supported with data this session did not gather. Earlier statement: 'The European Parliament has been the most consistent institutional defender of privacy across this period.' REQUIRES VERIFICATION. An evaluative claim about institutional behaviour over a decade; not sourced."
     },
     {
       "id": "clm-google-dma-fine-2026",
