@@ -195,7 +195,7 @@ export function readPage(file, { root = REPO_ROOT } = {}) {
       if (at < 0) { dropped++; continue; }
       const closed = stack.splice(at)[0];
 
-      /* The brief's own box labels — CRITIQUE, MECHANICS. Recorded
+      /* The brief's own box labels — CRITIQUE, MECHANICS, SYNTHESIS. Recorded
          onto the nearest tone-bearing ancestor as the label closes,
          which is before any of the box's prose is pushed, so every
          block inside inherits it. Read from the markup the author

@@ -185,6 +185,10 @@ export const SUPPORTS_GLOSS = {
 /* Money. One definition, shared by the enforcement observatory and the search
    index, so a figure cannot be rounded two different ways on two pages.
    Returns null for null — an absent amount is not zero. */
+/** "1 record", "2 records": a count and its noun. The one home for it
+    (audit of 21 Oct 2026 item 15: "across 1 records"). */
+export const plural = (n, one, many = one + 's') => `${n} ${n === 1 ? one : many}`;
+
 export const eur = (n) => n == null ? null :
   (n >= 1e9 ? 'EUR ' + (n / 1e9).toFixed(2).replace(/\.?0+$/, '') + 'bn'
     : n >= 1e6 ? 'EUR ' + (n / 1e6).toFixed(0) + 'm'

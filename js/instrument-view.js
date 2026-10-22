@@ -36,7 +36,7 @@ import { label as taxLabel } from './data.js';
 import * as F from './format.js';
 import { authoritiesFor, datesFor, cell, setOverlay } from './dna.js';
 import { provisionApplication, provisionDeadlines } from './regulatory-model.js';
-import { derive, STAGES } from './pipeline.js';
+import { derive, STAGES, actionsOnly, inactionsOnly } from './pipeline.js';
 import { sourceList, gradeChip, freshness } from './evidence-view.js';
 import { interactionsFor } from './interactions.js';
 import { instrumentHref, knownAs, displayName, legalTextSource } from './routes.js';
@@ -128,16 +128,19 @@ function evidenceBlock(claim) {
   const grade = F.evidenceGrade(claim, IX);
   const type = F.typeOf(claim);
   return '<div class="ev" data-grade="' + esc(grade.id) + '">' +
-    '<div class="ev-kicker">' + gradeChip(claim, IX) +
+    /* words in adjacent chips are separated by a space as well as by the
+       layout, so extracted text and a screen reader do not run them together
+       (audit of 21 Oct 2026 item 15) */
+    '<div class="ev-kicker">' + gradeChip(claim, IX) + ' ' +
       '<span class="badge" data-st="' + (type === 'law' ? 'verified'
         : type === 'fact' ? 'neutral' : 'interpretation') + '">' + esc(type) + '</span>' +
-      (F.isUnverified(claim, IX) ? '<span class="badge" data-st="unresolved">unverified</span>' : '') +
+      (F.isUnverified(claim, IX) ? ' <span class="badge" data-st="unresolved">unverified</span>' : '') +
     '</div>' +
     '<p class="ev-claim">' + esc(claim.statement) + '</p>' +
     '<div class="ev-src">' + sourceList(claim, IX, 'compact') + '</div>' +
     '<div class="ev-foot">' +
       (claim.brief_part
-        ? '<a class="ev-part" href="' + esc(to('index.html#' + claim.brief_part)) + '">Read it in the brief &rarr;</a>'
+        ? '<a class="ev-part" href="' + esc(to('index.html#' + claim.brief_part)) + '">Read it in the brief &rarr;</a> '
         : '') +
       verified(claim.last_verified) +
     '</div></div>';
@@ -198,7 +201,9 @@ function headSection(inst) {
       dateItem +
       item('Competent authority', auths.length
         ? esc(auths[0].institution.short_name) +
-          (auths.length > 1 ? '<span class="v-sub">and ' + (auths.length - 1) + ' more — see below</span>' : '')
+          /* a space between the elements, so extracted text and a screen reader
+             read "authorities and 1 more", not "authoritiesand" (audit item 15) */
+          (auths.length > 1 ? ' <span class="v-sub">and ' + (auths.length - 1) + ' more — see below</span>' : '')
         : '<span class="none">not established in this dataset</span>') +
       item('Sanction ceiling', ceilingTxt ? esc(ceilingTxt) : '<span class="none">none recorded</span>', true) +
     '</dl>' +
@@ -233,7 +238,7 @@ function shortRows(inst) {
   const when = (e) => esc(taxLabel(IX, e.event_type)) + ' <b>' + esc(F.humanDate(e.date, e.date_precision)) + '</b>';
   const next = TODAY ? evs.find((e) => !F.isPast(e.date)) : null;
   const rest = evs.length - key.length;
-  const enf = (DB.enforcement.enforcement || []).filter((r) => r.instrument === inst.id).length;
+  const enf = actionsOnly(DB.enforcement.enforcement).filter((r) => r.instrument === inst.id).length;
   return [
     { section: 'what', label: 'Objective', value: esc(tr(inst.id + '.dna.objective', d.objective)), more: '' },
     { section: 'applies', label: prop ? 'Would bind' : 'Who it binds', value: cell('regulated_actor', inst, IX), more: '' },
@@ -387,9 +392,9 @@ function appliesCell(p, inst) {
   const verb = { applies: 'Applies since', scheduled: 'Applies from', general: 'Applies since', 'general-scheduled': 'Applies from' }[a.state];
   let html = '<span class="p-when" data-state="' + esc(a.state) + '">' + verb + ' <b>' + when(a.event) + '</b></span>' +
     amended(a.event) +
-    (a.via === 'instrument' ? '<span class="v-sub">the instrument’s general date; nothing specific to this article is recorded</span>' : '');
-  for (const e of a.later) html += '<span class="v-sub">then from ' + when(e) + ': ' + esc(taxLabel(IX, e.event_type).toLowerCase()) + amended(e) + '</span>';
-  for (const d of provisionDeadlines(p.id, inst, IX)) html += '<span class="v-sub">deadline ' + when(d) + ': ' + esc(d.required_action || d.obligation || '') + '</span>';
+    (a.via === 'instrument' ? ' <span class="v-sub">the instrument’s general date; nothing specific to this article is recorded</span>' : '');
+  for (const e of a.later) html += ' <span class="v-sub">then from ' + when(e) + ': ' + esc(taxLabel(IX, e.event_type).toLowerCase()) + amended(e) + '</span>';
+  for (const d of provisionDeadlines(p.id, inst, IX)) html += ' <span class="v-sub">deadline ' + when(d) + ': ' + esc(d.required_action || d.obligation || '') + '</span>';
   return html;
 }
 
@@ -405,7 +410,7 @@ function provisionsSection(inst) {
     const on = (p.obligation_on || []).map((a) => esc(taxLabel(IX, a))).join(' · ');
     return '<tr class="' + (anchors.has(p.id) ? 'is-anchor' : '') + '">' +
       '<th scope="row" data-label="Article"><span class="mono">Art. ' + esc(p.number) + '</span>' +
-        (anchors.has(p.id) ? '<span class="badge" data-st="verified">load-bearing</span>' : '') + '</th>' +
+        (anchors.has(p.id) ? ' <span class="badge" data-st="verified">load-bearing</span>' : '') + '</th>' +
       '<td data-label="Heading"><b>' + esc(p.heading || '') + '</b>' +
         (p.summary ? '<span class="p-sum">' + esc(p.summary) + '</span>' : '') +
         (p.requires_verification
@@ -424,12 +429,26 @@ function provisionsSection(inst) {
     '</tr></thead><tbody>' + rows + '</tbody></table></div>');
 }
 
+/* A recorded absence of action is not an enforcement action: it is
+   listed under its own heading, dated, and counted nowhere (js/pipeline.js
+   isInaction, audit of 21 Oct 2026 item 11). */
+function inactionHTML(inst) {
+  const none = inactionsOnly(DB.enforcement.enforcement).filter((r) => r.instrument === inst.id);
+  if (!none.length) return '';
+  return '<div class="ip-enf-none"><h3>Recorded inaction</h3>' +
+    '<p class="ip-enf-caveat">Not an enforcement action, and not counted above: each of these records says that ' +
+      'no action had been found when it was last checked, which is true only at that date.</p><ul>' +
+    none.map((r) => '<li><b>' + esc(r.entity) + '.</b> ' + esc(r.action || '') +
+      ' <a href="' + esc(to('enforcement.html#' + r.id)) + '">Record &rarr;</a> ' + verified(r.last_verified) + '</li>').join('') +
+    '</ul></div>';
+}
+
 function enforcementSection(inst) {
-  const recs = (DB.enforcement.enforcement || []).filter((r) => r.instrument === inst.id);
+  const recs = actionsOnly(DB.enforcement.enforcement).filter((r) => r.instrument === inst.id);
   if (!recs.length) {
     return section('enforcement', H.enforcement, empty('No enforcement recorded',
       'This dataset holds no enforcement action under this instrument. That is what the record says; ' +
-      'it is not a finding that none has been taken.') +
+      'it is not a finding that none has been taken.') + inactionHTML(inst) +
       '<p class="src-line"><a href="' + esc(to('enforcement.html')) + '">The whole enforcement observatory →</a></p>');
   }
   /* announced is a sum of what was announced; collected is not a sum at all,
@@ -462,12 +481,12 @@ function enforcementSection(inst) {
         '<header><h3>' + esc(r.entity) + '</h3>' +
           '<span class="badge" data-st="' + st + '">' + esc(taxLabel(IX, r.action_status)) + '</span></header>' +
         '<div class="ip-enf-figs">' +
-          '<div class="numstat"><b>' + esc(r.fine_eur ? F.eur(r.fine_eur) : '—') + '</b><span>announced</span></div>' +
+          '<div class="numstat"><b>' + esc(r.fine_eur ? F.eur(r.fine_eur) : '—') + '</b> <span>announced</span></div>' +
           '<div class="numstat" data-tone="' +
             (String(r.payment_status).endsWith('collected') || String(r.payment_status).endsWith('paid') ? '' : 'unknown') +
-            '"><b>' + esc(taxLabel(IX, r.payment_status)) + '</b><span>payment</span></div>' +
+            '"><b>' + esc(taxLabel(IX, r.payment_status)) + '</b> <span>payment</span></div>' +
           '<div class="numstat"><b>' + esc(r.decision_date ? F.humanDate(r.decision_date) : 'no decision') +
-            '</b><span>decision</span></div>' +
+            '</b> <span>decision</span></div>' +
         '</div>' +
         '<dl class="meta-grid">' +
           '<div class="meta-item"><dt>Authority</dt><dd class="v">' +
@@ -490,12 +509,12 @@ function enforcementSection(inst) {
 
   return section('enforcement', H.enforcement,
     '<div class="ip-enf-summary">' +
-      '<div class="numstat"><b>' + esc(F.eur(announced)) + '</b><span>announced across ' + recs.length + ' records</span></div>' +
-      '<div class="numstat" data-tone="unknown"><b>unknown</b><span>demonstrably collected</span></div>' +
-      '<p class="ip-enf-caveat">' + unknownPay + ' of ' + recs.length +
-        ' records cannot settle whether money moved. That is not zero, and the announced figure is not a total ' +
+      '<div class="numstat"><b>' + esc(F.eur(announced)) + '</b> <span>announced across ' + esc(F.plural(recs.length, 'record')) + '</span></div>' +
+      '<div class="numstat" data-tone="unknown"><b>unknown</b> <span>demonstrably collected</span></div>' +
+      '<p class="ip-enf-caveat">' + unknownPay + ' of ' + F.plural(recs.length, 'record') +
+        ' cannot settle whether money moved. That is not zero, and the announced figure is not a total ' +
         'of anything that has been paid.</p>' +
-    '</div>' + '<div class="ip-enf-cards">' + cards + '</div>');
+    '</div>' + '<div class="ip-enf-cards">' + cards + '</div>' + inactionHTML(inst));
 }
 
 function evidenceSection(inst) {
@@ -551,12 +570,22 @@ function relatedSection(inst) {
 
   /* each related instrument links to its own page, and the label says how
      the two are related, so the link reads as the relationship it is */
-  const relList = rels.length ? rels.map((r) => {
+  /* one entry per related instrument: two edges to the same instrument
+     (the AI Act overlaps the GDPR on Art. 22 and on impact assessments)
+     are two records, but one place to go, so they are one link that says
+     how many edges it stands for (audit of 21 Oct 2026 item 15) */
+  const byOther = new Map();
+  for (const r of rels) {
     const otherId = r.from === inst.id ? r.to : r.from;
+    if (!byOther.has(otherId)) byOther.set(otherId, []);
+    byOther.get(otherId).push(r);
+  }
+  const relList = byOther.size ? [...byOther].map(([otherId, edges]) => {
     const other = IX.instrument.get(otherId);
+    const kinds = [...new Set(edges.map((r) => taxLabel(IX, r.kind)))].join(' · ');
     return '<li><a href="' + esc(instrumentHref(otherId, IX, ROOT)) + '">' +
       esc(other ? other.short_name : otherId) +
-      '<span class="n">' + esc(taxLabel(IX, r.kind)) + '</span></a></li>';
+      '<span class="n">' + esc(kinds) + (edges.length > 1 ? ' · ' + esc(F.plural(edges.length, 'edge')) : '') + '</span></a></li>';
   }).join('') : '<li class="none">none recorded</li>';
 
   const authList = auths.length ? auths.slice(0, 6).map((a) =>
@@ -602,7 +631,7 @@ const SECTIONS = [
 function subnav() {
   return '<nav class="subnav" aria-label="Sections of this instrument">' +
     SECTIONS.map(([id, label], i) =>
-      '<a href="#sec-' + id + '"' + (i === 0 ? ' aria-current="true"' : '') + '>' + esc(label) + '</a>').join('') +
+      '<a href="#sec-' + id + '"' + (i === 0 ? ' aria-current="true"' : '') + '>' + esc(label) + '</a>').join(' ') +
     '</nav>';
 }
 

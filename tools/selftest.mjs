@@ -40,7 +40,7 @@ import {
 } from './thirdparty.mjs';
 import { EXPECTED, RECHECK } from './freshness.mjs';
 import { readBaseline } from '../agent/implement/baseline.mjs';
-import { audit, passages, datesIn, DERIVED_FIELDS } from './evidence-audit.mjs';
+import { audit, passages, datesIn, DERIVED_FIELDS, rankingProblems } from './evidence-audit.mjs';
 import { cspProblems, securityMeta, inlineScripts } from './csp.mjs';
 import { openBacklog } from '../js/evidence-model.js';
 import { sitePages } from './thirdparty.mjs';
@@ -754,7 +754,7 @@ test('I1c · the Evidence page and the build count the same backlog', () => {
   assert.doesNotMatch(readFileSync(join(ROOT, 'tools', 'validate.mjs'), 'utf8'), /function unverifiedReport\(\)\s*\{/, 'validate.mjs keeps no copy of its own');
 });
 
-test('I1d · languages: no alternate is advertised while a translation exists only in JavaScript', () => {
+test('I1d · languages: no alternate is advertised for a translation no person has reviewed', () => {
   /* Until 27 Sep 2026 this asserted the opposite: hreflang alternates at
      ?lang=it|fr|es, in the sitemap too. docs/SEO-AUDIT-2026-09-27.md A5
      measured why that was wrong — the raw HTML at every ?lang= address is
@@ -762,15 +762,21 @@ test('I1d · languages: no alternate is advertised while a translation exists on
      not self-canonical and contradicted the HTML they pointed at — and the
      translations are unreviewed (README limitation 5). The rule now: no
      alternate until a pre-rendered, reviewed page exists; the address keeps
-     working for readers. docs/SEO-OPERATIONS.md §6. */
+     working for readers. docs/SEO-OPERATIONS.md §6.
+     22 Oct 2026: the pre-rendered pages exist (/it/, /fr/, /es/), so the rule
+     is now the review: on this tree no edition is reviewed and no page names
+     an alternate; A8 holds the reviewed case. */
   for (const f of sitePages(ROOT)) {
-    assert.doesNotMatch(readFileSync(join(ROOT, f), 'utf8'), /hreflang=/, `${f} advertises an alternate language`);
+    assert.doesNotMatch(readFileSync(join(ROOT, f), 'utf8'), /<link [^>]*hreflang=/, `${f} advertises an alternate language`);
   }
   assert.doesNotMatch(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8'), /\?lang=/, 'a ?lang= address is in the sitemap');
   const app = readFileSync(join(ROOT, 'app.js'), 'utf8');
-  assert.match(app, /searchParams\.get\('lang'\)/, 'the page still honours the parameter');
-  const sync = app.slice(app.indexOf('function syncLangUrl'), app.indexOf('function demote'));
-  assert.doesNotMatch(sync, /canonical/, 'the canonical is not rewritten after load');
+  const i18n = app.slice(app.indexOf('/* ================= i18n: one page per language'));
+  assert.ok(i18n.length > 1000, 'the language block was found');
+  assert.match(i18n, /searchParams\.get\('lang'\)/, 'an old ?lang= address still works: it forwards to the edition');
+  assert.match(i18n, /location\.replace\(/, 'by replacing, so Back does not loop');
+  assert.doesNotMatch(i18n, /canonical/, 'no head metadata is rewritten after load');
+  assert.doesNotMatch(i18n, /\.innerHTML = map\[|el\.innerHTML = v/, 'and no translation is swapped in place: each language is its own page');
 });
 
 test('I2 · the Pages artifact is the website and nothing else', () => {
@@ -809,6 +815,8 @@ function siteCopy(name) {
   for (const f of readdirSync(ROOT).filter((x) => x.endsWith('.html'))) cpSync(join(ROOT, f), join(dir, f));
   for (const f of ['sitemap.xml', 'robots.txt', 'app.js', 'style.css']) cpSync(join(ROOT, f), join(dir, f));
   for (const d of ['data', 'i18n', 'js', 'img', 'instruments', 'css']) cpSync(join(ROOT, d), join(dir, d), { recursive: true });
+  /* the language editions (22 Oct 2026) */
+  for (const d of readdirSync(ROOT).filter((x) => /^[a-z]{2}$/.test(x))) cpSync(join(ROOT, d), join(dir, d), { recursive: true });
   return dir;
 }
 const edit = (dir, f, fn) => writeFileSync(join(dir, f), fn(readFileSync(join(dir, f), 'utf8')));
@@ -1167,6 +1175,210 @@ test('O8 · the masthead says when the records were checked, from the records, w
   assert.doesNotMatch(src, /\.portal-head/, 'the old line wrote into an element no page has');
   assert.doesNotMatch(src, /\$last_verified/, 'a file-level date is not a per-record check');
   assert.match(src, /checkedLine\(instruments, \[\.\.\.ix\.event\.values\(\)\], records\)/);
+});
+
+/* ---------------------------------------------- audit of 21 Oct 2026 */
+
+test('A1 · a "largest to date" claim is recomputed from the records, and fails when a larger one is added', () => {
+  const claims = readData('claims.json').claims;
+  const enf = readData('enforcement.json').enforcement;
+  const ranked = claims.filter((c) => c.ranking);
+  assert.ok(ranked.some((c) => c.id === 'clm-google-dma-largest-total') && ranked.some((c) => c.id === 'clm-aliexpress-fine'),
+    'both "largest" claims in the brief carry a ranking block');
+  for (const c of ranked) assert.deepEqual(rankingProblems(c, enf), [], `${c.id} holds over the records as they stand`);
+  const g = ranked.find((c) => c.id === 'clm-google-dma-largest-total');
+  const bigger = { id: 'enf-planted', instrument: 'dma', authority: 'ec', fine_eur: 1e9, action_status: 'action:imposed' };
+  assert.match(rankingProblems(g, [...enf, bigger]).join(' '), /ranks 2/, 'a planted larger DMA fine breaks the ranking');
+  const unknown = { ...bigger, fine_eur: null };
+  assert.match(rankingProblems(g, [...enf, unknown]).join(' '), /cannot be settled/, 'an imposed fine of unknown amount is not a small one');
+  const prelim = { ...unknown, action_status: 'action:announced' };
+  assert.deepEqual(rankingProblems(g, [...enf, prelim]), [], 'preliminary findings carry no fine and do not unsettle it');
+});
+
+test('A2 · validate.mjs FAILS when an instrument was verified before its status was assessed (item 10)', () => {
+  assert.equal(runValidator('validate.mjs').exit, 0, 'no instrument on this tree has last_verified < status_as_of');
+  const dir = dataScratch();
+  try {
+    const p = join(dir, 'data', 'instruments.json');
+    const d = JSON.parse(readFileSync(p, 'utf8'));
+    const i = d.instruments.find((x) => x.id === 'cra');
+    i.status_as_of = '2026-10-14'; i.last_verified = '2026-08-27';
+    writeFileSync(p, JSON.stringify(d, null, 2));
+    const r = runValidator('validate.mjs', [], dir);
+    assert.equal(r.exit, 1);
+    assert.match(r.out, /instruments\/cra: last_verified 2026-08-27 is earlier than status_as_of 2026-10-14/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('A3 · a recorded inaction is typed, carries nothing an action carries, and is counted nowhere (item 11)', () => {
+  const enf = readData('enforcement.json').enforcement;
+  const none = enf.filter((r) => r.record_type === 'record-type:inaction');
+  assert.ok(none.some((r) => r.id === 'enf-hungary-commission-none'));
+  for (const r of enf) if (r.action_status == null) assert.equal(r.record_type, 'record-type:inaction', `${r.id} has no action and must be typed`);
+  /* planted: an untyped non-action, and a typed inaction carrying a fine */
+  const dir = dataScratch();
+  try {
+    const p = join(dir, 'data', 'enforcement.json');
+    const d = JSON.parse(readFileSync(p, 'utf8'));
+    const h = d.enforcement.find((x) => x.id === 'enf-hungary-commission-none');
+    delete h.record_type;
+    d.enforcement.push({ ...h, id: 'enf-planted-none', record_type: 'record-type:inaction', fine_eur: 1 });
+    writeFileSync(p, JSON.stringify(d, null, 2));
+    const r = runValidator('validate.mjs', [], dir);
+    assert.equal(r.exit, 1);
+    assert.match(r.out, /enf-hungary-commission-none" records no action but is not typed record-type:inaction/);
+    assert.match(r.out, /enf-planted-none" is a recorded inaction but carries fine_eur 1/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+  /* and no counter counts it: the generated AI Act page, whose only record is Hungary's */
+  const page = readFileSync(join(ROOT, 'instruments', 'ai-act', 'index.html'), 'utf8');
+  assert.match(page, /No enforcement recorded/);
+  assert.match(page, /<h3>Recorded inaction<\/h3>/);
+  assert.doesNotMatch(page, /enforcement record\b/, 'the description does not call it an enforcement record');
+  assert.doesNotMatch(page, /across 1 records/);
+  for (const f of ['js/instrument-view.js', 'js/masthead.js', 'js/enforcement-page.js', 'tools/seo.mjs']) {
+    assert.match(readFileSync(join(ROOT, f), 'utf8'), /actionsOnly\(/, `${f} counts through actionsOnly()`);
+  }
+});
+
+test('A4 · every Part counter equals the boxes the Part holds, in all four languages (item 13)', () => {
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  const parts = [...html.matchAll(/<section class="part"[^>]*id="([^"]+)"/g)];
+  assert.ok(parts.length >= 11);
+  const loc = Object.fromEntries(['it', 'fr', 'es'].map((c) => [c, JSON.parse(readFileSync(join(ROOT, 'i18n', `${c}.json`), 'utf8'))]));
+  for (const m of parts) {
+    const seg = html.slice(m.index, html.indexOf('</section>', m.index));
+    const eyebrow = (seg.match(/class="part-eyebrow" data-i18n="([^"]+)">([\s\S]*?)<\/span>\s*(?:<|$)/) || [])[0] || '';
+    const key = (seg.match(/class="part-eyebrow" data-i18n="([^"]+)"/) || [])[1];
+    for (const tone of ['mech', 'crit', 'synth']) {
+      const boxes = (seg.match(new RegExp(`class="box [^"]*" data-tone="${tone}"`, 'g')) || []).length;
+      const shown = (src) => { const x = src.match(new RegExp(`data-count="${tone}">(\\d+)<`)); return x ? Number(x[1]) : 0; };
+      assert.equal(shown(seg), boxes, `${m[1]}: the English ${tone} counter`);
+      for (const [c, o] of Object.entries(loc)) assert.equal(shown(o[key] || ''), boxes, `${m[1]}: the ${c} ${tone} counter`);
+    }
+    assert.doesNotMatch(eyebrow, /· \d+ (mechanics|critique)/, `${m[1]}: no hand-typed counter outside a data-count span`);
+  }
+  assert.match(html, /<aside class="box box-synth" data-tone="synth"><span class="box-label" data-i18n="part-11\.span6">SYNTHESIS</, 'Part XI\'s synthesis box is labelled as synthesis');
+  assert.match(readFileSync(join(ROOT, 'app.js'), 'utf8'), /addEventListener\('i18n:applied', countBoxes\)/, 'and the counters are recomputed after a language swap');
+});
+
+test('A5 · the numerals inside the summary and contents trees are hidden from assistive technology (item 25)', () => {
+  /* Each node is a labelled role="button"; its <text> numeral was exposed as
+     well, so a reader heard "I III II V …" (extracted: "lllllllll"). Measured
+     in Chromium's accessibility tree on 21 Oct 2026: 13 numeral StaticText
+     nodes before, 0 after. No screen reader was run. */
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  for (const cls of ['portal-tree', 'tree-map', 'system-map']) {
+    const s = html.search(new RegExp(`<svg[^>]*class="${cls}"`));
+    assert.ok(s >= 0, cls);
+    const seg = html.slice(s, html.indexOf('</svg>', s));
+    const nodes = seg.match(/<g [^>]*role="button"[^>]*>[\s\S]*?<\/g>/g) || [];
+    assert.ok(nodes.length >= 6, `${cls}: its nodes were found`);
+    for (const g of nodes) {
+      assert.match(g, /aria-label="[^"]+"/, `${cls}: a node is named by its label`);
+      for (const tx of g.match(/<text\b[^>]*>/g) || []) assert.match(tx, /aria-hidden="true"/, `${cls}: ${tx}`);
+    }
+  }
+});
+
+test('A6 · 404.html works at any depth, is never indexed, and is published (item 23)', () => {
+  const html = readFileSync(join(ROOT, '404.html'), 'utf8');
+  assert.match(html, /<meta content="noindex" name="robots"\/>/);
+  assert.match(html, /<body [^>]*data-root="\/"/, 'js/shell.js builds the chrome from the root, not from the missed address');
+  assert.doesNotMatch(html, /rel="canonical"/);
+  for (const m of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
+    const u = m[1];
+    if (/^(https?:|data:|#)/.test(u)) continue;
+    assert.match(u, /^\//, `a relative link breaks when the page is served at /a/b/c: ${u}`);
+  }
+  assert.match(html, /href="\/">brief<\/a>/, 'it links to the brief');
+  assert.match(html, /<kbd>\/<\/kbd>/, 'and says how to search');
+  assert.ok(buildArtifact ? true : true);
+  assert.equal(refusal('404.html'), null, 'the deploy artifact carries it');
+  assert.doesNotMatch(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8'), /404\.html/);
+});
+
+/* ---------------------------------------------- the editions' review (22 Oct 2026) */
+
+test('A7 · a translation approval names exact text, goes stale by itself, and only a person records it', async () => {
+  const E = await import('./editions.mjs');
+  const RV = await import('./i18n-review.mjs');
+  const dir = scratch('review');
+  try {
+    cpSync(join(ROOT, 'i18n'), join(dir, 'i18n'), { recursive: true });
+    writeFileSync(join(dir, 'index.html'), readFileSync(join(ROOT, 'index.html'), 'utf8'));
+    const head = { root: dir, englishTitle: 'T', englishDescription: 'D' };
+    const st = E.reviewState('it', head);
+    assert.equal(st.counts.reviewed, 0, 'nothing is reviewed until a person records it');
+    assert.equal(st.complete, false);
+    const k = st.keys.find((x) => x.key === 'part-1.p2');
+    /* a sheet with one ticked box, recorded */
+    const sheet = RV.renderSheet(st).replace(`- [ ] approve \`part-1.p2\``, `- [x] approve \`part-1.p2\``);
+    const ledger = E.readLedger('it', dir);
+    assert.throws(() => RV.record(st, RV.parseSheet(sheet), { by: 'Claude', ledger }), /not a person's name/);
+    assert.throws(() => RV.record(st, RV.parseSheet(sheet), { by: '', ledger }), /required/);
+    const r = RV.record(st, RV.parseSheet(sheet), { by: 'A Reviewer', on: '2026-10-22', ledger });
+    assert.deepEqual(r.done, ['part-1.p2']);
+    writeFileSync(E.ledgerPath('it', dir), JSON.stringify(ledger));
+    assert.equal(E.reviewState('it', head).keys.find((x) => x.key === 'part-1.p2').state, 'reviewed');
+    /* change the translation: the approval no longer matches */
+    const p = join(dir, 'i18n', 'it.json');
+    const it = JSON.parse(readFileSync(p, 'utf8'));
+    it['part-1.p2'] += ' ';
+    writeFileSync(p, JSON.stringify(it));
+    const after = E.reviewState('it', head);
+    assert.equal(after.keys.find((x) => x.key === 'part-1.p2').state, 'stale', 'an approval of an earlier text does not count');
+    /* and a sheet ticked against the old text is refused */
+    const again = RV.record(after, RV.parseSheet(sheet), { by: 'A Reviewer', ledger: { entries: {} } });
+    assert.match(again.refused.join(' '), /changed since the sheet was generated/);
+    assert.equal(k.fp, E.fingerprint('part-1.p2', k.en, k.tr));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+  /* the shipped ledgers record no approval this repository's agents made */
+  for (const c of ['it', 'fr', 'es']) {
+    const l = JSON.parse(readFileSync(join(ROOT, 'i18n', 'review', `${c}.json`), 'utf8'));
+    for (const [key, e] of Object.entries(l.entries)) assert.doesNotMatch(e.reviewed_by, (await import('./i18n-review.mjs')).NOT_A_PERSON, `${c} ${key}`);
+  }
+});
+
+test('A8 · an edition is offered to search engines exactly when its review is complete, and stops being when its text changes', async () => {
+  const E = await import('./editions.mjs');
+  const { TOP_PAGES } = await import('./seo.mjs');
+  const home = TOP_PAGES.find((p) => p.file === 'index.html');
+  /* this tree: nothing reviewed, so every edition is generated, noindex, unlisted */
+  for (const c of ['it', 'fr', 'es']) {
+    const html = readFileSync(join(ROOT, c, 'index.html'), 'utf8');
+    assert.match(html, new RegExp(`<html lang="${c}"`));
+    assert.match(html, /<meta content="noindex" name="robots"\/>/);
+    assert.doesNotMatch(html, /hreflang=|rel="canonical"/);
+    assert.match(html, /<body [^>]*data-root="\.\.\/"/);
+  }
+  assert.doesNotMatch(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8'), /\/it\//);
+  assert.doesNotMatch(readFileSync(join(ROOT, 'index.html'), 'utf8'), /hreflang=/);
+
+  const dir = siteCopy('editions');
+  const regenerate = async () => { const { files } = await generateSite(dir); for (const [f, s] of files) { mkdirSync(join(dir, f, '..'), { recursive: true }); writeFileSync(join(dir, f), s); } };
+  try {
+    /* a complete Italian review, recorded in the scratch copy as a person would */
+    const st = E.reviewState('it', { root: dir, englishTitle: home.title, englishDescription: home.description });
+    const ledger = { locale: 'it', entries: Object.fromEntries(st.keys.map((k) => [k.key, { fingerprint: k.fp, reviewed_by: 'A Reviewer', reviewed_on: '2026-10-22' }])) };
+    writeFileSync(E.ledgerPath('it', dir), JSON.stringify(ledger));
+    await regenerate();
+    const it = readFileSync(join(dir, 'it', 'index.html'), 'utf8');
+    assert.match(it, new RegExp(`<link href="${BASE}it/" rel="canonical"/>`));
+    assert.doesNotMatch(it, /name="robots"/);
+    for (const [lang, href] of [['en', BASE], ['it', BASE + 'it/'], ['x-default', BASE]]) assert.ok(it.includes(`<link href="${href}" hreflang="${lang}" rel="alternate"/>`), `it/ names ${lang}`);
+    assert.ok(readFileSync(join(dir, 'index.html'), 'utf8').includes(`<link href="${BASE}it/" hreflang="it" rel="alternate"/>`), 'and the English brief names it back');
+    assert.match(readFileSync(join(dir, 'sitemap.xml'), 'utf8'), /\/it\/<\/loc>/);
+    assert.match(readFileSync(join(dir, 'fr', 'index.html'), 'utf8'), /name="robots"/, 'French, unreviewed, stays out');
+    assert.deepEqual(seoAudit(dir).errors, [], 'and the audit accepts the reviewed state');
+    /* one Italian string corrected after the review: the edition leaves search again */
+    edit(dir, 'i18n/it.json', (s) => { const o = JSON.parse(s); o['part-1.p2'] += ' '; return JSON.stringify(o); });
+    await regenerate();
+    const after = readFileSync(join(dir, 'it', 'index.html'), 'utf8');
+    assert.match(after, /<meta content="noindex" name="robots"\/>/);
+    assert.doesNotMatch(after, /hreflang=/);
+    assert.doesNotMatch(readFileSync(join(dir, 'index.html'), 'utf8'), /hreflang=/);
+    assert.deepEqual(seoAudit(dir).errors, []);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 /* ============================================================

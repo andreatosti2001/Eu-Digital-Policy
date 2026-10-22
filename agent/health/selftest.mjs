@@ -597,12 +597,16 @@ test('duplicate facts: the __CONTENT__ blob is gone, and the second home that re
   assert.equal(r.detail.inline_blob_present, false);
   assert.equal(r.detail.script_copies_of_page_text, 0);
   /* What remains is NOT zero, and the metric must not read as if it were:
-     fourteen part titles, and the deks, sit in data/brief.json beside the
-     headings index.html shows. */
-  assert.ok(r.detail.part_fields_duplicated >= 14, 'fourteen part titles exist in two places');
-  assert.ok(r.value >= 14);
-  /* Annex C's dek is held in data/brief.json and shown nowhere — found, not fixed. */
-  assert.ok(r.detail.disagreements.some((d) => d.field === 'parts[annex-c].dek'));
+     thirteen part titles, and the deks, sit in data/brief.json beside the
+     headings index.html shows (fourteen until 21 Oct 2026, when Annexes B and
+     C were merged into one method annex). */
+  assert.ok(r.detail.part_fields_duplicated >= 13, 'thirteen part titles exist in two places');
+  assert.ok(r.value >= 13);
+  /* Annex C's dek was held in data/brief.json and shown nowhere — found here
+     and never fixed; it went with Annex C. The metric still reports any
+     disagreement it finds, and none of them is that one. */
+  assert.ok(!r.detail.disagreements.some((d) => d.field === 'parts[annex-c].dek'));
+  assert.ok(!r.detail.disagreements.some((d) => /^parts\[annex-c\]/.test(d.field)), 'no record of a part the page no longer has');
 });
 
 test('the unverified count matches the recorded baseline in §12', async () => {

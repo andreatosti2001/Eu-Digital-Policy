@@ -66,6 +66,11 @@ import { EDITORIAL_STATES } from '../../schemas/types.mjs';
 export const BOX_LABEL_STATE = {
   CRITIQUE: 'critique',
   MECHANICS: 'fact',
+  /* 21 Oct 2026 (audit item 13): Part XI's "The assessment, stated
+     plainly" was labelled MECHANICS over claims typed critique — the
+     disagreement this map exists to catch. It is the author's synthesis,
+     and the site now labels it so. */
+  SYNTHESIS: 'interpretation',
 };
 
 /** The claim families each label is consistent with. `familyOf`
@@ -73,6 +78,7 @@ export const BOX_LABEL_STATE = {
 export const BOX_LABEL_EXPECTS = {
   CRITIQUE: ['argument'],
   MECHANICS: ['law', 'fact'],
+  SYNTHESIS: ['argument'],
 };
 
 /**

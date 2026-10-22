@@ -1133,6 +1133,62 @@
       "note": "Read 14 Oct 2026 with the full press release IP/26/1579 (10 July 2026). Preliminary findings in formal proceedings opened 16 May 2024; 'These preliminary findings do not prejudge the final outcome of the investigation.' At this stage the Commission considers Meta needs design changes, 'for instance, by disabling key addictive features such as autoplay and infinite scroll by default'. The same proceedings produced preliminary findings on under-13 age assurance on 29 April 2026."
     },
     {
+      "id": "src-ec-meta-under13-2026",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Press release IP/26/920 — Commission preliminarily finds Meta in breach of Digital Services Act for failing to prevent minors under 13 from using Instagram and Facebook",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_26_920",
+      "url_status": "url:live",
+      "published": "2026-04-29",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read in full 21 Oct 2026 through the Commission's press corner. Preliminary findings that Instagram and Facebook breach the DSA 'for failing to diligently identify, assess and mitigate the risks of minors under 13 years old accessing their services': self-declared birth dates with 'no effective controls in place'; a reporting tool 'requiring up to seven clicks'; an 'incomplete and arbitrary risk assessment', against evidence that 'roughly 10-12% of children under 13' use the services. Part of the formal proceedings opened 16 May 2024; 'These findings do not prejudge the final outcome of the investigation.' If confirmed, a non-compliance decision could carry a fine of up to 6% of worldwide turnover. The release names no article; the proceedings' opening release (IP/24/2664) names Articles 28, 34 and 35."
+    },
+    {
+      "id": "src-ec-x-preliminary-2024",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Press release IP/24/3761 — Commission sends preliminary findings to X for breach of the Digital Services Act",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_24_3761",
+      "url_status": "url:live",
+      "published": "2024-07-12",
+      "accessed": "2026-10-22",
+      "language": "en",
+      "note": "Read in full 22 Oct 2026 through the Commission's press corner. 'Today, the Commission has informed X of its preliminary view that it is in breach of the Digital Services Act (DSA) in areas linked to dark patterns, advertising transparency and data access for researchers': the 'verified accounts' blue checkmark, the advertisement repository, and researchers' access to public data."
+    },
+    {
+      "id": "src-ec-dsa-costs-2025",
+      "tier": "tier:2",
+      "type": "source-type:report",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "COM(2026) 147 — Report on the overall annual costs incurred for the Commission’s tasks under Regulation (EU) 2022/2065 in 2025 and the supervisory fees charged in 2025",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:52026DC0147",
+      "url_status": "url:live",
+      "published": "2026-03-31",
+      "accessed": "2026-10-22",
+      "language": "en",
+      "note": "Read 22 Oct 2026 in the Publications Office's Cellar (CELEX 52026DC0147, XHTML). Dated Brussels, 31.3.2026. Para. (9): '80 staff members were recruited' in 2025, 54 to DG CNECT and 26 to the Commission representations. Para. (14): recruitment came later than foreseen, 'amounting to a total of approximately 138 FTEs (including a total of approximately 34 FTE officials and temporary agents, 92 FTE contract agents and 12 FTE seconded national experts dedicated to tasks referred to in Article 43(2) DSA)', EUR 21.153 million. A footnote warns that the FTEs 'do not represent the total number of Commission staff members working on DSA activities in 2025'."
+    },
+    {
+      "id": "src-ec-meta-minors-opening-2024",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "Press release IP/24/2664 — Commission opens formal proceedings against Meta under the Digital Services Act related to the protection of minors on Facebook and Instagram",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/ip_24_2664",
+      "url_status": "url:live",
+      "published": "2024-05-16",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read in full 21 Oct 2026 through the Commission's press corner. Opens proceedings on the design of Facebook's and Instagram's interfaces, on 'age-verification tools used by Meta, which may not be reasonable, proportionate and effective', and on default privacy settings for minors: 'If proven, these failures would constitute infringements of Articles 28, 34, and 35 of the DSA.'"
+    },
+    {
       "id": "src-ec-tiktok-minors-2026",
       "tier": "tier:2",
       "type": "source-type:press-release",
@@ -1920,6 +1976,20 @@
       "note": "Read on 2026-09-26. Reports an analysis by 'insurance brokerage Alliance Risk': an estimated EUR 7.1 billion of GDPR fines announced over eight years, of which nearly 40%, around EUR 2.8 billion, is already annulled or under active legal challenge; Alliance Risk used the CMS Law GDPR Enforcement Tracker as its primary source, cross-referenced against IAPP, Kiteworks and UniConsent data. Alliance Risk's own publication could not be located; PPC Land describes the firm as a 'cyber risk advisory firm' rather than a brokerage."
     },
     {
+      "id": "src-ppcland-alliance-risk-2026",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "PPC Land",
+      "title": "Eight years of GDPR: 40% of the €7.1B in fines annulled or under challenge",
+      "url": "https://ppc.land/eight-years-of-gdpr-40-of-the-eur7-1b-in-fines-annulled-or-under-challenge/",
+      "url_status": "url:live",
+      "published": "2026-05-30",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read 21 Oct 2026. By Luís Rijo. Attributes the EUR 7.1 billion, ~40% and EUR 2.8 billion figures to 'analysis published this week by Alliance Risk, a cyber risk advisory firm', 'drawn primarily from the CMS Law GDPR Enforcement Tracker'. Its link to Alliance Risk's publication goes to an interactive map (gdpr-interactive-map-2018-2026.netlify.app), which was read the same day: it reports EUR 6.07 billion across 2,879 enforcement actions to May 2026, names no author and contains none of the three figures. A second press report of the same analysis, not the analysis; CSO Online calls the firm an insurance brokerage, PPC Land a cyber risk advisory firm."
+    },
+    {
       "id": "src-edpb-cef-2026",
       "tier": "tier:2",
       "type": "source-type:press-release",
@@ -2102,6 +2172,20 @@
       "note": null
     },
     {
+      "id": "src-ec-infringement-package-2026-10",
+      "tier": "tier:2",
+      "type": "source-type:press-release",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "INF/26/1760 — October infringements package: key decisions",
+      "url": "https://ec.europa.eu/commission/presscorner/detail/en/inf_26_1760",
+      "url_status": "url:live",
+      "published": "2026-10-01",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read in full 21 Oct 2026 through the Commission's press corner, with the thirteen earlier packages since the Hungarian amendments of March 2025: INF/25/503 (12 Mar 2025), INF/25/982 (7 May 2025), INF/25/1241 (18 Jun 2025), INF/25/1628 (17 Jul 2025), INF/25/2077 (8 Oct 2025), INF/25/2481 (21 Nov 2025), INF/25/2745 (11 Dec 2025), INF/26/115 (30 Jan 2026), INF/26/431 (11 Mar 2026), INF/26/720 (29 Apr 2026), INF/26/1084 (4 Jun 2026), INF/26/1376 (8 Jul 2026), INF/26/1380 (15 Jul 2026, transposition) and INF/26/1760 (1 Oct 2026). None of the fourteen mentions the AI Act, artificial intelligence, biometric identification or facial recognition. A package lists the Commission's KEY decisions of the cycle, not every one, so an absence here is partial evidence of an absence in the register; the register itself (ec.europa.eu/implementing-eu-law) answered HTTP 404 to its search page from this environment on 21 Oct 2026."
+    },
+    {
       "id": "src-euronews-magyar-2026",
       "tier": "tier:4",
       "type": "source-type:journalism",
@@ -2185,6 +2269,20 @@
       "accessed": "2026-09-26",
       "language": "en",
       "note": "A GDPR/NIS2 compliance vendor's blog. States its own figures for 'first fines' in Belgium (€185K), Italy (€450K), Hungary (€78K) and Lithuania (€52K), but its own 'On the figures' section says NIS2 enforcement data is fragmented across national authorities, that most do not publish a centralised fine register, and that its amounts 'aggregate reported and estimated figures... they should be treated as directional, not as an authoritative legal record.' No official decision, case number or authority-published figure was located from this source or any other."
+    },
+    {
+      "id": "src-acn-nis-obblighi-2026",
+      "tier": "tier:2",
+      "type": "source-type:guidance",
+      "publisher": null,
+      "publisher_name": "Agenzia per la Cybersicurezza Nazionale (ACN), Italy — NIS portal",
+      "title": "NIS — Obblighi; La normativa; Registrazione (ACN, the Italian national competent authority for NIS)",
+      "url": "https://www.acn.gov.it/portale/nis/obblighi",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-10-22",
+      "language": "it",
+      "note": "Read 22 Oct 2026 on ACN's own NIS pages (obblighi, la-normativa, registrazione). La normativa: 'Con il decreto legislativo 4 settembre 2024, n. 138, l'Italia ha recepito nell'ordinamento nazionale la direttiva (UE) 2022/2555'. Obblighi: 'Dal 1° dicembre 2024 e non oltre il 28 febbraio 2025, i soggetti pubblici e privati a cui si applica la normativa devono registrarsi'; first windows of '9 mesi per le notifiche e 18 mesi per le misure di sicurezza, decorrenti dalla data di consolidamento dell'elenco dei soggetti NIS (aprile 2025)'; annual updates 15 April–31 May. Registrazione: failure to register is sanctioned up to 0.1% of worldwide turnover. The pages are undated (published null). ACN is a national authority, not an EU institution, so publisher is null and the name is given in full."
     },
     {
       "id": "src-iccl-ireland-bottleneck",
@@ -2684,6 +2782,62 @@
       "accessed": "2026-10-14",
       "language": "en",
       "note": "Read 14 Oct 2026. Datelined Brussels, 12/10/2026, in the bulletin of 13 October 2026; English version of an original in French by Louis Dubar. States that the Irish Presidency's compromise text 'was supposed to go to a vote at an EU Committee of Permanent Representatives (Coreper II) meeting on Sunday 11 October. But in the end, it wasn't even discussed – or voted on'; that its examination had already been postponed at a Coreper meeting on Wednesday 7 October 'under pressure from Germany and France'; that Berlin's reservations concern the Data Act's provisions on trade secrets; and that 'Ireland may hold further consultations with Member State delegations, a source said'. Specialist press, tier 4. No Council agenda, outcome of proceedings or press release recording either meeting was located on 14 Oct 2026, so the procedural outcome rests on this report and is labelled as reported, not as an official record."
+    },
+    {
+      "id": "src-agenceurope-omnibus-2026-10-20",
+      "tier": "tier:4",
+      "type": "source-type:journalism",
+      "publisher": null,
+      "publisher_name": "Agence Europe (Europe Daily Bulletin No. 13964)",
+      "title": "'Digital Omnibus' proposal back before EU Member States with new safeguards for trade secrets",
+      "url": "https://agenceurope.eu/en/bulletin/article/13964/7/digital-omnibus-proposal-back-before-eu-member-states-with-new-safeguards-for-trade-secrets",
+      "url_status": "url:live",
+      "published": "2026-10-20",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read 21 Oct 2026. Datelined Strasbourg, 20/10/2026, in the bulletin of 21 October 2026. States that the Irish compromise 'failed to secure support at the 7 October meeting of the Committee of Permanent Representatives to the EU (Coreper)' and that 'Coreper is due to examine a revised version on Wednesday 21 October', with a view to 'adopting a negotiating mandate with the European Parliament on the text'; among the changes, 'stronger protection for trade secrets, one of Berlin's red lines', including 'a reference to trade secrets constituting industrial manufacturing know-how', and a provision for 'the Commission to submit a specific report, accompanied by recommendations' on 'the proportionality of the obligations imposed on small and medium-sized enterprises'. Written before the meeting: it does not report its outcome. Specialist press, tier 4."
+    },
+    {
+      "id": "src-council-cm-4156-2026",
+      "tier": "tier:2",
+      "type": "source-type:legislative-document",
+      "publisher": "council",
+      "publisher_name": "Council of the European Union, General Secretariat",
+      "title": "CM 4156/26 — Notice of meeting and provisional agenda, Antici Group (Simplification), 25 September 2026",
+      "url": "https://data.consilium.europa.eu/doc/document/CM-4156-2026-INIT/en/pdf",
+      "url_status": "url:live",
+      "published": "2026-09-17",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read 21 Oct 2026 on the Council's document register. Dated Brussels, 17 September 2026. Item 1, Omnibus VII: Digital Omnibus: 'Exchange of views based on the Presidency revised compromise text', 'ST 13112/26 (Presidency revised compromise text – to be issued)', with WK 14017/26 as the Presidency's steering note. It gives no date for ST 13112/26 itself; ST 13112/26 was not found on the register (HTTP 404, 21 Oct 2026)."
+    },
+    {
+      "id": "src-council-st-12535-2026",
+      "tier": "tier:2",
+      "type": "source-type:legislative-document",
+      "publisher": "council",
+      "publisher_name": "Council of the European Union, General Secretariat",
+      "title": "ST 12535/26 — Digital Omnibus: Presidency revised compromise text (3 September 2026)",
+      "url": "https://data.consilium.europa.eu/doc/document/ST-12535-2026-INIT/en/pdf",
+      "url_status": "url:live",
+      "published": "2026-09-03",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read 21 Oct 2026 on the Council's document register, where it now appears (PDF rendered 16 Oct 2026; 158 pages; still marked LIMITE). Note from the General Secretariat to Delegations, 'Presidency revised compromise text', 'in view of the AGS meeting of 11 September 2026', changes against ST 10677/26 marked. The annex renumbers the AI clause 'Article 88c88 bis' and the pseudonymisation article 'Article 29a25a' (strikethrough and insertions run together in the text layer, so which safeguards are struck cannot be read from the extraction; the brief's account of them rests on src-ppcland-omnibus-2026-09)."
+    },
+    {
+      "id": "src-council-st-13886-2026",
+      "tier": "tier:2",
+      "type": "source-type:legislative-document",
+      "publisher": "council",
+      "publisher_name": "Council of the European Union, General Secretariat (copy distributed by Agence Europe)",
+      "title": "ST 13886/26 — Digital Omnibus: Mandate for negotiations with the European Parliament (2 October 2026)",
+      "url": "https://aeur.eu/f/nrj",
+      "url_status": "url:live",
+      "published": "2026-10-02",
+      "accessed": "2026-10-21",
+      "language": "en",
+      "note": "Read 21 Oct 2026. A LIMITE document not on the Council's register (HTTP 404 for ST-13886-2026-INIT, 21 Oct 2026); read in the copy Agence Europe distributes, each page stamped 'Obtained by Agence Europe'. Its authenticity rests on that distribution, which is why only its cover facts are used: dated Brussels, 2 October 2026; note from the General Secretariat to the Permanent Representatives Committee; subject the Digital Omnibus, 'Mandate for negotiations with the European Parliament'; 163 pages. §7: the Antici Group (Simplification) examined the proposal at meetings including 11 and 25 September, and 'between July and September, the Presidency presented two revised compromise texts'. §9: after 25 September the Presidency updated the text, notably on the Data Acquis, the GDPR and the ePrivacy cookie rules."
     },
     {
       "id": "src-oeil-2025-0360",

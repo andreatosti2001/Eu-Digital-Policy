@@ -9,7 +9,7 @@
 
 import { loadAll, index, renderError, label as taxLabel, note as taxNote } from './data.js';
 import * as F from './format.js';
-import { STAGES, DERIVATION, derive, depth, aggregate, procedure } from './pipeline.js';
+import { STAGES, DERIVATION, derive, depth, aggregate, procedure, isInaction, actionsOnly } from './pipeline.js';
 import { renderFilterState, syncUrl, readUrl, emptyState } from './filters.js';
 
 const esc = (s) => String(s == null ? '' : s)
@@ -151,6 +151,36 @@ function recordHTML(rec, n) {
     '</article>';
 }
 
+/* ---------------------------------------------------------- recorded inaction
+
+   A record that no action exists (js/pipeline.js isInaction). It has no
+   pipeline, no decision and no fine, so it is drawn without them rather
+   than as an action whose every stage is dark, and it is left out of the
+   statistics, the aggregates and the funnel. */
+function inactionHTML(rec) {
+  const inst = IX.instrument.get(rec.instrument);
+  const auth = IX.institution.get(rec.authority);
+  const srcs = (rec.sources || []).map((s) => {
+    const src = IX.source.get(s);
+    return src ? '<li>' + F.citeHTML(src, IX, 'note') + '</li>' : '';
+  }).join('');
+  return '<article class="enf-rec enf-inaction" id="' + esc(rec.id) + '" data-id="' + esc(rec.id) + '">' +
+    '<header class="enf-head">' +
+      '<h2>' + esc(rec.entity) + '</h2>' +
+      '<span class="enf-inst">' + esc(inst ? inst.short_name : rec.instrument) + '</span>' +
+      '<span class="enf-auth">' + esc(auth ? auth.short_name : rec.authority) + '</span>' +
+      '<span class="enf-date">' + esc(taxLabel(IX, rec.record_type)) + '</span>' +
+    '</header>' +
+    '<p class="enf-action">' + esc(rec.action || '—') + '</p>' +
+    '<p class="enf-sub"><b>Not an enforcement action.</b> ' + esc(taxNote(IX, rec.record_type) || '') + '</p>' +
+    (rec.verification_note ? '<div class="enf-field' + (rec.requires_verification ? ' warn' : '') + '"><h3>' +
+      (rec.requires_verification ? 'Requires verification' : 'What was checked') + '</h3><p>' + esc(rec.verification_note) + '</p></div>' : '') +
+    (srcs ? '<details class="enf-sources"><summary>Sources (' + (rec.sources || []).length + ')</summary><ul>' + srcs + '</ul></details>' : '') +
+    '<div class="enf-verified">' + esc(rec.id) + ' · checked ' +
+      (rec.last_verified ? esc(F.humanDate(rec.last_verified)) : '<span class="enf-unknown">never</span>') + '</div>' +
+    '</article>';
+}
+
 /* ---------------------------------------------------------- aggregates */
 
 function summaryHTML(list) {
@@ -278,21 +308,24 @@ function match(rec) {
 }
 
 function render() {
-  const list = RECORDS.filter(match)
+  const shown = RECORDS.filter(match);
+  const list = actionsOnly(shown)
     .sort((a, b) => String(b.decision_date || '').localeCompare(String(a.decision_date || '')));
+  const none = shown.filter(isInaction);
   document.getElementById('enfSummary').innerHTML = summaryHTML(list);
   document.getElementById('enfFunnel').innerHTML = funnelHTML(list);
   F.applyGeometry(document.getElementById('enfFunnel'));
-  document.getElementById('enfList').innerHTML = list.length
+  document.getElementById('enfList').innerHTML = (list.length
     ? list.map(recordHTML).join('')
     : emptyState('enforcement records',
         'Every record in this register is an action that was actually taken; a combination with no ' +
-        'results means no such action is recorded, not that none exists.');
+        'results means no such action is recorded, not that none exists.')) +
+    none.map(inactionHTML).join('');
 
   renderFilterState({
     host: document.getElementById('enfState'),
     active: activeFilters(),
-    count: { shown: list.length, total: RECORDS.length },
+    count: { shown: shown.length, total: RECORDS.length },
     onRemove: (k) => setFilter(k, ''),
     onClear: clearFilters,
   });
@@ -336,11 +369,15 @@ function focusFromHash() {
     RECORDS = db.enforcement.enforcement || [];
     const st = document.getElementById('enfStats');
     if (st) {
-      const withFine = RECORDS.filter((r) => r.fine_eur != null).length;
-      const unknownPay = RECORDS.filter((r) => !r.payment_status || r.payment_status === 'payment:unknown').length;
-      const authorities = new Set(RECORDS.map((r) => r.authority)).size;
+      /* the statistics count actions; a recorded inaction is named apart */
+      const acts = actionsOnly(RECORDS);
+      const withFine = acts.filter((r) => r.fine_eur != null).length;
+      const unknownPay = acts.filter((r) => !r.payment_status || r.payment_status === 'payment:unknown').length;
+      const authorities = new Set(acts.map((r) => r.authority)).size;
+      const none = RECORDS.length - acts.length;
       st.innerHTML =
-        '<span><b>' + RECORDS.length + '</b> records</span>' +
+        '<span><b>' + acts.length + '</b> enforcement records</span>' +
+        (none ? '<span><b>' + none + '</b> recorded inaction, not counted</span>' : '') +
         '<span><b>' + withFine + '</b> with a stated amount</span>' +
         '<span><b>' + authorities + '</b> authorities</span>' +
         '<span><b>' + unknownPay + '</b> where payment cannot be established</span>';

@@ -236,6 +236,19 @@ function checkRefs(ids) {
       if (x.payment_status && x.payment_status !== 'payment:not-applicable')
         err(`ENFORCEMENT "${x.id}" is preliminary findings but carries payment status "${x.payment_status}"`);
     }
+    /* audit of 21 Oct 2026 item 11: a recorded inaction asserts that NO action
+       exists, so it may carry nothing an action carries, and an untyped record
+       with no action is an inaction that every counter would count. The
+       counters exclude it through js/pipeline.js actionsOnly(). */
+    checkOne(w, 'taxonomy', x.record_type);
+    if (x.record_type === 'record-type:inaction') {
+      for (const [k, v] of [['action_status', x.action_status], ['decision_date', x.decision_date], ['fine_eur', x.fine_eur], ['opened', x.opened]])
+        if (v != null) err(`ENFORCEMENT "${x.id}" is a recorded inaction but carries ${k} ${JSON.stringify(v)} — an absence of action has none`);
+      if (x.payment_status !== 'payment:not-applicable') err(`ENFORCEMENT "${x.id}" is a recorded inaction but its payment status is "${x.payment_status}", not payment:not-applicable`);
+      if (!x.last_verified) err(`ENFORCEMENT "${x.id}" is a recorded inaction with no last_verified — an absence is true only at the date it was checked`);
+    } else if (x.action_status == null) {
+      err(`ENFORCEMENT "${x.id}" records no action but is not typed record-type:inaction, so it would be counted as an enforcement action`);
+    }
     // a collected or paid state without an amount cannot be aggregated honestly
     if ((x.payment_status === 'payment:collected' || x.payment_status === 'payment:paid') && x.fine_eur == null)
       warn(`ENFORCEMENT "${x.id}" is marked ${x.payment_status} but records no amount`);
@@ -396,6 +409,12 @@ function checkStatusModel() {
       warn(`instruments/${i.id} is a core directive with no transposition block — transposition is not the same as applicability`);
     if (i.kind === 'kind:regulation' && i.transposition !== null && i.transposition !== undefined)
       warn(`instruments/${i.id} is a regulation but carries a transposition block`);
+    /* audit of 21 Oct 2026 item 10: a status assessed on a date is part of
+       the record, so the record cannot have been verified BEFORE its status
+       was. Seven instruments said "status as of 14 Oct" over a last_verified
+       of 27 Aug or 27 Sep; ISO dates compare as strings. */
+    if (i.last_verified && i.status_as_of && i.last_verified < i.status_as_of)
+      err(`instruments/${i.id}: last_verified ${i.last_verified} is earlier than status_as_of ${i.status_as_of} — the status cannot have been assessed after the record was last verified`);
     // an instrument claiming applicability should have at least one application milestone
     if (['status:applicable', 'status:partly-applicable'].includes(i.legislative_status)) {
       const ms = arr(i.milestones);

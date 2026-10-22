@@ -23,6 +23,7 @@
    ============================================================ */
 
 import { loadAll, index, label as taxLabel } from './data.js';
+import { href as siteHref } from './routes.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -110,7 +111,7 @@ function readoutHTML(i) {
 
   const chip = (p) => {
     const pr = IX.provision.get(p.id);
-    return '<a class="pyr-prov" href="instruments.html#dsa" title="' + esc(pr.heading || '') + '">' +
+    return '<a class="pyr-prov" href="' + esc(siteHref('instruments.html#dsa')) + '" title="' + esc(pr.heading || '') + '">' +
       'Art. ' + esc(pr.number) + '</a>';
   };
 

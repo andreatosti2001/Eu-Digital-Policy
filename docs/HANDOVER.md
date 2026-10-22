@@ -1,8 +1,44 @@
 # HANDOVER
 
-**Last updated:** Dataset explorer · 22 October 2026
-**Branch:** `claude/datasets-explorer`, cut from `origin/main` at `dfdc01c`. Pushed; not merged.
-Merging is the author's.
+**Last updated:** audit of 21 October 2026 and the dataset explorer, merged · 22 October 2026
+**Branches:** `claude/audit-2026-10-21` merged to `main` by the author (pull request #12, `29f92c9`).
+`claude/datasets-explorer` (another session, same day; its own section below) has `main` merged into it,
+conflicts resolved, and is unmerged; merging it is the author's.
+
+## Audit of 21 October 2026 — implemented on `claude/audit-2026-10-21`
+
+**Asked:** the author's external audit "eudigitalpolicy.eu audit fixes" — 26 items in three phases and
+an evidence-audit list. **The full register of what was checked, what changed and what was not done is
+`docs/AUDIT-2026-10-21.md`.** One commit (or two) per item, each naming the item and its evidence.
+
+**What the author should know first:**
+- **Part VIII does not report the Coreper of 21 October.** No outcome had been published when it was
+  checked; the brief says so, dated. Replace `clm-data-omnibus-coreper-21-october` the moment one is.
+- **ST 13886/26 is a LIMITE Council document read in Agence Europe's copy**, recorded tier:2 with that
+  provenance in its note; only its cover facts are used. Confirm or downgrade the tier.
+- **Items 20 and 22 are built; the review itself is yours.** `it/`, `fr/`, `es/` exist as
+  generated pages and the language menu goes there, but each stays `noindex` with no `hreflang`
+  until every one of its 430 strings is recorded as reviewed by a person. To review Italian:
+  `node tools/i18n-review.mjs sheet it`, tick `docs/i18n-review/it.md`, then
+  `node tools/i18n-review.mjs record it --by "Your Name"` and `node tools/_footer.mjs`, and commit
+  (`docs/SEO-OPERATIONS.md` §6). An agent never runs `record` (`docs/AI-SAFE-BOUNDARIES.md` §3).
+- **Item 26 was not done**: versioned filenames need a build step, and GitHub Pages fixes
+  `max-age=600`, so the gain is small.
+- **Item 24 kept the three robots.txt lines**, documented: they stop being superfluous only when
+  Settings → Pages → Source is "GitHub Actions".
+- Annexes B and C are **one annex now**: 13 parts, `data/brief.json` and both trees changed.
+- New checks: `last_verified ≥ status_as_of` and recorded inaction in `validate.mjs`; rankings of
+  "largest to date" claims in `evidence-audit.mjs`; self-test A1–A6.
+- Five things the suites pinned moved with the change, each with its reason: R6's unverified baseline
+  (47 → 46 → 45, §12), the detector's field register (`ranking.*`), the editorial agent's box labels
+  (SYNTHESIS) and root-page count (10), the health suite's Annex C assertions, and the detector's
+  `NOT_ANALYTICAL` (404.html).
+- Seen in passing, not acted on: the Commission opened DSA proceedings against Booking.com on
+  21 Oct 2026 (IP/26/2223); the language menu is not reachable at 390px (pre-existing).
+
+**Measured at the end** (22 Oct 2026, UTC): validators 0 errors (evidence-audit 11 warnings, as
+before); 1255 tests passing; contracts 18/18; commit-evidence exit 0; browser suite 291 · 0 · 1
+undecidable (`a11y:bound`), as before.
 
 ## Dataset explorer — 22 October 2026
 
@@ -154,6 +190,21 @@ longer blocked; (d) `fonts/` carries no licence files for the three typefaces �
 `/tools/` disallowed, `Sitemap: https://eudigitalpolicy.eu/sitemap.xml`; in the deploy allowlist;
 `seo-audit.mjs` fails a wrong sitemap or a rule over an indexable route (selftest S4c). Merged into
 `main` with `--no-ff` on the author's instruction ("Fai merge"), not deleted.
+
+## Branch register — 22 October 2026 (audit)
+
+At the start `git branch -r --no-merged origin/main` listed nothing. `claude/audit-2026-10-21` is
+pushed and unmerged. Asked at the end of the session, the author said to open a pull request:
+**#12**, `claude/audit-2026-10-21` → `main`, opened 22 Oct 2026 and merged by the author the same day
+(`29f92c9`). `main` was then merged into `claude/datasets-explorer`, with seven conflicts resolved:
+both branches had added one root page each (`404.html`, `datasets.html`) to `tools/seo.mjs`,
+`tools/_footer.mjs`, `tools/pages-artifact.mjs` and the editorial suite's page count (now 11), both
+appended tests to `tools/selftest.mjs`, and both rewrote `brief.json`'s row in CURRENT-ARCHITECTURE §7
+(13 parts) and the top of this file. Measured on the merged tree: validators 0 errors, 1262 tests,
+browser suite 328 · 0 · 1 undecidable. Re-fetched before this write: `origin/main` still `dfdc01c`; one branch appeared
+meanwhile, `claude/datasets-explorer` (another session, 22 Oct, 2 commits, a dataset explorer). It
+also edits `tools/seo.mjs` and `tools/seo-audit.mjs`, so whichever merges second will need those two
+files reconciled.
 
 ## Branch register — 21 October 2026 (P1)
 
