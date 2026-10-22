@@ -1467,28 +1467,57 @@ test('J5 · the structure graph draws nesting as nesting, keeps null and "unknow
   assert.equal(JG.structureGraph('scalar').nodes[0].rows[0].text, '"scalar"');
 });
 
-test('J6 · every record in every real file lays out without two cards overlapping, and the same way twice', () => {
+const apart = (p, q) => p.x + p.w <= q.x || q.x + q.w <= p.x || p.y + p.h <= q.y || q.y + q.h <= p.y;
+
+test('J6 · every record in every real file lays out without two cards overlapping, in both directions, and the same way twice', () => {
   const docs = allDocs();
   const refs = JG.refIndex(docs);
+  assert.deepEqual(JG.ORIENTATIONS, ['horizontal', 'vertical'], 'horizontal is the default, and the only other is vertical');
   let checked = 0;
   for (const { name } of JG.DATASETS) {
     for (const col of JG.describe(docs[name]).collections) {
       col.records.forEach((rec, i) => {
-        const L = JG.layout(JG.structureGraph(rec, { title: JG.recordKey(rec, i), refs }));
-        for (let a = 0; a < L.nodes.length; a++) {
-          for (let b = a + 1; b < L.nodes.length; b++) {
-            const p = L.nodes[a], q = L.nodes[b];
-            const apart = p.x + p.w <= q.x || q.x + q.w <= p.x || p.y + p.h <= q.y || q.y + q.h <= p.y;
-            assert.ok(apart, `${name}/${JG.recordKey(rec, i)}: ${p.title} overlaps ${q.title}`);
+        const g = JG.structureGraph(rec, { title: JG.recordKey(rec, i), refs });
+        for (const o of JG.ORIENTATIONS) {
+          const L = JG.layout(g, JG.METRICS, o);
+          assert.equal(L.orientation, o);
+          for (let a = 0; a < L.nodes.length; a++) {
+            for (let b = a + 1; b < L.nodes.length; b++) {
+              const p = L.nodes[a], q = L.nodes[b];
+              assert.ok(apart(p, q), `${name}/${JG.recordKey(rec, i)} (${o}): ${p.title} overlaps ${q.title}`);
+            }
           }
+          checked += 1;
         }
-        checked += 1;
       });
     }
   }
-  assert.ok(checked > 900);
+  assert.ok(checked > 1800);
   const gdpr = docs.instruments.instruments.find((x) => x.id === 'gdpr');
-  assert.deepEqual(JG.layout(JG.structureGraph(gdpr, { refs })), JG.layout(JG.structureGraph(gdpr, { refs })));
+  for (const o of JG.ORIENTATIONS) {
+    assert.deepEqual(JG.layout(JG.structureGraph(gdpr, { refs }), JG.METRICS, o), JG.layout(JG.structureGraph(gdpr, { refs }), JG.METRICS, o));
+  }
+  assert.deepEqual(JG.layout(JG.structureGraph(gdpr, { refs })), JG.layout(JG.structureGraph(gdpr, { refs }), JG.METRICS, 'horizontal'),
+    'no direction given is horizontal');
+});
+
+test('J8 · the vertical layout is the horizontal one turned: children below their parent, edges from foot to head', () => {
+  const g = JG.structureGraph({ a: { x: 1 }, b: [1, 2], c: 'v' }, { title: 'r' });
+  const H = JG.layout(g), V = JG.layout(g, JG.METRICS, 'vertical');
+  const at = (L, id) => L.nodes.find((n) => n.id === id);
+  for (const e of g.edges) {
+    const [hp, hc] = [at(H, e.from), at(H, e.to)];
+    const [vp, vc] = [at(V, e.from), at(V, e.to)];
+    assert.ok(hc.x >= hp.x + hp.w, 'horizontal: a child sits to the right of its parent');
+    assert.ok(vc.y >= vp.y + vp.h, 'vertical: a child sits below its parent');
+  }
+  for (const e of V.edges) {
+    const p = at(V, e.from), c = at(V, e.to);
+    assert.equal(e.y1, p.y + p.h, 'a vertical edge leaves from the foot of the parent card');
+    assert.equal(e.y2, c.y, 'and arrives at the head of the child');
+  }
+  assert.match(JG.edgePath(V.edges[0], 'vertical'), /^M[\d.]+ [\d.]+ C/);
+  assert.notEqual(JG.edgePath(V.edges[0], 'vertical'), JG.edgePath(V.edges[0], 'horizontal'), 'the curve leaves along the direction of the layout');
 });
 
 test('J7 · the reference graph leaves out vocabulary terms, caps each side and counts what it left out', () => {
@@ -1507,4 +1536,18 @@ test('J7 · the reference graph leaves out vocabulary terms, caps each side and 
   assert.ok(drawn.every((c) => c.dataset !== 'taxonomy'), 'vocabulary terms are labelled in place, not drawn');
   /* a provision naming its own instrument is not an incoming edge into it */
   for (const r of into.get('gdpr') || []) assert.ok(!(r.dataset === 'instruments' && r.record === 'gdpr'));
+
+  /* turned: the records naming it above, the records it names below, no card over another */
+  const dma = docs.instruments.instruments.find((x) => x.id === 'dma');
+  for (const o of JG.ORIENTATIONS) {
+    const G2 = JG.referenceGraph({ dataset: 'instruments', record: 'dma' }, JG.referencesIn(dma, refs), into.get('dma') || [], { orientation: o });
+    assert.equal(G2.orientation, o);
+    const all = [G2.center, ...G2.cards];
+    for (let a = 0; a < all.length; a++) for (let b = a + 1; b < all.length; b++) assert.ok(apart(all[a], all[b]), `${o}: two reference cards overlap`);
+    for (const c of G2.cards) {
+      if (o === 'vertical') assert.ok(c.side === 'in' ? c.y + c.h <= G2.center.y : c.y >= G2.center.y + G2.center.h, 'vertical: in above, out below');
+      else assert.ok(c.side === 'in' ? c.x + c.w <= G2.center.x : c.x >= G2.center.x + G2.center.w, 'horizontal: in left, out right');
+      assert.ok(c.x >= 0 && c.y >= 0 && c.x + c.w <= G2.width + 0.01 && c.y + c.h <= G2.height + 0.01, 'every card inside the drawing');
+    }
+  }
 });
