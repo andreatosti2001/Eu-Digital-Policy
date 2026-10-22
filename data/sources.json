@@ -2243,6 +2243,20 @@
       "note": "A GDPR/NIS2 compliance vendor's blog. States its own figures for 'first fines' in Belgium (€185K), Italy (€450K), Hungary (€78K) and Lithuania (€52K), but its own 'On the figures' section says NIS2 enforcement data is fragmented across national authorities, that most do not publish a centralised fine register, and that its amounts 'aggregate reported and estimated figures... they should be treated as directional, not as an authoritative legal record.' No official decision, case number or authority-published figure was located from this source or any other."
     },
     {
+      "id": "src-acn-nis-obblighi-2026",
+      "tier": "tier:2",
+      "type": "source-type:guidance",
+      "publisher": null,
+      "publisher_name": "Agenzia per la Cybersicurezza Nazionale (ACN), Italy — NIS portal",
+      "title": "NIS — Obblighi; La normativa; Registrazione (ACN, the Italian national competent authority for NIS)",
+      "url": "https://www.acn.gov.it/portale/nis/obblighi",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-10-22",
+      "language": "it",
+      "note": "Read 22 Oct 2026 on ACN's own NIS pages (obblighi, la-normativa, registrazione). La normativa: 'Con il decreto legislativo 4 settembre 2024, n. 138, l'Italia ha recepito nell'ordinamento nazionale la direttiva (UE) 2022/2555'. Obblighi: 'Dal 1° dicembre 2024 e non oltre il 28 febbraio 2025, i soggetti pubblici e privati a cui si applica la normativa devono registrarsi'; first windows of '9 mesi per le notifiche e 18 mesi per le misure di sicurezza, decorrenti dalla data di consolidamento dell'elenco dei soggetti NIS (aprile 2025)'; annual updates 15 April–31 May. Registrazione: failure to register is sanctioned up to 0.1% of worldwide turnover. The pages are undated (published null). ACN is a national authority, not an EU institution, so publisher is null and the name is given in full."
+    },
+    {
       "id": "src-iccl-ireland-bottleneck",
       "tier": "tier:4",
       "type": "source-type:report",

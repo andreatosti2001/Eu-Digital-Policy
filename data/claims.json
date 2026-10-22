@@ -525,11 +525,6 @@
           "source_id": "src-cms-enforcement-tracker",
           "supports": "supports:partial",
           "locator": null
-        },
-        {
-          "source_id": "src-brief-original",
-          "supports": "supports:direct",
-          "locator": "Part II"
         }
       ],
       "legal_basis": [
@@ -538,7 +533,7 @@
       "brief_part": "part-2",
       "published": null,
       "last_verified": "2026-10-14",
-      "verification_note": "14 Oct 2026: the statement now names the tracker, its cut-off and what it counts, in DLA Piper's own words, re-read that day. It is a count of fines reported, not of fines upheld on appeal or collected. CMS's Enforcement Tracker measures something different on its own method (clm-cms-fines-total: EUR 7,159,322,834 across 3,275 cases on 27 September 2026; its March 2026 report about EUR 6.11 billion); the two are not added together, averaged or substituted for each other. Earlier statement: 'Cumulative GDPR fines have passed roughly EUR 7.1 billion since 2018.' Earlier note: Resolved 28 Aug 2026 against the DLA Piper survey of January 2026, which is the actual source of the EUR 7.1bn figure — the brief attributed it to the CMS tracker, which records roughly EUR 6.11bn on its own methodology. Both are compilations by law firms from published decisions, not audited totals; Annex B's warning stands and is now demonstrated rather than asserted.",
+      "verification_note": "14 Oct 2026: the statement now names the tracker, its cut-off and what it counts, in DLA Piper's own words, re-read that day. It is a count of fines reported, not of fines upheld on appeal or collected. CMS's Enforcement Tracker measures something different on its own method (clm-cms-fines-total: EUR 7,159,322,834 across 3,275 cases on 27 September 2026; its March 2026 report about EUR 6.11 billion); the two are not added together, averaged or substituted for each other. Earlier statement: 'Cumulative GDPR fines have passed roughly EUR 7.1 billion since 2018.' Earlier note: Resolved 28 Aug 2026 against the DLA Piper survey of January 2026, which is the actual source of the EUR 7.1bn figure — the brief attributed it to the CMS tracker, which records roughly EUR 6.11bn on its own methodology. Both are compilations by law firms from published decisions, not audited totals; Annex B's warning stands and is now demonstrated rather than asserted. 21 Oct 2026 (audit, evidence item clm-gdpr-total-fines): the brief removed from its own sources; DLA Piper's survey carries the statement directly, and its status stays as computed from the remaining references.",
       "contested": {
         "note": "The two compilations disagree on the total. DLA Piper's January 2026 survey gives about EUR 7.1bn to 10 January 2026; the CMS Enforcement Tracker Report (March 2026) records roughly EUR 6.11bn in directly documented fines. Both compile published decisions by their own methods; neither is an audited figure (Annex B).",
         "sources": [
@@ -3772,7 +3767,7 @@
         {
           "source_id": "src-eurlex-data-act",
           "supports": "supports:partial",
-          "locator": "Art. 1(2), 1(5)"
+          "locator": "Art. 1(2): 'This Regulation covers personal and non-personal data'; Art. 1(5): 'In the event of a conflict between this Regulation and Union law on the protection of personal data or privacy … the relevant Union or national law on the protection of personal data or privacy shall prevail'"
         },
         {
           "source_id": "src-brief-original",
@@ -3783,8 +3778,8 @@
       "legal_basis": [],
       "brief_part": "part-6",
       "published": "2023-12-22",
-      "last_verified": "2026-09-27",
-      "verification_note": "Corrected on 2026-09-26 (audit T-13): the earlier wording implied the Data Act concerns non-personal data. Art. 1(2) says it covers personal and non-personal data, and Art. 1(5) that data-protection law prevails in a conflict. Read from an unofficial reproduction (EUR-Lex returns HTTP 202 with no body here). 'Predominantly non-personal, industrial and machine-generated' remains the brief's characterisation. Checked 27 Sep 2026 against the Official Journal text read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32023R2854): Article 1(2) covers personal and non-personal data, and Article 1(5) makes data-protection law prevail in a conflict. \"Predominantly non-personal, industrial and machine-generated\" and \"reallocates control by default\" are the brief's characterisation, so the reference stays partial. The unofficial reproduction (src-da-text-unofficial-arts-1-50), read for the same two paragraphs on 26 Sep 2026, was removed from this claim on 27 Sep 2026: the Official Journal reading supersedes it and it added no support."
+      "last_verified": "2026-10-22",
+      "verification_note": "Corrected on 2026-09-26 (audit T-13): the earlier wording implied the Data Act concerns non-personal data. Art. 1(2) says it covers personal and non-personal data, and Art. 1(5) that data-protection law prevails in a conflict. Read from an unofficial reproduction (EUR-Lex returns HTTP 202 with no body here). 'Predominantly non-personal, industrial and machine-generated' remains the brief's characterisation. Checked 27 Sep 2026 against the Official Journal text read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32023R2854): Article 1(2) covers personal and non-personal data, and Article 1(5) makes data-protection law prevail in a conflict. \"Predominantly non-personal, industrial and machine-generated\" and \"reallocates control by default\" are the brief's characterisation, so the reference stays partial. The unofficial reproduction (src-da-text-unofficial-arts-1-50), read for the same two paragraphs on 26 Sep 2026, was removed from this claim on 27 Sep 2026: the Official Journal reading supersedes it and it added no support. 22 Oct 2026 (audit, evidence item clm-data-act-non-personal, which said Art. 1(2) and 1(5) were read from an unofficial reproduction): that was corrected on 27 Sep 2026, and both paragraphs were read again on 22 Oct 2026 in the Official Journal text (XHTML manifestation of CELEX 32023R2854 from the Publications Office's Cellar); the locator now quotes them. The OJ text supports the scope and the precedence rule, so the reference stays partial: 'predominantly non-personal, industrial and machine-generated' and 'reallocates control over it by default' are the brief's characterisation, which is why the brief remains a source."
     },
     {
       "id": "clm-data-act-switching-numbers",
@@ -4142,9 +4137,34 @@
       "verification_note": "The letters of formal notice and the referral are directly sourced. The intermediate step — nineteen reasoned opinions in May 2025 — is NOT sourced and requires verification. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim. Neither release gives the number of reasoned opinions (\"nineteen\" in the statement); that figure is not located."
     },
     {
+      "id": "clm-nis2-italy-regime-running",
+      "type": "claim-type:fact",
+      "statement": "Italy transposed NIS2 by Legislative Decree 138 of 4 September 2024; entities registered with its national authority, ACN, between 1 December 2024 and 28 February 2025, and the list of NIS entities was consolidated in April 2025.",
+      "instruments": [
+        "nis2"
+      ],
+      "provisions": [],
+      "institutions": [
+        "nca-*"
+      ],
+      "enforcement": [],
+      "legal_basis": [],
+      "sources": [
+        {
+          "source_id": "src-acn-nis-obblighi-2026",
+          "supports": "supports:direct",
+          "locator": "La normativa: 'Con il decreto legislativo 4 settembre 2024, n. 138'; Obblighi: 'Dal 1° dicembre 2024 e non oltre il 28 febbraio 2025 … devono registrarsi'; 'consolidamento dell'elenco dei soggetti NIS (aprile 2025)'"
+        }
+      ],
+      "brief_part": "part-7",
+      "published": null,
+      "last_verified": "2026-10-22",
+      "verification_note": "Registered 22 Oct 2026 (audit, evidence item clm-nis2-enforcement-despite-transposition), read that day on ACN's own pages. It says that the Italian regime is running, which is what the authority states; it does not say that inspections or sanctions have taken place, which ACN's pages do not state."
+    },
+    {
       "id": "clm-nis2-enforcement-despite-transposition",
       "type": "claim-type:fact",
-      "statement": "Supervision under NIS2 has begun regardless of the transposition failure, but no officially published NIS2 fine decision has been located for this brief; figures circulating for Belgium, Italy and Hungary come from commercial trackers that describe their own numbers as indicative.",
+      "statement": "No officially published NIS2 fine decision by a national authority had been located as of 22 October 2026; figures circulating for Belgium, Italy, Hungary and other Member States come from commercial trackers that cite no regulator decision.",
       "instruments": [
         "nis2"
       ],
@@ -4163,8 +4183,8 @@
       "legal_basis": [],
       "brief_part": "part-7",
       "published": "2026-08-19",
-      "last_verified": "2026-09-26",
-      "verification_note": "REQUIRES VERIFICATION. No entity, date, amount or authority naming an official NIS2 fine decision has been located. The one located source (Legiscope, a commercial NIS2-compliance vendor) explicitly describes its own figures as directional/indicative, not as decisions. The corresponding enforcement record (enf-nis2-first-fines) has been removed rather than kept as a placeholder that could be read as a countable action.",
+      "last_verified": "2026-10-22",
+      "verification_note": "22 Oct 2026 (audit, evidence item clm-nis2-enforcement-despite-transposition): split and dated. 'Supervision has begun' rested on Legiscope alone; it is now clm-nis2-italy-regime-running, sourced to ACN, the Italian authority, and says what ACN states rather than 'supervision'. This claim keeps only the negative, dated: a search on 22 Oct 2026 found vendor pages listing NIS2 fines (Belgium, Italy, Hungary, Lithuania, Germany) that cite no decision, press release or register entry, and none was found on a regulator's site. True only at that date. Earlier statement: 'Supervision under NIS2 has begun regardless of the transposition failure, but no officially published NIS2 fine decision has been located for this brief; figures circulating for Belgium, Italy and Hungary come from commercial trackers that describe their own numbers as indicative.' REQUIRES VERIFICATION. No entity, date, amount or authority naming an official NIS2 fine decision has been located. The one located source (Legiscope, a commercial NIS2-compliance vendor) explicitly describes its own figures as directional/indicative, not as decisions. The corresponding enforcement record (enf-nis2-first-fines) has been removed rather than kept as a placeholder that could be read as a countable action.",
       "reference_gap": true,
       "gap_note": "No official source located naming any first NIS2 fine in Belgium, Italy or Hungary. The only located source is a vendor tracker that disclaims its own figures as indicative."
     },
