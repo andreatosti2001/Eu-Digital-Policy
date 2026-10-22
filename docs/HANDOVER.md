@@ -15,9 +15,14 @@ an evidence-audit list. **The full register of what was checked, what changed an
   checked; the brief says so, dated. Replace `clm-data-omnibus-coreper-21-october` the moment one is.
 - **ST 13886/26 is a LIMITE Council document read in Agence Europe's copy**, recorded tier:2 with that
   provenance in its note; only its cover facts are used. Confirm or downgrade the tier.
-- **Items 20 and 26 were not done**, by the repository's own rules: `hreflang` needs reviewed
-  pre-rendered pages (item 22 is yours: `docs/TRANSLATION-REVIEW-2026-10-21.md`), and versioned
-  filenames need a build step.
+- **Items 20 and 22 are built; the review itself is yours.** `it/`, `fr/`, `es/` exist as
+  generated pages and the language menu goes there, but each stays `noindex` with no `hreflang`
+  until every one of its 430 strings is recorded as reviewed by a person. To review Italian:
+  `node tools/i18n-review.mjs sheet it`, tick `docs/i18n-review/it.md`, then
+  `node tools/i18n-review.mjs record it --by "Your Name"` and `node tools/_footer.mjs`, and commit
+  (`docs/SEO-OPERATIONS.md` §6). An agent never runs `record` (`docs/AI-SAFE-BOUNDARIES.md` §3).
+- **Item 26 was not done**: versioned filenames need a build step, and GitHub Pages fixes
+  `max-age=600`, so the gain is small.
 - **Item 24 kept the three robots.txt lines**, documented: they stop being superfluous only when
   Settings → Pages → Source is "GitHub Actions".
 - Annexes B and C are **one annex now**: 13 parts, `data/brief.json` and both trees changed.
@@ -31,7 +36,7 @@ an evidence-audit list. **The full register of what was checked, what changed an
   21 Oct 2026 (IP/26/2223); the language menu is not reachable at 390px (pre-existing).
 
 **Measured at the end** (22 Oct 2026, UTC): validators 0 errors (evidence-audit 11 warnings, as
-before); 1253 tests passing; contracts 18/18; commit-evidence exit 0; browser suite 291 · 0 · 1
+before); 1255 tests passing; contracts 18/18; commit-evidence exit 0; browser suite 291 · 0 · 1
 undecidable (`a11y:bound`), as before.
 
 ## P1 — licence, methodology, structured data, custom domain — 21 October 2026
@@ -107,7 +112,10 @@ longer blocked; (d) `fonts/` carries no licence files for the three typefaces �
 
 At the start `git branch -r --no-merged origin/main` listed nothing. `claude/audit-2026-10-21` is
 pushed and unmerged; whether to open a pull request to `main` is the author's question, asked at the
-end of the session.
+end of the session. Re-fetched before this write: `origin/main` still `dfdc01c`; one branch appeared
+meanwhile, `claude/datasets-explorer` (another session, 22 Oct, 2 commits, a dataset explorer). It
+also edits `tools/seo.mjs` and `tools/seo-audit.mjs`, so whichever merges second will need those two
+files reconciled.
 
 ## Branch register — 21 October 2026 (P1)
 

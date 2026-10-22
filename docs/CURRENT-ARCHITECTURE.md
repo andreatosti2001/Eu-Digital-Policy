@@ -102,7 +102,8 @@ not fabricate fallback data**, leave the surrounding static content alone.
 A 62 KB classic (non-module) script loaded before `js/main.js` on `index.html` only. It owns
 scroll/progress, the reading lens, the theme toggle, the Tree-of-Life contents overlay, the
 glossary popovers, the prose search provider, resume positions, the pager, the shortcuts
-overlay, the portal/rota set pieces, and the in-place i18n string swap.
+overlay, the portal/rota set pieces, and the language menu (which navigates to the edition
+pages; until 22 Oct 2026 it swapped translated strings into the English page in place).
 
 It reads the brief's own structure — each Part's id, numeral, title, dek and prose — out of
 the markup of `index.html`, once, at load, and builds the contents overlay's pagers, the
@@ -320,8 +321,8 @@ them, page-local `<style>` blocks, and any third-party stylesheet or script.
 ## 11. Localisation
 
 `i18n/locales.json` is the **single source of truth**. The language menu is built from it at
-runtime, so a language cannot be offered unless the register declares a file for it, and a
-declared file that 404s demotes the locale rather than breaking the page. **No module may
+runtime, so a language cannot be offered unless the register declares an edition for it; a
+register that will not load leaves the page in its own language rather than breaking it. **No module may
 assemble an i18n path by string concatenation** — `i18n-audit.mjs` checks this.
 
 Each locale has two files:
@@ -337,8 +338,24 @@ translation withdrawn because the English it rendered no longer describes the si
 strings fall back to English, are marked `data-i18n-fallback`, and show as **EN** in the
 interface.
 
-Current state: 416 declared English keys; 394 present per locale; 22 declared absent (10
-superseded, 12 pending); 60 canonical entity keys, identical across `it`, `fr`, `es`.
+**Editions (since 22 Oct 2026).** The translated brief is a generated page per language,
+`it/`, `fr/`, `es/`, written by `tools/_footer.mjs` from `index.html` and `i18n/<code>.json`
+through `tools/editions.mjs applyLocale()` — the same swap `app.js` used to do in the browser,
+done once at generation, so the HTML at each address is in its language. Links are rewritten to
+resolve from the subdirectory (`<body data-root="../">`, `js/routes.js href()`). The language
+menu navigates between the pages, keeping the hash; `?lang=xx` forwards. There is no in-place
+swap any more (self-test I1d).
+
+**Review (since 22 Oct 2026).** Whether a translated string has been read by a person is
+derived, per string, from `i18n/review/<code>.json`: an approval holds a sha256 of the key, the
+English and the translation, and matches only while both are unchanged. A locale is reviewed
+when every string is. `tools/seo.mjs` makes an edition indexable (canonical, sitemap,
+reciprocal `hreflang`, `x-default` English) only then; until then it is `noindex`.
+`tools/i18n-review.mjs` writes the review sheets (`docs/i18n-review/<code>.md`) and records
+approvals; only a person runs `record` (`docs/AI-SAFE-BOUNDARIES.md` §3).
+
+Current state (22 Oct 2026): 428 `data-i18n` keys plus 2 edition strings per locale; all
+present in `it`, `fr`, `es`; 0 of 430 reviewed in each; 57 canonical entity keys.
 
 ## 12. Tooling
 

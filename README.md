@@ -290,11 +290,13 @@ English and are marked **EN** in the interface.
 **There is no offline support.** No service worker, nothing precached. The
 first switch to a language fetches its file.
 
-**Search engines are offered English only, for now.** A translation is applied
-by JavaScript over the English HTML and has not been reviewed by a native
-speaker, so `?lang=it|fr|es` keeps working for readers but is not advertised
-with `hreflang` and is not in the sitemap. `docs/SEO-OPERATIONS.md` §6 says what
-would change that.
+**Each language has a page, and search engines are offered it only once a
+person has reviewed it.** `it/`, `fr/` and `es/` are generated from the brief
+and the locale files; the language menu goes there, and old `?lang=` links
+forward there. An edition stays `noindex`, with no `hreflang` and no sitemap
+entry, until every one of its strings is recorded as reviewed in
+`i18n/review/<code>.json`; an approval goes stale by itself when either side
+changes. `docs/SEO-OPERATIONS.md` §6 says how to review one.
 
 ---
 
@@ -425,6 +427,9 @@ what it cannot support:
    been reviewed by a native speaker** — the legal terminology follows each
    file's existing usage, but a reviewer should read them. When the English
    changes again, the lag returns, and the register is where it shows.
+   *Update, 22 October 2026:* the review now has a record —
+   `node tools/i18n-review.mjs status` reports it per string, and it reads
+   0 of 430 reviewed in each language.
 6. This is not legal advice, and the applicability engine asks three questions
    where a lawyer would ask fifty.
 7. **No screen reader has been run against this.** Dialog semantics, focus
