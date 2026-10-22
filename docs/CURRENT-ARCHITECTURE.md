@@ -38,8 +38,8 @@ the gate in `js/routes.js`. Why: `docs/SEO-AUDIT-2026-09-27.md`; how: `docs/SEO-
 
 | Layer | Count | Location |
 |---|---|---|
-| Pages | 7 + 12 generated | repository root (`*.html`); `instruments/<id>/index.html` (generated, 27 Sep 2026) |
-| ES modules | 27 | `js/` (`evidence-model.js` and `regulatory-model.js` added 27 Sep 2026; both pure) |
+| Pages | 10 + 12 generated | repository root (`*.html`; `methodology.html` and `licence.html` 21 Oct 2026, `datasets.html` 22 Oct 2026); `instruments/<id>/index.html` (generated, 27 Sep 2026) |
+| ES modules | 32 | `js/` (`evidence-model.js` and `regulatory-model.js` added 27 Sep 2026, both pure; `json-graph.js`, pure, and `datasets-page.js` added 22 Oct 2026). Counted by `design-qa.mjs`. |
 | Classic script | 1 | `app.js` (62 KB, `index.html` only, not a module) |
 | Stylesheets | 4 | `style.css`, `css/tokens.css`, `css/evidence.css`, `css/tools.css` |
 | Canonical datasets | 10 | `data/*.json` |
@@ -59,13 +59,38 @@ the gate in `js/routes.js`. Why: `docs/SEO-AUDIT-2026-09-27.md`; how: `docs/SEO-
 | `enforcement.html` | Enforcement observatory with the derived pipeline per record. |
 | `applies.html` | The applicability engine. |
 | `bibliography.html` | Every source, tiered, with the live grade tally, and the data-quality panels — open backlog, verification dates, freshness, provenance — computed on load (which is why it loads nine datasets: the backlog reads every one). |
+| `datasets.html` | The dataset explorer (22 Oct 2026): every file in `data/`, one record at a time, as a graph of cards, a tree or the raw text. Read-only. A child of Evidence (`CHILD_OF`), linked from the bibliography and the site index. See below. |
 
 The chrome — navigation, breadcrumbs, theme, skip target, search — is rendered by
 `js/shell.js` on every page from **one nav model** (`NAV`, `js/shell.js:34`). It is not
 written into the markup and a page must not add its own header. The README records why:
 five hand-copied headers is how one destination came to have two names, and how a skip link
 came to point at an id that existed on one page out of six. `instrument` is not a top-level
-destination — it is declared a child of `instruments` via `CHILD_OF`.
+destination — it is declared a child of `instruments` via `CHILD_OF`, and `datasets` a child
+of `evidence`. `tools/seo.mjs` reads `CHILD_OF` out of `js/shell.js` for the structured-data
+breadcrumb, and `tools/seo-audit.mjs` reads it again to compare, so the crumb a crawler is given
+is the one the page draws.
+
+**The dataset explorer — `datasets.html`, 22 Oct 2026.** A view of the files rather than of the
+argument. What holds it inside this architecture:
+
+- **No dependency.** The graph is SVG drawn by `js/datasets-page.js` from a model computed by
+  `js/json-graph.js` (pure, no DOM, tested in `tools/selftest.mjs` J1–J7). JSON Crack was
+  evaluated and not used: its hosted widget is a third-party iframe (`frame-src 'none'`,
+  `ALLOWED_RUNTIME_ORIGINS` empty — a Class D decision), and its React component needs React,
+  four further packages and a bundler (AI-SAFE-BOUNDARIES §3). The deeper reason holds even if
+  both were allowed: a generic viewer draws JSON nesting only, and the links between records
+  here are not nesting but ids held as strings.
+- **References are exact ids, named by field.** A string is drawn as a reference only when it is
+  exactly the id of an object in a loaded file; the field holding it is named; nothing is said
+  about what the link means. An id held twice resolves to nothing. Nesting (solid lines) and
+  references (marked `→`, and dashed in the References view) are never drawn alike.
+- **One derived fact, labelled.** A claim's evidence grade, from `js/evidence-view.js`
+  `gradeChip()`, marked as computed and not stored. Nothing else derived is shown.
+- **One gateway.** Every file is loaded through `js/data.js` `load()`, separately, so one that
+  fails to load or parse is reported by name and the others stay usable.
+- **One list of files.** A browser cannot list `data/`, so `json-graph.js` `DATASETS` names the
+  files; `design-qa.mjs` fails when it and the directory disagree.
 
 ## 4. Module topology
 
@@ -131,9 +156,11 @@ Which page loads which dataset — read from the `loadAll` / `load` call sites, 
 | `enforcement.html` → `js/enforcement-page.js` | taxonomy, instruments, institutions, sources, claims, timeline, enforcement |
 | `applies.html` → `js/applies.js` | taxonomy, instruments, institutions, sources, claims, timeline, applicability |
 | `bibliography.html` → `js/bibliography.js` | taxonomy, instruments, institutions, sources, claims, enforcement, timeline, glossary, applicability |
+| `datasets.html` → `js/datasets-page.js` | all ten, `brief` included |
 
-`taxonomy` and `instruments` are loaded by every view. **`brief` is loaded by nothing —
-see §8.**
+`taxonomy` and `instruments` are loaded by every view. **No view renders `brief`** — see §8.
+Since 22 Oct 2026 the dataset explorer loads it with every other file and shows it as the raw
+file it is, which makes the second home §8 describes visible to a reader there.
 
 ## 6. The derivation layer
 
@@ -177,7 +204,7 @@ the `$note` before editing any dataset** — it is where the non-obvious invaria
 | `sources.json` | 77 sources | One record per document. A source is never described twice. `url_status` distinguishes live / unchecked / none. |
 | `applicability.json` | 33 rules | Declarative; the matcher in `js/applies.js` is deliberately unintelligent. The reasoning lives in the data and is inspectable. |
 | `glossary.json` | 15 terms | Terms carry edges outward, so a definition is an entry point rather than a dead end. |
-| `brief.json` | 14 parts + 20 reading-graph edges | Canonical for part identity, ordering, titles, deks, reading times. **Not consumed at runtime — see §8.** |
+| `brief.json` | 14 parts + 20 reading-graph edges | Canonical for part identity, ordering, titles, deks, reading times. **Rendered by no view** — shown raw in the dataset explorer since 22 Oct 2026; see §8. |
 
 ## 8. RESOLVED 30 Sep 2026: the `__CONTENT__` bypass — and the one second home left
 
@@ -236,10 +263,11 @@ labels, such as Annex A's wheel) and `aria-hidden` decoration is no longer index
 
 **The one second home left, and it is NOT resolved here.** `data/brief.json` `parts` holds
 each Part's title, dek and reading time, and the markup holds them again — in the section
-heading, in the Tree-of-Life list and SVG, and in the spine's `title` attributes. No module
-loads `brief.json`; `validate.mjs` uses its part IDs to resolve `brief_part` references and its
-`reading_graph`. All fourteen titles agree today; **Annex C's dek is in `brief.json` and shown
-nowhere.** Until one is generated from the other, a part title or dek changed in one must be
+heading, in the Tree-of-Life list and SVG, and in the spine's `title` attributes. No view
+renders `brief.json`; `validate.mjs` uses its part IDs to resolve `brief_part` references and its
+`reading_graph`, and since 22 Oct 2026 the dataset explorer shows it raw, as a file. All
+fourteen titles agree today; **Annex C's dek is in `brief.json` and shown nowhere in the brief**
+— only in the explorer's view of that file. Until one is generated from the other, a part title or dek changed in one must be
 changed in the other, and `agent/health/` `knowledge.duplicate_facts` counts the pairs. The
 smallest structural fix is to generate the part heads, the tree list and the spine from
 `brief.json` in `tools/_footer.mjs`, the way the no-JS navigation is generated from the nav
@@ -292,7 +320,7 @@ model — a change to how the brief's markup is authored, and so the author's de
   index.html markup  ──► app.js reads it at load  ──► pagers,
       (prose, part       resume bar, prose search index
        headings)
-  data/brief.json — parts + reading graph; loaded by no module.
+  data/brief.json — parts + reading graph; rendered by no view (shown raw by datasets.html).
       Its titles and deks are the one second home left (§8).
   ════════════════════════════════════════════════════════════
 ```

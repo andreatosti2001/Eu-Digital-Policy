@@ -1168,3 +1168,131 @@ test('O8 · the masthead says when the records were checked, from the records, w
   assert.doesNotMatch(src, /\$last_verified/, 'a file-level date is not a per-record check');
   assert.match(src, /checkedLine\(instruments, \[\.\.\.ix\.event\.values\(\)\], records\)/);
 });
+
+/* ============================================================
+   J · the dataset explorer's model (js/json-graph.js)
+
+   datasets.html draws the canonical files as a graph. What it may say
+   is decided here: nesting is drawn as nesting, a reference is a string
+   that is EXACTLY another record's id, an ambiguous id resolves to
+   nothing, and a graph that stops early says where. These hold each of
+   those against the real tree and against planted inputs.
+   ============================================================ */
+
+import * as JG from '../js/json-graph.js';
+
+const allDocs = (root = ROOT) => Object.fromEntries(JG.DATASETS.map(({ name }) =>
+  [name, JSON.parse(readFileSync(join(root, 'data', name + '.json'), 'utf8'))]));
+
+test('J1 · the explorer lists every file in data/, and a file added or removed without it is caught', () => {
+  const files = readdirSync(join(ROOT, 'data'));
+  assert.deepEqual(JG.listDrift(files), { missing: [], extra: [] });
+  assert.deepEqual(JG.listDrift([...files, 'jurisdictions.json']).missing, ['jurisdictions']);
+  assert.deepEqual(JG.listDrift(files.filter((f) => f !== 'brief.json')).extra, ['brief']);
+  assert.deepEqual(JG.listDrift([...files, 'notes.txt']), { missing: [], extra: [] }, 'only .json files are datasets');
+});
+
+test('J2 · a file of the wrong shape is reported, not drawn', () => {
+  for (const [doc, re] of [[null, /top level is null/], [[], /an array/], [3, /a number/], ['x', /a string/],
+    [{ $description: 'only metadata' }, /no collection/]]) {
+    const d = JG.describe(doc);
+    assert.equal(d.ok, false);
+    assert.match(d.problem, re);
+  }
+  const d = JG.describe({ $note: 'n', rows: [], misc: { a: 1 } });
+  assert.equal(d.ok, true, 'an EMPTY collection is a collection: the page says it holds no records');
+  assert.deepEqual(d.collections, [{ key: 'rows', records: [] }]);
+  assert.deepEqual(d.other.map(([k]) => k), ['misc']);
+  assert.equal(JG.countText(d), '0 in rows');
+  for (const { name } of JG.DATASETS) assert.equal(JG.describe(allDocs()[name]).ok, true, name);
+});
+
+test('J3 · every id in the real tree resolves to exactly one record; a duplicated id resolves to nothing', () => {
+  const refs = JG.refIndex(allDocs());
+  assert.ok(refs.size > 900);
+  assert.deepEqual([...refs].filter(([, v]) => v === null).map(([k]) => k), [], 'no ambiguous id on this tree');
+  const prov = allDocs().instruments.instruments.find((x) => x.id === 'gdpr').provisions[0].id;
+  assert.equal(refs.get(prov).record, 'gdpr', 'a provision resolves to the instrument it is written inside');
+  assert.ok(refs.get(prov).path.length > 0, 'and says where inside it');
+  const planted = JG.refIndex({
+    claims: { claims: [{ id: 'dup', statement: 'one' }] },
+    sources: { sources: [{ id: 'dup', title: 'two' }, { id: 'src-a' }] },
+  });
+  assert.equal(planted.get('dup'), null, 'ambiguous: neither record is picked');
+  assert.equal(JG.resolve(planted, 'source_id', 'dup'), null);
+  assert.equal(JG.resolve(planted, 'source_id', 'src-a').dataset, 'sources');
+});
+
+test('J4 · a reference is an exact id held by a named field — never the record\'s own id, never a near miss', () => {
+  const refs = JG.refIndex({ sources: { sources: [{ id: 'src-a' }] }, taxonomy: { tier: [{ id: 'tier:1', label: 'Tier 1' }] } });
+  assert.equal(JG.resolve(refs, 'id', 'src-a'), null, 'the field `id` is identity, not a reference');
+  for (const near of ['SRC-A', 'src-a ', 'src-', 'src-ab', 'see src-a']) assert.equal(JG.resolve(refs, 'source_id', near), null, near);
+  const out = JG.referencesIn({ id: 'x', sources: ['src-a'], nested: { source_id: 'src-a' }, tier: 'tier:1', n: 3, z: null }, refs);
+  assert.deepEqual(out.map((r) => r.path), ['sources[0]', 'nested.source_id', 'tier']);
+  assert.equal(out[2].target.vocabulary, true, 'a vocabulary term is resolved, and marked so it is labelled rather than drawn');
+});
+
+test('J5 · the structure graph draws nesting as nesting, keeps null and "unknown" apart, and says where it stopped', () => {
+  const g = JG.structureGraph({ a: null, b: 'unknown', c: [], d: {}, e: [1, { f: 2 }], g: 'src-a' },
+    { title: 'r', refs: JG.refIndex({ sources: { sources: [{ id: 'src-a' }] } }) });
+  const root = g.nodes[0];
+  const row = (k) => root.rows.find((r) => r.key === k);
+  assert.equal(row('a').type, 'null');
+  assert.equal(row('a').text, 'null');
+  assert.equal(row('b').type, 'string');
+  assert.equal(row('b').text, '"unknown"', 'a string is quoted; null is not — the two never render alike');
+  assert.equal(row('g').type, 'ref');
+  assert.equal(g.edges.length, 4, 'one edge per nested object or array: c, d, e, e[1]');
+  assert.ok(g.edges.every((e) => e.kind === 'nest'));
+  assert.ok(g.nodes.some((n) => n.rows.some((r) => r.type === 'empty' && r.text === 'empty array')));
+  assert.equal(g.truncated, false);
+
+  const deep = { xs: Array.from({ length: 50 }, (_, i) => ({ i })) };
+  const cut = JG.structureGraph(deep, { limits: { ...JG.LIMITS, maxNodes: 10 } });
+  assert.equal(cut.nodes.length, 10);
+  assert.equal(cut.truncated, true);
+  assert.ok(cut.nodes.some((n) => n.rows.some((r) => r.type === 'cut')), 'the row where it stopped says so');
+  assert.equal(JG.structureGraph('scalar').nodes[0].rows[0].text, '"scalar"');
+});
+
+test('J6 · every record in every real file lays out without two cards overlapping, and the same way twice', () => {
+  const docs = allDocs();
+  const refs = JG.refIndex(docs);
+  let checked = 0;
+  for (const { name } of JG.DATASETS) {
+    for (const col of JG.describe(docs[name]).collections) {
+      col.records.forEach((rec, i) => {
+        const L = JG.layout(JG.structureGraph(rec, { title: JG.recordKey(rec, i), refs }));
+        for (let a = 0; a < L.nodes.length; a++) {
+          for (let b = a + 1; b < L.nodes.length; b++) {
+            const p = L.nodes[a], q = L.nodes[b];
+            const apart = p.x + p.w <= q.x || q.x + q.w <= p.x || p.y + p.h <= q.y || q.y + q.h <= p.y;
+            assert.ok(apart, `${name}/${JG.recordKey(rec, i)}: ${p.title} overlaps ${q.title}`);
+          }
+        }
+        checked += 1;
+      });
+    }
+  }
+  assert.ok(checked > 900);
+  const gdpr = docs.instruments.instruments.find((x) => x.id === 'gdpr');
+  assert.deepEqual(JG.layout(JG.structureGraph(gdpr, { refs })), JG.layout(JG.structureGraph(gdpr, { refs })));
+});
+
+test('J7 · the reference graph leaves out vocabulary terms, caps each side and counts what it left out', () => {
+  const docs = allDocs();
+  const refs = JG.refIndex(docs);
+  const into = JG.incomingIndex(docs, refs);
+  const self = into.get('src-brief-original') || [];
+  const RG = JG.referenceGraph({ dataset: 'sources', record: 'src-brief-original' }, [], self, { cap: 5 });
+  const distinct = new Set(self.map((r) => r.dataset + '/' + r.record)).size;
+  assert.equal(RG.totals.in, distinct);
+  assert.equal(RG.cards.length, Math.min(5, distinct));
+  assert.equal(RG.omitted.in, Math.max(0, distinct - 5));
+  const claim = docs.claims.claims[0];
+  const out = JG.referencesIn(claim, refs);
+  const drawn = JG.referenceGraph({}, out, []).cards;
+  assert.ok(drawn.every((c) => c.dataset !== 'taxonomy'), 'vocabulary terms are labelled in place, not drawn');
+  /* a provision naming its own instrument is not an incoming edge into it */
+  for (const r of into.get('gdpr') || []) assert.ok(!(r.dataset === 'instruments' && r.record === 'gdpr'));
+});

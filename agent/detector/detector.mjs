@@ -528,8 +528,10 @@ export class Detector {
         records: s.entries.map((e) => String(e.id)).filter((id) => !/\.(html|json)$/.test(id)),
         modules: s.modules.map((m) => m.module),
         pages: [...new Set([...s.pages, ...s.entries.map((e) => String(e.id)).filter((id) => id.endsWith('.html'))])].sort(),
+        /* each distinct explanation once: the pages are listed in `pages`,
+           and one copy per page outgrew the field at the tenth page */
         note: k === 'analytical_page'
-          ? s.entries.map((e) => e.why).join(' ') || null
+          ? [...new Set(s.entries.map((e) => e.why))].join(' ') || null
           : (s.modules[0]?.why ?? s.entries[0]?.why ?? null),
       }));
 

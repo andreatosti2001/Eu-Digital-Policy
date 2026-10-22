@@ -42,6 +42,7 @@ import { fileURLToPath } from 'node:url';
 import { scanRuntimeSurface, sitePages } from './thirdparty.mjs';
 import { TOP_PAGES, BASE } from './seo.mjs';
 import { proseCopies } from './prose-homes.mjs';
+import { listDrift } from '../js/json-graph.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const errors = [];
@@ -342,6 +343,19 @@ for (const c of proseCopies(ROOT)) {
   err(c.file, `holds a copy of text written in ${c.page}: "${c.text.slice(0, 70)}${c.text.length > 70 ? '…' : ''}". `
     + 'A page\'s text has one home, its markup; read it from the DOM, or generate it with tools/_footer.mjs '
     + '(docs/CURRENT-ARCHITECTURE.md §8).');
+}
+
+/* -------------------------------------------- the explorer reads every file
+
+   datasets.html offers the files js/json-graph.js DATASETS names, and a
+   browser cannot list a directory, so the list is written down. A file
+   added to data/ without an entry would be invisible there, and every
+   reference into it would read as a plain string. */
+
+{
+  const drift = listDrift(readdirSync(join(ROOT, 'data')));
+  for (const n of drift.missing) err('js/json-graph.js', `data/${n}.json has no entry in DATASETS, so the dataset explorer cannot show it or resolve references into it`);
+  for (const n of drift.extra) err('js/json-graph.js', `DATASETS names ${n}, and there is no data/${n}.json`);
 }
 
 /* ---------------------------------------------------------- report */

@@ -29,11 +29,15 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { stale } from './_footer.mjs';
+import { stale, navFromShell, childOfFromShell } from './_footer.mjs';
 import { staleCards } from './og-image.mjs';
 import { BASE, SITE, TOP_PAGES, INSTRUMENT_TITLE, loadDb, buildRoutes, sitemapXml, faqText } from './seo.mjs';
 import { sitePages } from './thirdparty.mjs';
 import * as R from '../js/routes.js';
+
+const SHELL_NAV = navFromShell();
+const SHELL_PARENT = Object.fromEntries(Object.entries(childOfFromShell())
+  .map(([page, id]) => [page, (SHELL_NAV.find((n) => n.id === id) || {}).label]).filter(([, l]) => l));
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -69,6 +73,7 @@ export function read(html) {
     crumbs: [...(visible.match(/<ol class="crumbs">([\s\S]*?)<\/ol>/) || [, ''])[1].matchAll(/<li>([\s\S]*?)<\/li>/g)]
       .map((m) => unesc(m[1].replace(/<[^>]+>/g, '').trim())),
     dataCrumb: (html.match(/<body[^>]*data-crumb="([^"]+)"/) || [])[1] || null,
+    dataPage: (html.match(/<body[^>]*data-page="([^"]+)"/) || [])[1] || null,
     text,
   };
 }
@@ -342,7 +347,11 @@ export function audit(root = ROOT) {
         items.forEach((it, i) => { if (it.position !== i + 1) err(f, 'breadcrumb positions are not 1..n'); });
         if (items[0] && items[0].item !== BASE) err(f, 'breadcrumb does not start at the home page');
         if (items.length && items[items.length - 1].item !== p.canonical[0]) err(f, 'breadcrumb does not end at this page');
-        const visible = p.crumbs.length ? p.crumbs : ['Digital Policy', p.dataCrumb];
+        /* what js/shell.js draws: home, the destination the page sits under
+           (CHILD_OF) if any, then the page — read from the shell, not from
+           the route model, so this compares two homes rather than one */
+        const parent = SHELL_PARENT[p.dataPage];
+        const visible = p.crumbs.length ? p.crumbs : ['Digital Policy', ...(parent ? [parent] : []), p.dataCrumb];
         if (items.map((x) => x.name).join(' › ') !== visible.join(' › ')) err(f, `breadcrumb names "${items.map((x) => x.name).join(' › ')}" ≠ the page's "${visible.join(' › ')}"`);
       }
     } else if (bc) err(f, 'a BreadcrumbList on the home page');
