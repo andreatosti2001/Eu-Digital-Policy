@@ -1288,3 +1288,45 @@ test('A6 · 404.html works at any depth, is never indexed, and is published (ite
   assert.equal(refusal('404.html'), null, 'the deploy artifact carries it');
   assert.doesNotMatch(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8'), /404\.html/);
 });
+
+/* ---------------------------------------------- the editions' review (22 Oct 2026) */
+
+test('A7 · a translation approval names exact text, goes stale by itself, and only a person records it', async () => {
+  const E = await import('./editions.mjs');
+  const RV = await import('./i18n-review.mjs');
+  const dir = scratch('review');
+  try {
+    cpSync(join(ROOT, 'i18n'), join(dir, 'i18n'), { recursive: true });
+    writeFileSync(join(dir, 'index.html'), readFileSync(join(ROOT, 'index.html'), 'utf8'));
+    const head = { root: dir, englishTitle: 'T', englishDescription: 'D' };
+    const st = E.reviewState('it', head);
+    assert.equal(st.counts.reviewed, 0, 'nothing is reviewed until a person records it');
+    assert.equal(st.complete, false);
+    const k = st.keys.find((x) => x.key === 'part-1.p2');
+    /* a sheet with one ticked box, recorded */
+    const sheet = RV.renderSheet(st).replace(`- [ ] approve \`part-1.p2\``, `- [x] approve \`part-1.p2\``);
+    const ledger = E.readLedger('it', dir);
+    assert.throws(() => RV.record(st, RV.parseSheet(sheet), { by: 'Claude', ledger }), /not a person's name/);
+    assert.throws(() => RV.record(st, RV.parseSheet(sheet), { by: '', ledger }), /required/);
+    const r = RV.record(st, RV.parseSheet(sheet), { by: 'A Reviewer', on: '2026-10-22', ledger });
+    assert.deepEqual(r.done, ['part-1.p2']);
+    writeFileSync(E.ledgerPath('it', dir), JSON.stringify(ledger));
+    assert.equal(E.reviewState('it', head).keys.find((x) => x.key === 'part-1.p2').state, 'reviewed');
+    /* change the translation: the approval no longer matches */
+    const p = join(dir, 'i18n', 'it.json');
+    const it = JSON.parse(readFileSync(p, 'utf8'));
+    it['part-1.p2'] += ' ';
+    writeFileSync(p, JSON.stringify(it));
+    const after = E.reviewState('it', head);
+    assert.equal(after.keys.find((x) => x.key === 'part-1.p2').state, 'stale', 'an approval of an earlier text does not count');
+    /* and a sheet ticked against the old text is refused */
+    const again = RV.record(after, RV.parseSheet(sheet), { by: 'A Reviewer', ledger: { entries: {} } });
+    assert.match(again.refused.join(' '), /changed since the sheet was generated/);
+    assert.equal(k.fp, E.fingerprint('part-1.p2', k.en, k.tr));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+  /* the shipped ledgers record no approval this repository's agents made */
+  for (const c of ['it', 'fr', 'es']) {
+    const l = JSON.parse(readFileSync(join(ROOT, 'i18n', 'review', `${c}.json`), 'utf8'));
+    for (const [key, e] of Object.entries(l.entries)) assert.doesNotMatch(e.reviewed_by, (await import('./i18n-review.mjs')).NOT_A_PERSON, `${c} ${key}`);
+  }
+});

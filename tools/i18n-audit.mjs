@@ -186,6 +186,19 @@ if (claims.length && !hasSW) claims.forEach((c) => bad('claims offline support w
 else if (!hasSW) ok('no service worker, and nothing claims offline support');
 else ok('service worker present');
 
+/* --- 8. the review of the editions (22 Oct 2026) --- reported, never failed:
+   an unreviewed locale is a state, not a defect. tools/i18n-review.mjs owns it. */
+console.log('\nREVIEW OF THE EDITIONS');
+try {
+  const { reviewState, editionLocales } = await import('./editions.mjs');
+  const { TOP_PAGES } = await import('./seo.mjs');
+  const home = TOP_PAGES.find((p) => p.file === 'index.html');
+  for (const l of editionLocales()) {
+    const st = reviewState(l.code, { englishTitle: home.title, englishDescription: home.description });
+    ok(`${l.code}: ${st.counts.reviewed}/${st.total} strings reviewed, ${st.counts.stale} stale — ${st.complete ? 'reviewed: indexable' : 'not reviewed: noindex, no hreflang'} (node tools/i18n-review.mjs status)`);
+  }
+} catch (e) { bad('the review state could not be computed: ' + e.message); }
+
 console.log('\n' + '─'.repeat(60));
 console.log('ERRORS ' + errors + '   WARNINGS ' + warnings);
 process.exit(errors ? 1 : 0);
