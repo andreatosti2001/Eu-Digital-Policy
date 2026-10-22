@@ -2,7 +2,8 @@
 
 **Last updated:** dataset explorer — full screen and layout direction · 22 October 2026
 **Branch:** `claude/datasets-explorer`, restarted from `origin/main` at `cfe3607` after pull request
-#13 merged (the procedure for a merged branch). Pushed; not merged.
+#13 merged (the procedure for a merged branch). Merged into `main` with `--no-ff` (`8f03a13`) on
+the author's instruction of 22 Oct 2026 ("Ok, merge"), no pull request; not deleted.
 
 ## Dataset explorer: full screen and layout direction — 22 October 2026
 
