@@ -115,8 +115,8 @@ An agent must **not** do these on its own initiative. Prepare a proposal; do not
 Traps that have already caused, or are positioned to cause, a false statement.
 
 **Part titles and deks have two homes.** `data/brief.json` `parts[]` and the headings in
-`index.html`'s markup. Nothing loads `brief.json` at runtime and no validator compares the
-two, so a title or dek changed in one must be changed in the other, and `brief.json` must not
+`index.html`'s markup. No view renders `brief.json` (the dataset explorer shows it raw, as a
+file, since 22 Oct 2026) and no validator compares the two, so a title or dek changed in one must be changed in the other, and `brief.json` must not
 be assumed to be what the reader sees. The larger hazard — the `__CONTENT__` blob, a stale
 inline copy of the whole brief that search and the pagers read — was **removed on 30 Sep
 2026**; do not reintroduce a copy under any name (`design-qa.mjs` fails it). Full detail in

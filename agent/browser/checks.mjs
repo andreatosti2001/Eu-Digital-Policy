@@ -34,6 +34,8 @@
    7 stands, and `runner.mjs` carries it on every run.
    ============================================================ */
 
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { serveSite, REPO_ROOT } from './serve.mjs';
 import { sleep } from './cdp.mjs';
 
@@ -51,6 +53,7 @@ export const PAGES = [
   /* static prose since 21 Oct 2026: no loading fallback, so "rendered" on load */
   { file: 'methodology.html', name: 'the methodology', main: '#maincontent' },
   { file: 'licence.html', name: 'the licence and reuse page', main: '#maincontent' },
+  { file: 'datasets.html', name: 'the dataset explorer', main: '#dxMain' },
 ];
 
 /** A page is "rendered" when its mount point no longer holds the
@@ -456,6 +459,158 @@ export async function checkEvidence(page, origin) {
   return out;
 }
 
+/* ============================================================
+   the dataset explorer — datasets.html
+
+   What the page claims, measured in a browser: it draws a record,
+   shows the claim's grade the one derivation computes, follows a
+   reference and comes back, searches, shows every view, refuses to
+   invent a record the address names, and — with a file served
+   malformed and another served as a 404 — reports each by name while
+   the rest of the files stay usable. The record-page links it offers
+   are checked to land on an element carrying the record's id.
+   ============================================================ */
+
+export async function checkDatasets(browser, origin) {
+  const out = [];
+  const area = 'datasets';
+  const F = await import('../../js/format.js');
+  const { index } = await import('../../js/data.js');
+  const read = (n) => JSON.parse(readFileSync(join(REPO_ROOT, 'data', n + '.json'), 'utf8'));
+  const db = Object.fromEntries(['taxonomy', 'instruments', 'institutions', 'sources', 'claims'].map((n) => [n, read(n)]));
+  const ix = index(db);
+  const claim = db.claims.claims.find((c) => (c.sources || []).some((s) => s.source_id && s.source_id !== 'src-brief-original'));
+  const firstSrc = claim.sources.find((s) => s.source_id && s.source_id !== 'src-brief-original').source_id;
+  const at = (q) => `${origin}/datasets.html${q}`;
+  const state = `(() => ({
+    h: (document.querySelector('#dx-rec-h')?.textContent ?? '').trim(),
+    search: location.search,
+    nodes: document.querySelectorAll('.dx-node').length,
+    grade: (document.querySelector('.dx-derived .evi-grade')?.textContent ?? '').trim(),
+    error: (document.querySelector('#dxMain .data-error')?.textContent ?? '').trim().slice(0, 240),
+    stats: (document.querySelector('#dxStats')?.textContent ?? '').trim(),
+    notes: [...document.querySelectorAll('.dx-note')].map((n) => n.textContent).join(' | ').slice(0, 400),
+    width: document.documentElement.scrollWidth,
+  }))()`;
+
+  const page = await browser.newPage();
+  try {
+    await page.goto(at(`?d=claims&c=claims&r=${encodeURIComponent(claim.id)}`));
+    let s = await page.evaluate(state);
+    out.push(s.nodes > 0 && s.h.endsWith(claim.id)
+      ? ok('datasets:render', area, `the explorer draws ${claim.id} as ${s.nodes} card(s)`, s)
+      : bad('datasets:render', area, `the explorer did not draw ${claim.id}`, s));
+
+    const want = F.evidenceGrade(claim, ix).label;
+    out.push(s.grade === want
+      ? ok('datasets:grade', area, `the claim's grade is the derived one (${want}), labelled as computed`, { grade: s.grade })
+      : bad('datasets:grade', area, `the explorer shows grade "${s.grade}"; js/format.js derives "${want}"`, { grade: s.grade, want }));
+
+    /* follow a reference from the list, then come back */
+    await page.evaluate(`document.querySelector('.dx-reflist a[data-dx][href*="r=${encodeURIComponent(firstSrc)}"]')?.click()`);
+    await page.waitFor(`(document.querySelector('#dx-rec-h')?.textContent ?? '').trim().endsWith(${JSON.stringify(firstSrc)})`, { timeoutMs: 3000 });
+    const followed = await page.evaluate(state);
+    await page.evaluate('history.back()');
+    await page.waitFor(`(document.querySelector('#dx-rec-h')?.textContent ?? '').trim().endsWith(${JSON.stringify(claim.id)})`, { timeoutMs: 3000 });
+    const back = await page.evaluate(state);
+    out.push(followed.h.endsWith(firstSrc) && /d=sources/.test(followed.search) && back.h.endsWith(claim.id)
+      ? ok('datasets:follow', area, `a reference opens ${firstSrc}, and Back returns to ${claim.id}`, { followed: followed.search, back: back.search })
+      : bad('datasets:follow', area, 'following a reference, or going back, did not land on the right record', { followed, back }));
+
+    /* a reference drawn in the graph is a link too */
+    await page.evaluate(`document.querySelector('.dx-svg-ref')?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }))`);
+    await sleep(300);
+    s = await page.evaluate(state);
+    out.push(!s.h.endsWith(claim.id) && s.nodes > 0
+      ? ok('datasets:svg-ref', area, `a reference in the graph opens its record (${s.h})`)
+      : bad('datasets:svg-ref', area, 'clicking a reference drawn in the graph did not open another record', s));
+
+    /* search: the record list, then inside the record */
+    await page.goto(at(`?d=claims&c=claims&r=${encodeURIComponent(claim.id)}`));
+    const found = await page.evaluate(`(() => {
+      const q = document.querySelector('#dx-q'); q.value = ${JSON.stringify(claim.id)};
+      q.dispatchEvent(new Event('input', { bubbles: true }));
+      const list = document.querySelectorAll('.dx-records a').length;
+      const f = document.querySelector('.dx-find'); f.value = 'source_id';
+      f.dispatchEvent(new Event('input', { bubbles: true }));
+      return { list, count: document.querySelector('.dx-count').textContent, hits: document.querySelectorAll('.dx-node.is-hit').length };
+    })()`);
+    out.push(found.list >= 1 && /match/.test(found.count) && found.hits > 0
+      ? ok('datasets:search', area, `search narrows the list (${found.count}) and finds ${found.hits} card(s) inside the record`, found)
+      : bad('datasets:search', area, 'search did not narrow the list or find a card in the record', found));
+
+    /* every view renders */
+    const views = {};
+    for (const [v, sel] of [['references', '.dx-rcard'], ['tree', '.dx-tree'], ['raw', '.dx-raw']]) {
+      await page.goto(at(`?d=claims&c=claims&r=${encodeURIComponent(claim.id)}&v=${v}`));
+      views[v] = await page.evaluate(`document.querySelectorAll(${JSON.stringify(sel)}).length`);
+    }
+    out.push(Object.values(views).every((n) => n > 0)
+      ? ok('datasets:views', area, 'the references, tree and raw views each render', views)
+      : bad('datasets:views', area, 'a view rendered nothing', views));
+
+    /* an address naming a record that does not exist */
+    await page.goto(at('?d=claims&c=claims&r=__no-such-record__'));
+    s = await page.evaluate(state);
+    out.push(s.h === 'No record to show' && s.nodes === 0 && /nothing has been substituted/.test(s.notes)
+      ? ok('datasets:missing-record', area, 'a record the address names and the file lacks is reported, and nothing is drawn in its place')
+      : bad('datasets:missing-record', area, 'an unknown record was not reported as missing', s));
+
+    /* the record pages the explorer links to carry the record's id */
+    const anchors = {};
+    for (const [file, n, coll] of [['bibliography.html', 'sources', 'sources'], ['enforcement.html', 'enforcement', 'enforcement'], ['institutions.html', 'institutions', 'institutions']]) {
+      const id = read(n)[coll][0].id;
+      await page.goto(`${origin}/${file}`);
+      anchors[file + '#' + id] = await page.evaluate(`!!document.getElementById(${JSON.stringify(id)})`);
+    }
+    out.push(Object.values(anchors).every(Boolean)
+      ? ok('datasets:anchors', area, 'every "shown on the site" link lands on an element with the record’s id', anchors)
+      : bad('datasets:anchors', area, 'a "shown on the site" link points at an id the page does not carry', anchors));
+
+    /* phone width */
+    await page.setViewport({ width: 390, height: 844, mobile: true });
+    await page.goto(at('?d=instruments&c=instruments&r=gdpr'));
+    s = await page.evaluate(state);
+    await page.send('Emulation.clearDeviceMetricsOverride');
+    out.push(s.width <= 390 && s.nodes > 0
+      ? ok('datasets:mobile', area, 'at 390px the explorer draws the record with no horizontal scroll', { width: s.width })
+      : bad('datasets:mobile', area, `at 390px the page is ${s.width}px wide or drew nothing`, s));
+  } finally { await page.close(); }
+
+  /* failure states, in a page of their own: glossary.json served
+     malformed, brief.json served as a 404 */
+  const broken = await browser.newPage();
+  try {
+    await broken.send('Fetch.enable', { patterns: [{ urlPattern: '*/data/glossary.json*' }, { urlPattern: '*/data/brief.json*' }] });
+    broken.browser.rpc.on('Fetch.requestPaused', (p, sid) => {
+      if (sid !== broken.sessionId) return;
+      const malformed = /glossary\.json/.test(p.request.url);
+      broken.send('Fetch.fulfillRequest', {
+        requestId: p.requestId, responseCode: malformed ? 200 : 404,
+        responseHeaders: [{ name: 'Content-Type', value: 'application/json' }],
+        body: Buffer.from(malformed ? '{"terms": [ {"id": "gl-x",' : 'not found').toString('base64'),
+      }).catch(() => {});
+    });
+    await broken.goto(at('?d=glossary'));
+    const g = await broken.evaluate(state);
+    await broken.goto(at('?d=brief'));
+    const b = await broken.evaluate(state);
+    await broken.goto(at(`?d=claims&c=claims&r=${encodeURIComponent(claim.id)}`));
+    const c = await broken.evaluate(state);
+    out.push(/not valid JSON/.test(g.error) && /glossary/.test(g.error) && g.nodes === 0
+      ? ok('datasets:malformed', area, 'a file that does not parse is reported by name, and nothing is drawn for it', { error: g.error })
+      : bad('datasets:malformed', area, 'a malformed file was not reported as such', g));
+    out.push(/404/.test(b.error) && b.nodes === 0
+      ? ok('datasets:missing-file', area, 'a file that does not load is reported with its status', { error: b.error })
+      : bad('datasets:missing-file', area, 'a missing file was not reported', b));
+    out.push(c.nodes > 0 && /^8 of 10/.test(c.stats) && /Incomplete/.test(c.notes)
+      ? ok('datasets:partial', area, 'with two files down the others still render, and the reference counts say they are incomplete', { stats: c.stats })
+      : bad('datasets:partial', area, 'with two files down the explorer did not keep working, or did not say its counts were incomplete', c));
+    await broken.send('Fetch.disable');
+  } finally { await broken.close(); }
+  return out;
+}
+
 export async function checkApplicability(page, origin) {
   await page.goto(`${origin}/applies.html`);
   const built = await page.evaluate(`(() => ({
@@ -550,7 +705,7 @@ export async function checkInstrumentView(page, origin, id = 'gdpr') {
 
 export const SEO_PAGES = ['', 'instruments.html', 'instruments/ai-act/', 'instruments/gdpr/', 'instruments/dsa/',
   'instruments/dma/', 'enforcement.html', 'applies.html', 'bibliography.html', 'institutions.html',
-  'methodology.html', 'licence.html'];
+  'methodology.html', 'licence.html', 'datasets.html'];
 
 const rawSeo = (html) => {
   const visible = (html.match(/<body[^>]*>([\s\S]*)<\/body>/) || [, ''])[1]

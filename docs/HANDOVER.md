@@ -1,8 +1,9 @@
 # HANDOVER
 
-**Last updated:** audit of 21 October 2026, implemented · 22 October 2026
-**Branch:** `claude/audit-2026-10-21`, cut from `main` at `dfdc01c`, pushed, **not merged; pull request
-#12 to `main` opened on the author's instruction** (see the branch register below).
+**Last updated:** audit of 21 October 2026 and the dataset explorer, merged · 22 October 2026
+**Branches:** `claude/audit-2026-10-21` merged to `main` by the author (pull request #12, `29f92c9`).
+`claude/datasets-explorer` (another session, same day; its own section below) has `main` merged into it,
+conflicts resolved, and is unmerged; merging it is the author's.
 
 ## Audit of 21 October 2026 — implemented on `claude/audit-2026-10-21`
 
@@ -39,7 +40,89 @@ an evidence-audit list. **The full register of what was checked, what changed an
 before); 1255 tests passing; contracts 18/18; commit-evidence exit 0; browser suite 291 · 0 · 1
 undecidable (`a11y:bound`), as before.
 
+## Dataset explorer — 22 October 2026
+
+**Asked:** evaluate JSON Crack and build an interactive JSON explorer for the site's data —
+audit and proposal first, then implementation once approved. **Decided with the author before
+any edit:** no JSON Crack, but a custom explorer "provided that it can visualize json content as
+json crack or even more graphical"; a JSON Crack-style canvas with a tree as the accessible
+fallback; the page a child of Evidence; indexed.
+
+**Why not JSON Crack** (Apache-2.0, so not a licence question): the hosted widget is a
+third-party iframe the CSP refuses (`frame-src 'none'`) and `tools/thirdparty.mjs` forbids
+(`ALLOWED_RUNTIME_ORIGINS` empty, Class D); `jsoncrack-react` 1.0.3 needs React ≥ 18, four
+further packages and a bundler (red under AI-SAFE-BOUNDARIES §3). And a generic viewer draws
+nesting only: here a claim does not contain its source, it holds the source's id as a string, so
+the edges that matter would have been invisible — and a raw claim shows no grade, because the
+grade is never stored. `docs/CURRENT-ARCHITECTURE.md` §3 records the design.
+
+**What it does:** `datasets.html` — one file, then one record. Four views: Structure (cards and
+nesting lines, pan, ctrl/⌘-wheel or pinch zoom, keyboard pan and zoom, fit, find-in-record),
+References (the records this one names on the right, those naming it on the left, edges labelled
+by field), Tree, Raw JSON. A searchable record list; the file's own `$description`/`$note`; links
+to the raw file and, where a page gives the record an anchor, to that page. Addresses are
+`?d=&c=&r=&v=`, so Back works and a record can be linked.
+
+**What it refuses to say:** a string is a reference only when it is EXACTLY an id in a loaded
+file (960 today, none ambiguous); an id held twice resolves to nothing; the field is named and
+the meaning of the link is not stated. `null` reads as the word, a string in quotes; a field a
+record lacks is not drawn. The only derived fact is a claim's grade, from `gradeChip()`,
+labelled as computed. The file header's `$last_verified` is shown beside the newest per-record
+`last_verified`, named, because the header is one stamp for the file (AUDIT-2026-09-01 F-13).
+No jurisdictions view: there is no jurisdictions dataset, and none was implied.
+
+**Files.** New: `datasets.html`, `js/json-graph.js` (pure model and layout),
+`js/datasets-page.js`. Changed: `js/shell.js` (`CHILD_OF`), `css/tools.css` (tokens only),
+`bibliography.html` (one link), `tools/_footer.mjs` (page list, generated no-JS file index,
+`childOfFromShell()`), `tools/seo.mjs` (route, `datasetsIndex()`, the structured-data breadcrumb
+now carries the parent the page draws), `tools/seo-audit.mjs` (compares against the shell's
+crumb, not a two-level assumption), `tools/pages-artifact.mjs` (allowlist), `tools/design-qa.mjs`
+(DATASETS = `data/*.json`), `tools/selftest.mjs` (J1–J7), `agent/browser/checks.mjs` + `runner.mjs`
+(the page in PAGES and SEO_PAGES; `checkDatasets`, 12 checks), `agent/detector/impact.mjs` (the two
+modules classified), `agent/detector/detector.mjs` (below),
+`agent/proposals/editorial/selftest.mjs` (ten pages), every generated page (site-index link),
+`sitemap.xml`, `docs/CURRENT-ARCHITECTURE.md`, `docs/AI-SAFE-BOUNDARIES.md`. No `data/` file.
+
+**Two things the change exposed, fixed:** (1) the detector's analytical-page note joined one
+identical explanation per page, and a tenth page pushed it past the contract's 4,000 characters,
+so five of six fixture changes lost their ImpactAssessment; it now keeps each distinct
+explanation once (the pages stay listed in `pages`). Any new page would have tripped it. (2) the
+structured-data breadcrumb assumed every top page sits directly under home; a page with a
+`CHILD_OF` parent now gets the parent, read from `js/shell.js`.
+
+**A documented fact changed:** "`brief.json` is loaded by nothing" is no longer true — the
+explorer loads it and shows it raw. No view renders it, and it holds no copy of the brief's text,
+but Annex C's dek, shown nowhere in the brief, is now visible in the explorer's view of that file.
+CURRENT-ARCHITECTURE §5/§7/§8/§9 and AI-SAFE-BOUNDARIES §4 now say so.
+
+**Tests — run, not asserted (22 Oct 2026):** `validate` 0 errors · `i18n-audit` 0/0 · `design-qa`
+0/0 · `freshness` 0 defects, 3 staleness prompts (as at baseline) · `seo-audit` 0 · `evidence-audit`
+0 · `_footer.mjs --check` current · `tools/selftest.mjs` 73/73 (J1–J7 new) · all 22 agent suites +
+schemas + browser selftest pass · `agent/implement/cli.mjs check` pass_with_findings (baseline) ·
+both boundary scans and `pages-artifact.mjs build` clean · every other CI command exits as on
+`main` · browser suite 328 pass, 0 fail, 1 undecidable (baseline 291/0/1; the undecidable is the same). Browser `checkDatasets` covers render, the derived grade
+against `format.js`, following a reference and Back, a reference clicked in the SVG, list and
+in-record search, every view, an unknown record, the anchors the "shown on the site" links target,
+390px, and — via CDP Fetch interception — `glossary.json` served malformed and `brief.json` as a
+404, with the other eight files still usable.
+
+**Limitations, stated:** the canvas is a mouse/touch surface; keyboard users get pan and zoom
+keys, focusable reference links in the SVG, and the Tree view and reference lists as the full
+alternative — no screen reader was run. Large records open at reading size on the first card
+rather than fitted (GDPR is 80 cards). The Structure graph stops at 240 cards and says where; no
+record is near it today. The References view draws 24 per side and lists the rest. Taxonomy terms
+are labelled, not drawn. The deployed site was not loaded in this session; everything above ran
+against a local server.
+
+**For the author:** merge `claude/datasets-explorer` if you want it live; nothing else is needed.
+
 ## P1 — licence, methodology, structured data, custom domain — 21 October 2026
+
+*(previous header)* **Branches:** `claude/p1-licence-geo` (cut from `origin/main` at `05707f5`) and
+`claude/p1-custom-domain` (stacked on it). The first merged into `main` with `--no-ff` on the
+author's instruction of 21 Oct 2026 ("Fai merge solo di claude p1-licence"), no pull request; the
+second merged into `main` with `--no-ff` the same day, once `eudigitalpolicy.eu` resolved (A,
+AAAA, `www` CNAME and the GitHub challenge TXT read back through dns.google on 21 Oct 2026).
 
 **Asked** (in Italian): a `CNAME` for a placeholder domain `eu-digital-policy.eu` and the Jekyll
 `url`/`baseurl`; a CC BY 4.0 `LICENSE`, a licence page and a methodology page; a licence line in
@@ -112,7 +195,13 @@ longer blocked; (d) `fonts/` carries no licence files for the three typefaces �
 
 At the start `git branch -r --no-merged origin/main` listed nothing. `claude/audit-2026-10-21` is
 pushed and unmerged. Asked at the end of the session, the author said to open a pull request:
-**#12**, `claude/audit-2026-10-21` → `main`, opened 22 Oct 2026, awaiting the author's merge. Re-fetched before this write: `origin/main` still `dfdc01c`; one branch appeared
+**#12**, `claude/audit-2026-10-21` → `main`, opened 22 Oct 2026 and merged by the author the same day
+(`29f92c9`). `main` was then merged into `claude/datasets-explorer`, with seven conflicts resolved:
+both branches had added one root page each (`404.html`, `datasets.html`) to `tools/seo.mjs`,
+`tools/_footer.mjs`, `tools/pages-artifact.mjs` and the editorial suite's page count (now 11), both
+appended tests to `tools/selftest.mjs`, and both rewrote `brief.json`'s row in CURRENT-ARCHITECTURE §7
+(13 parts) and the top of this file. Measured on the merged tree: validators 0 errors, 1262 tests,
+browser suite 328 · 0 · 1 undecidable. Re-fetched before this write: `origin/main` still `dfdc01c`; one branch appeared
 meanwhile, `claude/datasets-explorer` (another session, 22 Oct, 2 commits, a dataset explorer). It
 also edits `tools/seo.mjs` and `tools/seo-audit.mjs`, so whichever merges second will need those two
 files reconciled.

@@ -46,7 +46,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const PUBLIC_FILES = Object.freeze([
   'index.html', 'instruments.html', 'instrument.html', 'institutions.html',
   'enforcement.html', 'applies.html', 'bibliography.html',
-  'methodology.html', 'licence.html', '404.html',
+  'methodology.html', 'licence.html', '404.html', 'datasets.html',
   'app.js', 'style.css', 'sitemap.xml', 'robots.txt', 'CNAME',
 ]);
 /* The language editions' directories come from the register, so a locale

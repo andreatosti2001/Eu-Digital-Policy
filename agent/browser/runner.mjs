@@ -34,7 +34,7 @@ import { serveSite, REPO_ROOT } from './serve.mjs';
 import { launch } from './cdp.mjs';
 import {
   PAGES, checkPageLoads, checkNavigation, checkInternalLinks, checkSearch, checkBriefIndex, checkGlossary,
-  checkComparison, checkEvidence, checkApplicability, checkInstrumentView, checkSeo, SEO_PAGES,
+  checkComparison, checkEvidence, checkDatasets, checkApplicability, checkInstrumentView, checkSeo, SEO_PAGES,
   checkLanguageSwitching, checkViewports, checkKeyboard, checkDialogs,
   checkNoThirdParty, checkAccessibility, checkContrast, checkReducedMotion, checkThreshold, checkDeployedSubpath,
 } from './checks.mjs';
@@ -120,6 +120,7 @@ export async function runBrowserQA({ only = null, pages = PAGES, quick = false, 
     if (wants('glossary')) results.push(...await checkGlossary(page, site.origin));
     if (wants('comparison')) results.push(...await checkComparison(page, site.origin));
     if (wants('evidence')) results.push(...await checkEvidence(page, site.origin));
+    if (wants('datasets')) results.push(...await checkDatasets(browser, site.origin));
     if (wants('applicability')) results.push(...await checkApplicability(page, site.origin));
     if (wants('instrument')) results.push(...await checkInstrumentView(page, site.origin));
     if (wants('seo')) results.push(...await checkSeo(page, site.origin, { pages: quick ? SEO_PAGES.slice(0, 3) : SEO_PAGES }));

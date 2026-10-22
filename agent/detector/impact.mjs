@@ -101,6 +101,7 @@ export const SURFACE_KINDS = [
  * impact map of every change ever detected.
  */
 export const MODULE_SURFACE = {
+  'datasets-page.js': { surface: 'dataset', why: 'The dataset explorer, datasets.html: every file in data/ shown record by record as it is written — the one view whose surface is the dataset itself, so any change to any record reaches it.' },
   'applies.js': { surface: 'applicability', why: 'The applicability engine. It evaluates data/applicability.json against what a reader tells it and renders the outcome with its rationale.' },
   'calendar.js': { surface: 'compliance_calendar', why: 'The regulatory calendar — data/timeline.json rendered as the dated obligations a reader schedules around. Annex A of the brief.' },
   'dna.js': { surface: 'comparison', why: 'The DNA grid: eleven dimensions across the acts, side by side. The comparison view in its purest form.' },
@@ -122,6 +123,7 @@ export const MODULE_SURFACE = {
   'format.js': { surface: null, why: 'Derivation and formatting — evidenceGrade, the tier→grade map, date rendering. Renders nothing of its own, and appears in every view.' },
   'pipeline.js': { surface: null, why: 'The eight-stage enforcement derivation, and procedure(): the procedural posture and finality of a case. Computes; renders nothing.' },
   'evidence-model.js': { surface: null, why: 'The evidence model: claim kinds, evidence status, locator quality, derivation checks, freshness risk and remediation codes. Pure; read by format.js and by tools/evidence-audit.mjs. Renders nothing.' },
+  'json-graph.js': { surface: null, why: 'The dataset explorer\'s model: a record as cards and edges, references resolved by exact id, and the layout. Pure; datasets-page.js renders what it computes.' },
   'regulatory-model.js': { surface: null, why: 'Provision-level application dates and scalar-status contradictions, derived from timeline.json. Pure; renders nothing of its own.' },
   'filters.js': { surface: null, why: 'Shared filter controls. Chrome for a view rather than a view.' },
   'dialog.js': { surface: null, why: 'The dialog primitive. Chrome.' },
