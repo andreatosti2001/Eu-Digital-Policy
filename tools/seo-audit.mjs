@@ -394,7 +394,24 @@ export function audit(root = ROOT) {
       if (!back || !back.hreflang.some((x) => x.href === byFile.get(f).canonical)) err(f, `hreflang ${h.lang} → ${h.href} is not reciprocated`);
     }
   }
-  for (const r of langRoutes) if (seen.has(r.url)) err('sitemap.xml', `${r.url} (a JavaScript-only translation) is listed`);
+  /* the language editions (22 Oct 2026): a real page in the right language,
+     and offered to search engines exactly when its translation review is
+     complete — the review state is derived in tools/seo.mjs, and this
+     holds the page to it */
+  for (const r of langRoutes) {
+    const p = r.file && parsed.get(r.file);
+    if (!p) { err(r.file || r.url, `the ${r.lang} edition has no generated page — run node tools/_footer.mjs`); continue; }
+    if (!new RegExp(`<html lang="${r.lang}"`).test(readFileSync(join(root, r.file), 'utf8'))) err(r.file, `does not declare <html lang="${r.lang}">`);
+    if (r.indexable) {
+      if ((p.robots || []).length) err(r.file, `reviewed and indexable, but carries robots "${p.robots.join(', ')}"`);
+      if (!seen.has(r.url)) err('sitemap.xml', `the reviewed ${r.lang} edition ${r.url} is not listed`);
+      if (!p.hreflang.length) err(r.file, 'reviewed and indexable, but names no hreflang alternates');
+    } else {
+      if (!(p.robots || []).includes('noindex')) err(r.file, `${r.reason}, but it is not marked noindex`);
+      if (p.hreflang.length) err(r.file, 'not reviewed, but names hreflang alternates');
+      if (seen.has(r.url)) err('sitemap.xml', `${r.url} is listed, but its translation is not reviewed`);
+    }
+  }
 
   /* ---------------------------------------------------- 8 · the route model */
   for (const [id, name] of Object.entries(R.KNOWN_AS)) {

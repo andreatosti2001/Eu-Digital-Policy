@@ -754,7 +754,7 @@ test('I1c · the Evidence page and the build count the same backlog', () => {
   assert.doesNotMatch(readFileSync(join(ROOT, 'tools', 'validate.mjs'), 'utf8'), /function unverifiedReport\(\)\s*\{/, 'validate.mjs keeps no copy of its own');
 });
 
-test('I1d · languages: no alternate is advertised while a translation exists only in JavaScript', () => {
+test('I1d · languages: no alternate is advertised for a translation no person has reviewed', () => {
   /* Until 27 Sep 2026 this asserted the opposite: hreflang alternates at
      ?lang=it|fr|es, in the sitemap too. docs/SEO-AUDIT-2026-09-27.md A5
      measured why that was wrong — the raw HTML at every ?lang= address is
@@ -762,9 +762,12 @@ test('I1d · languages: no alternate is advertised while a translation exists on
      not self-canonical and contradicted the HTML they pointed at — and the
      translations are unreviewed (README limitation 5). The rule now: no
      alternate until a pre-rendered, reviewed page exists; the address keeps
-     working for readers. docs/SEO-OPERATIONS.md §6. */
+     working for readers. docs/SEO-OPERATIONS.md §6.
+     22 Oct 2026: the pre-rendered pages exist (/it/, /fr/, /es/), so the rule
+     is now the review: on this tree no edition is reviewed and no page names
+     an alternate; A8 holds the reviewed case. */
   for (const f of sitePages(ROOT)) {
-    assert.doesNotMatch(readFileSync(join(ROOT, f), 'utf8'), /hreflang=/, `${f} advertises an alternate language`);
+    assert.doesNotMatch(readFileSync(join(ROOT, f), 'utf8'), /<link [^>]*hreflang=/, `${f} advertises an alternate language`);
   }
   assert.doesNotMatch(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8'), /\?lang=/, 'a ?lang= address is in the sitemap');
   const app = readFileSync(join(ROOT, 'app.js'), 'utf8');
@@ -809,6 +812,8 @@ function siteCopy(name) {
   for (const f of readdirSync(ROOT).filter((x) => x.endsWith('.html'))) cpSync(join(ROOT, f), join(dir, f));
   for (const f of ['sitemap.xml', 'robots.txt', 'app.js', 'style.css']) cpSync(join(ROOT, f), join(dir, f));
   for (const d of ['data', 'i18n', 'js', 'img', 'instruments', 'css']) cpSync(join(ROOT, d), join(dir, d), { recursive: true });
+  /* the language editions (22 Oct 2026) */
+  for (const d of readdirSync(ROOT).filter((x) => /^[a-z]{2}$/.test(x))) cpSync(join(ROOT, d), join(dir, d), { recursive: true });
   return dir;
 }
 const edit = (dir, f, fn) => writeFileSync(join(dir, f), fn(readFileSync(join(dir, f), 'utf8')));
@@ -1329,4 +1334,46 @@ test('A7 · a translation approval names exact text, goes stale by itself, and o
     const l = JSON.parse(readFileSync(join(ROOT, 'i18n', 'review', `${c}.json`), 'utf8'));
     for (const [key, e] of Object.entries(l.entries)) assert.doesNotMatch(e.reviewed_by, (await import('./i18n-review.mjs')).NOT_A_PERSON, `${c} ${key}`);
   }
+});
+
+test('A8 · an edition is offered to search engines exactly when its review is complete, and stops being when its text changes', async () => {
+  const E = await import('./editions.mjs');
+  const { TOP_PAGES } = await import('./seo.mjs');
+  const home = TOP_PAGES.find((p) => p.file === 'index.html');
+  /* this tree: nothing reviewed, so every edition is generated, noindex, unlisted */
+  for (const c of ['it', 'fr', 'es']) {
+    const html = readFileSync(join(ROOT, c, 'index.html'), 'utf8');
+    assert.match(html, new RegExp(`<html lang="${c}"`));
+    assert.match(html, /<meta content="noindex" name="robots"\/>/);
+    assert.doesNotMatch(html, /hreflang=|rel="canonical"/);
+    assert.match(html, /<body [^>]*data-root="\.\.\/"/);
+  }
+  assert.doesNotMatch(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8'), /\/it\//);
+  assert.doesNotMatch(readFileSync(join(ROOT, 'index.html'), 'utf8'), /hreflang=/);
+
+  const dir = siteCopy('editions');
+  const regenerate = async () => { const { files } = await generateSite(dir); for (const [f, s] of files) { mkdirSync(join(dir, f, '..'), { recursive: true }); writeFileSync(join(dir, f), s); } };
+  try {
+    /* a complete Italian review, recorded in the scratch copy as a person would */
+    const st = E.reviewState('it', { root: dir, englishTitle: home.title, englishDescription: home.description });
+    const ledger = { locale: 'it', entries: Object.fromEntries(st.keys.map((k) => [k.key, { fingerprint: k.fp, reviewed_by: 'A Reviewer', reviewed_on: '2026-10-22' }])) };
+    writeFileSync(E.ledgerPath('it', dir), JSON.stringify(ledger));
+    await regenerate();
+    const it = readFileSync(join(dir, 'it', 'index.html'), 'utf8');
+    assert.match(it, new RegExp(`<link href="${BASE}it/" rel="canonical"/>`));
+    assert.doesNotMatch(it, /name="robots"/);
+    for (const [lang, href] of [['en', BASE], ['it', BASE + 'it/'], ['x-default', BASE]]) assert.ok(it.includes(`<link href="${href}" hreflang="${lang}" rel="alternate"/>`), `it/ names ${lang}`);
+    assert.ok(readFileSync(join(dir, 'index.html'), 'utf8').includes(`<link href="${BASE}it/" hreflang="it" rel="alternate"/>`), 'and the English brief names it back');
+    assert.match(readFileSync(join(dir, 'sitemap.xml'), 'utf8'), /\/it\/<\/loc>/);
+    assert.match(readFileSync(join(dir, 'fr', 'index.html'), 'utf8'), /name="robots"/, 'French, unreviewed, stays out');
+    assert.deepEqual(seoAudit(dir).errors, [], 'and the audit accepts the reviewed state');
+    /* one Italian string corrected after the review: the edition leaves search again */
+    edit(dir, 'i18n/it.json', (s) => { const o = JSON.parse(s); o['part-1.p2'] += ' '; return JSON.stringify(o); });
+    await regenerate();
+    const after = readFileSync(join(dir, 'it', 'index.html'), 'utf8');
+    assert.match(after, /<meta content="noindex" name="robots"\/>/);
+    assert.doesNotMatch(after, /hreflang=/);
+    assert.doesNotMatch(readFileSync(join(dir, 'index.html'), 'utf8'), /hreflang=/);
+    assert.deepEqual(seoAudit(dir).errors, []);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });

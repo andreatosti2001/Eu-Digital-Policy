@@ -224,6 +224,25 @@ export async function generate(root = HERE_ROOT) {
     files.set(route.file, finish(route, SEO.instrumentPage(route, ctx, shell)));
   }
 
+  /* the language editions (22 Oct 2026): the finished English brief with
+     the locale's strings in place, one directory down. A projection of
+     index.html and i18n/<code>.json, regenerated and checked like the
+     instrument pages; whether it is indexable is the route's business
+     (tools/seo.mjs, derived from the translation review). */
+  const { applyLocale } = await import('./editions.mjs');
+  const register = JSON.parse(readFileSync(join(root, 'i18n/locales.json'), 'utf8')).locales;
+  for (const route of routes.filter((x) => x.kind === 'language')) {
+    const rec = register.find((l) => l.code === route.lang);
+    const map = JSON.parse(readFileSync(join(root, rec.file), 'utf8'));
+    let s = applyLocale(files.get('index.html'), map).html;
+    s = s.replace(/<html lang="en"([^>]*)>/, `<html lang="${route.lang}"${rec.dir && rec.dir !== 'ltr' ? ` dir="${rec.dir}"` : ''}$1>`);
+    s = s.replace(/<body(?![^>]*data-root)([^>]*)>/, `<body$1 data-root="${route.root}">`);
+    /* every site-relative reference, one directory down; anchors, absolute
+       and scheme URLs untouched */
+    s = s.replace(/\b(href|src)="(?![#/]|[a-z][a-z0-9+.-]*:)([^"]*)"/gi, (m, attr, u) => `${attr}="${route.root}${u}"`);
+    files.set(route.file, finish(route, s));
+  }
+
   files.set('sitemap.xml', SEO.sitemapXml(routes));
   files.set('robots.txt', SEO.robotsTxt());
 
