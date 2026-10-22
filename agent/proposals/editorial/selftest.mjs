@@ -118,8 +118,9 @@ async function runWith(inputs) {
 test('every page at the repository root is read', () => {
   const pages = readdirSync(REPO_ROOT).filter((f) => f.endsWith('.html')).sort();
   assert.deepEqual(PROSE.pages, pages);
-  /* nine since 21 Oct 2026: methodology.html and licence.html */
-  assert.equal(pages.length, 9, 'the site has nine pages and the reader must see all of them');
+  /* nine since 21 Oct 2026 (methodology.html and licence.html), and ten the
+     same day with 404.html (audit item 23) */
+  assert.equal(pages.length, 10, 'the site has ten pages and the reader must see all of them');
 });
 
 test('the tag scanner leaves no close tag unmatched on any page', () => {
@@ -140,7 +141,7 @@ test('every data-claim attribution in the markup becomes an attributed block', (
 test('the brief\'s own CRITIQUE boxes are read from the markup, not inferred', () => {
   const labelled = PROSE.blocks.filter((b) => b.box_label);
   assert.ok(labelled.length >= 20, `expected the labelled boxes to be found, got ${labelled.length}`);
-  assert.deepEqual([...new Set(labelled.map((b) => b.box_label))].sort(), ['CRITIQUE', 'MECHANICS']);
+  assert.deepEqual([...new Set(labelled.map((b) => b.box_label))].sort(), ['CRITIQUE', 'MECHANICS', 'SYNTHESIS']);
 });
 
 test('a block below the stated word threshold is not treated as an authored sentence', () => {

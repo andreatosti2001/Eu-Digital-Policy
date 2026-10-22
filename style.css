@@ -351,6 +351,10 @@ tbody tr:hover td{background:rgba(255,255,255,.025);color:var(--paper)}
 .box-crit .box-label{color:var(--crit)} .box-crit h3,.box-crit h4{color:var(--paper)}
 body[data-lens="mech"] .box-crit{opacity:.15;filter:grayscale(.6)}
 body[data-lens="crit"] .box-mech{opacity:.15;filter:grayscale(.6)}
+/* synthesis: the author's own conclusion, neither mechanics nor critique (audit of 21 Oct 2026 item 13); each lens shows one category, so it recedes under both */
+.box-synth{border-left:3px solid var(--paper-faint)}
+.box-synth .box-label{color:var(--paper-dim)} .box-synth h3,.box-synth h4{color:var(--paper)}
+body[data-lens="mech"] .box-synth,body[data-lens="crit"] .box-synth{opacity:.15;filter:grayscale(.6)}
 .box{transition:opacity .25s,filter .25s}
 
 /* ---------------------------------------------------------- glossary panel */
@@ -399,6 +403,9 @@ body[data-lens="crit"] .box-mech{opacity:.15;filter:grayscale(.6)}
 .pg.next{text-align:right}
 .footnote{max-width:var(--measure);margin:60px 0 0;padding-top:20px;border-top:1px solid var(--line);
   font-family:var(--mono);font-size:11px;color:var(--paper-faint);line-height:1.7}
+/* the reading guide stands before Part I (audit of 21 Oct 2026 item 17); it was a footnote after Annex C */
+.reading-guide{max-width:var(--measure);margin:0 0 40px;padding:0 0 20px;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.6;color:var(--paper-dim)}
+.reading-guide b{color:var(--paper);font-weight:600}
 
 /* ---------------------------------------------------------- mobile */
 @media (max-width:1080px){
@@ -672,7 +679,7 @@ body.i18n-busy .readwrap,body.i18n-busy .portal,body.i18n-busy .hero{opacity:.45
 .langmenu li[aria-disabled="true"]:hover{background:none}
 /* a locale that does not carry every string says so before you pick it */
 .lm-partial{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--paper-faint);border:1px solid var(--line);padding:1px 4px;margin-left:6px;vertical-align:1px}
+  color:var(--paper-faint);border:1px solid var(--line);padding:1px 4px;margin-left:6px;vertical-align:1px;white-space:nowrap}
 /* and any element that fell back to English is marked in place, so the gap in a
    translation is visible in the interface rather than passing for a translation */
 [data-i18n-fallback]{position:relative}

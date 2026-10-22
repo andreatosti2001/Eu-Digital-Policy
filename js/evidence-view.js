@@ -58,7 +58,7 @@ export function sourceCard(ref, ix, density = 'full') {
   const head =
     '<div class="evi-src-top">' +
       '<span class="evi-tier" data-tier="' + esc(src.id === SELF ? 'self' : src.tier) + '">' +
-        esc(F.tierWord(src)) + '</span>' +
+        esc(F.tierWord(src)) + '</span> ' +
       '<span class="badge" data-st="' + (SUPPORTS_STATUS[ref.supports] || 'secondary') + '"' +
         ' title="' + esc(F.SUPPORTS_GLOSS[ref.supports] || '') + '">' +
         esc(F.SUPPORTS_WORD[ref.supports] || sup) + '</span>' +
@@ -108,7 +108,7 @@ export function sourceList(claim, ix, density = 'full') {
 export function gradeChip(claim, ix, withGloss = false) {
   const g = F.evidenceGrade(claim, ix);
   return '<span class="evi-grade" data-g="' + esc(g.id) + '">' + esc(g.label) + '</span>' +
-    (withGloss ? '<span class="evi-gloss">' + esc(g.gloss) + '</span>' : '');
+    (withGloss ? ' <span class="evi-gloss">' + esc(g.gloss) + '</span>' : '');
 }
 
 /* ============================================================

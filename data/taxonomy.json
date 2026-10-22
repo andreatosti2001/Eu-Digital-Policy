@@ -1480,5 +1480,17 @@
       "label": "No proceedings",
       "note": "The record documents that no proceedings were opened."
     }
+  ],
+  "record_type": [
+    {
+      "id": "record-type:action",
+      "label": "Enforcement action",
+      "note": "An action an authority actually took: a proceeding, preliminary findings, a decision, a fine, commitments or a court ruling. The default where a record states no record_type."
+    },
+    {
+      "id": "record-type:inaction",
+      "label": "Recorded inaction",
+      "note": "A record that no action has been found, true only at the date it was last checked. It has no decision, no fine and no pipeline, and it is excluded from every count, total and funnel of enforcement."
+    }
   ]
 }

@@ -288,6 +288,11 @@ export function sitePages(root) {
       if (existsSync(join(dir, d, 'index.html'))) pages.push(`instruments/${d}/index.html`);
     }
   }
+  /* the language editions, /it/ and so on (22 Oct 2026): every page a
+     reader can be sent to is held to the same checks */
+  for (const d of readdirSync(root).sort()) {
+    if (/^[a-z]{2}$/.test(d) && existsSync(join(root, d, 'index.html'))) pages.push(`${d}/index.html`);
+  }
   return pages;
 }
 

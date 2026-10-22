@@ -1267,6 +1267,8 @@ body[data-theme="light"]{
   border-bottom:1px solid transparent;
 }
 .si-col a:hover,.si-col a:focus-visible{color:var(--text-1);border-bottom-color:var(--text-1)}
+/* a language edition no person has reviewed says so beside its link (22 Oct 2026) */
+.si-note{font-family:var(--mono);font-size:var(--t-micro);color:var(--text-3)}
 @media (max-width:720px){ .si-inner{grid-template-columns:1fr} }
 @media print{ .site-index{display:none} }
 

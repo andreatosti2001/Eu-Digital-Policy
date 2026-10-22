@@ -1,0 +1,5 @@
+{
+ "$description": "Translation review of the fr edition. One entry per approved string: the sha256 fingerprint of the key, the English and the translation exactly as a person read them (tools/editions.mjs fingerprint), who approved them and when. Written ONLY by `node tools/i18n-review.mjs record fr --by \"<name>\"`, run by that person; an agent never writes here (docs/AI-SAFE-BOUNDARIES.md §3). Whether a string is reviewed is derived by recomputing the fingerprint, so an approval of text that has since changed does not count.",
+ "locale": "fr",
+ "entries": {}
+}

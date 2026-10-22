@@ -138,7 +138,7 @@ export function interactionBlock(r, ix, current, root = siteRoot()) {
     (provisions ? '<div class="ix-provs"><span class="ix-k">Carried by</span>' + provisions + '</div>' : '') +
     (claims ? '<div class="ix-block"><span class="ix-k">What the brief argues</span><ul class="ix-claims">' + claims + '</ul></div>' : '') +
     (sources ? '<div class="ix-block"><span class="ix-k">Sources</span><ul class="ix-srcs">' + sources + '</ul></div>' : '') +
-    (r.last_verified ? '<p class="ix-when">Recorded as at ' + esc(F.citeDate(r.last_verified)) + '</p>' : '') +
+    (r.last_verified ? '<p class="ix-when">Recorded as at ' + esc(F.humanDate(r.last_verified)) + '</p>' : '') +
     '</article>';
 }
 

@@ -17,7 +17,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-2",
       "legislative_status": "status:applicable",
-      "status_as_of": "2026-08-19",
+      "status_as_of": "2026-10-21",
+      "status_note": "Re-evaluated 21 Oct 2026 (audit item 9): in force with no end of validity and no amending act recorded, per the Publications Office's metadata (Cellar SPARQL, read 21 Oct 2026); general application since 25 May 2018 (Art. 99(2), milestone). Status unchanged. Only the status was re-read that day; the other fields of this record were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-gdpr-2016-04-27-adoption",
         "tl-gdpr-2016-05-04-publication",
@@ -282,7 +283,7 @@
       "sources": [
         "src-eurlex-gdpr"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-10-21",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -300,7 +301,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-3",
       "legislative_status": "status:applicable",
-      "status_as_of": "2026-08-19",
+      "status_as_of": "2026-10-21",
+      "status_note": "Re-evaluated 21 Oct 2026 (audit item 9): in force with no end of validity and no amending act recorded, per the Publications Office's metadata (Cellar SPARQL, read 21 Oct 2026); applicable to all providers since 17 February 2024 (Art. 93(2), milestone). Status unchanged. Only the status was re-read that day; the other fields of this record were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-dsa-2022-10-19-adoption",
         "tl-dsa-2022-10-27-publication",
@@ -371,9 +373,7 @@
           "obligation_on": [
             "actor:online-platform"
           ],
-          "claims": [
-            "clm-x-legal-basis-fragility"
-          ],
+          "claims": [],
           "sources": [
             "src-eurlex-dsa"
           ]
@@ -544,7 +544,7 @@
       "sources": [
         "src-eurlex-dsa"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-10-21",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -562,7 +562,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-4",
       "legislative_status": "status:applicable",
-      "status_as_of": "2026-08-19",
+      "status_as_of": "2026-10-21",
+      "status_note": "Re-evaluated 21 Oct 2026 (audit item 9): in force with no end of validity and no amending act recorded, per the Publications Office's metadata (Cellar SPARQL, read 21 Oct 2026); applicable since 2 May 2023 (Art. 54, milestone). Status unchanged. Only the status was re-read that day; the other fields of this record were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-dma-2022-09-14-adoption",
         "tl-dma-2022-10-12-publication",
@@ -740,7 +741,7 @@
       "sources": [
         "src-eurlex-dma"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-10-21",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -758,8 +759,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-5",
       "legislative_status": "status:partly-applicable",
-      "status_as_of": "2026-08-19",
-      "status_note": "In force since 2024. Prohibitions, AI-literacy, GPAI duties and governance apply; the high-risk tier does not yet. The scalar alone is insufficient — read the milestones.",
+      "status_as_of": "2026-10-21",
+      "status_note": "In force since 2024. Prohibitions, AI-literacy, GPAI duties and governance apply; the high-risk tier does not yet. The scalar alone is insufficient — read the milestones. Re-evaluated 21 Oct 2026 (audit item 9): in force with no end of validity, per the Publications Office's metadata (Cellar SPARQL, read 21 Oct 2026), which records one amending act, Regulation (EU) 2026/1744 of 8 July 2026 (the AI Omnibus, amended_by); its application dates are the milestones, re-read against the amended Art. 113 on 14 Oct 2026. Still partly applicable: the high-risk tier applies from 2 December 2027 and 2 August 2028. Only the status was re-read on 21 Oct 2026; the other fields were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-ai-act-2024-06-13-adoption",
         "tl-ai-act-2024-07-12-publication",
@@ -1015,7 +1016,7 @@
       "sources": [
         "src-eurlex-ai-act"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-10-21",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -1033,7 +1034,7 @@
       "brief_part": "part-6",
       "legislative_status": "status:partly-applicable",
       "status_as_of": "2026-09-27",
-      "status_note": "General application since 12 September 2025 (Art. 50). The Art. 3(1) design obligation applies to connected products and related services placed on the market after 12 September 2026; the switching-charge ban from 12 January 2027 (Art. 29(1)); Chapter IV's unfair-terms rules to long-running contracts concluded on or before 12 September 2025 from 12 September 2027 (Art. 50). Re-read against the milestones and the Official Journal text (CELEX 32023R2854) on 27 Sep 2026: still partly applicable.",
+      "status_note": "General application since 12 September 2025 (Art. 50). The Art. 3(1) design obligation applies to connected products and related services placed on the market after 12 September 2026; the switching-charge ban from 12 January 2027 (Art. 29(1)); Chapter IV's unfair-terms rules to long-running contracts concluded on or before 12 September 2025 from 12 September 2027 (Art. 50). Re-read against the milestones and the Official Journal text (CELEX 32023R2854) on 27 Sep 2026: still partly applicable. last_verified moved from 27 Aug to 27 Sep 2026 on 21 Oct 2026 (audit item 10), the date on which the status above was re-read against Arts 29 and 50 (commit 282a782); the other fields were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-data-act-2023-12-13-adoption",
         "tl-data-act-2023-12-22-publication",
@@ -1152,7 +1153,7 @@
       "sources": [
         "src-eurlex-data-act"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-09-27",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -1169,8 +1170,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-7",
       "legislative_status": "status:transposition-overdue",
-      "status_as_of": "2026-09-26",
-      "status_note": "In force since 2023, but a directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed and transposition is still materially incomplete: the Commission sent letters of formal notice to 23 Member States in November 2024 and referred Ireland, Spain, France and the Netherlands to the Court of Justice in July 2026.",
+      "status_as_of": "2026-10-21",
+      "status_note": "In force since 2023, but a directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed and transposition is still materially incomplete: the Commission sent letters of formal notice to 23 Member States in November 2024 and referred Ireland, Spain, France and the Netherlands to the Court of Justice in July 2026. Re-evaluated 21 Oct 2026 (audit items 9 and 10): the Commission's July 2026 infringements package (INF/26/1376, 8 Jul 2026) refers Ireland, Spain, France and the Netherlands to the Court of Justice for failing to notify complete transposition of Directive (EU) 2022/2555, after letters of formal notice of 28 November 2024 and reasoned opinions of 7 May 2025; the October 2026 package (INF/26/1760) records no closure. Still transposition-overdue. Only the status was re-read that day; the other fields were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-nis2-2022-12-14-adoption",
         "tl-nis2-2022-12-27-publication",
@@ -1309,7 +1310,7 @@
       "sources": [
         "src-eurlex-nis2"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-10-21",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -1326,8 +1327,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-7",
       "legislative_status": "status:transposition-overdue",
-      "status_as_of": "2026-09-26",
-      "status_note": "A directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed; on 29 April 2026 the Commission referred Bulgaria, France, Luxembourg, the Netherlands, Poland, Spain and Sweden to the Court of Justice for failing to transpose.",
+      "status_as_of": "2026-10-21",
+      "status_note": "A directive: obligations bite at national dates. The transposition deadline of 17 October 2024 has passed; on 29 April 2026 the Commission referred Bulgaria, France, Luxembourg, the Netherlands, Poland, Spain and Sweden to the Court of Justice for failing to transpose. Re-evaluated 21 Oct 2026 (audit items 9 and 10): the Commission's April 2026 infringements package (INF/26/720, 29 Apr 2026) refers Bulgaria, Spain, France, Luxembourg, the Netherlands, Poland and Sweden to the Court of Justice for failing to transpose Directive (EU) 2022/2557, which was due by 17 October 2024; the October 2026 package (INF/26/1760) records no closure. Still transposition-overdue. Only the status was re-read that day; the other fields were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-cer-2022-12-14-adoption",
         "tl-cer-2022-12-27-publication",
@@ -1385,7 +1386,7 @@
         "src-eurlex-cer",
         "src-ec-cer-referral-2026"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-10-21",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -1402,7 +1403,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-7",
       "legislative_status": "status:applicable",
-      "status_as_of": "2026-08-19",
+      "status_as_of": "2026-10-21",
+      "status_note": "Re-evaluated 21 Oct 2026 (audit item 9): in force with no end of validity and no amending act recorded, per the Publications Office's metadata (Cellar SPARQL, read 21 Oct 2026); applicable since 17 January 2025 (Art. 64, milestone). Status unchanged. Only the status was re-read that day; the other fields of this record were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-dora-2022-12-14-adoption",
         "tl-dora-2022-12-27-publication",
@@ -1548,7 +1550,7 @@
       "sources": [
         "src-eurlex-dora"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-10-21",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -1567,7 +1569,7 @@
       "brief_part": "part-7",
       "legislative_status": "status:partly-applicable",
       "status_as_of": "2026-10-14",
-      "status_note": "In force since December 2024. Chapter IV (notification of conformity assessment bodies) has applied since 11 June 2026 and Article 14 — manufacturers' reporting of actively exploited vulnerabilities and severe incidents — since 11 September 2026; the Regulation as a whole, including the main obligations on manufacturers, importers and distributors and the reporting obligations of open-source software stewards (Art. 24(3)), applies from 11 December 2027 (Art. 71(2), re-read on EUR-Lex on 14 Oct 2026). The scalar alone is insufficient — read the milestones.",
+      "status_note": "In force since December 2024. Chapter IV (notification of conformity assessment bodies) has applied since 11 June 2026 and Article 14 — manufacturers' reporting of actively exploited vulnerabilities and severe incidents — since 11 September 2026; the Regulation as a whole, including the main obligations on manufacturers, importers and distributors and the reporting obligations of open-source software stewards (Art. 24(3)), applies from 11 December 2027 (Art. 71(2), re-read on EUR-Lex on 14 Oct 2026). The scalar alone is insufficient — read the milestones. last_verified moved from 27 Aug to 14 Oct 2026 on 21 Oct 2026 (audit item 10), the date on which the status above was re-read (docs/AUDIT-2026-10-14.md §1 F), so that it is not earlier than status_as_of; the other fields were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-cra-2024-10-23-adoption",
         "tl-cra-2024-11-20-publication",
@@ -1687,7 +1689,7 @@
         "src-cra-text-unofficial-art71",
         "src-ec-cra-reporting"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-10-14",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -1706,8 +1708,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-8",
       "legislative_status": "status:in-force",
-      "status_as_of": "2026-08-19",
-      "status_note": "The Commission's own label is 'Digital Omnibus on AI'; 'AI Omnibus' is the informal shorthand used in this brief.",
+      "status_as_of": "2026-10-21",
+      "status_note": "The Commission's own label is 'Digital Omnibus on AI'; 'AI Omnibus' is the informal shorthand used in this brief. Re-evaluated 21 Oct 2026 (audit item 9): in force with no end of validity, per the Publications Office's metadata (Cellar SPARQL, read 21 Oct 2026). Its Art. 4, read in the Official Journal text from Cellar that day, has it enter into force on the third day following publication and sets no separate application date, so status:in-force is the whole of its status; the dates it sets are dates of the AI Act it amends. Only the status was re-read that day; the other fields were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-ai-omnibus-2026-07-08-adoption",
         "tl-ai-omnibus-2026-07-24-publication",
@@ -1755,7 +1757,7 @@
         "src-ep-legtrain-ai-omnibus",
         "src-op-ai-omnibus-record"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-10-21",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -1772,9 +1774,9 @@
       "kind": "kind:proposal",
       "scope_class": "scope:core",
       "brief_part": "part-8",
-      "legislative_status": "status:stalled",
-      "status_as_of": "2026-10-14",
-      "status_note": "NOT LAW. A Commission proposal (COM(2025) 837, 19 November 2025) with no Council negotiating mandate and no Parliament position as at 14 October 2026. Council: the Cypriot Presidency withdrew its compromise text from COREPER in late June 2026 for lack of a qualified majority; the Irish Presidency's revised compromise (ST 12535/26, 3 September 2026, not an official publication) was due for a Coreper II vote on 11 October 2026 but, as reported by Agence Europe, was neither discussed nor voted on, after a postponement on 7 October (clm-data-omnibus-council-october). Parliament: with the joint ITRE–LIBE committee, draft report of 22 June 2026, amendments tabled 27 July 2026, awaiting committee decision (clm-data-omnibus-parliament-stage). No trilogue has begun. Every GDPR, ePrivacy and Data Act change it contains is proposed text, not an obligation. Must never be rendered as an Act. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is the informal shorthand used in this brief.",
+      "legislative_status": "status:proposal",
+      "status_as_of": "2026-10-21",
+      "status_note": "NOT LAW. A Commission proposal (COM(2025) 837, 19 November 2025) with no Council negotiating mandate reported and no Parliament position as at 21 October 2026. Council: the Cypriot Presidency withdrew its compromise text from COREPER in late June 2026 for lack of a qualified majority; the Irish Presidency's revised compromise of 3 September 2026 (ST 12535/26) was followed by a further revised text for the Antici Group of 25 September (ST 13112/26, clm-data-omnibus-st-13112) and, on 2 October, by a draft negotiating mandate put to Coreper (ST 13886/26, clm-data-omnibus-draft-mandate); the Coreper II vote due on 11 October was not held, as reported by Agence Europe (clm-data-omnibus-council-october), and a revised version was due before Coreper on 21 October 2026, whose outcome had not been published when checked that day (clm-data-omnibus-coreper-21-october). Parliament: with the joint ITRE–LIBE committee, draft report of 22 June 2026, amendments tabled 27 July 2026, 'awaiting committee decision' on the Legislative Observatory on 21 October 2026 (clm-data-omnibus-parliament-stage). No trilogue has begun. Every GDPR, ePrivacy and Data Act change it contains is proposed text, not an obligation. Must never be rendered as an Act. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is the informal shorthand used in this brief. 21 Oct 2026 (audit items 2 and 12): legislative_status changed from status:stalled to status:proposal, the factual stage: 'stalled' was a reading of the Council's progress, not a stage of the procedure, and the procedure is still at proposal. last_verified 21 Oct 2026: the status was re-read that day (audit items 2 and 12); the other fields were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-data-omnibus-2025-11-19-proposal"
       ],
@@ -1819,16 +1821,23 @@
         "clm-omnibus-four-gdpr-reforms",
         "clm-edpb-edps-omnibus-pushback",
         "clm-data-omnibus-council-october",
-        "clm-data-omnibus-parliament-stage"
+        "clm-data-omnibus-parliament-stage",
+        "clm-data-omnibus-st-13112",
+        "clm-data-omnibus-draft-mandate",
+        "clm-data-omnibus-coreper-21-october"
       ],
       "sources": [
         "src-eurlex-data-omnibus-837",
         "src-ep-legtrain-digital-package",
         "src-privacynext-2026-omnibus",
         "src-agenceurope-omnibus-2026-10-12",
-        "src-oeil-2025-0360"
+        "src-oeil-2025-0360",
+        "src-council-st-12535-2026",
+        "src-council-cm-4156-2026",
+        "src-council-st-13886-2026",
+        "src-agenceurope-omnibus-2026-10-20"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-10-21",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -2012,7 +2021,7 @@
       "brief_part": null,
       "legislative_status": "status:in-force",
       "status_as_of": "2026-10-14",
-      "status_note": "In force since 20 May 2024 (Art. 2; OJ L 2024/1183, 30.4.2024); it amends Regulation (EU) No 910/2014 and sets no separate application date. Two dated duties follow from the implementing acts under Arts 5a(23) and 5c(6), in force since 24 December 2024: each Member State must provide a European Digital Identity Wallet within 24 months, by 24 December 2026 (Art. 5a(1); clm-eidas2-wallets), and private relying parties that must use strong user authentication — except micro and small enterprises — must accept the wallet at the user's voluntary request within 36 months, by 24 December 2027 (Art. 5f(2); clm-eidas2-private-acceptance). The first is a duty on Member States, the second a qualified duty on some businesses, not on all. Re-read on 14 Oct 2026 on EUR-Lex.",
+      "status_note": "In force since 20 May 2024 (Art. 2; OJ L 2024/1183, 30.4.2024); it amends Regulation (EU) No 910/2014 and sets no separate application date. Two dated duties follow from the implementing acts under Arts 5a(23) and 5c(6), in force since 24 December 2024: each Member State must provide a European Digital Identity Wallet within 24 months, by 24 December 2026 (Art. 5a(1); clm-eidas2-wallets), and private relying parties that must use strong user authentication — except micro and small enterprises — must accept the wallet at the user's voluntary request within 36 months, by 24 December 2027 (Art. 5f(2); clm-eidas2-private-acceptance). The first is a duty on Member States, the second a qualified duty on some businesses, not on all. Re-read on 14 Oct 2026 on EUR-Lex. last_verified moved from 27 Sep to 14 Oct 2026 on 21 Oct 2026 (audit item 10), the date on which the status above was re-read on EUR-Lex (docs/AUDIT-2026-10-14.md §1 E); the other fields were last re-read on 27 Sep 2026.",
       "milestones": [
         "tl-eidas2-2026-12-24-compliance-deadline",
         "tl-eidas2-2027-12-24-compliance-deadline"
@@ -2066,7 +2075,7 @@
         "src-eurlex-eudi-2024-2981",
         "src-eurlex-eudi-2024-2977"
       ],
-      "last_verified": "2026-09-27",
+      "last_verified": "2026-10-14",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -2205,8 +2214,8 @@
       "scope_class": "scope:referenced",
       "brief_part": "part-5",
       "legislative_status": "status:withdrawn",
-      "status_as_of": "2026-08-19",
-      "status_note": "Abandoned, leaving a gap in the fault-based liability route. Must never be presented as law.",
+      "status_as_of": "2026-10-21",
+      "status_note": "Abandoned, leaving a gap in the fault-based liability route. Must never be presented as law. Re-evaluated 21 Oct 2026 (audit item 9): the proposal COM(2022) 496 (CELEX 52022PC0496) carries an end of validity of 6 October 2025 in the Publications Office's metadata (Cellar SPARQL, read 21 Oct 2026), the date of the withdrawal published in the Official Journal (C/2025/5423, src-oj-aild-withdrawal-2025). Status unchanged: withdrawn.",
       "milestones": [],
       "amended_by": [],
       "amends": [],
@@ -2218,9 +2227,10 @@
         "clm-aild-abandoned"
       ],
       "sources": [
+        "src-oj-aild-withdrawal-2025",
         "src-brief-original"
       ],
-      "last_verified": "2026-08-27",
+      "last_verified": "2026-10-21",
       "legal_basis": []
     },
     {

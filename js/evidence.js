@@ -14,6 +14,7 @@ import { createDialog } from './dialog.js';
 import * as F from './format.js';
 import { label as taxLabel, note as taxNote } from './data.js';
 import { sourceCard as sharedSourceCard, sourceList } from './evidence-view.js';
+import { href as siteHref } from './routes.js';
 
 let IX = null;
 let ORDER = [];              // [{n, claimId, el}] in document order
@@ -126,11 +127,11 @@ function injectLegend() {
     '<span class="lg-prose"><span aria-hidden="true">◇</span> author’s synthesis, not a sourced finding</span>' +
     '<span>numbers open the source</span>' +
     '<span class="lg-gap"><b>*</b> reference not located</span>' +
-    '<a href="applies.html">What applies to me?</a>' +
-    '<a href="instruments.html">Compare</a>' +
-    '<a href="institutions.html">Institutions</a>' +
-    '<a href="enforcement.html">Enforcement</a>' +
-    '<a href="bibliography.html">Bibliography</a>';
+    '<a href="' + esc(siteHref('applies.html')) + '">What applies to me?</a>' +
+    '<a href="' + esc(siteHref('instruments.html')) + '">Compare</a>' +
+    '<a href="' + esc(siteHref('institutions.html')) + '">Institutions</a>' +
+    '<a href="' + esc(siteHref('enforcement.html')) + '">Enforcement</a>' +
+    '<a href="' + esc(siteHref('bibliography.html')) + '">Bibliography</a>';
   first.insertBefore(l, first.firstChild);
 }
 
@@ -232,7 +233,7 @@ function renderClaim(entry) {
       (!unv && c.verification_note
         ? '<div class="evi-sec"><h4>Note</h4><p class="evi-cite">' + esc(c.verification_note) + '</p></div>' : '') +
       '<div class="evi-foot">Claim ID <code>' + esc(c.id) + '</code>. ' +
-        'Every source above is listed in the <a href="bibliography.html">bibliography</a>.</div>' +
+        'Every source above is listed in the <a href="' + esc(siteHref('bibliography.html')) + '">bibliography</a>.</div>' +
     '</div>';
 
   panel.querySelector('.evi-close').addEventListener('click', () => dialogApi.close());

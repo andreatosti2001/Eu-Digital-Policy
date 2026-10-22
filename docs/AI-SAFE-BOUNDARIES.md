@@ -97,6 +97,10 @@ An agent must **not** do these on its own initiative. Prepare a proposal; do not
   `tools/_footer.mjs`.
 - **Declaring, changing or removing a licence** (CC BY 4.0 since the author's decision of 21 Oct 2026).
 - **Deleting or rewriting the README's "Known limitations" section.**
+- **Recording a translation review** (`i18n/review/<code>.json`, `node tools/i18n-review.mjs record`).
+  An approval attests that a speaker of the language read the text, and it is what makes an edition
+  indexable (`docs/SEO-OPERATIONS.md` §6). An agent may generate the review sheets and report the
+  state; it never ticks a box or runs `record`, and never edits a ledger by hand (22 Oct 2026).
 - **Architectural replacement** — introducing a framework, a build step, a bundler, a
   dependency, a service worker, server-side rendering, or a third-party script or
   stylesheet. All are currently absent by explicit design and `design-qa.mjs` fails on the

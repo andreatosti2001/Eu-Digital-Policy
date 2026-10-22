@@ -29,6 +29,7 @@
    ============================================================ */
 
 import { loadAll, index, label as taxLabel } from './data.js';
+import { href as siteHref } from './routes.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -45,7 +46,7 @@ const slugOf = (t) => String(t.legacy_dom_id || ('gloss-' + String(t.id).replace
 function instrumentLinks(ids) {
   return (ids || []).map((id) => {
     const i = IX.instrument.get(id);
-    return '<a class="gg-link" href="instruments.html#' + esc(id) + '">' +
+    return '<a class="gg-link" href="' + esc(siteHref('instruments.html#') + id) + '">' +
       esc(i ? i.short_name : id) + '</a>';
   });
 }
@@ -57,7 +58,7 @@ function provisionLinks(ids) {
     const inst = owner ? IX.instrument.get(owner) : null;
     const text = pr ? ((inst ? inst.short_name + ' ' : '') + 'Art. ' + pr.number) : pid;
     const title = pr && pr.heading ? pr.heading : '';
-    return '<a class="gg-link" href="instruments.html#' + esc(owner || '') + '"' +
+    return '<a class="gg-link" href="' + esc(siteHref('instruments.html#') + (owner || '')) + '"' +
       (title ? ' title="' + esc(title) + '"' : '') + '>' + esc(text) + '</a>';
   });
 }
@@ -66,7 +67,7 @@ function institutionLinks(ids) {
   return (ids || []).map((id) => {
     const x = IX.institution.get(id);
     const isClass = String(id).endsWith('-*');
-    return '<a class="gg-link" href="institutions.html#' + esc(id) + '">' +
+    return '<a class="gg-link" href="' + esc(siteHref('institutions.html#') + id) + '">' +
       esc(x ? x.short_name : id) +
       (isClass ? '<span class="gg-class" title="A class of national bodies, not a single institution">class</span>' : '') +
       '</a>';
@@ -76,13 +77,13 @@ function institutionLinks(ids) {
 function enforcementLinks(ids) {
   return (ids || []).map((id) => {
     const r = IX.enforcementById.get(id);
-    if (!r) return '<a class="gg-link" href="enforcement.html#' + esc(id) + '">' + esc(id) + '</a>';
+    if (!r) return '<a class="gg-link" href="' + esc(siteHref('enforcement.html#') + id) + '">' + esc(id) + '</a>';
     const st = taxLabel(IX, r.action_status);
     /* the same firm can appear twice under one term — two separate actions —
        so the year is part of the label rather than leaving two identical chips */
     const yr = String(r.decision_date || '').slice(0, 4);
     const short = String(r.entity).split(/[,(]| and /)[0].trim();
-    return '<a class="gg-link" href="enforcement.html#' + esc(id) + '"' +
+    return '<a class="gg-link" href="' + esc(siteHref('enforcement.html#') + id) + '"' +
       ' title="' + esc(r.entity + (st ? ' — ' + st : '')) + '">' +
       esc(short) + (yr ? ' <span class="gg-yr">' + esc(yr) + '</span>' : '') + '</a>';
   });

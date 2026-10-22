@@ -67,8 +67,8 @@ State this in any report that could be read as coverage.
 - **The validators do not read prose.** A false statement in `index.html` passes every check
   in this repository.
 - **Nothing compares `data/brief.json`'s part titles and deks with the headings in
-  `index.html`** — the one second home of the brief's text left (Annex C's dek is already in
-  `brief.json` only). The inline `__CONTENT__` blob that used to be a third is gone, and
+  `index.html`** — the one second home of the brief's text left (Annex C's dek drifted into
+  `brief.json` only, and went with Annex C when it was merged into Annex B on 21 Oct 2026). The inline `__CONTENT__` blob that used to be a third is gone, and
   `design-qa.mjs` and the browser suite's `search:brief-*` checks keep it gone.
 - **`design-qa.mjs` reads structure, not legibility.** No screen reader has been run against
   this site; verification is programmatic and Chromium-only.

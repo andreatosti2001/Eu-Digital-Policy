@@ -105,7 +105,8 @@ function themeButton() {
    the language does not exist or that these pages are translated,
    the chrome carries the language the reader chose on the brief,
    applies it to the entity layer, and says plainly that the
-   interface text around it is English. */
+   interface text around it is English. The note leads back to the
+   brief in that language: its edition page (it/, fr/, es/). */
 async function languageNote() {
   let lang = 'en';
   try { lang = localStorage.getItem('eupolicy:lang') || 'en'; } catch (e) { /* private mode */ }
@@ -115,7 +116,7 @@ async function languageNote() {
   if (!rec) return null;                       /* a language we do not ship is not applied */
   document.documentElement.setAttribute('lang', lang);
   const note = el('a', {
-    class: 'chrome-btn chrome-lang', href: href('index.html'),
+    class: 'chrome-btn chrome-lang', href: href(rec.edition ? rec.edition.path : 'index.html'),
     title: 'Record labels follow ' + (rec.name || lang.toUpperCase()) +
            '. The interface text on this page is English.',
   });
@@ -214,7 +215,7 @@ function frontDoor() {
   const ul = el('ul', {});
   for (const n of NAV) {
     if (n.id === 'brief') continue;
-    const a = el('a', { href: n.file });
+    const a = el('a', { href: href(n.file) });
     a.append(el('b', { text: n.long }), el('span', { text: DOOR_BLURB[n.id] || '' }));
     ul.appendChild(el('li', {}, [a]));
   }
@@ -229,7 +230,7 @@ function briefDestinations() {
     const ul = el('ul', {});
     for (const n of NAV) {
       if (n.id === 'brief') continue;
-      ul.appendChild(el('li', {}, [el('a', { href: n.file, text: n.long })]));
+      ul.appendChild(el('li', {}, [el('a', { href: href(n.file), text: n.long })]));
     }
     wrap.appendChild(ul);
     return wrap;

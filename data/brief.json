@@ -1,6 +1,6 @@
 {
  "$schema_version": "1.0.0",
- "$description": "The document's own structure. Canonical for part identity, ordering, titles, deks and reading times, and for the reading-order graph drawn by the Tree of Life. This is a NAVIGATION graph between parts of the document, deliberately kept separate from the legal relationships between instruments in instruments.json.",
+ "$description": "The document's own structure. Canonical for part identity, ordering, titles, deks and reading times, and for the reading-order graph drawn by the interactive summary. This is a NAVIGATION graph between parts of the document, deliberately kept separate from the legal relationships between instruments in instruments.json.",
  "$last_verified": "2026-08-27",
  "parts": [
   {
@@ -102,18 +102,10 @@
   {
    "id": "annex-b",
    "roman": "B",
-   "title": "A note on method",
-   "dek": null,
-   "reading_minutes": 1,
-   "kind": "annex"
-  },
-  {
-   "id": "annex-c",
-   "roman": "C",
-   "kind": "annex",
    "title": "Method, and the use of AI in building this",
-   "dek": "How the project was built, what was delegated and what was not.",
-   "reading_minutes": 2
+   "dek": null,
+   "reading_minutes": 3,
+   "kind": "annex"
   }
  ],
  "reading_graph": [

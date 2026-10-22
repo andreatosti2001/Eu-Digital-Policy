@@ -284,8 +284,13 @@ export function renderLayer({ root = REPO_ROOT } = {}) {
  * map says so rather than asserting staleness it has not
  * established.
  */
+/* Pages that restate no record. 404.html (21 Oct 2026) names ids only in the
+   generated site index every page carries, and a change to a record cannot
+   make a not-found page wrong, so it is not an analytical page. */
+export const NOT_ANALYTICAL = Object.freeze(['404.html']);
+
 export function markupMentions(ids, { root = REPO_ROOT } = {}) {
-  const pages = readdirSync(root).filter((f) => f.endsWith('.html')).sort();
+  const pages = readdirSync(root).filter((f) => f.endsWith('.html') && !NOT_ANALYTICAL.includes(f)).sort();
   const out = new Map();
   for (const page of pages) {
     const html = readFileSync(join(root, page), 'utf8');

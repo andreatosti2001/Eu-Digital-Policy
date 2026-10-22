@@ -37,6 +37,8 @@ import { fileURLToPath } from 'node:url';
 import { index, label as taxLabel } from '../js/data.js';
 import * as R from '../js/routes.js';
 import { datesFor, authoritiesFor } from '../js/dna.js';
+import { actionsOnly } from '../js/pipeline.js';
+import { editionLocales, reviewState } from './editions.mjs';
 import { renderInstrument, instrumentListItem, instrumentFaq } from '../js/instrument-view.js';
 import * as F from '../js/format.js';
 import { BASE, AUTHOR, LICENCE } from './_footer.mjs';
@@ -74,6 +76,10 @@ export const PAGE_PUBLISHED = Object.freeze(Object.fromEntries(
     .map((id) => [id, '2026-09-27'])));
 
 const BRAND = ' | ' + SITE.name;
+/** og:locale of each edition; the language code where none is listed. */
+const OG_LOCALE = Object.freeze({ it: 'it_IT', fr: 'fr_FR', es: 'es_ES' });
+/** Each edition named in its own language, as the language menu names it. */
+const LANG_LABEL = Object.freeze({ it: 'Italiano', fr: 'Français', es: 'Español' });
 
 /* ---------------------------------------------------------- the pages
 
@@ -134,6 +140,16 @@ export const TOP_PAGES = Object.freeze([
     records: [],
   },
   {
+    /* 21 Oct 2026 (audit item 23). GitHub Pages serves 404.html, with a 404
+       status, at whatever address was missed, at any depth — so every link
+       in it is root-absolute (root '/'), and it is never indexable. */
+    file: '404.html', path: '404.html', schema: null, compat: true, root: '/',
+    reason: 'the not-found page: served by GitHub Pages at any missing address, with a 404 status, and marked noindex',
+    title: 'Page not found' + BRAND,
+    description: 'There is no page at this address on EU Digital Policy. The brief, the instrument pages and the site search are linked from here.',
+    records: [],
+  },
+  {
     file: 'licence.html', path: 'licence.html', schema: 'WebPage',
     title: 'Licence and reuse: cite and reuse this analysis and its data under CC BY 4.0' + BRAND,
     description: 'EU Digital Policy is licensed under Creative Commons Attribution 4.0 International: what you may do with the analysis, the datasets and the code, how to credit them, and what the licence does not cover.',
@@ -190,7 +206,7 @@ function instrumentTitle(inst, ix, db) {
   return `${inst.short_name} — ${joinFacets(facets)}${BRAND}`;
 }
 
-const plural = (n, one, many = one + 's') => `${n} ${n === 1 ? one : many}`;
+const plural = F.plural;
 
 /* lower-case a leading capital unless it opens an acronym ("ICT risk
    management", "VLOP"), so a label or a status runs on mid-sentence */
@@ -221,7 +237,8 @@ function instrumentDescription(inst, ix, db) {
   /* "applicable as of 19 August 2026" read as the date it became applicable;
      it is the date the status was assessed, so it says so */
   const status = `${taxLabel(ix, inst.legislative_status)} (status as of ${F.humanDate(inst.status_as_of)})`;
-  const enf = (db.enforcement.enforcement || []).filter((r) => r.instrument === inst.id).length;
+  /* recorded inaction is not an enforcement record (js/pipeline.js isInaction) */
+  const enf = actionsOnly(db.enforcement.enforcement).filter((r) => r.instrument === inst.id).length;
   /* the objective up to its colon: where a record has one, what follows it
      is the elaboration the page carries in full */
   const obj = String(inst.dna.objective).split(/:\s/)[0].trim().replace(/\.?$/, '.');
@@ -300,10 +317,10 @@ export function buildRoutes(db, root = ROOT) {
     const crumb = crumbOf(root, p.file);
     routes.push({
       kind: p.compat ? 'compat' : (p.file === 'index.html' ? 'home' : 'directory'),
-      file: p.file, root: '', url,
+      file: p.file, root: p.root || '', url,
       canonical: p.compat ? null : url,
       indexable: !p.compat,
-      reason: p.compat ? 'compatibility route: forwards to an instrument page, or renders a thin record with noindex' : null,
+      reason: p.compat ? (p.reason || 'compatibility route: forwards to an instrument page, or renders a thin record with noindex') : null,
       title: p.title, description: p.description, schema: p.schema,
       h1: null,
       breadcrumb: p.file === 'index.html' ? [] : [home, { name: crumb || p.title, url }],
@@ -345,14 +362,41 @@ export function buildRoutes(db, root = ROOT) {
       reason: 'below the indexability gate: ' + R.gateReport(inst, ix).filter((g) => !g.met).map((g) => g.id).join(', '),
     });
   }
-  const shipped = JSON.parse(readFileSync(join(root, 'i18n', 'locales.json'), 'utf8')).locales
-    .filter((l) => l.file && l.code !== 'en');
-  for (const l of shipped) {
-    routes.push({
-      kind: 'language', lang: l.code, file: null, url: BASE + '?lang=' + l.code, canonical: BASE, indexable: false,
-      reason: 'the translation is applied by JavaScript over English HTML and has not been reviewed by a native speaker; ' +
-        'advertised as an alternate only once a pre-rendered, reviewed page exists (docs/SEO-OPERATIONS.md §6)',
-    });
+  /* The language editions (22 Oct 2026, audit items 20 and 22). Each is a
+     real page, /it/ and so on, generated by tools/_footer.mjs from
+     index.html and the locale's strings (tools/editions.mjs). Whether it is
+     indexable is DERIVED from the translation review: only an edition
+     every string of which a person has approved, as it now stands, gets a
+     canonical, a place in the sitemap and reciprocal hreflang
+     (docs/SEO-OPERATIONS.md §6). Until then it is served, linked from the
+     language menu, and marked noindex. */
+  const homeRoute = routes.find((r) => r.kind === 'home');
+  const homeTop = TOP_PAGES.find((p) => p.file === 'index.html');
+  const editions = [];
+  for (const l of editionLocales(root)) {
+    const st = reviewState(l.code, { root, englishTitle: homeTop.title, englishDescription: homeTop.description });
+    const url = BASE + l.edition.path;
+    const route = {
+      kind: 'language', lang: l.code, file: l.edition.path + 'index.html', root: '../', url,
+      canonical: st.complete ? url : null, indexable: st.complete,
+      reason: st.complete ? null
+        : `the ${l.label} edition has ${st.total - st.counts.reviewed} of ${st.total} strings not reviewed by a person (node tools/i18n-review.mjs status ${l.code}); generated and noindex until all are (docs/SEO-OPERATIONS.md §6)`,
+      review: st.counts,
+      title: l.edition.title, description: l.edition.description, schema: 'WebPage',
+      h1: null, breadcrumb: [], lastmod: homeRoute.lastmod, image: SITE.image,
+      htmlLang: l.code, ogLocale: OG_LOCALE[l.code] || l.code,
+    };
+    routes.push(route);
+    editions.push(route);
+  }
+  /* hreflang only among indexable pages, every one naming every other and
+     itself, x-default English: an alternate is a promise that the other
+     page is the same content in another language, made only once a person
+     has read it */
+  const live = editions.filter((e) => e.indexable);
+  if (live.length) {
+    const set = [{ lang: 'en', href: homeRoute.url }, ...live.map((e) => ({ lang: e.lang, href: e.url })), { lang: 'x-default', href: homeRoute.url }];
+    for (const r of [homeRoute, ...live]) r.alternates = set;
   }
   return { routes, ix };
 }
@@ -370,6 +414,9 @@ export function socialMeta(route, ctx) {
   const img = route.image ? BASE + route.image.path : null;
   const lines = [];
   if (route.canonical) lines.push(`<link href="${route.canonical}" rel="canonical"/>`);
+  /* a language edition nobody has reviewed yet is served, and kept out of search */
+  if (route.kind === 'language' && !route.indexable) lines.push('<meta content="noindex" name="robots"/>');
+  for (const a of route.indexable ? route.alternates || [] : []) lines.push(`<link href="${a.href}" hreflang="${a.lang}" rel="alternate"/>`);
   lines.push(
     `<meta content="${attr(route.title)}" property="og:title"/>`,
     `<meta content="${attr(route.description)}" property="og:description"/>`,
@@ -378,7 +425,7 @@ export function socialMeta(route, ctx) {
   if (route.canonical) lines.push(`<meta content="${route.canonical}" property="og:url"/>`);
   lines.push(
     `<meta content="${attr(SITE.name)}" property="og:site_name"/>`,
-    `<meta content="${SITE.ogLocale}" property="og:locale"/>`,
+    `<meta content="${route.ogLocale || SITE.ogLocale}" property="og:locale"/>`,
   );
   if (img) {
     lines.push(
@@ -418,7 +465,7 @@ export function jsonLd(route, { ix, routes } = {}) {
     url: BASE, inLanguage: SITE.locale, author: person(), license: SITE.licence.url };
   const page = {
     '@type': route.schema || 'WebPage', '@id': route.url + '#page', url: route.url,
-    name: route.title, description: route.description, inLanguage: SITE.locale,
+    name: route.title, description: route.description, inLanguage: route.htmlLang || SITE.locale,
     isPartOf: { '@id': BASE + '#site' },
   };
   if (route.image) {
@@ -492,6 +539,16 @@ export const ROBOTS_DISALLOW = Object.freeze(['/agent/', '/docs/', '/tools/']);
 
 export function robotsTxt() {
   return '# Generated by tools/_footer.mjs from tools/seo.mjs. Do not edit in place.\n' +
+    /* 21 Oct 2026 (audit item 24, which called these lines superfluous):
+       they are superfluous only once Pages publishes the allowlisted
+       artifact (tools/pages-artifact.mjs). Until the owner switches the
+       Pages source to "GitHub Actions" the branch deploy publishes the
+       whole repository, these three directories included
+       (docs/DEPLOYMENT.md §3), so the file says so rather than dropping
+       them on an assumption. */
+    '# /agent/, /docs/ and /tools/ are not part of the website. They are disallowed because a\n' +
+    '# branch deployment of this repository publishes them; once Pages is deployed from the\n' +
+    '# allowlisted artifact they do not exist on the host and these lines change nothing.\n' +
     'User-agent: *\n' +
     ROBOTS_DISALLOW.map((p) => `Disallow: ${p}\n`).join('') +
     `\nSitemap: ${BASE}sitemap.xml\n`;
@@ -511,6 +568,11 @@ export const ABOUT_PAGES = Object.freeze([
 ]);
 export function siteIndex(routes, ix, nav, root) {
   const insts = routes.filter((r) => r.kind === 'instrument').map((r) => ix.instrument.get(r.id));
+  /* the language editions, as plain links: every page that can be indexed
+     must be reachable without JavaScript, and a reader without it gets a
+     way to the brief in their language (22 Oct 2026) */
+  const langs = routes.filter((r) => r.kind === 'language' && r.file)
+    .map((r) => ({ code: r.lang, path: r.file.replace(/index\.html$/, ''), label: LANG_LABEL[r.lang] || r.lang, reviewed: r.indexable }));
   return `<nav class="site-index" aria-label="Site index">
 <div class="si-inner">
 <div class="si-col"><p class="si-label">Sections</p>
@@ -525,7 +587,12 @@ ${ABOUT_PAGES.map((a) => `<li><a href="${attr(root + a.file)}">${text(a.label)}<
 <ul>
 ${insts.map((i) => `<li><a href="${attr(root + R.entityPath(i.id))}">${text(displayName(i))}</a></li>`).join('\n')}
 </ul></div>
-</div>
+${langs.length ? `<div class="si-col"><p class="si-label">The brief in</p>
+<ul>
+<li><a href="${attr(root || './')}" lang="en">English</a></li>
+${langs.map((l) => `<li><a href="${attr(root + l.path)}" lang="${l.code}">${text(l.label)}</a>${l.reviewed ? '' : ' <span class="si-note">translation not yet reviewed</span>'}</li>`).join('\n')}
+</ul></div>
+` : ''}</div>
 </nav>`;
 }
 
