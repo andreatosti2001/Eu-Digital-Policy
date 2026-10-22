@@ -1252,3 +1252,22 @@ test('A4 · every Part counter equals the boxes the Part holds, in all four lang
   assert.match(html, /<aside class="box box-synth" data-tone="synth"><span class="box-label" data-i18n="part-11\.span6">SYNTHESIS</, 'Part XI\'s synthesis box is labelled as synthesis');
   assert.match(readFileSync(join(ROOT, 'app.js'), 'utf8'), /addEventListener\('i18n:applied', countBoxes\)/, 'and the counters are recomputed after a language swap');
 });
+
+test('A5 · the numerals inside the summary and contents trees are hidden from assistive technology (item 25)', () => {
+  /* Each node is a labelled role="button"; its <text> numeral was exposed as
+     well, so a reader heard "I III II V …" (extracted: "lllllllll"). Measured
+     in Chromium's accessibility tree on 21 Oct 2026: 13 numeral StaticText
+     nodes before, 0 after. No screen reader was run. */
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  for (const cls of ['portal-tree', 'tree-map', 'system-map']) {
+    const s = html.search(new RegExp(`<svg[^>]*class="${cls}"`));
+    assert.ok(s >= 0, cls);
+    const seg = html.slice(s, html.indexOf('</svg>', s));
+    const nodes = seg.match(/<g [^>]*role="button"[^>]*>[\s\S]*?<\/g>/g) || [];
+    assert.ok(nodes.length >= 6, `${cls}: its nodes were found`);
+    for (const g of nodes) {
+      assert.match(g, /aria-label="[^"]+"/, `${cls}: a node is named by its label`);
+      for (const tx of g.match(/<text\b[^>]*>/g) || []) assert.match(tx, /aria-hidden="true"/, `${cls}: ${tx}`);
+    }
+  }
+});
