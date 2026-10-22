@@ -1,6 +1,43 @@
 # HANDOVER
 
-**Last updated:** audit of 21 October 2026 and the dataset explorer, merged · 22 October 2026
+**Last updated:** dataset explorer — full screen and layout direction · 22 October 2026
+**Branch:** `claude/datasets-explorer`, restarted from `origin/main` at `cfe3607` after pull request
+#13 merged (the procedure for a merged branch). Pushed; not merged.
+
+## Dataset explorer: full screen and layout direction — 22 October 2026
+
+**Asked** (in Italian): the graphs viewable full screen and "rotatable — moving between vertical
+and horizontal is enough, not necessarily a full rotation". Read as a layout-direction switch, the
+way JSON Crack offers one; dragging to pan already existed.
+
+**What changed.** Both graphs (Structure, References) gain `↔ Horizontal` / `↕ Vertical` and
+`Full screen` beside the zoom controls; `F` on the canvas toggles full screen. Vertical is the same
+layout with the axes swapped (`js/json-graph.js` `layout(graph, m, orientation)`, `edgePath()`); the
+References view puts the records naming this one above and the ones it names below, as a grid of
+four. The direction is in the address (`o=vertical`) and travels with every reference followed.
+Switching it redraws in place, so it does not leave full screen. What goes full screen is `<main>`,
+not the viewer: `<main>` survives a render, so following a reference stays full screen, and only the
+record heading and the graph are shown. Without the Fullscreen API (Safari on iPhone) `<main>` is
+fixed over the window, page scroll locked, Escape or the button closes it.
+
+**Found on the way, fixed before commit:** in full screen the canvas first stayed at its 200px
+minimum — `.dx-layout` aligns its columns to the top, so the graph's column never stretched.
+
+**Files:** `js/json-graph.js`, `js/datasets-page.js`, `css/tools.css` (tokens only),
+`tools/selftest.mjs` (J6 now both directions over every record; J7 the reference graph in both;
+J8 new), `agent/browser/checks.mjs` (`datasets:direction`, `datasets:fullscreen` with a real CDP
+click, `datasets:fullscreen-fallback` with the API removed), `docs/CURRENT-ARCHITECTURE.md` §3.
+
+**Tests — run, not asserted (22 Oct 2026, on `cfe3607` + this change):** validate, i18n-audit,
+design-qa, seo-audit, evidence-audit 0 errors; freshness 0 defects; `_footer.mjs --check` current;
+`tools/selftest.mjs` 82/82; every agent suite passing; baseline check `pass_with_findings`; boundary
+clean; browser suite 331 pass, 0 fail, 1 undecidable (the screen-reader bound, as before).
+
+**Not established:** Escape leaving the browser's own full screen is browser behaviour and cannot be
+driven in headless Chromium (the button and `F` were tested); no real iPhone or trackpad was used —
+the fallback was tested by removing the API in Chromium.
+
+*(previous header)* **Last updated:** audit of 21 October 2026 and the dataset explorer, merged · 22 October 2026
 **Branches:** both merged to `main` on 22 Oct 2026: `claude/audit-2026-10-21` (pull request #12,
 `29f92c9`) and `claude/datasets-explorer` (another session; its own section below; pull request #13,
 `1d973d8`). See the branch register below.

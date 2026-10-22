@@ -91,6 +91,12 @@ argument. What holds it inside this architecture:
   fails to load or parse is reported by name and the others stay usable.
 - **One list of files.** A browser cannot list `data/`, so `json-graph.js` `DATASETS` names the
   files; `design-qa.mjs` fails when it and the directory disagree.
+- **Two directions, one layout.** Both graphs lay out left to right or top to bottom
+  (`ORIENTATIONS`, `o=vertical` in the address); the vertical layout is the same algorithm with
+  the axes swapped, and J6 checks every record in both for overlapping cards.
+- **Full screen is `<main>`**, not the viewer, because `<main>` outlives a render: following a
+  reference stays full screen. Where the Fullscreen API is absent or refused (Safari on iPhone)
+  `<main>` is fixed over the window instead (`.is-max`), closed by Escape.
 
 ## 4. Module topology
 

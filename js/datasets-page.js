@@ -64,8 +64,9 @@ const S = {
   refs: new Map(),
   into: new Map(),
   ix: null,
-  state: { d: null, c: null, r: null, v: 'structure', q: '' },
+  state: { d: null, c: null, r: null, v: 'structure', o: 'horizontal', q: '' },
   view: null,        // the live canvas, while one is shown
+  full: null,        // the full-screen control of the viewer on screen
   notice: null,      // what the address asked for and could not be given
 };
 
@@ -77,6 +78,7 @@ function readState() {
   return {
     d: p.get('d'), c: p.get('c'), r: p.get('r'),
     v: VIEWS.some((x) => x.id === v) ? v : 'structure',
+    o: G.ORIENTATIONS.includes(p.get('o')) ? p.get('o') : G.ORIENTATIONS[0],
     q: '',
   };
 }
@@ -87,6 +89,10 @@ const linkFor = (st) => {
   if (st.c) p.set('c', st.c);
   if (st.r) p.set('r', st.r);
   if (st.v && st.v !== 'structure') p.set('v', st.v);
+  /* the layout direction travels with every link, so following a
+     reference keeps the reader's choice */
+  const o = st.o || S.state.o;
+  if (o && o !== G.ORIENTATIONS[0]) p.set('o', o);
   return '?' + p.toString();
 };
 
@@ -308,15 +314,17 @@ function renderStage(name, { focus }) {
    the frame never traps a reader scrolling past it. The transform is an
    SVG attribute, which the style-src policy does not govern. */
 
-function canvas(width, height, ariaLabel) {
-  const frame = el('div', { class: 'dx-canvas', tabindex: '0', role: 'region', 'aria-label': ariaLabel + '. Arrow keys pan, plus and minus zoom, 0 fits.' });
+function canvas(ariaLabel) {
+  const frame = el('div', { class: 'dx-canvas', tabindex: '0', role: 'region',
+    'aria-label': ariaLabel + '. Arrow keys pan, plus and minus zoom, 0 fits, F toggles full screen.' });
   const root = svg('svg', { class: 'dx-svg', role: 'group', 'aria-label': ariaLabel });
   const world = svg('g', {});
   root.append(world);
   frame.append(root);
-  const v = { k: 1, x: 0, y: 0, width, height, frame, world };
+  const v = { k: 1, x: 0, y: 0, width: 1, height: 1, frame, world, onKey: null };
   const apply = () => world.setAttribute('transform', 'translate(' + v.x.toFixed(1) + ' ' + v.y.toFixed(1) + ') scale(' + v.k.toFixed(4) + ')');
   const clampK = (k) => Math.min(3, Math.max(0.1, k));
+  const size = () => [frame.clientWidth || 800, frame.clientHeight || 500];
   v.zoomAt = (factor, cx, cy) => {
     const k = clampK(v.k * factor);
     v.x = cx - (cx - v.x) * (k / v.k);
@@ -324,19 +332,24 @@ function canvas(width, height, ariaLabel) {
     v.k = k; apply();
   };
   v.fit = () => {
-    const fw = frame.clientWidth || 800, fh = frame.clientHeight || 500, pad = 24;
+    const [fw, fh] = size(), pad = 24;
     v.k = clampK(Math.min(1, (fw - pad * 2) / Math.max(1, v.width), (fh - pad * 2) / Math.max(1, v.height)));
     v.x = (fw - v.width * v.k) / 2; v.y = (fh - v.height * v.k) / 2; apply();
   };
-  /* a record too large to read when fitted opens at reading size on its first card */
-  v.start = (focusBox) => {
-    const fw = frame.clientWidth || 800, fh = frame.clientHeight || 500;
+  /* a graph too large to read when fitted opens at reading size on its
+     first card: at the left edge when it grows rightwards, at the top
+     when it grows downwards */
+  v.start = (focusBox, orientation) => {
+    const [fw, fh] = size();
     const fitK = Math.min(1, (fw - 48) / Math.max(1, v.width), (fh - 48) / Math.max(1, v.height));
     if (fitK >= 0.6 || !focusBox) { v.fit(); return; }
-    v.k = 0.9; v.x = 24 - focusBox.x * v.k; v.y = fh / 2 - (focusBox.y + focusBox.h / 2) * v.k; apply();
+    v.k = 0.9;
+    if (orientation === 'vertical') { v.x = fw / 2 - (focusBox.x + focusBox.w / 2) * v.k; v.y = 24 - focusBox.y * v.k; }
+    else { v.x = 24 - focusBox.x * v.k; v.y = fh / 2 - (focusBox.y + focusBox.h / 2) * v.k; }
+    apply();
   };
   v.centreOn = (box) => {
-    const fw = frame.clientWidth || 800, fh = frame.clientHeight || 500;
+    const [fw, fh] = size();
     v.k = Math.max(v.k, 0.8);
     v.x = fw / 2 - (box.x + box.w / 2) * v.k; v.y = fh / 2 - (box.y + box.h / 2) * v.k; apply();
   };
@@ -373,21 +386,97 @@ function canvas(width, height, ariaLabel) {
     v.zoomAt(Math.exp(-e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top);
   }, { passive: false });
   frame.addEventListener('keydown', (e) => {
-    if (e.target !== frame) return;
+    if (e.target !== frame || e.ctrlKey || e.metaKey || e.altKey) return;
     const step = 48, cx = frame.clientWidth / 2, cy = frame.clientHeight / 2;
     const act = { ArrowLeft: () => { v.x += step; apply(); }, ArrowRight: () => { v.x -= step; apply(); },
       ArrowUp: () => { v.y += step; apply(); }, ArrowDown: () => { v.y -= step; apply(); },
-      '+': () => v.zoomAt(1.2, cx, cy), '=': () => v.zoomAt(1.2, cx, cy), '-': () => v.zoomAt(1 / 1.2, cx, cy), '0': () => v.fit() }[e.key];
+      '+': () => v.zoomAt(1.2, cx, cy), '=': () => v.zoomAt(1.2, cx, cy), '-': () => v.zoomAt(1 / 1.2, cx, cy), '0': () => v.fit(),
+      f: () => v.onKey && v.onKey('fullscreen'), F: () => v.onKey && v.onKey('fullscreen') }[e.key];
     if (act) { e.preventDefault(); act(); }
   });
   apply();
   return v;
 }
 
-function zoomBar(v, extra) {
-  const bar = el('div', { class: 'dx-zoom', role: 'group', 'aria-label': 'Zoom' });
-  const btn = (text, label, fn) => {
-    const b = el('button', { type: 'button', class: 'dx-zbtn', 'aria-label': label, text });
+/* ---------------------------------------------------------- full screen
+
+   What goes full screen is <main>, not the viewer: <main> outlives a
+   render, so following a reference from a full-screen graph opens the
+   next record still full screen (a removed element would drop out of
+   it). The stylesheet shows only the record's heading and the graph
+   while it is. Where the browser offers no element full screen (Safari
+   on iPhone does not, for anything but video) or refuses it, <main> is
+   fixed over the window instead, and Escape or the same button closes
+   it. One set of listeners for the page; the viewer on screen registers
+   its button in S.full. */
+
+const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+const fsOffered = () => !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+const fsHost = () => $('#dxMain');
+const isFull = () => { const h = fsHost(); return !!h && (fsElement() === h || h.classList.contains('is-max')); };
+
+function onFullChange() {
+  if (!fsElement()) document.documentElement.classList.remove('dx-locked');
+  if (S.full) S.full.sync();
+}
+document.addEventListener('fullscreenchange', onFullChange);
+document.addEventListener('webkitfullscreenchange', onFullChange);
+document.addEventListener('keydown', (e) => {
+  const h = fsHost();
+  if (e.key === 'Escape' && h && h.classList.contains('is-max')) { e.preventDefault(); exitFull(); }
+});
+
+function exitFull() {
+  const h = fsHost();
+  if (fsElement() === h) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  else {
+    h.classList.remove('is-max');
+    document.documentElement.classList.remove('dx-locked');
+    if (S.full) S.full.sync();
+  }
+}
+
+function enterFull(v) {
+  const h = fsHost();
+  const maximise = () => {
+    h.classList.add('is-max');
+    document.documentElement.classList.add('dx-locked');
+    if (S.full) S.full.sync();
+    v.frame.focus();
+  };
+  const req = h.requestFullscreen || h.webkitRequestFullscreen;
+  if (!req || !fsOffered()) { maximise(); return; }
+  try {
+    const p = req.call(h);
+    if (p && typeof p.then === 'function') p.then(() => v.frame.focus(), maximise);
+  } catch (e) { maximise(); }
+}
+
+function fullScreen(v, button, restart) {
+  const sync = () => {
+    const on = isFull();
+    button.setAttribute('aria-pressed', on ? 'true' : 'false');
+    button.textContent = on ? 'Exit full screen' : 'Full screen';
+    requestAnimationFrame(restart);
+  };
+  S.full = { sync };
+  const on = isFull();
+  button.setAttribute('aria-pressed', on ? 'true' : 'false');
+  button.textContent = on ? 'Exit full screen' : 'Full screen';
+  return () => (isFull() ? exitFull() : enterFull(v));
+}
+
+/* ---------------------------------------------------------- the viewer
+
+   Controls above the canvas: zoom, fit, layout direction, full screen,
+   and whatever the view adds (the structure view's search). `redraw`
+   lays the graph out again in place, so changing direction does not
+   leave full screen; `restart` re-frames it. */
+
+function viewer(v, { extra = [], redraw, restart }) {
+  const bar = el('div', { class: 'dx-zoom', role: 'group', 'aria-label': 'Graph controls' });
+  const btn = (text, label, fn, cls) => {
+    const b = el('button', { type: 'button', class: 'dx-zbtn' + (cls ? ' ' + cls : ''), 'aria-label': label, text });
     b.addEventListener('click', fn);
     return b;
   };
@@ -397,80 +486,108 @@ function zoomBar(v, extra) {
     btn('+', 'Zoom in', () => v.zoomAt(1.25, ...mid())),
     btn('Fit', 'Fit the whole graph in view', () => v.fit()),
   );
-  for (const x of extra || []) bar.append(x);
-  return bar;
-}
 
-const edgePath = (e) => {
-  const mx = (e.x1 + e.x2) / 2;
-  return 'M' + e.x1 + ' ' + e.y1 + ' C' + mx + ' ' + e.y1 + ' ' + mx + ' ' + e.y2 + ' ' + e.x2 + ' ' + e.y2;
-};
+  const dir = el('div', { class: 'dx-dir', role: 'group', 'aria-label': 'Layout direction' });
+  const DIRS = { horizontal: ['↔ Horizontal', 'Lay the graph out left to right'], vertical: ['↕ Vertical', 'Lay the graph out top to bottom'] };
+  const dirButtons = G.ORIENTATIONS.map((o) => {
+    const b = el('button', { type: 'button', class: 'dx-zbtn dx-dirbtn', 'aria-label': DIRS[o][1], 'aria-pressed': S.state.o === o ? 'true' : 'false', text: DIRS[o][0] });
+    b.addEventListener('click', () => {
+      if (S.state.o === o) return;
+      S.state.o = o;
+      history.replaceState(null, '', linkFor(S.state));
+      for (const x of dirButtons) x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+      redraw();
+      requestAnimationFrame(restart);
+    });
+    return b;
+  });
+  dir.append(...dirButtons);
+  const fsBtn = btn('Full screen', 'Show the graph full screen', null, 'dx-fsbtn');
+  fsBtn.setAttribute('aria-pressed', 'false');
+  bar.append(dir, fsBtn, ...extra);
+
+  const wrap = el('div', { class: 'dx-viewer' }, [bar, v.frame]);
+  const toggle = fullScreen(v, fsBtn, restart);
+  fsBtn.addEventListener('click', toggle);
+  v.onKey = (what) => { if (what === 'fullscreen') toggle(); };
+  return wrap;
+}
 
 function structureView(rec, key) {
   const graph = G.structureGraph(rec, { title: key, refs: S.refs });
-  const L = G.layout(graph);
   const m = G.METRICS;
-  const v = canvas(L.width, L.height, 'Structure of record ' + key + ': ' + L.nodes.length + (L.nodes.length === 1 ? ' card' : ' cards'));
-  const byId = new Map(L.nodes.map((n) => [n.id, n]));
-  const gEdges = svg('g', { class: 'dx-edges' });
-  for (const e of L.edges) gEdges.append(svg('path', { class: 'dx-edge', d: edgePath(e) }));
-  const gNodes = svg('g', {});
+  const v = canvas('Structure of record ' + key + ': ' + graph.nodes.length + (graph.nodes.length === 1 ? ' card' : ' cards'));
+  let L = null;
+  let byId = new Map();
   const nodeEls = new Map();
-  for (const n of L.nodes) {
-    const g = svg('g', { class: 'dx-node' + (n.depth === 0 ? ' is-root' : ''), transform: 'translate(' + n.x + ' ' + n.y + ')' });
-    g.append(svg('rect', { class: 'dx-card', width: n.w, height: n.h, rx: 2 }));
-    g.append(svg('text', { class: 'dx-title', x: m.padX, y: 17, text: G.clip(n.title, Math.floor((n.w - m.padX * 2) / m.char)) }));
-    g.append(svg('line', { class: 'dx-sep', x1: 0, x2: n.w, y1: m.head - 4, y2: m.head - 4 }));
-    n.rows.forEach((r, i) => {
-      const y = m.head + i * m.row + 13;
-      const t = svg('text', { class: 'dx-row', x: m.padX, y });
-      if (r.key) t.append(svg('tspan', { class: 'dx-k', text: G.clip(r.key, G.LIMITS.maxKey) }), svg('tspan', { class: 'dx-p', text: ': ' }));
-      const val = svg('tspan', { class: 'dx-v t-' + r.type, text: (r.type === 'ref' ? '→ ' : '') + r.text });
-      t.append(val);
-      const tip = r.type === 'vocab' ? r.full + ' — ' + (tl(r.full) || 'vocabulary term')
-        : r.type === 'ref' ? r.full + ' — ' + titleOf(r.target.dataset).toLowerCase() + ' record' + (r.target.label ? ': ' + r.target.label : '')
-          : r.full;
-      if (tip) t.append(svg('title', { text: (r.path ? r.path + ' = ' : '') + tip }));
-      if (r.type === 'ref') {
-        const st = { d: r.target.dataset, c: r.target.collection, r: r.target.record, v: S.state.v };
-        const a = svg('a', { href: linkFor(st), 'data-dx': JSON.stringify(st), class: 'dx-svg-ref' });
-        a.append(t);
-        g.append(a);
-      } else g.append(t);
-    });
-    gNodes.append(g);
-    nodeEls.set(n.id, g);
-  }
-  v.world.append(gEdges, gNodes);
+
+  /* the whole graph, in the current direction; called again when it changes */
+  const draw = () => {
+    L = G.layout(graph, m, S.state.o);
+    v.width = L.width; v.height = L.height;
+    byId = new Map(L.nodes.map((n) => [n.id, n]));
+    nodeEls.clear();
+    v.world.textContent = '';
+    const gEdges = svg('g', { class: 'dx-edges' });
+    for (const e of L.edges) gEdges.append(svg('path', { class: 'dx-edge', d: G.edgePath(e, L.orientation) }));
+    const gNodes = svg('g', {});
+    for (const n of L.nodes) {
+      const g = svg('g', { class: 'dx-node' + (n.depth === 0 ? ' is-root' : ''), transform: 'translate(' + n.x + ' ' + n.y + ')' });
+      g.append(svg('rect', { class: 'dx-card', width: n.w, height: n.h, rx: 2 }));
+      g.append(svg('text', { class: 'dx-title', x: m.padX, y: 17, text: G.clip(n.title, Math.floor((n.w - m.padX * 2) / m.char)) }));
+      g.append(svg('line', { class: 'dx-sep', x1: 0, x2: n.w, y1: m.head - 4, y2: m.head - 4 }));
+      n.rows.forEach((r, i) => {
+        const y = m.head + i * m.row + 13;
+        const t = svg('text', { class: 'dx-row', x: m.padX, y });
+        if (r.key) t.append(svg('tspan', { class: 'dx-k', text: G.clip(r.key, G.LIMITS.maxKey) }), svg('tspan', { class: 'dx-p', text: ': ' }));
+        t.append(svg('tspan', { class: 'dx-v t-' + r.type, text: (r.type === 'ref' ? '→ ' : '') + r.text }));
+        const tip = r.type === 'vocab' ? r.full + ' — ' + (tl(r.full) || 'vocabulary term')
+          : r.type === 'ref' ? r.full + ' — ' + titleOf(r.target.dataset).toLowerCase() + ' record' + (r.target.label ? ': ' + r.target.label : '')
+            : r.full;
+        if (tip) t.append(svg('title', { text: (r.path ? r.path + ' = ' : '') + tip }));
+        if (r.type === 'ref') {
+          const st = { d: r.target.dataset, c: r.target.collection, r: r.target.record, v: S.state.v };
+          const a = svg('a', { href: linkFor(st), 'data-dx': JSON.stringify(st), class: 'dx-svg-ref' });
+          a.append(t);
+          g.append(a);
+        } else g.append(t);
+      });
+      gNodes.append(g);
+      nodeEls.set(n.id, g);
+    }
+    v.world.append(gEdges, gNodes);
+  };
+  draw();
 
   /* search inside the record */
   const q = el('input', { type: 'search', class: 'dx-find', placeholder: 'Find in this record', 'aria-label': 'Find in this record', autocomplete: 'off' });
   const out = el('span', { class: 'dx-find-n', 'aria-live': 'polite' });
   const next = el('button', { type: 'button', class: 'dx-zbtn', text: 'Next', disabled: true });
   let hits = [], at = -1;
-  q.addEventListener('input', () => {
+  const mark = () => {
     for (const g of nodeEls.values()) g.classList.remove('is-hit', 'is-current');
     hits = G.matchNodes(graph, q.value);
     at = -1;
     for (const id of hits) nodeEls.get(id).classList.add('is-hit');
     out.textContent = q.value.trim() ? (hits.length ? hits.length + (hits.length === 1 ? ' card matches' : ' cards match') : 'no card matches') : '';
     next.disabled = !hits.length;
-    if (hits.length) step();
-  });
+  };
   const step = () => {
     if (at >= 0) nodeEls.get(hits[at]).classList.remove('is-current');
     at = (at + 1) % hits.length;
     nodeEls.get(hits[at]).classList.add('is-current');
     v.centreOn(byId.get(hits[at]));
   };
+  q.addEventListener('input', () => { mark(); if (hits.length) step(); });
   next.addEventListener('click', step);
   q.addEventListener('keydown', (e) => { if (e.key === 'Enter' && hits.length) { e.preventDefault(); step(); } });
 
-  const wrap = el('div', { class: 'dx-viewer' }, [zoomBar(v, [q, next, out]), v.frame]);
+  const restart = () => v.start(L.nodes[0], L.orientation);
+  const wrap = viewer(v, { extra: [q, next, out], redraw: () => { draw(); if (q.value.trim()) mark(); }, restart });
   if (graph.truncated) wrap.append(el('p', { class: 'dx-note', text: 'This record is larger than the graph draws (' + G.LIMITS.maxNodes + ' cards). The rows marked “not drawn” are complete in the Tree and Raw JSON views.' }));
   wrap.append(legend('structure'));
   S.view = v;
-  requestAnimationFrame(() => v.start(L.nodes[0]));
+  requestAnimationFrame(restart);
   return wrap;
 }
 
@@ -478,17 +595,10 @@ function referencesView(name, rec) {
   const st = S.state;
   const outgoing = G.referencesIn(rec, S.refs);
   const incoming = S.into.get(st.r) || [];
-  const RG = G.referenceGraph({ dataset: name, collection: st.c, record: st.r, label: G.recordLabel(rec) }, outgoing, incoming);
-  const v = canvas(RG.width, RG.height, 'References to and from record ' + st.r);
-  const gE = svg('g', {});
-  for (const e of RG.edges) {
-    gE.append(svg('path', { class: 'dx-redge is-' + e.side, d: edgePath(e) }));
-    /* beside the outer card, not at the middle: the middles converge on
-       the centre card and the labels would print over each other */
-    const atIn = e.side === 'in';
-    gE.append(svg('text', { class: 'dx-elabel', x: atIn ? e.x1 + 6 : e.x2 - 6, y: (atIn ? e.y1 : e.y2) - 4,
-      'text-anchor': atIn ? 'start' : 'end', text: G.clip(e.label, 28) }, [svg('title', { text: e.label })]));
-  }
+  const center = { dataset: name, collection: st.c, record: st.r, label: G.recordLabel(rec) };
+  const v = canvas('References to and from record ' + st.r);
+  let RG = null;
+
   const card = (c, centre) => {
     const g = svg('g', { class: 'dx-rcard' + (centre ? ' is-centre' : ''), transform: 'translate(' + c.x + ' ' + c.y + ')' });
     g.append(svg('rect', { class: 'dx-card', width: c.w, height: c.h, rx: 2 }));
@@ -501,11 +611,25 @@ function referencesView(name, rec) {
     a.append(g);
     return a;
   };
-  const gN = svg('g', {});
-  gN.append(card(RG.center, true));
-  for (const c of RG.cards) gN.append(card(c, false));
-  v.world.append(gE, gN);
-  const wrap = el('div', { class: 'dx-viewer' }, [zoomBar(v), v.frame]);
+  const draw = () => {
+    RG = G.referenceGraph(center, outgoing, incoming, { orientation: S.state.o });
+    v.width = RG.width; v.height = RG.height;
+    v.world.textContent = '';
+    const gE = svg('g', {});
+    for (const e of RG.edges) {
+      gE.append(svg('path', { class: 'dx-redge is-' + e.side, d: G.edgePath(e, RG.orientation) }));
+      gE.append(svg('text', { class: 'dx-elabel', x: e.lx, y: e.ly, 'text-anchor': e.anchor, text: G.clip(e.label, 28) },
+        [svg('title', { text: e.label })]));
+    }
+    const gN = svg('g', {});
+    gN.append(card(RG.center, true));
+    for (const c of RG.cards) gN.append(card(c, false));
+    v.world.append(gE, gN);
+  };
+  draw();
+
+  const restart = () => v.fit();
+  const wrap = viewer(v, { redraw: draw, restart });
   const vocab = outgoing.filter((r) => r.target.vocabulary).length;
   const notes = [];
   if (!RG.totals.in && !RG.totals.out) notes.push('No other record in the loaded files is named by this one, and none names it.');
@@ -516,7 +640,7 @@ function referencesView(name, rec) {
   for (const n of notes) wrap.append(el('p', { class: 'dx-note', text: n }));
   wrap.append(legend('references'));
   S.view = v;
-  requestAnimationFrame(() => v.fit());
+  requestAnimationFrame(restart);
   return wrap;
 }
 
@@ -639,6 +763,7 @@ function render({ focus = false } = {}) {
   const name = S.state.d;
   /* the list is re-drawn on every change; keep the reader's place in it */
   const listTop = ($('.dx-records') || {}).scrollTop || 0;
+  S.full = null;
   main.textContent = '';
   if (S.failed[name] || !S.described[name]?.ok) {
     const err = S.failed[name] || new Error(S.described[name]?.problem || 'data/' + name + '.json could not be read');
@@ -650,6 +775,9 @@ function render({ focus = false } = {}) {
   if (S.notice) { main.append(el('p', { class: 'dx-note', role: 'status', text: S.notice })); S.notice = null; }
   const side = el('div', { class: 'dx-side' }, [fileCard(name), recordList(name)]);
   main.append(el('div', { class: 'dx-layout' }, [side, renderStage(name, { focus })]));
+  /* full screen belongs to a graph: a view without one (Back to a tree)
+     would be full screen with no control to leave it */
+  if (!S.full && isFull()) exitFull();
   const list = $('.dx-records');
   if (list) list.scrollTop = listTop;
 }

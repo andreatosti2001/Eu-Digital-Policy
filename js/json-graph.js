@@ -293,14 +293,20 @@ export function structureGraph(value, { title = 'record', refs = new Map(), limi
 
 /* ---------------------------------------------------------- layout
 
-   Left to right, one column per depth. Each subtree owns a vertical
-   band at least as tall as its card and as its children stacked, and
-   the card sits centred in its band — so no two cards can overlap and
-   the same record always lays out the same way. Sizes come from a
-   monospace metric rather than from measuring rendered text, which
-   keeps this pure; the stylesheet sets the same face and size. */
+   One rank per depth, left to right (ORIENTATIONS.horizontal) or top to
+   bottom (vertical). Each subtree owns a band across the ranks at least
+   as wide as its card and as its children side by side, and the card
+   sits centred in its band — so no two cards can overlap, in either
+   orientation, and the same record always lays out the same way. The
+   two orientations are one algorithm with the axes swapped. Sizes come
+   from a monospace metric rather than from measuring rendered text,
+   which keeps this pure; the stylesheet sets the same face and size. */
 
 export const METRICS = Object.freeze({ char: 6.6, row: 18, head: 26, padX: 12, gapX: 64, gapY: 18, minW: 140, maxW: 420 });
+
+/** The two ways a graph can be laid out; the first is the default. */
+export const ORIENTATIONS = Object.freeze(['horizontal', 'vertical']);
+const isVertical = (o) => o === 'vertical';
 
 const rowChars = (r, m) => (r.key ? clip(r.key, LIMITS.maxKey).length + 2 : 0) + String(r.text).length + (r.type === 'ref' || r.type === 'vocab' ? 2 : 0);
 
@@ -312,62 +318,89 @@ export function nodeSize(node, m = METRICS) {
 }
 
 /**
- * @returns {{ nodes: Array, edges: Array, width: number, height: number }}
+ * @param {string} orientation  'horizontal' (default) or 'vertical'
+ * @returns {{ nodes: Array, edges: Array, width: number, height: number, orientation: string }}
  *   nodes gain x, y, w, h; edges gain x1, y1, x2, y2.
  */
-export function layout(graph, m = METRICS) {
+export function layout(graph, m = METRICS, orientation = 'horizontal') {
+  const V = isVertical(orientation);
+  /* along the ranks (depth) and across them (siblings) */
+  const along = (n) => (V ? n.h : n.w);
+  const across = (n) => (V ? n.w : n.h);
+  const gapAlong = V ? m.gapX * 0.75 : m.gapX;
+  const gapAcross = V ? m.gapY * 1.5 : m.gapY;
+
   const by = new Map(graph.nodes.map((n) => [n.id, { ...n, ...nodeSize(n, m) }]));
   const kids = new Map();
   for (const e of graph.edges) {
     if (!kids.has(e.from)) kids.set(e.from, []);
     kids.get(e.from).push(e.to);
   }
-  const colW = [];
-  for (const n of by.values()) colW[n.depth] = Math.max(colW[n.depth] || 0, n.w);
-  const colX = [];
-  colW.forEach((w, d) => { colX[d] = d === 0 ? 0 : colX[d - 1] + colW[d - 1] + m.gapX; });
+  const rank = [];
+  for (const n of by.values()) rank[n.depth] = Math.max(rank[n.depth] || 0, along(n));
+  const rankAt = [];
+  rank.forEach((w, d) => { rankAt[d] = d === 0 ? 0 : rankAt[d - 1] + rank[d - 1] + gapAlong; });
 
   const band = new Map();
   const measure = (id) => {
     const ks = kids.get(id) || [];
-    const stacked = ks.reduce((s, k, i) => s + measure(k) + (i ? m.gapY : 0), 0);
-    const b = Math.max(by.get(id).h, stacked);
+    const side = ks.reduce((s, k, i) => s + measure(k) + (i ? gapAcross : 0), 0);
+    const b = Math.max(across(by.get(id)), side);
     band.set(id, b);
     return b;
   };
-  const place = (id, top) => {
+  const place = (id, from) => {
     const n = by.get(id);
     const b = band.get(id);
-    n.x = colX[n.depth];
-    n.y = top + (b - n.h) / 2;
+    const a = rankAt[n.depth];
+    const c = from + (b - across(n)) / 2;
+    if (V) { n.x = c; n.y = a; } else { n.x = a; n.y = c; }
     const ks = kids.get(id) || [];
-    const stacked = ks.reduce((s, k, i) => s + band.get(k) + (i ? m.gapY : 0), 0);
-    let y = top + (b - stacked) / 2;
-    for (const k of ks) { place(k, y); y += band.get(k) + m.gapY; }
+    const side = ks.reduce((s, k, i) => s + band.get(k) + (i ? gapAcross : 0), 0);
+    let at = from + (b - side) / 2;
+    for (const k of ks) { place(k, at); at += band.get(k) + gapAcross; }
   };
   const roots = graph.nodes.filter((n) => !graph.edges.some((e) => e.to === n.id));
-  let top = 0;
-  for (const r of roots) { measure(r.id); place(r.id, top); top += band.get(r.id) + m.gapY; }
+  let from = 0;
+  for (const r of roots) { measure(r.id); place(r.id, from); from += band.get(r.id) + gapAcross; }
 
   const nodes = graph.nodes.map((n) => by.get(n.id));
+  /* horizontal: from the row that holds the child to the child's head;
+     vertical: from the card's foot to the child's head, centred */
   const edges = graph.edges.map((e) => {
     const a = by.get(e.from), b = by.get(e.to);
-    return { ...e, x1: a.x + a.w, y1: a.y + m.head + e.row * m.row + m.row / 2, x2: b.x, y2: b.y + m.head / 2 };
+    return V
+      ? { ...e, x1: a.x + a.w / 2, y1: a.y + a.h, x2: b.x + b.w / 2, y2: b.y }
+      : { ...e, x1: a.x + a.w, y1: a.y + m.head + e.row * m.row + m.row / 2, x2: b.x, y2: b.y + m.head / 2 };
   });
   const width = nodes.reduce((w, n) => Math.max(w, n.x + n.w), 0);
   const height = nodes.reduce((h, n) => Math.max(h, n.y + n.h), 0);
-  return { nodes, edges, width, height };
+  return { nodes, edges, width, height, orientation: V ? 'vertical' : 'horizontal' };
+}
+
+/** An SVG path for an edge: a curve that leaves and arrives along the
+ *  layout's direction. */
+export function edgePath(e, orientation = 'horizontal') {
+  if (isVertical(orientation)) {
+    const my = (e.y1 + e.y2) / 2;
+    return 'M' + e.x1 + ' ' + e.y1 + ' C' + e.x1 + ' ' + my + ' ' + e.x2 + ' ' + my + ' ' + e.x2 + ' ' + e.y2;
+  }
+  const mx = (e.x1 + e.x2) / 2;
+  return 'M' + e.x1 + ' ' + e.y1 + ' C' + mx + ' ' + e.y1 + ' ' + mx + ' ' + e.y2 + ' ' + e.x2 + ' ' + e.y2;
 }
 
 /* ---------------------------------------------------------- the reference graph
 
-   The record in the middle, the records it names on the right, the
-   records that name it on the left; one card per record, and each edge
-   labelled with the field that holds the id. Vocabulary terms are not
-   drawn (see VOCABULARY). Each side stops at `cap` and reports how many
-   it left out; the panel beside the canvas lists all of them. */
+   The record in the middle, the records it names on one side, the
+   records that name it on the other: right and left when horizontal,
+   below and above when vertical (as a grid, so a long list does not
+   become one very wide row). One card per record, and each edge labelled
+   with the field that holds the id, beside the outer card. Vocabulary
+   terms are not drawn (see VOCABULARY). Each side stops at `cap` and
+   reports how many it left out; the panel beside the canvas lists all
+   of them. */
 
-export function referenceGraph(center, outgoing, incoming, { cap = 24, m = METRICS } = {}) {
+export function referenceGraph(center, outgoing, incoming, { cap = 24, m = METRICS, orientation = 'horizontal' } = {}) {
   const group = (list, keyOf) => {
     const g = new Map();
     for (const x of list) {
@@ -384,25 +417,58 @@ export function referenceGraph(center, outgoing, incoming, { cap = 24, m = METRI
   const left = group(incoming, (r) => r.dataset + '/' + r.record)
     .map((r) => ({ dataset: r.dataset, collection: r.collection, record: r.record, label: r.label, fields: r.fields }));
 
-  const W = 260, H = 46, GAP = 10, COL = 200;
+  const W = 260, H = 46, CH = 64;
   const card = (x, side, i) => ({ ...x, side, w: W, h: H, i });
   const L = left.slice(0, cap).map((x, i) => card(x, 'in', i));
   const R = right.slice(0, cap).map((x, i) => card(x, 'out', i));
-  const tallest = Math.max(L.length, R.length, 1) * (H + GAP) - GAP;
-  L.forEach((c) => { c.x = 0; c.y = c.i * (H + GAP) + (tallest - (L.length * (H + GAP) - GAP)) / 2; });
-  const cx = (L.length ? W + COL : 0);
-  const C = { ...center, side: 'center', w: W, h: 64, x: cx, y: (tallest - 64) / 2 };
-  R.forEach((c) => { c.x = cx + W + COL; c.y = c.i * (H + GAP) + (tallest - (R.length * (H + GAP) - GAP)) / 2; });
-  const edges = [
-    ...L.map((c) => ({ x1: c.x + W, y1: c.y + H / 2, x2: C.x, y2: C.y + C.h / 2, label: c.fields.join(', '), side: 'in' })),
-    ...R.map((c) => ({ x1: C.x + W, y1: C.y + C.h / 2, x2: c.x, y2: c.y + H / 2, label: c.fields.join(', '), side: 'out' })),
-  ];
+  const label = (c) => c.fields.join(', ');
+  let C, width, height, edges;
+
+  if (isVertical(orientation)) {
+    /* grids above (in) and below (out); the gap under each card row
+       holds that row's field labels */
+    const COLS = 4, GX = 16, ROWGAP = 30, SPAN = 120;
+    const cols = Math.min(COLS, Math.max(L.length, R.length, 1));
+    width = Math.max(cols * (W + GX) - GX, W);
+    const grid = (cs, top) => {
+      cs.forEach((c) => {
+        const col = c.i % COLS, row = Math.floor(c.i / COLS);
+        const inRow = Math.min(COLS, cs.length - row * COLS);
+        c.x = (width - (inRow * (W + GX) - GX)) / 2 + col * (W + GX);
+        c.y = top + row * (H + ROWGAP);
+      });
+      return cs.length ? Math.ceil(cs.length / COLS) * (H + ROWGAP) - ROWGAP : 0;
+    };
+    const topH = grid(L, 0);
+    const cy = L.length ? topH + SPAN : 0;
+    C = { ...center, side: 'center', w: W, h: CH, x: (width - W) / 2, y: cy };
+    const botH = grid(R, cy + CH + SPAN);
+    height = R.length ? cy + CH + SPAN + botH : cy + CH;
+    edges = [
+      ...L.map((c) => ({ x1: c.x + W / 2, y1: c.y + H, x2: C.x + W / 2, y2: C.y, label: label(c), side: 'in', lx: c.x + W / 2, ly: c.y + H + 13, anchor: 'middle' })),
+      ...R.map((c) => ({ x1: C.x + W / 2, y1: C.y + CH, x2: c.x + W / 2, y2: c.y, label: label(c), side: 'out', lx: c.x + W / 2, ly: c.y - 6, anchor: 'middle' })),
+    ];
+  } else {
+    const GAP = 10, COL = 200;
+    const tallest = Math.max(L.length, R.length, 1) * (H + GAP) - GAP;
+    L.forEach((c) => { c.x = 0; c.y = c.i * (H + GAP) + (tallest - (L.length * (H + GAP) - GAP)) / 2; });
+    const cx = (L.length ? W + COL : 0);
+    C = { ...center, side: 'center', w: W, h: CH, x: cx, y: (tallest - CH) / 2 };
+    R.forEach((c) => { c.x = cx + W + COL; c.y = c.i * (H + GAP) + (tallest - (R.length * (H + GAP) - GAP)) / 2; });
+    /* labels beside the outer card, not at the middle: the middles
+       converge on the centre card and would print over each other */
+    edges = [
+      ...L.map((c) => ({ x1: c.x + W, y1: c.y + H / 2, x2: C.x, y2: C.y + CH / 2, label: label(c), side: 'in', lx: c.x + W + 6, ly: c.y + H / 2 - 4, anchor: 'start' })),
+      ...R.map((c) => ({ x1: C.x + W, y1: C.y + CH / 2, x2: c.x, y2: c.y + H / 2, label: label(c), side: 'out', lx: c.x - 6, ly: c.y + H / 2 - 4, anchor: 'end' })),
+    ];
+    width = R.length ? C.x + W + COL + W : C.x + W;
+    height = Math.max(tallest, CH);
+  }
   return {
     center: C, cards: [...L, ...R], edges,
     omitted: { in: Math.max(0, left.length - cap), out: Math.max(0, right.length - cap) },
     totals: { in: left.length, out: right.length },
-    cap,
-    width: R.length ? C.x + W + COL + W : C.x + W, height: Math.max(tallest, C.h),
+    cap, width, height, orientation: isVertical(orientation) ? 'vertical' : 'horizontal',
   };
 }
 

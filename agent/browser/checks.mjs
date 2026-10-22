@@ -549,6 +549,47 @@ export async function checkDatasets(browser, origin) {
       ? ok('datasets:views', area, 'the references, tree and raw views each render', views)
       : bad('datasets:views', area, 'a view rendered nothing', views));
 
+    /* layout direction: the graph is laid out again, the choice is in
+       the address, and an address carrying it opens that way */
+    await page.goto(at(`?d=claims&c=claims&r=${encodeURIComponent(claim.id)}`));
+    const edge = `document.querySelector('.dx-edge')?.getAttribute('d') ?? null`;
+    const flatD = await page.evaluate(edge);
+    await page.evaluate(`[...document.querySelectorAll('.dx-dirbtn')][1].click()`);
+    await sleep(300);
+    const turned = await page.evaluate(`({ search: location.search, d: ${edge},
+      pressed: [...document.querySelectorAll('.dx-dirbtn')].map((b) => b.getAttribute('aria-pressed')).join('/') })`);
+    await page.goto(at(`?d=claims&c=claims&r=${encodeURIComponent(claim.id)}&o=vertical`));
+    const reopened = await page.evaluate(`[...document.querySelectorAll('.dx-dirbtn')].map((b) => b.getAttribute('aria-pressed')).join('/')`);
+    out.push(flatD && turned.d && turned.d !== flatD && /o=vertical/.test(turned.search) && turned.pressed === 'false/true' && reopened === 'false/true'
+      ? ok('datasets:direction', area, 'Vertical lays the graph out again, puts o=vertical in the address, and that address opens vertical', { search: turned.search })
+      : bad('datasets:direction', area, 'switching the layout direction did not redraw the graph, or was not kept in the address', { flatD, turned, reopened }));
+
+    /* full screen, as a reader asks for it: a real click, so the browser
+       grants it; following a reference stays full screen; the button leaves */
+    const clickAt = async (sel) => {
+      const r = await page.evaluate(`(() => { const e = document.querySelector(${JSON.stringify(sel)});
+        e.scrollIntoView({ block: 'center', behavior: 'instant' });
+        const b = e.getBoundingClientRect(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 }; })()`);
+      for (const type of ['mousePressed', 'mouseReleased']) await page.send('Input.dispatchMouseEvent', { type, x: r.x, y: r.y, button: 'left', clickCount: 1 });
+    };
+    const fsState = `(() => { const c = document.querySelector('.dx-canvas').getBoundingClientRect();
+      return { native: document.fullscreenElement?.id ?? null, max: document.querySelector('#dxMain').classList.contains('is-max'),
+        locked: document.documentElement.classList.contains('dx-locked'), share: c.height / innerHeight, fills: c.bottom >= innerHeight - 40 && c.top >= 0,
+        h: (document.querySelector('#dx-rec-h')?.textContent ?? '').trim(), label: document.querySelector('.dx-fsbtn')?.textContent }; })()`;
+    await page.goto(at(`?d=claims&c=claims&r=${encodeURIComponent(claim.id)}`));
+    await clickAt('.dx-fsbtn');
+    await sleep(500);
+    const full = await page.evaluate(fsState);
+    await page.evaluate(`document.querySelector('.dx-svg-ref')?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }))`);
+    await sleep(500);
+    const fullFollowed = await page.evaluate(fsState);
+    await clickAt('.dx-fsbtn');
+    await sleep(500);
+    const left = await page.evaluate(fsState);
+    out.push(full.native === 'dxMain' && full.fills && fullFollowed.native === 'dxMain' && fullFollowed.fills && fullFollowed.h !== full.h && left.native === null && left.label === 'Full screen'
+      ? ok('datasets:fullscreen', area, `full screen gives the graph everything below the record's heading (${Math.round(full.share * 100)}% of the height here), survives following a reference, and the button leaves it`, { full, fullFollowed, left })
+      : bad('datasets:fullscreen', area, 'full screen did not open, did not fill the screen, dropped out on following a reference, or did not close', { full, fullFollowed, left }));
+
     /* an address naming a record that does not exist */
     await page.goto(at('?d=claims&c=claims&r=__no-such-record__'));
     s = await page.evaluate(state);
@@ -576,6 +617,28 @@ export async function checkDatasets(browser, origin) {
       ? ok('datasets:mobile', area, 'at 390px the explorer draws the record with no horizontal scroll', { width: s.width })
       : bad('datasets:mobile', area, `at 390px the page is ${s.width}px wide or drew nothing`, s));
   } finally { await page.close(); }
+
+  /* where the browser offers no element full screen (Safari on iPhone),
+     the viewer covers the window instead, and Escape closes it */
+  const nofs = await browser.newPage();
+  try {
+    await nofs.send('Page.addScriptToEvaluateOnNewDocument', { source:
+      "for (const k of ['fullscreenEnabled','webkitFullscreenEnabled']) Object.defineProperty(Document.prototype, k, { get: () => false, configurable: true });" +
+      "for (const k of ['requestFullscreen','webkitRequestFullscreen']) Object.defineProperty(Element.prototype, k, { value: undefined, configurable: true });" });
+    await nofs.goto(at(`?d=claims&c=claims&r=${encodeURIComponent(claim.id)}`));
+    const st = `(() => { const c = document.querySelector('.dx-canvas').getBoundingClientRect();
+      return { native: !!document.fullscreenElement, max: document.querySelector('#dxMain').classList.contains('is-max'),
+        locked: document.documentElement.classList.contains('dx-locked'), share: c.height / innerHeight, fills: c.bottom >= innerHeight - 40 && c.top >= 0 }; })()`;
+    await nofs.evaluate(`document.querySelector('.dx-fsbtn').click()`);
+    await sleep(300);
+    const max = await nofs.evaluate(st);
+    await nofs.key('Escape', { keyCode: 27 });
+    await sleep(300);
+    const closed = await nofs.evaluate(st);
+    out.push(!max.native && max.max && max.locked && max.fills && !closed.max && !closed.locked
+      ? ok('datasets:fullscreen-fallback', area, `without the Fullscreen API the viewer covers the window, the graph reaching its foot (${Math.round(max.share * 100)}% of the height here), and Escape closes it`, { max, closed })
+      : bad('datasets:fullscreen-fallback', area, 'without the Fullscreen API the viewer did not cover the window, or Escape did not close it', { max, closed }));
+  } finally { await nofs.close(); }
 
   /* failure states, in a page of their own: glossary.json served
      malformed, brief.json served as a 404 */
