@@ -1,9 +1,9 @@
 # HANDOVER
 
 **Last updated:** audit of 21 October 2026 and the dataset explorer, merged · 22 October 2026
-**Branches:** `claude/audit-2026-10-21` merged to `main` by the author (pull request #12, `29f92c9`).
-`claude/datasets-explorer` (another session, same day; its own section below) has `main` merged into it,
-conflicts resolved, and is unmerged; merging it is the author's.
+**Branches:** both merged to `main` on 22 Oct 2026: `claude/audit-2026-10-21` (pull request #12,
+`29f92c9`) and `claude/datasets-explorer` (another session; its own section below; pull request #13,
+`1d973d8`). See the branch register below.
 
 ## Audit of 21 October 2026 — implemented on `claude/audit-2026-10-21`
 
@@ -193,18 +193,21 @@ longer blocked; (d) `fonts/` carries no licence files for the three typefaces �
 
 ## Branch register — 22 October 2026 (audit)
 
-At the start `git branch -r --no-merged origin/main` listed nothing. `claude/audit-2026-10-21` is
-pushed and unmerged. Asked at the end of the session, the author said to open a pull request:
-**#12**, `claude/audit-2026-10-21` → `main`, opened 22 Oct 2026 and merged by the author the same day
-(`29f92c9`). `main` was then merged into `claude/datasets-explorer`, with seven conflicts resolved:
-both branches had added one root page each (`404.html`, `datasets.html`) to `tools/seo.mjs`,
-`tools/_footer.mjs`, `tools/pages-artifact.mjs` and the editorial suite's page count (now 11), both
-appended tests to `tools/selftest.mjs`, and both rewrote `brief.json`'s row in CURRENT-ARCHITECTURE §7
-(13 parts) and the top of this file. Measured on the merged tree: validators 0 errors, 1262 tests,
-browser suite 328 · 0 · 1 undecidable. Re-fetched before this write: `origin/main` still `dfdc01c`; one branch appeared
-meanwhile, `claude/datasets-explorer` (another session, 22 Oct, 2 commits, a dataset explorer). It
-also edits `tools/seo.mjs` and `tools/seo-audit.mjs`, so whichever merges second will need those two
-files reconciled.
+At the start `git branch -r --no-merged origin/main` listed nothing. During the session one branch
+appeared, `claude/datasets-explorer` (another session, 22 Oct, a dataset explorer), which also added a
+root page. Dispositions, all 22 Oct 2026, all on the author's instruction:
+
+- **`claude/audit-2026-10-21`** → pull request **#12**, merged by the author (`29f92c9`).
+- **`claude/datasets-explorer`** → `main` merged into it first (`89fccef`), seven conflicts resolved:
+  both branches had added one root page each (`404.html`, `datasets.html`) to `tools/seo.mjs`,
+  `tools/_footer.mjs`, `tools/pages-artifact.mjs` and the editorial suite's page count (now 11), both
+  appended tests to `tools/selftest.mjs`, and both rewrote `brief.json`'s row in CURRENT-ARCHITECTURE
+  §7 (13 parts) and the top of this file. Measured on the merged tree: validators 0 errors, 1262
+  tests, browser suite 328 · 0 · 1 undecidable. Then pull request **#13**, merged (`1d973d8`) on the
+  author's instruction, on the push run's full green for that commit; the pull-request run's browser
+  tests had passed and only its upload step was still running. No review of #13 beyond its CI.
+
+Afterwards `git branch -r --no-merged origin/main` lists nothing.
 
 ## Branch register — 21 October 2026 (P1)
 
