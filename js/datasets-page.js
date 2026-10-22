@@ -603,11 +603,16 @@ function referencePanel(name, rec) {
     if (items.length > PANEL_CAP) ul.append(el('li', { class: 'dx-empty', text: (items.length - PANEL_CAP) + ' more not listed.' }));
     return ul;
   };
-  box.append(el('h3', { text: 'Names ' + outgoing.length + (outgoing.length === 1 ? ' record' : ' records') }));
+  /* a record can be named from several fields: count both, and say which is which */
+  const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
+  const distinct = (xs, key) => new Set(xs.map(key)).size;
+  const nOut = distinct(outgoing, (r) => r.target.dataset + '/' + r.target.record);
+  const nIn = distinct(incoming, (r) => r.dataset + '/' + r.record);
+  box.append(el('h3', { text: 'Names ' + plural(nOut, 'record', 'records') + ', in ' + plural(outgoing.length, 'field', 'fields') }));
   box.append(outgoing.length
     ? list(outgoing, (r) => el('li', {}, [el('code', { text: r.path }), ' → ', recordLink(r.target, r.id), r.target.label ? el('span', { class: 'dx-rec-label', text: r.target.label }) : null]))
     : el('p', { class: 'dx-empty', text: 'This record holds no id of another record.' }));
-  box.append(el('h3', { text: 'Named by ' + incoming.length + (incoming.length === 1 ? ' record' : ' records') }));
+  box.append(el('h3', { text: 'Named by ' + plural(nIn, 'record', 'records') + ', in ' + plural(incoming.length, 'field', 'fields') }));
   box.append(incoming.length
     ? list(incoming, (r) => el('li', {}, [recordLink(r, r.record), ' ', el('span', { class: 'dx-meta', text: titleOf(r.dataset) + ', field ' + r.path }), r.label ? el('span', { class: 'dx-rec-label', text: r.label }) : null]))
     : el('p', { class: 'dx-empty', text: 'No record in the loaded files holds this record’s id.' }));
