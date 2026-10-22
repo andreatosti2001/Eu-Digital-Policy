@@ -1,11 +1,38 @@
 # HANDOVER
 
-**Last updated:** P1 — licence, methodology, structured data, custom domain · 21 October 2026
-**Branches:** `claude/p1-licence-geo` (cut from `origin/main` at `05707f5`) and
-`claude/p1-custom-domain` (stacked on it). The first merged into `main` with `--no-ff` on the
-author's instruction of 21 Oct 2026 ("Fai merge solo di claude p1-licence"), no pull request; the
-second merged into `main` with `--no-ff` the same day, once `eudigitalpolicy.eu` resolved (A,
-AAAA, `www` CNAME and the GitHub challenge TXT read back through dns.google on 21 Oct 2026).
+**Last updated:** audit of 21 October 2026, implemented · 22 October 2026
+**Branch:** `claude/audit-2026-10-21`, cut from `main` at `dfdc01c`, pushed, **not merged and no pull
+request** (the author has not been asked yet; see the branch register below).
+
+## Audit of 21 October 2026 — implemented on `claude/audit-2026-10-21`
+
+**Asked:** the author's external audit "eudigitalpolicy.eu audit fixes" — 26 items in three phases and
+an evidence-audit list. **The full register of what was checked, what changed and what was not done is
+`docs/AUDIT-2026-10-21.md`.** One commit (or two) per item, each naming the item and its evidence.
+
+**What the author should know first:**
+- **Part VIII does not report the Coreper of 21 October.** No outcome had been published when it was
+  checked; the brief says so, dated. Replace `clm-data-omnibus-coreper-21-october` the moment one is.
+- **ST 13886/26 is a LIMITE Council document read in Agence Europe's copy**, recorded tier:2 with that
+  provenance in its note; only its cover facts are used. Confirm or downgrade the tier.
+- **Items 20 and 26 were not done**, by the repository's own rules: `hreflang` needs reviewed
+  pre-rendered pages (item 22 is yours: `docs/TRANSLATION-REVIEW-2026-10-21.md`), and versioned
+  filenames need a build step.
+- **Item 24 kept the three robots.txt lines**, documented: they stop being superfluous only when
+  Settings → Pages → Source is "GitHub Actions".
+- Annexes B and C are **one annex now**: 13 parts, `data/brief.json` and both trees changed.
+- New checks: `last_verified ≥ status_as_of` and recorded inaction in `validate.mjs`; rankings of
+  "largest to date" claims in `evidence-audit.mjs`; self-test A1–A6.
+- Five things the suites pinned moved with the change, each with its reason: R6's unverified baseline
+  (47 → 46 → 45, §12), the detector's field register (`ranking.*`), the editorial agent's box labels
+  (SYNTHESIS) and root-page count (10), the health suite's Annex C assertions, and the detector's
+  `NOT_ANALYTICAL` (404.html).
+- Seen in passing, not acted on: the Commission opened DSA proceedings against Booking.com on
+  21 Oct 2026 (IP/26/2223); the language menu is not reachable at 390px (pre-existing).
+
+**Measured at the end** (22 Oct 2026, UTC): validators 0 errors (evidence-audit 11 warnings, as
+before); 1253 tests passing; contracts 18/18; commit-evidence exit 0; browser suite 291 · 0 · 1
+undecidable (`a11y:bound`), as before.
 
 ## P1 — licence, methodology, structured data, custom domain — 21 October 2026
 
@@ -75,6 +102,12 @@ longer blocked; (d) `fonts/` carries no licence files for the three typefaces �
 `/tools/` disallowed, `Sitemap: https://eudigitalpolicy.eu/sitemap.xml`; in the deploy allowlist;
 `seo-audit.mjs` fails a wrong sitemap or a rule over an indexable route (selftest S4c). Merged into
 `main` with `--no-ff` on the author's instruction ("Fai merge"), not deleted.
+
+## Branch register — 22 October 2026 (audit)
+
+At the start `git branch -r --no-merged origin/main` listed nothing. `claude/audit-2026-10-21` is
+pushed and unmerged; whether to open a pull request to `main` is the author's question, asked at the
+end of the session.
 
 ## Branch register — 21 October 2026 (P1)
 

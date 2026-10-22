@@ -47,6 +47,7 @@ the evidence it describes.
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
 | `docs/AUDIT-2026-09-03.md` | Foundation verification before SESSION 13, and the concurrent-merge collision that produced the re-fetch rule under **Git** |
 | `docs/AUDIT-2026-10-14.md` | The October 2026 evidence update: what was checked against primary sources on 14 Oct 2026, what changed, what stays unresolved, and two temporal errors in the derived provision dates (CRA, Data Act) found and fixed |
+| `docs/AUDIT-2026-10-21.md` | The external audit of 21 Oct 2026, implemented: what was checked against which primary source, what changed per item, and the five places where the audit asserted something no retrieved source established |
 | `docs/SECURITY-VERIFICATION-2026-09-08.md` | SESSION 23.5's adversarial gate: 65 attacks, what held, the two findings, and the two boundaries this environment cannot test |
 | `README.md` | The author's own account, including eight stated limitations |
 
