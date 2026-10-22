@@ -28,6 +28,7 @@
 import { loadAll, index, label as taxLabel, note as taxNote, renderError } from './data.js';
 import * as F from './format.js';
 import { actionsOnly } from './pipeline.js';
+import { href as siteHref } from './routes.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -100,7 +101,7 @@ function statusLedger(ix, instruments) {
       '<span class="sb-body">' +
         '<span class="sb-label">' + esc(b.short) + '</span>' +
         '<span class="sb-which">' + list.map((i) =>
-          '<a href="instruments.html#' + esc(i.id) + '">' + esc(i.short_name) + '</a>').join('') + '</span>' +
+          '<a href="' + esc(siteHref('instruments.html#' + i.id)) + '">' + esc(i.short_name) + '</a>').join('') + '</span>' +
         '<span class="sb-gloss">' + esc(b.gloss) + '</span>' +
       '</span></li>';
   }).join('');
@@ -188,7 +189,7 @@ function enforcementLine(ix, records) {
       ' records cannot settle whether money moved. That is not zero, and the ' +
       'distance between those two figures is this brief’s subject rather than ' +
       'a rounding error.</p>' +
-    '<a class="sop-more" href="enforcement.html">The enforcement observatory →</a>' +
+    '<a class="sop-more" href="' + esc(siteHref('enforcement.html')) + '">The enforcement observatory →</a>' +
     '</section>';
 }
 

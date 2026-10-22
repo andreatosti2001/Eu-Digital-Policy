@@ -214,7 +214,7 @@ function frontDoor() {
   const ul = el('ul', {});
   for (const n of NAV) {
     if (n.id === 'brief') continue;
-    const a = el('a', { href: n.file });
+    const a = el('a', { href: href(n.file) });
     a.append(el('b', { text: n.long }), el('span', { text: DOOR_BLURB[n.id] || '' }));
     ul.appendChild(el('li', {}, [a]));
   }
@@ -229,7 +229,7 @@ function briefDestinations() {
     const ul = el('ul', {});
     for (const n of NAV) {
       if (n.id === 'brief') continue;
-      ul.appendChild(el('li', {}, [el('a', { href: n.file, text: n.long })]));
+      ul.appendChild(el('li', {}, [el('a', { href: href(n.file), text: n.long })]));
     }
     wrap.appendChild(ul);
     return wrap;
