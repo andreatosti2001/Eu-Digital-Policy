@@ -286,7 +286,8 @@
     "clm-x-fine",
     "clm-x-data-access-staffing",
     "clm-press-release-governance",
-    "clm-x-action-plan"
+    "clm-x-action-plan",
+    "clm-x-preliminary-findings-2024"
    ],
    "sources": [
     "src-ec-x-fine-2025",
@@ -298,7 +299,8 @@
     "src-oj-t120-26-xai-action",
     "src-oj-t121-26-musk-action",
     "src-curia-register-2026-09-27",
-    "src-ec-x-action-plan-2026"
+    "src-ec-x-action-plan-2026",
+    "src-ec-x-preliminary-2024"
    ],
    "requires_verification": false,
    "verification_note": "Verified 2026-09-27. Amount and the three grounds from the Commission press release; decision number, date and case numbers from the three Official Journal notices of the actions against it, which also establish the appeals (T-114/26, T-120/26, T-121/26, lodged 16 Feb 2026) and the Court's register (pending, 27 Sep 2026). The per-infringement fines and the 183 pages rest on the decision text as released by the US House Judiciary Committee, not by the Commission. Two framings belong to the linked claims, not to this record, and remain unconfirmed there: the seventeen-month gap from preliminary findings, and 'first DSA fine'. 14 Oct 2026: the Commission's acceptance of X's action plan (16 July 2026) read that day and added; it follows the decision and withdraws nothing, so action_status stays imposed and the appeals stay pending. behavioural_outcome moved from null (not researched) to unknown (researched, not publicly determinable): implementation was due within six months of acceptance and no audit result has been published. The Commission's press release, re-read that day, calls this 'the first non-compliance decision under the DSA'. The appeal state was not re-read on 14 Oct 2026; it is as of 27 Sep 2026.",

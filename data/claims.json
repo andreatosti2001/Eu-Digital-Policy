@@ -86,6 +86,31 @@
       "verification_note": "The publication is identified and open: Papakonstantinou and De Hert, 'The Regulation of Digital Technologies in the EU: the law-making phenomena of act-ification, GDPR mimesis and EU law brutality', Technology and Regulation, published 21 May 2022 (techreg.org, read 2026-09-26). Its abstract names act-ification and GDPR mimesis among three phenomena common to most EU technology regulation. The four-element description in the statement (vocabulary, principles, case-specific rights, supervisory apparatus) was not checked against the full text, which was not opened. Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
+      "id": "clm-dsa-supervision-fte-2025",
+      "type": "claim-type:fact",
+      "statement": "The Commission costed its DSA supervisory tasks in 2025 at about 138 full-time equivalents, a measure of time worked on fee-funded tasks rather than a count of all its DSA staff.",
+      "instruments": [
+        "dsa"
+      ],
+      "provisions": [],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [],
+      "legal_basis": [],
+      "sources": [
+        {
+          "source_id": "src-ec-dsa-costs-2025",
+          "supports": "supports:direct",
+          "locator": "Para. (14): 'approximately 138 FTEs … dedicated to tasks referred to in Article 43(2) DSA'; footnote to section 2.1: not 'the total number of Commission staff members working on DSA activities in 2025'"
+        }
+      ],
+      "brief_part": "part-1",
+      "published": "2026-03-31",
+      "last_verified": "2026-10-22",
+      "verification_note": "Registered 22 Oct 2026 (audit, facts hidden in interpretation: clm-capacity-ambition-gap's 'a few hundred staff'). 'A few hundred' had no source; the Commission's own cost report gives about 138 FTEs for 2025 on Art. 43(2) tasks and says that is not its total DSA headcount, so the brief now cites that figure with that qualification instead of an unsourced headcount."
+    },
+    {
       "id": "clm-capacity-ambition-gap",
       "type": "claim-type:critique",
       "statement": "The recurring objection across every instrument is a capacity-ambition gap: broad obligations assigned either to a single Commission directorate with a few hundred staff or to twenty-seven national authorities of radically unequal resource.",
@@ -118,7 +143,7 @@
       "brief_part": "part-1",
       "published": "2026-03-05",
       "last_verified": "2026-08-27",
-      "verification_note": "The Bruegel brief argues for an independent EU enforcement authority and supports the institutional half of the argument. The specific staffing figures are not verified.",
+      "verification_note": "The Bruegel brief argues for an independent EU enforcement authority and supports the institutional half of the argument. The specific staffing figures are not verified. 22 Oct 2026 (audit, facts hidden in interpretation): 'a few hundred staff' replaced in the prose, in all four languages, by the Commission's own figure (clm-dsa-supervision-fte-2025: about 138 FTEs on DSA supervisory tasks in 2025, not the total headcount); the critique itself remains the author's.",
       "premises": [
         "clm-dpc-staff-growth",
         "clm-iccl-ireland-bottleneck",
@@ -2431,6 +2456,37 @@
       "verification_note": "Re-read CURIA Press Release No 114/25 (10 September 2025) on 2026-09-26: the implementing decisions were annulled because the methodology for counting average monthly active recipients should have been adopted by delegated act; the Court found no error affecting the obligation to pay the 2023 fee and maintained the decisions' effects for up to twelve months from the judgments becoming final. It is not an annulment of the fee mechanism. The prose's statement that the Commission has appealed rests on two paywalled MLex reports (24 November 2025; 12 January 2026, citing two Official Journal notices), of which only the standfirst/summary could be read: tier-4 journalism, and hence only partial support. The appeal case numbers, lodging dates and current state (whether still pending on the date read) are not established; the Official Journal notices could not be retrieved (EUR-Lex returns HTTP 202 with no body; CURIA case search unavailable on 2026-09-26). Locators added 27 Sep 2026: each source was re-read that day and the locator quotes the sentence that carries the claim."
     },
     {
+      "id": "clm-x-preliminary-findings-2024",
+      "type": "claim-type:fact",
+      "statement": "On 12 July 2024 the Commission sent X preliminary findings that it breached the DSA on the blue checkmark, advertising transparency and researchers' access to data.",
+      "instruments": [
+        "dsa"
+      ],
+      "provisions": [
+        "dsa:art-25",
+        "dsa:art-39",
+        "dsa:art-40"
+      ],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [
+        "enf-x-ec-2025"
+      ],
+      "legal_basis": [],
+      "sources": [
+        {
+          "source_id": "src-ec-x-preliminary-2024",
+          "supports": "supports:direct",
+          "locator": "Paragraph 1: 'Today, the Commission has informed X of its preliminary view that it is in breach of the Digital Services Act'; three grievances listed"
+        }
+      ],
+      "brief_part": "part-3",
+      "published": "2024-07-12",
+      "last_verified": "2026-10-22",
+      "verification_note": "Registered 22 Oct 2026 (audit, facts hidden in interpretation: clm-press-release-governance's 'seventeen months of X case'). The release names no article; the provisions are those of the decision of 5 December 2025 for the same three grievances (enf-x-ec-2025). With clm-x-fine (5 December 2025) it carries the box's 'roughly seventeen months': 12 July 2024 to 5 December 2025 is sixteen months and twenty-three days."
+    },
+    {
       "id": "clm-press-release-governance",
       "type": "claim-type:critique",
       "statement": "Announcing preliminary findings with detailed proposed remedies before publishing reasoning risks findings that are less responsive to debate and less likely to survive court challenge.",
@@ -2455,7 +2511,7 @@
       "brief_part": "part-3",
       "published": "2026-08-19",
       "last_verified": "2026-08-27",
-      "verification_note": "The author's critique. Typed as such."
+      "verification_note": "The author's critique. Typed as such. 22 Oct 2026 (audit, facts hidden in interpretation): the factual half of the passage — the X decision came 'roughly seventeen months after the preliminary findings' — is now carried by clm-x-preliminary-findings-2024 and clm-x-fine, both dated from Commission releases; the critique itself remains the author's."
     },
     {
       "id": "clm-dsa-gdpr-unresolved",
