@@ -1,8 +1,8 @@
 # HANDOVER
 
 **Last updated:** audit of 21 October 2026, implemented · 22 October 2026
-**Branch:** `claude/audit-2026-10-21`, cut from `main` at `dfdc01c`, pushed, **not merged and no pull
-request** (the author has not been asked yet; see the branch register below).
+**Branch:** `claude/audit-2026-10-21`, cut from `main` at `dfdc01c`, pushed, **not merged; pull request
+#12 to `main` opened on the author's instruction** (see the branch register below).
 
 ## Audit of 21 October 2026 — implemented on `claude/audit-2026-10-21`
 
@@ -111,8 +111,8 @@ longer blocked; (d) `fonts/` carries no licence files for the three typefaces �
 ## Branch register — 22 October 2026 (audit)
 
 At the start `git branch -r --no-merged origin/main` listed nothing. `claude/audit-2026-10-21` is
-pushed and unmerged; whether to open a pull request to `main` is the author's question, asked at the
-end of the session. Re-fetched before this write: `origin/main` still `dfdc01c`; one branch appeared
+pushed and unmerged. Asked at the end of the session, the author said to open a pull request:
+**#12**, `claude/audit-2026-10-21` → `main`, opened 22 Oct 2026, awaiting the author's merge. Re-fetched before this write: `origin/main` still `dfdc01c`; one branch appeared
 meanwhile, `claude/datasets-explorer` (another session, 22 Oct, 2 commits, a dataset explorer). It
 also edits `tools/seo.mjs` and `tools/seo-audit.mjs`, so whichever merges second will need those two
 files reconciled.
