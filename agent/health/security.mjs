@@ -43,6 +43,17 @@
    here because SESSION 21 builds a Control Room, and a Control Room
    that reuses this server would inherit exactly this: a privileged
    API whose only protection is a default somebody can override.
+
+   23 OCT 2026: THE DEFAULT IS NOW A REFUSAL. serve() throws on any
+   bind address but a loopback literal, re-checks the address actually
+   bound, and refuses a request whose Host header is not loopback (DNS
+   rebinding). The routes still check no credential — any process on
+   the machine can read the store — so the probe below still finds them
+   answering, and that reading is unchanged. What changed is that a
+   caller can no longer put them on a network, so
+   `privileged_endpoints_exposed` no longer counts them: analyseInterface()
+   reports `loopback_enforced`, and agent/observability/selftest.mjs
+   proves the refusal at run time rather than by reading.
    ============================================================ */
 
 import { readFileSync, existsSync } from 'node:fs';
@@ -127,6 +138,10 @@ export const APPROVAL_ACTION_SIGNALS = [
   /['"]\/api\/(approve|decide|approval)/,
 ];
 
+/** The shape of a bind guard: serve() refusing, by throwing, a host
+ *  that is not a loopback address. */
+export const LOOPBACK_GUARD = /if\s*\(\s*!\s*isLoopbackAddress\s*\(\s*host\s*\)\s*\)\s*\{?\s*throw\b/;
+
 /**
  * Parse a Node http server for its routes and what each one checks.
  *
@@ -141,7 +156,7 @@ export const APPROVAL_ACTION_SIGNALS = [
  */
 export function analyseInterface(spec, root) {
   const abs = join(root, spec.path);
-  if (!existsSync(abs)) return { path: spec.path, exists: false, routes: [], binds: null, host_is_a_parameter: false, has_auth: false, has_authz: false, methods_accepted: [] };
+  if (!existsSync(abs)) return { path: spec.path, exists: false, routes: [], binds: null, host_is_a_parameter: false, loopback_enforced: false, has_auth: false, has_authz: false, methods_accepted: [] };
   const src = readFileSync(abs, 'utf8');
 
   /* Every literal route this file answers on. */
@@ -162,6 +177,12 @@ export function analyseInterface(spec, root) {
      do not pass one. */
   const hostIsParameter = /function\s+serve\s*\(\s*\{[^}]*\bhost\b/.test(src) || /\bhost\s*=\s*['"][^'"]+['"]/.test(src);
 
+  /* A bind host that is a parameter but REFUSED unless it is a
+     loopback literal is not a default: the call throws. Read from the
+     source like every signal here; the run-time proof is
+     agent/observability/selftest.mjs "VIEWER". */
+  const loopbackEnforced = LOOPBACK_GUARD.test(src);
+
   const hasAuth = AUTH_SIGNALS.some((re) => re.test(src));
   const hasAuthz = AUTHZ_SIGNALS.some((re) => re.test(src));
 
@@ -178,6 +199,7 @@ export function analyseInterface(spec, root) {
     privileged_routes: [...new Set(routes.filter((r) => r.privileged).map((r) => r.route))],
     binds: hostDefault,
     host_is_a_parameter: hostIsParameter,
+    loopback_enforced: loopbackEnforced,
     has_auth: hasAuth,
     has_authz: hasAuthz,
     methods_checked: methods,
@@ -227,7 +249,7 @@ export const SECURITY_METRICS = [
     domain: 'control_plane',
     definition: 'Privileged HTTP routes whose only protection against public reachability is a default that a caller can override.',
     source: 'agent/health/security.mjs analyseInterface(), parsing agent/observability/server.mjs',
-    calculation: 'For each privileged interface, the routes under its privileged prefix, counted when the bind host is a PARAMETER with a loopback default rather than a fixed loopback bind AND the interface performs neither authentication nor authorization. A default is not a control; an authenticated and authorized route is not protected BY the default, so it is not what this metric counts. SESSION 21 brought the calculation into line with the definition it always had — until then nothing in this repository had authentication, so the two could not come apart.',
+    calculation: 'For each privileged interface, the routes under its privileged prefix, counted when the bind host is a PARAMETER with a loopback default rather than a fixed or ENFORCED loopback bind (a serve() that throws on any other host, since 23 Oct 2026) AND the interface performs neither authentication nor authorization. A default is not a control; an authenticated and authorized route is not protected BY the default, so it is not what this metric counts. SESSION 21 brought the calculation into line with the definition it always had — until then nothing in this repository had authentication, so the two could not come apart.',
     frequency: 'per_commit',
     interpretation: 'Above 0 means the code permits a caller to expose those routes to a network, and nothing in the request path would object if they did. That is a defensible design for a local development viewer, which is what agent/observability/server.mjs says it is. It becomes a real exposure the moment anything reuses it — and SESSION 21 builds a Control Room.',
     limitations: 'It reads the code, not a running process. It cannot tell whether anybody has ever started the server with a non-loopback host, and it does not probe the network. It also only checks interfaces listed in PRIVILEGED_INTERFACES: a new server nobody adds to that list is not checked, which is the standing weakness of every allowlist. And it treats the PRESENCE of an authentication or authorization signal as protection: it cannot judge whether either is correct, which is why the loopback probe below and .control-room/selftest.mjs exist alongside it rather than instead of it.',
@@ -241,7 +263,7 @@ export const SECURITY_METRICS = [
          would report a server that refuses unauthenticated callers
          identically to one that answers them, and that is the
          distinction the whole domain exists to make. */
-      const exposed = ifaces.filter((i) => i.exists && i.host_is_a_parameter && !(i.has_auth && i.has_authz));
+      const exposed = ifaces.filter((i) => i.exists && i.host_is_a_parameter && !i.loopback_enforced && !(i.has_auth && i.has_authz));
       return measured(exposed.reduce((n, i) => n + i.privileged_routes.length, 0), {
         unit: 'routes whose only control is an overridable default',
         detail: {
@@ -251,11 +273,12 @@ export const SECURITY_METRICS = [
             privileged_routes: i.privileged_routes ?? [],
             binds_by_default: i.binds,
             host_is_a_parameter: i.host_is_a_parameter,
+            loopback_enforced: i.loopback_enforced,
             serves: i.what ?? null,
           })),
           counted: exposed.map((i) => i.path),
           not_counted: ifaces.filter((i) => i.exists && !exposed.includes(i))
-            .map((i) => ({ path: i.path, why: i.has_auth && i.has_authz ? 'it authenticates and authorizes every privileged request, so the bind default is not its only protection' : 'its bind address is not a parameter' })),
+            .map((i) => ({ path: i.path, why: i.has_auth && i.has_authz ? 'it authenticates and authorizes every privileged request, so the bind default is not its only protection' : i.loopback_enforced ? 'it refuses any bind address but a loopback literal, so a caller cannot put its routes on a network; they still answer any local process' : 'its bind address is not a parameter' })),
           note: 'for a COUNTED interface the bind address is a PARAMETER with a loopback default. serve({ host }) accepts any value, and a caller passing 0.0.0.0 exposes the whole store with nothing in the request path to refuse.',
         },
         evidence: ['agent/observability/server.mjs'],

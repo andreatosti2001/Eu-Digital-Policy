@@ -48,6 +48,7 @@ the evidence it describes.
 | `docs/AUDIT-2026-09-03.md` | Foundation verification before SESSION 13, and the concurrent-merge collision that produced the re-fetch rule under **Git** |
 | `docs/AUDIT-2026-10-14.md` | The October 2026 evidence update: what was checked against primary sources on 14 Oct 2026, what changed, what stays unresolved, and two temporal errors in the derived provision dates (CRA, Data Act) found and fixed |
 | `docs/AUDIT-2026-10-21.md` | The external audit of 21 Oct 2026, implemented: what was checked against which primary source, what changed per item, and the five places where the audit asserted something no retrieved source established |
+| `docs/AUDIT-2026-10-23.md` | The audit snapshot of 23 Oct 2026, rechecked: the QA browser job's root cause (the snap), eight enforcement records against primary sources and the two proposals left for the author, both publishers deploying every push, the viewer's enforced loopback bind, the dialogs, and what this environment could not measure (HSTS) |
 | `docs/SECURITY-VERIFICATION-2026-09-08.md` | SESSION 23.5's adversarial gate: 65 attacks, what held, the two findings, and the two boundaries this environment cannot test |
 | `README.md` | The author's own account, including eight stated limitations |
 
@@ -550,7 +551,9 @@ patches, not checks. **Do not re-run** the latter two.
   only after the site checks pass, from an allowlisted artifact — but only once the owner sets
   Settings → Pages → Source to "GitHub Actions". Until then a push to `main` still publishes
   directly and a CI failure is **visible, not blocking**. `docs/DEPLOYMENT.md` §3 lists the
-  settings. Run the validators by hand as well.
+  settings. **Measured 23 Oct 2026 (§1a): both publish on every push** — the ungated branch
+  build first, then `pages.yml`'s gated artifact replaces it about four minutes later if every
+  gate passes. Run the validators by hand as well.
 - **A data change needs a regeneration.** Since 27 Sep 2026 each substantive instrument has a
   pre-rendered page at `instruments/<id>/`, generated from `data/` by `node tools/_footer.mjs`
   (`docs/SEO-OPERATIONS.md`). After editing `data/`, re-run it and commit what it writes, or
@@ -614,11 +617,14 @@ patches, not checks. **Do not re-run** the latter two.
 - **The privileged API has no authentication and no authorization — and it is still there.**
   `agent/observability/server.mjs` serves eleven `/api/` endpoints over the whole trace
   store — agent inputs and outputs, decisions, approvals, provenance — and checks nothing.
-  Its only control is that `host` DEFAULTS to `127.0.0.1`, and a default is not a control:
-  `serve({ host })` accepts any value. Measured rather than inferred — the health monitor
-  starts it on an ephemeral loopback port and finds **nine of the eleven routes return data
-  to a request with no credential**. Defensible for a local development viewer, which is
-  what it is. **SESSION 21's Control Room did not inherit it**: `.control-room/server.mjs` is
+  Until 23 Oct 2026 its only control was that `host` DEFAULTED to `127.0.0.1`, and
+  `serve({ host })` accepted any value. **Since then the bind is enforced**: any address but
+  `127.0.0.1` or `::1` throws, and a request whose `Host` header is not loopback (DNS
+  rebinding) gets 403 — `agent/observability/selftest.mjs` "VIEWER". It still checks no
+  credential, so measured rather than inferred — the health monitor starts it on an ephemeral
+  loopback port and finds **nine of the eleven routes return data to a request with no
+  credential** — to any process on the machine. Defensible for a local development viewer,
+  which is what it is. **SESSION 21's Control Room did not inherit it**: `.control-room/server.mjs` is
   a separate server that authenticates and then authorizes every privileged request, and the
   finding above stands unchanged against the viewer. Do not point a Control Room at the
   viewer's routes, and do not "fix" the viewer by bolting a token onto it — they exist for

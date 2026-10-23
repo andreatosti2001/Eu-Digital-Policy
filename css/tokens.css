@@ -581,6 +581,14 @@ a.ext:hover::after{color:var(--live)}
 
 .chrome-lang{text-decoration:none}
 .chrome-lang b{color:var(--text-1);font-weight:500}
+/* 23 Oct 2026. The narrow chrome hides every button's word, and on this
+   one the word is the information: without "· UI EN" a phone showed
+   "IT" alone, as if the page were in Italian, and the accessible name
+   was "IT" too (display:none removes it from the tree). It stays, at
+   every width. Measured in Chromium at 320px: no overflow of the chrome
+   or the page; the nav strip, which scrolls, shows 91px instead of 145px,
+   and only while a language other than English is chosen. */
+.chrome-lang .chrome-btn-word{display:inline}
 
 /* destinations, shown inside the brief's contents overlay and controls sheet */
 .dest{border-top:var(--border-std);margin:var(--s-5) 0 0;padding:var(--s-4) 0 0}

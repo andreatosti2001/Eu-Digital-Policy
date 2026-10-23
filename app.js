@@ -273,24 +273,44 @@ if (themeBtn) themeBtn.addEventListener('click', function(){
    than reach across that line this is the same contract implemented
    once here and applied to all four.
    =============================================================== */
-var MODAL_INERT = ['.readwrap','.portal','.hero','.sitehead','.spine','.resume-bar'];
 var openModals = [];
 
+/* Visible means rendered: getClientRects, as js/dialog.js decides it.
+   offsetParent is null for a position:fixed element, so it dropped a
+   fixed control from the trap. */
 function modalFocusables(root){
   return [...root.querySelectorAll(
     'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),' +
     'textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')]
-    .filter(function(el){ return el.offsetParent !== null || el === document.activeElement; });
+    .filter(function(el){ return el.getClientRects().length > 0 || el === document.activeElement; });
 }
 
-function inertBackground(on){
-  MODAL_INERT.forEach(function(sel){
-    document.querySelectorAll(sel).forEach(function(el){
-      if (el.closest('.cmdk-scrim, .tree-scrim, .gpanel, .shortcuts-scrim')) return;
-      if (on){ el.setAttribute('inert',''); el.setAttribute('aria-hidden','true'); }
-      else { el.removeAttribute('inert'); el.removeAttribute('aria-hidden'); }
-    });
-  });
+/* 23 Oct 2026. EVERY top-level element but the open dialog's own (and
+   its scrim, when that is a separate element) is inert and aria-hidden —
+   the rule js/dialog.js keeps. Until then this inerted a NAMED list of
+   six selectors, and with the contents or the shortcuts open, 132
+   focusable elements stayed live behind it, measured in Chromium on the
+   brief: the header, the site index, the footer, the skip link and the
+   glossary panel. A named list covers what existed when it was written.
+   Recomputed on every open and close, so a dialog opened over another
+   un-inerts itself and the one under it comes back when it closes. What
+   was inert or aria-hidden before any dialog opened stays so after. */
+function inertBackground(){
+  var top = openModals[openModals.length - 1];
+  for (const el of document.body.children){
+    var keep = !top || el.contains(top.panel) || top.keep().indexOf(el) > -1;
+    if (!keep){
+      if (!el.hasAttribute('data-modal-was')){
+        el.setAttribute('data-modal-was', (el.hasAttribute('inert') ? 'i' : '') + (el.getAttribute('aria-hidden') === 'true' ? 'h' : '') || '-');
+        el.setAttribute('inert', ''); el.setAttribute('aria-hidden', 'true');
+      }
+    } else if (el.hasAttribute('data-modal-was')){
+      var was = el.getAttribute('data-modal-was');
+      if (was.indexOf('i') < 0) el.removeAttribute('inert');
+      if (was.indexOf('h') < 0) el.removeAttribute('aria-hidden');
+      el.removeAttribute('data-modal-was');
+    }
+  }
 }
 
 /**
@@ -324,12 +344,13 @@ function makeModal(panel, opts){
 
   var api = {
     panel: panel,
+    keep: function(){ return o.keep ? o.keep().filter(Boolean) : []; },
     open: function(){
       if (isOpen()) return;
       opener = document.activeElement;
       o.show();
       openModals.push(api);
-      inertBackground(true);
+      inertBackground();
       document.addEventListener('keydown', trap, true);
       var f = modalFocusables(panel);
       if (o.focus && o.focus()) o.focus().focus();
@@ -341,7 +362,7 @@ function makeModal(panel, opts){
       o.hide();
       openModals = openModals.filter(function(m){ return m !== api; });
       document.removeEventListener('keydown', trap, true);
-      if (!openModals.length) inertBackground(false);
+      inertBackground();
       var back = (opener && opener !== document.body && document.contains(opener)) ? opener : o.opener && o.opener();
       if (back) back.focus();
       opener = null;
@@ -600,7 +621,8 @@ var glossModal = gpanel ? makeModal(gpanel, {
   show: function(){ gpanel.classList.add('open'); if (scrim) scrim.classList.add('show'); },
   hide: function(){ gpanel.classList.remove('open'); if (scrim) scrim.classList.remove('show'); },
   focus: function(){ return gClose; },
-  opener: function(){ return glossBtn; }
+  opener: function(){ return glossBtn; },
+  keep: function(){ return [scrim]; }   /* a sibling, and a click on it closes the panel */
 }) : null;
 function openPanel(){ if (glossModal) glossModal.open(); }
 function closePanel(){ if (glossModal) glossModal.close(); }

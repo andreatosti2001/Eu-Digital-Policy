@@ -26,6 +26,36 @@ not claim a protection the hosting does not provide.
   `cache-control: max-age=600`. No `Content-Security-Policy`, `X-Content-Type-Options`,
   `Permissions-Policy` or `X-Frame-Options` header is sent, and Pages offers no way to add one.
 
+### 1a. Re-measured 23 Oct 2026, on the custom domain
+
+From this session's container, whose HTTPS goes through a TLS-intercepting proxy (which matters
+for the last point).
+
+- **Two publishers deploy every push to `main`, and the ungated one goes first.** For
+  `c5b2ad7` (22 Oct 2026) GitHub's branch build, *pages build and deployment* (Jekyll, no
+  gate), deployed at 11:23:19 UTC, and `pages.yml` deployed the allowlisted artifact at
+  11:27:16 after its four gates passed. Both runs report success. The live site is the second:
+  its `last-modified` is 11:27:18, its `index.html` is byte-identical to `c5b2ad7`, and paths
+  outside the allowlist that the branch build served on 27 Sep 2026 (§1) now return **404** —
+  `AGENTS.md`, `docs/HANDOVER.md`, `tools/validate.mjs`, `agent/`, `docs/`, `.control-room/`.
+  So the gate decides what stays published, but **not what is published first**: for about four
+  minutes after each push the branch build's output was live, and if a gate fails, nothing
+  replaces it. The Pages source setting itself could not be read (the API path is refused by
+  this environment's proxy); §3.1 is the setting that would leave one publisher.
+- **No QA check is shown to be required before a merge.** The QA run on `c5b2ad7` failed
+  (its browser job, `docs/BROWSER-QA.md` §8) on a commit already on `main`; the public rulesets
+  endpoint for `main` returned none. This does not prove no rule exists — an admin can bypass
+  one — only that nothing measured shows it.
+- **Redirects:** `http://eudigitalpolicy.eu/`, `http://www.…` and `https://www.…` answer **301**
+  to `https://eudigitalpolicy.eu/`, and the old `github.io` address answers 301 to the same.
+- **`Strict-Transport-Security` was not observed — and this environment cannot settle
+  whether it is sent.** The same proxy also showed no HSTS header for `octocat.github.io` and
+  `github.com`, which send one (github.io's was measured from an unproxied network on 27 Sep,
+  §1), while it did pass `docs.github.com`'s through. A measurement from an ordinary network
+  (`curl -sI https://eudigitalpolicy.eu/`) is what decides it. No other security header
+  (`Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`,
+  `Permissions-Policy`) was observed as a response header; the CSP is in a `<meta>` (§4).
+
 ## 2. The gate — `.github/workflows/pages.yml`
 
 On a push to `main` (or by hand), four gate jobs run on the exact commit, and the site is
@@ -84,6 +114,11 @@ first step of `gate-data`.
 3. **The `github-pages` environment** (created by the first Actions deployment): Settings →
    Environments → github-pages → Deployment branches: **`main` only**.
 
+**Why 1 matters more than it reads (23 Oct 2026, §1a):** both publishers are deploying today,
+so `pages.yml`'s gate governs what stays live but not what goes live first. Whether the
+setting is currently "Deploy from a branch" could not be read from here; the branch build's
+successful run on every push says it is still publishing.
+
 With 1–3 in place the chain is: a change arrives by pull request → `qa.yml` must be green to
 merge → the merge to `main` triggers `pages.yml` → the site checks run again on the merged
 commit → only then is the site deployed. **QA FAIL → no merge, and no deploy.**
@@ -99,7 +134,7 @@ publishes, and CI makes a failure visible, not blocking.
 | CSP `style-src` | **`'self'` only, since 27 Sep 2026** | Until then `'unsafe-inline'` was a stated trade-off for the `style="…"` attributes pages and modules wrote. Fixed values are now classes (end of `css/tools.css`); values computed at run time go through the CSSOM (`js/format.js` `applyGeometry`), which the policy allows. Three guards: `tools/csp.mjs` fails a page carrying a style attribute or `<style>` element; `design-qa.mjs` fails a module that writes one into markup; the browser suite's `csp:<page>` check records every `securitypolicyviolation` in Chromium and fails on any. All seven pages: zero refusals. |
 | Referrer-Policy | **In place** | `<meta name="referrer" content="strict-origin-when-cross-origin">` on every page. |
 | Inline event handlers | **None; now an error** | The three `onclick=""` in `index.html` moved into `app.js` (`data-action`). `design-qa.mjs` errors on any `on…=` attribute. |
-| Strict-Transport-Security | Sent by GitHub Pages | Measured (§1). Not configurable here. |
+| Strict-Transport-Security | **Unconfirmed on the custom domain** | Sent on `github.io` (measured 27 Sep 2026, §1). On `eudigitalpolicy.eu` it was not observed on 23 Oct 2026, through a proxy that also hid it on hosts that send it (§1a), so the question is open. GitHub Pages offers no setting for it either way, and a `<meta http-equiv>` cannot carry it — browsers honour HSTS only as a response header. HTTP is redirected to HTTPS (301), which covers every visit after the first plain-HTTP request. If it is absent, the remedies are outside this repository: a host or proxy in front of Pages that sets the header (and then HSTS preload, which requires it) — a hosting change for the owner to decide, not made here. |
 | CSP `frame-ancestors`, X-Frame-Options | **Not possible** | Ignored in a meta policy; Pages sends no such header. Clickjacking protection would need a host or proxy that sets headers. |
 | X-Content-Type-Options, Permissions-Policy | **Not possible** | Headers only; Pages cannot send them. |
 

@@ -38,6 +38,7 @@ import { publicSurface, SECRET_PATTERNS } from '../../implement/boundary.mjs';
 import { deriveApproval, recordDecision, readLedger, readAgentRecords, proposalFingerprint, SelfApprovalRefused } from '../../implement/ledger.mjs';
 import { preflight } from '../../implement/preflight.mjs';
 import { controlPlaneClear, phraseOccurrences } from '../../production/separations.mjs';
+import { analyseAll } from '../../health/security.mjs';
 
 /** HE-04's decision, as a pure function of what separations.mjs
  *  established, so the mapping can be tested on constructed inputs.
@@ -933,13 +934,24 @@ export async function observability(w) {
       : safely(a, `all ${d.conditions.filter((c) => c.verdict !== 'satisfied' && c.verdict !== 'not_applicable').length} unmet condition(s) carry both a reason and what would close them`));
   }
 
-  /* OB-05 · the unauthenticated viewer. */
+  /* OB-05 · the unauthenticated viewer. Since 23 Oct 2026 its bind is
+     refused unless it is a loopback literal; read here from the
+     source, because this gate starts no viewer — the run-time proof is
+     agent/observability/selftest.mjs "VIEWER". Still partial either
+     way: the routes check no credential, so any local process reads
+     the store. */
   {
     const a = attack('OB-05', 'observability', 'read the trace store through the observability viewer with no credential', 'high');
-    out.push(partial(a,
-      'agent/observability/server.mjs serves eleven /api/ routes over the whole trace store — agent inputs and outputs, decisions, approvals, provenance — and authenticates nothing. Its only protection is that `host` DEFAULTS to 127.0.0.1, and serve({ host }) accepts any value. The health monitor measures nine of the eleven answering an unauthenticated request. This gate did not re-run that measurement; it confirms the module is unchanged and the finding stands.',
-      { component: 'agent/observability/server.mjs', measured_by: 'agent/health/ — docs/HEALTH-MONITOR.md §6', not_re_measured_here: true },
-      'high'));
+    const viewer = analyseAll(REPO_ROOT).find((i) => i.path === 'agent/observability/server.mjs');
+    out.push(viewer && viewer.loopback_enforced
+      ? partial(a,
+        'agent/observability/server.mjs serves eleven /api/ routes over the whole trace store — agent inputs and outputs, decisions, approvals, provenance — and checks no credential, so any process on the machine can read it. It can no longer be put on a network: serve() throws on any bind address but 127.0.0.1 or ::1, re-checks the address bound, and refuses a request whose Host header is not loopback (DNS rebinding). Local exposure only.',
+        { component: 'agent/observability/server.mjs', loopback_enforced: true, proved_by: 'agent/observability/selftest.mjs VIEWER tests', measured_by: 'agent/health/ — docs/HEALTH-MONITOR.md §6' },
+        'medium')
+      : partial(a,
+        'agent/observability/server.mjs serves eleven /api/ routes over the whole trace store and authenticates nothing, and its bind address is a default a caller can override: serve({ host: \'0.0.0.0\' }) would expose the store to a network.',
+        { component: 'agent/observability/server.mjs', loopback_enforced: false, measured_by: 'agent/health/ — docs/HEALTH-MONITOR.md §6' },
+        'high'));
   }
 
   return out;

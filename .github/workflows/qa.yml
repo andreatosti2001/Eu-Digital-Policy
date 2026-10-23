@@ -504,17 +504,42 @@ jobs:
         with:
           node-version: '22'
 
-      # ubuntu-latest ships Chromium via snap, which headless Chrome
-      # cannot always start from. apt is the reliable route and it is
-      # a RUNNER dependency, not a repository one: nothing is added to
-      # the tree and `node agent/browser/cli.mjs` still runs on any
-      # machine that already has a browser.
-      - name: Install a browser on the runner
+      # 23 Oct 2026. THE RUNNER IMAGE ALREADY HAS A BROWSER, and this
+      # step used to replace it with one fetched from the network. The
+      # ubuntu-24.04 image installs Chromium in /usr/local/share/chromium
+      # and links /usr/bin/chromium and /usr/bin/chromium-browser to it,
+      # and installs Google Chrome (actions/runner-images,
+      # images/ubuntu/scripts/build/install-google-chrome.sh). Until this
+      # date the step ran `apt-get install chromium-browser`, which on
+      # Ubuntu 24.04 is a transitional package: it overwrites that link
+      # with a wrapper around the chromium snap, downloaded from the snap
+      # store on every run. On 22 Oct 2026 (run 39770094879, c5b2ad7) the
+      # store answered HTTP 408 for the mesa-2404 content snap, apt
+      # failed, the `|| apt-get install chromium` fallback re-ran the same
+      # transitional package and "succeeded" over a half-installed snap,
+      # and the next step's `--version` exited 3: "Content snap GPU
+      # wrapper ... not found: ensure slot is connected".
+      #
+      # A candidate is now chosen only if it RUNS, not merely if it
+      # exists. apt is a last resort, for an image without a browser, and
+      # its failure is not hidden. Either way it is a RUNNER dependency,
+      # not a repository one: nothing is added to the tree. The step
+      # after this one still runs `--version` and fails the job if the
+      # chosen browser cannot start. pages.yml gate-browser does the same.
+      - name: Find a browser on the runner
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends chromium-browser \
-            || sudo apt-get install -y --no-install-recommends chromium
-          echo "BROWSER_QA_CHROME=$(command -v chromium-browser || command -v chromium)" >> "$GITHUB_ENV"
+          pick=""
+          for c in /usr/bin/chromium /usr/local/share/chromium/chrome-linux/chrome /usr/bin/google-chrome; do
+            if [ -x "$c" ] && "$c" --version > /dev/null 2>&1; then pick="$c"; break; fi
+            echo "not usable: $c"
+          done
+          if [ -z "$pick" ]; then
+            echo "::warning title=No browser in the runner image::installing the chromium snap through apt"
+            sudo apt-get update -qq
+            sudo apt-get install -y --no-install-recommends chromium-browser
+            pick="$(command -v chromium-browser)"
+          fi
+          echo "BROWSER_QA_CHROME=$pick" >> "$GITHUB_ENV"
 
       - name: Report which browser this run used
         run: |

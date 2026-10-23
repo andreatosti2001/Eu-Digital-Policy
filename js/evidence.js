@@ -150,6 +150,18 @@ function statusFor(instrumentId) {
   };
 }
 
+/* Which part of the brief states the claim. A bare dash rendered an
+   absent field, a null and an empty string alike; they are not the
+   same record. null is "not researched" (the datasets' convention), a
+   missing field is a record that never had the question asked of it.
+   Not-applicable is not offered: every claim is drawn from the prose. */
+function partHTML(c) {
+  if (c.brief_part) return esc(c.brief_part);
+  return '<span class="ev-dim-70">' + (c.brief_part === null
+    ? 'not researched — no part of the brief is recorded for this claim'
+    : 'not recorded — this record has no brief_part field') + '</span>';
+}
+
 function row(dt, dd, cls) {
   if (dd == null || dd === '') return '';
   return '<div class="evi-row"><dt>' + esc(dt) + '</dt><dd' +
@@ -221,7 +233,7 @@ function renderClaim(entry) {
       '<div class="evi-sec"><h4>Basis</h4><dl class="evi-dl">' +
         row('Legal basis', basis || '<span class="ev-dim-70">none — this is not a claim about the text of an instrument</span>') +
         row('Institutions', insts) +
-        row('Part', esc(c.brief_part || '—')) +
+        row('Part', partHTML(c)) +
       '</dl></div>' +
       '<div class="evi-sec"><h4>Sources (' + (c.sources || []).length + ')</h4>' + cards + '</div>' +
       '<div class="evi-sec"><h4>Dates</h4><dl class="evi-dl">' +

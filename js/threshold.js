@@ -132,8 +132,39 @@ export function close() {
   if (!open) return;
   document.removeEventListener('keydown', open.onKey, true);
   if (open.node && open.node.parentNode) open.node.parentNode.removeChild(open.node);
-  if (open.restore && open.restore.focus) { try { open.restore.focus(); } catch (e) { /* the element may be gone */ } }
+  for (const x of open.inerted || []) {
+    x.el.removeAttribute('inert');
+    if (x.hidden === null) x.el.removeAttribute('aria-hidden'); else x.el.setAttribute('aria-hidden', x.hidden);
+  }
+  if (open.restore && open.restore.focus && document.contains(open.restore)) { try { open.restore.focus(); } catch (e) { /* the element may be gone */ } }
   open = null;
+}
+
+/* 23 Oct 2026. A modal only Escape could leave was half a modal: Tab
+   walked out of the panel into a page still live behind the scrim —
+   measured in Chromium, focus left on the first Tab and 267 focusable
+   elements stayed reachable. Tab now cycles inside the panel, and every
+   other top-level element is inert and aria-hidden while it is up: the
+   contract js/dialog.js keeps, written out here because this module
+   imports nothing (agent/production/separations.mjs measures that). */
+function cycle(e, node) {
+  const f = [...node.querySelectorAll('a[href], button')].filter((n) => n.getClientRects().length > 0);
+  if (!f.length) return;
+  e.preventDefault();
+  const i = f.indexOf(document.activeElement);
+  const next = e.shiftKey ? f[(i <= 0 ? f.length : i) - 1] : f[(i + 1) % f.length];
+  next.focus();
+}
+
+function inertAllBut(node) {
+  const inerted = [];
+  for (const el of document.body.children) {
+    if (el === node || el.hasAttribute('inert')) continue;
+    inerted.push({ el, hidden: el.getAttribute('aria-hidden') });
+    el.setAttribute('inert', '');
+    el.setAttribute('aria-hidden', 'true');
+  }
+  return inerted;
 }
 
 /**
@@ -207,11 +238,15 @@ export function passage(opts) {
      nothing an accidental dismissal could lose. */
   node.addEventListener('click', (e) => { if (e.target === node || e.target === figure) close(); });
 
-  const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); close(); } };
+  const onKey = (e) => {
+    if (e.key === 'Escape') { e.stopPropagation(); close(); return; }
+    if (e.key === 'Tab') cycle(e, node);
+  };
   document.addEventListener('keydown', onKey, true);
 
-  open = { node, onKey, restore: document.activeElement };
+  open = { node, onKey, restore: document.activeElement, inerted: [] };
   document.body.appendChild(node);
+  open.inerted = inertAllBut(node);
 
   /* The transition is one class. Removing it, or never adding it,
      leaves the finished state on screen — which is why an

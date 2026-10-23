@@ -31,8 +31,8 @@
     "src-ap-uber-2026"
    ],
    "requires_verification": false,
-   "verification_note": "Added 27 Sep 2026 from the Autoriteit Persoonsgegevens' English release of 21 August 2026 (the decision date is taken as the release date; the release gives no separate adoption date). Lead authority under the one-stop-shop after 171 French drivers complained through the Ligue des droits de l'Homme to the CNIL. The decision itself was not opened.",
-   "last_verified": "2026-09-27",
+   "verification_note": "Added 27 Sep 2026 from the Autoriteit Persoonsgegevens' English release of 21 August 2026 (the decision date is taken as the release date; the release gives no separate adoption date). Lead authority under the one-stop-shop after 171 French drivers complained through the Ligue des droits de l'Homme to the CNIL. The decision itself was not opened. Re-read 23 Oct 2026: the AP's release (page last edited 21 Aug 2026) still states every value recorded here, including that Uber has appealed. No later AP statement on Uber was found; Dutch court records were not searched, so a ruling on the appeal would not have been seen.",
+   "last_verified": "2026-10-23",
    "appeal": {
     "status": "appeal:pending",
     "lodged_by": "Uber",
@@ -69,8 +69,8 @@
     "src-ap-uber-2026"
    ],
    "requires_verification": false,
-   "verification_note": "Added 27 Sep 2026 from the Autoriteit Persoonsgegevens' English release of 26 August 2024; the decision date is taken as the release date (CMS's database gives 22 July 2024, which was not confirmed on the authority's page). Legal basis records Art. 83 only, because no Chapter V provision record exists.",
-   "last_verified": "2026-09-27",
+   "verification_note": "Added 27 Sep 2026 from the Autoriteit Persoonsgegevens' English release of 26 August 2024; the decision date is taken as the release date (CMS's database gives 22 July 2024, which was not confirmed on the authority's page). Legal basis records Art. 83 only, because no Chapter V provision record exists. Re-read 23 Oct 2026: the AP's releases of 26 Aug 2024 and 21 Aug 2026 still state every value recorded here, the later one that the procedures on this fine are ongoing. Dutch court records were not searched, so a ruling on the appeal would not have been seen.",
+   "last_verified": "2026-10-23",
    "appeal": {
     "status": "appeal:pending",
     "lodged_by": "Uber",
@@ -609,8 +609,8 @@
     "src-curia-register-2026-09-27"
    ],
    "requires_verification": true,
-   "verification_note": "Updated 2026-09-27. The appeal is now established from the Official Journal notice of the action (Case T-438/25, lodged 7 July 2025) and the Court's register (pending on 27 Sep 2026); the investigation's opening date, 25 March 2024, is from the Commission's press release IP/25/1085, read in full the same day. STILL OPEN: the behavioural outcome recorded here reproduces the author's interpretation (clm-dma-consumer-benefit-modest) and is not what this decision is about — the press release describes a steering infringement under Art. 5(4) and an order to remove technical and commercial restrictions on steering within 60 days; it says nothing about default browsers, installation outside the App Store or third-party payment. The same release closed the separate investigation into Apple's user-choice obligations. Establishing what changed for users after this decision needs a Commission compliance assessment, which has not been read.",
-   "last_verified": "2026-09-27",
+   "verification_note": "Updated 2026-09-27. The appeal is now established from the Official Journal notice of the action (Case T-438/25, lodged 7 July 2025) and the Court's register (pending on 27 Sep 2026); the investigation's opening date, 25 March 2024, is from the Commission's press release IP/25/1085, read in full the same day. STILL OPEN: the behavioural outcome recorded here reproduces the author's interpretation (clm-dma-consumer-benefit-modest) and is not what this decision is about — the press release describes a steering infringement under Art. 5(4) and an order to remove technical and commercial restrictions on steering within 60 days; it says nothing about default browsers, installation outside the App Store or third-party payment. The same release closed the separate investigation into Apple's user-choice obligations. Establishing what changed for users after this decision needs a Commission compliance assessment, which has not been read. Re-read 23 Oct 2026: IP/25/1085 (through the Commission's press-corner API) and the OJ notice of T-438/25 (C/2025/5215, through the Publications Office) carry every value above; the Court's register (InfoCuria search service) still records T-438/25 as 'Affaire pendante'. The open question on the behavioural outcome is unchanged: no Commission compliance assessment was found, and the DMA site lists none since 23 July 2026.",
+   "last_verified": "2026-10-23",
    "appeal": {
     "status": "appeal:pending",
     "lodged_by": "Apple Inc.",
@@ -650,8 +650,8 @@
     "src-curia-register-2026-09-27"
    ],
    "requires_verification": false,
-   "verification_note": "Verified 2026-09-27. Decision, date, fine and ground from the Commission's press release IP/25/1085 (read in full): the binary 'Consent or Pay' model did not give users the specific choice of an equivalent service using less personal data, for the period March–November 2024; investigation opened 25 March 2024. The appeal from the Official Journal notice of Case T-435/25 and the Court's register. The behavioural outcome from the Commission's statement of 8 December 2025. The brief's 'three-tier advertising model' was replaced on 2026-09-26 (audit T-18) by that statement's two-way choice.",
-   "last_verified": "2026-09-27",
+   "verification_note": "Verified 2026-09-27. Decision, date, fine and ground from the Commission's press release IP/25/1085 (read in full): the binary 'Consent or Pay' model did not give users the specific choice of an equivalent service using less personal data, for the period March–November 2024; investigation opened 25 March 2024. The appeal from the Official Journal notice of Case T-435/25 and the Court's register. The behavioural outcome from the Commission's statement of 8 December 2025. The brief's 'three-tier advertising model' was replaced on 2026-09-26 (audit T-18) by that statement's two-way choice. Re-read 23 Oct 2026: IP/25/1085, the Commission's statement of 8 December 2025 and the OJ notice of T-435/25 (C/2025/5214) carry every value above; the Court's register still records T-435/25 as 'Affaire pendante'. The DMA site lists no later Commission statement on Meta's ad model (read 23 Oct 2026).",
+   "last_verified": "2026-10-23",
    "appeal": {
     "status": "appeal:pending",
     "lodged_by": "Meta Platforms, Inc.",

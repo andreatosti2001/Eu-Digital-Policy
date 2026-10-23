@@ -134,7 +134,7 @@ configuration this machine happens to be running and the question is **what the 
 | Check | Today |
 |---|---|
 | Secrets in public assets | **0 blocking.** The 60 files a reader's browser loads carry no credential. Eight synthetic credentials live in the fixtures that prove `redact.mjs` works; they are classified and counted, never suppressed. |
-| Privileged endpoints exposed publicly | **11 routes.** |
+| Privileged endpoints exposed publicly | **11 routes** when written; **0 since 23 Oct 2026**, when the viewer's loopback bind became enforced (below). |
 | Control Room assets published | **0** — and *not a clearance*: there is no exclusion mechanism, so a Control Room page added in SESSION 21 would be published the moment it was pushed. |
 | Privileged routes with no authentication | **11.** |
 | Privileged routes with no server-side authorization | **11.** |
@@ -158,6 +158,19 @@ That is a defensible design for a local development viewer, which is what its ow
 it is. It is recorded because **SESSION 21 builds a Control Room**, and a Control Room that
 reused this server would inherit a privileged API whose only protection is a default somebody
 can override.
+
+**23 Oct 2026: the default is now a refusal.** `serve()` throws on any bind address but the
+loopback literals `127.0.0.1` and `::1` (`localhost` included, because what a name resolves to
+is not the server's decision), re-checks the address actually bound, and answers `403` to a
+request whose `Host` header is not loopback, which is what a DNS-rebinding page would send.
+`agent/observability/selftest.mjs` "VIEWER" proves all three at run time; against the previous
+file the bind test and the `Host` test fail. **No credential was added and none is checked**,
+on purpose (`AGENTS.md`, Known hazards): the routes still answer any process on the machine,
+so the probe still reads nine of eleven answering and that row above is unchanged.
+`analyseInterface()` now reports `loopback_enforced`, and *Privileged endpoints exposed
+publicly* — routes whose only protection is an overridable default — is **0**, with the
+viewer listed under `not_counted` and the reason. The adversarial gate's OB-05 reads the same
+guard and stays `partial`, lowered from high to medium: local exposure only.
 
 ### The false positive that shaped the check
 
