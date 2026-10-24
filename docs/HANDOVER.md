@@ -1,10 +1,58 @@
 # HANDOVER
 
+**Last updated:** Annex B replaced with the author's text · 24 October 2026
+**Branch:** `claude/annex-b-2026-10-24`, cut from `main` at `74d2341` (the merge of #15). Not pushed
+until the author says so.
+
+## Annex B — the author's updated text, 24 October 2026
+
+**Asked** (in Italian): "modifica annex B con questo aggiornato", with the full Italian text pasted.
+
+**What changed.** `annex-b.p2` to `p9` were replaced and a tenth paragraph added: the supplied
+research-tooling note is two paragraphs, so its second half is the new key `annex-b.p10`, placed after
+`p7` in `index.html` (as `part-1.p10` and `p11` precedent). `p1` is unchanged (its glossary link on
+"sportello unico" is kept). What the new text says that the old did not:
+- the date on a record is a date *associated with* the record, not proof of a fresh check; the
+  freshness system flags priorities and certifies nothing; individual verification is incomplete;
+- Claude Opus 5 **and 5.5**; ChatGPT (GPT-5.6 Luna), Mistral Large 4 and DeepSeek-V4.1-Flash-1017 as
+  critical reviewers, "not final authorities on the correctness of the results";
+- the Source Scout is "the documented operational component", and the wider design is **not** a fully
+  operational end-to-end multi-agent system; the September runs fetched real pages, 21 September gave
+  six candidates and none was promoted;
+- the closing checks "do not equal a guarantee of absolute correctness".
+
+**Which text is whose.** The Italian is the author's, verbatim (apart from the markup the page needs:
+the bold lead-ins, the methodology link). **The English was written from it by the assistant**, so it is
+a translation going the other way, and the author should read it: `index.html`, `annex-b.p2` to `p10`.
+`annex-b.p5` renders "ChatGPT, con GPT-5.6 Luna" as "ChatGPT (GPT-5.6 Luna)".
+
+**Checked against the repository, not assumed:** the Scout runs weekly (`source-scout.yml`, cron
+Monday 06:17); on 21 Sep 2026 it made 17 retrieval attempts and produced 6 candidates (`digest-2026-09-21`,
+`docs/SOURCE-SCOUT.md`); no candidate was promoted into `data/sources.json`; it never opens `data/*.json`
+for writing. **Not checkable here:** the model names and versions, which are the author's own account of
+the tools used. **One date to consider:** "As of 26 September 2026" is now a month old. Two Scout digests
+since (12 and 19 Oct) were merged as candidates only; nothing found contradicts the sentence.
+
+**French and Spanish.** Their eight Annex B paragraphs (`p2` to `p9`) described the old text, so they
+are withdrawn as `superseded` and `p10` is `pending_translation` (`i18n/locales.json`, which says
+so in each locale's note): those paragraphs show in English with the EN marker until someone
+retranslates them. I did not translate the author's disclosure into two more languages unasked.
+`it/` carries the author's Italian; **no review was recorded** (`record` is a person's), and all three
+editions remain `noindex`. The three review sheets were regenerated (431 strings each).
+
+**Checks:** validate, i18n-audit, design-qa, seo-audit, evidence-audit 0 errors (prose: 0 unclassified);
+freshness 0 defects; `tools/selftest.mjs` 82/82; 25 suites 1269 pass 0 fail; browser suite 339/0/1;
+gate 0 succeeded / 3 partial / 1 undecidable. Rendered in Chromium: English and Italian show ten
+paragraphs in order with their links; French shows the English fallback, marked.
+
+**Also settled today:** the Pages switch holds (`docs/DEPLOYMENT.md` §1b): the merge of #15 started no
+"pages build and deployment" run.
+
+## (previous header) The deployment settings — 24 October 2026
+
 **Last updated:** the deployment settings, as the author reported them · 24 October 2026
 **Branch:** `claude/deploy-settings-2026-10-24`, cut from `main` at `9891958` (the merge of #14),
 documentation and workflow comments only. Not pushed until the author says so.
-
-## The deployment settings — 24 October 2026
 
 - **Pull request #14 was merged** by the author (`9891958`, 09:02:56 UTC). The branch build published
   it first, at 09:03:57, and `docs/HANDOVER.md` and `AGENTS.md` answered **200** on the live site;
