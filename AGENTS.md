@@ -439,12 +439,13 @@ session repaired two of them. It asserts twenty-four suites (twenty-five countin
 SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
 changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
 
-**There is CI, and a deploy gate waiting on one setting.** `.github/workflows/qa.yml` runs all
+**There is CI, and a deploy gate whose setting was switched on 24 Oct 2026.** `.github/workflows/qa.yml` runs all
 four validators against the recorded baseline, the evidence audit, every agent suite, the
 contract check, the public/private boundary check and the browser suite, on every push.
 `.github/workflows/pages.yml` is the deploy gate; it takes effect when the owner sets the
-Pages source to "GitHub Actions" and requires the QA checks through branch protection —
-repository configuration outside this tree (`docs/DEPLOYMENT.md` §3).
+Pages source to "GitHub Actions" — done by the author on 24 Oct 2026, to be confirmed on the
+next push to `main` — and nothing requires the QA checks: no ruleset exists
+(`docs/DEPLOYMENT.md` §1b, §3).
 
 The browser suite opens the site in a real browser and is the first thing here that ever has:
 
@@ -547,13 +548,15 @@ patches, not checks. **Do not re-run** the latter two.
 - **Superseded translations.** Correcting an English string without declaring its key
   `superseded` in `i18n/locales.json` leaves the it/fr/es editions asserting the thing you
   just corrected. This has already happened once.
-- **The deploy gate exists and is not yet switched on.** `.github/workflows/pages.yml` deploys
+- **The deploy gate exists and was switched on 24 Oct 2026, unconfirmed.** `.github/workflows/pages.yml` deploys
   only after the site checks pass, from an allowlisted artifact — but only once the owner sets
   Settings → Pages → Source to "GitHub Actions". Until then a push to `main` still publishes
   directly and a CI failure is **visible, not blocking**. `docs/DEPLOYMENT.md` §3 lists the
   settings. **Measured 23 Oct 2026 (§1a): both publish on every push** — the ungated branch
   build first, then `pages.yml`'s gated artifact replaces it about four minutes later if every
-  gate passes. Run the validators by hand as well.
+  gate passes. The author switched the source on 24 Oct 2026; the merge of #14 that day was still
+  published ungated first (§1b), so the next push to `main` confirms whether it holds. Run the
+  validators by hand as well.
 - **A data change needs a regeneration.** Since 27 Sep 2026 each substantive instrument has a
   pre-rendered page at `instruments/<id>/`, generated from `data/` by `node tools/_footer.mjs`
   (`docs/SEO-OPERATIONS.md`). After editing `data/`, re-run it and commit what it writes, or

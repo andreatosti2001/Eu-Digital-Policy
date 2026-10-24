@@ -1,11 +1,29 @@
 # HANDOVER
 
+**Last updated:** the deployment settings, as the author reported them · 24 October 2026
+**Branch:** `claude/deploy-settings-2026-10-24`, cut from `main` at `9891958` (the merge of #14),
+documentation and workflow comments only. Not pushed until the author says so.
+
+## The deployment settings — 24 October 2026
+
+- **Pull request #14 was merged** by the author (`9891958`, 09:02:56 UTC). The branch build published
+  it first, at 09:03:57, and `docs/HANDOVER.md` and `AGENTS.md` answered **200** on the live site;
+  `pages.yml` run 22 replaced it at 09:07:16 and every private path is 404 again (measured).
+- **Pages source:** the author switched it to "GitHub Actions" on 24 Oct. Unconfirmed: the merge
+  above went through the branch build. **On the next push to `main`, check that no "pages build and
+  deployment" run appears** and that `/docs/` never answers 200.
+- **Rulesets:** none (the author's screenshot). Nothing requires QA before a merge.
+- **HSTS: not sent** — hstspreload.org's check, with github.com as the control. Remedy is a hosting
+  decision for the author (`docs/DEPLOYMENT.md` §4).
+- Recorded in `docs/DEPLOYMENT.md` §1a, §1b, §3, §4; pointers in `AGENTS.md`,
+  `docs/AI-SAFE-BOUNDARIES.md`, both skills, and the comments of `pages.yml` and `qa.yml`.
+
+## (previous header) The audit snapshot of 23 October 2026 — rechecked and worked
+
 **Last updated:** the audit snapshot of 23 October 2026, rechecked · 23 October 2026
 **Branch:** `claude/audit-2026-10-23`, cut from `main` at `c5b2ad7`; pushed on the author's say-so
 (QA run 246 green, the browser job on the image's own Chromium) and opened as a pull request on the
 author's decision of 24 Oct 2026. Not merged; no setting changed.
-
-## The audit snapshot of 23 October 2026 — rechecked and worked
 
 The register is `docs/AUDIT-2026-10-23.md`. In one paragraph each:
 

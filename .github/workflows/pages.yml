@@ -6,16 +6,19 @@
 # publishes only the website itself (tools/pages-artifact.mjs), never
 # the repository.
 #
-# IT GATES NOTHING UNTIL A PERSON CHANGES ONE SETTING, and that is said
-# here rather than implied. GitHub Pages currently serves `main` from the
-# repository root ("Deploy from a branch"). While that setting stands,
-# every push to `main` is published by GitHub's own Pages build whatever
-# this workflow concludes. To make this the gate:
+# IT GATES ONLY WHILE IT IS THE ONLY PUBLISHER, and that is said here
+# rather than implied. Until 24 Oct 2026 GitHub's own branch build ("Deploy
+# from a branch") published every push to `main` first, ungated, and this
+# workflow's artifact replaced it minutes later — and only if every gate
+# passed. The author set
 #
 #   Settings → Pages → Build and deployment → Source: "GitHub Actions"
 #
-# docs/DEPLOYMENT.md has that step, the branch-protection rule that makes
-# the QA checks required on pull requests, and what each one blocks.
+# on 24 Oct 2026. The merge of pull request #14 that day was still published
+# by the branch build, so whether the setting now holds is confirmed by the
+# next push to `main` showing no "pages build and deployment" run
+# (docs/DEPLOYMENT.md §1a). No ruleset requires the QA checks on pull
+# requests (§3).
 #
 # WHAT GATES AND WHAT DOES NOT. The gate is the set of checks that say
 # something about the published site: the four validators at their

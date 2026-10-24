@@ -131,7 +131,8 @@ Annex A captions) and is the reason `tools/_review10.mjs` carries a warning comm
 `.github/workflows/pages.yml` gates deployment on them — but only once the Pages source is set
 to "GitHub Actions" (`docs/DEPLOYMENT.md` §3). Until then a push to `main` publishes: on
 23 Oct 2026 the ungated branch build was measured deploying each push before the gated one
-(`docs/DEPLOYMENT.md` §1a). Run the validators by hand before every commit that touches data
+(`docs/DEPLOYMENT.md` §1a). The author switched the source on 24 Oct 2026; whether it holds is
+confirmed by the next push to `main` (§1b). Run the validators by hand before every commit that touches data
 or markup.
 
 **The validators do not check the prose.** `validate.mjs` sees `data/`; `design-qa.mjs` sees

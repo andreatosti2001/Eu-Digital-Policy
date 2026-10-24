@@ -16,8 +16,9 @@ Branch, diff, commit and push discipline. Whether a change may be made at all is
 
 A push to `main` publishes to the public site. CI (`qa.yml`) and a gated deploy (`pages.yml`)
 both run on it, but GitHub's ungated branch build was measured deploying the same commit
-first (22 Oct 2026), and no check was measured as required before a merge, so neither is a
-review step between a commit and a reader. `docs/DEPLOYMENT.md` §1 and §3 are the one home for
+first (22 Oct and again 24 Oct 2026), and no ruleset requires a check before a merge, so
+neither is a review step between a commit and a reader. The author switched the Pages source
+on 24 Oct 2026; the next push to `main` shows whether the ungated build has stopped. `docs/DEPLOYMENT.md` §1 and §3 are the one home for
 what was measured and which settings would change it. Until the owner changes them the
 discipline has to be yours: run the checks before you push, not after CI reports.
 
