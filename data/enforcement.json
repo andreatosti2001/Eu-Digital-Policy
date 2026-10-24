@@ -606,7 +606,8 @@
    "sources": [
     "src-ec-apple-meta-dma-2025",
     "src-oj-t438-25-apple-action",
-    "src-curia-register-2026-09-27"
+    "src-curia-register-2026-09-27",
+    "src-curia-register-2026-10-23"
    ],
    "requires_verification": true,
    "verification_note": "Updated 2026-09-27. The appeal is now established from the Official Journal notice of the action (Case T-438/25, lodged 7 July 2025) and the Court's register (pending on 27 Sep 2026); the investigation's opening date, 25 March 2024, is from the Commission's press release IP/25/1085, read in full the same day. STILL OPEN: the behavioural outcome recorded here reproduces the author's interpretation (clm-dma-consumer-benefit-modest) and is not what this decision is about — the press release describes a steering infringement under Art. 5(4) and an order to remove technical and commercial restrictions on steering within 60 days; it says nothing about default browsers, installation outside the App Store or third-party payment. The same release closed the separate investigation into Apple's user-choice obligations. Establishing what changed for users after this decision needs a Commission compliance assessment, which has not been read. Re-read 23 Oct 2026: IP/25/1085 (through the Commission's press-corner API) and the OJ notice of T-438/25 (C/2025/5215, through the Publications Office) carry every value above; the Court's register (InfoCuria search service) still records T-438/25 as 'Affaire pendante'. The open question on the behavioural outcome is unchanged: no Commission compliance assessment was found, and the DMA site lists none since 23 July 2026.",
@@ -647,7 +648,8 @@
     "src-ec-apple-meta-dma-2025",
     "src-ec-meta-ad-choice-2025",
     "src-oj-t435-25-meta-action",
-    "src-curia-register-2026-09-27"
+    "src-curia-register-2026-09-27",
+    "src-curia-register-2026-10-23"
    ],
    "requires_verification": false,
    "verification_note": "Verified 2026-09-27. Decision, date, fine and ground from the Commission's press release IP/25/1085 (read in full): the binary 'Consent or Pay' model did not give users the specific choice of an equivalent service using less personal data, for the period March–November 2024; investigation opened 25 March 2024. The appeal from the Official Journal notice of Case T-435/25 and the Court's register. The behavioural outcome from the Commission's statement of 8 December 2025. The brief's 'three-tier advertising model' was replaced on 2026-09-26 (audit T-18) by that statement's two-way choice. Re-read 23 Oct 2026: IP/25/1085, the Commission's statement of 8 December 2025 and the OJ notice of T-435/25 (C/2025/5214) carry every value above; the Court's register still records T-435/25 as 'Affaire pendante'. The DMA site lists no later Commission statement on Meta's ad model (read 23 Oct 2026).",
@@ -722,7 +724,7 @@
    "judicial": {
     "forum": "General Court of the European Union",
     "date": "2025-09-10",
-    "outcome": "The implementing decisions setting the supervisory fee were annulled because the methodology should have been adopted by delegated act. Effects provisionally maintained for up to twelve months. This is an annulment of the fee decisions, not of the fee mechanism as such.",
+    "outcome": "The implementing decisions setting the supervisory fee were annulled because the methodology should have been adopted by delegated act. Effects provisionally maintained, for no more than twelve months from the date on which the judgments become final; the Commission's appeals are pending, so that period has not started. This is an annulment of the fee decisions, not of the fee mechanism as such.",
     "case_ref": "Cases T-55/24 Meta Platforms Ireland and T-58/24 TikTok Technology"
    },
    "timeline_events": [],
@@ -735,11 +737,12 @@
     "src-mlex-2026-dsa-fee-appeal-oj",
     "src-oj-c744-25p-fee-appeal",
     "src-oj-c745-25p-fee-appeal",
-    "src-curia-register-2026-09-27"
+    "src-curia-register-2026-09-27",
+    "src-curia-register-2026-10-23"
    ],
    "requires_verification": false,
-   "verification_note": "Verified 2026-09-27. The judgments from the Court's press release; the appeals from the two Official Journal notices (C-744/25 P and C-745/25 P, lodged 20 Nov 2025), which name the contested acts at first instance — Implementing Decisions C(2023) 8176 final (Facebook and Instagram) and C(2023) 8173 final (TikTok) of 27 November 2023 — and the Court's register (pending, 27 Sep 2026). This supersedes the MLex reports of 24 Nov 2025 and 12 Jan 2026, which are kept as the record of how the appeal was first learned of.",
-   "last_verified": "2026-09-27",
+   "verification_note": "Verified 2026-09-27. The judgments from the Court's press release; the appeals from the two Official Journal notices (C-744/25 P and C-745/25 P, lodged 20 Nov 2025), which name the contested acts at first instance — Implementing Decisions C(2023) 8176 final (Facebook and Instagram) and C(2023) 8173 final (TikTok) of 27 November 2023 — and the Court's register (pending, 27 Sep 2026). This supersedes the MLex reports of 24 Nov 2025 and 12 Jan 2026, which are kept as the record of how the appeal was first learned of. Re-read 23 Oct 2026: Press Release No 114/25, both Official Journal notices and the Court's register (both appeals still pending). The outcome above was corrected on the author's decision of 24 Oct 2026: it read 'for up to twelve months', which drops the press release's condition that the twelve months run from the date the judgments become final.",
+   "last_verified": "2026-10-23",
    "appeal": {
     "status": "appeal:pending",
     "lodged_by": "European Commission",
@@ -762,7 +765,7 @@
    "decision_date": "2025-09-05",
    "action": "Antitrust decision and fine under Article 102 TFEU",
    "fine_eur": 2950000000,
-   "action_status": "action:imposed",
+   "action_status": "action:appealed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",
    "behavioural_outcome": null,
@@ -772,18 +775,20 @@
     "clm-dma-alongside-102"
    ],
    "sources": [
-    "src-ec-google-adtech-2025"
+    "src-ec-google-adtech-2025",
+    "src-oj-t794-25-google-action",
+    "src-curia-register-2026-10-23"
    ],
    "requires_verification": false,
-   "verification_note": "Case AT.40670. This is an Article 102 TFEU decision, NOT a DMA decision. Recorded here to keep the distinction visible: the DMA operates alongside Articles 101 and 102, not instead of them. Appeal status not established.",
-   "last_verified": "2026-08-27",
+   "verification_note": "This is an Article 102 TFEU decision, NOT a DMA decision. Recorded here to keep the distinction visible: the DMA operates alongside Articles 101 and 102, not instead of them. Re-read 23 Oct 2026: the decision date, the fine, Article 102 and the order to end the practices from the Commission's release IP/25/1992 (through the press-corner API); the appeal from the Official Journal notice of Case T-794/25 (C/2026/185, through the Publications Office) and the Court's register (pending, 23 Oct 2026); recorded on the author's decision of 24 Oct 2026. CASE NUMBER NOT ESTABLISHED: IP/25/1992 gives AT.40670, the Official Journal notice AT.40760; both are primary sources and neither is preferred here. Payment is not stated in either.",
+   "last_verified": "2026-10-23",
    "appeal": {
-    "status": "appeal:unknown",
-    "lodged_by": null,
-    "forum": null,
-    "lodged_date": null,
-    "case_ref": null,
-    "note": "Not established in this build."
+    "status": "appeal:pending",
+    "lodged_by": "Google LLC and Alphabet Inc.",
+    "forum": "General Court of the European Union",
+    "lodged_date": "2025-11-20",
+    "case_ref": "T-794/25",
+    "note": "Action for annulment, in whole or in part, of the decision of 5 September 2025, and annulment or reduction of the fine, brought on 20 November 2025 (OJ C/2026/185, read on 23 Oct 2026); seventeen pleas, including against the finding of a single continuous infringement and against the measures required beyond the cease-and-desist order. Recorded as pending in the Court's register on 23 Oct 2026."
    }
   },
   {

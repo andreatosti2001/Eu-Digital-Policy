@@ -1,9 +1,9 @@
 # HANDOVER
 
 **Last updated:** the audit snapshot of 23 October 2026, rechecked · 23 October 2026
-**Branch:** none — the work is **uncommitted** in a checkout of `main` at `c5b2ad7` (re-fetched before
-this write: unchanged). The author asked for no push, no deploy and no setting change; whether to
-commit it, on which branch, and whether to open a pull request is the author's call.
+**Branch:** `claude/audit-2026-10-23`, cut from `main` at `c5b2ad7`; pushed on the author's say-so
+(QA run 246 green, the browser job on the image's own Chromium) and opened as a pull request on the
+author's decision of 24 Oct 2026. Not merged; no setting changed.
 
 ## The audit snapshot of 23 October 2026 — rechecked and worked
 
@@ -15,10 +15,9 @@ The register is `docs/AUDIT-2026-10-23.md`. In one paragraph each:
   browser, chosen only if it runs. Not yet seen on a real runner: that needs a push.
 - **Eight enforcement records rechecked.** Four re-read in full and re-dated (`enf-uber-ap-2026`,
   `enf-uber-ap-2024`, `enf-apple-ec-2025`, `enf-meta-ec-2025`). Four left unchanged with the reason:
-  **for the author — two proposals** (the adtech appeal T-794/25 is established while the record
-  says unknown, and the Commission and the Official Journal give different case numbers, AT.40670 and
-  AT.40760; the supervisory-fee outcome drops "from the date the judgments become final") **and two
-  gaps** ([2026] IEHC 323 unidentified; courts.ie judgments offline since 21 Oct). Two candidates are
+  **two proposals the author decided on 24 Oct 2026 and that are now recorded** (the adtech appeal,
+  T-794/25, with the case-number conflict AT.40670 / AT.40760 stated and unresolved; the
+  supervisory-fee outcome now carries "from the date the judgments become final") **and two gaps** ([2026] IEHC 323 unidentified; courts.ie judgments offline since 21 Oct). Two candidates are
   not added: T-638/26 and T-639/26 (Google, 28 Sep 2026) and the Booking.com DSA opening.
 - **Two publishers deploy every push to `main`**, the ungated branch build first; the skills that said
   "no CI, no deploy gate" now point to `docs/DEPLOYMENT.md` §1a.
@@ -27,6 +26,9 @@ The register is `docs/AUDIT-2026-10-23.md`. In one paragraph each:
   `js/dialog.js` lifts inert for a dialog opened over another. **Language note** keeps "· UI EN" on
   phones. **`brief_part`** absent and `null` read differently. **No colour-only state was confirmed.**
 - **HSTS could not be measured from here** (the proxy hides it on hosts that send it).
+- **Asked of the author on 24 Oct, not remembered:** whether the Pages source is "GitHub Actions",
+  whether a ruleset requires QA on `main`, and an HSTS reading from an ordinary network. All three
+  stay open; `docs/DEPLOYMENT.md` §1a and §3 say how to check each.
 
 **Local state:** `agent/records/` and `agent/observability/runs/`, which this session's `agent/ux/` and
 health-monitor runs created, were moved to the session scratchpad rather than deleted; with them in
