@@ -10,11 +10,11 @@
 # THIS WORKFLOW IS NOT ITSELF THE DEPLOY GATE. On pull requests it is
 # what branch protection can require (docs/DEPLOYMENT.md). The deploy
 # gate is .github/workflows/pages.yml, which re-runs the checks that
-# concern the published site and deploys only if they pass — once the
-# repository's Pages source is set to "GitHub Actions", which is a
-# setting outside this tree. Until then a push to `main` still
-# publishes through GitHub's branch build, and a green tick here means
-# the checks ran and passed, not that the site was gated on them.
+# concern the published site and deploys only if they pass. The author
+# set the Pages source to "GitHub Actions" on 24 Oct 2026, which leaves it
+# the only publisher once confirmed (docs/DEPLOYMENT.md §1a). No ruleset
+# requires this workflow before a merge, so a green tick here means the
+# checks ran and passed, not that a merge waited for them.
 #
 # THE BROWSER JOB IS THE POINT OF SESSION 19. It runs the repository's
 # own browser suite against a browser the runner already has. If no
@@ -617,8 +617,8 @@ jobs:
             echo "### What it does not mean"
             echo
             echo "- **This workflow is not the deploy gate.** \`.github/workflows/pages.yml\` is: it deploys"
-            echo "  only after the site checks pass, once Settings → Pages → Source is \"GitHub Actions\"."
-            echo "  Until that setting is changed, a push to \`main\` still publishes directly (docs/DEPLOYMENT.md)."
+            echo "  only after the site checks pass; the Pages source was set to \"GitHub Actions\" on 24 Oct 2026."
+            echo "  No ruleset requires this workflow before a merge (docs/DEPLOYMENT.md §3)."
             echo "- **No check establishes that a sentence is true.** \`evidence-audit.mjs\` checks that every"
             echo "  passage of the brief is registered as a claim or classified, and that a claim's"
             echo "  arithmetic and dates agree with its records. A false statement can still pass."

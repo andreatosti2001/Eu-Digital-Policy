@@ -13,9 +13,10 @@ CI exists and so does a deploy gate, and neither is a reason not to run the chec
 `.github/workflows/qa.yml` runs on every push to any branch and on pull requests;
 `.github/workflows/pages.yml` runs on every push to `main`, gates, and deploys the allowlisted
 artifact. But on 22 Oct 2026 GitHub's own branch build also deployed the same commit, ungated
-and four minutes earlier, and nothing measured shows a QA check is required before a merge.
-So a push to `main` still reaches readers before any check has finished, and a red QA run is
-visible, not blocking. `docs/DEPLOYMENT.md` §1 and §3 hold what was measured and what only
+and four minutes earlier, and no ruleset requires a QA check before a merge. The author switched
+the Pages source to "GitHub Actions" on 24 Oct 2026, which should leave `pages.yml` the only
+publisher; until a push to `main` confirms it, assume a push reaches readers before any check
+has finished. A red QA run is visible, not blocking. `docs/DEPLOYMENT.md` §1 and §3 hold what was measured and what only
 the owner can change; do not restate it here. The four validators are the test suite: run
 them, and report what they said.
 
