@@ -481,6 +481,30 @@ test('SECURITY · the real observability server has neither authentication nor a
   assert.equal(a.has_authz, false);
   assert.equal(a.binds, '127.0.0.1');
   assert.equal(a.host_is_a_parameter, true);
+  /* 23 Oct 2026: the parameter is now refused unless it is loopback. */
+  assert.equal(a.loopback_enforced, true, 'serve() must throw on a non-loopback host');
+});
+
+test('SECURITY · an ENFORCED loopback bind is told apart from a default one', () => {
+  const dir = tempDir('srv-');
+  try {
+    mkdirSync(join(dir, 'agent', 'observability'), { recursive: true });
+    const body = `createServer((req, res) => { if (p === '/api/runs') return json(res, runs()); });`;
+    writeFileSync(join(dir, 'agent/observability/server.mjs'),
+      `export function serve({ host = '127.0.0.1' } = {}) {\n  if (!isLoopbackAddress(host)) {\n    throw new Error('no');\n  }\n  ${body}\n}\n`);
+    assert.equal(analyseInterface(PRIVILEGED_INTERFACES[0], dir).loopback_enforced, true);
+    /* The same server with the guard reduced to a warning is a default again. */
+    writeFileSync(join(dir, 'agent/observability/server.mjs'),
+      `export function serve({ host = '127.0.0.1' } = {}) {\n  if (!isLoopbackAddress(host)) console.warn('careful');\n  ${body}\n}\n`);
+    assert.equal(analyseInterface(PRIVILEGED_INTERFACES[0], dir).loopback_enforced, false);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('SECURITY · the real tree: no privileged route is exposable, and the viewer is the reason it is 0', () => {
+  const r = BY_ID.get('control_plane.privileged_endpoints_exposed').measure({ root: REPO_ROOT });
+  assert.equal(r.value, 0);
+  const why = r.detail.not_counted.find((n) => n.path === 'agent/observability/server.mjs');
+  assert.ok(why && /loopback literal/.test(why.why), 'the viewer is not counted BECAUSE its bind is enforced');
 });
 
 test('SECURITY · the loopback probe finds that privileged routes answer without a credential', async () => {

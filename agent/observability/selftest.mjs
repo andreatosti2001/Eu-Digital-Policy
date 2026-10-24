@@ -35,6 +35,8 @@ import { readTrace } from './sink.mjs';
 import { receive } from '../schemas/gateway.mjs';
 import { FIXTURES } from '../schemas/fixtures.mjs';
 import { runDemo } from './demo/workflow.mjs';
+import { serve, isLoopbackAddress, isLoopbackHostHeader } from './server.mjs';
+import { request as httpRequest } from 'node:http';
 
 const fixture = () => new Tracer({
   sink: new MemorySink({ strict: true }),
@@ -767,4 +769,79 @@ test('two downstream runs reading the same upstream trace do not share a handoff
   /* And the same downstream run recorded twice is the same edge. */
   const again = recordHandoff({ upstream: up, to_agent: 'verification-integrator', records, downstream_trace_id: 'a'.repeat(32), dir });
   assert.equal(again.handoff_id, a.handoff_id);
+});
+
+/* ---------------------------------------------------------------
+   23 Oct 2026 — the viewer binds loopback only, and says so by
+   refusing. Until then `host` was a default a caller could override,
+   and serve({ host: '0.0.0.0' }) exposed the trace store.
+   --------------------------------------------------------------- */
+
+const listening = (server) => new Promise((ok, fail) => {
+  if (server.listening) return ok();
+  server.once('listening', ok);
+  server.once('error', fail);
+});
+
+/* node:http rather than fetch: fetch will not send a Host header the
+   caller chose, and the Host header is what a rebinding page controls. */
+const ask = (port, path, hostHeader) => new Promise((ok, fail) => {
+  const req = httpRequest({ host: '127.0.0.1', port, path, headers: { host: hostHeader } }, (res) => {
+    let body = '';
+    res.on('data', (c) => { body += c; });
+    res.on('end', () => ok({ status: res.statusCode, body }));
+  });
+  req.on('error', fail);
+  req.end();
+});
+
+test('VIEWER · a non-loopback bind address is refused before anything listens', () => {
+  for (const host of ['0.0.0.0', '::', '192.168.1.10', '10.0.0.1', 'localhost', 'example.org', '']) {
+    assert.throws(() => serve({ port: 0, host, quiet: true }), /refusing to bind/, `serve({ host: ${JSON.stringify(host)} }) must throw`);
+  }
+});
+
+test('VIEWER · a loopback literal is accepted and the bound address is loopback', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'obs-view-'));
+  const server = serve({ port: 0, host: '127.0.0.1', dir, quiet: true });
+  try {
+    await listening(server);
+    assert.equal(server.address().address, '127.0.0.1');
+    assert.ok(isLoopbackAddress('::1'));
+    assert.ok(!isLoopbackAddress('0.0.0.0'));
+  } finally {
+    await new Promise((ok) => server.close(ok));
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('VIEWER · a request addressed to another host name is refused (DNS rebinding)', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'obs-view-'));
+  const server = serve({ port: 0, host: '127.0.0.1', dir, quiet: true });
+  try {
+    await listening(server);
+    const { port } = server.address();
+    for (const h of [`127.0.0.1:${port}`, `localhost:${port}`, 'localhost', `[::1]:${port}`]) {
+      const r = await ask(port, '/api/summary', h);
+      assert.equal(r.status, 200, `Host ${h} is loopback and must be answered`);
+    }
+    for (const h of [`attacker.example:${port}`, 'attacker.example', `127.0.0.1.attacker.example:${port}`, `0.0.0.0:${port}`]) {
+      for (const path of ['/api/summary', '/api/runs', '/']) {
+        const r = await ask(port, path, h);
+        assert.equal(r.status, 403, `Host ${h} on ${path} must be refused`);
+        assert.match(r.body, /host not allowed/);
+      }
+    }
+    assert.ok(!isLoopbackHostHeader(undefined), 'a request with no Host header is not loopback');
+  } finally {
+    await new Promise((ok) => server.close(ok));
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('VIEWER · the CLI starts the viewer without a host, so it cannot pass one', () => {
+  const cli = readFileSync(new URL('./cli.mjs', import.meta.url), 'utf8');
+  const call = cli.match(/serve\(\{[^}]*\}\)/);
+  assert.ok(call, 'the CLI calls serve()');
+  assert.doesNotMatch(call[0], /\bhost\b/);
 });

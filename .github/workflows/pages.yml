@@ -121,12 +121,27 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
-      - name: Install a browser on the runner
+      # The runner image's own browser, chosen only if it runs; apt (the
+      # chromium snap) only when the image has none. Why, and the run that
+      # failed: the comment on the same step in qa.yml (23 Oct 2026).
+      - name: Find a browser on the runner
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends chromium-browser \
-            || sudo apt-get install -y --no-install-recommends chromium
-          echo "BROWSER_QA_CHROME=$(command -v chromium-browser || command -v chromium)" >> "$GITHUB_ENV"
+          pick=""
+          for c in /usr/bin/chromium /usr/local/share/chromium/chrome-linux/chrome /usr/bin/google-chrome; do
+            if [ -x "$c" ] && "$c" --version > /dev/null 2>&1; then pick="$c"; break; fi
+            echo "not usable: $c"
+          done
+          if [ -z "$pick" ]; then
+            echo "::warning title=No browser in the runner image::installing the chromium snap through apt"
+            sudo apt-get update -qq
+            sudo apt-get install -y --no-install-recommends chromium-browser
+            pick="$(command -v chromium-browser)"
+          fi
+          echo "BROWSER_QA_CHROME=$pick" >> "$GITHUB_ENV"
+      - name: Report which browser this run used
+        run: |
+          echo "BROWSER_QA_CHROME=$BROWSER_QA_CHROME"
+          "$BROWSER_QA_CHROME" --version
       - name: The browser suite (a missing browser is a failure)
         run: node agent/browser/cli.mjs --require-browser
 

@@ -1,11 +1,45 @@
 # HANDOVER
 
+**Last updated:** the audit snapshot of 23 October 2026, rechecked · 23 October 2026
+**Branch:** `claude/audit-2026-10-23`, cut from `main` at `c5b2ad7`; pushed on the author's say-so
+(QA run 246 green, the browser job on the image's own Chromium) and opened as a pull request on the
+author's decision of 24 Oct 2026. Not merged; no setting changed.
+
+## The audit snapshot of 23 October 2026 — rechecked and worked
+
+The register is `docs/AUDIT-2026-10-23.md`. In one paragraph each:
+
+- **QA's red browser job had a root cause, not a flake.** The log was readable: `apt-get install
+  chromium-browser` replaced the runner image's own Chromium with a snap wrapper, the snap store
+  answered 408, an `||` fallback hid it, `--version` exited 3. Both workflows now use the image's
+  browser, chosen only if it runs. Not yet seen on a real runner: that needs a push.
+- **Eight enforcement records rechecked.** Four re-read in full and re-dated (`enf-uber-ap-2026`,
+  `enf-uber-ap-2024`, `enf-apple-ec-2025`, `enf-meta-ec-2025`). Four left unchanged with the reason:
+  **two proposals the author decided on 24 Oct 2026 and that are now recorded** (the adtech appeal,
+  T-794/25, with the case-number conflict AT.40670 / AT.40760 stated and unresolved; the
+  supervisory-fee outcome now carries "from the date the judgments become final") **and two gaps** ([2026] IEHC 323 unidentified; courts.ie judgments offline since 21 Oct). Two candidates are
+  not added: T-638/26 and T-639/26 (Google, 28 Sep 2026) and the Booking.com DSA opening.
+- **Two publishers deploy every push to `main`**, the ungated branch build first; the skills that said
+  "no CI, no deploy gate" now point to `docs/DEPLOYMENT.md` §1a.
+- **The observability viewer binds loopback only, enforced**, and refuses a non-loopback `Host`.
+- **Dialogs:** `app.js` and `js/threshold.js` now inert the whole background and the passage traps Tab;
+  `js/dialog.js` lifts inert for a dialog opened over another. **Language note** keeps "· UI EN" on
+  phones. **`brief_part`** absent and `null` read differently. **No colour-only state was confirmed.**
+- **HSTS could not be measured from here** (the proxy hides it on hosts that send it).
+- **Asked of the author on 24 Oct, not remembered:** whether the Pages source is "GitHub Actions",
+  whether a ruleset requires QA on `main`, and an HSTS reading from an ordinary network. All three
+  stay open; `docs/DEPLOYMENT.md` §1a and §3 say how to check each.
+
+**Local state:** `agent/records/` and `agent/observability/runs/`, which this session's `agent/ux/` and
+health-monitor runs created, were moved to the session scratchpad rather than deleted; with them in
+the tree the governance suite fails three tests by design.
+
+## (previous header) Dataset explorer: full screen and layout direction — 22 October 2026
+
 **Last updated:** dataset explorer — full screen and layout direction · 22 October 2026
 **Branch:** `claude/datasets-explorer`, restarted from `origin/main` at `cfe3607` after pull request
 #13 merged (the procedure for a merged branch). Merged into `main` with `--no-ff` (`8f03a13`) on
 the author's instruction of 22 Oct 2026 ("Ok, merge"), no pull request; not deleted.
-
-## Dataset explorer: full screen and layout direction — 22 October 2026
 
 **Asked** (in Italian): the graphs viewable full screen and "rotatable — moving between vertical
 and horizontal is enough, not necessarily a full rotation". Read as a layout-direction switch, the

@@ -285,10 +285,18 @@ context, which `newPage()` creates precisely so this cannot cross.
 
 ## 8. Running it in CI
 
-`.github/workflows/qa.yml`, job **browser**. It installs a browser on the *runner* with
-`apt` — a runner dependency, not a repository one; nothing is added to the tree — and runs
-the suite with `--require-browser`, so a missing browser fails the job rather than skipping
-it. The machine-readable result is uploaded as an artifact. The job then asserts the
+`.github/workflows/qa.yml`, job **browser** (and `pages.yml`, job **gate-browser**). It uses
+the browser the *runner image* already has — the first of `/usr/bin/chromium`, the image's
+Chromium build and `/usr/bin/google-chrome` that actually runs `--version` — and falls back
+to `apt` only when the image has none; either way a runner dependency, not a repository one,
+and nothing is added to the tree. It then runs the suite with `--require-browser`, so a
+missing browser fails the job rather than skipping it. **Until 23 Oct 2026 the step always ran
+`apt-get install chromium-browser`**, which on Ubuntu 24.04 replaces the image's working
+Chromium link with a wrapper around the chromium snap, fetched from the snap store on every
+run; when the store answered HTTP 408 on 22 Oct 2026 (QA run 39770094879, `c5b2ad7`) the
+snap was left half-installed, an `||` fallback hid the apt failure, and "Report which browser
+this run used" exited 3. That report step is unchanged and still fails the job on a browser
+that cannot start. The machine-readable result is uploaded as an artifact. The job then asserts the
 repository is byte-identical afterwards.
 
 The workflow's final job prints what a green tick does **not** mean: it is not a deploy gate,

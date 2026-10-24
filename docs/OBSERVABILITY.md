@@ -436,7 +436,10 @@ and asserting the view notices.
 
 A `node:http` server (no framework) over the store, and a static page. It
 binds to loopback: even redacted, agent inputs and outputs are not something
-to put on an interface by accident.
+to put on an interface by accident. Since 23 Oct 2026 that is enforced, not
+defaulted — any other bind address throws, and a request whose `Host` is not
+loopback is refused (`docs/HEALTH-MONITOR.md` §6). It checks no credential:
+any process on the machine can read the store.
 
 It shows, per the session's requirement: running / completed / degraded /
 failed traces; open handoffs; pending human approvals; website changes; and

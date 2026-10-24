@@ -6,9 +6,9 @@
      · the viewer under /  (agent/observability/viewer/)
      · a JSON API over the trace store under /api/
 
-   It binds to 127.0.0.1 by default. The store contains inputs and
-   outputs of agent runs; even redacted, that is not something to
-   expose on an interface by accident.
+   It binds to loopback ONLY — enforced, not defaulted (below). The
+   store contains inputs and outputs of agent runs; even redacted,
+   that is not something to expose on an interface by accident.
 
    The viewer is a development tool, not part of the site. It is
    deliberately not wired into js/shell.js, does not load the
@@ -27,6 +27,35 @@ import { DEFAULT_RUN_DIR, OBS_ROOT } from './sink.mjs';
 const VIEWER = join(OBS_ROOT, 'viewer');
 const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml' };
 
+/* 23 Oct 2026. LOOPBACK ONLY, AND ENFORCED RATHER THAN DEFAULTED.
+   Until this date `host` was a parameter with a loopback default, and
+   serve({ host: '0.0.0.0' }) put the whole trace store on a network
+   with nothing in the request path to object (docs/HEALTH-MONITOR.md
+   §6). The viewer checks no credential, by design: it is a development
+   tool, and bolting a token onto it would give it a security model
+   nobody tests (AGENTS.md, Known hazards). So its boundary is the bind
+   address, and a bind address other than a loopback LITERAL is now
+   refused — before listening, and again on the address actually bound.
+   A hostname is refused too, `localhost` included: what a name
+   resolves to is the resolver's decision, not this file's.
+
+   The Host header is checked on every request as well. A loopback
+   bind does not stop a web page the developer has open from reaching
+   127.0.0.1 through a DNS name its owner re-points there (DNS
+   rebinding); such a request carries that name in Host and is refused.
+   Neither check identifies a caller: any process on this machine can
+   still read the store, which is what "local" means here. */
+export const LOOPBACK_BIND_ADDRESSES = Object.freeze(['127.0.0.1', '::1']);
+
+export function isLoopbackAddress(address) {
+  return LOOPBACK_BIND_ADDRESSES.includes(String(address));
+}
+
+/** Host header values a loopback viewer can legitimately be asked for. */
+export function isLoopbackHostHeader(value) {
+  return typeof value === 'string' && /^(?:127\.0\.0\.1|localhost|\[::1\])(?::\d{1,5})?$/i.test(value);
+}
+
 /**
  * @param {{port?:number, host?:string, dir?:string, quiet?:boolean}} opts
  *
@@ -37,6 +66,9 @@ const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=u
  * banner in the middle of a health report is noise, not information.
  */
 export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR, quiet = false } = {}) {
+  if (!isLoopbackAddress(host)) {
+    throw new Error(`observability viewer: refusing to bind "${host}". It serves the trace store with no credential check and binds loopback only: ${LOOPBACK_BIND_ADDRESSES.join(' or ')}.`);
+  }
   const json = (res, body, code = 200) => {
     const s = JSON.stringify(body);
     res.writeHead(code, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'content-length': Buffer.byteLength(s) });
@@ -44,6 +76,7 @@ export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR, 
   };
 
   const server = createServer((req, res) => {
+    if (!isLoopbackHostHeader(req.headers.host)) return json(res, { error: 'host not allowed: this viewer answers only requests addressed to loopback' }, 403);
     let url;
     try { url = new URL(req.url, `http://${host}:${port}`); }
     catch { return json(res, { error: 'bad request' }, 400); }
@@ -197,6 +230,12 @@ export function serve({ port = 7801, host = '127.0.0.1', dir = DEFAULT_RUN_DIR, 
   });
 
   server.listen(port, host, () => {
+    const bound = server.address();
+    if (!bound || !isLoopbackAddress(bound.address)) {
+      server.close();
+      server.emit('error', new Error(`observability viewer: bound ${bound && bound.address}, which is not loopback; closed`));
+      return;
+    }
     if (quiet) return;
     console.log(`observability view → http://${host}:${port}`);
     console.log(`  store: ${dir}`);

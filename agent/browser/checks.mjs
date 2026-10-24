@@ -974,6 +974,27 @@ export async function checkLanguageSwitching(page, origin) {
     `${after.fallbacks} of ${after.keys} translated node(s) fell back to English in ${target} — reported, not judged: the register declares its gaps and tools/i18n-audit.mjs owns whether they are declared correctly`,
     { fallbacks: after.fallbacks, keys: after.keys, locale: target }));
 
+  /* 23 Oct 2026. On a tool page the chrome carries the chosen language
+     and says the interface around it is English. At 820px and below the
+     narrow chrome hid the "· UI EN" half, so a phone read "IT" alone and
+     so did the accessible name. Measured at the reflow width, where it
+     is tightest; the choice is still in localStorage from the switch. */
+  await page.setViewport(VIEWPORTS[0]);
+  await page.goto(`${origin}/enforcement.html`);
+  const note = await page.waitFor(`(() => {
+    const n = document.querySelector('.chrome-lang');
+    if (!n) return null;
+    const inner = document.querySelector('.chrome-inner');
+    return { text: n.innerText.replace(/\\s+/g, ' ').trim(),
+      overflow: inner ? inner.scrollWidth - inner.clientWidth : 0 };
+  })()`, { timeoutMs: 8000 });
+  await page.send('Emulation.clearDeviceMetricsOverride', {});
+  out.push(!note
+    ? bad('lang:chrome-note', 'localization', `with ${target} chosen, enforcement.html at ${VIEWPORTS[0].width}px rendered no language note in the chrome`)
+    : /UI EN/.test(note.text) && note.overflow <= 0
+      ? ok('lang:chrome-note', 'localization', `at ${VIEWPORTS[0].width}px the chrome reads "${note.text}": the chosen language and that the interface is English`, note)
+      : bad('lang:chrome-note', 'localization', `at ${VIEWPORTS[0].width}px the chrome reads "${note.text}"${note.overflow > 0 ? ` and overflows by ${note.overflow}px` : ''} — it must say the interface text is English`, note));
+
   return out;
 }
 
@@ -1187,6 +1208,63 @@ export async function checkDialogs(page, origin) {
     : bad('dialog:trap', 'dialogs', 'focus escaped the dialog within 25 tab presses'));
 
   await page.key('Escape', { code: 'Escape', keyCode: 27 });
+
+  /* 23 Oct 2026. The checks above ask one dialog, the palette, which is
+     js/dialog.js. The brief's own dialogs are app.js's makeModal and the
+     threshold passage is js/threshold.js — agent/ux/ found the three had
+     drifted, and measured here, the brief's contents left 132 focusable
+     elements live behind it and the passage let focus out on the first
+     Tab. Each is now asked the same three questions in the rendered
+     page: is anything outside it still reachable, does focus stay in
+     after 25 Tabs, and does Escape close it. */
+  const contract = (sel) => `(() => {
+    const d = document.querySelector(${JSON.stringify(sel)});
+    if (!d) return null;
+    const live = [...document.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])')]
+      .filter((n) => !d.contains(n) && !n.closest('[inert]') && !n.closest('[aria-hidden="true"]') && n.getClientRects().length);
+    return { liveOutside: live.length, sample: live.slice(0, 5).map((n) => n.tagName + '.' + String(n.className).split(' ')[0]), inside: d.contains(document.activeElement) };
+  })()`;
+  const askContract = async (name, sel, isOpen) => {
+    const at = await page.evaluate(contract(sel));
+    if (!at) { out.push(bad(`dialog:${name}-open`, 'dialogs', `${sel} did not open`)); return; }
+    out.push(at.liveOutside === 0
+      ? ok(`dialog:${name}-inert`, 'dialogs', `nothing outside ${sel} is reachable while it is open`, at)
+      : bad(`dialog:${name}-inert`, 'dialogs', `${at.liveOutside} focusable element(s) outside ${sel} stay live while it is open`, at));
+    for (let i = 0; i < 25; i++) await page.key('Tab', { code: 'Tab', keyCode: 9 });
+    const after = await page.evaluate(contract(sel));
+    out.push(after && after.inside
+      ? ok(`dialog:${name}-trap`, 'dialogs', `focus is still inside ${sel} after 25 tab presses`)
+      : bad(`dialog:${name}-trap`, 'dialogs', `focus escaped ${sel} within 25 tab presses`));
+    await page.key('Escape', { code: 'Escape', keyCode: 27 });
+    const closed = await page.waitFor(`(() => (${isOpen}) ? null : true)()`, { timeoutMs: 3000 });
+    out.push(closed
+      ? ok(`dialog:${name}-escape`, 'dialogs', `Escape closes ${sel}`)
+      : bad(`dialog:${name}-escape`, 'dialogs', `${sel} is still open after Escape`));
+  };
+
+  await page.goto(`${origin}/index.html`);
+  await page.evaluate(`document.getElementById('openTree') && document.getElementById('openTree').click()`);
+  await askContract('brief-contents', '#treeScrim', `document.getElementById('treeScrim').classList.contains('show')`);
+
+  /* The palette opened over the contents: app.js has made its scrim
+     inert, and js/dialog.js must lift that or the palette takes no focus. */
+  await page.goto(`${origin}/index.html`);
+  await page.evaluate(`document.getElementById('openTree') && document.getElementById('openTree').click()`);
+  await page.key('/', { code: 'Slash', keyCode: 191 });
+  const stacked = await page.waitFor(`(() => { const i = document.getElementById('cmdkInput'); return i && document.activeElement === i && !i.closest('[inert]') ? true : null; })()`, { timeoutMs: 3000 });
+  out.push(stacked
+    ? ok('dialog:stacked', 'dialogs', 'the palette opened over the contents takes focus and is not inert')
+    : bad('dialog:stacked', 'dialogs', 'the palette opened over the contents did not take focus, or sits in an inert subtree'));
+
+  await page.goto(`${origin}/enforcement.html`);
+  await page.key('/', { code: 'Slash', keyCode: 191 });
+  await page.waitFor(`(() => document.getElementById('cmdkInput') === document.activeElement || null)()`, { timeoutMs: 3000 });
+  await page.type('thirty-two path');   /* in two pieces, as checkThreshold types it */
+  await page.type('s');
+  await page.waitFor(`(() => document.querySelectorAll('#cmdkResults [role=option]').length === 1 || null)()`, { timeoutMs: 4000 });
+  await page.key('Enter', { code: 'Enter', keyCode: 13 });
+  await page.waitFor(`(() => document.querySelector('.thr-scrim') ? true : null)()`, { timeoutMs: 4000 });
+  await askContract('threshold', '.thr-scrim', `document.querySelector('.thr-scrim')`);
 
   /* The theme control — agent/ux/ finding: two implementations, and
      only one exposes aria-pressed. Asked here of the rendered page

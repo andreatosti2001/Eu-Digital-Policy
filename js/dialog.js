@@ -52,6 +52,33 @@ export function createDialog(panel, scrim, opts = {}) {
 
   let opener = null;
   let open = false;
+  let lifted = [];
+
+  /* A dialog opened over another dialog may sit in a subtree that dialog
+     made inert — app.js inerts every top-level element but its own, the
+     palette's scrim included — and an inert dialog takes no focus. Lift
+     it from the panel's and the scrim's ancestors while this one is up,
+     and put it back on close, for the dialog underneath. */
+  function liftInert() {
+    for (const start of [panel, scrim]) {
+      for (let n = start; n && n !== document.body; n = n.parentElement) {
+        if (!n.hasAttribute('inert') || lifted.some((l) => l.el === n)) continue;
+        lifted.push({ el: n, hidden: n.getAttribute('aria-hidden') });
+        n.removeAttribute('inert');
+        n.removeAttribute('aria-hidden');
+      }
+    }
+  }
+  function restoreInert() {
+    for (const l of lifted) {
+      /* only while the dialog underneath still holds it (its marker): if
+         that one closed first, putting inert back would strand this one */
+      if (!l.el.hasAttribute('data-modal-was') && !l.el.hasAttribute('data-was-inert')) continue;
+      l.el.setAttribute('inert', '');
+      if (l.hidden !== null) l.el.setAttribute('aria-hidden', l.hidden);
+    }
+    lifted = [];
+  }
 
   const api = {
     panel,
@@ -61,6 +88,7 @@ export function createDialog(panel, scrim, opts = {}) {
       if (open) return;
       opener = trigger || document.activeElement;
       open = true;
+      liftInert();
       panel.hidden = false;
       if (scrim) { scrim.hidden = false; requestAnimationFrame(() => scrim.classList.add('show')); }
       requestAnimationFrame(() => panel.classList.add('open'));
@@ -76,6 +104,7 @@ export function createDialog(panel, scrim, opts = {}) {
       panel.classList.remove('open');
       if (scrim) scrim.classList.remove('show');
       inertSiblings(false);
+      restoreInert();
       const i = stack.indexOf(api);
       if (i > -1) stack.splice(i, 1);
       const done = () => { panel.hidden = true; if (scrim) scrim.hidden = true; };

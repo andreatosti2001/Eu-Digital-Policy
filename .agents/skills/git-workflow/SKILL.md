@@ -14,8 +14,12 @@ Branch, diff, commit and push discipline. Whether a change may be made at all is
 
 ## Purpose
 
-A push to `main` publishes to the public site. There is no CI, no deploy gate and no review
-step between a commit and a reader. The validators are advisory, so the discipline has to be.
+A push to `main` publishes to the public site. CI (`qa.yml`) and a gated deploy (`pages.yml`)
+both run on it, but GitHub's ungated branch build was measured deploying the same commit
+first (22 Oct 2026), and no check was measured as required before a merge, so neither is a
+review step between a commit and a reader. `docs/DEPLOYMENT.md` §1 and §3 are the one home for
+what was measured and which settings would change it. Until the owner changes them the
+discipline has to be yours: run the checks before you push, not after CI reports.
 
 ## The rules
 

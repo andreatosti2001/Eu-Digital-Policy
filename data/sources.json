@@ -867,6 +867,34 @@
       "note": "Read on 27 Sep 2026 from the Publications Office’s Cellar by CELEX number (62025TN0438). Apple Inc. seeks annulment in full or in part of Commission Decision C(2025) 2090 final of 23 April 2025 in case DMA.100109, adopted under Arts 29(1)(a), 30(1)(a) and 31(1)(h) DMA, or annulment or reduction of the fine imposed by its Art. 2. Five pleas; the first alleges misinterpretation and misapplication of Art. 5(4) DMA."
     },
     {
+      "id": "src-oj-t794-25-google-action",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "gc",
+      "publisher_name": "General Court of the European Union",
+      "title": "Action brought on 20 November 2025 – Google and Alphabet v Commission (Case T-794/25), OJ C/2026/185",
+      "url": "http://publications.europa.eu/resource/celex/62025TN0794",
+      "url_status": "url:live",
+      "published": "2026-01-12",
+      "accessed": "2026-10-23",
+      "language": "en",
+      "note": "Read on 23 Oct 2026 from the Publications Office’s Cellar by CELEX number (62025TN0794, XHTML manifestation). Google LLC and Alphabet Inc. seek annulment in whole or in part of the Commission’s prohibition decision of 5 September 2025 ‘in Case AT.40760 – Google - Adtech and Data-related practices’ under Article 102 TFEU and Article 54 EEA, and annulment or reduction of the fine. Seventeen pleas. The case number given here, AT.40760, differs from the AT.40670 of the Commission’s release IP/25/1992; which is correct is not established."
+    },
+    {
+      "id": "src-curia-register-2026-10-23",
+      "tier": "tier:2",
+      "type": "source-type:court-record",
+      "publisher": "cjeu",
+      "publisher_name": "Court of Justice of the European Union",
+      "title": "InfoCuria case register — state of ten cases, read 23 October 2026",
+      "url": "https://infocuria.curia.europa.eu/",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-10-23",
+      "language": "en",
+      "note": "The Court’s own case register, queried through its search service on 23 Oct 2026. Recorded as ‘Affaire pendante’ (pending) on that date: T-794/25 Google and Alphabet v Commission (lodged 20 Nov 2025); T-438/25 Apple v Commission (7 Jul 2025); T-435/25 Meta Platforms v Commission (4 Jul 2025); T-325/23 Meta Platforms Ireland v EDPB (13 Jun 2023); C-744/25 P and C-745/25 P, the Commission’s appeals in the supervisory-fee cases (20 Nov 2025); C-1009/26 Tiktok Technology and TikTok Information Technologies UK (11 Sep 2026, no referring court in the entry). Also registered and pending: T-638/26, with an application for interim measures T-638/26 R, and T-639/26, Alphabet and Google Ireland v Commission, all lodged 28 Sep 2026 — the register gives no subject matter and the Publications Office held no Official Journal notice of either action (HTTP 404 for CELEX 62026TN0638 and 62026TN0639), so which decisions they challenge is not established. The register is a live record: ‘pending’ is its state on the read date only."
+    },
+    {
       "id": "src-oj-t435-25-meta-action",
       "tier": "tier:2",
       "type": "source-type:court-record",
