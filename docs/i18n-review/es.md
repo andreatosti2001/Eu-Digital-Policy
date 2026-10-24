@@ -1,6 +1,6 @@
 # Spanish edition — translation review
 
-Generated 2026-10-22 by `node tools/i18n-review.mjs sheet es`. State when generated: **0 reviewed · 0 stale · 430 unreviewed · 0 untranslated** of 430 strings. The Spanish edition is offered to search engines only when all 430 are reviewed.
+Generated 2026-10-24 by `node tools/i18n-review.mjs sheet es`. State when generated: **0 reviewed · 0 stale · 422 unreviewed · 9 untranslated** of 431 strings. The Spanish edition is offered to search engines only when all 431 are reviewed.
 
 **How to review.** For each string below:
 
@@ -2574,54 +2574,6 @@ Stale strings were approved before and have changed since; they come first. ⚠ 
 - **ES** Las cifras de totales sancionadores acumulados difieren notablemente según la fuente y la metodología. El CMS Enforcement Tracker Report y enforcementtracker.com producen recuentos y totales distintos para el mismo periodo, y dos amplias resoluciones francesas de septiembre de 2025 (Google 325 mill. €, Shein 150 mill. €) no deben contabilizarse como sanciones del GDPR: se dictaron con arreglo al régimen francés de ePrivacy y no a través de la ventanilla única. Cuando este informe cita un total, cita la cifra más difundida y señala la incertidumbre. En un campo que se mueve deprisa, las cifras de aplicación deben tratarse como indicativas del orden de magnitud, no como cuentas auditadas.
 - [ ] approve `annex-b.p1` · `fp:19dffb87cc1d`
 
-### `annex-b.p2`
-
-- **EN** Every record on this site carries the date it was last checked against its sources, shown in its “Why this claim?” evidence drawer. The method itself — the source tiers, how a statement becomes a record, how the evidence is graded and what the method cannot establish — is set out on the methodology page. Primary legal texts should be consulted in their consolidated versions on EUR-Lex.
-- **ES** Cada registro de este sitio lleva la fecha en que se comprobó por última vez frente a sus fuentes, que se muestra en su panel «¿Por qué esta afirmación?». El método en sí —los niveles de las fuentes, cómo una afirmación se convierte en un registro, cómo se gradúa la evidencia y qué no puede establecer el método— se expone en la página de metodología. Los textos jurídicos primarios deben consultarse en sus versiones consolidadas en EUR-Lex.
-- [ ] approve `annex-b.p2` · `fp:88473f2b908f`
-
-### `annex-b.p3`
-
-- **EN** The research, the conceptual framework, the structure and the analysis in this project were conceived and carried out by the author. Artificial-intelligence tools were used in parts of the work, and this note records where and on what terms, because a reader entitled to ask where a claim comes from is equally entitled to ask how the thing making the claim was built.
-- **ES** La investigación, el marco conceptual, la estructura y el análisis de este proyecto fueron concebidos y realizados por el autor. En algunas partes del trabajo se utilizaron herramientas de inteligencia artificial, y esta nota deja constancia de dónde y en qué condiciones, porque un lector con derecho a preguntar de dónde procede una afirmación tiene el mismo derecho a preguntar cómo se construyó aquello que la formula.
-- [ ] approve `annex-b.p3` · `fp:87c2652d700a`
-
-### `annex-b.p4`
-
-- **EN** The choice was deliberate rather than expedient. AI is used here as augmentation: a means of iterating, refining and implementing, and of holding clarity and consistency across a document that would otherwise drift. It is neither a way of doing the same work faster nor a substitute for thinking. The value of the arrangement lies in the exchange between human judgement and computational assistance, not in any output generated on its own. Setting the objectives, framing the questions, assessing what came back and deciding what stands are human responsibilities, and they were not delegated.
-- **ES** La elección fue deliberada, no de conveniencia. Aquí la IA se usa como complemento: un medio para iterar, pulir e implementar, y para mantener la claridad y la coherencia en un documento que de otro modo tendería a dispersarse. No es una forma de hacer el mismo trabajo más deprisa ni un sustituto del pensamiento. El valor de ese planteamiento reside en el intercambio entre el juicio humano y la asistencia computacional, no en un resultado generado por sí solo. Fijar los objetivos, plantear las preguntas, evaluar lo que se obtenía y decidir qué se mantiene son responsabilidades humanas, y no se delegaron.
-- [ ] approve `annex-b.p4` · `fp:6c88e9908da2`
-
-### `annex-b.p5`
-
-- **EN** On the writing. AI-assisted tools, specifically Claude Opus 5 and ChatGPT 5.5, supported the review and refinement of written content, and its translation and adaptation into formal English.
-- **ES** Sobre la redacción. Herramientas asistidas por IA, en concreto Claude Opus 5 y ChatGPT 5.5, apoyaron la revisión y el perfeccionamiento de los textos, así como su traducción y adaptación a un inglés formal.
-- [ ] approve `annex-b.p5` · `fp:0252375acfa8`
-
-### `annex-b.p6`
-
-- **EN** On the code. The site was built through a vibecoding approach, with Claude Opus 5 assisting in the production and iterative development of the JavaScript, CSS and HTML. Substantial parts of the coding were delegated to the model. The direction was not. The objectives, the information architecture, the content structure, the functional requirements, the creative direction and the assessment of what was actually produced remained the author's.
-- **ES** Sobre el código. El sitio se construyó mediante un enfoque de vibecoding, con Claude Opus 5 asistiendo en la producción y el desarrollo iterativo del JavaScript, el CSS y el HTML. Partes sustanciales de la programación se delegaron en el modelo. La dirección, no. Los objetivos, la arquitectura de la información, la estructura de los contenidos, los requisitos funcionales, la dirección creativa y la evaluación de lo que efectivamente se produjo siguieron siendo del autor.
-- [ ] approve `annex-b.p6` · `fp:8df23c7ec740`
-
-### `annex-b.p7`
-
-- **EN** On research tooling. The repository also contains an experimental multi-agent pipeline (a weekly Source Scout, a verifier, an orchestrator and a private control plane) designed to surface candidate sources and propose changes for human review. As of 26 September 2026, no content on this site has been added or changed through that pipeline: every change to the text and the data was made in editing sessions directed by the author, in the way described above. Candidates the pipeline surfaces are not sources until a human has read them.
-- **ES** Sobre las herramientas de investigación. El repositorio contiene también una cadena experimental multiagente (un Source Scout semanal, un verificador, un orquestador y un plano de control privado) diseñada para detectar fuentes candidatas y proponer cambios sujetos a revisión humana. A 26 de septiembre de 2026, ningún contenido de este sitio se ha añadido ni modificado a través de esa cadena: cada cambio en el texto y en los datos se hizo en sesiones de trabajo dirigidas por el autor, de la manera descrita arriba. Las candidatas que la cadena detecta no son fuentes hasta que una persona las ha leído.
-- [ ] approve `annex-b.p7` · `fp:46fd33052255`
-
-### `annex-b.p8`
-
-- **EN** AI was therefore an implementation layer inside a human-directed process, not an autonomous author of it. The code may be AI-assisted; the purpose, the structure, the content, the research logic and the creative direction were defined independently and supervised throughout.
-- **ES** La IA fue, por tanto, una capa de implementación dentro de un proceso dirigido por una persona, no su autor autónomo. El código puede estar asistido por IA; la finalidad, la estructura, el contenido, la lógica de la investigación y la dirección creativa se definieron de forma independiente y se supervisaron en todo momento.
-- [ ] approve `annex-b.p8` · `fp:16c164fa7536`
-
-### `annex-b.p9`
-
-- **EN** Every AI-assisted output was reviewed and checked afterwards for accuracy, internal consistency, functional coherence and agreement with what the project is actually trying to say. Elsewhere this brief insists that entry into force is not application, that an announced fine is not a collected one, and that unknown is not zero. The same distinctions apply to its own making: assistance is not authorship, and delegation is not abdication.
-- **ES** Cada resultado asistido por IA se revisó y comprobó después en cuanto a su exactitud, su coherencia interna, su coherencia funcional y su conformidad con lo que el proyecto pretende decir realmente. En otros lugares este documento insiste en que la entrada en vigor no es la aplicación, en que una multa anunciada no es una multa cobrada y en que desconocido no significa cero. Las mismas distinciones valen para su propia elaboración: la asistencia no es autoría, y delegar no es abdicar.
-- [ ] approve `annex-b.p9` · `fp:95185c640523`
-
 ## edition
 
 ### `edition.title`
@@ -2635,4 +2587,51 @@ Stale strings were approved before and have changed since; they come first. ⚠ 
 - **EN** An evidence-graded analysis of the EU digital rulebook — GDPR, DSA, DMA, AI Act, Data Act and the cyber layer: structure, key provisions, compliance consequences and the case against each.
 - **ES** Un análisis del corpus normativo digital de la UE, graduado según sus fuentes — GDPR, DSA, DMA, AI Act, Data Act y la capa de ciberseguridad: estructura, disposiciones clave, consecuencias para el cumplimiento y las objeciones a cada instrumento.
 - [ ] approve `edition.description` · `fp:2de9ca944248`
+
+## annex-b
+
+### `annex-b.p2`
+
+- **EN** Every record on this site carries a date associated with the record, shown in its “Why this claim?” evidence drawer. For records that have been individually checked, that date is accompanied, where documented, by notes on the scope of the check and the sources consulted. Coverage of individual verification is not yet complete. The freshness system flags due dates and review priorities, but it does not replace consulting the sources and does not by itself certify that every item of information is up to date. For records that have not been individually verified, the associated date does not attest to a fresh check of their sources. The method itself — the source tiers, how a statement becomes a record, how the evidence is graded and what the method cannot establish — is set out on the methodology page. Acts of Union law should be consulted in their official, consolidated versions on EUR-Lex; for national legislation and the decisions of national authorities, the respective official sources should be consulted.
+- **ES** *(no translation: the edition shows the English)*
+
+### `annex-b.p3`
+
+- **EN** The research question, the conceptual framework, the structure and the analysis underlying the published content were conceived and carried out by the author. Artificial-intelligence tools were used in parts of the work, and this note records where and on what terms, because a reader entitled to ask where a claim comes from is equally entitled to ask how the thing making the claim was built.
+- **ES** *(no translation: the edition shows the English)*
+
+### `annex-b.p4`
+
+- **EN** The choice was deliberate rather than expedient. AI is used here as augmentation: a means of iterating, refining and implementing, and of holding clarity and consistency across a document that would otherwise drift. It is not merely a way of doing the same work faster, nor a substitute for thinking. The value of the arrangement lies in the exchange between human judgement and computational assistance, not in any output generated on its own. Setting the objectives, framing the questions, assessing what came back and deciding what stands are human responsibilities, and they were not delegated.
+- **ES** *(no translation: the edition shows the English)*
+
+### `annex-b.p5`
+
+- **EN** On the writing and the review. Claude Opus 5 and Claude Opus 5.5 supported the review and refinement of written content, as well as its translation and adaptation into formal English. ChatGPT (GPT-5.6 Luna), Mistral Large 4 and DeepSeek-V4.1-Flash-1017 were also used for the critical review and cross-auditing of the project. These tools were used as interlocutors to find inconsistencies, check the coherence of the arguments and test design choices, not as final authorities on the correctness of the results.
+- **ES** *(no translation: the edition shows the English)*
+
+### `annex-b.p6`
+
+- **EN** On the code. The site was built through a vibecoding approach, with Claude Opus 5 and Claude Opus 5.5 assisting in the production and iterative development of the JavaScript, CSS and HTML. Substantial parts of the coding were delegated to the models. The direction was not. The objectives, the information architecture, the content structure, the functional requirements, the creative direction and the assessment of what was actually produced remained the author’s.
+- **ES** *(no translation: the edition shows the English)*
+
+### `annex-b.p7`
+
+- **EN** On research tooling. The repository includes an automated source-discovery pipeline. The Source Scout, scheduled weekly, is the documented operational component: it identifies candidate materials and submits them to a review process, and it cannot modify the canonical data directly or publish content to the site on its own. The wider experimental design also contemplates verification and orchestration functions and a private control plane; these elements should not be understood as a fully operational end-to-end multi-agent system.
+- **ES** *(no translation: the edition shows the English)*
+
+### `annex-b.p10`
+
+- **EN** The runs documented in September 2026 made attempts to retrieve real pages. The one of 21 September produced six candidates, none of which was promoted into the canonical data. As of 26 September 2026, no content on this site had been added or changed through the pipeline: every change to the text and the data had been made in editing sessions directed by the author, in the way described above. Candidates identified by the pipeline are not verified sources until a person has examined them.
+- **ES** *(no translation: the edition shows the English)*
+
+### `annex-b.p8`
+
+- **EN** AI was therefore an implementation and assistance layer inside a human-directed process, not an autonomous author of it. The code may be AI-assisted; the purpose, the structure, the content, the research logic and the creative direction were defined independently and supervised by the author.
+- **ES** *(no translation: the edition shows the English)*
+
+### `annex-b.p9`
+
+- **EN** Every AI-assisted output actually incorporated into the project was reviewed by a person for accuracy, internal consistency and agreement with what the project is actually trying to say. The code was also put through the relevant functional checks. These checks do not amount to a guarantee of absolute correctness: where sources diverge or do not allow a single conclusion, the uncertainty must remain explicit. Elsewhere this document insists that entry into force is not application, that an announced fine is not a collected one, and that unknown is not zero. The same distinctions apply to its own making: assistance is not authorship, and delegation is not abdication.
+- **ES** *(no translation: the edition shows the English)*
 

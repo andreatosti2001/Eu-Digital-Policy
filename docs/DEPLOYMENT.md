@@ -64,7 +64,10 @@ for the last point).
   site (measured). `pages.yml` run 22 replaced it at 09:07:16 and they returned 404 again
   (measured). So either the switch came after the merge or it had not taken effect then. **The
   next push to `main` settles it**: with the setting in force, no "pages build and deployment"
-  run appears and the private paths never answer 200.
+  run appears and the private paths never answer 200. **Settled the same day:** the merge of
+  pull request #15 (`74d2341`, 09:11:37 UTC) started only the "Pages" and "QA" workflows; the last
+  "pages build and deployment" run is #103, for the earlier merge. The private paths stayed 404
+  (measured 09:15 and after). The switch holds, and `pages.yml` is now the only publisher.
 - **Rulesets: none.** The repository's Rulesets page reads "You haven't created any rulesets"
   (the author's screenshot, 24 Oct 2026). Nothing requires a QA check before a merge; §3.2 is
   still undone.
