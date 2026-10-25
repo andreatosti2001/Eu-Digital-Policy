@@ -1,10 +1,63 @@
 # HANDOVER
 
+**Last updated:** v2 Session 1 — the v2.0 roadmap and the Control Room audit of 24 Oct · 25 October 2026
+**Branch:** `claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e` (the merge of #16),
+documentation only. Not pushed until the author says so.
+
+## v2 Session 1 — ROADMAP v2.0 and the audit of 24 October 2026
+
+**Asked** (in Italian): the author supplied the BRIEF v2.0 ("Contratto tra sessioni", binding on every
+v2 session), then the Control Room content audit of 24 Oct 2026 as a PDF, then approved producing the
+roadmap and recording the audit.
+
+**What exists now.**
+- `docs/AUDIT-2026-10-24.md`: the audit verbatim (Italian) and its six findings checked against the
+  code at `5f3859e`. All six are confirmed.
+- `docs/ROADMAP-v2.md`: Phases 0–5, ten decisions D-1…D-10 for the author, exit criteria. **Proposed,
+  not approved**; its §8 approval record is empty.
+- Two rows in `AGENTS.md`'s reading table.
+- No code, data, page or locale was touched.
+
+**What the author should know first.**
+- **The audit's own freshness command gives a false all-clear.**
+  - `node tools/freshness.mjs --as-of 2026-10-24` takes `--as-of` as the date and reports 0 prompts,
+    exit 0.
+  - `node tools/freshness.mjs 2026-10-24` reports 2.
+  - `evidence-audit.mjs` fails the other way on a bad date (all stale, exit 1).
+  - Not fixed: it is roadmap item 0.3 (D-10).
+- **Finding A's remedy, as worded, would breach `docs/CONTROL-ROOM.md` §12** (no route that executes;
+  `PROHIBITED_ROUTE_WORDS`). Roadmap 1.1 reaches the audit's goal by recording the run from the machine
+  and having the Control Room read it.
+- **The brief collides with the repository in four places**, each a decision, none taken:
+  - D-2: `applies.html` is already published, with 33 rules whose source references carry no
+    `supports` qualifier or locator, and which `evidence-audit.mjs` does not read.
+  - D-3: six status labels over sixteen taxonomy states; the draft mapping is in §5.
+  - D-4: "Tier A/B/C" vs the autonomy classes A/B/C/D.
+  - D-5: a git-based CMS with OAuth vs "no serverless" and the empty runtime-origin allowlist.
+- **The brief itself is not in the repository** (D-1).
+
+**Decided by the author on 25 Oct 2026, recorded in `docs/ROADMAP-v2.md` §8:**
+- **D-9:** the attestation goes in the Control Room trail.
+- **D-10:** item 0.3 is in Phase 0.
+
+The roadmap as a whole is **not yet approved**. D-1…D-8 are open.
+
+**Pull request #17** was opened on the author's say-so. It is not merged.
+
+**Next:** v2 Session 2 = Phase 0, only after the author approves the roadmap and that approval is
+recorded in its §8.
+
+## Branch register — 25 October 2026 (v2 Session 1)
+
+At the start `git branch -r --no-merged origin/main` listed nothing. Thirteen remote branches besides
+`main` are all already merged and not deleted. `claude/roadmap-v2-2026-10-25` is this session's; its
+disposition: pushed and opened as pull request #17 on the author's instruction of 25 Oct 2026; not merged.
+
+## (previous header) Annex B — the author's updated text, 24 October 2026
+
 **Last updated:** Annex B replaced with the author's text · 24 October 2026
 **Branch:** `claude/annex-b-2026-10-24`, cut from `main` at `74d2341` (the merge of #15). Not pushed
 until the author says so.
-
-## Annex B — the author's updated text, 24 October 2026
 
 **Asked** (in Italian): "modifica annex B con questo aggiornato", with the full Italian text pasted.
 

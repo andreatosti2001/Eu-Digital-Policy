@@ -49,6 +49,8 @@ the evidence it describes.
 | `docs/AUDIT-2026-10-14.md` | The October 2026 evidence update: what was checked against primary sources on 14 Oct 2026, what changed, what stays unresolved, and two temporal errors in the derived provision dates (CRA, Data Act) found and fixed |
 | `docs/AUDIT-2026-10-21.md` | The external audit of 21 Oct 2026, implemented: what was checked against which primary source, what changed per item, and the five places where the audit asserted something no retrieved source established |
 | `docs/AUDIT-2026-10-23.md` | The audit snapshot of 23 Oct 2026, rechecked: the QA browser job's root cause (the snap), eight enforcement records against primary sources and the two proposals left for the author, both publishers deploying every push, the viewer's enforced loopback bind, the dialogs, and what this environment could not measure (HSTS) |
+| `docs/AUDIT-2026-10-24.md` | The Control Room content audit of 24 Oct 2026 (the author's, verbatim) — the BRIEF v2.0's "P0/P1 audit" — each finding checked against the code, and where its remedies collide with `docs/CONTROL-ROOM.md` §12 |
+| `docs/ROADMAP-v2.md` | v2 Session 1: the v2.0 plan — phases 0–5, ten decisions for the author, exit criteria a session can fail. **Proposed, not approved** until its §8 says so |
 | `docs/SECURITY-VERIFICATION-2026-09-08.md` | SESSION 23.5's adversarial gate: 65 attacks, what held, the two findings, and the two boundaries this environment cannot test |
 | `README.md` | The author's own account, including eight stated limitations |
 
