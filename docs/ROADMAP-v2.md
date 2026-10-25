@@ -74,8 +74,8 @@ None is taken here. Each carries a recommendation; the recommendation is not a d
 | D-6 | What the dependency map is | Phase 2 | An extension of the 17 existing `relationships`, not a second graph: new edge kinds, if needed, go in `data/taxonomy.json`; the map is a derived view. A separate file would be a second home for the edges that already exist. |
 | D-7 | The inclusion criterion behind the Phase 2 list | Phase 2 | Item 2.0 proposes one in writing; you approve it before 2.2. The list itself is already decided by the brief and is not reopened. |
 | D-8 | The brief mentions `stratum` being reviewed "in Session 2"; this roadmap puts Phase 0 in v2 Session 2 | v2 Session 2 | Keep the brief's binding sequence (Phase 0 first) and review `stratum` in the Phase 2 design session (v2 Session 4). The brief's clause is conditional ("if it emerges in Session 2"), and nothing in Phase 0 touches the property. |
-| D-9 | Where a reviewer's attestation is recorded | Phase 0 item 0.2 | The Control Room trail, in the same entry as the decision it accompanies, bound to the same fingerprint. Not the decision ledger: the attestation is a fact about the review, not about the grant, and the ledger is one home for grants. Trade-off, stated: the trail is per-machine and git-ignored. |
-| D-10 | Item 0.3 is this session's finding, not the audit's | Phase 0 item 0.3 | Include it in Phase 0: it is a check that reports a clean result on an invalid date, and the brief's fifth principle is "on what date". |
+| D-9 | Where a reviewer's attestation is recorded — **decided 25 Oct 2026: the trail** (§8) | Phase 0 item 0.2 | The Control Room trail, in the same entry as the decision it accompanies, bound to the same fingerprint. Not the decision ledger: the attestation is a fact about the review, not about the grant, and the ledger is one home for grants. Trade-off, stated: the trail is per-machine and git-ignored. |
+| D-10 | Item 0.3 is this session's finding, not the audit's — **decided 25 Oct 2026: in Phase 0** (§8) | Phase 0 item 0.3 | Include it in Phase 0: it is a check that reports a clean result on an invalid date, and the brief's fifth principle is "on what date". |
 
 ---
 
@@ -308,4 +308,4 @@ Filled in only with the author's words. A row here is the checkpoint.
 
 | Date | What was approved | Decisions taken | By |
 |---|---|---|---|
-| — | — | — | — |
+| 25 Oct 2026 | Two decisions only. **The roadmap as a whole is not yet approved**, and v2 Session 2 does not start until it is. | **D-9:** the reviewer's attestation is recorded in the Control Room trail, in the decision's own entry, bound to the same fingerprint; not in the decision ledger. **D-10:** item 0.3 (the date argument of `freshness.mjs` and `evidence-audit.mjs`) is in Phase 0. Both as recommended. | The author, answering in v2 Session 1 |

@@ -36,13 +36,22 @@ roadmap and recording the audit.
   - D-5: a git-based CMS with OAuth vs "no serverless" and the empty runtime-origin allowlist.
 - **The brief itself is not in the repository** (D-1).
 
-**Next:** v2 Session 2 = Phase 0, only after the author approves the roadmap and records it in its §8.
+**Decided by the author on 25 Oct 2026, recorded in `docs/ROADMAP-v2.md` §8:**
+- **D-9:** the attestation goes in the Control Room trail.
+- **D-10:** item 0.3 is in Phase 0.
+
+The roadmap as a whole is **not yet approved**. D-1…D-8 are open.
+
+**Pull request #17** was opened on the author's say-so. It is not merged.
+
+**Next:** v2 Session 2 = Phase 0, only after the author approves the roadmap and that approval is
+recorded in its §8.
 
 ## Branch register — 25 October 2026 (v2 Session 1)
 
 At the start `git branch -r --no-merged origin/main` listed nothing. Thirteen remote branches besides
 `main` are all already merged and not deleted. `claude/roadmap-v2-2026-10-25` is this session's; its
-disposition is the author's (asked at the end of the session).
+disposition: pushed and opened as pull request #17 on the author's instruction of 25 Oct 2026; not merged.
 
 ## (previous header) Annex B — the author's updated text, 24 October 2026
 
