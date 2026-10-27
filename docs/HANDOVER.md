@@ -1,8 +1,101 @@
 # HANDOVER
 
-**Last updated:** v2 Session 1 — the v2.0 roadmap and the Control Room audit of 24 Oct · 25 October 2026
+**Last updated:** v2 Session 2 — schemas and technical structure (roadmap item 2.0) · 25–27 October 2026
+**Branch:** `claude/v2-session-2-schemas`, cut from `main` at `933515a` (the merge of #17),
+documentation only.
+
+## v2 Session 2 — the data design for v2.0 (item 2.0, brought forward)
+
+**Asked** (in Italian): produce D1–D6 — the dependency-map schema, the applicability-trigger schema,
+the status labels, the `evidence-audit.mjs` extension plan, the methodological note, the exclusion
+register and watchlist — and a coherence matrix. No production code, no UI, no
+`docs/CONTROL-ROOM.md`.
+
+**What the author decided first** (four questions at the start, recorded in `docs/ROADMAP-v2.md` §8):
+- The roadmap is approved. Item 2.0 is brought forward to this session; Phase 0 moves to Session 3 and
+  Phase 1 to Session 4. Items 2.1–2.6, which write data, still wait for the Phase 1 checkpoint (read
+  conservatively).
+- D-3, D-6, and the trigger as the existing applicability rule: all as recommended.
+- `stratum`: dropped, derived instead (option (c)).
+- The brief: not available when the design was drafted, so every brief-dependent point was an
+  assumption. **The author pasted it on 27 Oct 2026**, and the design was then checked against it
+  (`docs/V2-DATA-DESIGN.md` §0.1):
+  - A-1, A-3 and A-5 confirmed, with two corrections the brief required: the seven regimes go in the
+    register *or* the watchlist; and PSD3/PSR reopen only if the finance chapter is opened, not on
+    adoption;
+  - node verification added: the brief says an unverifiable node is removed or downgraded;
+  - the map is not published while any edge lacks locators ("an unverified map is worse than no map").
+  The audit PDF attached with it is word for word `docs/AUDIT-2026-10-24.md` §1.
+
+**What exists now** — design only; `data/`, `js/`, `tools/`, pages and locales are untouched:
+- `docs/V2-DATA-DESIGN.md`: the reasons, every validation rule (M-, T-, S-, R-), the D4 plan, the
+  proposed inclusion criterion (D-7), the coherence matrix and eight findings.
+- `docs/v2-design/`: three schemas (map, applicability rule, status labels) and three record files
+  (map examples; applicability examples; the register and watchlist as proposed records).
+- `docs/METHODOLOGY-NOTE-v2.md`: D5, final text, to ship in the same commit as the map.
+- `docs/ROADMAP-v2.md`: §8 approval row, the decided rows of §3, the session numbering of §4 and §6.
+
+**What the author should know first:**
+- **Every legal fact in the new files was read on 25 Oct 2026**, from Cellar (Official Journal texts and
+  proposals, by CELEX), the Publications Office's SPARQL metadata and the Legislative Observatory.
+  EUR-Lex returns empty pages to this environment; Cellar and OEIL do not. That is worth knowing for
+  every later evidence session.
+- **All 17 existing relationships derive as `unverified`** under the v2 rule (bare source IDs, no
+  locator). That is the data's state made visible, not a regression.
+- **None of the 33 applicability rules is publishable at the v2 standard** (v1 sources). What
+  applies.html does about it: D-2, decided 27 Oct 2026 — kept, with a notice in Phase 1.
+- **Eight findings in existing data, none fixed** (`docs/V2-DATA-DESIGN.md` §7). Most consequential:
+  - F-2: `data-omnibus.proposes_to_amend` lists the DGA, which COM(2025) 837 Art. 10(3)(a) would
+    *repeal*;
+  - F-3: it omits the CER Directive, which Art. 9 amends;
+  - F-4: `ap-ai-act-03`'s `_gte` key against AI Act Art. 51(2)'s "greater than";
+  - F-8: 11 rules' dates omit application events of their own obligations.
+- **Decided by the author on 27 Oct 2026** (ROADMAP-v2 §8):
+  - D-1: the brief is committed as `docs/BRIEF-v2.md`, pointed to from `AGENTS.md`;
+  - D-7: the inclusion criterion is approved;
+  - D-2: `applies.html` stays, with a notice added in Phase 1 (item 1.5);
+  - P2B: watchlist, watching COM(2025) 837;
+  - the six states outside the brief's labels: no label;
+  - the DGA: the finance-chapter condition applies to it too;
+  - the eight findings: corrected in Phase 3;
+  - the D6 reasons: drafts, which the author reviews entry by entry before item 2.1.
+- **Still open:** D-4 (the tier names) and D-5 (the CMS login); A-2 and A-4 (which acts "copyright" and
+  "AVMSD" mean), which the brief does not settle.
+
+**Validators** before and after: unchanged — `validate` 0/0, `i18n-audit` 0/0, `design-qa` 0/0,
+`evidence-audit` 0 errors / 11 warnings, `freshness` (positional date) 0 defects, `seo-audit` 0/0.
+None of them reads `docs/`.
+
+**Next:** v2 Session 3 = Phase 0 (0.1–0.4), then a checkpoint **inside** the session (report,
+validators and suites re-run, the author's explicit approval), then Phase 1 (1.1–1.5) — decided on
+27 Oct 2026 (ROADMAP-v2 §8). Before it starts, pull request #18 must be merged, or the brief and the
+Session 2 schemas are not on `main`. What the author settled for it:
+- 0.1: `as_of`, `recorded_at` and the commit analysed, shown apart; no `auto_checked_at`; no
+  `verified_at` beside `last_verified`.
+- 0.2: the attestation is required to approve **and** to deny; it uses a fixed list of sections and
+  goes in the decision's trail entry (D-9).
+- 0.3 (D-10): `--as-of YYYY-MM-DD` in both tools, exit 2 on a date that does not parse. It is also the
+  prerequisite of every date check in `docs/V2-DATA-DESIGN.md` §4.
+- 1.1: as planned — `--record` and a read-only Editorial audit view; nothing executes from the UI.
+- 1.3: with the assertion that fails on a view the inventory does not name.
+- 1.4: the security-wording sweep, listing every occurrence.
+- 1.5 (D-2): the session drafts the notice for `applies.html` and waits for the author's wording.
+
+Nothing from the Session 2 design (D1–D6) is implemented in Session 3. Item 2.1 (the register and
+watchlist into `data/`) waits for the Phase 1 checkpoint and the author's approval of the D6 reasons.
+
+## Branch register — 27 October 2026 (v2 Session 2)
+
+`git branch -r --no-merged origin/main` lists one branch: `origin/scout/digest-digest-2026-10-26T13-10-32Z`,
+the weekly Source Scout digest of 26 Oct 2026 (two files under `agent/scout/digests/`; candidates
+about the DMA, GDPR enforcement and ENISA, none touching this session's records). It is in no register
+entry, is reported to the author, and was not touched. `claude/v2-session-2-schemas` is this session's;
+its disposition: pushed and opened as pull request #18 on the author's instruction of 27 Oct 2026; not merged.
+
+## (previous header) v2 Session 1 — 25 October 2026
+
 **Branch:** `claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e` (the merge of #16),
-documentation only. Not pushed until the author says so.
+documentation only. Merged as #17 (`933515a`).
 
 ## v2 Session 1 — ROADMAP v2.0 and the audit of 24 October 2026
 

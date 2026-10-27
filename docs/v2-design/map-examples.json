@@ -1,0 +1,326 @@
+{
+  "$description": "D1 examples — every regime as a map node, and at least one edge for each relation the session prompt names. PROPOSED in v2 Session 2; nothing here is in data/. Read with docs/v2-design/map.schema.json and docs/V2-DATA-DESIGN.md §1.",
+  "$note": "THREE KINDS OF ENTRY, kept apart so that no fact gets a second home. (1) `existing_nodes` are PROJECTIONS of records already in data/instruments.json at main 933515a: they restate only what the derived view would show, so they can be regenerated from the data and must never be edited by hand. (2) `register_and_watchlist_nodes` point at the records proposed in docs/v2-design/register-watchlist.proposed.json and restate nothing. (3) `priority_inclusion_nodes`, `edges`, `sources` and `events` are proposed records that exist only here, each read on 25 Oct 2026 from a retrieved primary text; they are the starting point of items 2.2–2.6, and each of those sessions re-reads them and moves them into data/, deleting them here. `derived` blocks show what the view computes; they are illustrations of the rule, never fields to store.",
+  "$snapshot": { "commit": "933515a", "as_of": "2026-10-27" },
+  "existing_nodes": [
+    { "id": "gdpr", "scope_class": "scope:core", "legislative_status": "status:applicable", "derived": { "coverage": "covered", "has_page": true, "status_label": "label:in-force" }, "scope_decision": "absent — migration backlog (M-04)" },
+    { "id": "dsa", "scope_class": "scope:core", "legislative_status": "status:applicable", "derived": { "coverage": "covered", "has_page": true, "status_label": "label:in-force" }, "scope_decision": "absent — migration backlog (M-04)" },
+    { "id": "dma", "scope_class": "scope:core", "legislative_status": "status:applicable", "derived": { "coverage": "covered", "has_page": true, "status_label": "label:in-force" }, "scope_decision": "absent — migration backlog (M-04)" },
+    { "id": "ai-act", "scope_class": "scope:core", "legislative_status": "status:partly-applicable", "derived": { "coverage": "covered", "has_page": true, "status_label": "label:staggered" }, "scope_decision": "absent — migration backlog (M-04)" },
+    { "id": "data-act", "scope_class": "scope:core", "legislative_status": "status:partly-applicable", "derived": { "coverage": "covered", "has_page": true, "status_label": "label:staggered" }, "scope_decision": "absent — migration backlog (M-04)" },
+    { "id": "nis2", "scope_class": "scope:core", "legislative_status": "status:transposition-overdue", "derived": { "coverage": "covered", "has_page": true, "status_label": null }, "scope_decision": "absent — migration backlog (M-04)" },
+    { "id": "cer", "scope_class": "scope:core", "legislative_status": "status:transposition-overdue", "derived": { "coverage": "covered", "has_page": true, "status_label": null }, "scope_decision": "absent — migration backlog (M-04)" },
+    { "id": "dora", "scope_class": "scope:core", "legislative_status": "status:applicable", "derived": { "coverage": "covered", "has_page": true, "status_label": "label:in-force" }, "scope_decision": "absent — migration backlog (M-04)" },
+    { "id": "cra", "scope_class": "scope:core", "legislative_status": "status:partly-applicable", "derived": { "coverage": "covered", "has_page": true, "status_label": "label:staggered" }, "scope_decision": "absent — migration backlog (M-04)" },
+    { "id": "ai-omnibus", "scope_class": "scope:core", "legislative_status": "status:in-force", "derived": { "coverage": "covered", "has_page": true, "status_label": "label:in-force" }, "scope_decision": "absent — migration backlog (M-04)" },
+    { "id": "data-omnibus", "scope_class": "scope:core", "legislative_status": "status:proposal", "derived": { "coverage": "covered", "has_page": true, "status_label": "label:proposal" }, "scope_decision": "absent — migration backlog (M-04)" }
+  ],
+  "existing_nodes_note": "The eleven scope:core records are the brief's 'eleven existing'. The other thirteen records in data/instruments.json are `mapped` and unchanged: pld (adjacent, the one non-core record WITH a page — allowed, M-05), gdpr-procedural, eprivacy, cloud-ai-development-act, ecommerce-directive, nis1, chips-act, ai-liability-directive, charter, tfeu, teu; dga becomes `watched` (D6) and eidas2 `covered` (2.2). status_label values are those of docs/v2-design/status-labels.json, for 27 Oct 2026; null means the state has no label and is shown on its own (nis2 and cer, transposition overdue).",
+  "priority_inclusion_nodes": [
+    {
+      "id": "eidas2",
+      "change": "Existing record (scope:adjacent, no page). Item 2.2 promotes it: scope_class → scope:core, and adds scope_decision and status_basis. No other field changes here; its page then depends on the gate in js/routes.js (it has no dna.objective today, so M-05 would fail until 2.2 writes one).",
+      "add": {
+        "scope_class": "scope:core",
+        "status_basis": [
+          { "source_id": "src-eurlex-eidas2", "supports": "supports:direct", "locator": "Art. 2 (entry into force) — as recorded in the existing status_note, re-read on 14 Oct 2026; item 2.2 re-reads it" }
+        ],
+        "scope_decision": {
+          "disposition": "included",
+          "criterion": ["crit:object-infrastructure", "crit:horizontal"],
+          "reason": "DRAFT. eIDAS 2.0 establishes the European Digital Identity Wallet and the trust services that other instruments rely on for identification — the EHDS among them (EHDS Art. 16(1)). It is digital infrastructure in the criterion's sense, and the brief names it first among its priority inclusions.",
+          "approved_on": null,
+          "refer_to": [],
+          "watch_for": null,
+          "sources": [{ "source_id": "src-eurlex-eidas2", "supports": "supports:direct", "locator": "Title; Art. 1 (amendments to Regulation (EU) No 910/2014) — item 2.2 confirms the locator" }],
+          "last_verified": "2026-10-14"
+        }
+      },
+      "derived": { "coverage": "covered", "status_label": "label:in-force", "enables": ["ehds"] }
+    },
+    {
+      "id": "ehds",
+      "aliases": ["european-health-data-space", "reg-2025-327"],
+      "celex": "32025R0327",
+      "short_name": "EHDS",
+      "full_name": "Regulation (EU) 2025/327 on the European Health Data Space and amending Directive 2011/24/EU and Regulation (EU) 2024/2847",
+      "kind": "kind:regulation",
+      "scope_class": "scope:core",
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-10-25",
+      "status_note": "In force since 25 March 2025; applies from 26 March 2027, with later dates for priority categories of personal electronic health data and EHR systems (Art. 105). The site already records this as clm-ehds-dates and in src-eurlex-ehds; item 2.4 adds the timeline events. Not yet applicable on 27 Oct 2026, hence in force and not partly applicable.",
+      "status_basis": [
+        { "source_id": "src-eurlex-ehds", "supports": "supports:direct", "locator": "Art. 105; Publications Office metadata: in force, dates 2025-03-25, 2027-03-26, 2029-03-26, 2031-03-26, 2035-03-26" }
+      ],
+      "milestones": [],
+      "sources": ["src-eurlex-ehds", "src-ec-ehds-page"],
+      "last_verified": "2026-10-25",
+      "scope_decision": {
+        "disposition": "included",
+        "criterion": ["crit:object-data", "crit:sector-instance"],
+        "reason": "DRAFT. The EHDS is the first sectoral data space, and it is built on the instruments the brief covers: it borrows eIDAS identification (Art. 16(1)), amends the CRA (Art. 104) and works with the GDPR's supervisory authorities. It is the health sector's instance of the data layer.",
+        "approved_on": null,
+        "refer_to": [],
+        "watch_for": null,
+        "sources": [{ "source_id": "src-eurlex-ehds", "supports": "supports:direct", "locator": "Art. 16(1); Art. 104; title" }],
+        "last_verified": "2026-10-25"
+      },
+      "derived": { "coverage": "covered", "status_label": "label:in-force", "has_page": "not until item 2.4 writes dna.objective, milestones and a claim" }
+    },
+    {
+      "id": "csa",
+      "aliases": ["cyber-solidarity-act", "reg-2025-38"],
+      "celex": "32025R0038",
+      "short_name": "Cyber Solidarity Act",
+      "full_name": "Regulation (EU) 2025/38 laying down measures to strengthen solidarity and capacities in the Union to detect, prepare for and respond to cyber threats and incidents and amending Regulation (EU) 2021/694 (Cyber Solidarity Act)",
+      "kind": "kind:regulation",
+      "scope_class": "scope:core",
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-10-25",
+      "status_note": "In force since 4 February 2025, the twentieth day after publication (Art. 26; OJ L 2025/38, 15.1.2025), with no separate application date in Art. 26. Read on 25 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force from that date.",
+      "status_basis": [
+        { "source_id": "src-eurlex-csa", "supports": "supports:direct", "locator": "Art. 26; Publications Office metadata: in force, entry into force 2025-02-04" }
+      ],
+      "milestones": [],
+      "sources": ["src-eurlex-csa"],
+      "last_verified": "2026-10-25",
+      "scope_decision": {
+        "disposition": "included",
+        "criterion": ["crit:object-security", "crit:horizontal"],
+        "reason": "DRAFT. The Act builds the Union's operational layer of cybersecurity — the European Cybersecurity Alert System, the Cybersecurity Emergency Mechanism and the incident review mechanism (Art. 1(1)) — on NIS2's institutions and definitions (Art. 2). It completes the cyber layer the brief analyses.",
+        "approved_on": null,
+        "refer_to": [],
+        "watch_for": null,
+        "sources": [{ "source_id": "src-eurlex-csa", "supports": "supports:direct", "locator": "Art. 1(1); Art. 2, points (3)–(9)" }],
+        "last_verified": "2026-10-25"
+      },
+      "derived": { "coverage": "covered", "status_label": "label:in-force" }
+    },
+    {
+      "id": "iea",
+      "aliases": ["interoperable-europe-act", "reg-2024-903"],
+      "celex": "32024R0903",
+      "short_name": "Interoperable Europe Act",
+      "full_name": "Regulation (EU) 2024/903 laying down measures for a high level of public sector interoperability across the Union (Interoperable Europe Act)",
+      "kind": "kind:regulation",
+      "scope_class": "scope:core",
+      "legislative_status": "status:applicable",
+      "status_as_of": "2026-10-25",
+      "status_note": "In force since 11 April 2024, the twentieth day after publication (Art. 23(1); OJ L 2024/903, 22.3.2024); applies from 12 July 2024, with Art. 3(1)–(4) and Art. 17 applying from 12 January 2025 (Art. 23(2)). Both dates have passed, so the whole Act applies. Read on 25 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the same three dates.",
+      "status_basis": [
+        { "source_id": "src-eurlex-iea", "supports": "supports:direct", "locator": "Art. 23(1)–(2); Publications Office metadata: in force, dates 2024-04-11, 2024-07-12, 2025-01-12" }
+      ],
+      "milestones": ["tl-iea-2024-04-11-entry-into-force", "tl-iea-2024-07-12-application"],
+      "sources": ["src-eurlex-iea"],
+      "last_verified": "2026-10-25",
+      "scope_decision": {
+        "disposition": "included",
+        "criterion": ["crit:object-infrastructure", "crit:horizontal"],
+        "reason": "DRAFT. The Act sets common rules and a governance framework for the cross-border interoperability of trans-European digital public services (Art. 1(1)–(2)). It is the public-sector counterpart of the rulebook's private-sector duties, and digital infrastructure in the criterion's sense.",
+        "approved_on": null,
+        "refer_to": [],
+        "watch_for": null,
+        "sources": [{ "source_id": "src-eurlex-iea", "supports": "supports:direct", "locator": "Art. 1(1)–(2)" }],
+        "last_verified": "2026-10-25"
+      },
+      "derived": { "coverage": "covered", "status_label": "label:in-force" }
+    },
+    {
+      "id": "dna",
+      "aliases": ["digital-networks-act", "com-2026-16"],
+      "celex": "52026PC0016",
+      "short_name": "Digital Networks Act",
+      "full_name": "Proposal for a Regulation on digital networks, amending Regulation (EU) 2015/2120, Directive 2002/58/EC and Decision No 676/2002/EC and repealing Regulation (EU) 2018/1971, Directive (EU) 2018/1972 and Decision No 243/2012/EU (Digital Networks Act) (COM(2026) 16)",
+      "kind": "kind:proposal",
+      "scope_class": "scope:core",
+      "legislative_status": "status:proposal",
+      "status_as_of": "2026-10-25",
+      "status_note": "NOT LAW. A Commission proposal of 21 January 2026 (COM(2026) 16), procedure 2026/0013(COD). The Legislative Observatory records the committee referral announced in Parliament on 27 April 2026 and a committee draft report of 20 October 2026 (PE791.994); stage reached 'Awaiting committee decision'. No Parliament position and no Council position are recorded. The proposal's articles were not read. A regime still forming: its status label is whatever the sources establish on the date checked (docs/ROADMAP-v2.md item 2.6). Read on 25 Oct 2026.",
+      "status_basis": [
+        { "source_id": "src-oeil-2026-0013", "supports": "supports:direct", "locator": "Key events (21/01/2026 proposal published; 27/04/2026 committee referral); Technical information: 'Stage reached in procedure: Awaiting committee decision'" },
+        { "source_id": "src-eurlex-dna-proposal", "supports": "supports:partial", "locator": "Title; Publications Office metadata: document date 2026-01-21, no in-force flag" }
+      ],
+      "milestones": ["tl-dna-2026-01-21-proposal"],
+      "sources": ["src-eurlex-dna-proposal", "src-oeil-2026-0013"],
+      "last_verified": "2026-10-25",
+      "scope_decision": {
+        "disposition": "included",
+        "criterion": ["crit:object-infrastructure", "crit:horizontal"],
+        "reason": "DRAFT. The proposal would replace the European Electronic Communications Code and the BEREC Regulation with one Regulation on digital networks and amend the ePrivacy Directive (title): the network layer under every other instrument the brief covers. Included as a regime still forming, labelled as a proposal until its sources say otherwise.",
+        "approved_on": null,
+        "refer_to": [],
+        "watch_for": null,
+        "sources": [{ "source_id": "src-eurlex-dna-proposal", "supports": "supports:direct", "locator": "Title" }],
+        "last_verified": "2026-10-25"
+      },
+      "derived": { "coverage": "covered", "status_label": "label:proposal" }
+    }
+  ],
+  "register_and_watchlist_nodes": [
+    { "id": "vida", "record": "register-watchlist.proposed.json", "derived": { "coverage": "excluded", "status_label": "label:in-force" } },
+    { "id": "avmsd", "record": "register-watchlist.proposed.json", "derived": { "coverage": "excluded", "status_label": "label:in-force" } },
+    { "id": "copyright-dsm", "record": "register-watchlist.proposed.json", "derived": { "coverage": "excluded", "status_label": "label:in-force" } },
+    { "id": "gpsr", "record": "register-watchlist.proposed.json", "derived": { "coverage": "excluded", "status_label": "label:in-force" } },
+    { "id": "eaa", "record": "register-watchlist.proposed.json", "derived": { "coverage": "excluded", "status_label": "label:in-force" } },
+    { "id": "p2b", "record": "register-watchlist.proposed.json", "derived": { "coverage": "watched", "status_label": "label:in-force", "transition_label": "label:in-transition", "in_transition": { "via": "data-omnibus", "toward": null } } },
+    { "id": "ttpa", "record": "register-watchlist.proposed.json", "derived": { "coverage": "excluded", "status_label": "label:in-force" } },
+    { "id": "mica", "record": "register-watchlist.proposed.json", "derived": { "coverage": "watched", "status_label": "label:in-force" } },
+    { "id": "psd3", "record": "register-watchlist.proposed.json", "derived": { "coverage": "watched", "status_label": "label:political-agreement" } },
+    { "id": "psr", "record": "register-watchlist.proposed.json", "derived": { "coverage": "watched", "status_label": "label:political-agreement" } },
+    { "id": "dga", "record": "data/instruments.json + instrument_updates in register-watchlist.proposed.json", "derived": { "coverage": "watched", "status_label": "label:in-force", "transition_label": "label:in-transition", "in_transition": { "via": "data-omnibus", "toward": "data-act" } } }
+  ],
+  "edges": [
+    {
+      "relation": "abilitante per (enables)",
+      "id": "rel-nis2-csa-enables",
+      "from": "nis2", "to": "csa", "kind": "rel-kind:enables", "symmetric": false,
+      "summary": "The Cyber Solidarity Act defines CSIRTs, entities, sectors of high criticality, risk and incident by reference to NIS2.",
+      "provisions": [], "claims": [],
+      "sources": [{ "source_id": "src-eurlex-csa", "supports": "supports:direct", "locator": "Art. 2, points (3)–(7) and (9)" }],
+      "last_verified": "2026-10-25", "requires_verification": false,
+      "verification_note": "Read on 25 Oct 2026 in the CSA's Official Journal text. The locator is in the DEPENDENT instrument's text, as rel-kind:enables requires (M-13).",
+      "derived": { "verification_state": "verified", "modality": "law", "external": false }
+    },
+    {
+      "relation": "abilitante per (enables) — partial",
+      "id": "rel-eidas2-ehds-enables",
+      "from": "eidas2", "to": "ehds", "kind": "rel-kind:enables", "symmetric": false,
+      "summary": "Natural persons using EHDS access services may identify themselves with any electronic identification means recognised under Article 6 of the eIDAS Regulation.",
+      "provisions": [], "claims": [],
+      "sources": [{ "source_id": "src-eurlex-ehds", "supports": "supports:partial", "locator": "Art. 16(1); Art. 12 — both refer to Regulation (EU) No 910/2014, which eidas2 (Regulation (EU) 2024/1183) amends" }],
+      "last_verified": "2026-10-25", "requires_verification": false,
+      "verification_note": "Partial by construction: the EHDS refers to the eIDAS Regulation as amended, and the node eidas2 is the AMENDING act. The edge holds of eidas2 only through the amendment. Whether to model Regulation (EU) No 910/2014 as its own node is a question for item 2.2.",
+      "derived": { "verification_state": "partial", "modality": "law", "external": false }
+    },
+    {
+      "relation": "abilitante per (enables) — across the watchlist boundary",
+      "id": "rel-mica-dora-enables",
+      "record": "register-watchlist.proposed.json",
+      "derived": { "verification_state": "verified", "modality": "law", "external": true }
+    },
+    {
+      "relation": "complementare (complement) — an existing v1 edge, as it would be drawn today",
+      "id": "rel-dsa-dma-scope",
+      "record": "data/instruments.json relationships[] (unchanged)",
+      "derived": {
+        "verification_state": "unverified",
+        "why": "Its sources are bare IDs (v1): no supports, no locator. And complement is an analytical kind, so even with locators it needs a claim to be drawn as verified; its `claims` is empty. Migration means reading DSA Art. 33 and DMA Art. 3 for locators and registering the reading as an interpretation claim.",
+        "modality": "law", "external": false
+      }
+    },
+    {
+      "relation": "rinvio esterno (defers-to, external)",
+      "id": "rel-dsa-avmsd-defers",
+      "record": "register-watchlist.proposed.json",
+      "derived": { "verification_state": "verified", "modality": "law", "external": true, "label": "external referral" }
+    },
+    {
+      "relation": "rinvio (defers-to, internal) — the same kind between two covered regimes",
+      "id": "rel-iea-gdpr-defers",
+      "from": "iea", "to": "gdpr", "kind": "rel-kind:defers-to", "symmetric": false,
+      "summary": "A consultation in an interoperability regulatory sandbox does not replace the GDPR's prior consultation of the supervisory authority.",
+      "provisions": [], "claims": [],
+      "sources": [{ "source_id": "src-eurlex-iea", "supports": "supports:direct", "locator": "Art. 11(4), referring to GDPR Art. 36" }],
+      "last_verified": "2026-10-25", "requires_verification": false,
+      "verification_note": "Read on 25 Oct 2026. gdpr:art-36 is not a provision record, so `provisions` is empty.",
+      "derived": { "verification_state": "verified", "modality": "law", "external": false, "label": "referral" }
+    },
+    {
+      "relation": "sostituisce (repeals) — an existing v1 edge",
+      "id": "rel-nis2-nis1",
+      "record": "data/instruments.json relationships[] (unchanged)",
+      "derived": { "verification_state": "unverified", "why": "Bare source ID, no locator. Migration: NIS2's repeal article, read and cited.", "modality": "law", "external": true }
+    },
+    {
+      "relation": "sostituisce (repeals) — proposed",
+      "id": "rel-data-omnibus-dga-repeals",
+      "record": "register-watchlist.proposed.json",
+      "derived": { "verification_state": "verified", "modality": "proposed", "external": true }
+    },
+    {
+      "relation": "amends — law",
+      "id": "rel-ehds-cra-amends",
+      "from": "ehds", "to": "cra", "kind": "rel-kind:amends", "symmetric": false,
+      "summary": "The EHDS amends the Cyber Resilience Act, beginning with Article 13(4).",
+      "provisions": [], "claims": [],
+      "sources": [{ "source_id": "src-eurlex-ehds", "supports": "supports:direct", "locator": "Art. 104 ('Amendment to Regulation (EU) 2024/2847'), point (1)" }],
+      "last_verified": "2026-10-25", "requires_verification": false,
+      "verification_note": "Read on 25 Oct 2026. Only the article heading and point (1) were read; item 2.4 reads the rest before the edge's summary says more.",
+      "derived": { "verification_state": "verified", "modality": "law", "external": false }
+    },
+    {
+      "relation": "amends — proposed, with a descriptive locator only",
+      "id": "rel-dna-eprivacy-amends",
+      "from": "dna", "to": "eprivacy", "kind": "rel-kind:amends", "symmetric": false,
+      "summary": "PROPOSED: the Digital Networks Act would amend the ePrivacy Directive.",
+      "provisions": [], "claims": [],
+      "sources": [{ "source_id": "src-eurlex-dna-proposal", "supports": "supports:direct", "locator": "Title ('amending … Directive 2002/58/EC')" }],
+      "last_verified": "2026-10-25", "requires_verification": true,
+      "verification_note": "The proposal's articles were not read, so the locator is the title — descriptive, not structural — and the edge is drawn as partial until item 2.6 reads the amending article.",
+      "derived": { "verification_state": "partial", "modality": "proposed", "external": true }
+    },
+    {
+      "relation": "in transizione verso (derived — never stored)",
+      "id": null,
+      "derived": {
+        "node": "dga",
+        "in_transition": { "via": "data-omnibus", "toward": "data-act" },
+        "from_edges": ["rel-data-omnibus-dga-repeals", "rel-data-omnibus-data-act-amends"],
+        "why_derived": "data-omnibus has modality `proposed` (status:proposal), a repeals edge to dga and an amends edge to data-act. Nothing records 'DGA in transition' as such: the day COM(2025) 837 is adopted, withdrawn or amended, the derivation changes with its records, and no forecast is left stored behind it."
+      }
+    },
+    {
+      "relation": "in transizione (derived, no named target)",
+      "id": null,
+      "derived": {
+        "node": "p2b",
+        "in_transition": { "via": "data-omnibus", "toward": null },
+        "from_edges": ["rel-data-omnibus-p2b-repeals"],
+        "why_derived": "A proposed repeal with no amends edge to name where the rules go. The view says 'proposed for repeal by COM(2025) 837' and names no destination, because no record states one."
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "src-eurlex-csa",
+      "tier": "tier:1", "type": "source-type:regulation", "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2025/38 of 19 December 2024 (Cyber Solidarity Act) (OJ L 2025/38, 15.1.2025)",
+      "url": "http://publications.europa.eu/resource/celex/32025R0038", "url_status": "url:live",
+      "published": "2025-01-15", "accessed": "2026-10-25", "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026 from the Publications Office's Cellar by CELEX number. Art. 1 (subject matter), Art. 2 (definitions by reference to NIS2), Art. 26 (entry into force)."
+    },
+    {
+      "id": "src-eurlex-iea",
+      "tier": "tier:1", "type": "source-type:regulation", "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2024/903 of 13 March 2024 (Interoperable Europe Act) (OJ L 2024/903, 22.3.2024)",
+      "url": "http://publications.europa.eu/resource/celex/32024R0903", "url_status": "url:live",
+      "published": "2024-03-22", "accessed": "2026-10-25", "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026 from the Publications Office's Cellar by CELEX number. Art. 1 (subject matter and scope), Art. 11(4) (sandbox consultation and GDPR Art. 36), Art. 23 (entry into force and application)."
+    },
+    {
+      "id": "src-eurlex-dna-proposal",
+      "tier": "tier:1", "type": "source-type:legislative-document", "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "COM(2026) 16 final — Proposal for a Regulation on digital networks (Digital Networks Act)",
+      "url": "http://publications.europa.eu/resource/celex/52026PC0016", "url_status": "url:live",
+      "published": "2026-01-21", "accessed": "2026-10-25", "language": "en",
+      "note": "A proposal, not law. Identified on 25 Oct 2026 from the Publications Office's metadata (full title, document date 21 January 2026, no in-force flag). The proposal's articles were not read."
+    },
+    {
+      "id": "src-oeil-2026-0013",
+      "tier": "tier:2", "type": "source-type:legislative-document", "publisher": "ep",
+      "publisher_name": "European Parliament — Legislative Observatory",
+      "title": "Procedure file 2026/0013(COD): Digital Networks Act",
+      "url": "https://oeil.secure.europarl.europa.eu/oeil/en/procedure-file?reference=2026/0013(COD)", "url_status": "url:live",
+      "published": null, "accessed": "2026-10-25", "language": "en",
+      "note": "Read on 25 Oct 2026. Key events: proposal published 21/01/2026; committee referral announced 27/04/2026. Committee draft report PE791.994, 20/10/2026. Stage reached: 'Awaiting committee decision'. A living page."
+    }
+  ],
+  "events": [
+    { "id": "tl-iea-2024-04-11-entry-into-force", "date": "2024-04-11", "date_precision": "precision:day", "event_type": "event:entry-into-force", "instrument": "iea", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-iea"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 23(1): entry into force on the twentieth day following publication (OJ L 2024/903, 22.3.2024). The Publications Office's metadata records the same date." },
+    { "id": "tl-iea-2024-07-12-application", "date": "2024-07-12", "date_precision": "precision:day", "event_type": "event:application", "instrument": "iea", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-iea"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 23(2), first subparagraph: 'It shall apply from 12 July 2024.' The tranche for Art. 3(1)–(4) and Art. 17 (12 January 2025) is not an event until those provisions are records." },
+    { "id": "tl-dna-2026-01-21-proposal", "date": "2026-01-21", "date_precision": "precision:day", "event_type": "event:proposal", "instrument": "dna", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": ["ec"], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-dna-proposal", "src-oeil-2026-0013"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "COM(2026) 16: document date 21 January 2026 in the Publications Office's metadata; 'Legislative proposal published' on 21/01/2026 in the procedure file." }
+  ]
+}

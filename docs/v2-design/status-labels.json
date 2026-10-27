@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "docs/v2-design/status-labels.json",
+  "title": "Status labels (D3)",
+  "description": "PROPOSED in v2 Session 2. The brief's six status labels as a DERIVED DISPLAY GROUPING over the sixteen `status:*` states of data/taxonomy.json (decision D-3, approved 25 Oct 2026). A label is computed by the view from the record's legislative_status, its milestones, the map's edges and the as-of date; it is never stored (rule M-02), never replaces the state (the state is shown beside it), and never renames a taxonomy ID. Where no label fits, the state is shown on its own: a grouping that drops a state silently is worse than no grouping (docs/ROADMAP-v2.md §5).",
+  "x-status": "proposed",
+  "$defs": {
+    "labelId": {
+      "enum": ["label:in-force", "label:staggered", "label:proposal", "label:political-agreement", "label:withdrawn", "label:in-transition"]
+    }
+  },
+  "x-labels": [
+    {
+      "id": "label:in-force",
+      "it": "in vigore",
+      "en": "In force",
+      "kind": "primary",
+      "states": ["status:in-force", "status:applicable"],
+      "meaning": "The act is law. Shown with the state beside it, because in force is not applicable: an act whose every application date is still ahead (the EHDS on 27 Oct 2026) carries this label and the state 'In force', and the view derives and shows the next application date from the milestones.",
+      "condition": "legislative_status ∈ states AND NOT label:staggered"
+    },
+    {
+      "id": "label:staggered",
+      "it": "in applicazione scaglionata",
+      "en": "Applying in stages",
+      "kind": "primary",
+      "states": ["status:partly-applicable", "status:in-force", "status:applicable"],
+      "meaning": "Some obligations apply and others do not yet. Derived from the dates, not from the scalar alone (roadmap §5): an act whose state is in force or applicable but whose milestones show both a passed and a future application event is staggered whatever its scalar says.",
+      "condition": "legislative_status = status:partly-applicable, OR (legislative_status ∈ {in-force, applicable} AND at least one application event is on or before as-of AND at least one is after it)"
+    },
+    {
+      "id": "label:proposal",
+      "it": "proposta legislativa in corso",
+      "en": "Legislative proposal under negotiation",
+      "kind": "primary",
+      "states": ["status:proposal", "status:parliament-position", "status:council-position", "status:trilogue", "status:stalled"],
+      "meaning": "Not law. The procedural stage is the state shown beside the label; the label groups five stages and loses which one, which is why the state is never hidden. status:stalled is grouped here because a stalled proposal is still a pending proposal in law; that it is stalled is a reading, and the state says so.",
+      "condition": "legislative_status ∈ states"
+    },
+    {
+      "id": "label:political-agreement",
+      "it": "accordo politico raggiunto, adozione formale attesa",
+      "en": "Political agreement reached, formal adoption pending",
+      "kind": "primary",
+      "states": ["status:political-agreement"],
+      "meaning": "Not law. The co-legislators have agreed a text and it has not been formally adopted. Evidence: a procedure file key event recording the agreed text (for an early second reading, its approval in committee), or a Council or Parliament document stating the agreement.",
+      "condition": "legislative_status = status:political-agreement"
+    },
+    {
+      "id": "label:withdrawn",
+      "it": "ritirato",
+      "en": "Withdrawn",
+      "kind": "primary",
+      "states": ["status:withdrawn"],
+      "meaning": "The proposal will not become law in this procedure. Evidence: the Commission's withdrawal as published in the Official Journal or the procedure file's key event.",
+      "condition": "legislative_status = status:withdrawn"
+    },
+    {
+      "id": "label:in-transition",
+      "it": "in transizione / possibile abrogazione",
+      "en": "In transition — repeal proposed",
+      "kind": "secondary",
+      "states": [],
+      "meaning": "Shown IN ADDITION to the primary label, never instead of it: the act is law today and a pending proposal would repeal it. Not a taxonomy state and not stored: it is derived from the map (node.in_transition in map.schema.json) — a node whose `from` has modality `proposed` and a rel-kind:repeals edge to this one. Because it is read from the proposal's own text, it needs no forecast claim, and it disappears by itself when the proposal is adopted (the act then becomes repealed on its date), withdrawn, or amended to drop the repeal.",
+      "condition": "∃ edge e: e.kind = rel-kind:repeals AND e.to = this AND modality(e) = proposed"
+    }
+  ],
+  "x-unlabelled": {
+    "states": ["status:transposition-pending", "status:transposition-overdue", "status:amended", "status:repealed", "status:adopted", "status:published"],
+    "rule": "No label. The view shows the state's taxonomy label on its own. A directive whose transposition is pending or overdue is in force at Union level, but labelling it 'in vigore' would tell a reader its obligations bind them, when what binds them is national law (taxonomy note on status:transposition-overdue). Adopted and published acts are not yet in force. A repealed act is not in force. 'Amended' says nothing about force at all.",
+    "decision": "Q-3, decided by the author on 27 Oct 2026: these six states carry no label and are shown on their own, although the brief calls the labels uniform — NIS2 and CER, both core, among them. The alternative, 'in vigore' with the state beside it, was declined."
+  },
+  "x-transitions": {
+    "description": "The moves a record's legislative_status may make between two verifications. A move not listed is an error unless the record's status_note names the event that explains it (rule S-04). The label follows the state; it has no transitions of its own.",
+    "allowed": {
+      "status:proposal": ["status:parliament-position", "status:council-position", "status:trilogue", "status:political-agreement", "status:withdrawn", "status:stalled", "status:adopted"],
+      "status:parliament-position": ["status:council-position", "status:trilogue", "status:political-agreement", "status:withdrawn", "status:stalled", "status:adopted"],
+      "status:council-position": ["status:parliament-position", "status:trilogue", "status:political-agreement", "status:withdrawn", "status:stalled", "status:adopted"],
+      "status:trilogue": ["status:political-agreement", "status:withdrawn", "status:stalled"],
+      "status:stalled": ["status:proposal", "status:parliament-position", "status:council-position", "status:trilogue", "status:political-agreement", "status:withdrawn"],
+      "status:political-agreement": ["status:adopted", "status:published", "status:in-force", "status:withdrawn"],
+      "status:adopted": ["status:published", "status:in-force"],
+      "status:published": ["status:in-force", "status:transposition-pending"],
+      "status:in-force": ["status:partly-applicable", "status:applicable", "status:transposition-pending", "status:amended", "status:repealed"],
+      "status:partly-applicable": ["status:applicable", "status:amended", "status:repealed"],
+      "status:applicable": ["status:amended", "status:repealed"],
+      "status:transposition-pending": ["status:transposition-overdue", "status:in-force", "status:amended", "status:repealed"],
+      "status:transposition-overdue": ["status:in-force", "status:amended", "status:repealed"],
+      "status:amended": ["status:repealed"],
+      "status:withdrawn": [],
+      "status:repealed": []
+    },
+    "notes": [
+      "Skipping stages is allowed where the record is verified less often than the procedure moves (proposal → political-agreement, the path PSD3 and PSR took between two readings); the status_note must name the key events skipped.",
+      "status:proposal → status:adopted covers a first-reading agreement with no separate political-agreement stage on the procedure file.",
+      "A record's kind changes with adoption: kind:proposal becomes the act's kind, and the CELEX number changes from 5…PC… to the act's. Phase 3 decides whether that is the same record (same id) or a new record with a rel-kind:sequence edge; this design recommends the same id, since IDs are never renamed and the proposal is the act's history.",
+      "status:in-force → status:partly-applicable or status:applicable is not a separate verification: it follows from the milestones and the date, and js/regulatory-model.js statusContradictions already fails a scalar that disagrees with them."
+    ]
+  },
+  "x-verification": {
+    "description": "How a state is established, and what the machine can check without the network. tools/evidence-audit.mjs performs no network I/O and must not start (docs/AUDIT-2026-09-01.md F-12): the AUDIT checks consistency between records and the sources a person read; the READING is done by a person or an agent with network access, and recorded as a source with a locator.",
+    "by_state": {
+      "status:proposal": "Tier-1 legislative document (the COM document, via Cellar) for identity and date; a tier-2 procedure file (Legislative Observatory) for the stage. Locator: the procedure file's key events and 'Stage reached in procedure'.",
+      "status:parliament-position": "Procedure file key event 'Decision by Parliament, 1st reading' with its T-number.",
+      "status:council-position": "Council document (general approach or first-reading position) or procedure file key event.",
+      "status:trilogue": "Procedure file key event opening interinstitutional negotiations, and no later agreement event.",
+      "status:political-agreement": "Procedure file key event recording the agreed text, or a Council or Parliament statement of the agreement.",
+      "status:stalled": "Not a procedural stage; a reading. Requires a claim typed interpretation saying why, or is not used (21 Oct 2026 audit items 2 and 12 moved data-omnibus away from it).",
+      "status:withdrawn": "Official Journal notice of withdrawal, or the procedure file.",
+      "status:adopted": "The act's signature date in its text; Cellar metadata document date.",
+      "status:published": "The Official Journal reference in the act's header.",
+      "status:in-force": "The act's entry-into-force article (structural locator) AND the Publications Office's metadata in-force flag and entry-into-force date, both read; they must agree.",
+      "status:applicable": "The application article AND every application milestone on or before as-of.",
+      "status:partly-applicable": "As applicable, with at least one milestone after as-of.",
+      "status:transposition-pending": "The transposition article (deadline in the future).",
+      "status:transposition-overdue": "The transposition article (deadline passed) AND a source that transposition is not complete in every Member State. Without that source, the state is not established: use status:in-force and say so in the note.",
+      "status:amended": "The amending act's title or amending article.",
+      "status:repealed": "The repealing act's repeal article, or the metadata's end-of-validity date."
+    },
+    "the_publications_office_query": "For an adopted act, the Publications Office's SPARQL endpoint returns, by CELEX number, the in-force flag (cdm:resource_legal_in-force), the entry-into-force dates (cdm:resource_legal_date_entry-into-force), the document date and the end-of-validity date. This session used it on 25 Oct 2026 for every act in D6 and every date matched the act's own final provisions. It is the natural input for a future scout agent (agent/scout/) — NOT for evidence-audit.mjs, which stays offline."
+  }
+}

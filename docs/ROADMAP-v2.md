@@ -1,13 +1,12 @@
 # ROADMAP v2.0
 
-**Status: PROPOSED — not approved.** Written in v2 Session 1, 25 Oct 2026, on
+**Status: APPROVED by the author on 25 Oct 2026 (§8)**, with item 2.0 brought forward to v2 Session 2. Written in v2 Session 1, 25 Oct 2026, on
 `claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e`. Nothing in it is implemented, and
 nothing in it may be implemented until the author approves it. The approval is recorded in §8, by
 the author's word, and nowhere else.
 
-**What governs it.** The BRIEF v2.0 ("Contratto tra sessioni"), which the author supplies with every
-v2 session prompt, is the contract; this document is the plan that answers it. The brief is **not**
-in this repository (decision D-1). Where this roadmap departs from the brief, or reads it in a way
+**What governs it.** The BRIEF v2.0 ("Contratto tra sessioni") is the contract; this document is the
+plan that answers it. The brief is `docs/BRIEF-v2.md`, committed on 27 Oct 2026 (decision D-1, §8). Where this roadmap departs from the brief, or reads it in a way
 the brief does not settle, it says so in §3 and does not proceed on that point.
 
 **What it is measured against.** `docs/AUDIT-2026-10-24.md` — the Control Room content audit the
@@ -66,14 +65,14 @@ None is taken here. Each carries a recommendation; the recommendation is not a d
 
 | | Decision | Blocks | Recommendation |
 |---|---|---|---|
-| D-1 | Where the brief lives | nothing yet | Commit it as `docs/BRIEF-v2.md`, pointed to once from `AGENTS.md`, so a session that is not handed it still finds it. One home: the prompt then cites the file rather than carrying a copy. |
-| D-2 | `applies.html` is already published, and the brief says not to publish "what applies" before the triggers meet claim-level rigour | Phase 1 item 1.5; Phase 3 | Keep the page; in Phase 1, add a plain statement on it that its rules are not yet verified to the standard the claims are (the measured gap in §2). The statement is public text, so its wording is yours. Withdrawing the page is the other honest option; leaving it unmarked is not. |
-| D-3 | The six uniform status labels vs the 16 states in `data/taxonomy.json` | Phase 2 | Make the six a **derived display grouping** over the 16, never a replacement and never stored (IDs are never renamed; a derived fact is never stored). §5 drafts the mapping and shows where it loses information. |
+| D-1 | Where the brief lives — **decided 27 Oct 2026: as recommended** (§8; `docs/BRIEF-v2.md`) | nothing yet | Commit it as `docs/BRIEF-v2.md`, pointed to once from `AGENTS.md`, so a session that is not handed it still finds it. One home: the prompt then cites the file rather than carrying a copy. |
+| D-2 | `applies.html` is already published, and the brief says not to publish "what applies" before the triggers meet claim-level rigour — **decided 27 Oct 2026: as recommended, kept with a notice** (§8) | Phase 1 item 1.5; Phase 3 | Keep the page; in Phase 1, add a plain statement on it that its rules are not yet verified to the standard the claims are (the measured gap in §2). The statement is public text, so its wording is yours. Withdrawing the page is the other honest option; leaving it unmarked is not. |
+| D-3 | The six uniform status labels vs the 16 states in `data/taxonomy.json` — **decided 25 Oct 2026: as recommended** (§8; designed in `docs/v2-design/status-labels.json`) | Phase 2 | Make the six a **derived display grouping** over the 16, never a replacement and never stored (IDs are never renamed; a derived fact is never stored). §5 drafts the mapping and shows where it loses information. |
 | D-4 | "Tier A/B/C" collides with the autonomy classes A/B/C/D of `docs/AUTONOMY-POLICY.md`, which mean something else | Phase 4 | Name the three levels in words — *machine check*, *human attestation*, *human authorship* — and give them no letters. |
 | D-5 | A git-based CMS with OAuth, under "no serverless backend" and "no third-party requests" | Phase 4 | Not needed before Phase 4. Before choosing one, read the chosen CMS's own documentation for two facts this session did not verify: whether its GitHub login needs a server-side token exchange (which is a backend), and which origins it loads code from (`ALLOWED_RUNTIME_ORIGINS` in `tools/thirdparty.mjs` is empty; adding one is Class D). Weigh it against the Control Room's existing OIDC login. |
-| D-6 | What the dependency map is | Phase 2 | An extension of the 17 existing `relationships`, not a second graph: new edge kinds, if needed, go in `data/taxonomy.json`; the map is a derived view. A separate file would be a second home for the edges that already exist. |
-| D-7 | The inclusion criterion behind the Phase 2 list | Phase 2 | Item 2.0 proposes one in writing; you approve it before 2.2. The list itself is already decided by the brief and is not reopened. |
-| D-8 | The brief mentions `stratum` being reviewed "in Session 2"; this roadmap puts Phase 0 in v2 Session 2 | v2 Session 2 | Keep the brief's binding sequence (Phase 0 first) and review `stratum` in the Phase 2 design session (v2 Session 4). The brief's clause is conditional ("if it emerges in Session 2"), and nothing in Phase 0 touches the property. |
+| D-6 | What the dependency map is — **decided 25 Oct 2026: as recommended** (§8; designed in `docs/V2-DATA-DESIGN.md` §1) | Phase 2 | An extension of the 17 existing `relationships`, not a second graph: new edge kinds, if needed, go in `data/taxonomy.json`; the map is a derived view. A separate file would be a second home for the edges that already exist. |
+| D-7 | The inclusion criterion behind the Phase 2 list — **decided 27 Oct 2026: the criterion of `docs/V2-DATA-DESIGN.md` §5 approved** (§8) | Phase 2 | Item 2.0 proposes one in writing; you approve it before 2.2. The list itself is already decided by the brief and is not reopened. |
+| D-8 | The brief mentions `stratum` being reviewed "in Session 2"; this roadmap puts Phase 0 in v2 Session 2 — **decided 25 Oct 2026: reviewed in v2 Session 2 with item 2.0, and `stratum` dropped, derived instead** (§8; `docs/V2-DATA-DESIGN.md` §1.2) | v2 Session 2 | Keep the brief's binding sequence (Phase 0 first) and review `stratum` in the Phase 2 design session (v2 Session 4). The brief's clause is conditional ("if it emerges in Session 2"), and nothing in Phase 0 touches the property. |
 | D-9 | Where a reviewer's attestation is recorded — **decided 25 Oct 2026: the trail** (§8) | Phase 0 item 0.2 | The Control Room trail, in the same entry as the decision it accompanies, bound to the same fingerprint. Not the decision ledger: the attestation is a fact about the review, not about the grant, and the ledger is one home for grants. Trade-off, stated: the trail is per-machine and git-ignored. |
 | D-10 | Item 0.3 is this session's finding, not the audit's — **decided 25 Oct 2026: in Phase 0** (§8) | Phase 0 item 0.3 | Include it in Phase 0: it is a check that reports a clean result on an invalid date, and the brief's fifth principle is "on what date". |
 
@@ -86,7 +85,7 @@ session can fail. **A phase ends at a checkpoint**: the session reports, the fou
 every suite are re-run, `docs/HANDOVER.md` records the result, and the author's approval is
 recorded in §8 before the next phase starts.
 
-### Phase 0 — the audit's P0 (v2 Session 2)
+### Phase 0 — the audit's P0 (v2 Session 3 — moved on 25 Oct 2026, §8)
 
 **0.1 · Snapshot time and state** — audit B and E.
 - Every Control Room view payload carries the time the server assembled it. The interface shows
@@ -138,7 +137,7 @@ recorded in §8 before the next phase starts.
 - `docs/CONTROL-ROOM.md` §5 and §6 are corrected for the changes above, and only for them. The
   full realignment is 1.3.
 
-### Phase 1 — the audit's P1 (v2 Session 3)
+### Phase 1 — the audit's P1 (v2 Session 3, after Phase 0's checkpoint — decided 27 Oct 2026, §8)
 
 **1.1 · An editorial-audit path that is recorded, and that the Control Room reads** — audit A.
 - The audit asks for a way to *launch* the check from the Control Room. That would be a route that
@@ -190,9 +189,9 @@ that way. The wording is the author's.
 **Phase 1 checkpoint = the audit closed.** Every P0/P1 row of `docs/AUDIT-2026-10-24.md` §1.5 is
 marked done, with its commit, in that document. Only then does Phase 2 open.
 
-### Phase 2 — the expansion (v2 Session 4 onward)
+### Phase 2 — the expansion (item 2.0 in v2 Session 2; items 2.1 onward after the Phase 1 checkpoint)
 
-**2.0 · Design, in documents only** (v2 Session 4). Nothing is added to `data/` in this session.
+**2.0 · Design, in documents only** (v2 Session 2, brought forward on 25 Oct 2026; delivered as `docs/V2-DATA-DESIGN.md` and `docs/v2-design/`). Nothing is added to `data/` in this session.
 It produces:
 - the inclusion criterion (D-7);
 - the status display grouping (D-3, from the §5 draft);
@@ -280,10 +279,9 @@ This is a vocabulary mapping, not a statement about any instrument. **Not adopte
 | v2 Session | Work | Ends with |
 |---|---|---|
 | 1 (this) | This roadmap; `docs/AUDIT-2026-10-24.md` | Author's approval of the roadmap and decisions D-1…D-10, recorded in §8 |
-| 2 | Phase 0: 0.1–0.4 | Phase 0 checkpoint |
-| 3 | Phase 1: 1.1–1.5 | Audit closed; Phase 1 checkpoint |
-| 4 | Phase 2.0, design documents only | Approval of the criterion, the labels, the map model, `stratum` |
-| 5 → | 2.1, then 2.2–2.6, one or two instruments per session | A checkpoint per session |
+| 2 | Phase 2.0, design documents only — brought forward on 25 Oct 2026 (§8) | Approval of the criterion, the labels, the map model, `stratum` |
+| 3 | Phase 0: 0.1–0.4; **checkpoint inside the session** (report, validators and suites re-run, the author's explicit approval); then Phase 1: 1.1–1.5 | Phase 0 checkpoint, mid-session; audit closed and Phase 1 checkpoint at the end |
+| 4 → | 2.1, then 2.2–2.6, one or two instruments per session | A checkpoint per session |
 | later | Phases 3, 4, 5 | Planned only when reached |
 
 No session starts on an unrecorded approval of the one before (the brief).
@@ -309,3 +307,7 @@ Filled in only with the author's words. A row here is the checkpoint.
 | Date | What was approved | Decisions taken | By |
 |---|---|---|---|
 | 25 Oct 2026 | Two decisions only. **The roadmap as a whole is not yet approved**, and v2 Session 2 does not start until it is. | **D-9:** the reviewer's attestation is recorded in the Control Room trail, in the decision's own entry, bound to the same fingerprint; not in the decision ledger. **D-10:** item 0.3 (the date argument of `freshness.mjs` and `evidence-audit.mjs`) is in Phase 0. Both as recommended. | The author, answering in v2 Session 1 |
+| 25 Oct 2026 | **The roadmap**, with one change of sequence: item 2.0 (design, documents only) is brought forward to v2 Session 2; Phase 0 moves to v2 Session 3 and Phase 1 to v2 Session 4. Read conservatively: items 2.1–2.6, which write data, still wait for the Phase 1 checkpoint (§1, first row). | **D-3:** the six labels are a derived display grouping over the sixteen states. **D-6:** the map extends the existing relationships; it is a derived view. **The trigger** of the v2 Session 2 prompt is the existing applicability rule raised to a v2 schema, not a new entity. **D-8:** `stratum` is dropped (option (c)), and what it meant is derived from the applicability rules' actors and the edge kinds. D-1, D-2, D-4, D-5 and D-7 stay open; D-7 is proposed in `docs/V2-DATA-DESIGN.md` §5. | The author, answering four questions in v2 Session 2 ("Approvo e anticipo 2.0"; "Sì, tutte e tre"; "(c) eliminare, derivare"), then "Vai" |
+| 27 Oct 2026 | — | **D-1:** the brief is committed verbatim as `docs/BRIEF-v2.md` and pointed to once from `AGENTS.md`. | The author, in v2 Session 2 ("si") |
+| 27 Oct 2026 | **The inclusion criterion** (item 2.0) | **D-7:** the criterion of `docs/V2-DATA-DESIGN.md` §5 is approved. **D-2:** `applies.html` stays, with a notice that its rules are not yet verified to the claims' standard, added in Phase 1 (item 1.5) in words the author approves. And the questions the design raised: **P2B** joins the watchlist, watching COM(2025) 837; the six states outside the brief's labels carry **no label**; the finance-chapter condition **applies to the DGA** too; the eight findings of `docs/V2-DATA-DESIGN.md` §7 are corrected **in Phase 3**; the reasons in the register and watchlist stay **drafts**, reviewed by the author entry by entry before item 2.1. D-4 and D-5 stay open. | The author, answering six questions in v2 Session 2 |
+| 27 Oct 2026 | **The scope of v2 Session 3** | Phases 0 and 1 in one session, with Phase 0's checkpoint **inside** it: the session reports, re-runs the validators and suites, and stops until the author approves before starting Phase 1. Item **1.1** as planned (`--record` and a read-only Editorial audit view). Item **1.5**: the session drafts the notice for `applies.html` and waits for the author's approval of its wording. Item **0.1**: `as_of`, `recorded_at` and the commit analysed, shown apart; no `auto_checked_at` (a field nobody writes, and preparation for Phase 4's automation); `verified_at` is not a new field — where the date an evidence record was last verified is meant, it is the existing `last_verified`. | The author, answering four questions in v2 Session 2 |
