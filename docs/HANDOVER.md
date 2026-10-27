@@ -1,9 +1,330 @@
 # HANDOVER
 
-**Last updated:** v2 Session 4 — Part A (item 2.1) and Part B (B.1–B.3) implemented and approved
-(`docs/ROADMAP-v2.md` §8) · 27 October 2026
-**Branch:** `claude/new-session-e7w8sp`, merged into `main` as #21 (`b304114`). Continued from that
-merge to record the scope and prompt of v2 Session 5; not opened as a pull request.
+**Last updated:** v2 Session 5. Part A (item 2.2, the promotion of `eidas2`) is approved. Part B
+(B.1 PP-09, B.2 the OIDC redirect URI and `::1`, B.3 the relationship migration) is implemented and
+approved too, which closes the session (`docs/ROADMAP-v2.md` §8) · 27 October 2026
+**Branch:** `claude/new-session-9ud5l5`, cut from `main` at `64aa696` (#22). Pull request #23 to `main`,
+opened on the author's instruction.
+
+## Branch register — 27 October 2026 (v2 Session 5)
+
+- At the start, `main` contained #21 (`b304114`) and §8's row "The scope of v2 Session 5" (#22,
+  `64aa696`).
+- `git branch -r --no-merged origin/main` listed only
+  `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
+- This session's branch: `claude/new-session-9ud5l5`. Disposition: Parts A and B approved (`docs/ROADMAP-v2.md` §8); pull request #23 to `main`, opened on the author's instruction of 27 Oct 2026 ("Sì, apri la PR").
+
+## v2 Session 5 — Part B checkpoint report (B.1–B.3)
+
+The author approved the Part A checkpoint (`docs/ROADMAP-v2.md` §8). With it, the internal references
+the report found stay an open finding, unchanged.
+
+### B.1 · PP-09's stale text — commit `bd2c318`
+
+- `agent/policy/verify/attacks.mjs` PP-09 said nothing had ever fetched the deployed site.
+- Its reason now cites `docs/DEPLOYMENT.md`'s dated measurements:
+  - §1, 27 Sep 2026, on `github.io`;
+  - §1a, 23 Oct 2026, on `eudigitalpolicy.eu`;
+  - §1b, 24 Oct 2026, after the switch to GitHub Actions.
+- It says those readings were taken by hand, not by the gate, and that `agent/records/` was never
+  requested by name. `would_need` names the custom domain.
+- **The outcome is unchanged**: undecidable, high. The gate performs no network I/O, so dated readings
+  do not tell it what the origin serves on the day it runs. No outcome change was proposed.
+- **`agent/policy/` was edited** — a never-automatic path. This is the one file.
+- The gate reads 65 · 0 · 3 · 1 before and after. `agent/policy/verify` passes 9/9 and
+  `agent/policy` 36/36.
+
+### B.2 · The OIDC redirect URI and the `::1` origin — commit `dd3c1fe`
+
+- **One home:** `.control-room/config.mjs serverOrigin(cfg, port)`. It returns the configured public
+  origin, or the bind host and port, with an IPv6 host bracketed (`http://[::1]:7802`).
+- `server.mjs selfOrigin()` asks it with the port actually listening.
+- The `OidcProvider` is handed the server's `selfOrigin`, so `redirectUri()` reads the same value.
+  With no server, it falls back to `serverOrigin(cfg)`.
+- **Not loosened:**
+  - the Origin comparison is the same exact match;
+  - the CSRF check is unchanged;
+  - state, nonce and PKCE are untouched, and the three existing OIDC tests pass.
+- **Tests** in `.control-room/selftest.mjs`; the first two were reproduced failing before the fix,
+  with `'http://::1:7802/auth/callback'` and `'http://127.0.0.1:0/auth/callback'`:
+  - "ORIGIN · B.2 · one home …" (pure);
+  - "OIDC · B.2 · with port 0, the redirect URI … carries the port actually listening": a real
+    server, a stub IdP, and the `Location` of `GET /auth/login`;
+  - "ORIGIN · B.2 · bound to ::1 …": the bracketed origin passes, while the unbracketed one, the
+    `127.0.0.1` one and a foreign one are refused.
+- **That third test did not run here.** This container cannot bind `::1` (`EAFNOSUPPORT`), so it
+  reports itself SKIPPED with that reason. It runs wherever IPv6 loopback exists. Whether the GitHub
+  runner has IPv6 loopback was not measured.
+
+### B.3 · The migration of the readable relationships — commit `f90212f`
+
+- **Measured 27 Oct 2026:**
+  - 13 of the 17 v1 relationships cite only tier-1 or tier-2 sources;
+  - 3 of those 13 are the claimless analytical edges, which leaves the prompt's 10;
+  - 4 edges rest only on `src-brief-original`.
+- **Re-read that day:**
+  - through Cellar by CELEX: 32016R0679, 32024R1689, 32024L2853, 32026R1744, 32022R2554, 32022L2555,
+    32022R2065, 32022R1925 and 52025PC0837 (the last as the PDF of `DOC_1`);
+  - through the Commission press corner's documents API: IP/25/1992 and IP/25/1085;
+  - from the EDPB's site: Guidelines 3/2025 v2 (PDF, adopted 17 Sep 2026).
+- **Migrated (8), on the author's decisions:**
+
+  | Relationship | References |
+  |---|---|
+  | `rel-ai-act-gdpr-art-22` | GDPR Art. 22(1), Art. 99(2) direct · AI Act Art. 6 partial |
+  | `rel-ai-act-pld` | PLD Art. 4 point (1), recital 13 partial (analytical) |
+  | `rel-nis2-dora` | DORA recital 16, Art. 1(2) direct · NIS2 Art. 4 partial |
+  | `rel-dsa-ecommerce` | DSA Art. 89(1)–(2) direct |
+  | `rel-nis2-nis1` | NIS2 Art. 44 direct |
+  | `rel-dma-tfeu-102` | **+ DMA Art. 1(6) direct** · IP/25/1992 partial |
+  | `rel-dma-gdpr-consent` | **+ DMA Art. 5(2) direct** · IP/25/1085 partial (the release text retrieved that day names no article) |
+  | `rel-ai-omnibus-ai-act` | Regulation (EU) 2026/1744 Art. 1, point (40) direct. `src-ec-ai-omnibus-in-force` **left the edge**: it answered 403 and was not re-read. It stays on `clm-ai-act-delay-scope` |
+
+- **Stay v1 (2), on the author's decisions:**
+  - `rel-dsa-gdpr-transparency-minimisation`: **the source no longer carries the summary.** EDPB
+    Guidelines 3/2025 v2 ¶6 put Art. 40 DSA researcher access outside their scope, and treat
+    advertising transparency under Art. 26 (¶79–80), with Art. 39 named only in ¶118. The summary
+    and `provisions` (`dsa:art-39`, `dsa:art-40`) are the author's to revise; nothing was changed.
+  - `rel-data-omnibus-gdpr`: "stalled in Council" is carried by no source on the edge, and the
+    Council stage was not re-read.
+- **Backlog unchanged:** the 4 brief-only edges and the 3 claimless analytical edges. The
+  `edge-v1-sources` flip was not done. v1 edges: **17 → 9**.
+- Every migrated edge has `last_verified` 2026-10-27 and a note saying what was read and through
+  which channel. No `summary` was changed.
+- **Sources** re-read: `accessed` is 2026-10-27 and the note names the channel, for `src-eurlex-gdpr`,
+  `-ai-act`, `-pld`, `-ai-omnibus`, `-nis2`, `-dma`, `src-ec-google-adtech-2025` and
+  `src-ec-apple-meta-dma-2025`. The last two are tier 2, read through the press corner, and the
+  Google URL now redirects to IP/25/1992. `src-edpb-guidelines-3-2025` was read but not changed:
+  its finding is the v1 decision above.
+- **No edge check exists in code** (M-08 to M-14 are D1's, not implemented). `tools/selftest.mjs` W12
+  therefore pins the data:
+  - the 8 migrated edges stay v2;
+  - each direct tier-1 reference is structurally located;
+  - each textual edge has a direct reference;
+  - the remaining v1 edges are the 9 named;
+  - a planted relapse is caught.
+
+### Re-run on the final tree
+
+- Validators, unchanged from the Part A checkpoint:
+  - `validate`: 0/0, 45 unverified;
+  - `i18n-audit`, `design-qa`, `seo-audit`: 0/0;
+  - `evidence-audit --as-of 2026-10-27`: 0 errors, 11 warnings; REGISTER "covered 12 · mapped 11 ·
+    watched 5 · excluded 6";
+  - `freshness --as-of 2026-10-27`: 0 defects, 2 prompts.
+- Suites: all 25 pass, **1309 tests**, 0 failures, 1 skipped (the `::1` test, as above), with
+  `BROWSER_QA_CHROME` set. That is 1305 at the Part A checkpoint: `.control-room/` 74 → 77 (B.2) and
+  `tools/` 101 → 102 (W12).
+- Browser suite: 343 pass · 0 fail · 1 undecidable (`a11y:bound`).
+- Adversarial gate: 65 · 0 · 3 · 1, unchanged.
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+- `tools/commit-evidence.mjs origin/main HEAD`: 5 commits, 0 without evidence.
+- `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+### Found, for the author — not changed
+
+1. `rel-dsa-gdpr-transparency-minimisation`: its summary and provisions no longer match its one
+   source (above).
+2. `src-ec-apple-meta-dma-2025`'s note attributes "under Art. 5(2)" and "under Art. 5(4)" to IP/25/1085.
+   The release text retrieved on 27 Oct 2026 names no article, so the attribution may come from a part
+   of the page not in that text. Not changed.
+3. `src-ec-ai-omnibus-in-force` could not be re-read (403). It still supports `clm-ai-act-delay-scope`
+   as last read on 27 Aug 2026.
+4. Still open from Part A: internal identifiers shown to a reader (`eidas2.status_note`; the
+   `defers-to`/`enables` taxonomy notes).
+
+## v2 Session 5 — the verification checklist
+
+**A.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, one row with the author's four answers.
+- *Verify:* read the row "Four questions on item 2.2".
+- *Automatic:* none (decisions).
+- *Criterion:* gate, page fields and stale texts decided before `data/` was touched.
+
+**A.1 · The promotion, in one block.**
+- *Changed:* §8 row "Item 2.2: the promotion of `eidas2`".
+- *Verify:* `scope_decision.approved_on` is 2026-10-27, with no DRAFT.
+- *Automatic:* `tools/selftest.mjs` W3 (M-04 on any decision) and W11.
+- *Criterion:* approved by the author before writing.
+
+**A.2 · Sources read first.**
+- *Changed:* the notes of the three sources, two claims, two events and the rule.
+- *Verify:* fetch `http://publications.europa.eu/resource/celex/32024R1183` (Accept
+  `application/xhtml+xml`) and read Art. 1 point (2)(b) and Art. 2.
+- *Automatic:* none reads a source (AUDIT F-12).
+- *Criterion:* every fact re-read; nothing from a search or from memory.
+
+**A.3 · Written in one home.**
+- *Changed:* `data/instruments.json` (`eidas2`, `rel-eidas2-gdpr-defers`), `timeline.json` (1),
+  `taxonomy.json` (1), `claims.json`, `applicability.json`, `sources.json`;
+  `tools/register-audit.mjs`; regenerated pages; `img/og/eidas2.png`.
+- *Verify:* `/instruments/eidas2/`.
+- *Automatic:* `tools/selftest.mjs` W11 (M-04, M-05, M-07 held in full), S1 (generated files
+  current) and W1 (backlog 23).
+- *Criterion:* M-04, M-05 and M-07 at 0 errors; dates only in `timeline.json`; no title in `data/`.
+
+**A.4 · Checkpoint A.**
+- *Changed:* `docs/HANDOVER.md`.
+- *Verify:* the report above.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run.
+- *Criterion:* approved (§8).
+
+**B.1 · PP-09.**
+- *Changed:* `agent/policy/verify/attacks.mjs` (PP-09 only).
+- *Verify:* `node agent/policy/verify/cli.mjs` and read PP-09.
+- *Automatic:* `agent/policy/verify/selftest.mjs` (the gate reproducible; outcome counts unchanged).
+- *Criterion:* the text cites the dated measurements, and the outcome is what they support.
+
+**B.2 · Origin and redirect URI.**
+- *Changed:* `.control-room/config.mjs`, `authn.mjs`, `server.mjs`, `selftest.mjs`.
+- *Verify:* run `CONTROL_ROOM_PORT=0 CONTROL_ROOM_AUTH_PROVIDER=oidc …` against an IdP, then open
+  `/auth/login`. `redirect_uri` carries the real port. On a host with IPv6, also check
+  `CONTROL_ROOM_HOST=::1`.
+- *Automatic:* `.control-room/selftest.mjs` "ORIGIN · B.2" ×2 and "OIDC · B.2"; the `::1` test is
+  skipped here.
+- *Criterion:* one home for the origin; the Origin, CSRF, state and nonce checks are not loosened.
+
+**B.3 · Relationships.**
+- *Changed:* `data/instruments.json` (8 relationships), `data/sources.json` (8 notes),
+  regenerated pages.
+- *Verify:* `/instruments/nis2/` (Art. 44, recital 16) and `/instruments/dma/` (Art. 1(6), Art. 5(2))
+  show the locators.
+- *Automatic:* `tools/selftest.mjs` W12.
+- *Criterion:* every migrated edge re-read; the two that no longer hold stay v1, with the reason; the
+  flip is not done.
+
+## v2 Session 5 — Part A checkpoint report (item 2.2)
+
+### What the author decided (each in `docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **A.0, before anything was written to `data/`** (measured that day: `eidas2` failed the page gate's
+  `explanation` and `context` only):
+  - *context*: one edge, `eidas2 → gdpr` `defers-to`, on Art. 1 point (2)(b) of Regulation (EU)
+    2024/1183, inserting Art. 2(4) into Regulation (EU) No 910/2014 ("without prejudice to Regulation
+    (EU) 2016/679"). Three more edges read the same day were offered and **not** added: `dsa → eidas2`
+    `enables` (Art. 5f(3)), `dma → eidas2` `enables` (Art. 12b), `eidas2 → nis2` `defers-to`
+    (Art. 16(1)). `brief_part` stays `null`: the brief names eIDAS2 only in Part I's box "Also in the
+    rulebook: what the six regimes leave out";
+  - *dna.objective*: draft A;
+  - *the other fields*: factual ones read now, analytical ones `null`;
+  - *two stale texts*: corrections proposed in A.1.
+- **A.1, in one block — approved as a whole**, with one addition: `actor:trust-service-provider`.
+
+### What was written — commit `061c226`
+
+| Record | Change |
+|---|---|
+| `eidas2` | `scope:adjacent` → `scope:core`; `scope_decision` (included; `crit:object-infrastructure`, `crit:horizontal`; three references, two direct structural); `status_basis` (Art. 2 + Publications Office metadata); `status_as_of` and `last_verified` 2026-10-27; the re-reading sentence of `status_note` replaced; `dna` (objective, `implementation_model`, `obligation_anchor`, `regulated_actor`, `sanction_ceiling` note; four fields `null`); milestone added |
+| `rel-eidas2-gdpr-defers` | new, v2 shape, direct structural locator |
+| `tl-eidas2-2024-05-20-entry-into-force` | new |
+| `actor:trust-service-provider` | new taxonomy term; nothing renamed |
+| `ap-eidas2-01` | rationale: "This dataset maps the framework as adjacent: the brief does not analyse it, and" removed; `last_verified` 2026-10-27 |
+| `clm-also-in-the-rulebook` | `eidas2` removed from `instruments` (the claim is about the cyber package alone) |
+| `clm-eidas2-wallets`, `clm-eidas2-private-acceptance`, the two deadline events | re-read; `last_verified` 2026-10-27; notes say what was read |
+| `src-eurlex-eidas2`, `src-eurlex-eudi-2024-2981`, `src-eurlex-eudi-2024-2977` | `accessed` 2026-10-27; notes say what was read; 2977's says it was read through Cellar, not at its EUR-Lex URL |
+| `tools/register-audit.mjs` | `eidas2` leaves `STATUS_BASIS_BACKLOG` (24 → 23): M-07 holds it in full |
+| `tools/selftest.mjs` | W11: removing its status basis, its decision, its edge or its objective each fails (M-07, M-04, M-05 ×2); W1's frozen length 24 → 23 |
+| generated | `instruments/eidas2/` (new), `instruments.html`, the `<noscript>` index on every page, `sitemap.xml`, `img/og/eidas2.png`. The tool also re-rendered the other twelve cards; they were restored, because their inputs did not change |
+
+Nothing was added to `tools/seo.mjs` or to `KNOWN_AS`: the title is derived ("eIDAS2 — key provisions and key dates"), and with no `PAGE_PUBLISHED` entry the page states no `datePublished`. **No locale key was touched**: the fields written are data, which the editions do not carry; `i18n-audit` 0/0.
+
+### Facts re-read on 27 Oct 2026, and facts left `null`
+
+- **Read** (Cellar by CELEX, XHTML; Publications Office SPARQL):
+  - 32024R1183: Art. 1 points (1) (Art. 1, subject matter), (2)(a)–(b) (Art. 2(1), Art. 2(4)),
+    (5) (Arts 5a(1), 5f(1)–(3)), (13) (Art. 12b), (15) (Art. 16(1)–(2)); Art. 2; the OJ header
+    (30.4.2024). SPARQL: in force, entry into force 2024-05-20.
+  - 32024R2977 and 32024R2981: the citations (Arts 5a(23), 5c(6)) and the final articles; OJ L of
+    4.12.2024. SPARQL: both in force, entry into force 2024-12-24.
+  - Every fact already in the record, the two claims, the two events and the rule was confirmed;
+    none changed.
+- **Left `null`, declared on the page as "not established":** `risk_logic`,
+  `enforcement_mechanism`, `protected_party`, `territorial_scope`; the sanction amounts (Art. 16(2)
+  sets a floor for the national maximum, not a ceiling — said in the note). No competent authority:
+  `institutions.json` has none for eIDAS2, and none was researched.
+- **Not read:** the definition of "trust service provider" in Art. 3 of Regulation (EU) No 910/2014
+  (the new term's note cites Art. 2(1) only); any other implementing act.
+- No fact was taken from a search result or from model knowledge.
+
+### Exit criteria of item 2.2
+
+- *Every fact read from a retrieved primary source* — **pass** (above).
+- *`sources.json` records only from documents read* — **pass**: no new source; three updated after
+  re-reading.
+- *Prose and claims to the author* — **pass**: every text written was in the A.1 block, approved;
+  no claim was created; one claim's tag was removed on approval.
+- *`node tools/_footer.mjs` re-run* — **pass**: committed with the data; `seo-audit` 0/0.
+- *Affected locale keys declared* — **n/a**: none touched.
+- *M-04, M-05, M-07 at 0 errors, held in full* — **pass**: `eidas2` is in no backlog; W11 shows each
+  failing.
+- *The page says nothing the records do not carry* — **pass**, opened in Chromium (below).
+
+### Counts against the baseline (v2 Session 4's closing re-run)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| relationships (`validate`) | 26 | 27 | `rel-eidas2-gdpr-defers` |
+| timeline events / taxonomy terms | 91 / 306 | 92 / 307 | the entry-into-force event; `actor:trust-service-provider` |
+| instruments / sources / claims | 34 / 220 / 181 | unchanged | — |
+| coverage covered / mapped | 11 / 12 | 12 / 11 | `eidas2` |
+| backlog `status-basis-missing` / `scope-decision-missing` | 24 / 11 | 23 / 11 | `eidas2` has its basis; it was never in the second |
+| instrument pages · indexable routes | 12 · 21 | 13 · 22 | `instruments/eidas2/` |
+| instruments.html "thinner records" | 8 | 7 | `eidas2` has a page |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit --as-of 2026-10-27` errors / warnings | 0 / 11 | 0 / 11 | unchanged |
+| `freshness --as-of 2026-10-27` | 0 defects / 2 prompts | 0 / 2 | unchanged |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged |
+| `tools/selftest.mjs` | 100 | 101 | W11 |
+| all 25 suites | 1304 | 1305, 0 failures | W11. Without `BROWSER_QA_CHROME`: 1304 pass and 1 skipped; with it, `agent/browser` is 21/21 |
+| browser suite | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable | unchanged (`a11y:bound`) |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+
+`agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0;
+`tools/commit-evidence.mjs origin/main HEAD`: `061c226` names its evidence.
+`BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+### The page, opened in a browser
+
+`/instruments/eidas2/`, opened in Chromium (Playwright) with no console error, shows:
+
+- Status: in force, as of 27 Oct 2026.
+- "In short":
+  - the objective;
+  - five actors;
+  - Arts 5a and 5f;
+  - entry into force on 20 May 2024, and the next deadline;
+  - "not established" for the protected party and for the sanction ceiling, with the Art. 16(2) note.
+- Three dated events, one rule and two provisions.
+- No enforcement recorded.
+- Two claims, both graded primary law.
+- One interaction, "eIDAS2 defers to GDPR", with its locator.
+- "No Part of the brief covers this instrument directly".
+
+`/instruments/gdpr/` shows the same edge from the other end.
+
+### Found, for the author — not changed
+
+1. **Internal identifiers shown to a reader.**
+   - `eidas2.status_note` names `clm-eidas2-wallets` and `clm-eidas2-private-acceptance`. That text
+     is unchanged and predates this session.
+   - The interactions box prints the taxonomy note of `rel-kind:defers-to`, which ends "Added 27 Oct
+     2026 (docs/V2-DATA-DESIGN.md §1.4)". It has appeared since item 2.1 on every page with a
+     `defers-to` or `enables` edge: DSA, DORA, GDPR and now eIDAS2.
+2. **`regulated_actor` mixes two populations.** One is the addressees of the wallet duties, taken
+   from the provisions; the other is trust service providers, taken from the scope article. Both were
+   read in the text, but the list is not exhaustive.
+3. **Two grammar slips on every instrument page**, not introduced by this item: "1 rule in the
+   dataset turn on this instrument" and "· 1 days ago".
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-27`: REGISTER reads "covered 12 · mapped 11";
+   `status-basis-missing` is 23, without `eidas2`.
+2. `python3 -m http.server 8000`, then open `/instruments/eidas2/` and `/instruments/gdpr/` (the edge
+   from both ends). `/instruments.html`: eIDAS2 is in the list, with seven thinner records.
+3. Fetch `http://publications.europa.eu/resource/celex/32024R1183` with Accept
+   `application/xhtml+xml` and read Art. 1 point (2)(b): the sentence the edge rests on.
+4. `node --test --test-name-pattern=W11 tools/selftest.mjs`.
 
 ## Branch register — 27 October 2026 (v2 Session 4)
 

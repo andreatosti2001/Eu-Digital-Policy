@@ -30,9 +30,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679",
       "url_status": "url:live",
       "published": "2016-05-04",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "Title and number confirmed by fetch."
+      "note": "Title and number confirmed by fetch. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Arts 22(1) and 99(2)."
     },
     {
       "id": "src-eurlex-dsa",
@@ -101,9 +101,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022R1925",
       "url_status": "url:live",
       "published": "2022-10-12",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "Title, number and entry into force of 1 November 2022 confirmed by fetch."
+      "note": "Title, number and entry into force of 1 November 2022 confirmed by fetch. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Arts 1(6) and 5(2)."
     },
     {
       "id": "src-eurlex-ai-act",
@@ -115,9 +115,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689",
       "url_status": "url:live",
       "published": "2024-07-12",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "Title and number confirmed by fetch. The metadata field scraped for entry into force returned an application milestone rather than the entry-into-force date; the entry-into-force record is flagged for confirmation against the consolidated text."
+      "note": "Title and number confirmed by fetch. The metadata field scraped for entry into force returned an application milestone rather than the entry-into-force date; the entry-into-force record is flagged for confirmation against the consolidated text. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Art. 6."
     },
     {
       "id": "src-aia-text-unofficial-arts-2-4",
@@ -244,9 +244,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022L2555",
       "url_status": "url:live",
       "published": "2022-12-27",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "Title, number and entry into force of 16 January 2023 confirmed by fetch."
+      "note": "Title, number and entry into force of 16 January 2023 confirmed by fetch. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Arts 4 and 44."
     },
     {
       "id": "src-nis2-text-unofficial-arts-20-32",
@@ -358,9 +358,9 @@
       "url": "https://eur-lex.europa.eu/eli/dir/2024/2853/oj/eng",
       "url_status": "url:live",
       "published": "2024-11-18",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "Applies to products placed on the market or put into service after 9 December 2026 (Art. 2(1)). Art. 4(1) includes software in the definition of product."
+      "note": "Applies to products placed on the market or put into service after 9 December 2026 (Art. 2(1)). Art. 4(1) includes software in the definition of product. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Art. 4 point (1) and recital 13."
     },
     {
       "id": "src-eurlex-ai-omnibus",
@@ -372,9 +372,9 @@
       "url": "https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng",
       "url_status": "url:live",
       "published": "2026-07-08",
-      "accessed": "2026-10-14",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "Directly supports entry into force on 27 July 2026. Re-read in full on 14 Oct 2026 (OJ L, 2026/1744, 24.7.2026; Art. 4: entry into force on the third day after publication). Art. 1, point (5), replaces Art. 4 (literacy: 'take measures to support'; 'does not require providers or deployers to guarantee any specific level of AI literacy of any individual'); Art. 1, point (39)(b), adds Art. 111(4) (Art. 50(2) by 2 December 2026 for systems placed on the market before 2 August 2026); Art. 1, point (40), amends Art. 113: Art. 5(1)(ba)-(bb), (1a) and (1b) from 2 December 2026; Chapter III Sections 1-3 from 2 December 2027 (Art. 6(2), Annex III) and 2 August 2028 (Art. 6(1), Annex I). Recital 40 gives the reason for the delay: 'the delayed availability of standards, common specifications, and alternative guidance and the delayed establishment of national competent authorities'."
+      "note": "Directly supports entry into force on 27 July 2026. Re-read in full on 14 Oct 2026 (OJ L, 2026/1744, 24.7.2026; Art. 4: entry into force on the third day after publication). Art. 1, point (5), replaces Art. 4 (literacy: 'take measures to support'; 'does not require providers or deployers to guarantee any specific level of AI literacy of any individual'); Art. 1, point (39)(b), adds Art. 111(4) (Art. 50(2) by 2 December 2026 for systems placed on the market before 2 August 2026); Art. 1, point (40), amends Art. 113: Art. 5(1)(ba)-(bb), (1a) and (1b) from 2 December 2026; Chapter III Sections 1-3 from 2 December 2027 (Art. 6(2), Annex III) and 2 August 2028 (Art. 6(1), Annex I). Recital 40 gives the reason for the delay: 'the delayed availability of standards, common specifications, and alternative guidance and the delayed establishment of national competent authorities'. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Art. 1, point (40) (Art. 113 as amended)."
     },
     {
       "id": "src-eurlex-gdpr-procedural",
@@ -680,9 +680,9 @@
       "url": "http://publications.europa.eu/resource/celex/32024R1183",
       "url_status": "url:live",
       "published": "2024-04-30",
-      "accessed": "2026-10-14",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Inserted Art. 5a(1): each Member State to provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts under Art. 5a(23) and Art. 5c(6). Re-read on 14 Oct 2026 from EUR-Lex (ELI reg/2024/1183/oj). Inserted Art. 5f(2): private relying parties, except microenterprises and small enterprises (Recommendation 2003/361/EC), that are required by Union or national law, or by contract, to use strong user authentication for online identification shall, no later than 36 months from the entry into force of the implementing acts under Arts 5a(23) and 5c(6) 'and only upon the voluntary request of the user', also accept European Digital Identity Wallets. Art. 5f(1) concerns public-sector online services; Art. 5f(3) very large online platforms that require user authentication."
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Inserted Art. 5a(1): each Member State to provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts under Art. 5a(23) and Art. 5c(6). Re-read on 14 Oct 2026 from EUR-Lex (ELI reg/2024/1183/oj). Inserted Art. 5f(2): private relying parties, except microenterprises and small enterprises (Recommendation 2003/361/EC), that are required by Union or national law, or by contract, to use strong user authentication for online identification shall, no later than 36 months from the entry into force of the implementing acts under Arts 5a(23) and 5c(6) 'and only upon the voluntary request of the user', also accept European Digital Identity Wallets. Art. 5f(1) concerns public-sector online services; Art. 5f(3) very large online platforms that require user authentication. Re-read on 27 Oct 2026 for item 2.2, from Cellar by CELEX (XHTML): Art. 1 point (1) (Art. 1, subject matter, as replaced), point (2)(a)–(b) (Art. 2(1) scope; Art. 2(4) 'without prejudice to Regulation (EU) 2016/679'), point (5) (Arts 5a(1), 5f(1)–(3)), point (15) (Art. 16(2), administrative fines), Art. 2 (entry into force); the Publications Office's SPARQL metadata records it in force, entry into force 2024-05-20."
     },
     {
       "id": "src-eurlex-eudi-2024-2981",
@@ -694,9 +694,9 @@
       "url": "http://publications.europa.eu/resource/celex/32024R2981",
       "url_status": "url:live",
       "published": "2024-12-04",
-      "accessed": "2026-09-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Adopted 'in particular' under Article 5c(6) of Regulation (EU) No 910/2014. The Publications Office's metadata records entry into force on 24 December 2024, as for Implementing Regulations 2024/2977, 2024/2979, 2024/2980 and 2024/2982 of the same date."
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Adopted 'in particular' under Article 5c(6) of Regulation (EU) No 910/2014. The Publications Office's metadata records entry into force on 24 December 2024, as for Implementing Regulations 2024/2977, 2024/2979, 2024/2980 and 2024/2982 of the same date. Re-read on 27 Oct 2026 for item 2.2, from Cellar by CELEX: the citation ('in particular Article 5c(6) thereof') and the final article (entry into force on the twentieth day following publication, OJ L, 2024/2981, 4.12.2024); SPARQL metadata: in force, entry into force 2024-12-24."
     },
     {
       "id": "src-gov-ie-data-bill-2025",
@@ -1240,9 +1240,9 @@
       "url": "https://digital-markets-act.ec.europa.eu/commission-finds-apple-and-meta-breach-digital-markets-act-2025-04-23_en",
       "url_status": "url:live",
       "published": "2025-04-23",
-      "accessed": "2026-09-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "EUR 500 million against Apple under Art. 5(4); EUR 200 million against Meta under Art. 5(2). Read in full on 27 Sep 2026 as press release IP/25/1085 through the Commission's press corner: investigations opened 25 March 2024; preliminary views 24 June 2024 (Apple) and 1 July 2024 (Meta); compliance required within 60 days; the Meta finding covers March–November 2024; the same day the Commission closed its investigation into Apple's user-choice obligations and found Facebook Marketplace should no longer be designated."
+      "note": "EUR 500 million against Apple under Art. 5(4); EUR 200 million against Meta under Art. 5(2). Read in full on 27 Sep 2026 as press release IP/25/1085 through the Commission's press corner: investigations opened 25 March 2024; preliminary views 24 June 2024 (Apple) and 1 July 2024 (Meta); compliance required within 60 days; the Meta finding covers March–November 2024; the same day the Commission closed its investigation into Apple's user-choice obligations and found Facebook Marketplace should no longer be designated. Re-read on 27 Oct 2026 for B.3 (v2 Session 5): IP/25/1085, read that day through the press corner's documents API; its section on Meta's 'consent or pay' model is unchanged. The text retrieved that day names no article of the DMA."
     },
     {
       "id": "src-ec-meta-ad-choice-2025",
@@ -1310,9 +1310,9 @@
       "url": "https://competition-policy.ec.europa.eu/about/news/commission-fines-google-eu295-billion-over-abusive-practices-online-advertising-technology-2025-09-05_en",
       "url_status": "url:live",
       "published": "2025-09-05",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "Case AT.40670. An Article 102 TFEU antitrust decision, not a DMA decision."
+      "note": "Case AT.40670. An Article 102 TFEU antitrust decision, not a DMA decision. Re-read on 27 Oct 2026 for B.3 (v2 Session 5): the URL now redirects to press release IP/25/1992 in the Commission's press corner, read that day through its documents API — the fine of EUR 2.95 billion, 'in breach of Article 102' TFEU, case AT.40670, dated 5 September 2025."
     },
     {
       "id": "src-ec-meta-whatsapp-ai-2025",
@@ -2933,9 +2933,9 @@
       "url": "https://eur-lex.europa.eu/eli/reg_impl/2024/2977/oj",
       "url_status": "url:live",
       "published": "2024-12-04",
-      "accessed": "2026-10-14",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "Official Journal text read 14 Oct 2026 (OJ L, 2024/2977, 4.12.2024). Adopted 'in particular' under Article 5a(23) of Regulation (EU) No 910/2014; 'This Regulation shall enter into force on the twentieth day following that of its publication', which is 24 December 2024. Implementing Regulation (EU) 2024/2981, under Article 5c(6), was published the same day with the same entry-into-force clause, read the same day."
+      "note": "Official Journal text read 14 Oct 2026 (OJ L, 2024/2977, 4.12.2024). Adopted 'in particular' under Article 5a(23) of Regulation (EU) No 910/2014; 'This Regulation shall enter into force on the twentieth day following that of its publication', which is 24 December 2024. Implementing Regulation (EU) 2024/2981, under Article 5c(6), was published the same day with the same entry-into-force clause, read the same day. Re-read on 27 Oct 2026 for item 2.2 through the Publications Office's Cellar by CELEX (32024R2977), not at the EUR-Lex URL above, which returns an empty page to the environment that read it: the citation ('in particular Article 5a(23) thereof') and the final article, unchanged; SPARQL metadata: in force, entry into force 2024-12-24."
     },
     {
       "id": "src-eurlex-vida",

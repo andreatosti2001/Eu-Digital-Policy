@@ -152,6 +152,19 @@ export const requiresSecureCookies = (cfg) => cfg.env === 'production';
 
 export const isLoopback = (host) => LOOPBACK.has(host);
 
+/** The origin this server is reached on — one home for it (v2 Session 5,
+ *  B.2): the Origin check in server.mjs and the OIDC redirect URI in
+ *  authn.mjs both ask this. The configured public origin, or the bind host
+ *  and the port; an IPv6 host is bracketed, as URLs and every browser's
+ *  Origin header write it ("http://[::1]:7802", never "http://::1:7802").
+ *  `port` is the port actually listening when the caller knows it — with
+ *  CONTROL_ROOM_PORT=0, cfg.port is 0 and names no port at all. */
+export function serverOrigin(cfg, port = cfg.port) {
+  if (cfg.public_origin) return String(cfg.public_origin).replace(/\/+$/, '');
+  const host = String(cfg.host).includes(':') ? `[${cfg.host}]` : cfg.host;
+  return `http://${host}:${port}`;
+}
+
 /**
  * Every reason this configuration may not start a server.
  *
