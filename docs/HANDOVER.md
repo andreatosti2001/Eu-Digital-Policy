@@ -14,6 +14,12 @@ is closed · 27 October 2026
     and untouched.
 - **The author approved the Phase 1 checkpoint** on 27 Oct 2026 (`docs/ROADMAP-v2.md` §8). Items
   2–4 of "Still open" below remain open, except the pull request.
+- **Rewritten once, before review.** The pull request's QA run failed `tools/commit-evidence.mjs`.
+  The F1.5 commit `2967f06` changed two published files (`applies.html`, `i18n/locales.json`)
+  without the `Evidence:` trailer the rule requires. It was re-made as `d12b6ce` with the trailer,
+  and the two commits after it were replayed: `6919acf` became `e6eb186`, and `7d6ca3b` became
+  `2650cf4`. The tree is unchanged except for the hashes cited in `docs/`. This is a branch this
+  session created; `main` was not touched.
 - **Phase 2 has not started.**
 
 ## v2 Session 3 — Phase 1 checkpoint report, and the verification checklist
@@ -184,7 +190,7 @@ to a temporary `CONTROL_ROOM_RECORDS_DIR`, as `.control-room/selftest.mjs` `worl
     `agent/health/security.mjs`.
 - *Satisfies:* roadmap 1.4.
 
-**F1.5 · `applies.html` notice** — commit `2967f06`; its test is in the checkpoint commit.
+**F1.5 · `applies.html` notice** — commit `d12b6ce`; its test is in the checkpoint commit.
 - *Changed:* `applies.html`, the first paragraph of the caveat box, `data-i18n="applies.notice"`;
   `i18n/locales.json`, where the key is `pending_translation` in it, fr and es, `it` is no longer
   complete, and the notes say why.
