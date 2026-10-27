@@ -28,6 +28,12 @@
  * Usage:
  *   node tools/evidence-audit.mjs [--as-of YYYY-MM-DD] [--json | --markdown | --graph] [--root DIR]
  *
+ * A date that does not parse, or an argument this script does not read
+ * (a bare positional date included, which it used to ignore and audit as of
+ * today), is refused with exit 2 and the reason (tools/as-of.mjs). Until
+ * 27 Oct 2026 `--as-of banana` audited as of "banana" and reported every
+ * record stale (docs/AUDIT-2026-10-24.md §3.1).
+ *
  * --graph prints the provenance graph as JSON: source -[supports, locator]->
  * claim -[input | premise]-> claim, and passage -[states]-> claim | record.
  * It is derived from the same records on every run and never stored.
@@ -44,13 +50,19 @@ import * as M from '../js/evidence-model.js';
 import { evidenceGrade, GRADE_ORDER } from '../js/format.js';
 import { procedure, contradictions as enfContradictions } from '../js/pipeline.js';
 import { statusContradictions, statusAge, provisionApplication } from '../js/regulatory-model.js';
+import { readArgs, refusalText, today, EXIT_UNREADABLE } from './as-of.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const args = process.argv.slice(2);
-const opt = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
-const ROOT = resolve(opt('--root') || join(HERE, '..'));
-const AS_OF = opt('--as-of') || new Date().toISOString().slice(0, 10);
-const MODE = args.includes('--graph') ? 'graph' : args.includes('--json') ? 'json' : args.includes('--markdown') ? 'markdown' : 'text';
+const IS_MAIN = Boolean(process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url));
+/* The command line is read only when this file is the entry point: an
+   importer's arguments are not this script's to judge, and an import gets
+   today's date and the repository root, as audit()'s defaults. */
+const ARGS = IS_MAIN
+  ? readArgs(process.argv.slice(2), { flags: ['--json', '--markdown', '--graph'], valued: ['--root'] })
+  : { asOf: today(), flags: new Set(), values: {} };
+const ROOT = resolve(ARGS.values?.['--root'] || join(HERE, '..'));
+const AS_OF = ARGS.asOf ?? null;
+const MODE = ARGS.error ? null : ARGS.flags.has('--graph') ? 'graph' : ARGS.flags.has('--json') ? 'json' : ARGS.flags.has('--markdown') ? 'markdown' : 'text';
 
 /* Fields the architecture DERIVES. A record that stores one has created the
    second copy that derivation exists to prevent (docs/DATA-GOVERNANCE.md). */
@@ -536,7 +548,10 @@ function markdown(r) {
   ].join('\n');
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (IS_MAIN && ARGS.error) {
+  console.error(refusalText('evidence-audit.mjs', ARGS.error));
+  process.exitCode = EXIT_UNREADABLE;
+} else if (IS_MAIN) {
   /* exitCode, never exit(): exit() discards whatever is still buffered on a
      pipe, which cut --graph off at 64 KB */
   if (MODE === 'graph') { console.log(JSON.stringify(graph(), null, 1)); }

@@ -39,6 +39,7 @@ import {
   foreignOrigin, scanHtml, scanCss, scanJs, scanRuntimeSurface, runtimeSurface,
 } from './thirdparty.mjs';
 import { EXPECTED, RECHECK } from './freshness.mjs';
+import { dateProblem } from './as-of.mjs';
 import { readBaseline } from '../agent/implement/baseline.mjs';
 import { audit, passages, datesIn, DERIVED_FIELDS, rankingProblems } from './evidence-audit.mjs';
 import { cspProblems, securityMeta, inlineScripts } from './csp.mjs';
@@ -390,6 +391,58 @@ test('F6 · the prompts are still printed in full — nothing was silenced', () 
   for (const h of ['VERIFICATION DATES', 'EVENTS THAT HAVE PASSED', 'RECORDS EXPECTED TO CHANGE', 'SOURCE REACHABILITY']) {
     assert.match(r.out, new RegExp(h));
   }
+});
+
+/* ============================================================
+   DATES · a date the tools cannot read is refused, not reinterpreted
+
+   docs/ROADMAP-v2.md item 0.3 (D-10), docs/AUDIT-2026-10-24.md §3.1.
+   `freshness.mjs --as-of 2026-10-24` took "--as-of" as the date and
+   reported a false all-clear; `evidence-audit.mjs --as-of banana`
+   reported every record stale. Both now exit 2 with the reason.
+   ============================================================ */
+
+test('D1 · dateProblem() accepts a calendar day written YYYY-MM-DD and nothing else', () => {
+  assert.equal(dateProblem('2026-10-24'), null);
+  assert.equal(dateProblem('2024-02-29'), null, 'a leap day is a day');
+  for (const bad of ['banana', '--as-of', '2026-10-24T00:00:00Z', '24-10-2026', '2026-2-3', '2026-02-30', '2025-02-29', '2026-13-01', '', undefined, null]) {
+    assert.notEqual(dateProblem(bad), null, `${JSON.stringify(bad)} was read as a date`);
+  }
+});
+
+test('D2 · freshness.mjs: the audit\'s own command gives the same report as the positional form', () => {
+  /* The exact command of docs/AUDIT-2026-10-24.md §4. Before 0.3 it
+     printed "as of --as-of" and "Nothing past its stated interval". */
+  const flag = runValidator('freshness.mjs', ['--as-of', '2026-10-24']);
+  const positional = runValidator('freshness.mjs', ['2026-10-24']);
+  assert.equal(flag.exit, positional.exit);
+  assert.equal(flag.out, positional.out, 'the two spellings of one date must produce one report');
+  assert.match(flag.out, /FRESHNESS AUDIT {2}as of 2026-10-24\n/);
+  assert.doesNotMatch(flag.out, /as of --as-of/);
+  assert.equal(runValidator('freshness.mjs', ['--as-of=2026-10-24']).out, positional.out);
+});
+
+test('D3 · freshness.mjs exits 2, with the reason, on a date it cannot read — never 0 and never 1', () => {
+  for (const args of [['--as-of', 'banana'], ['banana'], ['2026-02-30'], ['--as-of'], ['--as-of', '2026-10-24', '--as-of', '2026-10-25'], ['2026-10-24', '--as-of', '2026-10-24'], ['--json']]) {
+    const r = runValidator('freshness.mjs', args);
+    assert.equal(r.exit, 2, `freshness.mjs ${args.join(' ')} exited ${r.exit}`);
+    assert.match(r.out, /refused — /, 'the refusal must say why');
+    assert.match(r.out, /Nothing was audited/);
+    assert.doesNotMatch(r.out, /Nothing past its stated interval/, 'a refused run must not print an all-clear');
+  }
+});
+
+test('D4 · evidence-audit.mjs exits 2, with the reason, on a date it cannot read — and on a date it would have ignored', () => {
+  for (const args of [['--as-of', 'banana'], ['--as-of', '2026-02-30'], ['--as-of'], ['--as-of', '--json'], ['2026-10-24']]) {
+    const r = runValidator('evidence-audit.mjs', args);
+    assert.equal(r.exit, 2, `evidence-audit.mjs ${args.join(' ')} exited ${r.exit}`);
+    assert.match(r.out, /refused — /);
+    assert.doesNotMatch(r.out, /EVIDENCE AUDIT/, 'a refused run must not print a report');
+  }
+  const ok = runValidator('evidence-audit.mjs', ['--as-of', '2026-10-24']);
+  assert.equal(ok.exit, 0);
+  assert.match(ok.out, /^EVIDENCE AUDIT {2}as of 2026-10-24$/m);
+  assert.match(runValidator('evidence-audit.mjs', ['--as-of', '2026-10-24', '--markdown']).out, /### Evidence model — as of 2026-10-24/);
 });
 
 /* ============================================================
