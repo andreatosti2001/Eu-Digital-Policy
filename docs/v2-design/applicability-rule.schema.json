@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "docs/v2-design/applicability-rule.schema.json",
+  "title": "Applicability trigger — the applicability rule, v2 (D2)",
+  "description": "PROPOSED in v2 Session 2. The 'trigger' of the session prompt is the rule that already exists in data/applicability.json (33 records, published on applies.html). A second entity would be a second home for the same facts, so v2 is that rule raised to the standard a claim meets (docs/ROADMAP-v2.md Phase 3 entry condition): every source reference carries `supports` and a locator, every condition resolves to a provision, every exemption and threshold names its basis. The matcher in js/applies.js reads `conditions` and `outcome` and is unchanged; every new field is evidence about the rule, not input to it. Rules T-01…T-11 in docs/V2-DATA-DESIGN.md §2.",
+  "x-status": "proposed",
+  "x-prompt-mapping": {
+    "domanda (question)": "The questionnaire dimensions the rule reads — the keys of `conditions` (actor, activity, territory). DERIVED as `asks`; the question wording keeps its one home in applies.html and js/applies.js and is not copied into each rule.",
+    "regola (rule)": "`conditions` + `outcome` + `rationale`, unchanged.",
+    "grado di certezza (certainty)": "`outcome` — applies / likely / possible / unlikely, with the meanings in data/applicability.json `$outcomes`. outcome:undetermined is never stored: only the engine emits it, for a combination no rule covers. `depends_on` states what the certainty turns on.",
+    "eccezioni/soglie (exceptions/thresholds)": "`exemptions` (v2: objects with an effect and a basis) and `conditions.thresholds` with `threshold_basis`.",
+    "rinvio con locator (reference with locator)": "`sources` (v2: reference objects with supports and locator, each saying what it is for) and `condition_provisions`.",
+    "verified_at": "`last_verified`, as on every other record. No second date field."
+  },
+  "$defs": {
+    "isoDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "supports", "locator"],
+      "properties": {
+        "source_id": { "type": "string", "pattern": "^src-[a-z0-9-]+$" },
+        "supports": { "enum": ["supports:direct", "supports:partial", "supports:context"] },
+        "locator": { "type": ["string", "null"] },
+        "for": {
+          "enum": ["scope", "obligation", "date", "rationale"],
+          "description": "What the reference establishes. `scope` = that the rule fires on these conditions (material, personal, territorial scope; the definition of an actor). At least one `scope` reference is required (T-02)."
+        }
+      }
+    },
+    "exemption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "effect", "basis"],
+      "properties": {
+        "text": { "type": "string", "minLength": 10, "description": "What the reader sees, as today." },
+        "effect": {
+          "enum": ["excludes", "narrows", "reinstates"],
+          "description": "excludes: the instrument does not apply to the case (GDPR household exemption). narrows: some obligations fall away (DSA Art. 19). reinstates: an exception to an exception (DSA Art. 19(2), designation as a VLOP)."
+        },
+        "basis": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sourceRef" } },
+        "outside_dataset": {
+          "type": "boolean",
+          "description": "true when the exemption sends the reader to an instrument this site has no record of (the Law Enforcement Directive in ap-gdpr-03). The text must then say so, as it does today."
+        }
+      }
+    }
+  },
+  "type": "object",
+  "required": ["id", "instrument", "conditions", "outcome", "rationale", "obligations", "authority", "dates", "exemptions", "depends_on", "claims", "sources", "last_verified"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^ap-[a-z0-9-]+$", "description": "Never renamed." },
+    "instrument": { "type": "string", "description": "An instrument id whose derived coverage is covered or mapped — never excluded (T-09)." },
+    "conditions": {
+      "type": "object",
+      "description": "UNCHANGED — the matcher's input. A dimension the rule omits is a wildcard. `thresholds` keys end in their comparator (_gt, _gte, _lt, _lte), and the comparator must be the one the legal text uses (T-05).",
+      "properties": {
+        "actor": { "type": "array", "items": { "type": "string", "pattern": "^actor:" } },
+        "activity": { "type": "array", "items": { "type": "string", "pattern": "^activity:" } },
+        "territory": { "type": "array", "items": { "type": "string", "pattern": "^territory:" } },
+        "thresholds": { "type": "object", "propertyNames": { "pattern": "_(gt|gte|lt|lte)$" } }
+      }
+    },
+    "outcome": { "enum": ["outcome:applies", "outcome:likely", "outcome:possible", "outcome:unlikely"] },
+    "rationale": { "type": "string", "minLength": 20, "description": "Editorial; the reading the rule encodes. Typed analytical content (docs/PROJECT-CONTEXT.md §4)." },
+    "obligations": { "type": "array", "items": { "type": "string" }, "description": "Provision IDs the rule triggers." },
+    "authority": { "type": "array", "items": { "type": "string" } },
+    "dates": { "type": "array", "items": { "type": "string", "pattern": "^tl-" } },
+    "exemptions": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          { "$ref": "#/$defs/exemption" },
+          { "type": "string", "description": "v1 — accepted during migration; the rule is then not publishable at the v2 standard (T-04)." }
+        ]
+      }
+    },
+    "depends_on": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "The facts the outcome turns on and the questionnaire does not establish. Required non-empty for outcome:likely and outcome:possible (T-06)."
+    },
+    "claims": { "type": "array", "items": { "type": "string", "pattern": "^clm-" } },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          { "$ref": "#/$defs/sourceRef" },
+          { "type": "string", "pattern": "^src-", "description": "v1 bare ID — accepted during migration; such a rule is not publishable at the v2 standard (T-01)." }
+        ]
+      }
+    },
+    "condition_provisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "NEW. For each dimension the rule's conditions use, the provision IDs that define it. Every ID must be a provision record (validate.mjs already resolves provisions). This is the roadmap's 'every condition resolves to a provision ID' (T-03).",
+      "properties": {
+        "actor": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "activity": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "territory": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "threshold_basis": {
+      "type": "object",
+      "description": "NEW. One entry per key of conditions.thresholds: the references that state the threshold and its comparator (T-05).",
+      "additionalProperties": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sourceRef" } }
+    },
+    "last_verified": { "$ref": "#/$defs/isoDate", "description": "Required. The date the rule was last read against its locators; never later than the as-of date (T-07)." },
+    "verification_note": { "type": ["string", "null"], "description": "NEW, optional. What was read and what was not, as on every other record." }
+  },
+  "not": {
+    "anyOf": [
+      { "required": ["asks"] },
+      { "required": ["publishable"] },
+      { "required": ["certainty"] },
+      { "required": ["question"] }
+    ]
+  },
+  "x-derived": {
+    "asks": "The keys of `conditions` other than thresholds: which questionnaire questions the rule reads.",
+    "publishable": "true when T-01…T-05 hold. A rule that is not publishable is either not shown or shown as not yet verified to the claims' standard — the choice is decision D-2, which is the author's and is still open. Never stored: a rule becomes publishable by being read, not by being flagged.",
+    "status_label": "The rule's instrument's label (status-labels.json), shown with the outcome, so that a rule for an instrument in transition says so."
+  }
+}

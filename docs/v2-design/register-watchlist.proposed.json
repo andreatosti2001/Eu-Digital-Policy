@@ -1,0 +1,732 @@
+{
+  "$description": "D6 — the exclusion register and the watchlist, as the records Phase 2 item 2.1 would add to data/. PROPOSED in v2 Session 2; nothing here is in data/. Each entry is an instrument record in the exact shape of data/instruments.json, carrying the new `scope_decision` block and the new `status_basis` field (docs/v2-design/map.schema.json). The register is DERIVED as the records whose decision says `excluded`, the watchlist as those whose decision says `watched`: neither is a list anybody maintains.",
+  "$note": "ONE HOME. When item 2.1 is implemented, each block below is MOVED into its data file — `instruments` into data/instruments.json `instruments[]`, `relationships` into its `relationships[]`, `sources` into data/sources.json, `events` into data/timeline.json, `source_updates` applied in place — and this file is deleted in the same commit, so the facts never live in two places. EVIDENCE. Every fact below was read on 25 Oct 2026 from a document retrieved that day: the Official Journal text through the Publications Office's Cellar by CELEX number, the Publications Office's metadata through its SPARQL endpoint (in-force flag, entry-into-force dates), the Commission proposals through Cellar, and the European Parliament's Legislative Observatory procedure files. No fact was taken from a search result or from model knowledge; where a fact was not read it is null, and the note says what is missing. EDITORIAL. Every `reason` is a DRAFT for the author's approval, and every `approved_on` is null until the author approves the entry in docs/ROADMAP-v2.md §8 — a record with a null `approved_on` may not enter data/ (rule M-04): the judgement is the author's (docs/AI-SAFE-BOUNDARIES.md §2), and the inclusion criterion it applies (D-7) is itself not yet approved. Two entries depart from what the brief is reported to decide, and say so in their reason: p2b and dga.",
+  "$read_on": "2026-10-25",
+  "$assumptions": [
+    "A-1: the register's seven regimes are the brief's list as reproduced in docs/ROADMAP-v2.md §4 item 2.1 (ViDA, AVMSD, copyright, GPSR, EAA, P2B, political advertising). The brief itself was not available to this session.",
+    "A-2: 'copyright' is read as Directive (EU) 2019/790 (copyright in the Digital Single Market), the copyright act the DSA's Art. 2(4)(b) reaches most directly. The brief's own word is 'copyright'; if it meant the copyright acquis as a whole, the entry widens and the author says so.",
+    "A-3: the watchlist is read from docs/ROADMAP-v2.md §4, 'Phase 3 of the brief's list (MiCA, PSD3/PSR, DGA in transition)', which opens 'only if the author explicitly opens a finance chapter'. PSD3 and PSR are two proposals and are two records.",
+    "A-4: 'AVMSD' is read as Directive 2010/13/EU (the codified version) as amended, notably by Directive (EU) 2018/1808."
+  ],
+  "instruments": [
+    {
+      "id": "vida",
+      "aliases": ["vat-in-the-digital-age", "dir-2025-516"],
+      "celex": "32025L0516",
+      "short_name": "ViDA",
+      "full_name": "Council Directive (EU) 2025/516 amending Directive 2006/112/EC as regards VAT rules for the digital age",
+      "kind": "kind:directive",
+      "scope_class": "scope:out-of-scope",
+      "brief_part": null,
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-10-25",
+      "status_note": "In force since 14 April 2025, the twentieth day after publication (Art. 7; OJ L 2025/516, 25.3.2025). Transposition is staggered (Art. 6): Member States may apply Art. 1 points 2 and 3 from 14 April 2025; the measures for Art. 2 are to be adopted by 31 December 2026 and applied from 1 January 2027; those for Art. 3 are to be adopted by 30 June 2028. Later paragraphs of Art. 6 were not read. Transposition in the Member States was not researched (null). The VAT package also comprises Council Regulation (EU) 2025/517; it was identified (CELEX 32025R0517) and not read. Read on 25 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force.",
+      "status_basis": [
+        { "source_id": "src-eurlex-vida", "supports": "supports:direct", "locator": "Art. 7 (entry into force); Art. 6(1)–(3) (transposition); Publications Office metadata: in force, entry into force 2025-04-14" }
+      ],
+      "milestones": ["tl-vida-2025-04-14-entry-into-force"],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [],
+      "sources": ["src-eurlex-vida"],
+      "last_verified": "2026-10-25",
+      "legal_basis": null,
+      "scope_decision": {
+        "disposition": "excluded",
+        "criterion": ["crit:other-field"],
+        "reason": "DRAFT. ViDA modernises the VAT system for digital transactions — e-invoicing, digital reporting, platforms as deemed suppliers — but what it regulates is a tax. Tax law is a field this brief does not analyse, and treating a VAT directive as part of the digital rulebook would stretch the brief's argument past what it can carry.",
+        "approved_on": null,
+        "refer_to": ["src-eurlex-vida"],
+        "watch_for": null,
+        "sources": [
+          { "source_id": "src-eurlex-vida", "supports": "supports:direct", "locator": "Title: 'amending Directive 2006/112/EC as regards VAT rules for the digital age'; Art. 1 (amendments to Directive 2006/112/EC)" }
+        ],
+        "last_verified": "2026-10-25"
+      }
+    },
+    {
+      "id": "avmsd",
+      "aliases": ["audiovisual-media-services-directive", "dir-2010-13"],
+      "celex": "32010L0013",
+      "short_name": "AVMSD",
+      "full_name": "Directive 2010/13/EU on the coordination of certain provisions laid down by law, regulation or administrative action in Member States concerning the provision of audiovisual media services (Audiovisual Media Services Directive) (codified version)",
+      "kind": "kind:directive",
+      "scope_class": "scope:out-of-scope",
+      "brief_part": null,
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-10-25",
+      "status_note": "In force since 5 May 2010, the twentieth day after publication (Art. 35; OJ L 95, 15.4.2010). It codified and repealed Directive 89/552/EEC (Art. 34). Amended by Directive (EU) 2018/1808 (OJ L 303, 28.11.2018), itself in force since 18 December 2018 according to the Publications Office's metadata; the amending directive's text was not read, and no other amendment was researched. Read on 25 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records both acts as in force.",
+      "status_basis": [
+        { "source_id": "src-eurlex-avmsd", "supports": "supports:direct", "locator": "Art. 35 (entry into force); Publications Office metadata: in force, entry into force 2010-05-05" },
+        { "source_id": "src-eurlex-avmsd-2018", "supports": "supports:partial", "locator": "Title ('amending Directive 2010/13/EU'); Publications Office metadata: in force, entry into force 2018-12-18" }
+      ],
+      "milestones": ["tl-avmsd-2010-05-05-entry-into-force"],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [],
+      "sources": ["src-eurlex-avmsd", "src-eurlex-avmsd-2018"],
+      "last_verified": "2026-10-25",
+      "legal_basis": null,
+      "scope_decision": {
+        "disposition": "excluded",
+        "criterion": ["crit:other-field"],
+        "reason": "DRAFT. The AVMSD reaches video-sharing platforms, but its organising principle is media regulation — editorial responsibility, programme content, the protection of minors in broadcasting — which this brief does not analyse. The DSA itself leaves the field to it (DSA Art. 2(4)(a)); this site follows that line and sends the reader to the Directive.",
+        "approved_on": null,
+        "refer_to": ["src-eurlex-avmsd"],
+        "watch_for": null,
+        "sources": [
+          { "source_id": "src-eurlex-avmsd", "supports": "supports:direct", "locator": "Art. 1(1)(a) (definition of 'audiovisual media service')" },
+          { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 2(4)(a)" }
+        ],
+        "last_verified": "2026-10-25"
+      }
+    },
+    {
+      "id": "copyright-dsm",
+      "aliases": ["copyright-directive", "dsm-directive", "dir-2019-790"],
+      "celex": "32019L0790",
+      "short_name": "Copyright DSM Directive",
+      "full_name": "Directive (EU) 2019/790 on copyright and related rights in the Digital Single Market and amending Directives 96/9/EC and 2001/29/EC",
+      "kind": "kind:directive",
+      "scope_class": "scope:out-of-scope",
+      "brief_part": null,
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-10-25",
+      "status_note": "In force since 6 June 2019, the twentieth day after publication (Art. 31; OJ L 130, 17.5.2019). Transposition deadline 7 June 2021 (Art. 29(1)); it applies to works protected on or after that date (Art. 26(1)). Transposition in the Member States was not researched (null). Read on 25 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force.",
+      "status_basis": [
+        { "source_id": "src-eurlex-copyright-dsm", "supports": "supports:direct", "locator": "Art. 31 (entry into force); Art. 29(1) (transposition); Publications Office metadata: in force, entry into force 2019-06-06" }
+      ],
+      "milestones": ["tl-copyright-dsm-2019-06-06-entry-into-force"],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [],
+      "sources": ["src-eurlex-copyright-dsm"],
+      "last_verified": "2026-10-25",
+      "legal_basis": null,
+      "scope_decision": {
+        "disposition": "excluded",
+        "criterion": ["crit:other-field"],
+        "reason": "DRAFT. The Directive's subject is copyright and related rights (Art. 1(1)): intellectual property, a field this brief does not analyse. Where it touches the brief's instruments — the liability of content-sharing platforms beside the DSA's — the DSA defers to copyright law (Art. 2(4)(b)), and the site records that deferral rather than analysing the regime.",
+        "approved_on": null,
+        "refer_to": ["src-eurlex-copyright-dsm"],
+        "watch_for": null,
+        "sources": [
+          { "source_id": "src-eurlex-copyright-dsm", "supports": "supports:direct", "locator": "Art. 1(1)" },
+          { "source_id": "src-eurlex-dsa", "supports": "supports:partial", "locator": "Art. 2(4)(b) ('Union law on copyright and related rights' — the body of law, not this Directive by name)" }
+        ],
+        "last_verified": "2026-10-25"
+      }
+    },
+    {
+      "id": "gpsr",
+      "aliases": ["general-product-safety-regulation", "reg-2023-988"],
+      "celex": "32023R0988",
+      "short_name": "GPSR",
+      "full_name": "Regulation (EU) 2023/988 on general product safety, amending Regulation (EU) No 1025/2012 and Directive (EU) 2020/1828, and repealing Directive 2001/95/EC and Council Directive 87/357/EEC",
+      "kind": "kind:regulation",
+      "scope_class": "scope:out-of-scope",
+      "brief_part": null,
+      "legislative_status": "status:applicable",
+      "status_as_of": "2026-10-25",
+      "status_note": "In force since 12 June 2023, the twentieth day after publication, and applicable since 13 December 2024 (Art. 52; OJ L 135, 23.5.2023). Read on 25 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force, with the same two dates.",
+      "status_basis": [
+        { "source_id": "src-eurlex-gpsr", "supports": "supports:direct", "locator": "Art. 52, first and second paragraphs; Publications Office metadata: in force, dates 2023-06-12 and 2024-12-13" }
+      ],
+      "milestones": ["tl-gpsr-2023-06-12-entry-into-force", "tl-gpsr-2024-12-13-application"],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [],
+      "sources": ["src-eurlex-gpsr"],
+      "last_verified": "2026-10-25",
+      "legal_basis": null,
+      "scope_decision": {
+        "disposition": "excluded",
+        "criterion": ["crit:other-field"],
+        "reason": "DRAFT. The GPSR lays down rules on the safety of consumer products (Art. 1): product-safety law, which this brief does not analyse. It reaches online marketplaces, and does so expressly without prejudice to the DSA's general obligations (GPSR Art. 22(1)–(2)); the site records that link and sends the reader to the Regulation for the rest.",
+        "approved_on": null,
+        "refer_to": ["src-eurlex-gpsr"],
+        "watch_for": null,
+        "sources": [
+          { "source_id": "src-eurlex-gpsr", "supports": "supports:direct", "locator": "Art. 1(1)–(2); Art. 22(1)–(2)" }
+        ],
+        "last_verified": "2026-10-25"
+      }
+    },
+    {
+      "id": "eaa",
+      "aliases": ["european-accessibility-act", "dir-2019-882"],
+      "celex": "32019L0882",
+      "short_name": "EAA",
+      "full_name": "Directive (EU) 2019/882 on the accessibility requirements for products and services (European Accessibility Act)",
+      "kind": "kind:directive",
+      "scope_class": "scope:out-of-scope",
+      "brief_part": null,
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-10-25",
+      "status_note": "In force since 27 June 2019, the twentieth day after publication (Art. 34; OJ L 151, 7.6.2019). Member States were to adopt and publish the transposing measures by 28 June 2022 (Art. 31(1)) and apply them from 28 June 2025 (Art. 31(2)), with an option to apply Art. 4(8) from 28 June 2027 at the latest (Art. 31(3)). Transposition in the Member States was not researched (null). 'European Accessibility Act' is the name in common use; the Directive's title does not carry it. Read on 25 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force.",
+      "status_basis": [
+        { "source_id": "src-eurlex-eaa", "supports": "supports:direct", "locator": "Art. 34 (entry into force); Art. 31(1)–(3) (transposition and application); Publications Office metadata: in force, entry into force 2019-06-27" }
+      ],
+      "milestones": ["tl-eaa-2019-06-27-entry-into-force"],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [],
+      "sources": ["src-eurlex-eaa"],
+      "last_verified": "2026-10-25",
+      "legal_basis": null,
+      "scope_decision": {
+        "disposition": "excluded",
+        "criterion": ["crit:other-field"],
+        "reason": "DRAFT. The Directive approximates accessibility requirements for certain products and services (Art. 1). Accessibility law reaches many digital services, but it is a field of its own that this brief does not analyse; the site names it and sends the reader to the Directive.",
+        "approved_on": null,
+        "refer_to": ["src-eurlex-eaa"],
+        "watch_for": null,
+        "sources": [
+          { "source_id": "src-eurlex-eaa", "supports": "supports:direct", "locator": "Art. 1" }
+        ],
+        "last_verified": "2026-10-25"
+      }
+    },
+    {
+      "id": "p2b",
+      "aliases": ["platform-to-business-regulation", "reg-2019-1150"],
+      "celex": "32019R1150",
+      "short_name": "P2B Regulation",
+      "full_name": "Regulation (EU) 2019/1150 on promoting fairness and transparency for business users of online intermediation services",
+      "kind": "kind:regulation",
+      "scope_class": "scope:out-of-scope",
+      "brief_part": null,
+      "legislative_status": "status:applicable",
+      "status_as_of": "2026-10-25",
+      "status_note": "In force since 31 July 2019, the twentieth day after publication (Art. 19(1); OJ L 186, 11.7.2019), and applicable since 12 July 2020 (Art. 19(2)). Its repeal is PROPOSED, not law: Art. 10(1) of the Digital Omnibus proposal (COM(2025) 837) would repeal it from that Regulation's date of application, with Art. 2 points (1), (2) and (5) and Arts 4, 11 and 15 continuing to apply until 31 December 2032 (Art. 10(2)). Read on 25 Oct 2026 in the Official Journal text and the proposal, both retrieved from the Publications Office's Cellar; the Publications Office's metadata records the Regulation as in force.",
+      "status_basis": [
+        { "source_id": "src-eurlex-p2b", "supports": "supports:direct", "locator": "Art. 19(1)–(2); Publications Office metadata: in force, dates 2019-07-31 and 2020-07-12" }
+      ],
+      "milestones": ["tl-p2b-2019-07-31-entry-into-force", "tl-p2b-2020-07-12-application"],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [],
+      "sources": ["src-eurlex-p2b", "src-eurlex-data-omnibus-837"],
+      "last_verified": "2026-10-25",
+      "legal_basis": null,
+      "scope_decision": {
+        "disposition": "excluded",
+        "criterion": ["crit:covered-elsewhere"],
+        "reason": "DRAFT — AND A CRITERION CONFLICT FOR THE AUTHOR. The brief excludes P2B, but the proposed criterion does not: its subject is the fairness and transparency of online intermediation services (Art. 1(1)), squarely within crit:object-services and crit:horizontal, and no crit:other-field applies. The only ground this session can state is that its repeal is proposed (COM(2025) 837 Art. 10(1)) and that its addressees are reached by the DMA and the DSA — which is what the clause crit:covered-elsewhere says, and that clause exists for this entry alone. Recommended instead: disposition `watched`, watching the adoption of COM(2025) 837. Not applied here, because it would reverse the brief's decision.",
+        "approved_on": null,
+        "refer_to": ["src-eurlex-p2b"],
+        "watch_for": null,
+        "sources": [
+          { "source_id": "src-eurlex-p2b", "supports": "supports:direct", "locator": "Art. 1(1)–(2)" },
+          { "source_id": "src-eurlex-data-omnibus-837", "supports": "supports:direct", "locator": "Art. 10(1)–(2)" },
+          { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 2(4)(e)" }
+        ],
+        "last_verified": "2026-10-25"
+      }
+    },
+    {
+      "id": "ttpa",
+      "aliases": ["political-advertising-regulation", "reg-2024-900"],
+      "celex": "32024R0900",
+      "short_name": "Political Advertising Regulation",
+      "full_name": "Regulation (EU) 2024/900 on the transparency and targeting of political advertising",
+      "kind": "kind:regulation",
+      "scope_class": "scope:out-of-scope",
+      "brief_part": null,
+      "legislative_status": "status:applicable",
+      "status_as_of": "2026-10-25",
+      "status_note": "In force since 9 April 2024, the twentieth day after publication (Art. 30(1)), and applicable since 10 October 2025 (Art. 30(2)); Art. 3 and Art. 5(1) have applied since entry into force (Art. 30(2), second sentence). OJ L 2024/900, 20.3.2024. Read on 25 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force, with the same two dates. The brief already cites it in Part I (clm-political-ads-dates, which this record does not restate).",
+      "status_basis": [
+        { "source_id": "src-eurlex-ttpa", "supports": "supports:direct", "locator": "Art. 30(1)–(2); Publications Office metadata: in force, dates 2024-04-09 and 2025-10-10" }
+      ],
+      "milestones": ["tl-ttpa-2024-04-09-entry-into-force", "tl-ttpa-2025-10-10-application"],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [],
+      "sources": ["src-eurlex-ttpa", "src-ec-political-ads-page"],
+      "last_verified": "2026-10-25",
+      "legal_basis": null,
+      "scope_decision": {
+        "disposition": "excluded",
+        "criterion": ["crit:other-field"],
+        "reason": "DRAFT. The Regulation governs political advertising and its targeting (Art. 1(1)); its organising principle is the integrity of democratic processes, a field this brief does not analyse, and it says itself that it leaves the rules on political campaigns untouched (Art. 2(2)). It uses the DSA's categories and is without prejudice to the DSA (Art. 2(3)(i), Art. 3); the site records that link and sends the reader to the Regulation.",
+        "approved_on": null,
+        "refer_to": ["src-eurlex-ttpa", "src-ec-political-ads-page"],
+        "watch_for": null,
+        "sources": [
+          { "source_id": "src-eurlex-ttpa", "supports": "supports:direct", "locator": "Art. 1(1); Art. 2(2); Art. 2(3)(i)" }
+        ],
+        "last_verified": "2026-10-25"
+      }
+    },
+    {
+      "id": "mica",
+      "aliases": ["markets-in-crypto-assets-regulation", "reg-2023-1114"],
+      "celex": "32023R1114",
+      "short_name": "MiCA",
+      "full_name": "Regulation (EU) 2023/1114 on markets in crypto-assets, and amending Regulations (EU) No 1093/2010 and (EU) No 1095/2010 and Directives 2013/36/EU and (EU) 2019/1937",
+      "kind": "kind:regulation",
+      "scope_class": "scope:referenced",
+      "brief_part": null,
+      "legislative_status": "status:applicable",
+      "status_as_of": "2026-10-25",
+      "status_note": "In force since 29 June 2023, the twentieth day after publication (Art. 149(1); OJ L 150, 9.6.2023); applicable since 30 December 2024 (Art. 149(2)), with Titles III and IV (asset-referenced and e-money tokens) applicable since 30 June 2024 (Art. 149(3)) and further derogations in Art. 149(4), not itemised here. Only the general application date is a milestone, because the Titles III–IV tranche can be tagged only once this record has provisions. Read on 25 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force.",
+      "status_basis": [
+        { "source_id": "src-eurlex-mica", "supports": "supports:direct", "locator": "Art. 149(1)–(3); Publications Office metadata: in force, dates 2023-06-29, 2024-06-30, 2024-12-30" }
+      ],
+      "milestones": ["tl-mica-2023-06-29-entry-into-force", "tl-mica-2024-12-30-application"],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [],
+      "sources": ["src-eurlex-mica", "src-eurlex-dora"],
+      "last_verified": "2026-10-25",
+      "legal_basis": null,
+      "scope_decision": {
+        "disposition": "watched",
+        "criterion": ["crit:other-field"],
+        "reason": "DRAFT. MiCA regulates the offer and trading of crypto-assets and the service providers who deal in them (Art. 1(1)): financial-markets law, which the brief does not analyse today. It is watched rather than excluded because the brief reserves a possible finance chapter, and because the rulebook already leans on it: DORA's scope includes crypto-asset service providers authorised under it (DORA Art. 2(1)(f)).",
+        "approved_on": null,
+        "refer_to": ["src-eurlex-mica"],
+        "watch_for": {
+          "event_type": null,
+          "description": "The author opens a finance chapter (docs/ROADMAP-v2.md §4, 'Phase 3 of the brief's list'). An editorial decision, not a legal event."
+        },
+        "sources": [
+          { "source_id": "src-eurlex-mica", "supports": "supports:direct", "locator": "Art. 1(1)" },
+          { "source_id": "src-eurlex-dora", "supports": "supports:direct", "locator": "Art. 2(1)(f)" }
+        ],
+        "last_verified": "2026-10-25"
+      }
+    },
+    {
+      "id": "psd3",
+      "aliases": ["payment-services-directive-3", "com-2023-366"],
+      "celex": "52023PC0366",
+      "short_name": "PSD3",
+      "full_name": "Proposal for a Directive on payment services and electronic money services in the Internal Market amending Directive 98/26/EC and repealing Directives 2015/2366/EU and 2009/110/EC (COM(2023) 366)",
+      "kind": "kind:proposal",
+      "scope_class": "scope:referenced",
+      "brief_part": null,
+      "legislative_status": "status:political-agreement",
+      "status_as_of": "2026-10-25",
+      "status_note": "NOT LAW. A Commission proposal of 28 June 2023 (COM(2023) 366), procedure 2023/0209(COD). The Legislative Observatory records Parliament's first-reading position of 23 April 2024 (T9-0297/2024), the committee decision to enter interinstitutional negotiations announced on 13 November 2024, and, on 5 May 2026, the 'approval in committee of the text agreed at early 2nd reading interinstitutional negotiations' (PE787.673): a text agreed with the Council, which is what status:political-agreement records. Stage reached: 'Awaiting Council's 1st reading position'; indicative plenary date 14 December 2026 (a forecast on the procedure file, not an event). Council documents were not read. Read on 25 Oct 2026.",
+      "status_basis": [
+        { "source_id": "src-oeil-2023-0209", "supports": "supports:direct", "locator": "Key events, 05/05/2026: 'Approval in committee of the text agreed at early 2nd reading interinstitutional negotiations', PE787.673; Technical information: 'Stage reached in procedure'" },
+        { "source_id": "src-eurlex-psd3-proposal", "supports": "supports:partial", "locator": "Title; Publications Office metadata: document date 2023-06-28, no in-force flag" }
+      ],
+      "milestones": ["tl-psd3-2023-06-28-proposal"],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [],
+      "sources": ["src-eurlex-psd3-proposal", "src-oeil-2023-0209"],
+      "last_verified": "2026-10-25",
+      "legal_basis": null,
+      "scope_decision": {
+        "disposition": "watched",
+        "criterion": ["crit:other-field"],
+        "reason": "DRAFT. PSD3 would replace the payment services and e-money directives: payments law, which the brief does not analyse today. Watched because the brief reserves a possible finance chapter and because the procedure has reached an agreed text, so its adoption is the next event that could change what a reader needs.",
+        "approved_on": null,
+        "refer_to": ["src-oeil-2023-0209", "src-eurlex-psd3-proposal"],
+        "watch_for": {
+          "event_type": "event:adoption",
+          "description": "Formal adoption of the agreed text, or the author opening a finance chapter, whichever comes first."
+        },
+        "sources": [
+          { "source_id": "src-eurlex-psd3-proposal", "supports": "supports:direct", "locator": "Title" }
+        ],
+        "last_verified": "2026-10-25"
+      }
+    },
+    {
+      "id": "psr",
+      "aliases": ["payment-services-regulation", "com-2023-367"],
+      "celex": "52023PC0367",
+      "short_name": "PSR",
+      "full_name": "Proposal for a Regulation on payment services in the internal market and amending Regulation (EU) No 1093/2010 (COM(2023) 367)",
+      "kind": "kind:proposal",
+      "scope_class": "scope:referenced",
+      "brief_part": null,
+      "legislative_status": "status:political-agreement",
+      "status_as_of": "2026-10-25",
+      "status_note": "NOT LAW. A Commission proposal of 28 June 2023 (COM(2023) 367), procedure 2023/0210(COD). The Legislative Observatory records Parliament's first-reading position of 23 April 2024 (T9-0298/2024), the committee decision to enter interinstitutional negotiations announced on 13 November 2024, and, on 5 May 2026, the 'approval in committee of the text agreed at early 2nd reading interinstitutional negotiations' (PE787.675). Stage reached: 'Awaiting Council's 1st reading position'; indicative plenary date 14 December 2026 (a forecast, not an event). Council documents were not read. Read on 25 Oct 2026.",
+      "status_basis": [
+        { "source_id": "src-oeil-2023-0210", "supports": "supports:direct", "locator": "Key events, 05/05/2026: 'Approval in committee of the text agreed at early 2nd reading interinstitutional negotiations', PE787.675; Technical information: 'Stage reached in procedure'" },
+        { "source_id": "src-eurlex-psr-proposal", "supports": "supports:partial", "locator": "Title; Publications Office metadata: document date 2023-06-28, no in-force flag" }
+      ],
+      "milestones": ["tl-psr-2023-06-28-proposal"],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [],
+      "sources": ["src-eurlex-psr-proposal", "src-oeil-2023-0210"],
+      "last_verified": "2026-10-25",
+      "legal_basis": null,
+      "scope_decision": {
+        "disposition": "watched",
+        "criterion": ["crit:other-field"],
+        "reason": "DRAFT. The PSR would set directly applicable rules on payment services, including fraud prevention: payments law, outside the brief's analysis today. Watched with PSD3, for the same two reasons.",
+        "approved_on": null,
+        "refer_to": ["src-oeil-2023-0210", "src-eurlex-psr-proposal"],
+        "watch_for": {
+          "event_type": "event:adoption",
+          "description": "Formal adoption of the agreed text, or the author opening a finance chapter, whichever comes first."
+        },
+        "sources": [
+          { "source_id": "src-eurlex-psr-proposal", "supports": "supports:direct", "locator": "Title" }
+        ],
+        "last_verified": "2026-10-25"
+      }
+    }
+  ],
+  "instrument_updates": [
+    {
+      "id": "dga",
+      "why": "The brief's 'DGA in transition' is a watchlist entry on a record that already exists (scope:adjacent, kept). Only the block below is added; no existing field changes.",
+      "add": {
+        "scope_decision": {
+          "disposition": "watched",
+          "criterion": ["crit:object-data", "crit:horizontal"],
+          "reason": "DRAFT. The DGA meets the criterion and is mapped, not covered: it has no page of its own. It is watched rather than promoted because its repeal is proposed (COM(2025) 837 Art. 10(3)(a)), in the same proposal that amends the Data Act (Art. 1); promoting a regime that may be folded into another would give a reader a page about a framework in transition as if it were settled. Its transition is shown as derived from the proposal's own edges, never stored.",
+          "approved_on": null,
+          "refer_to": ["src-eurlex-dga"],
+          "watch_for": {
+            "event_type": "event:adoption",
+            "description": "Adoption, amendment or withdrawal of the Digital Omnibus proposal (COM(2025) 837), procedure 2025/0360(COD)."
+          },
+          "sources": [
+            { "source_id": "src-eurlex-data-omnibus-837", "supports": "supports:direct", "locator": "Art. 10(3)(a) (proposed repeal of Regulation (EU) 2022/868); Art. 1 (amendments to Regulation (EU) 2023/2854)" }
+          ],
+          "last_verified": "2026-10-25"
+        }
+      }
+    },
+    {
+      "id": "data-omnibus",
+      "why": "Coherence with the edges above (rule M-15). The record's proposes_to_amend lists dga, but COM(2025) 837 proposes to REPEAL the DGA (Art. 10(3)(a); title: 'repealing … (EU) 2022/868'), and it omits the CER Directive, which Art. 9 amends ('Amendments to Directive (EU) 2022/2557'; title: 'amending … Directives … (EU) 2022/2557'). A factual correction to an existing record: amber, for the author (docs/V2-DATA-DESIGN.md §7, F-2 and F-3). No field records a repeal proposed by a proposal; the repeals are carried by the two relationships rel-data-omnibus-*-repeals, and §1.4 recommends deriving these arrays from the relationships altogether.",
+      "change": {
+        "proposes_to_amend": { "remove": ["dga"], "add": ["cer"] }
+      },
+      "sources": [
+        { "source_id": "src-eurlex-data-omnibus-837", "supports": "supports:direct", "locator": "Art. 9; Art. 10(3)(a); title" }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "rel-dsa-avmsd-defers",
+      "from": "dsa",
+      "to": "avmsd",
+      "kind": "rel-kind:defers-to",
+      "symmetric": false,
+      "summary": "The DSA is without prejudice to the Audiovisual Media Services Directive, which it names first among the acts regulating other aspects of intermediary services.",
+      "provisions": [],
+      "claims": [],
+      "sources": [{ "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 2(4)(a)" }],
+      "last_verified": "2026-10-25",
+      "requires_verification": false,
+      "verification_note": "Read on 25 Oct 2026 in the DSA's Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022R2065). The provision ID dsa:art-2 does not exist yet, so `provisions` is empty."
+    },
+    {
+      "id": "rel-dsa-copyright-dsm-defers",
+      "from": "dsa",
+      "to": "copyright-dsm",
+      "kind": "rel-kind:defers-to",
+      "symmetric": false,
+      "summary": "The DSA is without prejudice to Union law on copyright and related rights, of which the DSM Directive is part.",
+      "provisions": [],
+      "claims": [],
+      "sources": [{ "source_id": "src-eurlex-dsa", "supports": "supports:partial", "locator": "Art. 2(4)(b) — names 'Union law on copyright and related rights', not Directive (EU) 2019/790" }],
+      "last_verified": "2026-10-25",
+      "requires_verification": false,
+      "verification_note": "Partial by construction: the DSA names a body of law, and that this Directive belongs to it is the site's reading. Derived state: partial."
+    },
+    {
+      "id": "rel-dsa-p2b-defers",
+      "from": "dsa",
+      "to": "p2b",
+      "kind": "rel-kind:defers-to",
+      "symmetric": false,
+      "summary": "The DSA is without prejudice to the P2B Regulation.",
+      "provisions": [],
+      "claims": [],
+      "sources": [{ "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 2(4)(e)" }],
+      "last_verified": "2026-10-25",
+      "requires_verification": false,
+      "verification_note": null
+    },
+    {
+      "id": "rel-gpsr-dsa-defers",
+      "from": "gpsr",
+      "to": "dsa",
+      "kind": "rel-kind:defers-to",
+      "symmetric": false,
+      "summary": "The GPSR's product-safety duties for online marketplaces apply without prejudice to the DSA's general obligations on points of contact.",
+      "provisions": [],
+      "claims": [],
+      "sources": [{ "source_id": "src-eurlex-gpsr", "supports": "supports:direct", "locator": "Art. 22(1)–(2), referring to DSA Arts 11 and 12; Art. 22(7), referring to DSA Art. 31(3)" }],
+      "last_verified": "2026-10-25",
+      "requires_verification": false,
+      "verification_note": "The DSA provisions GPSR Art. 22 names — Arts 11, 12 and 31 — are not provision records, so `provisions` is empty rather than pointing at a neighbouring article."
+    },
+    {
+      "id": "rel-ttpa-dsa-defers",
+      "from": "ttpa",
+      "to": "dsa",
+      "kind": "rel-kind:defers-to",
+      "symmetric": false,
+      "summary": "The Political Advertising Regulation is without prejudice to the DSA and borrows its definitions of intermediary service and very large online platform.",
+      "provisions": ["dsa:art-33"],
+      "claims": [],
+      "sources": [{ "source_id": "src-eurlex-ttpa", "supports": "supports:direct", "locator": "Art. 2(3)(i); Art. 3, points (5), (8) and (9)" }],
+      "last_verified": "2026-10-25",
+      "requires_verification": false,
+      "verification_note": "Art. 3 point (8) defines 'very large online platform' by reference to DSA Art. 33(4); the point numbers (5) and (9) were read in the same passage."
+    },
+    {
+      "id": "rel-mica-dora-enables",
+      "from": "mica",
+      "to": "dora",
+      "kind": "rel-kind:enables",
+      "symmetric": false,
+      "summary": "DORA's scope includes crypto-asset service providers authorised under the Markets in Crypto-Assets Regulation, which it names by its title.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        { "source_id": "src-eurlex-dora", "supports": "supports:direct", "locator": "Art. 2(1)(f)" },
+        { "source_id": "src-eurlex-mica", "supports": "supports:partial", "locator": "Title (the title DORA Art. 2(1)(f) cites, which DORA gives before MiCA's number existed)" }
+      ],
+      "last_verified": "2026-10-25",
+      "requires_verification": false,
+      "verification_note": "DORA was adopted before MiCA and cites it by title; the title matches Regulation (EU) 2023/1114 word for word as far as DORA quotes it."
+    },
+    {
+      "id": "rel-data-omnibus-p2b-repeals",
+      "from": "data-omnibus",
+      "to": "p2b",
+      "kind": "rel-kind:repeals",
+      "symmetric": false,
+      "summary": "PROPOSED: the Digital Omnibus would repeal the P2B Regulation from its own date of application, keeping four provisions until 31 December 2032.",
+      "provisions": [],
+      "claims": [],
+      "sources": [{ "source_id": "src-eurlex-data-omnibus-837", "supports": "supports:direct", "locator": "Art. 10(1)–(2)" }],
+      "last_verified": "2026-10-25",
+      "requires_verification": false,
+      "verification_note": "Read on 25 Oct 2026 in the proposal's English PDF retrieved from the Publications Office's Cellar (the CELEX record's DOC_1). Derived modality: proposed."
+    },
+    {
+      "id": "rel-data-omnibus-dga-repeals",
+      "from": "data-omnibus",
+      "to": "dga",
+      "kind": "rel-kind:repeals",
+      "symmetric": false,
+      "summary": "PROPOSED: the Digital Omnibus would repeal the Data Governance Act, with references to it read in accordance with a correlation table.",
+      "provisions": [],
+      "claims": [],
+      "sources": [{ "source_id": "src-eurlex-data-omnibus-837", "supports": "supports:direct", "locator": "Art. 10(3)(a) and (4); title ('repealing … (EU) 2022/868')" }],
+      "last_verified": "2026-10-25",
+      "requires_verification": false,
+      "verification_note": "Derived modality: proposed. This edge contradicts data-omnibus.proposes_to_amend, which lists dga as amended: see docs/V2-DATA-DESIGN.md §7, finding F-2."
+    },
+    {
+      "id": "rel-data-omnibus-data-act-amends",
+      "from": "data-omnibus",
+      "to": "data-act",
+      "kind": "rel-kind:amends",
+      "symmetric": false,
+      "summary": "PROPOSED: the Digital Omnibus would amend the Data Act.",
+      "provisions": [],
+      "claims": [],
+      "sources": [{ "source_id": "src-eurlex-data-omnibus-837", "supports": "supports:direct", "locator": "Art. 1 ('Amendments to Regulation (EU) 2023/2854')" }],
+      "last_verified": "2026-10-25",
+      "requires_verification": false,
+      "verification_note": "Already asserted by data-omnibus.proposes_to_amend; this is the relationship that array lacked (finding F-1). With rel-data-omnibus-dga-repeals it is what makes the DGA's transition toward the Data Act derivable."
+    }
+  ],
+  "sources": [
+    {
+      "id": "src-eurlex-vida",
+      "tier": "tier:1", "type": "source-type:regulation", "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Council Directive (EU) 2025/516 of 11 March 2025 amending Directive 2006/112/EC as regards VAT rules for the digital age (OJ L 2025/516, 25.3.2025)",
+      "url": "http://publications.europa.eu/resource/celex/32025L0516", "url_status": "url:live",
+      "published": "2025-03-25", "accessed": "2026-10-25", "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026 from the Publications Office's Cellar by CELEX number. Art. 6 (transposition, paragraphs 1–3 read), Art. 7 (entry into force). The Publications Office's metadata records it as in force from 14 April 2025."
+    },
+    {
+      "id": "src-eurlex-avmsd",
+      "tier": "tier:1", "type": "source-type:regulation", "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Directive 2010/13/EU of 10 March 2010 (Audiovisual Media Services Directive) (codified version) (OJ L 95, 15.4.2010, p. 1)",
+      "url": "http://publications.europa.eu/resource/celex/32010L0013", "url_status": "url:live",
+      "published": "2010-04-15", "accessed": "2026-10-25", "language": "en",
+      "note": "The Official Journal text as published in 2010, retrieved on 25 Oct 2026 from the Publications Office's Cellar by CELEX number — NOT a consolidated version: later amendments are not in it. Art. 1 (definitions), Art. 34 (repeal of Directive 89/552/EEC), Art. 35 (entry into force)."
+    },
+    {
+      "id": "src-eurlex-avmsd-2018",
+      "tier": "tier:1", "type": "source-type:regulation", "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Directive (EU) 2018/1808 of 14 November 2018 amending Directive 2010/13/EU (Audiovisual Media Services Directive) in view of changing market realities (OJ L 303, 28.11.2018, p. 69)",
+      "url": "http://publications.europa.eu/resource/celex/32018L1808", "url_status": "url:live",
+      "published": "2018-11-28", "accessed": "2026-10-25", "language": "en",
+      "note": "Identified on 25 Oct 2026 from the Publications Office's metadata (title, in-force flag, entry into force 18 December 2018) and the header of the text retrieved from Cellar. Its provisions were not read; it supports that the 2010 Directive was amended, and nothing about how."
+    },
+    {
+      "id": "src-eurlex-copyright-dsm",
+      "tier": "tier:1", "type": "source-type:regulation", "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Directive (EU) 2019/790 of 17 April 2019 on copyright and related rights in the Digital Single Market and amending Directives 96/9/EC and 2001/29/EC (OJ L 130, 17.5.2019, p. 92)",
+      "url": "http://publications.europa.eu/resource/celex/32019L0790", "url_status": "url:live",
+      "published": "2019-05-17", "accessed": "2026-10-25", "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026 from the Publications Office's Cellar by CELEX number. Art. 1 (subject matter and scope), Art. 26 (application in time), Art. 29 (transposition), Art. 31 (entry into force)."
+    },
+    {
+      "id": "src-eurlex-gpsr",
+      "tier": "tier:1", "type": "source-type:regulation", "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2023/988 of 10 May 2023 on general product safety (OJ L 135, 23.5.2023, p. 1)",
+      "url": "http://publications.europa.eu/resource/celex/32023R0988", "url_status": "url:live",
+      "published": "2023-05-23", "accessed": "2026-10-25", "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026 from the Publications Office's Cellar by CELEX number. Art. 1 (objective and subject matter), Art. 22 (online marketplaces; refers to DSA Arts 9, 11, 12 and 31), Art. 52 (entry into force; applies from 13 December 2024)."
+    },
+    {
+      "id": "src-eurlex-eaa",
+      "tier": "tier:1", "type": "source-type:regulation", "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Directive (EU) 2019/882 of 17 April 2019 on the accessibility requirements for products and services (OJ L 151, 7.6.2019, p. 70)",
+      "url": "http://publications.europa.eu/resource/celex/32019L0882", "url_status": "url:live",
+      "published": "2019-06-07", "accessed": "2026-10-25", "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026 from the Publications Office's Cellar by CELEX number. Art. 1 (subject matter), Art. 31 (transposition by 28 June 2022, application from 28 June 2025), Art. 34 (entry into force)."
+    },
+    {
+      "id": "src-eurlex-p2b",
+      "tier": "tier:1", "type": "source-type:regulation", "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2019/1150 of 20 June 2019 on promoting fairness and transparency for business users of online intermediation services (OJ L 186, 11.7.2019, p. 57)",
+      "url": "http://publications.europa.eu/resource/celex/32019R1150", "url_status": "url:live",
+      "published": "2019-07-11", "accessed": "2026-10-25", "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026 from the Publications Office's Cellar by CELEX number. Art. 1 (subject matter and scope), Art. 19 (entry into force; applies from 12 July 2020)."
+    },
+    {
+      "id": "src-eurlex-mica",
+      "tier": "tier:1", "type": "source-type:regulation", "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2023/1114 of 31 May 2023 on markets in crypto-assets (OJ L 150, 9.6.2023, p. 40)",
+      "url": "http://publications.europa.eu/resource/celex/32023R1114", "url_status": "url:live",
+      "published": "2023-06-09", "accessed": "2026-10-25", "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026 from the Publications Office's Cellar by CELEX number. Art. 1 (subject matter), Art. 149 (entry into force and application: 30 December 2024; Titles III and IV from 30 June 2024)."
+    },
+    {
+      "id": "src-eurlex-psd3-proposal",
+      "tier": "tier:1", "type": "source-type:legislative-document", "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "COM(2023) 366 final — Proposal for a Directive on payment services and electronic money services in the Internal Market amending Directive 98/26/EC and repealing Directives 2015/2366/EU and 2009/110/EC",
+      "url": "http://publications.europa.eu/resource/celex/52023PC0366", "url_status": "url:live",
+      "published": "2023-06-28", "accessed": "2026-10-25", "language": "en",
+      "note": "A proposal, not law. Identified on 25 Oct 2026 from the Publications Office's metadata (title, document date 28 June 2023, no in-force flag). The proposal's articles were not read; it supports the proposal's identity and title only."
+    },
+    {
+      "id": "src-eurlex-psr-proposal",
+      "tier": "tier:1", "type": "source-type:legislative-document", "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "COM(2023) 367 final — Proposal for a Regulation on payment services in the internal market and amending Regulation (EU) No 1093/2010",
+      "url": "http://publications.europa.eu/resource/celex/52023PC0367", "url_status": "url:live",
+      "published": "2023-06-28", "accessed": "2026-10-25", "language": "en",
+      "note": "A proposal, not law. Identified on 25 Oct 2026 from the Publications Office's metadata (title, document date 28 June 2023, no in-force flag). The proposal's articles were not read; it supports the proposal's identity and title only."
+    },
+    {
+      "id": "src-oeil-2023-0209",
+      "tier": "tier:2", "type": "source-type:legislative-document", "publisher": "ep",
+      "publisher_name": "European Parliament — Legislative Observatory",
+      "title": "Procedure file 2023/0209(COD): payment services and electronic money services in the internal market",
+      "url": "https://oeil.secure.europarl.europa.eu/oeil/en/procedure-file?reference=2023/0209(COD)", "url_status": "url:live",
+      "published": null, "accessed": "2026-10-25", "language": "en",
+      "note": "Read on 25 Oct 2026. Key events: proposal 28/06/2023; Parliament first reading 23/04/2024 (T9-0297/2024); decision to enter interinstitutional negotiations announced 13/11/2024; approval in committee of the text agreed at early second-reading negotiations 05/05/2026 (PE787.673). Stage reached: 'Awaiting Council's 1st reading position'. A living page: what it says changes as the procedure moves."
+    },
+    {
+      "id": "src-oeil-2023-0210",
+      "tier": "tier:2", "type": "source-type:legislative-document", "publisher": "ep",
+      "publisher_name": "European Parliament — Legislative Observatory",
+      "title": "Procedure file 2023/0210(COD): payment services in the internal market",
+      "url": "https://oeil.secure.europarl.europa.eu/oeil/en/procedure-file?reference=2023/0210(COD)", "url_status": "url:live",
+      "published": null, "accessed": "2026-10-25", "language": "en",
+      "note": "Read on 25 Oct 2026. Key events: proposal 28/06/2023; Parliament first reading 23/04/2024 (T9-0298/2024); decision to enter interinstitutional negotiations announced 13/11/2024; approval in committee of the text agreed at early second-reading negotiations 05/05/2026 (PE787.675). Stage reached: 'Awaiting Council's 1st reading position'. A living page."
+    }
+  ],
+  "source_updates": [
+    {
+      "id": "src-eurlex-data-omnibus-837",
+      "set": { "accessed": "2026-10-25" },
+      "why": "Re-read on 25 Oct 2026 (the English PDF, DOC_1 of the CELEX record, from Cellar) for Art. 1, Art. 3, Art. 6, Art. 9, Art. 10 and Art. 11. The note's 'Art. 3 amends the GDPR' still holds; append: 'Art. 10(1)–(2) would repeal Regulation (EU) 2019/1150, keeping Art. 2 points (1), (2), (5) and Arts 4, 11 and 15 until 31 December 2032; Art. 10(3) would repeal Regulations (EU) 2022/868 and 2018/1807 and Directive 2019/1024; Art. 9 amends Directive (EU) 2022/2557.'"
+    },
+    {
+      "id": "src-eurlex-dsa",
+      "set": { "accessed": "2026-10-25" },
+      "why": "Art. 2 (scope) read on 25 Oct 2026 in the text retrieved from Cellar, for the three defers-to edges. Only if the record's `accessed` is earlier; the note gains 'Art. 2(4) lists the acts the DSA is without prejudice to'."
+    },
+    {
+      "id": "src-eurlex-dora",
+      "set": { "accessed": "2026-10-25" },
+      "why": "Art. 2(1)(f) read on 25 Oct 2026 in the text retrieved from Cellar, for rel-mica-dora-enables. Only if the record's `accessed` is earlier."
+    },
+    {
+      "id": "src-eurlex-ttpa",
+      "set": { "accessed": "2026-10-25" },
+      "why": "Arts 1, 2, 3 and 30 read on 25 Oct 2026 in the text retrieved from Cellar."
+    }
+  ],
+  "events": [
+    { "id": "tl-vida-2025-04-14-entry-into-force", "date": "2025-04-14", "date_precision": "precision:day", "event_type": "event:entry-into-force", "instrument": "vida", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-vida"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 7: entry into force on the twentieth day following publication (OJ L 2025/516, 25.3.2025). The Publications Office's metadata records the same date. affected_actors and sectors are empty because they were not researched, not because there are none." },
+    { "id": "tl-avmsd-2010-05-05-entry-into-force", "date": "2010-05-05", "date_precision": "precision:day", "event_type": "event:entry-into-force", "instrument": "avmsd", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-avmsd"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 35: entry into force on the 20th day following publication (OJ L 95, 15.4.2010). The Publications Office's metadata records the same date." },
+    { "id": "tl-copyright-dsm-2019-06-06-entry-into-force", "date": "2019-06-06", "date_precision": "precision:day", "event_type": "event:entry-into-force", "instrument": "copyright-dsm", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-copyright-dsm"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 31: entry into force on the twentieth day following publication (OJ L 130, 17.5.2019). The Publications Office's metadata records the same date." },
+    { "id": "tl-gpsr-2023-06-12-entry-into-force", "date": "2023-06-12", "date_precision": "precision:day", "event_type": "event:entry-into-force", "instrument": "gpsr", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-gpsr"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 52, first paragraph: entry into force on the twentieth day following publication (OJ L 135, 23.5.2023). The Publications Office's metadata records the same date." },
+    { "id": "tl-gpsr-2024-12-13-application", "date": "2024-12-13", "date_precision": "precision:day", "event_type": "event:application", "instrument": "gpsr", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-gpsr"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 52, second paragraph: 'It shall apply from 13 December 2024.'" },
+    { "id": "tl-eaa-2019-06-27-entry-into-force", "date": "2019-06-27", "date_precision": "precision:day", "event_type": "event:entry-into-force", "instrument": "eaa", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-eaa"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 34: entry into force on the twentieth day following publication (OJ L 151, 7.6.2019). The Publications Office's metadata records the same date." },
+    { "id": "tl-p2b-2019-07-31-entry-into-force", "date": "2019-07-31", "date_precision": "precision:day", "event_type": "event:entry-into-force", "instrument": "p2b", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-p2b"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 19(1): entry into force on the twentieth day following publication (OJ L 186, 11.7.2019). The Publications Office's metadata records the same date." },
+    { "id": "tl-p2b-2020-07-12-application", "date": "2020-07-12", "date_precision": "precision:day", "event_type": "event:application", "instrument": "p2b", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-p2b"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 19(2): 'It shall apply from 12 July 2020.'" },
+    { "id": "tl-ttpa-2024-04-09-entry-into-force", "date": "2024-04-09", "date_precision": "precision:day", "event_type": "event:entry-into-force", "instrument": "ttpa", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-ttpa"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 30(1): entry into force on the twentieth day following publication (OJ L 2024/900, 20.3.2024). Art. 3 and Art. 5(1) apply from this date (Art. 30(2), second sentence); they are not tagged because no provision record exists. The Publications Office's metadata records the same date." },
+    { "id": "tl-ttpa-2025-10-10-application", "date": "2025-10-10", "date_precision": "precision:day", "event_type": "event:application", "instrument": "ttpa", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-ttpa"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 30(2), first sentence: 'It shall apply from 10 October 2025.'" },
+    { "id": "tl-mica-2023-06-29-entry-into-force", "date": "2023-06-29", "date_precision": "precision:day", "event_type": "event:entry-into-force", "instrument": "mica", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-mica"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 149(1): entry into force on the twentieth day following publication (OJ L 150, 9.6.2023). The Publications Office's metadata records the same date." },
+    { "id": "tl-mica-2024-12-30-application", "date": "2024-12-30", "date_precision": "precision:day", "event_type": "event:application", "instrument": "mica", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": [], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-mica"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "Art. 149(2): 'This Regulation shall apply from 30 December 2024.' The Titles III–IV tranche (30 June 2024, Art. 149(3)) is not an event here: an application event that names no provision is read as the general date, and only one may exist (js/regulatory-model.js statusContradictions)." },
+    { "id": "tl-psd3-2023-06-28-proposal", "date": "2023-06-28", "date_precision": "precision:day", "event_type": "event:proposal", "instrument": "psd3", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": ["ec"], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-psd3-proposal", "src-oeil-2023-0209"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "COM(2023) 366: document date 28 June 2023 in the Publications Office's metadata; 'Legislative proposal published' on 28/06/2023 in the procedure file." },
+    { "id": "tl-psr-2023-06-28-proposal", "date": "2023-06-28", "date_precision": "precision:day", "event_type": "event:proposal", "instrument": "psr", "provisions": [], "affected_actors": [], "sectors": [], "required_action": null, "authority": ["ec"], "status": "occurred", "supersedes": null, "obligation": null, "claims": [], "sources": ["src-eurlex-psr-proposal", "src-oeil-2023-0210"], "requires_verification": false, "last_verified": "2026-10-25", "verification_note": "COM(2023) 367: document date 28 June 2023 in the Publications Office's metadata; 'Legislative proposal published' on 28/06/2023 in the procedure file." }
+  ]
+}

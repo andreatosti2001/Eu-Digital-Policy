@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "docs/v2-design/map.schema.json",
+  "title": "Dependency map — nodes and edges (v2, D1)",
+  "description": "PROPOSED in v2 Session 2 (27 Oct 2026); nothing here is implemented. The map is a DERIVED VIEW over two record types that already exist: instrument records (data/instruments.json `instruments[]`) are its nodes, and relationship records (data/instruments.json `relationships[]`) are its edges (decision D-6, approved 25 Oct 2026). This schema describes (1) the fields an instrument record must carry to be a map node, including the one new block `scope_decision` and the one new field `status_basis`; (2) the relationship record in its v2 shape, whose only change is that `sources` become reference objects carrying `supports` and `locator`, as claim references already do; (3) every property the view DERIVES and that may therefore never be stored. Read with docs/V2-DATA-DESIGN.md §1, which holds the reasons and the validation rules M-01…M-16.",
+  "x-status": "proposed",
+  "x-decisions": {
+    "D-6": "The map extends the 17 existing relationships; it is not a second graph and has no file of its own.",
+    "D-8": "`stratum` is dropped and never stored. What a reader would infer from it is shown as facts: the actors an instrument's applicability rules address, and the instruments it enables (docs/V2-DATA-DESIGN.md §1.2).",
+    "field-names": "`verified_at` in the session prompt is the existing `last_verified`; no second date field is introduced."
+  },
+  "$defs": {
+    "isoDate": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "sourceRef": {
+      "description": "One reference to one source record, in the shape data/claims.json already uses. `supports` says what the source can carry; `context` is not a citation. A locator is what lets a reader reach the evidence without reading the whole document (docs/EVIDENCE-MODEL.md §3).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "supports", "locator"],
+      "properties": {
+        "source_id": { "type": "string", "pattern": "^src-[a-z0-9-]+$" },
+        "supports": { "enum": ["supports:direct", "supports:partial", "supports:context"] },
+        "locator": {
+          "type": ["string", "null"],
+          "description": "Structural (article, paragraph, point, recital, annex, page, procedure key event) wherever the source is a legal text or a procedure file. null is permitted only with supports:context."
+        }
+      }
+    },
+    "scopeDecision": {
+      "description": "Why an instrument is covered, excluded or watched, measured against the inclusion criterion (docs/V2-DATA-DESIGN.md §5, decision D-7). The exclusion register and the watchlist are not files: they are the instrument records whose decision says `excluded` or `watched`, listed by a derived view.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disposition", "criterion", "reason", "approved_on", "refer_to", "sources", "last_verified"],
+      "properties": {
+        "disposition": {
+          "enum": ["included", "excluded", "watched"],
+          "description": "included ⇔ scope:core. excluded ⇔ scope:out-of-scope (the register). watched: any scope but core (the watchlist)."
+        },
+        "criterion": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "pattern": "^crit:[a-z0-9-]+$" },
+          "description": "The clauses of the inclusion criterion the decision rests on; each resolves to a taxonomy term under the proposed vocabulary `inclusion_criterion`."
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Editorial text, in the author's words or approved by the author. It states the judgement; the facts it relies on are carried by `sources`."
+        },
+        "approved_on": {
+          "oneOf": [{ "$ref": "#/$defs/isoDate" }, { "type": "null" }],
+          "description": "The date of the row in docs/ROADMAP-v2.md §8 that approves this decision. null only in a proposal under docs/: a record in data/ with a null approved_on is an error (rule M-04)."
+        },
+        "refer_to": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^src-[a-z0-9-]+$" },
+          "description": "The external pointer ('rinvio esterno'): where a reader goes for the regime this site does not cover. Source IDs only — a URL lives in data/sources.json and nowhere else. Required non-empty for excluded and watched."
+        },
+        "watch_for": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["event_type", "description"],
+          "properties": {
+            "event_type": {
+              "type": ["string", "null"],
+              "pattern": "^event:[a-z-]+$",
+              "description": "A timeline event type whose occurrence reopens the decision (event:adoption, event:publication …), or null when the trigger is an editorial decision rather than a legal event."
+            },
+            "description": { "type": "string", "minLength": 10 }
+          },
+          "description": "Required for watched, null otherwise: the event that reopens the decision."
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/sourceRef" },
+          "description": "What establishes the facts the decision relies on — at least the instrument's identity and subject matter."
+        },
+        "last_verified": { "$ref": "#/$defs/isoDate" }
+      }
+    },
+    "node": {
+      "description": "An instrument record as a map node. Every field listed exists today except `scope_decision` and `status_basis`, which are new and optional for records that existed on 25 Oct 2026 (counted as migration backlog), and required for every record added after it.",
+      "type": "object",
+      "required": ["id", "short_name", "full_name", "celex", "kind", "scope_class", "legislative_status", "status_as_of", "milestones", "sources", "last_verified"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Never renamed." },
+        "short_name": { "type": "string" },
+        "full_name": { "type": "string" },
+        "celex": { "type": ["string", "null"], "pattern": "^[0-9][0-9]{4}[A-Z]{1,2}[0-9]{4}$", "description": "null = not researched, never 'no CELEX number'." },
+        "kind": { "type": "string", "pattern": "^kind:" },
+        "scope_class": { "enum": ["scope:core", "scope:adjacent", "scope:referenced", "scope:out-of-scope"] },
+        "legislative_status": {
+          "type": ["string", "null"],
+          "pattern": "^status:",
+          "description": "One of the 16 taxonomy states. null = not researched. The six display labels are DERIVED from it (status-labels.json) and never stored."
+        },
+        "status_as_of": { "$ref": "#/$defs/isoDate" },
+        "status_note": { "type": ["string", "null"] },
+        "status_basis": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sourceRef" },
+          "description": "NEW. The references that establish `legislative_status` on `status_as_of`, with locators: the act's final provisions and the Publications Office's in-force metadata for an adopted act; the procedure file's key events for a procedural stage. Rules M-07 and S-01…S-06."
+        },
+        "milestones": { "type": "array", "items": { "type": "string", "pattern": "^tl-" } },
+        "sources": { "type": "array", "items": { "type": "string", "pattern": "^src-" } },
+        "last_verified": { "$ref": "#/$defs/isoDate" },
+        "scope_decision": {
+          "oneOf": [{ "$ref": "#/$defs/scopeDecision" }, { "type": "null" }],
+          "description": "NEW. Required for scope:out-of-scope, for every watched instrument and for every scope:core instrument added after 25 Oct 2026."
+        }
+      },
+      "not": {
+        "anyOf": [
+          { "required": ["coverage"] },
+          { "required": ["stratum"] },
+          { "required": ["regulatory_object"] },
+          { "required": ["status_label"] }
+        ]
+      }
+    },
+    "edge": {
+      "description": "A relationship record, v2. Unchanged in every field but `sources`, which become reference objects. A v1 record (bare source IDs) stays valid during migration and is DERIVED as an unverified edge: it is drawn as unverified or not drawn, never as verified.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "from", "to", "kind", "symmetric", "summary", "provisions", "claims", "sources", "last_verified"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^rel-[a-z0-9-]+$", "description": "Never renamed." },
+        "from": { "type": "string", "description": "An instrument id. For a directional kind, the instrument whose text acts (amends, repeals, defers) or, for rel-kind:enables, the enabling instrument." },
+        "to": { "type": "string", "description": "An instrument id." },
+        "kind": {
+          "enum": ["rel-kind:overlap", "rel-kind:complement", "rel-kind:sequence", "rel-kind:conflict", "rel-kind:carve-out", "rel-kind:amends", "rel-kind:repeals", "rel-kind:implements", "rel-kind:lex-specialis", "rel-kind:legal-basis", "rel-kind:enables", "rel-kind:defers-to"],
+          "description": "The last two are NEW taxonomy terms (proposed). Each term carries a `basis` property, textual or analytical — see x-taxonomy-additions."
+        },
+        "symmetric": { "type": "boolean", "description": "true only for analytical kinds (overlap, complement, conflict, sequence). Rule M-14." },
+        "summary": { "type": "string", "minLength": 20, "description": "The edge's note: what the relationship is, in a sentence a reader can check against the locator. Required (the prompt's 'note')." },
+        "provisions": { "type": "array", "items": { "type": "string" } },
+        "claims": { "type": "array", "items": { "type": "string", "pattern": "^clm-" }, "description": "Required non-empty for an analytical kind to be drawn as verified: the reading is a claim, typed interpretation or critique." },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "anyOf": [
+              { "$ref": "#/$defs/sourceRef" },
+              { "type": "string", "pattern": "^src-", "description": "v1 form — accepted during migration, derived as unverified." }
+            ]
+          }
+        },
+        "last_verified": { "$ref": "#/$defs/isoDate", "description": "Required. The date the edge was last read against its locators. The prompt's 'verified_at'." },
+        "requires_verification": { "type": "boolean" },
+        "verification_note": { "type": ["string", "null"] }
+      },
+      "not": {
+        "anyOf": [
+          { "required": ["verified"] },
+          { "required": ["verification_state"] },
+          { "required": ["modality"] },
+          { "required": ["external"] },
+          { "required": ["in_transition"] }
+        ]
+      }
+    }
+  },
+  "x-taxonomy-additions": {
+    "relationship_kind": [
+      {
+        "id": "rel-kind:enables",
+        "label": "Enables",
+        "basis": "textual",
+        "note": "The other instrument's provisions operate through definitions, bodies, means or populations this instrument establishes, and say so. Recorded only on an express reference in the DEPENDENT instrument's text; the locator is in that text. Direction: from = the enabling instrument."
+      },
+      {
+        "id": "rel-kind:defers-to",
+        "label": "Defers to",
+        "basis": "textual",
+        "note": "This instrument leaves a matter to the other: a without-prejudice clause, a 'shall not affect' clause or an express reference sending the reader there. The locator is in the DEFERRING instrument's text (from). Rendered 'external referral' when the other instrument is not covered."
+      }
+    ],
+    "relationship_kind_basis": {
+      "description": "A new property on every relationship_kind term. Existing IDs and labels are unchanged; only the property is added.",
+      "textual": ["rel-kind:amends", "rel-kind:repeals", "rel-kind:implements", "rel-kind:legal-basis", "rel-kind:carve-out", "rel-kind:lex-specialis", "rel-kind:enables", "rel-kind:defers-to"],
+      "analytical": ["rel-kind:overlap", "rel-kind:complement", "rel-kind:sequence", "rel-kind:conflict"]
+    },
+    "inclusion_criterion": "A new vocabulary of clause terms — crit:object-data, crit:object-services, crit:object-ai, crit:object-security, crit:object-infrastructure, crit:horizontal, crit:sector-instance, crit:other-field, crit:readable — defined in docs/V2-DATA-DESIGN.md §5. Proposed; D-7 is open until the author approves it."
+  },
+  "x-derived": {
+    "description": "Computed by the view on every render from the records above. Storing any of these is an error (rule M-02): each would be a second copy of a fact the records already hold.",
+    "node.coverage": {
+      "values": ["covered", "excluded", "watched", "mapped"],
+      "rule": "covered ⇔ scope:core; excluded ⇔ scope_decision.disposition = excluded; watched ⇔ disposition = watched; mapped otherwise (adjacent or referenced, no decision). Whether a page exists is NOT coverage: it is js/routes.js hasEntityPage(), checked against coverage by rule M-05."
+    },
+    "node.status_label": {
+      "rule": "status-labels.json: a function of legislative_status, the milestones and the as-of date. Shown beside the underlying state, never instead of it."
+    },
+    "node.addressees": {
+      "rule": "Replaces `stratum` (D-8). The union of `conditions.actor` over data/applicability.json rules whose instrument is this node. An instrument with no rule shows 'addressees not recorded' (null), never 'none'."
+    },
+    "node.enables": {
+      "rule": "Replaces `stratum` (D-8). The `to` of every rel-kind:enables edge whose `from` is this node."
+    },
+    "edge.verification_state": {
+      "values": ["verified", "partial", "unverified"],
+      "rule": "verified: at least one supports:direct reference whose source is tier:1 or tier:2 with a structural locator, no requires_verification, and — for an analytical kind — at least one claim. partial: references are objects with locators but the only support is partial, or an analytical kind has no claim. unverified: any v1 bare-ID reference set, no locator, only context, only the brief itself (src-brief-original), or requires_verification true. An unverified edge is never drawn as verified."
+    },
+    "edge.modality": {
+      "values": ["law", "proposed"],
+      "rule": "proposed when the `from` instrument's legislative_status is a pre-adoption state (proposal, parliament-position, council-position, trilogue, political-agreement, stalled) or withdrawn; law otherwise. Derived, so an edge changes modality on the day its proposal is adopted without anybody editing it."
+    },
+    "edge.external": {
+      "rule": "true when either end's coverage is not `covered`. A rel-kind:defers-to edge with external = true is labelled 'external referral' ('rinvio esterno')."
+    },
+    "node.in_transition": {
+      "rule": "The prompt's 'in transizione verso'. X is in transition toward Y via P when a node P with modality `proposed` has a rel-kind:repeals edge to X and a rel-kind:amends edge to Y; in transition with no named target when P has only the repeals edge. Never stored: it is a forecast about a legislative outcome, and deriving it from P's own recorded text makes it expire by itself when P is adopted, withdrawn or amended."
+    }
+  }
+}
