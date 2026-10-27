@@ -46,6 +46,7 @@ import { resolve, isAbsolute, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DEFAULT_RECORD_DIR } from '../agent/scout/store.mjs';
 import { DECISION_DIR } from '../agent/implement/ledger.mjs';
+import { storeDir } from '../tools/evidence-audit-record.mjs';
 
 export const CONTROL_ROOM_ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)));
 export const REPO_ROOT = resolve(CONTROL_ROOM_ROOT, '..');
@@ -135,6 +136,12 @@ export function readConfig(env = process.env, { root = REPO_ROOT } = {}) {
        produced the proposal would break the trace protocol §28
        requires end to end. */
     trace_dir: env.CONTROL_ROOM_TRACE_DIR || join(root, 'agent', 'observability', 'runs'),
+
+    /* WHERE THE RECORDED EDITORIAL AUDITS ARE (roadmap v2 item 1.1):
+       what `node tools/evidence-audit.mjs --record` writes, which the
+       Editorial audit view reads and nothing here writes. Configurable
+       for the same reason as the two above, and by the same person. */
+    editorial_audit_dir: env.CONTROL_ROOM_EDITORIAL_AUDIT_DIR || storeDir(root),
     root,
   };
 }
@@ -261,5 +268,6 @@ export function describeConfig(cfg) {
     trace_dir: cfg.trace_dir,
     records_dir: cfg.records_dir,
     decision_dir: cfg.decision_dir,
+    editorial_audit_dir: cfg.editorial_audit_dir,
   };
 }

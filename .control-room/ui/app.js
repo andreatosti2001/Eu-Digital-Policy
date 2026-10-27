@@ -287,6 +287,59 @@ function renderHealth(d) {
   return out;
 }
 
+/* Roadmap v2 item 1.1. The latest RECORDED run of the evidence audit,
+   answered question by question in the order the server gives. There
+   is no button that runs anything: the command is shown, for a person
+   to type at a machine. */
+function renderEditorial(d) {
+  const out = [el('h2', { text: 'Editorial audit' })];
+  out.push(el('p', { class: 'note', text: d.separate_from_health }));
+  out.push(el('p', { class: 'note', text: d.no_console }));
+  const recordCommand = el('p', { class: 'note' }, 'To record a new run, at the repository root: ', el('code', { text: d.command }));
+  const list = (items, f) => el('ul', {}, ...items.map((x) => el('li', { text: f(x) })));
+
+  if (d.state !== 'measured') {
+    out.push(el('p', { class: 'empty', text: d.why }));
+    out.push(recordCommand);
+    if (d.checked) { out.push(el('h3', { text: 'What a recorded run checks' }), list(d.checked, (c) => `${c.section} — ${c.what}`)); }
+    if (d.limits) { out.push(el('h3', { text: 'What it cannot establish' }), list(d.limits, (l) => l)); }
+    if (d.malformed?.length) out.push(dump(`${d.malformed.length} unreadable line(s) in the store, reported and not skipped`, d.malformed));
+    return out;
+  }
+
+  const r = d.latest;
+  out.push(el('div', { class: 'cards' },
+    stat('errors', d.counts.errors),
+    stat('warnings', d.counts.warnings),
+    stat('runs recorded here', d.runs_recorded)));
+  const commit = r.commit.sha
+    ? `${r.commit.sha}${r.commit.tree_clean ? ' — the audited tree matched this commit' : ` — plus ${r.commit.uncommitted_total} uncommitted change(s), audited too: ${r.commit.uncommitted.join(', ')}`}`
+    : `not named: ${r.commit.why}`;
+  const answer = {
+    checked: () => list(r.checked, (c) => `${c.section} — ${c.what}`),
+    evidence: () => el('div', {},
+      el('p', { text: `${r.evidence.read.length} file(s) read, by content hash: ${Object.entries(r.evidence.counts).map(([k, v]) => `${v} ${k.replace(/_/g, ' ')}`).join(' · ')}.` }),
+      dump('The files read, and the rules applied, with their SHA-256', { read: r.evidence.read, rules: r.evidence.rules })),
+    as_of: () => el('p', {}, el('code', { text: r.as_of }), ' — the reference date. The run was recorded at ', el('code', { text: r.recorded_at }), '.'),
+    commit: () => el('p', { text: commit }),
+    limits: () => list(r.limits, (l) => l),
+  };
+  out.push(el('h3', { text: 'The latest recorded run' }));
+  out.push(el('dl', { class: 'run' }, ...d.questions.flatMap((q) => [el('dt', { text: q.label }), el('dd', {}, answer[q.key]())])));
+
+  out.push(el('h3', { text: `Errors — ${r.findings.errors.length}` }));
+  out.push(r.findings.errors.length ? list(r.findings.errors, (x) => x) : el('p', { class: 'empty', text: 'None recorded on this run.' }));
+  out.push(el('h3', { text: `Warnings — ${r.findings.warnings.length}` }));
+  out.push(r.findings.warnings.length ? list(r.findings.warnings, (x) => x) : el('p', { class: 'empty', text: 'None recorded on this run.' }));
+  out.push(dump('Summary measured on this run', r.summary));
+  out.push(el('p', { class: 'note' }, 'Recorded by: ', el('code', { text: r.command })));
+  out.push(recordCommand);
+  out.push(el('p', { class: 'note', text: 'Turning a finding into a proposal is the editorial agent\u2019s job (agent/proposals/editorial/), and its proposals reach the Review queue. This view adds nothing to the queue.' }));
+  if (d.malformed?.length) out.push(dump(`${d.malformed.length} unreadable line(s) in the store, reported and not skipped`, d.malformed));
+  out.push(bound(d.bound));
+  return out;
+}
+
 function renderAutonomy(d) {
   const out = [el('h2', { text: 'Limited autonomy' })];
   out.push(el('p', { class: 'note', text: d.no_console }));
@@ -476,8 +529,8 @@ function renderOperators(d) {
 
 /* ---------------------------------------------------------- shell */
 
-const RENDER = { live: renderLive, workflows: renderWorkflows, autonomy: renderAutonomy, queue: renderQueue, health: renderHealth, audit: renderAudit, operators: renderOperators };
-const ENDPOINT = { live: '/api/live', workflows: '/api/workflows', autonomy: '/api/autonomy', queue: '/api/queue', health: '/api/health', audit: '/api/audit', operators: '/api/operators' };
+const RENDER = { live: renderLive, workflows: renderWorkflows, autonomy: renderAutonomy, queue: renderQueue, health: renderHealth, editorial: renderEditorial, audit: renderAudit, operators: renderOperators };
+const ENDPOINT = { live: '/api/live', workflows: '/api/workflows', autonomy: '/api/autonomy', queue: '/api/queue', health: '/api/health', editorial: '/api/editorial-audit', audit: '/api/audit', operators: '/api/operators' };
 
 /** What sits above every view: when its snapshot was taken, that it
  *  does not update by itself, the one manual refresh, and — if the
@@ -541,7 +594,7 @@ try {
      refuses it regardless; this only stops offering a door that
      does not open. */
   const may = session.interface;
-  const allowed = { live: may.live, workflows: may.workflows, autonomy: may.autonomy, queue: may.queue, health: may.health, audit: may.audit, operators: may.operators };
+  const allowed = { live: may.live, workflows: may.workflows, autonomy: may.autonomy, queue: may.queue, health: may.health, editorial: may.editorial, audit: may.audit, operators: may.operators };
   for (const tab of document.querySelectorAll('.tab')) if (!allowed[tab.dataset.view]) tab.remove();
   const first = document.querySelector('.tab');
   await load(first ? first.dataset.view : 'live');

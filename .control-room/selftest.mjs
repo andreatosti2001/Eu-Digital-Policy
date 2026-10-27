@@ -61,6 +61,8 @@ import { SessionStore, resolveSession, OidcProvider, sanitiseReturnTo, parseCook
 import { serve, ROUTES, PUBLIC_ROUTES, PROHIBITED_ROUTE_WORDS, routeFor, parseStrictJson, MAX_BODY_BYTES } from './server.mjs';
 import { decide, reviewQueue, DECIDABLE_STATES, PUBLICATION_NOTE } from './decide.mjs';
 import { controlRoomBoundary } from './boundary.mjs';
+import { RECORD_COMMAND } from '../tools/evidence-audit-record.mjs';
+import { execFileSync } from 'node:child_process';
 import { dataProposalFixture, approvalRequestFixture } from '../agent/schemas/fixtures.mjs';
 import { validate } from '../agent/schemas/validate.mjs';
 import { readLedger, deriveApproval, proposalFingerprint } from '../agent/implement/ledger.mjs';
@@ -122,7 +124,8 @@ function world({ proposals = null, env = {} } = {}) {
   const records = tempDir('cr-records-');
   const decisions = tempDir('cr-decisions-');
   const traces = tempDir('cr-traces-');
-  const cfg = { ...readConfig(env), state_dir: state, records_dir: records, decision_dir: decisions, trace_dir: traces, port: 0 };
+  const editorial = tempDir('cr-editorial-');
+  const cfg = { ...readConfig(env), state_dir: state, records_dir: records, decision_dir: decisions, trace_dir: traces, editorial_audit_dir: editorial, port: 0 };
 
   const p = proposals ?? [decidableProposal()];
   writeRecords(records, [...p, ...p.map((x) => approvalRequestFor(x.proposal_id))]);
@@ -1414,6 +1417,82 @@ test('ATTEST · 0.2 · the screen says it is a declaration, not proof of reading
 });
 
 /* ============================================================
+   Editorial audit: a recorded run, read — never launched from here
+   (roadmap v2 item 1.1; docs/AUDIT-2026-10-24.md finding A)
+   ============================================================ */
+
+test('EDITORIAL · 1.1 · on a fresh clone the view says "no recorded run" and gives the command — never zeros', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const viewer = await s.login('viewer@example.org');
+    const res = await s.get('/api/editorial-audit', viewer.cookie);
+    assert.equal(res.status, 200);
+    const d = await res.json();
+    assert.equal(d.state, 'no_recorded_run');
+    assert.match(d.why, /not the same as an audit that found nothing/);
+    assert.equal(d.command, RECORD_COMMAND);
+    assert.equal(d.command, 'node tools/evidence-audit.mjs --as-of YYYY-MM-DD --record');
+    assert.equal(d.latest, null);
+    assert.ok(!('counts' in d), 'a view with no run must not report counts that would read as zeros');
+    assert.equal(d.checked.length, 7, 'what a run would check is stated even before one exists');
+    assert.ok(d.limits.length >= 5);
+    assert.match(d.separate_from_health, /Not Website health/);
+  } finally { await s.stop(); }
+});
+
+test('EDITORIAL · 1.1 · a recorded run renders with every question answered: what, on which evidence, as of when, at which commit, with which limits', async () => {
+  const w = world();
+  const { audit: runAudit, recordEntry } = await import('../tools/evidence-audit.mjs');
+  const entry = recordEntry(runAudit({ root: REPO_ROOT, asOf: '2026-10-24' }), { root: REPO_ROOT, argv: ['--as-of', '2026-10-24', '--record'] });
+  writeFileSync(join(w.cfg.editorial_audit_dir, 'evidence-audit.jsonl'), `${JSON.stringify({ ...entry, as_of: '2026-10-23' })}\n${JSON.stringify(entry)}\nnot json\n`, 'utf8');
+  const s = await running(w);
+  try {
+    const viewer = await s.login('viewer@example.org');
+    const d = await (await s.get('/api/editorial-audit', viewer.cookie)).json();
+    assert.equal(d.state, 'measured');
+    assert.equal(d.runs_recorded, 2);
+    assert.equal(d.malformed.length, 1, 'an unreadable line is reported, not skipped');
+    assert.deepEqual(d.questions.map((q) => q.label), ['What was checked', 'On which evidence', 'As of which date', 'At which commit', 'With which limits']);
+    const r = d.latest;
+    for (const q of d.questions) assert.ok(r[q.key] !== null && r[q.key] !== undefined, `the record does not answer "${q.label}"`);
+    assert.equal(r.as_of, '2026-10-24', 'the LATEST record is shown');
+    assert.equal(r.checked.length, 7);
+    assert.ok(r.evidence.read.some((f) => f.path === 'index.html' && /^[0-9a-f]{64}$/.test(f.sha256)));
+    assert.ok(r.evidence.read.some((f) => f.path === 'data/claims.json'));
+    assert.ok(r.evidence.rules.some((f) => f.path === 'js/evidence-model.js'));
+    const head = execFileSync('git', ['-C', REPO_ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+    assert.equal(r.commit.sha, head);
+    assert.equal(typeof r.commit.tree_clean, 'boolean');
+    assert.ok(r.limits.some((l) => /no network I\/O/.test(l)));
+    assert.ok(r.limits.some((l) => /applicability\.json/.test(l)));
+    assert.equal(d.counts.errors, r.findings.errors.length);
+    assert.match(d.bound, /not a run of now/);
+  } finally { await s.stop(); }
+});
+
+test('EDITORIAL · 1.1 · no route runs the audit, records a run or queues a finding; the view is one GET', () => {
+  const routes = ROUTES.filter((r) => /editorial/.test(r.path));
+  assert.deepEqual(routes.map((r) => `${r.method} ${r.path} ${r.permission}`), ['GET /api/editorial-audit editorial:read']);
+  assert.ok(!PERMISSIONS.some((p) => /^editorial:(?!read$)/.test(p)), 'editorial:read is the only editorial permission');
+  for (const r of ROUTES) {
+    for (const word of ['run', 'record', 'launch', 'trigger', 'queue-finding']) {
+      if (r.path === '/api/queue') continue;
+      assert.ok(!r.path.toLowerCase().includes(word), `${r.method} ${r.path} names "${word}"`);
+    }
+  }
+  /* The Control Room imports the READ side only: not the tool, and
+     nothing in what it imports can write a record or start a process. */
+  const crSource = readdirSync(CONTROL_ROOM_ROOT).filter((n) => n.endsWith('.mjs') && n !== 'selftest.mjs').map((n) => readFileSync(join(CONTROL_ROOM_ROOT, n), 'utf8')).join('\n');
+  assert.doesNotMatch(crSource, /tools\/evidence-audit\.mjs'/, 'the Control Room imports the audit tool itself');
+  assert.match(crSource, /tools\/evidence-audit-record\.mjs'/);
+  const recordModule = readFileSync(join(REPO_ROOT, 'tools', 'evidence-audit-record.mjs'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const writer of ['child_process', 'appendFileSync', 'writeFileSync', 'mkdirSync', 'spawn', 'exec']) {
+    assert.ok(!recordModule.includes(writer), `the record module the Control Room reads references ${writer}`);
+  }
+});
+
+/* ============================================================
    Snapshots: what time a view is from, and that it is not live
    (roadmap v2 item 0.1; docs/AUDIT-2026-10-24.md findings B and E)
    ============================================================ */
@@ -1474,7 +1553,12 @@ test('SNAPSHOT · 0.1 · Website health shows reference date, run recorded at an
      three through the server's labels and never names as_of itself. */
   for (const { f, text } of uiFiles()) {
     assert.doesNotMatch(text, /Last recorded run/i, `${f} still labels a date "Last recorded run"`);
-    assert.doesNotMatch(text, /\bas_of\b/, `${f} renders as_of under a label of its own`);
+    assert.doesNotMatch(text, /\bd\.as_of\b/, `${f} renders the health run's as_of under a label of its own`);
+    /* Wherever a ui file names an as_of at all (the Editorial audit
+       record has one too), the same line calls it the reference date. */
+    for (const line of text.split('\n').filter((l) => /\bas_of\b/.test(l))) {
+      assert.match(line, /reference date/i, `${f} shows an as_of without calling it the reference date: ${line.trim().slice(0, 120)}`);
+    }
   }
   assert.match(readFileSync(join(UI_DIR, 'app.js'), 'utf8'), /run_fields/);
 });

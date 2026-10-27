@@ -26,7 +26,14 @@
  * cannot disagree. Nothing here writes.
  *
  * Usage:
- *   node tools/evidence-audit.mjs [--as-of YYYY-MM-DD] [--json | --markdown | --graph] [--root DIR]
+ *   node tools/evidence-audit.mjs [--as-of YYYY-MM-DD] [--json | --markdown | --graph] [--root DIR] [--record]
+ *
+ * --record appends one record of the run to tools/evidence-audit-runs/ under
+ * the audited tree (git-ignored): what was checked, on which evidence, as of
+ * which date, at which commit, with which limits. The Control Room's
+ * Editorial audit view reads the latest one. Without --record nothing is
+ * written, as before. tools/evidence-audit-record.mjs defines the record;
+ * docs/EDITORIAL-AUDIT-PATH.md is the path a person follows.
  *
  * A date that does not parse, or an argument this script does not read
  * (a bare positional date included, which it used to ignore and audit as of
@@ -43,14 +50,17 @@
  * closed by verification work, never by a commit that edits a check.
  */
 
-import { readFileSync, readdirSync } from 'node:fs';
-import { join, resolve, dirname } from 'node:path';
+import { readFileSync, readdirSync, appendFileSync, mkdirSync } from 'node:fs';
+import { join, resolve, dirname, relative } from 'node:path';
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import * as M from '../js/evidence-model.js';
 import { evidenceGrade, GRADE_ORDER } from '../js/format.js';
 import { procedure, contradictions as enfContradictions } from '../js/pipeline.js';
 import { statusContradictions, statusAge, provisionApplication } from '../js/regulatory-model.js';
 import { readArgs, refusalText, today, EXIT_UNREADABLE } from './as-of.mjs';
+import { RECORD_VERSION, CHECKED, LIMITS, storeDir, storePath } from './evidence-audit-record.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const IS_MAIN = Boolean(process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url));
@@ -58,7 +68,11 @@ const IS_MAIN = Boolean(process.argv[1] && resolve(process.argv[1]) === fileURLT
    importer's arguments are not this script's to judge, and an import gets
    today's date and the repository root, as audit()'s defaults. */
 const ARGS = IS_MAIN
-  ? readArgs(process.argv.slice(2), { flags: ['--json', '--markdown', '--graph'], valued: ['--root'] })
+  ? (() => {
+    const a = readArgs(process.argv.slice(2), { flags: ['--json', '--markdown', '--graph', '--record'], valued: ['--root'] });
+    /* --graph prints no audit, so there is nothing to record. */
+    return !a.error && a.flags.has('--record') && a.flags.has('--graph') ? { error: '--record records an audit, and --graph prints the provenance graph instead of one. Drop one of the two.' } : a;
+  })()
   : { asOf: today(), flags: new Set(), values: {} };
 const ROOT = resolve(ARGS.values?.['--root'] || join(HERE, '..'));
 const AS_OF = ARGS.asOf ?? null;
@@ -486,6 +500,62 @@ export function graph({ root = ROOT } = {}) {
   return { nodes, edges };
 }
 
+/* ------------------------------------------------------------------ record */
+
+const sha256File = (f) => createHash('sha256').update(readFileSync(f)).digest('hex');
+
+/** The commit the audited tree is at, and whether the tree matched it. */
+function commitOf(root) {
+  try {
+    const sha = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    const dirty = execFileSync('git', ['-C', root, 'status', '--porcelain'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
+      .split('\n').filter(Boolean).map((l) => l.slice(3));
+    return { sha, tree_clean: dirty.length === 0, uncommitted: dirty.slice(0, 50), uncommitted_total: dirty.length, why: null };
+  } catch {
+    return { sha: null, tree_clean: null, uncommitted: [], uncommitted_total: null, why: 'the audited tree is not a git checkout, or git is not available, so no commit can be named' };
+  }
+}
+
+/**
+ * One record of one run (tools/evidence-audit-record.mjs). Everything in
+ * it is either fixed text (CHECKED, LIMITS) or measured on this run; none
+ * of it is a judgement this tool did not make.
+ */
+export function recordEntry(r, { root = ROOT, argv = [], now = () => new Date().toISOString() } = {}) {
+  const dataFiles = readdirSync(join(root, 'data')).filter((f) => f.endsWith('.json')).sort();
+  const rules = ['tools/evidence-audit.mjs', 'js/evidence-model.js', 'js/format.js', 'js/pipeline.js', 'js/regulatory-model.js'];
+  return {
+    record_version: RECORD_VERSION,
+    tool: 'tools/evidence-audit.mjs',
+    recorded_at: now(),
+    as_of: r.as_of,
+    commit: commitOf(root),
+    command: ['node', 'tools/evidence-audit.mjs', ...argv].join(' '),
+    checked: CHECKED,
+    evidence: {
+      /* The records and the prose the run read, by content hash, so a
+         reader can tell whether a later tree is the same evidence. */
+      read: [...dataFiles.map((f) => `data/${f}`), 'index.html'].map((f) => ({ path: f, sha256: sha256File(join(root, f)) })),
+      /* The rules it applied, from the tool's own tree. */
+      rules: rules.map((f) => ({ path: f, sha256: sha256File(join(HERE, '..', f)) })),
+      counts: {
+        claims: r.claims.total, sources: r.sources.total, substantive_passages: r.prose.total,
+        enforcement_records: r.enforcement.total, instruments: r.regulatory.instruments, provisions: r.regulatory.provisions,
+      },
+    },
+    findings: { errors: r.errors, warnings: r.warnings },
+    summary: {
+      claims: { by_evidence_status: r.claims.by_evidence_status, by_grade: r.claims.by_grade, unverified_owing: r.claims.unverified_owing, owe_verification: r.claims.owe_verification, direct_refs_without_locator: r.claims.direct_refs_without_locator, direct_refs: r.claims.direct_refs },
+      remediation: r.remediation.by_code,
+      prose: { registered: r.prose.registered, classified_not_registered: r.prose.classified_not_registered, unclassified: r.prose.unclassified, coverage_pct: r.prose.coverage_pct },
+      freshness: r.freshness,
+      enforcement: { by_finality: r.enforcement.by_finality, contradictions: r.enforcement.contradictions },
+      regulatory: { provision_application: r.regulatory.provision_application },
+    },
+    limits: LIMITS,
+  };
+}
+
 /* ------------------------------------------------------------------ output */
 
 function kv(o) { return Object.entries(o).map(([k, v]) => `${String(k).split(':').pop()} ${v}`).join(' · '); }
@@ -560,6 +630,14 @@ if (IS_MAIN && ARGS.error) {
     if (MODE === 'json') console.log(JSON.stringify(r, null, 2));
     else if (MODE === 'markdown') console.log(markdown(r));
     else console.log(text(r));
+    if (ARGS.flags.has('--record')) {
+      const entry = recordEntry(r, { argv: process.argv.slice(2) });
+      const dir = storeDir(ROOT);
+      mkdirSync(dir, { recursive: true });
+      appendFileSync(storePath(dir), `${JSON.stringify(entry)}\n`, 'utf8');
+      /* stderr, so --json and --markdown stay parseable on stdout. */
+      console.error(`Recorded to ${relative(process.cwd(), storePath(dir)) || storePath(dir)} — as of ${entry.as_of}, commit ${entry.commit.sha ?? 'unknown'}${entry.commit.tree_clean === false ? ' plus uncommitted changes' : ''}. The Control Room's Editorial audit view reads the latest record.`);
+    }
     process.exitCode = r.errors.length ? 1 : 0;
   }
 }

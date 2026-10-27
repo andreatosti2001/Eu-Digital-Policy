@@ -82,6 +82,7 @@ import { summariseActions, rollbackInformation } from '../agent/autonomy/ledger.
 import { reviewQueue, ATTESTATION_SECTIONS, ATTESTATION_STATEMENT, ATTESTED_ACTIONS } from './decide.mjs';
 import { listOperators } from './identity.mjs';
 import { describeConfig, isLoopback } from './config.mjs';
+import { readRecords, QUESTIONS, CHECKED, LIMITS, RECORD_COMMAND } from '../tools/evidence-audit-record.mjs';
 
 /* ============================================================
    1 · LIVE SYSTEM
@@ -380,6 +381,64 @@ export function autonomyView(cfg, { dir = undefined, actionDir = undefined, now 
     },
     bound: 'This is what the ledgers on THIS machine hold. The grant ledger is git-tracked and travels with the repository; the action ledger is per-machine run state, and the durable record of an autonomous change is the commit it made.',
     no_console: AUTONOMY_NO_CONSOLE,
+  };
+}
+
+/* ============================================================
+   2d · EDITORIAL AUDIT — the latest recorded run of the evidence audit
+
+   Roadmap v2 item 1.1 (docs/AUDIT-2026-10-24.md finding A). The audit
+   asked for a way to LAUNCH the editorial check from here; a route that
+   executes is what docs/CONTROL-ROOM.md §12 forbids. So the check is
+   run at a command line with --record, and this view READS the record
+   and shows the command. There is no route that runs the tool, records
+   a run, or turns a finding into a proposal — that is
+   agent/proposals/editorial/'s job, and no new kind of queue item exists.
+
+   KEPT APART FROM WEBSITE HEALTH, as the audit asks: the health monitor
+   measures the system; this is what the evidence audit found in the
+   claims, sources and prose.
+   ============================================================ */
+
+export const EDITORIAL_NO_CONSOLE = 'This view reads the record that `node tools/evidence-audit.mjs --record` wrote and adds nothing to it. There is no route here that runs the tool, records a run or turns a finding into a proposal — not a check somebody could move, but a route that does not exist (docs/CONTROL-ROOM.md §12). A run is started by a person at a command line; a finding becomes a proposal through agent/proposals/editorial/.';
+
+export const EDITORIAL_SEPARATE = 'Not Website health. The health monitor measures the system in three domains; this is what the evidence audit found in the claims, the sources and the prose of the brief, as of one date.';
+
+export function editorialAuditView(cfg) {
+  const dir = cfg.editorial_audit_dir;
+  const base = { view: 'editorial_audit', store: dir, command: RECORD_COMMAND, questions: QUESTIONS, no_console: EDITORIAL_NO_CONSOLE, separate_from_health: EDITORIAL_SEPARATE };
+  let store;
+  try { store = readRecords({ dir }); }
+  catch (e) { return { ...base, state: 'unreadable', why: `the record store could not be read: ${e.message}`, latest: null, runs_recorded: null, malformed: [] }; }
+
+  if (!store.entries.length) {
+    return {
+      ...base,
+      /* Not "0 findings". No run has been recorded where this server can
+         see, which is a different fact from an audit that found nothing. */
+      state: 'no_recorded_run',
+      why: store.malformed.length
+        ? `the record store holds ${store.malformed.length} line(s) and none is a readable record. They are reported below, not skipped.`
+        : 'no editorial audit has been recorded on this machine. tools/evidence-audit-runs/ is git-ignored run state, so a fresh clone has none — which is not the same as an audit that found nothing.',
+      /* What a record would answer, so the empty view still says what
+         is checked and what it cannot establish. */
+      checked: CHECKED,
+      limits: LIMITS,
+      latest: null,
+      runs_recorded: 0,
+      malformed: store.malformed,
+    };
+  }
+
+  const latest = store.entries[store.entries.length - 1];
+  return {
+    ...base,
+    state: 'measured',
+    latest,
+    runs_recorded: store.entries.length,
+    malformed: store.malformed,
+    counts: { errors: latest.findings?.errors?.length ?? null, warnings: latest.findings?.warnings?.length ?? null },
+    bound: 'This is the latest run recorded on THIS machine, as of its reference date, at the commit it names. It is not a run of now: the tree may have changed since, and looking at the record does not re-run the audit.',
   };
 }
 

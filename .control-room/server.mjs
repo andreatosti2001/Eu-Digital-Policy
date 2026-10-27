@@ -53,7 +53,7 @@ import { SessionStore, OidcProvider, resolveSession, authenticateLocal, parseCoo
 import { authorize, visibleActions } from './authz.mjs';
 import { AuditLog } from './audit.mjs';
 import { decide, proposalDetail, DecisionRefused } from './decide.mjs';
-import { liveSystem, workflowsView, autonomyView, reviewQueueView, websiteHealth, operatorsView } from './views.mjs';
+import { liveSystem, workflowsView, autonomyView, reviewQueueView, websiteHealth, editorialAuditView, operatorsView } from './views.mjs';
 import { Tracer } from '../agent/observability/tracer.mjs';
 import { JsonlSink } from '../agent/observability/sink.mjs';
 
@@ -109,6 +109,9 @@ export const ROUTES = [
   { method: 'GET', path: '/api/queue', permission: 'queue:read', what: 'view 2 — proposals awaiting a human decision, each with its full trace.' },
   { method: 'GET', path: '/api/proposal', permission: 'queue:read', what: 'one proposal, by ?id=. The same trace, alone.' },
   { method: 'GET', path: '/api/health', permission: 'health:read', what: 'view 3 — the last recorded health run, with every reading marked public-safe or private.' },
+  /* Roadmap v2 item 1.1. A READ of what `node tools/evidence-audit.mjs
+     --record` wrote; nothing here runs the tool or records a run. */
+  { method: 'GET', path: '/api/editorial-audit', permission: 'editorial:read', what: 'the latest recorded run of tools/evidence-audit.mjs — what was checked, on which evidence, as of which date, at which commit, with which limits — and the command that records a new one. Read-only: nothing here runs the tool.' },
   { method: 'GET', path: '/api/audit', permission: 'audit:read', what: 'the approval audit trail, and the result of re-walking its hash chain.' },
   { method: 'GET', path: '/api/operators', permission: 'operators:read', what: 'who has access and with what role.' },
   /* The floor to reach the endpoint. The permission that actually
@@ -411,6 +414,7 @@ export function serve({ cfg, quiet = false, tracer = null } = {}) {
       if (path === '/api/autonomy') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'autonomy' }); return view(autonomyView(cfg, { now: at })); }
       if (path === '/api/queue') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'review_queue' }); return view(reviewQueueView(cfg)); }
       if (path === '/api/health') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'website_health' }); return view(websiteHealth(cfg, { root: cfg.root })); }
+      if (path === '/api/editorial-audit') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'editorial_audit' }); return view(editorialAuditView(cfg)); }
 
       if (path === '/api/proposal') {
         const id = url.searchParams.get('id');

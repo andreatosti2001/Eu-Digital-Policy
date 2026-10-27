@@ -46,6 +46,13 @@
    switch autonomy on through, and protocol §24 reserves the decision
    to a person rather than to a button.
 
+   `editorial:read` IS A READ AND THERE IS NO WRITE BESIDE IT EITHER.
+   Roadmap v2 item 1.1: the Control Room shows the latest recorded run
+   of tools/evidence-audit.mjs. There is no permission — because there
+   is no route — that runs the tool, records a run or turns a finding
+   into a proposal; the first two are done at a command line, the third
+   is agent/proposals/editorial/'s job.
+
    `workflows:read` IS A READ AND THERE IS NO WRITE BESIDE IT.
    SESSION 22 requires the Orchestrator to expose workflow state to
    this Control Room, and the whole of that requirement is
@@ -80,6 +87,7 @@ export const PERMISSIONS = [
   'autonomy:read',                // what limited autonomy is switched on to do, and every action it took
   'queue:read',                   // the Review Queue: proposals and their full trace
   'health:read',                  // the Website Health view, private metrics included
+  'editorial:read',               // the Editorial audit view: the latest recorded run of tools/evidence-audit.mjs
   'audit:read',                   // the approval audit trail
   'operators:read',               // who has access, and with what role
   'operators:write',              // grant and revoke a role
@@ -95,16 +103,16 @@ export const PERMISSIONS = [
  * role cannot affect another, and it can.
  */
 export const ROLE_PERMISSIONS = {
-  viewer: ['live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read'],
+  viewer: ['live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read', 'editorial:read'],
 
-  reviewer: ['live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read', 'proposal:request_changes'],
+  reviewer: ['live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read', 'editorial:read', 'proposal:request_changes'],
 
   /* An approver may grant and deny, but not for a human_only
      proposal, and may not change who has access. */
-  approver: ['live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read', 'audit:read', 'proposal:request_changes', 'proposal:reject', 'proposal:approve'],
+  approver: ['live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read', 'editorial:read', 'audit:read', 'proposal:request_changes', 'proposal:reject', 'proposal:approve'],
 
   administrator: [
-    'live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read', 'audit:read',
+    'live:read', 'workflows:read', 'autonomy:read', 'queue:read', 'health:read', 'editorial:read', 'audit:read',
     'operators:read', 'operators:write',
     'proposal:request_changes', 'proposal:reject', 'proposal:approve', 'proposal:approve:human_only',
   ],
@@ -113,7 +121,7 @@ export const ROLE_PERMISSIONS = {
      separation is the point — the person who keeps the agents
      running is not thereby a person who may decide what the site
      says about EU law. */
-  operator: ['live:read', 'workflows:read', 'autonomy:read', 'health:read', 'audit:read'],
+  operator: ['live:read', 'workflows:read', 'autonomy:read', 'health:read', 'editorial:read', 'audit:read'],
 };
 
 /** The autonomy classes a proposal can carry, from
@@ -211,6 +219,7 @@ export function visibleActions(actor) {
     autonomy: held.includes('autonomy:read'),
     queue: held.includes('queue:read'),
     health: held.includes('health:read'),
+    editorial: held.includes('editorial:read'),
     audit: held.includes('audit:read'),
     operators: held.includes('operators:read'),
     approve: held.includes('proposal:approve'),

@@ -29,7 +29,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, cpSync, readdirSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, cpSync, readdirSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -40,6 +40,8 @@ import {
 } from './thirdparty.mjs';
 import { EXPECTED, RECHECK } from './freshness.mjs';
 import { dateProblem } from './as-of.mjs';
+import { RECORD_VERSION, QUESTIONS, CHECKED, LIMITS, readRecords } from './evidence-audit-record.mjs';
+import { createHash } from 'node:crypto';
 import { readBaseline } from '../agent/implement/baseline.mjs';
 import { audit, passages, datesIn, DERIVED_FIELDS, rankingProblems } from './evidence-audit.mjs';
 import { cspProblems, securityMeta, inlineScripts } from './csp.mjs';
@@ -646,6 +648,80 @@ function treeCopy() {
 const editJSON = (dir, f, fn) => {
   const p = join(dir, 'data', f); const d = JSON.parse(readFileSync(p, 'utf8')); fn(d); writeFileSync(p, JSON.stringify(d));
 };
+
+/* ============================================================
+   RECORD · an editorial audit that is recorded only when asked
+
+   Roadmap v2 item 1.1. `--record` appends one record to the audited
+   tree's git-ignored store; without it the tool writes nothing.
+   ============================================================ */
+
+const storeFile = (dir) => join(dir, 'tools', 'evidence-audit-runs', 'evidence-audit.jsonl');
+const records = (dir) => readFileSync(storeFile(dir), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+
+test('R1 · without --record the evidence audit writes nothing', () => {
+  const dir = treeCopy();
+  for (const extra of [[], ['--json'], ['--markdown'], ['--graph']]) {
+    assert.equal(runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-24', ...extra]).exit, 0);
+  }
+  assert.ok(!existsSync(join(dir, 'tools')), 'a run without --record wrote into the audited tree');
+});
+
+test('R2 · --record appends one record answering what, on which evidence, as of when, at which commit, with which limits', () => {
+  const dir = treeCopy();
+  const r = runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-24', '--json', '--record']);
+  assert.equal(r.exit, 0);
+  assert.equal(JSON.parse(r.out.slice(0, r.out.lastIndexOf('}') + 1)).as_of, '2026-10-24', '--json stays parseable: the record notice goes to stderr');
+  let [e] = records(dir);
+  assert.equal(e.record_version, RECORD_VERSION);
+  for (const q of QUESTIONS) assert.ok(e[q.key] !== null && e[q.key] !== undefined, `the record does not answer "${q.label}"`);
+  assert.equal(e.as_of, '2026-10-24');
+  assert.ok(Date.parse(e.recorded_at));
+  assert.match(e.recorded_at, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/, 'recorded_at is the instant written, a field apart from the reference date');
+  assert.deepEqual(e.checked, CHECKED);
+  assert.deepEqual(e.limits, LIMITS);
+  assert.equal(e.command, 'node tools/evidence-audit.mjs --root ' + dir + ' --as-of 2026-10-24 --json --record');
+  const claims = e.evidence.read.find((f) => f.path === 'data/claims.json');
+  assert.equal(claims.sha256, createHash('sha256').update(readFileSync(join(dir, 'data', 'claims.json'))).digest('hex'));
+  assert.ok(e.evidence.read.some((f) => f.path === 'index.html'));
+  assert.ok(e.evidence.counts.claims > 100);
+  /* A scratch copy is not a git checkout: the commit is not named, and
+     the record says why rather than naming one it cannot know. */
+  assert.equal(e.commit.sha, null);
+  assert.equal(e.commit.tree_clean, null);
+  assert.match(e.commit.why, /not a git checkout/);
+  assert.deepEqual(e.findings.errors, []);
+
+  runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-25', '--record']);
+  assert.deepEqual(records(dir).map((x) => x.as_of), ['2026-10-24', '2026-10-25'], 'append-only, one line per run');
+  /* The read side agrees with the writer. */
+  const back = readRecords({ dir: join(dir, 'tools', 'evidence-audit-runs') });
+  assert.equal(back.entries.length, 2);
+  assert.deepEqual(back.malformed, []);
+  [e] = back.entries;
+  assert.equal(e.as_of, '2026-10-24');
+});
+
+test('R3 · in a git checkout the record names the commit, and says when the tree did not match it', () => {
+  const dir = treeCopy();
+  const git = (...a) => execFileSync('git', ['-C', dir, ...a], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+  git('init', '-q');
+  git('add', '-A');
+  git('-c', 'user.name=suite', '-c', 'user.email=suite@example.invalid', 'commit', '-qm', 'scratch');
+  /* The store itself is git-ignored in a real checkout; here it is
+     ignored the same way, so recording does not dirty the tree. */
+  writeFileSync(join(dir, '.gitignore'), 'tools/evidence-audit-runs/*\n.gitignore\n');
+  const head = git('rev-parse', 'HEAD');
+  runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-24', '--record']);
+  let e = records(dir).at(-1);
+  assert.equal(e.commit.sha, head);
+  assert.equal(e.commit.tree_clean, true);
+  editJSON(dir, 'glossary.json', (d) => { d.$note = `${d.$note ?? ''} (planted)`; });
+  runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-24', '--record']);
+  e = records(dir).at(-1);
+  assert.equal(e.commit.tree_clean, false);
+  assert.deepEqual(e.commit.uncommitted, ['data/glossary.json']);
+});
 
 test('H1 · the real tree has no evidence-audit error and every substantive passage is accounted for', () => {
   const r = audit({ root: TREE, asOf: '2026-09-27' });
