@@ -55,7 +55,7 @@ register and watchlist — and a coherence matrix. No production code, no UI, no
   - Q-2: the criterion itself (D-7);
   - Q-3: the six unlabelled states, against the brief's "uniformi";
   - Q-6: whether the brief's finance-chapter condition is meant for the DGA too;
-  - Q-4: committing the brief (D-1);
+  - Q-4: committing the brief (D-1) — **decided 27 Oct 2026: `docs/BRIEF-v2.md`, verbatim**, pointed to from `AGENTS.md`;
   - Q-5: the amber corrections in §7;
   - and every `reason` in D6, which is a draft in the author's name.
 

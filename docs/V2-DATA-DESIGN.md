@@ -28,7 +28,7 @@ schemas and the records live beside it, in `docs/v2-design/`:
 ## 0 · What governs this, and what was missing
 
 **The brief arrived after the first draft.** The session prompt asks for `docs/BRIEF-v2.md`, which
-exists on no branch (decision D-1 is open). The design was first written from the roadmap's paraphrase,
+existed on no branch when the session began. It was committed on 27 Oct 2026 (D-1). The design was first written from the roadmap's paraphrase,
 with every brief-dependent point listed as an assumption. On 27 Oct 2026 the author pasted the brief.
 This document was then checked against it, and corrected where the brief, being binding, required it.
 §0.1 lists what the check found.
@@ -67,7 +67,7 @@ recorded in `docs/AUDIT-2026-10-24.md` §1; only the layout differs. Nothing in 
 - **Q-2** The inclusion criterion itself (D-7).
 - **Q-3** Six states have no label, although the brief calls the labels "uniformi" (§0.1, and
   `status-labels.json` `x-unlabelled`).
-- **Q-4** Whether `docs/BRIEF-v2.md` should be committed (D-1).
+- **Q-4** ~~Whether `docs/BRIEF-v2.md` should be committed (D-1).~~ Decided 27 Oct 2026: committed.
 - **Q-5** The data corrections in §7, which are amber.
 - **Q-6** The DGA is conditioned on the finance chapter, as the brief lists it. Is that intended (§0.1)?
 

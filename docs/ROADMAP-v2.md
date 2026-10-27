@@ -5,9 +5,8 @@
 nothing in it may be implemented until the author approves it. The approval is recorded in §8, by
 the author's word, and nowhere else.
 
-**What governs it.** The BRIEF v2.0 ("Contratto tra sessioni"), which the author supplies with every
-v2 session prompt, is the contract; this document is the plan that answers it. The brief is **not**
-in this repository (decision D-1). Where this roadmap departs from the brief, or reads it in a way
+**What governs it.** The BRIEF v2.0 ("Contratto tra sessioni") is the contract; this document is the
+plan that answers it. The brief is `docs/BRIEF-v2.md`, committed on 27 Oct 2026 (decision D-1, §8). Where this roadmap departs from the brief, or reads it in a way
 the brief does not settle, it says so in §3 and does not proceed on that point.
 
 **What it is measured against.** `docs/AUDIT-2026-10-24.md` — the Control Room content audit the
@@ -66,7 +65,7 @@ None is taken here. Each carries a recommendation; the recommendation is not a d
 
 | | Decision | Blocks | Recommendation |
 |---|---|---|---|
-| D-1 | Where the brief lives | nothing yet | Commit it as `docs/BRIEF-v2.md`, pointed to once from `AGENTS.md`, so a session that is not handed it still finds it. One home: the prompt then cites the file rather than carrying a copy. |
+| D-1 | Where the brief lives — **decided 27 Oct 2026: as recommended** (§8; `docs/BRIEF-v2.md`) | nothing yet | Commit it as `docs/BRIEF-v2.md`, pointed to once from `AGENTS.md`, so a session that is not handed it still finds it. One home: the prompt then cites the file rather than carrying a copy. |
 | D-2 | `applies.html` is already published, and the brief says not to publish "what applies" before the triggers meet claim-level rigour | Phase 1 item 1.5; Phase 3 | Keep the page; in Phase 1, add a plain statement on it that its rules are not yet verified to the standard the claims are (the measured gap in §2). The statement is public text, so its wording is yours. Withdrawing the page is the other honest option; leaving it unmarked is not. |
 | D-3 | The six uniform status labels vs the 16 states in `data/taxonomy.json` — **decided 25 Oct 2026: as recommended** (§8; designed in `docs/v2-design/status-labels.json`) | Phase 2 | Make the six a **derived display grouping** over the 16, never a replacement and never stored (IDs are never renamed; a derived fact is never stored). §5 drafts the mapping and shows where it loses information. |
 | D-4 | "Tier A/B/C" collides with the autonomy classes A/B/C/D of `docs/AUTONOMY-POLICY.md`, which mean something else | Phase 4 | Name the three levels in words — *machine check*, *human attestation*, *human authorship* — and give them no letters. |
@@ -310,3 +309,4 @@ Filled in only with the author's words. A row here is the checkpoint.
 |---|---|---|---|
 | 25 Oct 2026 | Two decisions only. **The roadmap as a whole is not yet approved**, and v2 Session 2 does not start until it is. | **D-9:** the reviewer's attestation is recorded in the Control Room trail, in the decision's own entry, bound to the same fingerprint; not in the decision ledger. **D-10:** item 0.3 (the date argument of `freshness.mjs` and `evidence-audit.mjs`) is in Phase 0. Both as recommended. | The author, answering in v2 Session 1 |
 | 25 Oct 2026 | **The roadmap**, with one change of sequence: item 2.0 (design, documents only) is brought forward to v2 Session 2; Phase 0 moves to v2 Session 3 and Phase 1 to v2 Session 4. Read conservatively: items 2.1–2.6, which write data, still wait for the Phase 1 checkpoint (§1, first row). | **D-3:** the six labels are a derived display grouping over the sixteen states. **D-6:** the map extends the existing relationships; it is a derived view. **The trigger** of the v2 Session 2 prompt is the existing applicability rule raised to a v2 schema, not a new entity. **D-8:** `stratum` is dropped (option (c)), and what it meant is derived from the applicability rules' actors and the edge kinds. D-1, D-2, D-4, D-5 and D-7 stay open; D-7 is proposed in `docs/V2-DATA-DESIGN.md` §5. | The author, answering four questions in v2 Session 2 ("Approvo e anticipo 2.0"; "Sì, tutte e tre"; "(c) eliminare, derivare"), then "Vai" |
+| 27 Oct 2026 | — | **D-1:** the brief is committed verbatim as `docs/BRIEF-v2.md` and pointed to once from `AGENTS.md`. | The author, in v2 Session 2 ("si") |
