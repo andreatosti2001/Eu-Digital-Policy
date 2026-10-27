@@ -1,10 +1,225 @@
 # HANDOVER
 
-**Last updated:** v2 Session 5. Part A (item 2.2, the promotion of `eidas2`) is approved. Part B
-(B.1 PP-09, B.2 the OIDC redirect URI and `::1`, B.3 the relationship migration) is implemented and
-approved too, which closes the session (`docs/ROADMAP-v2.md` §8) · 27 October 2026
-**Branch:** `claude/new-session-9ud5l5`, cut from `main` at `64aa696` (#22). Pull request #23 to `main`,
-opened on the author's instruction.
+**Last updated:** v2 Session 6. Item 2.3 (the Cyber Solidarity Act, `csa`) is implemented and
+**stopped at its checkpoint**, waiting for the author's approval (`docs/ROADMAP-v2.md` §8) ·
+27 October 2026
+**Branch:** `claude/v2-session-6-csa`, cut from `main` at `59dc88c` (#23). No pull request: one is
+opened only on the author's instruction.
+
+## Branch register — 27 October 2026 (v2 Session 6)
+
+- At the start, `main` was `59dc88c`, the merge of #23. §8 carried every Session 5 row, including
+  "The Part B checkpoint of v2 Session 5".
+- `git branch -r --no-merged origin/main` listed only
+  `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
+- `origin/main` was re-fetched before this handover was written: still `59dc88c`.
+- This session's branch: `claude/v2-session-6-csa`. Disposition: **open, at the item 2.3
+  checkpoint**. Whether to push it and open a pull request is the author's to say.
+
+## v2 Session 6 — checkpoint report (item 2.3, the Cyber Solidarity Act)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope**: the author's roadmap after v2 Session 5, which covers sessions 6–16, is kept as
+  `docs/prompts/v2-session-6.md`. Session 6 is **item 2.3 only**, ending at a checkpoint.
+- **Item 2.3, asked before anything was written to `data/`**, in seven answers, all as recommended:
+  - `status:in-force`, not `status:applicable`;
+  - `dna.objective` draft A;
+  - `rel-nis2-csa-enables` added. The author knew it is also what meets the gate's `context`
+    criterion;
+  - the factual `dna` fields as proposed, with the analytical ones `null`;
+  - the scope decision, status note, status basis and source as proposed;
+  - only the entry-into-force event, not the Art. 25(1) evaluation date;
+  - the roadmap recorded in §8 and in `docs/prompts/`.
+
+### What was written — commit `f75c0f4`
+
+| Record | Change |
+|---|---|
+| `csa` | new; `scope:core`; `brief_part` `null`; `status:in-force`, `status_as_of` 2026-10-27; `status_note` (no internal identifier); `status_basis` Art. 26 + metadata; `scope_decision` (included; `crit:object-security`, `crit:horizontal`; two direct structural references; `approved_on` 2026-10-27); `dna` as decided; `legal_basis` `tfeu:art-173` |
+| `csa:art-3`, `csa:art-14`, `csa:art-21` | three provisions, one per mechanism of Art. 1(1); `obligation_on` empty (participation in the Alert System is voluntary); `obligation_on_institution` `ec` (Art. 14) and `enisa` (Art. 21) |
+| `rel-nis2-csa-enables` | new, v2 shape; direct; "Art. 2, points (3)–(7), (9), (10), (12) and (16)". The locator is in the dependent act |
+| `tl-csa-2025-02-04-entry-into-force` | new |
+| `src-eurlex-csa` | new, tier 1, Cellar; the note says what was read and what was not |
+| `tools/selftest.mjs` | W13: removing the status basis, the decision, the edge or the objective each fails (M-07, M-04, M-05 ×2). It also checks that the edge is v2, direct and structural, and located in the CSA |
+| generated | `instruments/csa/` (new); `instruments.html`; the `<noscript>` index on every page; the NIS2 and GDPR pages (the edge from the other end and the related list); `sitemap.xml`; `img/og/csa.png` and its manifest entry. The tool re-rendered the other fourteen cards; they were restored, because their inputs did not change (`og-image.mjs --check` passes) |
+| `docs/ROADMAP-v2.md` §8, `docs/prompts/v2-session-6.md` | two rows; the prompt |
+
+Not added:
+- no claim;
+- no taxonomy term;
+- no applicability rule;
+- no institution edge;
+- no entry in `tools/seo.mjs`, `KNOWN_AS` or `PAGE_PUBLISHED`.
+
+**No locale key was touched.** The fields written are data, which the editions do not carry, so no
+key needs declaring `superseded` or `pending_translation`; `i18n-audit` is 0/0.
+
+### Facts read on 27 Oct 2026, and facts left `null`
+
+- **Read**:
+  - Regulation (EU) 2025/38, the Official Journal text, retrieved from Cellar by CELEX `32025R0038`
+    (XHTML). Read in full: Arts 1–21 and 23–26. Of Art. 22 (the amendments to Regulation (EU)
+    2021/694), only the opening.
+  - The Publications Office's SPARQL metadata: in force, entry into force 2025-02-04, no end of
+    validity, no amending act; the only consolidated version is the original.
+  - The corrigenda:
+    - OJ L 2025/90063: a reference in the Annex;
+    - OJ L 2025/90886: Art. 22, point (3)(b);
+    - neither touches an Article cited in the records.
+- **Not read**:
+  - corrigendum `32025R0038R(02)`: Cellar returned no English text;
+  - the Council implementing decisions and the Commission documents that the metadata lists as
+    based on, or citing, the Act (`32025D1458`, `32026D1354`, `32026D1725` and others);
+  - whether ENISA has issued the interoperability guidelines due "by 5 February 2026" (Art. 6(4)).
+    For that reason no event was proposed for it.
+- **Left `null` or empty, and shown on the page as "not established"**:
+  - `risk_logic`, `enforcement_mechanism`, `protected_party`, `territorial_scope`;
+  - `obligation_anchor`;
+  - the sanction amounts. The note says the text sets no fines or penalties: the whole OJ text was
+    searched for "penalt", "fines" and "sanction", with no match.
+  - No competent authority: `institutions.json` has none for the CSA, and none was researched.
+- **Not recorded**:
+  - Art. 322(1)(a) TFEU, the second legal basis. The dataset's TFEU record has no such provision,
+    and adding one was not proposed.
+  - Regulation (EU) 2021/694 in `amends`, because it is not an instrument in the dataset. The
+    status note names it.
+- No fact was taken from a search result or from model knowledge. The design draft of 25 Oct 2026
+  (`docs/v2-design/map-examples.json`) was not copied: every field was re-read in the text.
+
+### Exit criteria of item 2.3 (`docs/ROADMAP-v2.md` §4)
+
+- *Every fact read from a retrieved primary source* — **pass** (above).
+- *`sources.json` records only from documents read* — **pass**: one new record, for the text read.
+- *Prose and claims to the author* — **pass**: every text written was in the approved block; no
+  claim was created.
+- *`node tools/_footer.mjs` re-run* — **pass**: committed with the data; a second run writes 0 files.
+- *Affected locale keys declared* — **n/a**: none touched.
+- *M-04, M-05, M-07 held in full* — **pass**: `csa` is in no backlog; W13 shows each one failing.
+- *The page says nothing the records do not carry* — **pass**, with the two display observations
+  under "Found" below.
+
+### Counts against the baseline (v2 Session 5's closing re-run)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / provisions / relationships | 34 / 78 / 27 | 35 / 81 / 28 | `csa`; its three provisions; `rel-nis2-csa-enables` |
+| sources / timeline events / claims / taxonomy terms | 220 / 92 / 181 / 307 | 221 / 93 / 181 / 307 | `src-eurlex-csa`; the entry-into-force event |
+| coverage covered / mapped / watched / excluded | 12 / 11 / 5 / 6 | 13 / 11 / 5 / 6 | `csa` |
+| backlog `status-basis-missing` / `scope-decision-missing` | 23 / 11 | 23 / 11 | a new record joins no backlog |
+| instrument pages · indexable routes | 13 · 22 | 14 · 23 | `instruments/csa/` |
+| instruments.html "thinner records" | 7 | 7 | `csa` has a page |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit --as-of 2026-10-27` errors / warnings | 0 / 11 | 0 / 11 | unchanged |
+| `freshness --as-of 2026-10-27` | 0 defects / 2 prompts | 0 / 2 | unchanged |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged |
+| `tools/selftest.mjs` | 102 | 103 | W13 |
+| all 25 suites | 1309 + 1 skipped | **1309 pass + 1 skipped, 0 failures (1310)** | W13; the skip is the `::1` test, as in Session 5 |
+| browser suite | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable | unchanged (`a11y:bound`) |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+
+The provisions "before" figure (78) was counted on `data/instruments.json` at `59dc88c`; Session 5's
+report did not record it.
+
+Other checks:
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+- `tools/og-image.mjs --check` passes.
+- `tools/commit-evidence.mjs origin/main HEAD`: 0 commits without evidence.
+- `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+### The page, opened in a browser
+
+`/instruments/csa/` was opened in Chromium (Playwright) at 1280px dark and 390px light. There was no
+console error and, at 390px, no horizontal overflow. The page shows:
+- Status: in force, as of 27 Oct 2026, and the status note.
+- "In short":
+  - the objective;
+  - "Member State · Public authority";
+  - "not established" for the protected party, the core obligations and the sanction ceiling, with
+    the note;
+  - entry into force on 4 February 2025.
+- One dated event.
+- "No rules recorded", worded as absence of knowledge.
+- Three provisions.
+- No enforcement recorded.
+- "No claims attached".
+- One interaction, "NIS2 enables Cyber Solidarity Act", with its locator.
+- "No Part of the brief covers this instrument directly".
+
+`/instruments/nis2/` shows the same edge from the other end.
+
+### Found, for the author — not changed
+
+1. **The internal reference reaches two more pages.** The `rel-kind:enables` taxonomy note ends
+   "Added 27 Oct 2026 (docs/V2-DATA-DESIGN.md §1.4)". The interactions box prints it, now also on
+   `/instruments/csa/` and on NIS2's new row. This is Session 10's item 10.2, foreseen when the edge
+   was approved; it is not fixed here.
+2. **The sanction ceiling reads two ways on one page.** The header strip says "none recorded"; "In
+   short" says "not established", followed by the note that the text sets no penalties. This is
+   the renderer's wording for null amounts, and eIDAS2 reads the same. It is not a data question.
+3. **`obligation_on_institution` is not displayed.** The provisions table shows "not recorded"
+   under "Binds" for Arts 14 and 21, although the records name the Commission and ENISA.
+   `dma:art-53`, the one other provision with the field, renders the same way: checked on
+   `/instruments/dma/`. This is a renderer gap, not changed.
+
+**Still open from Session 5** (the roadmap's §3; none touched):
+1. `rel-dsa-gdpr-transparency-minimisation`: its summary and provisions no longer match EDPB
+   Guidelines 3/2025 v2. The revision is the author's.
+2. `rel-data-omnibus-gdpr`: "stalled in Council" is carried by no source on the edge, and has not
+   been re-read.
+3. The 4 brief-only and 3 claimless analytical edges stay v1; the `edge-v1-sources` flip stays
+   deferred.
+4. The article attribution in `src-ec-apple-meta-dma-2025`'s note.
+5. `src-ec-ai-omnibus-in-force`: not re-read (403).
+6. The `::1` test: skipped again in this container, so not run. A skip is not a pass.
+7. R-01's P2B gap and the eight findings of `docs/V2-DATA-DESIGN.md` §7 belong to Phase 3.
+8. The internal identifiers shown to a reader (`eidas2.status_note`; the `defers-to` and `enables`
+   notes). These are Session 10's.
+
+### The verification checklist
+
+**6.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, two rows.
+- *Verify:* read "The scope of v2 Session 6" and "Item 2.3: the inclusion of `csa`".
+- *Criterion:* every editorial field was decided before `data/` was touched.
+
+**6.1 · Sources read first.**
+- *Changed:* `data/sources.json` (`src-eurlex-csa`).
+- *Verify:*
+  - fetch `http://publications.europa.eu/resource/celex/32025R0038` with Accept
+    `application/xhtml+xml`;
+  - read Art. 1(1), Art. 2 points (3)–(16), Art. 26;
+  - query the SPARQL endpoint for `resource_legal_date_entry-into-force` (2025-02-04).
+- *Automatic:* none. No check reads a source (AUDIT F-12).
+
+**6.2 · Written in one home.**
+- *Changed:*
+  - `data/instruments.json`: `csa` and `rel-nis2-csa-enables`;
+  - `data/timeline.json`: one event;
+  - the regenerated pages;
+  - `img/og/csa.png`.
+- *Verify:* `/instruments/csa/` and `/instruments/nis2/`.
+- *Automatic:*
+  - `tools/selftest.mjs` W13;
+  - S1 (generated files current);
+  - `seo-audit` 0/0.
+- *Criterion:*
+  - M-04, M-05 and M-07 at 0 errors, held in full;
+  - the date lives only in `timeline.json`;
+  - no title in `data/`.
+
+**6.3 · Checkpoint.**
+- *Changed:* this report.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run above.
+- *Criterion:* the author's approval, recorded in §8. Item 2.4 does not start before it.
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-27`: REGISTER reads "covered 13 · mapped 11".
+2. `python3 -m http.server 8000`, then open `/instruments/csa/` in both themes, at desktop and phone
+   width, and `/instruments/nis2/` for the edge from the other end. `/instruments.html` lists the
+   Cyber Solidarity Act.
+3. `node --test --test-name-pattern=W13 tools/selftest.mjs`.
 
 ## Branch register — 27 October 2026 (v2 Session 5)
 
