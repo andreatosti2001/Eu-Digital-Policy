@@ -3137,10 +3137,20 @@
         "clm-ai-act-coherence-objection"
       ],
       "sources": [
-        "src-eurlex-gdpr",
-        "src-eurlex-ai-act"
+        {
+          "source_id": "src-eurlex-gdpr",
+          "supports": "supports:direct",
+          "locator": "Art. 22(1); Art. 99(2) (applies from 25 May 2018)"
+        },
+        {
+          "source_id": "src-eurlex-ai-act",
+          "supports": "supports:partial",
+          "locator": "Art. 6 (classification rules for high-risk AI systems)"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-10-27",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 27 Oct 2026 (v2 Session 5, B.3): GDPR Art. 22(1) and Art. 99(2), and AI Act Art. 6, re-read on 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32016R0679, 32024R1689), not at the EUR-Lex URLs, which return an empty page to the environment that read them. The AI Act reference is partial: that a system the AI Act does not classify as high-risk still falls under Art. 22 is the site's reading, carried by the two claims."
     },
     {
       "id": "rel-ai-act-gdpr-impact-assessments",
@@ -3213,9 +3223,20 @@
         "clm-dma-alongside-102"
       ],
       "sources": [
-        "src-ec-google-adtech-2025"
+        {
+          "source_id": "src-eurlex-dma",
+          "supports": "supports:direct",
+          "locator": "Art. 1(6) ('without prejudice to the application of Articles 101 and 102 TFEU')"
+        },
+        {
+          "source_id": "src-ec-google-adtech-2025",
+          "supports": "supports:partial",
+          "locator": "IP/25/1992 (5 September 2025): a fine of EUR 2.95 billion for breaching Article 102 TFEU; case AT.40670"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-10-27",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 27 Oct 2026 (v2 Session 5, B.3), on the author's decision: DMA Art. 1(6), re-read that day in the Official Journal text retrieved from Cellar (32022R1925), added as the direct reference for the first sentence; the Commission's page, which now redirects to press release IP/25/1992 and was read that day through the press corner, carries the fine and stays partial."
     },
     {
       "id": "rel-dma-gdpr-consent",
@@ -3231,9 +3252,20 @@
         "clm-meta-pay-or-consent"
       ],
       "sources": [
-        "src-ec-apple-meta-dma-2025"
+        {
+          "source_id": "src-eurlex-dma",
+          "supports": "supports:direct",
+          "locator": "Art. 5(2), last subparagraphs (the specific choice, and consent within the meaning of Article 4, point (11), and Article 7 of Regulation (EU) 2016/679)"
+        },
+        {
+          "source_id": "src-ec-apple-meta-dma-2025",
+          "supports": "supports:partial",
+          "locator": "IP/25/1085, section 'Non-compliance decision on Meta's “consent or pay” model': the model 'did not give users the required specific choice to opt for a service that uses less of their personal data'"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-10-27",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 27 Oct 2026 (v2 Session 5, B.3), on the author's decision: DMA Art. 5(2), re-read that day in the Official Journal text retrieved from Cellar (32022R1925), added as the direct reference; press release IP/25/1085, re-read that day through the Commission's press corner, stays partial. The text of the release retrieved that day names no article. 'Functionally a data protection provision' is the site's reading, carried by clm-meta-pay-or-consent."
     },
     {
       "id": "rel-ai-act-pld",
@@ -3248,9 +3280,15 @@
         "clm-pld-covers-software"
       ],
       "sources": [
-        "src-eurlex-pld"
+        {
+          "source_id": "src-eurlex-pld",
+          "supports": "supports:partial",
+          "locator": "Art. 4 point (1) ('product' … includes … software); recital 13 (software, including AI systems)"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-10-27",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 27 Oct 2026 (v2 Session 5, B.3): Directive (EU) 2024/2853 Art. 4 point (1) and recital 13 re-read on 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32024L2853). Partial: the Directive carries the software half of the summary; the AI Act as product-safety legislation is the site's reading, and the AI Liability Directive's withdrawal is carried by clm-aild-abandoned."
     },
     {
       "id": "rel-ai-omnibus-ai-act",
@@ -3264,10 +3302,15 @@
         "clm-ai-act-delay-scope"
       ],
       "sources": [
-        "src-eurlex-ai-omnibus",
-        "src-ec-ai-omnibus-in-force"
+        {
+          "source_id": "src-eurlex-ai-omnibus",
+          "supports": "supports:direct",
+          "locator": "Art. 1 (amendments to Regulation (EU) 2024/1689); point (40) (Art. 113: Annex III high-risk from 2 December 2027, Annex I from 2 August 2028)"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-10-27",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 27 Oct 2026 (v2 Session 5, B.3), on the author's decision: Regulation (EU) 2026/1744 Art. 1 re-read on 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32026R1744). src-ec-ai-omnibus-in-force left the edge: it answered 403 that day and was not re-read; it stays on clm-ai-act-delay-scope. That the prohibitions, GPAI duties and transparency stay close to the original schedule is the site's reading of the same Article."
     },
     {
       "id": "rel-data-omnibus-gdpr",
@@ -3311,12 +3354,20 @@
       "provisions": [],
       "claims": [],
       "sources": [
-        "src-eurlex-dora",
-        "src-eurlex-nis2"
+        {
+          "source_id": "src-eurlex-dora",
+          "supports": "supports:direct",
+          "locator": "Recital 16 ('this Regulation constitutes lex specialis with regard to Directive (EU) 2022/2555'); Art. 1(2)"
+        },
+        {
+          "source_id": "src-eurlex-nis2",
+          "supports": "supports:partial",
+          "locator": "Art. 4 (sector-specific Union legal acts)"
+        }
       ],
-      "last_verified": "2026-09-27",
+      "last_verified": "2026-10-27",
       "requires_verification": false,
-      "verification_note": "DORA recital 16: 'this Regulation constitutes lex specialis with regard to Directive (EU) 2022/2555'. Read on 27 Sep 2026 in the Official Journal text (CELEX 32022R2554, via the Publications Office's Cellar). Earlier: The lex specialis characterisation is stated by the brief's framing rather than established from a primary source in this build."
+      "verification_note": "DORA recital 16: 'this Regulation constitutes lex specialis with regard to Directive (EU) 2022/2555'. Read on 27 Sep 2026 in the Official Journal text (CELEX 32022R2554, via the Publications Office's Cellar). Earlier: The lex specialis characterisation is stated by the brief's framing rather than established from a primary source in this build. Migrated to the v2 shape on 27 Oct 2026 (v2 Session 5, B.3): recital 16 and Art. 1(2) of DORA, and NIS2 Art. 4, re-read on 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32022R2554, 32022L2555)."
     },
     {
       "id": "rel-cra-nis2",
@@ -3361,9 +3412,15 @@
       "provisions": [],
       "claims": [],
       "sources": [
-        "src-eurlex-dsa"
+        {
+          "source_id": "src-eurlex-dsa",
+          "supports": "supports:direct",
+          "locator": "Art. 89(1)–(2) (Arts 12 to 15 of Directive 2000/31/EC deleted; references read as to DSA Arts 4, 5, 6 and 8)"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-10-27",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 27 Oct 2026 (v2 Session 5, B.3): DSA Art. 89 re-read on 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32022R2065). 'Graduated due-diligence regime' is the brief's characterisation of what replaced the deleted articles."
     },
     {
       "id": "rel-nis2-nis1",
@@ -3375,9 +3432,15 @@
       "provisions": [],
       "claims": [],
       "sources": [
-        "src-eurlex-nis2"
+        {
+          "source_id": "src-eurlex-nis2",
+          "supports": "supports:direct",
+          "locator": "Art. 44 (Directive (EU) 2016/1148 repealed with effect from 18 October 2024)"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-10-27",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 27 Oct 2026 (v2 Session 5, B.3): NIS2 Art. 44 re-read on 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32022L2555)."
     },
     {
       "id": "rel-tfeu-114-acquis",

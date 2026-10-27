@@ -44,7 +44,7 @@ import { RECORD_VERSION, QUESTIONS, CHECKED, LIMITS, readRecords } from './evide
 import { createHash } from 'node:crypto';
 import { readBaseline } from '../agent/implement/baseline.mjs';
 import { audit, passages, datesIn, DERIVED_FIELDS, rankingProblems } from './evidence-audit.mjs';
-import { registerAudit, SCOPE_DECISION_BACKLOG, STATUS_BASIS_BACKLOG } from './register-audit.mjs';
+import { registerAudit, structural, SCOPE_DECISION_BACKLOG, STATUS_BASIS_BACKLOG } from './register-audit.mjs';
 import { coverage, notCovered } from '../js/routes.js';
 import { cspProblems, securityMeta, inlineScripts } from './csp.mjs';
 import { openBacklog } from '../js/evidence-model.js';
@@ -1873,4 +1873,41 @@ test('W11 · item 2.2: eidas2 is covered and held to M-04, M-05 and M-07 in full
   plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => x.id !== 'rel-eidas2-gdpr-defers'); },
     /^M-05 instruments\/eidas2: covered \(core\) without a page/);
   plant((d) => { instOf(d, 'eidas2').dna.objective = ''; }, /^M-05 instruments\/eidas2: covered \(core\) without a page/);
+});
+
+/* v2 Session 5, B.3. Eight of the seventeen v1 relationships were migrated to
+   v2 reference objects on 27 Oct 2026, each source re-read that day; nine stay
+   v1 (docs/ROADMAP-v2.md §8). No edge check exists yet (M-08 belongs to D1, and
+   the `edge-v1-sources` flip is deferred by the author), so this pins the data:
+   the v1 list may only shrink, and a migrated edge cannot drift back. */
+const B3_MIGRATED = ['rel-ai-act-gdpr-art-22', 'rel-dma-tfeu-102', 'rel-dma-gdpr-consent', 'rel-ai-act-pld',
+  'rel-ai-omnibus-ai-act', 'rel-nis2-dora', 'rel-dsa-ecommerce', 'rel-nis2-nis1'];
+const B3_STILL_V1 = ['rel-ai-act-gdpr-impact-assessments', 'rel-dsa-gdpr-transparency-minimisation', 'rel-dsa-dma-scope',
+  'rel-data-omnibus-gdpr', 'rel-nis2-cer', 'rel-cra-nis2', 'rel-data-act-cloud-ai-act', 'rel-tfeu-114-acquis', 'rel-ai-act-teu-4-2'];
+
+test('W12 · B.3: the migrated relationships carry v2 references, each direct tier-1 one structurally located, and the v1 list only shrinks', () => {
+  const db = loadDb();
+  const src = new Map(db.sources.sources.map((s) => [s.id, s]));
+  const isV1 = (r) => (r.sources || []).some((s) => typeof s === 'string');
+  for (const id of B3_MIGRATED) {
+    const r = db.instruments.relationships.find((x) => x.id === id);
+    assert.ok(r, `${id} exists`);
+    assert.ok(!isV1(r) && r.sources.length, `${id} is back to bare ids`);
+    /* a textual edge is stated by the law, so it needs a direct reference;
+       an analytical one (rel-ai-act-pld) may rest on partial ones and its claims */
+    if (['rel-kind:amends', 'rel-kind:repeals', 'rel-kind:lex-specialis'].includes(r.kind))
+      assert.ok(r.sources.some((s) => s.supports === 'supports:direct'), `${id} has no direct reference`);
+    for (const s of r.sources) {
+      assert.ok(src.has(s.source_id), `${id}: ${s.source_id} resolves`);
+      if (s.supports === 'supports:direct' && src.get(s.source_id).tier === 'tier:1')
+        assert.ok(structural(s.locator), `${id}: a direct tier-1 reference without a structural locator (${s.locator})`);
+    }
+    assert.equal(r.last_verified, '2026-10-27');
+  }
+  const v1 = db.instruments.relationships.filter(isV1).map((r) => r.id);
+  for (const id of v1) assert.ok(B3_STILL_V1.includes(id), `${id} is a new v1 relationship — every relationship added after 25 Oct 2026 is v2`);
+  /* and the test can fail: a migrated edge put back to bare ids is caught */
+  const planted = loadDb();
+  planted.instruments.relationships.find((x) => x.id === 'rel-nis2-nis1').sources = ['src-eurlex-nis2'];
+  assert.ok(planted.instruments.relationships.filter(isV1).some((r) => !B3_STILL_V1.includes(r.id)));
 });
