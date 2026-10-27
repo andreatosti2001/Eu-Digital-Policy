@@ -1982,14 +1982,14 @@
           "crit:object-data",
           "crit:horizontal"
         ],
-        "reason": "The DGA meets the criterion and is mapped, not covered: it has no page of its own. It is watched because the brief makes it a conditional inclusion, with MiCA and PSD3/PSR: it enters only if the finance chapter is explicitly opened — read literally, on the author's decision of 27 Oct 2026 (Q-6). Its proposed repeal (COM(2025) 837 Art. 10(3)(a)), in the same proposal that amends the Data Act (Art. 1), is shown meanwhile as a transition derived from the proposal's own edges, never stored.",
+        "reason": "The DGA meets the criterion and is mapped, not covered: it has no page of its own. It is watched because the brief makes it a conditional inclusion, with MiCA and PSD3/PSR: it enters only if the finance chapter is explicitly opened — read literally, on the author's decision of 27 Oct 2026. Its proposed repeal (COM(2025) 837 Art. 10(3)(a)), in the same proposal that amends the Data Act (Art. 1), is shown meanwhile as a transition derived from the proposal's own edges, never stored.",
         "approved_on": "2026-10-27",
         "refer_to": [
           "src-eurlex-dga"
         ],
         "watch_for": {
           "event_type": null,
-          "description": "The author explicitly opens the finance chapter, the condition the brief sets for its Phase 3 conditional inclusions, among which it lists the DGA. Applied to the DGA too, by the author's decision of 27 Oct 2026 (Q-6). The proposed repeal is shown meanwhile as a derived transition, which needs no trigger."
+          "description": "The author explicitly opens the finance chapter, the condition the brief sets for its Phase 3 conditional inclusions, among which it lists the DGA. Applied to the DGA too, by the author's decision of 27 Oct 2026. The proposed repeal is shown meanwhile as a derived transition, which needs no trigger."
         },
         "sources": [
           {
@@ -2754,7 +2754,7 @@
           "crit:object-services",
           "crit:horizontal"
         ],
-        "reason": "The P2B Regulation sets rules on the fairness and transparency of online intermediation services and search engines towards business users (Art. 1(1)–(2)): it meets the criterion, and the brief rules out a full page for it. It is watched rather than covered because its repeal is proposed — COM(2025) 837 Art. 10(1) would repeal it, keeping Art. 2 points (1), (2) and (5) and Arts 4, 11 and 15 until 31 December 2032 (Art. 10(2)) — and because the DSA leaves it its own field (DSA Art. 2(4)(e)). Covering a regime on its way out would give a reader a settled-looking page about a framework in transition. Placed on the watchlist by the author's decision of 27 Oct 2026 (Q-1).",
+        "reason": "The P2B Regulation sets rules on the fairness and transparency of online intermediation services and search engines towards business users (Art. 1(1)–(2)): it meets the criterion, and the brief rules out a full page for it. It is watched rather than covered because its repeal is proposed — COM(2025) 837 Art. 10(1) would repeal it, keeping Art. 2 points (1), (2) and (5) and Arts 4, 11 and 15 until 31 December 2032 (Art. 10(2)) — and because the DSA leaves it its own field (DSA Art. 2(4)(e)). Covering a regime on its way out would give a reader a settled-looking page about a framework in transition. Placed on the watchlist by the author's decision of 27 Oct 2026.",
         "approved_on": "2026-10-27",
         "refer_to": [
           "src-eurlex-p2b"
@@ -2895,7 +2895,7 @@
         ],
         "watch_for": {
           "event_type": null,
-          "description": "The author opens a finance chapter (docs/ROADMAP-v2.md §4, 'Phase 3 of the brief's list'). An editorial decision, not a legal event."
+          "description": "The author opens a finance chapter. An editorial decision, not a legal event."
         },
         "sources": [
           {
