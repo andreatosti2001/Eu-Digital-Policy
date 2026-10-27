@@ -1,10 +1,9 @@
 # HANDOVER
 
-**Last updated:** v2 Session 6. Item 2.3 (the Cyber Solidarity Act, `csa`) is implemented and
-**stopped at its checkpoint**, waiting for the author's approval (`docs/ROADMAP-v2.md` §8) ·
-27 October 2026
-**Branch:** `claude/v2-session-6-csa`, cut from `main` at `59dc88c` (#23). No pull request: one is
-opened only on the author's instruction.
+**Last updated:** v2 Session 6. Item 2.3 (the Cyber Solidarity Act, `csa`) is implemented and its
+checkpoint is **approved**, which closes the session (`docs/ROADMAP-v2.md` §8) · 27 October 2026
+**Branch:** `claude/v2-session-6-csa`, cut from `main` at `59dc88c` (#23). Pull request to `main`,
+opened on the author's instruction.
 
 ## Branch register — 27 October 2026 (v2 Session 6)
 
@@ -13,8 +12,9 @@ opened only on the author's instruction.
 - `git branch -r --no-merged origin/main` listed only
   `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
 - `origin/main` was re-fetched before this handover was written: still `59dc88c`.
-- This session's branch: `claude/v2-session-6-csa`. Disposition: **open, at the item 2.3
-  checkpoint**. Whether to push it and open a pull request is the author's to say.
+- This session's branch: `claude/v2-session-6-csa`. Disposition: item 2.3 approved
+  (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the author's
+  instruction of 27 Oct 2026 ("Si").
 
 ## v2 Session 6 — checkpoint report (item 2.3, the Cyber Solidarity Act)
 
