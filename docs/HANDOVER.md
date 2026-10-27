@@ -76,7 +76,7 @@ the D6 reasons.
 the weekly Source Scout digest of 26 Oct 2026 (two files under `agent/scout/digests/`; candidates
 about the DMA, GDPR enforcement and ENISA, none touching this session's records). It is in no register
 entry, is reported to the author, and was not touched. `claude/v2-session-2-schemas` is this session's;
-its disposition is the author's (pull request on request).
+its disposition: pushed and opened as pull request #18 on the author's instruction of 27 Oct 2026; not merged.
 
 ## (previous header) v2 Session 1 — 25 October 2026
 
