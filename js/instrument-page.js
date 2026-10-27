@@ -18,7 +18,12 @@
      record too thin for a page of its own (js/routes.js, the gate) it
      renders the view here and marks the page noindex: it stays useful
      to a reader and is not offered to a search engine as a landing
-     page. With no id, it forwards to the instrument list.
+     page. With no id, it forwards to the instrument list. A record in
+     the exclusion register or on the watchlist gets neither: it gets a
+     notice that this site does not cover it, why, and where to read it
+     (the wording approved by the author on 27 Oct 2026, docs/ROADMAP-v2.md
+     §8), because the full view would present it as an instrument this
+     site analyses.
 
    Which instrument has a page is asked of js/routes.js, which answers
    from the data — the same function the generator and the sitemap ask.
@@ -26,7 +31,8 @@
 
 import { loadAll, index, renderError, loadOverlay } from './data.js';
 import { renderInstrument } from './instrument-view.js';
-import { hasEntityPage, entityPath, siteRoot, href } from './routes.js';
+import { hasEntityPage, entityPath, siteRoot, href, coverage, notCovered } from './routes.js';
+import { humanDate } from './format.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -60,6 +66,30 @@ function noindex() {
   m.setAttribute('content', 'noindex, follow');
   const c = document.querySelector('link[rel="canonical"]');
   if (c) c.remove();
+}
+
+/** The notice for an instrument this site names and deliberately does not
+ *  cover. Every value in it is read from the record's scope decision and
+ *  the source records it refers to; nothing here is written for one record. */
+function notCoveredNotice(inst, IX) {
+  const d = inst.scope_decision;
+  const name = esc(inst.short_name);
+  const first = coverage(inst) === 'watched'
+    ? 'The ' + name + ' is on this site\'s watchlist: the brief does not analyse it today. ' +
+      'The decision is reopened when: ' + esc(d.watch_for && d.watch_for.description)
+    : 'The ' + name + ' is in this site\'s exclusion register: the brief does not analyse it.';
+  const refer = (d.refer_to || []).map((id) => {
+    const s = IX.source.get(id);
+    if (!s) return '';
+    const t = esc(s.title || s.publisher_name || id);
+    return s.url ? '<a href="' + esc(s.url) + '" rel="noopener noreferrer" target="_blank">' + t + '</a>' : t;
+  }).filter(Boolean).join('; ');
+  return '<div class="page-head"><h1>' + name + '</h1>' +
+    '<p class="lede"><strong>Not covered by this site.</strong> ' + first + '</p></div>' +
+    '<p><strong>Why.</strong> ' + esc(d.reason) + '</p>' +
+    (refer ? '<p><strong>Read it at the source:</strong> ' + refer + '</p>' : '') +
+    '<p>Decision recorded on ' + esc(humanDate(d.approved_on, 'precision:day')) +
+    '; the facts it rests on were last checked on ' + esc(humanDate(d.last_verified, 'precision:day')) + '.</p>';
 }
 
 async function boot() {
@@ -105,12 +135,19 @@ async function boot() {
     return;
   }
 
+  const kept = notCovered(inst);
+
   if (!declared) {
     noindex();
     document.title = inst.short_name + ' | EU Digital Policy';
     document.body.dataset.crumb = inst.short_name;
     const crumb = document.querySelector('.crumbs [aria-current="page"]');
     if (crumb) crumb.textContent = inst.short_name;
+  }
+
+  if (kept) {
+    mount.innerHTML = notCoveredNotice(inst, IX);
+    return;
   }
 
   mount.innerHTML = renderInstrument(inst, {

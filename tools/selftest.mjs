@@ -44,6 +44,8 @@ import { RECORD_VERSION, QUESTIONS, CHECKED, LIMITS, readRecords } from './evide
 import { createHash } from 'node:crypto';
 import { readBaseline } from '../agent/implement/baseline.mjs';
 import { audit, passages, datesIn, DERIVED_FIELDS, rankingProblems } from './evidence-audit.mjs';
+import { registerAudit, SCOPE_DECISION_BACKLOG, STATUS_BASIS_BACKLOG } from './register-audit.mjs';
+import { coverage, notCovered } from '../js/routes.js';
 import { cspProblems, securityMeta, inlineScripts } from './csp.mjs';
 import { openBacklog } from '../js/evidence-model.js';
 import { sitePages } from './thirdparty.mjs';
@@ -1702,5 +1704,155 @@ test('J7 · the reference graph leaves out vocabulary terms, caps each side and 
       else assert.ok(c.side === 'in' ? c.x + c.w <= G2.center.x : c.x >= G2.center.x + G2.center.w, 'horizontal: in left, out right');
       assert.ok(c.x >= 0 && c.y >= 0 && c.x + c.w <= G2.width + 0.01 && c.y + c.h <= G2.height + 0.01, 'every card inside the drawing');
     }
+  }
+});
+
+/* ============================================================
+   W · the exclusion register and the watchlist (item 2.1)
+
+   v2 Session 4, 27 Oct 2026. docs/V2-DATA-DESIGN.md §6.3 ties six checks
+   to the register and the watchlist — M-03, M-04, M-05, M-06, M-07 and
+   R-01 — and they arrived with the records. Each is shown failing here on
+   a planted defect, because a check that cannot be seen to fail checks
+   nothing. The fixtures are copies of the real data with one thing wrong.
+   ============================================================ */
+
+const loadDb = (root = ROOT) => Object.fromEntries(readdirSync(join(root, 'data')).filter((f) => f.endsWith('.json'))
+  .map((f) => [f.replace(/\.json$/, ''), JSON.parse(readFileSync(join(root, 'data', f), 'utf8'))]));
+const instOf = (db, id) => db.instruments.instruments.find((i) => i.id === id);
+const firstOf = (db, disp) => db.instruments.instruments.find((i) => i.scope_decision && i.scope_decision.disposition === disp);
+const regErrors = (db, asOf = '2026-10-27') => registerAudit(db, asOf).errors;
+
+test('W1 · this tree: the register and the watchlist are derived, complete and clean, and the backlog is the frozen one', () => {
+  const r = registerAudit(loadDb(), '2026-10-27');
+  assert.deepEqual(r.errors, []);
+  assert.deepEqual(r.warnings, []);
+  assert.ok(r.register.length >= 1 && r.watchlist.length >= 1, 'item 2.1 put records in both lists');
+  for (const id of r.register) assert.equal(instOf(loadDb(), id).scope_class, 'scope:out-of-scope');
+  /* the backlog may only shrink: every name in it is on the frozen list */
+  for (const id of r.backlog['scope-decision-missing']) assert.ok(SCOPE_DECISION_BACKLOG.includes(id));
+  for (const id of r.backlog['status-basis-missing']) assert.ok(STATUS_BASIS_BACKLOG.includes(id));
+  assert.equal(SCOPE_DECISION_BACKLOG.length, 11);
+  assert.equal(STATUS_BASIS_BACKLOG.length, 24);
+});
+
+test('W2 · M-03: a disposition that disagrees with the scope class is an error', () => {
+  const db = loadDb();
+  firstOf(db, 'excluded').scope_decision.disposition = 'watched';
+  assert.ok(regErrors(db).some((e) => /^M-03 .*excluded and out-of-scope go together/.test(e)));
+  const db2 = loadDb();
+  firstOf(db2, 'watched').scope_class = 'scope:core';
+  assert.ok(regErrors(db2).some((e) => /^M-03 .*included and core go together/.test(e)));
+});
+
+test('W3 · M-04: an unapproved, draft, unsourced or incomplete decision is an error, and so is a missing one', () => {
+  const plant = (fn, re) => { const db = loadDb(); fn(db); assert.ok(regErrors(db).some((e) => re.test(e)), `expected ${re}`); };
+  plant((db) => { firstOf(db, 'excluded').scope_decision.approved_on = null; }, /^M-04 .*approved_on is null/);
+  plant((db) => { const d = firstOf(db, 'excluded').scope_decision; d.reason = 'DRAFT. ' + d.reason; }, /^M-04 .*still marked DRAFT/);
+  plant((db) => { firstOf(db, 'excluded').scope_decision.criterion = ['crit:nonsense']; }, /^M-04 .*crit:nonsense/);
+  plant((db) => { firstOf(db, 'watched').scope_decision.watch_for = null; }, /^M-04 .*watched with no watch_for/);
+  plant((db) => { firstOf(db, 'excluded').scope_decision.watch_for = { event_type: null, description: 'something happens' }; }, /^M-04 .*watch_for on a decision that is not watched/);
+  plant((db) => { for (const s of firstOf(db, 'excluded').scope_decision.sources) s.locator = 'Title'; }, /^M-04 .*no direct reference with a structural locator/);
+  plant((db) => { delete firstOf(db, 'excluded').scope_decision; }, /^M-04 .*out of scope with no scope_decision/);
+  /* a core record added after 25 Oct 2026 is held to the rule, not backlogged */
+  plant((db) => { const i = instOf(db, 'pld'); i.scope_class = 'scope:core'; }, /^M-04 instruments\/pld: a core record added after 25 Oct 2026/);
+});
+
+test('W4 · M-04: a decision verified after the audit date is a WARNING, not an error (the author, 27 Oct 2026)', () => {
+  const r = registerAudit(loadDb(), '2026-09-27');
+  assert.ok(!r.errors.some((e) => /after the audit date/.test(e)));
+  assert.ok(r.warnings.some((w) => /^VERIFIED_AFTER_AS_OF /.test(w)));
+});
+
+test('W5 · M-05: a covered record without a page, and an excluded record the gate would give one, are errors', () => {
+  const db = loadDb();
+  instOf(db, 'gdpr').dna = null;
+  assert.ok(regErrors(db).some((e) => /^M-05 instruments\/gdpr: covered \(core\) without a page/.test(e)));
+  /* the gate's own criteria, met one by one on an excluded record */
+  const db2 = loadDb();
+  const x = firstOf(db2, 'excluded');
+  x.dna = { objective: 'A planted objective, so the explanation criterion passes.' };
+  x.brief_part = db2.brief.parts[0].id;
+  db2.claims.claims[0].instruments = [...(db2.claims.claims[0].instruments || []), x.id];
+  assert.ok(regErrors(db2).some((e) => new RegExp(`^M-05 instruments/${x.id}: excluded, and the page gate gives it a page`).test(e)));
+});
+
+test('W6 · M-06: an excluded or watched record that refers nowhere, or to a source with no URL, is an error', () => {
+  const db = loadDb();
+  firstOf(db, 'excluded').scope_decision.refer_to = [];
+  assert.ok(regErrors(db).some((e) => /^M-06 .*the reader is sent nowhere/.test(e)));
+  const db2 = loadDb();
+  const w = firstOf(db2, 'watched');
+  db2.sources.sources.find((s) => s.id === w.scope_decision.refer_to[0]).url = null;
+  assert.ok(regErrors(db2).some((e) => /^M-06 .*which has no url/.test(e)));
+});
+
+test('W7 · M-07: a new record without a status basis, or with one of the wrong tier, is an error; an old one is backlog', () => {
+  const db = loadDb();
+  delete firstOf(db, 'excluded').status_basis;
+  assert.ok(regErrors(db).some((e) => /^M-07 .*without a direct tier:1 reference/.test(e)));
+  /* an in-force act on a tier-2 procedure file alone: the wrong tier */
+  const db2 = loadDb();
+  const x = firstOf(db2, 'excluded');
+  const t2 = db2.sources.sources.find((s) => s.tier === 'tier:2');
+  x.status_basis = [{ source_id: t2.id, supports: 'supports:direct', locator: 'Art. 1' }];
+  assert.ok(regErrors(db2).some((e) => new RegExp(`^M-07 instruments/${x.id}`).test(e)));
+  /* gdpr existed on 25 Oct 2026: backlog, never an error */
+  const r = registerAudit(loadDb(), '2026-10-27');
+  assert.ok(r.backlog['status-basis-missing'].includes('gdpr'));
+});
+
+test('W8 · R-01: a watched record whose event has happened is a WATCH_TRIGGERED warning; a future one is not', () => {
+  const db = loadDb();
+  const w = db.instruments.instruments.find((i) => i.scope_decision?.disposition === 'watched' && i.scope_decision.watch_for?.event_type);
+  assert.ok(w, 'a watched record with a typed trigger exists');
+  const ev = { ...db.timeline.events[0], id: 'tl-planted-trigger', instrument: w.id, event_type: w.scope_decision.watch_for.event_type, date: '2026-10-01' };
+  db.timeline.events.push(ev);
+  w.milestones = [...w.milestones, ev.id];
+  assert.ok(registerAudit(db, '2026-10-27').warnings.some((x) => new RegExp(`^WATCH_TRIGGERED instruments/${w.id}`).test(x)));
+  assert.ok(!registerAudit(db, '2026-09-30').warnings.some((x) => /^WATCH_TRIGGERED/.test(x)), 'not before the event');
+});
+
+test('W9 · evidence-audit.mjs FAILS on a planted register defect, and validate.mjs on a dangling v2 reference', () => {
+  const dir = treeCopy();
+  try {
+    editJSON(dir, 'instruments.json', (d) => {
+      d.instruments.find((i) => i.scope_decision?.disposition === 'excluded').scope_decision.approved_on = null;
+    });
+    const r = runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-27']);
+    assert.equal(r.exit, 1);
+    assert.match(r.out, /M-04 .*approved_on is null/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+  const d2 = dataScratch();
+  try {
+    const p = join(d2, 'data', 'instruments.json');
+    const d = JSON.parse(readFileSync(p, 'utf8'));
+    d.relationships.find((r) => typeof r.sources[0] === 'object').sources[0].source_id = 'src-not-a-source';
+    d.instruments.find((i) => i.scope_decision).scope_decision.criterion.push('crit:not-a-clause');
+    d.instruments[0].approved_on = '2026-10-27';            /* admitted under scope_decision only */
+    writeFileSync(p, JSON.stringify(d, null, 2));
+    const r = runValidator('validate.mjs', [], d2);
+    assert.equal(r.exit, 1);
+    assert.match(r.out, /DANGLING source ref "src-not-a-source"/);
+    assert.match(r.out, /DANGLING taxonomy ref "crit:not-a-clause"/);
+    assert.match(r.out, /POSSIBLE DUPLICATE FACT: ISO date in instruments\/gdpr\.approved_on/);
+  } finally { rmSync(d2, { recursive: true, force: true }); }
+});
+
+test('W10 · coverage() is derived, one home, and the static instrument list leaves the register and the watchlist out', () => {
+  const db = loadDb();
+  assert.equal(coverage(instOf(db, 'gdpr')), 'covered');
+  assert.equal(coverage(instOf(db, 'pld')), 'mapped');
+  assert.equal(coverage({ scope_class: 'scope:core', scope_decision: { disposition: 'watched' } }), 'watched');
+  for (const i of db.instruments.instruments) assert.ok(!('coverage' in i), `${i.id} stores coverage, which is derived`);
+  const html = readFileSync(join(ROOT, 'instruments.html'), 'utf8');
+  const thin = html.slice(html.indexOf('class="inst-thin"'), html.indexOf('</p>', html.indexOf('class="inst-thin"')));
+  assert.ok(thin.length > 20, 'the list of thinner records is in the page');
+  for (const i of db.instruments.instruments.filter((x) => notCovered(x))) {
+    assert.ok(!thin.includes(`>${i.short_name}<`), `${i.id} (${coverage(i)}) is listed among the instruments still to be covered`);
+  }
+  /* the three views and the record page ask the same function */
+  for (const f of ['js/search.js', 'js/calendar.js', 'js/instrument-page.js']) {
+    assert.match(readFileSync(join(ROOT, f), 'utf8'), /notCovered\(/, `${f} does not ask js/routes.js`);
   }
 });

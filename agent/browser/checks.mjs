@@ -752,6 +752,68 @@ export async function checkInstrumentView(page, origin, id = 'gdpr') {
   return out;
 }
 
+/* An instrument in the exclusion register or on the watchlist (item 2.1,
+   27 Oct 2026) is named by the site and deliberately not analysed by it.
+   Three public views would otherwise present it as an instrument the site
+   covers, and the author decided they ask one derived filter instead
+   (js/routes.js coverage(), docs/ROADMAP-v2.md §8). This measures them in a
+   browser, for the first excluded and the first watched record the DATA
+   holds — no id is written here:
+     · instrument.html?id= shows the "not covered" notice, its reason and
+       its external referral, and not the full instrument view;
+     · the compliance calendar's instrument filter does not offer it;
+     · search finds no instrument result for its name. */
+export async function checkNotCovered(page, origin, { root = REPO_ROOT } = {}) {
+  const { coverage } = await import('../../js/routes.js');
+  const db = JSON.parse(readFileSync(join(root, 'data', 'instruments.json'), 'utf8'));
+  const srcs = JSON.parse(readFileSync(join(root, 'data', 'sources.json'), 'utf8')).sources;
+  const kept = db.instruments.filter((i) => ['excluded', 'watched'].includes(coverage(i)));
+  const out = [];
+  if (!kept.length) return [ok('not-covered:none', 'instrument-view', 'no instrument is excluded or watched; nothing to measure')];
+
+  for (const disp of ['excluded', 'watched']) {
+    const inst = kept.find((i) => coverage(i) === disp);
+    if (!inst) continue;
+    await page.goto(`${origin}/instrument.html?id=${encodeURIComponent(inst.id)}`);
+    const v = await page.waitFor(`(() => {
+      const m = document.querySelector('#instrumentPage');
+      const t = m ? m.textContent : '';
+      return /Not covered by this site/.test(t) ? { text: t.replace(/\\s+/g, ' ').trim(),
+        links: [...m.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')),
+        sections: m.querySelectorAll('section, .subnav').length } : null;
+    })()`, { timeoutMs: 6000 });
+    const refer = inst.scope_decision.refer_to.map((id) => (srcs.find((x) => x.id === id) || {}).url).filter(Boolean);
+    const words = disp === 'watched' ? /on this site's watchlist/ : /in this site's exclusion register/;
+    const good = v && words.test(v.text) && v.text.includes(inst.scope_decision.reason.slice(0, 60))
+      && refer.every((u) => v.links.includes(u)) && v.sections === 0;
+    out.push(good
+      ? ok(`not-covered:${disp}`, 'instrument-view', `instrument.html?id=${inst.id} (${disp}) shows the notice, its reason and its ${refer.length} external referral(s), not the instrument view`, { id: inst.id })
+      : bad(`not-covered:${disp}`, 'instrument-view', `instrument.html?id=${inst.id} (${disp}) does not show the not-covered notice as decided`, { id: inst.id, text: v ? v.text.slice(0, 200) : null, sections: v && v.sections }));
+  }
+
+  await page.goto(`${origin}/index.html`);
+  const opts = await page.waitFor(`(() => { const s = document.getElementById('cal-i');
+    return s && s.options.length > 1 ? [...s.options].map((o) => o.value) : null; })()`, { timeoutMs: 6000 });
+  const offered = (opts || []).filter((id) => kept.some((i) => i.id === id));
+  out.push(opts && !offered.length
+    ? ok('not-covered:calendar', 'instrument-view', `the calendar's instrument filter offers none of the ${kept.length} excluded or watched records`)
+    : bad('not-covered:calendar', 'instrument-view', 'the calendar offers an excluded or watched instrument, or did not render', { offered, rendered: !!opts }));
+
+  const probe = kept[0];
+  await page.goto(`${origin}/enforcement.html`);
+  await page.key('/', { code: 'Slash', keyCode: 191 });
+  await page.waitFor(`(() => { const p = document.querySelector('[role=dialog]'); return p && getComputedStyle(p).display !== 'none' ? true : null; })()`, { timeoutMs: 4000 });
+  await page.type(probe.short_name);
+  await sleep(600);
+  const shown = await page.evaluate(`(() => [...document.querySelectorAll('[role=option], .cmdk-item, #cmdkResults li, #cmdkResults a')]
+    .map((e) => e.textContent).join(' | '))()`);
+  out.push(!shown.includes(probe.full_name.slice(0, 40))
+    ? ok('not-covered:search', 'search', `searching "${probe.short_name}" offers no instrument result for a record that is ${coverage(probe)}`)
+    : bad('not-covered:search', 'search', `searching "${probe.short_name}" offers a record that is ${coverage(probe)} as an instrument`, { shown: shown.slice(0, 300) }));
+  await page.key('Escape', { code: 'Escape', keyCode: 27 });
+  return out;
+}
+
 /* ============================================================
    9b · what a crawler is told, measured against what renders
 

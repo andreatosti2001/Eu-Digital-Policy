@@ -53,7 +53,7 @@ the evidence it describes.
 | `docs/EDITORIAL-AUDIT-PATH.md` | v2 Session 3: the editorial-audit path — run `tools/evidence-audit.mjs` and `tools/freshness.mjs`, record a run with `--record`, read it in the Control Room's Editorial audit view; nothing in the Control Room runs it |
 | `docs/BRIEF-v2.md` | The BRIEF v2.0, "Contratto tra sessioni" — the author's, verbatim, in Italian: binding on every v2 session. Committed on the author's decision of 27 Oct 2026 (D-1); session prompts cite it rather than carry a copy |
 | `docs/ROADMAP-v2.md` | v2 Session 1: the v2.0 plan — phases 0–5, ten decisions for the author, exit criteria a session can fail. **Approved on 25 Oct 2026** (§8), with item 2.0 brought forward |
-| `docs/V2-DATA-DESIGN.md` | v2 Session 2: roadmap item 2.0 — the map, trigger and status-label schemas (`docs/v2-design/`), the `evidence-audit.mjs` extension plan, the proposed inclusion criterion, the exclusion register and watchlist as proposed records. **Design only; nothing in `data/` yet** |
+| `docs/V2-DATA-DESIGN.md` | v2 Session 2: roadmap item 2.0 — the map, trigger and status-label schemas (`docs/v2-design/`), the `evidence-audit.mjs` extension plan, the proposed inclusion criterion, the exclusion register and watchlist as proposed records. **Design; item 2.1 (the register and the watchlist) implemented on 27 Oct 2026, the rest not yet** |
 | `docs/SECURITY-VERIFICATION-2026-09-08.md` | SESSION 23.5's adversarial gate: 65 attacks, what held, the two findings, and the two boundaries this environment cannot test |
 | `README.md` | The author's own account, including eight stated limitations |
 

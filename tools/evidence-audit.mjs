@@ -19,6 +19,9 @@
  *   6. ENFORCEMENT   procedural posture, finality, contradictions
  *   7. REGULATORY    scalar status against the milestones; provision-level
  *                    application dates
+ *   8. REGISTER      the exclusion register and the watchlist (item 2.1,
+ *                    27 Oct 2026): M-03 … M-07 and R-01, with a BACKLOG for
+ *                    the records that predate them (tools/register-audit.mjs)
  *
  * Every number is DERIVED from the data on each run through the same
  * modules the website uses (js/evidence-model.js, js/format.js,
@@ -61,6 +64,7 @@ import { procedure, contradictions as enfContradictions } from '../js/pipeline.j
 import { statusContradictions, statusAge, provisionApplication } from '../js/regulatory-model.js';
 import { readArgs, refusalText, today, EXIT_UNREADABLE } from './as-of.mjs';
 import { RECORD_VERSION, CHECKED, LIMITS, storeDir, storePath } from './evidence-audit-record.mjs';
+import { registerAudit } from './register-audit.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const IS_MAIN = Boolean(process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url));
@@ -405,6 +409,11 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
       provState[st] = (provState[st] || 0) + 1;
     }
   }
+  /* ---- 7. register and watchlist ---- */
+  const regAudit = registerAudit(db, asOf);
+  for (const e of regAudit.errors) err(e);
+  for (const w of regAudit.warnings) warn(w);
+
   const lifecycle = instruments.filter((i) => {
     const t = new Set(arr(i.milestones).map((m) => ix.event.get(m)).filter(Boolean).map((e) => e.event_type));
     return t.has('event:adoption') && t.has('event:publication') && t.has('event:entry-into-force');
@@ -468,6 +477,12 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
       with_full_lifecycle: lifecycle,
       provisions: provTotal,
       provision_application: provState,
+    },
+    register: {
+      by_coverage: regAudit.by_coverage,
+      register: regAudit.register,
+      watchlist: regAudit.watchlist,
+      backlog: regAudit.backlog,
     },
     errors,
     warnings,
@@ -579,6 +594,10 @@ function text(r) {
   L.push(`ENFORCEMENT     ${r.enforcement.total} · ${kv(r.enforcement.by_procedure)}`);
   L.push(`  finality      ${kv(r.enforcement.by_finality)} · contradictions ${r.enforcement.contradictions}`);
   L.push(`REGULATORY      ${r.regulatory.instruments} instruments, ${r.regulatory.with_full_lifecycle} with adoption → publication → entry into force · provisions ${r.regulatory.provisions}: ${kv(r.regulatory.provision_application)}`);
+  L.push(`REGISTER        coverage ${kv(r.register.by_coverage)}`);
+  L.push(`  register      ${r.register.register.length}: ${r.register.register.join(', ') || 'none'}`);
+  L.push(`  watchlist     ${r.register.watchlist.length}: ${r.register.watchlist.join(', ') || 'none'}`);
+  for (const [code, ids] of Object.entries(r.register.backlog)) L.push(`  BACKLOG ${code} ${ids.length}: ${ids.join(', ') || 'none'}`);
   L.push('');
   L.push(`WARNINGS ${r.warnings.length}`);
   for (const w of r.warnings) L.push('  ! ' + w);
@@ -612,6 +631,9 @@ function markdown(r) {
     ...Object.entries(r.freshness).map(([k, v]) => row(`Freshness — ${k}`, kv(v.by_state))),
     row('Enforcement finality', kv(r.enforcement.by_finality)),
     row('Provision application', kv(r.regulatory.provision_application)),
+    row('Coverage', kv(r.register.by_coverage)),
+    row('Exclusion register / watchlist', `${r.register.register.length} / ${r.register.watchlist.length}`),
+    ...Object.entries(r.register.backlog).map(([code, ids]) => row(`Backlog — ${code}`, ids.length)),
     row('Errors / warnings', `${r.errors.length} / ${r.warnings.length}`),
     '',
     '_Derived on this run from `data/` and `index.html` by the modules the site itself uses. Not a score: the backlog is closed by verification work, not by a passing check._',

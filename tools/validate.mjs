@@ -125,6 +125,13 @@ function checkRefs(ids) {
     if (ref === null || ref === undefined) return;
     if (!resolves(kind, ref)) err(`DANGLING ${kind} ref "${ref}" in ${where}`);
   };
+  /* a source reference in the claims' shape, {source_id, supports, locator} */
+  const checkRef = (where, s) => {
+    if (!s || typeof s !== 'object') return err(`MALFORMED source reference ${JSON.stringify(s)} in ${where}`);
+    if (!s.source_id) return err(`MALFORMED source reference without source_id in ${where}`);
+    checkOne(`${where}/sources`, 'source', s.source_id);
+    checkOne(`${where}/sources`, 'taxonomy', s.supports);
+  };
 
   for (const i of arr(db.instruments?.instruments)) {
     const w = `instruments/${i.id}`;
@@ -140,6 +147,17 @@ function checkRefs(ids) {
     checkOne(w, 'taxonomy', i.scope_class);
     checkOne(w, 'taxonomy', i.legislative_status);
     checkOne(w, 'part', i.brief_part);
+    /* v2 (item 2.1, 27 Oct 2026): the basis of the status and the scope
+       decision cite sources the way claims do. Only resolution lives here;
+       what a reference can carry is tools/evidence-audit.mjs's (M-04, M-07). */
+    for (const s of arr(i.status_basis)) checkRef(`${w}/status_basis`, s);
+    if (i.scope_decision) {
+      const d = i.scope_decision, dw = `${w}/scope_decision`;
+      check(dw, 'taxonomy', d.criterion);
+      check(dw, 'source', d.refer_to);
+      checkOne(dw, 'taxonomy', d.watch_for?.event_type);
+      for (const s of arr(d.sources)) checkRef(dw, s);
+    }
     if (i.transposition) {
       checkOne(`${w}/transposition`, 'timeline', i.transposition.deadline);
       check(`${w}/transposition`, 'source', i.transposition.sources);
@@ -169,7 +187,11 @@ function checkRefs(ids) {
     checkOne(w, 'taxonomy', r.kind);
     check(w, 'provision', r.provisions);
     check(w, 'claim', r.claims);
-    check(w, 'source', r.sources);
+    /* a bare id is the v1 form; an object is v2 (docs/V2-DATA-DESIGN.md §1.1) */
+    for (const s of arr(r.sources)) {
+      if (typeof s === 'string') checkOne(w, 'source', s);
+      else checkRef(w, s);
+    }
   }
   for (const x of arr(db.institutions?.institutions)) {
     const w = `institutions/${x.id}`;
@@ -307,7 +329,11 @@ function checkCanonicalFacts() {
   const walk = (node, path, file) => {
     if (node === null || typeof node !== 'object') return;
     for (const [k, v] of Object.entries(node)) {
-      if (typeof v === 'string' && ISO.test(v) && !DATE_FIELDS_ALLOWED.has(k)) {
+      /* the date of the docs/ROADMAP-v2.md §8 row that approved a scope
+         decision is a fact about the site's editing, not about the law, and
+         has no timeline event to point at — admitted there and nowhere else */
+      const approval = k === 'approved_on' && path.endsWith('.scope_decision');
+      if (typeof v === 'string' && ISO.test(v) && !DATE_FIELDS_ALLOWED.has(k) && !approval) {
         warn(`POSSIBLE DUPLICATE FACT: ISO date in ${file}${path}.${k} = "${v}" — dates should live in timeline.json and be referenced by ID`);
       }
       if (typeof v === 'object') walk(v, `${path}.${k}`, file);

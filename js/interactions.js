@@ -105,13 +105,18 @@ export function interactionBlock(r, ix, current, root = siteRoot()) {
       '<span class="ix-claim-txt">' + esc(c.statement || c.id) + '</span></li>';
   }).filter(Boolean).join('');
 
-  const sources = (r.sources || []).map((sid) => {
+  /* a bare id is the v1 form; a v2 reference is {source_id, supports,
+     locator}, and its locator is what lets the reader check the edge */
+  const sources = (r.sources || []).map((ref) => {
+    const sid = typeof ref === 'string' ? ref : ref && ref.source_id;
+    const loc = typeof ref === 'string' ? null : ref && ref.locator;
     const s = ix.source.get(sid);
     if (!s) return '';
     const name = esc(s.publisher_name || s.title || sid);
     const tier = esc(F.tierWord(s) || '');
     const inner = '<span class="ix-src-n">' + name + '</span>' +
-      (tier ? '<span class="ix-src-t">' + tier + '</span>' : '');
+      (tier ? '<span class="ix-src-t">' + tier + '</span>' : '') +
+      (loc ? '<span class="ix-src-t">' + esc(loc) + '</span>' : '');
     if (s.url) {
       return '<li><a href="' + esc(s.url) + '" rel="noopener noreferrer" target="_blank">' +
         inner + '</a></li>';
