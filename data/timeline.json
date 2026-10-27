@@ -2334,6 +2334,30 @@
    "last_verified": "2026-10-27"
   },
   {
+   "id": "tl-csa-2025-02-04-entry-into-force",
+   "date": "2025-02-04",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "csa",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [
+    "sector:cross-sector"
+   ],
+   "obligation": null,
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-csa"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added 27 Oct 2026 for item 2.3. Art. 26: entry into force on the twentieth day following publication in the Official Journal (OJ L, 2025/38, 15.1.2025), read that day in the text retrieved from the Publications Office's Cellar (CELEX 32025R0038); the Publications Office's SPARQL metadata, read the same day, records it in force with entry into force 2025-02-04.",
+   "last_verified": "2026-10-27"
+  },
+  {
    "id": "tl-vida-2025-04-14-entry-into-force",
    "date": "2025-04-14",
    "date_precision": "precision:day",
