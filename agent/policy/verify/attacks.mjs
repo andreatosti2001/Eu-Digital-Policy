@@ -231,9 +231,16 @@ export async function publicPrivate(w) {
   /* PP-09 · the deployed origin. */
   {
     const a = attack('PP-09', 'public_private', 'fetch the deployed site and confirm what it actually serves', 'high');
+    /* Rewritten 27 Oct 2026 (v2 Session 5, B.1): the old text said the
+       deployed site had never been fetched, which docs/DEPLOYMENT.md §1
+       had stopped being true of on 27 Sep 2026. The outcome is unchanged:
+       those are dated measurements a session took by hand, and this gate
+       performs no network I/O, so it still cannot say what the origin
+       serves on the day it runs. */
     out.push(undecidable(a,
-      'nothing in this environment has ever fetched https://andreatosti2001.github.io/Eu-Digital-Policy/ — the network policy refuses it, and docs/CURRENT-ARCHITECTURE.md §13 and AUDIT F-12 both record that no URL in this repository has ever been retrieved.',
-      'an environment with outbound access to the deployed origin, and a check that requests .control-room/ and agent/records/ against it. Until then the publication boundary is INFERRED from the allowlist in tools/pages-artifact.mjs and from reading the tree.'));
+      'the deployed site has been fetched by hand, never by this gate. docs/DEPLOYMENT.md records the measurements: on 27 Sep 2026 (§1), on github.io, .control-room/ paths returned 404 and files under agent/, docs/ and tools/ returned 200 (the Jekyll branch build); on 23 Oct 2026 (§1a), on https://eudigitalpolicy.eu/, AGENTS.md, docs/HANDOVER.md, tools/validate.mjs, agent/, docs/ and .control-room/ returned 404 once pages.yml\'s artifact had replaced the branch build; on 24 Oct 2026 (§1b), after the Pages source was switched to GitHub Actions, the private paths stayed 404. Those are dated readings, not a check this gate runs: it reads the tree and fetches nothing, so it cannot say what the origin serves today, and agent/records/ was never requested by name.',
+      'a check this gate runs, from an environment with outbound access to https://eudigitalpolicy.eu/, that requests .control-room/ and agent/records/ and records the date of the reading. Until then the publication boundary on the live site is the allowlist in tools/pages-artifact.mjs, plus the dated measurements in docs/DEPLOYMENT.md §1–§1b.',
+      { measured_by_hand: ['2026-09-27', '2026-10-23', '2026-10-24'], record: 'docs/DEPLOYMENT.md §1, §1a, §1b' }));
   }
 
   return out;
