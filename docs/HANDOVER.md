@@ -1,9 +1,20 @@
 # HANDOVER
 
-**Last updated:** v2 Session 3 — Phases 0 and 1 implemented; the Phase 1 checkpoint is reported
-and waits for the author's approval · 27 October 2026
+**Last updated:** v2 Session 3 — Phases 0 and 1 implemented and approved; the audit of 24 Oct 2026
+is closed · 27 October 2026
 **Branch:** `claude/eloquent-hamilton-7p6t2u`, fast-forwarded to `main` at `51efe8e` (the merge of
-#18). Pushed; no pull request.
+#18). Pushed, and opened as a pull request to `main` on the author's instruction; not merged.
+
+## Branch register — 27 October 2026 (v2 Session 3)
+
+- `git branch -r --no-merged origin/main` lists two branches:
+  - this session's `claude/eloquent-hamilton-7p6t2u`. Disposition: pull request to `main`, opened
+    on the author's instruction of 27 Oct 2026 ("approvo e apri pull request"); not merged.
+  - `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the 27 Oct register entry below
+    and untouched.
+- **The author approved the Phase 1 checkpoint** on 27 Oct 2026 (`docs/ROADMAP-v2.md` §8). Items
+  2–4 of "Still open" below remain open, except the pull request.
+- **Phase 2 has not started.**
 
 ## v2 Session 3 — Phase 1 checkpoint report, and the verification checklist
 
@@ -185,11 +196,10 @@ to a temporary `CONTROL_ROOM_RECORDS_DIR`, as `.control-room/selftest.mjs` `worl
 
 ### Still open, for the author
 
-1. Approve the Phase 1 checkpoint. It then gets its row in roadmap §8, and the audit of
-   24 Oct 2026 is closed.
+1. ~~Approve the Phase 1 checkpoint.~~ Approved 27 Oct 2026 (roadmap §8).
 2. The proposed ninth README limitation (`docs/AUDIT-2026-10-24.md` §5).
 3. The two §5 findings: the stale publication model in `AGENTS.md` and in the checks.
-4. Whether to open a pull request for this branch.
+4. ~~Whether to open a pull request for this branch.~~ Opened on the author's instruction.
 
 ## (previous header) v2 Session 3 — Phase 0, stopped at its checkpoint
 
