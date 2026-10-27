@@ -53,7 +53,7 @@ import { SessionStore, OidcProvider, resolveSession, authenticateLocal, parseCoo
 import { authorize, visibleActions } from './authz.mjs';
 import { AuditLog } from './audit.mjs';
 import { decide, proposalDetail, DecisionRefused } from './decide.mjs';
-import { liveSystem, workflowsView, autonomyView, reviewQueueView, websiteHealth, operatorsView } from './views.mjs';
+import { liveSystem, workflowsView, autonomyView, reviewQueueView, websiteHealth, editorialAuditView, operatorsView } from './views.mjs';
 import { Tracer } from '../agent/observability/tracer.mjs';
 import { JsonlSink } from '../agent/observability/sink.mjs';
 
@@ -109,12 +109,15 @@ export const ROUTES = [
   { method: 'GET', path: '/api/queue', permission: 'queue:read', what: 'view 2 — proposals awaiting a human decision, each with its full trace.' },
   { method: 'GET', path: '/api/proposal', permission: 'queue:read', what: 'one proposal, by ?id=. The same trace, alone.' },
   { method: 'GET', path: '/api/health', permission: 'health:read', what: 'view 3 — the last recorded health run, with every reading marked public-safe or private.' },
+  /* Roadmap v2 item 1.1. A READ of what `node tools/evidence-audit.mjs
+     --record` wrote; nothing here runs the tool or records a run. */
+  { method: 'GET', path: '/api/editorial-audit', permission: 'editorial:read', what: 'the latest recorded run of tools/evidence-audit.mjs — what was checked, on which evidence, as of which date, at which commit, with which limits — and the command that records a new one. Read-only: nothing here runs the tool.' },
   { method: 'GET', path: '/api/audit', permission: 'audit:read', what: 'the approval audit trail, and the result of re-walking its hash chain.' },
   { method: 'GET', path: '/api/operators', permission: 'operators:read', what: 'who has access and with what role.' },
   /* The floor to reach the endpoint. The permission that actually
      decides is computed from the PROPOSAL inside decide(), because
      a human_only proposal needs the administrator-only one. */
-  { method: 'POST', path: '/api/review', permission: 'proposal:request_changes', what: 'approve · reject · request changes. Records an authorization; publishes nothing.' },
+  { method: 'POST', path: '/api/review', permission: 'proposal:request_changes', what: 'approve · reject · request changes. Approve and reject carry the reviewer\'s attestation of what they examined. Records an authorization; publishes nothing.' },
 ];
 
 /** Words that would make a route a production control. The suite
@@ -163,7 +166,7 @@ const SECURITY_HEADERS = (cfg) => ({
 });
 
 function readBody(req) {
-  const tooLarge = () => new DecisionRefused(`the request body is larger than ${MAX_BODY_BYTES} bytes`, { status: 413, code: 'body_too_large', fix: 'a control plane has no reason to accept a large request. Nothing this server accepts is bigger than a proposal id, a fingerprint and a note.' });
+  const tooLarge = () => new DecisionRefused(`the request body is larger than ${MAX_BODY_BYTES} bytes`, { status: 413, code: 'body_too_large', fix: 'a control plane has no reason to accept a large request. Nothing this server accepts is bigger than a proposal id, a fingerprint, a note and an attestation.' });
 
   /* Declared length first, so an oversized body is refused BEFORE
      it is read. Destroying the socket mid-upload loses the response
@@ -398,34 +401,44 @@ export function serve({ cfg, quiet = false, tracer = null } = {}) {
         });
       }
 
-      /* ---- the four views ---- */
-      if (path === '/api/live') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'live_system' }); return send(res, 200, liveSystem(cfg)); }
-      if (path === '/api/workflows') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'workflows' }); return send(res, 200, workflowsView(cfg)); }
-      if (path === '/api/autonomy') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'autonomy' }); return send(res, 200, autonomyView(cfg)); }
-      if (path === '/api/queue') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'review_queue' }); return send(res, 200, reviewQueueView(cfg)); }
-      if (path === '/api/health') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'website_health' }); return send(res, 200, websiteHealth(cfg, { root: cfg.root })); }
+      /* ---- the views ----
+         Every view payload carries `assembled_at`: the instant this
+         server began reading the stores for it (roadmap v2 item 0.1;
+         docs/AUDIT-2026-10-24.md finding B). A view is a SNAPSHOT —
+         nothing refreshes it but another GET of the same route — and a
+         snapshot without its time reads as "now", which it is not. */
+      const at = new Date().toISOString();
+      const view = (payload) => send(res, 200, { ...payload, assembled_at: at });
+      if (path === '/api/live') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'live_system' }); return view(liveSystem(cfg)); }
+      if (path === '/api/workflows') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'workflows' }); return view(workflowsView(cfg)); }
+      if (path === '/api/autonomy') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'autonomy' }); return view(autonomyView(cfg, { now: at })); }
+      if (path === '/api/queue') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'review_queue' }); return view(reviewQueueView(cfg)); }
+      if (path === '/api/health') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'website_health' }); return view(websiteHealth(cfg, { root: cfg.root })); }
+      if (path === '/api/editorial-audit') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'editorial_audit' }); return view(editorialAuditView(cfg)); }
 
       if (path === '/api/proposal') {
         const id = url.searchParams.get('id');
         if (!id) return send(res, 400, { error: 'bad request', reason: 'name a proposal with ?id=' });
         const item = proposalDetail(cfg, id);
-        return item ? send(res, 200, item) : send(res, 404, { error: 'not found', reason: `no proposal "${id}" is in the record store` });
+        return item ? view(item) : send(res, 404, { error: 'not found', reason: `no proposal "${id}" is in the record store` });
       }
 
       if (path === '/api/audit') {
         const q = audit.query({ action: url.searchParams.get('action'), actor_id: url.searchParams.get('actor'), proposal_id: url.searchParams.get('proposal'), limit: Number(url.searchParams.get('limit') ?? 200) });
-        return send(res, 200, { ...q, chain: audit.verifyChain() });
+        return view({ view: 'audit', ...q, chain: audit.verifyChain() });
       }
 
-      if (path === '/api/operators') return send(res, 200, operatorsView(cfg));
+      if (path === '/api/operators') return view(operatorsView(cfg));
 
       /* ---- the one state-changing action in the system ---- */
       if (path === '/api/review') {
-        const body = parseStrictJson(await readBody(req), ['action', 'proposal_id', 'fingerprint', 'note']);
+        /* `attestation` (roadmap v2 item 0.2) is ADDED to the accepted
+           list; the unknown-field check is not loosened. */
+        const body = parseStrictJson(await readBody(req), ['action', 'proposal_id', 'fingerprint', 'note', 'attestation']);
         try {
           const out = decide(cfg, {
             actor: resolved.actor, session: resolved.session, request: requestInfo,
-            action: body.action, proposalId: body.proposal_id, fingerprint: body.fingerprint, note: body.note ?? null,
+            action: body.action, proposalId: body.proposal_id, fingerprint: body.fingerprint, note: body.note ?? null, attestation: body.attestation ?? null,
             audit, tracer: trace,
           });
           return send(res, 200, out);

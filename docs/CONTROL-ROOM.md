@@ -1,7 +1,10 @@
 # The Control Room
 
 **Status:** binding. The reference document for `.control-room/` — the private control plane
-for *The European Legal Framework for the Digital World*. SESSION 21.
+for *The European Legal Framework for the Digital World*. Written in SESSION 21. Realigned with the
+interface in v2 Session 3 (27 Oct 2026, `docs/ROADMAP-v2.md` items 0.4 and 1.3). §5 is now an
+inventory of every view, and `.control-room/selftest.mjs` "INVENTORY · 1.3" fails when `ui/app.html`
+has a tab the inventory does not name.
 
 `docs/HANDOVER.md` carries what this session did. This carries what the thing **is**, how the
 owner sets it up, and — at the end, at length — **what it does not prove**.
@@ -17,6 +20,11 @@ audit entry for each, and can do exactly three things to a proposal: **approve, 
 changes**. Approving writes one line to `agent/implement/decisions/decisions.jsonl` and changes
 nothing else. It cannot deploy, delete, apply, publish or execute anything, and there is no
 flag that lets it.
+
+**How far that is established** (v2 item 1.4, 27 Oct 2026): the controls in this document are
+**implemented in code**, and the suite (§10) **verifies them in tests** against a server it starts
+on a loopback port. **None is verified on a deployed installation**, because no deployed Control
+Room exists (§11). Read every present-tense sentence below in that light.
 
 ```
 node .control-room/cli.mjs check       # what it would refuse to start on
@@ -58,11 +66,18 @@ data:
 Only the third is a security control. The first two are why a mistake in the third would not
 already have published an audit trail.
 
-**What this is not.** It is not a claim about what the deployed site serves. Nothing in this
-repository has ever fetched `andreatosti2001.github.io` — outbound access to that origin is
-refused by this environment's network policy — so the publication boundary is **read from the
-tree and inferred from GitHub Pages' documented default**, and every record that touches it says
-so.
+**What this is not.** It is not a claim about what the deployed site serves today. Until
+27 Sep 2026 nothing here had fetched the deployed origin, and this paragraph said the boundary was
+inferred. **That fact changed, and the paragraph was updated on 27 Oct 2026.**
+`docs/DEPLOYMENT.md` §1 and §1a record measurements of the live site:
+- `.control-room/server.mjs` and `.control-room/cli.mjs` answered **404** on `github.io` on
+  27 Sep 2026;
+- `.control-room/` answered **404** on `eudigitalpolicy.eu` on 23 Oct 2026.
+
+Since 24 Oct 2026 the site is published only by `.github/workflows/pages.yml`, from an
+**allowlisted artifact** that refuses every dot path by name (`tools/pages-artifact.mjs`,
+`docs/DEPLOYMENT.md` §1b and §2). That allowlist, not Jekyll's dot-prefix default, is now the
+publication boundary. Those are measurements on those dates, not a continuous check.
 
 ---
 
@@ -159,8 +174,8 @@ so that changing one variable does not get round it.
 
 **The architectural reason, stated because §11 asks for one and because "it was easier" is not
 one.** This repository has no dependencies and no build step, and this environment has no
-outbound network access. Without an offline provider, the sixteen security proofs SESSION 21
-requires could not be **run** — every one of them needs a login — and a security boundary
+outbound network access. Without an offline provider, the sixteen security tests SESSION 21
+requires (its "proofs") could not be **run** — every one of them needs a login — and a security boundary
 nobody has executed is a claim rather than a control. The local provider exists so that the
 suite can actually authenticate, and it is structurally unable to serve production.
 
@@ -198,11 +213,16 @@ remembers.
 
 | Role | Permissions |
 |---|---|
-| `viewer` | `live:read` `queue:read` `health:read` |
+| `viewer` | `live:read` `workflows:read` `autonomy:read` `queue:read` `health:read` `editorial:read` |
 | `reviewer` | the above, plus `proposal:request_changes` |
 | `approver` | the above, plus `audit:read` `proposal:reject` `proposal:approve` |
 | `administrator` | the above, plus `operators:read` `operators:write` `proposal:approve:human_only` |
-| `operator` | `live:read` `health:read` `audit:read` |
+| `operator` | `live:read` `workflows:read` `autonomy:read` `health:read` `editorial:read` `audit:read` |
+
+Corrected on 27 Oct 2026. Until then this table omitted `workflows:read` (SESSION 22) and
+`autonomy:read` (SESSION 26), which `authz.mjs` already granted. It now also carries `editorial:read`
+(v2 item 1.1). `.control-room/authz.mjs ROLE_PERMISSIONS` is the authority, and "INVENTORY · 1.3"
+asserts this table against it.
 
 Two separations are the point rather than the detail:
 
@@ -222,34 +242,72 @@ the suite proves it by sending exactly that request.
 
 ---
 
-## 5 · The three views
+## 5 · The views — an inventory
 
-All three are assembled **server-side**. The browser receives JSON and renders it; it computes
-no state, derives no status and holds no authority.
+Eight tabs, all assembled **server-side**. The browser receives JSON and renders it; it computes
+no state, derives no status and holds no authority. Until 27 Oct 2026 this section was "The three
+views" and described Live system, Review queue and Website health; Workflows (SESSION 22) and
+Autonomy (SESSION 26) existed in the interface and were not described here
+(`docs/AUDIT-2026-10-24.md` finding F).
 
-**1 · Live system.** Agent runs, events, discoveries, verification decisions, handoffs,
-downstream effects and failures — with **running** and **failed** runs lifted out, because a
-stuck pipeline looks exactly like an idle one until somebody notices a run that never ended. An
-absent trace store reports `no_trace_store` with the reason, not zero: nothing has run *where
-this server can see* is a different fact from nothing having run.
+**Every tab has these two operations, and only the Review queue has any other:**
+- **Read.** A `GET` of the tab's route. The first five tabs below and the Editorial audit also
+  write a `view.read` entry to the audit trail; the Audit trail and Access tabs do not.
+- **Refresh.** A manual `GET` of the same route.
 
-**2 · Review queue.** Every proposal with its **whole chain** — evidence, facts, inferences and
-open questions, affected entities, operations, the originating agent run, required tests, the
-files an approval would permit, the rollback plan — plus the **fingerprint** of the exact
-version being displayed and the **gates that currently refuse it**. A proposal that is pending
-*and* gate-blocked is waiting on the agent that produced it, not on a reviewer, and the two are
-counted apart: approving something that cannot be implemented spends the scarcest thing in this
-system, which is a person having read the evidence.
+| Tab (`data-view`) | Route · permission | What it shows | Where it comes from | Operations | Limits |
+|---|---|---|---|---|---|
+| **Agent activity** (`live`) | `GET /api/live` · `live:read` | Agent runs, with running and failed lifted out; events, discoveries and verification decisions from the twelve most recent runs; open handoffs; pending approvals; downstream effects; errors | The shared trace store, `agent/observability/runs/` (git-ignored), read through `agent/observability/query.mjs` | Read, Refresh | Only this machine's store, and the 60 most recent runs. An absent store is `no_trace_store`, never zero |
+| **Workflows** (`workflows`) | `GET /api/workflows` · `workflows:read` | Each workflow's state, replayed from its journal: transitions, stage outcomes, gaps, malformed lines. Also the registers: ten workflow types, the capability register, the human-review triggers, the mandatory conditions, and the autonomous categories (base and in force) | `agent/orchestrator/state/` (git-ignored). The registers come from `agent/orchestrator/` and `agent/policy/governance.mjs` | Read, Refresh | Per machine; the 80 most recent workflows. **No route starts, retries, dispatches or reopens anything** |
+| **Autonomy** (`autonomy`) | `GET /api/autonomy` · `autonomy:read` | Grants in force and not in force; the policy in force against the base; the paths and fields no grant may reach; the 60 most recent autonomous actions (merged, reverted, refused), each with its rollback information | `agent/policy/governance/grants.jsonl` (tracked); `agent/autonomy/actions/actions.jsonl` (git-ignored) | Read, Refresh | The action ledger is per machine. **No route grants, revokes, triggers or rolls back** |
+| **Review queue** (`queue`) | `GET /api/queue`, `GET /api/proposal?id=` · `queue:read`; `POST /api/review` · `proposal:request_changes`, then the decision's own permission (§4, §6) | Each proposal with its derived approval state and its whole chain: evidence, the source records cited, facts and open questions, operations, permitted files, required tests, rollback, agent run. Also its fingerprint, the gates that refuse it, change requests, and the attestation list and statement | `agent/records/` (git-ignored); the decision ledger `agent/implement/decisions/decisions.jsonl`; the Implementation Agent's preflight; `.control-room/state/reviews/` | Read, Refresh; **approve, reject** (each with an attestation), **request changes** (§6) | A fresh clone has no proposals. Approving publishes nothing. The attestation is a declaration, not proof of reading |
+| **Website health** (`health`) | `GET /api/health` · `health:read` | Readings of the last recorded run, by domain. Each metric shows its name, ID and definition, with source, calculation, frequency, interpretation and limitations one click away; its visibility (public-safe or private) and direction; the reference date, the time the run was recorded, and the commit analysed. Also the movement since the previous run, the metric register, and the privileged interfaces read from source | `agent/health/history/health.jsonl` (git-ignored); `agent/health/metrics.mjs`; `agent/health/security.mjs` | Read, Refresh | The last recorded run, not now; no freshness is computed from its dates. There is no overall score. Private readings are not publishable |
+| **Editorial audit** (`editorial`) | `GET /api/editorial-audit` · `editorial:read` | The latest recorded run of `tools/evidence-audit.mjs`. It answers what was checked, on which evidence, as of which date, at which commit and with which limits, and shows its errors, warnings and summary. Also the command that records a new run | `tools/evidence-audit-runs/evidence-audit.jsonl` (git-ignored), written by `node tools/evidence-audit.mjs --as-of YYYY-MM-DD --record` (`docs/EDITORIAL-AUDIT-PATH.md`) | Read, Refresh. The command is shown, **not run** | Per machine: a fresh clone has "no recorded run". The record's own limits are in `tools/evidence-audit-record.mjs` `LIMITS`. Kept apart from Website health. It adds nothing to the review queue |
+| **Audit trail** (`audit`) | `GET /api/audit` · `audit:read` | Trail entries, newest first: up to 200, filterable by action, actor and proposal. Also the result of re-walking the hash chain | `.control-room/state/audit/` (git-ignored) | Read, Refresh | Per machine. The chain detects edits, not wholesale rewrites (§7) |
+| **Access** (`operators`) | `GET /api/operators` · `operators:read` | Operators: roles, provider, who created each one, last seen, state. Also the configuration, with no secret in it | The operator registry under `.control-room/state/`; the environment | Read, Refresh. Roles are granted from the machine (§2) | Read-only. The interface cannot grant a role |
+
+The paragraphs below give the reasons behind four of these rows: Agent activity, the Review queue, Website health and the Editorial audit.
+
+**Every view is a snapshot, and says so** (v2 item 0.1, 27 Oct 2026; `docs/AUDIT-2026-10-24.md`
+findings B and E). The server stamps every view payload with `assembled_at`, the instant it began
+reading the stores for it, and the interface shows it above the view as "Snapshot taken at …".
+Nothing refreshes a view on a timer. Each view has one **manual** refresh, which is a `GET` of the
+same route; a tab already visited shows the snapshot it holds, with its time, until that refresh.
+When a refresh fails, the earlier snapshot stays on screen with its own time and the error, rather
+than being blanked or passed off as current.
+
+**1 · Agent activity** — labelled "Live system" until 27 Oct 2026, a label that promised real
+time; the route (`/api/live`), the permission (`live:read`) and the view id are unchanged. Agent
+runs, events, discoveries, verification decisions, handoffs, downstream effects and failures — with
+**running** and **failed** runs lifted out, because a stuck pipeline looks exactly like an idle one
+until somebody notices a run that never ended. An absent trace store reports `no_trace_store` with
+the reason, not zero: nothing has run *where this server can see* is a different fact from nothing
+having run.
+
+**2 · Review queue.** Every proposal with its **whole chain** — evidence, the source records that
+evidence cites, facts, inferences and open questions, affected entities, operations, the
+originating agent run, required tests, the files an approval would permit, the rollback plan —
+plus the **fingerprint** of the exact version being displayed and the **gates that currently refuse
+it**. A proposal that is pending *and* gate-blocked is waiting on the agent that produced it, not on
+a reviewer, and the two are counted apart: approving something that cannot be implemented spends the
+scarcest thing in this system, which is a person having read the evidence. Each item carries the
+attestation a decision requires (§6).
 
 **3 · Website health.** The last recorded run of `agent/health/`, every reading marked
 **public-safe or private**, with the metric register alongside so a number is quotable in
-context. Where no run has been recorded — the ordinary case on a fresh clone, because
-`agent/health/history/` is git-ignored — it says so and gives the command, rather than
-rendering nulls as zeros. **There is no overall score and this view will not compute one**;
-`agent/health/model.mjs overallScore()` still throws.
+context. The run's **reference date** (`as_of`), the time the **run was recorded** (`recorded_at`)
+and the **commit analysed** are shown as three separate fields, labelled by the server
+(`views.mjs HEALTH_RUN_FIELDS`). Until 27 Oct 2026 `as_of` was printed as "Last recorded run" and
+`recorded_at` was not shown; the date a measurement refers to is not the date it was taken. The
+view computes no freshness from any of the three. Where no run has been recorded — the ordinary
+case on a fresh clone, because `agent/health/history/` is git-ignored — it says so and gives the
+command, rather than rendering nulls as zeros. **There is no overall score and this view will not
+compute one**; `agent/health/model.mjs overallScore()` still throws.
 
-There is also an **audit trail** view (`audit:read`) and an **access** view
-(`operators:read`), the second read-only: roles are granted from the machine.
+**Editorial audit** (v2 item 1.1, 27 Oct 2026; `docs/AUDIT-2026-10-24.md` finding A). The audit
+asked for a way to *launch* the editorial check from here. That would be a route that executes, which
+§12 forbids. So the check is run at a command line with `--record`, and this tab reads the record.
+The path a person follows is `docs/EDITORIAL-AUDIT-PATH.md`.
 
 ---
 
@@ -264,7 +322,7 @@ It changes no dataset, no page, no stylesheet, no locale. It runs no validator, 
 deployment. It touches no git. `git_ref` on the audit entry is `null` at decision time by
 design — a value there would mean the approval published something.
 
-Seven gates, in order, all server-side:
+Eight gates, in order, all server-side (seven until 27 Oct 2026; gate 7 is new):
 
 | | | |
 |---|---|---|
@@ -274,7 +332,8 @@ Seven gates, in order, all server-side:
 | 4 | the request is bound to the **exact version** the reviewer saw | 409 |
 | 5 | the proposal is in a **governed state** to decide from | 409 |
 | 6 | every governance gate that does not depend on the approval passes | 409 |
-| 7 | the ledger accepts it — content-bound, no self-approval, a request exists | 409 |
+| 7 | approve and reject only: the reviewer **attests** which sections they examined | 400 |
+| 8 | the ledger accepts it — content-bound, no self-approval, a request exists | 409 |
 
 Gate 4 is the answer to *scope cannot be expanded through request manipulation*: the request
 carries a **fingerprint and nothing else about scope**. Scope is read from the stored proposal,
@@ -282,6 +341,21 @@ never from the body — and a body naming files, operations, roles or an outcome
 with the field named**, not silently ignored. Editing a proposal after approval voids the
 approval rather than carrying it onto a widened scope, because `recordDecision` binds the
 decision to the proposal's hash.
+
+Gate 7 is the answer to *evidence available is not evidence reviewed* (v2 item 0.2, 27 Oct 2026;
+`docs/AUDIT-2026-10-24.md` finding C; decision D-9). Approving or rejecting requires
+`"attestation": {"examined": [...]}` naming, from the fixed list **evidence, sources, operations,
+tests, rollback**, at least one section the reviewer declares they examined; a missing or malformed
+one is refused 400 with the field named, and a request for changes — not a decision — carries none.
+**It is a declaration, not proof of reading**, and the interface says so in those words beside the
+checkboxes. Nothing records which panels were opened: that would be trivially faked and would invite
+being read as proof. The attestation is recorded in the **audit trail entry of the decision itself**
+(§7), under the same hash as the actor, the time and the fingerprint the decision is bound to, so
+it cannot be changed after the decision without `audit --verify` reporting the entry. It is **not**
+in the decision ledger: it is a fact about the review, not about the grant, and the ledger is one
+home for grants — with the trade-off that the trail is per-machine and git-ignored. The field is
+**added** to the review body's accepted list; the strict unknown-field check is unchanged and still
+refuses anything else (§12).
 
 Gate 5 is the answer to *a rejected proposal cannot be approved without entering a valid
 governed state*: only `pending` is decidable. A **denied** proposal is reopened by the producing
@@ -307,7 +381,8 @@ each entry carries the SHA-256 of the one before it and its own.
 Every entry carries the authenticated actor and **the roles they held at that moment**, the
 session, the proposal, the fingerprint the decision was bound to, the state before and after,
 the provenance the reviewer was shown, the originating agent run, the required tests, the
-approved scope, the Control Room's trace id, and the reason. An entry that cannot answer one of
+approved scope, the Control Room's trace id, the reviewer's **attestation** (on an approval or a
+rejection, null elsewhere; §6 — added 27 Oct 2026), and the reason. An entry that cannot answer one of
 the questions lists it in `missing_fields` — an incomplete trail says so rather than looking
 complete.
 
@@ -382,12 +457,13 @@ refusal to start rather than a default somebody can override:
 ## 10 · The suite
 
 ```
-node --test .control-room/selftest.mjs      # 55 tests
+node --test .control-room/selftest.mjs      # 72 tests on 27 Oct 2026 (55 when this was written)
 node .control-room/cli.mjs boundary         # in CI, on every push
 ```
 
 The sixteen proofs SESSION 21 names are each a test with its number in the title, and each is
-proved **against a running server over real HTTP** wherever the claim is about a request — a
+tested **against a running server over real HTTP** wherever the claim is about a request — a
+local server on an ephemeral loopback port, never a deployed one (§11.2) — a
 claim about what a route does, tested by calling a function, is a claim about a function.
 
 Two shapes the file is arranged to avoid. **A test that passes for the wrong reason:** every
@@ -417,10 +493,16 @@ Read this section before quoting anything above.
 2. **No deployed Control Room has ever been reached.** The suite starts one on an ephemeral
    loopback port. `control_plane.control_room_availability` reports `unmeasurable` for exactly
    this reason, and 100% would be the more dangerous of the two possible lies.
-3. **The publication boundary is inferred, not confirmed.** That `.control-room/` is not served
-   follows from GitHub Pages' documented default and from `agent/implement/boundary.mjs`
-   reading the tree. The deployed origin has never been fetched (`docs/AUDIT-2026-09-01.md`
-   F-12 is the same limitation one layer down).
+3. **The publication boundary is measured on dates, not continuously.** *(Fact changed — updated
+   27 Oct 2026. This item read "inferred, not confirmed … the deployed origin has never been
+   fetched", which `docs/DEPLOYMENT.md` §1 made untrue on 27 Sep 2026.)*
+   - `.control-room/` was measured as **not served** on the live site on 27 Sep and 23 Oct 2026
+     (§1).
+   - It is excluded today by the Pages artifact's allowlist, which `tools/selftest.mjs` I2
+     asserts on every push.
+   - Nothing re-fetches the live site on a schedule, so a later change of host or setting would
+     go unseen until somebody measures again (`docs/AUDIT-2026-09-01.md` F-12 is the same
+     limitation one layer down).
 4. **The secret scan matches known credential shapes.** A clean run is a floor, not a ceiling,
    and it reads only text files.
 5. **The audit chain detects edits, not rewrites.** §7 above.
@@ -444,8 +526,11 @@ Read this section before quoting anything above.
 ## 12 · What must not change
 
 - **Do not put a Control Room page in the published tree.** Not under `docs/`, not at the root,
-  not as an `admin.html`. The dot prefix is the only publication boundary this repository has,
-  and a page outside it is public the moment it is pushed — whether or not it is linked.
+  not as an `admin.html`. A page outside `.control-room/` may be one allowlist edit away from
+  public, whether or not it is linked. *(Fact changed — updated 27 Oct 2026: this said "the dot
+  prefix is the only publication boundary this repository has", true until `pages.yml` became
+  the only publisher on 24 Oct 2026. The allowlisted artifact is now the boundary; the rule
+  stands.)*
 - **Do not add a default account, a seeded administrator, or a "first run" bootstrap that
   creates one.** The refusal to start is the feature.
 - **Do not add a `--password` flag,** and do not accept a credential in a URL, a query
@@ -469,3 +554,10 @@ Read this section before quoting anything above.
 - **Do not let the local provider out of loopback development.** Both refusals are load-bearing;
   removing either leaves the other looking sufficient.
 - **Do not commit `.control-room/state/`.**
+- **Do not make the attestation optional, and do not record which panels were opened** (added
+  27 Oct 2026, v2 item 0.2). A decision without a declaration is refused. A record of opened panels
+  would be trivially faked and read as proof of reading, which no attestation is.
+- **Do not add a route that runs the editorial audit, records a run or turns a finding into a queue
+  item** (added 27 Oct 2026, v2 item 1.1). The run is a command a person types; the view reads its
+  record. The same rule as the routes above, applied to the one view the audit asked to *launch*
+  something.

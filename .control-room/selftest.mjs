@@ -61,6 +61,8 @@ import { SessionStore, resolveSession, OidcProvider, sanitiseReturnTo, parseCook
 import { serve, ROUTES, PUBLIC_ROUTES, PROHIBITED_ROUTE_WORDS, routeFor, parseStrictJson, MAX_BODY_BYTES } from './server.mjs';
 import { decide, reviewQueue, DECIDABLE_STATES, PUBLICATION_NOTE } from './decide.mjs';
 import { controlRoomBoundary } from './boundary.mjs';
+import { RECORD_COMMAND } from '../tools/evidence-audit-record.mjs';
+import { execFileSync } from 'node:child_process';
 import { dataProposalFixture, approvalRequestFixture } from '../agent/schemas/fixtures.mjs';
 import { validate } from '../agent/schemas/validate.mjs';
 import { readLedger, deriveApproval, proposalFingerprint } from '../agent/implement/ledger.mjs';
@@ -73,6 +75,9 @@ import { Tracer } from '../agent/observability/tracer.mjs';
    ============================================================ */
 
 const PASSWORD = 'a sufficiently long passphrase';
+/** Every section on the fixed list: what a reviewer who examined the
+ *  whole chain declares (roadmap v2 item 0.2). */
+const ATTEST = Object.freeze({ examined: ['evidence', 'sources', 'operations', 'tests', 'rollback'] });
 const temps = [];
 const tempDir = (p = 'cr-') => { const d = mkdtempSync(join(tmpdir(), p)); temps.push(d); return d; };
 process.on('exit', () => { for (const d of temps) { try { rmSync(d, { recursive: true, force: true }); } catch { /* nothing to do at exit */ } } });
@@ -119,7 +124,8 @@ function world({ proposals = null, env = {} } = {}) {
   const records = tempDir('cr-records-');
   const decisions = tempDir('cr-decisions-');
   const traces = tempDir('cr-traces-');
-  const cfg = { ...readConfig(env), state_dir: state, records_dir: records, decision_dir: decisions, trace_dir: traces, port: 0 };
+  const editorial = tempDir('cr-editorial-');
+  const cfg = { ...readConfig(env), state_dir: state, records_dir: records, decision_dir: decisions, trace_dir: traces, editorial_audit_dir: editorial, port: 0 };
 
   const p = proposals ?? [decidableProposal()];
   writeRecords(records, [...p, ...p.map((x) => approvalRequestFor(x.proposal_id))]);
@@ -261,7 +267,7 @@ test('3 · a reviewer may request changes and may NOT approve or reject; an appr
     assert.equal(readLedger({ dir: w.cfg.decision_dir }).decisions.length, 0, 'a change request is not an approval and writes no ledger line');
 
     const approver = await s.login('approver@example.org');
-    const ok = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint, note: 'Read the passage.' }, approver);
+    const ok = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint, note: 'Read the passage.', attestation: ATTEST }, approver);
     const okBody = await ok.json();
     assert.equal(ok.status, 200, JSON.stringify(okBody));
     assert.equal(okBody.outcome, 'granted');
@@ -302,7 +308,7 @@ test('4 · a human_only proposal needs the administrator-only permission, and an
     assert.match((await refused.json()).fix, /red tier|Class D/, 'the refusal must say why the class matters');
 
     const admin = await s.login('admin@example.org');
-    const allowed = await s.post('/api/review', { action: 'approve', proposal_id: humanOnly.proposal_id, fingerprint, note: 'Author authorised this by name.' }, admin);
+    const allowed = await s.post('/api/review', { action: 'approve', proposal_id: humanOnly.proposal_id, fingerprint, note: 'Author authorised this by name.', attestation: ATTEST }, admin);
     assert.equal(allowed.status, 200, JSON.stringify(await allowed.json()));
   } finally { await s.stop(); }
 });
@@ -404,7 +410,7 @@ test('6 · every approval is attributable, and the trail refuses an unattributed
   const s = await running(w);
   try {
     const approver = await s.login('approver@example.org');
-    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'checked' }, approver);
+    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'checked', attestation: ATTEST }, approver);
 
     const led = readLedger({ dir: w.cfg.decision_dir });
     assert.equal(led.decisions.length, 1);
@@ -440,7 +446,7 @@ test('7 · approving proposal A does not decide proposal B, and an id for someth
   const s = await running(w);
   try {
     const approver = await s.login('approver@example.org');
-    const res = await s.post('/api/review', { action: 'approve', proposal_id: 'prop-cr-a', fingerprint: proposalFingerprint(a), note: 'A only' }, approver);
+    const res = await s.post('/api/review', { action: 'approve', proposal_id: 'prop-cr-a', fingerprint: proposalFingerprint(a), note: 'A only', attestation: ATTEST }, approver);
     assert.equal(res.status, 200, JSON.stringify(await res.json()));
 
     const led = readLedger({ dir: w.cfg.decision_dir });
@@ -483,7 +489,7 @@ test('8 · scope comes from the stored proposal; a body naming files, operations
 
     /* And the approval that IS accepted records the scope the
        PROPOSAL defines, not anything a caller supplied. */
-    const ok = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint: proposalFingerprint(w.proposals[0]) }, approver);
+    const ok = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint: proposalFingerprint(w.proposals[0]), attestation: ATTEST }, approver);
     assert.equal(ok.status, 200);
     const entry = new AuditLog(w.cfg).read().entries.find((e) => e.action === 'proposal.approved');
     assert.deepEqual(entry.approved_scope.permitted_files, ['data/claims.json']);
@@ -531,7 +537,7 @@ test('9 · a denied proposal cannot be approved by sending the request again', a
     const id = w.proposals[0].proposal_id;
     const fingerprint = proposalFingerprint(w.proposals[0]);
 
-    const denied = await s.post('/api/review', { action: 'reject', proposal_id: id, fingerprint, note: 'The evidence does not carry it.' }, approver);
+    const denied = await s.post('/api/review', { action: 'reject', proposal_id: id, fingerprint, note: 'The evidence does not carry it.', attestation: ATTEST }, approver);
     const deniedBody = await denied.json();
     assert.equal(denied.status, 200, JSON.stringify(deniedBody));
     assert.equal(deniedBody.outcome, 'denied');
@@ -556,7 +562,7 @@ test('9b · an already-granted proposal is not decided twice, and only "pending"
     const approver = await s.login('approver@example.org');
     const id = w.proposals[0].proposal_id;
     const fingerprint = proposalFingerprint(w.proposals[0]);
-    assert.equal((await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint }, approver)).status, 200);
+    assert.equal((await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint, attestation: ATTEST }, approver)).status, 200);
     const twice = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint }, approver);
     assert.equal(twice.status, 409);
     assert.match((await twice.json()).error, /state_granted/);
@@ -592,7 +598,7 @@ test('10 · an approval changes exactly one file, and it is the decision ledger'
   try {
     const before = hashTree(REPO_ROOT);
     const approver = await s.login('approver@example.org');
-    const res = await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'ok' }, approver);
+    const res = await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'ok', attestation: ATTEST }, approver);
     assert.equal(res.status, 200);
     const out = await res.json();
 
@@ -679,7 +685,7 @@ test('11 · the trail answers all five questions, and names any it cannot', asyn
   const s = await running(w);
   try {
     const approver = await s.login('approver@example.org');
-    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'Read the passage against the claim.' }, approver);
+    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'Read the passage against the claim.', attestation: ATTEST }, approver);
 
     const entry = new AuditLog(w.cfg).read().entries.find((e) => e.action === 'proposal.approved');
     for (const field of REQUIRED_FIELDS) {
@@ -708,7 +714,7 @@ test('11b · the audit chain detects an edited entry', () => {
   const w = world();
   const log = new AuditLog(w.cfg);
   log.record({ action: 'session.login', outcome: 'allowed', actor: { operator_id: 'op-1', subject: 'a@b', roles: ['viewer'] } });
-  log.record({ action: 'proposal.approved', outcome: 'allowed', actor: { operator_id: 'op-1', subject: 'a@b', roles: ['approver'] }, proposal_id: 'p', previous_state: 'pending', resulting_state: 'granted' });
+  log.record({ action: 'proposal.approved', outcome: 'allowed', actor: { operator_id: 'op-1', subject: 'a@b', roles: ['approver'] }, proposal_id: 'p', previous_state: 'pending', resulting_state: 'granted', attestation: { examined: ['evidence'] } });
   assert.equal(log.verifyChain().ok, true);
 
   const file = log.file();
@@ -777,7 +783,7 @@ test('12c · no credential, token, password or cookie reaches the audit trail or
   const s = await running(w);
   try {
     const approver = await s.login('approver@example.org');
-    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'ok' }, approver);
+    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'ok', attestation: ATTEST }, approver);
     await s.get('/api/live', approver.cookie);
 
     const trail = readdirSync(join(w.cfg.state_dir, 'audit')).map((f) => readFileSync(join(w.cfg.state_dir, 'audit', f), 'utf8')).join('\n');
@@ -1283,6 +1289,439 @@ test('VIEWS · a gate-blocked proposal is counted apart from one waiting on a re
 });
 
 /* ============================================================
+   Attestation: evidence available is not evidence reviewed
+   (roadmap v2 item 0.2; docs/AUDIT-2026-10-24.md finding C; D-9)
+   ============================================================ */
+
+test('ATTEST · 0.2 · approving or rejecting without an attestation is refused, naming the field, and decides nothing', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const approver = await s.login('approver@example.org');
+    const id = w.proposals[0].proposal_id;
+    const fingerprint = proposalFingerprint(w.proposals[0]);
+    for (const action of ['approve', 'reject']) {
+      const res = await s.post('/api/review', { action, proposal_id: id, fingerprint, note: 'n' }, approver);
+      const body = await res.json();
+      assert.equal(res.status, 400, `${action} without an attestation answered ${res.status}`);
+      assert.equal(body.error, 'no_attestation');
+      assert.match(body.reason, /attestation/);
+      assert.equal(body.detail.field, 'attestation');
+    }
+    for (const bad of [[], 'yes', { examined: [] }, { examined: ['evidence', 'banana'] }, { examined: ['evidence', 'evidence'] }, { examined: ['evidence'], panels_opened: 3 }, { examined: 'evidence' }]) {
+      const res = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint, attestation: bad }, approver);
+      const body = await res.json();
+      assert.equal(res.status, 400, `attestation ${JSON.stringify(bad)} answered ${res.status}`);
+      assert.equal(body.error, 'bad_attestation', JSON.stringify(body));
+      assert.match(body.reason, /attestation/);
+    }
+    assert.equal(readLedger({ dir: w.cfg.decision_dir }).decisions.length, 0, 'a refused decision wrote a ledger line');
+    const refusals = new AuditLog(w.cfg).read().entries.filter((e) => e.action === 'proposal.decision_refused' && /attestation/.test(e.detail?.code ?? ''));
+    assert.equal(refusals.length, 9, 'every refusal is audited with its reason');
+
+    /* A request for changes is not a decision and carries none. */
+    const withOne = await s.post('/api/review', { action: 'request_changes', proposal_id: id, fingerprint, note: 'Needs a source.', attestation: ATTEST }, approver);
+    assert.equal(withOne.status, 400);
+    assert.equal((await withOne.json()).error, 'attestation_not_applicable');
+    const without = await s.post('/api/review', { action: 'request_changes', proposal_id: id, fingerprint, note: 'Needs a source.' }, approver);
+    assert.equal(without.status, 200);
+
+    /* The paired positive: one section is a declaration, and it decides. */
+    const ok = await s.post('/api/review', { action: 'reject', proposal_id: id, fingerprint, note: 'n', attestation: { examined: ['evidence'] } }, approver);
+    assert.equal(ok.status, 200, JSON.stringify(await ok.json()));
+  } finally { await s.stop(); }
+});
+
+test('ATTEST · 0.2 · an unknown field is still refused: attestation was added to the accepted list, the check was not loosened', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const approver = await s.login('approver@example.org');
+    const id = w.proposals[0].proposal_id;
+    for (const extra of [{ panels_opened: ['evidence'] }, { read: true }, { attested: true }]) {
+      const res = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint: proposalFingerprint(w.proposals[0]), attestation: ATTEST, ...extra }, approver);
+      const body = await res.json();
+      assert.equal(res.status, 400);
+      assert.equal(body.error, 'unknown_fields');
+      assert.match(body.reason, new RegExp(Object.keys(extra)[0]));
+    }
+    assert.equal(readLedger({ dir: w.cfg.decision_dir }).decisions.length, 0);
+    const src = readFileSync(join(CONTROL_ROOM_ROOT, 'server.mjs'), 'utf8');
+    assert.match(src, /parseStrictJson\(await readBody\(req\), \['action', 'proposal_id', 'fingerprint', 'note', 'attestation'\]\)/,
+      'the review body accepts exactly these five fields');
+  } finally { await s.stop(); }
+});
+
+test('ATTEST · 0.2 · the attestation is in the decision\'s own trail entry, under the same hash as its fingerprint, actor and time — and not in the ledger', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const approver = await s.login('approver@example.org');
+    const fingerprint = proposalFingerprint(w.proposals[0]);
+    const res = await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint, note: 'n', attestation: { examined: ['rollback', 'evidence'] } }, approver);
+    assert.equal(res.status, 200);
+
+    const log = new AuditLog(w.cfg);
+    const entry = log.read().entries.find((e) => e.action === 'proposal.approved');
+    assert.deepEqual(entry.attestation.examined, ['evidence', 'rollback'], 'recorded in the fixed list\'s order');
+    assert.match(entry.attestation.statement, /declaration/);
+    assert.match(entry.attestation.statement, /not proof/);
+    assert.equal(entry.proposal_sha256, fingerprint, 'bound to the fingerprint the decision was bound to');
+    assert.equal(entry.actor_id, w.operators.approver.operator_id);
+    assert.ok(Date.parse(entry.ts));
+    assert.equal(log.verifyChain().ok, true, 'the chain verifies with the attestation in it');
+
+    /* D-9: not in the decision ledger, which is the one home for grants. */
+    const ledgerText = readdirSync(w.cfg.decision_dir).map((f) => readFileSync(join(w.cfg.decision_dir, f), 'utf8')).join('');
+    assert.doesNotMatch(ledgerText, /attestation|examined/);
+
+    /* Not changeable after the decision: no route edits the trail, and
+       an edit made on disk is reported by the chain. */
+    assert.ok(!ROUTES.some((r) => r.method !== 'GET' && /audit|attest/.test(r.path)), 'no route writes to the trail or an attestation');
+    const file = log.file(entry.ts);
+    const lines = readFileSync(file, 'utf8').trim().split('\n');
+    const i = lines.findIndex((l) => JSON.parse(l).event_id === entry.event_id);
+    const edited = JSON.parse(lines[i]);
+    edited.attestation.examined = ['evidence', 'sources', 'operations', 'tests', 'rollback'];
+    lines[i] = JSON.stringify(edited);
+    writeFileSync(file, `${lines.join('\n')}\n`, 'utf8');
+    const v = log.verifyChain();
+    assert.equal(v.ok, false);
+    assert.ok(v.tampered.some((t) => t.event_id === entry.event_id), 'widening the declaration after the fact must break the chain');
+
+    /* And the trail itself refuses a decision entry with none. */
+    assert.throws(() => new AuditLog(w.cfg).record({ action: 'proposal.rejected', outcome: 'allowed', actor: { operator_id: 'op-1', subject: 'a@b', roles: ['approver'] }, proposal_id: 'p' }), /no attestation/);
+  } finally { await s.stop(); }
+});
+
+test('ATTEST · 0.2 · the screen says it is a declaration, not proof of reading, and nothing records which panels were opened', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const reviewer = await s.login('reviewer@example.org');
+    const queue = await (await s.get('/api/queue', reviewer.cookie)).json();
+    assert.deepEqual(queue.attestation.sections.map((x) => x.section), ['evidence', 'sources', 'operations', 'tests', 'rollback']);
+    assert.deepEqual(queue.attestation.required_for, ['approve', 'reject']);
+    assert.match(queue.attestation.statement, /declaration/);
+    assert.match(queue.attestation.statement, /not proof/);
+    assert.match(queue.attestation.statement, /does not record which panels were opened/);
+    /* The "sources" section has something to examine. */
+    const item = queue.items[0];
+    assert.ok(Array.isArray(item.trace.sources.cited));
+    assert.equal(item.trace.sources.cited.reduce((n, c) => n + c.references, 0) + item.trace.sources.evidence_without_source, item.trace.source_to_evidence.length);
+  } finally { await s.stop(); }
+  const app = readFileSync(join(UI_DIR, 'app.js'), 'utf8');
+  assert.match(app, /a declaration, not proof of reading/);
+  assert.match(app, /d\.attestation\.statement/);
+  assert.doesNotMatch(app, /'toggle'|ontoggle|panels_opened|panel_opened/, 'the client must not record which panels were opened');
+});
+
+/* ============================================================
+   The inventory: docs/CONTROL-ROOM.md names every view the interface
+   has (roadmap v2 item 1.3; docs/AUDIT-2026-10-24.md finding F)
+   ============================================================ */
+
+const DOC = join(REPO_ROOT, 'docs', 'CONTROL-ROOM.md');
+
+/** Every disagreement between the interface and the document's §5
+ *  inventory. Empty means aligned. Pure, so it can be fed a planted
+ *  tab and shown to fail. */
+function inventoryGaps({ html, appJs, doc }) {
+  const gaps = [];
+  const tabs = [...html.matchAll(/<button data-view="([a-z_]+)" class="tab"[^>]*>([^<]+)<\/button>/g)].map((m) => ({ id: m[1], label: m[2].trim() }));
+  const endpoint = Object.fromEntries([...(appJs.match(/const ENDPOINT = \{([^}]*)\}/)?.[1] ?? '').matchAll(/(\w+): '([^']+)'/g)].map((m) => [m[1], m[2]]));
+  const start = doc.indexOf('\n## 5 ');
+  const section = start < 0 ? '' : doc.slice(start, doc.indexOf('\n## 6 ', start));
+  const rows = section.split('\n').filter((l) => /^\| \*\*/.test(l)).map((l) => {
+    const cells = l.split(' | ');
+    const head = cells[0].match(/\*\*(.+?)\*\* \(`([a-z_]+)`\)/);
+    return {
+      label: head?.[1] ?? null, id: head?.[2] ?? null,
+      routes: [...(cells[1] ?? '').matchAll(/`(GET|POST) (\/[^`?\s]+)[^`]*`(?: · `([a-z_:]+)`)?/g)].map((m) => ({ method: m[1], path: m[2], permission: m[3] ?? null })),
+      columns: cells.length,
+    };
+  });
+  if (!rows.length) gaps.push('docs/CONTROL-ROOM.md §5 has no inventory table');
+  for (const t of tabs) {
+    const row = rows.find((r) => r.id === t.id);
+    if (!row) { gaps.push(`ui/app.html has a tab "${t.label}" (data-view="${t.id}") that the inventory does not name`); continue; }
+    if (row.label !== t.label) gaps.push(`the inventory calls data-view="${t.id}" "${row.label}", the interface "${t.label}"`);
+    if (!endpoint[t.id]) gaps.push(`the tab "${t.label}" reads no endpoint in app.js`);
+    else if (!row.routes.some((r) => r.path === endpoint[t.id])) gaps.push(`the tab "${t.label}" reads ${endpoint[t.id]}, which its inventory row does not name`);
+  }
+  for (const r of rows) {
+    if (!tabs.some((t) => t.id === r.id)) gaps.push(`the inventory names "${r.label}" (${r.id}), which ui/app.html has no tab for`);
+    if (r.columns < 6) gaps.push(`the inventory row "${r.label}" does not give data, source, operations and limits`);
+    for (const route of r.routes) {
+      const real = ROUTES.find((x) => x.method === route.method && x.path === route.path);
+      if (!real) gaps.push(`the inventory row "${r.label}" names ${route.method} ${route.path}, which server.mjs does not serve`);
+      else if (route.permission && route.permission !== real.permission) gaps.push(`the inventory gives ${route.method} ${route.path} the permission ${route.permission}; server.mjs requires ${real.permission}`);
+    }
+  }
+  return gaps;
+}
+
+const realInventory = () => ({
+  html: readFileSync(join(UI_DIR, 'app.html'), 'utf8'),
+  appJs: readFileSync(join(UI_DIR, 'app.js'), 'utf8'),
+  doc: readFileSync(DOC, 'utf8'),
+});
+
+test('INVENTORY · 1.3 · docs/CONTROL-ROOM.md names every view the interface has, with its route, permission, data, source, operations and limits', () => {
+  const inv = realInventory();
+  assert.deepEqual(inventoryGaps(inv), []);
+  /* And the check is checking something: eight tabs, eight rows. */
+  assert.equal([...inv.html.matchAll(/class="tab"/g)].length, 8);
+  /* Every GET view route the server has is in some row. */
+  for (const r of ROUTES.filter((x) => x.method === 'GET' && x.path.startsWith('/api/') && x.path !== '/api/session')) {
+    assert.ok(inv.doc.includes(`\`GET ${r.path}`), `the inventory does not name GET ${r.path}`);
+  }
+});
+
+test('INVENTORY · 1.3 · the assertion FAILS on a planted tab, a renamed tab and a dropped row', () => {
+  const inv = realInventory();
+  const planted = { ...inv, html: inv.html.replace('</nav>', '  <button data-view="planted" class="tab">Planted view</button>\n  </nav>') };
+  assert.ok(inventoryGaps(planted).some((g) => /tab "Planted view" \(data-view="planted"\) that the inventory does not name/.test(g)));
+  const renamed = { ...inv, html: inv.html.replace('>Agent activity<', '>Live system<') };
+  assert.ok(inventoryGaps(renamed).some((g) => /calls data-view="live" "Agent activity", the interface "Live system"/.test(g)));
+  const dropped = { ...inv, doc: inv.doc.split('\n').filter((l) => !l.startsWith('| **Editorial audit**')).join('\n') };
+  assert.ok(inventoryGaps(dropped).some((g) => /data-view="editorial"\) that the inventory does not name/.test(g)));
+  const wrongPermission = { ...inv, doc: inv.doc.replace('`GET /api/audit` · `audit:read`', '`GET /api/audit` · `live:read`') };
+  assert.ok(inventoryGaps(wrongPermission).some((g) => /GET \/api\/audit the permission live:read; server\.mjs requires audit:read/.test(g)));
+});
+
+test('INVENTORY · 1.3 · the roles table in §4 is the matrix authz.mjs enforces', () => {
+  const doc = readFileSync(DOC, 'utf8');
+  const sec = doc.slice(doc.indexOf('\n## 4 '), doc.indexOf('\n## 5 '));
+  const rows = Object.fromEntries(sec.split('\n').filter((l) => /^\| `[a-z]+` \|/.test(l)).map((l) => {
+    const [, role, rest] = l.match(/^\| `([a-z]+)` \| (.*) \|$/);
+    return [role, { above: /the above/.test(rest), perms: [...rest.matchAll(/`([a-z_:]+)`/g)].map((m) => m[1]) }];
+  }));
+  let carried = [];
+  for (const role of ['viewer', 'reviewer', 'approver', 'administrator']) {
+    carried = rows[role].above ? [...carried, ...rows[role].perms] : rows[role].perms;
+    assert.deepEqual([...new Set(carried)].sort(), [...ROLE_PERMISSIONS[role]].sort(), `§4 gives ${role} a different set from authz.mjs`);
+  }
+  assert.deepEqual(rows.operator.perms.sort(), [...ROLE_PERMISSIONS.operator].sort());
+});
+
+/* ============================================================
+   Metric definitions you can read (roadmap v2 item 1.2;
+   docs/AUDIT-2026-10-24.md finding D)
+   ============================================================ */
+
+test('METRICS · 1.2 · every reading row carries name and definition beside its ID, and the five details can be opened', async () => {
+  const { ALL_METRICS } = await import('../agent/health/metrics.mjs');
+  const w = world();
+  const dir = tempDir('cr-health-');
+  const readings = [...ALL_METRICS.map((m) => ({ id: m.id, domain: m.domain, state: 'measured', value: 1, unit: 'items' })), { id: 'metric.no_longer_defined', state: 'measured', value: 3 }];
+  writeFileSync(join(dir, 'health.jsonl'), `${JSON.stringify({ history_version: 1, recorded_at: '2026-10-25T09:00:00.000Z', as_of: '2026-10-24', commit: 'b'.repeat(40), readings })}\n`, 'utf8');
+  const h = liveModule.websiteHealth(w.cfg, { root: REPO_ROOT, historyDir: dir });
+  assert.deepEqual(h.metric_detail_fields.map((f) => f.field), ['source', 'calculation', 'frequency', 'interpretation', 'limitations']);
+  for (const r of h.readings.filter((x) => x.in_register)) {
+    assert.ok(r.name && r.name !== r.id, `${r.id} has no name of its own`);
+    assert.ok(r.definition && r.definition.length > 20, `${r.id} has no definition`);
+    for (const f of h.metric_detail_fields) assert.ok(r[f.field], `${r.id} cannot open its ${f.field}`);
+  }
+  assert.equal(h.readings.filter((x) => x.in_register).length, ALL_METRICS.length);
+  /* A reading whose metric left the register says so; it does not
+     borrow its ID as a name. */
+  const orphan = h.readings.find((x) => x.id === 'metric.no_longer_defined');
+  assert.equal(orphan.in_register, false);
+  assert.equal(orphan.name, null);
+  /* The empty view carries the definitions too, so they are readable
+     before anything has been measured. */
+  const empty = liveModule.websiteHealth(w.cfg, { root: REPO_ROOT, historyDir: tempDir('cr-health-none-') });
+  assert.equal(empty.state, 'no_run_recorded');
+  assert.ok(empty.register.every((m) => m.name && m.definition));
+  const app = readFileSync(join(UI_DIR, 'app.js'), 'utf8');
+  assert.match(app, /m\.definition/);
+  assert.match(app, /metric_detail_fields/);
+});
+
+test('METRICS · 1.2 · one display term for the visibility value: "public-safe" on screen, `public` unrenamed in the data', async () => {
+  const { ALL_METRICS } = await import('../agent/health/metrics.mjs');
+  assert.ok(ALL_METRICS.some((m) => m.visibility === 'public'), 'the data value is still `public`; only the display term changed');
+  assert.deepEqual(liveModule.VISIBILITY_LABEL, { public: 'public-safe', private: 'private' });
+  const w = world();
+  const h = liveModule.websiteHealth(w.cfg, { root: REPO_ROOT, historyDir: tempDir('cr-health-none-') });
+  for (const m of h.register) assert.ok(['public-safe', 'private'].includes(m.visibility_label), `${m.id} is shown as "${m.visibility_label}"`);
+  /* The interface never prints the raw value: no bare "public" in any
+     ui file, only "public-safe". */
+  for (const { f, text: raw } of uiFiles().filter((x) => /^app\.(js|html)$/.test(x.f))) {
+    /* What reaches the screen: comments ("the public site") are not. */
+    const text = raw.replace(/\/\*[\s\S]*?\*\//g, '').replace(/<!--[\s\S]*?-->/g, '');
+    const bare = text.match(/\bpublic\b(?!-safe)/g) ?? [];
+    assert.deepEqual(bare, [], `${f} shows the visibility value as "public"`);
+    assert.doesNotMatch(text, /text: \w+\.visibility\b(?!_label)/, `${f} prints the raw visibility value`);
+  }
+});
+
+/* ============================================================
+   Editorial audit: a recorded run, read — never launched from here
+   (roadmap v2 item 1.1; docs/AUDIT-2026-10-24.md finding A)
+   ============================================================ */
+
+test('EDITORIAL · 1.1 · on a fresh clone the view says "no recorded run" and gives the command — never zeros', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const viewer = await s.login('viewer@example.org');
+    const res = await s.get('/api/editorial-audit', viewer.cookie);
+    assert.equal(res.status, 200);
+    const d = await res.json();
+    assert.equal(d.state, 'no_recorded_run');
+    assert.match(d.why, /not the same as an audit that found nothing/);
+    assert.equal(d.command, RECORD_COMMAND);
+    assert.equal(d.command, 'node tools/evidence-audit.mjs --as-of YYYY-MM-DD --record');
+    assert.equal(d.latest, null);
+    assert.ok(!('counts' in d), 'a view with no run must not report counts that would read as zeros');
+    assert.equal(d.checked.length, 7, 'what a run would check is stated even before one exists');
+    assert.ok(d.limits.length >= 5);
+    assert.match(d.separate_from_health, /Not Website health/);
+  } finally { await s.stop(); }
+});
+
+test('EDITORIAL · 1.1 · a recorded run renders with every question answered: what, on which evidence, as of when, at which commit, with which limits', async () => {
+  const w = world();
+  const { audit: runAudit, recordEntry } = await import('../tools/evidence-audit.mjs');
+  const entry = recordEntry(runAudit({ root: REPO_ROOT, asOf: '2026-10-24' }), { root: REPO_ROOT, argv: ['--as-of', '2026-10-24', '--record'] });
+  writeFileSync(join(w.cfg.editorial_audit_dir, 'evidence-audit.jsonl'), `${JSON.stringify({ ...entry, as_of: '2026-10-23' })}\n${JSON.stringify(entry)}\nnot json\n`, 'utf8');
+  const s = await running(w);
+  try {
+    const viewer = await s.login('viewer@example.org');
+    const d = await (await s.get('/api/editorial-audit', viewer.cookie)).json();
+    assert.equal(d.state, 'measured');
+    assert.equal(d.runs_recorded, 2);
+    assert.equal(d.malformed.length, 1, 'an unreadable line is reported, not skipped');
+    assert.deepEqual(d.questions.map((q) => q.label), ['What was checked', 'On which evidence', 'As of which date', 'At which commit', 'With which limits']);
+    const r = d.latest;
+    for (const q of d.questions) assert.ok(r[q.key] !== null && r[q.key] !== undefined, `the record does not answer "${q.label}"`);
+    assert.equal(r.as_of, '2026-10-24', 'the LATEST record is shown');
+    assert.equal(r.checked.length, 7);
+    assert.ok(r.evidence.read.some((f) => f.path === 'index.html' && /^[0-9a-f]{64}$/.test(f.sha256)));
+    assert.ok(r.evidence.read.some((f) => f.path === 'data/claims.json'));
+    assert.ok(r.evidence.rules.some((f) => f.path === 'js/evidence-model.js'));
+    const head = execFileSync('git', ['-C', REPO_ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+    assert.equal(r.commit.sha, head);
+    assert.equal(typeof r.commit.tree_clean, 'boolean');
+    assert.ok(r.limits.some((l) => /no network I\/O/.test(l)));
+    assert.ok(r.limits.some((l) => /applicability\.json/.test(l)));
+    assert.equal(d.counts.errors, r.findings.errors.length);
+    assert.match(d.bound, /not a run of now/);
+  } finally { await s.stop(); }
+});
+
+test('EDITORIAL · 1.1 · no route runs the audit, records a run or queues a finding; the view is one GET', () => {
+  const routes = ROUTES.filter((r) => /editorial/.test(r.path));
+  assert.deepEqual(routes.map((r) => `${r.method} ${r.path} ${r.permission}`), ['GET /api/editorial-audit editorial:read']);
+  assert.ok(!PERMISSIONS.some((p) => /^editorial:(?!read$)/.test(p)), 'editorial:read is the only editorial permission');
+  for (const r of ROUTES) {
+    for (const word of ['run', 'record', 'launch', 'trigger', 'queue-finding']) {
+      if (r.path === '/api/queue') continue;
+      assert.ok(!r.path.toLowerCase().includes(word), `${r.method} ${r.path} names "${word}"`);
+    }
+  }
+  /* The Control Room imports the READ side only: not the tool, and
+     nothing in what it imports can write a record or start a process. */
+  const crSource = readdirSync(CONTROL_ROOM_ROOT).filter((n) => n.endsWith('.mjs') && n !== 'selftest.mjs').map((n) => readFileSync(join(CONTROL_ROOM_ROOT, n), 'utf8')).join('\n');
+  assert.doesNotMatch(crSource, /tools\/evidence-audit\.mjs'/, 'the Control Room imports the audit tool itself');
+  assert.match(crSource, /tools\/evidence-audit-record\.mjs'/);
+  const recordModule = readFileSync(join(REPO_ROOT, 'tools', 'evidence-audit-record.mjs'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const writer of ['child_process', 'appendFileSync', 'writeFileSync', 'mkdirSync', 'spawn', 'exec']) {
+    assert.ok(!recordModule.includes(writer), `the record module the Control Room reads references ${writer}`);
+  }
+});
+
+/* ============================================================
+   Snapshots: what time a view is from, and that it is not live
+   (roadmap v2 item 0.1; docs/AUDIT-2026-10-24.md findings B and E)
+   ============================================================ */
+
+const UI_DIR = join(CONTROL_ROOM_ROOT, 'ui');
+const uiFiles = () => readdirSync(UI_DIR).filter((f) => /\.(html|js|css)$/.test(f)).map((f) => ({ f, text: readFileSync(join(UI_DIR, f), 'utf8') }));
+
+test('SNAPSHOT · 0.1 · every view payload carries the ISO time the server assembled it', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const admin = await s.login('admin@example.org');
+    /* Every GET under /api/ except the session itself: a route added
+       later is covered by default, not by remembering to list it. */
+    const viewRoutes = ROUTES.filter((r) => r.method === 'GET' && r.path.startsWith('/api/') && r.path !== '/api/session');
+    assert.ok(viewRoutes.length >= 8, 'the suite must be checking every view');
+    for (const r of viewRoutes) {
+      const path = r.path === '/api/proposal' ? `/api/proposal?id=${w.proposals[0].proposal_id}` : r.path;
+      const before = Date.now();
+      const res = await s.get(path, admin.cookie);
+      assert.equal(res.status, 200, `${path} answered ${res.status}`);
+      const body = await res.json();
+      assert.match(String(body.assembled_at), /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/, `${path} carries no ISO assembly time`);
+      const t = Date.parse(body.assembled_at);
+      assert.ok(t >= before - 1000 && t <= Date.now() + 1000, `${path}'s assembly time is not the time it was assembled`);
+    }
+  } finally { await s.stop(); }
+});
+
+test('SNAPSHOT · 0.1 · Website health shows reference date, run recorded at and commit analysed as three fields', () => {
+  const w = world();
+  const dir = tempDir('cr-health-');
+  const entry = { history_version: 1, recorded_at: '2026-10-25T09:14:03.120Z', as_of: '2026-10-24', commit: 'a'.repeat(40), readings: [] };
+  writeFileSync(join(dir, 'health.jsonl'), `${JSON.stringify(entry)}\n`, 'utf8');
+  const health = liveModule.websiteHealth(w.cfg, { root: REPO_ROOT, historyDir: dir });
+  assert.equal(health.state, 'measured');
+  assert.equal(health.as_of, '2026-10-24');
+  assert.equal(health.recorded_at, '2026-10-25T09:14:03.120Z');
+  assert.equal(health.commit, 'a'.repeat(40));
+  assert.equal(new Set([health.as_of, health.recorded_at, health.commit]).size, 3, 'the three fields must be three values, not one shown three times');
+
+  const labels = Object.fromEntries(health.run_fields.map((f) => [f.field, f.label]));
+  assert.deepEqual(Object.keys(labels), ['as_of', 'recorded_at', 'commit']);
+  assert.equal(labels.as_of, 'Reference date');
+  assert.doesNotMatch(labels.as_of, /run|recorded|execut/i, 'the reference date must not be labelled as a run date');
+  assert.match(labels.recorded_at, /recorded/i);
+  assert.match(labels.commit, /commit/i);
+  for (const f of health.run_fields) assert.ok(f.means.length > 40, `${f.field} does not say what it means`);
+  assert.match(health.bound, /does not compute a freshness/);
+
+  /* An entry written without recorded_at shows it as absent; it is
+     never filled in from the reference date. */
+  writeFileSync(join(dir, 'health.jsonl'), `${JSON.stringify({ ...entry, recorded_at: undefined, commit: null })}\n`, 'utf8');
+  const thin = liveModule.websiteHealth(w.cfg, { root: REPO_ROOT, historyDir: dir });
+  assert.equal(thin.state, 'no_run_recorded', 'an entry without recorded_at is malformed in agent/health/history.mjs and is not a run');
+
+  /* No label in ui/ presents as_of as a run date. The client reads the
+     three through the server's labels and never names as_of itself. */
+  for (const { f, text } of uiFiles()) {
+    assert.doesNotMatch(text, /Last recorded run/i, `${f} still labels a date "Last recorded run"`);
+    assert.doesNotMatch(text, /\bd\.as_of\b/, `${f} renders the health run's as_of under a label of its own`);
+    /* Wherever a ui file names an as_of at all (the Editorial audit
+       record has one too), the same line calls it the reference date. */
+    for (const line of text.split('\n').filter((l) => /\bas_of\b/.test(l))) {
+      assert.match(line, /reference date/i, `${f} shows an as_of without calling it the reference date: ${line.trim().slice(0, 120)}`);
+    }
+  }
+  assert.match(readFileSync(join(UI_DIR, 'app.js'), 'utf8'), /run_fields/);
+});
+
+test('SNAPSHOT · 0.1 · "Live system" is no label, and the one refresh is manual — no timer anywhere in ui/', () => {
+  for (const { f, text } of uiFiles()) {
+    assert.doesNotMatch(text, /live system/i, `${f} still says "Live system"`);
+    assert.doesNotMatch(text, /setInterval|setTimeout|requestAnimationFrame|EventSource|WebSocket/, `${f} refreshes something on its own`);
+  }
+  const app = readFileSync(join(UI_DIR, 'app.js'), 'utf8');
+  assert.match(app, /Snapshot taken at/);
+  assert.match(app, /assembled_at/);
+  assert.match(app, /Refresh this view/);
+  assert.match(app, /Not live/);
+  /* On a failed refresh the earlier snapshot is kept, with the error. */
+  assert.match(app, /data: held\?\.data \?\? null, error: e\.message/);
+  assert.match(app, /The last refresh failed/);
+  /* The tab still reads the same route; the label changed, not the ID. */
+  assert.match(readFileSync(join(UI_DIR, 'app.html'), 'utf8'), /data-view="live" class="tab"[^>]*>Agent activity</);
+});
+
+/* ============================================================
    Observability: every substantive action is traceable
    ============================================================ */
 
@@ -1299,6 +1738,7 @@ test('OBSERVABILITY · a decision reaches the shared trace store, and the origin
     proposalId: proposal.proposal_id,
     fingerprint: proposalFingerprint(proposal),
     note: 'checked against the passage',
+    attestation: ATTEST,
     audit, tracer,
   });
   assert.equal(out.outcome, 'granted');

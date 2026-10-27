@@ -103,3 +103,16 @@ agent/simulation/runs/*
 # agent/simulation/runs/ use.
 agent/autonomy/actions/*
 !agent/autonomy/actions/README.md
+
+# The recorded editorial audits (v2 Session 3, roadmap item 1.1). One line per
+# `node tools/evidence-audit.mjs --as-of YYYY-MM-DD --record`, append-only, read by
+# the Control Room's Editorial audit view. A run record is a fact about one
+# machine on one day, not about the repository: a fresh clone has none, and the
+# view says so rather than showing zeros. Nothing in it is private — every
+# number is derived from the tracked data/ and index.html — but it is run state,
+# and this repository keeps run state out of git.
+#
+# The glob is `*` with the README negated back in, the same shape
+# agent/health/history/ and the other run stores use.
+tools/evidence-audit-runs/*
+!tools/evidence-audit-runs/README.md

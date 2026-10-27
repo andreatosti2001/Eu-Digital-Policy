@@ -1,7 +1,15 @@
 /* ============================================================
-   .control-room/views.mjs — the three views, assembled server-side
+   .control-room/views.mjs — the views, assembled server-side
 
-   LIVE SYSTEM · WORKFLOWS · AUTONOMY · REVIEW QUEUE · WEBSITE HEALTH.
+   AGENT ACTIVITY (route /api/live, permission live:read — the IDs
+   predate the label and are not renamed) · WORKFLOWS · AUTONOMY ·
+   REVIEW QUEUE · WEBSITE HEALTH.
+
+   EVERY VIEW IS A SNAPSHOT. `server.mjs` stamps each payload with
+   `assembled_at`, and nothing refreshes a view but another GET of the
+   same route. Until 27 Oct 2026 the first tab was labelled "Live
+   system" and no view carried its time, which read as real time
+   (docs/AUDIT-2026-10-24.md finding B; roadmap v2 item 0.1).
 
    Each is built here, on the server, from the same modules the CLIs
    read. The browser receives JSON it may render; it computes no
@@ -12,7 +20,7 @@
 
    WHAT EACH VIEW REFUSES.
 
-   The Live System view shows FAILED and RUNNING runs, open handoffs
+   The Agent activity view shows FAILED and RUNNING runs, open handoffs
    and pending approvals, not just the ones that finished. A
    dashboard that showed only completed work would report a stuck
    pipeline as an idle one.
@@ -71,9 +79,10 @@ import { describeCapabilities } from '../agent/orchestrator/capabilities.mjs';
 import { HUMAN_REVIEW_TRIGGERS, MANDATORY_AUTONOMY_CONDITIONS, APPROVED_AUTONOMOUS_CATEGORIES, approvedCategories, autonomyNote } from '../agent/orchestrator/policy.mjs';
 import { describeGovernance } from '../agent/policy/governance.mjs';
 import { summariseActions, rollbackInformation } from '../agent/autonomy/ledger.mjs';
-import { reviewQueue } from './decide.mjs';
+import { reviewQueue, ATTESTATION_SECTIONS, ATTESTATION_STATEMENT, ATTESTED_ACTIONS } from './decide.mjs';
 import { listOperators } from './identity.mjs';
 import { describeConfig, isLoopback } from './config.mjs';
+import { readRecords, QUESTIONS, CHECKED, LIMITS, RECORD_COMMAND } from '../tools/evidence-audit-record.mjs';
 
 /* ============================================================
    1 · LIVE SYSTEM
@@ -174,6 +183,9 @@ export function reviewQueueView(cfg, ctx = {}) {
        as longer than the work a person can actually do. */
     note: 'A pending proposal with blocking gates is waiting on the agent that produced it, not on a reviewer. The two are counted apart.',
     approval_effect: 'Approval records an authorization in agent/implement/decisions/decisions.jsonl. It publishes nothing.',
+    /* What a reviewer declares with a decision (roadmap v2 item 0.2):
+       the fixed list, and what the declaration is and is not. */
+    attestation: { required_for: ATTESTED_ACTIONS, sections: ATTESTATION_SECTIONS, statement: ATTESTATION_STATEMENT },
   };
 }
 
@@ -373,11 +385,101 @@ export function autonomyView(cfg, { dir = undefined, actionDir = undefined, now 
 }
 
 /* ============================================================
+   2d · EDITORIAL AUDIT — the latest recorded run of the evidence audit
+
+   Roadmap v2 item 1.1 (docs/AUDIT-2026-10-24.md finding A). The audit
+   asked for a way to LAUNCH the editorial check from here; a route that
+   executes is what docs/CONTROL-ROOM.md §12 forbids. So the check is
+   run at a command line with --record, and this view READS the record
+   and shows the command. There is no route that runs the tool, records
+   a run, or turns a finding into a proposal — that is
+   agent/proposals/editorial/'s job, and no new kind of queue item exists.
+
+   KEPT APART FROM WEBSITE HEALTH, as the audit asks: the health monitor
+   measures the system; this is what the evidence audit found in the
+   claims, sources and prose.
+   ============================================================ */
+
+export const EDITORIAL_NO_CONSOLE = 'This view reads the record that `node tools/evidence-audit.mjs --record` wrote and adds nothing to it. There is no route here that runs the tool, records a run or turns a finding into a proposal — not a check somebody could move, but a route that does not exist (docs/CONTROL-ROOM.md §12). A run is started by a person at a command line; a finding becomes a proposal through agent/proposals/editorial/.';
+
+export const EDITORIAL_SEPARATE = 'Not Website health. The health monitor measures the system in three domains; this is what the evidence audit found in the claims, the sources and the prose of the brief, as of one date.';
+
+export function editorialAuditView(cfg) {
+  const dir = cfg.editorial_audit_dir;
+  const base = { view: 'editorial_audit', store: dir, command: RECORD_COMMAND, questions: QUESTIONS, no_console: EDITORIAL_NO_CONSOLE, separate_from_health: EDITORIAL_SEPARATE };
+  let store;
+  try { store = readRecords({ dir }); }
+  catch (e) { return { ...base, state: 'unreadable', why: `the record store could not be read: ${e.message}`, latest: null, runs_recorded: null, malformed: [] }; }
+
+  if (!store.entries.length) {
+    return {
+      ...base,
+      /* Not "0 findings". No run has been recorded where this server can
+         see, which is a different fact from an audit that found nothing. */
+      state: 'no_recorded_run',
+      why: store.malformed.length
+        ? `the record store holds ${store.malformed.length} line(s) and none is a readable record. They are reported below, not skipped.`
+        : 'no editorial audit has been recorded on this machine. tools/evidence-audit-runs/ is git-ignored run state, so a fresh clone has none — which is not the same as an audit that found nothing.',
+      /* What a record would answer, so the empty view still says what
+         is checked and what it cannot establish. */
+      checked: CHECKED,
+      limits: LIMITS,
+      latest: null,
+      runs_recorded: 0,
+      malformed: store.malformed,
+    };
+  }
+
+  const latest = store.entries[store.entries.length - 1];
+  return {
+    ...base,
+    state: 'measured',
+    latest,
+    runs_recorded: store.entries.length,
+    malformed: store.malformed,
+    counts: { errors: latest.findings?.errors?.length ?? null, warnings: latest.findings?.warnings?.length ?? null },
+    bound: 'This is the latest run recorded on THIS machine, as of its reference date, at the commit it names. It is not a run of now: the tree may have changed since, and looking at the record does not re-run the audit.',
+  };
+}
+
+/* ============================================================
    3 · WEBSITE HEALTH
    ============================================================ */
 
-export function websiteHealth(cfg, { root } = {}) {
-  const hist = readHistory();
+/**
+ * The three dates of a recorded health run, labelled apart. Labels
+ * come from here so the interface cannot drift into calling the
+ * reference date a run date (docs/AUDIT-2026-10-24.md finding E:
+ * `as_of` was printed as "Last recorded run"). None of the three is a
+ * statement of freshness, and this view computes none from them.
+ */
+export const HEALTH_RUN_FIELDS = [
+  { field: 'as_of', label: 'Reference date', means: 'the date the readings refer to: what the run was told "today" is. It is not when the run happened, and it is not evidence that the readings are current.' },
+  { field: 'recorded_at', label: 'Run recorded at', means: 'when the health monitor wrote this run to agent/health/history/ on this machine. agent/health/history.mjs reports an entry without it as malformed rather than reading it as a run, so it is never filled in from the reference date.' },
+  { field: 'commit', label: 'Commit analysed', means: 'the git commit the run measured. Anything changed after that commit is not in these readings.' },
+];
+
+/**
+ * The one display term for each visibility value (roadmap v2 item 1.2;
+ * docs/AUDIT-2026-10-24.md finding D). The data value `public` is NOT
+ * renamed — agent/health/model.mjs and the history use it — but the
+ * screen says "public-safe" everywhere it shows it, because "public"
+ * alone reads as "already published", which none of these readings is.
+ */
+export const VISIBILITY_LABEL = { public: 'public-safe', private: 'private' };
+
+/** What a person can open beside each metric. All of it is already in
+ *  agent/health/metrics.mjs; this only names the order and the labels. */
+export const METRIC_DETAIL_FIELDS = [
+  { field: 'source', label: 'Source' },
+  { field: 'calculation', label: 'Calculation' },
+  { field: 'frequency', label: 'Frequency' },
+  { field: 'interpretation', label: 'Interpretation' },
+  { field: 'limitations', label: 'Limitations' },
+];
+
+export function websiteHealth(cfg, { root, historyDir = null } = {}) {
+  const hist = historyDir ? readHistory({ dir: historyDir }) : readHistory();
   const last = hist.entries?.length ? hist.entries[hist.entries.length - 1] : null;
   const prev = hist.entries?.length > 1 ? hist.entries[hist.entries.length - 2] : null;
 
@@ -386,7 +488,7 @@ export function websiteHealth(cfg, { root } = {}) {
   const register = ALL_METRICS.map((m) => ({
     id: m.id, name: m.name, domain: m.domain, definition: m.definition, source: m.source,
     calculation: m.calculation, frequency: m.frequency, interpretation: m.interpretation,
-    limitations: m.limitations, visibility: m.visibility, direction: m.direction,
+    limitations: m.limitations, visibility: m.visibility, visibility_label: VISIBILITY_LABEL[m.visibility] ?? m.visibility, direction: m.direction,
   }));
 
   const domains = DOMAINS.map((d) => ({
@@ -407,6 +509,7 @@ export function websiteHealth(cfg, { root } = {}) {
       why: 'no health run has been recorded on this machine. agent/health/history/ is git-ignored private control-plane data and does not travel with a checkout, so a fresh clone has none.',
       needs: 'run: node agent/health/cli.mjs --as-of YYYY-MM-DD',
       domains, register,
+      metric_detail_fields: METRIC_DETAIL_FIELDS,
       readings: [], movement: null,
       no_overall_score: NO_OVERALL_SCORE,
       security: securitySnapshot(cfg, root),
@@ -415,12 +518,23 @@ export function websiteHealth(cfg, { root } = {}) {
 
   const readings = (last.readings ?? []).map((r) => {
     const m = BY_ID.get(r.id);
+    const visibility = m?.visibility ?? 'private';
     return {
       ...r,
-      name: m?.name ?? r.id,
+      /* Name and definition beside the ID, and everything a person needs
+         to read the number in context (roadmap v2 item 1.2). A reading
+         whose metric is no longer in the register says so instead of
+         borrowing its ID as a name. */
+      name: m?.name ?? null,
+      definition: m?.definition ?? null,
+      in_register: Boolean(m),
       domain: m?.domain ?? null,
-      visibility: m?.visibility ?? 'private',
+      visibility,
+      visibility_label: VISIBILITY_LABEL[visibility] ?? visibility,
       direction: m?.direction ?? null,
+      source: m?.source ?? null,
+      calculation: m?.calculation ?? null,
+      frequency: m?.frequency ?? null,
       interpretation: m?.interpretation ?? null,
       limitations: m?.limitations ?? null,
     };
@@ -432,6 +546,8 @@ export function websiteHealth(cfg, { root } = {}) {
     as_of: last.as_of,
     recorded_at: last.recorded_at ?? null,
     commit: last.commit ?? null,
+    run_fields: HEALTH_RUN_FIELDS,
+    metric_detail_fields: METRIC_DETAIL_FIELDS,
     domains,
     readings,
     counts: {
@@ -446,7 +562,7 @@ export function websiteHealth(cfg, { root } = {}) {
     register,
     no_overall_score: NO_OVERALL_SCORE,
     security: securitySnapshot(cfg, root),
-    bound: 'These are the numbers from the last recorded run, not from now. The as_of date is on the reading; a stale one is stale and says so rather than being refreshed by being looked at.',
+    bound: 'These are the numbers from the last recorded run, not from now. Its reference date, the time it was recorded and the commit it analysed are three different facts and are shown apart; how current the readings are depends on all three and on what has changed since that commit, and this view does not compute a freshness from any of them. Looking at a stale run does not refresh it.',
   };
 }
 

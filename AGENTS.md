@@ -31,7 +31,7 @@ the evidence it describes.
 | `docs/OBSERVABILITY.md` | The trace model every agent run is instrumented through |
 | `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` · `docs/DATA-DEPTH.md` · `docs/GAP-PROPOSALS.md` · `docs/KNOWLEDGE-ARCHITECTURE.md` · `docs/EDITORIAL-AGENT.md` · `docs/UX-AUDIT.md` · `docs/IMPLEMENTATION-QA.md` · `docs/HEALTH-MONITOR.md` | The eleven agents that exist, what each refuses, and what none of them may do |
 | `docs/BROWSER-QA.md` · `docs/HEALTH-MONITOR.md` | The browser regression suite and the three health domains — what each measures, and what neither can see |
-| `docs/CONTROL-ROOM.md` | The private control plane: the two security domains, authentication, authorization, the seven approval gates, the audit trail — and §11, what none of it proves |
+| `docs/CONTROL-ROOM.md` | The private control plane: the two security domains, authentication, authorization, the inventory of every view, the eight approval gates, the audit trail — and §11, what none of it proves |
 | `docs/ORCHESTRATOR.md` | The Master Orchestrator: the ten workflow types, the five end states, the capability register, the eight routing checks, the six conflict shapes — and §13, what none of it proves |
 | `docs/FIRST-END-TO-END-AUDIT.md` | SESSION 24's simulated end-to-end cycle: what ran, what was simulated, the Control Room discovery path, the intended visual sequence — and **twenty-three findings, none fixed** |
 | `docs/LIMITED-AUTONOMY.md` | SESSION 26: the governance grant that switched five low-risk categories on, what a grant may never say, the six gates and the seven steps — and §7, what none of it proves |
@@ -50,6 +50,7 @@ the evidence it describes.
 | `docs/AUDIT-2026-10-21.md` | The external audit of 21 Oct 2026, implemented: what was checked against which primary source, what changed per item, and the five places where the audit asserted something no retrieved source established |
 | `docs/AUDIT-2026-10-23.md` | The audit snapshot of 23 Oct 2026, rechecked: the QA browser job's root cause (the snap), eight enforcement records against primary sources and the two proposals left for the author, both publishers deploying every push, the viewer's enforced loopback bind, the dialogs, and what this environment could not measure (HSTS) |
 | `docs/AUDIT-2026-10-24.md` | The Control Room content audit of 24 Oct 2026 (the author's, verbatim) — the BRIEF v2.0's "P0/P1 audit" — each finding checked against the code, and where its remedies collide with `docs/CONTROL-ROOM.md` §12 |
+| `docs/EDITORIAL-AUDIT-PATH.md` | v2 Session 3: the editorial-audit path — run `tools/evidence-audit.mjs` and `tools/freshness.mjs`, record a run with `--record`, read it in the Control Room's Editorial audit view; nothing in the Control Room runs it |
 | `docs/BRIEF-v2.md` | The BRIEF v2.0, "Contratto tra sessioni" — the author's, verbatim, in Italian: binding on every v2 session. Committed on the author's decision of 27 Oct 2026 (D-1); session prompts cite it rather than carry a copy |
 | `docs/ROADMAP-v2.md` | v2 Session 1: the v2.0 plan — phases 0–5, ten decisions for the author, exit criteria a session can fail. **Approved on 25 Oct 2026** (§8), with item 2.0 brought forward |
 | `docs/V2-DATA-DESIGN.md` | v2 Session 2: roadmap item 2.0 — the map, trigger and status-label schemas (`docs/v2-design/`), the `evidence-audit.mjs` extension plan, the proposed inclusion criterion, the exclusion register and watchlist as proposed records. **Design only; nothing in `data/` yet** |
@@ -405,7 +406,7 @@ node --test agent/simulation/selftest.mjs      # SESSION 24's simulation, incl. 
 node --test agent/autonomy/selftest.mjs       # SESSION 26's limited-autonomy runner, incl. the git half against a real temporary repository
 node --test agent/improve/selftest.mjs         # SESSION 27's improvement loop, incl. two real cycles over the real corpus
 node --test agent/production/selftest.mjs      # SESSION 29's production operating mode, incl. the refusal driven with synthetic facts
-node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
+node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security tests (its "proofs"), on a local server — never a deployed one
 node --test tools/selftest.mjs                 # SESSION 30, the four validators' own suite, incl. a planted Google Fonts import
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```

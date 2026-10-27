@@ -49,10 +49,12 @@ enforcement, its interactions with the others, and the graded evidence behind ev
   sooner than a 2018 application date), reported as fresh / aging / review due / stale.
 - **Governed source discovery.** A scheduled Source Scout proposes candidate sources through
   pull requests; nothing an agent finds reaches the site without a person (`docs/SOURCE-SCOUT.md`).
-- **A security boundary that does not rely on obscurity.** A Content-Security-Policy with no
-  `'unsafe-inline'` scripts or styles, no inline handlers, no third-party requests, and a deploy artifact
-  built from an allowlist so private material cannot be published by accident
-  (`docs/DEPLOYMENT.md`).
+- **Security controls that do not rely on obscurity — implemented in code and verified in
+  tests.** A Content-Security-Policy with no `'unsafe-inline'` scripts or styles, no inline
+  handlers, no third-party requests, and a deploy artifact built from an allowlist so private
+  material is not published by accident. What was measured on the deployed site, and what the
+  host cannot send, is in `docs/DEPLOYMENT.md` §1 and §4. Nothing beyond that is verified in
+  operation, and the private Control Room is not deployed anywhere.
 
 What it does **not** demonstrate is stated too: see **Known limitations** at the end.
 

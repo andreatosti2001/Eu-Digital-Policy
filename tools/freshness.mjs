@@ -1,8 +1,15 @@
 /* ============================================================
    Freshness audit. Zero dependencies; run from site/:
 
-       node tools/freshness.mjs            # against today
-       node tools/freshness.mjs 2026-08-27 # against a fixed date
+       node tools/freshness.mjs                    # against today
+       node tools/freshness.mjs --as-of 2026-08-27 # against a fixed date
+       node tools/freshness.mjs 2026-08-27         # the same, positionally
+
+   A date that does not parse, or an argument this script does not
+   read, is refused with exit 2 and the reason (tools/as-of.mjs). Until
+   27 Oct 2026 the date was simply argv[2], so `--as-of 2026-10-24` made
+   the string "--as-of" the date and reported a false all-clear
+   (docs/AUDIT-2026-10-24.md §3.1).
 
    The site is a current-state reference, and the failure mode of a
    current-state reference is not being wrong — it is being stale while
@@ -68,8 +75,12 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { riskClass, freshnessState, RISK_TTL_DAYS } from '../js/evidence-model.js';
+import { readArgs, refusalText, EXIT_UNREADABLE } from './as-of.mjs';
 
-const AS_OF = process.argv[2] || new Date().toISOString().slice(0, 10);
+/* Read here, refused only when this file is the entry point (below): an
+   importer's own command line is not this script's to judge. */
+const ARGS = readArgs(process.argv.slice(2), { positionalDate: true });
+const AS_OF = ARGS.asOf ?? null;
 const DAY = 86400000;
 const days = (a, b) => Math.round((Date.parse(b + 'T00:00:00') - Date.parse(a + 'T00:00:00')) / DAY);
 
@@ -119,6 +130,11 @@ const annotation = (s) => `::warning title=Content stale::${s.replace(/%/g, '%25
    intervals without running an audit, printing a report or calling
    process.exit. */
 const isMain = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+
+if (isMain && ARGS.error) {
+  console.error(refusalText('freshness.mjs', ARGS.error));
+  process.exit(EXIT_UNREADABLE);
+}
 
 if (isMain) {
   /* Two counters, never summed. See the contract at the head of this

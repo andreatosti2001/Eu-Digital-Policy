@@ -29,7 +29,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, cpSync, readdirSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, cpSync, readdirSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -39,6 +39,9 @@ import {
   foreignOrigin, scanHtml, scanCss, scanJs, scanRuntimeSurface, runtimeSurface,
 } from './thirdparty.mjs';
 import { EXPECTED, RECHECK } from './freshness.mjs';
+import { dateProblem } from './as-of.mjs';
+import { RECORD_VERSION, QUESTIONS, CHECKED, LIMITS, readRecords } from './evidence-audit-record.mjs';
+import { createHash } from 'node:crypto';
 import { readBaseline } from '../agent/implement/baseline.mjs';
 import { audit, passages, datesIn, DERIVED_FIELDS, rankingProblems } from './evidence-audit.mjs';
 import { cspProblems, securityMeta, inlineScripts } from './csp.mjs';
@@ -393,6 +396,82 @@ test('F6 · the prompts are still printed in full — nothing was silenced', () 
 });
 
 /* ============================================================
+   DATES · a date the tools cannot read is refused, not reinterpreted
+
+   docs/ROADMAP-v2.md item 0.3 (D-10), docs/AUDIT-2026-10-24.md §3.1.
+   `freshness.mjs --as-of 2026-10-24` took "--as-of" as the date and
+   reported a false all-clear; `evidence-audit.mjs --as-of banana`
+   reported every record stale. Both now exit 2 with the reason.
+   ============================================================ */
+
+test('D1 · dateProblem() accepts a calendar day written YYYY-MM-DD and nothing else', () => {
+  assert.equal(dateProblem('2026-10-24'), null);
+  assert.equal(dateProblem('2024-02-29'), null, 'a leap day is a day');
+  for (const bad of ['banana', '--as-of', '2026-10-24T00:00:00Z', '24-10-2026', '2026-2-3', '2026-02-30', '2025-02-29', '2026-13-01', '', undefined, null]) {
+    assert.notEqual(dateProblem(bad), null, `${JSON.stringify(bad)} was read as a date`);
+  }
+});
+
+test('D2 · freshness.mjs: the audit\'s own command gives the same report as the positional form', () => {
+  /* The exact command of docs/AUDIT-2026-10-24.md §4. Before 0.3 it
+     printed "as of --as-of" and "Nothing past its stated interval". */
+  const flag = runValidator('freshness.mjs', ['--as-of', '2026-10-24']);
+  const positional = runValidator('freshness.mjs', ['2026-10-24']);
+  assert.equal(flag.exit, positional.exit);
+  assert.equal(flag.out, positional.out, 'the two spellings of one date must produce one report');
+  assert.match(flag.out, /FRESHNESS AUDIT {2}as of 2026-10-24\n/);
+  assert.doesNotMatch(flag.out, /as of --as-of/);
+  assert.equal(runValidator('freshness.mjs', ['--as-of=2026-10-24']).out, positional.out);
+});
+
+test('D3 · freshness.mjs exits 2, with the reason, on a date it cannot read — never 0 and never 1', () => {
+  for (const args of [['--as-of', 'banana'], ['banana'], ['2026-02-30'], ['--as-of'], ['--as-of', '2026-10-24', '--as-of', '2026-10-25'], ['2026-10-24', '--as-of', '2026-10-24'], ['--json']]) {
+    const r = runValidator('freshness.mjs', args);
+    assert.equal(r.exit, 2, `freshness.mjs ${args.join(' ')} exited ${r.exit}`);
+    assert.match(r.out, /refused — /, 'the refusal must say why');
+    assert.match(r.out, /Nothing was audited/);
+    assert.doesNotMatch(r.out, /Nothing past its stated interval/, 'a refused run must not print an all-clear');
+  }
+});
+
+test('D4 · evidence-audit.mjs exits 2, with the reason, on a date it cannot read — and on a date it would have ignored', () => {
+  for (const args of [['--as-of', 'banana'], ['--as-of', '2026-02-30'], ['--as-of'], ['--as-of', '--json'], ['2026-10-24']]) {
+    const r = runValidator('evidence-audit.mjs', args);
+    assert.equal(r.exit, 2, `evidence-audit.mjs ${args.join(' ')} exited ${r.exit}`);
+    assert.match(r.out, /refused — /);
+    assert.doesNotMatch(r.out, /EVIDENCE AUDIT/, 'a refused run must not print a report');
+  }
+  const ok = runValidator('evidence-audit.mjs', ['--as-of', '2026-10-24']);
+  assert.equal(ok.exit, 0);
+  assert.match(ok.out, /^EVIDENCE AUDIT {2}as of 2026-10-24$/m);
+  assert.match(runValidator('evidence-audit.mjs', ['--as-of', '2026-10-24', '--markdown']).out, /### Evidence model — as of 2026-10-24/);
+});
+
+/* ============================================================
+   APPLIES · the notice D-2 requires stays on the page
+
+   docs/ROADMAP-v2.md item 1.5: applies.html stays online only with a
+   statement that its rules are not yet verified to the standard of the
+   claims, in the words the author approved on 27 Oct 2026. Removing or
+   rewording it is the author's decision, so this pins the text.
+   ============================================================ */
+
+test('N1 · applies.html carries the approved notice, and its key is declared pending in it, fr and es', () => {
+  const html = readFileSync(join(ROOT, 'applies.html'), 'utf8');
+  const m = html.match(/<p data-i18n="applies\.notice">([\s\S]*?)<\/p>/);
+  assert.ok(m, 'applies.html has lost the notice that its rules are not yet verified to the standard of the claims');
+  assert.equal(m[1], "<b>These rules are not yet verified to the standard the site's claims are.</b> Each rule cites its sources by identifier only: unlike a claim, it does not say what each source supports or where in it the rule is found, and the evidence audit that checks every claim does not yet check these rules. Read a result as a pointer to the law, not as a verified reading of it.",
+    'the wording is the author\'s (docs/ROADMAP-v2.md §8); change it only on their word');
+  assert.ok(html.indexOf('applies.notice') < html.indexOf('id="ap-form"'), 'the notice comes before the questions');
+  const reg = JSON.parse(readFileSync(join(ROOT, 'i18n', 'locales.json'), 'utf8'));
+  for (const code of ['it', 'fr', 'es']) {
+    const l = reg.locales.find((x) => x.code === code);
+    const translated = Object.hasOwn(JSON.parse(readFileSync(join(ROOT, l.file), 'utf8')), 'applies.notice');
+    assert.ok(translated || (l.pending_translation ?? []).includes('applies.notice'), `${code}: applies.notice is neither translated nor declared pending`);
+  }
+});
+
+/* ============================================================
    TEST B · every source record against the authoritative contract
 
    The governance layer allowlists eight fields on data/sources.json and
@@ -593,6 +672,80 @@ function treeCopy() {
 const editJSON = (dir, f, fn) => {
   const p = join(dir, 'data', f); const d = JSON.parse(readFileSync(p, 'utf8')); fn(d); writeFileSync(p, JSON.stringify(d));
 };
+
+/* ============================================================
+   RECORD · an editorial audit that is recorded only when asked
+
+   Roadmap v2 item 1.1. `--record` appends one record to the audited
+   tree's git-ignored store; without it the tool writes nothing.
+   ============================================================ */
+
+const storeFile = (dir) => join(dir, 'tools', 'evidence-audit-runs', 'evidence-audit.jsonl');
+const records = (dir) => readFileSync(storeFile(dir), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+
+test('R1 · without --record the evidence audit writes nothing', () => {
+  const dir = treeCopy();
+  for (const extra of [[], ['--json'], ['--markdown'], ['--graph']]) {
+    assert.equal(runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-24', ...extra]).exit, 0);
+  }
+  assert.ok(!existsSync(join(dir, 'tools')), 'a run without --record wrote into the audited tree');
+});
+
+test('R2 · --record appends one record answering what, on which evidence, as of when, at which commit, with which limits', () => {
+  const dir = treeCopy();
+  const r = runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-24', '--json', '--record']);
+  assert.equal(r.exit, 0);
+  assert.equal(JSON.parse(r.out.slice(0, r.out.lastIndexOf('}') + 1)).as_of, '2026-10-24', '--json stays parseable: the record notice goes to stderr');
+  let [e] = records(dir);
+  assert.equal(e.record_version, RECORD_VERSION);
+  for (const q of QUESTIONS) assert.ok(e[q.key] !== null && e[q.key] !== undefined, `the record does not answer "${q.label}"`);
+  assert.equal(e.as_of, '2026-10-24');
+  assert.ok(Date.parse(e.recorded_at));
+  assert.match(e.recorded_at, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/, 'recorded_at is the instant written, a field apart from the reference date');
+  assert.deepEqual(e.checked, CHECKED);
+  assert.deepEqual(e.limits, LIMITS);
+  assert.equal(e.command, 'node tools/evidence-audit.mjs --root ' + dir + ' --as-of 2026-10-24 --json --record');
+  const claims = e.evidence.read.find((f) => f.path === 'data/claims.json');
+  assert.equal(claims.sha256, createHash('sha256').update(readFileSync(join(dir, 'data', 'claims.json'))).digest('hex'));
+  assert.ok(e.evidence.read.some((f) => f.path === 'index.html'));
+  assert.ok(e.evidence.counts.claims > 100);
+  /* A scratch copy is not a git checkout: the commit is not named, and
+     the record says why rather than naming one it cannot know. */
+  assert.equal(e.commit.sha, null);
+  assert.equal(e.commit.tree_clean, null);
+  assert.match(e.commit.why, /not a git checkout/);
+  assert.deepEqual(e.findings.errors, []);
+
+  runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-25', '--record']);
+  assert.deepEqual(records(dir).map((x) => x.as_of), ['2026-10-24', '2026-10-25'], 'append-only, one line per run');
+  /* The read side agrees with the writer. */
+  const back = readRecords({ dir: join(dir, 'tools', 'evidence-audit-runs') });
+  assert.equal(back.entries.length, 2);
+  assert.deepEqual(back.malformed, []);
+  [e] = back.entries;
+  assert.equal(e.as_of, '2026-10-24');
+});
+
+test('R3 · in a git checkout the record names the commit, and says when the tree did not match it', () => {
+  const dir = treeCopy();
+  const git = (...a) => execFileSync('git', ['-C', dir, ...a], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+  git('init', '-q');
+  git('add', '-A');
+  git('-c', 'user.name=suite', '-c', 'user.email=suite@example.invalid', 'commit', '-qm', 'scratch');
+  /* The store itself is git-ignored in a real checkout; here it is
+     ignored the same way, so recording does not dirty the tree. */
+  writeFileSync(join(dir, '.gitignore'), 'tools/evidence-audit-runs/*\n.gitignore\n');
+  const head = git('rev-parse', 'HEAD');
+  runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-24', '--record']);
+  let e = records(dir).at(-1);
+  assert.equal(e.commit.sha, head);
+  assert.equal(e.commit.tree_clean, true);
+  editJSON(dir, 'glossary.json', (d) => { d.$note = `${d.$note ?? ''} (planted)`; });
+  runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-24', '--record']);
+  e = records(dir).at(-1);
+  assert.equal(e.commit.tree_clean, false);
+  assert.deepEqual(e.commit.uncommitted, ['data/glossary.json']);
+});
 
 test('H1 · the real tree has no evidence-audit error and every substantive passage is accounted for', () => {
   const r = audit({ root: TREE, asOf: '2026-09-27' });

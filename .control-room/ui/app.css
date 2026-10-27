@@ -43,7 +43,7 @@ h3 { font-size: .92rem; margin: 1rem 0 .35rem; }
 .item { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: .9rem 1rem; margin-bottom: .7rem; }
 .item h3 { margin-top: 0; }
 .meta { font-size: .78rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: .2rem .9rem; margin: .2rem 0 .6rem; }
-.pill { font-size: .72rem; border: 1px solid var(--line); border-radius: 999px; padding: .05rem .5rem; }
+.pill { font-size: .72rem; border: 1px solid var(--line); border-radius: 999px; padding: .05rem .5rem; white-space: nowrap; }
 .pill.warn { color: var(--warn); border-color: currentColor; }
 .pill.error { color: var(--error); border-color: currentColor; }
 .pill.ok { color: var(--ok); border-color: currentColor; }
@@ -64,3 +64,14 @@ table { border-collapse: collapse; width: 100%; font-size: .82rem; }
 th, td { text-align: left; padding: .35rem .5rem; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { color: var(--muted); font-weight: 600; }
 .scroll { overflow-x: auto; }
+.snapshot { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1rem; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: .55rem .8rem; margin: 0 0 1rem; font-size: .82rem; color: var(--muted); }
+.snapshot p { margin: 0; flex: 1 1 24rem; }
+.snapshot strong { color: var(--fg); font-weight: 600; }
+.snapshot .snapshot-error { flex-basis: 100%; color: var(--error); }
+.snapshot button { border: 1px solid var(--line); background: var(--bg); color: inherit; font: inherit; padding: .25rem .7rem; border-radius: 6px; cursor: pointer; }
+dl.run { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; font-size: .84rem; margin: .4rem 0 1rem; }
+dl.run dt { color: var(--muted); font-weight: 600; }
+dl.run dd { margin: 0; }
+fieldset.attest { margin: .8rem 0 0; border: 1px solid var(--line); border-radius: 6px; padding: .5rem .8rem .6rem; }
+fieldset.attest legend { font-size: .84rem; font-weight: 600; padding: 0 .3rem; }
+fieldset.attest label { display: block; font-size: .84rem; margin: .2rem 0; }

@@ -16,6 +16,15 @@
        cookie is HttpOnly, so this script cannot read it, and the
        CSRF token it does hold is useless without the cookie.
 
+     · every view is a SNAPSHOT. The server stamps each payload with
+       `assembled_at`; this script shows that time above the view,
+       keeps the snapshot when the tab is left, and fetches again only
+       when somebody presses Refresh — a GET of the same route, never
+       a timer. A failed refresh leaves the last snapshot on screen
+       with its own time and the error, rather than blanking it or
+       passing it off as current (docs/AUDIT-2026-10-24.md finding B;
+       roadmap v2 item 0.1).
+
    Rendering is done by building nodes, not by assigning innerHTML,
    so a string that arrives from an agent record cannot become
    markup. The content security policy would stop an injected script
@@ -23,7 +32,7 @@
    ============================================================ */
 
 const $ = (id) => document.getElementById(id);
-const state = { csrf: null, actor: null, view: 'live', data: {} };
+const state = { csrf: null, actor: null, view: 'live', snapshots: {} };
 
 /* ---------------------------------------------------------- dom */
 
@@ -76,7 +85,7 @@ async function post(path, payload) {
 /* ---------------------------------------------------------- views */
 
 function renderLive(d) {
-  const out = [el('h2', { text: 'Live system' })];
+  const out = [el('h2', { text: 'Agent activity' })];
   if (d.state !== 'measured') {
     out.push(el('p', { class: 'empty', text: d.why }));
     out.push(bound(d.bound));
@@ -159,6 +168,7 @@ function renderQueue(d) {
        than absent: a reviewer who wants to approve without reading
        it has to open it first. */
     card.append(dump(`Evidence — ${item.trace.source_to_evidence.length} reference(s)`, item.trace.source_to_evidence));
+    card.append(dump(`Sources — ${item.trace.sources.cited.length} record(s) cited`, item.trace.sources));
     if (item.trace.epistemic) card.append(dump('Facts, inferences and open questions', item.trace.epistemic));
     card.append(dump(`Operations — ${item.trace.operations.length}`, item.trace.operations));
     card.append(dump(`Files this approval would permit — ${item.trace.permitted_files.length}`, item.trace.permitted_files));
@@ -174,6 +184,21 @@ function renderQueue(d) {
       card.append(el('p', { class: 'note', text: 'These are the Implementation Agent’s own gates. They are closed by the agent that produced the proposal, not by approving it.' }));
     }
 
+    /* The attestation (roadmap v2 item 0.2). Its wording and its
+       fixed list come from the server. Nothing here records which
+       panels above were opened, and nothing should: that would be
+       trivially faked and read as proof. */
+    const attest = el('fieldset', { class: 'attest' },
+      el('legend', { text: 'Attestation — a declaration, not proof of reading' }),
+      el('p', { class: 'note', text: d.attestation.statement }));
+    const boxes = d.attestation.sections.map((sec) => {
+      const box = el('input', { type: 'checkbox', value: sec.section });
+      attest.append(el('label', {}, box, ` I declare I examined: ${sec.label}`));
+      return box;
+    });
+    attest.append(el('p', { class: 'note', text: `Required to ${d.attestation.required_for.join(' or ')}, and recorded in the audit trail entry of the decision. Not sent with a request for changes.` }));
+    card.append(attest);
+
     const note = el('textarea', { placeholder: 'Why. Recorded in the ledger for a decision, and required for a change request.', 'aria-label': 'Decision note' });
     const actions = el('div', { class: 'actions' }, note);
 
@@ -182,9 +207,11 @@ function renderQueue(d) {
       b.addEventListener('click', async () => {
         setStatus(`${action} ${item.proposal_id}…`);
         try {
-          const out = await post('/api/review', { action, proposal_id: item.proposal_id, fingerprint: item.fingerprint, note: note.value || null });
+          const payload = { action, proposal_id: item.proposal_id, fingerprint: item.fingerprint, note: note.value || null };
+          if (d.attestation.required_for.includes(action)) payload.attestation = { examined: boxes.filter((b) => b.checked).map((b) => b.value) };
+          const out = await post('/api/review', payload);
+          await load('queue', { refresh: true });
           setStatus(`${out.outcome}. ${out.publication_note}`);
-          await load('queue');
         } catch (e) {
           setStatus(`${e.message}${e.fix ? ` — ${e.fix}` : ''}`, true);
         }
@@ -208,9 +235,25 @@ function renderHealth(d) {
   const out = [el('h2', { text: 'Website health' })];
   out.push(el('p', { class: 'bound', text: d.no_overall_score }));
 
+  /* Roadmap v2 item 1.2: a metric is shown by NAME and DEFINITION,
+     beside its ID, with its source, calculation, frequency,
+     interpretation and limitations one click away. The labels, and the
+     one display term for the visibility value, come from the server. */
+  const metricCell = (m) => el('td', {},
+    el('strong', { text: m.name ?? 'not in the metric register' }), ' ', el('code', { text: m.id }),
+    el('div', { class: 'note', text: m.definition ?? 'This reading names a metric the register no longer defines.' }),
+    el('details', {}, el('summary', { text: 'Source, calculation, frequency, interpretation, limitations' }),
+      el('dl', { class: 'run' }, ...d.metric_detail_fields.flatMap((f) => [el('dt', { text: f.label }), el('dd', { text: m[f.field] ?? '—' })]))));
+  const visibilityPill = (m) => el('span', { class: `pill ${m.visibility_label === 'public-safe' ? 'ok' : ''}`, text: m.visibility_label });
+
   if (d.state !== 'measured') {
     out.push(el('p', { class: 'empty', text: d.why }));
     out.push(el('p', { class: 'note' }, 'To produce one: ', el('code', { text: d.needs })));
+    /* No readings, but the definitions are still worth reading. */
+    out.push(el('h3', { text: `The metric register — ${d.register.length} metrics, defined, none measured here` }));
+    out.push(el('div', { class: 'scroll' }, el('table', {},
+      el('thead', {}, el('tr', {}, el('th', { text: 'metric' }), el('th', { text: 'visibility' }), el('th', { text: 'direction' }))),
+      el('tbody', {}, ...d.register.map((m) => el('tr', {}, metricCell(m), el('td', {}, visibilityPill(m)), el('td', { text: m.direction === 'not_a_score' ? 'never a score' : (m.direction ?? '') })))))));
   } else {
     out.push(el('div', { class: 'cards' },
       stat('measured', d.counts.measured),
@@ -219,16 +262,22 @@ function renderHealth(d) {
       stat('public-safe', d.counts.public_safe),
       stat('private', d.counts.private),
       stat('never a score', d.counts.not_a_score)));
-    out.push(el('p', { class: 'note', text: `Last recorded run: ${d.as_of}${d.commit ? ` at ${d.commit}` : ''}.` }));
+    /* Three dates, three facts, labelled by the server
+       (views.mjs HEALTH_RUN_FIELDS). None is a freshness verdict. */
+    out.push(el('h3', { text: 'The recorded run these readings come from' }));
+    out.push(el('dl', { class: 'run' }, ...d.run_fields.flatMap((f) => [
+      el('dt', { text: f.label }),
+      el('dd', {}, el('code', { text: d[f.field] ?? 'not recorded in this entry' }), el('span', { class: 'note', text: ` — ${f.means}` })),
+    ])));
 
     for (const domain of d.domains) {
       const readings = d.readings.filter((r) => r.domain === domain.domain);
       if (!readings.length) continue;
       out.push(el('h3', { text: `${domain.label} — ${domain.stake}` }));
       const rows = readings.map((r) => el('tr', {},
-        el('td', {}, el('code', { text: r.id })),
+        metricCell(r),
         el('td', { text: r.state === 'measured' ? `${r.value} ${r.unit ?? ''}${r.of != null ? ` of ${r.of}` : ''}` : r.state.toUpperCase() }),
-        el('td', {}, el('span', { class: `pill ${r.visibility === 'public' ? 'ok' : ''}`, text: r.visibility })),
+        el('td', {}, visibilityPill(r)),
         el('td', { text: r.direction === 'not_a_score' ? 'never a score' : (r.direction ?? '') }),
         el('td', { text: r.why ?? '' })));
       out.push(el('div', { class: 'scroll' }, el('table', {},
@@ -251,6 +300,59 @@ function renderHealth(d) {
   out.push(bound(d.security.bound));
   out.push(dump('This server', d.security.this_server));
   out.push(el('p', { class: 'note', text: 'Readings marked private are control-plane information. Only the ones marked public-safe may be published, and the health monitor produces that subset separately: node agent/health/cli.mjs --publish' }));
+  return out;
+}
+
+/* Roadmap v2 item 1.1. The latest RECORDED run of the evidence audit,
+   answered question by question in the order the server gives. There
+   is no button that runs anything: the command is shown, for a person
+   to type at a machine. */
+function renderEditorial(d) {
+  const out = [el('h2', { text: 'Editorial audit' })];
+  out.push(el('p', { class: 'note', text: d.separate_from_health }));
+  out.push(el('p', { class: 'note', text: d.no_console }));
+  const recordCommand = el('p', { class: 'note' }, 'To record a new run, at the repository root: ', el('code', { text: d.command }));
+  const list = (items, f) => el('ul', {}, ...items.map((x) => el('li', { text: f(x) })));
+
+  if (d.state !== 'measured') {
+    out.push(el('p', { class: 'empty', text: d.why }));
+    out.push(recordCommand);
+    if (d.checked) { out.push(el('h3', { text: 'What a recorded run checks' }), list(d.checked, (c) => `${c.section} — ${c.what}`)); }
+    if (d.limits) { out.push(el('h3', { text: 'What it cannot establish' }), list(d.limits, (l) => l)); }
+    if (d.malformed?.length) out.push(dump(`${d.malformed.length} unreadable line(s) in the store, reported and not skipped`, d.malformed));
+    return out;
+  }
+
+  const r = d.latest;
+  out.push(el('div', { class: 'cards' },
+    stat('errors', d.counts.errors),
+    stat('warnings', d.counts.warnings),
+    stat('runs recorded here', d.runs_recorded)));
+  const commit = r.commit.sha
+    ? `${r.commit.sha}${r.commit.tree_clean ? ' — the audited tree matched this commit' : ` — plus ${r.commit.uncommitted_total} uncommitted change(s), audited too: ${r.commit.uncommitted.join(', ')}`}`
+    : `not named: ${r.commit.why}`;
+  const answer = {
+    checked: () => list(r.checked, (c) => `${c.section} — ${c.what}`),
+    evidence: () => el('div', {},
+      el('p', { text: `${r.evidence.read.length} file(s) read, by content hash: ${Object.entries(r.evidence.counts).map(([k, v]) => `${v} ${k.replace(/_/g, ' ')}`).join(' · ')}.` }),
+      dump('The files read, and the rules applied, with their SHA-256', { read: r.evidence.read, rules: r.evidence.rules })),
+    as_of: () => el('p', {}, el('code', { text: r.as_of }), ' — the reference date. The run was recorded at ', el('code', { text: r.recorded_at }), '.'),
+    commit: () => el('p', { text: commit }),
+    limits: () => list(r.limits, (l) => l),
+  };
+  out.push(el('h3', { text: 'The latest recorded run' }));
+  out.push(el('dl', { class: 'run' }, ...d.questions.flatMap((q) => [el('dt', { text: q.label }), el('dd', {}, answer[q.key]())])));
+
+  out.push(el('h3', { text: `Errors — ${r.findings.errors.length}` }));
+  out.push(r.findings.errors.length ? list(r.findings.errors, (x) => x) : el('p', { class: 'empty', text: 'None recorded on this run.' }));
+  out.push(el('h3', { text: `Warnings — ${r.findings.warnings.length}` }));
+  out.push(r.findings.warnings.length ? list(r.findings.warnings, (x) => x) : el('p', { class: 'empty', text: 'None recorded on this run.' }));
+  out.push(dump('Summary measured on this run', r.summary));
+  out.push(el('p', { class: 'note' }, 'Recorded by: ', el('code', { text: r.command })));
+  out.push(recordCommand);
+  out.push(el('p', { class: 'note', text: 'Turning a finding into a proposal is the editorial agent\u2019s job (agent/proposals/editorial/), and its proposals reach the Review queue. This view adds nothing to the queue.' }));
+  if (d.malformed?.length) out.push(dump(`${d.malformed.length} unreadable line(s) in the store, reported and not skipped`, d.malformed));
+  out.push(bound(d.bound));
   return out;
 }
 
@@ -443,22 +545,50 @@ function renderOperators(d) {
 
 /* ---------------------------------------------------------- shell */
 
-const RENDER = { live: renderLive, workflows: renderWorkflows, autonomy: renderAutonomy, queue: renderQueue, health: renderHealth, audit: renderAudit, operators: renderOperators };
-const ENDPOINT = { live: '/api/live', workflows: '/api/workflows', autonomy: '/api/autonomy', queue: '/api/queue', health: '/api/health', audit: '/api/audit', operators: '/api/operators' };
+const RENDER = { live: renderLive, workflows: renderWorkflows, autonomy: renderAutonomy, queue: renderQueue, health: renderHealth, editorial: renderEditorial, audit: renderAudit, operators: renderOperators };
+const ENDPOINT = { live: '/api/live', workflows: '/api/workflows', autonomy: '/api/autonomy', queue: '/api/queue', health: '/api/health', editorial: '/api/editorial-audit', audit: '/api/audit', operators: '/api/operators' };
 
-async function load(view) {
+/** What sits above every view: when its snapshot was taken, that it
+ *  does not update by itself, the one manual refresh, and — if the
+ *  last refresh failed — the error, beside the snapshot still shown. */
+function snapshotBar(view, snap) {
+  const refresh = el('button', { type: 'button', text: 'Refresh this view' });
+  refresh.addEventListener('click', () => load(view, { refresh: true }));
+  const said = snap?.data
+    ? [el('strong', { text: `Snapshot taken at ${snap.data.assembled_at ?? 'a time the server did not state'}` }), ' (server time, UTC). ']
+    : [el('strong', { text: 'No snapshot of this view has been taken in this session.' }), ' '];
+  const bar = el('div', { class: 'snapshot' },
+    el('p', {}, ...said, 'Not live: this view changes only when you refresh it, and nothing refreshes it on a timer.'),
+    refresh);
+  if (snap?.error) {
+    bar.append(el('p', { class: 'snapshot-error', role: 'alert', text: snap.data
+      ? `The last refresh failed: ${snap.error}. Shown below is the earlier snapshot, taken at the time above.`
+      : `The refresh failed: ${snap.error}.` }));
+  }
+  return bar;
+}
+
+function show(view) {
+  const snap = state.snapshots[view];
+  $('view').replaceChildren(snapshotBar(view, snap), ...(snap?.data ? RENDER[view](snap.data) : []));
+}
+
+/* A tab already visited shows the snapshot it holds, with its time;
+   only `refresh` fetches again. */
+async function load(view, { refresh = false } = {}) {
   state.view = view;
   for (const tab of document.querySelectorAll('.tab')) tab.setAttribute('aria-current', String(tab.dataset.view === view));
+  const held = state.snapshots[view];
+  if (held?.data && !refresh) { setStatus(''); show(view); return; }
   setStatus('Loading…');
-  const section = $('view');
   try {
-    const data = await get(ENDPOINT[view]);
-    section.replaceChildren(...RENDER[view](data));
+    state.snapshots[view] = { data: await get(ENDPOINT[view]), error: null };
     setStatus('');
   } catch (e) {
-    section.replaceChildren(el('p', { class: 'empty', text: e.message }));
+    state.snapshots[view] = { data: held?.data ?? null, error: e.message };
     setStatus(e.message, true);
   }
+  if (state.view === view) show(view);
 }
 
 for (const tab of document.querySelectorAll('.tab')) {
@@ -480,7 +610,7 @@ try {
      refuses it regardless; this only stops offering a door that
      does not open. */
   const may = session.interface;
-  const allowed = { live: may.live, workflows: may.workflows, autonomy: may.autonomy, queue: may.queue, health: may.health, audit: may.audit, operators: may.operators };
+  const allowed = { live: may.live, workflows: may.workflows, autonomy: may.autonomy, queue: may.queue, health: may.health, editorial: may.editorial, audit: may.audit, operators: may.operators };
   for (const tab of document.querySelectorAll('.tab')) if (!allowed[tab.dataset.view]) tab.remove();
   const first = document.querySelector('.tab');
   await load(first ? first.dataset.view : 'live');
