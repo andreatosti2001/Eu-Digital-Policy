@@ -66,9 +66,23 @@ register and watchlist — and a coherence matrix. No production code, no UI, no
 `evidence-audit` 0 errors / 11 warnings, `freshness` (positional date) 0 defects, `seo-audit` 0/0.
 None of them reads `docs/`.
 
-**Next:** v2 Session 3 = Phase 0 (0.1–0.4), after the author's review of this design. Item 2.1 (the
-register and watchlist into `data/`) waits for the Phase 1 checkpoint and the author's approval of
-the D6 reasons.
+**Next:** v2 Session 3 = Phase 0 (0.1–0.4), then a checkpoint **inside** the session (report,
+validators and suites re-run, the author's explicit approval), then Phase 1 (1.1–1.5) — decided on
+27 Oct 2026 (ROADMAP-v2 §8). Before it starts, pull request #18 must be merged, or the brief and the
+Session 2 schemas are not on `main`. What the author settled for it:
+- 0.1: `as_of`, `recorded_at` and the commit analysed, shown apart; no `auto_checked_at`; no
+  `verified_at` beside `last_verified`.
+- 0.2: the attestation is required to approve **and** to deny; it uses a fixed list of sections and
+  goes in the decision's trail entry (D-9).
+- 0.3 (D-10): `--as-of YYYY-MM-DD` in both tools, exit 2 on a date that does not parse. It is also the
+  prerequisite of every date check in `docs/V2-DATA-DESIGN.md` §4.
+- 1.1: as planned — `--record` and a read-only Editorial audit view; nothing executes from the UI.
+- 1.3: with the assertion that fails on a view the inventory does not name.
+- 1.4: the security-wording sweep, listing every occurrence.
+- 1.5 (D-2): the session drafts the notice for `applies.html` and waits for the author's wording.
+
+Nothing from the Session 2 design (D1–D6) is implemented in Session 3. Item 2.1 (the register and
+watchlist into `data/`) waits for the Phase 1 checkpoint and the author's approval of the D6 reasons.
 
 ## Branch register — 27 October 2026 (v2 Session 2)
 

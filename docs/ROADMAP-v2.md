@@ -137,7 +137,7 @@ recorded in §8 before the next phase starts.
 - `docs/CONTROL-ROOM.md` §5 and §6 are corrected for the changes above, and only for them. The
   full realignment is 1.3.
 
-### Phase 1 — the audit's P1 (v2 Session 4 — moved on 25 Oct 2026, §8)
+### Phase 1 — the audit's P1 (v2 Session 3, after Phase 0's checkpoint — decided 27 Oct 2026, §8)
 
 **1.1 · An editorial-audit path that is recorded, and that the Control Room reads** — audit A.
 - The audit asks for a way to *launch* the check from the Control Room. That would be a route that
@@ -280,9 +280,8 @@ This is a vocabulary mapping, not a statement about any instrument. **Not adopte
 |---|---|---|
 | 1 (this) | This roadmap; `docs/AUDIT-2026-10-24.md` | Author's approval of the roadmap and decisions D-1…D-10, recorded in §8 |
 | 2 | Phase 2.0, design documents only — brought forward on 25 Oct 2026 (§8) | Approval of the criterion, the labels, the map model, `stratum` |
-| 3 | Phase 0: 0.1–0.4 | Phase 0 checkpoint |
-| 4 | Phase 1: 1.1–1.5 | Audit closed; Phase 1 checkpoint |
-| 5 → | 2.1, then 2.2–2.6, one or two instruments per session | A checkpoint per session |
+| 3 | Phase 0: 0.1–0.4; **checkpoint inside the session** (report, validators and suites re-run, the author's explicit approval); then Phase 1: 1.1–1.5 | Phase 0 checkpoint, mid-session; audit closed and Phase 1 checkpoint at the end |
+| 4 → | 2.1, then 2.2–2.6, one or two instruments per session | A checkpoint per session |
 | later | Phases 3, 4, 5 | Planned only when reached |
 
 No session starts on an unrecorded approval of the one before (the brief).
@@ -311,3 +310,4 @@ Filled in only with the author's words. A row here is the checkpoint.
 | 25 Oct 2026 | **The roadmap**, with one change of sequence: item 2.0 (design, documents only) is brought forward to v2 Session 2; Phase 0 moves to v2 Session 3 and Phase 1 to v2 Session 4. Read conservatively: items 2.1–2.6, which write data, still wait for the Phase 1 checkpoint (§1, first row). | **D-3:** the six labels are a derived display grouping over the sixteen states. **D-6:** the map extends the existing relationships; it is a derived view. **The trigger** of the v2 Session 2 prompt is the existing applicability rule raised to a v2 schema, not a new entity. **D-8:** `stratum` is dropped (option (c)), and what it meant is derived from the applicability rules' actors and the edge kinds. D-1, D-2, D-4, D-5 and D-7 stay open; D-7 is proposed in `docs/V2-DATA-DESIGN.md` §5. | The author, answering four questions in v2 Session 2 ("Approvo e anticipo 2.0"; "Sì, tutte e tre"; "(c) eliminare, derivare"), then "Vai" |
 | 27 Oct 2026 | — | **D-1:** the brief is committed verbatim as `docs/BRIEF-v2.md` and pointed to once from `AGENTS.md`. | The author, in v2 Session 2 ("si") |
 | 27 Oct 2026 | **The inclusion criterion** (item 2.0) | **D-7:** the criterion of `docs/V2-DATA-DESIGN.md` §5 is approved. **D-2:** `applies.html` stays, with a notice that its rules are not yet verified to the claims' standard, added in Phase 1 (item 1.5) in words the author approves. And the questions the design raised: **P2B** joins the watchlist, watching COM(2025) 837; the six states outside the brief's labels carry **no label**; the finance-chapter condition **applies to the DGA** too; the eight findings of `docs/V2-DATA-DESIGN.md` §7 are corrected **in Phase 3**; the reasons in the register and watchlist stay **drafts**, reviewed by the author entry by entry before item 2.1. D-4 and D-5 stay open. | The author, answering six questions in v2 Session 2 |
+| 27 Oct 2026 | **The scope of v2 Session 3** | Phases 0 and 1 in one session, with Phase 0's checkpoint **inside** it: the session reports, re-runs the validators and suites, and stops until the author approves before starting Phase 1. Item **1.1** as planned (`--record` and a read-only Editorial audit view). Item **1.5**: the session drafts the notice for `applies.html` and waits for the author's approval of its wording. Item **0.1**: `as_of`, `recorded_at` and the commit analysed, shown apart; no `auto_checked_at` (a field nobody writes, and preparation for Phase 4's automation); `verified_at` is not a new field — where the date an evidence record was last verified is meant, it is the existing `last_verified`. | The author, answering four questions in v2 Session 2 |
