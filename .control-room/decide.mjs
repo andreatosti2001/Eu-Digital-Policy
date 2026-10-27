@@ -20,7 +20,7 @@
    asserts the negative directly: after an approval, every file in the
    working tree is byte-identical except the ledger.
 
-   THE SEVEN GATES, IN ORDER, ALL SERVER-SIDE.
+   THE EIGHT GATES, IN ORDER, ALL SERVER-SIDE (seven until 27 Oct 2026).
 
      1 · the action is one of the three                    400
      2 · the proposal exists in the record store           404

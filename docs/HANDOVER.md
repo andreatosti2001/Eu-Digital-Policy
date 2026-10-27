@@ -1,8 +1,140 @@
 # HANDOVER
 
-**Last updated:** v2 Session 2 — schemas and technical structure (roadmap item 2.0) · 25–27 October 2026
+**Last updated:** v2 Session 3 — Phase 0 (roadmap items 0.1–0.4) · 27 October 2026
+**Branch:** `claude/eloquent-hamilton-7p6t2u`, fast-forwarded to `main` at `51efe8e` (the merge of
+#18). **Stopped at the Phase 0 checkpoint**: Phase 1 does not start until the author approves this
+report, and that approval is recorded in `docs/ROADMAP-v2.md` §8.
+
+## v2 Session 3 — Phase 0 checkpoint report
+
+**Asked** (in Italian): implement Phase 0 (audit P0: 0.1–0.4), stop at the checkpoint with a report
+of every exit criterion, wait for the author's explicit approval, then Phase 1 (1.1–1.5).
+Pre-condition checked: #18 is on `main` and `docs/BRIEF-v2.md` exists.
+
+**Commits** (on `claude/eloquent-hamilton-7p6t2u`):
+- `2606f3e` — 0.3, the date argument;
+- `7a2346e` — 0.1, snapshot time and the three health dates;
+- `cd3cd22` — 0.2, the attestation;
+- the commit carrying this entry — 0.4, `docs/CONTROL-ROOM.md` §5 and §6.
+
+### Exit criteria, one by one (`docs/ROADMAP-v2.md` §4)
+
+**0.1 · Snapshot time and state — all three pass.**
+- *Every view payload carries an ISO assembly time* — **pass**. `server.mjs` stamps `assembled_at`
+  on all seven views and on `/api/proposal`. `.control-room/selftest.mjs` "SNAPSHOT · 0.1 · every
+  view payload…" walks every `GET /api/*` route except `/api/session`, so a route added later is
+  covered by default.
+- *The health payload's three fields are distinct, and no label in `ui/` presents `as_of` as a run
+  date* — **pass**. Labels come from `views.mjs HEALTH_RUN_FIELDS`: Reference date, Run recorded at,
+  Commit analysed. The client never names `as_of`. Test "SNAPSHOT · 0.1 · Website health shows…".
+- *"Live system" no longer appears as a label* — **pass**. The tab is now **Agent activity**; the
+  route `/api/live`, the permission `live:read` and the view id are unchanged. Test "SNAPSHOT · 0.1 ·
+  "Live system" is no label…" also asserts no timer anywhere in `ui/`.
+- **Also delivered:**
+  - "Snapshot taken at …" above every view;
+  - one manual refresh per view, a `GET` of the same route; a visited tab keeps its snapshot;
+  - a failed refresh keeps the earlier snapshot, with its own time and the error.
+- **How the last point was checked:** the suite checks it in the source only. It was also checked
+  in a real browser (Chromium, Playwright, scratch script, not committed): the server was stopped
+  and Refresh pressed, and the queue stayed on screen with its time and "The last refresh failed:
+  Failed to fetch".
+
+**0.2 · Attestation of evidence review — all four pass.**
+- *A decision without an attestation is refused, naming the field* — **pass**. 400 `no_attestation`
+  / `bad_attestation`, `detail.field: "attestation"`, nothing written to the ledger, every refusal
+  audited. Test "ATTEST · 0.2 · approving or rejecting without an attestation…".
+- *An unknown field is still refused* — **pass**. `parseStrictJson` is unchanged; `attestation` was
+  added to the accepted list (`server.mjs`). Test "ATTEST · 0.2 · an unknown field is still refused…".
+- *The attestation appears in the trail entry and the chain verifies* — **pass**. It sits in the
+  decision's own entry (D-9), under the same hash as `actor_id`, `ts` and `proposal_sha256`, and it is
+  not in the ledger. Editing it on disk breaks `verifyChain()`, and the trail refuses an
+  approved/rejected entry without one. Test "ATTEST · 0.2 · the attestation is in the decision's own
+  trail entry…".
+- *After a decision, the tree is byte-identical except the ledger* — **pass**. Existing test 10,
+  unchanged except that its approval now carries an attestation.
+- **The wording:** "a declaration, not proof of reading", on screen and in the recorded statement.
+  Nothing records which panels were opened (asserted).
+
+**0.3 · A date the tools cannot read — both pass.**
+- *New self-tests plant an invalid date in each tool and assert exit 2* — **pass**:
+  - `tools/selftest.mjs` D3 (freshness: `--as-of banana`, `banana`, `2026-02-30`, a bare `--as-of`,
+    two dates, an unknown flag);
+  - D4 (evidence-audit: `--as-of banana`, `2026-02-30`, a bare `--as-of`, `--as-of --json`, a
+    positional date);
+  - D1 (the parser itself).
+- *The audit's own command produces the same report as the positional form* — **pass**. D2:
+  `freshness.mjs --as-of 2026-10-24` is byte-identical to `freshness.mjs 2026-10-24`, with 2 prompts.
+  Before this session it reported 0 prompts.
+- *F1–F6 not broken* — **pass**. F1–F9 unchanged and passing.
+
+**0.4 · `docs/CONTROL-ROOM.md` true about 0.1–0.2 — done; no automatic check (by design: that check
+is item 1.3).**
+- §5: snapshot, Agent activity, the three health dates, the Sources panel.
+- §6: eight gates, gate 7 the attestation.
+- **Deliberately not touched, for 1.3:**
+  - the "SESSION 21" status line;
+  - §7's list of entry fields, which does not yet name `attestation`;
+  - §10's "55 tests" (it is 64);
+  - `AGENTS.md:34`, which still says "the seven approval gates".
+
+### Validators and suites, re-run on the final Phase 0 tree
+
+**Validators — identical to this session's baseline:**
+- `validate` 0 errors · 0 warnings · 45 unverified;
+- `i18n-audit` 0/0;
+- `design-qa` 0/0;
+- `freshness --as-of 2026-10-27`: 0 defects, 2 staleness prompts, exit 0;
+- `evidence-audit --as-of 2026-10-27`: 0 errors, 11 warnings;
+- `seo-audit` 0/0.
+
+**Suites:**
+- All 25 suites: 1280 tests, 0 failures. The baseline had 82 in `tools/` and 57 in `.control-room/`;
+  they are now 86 and 64.
+- One test was skipped in the default run: `agent/browser` "the deployed-path check…", because no
+  Chromium was on `PATH`. With `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`
+  that suite is 21/21. `node agent/browser/cli.mjs` is 339 pass · 0 fail · 1 undecidable (the
+  deliberate `a11y:bound`).
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` all exit 0.
+
+**The adversarial gate** (`node agent/policy/verify/cli.mjs`): 65 failed safely · 0 succeeded ·
+3 partial · 1 undecidable. Its report is identical to the one on the tree before 0.2.
+
+### What the author should know first
+
+1. **A finding about the adversarial gate. Without a fix, three attacks would have passed for the
+   wrong reason, and its summary would not have shown it.**
+   - Once 0.2 landed, AZ-01's paired positive, AZ-03 (approve over a denial) and AZ-07 (replay) were
+     refused for *lacking an attestation*, not by the defence each names.
+   - The summary line was unchanged even so. I compared it against the pre-change tree with
+     `git stash`.
+   - **Fixed:** the setup decisions that must succeed now carry an attestation, in
+     `agent/policy/verify/attacks.mjs` and in `agent/simulation/run.mjs`. Each attack again reaches
+     its defence: 200; then `state_denied`; then a 409 replay with 1 grant.
+   - `agent/policy/` is on the never-automatic path list, so this edit is named here for your review.
+2. **My interpretations, each yours to overrule:**
+   - (a) an attestation must name **at least one** section, not all five;
+   - (b) an attestation sent with *request changes* is refused (400 `attestation_not_applicable`),
+     not ignored;
+   - (c) a visited tab shows its held snapshot, and only Refresh fetches again;
+   - (d) `evidence-audit.mjs` now refuses **every** unrecognised argument with exit 2, not only a bad
+     date. A positional date used to be silently ignored, the mirror of the freshness bug;
+   - (e) the tab label **"Agent activity"** is my wording.
+3. **Not fixed, pre-existing:** a Control Room configured with `port: 0` expects the Origin
+   `http://127.0.0.1:0`, so a real browser's POSTs are refused as cross-origin.
+   - The suite never sees it, because Node's `fetch` sends no Origin header.
+   - Found while checking the UI in a browser. Not in Phase 0's scope.
+4. **Branch register:**
+   - `git branch -r --no-merged origin/main` lists only `origin/scout/digest-digest-2026-10-26T13-10-32Z`,
+     already reported in the 27 Oct register entry and untouched;
+   - this branch is pushed, with no pull request (none was asked for).
+
+**Next:** the author approves (or corrects) this checkpoint. The approval is recorded in
+`docs/ROADMAP-v2.md` §8, and only then does Phase 1 (1.1–1.5) start in this session.
+
+## (previous header) v2 Session 2 — 25–27 October 2026
+
 **Branch:** `claude/v2-session-2-schemas`, cut from `main` at `933515a` (the merge of #17),
-documentation only.
+documentation only. Merged as #18 (`51efe8e`).
 
 ## v2 Session 2 — the data design for v2.0 (item 2.0, brought forward)
 

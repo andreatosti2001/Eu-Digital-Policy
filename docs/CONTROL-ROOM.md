@@ -227,26 +227,41 @@ the suite proves it by sending exactly that request.
 All three are assembled **server-side**. The browser receives JSON and renders it; it computes
 no state, derives no status and holds no authority.
 
-**1 · Live system.** Agent runs, events, discoveries, verification decisions, handoffs,
-downstream effects and failures — with **running** and **failed** runs lifted out, because a
-stuck pipeline looks exactly like an idle one until somebody notices a run that never ended. An
-absent trace store reports `no_trace_store` with the reason, not zero: nothing has run *where
-this server can see* is a different fact from nothing having run.
+**Every view is a snapshot, and says so** (v2 item 0.1, 27 Oct 2026; `docs/AUDIT-2026-10-24.md`
+findings B and E). The server stamps every view payload with `assembled_at`, the instant it began
+reading the stores for it, and the interface shows it above the view as "Snapshot taken at …".
+Nothing refreshes a view on a timer. Each view has one **manual** refresh, which is a `GET` of the
+same route; a tab already visited shows the snapshot it holds, with its time, until that refresh.
+When a refresh fails, the earlier snapshot stays on screen with its own time and the error, rather
+than being blanked or passed off as current.
 
-**2 · Review queue.** Every proposal with its **whole chain** — evidence, facts, inferences and
-open questions, affected entities, operations, the originating agent run, required tests, the
-files an approval would permit, the rollback plan — plus the **fingerprint** of the exact
-version being displayed and the **gates that currently refuse it**. A proposal that is pending
-*and* gate-blocked is waiting on the agent that produced it, not on a reviewer, and the two are
-counted apart: approving something that cannot be implemented spends the scarcest thing in this
-system, which is a person having read the evidence.
+**1 · Agent activity** — labelled "Live system" until 27 Oct 2026, a label that promised real
+time; the route (`/api/live`), the permission (`live:read`) and the view id are unchanged. Agent
+runs, events, discoveries, verification decisions, handoffs, downstream effects and failures — with
+**running** and **failed** runs lifted out, because a stuck pipeline looks exactly like an idle one
+until somebody notices a run that never ended. An absent trace store reports `no_trace_store` with
+the reason, not zero: nothing has run *where this server can see* is a different fact from nothing
+having run.
+
+**2 · Review queue.** Every proposal with its **whole chain** — evidence, the source records that
+evidence cites, facts, inferences and open questions, affected entities, operations, the
+originating agent run, required tests, the files an approval would permit, the rollback plan —
+plus the **fingerprint** of the exact version being displayed and the **gates that currently refuse
+it**. A proposal that is pending *and* gate-blocked is waiting on the agent that produced it, not on
+a reviewer, and the two are counted apart: approving something that cannot be implemented spends the
+scarcest thing in this system, which is a person having read the evidence. Each item carries the
+attestation a decision requires (§6).
 
 **3 · Website health.** The last recorded run of `agent/health/`, every reading marked
 **public-safe or private**, with the metric register alongside so a number is quotable in
-context. Where no run has been recorded — the ordinary case on a fresh clone, because
-`agent/health/history/` is git-ignored — it says so and gives the command, rather than
-rendering nulls as zeros. **There is no overall score and this view will not compute one**;
-`agent/health/model.mjs overallScore()` still throws.
+context. The run's **reference date** (`as_of`), the time the **run was recorded** (`recorded_at`)
+and the **commit analysed** are shown as three separate fields, labelled by the server
+(`views.mjs HEALTH_RUN_FIELDS`). Until 27 Oct 2026 `as_of` was printed as "Last recorded run" and
+`recorded_at` was not shown; the date a measurement refers to is not the date it was taken. The
+view computes no freshness from any of the three. Where no run has been recorded — the ordinary
+case on a fresh clone, because `agent/health/history/` is git-ignored — it says so and gives the
+command, rather than rendering nulls as zeros. **There is no overall score and this view will not
+compute one**; `agent/health/model.mjs overallScore()` still throws.
 
 There is also an **audit trail** view (`audit:read`) and an **access** view
 (`operators:read`), the second read-only: roles are granted from the machine.
@@ -264,7 +279,7 @@ It changes no dataset, no page, no stylesheet, no locale. It runs no validator, 
 deployment. It touches no git. `git_ref` on the audit entry is `null` at decision time by
 design — a value there would mean the approval published something.
 
-Seven gates, in order, all server-side:
+Eight gates, in order, all server-side (seven until 27 Oct 2026; gate 7 is new):
 
 | | | |
 |---|---|---|
@@ -274,7 +289,8 @@ Seven gates, in order, all server-side:
 | 4 | the request is bound to the **exact version** the reviewer saw | 409 |
 | 5 | the proposal is in a **governed state** to decide from | 409 |
 | 6 | every governance gate that does not depend on the approval passes | 409 |
-| 7 | the ledger accepts it — content-bound, no self-approval, a request exists | 409 |
+| 7 | approve and reject only: the reviewer **attests** which sections they examined | 400 |
+| 8 | the ledger accepts it — content-bound, no self-approval, a request exists | 409 |
 
 Gate 4 is the answer to *scope cannot be expanded through request manipulation*: the request
 carries a **fingerprint and nothing else about scope**. Scope is read from the stored proposal,
@@ -282,6 +298,21 @@ never from the body — and a body naming files, operations, roles or an outcome
 with the field named**, not silently ignored. Editing a proposal after approval voids the
 approval rather than carrying it onto a widened scope, because `recordDecision` binds the
 decision to the proposal's hash.
+
+Gate 7 is the answer to *evidence available is not evidence reviewed* (v2 item 0.2, 27 Oct 2026;
+`docs/AUDIT-2026-10-24.md` finding C; decision D-9). Approving or rejecting requires
+`"attestation": {"examined": [...]}` naming, from the fixed list **evidence, sources, operations,
+tests, rollback**, at least one section the reviewer declares they examined; a missing or malformed
+one is refused 400 with the field named, and a request for changes — not a decision — carries none.
+**It is a declaration, not proof of reading**, and the interface says so in those words beside the
+checkboxes. Nothing records which panels were opened: that would be trivially faked and would invite
+being read as proof. The attestation is recorded in the **audit trail entry of the decision itself**
+(§7), under the same hash as the actor, the time and the fingerprint the decision is bound to, so
+it cannot be changed after the decision without `audit --verify` reporting the entry. It is **not**
+in the decision ledger: it is a fact about the review, not about the grant, and the ledger is one
+home for grants — with the trade-off that the trail is per-machine and git-ignored. The field is
+**added** to the review body's accepted list; the strict unknown-field check is unchanged and still
+refuses anything else (§12).
 
 Gate 5 is the answer to *a rejected proposal cannot be approved without entering a valid
 governed state*: only `pending` is decidable. A **denied** proposal is reopened by the producing
