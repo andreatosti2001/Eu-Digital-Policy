@@ -53,9 +53,9 @@ the evidence it describes.
 | `docs/EDITORIAL-AUDIT-PATH.md` | v2 Session 3: the editorial-audit path — run `tools/evidence-audit.mjs` and `tools/freshness.mjs`, record a run with `--record`, read it in the Control Room's Editorial audit view; nothing in the Control Room runs it |
 | `docs/BRIEF-v2.md` | The BRIEF v2.0, "Contratto tra sessioni" — the author's, verbatim, in Italian: binding on every v2 session. Committed on the author's decision of 27 Oct 2026 (D-1); session prompts cite it rather than carry a copy |
 | `docs/ROADMAP-v2.md` | v2 Session 1: the v2.0 plan — phases 0–5, ten decisions for the author, exit criteria a session can fail. **Approved on 25 Oct 2026** (§8), with item 2.0 brought forward |
-| `docs/V2-DATA-DESIGN.md` | v2 Session 2: roadmap item 2.0 — the map, trigger and status-label schemas (`docs/v2-design/`), the `evidence-audit.mjs` extension plan, the proposed inclusion criterion, the exclusion register and watchlist as proposed records. **Design only; nothing in `data/` yet** |
+| `docs/V2-DATA-DESIGN.md` | v2 Session 2: roadmap item 2.0 — the map, trigger and status-label schemas (`docs/v2-design/`), the `evidence-audit.mjs` extension plan, the proposed inclusion criterion, the exclusion register and watchlist as proposed records. **Design; item 2.1 (the register and the watchlist) implemented on 27 Oct 2026, the rest not yet** |
 | `docs/SECURITY-VERIFICATION-2026-09-08.md` | SESSION 23.5's adversarial gate: 65 attacks, what held, the two findings, and the two boundaries this environment cannot test |
-| `README.md` | The author's own account, including eight stated limitations |
+| `README.md` | The author's own account, including nine stated limitations (the ninth accepted as written on 27 Oct 2026) |
 
 **The operating policies** (SESSION 01) sit under the boundaries document and refine it.
 Read the one you need; do not re-derive its contents here.
@@ -287,7 +287,7 @@ authorization because that boundary is **not** a security control. `docs/CONTROL
    not publicly determinable. Never render them alike, never sum unknown into a total.
 6. **No matching rule ≠ no obligation.** Where no applicability rule fires, the answer is
    NOT DETERMINED — never "probably not".
-7. **Never soften a stated limitation.** The unverified records (104 on 27 Sep 2026; §12 holds the live figure) and the README's eight
+7. **Never soften a stated limitation.** The unverified records (104 on 27 Sep 2026; §12 holds the live figure) and the README's nine
    limitations are the project's honesty. They change by doing the verification work.
 8. **Never change the licence** — CC BY 4.0, declared by the author on 21 Oct 2026 — and never alter
    the non-affiliation or no-legal-advice text.
@@ -647,25 +647,29 @@ patches, not checks. **Do not re-run** the latter two.
   substitute, bulk-stamping `last_verified`, removing a `blocks` flag — is a prohibited
   action rather than an improvement. **A rise in the first four is usually good news.**
 
-- **Almost the whole repository is inside the public deployment.** GitHub Pages serves `main`
-  at the repository root, with no `_config.yml`, no `.nojekyll` and no exclude list, so
-  `agent/`, `docs/` and the approval ledger are published alongside `index.html`. A Control
-  Room page dropped in *that* part of the tree would be public the moment it was pushed.
-  `node agent/implement/cli.mjs boundary` reports it on demand;
-  `docs/IMPLEMENTATION-QA.md` §6 carries it as the standing finding it is.
+- **There are two public surfaces, and only one is the website.** Since 24 Oct 2026 the site is
+  published only by `.github/workflows/pages.yml`, from an artifact built from the allowlist in
+  `tools/pages-artifact.mjs` (`docs/DEPLOYMENT.md` §1b, §2). That list is the one home of "what
+  is published": it admits the pages and the directories they load, and refuses `agent/`,
+  `docs/`, `tools/` and every dot path by name. `agent/implement/boundary.mjs publicSurface()`,
+  the health monitor, the adversarial gate's PP-08 and `.control-room/boundary.mjs` read it
+  (v2 Session 4, B.2). **The repository is the second surface:** it is public on github.com,
+  so `agent/`, `docs/`, the Control Room's source and anything ever committed are readable there,
+  and the secret scan reads every tracked file for that reason. Until 24 Oct 2026 the site was
+  GitHub Pages serving the whole tree through Jekyll, and the dot prefix was its one exclusion;
+  that model is gone. `node agent/implement/cli.mjs boundary` reports both surfaces on demand.
 
-  **The one real exclusion is the dot prefix.** A path whose segments begin with `.` or `_`
-  is not served by a Pages deployment with no `_config.yml` — which is why `.agents/` has
-  never been in the published surface and `agent/` always has. SESSION 21 put
-  `.control-room/` behind it deliberately, and `node .control-room/cli.mjs boundary` checks
-  on every push that it is still true. **Do not read that as "the Control Room is safe
-  because nobody can find it."** Protocol §10 and `docs/CONTROL-ROOM.md` §1 both say the
-  opposite, and every privileged request there is authenticated and authorized regardless.
+  **The allowlist is a publication boundary, not a security control.** `.control-room/` is
+  refused by it, and `node .control-room/cli.mjs boundary` checks on every push that it still
+  is. **Do not read that as "the Control Room is safe because nobody can find it."** Protocol
+  §10 and `docs/CONTROL-ROOM.md` §1 both say the opposite, and every privileged request there is
+  authenticated and authorized regardless.
 
-  What is merely UNTRACKED is weaker still: `agent/records/`, `agent/observability/runs/`,
-  `agent/health/history/`, `agent/orchestrator/state/` and `.control-room/state/` have never
-  been in a commit, and that is an **ignore rule, not a boundary** — one `git add -f` undoes it and nothing here would
-  object.
+  What is merely UNTRACKED is kept out of the public REPOSITORY by an ignore rule alone:
+  `agent/records/`, `agent/observability/runs/`, `agent/health/history/`,
+  `agent/orchestrator/state/` and `.control-room/state/` have never been in a commit, and that
+  is an **ignore rule, not a boundary** — one `git add -f` puts them on github.com and nothing
+  here would object; the website's allowlist would still refuse them.
 - **The public site now has one affordance that is not about EU law.** Typing
   `thirty-two paths` into the search palette offers a passage to a private control plane:
   `js/threshold.js`, styled at the end of `style.css`, drawn as an original Sefer

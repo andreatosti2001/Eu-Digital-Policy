@@ -71,7 +71,7 @@ export const ALLOWED_EVIDENCE_KINDS = new Set(['repository_file', 'measurement',
  * This is not style policing. `docs/AI-SAFE-BOUNDARIES.md` and the
  * `ux-audit` skill both forbid reporting a screen-reader, browser or
  * device result that was not obtained, and README limitation 7 is
- * one of the eight stated limitations `AGENTS.md` rule 7 says may
+ * one of the nine stated limitations `AGENTS.md` rule 7 says may
  * never be softened. An audit that writes "screen readers announce
  * this as…" has softened it, whatever else the finding got right.
  */

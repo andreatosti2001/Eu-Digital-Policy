@@ -98,6 +98,8 @@ export const PROSE_FIELDS = {
     'dna.risk_logic': 'What the act treats as the risk, in a sentence. Same dimension grid, same absence of any check.',
     'dna.enforcement_mechanism': 'Who enforces it and how, in a sentence. An enforcement architecture that changes leaves this describing the previous one.',
     'dna.implementation_model': 'How the act reaches a reader — directly applicable, transposed, and so on. Written as prose rather than as a taxonomy term, so nothing reconciles it with the transposition block that answers the same question structurally.',
+    'scope_decision.reason': 'WHY this site covers, excludes or watches the act, measured against the inclusion criterion — the author\'s judgement, approved entry by entry (item 2.1, 27 Oct 2026). instrument.html?id= renders it verbatim to a reader of an excluded or watched record.',
+    'scope_decision.watch_for.description': 'What event reopens a watched decision, in a sentence. A trigger that has happened leaves it describing a future that is past; tools/evidence-audit.mjs R-01 sees only the typed event, not this sentence.',
   },
   relationship: {
     summary: 'States how two acts interact. It is the whole content of the relationship record; the from/to ids only say that they interact at all.',
@@ -169,8 +171,16 @@ export const PROSE_FIELDS = {
 export const VALUE_FIELDS = {
   instrument: ['id', 'aliases', 'celex', 'short_name', 'full_name', 'status_as_of', 'last_verified',
     'dna', 'transposition', 'dna.sanction_ceiling.fixed_eur', 'dna.sanction_ceiling.pct_global_turnover',
-    'transposition.last_verified', 'transposition.requires_verification'],
-  relationship: ['id', 'symmetric', 'last_verified', 'requires_verification'],
+    'transposition.last_verified', 'transposition.requires_verification',
+    /* item 2.1 (27 Oct 2026): the scope decision and the status basis. Their
+       ids (criterion, refer_to, source_id, supports) are references the graph
+       already sees; these are the values. `disposition` is a closed vocabulary
+       that is not a taxonomy id, `watch_for` is null on an excluded record. */
+    'scope_decision', 'scope_decision.disposition', 'scope_decision.approved_on', 'scope_decision.last_verified',
+    'scope_decision.watch_for', 'scope_decision.sources.locator', 'status_basis.locator'],
+  /* sources.locator: a v2 relationship cites {source_id, supports, locator},
+     as claims do (docs/V2-DATA-DESIGN.md §1.1) */
+  relationship: ['id', 'symmetric', 'last_verified', 'requires_verification', 'sources.locator'],
   /* derivation.* (27 Sep 2026): every number here is re-computed by
      js/evidence-model.js checkDerivation on each run of
      tools/evidence-audit.mjs, and each `as_stated` must read back out of

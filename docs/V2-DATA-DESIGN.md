@@ -8,6 +8,29 @@ from `main` at `933515a`. It is design only:
 It is roadmap item 2.0, brought forward by the author's decision of 25 Oct 2026 (`docs/ROADMAP-v2.md` §8).
 Phase 3 implements what is approved here.
 
+**Item 2.1 implemented, 27 Oct 2026 (v2 Session 4).** What this design proposed for the register and
+the watchlist is now in `data/`, as the author approved it entry by entry (`docs/ROADMAP-v2.md` §8):
+- the ten records, the `dga` scope decision, nine relationships in the v2 shape, twelve sources and
+  fourteen events, each fact re-read on 27 Oct 2026 from a retrieved primary source;
+- the taxonomy terms `inclusion_criterion` (§5) and `rel-kind:enables`, `rel-kind:defers-to` (§1.4),
+  without the `basis` property, which is M-16 and belongs to D1;
+- the checks of §6.3 — M-03, M-04, M-05, M-06, M-07 and R-01 — in `tools/register-audit.mjs`, run by
+  `tools/evidence-audit.mjs`, each with a planted failure in `tools/selftest.mjs` (W1–W10);
+- `coverage()` in `js/routes.js`, the one filter the public views ask (decided 27 Oct 2026).
+
+**Where the implementation departs from this document, each on the author's decision of 27 Oct 2026:**
+- M-04's "`last_verified` ≤ as-of" is a WARNING (`VERIFIED_AFTER_AS_OF`), not an ERROR, because an
+  ERROR in `evidence-audit.mjs` is a defect on every date;
+- the 17 existing relationships are **not** migrated, and the flip of `edge-v1-sources` and
+  `edge-analytical-no-claim` (§4.3) is **deferred** with them; the map view stays unpublished;
+- the `data-omnibus` correction (F-2, F-3) is not applied: it stays in
+  `docs/v2-design/register-watchlist.proposed.json` for Phase 3 (Q-5).
+
+**Found while implementing, not changed:** R-01 looks for the trigger event among the watched record's
+own milestones. P2B's trigger, the adoption of COM(2025) 837, would be a milestone of `data-omnibus`,
+not of `p2b`, so R-01 cannot fire for it as written. Reported to the author; §7's findings are
+Phase 3's, and this one is listed with them in `docs/HANDOVER.md`.
+
 **The files.** This document holds the reasons, the validation rules and the coherence matrix. The
 schemas and the records live beside it, in `docs/v2-design/`:
 

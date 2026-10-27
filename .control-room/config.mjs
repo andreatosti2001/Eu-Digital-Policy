@@ -4,23 +4,22 @@
 
    THE FIRST THING TO KNOW IS WHY THIS DIRECTORY BEGINS WITH A DOT.
 
-   Deployment is GitHub Pages serving `main` at the repository root
-   with no `_config.yml`, no `.nojekyll` and no exclude list
-   (docs/CURRENT-ARCHITECTURE.md §13). The unit of publication is
-   therefore FILES IN THE REPOSITORY: `agent/`, `docs/` and `tools/`
-   are published alongside `index.html`, and
-   `node agent/implement/cli.mjs boundary` has reported that on every
-   run since SESSION 18.
+   When SESSION 21 wrote this, deployment was GitHub Pages serving
+   `main` at the repository root through Jekyll, with no exclude
+   list: `agent/`, `docs/` and `tools/` were published alongside
+   `index.html`, and the one exclusion was Jekyll's default that a
+   path segment beginning with `.` or `_` is not served.
 
-   The one exclusion that does exist is Jekyll's documented default:
-   a path whose segments begin with `.` or `_` is not served. It is
-   the only publication boundary this repository has, and
-   `agent/implement/boundary.mjs publicSurface()` already models it —
-   which is why `.agents/` does not appear in the published surface
-   and `agent/` does.
+   Since 24 Oct 2026 the site is published only by
+   `.github/workflows/pages.yml`, from an artifact built from the
+   allowlist in `tools/pages-artifact.mjs`, which refuses every dot
+   path by name (docs/DEPLOYMENT.md §1b, §2), and
+   `agent/implement/boundary.mjs publicSurface()` reads that list.
+   The source in this directory is public in the repository on
+   github.com; its state is not tracked.
 
-   So the Control Room lives behind that boundary rather than beside
-   the pages. That is a structural fact about the deployment, not a
+   So the Control Room lives outside the published website rather
+   than beside the pages. That is a structural fact about the deployment, not a
    hidden route: protocol §10 is explicit that a hidden route, a
    hidden link, robots.txt, a frontend check and an unlisted page are
    NOT security mechanisms, and none of them is relied on here. What

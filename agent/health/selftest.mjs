@@ -569,8 +569,12 @@ test('SECURITY · the health RECORD is not published, while the README explainin
   const surface = publicSurface();
   const records = surface.published.filter((f) => f.startsWith('agent/health/history/') && f.endsWith('.jsonl'));
   assert.deepEqual(records, [], `the historical health record is in the published surface: ${records.join(', ')}`);
-  assert.ok(surface.published.includes('agent/health/history/README.md'),
+  /* since 24 Oct 2026 the website is the allowlisted artifact and
+     agent/ is not on it: the README belongs in the REPOSITORY surface,
+     public on github.com (v2 Session 4, B.2) */
+  assert.ok(surface.repository.includes('agent/health/history/README.md'),
     'the README explaining why the record is not published belongs in the repository');
+  assert.ok(!surface.published.includes('agent/health/history/README.md'), 'agent/ is refused by the website allowlist');
 });
 
 /* ============================================================

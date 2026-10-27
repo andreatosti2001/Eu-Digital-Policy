@@ -41,6 +41,7 @@ import {
   boundaryCheck, scanSecrets, controlPlaneExposure, publicSurface,
   isWebsiteAsset, classifyHit, CONTROL_PLANE_DIRS,
 } from './boundary.mjs';
+import { refusal } from '../../tools/pages-artifact.mjs';
 import { readBaseline, compare, VALIDATORS } from './baseline.mjs';
 import { verdictFor, blockingFindings, parseValidator, runBrowserCheck, AGENT_SUITES } from './checks.mjs';
 import { openContext, applyOperation, applyProposal, rollback, ApplyRefused, countOccurrences } from './apply.mjs';
@@ -504,22 +505,33 @@ test('R4 · the synthetic credentials in the redaction fixtures are classified, 
    accessible through accidental static publication
    ============================================================ */
 
-test('R5 · the check REPORTS that this repository has no public/private separation', () => {
+test('R5 · the check reads the allowlist: no control-plane directory is on the website, and every one is still in the repository it reports', () => {
+  /* Until 24 Oct 2026 this asserted a FULL list, because the site was
+     the whole tree served by Jekyll. Since then the site is the
+     allowlisted artifact (docs/DEPLOYMENT.md §1b), and the honest
+     result is an empty list — which this asserts together with what
+     would make it vacuous: every control-plane prefix is refused BY
+     NAME, and the tracked ones are still seen in the repository
+     surface, so an empty list cannot come from a surface that lost
+     them (v2 Session 4, B.2). */
   const e = controlPlaneExposure();
-  assert.ok(e.exposed.length > 0,
-    'deployment is GitHub Pages serving main at the repository root, with no _config.yml, no .nojekyll and no exclude list. A boundary check on a repository with no boundary reports a full list; an empty one would mean the check stopped working.');
-  assert.ok(e.exposed.some((x) => x.prefix === 'agent/'));
+  assert.deepEqual(e.exposed, []);
+  for (const [prefix] of CONTROL_PLANE_DIRS) assert.ok(refusal(prefix + 'probe.json'), `${prefix} is not refused by tools/pages-artifact.mjs`);
+  assert.ok(e.surface.repository.some((f) => f.startsWith('agent/')), 'agent/ must be in the repository surface, or the empty list proves nothing');
+  assert.ok(e.surface.excluded.some((f) => f.startsWith('agent/')), 'agent/ must be in the EXCLUDED set, not merely absent');
+  assert.ok(e.ignored_not_excluded.find((x) => x.prefix === 'agent/').public_in_repository > 0);
 });
 
 test('R5 · the surface separates what is READ from the tree from what is INFERRED about the live site', () => {
   const s = publicSurface();
   assert.ok(Array.isArray(s.established) && s.established.length >= 3);
   assert.match(s.inferred, /inferred/);
-  assert.match(s.unresolved, /not established here/);
-  /* Nothing in this repository has ever fetched the deployed site.
-     A claim about what it serves would be a fabrication with a
-     checkable-looking shape. */
-  assert.match(s.unresolved, /network policy|403/);
+  /* What the live site serves was measured on dates
+     (docs/DEPLOYMENT.md §1) and is not re-fetched; this function reads
+     the tree. A claim that it watches the live site would be a
+     fabrication with a checkable-looking shape. */
+  assert.match(s.unresolved, /measured on dates, not continuously/);
+  assert.ok(s.established.some((x) => /tools\/pages-artifact\.mjs/.test(x)), 'the allowlist is named as the source');
 });
 
 test('R5 · a git-ignored control-plane directory is reported as ignored, NOT as excluded', () => {

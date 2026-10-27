@@ -1065,6 +1065,61 @@ test('CSRF · a state-changing request without the token is refused, and a cross
   } finally { await s.stop(); }
 });
 
+/* v2 Session 4, B.3 (27 Oct 2026). With CONTROL_ROOM_PORT=0 the operating
+   system picks the port when the server listens, and the Origin check used
+   to compare against an origin built from the CONFIGURED port —
+   "http://127.0.0.1:0", which no browser ever sends — so a real browser's
+   every POST was refused as cross-origin. Node's fetch sends no Origin
+   header, which is why no test here saw it. These two send one: the
+   server's own, which must pass, and a foreign one on the same server,
+   which must still be refused. The world() fixture binds port 0. */
+test('ORIGIN · B.3 · with port 0, a POST carrying the server\'s real Origin passes the Origin and CSRF checks', async () => {
+  const w = world();
+  assert.equal(w.cfg.port, 0, 'the fixture must bind an ephemeral port, the case this test exists for');
+  const s = await running(w);
+  try {
+    const reviewer = await s.login('reviewer@example.org');
+    const id = w.proposals[0].proposal_id;
+    const fingerprint = proposalFingerprint(w.proposals[0]);
+    const res = await fetch(`${s.origin}/api/review`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', cookie: reviewer.cookie, 'x-control-room-csrf': reviewer.csrf, origin: s.origin },
+      body: JSON.stringify({ action: 'request_changes', proposal_id: id, fingerprint, note: 'The second operation needs a source.' }),
+    });
+    const body = await res.json();
+    assert.equal(res.status, 200, `the server's own origin ${s.origin} was refused: ${JSON.stringify(body)}`);
+    assert.equal(readLedger({ dir: w.cfg.decision_dir }).decisions.length, 0, 'a request for changes records no grant');
+  } finally { await s.stop(); }
+});
+
+test('ORIGIN · B.3 · with port 0, a POST carrying a foreign Origin is still refused, and so is the old ":0" origin', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const reviewer = await s.login('reviewer@example.org');
+    const id = w.proposals[0].proposal_id;
+    const fingerprint = proposalFingerprint(w.proposals[0]);
+    const port = new URL(s.origin).port;
+    for (const origin of ['https://evil.example', 'http://127.0.0.1:0', `http://localhost:${port}`, `http://127.0.0.1:${Number(port) + 1}`]) {
+      const res = await fetch(`${s.origin}/api/review`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', cookie: reviewer.cookie, 'x-control-room-csrf': reviewer.csrf, origin },
+        body: JSON.stringify({ action: 'request_changes', proposal_id: id, fingerprint, note: 'n' }),
+      });
+      assert.equal(res.status, 403, `${origin} was accepted`);
+      assert.match((await res.json()).reason, /cross-origin/);
+    }
+    /* and the CSRF token is still required with the right Origin */
+    const noToken = await fetch(`${s.origin}/api/review`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', cookie: reviewer.cookie, origin: s.origin },
+      body: JSON.stringify({ action: 'request_changes', proposal_id: id, fingerprint, note: 'n' }),
+    });
+    assert.equal(noToken.status, 403);
+    assert.match((await noToken.json()).reason, /x-control-room-csrf/);
+  } finally { await s.stop(); }
+});
+
 test('METHOD · every route inspects the method, and an oversized body is refused', async () => {
   const w = world();
   const s = await running(w);
@@ -1838,15 +1893,19 @@ test('FIXTURE · the proposal this suite decides really does satisfy its contrac
   assert.equal(p.simulated, false, 'a simulated record is refused by the gate, so the fixture must be a real one');
 });
 
-test('THE REPOSITORY · the Control Room is not in the published surface, and agent/ still is', () => {
-  /* The second half is not decoration. If `agent/` ever stopped
-     appearing here it would mean the surface calculation changed,
-     and the first half would be proving nothing. */
+test('THE REPOSITORY · the Control Room is not on the website, and its source is still seen in the public repository', () => {
+  /* The second half is not decoration. Until 24 Oct 2026 it asserted
+     that agent/ was published, because the site was the whole tree.
+     Since then the website is the allowlisted artifact and agent/ is
+     refused like .control-room/; what keeps the first half from
+     proving nothing now is that the surface still SEES both, in the
+     repository, which is public on github.com (v2 Session 4, B.2). */
   const surface = publicSurface({ root: REPO_ROOT });
   assert.ok(!surface.published.some((f) => f.startsWith('.control-room/')));
   assert.ok(surface.excluded.some((f) => f.startsWith('.control-room/')), 'the Control Room must be in the EXCLUDED set, not merely absent');
-  assert.ok(surface.published.some((f) => f.startsWith('agent/')),
-    'agent/ is still published — this repository has no exclude list, and the dot prefix is the only boundary there is');
+  assert.ok(surface.repository.some((f) => f.startsWith('.control-room/')) && surface.repository.some((f) => f.startsWith('agent/')),
+    'the repository surface must still hold the Control Room source and agent/, or the exclusion above proves nothing');
+  assert.ok(!surface.published.some((f) => f.startsWith('agent/')), 'agent/ is refused by the website allowlist');
   assert.equal(relative(REPO_ROOT, CONTROL_ROOM_ROOT), '.control-room');
   assert.equal(isLoopback('127.0.0.1'), true);
   assert.equal(isLoopback('0.0.0.0'), false);

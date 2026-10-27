@@ -81,6 +81,32 @@ export function gateReport(inst, ix) {
   return GATE.map((g) => ({ id: g.id, label: g.label, met: !!g.test(inst, ix) }));
 }
 
+/* ---------------------------------------------------------- coverage
+
+   What the site says about an instrument's place in its argument, DERIVED
+   from the record and never stored (docs/V2-DATA-DESIGN.md §1.3):
+     covered   scope:core — analysed at length;
+     excluded  the scope decision puts it in the exclusion register;
+     watched   the scope decision puts it on the watchlist;
+     mapped    anything else — adjacent or referenced, with no decision.
+   One home, decided by the author on 27 Oct 2026 (docs/ROADMAP-v2.md §8):
+   every public list that would otherwise present an excluded or watched
+   record as an instrument this site covers asks this function, and
+   tools/evidence-audit.mjs holds it against the page gate (M-05). */
+export function coverage(inst) {
+  if (!inst) return null;
+  const d = inst.scope_decision && inst.scope_decision.disposition;
+  if (d === 'excluded' || d === 'watched') return d;
+  return inst.scope_class === 'scope:core' ? 'covered' : 'mapped';
+}
+
+/** An instrument in the exclusion register or on the watchlist: named by
+ *  this site, deliberately not analysed by it. */
+export const notCovered = (inst) => {
+  const c = coverage(inst);
+  return c === 'excluded' || c === 'watched';
+};
+
 /** Does this instrument have a page of its own at instruments/<id>/? */
 export function hasEntityPage(inst, ix) {
   return !!inst && GATE.every((g) => g.test(inst, ix));

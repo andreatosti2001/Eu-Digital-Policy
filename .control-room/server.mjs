@@ -263,6 +263,15 @@ export function serve({ cfg, quiet = false, tracer = null } = {}) {
     res.end();
   };
 
+  /* The origin this server is reached on: the configured public origin,
+     or the loopback address and the port ACTUALLY listening. With
+     CONTROL_ROOM_PORT=0 the operating system picks the port at listen
+     time, so an origin built from cfg.port was "http://127.0.0.1:0" — one
+     no browser sends — and every POST from a real browser was refused as
+     cross-origin (v2 Session 4, B.3). Only where the port is read from
+     changes; the comparison below is the same exact match. */
+  const selfOrigin = () => cfg.public_origin ?? `http://${cfg.host}:${server.address()?.port ?? cfg.port}`;
+
   const server = createServer(async (req, res) => {
     const requestInfo = {
       method: req.method,
@@ -272,7 +281,7 @@ export function serve({ cfg, quiet = false, tracer = null } = {}) {
     };
 
     let url;
-    try { url = new URL(req.url, cfg.public_origin ?? `http://${cfg.host}:${cfg.port}`); }
+    try { url = new URL(req.url, selfOrigin()); }
     catch { return send(res, 400, { error: 'bad request' }); }
     const path = url.pathname;
     requestInfo.path = path;
@@ -316,7 +325,7 @@ export function serve({ cfg, quiet = false, tracer = null } = {}) {
          by the Origin check and by SameSite. */
       if (req.method === 'POST' && !route.public) {
         const origin = req.headers.origin;
-        const expected = cfg.public_origin ?? `http://${cfg.host}:${cfg.port}`;
+        const expected = selfOrigin();
         if (origin && origin.replace(/\/+$/, '') !== expected.replace(/\/+$/, '')) {
           audit.record({ action: 'authz.denied', outcome: 'denied', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: `the request Origin "${origin}" is not this server's origin`, detail: { route: `${req.method} ${path}` } });
           return send(res, 403, { error: 'forbidden', reason: 'cross-origin request' });

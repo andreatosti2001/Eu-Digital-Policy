@@ -2308,6 +2308,320 @@
    "requires_verification": false,
    "verification_note": "Added 14 Oct 2026. The date is the site's arithmetic, read that day in the Official Journal texts: 36 months from 24 December 2024 (Art. 5f(2), 'no later than 36 months'). actor:sme is listed because medium-sized enterprises are covered; micro and small enterprises are not. No supervising authority is recorded because none was read for this duty.",
    "last_verified": "2026-10-14"
+  },
+  {
+   "id": "tl-vida-2025-04-14-entry-into-force",
+   "date": "2025-04-14",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "vida",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-vida"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 7: entry into force on the twentieth day following publication (OJ L 2025/516, 25.3.2025). The Publications Office's metadata records the same date. affected_actors and sectors are empty because they were not researched, not because there are none. Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-avmsd-2010-05-05-entry-into-force",
+   "date": "2010-05-05",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "avmsd",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-avmsd"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 35: entry into force on the 20th day following publication (OJ L 95, 15.4.2010). The Publications Office's metadata records the same date. Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-copyright-dsm-2019-06-06-entry-into-force",
+   "date": "2019-06-06",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "copyright-dsm",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-copyright-dsm"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 31: entry into force on the twentieth day following publication (OJ L 130, 17.5.2019). The Publications Office's metadata records the same date. Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-gpsr-2023-06-12-entry-into-force",
+   "date": "2023-06-12",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "gpsr",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-gpsr"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 52, first paragraph: entry into force on the twentieth day following publication (OJ L 135, 23.5.2023). The Publications Office's metadata records the same date. Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-gpsr-2024-12-13-application",
+   "date": "2024-12-13",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "gpsr",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-gpsr"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 52, second paragraph: 'It shall apply from 13 December 2024.' Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-eaa-2019-06-27-entry-into-force",
+   "date": "2019-06-27",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "eaa",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-eaa"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 34: entry into force on the twentieth day following publication (OJ L 151, 7.6.2019). The Publications Office's metadata records the same date. Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-p2b-2019-07-31-entry-into-force",
+   "date": "2019-07-31",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "p2b",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-p2b"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 19(1): entry into force on the twentieth day following publication (OJ L 186, 11.7.2019). The Publications Office's metadata records the same date. Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-p2b-2020-07-12-application",
+   "date": "2020-07-12",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "p2b",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-p2b"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 19(2): 'It shall apply from 12 July 2020.' Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-ttpa-2024-04-09-entry-into-force",
+   "date": "2024-04-09",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "ttpa",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-ttpa"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 30(1): entry into force on the twentieth day following publication (OJ L 2024/900, 20.3.2024). Art. 3 and Art. 5(1) apply from this date (Art. 30(2), second sentence); they are not tagged because no provision record exists. The Publications Office's metadata records the same date. Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-ttpa-2025-10-10-application",
+   "date": "2025-10-10",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "ttpa",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-ttpa"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 30(2), first sentence: 'It shall apply from 10 October 2025.' Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-mica-2023-06-29-entry-into-force",
+   "date": "2023-06-29",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "mica",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-mica"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 149(1): entry into force on the twentieth day following publication (OJ L 150, 9.6.2023). The Publications Office's metadata records the same date. Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-mica-2024-12-30-application",
+   "date": "2024-12-30",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "mica",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-mica"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "Art. 149(2): 'This Regulation shall apply from 30 December 2024.' The Titles III–IV tranche (30 June 2024, Art. 149(3)) is not an event here: an application event that names no provision is read as the general date, and only one may exist (js/regulatory-model.js statusContradictions). Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-psd3-2023-06-28-proposal",
+   "date": "2023-06-28",
+   "date_precision": "precision:day",
+   "event_type": "event:proposal",
+   "instrument": "psd3",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [
+    "ec"
+   ],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-psd3-proposal",
+    "src-oeil-2023-0209"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "COM(2023) 366: document date 28 June 2023 in the Publications Office's metadata; 'Legislative proposal published' on 28/06/2023 in the procedure file. Re-read on 27 Oct 2026."
+  },
+  {
+   "id": "tl-psr-2023-06-28-proposal",
+   "date": "2023-06-28",
+   "date_precision": "precision:day",
+   "event_type": "event:proposal",
+   "instrument": "psr",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [
+    "ec"
+   ],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-psr-proposal",
+    "src-oeil-2023-0210"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-27",
+   "verification_note": "COM(2023) 367: document date 28 June 2023 in the Publications Office's metadata; 'Legislative proposal published' on 28/06/2023 in the procedure file. Re-read on 27 Oct 2026."
   }
  ]
 }

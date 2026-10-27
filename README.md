@@ -451,3 +451,9 @@ what it cannot support:
    Italian on the brief sees those labels in Italian elsewhere too — but the
    chrome and the tool pages' own text are not translated, and the chrome says
    so rather than pretending otherwise.
+9. **Security is verified in tests, not in operation.** The site's controls — the
+   Content-Security-Policy, no third-party requests, the allowlisted deploy artifact — are
+   implemented in code and verified in tests; what the live host sends was measured on the dates
+   `docs/DEPLOYMENT.md` records, and it does not send `Strict-Transport-Security` on the custom
+   domain. The private Control Room has never been deployed: its OIDC login has run only against
+   a local stub, and nothing has been penetration-tested (`docs/CONTROL-ROOM.md` §11).

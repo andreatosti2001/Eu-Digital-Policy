@@ -994,6 +994,63 @@
     {
       "id": "rel-kind:legal-basis",
       "label": "Is the legal basis for"
+    },
+    {
+      "id": "rel-kind:enables",
+      "label": "Enables",
+      "note": "The other instrument's provisions operate through definitions, bodies, means or populations this instrument establishes, and say so. Recorded only on an express reference in the DEPENDENT instrument's text; the locator is in that text. Direction: from = the enabling instrument. Added 27 Oct 2026 (docs/V2-DATA-DESIGN.md §1.4)."
+    },
+    {
+      "id": "rel-kind:defers-to",
+      "label": "Defers to",
+      "note": "This instrument leaves a matter to the other: a without-prejudice clause, a 'shall not affect' clause or an express reference sending the reader there. The locator is in the DEFERRING instrument's text (from). Added 27 Oct 2026 (docs/V2-DATA-DESIGN.md §1.4)."
+    }
+  ],
+  "inclusion_criterion": [
+    {
+      "id": "crit:object-data",
+      "label": "Object: data",
+      "note": "Rules on personal data, or on access to, sharing or governance of data. Tested against the act's own subject-matter article. The clauses of the inclusion criterion approved by the author on 27 Oct 2026 (D-7, docs/V2-DATA-DESIGN.md §5)."
+    },
+    {
+      "id": "crit:object-services",
+      "label": "Object: digital services",
+      "note": "Rules on digital services and online platforms."
+    },
+    {
+      "id": "crit:object-ai",
+      "label": "Object: artificial intelligence",
+      "note": "Rules on artificial intelligence."
+    },
+    {
+      "id": "crit:object-security",
+      "label": "Object: security",
+      "note": "Rules on the security and resilience of network and information systems."
+    },
+    {
+      "id": "crit:object-infrastructure",
+      "label": "Object: digital infrastructure",
+      "note": "Rules on the digital infrastructure the other four run on: electronic identity and trust services, interoperability of public digital services, electronic communications networks."
+    },
+    {
+      "id": "crit:horizontal",
+      "label": "Horizontal",
+      "note": "The rules apply across sectors."
+    },
+    {
+      "id": "crit:sector-instance",
+      "label": "Sector instance",
+      "note": "A sector's instance of one object layer, built on a covered instrument, and shown by an edge to it."
+    },
+    {
+      "id": "crit:other-field",
+      "label": "Other field",
+      "note": "The act's organising principle belongs to a field the brief does not analyse: tax, intellectual property, media content, product safety, accessibility, electoral law, financial markets and payments."
+    },
+    {
+      "id": "crit:readable",
+      "label": "Readable",
+      "note": "Law in force, or a proposal whose procedure has begun, with a primary text readable on the date of decision. Included when (at least one object clause) and (horizontal or sector instance) and not other field and readable; excluded when other field holds, or no object clause does; watched when the decision is deferred to a named event."
     }
   ],
   "competence_role": [

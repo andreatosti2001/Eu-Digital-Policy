@@ -181,6 +181,14 @@ human act, and this session has no authority to perform one.
 SESSION 18 wants an agent that will not let the public website expose Control Room
 credentials, privileged endpoints, approval mechanisms or operational traces.
 
+> **Superseded on 24 Oct 2026, and the check corrected on 27 Oct 2026 (v2 Session 4, B.2).**
+> The site is now published only by `.github/workflows/pages.yml`, from the allowlisted artifact
+> of `tools/pages-artifact.mjs` (`docs/DEPLOYMENT.md` §1b), and `publicSurface()` reads that
+> allowlist: no control-plane directory is on the website. The repository is public on
+> github.com, so the secret scan reads every tracked file, and an untracked record is kept out of
+> the repository by an ignore rule alone. The text below is the SESSION 18 finding, kept as the
+> record of what was true then.
+
 **There is no separation mechanism in this repository.** Deployment is GitHub Pages serving
 `main` at the repository root (`CURRENT-ARCHITECTURE` §13). There is no `_config.yml`, no
 `.nojekyll`, and no exclude list. Under that configuration the units of publication are files

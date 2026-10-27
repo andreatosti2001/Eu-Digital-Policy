@@ -457,7 +457,7 @@ refusal to start rather than a default somebody can override:
 ## 10 · The suite
 
 ```
-node --test .control-room/selftest.mjs      # 72 tests on 27 Oct 2026 (55 when this was written)
+node --test .control-room/selftest.mjs      # 74 tests on 27 Oct 2026, after B.3 (55 when this was written)
 node .control-room/cli.mjs boundary         # in CI, on every push
 ```
 

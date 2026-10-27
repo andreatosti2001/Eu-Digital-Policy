@@ -14,6 +14,7 @@
 
 import * as F from './format.js';
 import { label as taxLabel, loadOverlay } from './data.js';
+import { notCovered } from './routes.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -27,8 +28,14 @@ const tr = (key, fallback) => (OVERLAY && OVERLAY[key]) || fallback;
 
 /* ---------------------------------------------------------- data shaping */
 
+/* the dates of an instrument in the exclusion register or on the watchlist
+   are records, and stay in the data; a compliance calendar that listed them
+   would present the instrument as one this site covers (js/routes.js
+   coverage(), decided 27 Oct 2026) */
+const calendarEvents = () => [...IX.event.values()].filter((e) => !notCovered(IX.instrument.get(e.instrument)));
+
 function events() {
-  const all = [...IX.event.values()];
+  const all = calendarEvents();
   const today = new Date().toISOString().slice(0, 10);
   let out = all;
   if (filters.horizon === 'upcoming') out = out.filter((e) => String(e.date) >= today);
@@ -115,9 +122,9 @@ function rowHTML(ev, i) {
 /* ---------------------------------------------------------- controls */
 
 function controlsHTML() {
-  const types = [...new Set([...IX.event.values()].map((e) => e.event_type))]
+  const types = [...new Set(calendarEvents().map((e) => e.event_type))]
     .sort((a, b) => taxLabel(IX, a).localeCompare(taxLabel(IX, b)));
-  const instruments = [...new Set([...IX.event.values()].map((e) => e.instrument))]
+  const instruments = [...new Set(calendarEvents().map((e) => e.instrument))]
     .sort((a, b) => String(instrName(a)).localeCompare(String(instrName(b))));
   const opt = (v, l, sel) => '<option value="' + esc(v) + '"' + (sel === v ? ' selected' : '') + '>' + esc(l) + '</option>';
   /* each label travels with its own control: as bare siblings in a wrapping

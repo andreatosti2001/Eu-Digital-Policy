@@ -44,9 +44,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022R2065",
       "url_status": "url:live",
       "published": "2022-10-27",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "Title and number confirmed by fetch."
+      "note": "Title and number confirmed by fetch. Art. 2 (scope) read on 25 and 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX number: Art. 2(4) lists the acts the DSA is without prejudice to."
     },
     {
       "id": "src-dsa-text-unofficial-arts-14-19",
@@ -315,9 +315,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022R2554",
       "url_status": "url:live",
       "published": "2022-12-27",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "Title and number confirmed by fetch. The scraped metadata field conflated entry into force with the 17 January 2025 application date; both are recorded separately in the timeline."
+      "note": "Title and number confirmed by fetch. The scraped metadata field conflated entry into force with the 17 January 2025 application date; both are recorded separately in the timeline. Art. 2(1)(f) read on 25 and 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX number."
     },
     {
       "id": "src-eurlex-cra",
@@ -428,9 +428,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:52025PC0837",
       "url_status": "url:live",
       "published": "2025-11-19",
-      "accessed": "2026-09-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "A proposal, not law. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is informal shorthand used in this brief. Text read on 27 Sep 2026 from the English PDF of the act held by the Publications Office's Cellar (the CELEX record's first document, 1_EN_ACT_part1_v9.pdf); Art. 3 amends the GDPR."
+      "note": "A proposal, not law. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is informal shorthand used in this brief. Text read on 27 Sep 2026 from the English PDF of the act held by the Publications Office's Cellar (the CELEX record's first document, 1_EN_ACT_part1_v9.pdf); Art. 3 amends the GDPR. Re-read on 25 and 27 Oct 2026 from the same Cellar record (the English text of the act, DOC_1): Art. 1 amends Regulation (EU) 2023/2854; Art. 9 amends Directive (EU) 2022/2557; Art. 10(1)–(2) would repeal Regulation (EU) 2019/1150, keeping Art. 2 points (1), (2), (5) and Arts 4, 11 and 15 until 31 December 2032; Art. 10(3) would repeal Regulations (EU) 2022/868 and 2018/1807 and Directive 2019/1024."
     },
     {
       "id": "src-cjeu-c413-23p",
@@ -638,9 +638,9 @@
       "url": "http://publications.europa.eu/resource/celex/32024R0900",
       "url_status": "url:live",
       "published": "2024-03-20",
-      "accessed": "2026-09-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 30(2): applies from 10 October 2025; Art. 3 and Art. 5(1) from the date of entry into force."
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 30(2): applies from 10 October 2025; Art. 3 and Art. 5(1) from the date of entry into force. Arts 1, 2, 3 and 30 re-read on 25 and 27 Oct 2026 in the text retrieved from Cellar."
     },
     {
       "id": "src-eurlex-platform-work",
@@ -750,9 +750,9 @@
       "url": "http://publications.europa.eu/resource/celex/32022R0868",
       "url_status": "url:live",
       "published": "2022-06-03",
-      "accessed": "2026-09-27",
+      "accessed": "2026-10-27",
       "language": "en",
-      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 38: entry into force on the twentieth day following publication; applies from 24 September 2023."
+      "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 38: entry into force on the twentieth day following publication; applies from 24 September 2023. Retrieved again from Cellar on 27 Oct 2026: Art. 1(1) (subject matter) and Art. 38 read."
     },
     {
       "id": "src-eurlex-eprivacy",
@@ -2936,6 +2936,174 @@
       "accessed": "2026-10-14",
       "language": "en",
       "note": "Official Journal text read 14 Oct 2026 (OJ L, 2024/2977, 4.12.2024). Adopted 'in particular' under Article 5a(23) of Regulation (EU) No 910/2014; 'This Regulation shall enter into force on the twentieth day following that of its publication', which is 24 December 2024. Implementing Regulation (EU) 2024/2981, under Article 5c(6), was published the same day with the same entry-into-force clause, read the same day."
+    },
+    {
+      "id": "src-eurlex-vida",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Council Directive (EU) 2025/516 of 11 March 2025 amending Directive 2006/112/EC as regards VAT rules for the digital age (OJ L 2025/516, 25.3.2025)",
+      "url": "http://publications.europa.eu/resource/celex/32025L0516",
+      "url_status": "url:live",
+      "published": "2025-03-25",
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026, and again on 27 Oct 2026, from the Publications Office's Cellar by CELEX number. Art. 6 (transposition, paragraphs 1–3 read), Art. 7 (entry into force). The Publications Office's metadata records it as in force from 14 April 2025."
+    },
+    {
+      "id": "src-eurlex-avmsd",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Directive 2010/13/EU of 10 March 2010 (Audiovisual Media Services Directive) (codified version) (OJ L 95, 15.4.2010, p. 1)",
+      "url": "http://publications.europa.eu/resource/celex/32010L0013",
+      "url_status": "url:live",
+      "published": "2010-04-15",
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "The Official Journal text as published in 2010, retrieved on 25 Oct 2026, and again on 27 Oct 2026, from the Publications Office's Cellar by CELEX number — NOT a consolidated version: later amendments are not in it. Art. 1 (definitions), Art. 34 (repeal of Directive 89/552/EEC), Art. 35 (entry into force)."
+    },
+    {
+      "id": "src-eurlex-avmsd-2018",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Directive (EU) 2018/1808 of 14 November 2018 amending Directive 2010/13/EU (Audiovisual Media Services Directive) in view of changing market realities (OJ L 303, 28.11.2018, p. 69)",
+      "url": "http://publications.europa.eu/resource/celex/32018L1808",
+      "url_status": "url:live",
+      "published": "2018-11-28",
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "Identified on 25 Oct 2026 from the Publications Office's metadata (title, in-force flag, entry into force 18 December 2018) and the header of the text retrieved from Cellar. On 27 Oct 2026 the Official Journal text was retrieved from Cellar by CELEX number and three provisions were read: Art. 1 point (23), inserting Chapter IXa ('Provisions applicable to video-sharing platform services', Arts 28a–28b); Art. 2(1), transposition by 19 September 2020; Art. 3, entry into force. Nothing else in it was read."
+    },
+    {
+      "id": "src-eurlex-copyright-dsm",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Directive (EU) 2019/790 of 17 April 2019 on copyright and related rights in the Digital Single Market and amending Directives 96/9/EC and 2001/29/EC (OJ L 130, 17.5.2019, p. 92)",
+      "url": "http://publications.europa.eu/resource/celex/32019L0790",
+      "url_status": "url:live",
+      "published": "2019-05-17",
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026, and again on 27 Oct 2026, from the Publications Office's Cellar by CELEX number. Art. 1 (subject matter and scope), Art. 17 (online content-sharing service providers, read on 27 Oct 2026), Art. 26 (application in time), Art. 29 (transposition), Art. 31 (entry into force)."
+    },
+    {
+      "id": "src-eurlex-gpsr",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2023/988 of 10 May 2023 on general product safety (OJ L 135, 23.5.2023, p. 1)",
+      "url": "http://publications.europa.eu/resource/celex/32023R0988",
+      "url_status": "url:live",
+      "published": "2023-05-23",
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026, and again on 27 Oct 2026, from the Publications Office's Cellar by CELEX number. Art. 1 (objective and subject matter), Art. 22 (online marketplaces; refers to DSA Arts 9(2), 11, 12, 16, 23, 30(1) and 31(1)–(3)), Art. 52 (entry into force; applies from 13 December 2024)."
+    },
+    {
+      "id": "src-eurlex-eaa",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Directive (EU) 2019/882 of 17 April 2019 on the accessibility requirements for products and services (OJ L 151, 7.6.2019, p. 70)",
+      "url": "http://publications.europa.eu/resource/celex/32019L0882",
+      "url_status": "url:live",
+      "published": "2019-06-07",
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026, and again on 27 Oct 2026, from the Publications Office's Cellar by CELEX number. Art. 1 (subject matter), Art. 31 (transposition by 28 June 2022, application from 28 June 2025), Art. 34 (entry into force)."
+    },
+    {
+      "id": "src-eurlex-p2b",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2019/1150 of 20 June 2019 on promoting fairness and transparency for business users of online intermediation services (OJ L 186, 11.7.2019, p. 57)",
+      "url": "http://publications.europa.eu/resource/celex/32019R1150",
+      "url_status": "url:live",
+      "published": "2019-07-11",
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026, and again on 27 Oct 2026, from the Publications Office's Cellar by CELEX number. Art. 1 (subject matter and scope), Art. 19 (entry into force; applies from 12 July 2020)."
+    },
+    {
+      "id": "src-eurlex-mica",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2023/1114 of 31 May 2023 on markets in crypto-assets (OJ L 150, 9.6.2023, p. 40)",
+      "url": "http://publications.europa.eu/resource/celex/32023R1114",
+      "url_status": "url:live",
+      "published": "2023-06-09",
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 25 Oct 2026, and again on 27 Oct 2026, from the Publications Office's Cellar by CELEX number. Art. 1 (subject matter), Art. 149 (entry into force and application: 30 December 2024; Titles III and IV from 30 June 2024)."
+    },
+    {
+      "id": "src-eurlex-psd3-proposal",
+      "tier": "tier:1",
+      "type": "source-type:legislative-document",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "COM(2023) 366 final — Proposal for a Directive on payment services and electronic money services in the Internal Market amending Directive 98/26/EC and repealing Directives 2015/2366/EU and 2009/110/EC",
+      "url": "http://publications.europa.eu/resource/celex/52023PC0366",
+      "url_status": "url:live",
+      "published": "2023-06-28",
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "A proposal, not law. Identified on 25 Oct 2026 from the Publications Office's metadata (title, document date 28 June 2023, no in-force flag). On 27 Oct 2026 the proposal's English text was retrieved from Cellar (DOC_1 of the CELEX record) and Art. 1(1) (subject matter) was read; no other article was. It supports the proposal's identity, title and subject matter only."
+    },
+    {
+      "id": "src-eurlex-psr-proposal",
+      "tier": "tier:1",
+      "type": "source-type:legislative-document",
+      "publisher": "ec",
+      "publisher_name": "European Commission",
+      "title": "COM(2023) 367 final — Proposal for a Regulation on payment services in the internal market and amending Regulation (EU) No 1093/2010",
+      "url": "http://publications.europa.eu/resource/celex/52023PC0367",
+      "url_status": "url:live",
+      "published": "2023-06-28",
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "A proposal, not law. Identified on 25 Oct 2026 from the Publications Office's metadata (title, document date 28 June 2023, no in-force flag). On 27 Oct 2026 the proposal's English text was retrieved from Cellar (DOC_1 of the CELEX record) and Art. 1(1) (subject matter) was read; no other article was. It supports the proposal's identity, title and subject matter only."
+    },
+    {
+      "id": "src-oeil-2023-0209",
+      "tier": "tier:2",
+      "type": "source-type:legislative-document",
+      "publisher": "ep",
+      "publisher_name": "European Parliament — Legislative Observatory",
+      "title": "Procedure file 2023/0209(COD): payment services and electronic money services in the internal market",
+      "url": "https://oeil.secure.europarl.europa.eu/oeil/en/procedure-file?reference=2023/0209(COD)",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "Read on 25 and 27 Oct 2026. Key events: proposal 28/06/2023; Parliament first reading 23/04/2024 (T9-0297/2024); decision to enter interinstitutional negotiations announced 13/11/2024; approval in committee of the text agreed at early second-reading negotiations 05/05/2026 (PE787.673). Stage reached: 'Awaiting Council's 1st reading position'. A living page: what it says changes as the procedure moves."
+    },
+    {
+      "id": "src-oeil-2023-0210",
+      "tier": "tier:2",
+      "type": "source-type:legislative-document",
+      "publisher": "ep",
+      "publisher_name": "European Parliament — Legislative Observatory",
+      "title": "Procedure file 2023/0210(COD): payment services in the internal market",
+      "url": "https://oeil.secure.europarl.europa.eu/oeil/en/procedure-file?reference=2023/0210(COD)",
+      "url_status": "url:live",
+      "published": null,
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "Read on 25 and 27 Oct 2026. Key events: proposal 28/06/2023; Parliament first reading 23/04/2024 (T9-0298/2024); decision to enter interinstitutional negotiations announced 13/11/2024; approval in committee of the text agreed at early second-reading negotiations 05/05/2026 (PE787.675). Stage reached: 'Awaiting Council's 1st reading position'. A living page."
     }
   ]
 }

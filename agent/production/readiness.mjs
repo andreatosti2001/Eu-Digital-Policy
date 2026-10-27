@@ -129,16 +129,16 @@ export const CONDITIONS = Object.freeze([
       if (!f.boundary?.ran) return unmeasurable(`the boundary scan did not run: ${f.boundary?.why ?? 'no result'}`);
       return f.boundary.exit_code === 0
         ? pass('node agent/implement/cli.mjs boundary exits 0: no credential in a file the website loads, and none in a published file that is not a declared test fixture.',
-          'Almost the whole repository is inside the published deployment. GitHub Pages serves main at the root with no _config.yml and no exclude list, so agent/ and docs/ are published alongside index.html. That is a standing architectural fact this check reports as a warning on every run.')
+          'Since 24 Oct 2026 the website is the allowlisted artifact of tools/pages-artifact.mjs, published only by .github/workflows/pages.yml; agent/, docs/, tools/ and every dot path are refused by it. The repository itself is public on github.com, so the secret scan reads every tracked file, not only the website.')
         : fail(`node agent/implement/cli.mjs boundary exits ${f.boundary.exit_code}`);
     }),
 
   C('control_room_boundary', 'boundary', true,
-    'is the Control Room still behind the one publication boundary this repository has?',
+    'is the Control Room still outside the published website?',
     (f) => (f.crBoundary?.ran
       ? (f.crBoundary.exit_code === 0
-        ? pass('node .control-room/cli.mjs boundary exits 0: the dot prefix still holds on the actual tree, no credential is in the Control Room\'s own files, no private state has become git-tracked, and no route could deploy, delete or publish.',
-          'Protocol §10 and docs/CONTROL-ROOM.md §1 both say the dot prefix is a PUBLICATION boundary and not a security control. Every privileged request there is authenticated and authorized regardless, and this check says nothing about that.')
+        ? pass('node .control-room/cli.mjs boundary exits 0: the allowlist still refuses .control-room/ on the actual tree, no credential is in the Control Room\'s own files, no private state has become git-tracked, and no route could deploy, delete or publish.',
+          'Protocol §10 and docs/CONTROL-ROOM.md §1 both say the publication boundary — the allowlist since 24 Oct 2026, the dot prefix before — is not a security control. The Control Room\'s source is public in the repository. Every privileged request is authenticated and authorized regardless, and this check says nothing about that.')
         : fail(`node .control-room/cli.mjs boundary exits ${f.crBoundary.exit_code}`))
       : unmeasurable(`the Control Room boundary check did not run: ${f.crBoundary?.why ?? 'no result'}`))),
 

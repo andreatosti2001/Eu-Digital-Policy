@@ -30,7 +30,7 @@
 
 import { loadAll, index, label as taxLabel, loadOverlay } from './data.js';
 import * as F from './format.js';
-import { href as siteHref, instrumentHref } from './routes.js';
+import { href as siteHref, instrumentHref, notCovered } from './routes.js';
 
 /* ---------------------------------------------------------- helpers */
 
@@ -107,8 +107,12 @@ export function buildIndex() {
   const out = [];
   if (!IX) return out;
 
-  /* ---- instruments ---- */
+  /* ---- instruments ----
+     An instrument in the exclusion register or on the watchlist, and its
+     dates, are not offered: a result for one would present it as an
+     instrument this site covers (js/routes.js coverage(), 27 Oct 2026). */
   for (const inst of IX.instrumentList) {
+    if (notCovered(inst)) continue;
     const st = inst.legislative_status;
     push(out, {
       kind: 'instrument', id: inst.id,
@@ -205,6 +209,7 @@ export function buildIndex() {
 
   /* ---- dates ---- */
   for (const ev of IX.event.values()) {
+    if (notCovered(IX.instrument.get(ev.instrument))) continue;
     push(out, {
       kind: 'date', id: ev.id,
       title: F.humanDate(ev.date, ev.date_precision) + ' — ' + instName(ev.instrument),
