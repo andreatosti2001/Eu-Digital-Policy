@@ -41,7 +41,7 @@ an unlisted page are not security mechanisms, and none of them is relied on here
 | `ui/` | The client. It renders what the server assembled and decides nothing. |
 | `state/` | Private, git-ignored, empty in every checkout. See its own README. |
 | `config.example.env` | Placeholders only. The only configuration file in the repository. |
-| `selftest.mjs` | The sixteen proofs SESSION 21 requires, against a running server. |
+| `selftest.mjs` | The sixteen security tests SESSION 21 calls proofs, against a server the suite starts on a loopback port. Controls implemented in code and verified in tests; not verified on a deployed installation. |
 
 ## What it cannot do
 

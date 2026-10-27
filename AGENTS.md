@@ -406,7 +406,7 @@ node --test agent/simulation/selftest.mjs      # SESSION 24's simulation, incl. 
 node --test agent/autonomy/selftest.mjs       # SESSION 26's limited-autonomy runner, incl. the git half against a real temporary repository
 node --test agent/improve/selftest.mjs         # SESSION 27's improvement loop, incl. two real cycles over the real corpus
 node --test agent/production/selftest.mjs      # SESSION 29's production operating mode, incl. the refusal driven with synthetic facts
-node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security proofs
+node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security tests (its "proofs"), on a local server — never a deployed one
 node --test tools/selftest.mjs                 # SESSION 30, the four validators' own suite, incl. a planted Google Fonts import
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```

@@ -172,7 +172,7 @@ decide (`docs/CONTROL-ROOM.md`). Its security does **not** rest on its being har
   browser suite's `threshold` checks assert this.
 - **Privileged operations are server-side only.** The Control Room is a Node server
   (`.control-room/server.mjs`) that authenticates every privileged request (OIDC with PKCE,
-  proved against a local identity-provider stub) and then authorizes it against the proposal's
+  tested against a local identity-provider stub and never against a real one) and then authorizes it against the proposal's
   autonomy class, and audits it. The shape is **browser → authenticated server → secret →
   action**, never **browser → embedded secret**. It exposes no route that deploys, deletes or
   publishes (`.control-room/cli.mjs routes`).

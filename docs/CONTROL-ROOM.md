@@ -21,6 +21,11 @@ changes**. Approving writes one line to `agent/implement/decisions/decisions.jso
 nothing else. It cannot deploy, delete, apply, publish or execute anything, and there is no
 flag that lets it.
 
+**How far that is established** (v2 item 1.4, 27 Oct 2026): the controls in this document are
+**implemented in code**, and the suite (§10) **verifies them in tests** against a server it starts
+on a loopback port. **None is verified on a deployed installation**, because no deployed Control
+Room exists (§11). Read every present-tense sentence below in that light.
+
 ```
 node .control-room/cli.mjs check       # what it would refuse to start on
 node .control-room/cli.mjs provision --subject "you@example.org" --role administrator --by "your name"
@@ -61,11 +66,18 @@ data:
 Only the third is a security control. The first two are why a mistake in the third would not
 already have published an audit trail.
 
-**What this is not.** It is not a claim about what the deployed site serves. Nothing in this
-repository has ever fetched `andreatosti2001.github.io` — outbound access to that origin is
-refused by this environment's network policy — so the publication boundary is **read from the
-tree and inferred from GitHub Pages' documented default**, and every record that touches it says
-so.
+**What this is not.** It is not a claim about what the deployed site serves today. Until
+27 Sep 2026 nothing here had fetched the deployed origin, and this paragraph said the boundary was
+inferred. **That fact changed, and the paragraph was updated on 27 Oct 2026.**
+`docs/DEPLOYMENT.md` §1 and §1a record measurements of the live site:
+- `.control-room/server.mjs` and `.control-room/cli.mjs` answered **404** on `github.io` on
+  27 Sep 2026;
+- `.control-room/` answered **404** on `eudigitalpolicy.eu` on 23 Oct 2026.
+
+Since 24 Oct 2026 the site is published only by `.github/workflows/pages.yml`, from an
+**allowlisted artifact** that refuses every dot path by name (`tools/pages-artifact.mjs`,
+`docs/DEPLOYMENT.md` §1b and §2). That allowlist, not Jekyll's dot-prefix default, is now the
+publication boundary. Those are measurements on those dates, not a continuous check.
 
 ---
 
@@ -162,8 +174,8 @@ so that changing one variable does not get round it.
 
 **The architectural reason, stated because §11 asks for one and because "it was easier" is not
 one.** This repository has no dependencies and no build step, and this environment has no
-outbound network access. Without an offline provider, the sixteen security proofs SESSION 21
-requires could not be **run** — every one of them needs a login — and a security boundary
+outbound network access. Without an offline provider, the sixteen security tests SESSION 21
+requires (its "proofs") could not be **run** — every one of them needs a login — and a security boundary
 nobody has executed is a claim rather than a control. The local provider exists so that the
 suite can actually authenticate, and it is structurally unable to serve production.
 
@@ -450,7 +462,8 @@ node .control-room/cli.mjs boundary         # in CI, on every push
 ```
 
 The sixteen proofs SESSION 21 names are each a test with its number in the title, and each is
-proved **against a running server over real HTTP** wherever the claim is about a request — a
+tested **against a running server over real HTTP** wherever the claim is about a request — a
+local server on an ephemeral loopback port, never a deployed one (§11.2) — a
 claim about what a route does, tested by calling a function, is a claim about a function.
 
 Two shapes the file is arranged to avoid. **A test that passes for the wrong reason:** every
@@ -480,10 +493,16 @@ Read this section before quoting anything above.
 2. **No deployed Control Room has ever been reached.** The suite starts one on an ephemeral
    loopback port. `control_plane.control_room_availability` reports `unmeasurable` for exactly
    this reason, and 100% would be the more dangerous of the two possible lies.
-3. **The publication boundary is inferred, not confirmed.** That `.control-room/` is not served
-   follows from GitHub Pages' documented default and from `agent/implement/boundary.mjs`
-   reading the tree. The deployed origin has never been fetched (`docs/AUDIT-2026-09-01.md`
-   F-12 is the same limitation one layer down).
+3. **The publication boundary is measured on dates, not continuously.** *(Fact changed — updated
+   27 Oct 2026. This item read "inferred, not confirmed … the deployed origin has never been
+   fetched", which `docs/DEPLOYMENT.md` §1 made untrue on 27 Sep 2026.)*
+   - `.control-room/` was measured as **not served** on the live site on 27 Sep and 23 Oct 2026
+     (§1).
+   - It is excluded today by the Pages artifact's allowlist, which `tools/selftest.mjs` I2
+     asserts on every push.
+   - Nothing re-fetches the live site on a schedule, so a later change of host or setting would
+     go unseen until somebody measures again (`docs/AUDIT-2026-09-01.md` F-12 is the same
+     limitation one layer down).
 4. **The secret scan matches known credential shapes.** A clean run is a floor, not a ceiling,
    and it reads only text files.
 5. **The audit chain detects edits, not rewrites.** §7 above.
@@ -507,8 +526,11 @@ Read this section before quoting anything above.
 ## 12 · What must not change
 
 - **Do not put a Control Room page in the published tree.** Not under `docs/`, not at the root,
-  not as an `admin.html`. The dot prefix is the only publication boundary this repository has,
-  and a page outside it is public the moment it is pushed — whether or not it is linked.
+  not as an `admin.html`. A page outside `.control-room/` may be one allowlist edit away from
+  public, whether or not it is linked. *(Fact changed — updated 27 Oct 2026: this said "the dot
+  prefix is the only publication boundary this repository has", true until `pages.yml` became
+  the only publisher on 24 Oct 2026. The allowlisted artifact is now the boundary; the rule
+  stands.)*
 - **Do not add a default account, a seeded administrator, or a "first run" bootstrap that
   creates one.** The refusal to start is the feature.
 - **Do not add a `--password` flag,** and do not accept a credential in a URL, a query
