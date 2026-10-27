@@ -82,7 +82,7 @@ export const ROLES = ['viewer', 'reviewer', 'approver', 'administrator', 'operat
  * an unknown word is not a request, it is a mistake.
  */
 export const PERMISSIONS = [
-  'live:read',                    // the Live System view: runs, events, handoffs, failures
+  'live:read',                    // the Agent activity view: runs, events, handoffs, failures
   'workflows:read',               // the Orchestrator's workflow state — routing, stages, refusals
   'autonomy:read',                // what limited autonomy is switched on to do, and every action it took
   'queue:read',                   // the Review Queue: proposals and their full trace

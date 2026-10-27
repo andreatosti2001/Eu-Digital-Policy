@@ -1417,6 +1417,95 @@ test('ATTEST · 0.2 · the screen says it is a declaration, not proof of reading
 });
 
 /* ============================================================
+   The inventory: docs/CONTROL-ROOM.md names every view the interface
+   has (roadmap v2 item 1.3; docs/AUDIT-2026-10-24.md finding F)
+   ============================================================ */
+
+const DOC = join(REPO_ROOT, 'docs', 'CONTROL-ROOM.md');
+
+/** Every disagreement between the interface and the document's §5
+ *  inventory. Empty means aligned. Pure, so it can be fed a planted
+ *  tab and shown to fail. */
+function inventoryGaps({ html, appJs, doc }) {
+  const gaps = [];
+  const tabs = [...html.matchAll(/<button data-view="([a-z_]+)" class="tab"[^>]*>([^<]+)<\/button>/g)].map((m) => ({ id: m[1], label: m[2].trim() }));
+  const endpoint = Object.fromEntries([...(appJs.match(/const ENDPOINT = \{([^}]*)\}/)?.[1] ?? '').matchAll(/(\w+): '([^']+)'/g)].map((m) => [m[1], m[2]]));
+  const start = doc.indexOf('\n## 5 ');
+  const section = start < 0 ? '' : doc.slice(start, doc.indexOf('\n## 6 ', start));
+  const rows = section.split('\n').filter((l) => /^\| \*\*/.test(l)).map((l) => {
+    const cells = l.split(' | ');
+    const head = cells[0].match(/\*\*(.+?)\*\* \(`([a-z_]+)`\)/);
+    return {
+      label: head?.[1] ?? null, id: head?.[2] ?? null,
+      routes: [...(cells[1] ?? '').matchAll(/`(GET|POST) (\/[^`?\s]+)[^`]*`(?: · `([a-z_:]+)`)?/g)].map((m) => ({ method: m[1], path: m[2], permission: m[3] ?? null })),
+      columns: cells.length,
+    };
+  });
+  if (!rows.length) gaps.push('docs/CONTROL-ROOM.md §5 has no inventory table');
+  for (const t of tabs) {
+    const row = rows.find((r) => r.id === t.id);
+    if (!row) { gaps.push(`ui/app.html has a tab "${t.label}" (data-view="${t.id}") that the inventory does not name`); continue; }
+    if (row.label !== t.label) gaps.push(`the inventory calls data-view="${t.id}" "${row.label}", the interface "${t.label}"`);
+    if (!endpoint[t.id]) gaps.push(`the tab "${t.label}" reads no endpoint in app.js`);
+    else if (!row.routes.some((r) => r.path === endpoint[t.id])) gaps.push(`the tab "${t.label}" reads ${endpoint[t.id]}, which its inventory row does not name`);
+  }
+  for (const r of rows) {
+    if (!tabs.some((t) => t.id === r.id)) gaps.push(`the inventory names "${r.label}" (${r.id}), which ui/app.html has no tab for`);
+    if (r.columns < 6) gaps.push(`the inventory row "${r.label}" does not give data, source, operations and limits`);
+    for (const route of r.routes) {
+      const real = ROUTES.find((x) => x.method === route.method && x.path === route.path);
+      if (!real) gaps.push(`the inventory row "${r.label}" names ${route.method} ${route.path}, which server.mjs does not serve`);
+      else if (route.permission && route.permission !== real.permission) gaps.push(`the inventory gives ${route.method} ${route.path} the permission ${route.permission}; server.mjs requires ${real.permission}`);
+    }
+  }
+  return gaps;
+}
+
+const realInventory = () => ({
+  html: readFileSync(join(UI_DIR, 'app.html'), 'utf8'),
+  appJs: readFileSync(join(UI_DIR, 'app.js'), 'utf8'),
+  doc: readFileSync(DOC, 'utf8'),
+});
+
+test('INVENTORY · 1.3 · docs/CONTROL-ROOM.md names every view the interface has, with its route, permission, data, source, operations and limits', () => {
+  const inv = realInventory();
+  assert.deepEqual(inventoryGaps(inv), []);
+  /* And the check is checking something: eight tabs, eight rows. */
+  assert.equal([...inv.html.matchAll(/class="tab"/g)].length, 8);
+  /* Every GET view route the server has is in some row. */
+  for (const r of ROUTES.filter((x) => x.method === 'GET' && x.path.startsWith('/api/') && x.path !== '/api/session')) {
+    assert.ok(inv.doc.includes(`\`GET ${r.path}`), `the inventory does not name GET ${r.path}`);
+  }
+});
+
+test('INVENTORY · 1.3 · the assertion FAILS on a planted tab, a renamed tab and a dropped row', () => {
+  const inv = realInventory();
+  const planted = { ...inv, html: inv.html.replace('</nav>', '  <button data-view="planted" class="tab">Planted view</button>\n  </nav>') };
+  assert.ok(inventoryGaps(planted).some((g) => /tab "Planted view" \(data-view="planted"\) that the inventory does not name/.test(g)));
+  const renamed = { ...inv, html: inv.html.replace('>Agent activity<', '>Live system<') };
+  assert.ok(inventoryGaps(renamed).some((g) => /calls data-view="live" "Agent activity", the interface "Live system"/.test(g)));
+  const dropped = { ...inv, doc: inv.doc.split('\n').filter((l) => !l.startsWith('| **Editorial audit**')).join('\n') };
+  assert.ok(inventoryGaps(dropped).some((g) => /data-view="editorial"\) that the inventory does not name/.test(g)));
+  const wrongPermission = { ...inv, doc: inv.doc.replace('`GET /api/audit` · `audit:read`', '`GET /api/audit` · `live:read`') };
+  assert.ok(inventoryGaps(wrongPermission).some((g) => /GET \/api\/audit the permission live:read; server\.mjs requires audit:read/.test(g)));
+});
+
+test('INVENTORY · 1.3 · the roles table in §4 is the matrix authz.mjs enforces', () => {
+  const doc = readFileSync(DOC, 'utf8');
+  const sec = doc.slice(doc.indexOf('\n## 4 '), doc.indexOf('\n## 5 '));
+  const rows = Object.fromEntries(sec.split('\n').filter((l) => /^\| `[a-z]+` \|/.test(l)).map((l) => {
+    const [, role, rest] = l.match(/^\| `([a-z]+)` \| (.*) \|$/);
+    return [role, { above: /the above/.test(rest), perms: [...rest.matchAll(/`([a-z_:]+)`/g)].map((m) => m[1]) }];
+  }));
+  let carried = [];
+  for (const role of ['viewer', 'reviewer', 'approver', 'administrator']) {
+    carried = rows[role].above ? [...carried, ...rows[role].perms] : rows[role].perms;
+    assert.deepEqual([...new Set(carried)].sort(), [...ROLE_PERMISSIONS[role]].sort(), `§4 gives ${role} a different set from authz.mjs`);
+  }
+  assert.deepEqual(rows.operator.perms.sort(), [...ROLE_PERMISSIONS.operator].sort());
+});
+
+/* ============================================================
    Metric definitions you can read (roadmap v2 item 1.2;
    docs/AUDIT-2026-10-24.md finding D)
    ============================================================ */

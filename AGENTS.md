@@ -31,7 +31,7 @@ the evidence it describes.
 | `docs/OBSERVABILITY.md` | The trace model every agent run is instrumented through |
 | `docs/SOURCE-SCOUT.md` · `docs/LEGAL-VERIFIER.md` · `docs/VERIFICATION-INTEGRATION.md` · `docs/CHANGE-DETECTOR.md` · `docs/DATA-DEPTH.md` · `docs/GAP-PROPOSALS.md` · `docs/KNOWLEDGE-ARCHITECTURE.md` · `docs/EDITORIAL-AGENT.md` · `docs/UX-AUDIT.md` · `docs/IMPLEMENTATION-QA.md` · `docs/HEALTH-MONITOR.md` | The eleven agents that exist, what each refuses, and what none of them may do |
 | `docs/BROWSER-QA.md` · `docs/HEALTH-MONITOR.md` | The browser regression suite and the three health domains — what each measures, and what neither can see |
-| `docs/CONTROL-ROOM.md` | The private control plane: the two security domains, authentication, authorization, the seven approval gates, the audit trail — and §11, what none of it proves |
+| `docs/CONTROL-ROOM.md` | The private control plane: the two security domains, authentication, authorization, the inventory of every view, the eight approval gates, the audit trail — and §11, what none of it proves |
 | `docs/ORCHESTRATOR.md` | The Master Orchestrator: the ten workflow types, the five end states, the capability register, the eight routing checks, the six conflict shapes — and §13, what none of it proves |
 | `docs/FIRST-END-TO-END-AUDIT.md` | SESSION 24's simulated end-to-end cycle: what ran, what was simulated, the Control Room discovery path, the intended visual sequence — and **twenty-three findings, none fixed** |
 | `docs/LIMITED-AUTONOMY.md` | SESSION 26: the governance grant that switched five low-risk categories on, what a grant may never say, the six gates and the seven steps — and §7, what none of it proves |

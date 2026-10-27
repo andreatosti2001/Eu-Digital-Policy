@@ -1,7 +1,10 @@
 # The Control Room
 
 **Status:** binding. The reference document for `.control-room/` — the private control plane
-for *The European Legal Framework for the Digital World*. SESSION 21.
+for *The European Legal Framework for the Digital World*. Written in SESSION 21. Realigned with the
+interface in v2 Session 3 (27 Oct 2026, `docs/ROADMAP-v2.md` items 0.4 and 1.3). §5 is now an
+inventory of every view, and `.control-room/selftest.mjs` "INVENTORY · 1.3" fails when `ui/app.html`
+has a tab the inventory does not name.
 
 `docs/HANDOVER.md` carries what this session did. This carries what the thing **is**, how the
 owner sets it up, and — at the end, at length — **what it does not prove**.
@@ -198,11 +201,16 @@ remembers.
 
 | Role | Permissions |
 |---|---|
-| `viewer` | `live:read` `queue:read` `health:read` |
+| `viewer` | `live:read` `workflows:read` `autonomy:read` `queue:read` `health:read` `editorial:read` |
 | `reviewer` | the above, plus `proposal:request_changes` |
 | `approver` | the above, plus `audit:read` `proposal:reject` `proposal:approve` |
 | `administrator` | the above, plus `operators:read` `operators:write` `proposal:approve:human_only` |
-| `operator` | `live:read` `health:read` `audit:read` |
+| `operator` | `live:read` `workflows:read` `autonomy:read` `health:read` `editorial:read` `audit:read` |
+
+Corrected on 27 Oct 2026. Until then this table omitted `workflows:read` (SESSION 22) and
+`autonomy:read` (SESSION 26), which `authz.mjs` already granted. It now also carries `editorial:read`
+(v2 item 1.1). `.control-room/authz.mjs ROLE_PERMISSIONS` is the authority, and "INVENTORY · 1.3"
+asserts this table against it.
 
 Two separations are the point rather than the detail:
 
@@ -222,10 +230,31 @@ the suite proves it by sending exactly that request.
 
 ---
 
-## 5 · The three views
+## 5 · The views — an inventory
 
-All three are assembled **server-side**. The browser receives JSON and renders it; it computes
-no state, derives no status and holds no authority.
+Eight tabs, all assembled **server-side**. The browser receives JSON and renders it; it computes
+no state, derives no status and holds no authority. Until 27 Oct 2026 this section was "The three
+views" and described Live system, Review queue and Website health; Workflows (SESSION 22) and
+Autonomy (SESSION 26) existed in the interface and were not described here
+(`docs/AUDIT-2026-10-24.md` finding F).
+
+**Every tab has these two operations, and only the Review queue has any other:**
+- **Read.** A `GET` of the tab's route. The first five tabs below and the Editorial audit also
+  write a `view.read` entry to the audit trail; the Audit trail and Access tabs do not.
+- **Refresh.** A manual `GET` of the same route.
+
+| Tab (`data-view`) | Route · permission | What it shows | Where it comes from | Operations | Limits |
+|---|---|---|---|---|---|
+| **Agent activity** (`live`) | `GET /api/live` · `live:read` | Agent runs, with running and failed lifted out; events, discoveries and verification decisions from the twelve most recent runs; open handoffs; pending approvals; downstream effects; errors | The shared trace store, `agent/observability/runs/` (git-ignored), read through `agent/observability/query.mjs` | Read, Refresh | Only this machine's store, and the 60 most recent runs. An absent store is `no_trace_store`, never zero |
+| **Workflows** (`workflows`) | `GET /api/workflows` · `workflows:read` | Each workflow's state, replayed from its journal: transitions, stage outcomes, gaps, malformed lines. Also the registers: ten workflow types, the capability register, the human-review triggers, the mandatory conditions, and the autonomous categories (base and in force) | `agent/orchestrator/state/` (git-ignored). The registers come from `agent/orchestrator/` and `agent/policy/governance.mjs` | Read, Refresh | Per machine; the 80 most recent workflows. **No route starts, retries, dispatches or reopens anything** |
+| **Autonomy** (`autonomy`) | `GET /api/autonomy` · `autonomy:read` | Grants in force and not in force; the policy in force against the base; the paths and fields no grant may reach; the 60 most recent autonomous actions (merged, reverted, refused), each with its rollback information | `agent/policy/governance/grants.jsonl` (tracked); `agent/autonomy/actions/actions.jsonl` (git-ignored) | Read, Refresh | The action ledger is per machine. **No route grants, revokes, triggers or rolls back** |
+| **Review queue** (`queue`) | `GET /api/queue`, `GET /api/proposal?id=` · `queue:read`; `POST /api/review` · `proposal:request_changes`, then the decision's own permission (§4, §6) | Each proposal with its derived approval state and its whole chain: evidence, the source records cited, facts and open questions, operations, permitted files, required tests, rollback, agent run. Also its fingerprint, the gates that refuse it, change requests, and the attestation list and statement | `agent/records/` (git-ignored); the decision ledger `agent/implement/decisions/decisions.jsonl`; the Implementation Agent's preflight; `.control-room/state/reviews/` | Read, Refresh; **approve, reject** (each with an attestation), **request changes** (§6) | A fresh clone has no proposals. Approving publishes nothing. The attestation is a declaration, not proof of reading |
+| **Website health** (`health`) | `GET /api/health` · `health:read` | Readings of the last recorded run, by domain. Each metric shows its name, ID and definition, with source, calculation, frequency, interpretation and limitations one click away; its visibility (public-safe or private) and direction; the reference date, the time the run was recorded, and the commit analysed. Also the movement since the previous run, the metric register, and the privileged interfaces read from source | `agent/health/history/health.jsonl` (git-ignored); `agent/health/metrics.mjs`; `agent/health/security.mjs` | Read, Refresh | The last recorded run, not now; no freshness is computed from its dates. There is no overall score. Private readings are not publishable |
+| **Editorial audit** (`editorial`) | `GET /api/editorial-audit` · `editorial:read` | The latest recorded run of `tools/evidence-audit.mjs`. It answers what was checked, on which evidence, as of which date, at which commit and with which limits, and shows its errors, warnings and summary. Also the command that records a new run | `tools/evidence-audit-runs/evidence-audit.jsonl` (git-ignored), written by `node tools/evidence-audit.mjs --as-of YYYY-MM-DD --record` (`docs/EDITORIAL-AUDIT-PATH.md`) | Read, Refresh. The command is shown, **not run** | Per machine: a fresh clone has "no recorded run". The record's own limits are in `tools/evidence-audit-record.mjs` `LIMITS`. Kept apart from Website health. It adds nothing to the review queue |
+| **Audit trail** (`audit`) | `GET /api/audit` · `audit:read` | Trail entries, newest first: up to 200, filterable by action, actor and proposal. Also the result of re-walking the hash chain | `.control-room/state/audit/` (git-ignored) | Read, Refresh | Per machine. The chain detects edits, not wholesale rewrites (§7) |
+| **Access** (`operators`) | `GET /api/operators` · `operators:read` | Operators: roles, provider, who created each one, last seen, state. Also the configuration, with no secret in it | The operator registry under `.control-room/state/`; the environment | Read, Refresh. Roles are granted from the machine (§2) | Read-only. The interface cannot grant a role |
+
+The paragraphs below give the reasons behind four of these rows: Agent activity, the Review queue, Website health and the Editorial audit.
 
 **Every view is a snapshot, and says so** (v2 item 0.1, 27 Oct 2026; `docs/AUDIT-2026-10-24.md`
 findings B and E). The server stamps every view payload with `assembled_at`, the instant it began
@@ -263,8 +292,10 @@ case on a fresh clone, because `agent/health/history/` is git-ignored — it say
 command, rather than rendering nulls as zeros. **There is no overall score and this view will not
 compute one**; `agent/health/model.mjs overallScore()` still throws.
 
-There is also an **audit trail** view (`audit:read`) and an **access** view
-(`operators:read`), the second read-only: roles are granted from the machine.
+**Editorial audit** (v2 item 1.1, 27 Oct 2026; `docs/AUDIT-2026-10-24.md` finding A). The audit
+asked for a way to *launch* the editorial check from here. That would be a route that executes, which
+§12 forbids. So the check is run at a command line with `--record`, and this tab reads the record.
+The path a person follows is `docs/EDITORIAL-AUDIT-PATH.md`.
 
 ---
 
@@ -338,7 +369,8 @@ each entry carries the SHA-256 of the one before it and its own.
 Every entry carries the authenticated actor and **the roles they held at that moment**, the
 session, the proposal, the fingerprint the decision was bound to, the state before and after,
 the provenance the reviewer was shown, the originating agent run, the required tests, the
-approved scope, the Control Room's trace id, and the reason. An entry that cannot answer one of
+approved scope, the Control Room's trace id, the reviewer's **attestation** (on an approval or a
+rejection, null elsewhere; §6 — added 27 Oct 2026), and the reason. An entry that cannot answer one of
 the questions lists it in `missing_fields` — an incomplete trail says so rather than looking
 complete.
 
@@ -413,7 +445,7 @@ refusal to start rather than a default somebody can override:
 ## 10 · The suite
 
 ```
-node --test .control-room/selftest.mjs      # 55 tests
+node --test .control-room/selftest.mjs      # 72 tests on 27 Oct 2026 (55 when this was written)
 node .control-room/cli.mjs boundary         # in CI, on every push
 ```
 
@@ -500,3 +532,10 @@ Read this section before quoting anything above.
 - **Do not let the local provider out of loopback development.** Both refusals are load-bearing;
   removing either leaves the other looking sufficient.
 - **Do not commit `.control-room/state/`.**
+- **Do not make the attestation optional, and do not record which panels were opened** (added
+  27 Oct 2026, v2 item 0.2). A decision without a declaration is refused. A record of opened panels
+  would be trivially faked and read as proof of reading, which no attestation is.
+- **Do not add a route that runs the editorial audit, records a run or turns a finding into a queue
+  item** (added 27 Oct 2026, v2 item 1.1). The run is a command a person types; the view reads its
+  record. The same rule as the routes above, applied to the one view the audit asked to *launch*
+  something.

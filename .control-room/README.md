@@ -33,8 +33,8 @@ an unlisted page are not security mechanisms, and none of them is relied on here
 | `authn.mjs` | Sessions, the OIDC provider (authorization code + PKCE, full `id_token` verification), and the development-only local provider. |
 | `authz.mjs` | Deny-by-default permissions. The permission needed to approve is computed from the proposal's own autonomy class. |
 | `audit.mjs` | The hash-chained approval trail. Who decided what, when, against which exact version, on which evidence. |
-| `decide.mjs` | The one place a human decision enters through HTTP. Seven server-side gates; writes one line to the decision ledger and publishes nothing. |
-| `views.mjs` | Live system · review queue · website health, assembled server-side. |
+| `decide.mjs` | The one place a human decision enters through HTTP. Eight server-side gates, the seventh the reviewer's attestation; writes one line to the decision ledger and publishes nothing. |
+| `views.mjs` | Every view, assembled server-side: agent activity, workflows, autonomy, review queue, website health, editorial audit, and access. `docs/CONTROL-ROOM.md` §5 is the inventory. |
 | `server.mjs` | `node:http`. The route table is data, so the suite can assert what is absent. |
 | `boundary.mjs` | Is the private control plane actually outside the public website? Asked of the real tree. |
 | `cli.mjs` | What a person runs on the machine. Provisioning lives here so the Control Room cannot grant itself a role. |
