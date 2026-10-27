@@ -64,3 +64,11 @@ table { border-collapse: collapse; width: 100%; font-size: .82rem; }
 th, td { text-align: left; padding: .35rem .5rem; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { color: var(--muted); font-weight: 600; }
 .scroll { overflow-x: auto; }
+.snapshot { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1rem; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: .55rem .8rem; margin: 0 0 1rem; font-size: .82rem; color: var(--muted); }
+.snapshot p { margin: 0; flex: 1 1 24rem; }
+.snapshot strong { color: var(--fg); font-weight: 600; }
+.snapshot .snapshot-error { flex-basis: 100%; color: var(--error); }
+.snapshot button { border: 1px solid var(--line); background: var(--bg); color: inherit; font: inherit; padding: .25rem .7rem; border-radius: 6px; cursor: pointer; }
+dl.run { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; font-size: .84rem; margin: .4rem 0 1rem; }
+dl.run dt { color: var(--muted); font-weight: 600; }
+dl.run dd { margin: 0; }

@@ -16,6 +16,15 @@
        cookie is HttpOnly, so this script cannot read it, and the
        CSRF token it does hold is useless without the cookie.
 
+     · every view is a SNAPSHOT. The server stamps each payload with
+       `assembled_at`; this script shows that time above the view,
+       keeps the snapshot when the tab is left, and fetches again only
+       when somebody presses Refresh — a GET of the same route, never
+       a timer. A failed refresh leaves the last snapshot on screen
+       with its own time and the error, rather than blanking it or
+       passing it off as current (docs/AUDIT-2026-10-24.md finding B;
+       roadmap v2 item 0.1).
+
    Rendering is done by building nodes, not by assigning innerHTML,
    so a string that arrives from an agent record cannot become
    markup. The content security policy would stop an injected script
@@ -23,7 +32,7 @@
    ============================================================ */
 
 const $ = (id) => document.getElementById(id);
-const state = { csrf: null, actor: null, view: 'live', data: {} };
+const state = { csrf: null, actor: null, view: 'live', snapshots: {} };
 
 /* ---------------------------------------------------------- dom */
 
@@ -76,7 +85,7 @@ async function post(path, payload) {
 /* ---------------------------------------------------------- views */
 
 function renderLive(d) {
-  const out = [el('h2', { text: 'Live system' })];
+  const out = [el('h2', { text: 'Agent activity' })];
   if (d.state !== 'measured') {
     out.push(el('p', { class: 'empty', text: d.why }));
     out.push(bound(d.bound));
@@ -183,8 +192,8 @@ function renderQueue(d) {
         setStatus(`${action} ${item.proposal_id}…`);
         try {
           const out = await post('/api/review', { action, proposal_id: item.proposal_id, fingerprint: item.fingerprint, note: note.value || null });
+          await load('queue', { refresh: true });
           setStatus(`${out.outcome}. ${out.publication_note}`);
-          await load('queue');
         } catch (e) {
           setStatus(`${e.message}${e.fix ? ` — ${e.fix}` : ''}`, true);
         }
@@ -219,7 +228,13 @@ function renderHealth(d) {
       stat('public-safe', d.counts.public_safe),
       stat('private', d.counts.private),
       stat('never a score', d.counts.not_a_score)));
-    out.push(el('p', { class: 'note', text: `Last recorded run: ${d.as_of}${d.commit ? ` at ${d.commit}` : ''}.` }));
+    /* Three dates, three facts, labelled by the server
+       (views.mjs HEALTH_RUN_FIELDS). None is a freshness verdict. */
+    out.push(el('h3', { text: 'The recorded run these readings come from' }));
+    out.push(el('dl', { class: 'run' }, ...d.run_fields.flatMap((f) => [
+      el('dt', { text: f.label }),
+      el('dd', {}, el('code', { text: d[f.field] ?? 'not recorded in this entry' }), el('span', { class: 'note', text: ` — ${f.means}` })),
+    ])));
 
     for (const domain of d.domains) {
       const readings = d.readings.filter((r) => r.domain === domain.domain);
@@ -446,19 +461,47 @@ function renderOperators(d) {
 const RENDER = { live: renderLive, workflows: renderWorkflows, autonomy: renderAutonomy, queue: renderQueue, health: renderHealth, audit: renderAudit, operators: renderOperators };
 const ENDPOINT = { live: '/api/live', workflows: '/api/workflows', autonomy: '/api/autonomy', queue: '/api/queue', health: '/api/health', audit: '/api/audit', operators: '/api/operators' };
 
-async function load(view) {
+/** What sits above every view: when its snapshot was taken, that it
+ *  does not update by itself, the one manual refresh, and — if the
+ *  last refresh failed — the error, beside the snapshot still shown. */
+function snapshotBar(view, snap) {
+  const refresh = el('button', { type: 'button', text: 'Refresh this view' });
+  refresh.addEventListener('click', () => load(view, { refresh: true }));
+  const said = snap?.data
+    ? [el('strong', { text: `Snapshot taken at ${snap.data.assembled_at ?? 'a time the server did not state'}` }), ' (server time, UTC). ']
+    : [el('strong', { text: 'No snapshot of this view has been taken in this session.' }), ' '];
+  const bar = el('div', { class: 'snapshot' },
+    el('p', {}, ...said, 'Not live: this view changes only when you refresh it, and nothing refreshes it on a timer.'),
+    refresh);
+  if (snap?.error) {
+    bar.append(el('p', { class: 'snapshot-error', role: 'alert', text: snap.data
+      ? `The last refresh failed: ${snap.error}. Shown below is the earlier snapshot, taken at the time above.`
+      : `The refresh failed: ${snap.error}.` }));
+  }
+  return bar;
+}
+
+function show(view) {
+  const snap = state.snapshots[view];
+  $('view').replaceChildren(snapshotBar(view, snap), ...(snap?.data ? RENDER[view](snap.data) : []));
+}
+
+/* A tab already visited shows the snapshot it holds, with its time;
+   only `refresh` fetches again. */
+async function load(view, { refresh = false } = {}) {
   state.view = view;
   for (const tab of document.querySelectorAll('.tab')) tab.setAttribute('aria-current', String(tab.dataset.view === view));
+  const held = state.snapshots[view];
+  if (held?.data && !refresh) { setStatus(''); show(view); return; }
   setStatus('Loading…');
-  const section = $('view');
   try {
-    const data = await get(ENDPOINT[view]);
-    section.replaceChildren(...RENDER[view](data));
+    state.snapshots[view] = { data: await get(ENDPOINT[view]), error: null };
     setStatus('');
   } catch (e) {
-    section.replaceChildren(el('p', { class: 'empty', text: e.message }));
+    state.snapshots[view] = { data: held?.data ?? null, error: e.message };
     setStatus(e.message, true);
   }
+  if (state.view === view) show(view);
 }
 
 for (const tab of document.querySelectorAll('.tab')) {

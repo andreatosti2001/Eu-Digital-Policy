@@ -1,7 +1,15 @@
 /* ============================================================
-   .control-room/views.mjs — the three views, assembled server-side
+   .control-room/views.mjs — the views, assembled server-side
 
-   LIVE SYSTEM · WORKFLOWS · AUTONOMY · REVIEW QUEUE · WEBSITE HEALTH.
+   AGENT ACTIVITY (route /api/live, permission live:read — the IDs
+   predate the label and are not renamed) · WORKFLOWS · AUTONOMY ·
+   REVIEW QUEUE · WEBSITE HEALTH.
+
+   EVERY VIEW IS A SNAPSHOT. `server.mjs` stamps each payload with
+   `assembled_at`, and nothing refreshes a view but another GET of the
+   same route. Until 27 Oct 2026 the first tab was labelled "Live
+   system" and no view carried its time, which read as real time
+   (docs/AUDIT-2026-10-24.md finding B; roadmap v2 item 0.1).
 
    Each is built here, on the server, from the same modules the CLIs
    read. The browser receives JSON it may render; it computes no
@@ -12,7 +20,7 @@
 
    WHAT EACH VIEW REFUSES.
 
-   The Live System view shows FAILED and RUNNING runs, open handoffs
+   The Agent activity view shows FAILED and RUNNING runs, open handoffs
    and pending approvals, not just the ones that finished. A
    dashboard that showed only completed work would report a stuck
    pipeline as an idle one.
@@ -376,8 +384,21 @@ export function autonomyView(cfg, { dir = undefined, actionDir = undefined, now 
    3 · WEBSITE HEALTH
    ============================================================ */
 
-export function websiteHealth(cfg, { root } = {}) {
-  const hist = readHistory();
+/**
+ * The three dates of a recorded health run, labelled apart. Labels
+ * come from here so the interface cannot drift into calling the
+ * reference date a run date (docs/AUDIT-2026-10-24.md finding E:
+ * `as_of` was printed as "Last recorded run"). None of the three is a
+ * statement of freshness, and this view computes none from them.
+ */
+export const HEALTH_RUN_FIELDS = [
+  { field: 'as_of', label: 'Reference date', means: 'the date the readings refer to: what the run was told "today" is. It is not when the run happened, and it is not evidence that the readings are current.' },
+  { field: 'recorded_at', label: 'Run recorded at', means: 'when the health monitor wrote this run to agent/health/history/ on this machine. agent/health/history.mjs reports an entry without it as malformed rather than reading it as a run, so it is never filled in from the reference date.' },
+  { field: 'commit', label: 'Commit analysed', means: 'the git commit the run measured. Anything changed after that commit is not in these readings.' },
+];
+
+export function websiteHealth(cfg, { root, historyDir = null } = {}) {
+  const hist = historyDir ? readHistory({ dir: historyDir }) : readHistory();
   const last = hist.entries?.length ? hist.entries[hist.entries.length - 1] : null;
   const prev = hist.entries?.length > 1 ? hist.entries[hist.entries.length - 2] : null;
 
@@ -432,6 +453,7 @@ export function websiteHealth(cfg, { root } = {}) {
     as_of: last.as_of,
     recorded_at: last.recorded_at ?? null,
     commit: last.commit ?? null,
+    run_fields: HEALTH_RUN_FIELDS,
     domains,
     readings,
     counts: {
@@ -446,7 +468,7 @@ export function websiteHealth(cfg, { root } = {}) {
     register,
     no_overall_score: NO_OVERALL_SCORE,
     security: securitySnapshot(cfg, root),
-    bound: 'These are the numbers from the last recorded run, not from now. The as_of date is on the reading; a stale one is stale and says so rather than being refreshed by being looked at.',
+    bound: 'These are the numbers from the last recorded run, not from now. Its reference date, the time it was recorded and the commit it analysed are three different facts and are shown apart; how current the readings are depends on all three and on what has changed since that commit, and this view does not compute a freshness from any of them. Looking at a stale run does not refresh it.',
   };
 }
 

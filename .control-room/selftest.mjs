@@ -1283,6 +1283,89 @@ test('VIEWS · a gate-blocked proposal is counted apart from one waiting on a re
 });
 
 /* ============================================================
+   Snapshots: what time a view is from, and that it is not live
+   (roadmap v2 item 0.1; docs/AUDIT-2026-10-24.md findings B and E)
+   ============================================================ */
+
+const UI_DIR = join(CONTROL_ROOM_ROOT, 'ui');
+const uiFiles = () => readdirSync(UI_DIR).filter((f) => /\.(html|js|css)$/.test(f)).map((f) => ({ f, text: readFileSync(join(UI_DIR, f), 'utf8') }));
+
+test('SNAPSHOT · 0.1 · every view payload carries the ISO time the server assembled it', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const admin = await s.login('admin@example.org');
+    /* Every GET under /api/ except the session itself: a route added
+       later is covered by default, not by remembering to list it. */
+    const viewRoutes = ROUTES.filter((r) => r.method === 'GET' && r.path.startsWith('/api/') && r.path !== '/api/session');
+    assert.ok(viewRoutes.length >= 8, 'the suite must be checking every view');
+    for (const r of viewRoutes) {
+      const path = r.path === '/api/proposal' ? `/api/proposal?id=${w.proposals[0].proposal_id}` : r.path;
+      const before = Date.now();
+      const res = await s.get(path, admin.cookie);
+      assert.equal(res.status, 200, `${path} answered ${res.status}`);
+      const body = await res.json();
+      assert.match(String(body.assembled_at), /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/, `${path} carries no ISO assembly time`);
+      const t = Date.parse(body.assembled_at);
+      assert.ok(t >= before - 1000 && t <= Date.now() + 1000, `${path}'s assembly time is not the time it was assembled`);
+    }
+  } finally { await s.stop(); }
+});
+
+test('SNAPSHOT · 0.1 · Website health shows reference date, run recorded at and commit analysed as three fields', () => {
+  const w = world();
+  const dir = tempDir('cr-health-');
+  const entry = { history_version: 1, recorded_at: '2026-10-25T09:14:03.120Z', as_of: '2026-10-24', commit: 'a'.repeat(40), readings: [] };
+  writeFileSync(join(dir, 'health.jsonl'), `${JSON.stringify(entry)}\n`, 'utf8');
+  const health = liveModule.websiteHealth(w.cfg, { root: REPO_ROOT, historyDir: dir });
+  assert.equal(health.state, 'measured');
+  assert.equal(health.as_of, '2026-10-24');
+  assert.equal(health.recorded_at, '2026-10-25T09:14:03.120Z');
+  assert.equal(health.commit, 'a'.repeat(40));
+  assert.equal(new Set([health.as_of, health.recorded_at, health.commit]).size, 3, 'the three fields must be three values, not one shown three times');
+
+  const labels = Object.fromEntries(health.run_fields.map((f) => [f.field, f.label]));
+  assert.deepEqual(Object.keys(labels), ['as_of', 'recorded_at', 'commit']);
+  assert.equal(labels.as_of, 'Reference date');
+  assert.doesNotMatch(labels.as_of, /run|recorded|execut/i, 'the reference date must not be labelled as a run date');
+  assert.match(labels.recorded_at, /recorded/i);
+  assert.match(labels.commit, /commit/i);
+  for (const f of health.run_fields) assert.ok(f.means.length > 40, `${f.field} does not say what it means`);
+  assert.match(health.bound, /does not compute a freshness/);
+
+  /* An entry written without recorded_at shows it as absent; it is
+     never filled in from the reference date. */
+  writeFileSync(join(dir, 'health.jsonl'), `${JSON.stringify({ ...entry, recorded_at: undefined, commit: null })}\n`, 'utf8');
+  const thin = liveModule.websiteHealth(w.cfg, { root: REPO_ROOT, historyDir: dir });
+  assert.equal(thin.state, 'no_run_recorded', 'an entry without recorded_at is malformed in agent/health/history.mjs and is not a run');
+
+  /* No label in ui/ presents as_of as a run date. The client reads the
+     three through the server's labels and never names as_of itself. */
+  for (const { f, text } of uiFiles()) {
+    assert.doesNotMatch(text, /Last recorded run/i, `${f} still labels a date "Last recorded run"`);
+    assert.doesNotMatch(text, /\bas_of\b/, `${f} renders as_of under a label of its own`);
+  }
+  assert.match(readFileSync(join(UI_DIR, 'app.js'), 'utf8'), /run_fields/);
+});
+
+test('SNAPSHOT · 0.1 · "Live system" is no label, and the one refresh is manual — no timer anywhere in ui/', () => {
+  for (const { f, text } of uiFiles()) {
+    assert.doesNotMatch(text, /live system/i, `${f} still says "Live system"`);
+    assert.doesNotMatch(text, /setInterval|setTimeout|requestAnimationFrame|EventSource|WebSocket/, `${f} refreshes something on its own`);
+  }
+  const app = readFileSync(join(UI_DIR, 'app.js'), 'utf8');
+  assert.match(app, /Snapshot taken at/);
+  assert.match(app, /assembled_at/);
+  assert.match(app, /Refresh this view/);
+  assert.match(app, /Not live/);
+  /* On a failed refresh the earlier snapshot is kept, with the error. */
+  assert.match(app, /data: held\?\.data \?\? null, error: e\.message/);
+  assert.match(app, /The last refresh failed/);
+  /* The tab still reads the same route; the label changed, not the ID. */
+  assert.match(readFileSync(join(UI_DIR, 'app.html'), 'utf8'), /data-view="live" class="tab"[^>]*>Agent activity</);
+});
+
+/* ============================================================
    Observability: every substantive action is traceable
    ============================================================ */
 

@@ -398,26 +398,33 @@ export function serve({ cfg, quiet = false, tracer = null } = {}) {
         });
       }
 
-      /* ---- the four views ---- */
-      if (path === '/api/live') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'live_system' }); return send(res, 200, liveSystem(cfg)); }
-      if (path === '/api/workflows') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'workflows' }); return send(res, 200, workflowsView(cfg)); }
-      if (path === '/api/autonomy') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'autonomy' }); return send(res, 200, autonomyView(cfg)); }
-      if (path === '/api/queue') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'review_queue' }); return send(res, 200, reviewQueueView(cfg)); }
-      if (path === '/api/health') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'website_health' }); return send(res, 200, websiteHealth(cfg, { root: cfg.root })); }
+      /* ---- the views ----
+         Every view payload carries `assembled_at`: the instant this
+         server began reading the stores for it (roadmap v2 item 0.1;
+         docs/AUDIT-2026-10-24.md finding B). A view is a SNAPSHOT —
+         nothing refreshes it but another GET of the same route — and a
+         snapshot without its time reads as "now", which it is not. */
+      const at = new Date().toISOString();
+      const view = (payload) => send(res, 200, { ...payload, assembled_at: at });
+      if (path === '/api/live') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'live_system' }); return view(liveSystem(cfg)); }
+      if (path === '/api/workflows') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'workflows' }); return view(workflowsView(cfg)); }
+      if (path === '/api/autonomy') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'autonomy' }); return view(autonomyView(cfg, { now: at })); }
+      if (path === '/api/queue') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'review_queue' }); return view(reviewQueueView(cfg)); }
+      if (path === '/api/health') { audit.record({ action: 'view.read', outcome: 'allowed', actor: resolved.actor, session: resolved.session, request: requestInfo, reason: 'website_health' }); return view(websiteHealth(cfg, { root: cfg.root })); }
 
       if (path === '/api/proposal') {
         const id = url.searchParams.get('id');
         if (!id) return send(res, 400, { error: 'bad request', reason: 'name a proposal with ?id=' });
         const item = proposalDetail(cfg, id);
-        return item ? send(res, 200, item) : send(res, 404, { error: 'not found', reason: `no proposal "${id}" is in the record store` });
+        return item ? view(item) : send(res, 404, { error: 'not found', reason: `no proposal "${id}" is in the record store` });
       }
 
       if (path === '/api/audit') {
         const q = audit.query({ action: url.searchParams.get('action'), actor_id: url.searchParams.get('actor'), proposal_id: url.searchParams.get('proposal'), limit: Number(url.searchParams.get('limit') ?? 200) });
-        return send(res, 200, { ...q, chain: audit.verifyChain() });
+        return view({ view: 'audit', ...q, chain: audit.verifyChain() });
       }
 
-      if (path === '/api/operators') return send(res, 200, operatorsView(cfg));
+      if (path === '/api/operators') return view(operatorsView(cfg));
 
       /* ---- the one state-changing action in the system ---- */
       if (path === '/api/review') {
