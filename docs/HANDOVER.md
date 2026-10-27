@@ -1,9 +1,9 @@
 # HANDOVER
 
-**Last updated:** v2 Session 4 — Part A (item 2.1) approved; Part B (B.1–B.3) implemented, **stopped
-at its checkpoint**, waiting for the author's approval · 27 October 2026
-**Branch:** `claude/new-session-e7w8sp`, cut from `main` at `34a2ee0` (the merge of #20), pushed. No
-pull request yet: the author is asked at the end of the session.
+**Last updated:** v2 Session 4 — Part A (item 2.1) and Part B (B.1–B.3) implemented and approved
+(`docs/ROADMAP-v2.md` §8) · 27 October 2026
+**Branch:** `claude/new-session-e7w8sp`, cut from `main` at `34a2ee0` (the merge of #20), pushed and
+opened as a pull request to `main` on the author's instruction; not merged.
 
 ## Branch register — 27 October 2026 (v2 Session 4)
 
@@ -12,8 +12,15 @@ pull request yet: the author is asked at the end of the session.
   stopped and said so; the author merged it as #20 (`34a2ee0`), and the session started from there.
 - `git branch -r --no-merged origin/main` then listed only
   `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
-- This session's branch: `claude/new-session-e7w8sp`, pushed. Disposition: asked of the author at the
-  end of the session (Part B checkpoint).
+- This session's branch: `claude/new-session-e7w8sp`. Disposition: pull request to `main`, opened on
+  the author's instruction of 27 Oct 2026 ("Sì, apri la PR"); not merged.
+
+## Next — v2 Session 5 (not yet scoped by the author)
+
+- Roadmap item 2.2 (eIDAS 2.0) is next in `docs/ROADMAP-v2.md` §4; it was not in Session 4.
+- Open from Session 4, each recorded in §8: PP-09's stale text; the OIDC redirect URI and the
+  unbracketed `::1` origin (`.control-room/authn.mjs`, `server.mjs`); R-01's P2B gap (Phase 3); the
+  17 relationships and the `edge-v1-sources` flip; the `data-omnibus` correction (F-2, F-3, Phase 3).
 
 ## v2 Session 4 — Part B checkpoint report (B.1–B.3)
 
