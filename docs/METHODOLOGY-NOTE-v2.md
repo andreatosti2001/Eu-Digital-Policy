@@ -12,8 +12,8 @@ same commit as the map.
 - **It states no number.** How many instruments are covered, excluded or watched is computed on the page,
   as the evidence counts are, so no document can drift from it.
 - **It names no instrument's status.** Statuses live in the records.
-- **One clause depends on an open decision.** The criterion paragraph restates the inclusion criterion
-  proposed in `docs/V2-DATA-DESIGN.md` §5 (D-7). If the author changes the criterion, that paragraph
+- **One paragraph restates a decision.** The criterion paragraph restates the inclusion criterion of
+  `docs/V2-DATA-DESIGN.md` §5, approved on 27 Oct 2026 (D-7). If the criterion changes, that paragraph
   changes with it and nothing else does.
 
 **Localisation.** The section adds keys to the `it`, `fr` and `es` overlays. They are declared

@@ -43,28 +43,31 @@ register and watchlist — and a coherence matrix. No production code, no UI, no
 - **All 17 existing relationships derive as `unverified`** under the v2 rule (bare source IDs, no
   locator). That is the data's state made visible, not a regression.
 - **None of the 33 applicability rules is publishable at the v2 standard** (v1 sources). What
-  applies.html does about it is still D-2, open.
+  applies.html does about it: D-2, decided 27 Oct 2026 — kept, with a notice in Phase 1.
 - **Eight findings in existing data, none fixed** (`docs/V2-DATA-DESIGN.md` §7). Most consequential:
   - F-2: `data-omnibus.proposes_to_amend` lists the DGA, which COM(2025) 837 Art. 10(3)(a) would
     *repeal*;
   - F-3: it omits the CER Directive, which Art. 9 amends;
   - F-4: `ap-ai-act-03`'s `_gte` key against AI Act Art. 51(2)'s "greater than";
   - F-8: 11 rules' dates omit application events of their own obligations.
-- **Open for the author:**
-  - Q-1, P2B: the proposed criterion would include it; recommended: watchlist, which the brief permits;
-  - Q-2: the criterion itself (D-7);
-  - Q-3: the six unlabelled states, against the brief's "uniformi";
-  - Q-6: whether the brief's finance-chapter condition is meant for the DGA too;
-  - Q-4: committing the brief (D-1) — **decided 27 Oct 2026: `docs/BRIEF-v2.md`, verbatim**, pointed to from `AGENTS.md`;
-  - Q-5: the amber corrections in §7;
-  - and every `reason` in D6, which is a draft in the author's name.
+- **Decided by the author on 27 Oct 2026** (ROADMAP-v2 §8):
+  - D-1: the brief is committed as `docs/BRIEF-v2.md`, pointed to from `AGENTS.md`;
+  - D-7: the inclusion criterion is approved;
+  - D-2: `applies.html` stays, with a notice added in Phase 1 (item 1.5);
+  - P2B: watchlist, watching COM(2025) 837;
+  - the six states outside the brief's labels: no label;
+  - the DGA: the finance-chapter condition applies to it too;
+  - the eight findings: corrected in Phase 3;
+  - the D6 reasons: drafts, which the author reviews entry by entry before item 2.1.
+- **Still open:** D-4 (the tier names) and D-5 (the CMS login); A-2 and A-4 (which acts "copyright" and
+  "AVMSD" mean), which the brief does not settle.
 
 **Validators** before and after: unchanged — `validate` 0/0, `i18n-audit` 0/0, `design-qa` 0/0,
 `evidence-audit` 0 errors / 11 warnings, `freshness` (positional date) 0 defects, `seo-audit` 0/0.
 None of them reads `docs/`.
 
 **Next:** v2 Session 3 = Phase 0 (0.1–0.4), after the author's review of this design. Item 2.1 (the
-register and watchlist into `data/`) waits for the Phase 1 checkpoint and the approval of D-7 and of
+register and watchlist into `data/`) waits for the Phase 1 checkpoint and the author's approval of
 the D6 reasons.
 
 ## Branch register — 27 October 2026 (v2 Session 2)

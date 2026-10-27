@@ -1,9 +1,9 @@
 {
   "$description": "D6 — the exclusion register and the watchlist, as the records Phase 2 item 2.1 would add to data/. PROPOSED in v2 Session 2; nothing here is in data/. Each entry is an instrument record in the exact shape of data/instruments.json, carrying the new `scope_decision` block and the new `status_basis` field (docs/v2-design/map.schema.json). The register is DERIVED as the records whose decision says `excluded`, the watchlist as those whose decision says `watched`: neither is a list anybody maintains.",
-  "$note": "ONE HOME. When item 2.1 is implemented, each block below is MOVED into its data file — `instruments` into data/instruments.json `instruments[]`, `relationships` into its `relationships[]`, `sources` into data/sources.json, `events` into data/timeline.json, `source_updates` applied in place — and this file is deleted in the same commit, so the facts never live in two places. EVIDENCE. Every fact below was read on 25 Oct 2026 from a document retrieved that day: the Official Journal text through the Publications Office's Cellar by CELEX number, the Publications Office's metadata through its SPARQL endpoint (in-force flag, entry-into-force dates), the Commission proposals through Cellar, and the European Parliament's Legislative Observatory procedure files. No fact was taken from a search result or from model knowledge; where a fact was not read it is null, and the note says what is missing. EDITORIAL. Every `reason` is a DRAFT for the author's approval, and every `approved_on` is null until the author approves the entry in docs/ROADMAP-v2.md §8 — a record with a null `approved_on` may not enter data/ (rule M-04): the judgement is the author's (docs/AI-SAFE-BOUNDARIES.md §2), and the inclusion criterion it applies (D-7) is itself not yet approved. Two entries need the author's word beyond approving their reason, and say so: p2b (which list, Q-1) and dga (whether the finance-chapter condition applies to it, Q-6).",
+  "$note": "ONE HOME. When item 2.1 is implemented, each block below is MOVED into its data file — `instruments` into data/instruments.json `instruments[]`, `relationships` into its `relationships[]`, `sources` into data/sources.json, `events` into data/timeline.json, `source_updates` applied in place — and this file is deleted in the same commit, so the facts never live in two places. EVIDENCE. Every fact below was read on 25 Oct 2026 from a document retrieved that day: the Official Journal text through the Publications Office's Cellar by CELEX number, the Publications Office's metadata through its SPARQL endpoint (in-force flag, entry-into-force dates), the Commission proposals through Cellar, and the European Parliament's Legislative Observatory procedure files. No fact was taken from a search result or from model knowledge; where a fact was not read it is null, and the note says what is missing. EDITORIAL. Every `reason` is a DRAFT for the author's approval, and every `approved_on` is null until the author approves the entry in docs/ROADMAP-v2.md §8 — a record with a null `approved_on` may not enter data/ (rule M-04): the judgement is the author's (docs/AI-SAFE-BOUNDARIES.md §2), and the inclusion criterion it applies (D-7) is itself not yet approved. On 27 Oct 2026 the author decided which list p2b joins (the watchlist, Q-1) and that the finance-chapter condition applies to the dga (Q-6), and chose to review every reason before it is approved: `approved_on` stays null until then.",
   "$read_on": "2026-10-25",
   "$assumptions": [
-    "A-1 (checked against the brief on 27 Oct 2026): the seven regimes are the brief's (ViDA, AVMSD, copyright, GPSR, EAA, P2B, political advertising). The brief puts them in 'the register of exclusions OR the watchlist'; six are excluded by the criterion's crit:other-field, and P2B's list is open (Q-1).",
+    "A-1 (checked against the brief on 27 Oct 2026): the seven regimes are the brief's (ViDA, AVMSD, copyright, GPSR, EAA, P2B, political advertising). The brief puts them in 'the register of exclusions OR the watchlist': six are excluded by the criterion's crit:other-field; P2B is watched (the author's decision of 27 Oct 2026, Q-1).",
     "A-2: 'copyright' is read as Directive (EU) 2019/790 (copyright in the Digital Single Market), the copyright act the DSA's Art. 2(4)(b) reaches most directly. The brief's own word is 'copyright'; if it meant the copyright acquis as a whole, the entry widens and the author says so.",
     "A-3 (confirmed against the brief on 27 Oct 2026): the watchlist holds the brief's 'inclusioni condizionate Fase 3 — MiCA, PSD3/PSR, DGA in transizione — solo se si apre esplicitamente il capitolo finanza'. PSD3 and PSR are two proposals and are two records; all four watch for the finance chapter only.",
     "A-4: 'AVMSD' is read as Directive 2010/13/EU (the codified version) as amended, notably by Directive (EU) 2018/1808."
@@ -214,7 +214,7 @@
       "short_name": "P2B Regulation",
       "full_name": "Regulation (EU) 2019/1150 on promoting fairness and transparency for business users of online intermediation services",
       "kind": "kind:regulation",
-      "scope_class": "scope:out-of-scope",
+      "scope_class": "scope:referenced",
       "brief_part": null,
       "legislative_status": "status:applicable",
       "status_as_of": "2026-10-25",
@@ -234,12 +234,15 @@
       "last_verified": "2026-10-25",
       "legal_basis": null,
       "scope_decision": {
-        "disposition": "excluded",
-        "criterion": ["crit:covered-elsewhere"],
-        "reason": "DRAFT — AND A CRITERION CONFLICT FOR THE AUTHOR. The brief puts P2B in the register or the watchlist, never on a page; this draft chose the register, and the proposed criterion does not support that choice: its subject is the fairness and transparency of online intermediation services (Art. 1(1)), squarely within crit:object-services and crit:horizontal, and no crit:other-field applies. The only ground this session can state is that its repeal is proposed (COM(2025) 837 Art. 10(1)) and that its addressees are reached by the DMA and the DSA — which is what the clause crit:covered-elsewhere says, and that clause exists for this entry alone. Recommended instead: disposition `watched`, watching the adoption of COM(2025) 837 — which the brief permits. Not applied here, because which list a regime joins is the author's decision (Q-1).",
+        "disposition": "watched",
+        "criterion": ["crit:object-services", "crit:horizontal"],
+        "reason": "DRAFT. The P2B Regulation sets rules on the fairness and transparency of online intermediation services and search engines towards business users (Art. 1(1)–(2)): it meets the criterion, and the brief rules out a full page for it. It is watched rather than covered because its repeal is proposed — COM(2025) 837 Art. 10(1) would repeal it, keeping Art. 2 points (1), (2) and (5) and Arts 4, 11 and 15 until 31 December 2032 (Art. 10(2)) — and because the DSA leaves it its own field (DSA Art. 2(4)(e)). Covering a regime on its way out would give a reader a settled-looking page about a framework in transition. Placed on the watchlist by the author's decision of 27 Oct 2026 (Q-1).",
         "approved_on": null,
         "refer_to": ["src-eurlex-p2b"],
-        "watch_for": null,
+        "watch_for": {
+          "event_type": "event:adoption",
+          "description": "Adoption, amendment or withdrawal of the Digital Omnibus proposal (COM(2025) 837), procedure 2025/0360(COD), which would repeal the Regulation. P2B is not one of the brief's finance-chapter inclusions, so this is its only trigger."
+        },
         "sources": [
           { "source_id": "src-eurlex-p2b", "supports": "supports:direct", "locator": "Art. 1(1)–(2)" },
           { "source_id": "src-eurlex-data-omnibus-837", "supports": "supports:direct", "locator": "Art. 10(1)–(2)" },
@@ -425,12 +428,12 @@
         "scope_decision": {
           "disposition": "watched",
           "criterion": ["crit:object-data", "crit:horizontal"],
-          "reason": "DRAFT. The DGA meets the criterion and is mapped, not covered: it has no page of its own. It is watched rather than promoted because its repeal is proposed (COM(2025) 837 Art. 10(3)(a)), in the same proposal that amends the Data Act (Art. 1); promoting a regime that may be folded into another would give a reader a page about a framework in transition as if it were settled. Its transition is shown as derived from the proposal's own edges, never stored.",
+          "reason": "DRAFT. The DGA meets the criterion and is mapped, not covered: it has no page of its own. It is watched because the brief makes it a conditional inclusion, with MiCA and PSD3/PSR: it enters only if the finance chapter is explicitly opened — read literally, on the author's decision of 27 Oct 2026 (Q-6). Its proposed repeal (COM(2025) 837 Art. 10(3)(a)), in the same proposal that amends the Data Act (Art. 1), is shown meanwhile as a transition derived from the proposal's own edges, never stored.",
           "approved_on": null,
           "refer_to": ["src-eurlex-dga"],
           "watch_for": {
             "event_type": null,
-            "description": "The author explicitly opens the finance chapter, the condition the brief sets for its Phase 3 conditional inclusions, among which it lists the DGA. Read literally; if the author meant that condition for the three finance acts only, this trigger becomes the outcome of COM(2025) 837 (docs/V2-DATA-DESIGN.md §0.1, Q-6). The proposed repeal is shown meanwhile as a derived transition, which needs no trigger."
+            "description": "The author explicitly opens the finance chapter, the condition the brief sets for its Phase 3 conditional inclusions, among which it lists the DGA. Applied to the DGA too, by the author's decision of 27 Oct 2026 (Q-6). The proposed repeal is shown meanwhile as a derived transition, which needs no trigger."
           },
           "sources": [
             { "source_id": "src-eurlex-data-omnibus-837", "supports": "supports:direct", "locator": "Art. 10(3)(a) (proposed repeal of Regulation (EU) 2022/868); Art. 1 (amendments to Regulation (EU) 2023/2854)" }

@@ -162,7 +162,7 @@
     { "id": "copyright-dsm", "record": "register-watchlist.proposed.json", "derived": { "coverage": "excluded", "status_label": "label:in-force" } },
     { "id": "gpsr", "record": "register-watchlist.proposed.json", "derived": { "coverage": "excluded", "status_label": "label:in-force" } },
     { "id": "eaa", "record": "register-watchlist.proposed.json", "derived": { "coverage": "excluded", "status_label": "label:in-force" } },
-    { "id": "p2b", "record": "register-watchlist.proposed.json", "derived": { "coverage": "excluded", "status_label": "label:in-force", "transition_label": "label:in-transition", "in_transition": { "via": "data-omnibus", "toward": null } } },
+    { "id": "p2b", "record": "register-watchlist.proposed.json", "derived": { "coverage": "watched", "status_label": "label:in-force", "transition_label": "label:in-transition", "in_transition": { "via": "data-omnibus", "toward": null } } },
     { "id": "ttpa", "record": "register-watchlist.proposed.json", "derived": { "coverage": "excluded", "status_label": "label:in-force" } },
     { "id": "mica", "record": "register-watchlist.proposed.json", "derived": { "coverage": "watched", "status_label": "label:in-force" } },
     { "id": "psd3", "record": "register-watchlist.proposed.json", "derived": { "coverage": "watched", "status_label": "label:political-agreement" } },

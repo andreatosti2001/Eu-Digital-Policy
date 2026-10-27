@@ -184,7 +184,7 @@
       "textual": ["rel-kind:amends", "rel-kind:repeals", "rel-kind:implements", "rel-kind:legal-basis", "rel-kind:carve-out", "rel-kind:lex-specialis", "rel-kind:enables", "rel-kind:defers-to"],
       "analytical": ["rel-kind:overlap", "rel-kind:complement", "rel-kind:sequence", "rel-kind:conflict"]
     },
-    "inclusion_criterion": "A new vocabulary of clause terms — crit:object-data, crit:object-services, crit:object-ai, crit:object-security, crit:object-infrastructure, crit:horizontal, crit:sector-instance, crit:other-field, crit:readable — defined in docs/V2-DATA-DESIGN.md §5. Proposed; D-7 is open until the author approves it."
+    "inclusion_criterion": "A new vocabulary of clause terms — crit:object-data, crit:object-services, crit:object-ai, crit:object-security, crit:object-infrastructure, crit:horizontal, crit:sector-instance, crit:other-field, crit:readable — defined in docs/V2-DATA-DESIGN.md §5. Approved by the author on 27 Oct 2026 (D-7)."
   },
   "x-derived": {
     "description": "Computed by the view on every render from the records above. Storing any of these is an error (rule M-02): each would be a second copy of a fact the records already hold.",

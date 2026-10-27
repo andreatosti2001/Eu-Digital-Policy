@@ -68,7 +68,7 @@
   "x-unlabelled": {
     "states": ["status:transposition-pending", "status:transposition-overdue", "status:amended", "status:repealed", "status:adopted", "status:published"],
     "rule": "No label. The view shows the state's taxonomy label on its own. A directive whose transposition is pending or overdue is in force at Union level, but labelling it 'in vigore' would tell a reader its obligations bind them, when what binds them is national law (taxonomy note on status:transposition-overdue). Adopted and published acts are not yet in force. A repealed act is not in force. 'Amended' says nothing about force at all.",
-    "open_question": "Q-3 for the author: the brief has six labels, which it calls 'uniformi', and these six states fall outside them — NIS2 and CER, both core, among them. Recommended as above. The alternative — 'in vigore' for transposition-* and amended, with the state beside it — loses nothing visible but invites the misreading above."
+    "decision": "Q-3, decided by the author on 27 Oct 2026: these six states carry no label and are shown on their own, although the brief calls the labels uniform — NIS2 and CER, both core, among them. The alternative, 'in vigore' with the state beside it, was declined."
   },
   "x-transitions": {
     "description": "The moves a record's legislative_status may make between two verifications. A move not listed is an error unless the record's status_note names the event that explains it (rule S-04). The label follows the state; it has no transitions of its own.",
