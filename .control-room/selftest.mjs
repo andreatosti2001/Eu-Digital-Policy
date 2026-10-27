@@ -52,7 +52,7 @@ import { join, relative } from 'node:path';
 import { createServer } from 'node:http';
 import { generateKeyPairSync, sign as cryptoSign, createHash } from 'node:crypto';
 
-import { readConfig, configRefusals, describeConfig, assertConfig, isLoopback, CONTROL_ROOM_ROOT, REPO_ROOT } from './config.mjs';
+import { readConfig, configRefusals, describeConfig, assertConfig, isLoopback, serverOrigin, CONTROL_ROOM_ROOT, REPO_ROOT } from './config.mjs';
 import { provisionOperator, setRoles, setDisabled, registryRefusals, listOperators, verifyPassword, hashPassword, passwordRefusal, REFUSED_PASSWORDS, ProvisioningRefused } from './identity.mjs';
 import { authorize, permissionsOf, approvalPermissionFor, ROLES, ROLE_PERMISSIONS, PERMISSIONS, visibleActions } from './authz.mjs';
 import { workflowsView } from './views.mjs';
@@ -1118,6 +1118,70 @@ test('ORIGIN · B.3 · with port 0, a POST carrying a foreign Origin is still re
     assert.equal(noToken.status, 403);
     assert.match((await noToken.json()).reason, /x-control-room-csrf/);
   } finally { await s.stop(); }
+});
+
+/* v2 Session 5, B.2. B.3 above read the listening port for the Origin
+   check; the OIDC redirect URI was still built from cfg.port, and neither
+   bracketed an IPv6 host ("http://::1:7802", which no browser sends and
+   new URL() refuses). serverOrigin() in config.mjs is now the one home of
+   the origin, and these pin it from both sides. */
+test('ORIGIN · B.2 · one home: the server origin brackets an IPv6 host, and the configured public origin wins', () => {
+  assert.equal(serverOrigin({ host: '::1', port: 7802, public_origin: null }), 'http://[::1]:7802');
+  assert.equal(serverOrigin({ host: '127.0.0.1', port: 7802, public_origin: null }), 'http://127.0.0.1:7802');
+  assert.equal(serverOrigin({ host: '::1', port: 0, public_origin: null }, 41234), 'http://[::1]:41234', 'the port actually listening, when the caller knows it');
+  assert.equal(serverOrigin({ host: '::1', port: 7802, public_origin: 'https://cr.example/' }), 'https://cr.example');
+  assert.equal(new URL(serverOrigin({ host: '::1', port: 7802, public_origin: null })).hostname, '[::1]', 'a URL a browser can send');
+  const p = new OidcProvider({ host: '::1', port: 7802, public_origin: null, state_dir: tempDir('cr-oidc-') });
+  assert.equal(p.redirectUri(), 'http://[::1]:7802/auth/callback');
+});
+
+test('OIDC · B.2 · with port 0, the redirect URI sent to the identity provider carries the port actually listening', async () => {
+  const idp = await stubIdp();
+  const w = world({ env: { CONTROL_ROOM_AUTH_PROVIDER: 'oidc', CONTROL_ROOM_OIDC_ISSUER: idp.issuer, CONTROL_ROOM_OIDC_CLIENT_ID: 'cid', CONTROL_ROOM_OIDC_ALLOW_INSECURE: '1' } });
+  assert.equal(w.cfg.port, 0, 'the fixture must bind an ephemeral port, the case this test exists for');
+  const s = await running(w);
+  try {
+    const res = await s.get('/auth/login');
+    assert.equal(res.status, 302);
+    const sent = new URL(res.headers.get('location')).searchParams.get('redirect_uri');
+    assert.equal(sent, `${s.origin}/auth/callback`, 'the identity provider is sent back to the server that is listening');
+    assert.notEqual(new URL(sent).port, '0');
+    /* state and nonce still travel with it */
+    const loc = new URL(res.headers.get('location'));
+    assert.ok(loc.searchParams.get('state') && loc.searchParams.get('nonce'));
+  } finally { await s.stop(); await idp.stop(); }
+});
+
+test('ORIGIN · B.2 · bound to ::1, the bracketed origin passes the Origin check and the unbracketed one is refused', async (t) => {
+  const w = world({ env: { CONTROL_ROOM_HOST: '::1' } });
+  const server = serve({ cfg: w.cfg, quiet: true });
+  const up = await new Promise((ok) => { server.once('listening', () => ok(true)); server.once('error', (e) => ok(e)); });
+  if (up !== true) {
+    /* this container has no IPv6 loopback (EAFNOSUPPORT, measured
+       27 Oct 2026); CI does. The pure test above runs everywhere. */
+    t.skip(`::1 cannot be bound here: ${up.code ?? up.message}`);
+    return;
+  }
+  const port = server.address().port;
+  const origin = `http://[::1]:${port}`;
+  try {
+    const login = await fetch(`${origin}/auth/local`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ subject: 'reviewer@example.org', password: PASSWORD }) });
+    assert.equal(login.status, 200);
+    const cookie = login.headers.getSetCookie()[0].split(';')[0];
+    const { csrf } = await (await fetch(`${origin}/api/session`, { headers: { cookie } })).json();
+    const id = w.proposals[0].proposal_id;
+    const fingerprint = proposalFingerprint(w.proposals[0]);
+    const post = (o) => fetch(`${origin}/api/review`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', cookie, 'x-control-room-csrf': csrf, origin: o },
+      body: JSON.stringify({ action: 'request_changes', proposal_id: id, fingerprint, note: 'n' }),
+    });
+    assert.equal((await post(origin)).status, 200, `the server's own origin ${origin} was refused`);
+    for (const o of [`http://::1:${port}`, `http://127.0.0.1:${port}`, 'https://evil.example']) {
+      const res = await post(o);
+      assert.equal(res.status, 403, `${o} was accepted`);
+    }
+  } finally { await new Promise((ok) => server.close(ok)); }
 });
 
 test('METHOD · every route inspects the method, and an oversized body is refused', async () => {

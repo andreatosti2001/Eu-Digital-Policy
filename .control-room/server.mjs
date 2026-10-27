@@ -47,7 +47,7 @@
 import { createServer } from 'node:http';
 import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join, extname, resolve } from 'node:path';
-import { CONTROL_ROOM_ROOT, assertConfig, describeConfig, requiresSecureCookies, isLoopback } from './config.mjs';
+import { CONTROL_ROOM_ROOT, assertConfig, describeConfig, requiresSecureCookies, isLoopback, serverOrigin } from './config.mjs';
 import { registryRefusals } from './identity.mjs';
 import { SessionStore, OidcProvider, resolveSession, authenticateLocal, parseCookies, sessionCookie, safeEqual, SESSION_COOKIE, CSRF_HEADER, AuthFailed, sanitiseReturnTo } from './authn.mjs';
 import { authorize, visibleActions } from './authz.mjs';
@@ -243,7 +243,9 @@ export function serve({ cfg, quiet = false, tracer = null } = {}) {
 
   const sessions = new SessionStore(cfg);
   const audit = new AuditLog(cfg);
-  const oidc = cfg.provider === 'oidc' ? new OidcProvider(cfg) : null;
+  /* the provider asks the server for its origin, so the redirect URI and
+     the Origin check below read one value (v2 Session 5, B.2) */
+  const oidc = cfg.provider === 'oidc' ? new OidcProvider(cfg, { origin: () => selfOrigin() }) : null;
   const trace = tracer ?? new Tracer({ service: 'control-room', sink: new JsonlSink({ dir: cfg.trace_dir }) });
 
   const send = (res, code, body, extra = {}) => {
@@ -269,8 +271,10 @@ export function serve({ cfg, quiet = false, tracer = null } = {}) {
      time, so an origin built from cfg.port was "http://127.0.0.1:0" — one
      no browser sends — and every POST from a real browser was refused as
      cross-origin (v2 Session 4, B.3). Only where the port is read from
-     changes; the comparison below is the same exact match. */
-  const selfOrigin = () => cfg.public_origin ?? `http://${cfg.host}:${server.address()?.port ?? cfg.port}`;
+     changes; the comparison below is the same exact match. Since v2
+     Session 5 (B.2) the origin itself has one home, config.mjs
+     serverOrigin(), which also brackets an IPv6 host. */
+  const selfOrigin = () => serverOrigin(cfg, server.address()?.port ?? cfg.port);
 
   const server = createServer(async (req, res) => {
     const requestInfo = {
@@ -476,7 +480,7 @@ export function serve({ cfg, quiet = false, tracer = null } = {}) {
     } catch { /* the server still starts */ }
     if (quiet) return;
     const { port } = server.address();
-    console.log(`Control Room → http://${cfg.host}:${port}`);
+    console.log(`Control Room → ${serverOrigin(cfg, port)}`);
     console.log(`  environment: ${cfg.env} · provider: ${cfg.provider} · loopback: ${isLoopback(cfg.host)}`);
     console.log(`  state:  ${cfg.state_dir}   (git-ignored, and inside the dot-prefixed tree the deployment does not publish)`);
     console.log(`  traces: ${cfg.trace_dir}`);

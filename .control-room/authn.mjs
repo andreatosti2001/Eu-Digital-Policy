@@ -45,6 +45,7 @@ import { randomBytes, createHash, timingSafeEqual, createPublicKey, verify as cr
 import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { findOperator, findOperatorById, publicOperator, verifyPassword, touchOperator } from './identity.mjs';
+import { serverOrigin } from './config.mjs';
 
 export class AuthFailed extends Error {
   constructor(message, { code = 'unauthenticated', status = 401 } = {}) { super(message); this.name = 'AuthFailed'; this.code = code; this.status = status; }
@@ -251,9 +252,13 @@ const ALG_PARAMS = {
 export const CLOCK_SKEW_SECONDS = 60;
 
 export class OidcProvider {
-  constructor(cfg, { fetchImpl = globalThis.fetch } = {}) {
+  /* `origin`: how the running server reports the origin it is reached on
+     (server.mjs passes its own, which reads the port actually listening).
+     Without one, the configured origin. */
+  constructor(cfg, { fetchImpl = globalThis.fetch, origin = null } = {}) {
     this.cfg = cfg;
     this.fetch = fetchImpl;
+    this.origin = origin;
     this.metadata = null;
     this.jwks = null;
     this.pendingDir = join(cfg.state_dir, 'pending');
@@ -290,7 +295,10 @@ export class OidcProvider {
   }
 
   redirectUri() {
-    const origin = this.cfg.public_origin ?? `http://${this.cfg.host}:${this.cfg.port}`;
+    /* config.mjs serverOrigin() is the one home of the origin (v2 Session 5,
+       B.2): built here from cfg.port, the URI named port 0 whenever the
+       server bound an ephemeral one, and an unbracketed ::1. */
+    const origin = this.origin ? this.origin() : serverOrigin(this.cfg);
     return `${origin.replace(/\/+$/, '')}/auth/callback`;
   }
 
