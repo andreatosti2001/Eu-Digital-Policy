@@ -235,9 +235,25 @@ function renderHealth(d) {
   const out = [el('h2', { text: 'Website health' })];
   out.push(el('p', { class: 'bound', text: d.no_overall_score }));
 
+  /* Roadmap v2 item 1.2: a metric is shown by NAME and DEFINITION,
+     beside its ID, with its source, calculation, frequency,
+     interpretation and limitations one click away. The labels, and the
+     one display term for the visibility value, come from the server. */
+  const metricCell = (m) => el('td', {},
+    el('strong', { text: m.name ?? 'not in the metric register' }), ' ', el('code', { text: m.id }),
+    el('div', { class: 'note', text: m.definition ?? 'This reading names a metric the register no longer defines.' }),
+    el('details', {}, el('summary', { text: 'Source, calculation, frequency, interpretation, limitations' }),
+      el('dl', { class: 'run' }, ...d.metric_detail_fields.flatMap((f) => [el('dt', { text: f.label }), el('dd', { text: m[f.field] ?? '—' })]))));
+  const visibilityPill = (m) => el('span', { class: `pill ${m.visibility_label === 'public-safe' ? 'ok' : ''}`, text: m.visibility_label });
+
   if (d.state !== 'measured') {
     out.push(el('p', { class: 'empty', text: d.why }));
     out.push(el('p', { class: 'note' }, 'To produce one: ', el('code', { text: d.needs })));
+    /* No readings, but the definitions are still worth reading. */
+    out.push(el('h3', { text: `The metric register — ${d.register.length} metrics, defined, none measured here` }));
+    out.push(el('div', { class: 'scroll' }, el('table', {},
+      el('thead', {}, el('tr', {}, el('th', { text: 'metric' }), el('th', { text: 'visibility' }), el('th', { text: 'direction' }))),
+      el('tbody', {}, ...d.register.map((m) => el('tr', {}, metricCell(m), el('td', {}, visibilityPill(m)), el('td', { text: m.direction === 'not_a_score' ? 'never a score' : (m.direction ?? '') })))))));
   } else {
     out.push(el('div', { class: 'cards' },
       stat('measured', d.counts.measured),
@@ -259,9 +275,9 @@ function renderHealth(d) {
       if (!readings.length) continue;
       out.push(el('h3', { text: `${domain.label} — ${domain.stake}` }));
       const rows = readings.map((r) => el('tr', {},
-        el('td', {}, el('code', { text: r.id })),
+        metricCell(r),
         el('td', { text: r.state === 'measured' ? `${r.value} ${r.unit ?? ''}${r.of != null ? ` of ${r.of}` : ''}` : r.state.toUpperCase() }),
-        el('td', {}, el('span', { class: `pill ${r.visibility === 'public' ? 'ok' : ''}`, text: r.visibility })),
+        el('td', {}, visibilityPill(r)),
         el('td', { text: r.direction === 'not_a_score' ? 'never a score' : (r.direction ?? '') }),
         el('td', { text: r.why ?? '' })));
       out.push(el('div', { class: 'scroll' }, el('table', {},

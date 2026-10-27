@@ -459,6 +459,25 @@ export const HEALTH_RUN_FIELDS = [
   { field: 'commit', label: 'Commit analysed', means: 'the git commit the run measured. Anything changed after that commit is not in these readings.' },
 ];
 
+/**
+ * The one display term for each visibility value (roadmap v2 item 1.2;
+ * docs/AUDIT-2026-10-24.md finding D). The data value `public` is NOT
+ * renamed — agent/health/model.mjs and the history use it — but the
+ * screen says "public-safe" everywhere it shows it, because "public"
+ * alone reads as "already published", which none of these readings is.
+ */
+export const VISIBILITY_LABEL = { public: 'public-safe', private: 'private' };
+
+/** What a person can open beside each metric. All of it is already in
+ *  agent/health/metrics.mjs; this only names the order and the labels. */
+export const METRIC_DETAIL_FIELDS = [
+  { field: 'source', label: 'Source' },
+  { field: 'calculation', label: 'Calculation' },
+  { field: 'frequency', label: 'Frequency' },
+  { field: 'interpretation', label: 'Interpretation' },
+  { field: 'limitations', label: 'Limitations' },
+];
+
 export function websiteHealth(cfg, { root, historyDir = null } = {}) {
   const hist = historyDir ? readHistory({ dir: historyDir }) : readHistory();
   const last = hist.entries?.length ? hist.entries[hist.entries.length - 1] : null;
@@ -469,7 +488,7 @@ export function websiteHealth(cfg, { root, historyDir = null } = {}) {
   const register = ALL_METRICS.map((m) => ({
     id: m.id, name: m.name, domain: m.domain, definition: m.definition, source: m.source,
     calculation: m.calculation, frequency: m.frequency, interpretation: m.interpretation,
-    limitations: m.limitations, visibility: m.visibility, direction: m.direction,
+    limitations: m.limitations, visibility: m.visibility, visibility_label: VISIBILITY_LABEL[m.visibility] ?? m.visibility, direction: m.direction,
   }));
 
   const domains = DOMAINS.map((d) => ({
@@ -490,6 +509,7 @@ export function websiteHealth(cfg, { root, historyDir = null } = {}) {
       why: 'no health run has been recorded on this machine. agent/health/history/ is git-ignored private control-plane data and does not travel with a checkout, so a fresh clone has none.',
       needs: 'run: node agent/health/cli.mjs --as-of YYYY-MM-DD',
       domains, register,
+      metric_detail_fields: METRIC_DETAIL_FIELDS,
       readings: [], movement: null,
       no_overall_score: NO_OVERALL_SCORE,
       security: securitySnapshot(cfg, root),
@@ -498,12 +518,23 @@ export function websiteHealth(cfg, { root, historyDir = null } = {}) {
 
   const readings = (last.readings ?? []).map((r) => {
     const m = BY_ID.get(r.id);
+    const visibility = m?.visibility ?? 'private';
     return {
       ...r,
-      name: m?.name ?? r.id,
+      /* Name and definition beside the ID, and everything a person needs
+         to read the number in context (roadmap v2 item 1.2). A reading
+         whose metric is no longer in the register says so instead of
+         borrowing its ID as a name. */
+      name: m?.name ?? null,
+      definition: m?.definition ?? null,
+      in_register: Boolean(m),
       domain: m?.domain ?? null,
-      visibility: m?.visibility ?? 'private',
+      visibility,
+      visibility_label: VISIBILITY_LABEL[visibility] ?? visibility,
       direction: m?.direction ?? null,
+      source: m?.source ?? null,
+      calculation: m?.calculation ?? null,
+      frequency: m?.frequency ?? null,
       interpretation: m?.interpretation ?? null,
       limitations: m?.limitations ?? null,
     };
@@ -516,6 +547,7 @@ export function websiteHealth(cfg, { root, historyDir = null } = {}) {
     recorded_at: last.recorded_at ?? null,
     commit: last.commit ?? null,
     run_fields: HEALTH_RUN_FIELDS,
+    metric_detail_fields: METRIC_DETAIL_FIELDS,
     domains,
     readings,
     counts: {

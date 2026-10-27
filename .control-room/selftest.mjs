@@ -1417,6 +1417,58 @@ test('ATTEST · 0.2 · the screen says it is a declaration, not proof of reading
 });
 
 /* ============================================================
+   Metric definitions you can read (roadmap v2 item 1.2;
+   docs/AUDIT-2026-10-24.md finding D)
+   ============================================================ */
+
+test('METRICS · 1.2 · every reading row carries name and definition beside its ID, and the five details can be opened', async () => {
+  const { ALL_METRICS } = await import('../agent/health/metrics.mjs');
+  const w = world();
+  const dir = tempDir('cr-health-');
+  const readings = [...ALL_METRICS.map((m) => ({ id: m.id, domain: m.domain, state: 'measured', value: 1, unit: 'items' })), { id: 'metric.no_longer_defined', state: 'measured', value: 3 }];
+  writeFileSync(join(dir, 'health.jsonl'), `${JSON.stringify({ history_version: 1, recorded_at: '2026-10-25T09:00:00.000Z', as_of: '2026-10-24', commit: 'b'.repeat(40), readings })}\n`, 'utf8');
+  const h = liveModule.websiteHealth(w.cfg, { root: REPO_ROOT, historyDir: dir });
+  assert.deepEqual(h.metric_detail_fields.map((f) => f.field), ['source', 'calculation', 'frequency', 'interpretation', 'limitations']);
+  for (const r of h.readings.filter((x) => x.in_register)) {
+    assert.ok(r.name && r.name !== r.id, `${r.id} has no name of its own`);
+    assert.ok(r.definition && r.definition.length > 20, `${r.id} has no definition`);
+    for (const f of h.metric_detail_fields) assert.ok(r[f.field], `${r.id} cannot open its ${f.field}`);
+  }
+  assert.equal(h.readings.filter((x) => x.in_register).length, ALL_METRICS.length);
+  /* A reading whose metric left the register says so; it does not
+     borrow its ID as a name. */
+  const orphan = h.readings.find((x) => x.id === 'metric.no_longer_defined');
+  assert.equal(orphan.in_register, false);
+  assert.equal(orphan.name, null);
+  /* The empty view carries the definitions too, so they are readable
+     before anything has been measured. */
+  const empty = liveModule.websiteHealth(w.cfg, { root: REPO_ROOT, historyDir: tempDir('cr-health-none-') });
+  assert.equal(empty.state, 'no_run_recorded');
+  assert.ok(empty.register.every((m) => m.name && m.definition));
+  const app = readFileSync(join(UI_DIR, 'app.js'), 'utf8');
+  assert.match(app, /m\.definition/);
+  assert.match(app, /metric_detail_fields/);
+});
+
+test('METRICS · 1.2 · one display term for the visibility value: "public-safe" on screen, `public` unrenamed in the data', async () => {
+  const { ALL_METRICS } = await import('../agent/health/metrics.mjs');
+  assert.ok(ALL_METRICS.some((m) => m.visibility === 'public'), 'the data value is still `public`; only the display term changed');
+  assert.deepEqual(liveModule.VISIBILITY_LABEL, { public: 'public-safe', private: 'private' });
+  const w = world();
+  const h = liveModule.websiteHealth(w.cfg, { root: REPO_ROOT, historyDir: tempDir('cr-health-none-') });
+  for (const m of h.register) assert.ok(['public-safe', 'private'].includes(m.visibility_label), `${m.id} is shown as "${m.visibility_label}"`);
+  /* The interface never prints the raw value: no bare "public" in any
+     ui file, only "public-safe". */
+  for (const { f, text: raw } of uiFiles().filter((x) => /^app\.(js|html)$/.test(x.f))) {
+    /* What reaches the screen: comments ("the public site") are not. */
+    const text = raw.replace(/\/\*[\s\S]*?\*\//g, '').replace(/<!--[\s\S]*?-->/g, '');
+    const bare = text.match(/\bpublic\b(?!-safe)/g) ?? [];
+    assert.deepEqual(bare, [], `${f} shows the visibility value as "public"`);
+    assert.doesNotMatch(text, /text: \w+\.visibility\b(?!_label)/, `${f} prints the raw visibility value`);
+  }
+});
+
+/* ============================================================
    Editorial audit: a recorded run, read — never launched from here
    (roadmap v2 item 1.1; docs/AUDIT-2026-10-24.md finding A)
    ============================================================ */
