@@ -2,8 +2,8 @@
 
 **Last updated:** v2 Session 4 — Part A (item 2.1) and Part B (B.1–B.3) implemented and approved
 (`docs/ROADMAP-v2.md` §8) · 27 October 2026
-**Branch:** `claude/new-session-e7w8sp`, cut from `main` at `34a2ee0` (the merge of #20), pushed and
-opened as a pull request to `main` on the author's instruction; not merged.
+**Branch:** `claude/new-session-e7w8sp`, merged into `main` as #21 (`b304114`). Continued from that
+merge to record the scope and prompt of v2 Session 5; not opened as a pull request.
 
 ## Branch register — 27 October 2026 (v2 Session 4)
 
@@ -12,15 +12,24 @@ opened as a pull request to `main` on the author's instruction; not merged.
   stopped and said so; the author merged it as #20 (`34a2ee0`), and the session started from there.
 - `git branch -r --no-merged origin/main` then listed only
   `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
-- This session's branch: `claude/new-session-e7w8sp`. Disposition: pull request to `main`, opened on
-  the author's instruction of 27 Oct 2026 ("Sì, apri la PR"); not merged.
+- This session's branch: `claude/new-session-e7w8sp`. Disposition: pull request #21, opened on the
+  author's instruction of 27 Oct 2026 ("Sì, apri la PR") and merged as `b304114`. The branch then
+  carries one more commit (the scope and prompt of v2 Session 5); no pull request for it unless the
+  author asks.
 
-## Next — v2 Session 5 (not yet scoped by the author)
+## Next — v2 Session 5 (decided 27 Oct 2026, `docs/ROADMAP-v2.md` §8)
 
-- Roadmap item 2.2 (eIDAS 2.0) is next in `docs/ROADMAP-v2.md` §4; it was not in Session 4.
-- Open from Session 4, each recorded in §8: PP-09's stale text; the OIDC redirect URI and the
-  unbracketed `::1` origin (`.control-room/authn.mjs`, `server.mjs`); R-01's P2B gap (Phase 3); the
-  17 relationships and the `edge-v1-sources` flip; the `data-omnibus` correction (F-2, F-3, Phase 3).
+Pull request #21 was merged as `b304114`. The prompt is `docs/prompts/v2-session-5.md`. In order:
+1. **Item 2.2, the promotion of `eidas2`**, then a checkpoint. Measured on `main`: the page gate
+   would refuse `eidas2` a page today (no `dna.objective`, no `brief_part`, no relationship), so
+   M-05 would fail on promotion; the prompt puts that to the author before anything is written.
+2. **PP-09's stale text** (`agent/policy/`, never automatic).
+3. **The OIDC redirect URI and the unbracketed `::1` origin** in `.control-room/`.
+4. **The 10 readable relationships migrated to v2**; the other 7 stay in the backlog and the
+   `edge-v1-sources` flip stays deferred.
+
+Still for Phase 3: R-01's P2B gap, the eight findings of `docs/V2-DATA-DESIGN.md` §7, and the
+`data-omnibus` correction left in `docs/v2-design/register-watchlist.proposed.json`.
 
 ## v2 Session 4 — Part B checkpoint report (B.1–B.3)
 
