@@ -2244,6 +2244,30 @@
    "last_verified": "2026-10-14"
   },
   {
+   "id": "tl-eidas2-2024-05-20-entry-into-force",
+   "date": "2024-05-20",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "eidas2",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [
+    "sector:cross-sector"
+   ],
+   "obligation": null,
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-eidas2"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added 27 Oct 2026 for item 2.2. Art. 2: entry into force on the twentieth day following publication in the Official Journal (OJ L, 2024/1183, 30.4.2024), read that day in the text retrieved from the Publications Office's Cellar (CELEX 32024R1183); the Publications Office's SPARQL metadata, read the same day, records it in force with entry into force 2024-05-20.",
+   "last_verified": "2026-10-27"
+  },
+  {
    "id": "tl-eidas2-2026-12-24-compliance-deadline",
    "date": "2026-12-24",
    "date_precision": "precision:day",
@@ -2274,8 +2298,8 @@
     "src-eurlex-eudi-2024-2981"
    ],
    "requires_verification": false,
-   "verification_note": "Added 14 Oct 2026. The date is the site's arithmetic, read that day in the Official Journal texts: 24 months from 24 December 2024, when Implementing Regulations (EU) 2024/2977 (Art. 5a(23)) and 2024/2981 (Art. 5c(6)) entered into force. The provision sets no EU-level penalty for missing it, and none is recorded.",
-   "last_verified": "2026-10-14"
+   "verification_note": "Added 14 Oct 2026. The date is the site's arithmetic, read that day in the Official Journal texts: 24 months from 24 December 2024, when Implementing Regulations (EU) 2024/2977 (Art. 5a(23)) and 2024/2981 (Art. 5c(6)) entered into force. The provision sets no EU-level penalty for missing it, and none is recorded. 27 Oct 2026: re-read for item 2.2 in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX (32024R1183, 32024R2977, 32024R2981), with the Publications Office's SPARQL metadata (each implementing regulation in force, entry into force 2024-12-24); unchanged.",
+   "last_verified": "2026-10-27"
   },
   {
    "id": "tl-eidas2-2027-12-24-compliance-deadline",
@@ -2306,8 +2330,8 @@
     "src-eurlex-eudi-2024-2977"
    ],
    "requires_verification": false,
-   "verification_note": "Added 14 Oct 2026. The date is the site's arithmetic, read that day in the Official Journal texts: 36 months from 24 December 2024 (Art. 5f(2), 'no later than 36 months'). actor:sme is listed because medium-sized enterprises are covered; micro and small enterprises are not. No supervising authority is recorded because none was read for this duty.",
-   "last_verified": "2026-10-14"
+   "verification_note": "Added 14 Oct 2026. The date is the site's arithmetic, read that day in the Official Journal texts: 36 months from 24 December 2024 (Art. 5f(2), 'no later than 36 months'). actor:sme is listed because medium-sized enterprises are covered; micro and small enterprises are not. No supervising authority is recorded because none was read for this duty. 27 Oct 2026: re-read for item 2.2 in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX (32024R1183, 32024R2977, 32024R2981), with the Publications Office's SPARQL metadata (each implementing regulation in force, entry into force 2024-12-24); unchanged.",
+   "last_verified": "2026-10-27"
   },
   {
    "id": "tl-vida-2025-04-14-entry-into-force",

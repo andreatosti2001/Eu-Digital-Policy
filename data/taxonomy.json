@@ -268,6 +268,13 @@
       "definition_ref": null,
       "parent": null,
       "note": "Umbrella term used by the applicability engine. Covers NIS2 essential and important entities and CER critical entities; which of those an organisation is depends on sector and size."
+    },
+    {
+      "id": "actor:trust-service-provider",
+      "label": "Trust service provider",
+      "definition_ref": null,
+      "parent": null,
+      "note": "eIDAS: Regulation (EU) No 910/2014 applies to trust service providers established in the Union (Art. 2(1), as replaced by Regulation (EU) 2024/1183 Art. 1 point (2)(a), read 27 Oct 2026). Added 27 Oct 2026 for item 2.2."
     }
   ],
   "activity": [

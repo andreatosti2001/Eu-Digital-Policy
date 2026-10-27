@@ -2046,12 +2046,20 @@
       "short_name": "eIDAS2",
       "full_name": "Regulation (EU) 2024/1183 amending Regulation (EU) No 910/2014 as regards establishing the European Digital Identity Framework",
       "kind": "kind:regulation",
-      "scope_class": "scope:adjacent",
+      "scope_class": "scope:core",
       "brief_part": null,
       "legislative_status": "status:in-force",
-      "status_as_of": "2026-10-14",
-      "status_note": "In force since 20 May 2024 (Art. 2; OJ L 2024/1183, 30.4.2024); it amends Regulation (EU) No 910/2014 and sets no separate application date. Two dated duties follow from the implementing acts under Arts 5a(23) and 5c(6), in force since 24 December 2024: each Member State must provide a European Digital Identity Wallet within 24 months, by 24 December 2026 (Art. 5a(1); clm-eidas2-wallets), and private relying parties that must use strong user authentication — except micro and small enterprises — must accept the wallet at the user's voluntary request within 36 months, by 24 December 2027 (Art. 5f(2); clm-eidas2-private-acceptance). The first is a duty on Member States, the second a qualified duty on some businesses, not on all. Re-read on 14 Oct 2026 on EUR-Lex. last_verified moved from 27 Sep to 14 Oct 2026 on 21 Oct 2026 (audit item 10), the date on which the status above was re-read on EUR-Lex (docs/AUDIT-2026-10-14.md §1 E); the other fields were last re-read on 27 Sep 2026.",
+      "status_as_of": "2026-10-27",
+      "status_note": "In force since 20 May 2024 (Art. 2; OJ L 2024/1183, 30.4.2024); it amends Regulation (EU) No 910/2014 and sets no separate application date. Two dated duties follow from the implementing acts under Arts 5a(23) and 5c(6), in force since 24 December 2024: each Member State must provide a European Digital Identity Wallet within 24 months, by 24 December 2026 (Art. 5a(1); clm-eidas2-wallets), and private relying parties that must use strong user authentication — except micro and small enterprises — must accept the wallet at the user's voluntary request within 36 months, by 24 December 2027 (Art. 5f(2); clm-eidas2-private-acceptance). The first is a duty on Member States, the second a qualified duty on some businesses, not on all. Re-read on 27 Oct 2026 in the Official Journal text retrieved from Cellar.",
+      "status_basis": [
+        {
+          "source_id": "src-eurlex-eidas2",
+          "supports": "supports:direct",
+          "locator": "Art. 2 (entry into force); Publications Office metadata: in force, entry into force 2024-05-20"
+        }
+      ],
       "milestones": [
+        "tl-eidas2-2024-05-20-entry-into-force",
         "tl-eidas2-2026-12-24-compliance-deadline",
         "tl-eidas2-2027-12-24-compliance-deadline"
       ],
@@ -2059,7 +2067,31 @@
       "amends": [],
       "repeals": [],
       "transposition": null,
-      "dna": null,
+      "dna": {
+        "regulated_actor": [
+          "actor:member-state",
+          "actor:public-authority",
+          "actor:large-company",
+          "actor:vlop",
+          "actor:trust-service-provider"
+        ],
+        "protected_party": [],
+        "objective": "Secure electronic identification and trust services across the internal market, extended by the European Digital Identity Wallets each Member State must provide and recognise.",
+        "risk_logic": null,
+        "obligation_anchor": [
+          "eidas2:art-5a",
+          "eidas2:art-5f"
+        ],
+        "enforcement_mechanism": null,
+        "sanction_ceiling": {
+          "pct_global_turnover": null,
+          "fixed_eur": null,
+          "basis": null,
+          "note": "No ceiling at EU level: Art. 16(2) of Regulation (EU) No 910/2014, as replaced, requires Member States to set administrative fines for trust service providers with a maximum of at least EUR 5 000 000 or, for a legal person, 1 % of worldwide annual turnover if higher. A floor for the national maximum, not a ceiling."
+        },
+        "territorial_scope": [],
+        "implementation_model": "Directly applicable"
+      },
       "provisions": [
         {
           "id": "eidas2:art-5a",
@@ -2104,10 +2136,39 @@
         "src-eurlex-eudi-2024-2981",
         "src-eurlex-eudi-2024-2977"
       ],
-      "last_verified": "2026-10-14",
+      "last_verified": "2026-10-27",
       "legal_basis": [
         "tfeu:art-114"
-      ]
+      ],
+      "scope_decision": {
+        "disposition": "included",
+        "criterion": [
+          "crit:object-infrastructure",
+          "crit:horizontal"
+        ],
+        "reason": "eIDAS2 meets the criterion. Its subject matter is electronic identification and trust services used across the Union, including the European Digital Identity Wallets (Art. 1 of Regulation (EU) No 910/2014, as replaced): digital infrastructure the other layers run on. Its rules apply across sectors: the duty to accept the wallet reaches relying parties in transport, energy, banking, health, digital infrastructure and other areas (Art. 5f(2)). Covered, with a page of its own.",
+        "approved_on": "2026-10-27",
+        "refer_to": [],
+        "watch_for": null,
+        "sources": [
+          {
+            "source_id": "src-eurlex-eidas2",
+            "supports": "supports:direct",
+            "locator": "Art. 1 point (1), replacing Art. 1 of Regulation (EU) No 910/2014 (subject matter)"
+          },
+          {
+            "source_id": "src-eurlex-eidas2",
+            "supports": "supports:direct",
+            "locator": "Art. 1 point (2)(a), replacing Art. 2(1) of Regulation (EU) No 910/2014 (scope)"
+          },
+          {
+            "source_id": "src-eurlex-eidas2",
+            "supports": "supports:partial",
+            "locator": "Art. 1 point (5), inserting Art. 5f(2) into Regulation (EU) No 910/2014 (the areas it lists)"
+          }
+        ],
+        "last_verified": "2026-10-27"
+      }
     },
     {
       "id": "cloud-ai-development-act",
@@ -3542,6 +3603,26 @@
       "last_verified": "2026-10-27",
       "requires_verification": false,
       "verification_note": "Already asserted by data-omnibus.proposes_to_amend; this is the relationship that array lacked (finding F-1). With rel-data-omnibus-dga-repeals it is what makes the DGA's transition toward the Data Act derivable."
+    },
+    {
+      "id": "rel-eidas2-gdpr-defers",
+      "from": "eidas2",
+      "to": "gdpr",
+      "kind": "rel-kind:defers-to",
+      "symmetric": false,
+      "summary": "The eIDAS Regulation, as amended by eIDAS2, is without prejudice to the GDPR.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-eidas2",
+          "supports": "supports:direct",
+          "locator": "Art. 1 point (2)(b), inserting Art. 2(4) into Regulation (EU) No 910/2014"
+        }
+      ],
+      "last_verified": "2026-10-27",
+      "requires_verification": false,
+      "verification_note": "Read on 27 Oct 2026 in the Official Journal text of Regulation (EU) 2024/1183 retrieved from the Publications Office's Cellar (CELEX 32024R1183): 'This Regulation is without prejudice to Regulation (EU) 2016/679.' No provision ID exists for the inserted Art. 2, so `provisions` is empty. Added for item 2.2 on the author's decision of 27 Oct 2026."
     }
   ]
 }

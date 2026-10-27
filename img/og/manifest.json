@@ -41,6 +41,9 @@
     },
     "img/og/pld.png": {
       "input_sha256": "2dd9c86b47431e648d3fe88ab95a29f48bf319810fa935e4dcf06b50b0991170"
+    },
+    "img/og/eidas2.png": {
+      "input_sha256": "f4e9b6962cb29bfd4d8a5b42828ff2f63f585498ad3c35105fe01938a9e39194"
     }
   }
 }

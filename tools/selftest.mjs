@@ -1733,7 +1733,7 @@ test('W1 · this tree: the register and the watchlist are derived, complete and 
   for (const id of r.backlog['scope-decision-missing']) assert.ok(SCOPE_DECISION_BACKLOG.includes(id));
   for (const id of r.backlog['status-basis-missing']) assert.ok(STATUS_BASIS_BACKLOG.includes(id));
   assert.equal(SCOPE_DECISION_BACKLOG.length, 11);
-  assert.equal(STATUS_BASIS_BACKLOG.length, 24);
+  assert.equal(STATUS_BASIS_BACKLOG.length, 23);    /* 24 until eidas2's basis was written (item 2.2) */
 });
 
 test('W2 · M-03: a disposition that disagrees with the scope class is an error', () => {
@@ -1855,4 +1855,22 @@ test('W10 · coverage() is derived, one home, and the static instrument list lea
   for (const f of ['js/search.js', 'js/calendar.js', 'js/instrument-page.js']) {
     assert.match(readFileSync(join(ROOT, f), 'utf8'), /notCovered\(/, `${f} does not ask js/routes.js`);
   }
+});
+
+test('W11 · item 2.2: eidas2 is covered and held to M-04, M-05 and M-07 in full — remove any one support and it fails', () => {
+  const r = registerAudit(loadDb(), '2026-10-27');
+  const db = loadDb();
+  assert.equal(coverage(instOf(db, 'eidas2')), 'covered');
+  assert.equal(instOf(db, 'eidas2').scope_decision.disposition, 'included');
+  assert.ok(!STATUS_BASIS_BACKLOG.includes('eidas2') && !SCOPE_DECISION_BACKLOG.includes('eidas2'), 'no backlog shelters it');
+  assert.ok(!r.backlog['status-basis-missing'].includes('eidas2'));
+  const plant = (fn, re) => { const d = loadDb(); fn(d); assert.ok(regErrors(d).some((e) => re.test(e)), `expected ${re}`); };
+  /* its status basis gone: an error, not backlog */
+  plant((d) => { delete instOf(d, 'eidas2').status_basis; }, /^M-07 instruments\/eidas2:/);
+  /* its decision gone: a core record added after 25 Oct 2026 */
+  plant((d) => { delete instOf(d, 'eidas2').scope_decision; }, /^M-04 instruments\/eidas2: a core record added after 25 Oct 2026/);
+  /* the one relationship that gives it context gone, or its objective: no page, so M-05 */
+  plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => x.id !== 'rel-eidas2-gdpr-defers'); },
+    /^M-05 instruments\/eidas2: covered \(core\) without a page/);
+  plant((d) => { instOf(d, 'eidas2').dna.objective = ''; }, /^M-05 instruments\/eidas2: covered \(core\) without a page/);
 });

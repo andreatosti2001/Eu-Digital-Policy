@@ -39,9 +39,11 @@ import { locatorQuality } from '../js/evidence-model.js';
 export const SCOPE_DECISION_BACKLOG = Object.freeze(['gdpr', 'dsa', 'dma', 'ai-act', 'data-act', 'nis2', 'cer',
   'dora', 'cra', 'ai-omnibus', 'data-omnibus']);
 
-/* The 24 records that existed on 25 Oct 2026, before status_basis existed (M-07). */
+/* The records that existed on 25 Oct 2026, before status_basis existed (M-07):
+   24 then. eidas2 left the list on 27 Oct 2026 (item 2.2, v2 Session 5), when
+   its status basis was read and written, so it is held to the rule in full. */
 export const STATUS_BASIS_BACKLOG = Object.freeze(['gdpr', 'dsa', 'dma', 'ai-act', 'data-act', 'nis2', 'cer',
-  'dora', 'cra', 'ai-omnibus', 'data-omnibus', 'pld', 'gdpr-procedural', 'dga', 'eprivacy', 'eidas2',
+  'dora', 'cra', 'ai-omnibus', 'data-omnibus', 'pld', 'gdpr-procedural', 'dga', 'eprivacy',
   'cloud-ai-development-act', 'ecommerce-directive', 'nis1', 'chips-act', 'ai-liability-directive', 'charter',
   'tfeu', 'teu']);
 
