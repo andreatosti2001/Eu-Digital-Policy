@@ -12,30 +12,31 @@
    functionality cannot become publicly accessible through accidental
    static publication.
 
-   THE FINDING THIS MODULE EXISTS TO MAKE CHECKABLE, and it is a
-   finding rather than a control: **there is no separation mechanism
-   here.** Deployment is GitHub Pages serving `main` at the
-   repository root (`docs/CURRENT-ARCHITECTURE.md` §13). There is no
-   `_config.yml`, no `.nojekyll`, and no exclude list. Under that
-   configuration the units of publication are FILES IN THE
-   REPOSITORY, so `agent/`, `docs/`, `tools/` and this module are
-   part of the same deployment as `index.html`. A Control Room page
-   added to this tree in SESSION 21 would be public the moment it was
-   pushed, and the protocol says so in its own §10: hidden routes,
-   hidden links, robots.txt, frontend checks and unlisted pages are
-   not security mechanisms.
+   THE FINDING THIS MODULE WAS WRITTEN TO MAKE CHECKABLE, and what
+   became of it. Until 24 Oct 2026 the site was GitHub Pages serving
+   `main` at the repository root through Jekyll, with no exclude list,
+   so `agent/`, `docs/` and `tools/` were part of the same deployment
+   as `index.html`, and the only exclusion was Jekyll's dot prefix.
+   Since then the site is published only by
+   `.github/workflows/pages.yml`, from an artifact built from the
+   allowlist in `tools/pages-artifact.mjs` (docs/DEPLOYMENT.md §1b, §2),
+   and this module reads that allowlist rather than modelling Jekyll
+   (v2 Session 4, B.2, 27 Oct 2026). The protocol's §10 still holds:
+   hidden routes, hidden links, robots.txt, frontend checks and unlisted
+   pages are not security mechanisms, and neither is the allowlist — it
+   is a PUBLICATION boundary.
+
+   THE REPOSITORY IS A SECOND PUBLIC SURFACE. The GitHub repository is
+   public (read on 27 Oct 2026), so every tracked file is readable on
+   github.com whatever the website serves. The secret scan reads that
+   surface; the control-plane exposure check reads the website's.
 
    WHAT IS ESTABLISHED AND WHAT IS INFERRED, kept apart because this
    repository has been caught conflating them before (AUDIT F-01).
-   That there is no `_config.yml`, no `.nojekyll` and no exclude
-   list is READ FROM THE TREE. That the live site therefore serves
-   `agent/` is an INFERENCE from GitHub Pages' documented default,
-   and it has NOT been confirmed by fetching the deployed site:
-   outbound access to andreatosti2001.github.io is refused by this
-   environment's network policy, exactly as
-   `docs/CURRENT-ARCHITECTURE.md` §13 records. Every record this
-   module produces carries that as an open question rather than
-   asserting what the live site serves.
+   The allowlist and the tracked files are READ FROM THE TREE. That
+   the live site serves exactly the artifact is inferred from the
+   workflow and from the dated measurements docs/DEPLOYMENT.md
+   records; nothing here fetches the site.
 
    THE SECRET SCAN IS A FLOOR, NOT A CEILING. It matches shapes —
    `sk-`, `ghp_`, an `Authorization:` header with a literal, a long
@@ -50,24 +51,19 @@ import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, relative } from 'node:path';
 import { REPO_ROOT } from './baseline.mjs';
-
-/** What GitHub Pages excludes by default when Jekyll processes a
- *  site with no `_config.yml`. Everything else in the tree is
- *  published. Sourced from Jekyll's documented defaults; the
- *  inference is labelled as one wherever this list is used. */
-export const JEKYLL_DEFAULT_EXCLUDES = ['.git', '.github', 'node_modules', 'vendor', 'Gemfile', 'Gemfile.lock'];
+import { refusal } from '../../tools/pages-artifact.mjs';
 
 /** Directories whose contents are, by their own documentation, the
- *  private control plane rather than the public website. None of
- *  them is excluded from publication by anything in this
- *  repository — which is the point. */
+ *  private control plane rather than the public website. Since
+ *  24 Oct 2026 the allowlist keeps every one of them off the website;
+ *  the tracked ones are still public in the repository. */
 export const CONTROL_PLANE_DIRS = [
   ['agent/', 'the agent layer: orchestration, contracts, proposals, approval mechanisms and operational traces. Protocol §10 puts every one of those in the private control plane.'],
   ['agent/implement/decisions/', 'the approval ledger — who approved what, and when.'],
   ['agent/records/', 'contract records: what agents found, proposed and refused. Git-ignored, so not published today, and that is an ignore rule rather than a boundary.'],
   ['agent/observability/runs/', 'operational traces. Git-ignored, same caveat.'],
   ['.agents/', 'skills — the agent operating instructions.'],
-  ['.control-room/', 'the Control Room: the private administrative interface, its authentication and authorization, and its audit trail. SESSION 21. It is dot-prefixed BECAUSE of this check — the deployment does not serve a path whose segments begin with "." or "_", and that is the only publication boundary this repository has. Its private state (.control-room/state/) is git-ignored as well, so it is outside on both counts.'],
+  ['.control-room/', 'the Control Room: the private administrative interface, its authentication and authorization, and its audit trail. SESSION 21. It is dot-prefixed, and tools/pages-artifact.mjs refuses a dot path by name whatever its allowlist says. Its private state (.control-room/state/) is git-ignored as well, so it is outside the repository too; its source is public there.'],
 ];
 
 /** Shapes that are credentials. Each carries what it matches so a
@@ -212,58 +208,90 @@ export function trackedFiles({ root = REPO_ROOT } = {}) {
 }
 
 /**
- * What a GitHub Pages deployment from the repository root would
- * serve — with the epistemic status of the answer attached, because
- * this has NOT been confirmed against the live site.
+ * The two public surfaces, measured rather than inferred.
+ *
+ * Until 24 Oct 2026 this module modelled the website as GitHub Pages
+ * serving `main` through Jekyll, so "published" was every tracked file
+ * whose path had no "." or "_" segment. Since that day the site is
+ * published only by .github/workflows/pages.yml, from an artifact built
+ * from an ALLOWLIST (docs/DEPLOYMENT.md §1b, §2). What that artifact holds
+ * has one home, tools/pages-artifact.mjs refusal(), and this asks it
+ * instead of re-deriving it (v2 Session 4, B.2, 27 Oct 2026).
+ *
+ * That narrowed one surface and made a second one visible, and the two
+ * must not be conflated in either direction:
+ *   · published   — the WEBSITE: the tracked files refusal() admits, which
+ *                   is what a reader's browser can be served;
+ *   · repository  — every tracked file. The GitHub repository is PUBLIC
+ *                   (its visibility read on 27 Oct 2026), so agent/, docs/,
+ *                   tools/ and the dot directories are readable by anyone
+ *                   on github.com even though the website serves none of
+ *                   them. The secret scan reads this surface, not the
+ *                   narrower one: a credential committed here is public
+ *                   whatever the artifact says.
+ * A path in the tree that the allowlist refuses is not silently gone: it
+ * is listed in `excluded`, with the reason refusal() gives.
  */
 export function publicSurface({ root = REPO_ROOT } = {}) {
   const tracked = trackedFiles({ root });
   const onDisk = allFiles({ root });
-  /* Tracked files are what `main` carries and therefore what Pages
-     serves. When git cannot be consulted, fall back to the whole
-     tree — overstating the published surface is the safe direction
-     for a boundary check — and say which happened. */
+  /* Tracked files are what `main` carries. When git cannot be consulted,
+     fall back to the whole tree — overstating a surface is the safe
+     direction for a boundary check — and say which happened. */
   const files = tracked ?? onDisk;
 
-  const excludedByDefault = files.filter((f) => JEKYLL_DEFAULT_EXCLUDES.some((e) => f === e || f.startsWith(`${e}/`)));
-  const dotfiles = files.filter((f) => f.split('/').some((seg) => seg.startsWith('_') || seg.startsWith('.')));
-  const published = files.filter((f) => !excludedByDefault.includes(f) && !dotfiles.includes(f));
+  const why = new Map(files.map((f) => [f, refusal(f)]));
+  const published = files.filter((f) => why.get(f) === null);
+  const excluded = files.filter((f) => why.get(f) !== null);
+  const refusedBy = {};
+  for (const f of excluded) {
+    const top = f.split('/')[0];
+    (refusedBy[top] ??= { files: 0, why: why.get(f) }).files++;
+  }
   const trackedSet = new Set(files);
   const untracked = tracked ? onDisk.filter((f) => !trackedSet.has(f)) : [];
 
   return {
     total: files.length,
     published,
-    excluded: [...new Set([...excludedByDefault, ...dotfiles])],
-    /* Present on this machine and never committed, so never
-       published. Reported rather than dropped: several of these
-       hold control-plane data, and "not published because git
-       ignores it" is a different and weaker fact from "not
-       published because the deployment excludes it". */
+    excluded,
+    excluded_by_reason: refusedBy,
+    repository: files,
+    /* Present on this machine and never committed, so in neither surface.
+       Reported rather than dropped: several of these hold control-plane
+       data, and "not public because git ignores it" is a different and
+       weaker fact from "not published because the allowlist refuses it". */
     untracked,
-    source_of_truth: tracked ? 'git ls-files — what `main` carries, which is what GitHub Pages serves' : 'the filesystem walk — GIT COULD NOT BE CONSULTED, so this OVERSTATES the published surface by including untracked and ignored files',
+    allowlisted: true,
+    source_of_truth: tracked
+      ? 'git ls-files, filtered by tools/pages-artifact.mjs refusal() — the allowlist .github/workflows/pages.yml builds the deployed artifact from'
+      : 'the filesystem walk filtered by refusal() — GIT COULD NOT BE CONSULTED, so the repository surface OVERSTATES by including untracked and ignored files',
     git_consulted: Boolean(tracked),
     files_on_disk: onDisk.length,
     has_config: existsSync(join(root, '_config.yml')),
     has_nojekyll: existsSync(join(root, '.nojekyll')),
     established: [
-      `there is no _config.yml in the repository root${existsSync(join(root, '_config.yml')) ? ' — CORRECTION: there is one, and this module has not read its exclude list' : ''}`,
-      `there is no .nojekyll${existsSync(join(root, '.nojekyll')) ? ' — CORRECTION: there is one' : ''}`,
-      'no file in the tree declares an exclude list for publication',
-      tracked ? `${files.length} file(s) are tracked by git and therefore in the deployment unit; ${onDisk.length - files.length} more exist on this machine and are not` : 'git could not be consulted, so this reads the filesystem and overstates',
+      `${published.length} of ${files.length} tracked file(s) are on the allowlist of website files (tools/pages-artifact.mjs); ${excluded.length} are refused by it`,
+      'since 24 Oct 2026 .github/workflows/pages.yml is the only publisher of the site (docs/DEPLOYMENT.md §1b, measured that day)',
+      'the GitHub repository is public (its visibility, read on 27 Oct 2026), so every tracked file is readable on github.com',
+      tracked ? `${onDisk.length - files.length} more file(s) exist on this machine and are not tracked` : 'git could not be consulted, so this reads the filesystem and overstates',
     ],
-    inferred: 'that the deployed site therefore serves every path above is inferred from GitHub Pages\' documented default behaviour and from docs/CURRENT-ARCHITECTURE.md §13 ("Deployment is GitHub Pages serving main at the repository root"). It has NOT been confirmed by fetching the deployed site.',
-    unresolved: 'outbound access to andreatosti2001.github.io is refused by this environment\'s network policy (HTTP 403 on CONNECT, recorded in docs/CURRENT-ARCHITECTURE.md §13). Nothing in this repository has ever fetched the live site, so what it actually serves is not established here.',
+    inferred: 'that the live site serves exactly the allowlisted artifact is inferred from the workflow and from the measurements docs/DEPLOYMENT.md records (private paths answering 404 on 27 Sep, 23 Oct and 24 Oct 2026); this function reads the tree and does not fetch the site.',
+    unresolved: 'the publication boundary is measured on dates, not continuously: nothing here re-fetches the live site, so a later change of host or Pages setting would go unseen until somebody measures again (docs/CONTROL-ROOM.md §11.3).',
   };
 }
 
 /**
- * Control-plane paths that are inside the public surface.
+ * Control-plane paths that are on the public WEBSITE.
  *
- * Today this returns every one of them, and that IS the result. It
- * is not a bug in the check and it must not be "fixed" by narrowing
- * the list — the separation does not exist, and the honest output of
- * a boundary check on a repository with no boundary is a full list.
+ * Until 24 Oct 2026 this returned every one of them, because the
+ * deployment served the whole tree. Since the allowlisted artifact it
+ * returns none, and that is a measurement of the allowlist, not an
+ * assumption: a control-plane path the allowlist admits appears here.
+ * Two further facts are reported beside it rather than folded in:
+ * the tracked control-plane files are public in the REPOSITORY, and a
+ * git-ignored directory is absent from both surfaces only because
+ * nobody committed it.
  */
 export function controlPlaneExposure({ root = REPO_ROOT } = {}) {
   const surface = publicSurface({ root });
@@ -274,28 +302,23 @@ export function controlPlaneExposure({ root = REPO_ROOT } = {}) {
   }
   return {
     exposed,
-    /* An entry with zero files is not a clearance. agent/records/ and
-       agent/observability/runs/ are absent because they are
-       git-ignored, and an ignore rule is not a publication boundary:
-       a single `git add -f` puts operational traces on the public
-       web with no error anywhere. */
+    /* An entry with zero files on the website is not a clearance of
+       the repository: what is tracked there is readable on github.com,
+       and what is git-ignored is kept out by an ignore rule, which one
+       `git add -f` undoes. */
     ignored_not_excluded: CONTROL_PLANE_DIRS
       .filter(([prefix]) => !surface.published.some((f) => f.startsWith(prefix)))
       .map(([prefix, why]) => {
+        const inRepo = surface.repository.filter((f) => f.startsWith(prefix)).length;
         const onDisk = surface.untracked.some((f) => f.startsWith(prefix));
-        const excludedByJekyll = surface.excluded.some((f) => f.startsWith(prefix));
         return {
           prefix,
           why,
           present_on_disk: onDisk,
-          /* Two very different reasons to be absent from the
-             published set, and collapsing them would overstate the
-             protection. A dotfile directory is excluded by the
-             DEPLOYMENT; a git-ignored directory is absent because
-             nobody committed it, which one `git add -f` undoes. */
-          reason: excludedByJekyll
-            ? 'excluded from publication by the deployment: paths beginning with "." or "_" are not served. That is a real boundary, and it is the only one this repository has.'
-            : 'not in the deployment unit because git does not track it. That is an IGNORE RULE, not a publication boundary: a single `git add -f` would put it in `main` and nothing in this repository would object.',
+          public_in_repository: inRepo,
+          reason: inRepo
+            ? `not on the website: tools/pages-artifact.mjs refuses it (${refusal(prefix + 'x')}). Its ${inRepo} tracked file(s) are public in the repository on github.com.`
+            : 'in neither surface because git does not track it. That is an IGNORE RULE, not a publication boundary: a single `git add -f` would put it in the public repository, and nothing in this repository would object; the website would still refuse it.',
         };
       }),
     surface,
@@ -308,7 +331,10 @@ export function controlPlaneExposure({ root = REPO_ROOT } = {}) {
  * @param {{root?:string, files?:string[]}} opts
  */
 export function scanSecrets({ root = REPO_ROOT, files = null } = {}) {
-  const list = files ?? publicSurface({ root }).published;
+  /* the REPOSITORY surface: every tracked file is public on github.com,
+     so a credential anywhere in it is published whatever the website's
+     allowlist says (v2 Session 4, B.2) */
+  const list = files ?? publicSurface({ root }).repository;
   const findings = [];
   let scanned = 0;
   let skippedBinary = 0;
@@ -360,12 +386,11 @@ export function scanSecrets({ root = REPO_ROOT, files = null } = {}) {
  * `errors` counts secrets only. Control-plane exposure is a WARNING
  * rather than an error, and the distinction is deliberate: a
  * credential in the public surface is a defect this change could
- * have introduced, and the absence of a public/private boundary is a
- * standing architectural fact that predates every change and would
- * otherwise redden every run forever. It is named in `new_findings`
- * on every run so it cannot be forgotten, and
- * `docs/IMPLEMENTATION-QA.md` §6 carries it as the standing finding
- * it is.
+ * have introduced, and a control-plane path on the website is a
+ * publication fact the allowlist decides. Since 24 Oct 2026 the
+ * allowlist admits none, so the warning count is the test fixtures
+ * alone; a control-plane path admitted tomorrow raises it, and it is
+ * named in `new_findings` on every run so it cannot be missed.
  */
 export function boundaryCheck({ root = REPO_ROOT } = {}) {
   const secrets = scanSecrets({ root });
@@ -388,12 +413,12 @@ export function boundaryCheck({ root = REPO_ROOT } = {}) {
     baseline_warnings: exposure.exposed.length + secrets.fixtures.length,
     new_findings: [
       ...secrets.findings.map((f) => `${f.path}:${f.line} — ${f.what} (${f.pattern}) [${f.class}, ${f.severity}], value redacted`),
-      ...exposure.exposed.map((e) => `${e.prefix} is inside the public surface (${e.files} files): ${e.why}`),
+      ...exposure.exposed.map((e) => `${e.prefix} is on the public website (${e.files} files): ${e.why}`),
     ],
     output_excerpt: [
       `${secrets.scanned} text file(s) scanned against ${secrets.patterns} credential patterns · ${secrets.blocking.length} blocking · ${secrets.fixtures.length} in test fixtures`,
-      `${exposure.surface.published.length} of ${exposure.surface.total} file(s) would be published; ${exposure.exposed.length} control-plane director(ies) among them`,
-      `_config.yml: ${exposure.surface.has_config ? 'present' : 'absent'} · .nojekyll: ${exposure.surface.has_nojekyll ? 'present' : 'absent'}`,
+      `${exposure.surface.published.length} of ${exposure.surface.total} tracked file(s) are on the website's allowlist (tools/pages-artifact.mjs); ${exposure.exposed.length} control-plane director(ies) among them`,
+      `refused by the allowlist and public in the repository: ${Object.entries(exposure.surface.excluded_by_reason).map(([k, v]) => `${k} ${v.files}`).join(', ')}`,
       exposure.surface.unresolved,
     ].join('\n'),
     detail: { secrets, exposure },

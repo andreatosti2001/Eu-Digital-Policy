@@ -290,30 +290,33 @@ export const SECURITY_METRICS = [
     id: 'control_plane.control_room_assets_published',
     name: 'Control Room assets in the published surface',
     domain: 'control_plane',
-    definition: 'Files whose path marks them as an administrative or Control Room asset, present in the set the deployment publishes.',
+    definition: 'Files whose path marks them as an administrative or Control Room asset, present in the set the website publishes — the allowlisted artifact of tools/pages-artifact.mjs.',
     source: 'agent/implement/boundary.mjs publicSurface(), matched against CONTROL_ROOM_MARKERS',
-    calculation: 'Published files whose path contains control-room, admin, approve, operator or console. Also reports whether any exclusion mechanism exists at all — because with none, a future Control Room page IS published, and the count being 0 today says only that nobody has added one yet.',
+    calculation: 'Files on the website allowlist whose path contains control-room, admin, approve, operator or console. Also reports the exclusion mechanism — the allowlist, which refuses every dot path and agent/, docs/ and tools/ by name — and, apart, the tracked matches that are public in the repository rather than on the website.',
     frequency: 'per_commit',
-    interpretation: 'Above 0 means an administrative asset is on the public web. The 0 today is not a clearance: there is no _config.yml, no .nojekyll and no exclude list, so nothing WOULD stop one. Protocol §10 is explicit that hidden routes, unlisted pages and robots.txt are not security mechanisms, and this metric is deliberately not satisfied by any of them.',
-    limitations: 'It matches on PATH. A Control Room page called something else is invisible to it — which is why the second half of the reading, whether any exclusion mechanism exists, matters more than the count. Whether the live site actually serves what this predicts has never been confirmed: the network policy refuses that origin.',
+    interpretation: 'Above 0 means an administrative asset is on the public website. Until 24 Oct 2026 the site was the whole tree served by Jekyll and nothing would have stopped one; since then .github/workflows/pages.yml publishes only the allowlisted artifact (docs/DEPLOYMENT.md §1b), and a Control Room page added under a refused path is not served. The allowlist is a PUBLICATION boundary: protocol §10 is explicit that hidden routes, unlisted pages and robots.txt are not security mechanisms, and this metric is not satisfied by any of them.',
+    limitations: 'It matches on PATH. A Control Room page called something else is invisible to it — which is why the exclusion mechanism matters more than the count. What the live site serves was measured on dates (docs/DEPLOYMENT.md §1), not continuously, and the repository itself is public on github.com, which this website count does not cover.',
     visibility: 'private',
     direction: 'lower_is_better',
     measure(ctx) {
       const published = ctx.surface.published;
       const hits = published.filter((f) => CONTROL_ROOM_MARKERS.some((m) => f.toLowerCase().includes(m)));
-      const hasExclusion = ctx.surface.has_config || ctx.surface.has_nojekyll;
+      const hasExclusion = Boolean(ctx.surface.allowlisted) || ctx.surface.has_config || ctx.surface.has_nojekyll;
+      const inRepository = (ctx.surface.repository || []).filter((f) => CONTROL_ROOM_MARKERS.some((m) => f.toLowerCase().includes(m)) && !published.includes(f));
       return measured(hits.length, {
         unit: 'published administrative assets',
         of: published.length,
         detail: {
           matches: hits,
           exclusion_mechanism_exists: hasExclusion,
+          exclusion_mechanism: ctx.surface.allowlisted ? 'tools/pages-artifact.mjs: the allowlist .github/workflows/pages.yml builds the artifact from' : null,
           has_config_yml: ctx.surface.has_config,
           has_nojekyll: ctx.surface.has_nojekyll,
           control_plane_directories_in_the_published_surface: ctx.exposure.exposed.map((e) => ({ prefix: e.prefix, files: e.files })),
+          public_in_the_repository_not_on_the_website: inRepository.length,
           standing_finding: hasExclusion
             ? null
-            : 'THERE IS NO EXCLUSION MECHANISM. GitHub Pages serves main at the repository root with no _config.yml, no .nojekyll and no exclude list. A Control Room page added to this tree would be published the moment it was pushed. The 0 above means nobody has added one, not that one would be protected.',
+            : 'THERE IS NO EXCLUSION MECHANISM: the surface was built without the allowlist, so everything tracked counts as published. A Control Room page added to this tree would be published the moment it was pushed.',
           not_established: ctx.surface.unresolved,
         },
         evidence: ['agent/implement/boundary.mjs'],

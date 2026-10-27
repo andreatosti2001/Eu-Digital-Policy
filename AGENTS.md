@@ -647,25 +647,29 @@ patches, not checks. **Do not re-run** the latter two.
   substitute, bulk-stamping `last_verified`, removing a `blocks` flag — is a prohibited
   action rather than an improvement. **A rise in the first four is usually good news.**
 
-- **Almost the whole repository is inside the public deployment.** GitHub Pages serves `main`
-  at the repository root, with no `_config.yml`, no `.nojekyll` and no exclude list, so
-  `agent/`, `docs/` and the approval ledger are published alongside `index.html`. A Control
-  Room page dropped in *that* part of the tree would be public the moment it was pushed.
-  `node agent/implement/cli.mjs boundary` reports it on demand;
-  `docs/IMPLEMENTATION-QA.md` §6 carries it as the standing finding it is.
+- **There are two public surfaces, and only one is the website.** Since 24 Oct 2026 the site is
+  published only by `.github/workflows/pages.yml`, from an artifact built from the allowlist in
+  `tools/pages-artifact.mjs` (`docs/DEPLOYMENT.md` §1b, §2). That list is the one home of "what
+  is published": it admits the pages and the directories they load, and refuses `agent/`,
+  `docs/`, `tools/` and every dot path by name. `agent/implement/boundary.mjs publicSurface()`,
+  the health monitor, the adversarial gate's PP-08 and `.control-room/boundary.mjs` read it
+  (v2 Session 4, B.2). **The repository is the second surface:** it is public on github.com,
+  so `agent/`, `docs/`, the Control Room's source and anything ever committed are readable there,
+  and the secret scan reads every tracked file for that reason. Until 24 Oct 2026 the site was
+  GitHub Pages serving the whole tree through Jekyll, and the dot prefix was its one exclusion;
+  that model is gone. `node agent/implement/cli.mjs boundary` reports both surfaces on demand.
 
-  **The one real exclusion is the dot prefix.** A path whose segments begin with `.` or `_`
-  is not served by a Pages deployment with no `_config.yml` — which is why `.agents/` has
-  never been in the published surface and `agent/` always has. SESSION 21 put
-  `.control-room/` behind it deliberately, and `node .control-room/cli.mjs boundary` checks
-  on every push that it is still true. **Do not read that as "the Control Room is safe
-  because nobody can find it."** Protocol §10 and `docs/CONTROL-ROOM.md` §1 both say the
-  opposite, and every privileged request there is authenticated and authorized regardless.
+  **The allowlist is a publication boundary, not a security control.** `.control-room/` is
+  refused by it, and `node .control-room/cli.mjs boundary` checks on every push that it still
+  is. **Do not read that as "the Control Room is safe because nobody can find it."** Protocol
+  §10 and `docs/CONTROL-ROOM.md` §1 both say the opposite, and every privileged request there is
+  authenticated and authorized regardless.
 
-  What is merely UNTRACKED is weaker still: `agent/records/`, `agent/observability/runs/`,
-  `agent/health/history/`, `agent/orchestrator/state/` and `.control-room/state/` have never
-  been in a commit, and that is an **ignore rule, not a boundary** — one `git add -f` undoes it and nothing here would
-  object.
+  What is merely UNTRACKED is kept out of the public REPOSITORY by an ignore rule alone:
+  `agent/records/`, `agent/observability/runs/`, `agent/health/history/`,
+  `agent/orchestrator/state/` and `.control-room/state/` have never been in a commit, and that
+  is an **ignore rule, not a boundary** — one `git add -f` puts them on github.com and nothing
+  here would object; the website's allowlist would still refuse them.
 - **The public site now has one affordance that is not about EU law.** Typing
   `thirty-two paths` into the search palette offers a passage to a private control plane:
   `js/threshold.js`, styled at the end of `style.css`, drawn as an original Sefer

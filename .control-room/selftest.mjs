@@ -1838,15 +1838,19 @@ test('FIXTURE · the proposal this suite decides really does satisfy its contrac
   assert.equal(p.simulated, false, 'a simulated record is refused by the gate, so the fixture must be a real one');
 });
 
-test('THE REPOSITORY · the Control Room is not in the published surface, and agent/ still is', () => {
-  /* The second half is not decoration. If `agent/` ever stopped
-     appearing here it would mean the surface calculation changed,
-     and the first half would be proving nothing. */
+test('THE REPOSITORY · the Control Room is not on the website, and its source is still seen in the public repository', () => {
+  /* The second half is not decoration. Until 24 Oct 2026 it asserted
+     that agent/ was published, because the site was the whole tree.
+     Since then the website is the allowlisted artifact and agent/ is
+     refused like .control-room/; what keeps the first half from
+     proving nothing now is that the surface still SEES both, in the
+     repository, which is public on github.com (v2 Session 4, B.2). */
   const surface = publicSurface({ root: REPO_ROOT });
   assert.ok(!surface.published.some((f) => f.startsWith('.control-room/')));
   assert.ok(surface.excluded.some((f) => f.startsWith('.control-room/')), 'the Control Room must be in the EXCLUDED set, not merely absent');
-  assert.ok(surface.published.some((f) => f.startsWith('agent/')),
-    'agent/ is still published — this repository has no exclude list, and the dot prefix is the only boundary there is');
+  assert.ok(surface.repository.some((f) => f.startsWith('.control-room/')) && surface.repository.some((f) => f.startsWith('agent/')),
+    'the repository surface must still hold the Control Room source and agent/, or the exclusion above proves nothing');
+  assert.ok(!surface.published.some((f) => f.startsWith('agent/')), 'agent/ is refused by the website allowlist');
   assert.equal(relative(REPO_ROOT, CONTROL_ROOM_ROOT), '.control-room');
   assert.equal(isLoopback('127.0.0.1'), true);
   assert.equal(isLoopback('0.0.0.0'), false);

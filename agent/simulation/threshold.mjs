@@ -311,11 +311,11 @@ export async function separations({ controlRoom = null } = {}) {
     separated: declaring.length === 0,
     measured: [
       `${declaring.length} published page(s) declare <meta name="eu-control-room">, so the passage ends at a statement and navigates nowhere.`,
-      '.control-room/ is behind a dot prefix and is therefore not served by a GitHub Pages deployment with no _config.yml.',
+      '.control-room/ is refused by the allowlist the deployed artifact is built from (tools/pages-artifact.mjs), so it is not served by the website.',
       'No route in the Control Room contains any of the prohibited production words, and the server imports neither child_process nor the applier.',
       'Nothing about the animation can cause a deployment: a push to main publishes, and the animation cannot push.',
     ],
-    bound: 'Almost the whole repository IS inside the published deployment (docs/IMPLEMENTATION-QA.md §6). The dot prefix is the one real exclusion, and it is a publication boundary, not a security control — protocol §10 and docs/CONTROL-ROOM.md §1 both say so.',
+    bound: 'The website is the allowlisted artifact (docs/DEPLOYMENT.md §1b), and the repository, Control Room source included, is public on github.com. The allowlist is a publication boundary, not a security control — protocol §10 and docs/CONTROL-ROOM.md §1 both say so.',
   });
 
   return out;

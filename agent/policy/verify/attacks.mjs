@@ -197,27 +197,34 @@ export async function publicPrivate(w) {
   {
     const a = attack('PP-08', 'public_private', 'read a trace, a decision, an operator record or a health reading out of the published surface', 'high');
     const surface = publicSurface({ root: REPO_ROOT });
+    /* Two public surfaces since 24 Oct 2026 (v2 Session 4, B.2): the
+       WEBSITE, the allowlisted artifact of tools/pages-artifact.mjs, and
+       the REPOSITORY, every tracked file, public on github.com. A record
+       in either is read by anyone; the attack is tried against both. */
     const published = surface.published ?? [];
-    const controlPlanePaths = published.filter((f) => /^agent\/(records|observability\/runs|health\/history|orchestrator\/state)\//.test(f) || f.startsWith('agent/implement/decisions/'));
+    const repository = surface.repository ?? published;
+    const isRecordDir = (f) => /^agent\/(records|observability\/runs|health\/history|orchestrator\/state)\//.test(f) || f.startsWith('agent/implement/decisions/');
+    const onWebsite = published.filter(isRecordDir);
+    const controlPlanePaths = repository.filter(isRecordDir);
     /* A README explaining why a directory is empty is not an
        operational record, and reporting one as a leaked decision
        would be this gate crying wolf — which it did on its first
-       run. What matters is whether a RECORD is published, and
-       separately whether the DIRECTORY is inside the published
-       surface, because a record written there tomorrow would be. */
+       run. What matters is whether a RECORD is public, and
+       separately whether the DIRECTORY is in a public surface,
+       because a record written there tomorrow would be. */
     const records = controlPlanePaths.filter((f) => !f.endsWith('README.md'));
     const placeholders = controlPlanePaths.filter((f) => f.endsWith('README.md'));
-    const dirsPublished = published.filter((f) => f.startsWith('agent/') || f.startsWith('docs/'));
-    out.push(records.length
-      ? succeeded(a, `${records.length} control-plane RECORD file(s) are inside the published surface: ${records.slice(0, 6).join(', ')}`, { files: records.slice(0, 20) })
+    const sourcePublic = repository.filter((f) => f.startsWith('agent/') || f.startsWith('docs/'));
+    out.push(records.length || onWebsite.some((f) => !f.endsWith('README.md'))
+      ? succeeded(a, `${records.length} control-plane RECORD file(s) are public — ${onWebsite.length ? 'on the website' : 'in the repository on github.com'}: ${records.slice(0, 6).join(', ')}`, { files: records.slice(0, 20), on_website: onWebsite })
       : placeholders.length
         ? partial(a,
-          `no operational record is published today — agent/records/, agent/observability/runs/, agent/health/history/, agent/orchestrator/state/ and the decision ledger are all untracked — but ${placeholders.length} placeholder README(s) show that those DIRECTORIES are inside the published surface (${placeholders.join(', ')}). The ignore rule is what keeps the records out, and an ignore rule is not a boundary: one \`git add -f\` of agent/implement/decisions/decisions.jsonl publishes the approval ledger, and nothing here would object. ${dirsPublished.length} file(s) under agent/ and docs/ are published, including the whole agent layer's source.`,
-          { published_directories: placeholders, published_control_plane_source: dirsPublished.length, sample: dirsPublished.slice(0, 8), note: 'docs/IMPLEMENTATION-QA.md §6\'s standing finding, re-measured today rather than quoted' },
+          `no operational record is public today — agent/records/, agent/observability/runs/, agent/health/history/, agent/orchestrator/state/ and the decision ledger are all untracked. The website's allowlist refuses agent/ (${onWebsite.length} of those paths on the website), but the repository is public on github.com, and ${placeholders.length} placeholder README(s) show those DIRECTORIES are tracked there (${placeholders.join(', ')}). The ignore rule is what keeps the records out of the repository, and an ignore rule is not a boundary: one \`git add -f\` of agent/implement/decisions/decisions.jsonl publishes the approval ledger on github.com, and nothing here would object. ${sourcePublic.length} file(s) under agent/ and docs/ are public in the repository, none on the website.`,
+          { published_directories: placeholders, on_website: onWebsite.length, public_in_repository_control_plane_source: sourcePublic.length, sample: sourcePublic.slice(0, 8), note: 'docs/IMPLEMENTATION-QA.md §6\'s standing finding, re-measured against the allowlist and the public repository (v2 Session 4, B.2)' },
           'high')
         : partial(a,
-        `no trace, decision or operator FILE is published — those directories are untracked — but ${dirsPublished.length} file(s) under agent/ and docs/ are, including the whole agent layer's source. Protocol §10 puts orchestration, approval mechanisms and operational traces in the private control plane, and the SOURCE of all three is public here.`,
-        { published_control_plane_source: dirsPublished.length, sample: dirsPublished.slice(0, 8), note: 'this is docs/IMPLEMENTATION-QA.md §6\'s standing finding, re-measured today rather than quoted' },
+        `no trace, decision or operator FILE is public — those directories are untracked — but ${sourcePublic.length} file(s) under agent/ and docs/ are public in the repository on github.com, including the whole agent layer's source. Protocol §10 puts orchestration, approval mechanisms and operational traces in the private control plane, and the SOURCE of all three is public there, though not on the website.`,
+        { public_in_repository_control_plane_source: sourcePublic.length, sample: sourcePublic.slice(0, 8), note: 'docs/IMPLEMENTATION-QA.md §6\'s standing finding, re-measured today rather than quoted' },
         'medium'));
   }
 
@@ -226,7 +233,7 @@ export async function publicPrivate(w) {
     const a = attack('PP-09', 'public_private', 'fetch the deployed site and confirm what it actually serves', 'high');
     out.push(undecidable(a,
       'nothing in this environment has ever fetched https://andreatosti2001.github.io/Eu-Digital-Policy/ — the network policy refuses it, and docs/CURRENT-ARCHITECTURE.md §13 and AUDIT F-12 both record that no URL in this repository has ever been retrieved.',
-      'an environment with outbound access to the deployed origin, and a check that requests .control-room/ and agent/records/ against it. Until then the publication boundary is INFERRED from Jekyll\'s documented default and from reading the tree.'));
+      'an environment with outbound access to the deployed origin, and a check that requests .control-room/ and agent/records/ against it. Until then the publication boundary is INFERRED from the allowlist in tools/pages-artifact.mjs and from reading the tree.'));
   }
 
   return out;

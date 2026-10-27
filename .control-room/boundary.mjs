@@ -2,17 +2,19 @@
    .control-room/boundary.mjs — is the private control plane actually
    outside the public website?
 
-   SESSION 18 built `agent/implement/boundary.mjs` and it reported
-   the honest answer for this repository: there is no separation.
-   GitHub Pages serves `main` at the repository root, with no
-   `_config.yml`, no `.nojekyll` and no exclude list, so `agent/`,
-   `docs/` and `tools/` are published beside `index.html`.
+   SESSION 18 built `agent/implement/boundary.mjs` when GitHub Pages
+   served `main` at the repository root through Jekyll, so `agent/`,
+   `docs/` and `tools/` were published beside `index.html` and the
+   only exclusion was Jekyll's dot prefix — the boundary this
+   directory was put behind.
 
-   THE ONE EXCLUSION THAT DOES EXIST is Jekyll's documented default:
-   a path whose segments begin with `.` or `_` is not served. That is
-   why `.agents/` has never been in the published surface and `agent/`
-   always has been, and it is the boundary this directory is behind.
-   It is a property of the DEPLOYMENT, not a hidden route: nothing
+   SINCE 24 OCT 2026 the website is published only by
+   `.github/workflows/pages.yml`, from an artifact built from the
+   allowlist in `tools/pages-artifact.mjs`, which refuses every dot
+   path by name (docs/DEPLOYMENT.md §1b, §2). `publicSurface()` reads
+   that allowlist (v2 Session 4, B.2). This directory's SOURCE is
+   public in the repository on github.com; its state is not tracked.
+   The allowlist is a property of the DEPLOYMENT, not a hidden route: nothing
    here relies on the URL being unknown, and every privileged request
    is authenticated and authorized whether or not anybody finds the
    server.
@@ -32,10 +34,8 @@
 
    WHAT IT DOES NOT PROVE, in the same words `agent/implement/`
    uses: the secret scan matches known credential SHAPES, so a clean
-   run is a floor and not a ceiling; and whether the live site serves
-   what this predicts has never been confirmed, because outbound
-   access to the deployed origin is refused by this environment's
-   network policy.
+   run is a floor and not a ceiling; and what the live site serves is
+   measured on dates (docs/DEPLOYMENT.md §1), not continuously.
    ============================================================ */
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
@@ -85,10 +85,9 @@ export function controlRoomBoundary({ root = REPO_ROOT, cfg = null } = {}) {
   /* 1 · nothing of ours in the published set. */
   const published = surface.published.filter((f) => f.startsWith('.control-room/'));
 
-  /* 2 · credential shapes in our own tree. Scanned explicitly,
-         because `scanSecrets` reads the PUBLISHED surface by default
-         and we are deliberately not in it — which would otherwise
-         mean this directory was the one place never scanned. */
+  /* 2 · credential shapes in our own tree, tracked or not, scanned
+         explicitly: `scanSecrets` reads the tracked repository by
+         default, and an untracked file here would otherwise go unread. */
   const ourFiles = walk(CONTROL_ROOM_ROOT).map((f) => `.control-room/${f}`)
     .filter((f) => !f.startsWith('.control-room/state/'))
     .filter((f) => !SCANNER_OWN_FILES.includes(f));
@@ -117,9 +116,9 @@ export function controlRoomBoundary({ root = REPO_ROOT, cfg = null } = {}) {
     errors,
     warnings: 0,
     findings: [
-      ...published.map((f) => `${f} is in the set the deployment publishes. The Control Room is behind the dot-prefix exclusion; a file of ours in the published surface means that is no longer true.`),
+      ...published.map((f) => `${f} is in the set the website publishes. tools/pages-artifact.mjs refuses .control-room/; a file of ours in the published surface means that is no longer true.`),
       ...secrets.blocking.map((f) => `${f.path}:${f.line} — ${f.what} (${f.pattern}), value redacted`),
-      ...trackedState.map((f) => `${f} is tracked by git. Operators, password hashes, sessions, the audit trail and review notes are private control-plane data and this repository publishes its whole tree.`),
+      ...trackedState.map((f) => `${f} is tracked by git. Operators, password hashes, sessions, the audit trail and review notes are private control-plane data, and the repository is public on github.com.`),
       ...productionControls.map((r) => `${r.method} ${r.path} names a production control. The Control Room is OBSERVE → REVIEW → DECIDE; it may not delete, deploy, force or publish.`),
       ...(ignoreRuleExists ? [] : ['.gitignore does not name .control-room/state/. Nothing being tracked today is not the same as nothing being trackable tomorrow.']),
     ],
@@ -134,8 +133,8 @@ export function controlRoomBoundary({ root = REPO_ROOT, cfg = null } = {}) {
       routes: ROUTES.length,
       public_routes: PUBLIC_ROUTES,
       production_controls: productionControls.map((r) => `${r.method} ${r.path}`),
-      excluded_because: 'a path whose segments begin with "." or "_" is not served by a GitHub Pages deployment with no _config.yml. That is a property of the deployment, and it is the only publication boundary this repository has.',
+      excluded_because: 'tools/pages-artifact.mjs refuses every dot path by name, and .github/workflows/pages.yml publishes only the artifact built from that allowlist (since 24 Oct 2026, docs/DEPLOYMENT.md §1b). A publication boundary, not a security control. The source is public in the repository.',
     },
-    bound: 'The secret scan matches known credential SHAPES: a clean run is a floor, not a ceiling. And whether the deployed site serves what this predicts has never been confirmed — outbound access to the deployed origin is refused by this environment\'s network policy, exactly as docs/CURRENT-ARCHITECTURE.md §13 records.',
+    bound: 'The secret scan matches known credential SHAPES: a clean run is a floor, not a ceiling. What the deployed site serves was measured on dates (docs/DEPLOYMENT.md §1: .control-room/ not served on 27 Sep and 23 Oct 2026), not continuously.',
   };
 }

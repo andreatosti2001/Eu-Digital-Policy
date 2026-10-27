@@ -273,7 +273,7 @@ export const MONTHLY_REVIEWS = Object.freeze([
     cadence: 'monthly',
     runs: 'node .control-room/cli.mjs boundary',
     doc: 'docs/IMPLEMENTATION-QA.md',
-    human_step: 'read it together with node agent/implement/cli.mjs boundary. Almost the whole repository is inside the published deployment; the dot prefix is the one real exclusion and it is a publication boundary, not a security control.',
+    human_step: 'read it together with node agent/implement/cli.mjs boundary. The website is the allowlisted artifact of tools/pages-artifact.mjs and the repository is public on github.com; the allowlist is a publication boundary, not a security control.',
   }),
 ]);
 
