@@ -1,9 +1,37 @@
 # HANDOVER
 
-**Last updated:** v2 Session 3 — Phase 0 (roadmap items 0.1–0.4) · 27 October 2026
+**Last updated:** v2 Session 3 — Phase 0 closed; Phase 1 items 1.1–1.4 done, 1.5 waiting on the
+author's wording · 27 October 2026
 **Branch:** `claude/eloquent-hamilton-7p6t2u`, fast-forwarded to `main` at `51efe8e` (the merge of
-#18). **Stopped at the Phase 0 checkpoint**: Phase 1 does not start until the author approves this
-report, and that approval is recorded in `docs/ROADMAP-v2.md` §8.
+#18).
+
+## v2 Session 3 — Phase 1, in progress
+
+**The author approved the Phase 0 checkpoint** on 27 Oct 2026. It is recorded in
+`docs/ROADMAP-v2.md` §8 (`9d51dc8`).
+
+**Done, each with its tests:**
+- 1.1 `76e24f8` — `evidence-audit.mjs --record` and the read-only Editorial audit view;
+  `docs/EDITORIAL-AUDIT-PATH.md`.
+- 1.2 `8962210` — metric names, definitions and details; "public-safe".
+- 1.3 `f9d9f26` — the `docs/CONTROL-ROOM.md` inventory, with the assertion that fails on a tab the
+  inventory does not name.
+- 1.4 `721a26b` — the security-wording sweep: 26 occurrences, listed in
+  `docs/AUDIT-2026-10-24.md` §5. A ninth README limitation is proposed there, not applied.
+
+**Re-run on that tree:**
+- the six validators are at this session's baseline;
+- all 25 suites pass: 1291 tests, 0 failures, 0 skipped with `BROWSER_QA_CHROME` set.
+
+**Waiting:** item 1.5. The notice for `applies.html` was drafted and put to the author. Nothing is
+inserted until the author approves the wording; the key will then be declared
+`pending_translation` for it, fr and es. After 1.5 comes the Phase 1 checkpoint:
+`docs/AUDIT-2026-10-24.md` §1.5 rows with commits, and roadmap §8.
+
+## (previous header) v2 Session 3 — Phase 0, stopped at its checkpoint
+
+**Branch:** `claude/eloquent-hamilton-7p6t2u`. **Stopped at the Phase 0 checkpoint**, which the
+author approved on 27 Oct 2026 (above).
 
 ## v2 Session 3 — Phase 0 checkpoint report
 
