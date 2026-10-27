@@ -1,8 +1,8 @@
 # HANDOVER
 
 **Last updated:** v2 Session 5. Part A (item 2.2, the promotion of `eidas2`) is approved. Part B
-(B.1 PP-09, B.2 the OIDC redirect URI and `::1`, B.3 the relationship migration) is implemented, with
-its checkpoint waiting for the author's approval (`docs/ROADMAP-v2.md` §8) · 27 October 2026
+(B.1 PP-09, B.2 the OIDC redirect URI and `::1`, B.3 the relationship migration) is implemented and
+approved too, which closes the session (`docs/ROADMAP-v2.md` §8) · 27 October 2026
 **Branch:** `claude/new-session-9ud5l5`, cut from `main` at `64aa696` (#22). No pull request unless the
 author asks.
 
@@ -12,7 +12,7 @@ author asks.
   `64aa696`).
 - `git branch -r --no-merged origin/main` listed only
   `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
-- This session's branch: `claude/new-session-9ud5l5`. Disposition: open — recorded at the session's end.
+- This session's branch: `claude/new-session-9ud5l5`. Disposition: Parts A and B approved (`docs/ROADMAP-v2.md` §8); pull request to `main` opened on the author's instruction of 27 Oct 2026 ("Sì, apri la PR").
 
 ## v2 Session 5 — Part B checkpoint report (B.1–B.3)
 
