@@ -201,7 +201,7 @@ node .control-room/cli.mjs provision --subject you@example.org --role administra
 node .control-room/cli.mjs serve                   # http://127.0.0.1:7802
 ```
 
-Use a fixed port, not `CONTROL_ROOM_PORT=0`. That is a pre-existing defect, not fixed: with port 0
+Use a fixed port, not `CONTROL_ROOM_PORT=0`. *(Fixed in v2 Session 4, B.3: the Origin check now reads the listening port.)* That was a pre-existing defect: with port 0
 the server expects the Origin `http://127.0.0.1:0` and refuses a real browser's POSTs.
 
 The review queue is empty on a fresh clone. To see one proposal, the suite's fixture can be written

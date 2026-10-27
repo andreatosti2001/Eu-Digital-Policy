@@ -1065,6 +1065,61 @@ test('CSRF · a state-changing request without the token is refused, and a cross
   } finally { await s.stop(); }
 });
 
+/* v2 Session 4, B.3 (27 Oct 2026). With CONTROL_ROOM_PORT=0 the operating
+   system picks the port when the server listens, and the Origin check used
+   to compare against an origin built from the CONFIGURED port —
+   "http://127.0.0.1:0", which no browser ever sends — so a real browser's
+   every POST was refused as cross-origin. Node's fetch sends no Origin
+   header, which is why no test here saw it. These two send one: the
+   server's own, which must pass, and a foreign one on the same server,
+   which must still be refused. The world() fixture binds port 0. */
+test('ORIGIN · B.3 · with port 0, a POST carrying the server\'s real Origin passes the Origin and CSRF checks', async () => {
+  const w = world();
+  assert.equal(w.cfg.port, 0, 'the fixture must bind an ephemeral port, the case this test exists for');
+  const s = await running(w);
+  try {
+    const reviewer = await s.login('reviewer@example.org');
+    const id = w.proposals[0].proposal_id;
+    const fingerprint = proposalFingerprint(w.proposals[0]);
+    const res = await fetch(`${s.origin}/api/review`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', cookie: reviewer.cookie, 'x-control-room-csrf': reviewer.csrf, origin: s.origin },
+      body: JSON.stringify({ action: 'request_changes', proposal_id: id, fingerprint, note: 'The second operation needs a source.' }),
+    });
+    const body = await res.json();
+    assert.equal(res.status, 200, `the server's own origin ${s.origin} was refused: ${JSON.stringify(body)}`);
+    assert.equal(readLedger({ dir: w.cfg.decision_dir }).decisions.length, 0, 'a request for changes records no grant');
+  } finally { await s.stop(); }
+});
+
+test('ORIGIN · B.3 · with port 0, a POST carrying a foreign Origin is still refused, and so is the old ":0" origin', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const reviewer = await s.login('reviewer@example.org');
+    const id = w.proposals[0].proposal_id;
+    const fingerprint = proposalFingerprint(w.proposals[0]);
+    const port = new URL(s.origin).port;
+    for (const origin of ['https://evil.example', 'http://127.0.0.1:0', `http://localhost:${port}`, `http://127.0.0.1:${Number(port) + 1}`]) {
+      const res = await fetch(`${s.origin}/api/review`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', cookie: reviewer.cookie, 'x-control-room-csrf': reviewer.csrf, origin },
+        body: JSON.stringify({ action: 'request_changes', proposal_id: id, fingerprint, note: 'n' }),
+      });
+      assert.equal(res.status, 403, `${origin} was accepted`);
+      assert.match((await res.json()).reason, /cross-origin/);
+    }
+    /* and the CSRF token is still required with the right Origin */
+    const noToken = await fetch(`${s.origin}/api/review`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', cookie: reviewer.cookie, origin: s.origin },
+      body: JSON.stringify({ action: 'request_changes', proposal_id: id, fingerprint, note: 'n' }),
+    });
+    assert.equal(noToken.status, 403);
+    assert.match((await noToken.json()).reason, /x-control-room-csrf/);
+  } finally { await s.stop(); }
+});
+
 test('METHOD · every route inspects the method, and an oversized body is refused', async () => {
   const w = world();
   const s = await running(w);
