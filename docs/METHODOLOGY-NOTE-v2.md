@@ -37,8 +37,11 @@ conduct, complement each other, or pull in opposite directions. A reading is an 
 recorded as one, with the claim that carries it. The map draws the two kinds differently.
 
 **What is not yet checked is shown as not yet checked.** A relationship that has not been read against
-its source is drawn as unverified, or not drawn at all. It is never drawn like one that has. A
-relationship that comes from a proposal is drawn as proposed: a proposal binds nobody.
+its source is drawn as unverified, or not drawn at all. It is never drawn like one that has. The same
+holds for an instrument: one whose status has not been read against its official text, with the
+article that establishes it, is drawn as unverified, and its status label is withheld. A relationship
+that comes from a proposal is drawn as proposed: a proposal binds nobody. An unverified map would be
+worse than none, so the map is not published while any line on it lacks its source.
 
 **"In transition" is not a prediction.** When a pending proposal would repeal an act that is in force,
 the map marks that act as in transition. The mark is computed from the proposal's own text, the

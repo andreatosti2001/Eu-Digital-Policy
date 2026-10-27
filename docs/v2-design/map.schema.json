@@ -117,7 +117,8 @@
           { "required": ["coverage"] },
           { "required": ["stratum"] },
           { "required": ["regulatory_object"] },
-          { "required": ["status_label"] }
+          { "required": ["status_label"] },
+          { "required": ["verification_state"] }
         ]
       }
     },
@@ -193,6 +194,10 @@
     },
     "node.status_label": {
       "rule": "status-labels.json: a function of legislative_status, the milestones and the as-of date. Shown beside the underlying state, never instead of it."
+    },
+    "node.verification_state": {
+      "values": ["verified", "unverified"],
+      "rule": "verified: status_basis holds a supports:direct reference with a structural locator, of the tier its legislative_status requires (status-labels.json x-verification). unverified otherwise. The brief: a node that cannot be verified is removed or downgraded. An unverified node is drawn as unverified and its status label is replaced by 'not verified'."
     },
     "node.addressees": {
       "rule": "Replaces `stratum` (D-8). The union of `conditions.actor` over data/applicability.json rules whose instrument is this node. An instrument with no rule shows 'addressees not recorded' (null), never 'none'."

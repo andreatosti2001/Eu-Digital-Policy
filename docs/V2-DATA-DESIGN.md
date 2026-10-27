@@ -27,15 +27,14 @@ schemas and the records live beside it, in `docs/v2-design/`:
 
 ## 0 · What governs this, and what was missing
 
-**The brief was not available.** The session prompt asks for `docs/BRIEF-v2.md`. That file exists on
-no branch: decision D-1 is open, and the brief lives only in the author's prompts. The author chose to
-paste it, then said to go ahead without it. So everything below rests on three things:
-- the roadmap, which quotes or paraphrases the brief in several places;
-- the session prompt;
-- the repository.
+**The brief arrived after the first draft.** The session prompt asks for `docs/BRIEF-v2.md`, which
+exists on no branch (decision D-1 is open). The design was first written from the roadmap's paraphrase,
+with every brief-dependent point listed as an assumption. On 27 Oct 2026 the author pasted the brief.
+This document was then checked against it, and corrected where the brief, being binding, required it.
+§0.1 lists what the check found.
 
-Every point that depends on the brief's own words is listed as an assumption (A-n). The author should
-check each against the brief.
+The author also attached the Control Room audit of 24 Oct 2026. It is word for word the text already
+recorded in `docs/AUDIT-2026-10-24.md` §1; only the layout differs. Nothing in it changes this design.
 
 **Decided by the author on 25 Oct 2026**, in answer to four questions in this session (recorded in
 `docs/ROADMAP-v2.md` §8):
@@ -48,20 +47,51 @@ check each against the brief.
 | D2 model | The "trigger" is the existing applicability rule, raised to a v2 standard. It is not a new entity. |
 | D-8 | `stratum` is dropped: option (c). What it tried to say is derived from data that already exists (§1.2). |
 
-**Assumptions** (to check against the brief):
-- **A-1** The register is the seven regimes in roadmap item 2.1: ViDA, AVMSD, copyright, GPSR, EAA, P2B and political advertising.
-- **A-2** "Copyright" means Directive (EU) 2019/790.
-- **A-3** The watchlist is MiCA, PSD3, PSR and the DGA in transition. Source: roadmap §4, "Phase 3 of the brief's list".
-- **A-4** "AVMSD" means Directive 2010/13/EU, as amended.
-- **A-5** The six status labels are the six Italian phrases quoted in roadmap §5.
-- **A-6** The prompt's five relations are its full list.
+**Assumptions**, checked against the brief on 27 Oct 2026:
+- **A-1 — corrected.** The draft read the seven regimes (ViDA, AVMSD, copyright, GPSR, EAA, P2B,
+  political advertising) as all excluded. The brief says they go "nel registro delle esclusioni **o**
+  nella watchlist": which list each one joins is left to the criterion. The seven names are confirmed.
+- **A-2 — still an assumption.** "Copyright" means Directive (EU) 2019/790; the brief says only
+  "copyright".
+- **A-3 — confirmed, with one correction.** MiCA, PSD3/PSR and the DGA in transition are the brief's
+  "inclusioni condizionate Fase 3 … solo se si apre esplicitamente il capitolo finanza". The draft let
+  PSD3 and PSR reopen on their adoption, "whichever comes first"; the brief's "solo se" rules that out.
+  All four now watch for the finance chapter alone.
+- **A-4 — still an assumption.** "AVMSD" means Directive 2010/13/EU, as amended.
+- **A-5 — confirmed.** The six labels are the brief's, word for word.
+- **A-6 — not settled by the brief.** It names no relations; the prompt's five stand.
 
 **Open questions for the author:**
-- **Q-1** P2B: the criterion would include it, but the brief excludes it (§5, §6).
+- **Q-1** P2B: the criterion would include it. The brief allows register or watchlist; recommended:
+  watchlist (§5).
 - **Q-2** The inclusion criterion itself (D-7).
-- **Q-3** Six states have no label (`status-labels.json` `x-unlabelled`).
+- **Q-3** Six states have no label, although the brief calls the labels "uniformi" (§0.1, and
+  `status-labels.json` `x-unlabelled`).
 - **Q-4** Whether `docs/BRIEF-v2.md` should be committed (D-1).
 - **Q-5** The data corrections in §7, which are amber.
+- **Q-6** The DGA is conditioned on the finance chapter, as the brief lists it. Is that intended (§0.1)?
+
+### 0.1 · The design against the brief
+
+| Brief | Design | Result |
+|---|---|---|
+| Principle 4: partiality is allowed if declared, and the map is how it is declared | Coverage classes, register and watchlist as derived lists (§1.3) | consistent |
+| "A node or edge that cannot be verified is removed or downgraded. An unverified map is worse than no map" | Edges: derived `verification_state`; unverified edges never drawn as verified (§1.4). **Nodes were not covered by the draft.** | **corrected**: nodes now derive a `verification_state` too (§1.3), and the map view is **not published** while any edge is still v1 (§4.3) |
+| The seven regimes go in the register **or** the watchlist, never as full pages | Six excluded, P2B excluded pending Q-1; M-05 forbids a page for either list | consistent; Q-1 reworded (A-1) |
+| Phase 3 conditional inclusions: MiCA, PSD3/PSR, DGA in transition, "only if the finance chapter is explicitly opened" | Watchlist, `watch_for` the finance chapter | **corrected** for PSD3/PSR (A-3); DGA aligned, and flagged as Q-6 |
+| The six uniform labels | `label:*`, with *in transizione* shown beside another label | wording consistent (A-5). Two readings need the author's confirmation (Q-3): six states stay unlabelled — NIS2 and CER among them — although the brief says "uniformi"; and *in transizione / possibile abrogazione* is a second label beside the first rather than a replacement |
+| "Do not publish 'what applies to me' before the triggers meet the claims' rigour" | `publishable` derived; T-01…T-05 | consistent. `applies.html` is already published, which is D-2, still open |
+| No aggregate score | Counts by code, coverage and state; never combined | consistent |
+| No other dashboard before the P0/P1 fixes | The extensions are report sections of a CLI; the map is a view of the brief's data, not a monitoring dashboard | consistent; the map ships after Phase 1 in any case |
+| Sequence: Phase 0 → 1 → 2 | Item 2.0 brought forward, documents only | **a departure from the brief**, proposed in this session and approved by the author on 25 Oct 2026 (ROADMAP-v2 §8), as the brief's own preamble requires |
+| `stratum`: if it is to be dropped, the proposal is motivated and approved first | Motivated in §1.2; approved on 25 Oct 2026 | consistent |
+
+**Q-6.** The brief puts the DGA's inclusion behind the finance chapter, with MiCA and PSD3/PSR. The DGA
+is data governance, not finance, so the grouping may be a matter of phasing rather than of subject.
+D6 follows the brief literally: its `watch_for` is the finance chapter. The proposed repeal by
+COM(2025) 837 is still shown, as a derived transition, which needs no trigger. If the author meant the
+condition for the three finance acts only, the DGA's trigger becomes the outcome of COM(2025) 837.
+That is a one-field change.
 
 **Evidence.** Every legal fact in these files was read on **25 Oct 2026** from a document retrieved that
 day. EUR-Lex returns an empty page to this environment, so the channels were:
@@ -148,6 +178,17 @@ Whether a page exists is not coverage. It is the seven-criterion gate in `js/rou
 checks the two against each other. The check matters because the gate's `context` criterion passes any
 record with a relationship. The moment the D6 edges exist, an excluded regime with an objective, a date
 and a claim **would earn a page** unless something stops it.
+
+**Nodes are verified too.** The brief says a node that cannot be verified is removed or downgraded, so
+each node derives a `verification_state`:
+- **verified**: `status_basis` holds a direct reference with a structural locator, of the tier its state
+  requires (M-07, S-03);
+- **unverified** otherwise.
+
+An unverified node is drawn as unverified: its status label is shown as *not verified*, never as a
+label. Today all 24 records are unverified on this rule, because none has a `status_basis` yet; their
+statuses are verified only in prose notes. Item 2.1 writes `status_basis` for the records the map
+shows first.
 
 The **exclusion register** and the **watchlist** are not files. They are the lists of records whose
 decision says `excluded` or `watched`, derived by the view. Their schema is `scope_decision`
@@ -390,6 +431,11 @@ Not implemented. This is the plan Phase 3 executes.
     the existing 33 pass it".
   - `edge-second-home`: when the arrays are derived (F-1).
   Each flip is a one-line change to the check, made in the session that closes the backlog.
+- **The map view is not published while the `edge-v1-sources` backlog is open.** The brief: "an
+  unverified map is worse than no map". Today that backlog holds all 17 edges. Hiding them and showing a
+  map of the new edges only would be a map that looks complete and is not. The view therefore ships with
+  item 2.1's checkpoint, or later, when every edge it draws has locators. The same holds for a node
+  without `status_basis`, which is drawn as unverified (§1.3).
 - **CI.** `qa.yml` already runs `evidence-audit.mjs`. S-04 is added to the pull-request job only, with
   `--base origin/main`.
 
@@ -433,18 +479,20 @@ Tested against every regime the prompt names:
 | GPSR | other-field (product safety) | excluded | excluded | yes |
 | EAA | other-field (accessibility) | excluded | excluded | yes |
 | Political advertising | other-field (electoral) | excluded | excluded | yes |
-| **P2B** | object-services, horizontal | **included** | **excluded** | **NO — Q-1** |
-| MiCA | other-field (financial markets) | excluded → watched (finance chapter) | watchlist | yes |
-| PSD3, PSR | other-field (payments) | excluded → watched (finance chapter, adoption) | watchlist | yes |
-| DGA | object-data, horizontal | included → watched (proposed repeal) | "in transition" | yes |
+| **P2B** | object-services, horizontal | **included** | register **or** watchlist, not a page | **only as watched — Q-1** |
+| MiCA | other-field (financial markets) | excluded → watched (finance chapter) | conditional, finance chapter | yes |
+| PSD3, PSR | other-field (payments) | excluded → watched (finance chapter) | conditional, finance chapter | yes |
+| DGA | object-data, horizontal | included → watched (finance chapter, as the brief lists it; Q-6) | conditional, finance chapter | yes |
 
-**Q-1, P2B.** The criterion does not reproduce the brief's exclusion. D6 keeps the brief's decision and
-gives the only ground this session can state: its repeal is proposed (COM(2025) 837 Art. 10(1)), and its
-addressees are reached by the DMA and the DSA. That ground needs a clause, `crit:covered-elsewhere`,
+**Q-1, P2B.** The criterion would include P2B, and the brief rules out a full page for it. The two meet
+only in the watchlist. D6 still records P2B as excluded, because that is how the first draft read the
+brief. The only ground it can give is that P2B's repeal is proposed (COM(2025) 837 Art. 10(1)) and that
+its addressees are reached by the DMA and the DSA. That ground needs a clause, `crit:covered-elsewhere`,
 written for this one entry, and a clause that fits one case is a smell.
 
-**Recommended instead:** P2B becomes `watched`, watching the adoption of COM(2025) 837, the same
-treatment as the DGA. This reverses the brief, so it is the author's call.
+**Recommended:** P2B becomes `watched`, watching the adoption of COM(2025) 837. The brief permits this
+("registro … o watchlist"), so it reverses nothing. It still assigns a regime to a list, which is the
+author's call; D6 changes only on the author's word.
 
 ---
 
@@ -513,7 +561,9 @@ No check lacks a deliverable, and no deliverable that states facts lacks a check
 | I-2 | D6 entries carried an approval date the author had not given | **Fixed**: `approved_on: null`; schema allows null only under `docs/` (M-04) |
 | I-3 | D6's repeal edges contradict `data-omnibus.proposes_to_amend` (dga), which also omits cer | **Fixed in the proposal**: D6 `instrument_updates` carries the correction. The data change itself is the author's (F-2, F-3) |
 | I-4 | Labels: transposition states fell in no group, which would have dropped two core instruments silently | **Fixed**: an explicit unlabelled list, plus S-05 (Q-3 for the wording) |
-| I-5 | P2B: the criterion includes it, the brief excludes it | **Not fixable without the author**: Q-1, with a recommendation |
+| I-5 | P2B: the criterion includes it; the draft had it excluded | **Not fixable without the author**: Q-1. The brief allows the watchlist, so the recommended fix contradicts nothing |
+| I-7 | PSD3/PSR reopened on adoption, against the brief's "solo se … capitolo finanza" | **Fixed**: `watch_for` is the finance chapter for all four conditional inclusions |
+| I-8 | The brief requires an unverifiable node to be removed or downgraded; the draft verified edges only | **Fixed**: derived node `verification_state` (§1.3); the map is not published while an edge is v1 (§4.3) |
 | I-6 | eidas2 promoted to core would fail M-05 (no `dna.objective`, so no page) | **Sequencing, not design**: item 2.2 writes the objective in the same commit that changes the scope |
 
 ---
@@ -546,7 +596,8 @@ All are amber or red, and the author decides each one. None was changed.
   - no `stratum` (D-8).
 - **One addition the prompt did not ask for:** the inclusion criterion (§5). Without it, D6's reasons
   would have nothing to be measured against, which the roadmap forbids (D-7). It is proposed, not decided.
-- **The brief was not read.** A-1…A-6 are this session's readings of the roadmap's paraphrase.
+- **The brief arrived after the first draft.** The design was checked against it on 27 Oct 2026 (§0.1).
+  A-2, A-4 and A-6 remain assumptions, because the brief does not settle them.
 - **What the sources were read for.** They were read for the facts the records state: identity, status,
   dates and the cited articles. Nothing else in them was read. Amendments to the excluded acts beyond
   those named, and transposition in the Member States, were not researched; both are `null`.

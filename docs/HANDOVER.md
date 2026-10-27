@@ -17,8 +17,15 @@ register and watchlist — and a coherence matrix. No production code, no UI, no
   conservatively).
 - D-3, D-6, and the trigger as the existing applicability rule: all as recommended.
 - `stratum`: dropped, derived instead (option (c)).
-- The brief: the author chose to paste it, then said "Vai" without pasting it. **The brief was not
-  read**, and every point that depends on it is an assumption (A-1…A-6 in `docs/V2-DATA-DESIGN.md` §0).
+- The brief: not available when the design was drafted, so every brief-dependent point was an
+  assumption. **The author pasted it on 27 Oct 2026**, and the design was then checked against it
+  (`docs/V2-DATA-DESIGN.md` §0.1):
+  - A-1, A-3 and A-5 confirmed, with two corrections the brief required: the seven regimes go in the
+    register *or* the watchlist; and PSD3/PSR reopen only if the finance chapter is opened, not on
+    adoption;
+  - node verification added: the brief says an unverifiable node is removed or downgraded;
+  - the map is not published while any edge lacks locators ("an unverified map is worse than no map").
+  The audit PDF attached with it is word for word `docs/AUDIT-2026-10-24.md` §1.
 
 **What exists now** — design only; `data/`, `js/`, `tools/`, pages and locales are untouched:
 - `docs/V2-DATA-DESIGN.md`: the reasons, every validation rule (M-, T-, S-, R-), the D4 plan, the
@@ -44,9 +51,10 @@ register and watchlist — and a coherence matrix. No production code, no UI, no
   - F-4: `ap-ai-act-03`'s `_gte` key against AI Act Art. 51(2)'s "greater than";
   - F-8: 11 rules' dates omit application events of their own obligations.
 - **Open for the author:**
-  - Q-1, P2B: the proposed criterion would include it; recommended: watchlist;
+  - Q-1, P2B: the proposed criterion would include it; recommended: watchlist, which the brief permits;
   - Q-2: the criterion itself (D-7);
-  - Q-3: the six unlabelled states;
+  - Q-3: the six unlabelled states, against the brief's "uniformi";
+  - Q-6: whether the brief's finance-chapter condition is meant for the DGA too;
   - Q-4: committing the brief (D-1);
   - Q-5: the amber corrections in §7;
   - and every `reason` in D6, which is a draft in the author's name.

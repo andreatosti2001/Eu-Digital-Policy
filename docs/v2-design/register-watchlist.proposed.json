@@ -1,11 +1,11 @@
 {
   "$description": "D6 — the exclusion register and the watchlist, as the records Phase 2 item 2.1 would add to data/. PROPOSED in v2 Session 2; nothing here is in data/. Each entry is an instrument record in the exact shape of data/instruments.json, carrying the new `scope_decision` block and the new `status_basis` field (docs/v2-design/map.schema.json). The register is DERIVED as the records whose decision says `excluded`, the watchlist as those whose decision says `watched`: neither is a list anybody maintains.",
-  "$note": "ONE HOME. When item 2.1 is implemented, each block below is MOVED into its data file — `instruments` into data/instruments.json `instruments[]`, `relationships` into its `relationships[]`, `sources` into data/sources.json, `events` into data/timeline.json, `source_updates` applied in place — and this file is deleted in the same commit, so the facts never live in two places. EVIDENCE. Every fact below was read on 25 Oct 2026 from a document retrieved that day: the Official Journal text through the Publications Office's Cellar by CELEX number, the Publications Office's metadata through its SPARQL endpoint (in-force flag, entry-into-force dates), the Commission proposals through Cellar, and the European Parliament's Legislative Observatory procedure files. No fact was taken from a search result or from model knowledge; where a fact was not read it is null, and the note says what is missing. EDITORIAL. Every `reason` is a DRAFT for the author's approval, and every `approved_on` is null until the author approves the entry in docs/ROADMAP-v2.md §8 — a record with a null `approved_on` may not enter data/ (rule M-04): the judgement is the author's (docs/AI-SAFE-BOUNDARIES.md §2), and the inclusion criterion it applies (D-7) is itself not yet approved. Two entries depart from what the brief is reported to decide, and say so in their reason: p2b and dga.",
+  "$note": "ONE HOME. When item 2.1 is implemented, each block below is MOVED into its data file — `instruments` into data/instruments.json `instruments[]`, `relationships` into its `relationships[]`, `sources` into data/sources.json, `events` into data/timeline.json, `source_updates` applied in place — and this file is deleted in the same commit, so the facts never live in two places. EVIDENCE. Every fact below was read on 25 Oct 2026 from a document retrieved that day: the Official Journal text through the Publications Office's Cellar by CELEX number, the Publications Office's metadata through its SPARQL endpoint (in-force flag, entry-into-force dates), the Commission proposals through Cellar, and the European Parliament's Legislative Observatory procedure files. No fact was taken from a search result or from model knowledge; where a fact was not read it is null, and the note says what is missing. EDITORIAL. Every `reason` is a DRAFT for the author's approval, and every `approved_on` is null until the author approves the entry in docs/ROADMAP-v2.md §8 — a record with a null `approved_on` may not enter data/ (rule M-04): the judgement is the author's (docs/AI-SAFE-BOUNDARIES.md §2), and the inclusion criterion it applies (D-7) is itself not yet approved. Two entries need the author's word beyond approving their reason, and say so: p2b (which list, Q-1) and dga (whether the finance-chapter condition applies to it, Q-6).",
   "$read_on": "2026-10-25",
   "$assumptions": [
-    "A-1: the register's seven regimes are the brief's list as reproduced in docs/ROADMAP-v2.md §4 item 2.1 (ViDA, AVMSD, copyright, GPSR, EAA, P2B, political advertising). The brief itself was not available to this session.",
+    "A-1 (checked against the brief on 27 Oct 2026): the seven regimes are the brief's (ViDA, AVMSD, copyright, GPSR, EAA, P2B, political advertising). The brief puts them in 'the register of exclusions OR the watchlist'; six are excluded by the criterion's crit:other-field, and P2B's list is open (Q-1).",
     "A-2: 'copyright' is read as Directive (EU) 2019/790 (copyright in the Digital Single Market), the copyright act the DSA's Art. 2(4)(b) reaches most directly. The brief's own word is 'copyright'; if it meant the copyright acquis as a whole, the entry widens and the author says so.",
-    "A-3: the watchlist is read from docs/ROADMAP-v2.md §4, 'Phase 3 of the brief's list (MiCA, PSD3/PSR, DGA in transition)', which opens 'only if the author explicitly opens a finance chapter'. PSD3 and PSR are two proposals and are two records.",
+    "A-3 (confirmed against the brief on 27 Oct 2026): the watchlist holds the brief's 'inclusioni condizionate Fase 3 — MiCA, PSD3/PSR, DGA in transizione — solo se si apre esplicitamente il capitolo finanza'. PSD3 and PSR are two proposals and are two records; all four watch for the finance chapter only.",
     "A-4: 'AVMSD' is read as Directive 2010/13/EU (the codified version) as amended, notably by Directive (EU) 2018/1808."
   ],
   "instruments": [
@@ -236,7 +236,7 @@
       "scope_decision": {
         "disposition": "excluded",
         "criterion": ["crit:covered-elsewhere"],
-        "reason": "DRAFT — AND A CRITERION CONFLICT FOR THE AUTHOR. The brief excludes P2B, but the proposed criterion does not: its subject is the fairness and transparency of online intermediation services (Art. 1(1)), squarely within crit:object-services and crit:horizontal, and no crit:other-field applies. The only ground this session can state is that its repeal is proposed (COM(2025) 837 Art. 10(1)) and that its addressees are reached by the DMA and the DSA — which is what the clause crit:covered-elsewhere says, and that clause exists for this entry alone. Recommended instead: disposition `watched`, watching the adoption of COM(2025) 837. Not applied here, because it would reverse the brief's decision.",
+        "reason": "DRAFT — AND A CRITERION CONFLICT FOR THE AUTHOR. The brief puts P2B in the register or the watchlist, never on a page; this draft chose the register, and the proposed criterion does not support that choice: its subject is the fairness and transparency of online intermediation services (Art. 1(1)), squarely within crit:object-services and crit:horizontal, and no crit:other-field applies. The only ground this session can state is that its repeal is proposed (COM(2025) 837 Art. 10(1)) and that its addressees are reached by the DMA and the DSA — which is what the clause crit:covered-elsewhere says, and that clause exists for this entry alone. Recommended instead: disposition `watched`, watching the adoption of COM(2025) 837 — which the brief permits. Not applied here, because which list a regime joins is the author's decision (Q-1).",
         "approved_on": null,
         "refer_to": ["src-eurlex-p2b"],
         "watch_for": null,
@@ -360,12 +360,12 @@
       "scope_decision": {
         "disposition": "watched",
         "criterion": ["crit:other-field"],
-        "reason": "DRAFT. PSD3 would replace the payment services and e-money directives: payments law, which the brief does not analyse today. Watched because the brief reserves a possible finance chapter and because the procedure has reached an agreed text, so its adoption is the next event that could change what a reader needs.",
+        "reason": "DRAFT. PSD3 would replace the payment services and e-money directives: payments law, which the brief does not analyse today. Watched, not excluded, because the brief makes it a conditional inclusion, to be included only if the finance chapter is explicitly opened. The procedure has reached an agreed text, so the record's status is the part most likely to move.",
         "approved_on": null,
         "refer_to": ["src-oeil-2023-0209", "src-eurlex-psd3-proposal"],
         "watch_for": {
-          "event_type": "event:adoption",
-          "description": "Formal adoption of the agreed text, or the author opening a finance chapter, whichever comes first."
+          "event_type": null,
+          "description": "The author explicitly opens the finance chapter — the brief's only condition for the Phase 3 conditional inclusions ('solo se si apre esplicitamente il capitolo finanza'). Formal adoption of the agreed text changes the record's status, which is re-read like any other; it does not reopen coverage."
         },
         "sources": [
           { "source_id": "src-eurlex-psd3-proposal", "supports": "supports:direct", "locator": "Title" }
@@ -407,8 +407,8 @@
         "approved_on": null,
         "refer_to": ["src-oeil-2023-0210", "src-eurlex-psr-proposal"],
         "watch_for": {
-          "event_type": "event:adoption",
-          "description": "Formal adoption of the agreed text, or the author opening a finance chapter, whichever comes first."
+          "event_type": null,
+          "description": "The author explicitly opens the finance chapter — the brief's only condition for the Phase 3 conditional inclusions ('solo se si apre esplicitamente il capitolo finanza'). Formal adoption of the agreed text changes the record's status, which is re-read like any other; it does not reopen coverage."
         },
         "sources": [
           { "source_id": "src-eurlex-psr-proposal", "supports": "supports:direct", "locator": "Title" }
@@ -429,8 +429,8 @@
           "approved_on": null,
           "refer_to": ["src-eurlex-dga"],
           "watch_for": {
-            "event_type": "event:adoption",
-            "description": "Adoption, amendment or withdrawal of the Digital Omnibus proposal (COM(2025) 837), procedure 2025/0360(COD)."
+            "event_type": null,
+            "description": "The author explicitly opens the finance chapter, the condition the brief sets for its Phase 3 conditional inclusions, among which it lists the DGA. Read literally; if the author meant that condition for the three finance acts only, this trigger becomes the outcome of COM(2025) 837 (docs/V2-DATA-DESIGN.md §0.1, Q-6). The proposed repeal is shown meanwhile as a derived transition, which needs no trigger."
           },
           "sources": [
             { "source_id": "src-eurlex-data-omnibus-837", "supports": "supports:direct", "locator": "Art. 10(3)(a) (proposed repeal of Regulation (EU) 2022/868); Art. 1 (amendments to Regulation (EU) 2023/2854)" }
