@@ -1,32 +1,195 @@
 # HANDOVER
 
-**Last updated:** v2 Session 3 — Phase 0 closed; Phase 1 items 1.1–1.4 done, 1.5 waiting on the
-author's wording · 27 October 2026
+**Last updated:** v2 Session 3 — Phases 0 and 1 implemented; the Phase 1 checkpoint is reported
+and waits for the author's approval · 27 October 2026
 **Branch:** `claude/eloquent-hamilton-7p6t2u`, fast-forwarded to `main` at `51efe8e` (the merge of
-#18).
+#18). Pushed; no pull request.
 
-## v2 Session 3 — Phase 1, in progress
+## v2 Session 3 — Phase 1 checkpoint report, and the verification checklist
 
-**The author approved the Phase 0 checkpoint** on 27 Oct 2026. It is recorded in
-`docs/ROADMAP-v2.md` §8 (`9d51dc8`).
+**The author approved:**
+- the Phase 0 checkpoint (`docs/ROADMAP-v2.md` §8, `9d51dc8`);
+- the wording of the `applies.html` notice: Draft A (§8, item 1.5).
 
-**Done, each with its tests:**
-- 1.1 `76e24f8` — `evidence-audit.mjs --record` and the read-only Editorial audit view;
-  `docs/EDITORIAL-AUDIT-PATH.md`.
-- 1.2 `8962210` — metric names, definitions and details; "public-safe".
-- 1.3 `f9d9f26` — the `docs/CONTROL-ROOM.md` inventory, with the assertion that fails on a tab the
-  inventory does not name.
-- 1.4 `721a26b` — the security-wording sweep: 26 occurrences, listed in
-  `docs/AUDIT-2026-10-24.md` §5. A ninth README limitation is proposed there, not applied.
+**The Phase 1 checkpoint itself** is recorded in `docs/AUDIT-2026-10-24.md` §1.5, one row per
+P0/P1 item with its commit. Its row in roadmap §8 waits for the author's words, because §8 is
+"filled in only with the author's words".
 
-**Re-run on that tree:**
-- the six validators are at this session's baseline;
-- all 25 suites pass: 1291 tests, 0 failures, 0 skipped with `BROWSER_QA_CHROME` set.
+**Phase 2 does not start.** Item 2.1 waits for the author's approval of the Phase 1 checkpoint and
+of the reasons in `docs/v2-design/register-watchlist.proposed.json`.
 
-**Waiting:** item 1.5. The notice for `applies.html` was drafted and put to the author. Nothing is
-inserted until the author approves the wording; the key will then be declared
-`pending_translation` for it, fr and es. After 1.5 comes the Phase 1 checkpoint:
-`docs/AUDIT-2026-10-24.md` §1.5 rows with commits, and roadmap §8.
+### Re-run on the final tree
+
+**Validators — identical to the session's baseline:**
+- `validate` 0/0, 45 unverified;
+- `i18n-audit` 0/0;
+- `design-qa` 0/0;
+- `freshness --as-of 2026-10-27`: 0 defects, 2 prompts;
+- `evidence-audit --as-of 2026-10-27`: 0 errors, 11 warnings;
+- `seo-audit` 0/0.
+
+**Suites:**
+- All 25 suites pass: 1292 tests, 0 failures, 0 skipped, with
+  `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`. The baseline had 82 in
+  `tools/` and 57 in `.control-room/`; they are now 90 and 72.
+- Browser suite: 339 pass · 0 fail · 1 undecidable (`a11y:bound`, deliberate).
+- Adversarial gate: 65 failed safely · 0 succeeded · 3 partial · 1 undecidable, unchanged.
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` all exit 0.
+
+### How to start a Control Room for the manual checks below
+
+```
+export CONTROL_ROOM_STATE_DIR=$(mktemp -d)        # keep the trial out of .control-room/state/
+node .control-room/cli.mjs provision --subject you@example.org --role administrator --by "you"   # asks a password on stdin
+node .control-room/cli.mjs serve                   # http://127.0.0.1:7802
+```
+
+Use a fixed port, not `CONTROL_ROOM_PORT=0`. That is a pre-existing defect, not fixed: with port 0
+the server expects the Origin `http://127.0.0.1:0` and refuses a real browser's POSTs.
+
+The review queue is empty on a fresh clone. To see one proposal, the suite's fixture can be written
+to a temporary `CONTROL_ROOM_RECORDS_DIR`, as `.control-room/selftest.mjs` `world()` does.
+
+### The checklist — one entry per item
+
+**F0.1 · Snapshot time and state** — commit `7a2346e`, `docs/` in `31db1a4`.
+- *Changed:*
+  - `.control-room/server.mjs`: `assembled_at` on every view payload and on `/api/proposal`;
+  - `.control-room/views.mjs`: `HEALTH_RUN_FIELDS`, and `websiteHealth()` takes `historyDir`;
+  - `ui/app.html`: the tab "Live system" became "Agent activity";
+  - `ui/app.js`: `snapshotBar()`, `show()`, `load(view, {refresh})` and the health run fields;
+  - `ui/app.css`.
+- *Verify by hand:*
+  1. Open any tab: it shows "Snapshot taken at … (server time, UTC)" and "Refresh this view".
+  2. Leave the tab and come back: the time does not change. Press Refresh: it does.
+  3. Stop the server and press Refresh: the old snapshot stays, with "The last refresh failed: …".
+     Checked so in Chromium during this session.
+  4. On Website health with a recorded run (`node agent/health/cli.mjs --as-of D`): Reference date,
+     Run recorded at and Commit analysed are three separate rows.
+- *Automatic:* `.control-room/selftest.mjs`:
+  - "SNAPSHOT · 0.1 · every view payload carries the ISO time the server assembled it";
+  - "… Website health shows reference date, run recorded at and commit analysed as three fields";
+  - "… "Live system" is no label, and the one refresh is manual — no timer anywhere in ui/".
+  - The failed-refresh behaviour is asserted in the source, not in a browser.
+- *Satisfies:* roadmap 0.1, all three exit criteria.
+
+**F0.2 · Attestation** — commit `cd3cd22`.
+- *Changed:*
+  - `.control-room/decide.mjs`: `ATTESTATION_SECTIONS`, `ATTESTATION_STATEMENT`,
+    `attestationProblem()`, gate 7 in `decide()`, and the Sources panel data in `reviewQueue()`;
+  - `.control-room/audit.mjs`: the `attestation` field, `REQUIRED_FIELDS`, and the write-time
+    refusal;
+  - `.control-room/server.mjs`: the accepted fields of the review body;
+  - `.control-room/views.mjs`: `reviewQueueView()`;
+  - `ui/app.js`: the fieldset and the Sources panel;
+  - `agent/policy/verify/attacks.mjs` (AZ-01, AZ-03, AZ-07) and `agent/simulation/run.mjs`.
+- *Verify by hand:*
+  1. In the Review queue, press Approve with no box ticked: refused, and the refusal names
+     `attestation`.
+  2. Tick two boxes and approve: granted.
+  3. In the Audit trail tab (or `node .control-room/cli.mjs audit --verify`) the
+     `proposal.approved` entry carries `attestation.examined`, and the chain verifies.
+- *Automatic:* `.control-room/selftest.mjs`, the four "ATTEST · 0.2" tests and test 10 (the
+  byte-identical tree).
+- *Satisfies:* roadmap 0.2, all four exit criteria.
+
+**F0.3 · Dates the tools cannot read** — commit `2606f3e`.
+- *Changed:* `tools/as-of.mjs` (new: `readArgs`, `dateProblem`, `refusalText`), and the argument
+  parsing in `tools/freshness.mjs` and `tools/evidence-audit.mjs`.
+- *Verify by hand:*
+  - `node tools/freshness.mjs --as-of 2026-10-24` and `node tools/freshness.mjs 2026-10-24` print
+    the same report;
+  - `node tools/freshness.mjs --as-of banana; echo $?` gives 2;
+  - so do `node tools/evidence-audit.mjs --as-of banana` and
+    `node tools/evidence-audit.mjs 2026-10-24`.
+- *Automatic:* `tools/selftest.mjs` D1–D4; F1–F9 unchanged.
+- *Satisfies:* roadmap 0.3.
+
+**F0.4 · `docs/CONTROL-ROOM.md` §5–§6** — commit `31db1a4`.
+- *Verify by hand:* read §5 and §6 against the interface.
+- *Automatic:* none for the text of §6. Item 1.3's inventory assertion now covers §5's views and
+  routes.
+- *Satisfies:* roadmap 0.4.
+
+**F1.1 · Editorial-audit path** — commit `76e24f8`.
+- *Changed:*
+  - `tools/evidence-audit-record.mjs` (new; reads only);
+  - `tools/evidence-audit.mjs`: `--record`, `recordEntry()`, `commitOf()`;
+  - `tools/evidence-audit-runs/README.md` and `.gitignore`;
+  - `.control-room/config.mjs`: `editorial_audit_dir`;
+  - `.control-room/authz.mjs`: `editorial:read`;
+  - `.control-room/views.mjs`: `editorialAuditView()`;
+  - `.control-room/server.mjs`: `GET /api/editorial-audit`;
+  - `ui/`: the "Editorial audit" tab and `renderEditorial()`;
+  - `docs/EDITORIAL-AUDIT-PATH.md` (new), and a row in `AGENTS.md`.
+- *Verify by hand:*
+  1. On a fresh clone the Editorial audit tab says "no editorial audit has been recorded" and gives
+     the command.
+  2. Run `node tools/evidence-audit.mjs --as-of 2026-10-27 --record`, then Refresh: the latest run
+     answers the five questions in order. With uncommitted changes, the commit row lists them.
+  3. `git status` does not show the store.
+- *Automatic:*
+  - `tools/selftest.mjs` R1–R3;
+  - `.control-room/selftest.mjs`, the three "EDITORIAL · 1.1" tests (no recorded run; a recorded
+    run with every answer; no route that runs anything).
+- *Satisfies:* roadmap 1.1, all three exit criteria.
+
+**F1.2 · Readable metrics** — commit `8962210`.
+- *Changed:*
+  - `.control-room/views.mjs`: `VISIBILITY_LABEL`, `METRIC_DETAIL_FIELDS`, and the enriched
+    readings;
+  - `ui/app.js`: `metricCell()` and `visibilityPill()`, plus the register shown when no run is
+    recorded.
+- *Verify by hand:*
+  - on Website health each metric shows its name, ID and definition, and "Source, calculation,
+    frequency, interpretation, limitations" opens;
+  - the visibility pill reads "public-safe" or "private", never "public".
+- *Automatic:* `.control-room/selftest.mjs`, the two "METRICS · 1.2" tests.
+- *Satisfies:* roadmap 1.2.
+
+**F1.3 · Document matches interface** — commit `f9d9f26`.
+- *Changed:*
+  - `docs/CONTROL-ROOM.md`: the status line, the roles table in §4, the §5 inventory, §7, §10, and
+    two named additions to §12;
+  - `.control-room/README.md`, `AGENTS.md`:34, the `authz.mjs` comment, and
+    `config.example.env`.
+- *Verify by hand:* add `<button data-view="x" class="tab">X</button>` to `ui/app.html` and run the
+  suite. "INVENTORY · 1.3 · docs/CONTROL-ROOM.md names every view…" fails, naming the tab.
+- *Automatic:* `.control-room/selftest.mjs`, the three "INVENTORY · 1.3" tests: alignment; failure
+  on a planted tab, a renamed tab, a dropped row and a wrong permission; §4 against
+  `ROLE_PERMISSIONS`.
+- *Satisfies:* roadmap 1.3.
+
+**F1.4 · Security wording** — commit `721a26b`.
+- *Changed:* `README.md` (outside the limitations), `docs/CONTROL-ROOM.md` §0, §1, §3, §10, §11.3
+  and §12, `docs/DEPLOYMENT.md` §5, `AGENTS.md`, and `.control-room/README.md`.
+- *Verify by hand:* read `docs/AUDIT-2026-10-24.md` §5, which lists all 26 occurrences examined
+  and what was done with each.
+- *Automatic:* none. The sweep is a reading; no check holds wording.
+- **Not complete, by design:**
+  - the proposed ninth README limitation is the author's to accept;
+  - two findings were left for the author: the stale "whole tree is published" model in
+    `AGENTS.md`, and the same model in the checks — `publicSurface()`, PP-08,
+    `agent/health/security.mjs`.
+- *Satisfies:* roadmap 1.4.
+
+**F1.5 · `applies.html` notice** — commit `2967f06`; its test is in the checkpoint commit.
+- *Changed:* `applies.html`, the first paragraph of the caveat box, `data-i18n="applies.notice"`;
+  `i18n/locales.json`, where the key is `pending_translation` in it, fr and es, `it` is no longer
+  complete, and the notes say why.
+- *Verify by hand:* open `/applies.html`: the notice is the first thing under "Read this before you
+  read a result".
+- *Automatic:* `tools/selftest.mjs` N1 pins the approved text and its declarations; `i18n-audit`
+  fails if the key is undeclared.
+- *Satisfies:* roadmap 1.5 and D-2.
+
+### Still open, for the author
+
+1. Approve the Phase 1 checkpoint. It then gets its row in roadmap §8, and the audit of
+   24 Oct 2026 is closed.
+2. The proposed ninth README limitation (`docs/AUDIT-2026-10-24.md` §5).
+3. The two §5 findings: the stale publication model in `AGENTS.md` and in the checks.
+4. Whether to open a pull request for this branch.
 
 ## (previous header) v2 Session 3 — Phase 0, stopped at its checkpoint
 

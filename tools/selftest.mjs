@@ -448,6 +448,30 @@ test('D4 · evidence-audit.mjs exits 2, with the reason, on a date it cannot rea
 });
 
 /* ============================================================
+   APPLIES · the notice D-2 requires stays on the page
+
+   docs/ROADMAP-v2.md item 1.5: applies.html stays online only with a
+   statement that its rules are not yet verified to the standard of the
+   claims, in the words the author approved on 27 Oct 2026. Removing or
+   rewording it is the author's decision, so this pins the text.
+   ============================================================ */
+
+test('N1 · applies.html carries the approved notice, and its key is declared pending in it, fr and es', () => {
+  const html = readFileSync(join(ROOT, 'applies.html'), 'utf8');
+  const m = html.match(/<p data-i18n="applies\.notice">([\s\S]*?)<\/p>/);
+  assert.ok(m, 'applies.html has lost the notice that its rules are not yet verified to the standard of the claims');
+  assert.equal(m[1], "<b>These rules are not yet verified to the standard the site's claims are.</b> Each rule cites its sources by identifier only: unlike a claim, it does not say what each source supports or where in it the rule is found, and the evidence audit that checks every claim does not yet check these rules. Read a result as a pointer to the law, not as a verified reading of it.",
+    'the wording is the author\'s (docs/ROADMAP-v2.md §8); change it only on their word');
+  assert.ok(html.indexOf('applies.notice') < html.indexOf('id="ap-form"'), 'the notice comes before the questions');
+  const reg = JSON.parse(readFileSync(join(ROOT, 'i18n', 'locales.json'), 'utf8'));
+  for (const code of ['it', 'fr', 'es']) {
+    const l = reg.locales.find((x) => x.code === code);
+    const translated = Object.hasOwn(JSON.parse(readFileSync(join(ROOT, l.file), 'utf8')), 'applies.notice');
+    assert.ok(translated || (l.pending_translation ?? []).includes('applies.notice'), `${code}: applies.notice is neither translated nor declared pending`);
+  }
+});
+
+/* ============================================================
    TEST B · every source record against the authoritative contract
 
    The governance layer allowlists eight fields on data/sources.json and
