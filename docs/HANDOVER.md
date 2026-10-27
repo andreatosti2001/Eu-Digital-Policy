@@ -22,6 +22,23 @@ is closed · 27 October 2026
   session created; `main` was not touched.
 - **Phase 2 has not started.**
 
+## Next — v2 Session 4 (decided 27 Oct 2026, `docs/ROADMAP-v2.md` §8)
+
+Pull request #19 was merged as `0456808`, and Phases 0 and 1 are on `main`. The author has set
+Session 4 to do the following, in this order:
+1. **The entry-by-entry review, then item 2.1.**
+   - The author reviews the 10 records of `docs/v2-design/register-watchlist.proposed.json`.
+   - `data/` receives only what the author approves, each fact re-read from a retrieved primary
+     source.
+   - Then a checkpoint. Item 2.2 is not in Session 4.
+2. **The ninth README limitation**, verbatim from `docs/AUDIT-2026-10-24.md` §5 (accepted as
+   written).
+3. **The publication model, corrected as a check** against `tools/pages-artifact.mjs`.
+   - It covers `publicSurface()`, PP-08, `agent/health/security.mjs` and the hazards in `AGENTS.md`.
+   - Every verdict that moves is reported before and after.
+   - The session stops and asks before a verdict changes.
+4. **The port-0 Origin defect**, fixed without loosening the Origin or CSRF check.
+
 ## v2 Session 3 — Phase 1 checkpoint report, and the verification checklist
 
 **The author approved:**
