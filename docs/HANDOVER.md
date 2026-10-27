@@ -1,9 +1,132 @@
 # HANDOVER
 
-**Last updated:** v2 Session 3 — Phases 0 and 1 implemented and approved; the audit of 24 Oct 2026
-is closed · 27 October 2026
-**Branch:** `claude/eloquent-hamilton-7p6t2u`, fast-forwarded to `main` at `51efe8e` (the merge of
-#18). Pushed, and opened as a pull request to `main` on the author's instruction; not merged.
+**Last updated:** v2 Session 4 — Part A (item 2.1, the register and the watchlist) implemented,
+**stopped at its checkpoint**, waiting for the author's approval · 27 October 2026
+**Branch:** `claude/new-session-e7w8sp`, cut from `main` at `34a2ee0` (the merge of #20). Not yet
+pushed as a pull request; Part B (`docs/ROADMAP-v2.md` §8, scope of Session 4, (b)–(d)) has not started.
+
+## Branch register — 27 October 2026 (v2 Session 4)
+
+- At the start, `docs/ROADMAP-v2.md` §8's row "The scope of v2 Session 4" was **not on `main`**: it
+  was `7f82f62`, committed on `claude/eloquent-hamilton-7p6t2u` after #19 was merged. The session
+  stopped and said so; the author merged it as #20 (`34a2ee0`), and the session started from there.
+- `git branch -r --no-merged origin/main` then listed only
+  `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
+- This session's branch: `claude/new-session-e7w8sp`. Disposition: to be decided by the author at the
+  end of the session.
+
+## v2 Session 4 — Part A checkpoint report (item 2.1)
+
+### What the author decided (each in `docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **A.0, before anything was written to `data/`:**
+  - the 17 existing relationships are **not** migrated, and the flip of `edge-v1-sources` and
+    `edge-analytical-no-claim` to ERROR is **deferred** with them. Measured that day: 10 of the 17
+    cite only tier-1/2 sources and need a locator; 4 rest only on `src-brief-original`; 3 analytical
+    edges have no claim;
+  - the public views read **one derived filter**, `coverage()` in `js/routes.js`.
+- **A.1, entry by entry — all ten approved, none refused, none deferred:**
+
+  | Record | List | Approved | Corrections from the re-reading, approved with it |
+  |---|---|---|---|
+  | `vida` | register | yes | `status_note` states Art. 6(4)–(5); Art. 3 point (1) (new Art. 28a) cited for "deemed suppliers" |
+  | `avmsd` | register | yes, **A-4 decided** (2010/13/EU as amended) | Directive 2018/1808 Art. 1(23) read and cited for "video-sharing platforms" |
+  | `copyright-dsm` | register | yes, **A-2 decided** (Directive 2019/790) | reason gains "(Art. 17)"; Art. 17 cited |
+  | `gpsr` | register | yes | source note lists every DSA article GPSR Art. 22 refers to |
+  | `eaa` | register | yes | `full_name` is the exact title, without "(European Accessibility Act)" |
+  | `ttpa` | register | yes | none |
+  | `p2b` | watchlist | yes | none (procedure 2025/0360(COD): "Awaiting committee decision") |
+  | `mica` | watchlist | yes | none |
+  | `psd3` | watchlist | yes | Art. 1(1) of COM(2023) 366 added, so M-04 holds |
+  | `psr` | watchlist | yes | reason without "including fraud prevention" (no source read establishes it); Art. 1(1) of COM(2023) 367 added |
+
+  - `dga` (instrument update): approved, with DGA Art. 1(1) added to its decision's sources.
+  - `data-omnibus` (instrument update, `proposes_to_amend` −dga +cer): **not applied**. It is
+    findings F-2 and F-3 of `docs/V2-DATA-DESIGN.md` §7, which are Phase 3's (Q-5). It is the one block
+    left in `docs/v2-design/register-watchlist.proposed.json`.
+  - The four source updates: approved.
+- **During implementation:** the "not covered" notice's wording (draft A); M-04's date test as a
+  WARNING (`VERIFIED_AFTER_AS_OF`), because an ERROR in `evidence-audit.mjs` is a defect on every date.
+
+### Facts re-read on 27 Oct 2026, and facts left `null`
+
+- **Re-read, every one confirmed** (Cellar by CELEX for the texts, the Publications Office's SPARQL
+  endpoint for in-force flags and dates, the Legislative Observatory for the three procedures): the
+  title, entry into force, application and transposition articles of the eight acts; DSA Art. 2(4);
+  DORA Art. 2(1)(f); COM(2025) 837 Arts 1, 9, 10 and 11; the stage and key events of 2023/0209(COD),
+  2023/0210(COD) and 2025/0360(COD); the Commission's political-advertising page.
+- **Read for the first time that day:** ViDA Art. 6(4)–(5) and Art. 3(1); Directive 2018/1808 Arts 1(23),
+  2(1) and 3; Copyright DSM Art. 17; GPSR Art. 22 in full; DGA Art. 1(1); Art. 1(1) of both payment
+  proposals.
+- **One fact in a draft was not established by any source and was removed:** "including fraud
+  prevention" (PSR).
+- **Left `null`, with the reason in the record:** `transposition`, `dna` and `legal_basis` on all ten
+  (not researched); other amendments to the AVMSD; Regulation (EU) 2025/517 (identified, not read);
+  MiCA Art. 149(4) derogations (not itemised); the Council documents for PSD3 and PSR.
+- No fact was taken from a search result or from model knowledge.
+
+### Exit criteria of item 2.1 (`docs/ROADMAP-v2.md` §4)
+
+- *The seven regimes are records with their reason, measured against the criterion* — **pass**: six
+  in the register, P2B on the watchlist, each with `scope_decision.criterion` and an approved reason.
+  The four conditional inclusions (MiCA, PSD3, PSR, DGA) are on the watchlist with the finance-chapter
+  condition; the finance chapter was not opened.
+- *None becomes a page* — **pass**: 12 instrument pages before and after; M-05 is 0 and fails on a
+  planted record (W5).
+- *A status no source has been read for is null* — **pass**: every status written was read that day;
+  none is a guess.
+- *The checks of §6.3 arrive with the records, each with a planted failure* — **pass**: M-03, M-04,
+  M-05, M-06, M-07, R-01 in `tools/register-audit.mjs`; `tools/selftest.mjs` W1–W10.
+- *Design §4.3: `edge-v1-sources` flips to ERROR at the end of 2.1* — **not met, deferred by the
+  author** (A.0). The map view stays unpublished.
+
+### Counts against the baseline (`docs/CURRENT-ARCHITECTURE.md` §12 and v2 Session 3's re-run)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / relationships | 24 / 17 | 34 / 26 | the ten records; nine v2 relationships |
+| sources / timeline events | 208 / 77 | 220 / 91 | twelve sources, fourteen events |
+| taxonomy terms | 295 | 306 | `rel-kind:enables`, `rel-kind:defers-to`, nine `crit:*` |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit` errors / warnings | 0 / 11 | 0 / 11 | unchanged; new REGISTER section: backlog `scope-decision-missing` 11, `status-basis-missing` 24 |
+| `freshness` defects / prompts | 0 / 2 | 0 / 2 | unchanged |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged; no locale key was touched |
+| `tools/selftest.mjs` | 90 | 100 | W1–W10 |
+| all 25 suites | 1292 | 1302 | the ten above; `agent/detector` 67 unchanged (the field register now classifies `scope_decision.*`, `status_basis.locator`, `relationships[].sources.locator`) |
+| browser suite | 339 pass · 1 undecidable | 343 pass · 1 undecidable | `not-covered:excluded`, `:watched`, `:calendar`, `:search` |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+| instruments.html "thinner records" | 9 | 8 | the DGA is watched, so it left that list |
+
+`BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome` for the browser suite.
+`agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+
+### What changes on screen
+
+- `instrument.html?id=<excluded or watched>` shows the approved notice (name, register or watchlist,
+  the reopening event, "Why.", "Read it at the source:", the two dates), noindex, not the full view.
+- The static list on `instruments.html`, search and the calendar leave those records out.
+- The interaction views gain the nine relationships, and every v2 reference shows its locator
+  (`js/interactions.js` used to drop an object reference silently).
+- Bibliography and Datasets count the new records; they are views of the data as such.
+
+### Found, for the author — not changed
+
+1. **R-01 cannot fire for P2B as designed.** It looks for the trigger among the watched record's own
+   milestones; P2B's trigger, adoption of COM(2025) 837, would be a milestone of `data-omnibus`.
+2. **Two notices show internal references** to a reader: MiCA's `watch_for.description` cites
+   "docs/ROADMAP-v2.md §4", and the P2B and DGA reasons cite "(Q-1)" and "(Q-6)". All are approved text,
+   shown verbatim.
+3. **Political Advertising Regulation Art. 2(3)(f) and (h)** also name the AVMSD and P2B: two
+   `defers-to` edges nobody proposed, not added.
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-27`: the REGISTER section lists 6 and 5 records and
+   the two backlogs.
+2. `python3 -m http.server 8000`, then open `/instrument.html?id=vida` and `/instrument.html?id=mica`:
+   the notice. `/instruments.html`: the thinner-records list names eight instruments and none of the
+   eleven. Search "ViDA" or "MiCA": no instrument result. Annex A's Instrument filter: none of them.
+3. `/instruments/dsa/`: "DSA defers to AVMSD", with "Art. 2(4)(a)" beside the source.
 
 ## Branch register — 27 October 2026 (v2 Session 3)
 
