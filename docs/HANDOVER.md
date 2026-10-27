@@ -1,9 +1,9 @@
 # HANDOVER
 
-**Last updated:** v2 Session 4 — Part A (item 2.1, the register and the watchlist) implemented,
-**stopped at its checkpoint**, waiting for the author's approval · 27 October 2026
-**Branch:** `claude/new-session-e7w8sp`, cut from `main` at `34a2ee0` (the merge of #20). Not yet
-pushed as a pull request; Part B (`docs/ROADMAP-v2.md` §8, scope of Session 4, (b)–(d)) has not started.
+**Last updated:** v2 Session 4 — Part A (item 2.1) approved; Part B (B.1–B.3) implemented, **stopped
+at its checkpoint**, waiting for the author's approval · 27 October 2026
+**Branch:** `claude/new-session-e7w8sp`, cut from `main` at `34a2ee0` (the merge of #20), pushed. No
+pull request yet: the author is asked at the end of the session.
 
 ## Branch register — 27 October 2026 (v2 Session 4)
 
@@ -12,8 +12,128 @@ pushed as a pull request; Part B (`docs/ROADMAP-v2.md` §8, scope of Session 4, 
   stopped and said so; the author merged it as #20 (`34a2ee0`), and the session started from there.
 - `git branch -r --no-merged origin/main` then listed only
   `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
-- This session's branch: `claude/new-session-e7w8sp`. Disposition: to be decided by the author at the
-  end of the session.
+- This session's branch: `claude/new-session-e7w8sp`, pushed. Disposition: asked of the author at the
+  end of the session (Part B checkpoint).
+
+## v2 Session 4 — Part B checkpoint report (B.1–B.3)
+
+The author approved the Part A checkpoint (`docs/ROADMAP-v2.md` §8, commit `76fa900`), and with it:
+R-01's P2B gap deferred to Phase 3; the internal references removed from three public texts (done in
+`76fa900`); no relationship added for TTPA Art. 2(3)(f) and (h).
+
+### B.1 · The ninth README limitation — commit `c886fdb`
+
+- Inserted as item 9 of "Known limitations", **word for word** from `docs/AUDIT-2026-10-24.md` §5
+  (checked by script: identical once the quote marks are removed).
+- Every fact it cites was checked first and still holds: HSTS not sent on the custom domain
+  (`docs/DEPLOYMENT.md` §1a, §4); the Control Room never deployed, OIDC only against a local stub,
+  nothing penetration-tested (`docs/CONTROL-ROOM.md` §11 items 1, 2, 6).
+- "Eight limitations" became "nine" where the count is stated: `AGENTS.md` (twice),
+  `docs/AI-SAFE-BOUNDARIES.md` §0, a comment in `agent/ux/boundary.mjs`.
+
+### B.2 · The publication model, corrected as a check — commit `1d0d897`
+
+- `tools/pages-artifact.mjs refusal()` is the one home of what the website publishes;
+  `agent/implement/boundary.mjs publicSurface()` asks it, and every other check reads
+  `publicSurface()`.
+- **Two surfaces, measured:** the website (106 tracked files the allowlist admits) and the
+  repository (all 506 tracked files — **public on github.com**, read through the GitHub API on
+  27 Oct 2026). Refused paths are listed by reason: `agent` 261, `docs` 62, `tools` 24, `.agents` 25,
+  `.control-room` 20, and eight more.
+- **The secret scan reads the whole repository** (487 text files, was 435): no check was weakened.
+- **Verdicts, before → after, approved by the author before the commit:**
+
+  | Verdict | Before | After |
+  |---|---|---|
+  | health `control_plane.control_room_assets_published` | 1 (`docs/CONTROL-ROOM.md`) | 0 (it is in the repository, not on the site; reported apart) |
+  | `agent/implement` boundary errors / warnings | 0 / 13 | 0 / 20 (exposure 2 → 0; fixture credential shapes 11 → 20, `.control-room/selftest.mjs` now read) |
+  | health `secrets_in_public_assets` | 0 (11 in fixtures) | 0 (20 in fixtures) |
+  | adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 — PP-08 still partial/high, its reason rewritten for both surfaces |
+  | production readiness | refused | refused — no condition moved because of B.2 |
+  | `.control-room` boundary | 0 errors | 0 errors — text only |
+
+- **`agent/policy/` was edited** (a never-automatic path): `agent/policy/verify/attacks.mjs`, PP-08,
+  and one phrase of PP-09 ("inferred from Jekyll's documented default" → "from the allowlist").
+- **Four tests that asserted the Jekyll model were rewritten**, each now asserting the allowlist
+  model and what would make an empty result vacuous: `agent/implement/selftest.mjs` R5 (×2),
+  `agent/health/selftest.mjs` "SECURITY · the health RECORD is not published…",
+  `.control-room/selftest.mjs` "THE REPOSITORY · …".
+- Text with the same stale model corrected beyond the prompt's list: `agent/production/readiness.mjs`
+  and `schedule.mjs`, `agent/simulation/threshold.mjs`, `docs/IMPLEMENTATION-QA.md` §6 (marked
+  superseded, the SESSION 18 text kept).
+- **Left open, by the author's decision:** PP-09 still says the deployed site has never been fetched,
+  while `docs/DEPLOYMENT.md` §1 measured it on 27 Sep and 23 Oct 2026. Its outcome is undecidable.
+
+### B.3 · The port-0 Origin defect — commit `dc3a030`
+
+- `.control-room/server.mjs` `selfOrigin()`: the configured public origin, or the loopback host and
+  the port **actually listening** (`server.address().port`). The exact-match comparison and the CSRF
+  check are unchanged.
+- Two paired tests in `.control-room/selftest.mjs` ("ORIGIN · B.3"), both reproduced failing before
+  the fix: the server's real Origin now passes; a foreign Origin, the old `:0` origin, `localhost`
+  and the next port are refused, and a POST with the right Origin and no CSRF token is still refused.
+- **Found, not fixed (outside B.3):** `.control-room/authn.mjs redirectUri()` builds the OIDC
+  redirect URI from `cfg.port` the same way, so with port 0 and the OIDC provider it would be wrong;
+  and with `CONTROL_ROOM_HOST=::1` neither origin is bracketed (`http://::1:7802`), which no browser
+  sends either.
+
+### Re-run on the final tree
+
+- Validators: `validate` 0/0, 45 unverified; `i18n-audit` 0/0; `design-qa` 0/0;
+  `evidence-audit --as-of 2026-10-27` 0 errors, 11 warnings; `freshness --as-of 2026-10-27` 0 defects,
+  2 prompts; `seo-audit` 0/0 — identical to the start of the session.
+- Suites: all 25 pass, **1304 tests**, 0 failures (1292 at the start: `tools/` 90 → 100,
+  `.control-room/` 72 → 74). Browser suite 343 pass · 0 fail · 1 undecidable (`a11y:bound`), with
+  `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+- Adversarial gate 65 · 0 · 3 · 1. `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary`
+  and `routes` exit 0. `tools/commit-evidence.mjs origin/main HEAD`: every commit that changes a
+  published file names its evidence.
+
+## v2 Session 4 — the verification checklist
+
+**A.1 · Entry-by-entry review.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, one row per entry and per decision, in the author's words.
+- *Verify:* read the §8 rows dated 27 Oct 2026; each record in `data/instruments.json` carries
+  `scope_decision.approved_on` 2026-10-27 and no `DRAFT`.
+- *Automatic:* `tools/selftest.mjs` W3 (an unapproved or DRAFT decision is an M-04 error).
+- *Criterion:* every entry approved, refused or deferred in writing — all ten approved.
+
+**A.2 · Facts re-read before writing.**
+- *Changed:* the record notes and source notes say what was read on 27 Oct 2026; one unsupported
+  phrase removed (PSR); fields not researched stay `null`.
+- *Verify:* open any new source's URL (Cellar, CELEX) and its locator, e.g. `src-eurlex-gpsr`, Art. 52.
+- *Automatic:* none reads a source — no check here touches the network (AUDIT F-12). M-04 and M-07
+  check that a direct structural reference exists.
+- *Criterion:* "a status no source has been read for is null" — every status was read.
+
+**A.3 · Written in one home.**
+- *Changed:* `data/instruments.json` (10 records, `dga.scope_decision`, 9 relationships),
+  `data/sources.json` (12 + 5 updated), `data/timeline.json` (14), `data/taxonomy.json` (11 terms);
+  `docs/v2-design/register-watchlist.proposed.json` keeps only the `data-omnibus` block;
+  `tools/register-audit.mjs` (new), `tools/evidence-audit.mjs`, `tools/validate.mjs`,
+  `agent/detector/fields.mjs`; `js/routes.js coverage()`, `js/search.js`, `js/calendar.js`,
+  `js/instrument-page.js`, `js/interactions.js`, `tools/seo.mjs`; regenerated pages.
+- *Verify:* §"How to check it by hand" in the Part A report above.
+- *Automatic:* `tools/selftest.mjs` W1–W10; `agent/browser` `not-covered:excluded`, `:watched`,
+  `:calendar`, `:search`; `agent/detector` "the field register classifies every field".
+- *Criterion:* item 2.1's exit criteria — all met except the `edge-v1-sources` flip, deferred by the
+  author.
+
+**A.4 · Part A checkpoint.** Report in this file; approved by the author (§8, `76fa900`).
+
+**B.1 · Ninth limitation.** *Changed:* `README.md`. *Verify:* compare item 9 with
+`docs/AUDIT-2026-10-24.md` §5. *Automatic:* none (a reading). *Criterion:* inserted verbatim, every
+cited fact still true.
+
+**B.2 · Publication model.** *Changed:* listed above. *Verify:* `node agent/implement/cli.mjs boundary`
+prints the two surfaces; `node agent/policy/verify/cli.mjs` shows PP-08's new reason. *Automatic:*
+`agent/implement/selftest.mjs` R5, `agent/health/selftest.mjs` SECURITY, `.control-room/selftest.mjs`
+THE REPOSITORY. *Criterion:* one home, every moved verdict reported and approved, no check weakened.
+
+**B.3 · Port 0.** *Changed:* `.control-room/server.mjs`. *Verify:* `CONTROL_ROOM_PORT=0 node
+.control-room/cli.mjs serve`, log in from a browser and press Approve: no "cross-origin request".
+*Automatic:* `.control-room/selftest.mjs` "ORIGIN · B.3" ×2. *Criterion:* fixed without loosening the
+Origin or CSRF check.
 
 ## v2 Session 4 — Part A checkpoint report (item 2.1)
 
