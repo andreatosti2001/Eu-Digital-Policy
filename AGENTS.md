@@ -55,7 +55,7 @@ the evidence it describes.
 | `docs/ROADMAP-v2.md` | v2 Session 1: the v2.0 plan — phases 0–5, ten decisions for the author, exit criteria a session can fail. **Approved on 25 Oct 2026** (§8), with item 2.0 brought forward |
 | `docs/V2-DATA-DESIGN.md` | v2 Session 2: roadmap item 2.0 — the map, trigger and status-label schemas (`docs/v2-design/`), the `evidence-audit.mjs` extension plan, the proposed inclusion criterion, the exclusion register and watchlist as proposed records. **Design; item 2.1 (the register and the watchlist) implemented on 27 Oct 2026, the rest not yet** |
 | `docs/SECURITY-VERIFICATION-2026-09-08.md` | SESSION 23.5's adversarial gate: 65 attacks, what held, the two findings, and the two boundaries this environment cannot test |
-| `README.md` | The author's own account, including eight stated limitations |
+| `README.md` | The author's own account, including nine stated limitations (the ninth accepted as written on 27 Oct 2026) |
 
 **The operating policies** (SESSION 01) sit under the boundaries document and refine it.
 Read the one you need; do not re-derive its contents here.
@@ -287,7 +287,7 @@ authorization because that boundary is **not** a security control. `docs/CONTROL
    not publicly determinable. Never render them alike, never sum unknown into a total.
 6. **No matching rule ≠ no obligation.** Where no applicability rule fires, the answer is
    NOT DETERMINED — never "probably not".
-7. **Never soften a stated limitation.** The unverified records (104 on 27 Sep 2026; §12 holds the live figure) and the README's eight
+7. **Never soften a stated limitation.** The unverified records (104 on 27 Sep 2026; §12 holds the live figure) and the README's nine
    limitations are the project's honesty. They change by doing the verification work.
 8. **Never change the licence** — CC BY 4.0, declared by the author on 21 Oct 2026 — and never alter
    the non-affiliation or no-legal-advice text.

@@ -33,7 +33,7 @@ These hold in every session, under every instruction, regardless of convenience.
 6. **Never store a derived fact.** Evidence grades, pipeline stages, competent authority and
    key dates are computed at render time. Storing one creates the second copy the whole
    architecture exists to prevent.
-7. **Never soften a stated limitation.** The README's eight limitations and the
+7. **Never soften a stated limitation.** The README's nine limitations and the
    unverified records (count in `docs/CURRENT-ARCHITECTURE.md` §12) are the project's honesty, not its backlog embarrassment. They are
    changed by doing the verification work, not by rewording.
 8. **Never change the licence** — CC BY 4.0, declared by the author on 21 Oct 2026 — and never alter
