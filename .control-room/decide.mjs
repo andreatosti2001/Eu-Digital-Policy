@@ -31,8 +31,23 @@
      5 · the proposal is in a governed state to decide     409
      6 · every governance gate that does not depend on the
          approval itself passes                            409
-     7 · the ledger accepts it — content-bound, no
+     7 · the reviewer attests which sections they
+         examined (approve and reject only)                400
+     8 · the ledger accepts it — content-bound, no
          self-approval, an ApprovalRequest exists          409
+
+   Gate 7 is roadmap v2 item 0.2 (docs/AUDIT-2026-10-24.md finding C;
+   decision D-9). The evidence being AVAILABLE in a panel is not the
+   evidence having been REVIEWED, so approving and rejecting require
+   the reviewer to declare, from a fixed list, which sections they
+   examined. It is a DECLARATION and is recorded as one — not proof
+   of reading. Nothing records which panels were opened: that would
+   be trivially faked and would invite being read as proof. The
+   declaration goes in the trail entry of the decision itself (D-9),
+   under the same hash as the actor, the time and the fingerprint the
+   decision is bound to; not in the decision ledger, which is the one
+   home for grants. It runs after gates 1-6, so every refusal those
+   gates make is still made for its own reason.
 
    Gate 4 is the answer to "proposal scope cannot be expanded through
    request manipulation". The request carries a FINGERPRINT and
@@ -60,6 +75,43 @@ import { getContract } from '../agent/schemas/registry.mjs';
 import { authorize, approvalPermissionFor } from './authz.mjs';
 
 export const REVIEW_ACTIONS = ['approve', 'reject', 'request_changes'];
+
+/** The actions an attestation accompanies. A request for changes is
+ *  not a decision and carries none. */
+export const ATTESTED_ACTIONS = ['approve', 'reject'];
+
+/** The fixed list a reviewer declares from (roadmap v2 item 0.2). The
+ *  labels say which part of a queue item each section is. */
+export const ATTESTATION_SECTIONS = [
+  { section: 'evidence', label: 'Evidence — the references, locators and quotes the proposal stands on' },
+  { section: 'sources', label: 'Sources — the source records those references cite' },
+  { section: 'operations', label: 'Operations — what the proposal would change, and the files an approval would permit' },
+  { section: 'tests', label: 'Tests — the checks the proposal requires before it can be implemented' },
+  { section: 'rollback', label: 'Rollback — how the change would be undone' },
+];
+export const ATTESTATION_SECTION_IDS = ATTESTATION_SECTIONS.map((s) => s.section);
+
+/** What the attestation is, said where it is given and where it is
+ *  recorded. */
+export const ATTESTATION_STATEMENT = 'A declaration by the reviewer of which sections of this proposal they examined before deciding. The Control Room records what the reviewer declares. It is not proof that anything was read, and the Control Room does not record which panels were opened.';
+
+/**
+ * Why `att` is not an attestation this server accepts, or null.
+ * Shape: { examined: [section, ...] } — at least one section, each
+ * from ATTESTATION_SECTION_IDS, none twice, and no other key.
+ */
+export function attestationProblem(att) {
+  if (att === null || att === undefined) return 'the request carries no `attestation`';
+  if (typeof att !== 'object' || Array.isArray(att)) return '`attestation` must be an object of the form {"examined": [...]}';
+  const extra = Object.keys(att).filter((k) => k !== 'examined');
+  if (extra.length) return `\`attestation\` carries ${extra.join(', ')}, which it does not accept; it carries \`examined\` and nothing else`;
+  const ex = att.examined;
+  if (!Array.isArray(ex) || !ex.length) return '`attestation.examined` must name at least one section; an attestation that names none declares that nothing was examined';
+  const unknown = ex.filter((x) => !ATTESTATION_SECTION_IDS.includes(x));
+  if (unknown.length) return `\`attestation.examined\` names ${unknown.map((x) => JSON.stringify(x)).join(', ')}, which is not on the fixed list: ${ATTESTATION_SECTION_IDS.join(', ')}`;
+  if (new Set(ex).size !== ex.length) return '`attestation.examined` names a section twice';
+  return null;
+}
 
 /** Gates 6 checks every preflight gate EXCEPT these two. They are
  *  excluded because they are about the approval, and the approval is
@@ -122,6 +174,11 @@ export function reviewQueue(cfg, { records, ledger, reviews } = {}) {
       permission_required: approvalPermissionFor(p),
       trace: {
         source_to_evidence: (p.evidence ?? []).map((e) => ({ kind: e.kind, locator: e.locator ?? null, source_id: e.source_id ?? null, quote: e.quote ?? null })),
+        /* The source records the evidence cites, once each — the
+           "sources" section of the attestation. Read off the same
+           evidence list; an evidence item naming no source is counted
+           as such rather than dropped. */
+        sources: sourcesCited(p.evidence ?? []),
         epistemic: p.epistemic ?? null,
         affected_entities: p.affected_entities ?? [],
         agent_run: p.trace_ref ?? null,
@@ -143,6 +200,16 @@ export function reviewQueue(cfg, { records, ledger, reviews } = {}) {
       approval_effect: 'Recording a grant in agent/implement/decisions/decisions.jsonl. It publishes nothing: the Implementation Agent re-derives the authorization and runs its own gates before anything is written to the site.',
     };
   });
+}
+
+function sourcesCited(evidence) {
+  const by = new Map();
+  let without = 0;
+  for (const e of evidence) {
+    if (!e.source_id) { without++; continue; }
+    by.set(e.source_id, (by.get(e.source_id) ?? 0) + 1);
+  }
+  return { cited: [...by].map(([source_id, references]) => ({ source_id, references })), evidence_without_source: without };
 }
 
 export function proposalDetail(cfg, proposalId, ctx = {}) {
@@ -185,12 +252,12 @@ function appendReviewNote(cfg, proposalId, note) {
  *
  * @param {object} cfg
  * @param {{actor:object, action:string, proposalId:string, fingerprint:string,
- *          note?:string|null, session?:object|null, request?:object|null,
+ *          note?:string|null, attestation?:{examined:string[]}|null, session?:object|null, request?:object|null,
  *          audit:object, tracer?:object|null,
  *          records?:object, ledger?:object, decisionDir?:string}} args
  */
 export function decide(cfg, {
-  actor, action, proposalId, fingerprint, note = null,
+  actor, action, proposalId, fingerprint, note = null, attestation = null,
   session = null, request = null, audit, tracer = null,
   records, ledger, decisionDir = null, now = () => new Date().toISOString(),
 }) {
@@ -308,6 +375,9 @@ export function decide(cfg, {
 
   /* ----------------------------------- request changes: no ledger */
   if (action === 'request_changes') {
+    if (attestation !== null && attestation !== undefined) {
+      refuse(new DecisionRefused('a request for changes carries no attestation: it is not a decision', { status: 400, code: 'attestation_not_applicable', fix: `send \`attestation\` with ${ATTESTED_ACTIONS.join(' or ')} only.` }));
+    }
     if (!note || !String(note).trim()) {
       refuse(new DecisionRefused('a request for changes with no note asks for nothing', { status: 400, code: 'no_note', fix: 'say what has to change. "Please revise" delegates the thinking back to whoever can least reconstruct what the agent was standing on.' }));
     }
@@ -339,7 +409,25 @@ export function decide(cfg, {
     return { ok: true, action, outcome: 'changes_requested', ledger_entry: null, review_note: entry, audit: audited, state_before: before.state, state_after: 'pending', published: false, publication_note: PUBLICATION_NOTE };
   }
 
-  /* 7 ------------------------------------------------- the ledger */
+  /* 7 ------------------------------------------- the attestation
+     A declaration of which sections the reviewer examined, from the
+     fixed list. Refused with the field named; never defaulted. */
+  const attestProblem = attestationProblem(attestation);
+  if (attestProblem) {
+    refuse(new DecisionRefused(`${action === 'approve' ? 'approving' : 'rejecting'} requires an attestation, and ${attestProblem}`, {
+      status: 400, code: attestation === null || attestation === undefined ? 'no_attestation' : 'bad_attestation',
+      detail: { field: 'attestation', sections: ATTESTATION_SECTION_IDS },
+      fix: `send "attestation": {"examined": [...]} naming, from ${ATTESTATION_SECTION_IDS.join(', ')}, the sections you declare you examined. ${ATTESTATION_STATEMENT}`,
+    }));
+  }
+  const attested = {
+    /* In the fixed list's order, so the same declaration reads the
+       same however it was sent. */
+    examined: ATTESTATION_SECTION_IDS.filter((x) => attestation.examined.includes(x)),
+    statement: ATTESTATION_STATEMENT,
+  };
+
+  /* 8 ------------------------------------------------- the ledger */
   let entry;
   try {
     entry = recordDecision({
@@ -388,6 +476,11 @@ export function decide(cfg, {
     git_ref: null,
     trace_id: trace?.trace_id ?? null,
     run_id: trace?.run_id ?? null,
+    /* D-9: the attestation lives HERE, in the decision's own entry,
+       under the same hash as actor_id, ts and proposal_sha256. The
+       chain is append-only, so it cannot be changed after the
+       decision without verifyChain() reporting the entry. */
+    attestation: attested,
     reason: entry.note,
     detail: { what_was_asked: entry.what_was_asked, risk_if_wrong: entry.risk_if_wrong },
   });

@@ -72,3 +72,6 @@ th { color: var(--muted); font-weight: 600; }
 dl.run { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; font-size: .84rem; margin: .4rem 0 1rem; }
 dl.run dt { color: var(--muted); font-weight: 600; }
 dl.run dd { margin: 0; }
+fieldset.attest { margin: .8rem 0 0; border: 1px solid var(--line); border-radius: 6px; padding: .5rem .8rem .6rem; }
+fieldset.attest legend { font-size: .84rem; font-weight: 600; padding: 0 .3rem; }
+fieldset.attest label { display: block; font-size: .84rem; margin: .2rem 0; }

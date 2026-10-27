@@ -79,7 +79,7 @@ import { describeCapabilities } from '../agent/orchestrator/capabilities.mjs';
 import { HUMAN_REVIEW_TRIGGERS, MANDATORY_AUTONOMY_CONDITIONS, APPROVED_AUTONOMOUS_CATEGORIES, approvedCategories, autonomyNote } from '../agent/orchestrator/policy.mjs';
 import { describeGovernance } from '../agent/policy/governance.mjs';
 import { summariseActions, rollbackInformation } from '../agent/autonomy/ledger.mjs';
-import { reviewQueue } from './decide.mjs';
+import { reviewQueue, ATTESTATION_SECTIONS, ATTESTATION_STATEMENT, ATTESTED_ACTIONS } from './decide.mjs';
 import { listOperators } from './identity.mjs';
 import { describeConfig, isLoopback } from './config.mjs';
 
@@ -182,6 +182,9 @@ export function reviewQueueView(cfg, ctx = {}) {
        as longer than the work a person can actually do. */
     note: 'A pending proposal with blocking gates is waiting on the agent that produced it, not on a reviewer. The two are counted apart.',
     approval_effect: 'Approval records an authorization in agent/implement/decisions/decisions.jsonl. It publishes nothing.',
+    /* What a reviewer declares with a decision (roadmap v2 item 0.2):
+       the fixed list, and what the declaration is and is not. */
+    attestation: { required_for: ATTESTED_ACTIONS, sections: ATTESTATION_SECTIONS, statement: ATTESTATION_STATEMENT },
   };
 }
 

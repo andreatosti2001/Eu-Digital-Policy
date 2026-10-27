@@ -73,6 +73,9 @@ import { Tracer } from '../agent/observability/tracer.mjs';
    ============================================================ */
 
 const PASSWORD = 'a sufficiently long passphrase';
+/** Every section on the fixed list: what a reviewer who examined the
+ *  whole chain declares (roadmap v2 item 0.2). */
+const ATTEST = Object.freeze({ examined: ['evidence', 'sources', 'operations', 'tests', 'rollback'] });
 const temps = [];
 const tempDir = (p = 'cr-') => { const d = mkdtempSync(join(tmpdir(), p)); temps.push(d); return d; };
 process.on('exit', () => { for (const d of temps) { try { rmSync(d, { recursive: true, force: true }); } catch { /* nothing to do at exit */ } } });
@@ -261,7 +264,7 @@ test('3 · a reviewer may request changes and may NOT approve or reject; an appr
     assert.equal(readLedger({ dir: w.cfg.decision_dir }).decisions.length, 0, 'a change request is not an approval and writes no ledger line');
 
     const approver = await s.login('approver@example.org');
-    const ok = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint, note: 'Read the passage.' }, approver);
+    const ok = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint, note: 'Read the passage.', attestation: ATTEST }, approver);
     const okBody = await ok.json();
     assert.equal(ok.status, 200, JSON.stringify(okBody));
     assert.equal(okBody.outcome, 'granted');
@@ -302,7 +305,7 @@ test('4 · a human_only proposal needs the administrator-only permission, and an
     assert.match((await refused.json()).fix, /red tier|Class D/, 'the refusal must say why the class matters');
 
     const admin = await s.login('admin@example.org');
-    const allowed = await s.post('/api/review', { action: 'approve', proposal_id: humanOnly.proposal_id, fingerprint, note: 'Author authorised this by name.' }, admin);
+    const allowed = await s.post('/api/review', { action: 'approve', proposal_id: humanOnly.proposal_id, fingerprint, note: 'Author authorised this by name.', attestation: ATTEST }, admin);
     assert.equal(allowed.status, 200, JSON.stringify(await allowed.json()));
   } finally { await s.stop(); }
 });
@@ -404,7 +407,7 @@ test('6 · every approval is attributable, and the trail refuses an unattributed
   const s = await running(w);
   try {
     const approver = await s.login('approver@example.org');
-    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'checked' }, approver);
+    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'checked', attestation: ATTEST }, approver);
 
     const led = readLedger({ dir: w.cfg.decision_dir });
     assert.equal(led.decisions.length, 1);
@@ -440,7 +443,7 @@ test('7 · approving proposal A does not decide proposal B, and an id for someth
   const s = await running(w);
   try {
     const approver = await s.login('approver@example.org');
-    const res = await s.post('/api/review', { action: 'approve', proposal_id: 'prop-cr-a', fingerprint: proposalFingerprint(a), note: 'A only' }, approver);
+    const res = await s.post('/api/review', { action: 'approve', proposal_id: 'prop-cr-a', fingerprint: proposalFingerprint(a), note: 'A only', attestation: ATTEST }, approver);
     assert.equal(res.status, 200, JSON.stringify(await res.json()));
 
     const led = readLedger({ dir: w.cfg.decision_dir });
@@ -483,7 +486,7 @@ test('8 · scope comes from the stored proposal; a body naming files, operations
 
     /* And the approval that IS accepted records the scope the
        PROPOSAL defines, not anything a caller supplied. */
-    const ok = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint: proposalFingerprint(w.proposals[0]) }, approver);
+    const ok = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint: proposalFingerprint(w.proposals[0]), attestation: ATTEST }, approver);
     assert.equal(ok.status, 200);
     const entry = new AuditLog(w.cfg).read().entries.find((e) => e.action === 'proposal.approved');
     assert.deepEqual(entry.approved_scope.permitted_files, ['data/claims.json']);
@@ -531,7 +534,7 @@ test('9 · a denied proposal cannot be approved by sending the request again', a
     const id = w.proposals[0].proposal_id;
     const fingerprint = proposalFingerprint(w.proposals[0]);
 
-    const denied = await s.post('/api/review', { action: 'reject', proposal_id: id, fingerprint, note: 'The evidence does not carry it.' }, approver);
+    const denied = await s.post('/api/review', { action: 'reject', proposal_id: id, fingerprint, note: 'The evidence does not carry it.', attestation: ATTEST }, approver);
     const deniedBody = await denied.json();
     assert.equal(denied.status, 200, JSON.stringify(deniedBody));
     assert.equal(deniedBody.outcome, 'denied');
@@ -556,7 +559,7 @@ test('9b · an already-granted proposal is not decided twice, and only "pending"
     const approver = await s.login('approver@example.org');
     const id = w.proposals[0].proposal_id;
     const fingerprint = proposalFingerprint(w.proposals[0]);
-    assert.equal((await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint }, approver)).status, 200);
+    assert.equal((await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint, attestation: ATTEST }, approver)).status, 200);
     const twice = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint }, approver);
     assert.equal(twice.status, 409);
     assert.match((await twice.json()).error, /state_granted/);
@@ -592,7 +595,7 @@ test('10 · an approval changes exactly one file, and it is the decision ledger'
   try {
     const before = hashTree(REPO_ROOT);
     const approver = await s.login('approver@example.org');
-    const res = await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'ok' }, approver);
+    const res = await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'ok', attestation: ATTEST }, approver);
     assert.equal(res.status, 200);
     const out = await res.json();
 
@@ -679,7 +682,7 @@ test('11 · the trail answers all five questions, and names any it cannot', asyn
   const s = await running(w);
   try {
     const approver = await s.login('approver@example.org');
-    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'Read the passage against the claim.' }, approver);
+    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'Read the passage against the claim.', attestation: ATTEST }, approver);
 
     const entry = new AuditLog(w.cfg).read().entries.find((e) => e.action === 'proposal.approved');
     for (const field of REQUIRED_FIELDS) {
@@ -708,7 +711,7 @@ test('11b · the audit chain detects an edited entry', () => {
   const w = world();
   const log = new AuditLog(w.cfg);
   log.record({ action: 'session.login', outcome: 'allowed', actor: { operator_id: 'op-1', subject: 'a@b', roles: ['viewer'] } });
-  log.record({ action: 'proposal.approved', outcome: 'allowed', actor: { operator_id: 'op-1', subject: 'a@b', roles: ['approver'] }, proposal_id: 'p', previous_state: 'pending', resulting_state: 'granted' });
+  log.record({ action: 'proposal.approved', outcome: 'allowed', actor: { operator_id: 'op-1', subject: 'a@b', roles: ['approver'] }, proposal_id: 'p', previous_state: 'pending', resulting_state: 'granted', attestation: { examined: ['evidence'] } });
   assert.equal(log.verifyChain().ok, true);
 
   const file = log.file();
@@ -777,7 +780,7 @@ test('12c · no credential, token, password or cookie reaches the audit trail or
   const s = await running(w);
   try {
     const approver = await s.login('approver@example.org');
-    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'ok' }, approver);
+    await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint: proposalFingerprint(w.proposals[0]), note: 'ok', attestation: ATTEST }, approver);
     await s.get('/api/live', approver.cookie);
 
     const trail = readdirSync(join(w.cfg.state_dir, 'audit')).map((f) => readFileSync(join(w.cfg.state_dir, 'audit', f), 'utf8')).join('\n');
@@ -1283,6 +1286,134 @@ test('VIEWS · a gate-blocked proposal is counted apart from one waiting on a re
 });
 
 /* ============================================================
+   Attestation: evidence available is not evidence reviewed
+   (roadmap v2 item 0.2; docs/AUDIT-2026-10-24.md finding C; D-9)
+   ============================================================ */
+
+test('ATTEST · 0.2 · approving or rejecting without an attestation is refused, naming the field, and decides nothing', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const approver = await s.login('approver@example.org');
+    const id = w.proposals[0].proposal_id;
+    const fingerprint = proposalFingerprint(w.proposals[0]);
+    for (const action of ['approve', 'reject']) {
+      const res = await s.post('/api/review', { action, proposal_id: id, fingerprint, note: 'n' }, approver);
+      const body = await res.json();
+      assert.equal(res.status, 400, `${action} without an attestation answered ${res.status}`);
+      assert.equal(body.error, 'no_attestation');
+      assert.match(body.reason, /attestation/);
+      assert.equal(body.detail.field, 'attestation');
+    }
+    for (const bad of [[], 'yes', { examined: [] }, { examined: ['evidence', 'banana'] }, { examined: ['evidence', 'evidence'] }, { examined: ['evidence'], panels_opened: 3 }, { examined: 'evidence' }]) {
+      const res = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint, attestation: bad }, approver);
+      const body = await res.json();
+      assert.equal(res.status, 400, `attestation ${JSON.stringify(bad)} answered ${res.status}`);
+      assert.equal(body.error, 'bad_attestation', JSON.stringify(body));
+      assert.match(body.reason, /attestation/);
+    }
+    assert.equal(readLedger({ dir: w.cfg.decision_dir }).decisions.length, 0, 'a refused decision wrote a ledger line');
+    const refusals = new AuditLog(w.cfg).read().entries.filter((e) => e.action === 'proposal.decision_refused' && /attestation/.test(e.detail?.code ?? ''));
+    assert.equal(refusals.length, 9, 'every refusal is audited with its reason');
+
+    /* A request for changes is not a decision and carries none. */
+    const withOne = await s.post('/api/review', { action: 'request_changes', proposal_id: id, fingerprint, note: 'Needs a source.', attestation: ATTEST }, approver);
+    assert.equal(withOne.status, 400);
+    assert.equal((await withOne.json()).error, 'attestation_not_applicable');
+    const without = await s.post('/api/review', { action: 'request_changes', proposal_id: id, fingerprint, note: 'Needs a source.' }, approver);
+    assert.equal(without.status, 200);
+
+    /* The paired positive: one section is a declaration, and it decides. */
+    const ok = await s.post('/api/review', { action: 'reject', proposal_id: id, fingerprint, note: 'n', attestation: { examined: ['evidence'] } }, approver);
+    assert.equal(ok.status, 200, JSON.stringify(await ok.json()));
+  } finally { await s.stop(); }
+});
+
+test('ATTEST · 0.2 · an unknown field is still refused: attestation was added to the accepted list, the check was not loosened', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const approver = await s.login('approver@example.org');
+    const id = w.proposals[0].proposal_id;
+    for (const extra of [{ panels_opened: ['evidence'] }, { read: true }, { attested: true }]) {
+      const res = await s.post('/api/review', { action: 'approve', proposal_id: id, fingerprint: proposalFingerprint(w.proposals[0]), attestation: ATTEST, ...extra }, approver);
+      const body = await res.json();
+      assert.equal(res.status, 400);
+      assert.equal(body.error, 'unknown_fields');
+      assert.match(body.reason, new RegExp(Object.keys(extra)[0]));
+    }
+    assert.equal(readLedger({ dir: w.cfg.decision_dir }).decisions.length, 0);
+    const src = readFileSync(join(CONTROL_ROOM_ROOT, 'server.mjs'), 'utf8');
+    assert.match(src, /parseStrictJson\(await readBody\(req\), \['action', 'proposal_id', 'fingerprint', 'note', 'attestation'\]\)/,
+      'the review body accepts exactly these five fields');
+  } finally { await s.stop(); }
+});
+
+test('ATTEST · 0.2 · the attestation is in the decision\'s own trail entry, under the same hash as its fingerprint, actor and time — and not in the ledger', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const approver = await s.login('approver@example.org');
+    const fingerprint = proposalFingerprint(w.proposals[0]);
+    const res = await s.post('/api/review', { action: 'approve', proposal_id: w.proposals[0].proposal_id, fingerprint, note: 'n', attestation: { examined: ['rollback', 'evidence'] } }, approver);
+    assert.equal(res.status, 200);
+
+    const log = new AuditLog(w.cfg);
+    const entry = log.read().entries.find((e) => e.action === 'proposal.approved');
+    assert.deepEqual(entry.attestation.examined, ['evidence', 'rollback'], 'recorded in the fixed list\'s order');
+    assert.match(entry.attestation.statement, /declaration/);
+    assert.match(entry.attestation.statement, /not proof/);
+    assert.equal(entry.proposal_sha256, fingerprint, 'bound to the fingerprint the decision was bound to');
+    assert.equal(entry.actor_id, w.operators.approver.operator_id);
+    assert.ok(Date.parse(entry.ts));
+    assert.equal(log.verifyChain().ok, true, 'the chain verifies with the attestation in it');
+
+    /* D-9: not in the decision ledger, which is the one home for grants. */
+    const ledgerText = readdirSync(w.cfg.decision_dir).map((f) => readFileSync(join(w.cfg.decision_dir, f), 'utf8')).join('');
+    assert.doesNotMatch(ledgerText, /attestation|examined/);
+
+    /* Not changeable after the decision: no route edits the trail, and
+       an edit made on disk is reported by the chain. */
+    assert.ok(!ROUTES.some((r) => r.method !== 'GET' && /audit|attest/.test(r.path)), 'no route writes to the trail or an attestation');
+    const file = log.file(entry.ts);
+    const lines = readFileSync(file, 'utf8').trim().split('\n');
+    const i = lines.findIndex((l) => JSON.parse(l).event_id === entry.event_id);
+    const edited = JSON.parse(lines[i]);
+    edited.attestation.examined = ['evidence', 'sources', 'operations', 'tests', 'rollback'];
+    lines[i] = JSON.stringify(edited);
+    writeFileSync(file, `${lines.join('\n')}\n`, 'utf8');
+    const v = log.verifyChain();
+    assert.equal(v.ok, false);
+    assert.ok(v.tampered.some((t) => t.event_id === entry.event_id), 'widening the declaration after the fact must break the chain');
+
+    /* And the trail itself refuses a decision entry with none. */
+    assert.throws(() => new AuditLog(w.cfg).record({ action: 'proposal.rejected', outcome: 'allowed', actor: { operator_id: 'op-1', subject: 'a@b', roles: ['approver'] }, proposal_id: 'p' }), /no attestation/);
+  } finally { await s.stop(); }
+});
+
+test('ATTEST · 0.2 · the screen says it is a declaration, not proof of reading, and nothing records which panels were opened', async () => {
+  const w = world();
+  const s = await running(w);
+  try {
+    const reviewer = await s.login('reviewer@example.org');
+    const queue = await (await s.get('/api/queue', reviewer.cookie)).json();
+    assert.deepEqual(queue.attestation.sections.map((x) => x.section), ['evidence', 'sources', 'operations', 'tests', 'rollback']);
+    assert.deepEqual(queue.attestation.required_for, ['approve', 'reject']);
+    assert.match(queue.attestation.statement, /declaration/);
+    assert.match(queue.attestation.statement, /not proof/);
+    assert.match(queue.attestation.statement, /does not record which panels were opened/);
+    /* The "sources" section has something to examine. */
+    const item = queue.items[0];
+    assert.ok(Array.isArray(item.trace.sources.cited));
+    assert.equal(item.trace.sources.cited.reduce((n, c) => n + c.references, 0) + item.trace.sources.evidence_without_source, item.trace.source_to_evidence.length);
+  } finally { await s.stop(); }
+  const app = readFileSync(join(UI_DIR, 'app.js'), 'utf8');
+  assert.match(app, /a declaration, not proof of reading/);
+  assert.match(app, /d\.attestation\.statement/);
+  assert.doesNotMatch(app, /'toggle'|ontoggle|panels_opened|panel_opened/, 'the client must not record which panels were opened');
+});
+
+/* ============================================================
    Snapshots: what time a view is from, and that it is not live
    (roadmap v2 item 0.1; docs/AUDIT-2026-10-24.md findings B and E)
    ============================================================ */
@@ -1382,6 +1513,7 @@ test('OBSERVABILITY · a decision reaches the shared trace store, and the origin
     proposalId: proposal.proposal_id,
     fingerprint: proposalFingerprint(proposal),
     note: 'checked against the passage',
+    attestation: ATTEST,
     audit, tracer,
   });
   assert.equal(out.outcome, 'granted');

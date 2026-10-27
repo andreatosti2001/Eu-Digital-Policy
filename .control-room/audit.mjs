@@ -80,12 +80,13 @@ export const REQUIRED_FIELDS = [
   'actor_id', 'actor_subject', 'actor_roles', 'session_id',
   'proposal_id', 'previous_state', 'resulting_state',
   'provenance', 'agent_run', 'required_tests', 'approved_scope',
-  'git_ref', 'trace_id', 'reason',
+  'git_ref', 'trace_id', 'attestation', 'reason',
 ];
 
 /** Fields whose absence makes the trail unable to answer one of the
  *  five questions, for the actions where the question applies. */
 const DECISION_ACTIONS = new Set(['proposal.approved', 'proposal.rejected', 'proposal.changes_requested']);
+const ATTESTED_DECISIONS = new Set(['proposal.approved', 'proposal.rejected']);
 const ANSWERS_A_QUESTION = ['actor_id', 'proposal_id', 'previous_state', 'resulting_state', 'proposal_sha256', 'agent_run'];
 
 const sha256 = (s) => createHash('sha256').update(s).digest('hex');
@@ -191,6 +192,12 @@ export class AuditLog {
          mean approval published something. */
       git_ref: e.git_ref ?? null,
 
+      /* WHAT THE REVIEWER DECLARED THEY EXAMINED (roadmap v2 item
+         0.2, D-9). On an approval or a rejection; null elsewhere. It
+         is a declaration, and the entry carries the statement saying
+         so. */
+      attestation: e.attestation ?? null,
+
       /* Where in the shared observability layer this is. */
       trace_id: e.trace_id ?? null,
       run_id: e.run_id ?? null,
@@ -206,6 +213,13 @@ export class AuditLog {
        the handler. */
     if (DECISION_ACTIONS.has(entry.action) && entry.outcome === 'allowed' && !entry.actor_id) {
       throw new AuditRefused(`a ${entry.action} entry with no actor_id would be an anonymous decision. Protocol §13: do not allow anonymous approval, do not allow unattributed approval.`);
+    }
+
+    /* A decision with no attestation is refused here too, for the
+       same reason: the handler is not the only thing that can call
+       record(). */
+    if (ATTESTED_DECISIONS.has(entry.action) && entry.outcome === 'allowed' && !(entry.attestation && Array.isArray(entry.attestation.examined) && entry.attestation.examined.length)) {
+      throw new AuditRefused(`a ${entry.action} entry with no attestation would be a decision with no declaration of what the reviewer examined. Roadmap v2 item 0.2: approving and rejecting require one.`);
     }
 
     /* Which of the five questions this entry cannot answer. Recorded

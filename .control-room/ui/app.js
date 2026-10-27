@@ -168,6 +168,7 @@ function renderQueue(d) {
        than absent: a reviewer who wants to approve without reading
        it has to open it first. */
     card.append(dump(`Evidence — ${item.trace.source_to_evidence.length} reference(s)`, item.trace.source_to_evidence));
+    card.append(dump(`Sources — ${item.trace.sources.cited.length} record(s) cited`, item.trace.sources));
     if (item.trace.epistemic) card.append(dump('Facts, inferences and open questions', item.trace.epistemic));
     card.append(dump(`Operations — ${item.trace.operations.length}`, item.trace.operations));
     card.append(dump(`Files this approval would permit — ${item.trace.permitted_files.length}`, item.trace.permitted_files));
@@ -183,6 +184,21 @@ function renderQueue(d) {
       card.append(el('p', { class: 'note', text: 'These are the Implementation Agent’s own gates. They are closed by the agent that produced the proposal, not by approving it.' }));
     }
 
+    /* The attestation (roadmap v2 item 0.2). Its wording and its
+       fixed list come from the server. Nothing here records which
+       panels above were opened, and nothing should: that would be
+       trivially faked and read as proof. */
+    const attest = el('fieldset', { class: 'attest' },
+      el('legend', { text: 'Attestation — a declaration, not proof of reading' }),
+      el('p', { class: 'note', text: d.attestation.statement }));
+    const boxes = d.attestation.sections.map((sec) => {
+      const box = el('input', { type: 'checkbox', value: sec.section });
+      attest.append(el('label', {}, box, ` I declare I examined: ${sec.label}`));
+      return box;
+    });
+    attest.append(el('p', { class: 'note', text: `Required to ${d.attestation.required_for.join(' or ')}, and recorded in the audit trail entry of the decision. Not sent with a request for changes.` }));
+    card.append(attest);
+
     const note = el('textarea', { placeholder: 'Why. Recorded in the ledger for a decision, and required for a change request.', 'aria-label': 'Decision note' });
     const actions = el('div', { class: 'actions' }, note);
 
@@ -191,7 +207,9 @@ function renderQueue(d) {
       b.addEventListener('click', async () => {
         setStatus(`${action} ${item.proposal_id}…`);
         try {
-          const out = await post('/api/review', { action, proposal_id: item.proposal_id, fingerprint: item.fingerprint, note: note.value || null });
+          const payload = { action, proposal_id: item.proposal_id, fingerprint: item.fingerprint, note: note.value || null };
+          if (d.attestation.required_for.includes(action)) payload.attestation = { examined: boxes.filter((b) => b.checked).map((b) => b.value) };
+          const out = await post('/api/review', payload);
           await load('queue', { refresh: true });
           setStatus(`${out.outcome}. ${out.publication_note}`);
         } catch (e) {

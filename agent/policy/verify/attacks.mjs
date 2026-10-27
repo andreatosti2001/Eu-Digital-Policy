@@ -382,6 +382,12 @@ export async function hiddenEntry(w) {
 export async function authorization(w) {
   const out = [];
   const fp = (p) => proposalFingerprint(p);
+  /* Since roadmap v2 item 0.2 an approval or a rejection carries the
+     reviewer's attestation. The requests below whose job is to SUCCEED
+     — a paired positive, the decision an attack then tries to repeat
+     or override — carry one, so that each attack is refused by the
+     defence it names and not, vacuously, for lacking it. */
+  const ATTEST = { examined: ['evidence', 'sources', 'operations', 'tests', 'rollback'] };
 
   const approve = async (who, proposalId, fingerprint, extra = {}) => {
     const s = await w.login(who);
@@ -398,7 +404,7 @@ export async function authorization(w) {
       const { res } = await approve(who, w.ordinary.proposal_id, fp(w.ordinary));
       if (res && res.status === 200) got.push(who);
     }
-    const { res: ok } = await approve('admin', w.ordinary.proposal_id, fp(w.ordinary));
+    const { res: ok } = await approve('admin', w.ordinary.proposal_id, fp(w.ordinary), { attestation: ATTEST });
     out.push(got.length
       ? succeeded(a, `${got.join(', ')} approved a proposal`, { got })
       : safely(a, `all three were refused 403, and the paired positive holds: an administrator approving the same proposal answered ${ok?.status}. A refusal path that always refuses proves nothing.`, { administrator_status: ok?.status }));
@@ -418,8 +424,8 @@ export async function authorization(w) {
   {
     const a = attack('AZ-03', 'authorization', 'approve a proposal that has already been rejected', 'high');
     const s = await w.login('admin');
-    const rejected = await w.req('POST', '/api/review', { cookie: s.cookie, csrf: s.csrf, body: { action: 'reject', proposal_id: w.redTier.proposal_id, fingerprint: fp(w.redTier), note: 'rejected by the verification gate' } });
-    const again = await w.req('POST', '/api/review', { cookie: s.cookie, csrf: s.csrf, body: { action: 'approve', proposal_id: w.redTier.proposal_id, fingerprint: fp(w.redTier) } });
+    const rejected = await w.req('POST', '/api/review', { cookie: s.cookie, csrf: s.csrf, body: { action: 'reject', proposal_id: w.redTier.proposal_id, fingerprint: fp(w.redTier), note: 'rejected by the verification gate', attestation: ATTEST } });
+    const again = await w.req('POST', '/api/review', { cookie: s.cookie, csrf: s.csrf, body: { action: 'approve', proposal_id: w.redTier.proposal_id, fingerprint: fp(w.redTier), attestation: ATTEST } });
     const j = await again.json().catch(() => ({}));
     out.push(again.status === 200
       ? succeeded(a, 'a rejected proposal was approved over its denial', { reject: rejected.status })
@@ -470,8 +476,8 @@ export async function authorization(w) {
   {
     const a = attack('AZ-07', 'authorization', 'replay an approval that already succeeded', 'high');
     const s = await w.login('admin');
-    const first = await w.req('POST', '/api/review', { cookie: s.cookie, csrf: s.csrf, body: { action: 'approve', proposal_id: w.ordinary.proposal_id, fingerprint: fp(w.ordinary) } });
-    const replay = await w.req('POST', '/api/review', { cookie: s.cookie, csrf: s.csrf, body: { action: 'approve', proposal_id: w.ordinary.proposal_id, fingerprint: fp(w.ordinary) } });
+    const first = await w.req('POST', '/api/review', { cookie: s.cookie, csrf: s.csrf, body: { action: 'approve', proposal_id: w.ordinary.proposal_id, fingerprint: fp(w.ordinary), attestation: ATTEST } });
+    const replay = await w.req('POST', '/api/review', { cookie: s.cookie, csrf: s.csrf, body: { action: 'approve', proposal_id: w.ordinary.proposal_id, fingerprint: fp(w.ordinary), attestation: ATTEST } });
     const led = readLedger({ dir: w.cfg.decision_dir });
     const n = led.decisions.filter((d) => d.proposal_id === w.ordinary.proposal_id && d.outcome === 'granted').length;
     out.push(n > 1

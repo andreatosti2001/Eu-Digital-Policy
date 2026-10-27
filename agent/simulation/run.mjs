@@ -165,7 +165,10 @@ export async function authorizationLeg(world, proposal, { action = 'approve' } =
     const real = await fetch(`${origin}/api/review`, {
       method: 'POST',
       headers: { 'content-type': 'application/json', cookie: actor.cookie, 'x-control-room-csrf': actor.csrf },
-      body: JSON.stringify({ proposal_id: proposal.proposal_id, action, fingerprint: proposalFingerprint(proposal), note: action === 'approve' ? 'SIMULATED decision, SESSION 24. Not a person, not an authorisation for anything real.' : 'simulated' }),
+      /* Since roadmap v2 item 0.2 an approval or a rejection carries
+         the reviewer's attestation of what they examined. This one is
+         as SIMULATED as the decision it accompanies. */
+      body: JSON.stringify({ proposal_id: proposal.proposal_id, action, fingerprint: proposalFingerprint(proposal), note: action === 'approve' ? 'SIMULATED decision, SESSION 24. Not a person, not an authorisation for anything real.' : 'simulated', ...(['approve', 'reject'].includes(action) ? { attestation: { examined: ['evidence', 'sources', 'operations', 'tests', 'rollback'] } } : {}) }),
     });
     const realBody = await real.json().catch(() => ({}));
     observations.push({

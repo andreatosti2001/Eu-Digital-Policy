@@ -114,7 +114,7 @@ export const ROUTES = [
   /* The floor to reach the endpoint. The permission that actually
      decides is computed from the PROPOSAL inside decide(), because
      a human_only proposal needs the administrator-only one. */
-  { method: 'POST', path: '/api/review', permission: 'proposal:request_changes', what: 'approve · reject · request changes. Records an authorization; publishes nothing.' },
+  { method: 'POST', path: '/api/review', permission: 'proposal:request_changes', what: 'approve · reject · request changes. Approve and reject carry the reviewer\'s attestation of what they examined. Records an authorization; publishes nothing.' },
 ];
 
 /** Words that would make a route a production control. The suite
@@ -163,7 +163,7 @@ const SECURITY_HEADERS = (cfg) => ({
 });
 
 function readBody(req) {
-  const tooLarge = () => new DecisionRefused(`the request body is larger than ${MAX_BODY_BYTES} bytes`, { status: 413, code: 'body_too_large', fix: 'a control plane has no reason to accept a large request. Nothing this server accepts is bigger than a proposal id, a fingerprint and a note.' });
+  const tooLarge = () => new DecisionRefused(`the request body is larger than ${MAX_BODY_BYTES} bytes`, { status: 413, code: 'body_too_large', fix: 'a control plane has no reason to accept a large request. Nothing this server accepts is bigger than a proposal id, a fingerprint, a note and an attestation.' });
 
   /* Declared length first, so an oversized body is refused BEFORE
      it is read. Destroying the socket mid-upload loses the response
@@ -428,11 +428,13 @@ export function serve({ cfg, quiet = false, tracer = null } = {}) {
 
       /* ---- the one state-changing action in the system ---- */
       if (path === '/api/review') {
-        const body = parseStrictJson(await readBody(req), ['action', 'proposal_id', 'fingerprint', 'note']);
+        /* `attestation` (roadmap v2 item 0.2) is ADDED to the accepted
+           list; the unknown-field check is not loosened. */
+        const body = parseStrictJson(await readBody(req), ['action', 'proposal_id', 'fingerprint', 'note', 'attestation']);
         try {
           const out = decide(cfg, {
             actor: resolved.actor, session: resolved.session, request: requestInfo,
-            action: body.action, proposalId: body.proposal_id, fingerprint: body.fingerprint, note: body.note ?? null,
+            action: body.action, proposalId: body.proposal_id, fingerprint: body.fingerprint, note: body.note ?? null, attestation: body.attestation ?? null,
             audit, tracer: trace,
           });
           return send(res, 200, out);
