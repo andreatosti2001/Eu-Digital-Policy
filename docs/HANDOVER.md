@@ -19,7 +19,12 @@ its checkpoint is **approved**, which closes the session (`docs/ROADMAP-v2.md` �
   no content this branch did not already hold.
 - This session's branch: `claude/new-session-6evq51`. Disposition: item 2.4 approved
   (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the author's
-  instruction of 28 Oct 2026 ("Approvo e apri la PR").
+  instruction of 28 Oct 2026 ("Approvo e apri la PR"); merged as #26 (`21d6ada`).
+- After the merge, on 28 Oct 2026: the prompt of v2 Session 8 (item 2.5, the Interoperable Europe
+  Act) was drafted on the author's request ("Manda session 8 md") and kept as
+  `docs/prompts/v2-session-8.md` on `claude/new-session-6evq51`, restarted from `main` at `21d6ada`.
+  No pull request yet: it is the author's to ask for. The prompt records no decision: its first write
+  is §8's row "The scope of v2 Session 8", in the author's words.
 
 ## v2 Session 7 — checkpoint report (item 2.4, the European Health Data Space)
 
