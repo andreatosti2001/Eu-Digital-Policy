@@ -289,6 +289,7 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
     instrument: new Map(instruments.map((i) => [i.id, i])),
   };
   const enfById = new Map(enforcement.map((e) => [e.id, e]));
+  const instById = new Map(instruments.map((i) => [i.id, i]));
   const count = (list, f) => { const m = {}; for (const x of list) for (const v of [].concat(f(x))) m[v] = (m[v] || 0) + 1; return m; };
 
   /* ---- derived fields must not be stored anywhere ---- */
@@ -337,7 +338,7 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
   const noLocator = directRefs.filter((r) => r.quality === 'none' || r.quality === 'generic');
   for (const r of noLocator) if (!(r.kind === 'law' && r.tier === 'tier:1')) warn(`DIRECT_CLAIM_WITHOUT_LOCATOR ${r.claim} → ${r.source}`);
 
-  const remediation = new Map(claims.map((c) => [c.id, M.remediationCodes(c, ix, { asOf, enforcementById: enfById })]));
+  const remediation = new Map(claims.map((c) => [c.id, M.remediationCodes(c, ix, { asOf, enforcementById: enfById, instrumentById: instById })]));
   const owing = claims.filter((c) => M.owesVerification(c));
   const noExternalDirect = claims.filter((c) => M.evidenceStatus(c) !== 'evidence:direct' && M.evidenceStatus(c) !== 'evidence:derived');
 
@@ -380,7 +381,7 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
   /* ---- 4. freshness ---- */
   const fresh = (kind, list, dateOf) => {
     const rows = list.map((r) => {
-      const risk = M.riskClass(kind, r, { asOf, enforcementById: enfById });
+      const risk = M.riskClass(kind, r, { asOf, enforcementById: enfById, instrumentById: instById });
       return { id: r.id, risk, state: M.freshnessState(dateOf(r), risk, asOf) };
     });
     return { byRisk: count(rows, (r) => r.risk), byState: count(rows, (r) => r.state),

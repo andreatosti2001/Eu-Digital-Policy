@@ -299,12 +299,20 @@ export const RISK_TTL_DAYS = Object.freeze({
 const DAY = 86400000;
 const days = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / DAY);
 
+/* A file still in the legislative procedure: what the Council or
+   Parliament has done on it is the "institutional status" of
+   docs/EVIDENCE-MODEL.md §8. */
+const IN_PROCEDURE = /proposal|position|trilogue|agreement|stalled/;
+const CO_LEGISLATORS = new Set(['council', 'ep']);
+
 /**
  * The risk class of one record. `kind` is the dataset: 'claim',
  * 'enforcement', 'event' or 'instrument'. `asOf` is an ISO date and is
  * required: this module never reads the clock itself (AUDIT F-15).
+ * `instrumentById` lets a claim inherit the institutional-status class
+ * (AUDIT-2026-10-28 F-3); without it that rule cannot fire.
  */
-export function riskClass(kind, rec, { asOf, enforcementById } = {}) {
+export function riskClass(kind, rec, { asOf, enforcementById, instrumentById } = {}) {
   if (kind === 'enforcement') {
     const a = rec.action_status;
     const ap = rec.appeal && rec.appeal.status;
@@ -319,7 +327,7 @@ export function riskClass(kind, rec, { asOf, enforcementById } = {}) {
   }
   if (kind === 'instrument') {
     const s = rec.legislative_status || '';
-    if (/proposal|position|trilogue|agreement|partly|transposition|stalled/.test(s)) return 'risk:high';
+    if (IN_PROCEDURE.test(s) || /partly|transposition/.test(s)) return 'risk:high';
     return 'risk:medium';
   }
   /* claims */
@@ -327,6 +335,11 @@ export function riskClass(kind, rec, { asOf, enforcementById } = {}) {
   const get = getter(enforcementById);
   const linked = (rec.enforcement || []).map(get).filter(Boolean);
   if (linked.some((e) => riskClass('enforcement', e) === 'risk:critical')) return 'risk:high';
+  /* a co-legislator's stage on a file still in procedure: a Council
+     mandate can form the day after the record was read */
+  const inst = getter(instrumentById);
+  if (rec.type === 'claim-type:fact' && (rec.institutions || []).some((x) => CO_LEGISLATORS.has(x))
+    && (rec.instruments || []).map(inst).some((i) => i && IN_PROCEDURE.test(i.legislative_status || ''))) return 'risk:high';
   return 'risk:medium';
 }
 
@@ -350,7 +363,7 @@ const TIER_RANK = { 'tier:1': 1, 'tier:2': 2, 'tier:3': 3, 'tier:4': 4 };
  * person has recorded in the claim's own `remediation` field. Mechanical
  * codes are never stored: storing one would let it outlive the gap.
  */
-export function remediationCodes(claim, ix, { asOf, enforcementById } = {}) {
+export function remediationCodes(claim, ix, { asOf, enforcementById, instrumentById } = {}) {
   const L = lookup(ix);
   const codes = new Set();
   const kind = claimKind(claim);
@@ -386,7 +399,7 @@ export function remediationCodes(claim, ix, { asOf, enforcementById } = {}) {
   if (claim.reference_gap) codes.add('remediation:reference-gap');
   if (claim.contested) codes.add('remediation:contested');
   if (asOf) {
-    const st = freshnessState(claim.last_verified, riskClass('claim', claim, { asOf, enforcementById }), asOf);
+    const st = freshnessState(claim.last_verified, riskClass('claim', claim, { asOf, enforcementById, instrumentById }), asOf);
     if (st === 'freshness:review-due' || st === 'freshness:stale') codes.add('remediation:outdated');
   }
   for (const c of claim.remediation || []) codes.add(c);

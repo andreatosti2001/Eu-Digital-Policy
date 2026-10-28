@@ -1285,7 +1285,8 @@ test('O4 · the Data Omnibus is a proposal: no binding date, and the October Cor
   assert.match(c.statement, /11 October 2026/);
   assert.deepEqual(c.sources.map((s) => sources.get(s.source_id).tier), ['tier:4'], 'a press report, and recorded as one');
   assert.doesNotMatch(claims.find((x) => x.id === 'clm-data-omnibus-stalled').statement, /As of 25 September/, 'the superseded state is not repeated');
-  assert.match(readFileSync(join(ROOT, 'index.html'), 'utf8'), /data-i18n="part-8\.span3">Data Omnibus: proposal, no Council mandate</);
+  /* the chip said "no Council mandate" until Coreper agreed one on 21 Oct 2026 (AUDIT-2026-10-28 F-1, P1 below) */
+  assert.match(readFileSync(join(ROOT, 'index.html'), 'utf8'), /data-i18n="part-8\.span3">Data Omnibus: proposal, Council mandate agreed</);
 });
 
 test('O5 · DSA: a preliminary finding carries no fine, and an accepted action plan does not undo an infringement decision', () => {
@@ -2204,4 +2205,114 @@ test('W18 · item 10.2: no internal reference reaches a reader — every display
   /* R8, the bibliography's own copy */
   const bib = visibleText(readFileSync(join(ROOT, 'bibliography.html'), 'utf8')).replace(/\s+/g, ' ').replace(/ ([.,])/g, '$1');
   assert.ok(bib.includes("each computed from the site's datasets when this page loads — none of these numbers is written into the page. The open backlog is the same computation the build runs, in the site's data validator."));
+});
+
+/* ---------------------------------------------------------------------------
+   AUDIT-2026-10-28 (P0): the Data Omnibus's Council mandate, the bibliography's
+   static count, and the institutional-status review interval.
+   --------------------------------------------------------------------------- */
+
+/* What every page and edition said until 28 Oct 2026. Each pattern is planted
+   below, so a pattern that could no longer fire would fail the test. */
+const NO_MANDATE = [
+  /no Council (negotiating )?mandate (has been )?reported/,
+  /has no Council mandate/,
+  /Data Omnibus: proposal, no Council mandate/,
+  /no outcome of that meeting had been published/,
+  /sin mandato del Consejo|no tiene mandato del Consejo|no consta ning&uacute;n mandato del Consejo/,
+  /sans mandat du Conseil|n&rsquo;a pas de mandat du Conseil|aucun mandat du Conseil/,
+  /senza mandato del Consiglio|non ha un mandato del Consiglio|non risulta alcun mandato del Consiglio/,
+];
+const saysNoMandate = (s) => NO_MANDATE.filter((re) => re.test(s)).map(String);
+
+test('P1 · the Data Omnibus Council mandate rests on the Council register, and no page or edition says there is none', () => {
+  /* the patterns fire on the text they replaced */
+  for (const old of [
+    'with no Council negotiating mandate reported and no Parliament position as at 21 October 2026',
+    'Data Omnibus: proposal, no Council mandate',
+    'As at 21 October 2026 no Council mandate has been reported',
+    'no outcome of that meeting had been published when this was checked on 21 October 2026',
+    'Data Omnibus: propuesta, sin mandato del Consejo', 'Data Omnibus&nbsp;: proposition, sans mandat du Conseil',
+    'Data Omnibus: proposta, senza mandato del Consiglio']) assert.ok(saysNoMandate(old).length, old);
+
+  /* the record: one claim, carried by the Council's own outcome of proceedings */
+  const claims = new Map(readData('claims.json').claims.map((c) => [c.id, c]));
+  const sources = new Map(readData('sources.json').sources.map((s) => [s.id, s]));
+  const c = claims.get('clm-data-omnibus-council-mandate');
+  assert.ok(c, 'the mandate is a claim');
+  assert.equal(c.type, 'claim-type:fact');
+  assert.match(c.statement, /agreed the Council's mandate for negotiations with the European Parliament .* on 21 October 2026/);
+  assert.match(c.statement, /ST 14756\/26/);
+  assert.deepEqual(c.sources.map((r) => [r.source_id, r.supports]), [['src-council-st-14756-2026', 'supports:direct']]);
+  const s = sources.get('src-council-st-14756-2026');
+  assert.equal(s.tier, 'tier:2');
+  assert.equal(s.publisher, 'council');
+  assert.equal(s.url, 'https://data.consilium.europa.eu/doc/document/ST-14756-2026-INIT/en/pdf');
+  assert.equal(s.published, '2026-10-22');
+
+  /* the superseded state is not restated as current anywhere a reader sees it */
+  for (const id of ['clm-data-omnibus-coreper-21-october', 'clm-data-omnibus-parliament-stage', 'clm-data-omnibus-council-mandate'])
+    assert.deepEqual(saysNoMandate(claims.get(id).statement), [], id);
+  const om = readData('instruments.json').instruments.find((i) => i.id === 'data-omnibus');
+  const opening = om.status_note.split(' Council: ')[0];
+  assert.deepEqual(saysNoMandate(opening), []);
+  assert.match(opening, /negotiating mandate, agreed by the Permanent Representatives Committee on 21 October 2026 \(ST 14756\/26, clm-data-omnibus-council-mandate\)/);
+  assert.ok(om.claims.includes('clm-data-omnibus-council-mandate') && om.sources.includes('src-council-st-14756-2026'));
+  assert.ok(om.status_as_of >= '2026-10-22', 'the status was read after the outcome was published');
+  assert.equal(om.kind, 'kind:proposal', 'a negotiating mandate makes nothing law');
+  /* the previous state and the reason stay in the record (docs/DATA-GOVERNANCE.md) */
+  assert.match(om.status_note, /'with no Council negotiating mandate reported and no Parliament position as at 21 October 2026'/);
+  assert.match(claims.get('clm-data-omnibus-coreper-21-october').verification_note, /It read: 'no outcome of that meeting had been published/);
+
+  /* the brief, its three editions, their overlays and the generated instrument page */
+  for (const f of ['index.html', 'es/index.html', 'fr/index.html', 'it/index.html', 'i18n/es.json', 'i18n/fr.json', 'i18n/it.json'])
+    assert.deepEqual(saysNoMandate(readFileSync(join(ROOT, f), 'utf8')), [], f);
+  const page = readFileSync(join(ROOT, 'instruments/data-omnibus/index.html'), 'utf8');
+  assert.match(page, /id="clm-data-omnibus-council-mandate"/);
+  assert.deepEqual(saysNoMandate(visibleText(page).split('28 Oct 2026 (')[0]), [], 'the page, before the status note\'s own provenance');
+  /* and Part VIII cites the record its sentence rests on */
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  for (const key of ['part-8.li2', 'part-8.p4'])
+    assert.match(html, new RegExp(`data-i18n="${key.replace('.', '\\.')}" data-claim="[^"]*clm-data-omnibus-council-mandate`), key);
+});
+
+test('P2 · the bibliography and the datasets page count what data/ holds, and a source added without regenerating is caught', async () => {
+  const n = readData('sources.json').sources.length;
+  const bib = readFileSync(join(ROOT, 'bibliography.html'), 'utf8');
+  assert.equal(Number(bib.match(/every source, (\d+) in all/)[1]), n, 'the no-script fallback');
+  assert.equal(new Set([...bib.matchAll(/<li id="(src-[a-z0-9-]+)">/g)].map((m) => m[1])).size, n, 'one entry per source');
+  const ds = readFileSync(join(ROOT, 'datasets.html'), 'utf8');
+  assert.equal(Number(ds.match(/<span class="ri-sub">(\d+) in sources<\/span>/)[1]), n);
+  assert.equal(Number(ds.match(/<span class="ri-sub">(\d+) in claims<\/span>/)[1]), readData('claims.json').claims.length);
+
+  const dir = siteCopy('bib-count');
+  try {
+    edit(dir, 'data/sources.json', (s) => s.replace('\n    {\n      "id": "src-council-st-14756-2026",',
+      '\n    {\n      "id": "src-planted-p2",\n      "tier": "tier:4",\n      "type": "source-type:commentary",\n      "publisher": null,\n      "publisher_name": "Planted",\n      "title": "Planted",\n      "url": null,\n      "url_status": "url:none",\n      "published": null,\n      "accessed": null,\n      "language": "en",\n      "note": "planted"\n    },\n    {\n      "id": "src-council-st-14756-2026",'));
+    const problems = await staleSite(dir);
+    assert.ok(problems.includes('bibliography.html is stale'), problems.join('\n'));
+    assert.ok(problems.includes('datasets.html is stale'), problems.join('\n'));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('P3 · a co-legislator\'s stage on a file still in procedure is reviewed as institutional status (30 days), not as a general fact', () => {
+  const insts = new Map(readData('instruments.json').instruments.map((i) => [i.id, i]));
+  const claims = new Map(readData('claims.json').claims.map((c) => [c.id, c]));
+  const risk = (c, withInst = true) => EM.riskClass('claim', c, { asOf: '2026-10-28', instrumentById: withInst ? insts : undefined });
+  for (const id of ['clm-data-omnibus-council-mandate', 'clm-data-omnibus-council-october', 'clm-data-omnibus-parliament-stage', 'clm-data-omnibus-stalled'])
+    assert.equal(risk(claims.get(id)), 'risk:high', id);
+  assert.equal(EM.RISK_TTL_DAYS['risk:high'], 30, 'docs/EVIDENCE-MODEL.md §8');
+  /* what does not move: a law claim about a proposal, a co-legislator's history on an adopted act, a claim naming no co-legislator */
+  assert.equal(risk(claims.get('clm-cloud-ai-act-dual-basis')), 'risk:medium');
+  assert.equal(risk(claims.get('clm-ai-omnibus-legislative-path')), 'risk:medium');
+  assert.equal(risk({ ...claims.get('clm-data-omnibus-council-mandate'), institutions: ['ec'] }), 'risk:medium');
+  /* without the instruments the rule cannot fire: the class is the old one */
+  assert.equal(risk(claims.get('clm-data-omnibus-council-mandate'), false), 'risk:medium');
+  /* the record that read "no outcome published" on 21 Oct would have been fresh under either class on 22 Oct:
+     no interval catches a change the next day, which is why the claim is re-read before every publication */
+  assert.equal(EM.freshnessState('2026-10-21', 'risk:high', '2026-10-22'), 'freshness:fresh');
+  /* and the work list shows the one now due */
+  assert.equal(EM.freshnessState(claims.get('clm-data-omnibus-stalled').last_verified, risk(claims.get('clm-data-omnibus-stalled')), '2026-10-28'), 'freshness:review-due');
+  const out = execFileSync('node', [join(ROOT, 'tools/freshness.mjs'), '--as-of', '2026-10-28'], { cwd: ROOT, encoding: 'utf8' });
+  assert.match(out, /high\s+review-due clm-data-omnibus-stalled/);
 });

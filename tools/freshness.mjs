@@ -296,6 +296,7 @@ if (isMain) {
      the same states, from the same module. */
   line('\nRISK-BASED REVIEW (per record)  intervals: ' + Object.entries(RISK_TTL_DAYS).map(([k, v]) => `${k.split(':')[1]} ${v}d`).join(' · '));
   const enfById = new Map(enf.map((e) => [e.id, e]));
+  const instById = new Map(arr(read('instruments.json').instruments).map((i) => [i.id, i]));
   const sets = [
     ['claims', 'claim', arr(read('claims.json').claims)],
     ['enforcement', 'enforcement', enf],
@@ -304,7 +305,7 @@ if (isMain) {
   ];
   for (const [name, kind, list] of sets) {
     const rows = list.map((r) => {
-      const risk = riskClass(kind, r, { asOf: AS_OF, enforcementById: enfById });
+      const risk = riskClass(kind, r, { asOf: AS_OF, enforcementById: enfById, instrumentById: instById });
       return { id: r.id, risk, state: freshnessState(r.last_verified, risk, AS_OF), at: r.last_verified };
     });
     const tally = {};
