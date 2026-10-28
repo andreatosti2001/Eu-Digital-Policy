@@ -2066,7 +2066,9 @@
         "tl-eidas2-2027-12-24-compliance-deadline"
       ],
       "amended_by": [],
-      "amends": [],
+      "amends": [
+        "eidas"
+      ],
       "repeals": [],
       "transposition": null,
       "dna": {
@@ -2593,6 +2595,45 @@
         ],
         "last_verified": "2026-10-28"
       }
+    },
+    {
+      "id": "eidas",
+      "aliases": [
+        "eidas-regulation"
+      ],
+      "celex": "32014R0910",
+      "short_name": "eIDAS Regulation",
+      "full_name": "Regulation (EU) No 910/2014 on electronic identification and trust services for electronic transactions in the internal market and repealing Directive 1999/93/EC",
+      "kind": "kind:regulation",
+      "scope_class": "scope:referenced",
+      "brief_part": null,
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-10-28",
+      "status_note": "In force since 17 September 2014, the twentieth day after publication (Art. 52(1); OJ L 257, 28.8.2014). It applies from 1 July 2016, except the provisions that Art. 52(2) makes apply earlier, from 17 September 2014, or later, from dates tied to its implementing acts, among them Art. 6 on the mutual recognition of electronic identification means. It has been amended by Regulation (EU) 2024/1183 and, as the Publications Office's metadata record, by Directive (EU) 2022/2555. Read on 28 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records it in force, with the dates 17 September 2014 and 1 July 2016.",
+      "status_basis": [
+        {
+          "source_id": "src-eurlex-eidas",
+          "supports": "supports:direct",
+          "locator": "Art. 52 (entry into force and application); Publications Office metadata: in force, dates 2014-09-17 and 2016-07-01"
+        }
+      ],
+      "milestones": [],
+      "amended_by": [
+        "eidas2"
+      ],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": null,
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        "src-eurlex-eidas"
+      ],
+      "last_verified": "2026-10-28",
+      "legal_basis": [
+        "tfeu:art-114"
+      ]
     },
     {
       "id": "cloud-ai-development-act",
@@ -3602,18 +3643,21 @@
       "to": "gdpr",
       "kind": "rel-kind:conflict",
       "symmetric": true,
-      "summary": "Content moderation is processing; ad repositories publish targeting data; Art. 40 access almost always entails personal data. The DSA tells platforms to be transparent while the GDPR tells them to minimise. EDPB guidance mediates the conflict but does not dissolve it.",
+      "summary": "Content moderation, notice and action and advertising transparency all involve processing personal data. The DSA requires each advertisement to be explained in real time, including its main targeting parameters, while the GDPR requires information when the data are obtained and their minimisation. EDPB guidance mediates the conflict but does not dissolve it.",
       "provisions": [
-        "dsa:art-40",
-        "dsa:art-39"
+        "dsa:art-16"
       ],
       "claims": [
         "clm-dsa-gdpr-unresolved"
       ],
       "sources": [
-        "src-edpb-guidelines-3-2025"
+        {
+          "source_id": "src-edpb-guidelines-3-2025",
+          "supports": "supports:partial",
+          "locator": "Guidelines 3/2025 v2, ¶¶7–11; section 2.2 (Arts 16, 17, 20 and 23 DSA); ¶¶53–58 and 79–80 (Art. 26 DSA); ¶6 excludes Art. 40"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-10-28"
     },
     {
       "id": "rel-dsa-dma-scope",
@@ -3742,11 +3786,10 @@
       "to": "gdpr",
       "kind": "rel-kind:amends",
       "symmetric": false,
-      "summary": "PROPOSED amendment only. The Digital Omnibus proposes changes to the personal-data definition, a new Art. 41a, relocation of cookie consent to Art. 88a and a new Art. 88c. None is law; the proposal is stalled in Council.",
+      "summary": "PROPOSED amendment only. The Digital Omnibus proposes changes to the personal-data definition, a new Art. 41a, relocation of cookie consent to Art. 88a and a new Art. 88c. None is law.",
       "provisions": [],
       "claims": [
-        "clm-omnibus-four-gdpr-reforms",
-        "clm-data-omnibus-stalled"
+        "clm-omnibus-four-gdpr-reforms"
       ],
       "sources": [
         "src-eurlex-data-omnibus-837"
@@ -4270,6 +4313,46 @@
       "last_verified": "2026-10-28",
       "requires_verification": false,
       "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2024/903 retrieved from the Publications Office's Cellar (CELEX 32024R0903): Art. 2, point (3): 'network and information system' means a network and information system as defined in Article 6, point (1), of Directive (EU) 2022/2555. The locator is in the dependent instrument's text, as rel-kind:enables requires. Directive (EU) 2022/2555 itself was not re-read. No provision ID exists for the Act's Art. 2, so `provisions` is empty. Added for item 2.5 on the author's decision of 28 Oct 2026."
+    },
+    {
+      "id": "rel-eidas2-eidas-amends",
+      "from": "eidas2",
+      "to": "eidas",
+      "kind": "rel-kind:amends",
+      "symmetric": false,
+      "summary": "eIDAS2 amends the eIDAS Regulation: among other changes, it replaces its subject matter, which now includes the European Digital Identity Wallets, and its first five definitions, and inserts a governance chapter with the supervisory bodies of Art. 46b.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-eidas2",
+          "supports": "supports:direct",
+          "locator": "Art. 1 (Amendments to Regulation (EU) No 910/2014), points (1), (3)(a) and (47)"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2024/1183 retrieved from the Publications Office's Cellar (CELEX 32024R1183): Art. 1 is headed 'Amendments to Regulation (EU) No 910/2014'; point (1) replaces Art. 1, point (3)(a) replaces Art. 3, points (1) to (5), and point (47) inserts Chapter IVa, including Art. 46b. The Publications Office's metadata for 32014R0910 record the amendment. The locator is in the amending act. eidas2.amends and eidas.amended_by carry the same edge. Added on the author's decision of 28 Oct 2026."
+    },
+    {
+      "id": "rel-eidas-ehds-enables",
+      "from": "eidas",
+      "to": "ehds",
+      "kind": "rel-kind:enables",
+      "symmetric": false,
+      "summary": "The EHDS takes its definitions of electronic identification and electronic identification means from the eIDAS Regulation, relies on the electronic identification means recognised under its Art. 6 for health professionals and for natural persons, and has its bodies cooperate with the eIDAS supervisory authorities and bodies.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ehds",
+          "supports": "supports:direct",
+          "locator": "Art. 2(1)(f); Art. 12; Art. 16(1)–(2); Art. 19(2)(m); Art. 92(8)"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2025/327 retrieved from the Publications Office's Cellar (CELEX 32025R0327): Art. 2(1)(f) applies the definitions of Art. 3, points (1) and (2), of Regulation (EU) No 910/2014; Arts 12 and 16(1) rely on the means recognised pursuant to its Art. 6, and Art. 16(2) on the Regulation itself; Art. 19(2)(m) has digital health authorities cooperate with supervisory authorities under it; Art. 92(8) has the EHDS Board cooperate with the supervisory bodies of its Art. 46b. Art. 46b exists only as inserted by Regulation (EU) 2024/1183 (Art. 1, point (47)), and Art. 3, points (1) and (2), are as that Act replaced them, so the EHDS reads Regulation (EU) No 910/2014 as amended; Art. 6 is the 2014 text. The locator is in the dependent instrument's text, as rel-kind:enables requires. No provision ID exists for the EHDS Articles cited, so `provisions` is empty. Added on the author's decision of 28 Oct 2026."
     }
   ]
 }

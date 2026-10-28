@@ -33,6 +33,7 @@ import { loadAll, index, renderError, loadOverlay } from './data.js';
 import { renderInstrument } from './instrument-view.js';
 import { hasEntityPage, entityPath, siteRoot, href, coverage, notCovered } from './routes.js';
 import { humanDate } from './format.js';
+import { interactionsFor } from './interactions.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -89,7 +90,23 @@ function notCoveredNotice(inst, IX) {
     '<p><strong>Why.</strong> ' + esc(d.reason) + '</p>' +
     (refer ? '<p><strong>Read it at the source:</strong> ' + refer + '</p>' : '') +
     '<p>Decision recorded on ' + esc(humanDate(d.approved_on, 'precision:day')) +
-    '; the facts it rests on were last checked on ' + esc(humanDate(d.last_verified, 'precision:day')) + '.</p>';
+    '; the facts it rests on were last checked on ' + esc(humanDate(d.last_verified, 'precision:day')) + '.</p>' +
+    relationshipsRecorded(inst, IX);
+}
+
+/* The relationships the dataset records for a record it does not cover,
+   with the instrument page's own renderer (decided 28 Oct 2026,
+   docs/ROADMAP-v2.md §8): an edge to a covered instrument is otherwise
+   visible from that end only. Nothing when there are none. */
+function relationshipsRecorded(inst, IX) {
+  const blocks = interactionsFor(inst.id, IX);
+  if (!blocks) return '';
+  const n = (IX.relationship || []).filter((r) => r.from === inst.id || r.to === inst.id).length;
+  /* a <div>, not a <section>: agent/browser/checks.mjs checkNotCovered proves the
+     notice is not the instrument view by finding no <section> in it */
+  return '<div class="section" id="sec-interactions"><h2>Relationships recorded</h2>' +
+    '<p>' + n + ' recorded relationship' + (n === 1 ? '' : 's') + ' with other instruments.</p>' +
+    '<div class="ix-list ix-inline">' + blocks + '</div></div>';
 }
 
 async function boot() {

@@ -34,7 +34,7 @@
 
 import { label as taxLabel } from './data.js';
 import * as F from './format.js';
-import { authoritiesFor, datesFor, cell, setOverlay } from './dna.js';
+import { authoritiesFor, datesFor, cell, setOverlay, sanctionCeiling } from './dna.js';
 import { provisionApplication, provisionDeadlines } from './regulatory-model.js';
 import { derive, STAGES, actionsOnly, inactionsOnly } from './pipeline.js';
 import { sourceList, gradeChip, freshness } from './evidence-view.js';
@@ -205,7 +205,12 @@ function headSection(inst) {
              read "authorities and 1 more", not "authoritiesand" (audit item 15) */
           (auths.length > 1 ? ' <span class="v-sub">and ' + (auths.length - 1) + ' more — see below</span>' : '')
         : '<span class="none">not established in this dataset</span>') +
-      item('Sanction ceiling', ceilingTxt ? esc(ceilingTxt) : '<span class="none">none recorded</span>', true) +
+      /* the same three states as the comparison table and "In short" (js/dna.js
+         sanctionCeiling): an amount, "no amount recorded" with a note below, or
+         "not established" */
+      item('Sanction ceiling', ceilingTxt ? esc(ceilingTxt)
+        : sanctionCeiling(inst.dna).state === 'no-amount' ? '<span class="none">no amount recorded</span>'
+        : '<span class="none">not established</span>', true) +
     '</dl>' +
     (inst.status_note ? '<p class="inst-statusnote">' + esc(inst.status_note) + '</p>' : '') +
     '</div>';
@@ -392,7 +397,10 @@ function appliesCell(p, inst) {
   const verb = { applies: 'Applies since', scheduled: 'Applies from', general: 'Applies since', 'general-scheduled': 'Applies from' }[a.state];
   let html = '<span class="p-when" data-state="' + esc(a.state) + '">' + verb + ' <b>' + when(a.event) + '</b></span>' +
     amended(a.event) +
-    (a.via === 'instrument' ? ' <span class="v-sub">the instrument’s general date; nothing specific to this article is recorded</span>' : '');
+    (a.via === 'instrument' ? ' <span class="v-sub">the instrument’s general date; nothing specific to this article is recorded</span>' : '') +
+    /* a tranche may cover the whole article or only part of it, and the
+       record cannot say which: the event's own text, under Key dates, does */
+    (a.via === 'provision' ? ' <span class="v-sub">a date set for named provisions: what it covers is under <a href="#sec-dates">Key dates →</a></span>' : '');
   for (const e of a.later) html += ' <span class="v-sub">then from ' + when(e) + ': ' + esc(taxLabel(IX, e.event_type).toLowerCase()) + amended(e) + '</span>';
   for (const d of provisionDeadlines(p.id, inst, IX)) html += ' <span class="v-sub">deadline ' + when(d) + ': ' + esc(d.required_action || d.obligation || '') + '</span>';
   return html;
@@ -407,7 +415,10 @@ function provisionsSection(inst) {
   }
   const anchors = new Set((inst.dna && inst.dna.obligation_anchor) || []);
   const rows = provs.map((p) => {
-    const on = (p.obligation_on || []).map((a) => esc(taxLabel(IX, a))).join(' · ');
+    /* an Article that obliges a Union institution names it (obligation_on_institution) */
+    const inst2 = p.obligation_on_institution && IX.institution.get(p.obligation_on_institution);
+    const on = [...(p.obligation_on || []).map((a) => esc(taxLabel(IX, a))),
+      ...(inst2 ? [esc(inst2.short_name)] : [])].join(' · ');
     return '<tr class="' + (anchors.has(p.id) ? 'is-anchor' : '') + '">' +
       '<th scope="row" data-label="Article"><span class="mono">Art. ' + esc(p.number) + '</span>' +
         (anchors.has(p.id) ? ' <span class="badge" data-st="verified">load-bearing</span>' : '') + '</th>' +

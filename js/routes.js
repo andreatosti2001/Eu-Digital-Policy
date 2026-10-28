@@ -145,6 +145,7 @@ export const KNOWN_AS = {
   'ai-omnibus': 'Digital Omnibus on AI',
   'data-omnibus': 'Digital Omnibus',
   pld: 'Product Liability Directive',
+  ehds: 'European Health Data Space',
 };
 
 const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');

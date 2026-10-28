@@ -101,14 +101,32 @@ function provisionList(ids, ix, limit) {
   return txt + (limit && ids.length > limit ? ' <span class="dna-more">+' + (ids.length - limit) + '</span>' : '');
 }
 
-function sanctionCell(dna) {
+/**
+ * The sanction ceiling, one derivation for the comparison table, the page
+ * head and "In short" (decided 28 Oct 2026, docs/ROADMAP-v2.md §8):
+ *   'amount'           a figure is recorded;
+ *   'no-amount'        the amounts are null and the record carries a note,
+ *                      which says why (a sourced "none", a national figure,
+ *                      or that it was not established);
+ *   'not-established'  nothing to go on.
+ * It never states by itself that an act sets no sanction: only the note,
+ * which has a source, can say that.
+ */
+export function sanctionCeiling(dna) {
   const s = dna && dna.sanction_ceiling;
-  if (!s) return UNKNOWN;
+  if (!s) return { state: 'not-established', figure: null, note: null };
   const bits = [];
   if (s.pct_global_turnover != null) bits.push(s.pct_global_turnover + '% of global turnover');
   if (s.fixed_eur != null) bits.push('EUR ' + (s.fixed_eur / 1e6) + 'm');
-  let out = bits.length ? esc(bits.join(' / ')) : UNKNOWN;
-  if (s.note) out += '<span class="dna-note">' + esc(s.note) + '</span>';
+  if (bits.length) return { state: 'amount', figure: bits.join(' / '), note: s.note || null };
+  return { state: s.note ? 'no-amount' : 'not-established', figure: null, note: s.note || null };
+}
+
+function sanctionCell(dna) {
+  const c = sanctionCeiling(dna);
+  let out = c.state === 'amount' ? esc(c.figure)
+    : c.state === 'no-amount' ? '<span class="dna-unknown">no amount recorded</span>' : UNKNOWN;
+  if (c.note) out += '<span class="dna-note">' + esc(c.note) + '</span>';
   return out;
 }
 

@@ -53,6 +53,7 @@ import { build as buildArtifact, refusal } from './pages-artifact.mjs';
 import * as EM from '../js/evidence-model.js';
 import { procedure, contradictions } from '../js/pipeline.js';
 import { statusContradictions, provisionApplication } from '../js/regulatory-model.js';
+import { sanctionCeiling } from '../js/dna.js';
 import { proseCopies, textBlocks, scriptBodies, codeOf, MIN_WORDS, unescapeJs } from './prose-homes.mjs';
 import {
   SOURCE_FIELDS, REQUIRED_FIELDS, OPTIONAL_FIELDS, RESOLUTIONS, ABSENT_BY_DESIGN, violations,
@@ -1875,8 +1876,12 @@ test('W11 · item 2.2: eidas2 is covered and held to M-04, M-05 and M-07 in full
   plant((d) => { delete instOf(d, 'eidas2').status_basis; }, /^M-07 instruments\/eidas2:/);
   /* its decision gone: a core record added after 25 Oct 2026 */
   plant((d) => { delete instOf(d, 'eidas2').scope_decision; }, /^M-04 instruments\/eidas2: a core record added after 25 Oct 2026/);
-  /* the one relationship that gives it context gone, or its objective: no page, so M-05 */
-  plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => x.id !== 'rel-eidas2-gdpr-defers'); },
+  /* every relationship that gives it context gone, or its objective: no page, so M-05.
+     Until 28 Oct 2026 rel-eidas2-gdpr-defers was the only one; since then
+     rel-eidas2-eidas-amends gives context too (docs/ROADMAP-v2.md §8, item (k)) */
+  { const d = loadDb(); d.instruments.relationships = d.instruments.relationships.filter((x) => x.id !== 'rel-eidas2-gdpr-defers');
+    assert.ok(!regErrors(d).some((e) => /^M-05 instruments\/eidas2/.test(e)), 'the GDPR edge alone is no longer its only context'); }
+  plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => x.from !== 'eidas2' && x.to !== 'eidas2'); },
     /^M-05 instruments\/eidas2: covered \(core\) without a page/);
   plant((d) => { instOf(d, 'eidas2').dna.objective = ''; }, /^M-05 instruments\/eidas2: covered \(core\) without a page/);
 });
@@ -1981,6 +1986,29 @@ test('W15 · item 2.5: iea is covered and held to M-04, M-05 and M-07 in full �
   { const ev = new Map(ix.event); ev.set('tl-iea-planted', { id: 'tl-iea-planted', date: '2027-01-01', event_type: 'event:application', provisions: ['iea:art-4'] });
     assert.ok(statusContradictions({ ...iea, milestones: [...iea.milestones, 'tl-iea-planted'] }, { event: ev }, '2026-10-28')
       .some((m) => /still to come/.test(m))); }
+});
+
+test('W16 · the sanction ceiling has one derivation, and the page head and "In short" agree with it on every instrument page', () => {
+  assert.equal(sanctionCeiling({ sanction_ceiling: { pct_global_turnover: 4, fixed_eur: null, note: null } }).state, 'amount');
+  assert.equal(sanctionCeiling({ sanction_ceiling: { pct_global_turnover: null, fixed_eur: null, note: 'Set by Member States.' } }).state, 'no-amount');
+  assert.equal(sanctionCeiling({ sanction_ceiling: { pct_global_turnover: null, fixed_eur: null, note: null } }).state, 'not-established');
+  assert.equal(sanctionCeiling({}).state, 'not-established');
+  const db = loadDb();
+  for (const id of readdirSync(join(ROOT, 'instruments'))) {
+    const inst = instOf(db, id);
+    if (!inst) continue;
+    const html = readFileSync(join(ROOT, 'instruments', id, 'index.html'), 'utf8');
+    const head = html.match(/<dt>Sanction ceiling<\/dt><dd[^>]*>(.*?)<\/dd>/);
+    const short = html.match(/<strong>Sanction ceiling:<\/strong> (.*?)<\/li>/);
+    assert.ok(head && short, `${id}: both places render the ceiling`);
+    const c = sanctionCeiling(inst.dna);
+    const word = { 'no-amount': 'no amount recorded', 'not-established': 'not established' }[c.state];
+    if (word) {
+      assert.match(head[1], new RegExp(`>${word}<`), `${id}: the page head says "${word}"`);
+      assert.match(short[1], new RegExp(`>${word}<`), `${id}: "In short" says "${word}"`);
+    }
+    assert.doesNotMatch(head[1] + short[1], />none recorded</, `${id}: the old wording is back`);
+  }
 });
 
 /* v2 Session 5, B.3. Eight of the seventeen v1 relationships were migrated to
