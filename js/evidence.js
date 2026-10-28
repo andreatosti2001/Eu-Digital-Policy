@@ -14,7 +14,7 @@ import { createDialog } from './dialog.js';
 import * as F from './format.js';
 import { label as taxLabel, note as taxNote } from './data.js';
 import { sourceCard as sharedSourceCard, sourceList } from './evidence-view.js';
-import { href as siteHref } from './routes.js';
+import { href as siteHref, instrumentHref } from './routes.js';
 
 let IX = null;
 let ORDER = [];              // [{n, claimId, el}] in document order
@@ -137,6 +137,14 @@ function injectLegend() {
 
 /* ---------------------------------------------------------- the drawer */
 
+/* a note as a reader is shown it (F.readerText, item 10.2): a claim the brief
+   cites becomes its footnote number, which opens it in this panel */
+const say = () => ({
+  href: (p) => siteHref(p),
+  instrumentHref: (id) => instrumentHref(id, IX),
+  claimRef: (id) => { const e = ORDER.find((x) => x.claimId === id); return e ? e.n : null; },
+});
+
 function statusFor(instrumentId) {
   const i = IX.instrument.get(instrumentId);
   if (!i) return null;
@@ -196,7 +204,7 @@ function renderClaim(entry) {
   const statusHTML = statuses.length ? statuses.map((s) =>
     '<div class="evi-row"><dt>' + esc(s.name) + '</dt><dd>' +
     '<b>' + esc(s.status) + '</b>' + (s.asOf ? ' <span class="ev-dim-70">as of ' + esc(F.humanDate(s.asOf)) + '</span>' : '') +
-    (s.note ? '<br><span class="ev-dim-80">' + esc(s.note) + '</span>' : '') +
+    (s.note ? '<br><span class="ev-dim-80">' + F.readerText(s.note, IX, say()) + '</span>' : '') +
     '</dd></div>').join('') : '';
 
   const cards = sourceList(c, IX, 'full');
@@ -222,11 +230,12 @@ function renderClaim(entry) {
         : '') +
       (g.id === 'unresolved'
         ? '<div class="evi-warn"><b>* Reference not located</b>' +
-          esc(c.verification_note || 'No directly supporting external source has been located for this claim.') +
+          (c.verification_note ? F.readerText(c.verification_note, IX, say())
+            : 'No directly supporting external source has been located for this claim.') +
           '</div>'
         : unv
           ? '<div class="evi-warn evi-warn-soft"><b>Open question on this record</b>' +
-            esc(c.verification_note || '') + '</div>'
+            F.readerText(c.verification_note, IX, say()) + '</div>'
           : '') +
       extra +
       (statusHTML ? '<div class="evi-sec"><h4>Regulatory status</h4><dl class="evi-dl">' + statusHTML + '</dl></div>' : '') +
@@ -243,7 +252,7 @@ function renderClaim(entry) {
           : '<span class="evi-nourl">never verified</span>') +
       '</dl></div>' +
       (!unv && c.verification_note
-        ? '<div class="evi-sec"><h4>Note</h4><p class="evi-cite">' + esc(c.verification_note) + '</p></div>' : '') +
+        ? '<div class="evi-sec"><h4>Note</h4><p class="evi-cite">' + F.readerText(c.verification_note, IX, say()) + '</p></div>' : '') +
       '<div class="evi-foot">Claim ID <code>' + esc(c.id) + '</code>. ' +
         'Every source above is listed in the <a href="' + esc(siteHref('bibliography.html')) + '">bibliography</a>.</div>' +
     '</div>';

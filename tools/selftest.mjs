@@ -2122,3 +2122,86 @@ test('W12 · B.3: the migrated relationships carry v2 references, each direct ti
   planted.instruments.relationships.find((x) => x.id === 'rel-nis2-nis1').sources = ['src-eurlex-nis2'];
   assert.ok(planted.instruments.relationships.filter(isV1).some((r) => !B3_STILL_V1.includes(r.id)));
 });
+
+/* ---------------------------------------------------------- W18 · item 10.2
+
+   A note in data/ is where provenance lives; what a reader is shown of it is
+   js/format.js readerText(), and the rule it applies is internalRefs()
+   (docs/ROADMAP-v2.md §8, item 10.2): no docs/ or code path, no record id in
+   prose, no commit, no workflow code, no raw taxonomy id, no field name. */
+
+const W18_FIELDS = (db) => {
+  const out = [];
+  const add = (where, text) => { if (text) out.push({ where, text }); };
+  for (const dim of ['relationship_kind', 'actor', 'sector', 'activity', 'territory'])
+    for (const t of db.taxonomy[dim] || []) add(`taxonomy ${t.id}`, t.note);
+  for (const i of db.instruments.instruments) add(`status_note ${i.id}`, i.status_note);
+  for (const r of db.instruments.relationships) add(`relationship ${r.id}`, r.verification_note);
+  for (const s of db.sources.sources) add(`source ${s.id}`, s.note);
+  for (const c of db.claims.claims) add(`claim ${c.id}`, c.verification_note);
+  for (const e of db.enforcement.enforcement) { add(`enforcement ${e.id}`, e.verification_note); add(`appeal ${e.id}`, e.appeal && e.appeal.note); }
+  for (const x of db.institutions.institutions) for (const c of x.competences || []) add(`competence ${x.id} ${c.instrument}`, c.note);
+  return out;
+};
+
+/* the visible text of a static page: no script, style or comment, entities decoded */
+const visibleText = (html) => html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<!--[\s\S]*?-->/g, ' ')
+  .replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+  .replace(/&quot;/g, '"').replace(/&#39;|&#x27;/g, "'").replace(/&[a-z#0-9]+;/gi, ' ');
+
+/* every generated or static page a reader opens; the datasets explorer shows
+   the raw records as records, by design, and is outside the rule */
+const W18_PAGES = () => [
+  ...readdirSync(ROOT).filter((f) => f.endsWith('.html') && f !== 'datasets.html'),
+  ...['it', 'fr', 'es'].map((l) => `${l}/index.html`),
+  ...readdirSync(join(ROOT, 'instruments')).map((d) => `instruments/${d}/index.html`),
+].filter((f) => existsSync(join(ROOT, f)));
+
+test('W18 · item 10.2: no internal reference reaches a reader — every displayed note through readerText(), and every page', async () => {
+  const F = await import('../js/format.js');
+  const db = loadDb();
+  const ix = buildIndex(db);
+  const fields = W18_FIELDS(db);
+  const leaks = (filter) => fields.flatMap(({ where, text }) =>
+    F.internalRefs(filter(text), ix).map((m) => `${where}: ${m}`));
+  /* the check holds on every note a renderer prints */
+  assert.deepEqual(leaks((t) => F.readerText(t, ix, { html: false })), []);
+  /* and it is the filter that holds it: with the control off, the same check fails on this tree,
+     on each of the three cases item 10.3 names */
+  const raw = leaks((t) => t);
+  for (const re of [/docs\/V2-DATA-DESIGN\.md/, /clm-eidas2-wallets/, /commit 282a782/])
+    assert.ok(raw.some((l) => re.test(l)), `with no filter, ${re} reaches a reader`);
+
+  /* planted: a docs/ path, a claim id, a commit — each caught raw, each gone through the filter */
+  for (const note of ['Re-read (docs/AUDIT-2026-10-14.md §1 F) today.', 'Carried by clm-gdpr-total-fines.', 'Moved on 21 Oct 2026 (commit 1895845).']) {
+    assert.ok(F.internalRefs(note, ix).length, `the rule sees ${note}`);
+    assert.deepEqual(F.internalRefs(F.readerText(note, ix, { html: false }), ix), [], `the filter cleans ${note}`);
+  }
+  /* what the rule must NOT see: case numbers, Council documents, a court URL, an agenda item */
+  assert.deepEqual(F.internalRefs('Cases T-55/24 and T-58/24; ST 13112/26; Item 1; https://curia.europa.eu/site/upload/docs/application/pdf/2025-09/cp250107en.pdf', ix), []);
+
+  /* the approved texts, word for word (§8, 28 Oct 2026) */
+  const { interactionBlock } = await import('../js/interactions.js');
+  const kindNote = (kind) => {
+    const r = db.instruments.relationships.find((x) => x.kind === kind);
+    return interactionBlock(r, ix, r.from, '').match(/<p class="ix-kindnote">([^<]*)<\/p>/)[1].replace(/&#39;|&#x27;/g, "'");
+  };
+  assert.equal(kindNote('rel-kind:enables'), "The other instrument's provisions operate through definitions, bodies, means or populations this instrument establishes, and say so. Recorded only on an express reference in the DEPENDENT instrument's text; the locator is in that text. Added 27 Oct 2026.");
+  assert.equal(kindNote('rel-kind:defers-to'), "This instrument leaves a matter to the other: a without-prejudice clause, a 'shall not affect' clause or an express reference sending the reader there. The locator is in the DEFERRING instrument's text. Added 27 Oct 2026.");
+  const say = (id) => F.readerText(instOf(db, id).status_note, ix, { html: false });
+  assert.match(say('eidas2'), /by 24 December 2026 \(Art\. 5a\(1\)\), and private relying parties/);
+  assert.match(say('data-omnibus'), /\(ST 13112\/26\) and, on 2 October, by a draft negotiating mandate put to Coreper \(ST 13886\/26\);/);
+  assert.match(say('data-act'), /The verification date moved from 27 Aug to 27 Sep 2026 on 21 Oct 2026, the date on which the status above was re-read against Arts 29 and 50;/);
+  /* the provenance stays in the record: the data is unchanged */
+  assert.match(instOf(db, 'eidas2').status_note, /clm-eidas2-wallets/);
+  assert.match(instOf(db, 'data-act').status_note, /commit 282a782/);
+
+  /* the pages: generated instrument pages, the static pages and the three editions */
+  const pageLeaks = W18_PAGES().flatMap((f) => F.internalRefs(visibleText(readFileSync(join(ROOT, f), 'utf8')), ix).map((m) => `${f}: ${m}`));
+  assert.deepEqual(pageLeaks, []);
+  /* and the page scan can fail: the kind note as it was printed before item 10.2 */
+  assert.ok(F.internalRefs(visibleText('<p class="ix-kindnote">Added 27 Oct 2026 (docs/V2-DATA-DESIGN.md §1.4).</p>'), ix).length);
+  /* R8, the bibliography's own copy */
+  const bib = visibleText(readFileSync(join(ROOT, 'bibliography.html'), 'utf8')).replace(/\s+/g, ' ').replace(/ ([.,])/g, '$1');
+  assert.ok(bib.includes("each computed from the site's datasets when this page loads — none of these numbers is written into the page. The open backlog is the same computation the build runs, in the site's data validator."));
+});

@@ -47,6 +47,7 @@ const esc = (s) => String(s == null ? '' : s)
 /* The render context. Set once per renderInstrument() call; the section
    functions read it, exactly as they read module globals before the split. */
 let IX = null, DB = null, OVERLAY = {}, TODAY = null, ROOT = '', H = {};
+const say = () => ({ href: (p) => ROOT + p, instrumentHref: (id) => instrumentHref(id, IX, ROOT) });
 const tr = (k, fb) => (OVERLAY && OVERLAY[k]) || fb;
 const to = (path) => ROOT + path;
 
@@ -127,7 +128,9 @@ export function instrumentListItem(inst, ix, root = '') {
 function evidenceBlock(claim) {
   const grade = F.evidenceGrade(claim, IX);
   const type = F.typeOf(claim);
-  return '<div class="ev" data-grade="' + esc(grade.id) + '">' +
+  /* the id is an anchor, not text: a note elsewhere that names this claim
+     links here (F.readerText, item 10.2) */
+  return '<div class="ev" id="' + esc(claim.id) + '" data-grade="' + esc(grade.id) + '">' +
     /* words in adjacent chips are separated by a space as well as by the
        layout, so extracted text and a screen reader do not run them together
        (audit of 21 Oct 2026 item 15) */
@@ -212,7 +215,8 @@ function headSection(inst) {
         : sanctionCeiling(inst.dna).state === 'no-amount' ? '<span class="none">no amount recorded</span>'
         : '<span class="none">not established</span>', true) +
     '</dl>' +
-    (inst.status_note ? '<p class="inst-statusnote">' + esc(inst.status_note) + '</p>' : '') +
+    /* the note as a reader is shown it (F.readerText, item 10.2) */
+    (inst.status_note ? '<p class="inst-statusnote">' + F.readerText(inst.status_note, IX, say()) + '</p>' : '') +
     '</div>';
 }
 

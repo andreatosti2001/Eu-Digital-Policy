@@ -287,6 +287,27 @@ function cleanParens(text) {
   return out;
 }
 
+/** The rule of item 10.2 as a check: every internal reference left in a text a
+ *  reader sees. URLs are left out first — a hex segment or a "docs/" in a
+ *  court's URL is the court's, not ours. A record's own handle ("Claim ID
+ *  clm-…", "enf-… · verified") is printed by its renderer, not by a note, and
+ *  is not passed here. tools/selftest.mjs W18 holds every renderer to it. */
+export function internalRefs(text, ix) {
+  const t = String(text || '').replace(/\bhttps?:\/\/\S+|\b[a-z0-9.-]+\.(?:eu|com|org|ie|int|net)\/\S*/gi, ' ');
+  const found = [];
+  const add = (re) => { for (const m of t.matchAll(re)) found.push(m[0]); };
+  add(/\bdocs\/[A-Za-z0-9_.-]+\.md\b/g);
+  add(/\b(?:clm|src|enf|rel|tl)-[a-z0-9]+(?:-[a-z0-9]+)+\b/g);
+  add(/\bcommit [0-9a-f]{7,40}\b/g);
+  add(/\baudits? (?:items? \d+|T-\d{1,2}\b(?!\/))/g);
+  add(/\bitems? \d+\.\d+\b|\bv2 Session \d+\b|\bB\.3\b|\b[DF]-\d{1,2}\b(?!\/)|\bT-\d{1,2}\b(?![\/\d])/g);
+  add(/\b(?:js|tools|css|agent)\/[\w\/.-]+\.(?:m?js|css)\b|\b(?:data\/)?[a-z]+\.json\b/g);
+  add(FIELD_RE);
+  add(/`[^`]+`/g);
+  for (const m of t.matchAll(/\b[a-z][a-z-]*:[a-z0-9][a-z0-9-]*\b/g)) if (ix?.taxonomy?.has(m[0])) found.push(m[0]);
+  return found;
+}
+
 export function readerText(text, ix, opts = {}) {
   if (text == null || text === '') return text == null ? '' : '';
   const html = opts.html !== false;

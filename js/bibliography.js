@@ -71,7 +71,8 @@ function entryHTML(src) {
       '<span>' + esc(src.id) + '</span>' +
     '</div>' +
     '<p class="bib-used">' + usedLine + '</p>' +
-    (src.note ? '<p class="bib-note">' + esc(src.note) + '</p>' : '') +
+    /* the note as a reader is shown it (F.readerText, item 10.2) */
+    (src.note ? '<p class="bib-note">' + F.readerText(src.note, IX) + '</p>' : '') +
     '</article>';
 }
 
