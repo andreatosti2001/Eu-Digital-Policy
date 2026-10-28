@@ -290,6 +290,18 @@ body[data-theme="light"]{
   background-attachment:local, local, scroll, scroll;
 }
 
+/* A note can now carry a link: F.readerText() turns a source, an enforcement
+   record or a claim it names into one (item 10.2). These containers held
+   plain text until then and had no link rule, so the link fell back to the
+   browser's blue — 1.85:1 on the dark page (agent/browser a11y:contrast).
+   The site's own link convention, nothing new. */
+.bib-note a,.dq-lede a,.enf-sub a,.enf-field a,.im-note a,.im-unver a,.inst-statusnote a,
+.is-note a,.ix-kindnote a,.ix-flag a,.evi-warn a,.ev-dim-80 a{
+  color:var(--mech);text-decoration:underline;text-underline-offset:2px;word-break:break-word}
+.bib-note a:hover,.dq-lede a:hover,.enf-sub a:hover,.enf-field a:hover,.im-note a:hover,.im-unver a:hover,
+.inst-statusnote a:hover,.is-note a:hover,.ix-kindnote a:hover,.ix-flag a:hover,.evi-warn a:hover,.ev-dim-80 a:hover{
+  color:var(--live)}
+
 /* ============================================================
    STATUS BADGE — hue + glyph + border. Never hue alone.
    ============================================================ */
