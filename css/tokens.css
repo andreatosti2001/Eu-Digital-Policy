@@ -279,12 +279,13 @@ body[data-theme="light"]{
    links are out of view, and none when the strip fits. No JS, no mask. */
 .chrome-nav,.subnav{
   background-image:
-    linear-gradient(to right, var(--ink-0), transparent),
-    linear-gradient(to left, var(--ink-0), transparent),
+    linear-gradient(to right, var(--ink-0) 60%, transparent),
+    linear-gradient(to left, var(--ink-0) 60%, transparent),
     linear-gradient(to right, color-mix(in srgb, var(--paper-faint) 70%, transparent), transparent),
     linear-gradient(to left, color-mix(in srgb, var(--paper-faint) 70%, transparent), transparent);
   background-position:left center, right center, left center, right center;
-  background-size:24px 100%, 24px 100%, 18px 100%, 18px 100%;
+  /* each cover is solid over more than the shadow's width, so none shows at rest */
+  background-size:32px 100%, 32px 100%, 18px 100%, 18px 100%;
   background-repeat:no-repeat;
   background-attachment:local, local, scroll, scroll;
 }
