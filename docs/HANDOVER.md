@@ -19,6 +19,12 @@ proposal, with its page. The checkpoint is **approved**, and with it **Phase 2 i
 - Disposition: approved (`docs/ROADMAP-v2.md` §8, "Yes"); pushed, with a pull request to `main` opened
   on the author's instruction of 28 Oct 2026 ("Open PR; Phase 2 closed"). Nothing is pushed to the
   branch after the pull request is opened.
+- After that, on 28 Oct 2026: the prompt of v2 Session 10 (items 10.1 and 10.2: scrollbars, and the
+  internal references shown to a reader) was drafted on the author's request ("Do it"). It is kept as
+  `docs/prompts/v2-session-10.md` on `claude/v2-session-10-prompt`, cut from this branch at `480a83c`
+  so that #31 stays untouched; once #31 is merged, its pull request would show only the prompt. The
+  prompt records no decision: its first write is §8's row "The scope of v2 Session 10", in the
+  author's words.
 
 ## v2 Session 9 — checkpoint report (item 2.6, the Digital Networks Act)
 
