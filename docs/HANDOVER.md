@@ -47,6 +47,16 @@ The full register is `docs/AUDIT-2026-10-28.md`. In short:
 - Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve the checkpoint"); pushed, with a pull
   request to `main` opened on the author's instruction of 28 Oct 2026 ("Open PR to main"). Nothing is
   pushed to the branch after the pull request is opened.
+- After that, on 28 Oct 2026: #35 was merged (`8aae4a3`), then #36, Session 11.5 (`a53c2c2`). On the
+  author's request ("Inizierei la fase 3"; then "Scrivi il prompt della S12 (Recommended)"), the prompt
+  of v2 Session 12 was drafted: the opening of Phase 3, V2C-01 first, then the extension of
+  `tools/evidence-audit.mjs` to the applicability rules, then a checkpoint. It is kept as
+  `docs/prompts/v2-session-12.md` on `claude/v2-session-12-prompt`, cut from `main` at `a53c2c2`. The
+  prompt records no decision: its first write is §8's row "The scope of v2 Session 12", in the
+  author's words. **A finding the Session 11 inventory missed**, carried in the prompt for the author:
+  `docs/V2-DATA-DESIGN.md` §4.3 flips `scope-decision-missing` and `status-basis-missing` from BACKLOG to
+  ERROR "at the end of item 2.6"; item 2.6 is closed and both were still BACKLOG on 28 Oct 2026 (11 and
+  23). #36 also closed V2C-22 (the Coreper outcome of 21 Oct 2026, ST 14756/26).
 
 ## v2 Session 11 — checkpoint report (the closing gate of v2)
 
