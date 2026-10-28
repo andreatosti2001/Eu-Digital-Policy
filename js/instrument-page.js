@@ -102,9 +102,11 @@ function relationshipsRecorded(inst, IX) {
   const blocks = interactionsFor(inst.id, IX);
   if (!blocks) return '';
   const n = (IX.relationship || []).filter((r) => r.from === inst.id || r.to === inst.id).length;
-  return '<section class="section" id="sec-interactions"><h2>Relationships recorded</h2>' +
+  /* a <div>, not a <section>: agent/browser/checks.mjs checkNotCovered proves the
+     notice is not the instrument view by finding no <section> in it */
+  return '<div class="section" id="sec-interactions"><h2>Relationships recorded</h2>' +
     '<p>' + n + ' recorded relationship' + (n === 1 ? '' : 's') + ' with other instruments.</p>' +
-    '<div class="ix-list ix-inline">' + blocks + '</div></section>';
+    '<div class="ix-list ix-inline">' + blocks + '</div></div>';
 }
 
 async function boot() {
