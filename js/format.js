@@ -206,9 +206,14 @@ export const TIER_WORD = {
    opposite of what it is. A note that points back at the document making the
    claim is self-reference, and says so. */
 const SELF_SOURCE = 'src-brief-original';
+/* A Commission proposal is a tier-1 legislative document (taxonomy
+   source_tier), not law: its CELEX number, sector 5 type PC, says so, and
+   the label follows it (v2 Session 9, docs/ROADMAP-v2.md §8). */
+const PROPOSAL_CELEX = /celex[:/]5\d{4}PC\d{4}\b/i;
 export function tierWord(src) {
   if (!src) return '';
   if (src.id === SELF_SOURCE) return 'Unverified · the brief itself';
+  if (src.tier === 'tier:1' && PROPOSAL_CELEX.test(String(src.url || ''))) return 'Tier 1 · legislative proposal';
   return TIER_WORD[src.tier] || src.tier;
 }
 

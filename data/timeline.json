@@ -2543,6 +2543,31 @@
    "last_verified": "2026-10-28"
   },
   {
+   "id": "tl-digital-networks-act-2026-01-21-proposal",
+   "date": "2026-01-21",
+   "date_precision": "precision:day",
+   "event_type": "event:proposal",
+   "instrument": "digital-networks-act",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "required_action": null,
+   "authority": [
+    "ec"
+   ],
+   "status": "occurred",
+   "supersedes": null,
+   "obligation": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-dna-proposal",
+    "src-oeil-2026-0013"
+   ],
+   "requires_verification": false,
+   "last_verified": "2026-10-28",
+   "verification_note": "COM(2026) 16 is dated 21 January 2026 on its face (‘Brussels, 21.1.2026’) and in the Publications Office’s metadata (document date 2026-01-21; the procedure’s first event, the adoption of the legislative proposal by the Commission); the Legislative Observatory records ‘Legislative proposal published’ on 21/01/2026. Read on 28 Oct 2026."
+  },
+  {
    "id": "tl-vida-2025-04-14-entry-into-force",
    "date": "2025-04-14",
    "date_precision": "precision:day",

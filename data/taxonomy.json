@@ -303,6 +303,13 @@
       "definition_ref": null,
       "parent": null,
       "note": "Interoperable Europe Act: 'public sector body' as defined in Art. 2, point (6), of Regulation (EU) 2024/903, read 28 Oct 2026, which applies the definition in Art. 2, point (1), of Directive (EU) 2019/1024 (not re-read). Added 28 Oct 2026 for item 2.5."
+    },
+    {
+      "id": "actor:electronic-communications-provider",
+      "label": "Electronic communications provider",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Digital Networks Act proposal: a provider of public electronic communications networks or of publicly available electronic communications services, as COM(2026) 16 would define them (Art. 2, points (1), (3) and (11); Art. 9(2)), read 28 Oct 2026. A proposal's definition, not law. Added 28 Oct 2026 for item 2.6."
     }
   ],
   "activity": [
