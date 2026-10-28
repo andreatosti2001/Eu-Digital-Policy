@@ -1875,6 +1875,26 @@ test('W11 · item 2.2: eidas2 is covered and held to M-04, M-05 and M-07 in full
   plant((d) => { instOf(d, 'eidas2').dna.objective = ''; }, /^M-05 instruments\/eidas2: covered \(core\) without a page/);
 });
 
+test('W13 · item 2.3: csa is covered and held to M-04, M-05 and M-07 in full — remove any one support and it fails', () => {
+  const r = registerAudit(loadDb(), '2026-10-27');
+  const db = loadDb();
+  assert.equal(coverage(instOf(db, 'csa')), 'covered');
+  assert.equal(instOf(db, 'csa').scope_decision.disposition, 'included');
+  assert.ok(!STATUS_BASIS_BACKLOG.includes('csa') && !SCOPE_DECISION_BACKLOG.includes('csa'), 'no backlog shelters it');
+  assert.ok(!r.backlog['status-basis-missing'].includes('csa'));
+  /* the edge that gives it context is textual, v2, and located in the dependent act (rel-kind:enables) */
+  const edge = db.instruments.relationships.find((x) => x.id === 'rel-nis2-csa-enables');
+  assert.ok(edge && edge.from === 'nis2' && edge.to === 'csa' && edge.kind === 'rel-kind:enables');
+  assert.ok(edge.sources.every((s) => typeof s === 'object' && s.supports === 'supports:direct' && structural(s.locator)));
+  assert.ok(edge.sources.every((s) => instOf(db, 'csa').sources.includes(s.source_id)), 'the locator is in the CSA, not in NIS2');
+  const plant = (fn, re) => { const d = loadDb(); fn(d); assert.ok(regErrors(d).some((e) => re.test(e)), `expected ${re}`); };
+  plant((d) => { delete instOf(d, 'csa').status_basis; }, /^M-07 instruments\/csa:/);
+  plant((d) => { delete instOf(d, 'csa').scope_decision; }, /^M-04 instruments\/csa: a core record added after 25 Oct 2026/);
+  plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => x.id !== 'rel-nis2-csa-enables'); },
+    /^M-05 instruments\/csa: covered \(core\) without a page/);
+  plant((d) => { instOf(d, 'csa').dna.objective = ''; }, /^M-05 instruments\/csa: covered \(core\) without a page/);
+});
+
 /* v2 Session 5, B.3. Eight of the seventeen v1 relationships were migrated to
    v2 reference objects on 27 Oct 2026, each source re-read that day; nine stay
    v1 (docs/ROADMAP-v2.md §8). No edge check exists yet (M-08 belongs to D1, and

@@ -685,6 +685,20 @@
       "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Inserted Art. 5a(1): each Member State to provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts under Art. 5a(23) and Art. 5c(6). Re-read on 14 Oct 2026 from EUR-Lex (ELI reg/2024/1183/oj). Inserted Art. 5f(2): private relying parties, except microenterprises and small enterprises (Recommendation 2003/361/EC), that are required by Union or national law, or by contract, to use strong user authentication for online identification shall, no later than 36 months from the entry into force of the implementing acts under Arts 5a(23) and 5c(6) 'and only upon the voluntary request of the user', also accept European Digital Identity Wallets. Art. 5f(1) concerns public-sector online services; Art. 5f(3) very large online platforms that require user authentication. Re-read on 27 Oct 2026 for item 2.2, from Cellar by CELEX (XHTML): Art. 1 point (1) (Art. 1, subject matter, as replaced), point (2)(a)–(b) (Art. 2(1) scope; Art. 2(4) 'without prejudice to Regulation (EU) 2016/679'), point (5) (Arts 5a(1), 5f(1)–(3)), point (15) (Art. 16(2), administrative fines), Art. 2 (entry into force); the Publications Office's SPARQL metadata records it in force, entry into force 2024-05-20."
     },
     {
+      "id": "src-eurlex-csa",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2025/38 of 19 December 2024 laying down measures to strengthen solidarity and capacities in the Union to detect, prepare for and respond to cyber threats and incidents and amending Regulation (EU) 2021/694 (Cyber Solidarity Act) (OJ L 2025/38, 15.1.2025)",
+      "url": "http://publications.europa.eu/resource/celex/32025R0038",
+      "url_status": "url:live",
+      "published": "2025-01-15",
+      "accessed": "2026-10-27",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 27 Oct 2026 from the Publications Office's Cellar by CELEX number (XHTML), for item 2.3: Art. 1 (subject matter and objectives), Art. 2 (definitions; points (3)–(7), (9), (10), (12) and (16) by reference to Directive (EU) 2022/2555), Arts 3–4 and 8 (European Cybersecurity Alert System), Arts 12 and 14–16 (Cybersecurity Emergency Mechanism; EU Cybersecurity Reserve), Art. 21 (incident review), Art. 22 (its opening: amendments to Regulation (EU) 2021/694), Art. 25 (evaluation), Art. 26 (entry into force). The Publications Office's SPARQL metadata, read the same day: in force, entry into force 2025-02-04, no end of validity. Corrigenda OJ L 2025/90063 (24.1.2025, a reference in the Annex) and OJ L 2025/90886 (6.11.2025, Art. 22, point (3)(b)) were read that day; neither touches the Articles cited here. A third corrigendum, CELEX 32025R0038R(02), had no English text retrievable and was not read."
+    },
+    {
       "id": "src-eurlex-eudi-2024-2981",
       "tier": "tier:1",
       "type": "source-type:regulation",
