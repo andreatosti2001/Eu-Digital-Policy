@@ -252,7 +252,11 @@ Today `rel-dsa-dma-scope`, `rel-nis2-cer` and `rel-cra-nis2` have no claim (meas
 
 **Derived on every edge, never stored:**
 - `verification_state` (verified / partial / unverified);
-- `modality` (law / proposed, from the `from` node's status);
+- `modality` (law / proposed). **Revised in v2 Session 12** (`docs/ROADMAP-v2.md` §8, question 1): not from the
+  `from` node, which read an `enables` edge into a proposal as law (V2C-16), but from the act whose text
+  states the edge — `to` for `enables` and `legal-basis`, `from` for `defers-to`, `amends`, `repeals`,
+  `implements`, `lex-specialis`, `carve-out`; for the analytical kinds, either end. Implemented in
+  `js/map-model.js`;
 - `external`.
 
 The rule for `verification_state` is in `map.schema.json` `x-derived`. **Measured consequence: all 17
@@ -452,7 +456,10 @@ Not implemented. This is the plan Phase 3 executes.
 - **Flip checkpoints** — when each BACKLOG becomes an ERROR:
   - `edge-v1-sources`, `edge-analytical-no-claim`: at the end of item 2.1. The register's edges are v2
     from the start; the 17 old ones are migrated in the same item.
-  - `scope-decision-missing`, `status-basis-missing`: at the end of item 2.6.
+  - `scope-decision-missing`, `status-basis-missing`: ~~at the end of item 2.6~~. Item 2.6 closed with both
+    open (11 and 23), so the flip did not happen. **Re-dated in v2 Session 12** (`docs/ROADMAP-v2.md` §8,
+    question 6): each list flips when its records have been read against primary sources; until then
+    the lists only shrink.
   - `rule-*`: at the Phase 3 entry gate, which is the roadmap's own condition: "adding rules waits until
     the existing 33 pass it".
   - `edge-second-home`: when the arrays are derived (F-1).
