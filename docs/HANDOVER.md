@@ -1,8 +1,7 @@
 # HANDOVER
 
-**Last updated:** v2 Session 7. Item 2.4 (the European Health Data Space, `ehds`) is implemented;
-the session is **stopped at its checkpoint**, waiting for the author's approval
-(`docs/ROADMAP-v2.md` §8) · 28 October 2026
+**Last updated:** v2 Session 7. Item 2.4 (the European Health Data Space, `ehds`) is implemented and
+its checkpoint is **approved**, which closes the session (`docs/ROADMAP-v2.md` §8) · 28 October 2026
 **Branch:** `claude/new-session-6evq51` (assigned by the environment), cut from `main` at `fdc7727`
 (#24).
 
@@ -18,8 +17,9 @@ the session is **stopped at its checkpoint**, waiting for the author's approval
 - `origin/main` was re-fetched before this handover was written: it had moved to `8c60abb`, the
   merge of #25, which is that same prompt branch. It was merged into this branch (`8c1c480`), with
   no content this branch did not already hold.
-- This session's branch: `claude/new-session-6evq51`. Disposition: **open**, waiting for the
-  author's approval of the checkpoint and the question of a pull request.
+- This session's branch: `claude/new-session-6evq51`. Disposition: item 2.4 approved
+  (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the author's
+  instruction of 28 Oct 2026 ("Approvo e apri la PR").
 
 ## v2 Session 7 — checkpoint report (item 2.4, the European Health Data Space)
 
@@ -288,7 +288,8 @@ Each other page shows its edge from the other end.
 - *Changed:* this report.
 - *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run above.
 - *Criterion:* the author's approval, recorded in §8. Item 2.5 does not start before it.
-- **Not complete** until the author approves; the pull request is the author's to ask for.
+- **Approved** on 28 Oct 2026 (§8, "The checkpoint of v2 Session 7 = item 2.4"); pull request opened
+  on the author's instruction.
 
 ### How to check it by hand
 
