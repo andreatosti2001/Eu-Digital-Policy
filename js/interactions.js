@@ -70,7 +70,13 @@ const instLink = (ix, id, current, root) => {
  */
 export function interactionBlock(r, ix, current, root = siteRoot()) {
   const kind = esc(taxLabel(ix, r.kind) || String(r.kind).split(':').pop());
-  const kindNote = taxNote(ix, r.kind);
+  /* a note is what the record's maintainers wrote; F.readerText() is what a
+     reader is shown of it (item 10.2). The kind note's "Direction: from = …"
+     and "(from)" name the edge's field: the head below already draws the
+     direction, so they are not printed (docs/ROADMAP-v2.md §8, R1) */
+  const say = { href: (p) => root + p, instrumentHref: (id) => instrumentHref(id, ix, root) };
+  const kindNote = F.readerText(String(taxNote(ix, r.kind) || '')
+    .replace(/\s*Direction: from = [^.]*\./, '').replace(/\s*\(from\)/, ''), ix, say);
 
   /* Direction is not decoration. "AI Omnibus amends AI Act" and "AI Act
      amends AI Omnibus" are different statements and only one is true, so
@@ -131,13 +137,14 @@ export function interactionBlock(r, ix, current, root = siteRoot()) {
 
   const flag = r.requires_verification
     ? '<p class="ix-flag"><b>Characterisation requires verification.</b> ' +
-      esc(r.verification_note || 'Not established from a primary source in this build.') + '</p>'
+      (r.verification_note ? F.readerText(r.verification_note, ix, say)
+        : 'Not established from a primary source in this build.') + '</p>'
     : '';
 
   return '<article class="ix-edge" data-kind="' + esc(String(r.kind).split(':').pop()) + '"' +
       (r.requires_verification ? ' data-unverified="1"' : '') + '>' +
     head +
-    (kindNote ? '<p class="ix-kindnote">' + esc(kindNote) + '</p>' : '') +
+    (kindNote ? '<p class="ix-kindnote">' + kindNote + '</p>' : '') +
     '<p class="ix-sum">' + esc(r.summary || '') + '</p>' +
     flag +
     (provisions ? '<div class="ix-provs"><span class="ix-k">Carried by</span>' + provisions + '</div>' : '') +

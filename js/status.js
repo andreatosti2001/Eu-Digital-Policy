@@ -10,6 +10,7 @@
 
 import * as F from './format.js';
 import { label as taxLabel } from './data.js';
+import { instrumentHref, siteRoot } from './routes.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -68,7 +69,8 @@ function strip(inst, ix) {
       (inst.status_as_of ? '<span class="is-asof">as of ' + esc(F.humanDate(inst.status_as_of)) + '</span>' : '') +
     '</div>' +
     proposalWarning +
-    (inst.status_note ? '<p class="is-note">' + esc(inst.status_note) + '</p>' : '') +
+    (inst.status_note ? '<p class="is-note">' + F.readerText(inst.status_note, ix,
+      { href: (p) => siteRoot() + p, instrumentHref: (id) => instrumentHref(id, ix) }) + '</p>' : '') +
     transpositionBlock(inst, ix) +
     (events.length ? '<div class="is-mile">' + events.map((e) => milestoneRow(e, ix)).join('') + '</div>' : '') +
     '</section>';

@@ -53,7 +53,11 @@
 }
 
 /* ---------------------------------------------------------- day mode (vellum, not white) */
-[data-theme="light"]{
+/* The palette is also declared on <html> when <body> carries the day theme:
+   the page's own scrollbar takes its colours from the root element, which
+   [data-theme] on <body> does not reach (docs/ROADMAP-v2.md §8, item 10.1). */
+[data-theme="light"],
+:root:has(> body[data-theme="light"]){
   --ink-0:#E8E0CD;      /* vellum */
   --ink-1:#DFD5BE;
   --ink-2:#D5C9AE;
@@ -92,6 +96,10 @@ body{transition:background-color .25s,color .25s}
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+/* Every scrollbar on the site, the page's and each panel's, inherits this:
+   the metadata ink on a clear track, >= 5.3:1 on every surface in both
+   themes. No hover state: scrollbar-color has none. (item 10.1) */
+html{scrollbar-color:var(--paper-faint) transparent}
 @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{animation-duration:.01ms!important;transition-duration:.01ms!important} }
 
 body{
@@ -144,7 +152,9 @@ body{
 .shell{display:grid;grid-template-columns:var(--spine) minmax(0,1fr);padding-top:56px}
 .spine{position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;border-right:1px solid var(--line);
   background:linear-gradient(180deg,var(--ink-1),var(--ink-0));padding:18px 0;display:flex;flex-direction:column;align-items:center;gap:2px}
-.spine::-webkit-scrollbar{display:none}
+/* overflows only below ~410px of height (200% zoom on a short screen); a thin
+   bar then shows the rail continues, in every engine alike (item 10.1) */
+.spine{scrollbar-width:thin}
 .spine-item{width:40px;height:40px;display:flex;align-items:center;justify-content:center;text-decoration:none;
   font-family:var(--mono);font-size:11px;color:var(--paper-faint);border-left:2px solid transparent;position:relative}
 .spine-item:hover{color:var(--paper)}

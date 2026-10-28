@@ -9,8 +9,12 @@
 
 import { loadAll, index, renderError, label as taxLabel, note as taxNote } from './data.js';
 import * as F from './format.js';
+import { instrumentHref } from './routes.js';
 import { STAGES, DERIVATION, derive, depth, aggregate, procedure, isInaction, actionsOnly } from './pipeline.js';
 import { renderFilterState, syncUrl, readUrl, emptyState } from './filters.js';
+
+/* a note as a reader is shown it (F.readerText, item 10.2) */
+const say = (t) => F.readerText(t, IX, { instrumentHref: (id) => instrumentHref(id, IX) });
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -125,7 +129,7 @@ function recordHTML(rec, n) {
 
     (ap.note ? '<p class="enf-sub"><b>Appeal</b> ' +
       (ap.forum ? esc(ap.forum) + (ap.lodged_by ? ', lodged by ' + esc(ap.lodged_by) : '') + '. ' : '') +
-      esc(ap.note) + '</p>' : '') +
+      say(ap.note) + '</p>' : '') +
 
     (j ? '<p class="enf-sub"><b>Judicial</b> ' + esc(j.forum || '') +
       (j.date ? ', ' + esc(F.humanDate(j.date)) : '') +
@@ -141,8 +145,8 @@ function recordHTML(rec, n) {
     (basis ? '<div class="enf-field"><h3>Legal basis</h3><div class="enf-chips">' + basis + '</div></div>' : '') +
 
     (rec.requires_verification
-      ? '<div class="enf-field warn"><h3>Requires verification</h3><p>' + esc(rec.verification_note || '') + '</p></div>'
-      : rec.verification_note ? '<p class="enf-sub enf-quiet">' + esc(rec.verification_note) + '</p>' : '') +
+      ? '<div class="enf-field warn"><h3>Requires verification</h3><p>' + say(rec.verification_note) + '</p></div>'
+      : rec.verification_note ? '<p class="enf-sub enf-quiet">' + say(rec.verification_note) + '</p>' : '') +
 
     (srcs ? '<details class="enf-sources"><summary>Sources (' + (rec.sources || []).length + ')</summary><ul>' + srcs + '</ul></details>' : '') +
 
@@ -174,7 +178,7 @@ function inactionHTML(rec) {
     '<p class="enf-action">' + esc(rec.action || '—') + '</p>' +
     '<p class="enf-sub"><b>Not an enforcement action.</b> ' + esc(taxNote(IX, rec.record_type) || '') + '</p>' +
     (rec.verification_note ? '<div class="enf-field' + (rec.requires_verification ? ' warn' : '') + '"><h3>' +
-      (rec.requires_verification ? 'Requires verification' : 'What was checked') + '</h3><p>' + esc(rec.verification_note) + '</p></div>' : '') +
+      (rec.requires_verification ? 'Requires verification' : 'What was checked') + '</h3><p>' + say(rec.verification_note) + '</p></div>' : '') +
     (srcs ? '<details class="enf-sources"><summary>Sources (' + (rec.sources || []).length + ')</summary><ul>' + srcs + '</ul></details>' : '') +
     '<div class="enf-verified">' + esc(rec.id) + ' · checked ' +
       (rec.last_verified ? esc(F.humanDate(rec.last_verified)) : '<span class="enf-unknown">never</span>') + '</div>' +

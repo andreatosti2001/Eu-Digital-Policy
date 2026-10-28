@@ -162,6 +162,237 @@ export function citeHTML(src, ix, form = 'note') {
   return esc(text).replace('no public URL located', '<span class="evi-nourl">no public URL located</span>');
 }
 
+/* ---------------------------------------------------------- reader text
+
+   The notes in data/ are where provenance lives: which audit item re-read a
+   status, which commit moved a date, which claim carries a figure. They are
+   written for the people who maintain the records, and until v2 Session 10
+   they were printed to readers as they stand, so a status note told a reader
+   about "audit item 9" and "commit 282a782".
+
+   readerText() is the one place that turns such a note into what a reader
+   sees (docs/ROADMAP-v2.md §8, item 10.2). The data is not changed: the
+   reference stays in the record, where the checks and the maintainers need
+   it, and stops being printed as editorial text. What it does:
+     - a docs/ or code path, a commit, a workflow code (audit item 9, audit
+       T-29, item 2.4, v2 Session 5, B.3, D-7, finding F-2) is dropped, with
+       the parenthesis or phrase that only carried it;
+     - a taxonomy id becomes its label, and a field name words;
+     - a claim id becomes a reference the reader can follow (its footnote in
+       the brief, or the claim on its instrument's page), or is dropped where
+       the same parenthesis already carries a legal citation;
+     - a source or enforcement id becomes a link to that record.
+   A record's own id shown AS its id (the evidence panel's "Claim ID", the
+   enforcement page's record line) is not a note and does not come here.
+
+   opts: html (default true) — return escaped HTML with links; false returns
+   plain text. href(path) — how a page builds a site link. claimRef(id) —
+   the claim's footnote number where the page has them (the brief), or null.
+   tools/selftest.mjs W18 runs every note field in data/ through this and
+   fails on any reference left. */
+
+const PH_OPEN = '\uE001', PH_CLOSE = '\uE002', CUT = '\uE003';
+const RT = {
+  doc: /\bdocs\/[A-Za-z0-9_./-]+\.md(?:\s*§\s*[\d.]+[a-z]?(?:\s+[A-Z](?![\w]))?)?/g,
+  code: /\b(?:audits?\s+)?(?:items?\s+\d+\.\d+|T-\d{1,2}(?:\s*,\s*T-\d{1,2})*)\b(?!\/)|\baudits?\s+items?\s+\d+(?:\s*(?:,|and)\s*\d+)*\b|\bv2 Session \d+(?:\.\d+)?\b|\bB\.3\b|\b[DF]-\d{1,2}\b(?!\/)/g,
+  hash: /\bcommit [0-9a-f]{7,40}\b/g,
+  file: /\b(?:data\/)?[a-z]+\.json\b|\b(?:js|tools|css|agent)\/[A-Za-z0-9_\/.-]+\.(?:m?js|css)\b(?:\s+(?:[a-z]+[A-Z][A-Za-z0-9]*|[A-Z][A-Z0-9_]{2,})(?:\(\))?(?=[\s).,;:]))?/g,
+  id: /\b(?:clm|src|enf|rel|tl)-[a-z0-9]+(?:-[a-z0-9]+)+\b/g,
+};
+const STOP = new Set(['see', 'the', 'a', 'and', 'record', 'records', 'finding', 'findings', 'audit', 'audits',
+  'item', 'items', 'evidence', 'for', 'of', 'on', 'in', 'its', 'session', 'commit']);
+const CITATION = /\bArts?\.\s*\d|\bST \d|\bRegulation\b|\bDirective\b|\bOJ\b|\bC\/\d{4}\/|\bIP\/\d|\bCELEX\b|\bCOM\(\d/;
+const FILE_WORDS = {
+  'tools/evidence-audit.mjs': "the site's evidence audit",
+  'tools/validate.mjs': "the site's data validator",
+  'tools/freshness.mjs': "the site's freshness check",
+  'js/regulatory-model.js': "the site's date model",
+  'js/evidence-model.js': "the site's evidence model",
+};
+const FIELD_WORDS = {
+  last_verified: 'the verification date', legislative_status: 'the legislative status',
+  status_as_of: 'the status date', action_status: 'the action status', amended_by: 'amended by',
+  obligation_on: 'the actors bound', proposes_to_amend: 'the acts it would amend',
+  requires_verification: 'the verification flag', verification_note: 'this note', status_note: 'the status note',
+  url_status: 'the URL status', brief_part: 'the part of the brief', legal_basis: 'the legal basis',
+  reference_gap: 'the reference gap', enforcement_mechanism: 'the enforcement mechanism',
+  behavioural_outcome: 'the behavioural outcome',
+};
+const FIELD_RE = new RegExp('\\b(?:' + Object.keys(FIELD_WORDS).join('|') + ')\\b', 'g');
+
+function fileWords(m) {
+  const path = m.split(/\s+/)[0];
+  if (FILE_WORDS[path]) return FILE_WORDS[path];
+  const json = path.match(/([a-z]+)\.json$/);
+  if (json) return 'the ' + json[1] + ' dataset';
+  return "the site's code";
+}
+
+/** True when a parenthesis part held nothing but references and filler. */
+function onlyRefs(part) {
+  let rest = part;
+  let refs = 0;
+  for (const re of [RT.doc, RT.code, RT.hash, RT.file, RT.id]) {
+    rest = rest.replace(re, () => { refs++; return ' '; });
+  }
+  if (!refs) return false;
+  return rest.split(/[\s,;:'’]+/).filter(Boolean).every((w) => STOP.has(w.toLowerCase()));
+}
+
+/** Split a parenthesis body at its top-level ";" and "," — not inside a nested one. */
+function splitTop(body) {
+  const parts = [];
+  let depth = 0, cur = '';
+  for (let k = 0; k < body.length; k++) {
+    const ch = body[k];
+    if (ch === '(') depth++;
+    if (ch === ')') depth--;
+    /* a separator is followed by a space: "7,159,322" is one number */
+    if (depth === 0 && (ch === ';' || ch === ',') && /\s/.test(body[k + 1] || '')) {
+      parts.push({ text: cur, sep: ch }); cur = ''; continue;
+    }
+    cur += ch;
+  }
+  parts.push({ text: cur, sep: '' });
+  return parts;
+}
+
+/** Each top-level parenthesis: drop the parts that only carried a reference. */
+function cleanParens(text) {
+  let out = '', i = 0;
+  while (i < text.length) {
+    if (text[i] !== '(') { out += text[i++]; continue; }
+    let depth = 0, j = i;
+    for (; j < text.length; j++) {
+      if (text[j] === '(') depth++;
+      else if (text[j] === ')' && --depth === 0) break;
+    }
+    if (j >= text.length) { out += text.slice(i); break; }
+    const body = text.slice(i + 1, j);
+    const parts = splitTop(body);
+    const cited = CITATION.test(body);
+    const keep = parts.filter((p) => {
+      /* a claim id is the evidence: it goes only where the same parenthesis
+         already gives the reader a legal citation to check */
+      if (/^\s*clm-[a-z0-9-]+\s*$/.test(p.text)) return !cited;
+      return !onlyRefs(p.text);
+    });
+    if (keep.length) {
+      out += '(' + keep.map((p, k) => p.text.trim() + (k < keep.length - 1 ? (p.sep || ',') + ' ' : '')).join('') + ')';
+    } else {
+      out = out.replace(/\s+$/, '');
+    }
+    i = j + 1;
+  }
+  return out;
+}
+
+/** The rule of item 10.2 as a check: every internal reference left in a text a
+ *  reader sees. URLs are left out first — a hex segment or a "docs/" in a
+ *  court's URL is the court's, not ours. A record's own handle ("Claim ID
+ *  clm-…", "enf-… · verified") is printed by its renderer, not by a note, and
+ *  is not passed here. tools/selftest.mjs W18 holds every renderer to it. */
+export function internalRefs(text, ix) {
+  const t = String(text || '').replace(/\bhttps?:\/\/\S+|\b[a-z0-9.-]+\.(?:eu|com|org|ie|int|net)\/\S*/gi, ' ');
+  const found = [];
+  const add = (re) => { for (const m of t.matchAll(re)) found.push(m[0]); };
+  add(/\bdocs\/[A-Za-z0-9_.-]+\.md\b/g);
+  add(/\b(?:clm|src|enf|rel|tl)-[a-z0-9]+(?:-[a-z0-9]+)+\b/g);
+  add(/\bcommit [0-9a-f]{7,40}\b/g);
+  add(/\baudits? (?:items? \d+|T-\d{1,2}\b(?!\/))/g);
+  add(/\bitems? \d+\.\d+\b|\bv2 Session \d+\b|\bB\.3\b|\b[DF]-\d{1,2}\b(?!\/)|\bT-\d{1,2}\b(?![\/\d])/g);
+  add(/\b(?:js|tools|css|agent)\/[\w\/.-]+\.(?:m?js|css)\b|\b(?:data\/)?[a-z]+\.json\b/g);
+  add(FIELD_RE);
+  add(/`[^`]+`/g);
+  for (const m of t.matchAll(/\b[a-z][a-z-]*:[a-z0-9][a-z0-9-]*\b/g)) if (ix?.taxonomy?.has(m[0])) found.push(m[0]);
+  return found;
+}
+
+export function readerText(text, ix, opts = {}) {
+  if (text == null || text === '') return text == null ? '' : '';
+  const html = opts.html !== false;
+  const href = opts.href || ((p) => p);
+  const links = [];
+  const link = (label, url) => {
+    links.push({ label, url });
+    return PH_OPEN + (links.length - 1) + PH_CLOSE;
+  };
+
+  let t = String(text);
+
+  /* phrases that exist only to carry a workflow code */
+  t = t.replace(/,?\s+for B\.3\b/g, '');
+  t = t.replace(/,?\s+for items? \d+\.\d+/g, '');
+  t = t.replace(/,?\s*see\s+docs\/[A-Za-z0-9_./-]+\.md(?:\s*§\s*[\d.]+)?(?:,\s*finding [DF]-\d+)?/g, '');
+
+  t = cleanParens(t);
+
+  /* what is left in running text. A removal leaves CUT behind, and only
+     the punctuation next to a CUT is tidied: a note that quotes a query or
+     an ellipsis keeps its own spacing */
+  t = t.replace(RT.doc, CUT).replace(RT.hash, CUT).replace(/\bv2 Session \d+\b/g, CUT);
+  t = t.replace(/\(?(?:the )?(?:audits?\s+)?(?:T-\d{1,2}(?:\s*,\s*T-\d{1,2})*)\s+records?\)?/g, CUT);
+  t = t.replace(/\b(?:audits?\s+items?\s+\d+(?:\s*(?:,|and)\s*\d+)*|audits?\s+T-\d{1,2}(?:\s*,\s*T-\d{1,2})*)\b/g, 'an audit');
+  t = t.replace(/\bfinding [DF]-\d{1,2}\b/g, 'a finding');
+  t = t.replace(RT.file, (m) => fileWords(m));
+
+  t = t.replace(/\bthe former ((?:src|enf|clm|rel|tl)-[a-z0-9-]+)/g, (m, id) => {
+    const live = (id.startsWith('src-') && ix?.source?.has(id)) || (id.startsWith('clm-') && ix?.claim?.has(id));
+    return live ? m : 'a former record';
+  });
+
+  t = t.replace(RT.id, (id, at, all) => {
+    if (id.startsWith('clm-')) {
+      const n = opts.claimRef ? opts.claimRef(id) : null;
+      if (n != null) return link('claim ' + n, { claim: id, n });
+      const alone = all[at - 1] === '(' && all[at + id.length] === ')';
+      const label = alone ? 'see the claim' : 'a separate claim';
+      const c = ix?.claim?.get(id);
+      const home = c && (c.instruments || []).find((i) => ix.instrument?.has(i));
+      if (home && opts.instrumentHref) return link(label, opts.instrumentHref(home) + '#' + id);
+      return label;
+    }
+    if (id.startsWith('src-')) {
+      const s = ix?.source?.get(id);
+      if (!s) return 'a former record';
+      const year = String(s.published || '').slice(0, 4);
+      return link((s.publisher_name || s.title || 'a source') + (year ? ', ' + year : ''), href('bibliography.html') + '#' + id);
+    }
+    if (id.startsWith('enf-')) return link('the enforcement record', href('enforcement.html') + '#' + id);
+    if (id.startsWith('tl-')) return 'the dated event';
+    return 'the interaction record';
+  });
+
+  /* taxonomy ids, and the field names a note mentions */
+  t = t.replace(/\b[a-z][a-z-]*:[a-z0-9][a-z0-9-]*\b/g, (m) => {
+    const term = ix?.taxonomy?.get(m);
+    return term ? '‘' + term.label + '’' : m;
+  });
+  t = t.replace(/`([a-z0-9_-]+)`/g, '$1');
+  t = t.replace(FIELD_RE, (m, at, all) => {
+    let w = FIELD_WORDS[m];
+    const before = all.slice(0, at).trimEnd();
+    /* "no legal_basis link" is "no legal basis link", not "no the legal basis link" */
+    if (/\b(?:no|a|an|the|its|this|that|each|every|any)$/i.test(before)) w = w.replace(/^the /, '');
+    return before === '' || /[.!?]$/.test(before) ? w[0].toUpperCase() + w.slice(1) : w;
+  });
+
+  t = t.replace(new RegExp('\\(\\s*' + CUT + '+\\s*\\)', 'g'), CUT)
+    .replace(new RegExp('[ \\t]*' + CUT + '+[ \\t]*(?=[.,;:)])', 'g'), '')
+    .replace(new RegExp('[ \\t]*' + CUT + '+[ \\t]*', 'g'), ' ')
+    .replace(/^\s+|\s+$/g, '');
+
+  if (!html) return t.replace(new RegExp(PH_OPEN + '(\\d+)' + PH_CLOSE, 'g'), (m, k) => links[k].label);
+  return esc(t).replace(new RegExp(PH_OPEN + '(\\d+)' + PH_CLOSE, 'g'), (m, k) => {
+    const l = links[k];
+    if (l.url && typeof l.url === 'object') {
+      return 'claim <button type="button" class="fn fn-ref" data-claim-ref="' + esc(l.url.claim) +
+        '" aria-label="Open claim ' + esc(l.url.n) + '">' + esc(l.url.n) + '</button>';
+    }
+    return '<a href="' + esc(l.url) + '">' + esc(l.label) + '</a>';
+  });
+}
+
 /** Surname-ish key for alphabetising a bibliography. */
 export function sortKey(src, ix) {
   const pub = publisherName(src, ix) || src.title || '';

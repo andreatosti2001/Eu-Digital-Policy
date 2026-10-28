@@ -271,8 +271,9 @@ export function buildIndex() {
       push(out, {
         kind: 'actor', id: term.id,
         title: term.label,
-        sub: term.note || '',
-        body: [term.label, term.note, dim].join(' '),
+        /* plain text: the palette escapes it itself (F.readerText, item 10.2) */
+        sub: F.readerText(term.note, IX, { html: false }),
+        body: [term.label, F.readerText(term.note, IX, { html: false }), dim].join(' '),
         badge: dim,
         href: siteHref('applies.html'),
         note: '',

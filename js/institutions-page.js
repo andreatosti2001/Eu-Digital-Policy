@@ -64,8 +64,10 @@ function competenceHTML(e) {
     (e.exclusive ? '<span class="im-excl" title="No other body holds this competence">exclusive</span>' : '') +
     (basis ? '<span class="im-bases">' + basis + '</span>' : '<span class="im-nobasis">no provision recorded</span>') +
     (e.scope ? '<span class="im-scope">' + esc(e.scope) + '</span>' : '') +
-    (e.note && !unverified ? '<span class="im-note">' + esc(e.note) + '</span>' : '') +
-    (unverified ? '<span class="im-unver">' + esc(e.note) + '</span>' : '') +
+    /* the note as a reader is shown it (F.readerText, item 10.2); the
+       "requires verification" test above reads the record as written */
+    (e.note && !unverified ? '<span class="im-note">' + F.readerText(e.note, IX) + '</span>' : '') +
+    (unverified ? '<span class="im-unver">' + F.readerText(e.note, IX) + '</span>' : '') +
     '</li>';
 }
 
