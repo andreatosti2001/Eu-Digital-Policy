@@ -1,9 +1,154 @@
 # HANDOVER
 
-**Last updated:** v2 Session 8. Item 2.5 (the Interoperable Europe Act, `iea`) is implemented and
-its checkpoint is **approved**, which closes the session (`docs/ROADMAP-v2.md` §8) · 28 October 2026
-**Branch:** `claude/new-session-o9uopd` (assigned by the environment), cut from `main` at `3cc0473`
-(#27).
+**Last updated:** v2 Session 8, part 2. After the approved item 2.5 checkpoint, the open findings the
+author chose to resolve in this session: (a)–(f) and (h)–(k). The part awaits the author's approval
+(`docs/ROADMAP-v2.md` §8) · 28 October 2026
+**Branch:** `claude/v2-session-8-findings`, cut from `claude/new-session-o9uopd` at `58671c2` (pull
+request #28, item 2.5, open).
+
+## Branch register — 28 October 2026 (v2 Session 8, after the item 2.5 checkpoint)
+
+- Branch `claude/v2-session-8-findings`, cut from `claude/new-session-o9uopd` at `58671c2`, not from
+  `main`: the fixes regenerate pages that already carry the IEA (the `<noscript>` index, the sitemap),
+  and a branch from `main` would conflict on every page. Once #28 is merged, its pull request shows only
+  its own commits.
+- `origin/main` was re-fetched before this handover was written: still `3cc0473`; #28 not yet merged.
+- Disposition: pending the author's approval of this part, then the author's answer on a pull request.
+
+## v2 Session 8, part 2 — open findings resolved on the author's request
+
+The Session 8 prompt excluded the open findings of Sessions 5–7. After the item 2.5 checkpoint the
+author asked to be asked which of them this session could resolve ("Vorrei che mi chiedessi le
+questioni aperte risolvibili in questa sessione"). Every decision below is in `docs/ROADMAP-v2.md` §8,
+in the author's words, recorded before the change it governs.
+
+### What the author decided, and what was written
+
+| Item | Decision (§8) | Commit | Change |
+|---|---|---|---|
+| scope | (a)–(f), (h)–(k); not (g) | `85754b3` | §8 row |
+| (a) sanction ceiling | A, renderer | `4558712` | `js/dna.js sanctionCeiling()`: an amount; "no amount recorded" with the record's note; "not established". The page head, "In short" and the comparison table read it. The renderer never says "none" by itself; the FAQ structured data is unchanged |
+| (b) tranche date | B1 | `4558712` | a provision dated by an event that names it carries "a date set for named provisions: what it covers is under Key dates →" |
+| (c) institutions | approved | `4558712` | the Binds column shows `obligation_on_institution` (CSA Arts 14 and 21; one other record) |
+| (d) "not covered" notice | approved | `4558712` | `instrument.html?id=…` lists the record's relationships with `interactionsFor()`, in a `<div>` (`1d8a305`); nothing when there are none (the DGA shows 2, the EAA none) |
+| (e) badge spacing | CSS | `4558712` | `.badge + .fresh{margin-left:var(--s-2)}`: 8px measured |
+| (f) EHDS name | approved | `bb2176e` | `KNOWN_AS.ehds` "European Health Data Space": the `<h1>`, the index, the descriptions and `img/og/ehds.png`. The `<title>` is unchanged: `tools/seo.mjs` derives it from `short_name` |
+| (h) Apple/Meta note | approved | `19f63c1` | `src-ec-apple-meta-dma-2025`: the note no longer attributes Arts 5(4) and 5(2) to a release that names no article; re-read recorded; `accessed` 2026-10-28 |
+| (i) DSA–GDPR edge | A | `19f63c1` | `rel-dsa-gdpr-transparency-minimisation`: summary rewritten on Guidelines 3/2025 v2; `provisions` `dsa:art-16`; v2 reference, `supports:partial`, located; `last_verified` 2026-10-28; it leaves the v1 list. The `conflict` reading and its claim are the author's and unchanged |
+| (j) "stalled in Council" | J-A | `19f63c1` | removed from `rel-data-omnibus-gdpr`; `clm-data-omnibus-stalled` off the edge, kept on the instrument; `last_verified` unchanged |
+| (k) Regulation (EU) No 910/2014 | K1 + its texts | `98c9ade` | node `eidas` (`scope:referenced`, no page), `src-eurlex-eidas`, `rel-eidas2-eidas-amends` with the arrays, `rel-eidas-ehds-enables` |
+| W11 | approved | `98c9ade` | its plant removed "the one relationship that gives it context"; `eidas2` now has two |
+
+### Checks and tests
+
+- **W16**, new: it pins the three sanction states and holds the page head and "In short" to them on
+  every instrument page. Measured failing with the old wording planted back into a generated page.
+- **W11**, changed:
+  - the plant now removes every edge of `eidas2` and still expects M-05;
+  - a new assertion records that removing the GDPR edge alone no longer removes its context;
+  - no assertion was removed;
+  - measured failing with M-05 disabled, then restored.
+- No check was changed. No locale key carries any string changed here, so none needed declaring.
+- No agent CLI was run; `agent/records/` stayed empty.
+
+### Facts read on 28 Oct 2026
+
+- **(h)**: the DMA portal page of 23 April 2025, and IP/25/1085 in full through the press corner's
+  documents API. Neither names an article of the DMA.
+- **(i)**: EDPB Guidelines 3/2025 v2 (adopted 17 September 2026), the PDF from the EDPB's site:
+  - the table of contents;
+  - ¶¶1–11 (¶6: Art. 40 DSA and political advertising are outside their scope);
+  - ¶¶53–59 and 79–81 (Art. 26 DSA).
+  The source record itself was not changed.
+- **(j)**:
+  - the Legislative Observatory, 2025/0360(COD): "Awaiting committee decision", ITRE–LIBE;
+  - the Publications Office's dossier metadata for COM(2025) 837: pending, not adopted, not withdrawn,
+    with Council and Coreper deliberations from December 2025 to October 2026. Coreper events typed
+    "Adoption of negotiating mandate" are recorded for 7, 11 and 21 October 2026, and one of 26 June
+    is marked cancelled. They are the Council's planning entries (sender `CONSIL:FilePlanning`) and do
+    not establish an outcome. The Council's site answered 403.
+- **(k)**:
+  - Regulation (EU) No 910/2014: Arts 6 and 52 (2014 text);
+  - Regulation (EU) 2024/1183 Art. 1, points (1), (2), (3)(a), (6) and (47), including Art. 46b;
+  - Regulation (EU) 2025/327: Arts 2(1)(f), 12, 16(1)–(2), 19(2)(m) and 92(8);
+  - SPARQL metadata for 32014R0910: in force; 2014-09-17 and 2016-07-01; amended by 32022L2555 and
+    32024R1183; consolidations to 2024-10-18; corrigenda R(01)–R(13), none read.
+- **Not read**:
+  - the NIS2 Article that amends Regulation (EU) No 910/2014 (no `nis2 → eidas` edge);
+  - the 910/2014 Regulation's implementing acts, so `eidas` is `status:in-force`, not `applicable`;
+  - the Council documents ST 14532/26 and ST 14633/26.
+
+### Counts against this branch's base (`claude/new-session-o9uopd`, the item 2.5 close)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / provisions / relationships | 37 / 89 / 35 | 38 / 89 / 37 | `eidas`; two edges |
+| sources / events / claims / terms | 222 / 100 / 181 / 311 | 223 / 100 / 181 / 311 | `src-eurlex-eidas` |
+| coverage covered / mapped / watched / excluded | 15 / 11 / 5 / 6 | 15 / 12 / 5 / 6 | `eidas` is mapped |
+| instrument pages · indexable routes | 16 · 25 | 16 · 25 | `eidas` has no page |
+| v1 relationships | 9 | 8 | `rel-dsa-gdpr-transparency-minimisation` migrated |
+| `validate` / `evidence-audit` / `freshness` | 0/0 (45) · 0 err, 11 warn · 0 defects, 3 prompts | the same | |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | |
+| `tools/selftest.mjs` | 105 | 106 | W16 |
+| all 25 suites | 1311 + 1 skipped | **1312 pass + 1 skipped (`::1`), 0 failures**, on `98c9ade` | W16 |
+| browser suite | 343 · 0 · 1 | 343 · 0 · 1, on `1d8a305`. The first run on `98c9ade` read 342 · 1 · 1: `not-covered:watched` finds no `<section>` in the notice, and (d)'s block was one. It became a `<div>` (§8, `1d8a305`), with the check unchanged. After that commit, `agent/browser` (21/21), `agent/ux` (73), `tools/selftest.mjs` (106) and `design-qa` were re-run | |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | |
+
+Also: `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0;
+`og-image.mjs --check` passes; `commit-evidence`: 0 commits without evidence.
+
+### Seen in a browser
+
+All in Chromium at 1280px dark and 390px light, with no console error and no overflow:
+- `/instruments/iea/` and `/instruments/csa/`: "no amount recorded" in the head and in "In short",
+  the tranche line, and "European Commission" and "ENISA" in Binds;
+- `instrument.html?id=dga`: two relationships under the notice;
+- `instrument.html?id=eaa`: none;
+- `instrument.html?id=eidas`: noindex, no page;
+- `/instruments/ehds/` and `/instruments/eidas2/`: the new edges.
+
+### Found, for the author — not changed
+
+1. **The "Read it at the source" link on the "not covered" notice** is in the browser's default blue
+   in the dark theme. It predates this work.
+2. **The EHDS page `<title>`** still reads "EHDS — …": the derived title uses `short_name`. Changing
+   it means touching `tools/seo.mjs`'s derived title, or a curated `INSTRUMENT_TITLE` entry.
+3. **`data-omnibus`'s status note** says the 21 October Coreper outcome had not been published. The
+   metadata now carry a "negotiating mandate" planning entry for that date, and the outcome could not
+   be read from here. It needs re-checking against a Council source.
+4. **`nis2 → eidas`** (NIS2 amends Regulation (EU) No 910/2014 per the metadata) is not modelled.
+
+**Still open** (unchanged):
+- (g), the internal references shown to a reader: Session 10's item 10.2;
+- `src-ec-ai-omnibus-in-force` (403);
+- the `::1` test, skipped again;
+- the remaining 8 v1 edges and the `edge-v1-sources` flip;
+- R-01 and `docs/V2-DATA-DESIGN.md` §7 (Phase 3).
+
+### Verification checklist
+
+- **Decisions:** four §8 rows (`85754b3`, `f61da1e`, `19f63c1`, `98c9ade`). Read them in order. The
+  scope and display rows precede their commits; the (h)–(j) and (k) rows were written before the
+  data and are committed with it.
+- **Display (a)–(e):**
+  - *Changed:* `js/dna.js`, `js/instrument-view.js`, `js/instrument-page.js`, `css/tokens.css`, and
+    the generated pages.
+  - *Verify:* open `/instruments/csa/`, `/instruments/iea/` and `instrument.html?id=dga`.
+  - *Automatic:* W16, `design-qa`, the browser suite.
+- **(f):**
+  - *Changed:* `js/routes.js`, the pages and `img/og/ehds.png`.
+  - *Verify:* the `<h1>` of `/instruments/ehds/`.
+  - *Automatic:* `seo-audit` checks that `KNOWN_AS` matches an alias.
+- **(h)–(j):**
+  - *Changed:* `data/sources.json` and `data/instruments.json`.
+  - *Verify:* re-read the three sources at their URLs.
+  - *Automatic:* W12, which lets the v1 list only shrink.
+- **(k):**
+  - *Changed:* `data/instruments.json`, `data/sources.json` and `tools/selftest.mjs` W11.
+  - *Verify:* `node tools/evidence-audit.mjs --as-of 2026-10-28` reads "mapped 12", and
+    `instrument.html?id=eidas` shows the record.
+  - *Automatic:* W11, M-07 (`status_basis`) and M-15.
+- **Checkpoint:** awaiting the author's approval, recorded in §8.
 
 ## Branch register — 28 October 2026 (v2 Session 8)
 
