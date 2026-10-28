@@ -2295,3 +2295,24 @@ test('P2 · the bibliography and the datasets page count what data/ holds, and a
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('P3 · a co-legislator\'s stage on a file still in procedure is reviewed as institutional status (30 days), not as a general fact', () => {
+  const insts = new Map(readData('instruments.json').instruments.map((i) => [i.id, i]));
+  const claims = new Map(readData('claims.json').claims.map((c) => [c.id, c]));
+  const risk = (c, withInst = true) => EM.riskClass('claim', c, { asOf: '2026-10-28', instrumentById: withInst ? insts : undefined });
+  for (const id of ['clm-data-omnibus-council-mandate', 'clm-data-omnibus-council-october', 'clm-data-omnibus-parliament-stage', 'clm-data-omnibus-stalled'])
+    assert.equal(risk(claims.get(id)), 'risk:high', id);
+  assert.equal(EM.RISK_TTL_DAYS['risk:high'], 30, 'docs/EVIDENCE-MODEL.md §8');
+  /* what does not move: a law claim about a proposal, a co-legislator's history on an adopted act, a claim naming no co-legislator */
+  assert.equal(risk(claims.get('clm-cloud-ai-act-dual-basis')), 'risk:medium');
+  assert.equal(risk(claims.get('clm-ai-omnibus-legislative-path')), 'risk:medium');
+  assert.equal(risk({ ...claims.get('clm-data-omnibus-council-mandate'), institutions: ['ec'] }), 'risk:medium');
+  /* without the instruments the rule cannot fire: the class is the old one */
+  assert.equal(risk(claims.get('clm-data-omnibus-council-mandate'), false), 'risk:medium');
+  /* the record that read "no outcome published" on 21 Oct would have been fresh under either class on 22 Oct:
+     no interval catches a change the next day, which is why the claim is re-read before every publication */
+  assert.equal(EM.freshnessState('2026-10-21', 'risk:high', '2026-10-22'), 'freshness:fresh');
+  /* and the work list shows the one now due */
+  assert.equal(EM.freshnessState(claims.get('clm-data-omnibus-stalled').last_verified, risk(claims.get('clm-data-omnibus-stalled')), '2026-10-28'), 'freshness:review-due');
+  const out = execFileSync('node', [join(ROOT, 'tools/freshness.mjs'), '--as-of', '2026-10-28'], { cwd: ROOT, encoding: 'utf8' });
+  assert.match(out, /high\s+review-due clm-data-omnibus-stalled/);
+});

@@ -339,6 +339,7 @@ const FRESH_WORD = { 'freshness:fresh': 'fresh', 'freshness:aging': 'ageing', 'f
 function dqFresh(db) {
   const asOf = today();
   const enfById = new Map(arrOf(db.enforcement.enforcement).map((e) => [e.id, e]));
+  const instById = new Map(arrOf(db.instruments.instruments).map((i) => [i.id, i]));
   const sets = [
     ['Claims', 'claim', arrOf(db.claims.claims)],
     ['Enforcement records', 'enforcement', arrOf(db.enforcement.enforcement)],
@@ -349,7 +350,7 @@ function dqFresh(db) {
   const body = sets.map(([name, kind, list]) => {
     const t = {};
     for (const r of list) {
-      const st = freshnessState(r.last_verified, riskClass(kind, r, { asOf, enforcementById: enfById }), asOf);
+      const st = freshnessState(r.last_verified, riskClass(kind, r, { asOf, enforcementById: enfById, instrumentById: instById }), asOf);
       t[st] = (t[st] || 0) + 1;
     }
     return '<tr><th scope="row">' + name + '</th>' + FRESH_ORDER.map((s) => '<td>' + (t[s] || 0) + '</td>').join('') + '</tr>';
