@@ -685,6 +685,20 @@
       "note": "The Official Journal text, retrieved on 28 Oct 2026 from the Publications Office's Cellar by CELEX number (XHTML), for item 2.5. Read: the enacting terms in full (Arts 1–23), the Annex, and recitals 1–13, 41–43 and 56. Not read: the other recitals. The Publications Office's SPARQL metadata, read the same day: in force; dates 2024-04-11, 2024-07-12 and 2025-01-12; deadline 2028-01-12; no end of validity; legal basis Art. 172 TFEU; it amends no act and no act amends it; no consolidated version and no corrigendum recorded. Acts recorded as based on it, including Regulation (EU) 2025/1420, were not read."
     },
     {
+      "id": "src-eurlex-eidas",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) No 910/2014 of 23 July 2014 on electronic identification and trust services for electronic transactions in the internal market and repealing Directive 1999/93/EC (OJ L 257, 28.8.2014, p. 73)",
+      "url": "http://publications.europa.eu/resource/celex/32014R0910",
+      "url_status": "url:live",
+      "published": "2014-08-28",
+      "accessed": "2026-10-28",
+      "language": "en",
+      "note": "The Official Journal text as adopted, retrieved on 28 Oct 2026 from the Publications Office's Cellar by CELEX number (XHTML). Read: Art. 6 and Art. 52 in full. Its Art. 3, points (1) to (5), and its Art. 46b were read as replaced and inserted by Regulation (EU) 2024/1183 (Art. 1, points (3)(a) and (47)), not in a consolidated version. The Publications Office's SPARQL metadata, read the same day: in force; dates 2014-09-17 and 2016-07-01; no end of validity; legal basis Art. 114 TFEU; amended by Directive (EU) 2022/2555 and Regulation (EU) 2024/1183; consolidated versions of 2014-09-17, 2024-05-20 and 2024-10-18; thirteen corrigenda recorded (R(01)–R(13)), none read."
+    },
+    {
       "id": "src-eurlex-eidas2",
       "tier": "tier:1",
       "type": "source-type:regulation",

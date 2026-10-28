@@ -1876,8 +1876,12 @@ test('W11 · item 2.2: eidas2 is covered and held to M-04, M-05 and M-07 in full
   plant((d) => { delete instOf(d, 'eidas2').status_basis; }, /^M-07 instruments\/eidas2:/);
   /* its decision gone: a core record added after 25 Oct 2026 */
   plant((d) => { delete instOf(d, 'eidas2').scope_decision; }, /^M-04 instruments\/eidas2: a core record added after 25 Oct 2026/);
-  /* the one relationship that gives it context gone, or its objective: no page, so M-05 */
-  plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => x.id !== 'rel-eidas2-gdpr-defers'); },
+  /* every relationship that gives it context gone, or its objective: no page, so M-05.
+     Until 28 Oct 2026 rel-eidas2-gdpr-defers was the only one; since then
+     rel-eidas2-eidas-amends gives context too (docs/ROADMAP-v2.md §8, item (k)) */
+  { const d = loadDb(); d.instruments.relationships = d.instruments.relationships.filter((x) => x.id !== 'rel-eidas2-gdpr-defers');
+    assert.ok(!regErrors(d).some((e) => /^M-05 instruments\/eidas2/.test(e)), 'the GDPR edge alone is no longer its only context'); }
+  plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => x.from !== 'eidas2' && x.to !== 'eidas2'); },
     /^M-05 instruments\/eidas2: covered \(core\) without a page/);
   plant((d) => { instOf(d, 'eidas2').dna.objective = ''; }, /^M-05 instruments\/eidas2: covered \(core\) without a page/);
 });
