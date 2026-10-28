@@ -1,9 +1,307 @@
 # HANDOVER
 
-**Last updated:** v2 Session 6. Item 2.3 (the Cyber Solidarity Act, `csa`) is implemented and its
-checkpoint is **approved**, which closes the session (`docs/ROADMAP-v2.md` §8) · 27 October 2026
-**Branch:** `claude/v2-session-6-csa`, cut from `main` at `59dc88c` (#23). Pull request to `main`,
-opened on the author's instruction.
+**Last updated:** v2 Session 7. Item 2.4 (the European Health Data Space, `ehds`) is implemented;
+the session is **stopped at its checkpoint**, waiting for the author's approval
+(`docs/ROADMAP-v2.md` §8) · 28 October 2026
+**Branch:** `claude/new-session-6evq51` (assigned by the environment), cut from `main` at `fdc7727`
+(#24).
+
+## Branch register — 28 October 2026 (v2 Session 7)
+
+- At the start, `main` was `fdc7727`, the merge of #24. §8 carried the three Session 6 rows, up to
+  "The checkpoint of v2 Session 6 = item 2.3", and `docs/prompts/v2-session-6.md`.
+- `git branch -r --no-merged origin/main` listed two branches:
+  - `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched;
+  - `origin/claude/v2-session-7-prompt` (`9226a1e`: the prompt and its register entry, above). It was
+    reported to the author and merged into this branch on the author's answer ("Solo 2.4, unisci il
+    prompt").
+- `origin/main` was re-fetched before this handover was written: it had moved to `8c60abb`, the
+  merge of #25, which is that same prompt branch. It was merged into this branch (`8c1c480`), with
+  no content this branch did not already hold.
+- This session's branch: `claude/new-session-6evq51`. Disposition: **open**, waiting for the
+  author's approval of the checkpoint and the question of a pull request.
+
+## v2 Session 7 — checkpoint report (item 2.4, the European Health Data Space)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope** (first write of the session, `96d9b19`): item 2.4 only; the prompt branch merged.
+- **Item 2.4**, asked one question at a time before anything was written to `data/`; eleven answers,
+  ten as recommended:
+  - *criterion*: `crit:object-data` + `crit:sector-instance`. `crit:horizontal` does not hold (the
+    rules are those of the health and care sectors), so the inclusion itself rests on an edge to a
+    covered instrument;
+  - *edges*: `gdpr → ehds` `enables`, knowing it is what shows the sector instance and meets the
+    gate's `context` criterion; `ehds → cra` `amends`, with the `amends` / `amended_by` arrays filled;
+    `eidas2 → ehds` **not** added (open finding below);
+  - *more edges*, **not** as recommended (the recommendation was none): `ehds → data-act`
+    `defers-to`, `ehds → ai-act` `defers-to`, `dga → ehds` `enables`;
+  - `status:in-force`, with the status note as proposed;
+  - four events (E1–E4);
+  - `dna.objective` draft B;
+  - the other `dna` fields, four provisions and two new taxonomy terms;
+  - `clm-ehds-dates` tied to `ehds`, its false sentence replaced;
+  - `src-eurlex-ehds` re-read, `src-ec-ehds-page` not used, the scope decision as proposed.
+
+### What was written
+
+| Commit | Record or file | Change |
+|---|---|---|
+| `fb015c6` | `ehds` | new; `scope:core`; `brief_part` `null`; `status:in-force`, `status_as_of` 2026-10-28; `status_note` (no internal identifier); `status_basis` Art. 105 + metadata; `scope_decision` (included; `crit:object-data`, `crit:sector-instance`; two direct structural references; `approved_on` 2026-10-28); `dna` as decided; `amends` `cra`; `legal_basis` `tfeu:art-114` |
+| | `ehds:art-3`, `ehds:art-26`, `ehds:art-60`, `ehds:art-64` | four provisions; `obligation_on` member-state, manufacturer, health-data-holder, none |
+| | `cra` | `amended_by` `ehds`; nothing else |
+| | `rel-gdpr-ehds-enables`, `rel-ehds-cra-amends`, `rel-ehds-data-act-defers`, `rel-ehds-ai-act-defers`, `rel-dga-ehds-enables` | new, v2 shape, direct, every locator in the EHDS |
+| | `tl-ehds-2025-03-25-entry-into-force`, `tl-ehds-2027-03-26-application`, `tl-ehds-2029-03-26-application`, `tl-ehds-2031-03-26-application` | new; the two tranches tagged with the provisions they govern |
+| | `actor:health-data-holder`, `actor:health-data-user` | new taxonomy terms; nothing renamed |
+| | `clm-ehds-dates` | `instruments` `ehds`; the sentence "The instrument is not modelled in data/instruments.json." replaced; `last_verified` 2026-10-28; statement unchanged |
+| | `src-eurlex-ehds` | `accessed` 2026-10-28; the note says what was read and what was not |
+| | `tools/register-audit.mjs` | **a check extended**: M-04 now also requires, for a decision citing `crit:sector-instance`, an edge to a covered instrument resting on a direct structural reference (below) |
+| | `tools/selftest.mjs` | W14, new; W1 audits the tree as of its own newest decision date (below) |
+| | generated | `instruments/ehds/` (new); the GDPR, CRA, Data Act and AI Act pages (the edges from the other end); `instruments.html`; the `<noscript>` index on every page; `sitemap.xml`; `img/og/ehds.png` and its manifest entry. The tool re-rendered the other fifteen cards; they were restored, because their inputs did not change (`og-image.mjs --check` passes) |
+| `601fe44` | `agent/depth/detectors.mjs`, `depth.mjs` | a latent id collision the new record exposed (below) |
+| `96d9b19`, this commit | `docs/ROADMAP-v2.md` §8 | two rows; this report |
+
+Not added:
+- no new claim and no new source;
+- no applicability rule and no institution edge;
+- no entry in `tools/seo.mjs`, `KNOWN_AS` or `PAGE_PUBLISHED`. The page is headed "EHDS"; a common
+  name ("European Health Data Space") in `KNOWN_AS` was not proposed and is the author's to decide.
+
+**No locale key was touched.** The fields written are data, which the editions do not carry, so no
+key needs declaring `superseded` or `pending_translation`; `i18n-audit` is 0/0.
+
+**Three changes to checks, each with a test that fails without it:**
+1. **M-04 and `crit:sector-instance`.** §5 defines the clause as "shown by an edge to it", and no
+   check held it. W14 showed the gap: with every edge from `ehds` to a covered instrument removed and
+   the edge to the watched DGA kept, the page gate's `context` criterion still passed and nothing
+   failed. M-04 now reports it. W14 asserts that case fails on the new rule and **not** on M-05, and
+   it fails again with the new rule disabled (measured). Only `ehds` cites the clause, so no other
+   record is affected.
+2. **W1's date.** W1 asserted "this tree" clean as of a fixed 2026-10-27. The new decision is dated
+   28 Oct, so that date produces a `VERIFIED_AFTER_AS_OF` warning, which W4 says belongs to the date
+   asked and not to the tree. W1 now audits as of the tree's newest decision date and asserts that
+   date is at least 2026-10-28. The assertions themselves are unchanged.
+3. **`agent/depth` ids.** For an act with a sanction ceiling and no enforcement role at all, the
+   detector reports two findings, "as different findings rather than averaged into one", and both
+   derived one id. `ehds` is the first such act; `agent/depth` and `agent/proposals/data` failed
+   "two findings share an id". The minter's own error names the fix, a discriminator. It is passed
+   only when no role is held. Measured on the same tree against the code before the fix, **no
+   existing gap id changes**: `ai-act`'s and `nis2`'s fines findings and `eidas2`'s and `pld`'s
+   general findings keep theirs. That matters, because `agent/improve/cycles/cycles.jsonl` is tracked
+   and records ids. No test was changed.
+
+### Facts read on 28 Oct 2026, and facts left `null`
+
+- **Read**:
+  - Regulation (EU) 2025/327, the Official Journal text, from Cellar by CELEX `32025R0327` (XHTML):
+    - Arts 1–4, 12, 14, 16, 19, 21–22, 26–27, 30, 55, 60–61, 63–65 and 99;
+    - Arts 102–104, Art. 104 in full;
+    - Art. 105 in full;
+    - the chapter boundaries.
+  - The Publications Office's SPARQL metadata:
+    - in force; entry into force 2025-03-25; no end of validity;
+    - dates recorded: 2027-03-26, 2029-03-26, 2031-03-26, 2035-03-26;
+    - it amends `32011L0024` and `32024R2847`; the only consolidated version is the original.
+  - Regulation (EU) 2024/2847, Arts 13(4), 31(3) and 32, to compare what Art. 104 replaces.
+  - Regulation (EU) 2024/1183, Art. 1 points (3)(a) and (6), for the eIDAS question.
+- **Not read**:
+  - the three corrigenda, `32025R0327R(01)` (French, Croatian, Latvian) and `R(02)`, `R(03)`
+    (Hungarian). The metadata lists no English expression for any of them, so the English text is
+    not shown to be corrected;
+  - Arts 5–11, 13, 15, 17–18, 20, 23–25, 28–29, 31–54, 56–59, 62, 66–98, 100–101 beyond their
+    headings, and the Annexes;
+  - the implementing and delegated acts the Regulation calls for.
+- **Left `null` or empty, and shown on the page as "not established"**:
+  - `risk_logic`, `enforcement_mechanism`, `protected_party`, `territorial_scope`.
+  - No competent authority. `institutions.json` has none for the EHDS (digital health authorities,
+    Art. 19; health data access bodies, Art. 55; GDPR supervisory authorities, Arts 22 and 65), and
+    none was researched or proposed.
+- **Not recorded**:
+  - Art. 16 TFEU, the second legal basis: the dataset's TFEU record has no such provision.
+  - Directive 2011/24/EU in `amends`: it is not an instrument in the dataset. The status note names
+    it (Art. 103).
+  - The 2035 date (Art. 75(5) only), the 2027 deadlines (implementing acts, Art. 99 notification,
+    Art. 19(1) designation) and the evaluations (Art. 102).
+  - Read and not proposed as edges: `ehds → eprivacy` (Art. 1(3)); `ehds → gdpr` `defers-to`
+    (Art. 1(3)), beside the `enables` edge; Art. 27(2) on high-risk AI systems.
+- No fact was taken from a search result or from model knowledge. The design draft of 25 Oct 2026
+  (`docs/v2-design/map-examples.json`) was not copied. Three of its statements did not survive the
+  re-reading:
+  - its scope reason ("borrows eIDAS identification … amends the CRA");
+  - its eIDAS edge's "as amended": the EHDS cites Regulation (EU) No 910/2014 by its 2014 reference;
+  - its CRA summary, written on point (1) alone.
+
+### Exit criteria of item 2.4 (`docs/ROADMAP-v2.md` §4)
+
+- *Every fact read from a retrieved primary source*: **pass** (above).
+- *`sources.json` records only from documents read*: **pass**. No new record; one updated after
+  re-reading.
+- *Prose and claims to the author*: **pass**. Every text written was in an approved question; one
+  claim was changed, as approved, and none created.
+- *`node tools/_footer.mjs` re-run*: **pass**. Committed with the data; a second run writes 0 files.
+- *Affected locale keys declared*: **n/a**, none touched.
+- *M-04, M-05, M-07 held in full*: **pass**. `ehds` is in no backlog; W14 shows each one failing,
+  including the new sector-instance rule.
+- *The page says nothing the records do not carry*: **pass**, with the display observations under
+  "Found" below.
+
+### Counts against the baseline (v2 Session 6's closing re-run, re-measured at the start)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / provisions / relationships | 35 / 81 / 28 | 36 / 85 / 33 | `ehds`; its four provisions; five edges |
+| sources / timeline events / claims / taxonomy terms | 221 / 93 / 181 / 307 | 221 / 97 / 181 / 309 | four events; two actor terms |
+| coverage covered / mapped / watched / excluded | 13 / 11 / 5 / 6 | 14 / 11 / 5 / 6 | `ehds` |
+| backlog `status-basis-missing` / `scope-decision-missing` | 23 / 11 | 23 / 11 | a new record joins no backlog |
+| instrument pages · indexable routes | 14 · 23 | 15 · 24 | `instruments/ehds/` |
+| instruments.html "thinner records" | 7 | 7 | `ehds` has a page |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit --as-of 2026-10-28` errors / warnings | 0 / 11 | 0 / 11 | unchanged. As of 2026-10-27 the after-tree reads 0 / 12: `VERIFIED_AFTER_AS_OF` for `ehds`, dated the day after |
+| `freshness` | 0 defects / 2 prompts (as of 10-27) | 0 / 2 (as of 10-27); 0 / 3 (as of 10-28) | the third prompt is the calendar: the same before-tree also reads 3 as of 10-28 |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged |
+| `tools/selftest.mjs` | 103 | 104 | W14 |
+| all 25 suites | 1309 + 1 skipped | **1310 pass + 1 skipped, 0 failures (1311)** | W14. The skip is the `::1` test, as in Sessions 5 and 6 |
+| browser suite (`--require-browser`) | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable | unchanged (`a11y:bound`) |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+
+Other checks:
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+- `tools/og-image.mjs --check` passes.
+- `tools/commit-evidence.mjs origin/main HEAD`: 0 commits without evidence. `fb015c6` names its
+  evidence; the others change no published file or are merges.
+- `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+**One failure on the way, and its cause.** A first re-run had `agent/proposals/governance` at 42 + 3
+failures (P-07: "76 proposal(s) are reachable … expects 0"). The cause was this session's own
+`node agent/depth/cli.mjs` run, made to identify a gap id: it wrote 76 records into the git-ignored
+`agent/records/`, which is empty on a fresh clone. The file, created at 10:04 that day and holding
+only `data-depth` records, was deleted. The suite then passed 45/45. Nothing in the tree was the
+cause.
+
+### The page, opened in a browser
+
+`/instruments/ehds/` was opened in Chromium (Playwright) at 1280px dark and 390px light. There was no
+console error and no horizontal overflow at either width. The GDPR, CRA, Data Act and AI Act pages were
+opened the same way. The page shows:
+- Status: in force, as of 28 Oct 2026, and the status note. The header's next date is 26 March 2027,
+  "Application date". Nothing says the Regulation applies today.
+- "In short":
+  - the objective;
+  - "Member State · Manufacturer · Health data holder · Health data user";
+  - Arts 3, 26 and 60;
+  - the four dates;
+  - "4% of global turnover / EUR 20m", with the two-tier note;
+  - "not established" for the protected party.
+- Four dated events, each with its Art. 105 text.
+- "No rules recorded", worded as absence of knowledge.
+- Four provisions, with their application dates.
+- No enforcement recorded.
+- One claim, graded primary law.
+- Five interactions, each with its locator.
+- "No Part of the brief covers this instrument directly".
+
+Each other page shows its edge from the other end.
+
+### Found, for the author — not changed
+
+1. **The tranche dates in the provisions table carry no qualifier.** Arts 3 and 26 show "Applies
+   from 26 March 2029, then from 26 March 2031". The event text says the 2029 date covers only the
+   categories of Art. 14(1)(a)–(c) and the 2031 date covers (d)–(f), but the table does not repeat
+   that. It is how the renderer shows any tranche, and the AI Act reads the same. It is not a data
+   question, but a reader of the table alone could take 2029 as the date for all of Art. 3.
+2. **eIDAS, not modelled** (the author's decision). The EHDS cites Regulation (EU) No 910/2014:
+   - Art. 2(1)(f) borrows its Art. 3 points (1)–(2), which Regulation (EU) 2024/1183 replaced;
+   - Arts 12 and 16(1) rely on Art. 6, which 2024/1183 did not amend.
+   The question is whether to model the 910/2014 Regulation as a node. It is open, and no node was
+   created.
+3. **The internal reference now reaches more pages.** The `rel-kind:enables` and `defers-to` notes
+   end "Added 27 Oct 2026 (docs/V2-DATA-DESIGN.md §1.4)". The interactions box prints them, now also
+   on `/instruments/ehds/` and on the new rows of the GDPR, Data Act and AI Act pages. This is
+   Session 10's item 10.2, not fixed here.
+4. **The DGA's "not covered" notice shows no relationships.** `instrument.html?id=dga` renders the
+   notice only, so `rel-dga-ehds-enables` is visible from the EHDS page alone. The DGA's existing
+   edges are rendered the same way.
+5. **Not this item's**: the `missing_competence` findings for `ehds` (a ceiling and no institution
+   named) are what `agent/depth` now reports for it, as it does for `eidas2` and `pld`.
+
+**Still open from Session 6** (unchanged):
+- the `enables` note's internal reference (point 3 above);
+- the sanction ceiling worded two ways, on the CSA and eIDAS2 pages. The EHDS, with a figure, reads
+  the same in both places;
+- `obligation_on_institution` not displayed.
+
+**Still open from Session 5** (the roadmap's §3; none touched):
+1. `rel-dsa-gdpr-transparency-minimisation`: its summary no longer matches EDPB Guidelines 3/2025 v2.
+2. `rel-data-omnibus-gdpr`: "stalled in Council" is unsupported and not re-read.
+3. The 4 brief-only and 3 claimless analytical edges stay v1; the `edge-v1-sources` flip stays
+   deferred.
+4. The article attribution in `src-ec-apple-meta-dma-2025`'s note.
+5. `src-ec-ai-omnibus-in-force`: not re-read (403).
+6. The `::1` test: skipped again in this container, so not run. A skip is not a pass.
+7. R-01's P2B gap and the eight findings of `docs/V2-DATA-DESIGN.md` §7 (Phase 3). F-1 did not
+   grow: the new `amends` edge has its arrays filled.
+8. The internal identifiers shown to a reader (Session 10).
+
+### The verification checklist
+
+**7.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, two rows (`96d9b19`, `fb015c6`).
+- *Verify:* read "The scope of v2 Session 7" and "Item 2.4: the inclusion of `ehds`".
+- *Automatic:* none.
+- *Criterion:* every editorial field was decided before `data/` was touched, and `approved_on`
+  carries the date of the row.
+
+**7.1 · Sources read first.**
+- *Changed:* `data/sources.json` (`src-eurlex-ehds`: `accessed`, note).
+- *Verify:*
+  - fetch `http://publications.europa.eu/resource/celex/32025R0327` with Accept
+    `application/xhtml+xml`;
+  - read Art. 1(1)–(2), Art. 2(1)(a), (c) and (f), Art. 22, Art. 64, Art. 104 and Art. 105;
+  - query the SPARQL endpoint for `resource_legal_date_entry-into-force` (2025-03-25) and for the
+    corrigenda's languages.
+- *Automatic:* none. No check reads a source (AUDIT F-12).
+- *Criterion:* no fact from a search result or memory.
+
+**7.2 · Written in one home.**
+- *Changed:*
+  - `data/instruments.json`: `ehds`, `cra.amended_by`, five edges;
+  - `data/timeline.json`: four events;
+  - `data/taxonomy.json`: two terms;
+  - `data/claims.json`: `clm-ehds-dates`;
+  - `tools/register-audit.mjs`, `tools/selftest.mjs`;
+  - `agent/depth/`;
+  - the regenerated pages and `img/og/ehds.png`.
+- *Verify:* `/instruments/ehds/`, and `/instruments/gdpr/`, `/cra/`, `/data-act/`, `/ai-act/`.
+- *Automatic:*
+  - `tools/selftest.mjs` W14 (and W1);
+  - S1 (generated files current);
+  - `seo-audit` 0/0;
+  - `agent/depth` "every gap id is distinct";
+  - `agent/proposals/data` "every … data gap id in a run is distinct".
+- *Criterion:*
+  - M-04 (with the sector-instance rule), M-05 and M-07 at 0 errors, held in full;
+  - dates only in `timeline.json`;
+  - no title in `data/`;
+  - no internal identifier in a reader-facing field written here.
+
+**7.3 · Checkpoint.**
+- *Changed:* this report.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run above.
+- *Criterion:* the author's approval, recorded in §8. Item 2.5 does not start before it.
+- **Not complete** until the author approves; the pull request is the author's to ask for.
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-28`: REGISTER reads "covered 14 · mapped 11".
+2. `python3 -m http.server 8000`, then open `/instruments/ehds/` in both themes, at desktop and phone
+   width, and `/instruments/gdpr/` for the edge that holds the criterion. `/instruments.html` lists
+   the EHDS.
+3. `node --test --test-name-pattern="W1 |W14" tools/selftest.mjs`.
+4. To see the new rule fail, delete from `data/instruments.json` the four edges between `ehds` and
+   GDPR, CRA, Data Act and AI Act, keeping the DGA's. `evidence-audit` then reports
+   `M-04 instruments/ehds: crit:sector-instance …` and no M-05. Restore the file afterwards.
+
+## Branch register — 27 October 2026 (v2 Session 6)
 
 ## Branch register — 27 October 2026 (v2 Session 6)
 
