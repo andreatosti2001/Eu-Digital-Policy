@@ -2938,6 +2938,20 @@
       "note": "Read 21 Oct 2026. A LIMITE document not on the Council's register (HTTP 404 for ST-13886-2026-INIT, 21 Oct 2026); read in the copy Agence Europe distributes, each page stamped 'Obtained by Agence Europe'. Its authenticity rests on that distribution, which is why only its cover facts are used: dated Brussels, 2 October 2026; note from the General Secretariat to the Permanent Representatives Committee; subject the Digital Omnibus, 'Mandate for negotiations with the European Parliament'; 163 pages. §7: the Antici Group (Simplification) examined the proposal at meetings including 11 and 25 September, and 'between July and September, the Presidency presented two revised compromise texts'. §9: after 25 September the Presidency updated the text, notably on the Data Acquis, the GDPR and the ePrivacy cookie rules."
     },
     {
+      "id": "src-council-st-14756-2026",
+      "tier": "tier:2",
+      "type": "source-type:legislative-document",
+      "publisher": "council",
+      "publisher_name": "Council of the European Union, General Secretariat",
+      "title": "ST 14756/26 — Digital Omnibus: Mandate for negotiations with the European Parliament, outcome of proceedings (22 October 2026)",
+      "url": "https://data.consilium.europa.eu/doc/document/ST-14756-2026-INIT/en/pdf",
+      "url_status": "url:live",
+      "published": "2026-10-22",
+      "accessed": "2026-10-28",
+      "language": "en",
+      "note": "Read 28 Oct 2026 on the Council's document register (PDF created 22 Oct 2026; 179 pages; not marked LIMITE). Dated Brussels, 22 October 2026; 'OUTCOME OF PROCEEDINGS' from the General Secretariat of the Council to Delegations; interinstitutional file 2025/0360 (COD); previous document 14532/26; subject the Digital Omnibus, '- Mandate for negotiations with the European Parliament'. Cover text: 'Delegations will find in the Annex the text of the mandate for negotiations with the European Parliament on the above-mentioned file as agreed by the Permanent Representatives Committee at its meeting on 21 October 2026.' Only the cover facts are used: the content of the annex is not summarised in this dataset, and the document does not record how delegations voted."
+    },
+    {
       "id": "src-oeil-2025-0360",
       "tier": "tier:2",
       "type": "source-type:legislative-document",

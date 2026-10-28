@@ -1777,8 +1777,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-8",
       "legislative_status": "status:proposal",
-      "status_as_of": "2026-10-21",
-      "status_note": "NOT LAW. A Commission proposal (COM(2025) 837, 19 November 2025) with no Council negotiating mandate reported and no Parliament position as at 21 October 2026. Council: the Cypriot Presidency withdrew its compromise text from COREPER in late June 2026 for lack of a qualified majority; the Irish Presidency's revised compromise of 3 September 2026 (ST 12535/26) was followed by a further revised text for the Antici Group of 25 September (ST 13112/26, clm-data-omnibus-st-13112) and, on 2 October, by a draft negotiating mandate put to Coreper (ST 13886/26, clm-data-omnibus-draft-mandate); the Coreper II vote due on 11 October was not held, as reported by Agence Europe (clm-data-omnibus-council-october), and a revised version was due before Coreper on 21 October 2026, whose outcome had not been published when checked that day (clm-data-omnibus-coreper-21-october). Parliament: with the joint ITRE–LIBE committee, draft report of 22 June 2026, amendments tabled 27 July 2026, 'awaiting committee decision' on the Legislative Observatory on 21 October 2026 (clm-data-omnibus-parliament-stage). No trilogue has begun. Every GDPR, ePrivacy and Data Act change it contains is proposed text, not an obligation. Must never be rendered as an Act. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is the informal shorthand used in this brief. 21 Oct 2026 (audit items 2 and 12): legislative_status changed from status:stalled to status:proposal, the factual stage: 'stalled' was a reading of the Council's progress, not a stage of the procedure, and the procedure is still at proposal. last_verified 21 Oct 2026: the status was re-read that day (audit items 2 and 12); the other fields were last re-read on 27 Aug 2026.",
+      "status_as_of": "2026-10-28",
+      "status_note": "NOT LAW. A Commission proposal (COM(2025) 837, 19 November 2025). As at 28 October 2026 the Council has a negotiating mandate, agreed by the Permanent Representatives Committee on 21 October 2026 (ST 14756/26, clm-data-omnibus-council-mandate), and Parliament has no position. Council: the Cypriot Presidency withdrew its compromise text from COREPER in late June 2026 for lack of a qualified majority; the Irish Presidency's revised compromise of 3 September 2026 (ST 12535/26) was followed by a further revised text for the Antici Group of 25 September (ST 13112/26, clm-data-omnibus-st-13112) and, on 2 October, by a draft negotiating mandate put to Coreper (ST 13886/26, clm-data-omnibus-draft-mandate); the Coreper II vote due on 11 October was not held, as reported by Agence Europe (clm-data-omnibus-council-october), and a revised version was due before Coreper on 21 October 2026 (clm-data-omnibus-coreper-21-october), where the mandate was agreed; the General Secretariat circulated it to delegations on 22 October as an outcome of proceedings. Parliament: with the joint ITRE–LIBE committee, draft report of 22 June 2026, amendments tabled 27 July 2026, 'awaiting committee decision' on the Legislative Observatory on 28 October 2026 (clm-data-omnibus-parliament-stage). No trilogue has begun. Every GDPR, ePrivacy and Data Act change it contains is proposed text, not an obligation. Must never be rendered as an Act. The Commission's own label is 'Digital Omnibus'; 'Data Omnibus' is the informal shorthand used in this brief. 21 Oct 2026 (audit items 2 and 12): legislative_status changed from status:stalled to status:proposal, the factual stage: 'stalled' was a reading of the Council's progress, not a stage of the procedure, and the procedure is still at proposal. last_verified 21 Oct 2026: the status was re-read that day (audit items 2 and 12); the other fields were last re-read on 27 Aug 2026. 28 Oct 2026 (data-integrity audit): legislative_status re-read and left at status:proposal, which stays accurate (the act is still a proposal); moving it to the narrower status:council-position is left to the author, because the site's status displays have no place for that stage yet. status_as_of and last_verified moved to 28 Oct 2026, on ST 14756/26, read that day on the Council's register: Coreper agreed the Council's negotiating mandate on 21 October 2026. The opening sentence read 'with no Council negotiating mandate reported and no Parliament position as at 21 October 2026', and the 21 October Coreper meeting was described as one 'whose outcome had not been published when checked that day'; both were accurate when checked and were overtaken by the outcome of proceedings dated the next day. Parliament's procedure file was re-read the same day and is unchanged. kind stays kind:proposal: a Council mandate is a negotiating position, and nothing in this proposal is law. The other fields were last re-read on 27 Aug 2026.",
       "milestones": [
         "tl-data-omnibus-2025-11-19-proposal"
       ],
@@ -1826,7 +1826,8 @@
         "clm-data-omnibus-parliament-stage",
         "clm-data-omnibus-st-13112",
         "clm-data-omnibus-draft-mandate",
-        "clm-data-omnibus-coreper-21-october"
+        "clm-data-omnibus-coreper-21-october",
+        "clm-data-omnibus-council-mandate"
       ],
       "sources": [
         "src-eurlex-data-omnibus-837",
@@ -1837,9 +1838,10 @@
         "src-council-st-12535-2026",
         "src-council-cm-4156-2026",
         "src-council-st-13886-2026",
-        "src-agenceurope-omnibus-2026-10-20"
+        "src-agenceurope-omnibus-2026-10-20",
+        "src-council-st-14756-2026"
       ],
-      "last_verified": "2026-10-21",
+      "last_verified": "2026-10-28",
       "legal_basis": [
         "tfeu:art-114"
       ]
