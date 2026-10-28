@@ -1,7 +1,7 @@
 # HANDOVER
 
 **Last updated:** v2 Session 12, the opening of Phase 3 (28 October 2026): 12.1 (V2C-01) and 12.2 (the
-check reads the applicability rules), then a checkpoint **awaiting the author's approval**.
+check reads the applicability rules), then a checkpoint, **approved by the author** (§8).
 **Branch:** `claude/v2-session-12-phase-3-open`, cut from `main` at `bca554e`.
 
 ## Branch register — 28 October 2026 (v2 Session 12)
@@ -12,8 +12,9 @@ check reads the applicability rules), then a checkpoint **awaiting the author's 
   `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
   already in the register. No other branch to report.
 - `origin/main` was re-fetched before this handover was written: still `bca554e`.
-- Disposition: pushed; **no pull request opened**. The checkpoint waits for the author's approval
-  (§8), then the question whether to open one to `main`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve, incl. RULES_V1 (Recommended)"); pushed, with a
+  pull request to `main` opened on the author's instruction of 28 Oct 2026 ("Open PR to main
+  (Recommended)"). Nothing is pushed to the branch after the pull request is opened.
 
 ## v2 Session 12 — checkpoint report (12.1 V2C-01, 12.2 the triggers)
 
@@ -155,7 +156,7 @@ card ("Data Omnibus — Proposed: repeals → P2B Regulation") and has no "Relat
 | **12.1** | `js/map-model.js`, `js/interactions.js`, `js/instrument-view.js`, `js/regulatory-model.js`, 5 pages (`580621c`) | open `/instruments/digital-networks-act/`: "Proposed: amends → ePrivacy"; Related "ePrivacy · Proposed: amends"; `git diff bca554e -- data/` is empty | `tools/selftest.mjs` V1 | met: no proposed edge printed in the present tense; derived, not stored; second generator run writes 0 |
 | **12.2** | `tools/trigger-audit.mjs`, `tools/evidence-audit.mjs`, `tools/evidence-audit-record.mjs`, `.control-room/selftest.mjs` (`f0c88d7`, `9894cf9`) | `node tools/evidence-audit.mjs --as-of 2026-10-28` shows TRIGGERS and exits 0; plant `"depends_on": []` on a `possible` rule in a copy and it exits 1 | X1–X4; `.control-room/selftest.mjs` | met for the triggers; **Phase 3's entry condition is still not met** (0 of 33 publishable) — that is the work the check now measures |
 | **12.3** | all checks re-run, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: 0 errors everywhere; readiness unchanged |
-| **12.4** | this report; V2-CLOSURE V2C-66, V2C-67 (`this commit`) | — | — | **waits for the author's approval**; V2C-01's row then names `580621c` |
+| **12.4** | this report; V2-CLOSURE V2C-66, V2C-67 (`a2edc18`) | — | — | **approved** by the author (§8); V2C-01's row names `580621c` |
 
 ### How to check it by hand
 
