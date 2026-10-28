@@ -1,9 +1,11 @@
 # ROADMAP v2.0
 
 **Status: APPROVED by the author on 25 Oct 2026 (§8)**, with item 2.0 brought forward to v2 Session 2. Written in v2 Session 1, 25 Oct 2026, on
-`claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e`. Nothing in it is implemented, and
-nothing in it may be implemented until the author approves it. The approval is recorded in §8, by
-the author's word, and nowhere else.
+`claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e`. **As of 28 Oct 2026: Phases 0, 1
+and 2 are executed, each closed at a checkpoint in §8; Phases 3, 4 and 5 are not started. The v2 is
+open, and Phase 3 is next** (§8, v2 Session 11; the measured comparison is `docs/V2-CLOSURE.md`).
+Nothing is implemented without the author's approval, recorded in §8, by the author's word, and
+nowhere else.
 
 **What governs it.** The BRIEF v2.0 ("Contratto tra sessioni") is the contract; this document is the
 plan that answers it. The brief is `docs/BRIEF-v2.md`, committed on 27 Oct 2026 (decision D-1, §8). Where this roadmap departs from the brief, or reads it in a way

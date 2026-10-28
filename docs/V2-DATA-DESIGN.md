@@ -1,6 +1,6 @@
 # V2 DATA DESIGN — schemas and technical structure
 
-**Status: PROPOSED.** Written in v2 Session 2, 25–27 Oct 2026, on `claude/v2-session-2-schemas`, cut
+**Status: APPROVED (`docs/ROADMAP-v2.md` §8: D-3, D-6, D-7, D-8 and the trigger model, 25–27 Oct 2026), implemented in part** — item 2.1, below; the map audit (§4), the status labels (§3) and the triggers (§2) are Phase 3's and are not implemented. Written in v2 Session 2, 25–27 Oct 2026, on `claude/v2-session-2-schemas`, cut
 from `main` at `933515a`. It is design only:
 - no data, code, page, locale or validator was changed;
 - `docs/CONTROL-ROOM.md` was not touched.

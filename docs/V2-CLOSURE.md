@@ -1,6 +1,8 @@
 # V2 CLOSURE — the closing gate of v2.0, measured
 
-**Status: MEASUREMENT, NOT A DECISION.** Written in v2 Session 11, 28 Oct 2026, on
+**Status: MEASURED, AND DECIDED BY THE AUTHOR ON 28 OCT 2026** (`docs/ROADMAP-v2.md` §8, "The closing
+gate of v2"): **the v2 stays open, and Phase 3 is next**; every class proposed in §2 is decided as
+proposed; V2C-01 stays class A and is fixed first in Phase 3. Written in v2 Session 11, 28 Oct 2026, on
 `claude/v2-session-11-closing-gate`, cut from `main` at `17768c1`, on the author's scope
 (`docs/ROADMAP-v2.md` §8, "The scope of v2 Session 11"). **This document does not declare the v2
 closed, concluded or complete.** That is the author's decision, and until a row in §8 records it, no
@@ -141,7 +143,8 @@ status, a date, an obligation, a relationship between acts, a source) — **yes*
 presentation, the internal tools or the environment — **no**. "Data only" means the value is in
 `data/` and reaches a reader only as raw JSON in the datasets explorer.
 
-**Proposed class** — a proposal; the decision is the author's:
+**Proposed class** — proposed by this session and **decided as proposed by the author on 28 Oct
+2026** (§8):
 - **A** — blocks the closure: the site states something false, or a v2 exit criterion fails today;
 - **B** — assigned to a named later phase or session, with the reason;
 - **C** — to be verified outside this environment (network, an IPv6 runner, another browser, a
