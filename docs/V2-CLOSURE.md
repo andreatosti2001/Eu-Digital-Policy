@@ -202,6 +202,8 @@ presentation, the internal tools or the environment — **no**. "Data only" mean
 | V2C-43 | adversarial gate, standing | 3 partial (PP-08 high; HE-04, OB-05 medium) and 1 undecidable (PP-09: the deployed site was not fetched) | no (control plane) | `node agent/policy/verify/cli.mjs` | **B — Phase 4** (the Control Room and its deployment), PP-09 **C** (needs network to the live site) |
 | V2C-44 | `docs/DEPLOYMENT.md` §3, `AGENTS.md` Known hazards | "Done by the author on 24 Oct 2026; to be confirmed on the next push" still reads as unconfirmed, though about twenty pushes to `main` followed and V2C-42's record exists | no | `docs/DEPLOYMENT.md` line 119 | **B — this session, on the author's answer to question 7**, or a later documentation pass |
 | V2C-45 | 11.0 question 7 | The documents that state the v2's status are stale: `docs/ROADMAP-v2.md` header "Nothing in it is implemented"; `docs/V2-DATA-DESIGN.md` "Status: PROPOSED"; the `AGENTS.md` row on the roadmap; the "Last updated" of `docs/HANDOVER.md` | no | the headers as they read today | **B — this session, only with the text the author approves** (question 7) |
+| V2C-66 | S12 (12.0 question 6) | The flip of `scope-decision-missing` and `status-basis-missing` from BACKLOG to ERROR, set by `docs/V2-DATA-DESIGN.md` §4.3 for "the end of item 2.6", did not happen: item 2.6 closed with both backlogs open, and this inventory did not list it | no (a check's strictness) | `evidence-audit --as-of 2026-10-28`: BACKLOG 11 and 23; flipping them would be 34 ERRORs | **B — Phase 3**, decided by the author on 28 Oct 2026 (§8, v2 Session 12, question 6): re-dated to after the verification work; each list flips when its records have been read against primary sources |
+| V2C-67 | S12 (reconnaissance) | `index.html` Part IX, `part-9.p8`, and its it/fr/es overlays say "the Council has yet to agree a mandate on the Commission's own GDPR reforms"; the `data-omnibus` record (COM(2025) 837, which amends the GDPR) records the Council's negotiating mandate agreed by Coreper on 21 Oct 2026 (ST 14756/26). The audit of 28 Oct 2026 corrected Part VIII, not this sentence; test P1's patterns do not match it | **yes** | the sentence as it reads on `bca554e`, in all four languages | **A**, decided by the author on 28 Oct 2026 (§8, v2 Session 12): logged here and fixed in the next session, its rewording put to the author word by word |
 
 ### 2.2 Closed or superseded (class E), each with its proof
 
@@ -237,6 +239,8 @@ presentation, the internal tools or the environment — **no**. "Data only" mean
 | **C** | 5 | V2C-22, V2C-23, V2C-38, V2C-39, V2C-42 (and PP-09 within V2C-43) |
 | **D** | 0 | — |
 | **E** | 20 | V2C-46–V2C-65 |
+
+*28 Oct 2026, v2 Session 12:* two rows added with the class the author decided — **V2C-66** (B, Phase 3) and **V2C-67** (A). The counts above are v2 Session 11's and are left as they were; with the two rows they are A 2, B 40, C 5, D 0, E 20.
 
 **No class D is proposed.** The open findings that a reader would need to know are either already
 declared (README limitations 5, 7 and 9 cover V2C-27, V2C-38, V2C-39 in substance) or assigned to a
