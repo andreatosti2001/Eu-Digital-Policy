@@ -1,8 +1,176 @@
 # HANDOVER
 
-**Last updated:** v2 Session 10, items 10.1 (the scrollbars) and 10.2 (the internal references shown
-to a reader). The checkpoint is **approved** (`docs/ROADMAP-v2.md` §8) · 28 October 2026
-**Branch:** `claude/v2-session-10-frontend`, cut from `main` at `c982724`.
+**Last updated:** v2 Session 11, the closing gate of v2. **The v2 is not closed**: the author decided
+it stays open, with Phase 3 next (`docs/ROADMAP-v2.md` §8). The checkpoint **waits for the author's
+approval** · 28 October 2026
+**Branch:** `claude/v2-session-11-closing-gate`, cut from `main` at `17768c1`.
+
+## Branch register — 28 October 2026 (v2 Session 11)
+
+- Branch `claude/v2-session-11-closing-gate`, cut from `main` at `17768c1` (#33 and #34 merged). The
+  prompt's branch, `claude/v2-session-11-prompt`, was already in `main` as #34, so nothing was merged
+  in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
+  already in the register. No other branch to report.
+- `origin/main` was re-fetched before this handover was written: still `17768c1`.
+- Disposition: **waiting for the author's approval of the checkpoint**; then the author is asked
+  whether to open a pull request to `main`.
+
+## v2 Session 11 — checkpoint report (the closing gate of v2)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope** (the session's first write, `5fec457`): the closing gate only, 11.1 and 11.2 in
+  `docs/V2-CLOSURE.md`, then the questions of 11.0, then the checkpoint; only `docs/` written, nothing
+  published changed. The author first answered "Gate, measurement only", then asked for the question
+  again and answered "Closing gate only (Recommended)"; the row records both.
+- **The seven questions** (`166bf44`), all as recommended:
+  1. **The v2 stays open, and Phase 3 is next.** Post-v2 waits until after it.
+  2. **The classes as proposed**: A 1, B 39, C 5, D 0, E 20.
+  3. **V2C-01 stays A** (an edge from a proposal labelled in the present tense) and is fixed at its
+     root, the derived modality, as **the first item of Phase 3**, before the check extension; **V2C-06
+     and V2C-08** (F-4, F-6 on `applies.html`) stay B, Phase 3, recorded as meeting the A criterion.
+  4. **No class D**; the README is unchanged.
+  5. **D-4 and D-5 stay open**, tied to Phase 4.
+  6. **Post-v2 is not opened**; it opens after the v2 closure is recorded.
+  7. **S1–S3 written verbatim** (`48f7cec`): the roadmap's status paragraph, the `AGENTS.md` row for
+     the roadmap and a new row for `docs/V2-CLOSURE.md`, the status line of `docs/V2-DATA-DESIGN.md`.
+     V2C-44 (the deploy gate "to be confirmed") is left for a later documentation pass.
+
+### What was written
+
+| Commit | File | Change |
+|---|---|---|
+| `5fec457` | `docs/ROADMAP-v2.md` §8 | the scope row |
+| `1d41c13` | `docs/V2-CLOSURE.md` | 11.1, the comparison; 11.2, the inventory |
+| `80adfd6` | `docs/V2-CLOSURE.md` §3.1 | the exact before and after for question 7 |
+| `166bf44` | `docs/ROADMAP-v2.md` §8 | the seven answers |
+| `48f7cec` | `docs/ROADMAP-v2.md`, `AGENTS.md`, `docs/V2-DATA-DESIGN.md`, `docs/V2-CLOSURE.md` | S1–S3; the decision marked in `docs/V2-CLOSURE.md` |
+| this commit | `docs/HANDOVER.md` | this report |
+
+**No published file changed**: nothing under `data/`, `js/`, `css/`, `style.css`, the pages, `i18n/`,
+`img/`, `tools/`, `agent/` or `.control-room/`. `AGENTS.md` is outside `docs/`; it was written only
+with the text approved for question 7, and the five suites that read it were re-run (374 · 0).
+
+### The comparison, in short (the detail is `docs/V2-CLOSURE.md` §1)
+
+- **Executed**: Phases 0, 1 and 2 (items 0.1–2.6), each closed at a checkpoint in §8, and Session
+  10's maintenance. **Every exit criterion of 0.1–2.6 re-run today passes**: each named test is `ok` in
+  this session's run (SNAPSHOT 0.1, ATTEST 0.2, D1–D4, EDITORIAL 1.1, METRICS 1.2, INVENTORY 1.3, N1,
+  W1–W18).
+- **Not started**: Phases 3, 4, 5 and the finance chapter. **Phase 3's entry condition is not met**:
+  0 of 33 rules with `supports` and a locator; 0 of 101 condition values resolving to a provision ID
+  (the 77 obligations do resolve); `evidence-audit.mjs` checks no rule.
+- **The brief**: the five principles are checkable and hold, with two halves not executed (the map's
+  edges, P4/N5); the nine "do not" rules are respected, one by a departure the author decided (D-2,
+  `applies.html` kept with a notice); of the decisions already taken, the inclusions, the finance
+  condition, `stratum` and the sequence to Phase 2 are executed, while **the status labels (D-3) and
+  the map's audit by `evidence-audit.mjs` are decided and not implemented** (Phase 3).
+- **Checkpoint discipline**: every session's first write has the previous checkpoint commit as an
+  ancestor. From Session 5 to 9 several decision rows were committed in the same commit as the change
+  they authorise; the order then rests on the author's quoted words, not on git.
+
+### The findings, with the class the author decided (`docs/V2-CLOSURE.md` §2)
+
+| Class | Count | What |
+|---|---|---|
+| **A** | 1 | V2C-01: an edge from a proposal in the present tense ("Amends", "Repeals"; the DNA's "Related" list with no qualifier). Fixed first in Phase 3 |
+| **B** | 39 | Phase 3: 20 (V2C-02–21: the entry condition, F-1…F-8, R-01, the 8 v1 edges, the map audit, the labels, `stratum`, modality, the DNA's acts, `nis2 → eidas`, the TTPA edges, the procedural event type, eIDAS2's actors). Evidence, data depth, translation: 4 (V2C-24–27). Maintenance: 9 (V2C-28–36). Post-v2 D: 1 (V2C-37). Phase 4: 3 (V2C-40, 41, 43). Status documents: 2 (V2C-44, 45; V2C-45 written in this session) |
+| **C** | 5 | V2C-22 (the Coreper of 21 Oct 2026, Council site), V2C-23 (the AI Omnibus page, 403), V2C-38 (other browsers, devices, screen reader), V2C-39 (the `::1` test, IPv6 runner), V2C-42 (the Pages setting) |
+| **D** | 0 | — |
+| **E** | 20 | V2C-46–65, each with the commit that closed it |
+
+**Corrections to earlier reports, measured in this session:**
+- "member State" is on **5** generated pages (CSA, DNA, EHDS, eIDAS2, IEA), not 3 (Session 9).
+- The undated source's `.”.` is in **31** bibliography entries, not only the OEIL procedure files
+  (Session 9).
+- The verification date's line break reaches the GDPR page too: the `<b>` inside `.fresh` renders
+  `display: block`, so it predates Phase 2 (Session 9 had it unmeasured).
+- The notice's "Read it at the source" link is the default blue in **both** themes; dark, about 2.0:1
+  (Session 8 said the dark theme).
+- F-1 has 2 unmatched entries left, not 4: `data-act` and `dga` gained edges in item 2.1.
+- The deploy gate: GitHub Actions shows the legacy "pages build and deployment" last running on
+  24 Oct 2026 (#14), and `pages.yml` deploying every push to `main` since, the last for #34. That is a
+  deployment record; the Pages setting itself was not read (V2C-42).
+
+### Counts against `main` (`17768c1`), before and after
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| records (instruments / relationships / sources / claims / events / terms) | 39 / 40 / 225 / 181 / 101 / 312 | unchanged | no data change |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | |
+| `evidence-audit --as-of 2026-10-28` | 0 errors · 11 warnings · covered 16 · mapped 12 · watched 5 · excluded 6 | unchanged | |
+| `freshness --as-of 2026-10-28` | 0 defects · 3 prompts | unchanged | the same date as Session 10's close; the prompts are the enforcement set's age (V2C-24) |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | |
+| all 25 suites | 1314 pass + 1 skipped (`::1`) | **1314 pass + 1 skipped (`::1`, EAFNOSUPPORT), 0 failures** | no test added or changed. The skip is not a pass |
+| browser suite (`--require-browser`) | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable (`a11y:bound`) | the first "before" run exited 1 because `docs/V2-CLOSURE.md` was written while it ran; it was re-run on a still tree |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | |
+| `readiness` | refuses, 17 of 20 | refuses, 17 of 20 | blocking: `production_dispatcher_wired`, `decision_ledger_present`; unmeasurable: `deploy_gate_exists` |
+| instrument pages · indexable routes | 17 · 26 | 17 · 26 | |
+
+Other checks, before and after: `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and
+`routes` exit 0; `tools/og-image.mjs --check` passes; `tools/commit-evidence.mjs origin/main HEAD`:
+5 commits, 0 without evidence, each "changes no published file".
+`BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`. No agent CLI that writes was
+run; `agent/records/` does not exist in this checkout.
+
+### What was not verified, and why
+
+- **No source was re-read.** This was a measurement session; V2C-22 and V2C-23 need network this
+  environment did not reach in Sessions 5 and 8, and were not retried.
+- **The Pages setting** (V2C-42): only the Actions history was read.
+- **The `::1` test** (V2C-39): skipped again (EAFNOSUPPORT).
+- **Other browsers, devices, screen readers** (V2C-38): only Chromium 153.
+- **The count of 11 rules in F-8** was not re-derived; the three AI Act rules it names were.
+- **V2C-26** (`agent/depth`'s `missing_competence`): not re-run, to keep `agent/records/` empty.
+
+### The verification checklist
+
+**11.0 · Questions to the author.**
+- *Written:* `docs/ROADMAP-v2.md` §8, the scope row (`5fec457`) and the row of the seven answers
+  (`166bf44`); S1–S3 (`48f7cec`).
+- *Verify:* `git log --oneline 17768c1..` shows `5fec457` first; read the last two rows of §8 and
+  `docs/V2-CLOSURE.md` §3.1, and compare S1–S3 with `git show 48f7cec`.
+- *Automatic:* none.
+- *Criterion:* every answer recorded in the author's words; nothing unapproved written.
+
+**11.1 · The comparison.**
+- *Written:* `docs/V2-CLOSURE.md` §1 (`1d41c13`).
+- *Verify:* re-run any row's "Today" command; for Phase 3, `python3` over `data/applicability.json`
+  (every `sources` entry is a string; no condition value is a provision id) and
+  `grep -n applicability tools/evidence-audit-record.mjs`.
+- *Automatic:* the tests named in §1.4, all in the 25 suites.
+- *Criterion:* every row measured today, not copied; no phase not executed marked complete.
+
+**11.2 · The inventory.**
+- *Written:* `docs/V2-CLOSURE.md` §2.
+- *Verify:* for any open row, its "Measured today" cell; for any E row, `git show` its commit.
+- *Automatic:* none for the inventory itself.
+- *Criterion:* every finding of the named records, with origin, law or not, and a class; closed ones
+  not reported as open.
+
+**11.3 · Write and verify.**
+- *Written:* only `docs/` and `AGENTS.md` (question 7).
+- *Verify:* `git diff --stat 17768c1..` lists only `AGENTS.md` and `docs/`.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, before and after;
+  `commit-evidence` 0.
+- *Criterion:* nothing published changed; no gate, validator, test, CSP, CSRF, Origin, OIDC or
+  publication limit lowered.
+
+**11.4 · Checkpoint.**
+- *Written:* this report.
+- *Criterion:* the author's approval, recorded in §8. **Not yet given.**
+
+### How to check it by hand
+
+1. `git diff --stat 17768c1..HEAD`: `AGENTS.md`, `docs/HANDOVER.md`, `docs/ROADMAP-v2.md`,
+   `docs/V2-CLOSURE.md`, `docs/V2-DATA-DESIGN.md`, and nothing else.
+2. `python3 -m http.server 8000`; open `/instruments/digital-networks-act/` and read the "Related" list:
+   "ePrivacy / Amends" (V2C-01). Open `/instrument.html?id=p2b` in the dark theme: the source link is
+   blue on near-black (V2C-28).
+3. `node tools/evidence-audit.mjs --as-of 2026-10-28` and `node agent/production/cli.mjs readiness`:
+   the figures above.
 
 ## Branch register — 28 October 2026 (v2 Session 10)
 
