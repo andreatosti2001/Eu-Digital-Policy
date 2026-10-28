@@ -3602,18 +3602,21 @@
       "to": "gdpr",
       "kind": "rel-kind:conflict",
       "symmetric": true,
-      "summary": "Content moderation is processing; ad repositories publish targeting data; Art. 40 access almost always entails personal data. The DSA tells platforms to be transparent while the GDPR tells them to minimise. EDPB guidance mediates the conflict but does not dissolve it.",
+      "summary": "Content moderation, notice and action and advertising transparency all involve processing personal data. The DSA requires each advertisement to be explained in real time, including its main targeting parameters, while the GDPR requires information when the data are obtained and their minimisation. EDPB guidance mediates the conflict but does not dissolve it.",
       "provisions": [
-        "dsa:art-40",
-        "dsa:art-39"
+        "dsa:art-16"
       ],
       "claims": [
         "clm-dsa-gdpr-unresolved"
       ],
       "sources": [
-        "src-edpb-guidelines-3-2025"
+        {
+          "source_id": "src-edpb-guidelines-3-2025",
+          "supports": "supports:partial",
+          "locator": "Guidelines 3/2025 v2, ¶¶7–11; section 2.2 (Arts 16, 17, 20 and 23 DSA); ¶¶53–58 and 79–80 (Art. 26 DSA); ¶6 excludes Art. 40"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-10-28"
     },
     {
       "id": "rel-dsa-dma-scope",
@@ -3742,11 +3745,10 @@
       "to": "gdpr",
       "kind": "rel-kind:amends",
       "symmetric": false,
-      "summary": "PROPOSED amendment only. The Digital Omnibus proposes changes to the personal-data definition, a new Art. 41a, relocation of cookie consent to Art. 88a and a new Art. 88c. None is law; the proposal is stalled in Council.",
+      "summary": "PROPOSED amendment only. The Digital Omnibus proposes changes to the personal-data definition, a new Art. 41a, relocation of cookie consent to Art. 88a and a new Art. 88c. None is law.",
       "provisions": [],
       "claims": [
-        "clm-omnibus-four-gdpr-reforms",
-        "clm-data-omnibus-stalled"
+        "clm-omnibus-four-gdpr-reforms"
       ],
       "sources": [
         "src-eurlex-data-omnibus-837"
