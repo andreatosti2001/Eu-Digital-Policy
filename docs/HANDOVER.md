@@ -1,8 +1,8 @@
 # HANDOVER
 
 **Last updated:** v2 Session 9, item 2.6: the Digital Networks Act (COM(2026) 16) covered as a
-proposal, with its page. **Awaiting the author's approval of the checkpoint** (`docs/ROADMAP-v2.md` §8) ·
-28 October 2026
+proposal, with its page. The checkpoint is **approved**, and with it **Phase 2 is closed**
+(`docs/ROADMAP-v2.md` §8) · 28 October 2026
 **Branch:** `claude/intelligent-bell-wuhder`, cut from `main` at `cabe21b`, with `c756f0f` merged.
 
 ## Branch register — 28 October 2026 (v2 Session 9)
@@ -16,7 +16,9 @@ proposal, with its page. **Awaiting the author's approval of the checkpoint** (`
   - `origin/claude/v2-session-8-findings`: `2b5d71d` only, whose content `c756f0f` carries;
   - `origin/scout/digest-digest-2026-10-26T13-10-32Z` (already in the register).
 - `origin/main` was re-fetched before this handover was written: still `cabe21b`.
-- Disposition: awaiting the author's approval of the checkpoint (`docs/ROADMAP-v2.md` §8).
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Yes"); pushed, with a pull request to `main` opened
+  on the author's instruction of 28 Oct 2026 ("Open PR; Phase 2 closed"). Nothing is pushed to the
+  branch after the pull request is opened.
 
 ## v2 Session 9 — checkpoint report (item 2.6, the Digital Networks Act)
 
@@ -316,7 +318,8 @@ amount, or an obligation stated as binding.
 - *Changed:* this report.
 - *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run above.
 - *Criterion:* the author's approval, recorded in §8; the closure of Phase 2 is the author's to decide.
-- **Not yet approved.**
+- **Approved** on 28 Oct 2026 (§8, "The checkpoint of v2 Session 9 = item 2.6"), and Phase 2 closed;
+  pull request opened on the author's instruction.
 
 ### How to check it by hand
 
