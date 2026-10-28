@@ -1,8 +1,8 @@
 # HANDOVER
 
 **Last updated:** v2 Session 11, the closing gate of v2. **The v2 is not closed**: the author decided
-it stays open, with Phase 3 next (`docs/ROADMAP-v2.md` §8). The checkpoint **waits for the author's
-approval** · 28 October 2026
+it stays open, with Phase 3 next (`docs/ROADMAP-v2.md` §8). The checkpoint is **approved** · 28 October
+2026
 **Branch:** `claude/v2-session-11-closing-gate`, cut from `main` at `17768c1`.
 
 ## Branch register — 28 October 2026 (v2 Session 11)
@@ -14,8 +14,9 @@ approval** · 28 October 2026
   `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
   already in the register. No other branch to report.
 - `origin/main` was re-fetched before this handover was written: still `17768c1`.
-- Disposition: **waiting for the author's approval of the checkpoint**; then the author is asked
-  whether to open a pull request to `main`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve the checkpoint"); pushed, with a pull
+  request to `main` opened on the author's instruction of 28 Oct 2026 ("Open PR to main"). Nothing is
+  pushed to the branch after the pull request is opened.
 
 ## v2 Session 11 — checkpoint report (the closing gate of v2)
 
@@ -160,7 +161,8 @@ run; `agent/records/` does not exist in this checkout.
 
 **11.4 · Checkpoint.**
 - *Written:* this report.
-- *Criterion:* the author's approval, recorded in §8. **Not yet given.**
+- *Criterion:* the author's approval, recorded in §8. **Approved** on 28 Oct 2026; pull request
+  opened on the author's instruction.
 
 ### How to check it by hand
 
