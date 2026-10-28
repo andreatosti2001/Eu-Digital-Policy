@@ -1,9 +1,258 @@
 # HANDOVER
 
-**Last updated:** v2 Session 9, item 2.6: the Digital Networks Act (COM(2026) 16) covered as a
-proposal, with its page. The checkpoint is **approved**, and with it **Phase 2 is closed**
-(`docs/ROADMAP-v2.md` §8) · 28 October 2026
-**Branch:** `claude/intelligent-bell-wuhder`, cut from `main` at `cabe21b`, with `c756f0f` merged.
+**Last updated:** v2 Session 10, items 10.1 (the scrollbars) and 10.2 (the internal references shown
+to a reader). The checkpoint is **awaiting the author's approval** (`docs/ROADMAP-v2.md` §8) ·
+28 October 2026
+**Branch:** `claude/v2-session-10-frontend`, cut from `main` at `c982724`.
+
+## Branch register — 28 October 2026 (v2 Session 10)
+
+- Branch `claude/v2-session-10-frontend`, cut from `main` at `c982724` (#31 and #32 merged). The
+  prompt's branch, `claude/v2-session-10-prompt`, was already in `main` as #32, so nothing was merged
+  in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`:
+  - `origin/claude/v2-session-8-findings`: `2b5d71d` only, whose content #31 carries (Session 9's
+    register);
+  - `origin/scout/digest-digest-2026-10-26T13-10-32Z` (already in the register).
+  `origin/claude/new-session-o9uopd`, which the prompt expected, is no longer unmerged.
+- `origin/main` was re-fetched before this handover was written: still `c982724`.
+- Disposition: pushed; **awaiting the checkpoint's approval**. A pull request to `main` is put to the
+  author after it. Nothing is pushed to the branch after a merge is requested.
+
+## v2 Session 10 — checkpoint report (items 10.1 and 10.2)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope** (the session's first write, `3e0e869`): items 10.1 and 10.2 only; a presentation
+  session in which no data changes meaning; Session 11, Phase 3 and post-v2 out.
+- **10.1** (`7cbfd4e`), all four as proposed: one `scrollbar-color` on `html`
+  (`var(--paper-faint) transparent`), with the day palette also declared on `:root` when `body`
+  carries it; a scroll shadow on `.chrome-nav` and `.subnav`, whose bars stay hidden; a thin bar on
+  `.spine` in every engine; the hide rules of the dead `.tool-top`/`.bib-top` strip deleted.
+- **10.2, the rule and how** (`7cbfd4e`): what counts as an internal reference and what does not; the
+  perimeter of eight renderers (R1–R8); the data stays as written and one function in `js/format.js`
+  cleans the text at render time; W18 holds it.
+- **10.2, every text** (`ede6497`), one question per group, all as recommended: R1 (the relation-kind
+  note, with "Direction: from = …" and "(from)" dropped by the interaction box), R2 (status notes),
+  R3 (source notes), R4 (claim notes), R5–R7 (enforcement, institutions, search), R8 (the
+  bibliography's own copy, word for word, with two links). No locale key to declare. The presentation
+  findings of Sessions 8 and 9 stay open.
+
+### What was written
+
+| Commit | File | Change |
+|---|---|---|
+| `947803f` | `js/format.js` | `readerText()`, the filter (unwired until approved) |
+| `d7d737b`, `8876649` | `style.css`, `css/tokens.css`, `css/tools.css` | 10.1 as decided; `8876649` tunes the shadow's covers (values only) after the browser showed a faint band at rest |
+| `90c7f92` | `js/format.js` (`internalRefs()`), `js/interactions.js`, `js/instrument-view.js`, `js/status.js`, `js/evidence.js`, `js/bibliography.js`, `js/enforcement-page.js`, `js/institutions-page.js`, `js/search.js`, `bibliography.html`, `tools/selftest.mjs` | the eight renderers print notes through `readerText()`; each instrument page's claim card carries its id as an anchor; R8's copy; W18 |
+| | generated | the 17 instrument pages (`node tools/_footer.mjs`; a second run writes 0 files). No OG card changed (`og-image --check` passes) |
+| `77b9058` | `css/tokens.css` | the link style for the note containers (below, "checks changed") |
+| this commit | `docs/HANDOVER.md`, `docs/v2-design/session-10-before-after.md` | this report; the before/after table |
+| `3e0e869`, `7cbfd4e`, `ede6497` | `docs/ROADMAP-v2.md` §8 | four rows |
+
+**No file under `data/` changed, and no fact, date, status, relationship, claim, source or judgement
+changed.** The provenance stays in the notes, where the maintainers and the checks read it.
+`js/search.js` was changed only for R7, on the author's decision; nothing there prepares the Evidence
+Navigator.
+
+### The checks changed, and why
+
+- **W18**, new in `tools/selftest.mjs`. It runs every note a renderer of the perimeter prints (taxonomy
+  notes of the relation kinds and actor/sector/activity/territory terms; status notes; relationship,
+  source, claim and enforcement notes; appeal notes; competence notes) through `readerText()`, and
+  fails on anything `internalRefs()` still finds. It reads the visible text of every static and
+  generated page and of the three editions (the datasets explorer excepted, by the rule). It pins the
+  approved R1 texts word for word, three R2 outputs and R8's copy, asserts the data still carries the
+  references (so the provenance is not lost), plants a `docs/` path, a claim id and a commit, and
+  asserts that case numbers, Council documents, a court URL and an agenda item are not findings.
+  **Measured to fail** with each control off, and restored after each run:
+  - `readerText()` made a pass-through: W18 fails on the fields;
+  - the pages generated with it off: 56 leaks on the instrument pages;
+  - the R1 rule removed from `js/interactions.js`: W18 fails on the pinned kind notes.
+- **No existing test's premise changed.** No selftest, browser check, `prose-homes` or `design-qa`
+  rule read any of the texts changed. The one check the work tripped is below.
+- **A regression of this session, caught by the browser suite and fixed at its root (`77b9058`).** The
+  links `readerText()` makes landed in containers that had only held plain text and had no link rule.
+  They fell back to the browser's blue: `a11y:contrast:dark:enforcement.html` 1.85:1 and
+  `:bibliography.html` 1.98:1, 2 failures. Those containers now take the site's existing link
+  convention (`--mech`, underlined, `--live` on hover), and the suite is back to 343 · 0 · 1. No
+  check was changed.
+
+### Item 10.2: the inventory, and before and after
+
+Measured in Chromium over every page, every instrument's generated page and `instrument.html?id`
+(39), the 175 evidence panels the brief opens, search, the SEO metadata, JSON-LD, the OG cards' inputs
+and the it/fr/es editions.
+
+| Renderer | Field | Records | Shown on |
+|---|---|---|---|
+| R1 interaction box | taxonomy `relationship_kind` note | 2 | 26 cards on 12 instrument pages; `instrument.html`; the brief and its three editions |
+| R2 status note | `instruments[].status_note` | 13 (+ ttpa, psd3, not printed today) | instrument page head; the brief's status strips; the evidence panel |
+| R3 source note | `sources[].note` | 25 | the bibliography |
+| R4 claim note | `claims[].verification_note` | 86 of 181 | the evidence panel |
+| R5 enforcement | `verification_note`, `appeal.note` | 11 | `enforcement.html` |
+| R6 institutions | `competences[].note` | 3 | `institutions.html` |
+| R7 search | taxonomy actor notes | 6 | the search palette |
+| R8 page copy | `bibliography.html` | 1 | the bibliography |
+
+Clean before the work: the SEO metadata, JSON-LD, the OG cards (drawn from name, title, kind and CELEX).
+Outside the rule: the datasets explorer (the raw records, by design); a record's own handle ("Claim ID
+clm-…", "enf-… · verified"); URLs, case numbers, Council documents, CELEX numbers; the methodology and
+licence pages' repository links. Not printed by any renderer today, and filtered anyway where the
+renderer is in the perimeter: the relationships' notes (printed only when an edge requires
+verification).
+
+**Every changed sentence, before and after, is in `docs/v2-design/session-10-before-after.md`**
+(148 records). By kind:
+
+| Before | After | Where |
+|---|---|---|
+| "(docs/V2-DATA-DESIGN.md §1.4)", "(docs/AUDIT-2026-10-14.md §1 F)" | dropped | R1 (26 cards), R2 (CRA) |
+| "Direction: from = the enabling instrument." / "(from)" | dropped | R1 (9 / 17 cards) |
+| "(audit item 9)", "(audit items 9 and 10)", "(audit item 10)", "(audit items 2 and 12)", "(audit item N)" | dropped | R2 (11 instruments), R4, R5 |
+| "(audit T-NN)", "(audits T-22, T-27)" | dropped | R3, R4, R5 |
+| "for B.3 (v2 Session 5)", "for item 2.x" | dropped | R3 (16), R4, R7 (6) |
+| "(commit 282a782)" | dropped | R2 (Data Act) |
+| `last_verified`, `status_as_of`, `legislative_status`, `action_status`, `amended_by`, … | "the verification date", "the status date", "the legislative status", "the action status", "amended by", … | R2, R4, R5 |
+| `status:in-force`, `status:stalled`, `remedy:ordered`, `record-type:inaction`, `actor:data-holder` | ‘In force’, ‘Stalled’, ‘Remedy ordered’, ‘Recorded inaction’, ‘Data holder’ | R2, R5, R7 |
+| `clm-…` beside an Article or a Council document | dropped: "(Art. 5a(1))", "(ST 13112/26)" | R2 (eIDAS2 ×2, Data Omnibus ×2), R4 |
+| `clm-…` with no citation beside it | "(see the claim)", a link to the claim on its instrument page; in the evidence panel "claim n", a button opening it | R2 (Data Omnibus ×3), R4, R5 (Apple) |
+| `src-…` in a sentence | "⟨publisher, year⟩", a link to the bibliography entry; dropped where the sentence names the document; "a former record" for an id that no longer exists | R2, R3, R6 |
+| `enf-…` | "the enforcement record", a link; dropped where the sentence names the decision | R4, R5 |
+| `tools/evidence-audit.mjs`, `instruments.json`, `enforcement.json` | "the site's evidence audit", "the instruments dataset", "the enforcement dataset" | R4 |
+| R8: "computed from `data/*.json`" / "(`tools/validate.mjs`)" | "computed from ⟨the site's datasets⟩" / ", in ⟨the site's data validator⟩" | the bibliography |
+
+Two corrections to what was put to the author, neither changing a text:
+- **R3's question said source notes are printed "in the bibliography and in the evidence panel's source
+  list".** They are printed in the bibliography only: `js/evidence-view.js` cites a source without its
+  note.
+- **The footnote numbers in the review file were an approximation** (from the order of `data-claim` in
+  the markup). The panel numbers them at run time: the two Dutch fines read "claim 38" and "claim 39",
+  not 34 and 35. The committed table writes "claim [n]".
+
+### Counts against `main` (`c982724`)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| records (instruments / relationships / sources / claims / events / terms) | 39 / 40 / 225 / 181 / 101 / 312 | unchanged | no data change |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | |
+| `evidence-audit --as-of 2026-10-28` | 0 errors · 11 warnings · covered 16 · mapped 12 · watched 5 · excluded 6 | unchanged | |
+| `freshness --as-of 2026-10-28` | 0 defects · 3 prompts | unchanged | the calendar |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | |
+| matches of the browser scan's patterns (datasets explorer and "Claim ID" handles excluded) | 797, 457 of them in the evidence panels | 20 (19 distinct) | the filter; every match left is an exempt kind: the Council's agenda "Item 1", hex segments of URLs, each enforcement record's own handle. The 797 also counted some of those |
+| static pages: `docs/V2-DATA-DESIGN.md §1.4` / `clm-` / `commit` | 26 / 7 / 1 | 0 / 0 / 0 | |
+| `tools/selftest.mjs` | 107 | 108 | W18 |
+| all 25 suites | 1313 pass + 1 skipped | **1314 pass + 1 skipped (`::1`), 0 failures** | W18. The skip is the `::1` test, not run in this container: a skip is not a pass |
+| browser suite (`--require-browser`) | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable (`a11y:bound`) | 341 · 2 · 1 before `77b9058` |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | |
+| instrument pages · indexable routes | 17 · 26 | 17 · 26 | |
+
+Other checks: `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0;
+`tools/og-image.mjs --check` passes; `tools/commit-evidence.mjs origin/main HEAD`: 0 commits without
+evidence. `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`. No agent CLI that
+writes was run, and `agent/records/` was empty before the last run of the suites.
+
+### Seen in a browser, and what was not verified
+
+Chromium 153 (Playwright), with classic scrollbars shown (headless hides them by default).
+- The home page, `instruments.html`, the bibliography, the GDPR, DNA, eIDAS2 and Data Omnibus pages at
+  1280px and 390px in both themes: the page's bar reads `--paper-faint` on `html` in each theme
+  (#978C7E dark, #5B5053 day). No horizontal overflow, no console error.
+- `.chrome-nav` at 390px, in both themes, at the start, in the middle and at the end of the strip: a
+  shadow shows only on a side where links are hidden. The subnav behaves the same. Tab reaches the
+  last link of each strip and the strip scrolls it into view.
+- `.spine` at 1280×360: it overflows and shows a 10px thin bar in the theme's ink. At 200% zoom of a
+  1280×720 screen (a 640×360 viewport) the spine is hidden by its existing breakpoint, so the bar is
+  only ever seen on wide, short windows.
+- The evidence panel: a claim note's "claim 38" button opens Note 38 in place. The Data Omnibus page's
+  three "see the claim" links land on cards that exist.
+- Contrast: thumb on track ≥ 5.3:1 in both themes (computed from the tokens), and the links in the
+  notes pass the browser suite's contrast check in both themes.
+- `prefers-reduced-motion`: nothing added moves; the scroll shadow is static backgrounds.
+
+**Not verified:** Firefox and Safari/WebKit (Safari keeps its native bar; whether it honours
+`scrollbar-color` was not measured); real touch devices, where scrollbars overlay and the shadow is the
+only signal; screen readers; Windows forced-colours; pixels.
+
+### Found, for the author — not changed
+
+1. **Leftovers outside the rule**, in claim notes (R4): a provision id ("No tfeu:art-16 provision is
+   modelled") and bare instrument ids ("eidas2 removed from instruments", "ehds added to
+   instruments"). Approved as leftovers, unchanged.
+2. **Un-numbered audit references stay**: "(audit, facts hidden in interpretation)", "21 Oct 2026
+   (audit): …". They name no code, so the rule leaves them.
+3. **Some outputs read stiffly**: "The verification date 21 Oct 2026: the status was re-read that day"
+   (Data Omnibus); "this environment" in source notes. Approved as listed.
+4. **The dead `.tool-top`/`.bib-top` block** in `css/tools.css` keeps its fade and layout rules (only
+   the hide rules went, as decided), and `js/shell.js` still queries those headers.
+5. **The spine's thin bar narrows the rail by 10px** when it shows; the dots sit close to it.
+6. **No hover state on a scrollbar** (`scrollbar-color` has none), as decided.
+
+**Still open from Session 9** (unchanged): the edge kind in the present tense ("Amends", "Defers to")
+for a proposal; the modality derived from the `from` node (`docs/V2-DATA-DESIGN.md` §1.4) and the four
+`enables` candidates; the acts the DNA would repeal or amend not modelled; "member State" in the
+generated descriptions; the undated source's `.”.`; the verification date breaking its line; no event
+type for a procedural step.
+
+**Still open from Session 8** (unchanged): the colour of the notice's "Read it at the source" link in
+the dark theme; the EHDS page's `<title>`; `data-omnibus`'s status note, to be re-verified against the
+outcome of the Coreper meeting of 21 Oct 2026 (only its identifiers changed here, at render time);
+`nis2 → eidas` not modelled.
+
+**Still open** (unchanged): `src-ec-ai-omnibus-in-force` (403); the `::1` test (skipped again here); the
+8 v1 relationships and the `edge-v1-sources` flip; R-01 and the eight findings of
+`docs/V2-DATA-DESIGN.md` §7 (Phase 3); the Session 5 findings of the roadmap's §3.
+
+### The verification checklist
+
+**10.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, four rows (`3e0e869`, `7cbfd4e`, `ede6497`).
+- *Verify:* `git log --oneline c982724..` shows `3e0e869` first, and `7cbfd4e` and `ede6497` before
+  `d7d737b` and `90c7f92`.
+- *Automatic:* none.
+- *Criterion:* every reader-facing text decided before it was written; nothing published changed
+  before the scope row.
+
+**10.1 · Scrollbars.**
+- *Changed:* `style.css`, `css/tokens.css`, `css/tools.css` (`d7d737b`, `8876649`).
+- *Verify:* open any page in the dark theme: the page's bar is dark-on-dark. Narrow the window below
+  ~1000px on an instrument page: a shadow appears at the nav strip's right edge, moves to both sides
+  as you scroll, and leaves the right at the end. Make the brief's window short (below ~410px): the
+  left rail shows a thin bar.
+- *Automatic:* `design-qa` 0/0; the browser suite's contrast checks. No test asserts the scrollbar
+  itself.
+- *Criterion:* existing tokens only; no inline style or script; no CSP exception; nothing hidden
+  globally; a continuity signal on every hidden strip.
+
+**10.2 · Internal references.**
+- *Changed:* `js/format.js` and seven renderers, `bibliography.html`, the 17 generated pages
+  (`947803f`, `90c7f92`, `77b9058`).
+- *Verify:* open `/instruments/eidas2/`: the status note ends its two duties "(Art. 5a(1))" and
+  "(Art. 5f(2))". Open the GDPR page's interactions: no "docs/". In the brief, open the footnote of
+  "Eight of the ten largest GDPR fines": its note says "claim 38", and the button opens Note 38. Open
+  the bibliography's Data quality lede.
+- *Automatic:* `node --test --test-name-pattern=W18 tools/selftest.mjs`.
+- *Criterion:* no internal reference in a text a reader sees; the data and its provenance unchanged.
+
+**10.3 · Write and verify.**
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as above;
+  `commit-evidence` 0.
+- *Criterion:* 0 errors everywhere; no gate, validator, test, CSP, CSRF, Origin, OIDC or publication
+  limit lowered.
+
+**10.4 · Checkpoint.**
+- *Changed:* this report.
+- *Criterion:* the author's approval, recorded in §8. **Not yet given.**
+
+### How to check it by hand
+
+1. `node --test --test-name-pattern=W18 tools/selftest.mjs`.
+2. To see it hold, add "(commit 1234abc)" to `eidas2`'s `status_note` in `data/instruments.json`: W18
+   still passes (the filter drops it). Then make `readerText()` return its input in `js/format.js`:
+   W18 fails. Restore both files.
+3. `python3 -m http.server 8000`; open `/instruments/data-omnibus/` in both themes at 390px and
+   desktop width; read the status note; follow a "see the claim" link; scroll the top nav strip.
+4. `node agent/browser/cli.mjs --require-browser`: 343 · 0 · 1.
 
 ## Branch register — 28 October 2026 (v2 Session 9)
 
