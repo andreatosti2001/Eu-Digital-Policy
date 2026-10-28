@@ -61,7 +61,7 @@ import { SessionStore, resolveSession, OidcProvider, sanitiseReturnTo, parseCook
 import { serve, ROUTES, PUBLIC_ROUTES, PROHIBITED_ROUTE_WORDS, routeFor, parseStrictJson, MAX_BODY_BYTES } from './server.mjs';
 import { decide, reviewQueue, DECIDABLE_STATES, PUBLICATION_NOTE } from './decide.mjs';
 import { controlRoomBoundary } from './boundary.mjs';
-import { RECORD_COMMAND } from '../tools/evidence-audit-record.mjs';
+import { RECORD_COMMAND, CHECKED } from '../tools/evidence-audit-record.mjs';
 import { execFileSync } from 'node:child_process';
 import { dataProposalFixture, approvalRequestFixture } from '../agent/schemas/fixtures.mjs';
 import { validate } from '../agent/schemas/validate.mjs';
@@ -1695,7 +1695,7 @@ test('EDITORIAL · 1.1 · on a fresh clone the view says "no recorded run" and g
     assert.equal(d.command, 'node tools/evidence-audit.mjs --as-of YYYY-MM-DD --record');
     assert.equal(d.latest, null);
     assert.ok(!('counts' in d), 'a view with no run must not report counts that would read as zeros');
-    assert.equal(d.checked.length, 7, 'what a run would check is stated even before one exists');
+    assert.deepEqual(d.checked, CHECKED, 'what a run would check is stated even before one exists');
     assert.ok(d.limits.length >= 5);
     assert.match(d.separate_from_health, /Not Website health/);
   } finally { await s.stop(); }
@@ -1717,7 +1717,7 @@ test('EDITORIAL · 1.1 · a recorded run renders with every question answered: w
     const r = d.latest;
     for (const q of d.questions) assert.ok(r[q.key] !== null && r[q.key] !== undefined, `the record does not answer "${q.label}"`);
     assert.equal(r.as_of, '2026-10-24', 'the LATEST record is shown');
-    assert.equal(r.checked.length, 7);
+    assert.deepEqual(r.checked, CHECKED);
     assert.ok(r.evidence.read.some((f) => f.path === 'index.html' && /^[0-9a-f]{64}$/.test(f.sha256)));
     assert.ok(r.evidence.read.some((f) => f.path === 'data/claims.json'));
     assert.ok(r.evidence.rules.some((f) => f.path === 'js/evidence-model.js'));

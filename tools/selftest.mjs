@@ -2536,3 +2536,9 @@ test('X3 · 12.2: evidence-audit.mjs reports TRIGGERS in text, --json and --mark
     assert.match(r.out, /applicability\/ap-gdpr-01 stores "publishable"/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
+
+test('X4 · 12.2: the record says what the run now reads, in the words the author approved, and no longer that it reads nothing of the rules', () => {
+  assert.ok(!LIMITS.some((l) => /reports nothing about data\/applicability\.json/.test(l)));
+  assert.ok(LIMITS.includes("It reads the rules behind applies.html (data/applicability.json) for their structure and evidence: references and locators, the provision behind each condition, exemptions, thresholds and dates. It opens no source and runs no questionnaire, so a rule it reports as publishable meets the claims' standard of evidence; that is not a finding that the rule states the law correctly (docs/ROADMAP-v2.md §4, Phase 3; D-2)."));
+  assert.deepEqual(CHECKED.map((c) => c.section), ['claims', 'remediation', 'prose', 'sources', 'freshness', 'enforcement', 'regulatory', 'register', 'triggers']);
+});
