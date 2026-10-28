@@ -1,9 +1,39 @@
 # HANDOVER
 
-**Last updated:** v2 Session 11, the closing gate of v2. **The v2 is not closed**: the author decided
-it stays open, with Phase 3 next (`docs/ROADMAP-v2.md` §8). The checkpoint is **approved** · 28 October
-2026
-**Branch:** `claude/v2-session-11-closing-gate`, cut from `main` at `17768c1`.
+**Last updated:** Session 11.5, the P0 data-integrity audit of 28 October 2026
+(`docs/AUDIT-2026-10-28.md`). The v2 stays open with Phase 3 next, as v2 Session 11 recorded below.
+**Branch:** `claude/p0-data-integrity-2026-10-28`, cut from `main` at `8aae4a3`.
+
+## Branch register — 28 October 2026 (Session 11.5)
+
+- Branch `claude/p0-data-integrity-2026-10-28`, cut from `main` at `8aae4a3` (#35 merged).
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
+  already in the register. No other branch to report.
+- `origin/main` was re-fetched before this handover was written: still `8aae4a3`.
+- Disposition: pushed; **no pull request opened**. Whether to open one to `main` is the author's
+  question, asked at the end of the session. Until it merges, production still says the Council has no
+  mandate on the Data Omnibus.
+
+## Session 11.5 — the P0 data-integrity audit (28 Oct 2026)
+
+The full register is `docs/AUDIT-2026-10-28.md`. In short:
+
+- **F-1, confirmed and fixed.** Coreper agreed the Council's negotiating mandate on the Data Omnibus on
+  21 Oct 2026. The record is ST 14756/26, an outcome of proceedings dated 22 Oct, read on the Council's
+  register. The site said there was none: Part VIII's chip and bullet, undated, and the paragraph,
+  dated 21 Oct, in four languages; the instrument's status note; one claim. A test (O4) pinned the
+  false chip. Corrected in the data, the prose and the overlays, and regenerated.
+  `legislative_status` stays `status:proposal`.
+- **F-2, disproved.** The bibliography's 206 and 208 are the counts of 22 and 24 Oct. The static
+  fallback has equalled `data/sources.json` at every commit, and production equals the tree.
+- **F-3, fixed.** Fact claims about the Council's or Parliament's stage on a file still in procedure
+  now get the 30-day "institutional status" interval their policy already named, instead of 90 days.
+  `clm-data-omnibus-stalled` is now review due and was **not** stamped.
+- **F-4, open for the author.** `status:council-position` cannot be shown: the masthead would count
+  a core instrument as "no status recorded". Leave the scalar, or extend the displays first.
+- Validators unchanged at baseline; `tools/selftest.mjs` 111/111 (P1–P3 new, O4 corrected); the 24
+  suites 1241 tests, 0 failing.
 
 ## Branch register — 28 October 2026 (v2 Session 11)
 
