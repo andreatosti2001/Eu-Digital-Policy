@@ -273,6 +273,22 @@ body[data-theme="light"]{
 .subnav a:hover{color:var(--text-1)}
 .subnav a[aria-current="true"]{color:var(--text-1);border-bottom-color:var(--live)}
 
+/* The strip hides its bar; this is how it says it continues (item 10.1).
+   Two covers in the page colour scroll WITH the links (local) and two
+   shadows stay at the edges (scroll): a shadow shows only on a side where
+   links are out of view, and none when the strip fits. No JS, no mask. */
+.chrome-nav,.subnav{
+  background-image:
+    linear-gradient(to right, var(--ink-0), transparent),
+    linear-gradient(to left, var(--ink-0), transparent),
+    linear-gradient(to right, color-mix(in srgb, var(--paper-faint) 70%, transparent), transparent),
+    linear-gradient(to left, color-mix(in srgb, var(--paper-faint) 70%, transparent), transparent);
+  background-position:left center, right center, left center, right center;
+  background-size:24px 100%, 24px 100%, 18px 100%, 18px 100%;
+  background-repeat:no-repeat;
+  background-attachment:local, local, scroll, scroll;
+}
+
 /* ============================================================
    STATUS BADGE — hue + glyph + border. Never hue alone.
    ============================================================ */
