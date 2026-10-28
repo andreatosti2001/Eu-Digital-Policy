@@ -242,7 +242,9 @@
       "id": "clm-ehds-dates",
       "type": "claim-type:law",
       "statement": "The European Health Data Space Regulation, Regulation (EU) 2025/327, entered into force on 25 March 2025 and applies from 26 March 2027, with provisions on priority categories of health data and EHR systems phased in from 2029 and 2031.",
-      "instruments": [],
+      "instruments": [
+        "ehds"
+      ],
       "provisions": [],
       "institutions": [],
       "enforcement": [],
@@ -256,8 +258,8 @@
       "legal_basis": [],
       "brief_part": "part-1",
       "published": "2025-03-05",
-      "last_verified": "2026-09-27",
-      "verification_note": "Registered on 27 Sep 2026 for a row of the 'also in the rulebook' box in Part I and read that day in the Official Journal text (Publications Office's Cellar). The instrument is not modelled in data/instruments.json. Published on 5 March 2025; the Publications Office's metadata records entry into force on 25 March 2025. The Commission's EHDS page says 26 March 2025; the site follows the Official Journal."
+      "last_verified": "2026-10-28",
+      "verification_note": "Registered on 27 Sep 2026 for a row of the 'also in the rulebook' box in Part I and read that day in the Official Journal text (Publications Office's Cellar). 28 Oct 2026: re-read in Art. 105 of the Official Journal text and in the Publications Office's metadata; `ehds` added to `instruments` for item 2.4, when the instrument was modelled. Published on 5 March 2025; the Publications Office's metadata records entry into force on 25 March 2025. The Commission's EHDS page says 26 March 2025; the site follows the Official Journal."
     },
     {
       "id": "clm-eidas2-wallets",

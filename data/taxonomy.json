@@ -275,6 +275,20 @@
       "definition_ref": null,
       "parent": null,
       "note": "eIDAS: Regulation (EU) No 910/2014 applies to trust service providers established in the Union (Art. 2(1), as replaced by Regulation (EU) 2024/1183 Art. 1 point (2)(a), read 27 Oct 2026). Added 27 Oct 2026 for item 2.2."
+    },
+    {
+      "id": "actor:health-data-holder",
+      "label": "Health data holder",
+      "definition_ref": null,
+      "parent": null,
+      "note": "EHDS: 'health data holder' as defined in Art. 2(2), point (t), of Regulation (EU) 2025/327, read 28 Oct 2026. Not the Data Act's data holder (actor:data-holder). Added 28 Oct 2026 for item 2.4."
+    },
+    {
+      "id": "actor:health-data-user",
+      "label": "Health data user",
+      "definition_ref": null,
+      "parent": null,
+      "note": "EHDS: 'health data user' as defined in Art. 2(2), point (u), of Regulation (EU) 2025/327, read 28 Oct 2026: granted lawful access to electronic health data for secondary use. Added 28 Oct 2026 for item 2.4."
     }
   ],
   "activity": [

@@ -1724,7 +1724,13 @@ const firstOf = (db, disp) => db.instruments.instruments.find((i) => i.scope_dec
 const regErrors = (db, asOf = '2026-10-27') => registerAudit(db, asOf).errors;
 
 test('W1 · this tree: the register and the watchlist are derived, complete and clean, and the backlog is the frozen one', () => {
-  const r = registerAudit(loadDb(), '2026-10-27');
+  /* audited as of the tree's own newest decision, as freshness F1 audits as of
+     its newest verification: an earlier date only reports VERIFIED_AFTER_AS_OF,
+     a property of the date asked (W4). Was a fixed 2026-10-27 until item 2.4
+     wrote a decision dated 28 Oct 2026. */
+  const newest = loadDb().instruments.instruments.map((i) => i.scope_decision?.last_verified).filter(Boolean).sort().pop();
+  assert.ok(newest >= '2026-10-28', 'the tree holds the decision of item 2.4');
+  const r = registerAudit(loadDb(), newest);
   assert.deepEqual(r.errors, []);
   assert.deepEqual(r.warnings, []);
   assert.ok(r.register.length >= 1 && r.watchlist.length >= 1, 'item 2.1 put records in both lists');
@@ -1893,6 +1899,43 @@ test('W13 · item 2.3: csa is covered and held to M-04, M-05 and M-07 in full �
   plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => x.id !== 'rel-nis2-csa-enables'); },
     /^M-05 instruments\/csa: covered \(core\) without a page/);
   plant((d) => { instOf(d, 'csa').dna.objective = ''; }, /^M-05 instruments\/csa: covered \(core\) without a page/);
+});
+
+test('W14 · item 2.4: ehds is covered and held to M-04, M-05 and M-07 in full — remove any one support and it fails', () => {
+  const r = registerAudit(loadDb(), '2026-10-28');
+  const db = loadDb();
+  const ehds = instOf(db, 'ehds');
+  assert.equal(coverage(ehds), 'covered');
+  assert.equal(ehds.scope_decision.disposition, 'included');
+  assert.ok(!STATUS_BASIS_BACKLOG.includes('ehds') && !SCOPE_DECISION_BACKLOG.includes('ehds'), 'no backlog shelters it');
+  assert.ok(!r.backlog['status-basis-missing'].includes('ehds'));
+  /* crit:sector-instance is "shown by an edge" to a covered instrument: the
+     criterion itself rests on rel-gdpr-ehds-enables, textual, v2, located in the EHDS */
+  assert.deepEqual(ehds.scope_decision.criterion, ['crit:object-data', 'crit:sector-instance']);
+  const edge = db.instruments.relationships.find((x) => x.id === 'rel-gdpr-ehds-enables');
+  assert.ok(edge && edge.from === 'gdpr' && edge.to === 'ehds' && edge.kind === 'rel-kind:enables');
+  assert.equal(coverage(instOf(db, 'gdpr')), 'covered', 'the edge reaches a covered instrument');
+  assert.ok(edge.sources.every((s) => typeof s === 'object' && s.supports === 'supports:direct' && structural(s.locator)));
+  assert.ok(edge.sources.every((s) => ehds.sources.includes(s.source_id)), 'the locator is in the EHDS, not in the GDPR');
+  const plant = (fn, re) => { const d = loadDb(); fn(d); assert.ok(regErrors(d).some((e) => re.test(e)), `expected ${re}`); };
+  plant((d) => { delete instOf(d, 'ehds').status_basis; }, /^M-07 instruments\/ehds:/);
+  plant((d) => { delete instOf(d, 'ehds').scope_decision; }, /^M-04 instruments\/ehds: a core record added after 25 Oct 2026/);
+  /* every edge to a covered instrument gone, the edge to the watched DGA kept:
+     the page gate's `context` still passes, and the criterion alone fails */
+  const toCovered = (d, x) => (x.from === 'ehds' || x.to === 'ehds')
+    && coverage(instOf(d, x.from === 'ehds' ? x.to : x.from)) === 'covered';
+  plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => !toCovered(d, x)); },
+    /^M-04 instruments\/ehds: crit:sector-instance with no edge to a covered instrument/);
+  { const d = loadDb(); d.instruments.relationships = d.instruments.relationships.filter((x) => !toCovered(d, x));
+    assert.ok(!regErrors(d).some((e) => /^M-05 instruments\/ehds/.test(e)), 'the gate alone would not have caught it'); }
+  /* the edge stays but loses its direct reference: the criterion fails too */
+  plant((d) => {
+    for (const x of d.instruments.relationships) if (toCovered(d, x)) for (const s of x.sources) s.supports = 'supports:partial';
+  }, /^M-04 instruments\/ehds: crit:sector-instance/);
+  /* every edge gone: no context, so no page, so M-05 as well */
+  plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => x.from !== 'ehds' && x.to !== 'ehds'); },
+    /^M-05 instruments\/ehds: covered \(core\) without a page/);
+  plant((d) => { instOf(d, 'ehds').dna.objective = ''; }, /^M-05 instruments\/ehds: covered \(core\) without a page/);
 });
 
 /* v2 Session 5, B.3. Eight of the seventeen v1 relationships were migrated to

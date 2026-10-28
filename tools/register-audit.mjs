@@ -8,7 +8,8 @@
  * as §1.5 and §3 define them:
  *
  *   M-03  the disposition agrees with scope_class
- *   M-04  a scope decision is present where it is required, and complete
+ *   M-04  a scope decision is present where it is required, and complete —
+ *         including, for crit:sector-instance, the edge that shows it
  *   M-05  covered ⇒ a page of its own; excluded or watched ⇒ none
  *   M-06  an excluded or watched record refers the reader to a source with a URL
  *   M-07  status_basis: a direct reference with a structural locator, of the
@@ -121,6 +122,17 @@ export function registerAudit(db, asOf) {
         errors.push(`M-04 ${w}: scope_decision.sources must be reference objects`);
       else if (!arr(d.sources).some((s) => s.supports === 'supports:direct' && structural(s.locator)))
         errors.push(`M-04 ${w}: no direct reference with a structural locator among the decision's sources`);
+      /* crit:sector-instance is "built on a covered instrument, and shown by an
+         edge to it" (docs/V2-DATA-DESIGN.md §5): the clause is complete only
+         while such an edge exists and rests on a direct, structurally located
+         reference. Added 28 Oct 2026 (item 2.4), when the first decision to cite
+         the clause entered data/; the page gate's `context` criterion cannot
+         stand in for it, because any edge at all satisfies that. */
+      if (arr(d.criterion).includes('crit:sector-instance') && !arr(db.instruments?.relationships).some((r) => {
+        const other = r.from === i.id ? r.to : r.to === i.id ? r.from : null;
+        return other && other !== i.id && coverage(ix.instrument.get(other)) === 'covered'
+          && arr(r.sources).some((s) => s && typeof s === 'object' && s.supports === 'supports:direct' && structural(s.locator));
+      })) errors.push(`M-04 ${w}: crit:sector-instance with no edge to a covered instrument resting on a direct reference with a structural locator`);
       if (!(typeof d.last_verified === 'string' && ISO.test(d.last_verified))) errors.push(`M-04 ${w}: scope_decision.last_verified missing`);
       /* a decision verified after the audit date is a property of the date
          asked, not of the tree, so it is a WARNING: an ERROR here is a defect
