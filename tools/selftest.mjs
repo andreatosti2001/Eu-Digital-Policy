@@ -53,6 +53,7 @@ import { build as buildArtifact, refusal } from './pages-artifact.mjs';
 import * as EM from '../js/evidence-model.js';
 import { procedure, contradictions } from '../js/pipeline.js';
 import { statusContradictions, provisionApplication } from '../js/regulatory-model.js';
+import { sanctionCeiling } from '../js/dna.js';
 import { proseCopies, textBlocks, scriptBodies, codeOf, MIN_WORDS, unescapeJs } from './prose-homes.mjs';
 import {
   SOURCE_FIELDS, REQUIRED_FIELDS, OPTIONAL_FIELDS, RESOLUTIONS, ABSENT_BY_DESIGN, violations,
@@ -1981,6 +1982,29 @@ test('W15 · item 2.5: iea is covered and held to M-04, M-05 and M-07 in full �
   { const ev = new Map(ix.event); ev.set('tl-iea-planted', { id: 'tl-iea-planted', date: '2027-01-01', event_type: 'event:application', provisions: ['iea:art-4'] });
     assert.ok(statusContradictions({ ...iea, milestones: [...iea.milestones, 'tl-iea-planted'] }, { event: ev }, '2026-10-28')
       .some((m) => /still to come/.test(m))); }
+});
+
+test('W16 · the sanction ceiling has one derivation, and the page head and "In short" agree with it on every instrument page', () => {
+  assert.equal(sanctionCeiling({ sanction_ceiling: { pct_global_turnover: 4, fixed_eur: null, note: null } }).state, 'amount');
+  assert.equal(sanctionCeiling({ sanction_ceiling: { pct_global_turnover: null, fixed_eur: null, note: 'Set by Member States.' } }).state, 'no-amount');
+  assert.equal(sanctionCeiling({ sanction_ceiling: { pct_global_turnover: null, fixed_eur: null, note: null } }).state, 'not-established');
+  assert.equal(sanctionCeiling({}).state, 'not-established');
+  const db = loadDb();
+  for (const id of readdirSync(join(ROOT, 'instruments'))) {
+    const inst = instOf(db, id);
+    if (!inst) continue;
+    const html = readFileSync(join(ROOT, 'instruments', id, 'index.html'), 'utf8');
+    const head = html.match(/<dt>Sanction ceiling<\/dt><dd[^>]*>(.*?)<\/dd>/);
+    const short = html.match(/<strong>Sanction ceiling:<\/strong> (.*?)<\/li>/);
+    assert.ok(head && short, `${id}: both places render the ceiling`);
+    const c = sanctionCeiling(inst.dna);
+    const word = { 'no-amount': 'no amount recorded', 'not-established': 'not established' }[c.state];
+    if (word) {
+      assert.match(head[1], new RegExp(`>${word}<`), `${id}: the page head says "${word}"`);
+      assert.match(short[1], new RegExp(`>${word}<`), `${id}: "In short" says "${word}"`);
+    }
+    assert.doesNotMatch(head[1] + short[1], />none recorded</, `${id}: the old wording is back`);
+  }
 });
 
 /* v2 Session 5, B.3. Eight of the seventeen v1 relationships were migrated to

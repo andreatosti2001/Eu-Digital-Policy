@@ -323,6 +323,9 @@ body[data-theme="light"]{
   color:var(--text-3);
 }
 .fresh b{color:var(--text-2);font-weight:500}
+/* the leading space inside an inline-flex .fresh is dropped, so the status
+   badge sat flush against "as of" (decided 28 Oct 2026, docs/ROADMAP-v2.md §8) */
+.badge + .fresh{margin-left:var(--s-2)}
 .fresh .fresh-flag{color:var(--st-warning)}
 .fresh .fresh-flag::before{content:"△ ";}
 
