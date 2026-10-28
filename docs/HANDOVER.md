@@ -14,7 +14,11 @@ opened on the author's instruction.
 - `origin/main` was re-fetched before this handover was written: still `59dc88c`.
 - This session's branch: `claude/v2-session-6-csa`. Disposition: item 2.3 approved
   (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the author's
-  instruction of 27 Oct 2026 ("Si").
+  instruction of 27 Oct 2026 ("Si"); merged as #24 (`fdc7727`).
+- After the merge, on 28 Oct 2026: the prompt of v2 Session 7 (item 2.4, the EHDS) was drafted and,
+  on the author's instruction ("Si"), kept as `docs/prompts/v2-session-7.md` on branch
+  `claude/v2-session-7-prompt`, with a pull request to `main`. It records no decision: the prompt's
+  first write is §8's row "The scope of v2 Session 7", in the author's words.
 
 ## v2 Session 6 — checkpoint report (item 2.3, the Cyber Solidarity Act)
 
