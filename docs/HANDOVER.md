@@ -1,9 +1,291 @@
 # HANDOVER
 
-**Last updated:** v2 Session 7. Item 2.4 (the European Health Data Space, `ehds`) is implemented and
-its checkpoint is **approved**, which closes the session (`docs/ROADMAP-v2.md` §8) · 28 October 2026
-**Branch:** `claude/new-session-6evq51` (assigned by the environment), cut from `main` at `fdc7727`
-(#24).
+**Last updated:** v2 Session 8. Item 2.5 (the Interoperable Europe Act, `iea`) is implemented and
+its checkpoint **awaits the author's approval** (`docs/ROADMAP-v2.md` §8) · 28 October 2026
+**Branch:** `claude/new-session-o9uopd` (assigned by the environment), cut from `main` at `3cc0473`
+(#27).
+
+## Branch register — 28 October 2026 (v2 Session 8)
+
+- At the start, `main` was `3cc0473`, the merge of #27. It holds #26 (`21d6ada`), §8's three Session 7
+  rows up to "The checkpoint of v2 Session 7 = item 2.4", and `docs/prompts/v2-session-6.md`, `-7.md`
+  and `-8.md`.
+- `git branch -r --no-merged origin/main` listed only
+  `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
+- `origin/main` was re-fetched before this handover was written: still `3cc0473`.
+- This session's branch: `claude/new-session-o9uopd`. Disposition: pending the author's approval of
+  the checkpoint, then the author's answer on a pull request.
+
+## v2 Session 8 — checkpoint report (item 2.5, the Interoperable Europe Act)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope** (first write of the session, `11236e5`): item 2.5 only.
+- **Item 2.5** (`5c86aa6`), asked one question at a time before anything was written to `data/`.
+  Eight answers, all as recommended:
+  - *criterion*: `crit:object-infrastructure` + `crit:horizontal`. The addressees are Union entities
+    and public sector bodies, defined by function and not by sector (Art. 1(2)). Not
+    `crit:sector-instance`, so M-04's edge rule does not apply;
+  - *edges*: `iea → gdpr` `defers-to` and `nis2 → iea` `enables`. Either one alone meets the page
+    gate's `context` criterion. Not `dga → iea` and not `iea → eaa`;
+  - `status:applicable`, with the status note as proposed. The page shows "Applicable";
+  - three events (E1–E3);
+  - `dna.objective` draft A;
+  - the other `dna` fields: four provisions and two new taxonomy terms;
+  - a new source, `src-eurlex-iea`;
+  - the name: `short_name` "Interoperable Europe Act", nothing in `KNOWN_AS`.
+
+### What was written
+
+| Commit | Record or file | Change |
+|---|---|---|
+| `0047586` | `iea` | new; `scope:core`; `brief_part` `null`; `status:applicable`, `status_as_of` 2026-10-28; `status_note` (no internal identifier); `status_basis` Art. 23(1)–(2) + metadata; `scope_decision` (included; `crit:object-infrastructure`, `crit:horizontal`; two direct structural references; `approved_on` 2026-10-28); `dna` as decided; `legal_basis` empty |
+| | `iea:art-3`, `iea:art-4`, `iea:art-17`, `iea:art-18` | four provisions; `obligation_on` union-entity + public-sector-body, the same, member-state, union-entity |
+| | `rel-iea-gdpr-defers`, `rel-nis2-iea-enables` | new, v2 shape, direct; every locator is in the IEA |
+| | `tl-iea-2024-04-11-entry-into-force`, `tl-iea-2024-07-12-application`, `tl-iea-2025-01-12-application` | new; the tranche is tagged with `iea:art-3` and `iea:art-17`, and its text says Art. 3(5) is outside it |
+| | `actor:union-entity`, `actor:public-sector-body` | new taxonomy terms; nothing renamed |
+| | `src-eurlex-iea` | new; its note says what was read and what was not |
+| | `tools/selftest.mjs` | W15, new (below) |
+| | generated | `instruments/iea/` (new); the GDPR and NIS2 pages (the edges from the other end); `instruments.html`; the `<noscript>` index on every page; `sitemap.xml`; `img/og/iea.png` and its manifest entry. The tool re-rendered the other cards; they were restored, because their inputs did not change (`og-image.mjs --check` passes) |
+| `11236e5`, `5c86aa6`, this commit | `docs/ROADMAP-v2.md` §8 | two rows; this report |
+
+Not added:
+- no claim (the brief does not name the IEA) and no applicability rule;
+- no institution edge: no competent authority is recorded, and the page says "not established";
+- no entry in `tools/seo.mjs`, `KNOWN_AS` or `PAGE_PUBLISHED`;
+- no record for any other act: Regulation (EU) 2018/1725, Directive (EU) 2019/1024, Regulation (EU)
+  No 1025/2012 and the accessibility Directives are cited by the IEA and are not instruments here.
+
+**No locale key was touched.** The fields written are data, which the editions do not carry, so no
+key needs declaring `superseded` or `pending_translation`; `i18n-audit` is 0/0.
+
+**Checks.** No check was changed or extended. W15 is a new test on W14's model:
+- it asserts that `iea` is covered, sits in no backlog, and that both edges are v2, direct, and
+  located in the IEA;
+- it asserts that "applicable" holds against `statusContradictions()`, and that Art. 3 dates from
+  2025-01-12 and Art. 4 from 2024-07-12;
+- it plants the loss of the status basis (M-07), of the decision (M-04), of both edges (M-05) and of
+  the objective (M-05), and each one fails;
+- it asserts that either edge alone still gives context;
+- it plants a future application date, which `statusContradictions()` reports.
+
+Measured: with the error line of M-04 (no decision), M-05 (no page) or M-07 (no status basis)
+disabled in `tools/register-audit.mjs`, W15 fails, each time on that plant. The file was restored
+(no diff).
+
+No latent defect surfaced in a check: `agent/depth` and `agent/proposals/data` pass unchanged. No
+agent CLI was run, and `agent/records/` stayed empty.
+
+### Facts read on 28 Oct 2026, and facts left `null`
+
+- **Read**:
+  - Regulation (EU) 2024/903, the Official Journal text, from Cellar by CELEX `32024R0903` (XHTML,
+    HTTP 200):
+    - the enacting terms in full (Arts 1–23);
+    - the Annex;
+    - recitals 1–13, 41–43 and 56.
+  - The Publications Office's SPARQL metadata:
+    - in force; dates recorded 2024-04-11, 2024-07-12, 2025-01-12; deadline 2028-01-12; end of
+      validity 9999-12-31;
+    - based on Art. 172 TFEU;
+    - no amending act; it amends nothing; no consolidated version; no corrigendum (no `R(..)`
+      expression exists, so there was no language to ask about).
+  - Searched the text in full for penalties, fines, sanctions and infringements. No Article sets any;
+    the only mention is recital 41, on the EDPS.
+  - Searched for the instruments in the dataset:
+    - GDPR (Arts 8(1)(d), 11(4), 12(6)(c), (e), (f)) and NIS2 (Art. 2(3)): edges proposed;
+    - DGA (Art. 2(7); Art. 15(5)(s)) and EAA (Art. 5(1)): proposed, not added;
+    - ePrivacy: recital 11 only;
+    - no reference to Regulation (EU) No 910/2014, to 2024/1183, to the Data Act or to the AI Act.
+- **Not read**:
+  - the other recitals;
+  - the acts recorded as based on it (Regulation (EU) 2025/1420, COM(2025) 860, SWD(2025) 975 and a
+    Parliament text, 52026IP0022);
+  - the texts the IEA borrows definitions from (Directive (EU) 2022/2555 Art. 6(1); Directive (EU)
+    2019/1024 Art. 2(1); Regulation (EU) 2022/868 Art. 2(1)); the edge and the term notes say so;
+  - GDPR Art. 36, beyond the IEA's own reference to it.
+- **Left `null` or empty, and shown on the page as "not established"**:
+  - `risk_logic`, `enforcement_mechanism`, `protected_party`, `territorial_scope`;
+  - the sanction ceiling's amounts, with the note that the Regulation sets none;
+  - the competent authority: national competent authorities (Art. 17) and the Interoperable Europe
+    Board (Art. 15) are not in `institutions.json`, and none was proposed.
+- **Not recorded**:
+  - Art. 172 TFEU as `legal_basis`: the TFEU record has no such provision;
+  - the institutions' deadlines (Art. 3(5) Board guidelines and Art. 12(10) implementing acts) and the
+    report of 2028-01-12 and every four years after it (Art. 20(5));
+  - `sectors` on the three events (`sector:public-administration` exists and was not proposed).
+- No fact was taken from a search result or from model knowledge. The design draft of 25 Oct 2026
+  (`docs/v2-design/map-examples.json`) was not copied. Of its statements:
+  - its status (applicable) and its three dates survived the re-reading;
+  - its scope reason did not: "public-sector counterpart of the rulebook's private-sector duties" is
+    not in the text;
+  - its event list did not: it had no tranche event, because no provision existed;
+  - its GDPR edge's locator now also cites Art. 12(6)(e)–(f).
+
+### Exit criteria of item 2.5 (`docs/ROADMAP-v2.md` §4)
+
+- *Every fact read from a retrieved primary source*: **pass** (above).
+- *`sources.json` records only from documents read*: **pass**. One new record, from the text read.
+- *Prose and claims to the author*: **pass**. Every text written was in an approved question; no
+  claim was created or changed.
+- *`node tools/_footer.mjs` re-run*: **pass**. Committed with the data; a second run writes 0 files.
+- *Affected locale keys declared*: **n/a**, none touched.
+- *M-04, M-05, M-07 held in full*: **pass**. `iea` is in no backlog, and W15 shows each one failing.
+- *The page says nothing the records do not carry*: **pass**, with the display observations under
+  "Found" below.
+- *No relationship added to complete the page*: **pass**. Two edges were approved, each on its own
+  text; two more were read, put to the author, and not added.
+
+### Counts against the baseline (v2 Session 7's closing figures, re-measured at the start)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / provisions / relationships | 36 / 85 / 33 | 37 / 89 / 35 | `iea`; its four provisions; two edges |
+| sources / timeline events / claims / taxonomy terms | 221 / 97 / 181 / 309 | 222 / 100 / 181 / 311 | `src-eurlex-iea`; three events; two actor terms |
+| coverage covered / mapped / watched / excluded | 14 / 11 / 5 / 6 | 15 / 11 / 5 / 6 | `iea` |
+| backlog `status-basis-missing` / `scope-decision-missing` | 23 / 11 | 23 / 11 | a new record joins no backlog |
+| instrument pages · indexable routes | 15 · 24 | 16 · 25 | `instruments/iea/` |
+| instruments.html "thinner records" | 7 | 7 | `iea` has a page |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit --as-of 2026-10-28` errors / warnings | 0 / 11 | 0 / 11 | unchanged |
+| `freshness --as-of 2026-10-28` | 0 defects / 3 prompts | 0 / 3 | unchanged |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged |
+| `tools/selftest.mjs` | 104 | 105 | W15 |
+| all 25 suites | 1310 pass + 1 skipped | **1311 pass + 1 skipped, 0 failures (1312)** | W15. The skip is the `::1` test, as in Sessions 5–7 |
+| browser suite (`--require-browser`) | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable | |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+
+Other checks:
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+- `tools/og-image.mjs --check` passes.
+- `tools/commit-evidence.mjs origin/main HEAD`: 0 commits without evidence. `0047586` names its
+  evidence; the others change no published file.
+- `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+### The page, opened in a browser
+
+`/instruments/iea/` was opened in Chromium (Playwright) at 1280px dark and at 390px light. There was no
+console error and no horizontal overflow at either width. The GDPR and NIS2 pages were opened the same
+way. The IEA page shows:
+- Status: "Applicable, as of 28 Oct 2026", with the status note, which gives both application dates
+  and says both have passed. The header reads "Next date: nothing further recorded".
+- "In short":
+  - the objective;
+  - "Union entity · Public sector body · Member State";
+  - Arts 3 and 4;
+  - the three dates;
+  - the sanction note;
+  - "not established" for the protected party.
+- Three dated events, each with its Art. 23 text.
+- "No rules recorded", worded as absence of knowledge.
+- Four provisions: Arts 3 and 17 "Applies since 12 January 2025", Arts 4 and 18 since 12 July 2024
+  (the general date).
+- No enforcement recorded, no claims, and "Competent authority: not established in this dataset".
+- Two interactions, each with its locator.
+- "No Part of the brief covers this instrument directly".
+
+Nothing on the page says the Act binds a private party. The GDPR and NIS2 pages show their edge from
+the other end.
+
+### Found, for the author — not changed
+
+1. **The sanction ceiling, worded two ways, now reads against itself.** The header says "Sanction
+   ceiling: none recorded". "In short" says "not established", followed by the note "None: no Article
+   of the Regulation sets fines or penalties". For an act whose text was read in full and sets none,
+   "not established" understates what was checked. This is Session 6's open finding (the CSA reads the
+   same), not fixed here.
+2. **Art. 3's date carries no qualifier.** The provisions table shows Art. 3 "Applies since
+   12 January 2025". Art. 3(5), the Board's guidelines, is not part of that tranche, and only the
+   event text says so. It is the same renderer limit as Session 7's finding 1.
+3. **The internal reference reaches two more pages.** The `defers-to` and `enables` notes end "Added
+   27 Oct 2026 (docs/V2-DATA-DESIGN.md §1.4)". They are printed on `/instruments/iea/` and on the new
+   rows of the GDPR and NIS2 pages. This is Session 10's item 10.2.
+4. **The status badge touches the "as of" text** on every instrument page with a status badge: no gap
+   between the badge's border and "as of" (measured on the IEA, GDPR, DSA and EHDS pages). This is
+   display only, predates this item, and is not fixed.
+5. **The Commission's and the Board's duties are not shown.** No `obligation_on_institution` was
+   proposed (Session 6's finding: the page would not show it anyway).
+
+**Still open from Session 7** (unchanged):
+- the tranche dates without their categories in the provisions table (point 2 above);
+- Regulation (EU) No 910/2014 not modelled (no `eidas2 → ehds` edge). The IEA does not raise it: its
+  enacting terms cite no eIDAS act;
+- the internal reference in the `enables` and `defers-to` notes (point 3 above);
+- the DGA's "not covered" notice showing no relationships;
+- the EHDS's common name not in `KNOWN_AS`.
+
+**Still open from Session 6** (unchanged):
+- the sanction ceiling worded two ways (point 1 above);
+- `obligation_on_institution` not displayed.
+
+**Still open from Session 5** (the roadmap's §3; none touched):
+1. `rel-dsa-gdpr-transparency-minimisation`: its summary no longer matches EDPB Guidelines 3/2025 v2.
+2. `rel-data-omnibus-gdpr`: "stalled in Council" is unsupported and not re-read.
+3. The 4 brief-only and 3 claimless analytical edges stay v1; the `edge-v1-sources` flip stays
+   deferred.
+4. The article attribution in `src-ec-apple-meta-dma-2025`'s note.
+5. `src-ec-ai-omnibus-in-force`: not re-read (403).
+6. The `::1` test: skipped again in this container, so not run. A skip is not a pass.
+7. R-01's P2B gap and the eight findings of `docs/V2-DATA-DESIGN.md` §7 (Phase 3).
+8. The internal identifiers shown to a reader (Session 10).
+
+### The verification checklist
+
+**8.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, two rows (`11236e5`, `5c86aa6`), both before `0047586`.
+- *Verify:* read "The scope of v2 Session 8" and "Item 2.5: the inclusion of `iea`".
+  `git log --oneline 3cc0473..` shows both before the data commit.
+- *Automatic:* none.
+- *Criterion:* every editorial field was decided before `data/` was touched, and `approved_on`
+  carries the date of the row.
+
+**8.1 · Sources read first.**
+- *Changed:* `data/sources.json` (`src-eurlex-iea`, new).
+- *Verify:*
+  - fetch `http://publications.europa.eu/resource/celex/32024R0903` with Accept
+    `application/xhtml+xml`;
+  - read Art. 1, Art. 2 points (3), (5)–(7), Arts 3, 4, 11(4), 12(6), 17, 18 and 23;
+  - search the text for "penalt" and "fine";
+  - query the SPARQL endpoint for `resource_legal_date_entry-into-force` (three dates), and for
+    incoming `amends` or `corrects` relations (none).
+- *Automatic:* none. No check reads a source (AUDIT F-12).
+- *Criterion:* no fact from a search result or memory.
+
+**8.2 · Written in one home.**
+- *Changed:*
+  - `data/instruments.json`: `iea`, two edges;
+  - `data/timeline.json`: three events;
+  - `data/taxonomy.json`: two terms;
+  - `data/sources.json`: one source;
+  - `tools/selftest.mjs`: W15;
+  - the regenerated pages and `img/og/iea.png`.
+- *Verify:* `/instruments/iea/`, `/instruments/gdpr/`, `/instruments/nis2/`.
+- *Automatic:*
+  - `tools/selftest.mjs` W15;
+  - S1 (generated files current);
+  - `seo-audit` 0/0;
+  - `evidence-audit` 0 errors, with `statusContradictions()` for `applicable`.
+- *Criterion:*
+  - M-04, M-05 and M-07 at 0 errors, held in full;
+  - dates only in `timeline.json`;
+  - no title in `data/`;
+  - no internal identifier in a reader-facing field written here.
+
+**8.3 · Checkpoint.**
+- *Changed:* this report.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run above.
+- *Criterion:* the author's approval, recorded in §8. Item 2.6 does not start before it.
+- **Not yet approved**: awaiting the author.
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-28`: REGISTER reads "covered 15 · mapped 11".
+2. `python3 -m http.server 8000`, then open `/instruments/iea/` in both themes, at desktop and phone
+   width. Also open `/instruments/gdpr/` and `/instruments/nis2/` for the edges. `/instruments.html`
+   lists the Act with "Applicable".
+3. `node --test --test-name-pattern="W15" tools/selftest.mjs`.
+4. To see a check hold, delete `status_basis` from `iea` in `data/instruments.json`. `evidence-audit`
+   then reports `M-07 instruments/iea: …`. Restore the file afterwards.
 
 ## Branch register — 28 October 2026 (v2 Session 7)
 
