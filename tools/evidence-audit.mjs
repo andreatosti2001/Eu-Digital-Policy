@@ -22,6 +22,10 @@
  *   8. REGISTER      the exclusion register and the watchlist (item 2.1,
  *                    27 Oct 2026): M-03 … M-07 and R-01, with a BACKLOG for
  *                    the records that predate them (tools/register-audit.mjs)
+ *   9. TRIGGERS      the applicability rules behind applies.html, held to
+ *                    the claims' standard (v2 Session 12, 28 Oct 2026):
+ *                    T-01 … T-11, with a BACKLOG for the 33 rules that
+ *                    predate them (tools/trigger-audit.mjs)
  *
  * Every number is DERIVED from the data on each run through the same
  * modules the website uses (js/evidence-model.js, js/format.js,
@@ -65,6 +69,7 @@ import { statusContradictions, statusAge, provisionApplication } from '../js/reg
 import { readArgs, refusalText, today, EXIT_UNREADABLE } from './as-of.mjs';
 import { RECORD_VERSION, CHECKED, LIMITS, storeDir, storePath } from './evidence-audit-record.mjs';
 import { registerAudit } from './register-audit.mjs';
+import { triggerAudit } from './trigger-audit.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const IS_MAIN = Boolean(process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url));
@@ -85,7 +90,9 @@ const MODE = ARGS.error ? null : ARGS.flags.has('--graph') ? 'graph' : ARGS.flag
 /* Fields the architecture DERIVES. A record that stores one has created the
    second copy that derivation exists to prevent (docs/DATA-GOVERNANCE.md). */
 export const DERIVED_FIELDS = Object.freeze(['evidence_status', 'grade', 'evidence_grade', 'freshness_state',
-  'freshness_risk', 'risk', 'finality', 'procedural_stage', 'procedure', 'coverage']);
+  'freshness_risk', 'risk', 'finality', 'procedural_stage', 'procedure', 'coverage',
+  /* the map and the triggers (docs/V2-DATA-DESIGN.md §1.4, §2; v2 Session 12) */
+  'publishable', 'asks', 'modality', 'verification_state']);
 
 /* Remediation codes a person may record, because a machine cannot judge
    them. Every other code is computed and may never be stored. */
@@ -295,6 +302,7 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
   /* ---- derived fields must not be stored anywhere ---- */
   const scan = (name, list) => { for (const r of list) for (const k of DERIVED_FIELDS) if (k in r) err(`${name}/${r.id} stores "${k}", which is derived at render time and must never be stored`); };
   scan('claims', claims); scan('enforcement', enforcement); scan('timeline', events); scan('instruments', instruments); scan('sources', sources);
+  scan('applicability', arr(db.applicability?.rules));
 
   /* ---- 1. claims ---- */
   const directRefs = [];
@@ -415,6 +423,11 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
   for (const e of regAudit.errors) err(e);
   for (const w of regAudit.warnings) warn(w);
 
+  /* ---- 8. triggers: the applicability rules ---- */
+  const trig = triggerAudit(db, asOf);
+  for (const e of trig.errors) err(e);
+  for (const w of trig.warnings) warn(w);
+
   const lifecycle = instruments.filter((i) => {
     const t = new Set(arr(i.milestones).map((m) => ix.event.get(m)).filter(Boolean).map((e) => e.event_type));
     return t.has('event:adoption') && t.has('event:publication') && t.has('event:entry-into-force');
@@ -485,6 +498,12 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
       watchlist: regAudit.watchlist,
       backlog: regAudit.backlog,
     },
+    triggers: {
+      total: trig.total,
+      by_outcome: trig.by_outcome,
+      publishable: trig.publishable,
+      backlog: trig.backlog,
+    },
     errors,
     warnings,
   };
@@ -539,7 +558,7 @@ function commitOf(root) {
  */
 export function recordEntry(r, { root = ROOT, argv = [], now = () => new Date().toISOString() } = {}) {
   const dataFiles = readdirSync(join(root, 'data')).filter((f) => f.endsWith('.json')).sort();
-  const rules = ['tools/evidence-audit.mjs', 'js/evidence-model.js', 'js/format.js', 'js/pipeline.js', 'js/regulatory-model.js'];
+  const rules = ['tools/evidence-audit.mjs', 'tools/register-audit.mjs', 'tools/trigger-audit.mjs', 'js/evidence-model.js', 'js/format.js', 'js/pipeline.js', 'js/regulatory-model.js'];
   return {
     record_version: RECORD_VERSION,
     tool: 'tools/evidence-audit.mjs',
@@ -567,6 +586,7 @@ export function recordEntry(r, { root = ROOT, argv = [], now = () => new Date().
       freshness: r.freshness,
       enforcement: { by_finality: r.enforcement.by_finality, contradictions: r.enforcement.contradictions },
       regulatory: { provision_application: r.regulatory.provision_application },
+      triggers: { total: r.triggers.total, publishable: r.triggers.publishable.length, backlog: Object.fromEntries(Object.entries(r.triggers.backlog).map(([c, ids]) => [c, ids.length])) },
     },
     limits: LIMITS,
   };
@@ -599,6 +619,9 @@ function text(r) {
   L.push(`  register      ${r.register.register.length}: ${r.register.register.join(', ') || 'none'}`);
   L.push(`  watchlist     ${r.register.watchlist.length}: ${r.register.watchlist.join(', ') || 'none'}`);
   for (const [code, ids] of Object.entries(r.register.backlog)) L.push(`  BACKLOG ${code} ${ids.length}: ${ids.join(', ') || 'none'}`);
+  L.push(`TRIGGERS        ${r.triggers.total} rules · ${kv(r.triggers.by_outcome)}`);
+  L.push(`  publishable   ${r.triggers.publishable.length} of ${r.triggers.total}${r.triggers.publishable.length ? ': ' + r.triggers.publishable.join(', ') : ''}`);
+  for (const [code, ids] of Object.entries(r.triggers.backlog)) L.push(`  BACKLOG ${code} ${ids.length}: ${ids.join(', ') || 'none'}`);
   L.push('');
   L.push(`WARNINGS ${r.warnings.length}`);
   for (const w of r.warnings) L.push('  ! ' + w);
@@ -635,6 +658,9 @@ function markdown(r) {
     row('Coverage', kv(r.register.by_coverage)),
     row('Exclusion register / watchlist', `${r.register.register.length} / ${r.register.watchlist.length}`),
     ...Object.entries(r.register.backlog).map(([code, ids]) => row(`Backlog — ${code}`, ids.length)),
+    row('Applicability rules', `${r.triggers.total} · ${kv(r.triggers.by_outcome)}`),
+    row('… publishable at the claims\' standard', `${r.triggers.publishable.length} of ${r.triggers.total}`),
+    ...Object.entries(r.triggers.backlog).map(([code, ids]) => row(`Backlog — ${code}`, ids.length)),
     row('Errors / warnings', `${r.errors.length} / ${r.warnings.length}`),
     '',
     '_Derived on this run from `data/` and `index.html` by the modules the site itself uses. Not a score: the backlog is closed by verification work, not by a passing check._',

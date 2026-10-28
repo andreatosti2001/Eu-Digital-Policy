@@ -2416,3 +2416,123 @@ test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with i
   assert.ok(caught.some((m) => /^related rel-digital-networks-act-eprivacy-amends/.test(m)), caught.join('\n'));
   assert.equal(caught.length, 6, 'three cards and three Related entries');
 });
+
+/* ---------------------------------------------------------------------------
+   v2 Session 12, item 12.2: the check reads the applicability rules.
+   tools/trigger-audit.mjs, at the severities of docs/ROADMAP-v2.md §8,
+   v2 Session 12, question 5. A check that cannot be shown to fire is a check
+   on nothing (docs/V2-DATA-DESIGN.md §4.3): every ERROR rule is planted.
+   --------------------------------------------------------------------------- */
+
+import { triggerAudit, RULES_V1, BACKLOG_CODES } from './trigger-audit.mjs';
+
+/* The backlog measured on 28 Oct 2026. Each list may only lose members: a
+   rule leaves it by being read against its Article, never by editing this. */
+const TRIGGER_BACKLOG_2026_10_28 = {
+  'rule-v1-sources': RULES_V1,
+  'rule-scope-basis-missing': RULES_V1,
+  'rule-condition-provisions-missing': RULES_V1,
+  'rule-exemption-v1': ['ap-gdpr-01', 'ap-gdpr-03', 'ap-dsa-01', 'ap-dsa-03', 'ap-dsa-04', 'ap-dsa-05', 'ap-dma-01',
+    'ap-ai-act-01', 'ap-ai-act-02', 'ap-ai-act-04', 'ap-ai-act-06', 'ap-data-act-03', 'ap-nis2-02'],
+  'rule-threshold-basis-missing': ['ap-dsa-02', 'ap-dma-02', 'ap-ai-act-03'],
+  'rule-dates-not-derived': ['ap-dsa-02', 'ap-dsa-05', 'ap-dma-03', 'ap-ai-act-01', 'ap-ai-act-02', 'ap-ai-act-05',
+    'ap-ai-act-06', 'ap-ai-act-07', 'ap-data-act-02', 'ap-data-act-04'],
+};
+
+const ruleOf = (db, id) => db.applicability.rules.find((r) => r.id === id);
+/* a v2 rule that passes T-01…T-05: the shape docs/v2-design/applicability-rule.schema.json describes */
+const v2Rule = (db) => {
+  const r = structuredClone(ruleOf(db, 'ap-gdpr-02'));
+  r.sources = [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 3(2)', for: 'scope' }];
+  r.condition_provisions = Object.fromEntries(Object.keys(r.conditions).map((d) => [d, ['gdpr:art-5']]));
+  r.exemptions = [];
+  return r;
+};
+
+test('X1 · 12.2, this tree: the 33 rules read, 0 errors, the backlog the measured one, and it can only shrink', () => {
+  const db = loadDb();
+  const t = triggerAudit(db, '2026-10-28');
+  assert.equal(t.total, 33);
+  assert.deepEqual(t.errors, []);
+  assert.deepEqual(t.warnings, []);
+  assert.deepEqual(Object.keys(t.backlog), BACKLOG_CODES);
+  for (const [code, ids] of Object.entries(t.backlog)) {
+    for (const id of ids) assert.ok(TRIGGER_BACKLOG_2026_10_28[code].includes(id), `${id} entered ${code}: the backlog only shrinks`);
+  }
+  /* today's counts, as the author was shown them (§8, question 5) */
+  assert.deepEqual(Object.fromEntries(Object.entries(t.backlog).map(([c, ids]) => [c, ids.length])),
+    { 'rule-v1-sources': 33, 'rule-scope-basis-missing': 33, 'rule-condition-provisions-missing': 33,
+      'rule-exemption-v1': 13, 'rule-threshold-basis-missing': 3, 'rule-dates-not-derived': 10 });
+  assert.equal(t.publishable.length, 0, 'none of the 33 is publishable at the claims\' standard yet');
+  assert.deepEqual([...RULES_V1].sort(), db.applicability.rules.map((r) => r.id).sort(), 'the frozen list is the 33');
+  /* the date-dependent halves are WARNINGs: an older date changes the report, never the exit code */
+  const sept = triggerAudit(db, '2026-09-27');
+  assert.deepEqual(sept.errors, []);
+  assert.deepEqual(sept.warnings, ['VERIFIED_AFTER_AS_OF applicability/ap-eidas2-01: last_verified 2026-10-27 is after the audit date 2026-09-27']);
+  const early = triggerAudit(db, '2024-06-01');
+  assert.deepEqual(early.errors, []);
+  assert.ok(early.warnings.some((w) => /^APPLIES_BEFORE_DATE applicability\/ap-ai-act-01/.test(w)));
+});
+
+test('X2 · 12.2: every ERROR rule fires on a planted defect, and a v2 rule that meets T-01…T-05 is publishable', () => {
+  const plant = (fn, asOf = '2026-10-28') => { const db = loadDb(); fn(db); return triggerAudit(db, asOf); };
+  const errs = (t, re) => t.errors.filter((e) => re.test(e));
+
+  /* the control: a clean v2 rule is publishable and in no backlog but the dates */
+  const clean = plant((db) => { db.applicability.rules[db.applicability.rules.findIndex((r) => r.id === 'ap-gdpr-02')] = v2Rule(db); });
+  assert.deepEqual(clean.errors, []);
+  assert.ok(clean.publishable.includes('ap-gdpr-02'));
+
+  const swap = (fn) => (db) => { const r = v2Rule(db); fn(r, db); db.applicability.rules[db.applicability.rules.findIndex((x) => x.id === 'ap-gdpr-02')] = r; };
+  /* T-02: object references with no scope basis, and one that does not resolve */
+  assert.equal(errs(plant(swap((r) => { r.sources[0].for = 'rationale'; })), /^T-02 applicability\/ap-gdpr-02: no for:scope/).length, 1);
+  assert.equal(errs(plant(swap((r) => { r.sources.push({ source_id: 'src-not-a-source', supports: 'supports:direct', locator: 'Art. 1' }); })), /^T-02 .*does not resolve/).length, 1);
+  assert.equal(errs(plant(swap((r) => { r.sources[0].locator = 'the Regulation'; })), /^T-02 /).length, 1, 'a locator that is not structural');
+  /* T-03: a dimension with no provision, and a provision of an unconnected instrument */
+  assert.equal(errs(plant(swap((r) => { delete r.condition_provisions[Object.keys(r.conditions)[0]]; })), /^T-03 .*names no provision/).length, 1);
+  assert.equal(errs(plant(swap((r) => { r.condition_provisions[Object.keys(r.conditions)[0]] = ['dora:art-5']; })), /^T-03 .*neither this rule's nor connected/).length, 1);
+  /* T-04: an exemption object with no basis */
+  assert.equal(errs(plant(swap((r) => { r.exemptions = [{ text: 'Purely personal or household activity.', effect: 'excludes', basis: [] }]; })), /^T-04 /).length, 1);
+  /* T-05: a key without its comparator */
+  assert.equal(errs(plant((db) => { const r = ruleOf(db, 'ap-ai-act-03'); r.conditions.thresholds = { cumulative_training_flop: 1e25 }; }), /^T-05 .*cumulative_training_flop/).length, 1);
+  /* T-06: an uncertain outcome that does not say what it turns on */
+  assert.equal(errs(plant((db) => { const r = db.applicability.rules.find((x) => x.outcome === 'outcome:likely'); r.depends_on = []; }), /^T-06 /).length, 1);
+  /* T-07: a date that is not one */
+  assert.equal(errs(plant((db) => { ruleOf(db, 'ap-gdpr-01').last_verified = '27/08/2026'; }), /^T-07 /).length, 1);
+  /* T-08: a proposal binds nobody */
+  assert.equal(errs(plant((db) => { ruleOf(db, 'ap-gdpr-01').instrument = 'data-omnibus'; }), /^T-08 applicability\/ap-gdpr-01: applies on data-omnibus/).length, 1);
+  /* T-09: a rule on an excluded instrument is an error; on a watched one, a warning */
+  const excluded = loadDb().instruments.instruments.find((i) => i.scope_decision?.disposition === 'excluded').id;
+  const watched = loadDb().instruments.instruments.find((i) => i.scope_decision?.disposition === 'watched').id;
+  assert.equal(errs(plant((db) => { ruleOf(db, 'ap-gdpr-04').instrument = excluded; ruleOf(db, 'ap-gdpr-04').outcome = 'outcome:possible'; }), /^T-09 /).length, 1);
+  assert.ok(plant((db) => { ruleOf(db, 'ap-gdpr-04').instrument = watched; ruleOf(db, 'ap-gdpr-04').outcome = 'outcome:possible'; })
+    .warnings.some((w) => /^RULE_ON_WATCHED applicability\/ap-gdpr-04/.test(w)));
+  /* a rule added after the 33 is held in full: its gaps are errors, not backlog */
+  const added = plant((db) => { db.applicability.rules.push({ ...structuredClone(ruleOf(db, 'ap-gdpr-01')), id: 'ap-gdpr-99' }); });
+  assert.ok(added.errors.some((e) => /^T-01 applicability\/ap-gdpr-99: .*held to it in full/.test(e)));
+  assert.ok(!Object.values(added.backlog).flat().includes('ap-gdpr-99'));
+});
+
+test('X3 · 12.2: evidence-audit.mjs reports TRIGGERS in text, --json and --markdown, FAILS on a planted rule defect, and refuses a stored derived field on a rule', () => {
+  const out = runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28']);
+  assert.equal(out.exit, 0, 'the backlog never fails the run');
+  assert.match(out.out, /^TRIGGERS {8}33 rules · applies 13 · likely 9 · possible 10 · unlikely 1$/m);
+  assert.match(out.out, /^ {2}publishable {3}0 of 33$/m);
+  assert.match(out.out, /^ {2}BACKLOG rule-dates-not-derived 10: /m);
+  const json = JSON.parse(runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28', '--json']).out);
+  assert.equal(json.triggers.total, 33);
+  assert.equal(json.triggers.backlog['rule-exemption-v1'].length, 13);
+  assert.match(runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28', '--markdown']).out, /\| … publishable at the claims' standard \| 0 of 33 \|/);
+  assert.ok(DERIVED_FIELDS.includes('publishable') && DERIVED_FIELDS.includes('modality'));
+  const dir = treeCopy();
+  try {
+    editJSON(dir, 'applicability.json', (d) => {
+      d.rules.find((r) => r.outcome === 'outcome:possible').depends_on = [];
+      d.rules[0].publishable = true;
+    });
+    const r = runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-28']);
+    assert.equal(r.exit, 1);
+    assert.match(r.out, /T-06 applicability\/.*possible with no depends_on/);
+    assert.match(r.out, /applicability\/ap-gdpr-01 stores "publishable"/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
