@@ -15,6 +15,16 @@ request #28, item 2.5, open).
 - `origin/main` was re-fetched before this handover was written: still `3cc0473`; #28 not yet merged.
 - Disposition: approved (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the
   author's instruction of 28 Oct 2026 ("Approve and open the PR").
+- After that, on 28 Oct 2026:
+  - #28 (`claude/new-session-o9uopd`, item 2.5) was merged into `main` with a merge commit, `2513a09`.
+    #29 then held only its own commits and merged without conflict.
+  - #29 (`claude/v2-session-8-findings`) was merged as `cabe21b`. A register commit pushed to the
+    branch seconds after the merge, `2b5d71d`, did not reach `main`. On the author's decision ("Si"),
+    its content goes in with this entry rather than in a pull request of its own.
+  - The prompt of v2 Session 9 (item 2.6, the Digital Networks Act) was drafted on the author's request
+    ("mandami session 9's prompt"). It is kept as `docs/prompts/v2-session-9.md` on
+    `claude/new-session-o9uopd`, restarted from `main` at `cabe21b`. The prompt records no decision: its
+    first write is §8's row "The scope of v2 Session 9", in the author's words.
 
 ## v2 Session 8, part 2 — open findings resolved on the author's request
 
