@@ -2447,6 +2447,154 @@
       }
     },
     {
+      "id": "iea",
+      "aliases": [
+        "interoperable-europe-act"
+      ],
+      "celex": "32024R0903",
+      "short_name": "Interoperable Europe Act",
+      "full_name": "Regulation (EU) 2024/903 laying down measures for a high level of public sector interoperability across the Union (Interoperable Europe Act)",
+      "kind": "kind:regulation",
+      "scope_class": "scope:core",
+      "brief_part": null,
+      "legislative_status": "status:applicable",
+      "status_as_of": "2026-10-28",
+      "status_note": "In force since 11 April 2024, the twentieth day after publication (Art. 23(1); OJ L 2024/903, 22.3.2024). It applies from 12 July 2024, and its interoperability assessment (Art. 3(1)–(4)) and the rules on national competent authorities and single points of contact (Art. 17) from 12 January 2025 (Art. 23(2)); both dates have passed. Read on 28 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records it in force, with the same three dates.",
+      "status_basis": [
+        {
+          "source_id": "src-eurlex-iea",
+          "supports": "supports:direct",
+          "locator": "Art. 23(1)–(2) (entry into force and application); Publications Office metadata: in force, dates 2024-04-11, 2024-07-12 and 2025-01-12"
+        }
+      ],
+      "milestones": [
+        "tl-iea-2024-04-11-entry-into-force",
+        "tl-iea-2024-07-12-application",
+        "tl-iea-2025-01-12-application"
+      ],
+      "amended_by": [],
+      "amends": [],
+      "repeals": [],
+      "transposition": null,
+      "dna": {
+        "regulated_actor": [
+          "actor:union-entity",
+          "actor:public-sector-body",
+          "actor:member-state"
+        ],
+        "protected_party": [],
+        "objective": "Common rules and a governance framework that promote the cross-border interoperability of trans-European digital public services, and so of the network and information systems beneath them, for the Union entities and public sector bodies that regulate, provide, manage or implement those services.",
+        "risk_logic": null,
+        "obligation_anchor": [
+          "iea:art-3",
+          "iea:art-4"
+        ],
+        "enforcement_mechanism": null,
+        "sanction_ceiling": {
+          "pct_global_turnover": null,
+          "fixed_eur": null,
+          "basis": null,
+          "note": "None: no Article of the Regulation sets fines or penalties (the Official Journal text, read in full on 28 Oct 2026). Recital 41 recalls that the European Data Protection Supervisor may impose administrative fines on Union entities in the interoperability regulatory sandboxes under Art. 58(2)(i) of Regulation (EU) 2018/1725."
+        },
+        "territorial_scope": [],
+        "implementation_model": "Directly applicable"
+      },
+      "provisions": [
+        {
+          "id": "iea:art-3",
+          "number": "3",
+          "heading": "Interoperability assessment",
+          "summary": "Before taking a decision on new or substantially modified binding requirements, a Union entity or public sector body carries out an interoperability assessment; none is needed where one has already been carried out for those requirements or where they are implemented by solutions provided by Union entities (3(1)). The assessment identifies the effects of the requirements on cross-border interoperability, the stakeholders concerned and the Interoperable Europe solutions that support their implementation, and a report on its outcome, covering the items in the Annex, is published on an official website and shared with the Interoperable Europe Board (3(2)). The recipients of the services directly affected, including citizens, are consulted (3(4)).",
+          "obligation_on": [
+            "actor:union-entity",
+            "actor:public-sector-body"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-iea"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 28 Oct 2026 for item 2.5 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R0903); heading and summary follow the Article's own paragraphs. Art. 3(1)–(4) apply from 12 January 2025 (Art. 23(2)); Art. 3(5), the Board's guidelines, is not part of that tranche."
+        },
+        {
+          "id": "iea:art-4",
+          "number": "4",
+          "heading": "Share and reuse of interoperability solutions between Union entities and public sector bodies",
+          "summary": "A Union entity or public sector body makes an interoperability solution supporting a trans-European digital public service, with its technical documentation and, where applicable, its documented source code, available to any other Union entity or public sector body that requests it (4(1)). The obligation does not cover solutions supporting processes outside the entity's public task, solutions for which third parties hold restricting intellectual property rights, or solutions excluded on grounds of critical infrastructure protection, defence or public security (4(1)(a)–(c)). Publishing on the Interoperable Europe portal fulfils it (4(3)). Solutions without restrictive licensing terms, such as open source solutions, are prioritised where they are equivalent (4(6)).",
+          "obligation_on": [
+            "actor:union-entity",
+            "actor:public-sector-body"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-iea"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 28 Oct 2026 for item 2.5 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R0903); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "iea:art-17",
+          "number": "17",
+          "heading": "National competent authorities and single points of contact",
+          "summary": "Each Member State designates one or more competent authorities responsible for the application of the Regulation, and a single point of contact from among them (17(1)), with the coordination and support tasks listed in 17(2). Member States ensure the authorities have adequate competence and resources (17(3)), notify the Commission of the single point of contact and make its designation public (17(5)).",
+          "obligation_on": [
+            "actor:member-state"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-iea"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 28 Oct 2026 for item 2.5 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R0903); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "iea:art-18",
+          "number": "18",
+          "heading": "Interoperability coordinators for Union entities",
+          "summary": "Any Union entity that regulates, provides or manages trans-European digital public services designates an interoperability coordinator, under the oversight of its highest level of management, who supports that entity in setting up or adapting its internal processes to implement the interoperability assessment.",
+          "obligation_on": [
+            "actor:union-entity"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-iea"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 28 Oct 2026 for item 2.5 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R0903); heading and summary follow the Article's own paragraphs."
+        }
+      ],
+      "claims": [],
+      "sources": [
+        "src-eurlex-iea"
+      ],
+      "last_verified": "2026-10-28",
+      "legal_basis": [],
+      "scope_decision": {
+        "disposition": "included",
+        "criterion": [
+          "crit:object-infrastructure",
+          "crit:horizontal"
+        ],
+        "reason": "The Interoperable Europe Act meets the criterion. Its subject matter is measures promoting the cross-border interoperability of trans-European digital public services, and so of the network and information systems beneath them, through common rules and a governance framework (Art. 1(1)): rules on the interoperability of public digital services. It applies to every Union entity and public sector body that regulates, provides, manages or implements those services, whatever the policy area (Art. 1(2); Art. 2, points (2), (5) and (6)), so its rules apply across sectors. Covered, with a page of its own.",
+        "approved_on": "2026-10-28",
+        "refer_to": [],
+        "watch_for": null,
+        "sources": [
+          {
+            "source_id": "src-eurlex-iea",
+            "supports": "supports:direct",
+            "locator": "Art. 1(1) (subject matter)"
+          },
+          {
+            "source_id": "src-eurlex-iea",
+            "supports": "supports:direct",
+            "locator": "Art. 1(2); Art. 2, points (2), (5) and (6) (Union entities and public sector bodies, whatever the policy area)"
+          }
+        ],
+        "last_verified": "2026-10-28"
+      }
+    },
+    {
       "id": "cloud-ai-development-act",
       "aliases": [
         "com-2026-502"
@@ -4082,6 +4230,46 @@
       "last_verified": "2026-10-28",
       "requires_verification": false,
       "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2025/327 retrieved from the Publications Office's Cellar (CELEX 32025R0327): Art. 2(1)(c) applies the definitions of Art. 2, points (1), (13), (16), (17) and (20), of Regulation (EU) 2022/868. The locator is in the dependent instrument's text, as rel-kind:enables requires. No provision ID exists for the EHDS Articles cited, so `provisions` is empty. Added for item 2.4 on the author's decision of 28 Oct 2026."
+    },
+    {
+      "id": "rel-iea-gdpr-defers",
+      "from": "iea",
+      "to": "gdpr",
+      "kind": "rel-kind:defers-to",
+      "symmetric": false,
+      "summary": "A consultation on an interoperability regulatory sandbox does not replace the GDPR's prior consultation, and processing in a sandbox leaves the data subjects' GDPR rights unaffected.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-iea",
+          "supports": "supports:direct",
+          "locator": "Art. 11(4); Art. 12(6)(e)–(f)"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2024/903 retrieved from the Publications Office's Cellar (CELEX 32024R0903): Art. 11(4): the consultation 'shall not replace the prior consultation referred to in Article 36 of Regulation (EU) 2016/679'; Art. 12(6)(e): personal data processed in a sandbox are not disclosed to non-participants 'unless such disclosure occurs in accordance with Regulation (EU) 2016/679'; Art. 12(6)(f): the processing does 'not affect the application of the rights of the data subjects … in particular in Article 22 of Regulation (EU) 2016/679'. The locator is in the deferring instrument's text, as rel-kind:defers-to requires. No provision ID exists for the Articles cited, so `provisions` is empty. Added for item 2.5 on the author's decision of 28 Oct 2026."
+    },
+    {
+      "id": "rel-nis2-iea-enables",
+      "from": "nis2",
+      "to": "iea",
+      "kind": "rel-kind:enables",
+      "symmetric": false,
+      "summary": "The Interoperable Europe Act defines the network and information systems whose interoperability it promotes by reference to NIS2.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-iea",
+          "supports": "supports:direct",
+          "locator": "Art. 2, point (3)"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2024/903 retrieved from the Publications Office's Cellar (CELEX 32024R0903): Art. 2, point (3): 'network and information system' means a network and information system as defined in Article 6, point (1), of Directive (EU) 2022/2555. The locator is in the dependent instrument's text, as rel-kind:enables requires. Directive (EU) 2022/2555 itself was not re-read. No provision ID exists for the Act's Art. 2, so `provisions` is empty. Added for item 2.5 on the author's decision of 28 Oct 2026."
     }
   ]
 }
