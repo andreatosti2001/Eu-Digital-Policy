@@ -23,7 +23,7 @@
    ============================================================ */
 
 const APPLIES = new Set(['event:application', 'event:compliance-deadline', 'event:transposition']);
-const PRE_ADOPTION = new Set(['status:proposal', 'status:parliament-position', 'status:council-position',
+export const PRE_ADOPTION = new Set(['status:proposal', 'status:parliament-position', 'status:council-position',
   'status:trilogue', 'status:political-agreement', 'status:stalled', 'status:withdrawn']);
 
 const events = (inst, ix) => (inst.milestones || [])

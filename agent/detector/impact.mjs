@@ -124,6 +124,7 @@ export const MODULE_SURFACE = {
   'pipeline.js': { surface: null, why: 'The eight-stage enforcement derivation, and procedure(): the procedural posture and finality of a case. Computes; renders nothing.' },
   'evidence-model.js': { surface: null, why: 'The evidence model: claim kinds, evidence status, locator quality, derivation checks, freshness risk and remediation codes. Pure; read by format.js and by tools/evidence-audit.mjs. Renders nothing.' },
   'json-graph.js': { surface: null, why: 'The dataset explorer\'s model: a record as cards and edges, references resolved by exact id, and the layout. Pure; datasets-page.js renders what it computes.' },
+  'map-model.js': { surface: null, why: 'The dependency map\'s derivations (docs/V2-DATA-DESIGN.md §4.1): today an edge\'s modality, law or proposed, and the words for its kind. Pure; read by interactions.js, instrument-view.js and tools/evidence-audit.mjs. Renders nothing of its own.' },
   'regulatory-model.js': { surface: null, why: 'Provision-level application dates and scalar-status contradictions, derived from timeline.json. Pure; renders nothing of its own.' },
   'filters.js': { surface: null, why: 'Shared filter controls. Chrome for a view rather than a view.' },
   'dialog.js': { surface: null, why: 'The dialog primitive. Chrome.' },

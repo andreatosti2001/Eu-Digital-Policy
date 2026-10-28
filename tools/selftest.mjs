@@ -2316,3 +2316,103 @@ test('P3 · a co-legislator\'s stage on a file still in procedure is reviewed as
   const out = execFileSync('node', [join(ROOT, 'tools/freshness.mjs'), '--as-of', '2026-10-28'], { cwd: ROOT, encoding: 'utf8' });
   assert.match(out, /high\s+review-due clm-data-omnibus-stalled/);
 });
+
+/* ---------------------------------------------------------------------------
+   v2 Session 12, item 12.1 (V2C-01): an edge a proposal states is not read as
+   law. Its modality is derived by js/map-model.js from the act whose text
+   states it (docs/ROADMAP-v2.md §8, question 1), and its kind is printed
+   "Proposed: amends", never "Amends" alone (question 2).
+   --------------------------------------------------------------------------- */
+
+const unescHtml = (s) => s.replace(/&amp;/g, '&').replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"');
+
+/* Every proposed edge printed with its kind in the present tense, in one
+   page's HTML: the interaction card heads and, on an instrument page, the
+   "Related" list. Read from the markup, so it judges what a reader sees. */
+const presentTenseEdges = async (html, ix, pageId = null) => {
+  const { modality } = await import('../js/map-model.js');
+  const { label } = await import('../js/data.js');
+  const byName = new Map([...new Set(ix.instrument.values())].map((i) => [i.short_name, i.id]));
+  const edges = ix.relationship || [];
+  const out = [];
+  const head = /<p class="ix-head">(?:<a href="[^"]*">|<b class="ix-self">)([^<]*)<\/[ab]> <span class="ix-rel"[^>]*>([^<]*)<\/span> (?:<a href="[^"]*">|<b class="ix-self">)([^<]*)<\/[ab]><\/p>/g;
+  for (const [, a, shown, b] of html.matchAll(head)) {
+    const from = byName.get(unescHtml(a)); const to = byName.get(unescHtml(b));
+    for (const r of edges.filter((x) => x.from === from && x.to === to && modality(x, ix) === 'proposed'))
+      if (shown !== 'Proposed: ' + label(ix, r.kind).toLowerCase()) out.push(`card ${r.id}: "${shown}"`);
+  }
+  const col = pageId && /<div class="rel-col"><h3>Instruments<\/h3><ul>([\s\S]*?)<\/ul>/.exec(html);
+  if (col) {
+    for (const [, name, shown] of col[1].matchAll(/<li><a href="[^"]*">([^<]*)<span class="n">([^<]*)<\/span><\/a><\/li>/g)) {
+      const other = byName.get(unescHtml(name));
+      const parts = shown.split(' · ');
+      for (const r of edges.filter((x) => ((x.from === pageId && x.to === other) || (x.to === pageId && x.from === other)) && modality(x, ix) === 'proposed')) {
+        const l = label(ix, r.kind);
+        if (parts.includes(l) || !parts.includes('Proposed: ' + l.toLowerCase())) out.push(`related ${r.id}: "${shown}"`);
+      }
+    }
+  }
+  return out;
+};
+
+test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with its kind in the present tense, on any page', async () => {
+  const MM = await import('../js/map-model.js');
+  const { interactionBlock } = await import('../js/interactions.js');
+  const { renderInstrument } = await import('../js/instrument-view.js');
+  const db = loadDb();
+  const ix = buildIndex(db);
+
+  /* the holder table names every kind the taxonomy has, and nothing else: a new kind is decided, not guessed */
+  assert.deepEqual(Object.keys(MM.HOLDER).sort(), db.taxonomy.relationship_kind.map((t) => t.id).sort());
+  assert.equal(MM.modality({ kind: 'rel-kind:unheard-of', from: 'gdpr', to: 'dsa' }, ix), null);
+
+  /* the rule, measured on this tree: the 8 edges §8 names, and no other */
+  const proposed = db.instruments.relationships.filter((r) => MM.modality(r, ix) === 'proposed').map((r) => r.id).sort();
+  assert.deepEqual(proposed, ['rel-data-act-cloud-ai-act', 'rel-data-omnibus-data-act-amends', 'rel-data-omnibus-dga-repeals',
+    'rel-data-omnibus-gdpr', 'rel-data-omnibus-p2b-repeals', 'rel-digital-networks-act-eprivacy-amends',
+    'rel-digital-networks-act-gdpr-defers', 'rel-digital-networks-act-nis2-defers']);
+  assert.ok(db.instruments.relationships.every((r) => MM.modality(r, ix) !== null), 'every edge has a modality');
+
+  /* derived, never stored: no edge carries it, and it follows the holder's status */
+  assert.ok(db.instruments.relationships.every((r) => !('modality' in r)));
+  const adopted = loadDb();
+  instOf(adopted, 'data-omnibus').legislative_status = 'status:in-force';
+  const ixA = buildIndex(adopted);
+  assert.equal(MM.modality(adopted.instruments.relationships.find((r) => r.id === 'rel-data-omnibus-gdpr'), ixA), 'law', 'adopted, its edge is law the same day');
+  /* V2C-16: an enables edge INTO a proposal is proposed (the holder is the dependent act), and one out of it to the law is too, the other way */
+  assert.equal(MM.modality({ kind: 'rel-kind:enables', from: 'eidas', to: 'digital-networks-act' }, ix), 'proposed');
+  assert.equal(MM.modality({ kind: 'rel-kind:enables', from: 'digital-networks-act', to: 'eidas' }, ix), 'law');
+  assert.equal(MM.modality({ kind: 'rel-kind:legal-basis', from: 'tfeu', to: 'digital-networks-act' }, ix), 'proposed');
+  assert.equal(MM.modality({ kind: 'rel-kind:overlap', from: 'gdpr', to: 'digital-networks-act' }, ix), 'proposed');
+
+  /* every card the site can draw (the instrument pages, instrument.html?id=, the not-covered
+     pages and the brief's Part IX overview all draw interactionBlock) */
+  const cards = db.instruments.relationships.map((r) => interactionBlock(r, ix, r.from, '')).join('');
+  assert.deepEqual(await presentTenseEdges(cards, ix), []);
+  assert.equal((cards.match(/data-modality="proposed"/g) || []).length, 8);
+  /* every instrument view, generated or rendered on request */
+  const views = [];
+  for (const inst of new Set(ix.instrument.values())) {
+    const html = renderInstrument(inst, { ix, db, overlay: {}, today: null, root: '' });
+    views.push(...(await presentTenseEdges(html, ix, inst.id)).map((m) => `${inst.id}: ${m}`));
+  }
+  assert.deepEqual(views, []);
+  /* every static page, the generated instrument pages and the three editions */
+  const pages = [];
+  for (const f of W18_PAGES()) {
+    const html = readFileSync(join(ROOT, f), 'utf8');
+    const id = /<body[^>]*data-instrument="([^"]+)"/.exec(html)?.[1] || null;
+    pages.push(...(await presentTenseEdges(html, ix, id)).map((m) => `${f}: ${m}`));
+  }
+  assert.deepEqual(pages, []);
+  const dna = readFileSync(join(ROOT, 'instruments/digital-networks-act/index.html'), 'utf8');
+  assert.match(dna, /<span class="ix-rel">Proposed: amends<\/span>/);
+  assert.match(dna, />ePrivacy<span class="n">Proposed: amends<\/span>/);
+
+  /* and the check can fail: the rule switched off, as the page read before 12.1 */
+  const before = dna.replaceAll('Proposed: amends', 'Amends').replaceAll('Proposed: defers to', 'Defers to');
+  const caught = await presentTenseEdges(before, ix, 'digital-networks-act');
+  assert.ok(caught.some((m) => /^card rel-digital-networks-act-eprivacy-amends/.test(m)), caught.join('\n'));
+  assert.ok(caught.some((m) => /^related rel-digital-networks-act-eprivacy-amends/.test(m)), caught.join('\n'));
+  assert.equal(caught.length, 6, 'three cards and three Related entries');
+});

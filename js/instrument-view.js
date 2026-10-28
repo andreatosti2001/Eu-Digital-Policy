@@ -39,6 +39,7 @@ import { provisionApplication, provisionDeadlines } from './regulatory-model.js'
 import { derive, STAGES, actionsOnly, inactionsOnly } from './pipeline.js';
 import { sourceList, gradeChip, freshness } from './evidence-view.js';
 import { interactionsFor } from './interactions.js';
+import { kindText } from './map-model.js';
 import { instrumentHref, knownAs, displayName, legalTextSource } from './routes.js';
 
 const esc = (s) => String(s == null ? '' : s)
@@ -605,7 +606,7 @@ function relatedSection(inst) {
   }
   const relList = byOther.size ? [...byOther].map(([otherId, edges]) => {
     const other = IX.instrument.get(otherId);
-    const kinds = [...new Set(edges.map((r) => taxLabel(IX, r.kind)))].join(' · ');
+    const kinds = [...new Set(edges.map((r) => kindText(r, IX, taxLabel(IX, r.kind))))].join(' · ');
     return '<li><a href="' + esc(instrumentHref(otherId, IX, ROOT)) + '">' +
       esc(other ? other.short_name : otherId) +
       '<span class="n">' + esc(kinds) + (edges.length > 1 ? ' · ' + esc(F.plural(edges.length, 'edge')) : '') + '</span></a></li>';
