@@ -1,8 +1,8 @@
 # HANDOVER
 
 **Last updated:** v2 Session 8, part 2. After the approved item 2.5 checkpoint, the open findings the
-author chose to resolve in this session: (a)–(f) and (h)–(k). The part awaits the author's approval
-(`docs/ROADMAP-v2.md` §8) · 28 October 2026
+author chose to resolve in this session: (a)–(f) and (h)–(k). The part is **approved**, which closes the
+session (`docs/ROADMAP-v2.md` §8) · 28 October 2026
 **Branch:** `claude/v2-session-8-findings`, cut from `claude/new-session-o9uopd` at `58671c2` (pull
 request #28, item 2.5, open).
 
@@ -13,7 +13,8 @@ request #28, item 2.5, open).
   and a branch from `main` would conflict on every page. Once #28 is merged, its pull request shows only
   its own commits.
 - `origin/main` was re-fetched before this handover was written: still `3cc0473`; #28 not yet merged.
-- Disposition: pending the author's approval of this part, then the author's answer on a pull request.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the
+  author's instruction of 28 Oct 2026 ("Approve and open the PR").
 
 ## v2 Session 8, part 2 — open findings resolved on the author's request
 
@@ -148,7 +149,8 @@ All in Chromium at 1280px dark and 390px light, with no console error and no ove
   - *Verify:* `node tools/evidence-audit.mjs --as-of 2026-10-28` reads "mapped 12", and
     `instrument.html?id=eidas` shows the record.
   - *Automatic:* W11, M-07 (`status_basis`) and M-15.
-- **Checkpoint:** awaiting the author's approval, recorded in §8.
+- **Checkpoint:** approved on 28 Oct 2026 (§8, "The checkpoint of v2 Session 8, part 2"); pull request
+  opened on the author's instruction.
 
 ## Branch register — 28 October 2026 (v2 Session 8)
 
