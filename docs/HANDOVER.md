@@ -1,7 +1,7 @@
 # HANDOVER
 
 **Last updated:** v2 Session 8. Item 2.5 (the Interoperable Europe Act, `iea`) is implemented and
-its checkpoint **awaits the author's approval** (`docs/ROADMAP-v2.md` §8) · 28 October 2026
+its checkpoint is **approved**, which closes the session (`docs/ROADMAP-v2.md` §8) · 28 October 2026
 **Branch:** `claude/new-session-o9uopd` (assigned by the environment), cut from `main` at `3cc0473`
 (#27).
 
@@ -13,8 +13,9 @@ its checkpoint **awaits the author's approval** (`docs/ROADMAP-v2.md` §8) · 28
 - `git branch -r --no-merged origin/main` listed only
   `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
 - `origin/main` was re-fetched before this handover was written: still `3cc0473`.
-- This session's branch: `claude/new-session-o9uopd`. Disposition: pending the author's approval of
-  the checkpoint, then the author's answer on a pull request.
+- This session's branch: `claude/new-session-o9uopd`. Disposition: item 2.5 approved
+  (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the author's
+  instruction of 28 Oct 2026 ("Approvo e apri la PR").
 
 ## v2 Session 8 — checkpoint report (item 2.5, the Interoperable Europe Act)
 
@@ -275,7 +276,8 @@ the other end.
 - *Changed:* this report.
 - *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run above.
 - *Criterion:* the author's approval, recorded in §8. Item 2.6 does not start before it.
-- **Not yet approved**: awaiting the author.
+- **Approved** on 28 Oct 2026 (§8, "The checkpoint of v2 Session 8 = item 2.5"); pull request opened
+  on the author's instruction.
 
 ### How to check it by hand
 
