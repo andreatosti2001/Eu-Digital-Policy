@@ -18,6 +18,12 @@ to a reader). The checkpoint is **approved** (`docs/ROADMAP-v2.md` §8) · 28 Oc
 - Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve the checkpoint"); pushed, with a pull
   request to `main` opened on the author's instruction of 28 Oct 2026 ("Open PR to main"). Nothing is
   pushed to the branch after the pull request is opened.
+- After that, on 28 Oct 2026: #33 was merged (`7cb47cf`), and the prompt of v2 Session 11 (the closing
+  gate of v2: the comparison with `docs/ROADMAP-v2.md`, the open findings classified, the author's
+  decision on the perimeter) was drafted on the author's request ("Write session 11"). It is kept as
+  `docs/prompts/v2-session-11.md` on `claude/v2-session-11-prompt`, cut from `main` at `7cb47cf`. The
+  prompt records no decision: its first write is §8's row "The scope of v2 Session 11", in the
+  author's words.
 
 ## v2 Session 10 — checkpoint report (items 10.1 and 10.2)
 
