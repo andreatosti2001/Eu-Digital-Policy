@@ -263,7 +263,44 @@ written.
 5. **D-4 and D-5**: open and tied to Phase 4, or decided now.
 6. **Post-v2**: whether and when it opens. Opening it does not start it.
 7. **The status documents** (V2C-45, V2C-44): whether and how to update them after the decision,
-   with the exact before and after.
+   with the exact before and after (§3.1).
+
+### 3.1 Question 7: the exact before and after, drafted on the answers to questions 1–6
+
+Drafts only. Nothing below is written into those files unless the author approves it.
+
+**S1 — `docs/ROADMAP-v2.md`, the status paragraph (lines 3–6).**
+
+Before:
+> **Status: APPROVED by the author on 25 Oct 2026 (§8)**, with item 2.0 brought forward to v2 Session 2. Written in v2 Session 1, 25 Oct 2026, on `claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e`. Nothing in it is implemented, and nothing in it may be implemented until the author approves it. The approval is recorded in §8, by the author's word, and nowhere else.
+
+After:
+> **Status: APPROVED by the author on 25 Oct 2026 (§8)**, with item 2.0 brought forward to v2 Session 2. Written in v2 Session 1, 25 Oct 2026, on `claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e`. **As of 28 Oct 2026: Phases 0, 1 and 2 are executed, each closed at a checkpoint in §8; Phases 3, 4 and 5 are not started. The v2 is open, and Phase 3 is next** (§8, v2 Session 11; the measured comparison is `docs/V2-CLOSURE.md`). Nothing is implemented without the author's approval, recorded in §8, by the author's word, and nowhere else.
+
+**S2 — `AGENTS.md`, the reading table's row for the roadmap (line 55), and one new row after it.**
+
+Before:
+> | `docs/ROADMAP-v2.md` | v2 Session 1: the v2.0 plan — phases 0–5, ten decisions for the author, exit criteria a session can fail. **Approved on 25 Oct 2026** (§8), with item 2.0 brought forward |
+
+After:
+> | `docs/ROADMAP-v2.md` | v2 Session 1: the v2.0 plan — phases 0–5, ten decisions for the author, exit criteria a session can fail. **Approved on 25 Oct 2026** (§8), with item 2.0 brought forward. **Phases 0–2 executed; 3–5 not started; the v2 open, with Phase 3 next** (§8, 28 Oct 2026) |
+> | `docs/V2-CLOSURE.md` | v2 Session 11: the v2 measured against the brief and the roadmap, and every open finding with the class the author decided. **The v2 is not closed** |
+
+**S3 — `docs/V2-DATA-DESIGN.md`, the status line (line 3).**
+
+Before:
+> **Status: PROPOSED.** Written in v2 Session 2, 25–27 Oct 2026, …
+
+After:
+> **Status: APPROVED (`docs/ROADMAP-v2.md` §8: D-3, D-6, D-7, D-8 and the trigger model, 25–27 Oct 2026), implemented in part** — item 2.1, below; the map audit (§4), the status labels (§3) and the triggers (§2) are Phase 3's and are not implemented. Written in v2 Session 2, 25–27 Oct 2026, …
+
+**S4 — `docs/HANDOVER.md`, "Last updated".** Rewritten by this session's report in any case, as every
+session's is; it will say the v2 is open with Phase 3 next.
+
+**Not drafted here: V2C-44** (the deploy gate "to be confirmed" in `AGENTS.md` lines 451 and 556 and
+`docs/DEPLOYMENT.md` §3 item 1). Correcting it touches the readiness check's own statement of what
+settles `deploy_gate_exists`, so it is proposed for a later documentation pass rather than folded
+into this one.
 
 ---
 
