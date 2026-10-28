@@ -23,6 +23,7 @@
 import { load, index, label as taxLabel, note as taxNote, renderError } from './data.js';
 import * as F from './format.js';
 import { instrumentHref, siteRoot } from './routes.js';
+import { modality, kindText } from './map-model.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -69,7 +70,9 @@ const instLink = (ix, id, current, root) => {
  * @param {string} [root]     path from the page to the site root
  */
 export function interactionBlock(r, ix, current, root = siteRoot()) {
-  const kind = esc(taxLabel(ix, r.kind) || String(r.kind).split(':').pop());
+  /* an edge a proposal states is not the law: its kind is qualified,
+     never printed in the present tense alone (V2C-01, js/map-model.js) */
+  const kind = esc(kindText(r, ix, taxLabel(ix, r.kind) || String(r.kind).split(':').pop()));
   /* a note is what the record's maintainers wrote; F.readerText() is what a
      reader is shown of it (item 10.2). The kind note's "Direction: from = …"
      and "(from)" name the edge's field: the head below already draws the
@@ -142,6 +145,7 @@ export function interactionBlock(r, ix, current, root = siteRoot()) {
     : '';
 
   return '<article class="ix-edge" data-kind="' + esc(String(r.kind).split(':').pop()) + '"' +
+      (modality(r, ix) === 'proposed' ? ' data-modality="proposed"' : '') +
       (r.requires_verification ? ' data-unverified="1"' : '') + '>' +
     head +
     (kindNote ? '<p class="ix-kindnote">' + kindNote + '</p>' : '') +

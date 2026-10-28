@@ -211,7 +211,7 @@
     },
     "edge.modality": {
       "values": ["law", "proposed"],
-      "rule": "proposed when the `from` instrument's legislative_status is a pre-adoption state (proposal, parliament-position, council-position, trilogue, political-agreement, stalled) or withdrawn; law otherwise. Derived, so an edge changes modality on the day its proposal is adopted without anybody editing it."
+      "rule": "proposed when the instrument whose text states the edge has a pre-adoption legislative_status (proposal, parliament-position, council-position, trilogue, political-agreement, stalled) or is withdrawn; law otherwise. The holder, kind by kind: `to` for enables and legal-basis; `from` for defers-to, amends, repeals, implements, lex-specialis and carve-out; either end for overlap, complement, conflict and sequence. Revised in v2 Session 12 (docs/ROADMAP-v2.md §8, question 1) from the `from` node alone, which read an enables edge into a proposal as law (V2C-16); implemented in js/map-model.js. Derived, so an edge changes modality on the day its proposal is adopted without anybody editing it."
     },
     "edge.external": {
       "rule": "true when either end's coverage is not `covered`. A rel-kind:defers-to edge with external = true is labelled 'external referral' ('rinvio esterno')."

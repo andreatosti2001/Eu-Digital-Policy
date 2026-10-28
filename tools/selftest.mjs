@@ -2316,3 +2316,229 @@ test('P3 · a co-legislator\'s stage on a file still in procedure is reviewed as
   const out = execFileSync('node', [join(ROOT, 'tools/freshness.mjs'), '--as-of', '2026-10-28'], { cwd: ROOT, encoding: 'utf8' });
   assert.match(out, /high\s+review-due clm-data-omnibus-stalled/);
 });
+
+/* ---------------------------------------------------------------------------
+   v2 Session 12, item 12.1 (V2C-01): an edge a proposal states is not read as
+   law. Its modality is derived by js/map-model.js from the act whose text
+   states it (docs/ROADMAP-v2.md §8, question 1), and its kind is printed
+   "Proposed: amends", never "Amends" alone (question 2).
+   --------------------------------------------------------------------------- */
+
+const unescHtml = (s) => s.replace(/&amp;/g, '&').replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"');
+
+/* Every proposed edge printed with its kind in the present tense, in one
+   page's HTML: the interaction card heads and, on an instrument page, the
+   "Related" list. Read from the markup, so it judges what a reader sees. */
+const presentTenseEdges = async (html, ix, pageId = null) => {
+  const { modality } = await import('../js/map-model.js');
+  const { label } = await import('../js/data.js');
+  const byName = new Map([...new Set(ix.instrument.values())].map((i) => [i.short_name, i.id]));
+  const edges = ix.relationship || [];
+  const out = [];
+  const head = /<p class="ix-head">(?:<a href="[^"]*">|<b class="ix-self">)([^<]*)<\/[ab]> <span class="ix-rel"[^>]*>([^<]*)<\/span> (?:<a href="[^"]*">|<b class="ix-self">)([^<]*)<\/[ab]><\/p>/g;
+  for (const [, a, shown, b] of html.matchAll(head)) {
+    const from = byName.get(unescHtml(a)); const to = byName.get(unescHtml(b));
+    for (const r of edges.filter((x) => x.from === from && x.to === to && modality(x, ix) === 'proposed'))
+      if (shown !== 'Proposed: ' + label(ix, r.kind).toLowerCase()) out.push(`card ${r.id}: "${shown}"`);
+  }
+  const col = pageId && /<div class="rel-col"><h3>Instruments<\/h3><ul>([\s\S]*?)<\/ul>/.exec(html);
+  if (col) {
+    for (const [, name, shown] of col[1].matchAll(/<li><a href="[^"]*">([^<]*)<span class="n">([^<]*)<\/span><\/a><\/li>/g)) {
+      const other = byName.get(unescHtml(name));
+      const parts = shown.split(' · ');
+      for (const r of edges.filter((x) => ((x.from === pageId && x.to === other) || (x.to === pageId && x.from === other)) && modality(x, ix) === 'proposed')) {
+        const l = label(ix, r.kind);
+        if (parts.includes(l) || !parts.includes('Proposed: ' + l.toLowerCase())) out.push(`related ${r.id}: "${shown}"`);
+      }
+    }
+  }
+  return out;
+};
+
+test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with its kind in the present tense, on any page', async () => {
+  const MM = await import('../js/map-model.js');
+  const { interactionBlock } = await import('../js/interactions.js');
+  const { renderInstrument } = await import('../js/instrument-view.js');
+  const db = loadDb();
+  const ix = buildIndex(db);
+
+  /* the holder table names every kind the taxonomy has, and nothing else: a new kind is decided, not guessed */
+  assert.deepEqual(Object.keys(MM.HOLDER).sort(), db.taxonomy.relationship_kind.map((t) => t.id).sort());
+  assert.equal(MM.modality({ kind: 'rel-kind:unheard-of', from: 'gdpr', to: 'dsa' }, ix), null);
+
+  /* the rule, measured on this tree: the 8 edges §8 names, and no other */
+  const proposed = db.instruments.relationships.filter((r) => MM.modality(r, ix) === 'proposed').map((r) => r.id).sort();
+  assert.deepEqual(proposed, ['rel-data-act-cloud-ai-act', 'rel-data-omnibus-data-act-amends', 'rel-data-omnibus-dga-repeals',
+    'rel-data-omnibus-gdpr', 'rel-data-omnibus-p2b-repeals', 'rel-digital-networks-act-eprivacy-amends',
+    'rel-digital-networks-act-gdpr-defers', 'rel-digital-networks-act-nis2-defers']);
+  assert.ok(db.instruments.relationships.every((r) => MM.modality(r, ix) !== null), 'every edge has a modality');
+
+  /* derived, never stored: no edge carries it, and it follows the holder's status */
+  assert.ok(db.instruments.relationships.every((r) => !('modality' in r)));
+  const adopted = loadDb();
+  instOf(adopted, 'data-omnibus').legislative_status = 'status:in-force';
+  const ixA = buildIndex(adopted);
+  assert.equal(MM.modality(adopted.instruments.relationships.find((r) => r.id === 'rel-data-omnibus-gdpr'), ixA), 'law', 'adopted, its edge is law the same day');
+  /* V2C-16: an enables edge INTO a proposal is proposed (the holder is the dependent act), and one out of it to the law is too, the other way */
+  assert.equal(MM.modality({ kind: 'rel-kind:enables', from: 'eidas', to: 'digital-networks-act' }, ix), 'proposed');
+  assert.equal(MM.modality({ kind: 'rel-kind:enables', from: 'digital-networks-act', to: 'eidas' }, ix), 'law');
+  assert.equal(MM.modality({ kind: 'rel-kind:legal-basis', from: 'tfeu', to: 'digital-networks-act' }, ix), 'proposed');
+  assert.equal(MM.modality({ kind: 'rel-kind:overlap', from: 'gdpr', to: 'digital-networks-act' }, ix), 'proposed');
+
+  /* every card the site can draw (the instrument pages, instrument.html?id=, the not-covered
+     pages and the brief's Part IX overview all draw interactionBlock) */
+  const cards = db.instruments.relationships.map((r) => interactionBlock(r, ix, r.from, '')).join('');
+  assert.deepEqual(await presentTenseEdges(cards, ix), []);
+  assert.equal((cards.match(/data-modality="proposed"/g) || []).length, 8);
+  /* every instrument view, generated or rendered on request */
+  const views = [];
+  for (const inst of new Set(ix.instrument.values())) {
+    const html = renderInstrument(inst, { ix, db, overlay: {}, today: null, root: '' });
+    views.push(...(await presentTenseEdges(html, ix, inst.id)).map((m) => `${inst.id}: ${m}`));
+  }
+  assert.deepEqual(views, []);
+  /* every static page, the generated instrument pages and the three editions */
+  const pages = [];
+  for (const f of W18_PAGES()) {
+    const html = readFileSync(join(ROOT, f), 'utf8');
+    const id = /<body[^>]*data-instrument="([^"]+)"/.exec(html)?.[1] || null;
+    pages.push(...(await presentTenseEdges(html, ix, id)).map((m) => `${f}: ${m}`));
+  }
+  assert.deepEqual(pages, []);
+  const dna = readFileSync(join(ROOT, 'instruments/digital-networks-act/index.html'), 'utf8');
+  assert.match(dna, /<span class="ix-rel">Proposed: amends<\/span>/);
+  assert.match(dna, />ePrivacy<span class="n">Proposed: amends<\/span>/);
+
+  /* and the check can fail: the rule switched off, as the page read before 12.1 */
+  const before = dna.replaceAll('Proposed: amends', 'Amends').replaceAll('Proposed: defers to', 'Defers to');
+  const caught = await presentTenseEdges(before, ix, 'digital-networks-act');
+  assert.ok(caught.some((m) => /^card rel-digital-networks-act-eprivacy-amends/.test(m)), caught.join('\n'));
+  assert.ok(caught.some((m) => /^related rel-digital-networks-act-eprivacy-amends/.test(m)), caught.join('\n'));
+  assert.equal(caught.length, 6, 'three cards and three Related entries');
+});
+
+/* ---------------------------------------------------------------------------
+   v2 Session 12, item 12.2: the check reads the applicability rules.
+   tools/trigger-audit.mjs, at the severities of docs/ROADMAP-v2.md §8,
+   v2 Session 12, question 5. A check that cannot be shown to fire is a check
+   on nothing (docs/V2-DATA-DESIGN.md §4.3): every ERROR rule is planted.
+   --------------------------------------------------------------------------- */
+
+import { triggerAudit, RULES_V1, BACKLOG_CODES } from './trigger-audit.mjs';
+
+/* The backlog measured on 28 Oct 2026. Each list may only lose members: a
+   rule leaves it by being read against its Article, never by editing this. */
+const TRIGGER_BACKLOG_2026_10_28 = {
+  'rule-v1-sources': RULES_V1,
+  'rule-scope-basis-missing': RULES_V1,
+  'rule-condition-provisions-missing': RULES_V1,
+  'rule-exemption-v1': ['ap-gdpr-01', 'ap-gdpr-03', 'ap-dsa-01', 'ap-dsa-03', 'ap-dsa-04', 'ap-dsa-05', 'ap-dma-01',
+    'ap-ai-act-01', 'ap-ai-act-02', 'ap-ai-act-04', 'ap-ai-act-06', 'ap-data-act-03', 'ap-nis2-02'],
+  'rule-threshold-basis-missing': ['ap-dsa-02', 'ap-dma-02', 'ap-ai-act-03'],
+  'rule-dates-not-derived': ['ap-dsa-02', 'ap-dsa-05', 'ap-dma-03', 'ap-ai-act-01', 'ap-ai-act-02', 'ap-ai-act-05',
+    'ap-ai-act-06', 'ap-ai-act-07', 'ap-data-act-02', 'ap-data-act-04'],
+};
+
+const ruleOf = (db, id) => db.applicability.rules.find((r) => r.id === id);
+/* a v2 rule that passes T-01…T-05: the shape docs/v2-design/applicability-rule.schema.json describes */
+const v2Rule = (db) => {
+  const r = structuredClone(ruleOf(db, 'ap-gdpr-02'));
+  r.sources = [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 3(2)', for: 'scope' }];
+  r.condition_provisions = Object.fromEntries(Object.keys(r.conditions).map((d) => [d, ['gdpr:art-5']]));
+  r.exemptions = [];
+  return r;
+};
+
+test('X1 · 12.2, this tree: the 33 rules read, 0 errors, the backlog the measured one, and it can only shrink', () => {
+  const db = loadDb();
+  const t = triggerAudit(db, '2026-10-28');
+  assert.equal(t.total, 33);
+  assert.deepEqual(t.errors, []);
+  assert.deepEqual(t.warnings, []);
+  assert.deepEqual(Object.keys(t.backlog), BACKLOG_CODES);
+  for (const [code, ids] of Object.entries(t.backlog)) {
+    for (const id of ids) assert.ok(TRIGGER_BACKLOG_2026_10_28[code].includes(id), `${id} entered ${code}: the backlog only shrinks`);
+  }
+  /* today's counts, as the author was shown them (§8, question 5) */
+  assert.deepEqual(Object.fromEntries(Object.entries(t.backlog).map(([c, ids]) => [c, ids.length])),
+    { 'rule-v1-sources': 33, 'rule-scope-basis-missing': 33, 'rule-condition-provisions-missing': 33,
+      'rule-exemption-v1': 13, 'rule-threshold-basis-missing': 3, 'rule-dates-not-derived': 10 });
+  assert.equal(t.publishable.length, 0, 'none of the 33 is publishable at the claims\' standard yet');
+  assert.deepEqual([...RULES_V1].sort(), db.applicability.rules.map((r) => r.id).sort(), 'the frozen list is the 33');
+  /* the date-dependent halves are WARNINGs: an older date changes the report, never the exit code */
+  const sept = triggerAudit(db, '2026-09-27');
+  assert.deepEqual(sept.errors, []);
+  assert.deepEqual(sept.warnings, ['VERIFIED_AFTER_AS_OF applicability/ap-eidas2-01: last_verified 2026-10-27 is after the audit date 2026-09-27']);
+  const early = triggerAudit(db, '2024-06-01');
+  assert.deepEqual(early.errors, []);
+  assert.ok(early.warnings.some((w) => /^APPLIES_BEFORE_DATE applicability\/ap-ai-act-01/.test(w)));
+});
+
+test('X2 · 12.2: every ERROR rule fires on a planted defect, and a v2 rule that meets T-01…T-05 is publishable', () => {
+  const plant = (fn, asOf = '2026-10-28') => { const db = loadDb(); fn(db); return triggerAudit(db, asOf); };
+  const errs = (t, re) => t.errors.filter((e) => re.test(e));
+
+  /* the control: a clean v2 rule is publishable and in no backlog but the dates */
+  const clean = plant((db) => { db.applicability.rules[db.applicability.rules.findIndex((r) => r.id === 'ap-gdpr-02')] = v2Rule(db); });
+  assert.deepEqual(clean.errors, []);
+  assert.ok(clean.publishable.includes('ap-gdpr-02'));
+
+  const swap = (fn) => (db) => { const r = v2Rule(db); fn(r, db); db.applicability.rules[db.applicability.rules.findIndex((x) => x.id === 'ap-gdpr-02')] = r; };
+  /* T-02: object references with no scope basis, and one that does not resolve */
+  assert.equal(errs(plant(swap((r) => { r.sources[0].for = 'rationale'; })), /^T-02 applicability\/ap-gdpr-02: no for:scope/).length, 1);
+  assert.equal(errs(plant(swap((r) => { r.sources.push({ source_id: 'src-not-a-source', supports: 'supports:direct', locator: 'Art. 1' }); })), /^T-02 .*does not resolve/).length, 1);
+  assert.equal(errs(plant(swap((r) => { r.sources[0].locator = 'the Regulation'; })), /^T-02 /).length, 1, 'a locator that is not structural');
+  /* T-03: a dimension with no provision, and a provision of an unconnected instrument */
+  assert.equal(errs(plant(swap((r) => { delete r.condition_provisions[Object.keys(r.conditions)[0]]; })), /^T-03 .*names no provision/).length, 1);
+  assert.equal(errs(plant(swap((r) => { r.condition_provisions[Object.keys(r.conditions)[0]] = ['dora:art-5']; })), /^T-03 .*neither this rule's nor connected/).length, 1);
+  /* T-04: an exemption object with no basis */
+  assert.equal(errs(plant(swap((r) => { r.exemptions = [{ text: 'Purely personal or household activity.', effect: 'excludes', basis: [] }]; })), /^T-04 /).length, 1);
+  /* T-05: a key without its comparator */
+  assert.equal(errs(plant((db) => { const r = ruleOf(db, 'ap-ai-act-03'); r.conditions.thresholds = { cumulative_training_flop: 1e25 }; }), /^T-05 .*cumulative_training_flop/).length, 1);
+  /* T-06: an uncertain outcome that does not say what it turns on */
+  assert.equal(errs(plant((db) => { const r = db.applicability.rules.find((x) => x.outcome === 'outcome:likely'); r.depends_on = []; }), /^T-06 /).length, 1);
+  /* T-07: a date that is not one */
+  assert.equal(errs(plant((db) => { ruleOf(db, 'ap-gdpr-01').last_verified = '27/08/2026'; }), /^T-07 /).length, 1);
+  /* T-08: a proposal binds nobody */
+  assert.equal(errs(plant((db) => { ruleOf(db, 'ap-gdpr-01').instrument = 'data-omnibus'; }), /^T-08 applicability\/ap-gdpr-01: applies on data-omnibus/).length, 1);
+  /* T-09: a rule on an excluded instrument is an error; on a watched one, a warning */
+  const excluded = loadDb().instruments.instruments.find((i) => i.scope_decision?.disposition === 'excluded').id;
+  const watched = loadDb().instruments.instruments.find((i) => i.scope_decision?.disposition === 'watched').id;
+  assert.equal(errs(plant((db) => { ruleOf(db, 'ap-gdpr-04').instrument = excluded; ruleOf(db, 'ap-gdpr-04').outcome = 'outcome:possible'; }), /^T-09 /).length, 1);
+  assert.ok(plant((db) => { ruleOf(db, 'ap-gdpr-04').instrument = watched; ruleOf(db, 'ap-gdpr-04').outcome = 'outcome:possible'; })
+    .warnings.some((w) => /^RULE_ON_WATCHED applicability\/ap-gdpr-04/.test(w)));
+  /* a rule added after the 33 is held in full: its gaps are errors, not backlog */
+  const added = plant((db) => { db.applicability.rules.push({ ...structuredClone(ruleOf(db, 'ap-gdpr-01')), id: 'ap-gdpr-99' }); });
+  assert.ok(added.errors.some((e) => /^T-01 applicability\/ap-gdpr-99: .*held to it in full/.test(e)));
+  assert.ok(!Object.values(added.backlog).flat().includes('ap-gdpr-99'));
+});
+
+test('X3 · 12.2: evidence-audit.mjs reports TRIGGERS in text, --json and --markdown, FAILS on a planted rule defect, and refuses a stored derived field on a rule', () => {
+  const out = runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28']);
+  assert.equal(out.exit, 0, 'the backlog never fails the run');
+  assert.match(out.out, /^TRIGGERS {8}33 rules · applies 13 · likely 9 · possible 10 · unlikely 1$/m);
+  assert.match(out.out, /^ {2}publishable {3}0 of 33$/m);
+  assert.match(out.out, /^ {2}BACKLOG rule-dates-not-derived 10: /m);
+  const json = JSON.parse(runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28', '--json']).out);
+  assert.equal(json.triggers.total, 33);
+  assert.equal(json.triggers.backlog['rule-exemption-v1'].length, 13);
+  assert.match(runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28', '--markdown']).out, /\| … publishable at the claims' standard \| 0 of 33 \|/);
+  assert.ok(DERIVED_FIELDS.includes('publishable') && DERIVED_FIELDS.includes('modality'));
+  const dir = treeCopy();
+  try {
+    editJSON(dir, 'applicability.json', (d) => {
+      d.rules.find((r) => r.outcome === 'outcome:possible').depends_on = [];
+      d.rules[0].publishable = true;
+    });
+    const r = runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', '2026-10-28']);
+    assert.equal(r.exit, 1);
+    assert.match(r.out, /T-06 applicability\/.*possible with no depends_on/);
+    assert.match(r.out, /applicability\/ap-gdpr-01 stores "publishable"/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('X4 · 12.2: the record says what the run now reads, in the words the author approved, and no longer that it reads nothing of the rules', () => {
+  assert.ok(!LIMITS.some((l) => /reports nothing about data\/applicability\.json/.test(l)));
+  assert.ok(LIMITS.includes("It reads the rules behind applies.html (data/applicability.json) for their structure and evidence: references and locators, the provision behind each condition, exemptions, thresholds and dates. It opens no source and runs no questionnaire, so a rule it reports as publishable meets the claims' standard of evidence; that is not a finding that the rule states the law correctly (docs/ROADMAP-v2.md §4, Phase 3; D-2)."));
+  assert.deepEqual(CHECKED.map((c) => c.section), ['claims', 'remediation', 'prose', 'sources', 'freshness', 'enforcement', 'regulatory', 'register', 'triggers']);
+});

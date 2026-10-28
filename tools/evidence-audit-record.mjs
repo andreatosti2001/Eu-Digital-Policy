@@ -53,8 +53,7 @@ export const QUESTIONS = [
   { key: 'limits', label: 'With which limits' },
 ];
 
-/** What the tool checks — its seven sections, as its own header
- *  states them. */
+/** What the tool checks — its sections, as its own header states them. */
 export const CHECKED = [
   { section: 'claims', what: 'type, evidence status and grade of every claim; locators on direct references; possibly composite statements; derivations re-run; attribution; premises' },
   { section: 'remediation', what: 'why each claim is not yet as strong as it could be, as taxonomy codes' },
@@ -63,6 +62,8 @@ export const CHECKED = [
   { section: 'freshness', what: 'risk class and freshness state of each record, computed against the reference date' },
   { section: 'enforcement', what: 'procedural posture, finality and contradictions of each enforcement record' },
   { section: 'regulatory', what: 'scalar status against the milestones, and provision-level application dates' },
+  { section: 'register', what: 'the exclusion register and the watchlist: scope decisions, coverage against the pages, the external referral, status bases, watched events (M-03…M-07, R-01)' },
+  { section: 'triggers', what: 'the applicability rules behind applies.html: reference objects, a direct scope reference with a structural locator, the provision behind each condition, exemptions and thresholds with their basis, what an uncertain outcome turns on, dates, and no rule that applies a text that binds nobody (T-01…T-11)' },
 ];
 
 /** What a recorded run does not establish. Stated on every record, so
@@ -72,7 +73,7 @@ export const LIMITS = [
   'It does not establish that any sentence is true. It checks structure, classification, locators, coverage, dates and contradictions between records.',
   '"Possibly composite" is a heuristic, and warnings are findings to read, not a score.',
   'Freshness is computed against the reference date (as_of), not against the day the run was recorded. Neither is evidence of currency.',
-  'It reports nothing about data/applicability.json, the rules behind applies.html (docs/ROADMAP-v2.md §2, D-2).',
+  'It reads the rules behind applies.html (data/applicability.json) for their structure and evidence: references and locators, the provision behind each condition, exemptions, thresholds and dates. It opens no source and runs no questionnaire, so a rule it reports as publishable meets the claims\' standard of evidence; that is not a finding that the rule states the law correctly (docs/ROADMAP-v2.md §4, Phase 3; D-2).',
   'The commit names the tree audited only when tree_clean is true. When it is false, the uncommitted changes listed were audited too.',
   'The record is per-machine and git-ignored. A run on another machine is not here, and no recorded run is not the same as no run.',
 ];

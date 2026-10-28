@@ -1,8 +1,171 @@
 # HANDOVER
 
-**Last updated:** Session 11.5, the P0 data-integrity audit of 28 October 2026
-(`docs/AUDIT-2026-10-28.md`). The v2 stays open with Phase 3 next, as v2 Session 11 recorded below.
-**Branch:** `claude/p0-data-integrity-2026-10-28`, cut from `main` at `8aae4a3`.
+**Last updated:** v2 Session 12, the opening of Phase 3 (28 October 2026): 12.1 (V2C-01) and 12.2 (the
+check reads the applicability rules), then a checkpoint, **approved by the author** (§8).
+**Branch:** `claude/v2-session-12-phase-3-open`, cut from `main` at `bca554e`.
+
+## Branch register — 28 October 2026 (v2 Session 12)
+
+- Branch `claude/v2-session-12-phase-3-open`, cut from `main` at `bca554e` (#35, #36 and #37 merged). The
+  prompt's branch, `claude/v2-session-12-prompt`, was already in `main` as #37, so nothing was merged in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
+  already in the register. No other branch to report.
+- `origin/main` was re-fetched before this handover was written: still `bca554e`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve, incl. RULES_V1 (Recommended)"); pushed, with a
+  pull request to `main` opened on the author's instruction of 28 Oct 2026 ("Open PR to main
+  (Recommended)"). Nothing is pushed to the branch after the pull request is opened.
+
+## v2 Session 12 — checkpoint report (12.1 V2C-01, 12.2 the triggers)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 12 | "Start session 12"; "12.1 then 12.2 (Recommended)" | `725b0cb` |
+| Q1 · the modality rule | "Locator holder per kind"; the holder table "Approve as drafted (Recommended)" | `294ee82` |
+| Q2 · the words for a proposed edge | "\"Proposed:\" + label (Recommended)" | `5616aac` |
+| Q3 · where the derivation lives | "New js/map-model.js (Recommended)" | `fd75e0a` |
+| Q4 · the perimeter of 12.2 | "Triggers only (Recommended)" — M-08…M-16 to a later Phase 3 session | `8b9795a` |
+| Q5 · the severities | "Approve as proposed (Recommended)" — incl. T-07's date half and T-11 as WARNING | `c76f9b2` |
+| Q6 · the 2.6 flip not made | "Re-date: after the work (Recommended)" | `681e725` |
+| Part IX's mandate sentence (found) | "Log it; fix next session (Recommended)" | `8340020` |
+| The record's LIMITS and CHECKED; a suite premise | "As drafted + register (Recommended)"; "Assert against CHECKED (Recommended)" | `9894cf9` |
+
+### What was written
+
+- **12.1, `580621c`.** `js/map-model.js` (new): `HOLDER` (the 12 kinds), `modality(r, ix)`,
+  `kindText()`. `js/regulatory-model.js` exports `PRE_ADOPTION` (its one home; the duplicate in
+  `tools/register-audit.mjs` `PROCEDURAL_STATES` is reported, not touched). `js/interactions.js` (the card
+  head, and `data-modality="proposed"` on the card) and `js/instrument-view.js` (the "Related" list)
+  read it. `agent/detector/impact.mjs` `MODULE_SURFACE` names the new module (the register must name every
+  module in `js/`). Five generated pages regenerated; a second `node tools/_footer.mjs` writes 0 files.
+  **No change to `data/`**; summaries untouched.
+- **12.2, `f0c88d7`, `9894cf9`.** `tools/trigger-audit.mjs` (new, pure, `asOf` passed in): T-01…T-11.
+  `tools/evidence-audit.mjs`: section 9 TRIGGERS in text, `--json`, `--markdown`; the derived-field scan
+  extended to the rules; `DERIVED_FIELDS` + `publishable`, `asks`, `modality`, `verification_state`; the
+  run record names the two audit modules among its rules. `tools/evidence-audit-record.mjs`: LIMITS and
+  CHECKED in the approved words. `.control-room/selftest.mjs`: the view's sections asserted equal to
+  `CHECKED` instead of pinned at 7. **A rule added after the 33 is held to every check in full**
+  (`RULES_V1`, the frozen list, on the precedent of `register-audit.mjs`): the roadmap's "adding rules
+  waits until the existing 33 pass", made mechanical — **put to the author for approval with this
+  checkpoint**, because the questions did not name it.
+- **Docs, `b7bb914`.** `docs/V2-DATA-DESIGN.md` §1.4 and `docs/v2-design/map.schema.json` `x-derived`
+  (the modality rule); §4.3 (the flip, re-dated). `docs/V2-CLOSURE.md`: V2C-66 (B) and V2C-67 (A)
+  added, with a dated note under §2.3; **V2C-01's row is not changed** until the author approves.
+- **Tests.** `tools/selftest.mjs` 111 → 116: **V1** (12.1: the holder table covers the taxonomy's 12
+  kinds; the 8 proposed edges; derived, following the holder's status; every card, every instrument
+  view, every static and generated page and the three editions; the rule switched off is caught, 6 of
+  6), **X1** (this tree: 0 errors, the backlog pinned so it can only shrink, the date halves warnings),
+  **X2** (every ERROR rule planted: T-02 ×3, T-03 ×2, T-04, T-05, T-06, T-07, T-08, T-09; a clean v2 rule
+  is publishable; a 34th rule is held in full), **X3** (the CLI in three formats; exit 1 on a planted
+  defect; a stored `publishable` refused), **X4** (the approved LIMITS sentence; CHECKED's nine sections).
+
+### Before and after, every text changed
+
+| Where | Before | After |
+|---|---|---|
+| Card head, 8 proposed edges (instrument pages, `instrument.html?id=`, not-covered pages, Part IX overview in 4 editions) | "Digital Networks Act — Amends → ePrivacy"; "… Defers to → GDPR / NIS2"; "Data Omnibus — Amends → GDPR / Data Act"; "… Repeals → P2B Regulation / DGA"; "Cloud and AI Development Act — In tension with → Data Act" | "… — Proposed: amends → …", "Proposed: defers to", "Proposed: repeals", "Proposed: in tension with" (shown in the head's small capitals) |
+| "Related" list, both ends of the 8 | "ePrivacy · Amends", "Data Omnibus · Amends", "Digital Networks Act · Defers to", … | "ePrivacy · Proposed: amends", "Data Omnibus · Proposed: amends", "Digital Networks Act · Proposed: defers to", … |
+| Generated pages | — | 5 changed: gdpr, data-act, nis2, data-omnibus, digital-networks-act (12 card heads, 12 Related entries) |
+| Record LIMITS (Control Room, run records) | "It reports nothing about data/applicability.json, the rules behind applies.html (docs/ROADMAP-v2.md §2, D-2)." | the sentence approved in §8 |
+| Record CHECKED | 7 sections | + `register`, + `triggers` |
+
+Part IX's group headings ("Amends 4"), the kind notes, the summaries, `applies.html` and its D-2 notice:
+unchanged. No locale key involved (the labels come from the taxonomy, rendered in English on every edition).
+
+### The TRIGGERS report today (`node tools/evidence-audit.mjs --as-of 2026-10-28`)
+
+```
+TRIGGERS        33 rules · applies 13 · likely 9 · possible 10 · unlikely 1
+  publishable   0 of 33
+  BACKLOG rule-v1-sources 33
+  BACKLOG rule-scope-basis-missing 33
+  BACKLOG rule-condition-provisions-missing 33
+  BACKLOG rule-exemption-v1 13
+  BACKLOG rule-threshold-basis-missing 3: ap-dsa-02, ap-dma-02, ap-ai-act-03 (4 keys)
+  BACKLOG rule-dates-not-derived 10: ap-dsa-02, ap-dsa-05, ap-dma-03, ap-ai-act-01, ap-ai-act-02,
+          ap-ai-act-05, ap-ai-act-06, ap-ai-act-07, ap-data-act-02, ap-data-act-04
+ERROR rules T-02…T-09: 0 · WARNING (VERIFIED_AFTER_AS_OF, RULE_ON_WATCHED, APPLIES_BEFORE_DATE): 0
+```
+
+As of 27 Sep 2026 (the date test H1 audits at) one warning appears, `VERIFIED_AFTER_AS_OF
+applicability/ap-eidas2-01`; as of 1 Jun 2024 `APPLIES_BEFORE_DATE` fires on six rules. Neither changes
+the exit code. **The design's F-8 count of 11 was not reproduced**: measured as every application event
+`provisionApplication()` gives a rule's obligations, later tranches included, absent from its `dates`,
+it is 10. The design's method is not recorded, so the difference is not explained.
+
+### Counts against `main` (`bca554e`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified | 0 / 0, 45 | — |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-28` | 0 errors, 11 warnings | 0 errors, 11 warnings; + TRIGGERS | the new section; no new warning |
+| `freshness --as-of 2026-10-28` | 0 defects, 3 prompts | 0 defects, 3 prompts | — |
+| `tools/selftest.mjs` | 111 | 116, 0 failing | V1, X1–X4 |
+| The 24 suites in `AGENT_SUITES` | 1241 | 1246, 0 failing | the five above |
+| `.control-room/selftest.mjs` | — | 77: 76 pass, 1 skipped, 0 fail | two assertions now against `CHECKED` |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | with `BROWSER_QA_CHROME` set; without it `browser_suite_pass` blocks too (15 of 20) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs origin/main HEAD` | — | 12 commits, 0 without evidence | — |
+
+### Seen in a browser
+
+Chromium (Playwright), local server: the DNA, the Data Omnibus, `instrument.html?id=eprivacy`, the GDPR
+and `instrument.html?id=p2b`, in both themes, at 1280px and 390px. Every proposed card and every
+"Related" entry reads "Proposed: …"; no console error; no horizontal overflow. The P2B notice shows the
+card ("Data Omnibus — Proposed: repeals → P2B Regulation") and has no "Related" list, as before.
+
+### What was not verified, and why
+
+- No source was opened: nothing in this session states a new legal fact, and no rule was corrected.
+- Screen readers, contrast and pixels: as README limitation 7 says.
+- Why the design's F-8 measured 11 (above).
+- `validate.mjs` does not yet know the v2 rule fields (`condition_provisions`, `threshold_basis`, object
+  sources): the first v2 rule written into `data/` may need it to accept them. Not tested, because no
+  v2 rule exists.
+
+### Found, for the author — not changed
+
+1. **V2C-67 (A)**, Part IX's mandate sentence, in four languages: logged, fixed next session.
+2. **V2C-66 (B)**, the 2.6 flip not made: re-dated.
+3. **`evidence-audit.mjs`'s exit code already turns on `--as-of`**, before this session: on `main`, as
+   of 1 Jun 2024, it reports 13 ERRORs (status contradictions measured against the date asked) and exits
+   1. SESSION 30's rule says an ERROR is a defect on every date. The new rules add none.
+4. **A proposal's claim graded "Primary law".** `clm-omnibus-four-gdpr-reforms`, a claim about
+   COM(2025) 837, carries the grade chip "PRIMARY LAW" on the Data Omnibus card, because its source is
+   tier 1. Item 2.6 changed the source chip ("Tier 1 · legislative proposal") but not the claim's
+   grade label. Measured by source title: 1 claim. The grading rules are red-tier; not touched.
+5. **The pre-adoption set has two homes**: `js/regulatory-model.js` `PRE_ADOPTION` and
+   `tools/register-audit.mjs` `PROCEDURAL_STATES` (Q3: reported, not touched).
+6. **M-11 and M-13 would fire today** on `rel-dsa-copyright-dsm-defers` (partial by construction), and
+   M-16 has no `basis` field to read (Q4): for the session that implements the map checks.
+7. **The interaction module's header** still says "Seventeen edges are recorded" (there are 40); a
+   comment, not shown to a reader.
+8. A session lesson repeated: a `pkill -f` with a string in its own command line killed the shell once
+   (no file affected; the local server it was meant to stop was stopped with it).
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **12.0** | §8: scope row and nine answer rows (`725b0cb` … `9894cf9`) | read §8's last eleven rows | — | every decision in the author's words before anything published changed |
+| **12.1** | `js/map-model.js`, `js/interactions.js`, `js/instrument-view.js`, `js/regulatory-model.js`, 5 pages (`580621c`) | open `/instruments/digital-networks-act/`: "Proposed: amends → ePrivacy"; Related "ePrivacy · Proposed: amends"; `git diff bca554e -- data/` is empty | `tools/selftest.mjs` V1 | met: no proposed edge printed in the present tense; derived, not stored; second generator run writes 0 |
+| **12.2** | `tools/trigger-audit.mjs`, `tools/evidence-audit.mjs`, `tools/evidence-audit-record.mjs`, `.control-room/selftest.mjs` (`f0c88d7`, `9894cf9`) | `node tools/evidence-audit.mjs --as-of 2026-10-28` shows TRIGGERS and exits 0; plant `"depends_on": []` on a `possible` rule in a copy and it exits 1 | X1–X4; `.control-room/selftest.mjs` | met for the triggers; **Phase 3's entry condition is still not met** (0 of 33 publishable) — that is the work the check now measures |
+| **12.3** | all checks re-run, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: 0 errors everywhere; readiness unchanged |
+| **12.4** | this report; V2-CLOSURE V2C-66, V2C-67 (`a2edc18`) | — | — | **approved** by the author (§8); V2C-01's row names `580621c` |
+
+### How to check it by hand
+
+```
+git diff bca554e -- data/                         # empty: nothing stored
+node tools/evidence-audit.mjs --as-of 2026-10-28  # TRIGGERS, ERRORS 0
+node --test tools/selftest.mjs                     # 116 pass
+python3 -m http.server 8000                        # /instruments/data-omnibus/, /instrument.html?id=p2b
+```
 
 ## Branch register — 28 October 2026 (Session 11.5)
 
