@@ -103,6 +103,15 @@ function push(out, rec) {
 
 /* ---------------------------------------------------------- the index */
 
+/** Whom a provision binds, as search offers it: nobody, when the provision
+ *  belongs to a proposal. A proposal's article stays searchable as a
+ *  provision and is never offered as an obligation (v2 Session 9, item 2.6,
+ *  docs/ROADMAP-v2.md §8). */
+export function bindingActors(provision, owner) {
+  if (owner && owner.kind === 'kind:proposal') return [];
+  return (provision && provision.obligation_on) || [];
+}
+
 export function buildIndex() {
   const out = [];
   if (!IX) return out;
@@ -142,7 +151,7 @@ export function buildIndex() {
     });
 
     /* ---- obligations: a provision that binds somebody ---- */
-    for (const who of pr.obligation_on || []) {
+    for (const who of bindingActors(pr, owner && IX.instrument.get(owner))) {
       push(out, {
         kind: 'obligation', id: pid + '::' + who,
         title: taxLabel(IX, who) + ' — ' + provRef(pid),

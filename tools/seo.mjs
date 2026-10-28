@@ -194,7 +194,11 @@ const joinFacets = (xs) => xs.length <= 1 ? xs.join('') : xs.slice(0, -1).join('
 
 /** The instrument number as the record's own full name writes it. */
 export function actNumber(inst) {
-  const m = String(inst.full_name || '').match(/(Regulation|Directive) \(EU\) \d{4}\/\d+|COM\(\d{4}\) \d+/);
+  /* a proposal's title names the acts it would amend or repeal before its
+     own number ("… amending Regulation (EU) 2015/2120 … — COM(2026) 16
+     final"), so a proposal is identified by its COM number alone */
+  const re = inst.kind === 'kind:proposal' ? /COM\(\d{4}\) \d+/ : /(Regulation|Directive) \(EU\) \d{4}\/\d+|COM\(\d{4}\) \d+/;
+  const m = String(inst.full_name || '').match(re);
   return m ? m[0] : null;
 }
 

@@ -1,10 +1,337 @@
 # HANDOVER
 
-**Last updated:** v2 Session 8, part 2. After the approved item 2.5 checkpoint, the open findings the
-author chose to resolve in this session: (a)–(f) and (h)–(k). The part is **approved**, which closes the
-session (`docs/ROADMAP-v2.md` §8) · 28 October 2026
-**Branch:** `claude/v2-session-8-findings`, cut from `claude/new-session-o9uopd` at `58671c2` (pull
-request #28, item 2.5, open).
+**Last updated:** v2 Session 9, item 2.6: the Digital Networks Act (COM(2026) 16) covered as a
+proposal, with its page. The checkpoint is **approved**, and with it **Phase 2 is closed**
+(`docs/ROADMAP-v2.md` §8) · 28 October 2026
+**Branch:** `claude/intelligent-bell-wuhder`, cut from `main` at `cabe21b`, with `c756f0f` merged.
+
+## Branch register — 28 October 2026 (v2 Session 9)
+
+- Branch `claude/intelligent-bell-wuhder`, the one the environment assigned, cut from `main` at
+  `cabe21b` (#28 and #29 merged). `c756f0f` (the prompt of this session, and the register entry that
+  carries the content of `2b5d71d`), on `claude/new-session-o9uopd` and not on `main`, was merged into
+  it (`8bd9e68`) on the author's decision ("Start Session 9 + merge c756f0f (Recommended)").
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`:
+  - `origin/claude/new-session-o9uopd`: `c756f0f` only, now carried by this branch;
+  - `origin/claude/v2-session-8-findings`: `2b5d71d` only, whose content `c756f0f` carries;
+  - `origin/scout/digest-digest-2026-10-26T13-10-32Z` (already in the register).
+- `origin/main` was re-fetched before this handover was written: still `cabe21b`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Yes"); pushed, with a pull request to `main` opened
+  on the author's instruction of 28 Oct 2026 ("Open PR; Phase 2 closed"). Nothing is pushed to the
+  branch after the pull request is opened.
+
+## v2 Session 9 — checkpoint report (item 2.6, the Digital Networks Act)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope** (first write of the session, `89311c1`): item 2.6 only, then the checkpoint; Phase 3
+  and Session 10 are not in this session.
+- **Item 2.6** (`139c15a`), asked one question at a time before anything was written to `data/`.
+  Thirteen answers, all as recommended:
+  - *criterion*: `crit:object-infrastructure` + `crit:horizontal` + `crit:readable`, on Art. 1(1)–(2),
+    Art. 9(2), Art. 93(1) and the procedure's first key event. `crit:horizontal` was put to the author
+    as the contestable clause: Art. 1(2) names "the electronic communications sector". The reading
+    taken: the rights would reach every end-user, whatever their sector, and the networks regulated
+    include those carrying information society services;
+  - *id and name*: `digital-networks-act`, not the draft's `dna`, which collides with the `dna` field
+    of every record (294 occurrences of the word in 27 files; the locale keys `<id>.dna.*`; the
+    detector's field paths; the `dna:` namespace). `short_name` "Digital Networks Act", alias
+    `com-2026-16`, no `dna` alias, nothing in `KNOWN_AS`;
+  - *status*: `status:proposal`, the status note word for word ("NOT LAW. …"), `status_basis` the
+    procedure file's key events and stage (tier 2, S-03);
+  - *edges*: three, all from the proposal — `amends` ePrivacy (Art. 207), `defers-to` GDPR
+    (Art. 93(4)), `defers-to` NIS2 (Art. 5(2); Art. 8(3)). Any one of them meets the page gate's
+    `context` criterion. No `enables` edge into the proposal (finding 2 below); no node for the acts it
+    would repeal or amend outside the dataset (finding 3);
+  - *dates*: the proposal event only. No event for the referral, the EESC opinion or the draft report
+    (the taxonomy has no type for them; the status note names them), and none of the proposal's own
+    bracketed dates;
+  - `dna.objective` draft A;
+  - *provisions and fields*: Arts 5, 9 and 93, each "Proposed, not law"; the new term
+    `actor:electronic-communications-provider`; `regulated_actor` [that term, `actor:member-state`];
+    `obligation_anchor` empty; `implementation_model` "Would be directly applicable: a proposed
+    Regulation (Art. 210, last paragraph)"; `sanction_ceiling` with null amounts and the note
+    (Art. 196(5); Art. 43(3)); the four other analytical fields `null`;
+  - *display*, for `kind:proposal` only: the provisions table reads "Would bind" and "Would apply",
+    its date cell "no date: a proposal is not law"; search offers no obligation from a proposal's
+    article;
+  - *sources*: `src-eurlex-dna-proposal` (tier 1) and `src-oeil-2026-0013` (tier 2), notes word for
+    word;
+  - *the reason* of the scope decision, word for word.
+- **Two display defects the new record exposed** (`13b536f`), each asked before it was fixed:
+  `tools/seo.mjs` `actNumber()` (the description called the proposal "Regulation (EU) 2015/2120") and
+  `js/format.js` `tierWord()` (a Commission proposal labelled "primary law").
+
+### What was written
+
+| Commit | Record or file | Change |
+|---|---|---|
+| `53f51e6` | `digital-networks-act` | new; `kind:proposal`; `scope:core`; `brief_part` `null`; `status:proposal`, `status_as_of` 2026-10-28; the status note; `status_basis` (OEIL key events and stage, direct; the proposal's title and metadata, partial); `scope_decision` (included; three clauses; three references, all direct; `approved_on` 2026-10-28); `proposes_to_amend` [`eprivacy`]; `dna` as decided; `legal_basis` empty (not asked; Art. 114 TFEU is cited by the proposal) |
+| | `digital-networks-act:art-5`, `:art-9`, `:art-93` | three provisions, each "Proposed, not law", `obligation_on` the new provider term |
+| | `rel-digital-networks-act-eprivacy-amends`, `-gdpr-defers`, `-nis2-defers` | new, v2 shape, direct, every locator in the proposal; every summary opens "Proposed:" |
+| | `tl-digital-networks-act-2026-01-21-proposal` | new; `event:proposal`; `obligation` `null` |
+| | `actor:electronic-communications-provider` | new taxonomy term; nothing renamed |
+| | `src-eurlex-dna-proposal`, `src-oeil-2026-0013` | new; each note says what was read and what was not |
+| | `js/instrument-view.js`, `js/search.js` (`bindingActors`), `tools/seo.mjs` (`actNumber`), `js/format.js` (`tierWord`) | the proposal-only display fixes |
+| | `tools/selftest.mjs` | W17, new (below) |
+| | generated | `instruments/digital-networks-act/` (new); the GDPR and NIS2 pages (the edges from the other end); the data-omnibus and Data Act pages (`tierWord`); the `<noscript>` index on every page; `instruments.html`; `bibliography.html`; `datasets.html`; `sitemap.xml`; `img/og/digital-networks-act.png` and its manifest entry. The tool re-rendered the other cards; they were restored, because their inputs did not change (`og-image.mjs --check` passes) |
+| `89311c1`, `139c15a`, `13b536f`, this commit | `docs/ROADMAP-v2.md` §8 | three rows; this report |
+
+Not added:
+- no claim (the brief does not name the DNA) and no applicability rule;
+- no institution edge: no competent authority is recorded, and the page says "not established";
+- no entry in `tools/seo.mjs`'s title table, `KNOWN_AS` or `PAGE_PUBLISHED`;
+- no record for Directive (EU) 2018/1972, Regulation (EU) 2018/1971, Decision No 243/2012/EU,
+  Regulation (EU) 2015/2120 or Decision No 676/2002/EC;
+- no `enables` edge from `eidas`, `nis2`, `gdpr` or `iea`.
+
+**No locale key was touched.** The fields written are data, which the editions do not carry, and the
+strings changed in code ("Would bind", "Would apply", "no date: a proposal is not law", "Tier 1 ·
+legislative proposal") have no locale key: the translations hold only the home and portal strings. No
+key needs declaring `superseded` or `pending_translation`; `i18n-audit` is 0/0.
+
+### The checks changed, and why
+
+No validator, gate or check was loosened or extended. Four renderers changed, each for `kind:proposal`
+only, each on the author's decision:
+- `js/instrument-view.js`: the provisions table's columns ("Would bind", "Would apply") and its date
+  cell. A proposal's provision passed through `provisionApplication()` would have read "no
+  application date recorded for this article", as though a date were still to be found.
+- `js/search.js`: `bindingActors()`. Search built an "obligation" entry ("a provision that binds
+  somebody") from every provision's `obligation_on`, so it would have offered "Electronic
+  communications provider — Digital Networks Act Art. 9" as an obligation.
+- `tools/seo.mjs` `actNumber()`: the first act number in the title was the proposal's identity; the
+  DNA's title names Regulation (EU) 2015/2120 first.
+- `js/format.js` `tierWord()`: "Tier 1 · primary law" on a Commission proposal (true of COM(2025) 837
+  on `main` already). The tier stays tier 1, which the taxonomy defines to include legislative
+  documents; only the word changes, keyed on the CELEX (sector 5, type PC).
+
+**W17**, a new test on W15's model:
+- it asserts that the DNA is covered, sits in no backlog and passes as written; that it is a
+  `kind:proposal` with `status:proposal` and no contradiction; that its one milestone is the proposal;
+  that its three edges run from it, direct, structurally located in the proposal, each summary saying
+  "Proposed:"; and that no edge runs into it;
+- it plants the loss of the status basis (M-07), of the decision (M-04), of all three edges (M-05) and
+  of the objective (M-05), and a post-adoption state (`status:in-force`, `status:applicable`,
+  `status:adopted`) on the proposal, which `statusContradictions()` reports as "counts it as law" and
+  M-07 refuses (a tier-2 procedure file cannot carry an adopted state). Each one fails;
+- it asserts that any one edge alone still gives context;
+- it reads the generated page: "Would bind" / "Would apply", no "Binds", one "no date: a proposal is
+  not law" per provision, no "Applies since/from"; the IEA page keeps "Binds";
+- it asserts `bindingActors()` offers nothing from the DNA's articles and the IEA's unchanged, and
+  that `buildIndex()` asks it; `actNumber()` gives "COM(2026) 16", "COM(2025) 837" and "Regulation
+  (EU) 2024/903"; the description does not name 2015/2120; `tierWord()` reads "legislative proposal"
+  for the four proposal sources and "primary law" for the IEA's, and the page holds no "primary law".
+
+Measured: W17 fails with each of nine controls disabled in turn — the proposal rule of
+`statusContradictions()`; M-07; M-04's missing-decision line; M-05; the provisions-table fix; the
+date-cell fix; `bindingActors()`'s proposal branch; `actNumber()`'s proposal branch; `tierWord()`'s
+proposal branch (the page regenerated where the control is a renderer). Every file was restored and
+the pages regenerated (`_footer` then wrote 0 files).
+
+**A lesson-8 check: no existing test's premise changed.** The new edges end at GDPR and NIS2. W15
+counts only the IEA's edges and W11 plants over `eidas2`'s; both pass unchanged.
+
+No agent CLI was run, and `agent/records/` stayed empty.
+
+### Facts read on 28 Oct 2026, and facts left `null`
+
+- **Read** (no fact from a web search):
+  - COM(2026) 16, from Cellar by CELEX `52026PC0016` (English XHTML, `DOC_1`, the act; HTTP 300 with
+    two manifestations, then 200):
+    - Arts 1–5, 9, 43, 93, 95, 99, 106, 107, 115, 196 and 206–210;
+    - every other Article that names Regulation (EU) 2016/679, Directive (EU) 2022/2555, Regulation
+      (EU) No 910/2014, Regulation (EU) 2024/903 or Directive 2002/58/EC (also Arts 2, 7, 8, 11(3)
+      and 77);
+    - the citation of Art. 114 TFEU, and the first section of the explanatory memorandum.
+  - The enacting terms were searched, without a hit, for the DSA, the DMA, the Data Act, the AI Act,
+    the CRA, the CSA, the EHDS, the DGA, DORA, Regulation (EU) 2024/1183, the e-Commerce Directive and
+    the CER Directive.
+  - The Publications Office's SPARQL metadata:
+    - the work: document date 2026-01-21; resource type PROP_REG; based on the TFEU; proposes to
+      amend 32002L0058, 32002D0676, 32012D0243, 32015R2120, 32018L1972 and 32018R1971;
+    - the dossier: 2026/0013/COD, OLP, `PROP_PENDING`; pending 1, adopted 0, withdrawn 0,
+      not-adopted 0;
+    - its 28 events: the Commission's adoption (21 Jan), the EP referral (27 Apr, ITRE), the EESC
+      opinion (17 Jun, EESC 2026-00515), the ITRE draft report (20 Oct), and 24 Council entries
+      (the question put to the author said 25; the count is 24)
+      (working party, one Coreper of 27 May, one Council of 9 Jun), all sent by `CONSIL:FilePlanning`.
+      Planning entries; none establishes a position.
+  - The Legislative Observatory, 2026/0013(COD): "Awaiting committee decision"; ITRE, rapporteur
+    Michał Kobosko (Renew), appointed 26 Feb 2026; IMCO and LIBE for opinion; BUDG declined; the key
+    events and documents as the source note lists them.
+- **Not read**:
+  - the recitals, the rest of the explanatory memorandum, the other Articles, the Annexes (`DOC_2`)
+    and the financial statement;
+  - the ITRE draft report PE791.994, the EESC opinion, the national parliaments' contributions;
+  - the acts the proposal would repeal or amend (so no node for them);
+  - the Council's documents (ST 8523/26, ST 9359/26, ST 9685/26, ST 9799/26), named in the planning
+    entries only.
+- **Left `null` or empty**: `protected_party`, `risk_logic`, `enforcement_mechanism`,
+  `territorial_scope`; the sanction amounts; `legal_basis` (not asked); `obligation_anchor`.
+- **Text-extraction note**: in the XHTML some Article headings are split by the converter ("Art icle
+  6"), so the Article index was built from the headings that parse; every Article cited above was
+  read in the text itself.
+
+### Exit criteria of item 2.6, and Phase 2
+
+- The criterion held, decided on the proposal's own text, with the contestable clause put to the
+  author: **met**.
+- The status label is what the sources establish on the date checked (roadmap §4): `status:proposal`
+  on 28 Oct 2026, from the procedure file and the metadata: **met**.
+- Every fact read from a retrieved primary source; `sources.json` records only for documents read;
+  prose approved word for word before writing; `_footer` re-run; locale keys declared (none): **met**.
+- No page presents the proposal as law (below): **met**, as far as the browser review reached.
+- **Phase 2** (items 2.0–2.6): with this item every listed inclusion has been taken. Whether Phase 2
+  is closed is **put to the author**, not stated here; Phase 3 does not start in this session.
+
+### Counts against `main` (`cabe21b`)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / provisions / relationships | 38 / 89 / 37 | 39 / 92 / 40 | the DNA; three provisions; three edges |
+| sources / timeline events / claims / taxonomy terms | 223 / 100 / 181 / 311 | 225 / 101 / 181 / 312 | two sources; the proposal event; one actor term |
+| coverage covered / mapped / watched / excluded | 15 / 12 / 5 / 6 | 16 / 12 / 5 / 6 | the DNA |
+| v1 relationships | 8 | 8 | the new edges are v2 |
+| instrument pages · indexable routes | 16 · 25 | 17 · 26 | `instruments/digital-networks-act/` |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit --as-of 2026-10-28` errors / warnings | 0 / 11 | 0 / 11 | unchanged (the same eleven) |
+| `freshness --as-of 2026-10-28` | 0 defects / 3 prompts | 0 / 3 | unchanged |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged |
+| `tools/selftest.mjs` | 106 | 107 | W17 |
+| all 25 suites | 1312 pass + 1 skipped | **1313 pass + 1 skipped (`::1`), 0 failures (1314)** | W17. The skip is the `::1` test |
+| browser suite (`--require-browser`) | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable (`a11y:bound`) | |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+
+Other checks:
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+- `tools/og-image.mjs --check` passes.
+- `tools/commit-evidence.mjs origin/main HEAD`: 0 commits without evidence. `53f51e6` names its
+  evidence; the others change no published file or are the merge.
+- `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+### The page, opened in a browser
+
+`/instruments/digital-networks-act/` was opened in Chromium (Playwright) at 1280px and 390px, in the
+dark and the light theme. There was no console error and no horizontal overflow in any of the four.
+The GDPR and NIS2 pages were opened the same way, with the same result. The page shows:
+- the kicker "Proposal · not law · creates no obligations · CELEX 52026PC0016", the full title, and
+  "Official text: COM(2026) 16 final — …", labelled "Tier 1 · legislative proposal";
+- Status "Proposal, as of 28 October 2026"; "Next date: nothing further recorded"; "Competent
+  authority: not established in this dataset"; "Sanction ceiling: no amount recorded"; the status
+  note, opening "NOT LAW.";
+- "In short": the objective in the conditional; "Would bind: Electronic communications provider ·
+  Member State"; "Would protect: not established"; "Core provisions: not established"; "Key dates:
+  Legislative proposal 21 January 2026"; the sanction note, opening "Proposed, not law.";
+- headings in the conditional ("What does the Digital Networks Act propose?", "Where does … stand?",
+  "Who would … affect?", "What would … change?", "How would … be enforced?");
+- one dated event, the proposal; "No rules recorded", worded as absence of knowledge;
+- three provisions under "Would bind" and "Would apply", each "Proposed, not law." and "no date: a
+  proposal is not law";
+- no enforcement recorded, no claims; three interactions, each summary opening "Proposed:", each with
+  its locator;
+- the GDPR and NIS2 pages show the `defers-to` edge from the other end, with "Proposed:" and the
+  proposal's source labelled "Tier 1 · legislative proposal".
+
+Nothing on these pages gives the proposal a date of entry into force or application, a sanction
+amount, or an obligation stated as binding.
+
+### Found, for the author — not changed
+
+1. **An edge's kind reads in the present tense.** The interaction cards and the "Related" list say
+   "Digital Networks Act — Amends → ePrivacy" and "Defers to"; only the summary says "Proposed:". The
+   design's derived modality (`docs/V2-DATA-DESIGN.md` §1.4) is not rendered anywhere. The
+   data-omnibus edges ("Repeals", "Amends") already read this way.
+2. **The modality derivation would misread an edge into a proposal.** §1.4 derives modality from the
+   `from` node's status. An `enables` edge from an act in force to a proposal (from `eidas`: Arts
+   106(2), 107(2)–(3); from `nis2`: Arts 4, 5(1), 8(1); from `gdpr`: Art. 2, points (49)–(50); from
+   `iea`: Art. 11(3)) would therefore derive as "law". Nothing derives modality yet, so no page shows
+   it; none of these edges was added.
+3. **The acts the proposal would replace are not nodes.** Directive (EU) 2018/1972 (the European
+   Electronic Communications Code), Regulation (EU) 2018/1971 (BEREC) and Decision No 243/2012/EU
+   (Art. 209), Regulation (EU) 2015/2120 (Art. 206) and Decision No 676/2002/EC (Art. 208). The page
+   names them only in the title.
+4. **"member State"** in the generated descriptions: `lowerLead()` lowercases the first letter of an
+   actor label. It is on the DNA, CSA and IEA pages' meta, og and twitter descriptions.
+5. **An undated source's bibliography entry ends `.”.`**: the OEIL procedure files, the new one
+   included.
+6. **"Last verified on 28 October 2026 ;"**: in the browser, the evidence section's verification date
+   breaks onto its own line, with the semicolon after it. Seen on the DNA page; the static HTML (here
+   and on the IEA page) is inline, so it comes from the client-side render and very probably reaches
+   every instrument page, which was not measured. Display only; not introduced by this item.
+7. **No event type for a procedural step** (committee referral, draft report, EESC opinion). The
+   status note carries them; the timeline cannot.
+
+**Still open from Session 8** (unchanged):
+- the colour of the notice's "Read it at the source" link in the dark theme;
+- the EHDS page's `<title>` ("EHDS — …");
+- `data-omnibus`'s status note, to be re-verified against the outcome of the Coreper meeting of
+  21 Oct 2026;
+- `nis2 → eidas` not modelled.
+
+**Still open** (unchanged):
+- (g) the internal references shown to a reader (Session 10's item 10.2). The `defers-to` note
+  "(docs/V2-DATA-DESIGN.md §1.4)" is now printed on the DNA page's two `defers-to` cards and on the
+  new rows of the GDPR and NIS2 pages;
+- `src-ec-ai-omnibus-in-force` (403);
+- the `::1` test: skipped again in this container, so not run. A skip is not a pass;
+- the 8 remaining v1 edges and the `edge-v1-sources` flip;
+- R-01 and the eight findings of `docs/V2-DATA-DESIGN.md` §7 (Phase 3).
+
+### The verification checklist
+
+**9.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, rows "The scope of v2 Session 9" (`89311c1`) and "Item 2.6: the
+  inclusion of `digital-networks-act`" (`139c15a`), both before `53f51e6`; "Item 2.6: two display
+  defects" (`13b536f`).
+- *Verify:* read the three rows; `git log --oneline cabe21b..` shows the first two before the data
+  commit.
+- *Automatic:* none.
+- *Criterion:* every editorial field and every reader-facing text was decided word for word before
+  `data/` was touched; `approved_on` carries the date of the row.
+
+**9.1 · Sources read first.**
+- *Changed:* `data/sources.json` (two new sources).
+- *Verify:*
+  - fetch `http://publications.europa.eu/resource/celex/52026PC0016` with Accept
+    `application/xhtml+xml`, then the `DOC_1` it lists; read Arts 1, 5, 9, 43(3), 93, 196, 206–210;
+  - query the SPARQL endpoint for the dossier `…/cellar/7e717699-f6af-11f0-b9bc-01aa75ed71a1`
+    (`dossier_pending-proposal` 1) and its events (`event_legal_part_of_dossier`, with
+    `sender_transmission`);
+  - open the Legislative Observatory file 2026/0013(COD): "Awaiting committee decision".
+- *Automatic:* none. No check reads a source (AUDIT F-12).
+- *Criterion:* no fact from a search result, a snippet or memory.
+
+**9.2 · Written in one home.**
+- *Changed:* `data/instruments.json` (the record, three edges); `data/timeline.json` (one event);
+  `data/taxonomy.json` (one term); `data/sources.json`; the four renderers; `tools/selftest.mjs` W17;
+  the regenerated pages and `img/og/digital-networks-act.png`.
+- *Verify:* `/instruments/digital-networks-act/`, `/instruments/gdpr/`, `/instruments/nis2/`,
+  `/instruments/data-omnibus/` (its official text now "Tier 1 · legislative proposal").
+- *Automatic:* `tools/selftest.mjs` W17; S1 (generated files current); `seo-audit` 0/0;
+  `evidence-audit` 0 errors, with `statusContradictions()` and M-04/M-05/M-07.
+- *Criterion:* M-04, M-05, M-07 and the pre-adoption rule at 0 errors, held in full; dates only in
+  `timeline.json`; no proposed date as an event; no title in `data/`; no internal identifier in a
+  reader-facing field written here.
+
+**9.3 · Checkpoint.**
+- *Changed:* this report.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run above.
+- *Criterion:* the author's approval, recorded in §8; the closure of Phase 2 is the author's to decide.
+- **Approved** on 28 Oct 2026 (§8, "The checkpoint of v2 Session 9 = item 2.6"), and Phase 2 closed;
+  pull request opened on the author's instruction.
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-28`: REGISTER reads "covered 16 · mapped 12 ·
+   watched 5 · excluded 6".
+2. `python3 -m http.server 8000`, then open `/instruments/digital-networks-act/` in both themes, at
+   desktop and phone width; check the head, "In short", the provisions table and the interactions.
+   Open `/instruments/gdpr/` and `/instruments/nis2/` for the edges.
+3. `node --test --test-name-pattern="W17" tools/selftest.mjs`.
+4. To see a check hold, set `legislative_status` of `digital-networks-act` to `status:in-force` in
+   `data/instruments.json`: `evidence-audit` then reports the M-07 error and the status contradiction
+   ("counts it as law"). Restore the file afterwards.
 
 ## Branch register — 28 October 2026 (v2 Session 8, after the item 2.5 checkpoint)
 
@@ -15,6 +342,16 @@ request #28, item 2.5, open).
 - `origin/main` was re-fetched before this handover was written: still `3cc0473`; #28 not yet merged.
 - Disposition: approved (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the
   author's instruction of 28 Oct 2026 ("Approve and open the PR").
+- After that, on 28 Oct 2026:
+  - #28 (`claude/new-session-o9uopd`, item 2.5) was merged into `main` with a merge commit, `2513a09`.
+    #29 then held only its own commits and merged without conflict.
+  - #29 (`claude/v2-session-8-findings`) was merged as `cabe21b`. A register commit pushed to the
+    branch seconds after the merge, `2b5d71d`, did not reach `main`. On the author's decision ("Si"),
+    its content goes in with this entry rather than in a pull request of its own.
+  - The prompt of v2 Session 9 (item 2.6, the Digital Networks Act) was drafted on the author's request
+    ("mandami session 9's prompt"). It is kept as `docs/prompts/v2-session-9.md` on
+    `claude/new-session-o9uopd`, restarted from `main` at `cabe21b`. The prompt records no decision: its
+    first write is §8's row "The scope of v2 Session 9", in the author's words.
 
 ## v2 Session 8, part 2 — open findings resolved on the author's request
 

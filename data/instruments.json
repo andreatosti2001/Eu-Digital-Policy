@@ -2597,6 +2597,146 @@
       }
     },
     {
+      "id": "digital-networks-act",
+      "aliases": [
+        "com-2026-16"
+      ],
+      "celex": "52026PC0016",
+      "short_name": "Digital Networks Act",
+      "full_name": "Proposal for a Regulation of the European Parliament and of the Council on digital networks, amending Regulation (EU) 2015/2120, Directive 2002/58/EC and Decision No 676/2002/EC and repealing Regulation (EU) 2018/1971, Directive (EU) 2018/1972 and Decision No 243/2012/EU (Digital Networks Act) — COM(2026) 16 final",
+      "kind": "kind:proposal",
+      "scope_class": "scope:core",
+      "brief_part": null,
+      "legislative_status": "status:proposal",
+      "status_as_of": "2026-10-28",
+      "status_note": "NOT LAW. A Commission proposal of 21 January 2026 (COM(2026) 16), under the ordinary legislative procedure 2026/0013(COD). On 28 October 2026 the Legislative Observatory gives the stage reached as ‘Awaiting committee decision’: the proposal was referred to Parliament’s Committee on Industry, Research and Energy (announced 27 April 2026), whose draft report is dated 20 October 2026. No position of Parliament or of the Council is recorded, and the Publications Office’s metadata list the proposal as pending. Every obligation, date and penalty in its text is proposed, not law. Read on 28 Oct 2026 in the proposal retrieved from the Publications Office’s Cellar, in the Publications Office’s metadata and in the Legislative Observatory.",
+      "status_basis": [
+        {
+          "source_id": "src-oeil-2026-0013",
+          "supports": "supports:direct",
+          "locator": "Key events (21/01/2026 legislative proposal published; 27/04/2026 committee referral announced in Parliament, 1st reading); Stage reached in procedure: Awaiting committee decision"
+        },
+        {
+          "source_id": "src-eurlex-dna-proposal",
+          "supports": "supports:partial",
+          "locator": "Title; Publications Office metadata: procedure 2026/0013/COD pending, not adopted, not withdrawn"
+        }
+      ],
+      "milestones": [
+        "tl-digital-networks-act-2026-01-21-proposal"
+      ],
+      "amended_by": [],
+      "amends": [],
+      "proposes_to_amend": [
+        "eprivacy"
+      ],
+      "repeals": [],
+      "transposition": null,
+      "dna": {
+        "regulated_actor": [
+          "actor:electronic-communications-provider",
+          "actor:member-state"
+        ],
+        "protected_party": null,
+        "objective": "Would establish rules for the provision of electronic communications networks and services, associated facilities and associated services, for the strategic planning and management of radio spectrum and for certain aspects of terminal equipment, with a governance framework for the electronic communications sector made up of the national regulatory authorities, BEREC, a Radio Spectrum Policy Body and an Office for Digital Networks.",
+        "risk_logic": null,
+        "obligation_anchor": [],
+        "enforcement_mechanism": null,
+        "sanction_ceiling": {
+          "pct_global_turnover": null,
+          "fixed_eur": null,
+          "basis": null,
+          "note": "Proposed, not law. Member States would lay down the penalties for infringements (Art. 196(5)); for holders of a Union authorisation to use satellite radio spectrum, the Commission could impose fines or periodic penalties of up to 5% of total worldwide turnover in the preceding financial year (Art. 43(3))."
+        },
+        "territorial_scope": null,
+        "implementation_model": "Would be directly applicable: a proposed Regulation (Art. 210, last paragraph)"
+      },
+      "provisions": [
+        {
+          "id": "digital-networks-act:art-5",
+          "number": "5",
+          "heading": "Availability and capabilities of electronic communications networks and services",
+          "summary": "Proposed, not law. Providers of public electronic communications networks and of publicly available electronic communications services would cooperate with the national authorities to keep networks and services continuously available through disruptions, crises or force majeure (5(1)); with the public safety answering points, they would take all necessary measures to ensure uninterrupted critical and emergency communications and public warnings (5(2)); and they would tell the authorities and end-users at least two years in advance where a migration to other network technologies may discontinue services on end-user devices (5(4)).",
+          "obligation_on": [
+            "actor:electronic-communications-provider"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dna-proposal"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 28 Oct 2026 for item 2.6 from the text of COM(2026) 16 retrieved that day from the Publications Office's Cellar (CELEX 52026PC0016); heading and summary follow the proposed Article's own paragraphs. A proposed provision: it binds no one, and no application date is recorded."
+        },
+        {
+          "id": "digital-networks-act:art-9",
+          "number": "9",
+          "heading": "General authorisation",
+          "summary": "Proposed, not law. The freedom to provide electronic communications networks and services would be subject only to the conditions and obligations the Regulation sets (9(1)). The general authorisation would apply to providers of public electronic communications services and of networks used wholly or mainly to provide electronic communications services or information society services available to the public (9(2)), not to number-independent interpersonal communications services (9(3)); its conditions, listed in 9(4), include resilience and preparedness, cybersecurity rules, access to data by law enforcement and judicial authorities, interconnection and interoperability.",
+          "obligation_on": [
+            "actor:electronic-communications-provider"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dna-proposal"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 28 Oct 2026 for item 2.6 from the text of COM(2026) 16 retrieved that day from the Publications Office's Cellar (CELEX 52026PC0016); heading and summary follow the proposed Article's own paragraphs. A proposed provision: it binds no one, and no application date is recorded."
+        },
+        {
+          "id": "digital-networks-act:art-93",
+          "number": "93",
+          "heading": "Safeguarding of open internet access",
+          "summary": "Proposed, not law. End-users would have the right to access and distribute information and content, use and provide applications and services and use terminal equipment of their choice via their internet access service (93(1)); providers of internet access services would treat all traffic equally, with reasonable traffic management only within the limits of 93(3), and personal data processed for it would be processed in accordance with the GDPR (93(4)).",
+          "obligation_on": [
+            "actor:electronic-communications-provider"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dna-proposal"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 28 Oct 2026 for item 2.6 from the text of COM(2026) 16 retrieved that day from the Publications Office's Cellar (CELEX 52026PC0016); heading and summary follow the proposed Article's own paragraphs. A proposed provision: it binds no one, and no application date is recorded."
+        }
+      ],
+      "claims": [],
+      "sources": [
+        "src-eurlex-dna-proposal",
+        "src-oeil-2026-0013"
+      ],
+      "last_verified": "2026-10-28",
+      "legal_basis": [],
+      "scope_decision": {
+        "disposition": "included",
+        "criterion": [
+          "crit:object-infrastructure",
+          "crit:horizontal",
+          "crit:readable"
+        ],
+        "reason": "The Digital Networks Act, a proposal, meets the criterion. Its proposed subject matter is rules for the provision of electronic communications networks and services, associated facilities and associated services and for radio spectrum, with a governance framework for the electronic communications sector (Art. 1(1)–(2)): rules on electronic communications networks, the digital infrastructure the other layers run on. Its rules would apply across sectors: every end-user would hold its open-internet rights (Art. 93(1)), and the networks it would regulate include those used to provide information society services to the public (Art. 9(2)). Its procedure has begun and its text is readable. Covered as a regime still forming, with a page of its own.",
+        "approved_on": "2026-10-28",
+        "refer_to": [],
+        "watch_for": null,
+        "sources": [
+          {
+            "source_id": "src-eurlex-dna-proposal",
+            "supports": "supports:direct",
+            "locator": "Art. 1(1)–(2) (subject matter)"
+          },
+          {
+            "source_id": "src-eurlex-dna-proposal",
+            "supports": "supports:direct",
+            "locator": "Art. 9(2); Art. 93(1) (networks providing information society services to the public; end-users' open-internet rights)"
+          },
+          {
+            "source_id": "src-oeil-2026-0013",
+            "supports": "supports:direct",
+            "locator": "Key events (21/01/2026 legislative proposal published)"
+          }
+        ],
+        "last_verified": "2026-10-28"
+      }
+    },
+    {
       "id": "eidas",
       "aliases": [
         "eidas-regulation"
@@ -4353,6 +4493,70 @@
       "last_verified": "2026-10-28",
       "requires_verification": false,
       "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2025/327 retrieved from the Publications Office's Cellar (CELEX 32025R0327): Art. 2(1)(f) applies the definitions of Art. 3, points (1) and (2), of Regulation (EU) No 910/2014; Arts 12 and 16(1) rely on the means recognised pursuant to its Art. 6, and Art. 16(2) on the Regulation itself; Art. 19(2)(m) has digital health authorities cooperate with supervisory authorities under it; Art. 92(8) has the EHDS Board cooperate with the supervisory bodies of its Art. 46b. Art. 46b exists only as inserted by Regulation (EU) 2024/1183 (Art. 1, point (47)), and Art. 3, points (1) and (2), are as that Act replaced them, so the EHDS reads Regulation (EU) No 910/2014 as amended; Art. 6 is the 2014 text. The locator is in the dependent instrument's text, as rel-kind:enables requires. No provision ID exists for the EHDS Articles cited, so `provisions` is empty. Added on the author's decision of 28 Oct 2026."
+    },
+    {
+      "id": "rel-digital-networks-act-eprivacy-amends",
+      "from": "digital-networks-act",
+      "to": "eprivacy",
+      "kind": "rel-kind:amends",
+      "symmetric": false,
+      "summary": "Proposed: Articles 7, 8, 10, 11 and 12 of the ePrivacy Directive would be deleted, and references to its Article 8 would be read as references to Article 109 of the proposed Regulation.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-dna-proposal",
+          "supports": "supports:direct",
+          "locator": "Art. 207"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the text of COM(2026) 16 retrieved from the Publications Office's Cellar (CELEX 52026PC0016): Art. 207: 'Articles 7, 8, 10, 11 and 12 of Directive 2002/58/EC are deleted. References to Article 8 of Directive 2002/58/EC shall be read as references to Article 109 of this Regulation.' A proposed amendment, not law. The locator is in the amending instrument's text. No provision ID exists for Art. 207, so `provisions` is empty. Added for item 2.6 on the author's decision of 28 Oct 2026."
+    },
+    {
+      "id": "rel-digital-networks-act-gdpr-defers",
+      "from": "digital-networks-act",
+      "to": "gdpr",
+      "kind": "rel-kind:defers-to",
+      "symmetric": false,
+      "summary": "Proposed: personal data processed for internet traffic management would be processed in accordance with the GDPR.",
+      "provisions": [
+        "digital-networks-act:art-93"
+      ],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-dna-proposal",
+          "supports": "supports:direct",
+          "locator": "Art. 93(4)"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the text of COM(2026) 16 retrieved from the Publications Office's Cellar (CELEX 52026PC0016): Art. 93(4): any traffic management measure 'may entail processing of personal data only if such processing is necessary and proportionate … Such processing shall be carried out in accordance with Regulation (EU) 2016/679'. A proposed provision, not law. The locator is in the deferring instrument's text, as rel-kind:defers-to requires. Added for item 2.6 on the author's decision of 28 Oct 2026."
+    },
+    {
+      "id": "rel-digital-networks-act-nis2-defers",
+      "from": "digital-networks-act",
+      "to": "nis2",
+      "kind": "rel-kind:defers-to",
+      "symmetric": false,
+      "summary": "Proposed: the providers' duty to keep critical and emergency communications available would apply without prejudice to NIS2, and the crisis tasks it would give BEREC would not affect those of ENISA, the CSIRTs network, EU-CyCLONe or the NIS Cooperation Group.",
+      "provisions": [
+        "digital-networks-act:art-5"
+      ],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-dna-proposal",
+          "supports": "supports:direct",
+          "locator": "Art. 5(2); Art. 8(3)"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the text of COM(2026) 16 retrieved from the Publications Office's Cellar (CELEX 52026PC0016): Art. 5(2): 'Without prejudice to Directive (EU) 2022/2555, providers referred to in paragraph 1 of this Article and PSAPs shall take all necessary measures …'; Art. 8(3): 'The tasks and actions under this Part shall not affect the tasks of ENISA, the Computer Security Incident Response Team (CSIRT) network, EU-CyCLONe, the Cooperation Group established by Directive (EU) 2022/2555 or other expert groups …'. Proposed provisions, not law. The locator is in the deferring instrument's text, as rel-kind:defers-to requires. No provision ID exists for Art. 8, so `provisions` names Art. 5 only. Added for item 2.6 on the author's decision of 28 Oct 2026."
     }
   ]
 }

@@ -2011,6 +2011,81 @@ test('W16 · the sanction ceiling has one derivation, and the page head and "In 
   }
 });
 
+test('W17 · item 2.6: the Digital Networks Act is covered as a proposal and held to M-04, M-05, M-07 and the pre-adoption rule — remove any one support and it fails', async () => {
+  const ID = 'digital-networks-act';
+  const r = registerAudit(loadDb(), '2026-10-28');
+  const db = loadDb();
+  const dna = instOf(db, ID);
+  assert.equal(coverage(dna), 'covered');
+  assert.equal(dna.scope_decision.disposition, 'included');
+  assert.deepEqual(dna.scope_decision.criterion, ['crit:object-infrastructure', 'crit:horizontal', 'crit:readable']);
+  assert.ok(!STATUS_BASIS_BACKLOG.includes(ID) && !SCOPE_DECISION_BACKLOG.includes(ID), 'no backlog shelters it');
+  assert.ok(!r.backlog['status-basis-missing'].includes(ID));
+  assert.ok(!r.errors.some((e) => e.includes(`instruments/${ID}`)), 'the record as written passes');
+  /* a proposal, and counted as one: a pre-adoption state, no contradiction */
+  const ix = { event: new Map(db.timeline.events.map((e) => [e.id, e])) };
+  assert.equal(dna.kind, 'kind:proposal');
+  assert.equal(dna.legislative_status, 'status:proposal');
+  assert.deepEqual(statusContradictions(dna, ix, '2026-10-28'), []);
+  /* no date the proposal itself foresees is an event: its one milestone is the proposal */
+  assert.deepEqual(dna.milestones.map((m) => ix.event.get(m).event_type), ['event:proposal']);
+  /* the brief does not name it, so context rests on its edges alone: textual,
+     v2, each located in the proposal (the amending act; the deferring act) */
+  assert.equal(dna.brief_part, null);
+  const EDGES = ['rel-digital-networks-act-eprivacy-amends', 'rel-digital-networks-act-gdpr-defers', 'rel-digital-networks-act-nis2-defers'];
+  for (const id of EDGES) {
+    const edge = db.instruments.relationships.find((x) => x.id === id);
+    assert.ok(edge && edge.from === ID, `${id} runs from the proposal`);
+    assert.ok(edge.sources.every((s) => typeof s === 'object' && s.supports === 'supports:direct' && structural(s.locator)));
+    assert.ok(edge.sources.every((s) => dna.sources.includes(s.source_id)), `${id}: the locator is in the proposal`);
+    assert.match(edge.summary, /^Proposed: /, `${id}: the summary says it is proposed`);
+  }
+  assert.deepEqual(db.instruments.relationships.filter((x) => x.to === ID).map((x) => x.id), [], 'no edge runs into the proposal (the author, 28 Oct 2026)');
+  const plant = (fn, re) => { const d = loadDb(); fn(d); assert.ok(regErrors(d, '2026-10-28').some((e) => re.test(e)), `expected ${re}`); };
+  plant((d) => { delete instOf(d, ID).status_basis; }, new RegExp(`^M-07 instruments/${ID}:`));
+  plant((d) => { delete instOf(d, ID).scope_decision; }, new RegExp(`^M-04 instruments/${ID}: a core record added after 25 Oct 2026`));
+  /* any one edge carries the page gate's `context`; all three gone, no page */
+  for (const id of EDGES) {
+    const d = loadDb(); d.instruments.relationships = d.instruments.relationships.filter((x) => x.id !== id);
+    assert.ok(!regErrors(d, '2026-10-28').some((e) => new RegExp(`^M-05 instruments/${ID}`).test(e)), `${id} removed, the others still give context`);
+  }
+  plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => x.from !== ID && x.to !== ID); },
+    new RegExp(`^M-05 instruments/${ID}: covered \\(core\\) without a page`));
+  plant((d) => { instOf(d, ID).dna.objective = ''; }, new RegExp(`^M-05 instruments/${ID}: covered \\(core\\) without a page`));
+  /* a post-adoption state on a proposal: counted as law by statusContradictions,
+     and a status a tier-2 procedure file cannot carry (M-07, S-03) */
+  for (const st of ['status:in-force', 'status:applicable', 'status:adopted']) {
+    assert.ok(statusContradictions({ ...dna, legislative_status: st }, ix, '2026-10-28').some((m) => /counts it as law/.test(m)), `${st} on a proposal`);
+    plant((d) => { instOf(d, ID).legislative_status = st; }, new RegExp(`^M-07 instruments/${ID}: ${st}`));
+  }
+  /* the page renders the proposal's articles as proposed: they would bind and
+     would apply, and no date applies; an adopted act's page keeps "Binds" */
+  const page = readFileSync(join(ROOT, 'instruments', ID, 'index.html'), 'utf8');
+  assert.match(page, /<th scope="col">Would bind<\/th><th scope="col">Would apply<\/th>/);
+  assert.doesNotMatch(page, /<th scope="col">Binds<\/th>|data-label="Binds"|data-label="Applies"/);
+  assert.equal((page.match(/no date: a proposal is not law/g) || []).length, dna.provisions.length);
+  assert.doesNotMatch(page, /Applies (since|from)|no application date recorded/);
+  assert.match(readFileSync(join(ROOT, 'instruments', 'iea', 'index.html'), 'utf8'), /<th scope="col">Binds<\/th><th scope="col">Applies<\/th>/);
+  /* search offers no obligation from a proposal's article */
+  const { bindingActors } = await import('../js/search.js');
+  for (const p of dna.provisions) assert.deepEqual(bindingActors(p, dna), [], `${p.id} offered as an obligation`);
+  assert.deepEqual(bindingActors(instOf(db, 'iea').provisions[0], instOf(db, 'iea')), instOf(db, 'iea').provisions[0].obligation_on);
+  assert.match(readFileSync(join(ROOT, 'js/search.js'), 'utf8'), /for \(const who of bindingActors\(/, 'buildIndex does not ask bindingActors');
+  /* a proposal is identified by its COM number, never by an act its title amends */
+  const { actNumber } = await import('./seo.mjs');
+  assert.equal(actNumber(dna), 'COM(2026) 16');
+  assert.equal(actNumber(instOf(db, 'data-omnibus')), 'COM(2025) 837');
+  assert.equal(actNumber(instOf(db, 'iea')), 'Regulation (EU) 2024/903');
+  assert.doesNotMatch(page.match(/<meta content="([^"]*)" name="description"/)[1], /2015\/2120/);
+  /* a Commission proposal is a tier-1 legislative document, never labelled "primary law" */
+  const { tierWord } = await import('../js/format.js');
+  const src = new Map(db.sources.sources.map((x) => [x.id, x]));
+  for (const id of ['src-eurlex-dna-proposal', 'src-eurlex-data-omnibus-837', 'src-eurlex-psd3-proposal', 'src-eurlex-psr-proposal'])
+    assert.equal(tierWord(src.get(id)), 'Tier 1 · legislative proposal', id);
+  assert.equal(tierWord(src.get('src-eurlex-iea')), 'Tier 1 · primary law');
+  assert.doesNotMatch(page, /primary law/);
+});
+
 /* v2 Session 5, B.3. Eight of the seventeen v1 relationships were migrated to
    v2 reference objects on 27 Oct 2026, each source re-read that day; nine stay
    v1 (docs/ROADMAP-v2.md §8). No edge check exists yet (M-08 belongs to D1, and

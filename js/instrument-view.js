@@ -389,6 +389,10 @@ function appliesSection(inst) {
    Without a clock every date is read as "applies from", which is how the
    acts themselves phrase it and is true before and after the date. */
 function appliesCell(p, inst) {
+  /* a proposal is not law: none of its articles applies, on any date, and
+     the cell says so rather than "no date recorded", which would read as a
+     date still to be found */
+  if (isProposal(inst)) return '<span class="none">no date: a proposal is not law</span>';
   const a = provisionApplication(p.id, inst, IX, TODAY || '');
   if (a.state === 'not-established') return '<span class="none">no application date recorded for this article</span>';
   const when = (e) => esc(F.humanDate(e.date, e.date_precision));
@@ -414,6 +418,10 @@ function provisionsSection(inst) {
       'therefore described here only in general terms, and the applicability rules for it cannot point at articles.'));
   }
   const anchors = new Set((inst.dna && inst.dna.obligation_anchor) || []);
+  /* a proposal's articles would bind and would apply; they bind no one now */
+  const prop = isProposal(inst);
+  const binds = prop ? 'Would bind' : 'Binds';
+  const applies = prop ? 'Would apply' : 'Applies';
   const rows = provs.map((p) => {
     /* an Article that obliges a Union institution names it (obligation_on_institution) */
     const inst2 = p.obligation_on_institution && IX.institution.get(p.obligation_on_institution);
@@ -427,8 +435,8 @@ function provisionsSection(inst) {
         (p.requires_verification
           ? '<span class="badge badge-long" data-st="unresolved">article number not confirmed against the consolidated text</span>'
           : '') + '</td>' +
-      '<td data-label="Binds">' + (on || '<span class="none">not recorded</span>') + '</td>' +
-      '<td data-label="Applies">' + appliesCell(p, inst) + '</td>' +
+      '<td data-label="' + binds + '">' + (on || '<span class="none">not recorded</span>') + '</td>' +
+      '<td data-label="' + applies + '">' + appliesCell(p, inst) + '</td>' +
       '</tr>';
   }).join('');
   return section('provisions', H.provisions,
@@ -436,7 +444,7 @@ function provisionsSection(inst) {
     ' recorded. This is what the dataset holds, not the whole instrument — an article that is not here ' +
     'has not been entered, which is a different statement from its not existing.</p>' +
     '<div class="t-scroll"><table class="t-rec prov-table"><thead><tr>' +
-      '<th scope="col">Article</th><th scope="col">Heading</th><th scope="col">Binds</th><th scope="col">Applies</th>' +
+      '<th scope="col">Article</th><th scope="col">Heading</th><th scope="col">' + binds + '</th><th scope="col">' + applies + '</th>' +
     '</tr></thead><tbody>' + rows + '</tbody></table></div>');
 }
 
