@@ -47,6 +47,9 @@
     },
     "img/og/csa.png": {
       "input_sha256": "1b26d2ef5f2d496a5a7e2dd75008394ce7b7077146eff7b2333f704afe4d891f"
+    },
+    "img/og/ehds.png": {
+      "input_sha256": "9ba957fdfebf964e2c13a4b63d4212e2eca23a76369a7ee060f62482be669bce"
     }
   }
 }

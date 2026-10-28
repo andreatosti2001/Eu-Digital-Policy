@@ -2358,6 +2358,118 @@
    "last_verified": "2026-10-27"
   },
   {
+   "id": "tl-ehds-2025-03-25-entry-into-force",
+   "date": "2025-03-25",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "ehds",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [
+    "sector:health"
+   ],
+   "obligation": null,
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-ehds"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added 28 Oct 2026 for item 2.4. Art. 105, first paragraph: entry into force on the twentieth day following publication in the Official Journal (OJ L, 2025/327, 5.3.2025), read that day in the text retrieved from the Publications Office's Cellar (CELEX 32025R0327); the Publications Office's SPARQL metadata, read the same day, records it in force with entry into force 2025-03-25.",
+   "last_verified": "2026-10-28"
+  },
+  {
+   "id": "tl-ehds-2027-03-26-application",
+   "date": "2027-03-26",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "ehds",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [
+    "sector:health"
+   ],
+   "obligation": "The Regulation applies (Art. 105, second paragraph), except the provisions that Art. 105 phases in on later dates.",
+   "required_action": null,
+   "authority": [],
+   "status": "scheduled",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-ehds"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added 28 Oct 2026 for item 2.4. Read that day in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32025R0327); the Publications Office's SPARQL metadata, read the same day, records this date. Art. 105, second paragraph: 'This Regulation shall apply from 26 March 2027.' The general date: it names no provision.",
+   "last_verified": "2026-10-28"
+  },
+  {
+   "id": "tl-ehds-2029-03-26-application",
+   "date": "2029-03-26",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "ehds",
+   "provisions": [
+    "ehds:art-3",
+    "ehds:art-26",
+    "ehds:art-60",
+    "ehds:art-64"
+   ],
+   "affected_actors": [
+    "actor:member-state",
+    "actor:manufacturer",
+    "actor:health-data-holder",
+    "actor:health-data-user"
+   ],
+   "sectors": [
+    "sector:health"
+   ],
+   "obligation": "Articles 3 to 15, Article 23(2) to (6) and Articles 25, 26, 27, 47, 48 and 49 apply to the priority categories of personal electronic health data in Article 14(1), points (a) to (c) — patient summaries, electronic prescriptions and electronic dispensations — and to EHR systems intended to process them (Art. 105, third paragraph, point (a)). Chapter IV, on secondary use, applies, except the paragraphs Art. 105 dates otherwise (fifth paragraph).",
+   "required_action": null,
+   "authority": [],
+   "status": "scheduled",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-ehds"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added 28 Oct 2026 for item 2.4. Read that day in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32025R0327); the Publications Office's SPARQL metadata, read the same day, records this date. Art. 105, third paragraph, point (a), and fifth paragraph. Tagged with the recorded provisions it governs: Arts 3 and 26 (third paragraph), Arts 60 and 64 (Chapter IV).",
+   "last_verified": "2026-10-28"
+  },
+  {
+   "id": "tl-ehds-2031-03-26-application",
+   "date": "2031-03-26",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "ehds",
+   "provisions": [
+    "ehds:art-3",
+    "ehds:art-26"
+   ],
+   "affected_actors": [
+    "actor:member-state",
+    "actor:manufacturer"
+   ],
+   "sectors": [
+    "sector:health"
+   ],
+   "obligation": "The same provisions apply to the priority categories in Article 14(1), points (d) to (f) — medical imaging studies and related imaging reports, medical test results and discharge reports — and to EHR systems intended to process them (Art. 105, third paragraph, point (b)). Chapter III applies to EHR systems put into service in the Union referred to in Article 26(2) (fourth paragraph), and Article 51(1), points (b), (f), (g), (m) and (p), apply (fifth paragraph).",
+   "required_action": null,
+   "authority": [],
+   "status": "scheduled",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-ehds"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added 28 Oct 2026 for item 2.4. Read that day in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32025R0327); the Publications Office's SPARQL metadata, read the same day, records this date. Art. 105, third paragraph, point (b), fourth and fifth paragraphs. Tagged with the recorded provisions it governs: Arts 3 and 26.",
+   "last_verified": "2026-10-28"
+  },
+  {
    "id": "tl-vida-2025-04-14-entry-into-force",
    "date": "2025-04-14",
    "date_precision": "precision:day",

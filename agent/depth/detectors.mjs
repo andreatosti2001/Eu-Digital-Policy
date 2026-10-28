@@ -374,6 +374,12 @@ const missingCompetence = (lens) => {
       out.push({
         gap_kind: 'missing_competence',
         subject: i.id,
+        /* (a) and (b) share kind, subject and entity, so they derived one id
+           the first time an act had a ceiling and no enforcement role at all
+           — ehds, 28 Oct 2026 (item 2.4). (b) fires only when no role is
+           held, so (a) is told apart exactly then, and every id minted
+           before (ai-act's and nis2's (a), every (b)) is unchanged. */
+        discriminator: roles.length ? null : 'no-role-fines',
         entities: [{ kind: 'instrument', id: i.id, path: 'data/institutions.json', field: 'competences', note: 'A sanction ceiling is recorded; no institution holds role:fines over the act.' }],
         missing_concept: `${i.id} records a maximum fine of ${figure} in its DNA, and no institution in the corpus holds role:fines over it. The model states what a reader can be fined and cannot state who imposes it.${roles.length ? ` Other roles are held (${[...new Set(roles.map((x) => x.role))].join(', ')}), so this is a specific hole rather than an unsupervised act.` : ''}`,
         why_it_matters: 'A fine ceiling is among the few figures on this site a reader would change their behaviour over. Competent authority is derived at render time from the competence edges, so with no role:fines edge the site presents an enforceable maximum next to an unanswerable question about who enforces it — which reads as an oversight in the law rather than a hole in the model.',

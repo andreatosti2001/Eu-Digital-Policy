@@ -121,6 +121,7 @@ export class DepthAgent {
       kind: finding.gap_kind,
       entities: finding.entities,
       subject: finding.subject,
+      discriminator: finding.discriminator ?? null,
     });
   }
 

@@ -1578,7 +1578,9 @@
         "tl-cra-2026-09-11-reporting-deadline",
         "tl-cra-2027-12-11-application"
       ],
-      "amended_by": [],
+      "amended_by": [
+        "ehds"
+      ],
       "amends": [],
       "repeals": [],
       "transposition": null,
@@ -2291,6 +2293,157 @@
           }
         ],
         "last_verified": "2026-10-27"
+      }
+    },
+    {
+      "id": "ehds",
+      "aliases": [
+        "european-health-data-space"
+      ],
+      "celex": "32025R0327",
+      "short_name": "EHDS",
+      "full_name": "Regulation (EU) 2025/327 on the European Health Data Space and amending Directive 2011/24/EU and Regulation (EU) 2024/2847",
+      "kind": "kind:regulation",
+      "scope_class": "scope:core",
+      "brief_part": null,
+      "legislative_status": "status:in-force",
+      "status_as_of": "2026-10-28",
+      "status_note": "In force since 25 March 2025, the twentieth day after publication (Art. 105; OJ L 2025/327, 5.3.2025). It applies from 26 March 2027, with later dates in 2029, 2031 and 2035 for the rights and services tied to priority categories of personal electronic health data, for EHR systems and for parts of the rules on secondary use (Art. 105). It also amends Directive 2011/24/EU (Art. 103) and the Cyber Resilience Act (Art. 104). Read on 28 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records it in force from that date.",
+      "status_basis": [
+        {
+          "source_id": "src-eurlex-ehds",
+          "supports": "supports:direct",
+          "locator": "Art. 105 (entry into force and application); Publications Office metadata: in force, entry into force 2025-03-25"
+        }
+      ],
+      "milestones": [
+        "tl-ehds-2025-03-25-entry-into-force",
+        "tl-ehds-2027-03-26-application",
+        "tl-ehds-2029-03-26-application",
+        "tl-ehds-2031-03-26-application"
+      ],
+      "amended_by": [],
+      "amends": [
+        "cra"
+      ],
+      "repeals": [],
+      "transposition": null,
+      "dna": {
+        "regulated_actor": [
+          "actor:member-state",
+          "actor:manufacturer",
+          "actor:health-data-holder",
+          "actor:health-data-user"
+        ],
+        "protected_party": [],
+        "objective": "Common rules, standards, infrastructures and a governance framework for access to electronic health data, both for the provision of healthcare and for secondary use, specifying the GDPR's rights for personal electronic health data and setting common rules for EHR systems.",
+        "risk_logic": null,
+        "obligation_anchor": [
+          "ehds:art-3",
+          "ehds:art-26",
+          "ehds:art-60"
+        ],
+        "enforcement_mechanism": null,
+        "sanction_ceiling": {
+          "pct_global_turnover": 4,
+          "fixed_eur": 20000000,
+          "basis": "ehds:art-64",
+          "note": "Two tiers for fines imposed by health data access bodies: up to EUR 10 000 000 or 2 % of total worldwide annual turnover (Art. 64(4)) and up to EUR 20 000 000 or 4 % (Art. 64(5)), whichever is higher; the figure recorded is the upper tier. The GDPR's supervisory authorities enforce Arts 3 and 5–10 with fines up to Art. 83(5) GDPR (Art. 22); other penalties are left to Member States (Art. 99)."
+        },
+        "territorial_scope": [],
+        "implementation_model": "Directly applicable"
+      },
+      "provisions": [
+        {
+          "id": "ehds:art-3",
+          "number": "3",
+          "heading": "Right of natural persons to access their personal electronic health data",
+          "summary": "Natural persons have the right to access at least their personal electronic health data in the priority categories of Article 14 that are processed for the provision of healthcare, through the electronic health data access services of Article 4, immediately after the data are registered in an EHR system, free of charge and in an easily readable, consolidated and accessible format (3(1)), and to download an electronic copy in the European electronic health record exchange format (3(2)). Member States must establish those access services (Art. 4(1)) and may restrict the rights in accordance with Article 23 of the GDPR (3(3)).",
+          "obligation_on": [
+            "actor:member-state"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-ehds"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 28 Oct 2026 for item 2.4 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32025R0327); heading and summary follow the Article's own paragraphs. obligation_on names Member States because Art. 4(1) puts on them the duty to establish the access services through which the right is exercised; Art. 3 itself confers a right."
+        },
+        {
+          "id": "ehds:art-26",
+          "number": "26",
+          "heading": "Placing on the market and putting into service",
+          "summary": "EHR systems may be placed on the market or put into service only if they comply with Chapter III (26(1)). EHR systems manufactured and used within health institutions established in the Union, and EHR systems offered as a service to a natural or legal person established in the Union, are considered put into service (26(2)). Member States may not prohibit or restrict the placing on the market of compliant EHR systems on account of the harmonised software components (26(3)). The obligations of manufacturers are set out in Article 30.",
+          "obligation_on": [
+            "actor:manufacturer"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-ehds"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 28 Oct 2026 for item 2.4 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32025R0327); heading and summary follow the Article's own paragraphs. obligation_on names manufacturers of EHR systems (Art. 30(1)); the obligations of importers and distributors (Arts 32 and 33) are not recorded."
+        },
+        {
+          "id": "ehds:art-60",
+          "number": "60",
+          "heading": "Duties of health data holders",
+          "summary": "Health data holders make the electronic health data referred to in Article 51 available upon request to the health data access body, in accordance with a data permit or an approved health data request (60(1)), within a reasonable time and no later than three months from the receipt of the request by the body, which may extend that period by up to three months in justified cases (60(2)). They describe the datasets they hold for the dataset catalogue and check that description at least annually (60(3)).",
+          "obligation_on": [
+            "actor:health-data-holder"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-ehds"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 28 Oct 2026 for item 2.4 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32025R0327); heading and summary follow the Article's own paragraphs."
+        },
+        {
+          "id": "ehds:art-64",
+          "number": "64",
+          "heading": "General conditions for the imposition of administrative fines by health data access bodies",
+          "summary": "Health data access bodies may impose administrative fines in addition to, or instead of, the enforcement measures of Article 63(3) and (4), having regard to the circumstances listed (64(2)). Infringements of the duties of health data holders and health data users under Article 60 and Article 61(1), (5) and (6) carry fines of up to EUR 10 000 000 or, for an undertaking, up to 2 % of its total worldwide annual turnover in the preceding financial year, whichever is higher (64(4)). Processing for prohibited uses, extracting personal electronic health data from secure processing environments, re-identification and non-compliance with enforcement measures carry fines of up to EUR 20 000 000 or 4 % (64(5)). Member States may decide whether fines may be imposed on public authorities and public sector bodies (64(6)).",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-ehds"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 28 Oct 2026 for item 2.4 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32025R0327); heading and summary follow the Article's own paragraphs. obligation_on is empty: the Article sets the fines a health data access body may impose; the duties fined are those of Arts 54, 60, 61 and 63."
+        }
+      ],
+      "claims": [],
+      "sources": [
+        "src-eurlex-ehds"
+      ],
+      "last_verified": "2026-10-28",
+      "legal_basis": [
+        "tfeu:art-114"
+      ],
+      "scope_decision": {
+        "disposition": "included",
+        "criterion": [
+          "crit:object-data",
+          "crit:sector-instance"
+        ],
+        "reason": "The EHDS meets the criterion. Its subject matter is common rules, standards, infrastructures and a governance framework for access to electronic health data, for primary and secondary use (Art. 1(1)): rules on access to and governance of data. Its rules are those of the health and care sectors, so it is a sector instance of the data layer, built on the GDPR: it specifies and complements the GDPR's rights for personal electronic health data, takes its definitions from it and gives its supervisory authorities the enforcement of those rights (Art. 1(2)(a); Art. 2(1)(a); Art. 22). Covered, with a page of its own.",
+        "approved_on": "2026-10-28",
+        "refer_to": [],
+        "watch_for": null,
+        "sources": [
+          {
+            "source_id": "src-eurlex-ehds",
+            "supports": "supports:direct",
+            "locator": "Art. 1(1) (subject matter)"
+          },
+          {
+            "source_id": "src-eurlex-ehds",
+            "supports": "supports:direct",
+            "locator": "Art. 1(2)(a); Art. 2(1)(a); Art. 22 (built on Regulation (EU) 2016/679)"
+          }
+        ],
+        "last_verified": "2026-10-28"
       }
     },
     {
@@ -3829,6 +3982,106 @@
       "last_verified": "2026-10-27",
       "requires_verification": false,
       "verification_note": "Read on 27 Oct 2026 in the Official Journal text of Regulation (EU) 2025/38 retrieved from the Publications Office's Cellar (CELEX 32025R0038): each of those points defines its term by reference to Directive (EU) 2022/2555 (Art. 10; Art. 6, points (38), (9), (6), (7) and (40); Annexes I and II; Art. 23(3)). The locator is in the dependent instrument's text, as rel-kind:enables requires. No provision ID exists for the CSA's Art. 2, so `provisions` is empty. Added for item 2.3 on the author's decision of 27 Oct 2026."
+    },
+    {
+      "id": "rel-gdpr-ehds-enables",
+      "from": "gdpr",
+      "to": "ehds",
+      "kind": "rel-kind:enables",
+      "symmetric": false,
+      "summary": "The EHDS takes its definitions of personal data, processing, controller, data concerning health and related terms from the GDPR, and gives the GDPR's supervisory authorities the monitoring and enforcement of its rights of access and control (Arts 3 and 5–10) and of the opt-out from secondary use (Art. 71).",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ehds",
+          "supports": "supports:direct",
+          "locator": "Art. 2(1)(a); Art. 22; Art. 65"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2025/327 retrieved from the Publications Office's Cellar (CELEX 32025R0327): Art. 2(1)(a) applies the definitions of Art. 4, points (1), (2), (5), (7), (8), (10), (11), (13), (15) and (26), of Regulation (EU) 2016/679; Art. 22 makes the supervisory authorities under that Regulation competent for Arts 3 and 5 to 10, with fines up to Art. 83(5) GDPR; Art. 65 does the same for the opt-out of Art. 71 (Art. 83 GDPR). The locator is in the dependent instrument's text, as rel-kind:enables requires. This is the edge that shows the EHDS's sector instance (crit:sector-instance). No provision ID exists for the EHDS Articles cited, so `provisions` is empty. Added for item 2.4 on the author's decision of 28 Oct 2026."
+    },
+    {
+      "id": "rel-ehds-cra-amends",
+      "from": "ehds",
+      "to": "cra",
+      "kind": "rel-kind:amends",
+      "symmetric": false,
+      "summary": "The EHDS amends the Cyber Resilience Act: manufacturers of products with digital elements that are EHR systems demonstrate conformity with the CRA's essential requirements through the EHDS's own conformity assessment procedure (new Art. 32(5a) CRA), and Arts 13(4) and 31(3) CRA extend to those products.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ehds",
+          "supports": "supports:direct",
+          "locator": "Art. 104, points (1)–(3)"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2025/327 retrieved from the Publications Office's Cellar (CELEX 32025R0327): Art. 104 read in full: points (1) and (2) replace Art. 13(4) and Art. 31(3) of Regulation (EU) 2024/2847, whose texts are unchanged save for the added reference to Article 32(5a) (compared that day with the Official Journal text of Regulation (EU) 2024/2847, CELEX 32024R2847); point (3) inserts Art. 32(5a). Art. 104 is not among the exceptions of Art. 105, so it falls under the EHDS's general date of application. ehds.amends and cra.amended_by record the same edge, on the author's decision. No provision ID exists for the EHDS Articles cited, so `provisions` is empty. Added for item 2.4 on the author's decision of 28 Oct 2026."
+    },
+    {
+      "id": "rel-ehds-data-act-defers",
+      "from": "ehds",
+      "to": "data-act",
+      "kind": "rel-kind:defers-to",
+      "symmetric": false,
+      "summary": "The EHDS is without prejudice to the Data Act as regards access to, sharing of or secondary use of electronic health data.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ehds",
+          "supports": "supports:direct",
+          "locator": "Art. 1(3)"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2025/327 retrieved from the Publications Office's Cellar (CELEX 32025R0327): Art. 1(3): 'without prejudice to other Union legal acts regarding access to, and sharing of or secondary use of, electronic health data … in particular Regulations … (EU) 2023/2854'. The locator is in the deferring instrument's text, as rel-kind:defers-to requires. No provision ID exists for the EHDS Articles cited, so `provisions` is empty. Added for item 2.4 on the author's decision of 28 Oct 2026."
+    },
+    {
+      "id": "rel-ehds-ai-act-defers",
+      "from": "ehds",
+      "to": "ai-act",
+      "kind": "rel-kind:defers-to",
+      "symmetric": false,
+      "summary": "The EHDS is without prejudice to the AI Act as regards the security of AI systems that interact with EHR systems.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ehds",
+          "supports": "supports:direct",
+          "locator": "Art. 1(5)"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2025/327 retrieved from the Publications Office's Cellar (CELEX 32025R0327): Art. 1(5): 'without prejudice to Regulations (EU) 2017/745, (EU) 2017/746 and (EU) 2024/1689, as regards the security of medical devices, in vitro diagnostic medical devices and artificial intelligence (AI) systems that interact with EHR systems'. Art. 27(2) (high-risk AI systems claiming interoperability with EHR systems) was read and is not part of this edge. No provision ID exists for the EHDS Articles cited, so `provisions` is empty. Added for item 2.4 on the author's decision of 28 Oct 2026."
+    },
+    {
+      "id": "rel-dga-ehds-enables",
+      "from": "dga",
+      "to": "ehds",
+      "kind": "rel-kind:enables",
+      "symmetric": false,
+      "summary": "The EHDS takes its definitions of data, access, data altruism, public sector body and secure processing environment from the Data Governance Act.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-ehds",
+          "supports": "supports:direct",
+          "locator": "Art. 2(1)(c)"
+        }
+      ],
+      "last_verified": "2026-10-28",
+      "requires_verification": false,
+      "verification_note": "Read on 28 Oct 2026 in the Official Journal text of Regulation (EU) 2025/327 retrieved from the Publications Office's Cellar (CELEX 32025R0327): Art. 2(1)(c) applies the definitions of Art. 2, points (1), (13), (16), (17) and (20), of Regulation (EU) 2022/868. The locator is in the dependent instrument's text, as rel-kind:enables requires. No provision ID exists for the EHDS Articles cited, so `provisions` is empty. Added for item 2.4 on the author's decision of 28 Oct 2026."
     }
   ]
 }
