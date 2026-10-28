@@ -289,6 +289,20 @@
       "definition_ref": null,
       "parent": null,
       "note": "EHDS: 'health data user' as defined in Art. 2(2), point (u), of Regulation (EU) 2025/327, read 28 Oct 2026: granted lawful access to electronic health data for secondary use. Added 28 Oct 2026 for item 2.4."
+    },
+    {
+      "id": "actor:union-entity",
+      "label": "Union entity",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Interoperable Europe Act: 'Union entities' as defined in Art. 2, point (5), of Regulation (EU) 2024/903, read 28 Oct 2026: the Union institutions, bodies, offices and agencies set up by, or on the basis of, the TEU, the TFEU or the Euratom Treaty. Added 28 Oct 2026 for item 2.5."
+    },
+    {
+      "id": "actor:public-sector-body",
+      "label": "Public sector body",
+      "definition_ref": null,
+      "parent": null,
+      "note": "Interoperable Europe Act: 'public sector body' as defined in Art. 2, point (6), of Regulation (EU) 2024/903, read 28 Oct 2026, which applies the definition in Art. 2, point (1), of Directive (EU) 2019/1024 (not re-read). Added 28 Oct 2026 for item 2.5."
     }
   ],
   "activity": [

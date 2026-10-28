@@ -2470,6 +2470,79 @@
    "last_verified": "2026-10-28"
   },
   {
+   "id": "tl-iea-2024-04-11-entry-into-force",
+   "date": "2024-04-11",
+   "date_precision": "precision:day",
+   "event_type": "event:entry-into-force",
+   "instrument": "iea",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "obligation": null,
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-iea"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added 28 Oct 2026 for item 2.5. Art. 23(1): entry into force on the twentieth day following publication in the Official Journal (OJ L 2024/903, 22.3.2024), read that day in the text retrieved from the Publications Office's Cellar (CELEX 32024R0903); the Publications Office's SPARQL metadata, read the same day, records it in force with this date.",
+   "last_verified": "2026-10-28"
+  },
+  {
+   "id": "tl-iea-2024-07-12-application",
+   "date": "2024-07-12",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "iea",
+   "provisions": [],
+   "affected_actors": [],
+   "sectors": [],
+   "obligation": "The Regulation applies (Art. 23(2), first subparagraph), except Article 3(1) to (4) and Article 17, which apply from 12 January 2025.",
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-iea"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added 28 Oct 2026 for item 2.5. Read that day in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32024R0903); the Publications Office's SPARQL metadata, read the same day, records this date. Art. 23(2), first subparagraph: 'It shall apply from 12 July 2024.' The general date: it names no provision.",
+   "last_verified": "2026-10-28"
+  },
+  {
+   "id": "tl-iea-2025-01-12-application",
+   "date": "2025-01-12",
+   "date_precision": "precision:day",
+   "event_type": "event:application",
+   "instrument": "iea",
+   "provisions": [
+    "iea:art-3",
+    "iea:art-17"
+   ],
+   "affected_actors": [
+    "actor:union-entity",
+    "actor:public-sector-body",
+    "actor:member-state"
+   ],
+   "sectors": [],
+   "obligation": "The interoperability assessment (Article 3(1) to (4)) and the designation of national competent authorities and single points of contact (Article 17) apply (Art. 23(2), second subparagraph). Article 3(5), on the Board's guidelines, applies from the general date.",
+   "required_action": null,
+   "authority": [],
+   "status": "occurred",
+   "supersedes": null,
+   "claims": [],
+   "sources": [
+    "src-eurlex-iea"
+   ],
+   "requires_verification": false,
+   "verification_note": "Added 28 Oct 2026 for item 2.5. Read that day in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32024R0903); the Publications Office's SPARQL metadata, read the same day, records this date. Art. 23(2), second subparagraph: 'However, Article 3(1) to (4) and Article 17 shall apply from 12 January 2025.' Tagged with the recorded provisions it governs: Arts 3 and 17.",
+   "last_verified": "2026-10-28"
+  },
+  {
    "id": "tl-vida-2025-04-14-entry-into-force",
    "date": "2025-04-14",
    "date_precision": "precision:day",

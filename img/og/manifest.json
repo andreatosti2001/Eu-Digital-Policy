@@ -50,6 +50,9 @@
     },
     "img/og/ehds.png": {
       "input_sha256": "9ba957fdfebf964e2c13a4b63d4212e2eca23a76369a7ee060f62482be669bce"
+    },
+    "img/og/iea.png": {
+      "input_sha256": "957a072e0239694ca0e5e7bfaebf95178b7b7408eaa03e8b18ec48b6ac527171"
     }
   }
 }

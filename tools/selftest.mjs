@@ -1938,6 +1938,51 @@ test('W14 · item 2.4: ehds is covered and held to M-04, M-05 and M-07 in full �
   plant((d) => { instOf(d, 'ehds').dna.objective = ''; }, /^M-05 instruments\/ehds: covered \(core\) without a page/);
 });
 
+test('W15 · item 2.5: iea is covered and held to M-04, M-05 and M-07 in full — remove any one support and it fails', () => {
+  const r = registerAudit(loadDb(), '2026-10-28');
+  const db = loadDb();
+  const iea = instOf(db, 'iea');
+  assert.equal(coverage(iea), 'covered');
+  assert.equal(iea.scope_decision.disposition, 'included');
+  assert.deepEqual(iea.scope_decision.criterion, ['crit:object-infrastructure', 'crit:horizontal']);
+  assert.ok(!STATUS_BASIS_BACKLOG.includes('iea') && !SCOPE_DECISION_BACKLOG.includes('iea'), 'no backlog shelters it');
+  assert.ok(!r.backlog['status-basis-missing'].includes('iea'));
+  /* the brief does not name it, so context rests on its edges alone: both
+     textual and v2, each located in the Interoperable Europe Act — the
+     deferring act for defers-to, the dependent act for enables */
+  assert.equal(iea.brief_part, null);
+  const defers = db.instruments.relationships.find((x) => x.id === 'rel-iea-gdpr-defers');
+  const enables = db.instruments.relationships.find((x) => x.id === 'rel-nis2-iea-enables');
+  assert.ok(defers && defers.from === 'iea' && defers.to === 'gdpr' && defers.kind === 'rel-kind:defers-to');
+  assert.ok(enables && enables.from === 'nis2' && enables.to === 'iea' && enables.kind === 'rel-kind:enables');
+  for (const edge of [defers, enables]) {
+    assert.ok(edge.sources.every((s) => typeof s === 'object' && s.supports === 'supports:direct' && structural(s.locator)));
+    assert.ok(edge.sources.every((s) => iea.sources.includes(s.source_id)), `${edge.id}: the locator is in the Interoperable Europe Act`);
+  }
+  /* "applicable" holds only while no application date is still to come, and
+     the 2025 tranche is tagged, so it cannot pose as the general date */
+  const ix = { event: new Map(db.timeline.events.map((e) => [e.id, e])) };
+  assert.equal(iea.legislative_status, 'status:applicable');
+  assert.deepEqual(statusContradictions(iea, ix, '2026-10-28'), []);
+  assert.equal(provisionApplication('iea:art-3', iea, ix, '2026-10-28').date, '2025-01-12');
+  assert.equal(provisionApplication('iea:art-4', iea, ix, '2026-10-28').date, '2024-07-12');
+  const plant = (fn, re) => { const d = loadDb(); fn(d); assert.ok(regErrors(d).some((e) => re.test(e)), `expected ${re}`); };
+  plant((d) => { delete instOf(d, 'iea').status_basis; }, /^M-07 instruments\/iea:/);
+  plant((d) => { delete instOf(d, 'iea').scope_decision; }, /^M-04 instruments\/iea: a core record added after 25 Oct 2026/);
+  /* either edge alone carries the page gate's `context`; both gone, no page */
+  for (const id of ['rel-iea-gdpr-defers', 'rel-nis2-iea-enables']) {
+    const d = loadDb(); d.instruments.relationships = d.instruments.relationships.filter((x) => x.id !== id);
+    assert.ok(!regErrors(d).some((e) => /^M-05 instruments\/iea/.test(e)), `${id} removed, the other edge still gives context`);
+  }
+  plant((d) => { d.instruments.relationships = d.instruments.relationships.filter((x) => x.from !== 'iea' && x.to !== 'iea'); },
+    /^M-05 instruments\/iea: covered \(core\) without a page/);
+  plant((d) => { instOf(d, 'iea').dna.objective = ''; }, /^M-05 instruments\/iea: covered \(core\) without a page/);
+  /* a future application date planted: "applicable" is then a contradiction */
+  { const ev = new Map(ix.event); ev.set('tl-iea-planted', { id: 'tl-iea-planted', date: '2027-01-01', event_type: 'event:application', provisions: ['iea:art-4'] });
+    assert.ok(statusContradictions({ ...iea, milestones: [...iea.milestones, 'tl-iea-planted'] }, { event: ev }, '2026-10-28')
+      .some((m) => /still to come/.test(m))); }
+});
+
 /* v2 Session 5, B.3. Eight of the seventeen v1 relationships were migrated to
    v2 reference objects on 27 Oct 2026, each source re-read that day; nine stay
    v1 (docs/ROADMAP-v2.md §8). No edge check exists yet (M-08 belongs to D1, and

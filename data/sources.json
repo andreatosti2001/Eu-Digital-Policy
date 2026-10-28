@@ -671,6 +671,20 @@
       "note": "The Official Journal text, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Art. 105: applies from 26 March 2027, with staged dates in 2029 and 2031 for priority categories of personal electronic health data and EHR systems. The Publications Office's metadata records entry into force on 25 March 2025. Re-read on 28 Oct 2026 for item 2.4, from Cellar by CELEX (XHTML): Arts 1–4, 12, 14, 16, 19, 21–22, 26, 27, 30, 55, 60–61, 63–65, 99, 102–105. The Publications Office's SPARQL metadata, read the same day: in force; entry into force 2025-03-25; dates recorded 2027-03-26, 2029-03-26, 2031-03-26 and 2035-03-26; no end of validity; amends 32011L0024 and 32024R2847; the only consolidated version is the original. Three corrigenda are recorded (32025R0327R(01): French, Croatian and Latvian; R(02) and R(03): Hungarian); none has an English text, and none was read."
     },
     {
+      "id": "src-eurlex-iea",
+      "tier": "tier:1",
+      "type": "source-type:regulation",
+      "publisher": "eu",
+      "publisher_name": "Publications Office of the European Union (Cellar)",
+      "title": "Regulation (EU) 2024/903 of 13 March 2024 laying down measures for a high level of public sector interoperability across the Union (Interoperable Europe Act) (OJ L 2024/903, 22.3.2024)",
+      "url": "http://publications.europa.eu/resource/celex/32024R0903",
+      "url_status": "url:live",
+      "published": "2024-03-22",
+      "accessed": "2026-10-28",
+      "language": "en",
+      "note": "The Official Journal text, retrieved on 28 Oct 2026 from the Publications Office's Cellar by CELEX number (XHTML), for item 2.5. Read: the enacting terms in full (Arts 1–23), the Annex, and recitals 1–13, 41–43 and 56. Not read: the other recitals. The Publications Office's SPARQL metadata, read the same day: in force; dates 2024-04-11, 2024-07-12 and 2025-01-12; deadline 2028-01-12; no end of validity; legal basis Art. 172 TFEU; it amends no act and no act amends it; no consolidated version and no corrigendum recorded. Acts recorded as based on it, including Regulation (EU) 2025/1420, were not read."
+    },
+    {
       "id": "src-eurlex-eidas2",
       "tier": "tier:1",
       "type": "source-type:regulation",
