@@ -1,8 +1,7 @@
 # HANDOVER
 
 **Last updated:** v2 Session 10, items 10.1 (the scrollbars) and 10.2 (the internal references shown
-to a reader). The checkpoint is **awaiting the author's approval** (`docs/ROADMAP-v2.md` §8) ·
-28 October 2026
+to a reader). The checkpoint is **approved** (`docs/ROADMAP-v2.md` §8) · 28 October 2026
 **Branch:** `claude/v2-session-10-frontend`, cut from `main` at `c982724`.
 
 ## Branch register — 28 October 2026 (v2 Session 10)
@@ -16,8 +15,9 @@ to a reader). The checkpoint is **awaiting the author's approval** (`docs/ROADMA
   - `origin/scout/digest-digest-2026-10-26T13-10-32Z` (already in the register).
   `origin/claude/new-session-o9uopd`, which the prompt expected, is no longer unmerged.
 - `origin/main` was re-fetched before this handover was written: still `c982724`.
-- Disposition: pushed; **awaiting the checkpoint's approval**. A pull request to `main` is put to the
-  author after it. Nothing is pushed to the branch after a merge is requested.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve the checkpoint"); pushed, with a pull
+  request to `main` opened on the author's instruction of 28 Oct 2026 ("Open PR to main"). Nothing is
+  pushed to the branch after the pull request is opened.
 
 ## v2 Session 10 — checkpoint report (items 10.1 and 10.2)
 
@@ -242,7 +242,8 @@ outcome of the Coreper meeting of 21 Oct 2026 (only its identifiers changed here
 
 **10.4 · Checkpoint.**
 - *Changed:* this report.
-- *Criterion:* the author's approval, recorded in §8. **Not yet given.**
+- *Criterion:* the author's approval, recorded in §8. **Approved** on 28 Oct 2026; pull request
+  opened on the author's instruction.
 
 ### How to check it by hand
 
