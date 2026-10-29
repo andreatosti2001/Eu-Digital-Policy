@@ -138,6 +138,8 @@ export const PROSE_FIELDS = {
   applicability_rule: {
     rationale: 'Why the rule fires — the reasoning a reader is shown when the applicability engine answers them. `js/applies.js` renders it verbatim beneath the outcome.',
     exemptions: 'The carve-outs, each a sentence. They narrow an obligation, so a stale one tells a reader they are exempt when they are not.',
+    /* v2 Session 13 (29 Oct 2026, docs/ROADMAP-v2.md §8): a v2 exemption is an object; its text is the same sentence */
+    'exemptions.text': 'A v2 carve-out\'s sentence — what js/applies.js and the instrument pages print, as the v1 string was. A stale one tells a reader they are exempt when they are not.',
     verification_note: 'What is still open about the rule, in words.',
     depends_on: 'Despite the name, this field holds a SENTENCE describing what the rule\'s outcome turns on — not an id. Nothing in the corpus points at it and nothing checks it, so a condition that moves leaves the rule\'s stated dependency describing the previous one. Named here because a field called depends_on reads like a reference and is not.',
   },
@@ -206,7 +208,12 @@ export const VALUE_FIELDS = {
     'judicial', 'judicial.forum', 'judicial.date', 'judicial.case_ref', 'judicial.remitted',
     'appeal.lodged_by', 'appeal.forum', 'appeal.lodged_date', 'appeal.case_ref', 'appeal.requires_verification'],
   glossary_term: ['id', 'term', 'legacy_dom_id', 'new_in_this_build', 'last_verified', 'requires_verification'],
+  /* sources.locator, sources.for, exemptions.effect, exemptions.basis.locator
+     (v2 Session 13, 29 Oct 2026, docs/ROADMAP-v2.md §8): a v2 rule cites
+     {source_id, supports, locator, for}, as claims do; `for` and `effect` are
+     closed vocabularies that are not taxonomy ids, as scope_decision.disposition */
   applicability_rule: ['id', 'last_verified', 'requires_verification',
+    'sources.locator', 'sources.for', 'exemptions.effect', 'exemptions.basis.locator',
     'conditions.thresholds.cumulative_training_flop_gte',
     'conditions.thresholds.monthly_active_eu_end_users_gte',
     'conditions.thresholds.monthly_active_eu_users_gte',
