@@ -13,8 +13,9 @@ checkpoint, **approved by the author** (§8).
   `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
   already in the register. No other branch to report.
 - `origin/main` was re-fetched before this handover was written: still `d073134`.
-- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); the author is asked whether to open a
-  pull request to `main`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed, with a pull request to `main`
+  opened on the author's instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the
+  branch after the pull request is opened.
 
 ## v2 Session 13 — checkpoint report (13.1 V2C-67, 13.2 the validator, 13.3 the pilot)
 
