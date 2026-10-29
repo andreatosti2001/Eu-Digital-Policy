@@ -1,8 +1,8 @@
 # HANDOVER
 
 **Last updated:** v2 Session 15, the third rules session of Phase 3 (29 October 2026): 15.1, the nine rules on the
-DSA and the DMA (`ap-dsa-01`…`ap-dsa-05`, `ap-dma-01`…`ap-dma-04`) in the v2 shape, then a checkpoint. **The
-checkpoint is not yet approved.** Item 15.4 (the draft of the Session 16 prompt) waits for it.
+DSA and the DMA (`ap-dsa-01`…`ap-dsa-05`, `ap-dma-01`…`ap-dma-04`) in the v2 shape, then a checkpoint, **approved by
+the author** (§8). Item 15.4 (the draft of the Session 16 prompt) follows.
 **Branch:** `claude/vigilant-ride-i216wh` (assigned by the environment), cut from `main` at `e77ee28`.
 
 ## Branch register — 29 October 2026 (v2 Session 15)
@@ -193,8 +193,8 @@ console error; no horizontal overflow; no "[object Object]"; the two old exempti
 | **15.0** | §8: scope row and twenty answer rows (`f825d75` … `07cd90d`) | read §8's last twenty-one rows | — | met: every decision in the author's words before anything published changed |
 | **15.1** | data, pages, sitemap, bibliography (`c49e110`); T-03 (`ef4a86b`); `RULES_V1`, X1–X3, Y3, Y4, `fields.mjs` (`7f346d3`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 16 of 33"; open the `applies.html` URLs above and `/instruments/dsa/`, `/instruments/dma/` | `tools/selftest.mjs` X1–X3, Y3, Y4; `agent/detector` 41 | met: the nine publishable; every check at 0 errors |
 | **15.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
-| **15.3** | this report | — | — | **not yet approved**; V2C-08's and V2C-09's rows in `docs/V2-CLOSURE.md` name the commit only after approval |
-| **15.4** | — | — | — | not started: waits for the approval |
+| **15.3** | this report; V2C-08's and V2C-09's rows in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); both rows name `c49e110` |
+| **15.4** | — | — | — | follows the approval |
 
 ### How to check it by hand
 
