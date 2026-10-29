@@ -105,6 +105,78 @@ function checkDuplicates() {
   }
 }
 
+/* ---------- 3a. an applicability rule in the v2 shape ----------
+   v2 Session 13 (docs/ROADMAP-v2.md §8, 13.0 question 2): the fields of
+   docs/v2-design/applicability-rule.schema.json, checked for whether they
+   RESOLVE and are in their vocabulary. What a rule can CARRY — a scope
+   reference to a tier-1 text, a provision for every condition, a basis for
+   every exemption, and so whether it is publishable — is
+   tools/trigger-audit.mjs's (T-01…T-11), not this file's. A bare source id
+   and a string exemption are the v1 forms and validate as they always did. */
+const RULE_FOR = ['scope', 'obligation', 'date', 'rationale'];
+const RULE_DIMENSIONS = ['actor', 'activity', 'territory'];
+const RULE_EFFECTS = ['excludes', 'narrows', 'reinstates'];
+const RULE_EXEMPTION_KEYS = ['text', 'effect', 'basis', 'outside_dataset'];
+
+function checkRuleV2(r, w, resolves) {
+  const rule = `RULE "${r.id}"`;
+  /* one reference object, wherever a rule carries one */
+  const ref = (field, s) => {
+    if (!s || typeof s !== 'object' || Array.isArray(s)) return err(`${rule} ${field}: MALFORMED reference ${JSON.stringify(s)} — a bare source id or an object {source_id, supports, locator, for}`);
+    if (typeof s.source_id !== 'string' || !s.source_id) return err(`${rule} ${field}: reference without a source_id`);
+    if (!resolves('source', s.source_id)) err(`${rule} ${field}: DANGLING source ref "${s.source_id}"`);
+    if (!(typeof s.supports === 'string' && s.supports.startsWith('supports:') && resolves('taxonomy', s.supports)))
+      err(`${rule} ${field}: supports ${JSON.stringify(s.supports)} is not a supports: term of the taxonomy`);
+    if (s.for !== undefined && !RULE_FOR.includes(s.for))
+      err(`${rule} ${field}: for ${JSON.stringify(s.for)} is not one of ${RULE_FOR.join(', ')}`);
+    if (!(s.locator === null || typeof s.locator === 'string'))
+      err(`${rule} ${field}: locator ${JSON.stringify(s.locator)} is neither a string nor null`);
+  };
+
+  /* (1) sources: a bare id (v1) or a reference object (v2) */
+  arr(r.sources).forEach((s, n) => {
+    if (typeof s === 'string') { if (!resolves('source', s)) err(`DANGLING source ref "${s}" in ${w}`); }
+    else ref(`sources[${n}]`, s);
+  });
+
+  /* (2) condition_provisions: for each dimension, the provisions that define it */
+  if (r.condition_provisions !== undefined) {
+    const cp = r.condition_provisions;
+    if (!cp || typeof cp !== 'object' || Array.isArray(cp)) err(`${rule} condition_provisions: not an object`);
+    else for (const [d, list] of Object.entries(cp)) {
+      if (!RULE_DIMENSIONS.includes(d)) err(`${rule} condition_provisions: "${d}" is not one of ${RULE_DIMENSIONS.join(', ')}`);
+      if (!Array.isArray(list) || !list.length) { err(`${rule} condition_provisions.${d}: not a non-empty array of provision ids`); continue; }
+      for (const p of list) if (typeof p !== 'string' || WILDCARD.test(p) || !resolves('provision', p))
+        err(`${rule} condition_provisions.${d}: DANGLING provision ref ${JSON.stringify(p)}`);
+    }
+  }
+
+  /* (3) threshold_basis: one entry per threshold key, each a list of references */
+  if (r.threshold_basis !== undefined) {
+    const tb = r.threshold_basis;
+    const keys = Object.keys((r.conditions || {}).thresholds || {});
+    if (!tb || typeof tb !== 'object' || Array.isArray(tb)) err(`${rule} threshold_basis: not an object`);
+    else for (const [k, list] of Object.entries(tb)) {
+      if (!keys.includes(k)) err(`${rule} threshold_basis: "${k}" is not a key of conditions.thresholds`);
+      if (!Array.isArray(list) || !list.length) { err(`${rule} threshold_basis.${k}: not a non-empty array of references`); continue; }
+      list.forEach((s, n) => ref(`threshold_basis.${k}[${n}]`, s));
+    }
+  }
+
+  /* (4) exemptions: a string (v1) or an object with an effect and a basis (v2) */
+  arr(r.exemptions).forEach((e, n) => {
+    const f = `exemptions[${n}]`;
+    if (typeof e === 'string') return;
+    if (!e || typeof e !== 'object' || Array.isArray(e)) return err(`${rule} ${f}: MALFORMED exemption ${JSON.stringify(e)} — a string or an object {text, effect, basis}`);
+    for (const k of Object.keys(e)) if (!RULE_EXEMPTION_KEYS.includes(k)) err(`${rule} ${f}: "${k}" is not one of ${RULE_EXEMPTION_KEYS.join(', ')}`);
+    if (typeof e.text !== 'string') err(`${rule} ${f}.text: not a string`);
+    if (!RULE_EFFECTS.includes(e.effect)) err(`${rule} ${f}.effect: ${JSON.stringify(e.effect)} is not one of ${RULE_EFFECTS.join(', ')}`);
+    if (!Array.isArray(e.basis)) err(`${rule} ${f}.basis: not an array of references`);
+    else e.basis.forEach((s, m) => ref(`${f}.basis[${m}]`, s));
+    if (e.outside_dataset !== undefined && typeof e.outside_dataset !== 'boolean') err(`${rule} ${f}.outside_dataset: not a boolean`);
+  });
+}
+
 /* ---------- 3. referential integrity ---------- */
 function checkRefs(ids) {
   const resolves = (kind, ref) => {
@@ -306,7 +378,7 @@ function checkRefs(ids) {
     check(w, 'institution', r.authority);
     check(w, 'timeline', r.dates);
     check(w, 'claim', r.claims);
-    check(w, 'source', r.sources);
+    checkRuleV2(r, w, resolves);
     const c = r.conditions || {};
     check(`${w}/conditions`, 'taxonomy', c.actor);
     check(`${w}/conditions`, 'taxonomy', c.activity);

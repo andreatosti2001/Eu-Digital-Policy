@@ -2496,7 +2496,12 @@ test('X2 · 12.2: every ERROR rule fires on a planted defect, and a v2 rule that
   const swap = (fn) => (db) => { const r = v2Rule(db); fn(r, db); db.applicability.rules[db.applicability.rules.findIndex((x) => x.id === 'ap-gdpr-02')] = r; };
   /* T-02: object references with no scope basis, and one that does not resolve */
   assert.equal(errs(plant(swap((r) => { r.sources[0].for = 'rationale'; })), /^T-02 applicability\/ap-gdpr-02: no for:scope/).length, 1);
-  assert.equal(errs(plant(swap((r) => { r.sources.push({ source_id: 'src-not-a-source', supports: 'supports:direct', locator: 'Art. 1' }); })), /^T-02 .*does not resolve/).length, 1);
+  /* a reference that does not resolve is validate.mjs's to report since v2 Session 13 (§8, 13.0
+     question 2: one home per check, test Y1); here it reports nothing and only keeps the rule from
+     being publishable */
+  const dangling = plant(swap((r) => { r.sources.push({ source_id: 'src-not-a-source', supports: 'supports:direct', locator: 'Art. 1' }); }));
+  assert.deepEqual(dangling.errors, []);
+  assert.ok(!dangling.publishable.includes('ap-gdpr-02'));
   assert.equal(errs(plant(swap((r) => { r.sources[0].locator = 'the Regulation'; })), /^T-02 /).length, 1, 'a locator that is not structural');
   /* T-03: a dimension with no provision, and a provision of an unconnected instrument */
   assert.equal(errs(plant(swap((r) => { delete r.condition_provisions[Object.keys(r.conditions)[0]]; })), /^T-03 .*names no provision/).length, 1);
@@ -2551,4 +2556,67 @@ test('X4 · 12.2: the record says what the run now reads, in the words the autho
   assert.ok(!LIMITS.some((l) => /reports nothing about data\/applicability\.json/.test(l)));
   assert.ok(LIMITS.includes("It reads the rules behind applies.html (data/applicability.json) for their structure and evidence: references and locators, the provision behind each condition, exemptions, thresholds and dates. It opens no source and runs no questionnaire, so a rule it reports as publishable meets the claims' standard of evidence; that is not a finding that the rule states the law correctly (docs/ROADMAP-v2.md §4, Phase 3; D-2)."));
   assert.deepEqual(CHECKED.map((c) => c.section), ['claims', 'remediation', 'prose', 'sources', 'freshness', 'enforcement', 'regulatory', 'register', 'triggers']);
+});
+
+/* ---------------------------------------------------------------------------
+   v2 Session 13, item 13.2: tools/validate.mjs learns the v2 rule shape
+   (docs/ROADMAP-v2.md §8, 13.0 question 2). It refused a reference object
+   with DANGLING source ref "[object Object]" and accepted an exemption object
+   without looking at it. Every new error is planted, each in its own copy.
+   --------------------------------------------------------------------------- */
+
+test('Y1 · 13.2: validate.mjs accepts a correct v2 rule, keeps the v1 forms, and names the field of every v2 defect', () => {
+  const run = (fn) => {
+    const dir = treeCopy();
+    try {
+      editJSON(dir, 'applicability.json', (d) => fn(d.rules.find((r) => r.id === 'ap-gdpr-02'), d.rules.find((r) => r.id === 'ap-ai-act-03'), d));
+      return runValidator('validate.mjs', [], dir);
+    } finally { rmSync(dir, { recursive: true, force: true }); }
+  };
+  /* a v2 rule in the schema's shape, on the rule X2 uses */
+  const v2 = (r, t) => {
+    r.sources = [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 3(2)', for: 'scope' },
+      { source_id: 'src-eurlex-gdpr', supports: 'supports:partial', locator: null }];
+    r.condition_provisions = Object.fromEntries(Object.keys(r.conditions).map((d) => [d, ['gdpr:art-3']]));
+    r.exemptions = ['A v1 string exemption, still accepted.',
+      { text: 'A planted exemption object.', effect: 'excludes', basis: [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 2(2)' }], outside_dataset: false }];
+    t.threshold_basis = { cumulative_training_flop_gte: [{ source_id: 'src-eurlex-ai-act', supports: 'supports:direct', locator: 'Art. 51(2)' }] };
+  };
+  const clean = run(v2);
+  assert.equal(clean.exit, 0, clean.out);
+  assert.match(clean.out, /^ERRORS {3}0$/m);
+
+  const fails = (fn, re) => {
+    const r = run((a, b, d) => { v2(a, b); fn(a, b, d); });
+    assert.equal(r.exit, 1, `${re} — expected a failing run`);
+    assert.match(r.out, re);
+  };
+  /* (1) sources */
+  fails((r) => { r.sources.push(42); }, /RULE "ap-gdpr-02" sources\[2\]: MALFORMED reference 42/);
+  fails((r) => { r.sources[1] = { supports: 'supports:direct', locator: 'Art. 1' }; }, /RULE "ap-gdpr-02" sources\[1\]: reference without a source_id/);
+  fails((r) => { r.sources[1].source_id = 'src-not-a-source'; }, /RULE "ap-gdpr-02" sources\[1\]: DANGLING source ref "src-not-a-source"/);
+  fails((r) => { r.sources[1].supports = 'outcome:applies'; }, /RULE "ap-gdpr-02" sources\[1\]: supports "outcome:applies" is not a supports: term/);
+  fails((r) => { r.sources[0].for = 'scope-ish'; }, /RULE "ap-gdpr-02" sources\[0\]: for "scope-ish" is not one of scope, obligation, date, rationale/);
+  fails((r) => { r.sources[0].locator = 3; }, /RULE "ap-gdpr-02" sources\[0\]: locator 3 is neither a string nor null/);
+  /* the v1 form keeps its message */
+  fails((r) => { r.sources.push('src-not-a-source'); }, /DANGLING source ref "src-not-a-source" in applicability\/ap-gdpr-02/);
+  /* (2) condition_provisions */
+  fails((r) => { r.condition_provisions = ['gdpr:art-3']; }, /RULE "ap-gdpr-02" condition_provisions: not an object/);
+  fails((r) => { r.condition_provisions.sector = ['gdpr:art-3']; }, /RULE "ap-gdpr-02" condition_provisions: "sector" is not one of actor, activity, territory/);
+  fails((r) => { r.condition_provisions.territory = []; }, /RULE "ap-gdpr-02" condition_provisions\.territory: not a non-empty array/);
+  fails((r) => { r.condition_provisions.territory = ['gdpr:art-999']; }, /RULE "ap-gdpr-02" condition_provisions\.territory: DANGLING provision ref "gdpr:art-999"/);
+  fails((r) => { r.condition_provisions.territory = ['gdpr:*']; }, /condition_provisions\.territory: DANGLING provision ref "gdpr:\*"/);
+  /* (3) threshold_basis */
+  fails((r, t) => { t.threshold_basis = []; }, /RULE "ap-ai-act-03" threshold_basis: not an object/);
+  fails((r, t) => { t.threshold_basis.flops_gt = t.threshold_basis.cumulative_training_flop_gte; }, /RULE "ap-ai-act-03" threshold_basis: "flops_gt" is not a key of conditions\.thresholds/);
+  fails((r, t) => { t.threshold_basis.cumulative_training_flop_gte = []; }, /threshold_basis\.cumulative_training_flop_gte: not a non-empty array of references/);
+  fails((r, t) => { t.threshold_basis.cumulative_training_flop_gte[0].source_id = 'src-not-a-source'; }, /RULE "ap-ai-act-03" threshold_basis\.cumulative_training_flop_gte\[0\]: DANGLING source ref/);
+  /* (4) exemptions */
+  fails((r) => { r.exemptions.push(7); }, /RULE "ap-gdpr-02" exemptions\[2\]: MALFORMED exemption 7/);
+  fails((r) => { r.exemptions[1].why = 'x'; }, /RULE "ap-gdpr-02" exemptions\[1\]: "why" is not one of text, effect, basis, outside_dataset/);
+  fails((r) => { r.exemptions[1].text = ['x']; }, /RULE "ap-gdpr-02" exemptions\[1\]\.text: not a string/);
+  fails((r) => { r.exemptions[1].effect = 'removes'; }, /RULE "ap-gdpr-02" exemptions\[1\]\.effect: "removes" is not one of excludes, narrows, reinstates/);
+  fails((r) => { r.exemptions[1].basis = 'Art. 2(2)'; }, /RULE "ap-gdpr-02" exemptions\[1\]\.basis: not an array of references/);
+  fails((r) => { r.exemptions[1].basis[0].supports = 'supports:strong'; }, /exemptions\[1\]\.basis\[0\]: supports "supports:strong" is not a supports: term/);
+  fails((r) => { r.exemptions[1].outside_dataset = 'no'; }, /RULE "ap-gdpr-02" exemptions\[1\]\.outside_dataset: not a boolean/);
 });
