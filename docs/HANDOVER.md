@@ -1,9 +1,205 @@
 # HANDOVER
 
-**Last updated:** v2 Session 15, the third rules session of Phase 3 (29 October 2026): 15.1, the nine rules on the
-DSA and the DMA (`ap-dsa-01`…`ap-dsa-05`, `ap-dma-01`…`ap-dma-04`) in the v2 shape, then a checkpoint, **approved by
-the author** (§8). Item 15.4 (the draft of the Session 16 prompt) follows.
-**Branch:** `claude/vigilant-ride-i216wh` (assigned by the environment), cut from `main` at `e77ee28`.
+**Last updated:** v2 Session 16, the fourth rules session of Phase 3 (29 October 2026): 16.1, the seven rules on the
+AI Act (`ap-ai-act-01`…`ap-ai-act-07`) in the v2 shape, read in the text as the AI Omnibus amends it, then a
+checkpoint, **approved by the author** (§8). Item 16.4 (the draft of the Session 17 prompt) follows.
+**Branch:** `claude/v2-session-16-ai-act-rules`, cut from `main` at `3576ea2`.
+
+## Branch register — 29 October 2026 (v2 Session 16)
+
+- Branch `claude/v2-session-16-ai-act-rules`, cut from `main` at `3576ea2` (#44, Session 15's report and the prompt
+  of this session, and #45, `docs/POST-V2.md`, merged). Nothing was merged in. The environment assigned no branch
+  (the checkout was a detached `main`), so the session used the prompt's name.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both already in the
+  register. `claude/vigilant-ride-i216wh` (Session 15) is in `main` (#44). No other branch to report.
+- `origin/main` was re-fetched after the data commit, after the assertions and before this handover was written:
+  still `3576ea2`. No pull request was opened or merged during the session.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed.
+- After the approval, item 16.4: the prompt of v2 Session 17 drafted, `docs/prompts/v2-session-17.md` (the ten
+  rules of the Data Act, NIS2, DORA and the CRA to the v2 shape by the method of 13.0 question 4, four tables; then
+  17.2, the `rule-*` flip to ERROR once `RULES_V1` is empty, and 17.3, the two maintenance checks §8's plan row
+  describes, each put to the author before it is written; the assertion question asked after measuring; then a
+  checkpoint). Its starting state was measured on this session's approved tree (`5326ea5`). The prompt records no
+  decision: its first write is §8's row "The scope of v2 Session 17", in the author's words. It names article
+  numbers only where the dataset already records them; which Articles define and delimit each Act is left to the
+  reading.
+- A pull request to `main`, carrying Session 16 and the Session 17 prompt together, opened on the author's
+  instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the branch after it.
+
+## v2 Session 16 — checkpoint report (16.1, the AI Act)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 16 | "Start session 16" | `8263a36` |
+| Q2 · F-4 (V2C-06), `ap-ai-act-03`'s key | "Rename to _gt (Recommended)" | `efc91f5` |
+| Q5 · the tier-2 sources of `-02` and `-04` | "As proposed (Recommended)" | `efc91f5` |
+| Q3a · F-8, `ap-ai-act-01`'s dates | "Add the derived date (Recommended)" | `efc91f5` |
+| Q3b · `ap-ai-act-02`, Art. 3(63) among the obligations | "A: move 3(63) to conditions (Recommended)" | `eefe38a` |
+| Q3c · `ap-ai-act-05`'s dates | "Add the derived date (Recommended)" | `eefe38a` |
+| Q3d · F-8, `ap-ai-act-06`'s dates and the 2 Aug 2028 event | "A: add two, fix the event (Recommended)" | `eefe38a` |
+| Q3e · F-8, `ap-ai-act-07`'s dates | "Add both dates (Recommended)" | `eefe38a` |
+| Q6a · three AI Act headings | "Correct 27 and 51 (Recommended)" | `4691d6a` |
+| Q6b · `src-eurlex-ai-omnibus` `published` | "Correct published (Recommended)" | `4691d6a` |
+| Q6c · `ap-ai-act-04`'s Art. 6(3) exemption | "Correct the text (Recommended)" | `4691d6a` |
+| Q6d · `ap-ai-act-01` and Art. 4 | "Add Art. 4 (Recommended)" | `d369140` |
+| Q6e · `ap-ai-act-01` and GPAI model providers | "Report, change nothing (Recommended)" | `d369140` |
+| Q6f · Art. 111(3) | "Report, change nothing (Recommended)" | `d369140` |
+| Q1 · the AI Act table | "Approve the table (Recommended)" | `3d29dae` |
+| Q4 · `ap-gdpr-04` and `ai-act:art-3` | "A: no change (Recommended)" | `1d64d9d` |
+| A correction to Q6a (the headings also print in search and on an interaction card) | "Stands (Recommended)" | `a6c5704` |
+| A correction to Q1 (the new provisions also print in search and on `instrument.html?id=ai-act`) | "Stands (Recommended)" | `a6c5704` |
+| Q7 · `RULES_V1` and the assertions | "Change as proposed (Recommended)" | `79456fb` |
+
+Q7 was asked after the data was written and every suite run on it (`cd85da8`), so it names what moved, measured. The
+two corrections were asked when the regenerated pages and the code showed a reach the questions had not named.
+
+### What was written
+
+- **16.1, `cd85da8`.** `data/applicability.json`: the seven rules with reference objects (with references to the
+  AI Omnibus where it inserts, replaces or dates what a rule cites), `condition_provisions` to `ai-act:art-3`,
+  `-3-63`, `-25` and `-2-1`, `ap-ai-act-03`'s key `cumulative_training_flop_gt` and its `threshold_basis`, exemption
+  objects, `last_verified` 2026-10-29 and a note of what was read; dates, obligations and the Art. 6(3) text per
+  Q3a–Q3e, Q6c, Q6d. `data/instruments.json`: `ai-act:art-2-1` and `ai-act:art-3` in the approved words; the
+  headings of `ai-act:art-27` and `-51` (Q6a). `data/timeline.json`: `tl-ai-act-2025-02-02-application` names the two
+  new provisions; `tl-ai-act-2028-08-02-application` no longer names `ai-act:art-27` (Q3d). `data/sources.json`:
+  `accessed` and a dated note on `src-eurlex-ai-act`, `src-eurlex-ai-omnibus`, `src-eurlex-teu-art-4`,
+  `src-ec-gpai-code`, `src-ec-ai-omnibus-in-force`; `src-eurlex-ai-omnibus` `published` 2026-07-24 (Q6b).
+  `instruments/ai-act/`, `instruments/ai-omnibus/`, `instruments/gdpr/` (Art. 27's heading on an interaction card),
+  `bibliography.html` and `sitemap.xml` regenerated; a second `node tools/_footer.mjs` writes 0 files. No change to
+  `js/`, `applies.html` or its D-2 notice; `ap-gdpr-04` untouched (Q4).
+- **Assertions, `414a374`** (Q7). `RULES_V1` at 10; `tools/selftest.mjs` 120 → 121: `RULES_AI_ACT`, `RULES_V2` (23),
+  X1 (10/10/10/2/0/2), X3 ("23 of 33", dates 2, JSON exemption 2, Markdown), Y1 (the `_gt` key), new **Y5**;
+  `agent/detector/fields.mjs`: the threshold path `_gt` and its basis locator VALUE.
+- Between `cd85da8` and `414a374` the branch's CI was red on X1–X3, Y1 and detector 41; no assertion changed
+  before the author answered. `evidence-audit` was at 0 errors on the data commit: no check had a defect to expose
+  this time.
+
+### Before and after, every text a reader sees that changed
+
+| Where | Before | After |
+|---|---|---|
+| `applies.html`, Sources of the seven cards | the citation alone | the citation + " — at <locators>"; an AI Omnibus line on `-01`, `-04`, `-05`, `-06`, `-07`; `-04`'s Commission news line ends "(context only)" |
+| `ap-ai-act-03`, "Why this is not a firm answer" | "… threshold the questionnaire does not ask for: cumulative training flop gte." | "… cumulative training flop gt." |
+| Key dates | `-01` 2 Feb 2025; `-05` 2 Dec 2027; `-06` 2 Feb 2025; `-07` 2 Feb 2025 | `-01` 2 Feb 2025 · 2 Dec 2026; `-05` 2 Dec 2027 · 2 Aug 2028; `-06` 2 Feb 2025 · 2 Dec 2026 · 2 Dec 2027; `-07` 2 Feb 2025 · 2 Aug 2025 · 2 Dec 2026 |
+| Relevant obligations | `-01` Art. 5; `-02` Art. 53 · Art. 3(63) | `-01` Art. 5 · Art. 4 AI literacy; `-02` Art. 53 |
+| `ap-ai-act-04` exemption (both pages) | "Article 6(3) filters out an Annex III system that does not pose a significant risk of harm — but the provider must document that assessment and register the system." | "Under Article 6(3), an Annex III system that does not pose a significant risk of harm to the health, safety or fundamental rights of natural persons, and meets one of the four conditions the paragraph lists, is not high-risk — never one that performs profiling of natural persons; the provider must document that assessment before placing the system on the market or putting it into service, and register it (Article 6(4))." |
+| Art. 27 and Art. 51 headings (obligations on `applies.html`, `/instruments/ai-act/`, search, the Art. 27 chip on the AI Act–GDPR card, so `/instruments/gdpr/` too) | "Fundamental rights impact assessment"; "Classification of general-purpose AI models with systemic risk" | "… for high-risk AI systems"; "Classification of general-purpose AI models as general-purpose AI models with systemic risk" |
+| every citation of Regulation (EU) 2026/1744 (8 events, 5 claims, `ai-act:art-4`, `/instruments/ai-omnibus/`, its edge, the bibliography, `applies.html`) | "EUR-Lex, July 8, 2026" | "EUR-Lex, July 24, 2026" |
+| `/instruments/ai-act/`, provisions | "13 provisions recorded" | "15 provisions recorded": "Art. 2(1) Scope" and "Art. 3 Definitions", in §8 Q1's words, applying from 2 February 2025; also in search and on `instrument.html?id=ai-act` |
+| `/instruments/ai-act/`, Art. 27's row | "… then from 2 August 2028: application date" | no 2 August 2028 tranche |
+| the seven cards, both pages | "Last verified 27 August 2026" | "29 October 2026" |
+
+Unchanged: every rationale, outcome and condition (but `-03`'s key); every `depends_on`; the other 26 rules' cards;
+`applies.html` and its D-2 notice; the brief.
+
+### The TRIGGERS report, before and after (`--as-of 2026-10-29`)
+
+```
+before (main 3576ea2)                                after (414a374)
+publishable   16 of 33                               publishable   23 of 33: … the 16 … + ap-ai-act-01…07
+BACKLOG rule-v1-sources 17                           BACKLOG rule-v1-sources 10
+BACKLOG rule-scope-basis-missing 17                  BACKLOG rule-scope-basis-missing 10
+BACKLOG rule-condition-provisions-missing 17         BACKLOG rule-condition-provisions-missing 10
+BACKLOG rule-exemption-v1 6                          BACKLOG rule-exemption-v1 2
+BACKLOG rule-threshold-basis-missing 1               BACKLOG rule-threshold-basis-missing 0
+BACKLOG rule-dates-not-derived 7                     BACKLOG rule-dates-not-derived 2
+ERRORS 0                                             ERRORS 0
+```
+
+**Phase 3's entry condition is still not met**: 10 rules remain (Session 17: the Data Act, NIS2, DORA, the CRA).
+
+### The sources read (29 Oct 2026)
+
+| Source | Where | Read |
+|---|---|---|
+| Regulation (EU) 2024/1689 (AI Act) | Cellar, CELEX 32024R1689 (XHTML, OJ L 2024/1689, 12.7.2024) | Arts 2–6, 9, 25–27, 50–55, 111, 113; Annex III's eight headings |
+| Regulation (EU) 2026/1744 (AI Omnibus) | Cellar, CELEX 32026R1744 (XHTML, OJ L 2026/1744, 24.7.2026) | Art. 1 in full (points (1)–(43)), Art. 4, recital 65 |
+| Their metadata | SPARQL | the AI Act: one amending act (32026R1744), four corrigenda R(01)–R(04), none in English; a proposal to amend, 52025PC1023, not read; the Omnibus: one corrigendum, R(01), German only |
+| The consolidated AI Act | Cellar, 02024R1689-20260727 (English, no legal effect) | Arts 51(2), 111(4), 113(a): it agrees |
+| TEU, Art. 4 | Cellar, 12016M004 | Art. 4(2) |
+| "General-Purpose AI Code of Practice"; "AI Omnibus enters into force" | the URLs the records hold | the sections cited in Q5 |
+
+Nothing was written from memory or from the design drafts without re-reading.
+
+### Counts against `main` (`3576ea2`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified; provisions 102 | 0 / 0, 45; provisions 104 | `ai-act:art-2-1`, `ai-act:art-3` |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-29` | 0 errors, 11 warnings | 0 errors, 11 warnings | TRIGGERS above |
+| `freshness --as-of 2026-10-29` | 0 defects, 3 prompts | 0 defects, 3 prompts | — |
+| `tools/selftest.mjs` | 120 | 121, 0 failing | Y5 |
+| The 24 suites in `AGENT_SUITES` | 1250 | 1251, 0 failing | Y5 |
+| `.control-room/selftest.mjs` | 76 · 1 skipped | 76 · 1 skipped | — |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | 16 of 20 on `cd85da8` (two suites red) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs 3576ea2 414a374` | — | 11 commits, 0 without evidence | — |
+
+### Seen in a browser
+
+Chromium (Playwright), local server, light and dark, 1280px and 390px: `applies.html` with
+`?actor=actor:gpai-provider&activity=activity:gpai-provision`, `?actor=actor:public-authority&activity=activity:ai-deployment`,
+`?actor=actor:ai-provider&territory=territory:non-eu-serving-eu`, `?actor=actor:ai-provider&activity=activity:ai-development`,
+`?actor=actor:sme&activity=activity:ai-deployment`, and `/instruments/ai-act/`, `/instruments/gdpr/`,
+`/instruments/ai-omnibus/`: the seven rules fire and read as in the table above; no console error; no horizontal
+overflow; no "[object Object]"; the old Art. 6(3) sentence nowhere.
+
+### What was not verified, and why
+
+- The claims the seven rules cite were not re-read; each rule's note says so.
+- Recommendation 2003/361/EC (the SME definition the Omnibus's Art. 3 point (14a) refers to) was not read; it is
+  outside the dataset, and `ap-ai-act-05`'s note says so.
+- The 2 Dec 2026 event's two secondary sources (Hunton, NicFab) were not re-read; the event rests on the Omnibus,
+  re-read.
+- The proposal 52025PC1023, which SPARQL lists as proposing to amend the AI Act, was not read: a proposal is not law.
+- `js/applies.js` has no rendering test; its output was checked in the browser and by Y5 on the generated pages.
+- Screen readers, contrast and pixels: as README limitation 7 says.
+
+### Found, for the author — not changed
+
+1. **`ap-ai-act-01` and GPAI model providers (Q6e):** Arts 4 and 5 address providers and deployers of AI systems; a
+   provider that only places a GPAI model on the market is not by that alone addressed, while the conditions include
+   `actor:gpai-provider` and `activity:gpai-provision`.
+2. **Art. 111(3) (Q6f):** GPAI models placed on the market before 2 Aug 2025 have until 2 Aug 2027; no event holds it,
+   and `ap-ai-act-02`'s rationale ("owes Article 53 since 2 August 2025") does not say so.
+3. **`ap-ai-act-06`'s exemption** ends with the brief's argument ("The brief argues this carve-out is …") in an
+   exemption's place; the same words are on the edge `rel-ai-act-teu-4-2` and on `teu:art-4-2`.
+4. **Art. 50's heading** (Q6a) is still "Transparency obligations"; the Official Journal prints "Transparency
+   obligations for providers and deployers of certain AI systems". No rule cites it.
+5. **The new provisions' dates:** linked to the 2 Feb 2025 event (Chapter I) as approved, so they read "Applies from
+   2 February 2025", not the general fallback Session 15 found on the DSA's definitions.
+6. **"1 days ago"** (pre-existing, `js/evidence-view.js:132`): the evidence line prints "1 days ago", without a
+   singular, and counted a record checked earlier the same UTC day as one day old in the browser.
+7. **The D-2 notice on `applies.html`** still says the rules cite "by identifier only" and that the evidence audit
+   does not check them; 23 of 33 now carry locators (Session 15's finding 5, unchanged).
+8. **`docs/v2-design/applicability-examples.json`** still holds the 25 Oct drafts of the AI Act rules, with the `_gte`
+   key; a design record, left as it is.
+9. **`ap-gdpr-04`'s note** still says the AI Act's provisions "belong to Session 16"; Q4 left it as a dated statement.
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **16.0** | §8: scope row and eighteen answer rows (`8263a36` … `79456fb`) | read §8's last nineteen rows | — | met: every decision in the author's words before anything published changed |
+| **16.1** | data, pages, sitemap, bibliography (`cd85da8`); `RULES_V1`, X1–X3, Y1, Y5, `fields.mjs` (`414a374`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 23 of 33"; open the `applies.html` URLs above and `/instruments/ai-act/` | `tools/selftest.mjs` X1–X3, Y1, Y5; `agent/detector` 41 | met: the seven publishable; every check at 0 errors |
+| **16.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
+| **16.3** | this report; V2C-06's and V2C-10's rows in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); both rows name `cd85da8` |
+| **16.4** | `docs/prompts/v2-session-17.md` (`02dffad`); this register entry | read the prompt against §8's plan row and Sessions 13–16's rows; its measured state against `node tools/evidence-audit.mjs --as-of 2026-10-29` | — | met: the prompt records no decision |
+
+### How to check it by hand
+
+```
+git diff 3576ea2 414a374 -- data/applicability.json   # the seven AI Act rules, nothing else
+node tools/evidence-audit.mjs --as-of 2026-10-29       # TRIGGERS: publishable 23 of 33, ERRORS 0
+node --test tools/selftest.mjs                          # 121 pass
+python3 -m http.server 8000                             # /applies.html?actor=actor:public-authority&activity=activity:ai-deployment
+```
 
 ## Branch register — 29 October 2026 (v2 Session 15)
 

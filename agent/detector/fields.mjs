@@ -216,12 +216,15 @@ export const VALUE_FIELDS = {
     'sources.locator', 'sources.for', 'exemptions.effect', 'exemptions.basis.locator',
     /* v2 Session 14 (29 Oct 2026, §8 14.0 question 5): a boolean, as requires_verification */
     'exemptions.outside_dataset',
-    'conditions.thresholds.cumulative_training_flop_gte',
+    /* v2 Session 16 (29 Oct 2026, §8 16.0 questions 2 and 7): the key is _gt, Art. 51(2)'s
+       'greater than', and its basis is a locator, as the other threshold_basis locators are */
+    'conditions.thresholds.cumulative_training_flop_gt',
     'conditions.thresholds.monthly_active_eu_end_users_gte',
     'conditions.thresholds.monthly_active_eu_users_gte',
     'conditions.thresholds.yearly_active_eu_business_users_gte',
     /* v2 Session 15 (29 Oct 2026, §8 15.0 question 7): a threshold's basis is a locator, as
        sources.locator and exemptions.basis.locator are */
+    'threshold_basis.cumulative_training_flop_gt.locator',
     'threshold_basis.monthly_active_eu_users_gte.locator',
     'threshold_basis.monthly_active_eu_end_users_gte.locator',
     'threshold_basis.yearly_active_eu_business_users_gte.locator'],
