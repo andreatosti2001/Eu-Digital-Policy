@@ -1,8 +1,8 @@
 # HANDOVER
 
 **Last updated:** v2 Session 14, the second rules session of Phase 3 (29 October 2026): 14.1, the GDPR's
-five rules (`ap-gdpr-01`…`ap-gdpr-04`, `ap-cross-01`) in the v2 shape, then a checkpoint — **awaiting the
-author's approval** (§8). Item 14.4 (the draft of the Session 15 prompt) follows the approval.
+five rules (`ap-gdpr-01`…`ap-gdpr-04`, `ap-cross-01`) in the v2 shape, then a checkpoint, **approved by the
+author** (§8). Item 14.4 (the draft of the Session 15 prompt) follows.
 **Branch:** `claude/zen-hamilton-rtgv1j` (assigned by the environment), cut from `main` at `a229336`.
 
 ## Branch register — 29 October 2026 (v2 Session 14)
@@ -13,7 +13,7 @@ author's approval** (§8). Item 14.4 (the draft of the Session 15 prompt) follow
   `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
   already in the register. No other branch to report; `claude/v2-session-14-prompt` is in `main`.
 - `origin/main` was re-fetched before this handover was written: still `a229336`.
-- Disposition: pushed; checkpoint awaiting the author. No pull request opened.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. No pull request opened yet.
 
 ## v2 Session 14 — checkpoint report (14.1, the GDPR)
 
@@ -152,7 +152,7 @@ console error; no horizontal overflow; no "[object Object]"; the old Art. 30(5) 
 | **14.0** | §8: scope row and seven answer rows (`54dd192` … `f5483e4`) | read §8's last eight rows | — | met: every decision in the author's words before anything published changed |
 | **14.1** | data, GDPR page, sitemap (`14af4b7`); `RULES_V1`, X1–X3, Y2, Y3, `fields.mjs`, detector 43 (`7df6524`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 7 of 33"; open the five `applies.html` URLs above and `/instruments/gdpr/` | `tools/selftest.mjs` X1, X3, Y3; `agent/detector` 41, 43 | met: the five publishable; every check at 0 errors |
 | **14.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
-| **14.3** | this report | — | — | **awaiting the author's approval**; V2C-07's row in `docs/V2-CLOSURE.md` names its commit only after it |
+| **14.3** | this report; V2C-07's row in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); V2C-07's row names `14af4b7` |
 | **14.4** | — | — | — | not started: follows the approval |
 
 ### How to check it by hand
