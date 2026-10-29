@@ -580,11 +580,22 @@
       "obligations": [],
       "authority": ["member-states"],
       "dates": ["tl-pld-2026-12-09-application"],
-      "exemptions": [],
+      "exemptions": [
+        { "text": "Free and open-source software developed or supplied outside the course of a commercial activity is outside the Directive.", "effect": "excludes",
+          "basis": [{ "source_id": "src-eurlex-pld", "supports": "supports:direct", "locator": "Art. 2(2)" }] }
+      ],
       "depends_on": ["National transposition, and the law of the Member State in which a claim is brought."],
       "claims": ["clm-pld-covers-software", "clm-aild-abandoned"],
-      "sources": ["src-eurlex-pld"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-pld", "supports": "supports:direct", "locator": "Art. 2(1); Art. 4 points (1), (10) and (15); Art. 8(1) and (2)", "for": "scope" },
+        { "source_id": "src-eurlex-pld", "supports": "supports:direct", "locator": "Recital 13 (software, including AI systems; AI system providers treated as manufacturers)", "for": "rationale" }
+      ],
+      "condition_provisions": {
+        "actor": ["pld:art-4", "pld:art-8"],
+        "activity": ["pld:art-2", "pld:art-4"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 13, the pilot): brought to the v2 shape. Read that day in the Official Journal text of Directive (EU) 2024/2853 retrieved from the Publications Office's Cellar by CELEX (32024L2853): Arts 1, 2, 4 points (1), (10) and (15), 8, 22 to 24, and recital 13. The exemption is Art. 2(2). Conditions, outcome and rationale were not changed. A deployer of an AI system is liable under Art. 8 only as a manufacturer or as one who substantially modifies a product (Art. 8(2)), so activity:ai-deployment fires only through the actor dimension: reported to the author, not changed. clm-aild-abandoned was not re-read."
     },
 
     {
@@ -597,14 +608,22 @@
       "rationale": "Under the European Digital Identity framework (Regulation (EU) No 910/2014 as amended by Regulation (EU) 2024/1183), each Member State must provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts under Arts 5a(23) and 5c(6), which entered into force on 24 December 2024. The rule covers the wallet obligation only.",
       "obligations": ["eidas2:art-5a"],
       "authority": ["member-states"],
-      "dates": [],
+      "dates": ["tl-eidas2-2026-12-24-compliance-deadline"],
       "exemptions": [],
       "depends_on": ["Whether the organisation provides or relies on a European Digital Identity Wallet — the obligations on relying parties and trust service providers are not mapped here."],
       "claims": ["clm-eidas2-wallets"],
-      "sources": ["src-eurlex-eidas2", "src-eurlex-eudi-2024-2981"],
-      "last_verified": "2026-10-27",
+      "sources": [
+        { "source_id": "src-eurlex-eidas2", "supports": "supports:direct", "locator": "Art. 1 point (2)(a) (Art. 2(1) of Regulation (EU) No 910/2014, as replaced); Art. 1 point (3)(j) (Art. 3 point (42), as added)", "for": "scope" },
+        { "source_id": "src-eurlex-eidas2", "supports": "supports:direct", "locator": "Art. 1 point (5) (Art. 5a(1) of Regulation (EU) No 910/2014, as inserted)", "for": "obligation" },
+        { "source_id": "src-eurlex-eudi-2024-2977", "supports": "supports:direct", "locator": "Citation ('in particular Article 5a(23) thereof'); Art. 6 (entry into force)", "for": "date" },
+        { "source_id": "src-eurlex-eudi-2024-2981", "supports": "supports:direct", "locator": "Citation ('in particular Article 5c(6) thereof'); Art. 22 (entry into force)", "for": "date" }
+      ],
+      "condition_provisions": {
+        "activity": ["eidas2:art-2", "eidas2:art-3"]
+      },
+      "last_verified": "2026-10-29",
       "requires_verification": false,
-      "verification_note": "Rebuilt on 27 Sep 2026 from the Official Journal texts of Regulation (EU) 2024/1183 (Art. 5a(1) as inserted) and Implementing Regulation (EU) 2024/2981; it replaces a placeholder that stated its own emptiness. Its scope is deliberately narrow: only the Member States' wallet obligation is mapped. 27 Oct 2026: re-read for item 2.2 in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX (32024R1183, 32024R2977, 32024R2981), with the Publications Office's SPARQL metadata (each implementing regulation in force, entry into force 2024-12-24); unchanged. The rationale's sentence 'This dataset maps the framework as adjacent: the brief does not analyse it' was removed when eidas2 became a covered instrument, on the author's decision of 27 Oct 2026."
+      "verification_note": "Rebuilt on 27 Sep 2026 from the Official Journal texts of Regulation (EU) 2024/1183 (Art. 5a(1) as inserted) and Implementing Regulation (EU) 2024/2981; it replaces a placeholder that stated its own emptiness. Its scope is deliberately narrow: only the Member States' wallet obligation is mapped. 27 Oct 2026: re-read for item 2.2 in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX (32024R1183, 32024R2977, 32024R2981), with the Publications Office's SPARQL metadata (each implementing regulation in force, entry into force 2024-12-24); unchanged. The rationale's sentence 'This dataset maps the framework as adjacent: the brief does not analyse it' was removed when eidas2 became a covered instrument, on the author's decision of 27 Oct 2026. 29 Oct 2026 (v2 Session 13, the pilot): brought to the v2 shape. Read that day in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX: 32024R1183 Art. 1 points (2)(a) and (b), (3)(a), (b), (c) and (j), and (5) (Arts 2(1), 2(4), 3(42), 5a(1), 5a(23) and 5c(6) of Regulation (EU) No 910/2014, as replaced, added and inserted); 32014R0910, the headings of Arts 2 and 3; 32024R2977, its citation and Art. 6; 32024R2981, its citation and Art. 22. The wallet deadline (tl-eidas2-2026-12-24-compliance-deadline) is stored in dates because a compliance deadline is not derived. Conditions, outcome and rationale were not changed."
     },
 
     {

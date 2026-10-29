@@ -16,7 +16,7 @@
  *         each id a provision of the rule's instrument or of one an edge
  *         connects to it                                      ERROR where present;
  *                                                             BACKLOG rule-condition-provisions-missing
- *   T-04  each exemption an object with an effect and a structural basis
+ *   T-04  each exemption an object with a text and a structural basis
  *                                                             ERROR on objects; BACKLOG rule-exemption-v1
  *   T-05  each threshold key ends in its comparator (ERROR) and has a
  *         threshold_basis                                     BACKLOG rule-threshold-basis-missing
@@ -39,6 +39,11 @@
  * register-audit.mjs's frozen lists): a rule added after is held to every
  * check in full, because adding rules waits until the 33 pass (Phase 3).
  *
+ * Whether a reference, a provision or an exemption's effect RESOLVES, and is
+ * in its vocabulary, is tools/validate.mjs's to report (v2 Session 13,
+ * docs/ROADMAP-v2.md §8, 13.0 question 2); a rule that fails it is still not
+ * publishable here, so the derivation never depends on validate having run.
+ *
  * `publishable` is derived (§2): a rule with no T-01…T-05 finding of either
  * severity. It is never stored, and evidence-audit.mjs refuses a rule that
  * stores it.
@@ -54,12 +59,13 @@ import { structural } from './register-audit.mjs';
 
 /* The rules in data/applicability.json on 28 Oct 2026, when this check was
    written. A rule leaves the list in the session that brings it to the v2
-   standard; the list only shrinks. */
+   standard; the list only shrinks. v2 Session 13 (29 Oct 2026, the pilot):
+   ap-pld-01 and ap-eidas2-01 left it (docs/ROADMAP-v2.md §8, 13.0 question 5). */
 export const RULES_V1 = Object.freeze(['ap-gdpr-01', 'ap-gdpr-02', 'ap-gdpr-03', 'ap-gdpr-04', 'ap-dsa-01',
   'ap-dsa-02', 'ap-dsa-03', 'ap-dsa-04', 'ap-dsa-05', 'ap-dma-01', 'ap-dma-02', 'ap-dma-03', 'ap-dma-04',
   'ap-ai-act-01', 'ap-ai-act-02', 'ap-ai-act-03', 'ap-ai-act-04', 'ap-ai-act-05', 'ap-ai-act-06', 'ap-ai-act-07',
   'ap-data-act-01', 'ap-data-act-02', 'ap-data-act-03', 'ap-data-act-04', 'ap-nis2-01', 'ap-nis2-02', 'ap-nis2-03',
-  'ap-dora-01', 'ap-dora-02', 'ap-cra-01', 'ap-pld-01', 'ap-eidas2-01', 'ap-cross-01']);
+  'ap-dora-01', 'ap-dora-02', 'ap-cra-01', 'ap-cross-01']);
 
 export const BACKLOG_CODES = Object.freeze(['rule-v1-sources', 'rule-scope-basis-missing',
   'rule-condition-provisions-missing', 'rule-exemption-v1', 'rule-threshold-basis-missing', 'rule-dates-not-derived']);
@@ -118,9 +124,12 @@ export function triggerAudit(db, asOf) {
     const objs = refs.filter(isRef);
     if (refs.some((s) => !isRef(s))) owePub('rule-v1-sources', `T-01 ${w}: a bare source id`);
 
-    /* T-02 · a scope reference that can carry the rule */
-    const bad = objs.filter((s) => !ix.source.get(s.source_id) || !SUPPORTS.has(s.supports) || (s.for != null && !FOR.has(s.for)));
-    for (const s of bad) t05(`T-02 ${w}: reference ${JSON.stringify(s.source_id)} does not resolve, or its supports or for is not in the vocabulary`);
+    /* T-02 · a scope reference that can carry the rule. A reference that does
+       not resolve, or whose supports or for is outside the vocabulary, is
+       tools/validate.mjs's to report (v2 Session 13, 13.0 question 2: one home
+       per check); here it only keeps the rule from being publishable. */
+    if (objs.some((s) => !ix.source.get(s.source_id) || !SUPPORTS.has(s.supports) || (s.for != null && !FOR.has(s.for))))
+      notPublishable.add(r.id);
     const scope = objs.some((s) => s.for === 'scope' && s.supports === 'supports:direct' && structural(s.locator)
       && (ix.source.get(s.source_id) || {}).tier === 'tier:1');
     if (!scope) {
@@ -136,7 +145,7 @@ export function triggerAudit(db, asOf) {
       for (const e of rels) { if (e.from === r.instrument) linked.add(e.to); if (e.to === r.instrument) linked.add(e.from); }
       for (const d of dims) if (!arr(r.condition_provisions[d]).length) t05(`T-03 ${w}: condition "${d}" names no provision`);
       for (const [d, ids] of Object.entries(r.condition_provisions)) for (const p of arr(ids)) {
-        if (!ix.provision.get(p)) t05(`T-03 ${w}: ${d} → ${p} is not a provision`);
+        if (!ix.provision.get(p)) notPublishable.add(r.id); /* validate.mjs reports it */
         else if (!linked.has(ix.provisionOwner.get(p))) t05(`T-03 ${w}: ${d} → ${p} belongs to an instrument neither this rule's nor connected to it by an edge`);
       }
     }
@@ -145,9 +154,11 @@ export function triggerAudit(db, asOf) {
     const ex = arr(r.exemptions);
     if (ex.some((e) => typeof e === 'string')) owePub('rule-exemption-v1', `T-04 ${w}: an exemption is a bare string`);
     for (const e of ex.filter(isRef)) {
-      if (typeof e.text !== 'string' || e.text.trim().length < 10 || !EFFECTS.has(e.effect)
-        || !arr(e.basis).some((b) => isRef(b) && b.supports === 'supports:direct' && structural(b.locator) && ix.source.get(b.source_id)))
-        t05(`T-04 ${w}: an exemption object without text, an effect in the vocabulary, or a direct reference with a structural locator`);
+      /* the effect's vocabulary and the basis's resolution are validate.mjs's */
+      if (!EFFECTS.has(e.effect) || arr(e.basis).some((b) => !isRef(b) || !ix.source.get(b.source_id))) notPublishable.add(r.id);
+      if (typeof e.text !== 'string' || e.text.trim().length < 10
+        || !arr(e.basis).some((b) => isRef(b) && b.supports === 'supports:direct' && structural(b.locator)))
+        t05(`T-04 ${w}: an exemption object without text, or without a direct reference with a structural locator`);
     }
 
     /* T-05 · thresholds: the comparator now, the basis as backlog */

@@ -1,8 +1,180 @@
 # HANDOVER
 
-**Last updated:** v2 Session 12, the opening of Phase 3 (28 October 2026): 12.1 (V2C-01) and 12.2 (the
-check reads the applicability rules), then a checkpoint, **approved by the author** (§8).
-**Branch:** `claude/v2-session-12-phase-3-open`, cut from `main` at `bca554e`.
+**Last updated:** v2 Session 13, the first rules session of Phase 3 (29 October 2026): 13.1 (V2C-67),
+13.2 (the validator learns the v2 rule shape), 13.3 (the pilot on `ap-eidas2-01` and `ap-pld-01`), then a
+checkpoint, **approved by the author** (§8).
+**Branch:** `claude/v2-session-13-rules-pilot`, cut from `main` at `d073134`.
+
+## Branch register — 29 October 2026 (v2 Session 13)
+
+- Branch `claude/v2-session-13-rules-pilot`, cut from `main` at `d073134` (#38 and #39 merged). The prompt's
+  branch, `claude/v2-session-13-prompt`, was already in `main` as #39, so nothing was merged in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
+  already in the register. No other branch to report.
+- `origin/main` was re-fetched before this handover was written: still `d073134`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed, with a pull request to `main`
+  opened on the author's instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the
+  branch after the pull request is opened.
+
+## v2 Session 13 — checkpoint report (13.1 V2C-67, 13.2 the validator, 13.3 the pilot)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 13 | "Start session 13"; "13.1 → 13.2 → 13.3 (Recommended)" | `f7bcb79` |
+| Q1 · the words of Part IX | "A, retranslate (Recommended)" | `acde365` |
+| Q2 · what the validator checks, and where | "Split as proposed (Recommended)" | `7b6848e` |
+| Q3a · what `applies.html` prints from a v2 rule | "(a) + (b) (Recommended)" | `517838f` |
+| Q3b · pilot rule `ap-eidas2-01` | "Approve, with the date (Recommended)" | `6c03bdc` |
+| Q3c · pilot rule `ap-pld-01` | "Approve, with exemption (Recommended)" | `1176f87` |
+| Q4 · the method for Sessions 14–17 | "A: table + separate (Recommended)" | `7ba7f41` |
+| Q5 · `RULES_V1` and its assertions | "Change as proposed (Recommended)" | `eda3ba6` |
+| A correction to Q3a (the words for a non-direct reference) | "Part notes' words (Recommended)" | `248cb67` |
+| X1's audit date (a premise Q5 did not name) | "Audit as of 29 Oct (Recommended)" | `51073b3` |
+| The field class of the five v2 rule paths (a premise in `agent/detector/`) | "As proposed (Recommended)" | `22e93d6` |
+
+Two of these rows correct this session's own questions: Q2 said "five checks" and listed four (the four are
+what was approved), and Q3a misquoted the part notes' words. Both are recorded in their rows.
+
+### What was written
+
+- **13.1, `ff5b066`.** `index.html` `part-9.p8` and its it/fr/es overlays in the approved words;
+  `data-claim` + `clm-data-omnibus-council-mandate` `clm-data-omnibus-parliament-stage`; a dated line in each
+  locale's note (`i18n/locales.json`) and in `clm-consolidation-contested`'s note (`last_verified`
+  unchanged); test P1 + the four old wordings, planted, and `part-9.p8` must cite the mandate. Three
+  edition pages regenerated; a second `node tools/_footer.mjs` writes 0 files.
+- **13.2, `296b7e3`.** `tools/validate.mjs` §3a, `checkRuleV2()`: the four approved checks, each error naming
+  the field. `tools/trigger-audit.mjs` stops reporting resolution and vocabulary (T-02's "does not resolve",
+  T-03's "is not a provision", T-04's effect), still marking such a rule not publishable. **No rule changed
+  in that commit**: validate 0 errors, publishable 0 of 33.
+- **13.3, `a4ba2f3`, `92ffe80`.** `data/applicability.json`: the two rules in the approved shape;
+  `data/instruments.json`: `eidas2:art-2`, `eidas2:art-3`, `pld:art-2`, `pld:art-4`, `pld:art-8`;
+  `data/sources.json`: `accessed` 2026-10-29 and a dated note on the five sources read. `js/applies.js`
+  (sources with locators, grouped per source; exemption objects print their text) and
+  `js/instrument-view.js` (exemption objects). `tools/trigger-audit.mjs`: 31 rules remain in `RULES_V1`.
+  Two pages and `sitemap.xml` regenerated; a second run writes 0. `agent/detector/fields.mjs`: the five
+  new paths classified as decided.
+- **Tests.** `tools/selftest.mjs` 116 → 118: **Y1** (every new `validate.mjs` error planted, each in its own
+  copy, 23 plants; a correct v2 rule validates; the v1 message unchanged), **Y2** (the pilot: v2,
+  publishable, condition provisions of the rule's own instrument, nothing derived stored, the approved
+  values, the generated pages print the exemption and never "[object Object]"). **Assertions changed,
+  each with an approved premise**: X1 (audited as of 29 Oct; backlog 31/31/31/13/3/10; publishable exactly
+  the two; a literal frozen baseline of the 33, `RULES_2026_10_28`, so the shrink check keeps its teeth;
+  the two in no backlog; the 27 Sep warnings now the two pilot rules'), X2 (the unresolved reference: no
+  trigger-audit error, not publishable), X3 ("2 of 33").
+
+### Before and after, every text changed
+
+| Where | Before | After |
+|---|---|---|
+| `part-9.p8`, English | "…the Council has yet to agree a mandate on the Commission's own GDPR reforms, while…" | "…the Council agreed its negotiating mandate on the Data Omnibus, which carries the Commission's own GDPR reforms, only on 21 October 2026, after successive Presidency texts had failed to win one, and Parliament had no position as at 28 October 2026, while…" |
+| `part-9.p8`, it / fr / es | "il Consiglio non ha ancora concordato un mandato…" / "le Conseil n'a toujours pas arrêté de mandat…" / "el Consejo aún no ha acordado un mandato…" | the three texts of §8, question 1 |
+| `applies.html`, card `ap-eidas2-01` | Sources: two citations, no locator; no Key dates | Sources: three lines with " — at <locator>" (the 1183 line carries three locators); Key dates "24 December 2026 · Compliance deadline"; "Rule last verified 29 October 2026" |
+| `applies.html`, card `ap-pld-01` | Sources: one citation; no Exemptions; last verified 27 August 2026 | Sources: one line, " — at Art. 2(1); Art. 4 points (1), (10) and (15); Art. 8(1) and (2); Recital 13 (…)"; Exemptions: "Free and open-source software developed or supplied outside the course of a commercial activity is outside the Directive."; last verified 29 October 2026 |
+| `/instruments/pld/` | "No provisions recorded…"; rule card without exemptions | "3 provisions recorded": Arts 2, 4, 8 in the approved words; the card's "Exemptions:" line; verified 29 October |
+| `/instruments/eidas2/` | 2 provisions | 4: Arts 2 and 3 (of Regulation (EU) No 910/2014, as amended) before 5a and 5f |
+
+`applies.html` and its D-2 notice, the other 31 rules' cards, and every other paragraph of the brief:
+unchanged.
+
+### The TRIGGERS report, before and after
+
+```
+before (main d073134, --as-of 2026-10-29)          after (--as-of 2026-10-29)
+publishable   0 of 33                               publishable   2 of 33: ap-pld-01, ap-eidas2-01
+BACKLOG rule-v1-sources 33                          BACKLOG rule-v1-sources 31
+BACKLOG rule-scope-basis-missing 33                 BACKLOG rule-scope-basis-missing 31
+BACKLOG rule-condition-provisions-missing 33        BACKLOG rule-condition-provisions-missing 31
+BACKLOG rule-exemption-v1 13                        BACKLOG rule-exemption-v1 13
+BACKLOG rule-threshold-basis-missing 3              BACKLOG rule-threshold-basis-missing 3
+BACKLOG rule-dates-not-derived 10                   BACKLOG rule-dates-not-derived 10
+ERRORS 0                                            ERRORS 0
+```
+
+**Phase 3's entry condition is still not met**: 31 rules remain (Sessions 14–17, by the method of Q4).
+
+### The sources read (29 Oct 2026)
+
+| Source | Where | Read |
+|---|---|---|
+| ST 14756/26 | Council register, PDF | cover page: dated 22 Oct 2026, outcome of proceedings, mandate "as agreed by the Permanent Representatives Committee at its meeting on 21 October 2026" |
+| 2025/0360(COD) | Legislative Observatory | "Awaiting committee decision"; key events only 19/11/2025 and 19/01/2026 |
+| Directive (EU) 2024/2853 | Cellar, CELEX 32024L2853 (XHTML) | Arts 1, 2, 4 points (1), (10), (15), 8, 22–24; recital 13 |
+| Regulation (EU) 2024/1183 | Cellar, CELEX 32024R1183 | Art. 1 points (1), (2)(a)–(b), (3)(a)–(c), (j), (5) (5a(1), 5a(23), 5c(6), 5f(2)); Art. 2 |
+| Regulation (EU) No 910/2014 | Cellar, CELEX 32014R0910 | headings of Arts 2 and 3 |
+| Implementing Regulations (EU) 2024/2977, 2024/2981 | Cellar, CELEX 32024R2977, 32024R2981 | citations; Arts 6 and 22 |
+
+Nothing was written from memory: every value added to `data/` is one of these readings.
+
+### Counts against `main` (`d073134`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified; provisions 92 | 0 / 0, 45; provisions 97 | five provisions added |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-29` | 0 errors, 11 warnings | 0 errors, 11 warnings | TRIGGERS above |
+| `freshness --as-of 2026-10-29` | 0 defects, 3 prompts | 0 defects, 3 prompts | — |
+| `tools/selftest.mjs` | 116 | 118, 0 failing | Y1, Y2 |
+| The 24 suites in `AGENT_SUITES` | 1246 | 1248, 0 failing | the two above; `agent/detector` test 41 failed once on the five unclassified paths and passes after `92ffe80` |
+| `.control-room/selftest.mjs` | 77: 76 · 1 skipped | 76 · 1 skipped | — |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | with `BROWSER_QA_CHROME`; 16 of 20 on the run before `92ffe80` (the detector suite) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs origin/main HEAD` | — | 0 commits without evidence | — |
+
+### Seen in a browser
+
+Chromium (Playwright), local server: `applies.html?actor=actor:ai-provider&activity=activity:ai-deployment`
+(fires `ap-pld-01`), `applies.html?activity=activity:digital-identity` (fires `ap-eidas2-01`) and
+`/instruments/pld/`, in both themes, at 1280px and 390px: the cards read as in the table above; no console
+error; no horizontal overflow; no "[object Object]" anywhere.
+
+### What was not verified, and why
+
+- `clm-aild-abandoned` (cited by `ap-pld-01`) was not re-read; the rule's note says so.
+- `js/applies.js` cannot be imported by a Node test (it boots against `document` on import), so its
+  rendering is checked in the browser and by Y2's source assertions, not by a rendering test; the browser
+  suite has no check of a v2 rule card.
+- The translations of `part-9.p8` are AI-assisted and not reviewed by a native speaker (README limitation 5).
+- Screen readers, contrast and pixels: as README limitation 7 says.
+
+### Found, for the author — not changed
+
+1. **`ap-pld-01` and `activity:ai-deployment`.** Under Art. 8 a deployer of an AI system is liable only as
+   a manufacturer or a substantial modifier (8(2)); the rule fires for it only through the actor dimension.
+   Conditions unchanged (§8, Q3c).
+2. **An id that reads two ways.** `eidas2:art-2` and `eidas2:art-3` are Articles of Regulation (EU)
+   No 910/2014 as amended, filed under `eidas2` as 5a and 5f already were; Art. 2 of Regulation (EU)
+   2024/1183 itself is its entry-into-force clause. The `number` field disambiguates; a later session
+   filing an Article of 2024/1183 itself would collide.
+3. **The selection URL `applies.html?actor=…&activity=…`** restores a selection silently; useful for
+   checking a rule by hand.
+4. **Two of this session's own questions were wrong in a detail** (Q2's count, Q3a's quoted words), each
+   corrected in its §8 row. Measuring before asking still holds as the lesson.
+5. A worker restart happened twice; no decision was lost, because each was in §8 before the next write.
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **13.0** | §8: scope row and ten answer rows (`f7bcb79` … `22e93d6`) | read §8's last eleven rows | — | met: every decision in the author's words before anything published changed |
+| **13.1** | `index.html`, three overlays, `i18n/locales.json`, `data/claims.json`, three edition pages, P1 (`ff5b066`) | open `/#part-9` and `/it/`, `/fr/`, `/es/`: the new sentence; `grep -c "has yet to agree" index.html` → 0 | `tools/selftest.mjs` P1 | met |
+| **13.2** | `tools/validate.mjs`, `tools/trigger-audit.mjs`, Y1, X2 (`296b7e3`) | on a copy, give a rule `"sources": [{"source_id": "src-x", "supports": "supports:direct", "locator": "Art. 1"}]`: `RULE "…" sources[0]: DANGLING source ref "src-x"` | Y1 (23 plants), X2 | met: v1 validates as before; every v2 defect named by field |
+| **13.3** | data, `js/`, two pages, `RULES_V1`, X1, X3, Y2, `agent/detector/fields.mjs` (`a4ba2f3`, `92ffe80`) | `node tools/evidence-audit.mjs --as-of 2026-10-29`: "publishable 2 of 33"; open the two `applies.html` URLs above | X1, X3, Y2; `agent/detector` test 41 | met for the pilot; the method for 14–17 decided (Q4) |
+| **13.4** | all checks re-run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: 0 errors everywhere; readiness at its baseline |
+| **13.5** | this report; V2C-67's row in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); V2C-67's row names `ff5b066` |
+
+### How to check it by hand
+
+```
+git diff d073134 -- data/applicability.json      # the two rules, nothing else
+node tools/evidence-audit.mjs --as-of 2026-10-29 # TRIGGERS: publishable 2 of 33, ERRORS 0
+node --test tools/selftest.mjs                    # 118 pass
+python3 -m http.server 8000                       # /applies.html?activity=activity:digital-identity
+```
 
 ## Branch register — 28 October 2026 (v2 Session 12)
 

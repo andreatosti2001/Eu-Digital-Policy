@@ -186,12 +186,28 @@ function hitHTML(h) {
       '<span class="ap-role">' + esc(taxLabel(IX, e.event_type)) + '</span></span>';
   }).join('');
 
-  const srcs = (r.sources || []).map((s) => {
-    const src = IX.source.get(s);
-    return src ? '<li>' + F.citeHTML(src, IX, 'note') + '</li>' : '';
+  /* A bare id is a v1 reference and prints as it always has. A reference
+     object (v2) prints where in the source it points; several references to
+     one source are one line, their locators in stored order, and one that is
+     not direct says so, as the brief's part notes do (docs/ROADMAP-v2.md §8,
+     v2 Session 13, question 3a). */
+  const bySource = new Map();
+  for (const s of r.sources || []) {
+    const id = typeof s === 'string' ? s : s && s.source_id;
+    if (!bySource.has(id)) bySource.set(id, []);
+    if (s && typeof s === 'object') bySource.get(id).push(s);
+  }
+  const srcs = [...bySource].map(([id, refs]) => {
+    const src = IX.source.get(id);
+    if (!src) return '';
+    const at = refs.map((s) => [s.locator,
+      s.supports !== 'supports:direct' && F.SUPPORTS_WORD[s.supports] ? '(' + F.SUPPORTS_WORD[s.supports] + ')' : '']
+      .filter(Boolean).join(' ')).filter(Boolean).join('; ');
+    return '<li>' + F.citeHTML(src, IX, 'note') + (at ? ' — at ' + esc(at) : '') + '</li>';
   }).join('');
 
-  const li = (arr) => arr.map((x) => '<li>' + esc(x) + '</li>').join('');
+  /* an exemption object (v2) prints its text, as a string exemption does */
+  const li = (arr) => arr.map((x) => '<li>' + esc(typeof x === 'string' ? x : (x && x.text) || '') + '</li>').join('');
 
   return '<div class="ap-hit">' +
     '<div class="ap-hit-head">' +

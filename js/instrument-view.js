@@ -375,7 +375,8 @@ function appliesSection(inst) {
       '<div class="ip-rule-cond">' + (cond || '<span class="none">no condition recorded</span>') + '</div>' +
       '<p>' + esc(r.rationale) + '</p>' +
       ((r.exemptions || []).length
-        ? '<p class="ip-rule-ex"><i>Exemptions:</i> ' + r.exemptions.map(esc).join(' · ') + '</p>' : '') +
+        /* an exemption object (v2) prints its text, as a string does (§8, v2 Session 13, 3a) */
+        ? '<p class="ip-rule-ex"><i>Exemptions:</i> ' + r.exemptions.map((x) => esc(typeof x === 'string' ? x : (x && x.text) || '')).join(' · ') + '</p>' : '') +
       verified(r.last_verified) +
       '</article>';
   }).join('');
