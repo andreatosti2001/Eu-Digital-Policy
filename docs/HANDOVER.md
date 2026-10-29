@@ -14,6 +14,12 @@ author** (§8). Item 14.4 (the draft of the Session 15 prompt) follows.
   already in the register. No other branch to report; `claude/v2-session-14-prompt` is in `main`.
 - `origin/main` was re-fetched before this handover was written: still `a229336`.
 - Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. No pull request opened yet.
+- After the approval, item 14.4: the prompt of v2 Session 15 drafted, `docs/prompts/v2-session-15.md` (the
+  nine DSA and DMA rules to the v2 shape by the method of 13.0 question 4, F-6 / V2C-08 and F-7 / V2C-09
+  among the questions beyond the shape, the two `ap-cross-01` findings Session 14 handed on, the assertion
+  question asked after measuring; then a checkpoint, then item 15.4, the draft of the Session 16 prompt). Its
+  starting state was measured on this session's approved tree (`8c1b1a3`). The prompt records no decision:
+  its first write is §8's row "The scope of v2 Session 15", in the author's words.
 
 ## v2 Session 14 — checkpoint report (14.1, the GDPR)
 
@@ -153,7 +159,7 @@ console error; no horizontal overflow; no "[object Object]"; the old Art. 30(5) 
 | **14.1** | data, GDPR page, sitemap (`14af4b7`); `RULES_V1`, X1–X3, Y2, Y3, `fields.mjs`, detector 43 (`7df6524`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 7 of 33"; open the five `applies.html` URLs above and `/instruments/gdpr/` | `tools/selftest.mjs` X1, X3, Y3; `agent/detector` 41, 43 | met: the five publishable; every check at 0 errors |
 | **14.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
 | **14.3** | this report; V2C-07's row in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); V2C-07's row names `14af4b7` |
-| **14.4** | — | — | — | not started: follows the approval |
+| **14.4** | `docs/prompts/v2-session-15.md`; this register entry | read the prompt against §8's plan row and Session 14's rows; its measured state against `node tools/evidence-audit.mjs --as-of 2026-10-29` | — | met: the prompt records no decision |
 
 ### How to check it by hand
 
