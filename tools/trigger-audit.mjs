@@ -60,12 +60,13 @@ import { structural } from './register-audit.mjs';
 /* The rules in data/applicability.json on 28 Oct 2026, when this check was
    written. A rule leaves the list in the session that brings it to the v2
    standard; the list only shrinks. v2 Session 13 (29 Oct 2026, the pilot):
-   ap-pld-01 and ap-eidas2-01 left it (docs/ROADMAP-v2.md §8, 13.0 question 5). */
-export const RULES_V1 = Object.freeze(['ap-gdpr-01', 'ap-gdpr-02', 'ap-gdpr-03', 'ap-gdpr-04', 'ap-dsa-01',
+   ap-pld-01 and ap-eidas2-01 left it (docs/ROADMAP-v2.md §8, 13.0 question 5). v2 Session 14
+   (29 Oct 2026, the GDPR): ap-gdpr-01…04 and ap-cross-01 left it (§8, 14.0 question 5). */
+export const RULES_V1 = Object.freeze(['ap-dsa-01',
   'ap-dsa-02', 'ap-dsa-03', 'ap-dsa-04', 'ap-dsa-05', 'ap-dma-01', 'ap-dma-02', 'ap-dma-03', 'ap-dma-04',
   'ap-ai-act-01', 'ap-ai-act-02', 'ap-ai-act-03', 'ap-ai-act-04', 'ap-ai-act-05', 'ap-ai-act-06', 'ap-ai-act-07',
   'ap-data-act-01', 'ap-data-act-02', 'ap-data-act-03', 'ap-data-act-04', 'ap-nis2-01', 'ap-nis2-02', 'ap-nis2-03',
-  'ap-dora-01', 'ap-dora-02', 'ap-cra-01', 'ap-cross-01']);
+  'ap-dora-01', 'ap-dora-02', 'ap-cra-01']);
 
 export const BACKLOG_CODES = Object.freeze(['rule-v1-sources', 'rule-scope-basis-missing',
   'rule-condition-provisions-missing', 'rule-exemption-v1', 'rule-threshold-basis-missing', 'rule-dates-not-derived']);
