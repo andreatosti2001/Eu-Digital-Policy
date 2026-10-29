@@ -3,7 +3,7 @@
 **Last updated:** v2 Session 17, the fifth and last rules session of Phase 3 (29 October 2026): 17.1, the ten rules of
 the Data Act, NIS2, DORA and the CRA in the v2 shape; 17.2, the `rule-*` BACKLOG flipped to ERROR — **33 of 33 rules
 publishable, Phase 3's entry condition met**; 17.3, the two maintenance checks (T-12 and freshness per rule); then a
-checkpoint, **awaiting the author's approval**.
+checkpoint, **approved by the author** (§8).
 **Branch:** `claude/v2-session-17-last-rules`, cut from `main` at `ca1e723`.
 
 ## Branch register — 29 October 2026 (v2 Session 17)
@@ -16,7 +16,7 @@ checkpoint, **awaiting the author's approval**.
   is in `main` (#46). No other branch to report.
 - `origin/main` was re-fetched after the data commit and before this handover was written: still `ca1e723`. No pull
   request was opened or merged during the session.
-- Disposition: **pending** — the checkpoint awaits the author's approval; then the author is asked whether to open a
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. The author is asked whether to open a
   pull request to `main`.
 
 ## v2 Session 17 — checkpoint report (17.1 the ten rules, 17.2 the flip, 17.3 the two maintenance checks)
@@ -213,7 +213,7 @@ and print the approved texts; no console error; no horizontal overflow; no "[obj
 | **17.1** | data, pages, sitemap (`bfb4b4e`); Y6 (`42feb8f`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 33 of 33"; open the `applies.html` URLs above and the four instrument pages | `tools/selftest.mjs` Y6, X1 | met: the ten publishable; every check at 0 errors |
 | **17.2** | `tools/trigger-audit.mjs`, `tools/evidence-audit.mjs`, ROADMAP §4 (`3f88d73`); X1–X3 (`42feb8f`) | plant a bare source id on any rule in a copy: `evidence-audit` exits 1 with T-01 and T-02 | X2 ("every rule held in full"), X3 | met: no backlog left; the entry condition met |
 | **17.3** | T-12 and `RULE_STALE` (`3f88d73`); X2's T-12 plants, F10 (`42feb8f`) | `node tools/evidence-audit.mjs --as-of 2027-03-26` → one `LAW_CHANGED_SINCE_VERIFIED`; `node tools/freshness.mjs --as-of 2027-01-28` → 33 `RULE_STALE` | X2, F10 | met: both derived, no network, no new field |
-| **17.4** | this report | — | — | **awaiting the author's approval**; then V2C-02 and V2C-10 in `docs/V2-CLOSURE.md` name `bfb4b4e`/`3f88d73` |
+| **17.4** | this report | — | — | **approved** by the author (§8); V2C-02 and V2C-10 in `docs/V2-CLOSURE.md` name `bfb4b4e` and `3f88d73` |
 
 ### How to check it by hand
 
