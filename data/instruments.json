@@ -61,6 +61,19 @@
       },
       "provisions": [
         {
+          "id": "gdpr:art-2",
+          "number": "2",
+          "heading": "Material scope",
+          "summary": "Applies to the processing of personal data wholly or partly by automated means, and to the processing other than by automated means of personal data which form part of a filing system or are intended to (2(1)). It does not apply to processing in the course of an activity outside the scope of Union law; by the Member States when carrying out activities within Chapter 2 of Title V of the TEU; by a natural person in the course of a purely personal or household activity; or by competent authorities for the prevention, investigation, detection or prosecution of criminal offences or the execution of criminal penalties, including safeguarding against threats to public security (2(2)).",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-gdpr"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32016R0679); number and heading as printed, summary from the Article's own paragraphs. Paragraphs 3 (the Union institutions, by reference to Regulation (EC) No 45/2001) and 4 (Directive 2000/31/EC) are not summarised."
+        },
+        {
           "id": "gdpr:art-3",
           "number": "3",
           "heading": "Territorial scope",
@@ -75,6 +88,19 @@
           ],
           "requires_verification": false,
           "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32016R0679): heading and number match; the summary was checked against paragraphs 1 and 2 (establishment in the Union; offering goods or services to, or monitoring the behaviour of, data subjects in the Union). Paragraph 3 (Member State law applying by virtue of public international law) is not in the summary. The earlier note said the article was recorded from general knowledge."
+        },
+        {
+          "id": "gdpr:art-4",
+          "number": "4",
+          "heading": "Definitions",
+          "summary": "'Personal data' means any information relating to an identified or identifiable natural person ('data subject') (point (1)). 'Processing' means any operation or set of operations performed on personal data or on sets of personal data, whether or not by automated means (point (2)). 'Profiling' means any form of automated processing of personal data consisting of the use of personal data to evaluate certain personal aspects relating to a natural person (point (4)). A 'controller' is the natural or legal person, public authority, agency or other body which, alone or jointly with others, determines the purposes and means of the processing of personal data (point (7)); a 'processor' processes personal data on behalf of the controller (point (8)).",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-gdpr"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32016R0679); number and heading as printed, summary from the Article's own paragraphs. The summary quotes points (1), (2), (4), (7) and (8); the Article's other definitions are not summarised here."
         },
         {
           "id": "gdpr:art-5",
@@ -189,7 +215,7 @@
           "id": "gdpr:art-37",
           "number": "37",
           "heading": "Designation of the data protection officer",
-          "summary": "Mandatory where processing is carried out by a public authority or body, and in the other cases the Article specifies.",
+          "summary": "Mandatory where processing is carried out by a public authority or body, except for courts acting in their judicial capacity, and in the other cases the Article specifies.",
           "obligation_on": [
             "actor:controller",
             "actor:processor",
@@ -200,7 +226,7 @@
             "src-eurlex-gdpr"
           ],
           "requires_verification": false,
-          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32016R0679): heading and number match; the summary was checked against paragraph 1, points (a) to (c): a public authority or body (courts acting in their judicial capacity excepted), regular and systematic monitoring on a large scale, and large-scale processing of special categories. The earlier note said the article was recorded from general knowledge."
+          "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32016R0679): heading and number match; the summary was checked against paragraph 1, points (a) to (c): a public authority or body (courts acting in their judicial capacity excepted), regular and systematic monitoring on a large scale, and large-scale processing of special categories. The earlier note said the article was recorded from general knowledge. 29 Oct 2026 (v2 Session 14, F-5): the summary now states the exception of paragraph 1(a) for courts acting in their judicial capacity, on the author's decision; paragraph 1 re-read that day in the Official Journal text (CELEX 32016R0679)."
         },
         {
           "id": "gdpr:art-51",

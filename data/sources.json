@@ -30,9 +30,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679",
       "url_status": "url:live",
       "published": "2016-05-04",
-      "accessed": "2026-10-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Title and number confirmed by fetch. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Arts 22(1) and 99(2)."
+      "note": "Title and number confirmed by fetch. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Arts 22(1) and 99(2). Re-read on 29 Oct 2026 for v2 Session 14 (the GDPR's applicability rules), from the Publications Office's Cellar by CELEX (XHTML): Arts 1 to 6, 22, 25, 30, 33, 35 and 37, recitals 18 and 19; with the corrigendum of 23 May 2018 (32016R0679R(02)), which changes Art. 37(1)(c), and the Publications Office's SPARQL metadata, which lists no amending act, only three corrigenda."
     },
     {
       "id": "src-eurlex-dsa",
@@ -2527,9 +2527,9 @@
       "url": "https://www.edpb.europa.eu/documents/guideline/guidelines-32025-on-the-interplay-between-the-dsa-and-the-gdpr_en",
       "url_status": "url:live",
       "published": "2026-09-17",
-      "accessed": "2026-09-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Located and read on 27 Sep 2026 on the EDPB's own site. The title recorded here is the official one. Version 1 was put to public consultation from 12 September to 31 October 2025 (its page is now marked 'Obsolete version'); the final version, Guidelines 3/2025 v2, is dated 17 September 2026 and published with a report on the consultation. The URL now points to the final version; the consultation page was the one recorded before."
+      "note": "Located and read on 27 Sep 2026 on the EDPB's own site. The title recorded here is the official one. Version 1 was put to public consultation from 12 September to 31 October 2025 (its page is now marked 'Obsolete version'); the final version, Guidelines 3/2025 v2, is dated 17 September 2026 and published with a report on the consultation. The URL now points to the final version; the consultation page was the one recorded before. Re-read on 29 Oct 2026 for v2 Session 14 (ap-cross-01): version 2.0 (PDF, linked from this page), paragraphs 7 to 11 and 79 to 95."
     },
     {
       "id": "src-ec-google-dma-opening-2024",
