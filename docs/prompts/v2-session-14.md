@@ -1,6 +1,7 @@
 <!--
 Provenance: the prompt of v2 Session 14, drafted at the end of v2 Session 13 (29 Oct 2026) on the author's
-request ("draft session 14's prompt"), from docs/ROADMAP-v2.md §8 as it stands after "The checkpoint of v2
+request ("draft session 14's prompt"; then "include the drafting of session 15 at the end of the
+session", which became item 14.4), from docs/ROADMAP-v2.md §8 as it stands after "The checkpoint of v2
 Session 13" (the plan row for Sessions 13–17 and the method of 13.0 question 4), from docs/V2-CLOSURE.md
 (V2C-07) and from the v2 Session 13 report in docs/HANDOVER.md. The decisions live in those rows and nowhere
 else; this file is the instruction text that cites them. Written in Italian, as the author's session prompts
@@ -53,7 +54,7 @@ attendi conferma. Non reinterpretare in silenzio.
 
 ## Obiettivo della sessione
 
-Una voce, poi checkpoint:
+Una voce, poi checkpoint, poi la bozza del prompt della sessione 15 (14.4):
 - **14.1 il GDPR**: le cinque regole sul GDPR (`ap-gdpr-01`…`ap-gdpr-04` e `ap-cross-01`, che ha
   `instrument: gdpr`) portate alla forma v2 contro i loro Articoli, fino a essere pubblicabili, **con il
   metodo deciso nella sessione 13** (§8, domanda 4): una tabella per lo strumento, approvata in una domanda,
@@ -155,11 +156,34 @@ Registra ogni risposta in §8 con le parole dell'autore, e committa subito. Ciò
 - Il rapporto in `docs/HANDOVER.md`, sul modello di quello della sessione 13: decisioni e commit;
   prima/dopo di ogni testo cambiato; le fonti lette, con data e locator; il rapporto TRIGGERS prima e dopo;
   i conteggi con il motivo di ogni movimento; ciò che non è stato verificato e perché; i rilievi trovati; la
-  checklist (14.0–14.3) e come controllare a mano.
+  checklist (14.0–14.4) e come controllare a mano.
 - Riscarica `origin/main` e confrontalo subito prima dell'ultima scrittura di `docs/HANDOVER.md`.
 - Attendi l'approvazione esplicita dell'autore; si registra in §8, e la riga di V2C-07 in
-  `docs/V2-CLOSURE.md` indica il commit solo dopo l'approvazione. Poi chiedi se aprire una pull request verso
-  `main` e registra la sorte del branch nel registro. **Non pushare sul branch dopo aver aperto la PR.**
+  `docs/V2-CLOSURE.md` indica il commit solo dopo l'approvazione. Poi la bozza del prompt della sessione 15
+  (14.4), **prima** di chiedere della pull request.
+
+## 14.4 · La bozza del prompt della sessione 15 — dopo l'approvazione del checkpoint
+
+Su richiesta dell'autore, la sessione 14 si chiude scrivendo il prompt della sessione successiva, come la
+sessione 13 ha scritto questo.
+- `docs/prompts/v2-session-15.md`, in italiano, sul modello di questo file; il commento di provenienza
+  dice da quali righe di §8 è tratto.
+- Il contenuto viene da §8, non da questo prompt: la riga del piano (sessioni 13–17: "**15**: the DSA (F-6, F-7)
+  and the DMA (9).") e il metodo della domanda 4 della sessione 13, più ciò che la sessione 14 avrà deciso (in
+  particolare la domanda 3, sugli attori definiti da un altro strumento: se le definizioni del DSA restano
+  da aggiungere, la sessione 15 le eredita).
+- Lo stato di partenza **misurato sull'albero approvato della sessione 14**, non copiato dal piano: le regole
+  del DSA e del DMA (`ap-dsa-*`, `ap-dma-*`) con i loro backlog, le disposizioni registrate e quelle che
+  mancano, F-6 (V2C-08) e F-7 (V2C-09), `rule-threshold-basis-missing` per `ap-dsa-02` e `ap-dma-02`,
+  `rule-dates-not-derived` per `ap-dsa-02`, `ap-dsa-05`, `ap-dma-03`; i conteggi della baseline.
+- Le lezioni della sessione 14 aggiunte a quelle delle sessioni 8–13.
+- **Il prompt non registra alcuna decisione**: la sua prima scrittura sarà la riga «The scope of v2
+  Session 15» in §8, con le parole dell'autore.
+- Commit sul branch della sessione, con una voce nel registro di `docs/HANDOVER.md`; poi chiedi se aprire
+  una pull request verso `main`, che porta insieme la sessione 14 e il prompt della 15, e registra la sorte
+  del branch. **Non pushare sul branch dopo aver aperto la PR.** Se la PR è già aperta quando l'autore chiede
+  la bozza, il prompt va su un branch nuovo tagliato dal branch della sessione
+  (`claude/v2-session-15-prompt`), come nella sessione 12.
 
 ## Cosa NON fare in questa sessione
 
@@ -172,7 +196,8 @@ Registra ogni risposta in §8 con le parole dell'autore, e committa subito. Ciò
 - Non implementare i due controlli di manutenzione (sessione 17) né i controlli della mappa M-08…M-16.
 - Non toccare `applies.html` né la sua nota; non ritirare la pagina.
 - Non correggere paragrafi del brief; un difetto trovato si porta all'autore.
-- Non avviare la Fase 4, il capitolo finanza, il post-v2, né la sessione 15.
+- Non avviare la Fase 4, il capitolo finanza, il post-v2, né la sessione 15: scriverne il prompt (14.4) non
+  è avviarla, e nessuna regola del DSA o del DMA si tocca.
 - Non dichiarare la v2 conclusa; non dichiarare «sicurezza operativa dimostrata».
 - Non abbassare gate, validator, test, CSP, CSRF, Origin, OIDC o limiti di pubblicazione.
 - Non toccare la licenza né il testo di non affiliazione o di assenza di consulenza legale; non scrivere
@@ -202,9 +227,10 @@ Registra ogni risposta in §8 con le parole dell'autore, e committa subito. Ciò
 ## Criterio di uscita e consegna
 
 La sessione è completa in uno di due casi: 14.1 è scritto come l'autore l'ha deciso, ogni controllo
-rilanciato è a 0 errori, il checkpoint è approvato; oppure l'autore decide di fermarsi.
+rilanciato è a 0 errori, il checkpoint è approvato e il prompt della sessione 15 è scritto (14.4); oppure
+l'autore decide di fermarsi.
 
-Prima di chiudere, produci la checklist di verifica. Per ciascun punto (14.0–14.3) indica:
+Prima di chiudere, produci la checklist di verifica. Per ciascun punto (14.0–14.4) indica:
 - cosa è stato scritto (file, righe di §8, commit);
 - come verificarlo manualmente (passi);
 - se esiste un test automatico, e dove (suite e nome del test);
