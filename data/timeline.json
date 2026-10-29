@@ -362,6 +362,8 @@
    "provisions": [
     "dsa:art-34",
     "dsa:art-35",
+    "dsa:art-38",
+    "dsa:art-39",
     "dsa:art-40"
    ],
    "affected_actors": [
@@ -385,7 +387,7 @@
     "src-op-dsa-vlop-2023-08-25"
    ],
    "requires_verification": false,
-   "verification_note": "Art. 92: the Regulation applies to designated VLOPs and VLOSEs 'from four months after the notification' of designation; the first designations were announced on 25 April 2023 (IP/23/2413, re-read 27 Sep 2026: 'within four months'), hence 25 August 2023. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022R2065). The event ID keeps '08-01' because IDs are never renamed. Earlier: Corrected on 2026-09-26 (audit T-29): the first VLOPs and VLOSEs, designated on 25 April 2023 with four months to comply (IP/23/2413), became bound on 25 August 2023 (data.europa.eu news item of that date). Day precision replaces the month. The event ID keeps '08-01' because IDs are never renamed.",
+   "verification_note": "Art. 92: the Regulation applies to designated VLOPs and VLOSEs 'from four months after the notification' of designation; the first designations were announced on 25 April 2023 (IP/23/2413, re-read 27 Sep 2026: 'within four months'), hence 25 August 2023. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022R2065). The event ID keeps '08-01' because IDs are never renamed. Earlier: Corrected on 2026-09-26 (audit T-29): the first VLOPs and VLOSEs, designated on 25 April 2023 with four months to comply (IP/23/2413), became bound on 25 August 2023 (data.europa.eu news item of that date). Day precision replaces the month. The event ID keeps '08-01' because IDs are never renamed. 29 Oct 2026 (v2 Session 15): dsa:art-38 and dsa:art-39 added to provisions on the author's decision of that day: Art. 92 applied the Regulation to the very large online platforms and search engines designated under Art. 33(4) from four months after the notification, and Art. 33(6) applies the obligations of Section 5 (Arts 33 to 43) from the same point; read that day in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32022R2065).",
    "last_verified": "2026-09-27"
   },
   {

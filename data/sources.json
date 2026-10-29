@@ -44,9 +44,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022R2065",
       "url_status": "url:live",
       "published": "2022-10-27",
-      "accessed": "2026-10-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Title and number confirmed by fetch. Art. 2 (scope) read on 25 and 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX number: Art. 2(4) lists the acts the DSA is without prejudice to."
+      "note": "Title and number confirmed by fetch. Art. 2 (scope) read on 25 and 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX number: Art. 2(4) lists the acts the DSA is without prejudice to. Re-read on 29 Oct 2026 for v2 Session 15 (the DSA's applicability rules), from the Publications Office's Cellar by CELEX (XHTML): Arts 2, 3, 16, 19, 24 to 30, 33 to 35, 38 to 40, 92 and 93; with the Publications Office's SPARQL metadata, which lists no amending act and eleven corrigenda, none with an English expression."
     },
     {
       "id": "src-dsa-text-unofficial-arts-14-19",
@@ -101,9 +101,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022R1925",
       "url_status": "url:live",
       "published": "2022-10-12",
-      "accessed": "2026-10-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Title, number and entry into force of 1 November 2022 confirmed by fetch. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Arts 1(6) and 5(2)."
+      "note": "Title, number and entry into force of 1 November 2022 confirmed by fetch. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Arts 1(6) and 5(2). Re-read on 29 Oct 2026 for v2 Session 15 (the DMA's applicability rules), from the Publications Office's Cellar by CELEX (XHTML): Arts 1 to 3, 5 to 7, 13, 21 and 54 and the Annex; with the SPARQL metadata, which lists no amending act and three corrigenda, of which only 32022R1925R(02) has an English expression, and it changes Art. 13(8) alone."
     },
     {
       "id": "src-eurlex-ai-act",
@@ -413,10 +413,10 @@
       "title": "Commission Delegated Regulation (EU) 2025/2050 of 1 July 2025 on data access under the Digital Services Act",
       "url": "https://eur-lex.europa.eu/eli/reg_del/2025/2050/oj/eng",
       "url_status": "url:live",
-      "published": "2025-07-01",
-      "accessed": "2026-08-27",
+      "published": "2025-10-09",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Directly supports entry into force on 29 October 2025. Silent on the data access portal."
+      "note": "Directly supports entry into force on 29 October 2025. Re-read on 29 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32025R2050), OJ L of 9.10.2025: Art. 1 and Art. 3 establish the DSA data access portal, which the earlier note called absent; Art. 16, entry into force on the twentieth day following publication; 'published' corrected from 1 July 2025, the date of adoption."
     },
     {
       "id": "src-eurlex-data-omnibus-837",
@@ -1310,9 +1310,9 @@
       "url": "https://digital-markets-act.ec.europa.eu/commission-finds-apple-and-meta-breach-digital-markets-act-2025-04-23_en",
       "url_status": "url:live",
       "published": "2025-04-23",
-      "accessed": "2026-10-28",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "EUR 500 million against Apple for breaching its anti-steering obligation; EUR 200 million against Meta for not giving users the choice of a service that uses less of their personal data. The release names no article of the DMA. Read in full on 27 Sep 2026 as press release IP/25/1085 through the Commission's press corner: investigations opened 25 March 2024; preliminary views 24 June 2024 (Apple) and 1 July 2024 (Meta); compliance required within 60 days; the Meta finding covers March–November 2024; the same day the Commission closed its investigation into Apple's user-choice obligations and found Facebook Marketplace should no longer be designated. Re-read on 27 Oct 2026 for B.3 (v2 Session 5): IP/25/1085, read that day through the press corner's documents API; its section on Meta's 'consent or pay' model is unchanged. The text retrieved that day names no article of the DMA. Re-read on 28 Oct 2026: the DMA portal page, a summary linking to IP/25/1085, and IP/25/1085 through the press corner's documents API; unchanged, and neither names an article."
+      "note": "EUR 500 million against Apple for breaching its anti-steering obligation; EUR 200 million against Meta for not giving users the choice of a service that uses less of their personal data. The release names no article of the DMA. Read in full on 27 Sep 2026 as press release IP/25/1085 through the Commission's press corner: investigations opened 25 March 2024; preliminary views 24 June 2024 (Apple) and 1 July 2024 (Meta); compliance required within 60 days; the Meta finding covers March–November 2024; the same day the Commission closed its investigation into Apple's user-choice obligations and found Facebook Marketplace should no longer be designated. Re-read on 27 Oct 2026 for B.3 (v2 Session 5): IP/25/1085, read that day through the press corner's documents API; its section on Meta's 'consent or pay' model is unchanged. The text retrieved that day names no article of the DMA. Re-read on 28 Oct 2026: the DMA portal page, a summary linking to IP/25/1085, and IP/25/1085 through the press corner's documents API; unchanged, and neither names an article. Re-read on 29 Oct 2026 (v2 Session 15): IP/25/1085 through the press corner's documents API; unchanged, it names no article, and it calls March 2024 the time 'when the DMA obligations became legally binding'."
     },
     {
       "id": "src-ec-meta-ad-choice-2025",
@@ -1705,9 +1705,9 @@
       "url": "https://digital-markets-act.ec.europa.eu/system/files/2026-04/DMA%20Review%20Report_COM_2026_178_1_EN.pdf",
       "url_status": "url:live",
       "published": "2026-04-28",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Supports the Article 53 basis and the enforce-rather-than-expand conclusion. Does not state the 3 May 2026 deadline or the 450-contribution figure."
+      "note": "Supports the Article 53 basis and the enforce-rather-than-expand conclusion. Does not state the 3 May 2026 deadline or the 450-contribution figure. Re-read on 29 Oct 2026 (v2 Session 15), the 14-page PDF at this URL: Section 4, 'Costs and benefits', page 8, 'the DMA does not impose compliance costs on non-gatekeepers, in particular on SMEs and start-ups'; Section 5 (Conclusions), page 14, 'The DMA applies only to designated gatekeepers and does not impose direct obligations on SMEs'."
     },
     {
       "id": "src-ec-dma-review-qa",

@@ -377,6 +377,19 @@
       },
       "provisions": [
         {
+          "id": "dsa:art-3",
+          "number": "3",
+          "heading": "Definitions",
+          "summary": "An 'online platform' is a hosting service that, at the request of a recipient of the service, stores and disseminates information to the public, unless that activity is a minor and purely ancillary feature of another service or a minor functionality of the principal service which, for objective and technical reasons, cannot be used without that other service (point (i)). An 'active recipient of an online platform' is a recipient that has engaged with the platform by requesting it to host information or by being exposed to information it hosts and disseminates (point (p)). A 'recommender system' is a fully or partially automated system used by an online platform to suggest in its online interface specific information to recipients of the service or prioritise that information (point (s)).",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dsa"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R2065); number and heading as printed, summary from the Article's own text. Only points (i), (p) and (s) are summarised."
+        },
+        {
           "id": "dsa:art-16",
           "number": "16",
           "heading": "Notice and action mechanisms",
@@ -390,6 +403,19 @@
           "sources": [
             "src-eurlex-dsa"
           ]
+        },
+        {
+          "id": "dsa:art-19",
+          "number": "19",
+          "heading": "Exclusion for micro and small enterprises",
+          "summary": "Section 3 of Chapter III, except Article 24(3), does not apply to providers of online platforms that qualify as micro or small enterprises under Recommendation 2003/361/EC, nor, during the 12 months after losing that status, to those that previously qualified, unless they are very large online platforms (19(1)). It applies to providers designated as very large online platforms, whatever their size (19(2)).",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dsa"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R2065); number and heading as printed, summary from the Article's own text."
         },
         {
           "id": "dsa:art-25",
@@ -418,6 +444,19 @@
           ],
           "requires_verification": false,
           "verification_note": "Verified 27 Sep 2026 against the Official Journal text (English, retrieved that day from the Publications Office Cellar, CELEX 32022R2065): heading and number match; the summary was checked against paragraphs 1 and 2. The Regulation's own threshold for the advertising prohibition is that the provider is \"aware with reasonable certainty\" that the recipient is a minor, which the summary shortens to \"known\". The earlier note said the article was recorded from general knowledge."
+        },
+        {
+          "id": "dsa:art-29",
+          "number": "29",
+          "heading": "Exclusion for micro and small enterprises",
+          "summary": "Section 4 of Chapter III does not apply to providers of online platforms allowing consumers to conclude distance contracts with traders that qualify as micro or small enterprises under Recommendation 2003/361/EC, nor, during the 12 months after losing that status, to those that previously qualified, unless they are very large online platforms (29(1)). It applies to such providers designated as very large online platforms, whatever their size (29(2)).",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-dsa"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R2065); number and heading as printed, summary from the Article's own text."
         },
         {
           "id": "dsa:art-30",
@@ -682,7 +721,7 @@
         {
           "id": "dma:art-6",
           "number": "6",
-          "heading": "Obligations susceptible of further specification",
+          "heading": "Obligations for gatekeepers susceptible of being further specified under Article 8",
           "summary": "6(4) third-party app stores and sideloading. 6(5) no self-preferencing in ranking. 6(7) free and effective interoperability. 6(9) data portability. 6(10) business-user access to performance data.",
           "obligation_on": [
             "actor:gatekeeper"
@@ -692,7 +731,8 @@
           ],
           "sources": [
             "src-eurlex-dma"
-          ]
+          ],
+          "verification_note": "Heading corrected on 29 Oct 2026 (v2 Session 15, the author's decision of that day) to the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R1925); it was recorded as 'Obligations susceptible of further specification'."
         },
         {
           "id": "dma:art-7",
@@ -734,7 +774,7 @@
         {
           "id": "dma:art-38",
           "number": "38",
-          "heading": "Cooperation and coordination with national competent authorities",
+          "heading": "Cooperation and coordination with national competent authorities enforcing competition rules",
           "summary": "The Commission is the sole enforcer; national authorities support rather than enforce.",
           "obligation_on": [],
           "claims": [
@@ -742,7 +782,8 @@
           ],
           "sources": [
             "src-eurlex-dma"
-          ]
+          ],
+          "verification_note": "Heading corrected on 29 Oct 2026 (v2 Session 15, the author's decision of that day) to the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32022R1925); it was recorded as 'Cooperation and coordination with national competent authorities'."
         },
         {
           "id": "dma:art-53",
