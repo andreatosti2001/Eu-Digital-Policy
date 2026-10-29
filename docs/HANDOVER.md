@@ -1,9 +1,220 @@
 # HANDOVER
 
-**Last updated:** v2 Session 14, the second rules session of Phase 3 (29 October 2026): 14.1, the GDPR's
-five rules (`ap-gdpr-01`…`ap-gdpr-04`, `ap-cross-01`) in the v2 shape, then a checkpoint, **approved by the
-author** (§8). Item 14.4 (the draft of the Session 15 prompt) follows.
-**Branch:** `claude/zen-hamilton-rtgv1j` (assigned by the environment), cut from `main` at `a229336`.
+**Last updated:** v2 Session 15, the third rules session of Phase 3 (29 October 2026): 15.1, the nine rules on the
+DSA and the DMA (`ap-dsa-01`…`ap-dsa-05`, `ap-dma-01`…`ap-dma-04`) in the v2 shape, then a checkpoint, **approved by
+the author** (§8). Item 15.4 (the draft of the Session 16 prompt) follows.
+**Branch:** `claude/vigilant-ride-i216wh` (assigned by the environment), cut from `main` at `e77ee28`.
+
+## Branch register — 29 October 2026 (v2 Session 15)
+
+- Branch `claude/vigilant-ride-i216wh`, cut from `main` at `e77ee28` (#42, Session 14 and the prompt of this
+  session, merged). Nothing was merged in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both already in
+  the register. `claude/zen-hamilton-rtgv1j` (Session 14) is in `main`. No other branch to report.
+- **Found at the final re-fetch, before this handover was written:** `origin/main` had moved from `e77ee28` to
+  `11103a0`, "Merge pull request #43 from andreatosti2001/claude/vigilant-ride-i216wh". The pull request was
+  opened and merged by the author's account at 13:35 UTC on 29 Oct 2026, with this branch's head `7f346d3`
+  (every commit of the session up to the assertions), **before the checkpoint below was put to the author**.
+  All 16 checks on `7f346d3` passed. The session opened no pull request. So the data of 15.1 is in `main`, and
+  — `pages.yml` deploying every push to `main` — very probably on the published site, ahead of the checkpoint's
+  approval. Reported, not reconciled: whether that merge was meant is the author's to say.
+- The branch was then fast-forwarded to `origin/main` (`11103a0`), its head being an ancestor; this handover
+  is committed on top of it. A merged pull request carries no new work, so this commit reaches `main` only
+  through a new pull request, if the author opens one.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. After the approval, item
+  15.4: the prompt of v2 Session 16 drafted, `docs/prompts/v2-session-16.md` (the seven AI Act rules to the v2
+  shape, read in the text as the AI Omnibus amends it, by the method of 13.0 question 4; F-4 / V2C-06 and F-8 /
+  V2C-10 among the questions beyond the shape; the assertion question asked after measuring; then a
+  checkpoint, then item 16.4, the draft of the Session 17 prompt). Its starting state was measured on this
+  session's approved tree (`d57bf0b`). The prompt records no decision: its first write is §8's row "The scope
+  of v2 Session 16", in the author's words. It is on this branch, re-aligned to `main` after #43 (the one
+  branch the environment assigns).
+- A second pull request to `main`, carrying the report, the approval and the Session 16 prompt (all under
+  `docs/`), opened on the author's instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is
+  pushed to the branch after it.
+
+## v2 Session 15 — checkpoint report (15.1, the DSA and the DMA)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 15 | "start session 15" | `f825d75` |
+| Q1a · the DSA table | "Approve the table (Recommended)" | `6d53600` |
+| Q2a · F-7 (V2C-09), `ap-dsa-01` | "Correct the text (Recommended)" | `6d53600` |
+| Q2b · F-6 (V2C-08), `ap-dsa-04` | "Correct the text (Recommended)" | `9256ed6` |
+| Q3a · `ap-dsa-02`'s dates: Arts 38, 39 on the 25 Aug 2023 event | "A: name Arts 38, 39 on the event (Recommended)" | `a3daa63` |
+| Q3b · `ap-dsa-05`'s dates | "Add the derived date (Recommended)" | `243bea0` |
+| Q6a · `src-eurlex-dsa-da-2050` | "Correct both (Recommended)" | `864cdf7` |
+| A correction to Q6a (the citation prints `published` everywhere) | "Stands (Recommended)" | `7981aec` |
+| Q6b · `ap-dsa-03` and Art. 27 | "A: report, change nothing (Recommended)" | `62c0330` |
+| Q4 · `ap-dma-03`, `ap-dma-01`'s tier-2 sources | "As proposed (Recommended)" | `a0ca17e` |
+| Q6c · `ap-dma-01` and "immediately" | "A: report, change nothing (Recommended)" | `8ef3f16` |
+| Q3c · `ap-dma-03`'s dates | "Add the derived date (Recommended)" | `0a51f92` |
+| Q3d · `ap-dma-02`'s date | "A: remove the date (Recommended)" | `0a51f92` |
+| Q3e · `ap-dma-04`'s dates | "Keep, report 'due' (Recommended)" | `0a51f92` |
+| Q6d · two DMA headings | "Correct both headings (Recommended)" | `0a51f92` |
+| Q1b · the DMA table | "Approve the table (Recommended)" | `8fe8fb4` |
+| Q5 · `ap-cross-01` | "(1) Add the DSA reference (Recommended)", "(2) Add a depends_on (Recommended)" | `dcc352a` |
+| T-03 and thresholds (a defect in a check, exposed by the data) | "Fix T-03 as proposed (Recommended)" | `52d5713` |
+| Q7 · `RULES_V1` and the assertions | "Change as proposed (Recommended)" | `1f0867a` |
+| A suite premise Q7 did not name (X3's dates backlog) | "Change to 7 (Recommended)" | `07cd90d` |
+
+Q7 was asked after the data was written and every suite run on it (`ef4a86b`), so it names what moved,
+measured; the one line it missed (X3's dates backlog) was asked separately before it changed.
+
+### What was written
+
+- **15.1, `c49e110`.** `data/applicability.json`: the nine rules with reference objects, `condition_provisions`
+  to `dsa:art-3`, `-30`, `-33`, `-40` and `dma:art-2`, `-3`, `threshold_basis` on `ap-dsa-02` and `ap-dma-02`,
+  exemption objects, `last_verified` 2026-10-29 and a note of what was read; F-7 and F-6 corrected (Q2a, Q2b);
+  dates per Q3b–Q3d; `ap-dma-03` carried by the DMA (Q4); `ap-cross-01` gains a DSA reference and a
+  `depends_on` (Q5). `data/instruments.json`: `dsa:art-3`, `dsa:art-19`, `dsa:art-29` in the approved words;
+  `dma:art-6` and `dma:art-38` take the Official Journal's headings (Q6d). `data/timeline.json`:
+  `tl-dsa-2023-08-01-application` names `dsa:art-38` and `dsa:art-39` (Q3a). `data/sources.json`: `accessed`
+  and a dated note on `src-eurlex-dsa`, `src-eurlex-dma`, `src-ec-apple-meta-dma-2025`, `src-ec-dma-review-2026`;
+  `src-eurlex-dsa-da-2050` `published` 2025-10-09 and its note corrected (Q6a). `instruments/dsa/`,
+  `instruments/dma/`, `bibliography.html` and `sitemap.xml` regenerated; a second `node tools/_footer.mjs`
+  writes 0 files. No change to `js/`, `applies.html` or its D-2 notice.
+- **T-03, `ef4a86b`.** `tools/trigger-audit.mjs` T-03 no longer reads `thresholds` as a dimension (T-05 covers
+  it); `tools/selftest.mjs` X2 plants a threshold with its basis and asserts no T-03 finding (shown failing on
+  the planted rule before the fix).
+- **Assertions, `7f346d3`** (Q7). `RULES_V1` at 17; `tools/selftest.mjs` 119 → 120: `RULES_DSA_DMA`,
+  `RULES_V2` (16), X1 (17/17/17/6/1/7), X3 ("16 of 33", JSON 6, Markdown, dates 7), Y3 (`ap-cross-01`'s
+  `depends_on`), new **Y4**; `agent/detector/fields.mjs`: three `threshold_basis.<key>.locator` paths VALUE.
+- Between `c49e110` and `7f346d3` the branch's CI was red: `evidence-audit` on the two T-03 errors until
+  `ef4a86b`, then X1–X3, Y3 and detector 41 until `7f346d3`; no assertion changed before the author answered.
+
+### Before and after, every text a reader sees that changed
+
+| Where | Before | After |
+|---|---|---|
+| `applies.html`, Sources of the nine cards | the citation alone | the citation + " — at <locators>" (e.g. `ap-dsa-02`: "— at Art. 2(1); Art. 3 points (i), (p) and (s); Art. 33(1) and (4); Art. 34; Art. 35; Art. 38; Art. 39; Art. 40") |
+| `ap-dma-01`, IP/25/1085 line | the citation alone | "… — at IP/25/1085 (context only)" |
+| `ap-dma-03`, Sources | the Review Report alone | the DMA "— at Art. 1(2); Art. 2 points (1) and (21); Art. 3(1) and (2); Art. 5(4) and (6); Art. 6(10)", then the Review Report "— at Section 4 ('Costs and benefits'), page 8; Section 5 (Conclusions), page 14" |
+| `ap-dsa-01` exemption (both pages) | "Micro and small enterprises are exempt from the Section 3 online-platform obligations unless designated as a VLOP." | "Under Article 19, providers of online platforms that are micro or small enterprises — and, for twelve months after losing that status, those that were — are exempt from the Section 3 online-platform obligations, except Article 24(3), unless designated as a very large online platform." |
+| `ap-dsa-04` exemption (both pages) | "Micro and small enterprises are exempt from the online-platform section unless designated as a VLOP." | "Under Article 29, providers of online platforms allowing consumers to conclude distance contracts with traders that are micro or small enterprises — and, for twelve months after losing that status, those that were — are exempt from the Section 4 marketplace obligations, unless designated as a very large online platform." |
+| `ap-dsa-05` Key dates | 29 October 2025 | 25 August 2023 · 29 October 2025 |
+| `ap-dma-02` Key dates | November 2026 (Designation decision) | none |
+| `ap-dma-03` Key dates | none | 2 May 2023 |
+| `ap-cross-01` | no Depends on; GDPR and EDPB lines | Depends on "Whether the recommender system processes personal data (EDPB Guidelines 3/2025, paragraph 88)."; a DSA line "— at Art. 27(1); Art. 39(1)" |
+| the nine cards, both pages, and `ap-cross-01` | "Last verified 27 August 2026" (`ap-cross-01`: already 29 October 2026) | "29 October 2026" |
+| `/instruments/dsa/`, provisions | "13 provisions recorded" | "16 provisions recorded": Art. 3 "Definitions", Arts 19 and 29 "Exclusion for micro and small enterprises", in §8 Q1a's words |
+| `/instruments/dsa/`, Arts 38 and 39 | "Applies from 17 February 2024 — the instrument's general date" | "Applies from 25 August 2023 — a date set for named provisions" |
+| `/instruments/dma/`, Arts 6 and 38 (and Art. 6 among `ap-dma-01`'s and `ap-dma-03`'s obligations on `applies.html`) | "Obligations susceptible of further specification"; "Cooperation and coordination with national competent authorities" | "Obligations for gatekeepers susceptible of being further specified under Article 8"; "… enforcing competition rules" |
+| every citation of Delegated Regulation (EU) 2025/2050 (`applies.html`, `/instruments/dsa/`, the timeline, the claim, `bibliography.html`) | "EUR-Lex, July 1, 2025" | "EUR-Lex, October 9, 2025" |
+
+Unchanged: every rationale, outcome and condition; every other date and `depends_on`; the other 24 rules'
+cards; `applies.html` and its D-2 notice; the brief.
+
+### The TRIGGERS report, before and after (`--as-of 2026-10-29`)
+
+```
+before (main e77ee28)                                after (7f346d3)
+publishable   7 of 33                                publishable   16 of 33: ap-gdpr-01…04, ap-dsa-01…05,
+                                                       ap-dma-01…04, ap-pld-01, ap-eidas2-01, ap-cross-01
+BACKLOG rule-v1-sources 26                           BACKLOG rule-v1-sources 17
+BACKLOG rule-scope-basis-missing 26                  BACKLOG rule-scope-basis-missing 17
+BACKLOG rule-condition-provisions-missing 26         BACKLOG rule-condition-provisions-missing 17
+BACKLOG rule-exemption-v1 11                         BACKLOG rule-exemption-v1 6
+BACKLOG rule-threshold-basis-missing 3               BACKLOG rule-threshold-basis-missing 1
+BACKLOG rule-dates-not-derived 10                    BACKLOG rule-dates-not-derived 7
+ERRORS 0                                             ERRORS 0
+```
+
+**Phase 3's entry condition is still not met**: 17 rules remain (Sessions 16–17).
+
+### The sources read (29 Oct 2026)
+
+| Source | Where | Read |
+|---|---|---|
+| Regulation (EU) 2022/2065 (DSA) | Cellar, CELEX 32022R2065 (XHTML, OJ L 277, 27.10.2022) | Arts 2, 3, 16, 19, 24–30, 33–35, 38–40, 49, 56, 74 (headings), 92, 93; the Section headings of Chapters III and IV |
+| Its metadata | SPARQL, amends/corrects/repeals 32022R2065 | no amending act; eleven corrigenda, R(01)–R(11), none with an English expression (languages listed by SPARQL) |
+| Regulation (EU) 2022/1925 (DMA) | Cellar, CELEX 32022R1925 (XHTML, OJ L 265, 12.10.2022) | Arts 1–3, 5–7, 13, 21, 54, the Annex; every Article heading |
+| Its corrigenda | SPARQL; Cellar 32022R1925R(02) (English, OJ L 2025/90024 of 10.1.2025) | no amending act; three corrigenda, only R(02) in English: Art. 13(8) |
+| Delegated Regulation (EU) 2025/2050 | Cellar, CELEX 32025R2050 (OJ L 2025/2050 of 9.10.2025) | title, Arts 1, 3 (heading), 16; SPARQL: no amending act or corrigendum |
+| DMA Review Report, COM(2026) 178 final | PDF at the URL the record holds (14 pages) | Section 4 "Costs and benefits", page 8; Section 5, page 14 |
+| IP/25/1085, IP/25/2717, IP/26/1444 | press corner documents API | in full |
+| Press reports on the AWS/Azure designation | web search | for Q3e only: no designation decision reported; nothing written from it |
+
+Nothing was written from memory or from the design drafts without re-reading.
+
+### Counts against `main` (`e77ee28`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified; provisions 99 | 0 / 0, 45; provisions 102 | `dsa:art-3`, `-19`, `-29` |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-29` | 0 errors, 11 warnings | 0 errors, 11 warnings | TRIGGERS above; 2 errors on `c49e110` (T-03) |
+| `freshness --as-of 2026-10-29` | 0 defects, 3 prompts | 0 defects, 3 prompts | — |
+| `tools/selftest.mjs` | 119 | 120, 0 failing | Y4 |
+| The 24 suites in `AGENT_SUITES` | 1249 | 1250, 0 failing | Y4 |
+| `.control-room/selftest.mjs` | 76 · 1 skipped | 76 · 1 skipped | — |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | 16 of 20 on `ef4a86b` (two suites red) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs e77ee28 7f346d3` | — | 19 commits, 0 without evidence | — |
+
+### Seen in a browser
+
+Chromium (Playwright), local server, light and dark, 1280px and 390px: `applies.html` with
+`?actor=actor:online-platform&activity=activity:online-platform-activity`, `?actor=actor:vlop&activity=activity:recommender-systems`,
+`?activity=activity:marketplace-activity`, `?actor=actor:researcher`, `?actor=actor:gatekeeper`,
+`?actor=actor:large-company&activity=activity:recommender-systems`, `?actor=actor:sme`, `?activity=activity:cloud-services`, and
+`/instruments/dsa/`, `/instruments/dma/`: the nine rules and `ap-cross-01` fire and read as in the table above; no
+console error; no horizontal overflow; no "[object Object]"; the two old exemption sentences nowhere.
+
+### What was not verified, and why
+
+- The claims the nine rules cite were not re-read; each rule's note says so.
+- The EDPB Guidelines 3/2025 were not re-read; Q5's `depends_on` cites paragraph 88 as Session 14 read it that day.
+- Recommendation 2003/361/EC (SME, micro and small enterprises) and Directive (EU) 2016/1148 (the DMA's cloud
+  definition) were not read; neither is in the dataset, and the notes say so.
+- The source records of IP/25/2717 and IP/26/1444 were read against but not updated (`accessed` unchanged): no
+  question covered them.
+- `js/applies.js` has no rendering test; its output was checked in the browser and by Y4 on the generated pages.
+- Screen readers, contrast and pixels: as README limitation 7 says.
+
+### Found, for the author — not changed
+
+1. **PR #43 merged before the checkpoint** (branch register above): Session 15's data is in `main`, and very
+   probably published, ahead of this checkpoint's approval.
+2. **"Immediately" (Q6c).** DMA Art. 3(10) gives six months; `ap-dma-01`'s rationale, `clm-dma-ex-ante` and the
+   brief's `part-4.p2` (with its it/fr/es overlays) say the obligations apply immediately. One correction, for a
+   later session.
+3. **`ap-dsa-03` and Art. 27 (Q6b):** the rationale's recommender-parameter transparency does not bind micro and
+   small platforms (Art. 19).
+4. **`ap-dma-04`'s "due" (Q3e):** November 2026 is a Commission target, not a deadline.
+5. **The D-2 notice on `applies.html`** still says the rules cite "by identifier only" and that the evidence audit
+   does not check them; 16 of 33 now carry locators and the audit reads all 33. The notice is outside this session
+   (the prompt forbids touching it); its wording is the author's to revisit.
+6. **The new provisions' derived dates:** `/instruments/dsa/` prints "Applies from 17 February 2024 — the
+   instrument's general date" for Arts 3, 19 and 29, as it does for `gdpr:art-2` and `-4`; for a definition
+   article that is the derivation's general fallback, not a statement read in the text.
+7. **`docs/v2-design/applicability-examples.json`** still holds the 25 Oct drafts of `ap-dsa-01`, `-02`, `-04`;
+   a design record, left as it is.
+8. Two worker restarts happened (after Q2b and after Q7); no decision was lost, each being in §8 first.
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **15.0** | §8: scope row and twenty answer rows (`f825d75` … `07cd90d`) | read §8's last twenty-one rows | — | met: every decision in the author's words before anything published changed |
+| **15.1** | data, pages, sitemap, bibliography (`c49e110`); T-03 (`ef4a86b`); `RULES_V1`, X1–X3, Y3, Y4, `fields.mjs` (`7f346d3`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 16 of 33"; open the `applies.html` URLs above and `/instruments/dsa/`, `/instruments/dma/` | `tools/selftest.mjs` X1–X3, Y3, Y4; `agent/detector` 41 | met: the nine publishable; every check at 0 errors |
+| **15.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
+| **15.3** | this report; V2C-08's and V2C-09's rows in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); both rows name `c49e110` |
+| **15.4** | `docs/prompts/v2-session-16.md`; this register entry | read the prompt against §8's plan row and Session 15's rows; its measured state against `node tools/evidence-audit.mjs --as-of 2026-10-29` | — | met: the prompt records no decision |
+
+### How to check it by hand
+
+```
+git diff e77ee28 7f346d3 -- data/applicability.json   # the nine rules and ap-cross-01, nothing else
+node tools/evidence-audit.mjs --as-of 2026-10-29       # TRIGGERS: publishable 16 of 33, ERRORS 0
+node --test tools/selftest.mjs                          # 120 pass
+python3 -m http.server 8000                             # /applies.html?actor=actor:vlop&activity=activity:recommender-systems
+```
 
 ## Branch register — 29 October 2026 (v2 Session 14)
 
