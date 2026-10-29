@@ -20,6 +20,8 @@ author** (§8). Item 14.4 (the draft of the Session 15 prompt) follows.
   question asked after measuring; then a checkpoint, then item 15.4, the draft of the Session 16 prompt). Its
   starting state was measured on this session's approved tree (`8c1b1a3`). The prompt records no decision:
   its first write is §8's row "The scope of v2 Session 15", in the author's words.
+- A pull request to `main`, carrying Session 14 and the Session 15 prompt together, opened on the author's
+  instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the branch after it.
 
 ## v2 Session 14 — checkpoint report (14.1, the GDPR)
 
