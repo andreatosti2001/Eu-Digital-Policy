@@ -2,7 +2,7 @@
 
 **Last updated:** v2 Session 13, the first rules session of Phase 3 (29 October 2026): 13.1 (V2C-67),
 13.2 (the validator learns the v2 rule shape), 13.3 (the pilot on `ap-eidas2-01` and `ap-pld-01`), then a
-checkpoint, **awaiting the author's approval** (§8).
+checkpoint, **approved by the author** (§8).
 **Branch:** `claude/v2-session-13-rules-pilot`, cut from `main` at `d073134`.
 
 ## Branch register — 29 October 2026 (v2 Session 13)
@@ -13,8 +13,8 @@ checkpoint, **awaiting the author's approval** (§8).
   `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
   already in the register. No other branch to report.
 - `origin/main` was re-fetched before this handover was written: still `d073134`.
-- Disposition: **pending** — the checkpoint awaits the author's approval; then the author is asked whether
-  to open a pull request to `main`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); the author is asked whether to open a
+  pull request to `main`.
 
 ## v2 Session 13 — checkpoint report (13.1 V2C-67, 13.2 the validator, 13.3 the pilot)
 
@@ -164,7 +164,7 @@ error; no horizontal overflow; no "[object Object]" anywhere.
 | **13.2** | `tools/validate.mjs`, `tools/trigger-audit.mjs`, Y1, X2 (`296b7e3`) | on a copy, give a rule `"sources": [{"source_id": "src-x", "supports": "supports:direct", "locator": "Art. 1"}]`: `RULE "…" sources[0]: DANGLING source ref "src-x"` | Y1 (23 plants), X2 | met: v1 validates as before; every v2 defect named by field |
 | **13.3** | data, `js/`, two pages, `RULES_V1`, X1, X3, Y2, `agent/detector/fields.mjs` (`a4ba2f3`, `92ffe80`) | `node tools/evidence-audit.mjs --as-of 2026-10-29`: "publishable 2 of 33"; open the two `applies.html` URLs above | X1, X3, Y2; `agent/detector` test 41 | met for the pilot; the method for 14–17 decided (Q4) |
 | **13.4** | all checks re-run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: 0 errors everywhere; readiness at its baseline |
-| **13.5** | this report | — | — | **awaiting the author's approval**; then V2C-67's row in `docs/V2-CLOSURE.md` names `ff5b066` |
+| **13.5** | this report; V2C-67's row in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); V2C-67's row names `ff5b066` |
 
 ### How to check it by hand
 
