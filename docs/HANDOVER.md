@@ -15,6 +15,16 @@ check reads the applicability rules), then a checkpoint, **approved by the autho
 - Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve, incl. RULES_V1 (Recommended)"); pushed, with a
   pull request to `main` opened on the author's instruction of 28 Oct 2026 ("Open PR to main
   (Recommended)"). Nothing is pushed to the branch after the pull request is opened.
+- After that, on 28–29 Oct 2026: the author asked how to meet Phase 3's entry condition, whether it fits
+  one session, what Session 17 would give and whether the rules would be maintained as the provisions
+  change. The answers became §8's row "The plan for meeting Phase 3's entry condition, and the maintenance
+  of the rules" (Sessions 13–17, with two maintenance checks in Session 17). On the author's request
+  ("draft session 13 and merge it"; then "farò un pull unico"), the prompt of v2 Session 13 was drafted:
+  `docs/prompts/v2-session-13.md` (V2C-67, `validate.mjs` taught the v2 rule shape, a pilot on
+  `ap-eidas2-01` and `ap-pld-01`, then a checkpoint). It is on `claude/v2-session-13-prompt`, cut from
+  this branch at `99091e5`, so that one pull request carries Session 12 and the prompt together: merging
+  it merges #38's commits as well. The prompt records no decision: its first write is §8's row "The scope
+  of v2 Session 13", in the author's words.
 
 ## v2 Session 12 — checkpoint report (12.1 V2C-01, 12.2 the triggers)
 
