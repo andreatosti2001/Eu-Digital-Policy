@@ -884,6 +884,19 @@
       },
       "provisions": [
         {
+          "id": "ai-act:art-2-1",
+          "number": "2(1)",
+          "heading": "Scope",
+          "summary": "Applies to providers placing on the market or putting into service AI systems, or placing on the market general-purpose AI models, in the Union, wherever they are established (point (a)); to deployers of AI systems established or located in the Union (point (b)); to providers and deployers established or located in a third country where the output produced by the AI system is used in the Union (point (c)); to importers and distributors of AI systems (point (d)); to product manufacturers placing on the market or putting into service an AI system together with their product and under their own name or trademark (point (e)); to authorised representatives of providers not established in the Union (point (f)); and to affected persons located in the Union (point (g)).",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-ai-act"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 (v2 Session 16, the author's decision of that day) from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1689); number and heading as printed, summary from the paragraph's own text. Regulation (EU) 2026/1744 (CELEX 32026R1744, read the same day) replaces Art. 2(2) and (7) and adds Art. 2(13), and does not amend paragraph 1. Paragraph 3 is recorded separately, as ai-act:art-2."
+        },
+        {
           "id": "ai-act:art-2",
           "number": "2(3)",
           "heading": "Scope — exclusion of military, defence and national security",
@@ -895,6 +908,19 @@
           "sources": [
             "src-eurlex-ai-act"
           ]
+        },
+        {
+          "id": "ai-act:art-3",
+          "number": "3",
+          "heading": "Definitions",
+          "summary": "An 'AI system' is a machine-based system designed to operate with varying levels of autonomy, which may exhibit adaptiveness after deployment and which, for explicit or implicit objectives, infers from the input it receives how to generate outputs such as predictions, content, recommendations or decisions that can influence physical or virtual environments (point (1)). A 'provider' is a natural or legal person, public authority, agency or other body that develops an AI system or a general-purpose AI model, or has one developed, and places it on the market or puts the AI system into service under its own name or trademark, whether for payment or free of charge (point (3)). A 'deployer' is a natural or legal person, public authority, agency or other body using an AI system under its authority, except in the course of a personal non-professional activity (point (4)). 'Placing on the market' is the first making available of an AI system or a general-purpose AI model on the Union market (point (9)). As inserted by Regulation (EU) 2026/1744, an 'SME' is a micro, small or medium-sized enterprise as defined in Article 2 of the Annex to Recommendation 2003/361/EC (point (14a)).",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-ai-act"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 (v2 Session 16, the author's decision of that day) from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1689), read as amended by Regulation (EU) 2026/1744 (CELEX 32026R1744, read the same day), whose Art. 1 point (4) amends point (14) and inserts points (14a) and (14b) and does not amend points (1), (3), (4) or (9); number and heading as printed, summary from the Article's own text. Only points (1), (3), (4), (9) and (14a) are summarised; point (63) is recorded separately, as ai-act:art-3-63."
         },
         {
           "id": "ai-act:art-3-63",
@@ -994,7 +1020,7 @@
         {
           "id": "ai-act:art-27",
           "number": "27",
-          "heading": "Fundamental rights impact assessment",
+          "heading": "Fundamental rights impact assessment for high-risk AI systems",
           "summary": null,
           "obligation_on": [
             "actor:ai-deployer"
@@ -1004,7 +1030,8 @@
           ],
           "sources": [
             "src-eurlex-ai-act"
-          ]
+          ],
+          "verification_note": "Heading corrected on 29 Oct 2026 (v2 Session 16, the author's decision of that day) to the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1689), which Regulation (EU) 2026/1744 does not change; it was recorded as 'Fundamental rights impact assessment'."
         },
         {
           "id": "ai-act:art-50",
@@ -1023,7 +1050,7 @@
         {
           "id": "ai-act:art-51",
           "number": "51",
-          "heading": "Classification of general-purpose AI models with systemic risk",
+          "heading": "Classification of general-purpose AI models as general-purpose AI models with systemic risk",
           "summary": "51(1)(a) high-impact capabilities or 51(1)(b) Commission decision. 51(2) supplies the operative presumption: cumulative training compute greater than 10^25 FLOP.",
           "obligation_on": [
             "actor:gpai-provider"
@@ -1033,7 +1060,8 @@
           ],
           "sources": [
             "src-eurlex-ai-act"
-          ]
+          ],
+          "verification_note": "Heading corrected on 29 Oct 2026 (v2 Session 16, the author's decision of that day) to the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1689), which Regulation (EU) 2026/1744 does not change; it was recorded as 'Classification of general-purpose AI models with systemic risk'."
         },
         {
           "id": "ai-act:art-53",

@@ -635,7 +635,9 @@
    "event_type": "event:application",
    "instrument": "ai-act",
    "provisions": [
+    "ai-act:art-2-1",
     "ai-act:art-2",
+    "ai-act:art-3",
     "ai-act:art-3-63",
     "ai-act:art-4",
     "ai-act:art-5"
@@ -663,7 +665,7 @@
     "src-brief-original"
    ],
    "requires_verification": false,
-   "verification_note": "Verified 27 Sep 2026 against Regulation (EU) 2024/1689 as published in the Official Journal (OJ L of 12.7.2024), read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32024R1689): Article 113, third paragraph, point (a) — \"Chapters I and II shall apply from 2 February 2025\". Chapter I holds Articles 1 to 4 (scope, definitions, AI literacy), so Articles 2, 3 and 4 are linked here; Chapter II is Article 5. Regulation (EU) 2026/1744 (OJ L of 24.7.2026, CELEX 32026R1744, read the same day), Article 1, point (40)(a), keeps this date and carves out only the new Article 5(1)(ba) and (bb), which apply from 2 December 2026. Previously: \"Date stated by the brief; not confirmed against the consolidated text in this build.\"",
+   "verification_note": "Verified 27 Sep 2026 against Regulation (EU) 2024/1689 as published in the Official Journal (OJ L of 12.7.2024), read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32024R1689): Article 113, third paragraph, point (a) — \"Chapters I and II shall apply from 2 February 2025\". Chapter I holds Articles 1 to 4 (scope, definitions, AI literacy), so Articles 2, 3 and 4 are linked here; Chapter II is Article 5. Regulation (EU) 2026/1744 (OJ L of 24.7.2026, CELEX 32026R1744, read the same day), Article 1, point (40)(a), keeps this date and carves out only the new Article 5(1)(ba) and (bb), which apply from 2 December 2026. Previously: \"Date stated by the brief; not confirmed against the consolidated text in this build.\" 29 Oct 2026 (v2 Session 16): ai-act:art-2-1 (Art. 2(1)) and ai-act:art-3 (Art. 3, definitions), recorded that day, added to provisions on the author's decision of that day: both are in Chapter I, which Art. 113, third paragraph, point (a), as replaced by Regulation (EU) 2026/1744, Art. 1 point (40)(a), applies from 2 February 2025; read that day in the Official Journal texts retrieved from the Publications Office's Cellar (CELEX 32024R1689 and 32026R1744).",
    "last_verified": "2026-09-27"
   },
   {
@@ -1452,8 +1454,7 @@
    "provisions": [
     "ai-act:art-6",
     "ai-act:art-9",
-    "ai-act:art-25",
-    "ai-act:art-27"
+    "ai-act:art-25"
    ],
    "affected_actors": [
     "actor:ai-provider",
@@ -1477,7 +1478,7 @@
     "src-ec-ai-omnibus-in-force"
    ],
    "requires_verification": false,
-   "verification_note": "Verified 27 Sep 2026 against Regulation (EU) 2026/1744 (OJ L of 24.7.2026, CELEX 32026R1744, read the same day): Article 1, point (40)(b), replaces Article 113, third paragraph, point (c) — \"Chapter III, Sections 1, 2, and 3, with the exception of Article 6(5), shall apply from\" \"2 August 2028 as regards AI systems classified as high-risk pursuant to Article 6(1) and Annex I\". Articles 6, 9, 25 and 27 are in Chapter III Sections 1 to 3 of Regulation (EU) 2024/1689 as published in the Official Journal (OJ L of 12.7.2024), read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32024R1689), so all four are linked here. Re-read 14 Oct 2026 against the Official Journal text of Regulation (EU) 2026/1744 on EUR-Lex (Art. 1, points (39)-(40); Art. 4); it agrees.",
+   "verification_note": "Verified 27 Sep 2026 against Regulation (EU) 2026/1744 (OJ L of 24.7.2026, CELEX 32026R1744, read the same day): Article 1, point (40)(b), replaces Article 113, third paragraph, point (c) — \"Chapter III, Sections 1, 2, and 3, with the exception of Article 6(5), shall apply from\" \"2 August 2028 as regards AI systems classified as high-risk pursuant to Article 6(1) and Annex I\". Articles 6, 9, 25 and 27 are in Chapter III Sections 1 to 3 of Regulation (EU) 2024/1689 as published in the Official Journal (OJ L of 12.7.2024), read on 27 Sep 2026 from the Publications Office's Cellar (CELEX 32024R1689), so all four are linked here. Re-read 14 Oct 2026 against the Official Journal text of Regulation (EU) 2026/1744 on EUR-Lex (Art. 1, points (39)-(40); Art. 4); it agrees. 29 Oct 2026 (v2 Session 16): ai-act:art-27 removed from provisions on the author's decision of that day: Art. 27(1) requires the fundamental rights impact assessment \"prior to deploying a high-risk AI system referred to in Article 6(2)\", so it has no addressee among the systems high-risk under Art. 6(1) and Annex I that this date concerns; read that day in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32024R1689), which Regulation (EU) 2026/1744 (Art. 1 point (13)) leaves unchanged in paragraph 1.",
    "last_verified": "2026-10-14"
   },
   {

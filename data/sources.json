@@ -115,9 +115,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689",
       "url_status": "url:live",
       "published": "2024-07-12",
-      "accessed": "2026-10-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Title and number confirmed by fetch. The metadata field scraped for entry into force returned an application milestone rather than the entry-into-force date; the entry-into-force record is flagged for confirmation against the consolidated text. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Art. 6."
+      "note": "Title and number confirmed by fetch. The metadata field scraped for entry into force returned an application milestone rather than the entry-into-force date; the entry-into-force record is flagged for confirmation against the consolidated text. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Art. 6. Re-read on 29 Oct 2026 for v2 Session 16 (the AI Act's applicability rules), from the Publications Office's Cellar by CELEX (XHTML): Arts 2 to 6, 9, 25 to 27, 50 to 55, 111 and 113 and Annex III, read as amended by Regulation (EU) 2026/1744; with the Publications Office's SPARQL metadata, which lists that one amending act and four corrigenda, R(01) to R(04), none with an English expression, and a consolidated text of 27 July 2026 (02024R1689-20260727), read for Arts 51, 111 and 113, which agrees."
     },
     {
       "id": "src-aia-text-unofficial-arts-2-4",
@@ -371,10 +371,10 @@
       "title": "Regulation (EU) 2026/1744 of 8 July 2026 (Digital Omnibus on AI)",
       "url": "https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng",
       "url_status": "url:live",
-      "published": "2026-07-08",
-      "accessed": "2026-10-27",
+      "published": "2026-07-24",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Directly supports entry into force on 27 July 2026. Re-read in full on 14 Oct 2026 (OJ L, 2026/1744, 24.7.2026; Art. 4: entry into force on the third day after publication). Art. 1, point (5), replaces Art. 4 (literacy: 'take measures to support'; 'does not require providers or deployers to guarantee any specific level of AI literacy of any individual'); Art. 1, point (39)(b), adds Art. 111(4) (Art. 50(2) by 2 December 2026 for systems placed on the market before 2 August 2026); Art. 1, point (40), amends Art. 113: Art. 5(1)(ba)-(bb), (1a) and (1b) from 2 December 2026; Chapter III Sections 1-3 from 2 December 2027 (Art. 6(2), Annex III) and 2 August 2028 (Art. 6(1), Annex I). Recital 40 gives the reason for the delay: 'the delayed availability of standards, common specifications, and alternative guidance and the delayed establishment of national competent authorities'. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Art. 1, point (40) (Art. 113 as amended)."
+      "note": "Directly supports entry into force on 27 July 2026. Re-read in full on 14 Oct 2026 (OJ L, 2026/1744, 24.7.2026; Art. 4: entry into force on the third day after publication). Art. 1, point (5), replaces Art. 4 (literacy: 'take measures to support'; 'does not require providers or deployers to guarantee any specific level of AI literacy of any individual'); Art. 1, point (39)(b), adds Art. 111(4) (Art. 50(2) by 2 December 2026 for systems placed on the market before 2 August 2026); Art. 1, point (40), amends Art. 113: Art. 5(1)(ba)-(bb), (1a) and (1b) from 2 December 2026; Chapter III Sections 1-3 from 2 December 2027 (Art. 6(2), Annex III) and 2 August 2028 (Art. 6(1), Annex I). Recital 40 gives the reason for the delay: 'the delayed availability of standards, common specifications, and alternative guidance and the delayed establishment of national competent authorities'. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Art. 1, point (40) (Art. 113 as amended). Re-read on 29 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32026R1744), OJ L, 2026/1744, 24.7.2026: 'published' corrected from 8 July 2026, the date of adoption. Art. 1 read in full that day for v2 Session 16 (the AI Act's applicability rules); the Publications Office's SPARQL metadata lists one corrigendum, R(01), in German only."
     },
     {
       "id": "src-eurlex-gdpr-procedural",
@@ -862,9 +862,9 @@
       "url": "http://publications.europa.eu/resource/celex/12016M004",
       "url_status": "url:live",
       "published": "2016-06-07",
-      "accessed": "2026-09-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "The Treaty text of Article 4 TEU as published in the Official Journal, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Recorded as a legislative document because the source vocabulary has no treaty type. Art. 4(2), third sentence: 'In particular, national security remains the sole responsibility of each Member State.'"
+      "note": "The Treaty text of Article 4 TEU as published in the Official Journal, retrieved on 27 Sep 2026 from the Publications Office's Cellar by CELEX number. Recorded as a legislative document because the source vocabulary has no treaty type. Art. 4(2), third sentence: 'In particular, national security remains the sole responsibility of each Member State.' Re-read on 29 Oct 2026 for v2 Session 16, from the Publications Office's Cellar by CELEX: Art. 4(2), third sentence, unchanged."
     },
     {
       "id": "src-cjeu-c623-17-pr",
@@ -1621,9 +1621,9 @@
       "url": "https://digital-strategy.ec.europa.eu/en/policies/ai-code-practice",
       "url_status": "url:live",
       "published": "2025-07-10",
-      "accessed": "2026-09-26",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Confirms the final version was received on 10 July 2025 and sets out the drafting timeline: first draft, second draft (19 Dec 2024), third draft (11 Mar 2025), final version (10 Jul 2025). The brief's 'after four drafts' is only accurate if the final text is counted as the fourth."
+      "note": "Confirms the final version was received on 10 July 2025 and sets out the drafting timeline: first draft, second draft (19 Dec 2024), third draft (11 Mar 2025), final version (10 Jul 2025). The brief's 'after four drafts' is only accurate if the final text is counted as the fourth. Re-read on 29 Oct 2026 (v2 Session 16) at this URL: section 'Why a Code of Practice for General-Purpose AI?', 'The AI Act rules on GPAI apply from 2 August 2025. The Code of Practice details out these rules, representing a voluntary tool'; section 'Timeline', '10 July 2025', 'The Commission received the final version of the Code', and '1 August 2025', 'The Commission and AI Board approve the code via Adequacy Decisions'."
     },
     {
       "id": "src-ec-gpai-code-safety-security",
@@ -1691,9 +1691,9 @@
       "url": "https://digital-strategy.ec.europa.eu/en/news/ai-omnibus-enters-force",
       "url_status": "url:live",
       "published": "2026-07-27",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Gives the new dates — Annex III high-risk from 2 December 2027, product-embedded high-risk from 2 August 2028 — but does not characterise the shift as 'sixteen months'. That figure is a computation, not a quoted claim."
+      "note": "Gives the new dates — Annex III high-risk from 2 December 2027, product-embedded high-risk from 2 August 2028 — but does not characterise the shift as 'sixteen months'. That figure is a computation, not a quoted claim. Re-read on 29 Oct 2026 (v2 Session 16) at this URL: section 'Extended timelines', 'High-risk AI systems in Annex III: Rules apply starting 2 December 2027' and 'High-risk AI embedded in physical products (machinery, toys, lifts, etc.) in Annex I: Rules apply starting 2 August 2028'."
     },
     {
       "id": "src-ec-dma-review-2026",
