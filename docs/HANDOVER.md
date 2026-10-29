@@ -22,8 +22,8 @@ check reads the applicability rules), then a checkpoint, **approved by the autho
   ("draft session 13 and merge it"; then "farò un pull unico"), the prompt of v2 Session 13 was drafted:
   `docs/prompts/v2-session-13.md` (V2C-67, `validate.mjs` taught the v2 rule shape, a pilot on
   `ap-eidas2-01` and `ap-pld-01`, then a checkpoint). It is on `claude/v2-session-13-prompt`, cut from
-  this branch at `99091e5`, so that one pull request carries Session 12 and the prompt together: merging
-  it merges #38's commits as well. The prompt records no decision: its first write is §8's row "The scope
+  this branch at `99091e5`. #38 was merged meanwhile (`39e5cea`), so the prompt's pull request carries only
+  §8's plan row, the prompt and this entry; the author merges it. The prompt records no decision: its first write is §8's row "The scope
   of v2 Session 13", in the author's words.
 
 ## v2 Session 12 — checkpoint report (12.1 V2C-01, 12.2 the triggers)

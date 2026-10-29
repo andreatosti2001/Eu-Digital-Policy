@@ -19,8 +19,8 @@ contenga la sessione 12 e questo prompt:
   entry condition, and the maintenance of the rules»;
 - `docs/prompts/v2-session-13.md` esiste.
 
-Se manca qualcosa in `main`, fermati e segnalalo. (L'autore ha detto che unirà la sessione 12 e questo
-prompt con un'unica pull request.)
+Se manca qualcosa in `main`, fermati e segnalalo. (La sessione 12 è entrata in `main` come #38,
+`39e5cea`; questo prompt con la sua pull request.)
 
 **Come prima scrittura della sessione**, registra in §8 la riga «The scope of v2 Session 13» con le
 parole con cui l'autore avvia questa sessione; se il prompt arriva senza parole dell'autore, chiediglielo
@@ -28,8 +28,8 @@ con lo strumento di domande. Senza quella riga non si scrive nulla, nemmeno in `
 
 Esegui `git branch -r --no-merged origin/main` e segnala ogni branch che non sia tuo né nel registro di
 `docs/HANDOVER.md`. Atteso: `origin/scout/digest-digest-2026-10-26T13-10-32Z` e
-`origin/claude/v2-session-8-findings` (già nel registro). Se `claude/v2-session-12-phase-3-open` o
-`claude/v2-session-13-prompt` risultano non uniti, è la pull request unica non ancora unita: segnalalo.
+`origin/claude/v2-session-8-findings` (già nel registro). Se `claude/v2-session-13-prompt` risulta non
+unito, la pull request di questo prompt non è ancora unita: segnalalo.
 
 Crea un branch di sessione (`claude/v2-session-13-rules-pilot` o quello assegnato dall'ambiente). Non
 lavorare su `main`.
