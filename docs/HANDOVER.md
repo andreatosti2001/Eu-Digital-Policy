@@ -23,7 +23,8 @@ checkpoint, **approved by the author** (§8).
   ("include the drafting of session 15 at the end of the session") — item 14.4, the draft of the Session 15
   prompt, measured on Session 14's approved tree). It is on
   `claude/v2-session-14-prompt`, cut from `main` at `d9a3939`. The prompt records no decision: its first write
-  is §8's row "The scope of v2 Session 14", in the author's words.
+  is §8's row "The scope of v2 Session 14", in the author's words. A pull request to `main` was opened on the author's instruction
+  ("yes", 29 Oct 2026); nothing is pushed to the branch after it.
 
 ## v2 Session 13 — checkpoint report (13.1 V2C-67, 13.2 the validator, 13.3 the pilot)
 
