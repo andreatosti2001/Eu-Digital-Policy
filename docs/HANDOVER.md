@@ -29,7 +29,10 @@ the author** (§8). Item 15.4 (the draft of the Session 16 prompt) follows.
   checkpoint, then item 16.4, the draft of the Session 17 prompt). Its starting state was measured on this
   session's approved tree (`d57bf0b`). The prompt records no decision: its first write is §8's row "The scope
   of v2 Session 16", in the author's words. It is on this branch, re-aligned to `main` after #43 (the one
-  branch the environment assigns). No pull request opened for it yet.
+  branch the environment assigns).
+- A second pull request to `main`, carrying the report, the approval and the Session 16 prompt (all under
+  `docs/`), opened on the author's instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is
+  pushed to the branch after it.
 
 ## v2 Session 15 — checkpoint report (15.1, the DSA and the DMA)
 
