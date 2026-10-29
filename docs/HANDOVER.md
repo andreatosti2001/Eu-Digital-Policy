@@ -22,6 +22,14 @@ the author** (§8). Item 15.4 (the draft of the Session 16 prompt) follows.
 - The branch was then fast-forwarded to `origin/main` (`11103a0`), its head being an ancestor; this handover
   is committed on top of it. A merged pull request carries no new work, so this commit reaches `main` only
   through a new pull request, if the author opens one.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. After the approval, item
+  15.4: the prompt of v2 Session 16 drafted, `docs/prompts/v2-session-16.md` (the seven AI Act rules to the v2
+  shape, read in the text as the AI Omnibus amends it, by the method of 13.0 question 4; F-4 / V2C-06 and F-8 /
+  V2C-10 among the questions beyond the shape; the assertion question asked after measuring; then a
+  checkpoint, then item 16.4, the draft of the Session 17 prompt). Its starting state was measured on this
+  session's approved tree (`d57bf0b`). The prompt records no decision: its first write is §8's row "The scope
+  of v2 Session 16", in the author's words. It is on this branch, re-aligned to `main` after #43 (the one
+  branch the environment assigns). No pull request opened for it yet.
 
 ## v2 Session 15 — checkpoint report (15.1, the DSA and the DMA)
 
@@ -194,7 +202,7 @@ console error; no horizontal overflow; no "[object Object]"; the two old exempti
 | **15.1** | data, pages, sitemap, bibliography (`c49e110`); T-03 (`ef4a86b`); `RULES_V1`, X1–X3, Y3, Y4, `fields.mjs` (`7f346d3`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 16 of 33"; open the `applies.html` URLs above and `/instruments/dsa/`, `/instruments/dma/` | `tools/selftest.mjs` X1–X3, Y3, Y4; `agent/detector` 41 | met: the nine publishable; every check at 0 errors |
 | **15.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
 | **15.3** | this report; V2C-08's and V2C-09's rows in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); both rows name `c49e110` |
-| **15.4** | — | — | — | follows the approval |
+| **15.4** | `docs/prompts/v2-session-16.md`; this register entry | read the prompt against §8's plan row and Session 15's rows; its measured state against `node tools/evidence-audit.mjs --as-of 2026-10-29` | — | met: the prompt records no decision |
 
 ### How to check it by hand
 
