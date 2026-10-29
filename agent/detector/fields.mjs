@@ -219,7 +219,12 @@ export const VALUE_FIELDS = {
     'conditions.thresholds.cumulative_training_flop_gte',
     'conditions.thresholds.monthly_active_eu_end_users_gte',
     'conditions.thresholds.monthly_active_eu_users_gte',
-    'conditions.thresholds.yearly_active_eu_business_users_gte'],
+    'conditions.thresholds.yearly_active_eu_business_users_gte',
+    /* v2 Session 15 (29 Oct 2026, §8 15.0 question 7): a threshold's basis is a locator, as
+       sources.locator and exemptions.basis.locator are */
+    'threshold_basis.monthly_active_eu_users_gte.locator',
+    'threshold_basis.monthly_active_eu_end_users_gte.locator',
+    'threshold_basis.yearly_active_eu_business_users_gte.locator'],
   institution: ['id', 'short_name', 'full_name', 'member_state', 'last_verified', 'competences.exclusive'],
   brief_part: ['id', 'roman', 'kind', 'reading_minutes'],
   provision: ['id', 'number', 'heading', 'requires_verification'],

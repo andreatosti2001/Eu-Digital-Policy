@@ -2446,10 +2446,13 @@ const RULES_2026_10_28 = Object.freeze(['ap-gdpr-01', 'ap-gdpr-02', 'ap-gdpr-03'
   'ap-data-act-01', 'ap-data-act-02', 'ap-data-act-03', 'ap-data-act-04', 'ap-nis2-01', 'ap-nis2-02', 'ap-nis2-03',
   'ap-dora-01', 'ap-dora-02', 'ap-cra-01', 'ap-pld-01', 'ap-eidas2-01', 'ap-cross-01']);
 /* the rules brought to the v2 shape, by session: they left RULES_V1. v2 Session 13 (29 Oct 2026):
-   the pilot; v2 Session 14 (29 Oct 2026, §8 14.0 question 5): the GDPR's five */
+   the pilot; v2 Session 14 (29 Oct 2026, §8 14.0 question 5): the GDPR's five; v2 Session 15
+   (29 Oct 2026, §8 15.0 question 7): the DSA's five and the DMA's four */
 const RULES_PILOT = Object.freeze(['ap-pld-01', 'ap-eidas2-01']);
 const RULES_GDPR = Object.freeze(['ap-gdpr-01', 'ap-gdpr-02', 'ap-gdpr-03', 'ap-gdpr-04', 'ap-cross-01']);
-const RULES_V2 = Object.freeze([...RULES_PILOT, ...RULES_GDPR]);
+const RULES_DSA_DMA = Object.freeze(['ap-dsa-01', 'ap-dsa-02', 'ap-dsa-03', 'ap-dsa-04', 'ap-dsa-05',
+  'ap-dma-01', 'ap-dma-02', 'ap-dma-03', 'ap-dma-04']);
+const RULES_V2 = Object.freeze([...RULES_PILOT, ...RULES_GDPR, ...RULES_DSA_DMA]);
 
 /* The backlog measured on 28 Oct 2026. Each list may only lose members: a
    rule leaves it by being read against its Article, never by editing this. */
@@ -2490,10 +2493,13 @@ test('X1 · 12.2, this tree: the 33 rules read, 0 errors, the backlog the measur
      33/33/33/13/3/10. v2 Session 13 (29 Oct 2026) brought two rules to the v2 shape (§8, its
      question 5): neither was in the exemption, threshold or dates lists. v2 Session 14 (29 Oct
      2026, §8 14.0 question 5) brought the GDPR's five: ap-gdpr-01 and ap-gdpr-03 were in the
-     exemption list, none in the threshold or dates lists */
+     exemption list, none in the threshold or dates lists. v2 Session 15 (29 Oct 2026, §8 15.0
+     question 7) brought the DSA's five and the DMA's four: five were in the exemption list
+     (ap-dsa-01, -03, -04, -05, ap-dma-01), two in the threshold list (ap-dsa-02, ap-dma-02), three
+     in the dates list (ap-dsa-02, ap-dsa-05, ap-dma-03) */
   assert.deepEqual(Object.fromEntries(Object.entries(t.backlog).map(([c, ids]) => [c, ids.length])),
-    { 'rule-v1-sources': 26, 'rule-scope-basis-missing': 26, 'rule-condition-provisions-missing': 26,
-      'rule-exemption-v1': 11, 'rule-threshold-basis-missing': 3, 'rule-dates-not-derived': 10 });
+    { 'rule-v1-sources': 17, 'rule-scope-basis-missing': 17, 'rule-condition-provisions-missing': 17,
+      'rule-exemption-v1': 6, 'rule-threshold-basis-missing': 1, 'rule-dates-not-derived': 7 });
   assert.deepEqual([...t.publishable].sort(), [...RULES_V2].sort(), 'publishable: exactly the rules brought to v2');
   for (const id of RULES_V2) assert.ok(!Object.values(t.backlog).flat().includes(id), `${id} is in no backlog`);
   /* the frozen list is the 33 less the rules brought to v2; it only shrinks */
@@ -2502,8 +2508,9 @@ test('X1 · 12.2, this tree: the 33 rules read, 0 errors, the backlog the measur
   /* the date-dependent halves are WARNINGs: an older date changes the report, never the exit code */
   const sept = triggerAudit(db, '2026-09-27');
   assert.deepEqual(sept.errors, []);
-  /* every rule read on 29 Oct 2026, in file order (v2 Sessions 13 and 14) */
-  assert.deepEqual(sept.warnings, ['ap-gdpr-01', 'ap-gdpr-02', 'ap-gdpr-03', 'ap-gdpr-04', 'ap-pld-01', 'ap-eidas2-01', 'ap-cross-01']
+  /* every rule read on 29 Oct 2026, in file order (v2 Sessions 13, 14 and 15) */
+  assert.deepEqual(sept.warnings, ['ap-gdpr-01', 'ap-gdpr-02', 'ap-gdpr-03', 'ap-gdpr-04', ...RULES_DSA_DMA,
+    'ap-pld-01', 'ap-eidas2-01', 'ap-cross-01']
     .map((id) => `VERIFIED_AFTER_AS_OF applicability/${id}: last_verified 2026-10-29 is after the audit date 2026-09-27`));
   const early = triggerAudit(db, '2024-06-01');
   assert.deepEqual(early.errors, []);
@@ -2568,13 +2575,14 @@ test('X3 · 12.2: evidence-audit.mjs reports TRIGGERS in text, --json and --mark
   const out = runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28']);
   assert.equal(out.exit, 0, 'the backlog never fails the run');
   assert.match(out.out, /^TRIGGERS {8}33 rules · applies 13 · likely 9 · possible 10 · unlikely 1$/m);
-  /* v2 Session 14 (29 Oct 2026, §8 14.0 question 5): 2 → 7, the GDPR's five brought to v2 */
-  assert.match(out.out, /^ {2}publishable {3}7 of 33: ap-gdpr-01, ap-gdpr-02, ap-gdpr-03, ap-gdpr-04, ap-pld-01, ap-eidas2-01, ap-cross-01$/m);
-  assert.match(out.out, /^ {2}BACKLOG rule-dates-not-derived 10: /m);
+  /* v2 Session 14 (29 Oct 2026, §8 14.0 question 5): 2 → 7, the GDPR's five brought to v2;
+     v2 Session 15 (29 Oct 2026, §8 15.0 question 7): 7 → 16, the DSA's five and the DMA's four */
+  assert.match(out.out, /^ {2}publishable {3}16 of 33: ap-gdpr-01, ap-gdpr-02, ap-gdpr-03, ap-gdpr-04, ap-dsa-01, ap-dsa-02, ap-dsa-03, ap-dsa-04, ap-dsa-05, ap-dma-01, ap-dma-02, ap-dma-03, ap-dma-04, ap-pld-01, ap-eidas2-01, ap-cross-01$/m);
+  assert.match(out.out, /^ {2}BACKLOG rule-dates-not-derived 7: /m);
   const json = JSON.parse(runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28', '--json']).out);
   assert.equal(json.triggers.total, 33);
-  assert.equal(json.triggers.backlog['rule-exemption-v1'].length, 11);
-  assert.match(runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28', '--markdown']).out, /\| … publishable at the claims' standard \| 7 of 33 \|/);
+  assert.equal(json.triggers.backlog['rule-exemption-v1'].length, 6);
+  assert.match(runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28', '--markdown']).out, /\| … publishable at the claims' standard \| 16 of 33 \|/);
   assert.ok(DERIVED_FIELDS.includes('publishable') && DERIVED_FIELDS.includes('modality'));
   const dir = treeCopy();
   try {
@@ -2744,8 +2752,10 @@ test('Y3 · 14.1: the GDPR\'s five rules are v2, publishable, resolve to the GDP
   const union = 'Processing by the Union\'s own institutions, bodies, offices and agencies is governed by a separate Union regulation rather than the GDPR — an instrument outside this dataset.';
   assert.equal(ruleOf(db, 'ap-gdpr-01').exemptions[1].text, art305);
   assert.deepEqual(ruleOf(db, 'ap-gdpr-03').exemptions.slice(1).map((e) => e.text), [union, courts]);
-  /* question 4c: ap-cross-01 reported, not changed */
-  assert.deepEqual(x.depends_on, []);
+  /* question 4c: ap-cross-01 reported, not changed; v2 Session 15 (29 Oct 2026, §8 15.0 questions 5
+     and 7) added the depends_on for EDPB paragraph 88 and a DSA reference that is direct, so the one
+     reference that is not direct is still the EDPB one (asserted above) */
+  assert.deepEqual(x.depends_on, ['Whether the recommender system processes personal data (EDPB Guidelines 3/2025, paragraph 88).']);
   assert.equal(x.outcome, 'outcome:applies');
   /* the new provisions, and the Art. 37 summary of question 2 */
   const g = db.instruments.instruments.find((i) => i.id === 'gdpr').provisions;
@@ -2757,4 +2767,52 @@ test('Y3 · 14.1: the GDPR\'s five rules are v2, publishable, resolve to the GDP
   for (const s of [art305, courts, union, 'Material scope', '18 provisions recorded']) assert.ok(page.includes(s), s);
   assert.ok(!page.includes('but does not remove it where processing is not occasional'));
   assert.ok(!page.includes('[object Object]'));
+});
+
+test('Y4 · 15.1: the DSA\'s five and the DMA\'s four rules are v2, publishable, resolve to their own instrument\'s provisions, and the pages print what was approved', () => {
+  /* v2 Session 15 (29 Oct 2026, docs/ROADMAP-v2.md §8, 15.0 questions 1a-6d and 7) */
+  const db = loadDb();
+  const ix = buildIndex(db);
+  const t = triggerAudit(db, '2026-10-29');
+  for (const id of RULES_DSA_DMA) {
+    const r = ruleOf(db, id);
+    assert.ok(!RULES_V1.includes(id), `${id} left RULES_V1`);
+    assert.ok(t.publishable.includes(id), `${id} is publishable`);
+    assert.equal(r.last_verified, '2026-10-29');
+    assert.ok(r.sources.every((s) => typeof s === 'object'), `${id}: reference objects`);
+    const own = r.instrument === 'dsa' ? 'src-eurlex-dsa' : 'src-eurlex-dma';
+    assert.ok(r.sources.some((s) => s.for === 'scope' && s.source_id === own && s.supports === 'supports:direct'), `${id}: a direct scope reference to the Regulation`);
+    assert.deepEqual(Object.keys(r.condition_provisions).sort(), Object.keys(r.conditions).filter((d) => d !== 'thresholds').sort());
+    for (const p of Object.values(r.condition_provisions).flat()) assert.equal(ix.provisionOwner.get(p), r.instrument, p);
+    for (const k of ['publishable', 'asks', 'modality', 'verification_state']) assert.ok(!(k in r), `${id} stores ${k}`);
+  }
+  /* questions 1a and 1b: the threshold bases, one per key */
+  assert.deepEqual(Object.keys(ruleOf(db, 'ap-dsa-02').threshold_basis), ['monthly_active_eu_users_gte']);
+  assert.deepEqual(Object.keys(ruleOf(db, 'ap-dma-02').threshold_basis).sort(), ['monthly_active_eu_end_users_gte', 'yearly_active_eu_business_users_gte']);
+  /* questions 2a and 2b: F-7 and F-6 */
+  const f7 = 'Under Article 19, providers of online platforms that are micro or small enterprises — and, for twelve months after losing that status, those that were — are exempt from the Section 3 online-platform obligations, except Article 24(3), unless designated as a very large online platform.';
+  const f6 = 'Under Article 29, providers of online platforms allowing consumers to conclude distance contracts with traders that are micro or small enterprises — and, for twelve months after losing that status, those that were — are exempt from the Section 4 marketplace obligations, unless designated as a very large online platform.';
+  assert.deepEqual(ruleOf(db, 'ap-dsa-01').exemptions.map((e) => [e.text, e.effect, e.basis.map((b) => b.locator)]), [[f7, 'narrows', ['Art. 19(1) and (2)']]]);
+  assert.deepEqual(ruleOf(db, 'ap-dsa-04').exemptions.map((e) => [e.text, e.effect, e.basis.map((b) => b.locator)]), [[f6, 'narrows', ['Art. 29(1) and (2)']]]);
+  /* questions 3a-3e: the dates */
+  assert.deepEqual(ruleOf(db, 'ap-dsa-02').dates, ['tl-dsa-2023-08-01-application']);
+  assert.deepEqual(ruleOf(db, 'ap-dsa-05').dates, ['tl-dsa-2023-08-01-application', 'tl-dsa-2025-10-29-delegated-act']);
+  assert.deepEqual(ruleOf(db, 'ap-dma-02').dates, []);
+  assert.deepEqual(ruleOf(db, 'ap-dma-03').dates, ['tl-dma-2023-05-01-application']);
+  assert.deepEqual(ruleOf(db, 'ap-dma-04').dates, ['tl-dma-2026-11-01-designation', 'tl-dma-2027-05-01-market-investigation']);
+  assert.deepEqual(db.timeline.events.find((e) => e.id === 'tl-dsa-2023-08-01-application').provisions,
+    ['dsa:art-34', 'dsa:art-35', 'dsa:art-38', 'dsa:art-39', 'dsa:art-40']);
+  /* question 6d: the two DMA headings, as the Official Journal prints them */
+  const dma = db.instruments.instruments.find((i) => i.id === 'dma').provisions;
+  assert.equal(dma.find((p) => p.id === 'dma:art-6').heading, 'Obligations for gatekeepers susceptible of being further specified under Article 8');
+  assert.equal(dma.find((p) => p.id === 'dma:art-38').heading, 'Cooperation and coordination with national competent authorities enforcing competition rules');
+
+  /* the generated pages print the new texts, and not the two old exemption sentences */
+  const dsaPage = visibleText(readFileSync(join(ROOT, 'instruments/dsa/index.html'), 'utf8'));
+  for (const s of [f7, f6, '16 provisions recorded', 'Exclusion for micro and small enterprises']) assert.ok(dsaPage.includes(s), s);
+  assert.ok(!dsaPage.includes('Micro and small enterprises are exempt from the Section 3 online-platform obligations unless designated as a VLOP.'));
+  assert.ok(!dsaPage.includes('Micro and small enterprises are exempt from the online-platform section unless designated as a VLOP.'));
+  const dmaPage = visibleText(readFileSync(join(ROOT, 'instruments/dma/index.html'), 'utf8'));
+  assert.ok(dmaPage.includes('Obligations for gatekeepers susceptible of being further specified under Article 8'));
+  for (const page of [dsaPage, dmaPage]) assert.ok(!page.includes('[object Object]'));
 });
