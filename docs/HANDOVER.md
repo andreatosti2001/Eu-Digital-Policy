@@ -15,7 +15,7 @@ checkpoint, **approved by the author** (§8). Item 16.4 (the draft of the Sessio
   register. `claude/vigilant-ride-i216wh` (Session 15) is in `main` (#44). No other branch to report.
 - `origin/main` was re-fetched after the data commit, after the assertions and before this handover was written:
   still `3576ea2`. No pull request was opened or merged during the session.
-- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. No pull request opened yet.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed.
 - After the approval, item 16.4: the prompt of v2 Session 17 drafted, `docs/prompts/v2-session-17.md` (the ten
   rules of the Data Act, NIS2, DORA and the CRA to the v2 shape by the method of 13.0 question 4, four tables; then
   17.2, the `rule-*` flip to ERROR once `RULES_V1` is empty, and 17.3, the two maintenance checks §8's plan row
@@ -24,6 +24,8 @@ checkpoint, **approved by the author** (§8). Item 16.4 (the draft of the Sessio
   decision: its first write is §8's row "The scope of v2 Session 17", in the author's words. It names article
   numbers only where the dataset already records them; which Articles define and delimit each Act is left to the
   reading.
+- A pull request to `main`, carrying Session 16 and the Session 17 prompt together, opened on the author's
+  instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the branch after it.
 
 ## v2 Session 16 — checkpoint report (16.1, the AI Act)
 
