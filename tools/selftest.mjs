@@ -2222,6 +2222,12 @@ const NO_MANDATE = [
   /sin mandato del Consejo|no tiene mandato del Consejo|no consta ning&uacute;n mandato del Consejo/,
   /sans mandat du Conseil|n&rsquo;a pas de mandat du Conseil|aucun mandat du Conseil/,
   /senza mandato del Consiglio|non ha un mandato del Consiglio|non risulta alcun mandato del Consiglio/,
+  /* Part IX, part-9.p8, until 29 Oct 2026 (V2C-67): the audit corrected Part
+     VIII, and none of the patterns above matched this sentence's wording */
+  /has yet to agree a mandate/,
+  /non ha ancora concordato un mandato/,
+  /n&rsquo;a toujours pas arr&ecirc;t&eacute; de mandat/,
+  /a&uacute;n no ha acordado un mandato/,
 ];
 const saysNoMandate = (s) => NO_MANDATE.filter((re) => re.test(s)).map(String);
 
@@ -2233,7 +2239,11 @@ test('P1 · the Data Omnibus Council mandate rests on the Council register, and 
     'As at 21 October 2026 no Council mandate has been reported',
     'no outcome of that meeting had been published when this was checked on 21 October 2026',
     'Data Omnibus: propuesta, sin mandato del Consejo', 'Data Omnibus&nbsp;: proposition, sans mandat du Conseil',
-    'Data Omnibus: proposta, senza mandato del Consiglio']) assert.ok(saysNoMandate(old).length, old);
+    'Data Omnibus: proposta, senza mandato del Consiglio',
+    "the Council has yet to agree a mandate on the Commission's own GDPR reforms",
+    'il Consiglio non ha ancora concordato un mandato sulle riforme del GDPR',
+    'le Conseil n&rsquo;a toujours pas arr&ecirc;t&eacute; de mandat sur les r&eacute;formes du GDPR',
+    'el Consejo a&uacute;n no ha acordado un mandato sobre las reformas del GDPR']) assert.ok(saysNoMandate(old).length, old);
 
   /* the record: one claim, carried by the Council's own outcome of proceedings */
   const claims = new Map(readData('claims.json').claims.map((c) => [c.id, c]));
@@ -2272,7 +2282,7 @@ test('P1 · the Data Omnibus Council mandate rests on the Council register, and 
   assert.deepEqual(saysNoMandate(visibleText(page).split('28 Oct 2026 (')[0]), [], 'the page, before the status note\'s own provenance');
   /* and Part VIII cites the record its sentence rests on */
   const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
-  for (const key of ['part-8.li2', 'part-8.p4'])
+  for (const key of ['part-8.li2', 'part-8.p4', 'part-9.p8'])
     assert.match(html, new RegExp(`data-i18n="${key.replace('.', '\\.')}" data-claim="[^"]*clm-data-omnibus-council-mandate`), key);
 });
 
