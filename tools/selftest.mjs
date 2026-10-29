@@ -2532,6 +2532,14 @@ test('X2 · 12.2: every ERROR rule fires on a planted defect, and a v2 rule that
   /* T-03: a dimension with no provision, and a provision of an unconnected instrument */
   assert.equal(errs(plant(swap((r) => { delete r.condition_provisions[Object.keys(r.conditions)[0]]; })), /^T-03 .*names no provision/).length, 1);
   assert.equal(errs(plant(swap((r) => { r.condition_provisions[Object.keys(r.conditions)[0]] = ['dora:art-5']; })), /^T-03 .*neither this rule's nor connected/).length, 1);
+  /* T-03 does not read thresholds as a dimension: they have their own basis, T-05 (v2 Session 15,
+     29 Oct 2026, §8 "T-03 and thresholds"). A planted threshold with its threshold_basis leaves the
+     rule with no T-03 finding */
+  const thr = plant(swap((r) => {
+    r.conditions.thresholds = { planted_count_gte: 1 };
+    r.threshold_basis = { planted_count_gte: [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 3(2)' }] };
+  }));
+  assert.equal(errs(thr, /^T-03 /).length, 0);
   /* T-04: an exemption object with no basis */
   assert.equal(errs(plant(swap((r) => { r.exemptions = [{ text: 'Purely personal or household activity.', effect: 'excludes', basis: [] }]; })), /^T-04 /).length, 1);
   /* T-05: a key without its comparator */

@@ -138,8 +138,12 @@ export function triggerAudit(db, asOf) {
       else owePub('rule-scope-basis-missing', `T-02 ${w}: no scope reference`);
     }
 
-    /* T-03 · every condition resolves to the provision that defines it */
-    const dims = Object.keys(r.conditions || {});
+    /* T-03 · every condition resolves to the provision that defines it. The dimensions are the
+       keys of conditions other than thresholds (the schema's derived `asks`): a threshold has its
+       own basis, T-05, and validate.mjs admits no `thresholds` key in condition_provisions.
+       v2 Session 15 (29 Oct 2026, docs/ROADMAP-v2.md §8, "T-03 and thresholds"): until then no
+       rule with a threshold could pass both checks. */
+    const dims = Object.keys(r.conditions || {}).filter((d) => d !== 'thresholds');
     if (r.condition_provisions == null) owePub('rule-condition-provisions-missing', `T-03 ${w}: no condition_provisions`);
     else {
       const linked = new Set([r.instrument]);
