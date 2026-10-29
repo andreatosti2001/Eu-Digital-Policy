@@ -146,11 +146,22 @@
       "obligations": ["dsa:art-16", "dsa:art-25", "dsa:art-28"],
       "authority": ["dsc-*"],
       "dates": ["tl-dsa-2024-02-17-application"],
-      "exemptions": ["Micro and small enterprises are exempt from the Section 3 online-platform obligations unless designated as a VLOP."],
+      "exemptions": [
+        { "text": "Under Article 19, providers of online platforms that are micro or small enterprises — and, for twelve months after losing that status, those that were — are exempt from the Section 3 online-platform obligations, except Article 24(3), unless designated as a very large online platform.", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 19(1) and (2)" }] }
+      ],
       "depends_on": [],
       "claims": ["clm-dsa-four-tiers", "clm-art-16-over-removal-incentive"],
-      "sources": ["src-eurlex-dsa"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 2(1); Art. 3 points (i) and (s); Art. 30(1); Art. 33(1)", "for": "scope" },
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 16; Art. 25; Art. 28", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["dsa:art-3", "dsa:art-33"],
+        "activity": ["dsa:art-3", "dsa:art-30"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2065 retrieved from the Publications Office's Cellar by CELEX (32022R2065): Arts 2(1), 3 points (i) and (s), 16, 19, 24(3), 25, 28, 30(1) and 33(1). The Publications Office's metadata lists no act amending the Regulation and eleven corrigenda, none with an English expression. The exemption is Art. 19(1) and (2); its text was corrected on the author's decision of 29 Oct 2026 to state the Art. 24(3) exception and the twelve months after a provider loses micro or small status (F-7, V2C-09). Arts 25 and 28 are in Section 3 of Chapter III, which Art. 19 excludes; Art. 16 is in Section 2 and is not excluded. Conditions, outcome and rationale were not changed. clm-dsa-four-tiers and clm-art-16-over-removal-incentive were not re-read."
     },
     {
       "id": "ap-dsa-02",
@@ -168,8 +179,19 @@
       "exemptions": [],
       "depends_on": ["Actual designation by Commission decision. The threshold alone does not create the obligation."],
       "claims": ["clm-dsa-vlop-threshold", "clm-art-34-open-concept", "clm-art-40-underperforming"],
-      "sources": ["src-eurlex-dsa"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 2(1); Art. 3 points (i), (p) and (s); Art. 33(1) and (4)", "for": "scope" },
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 34; Art. 35; Art. 38; Art. 39; Art. 40", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["dsa:art-33"],
+        "activity": ["dsa:art-3", "dsa:art-30"]
+      },
+      "threshold_basis": {
+        "monthly_active_eu_users_gte": [{ "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 33(1) ('equal to or higher than 45 million')" }]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2065 retrieved from the Publications Office's Cellar by CELEX (32022R2065): Arts 2(1), 3 points (i), (p) and (s), 33, 34, 35, 38, 39, 40 and 92. The Publications Office's metadata lists no act amending the Regulation and eleven corrigenda, none with an English expression. The threshold key's comparator (_gte) is the text's 'equal to or higher than' (Art. 33(1)); Art. 33(1) also requires designation under Art. 33(4), which depends_on states. Art. 3 point (p) defines the active recipient of an online platform, which the key calls a user. On the author's decision of 29 Oct 2026, Arts 38 and 39 are named on tl-dsa-2023-08-01-application (Arts 33(6) and 92), so the dates the obligations derive are the one stored. Conditions, outcome and rationale were not changed. The claims were not re-read."
     },
     {
       "id": "ap-dsa-03",
@@ -183,11 +205,22 @@
       "obligations": ["dsa:art-34", "dsa:art-35"],
       "authority": ["ec", "dsc-*"],
       "dates": ["tl-dsa-2023-08-01-application"],
-      "exemptions": ["Below the 45 million threshold and absent designation, Articles 33–43 do not apply."],
+      "exemptions": [
+        { "text": "Below the 45 million threshold and absent designation, Articles 33–43 do not apply.", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 33(1)" }] }
+      ],
       "depends_on": ["Whether the service reaches 45 million average monthly active recipients in the Union.", "Whether the Commission has designated it."],
       "claims": ["clm-dsa-vlop-threshold"],
-      "sources": ["src-eurlex-dsa"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 2(1); Art. 3 points (i) and (s); Art. 33(1) and (4)", "for": "scope" },
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 34; Art. 35", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["dsa:art-3", "dsa:art-33"],
+        "activity": ["dsa:art-3"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2065 retrieved from the Publications Office's Cellar by CELEX (32022R2065): Arts 2(1), 3 points (i) and (s), 19, 27, 33(1) and (4), 34 and 35. The Publications Office's metadata lists no act amending the Regulation and eleven corrigenda, none with an English expression. The exemption is Art. 33(1): Section 5 of Chapter III (Arts 33 to 43) applies only to platforms at or above the threshold and designated under Art. 33(4). The DSA does not define a large company; condition_provisions.actor names Art. 3 (the online platform) and Art. 33 (the very large online platform). The rationale's recommender-parameter transparency is Art. 27, in Section 3, from which Art. 19 exempts micro and small enterprises: reported to the author, not changed (29 Oct 2026). Conditions, outcome and rationale were not changed. clm-dsa-vlop-threshold was not re-read."
     },
     {
       "id": "ap-dsa-04",
@@ -200,11 +233,21 @@
       "obligations": ["dsa:art-30", "dsa:art-16"],
       "authority": ["dsc-*"],
       "dates": ["tl-dsa-2024-02-17-application"],
-      "exemptions": ["Micro and small enterprises are exempt from the online-platform section unless designated as a VLOP."],
+      "exemptions": [
+        { "text": "Under Article 29, providers of online platforms allowing consumers to conclude distance contracts with traders that are micro or small enterprises — and, for twelve months after losing that status, those that were — are exempt from the Section 4 marketplace obligations, unless designated as a very large online platform.", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 29(1) and (2)" }] }
+      ],
       "depends_on": [],
       "claims": ["clm-temu-fine"],
-      "sources": ["src-eurlex-dsa"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 2(1); Art. 3 points (f), (i) and (l); Art. 30(1)", "for": "scope" },
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 16; Art. 30", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "activity": ["dsa:art-3", "dsa:art-30"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2065 retrieved from the Publications Office's Cellar by CELEX (32022R2065): Arts 2(1), 3 points (f), (i) and (l), 16, 19, 29 and 30. The Publications Office's metadata lists no act amending the Regulation and eleven corrigenda, none with an English expression. The exemption is Art. 29(1) and (2); its text, which named 'the online-platform section' (Section 3, Art. 19), was corrected on the author's decision of 29 Oct 2026 to Section 4 and Art. 29, with the twelve months after a provider loses micro or small status (F-6, V2C-08). Art. 16 is in Section 2 and is not excluded. Conditions, outcome and rationale were not changed. clm-temu-fine was not re-read."
     },
     {
       "id": "ap-dsa-05",
@@ -216,12 +259,23 @@
       "rationale": "Article 40 gives researchers a route to platform data rather than an obligation. Access to non-public data runs through the Digital Services Coordinator of establishment, not the platform, and is purpose-limited to the detection and understanding of systemic risks. The brief records that route as underperforming in practice.",
       "obligations": ["dsa:art-40"],
       "authority": ["dsc-*", "ec"],
-      "dates": ["tl-dsa-2025-10-29-delegated-act"],
-      "exemptions": ["Article 40 reaches only VLOPs and VLOSEs. Smaller platforms are outside it entirely."],
+      "dates": ["tl-dsa-2023-08-01-application", "tl-dsa-2025-10-29-delegated-act"],
+      "exemptions": [
+        { "text": "Article 40 reaches only VLOPs and VLOSEs. Smaller platforms are outside it entirely.", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 33(1); Art. 40(4) and (12)" }] }
+      ],
       "depends_on": ["Vetting by a Digital Services Coordinator.", "Whether the research is directed at systemic risks in the Union."],
       "claims": ["clm-art-40-underperforming", "clm-art-40-delegated-act"],
-      "sources": ["src-eurlex-dsa", "src-eurlex-dsa-da-2050"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 33(1); Art. 40(4), (8), (9) and (12)", "for": "scope" },
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 40(4) and (12)", "for": "obligation" },
+        { "source_id": "src-eurlex-dsa-da-2050", "supports": "supports:direct", "locator": "Art. 1; Art. 16", "for": "date" }
+      ],
+      "condition_provisions": {
+        "actor": ["dsa:art-40"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2065 retrieved from the Publications Office's Cellar by CELEX (32022R2065): Arts 33(1) and (6), 40 and 92. The Publications Office's metadata lists no act amending the Regulation and eleven corrigenda, none with an English expression. Also read that day: Commission Delegated Regulation (EU) 2025/2050 (32025R2050, OJ L of 9.10.2025), Arts 1 and 16 — in force on the twentieth day following publication, 29 October 2025; no amending act or corrigendum. The exemption is Art. 33(1) with Art. 40(4) and (12), which address only providers of very large online platforms and search engines. Under Art. 40(8) and (9) the status of vetted researcher is awarded by the Digital Services Coordinator of establishment, an application possibly arriving through the Coordinator of the research organisation's Member State. tl-dsa-2023-08-01-application was added to dates on the author's decision of 29 Oct 2026, derived from dsa:art-40. Conditions, outcome and rationale were not changed. The claims were not re-read."
     },
 
     {
@@ -235,11 +289,22 @@
       "obligations": ["dma:art-5", "dma:art-6", "dma:art-7", "dma:art-13"],
       "authority": ["ec"],
       "dates": ["tl-dma-2023-05-01-application"],
-      "exemptions": ["The DMA imposes no direct obligations on SMEs."],
+      "exemptions": [
+        { "text": "The DMA imposes no direct obligations on SMEs.", "effect": "excludes",
+          "basis": [{ "source_id": "src-ec-dma-review-2026", "supports": "supports:direct", "locator": "Section 5 (Conclusions), page 14" }, { "source_id": "src-eurlex-dma", "supports": "supports:partial", "locator": "Art. 1(2); Art. 2 point (1)" }] }
+      ],
       "depends_on": ["Designation by Commission decision for the specific core platform service."],
       "claims": ["clm-dma-ex-ante", "clm-dma-designation", "clm-dma-commission-exclusive", "clm-apple-proactive-enablement"],
-      "sources": ["src-eurlex-dma", "src-ec-apple-meta-dma-2025"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 1(2); Art. 2 point (1); Art. 3(1) and (9)", "for": "scope" },
+        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 3(10); Art. 5(1); Art. 6(1); Art. 7(1); Art. 13(1)", "for": "obligation" },
+        { "source_id": "src-ec-apple-meta-dma-2025", "supports": "supports:context", "locator": "IP/25/1085", "for": "rationale" }
+      ],
+      "condition_provisions": {
+        "actor": ["dma:art-2", "dma:art-3"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1, 2 point (1), 3, 5, 6, 7 and 13. The Publications Office's metadata lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression, and it changes Art. 13(8) alone. Also read that day: the Review Report COM(2026) 178 final (PDF at the URL the source records), Section 5, page 14, 'The DMA applies only to designated gatekeepers and does not impose direct obligations on SMEs' — the exemption's direct basis; the DMA's text addresses gatekeepers without naming SMEs, hence partial; and IP/25/1085 through the press corner's documents API, which names no article of the DMA, kept as context (the author's decision of 29 Oct 2026). Art. 3(10) gives a gatekeeper six months after a core platform service is listed in the designation decision to comply with Arts 5, 6 and 7, and IP/25/1085 dates the obligations' binding force to March 2024, while the rationale says the Article 5 prohibitions apply 'immediately', as clm-dma-ex-ante and the brief's part-4.p2 do: reported to the author, not changed (29 Oct 2026). Conditions, outcome and rationale were not changed. The claims were not re-read."
     },
     {
       "id": "ap-dma-02",
@@ -252,12 +317,23 @@
       "rationale": "Article 3 designates by quantitative presumption: substantial Union turnover or market capitalisation, at least 45 million monthly active end users and 10,000 yearly active business users, sustained over three financial years. Meeting the thresholds triggers a notification duty, not the obligations themselves.",
       "obligations": ["dma:art-3", "dma:art-2"],
       "authority": ["ec"],
-      "dates": ["tl-dma-2026-11-01-designation"],
+      "dates": [],
       "exemptions": [],
       "depends_on": ["Whether the service is a core platform service within the Article 2 list.", "Whether the thresholds are met over three financial years.", "Designation by Commission decision."],
       "claims": ["clm-dma-designation", "clm-seven-gatekeepers"],
-      "sources": ["src-eurlex-dma"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 1(2); Art. 2 points (1) and (2); Art. 3(1) and (2)", "for": "scope" },
+        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 3(3) and (4)", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["dma:art-2", "dma:art-3"]
+      },
+      "threshold_basis": {
+        "monthly_active_eu_end_users_gte": [{ "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 3(2)(b) ('at least 45 million monthly active end users')" }],
+        "yearly_active_eu_business_users_gte": [{ "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 3(2)(b) ('at least 10 000 yearly active business users')" }]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1(2), 2 points (1), (2) and (13), and 3, and the Annex. The Publications Office's metadata lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression, and it changes Art. 13(8) alone. Both threshold keys' comparator (_gte) is the text's 'at least' (Art. 3(2)(b)). Art. 3(3) makes meeting the thresholds a duty to notify, and Art. 3(4) makes designation the Commission's act. The DMA does not define a large company, and the taxonomy's actor:cloud-provider is the Data Act's term (the DMA's cloud computing service is Art. 2 point (13)). tl-dma-2026-11-01-designation was removed from dates on the author's decision of 29 Oct 2026: its sources (IP/25/2717 and IP/26/1444, read that day) concern designating AWS and Azure despite their not meeting the thresholds (Arts 3(8) and 17), not the presumption this rule encodes; no date derives from Arts 2 and 3. Conditions, outcome and rationale were not changed. The claims were not re-read."
     },
     {
       "id": "ap-dma-03",
@@ -269,12 +345,20 @@
       "rationale": "The Commission's 2026 review confirms the DMA imposes no direct obligations on SMEs. An SME is far more likely to encounter the DMA as a business user with rights against a gatekeeper — the right to steer, to access its own performance data, and to raise non-compliance with a national authority — than as an addressee.",
       "obligations": ["dma:art-5", "dma:art-6"],
       "authority": ["ec"],
-      "dates": [],
+      "dates": ["tl-dma-2023-05-01-application"],
       "exemptions": [],
       "depends_on": [],
       "claims": ["clm-dma-review-enforce-not-expand"],
-      "sources": ["src-ec-dma-review-2026"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 1(2); Art. 2 points (1) and (21); Art. 3(1) and (2)", "for": "scope" },
+        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 5(4) and (6); Art. 6(10)", "for": "obligation" },
+        { "source_id": "src-ec-dma-review-2026", "supports": "supports:direct", "locator": "Section 4 ('Costs and benefits'), page 8; Section 5 (Conclusions), page 14", "for": "rationale" }
+      ],
+      "condition_provisions": {
+        "actor": ["dma:art-2", "dma:art-3"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1(2), 2 points (1) and (21), 3(1) and (2), 5(4) and (6), 6(10) and 54. The Publications Office's metadata lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression, and it changes Art. 13(8) alone. Also read that day: the Review Report COM(2026) 178 final (PDF at the URL the source records), Section 4, 'Costs and benefits', page 8, and Section 5, page 14. The DMA does not define an SME (Recommendation 2003/361/EC, outside this dataset); condition_provisions.actor names Art. 2 (the gatekeeper, the business user) and Art. 3 (designation). tl-dma-2023-05-01-application was added to dates on the author's decision of 29 Oct 2026, derived from dma:art-5 and dma:art-6. Conditions, outcome and rationale were not changed. clm-dma-review-enforce-not-expand was not re-read."
     },
     {
       "id": "ap-dma-04",
@@ -290,8 +374,15 @@
       "exemptions": [],
       "depends_on": ["The outcome of the pending cloud designation decisions."],
       "claims": ["clm-dma-scope-gap"],
-      "sources": ["src-eurlex-dma"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 1(2); Art. 2 points (2)(i) and (13)", "for": "scope" },
+        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 3(1), (2) and (8)", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "activity": ["dma:art-2"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1(2), 2 points (2)(i) and (13), and 3(1), (2) and (8). The Publications Office's metadata lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression, and it changes Art. 13(8) alone. Art. 2 point (13) defines a cloud computing service by reference to Directive (EU) 2016/1148. Also read that day, through the press corner's documents API: IP/25/2717 and IP/26/1444, the sources of the two events in dates. The November 2026 date is the Commission's target for concluding the AWS and Azure investigations, not a legal deadline, while the rationale says the decisions 'are due' then; no designation decision was found that day: reported to the author, not changed (29 Oct 2026). Conditions, outcome and rationale were not changed. clm-dma-scope-gap was not re-read."
     },
 
     {
@@ -683,19 +774,20 @@
       "authority": ["dpa-*", "ec"],
       "dates": ["tl-gdpr-2018-05-25-application"],
       "exemptions": [],
-      "depends_on": [],
+      "depends_on": ["Whether the recommender system processes personal data (EDPB Guidelines 3/2025, paragraph 88)."],
       "claims": ["clm-dsa-gdpr-unresolved"],
       "sources": [
         { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 2(1); Art. 4 points (1), (2), (4) and (7)", "for": "scope" },
         { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 5(1)(c); Art. 6(1); Art. 25(1) and (2)", "for": "obligation" },
-        { "source_id": "src-edpb-guidelines-3-2025", "supports": "supports:partial", "locator": "Version 2.0, paragraphs 7–11 (section 1.1), 80 (section 2.4.4) and 93–95 (section 2.5)", "for": "rationale" }
+        { "source_id": "src-edpb-guidelines-3-2025", "supports": "supports:partial", "locator": "Version 2.0, paragraphs 7–11 (section 1.1), 80 (section 2.4.4) and 93–95 (section 2.5)", "for": "rationale" },
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 27(1); Art. 39(1)", "for": "rationale" }
       ],
       "condition_provisions": {
         "actor": ["gdpr:art-4"],
         "activity": ["gdpr:art-2", "gdpr:art-4"]
       },
       "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 14): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 4 points (1), (2), (4) and (7), 5, 6 and 25; the corrigendum of 23 May 2018 (32016R0679R(02)) changes none of them, and the Publications Office's metadata lists no act amending the Regulation. Also read that day: the EDPB Guidelines 3/2025, version 2.0 of 17 September 2026 (PDF, from the EDPB's site), paragraphs 7 to 11 and 79 to 95. The DSA defines 'online platform' and 'recommender system' (Art. 3 points (i) and (s)) and the very large online platform (Art. 33(1)), read that day (CELEX 32022R2065); the GDPR binds a platform only as a controller or processor, so condition_provisions name the GDPR's own Arts 2 and 4 (the author's decision of 29 Oct 2026), and the DSA's provisions belong to Session 15. The EDPB reference supports the rationale in part: the guidelines do not mention the advertisement repository (DSA Art. 39), which the rationale names, and speak of compatible application rather than conflict. Paragraph 88 says a recommender system may involve no personal data, while the rule answers applies with no depends_on: reported to the author, not changed (29 Oct 2026). Conditions, outcome and rationale were not changed. clm-dsa-gdpr-unresolved was not re-read."
+      "verification_note": "29 Oct 2026 (v2 Session 14): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 4 points (1), (2), (4) and (7), 5, 6 and 25; the corrigendum of 23 May 2018 (32016R0679R(02)) changes none of them, and the Publications Office's metadata lists no act amending the Regulation. Also read that day: the EDPB Guidelines 3/2025, version 2.0 of 17 September 2026 (PDF, from the EDPB's site), paragraphs 7 to 11 and 79 to 95. The DSA defines 'online platform' and 'recommender system' (Art. 3 points (i) and (s)) and the very large online platform (Art. 33(1)), read that day (CELEX 32022R2065); the GDPR binds a platform only as a controller or processor, so condition_provisions name the GDPR's own Arts 2 and 4 (the author's decision of 29 Oct 2026), and the DSA's provisions belong to Session 15. The EDPB reference supports the rationale in part: the guidelines do not mention the advertisement repository (DSA Art. 39), which the rationale names, and speak of compatible application rather than conflict. Paragraph 88 says a recommender system may involve no personal data, while the rule answers applies with no depends_on: reported to the author, not changed (29 Oct 2026). Conditions, outcome and rationale were not changed. clm-dsa-gdpr-unresolved was not re-read. 29 Oct 2026 (v2 Session 15), on the author's decisions of that day: a DSA reference for the rationale's recommender-parameter transparency and advertisement repository (Arts 27(1) and 39(1), read that day in the Official Journal text, 32022R2065), and a depends_on for paragraph 88 of the EDPB guidelines; outcome and condition_provisions unchanged. The EDPB reference stays partial: the guidelines speak of compatible application rather than conflict."
     }
   ]
 }
