@@ -16,6 +16,15 @@ checkpoint, **approved by the author** (§8).
 - Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed, with a pull request to `main`
   opened on the author's instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the
   branch after the pull request is opened.
+- After that, on 29 Oct 2026: #40 was merged into `main` (`d9a3939`), with all 16 checks green on its head
+  (`984ea7d`). On the author's request ("draft session 14's prompt"), the prompt of v2 Session 14 was drafted:
+  `docs/prompts/v2-session-14.md` (the five GDPR rules to the v2 shape by the method of 13.0 question 4,
+  F-5 / V2C-07 among the questions beyond the shape, then a checkpoint, then — on the author's request
+  ("include the drafting of session 15 at the end of the session") — item 14.4, the draft of the Session 15
+  prompt, measured on Session 14's approved tree). It is on
+  `claude/v2-session-14-prompt`, cut from `main` at `d9a3939`. The prompt records no decision: its first write
+  is §8's row "The scope of v2 Session 14", in the author's words. A pull request to `main` was opened on the author's instruction
+  ("yes", 29 Oct 2026); nothing is pushed to the branch after it.
 
 ## v2 Session 13 — checkpoint report (13.1 V2C-67, 13.2 the validator, 13.3 the pilot)
 
