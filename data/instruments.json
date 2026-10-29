@@ -1899,7 +1899,49 @@
         ],
         "implementation_model": "Requires national transposition"
       },
-      "provisions": [],
+      "provisions": [
+        {
+          "id": "pld:art-2",
+          "number": "2",
+          "heading": "Scope",
+          "summary": "Applies to products placed on the market or put into service after 9 December 2026 (2(1)). It does not apply to free and open-source software developed or supplied outside the course of a commercial activity (2(2)), or to damage from nuclear accidents in so far as liability for it is covered by international conventions ratified by Member States (2(3)).",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-pld"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024L2853); number and heading as printed, summary from the Article's own paragraphs."
+        },
+        {
+          "id": "pld:art-4",
+          "number": "4",
+          "heading": "Definitions",
+          "summary": "'Product' means all movables, even if integrated into, or inter-connected with, another movable or an immovable, and includes electricity, digital manufacturing files, raw materials and software (point (1)). A 'manufacturer' is any natural or legal person who develops, manufactures or produces a product, has one designed or manufactured or presents themselves as its manufacturer, or develops, manufactures or produces one for their own use (point (10)).",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-pld"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024L2853); number and heading as printed, summary from the Article's own paragraphs."
+        },
+        {
+          "id": "pld:art-8",
+          "number": "8",
+          "heading": "Economic operators liable for defective products",
+          "summary": "Member States must ensure that the manufacturer of a defective product, and the manufacturer of a defective component integrated within its control, are liable; for a manufacturer established outside the Union, so are the importer, the authorised representative and, failing both, the fulfilment service provider (8(1)). Whoever substantially modifies a product outside the manufacturer's control and then makes it available or puts it into service is treated as its manufacturer (8(2)). Where no EU-established economic operator can be identified, a distributor that fails to identify one within one month of a request is liable (8(3)), and so is an online platform under the conditions of 8(4).",
+          "obligation_on": [
+            "actor:manufacturer"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-pld"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024L2853); number and heading as printed, summary from the Article's own paragraphs. obligation_on lists the manufacturer only, because the taxonomy has no importer, authorised-representative, fulfilment-service-provider or distributor actor; read the summary, not the actor list."
+        }
+      ],
       "claims": [
         "clm-pld-covers-software"
       ],
@@ -2099,6 +2141,34 @@
         "implementation_model": "Directly applicable"
       },
       "provisions": [
+        {
+          "id": "eidas2:art-2",
+          "number": "2 (of Regulation (EU) No 910/2014, as amended)",
+          "heading": "Scope",
+          "summary": "Applies to electronic identification schemes notified by a Member State, to European Digital Identity Wallets provided by a Member State and to trust service providers established in the Union (2(1)); it is without prejudice to Regulation (EU) 2016/679 (2(4)).",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-eidas2",
+            "src-eurlex-eidas"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 from the Official Journal texts retrieved that day from the Publications Office's Cellar: paragraphs 1 and 4 as replaced by Regulation (EU) 2024/1183, Art. 1 point (2)(a) and (b) (CELEX 32024R1183); the heading 'Scope' from Regulation (EU) No 910/2014 (CELEX 32014R0910). Not read in a consolidated version."
+        },
+        {
+          "id": "eidas2:art-3",
+          "number": "3 (of Regulation (EU) No 910/2014, as amended)",
+          "heading": "Definitions",
+          "summary": "Point (42): 'European Digital Identity Wallet' means an electronic identification means which allows the user to securely store, manage and validate person identification data and electronic attestations of attributes for the purpose of providing them to relying parties and other users of European Digital Identity Wallets, and to sign by means of qualified electronic signatures or to seal by means of qualified electronic seals.",
+          "obligation_on": [],
+          "claims": [],
+          "sources": [
+            "src-eurlex-eidas2",
+            "src-eurlex-eidas"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 29 Oct 2026 from the Official Journal texts retrieved that day from the Publications Office's Cellar: point (42) as added by Regulation (EU) 2024/1183, Art. 1 point (3)(j) (CELEX 32024R1183); the heading 'Definitions' from Regulation (EU) No 910/2014 (CELEX 32014R0910). Not read in a consolidated version. The summary quotes point (42); the Article's other definitions are not summarised here."
+        },
         {
           "id": "eidas2:art-5a",
           "number": "5a (of Regulation (EU) No 910/2014, as inserted)",
