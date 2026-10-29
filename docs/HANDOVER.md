@@ -16,6 +16,14 @@ checkpoint, **approved by the author** (§8). Item 16.4 (the draft of the Sessio
 - `origin/main` was re-fetched after the data commit, after the assertions and before this handover was written:
   still `3576ea2`. No pull request was opened or merged during the session.
 - Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. No pull request opened yet.
+- After the approval, item 16.4: the prompt of v2 Session 17 drafted, `docs/prompts/v2-session-17.md` (the ten
+  rules of the Data Act, NIS2, DORA and the CRA to the v2 shape by the method of 13.0 question 4, four tables; then
+  17.2, the `rule-*` flip to ERROR once `RULES_V1` is empty, and 17.3, the two maintenance checks §8's plan row
+  describes, each put to the author before it is written; the assertion question asked after measuring; then a
+  checkpoint). Its starting state was measured on this session's approved tree (`5326ea5`). The prompt records no
+  decision: its first write is §8's row "The scope of v2 Session 17", in the author's words. It names article
+  numbers only where the dataset already records them; which Articles define and delimit each Act is left to the
+  reading.
 
 ## v2 Session 16 — checkpoint report (16.1, the AI Act)
 
@@ -180,7 +188,7 @@ overflow; no "[object Object]"; the old Art. 6(3) sentence nowhere.
 | **16.1** | data, pages, sitemap, bibliography (`cd85da8`); `RULES_V1`, X1–X3, Y1, Y5, `fields.mjs` (`414a374`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 23 of 33"; open the `applies.html` URLs above and `/instruments/ai-act/` | `tools/selftest.mjs` X1–X3, Y1, Y5; `agent/detector` 41 | met: the seven publishable; every check at 0 errors |
 | **16.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
 | **16.3** | this report; V2C-06's and V2C-10's rows in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); both rows name `cd85da8` |
-| **16.4** | — | — | — | not started: follows the approval |
+| **16.4** | `docs/prompts/v2-session-17.md` (`02dffad`); this register entry | read the prompt against §8's plan row and Sessions 13–16's rows; its measured state against `node tools/evidence-audit.mjs --as-of 2026-10-29` | — | met: the prompt records no decision |
 
 ### How to check it by hand
 
