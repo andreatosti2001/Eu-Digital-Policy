@@ -2,7 +2,7 @@
 
 **Last updated:** v2 Session 16, the fourth rules session of Phase 3 (29 October 2026): 16.1, the seven rules on the
 AI Act (`ap-ai-act-01`…`ap-ai-act-07`) in the v2 shape, read in the text as the AI Omnibus amends it, then a
-checkpoint, **awaiting the author's approval**. Item 16.4 (the draft of the Session 17 prompt) follows the approval.
+checkpoint, **approved by the author** (§8). Item 16.4 (the draft of the Session 17 prompt) follows.
 **Branch:** `claude/v2-session-16-ai-act-rules`, cut from `main` at `3576ea2`.
 
 ## Branch register — 29 October 2026 (v2 Session 16)
@@ -15,7 +15,7 @@ checkpoint, **awaiting the author's approval**. Item 16.4 (the draft of the Sess
   register. `claude/vigilant-ride-i216wh` (Session 15) is in `main` (#44). No other branch to report.
 - `origin/main` was re-fetched after the data commit, after the assertions and before this handover was written:
   still `3576ea2`. No pull request was opened or merged during the session.
-- Disposition: pushed; the checkpoint awaits the author's approval. No pull request opened.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. No pull request opened yet.
 
 ## v2 Session 16 — checkpoint report (16.1, the AI Act)
 
@@ -179,7 +179,7 @@ overflow; no "[object Object]"; the old Art. 6(3) sentence nowhere.
 | **16.0** | §8: scope row and eighteen answer rows (`8263a36` … `79456fb`) | read §8's last nineteen rows | — | met: every decision in the author's words before anything published changed |
 | **16.1** | data, pages, sitemap, bibliography (`cd85da8`); `RULES_V1`, X1–X3, Y1, Y5, `fields.mjs` (`414a374`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 23 of 33"; open the `applies.html` URLs above and `/instruments/ai-act/` | `tools/selftest.mjs` X1–X3, Y1, Y5; `agent/detector` 41 | met: the seven publishable; every check at 0 errors |
 | **16.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
-| **16.3** | this report | — | — | **awaiting the author's approval**; then V2C-06's and V2C-10's rows in `docs/V2-CLOSURE.md` name `cd85da8` |
+| **16.3** | this report; V2C-06's and V2C-10's rows in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); both rows name `cd85da8` |
 | **16.4** | — | — | — | not started: follows the approval |
 
 ### How to check it by hand
