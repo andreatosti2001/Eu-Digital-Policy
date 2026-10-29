@@ -1,9 +1,230 @@
 # HANDOVER
 
-**Last updated:** v2 Session 16, the fourth rules session of Phase 3 (29 October 2026): 16.1, the seven rules on the
-AI Act (`ap-ai-act-01`…`ap-ai-act-07`) in the v2 shape, read in the text as the AI Omnibus amends it, then a
-checkpoint, **approved by the author** (§8). Item 16.4 (the draft of the Session 17 prompt) follows.
-**Branch:** `claude/v2-session-16-ai-act-rules`, cut from `main` at `3576ea2`.
+**Last updated:** v2 Session 17, the fifth and last rules session of Phase 3 (29 October 2026): 17.1, the ten rules of
+the Data Act, NIS2, DORA and the CRA in the v2 shape; 17.2, the `rule-*` BACKLOG flipped to ERROR — **33 of 33 rules
+publishable, Phase 3's entry condition met**; 17.3, the two maintenance checks (T-12 and freshness per rule); then a
+checkpoint, **awaiting the author's approval**.
+**Branch:** `claude/v2-session-17-last-rules`, cut from `main` at `ca1e723`.
+
+## Branch register — 29 October 2026 (v2 Session 17)
+
+- Branch `claude/v2-session-17-last-rules`, cut from `main` at `ca1e723` (#46: Session 16 and this session's prompt).
+  Nothing was merged in. The environment assigned no branch (the checkout was a detached `main`), so the session used
+  the prompt's name.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only `origin/claude/v2-session-8-findings`
+  and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both already in the register. `claude/v2-session-16-ai-act-rules`
+  is in `main` (#46). No other branch to report.
+- `origin/main` was re-fetched after the data commit and before this handover was written: still `ca1e723`. No pull
+  request was opened or merged during the session.
+- Disposition: **pending** — the checkpoint awaits the author's approval; then the author is asked whether to open a
+  pull request to `main`.
+
+## v2 Session 17 — checkpoint report (17.1 the ten rules, 17.2 the flip, 17.3 the two maintenance checks)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 17 | "Start Session 17" | `acdc63e` |
+| Q6a · the 12 Jan 2027 event and Data Act Art. 29 | "A: add Art. 29, retag (Recommended)" | `1d904d3` |
+| Q2a · `ap-data-act-02`'s dates | "Add the derived date (Recommended)" | `4d40033` |
+| Q2b · `ap-data-act-04`'s dates | "Add 2026, keep 2027 (Recommended)" | `9372bb3` |
+| Q3a · `ap-data-act-03`'s exemption (Art. 4(6)–(9)) | "A: correct, drop brief's line (Recommended)" | `0312451` |
+| Q6b · Data Act Art. 7(1) on `-03` and `-04` | "A: add to -03 and -04 (Recommended)" | `f517f30` |
+| Q6c · Data Act Art. 31 on `-01` and `-02` | "A: add to -01 and -02 (Recommended)" | `5d61860` |
+| Q6d · two headings (Data Act Art. 3, DORA Art. 28) | "A: correct both (Recommended)" | `e6976db` |
+| Q1a · the Data Act table | "Approve the table (Recommended)" | `c19c153` |
+| Q5a · NIS2 as a directive | "A: as proposed (Recommended)" | `a20f961` |
+| Q4 · the tier-2 source of `ap-nis2-01` | "A: context, report wording (Recommended)" | `579d1d1` |
+| Q3b · `ap-nis2-02`'s exemption (Art. 2(1)–(3)) | "A: correct the text (Recommended)" | `3f593cd` |
+| Q6e · `ap-nis2-03` and Art. 2(7) | "A: add the exemption (Recommended)" | `1c5481f` |
+| Q1b · the NIS2 table | "Approve the table (Recommended)" | `d293570` |
+| Q6f · `ap-dora-01`'s exemptions (Arts 2(3)–(4), 16(1), 24(1)) | "A: add both (Recommended)" | `43eb35e` |
+| Q1c · the DORA table | "Approve the table (Recommended)" | `8b52dbc` |
+| Q5b · the CRA as the EHDS amends it | "A: note only (Recommended)" | `6f45f2e` |
+| Q6g · `ap-cra-01`'s exemptions (Arts 2, 69) | "A: add both (Recommended)" | `1ac3f02` |
+| Q1d · the CRA table | "Approve the table (Recommended)" | `923674a` |
+| Q7 · the flip | "A: remove RULES_V1 (Recommended)" | `9663ea7` |
+| Q8a · maintenance check (a), T-12 | "A: T-12 as proposed (Recommended)" | `7c47151` |
+| Q8b · maintenance check (b), freshness per rule | "A: per rule, 90 days (Recommended)" | `9d66fb1` |
+| Q9 · the assertions | "Change as proposed (Recommended)" | `fada6e0` |
+| A premise Q9 did not name (Y2–Y5 and `RULES_V1`; F7's name taken, the test is F10) | "Replace as proposed (Recommended)" | `ff734b2` |
+
+Q6a was asked first because the two date questions turned on it. Q7 and Q8 were asked with the approved data written and
+measured (planted cases prototyped in scratch copies); Q9 after every suite had run on the flip and the two checks.
+
+### What was written
+
+- **17.1, `bfb4b4e`.** `data/applicability.json`: the ten rules with reference objects, `condition_provisions` to each
+  Act's own scope and definitions Articles, exemption objects, `last_verified` 2026-10-29 and a note of what was read
+  (Q1a–Q1d); dates, obligations and exemptions per Q2a, Q2b, Q3a, Q3b, Q5a, Q6a–Q6c, Q6e–Q6g; the tier-2 NIS2 press
+  release as context (Q4). `data/instruments.json`: nine new provisions in the approved words — `data-act:art-1`, `-2`,
+  `-29`; `nis2:art-2`, `-6`; `dora:art-2`, `-3`; `cra:art-2`, `-3` — and the Official Journal's headings of
+  `data-act:art-3-1` and `dora:art-28` (Q6d). `data/timeline.json`: `tl-data-act-2027-01-12-application` names Art. 29
+  instead of Art. 25; `tl-data-act-2025-09-12-application` also names Arts 1, 2 and 29. `data/sources.json`: `accessed`
+  and a dated note on `src-eurlex-data-act`, `-nis2`, `-dora`, `-cra` and `src-ec-nis2-referral-2026`. The four instrument
+  pages and `sitemap.xml` regenerated; a second `node tools/_footer.mjs` writes 0 files. Conditions, outcomes and
+  rationales unchanged on all ten.
+- **17.2 and 17.3, `3f88d73`.** `tools/trigger-audit.mjs`: `RULES_V1`, `BACKLOG_CODES` and the backlog branch gone,
+  every T-01…T-05 and T-10 finding an ERROR (Q7); T-12 `LAW_CHANGED_SINCE_VERIFIED`, a WARNING (Q8a).
+  `tools/evidence-audit.mjs`: the six `BACKLOG rule-*` lines leave text, `--json`, `--markdown` and the record summary.
+  `tools/freshness.mjs`: `RULE_INTERVAL` 90 days and the `RULE_STALE` prompt, applicability aged rule by rule (Q8b).
+  `docs/ROADMAP-v2.md` §4: "Met on 29 Oct 2026 (v2 Session 17)".
+- **Assertions, `42feb8f`** (Q9 and the premise question). `tools/selftest.mjs` 121 → 123: X1–X3 rewritten for the
+  flip, T-10 and T-12 plants in X2, Y2–Y5's `RULES_V1` line replaced, new **Y6** (the ten as approved) and **F10**
+  (freshness per rule).
+- Between `bfb4b4e` and `42feb8f` the branch's CI was red on `tools/selftest.mjs` (X1–X3, then a failed import); no
+  assertion changed before the author answered. `evidence-audit` was at 0 errors on every commit: no check had a defect
+  to expose this time.
+
+### Before and after, every text a reader sees that changed
+
+| Where | Before | After |
+|---|---|---|
+| `applies.html`, Sources of the ten cards | the citation alone | the citation + " — at <locators>"; `ap-nis2-01`'s press release ends "(context only)" |
+| the ten cards, Rule last verified | 27 August 2026 (Data Act, NIS2); 27 September 2026 (DORA, CRA) | 29 October 2026 |
+| Key dates | `-02` 12 Jan 2027; `-04` 12 Sep 2025 · 12 Sep 2027 | `-02` 12 Sep 2025 · 12 Jan 2027; `-04` 12 Sep 2025 · 12 Sep 2026 · 12 Sep 2027 |
+| Relevant obligations | `-01`, `-02` Data Act Art. 25 | + "Data Act Art. 29 Gradual withdrawal of switching charges" |
+| `ap-data-act-03` exemption | "Data holders may limit access where data qualifies as a trade secret, but must notify the national competent authority, and the user may challenge before a court. The brief records practitioner doubt about whether the confidentiality measures required of recipients are sufficient." | Q3a's text (Art. 4(6)–(9)), then Q6b's (Art. 7(1)) |
+| `ap-nis2-02` exemption | "Micro and small enterprises are generally outside NIS2, subject to sector-specific exceptions." | Q3b's text (Art. 2(1)–(3)) |
+| New exemptions | none on `-01`, `-02`, `-04`, `ap-nis2-03`, `ap-dora-01`, `ap-cra-01` | Art. 31 (`-01`, `-02`); Art. 7(1) (`-04`); Art. 2(7) (`ap-nis2-03`); Arts 2(3)–(4) and 16(1)/24(1) (`ap-dora-01`); Arts 2 and 69 (`ap-cra-01`), in §8's words |
+| Headings (cards, instrument pages, `instrument.html`, search) | "Obligation to make connected product data accessible to the user"; "General principles (ICT third-party risk)" | "Obligation to make product data and related service data accessible to the user"; "General principles" |
+| `/instruments/data-act/` | "4 provisions recorded"; Art. 25 "… then from 12 January 2027" | "7 provisions recorded": Arts 1, 2 (since 12 Sep 2025), Art. 29 (since 12 Sep 2025, then from 12 Jan 2027); Art. 25 without the 2027 tranche |
+| `/instruments/nis2/`, `/dora/`, `/cra/` | 5, 7, 5 provisions recorded | 7, 9, 7: Arts 2 and 6 (NIS2), 2 and 3 (DORA, CRA), each on the instrument's general date |
+| the brief's calendar, Legal basis | 12 Jan 2027 "Data Act Art. 25"; 12 Sep 2025 "Data Act Art. 25 · Data Act Art. 8" | "Data Act Art. 29"; "Data Act Art. 1 · Data Act Art. 2 · Data Act Art. 25 · Data Act Art. 29 · Data Act Art. 8" |
+| search palette, every page | — | entries for the nine new provisions; the two corrected headings |
+
+Unchanged: every condition, outcome, rationale and `depends_on`; the other 23 rules' cards; `applies.html` and its D-2
+notice; the brief's prose.
+
+### The TRIGGERS report, before and after (`--as-of 2026-10-29`)
+
+```
+before (main ca1e723)                                after (42feb8f)
+publishable   23 of 33                               publishable   33 of 33: … the 23 … + the ten
+BACKLOG rule-v1-sources 10                           (the six BACKLOG rule-* lines are gone:
+BACKLOG rule-scope-basis-missing 10                   every finding of T-01…T-05 and T-10 is an
+BACKLOG rule-condition-provisions-missing 10          ERROR for every rule)
+BACKLOG rule-exemption-v1 2
+BACKLOG rule-threshold-basis-missing 0
+BACKLOG rule-dates-not-derived 2
+ERRORS 0                                             ERRORS 0
+```
+
+**Phase 3's entry condition is met** (`docs/ROADMAP-v2.md` §4): every rule's references carry `supports` and a locator,
+every condition resolves to a provision, and the audit reads the rules as it reads the claims. V2C-02 and V2C-10 are
+marked closed in `docs/V2-CLOSURE.md` only after the author approves this checkpoint.
+
+The two maintenance checks today: T-12 reports nothing as of 29 Oct 2026; as of 26 Mar 2027 it reports
+`LAW_CHANGED_SINCE_VERIFIED applicability/ap-cra-01` (the EHDS's application date). `RULE_STALE` reports nothing until
+28 Jan 2027, when all 33 rules, read on one day, become stale together.
+
+### The sources read (29 Oct 2026)
+
+| Source | Where | Read |
+|---|---|---|
+| Regulation (EU) 2023/2854 (Data Act) | Cellar, CELEX 32023R2854 (XHTML, OJ L 2023/2854, 22.12.2023) | Arts 1–8, 23–31, 50 |
+| Directive (EU) 2022/2555 (NIS2) | Cellar, 32022L2555 (OJ L 333, 27.12.2022) | Arts 1–6, 20–26, 32(6), 41; Annex I |
+| Regulation (EU) 2022/2554 (DORA) | Cellar, 32022R2554 (OJ L 333, 27.12.2022) | Arts 1–6, 16, 17, 19, 24, 28, 30, 31, 33, 64 |
+| Regulation (EU) 2024/2847 (CRA) | Cellar, 32024R2847 (OJ L 2024/2847, 20.11.2024) | Arts 2, 3, 13, 14, 69, 71 |
+| Regulation (EU) 2025/327 (EHDS) | Cellar, 32025R0327 | Arts 104 and 105 |
+| Their metadata | SPARQL | Data Act: no amending act, six corrigenda, only R(01) in English; NIS2: none, nine, only R(04); DORA: none, nine, none in English; CRA: one (the EHDS), eight, R(01), R(02), R(04) in English. Proposals to amend (52025PC0837, 52026PC0013, 52023PC0360, 52026PC0590) not read: not law. The only consolidated versions are the originals |
+| The English corrigenda | Cellar, 32022L2555R(04), 32023R2854R(01), 32024R2847R(01), R(02), R(04) | in full: NIS2 Art. 19(1); Data Act Art. 48; CRA title, Art. 64(10), Art. 67 — none of the text the rules cite |
+| Commission press release, 8 July 2026 | the URL `src-ec-nis2-referral-2026` holds | in full |
+
+Every source record's `published` matches its Official Journal header. Nothing was written from memory or from the
+design drafts without re-reading.
+
+### Counts against `main` (`ca1e723`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified; provisions 104 | 0 / 0, 45; provisions 113 | the nine new provisions |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-29` | 0 errors, 11 warnings | 0 errors, 11 warnings | TRIGGERS above |
+| `freshness --as-of 2026-10-29` | 0 defects, 3 prompts | 0 defects, 3 prompts | no rule past 90 days |
+| `tools/selftest.mjs` | 121 | 123, 0 failing | Y6, F10 |
+| The 24 suites in `AGENT_SUITES` | 1251 | 1253, 0 failing | Y6, F10 |
+| `.control-room/selftest.mjs` | 76 · 1 skipped | 76 · 1 skipped | — |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | 16 of 20 on `bfb4b4e` and `3f88d73` (`tools/selftest.mjs` red) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs ca1e723 42feb8f` | — | 27 commits, 0 without evidence | — |
+
+"Before" for the validators and `evidence-audit` was measured this session on an export of `ca1e723`; for the suites,
+the browser suite, the adversarial gate and readiness it is Session 16's measurement on the same code (`main` changed
+only in `docs/` since).
+
+### Seen in a browser
+
+Chromium (Playwright), local server, light and dark, 1280px and 390px — 48 cases, all clean: `applies.html` with
+`?actor=actor:cloud-provider&activity=activity:cloud-services` (with and without `territory=territory:non-eu-serving-eu`),
+`?actor=actor:financial-entity`, `?actor=actor:essential-entity&activity=activity:critical-infrastructure-operation`,
+`?actor=actor:public-authority&activity=activity:critical-infrastructure-operation`,
+`?actor=actor:pde-manufacturer&activity=activity:product-with-digital-elements`,
+`?actor=actor:manufacturer&activity=activity:connected-products`, `?actor=actor:sme&activity=activity:connected-products`,
+and `/instruments/data-act/`, `/nis2/`, `/dora/`, `/cra/`: the ten rules fire, read "Rule last verified 29 October 2026"
+and print the approved texts; no console error; no horizontal overflow; no "[object Object]".
+
+### What was not verified, and why
+
+- The claims the ten rules cite were not re-read; each rule's note says so.
+- Recommendation 2003/361/EC (SME definitions the Data Act and NIS2 refer to) was not read; it is outside the dataset.
+- The sector-specific Union acts NIS2 Art. 4 and DORA Art. 2 refer to, and the Directives DORA Art. 2(3) and 16(1)
+  name, were not read; the exemptions quote DORA's own words about them.
+- National transposition of NIS2 is not in the dataset: the rules say the obligations reach entities through it.
+- The four proposals SPARQL lists as proposing to amend these Acts were not read: a proposal is not law.
+- `src-eurlex-ehds` was re-read (Arts 104–105) but its `accessed` was not moved: the CRA table did not name it.
+- `js/applies.js` has no rendering test; its output was checked in the browser and by Y6 on the generated pages.
+- Screen readers, contrast and pixels: as README limitation 7 says.
+
+### Found, for the author — not changed
+
+1. **The D-2 notice on `applies.html` is now false in its first paragraph** for every rule: "These rules are not yet
+   verified to the standard the site's claims are. Each rule cites its sources by identifier only … and the evidence
+   audit that checks every claim does not yet check these rules." All 33 are publishable at the claims' standard and
+   the audit checks them. Its words are the author's (D-2; Sessions 15 and 16, finding 5).
+2. **`ap-nis2-01`'s `depends_on`** says transposition is "materially incomplete"; the press release says "While most
+   complied, Spain, France, Ireland and the Netherlands have yet to notify full transposition" (Q4).
+3. **`ap-cra-01`'s rationale** says "serious incidents"; Art. 14(3)'s term is "severe incident" (the event's wording was
+   corrected on 14 Oct 2026, the rationale was not).
+4. **`ap-nis2-02`'s rationale** says the digital infrastructure sector is one "which NIS2 treats as essential"; Annex I
+   is "sectors of high criticality", and an entity is essential by Art. 3(1) (its next sentence says size decides).
+5. **`ap-data-act-02`** is `likely` and depends on "Whether the provider offers services to customers in the Union",
+   while its territory condition is "Outside the EU, serving EU users" and Art. 1(3)(f) brings such providers into scope.
+6. **The taxonomy notes** of `actor:essential-entity` ("NIS2 Annex I") and `actor:important-entity` ("NIS2 Annex II")
+   do not match Art. 3, which classes by size as well as by Annex.
+7. **The Art. 41(1) date reference** is on `ap-nis2-01` only, as Q5a approved; `-02` and `-03` carry the same date.
+8. **Status contradictions to come:** as of 31 Dec 2027 `evidence-audit` reports `data-act` and `cra` as "partly
+   applicable" with no future application date (pre-existing, the same on `main`): their status will need re-reading
+   when the last tranche passes.
+9. **All 33 rules turn stale on one day** (28 Jan 2027), having been read on one day.
+10. **`data/applicability.json` `$last_verified`** still says 2026-08-27; freshness no longer uses it (Q8b), and nothing
+    else reads it.
+11. **`docs/v2-design/applicability-examples.json`** still holds the 25 Oct drafts; a design record, left as it is.
+12. **Earlier findings unchanged**: Session 16's 1–9 (among them "1 days ago", Art. 111(3), Art. 50's heading).
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **17.0** | §8: scope row and twenty-three answer rows (`acdc63e` … `ff734b2`) | read §8's last twenty-four rows | — | met: every decision in the author's words before anything published changed |
+| **17.1** | data, pages, sitemap (`bfb4b4e`); Y6 (`42feb8f`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 33 of 33"; open the `applies.html` URLs above and the four instrument pages | `tools/selftest.mjs` Y6, X1 | met: the ten publishable; every check at 0 errors |
+| **17.2** | `tools/trigger-audit.mjs`, `tools/evidence-audit.mjs`, ROADMAP §4 (`3f88d73`); X1–X3 (`42feb8f`) | plant a bare source id on any rule in a copy: `evidence-audit` exits 1 with T-01 and T-02 | X2 ("every rule held in full"), X3 | met: no backlog left; the entry condition met |
+| **17.3** | T-12 and `RULE_STALE` (`3f88d73`); X2's T-12 plants, F10 (`42feb8f`) | `node tools/evidence-audit.mjs --as-of 2027-03-26` → one `LAW_CHANGED_SINCE_VERIFIED`; `node tools/freshness.mjs --as-of 2027-01-28` → 33 `RULE_STALE` | X2, F10 | met: both derived, no network, no new field |
+| **17.4** | this report | — | — | **awaiting the author's approval**; then V2C-02 and V2C-10 in `docs/V2-CLOSURE.md` name `bfb4b4e`/`3f88d73` |
+
+### How to check it by hand
+
+```
+git diff ca1e723 42feb8f -- data/applicability.json      # the ten rules, nothing else
+node tools/evidence-audit.mjs --as-of 2026-10-29          # TRIGGERS: publishable 33 of 33, no BACKLOG rule- line, ERRORS 0
+node tools/evidence-audit.mjs --as-of 2027-03-26 | grep LAW_CHANGED
+node tools/freshness.mjs --as-of 2027-01-28 | grep -c RULE_STALE   # 33
+node --test tools/selftest.mjs                             # 123 pass
+python3 -m http.server 8000                                # /applies.html?actor=actor:financial-entity
+```
 
 ## Branch register — 29 October 2026 (v2 Session 16)
 
