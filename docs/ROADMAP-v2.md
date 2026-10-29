@@ -239,6 +239,7 @@ explicitly opens a finance chapter. It is not scheduled.
   - `tools/evidence-audit.mjs` reads `applicability.json` and reports its rules the way it reports
     claims.
 - **Measured today:** 33 rules, none meeting the first or third condition.
+- **Met on 29 Oct 2026 (v2 Session 17): 33 of 33 rules publishable at the claims' standard; the rule-* backlog is ERROR (§8).**
 - The session that opens Phase 3 starts by extending the check. Adding rules waits until the
   existing 33 pass it.
 

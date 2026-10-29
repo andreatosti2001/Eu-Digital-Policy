@@ -8,18 +8,16 @@
  * (docs/v2-design/applicability-rule.schema.json). These are its checks,
  * at the severities the author set (§8, v2 Session 12, question 5):
  *
- *   T-01  sources are reference objects                       BACKLOG rule-v1-sources
+ *   T-01  sources are reference objects                       ERROR
  *   T-02  ≥1 `for: scope` reference, supports:direct, to a tier-1 text,
- *         with a structural locator                           ERROR on a rule with any object reference;
- *                                                             BACKLOG rule-scope-basis-missing otherwise
+ *         with a structural locator                           ERROR
  *   T-03  condition_provisions covers every dimension the conditions use,
  *         each id a provision of the rule's instrument or of one an edge
- *         connects to it                                      ERROR where present;
- *                                                             BACKLOG rule-condition-provisions-missing
+ *         connects to it                                      ERROR
  *   T-04  each exemption an object with a text and a structural basis
- *                                                             ERROR on objects; BACKLOG rule-exemption-v1
- *   T-05  each threshold key ends in its comparator (ERROR) and has a
- *         threshold_basis                                     BACKLOG rule-threshold-basis-missing
+ *                                                             ERROR
+ *   T-05  each threshold key ends in its comparator and has a
+ *         threshold_basis                                     ERROR
  *   T-06  likely / possible ⇒ depends_on non-empty            ERROR
  *   T-07  last_verified present and ISO (ERROR); after the audit date
  *         (WARNING VERIFIED_AFTER_AS_OF)
@@ -27,17 +25,33 @@
  *         pre-adoption, repealed, adopted or published        ERROR
  *   T-09  the rule's instrument is not excluded (ERROR) or watched (WARNING)
  *   T-10  the stored dates hold every application date the obligations
- *         derive (js/regulatory-model.js)                     BACKLOG rule-dates-not-derived
+ *         derive (js/regulatory-model.js)                     ERROR
  *   T-11  outcome:applies with every application date after the audit
  *         date                                                WARNING APPLIES_BEFORE_DATE
+ *   T-12  an instrument whose provisions the rule cites changed in law
+ *         after the rule was read, on or before the audit date WARNING LAW_CHANGED_SINCE_VERIFIED
  *
- * ERROR is a defect in the tree on every date, so T-07's date half and T-11,
- * which turn on the date asked, are WARNINGs (SESSION 30's exit-code rule;
- * the precedent is tools/register-audit.mjs VERIFIED_AFTER_AS_OF). BACKLOG is
- * counted and named and never fails the run, and only the 33 rules that
- * existed when the check was written may sit in it (RULES_V1, like
- * register-audit.mjs's frozen lists): a rule added after is held to every
- * check in full, because adding rules waits until the 33 pass (Phase 3).
+ * ERROR is a defect in the tree on every date, so T-07's date half, T-11 and
+ * T-12, which turn on the date asked, are WARNINGs (SESSION 30's exit-code
+ * rule; the precedent is tools/register-audit.mjs VERIFIED_AFTER_AS_OF).
+ *
+ * THE FLIP (v2 Session 17, 29 Oct 2026, docs/ROADMAP-v2.md §8, 17.0 question
+ * 7). Until then T-01…T-05 and T-10 were BACKLOG for the 33 rules of 28 Oct
+ * 2026 that had not yet been read against their Articles (RULES_V1, a list
+ * that only shrank) and ERROR for any rule added after. Session 17 brought
+ * the last ten to the v2 shape, publishable 33 of 33, and the list was
+ * removed with its backlog, as the author decided: every finding of those
+ * checks is an ERROR for every rule, and no list remains through which a rule
+ * could return to a backlog. Phase 3's entry condition is met (§4).
+ *
+ * T-12 (v2 Session 17, §8 17.0 question 8a) is one of the two maintenance
+ * checks of the plan row of 28 Oct 2026. It notices, from the records alone,
+ * that the law a rule cites may have moved since the rule was read: an
+ * amending or repealing edge of modality `law` (never `proposed`) whose
+ * amending act entered into force or began to apply after the rule's
+ * last_verified, or a delegated act, implementing act, judicial event or
+ * guidance of the cited instrument in that window. It says where to look;
+ * deciding whether the rule must change stays a person's act (D-4, D-5).
  *
  * Whether a reference, a provision or an exemption's effect RESOLVES, and is
  * in its vocabulary, is tools/validate.mjs's to report (v2 Session 13,
@@ -55,25 +69,16 @@
 import { index } from '../js/data.js';
 import { coverage } from '../js/routes.js';
 import { PRE_ADOPTION, provisionApplication } from '../js/regulatory-model.js';
+import { modality } from '../js/map-model.js';
 import { structural } from './register-audit.mjs';
-
-/* The rules in data/applicability.json on 28 Oct 2026, when this check was
-   written. A rule leaves the list in the session that brings it to the v2
-   standard; the list only shrinks. v2 Session 13 (29 Oct 2026, the pilot):
-   ap-pld-01 and ap-eidas2-01 left it (docs/ROADMAP-v2.md §8, 13.0 question 5). v2 Session 14
-   (29 Oct 2026, the GDPR): ap-gdpr-01…04 and ap-cross-01 left it (§8, 14.0 question 5). v2 Session 15
-   (29 Oct 2026, the DSA and the DMA): ap-dsa-01…05 and ap-dma-01…04 left it (§8, 15.0 question 7). v2 Session 16
-   (29 Oct 2026, the AI Act): ap-ai-act-01…07 left it (§8, 16.0 question 7). */
-export const RULES_V1 = Object.freeze([
-  'ap-data-act-01', 'ap-data-act-02', 'ap-data-act-03', 'ap-data-act-04', 'ap-nis2-01', 'ap-nis2-02', 'ap-nis2-03',
-  'ap-dora-01', 'ap-dora-02', 'ap-cra-01']);
-
-export const BACKLOG_CODES = Object.freeze(['rule-v1-sources', 'rule-scope-basis-missing',
-  'rule-condition-provisions-missing', 'rule-exemption-v1', 'rule-threshold-basis-missing', 'rule-dates-not-derived']);
 
 /* A state in which an instrument binds nobody (T-08). */
 const BINDS_NOBODY = new Set([...PRE_ADOPTION, 'status:repealed', 'status:adopted', 'status:published']);
 const APPLICATION = new Set(['event:application', 'event:compliance-deadline', 'event:transposition']);
+/* T-12: what changes a text in law, and what changes how it is read (§8, 17.0 question 8a) */
+const CHANGES_IN_LAW = new Set(['rel-kind:amends', 'rel-kind:repeals']);
+const IN_FORCE = new Set(['event:entry-into-force', 'event:application']);
+const CHANGES_READING = new Set(['event:delegated-act', 'event:implementing-act', 'event:judicial', 'event:guidance']);
 const SUPPORTS = new Set(['supports:direct', 'supports:partial', 'supports:context']);
 const FOR = new Set(['scope', 'obligation', 'date', 'rationale']);
 const EFFECTS = new Set(['excludes', 'narrows', 'reinstates']);
@@ -97,33 +102,26 @@ export function derivedDates(rule, ix, asOf) {
 /**
  * @param db    the datasets, as js/data.js loadAll() returns them
  * @param asOf  YYYY-MM-DD; T-07 and T-11 read it, never the clock
- * @returns { total, errors, warnings, backlog: {code: [rule ids]}, publishable: [ids], by_outcome }
+ * @returns { total, errors, warnings, publishable: [ids], by_outcome }
  */
 export function triggerAudit(db, asOf) {
   const errors = [];
   const warnings = [];
-  const backlog = Object.fromEntries(BACKLOG_CODES.map((c) => [c, []]));
   const ix = index(db);
   const rules = arr(db.applicability?.rules);
   const rels = arr(db.instruments?.relationships);
+  const events = arr(db.timeline?.events);
   const notPublishable = new Set();
 
   for (const r of rules) {
     const w = `applicability/${r.id}`;
-    const v1 = RULES_V1.includes(r.id);
     const inst = ix.instrument.get(r.instrument);
-    /* a finding that a v1 rule carries as backlog; a rule added after is held in full */
-    const owe = (code, msg) => {
-      if (v1) backlog[code].push(r.id);
-      else errors.push(`${msg} — a rule added after 28 Oct 2026 is held to it in full`);
-    };
     const t05 = (m) => { errors.push(m); notPublishable.add(r.id); };
-    const owePub = (code, msg) => { owe(code, msg); notPublishable.add(r.id); };
 
     /* T-01 · reference objects */
     const refs = arr(r.sources);
     const objs = refs.filter(isRef);
-    if (refs.some((s) => !isRef(s))) owePub('rule-v1-sources', `T-01 ${w}: a bare source id`);
+    if (refs.some((s) => !isRef(s))) t05(`T-01 ${w}: a bare source id`);
 
     /* T-02 · a scope reference that can carry the rule. A reference that does
        not resolve, or whose supports or for is outside the vocabulary, is
@@ -135,7 +133,7 @@ export function triggerAudit(db, asOf) {
       && (ix.source.get(s.source_id) || {}).tier === 'tier:1');
     if (!scope) {
       if (objs.length) t05(`T-02 ${w}: no for:scope, supports:direct reference to a tier-1 text with a structural locator`);
-      else owePub('rule-scope-basis-missing', `T-02 ${w}: no scope reference`);
+      else t05(`T-02 ${w}: no scope reference`);
     }
 
     /* T-03 · every condition resolves to the provision that defines it. The dimensions are the
@@ -144,7 +142,7 @@ export function triggerAudit(db, asOf) {
        v2 Session 15 (29 Oct 2026, docs/ROADMAP-v2.md §8, "T-03 and thresholds"): until then no
        rule with a threshold could pass both checks. */
     const dims = Object.keys(r.conditions || {}).filter((d) => d !== 'thresholds');
-    if (r.condition_provisions == null) owePub('rule-condition-provisions-missing', `T-03 ${w}: no condition_provisions`);
+    if (r.condition_provisions == null) t05(`T-03 ${w}: no condition_provisions`);
     else {
       const linked = new Set([r.instrument]);
       for (const e of rels) { if (e.from === r.instrument) linked.add(e.to); if (e.to === r.instrument) linked.add(e.from); }
@@ -157,7 +155,7 @@ export function triggerAudit(db, asOf) {
 
     /* T-04 · exemptions with an effect and a basis */
     const ex = arr(r.exemptions);
-    if (ex.some((e) => typeof e === 'string')) owePub('rule-exemption-v1', `T-04 ${w}: an exemption is a bare string`);
+    if (ex.some((e) => typeof e === 'string')) t05(`T-04 ${w}: an exemption is a bare string`);
     for (const e of ex.filter(isRef)) {
       /* the effect's vocabulary and the basis's resolution are validate.mjs's */
       if (!EFFECTS.has(e.effect) || arr(e.basis).some((b) => !isRef(b) || !ix.source.get(b.source_id))) notPublishable.add(r.id);
@@ -166,11 +164,11 @@ export function triggerAudit(db, asOf) {
         t05(`T-04 ${w}: an exemption object without text, or without a direct reference with a structural locator`);
     }
 
-    /* T-05 · thresholds: the comparator now, the basis as backlog */
+    /* T-05 · thresholds: the comparator and the basis */
     const keys = Object.keys((r.conditions || {}).thresholds || {});
     for (const k of keys) if (!COMPARATOR.test(k)) t05(`T-05 ${w}: threshold key "${k}" does not end in _gt, _gte, _lt or _lte`);
     if (keys.some((k) => !(r.threshold_basis && arr(r.threshold_basis[k]).length)))
-      owePub('rule-threshold-basis-missing', `T-05 ${w}: a threshold with no threshold_basis`);
+      t05(`T-05 ${w}: a threshold with no threshold_basis`);
 
     /* T-06 · what an uncertain outcome turns on */
     if (['outcome:likely', 'outcome:possible'].includes(r.outcome) && !arr(r.depends_on).length)
@@ -191,13 +189,27 @@ export function triggerAudit(db, asOf) {
 
     /* T-10 · the dates the obligations derive are the rule's dates */
     const missing = [...derivedDates(r, ix, asOf || '9999-12-31')].filter((e) => !arr(r.dates).includes(e));
-    if (missing.length) owe('rule-dates-not-derived', `T-10 ${w}: dates omit ${missing.join(', ')}`);
+    if (missing.length) errors.push(`T-10 ${w}: dates omit ${missing.join(', ')}`);
 
     /* T-11 · "applies" before anything applies */
     if (asOf && r.outcome === 'outcome:applies') {
       const app = arr(r.dates).map((d) => ix.event.get(d)).filter((e) => e && APPLICATION.has(e.event_type));
       if (app.length && app.every((e) => e.date > asOf))
         warnings.push(`APPLIES_BEFORE_DATE ${w}: outcome applies, and every application date (${app.map((e) => e.date).join(', ')}) is after the audit date ${asOf}`);
+    }
+
+    /* T-12 · the law cited moved after the rule was read */
+    if (asOf && typeof r.last_verified === 'string' && ISO.test(r.last_verified)) {
+      const since = (e) => e.date > r.last_verified && e.date <= asOf;
+      const cited = [...arr(r.obligations), ...Object.values(r.condition_provisions || {}).flatMap(arr)];
+      const owners = [...new Set(cited.map((p) => ix.provisionOwner.get(p)).filter(Boolean))];
+      for (const I of owners) {
+        for (const e of rels.filter((x) => CHANGES_IN_LAW.has(x.kind) && x.to === I && modality(x, ix) === 'law'))
+          for (const ev of events.filter((v) => v.instrument === e.from && IN_FORCE.has(v.event_type) && since(v)))
+            warnings.push(`LAW_CHANGED_SINCE_VERIFIED ${w}: cites ${I}, ${e.kind === 'rel-kind:repeals' ? 'repealed' : 'amended'} by ${e.from} (${e.id}), whose ${ev.id} (${ev.date}) is after last_verified ${r.last_verified}`);
+        for (const ev of events.filter((v) => v.instrument === I && CHANGES_READING.has(v.event_type) && since(v)))
+          warnings.push(`LAW_CHANGED_SINCE_VERIFIED ${w}: cites ${I}, whose ${ev.id} (${ev.event_type.split(':')[1]}, ${ev.date}) is after last_verified ${r.last_verified}`);
+      }
     }
   }
 
@@ -207,7 +219,6 @@ export function triggerAudit(db, asOf) {
     total: rules.length,
     errors,
     warnings,
-    backlog,
     publishable: rules.filter((r) => !notPublishable.has(r.id)).map((r) => r.id),
     by_outcome: byOutcome,
   };

@@ -63,7 +63,7 @@ export const CHECKED = [
   { section: 'enforcement', what: 'procedural posture, finality and contradictions of each enforcement record' },
   { section: 'regulatory', what: 'scalar status against the milestones, and provision-level application dates' },
   { section: 'register', what: 'the exclusion register and the watchlist: scope decisions, coverage against the pages, the external referral, status bases, watched events (M-03…M-07, R-01)' },
-  { section: 'triggers', what: 'the applicability rules behind applies.html: reference objects, a direct scope reference with a structural locator, the provision behind each condition, exemptions and thresholds with their basis, what an uncertain outcome turns on, dates, and no rule that applies a text that binds nobody (T-01…T-11)' },
+  { section: 'triggers', what: 'the applicability rules behind applies.html: reference objects, a direct scope reference with a structural locator, the provision behind each condition, exemptions and thresholds with their basis, what an uncertain outcome turns on, dates, no rule that applies a text that binds nobody, and whether the law a rule cites changed after it was read (T-01…T-12)' },
 ];
 
 /** What a recorded run does not establish. Stated on every record, so
