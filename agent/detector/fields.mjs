@@ -214,6 +214,8 @@ export const VALUE_FIELDS = {
      closed vocabularies that are not taxonomy ids, as scope_decision.disposition */
   applicability_rule: ['id', 'last_verified', 'requires_verification',
     'sources.locator', 'sources.for', 'exemptions.effect', 'exemptions.basis.locator',
+    /* v2 Session 14 (29 Oct 2026, §8 14.0 question 5): a boolean, as requires_verification */
+    'exemptions.outside_dataset',
     'conditions.thresholds.cumulative_training_flop_gte',
     'conditions.thresholds.monthly_active_eu_end_users_gte',
     'conditions.thresholds.monthly_active_eu_users_gte',

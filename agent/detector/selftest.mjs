@@ -723,13 +723,21 @@ test('reference fields are derived per KIND, not per record', () => {
 
 test('an array of prose keeps every one of its sentences', () => {
   const g = buildGraph({ corpus: CORPUS });
-  const rule = CORPUS.db.applicability.rules.find((r) => (r.exemptions ?? []).length > 1);
-  assert.ok(rule, 'data/applicability.json should carry a rule with more than one exemption');
-  const f = fieldsOf(rule, { kind: 'applicability_rule', isNode: (x) => g.nodes.has(x), referenceFields: new Set(), rootId: rule.id })
-    .find((x) => x.field === 'exemptions');
+  const opts = (r) => ({ kind: 'applicability_rule', isNode: (x) => g.nodes.has(x), referenceFields: new Set(), rootId: r.id });
+  /* v2 Session 14 (29 Oct 2026, docs/ROADMAP-v2.md §8, 14.0 question 5): no live rule carries
+     more than one STRING exemption any longer, so the v1 case is planted on a copy, and the v2
+     case is checked on the live rule with the most exemption objects */
+  const v1 = structuredClone(CORPUS.db.applicability.rules[0]);
+  v1.exemptions = ['A first planted carve-out sentence.', 'A second planted carve-out sentence.'];
+  const f = fieldsOf(v1, opts(v1)).find((x) => x.field === 'exemptions');
   assert.equal(f.class, 'prose');
-  assert.equal(f.values.length, rule.exemptions.length,
-    'only the first exemption was kept: a stale carve-out in position two would be invisible');
+  assert.equal(f.values.length, 2, 'only the first exemption was kept: a stale carve-out in position two would be invisible');
+  const rule = [...CORPUS.db.applicability.rules].sort((a, b) => (b.exemptions ?? []).length - (a.exemptions ?? []).length)[0];
+  assert.ok(rule.exemptions.length > 1 && rule.exemptions.every((e) => typeof e === 'object'),
+    'data/applicability.json should carry a rule with more than one exemption object');
+  const t = fieldsOf(rule, opts(rule)).find((x) => x.field === 'exemptions.text');
+  assert.equal(t.class, 'prose');
+  assert.equal(t.values.length, rule.exemptions.length, 'only the first exemption object\'s text was kept');
 });
 
 test('the two fields whose NAME says reference and whose VALUE is prose are registered as prose', () => {

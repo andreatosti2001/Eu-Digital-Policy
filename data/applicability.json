@@ -29,11 +29,24 @@
       "obligations": ["gdpr:art-5", "gdpr:art-6", "gdpr:art-30", "gdpr:art-33", "gdpr:art-35"],
       "authority": ["dpa-*"],
       "dates": ["tl-gdpr-2018-05-25-application"],
-      "exemptions": ["Purely personal or household activity is outside scope.", "Article 30(5) narrows the records obligation for organisations under 250 employees, but does not remove it where processing is not occasional or involves special categories."],
+      "exemptions": [
+        { "text": "Purely personal or household activity is outside scope.", "effect": "excludes",
+          "basis": [{ "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 2(2)(c)" }] },
+        { "text": "Under Article 30(5), an enterprise or organisation employing fewer than 250 persons need not keep records of processing activities, unless its processing is likely to result in a risk to the rights and freedoms of data subjects, is not occasional, or includes special categories of data or personal data relating to criminal convictions and offences.", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 30(5)" }] }
+      ],
       "depends_on": [],
       "claims": ["clm-one-stop-shop"],
-      "sources": ["src-eurlex-gdpr"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 2(1); Art. 3(1); Art. 4 points (1), (2), (7) and (8)", "for": "scope" },
+        { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 5; Art. 6; Art. 30; Art. 33; Art. 35", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "activity": ["gdpr:art-2", "gdpr:art-4"],
+        "territory": ["gdpr:art-3"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 14): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 3, 4 points (1), (2), (7) and (8), 5, 6, 30, 33 and 35, and recital 18; the corrigendum of 23 May 2018 (32016R0679R(02)) changes none of them, and the Publications Office's metadata lists no act amending the Regulation. The household exemption is Art. 2(2)(c). The Art. 30(5) exemption was reworded to the Article's text on the author's decision of 29 Oct 2026: it had left out processing likely to result in a risk to the rights and freedoms of data subjects, and personal data relating to criminal convictions and offences. Conditions, outcome and rationale were not changed. clm-one-stop-shop was not re-read."
     },
     {
       "id": "ap-gdpr-02",
@@ -50,8 +63,16 @@
       "exemptions": [],
       "depends_on": ["Whether the offering is directed at data subjects in the Union, or their behaviour is monitored."],
       "claims": [],
-      "sources": ["src-eurlex-gdpr"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 2(1); Art. 3(2)(a) and (b)", "for": "scope" },
+        { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 5; Art. 6", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "activity": ["gdpr:art-2", "gdpr:art-4"],
+        "territory": ["gdpr:art-3"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 14): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 3, 4, 5 and 6; the corrigendum of 23 May 2018 (32016R0679R(02)) changes none of them, and the Publications Office's metadata lists no act amending the Regulation. Conditions, outcome and rationale were not changed."
     },
     {
       "id": "ap-gdpr-03",
@@ -65,11 +86,26 @@
       "obligations": ["gdpr:art-37", "gdpr:art-35", "gdpr:art-6"],
       "authority": ["dpa-*"],
       "dates": ["tl-gdpr-2018-05-25-application"],
-      "exemptions": ["Processing by competent authorities for law-enforcement purposes falls under the Law Enforcement Directive rather than the GDPR — an instrument outside this dataset."],
+      "exemptions": [
+        { "text": "Processing by competent authorities for law-enforcement purposes falls under the Law Enforcement Directive rather than the GDPR — an instrument outside this dataset.", "effect": "excludes", "outside_dataset": true,
+          "basis": [{ "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 2(2)(d); recital 19 (Directive (EU) 2016/680)" }] },
+        { "text": "Processing by the Union's own institutions, bodies, offices and agencies is governed by a separate Union regulation rather than the GDPR — an instrument outside this dataset.", "effect": "excludes", "outside_dataset": true,
+          "basis": [{ "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 2(3)" }] },
+        { "text": "Courts acting in their judicial capacity are excepted from the obligation to designate a data protection officer that Article 37(1)(a) places on public authorities and bodies.", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 37(1)(a)" }] }
+      ],
       "depends_on": [],
       "claims": [],
-      "sources": ["src-eurlex-gdpr"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 2(1); Art. 4 point (7)", "for": "scope" },
+        { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 37(1)(a); Art. 6; Art. 35", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["gdpr:art-4", "gdpr:art-37"],
+        "activity": ["gdpr:art-2", "gdpr:art-4"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 14): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 4 point (7), 6, 35 and 37, and recital 19; the corrigendum of 23 May 2018 (32016R0679R(02)) changes Art. 37(1)(c) and none of the text cited here, and the Publications Office's metadata lists no act amending the Regulation. The Law Enforcement Directive exemption is Art. 2(2)(d); recital 19 names Directive (EU) 2016/680, which this dataset does not hold. Two exemptions were added on the author's decisions of 29 Oct 2026: the Union's own institutions, bodies, offices and agencies (Art. 2(3), which refers them to Regulation (EC) No 45/2001; the act that governs them today was not read, so the text names none), and courts acting in their judicial capacity (Art. 37(1)(a); F-5, V2C-07). The GDPR does not define 'public authority': Art. 4 point (7) names one among controllers and Art. 37(1)(a) uses the term for this obligation, hence condition_provisions.actor. Conditions, outcome and rationale were not changed."
     },
     {
       "id": "ap-gdpr-04",
@@ -86,8 +122,16 @@
       "exemptions": [],
       "depends_on": ["Whether the system processes personal data at all.", "Whether decisions are based solely on automated processing and produce legal or similarly significant effects."],
       "claims": ["clm-art-22-predates-ai-act", "clm-three-impact-assessments"],
-      "sources": ["src-eurlex-gdpr"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 2(1); Art. 4 points (1), (2), (4), (7) and (8)", "for": "scope" },
+        { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 22(1); Art. 35(1) and (3)(a)", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["gdpr:art-4"],
+        "activity": ["gdpr:art-2", "gdpr:art-4"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 14): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 4 points (1), (2), (4), (7) and (8), 22 and 35; the corrigendum of 23 May 2018 (32016R0679R(02)) changes none of them, and the Publications Office's metadata lists no act amending the Regulation. The AI Act defines 'provider' and 'deployer' (Art. 3 points (3) and (4), read that day, CELEX 32024R1689); the GDPR binds either only as a controller or processor, so condition_provisions name the GDPR's own Arts 2 and 4 (the author's decision of 29 Oct 2026), and the AI Act's provisions belong to Session 16. Conditions, outcome and rationale were not changed. The claims it cites were not re-read."
     },
 
     {
@@ -641,8 +685,17 @@
       "exemptions": [],
       "depends_on": [],
       "claims": ["clm-dsa-gdpr-unresolved"],
-      "sources": ["src-eurlex-gdpr", "src-edpb-guidelines-3-2025"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 2(1); Art. 4 points (1), (2), (4) and (7)", "for": "scope" },
+        { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 5(1)(c); Art. 6(1); Art. 25(1) and (2)", "for": "obligation" },
+        { "source_id": "src-edpb-guidelines-3-2025", "supports": "supports:partial", "locator": "Version 2.0, paragraphs 7–11 (section 1.1), 80 (section 2.4.4) and 93–95 (section 2.5)", "for": "rationale" }
+      ],
+      "condition_provisions": {
+        "actor": ["gdpr:art-4"],
+        "activity": ["gdpr:art-2", "gdpr:art-4"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 14): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 4 points (1), (2), (4) and (7), 5, 6 and 25; the corrigendum of 23 May 2018 (32016R0679R(02)) changes none of them, and the Publications Office's metadata lists no act amending the Regulation. Also read that day: the EDPB Guidelines 3/2025, version 2.0 of 17 September 2026 (PDF, from the EDPB's site), paragraphs 7 to 11 and 79 to 95. The DSA defines 'online platform' and 'recommender system' (Art. 3 points (i) and (s)) and the very large online platform (Art. 33(1)), read that day (CELEX 32022R2065); the GDPR binds a platform only as a controller or processor, so condition_provisions name the GDPR's own Arts 2 and 4 (the author's decision of 29 Oct 2026), and the DSA's provisions belong to Session 15. The EDPB reference supports the rationale in part: the guidelines do not mention the advertisement repository (DSA Art. 39), which the rationale names, and speak of compatible application rather than conflict. Paragraph 88 says a recommender system may involve no personal data, while the rule answers applies with no depends_on: reported to the author, not changed (29 Oct 2026). Conditions, outcome and rationale were not changed. clm-dsa-gdpr-unresolved was not re-read."
     }
   ]
 }

@@ -1,9 +1,176 @@
 # HANDOVER
 
-**Last updated:** v2 Session 13, the first rules session of Phase 3 (29 October 2026): 13.1 (V2C-67),
-13.2 (the validator learns the v2 rule shape), 13.3 (the pilot on `ap-eidas2-01` and `ap-pld-01`), then a
-checkpoint, **approved by the author** (§8).
-**Branch:** `claude/v2-session-13-rules-pilot`, cut from `main` at `d073134`.
+**Last updated:** v2 Session 14, the second rules session of Phase 3 (29 October 2026): 14.1, the GDPR's
+five rules (`ap-gdpr-01`…`ap-gdpr-04`, `ap-cross-01`) in the v2 shape, then a checkpoint, **approved by the
+author** (§8). Item 14.4 (the draft of the Session 15 prompt) follows.
+**Branch:** `claude/zen-hamilton-rtgv1j` (assigned by the environment), cut from `main` at `a229336`.
+
+## Branch register — 29 October 2026 (v2 Session 14)
+
+- Branch `claude/zen-hamilton-rtgv1j`, cut from `main` at `a229336` (#41, the prompt of this session,
+  merged). Nothing was merged in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
+  already in the register. No other branch to report; `claude/v2-session-14-prompt` is in `main`.
+- `origin/main` was re-fetched before this handover was written: still `a229336`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. No pull request opened yet.
+- After the approval, item 14.4: the prompt of v2 Session 15 drafted, `docs/prompts/v2-session-15.md` (the
+  nine DSA and DMA rules to the v2 shape by the method of 13.0 question 4, F-6 / V2C-08 and F-7 / V2C-09
+  among the questions beyond the shape, the two `ap-cross-01` findings Session 14 handed on, the assertion
+  question asked after measuring; then a checkpoint, then item 15.4, the draft of the Session 16 prompt). Its
+  starting state was measured on this session's approved tree (`8c1b1a3`). The prompt records no decision:
+  its first write is §8's row "The scope of v2 Session 15", in the author's words.
+- A pull request to `main`, carrying Session 14 and the Session 15 prompt together, opened on the author's
+  instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the branch after it.
+
+## v2 Session 14 — checkpoint report (14.1, the GDPR)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 14 | "start session 14" | `54dd192` |
+| Q3 · the conditions another Act defines (asked first: Q1's table depends on it) | "A: GDPR's own (Recommended)" | `f0a5f8a` |
+| Q1 · the GDPR table | "Approve the table (Recommended)" | `b9b22ae` |
+| Q2 · F-5 (V2C-07), the courts exception | "Rule + Art. 37 summary (Recommended)" | `4187acb` |
+| Q4a · `ap-gdpr-01`, the Art. 30(5) exemption | "Correct the text (Recommended)" | `2e5d2a5` |
+| Q4b · `ap-gdpr-03`, the Union's own institutions (Art. 2(3)) | "Add an exemption (Recommended)" | `f00783f` |
+| Q4c · `ap-cross-01`, EDPB ¶88 and the advertisement repository | "Report, change nothing (Recommended)" | `2552a12` |
+| Q5 · `RULES_V1` and the assertions that pin it | "Change as proposed (Recommended)" | `f5483e4` |
+
+Q5 was asked after the data was written and every suite run on it (`14af4b7`), so it names every assertion
+that moved, measured rather than predicted.
+
+### What was written
+
+- **14.1, `14af4b7`.** `data/applicability.json`: the five rules with reference objects, `condition_provisions`
+  to `gdpr:art-2`, `-3`, `-4`, `-37` (no AI Act or DSA provision: Q3), exemption objects, `last_verified`
+  2026-10-29 and a note of what was read; `ap-gdpr-01`'s Art. 30(5) text reworded (Q4a); `ap-gdpr-03` gains
+  the Union-institutions (Q4b) and courts (Q2) exemptions. `data/instruments.json`: `gdpr:art-2` "Material
+  scope" and `gdpr:art-4` "Definitions" in the approved words; `gdpr:art-37`'s summary states the courts
+  exception, with a dated line in its note. `data/sources.json`: `accessed` 2026-10-29 and a dated note on
+  `src-eurlex-gdpr` and `src-edpb-guidelines-3-2025`. `instruments/gdpr/` and `sitemap.xml` regenerated; a
+  second `node tools/_footer.mjs` writes 0 files. No change to `js/`, `applies.html` or its D-2 notice.
+- **Assertions, `7df6524`** (Q5). `tools/trigger-audit.mjs`: the five leave `RULES_V1` (26 remain).
+  `tools/selftest.mjs` 118 → 119: `RULES_V2` = the pilot's two + the five; X1 (26/26/26/11/3/10; publishable
+  exactly the 7; the 27 Sep warnings the 7 rules'), X2 (the "added rule" clones `RULES_V1[0]`), X3 ("7 of
+  33"), Y2 (the pilot's own two), new **Y3** (the five as approved, the GDPR page included).
+  `agent/detector/fields.mjs`: `exemptions.outside_dataset` VALUE; `agent/detector` test 43 repaired
+  (the v1 case on a planted copy, the v2 case on `ap-gdpr-03`'s three objects).
+- Between `14af4b7` and `7df6524` the branch's CI was red on exactly those five tests (X1–X3, detector 41
+  and 43): the data commit was pushed before Q5 was answered, so that no assertion changed unasked.
+
+### Before and after, every text a reader sees that changed
+
+| Where | Before | After |
+|---|---|---|
+| `applies.html`, Sources of the five GDPR cards | the citation alone | the citation + " — at <locators>" (e.g. `ap-gdpr-01`: "— at Art. 2(1); Art. 3(1); Art. 4 points (1), (2), (7) and (8); Art. 5; Art. 6; Art. 30; Art. 33; Art. 35") |
+| `applies.html`, `ap-cross-01`, EDPB line | the citation alone | "… — at Version 2.0, paragraphs 7–11 (section 1.1), 80 (section 2.4.4) and 93–95 (section 2.5) (supports in part)" |
+| `ap-gdpr-01` exemption 2 (`applies.html`, `/instruments/gdpr/`) | "Article 30(5) narrows the records obligation for organisations under 250 employees, but does not remove it where processing is not occasional or involves special categories." | "Under Article 30(5), an enterprise or organisation employing fewer than 250 persons need not keep records of processing activities, unless its processing is likely to result in a risk to the rights and freedoms of data subjects, is not occasional, or includes special categories of data or personal data relating to criminal convictions and offences." |
+| `ap-gdpr-03` exemptions | the Law Enforcement Directive line only | + "Processing by the Union's own institutions, bodies, offices and agencies is governed by a separate Union regulation rather than the GDPR — an instrument outside this dataset." + "Courts acting in their judicial capacity are excepted from the obligation to designate a data protection officer that Article 37(1)(a) places on public authorities and bodies." |
+| `/instruments/gdpr/`, provisions | "16 provisions recorded" | "18 provisions recorded": Art. 2 "Material scope" and Art. 4 "Definitions", in §8 Q1's words |
+| `/instruments/gdpr/`, Art. 37 | "Mandatory where processing is carried out by a public authority or body, and in the other cases the Article specifies." | "Mandatory where processing is carried out by a public authority or body, except for courts acting in their judicial capacity, and in the other cases the Article specifies." |
+| the five cards, both pages | "Last verified 27 August 2026" | "29 October 2026" |
+
+Unchanged: every rationale, outcome, condition, obligation, date and `depends_on`; the other 28 rules' cards;
+`applies.html` and its D-2 notice; the brief.
+
+### The TRIGGERS report, before and after (`--as-of 2026-10-29`)
+
+```
+before (main a229336)                                after (7df6524)
+publishable   2 of 33: ap-pld-01, ap-eidas2-01       publishable   7 of 33: ap-gdpr-01, ap-gdpr-02, ap-gdpr-03,
+                                                       ap-gdpr-04, ap-pld-01, ap-eidas2-01, ap-cross-01
+BACKLOG rule-v1-sources 31                           BACKLOG rule-v1-sources 26
+BACKLOG rule-scope-basis-missing 31                  BACKLOG rule-scope-basis-missing 26
+BACKLOG rule-condition-provisions-missing 31         BACKLOG rule-condition-provisions-missing 26
+BACKLOG rule-exemption-v1 13                         BACKLOG rule-exemption-v1 11
+BACKLOG rule-threshold-basis-missing 3               BACKLOG rule-threshold-basis-missing 3
+BACKLOG rule-dates-not-derived 10                    BACKLOG rule-dates-not-derived 10
+ERRORS 0                                             ERRORS 0
+```
+
+**Phase 3's entry condition is still not met**: 26 rules remain (Sessions 15–17).
+
+### The sources read (29 Oct 2026)
+
+| Source | Where | Read |
+|---|---|---|
+| Regulation (EU) 2016/679 | Cellar, CELEX 32016R0679 (XHTML, OJ L 119, 4.5.2016) | Arts 1–6, 22, 25, 30, 33, 35, 37; recitals 18, 19 |
+| Its corrigendum of 23 May 2018 | Cellar, 32016R0679R(02) (English; R(01) and R(03) answered 404 to a request for English) | in full: recital 71, Arts 37(1)(c), 41, 42, 43, 57, 64, 65, 69, 70 — none of the text the rules cite |
+| The Publications Office's metadata | SPARQL, amends/corrects 32016R0679 | no amending act; three corrigenda |
+| EDPB Guidelines 3/2025, version 2.0 (17 Sep 2026) | PDF linked from the EDPB page the source records | paragraphs 7–11, 79–99 |
+| Regulation (EU) 2024/1689 (AI Act) | Cellar, 32024R1689 (as published; the AI Omnibus's amendments not read) | Art. 3 points (1)–(5) — for Q3 only, nothing written |
+| Regulation (EU) 2022/2065 (DSA) | Cellar, 32022R2065 | Art. 3 points (h), (i), (s); Art. 33(1)–(4) — for Q3 only, nothing written |
+
+Nothing was written from memory or from the design drafts without re-reading.
+
+### Counts against `main` (`a229336`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified; provisions 97 | 0 / 0, 45; provisions 99 | `gdpr:art-2`, `gdpr:art-4` |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-29` | 0 errors, 11 warnings | 0 errors, 11 warnings | TRIGGERS above |
+| `freshness --as-of 2026-10-29` | 0 defects, 3 prompts | 0 defects, 3 prompts | — |
+| `tools/selftest.mjs` | 118 | 119, 0 failing | Y3 |
+| The 24 suites in `AGENT_SUITES` | 1248 | 1249, 0 failing | Y3; detector 41 and 43 failed on `14af4b7` and pass after `7df6524` |
+| `.control-room/selftest.mjs` | 76 · 1 skipped | 76 · 1 skipped | — |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | 16 of 20 on `14af4b7` (two suites red) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs origin/main HEAD` | — | 10 commits, 0 without evidence | — |
+
+### Seen in a browser
+
+Chromium (Playwright), local server, both themes, 1280px and 390px: `applies.html` with
+`?activity=activity:processing-personal-data&territory=territory:eu-established` (fires 01, 03, 04), `…&territory=territory:non-eu-serving-eu`
+(02), `?actor=actor:public-authority&activity=activity:processing-personal-data` (03), `?actor=actor:ai-deployer&activity=activity:ai-deployment` (04),
+`?actor=actor:vlop&activity=activity:recommender-systems` (cross-01), and `/instruments/gdpr/`: the cards read as in the table above; no
+console error; no horizontal overflow; no "[object Object]"; the old Art. 30(5) sentence nowhere.
+
+### What was not verified, and why
+
+- The claims the five rules cite (`clm-one-stop-shop`, `clm-art-22-predates-ai-act`,
+  `clm-three-impact-assessments`, `clm-dsa-gdpr-unresolved`) were not re-read; each rule's note says so.
+- The act that today governs the Union's institutions (Art. 2(3) names Regulation (EC) No 45/2001) was not
+  read, so the Q4b exemption names none.
+- The AI Act's Art. 3 was read as published, not against the AI Omnibus's amendments; nothing was written from it.
+- `js/applies.js` has no rendering test; its output was checked in the browser and by Y3 on the generated GDPR page.
+- Screen readers, contrast and pixels: as README limitation 7 says.
+
+### Found, for the author — not changed
+
+1. **`ap-cross-01` (Q4c).** EDPB ¶88: a recommender system may involve no personal data, yet the rule answers
+   "applies" with no `depends_on`; and the rationale's "advertisement repository" (DSA Art. 39) has no source
+   on the rule (hence the EDPB reference's "(supports in part)"). For Session 15, with the DSA's references.
+2. **The actors' definitions (Q3).** AI Act Art. 3(3)–(4) and DSA Art. 3(i), (s) are not in the dataset; the
+   two rules resolve through the GDPR's Art. 4. Sessions 15 and 16 inherit the choice.
+3. **`ap-gdpr-04` and the controller role.** Art. 22 binds the controller; an AI provider is one only for its
+   own processing. The rule's `depends_on` does not name the role. Not asked; reported here.
+4. **`docs/v2-design/applicability-examples.json`** still holds the 25 Oct drafts of three of these rules
+   (e.g. the old Art. 30(5) text). It is a design record, not data; left as it is.
+5. A worker restart happened once (after Q5's suite run); no decision was lost, each being in §8 first.
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **14.0** | §8: scope row and seven answer rows (`54dd192` … `f5483e4`) | read §8's last eight rows | — | met: every decision in the author's words before anything published changed |
+| **14.1** | data, GDPR page, sitemap (`14af4b7`); `RULES_V1`, X1–X3, Y2, Y3, `fields.mjs`, detector 43 (`7df6524`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 7 of 33"; open the five `applies.html` URLs above and `/instruments/gdpr/` | `tools/selftest.mjs` X1, X3, Y3; `agent/detector` 41, 43 | met: the five publishable; every check at 0 errors |
+| **14.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
+| **14.3** | this report; V2C-07's row in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); V2C-07's row names `14af4b7` |
+| **14.4** | `docs/prompts/v2-session-15.md`; this register entry | read the prompt against §8's plan row and Session 14's rows; its measured state against `node tools/evidence-audit.mjs --as-of 2026-10-29` | — | met: the prompt records no decision |
+
+### How to check it by hand
+
+```
+git diff a229336 -- data/applicability.json       # the five rules, nothing else
+node tools/evidence-audit.mjs --as-of 2026-10-29  # TRIGGERS: publishable 7 of 33, ERRORS 0
+node --test tools/selftest.mjs                     # 119 pass
+python3 -m http.server 8000                        # /applies.html?actor=actor:public-authority&activity=activity:processing-personal-data
+```
 
 ## Branch register — 29 October 2026 (v2 Session 13)
 
