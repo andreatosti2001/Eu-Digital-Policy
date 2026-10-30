@@ -608,14 +608,25 @@
       },
       "outcome": "outcome:applies",
       "rationale": "Chapter VI is nine articles (Arts. 23-31) out of fifty and carries most of the Regulation's practical weight for the software industry. Providers of data processing services must remove all pre-commercial, commercial, technical, contractual and organisational obstacles to switching, and Article 25 prescribes the mandatory contractual terms.",
-      "obligations": ["data-act:art-25"],
+      "obligations": ["data-act:art-25", "data-act:art-29"],
       "authority": ["nca-*"],
       "dates": ["tl-data-act-2025-09-12-application", "tl-data-act-2027-01-12-application"],
-      "exemptions": [],
+      "exemptions": [
+        { "text": "Under Article 31(2), the obligations of Chapter VI do not apply to data processing services provided as a non-production version for testing and evaluation purposes and for a limited period of time. Under Article 31(1), Article 29 does not apply — nor do Article 23, point (d), and Article 30(1) and (3) — to data processing services the majority of whose main features has been custom-built for an individual customer, or all of whose components have been developed for one, where they are not offered at broad commercial scale via the provider's service catalogue. The provider must inform the prospective customer beforehand of the obligations that do not apply (Article 31(3)).", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 31(1), (2) and (3)" }] }
+      ],
       "depends_on": ["Whether Chapter VI reaches contracts concluded before 12 September 2025: Article 50 phases in only Chapter IV for such contracts, and practitioner analysis reads the switching right as reaching them; the Commission's FAQ (version 1.4) does not address the point."],
       "claims": ["clm-data-act-switching-numbers", "clm-data-act-retroactivity-open"],
-      "sources": ["src-eurlex-data-act"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 1(3)(f); Art. 2 points (8) and (30)", "for": "scope" },
+        { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 25; Art. 29(1)", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["data-act:art-1", "data-act:art-2"],
+        "activity": ["data-act:art-2"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2023/2854 retrieved from the Publications Office's Cellar by CELEX (32023R2854): Arts 1(3)(f), 2 points (8) and (30), 25, 29, 31 and 50. The Publications Office's metadata lists no act amending the Regulation and six corrigenda, of which only R(01) has an English expression; it renumbers a point of Art. 48 and touches nothing cited here. On the author's decisions of 29 Oct 2026, Art. 29 joins the obligations — the 12 January 2027 event is Art. 29(1)'s, and named Art. 25 until then — and the Art. 31 exemption is added. Conditions, outcome and rationale were not changed. The claims were not re-read."
     },
     {
       "id": "ap-data-act-02",
@@ -627,14 +638,26 @@
       },
       "outcome": "outcome:likely",
       "rationale": "The Data Act reaches non-EEA providers of data processing services with customers in the Union. Establishment outside the Union is not a way out of the switching regime.",
-      "obligations": ["data-act:art-25"],
+      "obligations": ["data-act:art-25", "data-act:art-29"],
       "authority": ["nca-*"],
-      "dates": ["tl-data-act-2027-01-12-application"],
-      "exemptions": [],
+      "dates": ["tl-data-act-2025-09-12-application", "tl-data-act-2027-01-12-application"],
+      "exemptions": [
+        { "text": "Under Article 31(2), the obligations of Chapter VI do not apply to data processing services provided as a non-production version for testing and evaluation purposes and for a limited period of time. Under Article 31(1), Article 29 does not apply — nor do Article 23, point (d), and Article 30(1) and (3) — to data processing services the majority of whose main features has been custom-built for an individual customer, or all of whose components have been developed for one, where they are not offered at broad commercial scale via the provider's service catalogue. The provider must inform the prospective customer beforehand of the obligations that do not apply (Article 31(3)).", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 31(1), (2) and (3)" }] }
+      ],
       "depends_on": ["Whether the provider offers services to customers in the Union."],
       "claims": [],
-      "sources": ["src-eurlex-data-act"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 1(3)(f); Art. 2 points (8) and (30)", "for": "scope" },
+        { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 25; Art. 29(1)", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["data-act:art-1", "data-act:art-2"],
+        "activity": ["data-act:art-2"],
+        "territory": ["data-act:art-1"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2023/2854 retrieved from the Publications Office's Cellar by CELEX (32023R2854): Arts 1(3)(f), 2 points (8) and (30), 25, 29, 31 and 50. The Publications Office's metadata lists no act amending the Regulation and six corrigenda, of which only R(01) has an English expression; it renumbers a point of Art. 48 and touches nothing cited here. Art. 1(3)(f) brings providers of data processing services into scope irrespective of their place of establishment where they provide services to customers in the Union. On the author's decisions of 29 Oct 2026, Art. 29 joins the obligations, the dates hold 12 September 2025, the general date from which Art. 25 applies (Art. 50, second paragraph), and the Art. 31 exemption is added. Conditions, outcome and rationale were not changed."
     },
     {
       "id": "ap-data-act-03",
@@ -648,11 +671,24 @@
       "obligations": ["data-act:art-3-1"],
       "authority": ["nca-*"],
       "dates": ["tl-data-act-2026-09-12-application"],
-      "exemptions": ["Data holders may limit access where data qualifies as a trade secret, but must notify the national competent authority, and the user may challenge before a court. The brief records practitioner doubt about whether the confidentiality measures required of recipients are sufficient."],
+      "exemptions": [
+        { "text": "Under Article 4(6) to (8), trade secrets are disclosed only where the data holder and the user take the measures necessary to preserve their confidentiality. Where no such measures are agreed, or the user fails to implement them or undermines that confidentiality, the data holder may withhold or suspend the sharing of data identified as trade secrets; in exceptional circumstances, where it can demonstrate that it is highly likely to suffer serious economic damage, it may refuse access case by case. In each case it must notify the competent authority, and the user may lodge a complaint with that authority or, by agreement with the data holder, refer the matter to a dispute settlement body, without prejudice to recourse to a court (Article 4(9)).", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 4(6), (7), (8) and (9)" }] },
+        { "text": "Under Article 7(1), the obligations of Chapter II, Article 3(1) among them, do not apply to data generated through the use of connected products manufactured or designed, or related services provided, by a microenterprise or a small enterprise that has no partner or linked enterprise which is not itself micro or small, and that is not subcontracted to manufacture or design the product or provide the service. The same applies to an enterprise that has qualified as medium-sized for less than one year, and to connected products for one year after a medium-sized enterprise placed them on the market.", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 7(1)" }] }
+      ],
       "depends_on": [],
       "claims": ["clm-data-act-art-3-application", "clm-data-act-trade-secret-tension"],
-      "sources": ["src-eurlex-data-act"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 1(3)(a); Art. 2 points (5) and (6)", "for": "scope" },
+        { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 3(1)", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["data-act:art-1"],
+        "activity": ["data-act:art-2"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2023/2854 retrieved from the Publications Office's Cellar by CELEX (32023R2854): Arts 1(3)(a), 2 points (5) and (6), 3(1), 4, 7(1) and 50. The Publications Office's metadata lists no act amending the Regulation and six corrigenda, of which only R(01) has an English expression; it renumbers a point of Art. 48 and touches nothing cited here. The Act defines no 'manufacturer'; Art. 1(3)(a) names manufacturers of connected products and providers of related services. On the author's decisions of 29 Oct 2026 the trade-secret exemption states Art. 4(6) to (9), without the brief's sentence on practitioner doubt that ended it (the rule still cites clm-data-act-trade-secret-tension), and the Art. 7(1) exemption is added. Art. 4 governs access on request where data cannot be directly accessed (Art. 4(1)), while this rule's obligation is Art. 3(1). Conditions, outcome and rationale were not changed. The claims were not re-read."
     },
     {
       "id": "ap-data-act-04",
@@ -665,12 +701,23 @@
       "rationale": "The Data Act governs product and service data as such — personal or not, though predominantly non-personal, industrial and machine-generated, with the GDPR prevailing wherever personal data is involved — and reallocates control over it by default. An organisation may be a data holder, a user or a data recipient depending on the arrangement, and the obligations differ in each role.",
       "obligations": ["data-act:art-3-1", "data-act:art-25"],
       "authority": ["nca-*"],
-      "dates": ["tl-data-act-2025-09-12-application", "tl-data-act-2027-09-12-application"],
-      "exemptions": [],
+      "dates": ["tl-data-act-2025-09-12-application", "tl-data-act-2026-09-12-application", "tl-data-act-2027-09-12-application"],
+      "exemptions": [
+        { "text": "Under Article 7(1), the obligations of Chapter II, Article 3(1) among them, do not apply to data generated through the use of connected products manufactured or designed, or related services provided, by a microenterprise or a small enterprise that has no partner or linked enterprise which is not itself micro or small, and that is not subcontracted to manufacture or design the product or provide the service. The same applies to an enterprise that has qualified as medium-sized for less than one year, and to connected products for one year after a medium-sized enterprise placed them on the market.", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 7(1)" }] }
+      ],
       "depends_on": ["Which role the organisation occupies: data holder, user, or data recipient."],
       "claims": ["clm-data-act-non-personal", "clm-data-act-enforcement-uneven"],
-      "sources": ["src-eurlex-data-act"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 1(3)(a), (c) and (f); Art. 2 points (5), (6), (8), (24), (25) and (26)", "for": "scope" },
+        { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 3(1); Art. 25", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["data-act:art-2"],
+        "activity": ["data-act:art-2"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2023/2854 retrieved from the Publications Office's Cellar by CELEX (32023R2854): Arts 1(3), 2 points (5), (6), (8), (24), (25) and (26), 3(1), 7(1), 25 and 50. The Publications Office's metadata lists no act amending the Regulation and six corrigenda, of which only R(01) has an English expression; it renumbers a point of Art. 48 and touches nothing cited here. The Act defines small and micro enterprises by reference to Recommendation 2003/361/EC, which was not read, and no large company. On the author's decisions of 29 Oct 2026 the dates hold 12 September 2026 (Art. 50, third paragraph) and keep 12 September 2027, which is Chapter IV's tranche for legacy contracts (Art. 50, sixth paragraph), not a date the rule's obligations derive; and the Art. 7(1) exemption is added. Conditions, outcome and rationale were not changed. The claims were not re-read."
     },
 
     {
@@ -688,8 +735,19 @@
       "exemptions": [],
       "depends_on": ["THE OPERATIVE DATE IS NATIONAL, NOT EUROPEAN. NIS2 is a directive and transposition is materially incomplete: registration windows and compliance dates vary by Member State, and in several they have not yet arrived.", "Whether the organisation falls within an Annex I or Annex II sector and meets the size criteria."],
       "claims": ["clm-nis2-management-liability", "clm-nis2-transposition-failure", "clm-directives-underperform"],
-      "sources": ["src-eurlex-nis2", "src-ec-nis2-referral-2026"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 2(1), (2) and (3); Art. 3(1) and (2); Annexes I and II", "for": "scope" },
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 3(4); Art. 20(1) and (2); Art. 21(1) and (2); Art. 23(1) and (4)", "for": "obligation" },
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 32(6)", "for": "rationale" },
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 41(1)", "for": "date" },
+        { "source_id": "src-ec-nis2-referral-2026", "supports": "supports:context", "locator": "third paragraph", "for": "rationale" }
+      ],
+      "condition_provisions": {
+        "actor": ["nis2:art-2", "nis2:art-3"],
+        "activity": ["nis2:art-2"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 3, 20, 21, 23, 32(6) and 41 and Annexes I and II. The Publications Office's metadata lists no act amending the Directive and nine corrigenda, of which only R(04) has an English expression; it corrects Art. 19(1) and touches nothing cited here. NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national (the author's decision of 29 Oct 2026). Art. 3 stays among the obligations: Art. 3(4) requires entities to submit their details for the national list. The Commission's press release of 8 July 2026 (src-ec-nis2-referral-2026), re-read that day, is context: 'While most complied, Spain, France, Ireland and the Netherlands have yet to notify full transposition'; that wording against depends_on's 'materially incomplete' is reported to the author, and depends_on was not changed. Conditions, outcome and rationale were not changed. The claims were not re-read."
     },
     {
       "id": "ap-nis2-02",
@@ -703,11 +761,22 @@
       "obligations": ["nis2:art-21", "nis2:art-23", "nis2:art-20"],
       "authority": ["nca-*"],
       "dates": ["tl-nis2-2024-10-17-transposition"],
-      "exemptions": ["Micro and small enterprises are generally outside NIS2, subject to sector-specific exceptions."],
+      "exemptions": [
+        { "text": "Under Article 2(1), NIS2 applies to entities of a type referred to in Annex I or II that qualify as medium-sized enterprises or exceed the ceilings for medium-sized enterprises. Regardless of size, it also applies where the entity is the sole provider in a Member State of a service essential for critical societal or economic activities, where disruption of its service could have a significant impact on public safety, public security or public health or induce a significant systemic risk, or where it is critical because of its specific importance at national or regional level (Article 2(2), points (b) to (e)), and to entities identified as critical entities under Directive (EU) 2022/2557 (Article 2(3)).", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 2(1); Art. 2(2), points (b) to (e); Art. 2(3)" }] }
+      ],
       "depends_on": ["National transposition in the Member State of establishment.", "Size criteria."],
       "claims": ["clm-nis2-transposition-failure"],
-      "sources": ["src-eurlex-nis2"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 2(1) and (2); Art. 3(1) and (2); Art. 6 points (30) and (31); Annex I, point 8", "for": "scope" },
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 20(1); Art. 21(1) and (2); Art. 23(1) and (4)", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["nis2:art-2", "nis2:art-6"],
+        "activity": ["nis2:art-2", "nis2:art-6"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 3, 6 points (30) and (31), 20, 21, 23 and 41 and Annex I, point 8. The Publications Office's metadata lists no act amending the Directive and nine corrigenda, of which only R(04) has an English expression; it corrects Art. 19(1) and touches nothing cited here. NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national (the author's decision of 29 Oct 2026). On the author's decision of 29 Oct 2026 the exemption states Art. 2(1) to (3); it read 'Micro and small enterprises are generally outside NIS2, subject to sector-specific exceptions.' Conditions, outcome and rationale were not changed. The claims were not re-read."
     },
     {
       "id": "ap-nis2-03",
@@ -721,11 +790,22 @@
       "obligations": ["nis2:art-21", "nis2:art-23"],
       "authority": ["nca-*"],
       "dates": ["tl-nis2-2024-10-17-transposition"],
-      "exemptions": [],
+      "exemptions": [
+        { "text": "Under Article 2(7), NIS2 does not apply to public administration entities that carry out their activities in the areas of national security, public security, defence or law enforcement, including the prevention, investigation, detection and prosecution of criminal offences.", "effect": "excludes",
+          "basis": [{ "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 2(7)" }] }
+      ],
       "depends_on": ["How the Member State has transposed the public administration sector.", "Whether national security functions are carved out."],
       "claims": ["clm-nis2-transposition-failure"],
-      "sources": ["src-eurlex-nis2"],
-      "last_verified": "2026-08-27"
+      "sources": [
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 2(2)(f) and (5)(a); Art. 6 point (35); Annex I, point 10", "for": "scope" },
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 21(1) and (2); Art. 23(1) and (4)", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["nis2:art-2", "nis2:art-6"],
+        "activity": ["nis2:art-2"]
+      },
+      "last_verified": "2026-10-29",
+      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 6 point (35), 21, 23 and 41 and Annex I, point 10. The Publications Office's metadata lists no act amending the Directive and nine corrigenda, of which only R(04) has an English expression; it corrects Art. 19(1) and touches nothing cited here. NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national (the author's decision of 29 Oct 2026). On the author's decision of 29 Oct 2026 the Art. 2(7) exemption is added; depends_on still covers what Member States may add under Art. 2(8). Conditions, outcome and rationale were not changed. The claims were not re-read."
     },
 
     {
@@ -739,13 +819,24 @@
       "obligations": ["dora:art-5", "dora:art-6", "dora:art-17", "dora:art-19", "dora:art-24", "dora:art-28"],
       "authority": ["esas", "nca-*"],
       "dates": ["tl-dora-2025-01-17-application"],
-      "exemptions": [],
+      "exemptions": [
+        { "text": "Under Article 2(3), DORA does not apply to managers of alternative investment funds referred to in Article 3(2) of Directive 2011/61/EU; insurance and reinsurance undertakings referred to in Article 4 of Directive 2009/138/EC; institutions for occupational retirement provision which operate pension schemes that together have no more than 15 members in total; persons exempted under Articles 2 and 3 of Directive 2014/65/EU; insurance, reinsurance and ancillary insurance intermediaries which are microenterprises or small or medium-sized enterprises; and post office giro institutions. Under Article 2(4), a Member State may exclude entities referred to in Article 2(5), points (4) to (23), of Directive 2013/36/EU located in its territory.", "effect": "excludes",
+          "basis": [{ "source_id": "src-eurlex-dora", "supports": "supports:direct", "locator": "Art. 2(3) and (4)" }] },
+        { "text": "Under Article 16(1), Articles 5 to 15 do not apply to small and non-interconnected investment firms, payment institutions exempted under Directive (EU) 2015/2366, institutions exempted under Directive 2013/36/EU for which the Member State has not used the option in Article 2(4), electronic money institutions exempted under Directive 2009/110/EC, and small institutions for occupational retirement provision; they must instead maintain a simplified ICT risk management framework. Under Article 24(1), microenterprises are not required to establish a digital operational resilience testing programme.", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-dora", "supports": "supports:direct", "locator": "Art. 16(1); Art. 24(1)" }] }
+      ],
       "depends_on": ["Which category of financial entity, which determines the proportionality of the requirements."],
       "claims": ["clm-directives-underperform"],
-      "sources": ["src-eurlex-dora"],
-      "last_verified": "2026-09-27",
+      "sources": [
+        { "source_id": "src-eurlex-dora", "supports": "supports:direct", "locator": "Art. 2(1), points (a) to (t), and (2)", "for": "scope" },
+        { "source_id": "src-eurlex-dora", "supports": "supports:direct", "locator": "Art. 5; Art. 6; Art. 17(1); Art. 19(1); Art. 24(1); Art. 28(1)", "for": "obligation" }
+      ],
+      "condition_provisions": {
+        "actor": ["dora:art-2"]
+      },
+      "last_verified": "2026-10-29",
       "requires_verification": false,
-      "verification_note": "Obligations point at DORA Arts 5, 6, 17, 19, 24 and 28, added on 27 Sep 2026 from the Official Journal text (CELEX 32022R2554); application from 17 January 2025 per Art. 64. Earlier: No provisions are recorded for DORA in instruments.json, so this rule cannot yet point at specific articles. The obligation list is empty rather than invented."
+      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2554 retrieved from the Publications Office's Cellar by CELEX (32022R2554): Arts 2, 4, 5, 6, 16, 17, 19, 24, 28 and 64. The Publications Office's metadata lists no act amending the Regulation and nine corrigenda, none with an English expression. On the author's decision of 29 Oct 2026 the Art. 2(3) and (4) and the Art. 16(1) and 24(1) exemptions are added. Conditions, outcome and rationale were not changed. The claims were not re-read. Earlier: Obligations point at DORA Arts 5, 6, 17, 19, 24 and 28, added on 27 Sep 2026 from the Official Journal text (CELEX 32022R2554); application from 17 January 2025 per Art. 64. Earlier: No provisions are recorded for DORA in instruments.json, so this rule cannot yet point at specific articles. The obligation list is empty rather than invented."
     },
     {
       "id": "ap-dora-02",
@@ -762,10 +853,18 @@
       "exemptions": [],
       "depends_on": ["Whether the provider is designated a critical ICT third-party service provider.", "Whether it serves financial entities at all."],
       "claims": [],
-      "sources": ["src-eurlex-dora"],
-      "last_verified": "2026-09-27",
+      "sources": [
+        { "source_id": "src-eurlex-dora", "supports": "supports:direct", "locator": "Art. 2(1), point (u); Art. 3 points (19), (21) and (23)", "for": "scope" },
+        { "source_id": "src-eurlex-dora", "supports": "supports:direct", "locator": "Art. 28(1); Art. 31(1)", "for": "obligation" },
+        { "source_id": "src-eurlex-dora", "supports": "supports:direct", "locator": "Art. 30(1) and (2); Art. 33(1)", "for": "rationale" }
+      ],
+      "condition_provisions": {
+        "actor": ["dora:art-2", "dora:art-3"],
+        "activity": ["dora:art-3"]
+      },
+      "last_verified": "2026-10-29",
       "requires_verification": false,
-      "verification_note": "The oversight allocation is now established: under DORA Art. 31(1) the ESAs designate critical ICT third-party service providers through the Joint Committee and appoint as Lead Overseer the ESA responsible for the financial entities holding the largest share of total assets among the provider's users (Official Journal, CELEX 32022R2554, read 27 Sep 2026). Earlier: The allocation of the DORA oversight framework between the three ESAs is not established from a primary source in this build."
+      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2554 retrieved from the Publications Office's Cellar by CELEX (32022R2554): Arts 2(1)(u), 3 points (19), (21) and (23), 28, 30, 31, 33 and 64. The Publications Office's metadata lists no act amending the Regulation and nine corrigenda, none with an English expression. Art. 28 binds the financial entity, so it reaches the provider only through the contract (Art. 30). Conditions, outcome and rationale were not changed. Earlier: The oversight allocation is now established: under DORA Art. 31(1) the ESAs designate critical ICT third-party service providers through the Joint Committee and appoint as Lead Overseer the ESA responsible for the financial entities holding the largest share of total assets among the provider's users (Official Journal, CELEX 32022R2554, read 27 Sep 2026). Earlier: The allocation of the DORA oversight framework between the three ESAs is not established from a primary source in this build."
     },
 
     {
@@ -780,13 +879,26 @@
       "obligations": ["cra:art-13", "cra:art-14"],
       "authority": ["nca-*", "enisa"],
       "dates": ["tl-cra-2026-09-11-reporting-deadline", "tl-cra-2027-12-11-application"],
-      "exemptions": [],
+      "exemptions": [
+        { "text": "Under Article 2(2) to (4), (6) and (7), the Regulation does not apply to products with digital elements to which Regulation (EU) 2017/745, (EU) 2017/746 or (EU) 2019/2144 applies, to products certified in accordance with Regulation (EU) 2018/1139, to equipment within the scope of Directive 2014/90/EU, to spare parts made available to replace identical components and manufactured to the same specifications, or to products developed or modified exclusively for national security or defence purposes or specifically designed to process classified information.", "effect": "excludes",
+          "basis": [{ "source_id": "src-eurlex-cra", "supports": "supports:direct", "locator": "Art. 2(2), (3), (4), (6) and (7)" }] },
+        { "text": "Under Article 69(2), products with digital elements placed on the market before 11 December 2027 are subject to the Regulation's requirements only if, from that date, they are substantially modified; under Article 69(3), the reporting obligations of Article 14 nevertheless apply to all of them.", "effect": "narrows",
+          "basis": [{ "source_id": "src-eurlex-cra", "supports": "supports:direct", "locator": "Art. 69(2) and (3)" }] }
+      ],
       "depends_on": ["Whether the product is a product with digital elements within the Regulation's definition."],
       "claims": [],
-      "sources": ["src-eurlex-cra"],
-      "last_verified": "2026-09-27",
+      "sources": [
+        { "source_id": "src-eurlex-cra", "supports": "supports:direct", "locator": "Art. 2(1); Art. 3 points (1), (13), (21) and (22)", "for": "scope" },
+        { "source_id": "src-eurlex-cra", "supports": "supports:direct", "locator": "Art. 13(1); Art. 14(1) and (3)", "for": "obligation" },
+        { "source_id": "src-eurlex-cra", "supports": "supports:direct", "locator": "Art. 71(2)", "for": "date" }
+      ],
+      "condition_provisions": {
+        "actor": ["cra:art-3"],
+        "activity": ["cra:art-2", "cra:art-3"]
+      },
+      "last_verified": "2026-10-29",
       "requires_verification": false,
-      "verification_note": "Obligations point at CRA Arts 13 and 14, added on 27 Sep 2026 from the Official Journal text (CELEX 32024R2847); dates per Art. 71(2). Earlier: No provisions are recorded for the CRA in instruments.json, so this rule cannot yet point at specific articles."
+      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2024/2847 retrieved from the Publications Office's Cellar by CELEX (32024R2847): Arts 2, 3 points (1), (13), (14), (21) and (22), 13, 14, 69 and 71; and Art. 104 of Regulation (EU) 2025/327 (32025R0327), which replaces Arts 13(4) and 31(3) and inserts Art. 32(5a) from 26 March 2027 (its Art. 105) and leaves Arts 13(1) and 14 untouched (the author's decision of 29 Oct 2026: a note, no reference). The Publications Office's metadata lists that one amending act and eight corrigenda, of which R(01), R(02) and R(04) have English expressions; they correct the title, Art. 64(10) and Art. 67 and touch nothing cited here. The CRA has no 'connected-product provider', a Data Act term; it binds one only as a manufacturer (Art. 3 point (13)). On the author's decision of 29 Oct 2026 the Art. 2 and Art. 69 exemptions are added. Conditions, outcome and rationale were not changed. Earlier: Obligations point at CRA Arts 13 and 14, added on 27 Sep 2026 from the Official Journal text (CELEX 32024R2847); dates per Art. 71(2). Earlier: No provisions are recorded for the CRA in instruments.json, so this rule cannot yet point at specific articles."
     },
 
     {

@@ -24,8 +24,10 @@
  *                    the records that predate them (tools/register-audit.mjs)
  *   9. TRIGGERS      the applicability rules behind applies.html, held to
  *                    the claims' standard (v2 Session 12, 28 Oct 2026):
- *                    T-01 … T-11, with a BACKLOG for the 33 rules that
- *                    predate them (tools/trigger-audit.mjs)
+ *                    T-01 … T-12 (tools/trigger-audit.mjs). Its BACKLOG
+ *                    for the 33 rules that predated them was flipped to
+ *                    ERROR on 29 Oct 2026, 33 of 33 publishable (v2
+ *                    Session 17, docs/ROADMAP-v2.md §8, 17.0 question 7)
  *
  * Every number is DERIVED from the data on each run through the same
  * modules the website uses (js/evidence-model.js, js/format.js,
@@ -502,7 +504,6 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
       total: trig.total,
       by_outcome: trig.by_outcome,
       publishable: trig.publishable,
-      backlog: trig.backlog,
     },
     errors,
     warnings,
@@ -586,7 +587,7 @@ export function recordEntry(r, { root = ROOT, argv = [], now = () => new Date().
       freshness: r.freshness,
       enforcement: { by_finality: r.enforcement.by_finality, contradictions: r.enforcement.contradictions },
       regulatory: { provision_application: r.regulatory.provision_application },
-      triggers: { total: r.triggers.total, publishable: r.triggers.publishable.length, backlog: Object.fromEntries(Object.entries(r.triggers.backlog).map(([c, ids]) => [c, ids.length])) },
+      triggers: { total: r.triggers.total, publishable: r.triggers.publishable.length },
     },
     limits: LIMITS,
   };
@@ -621,7 +622,6 @@ function text(r) {
   for (const [code, ids] of Object.entries(r.register.backlog)) L.push(`  BACKLOG ${code} ${ids.length}: ${ids.join(', ') || 'none'}`);
   L.push(`TRIGGERS        ${r.triggers.total} rules · ${kv(r.triggers.by_outcome)}`);
   L.push(`  publishable   ${r.triggers.publishable.length} of ${r.triggers.total}${r.triggers.publishable.length ? ': ' + r.triggers.publishable.join(', ') : ''}`);
-  for (const [code, ids] of Object.entries(r.triggers.backlog)) L.push(`  BACKLOG ${code} ${ids.length}: ${ids.join(', ') || 'none'}`);
   L.push('');
   L.push(`WARNINGS ${r.warnings.length}`);
   for (const w of r.warnings) L.push('  ! ' + w);
@@ -660,7 +660,6 @@ function markdown(r) {
     ...Object.entries(r.register.backlog).map(([code, ids]) => row(`Backlog — ${code}`, ids.length)),
     row('Applicability rules', `${r.triggers.total} · ${kv(r.triggers.by_outcome)}`),
     row('… publishable at the claims\' standard', `${r.triggers.publishable.length} of ${r.triggers.total}`),
-    ...Object.entries(r.triggers.backlog).map(([code, ids]) => row(`Backlog — ${code}`, ids.length)),
     row('Errors / warnings', `${r.errors.length} / ${r.warnings.length}`),
     '',
     '_Derived on this run from `data/` and `index.html` by the modules the site itself uses. Not a score: the backlog is closed by verification work, not by a passing check._',

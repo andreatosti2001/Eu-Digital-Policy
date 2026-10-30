@@ -38,7 +38,7 @@ import {
   ALLOWED_RUNTIME_ORIGINS, TRACKER_HINTS, NON_FETCHING_URIS,
   foreignOrigin, scanHtml, scanCss, scanJs, scanRuntimeSurface, runtimeSurface,
 } from './thirdparty.mjs';
-import { EXPECTED, RECHECK } from './freshness.mjs';
+import { EXPECTED, RECHECK, RULE_INTERVAL } from './freshness.mjs';
 import { dateProblem } from './as-of.mjs';
 import { RECORD_VERSION, QUESTIONS, CHECKED, LIMITS, readRecords } from './evidence-audit-record.mjs';
 import { createHash } from 'node:crypto';
@@ -396,6 +396,30 @@ test('F6 · the prompts are still printed in full — nothing was silenced', () 
   for (const h of ['VERIFICATION DATES', 'EVENTS THAT HAVE PASSED', 'RECORDS EXPECTED TO CHANGE', 'SOURCE REACHABILITY']) {
     assert.match(r.out, new RegExp(h));
   }
+});
+
+test('F10 · 17.3(b): the applicability rules are aged one by one, at 90 days, and a stale rule is a prompt, never a defect', () => {
+  /* v2 Session 17 (29 Oct 2026, docs/ROADMAP-v2.md §8, 17.0 questions 8b and 9; named F10 because
+     F7 was taken): the file's $last_verified no longer ages the rules */
+  assert.equal(RULE_INTERVAL.days, 90);
+  const now = runValidator('freshness.mjs', ['2026-10-29']);
+  assert.equal(now.exit, 0);
+  assert.match(now.out, /^ {2}applicability {3}per rule, 33 rules verified 2026-10-29 … 2026-10-29 \(file date 2026-08-27 not used\)$/m);
+  assert.doesNotMatch(now.out, /RULE_STALE/);
+  const later = runValidator('freshness.mjs', ['2027-01-28']);
+  assert.equal(later.exit, 0);
+  assert.equal(later.out.split('\n').filter((l) => l.trim().startsWith('! RULE_STALE ')).length, 33);
+  const dir = dataScratch();
+  try {
+    const p = join(dir, 'data', 'applicability.json');
+    const d = JSON.parse(readFileSync(p, 'utf8'));
+    d.rules.find((r) => r.id === 'ap-cra-01').last_verified = '2026-07-01';
+    writeFileSync(p, JSON.stringify(d, null, 2));
+    const r = runValidator('freshness.mjs', ['2026-10-29'], dir);
+    assert.equal(r.exit, 0, 'a stale rule is a prompt, not a defect');
+    assert.deepEqual(r.out.split('\n').filter((l) => /RULE_STALE/.test(l)).map((l) => l.trim()),
+      ['! RULE_STALE applicability/ap-cra-01 was last verified 2026-07-01, 120 days ago, past its 90-day interval — a rule reads its Articles, and an amendment, a new tranche or a judgment changes what it should say']);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 /* ============================================================
@@ -2434,12 +2458,15 @@ test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with i
    on nothing (docs/V2-DATA-DESIGN.md §4.3): every ERROR rule is planted.
    --------------------------------------------------------------------------- */
 
-import { triggerAudit, RULES_V1, BACKLOG_CODES } from './trigger-audit.mjs';
+/* v2 Session 17 (29 Oct 2026, docs/ROADMAP-v2.md §8, 17.0 questions 7 and 9):
+   RULES_V1 and BACKLOG_CODES are gone with the backlog they held; every
+   T-01…T-05 and T-10 finding is an ERROR for every rule. */
+import { triggerAudit } from './trigger-audit.mjs';
 
-/* The 33 rules of 28 Oct 2026, frozen here as a literal list rather than read
-   from RULES_V1: RULES_V1 shrinks as rules reach the v2 shape, and a baseline
-   that shrank with it could never catch a rule moving back (docs/ROADMAP-v2.md
-   §8, v2 Session 13, question 5). */
+/* The 33 rules of 28 Oct 2026, frozen here as a literal list. Until v2
+   Session 17 it was the baseline RULES_V1 shrank against (docs/ROADMAP-v2.md
+   §8, v2 Session 13, question 5); since the flip it is the list of rules the
+   v2 shape holds, all 33. */
 const RULES_2026_10_28 = Object.freeze(['ap-gdpr-01', 'ap-gdpr-02', 'ap-gdpr-03', 'ap-gdpr-04', 'ap-dsa-01',
   'ap-dsa-02', 'ap-dsa-03', 'ap-dsa-04', 'ap-dsa-05', 'ap-dma-01', 'ap-dma-02', 'ap-dma-03', 'ap-dma-04',
   'ap-ai-act-01', 'ap-ai-act-02', 'ap-ai-act-03', 'ap-ai-act-04', 'ap-ai-act-05', 'ap-ai-act-06', 'ap-ai-act-07',
@@ -2448,27 +2475,17 @@ const RULES_2026_10_28 = Object.freeze(['ap-gdpr-01', 'ap-gdpr-02', 'ap-gdpr-03'
 /* the rules brought to the v2 shape, by session: they left RULES_V1. v2 Session 13 (29 Oct 2026):
    the pilot; v2 Session 14 (29 Oct 2026, §8 14.0 question 5): the GDPR's five; v2 Session 15
    (29 Oct 2026, §8 15.0 question 7): the DSA's five and the DMA's four; v2 Session 16 (29 Oct 2026,
-   §8 16.0 question 7): the AI Act's seven */
+   §8 16.0 question 7): the AI Act's seven; v2 Session 17 (29 Oct 2026, §8 17.0 question 9): the
+   Data Act's four, NIS2's three, DORA's two and the CRA's one, the last ten */
 const RULES_PILOT = Object.freeze(['ap-pld-01', 'ap-eidas2-01']);
 const RULES_GDPR = Object.freeze(['ap-gdpr-01', 'ap-gdpr-02', 'ap-gdpr-03', 'ap-gdpr-04', 'ap-cross-01']);
 const RULES_DSA_DMA = Object.freeze(['ap-dsa-01', 'ap-dsa-02', 'ap-dsa-03', 'ap-dsa-04', 'ap-dsa-05',
   'ap-dma-01', 'ap-dma-02', 'ap-dma-03', 'ap-dma-04']);
 const RULES_AI_ACT = Object.freeze(['ap-ai-act-01', 'ap-ai-act-02', 'ap-ai-act-03', 'ap-ai-act-04', 'ap-ai-act-05',
   'ap-ai-act-06', 'ap-ai-act-07']);
-const RULES_V2 = Object.freeze([...RULES_PILOT, ...RULES_GDPR, ...RULES_DSA_DMA, ...RULES_AI_ACT]);
-
-/* The backlog measured on 28 Oct 2026. Each list may only lose members: a
-   rule leaves it by being read against its Article, never by editing this. */
-const TRIGGER_BACKLOG_2026_10_28 = {
-  'rule-v1-sources': RULES_2026_10_28,
-  'rule-scope-basis-missing': RULES_2026_10_28,
-  'rule-condition-provisions-missing': RULES_2026_10_28,
-  'rule-exemption-v1': ['ap-gdpr-01', 'ap-gdpr-03', 'ap-dsa-01', 'ap-dsa-03', 'ap-dsa-04', 'ap-dsa-05', 'ap-dma-01',
-    'ap-ai-act-01', 'ap-ai-act-02', 'ap-ai-act-04', 'ap-ai-act-06', 'ap-data-act-03', 'ap-nis2-02'],
-  'rule-threshold-basis-missing': ['ap-dsa-02', 'ap-dma-02', 'ap-ai-act-03'],
-  'rule-dates-not-derived': ['ap-dsa-02', 'ap-dsa-05', 'ap-dma-03', 'ap-ai-act-01', 'ap-ai-act-02', 'ap-ai-act-05',
-    'ap-ai-act-06', 'ap-ai-act-07', 'ap-data-act-02', 'ap-data-act-04'],
-};
+const RULES_DA_NIS2_DORA_CRA = Object.freeze(['ap-data-act-01', 'ap-data-act-02', 'ap-data-act-03', 'ap-data-act-04',
+  'ap-nis2-01', 'ap-nis2-02', 'ap-nis2-03', 'ap-dora-01', 'ap-dora-02', 'ap-cra-01']);
+const RULES_V2 = Object.freeze([...RULES_PILOT, ...RULES_GDPR, ...RULES_DSA_DMA, ...RULES_AI_ACT, ...RULES_DA_NIS2_DORA_CRA]);
 
 const ruleOf = (db, id) => db.applicability.rules.find((r) => r.id === id);
 /* a v2 rule that passes T-01…T-05: the shape docs/v2-design/applicability-rule.schema.json describes */
@@ -2480,7 +2497,7 @@ const v2Rule = (db) => {
   return r;
 };
 
-test('X1 · 12.2, this tree: the 33 rules read, 0 errors, the backlog the measured one, and it can only shrink', () => {
+test('X1 · 12.2, this tree: the 33 rules read, 0 errors, every rule publishable, and no backlog left', () => {
   const db = loadDb();
   /* as of the tree's newest verification date (§8, v2 Session 13: the pilot rules were read on
      29 Oct 2026), the rule test F1 applies to freshness: nothing date-dependent is reported */
@@ -2488,35 +2505,19 @@ test('X1 · 12.2, this tree: the 33 rules read, 0 errors, the backlog the measur
   assert.equal(t.total, 33);
   assert.deepEqual(t.errors, []);
   assert.deepEqual(t.warnings, []);
-  assert.deepEqual(Object.keys(t.backlog), BACKLOG_CODES);
-  for (const [code, ids] of Object.entries(t.backlog)) {
-    for (const id of ids) assert.ok(TRIGGER_BACKLOG_2026_10_28[code].includes(id), `${id} entered ${code}: the backlog only shrinks`);
-  }
-  /* today's counts. 28 Oct 2026, as the author was shown them (§8, v2 Session 12, question 5):
-     33/33/33/13/3/10. v2 Session 13 (29 Oct 2026) brought two rules to the v2 shape (§8, its
-     question 5): neither was in the exemption, threshold or dates lists. v2 Session 14 (29 Oct
-     2026, §8 14.0 question 5) brought the GDPR's five: ap-gdpr-01 and ap-gdpr-03 were in the
-     exemption list, none in the threshold or dates lists. v2 Session 15 (29 Oct 2026, §8 15.0
-     question 7) brought the DSA's five and the DMA's four: five were in the exemption list
-     (ap-dsa-01, -03, -04, -05, ap-dma-01), two in the threshold list (ap-dsa-02, ap-dma-02), three
-     in the dates list (ap-dsa-02, ap-dsa-05, ap-dma-03). v2 Session 16 (29 Oct 2026, §8 16.0
-     question 7) brought the AI Act's seven: four were in the exemption list (ap-ai-act-01, -02, -04,
-     -06), one in the threshold list (ap-ai-act-03), five in the dates list (ap-ai-act-01, -02, -05,
-     -06, -07) */
-  assert.deepEqual(Object.fromEntries(Object.entries(t.backlog).map(([c, ids]) => [c, ids.length])),
-    { 'rule-v1-sources': 10, 'rule-scope-basis-missing': 10, 'rule-condition-provisions-missing': 10,
-      'rule-exemption-v1': 2, 'rule-threshold-basis-missing': 0, 'rule-dates-not-derived': 2 });
+  /* the flip (v2 Session 17, 29 Oct 2026, §8 17.0 questions 7 and 9): the backlog was 33/33/33/13/3/10
+     on 28 Oct 2026, as the author was shown it (§8, v2 Session 12, question 5), and only shrank —
+     10/10/10/2/0/2 after v2 Session 16 — until the last ten rules were read; then it was removed, so
+     the audit returns none, and a finding of those checks is an ERROR for every rule */
+  assert.equal(t.backlog, undefined, 'no backlog: every rule is held in full');
   assert.deepEqual([...t.publishable].sort(), [...RULES_V2].sort(), 'publishable: exactly the rules brought to v2');
-  for (const id of RULES_V2) assert.ok(!Object.values(t.backlog).flat().includes(id), `${id} is in no backlog`);
-  /* the frozen list is the 33 less the rules brought to v2; it only shrinks */
-  assert.deepEqual([...RULES_V1, ...RULES_V2].sort(), [...RULES_2026_10_28].sort());
+  assert.deepEqual([...RULES_V2].sort(), [...RULES_2026_10_28].sort(), 'all 33 are v2');
   assert.deepEqual([...RULES_2026_10_28].sort(), db.applicability.rules.map((r) => r.id).sort(), 'no rule added since 28 Oct 2026');
   /* the date-dependent halves are WARNINGs: an older date changes the report, never the exit code */
   const sept = triggerAudit(db, '2026-09-27');
   assert.deepEqual(sept.errors, []);
-  /* every rule read on 29 Oct 2026, in file order (v2 Sessions 13, 14, 15 and 16) */
-  assert.deepEqual(sept.warnings, ['ap-gdpr-01', 'ap-gdpr-02', 'ap-gdpr-03', 'ap-gdpr-04', ...RULES_DSA_DMA,
-    ...RULES_AI_ACT, 'ap-pld-01', 'ap-eidas2-01', 'ap-cross-01']
+  /* every rule read on 29 Oct 2026 (v2 Sessions 13 to 17), in file order: all 33 since v2 Session 17 */
+  assert.deepEqual(sept.warnings, db.applicability.rules.map((r) => r.id)
     .map((id) => `VERIFIED_AFTER_AS_OF applicability/${id}: last_verified 2026-10-29 is after the audit date 2026-09-27`));
   const early = triggerAudit(db, '2024-06-01');
   assert.deepEqual(early.errors, []);
@@ -2569,12 +2570,43 @@ test('X2 · 12.2: every ERROR rule fires on a planted defect, and a v2 rule that
   assert.equal(errs(plant((db) => { ruleOf(db, 'ap-gdpr-04').instrument = excluded; ruleOf(db, 'ap-gdpr-04').outcome = 'outcome:possible'; }), /^T-09 /).length, 1);
   assert.ok(plant((db) => { ruleOf(db, 'ap-gdpr-04').instrument = watched; ruleOf(db, 'ap-gdpr-04').outcome = 'outcome:possible'; })
     .warnings.some((w) => /^RULE_ON_WATCHED applicability\/ap-gdpr-04/.test(w)));
-  /* a rule added after the 33 is held in full: its gaps are errors, not backlog. The clone is of a
-     rule still in RULES_V1, which still has gaps (v2 Session 14, §8 14.0 question 5: ap-gdpr-01,
-     the clone until then, now has none) */
-  const added = plant((db) => { db.applicability.rules.push({ ...structuredClone(ruleOf(db, RULES_V1[0])), id: 'ap-gdpr-99' }); });
-  assert.ok(added.errors.some((e) => /^T-01 applicability\/ap-gdpr-99: .*held to it in full/.test(e)));
-  assert.ok(!Object.values(added.backlog).flat().includes('ap-gdpr-99'));
+  /* every rule is held in full (v2 Session 17, 29 Oct 2026, §8 17.0 questions 7 and 9): until the
+     flip a rule added after the 33 was, and the 33 carried their gaps as backlog; now a rule given back
+     a bare id has the two ERRORs, with no "held to it in full" suffix, and so does a new rule */
+  const bare = plant((db) => { ruleOf(db, 'ap-data-act-01').sources = ['src-eurlex-data-act']; }, '2026-10-29');
+  assert.deepEqual(bare.errors, ['T-01 applicability/ap-data-act-01: a bare source id', 'T-02 applicability/ap-data-act-01: no scope reference']);
+  assert.ok(!bare.publishable.includes('ap-data-act-01'));
+  const added = plant((db) => {
+    const r = { ...structuredClone(ruleOf(db, 'ap-data-act-01')), id: 'ap-gdpr-99' };
+    r.sources = ['src-eurlex-data-act'];
+    db.applicability.rules.push(r);
+  }, '2026-10-29');
+  assert.ok(added.errors.includes('T-01 applicability/ap-gdpr-99: a bare source id'));
+  assert.ok(![...bare.errors, ...added.errors].some((e) => /held to it in full/.test(e)));
+  assert.equal(added.backlog, undefined);
+  /* T-10 is an ERROR: ap-data-act-02 without the date question 2a gave it */
+  assert.deepEqual(plant((db) => { ruleOf(db, 'ap-data-act-02').dates = ['tl-data-act-2027-01-12-application']; }, '2026-10-29').errors,
+    ['T-10 applicability/ap-data-act-02: dates omit tl-data-act-2025-09-12-application']);
+
+  /* T-12 (v2 Session 17, §8 17.0 question 8a): the law a rule cites moved after it was read. A WARNING */
+  const law = (t) => t.warnings.filter((w) => /^LAW_CHANGED_SINCE_VERIFIED /.test(w));
+  const real = triggerAudit(loadDb(), '2027-03-26');
+  assert.deepEqual(law(real), ['LAW_CHANGED_SINCE_VERIFIED applicability/ap-cra-01: cites cra, amended by ehds (rel-ehds-cra-amends), whose tl-ehds-2027-03-26-application (2027-03-26) is after last_verified 2026-10-29']);
+  assert.deepEqual(law(triggerAudit(loadDb(), '2026-10-29')), []);
+  const omni = plant((db) => { ruleOf(db, 'ap-ai-act-01').last_verified = '2026-07-01'; }, '2026-10-29');
+  assert.deepEqual(law(omni), ['LAW_CHANGED_SINCE_VERIFIED applicability/ap-ai-act-01: cites ai-act, amended by ai-omnibus (rel-ai-omnibus-ai-act), whose tl-ai-omnibus-2026-07-27-entry-into-force (2026-07-27) is after last_verified 2026-07-01']);
+  assert.deepEqual(omni.errors, []);
+  /* a proposed edge never counts: the Data Omnibus, given an entry into force it does not have */
+  const proposed = plant((db) => {
+    ruleOf(db, 'ap-data-act-01').last_verified = '2026-10-01';
+    db.timeline.events.push({ id: 'tl-planted-omnibus-eif', date: '2026-10-28', date_precision: 'precision:day', event_type: 'event:entry-into-force', instrument: 'data-omnibus', provisions: [] });
+  }, '2026-10-29');
+  assert.deepEqual(law(proposed), []);
+  /* a judicial event of the cited instrument does */
+  const judged = plant((db) => {
+    db.timeline.events.push({ id: 'tl-planted-cra-judicial', date: '2026-11-02', date_precision: 'precision:day', event_type: 'event:judicial', instrument: 'cra', provisions: [] });
+  }, '2026-11-03');
+  assert.deepEqual(law(judged), ['LAW_CHANGED_SINCE_VERIFIED applicability/ap-cra-01: cites cra, whose tl-planted-cra-judicial (judicial, 2026-11-02) is after last_verified 2026-10-29']);
 });
 
 test('X3 · 12.2: evidence-audit.mjs reports TRIGGERS in text, --json and --markdown, FAILS on a planted rule defect, and refuses a stored derived field on a rule', () => {
@@ -2583,13 +2615,17 @@ test('X3 · 12.2: evidence-audit.mjs reports TRIGGERS in text, --json and --mark
   assert.match(out.out, /^TRIGGERS {8}33 rules · applies 13 · likely 9 · possible 10 · unlikely 1$/m);
   /* v2 Session 14 (29 Oct 2026, §8 14.0 question 5): 2 → 7, the GDPR's five brought to v2;
      v2 Session 15 (29 Oct 2026, §8 15.0 question 7): 7 → 16, the DSA's five and the DMA's four;
-     v2 Session 16 (29 Oct 2026, §8 16.0 question 7): 16 → 23, the AI Act's seven */
-  assert.match(out.out, /^ {2}publishable {3}23 of 33: ap-gdpr-01, ap-gdpr-02, ap-gdpr-03, ap-gdpr-04, ap-dsa-01, ap-dsa-02, ap-dsa-03, ap-dsa-04, ap-dsa-05, ap-dma-01, ap-dma-02, ap-dma-03, ap-dma-04, ap-ai-act-01, ap-ai-act-02, ap-ai-act-03, ap-ai-act-04, ap-ai-act-05, ap-ai-act-06, ap-ai-act-07, ap-pld-01, ap-eidas2-01, ap-cross-01$/m);
-  assert.match(out.out, /^ {2}BACKLOG rule-dates-not-derived 2: /m);
+     v2 Session 16 (29 Oct 2026, §8 16.0 question 7): 16 → 23, the AI Act's seven;
+     v2 Session 17 (29 Oct 2026, §8 17.0 questions 7 and 9): 23 → 33, the last ten, and the six
+     BACKLOG rule-* lines leave the report with the backlog */
+  assert.match(out.out, /^ {2}publishable {3}33 of 33: ap-gdpr-01, ap-gdpr-02, ap-gdpr-03, ap-gdpr-04, ap-dsa-01, ap-dsa-02, ap-dsa-03, ap-dsa-04, ap-dsa-05, ap-dma-01, ap-dma-02, ap-dma-03, ap-dma-04, ap-ai-act-01, ap-ai-act-02, ap-ai-act-03, ap-ai-act-04, ap-ai-act-05, ap-ai-act-06, ap-ai-act-07, ap-data-act-01, ap-data-act-02, ap-data-act-03, ap-data-act-04, ap-nis2-01, ap-nis2-02, ap-nis2-03, ap-dora-01, ap-dora-02, ap-cra-01, ap-pld-01, ap-eidas2-01, ap-cross-01$/m);
+  assert.doesNotMatch(out.out, /BACKLOG rule-/);
   const json = JSON.parse(runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28', '--json']).out);
   assert.equal(json.triggers.total, 33);
-  assert.equal(json.triggers.backlog['rule-exemption-v1'].length, 2);
-  assert.match(runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28', '--markdown']).out, /\| … publishable at the claims' standard \| 23 of 33 \|/);
+  assert.equal(json.triggers.backlog, undefined);
+  const md = runValidator('evidence-audit.mjs', ['--as-of', '2026-10-28', '--markdown']).out;
+  assert.match(md, /\| … publishable at the claims' standard \| 33 of 33 \|/);
+  assert.doesNotMatch(md, /Backlog — rule-/);
   assert.ok(DERIVED_FIELDS.includes('publishable') && DERIVED_FIELDS.includes('modality'));
   const dir = treeCopy();
   try {
@@ -2687,7 +2723,8 @@ test('Y2 · 13.3: the two pilot rules are v2, publishable, resolve to their own 
      is Y3's to hold, not "every reference direct" (§8 14.0 question 5) */
   for (const id of RULES_PILOT) {
     const r = ruleOf(db, id);
-    assert.ok(!RULES_V1.includes(id), `${id} left RULES_V1`);
+    /* v2 Session 17 (29 Oct 2026, §8): RULES_V1 is gone with the backlog it held */
+    assert.equal(t.backlog, undefined, 'no backlog: every rule is held in full');
     assert.ok(t.publishable.includes(id), `${id} is publishable`);
     assert.ok(r.sources.every((s) => typeof s === 'object' && s.supports === 'supports:direct'), `${id}: reference objects, all direct`);
     assert.equal(r.last_verified, '2026-10-29');
@@ -2735,7 +2772,8 @@ test('Y3 · 14.1: the GDPR\'s five rules are v2, publishable, resolve to the GDP
   const t = triggerAudit(db, '2026-10-29');
   for (const id of RULES_GDPR) {
     const r = ruleOf(db, id);
-    assert.ok(!RULES_V1.includes(id), `${id} left RULES_V1`);
+    /* v2 Session 17 (29 Oct 2026, §8): RULES_V1 is gone with the backlog it held */
+    assert.equal(t.backlog, undefined, 'no backlog: every rule is held in full');
     assert.ok(t.publishable.includes(id), `${id} is publishable`);
     assert.equal(r.instrument, 'gdpr');
     assert.equal(r.last_verified, '2026-10-29');
@@ -2784,7 +2822,8 @@ test('Y4 · 15.1: the DSA\'s five and the DMA\'s four rules are v2, publishable,
   const t = triggerAudit(db, '2026-10-29');
   for (const id of RULES_DSA_DMA) {
     const r = ruleOf(db, id);
-    assert.ok(!RULES_V1.includes(id), `${id} left RULES_V1`);
+    /* v2 Session 17 (29 Oct 2026, §8): RULES_V1 is gone with the backlog it held */
+    assert.equal(t.backlog, undefined, 'no backlog: every rule is held in full');
     assert.ok(t.publishable.includes(id), `${id} is publishable`);
     assert.equal(r.last_verified, '2026-10-29');
     assert.ok(r.sources.every((s) => typeof s === 'object'), `${id}: reference objects`);
@@ -2832,7 +2871,8 @@ test('Y5 · 16.1: the AI Act\'s seven rules are v2, publishable, read against th
   const t = triggerAudit(db, '2026-10-29');
   for (const id of RULES_AI_ACT) {
     const r = ruleOf(db, id);
-    assert.ok(!RULES_V1.includes(id), `${id} left RULES_V1`);
+    /* v2 Session 17 (29 Oct 2026, §8): RULES_V1 is gone with the backlog it held */
+    assert.equal(t.backlog, undefined, 'no backlog: every rule is held in full');
     assert.ok(t.publishable.includes(id), `${id} is publishable`);
     assert.equal(r.instrument, 'ai-act');
     assert.equal(r.last_verified, '2026-10-29');
@@ -2877,4 +2917,79 @@ test('Y5 · 16.1: the AI Act\'s seven rules are v2, publishable, read against th
   for (const s of [s63, '15 provisions recorded', 'Fundamental rights impact assessment for high-risk AI systems']) assert.ok(page.includes(s), s);
   assert.ok(!page.includes('Article 6(3) filters out an Annex III system'));
   assert.ok(!page.includes('[object Object]'));
+});
+
+test('Y6 · 17.1: the Data Act\'s, NIS2\'s, DORA\'s and the CRA\'s ten rules are v2, publishable, and the pages print what was approved', () => {
+  /* v2 Session 17 (29 Oct 2026, docs/ROADMAP-v2.md §8, 17.0 questions 1a-1d, 2a, 2b, 3a, 3b, 4, 5a, 5b,
+     6a-6g and 9) */
+  const db = loadDb();
+  const ix = buildIndex(db);
+  const t = triggerAudit(db, '2026-10-29');
+  assert.equal(t.backlog, undefined, 'no backlog: every rule is held in full');
+  for (const id of RULES_DA_NIS2_DORA_CRA) {
+    const r = ruleOf(db, id);
+    assert.ok(t.publishable.includes(id), `${id} is publishable`);
+    assert.equal(r.last_verified, '2026-10-29');
+    assert.deepEqual(Object.keys(r.condition_provisions).sort(), Object.keys(r.conditions).filter((d) => d !== 'thresholds').sort());
+    for (const p of Object.values(r.condition_provisions).flat()) assert.equal(ix.provisionOwner.get(p), r.instrument, p);
+    for (const k of ['publishable', 'asks', 'modality', 'verification_state']) assert.ok(!(k in r), `${id} stores ${k}`);
+  }
+  /* the four tables (questions 1a-1d, 4, 5a): every reference as [source, supports, for, locator] */
+  const refs = (id) => ruleOf(db, id).sources.map((s) => [s.source_id, s.supports.split(':')[1], s.for, s.locator]);
+  assert.deepEqual(refs("ap-data-act-01"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(f); Art. 2 points (8) and (30)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 25; Art. 29(1)"]]);
+  assert.deepEqual(refs("ap-data-act-02"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(f); Art. 2 points (8) and (30)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 25; Art. 29(1)"]]);
+  assert.deepEqual(refs("ap-data-act-03"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(a); Art. 2 points (5) and (6)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 3(1)"]]);
+  assert.deepEqual(refs("ap-data-act-04"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(a), (c) and (f); Art. 2 points (5), (6), (8), (24), (25) and (26)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 3(1); Art. 25"]]);
+  assert.deepEqual(refs("ap-nis2-01"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(1), (2) and (3); Art. 3(1) and (2); Annexes I and II"], ["src-eurlex-nis2", "direct", "obligation", "Art. 3(4); Art. 20(1) and (2); Art. 21(1) and (2); Art. 23(1) and (4)"], ["src-eurlex-nis2", "direct", "rationale", "Art. 32(6)"], ["src-eurlex-nis2", "direct", "date", "Art. 41(1)"], ["src-ec-nis2-referral-2026", "context", "rationale", "third paragraph"]]);
+  assert.deepEqual(refs("ap-nis2-02"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(1) and (2); Art. 3(1) and (2); Art. 6 points (30) and (31); Annex I, point 8"], ["src-eurlex-nis2", "direct", "obligation", "Art. 20(1); Art. 21(1) and (2); Art. 23(1) and (4)"]]);
+  assert.deepEqual(refs("ap-nis2-03"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(2)(f) and (5)(a); Art. 6 point (35); Annex I, point 10"], ["src-eurlex-nis2", "direct", "obligation", "Art. 21(1) and (2); Art. 23(1) and (4)"]]);
+  assert.deepEqual(refs("ap-dora-01"), [["src-eurlex-dora", "direct", "scope", "Art. 2(1), points (a) to (t), and (2)"], ["src-eurlex-dora", "direct", "obligation", "Art. 5; Art. 6; Art. 17(1); Art. 19(1); Art. 24(1); Art. 28(1)"]]);
+  assert.deepEqual(refs("ap-dora-02"), [["src-eurlex-dora", "direct", "scope", "Art. 2(1), point (u); Art. 3 points (19), (21) and (23)"], ["src-eurlex-dora", "direct", "obligation", "Art. 28(1); Art. 31(1)"], ["src-eurlex-dora", "direct", "rationale", "Art. 30(1) and (2); Art. 33(1)"]]);
+  assert.deepEqual(refs("ap-cra-01"), [["src-eurlex-cra", "direct", "scope", "Art. 2(1); Art. 3 points (1), (13), (21) and (22)"], ["src-eurlex-cra", "direct", "obligation", "Art. 13(1); Art. 14(1) and (3)"], ["src-eurlex-cra", "direct", "date", "Art. 71(2)"]]);
+  /* condition_provisions as tabled */
+  assert.deepEqual(ruleOf(db, "ap-data-act-01").condition_provisions, {"actor": ["data-act:art-1", "data-act:art-2"], "activity": ["data-act:art-2"]});
+  assert.deepEqual(ruleOf(db, "ap-data-act-02").condition_provisions, {"actor": ["data-act:art-1", "data-act:art-2"], "activity": ["data-act:art-2"], "territory": ["data-act:art-1"]});
+  assert.deepEqual(ruleOf(db, "ap-data-act-03").condition_provisions, {"actor": ["data-act:art-1"], "activity": ["data-act:art-2"]});
+  assert.deepEqual(ruleOf(db, "ap-data-act-04").condition_provisions, {"actor": ["data-act:art-2"], "activity": ["data-act:art-2"]});
+  assert.deepEqual(ruleOf(db, "ap-nis2-01").condition_provisions, {"actor": ["nis2:art-2", "nis2:art-3"], "activity": ["nis2:art-2"]});
+  assert.deepEqual(ruleOf(db, "ap-nis2-02").condition_provisions, {"actor": ["nis2:art-2", "nis2:art-6"], "activity": ["nis2:art-2", "nis2:art-6"]});
+  assert.deepEqual(ruleOf(db, "ap-nis2-03").condition_provisions, {"actor": ["nis2:art-2", "nis2:art-6"], "activity": ["nis2:art-2"]});
+  assert.deepEqual(ruleOf(db, "ap-dora-01").condition_provisions, {"actor": ["dora:art-2"]});
+  assert.deepEqual(ruleOf(db, "ap-dora-02").condition_provisions, {"actor": ["dora:art-2", "dora:art-3"], "activity": ["dora:art-3"]});
+  assert.deepEqual(ruleOf(db, "ap-cra-01").condition_provisions, {"actor": ["cra:art-3"], "activity": ["cra:art-2", "cra:art-3"]});
+  /* the exemptions, word for word, with effect and basis (questions 3a, 3b, 6b, 6c, 6e, 6f, 6g) */
+  const ex = (id) => ruleOf(db, id).exemptions.map((e) => [e.text, e.effect, e.basis.map((b) => b.locator)]);
+  assert.deepEqual(ex("ap-data-act-01"), [["Under Article 31(2), the obligations of Chapter VI do not apply to data processing services provided as a non-production version for testing and evaluation purposes and for a limited period of time. Under Article 31(1), Article 29 does not apply — nor do Article 23, point (d), and Article 30(1) and (3) — to data processing services the majority of whose main features has been custom-built for an individual customer, or all of whose components have been developed for one, where they are not offered at broad commercial scale via the provider's service catalogue. The provider must inform the prospective customer beforehand of the obligations that do not apply (Article 31(3)).", "narrows", ["Art. 31(1), (2) and (3)"]]]);
+  assert.deepEqual(ex("ap-data-act-02"), [["Under Article 31(2), the obligations of Chapter VI do not apply to data processing services provided as a non-production version for testing and evaluation purposes and for a limited period of time. Under Article 31(1), Article 29 does not apply — nor do Article 23, point (d), and Article 30(1) and (3) — to data processing services the majority of whose main features has been custom-built for an individual customer, or all of whose components have been developed for one, where they are not offered at broad commercial scale via the provider's service catalogue. The provider must inform the prospective customer beforehand of the obligations that do not apply (Article 31(3)).", "narrows", ["Art. 31(1), (2) and (3)"]]]);
+  assert.deepEqual(ex("ap-data-act-03"), [["Under Article 4(6) to (8), trade secrets are disclosed only where the data holder and the user take the measures necessary to preserve their confidentiality. Where no such measures are agreed, or the user fails to implement them or undermines that confidentiality, the data holder may withhold or suspend the sharing of data identified as trade secrets; in exceptional circumstances, where it can demonstrate that it is highly likely to suffer serious economic damage, it may refuse access case by case. In each case it must notify the competent authority, and the user may lodge a complaint with that authority or, by agreement with the data holder, refer the matter to a dispute settlement body, without prejudice to recourse to a court (Article 4(9)).", "narrows", ["Art. 4(6), (7), (8) and (9)"]], ["Under Article 7(1), the obligations of Chapter II, Article 3(1) among them, do not apply to data generated through the use of connected products manufactured or designed, or related services provided, by a microenterprise or a small enterprise that has no partner or linked enterprise which is not itself micro or small, and that is not subcontracted to manufacture or design the product or provide the service. The same applies to an enterprise that has qualified as medium-sized for less than one year, and to connected products for one year after a medium-sized enterprise placed them on the market.", "narrows", ["Art. 7(1)"]]]);
+  assert.deepEqual(ex("ap-data-act-04"), [["Under Article 7(1), the obligations of Chapter II, Article 3(1) among them, do not apply to data generated through the use of connected products manufactured or designed, or related services provided, by a microenterprise or a small enterprise that has no partner or linked enterprise which is not itself micro or small, and that is not subcontracted to manufacture or design the product or provide the service. The same applies to an enterprise that has qualified as medium-sized for less than one year, and to connected products for one year after a medium-sized enterprise placed them on the market.", "narrows", ["Art. 7(1)"]]]);
+  assert.deepEqual(ex("ap-nis2-01"), []);
+  assert.deepEqual(ex("ap-nis2-02"), [["Under Article 2(1), NIS2 applies to entities of a type referred to in Annex I or II that qualify as medium-sized enterprises or exceed the ceilings for medium-sized enterprises. Regardless of size, it also applies where the entity is the sole provider in a Member State of a service essential for critical societal or economic activities, where disruption of its service could have a significant impact on public safety, public security or public health or induce a significant systemic risk, or where it is critical because of its specific importance at national or regional level (Article 2(2), points (b) to (e)), and to entities identified as critical entities under Directive (EU) 2022/2557 (Article 2(3)).", "narrows", ["Art. 2(1); Art. 2(2), points (b) to (e); Art. 2(3)"]]]);
+  assert.deepEqual(ex("ap-nis2-03"), [["Under Article 2(7), NIS2 does not apply to public administration entities that carry out their activities in the areas of national security, public security, defence or law enforcement, including the prevention, investigation, detection and prosecution of criminal offences.", "excludes", ["Art. 2(7)"]]]);
+  assert.deepEqual(ex("ap-dora-01"), [["Under Article 2(3), DORA does not apply to managers of alternative investment funds referred to in Article 3(2) of Directive 2011/61/EU; insurance and reinsurance undertakings referred to in Article 4 of Directive 2009/138/EC; institutions for occupational retirement provision which operate pension schemes that together have no more than 15 members in total; persons exempted under Articles 2 and 3 of Directive 2014/65/EU; insurance, reinsurance and ancillary insurance intermediaries which are microenterprises or small or medium-sized enterprises; and post office giro institutions. Under Article 2(4), a Member State may exclude entities referred to in Article 2(5), points (4) to (23), of Directive 2013/36/EU located in its territory.", "excludes", ["Art. 2(3) and (4)"]], ["Under Article 16(1), Articles 5 to 15 do not apply to small and non-interconnected investment firms, payment institutions exempted under Directive (EU) 2015/2366, institutions exempted under Directive 2013/36/EU for which the Member State has not used the option in Article 2(4), electronic money institutions exempted under Directive 2009/110/EC, and small institutions for occupational retirement provision; they must instead maintain a simplified ICT risk management framework. Under Article 24(1), microenterprises are not required to establish a digital operational resilience testing programme.", "narrows", ["Art. 16(1); Art. 24(1)"]]]);
+  assert.deepEqual(ex("ap-dora-02"), []);
+  assert.deepEqual(ex("ap-cra-01"), [["Under Article 2(2) to (4), (6) and (7), the Regulation does not apply to products with digital elements to which Regulation (EU) 2017/745, (EU) 2017/746 or (EU) 2019/2144 applies, to products certified in accordance with Regulation (EU) 2018/1139, to equipment within the scope of Directive 2014/90/EU, to spare parts made available to replace identical components and manufactured to the same specifications, or to products developed or modified exclusively for national security or defence purposes or specifically designed to process classified information.", "excludes", ["Art. 2(2), (3), (4), (6) and (7)"]], ["Under Article 69(2), products with digital elements placed on the market before 11 December 2027 are subject to the Regulation's requirements only if, from that date, they are substantially modified; under Article 69(3), the reporting obligations of Article 14 nevertheless apply to all of them.", "narrows", ["Art. 69(2) and (3)"]]]);
+  /* questions 2a, 2b and 6a: dates and obligations */
+  assert.deepEqual(ruleOf(db, 'ap-data-act-02').dates, ['tl-data-act-2025-09-12-application', 'tl-data-act-2027-01-12-application']);
+  assert.deepEqual(ruleOf(db, 'ap-data-act-04').dates, ['tl-data-act-2025-09-12-application', 'tl-data-act-2026-09-12-application', 'tl-data-act-2027-09-12-application']);
+  for (const id of ['ap-data-act-01', 'ap-data-act-02']) assert.deepEqual(ruleOf(db, id).obligations, ['data-act:art-25', 'data-act:art-29'], id);
+  const ev = (id) => db.timeline.events.find((e) => e.id === id);
+  assert.deepEqual(ev('tl-data-act-2027-01-12-application').provisions, ['data-act:art-29']);
+  assert.deepEqual(ev('tl-data-act-2025-09-12-application').provisions, ['data-act:art-1', 'data-act:art-2', 'data-act:art-25', 'data-act:art-29', 'data-act:art-8']);
+  /* the nine new provisions and the two headings (questions 1a-1d, 6a, 6d) */
+  const heading = (pid) => db.instruments.instruments.find((i) => i.id === ix.provisionOwner.get(pid)).provisions.find((p) => p.id === pid).heading;
+  assert.deepEqual(['data-act:art-1', 'data-act:art-2', 'data-act:art-29', 'nis2:art-2', 'nis2:art-6', 'dora:art-2', 'dora:art-3', 'cra:art-2', 'cra:art-3'].map(heading),
+    ['Subject matter and scope', 'Definitions', 'Gradual withdrawal of switching charges', 'Scope', 'Definitions', 'Scope', 'Definitions', 'Scope', 'Definitions']);
+  assert.equal(heading('data-act:art-3-1'), 'Obligation to make product data and related service data accessible to the user');
+  assert.equal(heading('dora:art-28'), 'General principles');
+
+  /* the generated pages print the counts and the new texts, and none of the old exemption strings */
+  const page = (id) => visibleText(readFileSync(join(ROOT, `instruments/${id}/index.html`), 'utf8'));
+  const counts = { 'data-act': 7, nis2: 7, dora: 9, cra: 7 };
+  for (const [id, n] of Object.entries(counts)) assert.ok(page(id).includes(`${n} provisions recorded`), id);
+  for (const id of RULES_DA_NIS2_DORA_CRA) for (const [text] of ex(id)) assert.ok(page(ruleOf(db, id).instrument).includes(text), `${id}: ${text.slice(0, 40)}`);
+  const all = Object.keys(counts).map(page).join(' ');
+  for (const old of ['Data holders may limit access where data qualifies as a trade secret', 'Micro and small enterprises are generally outside NIS2', 'General principles (ICT third-party risk)', 'Obligation to make connected product data accessible to the user'])
+    assert.ok(!all.includes(old), old);
+  assert.ok(!all.includes('[object Object]'));
 });

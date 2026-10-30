@@ -744,7 +744,10 @@
    "event_type": "event:application",
    "instrument": "data-act",
    "provisions": [
+    "data-act:art-1",
+    "data-act:art-2",
     "data-act:art-25",
+    "data-act:art-29",
     "data-act:art-8"
    ],
    "affected_actors": [
@@ -770,7 +773,7 @@
     "src-eurlex-data-act"
    ],
    "requires_verification": false,
-   "verification_note": "Art. 50, second paragraph: 'It shall apply from 12 September 2025.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32023R2854). The Publications Office's metadata records the same date. Earlier: Date stated by the brief; not confirmed against the consolidated text in this build. 14 Oct 2026: data-act:art-8 added. Art. 50 ('It shall apply from 12 September 2025'; Chapter III 'in relation to obligations to make data available … which enters into force after 12 September 2025') re-read on EUR-Lex that day. This is the general date; because the event carries provisions, each provision that takes it must be listed.",
+   "verification_note": "Art. 50, second paragraph: 'It shall apply from 12 September 2025.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32023R2854). The Publications Office's metadata records the same date. Earlier: Date stated by the brief; not confirmed against the consolidated text in this build. 14 Oct 2026: data-act:art-8 added. Art. 50 ('It shall apply from 12 September 2025'; Chapter III 'in relation to obligations to make data available … which enters into force after 12 September 2025') re-read on EUR-Lex that day. This is the general date; because the event carries provisions, each provision that takes it must be listed. 29 Oct 2026 (v2 Session 17, the author's decisions of that day): data-act:art-1, data-act:art-2 and data-act:art-29 added; Art. 50, second paragraph, and Art. 29(3) and (4) re-read that day in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32023R2854).",
    "last_verified": "2026-10-14"
   },
   {
@@ -1295,7 +1298,7 @@
    "event_type": "event:application",
    "instrument": "data-act",
    "provisions": [
-    "data-act:art-25"
+    "data-act:art-29"
    ],
    "affected_actors": [
     "actor:cloud-provider"
@@ -1315,7 +1318,7 @@
     "src-eurlex-data-act"
    ],
    "requires_verification": false,
-   "verification_note": "Art. 29(1): 'From 12 January 2027, providers of data processing services shall not impose any switching charges on the customer for the switching process.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32023R2854). Earlier: Date stated by the brief; not confirmed against the consolidated text in this build.",
+   "verification_note": "Art. 29(1): 'From 12 January 2027, providers of data processing services shall not impose any switching charges on the customer for the switching process.' Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32023R2854). Earlier: Date stated by the brief; not confirmed against the consolidated text in this build. 29 Oct 2026 (v2 Session 17, the author's decision of that day): names data-act:art-29 instead of data-act:art-25. The text is Art. 29(1), re-read that day in the Official Journal text retrieved from the Publications Office's Cellar (CELEX 32023R2854); Art. 25 applies from 12 September 2025 (Art. 50) and has no 2027 tranche.",
    "last_verified": "2026-09-27"
   },
   {

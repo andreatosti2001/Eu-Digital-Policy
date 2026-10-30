@@ -107,6 +107,16 @@ export const EXPECTED = {
   sources: { days: 180, why: 'URLs rot; the accessed date is the only evidence they were ever reachable' },
 };
 
+/* How long an applicability rule may go without being re-read against its
+   Articles. The rules are aged one by one, not by the file's $last_verified:
+   v2 Session 17 (29 Oct 2026, docs/ROADMAP-v2.md §8, 17.0 question 8b), the
+   second maintenance check of the plan row of 28 Oct 2026. The file then
+   declared 27 Aug 2026 while every rule had been read on 29 Oct 2026, and
+   applicability had no entry in EXPECTED, so no rule was ever flagged. A rule
+   past the interval is a staleness prompt like any other: exit 0, raised in
+   CI as "Content stale", closed only by reading the rule's Articles again. */
+export const RULE_INTERVAL = { days: 90, why: 'a rule reads its Articles, and an amendment, a new tranche or a judgment changes what it should say' };
+
 /* How long a record whose own text says it will change may go without
    being re-read. Separate from EXPECTED, which ages whole datasets and
    which agent/integrate/stale.mjs iterates as a list of files.
@@ -170,6 +180,17 @@ if (isMain) {
     const file = d.$last_verified || null;
     const uniq = [...new Set(per)].sort();
     allDates.push(...per, ...(file ? [file] : []));
+    /* the applicability rules are aged one by one (RULE_INTERVAL above) */
+    if (name === 'applicability') {
+      const rules = arr(d.rules);
+      line(`  ${name.padEnd(15)} per rule, ${rules.length} rules verified ${uniq[0] || 'never'} … ${uniq[uniq.length - 1] || 'never'} (file date ${file} not used)`);
+      for (const r of rules) {
+        const a = typeof r.last_verified === 'string' ? days(r.last_verified, AS_OF) : null;
+        if (a == null || a > RULE_INTERVAL.days)
+          flag(`RULE_STALE applicability/${r.id} was last verified ${r.last_verified || 'never'}${a == null ? '' : `, ${a} days ago`}, past its ${RULE_INTERVAL.days}-day interval — ${RULE_INTERVAL.why}`);
+      }
+      continue;
+    }
     const age = file ? days(file, AS_OF) : null;
     const spread = uniq.length === 0 ? 'no per-record dates'
       : uniq.length === 1 ? `all ${per.length} records share ${uniq[0]}`

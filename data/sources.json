@@ -159,9 +159,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023R2854",
       "url_status": "url:live",
       "published": "2023-12-22",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Title and number confirmed by fetch."
+      "note": "Title and number confirmed by fetch. Re-read on 29 Oct 2026 for v2 Session 17 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32023R2854; OJ L, 2023/2854, 22.12.2023), not at this URL: Arts 1–8, 23–31 and 50. The Publications Office's SPARQL metadata, read the same day: no amending act; six corrigenda, of which only R(01) has an English expression (read: it renumbers a point of Art. 48); a proposal to amend, 52025PC0837, not law; no consolidated version but the original."
     },
     {
       "id": "src-da-text-unofficial-arts-1-50",
@@ -244,9 +244,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022L2555",
       "url_status": "url:live",
       "published": "2022-12-27",
-      "accessed": "2026-10-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Title, number and entry into force of 16 January 2023 confirmed by fetch. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Arts 4 and 44."
+      "note": "Title, number and entry into force of 16 January 2023 confirmed by fetch. Re-read on 27 Oct 2026 for B.3 (v2 Session 5) in the Official Journal text retrieved from the Publications Office's Cellar by CELEX, not at this URL, which returns an empty page to the environment that read it: Arts 4 and 44. Re-read on 29 Oct 2026 for v2 Session 17 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32022L2555; OJ L 333, 27.12.2022): Arts 1–6, 20–26, 32(6) and 41 and Annex I. The Publications Office's SPARQL metadata, read the same day: no amending act; nine corrigenda, of which only R(04) has an English expression (read: it corrects Art. 19(1)); two proposals to amend, 52025PC0837 and 52026PC0013, not law; no consolidated version but the original."
     },
     {
       "id": "src-nis2-text-unofficial-arts-20-32",
@@ -315,9 +315,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022R2554",
       "url_status": "url:live",
       "published": "2022-12-27",
-      "accessed": "2026-10-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Title and number confirmed by fetch. The scraped metadata field conflated entry into force with the 17 January 2025 application date; both are recorded separately in the timeline. Art. 2(1)(f) read on 25 and 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX number."
+      "note": "Title and number confirmed by fetch. The scraped metadata field conflated entry into force with the 17 January 2025 application date; both are recorded separately in the timeline. Art. 2(1)(f) read on 25 and 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX number. Re-read on 29 Oct 2026 for v2 Session 17 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32022R2554; OJ L 333, 27.12.2022): Arts 1–6, 16, 17, 19, 24, 28, 30, 31, 33 and 64. The Publications Office's SPARQL metadata, read the same day: no amending act; nine corrigenda, none with an English expression; a proposal to amend, 52023PC0360, not law; no consolidated version but the original."
     },
     {
       "id": "src-eurlex-cra",
@@ -329,9 +329,9 @@
       "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R2847",
       "url_status": "url:live",
       "published": "2024-11-20",
-      "accessed": "2026-10-14",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Title, number and entry into force of 10 December 2024 confirmed by fetch. Official Journal text re-read on 14 Oct 2026 from EUR-Lex (ELI reg/2024/2847/oj). Art. 71(2): 'This Regulation shall apply from 11 December 2027. However, Article 14 shall apply from 11 September 2026 and Chapter IV (Articles 35 to 51) shall apply from 11 June 2026.' Art. 24(3) applies the Art. 14(1) notification obligation to open-source software stewards to the extent they are involved in development, and Art. 14(3) and (8) where severe incidents affect their own systems; Art. 24 falls under the general date."
+      "note": "Title, number and entry into force of 10 December 2024 confirmed by fetch. Official Journal text re-read on 14 Oct 2026 from EUR-Lex (ELI reg/2024/2847/oj). Art. 71(2): 'This Regulation shall apply from 11 December 2027. However, Article 14 shall apply from 11 September 2026 and Chapter IV (Articles 35 to 51) shall apply from 11 June 2026.' Art. 24(3) applies the Art. 14(1) notification obligation to open-source software stewards to the extent they are involved in development, and Art. 14(3) and (8) where severe incidents affect their own systems; Art. 24 falls under the general date. Re-read on 29 Oct 2026 for v2 Session 17 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32024R2847; OJ L, 2024/2847, 20.11.2024): Arts 2, 3, 13, 14, 69 and 71. The Publications Office's SPARQL metadata, read the same day: one amending act, Regulation (EU) 2025/327 (Art. 104, read: it replaces Arts 13(4) and 31(3) and inserts Art. 32(5a)); eight corrigenda, of which R(01), R(02) and R(04) have English expressions (read: the title, Art. 64(10), Art. 67); a proposal to amend, 52026PC0590, not law; no consolidated version but the original."
     },
     {
       "id": "src-cra-text-unofficial-art71",
@@ -1593,9 +1593,9 @@
       "url": "https://digital-strategy.ec.europa.eu/en/news/commission-refers-ireland-spain-france-and-netherlands-court-justice-failing-transpose-rules",
       "url_status": "url:live",
       "published": "2026-07-08",
-      "accessed": "2026-08-27",
+      "accessed": "2026-10-29",
       "language": "en",
-      "note": "Confirms the referral includes a request for financial sanctions: a lump sum and daily penalties until complete transposition is notified."
+      "note": "Confirms the referral includes a request for financial sanctions: a lump sum and daily penalties until complete transposition is notified. Re-read on 29 Oct 2026 at this URL for v2 Session 17: 'Publication 08 July 2026'; third paragraph, 'Member States had until 17 October 2024 to transpose the Directive. While most complied, Spain, France, Ireland and the Netherlands have yet to notify full transposition.' Cited by ap-nis2-01 as context for its rationale."
     },
     {
       "id": "src-ec-nis2-lfn-2024",
