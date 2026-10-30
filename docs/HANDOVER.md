@@ -16,8 +16,9 @@ checkpoint, **approved by the author** (§8).
   is in `main` (#46). No other branch to report.
 - `origin/main` was re-fetched after the data commit and before this handover was written: still `ca1e723`. No pull
   request was opened or merged during the session.
-- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. The author is asked whether to open a
-  pull request to `main`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. A pull request to `main` opened on
+  the author's instruction of 30 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the branch after it.
+  No draft of a further prompt was asked for: with Session 17 the plan for Sessions 13–17 is exhausted.
 
 ## v2 Session 17 — checkpoint report (17.1 the ten rules, 17.2 the flip, 17.3 the two maintenance checks)
 
