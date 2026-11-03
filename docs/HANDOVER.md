@@ -5,6 +5,22 @@
 F-15 exposed (AI Act Art. 55's heading). Both checkpoints approved; the branch goes to `main` by pull request.
 **Branch:** `claude/v2-session-18-maintenance`, cut from `main` at `97e53d7`.
 
+## Branch register — 3 November 2026 (the prompt of v2 Session 19)
+
+- Branch `claude/v2-session-19-prompt`, drafted on Session 18's tree (`16bc7e9`) and rebased onto `main` at `55420ae`
+  (#53, v2 Session 18, merged), on the author's answer ("New branch after #53 merges (Recommended)"). It carries one
+  file, `docs/prompts/v2-session-19.md`, and this entry.
+- Drafted on the author's request of 3 Nov 2026 ("did you redact session 19's prompt already? if not, integrate this:",
+  with the site-name request quoted verbatim in the prompt), after three questions, answered: the scope, "Site name only
+  (Recommended)"; the WebSite node, "Homepage full, subpages @id only (Recommended)"; the branch, "New branch after #53
+  merges (Recommended)". These answers shape the prompt; they are not §8 rows.
+- Measured while drafting (3 Nov 2026): the redirects (http, www, https-www → 301 to `https://eudigitalpolicy.eu/`),
+  `robots.txt`, `sitemap.xml`, the canonical, `og:site_name` and the spelling of the name already hold. Three premises
+  the request does not name are put to the author as separate questions in 19.0: `tools/seo-audit.mjs:333–334`
+  requires a WebSite node on every page; `SITE.alternateName` is also the social card's title
+  (`tools/og-image.mjs:91`); the it/fr/es homepages carry the same "—" in their edition titles.
+- Disposition: pushed; a pull request to `main` opened on the author's answer above, after #53 was merged.
+
 ## Branch register — 3 November 2026 (v2 Session 18)
 
 - Branch `claude/v2-session-18-maintenance` (the prompt's name; the environment assigned none), cut from `main` at
