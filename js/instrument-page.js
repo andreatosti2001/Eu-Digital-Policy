@@ -88,7 +88,7 @@ function notCoveredNotice(inst, IX) {
   return '<div class="page-head"><h1>' + name + '</h1>' +
     '<p class="lede"><strong>Not covered by this site.</strong> ' + first + '</p></div>' +
     '<p><strong>Why.</strong> ' + esc(d.reason) + '</p>' +
-    (refer ? '<p><strong>Read it at the source:</strong> ' + refer + '</p>' : '') +
+    (refer ? '<p class="inst-refer"><strong>Read it at the source:</strong> ' + refer + '</p>' : '') +
     '<p>Decision recorded on ' + esc(humanDate(d.approved_on, 'precision:day')) +
     '; the facts it rests on were last checked on ' + esc(humanDate(d.last_verified, 'precision:day')) + '.</p>' +
     relationshipsRecorded(inst, IX);
