@@ -1075,7 +1075,7 @@ test('S4d · the WebSite node stands on the homepage only, and every other page 
     /* a WebSite node planted on a subpage, and the reference to #site cut from another */
     edit(dir, 'applies.html', (s) => s.replace('"@graph":[', '"@graph":[{"@type":"WebSite","@id":"https://eudigitalpolicy.eu/#site","name":"EU Digital Policy","url":"https://eudigitalpolicy.eu/"},'));
     edit(dir, 'enforcement.html', (s) => s.replace('"isPartOf":{"@id":"https://eudigitalpolicy.eu/#site"}', '"isPartOf":{"@id":"https://example.org/#site"}'));
-    edit(dir, 'index.html', (s) => s.replace('"alternateName":["EUDigitalPolicy","eudigitalpolicy.eu"]', '"alternateName":"EUDigitalPolicy"'));
+    edit(dir, 'index.html', (s) => s.replace('"alternateName":["Eu Digital Policy","eudigitalpolicy.eu"]', '"alternateName":"Eu Digital Policy"'));
     const errs = seoAudit(dir).errors.join('\n');
     assert.match(errs, /applies\.html: WebSite node on a page that is not the homepage/);
     assert.match(errs, /enforcement\.html: page node does not refer to the site by @id/);
