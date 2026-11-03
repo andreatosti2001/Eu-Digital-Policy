@@ -1,8 +1,69 @@
 # HANDOVER
 
-**Last updated:** v2 Session 19, the site name in search results (3 November 2026): 19.0 answered (four questions), 19.1
-written and measured. **Awaiting the author's approval at the checkpoint (19.2).**
-**Branch:** `claude/session-19-jwjgnu` (assigned by the environment), cut from `main` at `1c645ce` (#54, this session's prompt).
+**Last updated:** v2 Session 20, checkpoint 20.1 (3 November 2026): Phase 4 opened on the author's word, E-1…E-6 measured,
+the status lines reworded as approved. **Awaiting the author's approval at checkpoint 20.1; item 20.2 (the document of
+4.1) has not begun.**
+**Branch:** `claude/v2-session-20-phase-4` (no branch was assigned by the environment), cut from `main` at `40d4dd1`.
+
+## Branch register — 3 November 2026 (v2 Session 20)
+
+- Branch `claude/v2-session-20-phase-4`, cut from `main` at `40d4dd1` (#57, the prompt, merged). Nothing was merged in;
+  `origin/main` re-fetched before this entry: still `40d4dd1`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, already in the register below
+  (left open by the author's decision). The prompt's own branch is merged.
+- The clone was shallow at the start (`git rev-parse --is-shallow-repository` → `true`); `git fetch --unshallow` was run
+  before any suite.
+- Disposition: not pushed yet. The pull-request question is asked at the final checkpoint (20.2).
+
+## v2 Session 20 — checkpoint 20.1 (the opening of Phase 4)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8) and the commits
+
+| Item | Answer | §8 | Change |
+|---|---|---|---|
+| Scope | "Start session 20" | `b5cd376` | — |
+| Q1 · open Phase 4 | "Open Phase 4 (Recommended)" | `abf501f` | — |
+| Q2 · the status lines (S1–S3, before and after shown) | "Write S1–S3 as drafted (Recommended)" | `4510d1a` | `9937232` |
+
+### E-1…E-6, measured on 3 Nov 2026, full clone, `main` at `40d4dd1` (outputs kept in the session scratchpad)
+
+| # | Result | By |
+|---|---|---|
+| E-1 | met | §8 "17.5.0 question 1" ("Close on rules") |
+| E-2 | met | §8 question 6; `grep -n "Tier [ABC]" docs/PHASE-4-SETUP.md` finds only the brief's quoted words (header, §2.1) |
+| E-3 | met in §8 (questions 6, 8a). The document still said "pending D-4" and "does not choose": reworded under Q2 | §8; `grep -n -i pending docs/PHASE-4-SETUP.md` before and after |
+| E-4 | met (deferred, with the reason) | §8 question 7 |
+| E-5 | met | `validate`, `i18n-audit`, `design-qa`, `seo-audit` 0 errors (0 warnings on the last three); `evidence-audit --as-of 2026-11-03` 0 errors, 12 warnings; `freshness --as-of 2026-11-03` exit 0, 0 defects, 4 staleness prompts; `og-image --check` current; `tools/selftest.mjs` 124 of 124; **25 suites, 1331 tests, 1330 pass, 0 fail, 1 skipped** (the Control Room's `::1` test); browser suite `--require-browser` 343 pass · 0 fail · 1 undecidable; adversarial gate 65 failed safely · 0 succeeded · 3 partial · 1 undecidable; `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0 |
+| E-6 | a property of item 4.1 | nothing outside `docs/` and `AGENTS.md` has changed: `git diff --stat origin/main` = `AGENTS.md`, `docs/PHASE-4-SETUP.md`, `docs/ROADMAP-v2.md` |
+
+Readiness, reported and not a criterion: `refused`, 17 of 20 mandatory conditions pass; the three that do not are
+`production_dispatcher_wired`, `decision_ledger_present` and `deploy_gate_exists` (unmeasurable from the tree).
+The readiness run prints 24 suites and 1254 tests: that is the 1331 above less the Control Room's 77, which accounts for
+the figure (session 19 left a one-test difference with session 18's 1253 unexplained; this session did not re-measure
+session 18's base).
+
+The prompt's table, re-measured: the 33 rules all carry `last_verified` 2026-10-29; `freshness --as-of 2027-01-27` 0
+`RULE_STALE`, `--as-of 2027-01-28` 33; `evidence-audit --as-of 2027-03-26` reports `LAW_CHANGED_SINCE_VERIFIED
+applicability/ap-cra-01` and no other rule (18 warnings that day, 12 today, as `docs/PHASE-3-AUDIT.md` §5 records).
+
+### Not verified, and findings (none corrected)
+
+- Stale after the opening and **left as written, by the author's answer**: `docs/V2-CLOSURE.md` rows N1 and B5 ("Phase 4
+  not started; D-4 open") and `docs/ROADMAP-v2.md` §4's Phase 4 bullet ("Phase 4 opens on the author's word once E-5 is
+  measured").
+- Still true and left out by the prompt: "EUDigitalPolicy" in the session 19 report below (lines 53, 59) and in the
+  prompt's register entry; the three open findings of session 18 were **not re-measured** at this checkpoint.
+- `evidence-audit` today carries `STATUS_PREDATES_MILESTONE instruments/dma` (status as of 2026-10-21, designation
+  milestone 2026-11-01): a prompt for a status re-read, not a rule, and not touched.
+- No screen reader, no browser but Chromium; the live site was not checked and nothing was pushed.
+
+### The checklist (20.0 questions 1–2, 20.1)
+
+| Point | Written | By hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 20.0 Q1–Q2 | §8 rows `abf501f`, `4510d1a` | `grep -n "v2 Session 20" docs/ROADMAP-v2.md` | — | Phase 4 opened by a §8 row in the author's words |
+| 20.1 | `9937232`; this report | `git diff --stat origin/main`; rerun the commands in the E-5 row | the suites listed | E-1…E-6 measured |
+| 20.2 | not begun | — | — | after this checkpoint's approval |
 
 ## Branch register — 3 November 2026 (the prompt of v2 Session 20)
 
