@@ -478,16 +478,17 @@ test('D4 · evidence-audit.mjs exits 2, with the reason, on a date it cannot rea
    APPLIES · the notice D-2 requires stays on the page
 
    docs/ROADMAP-v2.md item 1.5: applies.html stays online only with a
-   statement that its rules are not yet verified to the standard of the
-   claims, in the words the author approved on 27 Oct 2026. Removing or
-   rewording it is the author's decision, so this pins the text.
+   statement of how far its rules are verified, in the words the author
+   approved on 27 Oct 2026 and replaced in v2 Session 17.5, question 3
+   (docs/ROADMAP-v2.md §8). Removing or rewording it is the author's
+   decision, so this pins the text.
    ============================================================ */
 
 test('N1 · applies.html carries the approved notice, and its key is declared pending in it, fr and es', () => {
   const html = readFileSync(join(ROOT, 'applies.html'), 'utf8');
   const m = html.match(/<p data-i18n="applies\.notice">([\s\S]*?)<\/p>/);
-  assert.ok(m, 'applies.html has lost the notice that its rules are not yet verified to the standard of the claims');
-  assert.equal(m[1], "<b>These rules are not yet verified to the standard the site's claims are.</b> Each rule cites its sources by identifier only: unlike a claim, it does not say what each source supports or where in it the rule is found, and the evidence audit that checks every claim does not yet check these rules. Read a result as a pointer to the law, not as a verified reading of it.",
+  assert.ok(m, 'applies.html has lost the notice that states how far its rules are verified');
+  assert.equal(m[1], "<b>These rules are checked to the standard the site's claims are.</b> Each rule says, for every source it cites, what that source supports and where in it the rule is found; each condition names the provision that defines it; and the evidence audit that checks every claim checks these rules too. Each rule shows the date it was last read against its Articles, and a change in the law after that date reaches a rule only when a person reads it again. Read a result as a pointer to the law, not as a verified reading of it.",
     'the wording is the author\'s (docs/ROADMAP-v2.md §8); change it only on their word');
   assert.ok(html.indexOf('applies.notice') < html.indexOf('id="ap-form"'), 'the notice comes before the questions');
   const reg = JSON.parse(readFileSync(join(ROOT, 'i18n', 'locales.json'), 'utf8'));
