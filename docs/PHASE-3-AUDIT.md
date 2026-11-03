@@ -1,12 +1,12 @@
 # PHASE 3 AUDIT — what Phase 3 produced, measured on 3 November 2026
 
-**Status: MEASURED; NOTHING IN IT IS DECIDED.** Written in v2 Session 17.5, 3 Nov 2026, on
+**Status: MEASURED; DECIDED BY THE AUTHOR ON 3 NOV 2026 (§8, v2 Session 17.5).** Written in v2 Session 17.5, 3 Nov 2026, on
 `claude/nifty-ride-kc0p4x`, cut from `main` at `4ab13a6`, on the author's scope (`docs/ROADMAP-v2.md` §8, "The
 scope of v2 Session 17.5"). The name of this file is the prompt's proposal; the author may change it.
 
-**This document does not declare Phase 3 closed, concluded or complete, and does not declare Phase 4 open.** A met
-entry condition does not close the phase it opens (the lesson of v2 Session 11). Phase 3's state is the author's
-decision, asked in 17.5.0 question 1, and until a row in §8 records it no document here may say otherwise.
+**Phase 3 was closed by the author's row in §8 (question 1), not by this document.** It does not declare Phase 4
+open. A met entry condition does not close the phase it opens (the lesson of v2 Session 11): the closure is the
+author's decision, and the destinations of what stays open are §8's questions 2–4.
 
 **How it was measured.** Every "today" cell is a command or a test **re-run in this session** on `4ab13a6` plus the
 §8 scope row (`5678935`, which changes no published file), and none was copied from the report of the session that

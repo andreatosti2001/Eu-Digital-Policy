@@ -1,9 +1,11 @@
 # ROADMAP v2.0
 
 **Status: APPROVED by the author on 25 Oct 2026 (§8)**, with item 2.0 brought forward to v2 Session 2. Written in v2 Session 1, 25 Oct 2026, on
-`claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e`. **As of 28 Oct 2026: Phases 0, 1
-and 2 are executed, each closed at a checkpoint in §8; Phases 3, 4 and 5 are not started. The v2 is
-open, and Phase 3 is next** (§8, v2 Session 11; the measured comparison is `docs/V2-CLOSURE.md`).
+`claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e`. **As of 3 Nov 2026: Phases 0, 1, 2
+and 3 are executed, each closed at a checkpoint in §8 (Phase 3 on its met entry condition and the 33
+rules, its open rows moved to named destinations); Phases 4 and 5 are not started. The v2 is open;
+Phase 4 is next, and opens on the author's word once its entry condition is met** (§8, v2 Session
+17.5; `docs/PHASE-3-AUDIT.md`, `docs/PHASE-4-SETUP.md`).
 Nothing is implemented without the author's approval, recorded in §8, by the author's word, and
 nowhere else.
 
@@ -70,8 +72,8 @@ None is taken here. Each carries a recommendation; the recommendation is not a d
 | D-1 | Where the brief lives — **decided 27 Oct 2026: as recommended** (§8; `docs/BRIEF-v2.md`) | nothing yet | Commit it as `docs/BRIEF-v2.md`, pointed to once from `AGENTS.md`, so a session that is not handed it still finds it. One home: the prompt then cites the file rather than carrying a copy. |
 | D-2 | `applies.html` is already published, and the brief says not to publish "what applies" before the triggers meet claim-level rigour — **decided 27 Oct 2026: as recommended, kept with a notice** (§8) | Phase 1 item 1.5; Phase 3 | Keep the page; in Phase 1, add a plain statement on it that its rules are not yet verified to the standard the claims are (the measured gap in §2). The statement is public text, so its wording is yours. Withdrawing the page is the other honest option; leaving it unmarked is not. |
 | D-3 | The six uniform status labels vs the 16 states in `data/taxonomy.json` — **decided 25 Oct 2026: as recommended** (§8; designed in `docs/v2-design/status-labels.json`) | Phase 2 | Make the six a **derived display grouping** over the 16, never a replacement and never stored (IDs are never renamed; a derived fact is never stored). §5 drafts the mapping and shows where it loses information. |
-| D-4 | "Tier A/B/C" collides with the autonomy classes A/B/C/D of `docs/AUTONOMY-POLICY.md`, which mean something else | Phase 4 | Name the three levels in words — *machine check*, *human attestation*, *human authorship* — and give them no letters. |
-| D-5 | A git-based CMS with OAuth, under "no serverless backend" and "no third-party requests" | Phase 4 | Not needed before Phase 4. Before choosing one, read the chosen CMS's own documentation for two facts this session did not verify: whether its GitHub login needs a server-side token exchange (which is a backend), and which origins it loads code from (`ALLOWED_RUNTIME_ORIGINS` in `tools/thirdparty.mjs` is empty; adding one is Class D). Weigh it against the Control Room's existing OIDC login. |
+| D-4 | "Tier A/B/C" collides with the autonomy classes A/B/C/D of `docs/AUTONOMY-POLICY.md`, which mean something else — **decided 3 Nov 2026: as recommended** (§8) | Phase 4 | Name the three levels in words — *machine check*, *human attestation*, *human authorship* — and give them no letters. |
+| D-5 | A git-based CMS with OAuth, under "no serverless backend" and "no third-party requests" — **deferred 3 Nov 2026 on its two facts** (§8; `docs/PHASE-4-SETUP.md` §4) | Phase 4 | Not needed before Phase 4. Before choosing one, read the chosen CMS's own documentation for two facts this session did not verify: whether its GitHub login needs a server-side token exchange (which is a backend), and which origins it loads code from (`ALLOWED_RUNTIME_ORIGINS` in `tools/thirdparty.mjs` is empty; adding one is Class D). Weigh it against the Control Room's existing OIDC login. |
 | D-6 | What the dependency map is — **decided 25 Oct 2026: as recommended** (§8; designed in `docs/V2-DATA-DESIGN.md` §1) | Phase 2 | An extension of the 17 existing `relationships`, not a second graph: new edge kinds, if needed, go in `data/taxonomy.json`; the map is a derived view. A separate file would be a second home for the edges that already exist. |
 | D-7 | The inclusion criterion behind the Phase 2 list — **decided 27 Oct 2026: the criterion of `docs/V2-DATA-DESIGN.md` §5 approved** (§8) | Phase 2 | Item 2.0 proposes one in writing; you approve it before 2.2. The list itself is already decided by the brief and is not reopened. |
 | D-8 | The brief mentions `stratum` being reviewed "in Session 2"; this roadmap puts Phase 0 in v2 Session 2 — **decided 25 Oct 2026: reviewed in v2 Session 2 with item 2.0, and `stratum` dropped, derived instead** (§8; `docs/V2-DATA-DESIGN.md` §1.2) | v2 Session 2 | Keep the brief's binding sequence (Phase 0 first) and review `stratum` in the Phase 2 design session (v2 Session 4). The brief's clause is conditional ("if it emerges in Session 2"), and nothing in Phase 0 touches the property. |
@@ -240,6 +242,7 @@ explicitly opens a finance chapter. It is not scheduled.
     claims.
 - **Measured today:** 33 rules, none meeting the first or third condition.
 - **Met on 29 Oct 2026 (v2 Session 17): 33 of 33 rules publishable at the claims' standard; the rule-* backlog is ERROR (§8).**
+- **Closed on 3 Nov 2026 (v2 Session 17.5), on the met entry condition and the 33 rules; its fifteen open rows moved to named destinations (§8).**
 - The session that opens Phase 3 starts by extending the check. Adding rules waits until the
   existing 33 pass it.
 
@@ -252,10 +255,12 @@ explicitly opens a finance chapter. It is not scheduled.
 - The login decision (D-5). A serverless backend only if the git-based CMS is shown, in writing,
   to be insufficient.
 - Phase 4 automates only what Phases 0–1 made visible as a manual process.
+- **Entry condition (approved 3 Nov 2026, §8):** E-1 Phase 3's state decided; E-2 D-4 decided, no letters; E-3 the inventory of `docs/PHASE-4-SETUP.md` approved with its levels; E-4 D-5 decided or deferred with its reason; E-5 the baseline green on a full-history clone; E-6 the first item writes nothing outside `docs/` without its own §8 row. First item: 4.1, the rule-maintenance process written down. Phase 4 opens on the author's word once E-5 is measured.
 
 ### Phase 5 — "what applies", advanced
 
 - Not planned. Its scope is written only after Phase 3's checkpoint, against what Phase 3 measured.
+- Its scope is written in the session after Phase 4's checkpoint (§8, 3 Nov 2026).
 
 ---
 
