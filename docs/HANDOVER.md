@@ -2,7 +2,7 @@
 
 **Last updated:** v2 Session 18, the maintenance session (3 November 2026): checkpoint 18.1 (the D-2 notice) approved;
 18.2 done — group (c) and V2C-28…V2C-36 each written as the author approved or closed with no change, plus one defect
-F-15 exposed (AI Act Art. 55's heading). The final checkpoint waits for the author.
+F-15 exposed (AI Act Art. 55's heading). Both checkpoints approved; the branch goes to `main` by pull request.
 **Branch:** `claude/v2-session-18-maintenance`, cut from `main` at `97e53d7`.
 
 ## Branch register — 3 November 2026 (v2 Session 18)
@@ -16,7 +16,11 @@ F-15 exposed (AI Act Art. 55's heading). The final checkpoint waits for the auth
   decision. `claude/v2-session-18-prompt` is merged (#52). Merged but not deleted, as before:
   `claude/fix-browser-brief-prose-check`, `claude/fix-og-site-name-2026-11-03`, `claude/nifty-ride-kc0p4x`,
   `claude/v2-session-17-5-prompt`, `claude/v2-session-18-prompt`.
-- Disposition: open; not pushed at checkpoint 18.1.
+- `origin/main` re-fetched immediately before this entry: still `97e53d7`; the only unmerged remote branch is still
+  `origin/scout/digest-digest-2026-11-02T16-04-07Z`.
+- Disposition: both checkpoints approved (`4f9cc27`, `f38586b`); pushed, and a pull request to `main` opened on the
+  author's instruction of 3 Nov 2026 ("Push + open PR (Recommended)"). Nothing is pushed to the branch after the
+  pull request is opened.
 
 ## v2 Session 18 — final checkpoint (18.2: group (c) and V2C-28…V2C-36)
 
@@ -120,7 +124,7 @@ palette; the V2C-28 contrast and the V2C-32 line measured as above.
 | 18.1 | `70061e9`; report above | `/applies.html`, "Read this before you read a result" | `tools/selftest.mjs` N1 | the notice written, N1 updated, checkpoint approved (`4f9cc27`) |
 | 18.2 | the commits in the first table | the before/after table; `git show <commit>` | S2; `seo-audit` facets; browser suite; validators | each finding corrected as approved or closed with its reason |
 | 18.3 | — | re-run the commands in "Counts"; `node tools/commit-evidence.mjs 97e53d7 HEAD` | CI `qa.yml` | counts identical, Evidence on every published change |
-| 18.4 | this report | read it against §8 | — | **pending: the author's approval of the final checkpoint** |
+| 18.4 | this report; V2C-28…V2C-36 closed (`a2217a8`); PHASE-3-AUDIT §4 marked (`287dbe0`) | read it against §8 | — | final checkpoint approved (`f38586b`) |
 
 ## v2 Session 18 — checkpoint 18.1 (the D-2 notice)
 
