@@ -354,6 +354,10 @@ body[data-theme="light"]{
   color:var(--text-3);
 }
 .fresh b{color:var(--text-2);font-weight:500}
+/* the one paragraph form ("The instrument record itself was last verified
+   on …") is a sentence, not a row of chips: inline-flex made its <b> a flex
+   item and broke the date onto its own line (V2C-32) */
+p.fresh{display:block}
 /* the leading space inside an inline-flex .fresh is dropped, so the status
    badge sat flush against "as of" (decided 28 Oct 2026, docs/ROADMAP-v2.md §8) */
 .badge + .fresh{margin-left:var(--s-2)}
