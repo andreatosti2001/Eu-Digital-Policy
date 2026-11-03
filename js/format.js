@@ -141,8 +141,12 @@ export function cite(src, ix, form = 'note') {
       return acc + glue + p;
     }, '');
   }
-  if (src.url) out += (form === 'bibliography' ? '. ' : ', ') + src.url;
-  else out += form === 'bibliography' ? '. No public URL located.' : ', no public URL located';
+  /* a quoted title already ends in its own full stop (“Title.”), so in the
+     bibliography form what follows it is a space, never a second ". " —
+     31 undated entries read .”. before their URL (V2C-31) */
+  const bibSep = /”$/.test(out) ? ' ' : '. ';
+  if (src.url) out += (form === 'bibliography' ? bibSep : ', ') + src.url;
+  else out += form === 'bibliography' ? bibSep + 'No public URL located.' : ', no public URL located';
   if (form === 'bibliography' && !/[.]$/.test(out)) out += '.';
   return out;
 }
