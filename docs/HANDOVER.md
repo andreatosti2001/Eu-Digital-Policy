@@ -4,6 +4,21 @@
 written and measured. **Awaiting the author's approval at the checkpoint (19.2).**
 **Branch:** `claude/session-19-jwjgnu` (assigned by the environment), cut from `main` at `1c645ce` (#54, this session's prompt).
 
+## Branch register — 3 November 2026 (the prompt of v2 Session 20)
+
+- Branch `claude/v2-session-20-prompt`, cut from `main` at `943467d` (#56 merged). It carries one file,
+  `docs/prompts/v2-session-20.md`, and this entry.
+- Drafted on the author's request of 3 Nov 2026 ("What's up for session 20?" → "Yes"), after four questions, answered:
+  the scope, "Open Phase 4 + item 4.1 (Recommended)"; the checkpoints, "Open Phase 4, then 4.1 (Recommended)"; group (a)
+  of v2 Session 17.5 question 4, "Session 21, using 4.1 (Recommended)"; the branch, "New branch + PR (Recommended)".
+  These answers shape the prompt; they are not §8 rows. The session records its own scope in §8 as its first write.
+- Measured while drafting, on `943467d`: `freshness --as-of 2027-01-27` 0 `RULE_STALE`, `--as-of 2027-01-28` 33;
+  `evidence-audit --as-of 2027-03-26` reports T-12 on `ap-cra-01` only.
+- Found while drafting, not fixed: `claude/session-19-alternate-name` (#56, merged) has no entry in this register, and
+  the session 19 report above still says "EUDigitalPolicy" where #56 made it "Eu Digital Policy". The prompt leaves both
+  out of Session 20.
+- Disposition: pushed; a pull request to `main` opened on the author's instruction.
+
 ## Branch register — 3 November 2026 (v2 Session 19)
 
 - Branch `claude/session-19-jwjgnu` (assigned by the environment), cut from `main` at `1c645ce`. Nothing was merged in;
