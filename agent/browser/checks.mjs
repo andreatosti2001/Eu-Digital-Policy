@@ -310,7 +310,13 @@ export async function checkBriefIndex(page, origin) {
        the query is prose and not the first word of a heading */
     const unfound = [];
     for (const s of secs) {
-      const ps = [...s.querySelectorAll('.part-body p')].map((p) => p.textContent.replace(/\\s+/g, ' ').trim()).filter((t) => t.split(' ').length >= 10);
+      /* the brief's PROSE only. The compliance dial in Annex A (figure.rota) is filled in by
+         app.js with the next upcoming deadline from the calendar table: its paragraph
+         changes with the date it is opened, is not in the markup, and is not the brief's
+         text, so a search of the prose cannot be asked to find it (3 Nov 2026: from 1 Nov
+         the dial showed the 2 Dec 2026 AI Act event and this check failed on an unchanged
+         tree; until then it showed an event whose words the prose happened to contain) */
+      const ps = [...s.querySelectorAll('.part-body p')].filter((p) => !p.closest('.rota')).map((p) => p.textContent.replace(/\\s+/g, ' ').trim()).filter((t) => t.split(' ').length >= 10);
       if (!ps.length) continue;
       const q = ps[ps.length - 1].split(' ').slice(1, 8).join(' ');
       const hit = search(q).some((g) => g.kind === 'passage' && g.items.some((i) => i.id === s.id));
