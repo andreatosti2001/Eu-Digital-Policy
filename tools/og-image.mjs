@@ -88,7 +88,7 @@ export function cards(root = ROOT) {
     file: SITE.image.path,
     html: card({
       kicker: SITE.name,
-      title: SITE.alternateName,
+      title: SITE.tagline,
       sub: 'The EU digital rulebook — ' + routes.filter((r) => r.kind === 'instrument').slice(0, 6)
         .map((r) => ix.instrument.get(r.id).short_name).join(' · ') + ' — read as law, as record and as argument.',
       left: 'Every claim graded by its evidence',
