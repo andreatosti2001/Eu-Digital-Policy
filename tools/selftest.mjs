@@ -1017,7 +1017,7 @@ test('S2 · the generator is deterministic and writes nothing that reads the clo
   assert.ok(pages.length >= 1);
   for (const f of pages) {
     const html = a.files.get(f);
-    for (const clockBound of ['days ago', 'review recommended', 'Next date', 'Applies since', 'ip-enf-pipe']) {
+    for (const clockBound of ['days ago', 'day ago', 'review recommended', 'Next date', 'Applies since', 'ip-enf-pipe']) {
       assert.ok(!html.includes(clockBound), `${f} carries "${clockBound}", which depends on the reader's clock`);
     }
   }

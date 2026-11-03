@@ -129,7 +129,7 @@ export function freshness(iso, whatFor) {
   const days = Math.round((Date.now() - Date.parse(iso + 'T00:00:00Z')) / 864e5);
   return '<span class="fresh">Last verified <b>' + esc(F.humanDate(iso)) + '</b>' +
     (whatFor ? ' <span>· ' + esc(whatFor) + '</span>' : '') +
-    (Number.isFinite(days) ? ' <span>· ' + (days <= 0 ? 'today' : days + ' days ago') + '</span>' : '') +
+    (Number.isFinite(days) ? ' <span>· ' + (days <= 0 ? 'today' : F.plural(days, 'day') + ' ago') + '</span>' : '') +
     (days > STALE_DAYS ? ' <span class="fresh-flag">review recommended</span>' : '') +
     '</span>';
 }
