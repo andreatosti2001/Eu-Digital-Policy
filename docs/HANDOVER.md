@@ -1,25 +1,93 @@
 # HANDOVER
 
-**Last updated:** v2 Session 18, the maintenance session (3 November 2026): checkpoint 18.1 (the D-2 notice) approved;
-18.2 done — group (c) and V2C-28…V2C-36 each written as the author approved or closed with no change, plus one defect
-F-15 exposed (AI Act Art. 55's heading). Both checkpoints approved; the branch goes to `main` by pull request.
-**Branch:** `claude/v2-session-18-maintenance`, cut from `main` at `97e53d7`.
+**Last updated:** v2 Session 19, the site name in search results (3 November 2026): 19.0 answered (four questions), 19.1
+written and measured. **Awaiting the author's approval at the checkpoint (19.2).**
+**Branch:** `claude/session-19-jwjgnu` (assigned by the environment), cut from `main` at `1c645ce` (#54, this session's prompt).
 
-## Branch register — 3 November 2026 (the prompt of v2 Session 19)
+## v2 Session 19 — checkpoint (19.1: the site name)
 
-- Branch `claude/v2-session-19-prompt`, drafted on Session 18's tree (`16bc7e9`) and rebased onto `main` at `55420ae`
-  (#53, v2 Session 18, merged), on the author's answer ("New branch after #53 merges (Recommended)"). It carries one
-  file, `docs/prompts/v2-session-19.md`, and this entry.
-- Drafted on the author's request of 3 Nov 2026 ("did you redact session 19's prompt already? if not, integrate this:",
-  with the site-name request quoted verbatim in the prompt), after three questions, answered: the scope, "Site name only
-  (Recommended)"; the WebSite node, "Homepage full, subpages @id only (Recommended)"; the branch, "New branch after #53
-  merges (Recommended)". These answers shape the prompt; they are not §8 rows.
-- Measured while drafting (3 Nov 2026): the redirects (http, www, https-www → 301 to `https://eudigitalpolicy.eu/`),
-  `robots.txt`, `sitemap.xml`, the canonical, `og:site_name` and the spelling of the name already hold. Three premises
-  the request does not name are put to the author as separate questions in 19.0: `tools/seo-audit.mjs:333–334`
-  requires a WebSite node on every page; `SITE.alternateName` is also the social card's title
-  (`tools/og-image.mjs:91`); the it/fr/es homepages carry the same "—" in their edition titles.
-- Disposition: pushed; a pull request to `main` opened on the author's answer above, after #53 was merged.
+### What the author decided (`docs/ROADMAP-v2.md` §8) and the commits
+
+| Item | Answer | §8 | Change |
+|---|---|---|---|
+| Scope | "start session 19" | `857657c` | — |
+| Q1 · homepage `<title>` | "EU Digital Policy \| The European Legal Framework for the Digital World (Recommended)" | `cdccc7c` | `9ddeb4b` |
+| Q2a · `alternateName` | "Add SITE.tagline, card unchanged (Recommended)" | `ebc310c` | `9ddeb4b` |
+| Q2b · WebSite on the homepage only | "Homepage full, subpages @id only (Recommended)"; the audit assertion shown before and after, "Write as shown" | `ebc310c` | `9ddeb4b` |
+| Q3 · `application-name` | "Every generated page (Recommended)" | `80e7749` | `9ddeb4b` |
+| Q4 · it/fr/es titles | 'Separator only, " \| " (Recommended)' | `80e7749` | `9ddeb4b` |
+
+`de2eb47` is the regeneration (`node tools/_footer.mjs`, 31 files; a second run wrote 0). `node tools/commit-evidence.mjs
+1c645ce HEAD`: both commits name their evidence. An early question of mine offered Phase 4 as the scope; it was
+superseded by the prompt (which puts Phase 4 out of scope) and is recorded nowhere in §8.
+
+### Before and after
+
+| Where | Before | After |
+|---|---|---|
+| Homepage `<title>`, `og:title`, WebPage `name` | EU Digital Policy — The European Legal Framework for the Digital World | EU Digital Policy \| The European Legal Framework for the Digital World |
+| it / fr / es `<title>` | EU Digital Policy — Il quadro… / Le cadre… / El marco… | the same words, " — " → " \| " |
+| WebSite `alternateName` | "The European Legal Framework for the Digital World" | ["EUDigitalPolicy", "eudigitalpolicy.eu"] |
+| WebSite node | on all 26 generated pages | `index.html` only; every other page's WebPage keeps `isPartOf {"@id": "https://eudigitalpolicy.eu/#site"}` |
+| `<meta name="application-name">` | absent | "EU Digital Policy" on every generated page |
+| `SITE.tagline` | — | the former `alternateName`; `tools/og-image.mjs` reads it, so the social card is unchanged (`og-image --check`: every card current) |
+
+The homepage WebSite node, whole: `{"@type":"WebSite","@id":"https://eudigitalpolicy.eu/#site","name":"EU Digital
+Policy","alternateName":["EUDigitalPolicy","eudigitalpolicy.eu"],"url":"https://eudigitalpolicy.eu/","inLanguage":"en",
+"author":{"@type":"Person","name":"Andrea Tosti"},"license":"https://creativecommons.org/licenses/by/4.0/"}`.
+
+### Files modified (the request's point 5)
+
+Generator and checks: `tools/seo.mjs`, `tools/seo-audit.mjs` (the assertion, on the author's word), `tools/og-image.mjs`,
+`tools/selftest.mjs` (S4b's planted author defect moved from `applies.html`, which no longer has a node that names the
+author, to `index.html`; new S4d plants a WebSite node on a subpage, a wrong `isPartOf` and a string `alternateName`).
+Data: `i18n/locales.json` (three edition titles). Generated, by `_footer.mjs` only: the ten hand-written pages,
+`instruments/*/index.html` (17), `it/`, `fr/`, `es/` `index.html`. Not touched: `CNAME`, Pages settings, DNS, README,
+translations (no key was declared `superseded`; no translation of `edition.title` changes).
+
+### Already true, re-measured on 3 Nov 2026
+
+`http://eudigitalpolicy.eu/`, `http://www…` and `https://www…` each answer 301 to `https://eudigitalpolicy.eu/`, the
+homepage 200 (not in the repo: Pages and the owner's settings). `robots.txt` names the sitemap; the first `<loc>` is
+`https://eudigitalpolicy.eu/`. `og:site_name` "EU Digital Policy" and the homepage canonical were already there. The
+name is spelled "EU Digital Policy" with no variant on any page.
+
+### Counts, as of 2026-11-03, full clone, this tree (`de2eb47`)
+
+`validate` 0 errors; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit` 0 errors; `freshness` exit 0;
+`tools/selftest.mjs` 124 of 124 (123 before: S4d added); the agent suites passing (the readiness run prints 24 suites,
+1254 tests; session 18 reported 1253 and I did not re-measure the base, so that one-test difference is **not explained
+here**); Control Room 1 skipped (`::1`), 0 fail; browser suite `--require-browser` 343 pass · 0 fail · 1 undecidable;
+adversarial gate 65 failed safely · 0 succeeded · 3 partial · 1 undecidable; schemas, boundary, routes exit 0. Every
+JSON-LD block of the 32 pages parses (`JSON.parse`, 0 errors). The readiness figure was started and not read to its end.
+Counts were taken on this tree only, not on a separate worktree of the base.
+
+### Seen in a browser
+
+`/`, `/instruments/gdpr/` and `/applies.html`, light and dark, 1280px and 390px (12 views): no console error, no overflow;
+the rendered `<title>`, `application-name`, `og:site_name` and the number of WebSite nodes read from the DOM.
+
+### What the repository cannot do, and the merge
+
+**Yes, this needs merging to `main`:** the site is published from `main` by `.github/workflows/pages.yml`
+(`docs/DEPLOYMENT.md`). After that, requesting indexing of the homepage in Search Console is the owner's. The name Google
+shows is Google's choice and changes only when it re-crawls the homepage; nothing here promises it.
+
+### Not verified, and new findings
+
+No screen reader, no browser but Chromium; the live site is not checked (nothing pushed or deployed). A WebSite node
+that subpages only reference by `@id` is a dangling reference inside each page's own graph; it resolves only if a
+consumer joins pages, which is the author's chosen design, not a defect I can measure. `.control-room/cli.mjs:253` prints
+the tagline as a literal and was left alone.
+
+### The checklist (19.0–19.2)
+
+| Point | Written | By hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 19.0 | §8 rows `857657c`…`80e7749` | `grep -n "v2 Session 19" docs/ROADMAP-v2.md` | — | every question answered |
+| 19.1 | `9ddeb4b`, `de2eb47` | `view-source` of `/`; `node tools/seo-audit.mjs` | `tools/selftest.mjs` S4b, S4d | each point as approved or already true |
+| 19.2 | this report | read it against §8 | — | author's approval, then the PR question |
+
 
 ## Branch register — 3 November 2026 (v2 Session 18)
 
