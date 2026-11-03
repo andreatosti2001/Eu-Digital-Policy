@@ -1036,7 +1036,7 @@
         {
           "id": "ai-act:art-50",
           "number": "50",
-          "heading": "Transparency obligations",
+          "heading": "Transparency obligations for providers and deployers of certain AI systems",
           "summary": "Users must be informed they are interacting with an AI system; synthetic content must be marked in a machine-readable format; deep fakes and AI-generated text on matters of public interest must be disclosed.",
           "obligation_on": [
             "actor:ai-provider",
