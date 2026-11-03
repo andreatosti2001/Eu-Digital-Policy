@@ -5,6 +5,22 @@ preparation of Phase 4, and the author's decisions — Phase 3 closed, D-4 decid
 condition and first item approved; Phase 4 not opened.
 **Branch:** `claude/nifty-ride-kc0p4x`, cut from `main` at `4ab13a6`.
 
+## Branch register — 3 November 2026 (the prompt of v2 Session 18)
+
+- Branch `claude/v2-session-18-prompt`, cut from `main` at `7c333b3` (#51, v2 Session 17.5, merged). It carries one
+  file, `docs/prompts/v2-session-18.md`, and this entry. Created on the author's permission ("New branch + PR
+  (Recommended)").
+- Drafted on the author's request of 3 Nov 2026, "Ask me and then write session 18's prompt", after four questions,
+  answered: the scope, "Notice + (c) + V2C-28–36 (Recommended)" — the D-2 notice in the text approved in v2 Session
+  17.5 (question 3), the findings of group (c) of its question 4 (F-06, F-15, F-16, F-21, F-28, F-30, F-10) and the
+  rows `docs/V2-CLOSURE.md` classes "B — a maintenance session" (V2C-28…V2C-36); the order, "Notice first, own
+  checkpoint (Recommended)"; Phase 4, "Not in 18 (Recommended)"; the branch, "New branch + PR (Recommended)". These
+  answers shape the prompt; they are not §8 rows. The session records its own scope in §8 as its first write.
+- Found while drafting: `tools/selftest.mjs` N1 pins the D-2 notice's current text word for word ("change it only on
+  their word"), so writing the approved text needs N1 changed too — a premise question 3 did not name. The prompt puts
+  it to the author as 18.0's first question.
+- Disposition: pushed; a pull request to `main` opened on the author's instruction.
+
 ## Branch register — 3 November 2026 (v2 Session 17.5)
 
 - Branch `claude/nifty-ride-kc0p4x`, assigned by the environment, cut from `main` at `4ab13a6` (#48, this session's
