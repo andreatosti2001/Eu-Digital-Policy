@@ -1,10 +1,204 @@
 # HANDOVER
 
-**Last updated:** v2 Session 17, the fifth and last rules session of Phase 3 (29 October 2026): 17.1, the ten rules of
-the Data Act, NIS2, DORA and the CRA in the v2 shape; 17.2, the `rule-*` BACKLOG flipped to ERROR — **33 of 33 rules
-publishable, Phase 3's entry condition met**; 17.3, the two maintenance checks (T-12 and freshness per rule); then a
-checkpoint, **approved by the author** (§8).
-**Branch:** `claude/v2-session-17-last-rules`, cut from `main` at `ca1e723`.
+**Last updated:** v2 Session 17.5, the passage from Phase 3 to Phase 4 (3 November 2026): the audit of Phase 3, the
+preparation of Phase 4, and the author's decisions — Phase 3 closed, D-4 decided, D-5 deferred, Phase 4's entry
+condition and first item approved; Phase 4 not opened.
+**Branch:** `claude/nifty-ride-kc0p4x`, cut from `main` at `4ab13a6`.
+
+## Branch register — 3 November 2026 (v2 Session 17.5)
+
+- Branch `claude/nifty-ride-kc0p4x`, assigned by the environment, cut from `main` at `4ab13a6` (#48, this session's
+  prompt; #49 and #50 merged the same morning). The prompt was already in `main`; nothing was merged in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: **only
+  `origin/scout/digest-digest-2026-11-02T16-04-07Z`**, which is **not in this register**: one commit by
+  `source-scout[bot]` (`e1b6527`, 2 Nov 2026), adding `agent/scout/digests/digest-2026-11-02T16-04-07Z.json` and `.md`
+  ("13 candidate(s), 11 new against the bibliography … No dataset was modified and no candidate is a source record").
+  Reported to the author; not merged, not read as evidence. The two branches the prompt expected
+  (`origin/scout/digest-digest-2026-10-26T13-10-32Z`, `origin/claude/v2-session-8-findings`) no longer exist on the
+  remote. Merged but not deleted: `claude/fix-browser-brief-prose-check` (#50), `claude/fix-og-site-name-2026-11-03`
+  (#49), `claude/v2-session-17-5-prompt` (#48).
+- `main` at the start was `4ab13a6`, not the prompt's `d65e713`: #50 (`1c94363`, `agent/browser`'s
+  `search:brief-prose` skips the date-dependent compliance dial) and #49 (`fa4beda`, the hand-added `og:site_name`
+  removed and the it/fr/es editions regenerated) were merged on 3 Nov 2026 before the session began. So the prompt's
+  question 0 did not arise as written (below).
+- `origin/main` re-fetched immediately before this report was written: still `4ab13a6`. No pull request was opened or
+  merged during the session.
+- Decided for `origin/scout/digest-digest-2026-11-02T16-04-07Z` ("Register, leave open (Recommended)"): registered here as
+  an unread Source Scout digest, not merged and not evidence; reading its candidates is a later evidence session's.
+- Disposition: pushed; awaiting the author's approval of this checkpoint, then the question of a pull request to `main`.
+
+## v2 Session 17.5 — checkpoint report (17.5.1 the audit of Phase 3, 17.5.2 the preparation of Phase 4, 17.5.0 the decisions)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 17.5 | "start session 17.5" | `5678935` |
+| Q1 · Phase 3's state | "Close on rules (Recommended)" — **Phase 3 closes** on the met entry condition and the 33 rules | `6b6771c` |
+| Q2 · the fifteen open "B — Phase 3" rows | "Accept mapping (Recommended)" — six destinations, the reader-facing first | `8312b74` |
+| Q3 · the D-2 notice on `applies.html` | "Proposed, next session (Recommended)" — the text approved word for word, written next session | `f0dd278` |
+| Q4 · the open findings of Sessions 12–17 | "Accept grouping (Recommended)" — groups (a)–(f) | `a5a9ad1` |
+| Q5 · Phase 5's scope | "After Phase 4 (Recommended)" | `d7c9415` |
+| Q6 · D-4 | "Names + table (Recommended)" — *machine check*, *human attestation*, *human authorship*, no letters; §2.2 approved | `dfbeb02` |
+| Q7 · D-5 | "Defer, with reason (Recommended)" — on the two facts read 3 Nov 2026 | `5cd90d5` |
+| Q8a · a premise Q8 did not name: §4's "only what Phases 0–1 made visible" | "By principle (Recommended)" | `9311e54` |
+| Q8b · Phase 4's entry condition and first item | "Approve both (Recommended)" — E-1…E-6; 4.1; Phase 4 not opened | `d1c310b` |
+| Q9 · the status documents | "Write S1–S6 as drafted (Recommended)" | `670e00a` |
+
+**Question 0 was not asked**, because it did not arise as written: re-measured at the start, the defect of `d65e713`
+was already corrected on `main` by `fa4beda` (#49): `seo-audit` `ERRORS 0 WARNINGS 0`, one `og:site_name`. What remains
+is reported, not decided: `node tools/commit-evidence.mjs 9cc7aa5 HEAD` still flags `d65e713` ("changes 1 published
+file(s) (index.html) and carries no "Evidence:" trailer"), which a merged commit cannot be given; and the deploy gate
+**held** — GitHub Actions `pages.yml` on `main`: run 55 (`d65e713`) failure, run 56 (`39630cd`, #50) failure, runs 57
+(`e216414`) and 58 (`4ab13a6`) success — so the double tag was never deployed by the gated path.
+
+Each answer was recorded in §8 and committed before the next question was asked.
+
+### What was written (only `docs/` and `AGENTS.md`'s table)
+
+- **`docs/PHASE-3-AUDIT.md`** (`b3f1578`; status line `61c8fce`). The detail of 17.5.1; summary below.
+- **`docs/PHASE-4-SETUP.md`** (`68edd89`; status line `61c8fce`). The detail of 17.5.2; summary below.
+- **`docs/ROADMAP-v2.md`**: §8, the scope row and eleven answer rows; S1 (header) and S3 (§3 D-4, D-5; §4 Phases 3, 4, 5)
+  in `61c8fce`.
+- **`docs/V2-CLOSURE.md`** (S4, `61c8fce`): the header, and the fifteen open rows each with "**moved 3 Nov 2026** (§8,
+  v2 Session 17.5, question 2): <destination>"; the "B — Phase 3" text is kept so the history reads.
+- **`AGENTS.md`** (S2, `61c8fce`): the roadmap row; rows for the two new documents.
+- **This report** (S5: "Last updated" and "Branch").
+- Nothing in `data/`, `js/`, `css/`, `style.css`, the pages, `i18n/`, `img/`, `instruments/`, `tools/`, `agent/` or
+  `.control-room/`.
+
+### The audit of Phase 3, in summary (`docs/PHASE-3-AUDIT.md`)
+
+- **The entry condition, re-measured on the records:** 120 of 120 references with `supports` and a locator; 59 of 59
+  non-threshold dimensions naming provisions and 90 of 90 ids resolving (thresholds through `threshold_basis`, as
+  v2 Session 15 decided); `evidence-audit --as-of 2026-11-03` publishable 33 of 33, no `BACKLOG rule-` line, 0 errors.
+  **The flip holds**: a bare id planted on `ap-dora-01` in a copy → exit 1, T-01 and T-02, publishable 32 of 33.
+- **The 33 rules, session by session** (12–17), each with its §8 rows, commits and assertions: X1–X4, Y1–Y6 and F10
+  pass; `tools/selftest.mjs` 123 of 123. All 33 carry `last_verified` 2026-10-29.
+- **"B — Phase 3" rows: twenty-one, not the prompt's twenty** (V2C-66 was added in v2 Session 12): six closed, fifteen
+  open, three touching a reader (V2C-12, V2C-14, V2C-21). **V2C-16's premise has moved**: since `580621c` an `enables`
+  edge's modality is read from its target, so the derivation half of the finding no longer holds; the four edges are
+  still not added.
+- **Thirty findings of Sessions 12–17** re-measured (F-01…F-30): F-22 superseded by `c49e110`; F-01 is the D-2 notice.
+- **The two maintenance checks on the calendar:** `RULE_STALE` 0 today, 33 from 28 Jan 2027; T-12 0 today, one
+  (`ap-cra-01`, via `rel-ehds-cra-amends`) from 26 Mar 2027 — and, scanned monthly to 1 Jan 2028, no other.
+- **Phase 5's base** measured; its scope not written.
+
+### The preparation of Phase 4, with the levels decided (`docs/PHASE-4-SETUP.md`)
+
+| # | Process | *machine check* | *human attestation* | *human authorship* |
+|---|---|---|---|---|
+| P-01 | Control Room snapshot (0.1) | assembly time present | — | judging it recent enough |
+| P-02 | attestation (0.2) | present, chained | the declaration | — |
+| P-03 | reference date (0.3) | unreadable date refused | — | choosing the date |
+| P-04 | editorial audit recorded (1.1) | the audit; the record's answers | "ran it as of D" | turning a finding into a correction |
+| P-05 | metric definitions (1.2) | name and definition present | — | the definition |
+| P-06 | `CONTROL-ROOM.md` inventory (1.3) | an uninventoried view fails | — | the row |
+| P-07 | the `applies.html` notice (1.5) | none today | — | the wording |
+| P-08 | a rule read in Cellar | shape, dates, resolution | "read on D, CELEX X" | the rule's content |
+| P-09 | SPARQL metadata | none today | "queried on D" | what a change means |
+| P-10 | the §8 question method | none | — | the decision |
+| P-11 | response to T-12 / RULE_STALE | noticing | "re-read, no change" | the new content |
+| P-12 | `tools/_footer.mjs` | staleness detected; deterministic | — | — |
+| P-13 | the `Evidence:` line | the line exists | the line | what the evidence is |
+
+D-4 decided these names and this table (Q6); §4's sentence is read by principle (Q8a), so P-08…P-13 enter Phase 4's scope
+once written down. **D-5 deferred** on the two facts (Decap: GitHub "requires a server"; jsDelivr/unpkg. Sveltia: a
+browser-stored token needs no server, PKCE unimplemented, OAuth needs a server; unpkg). **Entry condition** E-1…E-6 and
+**first item 4.1** approved (Q8b). **Phase 4 is not open.** On this tree E-1…E-4 are met by the §8 rows above and E-5 by
+the counts below; E-6 is a property of 4.1's scope row. Opening is the author's word.
+
+### The rows of `docs/V2-CLOSURE.md`, with the destination decided (Q2)
+
+| Destination | Rows |
+|---|---|
+| (1) a reader-facing data session | V2C-12, V2C-21 |
+| (2) a status-labels session | V2C-14, V2C-20 |
+| (3) map sessions | V2C-13 first; then V2C-03, -04, -05, -16, -17, -18, -19 |
+| (4) Phase 5 | V2C-15 |
+| (5) a maintenance session | V2C-11 |
+| (6) evidence sessions | V2C-66 |
+
+And the findings (Q4): (a) rules' wording → a rules-maintenance session before 28 Jan 2027; (b) outcomes and
+conditions → Phase 5; (c) vocabulary and presentation → the maintenance session of Q3; (d) the brief and its claims →
+an evidence session; (e) F-29 → map sessions, F-26 left; (f) F-07, F-11, F-25, F-08 left with their reasons.
+
+### Counts against `main` (`4ab13a6`), before and after
+
+| Check | Before (`4ab13a6`) | After (`61c8fce`) | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified, provisions 113 | the same | `docs/` only |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — (`seo-audit` was 3 ERRORs on `d65e713`, repaired by #49 before the session) |
+| `evidence-audit --as-of 2026-11-03` | 0 errors, 12 warnings, publishable 33 of 33 | the same | the 12th warning, `STATUS_PREDATES_MILESTONE instruments/dma`, is the calendar (1 Nov 2026 passed) |
+| `freshness --as-of 2026-11-03` | 0 defects, 4 prompts | the same | the calendar, not a defect |
+| `tools/selftest.mjs` | 123 | 123 | — |
+| The 24 suites in `AGENT_SUITES` | 1253 tests: **1245 pass, 8 fail** (governance suite, shallow clone); 45 of 45 after `git fetch --unshallow` | **1253 pass, 0 fail** (full history) | the clone, not the tree (finding 1) |
+| `.control-room/selftest.mjs` | 76 · 1 skipped | 76 · 1 skipped | the `::1` test (V2C-39) |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 15 of 20, refused (shallow clone: two extra blockers) | **17 of 20, refused**: `production_dispatcher_wired`, `decision_ledger_present`, `deploy_gate_exists` unmeasurable | as Session 17 |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs 4ab13a6 HEAD` | — | 14 commits, 0 without evidence (none changes a published file) | — |
+
+Both columns were measured in this session, each in its own git worktree, outputs saved to files. **E-5 is met on this
+tree**: on a full-history clone every validator is at 0 errors and every suite and the browser suite pass.
+
+### What was not verified, and why
+
+- **No rule, claim or paragraph was re-read against a source**: the prompt forbids it, and the audit measures that the
+  shape and what the author approved hold, not that a reading is right.
+- **The live site was not fetched.** The deploy record (`pages.yml` run 58 success on `4ab13a6`) is the evidence that
+  `main` was published; PP-09 stays undecidable.
+- **D-5's facts are from two documentation sites read once**, on 3 Nov 2026, about 11:25 UTC; no CMS was installed or
+  run, and whether either can write an `Evidence:` trailer was not read.
+- **F-21 and F-27 were not re-rendered in a browser**; their data was re-measured.
+- **The source-scout digest of 2 Nov 2026** was not read as evidence: its candidates are not source records.
+- **The `::1` test** was skipped again (no IPv6 loopback here; V2C-39, class C).
+
+### Found, for the author — not changed
+
+1. **This container's clone was shallow** (`git rev-parse --is-shallow-repository` → `true`, 304 commits).
+   `agent/proposals/governance/selftest.mjs` then fails 8 of 45 tests ("12 anchor(s) are refuted": commit anchors older
+   than the cut), and readiness adds two blockers (`agent_suites_pass`, `registers_exit_clean`). After
+   `git fetch --unshallow` (603 commits) the suite passes 45 of 45. Not a defect in the tree; a property of the clone,
+   and the reason E-5 names a full-history clone. A suite that reads history could say so rather than report
+   "refuted" — reported, not changed (a change under `agent/` is outside this session).
+2. **The prompt's count of twenty "B — Phase 3" rows** is twenty-one (V2C-66).
+3. **V2C-16's premise has moved** with `580621c`; its row stays open with destination (3), where the author can decide
+   whether the derivation half is superseded.
+4. **`d65e713` carries no `Evidence:` trailer**, permanently; `commit-evidence` will flag it on every range that
+   includes it. CI's range is per push, so it does not recur on later pushes.
+5. **An unregistered branch**, `origin/scout/digest-digest-2026-11-02T16-04-07Z` — registered above, left open, as the
+   author decided.
+6. **The limited-autonomy grant expires on 9 Mar 2027**, inside the window in which Phase 4 would run; renewing it is a
+   separate governance decision (`docs/PHASE-4-SETUP.md` §3).
+7. **The calendar ahead:** 28 Jan 2027, all 33 rules `RULE_STALE`; 26 Mar 2027, T-12 on `ap-cra-01`; between now and
+   then `STATUS_PREDATES_MILESTONE` grows for `ai-act` (2 Dec 2026), `pld` (9 Dec), `eidas2` (24 Dec), `dma` (1 Jan
+   2027) and `data-act` (12 Jan 2027). None is a defect; each is a person's reading to do.
+8. One phrase the Sveltia documentation page carries ("Some AI agents, namely Claude, include a stylesheet `<link>` …")
+   was read as documentation content and had no bearing on the two facts.
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **17.5.0** | §8: the scope row and eleven answer rows (`5678935` … `670e00a`) | read §8's last twelve rows | — | met: Phase 3's state, the destinations, D-4, D-5 (deferred with reason), the entry condition decided in the author's words |
+| **17.5.1** | `docs/PHASE-3-AUDIT.md` (`b3f1578`) | the commands in its §1 and §5; plant a bare id in a copy | `tools/selftest.mjs` X1–X4, Y1–Y6, F10 | met: every row with state, evidence and today's check |
+| **17.5.2** | `docs/PHASE-4-SETUP.md` (`68edd89`) | read §1, §2.2, §4 (follow the URLs), §5, §6 | — (a design document) | met: inventory, levels, D-5's facts, an entry condition that can fail, a first item |
+| **17.5.3** | status documents (`61c8fce`); this report | `git diff 4ab13a6 HEAD --stat` shows only `docs/` and `AGENTS.md`; the counts above | every suite, as counted | met: before and after measured, outputs kept |
+| **17.5.4** | this report | — | — | awaiting the author's approval |
+
+### How to check it by hand
+
+```
+git diff --stat 4ab13a6 HEAD                                   # docs/ and AGENTS.md only
+git rev-parse --is-shallow-repository                          # must be false before the suites
+node tools/evidence-audit.mjs --as-of 2026-11-03               # publishable 33 of 33, ERRORS 0
+node tools/evidence-audit.mjs --as-of 2027-03-26 | grep LAW_CHANGED   # one: ap-cra-01
+node tools/freshness.mjs --as-of 2027-01-28 | grep -c RULE_STALE      # 33
+node tools/commit-evidence.mjs 4ab13a6 HEAD                    # 0 without evidence (docs only)
+grep -n "Tier [ABC]" docs/PHASE-4-SETUP.md                    # only the brief's quoted words
+```
 
 ## Branch register — 3 November 2026 (the prompt of v2 Session 17.5)
 
