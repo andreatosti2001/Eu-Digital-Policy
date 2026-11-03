@@ -25,7 +25,7 @@ condition and first item approved; Phase 4 not opened.
   merged during the session.
 - Decided for `origin/scout/digest-digest-2026-11-02T16-04-07Z` ("Register, leave open (Recommended)"): registered here as
   an unread Source Scout digest, not merged and not evidence; reading its candidates is a later evidence session's.
-- Disposition: pushed; awaiting the author's approval of this checkpoint, then the question of a pull request to `main`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. A pull request to `main` opened on the author's instruction of 3 Nov 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the branch after it. No prompt for v2 Session 18 was asked for.
 
 ## v2 Session 17.5 — checkpoint report (17.5.1 the audit of Phase 3, 17.5.2 the preparation of Phase 4, 17.5.0 the decisions)
 
@@ -186,7 +186,7 @@ tree**: on a full-history clone every validator is at 0 errors and every suite a
 | **17.5.1** | `docs/PHASE-3-AUDIT.md` (`b3f1578`) | the commands in its §1 and §5; plant a bare id in a copy | `tools/selftest.mjs` X1–X4, Y1–Y6, F10 | met: every row with state, evidence and today's check |
 | **17.5.2** | `docs/PHASE-4-SETUP.md` (`68edd89`) | read §1, §2.2, §4 (follow the URLs), §5, §6 | — (a design document) | met: inventory, levels, D-5's facts, an entry condition that can fail, a first item |
 | **17.5.3** | status documents (`61c8fce`); this report | `git diff 4ab13a6 HEAD --stat` shows only `docs/` and `AGENTS.md`; the counts above | every suite, as counted | met: before and after measured, outputs kept |
-| **17.5.4** | this report | — | — | awaiting the author's approval |
+| **17.5.4** | this report | — | — | **approved** by the author (§8, "The checkpoint of v2 Session 17.5") |
 
 ### How to check it by hand
 
