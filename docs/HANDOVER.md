@@ -4,6 +4,14 @@
 written and measured. **Awaiting the author's approval at the checkpoint (19.2).**
 **Branch:** `claude/session-19-jwjgnu` (assigned by the environment), cut from `main` at `1c645ce` (#54, this session's prompt).
 
+## Branch register — 3 November 2026 (v2 Session 19)
+
+- Branch `claude/session-19-jwjgnu` (assigned by the environment), cut from `main` at `1c645ce`. Nothing was merged in;
+  `origin/main` re-fetched before this entry: still `1c645ce`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, already in the register below.
+- Disposition: checkpoint approved; pushed, and a pull request to `main` opened on the author's instruction of 3 Nov 2026
+  ("Open the PR (Recommended)"). Nothing is pushed to the branch after the pull request is opened.
+
 ## v2 Session 19 — checkpoint (19.1: the site name)
 
 ### What the author decided (`docs/ROADMAP-v2.md` §8) and the commits
