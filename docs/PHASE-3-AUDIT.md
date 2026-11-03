@@ -128,36 +128,36 @@ Each re-measured on today's data. *Law?* as above. **None is corrected here.**
 
 | # | Origin | Finding | Law? | Today |
 |---|---|---|---|---|
-| F-01 | S15 (5), S16 (7), S17 (1) | **The D-2 notice on `applies.html` is false in its first paragraph** (§4.1 below) | **yes** | unchanged; `applies.notice` `pending_translation` in it, fr, es (V2C-27) |
+| F-01 | S15 (5), S16 (7), S17 (1) | **The D-2 notice on `applies.html` is false in its first paragraph** (§4.1 below) | **yes** | unchanged; `applies.notice` `pending_translation` in it, fr, es (V2C-27) — **Closed, `70061e9`** (v2 Session 18) |
 | F-02 | S17 (2) | `ap-nis2-01`'s `depends_on`: "materially incomplete" against the press release's "While most complied" | **yes** | still in `depends_on` |
 | F-03 | S17 (3) | `ap-cra-01`'s rationale: "serious incidents"; Art. 14(3): "severe incident" | **yes** | still "serious incident" |
 | F-04 | S17 (4) | `ap-nis2-02`'s rationale: a sector "which NIS2 treats as essential"; Annex I is "sectors of high criticality" | **yes** | still |
 | F-05 | S17 (5) | `ap-data-act-02` is `likely`, depending on whether the provider serves the Union, while its territory condition is already "Outside the EU, serving EU users" | **yes** | `outcome:likely`; `depends_on` and territory unchanged |
-| F-06 | S17 (6) | taxonomy notes: `actor:essential-entity` "NIS2 Annex I.", `actor:important-entity` "NIS2 Annex II." — Art. 3 classes by size too | **yes** | unchanged |
+| F-06 | S17 (6) | taxonomy notes: `actor:essential-entity` "NIS2 Annex I.", `actor:important-entity` "NIS2 Annex II." — Art. 3 classes by size too | **yes** | unchanged — **Closed, `f5c40bd`** (v2 Session 18) |
 | F-07 | S17 (7) | Art. 41(1) is a dated reference on `ap-nis2-01` only; `-02` and `-03` cite it in text | no (as approved) | unchanged |
 | F-08 | S17 (8) | as of 31 Dec 2027 `data-act` and `cra` are "partly applicable" with no future application date | **yes**, on a future date | `--as-of 2027-12-31`: both ERRORs present (the status will need re-reading when the last tranche passes) |
 | F-09 | S17 (9) | all 33 rules turn stale on one day | no | §5 below |
-| F-10 | S17 (10) | `data/applicability.json` `$last_verified` still 2026-08-27; nothing reads it | no | unchanged; `freshness` says "file date 2026-08-27 not used" |
+| F-10 | S17 (10) | `data/applicability.json` `$last_verified` still 2026-08-27; nothing reads it | no | unchanged; `freshness` says "file date 2026-08-27 not used" — **Closed, no change** (v2 Session 18, §8 `38da72d`) |
 | F-11 | S14 (4), S15 (7), S16 (8), S17 (11) | `docs/v2-design/applicability-examples.json` holds the 25 Oct drafts | no (a design record) | unchanged |
 | F-12 | S16 (1) | `ap-ai-act-01` fires for GPAI model providers (`actor:gpai-provider`, `activity:gpai-provision`), whom Arts 4 and 5 do not address as such | **yes** | conditions unchanged |
 | F-13 | S16 (2) | Art. 111(3) (GPAI models placed before 2 Aug 2025: until 2 Aug 2027) held by no event; `ap-ai-act-02`'s rationale says "owes Article 53 since 2 August 2025" | **yes** | rationale unchanged; Art. 111(3) appears only in the rule's `verification_note` |
 | F-14 | S16 (3) | `ap-ai-act-06`'s exemption ends with the brief's argument ("The brief argues …"); the same words on `rel-ai-act-teu-4-2` and `teu:art-4-2` | **yes** (an argument where an exemption is read) | still |
-| F-15 | S16 (4) | `ai-act:art-50` heading "Transparency obligations"; the Official Journal prints a longer heading | no rule cites it; **yes** on the AI Act page | unchanged |
-| F-16 | S16 (6) | "1 days ago" (`js/evidence-view.js:132`) | no | `days + ' days ago'` unchanged |
+| F-15 | S16 (4) | `ai-act:art-50` heading "Transparency obligations"; the Official Journal prints a longer heading | no rule cites it; **yes** on the AI Act page | unchanged — **Closed, `6be1b5a`** (v2 Session 18; Art. 55, found with it, `a9277a4`) |
+| F-16 | S16 (6) | "1 days ago" (`js/evidence-view.js:132`) | no | `days + ' days ago'` unchanged — **Closed, `a133fc3`** (v2 Session 18) |
 | F-17 | S16 (9) | `ap-gdpr-04`'s note says the AI Act's provisions "belong to Session 16" | no (a dated note) | still |
 | F-18 | S15 (2) | DMA Art. 3(10) gives six months; `ap-dma-01`'s rationale, `clm-dma-ex-ante` and `part-4.p2` (and its it/fr/es overlays) say "immediately" | **yes** | `ap-dma-01` and `clm-dma-ex-ante` still say it; the brief's paragraph not re-read here |
 | F-19 | S15 (3) | `ap-dsa-03`'s rationale: recommender-parameter transparency, which Art. 19 lifts for micro and small platforms | **yes** | rationale unchanged |
 | F-20 | S15 (4) | `ap-dma-04`: cloud designation decisions "due in November 2026", a Commission target | **yes** | unchanged; and since 1 Nov 2026 `STATUS_PREDATES_MILESTONE instruments/dma` is a warning |
-| F-21 | S15 (6) | definition Articles print "Applies from … — the instrument's general date" (the derivation's fallback) | no (a derivation's wording) | not re-measured in a browser |
+| F-21 | S15 (6) | definition Articles print "Applies from … — the instrument's general date" (the derivation's fallback) | no (a derivation's wording) | not re-measured in a browser — **Closed, no change** (v2 Session 18, §8 `0a9f3d4`) |
 | F-22 | S14 (1) | `ap-cross-01`: EDPB ¶88 and the advertisement repository | — | **superseded** by `c49e110`: `depends_on` names ¶88, and `src-eurlex-dsa` "Art. 27(1); Art. 39(1)" is cited |
 | F-23 | S14 (2), (3) | actors' definitions resolve through GDPR Art. 4; `ap-gdpr-04` and the controller role | **yes** | unchanged |
 | F-24 | S13 (1) | `ap-pld-01` fires for `activity:ai-deployment` through the actor dimension only (Art. 8(2)) | **yes** | activity list unchanged |
 | F-25 | S13 (2) | `eidas2:art-2`/`-3` are Articles of Regulation (EU) No 910/2014 filed under `eidas2` | no today (the `number` field disambiguates) | unchanged |
 | F-26 | S12 (3) | `evidence-audit.mjs`'s exit turns on `--as-of` (status contradictions as ERRORs on a past date) | no | `--as-of 2024-06-01`: `ERRORS 13`, exit 1 |
 | F-27 | S12 (4) | a proposal's claim (`clm-omnibus-four-gdpr-reforms`) graded "Primary law" on the Data Omnibus card | **yes** (a grade) | its only source is still `src-eurlex-data-omnibus-837`, direct; the card not re-rendered here |
-| F-28 | S12 (5) | the pre-adoption set has two homes | no | `js/regulatory-model.js:26` `PRE_ADOPTION` and `tools/register-audit.mjs:56` `PROCEDURAL_STATES` |
+| F-28 | S12 (5) | the pre-adoption set has two homes | no | `js/regulatory-model.js:26` `PRE_ADOPTION` and `tools/register-audit.mjs:56` `PROCEDURAL_STATES` — **Closed, `343dd69`** (v2 Session 18) |
 | F-29 | S12 (6) | M-11 and M-13 would fire on `rel-dsa-copyright-dsm-defers`; M-16 has no `basis` field | no | not implemented (V2C-13) |
-| F-30 | S12 (7) | `js/interactions.js` header: "Seventeen edges are recorded" (there are 40) | no (a comment) | `js/interactions.js:18` unchanged |
+| F-30 | S12 (7) | `js/interactions.js` header: "Seventeen edges are recorded" (there are 40) | no (a comment) | `js/interactions.js:18` unchanged — **Closed, `ce69b60`** (v2 Session 18) |
 
 **Grouped for question 4:** the rules' wording (F-02, F-03, F-04, F-12, F-13, F-14, F-17, F-19, F-20, F-23, F-24);
 the rules' outcomes and conditions (F-05, F-12, F-24 — these are also Phase 5's material, §6); the vocabulary

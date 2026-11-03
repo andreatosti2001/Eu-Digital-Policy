@@ -60,7 +60,7 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2022/2065, not an official text; Arts. 14 and 19 (same URL pattern) read on 2026-09-26. Art. 14(4): providers of intermediary services 'shall act in a diligent, objective and proportionate manner' in applying and enforcing restrictions, 'with due regard to the rights and legitimate interests of all parties involved, including the fundamental rights of the recipients of the service'. Art. 19: Section 3 (online platforms), except Art. 24(3), does not apply to micro or small enterprises (and for 12 months after they lose that status), but does apply to any provider designated a VLOP under Art. 33. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "note": "Privately published reproduction of Regulation (EU) 2022/2065, not an official text; Arts. 14 and 19 (same URL pattern) read on 2026-09-26. Art. 14(4): providers of intermediary services 'shall act in a diligent, objective and proportionate manner' in applying and enforcing restrictions, 'with due regard to the rights and legitimate interests of all parties involved, including the fundamental rights of the recipients of the service'. Art. 19: Section 3 (online platforms), except Art. 24(3), does not apply to micro or small enterprises (and for 12 months after they lose that status), but does apply to any provider designated a VLOP under Art. 33. Cited because EUR-Lex returns HTTP 202 with no body to this site's requests.",
       "reproduces": "src-eurlex-dsa"
     },
     {
@@ -131,7 +131,7 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published explorer of Regulation (EU) 2024/1689, marking the Digital Omnibus amendments; not an official text. Art. 2 and Art. 4 pages (same URL pattern) read on 2026-09-26. Art. 2(3): the Regulation does not apply to AI systems where and in so far as they are placed on the market, put into service, or used with or without modification exclusively for military, defence or national security purposes. Art. 4(1), as amended: providers and deployers of AI systems shall take measures to support the development of AI literacy of their staff and others operating AI on their behalf, without being required to guarantee any specific level; new Art. 4(2)-(3) task the Commission, Member States and the Board with supporting it. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "note": "Privately published explorer of Regulation (EU) 2024/1689, marking the Digital Omnibus amendments; not an official text. Art. 2 and Art. 4 pages (same URL pattern) read on 2026-09-26. Art. 2(3): the Regulation does not apply to AI systems where and in so far as they are placed on the market, put into service, or used with or without modification exclusively for military, defence or national security purposes. Art. 4(1), as amended: providers and deployers of AI systems shall take measures to support the development of AI literacy of their staff and others operating AI on their behalf, without being required to guarantee any specific level; new Art. 4(2)-(3) task the Commission, Member States and the Board with supporting it. Cited because EUR-Lex returns HTTP 202 with no body to this site's requests.",
       "reproduces": "src-eurlex-ai-act"
     },
     {
@@ -146,7 +146,7 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published explorer of Regulation (EU) 2024/1689 marking the Digital Omnibus amendments; not an official text. Read on 2026-09-26. Art. 113: applies from 2 August 2026; point (b) applies Chapter V and related chapters from 2 August 2025 'with the exception of Article 101'. Art. 101(1): the Commission may fine GPAI model providers up to 3% of worldwide turnover or EUR 15 000 000, whichever is higher. Art. 111(2): providers and deployers of high-risk AI systems intended to be used by public authorities shall comply by 2 August 2030. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "note": "Privately published explorer of Regulation (EU) 2024/1689 marking the Digital Omnibus amendments; not an official text. Read on 2026-09-26. Art. 113: applies from 2 August 2026; point (b) applies Chapter V and related chapters from 2 August 2025 'with the exception of Article 101'. Art. 101(1): the Commission may fine GPAI model providers up to 3% of worldwide turnover or EUR 15 000 000, whichever is higher. Art. 111(2): providers and deployers of high-risk AI systems intended to be used by public authorities shall comply by 2 August 2030. Cited because EUR-Lex returns HTTP 202 with no body to this site's requests.",
       "reproduces": "src-eurlex-ai-act"
     },
     {
@@ -175,7 +175,7 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2023/2854, not an official text; the article index and the Art. 1 and Art. 50 pages (Data_Act_Article_N.html) read on 2026-09-26. Index: Chapter VI 'Switching between data processing services' is Arts. 23-31 (nine articles); the Regulation has fifty. Art. 1(2): covers personal and non-personal data. Art. 1(5): without prejudice to data-protection law; in a conflict, Union or national data-protection law prevails. Art. 50: applies from 12 September 2025; Art. 3(1) applies to connected products and related services placed on the market after 12 September 2026; Chapter IV applies to contracts concluded after 12 September 2025, and from 12 September 2027 to contracts concluded on or before that date if of indefinite duration or due to expire at least 10 years from 11 January 2024. No equivalent provision for Chapter VI. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "note": "Privately published reproduction of Regulation (EU) 2023/2854, not an official text; the article index and the Art. 1 and Art. 50 pages (Data_Act_Article_N.html) read on 2026-09-26. Index: Chapter VI 'Switching between data processing services' is Arts. 23-31 (nine articles); the Regulation has fifty. Art. 1(2): covers personal and non-personal data. Art. 1(5): without prejudice to data-protection law; in a conflict, Union or national data-protection law prevails. Art. 50: applies from 12 September 2025; Art. 3(1) applies to connected products and related services placed on the market after 12 September 2026; Chapter IV applies to contracts concluded after 12 September 2025, and from 12 September 2027 to contracts concluded on or before that date if of indefinite duration or due to expire at least 10 years from 11 January 2024. No equivalent provision for Chapter VI. Cited because EUR-Lex returns HTTP 202 with no body to this site's requests.",
       "reproduces": "src-eurlex-data-act"
     },
     {
@@ -260,7 +260,7 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Directive (EU) 2022/2555, not an official text; Arts. 20 and 32 (same URL pattern) read on 2026-09-26. Art. 20(1): management bodies of essential and important entities approve the Art. 21 risk-management measures, oversee their implementation and can be held liable for infringements by the entities of that Article. Art. 32(6): Member States ensure that natural persons responsible for or representing an essential entity can be held liable for breach of their duties to ensure compliance. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "note": "Privately published reproduction of Directive (EU) 2022/2555, not an official text; Arts. 20 and 32 (same URL pattern) read on 2026-09-26. Art. 20(1): management bodies of essential and important entities approve the Art. 21 risk-management measures, oversee their implementation and can be held liable for infringements by the entities of that Article. Art. 32(6): Member States ensure that natural persons responsible for or representing an essential entity can be held liable for breach of their duties to ensure compliance. Cited because EUR-Lex returns HTTP 202 with no body to this site's requests.",
       "reproduces": "src-eurlex-nis2"
     },
     {
@@ -345,7 +345,7 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2024/2847, not an official text; read on 2026-09-26. Art. 71(2): applies from 11 December 2027; Article 14 from 11 September 2026; Chapter IV (Articles 35 to 51) from 11 June 2026. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "note": "Privately published reproduction of Regulation (EU) 2024/2847, not an official text; read on 2026-09-26. Art. 71(2): applies from 11 December 2027; Article 14 from 11 September 2026; Chapter IV (Articles 35 to 51) from 11 June 2026. Cited because EUR-Lex returns HTTP 202 with no body to this site's requests.",
       "reproduces": "src-eurlex-cra"
     },
     {
@@ -1102,7 +1102,7 @@
       "published": "2026-01-12",
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Paywalled; only the summary was read: Meta Platforms Ireland and TikTok Technology are facing appeals by the European Commission, as two documents in the Official Journal of the European Union showed. The Official Journal notices themselves (and their case numbers) could not be retrieved: EUR-Lex returns HTTP 202 with no body in this environment and CURIA's case search reported 'temporarily unavailable' on 2026-09-26."
+      "note": "Paywalled; only the summary was read: Meta Platforms Ireland and TikTok Technology are facing appeals by the European Commission, as two documents in the Official Journal of the European Union showed. The Official Journal notices themselves (and their case numbers) could not be retrieved: EUR-Lex returns HTTP 202 with no body to this site's requests and CURIA's case search reported 'temporarily unavailable' on 2026-09-26."
     },
     {
       "id": "src-ec-x-fine-2025",
@@ -1508,7 +1508,7 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text. Art. 2(2) lists as core platform services (a) online intermediation, (b) search engines, (c) social networking, (d) video-sharing, (e) number-independent interpersonal communications, (f) operating systems, (g) web browsers, (h) virtual assistants, (i) cloud computing services and (j) online advertising; generative AI is not listed. Cited because EUR-Lex returns HTTP 202 with no body in this environment; to be replaced by src-eurlex-dma once the consolidated text can be read.",
+      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text. Art. 2(2) lists as core platform services (a) online intermediation, (b) search engines, (c) social networking, (d) video-sharing, (e) number-independent interpersonal communications, (f) operating systems, (g) web browsers, (h) virtual assistants, (i) cloud computing services and (j) online advertising; generative AI is not listed. Cited because EUR-Lex returns HTTP 202 with no body to this site's requests; to be replaced by src-eurlex-dma once the consolidated text can be read.",
       "reproduces": "src-eurlex-dma"
     },
     {
@@ -1523,7 +1523,7 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text; one page per article (same URL pattern, Digital_Markets_Act_Article_N.html), each read on 2026-09-26; the URL recorded is Art. 38's. Art. 11 'Reporting': a compliance report within 6 months of designation, updated at least annually. Art. 13 'Anti-circumvention'. Art. 14 'Obligation to inform about concentrations'. Art. 15 'Obligation of an audit': an independently audited description of consumer-profiling techniques. Art. 38(7): a national competition authority may, on its own initiative, investigate possible non-compliance with Arts. 5, 6 and 7 on its territory, and reports its findings 'to support the Commission in its role as sole enforcer'; the Commission's opening of proceedings under Art. 20 ends that possibility. Art. 39 'Cooperation with national courts': national courts in proceedings for the application of the Regulation may ask the Commission for information or its opinion, and may not decide against a Commission decision. Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text; one page per article (same URL pattern, Digital_Markets_Act_Article_N.html), each read on 2026-09-26; the URL recorded is Art. 38's. Art. 11 'Reporting': a compliance report within 6 months of designation, updated at least annually. Art. 13 'Anti-circumvention'. Art. 14 'Obligation to inform about concentrations'. Art. 15 'Obligation of an audit': an independently audited description of consumer-profiling techniques. Art. 38(7): a national competition authority may, on its own initiative, investigate possible non-compliance with Arts. 5, 6 and 7 on its territory, and reports its findings 'to support the Commission in its role as sole enforcer'; the Commission's opening of proceedings under Art. 20 ends that possibility. Art. 39 'Cooperation with national courts': national courts in proceedings for the application of the Regulation may ask the Commission for information or its opinion, and may not decide against a Commission decision. Cited because EUR-Lex returns HTTP 202 with no body to this site's requests.",
       "reproduces": "src-eurlex-dma"
     },
     {
@@ -1538,7 +1538,7 @@
       "published": null,
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text; read on 2026-09-26. Art. 54: the Regulation 'shall apply from 2 May 2023', with Art. 3(6)-(7) and Arts. 40 and 46-50 from 1 November 2022 and Arts. 42-43 from 25 June 2023 (postponed to the application date if earlier). Cited because EUR-Lex returns HTTP 202 with no body in this environment.",
+      "note": "Privately published reproduction of Regulation (EU) 2022/1925, not an official text; read on 2026-09-26. Art. 54: the Regulation 'shall apply from 2 May 2023', with Art. 3(6)-(7) and Arts. 40 and 46-50 from 1 November 2022 and Arts. 42-43 from 25 June 2023 (postponed to the application date if earlier). Cited because EUR-Lex returns HTTP 202 with no body to this site's requests.",
       "reproduces": "src-eurlex-dma"
     },
     {
@@ -1931,7 +1931,7 @@
       "published": "2026-01-16",
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "States that Regulation (EU) 2025/2518 was adopted 26 November 2025, published in Official Journal L 2025/2518 of 12 December 2025, entered into force 1 January 2026 and applies from 2 April 2027; regular investigations are expected to conclude within 15 months (12 for simplified procedures). EUR-Lex itself could not be retrieved in this environment (returns HTTP 202 with no body on every attempt); this specialist academic-institute newsletter is cited instead, pending direct confirmation of the consolidated text."
+      "note": "States that Regulation (EU) 2025/2518 was adopted 26 November 2025, published in Official Journal L 2025/2518 of 12 December 2025, entered into force 1 January 2026 and applies from 2 April 2027; regular investigations are expected to conclude within 15 months (12 for simplified procedures). EUR-Lex itself could not be retrieved by this site (returns HTTP 202 with no body on every attempt); this specialist academic-institute newsletter is cited instead, pending direct confirmation of the consolidated text."
     },
     {
       "id": "src-mlex-2026-amazon-annulment",
@@ -2113,7 +2113,7 @@
       "published": "2026-01-21",
       "accessed": "2026-09-26",
       "language": "en",
-      "note": "Advocacy network's account, read 2026-09-26: the Polish President vetoed the draft law adapting Polish law to the DSA in January 2026 (press reports date it 9 January). The President's own announcement on prezydent.pl could not be read: the site served a Cloudflare challenge to every client in this environment."
+      "note": "Advocacy network's account, read 2026-09-26: the Polish President vetoed the draft law adapting Polish law to the DSA in January 2026 (press reports date it 9 January). The President's own announcement on prezydent.pl could not be read: the site served a Cloudflare challenge to every client used for this site's checks."
     },
     {
       "id": "src-300polityka-pl-dsa-2026",
@@ -2281,7 +2281,7 @@
       "published": "2026-10-01",
       "accessed": "2026-10-21",
       "language": "en",
-      "note": "Read in full 21 Oct 2026 through the Commission's press corner, with the thirteen earlier packages since the Hungarian amendments of March 2025: INF/25/503 (12 Mar 2025), INF/25/982 (7 May 2025), INF/25/1241 (18 Jun 2025), INF/25/1628 (17 Jul 2025), INF/25/2077 (8 Oct 2025), INF/25/2481 (21 Nov 2025), INF/25/2745 (11 Dec 2025), INF/26/115 (30 Jan 2026), INF/26/431 (11 Mar 2026), INF/26/720 (29 Apr 2026), INF/26/1084 (4 Jun 2026), INF/26/1376 (8 Jul 2026), INF/26/1380 (15 Jul 2026, transposition) and INF/26/1760 (1 Oct 2026). None of the fourteen mentions the AI Act, artificial intelligence, biometric identification or facial recognition. A package lists the Commission's KEY decisions of the cycle, not every one, so an absence here is partial evidence of an absence in the register; the register itself (ec.europa.eu/implementing-eu-law) answered HTTP 404 to its search page from this environment on 21 Oct 2026."
+      "note": "Read in full 21 Oct 2026 through the Commission's press corner, with the thirteen earlier packages since the Hungarian amendments of March 2025: INF/25/503 (12 Mar 2025), INF/25/982 (7 May 2025), INF/25/1241 (18 Jun 2025), INF/25/1628 (17 Jul 2025), INF/25/2077 (8 Oct 2025), INF/25/2481 (21 Nov 2025), INF/25/2745 (11 Dec 2025), INF/26/115 (30 Jan 2026), INF/26/431 (11 Mar 2026), INF/26/720 (29 Apr 2026), INF/26/1084 (4 Jun 2026), INF/26/1376 (8 Jul 2026), INF/26/1380 (15 Jul 2026, transposition) and INF/26/1760 (1 Oct 2026). None of the fourteen mentions the AI Act, artificial intelligence, biometric identification or facial recognition. A package lists the Commission's KEY decisions of the cycle, not every one, so an absence here is partial evidence of an absence in the register; the register itself (ec.europa.eu/implementing-eu-law) answered HTTP 404 to this site's request for its search page on 21 Oct 2026."
     },
     {
       "id": "src-euronews-magyar-2026",
@@ -2711,7 +2711,7 @@
       "published": "2025-10-06",
       "accessed": "2026-08-28",
       "language": "en",
-      "note": "The Parliament's Legislative Train file, which records that the AI Liability Directive was announced for withdrawal in the Commission Work Programme 2025 (COM(2025) 45, 11 Feb 2025, \"no foreseeable agreement\") and formally withdrawn by notice C/2025/5423 in the Official Journal on 6 October 2025. Retitled on 2026-09-26 (audit T-30): the record previously named the OJ notice, which has never been opened; the notice is on EUR-Lex (CELEX 52025XC05423), which returns HTTP 202 with no body in this environment, as did the Legislative Train page on 2026-09-26, so the accessed date is the original one. The ID keeps 'oj' because IDs are never renamed."
+      "note": "The Parliament's Legislative Train file, which records that the AI Liability Directive was announced for withdrawal in the Commission Work Programme 2025 (COM(2025) 45, 11 Feb 2025, \"no foreseeable agreement\") and formally withdrawn by notice C/2025/5423 in the Official Journal on 6 October 2025. Retitled on 2026-09-26 (audit T-30): the record previously named the OJ notice, which has never been opened; the notice is on EUR-Lex (CELEX 52025XC05423), which returns HTTP 202 with no body to this site's requests, as did the Legislative Train page on 2026-09-26, so the accessed date is the original one. The ID keeps 'oj' because IDs are never renamed."
     },
     {
       "id": "src-purtova-law-of-everything",

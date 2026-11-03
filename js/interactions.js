@@ -15,9 +15,9 @@
    and both call the same block builder, so a change to how an
    interaction reads happens once.
 
-   Nothing here invents a connection. Seventeen edges are recorded; the
-   view says seventeen and says that seventeen is what has been written
-   down, not what exists.
+   Nothing here invents a connection. The view counts the edges
+   relationships[] records and says that the count is what has been
+   written down, not what exists.
    ============================================================ */
 
 import { load, index, label as taxLabel, note as taxNote, renderError } from './data.js';

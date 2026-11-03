@@ -188,6 +188,7 @@ export const INSTRUMENT_TITLE = Object.freeze({
   'ai-omnibus': { lead: 'Digital Omnibus on AI', facets: [['what it changes in the AI Act', 'AI Act'], ['key dates', 'Key dates']] },
   'data-omnibus': { lead: 'Digital Omnibus proposal', facets: [['GDPR amendments', 'GDPR'], ['status', 'Status']] },
   pld: { lead: 'Product Liability Directive', facets: [['software', 'software'], ['AI', '\\bAI\\b'], ['transposition', 'transposition']] },
+  ehds: { lead: 'European Health Data Space (EHDS)', facets: [['key provisions', 'provision'], ['key dates', 'Key dates']] },
 });
 
 const joinFacets = (xs) => xs.length <= 1 ? xs.join('') : xs.slice(0, -1).join(', ') + ' and ' + xs[xs.length - 1];
@@ -221,8 +222,11 @@ function instrumentTitle(inst, ix, db) {
 const plural = F.plural;
 
 /* lower-case a leading capital unless it opens an acronym ("ICT risk
-   management", "VLOP"), so a label or a status runs on mid-sentence */
-const lowerLead = (s) => /^[A-Z](?![A-Z0-9])/.test(s) ? s[0].toLowerCase() + s.slice(1) : s;
+   management", "VLOP"), so a label or a status runs on mid-sentence; a
+   label whose second word is also a capitalised word ("Member State") is
+   a name and keeps its capitals (V2C-30) */
+const lowerLead = (s) => /^[A-Z](?![A-Z0-9])/.test(s) && !/^[A-Z][a-z]* [A-Z][a-z]/.test(s)
+  ? s[0].toLowerCase() + s.slice(1) : s;
 
 /* What a searcher asks first leads — who it binds, what it requires, when,
    and what non-compliance costs — because a result is judged on the first

@@ -23,11 +23,6 @@ body[data-theme="light"]{
 
 /* ---------------------------------------------------------- shared page shell */
 .tool-shell{max-width:1120px;margin:0 auto;padding:0 32px 110px}
-.tool-top{display:flex;flex-wrap:wrap;gap:14px;align-items:baseline;padding:26px 0 18px;border-bottom:1px solid var(--line)}
-.tool-top a.back{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--mech);text-decoration:none}
-.tool-top a.back:hover{color:var(--live)}
-.tool-top .tt-brand{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--tool-meta)}
-.tool-top .tt-sp{margin-left:auto}
 .tool-head{padding:52px 0 8px}
 .tool-head h1{font-family:var(--display);font-weight:400;font-size:clamp(32px,5.6vw,56px);line-height:1.05;letter-spacing:-.015em;margin:0;color:var(--paper);text-wrap:balance;max-width:20ch}
 .tool-head .lede{font-family:var(--body);font-size:17px;line-height:1.6;color:var(--paper-dim);max-width:64ch;margin:18px 0 0}
@@ -476,10 +471,6 @@ body[data-theme="light"]{
 }
 .gg-yr{color:var(--paper-faint);font-size:9px;margin-left:3px}
 
-/* The section links became a <nav> landmark. display:contents keeps them as
-   direct flex children of the header, so the landmark is added without moving
-   a single pixel. */
-.tool-top > nav,.bib-top > nav{display:contents}
 
 /* Skip link: the first thing in the tab order, visible only when focused.
    Without it a keyboard reader tabs through the whole header on every page. */
@@ -508,14 +499,6 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,
 summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--live);outline-offset:2px}
 .gloss:focus-visible{outline:2px solid var(--live);outline-offset:1px}
 
-/* Section links sat at 17px tall — under the 24px minimum target size.
-   inline-flex with a min-height grows the target without moving the
-   baseline the header aligns on. */
-.tool-top a.back,.bib-top a.back,.tool-top .themebtn,.bib-top .themebtn{
-  display:inline-flex;align-items:center;min-height:24px}
-@media (pointer:coarse){
-  .tool-top a.back,.bib-top a.back{min-height:32px}
-}
 
 /* ------------------------------------------------------------------
    Target size, WCAG 2.2 §2.5.8 (minimum, 24×24).
@@ -613,41 +596,14 @@ body[data-theme="light"]{
 .rota-type[hidden]{display:none}
 
 /* ============================================================
-   VISUAL REFINEMENT — tool-page chrome on small screens
+   VISUAL REFINEMENT — tool pages on small screens
 
-   The header wrapped onto four lines and consumed roughly 400px
-   before the page's own title, on a viewport 844px tall. Nearly
-   half the first screen was navigation.
-
-   Below 760px the section links become one horizontally scrollable
-   strip — the pattern every reader already knows from a tab bar —
-   and the brand line, which repeats what the tab already says,
-   steps out of the way.
+   The rules here once also styled a hand-written .tool-top / .bib-top
+   header; js/shell.js's chrome replaced it on every page, and its 17
+   rules were removed on 3 Nov 2026 (V2C-36).
    ============================================================ */
 @media (max-width:760px){
   .tool-shell,.bib-shell{padding-left:18px;padding-right:18px}
-  .tool-top,.bib-top{
-    flex-wrap:nowrap;gap:0;align-items:center;
-    padding:10px 0 0;border-bottom:0;
-    position:sticky;top:0;z-index:60;
-    background:var(--ink-0);
-  }
-  .tool-top .tt-brand,.bib-top .bt-brand{display:none}
-  .tool-top .tt-sp,.bib-top .bt-sp{display:none}
-  .tool-top > a.back:first-of-type,.bib-top > a.back:first-of-type{
-    flex:none;padding-right:12px;margin-right:10px;border-right:1px solid var(--line)}
-  .tool-top > nav,.bib-top > nav{
-    display:flex;flex:1 1 auto;min-width:0;gap:16px;
-    overflow-x:auto;-webkit-overflow-scrolling:touch;
-    scroll-snap-type:x proximity;
-    /* the strip fades at its right edge so it reads as scrollable */
-    -webkit-mask-image:linear-gradient(to right,#000 88%,transparent);
-            mask-image:linear-gradient(to right,#000 88%,transparent);
-  }
-  .tool-top > nav a.back,.bib-top > nav a.back{white-space:nowrap;scroll-snap-align:start}
-  .tool-top .themebtn,.bib-top .themebtn{flex:none;margin-left:10px;padding:7px 10px}
-  .tool-top .themebtn{min-width:44px;justify-content:center}
-
   /* the page's own title is the thing the reader came for */
   .tool-head,.bib-head{padding:26px 0 4px}
   .tool-head h1,.bib-head h1{font-size:clamp(27px,8.4vw,38px);line-height:1.08;max-width:none}

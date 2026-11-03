@@ -382,7 +382,7 @@ function appliesSection(inst) {
   }).join('');
   return section('applies', H.applies,
     '<p>' + rules.length + ' rule' + (rules.length === 1 ? '' : 's') +
-    ' in the dataset turn on this instrument. They are conditions, not a test: the engine ranks them ' +
+    (rules.length === 1 ? ' in the dataset turns' : ' in the dataset turn') + ' on this instrument. They are conditions, not a test: the engine ranks them ' +
     'against what you actually answer, and downgrades rather than excludes where a question is left blank.</p>' +
     '<div class="ip-rules">' + rows + '</div>' +
     '<p class="src-line"><a href="' + esc(to('applies.html?instrument=' + inst.id)) + '">Run these against your situation →</a></p>');

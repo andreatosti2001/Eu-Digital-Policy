@@ -34,6 +34,7 @@
 import { index } from '../js/data.js';
 import { coverage, hasEntityPage } from '../js/routes.js';
 import { locatorQuality } from '../js/evidence-model.js';
+import { PRE_ADOPTION } from '../js/regulatory-model.js';
 
 /* The core records that existed on 25 Oct 2026, before a scope decision
    existed. Required of every core record added after it (M-04). */
@@ -53,8 +54,8 @@ export const DISPOSITIONS = Object.freeze(['included', 'excluded', 'watched']);
 /* A procedural stage, or a withdrawal, may rest on a tier-2 procedure file;
    every other state is a fact of an adopted text and needs tier 1
    (docs/v2-design/status-labels.json x-verification; rule S-03). */
-export const PROCEDURAL_STATES = Object.freeze(['status:proposal', 'status:parliament-position',
-  'status:council-position', 'status:trilogue', 'status:political-agreement', 'status:stalled', 'status:withdrawn']);
+/* one home: the set js/regulatory-model.js already exports (F-28) */
+export const PROCEDURAL_STATES = Object.freeze([...PRE_ADOPTION]);
 
 const ISO = /^\d{4}-\d{2}-\d{2}$/;
 const arr = (x) => (Array.isArray(x) ? x : []);
