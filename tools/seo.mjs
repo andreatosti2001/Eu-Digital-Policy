@@ -57,7 +57,7 @@ export { BASE, AUTHOR, LICENCE };
    here: the site already publishes them. */
 export const SITE = Object.freeze({
   name: 'EU Digital Policy',
-  alternateName: ['EUDigitalPolicy', 'eudigitalpolicy.eu'],
+  alternateName: ['Eu Digital Policy', 'eudigitalpolicy.eu'],
   tagline: 'The European Legal Framework for the Digital World',
   locale: 'en',
   ogLocale: 'en_GB',
