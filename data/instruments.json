@@ -1079,7 +1079,7 @@
         {
           "id": "ai-act:art-55",
           "number": "55",
-          "heading": "Obligations for providers of general-purpose AI models with systemic risk",
+          "heading": "Obligations of providers of general-purpose AI models with systemic risk",
           "summary": "Model evaluation against standardised protocols including documented adversarial testing; assessment and mitigation of Union-level systemic risks; tracking and prompt reporting of serious incidents; adequate cybersecurity protection.",
           "obligation_on": [
             "actor:gpai-provider"
