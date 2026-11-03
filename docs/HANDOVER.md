@@ -1,8 +1,8 @@
 # HANDOVER
 
-**Last updated:** v2 Session 20, checkpoint 20.1 (3 November 2026): Phase 4 opened on the author's word, E-1…E-6 measured,
-the status lines reworded as approved. **Awaiting the author's approval at checkpoint 20.1; item 20.2 (the document of
-4.1) has not begun.**
+**Last updated:** v2 Session 20, final checkpoint (3 November 2026): 20.1 approved (Phase 4 opened on the author's word,
+E-1…E-6 measured, the status lines reworded as approved); 20.2 written and rehearsed (`docs/RULE-MAINTENANCE.md`).
+**Awaiting the author's approval at the final checkpoint, then the pull-request question.**
 **Branch:** `claude/v2-session-20-phase-4` (no branch was assigned by the environment), cut from `main` at `40d4dd1`.
 
 ## Branch register — 3 November 2026 (v2 Session 20)
@@ -13,7 +13,72 @@ the status lines reworded as approved. **Awaiting the author's approval at check
   (left open by the author's decision). The prompt's own branch is merged.
 - The clone was shallow at the start (`git rev-parse --is-shallow-repository` → `true`); `git fetch --unshallow` was run
   before any suite.
-- Disposition: not pushed yet. The pull-request question is asked at the final checkpoint (20.2).
+- Disposition: not pushed yet. The pull-request question is asked after the final checkpoint's approval; nothing is pushed
+  to the branch after a pull request is opened.
+
+## v2 Session 20 — final checkpoint (20.2: item 4.1, the rule-maintenance process)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8) and the commits
+
+| Item | Answer | §8 | Change |
+|---|---|---|---|
+| 20.1 checkpoint | "Approve (Recommended)" | `c98e32a` | — |
+| Q3 · name and structure | "RULE-MAINTENANCE.md, as proposed (Recommended)" | `1c403dd` | `1e1c917` |
+| Q4 · the closure without a change | "Describe today's practice, no new field (Recommended)" | `b643ca4` | `1e1c917` |
+| Q5 · where the rehearsal's account lives | "In the document, HANDOVER points to it (Recommended)" | `d7a997c` | `1e1c917` |
+
+`node tools/commit-evidence.mjs 40d4dd1 HEAD`: every commit "changes no published file".
+
+### The document and the rehearsal
+
+`docs/RULE-MAINTENANCE.md` (227 lines): the two prompts that start it (§0), then P-08 → P-13 as steps 1–6, each with
+who · trigger · action · level · trace · what no check sees, the order in one paragraph (§7), what it does not establish
+(§8), and the rehearsal's account (§9). **The account is in the document; this report only points to it.** Run: `node
+tools/evidence-audit.mjs --as-of 2027-03-26` and `node tools/freshness.mjs --as-of 2027-03-26`, both exit 0; T-12 names
+`ap-cra-01` only; `ap-cra-01` is one of 33 `RULE_STALE` that day.
+
+What the walk measured on a **scratch copy outside the repository** (real `data/` unchanged): setting `ap-cra-01`'s
+`last_verified` to 2027-03-26 and nothing else takes T-12 from 1 to 0 and `RULE_STALE` from 33 to 32 — **a bare date bump
+silences both prompts** — and makes two generated files stale (`sitemap.xml`, `instruments/cra/index.html`) so that
+`seo-audit.mjs` reports 8 errors until `node tools/_footer.mjs` is run. The control copy without the date change: every
+generated file current, 0 errors. Neither fact was in the sources; both are in the document.
+
+Not done, as the document says: no re-reading of the CRA or the EHDS, no rule or data file changed, no Cellar or SPARQL
+request, steps 3 and 6 not exercised on a real change. **No step of the document was shown wrong and none was
+corrected.** One unrelated probe of Cellar from this environment answered HTTP 400; not investigated.
+
+### Assumptions the author is asked to confirm (document §9)
+
+(1) When a reading could not be made (Cellar unreachable) the document says to leave `last_verified` where it is. That is
+drawn from "a silenced prompt is not a closure", not from a decision. (2) Whether the 33 rules are re-read on one day or
+over several is unstated. (3) The SPARQL query text is kept nowhere; the document gives the endpoint and the kinds of
+question only.
+
+### Counts, as of 2026-11-03, full clone, this tree (`1e1c917`)
+
+`validate`, `i18n-audit`, `design-qa`, `seo-audit` 0 errors; `evidence-audit` 0 errors; `freshness` exit 0; `tools/selftest.mjs`
+124 of 124; the 25 suites **1331 tests, 1330 pass, 0 fail, 1 skipped** (the Control Room's `::1` test), as before the
+document; browser suite `--require-browser` 343 pass · 0 fail · 1 undecidable; adversarial gate 65 failed safely · 0
+succeeded · 3 partial · 1 undecidable; schemas, Control Room `boundary` and `routes` exit 0. **Readiness was run on the
+tree at checkpoint 20.1 (refused, 17 of 20 mandatory conditions pass) and not re-read to its end after the document was
+added.** `git diff --stat origin/main`: `AGENTS.md`, `docs/HANDOVER.md`, `docs/PHASE-4-SETUP.md`, `docs/ROADMAP-v2.md`,
+`docs/RULE-MAINTENANCE.md` — nothing outside `docs/` but `AGENTS.md`.
+
+### Findings, none corrected
+
+The two stale lines of 20.1 (V2-CLOSURE N1/B5; ROADMAP §4's Phase 4 bullet) stand, as decided. Still true: "EUDigitalPolicy"
+in the Session 19 report and the prompt's register entry; the three open findings of Session 18 were not re-measured. New:
+`docs/RULE-MAINTENANCE.md` is not listed in `AGENTS.md`'s reading table (the author's decision, question 3) and so is
+reachable only from this report and the roadmap row; `evidence-audit` carries `STATUS_PREDATES_MILESTONE instruments/dma`
+as of today.
+
+### The checklist (20.0–20.2)
+
+| Point | Written | By hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 20.0 Q3–Q5 | §8 rows `1c403dd`, `b643ca4`, `d7a997c` | `grep -n "v2 Session 20" docs/ROADMAP-v2.md` | — | every question answered, in the author's words |
+| 20.2 | `1e1c917`: `docs/RULE-MAINTENANCE.md` | read §1–§6: each step names level and trace; rerun the two `--as-of 2027-03-26` commands; `git diff -- data` empty | none reads the document | the document exists, every step names level and trace, one rehearsal on `ap-cra-01`, no rule changed |
+| 20.2 report | this section | read it against §8 | — | the author's approval, then the PR question |
 
 ## v2 Session 20 — checkpoint 20.1 (the opening of Phase 4)
 
@@ -63,7 +128,7 @@ applicability/ap-cra-01` and no other rule (18 warnings that day, 12 today, as `
 |---|---|---|---|---|
 | 20.0 Q1–Q2 | §8 rows `abf501f`, `4510d1a` | `grep -n "v2 Session 20" docs/ROADMAP-v2.md` | — | Phase 4 opened by a §8 row in the author's words |
 | 20.1 | `9937232`; this report | `git diff --stat origin/main`; rerun the commands in the E-5 row | the suites listed | E-1…E-6 measured |
-| 20.2 | not begun | — | — | after this checkpoint's approval |
+| 20.2 | written after this checkpoint: see the final checkpoint above | — | — | — |
 
 ## Branch register — 3 November 2026 (the prompt of v2 Session 20)
 
