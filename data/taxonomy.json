@@ -197,14 +197,14 @@
       "label": "Essential entity",
       "definition_ref": null,
       "parent": null,
-      "note": "NIS2 Annex I."
+      "note": "NIS2 Art. 3(1), read 3 Nov 2026: an entity of a type in Annex I that exceeds the ceilings for medium-sized enterprises (point (a)); qualified trust service providers, top-level domain name registries and DNS service providers, regardless of size (point (b)); and the entities points (c) to (g) list, including those a Member State identifies as essential."
     },
     {
       "id": "actor:important-entity",
       "label": "Important entity",
       "definition_ref": null,
       "parent": null,
-      "note": "NIS2 Annex II."
+      "note": "NIS2 Art. 3(2), read 3 Nov 2026: an entity of a type in Annex I or II that does not qualify as an essential entity under Art. 3(1), including entities a Member State identifies as important."
     },
     {
       "id": "actor:critical-entity",
