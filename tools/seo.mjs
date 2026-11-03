@@ -51,12 +51,14 @@ export { BASE, AUTHOR, LICENCE };
 
    "EU Digital Policy" is what the chrome, the README and the repository
    already call the project, and it is short enough to survive a
-   truncated result. The editorial title is kept, as the brief's own
-   <h1> and as the site's alternate name. Neither is invented here: both
-   are strings the site already publishes. */
+   truncated result. The editorial title is kept as the brief's own <h1>
+   and as the tagline of the homepage title and the social card; the
+   alternate names are the two forms a reader may type. Neither is invented
+   here: the site already publishes them. */
 export const SITE = Object.freeze({
   name: 'EU Digital Policy',
-  alternateName: 'The European Legal Framework for the Digital World',
+  alternateName: ['EUDigitalPolicy', 'eudigitalpolicy.eu'],
+  tagline: 'The European Legal Framework for the Digital World',
   locale: 'en',
   ogLocale: 'en_GB',
   image: { path: 'img/og/site.png', width: 1200, height: 630,
@@ -90,7 +92,7 @@ const LANG_LABEL = Object.freeze({ it: 'Italiano', fr: 'Français', es: 'Españo
 export const TOP_PAGES = Object.freeze([
   {
     file: 'index.html', path: '', schema: 'WebPage',
-    title: 'EU Digital Policy — The European Legal Framework for the Digital World',
+    title: SITE.name + ' | ' + SITE.tagline,
     description: 'An evidence-graded analysis of the EU digital rulebook — GDPR, DSA, DMA, AI Act, Data Act and the cyber layer: structure, key provisions, compliance consequences and the case against each.',
     records: ['claims', 'instruments', 'timeline', 'enforcement'],
   },
@@ -450,6 +452,7 @@ export function socialMeta(route, ctx) {
   if (route.canonical) lines.push(`<meta content="${route.canonical}" property="og:url"/>`);
   lines.push(
     `<meta content="${attr(SITE.name)}" property="og:site_name"/>`,
+    `<meta content="${attr(SITE.name)}" name="application-name"/>`,
     `<meta content="${route.ogLocale || SITE.ogLocale}" property="og:locale"/>`,
   );
   if (img) {
@@ -497,7 +500,9 @@ export function jsonLd(route, { ix, routes } = {}) {
     page.primaryImageOfPage = { '@type': 'ImageObject', url: BASE + route.image.path,
       width: route.image.width, height: route.image.height };
   }
-  const graph = [site, page];
+  /* the WebSite node stands on the homepage only; every other page refers to
+     it by @id through page.isPartOf (v2 Session 19, 19.0 question 2b) */
+  const graph = route.url === BASE ? [site, page] : [page];
   if (route.breadcrumb && route.breadcrumb.length) {
     page.breadcrumb = { '@id': route.url + '#breadcrumb' };
     graph.push({ '@type': 'BreadcrumbList', '@id': route.url + '#breadcrumb',

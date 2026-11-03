@@ -1056,8 +1056,8 @@ test('S4b · the author, the licence, the Article and the FAQ are held to what t
       .replace(/"headline":"[^"]*"/, '"headline":"Something else"'));
     /* an FAQ entry that is not in the route model */
     edit(dir, 'instruments/dsa/index.html', (s) => s.replace('"mainEntity":[', '"mainEntity":[{"@type":"Question","name":"Is it good?","acceptedAnswer":{"@type":"Answer","text":"Yes."}},'));
-    /* an author the page does not name */
-    edit(dir, 'applies.html', (s) => s.replace(/<body[\s\S]*$/, (b) => b.replaceAll('Andrea Tosti', 'the author')));
+    /* an author the page does not name (the WebSite node, which names the author, stands on the homepage only: v2 Session 19) */
+    edit(dir, 'index.html', (s) => s.replace(/<body[\s\S]*$/, (b) => b.replaceAll('Andrea Tosti', 'the author')));
     const errs = seoAudit(dir).errors.join('\n');
     assert.match(errs, /instruments\/dma\/index\.html: FAQ answer "Who it binds: Gatekeeper" is not on the page/);
     assert.match(errs, /instruments\/dma\/index\.html: JSON-LD names a licence the page does not link with rel="license"/);
@@ -1065,7 +1065,21 @@ test('S4b · the author, the licence, the Article and the FAQ are held to what t
     assert.match(errs, /instruments\/gdpr\/index\.html: JSON-LD datePublished "27 Sep 2026" is not a YYYY-MM-DD date/);
     assert.match(errs, /instruments\/gdpr\/index\.html: Article headline "Something else" is not the page's <h1>/);
     assert.match(errs, /instruments\/dsa\/index\.html: the FAQ in the structured data is not the route model's/);
-    assert.match(errs, /applies\.html: JSON-LD names Andrea Tosti as author and the page does not/);
+    assert.match(errs, /index\.html: JSON-LD names Andrea Tosti as author and the page does not/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('S4d · the WebSite node stands on the homepage only, and every other page refers to it by @id', () => {
+  const dir = siteCopy('seo-website');
+  try {
+    /* a WebSite node planted on a subpage, and the reference to #site cut from another */
+    edit(dir, 'applies.html', (s) => s.replace('"@graph":[', '"@graph":[{"@type":"WebSite","@id":"https://eudigitalpolicy.eu/#site","name":"EU Digital Policy","url":"https://eudigitalpolicy.eu/"},'));
+    edit(dir, 'enforcement.html', (s) => s.replace('"isPartOf":{"@id":"https://eudigitalpolicy.eu/#site"}', '"isPartOf":{"@id":"https://example.org/#site"}'));
+    edit(dir, 'index.html', (s) => s.replace('"alternateName":["EUDigitalPolicy","eudigitalpolicy.eu"]', '"alternateName":"EUDigitalPolicy"'));
+    const errs = seoAudit(dir).errors.join('\n');
+    assert.match(errs, /applies\.html: WebSite node on a page that is not the homepage/);
+    assert.match(errs, /enforcement\.html: page node does not refer to the site by @id/);
+    assert.match(errs, /index\.html: WebSite node missing or not the site identity/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 

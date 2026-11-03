@@ -330,9 +330,16 @@ export function audit(root = ROOT) {
         if (typeof v === 'string' && /^https?:\/\//.test(v) && v.startsWith(new URL(BASE).origin) && !v.startsWith(BASE)) err(f, `JSON-LD ${k} ${v} is outside the site`);
       }
     });
-    const site = graph.find((x) => x['@type'] === 'WebSite');
-    if (!site || site.name !== SITE.name || site.url !== BASE) err(f, 'WebSite node missing or not the site identity');
+    const sites = graph.filter((x) => x['@type'] === 'WebSite');
     const pg = graph.find((x) => x['@id'] === route.url + '#page');
+    if (route.url === BASE) {
+      const site = sites[0];
+      if (sites.length !== 1 || site.name !== SITE.name || site.url !== BASE
+        || JSON.stringify(site.alternateName) !== JSON.stringify(SITE.alternateName)) err(f, 'WebSite node missing or not the site identity');
+    } else {
+      if (sites.length) err(f, 'WebSite node on a page that is not the homepage (it stands there only; v2 Session 19)');
+      if (!pg || !pg.isPartOf || pg.isPartOf['@id'] !== BASE + '#site') err(f, 'page node does not refer to the site by @id (isPartOf #site)');
+    }
     if (!pg) { err(f, 'no page node for this URL'); continue; }
     if (pg['@type'] !== route.schema) err(f, `page type ${pg['@type']} ≠ route ${route.schema}`);
     if (pg.url !== p.canonical[0]) err(f, 'JSON-LD page url differs from the canonical');
