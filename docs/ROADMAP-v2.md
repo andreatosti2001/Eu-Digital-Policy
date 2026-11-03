@@ -3,9 +3,9 @@
 **Status: APPROVED by the author on 25 Oct 2026 (§8)**, with item 2.0 brought forward to v2 Session 2. Written in v2 Session 1, 25 Oct 2026, on
 `claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e`. **As of 3 Nov 2026: Phases 0, 1, 2
 and 3 are executed, each closed at a checkpoint in §8 (Phase 3 on its met entry condition and the 33
-rules, its open rows moved to named destinations); Phases 4 and 5 are not started. The v2 is open;
-Phase 4 is next, and opens on the author's word once its entry condition is met** (§8, v2 Session
-17.5; `docs/PHASE-3-AUDIT.md`, `docs/PHASE-4-SETUP.md`).
+rules, its open rows moved to named destinations); Phase 4 was opened by the author on 3 Nov 2026 on
+its met entry condition (§8, v2 Session 20, question 1), its first item, 4.1, not yet written; Phase 5
+is not started. The v2 is open** (§8, v2 Sessions 17.5 and 20; `docs/PHASE-3-AUDIT.md`, `docs/PHASE-4-SETUP.md`).
 Nothing is implemented without the author's approval, recorded in §8, by the author's word, and
 nowhere else.
 

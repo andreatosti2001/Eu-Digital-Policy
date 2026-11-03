@@ -2,8 +2,7 @@
 
 **Status: A DESIGN DOCUMENT; IT IMPLEMENTS NOTHING. DECIDED BY THE AUTHOR ON 3 NOV 2026 (§8, v2 Session 17.5).** Written in v2 Session 17.5,
 3 Nov 2026, on `claude/nifty-ride-kc0p4x`, on the author's scope (`docs/ROADMAP-v2.md` §8, "The scope of v2 Session
-17.5"). The name of this file is the prompt's proposal. **Phase 4 is not open**: opening it is the author's
-decision, and starting it is another session. D-4 is decided (the three names and §2.2 as drafted); D-5 is deferred
+17.5"). The name of this file is the prompt's proposal. **Phase 4 was opened by the author on 3 Nov 2026 (§8, v2 Session 20, question 1)**; its first item, 4.1 (§6), is not yet written. D-4 is decided (the three names and §2.2 as drafted); D-5 is deferred
 on §4's facts; §0 is read by principle; the entry condition (§5) and the first item (§6) are approved.
 
 **What governs it.** The brief (`docs/BRIEF-v2.md`): «Non aggiungere la Tier A/B/C come primo intervento. Prima di
@@ -33,7 +32,7 @@ Two readings are possible:
   process in the same way.
 
 This document inventories both, marks which is which (column *Made visible by*), and does not choose. It is asked as
-a premise of question 8 rather than assumed.
+a premise of question 8 rather than assumed. Decided by principle (§8, 17.5.0 question 8a).
 
 ---
 
@@ -59,7 +58,7 @@ establish*: measured in this repository today, not proposed. *Still a person's*:
 | P-12 | Regenerate the generated pages with `node tools/_footer.mjs` after a change to `data/` or an inline script | Phase 3 practice; older | a session | the regenerated files, git-tracked | **that it was not done**: `seo-audit.mjs` fails a stale page, CI fails, and `pages.yml` does not deploy (run 55, `d65e713`, 2 Nov 2026) | running it; deterministic, so nothing of judgement |
 | P-13 | Name the evidence of a published change in an `Evidence:` trailer | 27 Sep 2026 decision; Phase 3 practice | whoever commits | the commit message, git-tracked | **that the line exists** (`tools/commit-evidence.mjs`, in `qa.yml` and `pages.yml`) — it cannot judge the evidence | what the evidence is, and whether it carries the change |
 
-## 2 · The three levels applied to the inventory (pending D-4)
+## 2 · The three levels applied to the inventory (D-4 decided, §8 3 Nov 2026)
 
 ### 2.1 Why not the letters
 
@@ -75,7 +74,7 @@ next to "a Class B change" would state two different facts with one letter.
 
 ### 2.2 Per process
 
-A process usually has a part at each level. **No cell here is a decision.**
+A process usually has a part at each level. **Approved as drafted (§8, 17.5.0 question 6).**
 
 | # | *machine check* | *human attestation* | *human authorship* |
 |---|---|---|---|
@@ -229,4 +228,4 @@ The roadmap does not plan a phase before it is reached (§6), so this is one ite
 - **That Phase 4 should open now**, or at all before Phase 3's state is decided.
 - **That a CMS is needed.** §6's first item needs no login.
 - **Anything about a CMS beyond the pages quoted**, read once on one date.
-- **That any level assignment is right.** §2.2 is a proposal pending D-4.
+- **That any level assignment is right.** §2.2 was approved as drafted; approval is not proof.
