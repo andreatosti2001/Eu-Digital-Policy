@@ -1,8 +1,8 @@
 # HANDOVER
 
-**Last updated:** v2 Session 18, the maintenance session (3 November 2026): checkpoint 18.1 — the D-2 notice on
-`applies.html` written in the text approved in v2 Session 17.5, with `tools/selftest.mjs` N1 updated on the author's
-word. 18.2 (group (c) and V2C-28…V2C-36) has not begun; it waits for the approval of this checkpoint.
+**Last updated:** v2 Session 18, the maintenance session (3 November 2026): checkpoint 18.1 (the D-2 notice) approved;
+18.2 done — group (c) and V2C-28…V2C-36 each written as the author approved or closed with no change, plus one defect
+F-15 exposed (AI Act Art. 55's heading). The final checkpoint waits for the author.
 **Branch:** `claude/v2-session-18-maintenance`, cut from `main` at `97e53d7`.
 
 ## Branch register — 3 November 2026 (v2 Session 18)
@@ -17,6 +17,110 @@ word. 18.2 (group (c) and V2C-28…V2C-36) has not begun; it waits for the appro
   `claude/fix-browser-brief-prose-check`, `claude/fix-og-site-name-2026-11-03`, `claude/nifty-ride-kc0p4x`,
   `claude/v2-session-17-5-prompt`, `claude/v2-session-18-prompt`.
 - Disposition: open; not pushed at checkpoint 18.1.
+
+## v2 Session 18 — final checkpoint (18.2: group (c) and V2C-28…V2C-36)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words), and the commits
+
+| Item | Answer | §8 | Change |
+|---|---|---|---|
+| Checkpoint 18.1 | "Approve, start 18.2 (Recommended)" | `4f9cc27` | — |
+| F-06 · NIS2 actor notes (law) | "Write both notes (Recommended)" | `2d2bd46` | `f5c40bd` |
+| F-15 · AI Act Art. 50 heading (law) | "Exact OJ heading (Recommended)" | `aa19ff6` | `6be1b5a` |
+| A defect F-15 exposed · AI Act Art. 55 heading | "Fix now, own commit (Recommended)" | `9b27b93` | `a9277a4` |
+| V2C-29 + V2C-30 · `tools/seo.mjs` | "Both as shown (Recommended)" | `c9939c8` | `87ec7f3` |
+| V2C-28, V2C-31, V2C-32 · presentation | "All three as shown (Recommended)" | `f034277` | `554f80b`, `122172a`, `fc39228` |
+| F-16 + V2C-33 · plurals, and S2 | "Strings + S2 as shown (Recommended)" | `26d7e2c` | `a133fc3` |
+| F-28, F-30, V2C-36 · code | "All three as shown (Recommended)" | `ad7b5d6` | `343dd69`, `ce69b60`, `d245288` |
+| F-21 | "No change, close (Recommended)" | `0a9f3d4` | — (closed, reason in §8) |
+| F-10 | "No change, close (Recommended)" | `38da72d` | — (closed, reason in §8) |
+| V2C-34 + V2C-35 · texts in notes | "All 27 as in the table (Recommended)" | `8eed736` | `e36f892`, `ca947c6` |
+
+`node tools/commit-evidence.mjs 97e53d7 HEAD`: exit 0, every commit that changes a published file names its evidence.
+
+### The two legal readings (18.2's "Legge? sì")
+
+Both read on 3 Nov 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX
+(`https://publications.europa.eu/resource/celex/<CELEX>`, English), with amending acts and corrigenda checked in Cellar's
+SPARQL. **Cellar was reachable in this environment** (it was not in some earlier sessions).
+
+- **F-06**, Directive (EU) 2022/2555, Art. 3(1) and (2), OJ L 333, 27.12.2022, p. 80. No amending act recorded; nine
+  corrigenda exist, of which only `32022L2555R(04)` (22.12.2023) is in English, and it corrects Art. 19(1) only.
+  Art. 3(2) makes any Annex I **or** II entity that is not essential an important entity, so "NIS2 Annex II." was wrong
+  in substance.
+- **F-15**, Regulation (EU) 2024/1689, Art. 50. The one amending act Cellar records, Regulation (EU) 2026/1744
+  (32026R1744), replaces Art. 50(7) only (Art. 1 point (20)); the "Article 50" at its Art. 2 point (6) amends
+  Regulation (EU) 2018/1139. No English corrigendum of 32024R1689 is in Cellar.
+- **Comparing every AI Act heading** in `data/instruments.json` with the same text: 12 match, Arts 50 and 55 did not
+  (Art. 55: "Obligations for…" → the OJ's "Obligations of…"); 32026R1744 does not mention Article 55.
+
+### What a reader sees, before and after
+
+| Item | Where | Before | After |
+|---|---|---|---|
+| F-06 | search palette, actor "Essential entity" | NIS2 Annex I. | NIS2 Art. 3(1), read 3 Nov 2026: an entity of a type in Annex I that exceeds the ceilings for medium-sized enterprises (point (a)); qualified trust service providers, top-level domain name registries and DNS service providers, regardless of size (point (b)); and the entities points (c) to (g) list, including those a Member State identifies as essential. |
+| F-06 | search palette, actor "Important entity" | NIS2 Annex II. | NIS2 Art. 3(2), read 3 Nov 2026: an entity of a type in Annex I or II that does not qualify as an essential entity under Art. 3(1), including entities a Member State identifies as important. |
+| F-15 | AI Act page, Art. 50 | Transparency obligations | Transparency obligations for providers and deployers of certain AI systems |
+| Art. 55 | AI Act page, Art. 55 | Obligations for providers of general-purpose AI models with systemic risk | Obligations of providers of general-purpose AI models with systemic risk |
+| V2C-29 | EHDS `<title>` | EHDS — key provisions and key dates \| EU Digital Policy | European Health Data Space (EHDS) — key provisions and key dates \| EU Digital Policy |
+| V2C-30 | descriptions of CSA, DNA, EHDS, eIDAS2, IEA (meta, og, twitter, JSON-LD) | … who it binds (member State, … | … who it binds (Member State, … |
+| V2C-28 | `instrument.html?id=p2b`, "Read it at the source" link | `rgb(0, 0, 238)`: 7.15:1 light, 1.98:1 dark | `--mech`: 5.75:1 light, 6.73:1 dark |
+| V2C-31 | bibliography, 31 of 226 undated entries | … read 23 October 2026.”. https://… | … read 23 October 2026.” https://… |
+| V2C-32 | instrument pages, record line | the date on its own line at 390px | the date inline in the sentence |
+| F-16 | evidence "Last verified" | 1 days ago | 1 day ago |
+| V2C-33 | CRA, eIDAS2, PLD pages | 1 rule in the dataset turn on this instrument | 1 rule in the dataset turns on this instrument |
+| V2C-34, V2C-35 | 27 notes (sources, claims, enforcement, timeline, the Data Omnibus status note) | e.g. "Cited because EUR-Lex returns HTTP 202 with no body in this environment." | e.g. "Cited because EUR-Lex returns HTTP 202 with no body to this site's requests." — every row in §8 (`8eed736`) as an exact substitution |
+
+Nothing a reader sees changes for F-28, F-30 and V2C-36 (code and a comment), F-21 and F-10 (closed, no change).
+it/fr/es: no translation of any changed string existed, so nothing was declared `superseded` and nothing was written.
+
+### Checks changed, each on the author's word
+
+- `tools/selftest.mjs` N1 (18.1) — the pinned notice text, its header comment and one message.
+- `tools/selftest.mjs` S2 — its list of clock-bound strings gains "day ago" (strengthening only).
+- `tools/register-audit.mjs` — `PROCEDURAL_STATES` derived from `PRE_ADOPTION`; output byte-identical before and after.
+
+### Counts, before (`97e53d7`) and after (`ca947c6`), full clone, separate worktrees, as of 2026-11-03
+
+**Identical on every line**: `validate` 0 errors, 0 warnings, 45 unverified; `i18n-audit`, `design-qa`, `seo-audit`
+0/0; `evidence-audit` 0 errors, 12 warnings, publishable 33 of 33; `freshness` 0 defects, 4 staleness prompts;
+`og-image --check` exit 0; `tools/selftest.mjs` 123 of 123; the 24 agent suites 1253 of 1253; Control Room 76 · 1
+skipped (`::1`); browser suite 343 · 0 · 1; adversarial gate 65 failed safely · 0 succeeded · 3 partial · 1
+undecidable; schemas, `.control-room` boundary and routes exit 0; readiness 17 of 20, refuses, as before. Nothing moved
+because nothing in 18.2 changes a rule, a claim's grade, a source or a gate. Every `_footer.mjs` second run wrote 0.
+
+### Seen in a browser
+
+16 pages (applies, instrument for p2b, AI Act, GDPR, CRA, EHDS and the Data Omnibus, bibliography, enforcement,
+datasets, index, methodology, instruments, and the generated AI Act, EHDS and Data Omnibus pages) in Chromium, light
+and dark, 1280px and 390px: 64 views, no console error, no horizontal overflow. The new actor notes in the search
+palette; the V2C-28 contrast and the V2C-32 line measured as above.
+
+### Not verified, and a correction to one question
+
+- No screen reader, no browser but Chromium; the live site is not checked (nothing pushed or deployed).
+- F-16's "1 day ago" was checked by evaluating `F.plural` in Node; no record is exactly one day old today.
+- **A misstatement in a question, corrected in §8**: V2C-29's question called EHDS "the only one of 17 whose lead is a
+  bare acronym"; eIDAS2 (also a generic fallback), GDPR and DORA lead with one too.
+- F-10's premise ("nothing reads it") and V2C-35's count (14) were inexact; both re-measured and stated in §8.
+
+### New findings, not fixed
+
+1. **eIDAS2's page title** is the same generic fallback as EHDS's was: "eIDAS2 — key provisions and key dates".
+2. **Headings of instruments other than the AI Act** were not compared with the Official Journal; Art. 55 shows the
+   AI Act had a second mismatch the finding did not name, so the others may too.
+3. **`docs/v2-design/status-labels.json`** also lists the procedural states (its `x-verification`); F-28 joined the two
+   code homes and did not touch the design record.
+
+### The checklist (18.0–18.4)
+
+| Point | What was written | How to check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 18.0 | §8 rows, one per answer, each committed at once | `grep -n "v2 Session 18" docs/ROADMAP-v2.md` | — | every item decided in §8 |
+| 18.1 | `70061e9`; report above | `/applies.html`, "Read this before you read a result" | `tools/selftest.mjs` N1 | the notice written, N1 updated, checkpoint approved (`4f9cc27`) |
+| 18.2 | the commits in the first table | the before/after table; `git show <commit>` | S2; `seo-audit` facets; browser suite; validators | each finding corrected as approved or closed with its reason |
+| 18.3 | — | re-run the commands in "Counts"; `node tools/commit-evidence.mjs 97e53d7 HEAD` | CI `qa.yml` | counts identical, Evidence on every published change |
+| 18.4 | this report | read it against §8 | — | **pending: the author's approval of the final checkpoint** |
 
 ## v2 Session 18 — checkpoint 18.1 (the D-2 notice)
 
