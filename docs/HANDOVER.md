@@ -1,9 +1,78 @@
 # HANDOVER
 
-**Last updated:** v2 Session 17.5, the passage from Phase 3 to Phase 4 (3 November 2026): the audit of Phase 3, the
-preparation of Phase 4, and the author's decisions — Phase 3 closed, D-4 decided, D-5 deferred, Phase 4's entry
-condition and first item approved; Phase 4 not opened.
-**Branch:** `claude/nifty-ride-kc0p4x`, cut from `main` at `4ab13a6`.
+**Last updated:** v2 Session 18, the maintenance session (3 November 2026): checkpoint 18.1 — the D-2 notice on
+`applies.html` written in the text approved in v2 Session 17.5, with `tools/selftest.mjs` N1 updated on the author's
+word. 18.2 (group (c) and V2C-28…V2C-36) has not begun; it waits for the approval of this checkpoint.
+**Branch:** `claude/v2-session-18-maintenance`, cut from `main` at `97e53d7`.
+
+## Branch register — 3 November 2026 (v2 Session 18)
+
+- Branch `claude/v2-session-18-maintenance` (the prompt's name; the environment assigned none), cut from `main` at
+  `97e53d7` (#52, this session's prompt, merged). Nothing was merged in.
+- The clone was shallow at the start (`git rev-parse --is-shallow-repository` → `true`); `git fetch --unshallow` was
+  run before any suite.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: **only
+  `origin/scout/digest-digest-2026-11-02T16-04-07Z`**, already in the register below and left open by the author's
+  decision. `claude/v2-session-18-prompt` is merged (#52). Merged but not deleted, as before:
+  `claude/fix-browser-brief-prose-check`, `claude/fix-og-site-name-2026-11-03`, `claude/nifty-ride-kc0p4x`,
+  `claude/v2-session-17-5-prompt`, `claude/v2-session-18-prompt`.
+- Disposition: open; not pushed at checkpoint 18.1.
+
+## v2 Session 18 — checkpoint 18.1 (the D-2 notice)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 18 | "Start session 18" | `7cffa35` |
+| 18.0 Q1 · `tools/selftest.mjs` N1 (a premise 17.5 Q3 did not name) | "Update N1 as shown (Recommended)" | `67235e1` |
+| 18.0 Q2 · the notice | "Write it as shown (Recommended)" | `c5bc544` |
+
+The change: `70061e9` — `applies.html:82` and `tools/selftest.mjs` N1 in one commit, with an `Evidence:` line
+(`node tools/commit-evidence.mjs 97e53d7 HEAD`: exit 0, "changes 1 published file(s) and names its evidence").
+
+### What a reader sees, before and after (`applies.html`, `data-i18n="applies.notice"`)
+
+- Before: "**These rules are not yet verified to the standard the site's claims are.** Each rule cites its sources by
+  identifier only: unlike a claim, it does not say what each source supports or where in it the rule is found, and the
+  evidence audit that checks every claim does not yet check these rules. Read a result as a pointer to the law, not as
+  a verified reading of it."
+- After: "**These rules are checked to the standard the site's claims are.** Each rule says, for every source it
+  cites, what that source supports and where in it the rule is found; each condition names the provision that defines
+  it; and the evidence audit that checks every claim checks these rules too. Each rule shows the date it was last read
+  against its Articles, and a change in the law after that date reaches a rule only when a person reads it again. Read
+  a result as a pointer to the law, not as a verified reading of it."
+- The it, fr and es editions: unchanged — `applies.notice` stays `pending_translation` in `i18n/locales.json` and
+  they show the English. No translation of the key existed (`grep -c '"applies.notice"' i18n/{it,fr,es}.json` → 0
+  each), so none was declared `superseded`, and none was written.
+
+### Counts, before (`97e53d7`) and after (`70061e9`), each in its own worktree of a full clone, as of 2026-11-03
+
+Identical on every line; nothing moved, which is what a one-paragraph text change with its pinning test should do.
+`validate` 0 errors, 0 warnings, 45 unverified; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit` 0 errors,
+12 warnings, publishable 33 of 33; `freshness` 0 defects, 4 staleness prompts (exit 0); `og-image --check` exit 0;
+`tools/selftest.mjs` 123 of 123 (with the old N1 and the new text: 122 of 123, measured in a throwaway worktree, which
+is why both went in one commit); the 24 agent suites 1253 of 1253; Control Room 76 · 1 skipped (`::1`, unchanged as a
+skip); browser suite `--require-browser` 343 pass · 0 fail · 1 undecidable (`a11y:bound`); adversarial gate 65 failed
+safely · 0 succeeded · 3 partial · 1 undecidable; `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and
+`routes` exit 0; readiness 17 of 20 mandatory conditions, refuses (exit 1), as before. `node tools/_footer.mjs`: 0
+files written on the first run and 0 on the second.
+
+### Seen in a browser
+
+`applies.html` served over HTTP and opened in the environment's Chromium (Playwright), light and dark, 1280px and
+390px: the notice renders the new text with the first sentence bold, no console error, no horizontal overflow in any
+of the four.
+
+### Not verified
+
+No screen reader and no browser but Chromium. The live site is not checked: nothing is pushed or deployed.
+
+### How to check by hand
+
+1. `git show 70061e9` — two files, the approved text in both, the trailer at the end.
+2. `node --test tools/selftest.mjs` → 123 pass; revert `applies.html` alone and N1 fails.
+3. `python3 -m http.server 8000`, open `/applies.html`, read "Read this before you read a result".
 
 ## Branch register — 3 November 2026 (the prompt of v2 Session 18)
 
