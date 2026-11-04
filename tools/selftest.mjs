@@ -713,9 +713,11 @@ function treeCopy() {
   const dir = scratch('evidence');
   cpSync(join(ROOT, 'data'), join(dir, 'data'), { recursive: true });
   cpSync(join(ROOT, 'index.html'), join(dir, 'index.html'));
+  /* v2 Session 23 (§8, 23.1: two selftest pins the first closure broke): validate.mjs reads §8's titles for A-6 */
+  cpSync(join(ROOT, 'docs', 'ROADMAP-v2.md'), join(dir, 'docs', 'ROADMAP-v2.md'));
   return dir;
 }
-const editJSON = (dir, f, fn) => {
+const editJSON =(dir, f, fn) => {
   const p = join(dir, 'data', f); const d = JSON.parse(readFileSync(p, 'utf8')); fn(d); writeFileSync(p, JSON.stringify(d));
 };
 
@@ -3089,7 +3091,8 @@ test('AT1 · the control: ap-cra-01\'s closure of 4 Nov 2026, written in the for
   const a = withCra();
   assert.deepEqual(a.errors, []);
   assert.deepEqual(a.warnings, []);
-  assert.deepEqual(a.attested, ['ap-cra-01']);
+  /* v2 Session 23 (§8, 23.1: two selftest pins the first closure broke): the fixture, and the tree's closures */
+  assert.deepEqual([...a.attested].sort(), ['ap-cra-01', ...Object.keys(READ_V2_23)].sort());
 });
 
 test('AT2 · A-1 fails a misspelt key, an outcome out of vocabulary, an empty read, a dangling source and a text queried but not read', () => {
