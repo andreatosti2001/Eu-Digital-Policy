@@ -65,7 +65,7 @@
         "territory": ["territory:non-eu-serving-eu"]
       },
       "outcome": "outcome:likely",
-      "rationale": "Article 3(2) reaches a controller not established in the Union where the processing relates to offering goods or services to data subjects in the Union, or to monitoring their behaviour. Whether either limb is met is a question of fact about targeting that this questionnaire does not establish — merely being accessible from the Union is not enough.",
+      "rationale": "Article 3(2) reaches a controller or processor not established in the Union where the processing relates to offering goods or services to data subjects in the Union, or to monitoring their behaviour. Whether either limb is met is a question of fact about targeting that this questionnaire does not establish — merely being accessible from the Union is not enough.",
       "obligations": ["gdpr:art-3", "gdpr:art-5", "gdpr:art-6"],
       "authority": ["dpa-*"],
       "dates": ["tl-gdpr-2018-05-25-application"],
@@ -80,8 +80,17 @@
         "activity": ["gdpr:art-2", "gdpr:art-4"],
         "territory": ["gdpr:art-3"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 14): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 3, 4, 5 and 6; the corrigendum of 23 May 2018 (32016R0679R(02)) changes none of them, and the Publications Office's metadata lists no act amending the Regulation. Conditions, outcome and rationale were not changed."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 3, 4, 5 and 6. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and three corrigenda, of which only 32016R0679R(02) (23 May 2018) has an English expression; read that day, it corrects none of these Articles. On the author's decision of 4 Nov 2026 the rationale says that Art. 3(2) reaches a controller or processor not established in the Union, as the Article does; it named only the controller. First brought to the v2 shape on 29 Oct 2026 (v2 Session 14). Conditions, outcome, obligations and depends_on were not changed.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-gdpr", "locator": "Art. 2; Art. 3; Art. 4; Art. 5; Art. 6" }
+        ],
+        "queried": ["src-eurlex-gdpr"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 23, 23.1: `ap-gdpr-02`'s rationale"]
+      }
     },
     {
       "id": "ap-gdpr-03",
