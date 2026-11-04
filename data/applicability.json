@@ -1031,9 +1031,18 @@
       "condition_provisions": {
         "actor": ["dora:art-2"]
       },
-      "last_verified": "2026-10-29",
+      "last_verified": "2026-11-04",
       "requires_verification": false,
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2554 retrieved from the Publications Office's Cellar by CELEX (32022R2554): Arts 2, 4, 5, 6, 16, 17, 19, 24, 28 and 64. The Publications Office's metadata lists no act amending the Regulation and nine corrigenda, none with an English expression. On the author's decision of 29 Oct 2026 the Art. 2(3) and (4) and the Art. 16(1) and 24(1) exemptions are added. Conditions, outcome and rationale were not changed. The claims were not re-read. Earlier: Obligations point at DORA Arts 5, 6, 17, 19, 24 and 28, added on 27 Sep 2026 from the Official Journal text (CELEX 32022R2554); application from 17 January 2025 per Art. 64. Earlier: No provisions are recorded for DORA in instruments.json, so this rule cannot yet point at specific articles. The obligation list is empty rather than invented."
+      "verification_note": "4 Nov 2026 (v2 Session 24): re-read in the Official Journal text of Regulation (EU) 2022/2554 retrieved from the Publications Office's Cellar by CELEX (32022R2554): Arts 2, 4, 5, 6, 16, 17, 19, 24, 28 and 64. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Regulation and nine corrigenda, R(01) to R(09), none with an English expression. The financial entities are those of Art. 2(1), points (a) to (t) (Art. 2(2)). The rationale's four areas are the obligations cited: the ICT risk management framework and its governance (Arts 5 and 6), the ICT-related incident management process and the reporting of major ICT-related incidents (Arts 17 and 19), the digital operational resilience testing programme (Art. 24) and the management of ICT third-party risk (Art. 28); the Regulation applies from 17 January 2025 (Art. 64). The exemptions are Art. 2(3) and (4); Art. 16(1), under which the entities it lists maintain a simplified ICT risk management framework instead of Arts 5 to 15; and Art. 24(1), which requires the testing programme of financial entities other than microenterprises. The proportionality depends_on refers to is Art. 4: size, overall risk profile, and the nature, scale and complexity of services, activities and operations. Read against the rule, nothing was found to change. First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome, rationale, obligations and exemptions were not changed. The claims were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-dora", "locator": "Art. 2; Art. 4; Art. 5; Art. 6; Art. 16; Art. 17; Art. 19; Art. 24; Art. 28; Art. 64" }
+        ],
+        "queried": ["src-eurlex-dora"],
+        "outcome": "unchanged",
+        "decisions": []
+      }
     },
     {
       "id": "ap-dora-02",
