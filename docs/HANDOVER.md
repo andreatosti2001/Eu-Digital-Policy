@@ -48,8 +48,9 @@ unchanged.
 - Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register (left open by the
   author's decision).
 - The clone was shallow at the start; `git fetch --unshallow` was run before anything else.
-- Disposition: the session stopped at 25.0 on the author's decision (§8 `e0b69ce`); whether to open a pull request to
-  `main` is put to the author after this entry.
+- Disposition: the session stopped at 25.0 on the author's decision (§8 `e0b69ce`); pushed, and a pull request to `main`
+  opened on the author's instruction ("Open the PR (Recommended)"). Nothing is pushed to the branch after the pull request
+  is opened.
 
 ## Branch register — 4 November 2026 (v2 Session 24)
 
