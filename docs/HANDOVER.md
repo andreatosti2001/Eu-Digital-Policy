@@ -1,8 +1,103 @@
 # HANDOVER
 
-**Last updated:** 4 November 2026, at the final checkpoint of v2 Session 22 (the structured attestation, `docs/PHASE-4-PLAN.md` §3, S22).
-**Branch:** `claude/session-22-o5cl9k` (assigned by the environment), cut from `main` at `244072f` (#61, the plan, merged).
+**Last updated:** 4 November 2026, at checkpoint 23.1 of v2 Session 23 (the first reading in the form, `docs/PHASE-4-PLAN.md` §3, S23).
+**Branch:** `claude/funny-bohr-w74g7e` (assigned by the environment), fast-forwarded to `main` at `9217e62` (#62, Session 22, merged).
 The entries below this session's are unchanged.
+
+## v2 Session 23 — checkpoint 23.1 (GDPR and cross-cutting: four rules closed in the form, 18 headings)
+
+**Opening.** `main` did not yet contain Session 22 at the first fetch; it did at the second (#62, `9217e62`), and every
+precondition of the prompt then held. The clone was shallow; `git fetch --unshallow` before any suite. Unmerged branches:
+only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register. Scope row in §8 first (`3573b3d`), with the author's
+words ("Start Session 23"). **The reconnaissance re-measured every row of the prompt's table and found it exact**: 33 rules,
+25 dated 2026-10-29 and 8 dated 2026-11-04, none attested; `RULE_STALE` 0 / 25 / 33 on 2027-01-27 / 01-28 / 02-03; T-12
+only `ap-cra-01` on 2027-03-26; headings gdpr 18, dsa 16, dma 9, data-act 7; `selftest` 140/140; 25 suites 1349 · 0 · 1
+skipped. Cellar and the SPARQL endpoint both answered HTTP 200 from this environment.
+
+**23.0 · two questions, both decided** (§8). Q1 (`8db4fad`): the session began on 4 Nov 2026, 16:21 UTC — the day of
+`FORM_FROM` itself, where A-3 does not fire — against the prompt's premise that closures fall after it; the author chose
+"close on the day of the reading, and always write the form", `FORM_FROM` unmoved. Q2 (`25fbeae`, code `f6985bf`): the
+pins — `READ_V2_23` (rule → date), `dateOf()`, `NEWEST_READ`; Y2–Y6 and X1's September warnings follow `dateOf()`; F10
+counts 33 − 8 − the closures; X1 audits as of the newest date; AT0 holds that exactly the closures carry the form with 0
+errors and 0 warnings, which covers A-3's gap for closures dated 2026-11-04. Planted: an entry with no closure fails F10,
+X1, Y3 and AT0.
+
+### Per rule: what was read, what was queried, what was decided, the attestation
+
+Texts read on 4 Nov 2026, each fetched from Cellar by CELEX with `Accept-Language: eng`: Regulation (EU) 2016/679
+(32016R0679, OJ L 119, 4.5.2016; all 99 Articles extracted, the cited ones read in full), its corrigendum 32016R0679R(02)
+(the only one with an English expression), Regulation (EU) 2022/2065 (32022R2065, OJ L 277, 27.10.2022); and the EDPB
+Guidelines 3/2025, version 2.0 adopted 17 Sep 2026 (PDF from the EDPB's site). SPARQL (the queries of
+`docs/RULE-MAINTENANCE.md` step 2), HTTP 200: **GDPR** no amending or repealing act, three corrigenda — R(01) 2016-11-22,
+R(02) 2018-05-23, R(03) 2021-03-04 — only R(02) in English; R(02) corrects recital 71 and Arts 37(1)(c), 41, 42, 43, 57,
+64, 65, 69, 70. **DSA** no amending act, eleven corrigenda R(01)…R(11) (the last 2026-10-23), none in English — as v2
+Session 21 found.
+
+| Rule | Read (tier 1, then tier 2) | Queried | Found, and decided (§8) | Attestation | Commit |
+|---|---|---|---|---|---|
+| `ap-gdpr-01` | GDPR Arts 2, 3, 4 points (1), (2), (7), (8), 5, 6, 30, 33, 35 | gdpr | "Any processing … by a controller or processor established in the Union" left out Art. 2(1)'s limit and was narrower than Art. 3(1); **reworded to the Articles** (`256549d`) | `changed`, 1 decision | `430b528` |
+| `ap-gdpr-02` | GDPR Arts 2, 3, 4 (all of it), 5, 6 | gdpr | Art. 3(2) reaches "a controller or processor", the rationale named only the controller; **"or processor" added** (`b6cd243`) | `changed`, 1 decision | `de797c7` |
+| `ap-gdpr-03` | GDPR Arts 2, 4, 6, 35, 37, recital 19 | gdpr | nothing to change; R(02)'s change to Art. 37(1)(c) does not reach Art. 37(1)(a) | `unchanged`, no decision | `bcaee43` |
+| `ap-cross-01` | GDPR Arts 2, 4, 5, 6, 25; DSA Arts 27, 39; EDPB Guidelines v2.0 ¶¶ 7–11, 79–81, 88–89, 93–95 | gdpr, dsa | DSA Art. 39(1), cited for the repository, itself keeps recipients' personal data out of it; the guidelines never mention Art. 39, a repository or a conflict; **rationale kept, Art. 39(1) quoted in the note** (`72be4f6`) | `unchanged`, 1 decision | `38cbe58` |
+
+Every attestation passes A-1…A-8 with **0 errors and 0 warnings** (`tools/validate.mjs`; AT0). Each note names the
+CELEX of every tier-1 text read (A-7). The claims (`clm-one-stop-shop`, `clm-dsa-gdpr-unresolved`) were not re-read, and
+each note says so.
+
+### The headings: the GDPR's 18 against the Official Journal
+
+16 identical. 2 differed and **now carry the exact Official Journal headings** on the author's word (§8 `446b3ac`, data
+`9332d3d`): `gdpr:art-58` "Powers of supervisory authorities" → "Powers"; `gdpr:art-60` "Cooperation between the lead
+authority and other concerned authorities" → "Cooperation between the lead supervisory authority and the other supervisory
+authorities concerned". R(02) touches neither. No translation or pin held them.
+
+### A pin the first closure broke, changed on the author's word
+
+`ap-gdpr-01`'s closure, uncommitted, passed every check but failed 2 of 140 `selftest` tests that Q2 had not named: **Y1**
+runs `validate.mjs` in a scratch copy holding only `data/` and `index.html`, where A-6 cannot read `docs/ROADMAP-v2.md`;
+**AT1** pinned the attested list to its fixture alone. Put to the author (§8 `6b7c5d9`): `treeCopy()` also copies the
+roadmap; AT1 follows `READ_V2_23` as AT0 does. Committed on its own and shown green on the tree before the closure
+(`9168bfc`). Nothing relaxed.
+
+### Where the form and the packet guided, and where they did not
+
+- **The packet listed exactly what A-4 and A-5 then required**, and named the EDPB guidelines as a tier-2 text; A-8 would
+  have warned had `read` left them out.
+- **The packet is Article-level, so it cannot tell a partial reading from a whole one.** I printed Art. 4 only to point
+  (22) at first; `ap-gdpr-02` cites Art. 4 through `condition_provisions`, so the rest was read before "Art. 4" was
+  written in its `read`. Nothing in the form would have caught the omission (`docs/ATTESTATION-FORM.md` §6).
+- **The decision titles are long and carry backticks**; A-6 matched them exactly on the first try because each was copied
+  from the committed row.
+- **The previous notes' reading of recital 18 (`ap-gdpr-01`) and of DSA Arts 3 and 33 (`ap-cross-01`) was not repeated**,
+  because neither is cited; the new notes do not claim them.
+
+### New findings, not fixed
+
+1. **`ap-gdpr-01` lists only Art. 2(2)(c) among the GDPR's exclusions**; Art. 2(2)(a) (outside Union law) and (b) (CFSP)
+   are carried by no rule, and (d) only by `ap-gdpr-03`. Reported, not put as a change: the author's decision was about the
+   rationale.
+2. **The 23.1 closures sit on `FORM_FROM`**, so A-3 alone would not have held them; AT0 does (Q1, Q2). A later closure of
+   the same rules will be after `FORM_FROM` and A-3 will apply.
+3. **The closures were written with a scratch script outside the repository** (a textual edit of one rule's block, then a
+   parse proving that only `rationale`, `last_verified`, `verification_note` and `attestation` changed). No tool was added,
+   as the prompt requires; the proof is per closure and is not kept.
+
+### Counts (4 Nov 2026, `38cbe58`, full clone, outputs in the scratchpad)
+
+`validate` 0 · 0; `i18n-audit` 0 · 0; `design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings today, 18 on 2027-03-26),
+publishable 33 of 33, T-12 only `ap-cra-01`; `freshness` `RULE_STALE` **0 / 21 / 33** today / 2027-01-28 / 2027-02-03 (was
+0 / 25 / 33); `seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0 fail · 1 skipped** (`selftest` 140,
+unchanged in number); browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 69
+attacks, 65 failed safely · 0 succeeded · 3 partial · 1 undecidable; schemas check, Control Room boundary and routes exit 0;
+readiness refuses, **17 of 20** (production dispatcher, decision ledger, deploy gate unmeasured) — as at the opening;
+`commit-evidence 9217e62 HEAD` 15 commits, 0 without evidence.
+
+**Commits.** §8 `3573b3d`, `8db4fad`, `25fbeae`, `256549d`, `b6cd243`, `72be4f6`, `446b3ac`, `6b7c5d9`; tools `f6985bf`,
+`9168bfc`; data `9332d3d`, `430b528`, `de797c7`, `bcaee43`, `38cbe58`.
+
+**Next, on approval: 23.2** — `ap-dsa-01`, `-02`, `-04`, `-05`, `ap-dma-01`, `-02`, `-03`; the DSA's 16 headings and the
+DMA's 9.
+
 
 ## Branch register — 4 November 2026 (v2 Session 22)
 
