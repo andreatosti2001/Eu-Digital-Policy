@@ -2,7 +2,7 @@
 
 **Last updated:** 4 November 2026, after v2 Session 21 was merged (#60): the plan to conclude Phase 4
 (`docs/PHASE-4-PLAN.md`) and the revised prompt of v2 Session 22 (`docs/prompts/v2-session-22.md`), on the author's request.
-**Awaiting the author's approval of the plan.** The report of v2 Session 21 below is unchanged.
+**Plan approved on 4 Nov 2026 (roadmap §8); pull request to `main` follows.** The report of v2 Session 21 below is unchanged.
 **Branch:** `claude/v2-phase-4-plan`, cut from `main` at `959e08d`.
 
 ## Branch register — 4 November 2026 (the Phase 4 plan)
@@ -17,7 +17,8 @@
   rules (4 + 4 + 3 + 5 + 4), not 17, and checks **50** headings, not 41. The 25 rules (20 + 5) and the 98 headings
   (50 + 23 + 25) add up.
 - Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z` (in the register below).
-- Disposition: open; recorded at the approval.
+- Approved on 4 Nov 2026 ("Approve (Recommended)"; §8 row "The plan to conclude Phase 4"). Disposition: pushed, and a pull
+  request to `main` opened on the author's instruction (see below). Nothing is pushed after it is opened.
 
 ## Branch register — 4 November 2026 (v2 Session 21)
 
