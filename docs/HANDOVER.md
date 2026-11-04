@@ -1,8 +1,58 @@
 # HANDOVER
 
-**Last updated:** 4 November 2026, at checkpoint 24.1 and the final checkpoint of v2 Session 24 (the second reading and Phase 4's exit, `docs/PHASE-4-PLAN.md` §3, S24).
-**Branch:** `claude/v2-session-24-exit` (no branch assigned by the environment), cut from `main` at `f44d3f0` (#63 and #64 merged).
-The entries below this s## Branch register — 4 November 2026 (v2 Session 24)
+**Last updated:** 4 November 2026, v2 Session 25 (the reading of 3 Feb 2027, first round), stopped at 25.0 on the author's decision: the reading is deferred to 12 Jan–2 Feb 2027.
+**Branch:** `claude/inspiring-meitner-c7s9le` (assigned by the environment), at `main` `aac3830` (#65 merged).
+The entries below this session's are unchanged, except that line 5 of this header is restored (see the next section).
+
+## v2 Session 25 — stopped at 25.0: the reading deferred (4 Nov 2026)
+
+**What was measured, read-only, on a full clone** (the clone was shallow; `git fetch --unshallow` was run first): `main` at
+`aac3830` holds Session 24 as the prompt requires — 33 rules, all `last_verified` 2026-11-04, 25 with `attestation`, the 8
+without it being Session 21's; `tools/selftest.mjs` has `READ_V2_23` (25 entries), `EIDAS2_A8` (five) and `OLDEST_READ`;
+§8 holds the rows to Session 24's final checkpoint and "Phase 4 concluded"; `docs/prompts/v2-session-25.md` exists.
+`node tools/validate.mjs` 0 errors · 5 warnings (the five `ATTESTATION_NOT_CHECKABLE` of `ap-eidas2-01`, the §12 baseline) ·
+45 unverified; `freshness --as-of` 2026-11-04 / 2027-02-02 / 2027-02-03: `RULE_STALE` 0 / 0 / 33, exit 0 each;
+`evidence-audit --as-of 2026-11-04` exit 0, **0 `STATUS_PREDATES_MILESTONE`**; `--as-of 2027-03-26` exit 0, six (dma,
+ai-act, data-act, pld, eidas2, ehds) and T-12 on `ap-cra-01` only. Cellar and the SPARQL endpoint answered from this
+environment (one probe each; no reading was made).
+
+**The finding put to the author.** The session began on 4 Nov 2026 at 22:11 UTC — the day of `FORM_FROM` and the day all 33
+rules were last read (11 of this round's 14 by Session 23; `ap-gdpr-04`, `ap-dsa-03` and `ap-dma-04` by Session 21). The
+prompt assumes a session after `FORM_FROM`. A closure today is dated 2026-11-04 (§8, 23.0 question 1), so the 14 would still
+lapse on 3 Feb 2027 and the reading would move no date; and with no milestone passed, 25.2 had nothing to read.
+
+**Decided** (§8, "v2 Session 25, 25.0 question 1", `e0b69ce`): **defer the reading.** Nothing in `data/` changed. The prompt
+`docs/prompts/v2-session-25.md` is kept as written and is run **between 12 Jan and 2 Feb 2027**, when the readings move the
+14 rules' dates past 3 Feb 2027 and 25.2 covers five of the six statuses (ehds's milestone, 26 Mar 2027, falls after).
+
+**What did not happen, and stays open.** No rule read or closed; no `tools/selftest.mjs` pin changed (the prompt's pin
+question was not reached); R-3, R-4 (F-18) and R-8 keep their decided destinations; no status re-read; the prompt of
+Session 26 was not written, because the session that writes it is the deferred Session 25 itself (its 25.3). **All 33
+rules still lapse on 3 Feb 2027**; the autonomy grant still expires on 9 Mar 2027 (flagged, not renewed); T-12 on
+`ap-cra-01` still fires on 26 Mar 2027.
+
+**Writes:** §8 `b7802bd` (the scope of v2 Session 25) and `e0b69ce` (25.0 question 1); this entry. No file of the published
+surface changed, so no battery was run beyond the reconnaissance above, and no commit needs an `Evidence:` line.
+
+**A repair to this file, named.** From `1925258` (Session 24's final hand-over write) until this entry, line 5 of the header
+read "The entries below this s## Branch register — …": the sentence "…this session's are unchanged." was cut and the next
+heading spliced onto it, so `## Branch register — 4 November 2026 (v2 Session 24)` did not render as a heading. The text
+lost was those words and a blank line, nothing else (`git diff 93e8d28 1925258 -- docs/HANDOVER.md` removes two lines: the
+old "Last updated" line and that sentence). Restored in the header above and below; Session 24's entries are otherwise
+unchanged.
+
+## Branch register — 4 November 2026 (v2 Session 25)
+
+- Branch `claude/inspiring-meitner-c7s9le` (assigned by the environment), at `main` `aac3830`. Nothing merged in;
+  `origin/main` re-fetched before this entry: still `aac3830`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register (left open by the
+  author's decision).
+- The clone was shallow at the start; `git fetch --unshallow` was run before anything else.
+- Disposition: the session stopped at 25.0 on the author's decision (§8 `e0b69ce`); pushed, and a pull request to `main`
+  opened on the author's instruction ("Open the PR (Recommended)"). Nothing is pushed to the branch after the pull request
+  is opened.
+
+## Branch register — 4 November 2026 (v2 Session 24)
 
 - Branch `claude/v2-session-24-exit` (no branch was assigned by the environment), cut from `main` at `f44d3f0` (#63 and #64
   merged). Nothing merged in; `origin/main` re-fetched before this entry: still `f44d3f0`.
