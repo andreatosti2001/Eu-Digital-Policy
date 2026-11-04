@@ -41,6 +41,27 @@ lost was those words and a blank line, nothing else (`git diff 93e8d28 1925258 -
 old "Last updated" line and that sentence). Restored in the header above and below; Session 24's entries are otherwise
 unchanged.
 
+### 25.4 · The set-up of Phase 5 (after the stop, on the author's request)
+
+After the PR was opened the author asked: "generate the set up for phase 5, acknoledging the sessions required in coherence
+with the previous phases" (§8, "v2 Session 25, 25.4: the set-up of Phase 5", `d79b025`). The roadmap puts Phase 5's scope in
+"the session after Phase 4's checkpoint", which this is. **Written: `docs/PHASE-5-SETUP.md`, a proposal that decides
+nothing until §8 does**:
+- **The premises.** P-A, what "advanced" means: depth (recommended), breadth, or the findings only. P-B: design before the
+  reading of 3 Feb 2027, changes after it. P-C: Phase 5 sessions numbered 27 onward.
+- **The material, measured.** M-1…M-7: F-05, F-12 = R-6, F-24, R-8, V2C-15, R-1 (conditional), and the unasked facts
+  (38 `depends_on` items on 25 rules, 4 threshold keys on 3 rules, 26 exemptions on 20 rules, none evaluated).
+- **What Phase 5 extends, uses or leaves**, one row per component.
+- **The gates.** Entry condition E5-1…E5-7 and exit criteria X5-1…X5-7, each able to fail.
+- **The sessions.** S27 design (Nov–Dec 2026); S25 and S26 the reading (Jan 2027, unchanged); S28 the standard as a check
+  and group (b); S29 the questionnaire; S30 derivations and exit; S31 a buffer before 13 Apr 2027. The sessions outside
+  the phases are placed beside Phase 5.
+- **Seven questions for the author.**
+
+No question was put yet. Validators 0 errors (`validate.mjs` 5 warnings, the baseline), `tools/selftest.mjs` 140/140.
+`AGENTS.md`'s document table does not list the new file; that, with the status lines still saying Phase 4 is open, is
+status-document work for after the author's answers.
+
 ## Branch register — 4 November 2026 (v2 Session 25)
 
 - Branch `claude/inspiring-meitner-c7s9le` (assigned by the environment), at `main` `aac3830`. Nothing merged in;
@@ -50,7 +71,8 @@ unchanged.
 - The clone was shallow at the start; `git fetch --unshallow` was run before anything else.
 - Disposition: the session stopped at 25.0 on the author's decision (§8 `e0b69ce`); pushed, and a pull request to `main`
   opened on the author's instruction ("Open the PR (Recommended)"). Nothing is pushed to the branch after the pull request
-  is opened.
+  is opened — **except, on the author's later request, 25.4** (§8 `d79b025`): the Phase 5 set-up, pushed to this branch,
+  so PR #66 carries it.
 
 ## Branch register — 4 November 2026 (v2 Session 24)
 
