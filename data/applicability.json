@@ -169,7 +169,7 @@
         "activity": ["activity:online-platform-activity", "activity:marketplace-activity", "activity:recommender-systems"]
       },
       "outcome": "outcome:applies",
-      "rationale": "Obligations stack cumulatively across four tiers. An online platform owes the intermediary and hosting duties below it as well as the platform tier: notice and action, statements of reasons, internal complaint handling, the dark-pattern ban, advertising transparency and recommender-parameter disclosure.",
+      "rationale": "Obligations stack cumulatively across four tiers. An online platform owes the intermediary and hosting duties below it as well as the platform tier: notice and action, statements of reasons, internal complaint handling, the dark-pattern ban, the protection of minors, advertising transparency and recommender-parameter disclosure.",
       "obligations": ["dsa:art-16", "dsa:art-25", "dsa:art-28"],
       "authority": ["dsc-*"],
       "dates": ["tl-dsa-2024-02-17-application"],
@@ -181,14 +181,24 @@
       "claims": ["clm-dsa-four-tiers", "clm-art-16-over-removal-incentive"],
       "sources": [
         { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 2(1); Art. 3 points (i) and (s); Art. 30(1); Art. 33(1)", "for": "scope" },
-        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 16; Art. 25; Art. 28", "for": "obligation" }
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 16; Art. 25; Art. 28", "for": "obligation" },
+        { "source_id": "src-eurlex-dsa", "supports": "supports:direct", "locator": "Art. 17; Art. 20; Art. 26; Art. 27", "for": "rationale" }
       ],
       "condition_provisions": {
         "actor": ["dsa:art-3", "dsa:art-33"],
         "activity": ["dsa:art-3", "dsa:art-30"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2065 retrieved from the Publications Office's Cellar by CELEX (32022R2065): Arts 2(1), 3 points (i) and (s), 16, 19, 24(3), 25, 28, 30(1) and 33(1). The Publications Office's metadata lists no act amending the Regulation and eleven corrigenda, none with an English expression. The exemption is Art. 19(1) and (2); its text was corrected on the author's decision of 29 Oct 2026 to state the Art. 24(3) exception and the twelve months after a provider loses micro or small status (F-7, V2C-09). Arts 25 and 28 are in Section 3 of Chapter III, which Art. 19 excludes; Art. 16 is in Section 2 and is not excluded. Conditions, outcome and rationale were not changed. clm-dsa-four-tiers and clm-art-16-over-removal-incentive were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2022/2065 retrieved from the Publications Office's Cellar by CELEX (32022R2065): Arts 2, 3, 16, 17, 19, 20, 24(3), 25, 26, 27, 28, 30 and 33. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and eleven corrigenda, none with an English expression. On the author's decision of 4 Nov 2026 the rule cites the Articles that carry the duties its rationale names — Art. 17 statement of reasons, Art. 20 internal complaint-handling, Art. 26 advertising, Art. 27 recommender system transparency — in a reference for the rationale, and the rationale's list gains the protection of minors (Art. 28), one of the rule's obligations, which it had left out. The exemption is Art. 19(1) and (2): Section 3 of Chapter III, except Art. 24(3), does not apply to micro or small enterprises, nor for twelve months after a provider loses that status, unless designated under Art. 33. Arts 25 and 28 are in Section 3; Art. 16 is in Section 2 and is not excluded. First brought to the v2 shape on 29 Oct 2026 (v2 Session 15). Conditions, outcome, obligations and exemptions were not changed. clm-dsa-four-tiers and clm-art-16-over-removal-incentive were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-dsa", "locator": "Art. 2; Art. 3; Art. 16; Art. 17; Art. 19; Art. 20; Art. 24(3); Art. 25; Art. 26; Art. 27; Art. 28; Art. 30; Art. 33" }
+        ],
+        "queried": ["src-eurlex-dsa"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 23, 23.2: `ap-dsa-01`'s rationale and its references"]
+      }
     },
     {
       "id": "ap-dsa-02",
