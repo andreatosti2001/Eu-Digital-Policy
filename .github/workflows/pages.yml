@@ -163,19 +163,39 @@ jobs:
         run: node agent/policy/verify/cli.mjs
 
   build:
-    name: Build the artifact
+    name: Build the artifact, then the release gate
     needs: [gate-data, gate-boundary, gate-browser, gate-security]
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
       - name: The website, from the allowlist
         run: node tools/pages-artifact.mjs build _site
+      - name: The release gate — origin, publisher, approvals, artifact
+        # THE LAST THING BEFORE UPLOAD, in the job that uploads. If it exits
+        # non-zero the artifact is never uploaded and `deploy` has nothing to
+        # deploy. It checks (agent/release/gate.mjs, docs/DEPLOYMENT.md §2a):
+        # the run is the authorised publisher on main; pages.yml is the only
+        # workflow that publishes; the four gate jobs above reported success
+        # (GitHub's own `needs`, below); the decision ledger verifies; every
+        # commit that declares a Proposal traces to a signed, in-scope,
+        # unwithdrawn human decision that precedes it; and _site holds only
+        # allowlisted files, byte-identical to this commit's own, with no
+        # credential shape in them.
+        #
+        # RELEASE_REVIEWER_REGISTRY_SHA256 is a repository VARIABLE the owner
+        # sets (docs/DEPLOYMENT.md §3a). Unset, the gate refuses any run that
+        # relies on a reviewer signature; it never assumes the pin exists.
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          RELEASE_REVIEWER_REGISTRY_SHA256: ${{ vars.RELEASE_REVIEWER_REGISTRY_SHA256 }}
+        run: node agent/release/cli.mjs gate --ci --head "$GITHUB_SHA" --artifact _site --needs-env NEEDS_JSON
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:

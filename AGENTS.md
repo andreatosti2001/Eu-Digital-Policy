@@ -41,7 +41,9 @@ the evidence it describes.
 | `docs/GOVERNANCE-PROPOSALS.md` | SESSION 28: the decision corpus, measured — the approval ledger is ABSENT, not empty — the twelve patterns in what a person has had to correct, and seven governance proposals, none decided |
 | `docs/EVIDENCE-MODEL.md` | 27 Sep 2026: claim types vs evidence status, prose coverage, derived and attributed claims, locators, the remediation taxonomy, freshness by risk, provision dates, enforcement posture |
 | `docs/SEO-AUDIT-2026-09-27.md` · `docs/SEO-OPERATIONS.md` · `docs/DISCOVERABILITY-STRATEGY.md` | 27 Sep 2026: what a crawler saw before, the canonical model and route model now, the indexability gate, what only the owner can do in Search Console, and why |
-| `docs/DEPLOYMENT.md` | 27 Sep 2026: the deploy gate, the settings only the owner can change, the CSP and what Pages cannot send, the Control Room model, measured against the live site |
+| `docs/DEPLOYMENT.md` | 27 Sep 2026: the deploy gate, the settings only the owner can change, the CSP and what Pages cannot send, the Control Room model, measured against the live site. **4 Nov 2026: §2a the release gate, §3a the external settings it depends on, §3b how a person makes the approval it checks for** |
+| `docs/AUDIT-2026-11-04.md` | The Phase 4 operational-closure audit of 4 Nov 2026: the dispatcher, the decision ledger and the deploy gate measured against the code, what was built, what was tested, what is still a person's or a repository setting, and a 20-point readiness assessment that awards nothing for documentation alone |
+| `agent/release/README.md` | The release dispatcher (`agent/release/dispatch.mjs`) and the deploy gate (`gate.mjs`): the nine stages in the order they refuse, the ten gate conditions, and what neither is |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
@@ -84,6 +86,17 @@ Skills live in `.agents/skills/` — sixteen of them, listed with their scope an
 intended agent role in **`docs/SKILL-MAP.md`**. Invoke `project-context` at the start of every
 session, then load the skills the task actually needs; each one names the sibling that owns
 what it does not.
+
+**A RELEASE CHAIN EXISTS FROM 4 NOV 2026, AND NO PERSON HAS YET USED IT.** `agent/release/` holds a dispatcher that turns a
+*decided* proposal into one commit on a `release/…` branch (never pushed, never merged, nothing written without `--execute`), and
+the deploy gate `pages.yml`'s `build` job now runs before it uploads anything (`docs/DEPLOYMENT.md` §2a). The ledger became
+tamper-evident (hash chain, ed25519 signature checked against a registered reviewer, `human`/`simulated` provenance) —
+`agent/implement/attestation.mjs`. What that does **not** change: `agent/implement/decisions/decisions.jsonl` still does not
+exist, because no person has decided a proposal, and **nothing in a test or a tool may put a line there to make it look
+otherwise**; `production_dispatcher_wired` still reports no, because it measures the Orchestrator's
+`agent/orchestrator/dispatchers.mjs`, a different thing the release dispatcher does not create; and the gate has not yet run in
+GitHub Actions. Whether `main` is protected, whether the `github-pages` environment is restricted and whether the reviewer
+registry is pinned are settings the tree cannot show (`docs/DEPLOYMENT.md` §3a). `docs/AUDIT-2026-11-04.md`.
 
 **The Orchestrator does not replace a specialist.** `agent/orchestrator/` receives events,
 routes them through the ten workflow types, enforces the handoffs and the autonomy boundary,
@@ -411,10 +424,14 @@ node --test agent/simulation/selftest.mjs      # SESSION 24's simulation, incl. 
 node --test agent/autonomy/selftest.mjs       # SESSION 26's limited-autonomy runner, incl. the git half against a real temporary repository
 node --test agent/improve/selftest.mjs         # SESSION 27's improvement loop, incl. two real cycles over the real corpus
 node --test agent/production/selftest.mjs      # SESSION 29's production operating mode, incl. the refusal driven with synthetic facts
+node --test agent/release/selftest.mjs         # 4 Nov 2026: the dispatcher, the ledger's integrity and the deploy gate — positive and negative paths, on temporary repositories and keys
 node --test .control-room/selftest.mjs         # the Control Room, incl. SESSION 21's sixteen security tests (its "proofs"), on a local server — never a deployed one
 node --test tools/selftest.mjs                 # SESSION 30, the four validators' own suite, incl. a planted Google Fonts import
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
+
+**On 4 Nov 2026 the same 26 suites (the 25 `AGENT_SUITES` and `.control-room/`) pass 1394 tests**, 45 of them the release chain's
+own; the figures below are the history of how the count grew.
 
 **1196 tests across the twenty-five suites**, all passing on SESSION 30's tree — 25 rather
 than 24 because `tools/selftest.mjs` is the first entry in `AGENT_SUITES` that is not under

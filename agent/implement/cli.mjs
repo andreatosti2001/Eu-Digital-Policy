@@ -6,7 +6,7 @@
      node agent/implement/cli.mjs preflight --proposal <id>
      node agent/implement/cli.mjs boundary
      node agent/implement/cli.mjs check --as-of YYYY-MM-DD
-     node agent/implement/cli.mjs decide --proposal <id> --grant --by "<person>" [--note "…"]
+     node agent/implement/cli.mjs decide --proposal <id> --grant --by "<person>" [--role "<role>"] [--sign-key <private.pem>] [--note "…"]
      node agent/implement/cli.mjs decide --proposal <id> --deny  --by "<person>" --note "…"
      node agent/implement/cli.mjs run --as-of YYYY-MM-DD [--proposal <id>] [--apply] [--dry]
 
@@ -41,7 +41,9 @@ import {
 } from './ledger.mjs';
 import { boundaryCheck } from './boundary.mjs';
 import { runValidators, verdictFor } from './checks.mjs';
-import { readBaseline } from './baseline.mjs';
+import { readBaseline, REPO_ROOT } from './baseline.mjs';
+import { readFileSync } from 'node:fs';
+import { resolve, sep } from 'node:path';
 
 const argv = process.argv.slice(2);
 const command = argv.find((a) => !a.startsWith('--')) ?? 'queue';
@@ -178,10 +180,12 @@ if (command === 'decide') {
   const grant = has('--grant');
   const deny = has('--deny');
   const note = valueOf('--note');
+  const role = valueOf('--role');
+  const keyPath = valueOf('--sign-key');
 
   if (!proposalId || !by || (grant === deny)) {
     out();
-    out('  node agent/implement/cli.mjs decide --proposal <id> --grant|--deny --by "<person>" [--note "…"]');
+    out('  node agent/implement/cli.mjs decide --proposal <id> --grant|--deny --by "<person>" [--role "<role>"] [--sign-key <private.pem>] [--note "…"]');
     out();
     out('  THIS IS A HUMAN\'S COMMAND. It writes to the approval ledger, which is the only place');
     out('  a grant exists. --by must name a person: any name belonging to an agent in this system');
@@ -191,16 +195,29 @@ if (command === 'decide') {
     out('  The decision is bound to the proposal\'s fingerprint. Editing the proposal afterwards');
     out('  VOIDS the approval rather than carrying it onto a scope nobody agreed to.');
     out();
+    out('  --sign-key signs the entry with the reviewer\'s ed25519 private key (made by');
+    out('  `node agent/release/cli.mjs keygen`). Without a signature the entry is accepted by this');
+    out('  agent layer and REFUSED by the release gate, which requires a registered reviewer\'s key.');
+    out();
     process.exit(1);
   }
 
   try {
-    const entry = recordDecision({ proposalId, outcome: grant ? 'granted' : 'denied', decidedBy: by, note });
+    let signer = null;
+    if (keyPath) {
+      const abs = resolve(keyPath);
+      if (abs === REPO_ROOT || abs.startsWith(REPO_ROOT + sep)) {
+        throw new Error(`--sign-key ${keyPath} is inside the repository. A private key kept in the tree is readable by every agent that can read the tree, which defeats what the signature is for. Keep it elsewhere.`);
+      }
+      signer = { privateKeyPem: readFileSync(abs, 'utf8') };
+    }
+    const entry = recordDecision({ proposalId, outcome: grant ? 'granted' : 'denied', decidedBy: by, note, role, signer });
     out();
     out(`  RECORDED — ${entry.outcome} by ${entry.decided_by} at ${entry.decided_at}`);
     out(`  proposal   ${entry.proposal_id} (${entry.proposal_contract}, produced by ${entry.proposal_agent})`);
     out(`  approval   ${entry.approval_id}`);
     out(`  bound to   ${entry.proposal_sha256}`);
+    out(`  entry      #${entry.seq} ${entry.entry_sha256.slice(0, 16)}… · ${entry.signature ? `signed (key ${entry.signature.key_fingerprint.slice(0, 12)}…)` : 'UNSIGNED — the release gate will refuse it'}`);
     out(`  ledger     ${ledgerPath()}`);
     out();
     out('  Commit the ledger. A decision that exists only in a working tree is a decision nobody');

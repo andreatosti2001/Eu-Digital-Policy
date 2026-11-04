@@ -70,8 +70,13 @@ export class Implementer {
    * @param {{tracer:object, store:object, asOf:string, root?:string,
    *          apply?:boolean, quick?:boolean}} opts
    */
-  constructor({ tracer, store, asOf, root = REPO_ROOT, apply = false, quick = false }) {
+  constructor({ tracer, store, asOf, root = REPO_ROOT, apply = false, quick = false, records = null, ledger = null }) {
     this.tracer = tracer;
+    /* Optional, and for one caller: agent/release/dispatch.mjs verifies the
+       record store and the ledger ONCE and hands the same snapshot here, so
+       the approval it checked is the approval this agent acts on. Left null
+       (every other caller) the agent reads both itself, as it always did. */
+    this.injected = { records, ledger };
     this.store = store;
     this.asOf = asOf;
     this.root = root;
@@ -89,8 +94,8 @@ export class Implementer {
     const traceRef = (span) => ({ trace_id: span.trace_id, span_id: span.span_id, run_id: run.run_id });
     this.traceRef = traceRef;
 
-    const records = readAgentRecords();
-    const ledger = readLedger();
+    const records = this.injected.records ?? readAgentRecords();
+    const ledger = this.injected.ledger ?? readLedger();
 
     const survey = surveyProposals({ records, ledger });
     const chosen = proposalIds ? survey.filter((s) => proposalIds.includes(s.proposal_id)) : survey;

@@ -39,6 +39,13 @@
      · ATTRIBUTION. The file is in git. Who added the line, and when,
        is a commit.
 
+   SINCE THE RELEASE-GOVERNANCE SESSION (4 Nov 2026) an entry is also
+   hash-chained, may carry an ed25519 signature checked against a registered
+   reviewer key, and says whether it is human or simulated
+   (attestation.mjs). That makes a forged or edited line DETECTABLE; it does
+   not authenticate a person, and the paragraph below stays true of an
+   unsigned entry.
+
    WHAT THIS IS NOT, STATED PLAINLY RATHER THAN IMPLIED. It is not
    authentication. §11 and §13 of the governance protocol require an
    authenticated actor and server-side enforcement; this repository is
@@ -59,11 +66,17 @@ import { createHash } from 'node:crypto';
 import { canonicalJson } from '../schemas/gateway.mjs';
 import { readRecords, listRecordFiles, DEFAULT_RECORD_DIR } from '../scout/store.mjs';
 import { getContract } from '../schemas/registry.mjs';
+import {
+  GENESIS, LEDGER_SCHEMA_VERSION, SIMULATED_PREFIX, computeEntryHash, signEntryHash, verifyLedger,
+} from './attestation.mjs';
 
 export const IMPLEMENT_ROOT = dirname(fileURLToPath(import.meta.url));
 export const DECISION_DIR = join(IMPLEMENT_ROOT, 'decisions');
 export const DECISION_LEDGER = 'decisions.jsonl';
-export const LEDGER_VERSION = 1;
+/* Version 2 (this session): every entry is hash-chained, may be signed by a
+   registered reviewer, and says whether it is human or simulated. See
+   attestation.mjs for what each addition proves and what none of them does. */
+export const LEDGER_VERSION = LEDGER_SCHEMA_VERSION;
 
 /** The states `deriveApproval` can return. Each one is a different
  *  fact and none of them collapses into another. */
@@ -75,6 +88,7 @@ export const APPROVAL_STATES = [
   'void_scope_changed',    // decided, but the proposal has been edited since
   'void_self_approved',    // the decision names the proposing agent
   'void_unknown_proposal', // a decision exists for a proposal nobody can produce
+  'void_simulated',        // the decision is a labelled test fixture, not a person's
 ];
 
 /** A grant, and only a grant, authorises implementation. */
@@ -159,7 +173,7 @@ export function readAgentRecords({ dir = DEFAULT_RECORD_DIR } = {}) {
  * @returns {{state:string, why:string, approval_id:string|null,
  *            decision:object|null, discarded:object[], proposal:object|null}}
  */
-export function deriveApproval(proposalId, { records, ledger } = {}) {
+export function deriveApproval(proposalId, { records, ledger, allowSimulated = false } = {}) {
   const rec = records ?? readAgentRecords();
   const led = ledger ?? readLedger();
   let proposal = rec.byId.get(proposalId) ?? null;
@@ -194,6 +208,14 @@ export function deriveApproval(proposalId, { records, ledger } = {}) {
       approval_id: request.approval_id,
       decision: null, discarded, proposal,
     };
+  }
+
+  /* A simulated decision is a labelled fixture. It is read as void unless the
+     caller says, in so many words, that it is rehearsing — and the release
+     gate never says so. Checked on the label as well as on `provenance`, so
+     a line that dropped one of the two still reads as simulated. */
+  if (!allowSimulated && (decision.provenance === 'simulated' || String(decision.decided_by).startsWith(SIMULATED_PREFIX))) {
+    return { state: 'void_simulated', why: `the decision by "${decision.decided_by}" is a SIMULATED test fixture. It authorises nothing: an approval has to come from a person, and a fixture is not one.`, approval_id: decision.approval_id, decision, discarded, proposal };
   }
 
   let proposal_source = proposal ? 'record_store' : null;
@@ -241,17 +263,23 @@ export function deriveApproval(proposalId, { records, ledger } = {}) {
 
 export class SelfApprovalRefused extends Error {}
 export class UnknownProposal extends Error {}
+export class LedgerIntegrityError extends Error {}
 
 /**
  * Record a human decision. The ONLY code path that writes a grant.
  *
  * Note what it does not take: no `force`, no `skip_checks`, no
  * `assume`. A function with an override argument is a function whose
- * checks are advisory.
+ * checks are advisory. `signer` and `simulated` are not overrides: the first
+ * adds an authenticity claim a reader can check, the second labels a fixture
+ * so that nothing reads it as a grant.
  */
-export function recordDecision({ proposalId, outcome, decidedBy, note = null, records, dir = DECISION_DIR, now = () => new Date().toISOString() }) {
+export function recordDecision({ proposalId, outcome, decidedBy, note = null, role = null, signer = null, simulated = false, records, dir = DECISION_DIR, now = () => new Date().toISOString() }) {
   if (!['granted', 'denied'].includes(outcome)) throw new Error(`outcome must be "granted" or "denied", not "${outcome}"`);
   if (!decidedBy || !String(decidedBy).trim()) throw new Error('a decision with no decided_by is a record of nobody having decided');
+  if (simulated && signer) throw new Error('a simulated decision cannot be signed: a signature is a claim of authenticity, and a fixture makes none');
+  if (simulated && !String(decidedBy).startsWith(SIMULATED_PREFIX)) throw new Error(`a simulated decision must be named "${SIMULATED_PREFIX} …" so it cannot be mistaken for a person's`);
+  if (!simulated && String(decidedBy).startsWith(SIMULATED_PREFIX)) throw new Error(`"${decidedBy}" is labelled as a simulation; pass simulated:true or name a person`);
 
   const rec = records ?? readAgentRecords();
   const proposal = rec.byId.get(proposalId);
@@ -274,16 +302,32 @@ export function recordDecision({ proposalId, outcome, decidedBy, note = null, re
     throw new Error(`no ApprovalRequest names proposal "${proposalId}". A decision is a decision ON a request; without one there is no record of what the human was asked to check.`);
   }
 
+  /* Append to a ledger that is readable, or not at all. A chain continued
+     over a corrupt line would carry the corruption forward under a valid
+     hash. Structure only: signatures and the registry are the release gate's
+     business, so a development ledger stays appendable. */
+  const file = ledgerPath(dir);
+  const existing = existsSync(file) ? readFileSync(file, 'utf8') : '';
+  const check = verifyLedger({ dir, text: existing, allowSimulated: true, reviewers: { reviewers: [], problems: [] } });
+  const structural = check.problems.filter((p) => !['unknown_reviewer', 'unsigned', 'signature_invalid', 'reviewer_revoked', 'reviewer_name_mismatch', 'reviewer_role_mismatch', 'reviewer_registry'].includes(p.code));
+  if (structural.length) {
+    throw new LedgerIntegrityError(`the ledger at ${file} does not verify (${[...new Set(structural.map((p) => p.code))].join(', ')}); nothing is appended to a ledger that has been edited or cannot be read. Line ${structural[0].line ?? '?'}: ${structural[0].why}`);
+  }
+
   const entry = {
     ledger_version: LEDGER_VERSION,
+    seq: check.count + 1,
+    prev_entry_sha256: check.count ? check.chain_head : GENESIS,
     approval_id: approvalId,
     proposal_id: proposalId,
     proposal_contract: proposal.contract,
     proposal_agent: proposal.agent,
     proposal_sha256: proposalFingerprint(proposal),
     outcome,
+    provenance: simulated ? 'simulated' : 'human',
     decided_at: now(),
     decided_by: decidedBy,
+    decided_role: role,
     note,
     /* What the human was asked to check, copied in so the ledger
        stands on its own if agent/records/ is regenerated — this is a
@@ -301,9 +345,14 @@ export function recordDecision({ proposalId, outcome, decidedBy, note = null, re
        hashes to that value, so editing it voids the decision. */
     proposal_snapshot: proposalSubstance(proposal),
   };
+  entry.entry_sha256 = computeEntryHash(entry);
+  /* The signer is a private key the CALLER holds. This function never reads
+     one from disk and never writes one: where the key lives is the reviewer's
+     business, and it is not this repository. */
+  entry.signature = signer ? signEntryHash(entry.entry_sha256, signer.privateKeyPem) : null;
 
   mkdirSync(dir, { recursive: true });
-  appendFileSync(ledgerPath(dir), `${JSON.stringify(entry)}\n`, 'utf8');
+  appendFileSync(file, `${JSON.stringify(entry)}\n`, 'utf8');
   return entry;
 }
 

@@ -116,3 +116,9 @@ agent/autonomy/actions/*
 # agent/health/history/ and the other run stores use.
 tools/evidence-audit-runs/*
 !tools/evidence-audit-runs/README.md
+
+# The release dispatcher's run log: one line per dispatch attempt, refusals
+# included. Per-machine run state like every other agent's; the commit a
+# dispatch makes (trailers: Proposal, Approval, Dispatch-Key) is the durable
+# record, and the decision ledger is the tracked one.
+agent/release/runs/

@@ -104,6 +104,15 @@ decision and a refusal of the four forgeries that do not require write access. *
 real** — it is open question 1 in §9 — and closing it needs the Control Room of SESSION 21,
 not a comment claiming it is closed.
 
+**Strengthened on 4 Nov 2026, not closed.** An entry is now hash-chained, may carry an ed25519 signature checked against a
+reviewer key registered in `reviewers.json`, and says whether it is `human` or `simulated` (`agent/implement/attestation.mjs`).
+`agent/release/` requires the signature; this agent layer still accepts an unsigned entry, as it always did. That makes a forged
+or edited line *detectable* by anyone with the tree. It does not show who holds the private key or that the registry is honest —
+the registry is in the repository, so the control that closes that is a fingerprint the owner pins *outside* it
+(`docs/DEPLOYMENT.md` §3a). The Control Room's `POST /api/review` authenticates the reviewer and writes an **unsigned** entry,
+which the release gate refuses; having it sign would put a key on a server, which is a decision about who the signer is, and is
+left to the author. Open question 1 stays open in that respect.
+
 ---
 
 ## 4. The ten gates

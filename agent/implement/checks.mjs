@@ -63,6 +63,7 @@ export const AGENT_SUITES = [
   'agent/autonomy/selftest.mjs',
   'agent/improve/selftest.mjs',
   'agent/production/selftest.mjs',
+  'agent/release/selftest.mjs',
   /* The first entry here that is not under agent/, and it belongs: this
      list is what runs for a change under agent/ OR tools/, and until
      SESSION 30 nothing tested the four validators that are this
