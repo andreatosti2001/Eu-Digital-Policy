@@ -411,6 +411,7 @@ const READ_2026_11_04 = ['ap-nis2-01', 'ap-nis2-02', 'ap-cra-01', 'ap-ai-act-02'
 const READ_V2_23 = Object.freeze({
   'ap-gdpr-01': '2026-11-04',
   'ap-gdpr-02': '2026-11-04',
+  'ap-gdpr-03': '2026-11-04',
 });
 /** The date a rule was last read, as the closures above set it; every other rule keeps 2026-10-29. */
 const dateOf = (id) => READ_V2_23[id] ?? (READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29');

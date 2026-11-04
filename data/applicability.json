@@ -122,8 +122,17 @@
         "actor": ["gdpr:art-4", "gdpr:art-37"],
         "activity": ["gdpr:art-2", "gdpr:art-4"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 14): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 4 point (7), 6, 35 and 37, and recital 19; the corrigendum of 23 May 2018 (32016R0679R(02)) changes Art. 37(1)(c) and none of the text cited here, and the Publications Office's metadata lists no act amending the Regulation. The Law Enforcement Directive exemption is Art. 2(2)(d); recital 19 names Directive (EU) 2016/680, which this dataset does not hold. Two exemptions were added on the author's decisions of 29 Oct 2026: the Union's own institutions, bodies, offices and agencies (Art. 2(3), which refers them to Regulation (EC) No 45/2001; the act that governs them today was not read, so the text names none), and courts acting in their judicial capacity (Art. 37(1)(a); F-5, V2C-07). The GDPR does not define 'public authority': Art. 4 point (7) names one among controllers and Art. 37(1)(a) uses the term for this obligation, hence condition_provisions.actor. Conditions, outcome and rationale were not changed."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 4, 6, 35 and 37, and recital 19. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and three corrigenda, of which only 32016R0679R(02) (23 May 2018) has an English expression; read that day, it changes Art. 37(1)(c) ('and' becomes 'or' between special categories of data and personal data relating to criminal convictions and offences) and none of the text cited here. The Law Enforcement Directive exemption is Art. 2(2)(d); recital 19 names Directive (EU) 2016/680, which this dataset does not hold. Art. 2(3) refers the Union's own institutions, bodies, offices and agencies to Regulation (EC) No 45/2001; the act that governs them today was not read, so the exemption names none. Art. 37(1)(a) excepts courts acting in their judicial capacity. The GDPR does not define 'public authority': Art. 4 point (7) names one among controllers and Art. 37(1)(a) uses the term for this obligation, hence condition_provisions.actor. Read against the rule, nothing was found to change. First brought to the v2 shape on 29 Oct 2026 (v2 Session 14). Conditions, outcome, rationale, obligations and exemptions were not changed.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-gdpr", "locator": "Art. 2; Art. 4; Art. 6; Art. 35; Art. 37; recital 19" }
+        ],
+        "queried": ["src-eurlex-gdpr"],
+        "outcome": "unchanged",
+        "decisions": []
+      }
     },
     {
       "id": "ap-gdpr-04",
