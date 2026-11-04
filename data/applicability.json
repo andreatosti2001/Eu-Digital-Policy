@@ -876,7 +876,7 @@
         "activity": ["activity:cloud-services", "activity:connected-products"]
       },
       "outcome": "outcome:possible",
-      "rationale": "The Data Act governs product and service data as such — personal or not, though predominantly non-personal, industrial and machine-generated, with the GDPR prevailing wherever personal data is involved — and reallocates control over it by default. An organisation may be a data holder, a user or a data recipient depending on the arrangement, and the obligations differ in each role.",
+      "rationale": "The Data Act governs product and service data as such — personal or not, though predominantly non-personal, industrial and machine-generated, with the GDPR prevailing in any conflict where personal data is involved — and reallocates control over it by default. An organisation may be a data holder, a user or a data recipient depending on the arrangement, and the obligations differ in each role.",
       "obligations": ["data-act:art-3-1", "data-act:art-25"],
       "authority": ["nca-*"],
       "dates": ["tl-data-act-2025-09-12-application", "tl-data-act-2026-09-12-application", "tl-data-act-2027-09-12-application"],
@@ -888,14 +888,24 @@
       "claims": ["clm-data-act-non-personal", "clm-data-act-enforcement-uneven"],
       "sources": [
         { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 1(3)(a), (c) and (f); Art. 2 points (5), (6), (8), (24), (25) and (26)", "for": "scope" },
-        { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 3(1); Art. 25", "for": "obligation" }
+        { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 3(1); Art. 25", "for": "obligation" },
+        { "source_id": "src-eurlex-data-act", "supports": "supports:direct", "locator": "Art. 1(2) and (5); Art. 2 points (12), (13) and (14)", "for": "rationale" }
       ],
       "condition_provisions": {
         "actor": ["data-act:art-2"],
         "activity": ["data-act:art-2"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2023/2854 retrieved from the Publications Office's Cellar by CELEX (32023R2854): Arts 1(3), 2 points (5), (6), (8), (24), (25) and (26), 3(1), 7(1), 25 and 50. The Publications Office's metadata lists no act amending the Regulation and six corrigenda, of which only R(01) has an English expression; it renumbers a point of Art. 48 and touches nothing cited here. The Act defines small and micro enterprises by reference to Recommendation 2003/361/EC, which was not read, and no large company. On the author's decisions of 29 Oct 2026 the dates hold 12 September 2026 (Art. 50, third paragraph) and keep 12 September 2027, which is Chapter IV's tranche for legacy contracts (Art. 50, sixth paragraph), not a date the rule's obligations derive; and the Art. 7(1) exemption is added. Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2023/2854 retrieved from the Publications Office's Cellar by CELEX (32023R2854): Arts 1, 2 points (5), (6), (8), (12), (13), (14), (24), (25) and (26), 3, 7, 25 and 50. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and seven corrigenda, of which only 32023R2854R(01) has an English expression; read that day, it renumbers a point of Art. 48 and touches nothing cited here. On the author's decision of 4 Nov 2026 the rule cites, in a reference for the rationale, Art. 1(2) (the Regulation covers personal and non-personal data), Art. 1(5) (data protection law prevails in the event of a conflict) and Art. 2 points (12), (13) and (14) (the user, the data holder, the data recipient), and the rationale says the GDPR prevails 'in any conflict where personal data is involved'; it said 'wherever personal data is involved'. The Act defines small and micro enterprises by reference to Recommendation 2003/361/EC, which was not read, and no large company. The dates hold 12 September 2026 (Art. 50, third paragraph) and keep 12 September 2027, Chapter IV's tranche for legacy contracts (Art. 50, sixth paragraph), not a date the rule's obligations derive (29 Oct 2026). First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome, obligations, dates, exemptions and depends_on were not changed. The claims were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-data-act", "locator": "Art. 1; Art. 2 points (5), (6), (8), (12), (13), (14), (24), (25) and (26); Art. 3; Art. 7; Art. 25; Art. 50" }
+        ],
+        "queried": ["src-eurlex-data-act"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 23, 23.3: `ap-data-act-04`'s rationale and its references"]
+      }
     },
 
     {

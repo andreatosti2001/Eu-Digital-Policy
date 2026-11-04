@@ -428,6 +428,7 @@ const READ_V2_23 = Object.freeze({
   'ap-data-act-01': '2026-11-04',
   'ap-data-act-02': '2026-11-04',
   'ap-data-act-03': '2026-11-04',
+  'ap-data-act-04': '2026-11-04',
 });
 /** The date a rule was last read, as the closures above set it; every other rule keeps 2026-10-29. */
 const dateOf = (id) => READ_V2_23[id] ?? (READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29');
@@ -2998,7 +2999,9 @@ test('Y6 · 17.1: the Data Act\'s, NIS2\'s, DORA\'s and the CRA\'s ten rules are
     ["src-eurlex-data-act", "direct", "rationale", "Art. 23"]]);
   assert.deepEqual(refs("ap-data-act-02"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(f); Art. 2 points (8) and (30)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 25; Art. 29(1)"]]);
   assert.deepEqual(refs("ap-data-act-03"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(a); Art. 2 points (5) and (6)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 3(1)"]]);
-  assert.deepEqual(refs("ap-data-act-04"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(a), (c) and (f); Art. 2 points (5), (6), (8), (24), (25) and (26)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 3(1); Art. 25"]]);
+  assert.deepEqual(refs("ap-data-act-04"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(a), (c) and (f); Art. 2 points (5), (6), (8), (24), (25) and (26)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 3(1); Art. 25"],
+    /* v2 Session 23 (§8, 23.3: `ap-data-act-04`'s rationale and its references) */
+    ["src-eurlex-data-act", "direct", "rationale", "Art. 1(2) and (5); Art. 2 points (12), (13) and (14)"]]);
   assert.deepEqual(refs("ap-nis2-01"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(1), (2) and (3); Art. 3(1) and (2); Annexes I and II"], ["src-eurlex-nis2", "direct", "obligation", "Art. 3(4); Art. 20(1) and (2); Art. 21(1) and (2); Art. 23(1) and (4)"], ["src-eurlex-nis2", "direct", "rationale", "Art. 32(6)"], ["src-eurlex-nis2", "direct", "date", "Art. 41(1)"], ["src-ec-nis2-referral-2026", "context", "rationale", "third paragraph"]]);
   assert.deepEqual(refs("ap-nis2-02"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(1) and (2); Art. 3(1) and (2); Art. 6 points (30) and (31); Annex I, point 8"], ["src-eurlex-nis2", "direct", "obligation", "Art. 20(1); Art. 21(1) and (2); Art. 23(1) and (4)"]]);
   assert.deepEqual(refs("ap-nis2-03"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(2)(f) and (5)(a); Art. 6 point (35); Annex I, point 10"], ["src-eurlex-nis2", "direct", "obligation", "Art. 21(1) and (2); Art. 23(1) and (4)"]]);
