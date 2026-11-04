@@ -5,6 +5,24 @@ E-1…E-6 measured, the status lines reworded as approved); 20.2 written and reh
 **Final checkpoint approved on 4 Nov 2026 (roadmap §8); the pull-request question follows.**
 **Branch:** `claude/v2-session-20-phase-4` (no branch was assigned by the environment), cut from `main` at `40d4dd1`.
 
+## Branch register — 4 November 2026 (the prompt of v2 Session 21)
+
+- Branch `claude/v2-session-21-prompt`, cut from `main` at `3bae4fa` (#58 merged). It carries
+  `docs/prompts/v2-session-21.md`, this entry, one §8 row (`docs/ROADMAP-v2.md`, "A standing rule: the next session's
+  prompt is a precondition of closing a session's work") and a two-line pointer to it in `AGENTS.md`.
+- Drafted on the author's request of 4 Nov 2026 ("Write session 21 prompts, including the commitment to write the next
+  session's prompt as a precondition to closing the session's work"), after four questions, answered: the scope,
+  "Assumptions first, then group (a) (Recommended)"; the commitment, "Last item, before the final checkpoint
+  (Recommended)"; its record, "§8 row + prompt + AGENTS.md pointer (Recommended)"; Session 20's leftovers, all four
+  ("Stale 'Phase 4 not open' lines", "STATUS_PREDATES_MILESTONE dma", "'EUDigitalPolicy' in HANDOVER", "Session 18's
+  three open findings"). The commitment is the §8 row; the other answers shape the prompt and are not §8 rows.
+- Measured while drafting, on `3bae4fa`, full clone: `freshness --as-of 2027-01-27` 0 `RULE_STALE`, `--as-of 2027-01-28`
+  33; `evidence-audit --as-of 2027-03-26` reports T-12 on `ap-cra-01` only; today `STATUS_PREDATES_MILESTONE
+  instruments/dma`; the eIDAS2 page title is still the generic one; `docs/v2-design/status-labels.json` still has
+  `x-verification`.
+- Not asked, by default: the branch (a new branch and a pull request, as for the prompts of Sessions 18–20).
+- Disposition: pushed; a pull request to `main` opened, unless the author says otherwise.
+
 ## Branch register — 3 November 2026 (v2 Session 20)
 
 - Branch `claude/v2-session-20-phase-4`, cut from `main` at `40d4dd1` (#57, the prompt, merged). Nothing was merged in;
