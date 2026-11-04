@@ -64,7 +64,12 @@ V2C-15 kept after V2C-13; E5-1…E5-7 and X5-1…X5-7 as drafted; the sessions a
 not opened**: it opens on the author's word against E5-1…E5-7; E5-3 is Session 27's to write and E5-5 waits for Sessions 25
 and 26. The document's status line, M-6, Session 30's row and §7 now carry the answers. Validators 0 errors (`validate.mjs`
 5 warnings, the baseline), `tools/selftest.mjs` 140/140.
-`AGENTS.md`'s document table does not list the new file; that, with the status lines still saying Phase 4 is open, is
+**The prompt of v2 Session 27** (Phase 5's design, Nov–Dec 2026) was drafted on the author's answer ("Draft S27's prompt
+now (Recommended)", §8 `d68e419`): `docs/prompts/v2-session-27.md`, in Italian — 27.1 the premises verified, 27.2 the
+standard E5-3 with planted cases (checkpoint), 27.3 the X5-1 table by scratch measurement and decided per instrument, 27.4
+the paper test, 27.5 S28's prompt and whether Phase 5 opens; `docs/` only; stop rule 27.4, then 27.3. **The calendar**:
+S27 in Nov–Dec 2026; S25 (prompt kept) and S26 in 12 Jan–2 Feb 2027, before the 33 rules lapse on 3 Feb 2027; the reminder
+scheduled for 13 Jan 2027 still stands. `AGENTS.md`'s document table does not list the new file; that, with the status lines still saying Phase 4 is open, is
 status-document work for after the author's answers.
 
 ## Branch register — 4 November 2026 (v2 Session 25)
@@ -76,8 +81,10 @@ status-document work for after the author's answers.
 - The clone was shallow at the start; `git fetch --unshallow` was run before anything else.
 - Disposition: the session stopped at 25.0 on the author's decision (§8 `e0b69ce`); pushed, and a pull request to `main`
   opened on the author's instruction ("Open the PR (Recommended)"); **merged by the author as #66 (`9542548`)**, at
-  `150990e`. 25.4, the Phase 5 set-up, was written after that on the author's request and is rebased onto `9542548`; it
-  reaches `main` only by a new pull request, put to the author.
+  `150990e`. 25.4, the Phase 5 set-up, its seven decisions and the prompt of Session 27, was written after that on the
+  author's request and is rebased onto `9542548`; `origin/main` re-fetched before this entry: still `9542548`. Pushed, and
+  a new pull request to `main` opened on the author's instruction ("Open a new PR (Recommended)"); nothing is pushed to the
+  branch after it is opened.
 
 ## Branch register — 4 November 2026 (v2 Session 24)
 
