@@ -2,7 +2,7 @@
 
 **Last updated:** v2 Session 20, final checkpoint (3 November 2026): 20.1 approved (Phase 4 opened on the author's word,
 E-1…E-6 measured, the status lines reworded as approved); 20.2 written and rehearsed (`docs/RULE-MAINTENANCE.md`).
-**Awaiting the author's approval at the final checkpoint, then the pull-request question.**
+**Final checkpoint approved on 4 Nov 2026 (roadmap §8); the pull-request question follows.**
 **Branch:** `claude/v2-session-20-phase-4` (no branch was assigned by the environment), cut from `main` at `40d4dd1`.
 
 ## Branch register — 3 November 2026 (v2 Session 20)
