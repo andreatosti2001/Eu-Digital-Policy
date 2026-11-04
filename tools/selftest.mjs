@@ -408,7 +408,9 @@ test('F6 · the prompts are still printed in full — nothing was silenced', () 
 const READ_2026_11_04 = ['ap-nis2-01', 'ap-nis2-02', 'ap-cra-01', 'ap-ai-act-02', 'ap-ai-act-06', 'ap-gdpr-04', 'ap-dsa-03', 'ap-dma-04'];
 /* v2 Session 23 (docs/ROADMAP-v2.md §8, 23.0 questions 1 and 2): each rule closed in the attestation form,
    with the date of its reading; one entry is added in the same commit as each closure, on the author's word */
-const READ_V2_23 = Object.freeze({});
+const READ_V2_23 = Object.freeze({
+  'ap-gdpr-01': '2026-11-04',
+});
 /** The date a rule was last read, as the closures above set it; every other rule keeps 2026-10-29. */
 const dateOf = (id) => READ_V2_23[id] ?? (READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29');
 /** The tree's newest verification date. */
