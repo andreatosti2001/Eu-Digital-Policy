@@ -606,7 +606,7 @@
         "activity": ["activity:ai-deployment", "activity:ai-development"]
       },
       "outcome": "outcome:possible",
-      "rationale": "The Chapter III high-risk obligations — risk management, data governance, technical documentation, logging, human oversight, accuracy and cybersecurity, conformity assessment and registration — reach a system only through one of the two Article 6 entry routes. Most deployed AI never leaves the minimal-risk tier. Following the AI Omnibus these duties arrive on 2 December 2027 for Annex III systems and 2 August 2028 for product-embedded ones.",
+      "rationale": "The Chapter III high-risk obligations — risk management, data governance, technical documentation, logging, human oversight, accuracy and cybersecurity, conformity assessment and registration, and for certain deployers a fundamental rights impact assessment — reach a system only through one of the two Article 6 entry routes. Most deployed AI never leaves the minimal-risk tier. Following the AI Omnibus these duties arrive on 2 December 2027 for Annex III systems and 2 August 2028 for product-embedded ones.",
       "obligations": ["ai-act:art-6", "ai-act:art-9", "ai-act:art-27"],
       "authority": ["nca-*"],
       "dates": ["tl-ai-act-2027-12-02-application", "tl-ai-act-2028-08-02-application"],
@@ -620,14 +620,26 @@
         { "source_id": "src-eurlex-ai-act", "supports": "supports:direct", "locator": "Art. 2(1)(a) and (b); Art. 3 points (1), (3) and (4); Art. 6(1) and (2)", "for": "scope" },
         { "source_id": "src-eurlex-ai-act", "supports": "supports:direct", "locator": "Art. 6; Art. 9(1); Art. 27(1)", "for": "obligation" },
         { "source_id": "src-eurlex-ai-omnibus", "supports": "supports:direct", "locator": "Art. 1 point (40)(b) (Art. 113, third paragraph, point (c), as replaced)", "for": "date" },
-        { "source_id": "src-ec-ai-omnibus-in-force", "supports": "supports:context", "locator": "Section 'Extended timelines'", "for": "rationale" }
+        { "source_id": "src-ec-ai-omnibus-in-force", "supports": "supports:context", "locator": "Section 'Extended timelines'", "for": "rationale" },
+        { "source_id": "src-eurlex-ai-act", "supports": "supports:direct", "locator": "Art. 10; Art. 11; Art. 12; Art. 14; Art. 15; Art. 43; Art. 49", "for": "rationale" }
       ],
       "condition_provisions": {
         "actor": ["ai-act:art-3"],
         "activity": ["ai-act:art-3"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 16): brought to the v2 shape. Read that day in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX: Regulation (EU) 2024/1689 (32024R1689), Arts 2(1), 3 points (1), (3) and (4), 6, 9, 27 and 113 and Annex III, read as amended by Regulation (EU) 2026/1744 (32026R1744), Art. 1 points (8) (Art. 6(1a) to (1c), inserted; Art. 6(1) to (4) unchanged), (13) (Art. 27(4) and (5), replaced) and (40)(b) (Art. 113, third paragraph, point (c), replaced: 2 December 2027 for systems high-risk under Art. 6(2) and Annex III, 2 August 2028 for those under Art. 6(1) and Annex I). The Publications Office's metadata lists that one amending act and four corrigenda of the AI Act, none with an English expression. The Commission's news item (src-ec-ai-omnibus-in-force) was read at its URL that day and is held as context, the Omnibus carrying the dates (the author's decision of 29 Oct 2026). On the author's decision of 29 Oct 2026 the exemption's text was corrected to state the four conditions of Art. 6(3) and that an Annex III system performing profiling of natural persons is always high-risk. The eight areas depends_on names are Annex III's headings. Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX: Regulation (EU) 2024/1689 (32024R1689), Arts 2, 3 points (1), (3) and (4), 6, 9, 10, 11, 12, 14, 15, 27, 43, 49 and 113 and Annex III, as amended by Regulation (EU) 2026/1744 (32026R1744), Art. 1 points (3) (Art. 2(13), added), (8) (Art. 6(1a) to (1c), inserted; Art. 6(1) to (4) unchanged), (9) (Art. 10, amended), (10) (Art. 11(1), second subparagraph, replaced), (11) (Art. 43(3), replaced), (13) (Art. 27(4) and (5), replaced) and (40) (Art. 113, third paragraph, point (c), replaced: 2 December 2027 for systems high-risk under Art. 6(2) and Annex III, 2 August 2028 for those under Art. 6(1) and Annex I). The Publications Office's SPARQL endpoint, queried that day, lists that one amending act and four corrigenda of the AI Act, none with an English expression, and one corrigendum of Regulation (EU) 2026/1744, without an English expression. Also read that day: the Commission's news item (src-ec-ai-omnibus-in-force) at its URL, section 'Extended timelines', held as context. On the author's decision of 4 Nov 2026 the rule cites, in a reference for the rationale, the Articles of the duties its rationale names that it did not cite — Arts 10, 11, 12, 14, 15, 43 and 49 — and the rationale's list gains the fundamental rights impact assessment (Art. 27), one of the rule's obligations, which it had left out. The Omnibus refines Arts 10, 11(1) and 43(3) and removes none of the duties; Art. 2(13), which it adds, allows delegated acts to limit some requirements for Annex I systems. The exemption states the four conditions of Art. 6(3) and that an Annex III system performing profiling of natural persons is always high-risk (29 Oct 2026). The eight areas depends_on names are Annex III's headings. First brought to the v2 shape on 29 Oct 2026 (v2 Session 16). Conditions, outcome, obligations, dates, exemptions and depends_on were not changed. The claims were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-ai-act", "locator": "Art. 2; Art. 3 points (1), (3) and (4); Art. 6; Art. 9; Art. 10; Art. 11; Art. 12; Art. 14; Art. 15; Art. 27; Art. 43; Art. 49; Art. 113; Annex III" },
+          { "source_id": "src-eurlex-ai-omnibus", "locator": "Art. 1 points (3), (8), (9), (10), (11), (13) and (40); Art. 4" },
+          { "source_id": "src-ec-ai-omnibus-in-force", "locator": "Section 'Extended timelines'" }
+        ],
+        "queried": ["src-eurlex-ai-act", "src-eurlex-ai-omnibus"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 23, 23.3: `ap-ai-act-04`'s rationale and its references"]
+      }
     },
     {
       "id": "ap-ai-act-05",
