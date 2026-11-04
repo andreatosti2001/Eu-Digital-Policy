@@ -1,7 +1,7 @@
 # HANDOVER
 
 **Last updated:** v2 Session 21, final checkpoint (4 November 2026): 21.1 and 21.2 approved; 21.3 decided; 21.4, the
-prompt of v2 Session 22, written and confirmed. **Awaiting the approval of the final checkpoint.**
+prompt of v2 Session 22, written and confirmed. **Final checkpoint approved on 4 Nov 2026 (roadmap §8); pull request to `main` opened.**
 **Branch:** `claude/v2-session-21-rules` (no branch was assigned by the environment), cut from `main` at `a0082ea`.
 
 ## Branch register — 4 November 2026 (v2 Session 21)
@@ -11,7 +11,9 @@ prompt of v2 Session 22, written and confirmed. **Awaiting the approval of the f
   `origin/scout/digest-digest-2026-11-02T16-04-07Z`, already in the register (left open by the author's decision).
 - The clone was shallow at the start (`--is-shallow-repository` → `true`); `git fetch --unshallow` was run before any
   suite.
-- Disposition: open; recorded at the final checkpoint.
+- Disposition: final checkpoint approved (4 Nov 2026, §8 `d2a338a`); pushed, and a pull request to `main` opened on the
+  author's instruction ("Push and open the PR (Recommended)"). Nothing is pushed to the branch after the pull request is
+  opened.
 
 ## v2 Session 21 — final checkpoint (21.3 the leftovers, 21.4 the prompt of Session 22)
 
