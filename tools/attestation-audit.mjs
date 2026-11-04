@@ -116,6 +116,47 @@ export function roadmapTitles(roadmap) {
   return [...text.slice(at).matchAll(/^\| [^|\n]*\| \*\*([^*\n]+)\*\*/gm)].map((m) => m[1]);
 }
 
+/** Roadmap §8 rows written before the title convention, which have no leading bold title and are never
+ *  rewritten (a past record is annotated, not edited). Frozen on 4 Nov 2026 by date and first words
+ *  (§8, v2 Session 22, 22.4 (b)); this list may only SHRINK. */
+export const SECTION8_UNTITLED = Object.freeze([
+  Object.freeze(['25 Oct 2026', 'Two decisions only.']),
+  Object.freeze(['27 Oct 2026', '— | **D-1:**']),
+  Object.freeze(['29 Oct 2026', '**v2 Session 17, 17.0 question 7: the flip of the `rule-*` BACKLOG']),
+]);
+
+/**
+ * The §8 title check (22.4 (b)): every dated row of roadmap §8 opens its second column with a bold
+ * title, and no title occurs twice — the property A-6 relies on to resolve a decision to one row.
+ * It cannot check that the author said what a row says. Returns { errors, warnings }.
+ */
+export function roadmapAudit(roadmap) {
+  const errors = [];
+  const warnings = [];
+  const text = String(roadmap ?? '');
+  const at = text.indexOf('## 8 · Approval record');
+  if (roadmap == null || at < 0) {
+    warnings.push('ROADMAP_NOT_READ docs/ROADMAP-v2.md §8 could not be read: its titles were not checked');
+    return { errors, warnings };
+  }
+  const rows = text.slice(at).split('\n').filter((l) => /^\| \d{1,2} [A-Z][a-z]{2} \d{4} \|/.test(l));
+  const frozen = SECTION8_UNTITLED.map(([date, starts]) => ({ date, starts, seen: false }));
+  const seen = new Map();
+  for (const row of rows) {
+    const m = row.match(/^\| ([^|\n]*) \| \*\*([^*\n]+)\*\*/);
+    const date = row.match(/^\| ([^|]+?) \|/)[1];
+    const body = row.slice(row.indexOf('|', 2) + 2);
+    const f = frozen.find((x) => x.date === date && body.startsWith(x.starts));
+    if (f) { f.seen = true; continue; }
+    if (!m) { errors.push(`P-10 roadmap §8: the row of ${date} beginning «${body.slice(0, 60)}» has no leading bold title`); continue; }
+    if (seen.has(m[2])) errors.push(`P-10 roadmap §8: the title «${m[2]}» occurs twice (${seen.get(m[2])} and ${date}) — a decision cited by it resolves to no single row`);
+    else seen.set(m[2], date);
+  }
+  for (const f of frozen) if (!f.seen)
+    errors.push(`P-10 roadmap §8: the frozen untitled row of ${f.date} «${f.starts}» is no longer there as frozen — remove it from SECTION8_UNTITLED (the list only shrinks), or restore the row`);
+  return { errors, warnings };
+}
+
 /**
  * @param db       the datasets, keyed by file name (applicability, sources, instruments)
  * @param roadmap  the text of docs/ROADMAP-v2.md, or null if it could not be read

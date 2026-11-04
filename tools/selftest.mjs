@@ -60,7 +60,7 @@ import {
 } from './source-contract.mjs';
 import {
   attestationAudit, FORM_FROM, ATTESTATION_KEYS, OUTCOMES, segments, unitsOf, parseLocator, provisionArticle, celexOf, roadmapTitles,
-  readingPacket,
+  readingPacket, roadmapAudit, SECTION8_UNTITLED,
 } from './attestation-audit.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
@@ -3266,4 +3266,26 @@ test('AT13 · the packet command prints, fetches nothing, writes nothing, and of
   assert.equal(bad.exit, 2);
   const src = readFileSync(join(ROOT, 'tools', 'attestation-audit.mjs'), 'utf8');
   assert.doesNotMatch(src, /\bfetch\(|https?\.request|node:https?|node:net|writeFile/, 'no network and no write');
+});
+
+test('AT14 · the §8 title check: this roadmap is clean; an untitled row, a title used twice and a vanished frozen row each fail (22.4 (b))', () => {
+  assert.deepEqual(roadmapAudit(ROADMAP), { errors: [], warnings: [] });
+  assert.equal(SECTION8_UNTITLED.length, 3, 'the frozen list may only shrink');
+  const untitled = roadmapAudit(ROADMAP + '| 5 Nov 2026 | A decision with no title (planted) | x | The author |\n');
+  assert.deepEqual(untitled.errors, ['P-10 roadmap §8: the row of 5 Nov 2026 beginning «A decision with no title (planted) | x | The author |» has no leading bold title']);
+  const twice = roadmapAudit(ROADMAP + "| 5 Nov 2026 | **v2 Session 21, 21.2 F-03: `ap-cra-01`'s rationale** (planted) | x | The author |\n");
+  assert.equal(twice.errors.length, 1);
+  assert.match(twice.errors[0], /occurs twice \(4 Nov 2026 and 5 Nov 2026\)/);
+  const gone = roadmapAudit(ROADMAP.replace('| 25 Oct 2026 | Two decisions only.', '| 25 Oct 2026 | **Two decisions only.**'));
+  assert.match(gone.errors.join('\n'), /frozen untitled row of 25 Oct 2026 «Two decisions only\.» is no longer there/);
+  assert.deepEqual(roadmapAudit(null).warnings, ['ROADMAP_NOT_READ docs/ROADMAP-v2.md §8 could not be read: its titles were not checked']);
+  /* end to end: validate.mjs fails a roadmap with a title used twice */
+  const dir = dataScratch();
+  try {
+    mkdirSync(join(dir, 'docs'));
+    writeFileSync(join(dir, 'docs', 'ROADMAP-v2.md'), ROADMAP + "| 5 Nov 2026 | **v2 Session 21, 21.2 F-03: `ap-cra-01`'s rationale** (planted) | x | The author |\n");
+    const red = runValidator('validate.mjs', [], dir);
+    assert.equal(red.exit, 1);
+    assert.match(red.out, /✗ P-10 roadmap §8: the title .* occurs twice/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });

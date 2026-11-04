@@ -22,7 +22,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { violations as sourceViolations } from './source-contract.mjs';
 import { checkDerivation, claimKind, openBacklog } from '../js/evidence-model.js';
-import { attestationAudit } from './attestation-audit.mjs';
+import { attestationAudit, roadmapAudit } from './attestation-audit.mjs';
 
 const DATA = 'data';
 const errors = [];
@@ -539,6 +539,10 @@ function checkAttestations() {
   const a = attestationAudit(db, roadmap);
   a.errors.forEach(err);
   a.warnings.forEach(warn);
+  /* 22.4 (b): every §8 row titled, no title twice — what A-6 relies on */
+  const t = roadmapAudit(roadmap);
+  t.errors.forEach(err);
+  t.warnings.forEach(warn);
 }
 
 /* ---------- 6. unverified data report ---------- */
