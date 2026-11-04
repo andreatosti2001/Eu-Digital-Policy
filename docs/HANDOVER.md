@@ -1,9 +1,75 @@
 # HANDOVER
 
-**Last updated:** v2 Session 20, final checkpoint (3 November 2026): 20.1 approved (Phase 4 opened on the author's word,
-E-1…E-6 measured, the status lines reworded as approved); 20.2 written and rehearsed (`docs/RULE-MAINTENANCE.md`).
-**Final checkpoint approved on 4 Nov 2026 (roadmap §8); the pull-request question follows.**
-**Branch:** `claude/v2-session-20-phase-4` (no branch was assigned by the environment), cut from `main` at `40d4dd1`.
+**Last updated:** v2 Session 21, checkpoint 21.1 (4 November 2026): the three premises of `docs/RULE-MAINTENANCE.md` §9
+decided by the author and written into the document. **Awaiting the approval of checkpoint 21.1; 21.2 (group (a)) does
+not begin before it.**
+**Branch:** `claude/v2-session-21-rules` (no branch was assigned by the environment), cut from `main` at `a0082ea`.
+
+## Branch register — 4 November 2026 (v2 Session 21)
+
+- Branch `claude/v2-session-21-rules`, cut from `main` at `a0082ea` (#59, the prompt, merged). Nothing merged in.
+- Unmerged branches at the start (`git branch -r --no-merged origin/main`): only
+  `origin/scout/digest-digest-2026-11-02T16-04-07Z`, already in the register (left open by the author's decision).
+- The clone was shallow at the start (`--is-shallow-repository` → `true`); `git fetch --unshallow` was run before any
+  suite.
+- Disposition: open; recorded at the final checkpoint.
+
+## v2 Session 21 — checkpoint 21.1 (the three premises)
+
+### The reconnaissance (read only, full clone, `main` at `a0082ea`)
+
+Every row of the prompt's table re-measured on 4 Nov 2026 and found as stated: 33 rules, all `last_verified` 2026-10-29;
+`freshness --as-of 2027-01-27` 0 `RULE_STALE`, `--as-of 2027-01-28` 33; `evidence-audit --as-of 2027-03-26` names T-12 on
+`ap-cra-01` only (and six `STATUS_PREDATES_MILESTONE`: dma, ai-act, data-act, pld, eidas2, ehds); `evidence-audit --as-of
+2026-11-04` one, `instruments/dma` ("since then 2026-11-01 designation"); publishable 33 of 33. The stale Phase 4 lines
+(`docs/V2-CLOSURE.md` N1, B5; `docs/ROADMAP-v2.md` §4); "EUDigitalPolicy" in this file's Session 19 report; the eIDAS2
+title still "eIDAS2 — key provisions and key dates | EU Digital Policy"; `x-verification` once in
+`docs/v2-design/status-labels.json`. Outputs: the session's scratchpad (`recon/`).
+
+**One premise of the table was inexact, and is now explained.** Cellar answered HTTP 400 again, as in Session 20. The
+cause: a request without `Accept-Language: eng`. With it, `http://publications.europa.eu/resource/celex/32016R0679`
+answers 303 then 200, and the Official Journal text of Regulation (EU) 2016/679 was retrieved (806 864 bytes) and read.
+The SPARQL endpoint answered 200.
+
+### What the author decided (`docs/ROADMAP-v2.md` §8) and the commits
+
+| Item | Answer | §8 | Change |
+|---|---|---|---|
+| Scope | "Start session 21" | `d0742ba` | — |
+| Premise 1 · `last_verified` on a reading not made | "Date stays; record in §8 (Recommended)" | `d4732c3` | `a0867fa` |
+| Premise 2 · one day or in stages | "In stages (Recommended)" | `3f2fbb0` | `a0867fa` |
+| Premise 3 · the SPARQL query text | "In RULE-MAINTENANCE §2 (Recommended)" | `76d37e5` | `a0867fa` |
+| Q4 · the document's seven changes | "Approve all seven (Recommended)" | `1a0880d` | `a0867fa` |
+
+### The document, before and after (`a0867fa`)
+
+1. §0: added "**The rules are re-read in stages**, each when a prompt or a finding names it, and the calendar is not
+   realigned on one day (roadmap §8, v2 Session 21, premise 2)."
+2. Step 1: "with `Accept: application/xhtml+xml`" → "with `Accept: application/xhtml+xml` and `Accept-Language: eng`
+   (without the second header Cellar answers HTTP 400: measured 4 Nov 2026, v2 Session 21)". **A correction the use
+   showed, not a premise**; named as such in the question.
+3. Step 2, trace: "**The queries themselves are not kept**, and neither is any answer" → "The query text is kept below
+   this table (…, premise 3); **no answer is kept**".
+4. Step 2, what no check sees: "say so in the note and leave the rule's `last_verified` where it is" → "**nothing in
+   `data/` changes**: `last_verified` stays where it is and the published `verification_note` does not record the
+   failure; the roadmap §8 row and the `docs/HANDOVER.md` report say what could not be read, and the prompt or finding
+   stays open (…, premise 1)".
+5. Step 2: a new paragraph, the query as a fenced text block, "no tool … runs it; it is not a command and not a check",
+   last run 4 Nov 2026 with its result for 32016R0679 (three corrigenda, no amending or repealing act).
+6. Step 4: "(4) **Close the rule in one of two ways.**" → "(4) **Close the rule — only if every Article it cites was
+   read; otherwise nothing in `data/` changes (step 2, last row) — in one of two ways.**"
+7. §9: a dated paragraph "Decided on 4 Nov 2026" mapping items 2–4 to the premises and giving the cause of the 400; the
+   account of the rehearsal is not rewritten.
+
+No check reads the document (`grep -rl RULE-MAINTENANCE tools agent .control-room .github`: none). `node
+tools/validate.mjs` exit 0. Nothing outside `docs/` changed; no field, check or command.
+
+### What 21.2 inherits
+
+Eight rules to read (premise 2): `ap-nis2-01`, `ap-cra-01`, `ap-nis2-02`, `ap-ai-act-02`, `ap-ai-act-06`, `ap-gdpr-04`,
+`ap-dsa-03`, `ap-dma-04`, and the actors' definitions of F-23; the DMA's status with F-20. A rule whose cited texts are
+not all read keeps its date (premise 1). Under staging, the other 25 rules lapse on 28 Jan 2027 and are a later session's.
+
 
 ## Branch register — 4 November 2026 (the prompt of v2 Session 21)
 
