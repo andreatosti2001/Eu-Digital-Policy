@@ -430,6 +430,8 @@ const READ_V2_23 = Object.freeze({
   'ap-data-act-02': '2026-11-04',
   'ap-data-act-03': '2026-11-04',
   'ap-data-act-04': '2026-11-04',
+  /* v2 Session 24 (§8, 24.0 question 1) */
+  'ap-nis2-03': '2026-11-04',
 });
 /** The date a rule was last read, as the closures above set it; every other rule keeps 2026-10-29. */
 const dateOf = (id) => READ_V2_23[id] ?? (READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29');
@@ -3005,7 +3007,8 @@ test('Y6 · 17.1: the Data Act\'s, NIS2\'s, DORA\'s and the CRA\'s ten rules are
     ["src-eurlex-data-act", "direct", "rationale", "Art. 1(2) and (5); Art. 2 points (12), (13) and (14)"]]);
   assert.deepEqual(refs("ap-nis2-01"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(1), (2) and (3); Art. 3(1) and (2); Annexes I and II"], ["src-eurlex-nis2", "direct", "obligation", "Art. 3(4); Art. 20(1) and (2); Art. 21(1) and (2); Art. 23(1) and (4)"], ["src-eurlex-nis2", "direct", "rationale", "Art. 32(6)"], ["src-eurlex-nis2", "direct", "date", "Art. 41(1)"], ["src-ec-nis2-referral-2026", "context", "rationale", "third paragraph"]]);
   assert.deepEqual(refs("ap-nis2-02"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(1) and (2); Art. 3(1) and (2); Art. 6 points (30) and (31); Annex I, point 8"], ["src-eurlex-nis2", "direct", "obligation", "Art. 20(1); Art. 21(1) and (2); Art. 23(1) and (4)"]]);
-  assert.deepEqual(refs("ap-nis2-03"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(2)(f) and (5)(a); Art. 6 point (35); Annex I, point 10"], ["src-eurlex-nis2", "direct", "obligation", "Art. 21(1) and (2); Art. 23(1) and (4)"]]);
+  /* v2 Session 24 (§8, 24.1: `ap-nis2-03`'s scope reference and Art. 3; `ap-nis2-03`'s obligations and Art. 20) */
+  assert.deepEqual(refs("ap-nis2-03"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(2)(f) and (5)(a); Art. 3(1)(d) and (2); Art. 6 point (35); Annex I, point 10"], ["src-eurlex-nis2", "direct", "obligation", "Art. 20(1) and (2); Art. 21(1) and (2); Art. 23(1) and (4)"]]);
   assert.deepEqual(refs("ap-dora-01"), [["src-eurlex-dora", "direct", "scope", "Art. 2(1), points (a) to (t), and (2)"], ["src-eurlex-dora", "direct", "obligation", "Art. 5; Art. 6; Art. 17(1); Art. 19(1); Art. 24(1); Art. 28(1)"]]);
   assert.deepEqual(refs("ap-dora-02"), [["src-eurlex-dora", "direct", "scope", "Art. 2(1), point (u); Art. 3 points (19), (21) and (23)"], ["src-eurlex-dora", "direct", "obligation", "Art. 28(1); Art. 31(1)"], ["src-eurlex-dora", "direct", "rationale", "Art. 30(1) and (2); Art. 33(1)"]]);
   assert.deepEqual(refs("ap-cra-01"), [["src-eurlex-cra", "direct", "scope", "Art. 2(1); Art. 3 points (1), (13), (21) and (22)"], ["src-eurlex-cra", "direct", "obligation", "Art. 13(1); Art. 14(1) and (3)"], ["src-eurlex-cra", "direct", "date", "Art. 71(2)"]]);

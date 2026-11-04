@@ -975,7 +975,7 @@
       },
       "outcome": "outcome:possible",
       "rationale": "Public administration entities are within NIS2's sectoral scope, but Member States retain latitude in how far down the administrative hierarchy the Directive is transposed. This is precisely where the transposition patchwork bites hardest.",
-      "obligations": ["nis2:art-21", "nis2:art-23"],
+      "obligations": ["nis2:art-20", "nis2:art-21", "nis2:art-23"],
       "authority": ["nca-*"],
       "dates": ["tl-nis2-2024-10-17-transposition"],
       "exemptions": [
@@ -985,15 +985,24 @@
       "depends_on": ["How the Member State has transposed the public administration sector.", "Whether national security functions are carved out."],
       "claims": ["clm-nis2-transposition-failure"],
       "sources": [
-        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 2(2)(f) and (5)(a); Art. 6 point (35); Annex I, point 10", "for": "scope" },
-        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 21(1) and (2); Art. 23(1) and (4)", "for": "obligation" }
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 2(2)(f) and (5)(a); Art. 3(1)(d) and (2); Art. 6 point (35); Annex I, point 10", "for": "scope" },
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 20(1) and (2); Art. 21(1) and (2); Art. 23(1) and (4)", "for": "obligation" }
       ],
       "condition_provisions": {
         "actor": ["nis2:art-2", "nis2:art-6"],
         "activity": ["nis2:art-2"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 6 point (35), 21, 23 and 41 and Annex I, point 10. The Publications Office's metadata lists no act amending the Directive and nine corrigenda, of which only R(04) has an English expression; it corrects Art. 19(1) and touches nothing cited here. NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national (the author's decision of 29 Oct 2026). On the author's decision of 29 Oct 2026 the Art. 2(7) exemption is added; depends_on still covers what Member States may add under Art. 2(8). Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 24): re-read in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 3, 6, 20, 21, 23 and 41 and Annex I. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Directive and nine corrigenda, of which only R(04) has an English expression; it corrects Art. 19(1) and touches nothing cited here. Public administration entities of central government, and those at regional level that, following a risk-based assessment, provide services the disruption of which could have a significant impact on critical societal or economic activities, are within the Directive regardless of size (Art. 2(2)(f); Annex I, point 10; the entity as defined in Art. 6 point (35)); Member States may extend it to public administration entities at local level (Art. 2(5)(a)). Those of central government are essential entities (Art. 3(1)(d)) and the others important entities (Art. 3(2)). On the author's decisions of 4 Nov 2026, Art. 3(1)(d) and (2) is cited for scope and Art. 20 is added to the obligations: the management bodies approve and oversee the Art. 21 measures, can be held liable, and follow training — the liability without prejudice to national law on the liability rules applicable to public institutions and on the liability of public servants and elected or appointed officials (Art. 20(1) and (2)). NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national. The Art. 2(7) exemption is the Directive's text; depends_on still covers what Member States may add under Art. 2(8). First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome and rationale were not changed. The claims were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-nis2", "locator": "Art. 2; Art. 3; Art. 6; Art. 20; Art. 21; Art. 23; Art. 41; Annex I" }
+        ],
+        "queried": ["src-eurlex-nis2"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 24, 24.1: `ap-nis2-03`'s scope reference and Art. 3", "v2 Session 24, 24.1: `ap-nis2-03`'s obligations and Art. 20"]
+      }
     },
 
     {
