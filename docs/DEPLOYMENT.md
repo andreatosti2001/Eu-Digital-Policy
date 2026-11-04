@@ -111,6 +111,64 @@ gate either: they test the agent layer, which is not part of the published site.
 (`tools/commit-evidence.mjs`, §5 of the operating-mode document) **is** in the gate, as the
 first step of `gate-data`.
 
+## 2a. The release gate — `agent/release/gate.mjs`, inside `build`
+
+*Added 4 Nov 2026. Implemented and tested; **not yet run by GitHub** — it takes effect on the first push to `main` after
+it is merged, and §3a lists what must be true outside the tree for it to mean what it says.*
+
+The four gate jobs of §2 say the *site* is sound. They do not say that *this commit* is one a person authorised, or that
+*this artifact* is the one built from it. `build` now ends, before `upload-pages-artifact`, with
+`node agent/release/cli.mjs gate --ci --head "$GITHUB_SHA" --artifact _site --needs-env NEEDS_JSON`. A non-zero exit means
+no artifact is uploaded and `deploy` has nothing to deploy. It is in `build`, not in a job beside it, because a gate
+beside the path gates nothing.
+
+| | Checks | Answers |
+|---|---|---|
+| C1 | `GITHUB_REPOSITORY`, `_REF`, `_EVENT_NAME`, `_WORKFLOW_REF`, `_SHA` against the authorised publisher; the checkout is the commit judged | the change originates from an authorised workflow |
+| C2 | full clone; the commit that introduced the gate is an ancestor | the range can be judged at all |
+| C3 | `agent/release/workflows.mjs`: 14 checks on every workflow file | `pages.yml` is the only publisher; no direct deploy trigger, alternative entry point or skippable gate exists in the files |
+| C4 | GitHub's `toJSON(needs)`: every gate job `success` | required validation succeeded, as reported by GitHub rather than inferred |
+| C5, C6 | the decision ledger's chain, signatures, registered reviewers, no simulated entry; append-only across history | the decision record is valid and was not modified after the approval |
+| C7 | every commit declaring `Proposal:` traces to a granted, signed, in-scope, unwithdrawn decision that precedes it, ≤ 30 days old | the relevant human approval exists and corresponds to the actual change |
+| C8 | agent-attributed commits to the site citing no Proposal | **reported only**; see below |
+| C9 | `_site` against the allowlist **and against the commit's own git blobs**; nothing missing; credential scan | the artifact contains only authorised files and is the artifact of this commit |
+| C10 | `reviewers.json` against a fingerprint pinned *outside* the repository | the approval's signature is checked against a registry nobody inside the tree could have rewritten |
+
+A condition that cannot be **measured** blocks exactly as a failure does in CI: an unset `needs`, a missing artifact, a run
+outside Actions. A local run (`node agent/release/cli.mjs gate`) reports the same conditions and does not block on the
+unmeasured ones, because it cannot authorise anything.
+
+**Bypass scenarios, each with the test that refuses it** (`agent/release/selftest.mjs`):
+
+| Scenario | Where it is stopped | Test |
+|---|---|---|
+| a direct deploy by another workflow, an action (`deploy-pages`, gh-pages), a push to a pages branch, the deployments API, or a `pages: write` grant | C3 / W1 | C3 |
+| `pull_request_target`, a schedule, or a push to a branch other than `main` starting a publish | C3 / P1, P1b | C2 |
+| removing a gate from `build.needs`, `deploy.needs`, adding `if:`, `continue-on-error`, `\|\| true` or `set +e` to the path | C3 / P3–P6 | C2 |
+| deleting the release gate step, or moving it after the upload | C3 / P7 | C2 |
+| a manual `workflow_dispatch` from another branch or fork | C1 | G2 |
+| a gate job failed, was cancelled or skipped | C4 | G4 |
+| a change citing a proposal that nobody decided | C7 | G9 |
+| unsigned decision; signed by an unregistered key; revoked reviewer; simulated fixture; edited line | C5 | G10 |
+| wrong `Proposal-SHA256` or `Dispatch-Key`; a file outside the approved scope | C7 | G11 |
+| approval recorded *after* the change; approval older than 30 days; decided after the commit | C7 | G12 |
+| approval later withdrawn | C7 | G13 |
+| an agent adds its own key to `reviewers.json` and signs its own approval | C10 (the pin) | G14 |
+| a ledger line edited after an approval | C5, C6 | G10 |
+| an extra file, a changed byte, a missing file, a dot path or a credential in `_site` | C9 | G6, G7 |
+| the commit deployed is not the commit judged | C1, C9 | G2, G7 |
+
+**What the gate does not do, and why that is stated here.**
+
+- **It does not block agent-attributed commits that cite no Proposal (C8).** Today every change to this site is a session's
+  commit on the author's word in `docs/ROADMAP-v2.md` §8, merged by the author in a pull request, and the approval of that path
+  is the merge. The gate cannot tell that merge from an unreviewed one; branch protection (§3a-2) is the control that can.
+  `--strict-unledgered` would make it block, and would block every such change until it goes through the dispatcher. Whether
+  to switch it on is the author's decision and is **not** made here.
+- **It is code in the repository it guards.** Whoever can change `agent/release/` and `pages.yml` in one merge can change what
+  the gate asks. §3a-2 and §3a-4 are what protect the gate.
+- **It cannot show a change is true** (§7).
+
 ## 3. Manual repository settings required
 
 **None of the following can be done from the repository, and until they are done the gate in
@@ -143,6 +201,44 @@ commit → only then is the site deployed. **QA FAIL → no merge, and no deploy
 
 Without 1, the honest description is the one `AGENTS.md` has always given: a push to `main`
 publishes, and CI makes a failure visible, not blocking.
+
+## 3a. External settings the release gate depends on
+
+**None of these can be set from the repository, and the gate does not say they are set.** `node agent/release/cli.mjs
+status` lists them as *not measured* for that reason. Status as of 4 Nov 2026 is what the repository can show, which is
+nothing about any of them.
+
+| # | Setting | Why the gate needs it | Status |
+|---|---|---|---|
+| 1 | Settings → Pages → Source: **GitHub Actions** (§3.1) | otherwise a push to `main` is published by GitHub's branch build, which no workflow can gate | reported done 24 Oct 2026 (§1b); not re-measured |
+| 2 | **Ruleset on `main`**: require a pull request, **require review by a code owner**, require the `qa.yml` checks, block force pushes and deletions (§3.2) | the gate trusts the merge. Without a required review, C8's commits are unreviewed by construction | **not done** (§1b: "none") |
+| 3 | **`CODEOWNERS`** naming the owner for `/.github/`, `/agent/release/`, `/agent/implement/decisions/`, `/tools/pages-artifact.mjs` | with 2, no change to the gate, the workflows, the ledger or the allowlist merges without the owner | **not done**; the file is the owner's to add |
+| 4 | **`github-pages` environment → Deployment branches: `main` only** (§3.3), and **required reviewers** if the owner wants a manual stop before deploy | a `workflow_dispatch` from another ref cannot deploy; C1 checks the ref, this makes GitHub check it first | **not done** |
+| 5 | **Repository variable `RELEASE_REVIEWER_REGISTRY_SHA256`** = the output of `node agent/release/cli.mjs status` ("registry fingerprint") | C10: pins the reviewer registry outside the tree. Unset, any run relying on a signature is refused | **not set** — there is no registry yet |
+| 6 | Keep the reviewer's **private key** outside the repository and every agent's reach | it is the whole of the approval's authenticity | the owner's |
+
+## 3b. How a person makes the approval the gate checks for
+
+The mechanism exists; **no authentic approval has been made, and this document does not make one.** An approval is a person's
+act and a tool will not simulate it (`agent/implement/decisions/README.md`).
+
+1. **Once.** `node agent/release/cli.mjs keygen --out-dir ~/.eu-digital-policy-keys --reviewer-id rev-<you> --name "<your name>" --role "repository author"`.
+   The private key is written outside the repository (the command refuses a path inside it) and is never printed.
+2. **Once.** Put the public entry it prints into `agent/implement/decisions/reviewers.json` as `{"reviewers":[ … ]}`, in a pull
+   request **you** review and merge (step 4 of §3a makes the registry yours). Then set the repository variable of §3a-5 to the
+   fingerprint `node agent/release/cli.mjs status` prints.
+3. **Per proposal.** Inspect what the record asks you to check: `node agent/release/cli.mjs lifecycle --proposal <id>`, then the
+   proposal itself in `agent/records/` or the Control Room's queue — its `evidence`, `proposed_change.operations` (each carries
+   `current` and `proposed`), `risk`, `rollback_plan`, and the `what_to_check` of its `ApprovalRequest`. Then decide:
+   `node agent/implement/cli.mjs decide --proposal <id> --grant --by "<your name>" --role "repository author" --sign-key <your private key> --note "…"`
+   (the Control Room's `POST /api/review` is the other writer; it authenticates you and does not yet sign).
+4. Commit `decisions.jsonl` in its own commit, **before** the change. C7 refuses an approval that arrives after the change it
+   approves.
+5. `node agent/release/cli.mjs dispatch --proposal <id>` (rehearsal), then `… --execute --as-of <date>`; push the `release/…`
+   branch; open the pull request; merge it. `pages.yml` runs the gate on the merged commit.
+
+Approvals are **per proposal content**: editing the proposal afterwards voids the decision (the fingerprint no longer
+matches); denying it afterwards withdraws it; 30 days after the decision the gate calls it stale.
 
 ## 4. Security headers
 
@@ -249,4 +345,8 @@ working while the custom domain is set; they stop if it is removed.
 
 - That a deployed page says anything true. The gates check structure, consistency and
   provenance; `docs/VERIFICATION-POLICY.md` §3 still applies.
-- That the settings in §3 have been applied. Nothing in this repository can read them.
+- That the settings in §3 and §3a have been applied. Nothing in this repository can read them.
+- That the release gate (§2a) has ever run in GitHub Actions. It is implemented and tested locally; the first push to `main`
+  after it is merged is its first run, and a failure there is a finding about the gate, not about the site.
+- That any approval is authentic. The mechanism (signed, chained, pinned — §3b) exists; no person has used it, and a ledger
+  with no entry is the true state.

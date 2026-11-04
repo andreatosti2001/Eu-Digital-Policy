@@ -1,8 +1,68 @@
 # HANDOVER
 
-**Last updated:** 4 November 2026, v2 Session 25 (the reading of 3 Feb 2027, first round), stopped at 25.0 on the author's decision: the reading is deferred to 12 Jan–2 Feb 2027.
-**Branch:** `claude/inspiring-meitner-c7s9le` (assigned by the environment), at `main` `aac3830` (#65 merged).
-The entries below this session's are unchanged, except that line 5 of this header is restored (see the next section).
+**Last updated:** 4 November 2026, the Phase 4 operational-closure session (release dispatcher, ledger integrity, deploy gate), on top of v2 Session 25.4.
+**Branch:** `claude/gifted-brown-qb5su2` (assigned by the environment), cut from `main` `cb9a76c` (#67 merged).
+The entries below this session's are unchanged.
+
+## Phase 4 operational-closure session — the release chain (4 Nov 2026)
+
+*Not a numbered v2 session and not a roadmap row.* It answers a standing brief from the author to close three findings of the
+readiness checklist (`agent/production/cli.mjs readiness`: **17 of 20 mandatory conditions, three blocking** — the production
+dispatcher, the absent decision ledger, the unmeasurable deploy gate). The report is `docs/AUDIT-2026-11-04.md`; this entry is
+the hand-over.
+
+**The brief's premise did not match the repository, and the repository was believed.** The brief said S22.1 approved, S22.2
+started, S23 and S24 outstanding. `main` at `cb9a76c` has S22, S23 and S24 closed (33 rules, `last_verified` 2026-11-04, 25 with the
+attestation form, the 8 without it being Session 21's), "Phase 4 concluded" in §8 on the author's word, Session 25 deferred to
+12 Jan–2 Feb 2027 and Phase 5's plan approved. Nothing was reopened or renumbered. What the brief calls Phase 4's three findings are
+not roadmap items: they are the readiness checklist's, and `docs/PHASE-4-SETUP.md` §3 / X-3 **left them** ("activation is a
+governance decision"). They were built here because the author asked for them in terms.
+
+**Built (all tested; none yet run by GitHub; none an approval):**
+- `agent/implement/attestation.mjs` + `ledger.mjs`: ledger version 2 — hash chain, ed25519 signature against `reviewers.json`,
+  `human`/`simulated` provenance, `decided_role`; `verifyLedger()`; `recordDecision` refuses to append to a ledger that does not
+  verify; `decide --sign-key --role`. `deriveApproval` gained `void_simulated`.
+- `agent/release/`: `dispatch.mjs` (nine stages, rehearsal by default, never pushes or merges), `gate.mjs` (ten conditions),
+  `workflows.mjs`, `lifecycle.mjs`, `policy.mjs`, `cli.mjs`, `selftest.mjs` (45 tests), `README.md`.
+- `.github/workflows/pages.yml`: `build` checks out the full history and runs `agent/release/cli.mjs gate --ci …` after building
+  `_site` and before uploading it. `qa.yml`: the new suite, `workflows`, `verify-ledger`, and the gate rehearsed.
+- `agent/implement/implementer.mjs`: optional `records`/`ledger` injection (the dispatcher hands Agent 9 the snapshot it
+  verified). `checks.mjs`: the suite joins `AGENT_SUITES` (25); `implement/selftest.mjs` R6 asserts 25 — the eleventh time that
+  assertion has moved with the list, for the stated reason.
+- Docs: `docs/DEPLOYMENT.md` §2a, §3a, §3b; `agent/implement/decisions/README.md`; `docs/IMPLEMENTATION-QA.md` §3; `AGENTS.md`.
+
+**Found by the suite while building it, and fixed:** a refused change that left an *untracked* file made `git checkout --`
+abort and leave the tracked edit in the tree, so the next dispatch was refused as dirty; and a scope check that counted the
+user's own earlier uncommitted work as a violation. Both are in test A10.
+
+**Not done, and why it is a person's or another session's:**
+1. **No authentic human approval exists, and none was made.** `decisions.jsonl` and `reviewers.json` do not exist.
+   `readiness` still reports `decision_ledger_present` failing, correctly. What the owner does: `docs/DEPLOYMENT.md` §3b.
+2. **`production_dispatcher_wired` is unchanged.** It measures `agent/orchestrator/dispatchers.mjs`; the release dispatcher is
+   a different thing and was not given that name. Wiring the Orchestrator's seam to real specialists is a governance decision.
+3. **The gate has never run in GitHub Actions.** The first push to `main` after the merge is its first run. Expected: C1 pass,
+   C3 pass, C4 pass, C5/C7/C10 not applicable, C8 *warn* wherever a session's commit carries an agent marker (`Claude-Session`, `Co-Authored-By: …Claude`), C9 pass. If it
+   blocks a legitimate deploy, that is a finding about the gate.
+4. **External settings (§3a):** ruleset with required review, `CODEOWNERS`, the `github-pages` environment's branch rule, the
+   pinned registry variable. None is set, and none can be from the tree.
+5. **Agent 9 was exercised through a stub in the dispatcher's tests.** The real `Implementer` path runs the validators and
+   suites (minutes) and no real proposal exists to run it on. It is wired and rehearsal-tested, not run end to end.
+6. **The Control Room writes unsigned decisions**, which the gate refuses. Having it sign puts a key on a server; left to the author.
+7. **`--strict-unledgered`** (C8 blocking) is off. Switching it on blocks every session-authored change until it goes through
+   the dispatcher; the author's decision.
+8. **X-3 (`docs/PHASE-4-PLAN.md`):** this session changed `agent/implement/decisions/README.md` and the `agent/implement/`
+   code X-3 lists as "unchanged, or only what a §8 row approved". **No §8 row was written** — the author's word is the row — so
+   the diff `git diff 40d4dd1..HEAD --stat -- agent/implement/decisions` is no longer empty and says so.
+
+**Counts (4 Nov 2026, full clone, one run of each):** the four validators and `evidence-audit`, `seo-audit`, `_footer --check`,
+the §12 baseline, both boundary checks, the artifact build and the contracts check exit 0; `tools/selftest.mjs` 140; 25 suites
+and `.control-room/` **1394 pass · 0 fail** (1349 on Session 24's tree + the 45 new); adversarial gate exit 0; browser `--require-browser` 343 · 0 · 1 undecidable; `readiness` still **17 of 20**, the same three blocking. Measured on a fresh full clone of `0338b0c`.
+
+## Branch register — 4 November 2026 (the operational-closure session)
+
+- Branch `claude/gifted-brown-qb5su2` (assigned by the environment), cut from `main` `cb9a76c`. `origin/main` re-fetched at the
+  start. Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- Disposition: committed and pushed; **a pull request is the author's to ask for** (AGENTS.md: ask, do not open).
 
 ## v2 Session 25 — stopped at 25.0: the reading deferred (4 Nov 2026)
 

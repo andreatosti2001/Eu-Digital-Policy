@@ -198,6 +198,7 @@ jobs:
             agent/autonomy/selftest.mjs \
             agent/improve/selftest.mjs \
             agent/production/selftest.mjs \
+            agent/release/selftest.mjs \
             .control-room/selftest.mjs
           do
             echo "::group::$s"
@@ -207,6 +208,17 @@ jobs:
 
       - name: Every contract is satisfiable by its fixture
         run: node agent/schemas/cli.mjs check
+
+      # The release gate, REHEARSED on this commit, so that a change which
+      # pages.yml would refuse is visible on the pull request instead of
+      # after the merge. Local mode: the conditions that need GitHub's own
+      # facts (origin, the other jobs' results, the built artifact) are
+      # reported as unmeasured and do not block here; everything the history
+      # and the ledger can show — the publisher, the ledger, the append-only
+      # rule, every commit that declares a Proposal — does. This step passing
+      # authorises nothing: only pages.yml's own run of the gate does.
+      - name: The release gate, rehearsed
+        run: node agent/release/cli.mjs gate --head HEAD
 
       # SESSION 28. Every anchor under every pattern in
       # agent/proposals/governance/ resolved against the tree of this
@@ -485,6 +497,18 @@ jobs:
 
       - name: What is traceable, and what is not
         run: node agent/production/cli.mjs trace
+
+      # The release chain's two read-only registers. Neither writes. The
+      # first fails if any workflow other than pages.yml could publish, or
+      # if the release gate is not in pages.yml's path; the second fails on
+      # a ledger that has been edited, or holds a simulated or unsigned
+      # entry. An EMPTY ledger passes: no human has decided, and this check
+      # does not pretend otherwise (docs/DEPLOYMENT.md §3b).
+      - name: Is pages.yml the only publisher, with the release gate in its path?
+        run: node agent/release/cli.mjs workflows
+
+      - name: Does the decision ledger verify?
+        run: node agent/release/cli.mjs verify-ledger
 
   # ----------------------------------------------------------
   # 4. SESSION 19 — the browser suite

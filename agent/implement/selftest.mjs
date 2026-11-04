@@ -716,9 +716,16 @@ test('R6 · this suite is in the list the agent runs for a change under agent/ o
      freshness.mjs, whose exit code moved with the calendar rather than
      with the tree. A repair to a validator that nothing tests is a
      gate on nothing, and tools/selftest.mjs plants each of those
-     defects and asserts it is caught. It is 24. */
-  assert.equal(AGENT_SUITES.length, 24,
-    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24), the limited-autonomy runner (26), the continuous improvement loop (27), the governance proposals (28), the production operating mode (29) and the validators\' own suite (30)');
+     defects and asserts it is caught. It is 24.
+
+     THE RELEASE-GOVERNANCE SESSION (4 Nov 2026) is the ELEVENTH. It added
+     the dispatcher that turns a decided proposal into a commit and the
+     deploy gate pages.yml runs before it uploads anything — the second
+     thing here, after the autonomy runner, that sits on the path to
+     publication — and a suite for them that nothing ran would be a gate
+     on the gate. It is 25. */
+  assert.equal(AGENT_SUITES.length, 25,
+    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24), the limited-autonomy runner (26), the continuous improvement loop (27), the governance proposals (28), the production operating mode (29), the validators\' own suite (30) and the release chain (4 Nov 2026)');
   assert.ok(AGENT_SUITES.includes('tools/selftest.mjs'),
     'the four validators are this project\'s test suite; a change to one of them must run the suite that tests it');
 });
