@@ -586,8 +586,17 @@
       "threshold_basis": {
         "cumulative_training_flop_gt": [{ "source_id": "src-eurlex-ai-act", "supports": "supports:direct", "locator": "Art. 51(2) ('greater than 10^25')" }]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 16): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2024/1689 retrieved from the Publications Office's Cellar by CELEX (32024R1689): Arts 2(1)(a), 3 points (3), (63), (64) and (65), 51, 52, 55, 111(3) and 113; Regulation (EU) 2026/1744 (32026R1744), Art. 1, read in full the same day, amends none of them but Art. 113, whose point (b) it leaves unchanged. The Publications Office's metadata lists that one amending act and four corrigenda of the AI Act, none with an English expression; the consolidated text of 27 July 2026 (02024R1689-20260727) reads Art. 51(2) the same. On the author's decision of 29 Oct 2026 the threshold key was renamed from _gte to _gt (F-4, V2C-06): Art. 51(2) presumes high-impact capabilities when training computation 'is greater than 10^25' floating point operations. Art. 52(2) to (4): the provider may argue that the model does not present systemic risks, and the Commission may designate a model, which depends_on states. Found, not changed: Art. 111(3), as on ap-ai-act-02. Conditions (but the key), outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2024/1689 retrieved from the Publications Office's Cellar by CELEX (32024R1689): Arts 2, 3 points (3), (63), (64) and (65), 51, 52, 55, 111 and 113. Regulation (EU) 2026/1744 (32026R1744), whose Art. 1 was read the same day, amends none of Arts 51, 52 and 55, leaves Art. 111(3) and Art. 113, third paragraph, point (b) unchanged, and names Arts 51(3) and 52(4) only in the delegation of power. The Publications Office's SPARQL endpoint, queried that day, lists that one amending act and four corrigenda of the AI Act, none with an English expression. Art. 51(2) presumes high-impact capabilities when training computation 'is greater than 10^25' floating point operations, hence the key's _gt (F-4, V2C-06, 29 Oct 2026). The rationale's four duties are Art. 55(1), points (a) to (d). Art. 52(2) to (4): the provider may argue that the model does not present systemic risks, and the Commission may designate a model, which depends_on states. Found, not changed (29 Oct 2026): Art. 111(3) gives providers of models placed on the market before 2 August 2025 until 2 August 2027. Read against the rule, nothing was found to change. First brought to the v2 shape on 29 Oct 2026 (v2 Session 16). Conditions, outcome, rationale, obligations, dates and depends_on were not changed. The claims were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-ai-act", "locator": "Art. 2; Art. 3 points (3), (63), (64) and (65); Art. 51; Art. 52; Art. 55; Art. 111; Art. 113" }
+        ],
+        "queried": ["src-eurlex-ai-act"],
+        "outcome": "unchanged",
+        "decisions": []
+      }
     },
     {
       "id": "ap-ai-act-04",
