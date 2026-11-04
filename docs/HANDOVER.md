@@ -1,9 +1,56 @@
 # HANDOVER
 
-**Last updated:** 4 November 2026, after v2 Session 21 was merged (#60): the plan to conclude Phase 4
-(`docs/PHASE-4-PLAN.md`) and the revised prompt of v2 Session 22 (`docs/prompts/v2-session-22.md`), on the author's request.
-**Plan approved on 4 Nov 2026 (roadmap §8); pull request to `main` follows.** The report of v2 Session 21 below is unchanged.
-**Branch:** `claude/v2-phase-4-plan`, cut from `main` at `959e08d`.
+**Last updated:** 4 November 2026, during v2 Session 22 (the structured attestation, `docs/PHASE-4-PLAN.md` §3, S22).
+**Branch:** `claude/session-22-o5cl9k` (assigned by the environment), cut from `main` at `244072f` (#61, the plan, merged).
+The entries below this session's are unchanged.
+
+## v2 Session 22 — checkpoint 22.1 (the design of the attestation form)
+
+**Opening.** `main` held Session 21, the plan and this session's prompt (`docs/PHASE-4-PLAN.md` §1, §3, §5; the §8 row
+approving the plan; `docs/RULE-MAINTENANCE.md`'s three premises and three corrections; `READ_2026_11_04` with eight rules in
+`tools/selftest.mjs`; `docs/prompts/v2-session-22.md`). The clone was shallow (`true`); `git fetch --unshallow` was run
+before any suite. `git branch -r --no-merged origin/main`: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the
+register. Scope recorded in §8 as the first write (`40b3013`, "Start session 22").
+
+**The reconnaissance re-measured the prompt's table; every row holds** (4 Nov 2026, `244072f`, full clone): 33 rules,
+`last_verified` 2026-10-29 × 25 and 2026-11-04 × 8; `freshness --as-of 2027-01-27` 0 `RULE_STALE`, `2027-01-28` 25,
+`2027-02-03` 33; `evidence-audit --as-of 2027-03-26` T-12 on `ap-cra-01` only; `selftest` 124/124; the 25 suites 1330
+pass, 0 fail, 1 skipped (in `.control-room/selftest.mjs`); browser 343 pass, 0 fail, 1 undecidable; validators 0 errors;
+`seo-audit`, `og-image --check`, `_footer --check` clean; adversarial gate 65 failed safely · 0 succeeded · 3 partial · 1
+undecidable; readiness refuses, 17 of 20 mandatory (`production_dispatcher_wired`, `decision_ledger_present`, and
+`deploy_gate_exists` unmeasurable from the tree). Outputs kept in the session's scratchpad, not committed.
+
+**The locator measurement, before any check was promised** (plan §5, second risk; put in question 1): 113 locators on tier-1
+texts, 216 segments, **214 resolve** to an Article, Annex or Recital; the 2 that do not are `ap-eidas2-01`'s "Citation
+(…)" segments; 10 locators on tier-2 sources name sections, not Articles; **32 of 33 rules** resolve fully. Provisions:
+136 references, 124 direct, 9 by leading number or with two tier-1 texts, 3 (`eidas2:art-2`, `-3`, `-5a`) Articles of
+Regulation (EU) No 910/2014 that a check can only name. Detail: `docs/ATTESTATION-FORM.md` §4.
+
+**The author's eight answers** (§8, each committed at once): Q1 fields `read` + `queried` + `outcome` (`2b0a6b5`); Q2
+the seal `of`, checked equal to `last_verified` (`08b07f7`); Q3 changed/unchanged + §8 titles (`596ce47`); Q4 required
+after 2026-11-04, ERROR (`a86ccb0`); Q5 completeness at Article level and `queried`, ERROR, unresolvable named as WARNING
+(`cad9054`); Q6 not shown on `applies.html` (`c705afa`); Q7 — a premise no question named: the note keeps the reader's
+account, the doubling declared in `docs/DATA-GOVERNANCE.md`, a CELEX check (`faf7e5c`); Q8 the document's text approved as
+committed (`824f748`).
+
+**The document.** `docs/ATTESTATION-FORM.md` (`b5fcf19`), new — before: nothing. §1 the shape; §2 the couplings; §3
+checks A-1…A-8 with the case that fails each; §4 the measurements; §5 the paper test; §6 what it cannot see; §7 how a
+closure uses it; §8 what it does not establish.
+
+**The paper test** (§5 of the document; a scratch prototype outside the repository, nothing in `data/` changed): the eight
+closures of 4 Nov 2026 written as attestations from their own notes and §8 rows. **Seven pass; `ap-ai-act-06` fails
+A-5**: it cites `src-eurlex-ai-omnibus` in `sources[]`, and on 4 Nov 2026 only the AI Act was queried (§8 F-14 row).
+Not reopened: Q5 decided it, and Q8 confirmed A-5 for amending acts. Six planted defects are each caught (bare date bump →
+A-3; stale seal → A-2; Art. 32(6) dropped → A-4; a title not in §8 → A-6; a note without its CELEX → A-7, twice;
+`ap-eidas2-01` → 0 ERROR, 5 WARNING under A-8).
+
+**What the form does not see** (document §6): that the law was read (F-12) — the form is a declaration; what SPARQL
+returned; whether the note's Articles match the form's; what a §8 row says; whether "unchanged" is true; paragraphs and
+points; tier-2 content; `ap-eidas2-01`'s five unresolvable citations.
+
+**Not done in 22.1, by design:** no field, check, command or `data/` change; no rule read or closed; no backfill.
+
+**Next:** checkpoint 22.1 is put to the author; 22.2 (the implementation) begins only after its approval is in §8.
 
 ## Branch register — 4 November 2026 (the Phase 4 plan)
 
