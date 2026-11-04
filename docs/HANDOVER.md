@@ -339,6 +339,11 @@ The homepage WebSite node, whole: `{"@type":"WebSite","@id":"https://eudigitalpo
 Policy","alternateName":["EUDigitalPolicy","eudigitalpolicy.eu"],"url":"https://eudigitalpolicy.eu/","inLanguage":"en",
 "author":{"@type":"Person","name":"Andrea Tosti"},"license":"https://creativecommons.org/licenses/by/4.0/"}`.
 
+*Note, 4 Nov 2026 (v2 Session 21): the `alternateName` above is what 19.1 wrote. After the checkpoint the author
+corrected it (roadmap §8, "v2 Session 19, after the checkpoint: the WebSite `alternateName`"), and #56 (`d74f587`,
+merged `943467d`) made it `["Eu Digital Policy", "eudigitalpolicy.eu"]`: `tools/seo.mjs:60` and `index.html`, measured
+4 Nov 2026. The report is not rewritten.*
+
 ### Files modified (the request's point 5)
 
 Generator and checks: `tools/seo.mjs`, `tools/seo-audit.mjs` (the assertion, on the author's word), `tools/og-image.mjs`,
