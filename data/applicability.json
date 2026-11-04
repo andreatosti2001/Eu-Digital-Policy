@@ -1068,9 +1068,18 @@
         "actor": ["dora:art-2", "dora:art-3"],
         "activity": ["dora:art-3"]
       },
-      "last_verified": "2026-10-29",
+      "last_verified": "2026-11-04",
       "requires_verification": false,
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2554 retrieved from the Publications Office's Cellar by CELEX (32022R2554): Arts 2(1)(u), 3 points (19), (21) and (23), 28, 30, 31, 33 and 64. The Publications Office's metadata lists no act amending the Regulation and nine corrigenda, none with an English expression. Art. 28 binds the financial entity, so it reaches the provider only through the contract (Art. 30). Conditions, outcome and rationale were not changed. Earlier: The oversight allocation is now established: under DORA Art. 31(1) the ESAs designate critical ICT third-party service providers through the Joint Committee and appoint as Lead Overseer the ESA responsible for the financial entities holding the largest share of total assets among the provider's users (Official Journal, CELEX 32022R2554, read 27 Sep 2026). Earlier: The allocation of the DORA oversight framework between the three ESAs is not established from a primary source in this build."
+      "verification_note": "4 Nov 2026 (v2 Session 24): re-read in the Official Journal text of Regulation (EU) 2022/2554 retrieved from the Publications Office's Cellar by CELEX (32022R2554): Arts 2, 3, 28, 30, 31, 33 and 64. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Regulation and nine corrigenda, R(01) to R(09), none with an English expression. ICT third-party service providers are within the Regulation (Art. 2(1), point (u)): an undertaking providing ICT services (Art. 3 points (19) and (21)). Art. 28 binds the financial entity, so it reaches the provider through the contract, whose key provisions Art. 30(1) and (2) set out, with Art. 30(3) adding to them for ICT services supporting critical or important functions. A provider designated critical by the ESAs through the Joint Committee under Art. 31(1) and (2) (Art. 3 point (23)) is overseen by its Lead Overseer (Art. 33(1)). Art. 31 also binds such a provider directly: one that is part of a group designates one legal person as a coordination point (Art. 31(4)), and it notifies the financial entities it serves of its designation (Art. 31(5)). Under Art. 31(8), designation does not apply to financial entities providing ICT services to other financial entities, to providers subject to oversight frameworks supporting the tasks of Art. 127(2) TFEU, to ICT intra-group service providers, or to providers serving, solely in one Member State, financial entities active only there. Under Art. 31(7), designation was not to be used until the Commission had adopted the delegated act of Art. 31(6); that act was not read here. The Regulation applies from 17 January 2025 (Art. 64). Read against the rule, nothing was found to change. First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome, rationale and obligations were not changed. The rule cites no claim.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-dora", "locator": "Art. 2; Art. 3; Art. 28; Art. 30; Art. 31; Art. 33; Art. 64" }
+        ],
+        "queried": ["src-eurlex-dora"],
+        "outcome": "unchanged",
+        "decisions": []
+      }
     },
 
     {
