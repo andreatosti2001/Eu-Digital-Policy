@@ -191,6 +191,7 @@ export const INSTRUMENT_TITLE = Object.freeze({
   'data-omnibus': { lead: 'Digital Omnibus proposal', facets: [['GDPR amendments', 'GDPR'], ['status', 'Status']] },
   pld: { lead: 'Product Liability Directive', facets: [['software', 'software'], ['AI', '\\bAI\\b'], ['transposition', 'transposition']] },
   ehds: { lead: 'European Health Data Space (EHDS)', facets: [['key provisions', 'provision'], ['key dates', 'Key dates']] },
+  eidas2: { lead: 'eIDAS2', facets: [['European Digital Identity Wallets', 'Wallet'], ['trust services', 'trust service'], ['key dates', 'Key dates']] },
 });
 
 const joinFacets = (xs) => xs.length <= 1 ? xs.join('') : xs.slice(0, -1).join(', ') + ' and ' + xs[xs.length - 1];
