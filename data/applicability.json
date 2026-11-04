@@ -649,7 +649,7 @@
         "activity": ["activity:ai-deployment"]
       },
       "outcome": "outcome:possible",
-      "rationale": "Article 25 is the trap most often missed: a distributor, importer or deployer becomes a provider — assuming the full obligation set — if it puts its name or trademark on a high-risk system, substantially modifies it, or modifies its intended purpose. Buying rather than building is not by itself a way out.",
+      "rationale": "Article 25 is the trap most often missed: a distributor, importer or deployer becomes a provider — assuming the full obligation set — if it puts its name or trademark on a high-risk system, substantially modifies one, or modifies the intended purpose of a system that is not high-risk so that it becomes one. Buying rather than building is not by itself a way out.",
       "obligations": ["ai-act:art-25"],
       "authority": ["nca-*"],
       "dates": ["tl-ai-act-2027-12-02-application", "tl-ai-act-2028-08-02-application"],
@@ -665,8 +665,18 @@
         "actor": ["ai-act:art-3", "ai-act:art-25"],
         "activity": ["ai-act:art-3"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 16): brought to the v2 shape. Read that day in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX: Regulation (EU) 2024/1689 (32024R1689), Arts 2(1), 3 points (3) and (4), 25 and 113, read as amended by Regulation (EU) 2026/1744 (32026R1744), Art. 1 points (4)(b) (Art. 3 point (14a), inserted), (12) (Art. 25(2) and the first subparagraph of Art. 25(4), replaced; Art. 25(1) and (3) unchanged) and (40)(b) (Art. 113, third paragraph, point (c), replaced). The Publications Office's metadata lists that one amending act and four corrigenda of the AI Act, none with an English expression. The Act defines an SME (Art. 3 point (14a), as inserted, by reference to Recommendation 2003/361/EC, which was not read) and no large company; Art. 25(1) binds any distributor, importer, deployer or other third party whatever its size, and Art. 25(3) the product manufacturer where the high-risk system is a safety component of a product under Annex I, Section A. On the author's decision of 29 Oct 2026 the dates hold 2 August 2028 (Art. 113, third paragraph, point (c)(ii), as replaced). Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX: Regulation (EU) 2024/1689 (32024R1689), Arts 2, 3 points (3) and (4), 25 and 113, as amended by Regulation (EU) 2026/1744 (32026R1744), Art. 1 points (4) (Art. 3 point (14), amended; points (14a) and (14b), inserted), (12) (Art. 25(2) and the first subparagraph of Art. 25(4), replaced; Art. 25(1) and (3) unchanged) and (40) (Art. 113, third paragraph, point (c), replaced), and Art. 4. The Publications Office's SPARQL endpoint, queried that day, lists that one amending act and four corrigenda of the AI Act, none with an English expression, and one corrigendum of Regulation (EU) 2026/1744, without an English expression. On the author's decision of 4 Nov 2026 the rationale follows the three limbs of Art. 25(1): it had said the deployer becomes a provider if it 'modifies its intended purpose', referring back to the high-risk system, while limb (c) concerns a system not classified as high-risk whose intended purpose is modified so that it becomes high-risk. The Act defines an SME (Art. 3 point (14a), as inserted, by reference to Recommendation 2003/361/EC, which was not read) and no large company; Art. 25(1) binds any distributor, importer, deployer or other third party whatever its size, and Art. 25(3) the product manufacturer where the high-risk system is a safety component of a product under Annex I, Section A. The dates hold 2 December 2027 and 2 August 2028 (Art. 113, third paragraph, point (c), as replaced; the author's decision of 29 Oct 2026). First brought to the v2 shape on 29 Oct 2026 (v2 Session 16). Conditions, outcome, obligations, dates and depends_on were not changed. The claims were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-ai-act", "locator": "Art. 2; Art. 3 points (3) and (4); Art. 25; Art. 113" },
+          { "source_id": "src-eurlex-ai-omnibus", "locator": "Art. 1 points (4), (12) and (40); Art. 4" }
+        ],
+        "queried": ["src-eurlex-ai-act", "src-eurlex-ai-omnibus"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 23, 23.3: `ap-ai-act-05`'s rationale"]
+      }
     },
     {
       "id": "ap-ai-act-06",
