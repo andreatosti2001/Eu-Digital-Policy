@@ -62,6 +62,7 @@ import {
   attestationAudit, FORM_FROM, ATTESTATION_KEYS, OUTCOMES, segments, unitsOf, parseLocator, provisionArticle, celexOf, roadmapTitles,
   readingPacket, roadmapAudit, SECTION8_UNTITLED,
 } from './attestation-audit.mjs';
+import { noticeAudit, NOTICE_TEXT } from './notice-audit.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const SELF = new Set(['https://andreatosti2001.github.io']);
@@ -2688,7 +2689,7 @@ test('Y1 · 13.2: validate.mjs accepts a correct v2 rule, keeps the v1 forms, an
   /* a v2 rule in the schema's shape, on the rule X2 uses */
   const v2 = (r, t) => {
     r.sources = [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 3(2)', for: 'scope' },
-      { source_id: 'src-eurlex-gdpr', supports: 'supports:partial', locator: null }];
+      { source_id: 'src-eurlex-gdpr', supports: 'supports:partial', locator: 'Art. 6(1)' }];
     r.condition_provisions = Object.fromEntries(Object.keys(r.conditions).map((d) => [d, ['gdpr:art-3']]));
     r.exemptions = ['A v1 string exemption, still accepted.',
       { text: 'A planted exemption object.', effect: 'excludes', basis: [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 2(2)' }], outside_dataset: false }];
@@ -2711,6 +2712,8 @@ test('Y1 · 13.2: validate.mjs accepts a correct v2 rule, keeps the v1 forms, an
   fails((r) => { r.sources[1].supports = 'outcome:applies'; }, /RULE "ap-gdpr-02" sources\[1\]: supports "outcome:applies" is not a supports: term/);
   fails((r) => { r.sources[0].for = 'scope-ish'; }, /RULE "ap-gdpr-02" sources\[0\]: for "scope-ish" is not one of scope, obligation, date, rationale/);
   fails((r) => { r.sources[0].locator = 3; }, /RULE "ap-gdpr-02" sources\[0\]: locator 3 is neither a string nor null/);
+  /* v2 Session 22, 22.4 (c) (§8): the notice says every source says where the rule is found */
+  fails((r) => { r.sources[1].locator = null; }, /N-1 applicability\/ap-gdpr-02: sources\[1\] \(src-eurlex-gdpr\) has no locator/);
   /* the v1 form keeps its message */
   fails((r) => { r.sources.push('src-not-a-source'); }, /DANGLING source ref "src-not-a-source" in applicability\/ap-gdpr-02/);
   /* (2) condition_provisions */
@@ -3288,4 +3291,29 @@ test('AT14 · the §8 title check: this roadmap is clean; an untitled row, a tit
     assert.equal(red.exit, 1);
     assert.match(red.out, /✗ P-10 roadmap §8: the title .* occurs twice/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('AT15 · the notice check: this tree holds all four clauses; each planted falsehood fails it (22.4 (c), P-07)', () => {
+  const files = () => ({ appliesHtml: readFileSync(join(ROOT, 'applies.html'), 'utf8'),
+    evidenceAuditSrc: readFileSync(join(ROOT, 'tools', 'evidence-audit.mjs'), 'utf8'), appliesJsSrc: readFileSync(join(ROOT, 'js', 'applies.js'), 'utf8') });
+  const run = (fnDb = () => {}, fnFiles = (f) => f) => { const db = loadDb(); fnDb(db); return noticeAudit({ db, ...fnFiles(files()) }); };
+  assert.deepEqual(run(), { errors: [], warnings: [] });
+  /* N-1: a reference with no locator, and one with no supports, in each of the three places */
+  assert.match(run((db) => { ruleOf(db, 'ap-cra-01').sources[2].locator = null; }).errors.join('\n'), /^N-1 applicability\/ap-cra-01: sources\[2\] \(src-eurlex-cra\) has no locator/);
+  assert.match(run((db) => { delete ruleOf(db, 'ap-cra-01').exemptions[0].basis[0].supports; }).errors.join('\n'), /exemptions\[0\]\.basis\[0\] \(src-eurlex-cra\) says nothing about what it supports/);
+  const withT = loadDb().applicability.rules.find((r) => r.threshold_basis);
+  const k = Object.keys(withT.threshold_basis)[0];
+  assert.match(run((db) => { ruleOf(db, withT.id).threshold_basis[k][0].locator = ' '; }).errors.join('\n'), new RegExp(`threshold_basis\\.${k}\\[0\\]`));
+  /* N-2, N-4 (data) */
+  assert.match(run((db) => { const r = ruleOf(db, 'ap-cra-01'); r.condition_provisions.actor = []; }).errors.join('\n'), /^N-2 applicability\/ap-cra-01: condition "actor" names no provision/);
+  assert.match(run((db) => { delete ruleOf(db, 'ap-cra-01').last_verified; }).errors.join('\n'), /^N-4 applicability\/ap-cra-01: no last_verified/);
+  /* N-3, N-4 (page), N-0 */
+  assert.deepEqual(run(undefined, (f) => ({ ...f, evidenceAuditSrc: f.evidenceAuditSrc.replace(/triggerAudit/g, 'somethingElse') })).errors,
+    ['N-3 tools/evidence-audit.mjs no longer imports and calls triggerAudit — the notice says the evidence audit checks the rules']);
+  assert.deepEqual(run(undefined, (f) => ({ ...f, appliesJsSrc: f.appliesJsSrc.replace('humanDate(r.last_verified)', 'humanDate(null)') })).errors,
+    ["N-4 js/applies.js no longer renders a rule's last_verified — the notice says each rule shows it"]);
+  assert.match(run(undefined, (f) => ({ ...f, appliesHtml: f.appliesHtml.replace('checked to the standard', 'held to the standard') })).errors.join('\n'), /^N-0 applies\.html: the notice is not the text/);
+  assert.ok(NOTICE_TEXT.includes("Read a result as a pointer to the law, not as a verified reading of it."));
+  /* what could not be read is said, not skipped */
+  assert.equal(run(undefined, () => ({ appliesHtml: null, evidenceAuditSrc: null, appliesJsSrc: null })).warnings.length, 3);
 });
