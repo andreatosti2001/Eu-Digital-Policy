@@ -3330,7 +3330,7 @@
           "id": "teu:art-4-2",
           "number": "4(2)",
           "heading": "National identity and essential State functions",
-          "summary": "Reserves national security to the sole responsibility of each Member State. The structural source of the asymmetry between constraint on corporate and on state power.",
+          "summary": "Reserves national security to the sole responsibility of each Member State. The brief argues this is the structural source of the asymmetry between constraint on corporate and on state power.",
           "obligation_on": [],
           "claims": [
             "clm-art-4-2-teu-carve-out",
@@ -4361,7 +4361,7 @@
       "to": "ai-act",
       "kind": "rel-kind:carve-out",
       "symmetric": false,
-      "summary": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to AI systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)). This is the structural source of the asymmetry between constraint on corporate and on state power.",
+      "summary": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to AI systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)). The brief argues this is the structural source of the asymmetry between constraint on corporate and on state power.",
       "provisions": [
         "teu:art-4-2",
         "ai-act:art-2"
@@ -4373,7 +4373,7 @@
       "sources": [
         "src-brief-original"
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-11-04"
     },
     {
       "id": "rel-dsa-avmsd-defers",
