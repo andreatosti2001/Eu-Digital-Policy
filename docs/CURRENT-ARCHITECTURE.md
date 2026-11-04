@@ -443,7 +443,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session):
 
 ```
-validate.mjs     0 errors · 0 warnings · 45 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 5 warnings · 45 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -493,6 +493,16 @@ the corpus being more honest, not less.
 - 46 → 45 (21 Oct 2026): `clm-eprivacy-miscounted-fines` no longer says the two French ePrivacy decisions "are frequently miscounted as GDPR fines", which nothing showed; it says what the CNIL's own releases state (Art. 82 of the French Data Protection Act; the one-stop-shop not applying) and that they should therefore not be counted as GDPR fines. With that scope the two CNIL references are direct and the brief no longer cites itself, so the claim leaves the unverified set by re-scoping to its evidence. Its `reference_gap` is still set, for a person to clear (Annex B p1, all four languages).
 
 The other numbers on this block are unchanged.
+
+**`validate.mjs` warnings, 0 → 5 (4 Nov 2026, v2 Session 24, roadmap §8 "v2 Session 24, 24.1: `ap-eidas2-01`'s five A-8
+warnings and the pins that hold them").** Recorded so a later session can tell new from pre-existing. They are the five A-8
+cases `docs/ATTESTATION-FORM.md` §5 point 1 foresaw, emitted once `ap-eidas2-01` was closed in the attestation form. None
+is a defect in the record: each is something the offline check cannot resolve and names rather than skips. By name:
+`ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01` on the "Citation ('in particular Article 5a(23) thereof')" segment
+of `src-eurlex-eudi-2024-2977`; the same on the "Citation ('in particular Article 5c(6) thereof')" segment of
+`src-eurlex-eudi-2024-2981`; and on the provisions `eidas2:art-5a`, `eidas2:art-2` and `eidas2:art-3`, Articles of
+Regulation (EU) No 910/2014 recorded under the amending Regulation's source. `tools/selftest.mjs` pins exactly these
+five (`EIDAS2_A8`, in AT0, AT1 and AT9); any other `validate.mjs` warning, or a sixth, is a finding, as it always was.
 
 **Unchanged in SESSION 30, and that is the point of recording it.** All four still report
 exactly these numbers. `freshness.mjs` reached `exit 0` by the exit code answering a question

@@ -435,11 +435,21 @@ const READ_V2_23 = Object.freeze({
   'ap-dora-01': '2026-11-04',
   'ap-dora-02': '2026-11-04',
   'ap-pld-01': '2026-11-04',
+  'ap-eidas2-01': '2026-11-04',
 });
 /** The date a rule was last read, as the closures above set it; every other rule keeps 2026-10-29. */
 const dateOf = (id) => READ_V2_23[id] ?? (READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29');
 /** The tree's newest verification date. */
 const NEWEST_READ = ['2026-11-04', ...Object.values(READ_V2_23)].sort().at(-1);
+/* v2 Session 24 (§8, 24.1: `ap-eidas2-01`'s five A-8 warnings and the pins that hold them): the five cases
+   docs/ATTESTATION-FORM.md §5 point 1 foresaw, named exactly; any other warning, or a sixth, still fails */
+const EIDAS2_A8 = Object.freeze([
+  "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2977 «Citation ('in particular Article 5a(23) thereof')» names no Article, Annex or Recital the check can read",
+  "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2981 «Citation ('in particular Article 5c(6) thereof')» names no Article, Annex or Recital the check can read",
+  'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-5a ("5a (of Regulation (EU) No 910/2014, as inserted)") cannot be placed in a tier-1 text',
+  'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-2 ("2 (of Regulation (EU) No 910/2014, as amended)") cannot be placed in a tier-1 text',
+  'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-3 ("3 (of Regulation (EU) No 910/2014, as amended)") cannot be placed in a tier-1 text',
+]);
 
 test('F10 · 17.3(b): the applicability rules are aged one by one, at 90 days, and a stale rule is a prompt, never a defect', () => {
   /* v2 Session 17 (29 Oct 2026, docs/ROADMAP-v2.md §8, 17.0 questions 8b and 9; named F10 because
@@ -447,7 +457,7 @@ test('F10 · 17.3(b): the applicability rules are aged one by one, at 90 days, a
   assert.equal(RULE_INTERVAL.days, 90);
   const now = runValidator('freshness.mjs', ['2026-10-29']);
   assert.equal(now.exit, 0);
-  assert.match(now.out, new RegExp(`^ {2}applicability {3}per rule, 33 rules verified 2026-10-29 … ${NEWEST_READ} \\(file date 2026-08-27 not used\\)$`, 'm'));
+  assert.match(now.out, new RegExp(`^ {2}applicability {3}per rule, 33 rules verified ${OLDEST_READ} … ${NEWEST_READ} \\(file date 2026-08-27 not used\\)$`, 'm'));
   assert.doesNotMatch(now.out, /RULE_STALE/);
   const later = runValidator('freshness.mjs', ['2027-01-28']);
   assert.equal(later.exit, 0);
@@ -2534,6 +2544,8 @@ const RULES_2026_10_28 = Object.freeze(['ap-gdpr-01', 'ap-gdpr-02', 'ap-gdpr-03'
   'ap-ai-act-01', 'ap-ai-act-02', 'ap-ai-act-03', 'ap-ai-act-04', 'ap-ai-act-05', 'ap-ai-act-06', 'ap-ai-act-07',
   'ap-data-act-01', 'ap-data-act-02', 'ap-data-act-03', 'ap-data-act-04', 'ap-nis2-01', 'ap-nis2-02', 'ap-nis2-03',
   'ap-dora-01', 'ap-dora-02', 'ap-cra-01', 'ap-pld-01', 'ap-eidas2-01', 'ap-cross-01']);
+/** The tree's oldest verification date, over the 33 rules, as the closures set it (v2 Session 24, §8, 24.1: the F10 pin). */
+const OLDEST_READ = RULES_2026_10_28.map(dateOf).sort()[0];
 /* the rules brought to the v2 shape, by session: they left RULES_V1. v2 Session 13 (29 Oct 2026):
    the pilot; v2 Session 14 (29 Oct 2026, §8 14.0 question 5): the GDPR's five; v2 Session 15
    (29 Oct 2026, §8 15.0 question 7): the DSA's five and the DMA's four; v2 Session 16 (29 Oct 2026,
@@ -3105,7 +3117,7 @@ test('AT0 · this tree: exactly the rules closed in the form (v2 Sessions 23–2
   const db = loadDb();
   const a = attestationAudit(db, ROADMAP);
   assert.deepEqual(a.errors, []);
-  assert.deepEqual(a.warnings, []);
+  assert.deepEqual(a.warnings, [...EIDAS2_A8], 'exactly the five A-8 cases of ap-eidas2-01 (§8, 24.1)');
   assert.deepEqual([...a.attested].sort(), Object.keys(READ_V2_23).sort(), 'the closures in the form (v2 Sessions 23–24), and no backfill (plan §2)');
   /* §8, 22.1 question 4: the last day a rule was read without the form. Not moved to excuse a rule. */
   assert.equal(FORM_FROM, '2026-11-04');
@@ -3116,13 +3128,14 @@ test('AT0 · this tree: exactly the rules closed in the form (v2 Sessions 23–2
   assert.deepEqual([...OUTCOMES], ['changed', 'unchanged']);
   const v = runValidator('validate.mjs');
   assert.equal(v.exit, 0);
-  assert.doesNotMatch(v.out, /\bA-\d |ATTESTATION_NOT_CHECKABLE/);
+  assert.doesNotMatch(v.out, /\bA-\d /);
+  assert.deepEqual(v.out.split('\n').filter((l) => /ATTESTATION_NOT_CHECKABLE/.test(l)).map((l) => l.trim().replace(/^! /, '')), [...EIDAS2_A8]);
 });
 
 test('AT1 · the control: ap-cra-01\'s closure of 4 Nov 2026, written in the form, passes every check', () => {
   const a = withCra();
   assert.deepEqual(a.errors, []);
-  assert.deepEqual(a.warnings, []);
+  assert.deepEqual(a.warnings, [...EIDAS2_A8], 'the tree\'s five A-8 cases (§8, 24.1), and nothing from the fixture');
   /* v2 Session 23 (§8, 23.1: two selftest pins the first closure broke): the fixture, and the tree's closures */
   assert.deepEqual([...a.attested].sort(), ['ap-cra-01', ...Object.keys(READ_V2_23)].sort());
 });
@@ -3241,6 +3254,8 @@ test('AT9 · A-8 names what the check cannot resolve, as WARNINGs, and skips not
   assert.deepEqual(t2.warnings, [
     'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-04: the rule cites src-ec-dma-cloud-mi-2025 (not tier-1) in sources, and attestation.read does not name it',
     'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-04: the rule cites src-ec-cloud-gatekeeper-preliminary-2026 (not tier-1) in sources, and attestation.read does not name it',
+    /* the tree's own (§8, 24.1) */
+    ...EIDAS2_A8,
   ]);
 });
 
