@@ -13,8 +13,8 @@ E-1…E-6 measured, the status lines reworded as approved); 20.2 written and reh
   (left open by the author's decision). The prompt's own branch is merged.
 - The clone was shallow at the start (`git rev-parse --is-shallow-repository` → `true`); `git fetch --unshallow` was run
   before any suite.
-- Disposition: not pushed yet. The pull-request question is asked after the final checkpoint's approval; nothing is pushed
-  to the branch after a pull request is opened.
+- Disposition: final checkpoint approved (4 Nov 2026); pushed, and a pull request to `main` opened on the author's
+  instruction ("Push and open the PR (Recommended)"). Nothing is pushed to the branch after the pull request is opened.
 
 ## v2 Session 20 — final checkpoint (20.2: item 4.1, the rule-maintenance process)
 
