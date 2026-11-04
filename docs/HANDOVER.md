@@ -1,9 +1,208 @@
 # HANDOVER
 
-**Last updated:** v2 Session 20, final checkpoint (3 November 2026): 20.1 approved (Phase 4 opened on the author's word,
-E-1…E-6 measured, the status lines reworded as approved); 20.2 written and rehearsed (`docs/RULE-MAINTENANCE.md`).
-**Final checkpoint approved on 4 Nov 2026 (roadmap §8); the pull-request question follows.**
-**Branch:** `claude/v2-session-20-phase-4` (no branch was assigned by the environment), cut from `main` at `40d4dd1`.
+**Last updated:** v2 Session 21, final checkpoint (4 November 2026): 21.1 and 21.2 approved; 21.3 decided; 21.4, the
+prompt of v2 Session 22, written and confirmed. **Final checkpoint approved on 4 Nov 2026 (roadmap §8); pull request to `main` opened.**
+**Branch:** `claude/v2-session-21-rules` (no branch was assigned by the environment), cut from `main` at `a0082ea`.
+
+## Branch register — 4 November 2026 (v2 Session 21)
+
+- Branch `claude/v2-session-21-rules`, cut from `main` at `a0082ea` (#59, the prompt, merged). Nothing merged in.
+- Unmerged branches at the start (`git branch -r --no-merged origin/main`): only
+  `origin/scout/digest-digest-2026-11-02T16-04-07Z`, already in the register (left open by the author's decision).
+- The clone was shallow at the start (`--is-shallow-repository` → `true`); `git fetch --unshallow` was run before any
+  suite.
+- Disposition: final checkpoint approved (4 Nov 2026, §8 `d2a338a`); pushed, and a pull request to `main` opened on the
+  author's instruction ("Push and open the PR (Recommended)"). Nothing is pushed to the branch after the pull request is
+  opened.
+
+## v2 Session 21 — final checkpoint (21.3 the leftovers, 21.4 the prompt of Session 22)
+
+Checkpoint 21.2 approved (§8 `6368f81`). `origin/main` re-fetched before this entry: still `a0082ea`.
+
+### 21.3 · The leftovers of Sessions 18–20: decisions and commits
+
+| Residue | Re-measured 4 Nov 2026 | Answer | §8 | Change |
+|---|---|---|---|---|
+| The Phase 4 lines | V2-CLOSURE N1 "Phase 4 not started; D-4 open", B5 "… Phase 4 not started"; ROADMAP §4 "Phase 4 opens on the author's word once E-5 is measured."; no check reads them | "Note + reword (Recommended)" | `8c5079d` | `c9b8eef` (V2-CLOSURE notes), `7917a09` (§4) |
+| "EUDigitalPolicy" in this file | the Session 19 table and node; live value "Eu Digital Policy" (`tools/seo.mjs:60`, `index.html`), #56 | "Add the note (Recommended)" | `9a3e7cb` | `6316c33` |
+| S18 (1) · eIDAS2 title | the derived fallback; csa, digital-networks-act, ehds, iea the same words | "Wallets + trust services (Recommended)" | `6f62490` | `89d17f6` — "eIDAS2 — European Digital Identity Wallets, trust services and key dates \| EU Digital Policy" |
+| S18 (2) · headings outside the AI Act | 98 headings, 15 instruments | "Assign to Session 22 (Recommended)" | `a893512` | — (in Session 22's prompt) |
+| S18 (3) · `x-verification` | the seven procedural states equal `PRE_ADOPTION`; no code reads the file | "Close, no change (Recommended)" | `caff960` | — |
+
+**A commit whose message overstates it.** `c9b8eef` says it changes `docs/ROADMAP-v2.md` §4; its replacement failed (the
+sentence also occurs, quoted, in the §8 row `8c5079d`) and the commit holds only the V2-CLOSURE notes. Found at once,
+not rewritten (pushed): `7917a09` makes the §4 change and says so in its message.
+
+### 21.4 · The prompt of v2 Session 22
+
+`docs/prompts/v2-session-22.md` (`4144f55`, `888c938`, `6cd7bc6`, `0b0f0ae`), on this branch, in this pull request, under
+the standing rule of §8 (4 Nov 2026). The author's answers, in its provenance: "25 rules + headings (Recommended)"; "By
+instrument + stop rule (Recommended)"; "Final batch, first to drop (Recommended)"; the draft shown and confirmed ("Draft is
+right (Recommended)"). Scope: the 25 rules lapsing on 28 Jan 2027 and the 98 headings, in three batches by instrument with
+a checkpoint each; a stop rule (what remains goes, named, to Session 23 before 28 Jan 2027; the 25 rule-less headings
+first); the standing rule carried to Session 24. It records no §8 row of its own and opens nothing.
+
+### Not verified, and why
+
+- No claim was re-read (`clm-*` cited by the eight rules): outside group (a).
+- The Commission's gatekeepers page lists no cloud designation on 4 Nov 2026; a page's silence is not proof that no
+  decision exists. Recorded in those words.
+- The browser suite's one undecidable (accessibility) was not investigated; it is not new to this session's changes
+  (none touches markup but the eIDAS2 `<title>`).
+- `data/applicability.json`'s file-level `$last_verified` was not moved: the file was not re-read whole.
+
+### New findings, not corrected (all sessions' lists in one place)
+
+The six of the 21.2 report (NIS2's `status_note` and `instruments.html:105`; the brief's arguments in `ap-dma-04` and
+`ap-nis2-01`; no event for 2 Aug 2027; `tl-dma-2026-11-01-designation` still `scheduled`; two `accessed` dates; DSA
+definitions for `ap-cross-01`); the status re-reading that `validate.mjs:514` couples to a whole-record date; and four
+generic instrument titles (csa, digital-networks-act, ehds, iea). None is in Session 22's scope (its question 1).
+
+### Counts on the final tree (4 Nov 2026, `0b0f0ae`)
+
+`validate` 0 · `i18n-audit` 0/0 · `design-qa` 0/0 · `seo-audit` 0/0 · `og-image --check` current · `evidence-audit
+--as-of 2026-11-04` 0 errors, 11 warnings · `--as-of 2027-03-26` 0 errors, 18 warnings, T-12 on `ap-cra-01` only ·
+`freshness` 2027-01-28 25, 2027-02-03 33 · 25 suites 1330 pass, 0 fail · browser 343 pass, 0 fail, 1 undecidable ·
+gate, schemas, boundary, routes exit 0 · readiness exit 1, 17 of 20 mandatory, as `main` · `commit-evidence a0082ea
+HEAD` 45 commits, 0 without evidence. Outputs in the scratchpad (`runfinal/`).
+
+### The checklist (21.0–21.4)
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **21.0** | §8 scope row `d0742ba`; the reconnaissance in the 21.1 report | read §8's row "The scope of v2 Session 21" | — | met: scope recorded before any other write |
+| **21.1** | §8 `d4732c3`, `3f2fbb0`, `76d37e5`, `1a0880d`, approval `6423047`; `docs/RULE-MAINTENANCE.md` `a0867fa` | read §0, step 2 (the query), step 4, §9 "Decided on 4 Nov 2026" | none reads the document (`grep -rl RULE-MAINTENANCE tools agent`) | met: three premises decided and written |
+| **21.2** | §8 rows `b8c9e19` … `3337f7a`, approval `6368f81`; data `a1dd811`, `c97fed6`, `01a0902`, `1ad8786`, `63b8194`, `d239f6a`, `2685259`, `98fcd6d`, `5387ad3`; `tools/selftest.mjs` `f622cea`; RULE-MAINTENANCE `14c0191` | open `applies.html` for the eight rules; `node tools/evidence-audit.mjs --as-of 2026-11-04` (no dma warning); `node tools/freshness.mjs --as-of 2027-01-28` → 25 | `tools/selftest.mjs` F10, X1, X2, Y3–Y6 (`READ_2026_11_04`); `seo-audit` (generated pages) | met: nine findings and the DMA status closed on the author's word, none left open |
+| **21.3** | §8 `8c5079d`, `9a3e7cb`, `6f62490`, `a893512`, `caff960`; `c9b8eef`, `7917a09`, `6316c33`, `89d17f6` | V2-CLOSURE N1/B5; ROADMAP §4 line 258; this file under the Session 19 node; `instruments/eidas2/index.html` `<title>` | `seo-audit` (title facets, length) | met: every residue decided; (2) assigned to Session 22 |
+| **21.4** | `docs/prompts/v2-session-22.md` `0b0f0ae` | read its provenance (three answers) and exit criterion (the rule for Session 24) | — | met: the prompt exists on this branch, confirmed by the author; approved with the work at this checkpoint |
+
+## v2 Session 21 — checkpoint 21.2 (group (a), with the written process)
+
+Checkpoint 21.1 approved (§8 `6423047`). Every legal text below was retrieved **on 4 Nov 2026 from the Publications
+Office's Cellar by CELEX** (English XHTML, `Accept-Language: eng`), every amending act and corrigendum asked of the SPARQL
+endpoint that day with the queries now in `docs/RULE-MAINTENANCE.md` step 2, and every English corrigendum read. Nothing
+from memory or from a search result. Each closure: the §8 row first and committed, then `data/`, `node tools/_footer.mjs`,
+the checks, and a commit with `Evidence:`.
+
+### Per finding: the text read, before → after, the closure
+
+| Finding · record | Read (CELEX, Articles) | Before → after | Closure | §8 · data |
+|---|---|---|---|---|
+| F-02 · `ap-nis2-01` `depends_on` | 32022L2555 Arts 2, 3, 20, 21, 23, 32(6), 41, Annexes I–II; SPARQL: no amending act, 9 corrigenda, only R(04) in English (Art. 19(1)); press release `src-ec-nis2-referral-2026` at its URL | "transposition is materially incomplete … in several they have not yet arrived" → national dates vary; "On 8 July 2026 the Commission reported that most Member States had transposed it, and referred Spain, France, Ireland and the Netherlands …" | changed; only the rule (the same words in NIS2's `status_note` and `instruments.html:105` are new findings) | `b8c9e19` · `a1dd811` |
+| F-04 · `ap-nis2-02` rationale | 32022L2555 Annex I ("SECTORS OF HIGH CRITICALITY", point 8), Arts 2, 3(1)(a), 3(1)(e), 3(2), 6(30)–(31), 20, 21, 23, 41 | "which NIS2 treats as essential" → listed in Annex I, the sectors of high criticality; size decides (Art. 3(1)(a), 3(2), 3(1)(e)) | changed | `f98e0b9` · `c97fed6` |
+| F-03 · `ap-cra-01` rationale | 32024R2847 Arts 2, 3, 13(1), 14, 69, 71; 32025R0327 Arts 104–105; SPARQL: 1 amending act, 8 corrigenda, R(01), R(02), R(04) in English (title, Art. 64(10), Art. 67) | "serious incidents begins on 11 September 2026" → "severe incidents having an impact on the security of the product has applied since 11 September 2026 (Article 14)" | changed (a second point, the tense, named in the question); **T-12 still fires on 26 Mar 2027**, as it should | `dc447dd` · `01a0902` |
+| F-13 · `ap-ai-act-02` rationale | 32024R1689 Arts 2(1)(a), 3 points (3), (9), (63), 53, 111, 113; 32026R1744 Art. 1 (111(2) replaced, 111(4) added; 111(3), 53 untouched); SPARQL: 1 amending act, 4 corrigenda, none in English; `src-ec-gpai-code` at its URL | "owes Article 53 since 2 August 2025" → applies from 2 Aug 2025 (Art. 113(b)); models placed before have until 2 Aug 2027 (Art. 111(3)); a source "Art. 111(3); Art. 113, third paragraph, point (b)" added | changed; no timeline event for 2 Aug 2027 (a finding) | `ac87546` · `1ad8786` |
+| F-14 · `ap-ai-act-06` exemption; `teu:art-4-2`; `rel-ai-act-teu-4-2` | 32024R1689 Arts 2(1)(b), 2(3), 3(4), 5, 27, 113 with 32026R1744 Art. 1 points (7), (13), (40); TEU Art. 4(2) (12016M004) | the exemption's last sentence (the brief's argument) deleted; the two summaries "The structural source …"/"This is the structural source …" → "The brief argues this is the structural source …" | changed; `rel-ai-act-teu-4-2` `last_verified` 2026-11-04 | `8527a93` · `63b8194` |
+| F-17 + F-23 · `ap-gdpr-04` | 32016R0679 Arts 2, 4 points (1), (2), (4), (7), (8), 22, 35; SPARQL: no amending act, 3 corrigenda, only R(02) in English (recital 71, Arts 37, 41–43, 57, 64, 65, 69, 70) | `depends_on` + "Whether the organisation is the controller of the processing: Articles 22(3) and 35(1) bind the controller …"; the note no longer says the AI Act's provisions "belong to Session 16" | F-23(3) changed; **F-23(2) closed without change** (the decision of 29 Oct 2026, pinned by Y3; its premise "not in the dataset" no longer holds, `ai-act:art-3` exists); F-17 changed | `c281224` · `d239f6a` |
+| F-19 · `ap-dsa-03` rationale | 32022R2065 Arts 2(1), 3 points (i), (s), 19, 27, 33(1), (4), 34, 35 (Chapter III, Section 3 holds Arts 19–28); SPARQL: no amending act, 11 corrigenda, none in English | "owes recommender-parameter transparency" → "owes recommender-system transparency (Article 27) unless it is a micro or small enterprise, which Article 19 exempts from that Section" | changed | `dbf1efe` · `2685259` |
+| F-20 · `ap-dma-04` rationale | 32022R1925 Arts 1(2), 2 points (2)(i), (13), 3(1), (2), (8), 54; SPARQL: no amending act, 3 corrigenda, only R(02) in English (Art. 13(8)); IP/25/2717 (press corner documents API); the announcement of 25 June 2026; the gatekeepers page (23 core platform services, no cloud service) | "designation decisions are due in November 2026" → the Commission's 12-month target (not a legal deadline) and its preliminary view of 25 June 2026; the two releases cited as sources | changed; the brief's-argument sentence kept, a new finding | `ec60b87` · `98fcd6d` |
+| DMA status | SPARQL: in force, end of validity 9999-12-31, no amending or repealing act; Art. 54 | `status:applicable` unchanged; `status_as_of` and `last_verified` 2026-11-04 (`validate.mjs:514` pairs them; only the status re-read, as on 21 Oct) | re-read, unchanged; `STATUS_PREDATES_MILESTONE instruments/dma` cleared | `ad37493` · `5387ad3` |
+
+Eight rules re-read and closed, `last_verified` 2026-11-04: `ap-nis2-01`, `ap-nis2-02`, `ap-cra-01`, `ap-ai-act-02`,
+`ap-ai-act-06`, `ap-gdpr-04`, `ap-dsa-03`, `ap-dma-04`. **No finding was left open for an unreadable source**: Cellar and
+the SPARQL endpoint answered throughout. No `claim_type`, asterisk, `reference_gap` or `requires_verification` changed;
+no claim was re-read; no `i18n/` key carries any replaced text (grep, 0 for each).
+
+### A defect the work exposed, and corrected on the author's word
+
+`tools/selftest.mjs` pinned the dates of the 29 Oct 2026 reading (F10, X1, X2, Y5, Y6). I ran `validate` and
+`seo-audit` after each closure **but not `selftest`**, so the branch was red from `a1dd811` to `f622cea` (4 closures;
+clean `main` 124/124, the branch 119/124). Found before F-14 was committed, put to the author ("Update pins exactly",
+§8 `a67e21f`), fixed in `f622cea`: a list `READ_2026_11_04`, exact dates per rule, F10's 28 Jan 2027 count `33 −`
+that list, and X2's planted judicial event moved from 2026-11-02 to 2026-11-10 — it had stopped firing against
+`ap-cra-01`'s new date. Nothing relaxed. Each later closure added its rule to the list in its own commit.
+
+### Where the written process guided, and where it did not
+
+- **Clear:** the order of steps 1–6; one question per finding with the Article quoted; the §8 row before `data/`;
+  step 5 (two generated files per closure, every time); the note's form (`ap-cra-01`'s).
+- **Not clear, corrected in the document** (§8 `3337f7a`, `14c0191`): a corrigendum's CELEX must be percent-encoded
+  (404 otherwise); the English-expression query was nowhere; step 4 did not say that `selftest` pins a closure.
+- **Not clear, not changed:** an instrument's status re-reading has no step — `validate.mjs:514` forces
+  `last_verified` to move with `status_as_of`, a whole-record date for a status-only reading (the 21 Oct precedent
+  says so in prose). Reported here.
+
+### New findings, not corrected
+
+1. NIS2's `status_note` (`data/instruments.json`) and `instruments.html:105` still say transposition is "materially
+   incomplete" (F-02's words).
+2. `ap-dma-04`'s rationale ends with the brief's argument ("The scope gap the brief identifies is generative AI, not
+   cloud.") — F-14's pattern; and `ap-nis2-01`'s rationale calls Art. 32(6) "the provision that actually changes
+   boardroom behaviour", an argument.
+3. No timeline event holds 2 Aug 2027 (AI Act Art. 111(3)).
+4. `tl-dma-2026-11-01-designation` is `scheduled` at month precision; the month is current and no decision is listed.
+5. The source records `src-ec-nis2-referral-2026` and `src-ec-gpai-code` keep `accessed` 2026-10-29 though re-read
+   today (a data change not asked).
+6. DSA Art. 3(i), (s) as actor definitions for `ap-cross-01` (F-23(2)'s DSA half) — outside the eight rules (premise 2).
+
+### Counts (4 Nov 2026, the branch at `14c0191`)
+
+`validate` 0 errors · `i18n-audit` 0/0 · `design-qa` 0/0 · `seo-audit` 0/0 · `og-image --check` exit 0 ·
+`evidence-audit --as-of 2026-11-04` 0 errors, 11 warnings (no `instruments/dma`), publishable 33 of 33 · `--as-of
+2027-03-26` 0 errors, 18 warnings, T-12 on `ap-cra-01` only · `freshness --as-of 2026-11-04` 0 `RULE_STALE`, `--as-of
+2027-01-28` **25** (33 − 8, premise 2), `--as-of 2027-02-02` 25 · 25 suites 1330 pass, 0 fail (`BROWSER_QA_CHROME` on the
+environment's Chromium) · browser suite `--require-browser` 343 pass, 0 fail, 1 undecidable (accessibility) · adversarial
+gate exit 0 · `agent/schemas/cli.mjs check` exit 0 · `.control-room/cli.mjs boundary` 0 errors, `routes` exit 0 ·
+readiness exit 1, 17 of 20 mandatory, the same three blockers as `main` (dispatcher, decision ledger, deploy gate
+unmeasurable), identical to `main`'s report · `commit-evidence a0082ea HEAD` 0 without evidence. Outputs in the
+scratchpad (`run212/`).
+
+## v2 Session 21 — checkpoint 21.1 (the three premises)
+
+### The reconnaissance (read only, full clone, `main` at `a0082ea`)
+
+Every row of the prompt's table re-measured on 4 Nov 2026 and found as stated: 33 rules, all `last_verified` 2026-10-29;
+`freshness --as-of 2027-01-27` 0 `RULE_STALE`, `--as-of 2027-01-28` 33; `evidence-audit --as-of 2027-03-26` names T-12 on
+`ap-cra-01` only (and six `STATUS_PREDATES_MILESTONE`: dma, ai-act, data-act, pld, eidas2, ehds); `evidence-audit --as-of
+2026-11-04` one, `instruments/dma` ("since then 2026-11-01 designation"); publishable 33 of 33. The stale Phase 4 lines
+(`docs/V2-CLOSURE.md` N1, B5; `docs/ROADMAP-v2.md` §4); "EUDigitalPolicy" in this file's Session 19 report; the eIDAS2
+title still "eIDAS2 — key provisions and key dates | EU Digital Policy"; `x-verification` once in
+`docs/v2-design/status-labels.json`. Outputs: the session's scratchpad (`recon/`).
+
+**One premise of the table was inexact, and is now explained.** Cellar answered HTTP 400 again, as in Session 20. The
+cause: a request without `Accept-Language: eng`. With it, `http://publications.europa.eu/resource/celex/32016R0679`
+answers 303 then 200, and the Official Journal text of Regulation (EU) 2016/679 was retrieved (806 864 bytes) and read.
+The SPARQL endpoint answered 200.
+
+### What the author decided (`docs/ROADMAP-v2.md` §8) and the commits
+
+| Item | Answer | §8 | Change |
+|---|---|---|---|
+| Scope | "Start session 21" | `d0742ba` | — |
+| Premise 1 · `last_verified` on a reading not made | "Date stays; record in §8 (Recommended)" | `d4732c3` | `a0867fa` |
+| Premise 2 · one day or in stages | "In stages (Recommended)" | `3f2fbb0` | `a0867fa` |
+| Premise 3 · the SPARQL query text | "In RULE-MAINTENANCE §2 (Recommended)" | `76d37e5` | `a0867fa` |
+| Q4 · the document's seven changes | "Approve all seven (Recommended)" | `1a0880d` | `a0867fa` |
+
+### The document, before and after (`a0867fa`)
+
+1. §0: added "**The rules are re-read in stages**, each when a prompt or a finding names it, and the calendar is not
+   realigned on one day (roadmap §8, v2 Session 21, premise 2)."
+2. Step 1: "with `Accept: application/xhtml+xml`" → "with `Accept: application/xhtml+xml` and `Accept-Language: eng`
+   (without the second header Cellar answers HTTP 400: measured 4 Nov 2026, v2 Session 21)". **A correction the use
+   showed, not a premise**; named as such in the question.
+3. Step 2, trace: "**The queries themselves are not kept**, and neither is any answer" → "The query text is kept below
+   this table (…, premise 3); **no answer is kept**".
+4. Step 2, what no check sees: "say so in the note and leave the rule's `last_verified` where it is" → "**nothing in
+   `data/` changes**: `last_verified` stays where it is and the published `verification_note` does not record the
+   failure; the roadmap §8 row and the `docs/HANDOVER.md` report say what could not be read, and the prompt or finding
+   stays open (…, premise 1)".
+5. Step 2: a new paragraph, the query as a fenced text block, "no tool … runs it; it is not a command and not a check",
+   last run 4 Nov 2026 with its result for 32016R0679 (three corrigenda, no amending or repealing act).
+6. Step 4: "(4) **Close the rule in one of two ways.**" → "(4) **Close the rule — only if every Article it cites was
+   read; otherwise nothing in `data/` changes (step 2, last row) — in one of two ways.**"
+7. §9: a dated paragraph "Decided on 4 Nov 2026" mapping items 2–4 to the premises and giving the cause of the 400; the
+   account of the rehearsal is not rewritten.
+
+No check reads the document (`grep -rl RULE-MAINTENANCE tools agent .control-room .github`: none). `node
+tools/validate.mjs` exit 0. Nothing outside `docs/` changed; no field, check or command.
+
+### What 21.2 inherits
+
+Eight rules to read (premise 2): `ap-nis2-01`, `ap-cra-01`, `ap-nis2-02`, `ap-ai-act-02`, `ap-ai-act-06`, `ap-gdpr-04`,
+`ap-dsa-03`, `ap-dma-04`, and the actors' definitions of F-23; the DMA's status with F-20. A rule whose cited texts are
+not all read keeps its date (premise 1). Under staging, the other 25 rules lapse on 28 Jan 2027 and are a later session's.
+
 
 ## Branch register — 4 November 2026 (the prompt of v2 Session 21)
 
@@ -202,6 +401,11 @@ superseded by the prompt (which puts Phase 4 out of scope) and is recorded nowhe
 The homepage WebSite node, whole: `{"@type":"WebSite","@id":"https://eudigitalpolicy.eu/#site","name":"EU Digital
 Policy","alternateName":["EUDigitalPolicy","eudigitalpolicy.eu"],"url":"https://eudigitalpolicy.eu/","inLanguage":"en",
 "author":{"@type":"Person","name":"Andrea Tosti"},"license":"https://creativecommons.org/licenses/by/4.0/"}`.
+
+*Note, 4 Nov 2026 (v2 Session 21): the `alternateName` above is what 19.1 wrote. After the checkpoint the author
+corrected it (roadmap §8, "v2 Session 19, after the checkpoint: the WebSite `alternateName`"), and #56 (`d74f587`,
+merged `943467d`) made it `["Eu Digital Policy", "eudigitalpolicy.eu"]`: `tools/seo.mjs:60` and `index.html`, measured
+4 Nov 2026. The report is not rewritten.*
 
 ### Files modified (the request's point 5)
 

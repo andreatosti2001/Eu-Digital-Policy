@@ -627,8 +627,8 @@
       "scope_class": "scope:core",
       "brief_part": "part-4",
       "legislative_status": "status:applicable",
-      "status_as_of": "2026-10-21",
-      "status_note": "Re-evaluated 21 Oct 2026 (audit item 9): in force with no end of validity and no amending act recorded, per the Publications Office's metadata (Cellar SPARQL, read 21 Oct 2026); applicable since 2 May 2023 (Art. 54, milestone). Status unchanged. Only the status was re-read that day; the other fields of this record were last re-read on 27 Aug 2026.",
+      "status_as_of": "2026-11-04",
+      "status_note": "Re-evaluated 4 Nov 2026 (v2 Session 21), after the milestone tl-dma-2026-11-01-designation: in force, end of validity 9999-12-31, no amending or repealing act, per the Publications Office's metadata (Cellar SPARQL, read 4 Nov 2026); applicable since 2 May 2023 (Art. 54, read that day in the Official Journal text, CELEX 32022R1925). The milestone is the Commission's target for concluding the AWS and Azure market investigations (IP/25/2717), not a legal date, and the Commission's gatekeepers page, read that day, listed no cloud computing service among the designated core platform services. Status unchanged. Only the status was re-read that day; the other fields of this record were last re-read on 27 Aug 2026. Earlier: re-evaluated 21 Oct 2026 (audit item 9), status unchanged.",
       "milestones": [
         "tl-dma-2022-09-14-adoption",
         "tl-dma-2022-10-12-publication",
@@ -808,7 +808,7 @@
       "sources": [
         "src-eurlex-dma"
       ],
-      "last_verified": "2026-10-21",
+      "last_verified": "2026-11-04",
       "legal_basis": [
         "tfeu:art-114"
       ]
@@ -3330,7 +3330,7 @@
           "id": "teu:art-4-2",
           "number": "4(2)",
           "heading": "National identity and essential State functions",
-          "summary": "Reserves national security to the sole responsibility of each Member State. The structural source of the asymmetry between constraint on corporate and on state power.",
+          "summary": "Reserves national security to the sole responsibility of each Member State. The brief argues this is the structural source of the asymmetry between constraint on corporate and on state power.",
           "obligation_on": [],
           "claims": [
             "clm-art-4-2-teu-carve-out",
@@ -4361,7 +4361,7 @@
       "to": "ai-act",
       "kind": "rel-kind:carve-out",
       "symmetric": false,
-      "summary": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to AI systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)). This is the structural source of the asymmetry between constraint on corporate and on state power.",
+      "summary": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to AI systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)). The brief argues this is the structural source of the asymmetry between constraint on corporate and on state power.",
       "provisions": [
         "teu:art-4-2",
         "ai-act:art-2"
@@ -4373,7 +4373,7 @@
       "sources": [
         "src-brief-original"
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-11-04"
     },
     {
       "id": "rel-dsa-avmsd-defers",

@@ -120,7 +120,7 @@
       "authority": ["dpa-*"],
       "dates": ["tl-gdpr-2018-05-25-application"],
       "exemptions": [],
-      "depends_on": ["Whether the system processes personal data at all.", "Whether decisions are based solely on automated processing and produce legal or similarly significant effects."],
+      "depends_on": ["Whether the system processes personal data at all.", "Whether decisions are based solely on automated processing and produce legal or similarly significant effects.", "Whether the organisation is the controller of the processing: Articles 22(3) and 35(1) bind the controller, the person or body that determines the purposes and means of the processing (Article 4 point (7)); an AI provider is one only for the processing it determines itself."],
       "claims": ["clm-art-22-predates-ai-act", "clm-three-impact-assessments"],
       "sources": [
         { "source_id": "src-eurlex-gdpr", "supports": "supports:direct", "locator": "Art. 2(1); Art. 4 points (1), (2), (4), (7) and (8)", "for": "scope" },
@@ -130,8 +130,8 @@
         "actor": ["gdpr:art-4"],
         "activity": ["gdpr:art-2", "gdpr:art-4"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 14): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 4 points (1), (2), (4), (7) and (8), 22 and 35; the corrigendum of 23 May 2018 (32016R0679R(02)) changes none of them, and the Publications Office's metadata lists no act amending the Regulation. The AI Act defines 'provider' and 'deployer' (Art. 3 points (3) and (4), read that day, CELEX 32024R1689); the GDPR binds either only as a controller or processor, so condition_provisions name the GDPR's own Arts 2 and 4 (the author's decision of 29 Oct 2026), and the AI Act's provisions belong to Session 16. Conditions, outcome and rationale were not changed. The claims it cites were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 21): re-read in the Official Journal text of Regulation (EU) 2016/679 retrieved from the Publications Office's Cellar by CELEX (32016R0679): Arts 2, 4 points (1), (2), (4), (7) and (8), 22 and 35. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and three corrigenda, of which only R(02) (23 May 2018) has an English expression; read, it corrects recital 71 and Arts 37, 41, 42, 43, 57, 64, 65, 69 and 70, and touches nothing cited here. On the author's decision of 4 Nov 2026 (finding F-23), depends_on names the controller role: Arts 22(3) and 35(1) bind the controller (Art. 4 point (7)), and an AI provider is one only for the processing it determines itself. The AI Act defines 'provider' and 'deployer' (Art. 3 points (3) and (4), CELEX 32024R1689, read 4 Nov 2026; ai-act:art-3 in the dataset); the GDPR binds either only as a controller or processor, so condition_provisions name the GDPR's own Arts 2 and 4 (the author's decision of 29 Oct 2026, kept on 4 Nov 2026). First brought to the v2 shape on 29 Oct 2026 (v2 Session 14). Conditions, outcome and rationale were not changed. The claims it cites were not re-read."
     },
 
     {
@@ -201,7 +201,7 @@
         "activity": ["activity:recommender-systems"]
       },
       "outcome": "outcome:possible",
-      "rationale": "The systemic-risk regime for recommender design reaches only designated VLOPs and VLOSEs. A platform below that threshold owes recommender-parameter transparency but not the Article 34 assessment — unless and until it is designated.",
+      "rationale": "The systemic-risk regime for recommender design reaches only designated VLOPs and VLOSEs. A platform below that threshold is not subject to the Article 34 assessment unless and until it is designated. It owes recommender-system transparency (Article 27) unless it is a micro or small enterprise, which Article 19 exempts from that Section.",
       "obligations": ["dsa:art-34", "dsa:art-35"],
       "authority": ["ec", "dsc-*"],
       "dates": ["tl-dsa-2023-08-01-application"],
@@ -219,8 +219,8 @@
         "actor": ["dsa:art-3", "dsa:art-33"],
         "activity": ["dsa:art-3"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2065 retrieved from the Publications Office's Cellar by CELEX (32022R2065): Arts 2(1), 3 points (i) and (s), 19, 27, 33(1) and (4), 34 and 35. The Publications Office's metadata lists no act amending the Regulation and eleven corrigenda, none with an English expression. The exemption is Art. 33(1): Section 5 of Chapter III (Arts 33 to 43) applies only to platforms at or above the threshold and designated under Art. 33(4). The DSA does not define a large company; condition_provisions.actor names Art. 3 (the online platform) and Art. 33 (the very large online platform). The rationale's recommender-parameter transparency is Art. 27, in Section 3, from which Art. 19 exempts micro and small enterprises: reported to the author, not changed (29 Oct 2026). Conditions, outcome and rationale were not changed. clm-dsa-vlop-threshold was not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 21): re-read in the Official Journal text of Regulation (EU) 2022/2065 retrieved from the Publications Office's Cellar by CELEX (32022R2065): Arts 2(1), 3 points (i) and (s), 19, 27, 33(1) and (4), 34 and 35. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and eleven corrigenda, none with an English expression. On the author's decision of 4 Nov 2026 (finding F-19) the rationale says that a platform below the threshold owes recommender-system transparency (Art. 27, in Section 3 of Chapter III) unless it is a micro or small enterprise, which Art. 19 exempts from that Section; it said such a platform owes it without exception. The exemption is Art. 33(1): Section 5 of Chapter III (Arts 33 to 43) applies only to platforms at or above the threshold and designated under Art. 33(4). The DSA does not define a large company; condition_provisions.actor names Art. 3 (the online platform) and Art. 33 (the very large online platform). First brought to the v2 shape on 29 Oct 2026 (v2 Session 15). Conditions, outcome, exemptions and depends_on were not changed. clm-dsa-vlop-threshold was not re-read."
     },
     {
       "id": "ap-dsa-04",
@@ -367,7 +367,7 @@
         "activity": ["activity:cloud-services"]
       },
       "outcome": "outcome:possible",
-      "rationale": "Cloud computing services sit within the Article 2 list of core platform services, and cloud designation decisions are due in November 2026 with a market investigation running to May 2027. The scope gap the brief identifies is generative AI, not cloud.",
+      "rationale": "Cloud computing services are among the core platform services listed in Article 2, point (2)(i). On 18 November 2025 the Commission opened market investigations into Amazon Web Services and Microsoft Azure, aiming to conclude them within 12 months (a target, not a legal deadline), and on 25 June 2026 it reached the preliminary view that both should be designated; a sector-wide cloud market investigation is to report within 18 months. The scope gap the brief identifies is generative AI, not cloud.",
       "obligations": ["dma:art-2", "dma:art-3"],
       "authority": ["ec"],
       "dates": ["tl-dma-2026-11-01-designation", "tl-dma-2027-05-01-market-investigation"],
@@ -376,13 +376,15 @@
       "claims": ["clm-dma-scope-gap"],
       "sources": [
         { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 1(2); Art. 2 points (2)(i) and (13)", "for": "scope" },
-        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 3(1), (2) and (8)", "for": "obligation" }
+        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 3(1), (2) and (8)", "for": "obligation" },
+        { "source_id": "src-ec-dma-cloud-mi-2025", "supports": "supports:direct", "locator": "Next Steps", "for": "rationale" },
+        { "source_id": "src-ec-cloud-gatekeeper-preliminary-2026", "supports": "supports:direct", "locator": "first paragraph", "for": "rationale" }
       ],
       "condition_provisions": {
         "activity": ["dma:art-2"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1(2), 2 points (2)(i) and (13), and 3(1), (2) and (8). The Publications Office's metadata lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression, and it changes Art. 13(8) alone. Art. 2 point (13) defines a cloud computing service by reference to Directive (EU) 2016/1148. Also read that day, through the press corner's documents API: IP/25/2717 and IP/26/1444, the sources of the two events in dates. The November 2026 date is the Commission's target for concluding the AWS and Azure investigations, not a legal deadline, while the rationale says the decisions 'are due' then; no designation decision was found that day: reported to the author, not changed (29 Oct 2026). Conditions, outcome and rationale were not changed. clm-dma-scope-gap was not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 21): re-read in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1(2), 2 points (2)(i) and (13), 3(1), (2) and (8), and 54. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Regulation and three corrigenda, of which only R(02) has an English expression; read, it changes Art. 13(8) alone. Art. 2 point (13) defines a cloud computing service by reference to Directive (EU) 2016/1148. Also read that day: IP/25/2717 through the press corner's documents API ('The Commission aims to conclude the market investigations on Microsoft Azure and Amazon Web Services within 12 months'; the sector report 'within 18 months'), the Commission's announcement of 25 June 2026 at its URL (its 'preliminary view that they should be designated'), and the Commission's gatekeepers page, which listed 23 designated core platform services and no cloud computing service. On the author's decision of 4 Nov 2026 (finding F-20) the rationale no longer says the cloud designation decisions 'are due' in November 2026: that month is the Commission's target, not a legal deadline; the rationale now reports the two releases, which the rule cites. Its last sentence is the brief's argument, kept and reported to the author. First brought to the v2 shape on 29 Oct 2026 (v2 Session 15). Conditions, outcome, obligations, dates and depends_on were not changed. clm-dma-scope-gap was not re-read."
     },
 
     {
@@ -426,7 +428,7 @@
         "activity": ["activity:gpai-provision"]
       },
       "outcome": "outcome:applies",
-      "rationale": "Every provider of a general-purpose AI model owes Article 53 since 2 August 2025: Annex XI technical documentation, an Annex XII information pack for downstream providers, a copyright compliance policy and a sufficiently detailed public summary of training content. The operative detail sits in the Code of Practice, which is voluntary.",
+      "rationale": "Every provider of a general-purpose AI model owes Article 53: Annex XI technical documentation, an Annex XII information pack for downstream providers, a copyright compliance policy and a sufficiently detailed public summary of training content. It applies from 2 August 2025 (Article 113, point (b)); providers of models placed on the market before that date have until 2 August 2027 to comply (Article 111(3)). The operative detail sits in the Code of Practice, which is voluntary.",
       "obligations": ["ai-act:art-53"],
       "authority": ["ai-office"],
       "dates": ["tl-ai-act-2025-08-02-application", "tl-ai-act-2025-07-10-guidance"],
@@ -440,14 +442,15 @@
         { "source_id": "src-eurlex-ai-act", "supports": "supports:direct", "locator": "Art. 2(1)(a); Art. 3 points (3), (9) and (63)", "for": "scope" },
         { "source_id": "src-eurlex-ai-act", "supports": "supports:direct", "locator": "Art. 53(1)", "for": "obligation" },
         { "source_id": "src-ec-gpai-code", "supports": "supports:direct", "locator": "Section 'Why a Code of Practice for General-Purpose AI?'", "for": "rationale" },
-        { "source_id": "src-ec-gpai-code", "supports": "supports:direct", "locator": "Section 'Timeline', 10 July 2025", "for": "date" }
+        { "source_id": "src-ec-gpai-code", "supports": "supports:direct", "locator": "Section 'Timeline', 10 July 2025", "for": "date" },
+        { "source_id": "src-eurlex-ai-act", "supports": "supports:direct", "locator": "Art. 111(3); Art. 113, third paragraph, point (b)", "for": "date" }
       ],
       "condition_provisions": {
         "actor": ["ai-act:art-3", "ai-act:art-3-63"],
         "activity": ["ai-act:art-3", "ai-act:art-3-63"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 16): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2024/1689 retrieved from the Publications Office's Cellar by CELEX (32024R1689): Arts 2(1)(a), 3 points (3), (9) and (63), 53, 111(3) and 113; Regulation (EU) 2026/1744 (32026R1744), Art. 1, read in full the same day, amends none of Arts 2(1), 3 points (3), (9) and (63) or 53, nor Art. 111(3) or Art. 113, third paragraph, point (b). The Publications Office's metadata lists that one amending act and four corrigenda of the AI Act, none with an English expression. The Commission's page (src-ec-gpai-code) was read at its URL that day. On the author's decision of 29 Oct 2026, ai-act:art-3-63, a definition that imposes nothing, moved from the obligations to condition_provisions, so the dates the obligations derive are the one stored. The exemption is Art. 53(2): points (a) and (b) of Art. 53(1) do not apply to models released under a free and open-source licence whose parameters are made publicly available, and the exception does not apply to models with systemic risk. Found, not changed (the author's decision of 29 Oct 2026): Art. 111(3) gives providers of models placed on the market before 2 August 2025 until 2 August 2027 to comply, and data/timeline.json holds no event for it. Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 21): re-read in the Official Journal text of Regulation (EU) 2024/1689 retrieved from the Publications Office's Cellar by CELEX (32024R1689): Arts 2(1)(a), 3 points (3), (9) and (63), 53, 111 and 113; Regulation (EU) 2026/1744 (32026R1744), Art. 1, read the same day, replaces Art. 111(2) and adds Art. 111(4), and amends none of Arts 2(1)(a), 3 points (3), (9) and (63), 53 or 111(3). The Publications Office's SPARQL endpoint, queried that day, lists that one amending act and four corrigenda of the AI Act, none with an English expression. The Commission's page (src-ec-gpai-code) was re-read at its URL that day. On the author's decision of 4 Nov 2026 (finding F-13) the rationale no longer says that every provider owes Article 53 'since 2 August 2025': Chapter V applies from that date (Art. 113, third paragraph, point (b)), and providers of models placed on the market before it have until 2 August 2027 (Art. 111(3)), now cited as a source; data/timeline.json still holds no event for 2 August 2027 (a finding, not changed). On 29 Oct 2026 (v2 Session 16) the rule was brought to the v2 shape, and on the author's decision of that day ai-act:art-3-63, a definition that imposes nothing, moved from the obligations to condition_provisions, so the dates the obligations derive are the one stored. The exemption is Art. 53(2): points (a) and (b) of Art. 53(1) do not apply to models released under a free and open-source licence whose parameters are made publicly available, and the exception does not apply to models with systemic risk. Conditions, outcome, exemptions and dates were not changed. The claims were not re-read."
     },
     {
       "id": "ap-ai-act-03",
@@ -551,7 +554,7 @@
       "authority": ["nca-*", "ec"],
       "dates": ["tl-ai-act-2025-02-02-application", "tl-ai-act-2026-12-02-application", "tl-ai-act-2027-12-02-application"],
       "exemptions": [
-        { "text": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)). The brief argues this carve-out is the structural source of the asymmetry between constraint on corporate and on state power.", "effect": "excludes",
+        { "text": "Article 4(2) TEU reserves national security to the Member States, and the AI Act does not apply to systems placed on the market, put into service or used exclusively for military, defence or national security purposes (Art. 2(3)).", "effect": "excludes",
           "basis": [{ "source_id": "src-eurlex-ai-act", "supports": "supports:direct", "locator": "Art. 2(3)" },
             { "source_id": "src-eurlex-teu-art-4", "supports": "supports:direct", "locator": "Art. 4(2), third sentence" }] }
       ],
@@ -567,8 +570,8 @@
         "actor": ["ai-act:art-3"],
         "activity": ["ai-act:art-3"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 16): brought to the v2 shape. Read that day in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX: Regulation (EU) 2024/1689 (32024R1689), Arts 2(1)(b) and (3), 3 point (4), 5, 27 and 113, read as amended by Regulation (EU) 2026/1744 (32026R1744), Art. 1 points (7) (Art. 5(1), first subparagraph, points (ba) and (bb), and Art. 5(1a) and (1b), inserted), (13) (Art. 27(4) and (5), replaced; Art. 27(1) unchanged) and (40)(a) and (b) (Art. 113, third paragraph, points (a) and (c), replaced); and the Treaty on European Union, Art. 4(2) (12016M004). The Publications Office's metadata lists that one amending act and four corrigenda of the AI Act, none with an English expression. On the author's decisions of 29 Oct 2026 the dates hold 2 December 2026 (F-8, V2C-10) and 2 December 2027, and tl-ai-act-2028-08-02-application no longer names Art. 27, whose paragraph 1 concerns only high-risk systems referred to in Art. 6(2). Art. 27(1) binds deployers that are bodies governed by public law. The exemption's last sentence is the brief's argument, not the Act's: reported at the checkpoint and not changed. Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 21): re-read in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX: Regulation (EU) 2024/1689 (32024R1689), Arts 2(1)(b) and (3), 3 point (4), 5, 27 and 113, read as amended by Regulation (EU) 2026/1744 (32026R1744), Art. 1 points (7) (Art. 5(1), first subparagraph, points (ba) and (bb), and Art. 5(1a) and (1b), inserted), (13) (Art. 27(4) and (5), replaced; Art. 27(1) unchanged) and (40)(a) and (b) (Art. 113, third paragraph, points (a) and (c), replaced); and the Treaty on European Union, Art. 4(2) (12016M004). The Publications Office's SPARQL endpoint, queried that day, lists that one amending act and four corrigenda of the AI Act, none with an English expression. On the author's decision of 4 Nov 2026 (finding F-14) the exemption states only the law: its last sentence, 'The brief argues this carve-out is the structural source of the asymmetry between constraint on corporate and on state power.', an argument neither Art. 2(3) nor Art. 4(2) TEU makes, is deleted; the argument stays in clm-enforcement-asymmetry, which the rule cites. On 29 Oct 2026 (v2 Session 16) the rule was brought to the v2 shape; on the author's decisions of that day the dates hold 2 December 2026 (F-8, V2C-10) and 2 December 2027, and tl-ai-act-2028-08-02-application no longer names Art. 27, whose paragraph 1 concerns only high-risk systems referred to in Art. 6(2). Art. 27(1) binds deployers that are bodies governed by public law. Conditions, outcome, rationale, dates and depends_on were not changed. The claims were not re-read."
     },
     {
       "id": "ap-ai-act-07",
@@ -733,7 +736,7 @@
       "authority": ["nca-*", "enisa"],
       "dates": ["tl-nis2-2024-10-17-transposition"],
       "exemptions": [],
-      "depends_on": ["THE OPERATIVE DATE IS NATIONAL, NOT EUROPEAN. NIS2 is a directive and transposition is materially incomplete: registration windows and compliance dates vary by Member State, and in several they have not yet arrived.", "Whether the organisation falls within an Annex I or Annex II sector and meets the size criteria."],
+      "depends_on": ["THE OPERATIVE DATE IS NATIONAL, NOT EUROPEAN. NIS2 is a directive: registration windows and compliance dates are set by each Member State's transposing law and vary between them. On 8 July 2026 the Commission reported that most Member States had transposed it, and referred Spain, France, Ireland and the Netherlands to the Court of Justice for not notifying full transposition.", "Whether the organisation falls within an Annex I or Annex II sector and meets the size criteria."],
       "claims": ["clm-nis2-management-liability", "clm-nis2-transposition-failure", "clm-directives-underperform"],
       "sources": [
         { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 2(1), (2) and (3); Art. 3(1) and (2); Annexes I and II", "for": "scope" },
@@ -746,8 +749,8 @@
         "actor": ["nis2:art-2", "nis2:art-3"],
         "activity": ["nis2:art-2"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 3, 20, 21, 23, 32(6) and 41 and Annexes I and II. The Publications Office's metadata lists no act amending the Directive and nine corrigenda, of which only R(04) has an English expression; it corrects Art. 19(1) and touches nothing cited here. NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national (the author's decision of 29 Oct 2026). Art. 3 stays among the obligations: Art. 3(4) requires entities to submit their details for the national list. The Commission's press release of 8 July 2026 (src-ec-nis2-referral-2026), re-read that day, is context: 'While most complied, Spain, France, Ireland and the Netherlands have yet to notify full transposition'; that wording against depends_on's 'materially incomplete' is reported to the author, and depends_on was not changed. Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 21): re-read in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 3, 20, 21, 23, 32(6) and 41 and Annexes I and II. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Directive and nine corrigenda, of which only R(04) has an English expression; read, it corrects Art. 19(1) and touches nothing cited here. The Commission's press release of 8 July 2026 (src-ec-nis2-referral-2026) was re-read that day at its URL: 'While most complied, Spain, France, Ireland and the Netherlands have yet to notify full transposition.' On the author's decision of 4 Nov 2026 (finding F-02), depends_on no longer says that transposition is 'materially incomplete' or that national dates 'in several' have not arrived, which no source read says; it now reports the press release. NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national (the author's decision of 29 Oct 2026). Art. 3 stays among the obligations: Art. 3(4) requires entities to submit their details for the national list. First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome and rationale were not changed. The claims were not re-read."
     },
     {
       "id": "ap-nis2-02",
@@ -757,7 +760,7 @@
         "activity": ["activity:cloud-services", "activity:critical-infrastructure-operation"]
       },
       "outcome": "outcome:likely",
-      "rationale": "Cloud computing service providers and data centre service providers sit within the digital infrastructure sector, which NIS2 treats as essential. The size thresholds still determine whether an entity is essential or important.",
+      "rationale": "Cloud computing service providers and data centre service providers are listed in Annex I, the sectors of high criticality, under digital infrastructure (point 8). Size decides their category: those that exceed the ceilings for medium-sized enterprises are essential entities (Article 3(1)(a)); medium-sized ones are important entities (Article 3(2)), unless a Member State identifies them as essential under Article 2(2), points (b) to (e) (Article 3(1)(e)).",
       "obligations": ["nis2:art-21", "nis2:art-23", "nis2:art-20"],
       "authority": ["nca-*"],
       "dates": ["tl-nis2-2024-10-17-transposition"],
@@ -775,8 +778,8 @@
         "actor": ["nis2:art-2", "nis2:art-6"],
         "activity": ["nis2:art-2", "nis2:art-6"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 3, 6 points (30) and (31), 20, 21, 23 and 41 and Annex I, point 8. The Publications Office's metadata lists no act amending the Directive and nine corrigenda, of which only R(04) has an English expression; it corrects Art. 19(1) and touches nothing cited here. NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national (the author's decision of 29 Oct 2026). On the author's decision of 29 Oct 2026 the exemption states Art. 2(1) to (3); it read 'Micro and small enterprises are generally outside NIS2, subject to sector-specific exceptions.' Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 21): re-read in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 3, 6 points (30) and (31), 20, 21, 23 and 41 and Annex I, point 8. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Directive and nine corrigenda, of which only R(04) has an English expression; read, it corrects Art. 19(1) and touches nothing cited here. On the author's decision of 4 Nov 2026 (finding F-04) the rationale no longer says that NIS2 treats the digital infrastructure sector as essential: Annex I is headed 'sectors of high criticality', and the category is decided by Art. 3(1)(a), 3(1)(e) and 3(2). NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national (the author's decision of 29 Oct 2026). On the author's decision of 29 Oct 2026 the exemption states Art. 2(1) to (3); it read 'Micro and small enterprises are generally outside NIS2, subject to sector-specific exceptions.' First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome, exemptions and depends_on were not changed. The claims were not re-read."
     },
     {
       "id": "ap-nis2-03",
@@ -875,7 +878,7 @@
         "activity": ["activity:connected-products", "activity:product-with-digital-elements"]
       },
       "outcome": "outcome:likely",
-      "rationale": "The Cyber Resilience Act sets horizontal cybersecurity requirements for products with digital elements across their lifecycle. Reporting of actively exploited vulnerabilities and serious incidents begins on 11 September 2026; full application follows on 11 December 2027.",
+      "rationale": "The Cyber Resilience Act sets horizontal cybersecurity requirements for products with digital elements across their lifecycle. Reporting of actively exploited vulnerabilities and of severe incidents having an impact on the security of the product has applied since 11 September 2026 (Article 14); full application follows on 11 December 2027.",
       "obligations": ["cra:art-13", "cra:art-14"],
       "authority": ["nca-*", "enisa"],
       "dates": ["tl-cra-2026-09-11-reporting-deadline", "tl-cra-2027-12-11-application"],
@@ -896,9 +899,9 @@
         "actor": ["cra:art-3"],
         "activity": ["cra:art-2", "cra:art-3"]
       },
-      "last_verified": "2026-10-29",
+      "last_verified": "2026-11-04",
       "requires_verification": false,
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2024/2847 retrieved from the Publications Office's Cellar by CELEX (32024R2847): Arts 2, 3 points (1), (13), (14), (21) and (22), 13, 14, 69 and 71; and Art. 104 of Regulation (EU) 2025/327 (32025R0327), which replaces Arts 13(4) and 31(3) and inserts Art. 32(5a) from 26 March 2027 (its Art. 105) and leaves Arts 13(1) and 14 untouched (the author's decision of 29 Oct 2026: a note, no reference). The Publications Office's metadata lists that one amending act and eight corrigenda, of which R(01), R(02) and R(04) have English expressions; they correct the title, Art. 64(10) and Art. 67 and touch nothing cited here. The CRA has no 'connected-product provider', a Data Act term; it binds one only as a manufacturer (Art. 3 point (13)). On the author's decision of 29 Oct 2026 the Art. 2 and Art. 69 exemptions are added. Conditions, outcome and rationale were not changed. Earlier: Obligations point at CRA Arts 13 and 14, added on 27 Sep 2026 from the Official Journal text (CELEX 32024R2847); dates per Art. 71(2). Earlier: No provisions are recorded for the CRA in instruments.json, so this rule cannot yet point at specific articles."
+      "verification_note": "4 Nov 2026 (v2 Session 21): re-read in the Official Journal text of Regulation (EU) 2024/2847 retrieved from the Publications Office's Cellar by CELEX (32024R2847): Arts 2, 3 points (1), (13), (14), (21) and (22), 13(1), 14, 69 and 71; and Arts 104 and 105 of Regulation (EU) 2025/327 (32025R0327): Art. 104 replaces Arts 13(4) and 31(3) and inserts Art. 32(5a) from 26 March 2027 (Art. 105), and leaves Arts 13(1) and 14 untouched. The Publications Office's SPARQL endpoint, queried that day, lists that one amending act and eight corrigenda, of which R(01), R(02) and R(04) have English expressions; read, they correct the title, Art. 64(10) and Art. 67 and touch nothing cited here. On the author's decision of 4 Nov 2026 (finding F-03) the rationale says 'severe incidents having an impact on the security of the product', Art. 14(3)'s term, where it said 'serious incidents', and, the date having passed, that reporting 'has applied since' 11 September 2026 (Art. 71(2)) where it said 'begins on'. On 29 Oct 2026 (v2 Session 17) the rule was brought to the v2 shape; the author decided then on the EHDS amendment 'a note, no reference', and added the Art. 2 and Art. 69 exemptions. The CRA has no 'connected-product provider', a Data Act term; it binds one only as a manufacturer (Art. 3 point (13)). Conditions, outcome, exemptions and depends_on were not changed. Earlier: Obligations point at CRA Arts 13 and 14, added on 27 Sep 2026 from the Official Journal text (CELEX 32024R2847); dates per Art. 71(2). Earlier: No provisions are recorded for the CRA in instruments.json, so this rule cannot yet point at specific articles."
     },
 
     {

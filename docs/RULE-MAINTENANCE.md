@@ -34,7 +34,8 @@ closed by doing step 1 to step 4 below for the rule it names, and by nothing els
 a date (`docs/CONTENT-FRESHNESS-POLICY.md`; `tools/selftest.mjs` F1–F6).
 
 **Why 28 Jan 2027 is one day and not thirty-three.** The rules were read on one day (29 Oct 2026), so they lapse on one
-day (`docs/PHASE-3-AUDIT.md` F-09). A rule re-read on a different day lapses on a different day from then on.
+day (`docs/PHASE-3-AUDIT.md` F-09). A rule re-read on a different day lapses on a different day from then on. **The rules are re-read in stages**, each when a
+prompt or a finding names it, and the calendar is not realigned on one day (roadmap §8, v2 Session 21, premise 2).
 
 ---
 
@@ -44,7 +45,7 @@ day (`docs/PHASE-3-AUDIT.md` F-09). A rule re-read on a different day lapses on 
 |---|---|
 | **Who** | A session working under the author's prompt; the author approves what is to be changed (roadmap §8), and approves the table of Articles read (`docs/PHASE-4-SETUP.md` §1, P-08). |
 | **Trigger** | A prompt of §0 names a rule; or the author asks for the rule to be read. |
-| **Action** | For each instrument the rule cites (`instrument`, `obligations`, `condition_provisions`, each `sources[].locator`): fetch the Official Journal text from the Publications Office's Cellar by CELEX — `https://publications.europa.eu/resource/celex/<CELEX>`, English, with `Accept: application/xhtml+xml`, then the document the answer lists (the method recorded in `docs/HANDOVER.md`, Sessions 13–18; for the CRA, CELEX 32024R2847, as `ap-cra-01`'s note records). Read each Article the rule cites and each one it should now cite, against the rule's `conditions`, `outcome`, `rationale`, `obligations`, `exemptions`, `depends_on`, `dates` and `sources[].locator`. Write down which Articles were read and from which CELEX. **Cite only the document actually read** (`docs/AI-SAFE-BOUNDARIES.md` §0, 1–2). |
+| **Action** | For each instrument the rule cites (`instrument`, `obligations`, `condition_provisions`, each `sources[].locator`): fetch the Official Journal text from the Publications Office's Cellar by CELEX — `https://publications.europa.eu/resource/celex/<CELEX>`, English, with `Accept: application/xhtml+xml` and `Accept-Language: eng` (without the second header Cellar answers HTTP 400: measured 4 Nov 2026, v2 Session 21), then the document the answer lists (the method recorded in `docs/HANDOVER.md`, Sessions 13–18; for the CRA, CELEX 32024R2847, as `ap-cra-01`'s note records). Read each Article the rule cites and each one it should now cite, against the rule's `conditions`, `outcome`, `rationale`, `obligations`, `exemptions`, `depends_on`, `dates` and `sources[].locator`. Write down which Articles were read and from which CELEX. **Cite only the document actually read** (`docs/AI-SAFE-BOUNDARIES.md` §0, 1–2). A corrigendum's CELEX is fetched with its parentheses percent-encoded, e.g. `32022L2555R%2804%29`; unencoded, Cellar answers 404 (measured 4 Nov 2026). |
 | **Level** | *machine check*: the shape (T-01…T-05, `tools/trigger-audit.mjs`), the application dates the obligations derive (T-10), every reference and provision resolving (`tools/validate.mjs`). *human attestation*: "read on D in the Official Journal text retrieved by CELEX X" — today a `verification_note`, free text. *human authorship*: the rule's content. |
 | **Trace** | `data/applicability.json`: the rule's `last_verified` and `verification_note`; the roadmap §8 rows; the commit. All git-tracked. |
 | **What no check sees** | That the Articles were read at all. `tools/validate.mjs` and `tools/trigger-audit.mjs` check that a locator resolves and that the shape holds, not that the Article says what the rule says (`docs/AUDIT-2026-09-01.md` F-12: no URL in this repository has ever been fetched by any tool here). Whether the rule says what the Article says is the reading, which is the person's. |
@@ -62,8 +63,40 @@ is prose: nothing reads it.
 | **Trigger** | Part of P-08: the text read is the text as published, so what amends or corrects it has to be asked separately. |
 | **Action** | Query the Publications Office's SPARQL endpoint (`https://publications.europa.eu/webapi/rdf/sparql`, as recorded in the prompts of `docs/prompts/v2-session-7.md` and `v2-session-8.md`) for each CELEX read: the acts that *amend* or *repeal* it, the *corrigenda* and which have an English expression, the dates of entry into force, and proposals to amend. Read what an amending act changes in the cited Articles before deciding it matters; the practice has been to read a corrigendum's English expression and to record which corrigenda have none. **A proposal is not law**: the practice has been to list one and not read it into a rule (`docs/HANDOVER.md`, the Session 16 report). |
 | **Level** | *machine check*: none (a fetch is a network act, `docs/PHASE-4-SETUP.md` §3). *human attestation*: "queried on D; N amending acts; M corrigenda" — today in prose in the roadmap §8 row and the `verification_note`. *human authorship*: what an amendment or a corrigendum means for the rule. |
-| **Trace** | The roadmap §8 row and the `verification_note`. **The queries themselves are not kept**, and neither is any answer: a later reader has the sentence, not the response. |
-| **What no check sees** | **Everything.** No tool in this repository makes a network request, so nothing establishes that the query was run, what it returned, or that it was run at all (`docs/AUDIT-2026-09-01.md` F-12). Whether Cellar is reachable depends on the environment: it was in some sessions and not in others (`docs/HANDOVER.md`, Session 18). When it is not, say so in the note and leave the rule's `last_verified` where it is — do not close the prompt on a reading that could not be made. |
+| **Trace** | The roadmap §8 row and the `verification_note`. The query text is kept below this table (roadmap §8, v2 Session 21, premise 3); **no answer is kept**: a later reader has the sentence, not the response. |
+| **What no check sees** | **Everything.** No tool in this repository makes a network request, so nothing establishes that the query was run, what it returned, or that it was run at all (`docs/AUDIT-2026-09-01.md` F-12). Whether Cellar is reachable depends on the environment: it was in some sessions and not in others (`docs/HANDOVER.md`, Session 18). When it is not, or when any text the rule cites could not be read, **nothing in `data/` changes**: `last_verified` stays where it is and the published `verification_note` does not record the failure; the roadmap §8 row and the `docs/HANDOVER.md` report say what could not be read, and the prompt or finding stays open (roadmap §8, v2 Session 21, premise 1). Do not close the prompt on a reading that could not be made. |
+
+**The query, as a text a person copies and runs** (roadmap §8, v2 Session 21, premise 3). No tool in this repository runs
+it; it is not a command and not a check. Replace the CELEX, and send it to the endpoint above as the form field `query`
+with `Accept: text/csv`. It asks only for the acts that amend, repeal or correct one CELEX; entry-into-force dates, the
+language expressions of a corrigendum and proposals to amend are asked separately. **Last run 4 Nov 2026** (v2 Session
+21), HTTP 200: for `32016R0679` it returned three corrigenda — `32016R0679R(01)` 2016-11-22, `32016R0679R(02)`
+2018-05-23, `32016R0679R(03)` 2021-03-04 — and no amending or repealing act.
+
+```sparql
+PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
+SELECT DISTINCT ?rel ?celex ?date WHERE {
+  ?w cdm:resource_legal_id_celex "32016R0679"^^<http://www.w3.org/2001/XMLSchema#string> .
+  { ?a cdm:resource_legal_amends_resource_legal ?w . BIND("amends" AS ?rel) }
+  UNION { ?a cdm:resource_legal_repeals_resource_legal ?w . BIND("repeals" AS ?rel) }
+  UNION { ?a cdm:resource_legal_corrects_resource_legal ?w . BIND("corrects" AS ?rel) }
+  ?a cdm:resource_legal_id_celex ?celex .
+  OPTIONAL { ?a cdm:work_date_document ?date }
+} ORDER BY ?rel ?celex
+```
+
+**Which corrigenda have an English expression** — the same kind of text, copied and run by a person, no tool runs it
+(roadmap §8, v2 Session 21). One row per corrigendum of the CELEX, with the number of its English expressions (0 means
+none). Last run 4 Nov 2026 on 32022L2555, 32024R2847, 32024R1689, 32016R0679, 32022R2065 and 32022R1925.
+
+```sparql
+PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
+SELECT ?celex (COUNT(?e) AS ?eng) WHERE {
+  ?w cdm:resource_legal_id_celex "32022L2555"^^<http://www.w3.org/2001/XMLSchema#string> .
+  ?a cdm:resource_legal_corrects_resource_legal ?w ; cdm:resource_legal_id_celex ?celex .
+  OPTIONAL { ?e cdm:expression_belongs_to_work ?a ; cdm:expression_uses_language <http://publications.europa.eu/resource/authority/language/ENG> . }
+} GROUP BY ?celex ORDER BY ?celex
+```
 
 **What the records already hold that T-12 uses.** The edges between instruments are in `data/instruments.json`
 (`relationships`) and the events in `data/timeline.json`. T-12 reads those; it does **not** query Cellar. So a prompt
@@ -90,10 +123,10 @@ two states.
 |---|---|
 | **Who** | Nobody yet: the first prompt is due on 28 Jan 2027 (33 rules) and the second on 26 Mar 2027 (`ap-cra-01`). A session, under the author's prompt. |
 | **Trigger** | §0. |
-| **Action** | (1) Read the rule against its Articles (step 1). (2) Ask for amending acts and corrigenda (step 2). (3) Put anything that would change the rule to the author (step 3). (4) **Close the rule in one of two ways.** *The rule changes*: the author's answer is written to `data/applicability.json`, with `last_verified` set to the date of the reading and the `verification_note` rewritten to say what was read and what was changed. *The rule does not change*: **no field records "re-read, no change"**; the practice today is a new `last_verified` together with a `verification_note` naming the date, the CELEX read, the Articles read and the metadata queried, as `ap-cra-01`'s own note does (roadmap §8, v2 Session 20, question 4). |
+| **Action** | (1) Read the rule against its Articles (step 1). (2) Ask for amending acts and corrigenda (step 2). (3) Put anything that would change the rule to the author (step 3). (4) **Close the rule — only if every Article it cites was read; otherwise nothing in `data/` changes (step 2, last row) — in one of two ways.** *The rule changes*: the author's answer is written to `data/applicability.json`, with `last_verified` set to the date of the reading and the `verification_note` rewritten to say what was read and what was changed. *The rule does not change*: **no field records "re-read, no change"**; the practice today is a new `last_verified` together with a `verification_note` naming the date, the CELEX read, the Articles read and the metadata queried, as `ap-cra-01`'s own note does (roadmap §8, v2 Session 20, question 4). |
 | **Level** | *machine check*: noticing — T-12 and `RULE_STALE`. *human attestation*: "re-read on D, no change needed", which today has **no form other than a new `last_verified`** (`docs/PHASE-4-SETUP.md` §2.2, P-11). *human authorship*: deciding the rule's new content. |
 | **Trace** | The printed prompt (printed and counted, not stored); then, as P-08. A recorded evidence-audit run, if one is made, is `tools/evidence-audit-runs/evidence-audit.jsonl`: git-ignored, per machine (`docs/EDITORIAL-AUDIT-PATH.md`). |
-| **What no check sees** | **Whether the law was re-read.** T-12 compares event dates to `last_verified`, and `RULE_STALE` ages `last_verified`, so a bare date bump closes both prompts whether or not anything was read — measured in §9 below. **A new `last_verified` without a `verification_note` that names what was read is not a closure; it is a silenced prompt.** The reader of a rule cannot tell the two apart, and neither can any check. |
+| **What no check sees** | **Whether the law was re-read.** T-12 compares event dates to `last_verified`, and `RULE_STALE` ages `last_verified`, so a bare date bump closes both prompts whether or not anything was read — measured in §9 below. **A new `last_verified` without a `verification_note` that names what was read is not a closure; it is a silenced prompt.** The reader of a rule cannot tell the two apart, and neither can any check. A closure moves `last_verified`, and `tools/selftest.mjs` pins the dates of the 29 Oct 2026 reading (F10, X1, X2, Y3–Y6, through `READ_2026_11_04`): run `node tools/selftest.mjs` after each closure, and update the pin only on the author's word (roadmap §8, v2 Session 21). In v2 Session 21 the omission left the branch red for four closures. |
 
 **The structured form of this attestation is the next item, not this one.** `docs/PHASE-4-SETUP.md` §2.2 names it
 (*human attestation* for P-08 and P-11, "0.2 generalised"); this document proposes no field for it.
@@ -129,7 +162,7 @@ puts anything that would change the rule to the author and records the answer in
 unchanged with a note that says what was read (4), regenerates (5), and commits with an `Evidence:` line (6). The
 validators then run as at every change: `node tools/validate.mjs`, `i18n-audit.mjs`, `design-qa.mjs`, `freshness.mjs`,
 `evidence-audit.mjs`, `seo-audit.mjs`, `tools/selftest.mjs`, and the agent suites a change under `agent/` or `tools/`
-requires (`AGENTS.md`). Of those, only step 5 has a check that notices its omission. Steps 1, 2, 3, 4 and 6 are
+requires (`AGENTS.md`). Of those, only step 5 has a check that notices its omission — and `selftest`, which notices a closure, not its omission. Steps 1, 2, 3, 4 and 6 are
 declarations, and the system holds them as prose.
 
 ## 8 · What this document does not establish
@@ -213,6 +246,11 @@ step 5 is the only one a check notices; the form of the note, because `ap-cra-01
 4. **The SPARQL query itself** (its text, its variables) is not recorded anywhere in the repository (`docs/PHASE-4-SETUP.md`
    P-09: "the queries themselves are not kept"). The document gives the endpoint, which the earlier prompts recorded, and
    the kinds of thing asked; it cannot give the query. A person starting from this document alone would have to write it.
+
+**Decided on 4 Nov 2026** (roadmap §8, v2 Session 21; noted here, the account above is not rewritten). Item 2: a rule's
+`last_verified` moves only when every Article it cites was read; otherwise nothing in `data/` changes (premise 1, step 2).
+Item 3: the rules are re-read in stages (premise 2, §0). Item 4: the query is kept in step 2 (premise 3). The HTTP 400 of
+the probe below came from a request without `Accept-Language: eng` (step 1).
 
 **What this rehearsal did not do.**
 - **No re-reading of the CRA or the EHDS.** No Official Journal text was read, and no legal conclusion about `ap-cra-01` is
