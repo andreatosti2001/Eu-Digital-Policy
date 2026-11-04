@@ -4,6 +4,62 @@
 **Branch:** `claude/session-22-o5cl9k` (assigned by the environment), cut from `main` at `244072f` (#61, the plan, merged).
 The entries below this session's are unchanged.
 
+## v2 Session 22 — checkpoint 22.2 (the implementation of the attestation form)
+
+Checkpoint 22.1 approved (§8 `394d60c`). Class C; every change after its §8 row.
+
+**The consumers, found before anything changed** (4 Nov 2026: the 62 modules that read `data/applicability.json`, and
+every reader of `verification_note`). Two needed a change, and two docs: `agent/detector/fields.mjs` (its suite fails on
+any unregistered field of a real record, so Session 23's first closure would have broken it); `agent/integrate/canonical.mjs`
+`PROVENANCE_FIELDS`; `docs/v2-design/applicability-rule.schema.json`; `docs/DATA-GOVERNANCE.md` §5. Read and left unchanged,
+none reading the new key: `js/applies.js` (Q6), `tools/freshness.mjs`, `tools/seo.mjs`, `tools/trigger-audit.mjs`,
+`tools/evidence-audit.mjs` `DERIVED_FIELDS`, `tools/_refsweep.mjs` (claims only, a one-shot), `agent/policy/governance.mjs`
+(no grant can name `data/applicability.json`). §8 Q10 (`e57de10`).
+
+**A premise I stated wrongly, corrected before it was built on** (§8 Q11, `81b669a`). Q10 (b) said listing `attestation`
+in `PROVENANCE_FIELDS` would make `agent/integrate/preserve.mjs` refuse its removal. Measured while implementing: `canonicalOf()`
+resolves no applicability rule, so `preserve.mjs` checks no rule at all; and `agent/detector/impact.mjs` `routeOf()` matches
+only the last dotted segment. The author chose "add it, state its limit". **New finding, not fixed: `preserve.mjs` checks no
+applicability rule** — held as measured by a test in `agent/integrate/selftest.mjs` that fails if that changes.
+
+**The checks** (§8 Q9, `1d5d489`): `tools/attestation-audit.mjs`, pure, no network, no clock, no write; `tools/validate.mjs`
+reports it. Each with the planted case that fails it, in `tools/selftest.mjs`:
+
+| Check | Planted case (test) | Severity |
+|---|---|---|
+| A-1 shape | `reads` for `read`; `outcome: "re-read"`; `read: []`; `src-nowhere`; a text queried not read; a string (AT2) | ERROR |
+| A-2 seal | `last_verified` 2027-03-26, attestation of 2026-11-04 left in place (AT3) | ERROR |
+| A-3 gap | the bare date bump of `docs/RULE-MAINTENANCE.md` §9; boundary: 2026-11-04 passes, 2026-11-05 fails (AT4); and end to end, `validate.mjs` exits 1 on a copy of `data/` and 0 once attested (AT11) | ERROR |
+| A-4 completeness | Art. 71 dropped (sources), Art. 69 (exemption), Art. 14 (provision); Article level holds Art. 13(4) by Art. 13(1); Art. 71 read in the wrong text (AT5) | ERROR |
+| A-5 queried | `queried: []`; the paper test's `ap-ai-act-06` (AT6) | ERROR |
+| A-6 §8 | an unmatched title; "changed" with none; a title twice; no roadmap; "unchanged" with none passes (AT7) | ERROR |
+| A-7 CELEX in note | a note naming neither CELEX; the CELEX from a CELEX URL, an ELI, a corrigendum, none (AT8) | ERROR |
+| A-8 not checkable | `ap-eidas2-01` attested over all it cites: 0 ERROR, exactly 5 WARNING; a tier-2 source unnamed (AT9) | WARNING |
+
+AT0: the real tree is silent and `validate.mjs` passes; `FORM_FROM` is pinned to 2026-11-04 and no rule carries the form
+(no backfill). AT1: `ap-cra-01`'s closure written in the form passes (a fixture; no record carries it). AT10: the parser.
+**Each check was also broken on purpose** (A-2, A-3, A-5, A-6, A-7, one at a time, in place, restored): each turned its own
+test red.
+
+**The real parser re-measured 22.1's figures exactly**: 113 tier-1 locators, 216 segments, 214 resolved, 32 of 33 rules;
+136 provision references, 133 placed, 3 not (`eidas2:art-2`, `-3`, `-5a`).
+
+**Pins.** No existing `tools/selftest.mjs` pin changed: 124 → 136 tests, 12 added. Detector 2 tests added, integrate 1.
+
+**Commits.** §8 rows Q9 `1d5d489`, Q10 `e57de10`, Q11 `81b669a`, Q12 `5b9df59`; code `2038250` (tools), `2bb00b8`
+(detector), `118f79b` (integrate); docs `1a84857` (schema, DATA-GOVERNANCE), `8302bd0` (`docs/RULE-MAINTENANCE.md`, Q12
+A–F). No published file changed (`node tools/commit-evidence.mjs 244072f HEAD`: every commit "changes no published file"), so
+no `_footer.mjs` run and no `Evidence:` trailer was needed.
+
+**Counts after the change** (full clone, saved in the scratchpad): every validator's output byte-identical to the
+opening's (`validate`, `i18n-audit`, `design-qa`, `evidence-audit` today and 2027-03-26, `freshness` today, 2027-01-28,
+2027-02-03, `seo-audit`); 25 suites **1345 pass**, 0 fail, 1 skipped (1330 + 15); browser 343 · 0 · 1 undecidable;
+adversarial gate 65 · 0 · 3 · 1; schemas check, Control Room boundary and routes exit 0; readiness refuses, 17 of 20, as at
+the opening.
+
+**What the implementation does not do:** read anything (F-12); touch `data/`, a page, `js/` or an i18n string; backfill a
+note; change `agent/policy/`; make `preserve.mjs` check rules.
+
 ## v2 Session 22 — checkpoint 22.1 (the design of the attestation form)
 
 **Opening.** `main` held Session 21, the plan and this session's prompt (`docs/PHASE-4-PLAN.md` §1, §3, §5; the §8 row
