@@ -1,8 +1,23 @@
 # HANDOVER
 
-**Last updated:** v2 Session 21, final checkpoint (4 November 2026): 21.1 and 21.2 approved; 21.3 decided; 21.4, the
-prompt of v2 Session 22, written and confirmed. **Final checkpoint approved on 4 Nov 2026 (roadmap §8); pull request to `main` opened.**
-**Branch:** `claude/v2-session-21-rules` (no branch was assigned by the environment), cut from `main` at `a0082ea`.
+**Last updated:** 4 November 2026, after v2 Session 21 was merged (#60): the plan to conclude Phase 4
+(`docs/PHASE-4-PLAN.md`) and the revised prompt of v2 Session 22 (`docs/prompts/v2-session-22.md`), on the author's request.
+**Awaiting the author's approval of the plan.** The report of v2 Session 21 below is unchanged.
+**Branch:** `claude/v2-phase-4-plan`, cut from `main` at `959e08d`.
+
+## Branch register — 4 November 2026 (the Phase 4 plan)
+
+- Branch `claude/v2-phase-4-plan`, cut from `main` at `959e08d` (#60 merged). It carries `docs/PHASE-4-PLAN.md`, the revised
+  `docs/prompts/v2-session-22.md` (the version of #60 is in git history, `0b0f0ae`), one pointer row in `AGENTS.md`, this
+  entry, and — once the author approves — one §8 row. Docs only; no `data/`, `tools/` or generated file changes.
+- Requested on 4 Nov 2026 ("I want you to conceive the sessions needed to conclude phase 4 efficiently and effectively");
+  four answers: "Attestation first (Recommended)"; "In data/ (Recommended)"; "Reading packet, §8 well-formed check (P-10),
+  Notice check (P-07)"; "Follow-up PR after #60 (Recommended)". "Go ahead" after #60 merged.
+- **Two numbers in the proposal as first put to the author were wrong and are corrected in the plan:** S23 reads **20**
+  rules (4 + 4 + 3 + 5 + 4), not 17, and checks **50** headings, not 41. The 25 rules (20 + 5) and the 98 headings
+  (50 + 23 + 25) add up.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z` (in the register below).
+- Disposition: open; recorded at the approval.
 
 ## Branch register — 4 November 2026 (v2 Session 21)
 
