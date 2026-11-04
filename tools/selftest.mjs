@@ -400,7 +400,7 @@ test('F6 · the prompts are still printed in full — nothing was silenced', () 
 
 /* v2 Session 21 (4 Nov 2026, docs/ROADMAP-v2.md §8, 21.2): the rules re-read that day, in stages (premise 2),
    each closed on the author's word; the list grows as each rule of group (a) closes, and every other rule keeps 2026-10-29 */
-const READ_2026_11_04 = ['ap-nis2-01', 'ap-nis2-02', 'ap-cra-01', 'ap-ai-act-02', 'ap-ai-act-06'];
+const READ_2026_11_04 = ['ap-nis2-01', 'ap-nis2-02', 'ap-cra-01', 'ap-ai-act-02', 'ap-ai-act-06', 'ap-gdpr-04'];
 
 test('F10 · 17.3(b): the applicability rules are aged one by one, at 90 days, and a stale rule is a prompt, never a defect', () => {
   /* v2 Session 17 (29 Oct 2026, docs/ROADMAP-v2.md §8, 17.0 questions 8b and 9; named F10 because
