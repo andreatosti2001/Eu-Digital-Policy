@@ -406,8 +406,9 @@ test('F6 · the prompts are still printed in full — nothing was silenced', () 
 /* v2 Session 21 (4 Nov 2026, docs/ROADMAP-v2.md §8, 21.2): the rules re-read that day, in stages (premise 2),
    each closed on the author's word; the list grows as each rule of group (a) closes, and every other rule keeps 2026-10-29 */
 const READ_2026_11_04 = ['ap-nis2-01', 'ap-nis2-02', 'ap-cra-01', 'ap-ai-act-02', 'ap-ai-act-06', 'ap-gdpr-04', 'ap-dsa-03', 'ap-dma-04'];
-/* v2 Session 23 (docs/ROADMAP-v2.md §8, 23.0 questions 1 and 2): each rule closed in the attestation form,
-   with the date of its reading; one entry is added in the same commit as each closure, on the author's word */
+/* v2 Session 23 (docs/ROADMAP-v2.md §8, 23.0 questions 1 and 2) and v2 Session 24 (24.0 question 1): each rule
+   closed in the attestation form, with the date of its reading — the one list of the closures in the form; one entry
+   is added in the same commit as each closure, on the author's word */
 const READ_V2_23 = Object.freeze({
   'ap-gdpr-01': '2026-11-04',
   'ap-gdpr-02': '2026-11-04',
@@ -3092,14 +3093,14 @@ const attest = (id, fn, roadmap = ROADMAP) => {
 const withCra = (fn = () => {}) => attest('ap-cra-01', (r, db) => { r.attestation = structuredClone(CRA_ATTESTATION); fn(r, db); });
 const codes = (a, code) => a.errors.filter((e) => e.startsWith(`${code} `));
 
-test('AT0 · this tree: exactly the rules closed in v2 Session 23 carry the form, each passes A-1…A-8, and every rule dated after FORM_FROM carries it', () => {
+test('AT0 · this tree: exactly the rules closed in the form (v2 Sessions 23–24) carry it, each passes A-1…A-8, and every rule dated after FORM_FROM carries it', () => {
   /* v2 Session 23 (§8, 23.0 questions 1 and 2): a closure is dated the day of its reading and always
      writes the form, so a closure dated FORM_FROM itself, which A-3 does not reach, is held here */
   const db = loadDb();
   const a = attestationAudit(db, ROADMAP);
   assert.deepEqual(a.errors, []);
   assert.deepEqual(a.warnings, []);
-  assert.deepEqual([...a.attested].sort(), Object.keys(READ_V2_23).sort(), 'the closures of v2 Session 23, and no backfill (plan §2)');
+  assert.deepEqual([...a.attested].sort(), Object.keys(READ_V2_23).sort(), 'the closures in the form (v2 Sessions 23–24), and no backfill (plan §2)');
   /* §8, 22.1 question 4: the last day a rule was read without the form. Not moved to excuse a rule. */
   assert.equal(FORM_FROM, '2026-11-04');
   const attested = new Set(a.attested);
