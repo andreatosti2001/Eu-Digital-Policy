@@ -41,7 +41,7 @@ user's own earlier uncommitted work as a violation. Both are in test A10.
 2. **`production_dispatcher_wired` is unchanged.** It measures `agent/orchestrator/dispatchers.mjs`; the release dispatcher is
    a different thing and was not given that name. Wiring the Orchestrator's seam to real specialists is a governance decision.
 3. **The gate has never run in GitHub Actions.** The first push to `main` after the merge is its first run. Expected: C1 pass,
-   C3 pass, C4 pass, C5/C7/C10 not applicable, C8 *warn* (every session commit carries a `Claude-Session` trailer), C9 pass. If it
+   C3 pass, C4 pass, C5/C7/C10 not applicable, C8 *warn* wherever a session's commit carries an agent marker (`Claude-Session`, `Co-Authored-By: …Claude`), C9 pass. If it
    blocks a legitimate deploy, that is a finding about the gate.
 4. **External settings (§3a):** ruleset with required review, `CODEOWNERS`, the `github-pages` environment's branch rule, the
    pinned registry variable. None is set, and none can be from the tree.
@@ -56,7 +56,7 @@ user's own earlier uncommitted work as a violation. Both are in test A10.
 
 **Counts (4 Nov 2026, full clone, one run of each):** the four validators and `evidence-audit`, `seo-audit`, `_footer --check`,
 the §12 baseline, both boundary checks, the artifact build and the contracts check exit 0; `tools/selftest.mjs` 140; 25 suites
-and `.control-room/` **1394 pass · 0 fail** (1349 on Session 24's tree + the 45 new); adversarial gate exit 0.
+and `.control-room/` **1394 pass · 0 fail** (1349 on Session 24's tree + the 45 new); adversarial gate exit 0; browser `--require-browser` 343 · 0 · 1 undecidable; `readiness` still **17 of 20**, the same three blocking. Measured on a fresh full clone of `0338b0c`.
 
 ## Branch register — 4 November 2026 (the operational-closure session)
 
