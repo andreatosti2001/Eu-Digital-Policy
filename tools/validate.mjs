@@ -22,6 +22,8 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { violations as sourceViolations } from './source-contract.mjs';
 import { checkDerivation, claimKind, openBacklog } from '../js/evidence-model.js';
+import { attestationAudit, roadmapAudit } from './attestation-audit.mjs';
+import { noticeAudit } from './notice-audit.mjs';
 
 const DATA = 'data';
 const errors = [];
@@ -527,6 +529,28 @@ function checkStatusModel() {
   }
 }
 
+/* ---------- 5a. the structured attestation of a rule's reading ----------
+   v2 Session 22 (docs/ROADMAP-v2.md §8, 22.2 question 9): checks A-1…A-8 of
+   docs/ATTESTATION-FORM.md live in tools/attestation-audit.mjs and are reported
+   here, so CI and pages.yml enforce them. A-6 reads roadmap §8's row titles; if
+   the file cannot be read, a decision title cannot be checked and A-6 says so. */
+function checkAttestations() {
+  let roadmap = null;
+  try { roadmap = readFileSync(join('docs', 'ROADMAP-v2.md'), 'utf8'); } catch { /* A-6 reports it */ }
+  const a = attestationAudit(db, roadmap);
+  a.errors.forEach(err);
+  a.warnings.forEach(warn);
+  /* 22.4 (b): every §8 row titled, no title twice — what A-6 relies on */
+  const t = roadmapAudit(roadmap);
+  t.errors.forEach(err);
+  t.warnings.forEach(warn);
+  /* 22.4 (c): the factual clauses of the notice on applies.html (P-07) */
+  const read = (f) => { try { return readFileSync(f, 'utf8'); } catch { return null; } };
+  const n = noticeAudit({ db, appliesHtml: read('applies.html'), evidenceAuditSrc: read(join('tools', 'evidence-audit.mjs')), appliesJsSrc: read(join('js', 'applies.js')) });
+  n.errors.forEach(err);
+  n.warnings.forEach(warn);
+}
+
 /* ---------- 6. unverified data report ---------- */
 /* The rule itself lives in js/evidence-model.js openBacklog(), shared with
    the Evidence page so the site and CI count the same thing. */
@@ -538,6 +562,7 @@ checkDuplicates();
 checkRefs(ids);
 checkCanonicalFacts();
 checkStatusModel();
+checkAttestations();
 const unverified = unverifiedReport();
 
 function report() {

@@ -65,7 +65,12 @@ export const PROVENANCE_FIELDS = {
   'data/instruments.json': ['sources', 'last_verified', 'status_note', 'milestones'],
   'data/institutions.json': ['sources', 'claims'],
   'data/glossary.json': ['sources', 'requires_verification', 'verification_note'],
-  'data/applicability.json': ['sources', 'requires_verification', 'verification_note', 'rationale'],
+  /* `attestation` (v2 Session 22, 4 Nov 2026, docs/ROADMAP-v2.md §8, 22.2 questions 10 (b) and 11): the
+     structured record of what was read, docs/ATTESTATION-FORM.md. What listing it DOES: an impact on the
+     field `attestation` routes human_only (agent/detector/impact.mjs routeOf). What it does NOT: routeOf
+     compares the last dotted segment, so `attestation.of` is not matched; and preserve.mjs checks no
+     applicability rule at all — canonicalOf() returns null for one (a finding, not fixed). */
+  'data/applicability.json': ['sources', 'requires_verification', 'verification_note', 'rationale', 'attestation'],
 };
 
 /** Where a record of a given kind lives. One home per fact, stated

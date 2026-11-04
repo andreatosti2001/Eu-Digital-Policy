@@ -1,9 +1,193 @@
 # HANDOVER
 
-**Last updated:** 4 November 2026, after v2 Session 21 was merged (#60): the plan to conclude Phase 4
-(`docs/PHASE-4-PLAN.md`) and the revised prompt of v2 Session 22 (`docs/prompts/v2-session-22.md`), on the author's request.
-**Plan approved on 4 Nov 2026 (roadmap §8); pull request to `main` follows.** The report of v2 Session 21 below is unchanged.
-**Branch:** `claude/v2-phase-4-plan`, cut from `main` at `959e08d`.
+**Last updated:** 4 November 2026, at the final checkpoint of v2 Session 22 (the structured attestation, `docs/PHASE-4-PLAN.md` §3, S22).
+**Branch:** `claude/session-22-o5cl9k` (assigned by the environment), cut from `main` at `244072f` (#61, the plan, merged).
+The entries below this session's are unchanged.
+
+## Branch register — 4 November 2026 (v2 Session 22)
+
+- Branch `claude/session-22-o5cl9k` (assigned by the environment), cut from `main` at `244072f` (#61, the plan). Nothing
+  merged in; `origin/main` re-fetched before this entry: still `244072f`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register (left open by the
+  author's decision).
+- The clone was shallow at the start; `git fetch --unshallow` was run before any suite.
+- Disposition: final checkpoint approved (4 Nov 2026, §8 `2429442`); pushed, and a pull request to `main` opened on the
+  author's instruction ("Push and open the PR (Recommended)"). Nothing is pushed to the branch after the pull request is
+  opened.
+
+## v2 Session 22 — final checkpoint (22.3 the X-1 table, 22.4 the optional items, 22.5 the prompt of Session 23)
+
+Checkpoint 22.2 approved (§8 `acb5e6e`).
+
+### 22.3 · The X-1 table
+
+`docs/PHASE-4-PLAN.md` §1a (`d747037`), thirteen rows, approved in one question (§8 `56a4eae`, "Approve all 13 rows
+(Recommended)"); each named check measured to exist. **X-1 is met.** P-10 and P-07 were then amended by their own §8 rows
+when 22.4 built their checks (`da2d241`, `ababee3`): machine check — P-01, P-03, P-04 (running it stays manual), P-05, P-06,
+P-07, P-10 (titles), P-12, P-13; structured attestation — P-02, P-08, P-09 (the asking only), P-11.
+
+### 22.4 · The optional items — all three built
+
+| Item | §8 | Code | Tests | What it cannot do |
+|---|---|---|---|---|
+| (a) reading packet: `node tools/attestation-audit.mjs packet <rule-id>` | `01705da` | `14c41b3` | AT12 (for all 33 rules the packet is exactly what A-4 and A-5 demand: drop any listed Article and A-4 fires), AT13 (writes nothing, no skeleton, no network) | read anything; it lists what the record cites |
+| (b) §8 title check, `roadmapAudit()`, run by `validate.mjs` | `d9f5530` | `bc761a0` | AT14 (an untitled row, a title twice, a vanished frozen row; end to end through `validate.mjs`). The §8 row said "two planted tests": it is one test with four planted cases and an end-to-end run | check that the author said what a row says; three old untitled rows are frozen (`SECTION8_UNTITLED`, only shrinks) |
+| (c) notice check, `tools/notice-audit.mjs` N-0…N-4, run by `validate.mjs` | `4d85a6b`, Y1 `076f6cd` | `bf34bc8` | AT15 (each clause's falsehood planted; the text pin; unreadable inputs warned) | the wording (D-2), the fifth sentence, the translations |
+
+**A pin changed, on the author's word** (§8 `076f6cd`): `tools/selftest.mjs` Y1's fixture carried `locator: null` and
+expected `validate.mjs` to pass; N-1 refuses it. The fixture got a locator and one assertion was added (a null locator
+fails N-1). Nothing relaxed. N-1 closes a real gap: the notice's "for every source … where in it" was enforced nowhere.
+
+### 22.5 · The prompt of v2 Session 23
+
+`docs/prompts/v2-session-23.md` (`d010375`, `aeb19be`), on this branch, in this pull request, under the standing rule of §8
+(4 Nov 2026). The author's answers, in its provenance: "Three batches (Recommended)"; "Headings first, then batch 3
+(Recommended)"; "One growing list, asked at S23's start (Recommended)"; "(2) in S23's prompt, (1) to S24 (Recommended)";
+the draft shown, "Draft is right (Recommended)". Scope: 20 rules in three batches (4 + 7 + 9) with the 50 headings (gdpr 18,
+dsa 16, dma 9, data-act 7); the pins as its first question; the AI Omnibus queried for `ap-ai-act-01`, `-04`, `-05`, `-07`
+(A-5). It records no §8 row of its own and opens nothing.
+
+### Counts at the end (full clone, outputs in the scratchpad)
+
+Every validator's output byte-identical to the opening's (`validate` 0 errors 0 warnings, `i18n-audit`, `design-qa`,
+`evidence-audit` today and 2027-03-26, `freshness` today, 2027-01-27, 2027-01-28, 2027-02-03, `seo-audit`, `og-image
+--check`, `_footer --check`). `tools/selftest.mjs` 124 → **140**. 25 suites 1330 → **1349 pass**, 0 fail, 1 skipped
+(tools +16, detector +2, integrate +1). Browser 343 · 0 · 1 undecidable, tree unchanged during the run. Adversarial gate
+65 · 0 · 3 · 1. Schemas check, Control Room boundary and routes exit 0. Readiness refuses, 17 of 20, as at the opening
+(X-3: nothing Phase 4 leaves was touched). `node tools/commit-evidence.mjs 244072f HEAD`: no commit changes a published file.
+
+**A side effect, stated:** `validate.mjs` run on a copy of `data/` alone (as several selftest cases do) now prints four WARNINGs — `ROADMAP_NOT_READ` and three `NOTICE_NOT_READ` — because the roadmap, `applies.html` and two modules are absent there. On the repository it prints none.
+
+### What was not verified, and why
+
+- **That the law was read** — not this session's work, and no tool here can (F-12). No rule was read or closed.
+- **The form on a real closure** — X-2's last clause is Session 23's; the form was tested on paper and on fixtures only.
+- **The checks in CI** — they run inside `validate.mjs`, which `qa.yml` and `pages.yml` run; not observed in a CI run from
+  this session.
+
+### New findings, not fixed
+
+1. `agent/integrate/preserve.mjs` checks no applicability rule (`canonicalOf()` returns `null`) — to Session 24's exit audit
+   (§8 Q11; S23 prompt).
+2. A-5 requires a cited amending act to be queried (the AI Omnibus): a working fact, carried in Session 23's prompt.
+3. `agent/detector/impact.mjs` `routeOf()` matches the last dotted segment of a field path, so a nested provenance field
+   (`sources.locator`, `attestation.of`) is not routed `human_only` by name — pre-existing; stated in §8 Q11 and held by a test.
+4. The autonomy grant expires on 9 Mar 2027 (flagged, not renewed).
+
+### Checklist
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **22.0** | §8 scope `40b3013`; the reconnaissance and locator measure in the 22.1 report | `grep -n "The scope of v2 Session 22" docs/ROADMAP-v2.md` | — | scope recorded before any other write |
+| **22.1** | `docs/ATTESTATION-FORM.md` `b5fcf19`; §8 Q1–Q8 `2b0a6b5`…`824f748`; checkpoint `394d60c` | read the document; §5's paper test | (the design; held by 22.2's tests) | X-2, the design half |
+| **22.2** | `tools/attestation-audit.mjs` `2038250`; detector `2bb00b8`; integrate `118f79b`; docs `1a84857`, `8302bd0`; §8 Q9–Q12; checkpoint `acb5e6e` | `node tools/validate.mjs`; plant a bare date bump on a copy | `tools/selftest.mjs` AT0–AT11; `agent/detector/selftest.mjs` (2); `agent/integrate/selftest.mjs` (1) | X-2: the form with its offline checks |
+| **22.3** | `docs/PHASE-4-PLAN.md` §1a `d747037`; §8 `56a4eae` | read §1a: thirteen rows | — | **X-1 met** |
+| **22.4** | (a) `14c41b3`; (b) `bc761a0`; (c) `bf34bc8`; §8 rows; Y1 | `node tools/attestation-audit.mjs packet ap-cra-01` | AT12–AT15; Y1 | P-07 and P-10 now machine checks |
+| **22.5** | `docs/prompts/v2-session-23.md` `d010375`, `aeb19be` | read it | — | the standing rule: the next prompt exists |
+
+## v2 Session 22 — checkpoint 22.2 (the implementation of the attestation form)
+
+Checkpoint 22.1 approved (§8 `394d60c`). Class C; every change after its §8 row.
+
+**The consumers, found before anything changed** (4 Nov 2026: the 62 modules that read `data/applicability.json`, and
+every reader of `verification_note`). Two needed a change, and two docs: `agent/detector/fields.mjs` (its suite fails on
+any unregistered field of a real record, so Session 23's first closure would have broken it); `agent/integrate/canonical.mjs`
+`PROVENANCE_FIELDS`; `docs/v2-design/applicability-rule.schema.json`; `docs/DATA-GOVERNANCE.md` §5. Read and left unchanged,
+none reading the new key: `js/applies.js` (Q6), `tools/freshness.mjs`, `tools/seo.mjs`, `tools/trigger-audit.mjs`,
+`tools/evidence-audit.mjs` `DERIVED_FIELDS`, `tools/_refsweep.mjs` (claims only, a one-shot), `agent/policy/governance.mjs`
+(no grant can name `data/applicability.json`). §8 Q10 (`e57de10`).
+
+**A premise I stated wrongly, corrected before it was built on** (§8 Q11, `81b669a`). Q10 (b) said listing `attestation`
+in `PROVENANCE_FIELDS` would make `agent/integrate/preserve.mjs` refuse its removal. Measured while implementing: `canonicalOf()`
+resolves no applicability rule, so `preserve.mjs` checks no rule at all; and `agent/detector/impact.mjs` `routeOf()` matches
+only the last dotted segment. The author chose "add it, state its limit". **New finding, not fixed: `preserve.mjs` checks no
+applicability rule** — held as measured by a test in `agent/integrate/selftest.mjs` that fails if that changes.
+
+**The checks** (§8 Q9, `1d5d489`): `tools/attestation-audit.mjs`, pure, no network, no clock, no write; `tools/validate.mjs`
+reports it. Each with the planted case that fails it, in `tools/selftest.mjs`:
+
+| Check | Planted case (test) | Severity |
+|---|---|---|
+| A-1 shape | `reads` for `read`; `outcome: "re-read"`; `read: []`; `src-nowhere`; a text queried not read; a string (AT2) | ERROR |
+| A-2 seal | `last_verified` 2027-03-26, attestation of 2026-11-04 left in place (AT3) | ERROR |
+| A-3 gap | the bare date bump of `docs/RULE-MAINTENANCE.md` §9; boundary: 2026-11-04 passes, 2026-11-05 fails (AT4); and end to end, `validate.mjs` exits 1 on a copy of `data/` and 0 once attested (AT11) | ERROR |
+| A-4 completeness | Art. 71 dropped (sources), Art. 69 (exemption), Art. 14 (provision); Article level holds Art. 13(4) by Art. 13(1); Art. 71 read in the wrong text (AT5) | ERROR |
+| A-5 queried | `queried: []`; the paper test's `ap-ai-act-06` (AT6) | ERROR |
+| A-6 §8 | an unmatched title; "changed" with none; a title twice; no roadmap; "unchanged" with none passes (AT7) | ERROR |
+| A-7 CELEX in note | a note naming neither CELEX; the CELEX from a CELEX URL, an ELI, a corrigendum, none (AT8) | ERROR |
+| A-8 not checkable | `ap-eidas2-01` attested over all it cites: 0 ERROR, exactly 5 WARNING; a tier-2 source unnamed (AT9) | WARNING |
+
+AT0: the real tree is silent and `validate.mjs` passes; `FORM_FROM` is pinned to 2026-11-04 and no rule carries the form
+(no backfill). AT1: `ap-cra-01`'s closure written in the form passes (a fixture; no record carries it). AT10: the parser.
+**Each check was also broken on purpose** (A-2, A-3, A-5, A-6, A-7, one at a time, in place, restored): each turned its own
+test red.
+
+**The real parser re-measured 22.1's figures exactly**: 113 tier-1 locators, 216 segments, 214 resolved, 32 of 33 rules;
+136 provision references, 133 placed, 3 not (`eidas2:art-2`, `-3`, `-5a`).
+
+**Pins.** No existing `tools/selftest.mjs` pin changed: 124 → 136 tests, 12 added. Detector 2 tests added, integrate 1.
+
+**Commits.** §8 rows Q9 `1d5d489`, Q10 `e57de10`, Q11 `81b669a`, Q12 `5b9df59`; code `2038250` (tools), `2bb00b8`
+(detector), `118f79b` (integrate); docs `1a84857` (schema, DATA-GOVERNANCE), `8302bd0` (`docs/RULE-MAINTENANCE.md`, Q12
+A–F). No published file changed (`node tools/commit-evidence.mjs 244072f HEAD`: every commit "changes no published file"), so
+no `_footer.mjs` run and no `Evidence:` trailer was needed.
+
+**Counts after the change** (full clone, saved in the scratchpad): every validator's output byte-identical to the
+opening's (`validate`, `i18n-audit`, `design-qa`, `evidence-audit` today and 2027-03-26, `freshness` today, 2027-01-28,
+2027-02-03, `seo-audit`); 25 suites **1345 pass**, 0 fail, 1 skipped (1330 + 15); browser 343 · 0 · 1 undecidable;
+adversarial gate 65 · 0 · 3 · 1; schemas check, Control Room boundary and routes exit 0; readiness refuses, 17 of 20, as at
+the opening.
+
+**What the implementation does not do:** read anything (F-12); touch `data/`, a page, `js/` or an i18n string; backfill a
+note; change `agent/policy/`; make `preserve.mjs` check rules.
+
+## v2 Session 22 — checkpoint 22.1 (the design of the attestation form)
+
+**Opening.** `main` held Session 21, the plan and this session's prompt (`docs/PHASE-4-PLAN.md` §1, §3, §5; the §8 row
+approving the plan; `docs/RULE-MAINTENANCE.md`'s three premises and three corrections; `READ_2026_11_04` with eight rules in
+`tools/selftest.mjs`; `docs/prompts/v2-session-22.md`). The clone was shallow (`true`); `git fetch --unshallow` was run
+before any suite. `git branch -r --no-merged origin/main`: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the
+register. Scope recorded in §8 as the first write (`40b3013`, "Start session 22").
+
+**The reconnaissance re-measured the prompt's table; every row holds** (4 Nov 2026, `244072f`, full clone): 33 rules,
+`last_verified` 2026-10-29 × 25 and 2026-11-04 × 8; `freshness --as-of 2027-01-27` 0 `RULE_STALE`, `2027-01-28` 25,
+`2027-02-03` 33; `evidence-audit --as-of 2027-03-26` T-12 on `ap-cra-01` only; `selftest` 124/124; the 25 suites 1330
+pass, 0 fail, 1 skipped (in `.control-room/selftest.mjs`); browser 343 pass, 0 fail, 1 undecidable; validators 0 errors;
+`seo-audit`, `og-image --check`, `_footer --check` clean; adversarial gate 65 failed safely · 0 succeeded · 3 partial · 1
+undecidable; readiness refuses, 17 of 20 mandatory (`production_dispatcher_wired`, `decision_ledger_present`, and
+`deploy_gate_exists` unmeasurable from the tree). Outputs kept in the session's scratchpad, not committed.
+
+**The locator measurement, before any check was promised** (plan §5, second risk; put in question 1): 113 locators on tier-1
+texts, 216 segments, **214 resolve** to an Article, Annex or Recital; the 2 that do not are `ap-eidas2-01`'s "Citation
+(…)" segments; 10 locators on tier-2 sources name sections, not Articles; **32 of 33 rules** resolve fully. Provisions:
+136 references, 124 direct, 9 by leading number or with two tier-1 texts, 3 (`eidas2:art-2`, `-3`, `-5a`) Articles of
+Regulation (EU) No 910/2014 that a check can only name. Detail: `docs/ATTESTATION-FORM.md` §4.
+
+**The author's eight answers** (§8, each committed at once): Q1 fields `read` + `queried` + `outcome` (`2b0a6b5`); Q2
+the seal `of`, checked equal to `last_verified` (`08b07f7`); Q3 changed/unchanged + §8 titles (`596ce47`); Q4 required
+after 2026-11-04, ERROR (`a86ccb0`); Q5 completeness at Article level and `queried`, ERROR, unresolvable named as WARNING
+(`cad9054`); Q6 not shown on `applies.html` (`c705afa`); Q7 — a premise no question named: the note keeps the reader's
+account, the doubling declared in `docs/DATA-GOVERNANCE.md`, a CELEX check (`faf7e5c`); Q8 the document's text approved as
+committed (`824f748`).
+
+**The document.** `docs/ATTESTATION-FORM.md` (`b5fcf19`), new — before: nothing. §1 the shape; §2 the couplings; §3
+checks A-1…A-8 with the case that fails each; §4 the measurements; §5 the paper test; §6 what it cannot see; §7 how a
+closure uses it; §8 what it does not establish.
+
+**The paper test** (§5 of the document; a scratch prototype outside the repository, nothing in `data/` changed): the eight
+closures of 4 Nov 2026 written as attestations from their own notes and §8 rows. **Seven pass; `ap-ai-act-06` fails
+A-5**: it cites `src-eurlex-ai-omnibus` in `sources[]`, and on 4 Nov 2026 only the AI Act was queried (§8 F-14 row).
+Not reopened: Q5 decided it, and Q8 confirmed A-5 for amending acts. Six planted defects are each caught (bare date bump →
+A-3; stale seal → A-2; Art. 32(6) dropped → A-4; a title not in §8 → A-6; a note without its CELEX → A-7, twice;
+`ap-eidas2-01` → 0 ERROR, 5 WARNING under A-8).
+
+**What the form does not see** (document §6): that the law was read (F-12) — the form is a declaration; what SPARQL
+returned; whether the note's Articles match the form's; what a §8 row says; whether "unchanged" is true; paragraphs and
+points; tier-2 content; `ap-eidas2-01`'s five unresolvable citations.
+
+**Not done in 22.1, by design:** no field, check, command or `data/` change; no rule read or closed; no backfill.
+
+**Next:** checkpoint 22.1 is put to the author; 22.2 (the implementation) begins only after its approval is in §8.
 
 ## Branch register — 4 November 2026 (the Phase 4 plan)
 

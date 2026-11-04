@@ -58,6 +58,11 @@ import { proseCopies, textBlocks, scriptBodies, codeOf, MIN_WORDS, unescapeJs } 
 import {
   SOURCE_FIELDS, REQUIRED_FIELDS, OPTIONAL_FIELDS, RESOLUTIONS, ABSENT_BY_DESIGN, violations,
 } from './source-contract.mjs';
+import {
+  attestationAudit, FORM_FROM, ATTESTATION_KEYS, OUTCOMES, segments, unitsOf, parseLocator, provisionArticle, celexOf, roadmapTitles,
+  readingPacket, roadmapAudit, SECTION8_UNTITLED,
+} from './attestation-audit.mjs';
+import { noticeAudit, NOTICE_TEXT } from './notice-audit.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const SELF = new Set(['https://andreatosti2001.github.io']);
@@ -2684,7 +2689,7 @@ test('Y1 · 13.2: validate.mjs accepts a correct v2 rule, keeps the v1 forms, an
   /* a v2 rule in the schema's shape, on the rule X2 uses */
   const v2 = (r, t) => {
     r.sources = [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 3(2)', for: 'scope' },
-      { source_id: 'src-eurlex-gdpr', supports: 'supports:partial', locator: null }];
+      { source_id: 'src-eurlex-gdpr', supports: 'supports:partial', locator: 'Art. 6(1)' }];
     r.condition_provisions = Object.fromEntries(Object.keys(r.conditions).map((d) => [d, ['gdpr:art-3']]));
     r.exemptions = ['A v1 string exemption, still accepted.',
       { text: 'A planted exemption object.', effect: 'excludes', basis: [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 2(2)' }], outside_dataset: false }];
@@ -2707,6 +2712,8 @@ test('Y1 · 13.2: validate.mjs accepts a correct v2 rule, keeps the v1 forms, an
   fails((r) => { r.sources[1].supports = 'outcome:applies'; }, /RULE "ap-gdpr-02" sources\[1\]: supports "outcome:applies" is not a supports: term/);
   fails((r) => { r.sources[0].for = 'scope-ish'; }, /RULE "ap-gdpr-02" sources\[0\]: for "scope-ish" is not one of scope, obligation, date, rationale/);
   fails((r) => { r.sources[0].locator = 3; }, /RULE "ap-gdpr-02" sources\[0\]: locator 3 is neither a string nor null/);
+  /* v2 Session 22, 22.4 (c) (§8): the notice says every source says where the rule is found */
+  fails((r) => { r.sources[1].locator = null; }, /N-1 applicability\/ap-gdpr-02: sources\[1\] \(src-eurlex-gdpr\) has no locator/);
   /* the v1 form keeps its message */
   fails((r) => { r.sources.push('src-not-a-source'); }, /DANGLING source ref "src-not-a-source" in applicability\/ap-gdpr-02/);
   /* (2) condition_provisions */
@@ -3012,4 +3019,301 @@ test('Y6 · 17.1: the Data Act\'s, NIS2\'s, DORA\'s and the CRA\'s ten rules are
   for (const old of ['Data holders may limit access where data qualifies as a trade secret', 'Micro and small enterprises are generally outside NIS2', 'General principles (ICT third-party risk)', 'Obligation to make connected product data accessible to the user'])
     assert.ok(!all.includes(old), old);
   assert.ok(!all.includes('[object Object]'));
+});
+
+
+/* ============================================================
+   TEST AT · the structured attestation of a rule's reading (v2 Session 22)
+
+   docs/ATTESTATION-FORM.md, approved at checkpoint 22.1; the checks A-1…A-8
+   live in tools/attestation-audit.mjs and tools/validate.mjs reports them
+   (docs/ROADMAP-v2.md §8, v2 Session 22, questions 1–10). Each check is held
+   by PLANTING the defect it exists to catch. On the tree of 4 Nov 2026 every
+   one is silent, because no rule carries the form and none is dated after
+   FORM_FROM — the form is prospective, and nothing was backfilled
+   (docs/PHASE-4-PLAN.md §2).
+   ============================================================ */
+
+const ROADMAP = readFileSync(join(ROOT, 'docs', 'ROADMAP-v2.md'), 'utf8');
+/* ap-cra-01's closure of 4 Nov 2026, written in the form from its own note and §8 row: the paper
+   test of docs/ATTESTATION-FORM.md §5. A FIXTURE: no record carries it, and none may (plan §2). */
+const CRA_ATTESTATION = Object.freeze({
+  of: '2026-11-04',
+  read: [
+    { source_id: 'src-eurlex-cra', locator: 'Art. 2; Art. 3 points (1), (13), (14), (21) and (22); Art. 13(1); Art. 14; Art. 69; Art. 71' },
+    { source_id: 'src-eurlex-ehds', locator: 'Art. 104; Art. 105' },
+  ],
+  queried: ['src-eurlex-cra'],
+  outcome: 'changed',
+  decisions: ["v2 Session 21, 21.2 F-03: `ap-cra-01`'s rationale"],
+});
+/** The tree with one rule changed by `fn(rule, db)`, audited. */
+const attest = (id, fn, roadmap = ROADMAP) => {
+  const db = loadDb();
+  const r = ruleOf(db, id);
+  fn(r, db);
+  return attestationAudit(db, roadmap);
+};
+const withCra = (fn = () => {}) => attest('ap-cra-01', (r, db) => { r.attestation = structuredClone(CRA_ATTESTATION); fn(r, db); });
+const codes = (a, code) => a.errors.filter((e) => e.startsWith(`${code} `));
+
+test('AT0 · this tree: the form is silent — no rule carries it, none is dated after FORM_FROM, and validate.mjs is unchanged', () => {
+  const db = loadDb();
+  const a = attestationAudit(db, ROADMAP);
+  assert.deepEqual(a.errors, []);
+  assert.deepEqual(a.warnings, []);
+  assert.deepEqual(a.attested, []);
+  /* §8, 22.1 question 4: the last day a rule was read without the form. Not moved to excuse a rule. */
+  assert.equal(FORM_FROM, '2026-11-04');
+  assert.deepEqual(db.applicability.rules.filter((r) => r.last_verified > FORM_FROM).map((r) => r.id), []);
+  assert.deepEqual(db.applicability.rules.filter((r) => 'attestation' in r).map((r) => r.id), [], 'no backfill (plan §2)');
+  assert.deepEqual([...ATTESTATION_KEYS], ['of', 'read', 'queried', 'outcome', 'decisions']);
+  assert.deepEqual([...OUTCOMES], ['changed', 'unchanged']);
+  const v = runValidator('validate.mjs');
+  assert.equal(v.exit, 0);
+  assert.doesNotMatch(v.out, /\bA-\d |ATTESTATION_NOT_CHECKABLE/);
+});
+
+test('AT1 · the control: ap-cra-01\'s closure of 4 Nov 2026, written in the form, passes every check', () => {
+  const a = withCra();
+  assert.deepEqual(a.errors, []);
+  assert.deepEqual(a.warnings, []);
+  assert.deepEqual(a.attested, ['ap-cra-01']);
+});
+
+test('AT2 · A-1 fails a misspelt key, an outcome out of vocabulary, an empty read, a dangling source and a text queried but not read', () => {
+  assert.equal(codes(withCra((r) => { r.attestation.reads = r.attestation.read; delete r.attestation.read; }), 'A-1').length >= 2, true);
+  assert.match(codes(withCra((r) => { r.attestation.outcome = 're-read'; }), 'A-1').join('\n'), /outcome "re-read" is not one of changed, unchanged/);
+  assert.match(codes(withCra((r) => { r.attestation.read = []; }), 'A-1').join('\n'), /read is not a non-empty list/);
+  assert.match(codes(withCra((r) => { r.attestation.read[1].source_id = 'src-nowhere'; }), 'A-1').join('\n'), /names "src-nowhere", which is not a source/);
+  assert.match(codes(withCra((r) => { r.attestation.queried.push('src-eurlex-gdpr'); }), 'A-1').join('\n'), /queried names src-eurlex-gdpr, which attestation.read does not/);
+  assert.match(codes(withCra((r) => { r.attestation = 'read on 4 Nov 2026'; }), 'A-1').join('\n'), /is not an object/);
+});
+
+test('AT3 · A-2 fails an attestation left in place when the next reading moved last_verified (the seal)', () => {
+  const a = withCra((r) => { r.last_verified = '2027-03-26'; });
+  assert.deepEqual(codes(a, 'A-2'), ['A-2 applicability/ap-cra-01: attestation.of 2026-11-04 ≠ last_verified 2027-03-26 — the attestation is of another reading; rewrite it with the reading that moved the date']);
+});
+
+test('AT4 · A-3 fails a bare date bump — docs/RULE-MAINTENANCE.md §9\'s rehearsal, which silenced both prompts', () => {
+  const a = attest('ap-cra-01', (r) => { r.last_verified = '2027-03-26'; });
+  assert.equal(a.errors.length, 1);
+  assert.match(a.errors[0], /^A-3 applicability\/ap-cra-01: last_verified 2027-03-26 is after 2026-11-04 and the rule carries no attestation/);
+  /* the boundary: a rule dated FORM_FROM itself needs no form (the eight of 4 Nov 2026) */
+  assert.deepEqual(attest('ap-cra-01', (r) => { r.last_verified = FORM_FROM; }).errors, []);
+  assert.equal(codes(attest('ap-cra-01', (r) => { r.last_verified = '2026-11-05'; }), 'A-3').length, 1);
+});
+
+test('AT5 · A-4 fails a cited Article missing from read — in sources[], in an exemption, and as a provision', () => {
+  /* Art. 71(2) is cited in sources[] for the date */
+  const s = withCra((r) => { r.attestation.read[0].locator = r.attestation.read[0].locator.replace('; Art. 71', ''); });
+  assert.deepEqual(codes(s, 'A-4'), ['A-4 applicability/ap-cra-01: Art. 71 of src-eurlex-cra, cited in sources («Art. 71(2)»), is not in attestation.read — a rule is closed only if every Article it cites was read']);
+  /* Art. 69(2) and (3) are cited only by an exemption's basis */
+  const e = withCra((r) => { r.attestation.read[0].locator = r.attestation.read[0].locator.replace('; Art. 69', ''); });
+  assert.match(codes(e, 'A-4').join('\n'), /Art\. 69 of src-eurlex-cra, cited in exemption/);
+  /* Arts 13 and 14 are cited by sources[] AND as obligations: both halves report */
+  const p = withCra((r) => { r.attestation.read[0].locator = r.attestation.read[0].locator.replace('; Art. 14', ''); });
+  assert.match(codes(p, 'A-4').join('\n'), /provision cra:art-14 \(Art\. 14 of src-eurlex-cra\) is not in attestation\.read/);
+  /* Article level, as the document says: Art. 13(1) read covers a citation of Art. 13(4) */
+  assert.deepEqual(withCra((r) => { r.sources.push({ source_id: 'src-eurlex-cra', supports: 'supports:direct', locator: 'Art. 13(4)', for: 'obligation' }); }).errors, []);
+  /* a text read is the text named: Art. 71 read in the EHDS does not cover Art. 71 of the CRA */
+  const other = withCra((r) => { r.attestation.read[0].locator = r.attestation.read[0].locator.replace('; Art. 71', ''); r.attestation.read[1].locator += '; Art. 71'; });
+  assert.equal(codes(other, 'A-4').length, 1);
+});
+
+test('AT6 · A-5 fails a tier-1 text the rule cites whose amendments were not declared asked — and not an amending act read in addition', () => {
+  const a = withCra((r) => { r.attestation.queried = []; });
+  assert.deepEqual(codes(a, 'A-5'), ['A-5 applicability/ap-cra-01: src-eurlex-cra, a tier-1 text in the rule\'s sources, is not in attestation.queried — its amending acts and corrigenda were not declared asked']);
+  /* the EHDS was read, not cited in sources[]: it need not be queried (§8, 22.1 question 5) */
+  assert.deepEqual(withCra().errors, []);
+  /* the paper test's one failure, held: ap-ai-act-06 cites the AI Omnibus in sources[] (docs/ATTESTATION-FORM.md §5) */
+  const ai = attest('ap-ai-act-06', (r) => { r.attestation = { of: r.last_verified, outcome: 'changed',
+    decisions: ["v2 Session 21, 21.2 F-14: the brief's argument in `ap-ai-act-06`'s exemption, `teu:art-4-2` and `rel-ai-act-teu-4-2`"],
+    read: [{ source_id: 'src-eurlex-ai-act', locator: 'Art. 2(1)(b) and (3); Art. 3 point (4); Art. 5; Art. 27; Art. 113' },
+      { source_id: 'src-eurlex-ai-omnibus', locator: 'Art. 1 points (7), (13) and (40)(a) and (b)' },
+      { source_id: 'src-eurlex-teu-art-4', locator: 'Art. 4(2)' }],
+    queried: ['src-eurlex-ai-act'] }; });
+  assert.deepEqual(ai.errors, ['A-5 applicability/ap-ai-act-06: src-eurlex-ai-omnibus, a tier-1 text in the rule\'s sources, is not in attestation.queried — its amending acts and corrigenda were not declared asked']);
+});
+
+test('AT7 · A-6 fails a decision title not in roadmap §8, a changed rule with no decision, and an unreadable roadmap', () => {
+  assert.match(codes(withCra((r) => { r.attestation.decisions = ['v2 Session 21, F-03']; }), 'A-6').join('\n'), /decision "v2 Session 21, F-03" matches 0 roadmap §8 rows, not exactly one/);
+  assert.deepEqual(codes(withCra((r) => { r.attestation.decisions = []; }), 'A-6'), ['A-6 applicability/ap-cra-01: outcome "changed" names no roadmap §8 decision']);
+  /* "unchanged" may name none: re-read, no change needs no decision (§8, 22.1 question 3) */
+  assert.deepEqual(withCra((r) => { r.attestation.decisions = []; r.attestation.outcome = 'unchanged'; }).errors, []);
+  /* a title that occurs twice is not a reference to one row */
+  const twice = ROADMAP + "\n| 4 Nov 2026 | **v2 Session 21, 21.2 F-03: `ap-cra-01`'s rationale** (planted) | x | y |\n";
+  assert.match(codes(attest('ap-cra-01', (r) => { r.attestation = structuredClone(CRA_ATTESTATION); }, twice), 'A-6').join('\n'), /matches 2 roadmap §8 rows/);
+  assert.match(codes(attest('ap-cra-01', (r) => { r.attestation = structuredClone(CRA_ATTESTATION); }, null), 'A-6').join('\n'), /§8 could not be read/);
+  /* the parser reads §8's rows and no other table */
+  const titles = roadmapTitles(ROADMAP);
+  assert.ok(titles.includes("v2 Session 21, 21.2 F-03: `ap-cra-01`'s rationale"));
+  assert.equal(new Set(titles).size, titles.length, 'no §8 title is duplicated');
+  assert.equal(roadmapTitles('| a | **b** |'), null, 'no §8 heading, no titles');
+});
+
+test('AT8 · A-7 fails a note that does not name, by CELEX, a tier-1 text the form says was read', () => {
+  const a = withCra((r) => { r.verification_note = 'Re-read on 4 Nov 2026; nothing changed.'; });
+  assert.deepEqual(codes(a, 'A-7'), [
+    'A-7 applicability/ap-cra-01: the verification_note does not name 32024R2847 (src-eurlex-cra), which attestation.read says was read',
+    'A-7 applicability/ap-cra-01: the verification_note does not name 32025R0327 (src-eurlex-ehds), which attestation.read says was read',
+  ]);
+  /* the CELEX, from a CELEX URL, an ELI, a corrigendum, or nothing */
+  assert.equal(celexOf('https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022R2065'), '32022R2065');
+  assert.equal(celexOf('http://publications.europa.eu/resource/celex/32025R0327'), '32025R0327');
+  assert.equal(celexOf('https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng'), '32026R1744');
+  assert.equal(celexOf('https://eur-lex.europa.eu/eli/dir/2024/2853/oj/eng'), '32024L2853');
+  assert.equal(celexOf('https://eur-lex.europa.eu/eli/reg_impl/2024/2977/oj'), '32024R2977');
+  assert.equal(celexOf('http://publications.europa.eu/resource/celex/32022L2555R%2804%29'), '32022L2555R(04)');
+  assert.equal(celexOf('https://ja.public.lu/50001-55000/52757C.pdf'), null);
+});
+
+test('AT9 · A-8 names what the check cannot resolve, as WARNINGs, and skips nothing: ap-eidas2-01 attested over every Article it cites', () => {
+  const a = attest('ap-eidas2-01', (r, db) => {
+    const src = new Map(db.sources.sources.map((x) => [x.id, x]));
+    const cited = new Map();
+    for (const x of [...r.sources, ...r.exemptions.flatMap((e) => e.basis || [])])
+      cited.set(x.source_id, [...(cited.get(x.source_id) || []), ...parseLocator(x.locator).units]);
+    r.last_verified = '2027-01-20';
+    r.attestation = { of: '2027-01-20', outcome: 'unchanged', decisions: [],
+      read: [...cited].map(([source_id, u]) => ({ source_id, locator: [...new Set(u)].join('; ') })),
+      queried: [...new Set(r.sources.map((x) => x.source_id))].filter((id) => src.get(id)?.tier === 'tier:1') };
+    r.verification_note = [...cited.keys()].map((id) => celexOf(src.get(id).url)).join(' ');
+  });
+  assert.deepEqual(a.errors, []);
+  assert.deepEqual(a.warnings, [
+    "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2977 «Citation ('in particular Article 5a(23) thereof')» names no Article, Annex or Recital the check can read",
+    "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2981 «Citation ('in particular Article 5c(6) thereof')» names no Article, Annex or Recital the check can read",
+    'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-5a ("5a (of Regulation (EU) No 910/2014, as inserted)") cannot be placed in a tier-1 text',
+    'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-2 ("2 (of Regulation (EU) No 910/2014, as amended)") cannot be placed in a tier-1 text',
+    'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-3 ("3 (of Regulation (EU) No 910/2014, as amended)") cannot be placed in a tier-1 text',
+  ]);
+  /* a tier-2 source the rule cites and read does not name: named, not an error */
+  const t2 = attest('ap-dma-04', (r) => { r.attestation = { of: r.last_verified, outcome: 'unchanged', decisions: [], queried: ['src-eurlex-dma'],
+    read: [{ source_id: 'src-eurlex-dma', locator: 'Art. 1; Art. 2; Art. 3' }] }; });
+  assert.deepEqual(t2.errors, []);
+  assert.deepEqual(t2.warnings, [
+    'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-04: the rule cites src-ec-dma-cloud-mi-2025 (not tier-1) in sources, and attestation.read does not name it',
+    'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-04: the rule cites src-ec-cloud-gatekeeper-preliminary-2026 (not tier-1) in sources, and attestation.read does not name it',
+  ]);
+});
+
+test('AT10 · the locator parser: what it reads, what it refuses, and the semicolon inside parentheses', () => {
+  assert.deepEqual(segments('Recital 13 (software, including AI systems; AI system providers treated as manufacturers)'),
+    ['Recital 13 (software, including AI systems; AI system providers treated as manufacturers)']);
+  assert.deepEqual(parseLocator('Art. 2(1); Art. 3 points (1), (13), (21) and (22)').units, ['Art. 2', 'Art. 3']);
+  assert.deepEqual(parseLocator('Art. 2(1), (2) and (3); Art. 3(1) and (2); Annexes I and II').units, ['Art. 2', 'Art. 3', 'Annex I', 'Annex II']);
+  assert.deepEqual(parseLocator('Annex I, point 8').units, ['Annex I']);
+  assert.deepEqual(parseLocator('Art. 2(2)(d); recital 19 (Directive (EU) 2016/680)').units, ['Art. 2', 'Recital 19']);
+  assert.deepEqual(parseLocator('Art. 1 point (7) (Art. 5(1), first subparagraph, points (ba) and (bb), and Art. 5(1a) and (1b), as inserted)').units, ['Art. 1'],
+    'an amending act\'s locator points into the amending act');
+  assert.deepEqual(parseLocator('Art. 1 point (5) (Art. 5a(1) of Regulation (EU) No 910/2014, as inserted)').units, ['Art. 1']);
+  assert.deepEqual(parseLocator("Citation ('in particular Article 5a(23) thereof'); Art. 6 (entry into force)"),
+    { units: ['Art. 6'], unresolved: ["Citation ('in particular Article 5a(23) thereof')"] });
+  assert.equal(unitsOf('Section 5 (Conclusions), page 14'), null);
+  assert.equal(unitsOf('third paragraph'), null);
+  assert.equal(provisionArticle('3(63)'), 'Art. 3');
+  assert.equal(provisionArticle('5a'), 'Art. 5a');
+  assert.equal(provisionArticle('5a (of Regulation (EU) No 910/2014, as inserted)'), null);
+});
+
+test('AT11 · validate.mjs FAILS on a planted bare date bump, names it, and passes the same tree once the rule is attested', () => {
+  const dir = dataScratch();
+  try {
+    mkdirSync(join(dir, 'docs'));
+    cpSync(join(ROOT, 'docs', 'ROADMAP-v2.md'), join(dir, 'docs', 'ROADMAP-v2.md'));
+    const bump = (fn) => edit(dir, 'data/applicability.json', (t) => { const d = JSON.parse(t); fn(d.applicability ?? d, d); return JSON.stringify(d, null, 2); });
+    bump((d) => { d.rules.find((r) => r.id === 'ap-cra-01').last_verified = '2027-03-26'; });
+    const red = runValidator('validate.mjs', [], dir);
+    assert.equal(red.exit, 1);
+    assert.match(red.out, /✗ A-3 applicability\/ap-cra-01: last_verified 2027-03-26 is after 2026-11-04 and the rule carries no attestation/);
+    bump((d) => { d.rules.find((r) => r.id === 'ap-cra-01').attestation = { ...structuredClone(CRA_ATTESTATION), of: '2027-03-26' }; });
+    const green = runValidator('validate.mjs', [], dir);
+    assert.equal(green.exit, 0, green.out);
+    assert.doesNotMatch(green.out, /\bA-\d /);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('AT12 · the reading packet is exactly what A-4 and A-5 demand, for every one of the 33 rules (22.4 (a))', () => {
+  const db = loadDb();
+  for (const rule of db.applicability.rules) {
+    const p = readingPacket(db, rule.id);
+    const build = (drop = null) => attest(rule.id, (r) => {
+      const read = p.read.map((x) => ({ source_id: x.source_id, articles: x.articles.filter((u) => !(drop && drop[0] === x.source_id && drop[1] === u)) }));
+      for (const a of p.read_any_of) { const t = read.find((x) => x.source_id === a.in_any_of[0]); if (t) t.articles.push(a.article); else read.push({ source_id: a.in_any_of[0], articles: [a.article] }); }
+      r.last_verified = '2027-01-20';
+      r.attestation = { of: '2027-01-20', outcome: 'unchanged', decisions: [], queried: p.query,
+        read: read.filter((x) => x.articles.length).map((x) => ({ source_id: x.source_id, locator: x.articles.join('; ') })) };
+      for (const x of p.tier2) r.attestation.read.push({ source_id: x, locator: 'at its URL' });
+      r.verification_note = p.read.map((x) => x.celex).join(' ');
+    });
+    const whole = build();
+    assert.deepEqual(whole.errors.filter((e) => /^A-[45] /.test(e)), [], `${rule.id}: the packet must satisfy A-4 and A-5`);
+    /* and every Article it lists is one A-4 requires: drop any, and A-4 fires */
+    for (const x of p.read) for (const u of x.articles)
+      assert.ok(build([x.source_id, u]).errors.some((e) => e.startsWith('A-4 ')), `${rule.id}: ${u} of ${x.source_id} is listed but not required`);
+  }
+  assert.deepEqual(readingPacket(db, 'ap-cra-01').read, [{ source_id: 'src-eurlex-cra', celex: '32024R2847', articles: ['Art. 2', 'Art. 3', 'Art. 13', 'Art. 14', 'Art. 69', 'Art. 71'] }]);
+  assert.equal(readingPacket(db, 'ap-nowhere'), null);
+});
+
+test('AT13 · the packet command prints, fetches nothing, writes nothing, and offers no pre-filled attestation', () => {
+  const hash = () => createHash('sha256').update(readdirSync(join(ROOT, 'data')).sort().map((f) => readFileSync(join(ROOT, 'data', f))).join('')).digest('hex');
+  const before = hash();
+  const out = execFileSync(process.execPath, [join(ROOT, 'tools', 'attestation-audit.mjs'), 'packet', 'ap-eidas2-01'], { cwd: ROOT, encoding: 'utf8' });
+  assert.equal(hash(), before);
+  assert.match(out, /READING PACKET {2}ap-eidas2-01/);
+  assert.match(out, /Citation \('in particular Article 5a\(23\) thereof'\)/, 'what A-8 cannot check is named, not skipped');
+  assert.doesNotMatch(out, /[{}]|"of"|"outcome"/, 'no attestation skeleton');
+  const bad = runValidator('attestation-audit.mjs', ['packet', 'ap-nowhere']);
+  assert.equal(bad.exit, 2);
+  const src = readFileSync(join(ROOT, 'tools', 'attestation-audit.mjs'), 'utf8');
+  assert.doesNotMatch(src, /\bfetch\(|https?\.request|node:https?|node:net|writeFile/, 'no network and no write');
+});
+
+test('AT14 · the §8 title check: this roadmap is clean; an untitled row, a title used twice and a vanished frozen row each fail (22.4 (b))', () => {
+  assert.deepEqual(roadmapAudit(ROADMAP), { errors: [], warnings: [] });
+  assert.equal(SECTION8_UNTITLED.length, 3, 'the frozen list may only shrink');
+  const untitled = roadmapAudit(ROADMAP + '| 5 Nov 2026 | A decision with no title (planted) | x | The author |\n');
+  assert.deepEqual(untitled.errors, ['P-10 roadmap §8: the row of 5 Nov 2026 beginning «A decision with no title (planted) | x | The author |» has no leading bold title']);
+  const twice = roadmapAudit(ROADMAP + "| 5 Nov 2026 | **v2 Session 21, 21.2 F-03: `ap-cra-01`'s rationale** (planted) | x | The author |\n");
+  assert.equal(twice.errors.length, 1);
+  assert.match(twice.errors[0], /occurs twice \(4 Nov 2026 and 5 Nov 2026\)/);
+  const gone = roadmapAudit(ROADMAP.replace('| 25 Oct 2026 | Two decisions only.', '| 25 Oct 2026 | **Two decisions only.**'));
+  assert.match(gone.errors.join('\n'), /frozen untitled row of 25 Oct 2026 «Two decisions only\.» is no longer there/);
+  assert.deepEqual(roadmapAudit(null).warnings, ['ROADMAP_NOT_READ docs/ROADMAP-v2.md §8 could not be read: its titles were not checked']);
+  /* end to end: validate.mjs fails a roadmap with a title used twice */
+  const dir = dataScratch();
+  try {
+    mkdirSync(join(dir, 'docs'));
+    writeFileSync(join(dir, 'docs', 'ROADMAP-v2.md'), ROADMAP + "| 5 Nov 2026 | **v2 Session 21, 21.2 F-03: `ap-cra-01`'s rationale** (planted) | x | The author |\n");
+    const red = runValidator('validate.mjs', [], dir);
+    assert.equal(red.exit, 1);
+    assert.match(red.out, /✗ P-10 roadmap §8: the title .* occurs twice/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('AT15 · the notice check: this tree holds all four clauses; each planted falsehood fails it (22.4 (c), P-07)', () => {
+  const files = () => ({ appliesHtml: readFileSync(join(ROOT, 'applies.html'), 'utf8'),
+    evidenceAuditSrc: readFileSync(join(ROOT, 'tools', 'evidence-audit.mjs'), 'utf8'), appliesJsSrc: readFileSync(join(ROOT, 'js', 'applies.js'), 'utf8') });
+  const run = (fnDb = () => {}, fnFiles = (f) => f) => { const db = loadDb(); fnDb(db); return noticeAudit({ db, ...fnFiles(files()) }); };
+  assert.deepEqual(run(), { errors: [], warnings: [] });
+  /* N-1: a reference with no locator, and one with no supports, in each of the three places */
+  assert.match(run((db) => { ruleOf(db, 'ap-cra-01').sources[2].locator = null; }).errors.join('\n'), /^N-1 applicability\/ap-cra-01: sources\[2\] \(src-eurlex-cra\) has no locator/);
+  assert.match(run((db) => { delete ruleOf(db, 'ap-cra-01').exemptions[0].basis[0].supports; }).errors.join('\n'), /exemptions\[0\]\.basis\[0\] \(src-eurlex-cra\) says nothing about what it supports/);
+  const withT = loadDb().applicability.rules.find((r) => r.threshold_basis);
+  const k = Object.keys(withT.threshold_basis)[0];
+  assert.match(run((db) => { ruleOf(db, withT.id).threshold_basis[k][0].locator = ' '; }).errors.join('\n'), new RegExp(`threshold_basis\\.${k}\\[0\\]`));
+  /* N-2, N-4 (data) */
+  assert.match(run((db) => { const r = ruleOf(db, 'ap-cra-01'); r.condition_provisions.actor = []; }).errors.join('\n'), /^N-2 applicability\/ap-cra-01: condition "actor" names no provision/);
+  assert.match(run((db) => { delete ruleOf(db, 'ap-cra-01').last_verified; }).errors.join('\n'), /^N-4 applicability\/ap-cra-01: no last_verified/);
+  /* N-3, N-4 (page), N-0 */
+  assert.deepEqual(run(undefined, (f) => ({ ...f, evidenceAuditSrc: f.evidenceAuditSrc.replace(/triggerAudit/g, 'somethingElse') })).errors,
+    ['N-3 tools/evidence-audit.mjs no longer imports and calls triggerAudit — the notice says the evidence audit checks the rules']);
+  assert.deepEqual(run(undefined, (f) => ({ ...f, appliesJsSrc: f.appliesJsSrc.replace('humanDate(r.last_verified)', 'humanDate(null)') })).errors,
+    ["N-4 js/applies.js no longer renders a rule's last_verified — the notice says each rule shows it"]);
+  assert.match(run(undefined, (f) => ({ ...f, appliesHtml: f.appliesHtml.replace('checked to the standard', 'held to the standard') })).errors.join('\n'), /^N-0 applies\.html: the notice is not the text/);
+  assert.ok(NOTICE_TEXT.includes("Read a result as a pointer to the law, not as a verified reading of it."));
+  /* what could not be read is said, not skipped */
+  assert.equal(run(undefined, () => ({ appliesHtml: null, evidenceAuditSrc: null, appliesJsSrc: null })).warnings.length, 3);
 });

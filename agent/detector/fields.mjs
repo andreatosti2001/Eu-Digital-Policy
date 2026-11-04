@@ -227,7 +227,12 @@ export const VALUE_FIELDS = {
     'threshold_basis.cumulative_training_flop_gt.locator',
     'threshold_basis.monthly_active_eu_users_gte.locator',
     'threshold_basis.monthly_active_eu_end_users_gte.locator',
-    'threshold_basis.yearly_active_eu_business_users_gte.locator'],
+    'threshold_basis.yearly_active_eu_business_users_gte.locator',
+    /* v2 Session 22 (4 Nov 2026, §8 22.2 question 10 (a)): the structured attestation of a
+       reading, docs/ATTESTATION-FORM.md. `of` is a date sealed to last_verified, `outcome` a
+       closed vocabulary, `decisions` the titles of roadmap §8 rows, `read.locator` a locator as
+       sources.locator is; read.source_id and queried are references, which the graph decides */
+    'attestation.of', 'attestation.read.locator', 'attestation.outcome', 'attestation.decisions'],
   institution: ['id', 'short_name', 'full_name', 'member_state', 'last_verified', 'competences.exclusive'],
   brief_part: ['id', 'roman', 'kind', 'reading_minutes'],
   provision: ['id', 'number', 'heading', 'requires_verification'],

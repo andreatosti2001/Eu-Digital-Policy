@@ -107,7 +107,25 @@
       "additionalProperties": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sourceRef" } }
     },
     "last_verified": { "$ref": "#/$defs/isoDate", "description": "Required. The date the rule was last read against its locators; never later than the as-of date (T-07)." },
-    "verification_note": { "type": ["string", "null"], "description": "NEW, optional. What was read and what was not, as on every other record." }
+    "verification_note": { "type": ["string", "null"], "description": "NEW, optional. What was read and what was not, as on every other record." },
+    "attestation": {
+      "type": "object",
+      "description": "v2 Session 22 (4 Nov 2026), docs/ATTESTATION-FORM.md; docs/ROADMAP-v2.md §8, v2 Session 22, 22.1 questions 1-7. Optional, prospective: required of a rule whose last_verified is later than 2026-11-04 (A-3); none of the 33 rules of 4 Nov 2026 carries it. A declaration of what was read, not proof of reading. Checked by tools/attestation-audit.mjs (A-1…A-8), reported by tools/validate.mjs.",
+      "additionalProperties": false,
+      "required": ["of", "read", "queried", "outcome", "decisions"],
+      "properties": {
+        "of": { "$ref": "#/$defs/isoDate", "description": "The seal: equal to the rule's last_verified, or the tree fails (A-2). Not a second date." },
+        "read": {
+          "type": "array", "minItems": 1,
+          "description": "The texts read, each by its source record, and the Articles read in it, in the locator grammar. Must cover every Article the rule cites on a tier-1 text, at Article level (A-4).",
+          "items": { "type": "object", "additionalProperties": false, "required": ["source_id", "locator"],
+            "properties": { "source_id": { "type": "string" }, "locator": { "type": "string", "minLength": 1 } } }
+        },
+        "queried": { "type": "array", "items": { "type": "string" }, "description": "The texts whose amending acts and corrigenda were asked of the Publications Office's SPARQL endpoint (P-09); each also in read; every tier-1 text in sources[] must be here (A-5). What came back stays prose in verification_note." },
+        "outcome": { "enum": ["changed", "unchanged"], "description": "Whether the reading changed the rule." },
+        "decisions": { "type": "array", "items": { "type": "string" }, "description": "The exact bold titles of the roadmap §8 rows that decided the change; at least one when outcome is changed (A-6)." }
+      }
+    }
   },
   "not": {
     "anyOf": [

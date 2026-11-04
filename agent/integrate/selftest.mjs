@@ -793,6 +793,20 @@ test('the provenance field list covers every dataset a proposal can name', () =>
   }
 });
 
+test('the structured attestation is a provenance field of a rule — and preserve.mjs still checks no rule (v2 Session 22)', () => {
+  /* docs/ROADMAP-v2.md §8, v2 Session 22, 22.2 questions 10 (b) and 11: listed, with its limit stated */
+  assert.ok(PROVENANCE_FIELDS['data/applicability.json'].includes('attestation'));
+  assert.ok(!NEVER_REMOVED.includes('attestation'), 'not added to NEVER_REMOVED: question 11 left preserve.mjs as it is');
+  /* the finding, held as measured rather than fixed: a proposal naming a rule finds no record to check */
+  const rule = CORPUS.db.applicability.rules[0];
+  const problems = checkPreservation({ record_kind: 'applicability_rule', dataset: 'data/applicability.json', record_id: rule.id,
+    preserves_record_id: true, proposed_change: { operations: [{ op: 'remove', target: `data/applicability.json rules[${rule.id}].attestation` }] },
+    provenance_disposition: [] }, CORPUS);
+  assert.ok(problems.some((p) => /is not a applicability_rule in data\/applicability\.json/.test(p)),
+    'canonicalOf() resolves no rule, so the removal is not examined as a provenance change — if this starts failing, preserve.mjs learned rules and the finding is closed');
+  assert.ok(!problems.some((p) => /would remove "attestation"/.test(p)));
+});
+
 /* --------------------------------- node identity (SESSION 13) */
 
 test('link, proposal, gap and approval ids are derived from content, not from a counter', async () => {
