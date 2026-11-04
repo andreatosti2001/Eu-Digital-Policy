@@ -32,6 +32,27 @@ the phase ends: the next readings fall on 3 Feb 2027 (the eight rules read on 4 
 `ap-cra-01`), both after any reasonable end of Phase 4. A rehearsal would attest a reading that did not happen, which is
 the thing the form exists to prevent.
 
+## 1a · The X-1 dispositions (v2 Session 22, approved 4 Nov 2026)
+
+*Added after the plan's approval, as X-1 requires: one row per process of `docs/PHASE-4-SETUP.md` §1, approved in roadmap
+§8 (v2 Session 22, 22.3). Each named check was measured to exist on 4 Nov 2026. A row changes only by its own §8 row.*
+
+| # | Process | Disposition | Named | What stays a person's, and why |
+|---|---|---|---|---|
+| P-01 | Read a Control Room view as a snapshot | **machine check** | `.control-room/selftest.mjs`: every view's payload carries an ISO `assembled_at` | whether it is recent enough to act on — a judgement |
+| P-02 | Attest which sections were examined | **structured attestation** | Control Room gate 7 (0.2), from the fixed list, chained in the trail | the examining; a declaration, not proof of reading |
+| P-03 | Choose the reference date of a check | **machine check** | `tools/as-of.mjs` `dateProblem()`: an unreadable date exits 2 (`tools/selftest.mjs` D1) | the choice of date |
+| P-04 | Run, record and read the editorial audit | **machine check** (the audit and its record) | `tools/evidence-audit.mjs`; `tools/evidence-audit-record.mjs`'s five answers | **running it**: nothing schedules it, because a scheduler is the production dispatcher Phase 4 leaves (`docs/PHASE-4-SETUP.md` §3) |
+| P-05 | Write a metric's definition | **machine check** | the metric register's name and definition checks (`agent/health/selftest.mjs`, `.control-room/selftest.mjs`) | the definition — authorship |
+| P-06 | Keep `docs/CONTROL-ROOM.md` true to the interface | **machine check** | `.control-room/selftest.mjs` `inventoryGaps()` | the row's content |
+| P-07 | Word the notice on `applies.html` | **stays manual** | — | its truth and its wording: nothing checks the notice (`docs/PHASE-3-AUDIT.md` F-01). 22.4 (c) would change this row by its own §8 row |
+| P-08 | Read a rule against its Articles | **structured attestation** | `attestation` on the rule, A-1…A-8 (`tools/attestation-audit.mjs`, run by `tools/validate.mjs`; `docs/ATTESTATION-FORM.md`), beside T-01…T-05, T-10 and `validate.mjs` | the reading — no tool fetches anything (F-12) |
+| P-09 | Ask SPARQL for amending acts and corrigenda | **structured attestation of the asking only** | `attestation.queried`, A-5 | running the query and reading its answer: **out of Phase 4 as a tool** (§2; F-12) |
+| P-10 | Put a decision to the author; record it in §8 | **stays manual** | A-6 checks only that a title an attestation cites is one §8 row | the decision is the author's. 22.4 (b) would change this row by its own §8 row |
+| P-11 | Respond to T-12 or `RULE_STALE` | **structured attestation** | `attestation.outcome` (`"changed"` / `"unchanged"`); noticing is machine — T-12, `RULE_STALE`, and A-3 for a date moved with no form | re-reading the law and deciding the rule's content |
+| P-12 | Regenerate the generated pages | **machine check** | `tools/seo-audit.mjs` and `node tools/_footer.mjs --check`, in CI and `pages.yml` | nothing of judgement |
+| P-13 | Name a change's evidence in `Evidence:` | **machine check** | `tools/commit-evidence.mjs` (`qa.yml`, `pages.yml`): that the line exists | what the evidence is, and whether it carries the change |
+
 ## 2 · What stays out of Phase 4
 
 Each is a reason, not a deferral by default; the author may reopen any (§8).
