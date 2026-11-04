@@ -705,6 +705,38 @@ test('the field register classifies every field on every record in the live data
     'a dataset grew a field nothing in agent/detector/fields.mjs classifies. It defaults to editorial, which is the safe half — but an unclassified field is a decision nobody made, and the decision is whether an agent may act on it unattended');
 });
 
+test('a rule carrying the structured attestation (v2 Session 22) has every field registered', () => {
+  /* docs/ATTESTATION-FORM.md; docs/ROADMAP-v2.md §8, v2 Session 22, 22.2 question 10 (a). No rule carries
+     the form on 4 Nov 2026, so the live-data test above cannot see it; Session 23's first closure would.
+     The attestation planted here is a fixture in memory, written from ap-cra-01's note of 4 Nov 2026. */
+  const corpus = loadCorpus();
+  const rule = corpus.db.applicability.rules.find((r) => r.id === 'ap-cra-01');
+  rule.attestation = { of: rule.last_verified, outcome: 'changed', decisions: ["v2 Session 21, 21.2 F-03: `ap-cra-01`'s rationale"],
+    read: [{ source_id: 'src-eurlex-cra', locator: 'Art. 2; Art. 3; Art. 13(1); Art. 14; Art. 69; Art. 71' }, { source_id: 'src-eurlex-ehds', locator: 'Art. 104; Art. 105' }],
+    queried: ['src-eurlex-cra'] };
+  const g = buildGraph({ corpus });
+  const node = g.nodes.get('ap-cra-01');
+  const fields = fieldsOf(node.record, { kind: node.kind, isNode: (x) => g.nodes.has(x),
+    referenceFields: referenceFieldsByKind(g).get(node.kind) ?? new Set(), rootId: node.id })
+    .filter((f) => f.field.startsWith('attestation.'));
+  assert.deepEqual(fields.filter((f) => !f.registered).map((f) => f.field), []);
+  const cls = Object.fromEntries(fields.map((f) => [f.field, f.class]));
+  assert.equal(cls['attestation.of'], 'value');
+  assert.equal(cls['attestation.read.locator'], 'value');
+  assert.equal(cls['attestation.outcome'], 'value');
+  assert.equal(cls['attestation.decisions'], 'value');
+  /* the texts named are records: the graph makes them references, as sources[].source_id is */
+  assert.equal(cls['attestation.read.source_id'], 'reference');
+  assert.equal(cls['attestation.queried'], 'reference');
+});
+
+test('an impact on a rule\'s attestation routes to a person — on the field itself, not on its parts (v2 Session 22)', () => {
+  /* docs/ROADMAP-v2.md §8, v2 Session 22, 22.2 question 11: the limit, stated and held */
+  assert.equal(routeOf({ field_class: 'value', dataset: 'data/applicability.json', field: 'attestation', restates_old_value: false }).route, 'human_only');
+  assert.notEqual(routeOf({ field_class: 'value', dataset: 'data/applicability.json', field: 'attestation.of', restates_old_value: false }).why.includes('PROVENANCE_FIELDS'), true,
+    'routeOf compares the last dotted segment: "of" is not a provenance field');
+});
+
 test('reference fields are derived per KIND, not per record', () => {
   /* instruments[].brief_part holds an id on most acts and null on at
      least one. Asking whether one RECORD produced an edge would make
