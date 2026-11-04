@@ -255,7 +255,7 @@ explicitly opens a finance chapter. It is not scheduled.
 - The login decision (D-5). A serverless backend only if the git-based CMS is shown, in writing,
   to be insufficient.
 - Phase 4 automates only what Phases 0–1 made visible as a manual process.
-- **Entry condition (approved 3 Nov 2026, §8):** E-1 Phase 3's state decided; E-2 D-4 decided, no letters; E-3 the inventory of `docs/PHASE-4-SETUP.md` approved with its levels; E-4 D-5 decided or deferred with its reason; E-5 the baseline green on a full-history clone; E-6 the first item writes nothing outside `docs/` without its own §8 row. First item: 4.1, the rule-maintenance process written down. Phase 4 opens on the author's word once E-5 is measured.
+- **Entry condition (approved 3 Nov 2026, §8):** E-1 Phase 3's state decided; E-2 D-4 decided, no letters; E-3 the inventory of `docs/PHASE-4-SETUP.md` approved with its levels; E-4 D-5 decided or deferred with its reason; E-5 the baseline green on a full-history clone; E-6 the first item writes nothing outside `docs/` without its own §8 row. First item: 4.1, the rule-maintenance process written down. Phase 4 opened on the author's word on 3 Nov 2026, E-5 measured (§8, v2 Session 20, 20.0 question 1); 4.1 was written in v2 Session 20 and first used in v2 Session 21.
 
 ### Phase 5 — "what applies", advanced
 
