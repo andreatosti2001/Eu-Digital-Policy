@@ -757,7 +757,7 @@
         "activity": ["activity:cloud-services", "activity:critical-infrastructure-operation"]
       },
       "outcome": "outcome:likely",
-      "rationale": "Cloud computing service providers and data centre service providers sit within the digital infrastructure sector, which NIS2 treats as essential. The size thresholds still determine whether an entity is essential or important.",
+      "rationale": "Cloud computing service providers and data centre service providers are listed in Annex I, the sectors of high criticality, under digital infrastructure (point 8). Size decides their category: those that exceed the ceilings for medium-sized enterprises are essential entities (Article 3(1)(a)); medium-sized ones are important entities (Article 3(2)), unless a Member State identifies them as essential under Article 2(2), points (b) to (e) (Article 3(1)(e)).",
       "obligations": ["nis2:art-21", "nis2:art-23", "nis2:art-20"],
       "authority": ["nca-*"],
       "dates": ["tl-nis2-2024-10-17-transposition"],
@@ -775,8 +775,8 @@
         "actor": ["nis2:art-2", "nis2:art-6"],
         "activity": ["nis2:art-2", "nis2:art-6"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 3, 6 points (30) and (31), 20, 21, 23 and 41 and Annex I, point 8. The Publications Office's metadata lists no act amending the Directive and nine corrigenda, of which only R(04) has an English expression; it corrects Art. 19(1) and touches nothing cited here. NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national (the author's decision of 29 Oct 2026). On the author's decision of 29 Oct 2026 the exemption states Art. 2(1) to (3); it read 'Micro and small enterprises are generally outside NIS2, subject to sector-specific exceptions.' Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 21): re-read in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 3, 6 points (30) and (31), 20, 21, 23 and 41 and Annex I, point 8. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Directive and nine corrigenda, of which only R(04) has an English expression; read, it corrects Art. 19(1) and touches nothing cited here. On the author's decision of 4 Nov 2026 (finding F-04) the rationale no longer says that NIS2 treats the digital infrastructure sector as essential: Annex I is headed 'sectors of high criticality', and the category is decided by Art. 3(1)(a), 3(1)(e) and 3(2). NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national (the author's decision of 29 Oct 2026). On the author's decision of 29 Oct 2026 the exemption states Art. 2(1) to (3); it read 'Micro and small enterprises are generally outside NIS2, subject to sector-specific exceptions.' First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome, exemptions and depends_on were not changed. The claims were not re-read."
     },
     {
       "id": "ap-nis2-03",
