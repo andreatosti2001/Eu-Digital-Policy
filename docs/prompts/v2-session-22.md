@@ -11,4 +11,7 @@ time; the answers so far, in the author's words:
   the same retrieved text; checkpoints after GDPR + DSA + DMA, after AI Act + Data Act, and a final one (NIS2, DORA, PLD,
   eIDAS2, then Session 23's prompt); whatever is not closed goes, named, into Session 23's prompt, which must run before
   28 Jan 2027.
+- Question 3, the headings of instruments with no rule in Session 22 (25: cra 7, csa 3, ehds 4, iea 4,
+  digital-networks-act 3, tfeu 3, teu 1): "Final batch, first to drop (Recommended)" — compared in the final batch,
+  after the rules; under the stop rule they move to Session 23 before any rule does.
 -->
