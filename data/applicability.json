@@ -1124,7 +1124,7 @@
         "activity": ["activity:connected-products", "activity:ai-deployment", "activity:ai-development", "activity:product-with-digital-elements"]
       },
       "outcome": "outcome:likely",
-      "rationale": "The revised Product Liability Directive brings software and AI within strict product liability for products placed on the market or put into service after 9 December 2026. This is civil liability before national courts, not an administrative penalty regime — and the proposed AI Liability Directive, which would have covered the fault-based route, was abandoned.",
+      "rationale": "The revised Product Liability Directive brings software and AI within strict product liability for products placed on the market or put into service from 9 December 2026. This is civil liability before national courts, not an administrative penalty regime — and the proposed AI Liability Directive, which would have covered the fault-based route, was abandoned.",
       "obligations": [],
       "authority": ["member-states"],
       "dates": ["tl-pld-2026-12-09-application"],
@@ -1142,8 +1142,17 @@
         "actor": ["pld:art-4", "pld:art-8"],
         "activity": ["pld:art-2", "pld:art-4"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 13, the pilot): brought to the v2 shape. Read that day in the Official Journal text of Directive (EU) 2024/2853 retrieved from the Publications Office's Cellar by CELEX (32024L2853): Arts 1, 2, 4 points (1), (10) and (15), 8, 22 to 24, and recital 13. The exemption is Art. 2(2). Conditions, outcome and rationale were not changed. A deployer of an AI system is liable under Art. 8 only as a manufacturer or as one who substantially modifies a product (Art. 8(2)), so activity:ai-deployment fires only through the actor dimension: reported to the author, not changed. clm-aild-abandoned was not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 24): re-read in the Official Journal text of Directive (EU) 2024/2853 retrieved from the Publications Office's Cellar by CELEX (32024L2853): Arts 1, 2, 4, 8 and 21 to 24, and recital 13. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Directive and two corrigenda: R(01) of 7 May 2026, which has an English expression, and R(02) of 29 Sep 2026, which has none and was not read. R(01), read that day by CELEX (32024L2853R(01)), corrects Art. 2(1) to read 'This Directive shall apply to products placed on the market or put into service after 8 December 2026'; Art. 21 repeals Directive 85/374/EEC with effect from 9 December 2026 and keeps it for products placed on the market or put into service before that date. The Directive therefore covers products placed on the market or put into service from 9 December 2026, and on the author's decision of 4 Nov 2026 the rationale says 'from' where it said 'after'. Software is a product (Art. 4(1)); a developer or producer of software, including AI system providers within the meaning of Regulation (EU) 2024/1689, should be treated as a manufacturer (recital 13; Art. 4(10)). Liability falls on the economic operators of Art. 8; a deployer of an AI system is liable only as a manufacturer or as one who substantially modifies a product (Art. 8(2)), so activity:ai-deployment fires only through the actor dimension, as reported to the author on 29 Oct 2026 and not changed. The exemption is Art. 2(2). Member States bring their measures into force by 9 December 2026 (Art. 22(1)). First brought to the v2 shape on 29 Oct 2026 (v2 Session 13, the pilot). Conditions, outcome and obligations were not changed. clm-pld-covers-software and clm-aild-abandoned were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-pld", "locator": "Art. 1; Art. 2; Art. 4; Art. 8; Art. 21; Art. 22; Art. 23; Art. 24; Recital 13" }
+        ],
+        "queried": ["src-eurlex-pld"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 24, 24.1: `ap-pld-01`'s rationale and the corrigendum to Art. 2(1)"]
+      }
     },
 
     {
