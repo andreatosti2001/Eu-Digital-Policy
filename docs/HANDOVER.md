@@ -11,7 +11,9 @@ The entries below this session's are unchanged.
 - Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register (left open by the
   author's decision).
 - The clone was shallow at the start; `git fetch --unshallow` was run before any suite.
-- Disposition: pending: checkpoint 23.3 and the final checkpoint put to the author; then whether to open a pull request to `main`.
+- Disposition: checkpoint 23.3 approved (§8 `6942ec7`) and the final checkpoint approved (4 Nov 2026, §8 `9fe9ad7`); pushed,
+  and a pull request to `main` opened on the author's instruction ("Push and open the PR (Recommended)"). Nothing is pushed
+  to the branch after the pull request is opened.
 
 ## v2 Session 23 — final checkpoint (23.4, the prompt of Session 24; with checkpoint 23.3)
 
