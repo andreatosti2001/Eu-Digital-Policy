@@ -9,7 +9,7 @@ The entries below this s## Branch register — 4 November 2026 (v2 Session 24)
 - Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register (left open by the
   author's decision).
 - The clone was shallow at the start; `git fetch --unshallow` was run before any suite.
-- Disposition: checkpoint 24.1 approved (§8 `c6a5410`); the final checkpoint, whether Phase 4 is concluded, and a pull request are put to the author after this entry.
+- Disposition: checkpoint 24.1 approved (§8 `c6a5410`) and the final checkpoint approved (§8 `c1d59f3`); **Phase 4 concluded** on the author's word (§8, "Phase 4 concluded"); pushed, and a pull request to `main` opened on the author's instruction ("Push and open the PR (Recommended)"). Nothing is pushed to the branch after the pull request is opened.
 
 ## v2 Session 24 — final checkpoint (24.2 the exit audit, 24.3 D-5, 24.4 the hand-over and the prompt of Session 25)
 
