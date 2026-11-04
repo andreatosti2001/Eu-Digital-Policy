@@ -443,8 +443,18 @@
       "condition_provisions": {
         "actor": ["dma:art-2", "dma:art-3"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1(2), 2 points (1) and (21), 3(1) and (2), 5(4) and (6), 6(10) and 54. The Publications Office's metadata lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression, and it changes Art. 13(8) alone. Also read that day: the Review Report COM(2026) 178 final (PDF at the URL the source records), Section 4, 'Costs and benefits', page 8, and Section 5, page 14. The DMA does not define an SME (Recommendation 2003/361/EC, outside this dataset); condition_provisions.actor names Art. 2 (the gatekeeper, the business user) and Art. 3 (designation). tl-dma-2023-05-01-application was added to dates on the author's decision of 29 Oct 2026, derived from dma:art-5 and dma:art-6. Conditions, outcome and rationale were not changed. clm-dma-review-enforce-not-expand was not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1, 2, 3, 5 and 6. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression; read that day, it changes Art. 13(8) alone. Also read that day: the Review Report COM(2026) 178 final (PDF at the URL the source records), Section 4, 'Costs and benefits', page 8 ('the DMA does not impose compliance costs on non-gatekeepers, in particular on SMEs and start-ups'), and Section 5, page 14 ('The DMA applies only to designated gatekeepers and does not impose direct obligations on SMEs'). The business user's three rights the rationale names are Art. 5(4) (to communicate and promote offers to end users, free of charge), Art. 6(10) (access to the data generated in the use of the core platform service) and Art. 5(6) (to raise non-compliance with any relevant public authority, including national courts). The DMA does not define an SME (Recommendation 2003/361/EC, outside this dataset); condition_provisions.actor names Art. 2 (the gatekeeper, the business user) and Art. 3 (designation). Read against the rule, nothing was found to change. First brought to the v2 shape on 29 Oct 2026 (v2 Session 15). Conditions, outcome, rationale, obligations and dates were not changed. clm-dma-review-enforce-not-expand was not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-dma", "locator": "Art. 1; Art. 2; Art. 3; Art. 5; Art. 6" },
+          { "source_id": "src-ec-dma-review-2026", "locator": "Section 4 ('Costs and benefits'), page 8; Section 5 (Conclusions), page 14" }
+        ],
+        "queried": ["src-eurlex-dma"],
+        "outcome": "unchanged",
+        "decisions": []
+      }
     },
     {
       "id": "ap-dma-04",
