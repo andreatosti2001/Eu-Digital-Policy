@@ -3,8 +3,12 @@
 **Stato:** non aperto. Nessuna sessione è stata avviata e nessuna decisione è stata presa.
 **Fonte:** `docs/prompts/v2-session-6.md`, sezione «Passaggio al lavoro post-v2» (righe 149–270). È il
 roadmap scritto dall'autore, incollato come prompt della sessione 6 il 27 ottobre 2026 e conservato per sua
-decisione di quel giorno. Questo documento lo riporta senza cambiarne il contenuto, e aggiunge solo le
-condizioni di apertura e le domande che l'autore deve decidere.
+decisione di quel giorno. Questo documento lo riporta senza cambiarne il contenuto (§3), e aggiunge solo le
+condizioni di apertura, la stima delle sessioni (§4, aggiornata il 4 novembre 2026) e le domande che l'autore
+deve decidere.
+**Aggiornamento del 4 novembre 2026:** la stima delle sessioni è stata rifatta dall'autore (§4: numerazione
+PV2-01…PV2-12 e previsione di 11 sessioni nello scenario raccomandato). Le parti A–E (§3) non sono cambiate.
+La stima è una **previsione**, non una durata garantita, e non apre il post-v2: lo stato resta «non aperto».
 **Riferimenti:** `docs/V2-CLOSURE.md`, domanda 6 (e la voce V2C-37); `docs/ROADMAP-v2.md` §8 per ogni decisione
 presa.
 
@@ -132,18 +136,99 @@ Il blog è una pubblicazione statica, non una lista caricata solo via JavaScript
 
 Il piano non dichiara una dipendenza esplicita di E dalle altre parti.
 
-## 4. Ciò che il piano non stabilisce
+## 4. Sequenza e stima delle sessioni (previsione aggiornata al 4 novembre 2026)
 
-- **Una stima di sessioni.** Il piano diceva «circa 4–5 sessioni», ma con una numerazione che non è più quella
-  attuale. La stima va rifatta quando il post-v2 si apre.
-- **Un ordine di pubblicazione di E rispetto al resto.**
+Questa sezione sostituisce la stima originale di «circa 4–5 sessioni» (e la numerazione «12–16» con cui era
+espressa), che era una pianificazione compressa: accorpava data readiness e ricerca frontend, prevedeva una
+sola sessione per i tre prototipi e non separava la verifica finale dal lavoro di implementazione. La nuova
+stima adotta lo stesso criterio della v2: ricerca, progettazione, implementazione e verifica hanno ciascuna un
+deliverable e una condizione di uscita verificabili.
+
+**È una previsione, non una durata garantita.** Ogni sessione chiude con il proprio checkpoint e parte solo con
+l'approvazione dell'autore. Non si accorpano sessioni per rispettare il conteggio; se un gate fallisce o emerge
+un problema sostanziale, ci si ferma, si documenta e si stima il lavoro aggiuntivo.
+
+**Numerazione.** `PV2-NN`, distinta dalla numerazione «v2 Session N» di `docs/ROADMAP-v2.md` (le due serie non
+sono collegate).
+
+### 4.1 Le sessioni
+
+| Sessione | Attività | Condizione di uscita |
+|---|---|---|
+| PV2-01 | A — Data readiness | Inventario dei dataset e delle metriche candidate; definizioni, fonti, formule, denominatori, periodi, trattamento dei valori mancanti, limiti e test documentati |
+| PV2-02 | B — Ricerca e selezione dei riferimenti frontend open source | Matrice dei repository e delle demo, manutenzione, licenze, stack, accessibilità, responsive, temi e pattern; shortlist e tre direzioni grafiche descritte |
+| PV2-03 | C — Prototipo Editoriale | Prima direzione implementata sulle viste e sugli stati concordati |
+| PV2-04 | C — Prototipo Policy Observatory | Seconda direzione implementata con gli stessi contenuti e criteri di confronto |
+| PV2-05 | C — Prototipo Ibrido e selezione | Terza direzione, confronto omogeneo dei tre prototipi e decisione esplicita dell'autore |
+| PV2-06 | D — Design system e struttura | Token, componenti riusabili, layout e pattern approvati; nessuna modifica ai dati canonici non autorizzata |
+| PV2-07 | D — Redesign delle viste | Implementazione incrementale delle pagine principali e della navigazione sulla base del prototipo selezionato |
+| PV2-08 | D — Infografiche e visualizzazioni | Grafici, tooltip e alternative testuali fondati sulle metriche approvate in A |
+| PV2-09 | D — Motion, temi e accessibilità | Passaggio giorno/notte, microanimazioni, responsive, tastiera, contrasto e `prefers-reduced-motion`; regressioni mirate |
+| PV2-10 | E — Blog statico e SEO | Archivio e pagine articolo autonomamente indicizzabili, template, metadati, sitemap e controlli automatici |
+| PV2-11 | Final QA e rilascio | Verifica integrata di contenuti, rendering, accessibilità, SEO, CSP, prestazioni e regressioni; checklist di rilascio |
+| PV2-12 | Buffer eventuale | Correzioni sostanziali emerse dai gate, che non possono essere chiuse nel perimetro assegnato |
+
+**PV2-12 non è una sessione ordinaria.** Si attiva solo se PV2-11, o una sessione precedente, rileva problemi che
+non possono essere chiusi nel perimetro assegnato. Non rientra nel conteggio dello scenario raccomandato.
+
+L'ordine delle righe è l'ordine di esecuzione previsto: data readiness → selezione frontend → prototipi →
+redesign e visualizzazioni → blog → final QA. L'ordine di PV2-10 non stabilisce una dipendenza di E dalle altre
+parti (vedi §5).
+
+### 4.2 La stima
+
+| Scenario | Sessioni |
+|---|---:|
+| Efficiente | 8–9 — possibile solo con prototipi e redesign circoscritti e poche iterazioni |
+| **Realistico, raccomandato** | **11** (PV2-01…PV2-11) |
+| Conservativo | 12–13 — se emergono revisioni sostanziali del design system, problemi di accessibilità o responsive, o regressioni d'integrazione |
+| Buffer | PV2-12, soltanto se necessaria (vedi sopra) |
+
+Ripartizione dello scenario raccomandato:
+
+| Blocco | Sessioni | Sessioni PV2 | Nota |
+|---|---:|---|---|
+| A — Data readiness | 1 | PV2-01 | Audit e contratto delle metriche; è un gate per le visualizzazioni |
+| B — Ricerca frontend | 1 | PV2-02 | Ricerca documentata, matrice comparativa e licenze |
+| C — Prototipi | 3 | PV2-03, 04, 05 | Una sessione per ciascuna direzione; la terza include il confronto e la selezione |
+| D — Redesign e visualizzazioni | 4 | PV2-06, 07, 08, 09 | Design system, pagine, grafici e infografiche, motion e accessibilità |
+| E — Blog SEO | 1 | PV2-10 | Architettura statica, template, metadati e sitemap |
+| Final QA | 1 | PV2-11 | Verifica integrata e rilascio |
+| **Totale** | **11** | | Più PV2-12 soltanto se necessaria |
+
+**Presupposti e rischi.** La stima presuppone che A non richieda una revisione sostanziale dei dataset canonici
+e che il redesign D mantenga l'architettura dei dati e i gate esistenti. Una modifica strutturale ai dati, alla
+Content-Security-Policy o al modello di evidenza richiede una decisione di scope e una stima separata: non si
+assorbe silenziosamente nel redesign. D è il principale fattore di rischio e di durata: il blocco non si
+comprime a due sessioni per rispettare un calendario, perché include sistema di componenti, viste,
+visualizzazioni, temi, microanimazioni, responsive e accessibilità. Il blocco C deve garantire che le tre
+direzioni siano confrontate con gli stessi contenuti e nelle stesse condizioni, non soltanto che esistano tre
+homepage dimostrative.
+
+**Evidence Navigator.** Escluso dal conteggio e da questo piano di implementazione: lo scrive l'autore, in un
+percorso separato. Non se ne anticipano implementazione, scaffolding o integrazione nelle sessioni PV2.
+
+**Che cosa la stima non fa.** Non apre il post-v2 e non chiude la v2: per entrambi restano le condizioni del §2 e
+una decisione esplicita dell'autore, registrata in `docs/ROADMAP-v2.md` §8. Non misura il successo dal numero di
+file o schermate aggiunti, ma dal miglioramento della qualità legale, dalla provenienza verificabile,
+dall'assenza di regressioni e dalla possibilità del lettore di capire che cosa il sistema sa e che cosa non sa.
+
+## 5. Ciò che il piano non stabilisce
+
+- **Una stima di sessioni nel piano originale.** Il piano diceva «circa 4–5 sessioni», con una numerazione che
+  non era più quella attuale. È stata rifatta il 4 novembre 2026: vedi §4, che la sostituisce. Il testo originale
+  resta in `docs/prompts/v2-session-6.md`, come storia.
+- **Un ordine di pubblicazione di E rispetto al resto.** La sequenza del §4.1 mette E dopo D come ordine di
+  esecuzione previsto; il piano non dichiara che E dipenda da D.
 - **Che il redesign sia giusto.** La direzione la sceglie l'autore dopo il confronto dei prototipi.
 - **Alcuna licenza o alcun riuso.** Ogni scelta richiede la verifica della licenza al momento della scelta.
 
-## 5. Domande aperte per l'autore
+## 6. Domande aperte per l'autore
 
 1. Il post-v2 si apre, e quando? (`docs/V2-CLOSURE.md`, domanda 6.)
 2. La parte A (data readiness) può partire prima della chiusura formale della v2, perché non tocca il contenuto?
 3. Il gate di B richiede la griglia approvata prima della ricerca, come scritto nel piano?
-4. La stima di sessioni va rifatta: chi la fa, e in quale sessione?
+4. ~~La stima di sessioni va rifatta: chi la fa, e in quale sessione?~~ **Rifatta dall'autore il 4 novembre 2026**
+   (§4), come previsione. Resta aperto se e quando registrarla in `docs/ROADMAP-v2.md` §8: l'aggiornamento di
+   questo documento non lo fa.
 5. Il Kabarza resta un riferimento visivo esterno, come scritto nel piano?
