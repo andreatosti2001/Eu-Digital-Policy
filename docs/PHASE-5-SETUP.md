@@ -1,6 +1,7 @@
 # PHASE 5 SET-UP — "what applies", advanced: the material, an entry condition and an exit that can fail, and the sessions
 
-**Status: A PROPOSAL, PUT TO THE AUTHOR; IT DECIDES NOTHING UNTIL ROADMAP §8 SAYS SO.** Written on 4 Nov 2026 in v2
+**Status: APPROVED BY THE AUTHOR ON 4 NOV 2026 (roadmap §8, v2 Session 25, 25.4 questions 1–7; the answers in §7). PHASE 5
+IS PLANNED AND NOT OPENED**: it opens on the author's word against E5-1…E5-7 (§3). Written on 4 Nov 2026 in v2
 Session 25 (item 25.4, after the session stopped at 25.0), on `claude/inspiring-meitner-c7s9le`, at the author's request
 ("generate the set up for phase 5, acknoledging the sessions required in coherence with the previous phases"; roadmap §8,
 "v2 Session 25, 25.4: the set-up of Phase 5"). **"Roadmap §8" means that approval record throughout.** It adds no field,
@@ -32,6 +33,9 @@ unintelligent", "there is no decision tree in the JavaScript — the reasoning l
 ---
 
 ## 0 · Three premises to put to the author before anything else
+
+*Decided on 4 Nov 2026 (§7): P-A depth, P-B design before and changes after, P-C from Session 27. The text below is the
+proposal as it was put.*
 
 **P-A · What "advanced" means.** The roadmap names Phase 5 and does not define it. Three readings, measured against the
 records of 4 Nov 2026:
@@ -68,7 +72,7 @@ Each item exists because a roadmap §8 row sent it here. Each stays open until i
 | M-3 | **F-24**, `ap-pld-01` and deployers | group (b) | The rule fires for `activity:ai-deployment` through the actor dimension only (Art. 8(2)). Activity list unchanged. |
 | M-4 | **R-8**, GDPR Art. 2(2)(a) and (b) carried by no rule | §8, 24.2 R-8 | `ap-gdpr-01` carries (c), `ap-gdpr-03` (d); (a) and (b) are carried by none, so the matcher can answer "applies" where the GDPR does not reach. "Adding the exemptions is simple, deciding which answers trigger them is 'what applies, advanced'." |
 | M-5 | **V2C-15**, what `stratum` meant | §8, 17.5.0 question 2, destination 4 | `stratum` was dropped (D-8, 25 Oct 2026); "what it meant is to be derived from the actors and the edge kinds", and nothing derives it. |
-| M-6 | **R-1**, `agent/integrate/preserve.mjs` and the rules | §8, 24.2 R-1 ("to Phase 5 if 'what applies, advanced' lets an agent propose a change to a rule") | `canonicalOf()` resolves no rule, so a DataProposal naming one is refused; the suite fails if it learns rules. **Conditional**: live only if Phase 5 lets an agent propose a rule change. |
+| M-6 | **R-1**, `agent/integrate/preserve.mjs` and the rules | §8, 24.2 R-1 ("to Phase 5 if 'what applies, advanced' lets an agent propose a change to a rule") | `canonicalOf()` resolves no rule, so a DataProposal naming one is refused; the suite fails if it learns rules. **Closed for Phase 5** (§7, question 4): no agent proposes a rule change; `preserve.mjs` and its tripwire are left. |
 | M-7 | **The unasked facts** | `docs/PHASE-3-AUDIT.md` §6 ("that is the gap an 'advanced' phase would address") | §0, P-A's first row: 38 `depends_on` items, 4 threshold keys, 26 exemptions. The page shows them; the matcher evaluates none. |
 
 **Listed in `docs/PHASE-3-AUDIT.md` §6 and not Phase 5's**, so a session does not reopen them by accident:
@@ -92,7 +96,7 @@ Each item exists because a roadmap §8 row sent it here. Each stays open until i
 | `i18n/locales.json` | **uses** | Every new questionnaire string is registered; the it/fr/es editions stay `pending_translation` until reviewed (V2C-27; a translation review is never an agent's, `docs/AI-SAFE-BOUNDARIES.md` §3). |
 | `data/taxonomy.json` | **extends by adding only** | New dimension terms may be added; no ID is renamed. |
 | The browser suite (`agent/browser/`) | **extends** | The one check that sees the rendered questionnaire: an unanswered question must render as unanswered (X5-3). |
-| `agent/integrate/preserve.mjs` | **leaves** — unless P-D below lets an agent propose a rule change (M-6) | The refusal fails closed; its suite is the tripwire. |
+| `agent/integrate/preserve.mjs` | **leaves** (P-D decided: no agent proposes a rule change, §7 question 4) | The refusal fails closed; its suite is the tripwire. |
 | The production dispatcher, the decision ledger, readiness, the adversarial gate, `ALLOWED_RUNTIME_ORIGINS`, any network request by a tool | **leaves** | As Phase 4 left them (X-3). Nothing in "what applies" needs any of them. |
 | D-5 (CMS, login) | **leaves** | Deferred past Phase 4 (§8, 24.3); nothing here needs a login. |
 
@@ -142,7 +146,7 @@ changes anything outside `docs/`.
 | 12 Jan–2 Feb 2027 | **S25, S26 · The reading** (maintenance, already prompted) | The 33 rules re-read in the form; the statuses at their milestones. **Not Phase 5**: they change a rule only as maintenance does. S26 writes the prompt of S28, carrying S27's design. | All 33 rules dated in January 2027; E5-5 met |
 | Feb 2027 | **S28 · The standard as a check, and group (b)** | **28.1** E5-3 implemented in `tools/trigger-audit.mjs` (Class C), with `selftest` cases, at ERROR before any new trigger exists; **28.2** M-1, M-2, M-3, M-4, one question each, the Articles read in that session; a rule that changes is a closure in the form | checkpoint after 28.1; final |
 | Feb–Mar 2027 | **S29 · The questionnaire** | The askable items of X5-1 as data in `data/applicability.json` and `data/taxonomy.json`, the matcher's intersections, `applies.html` and `js/applies.js`, the i18n register, the browser checks of X5-3, `$limits` and the notice per X5-5 | checkpoint per batch of instruments |
-| Mar 2027 | **S30 · Derivations and exit** | M-5 (V2C-15), if the author keeps it; M-6 if P-D let an agent propose rules; the exit audit X5-1…X5-7; the hand-over (§5.3) | Phase 5 concluded on the author's word, or the named residue |
+| Mar 2027 | **S30 · Derivations and exit** | M-5 (V2C-15), kept (§7 question 5), and only if the map sessions' V2C-13 has run — otherwise named residue; the exit audit X5-1…X5-7; the hand-over (§5.3) | Phase 5 concluded on the author's word, or the named residue |
 | before 13 Apr 2027 | **S31 · Buffer, only if needed** | Whatever S28–S30 could not close, named | |
 
 **Stop rules.** (1) In S27, the paper test (27.4) goes first, then 27.3 moves to S28's opening; 27.1 and 27.2 never move.
@@ -211,11 +215,24 @@ Each with the recommendation first; each answer recorded in roadmap §8 in the a
 7. **The sessions of §5.1**, as drafted (recommended) · amended. Approval of this question approves the plan, as the §8 row
    citing `docs/PHASE-4-PLAN.md` did for Phase 4.
 
+### The author's answers (4 Nov 2026, roadmap §8, v2 Session 25, 25.4 questions 1–7)
+
+1. **P-A:** "Depth (Recommended)".
+2. **P-B:** "Design before, changes after (Recommended)".
+3. **P-C:** "From 27, numbers name work (Recommended)".
+4. **P-D:** "No agent proposals (Recommended)" — M-6 closed for Phase 5.
+5. **M-5:** "Keep, after V2C-13 (Recommended)".
+6. **E5-1…E5-7, X5-1…X5-7:** "Approve as drafted (Recommended)".
+7. **The sessions of §5.1:** "Approve as drafted (Recommended)" — with 1–6, the plan is approved.
+
+After these answers E5-1, E5-2 and E5-4 hold (E5-4: M-1…M-4 to S28, M-5 to S30, M-6 closed, M-7 to S27–S29); E5-3 is
+S27's to write, E5-5 waits for Sessions 25 and 26, E5-6 is measured at the opening.
+
 ## 8 · What this document does not establish
 
 - **Any fact about any instrument.** Every count here is a measurement of `data/` on 4 Nov 2026; no Article was read for
   this document, and nothing here says what any rule should say.
-- **That Phase 5 is open.** It opens on the author's word, on E5-1…E5-7 (or what the author decides instead).
+- **That Phase 5 is open.** It opens on the author's word, on E5-1…E5-7. The approval of this plan does not open it.
 - **That depth is right.** It is the recommendation that follows from the brief's words; the author may choose otherwise.
 - **That five sessions suffice.** The count assumes S27–S30 each close what they name; S31 exists because it is an estimate.
 - **That any `depends_on` item can be asked.** 27.3 measures that; this document only counts them.

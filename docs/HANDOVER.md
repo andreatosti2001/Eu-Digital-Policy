@@ -58,7 +58,12 @@ nothing until §8 does**:
   the phases are placed beside Phase 5.
 - **Seven questions for the author.**
 
-No question was put yet. Validators 0 errors (`validate.mjs` 5 warnings, the baseline), `tools/selftest.mjs` 140/140.
+**The seven questions were put one at a time and answered on 4 Nov 2026** (§8, 25.4 questions 1–7, `24809f6` … `fa880aa`),
+each recommendation chosen: depth; design before, changes after; Sessions 27 onward; no agent rule proposals (M-6 closed);
+V2C-15 kept after V2C-13; E5-1…E5-7 and X5-1…X5-7 as drafted; the sessions as drafted. **The plan is approved and Phase 5 is
+not opened**: it opens on the author's word against E5-1…E5-7; E5-3 is Session 27's to write and E5-5 waits for Sessions 25
+and 26. The document's status line, M-6, Session 30's row and §7 now carry the answers. Validators 0 errors (`validate.mjs`
+5 warnings, the baseline), `tools/selftest.mjs` 140/140.
 `AGENTS.md`'s document table does not list the new file; that, with the status lines still saying Phase 4 is open, is
 status-document work for after the author's answers.
 
