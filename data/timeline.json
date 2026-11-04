@@ -1246,7 +1246,7 @@
     "sector:manufacturing",
     "sector:cross-sector"
    ],
-   "obligation": "The revised Product Liability Directive applies to products placed on the market or put into service after this date. Software and AI fall within strict product liability.",
+   "obligation": "The revised Product Liability Directive applies to products placed on the market or put into service from this date. Software and AI fall within strict product liability.",
    "required_action": "Reassess liability exposure for software and AI-enabled products.",
    "authority": [
     "member-states"
@@ -1260,8 +1260,8 @@
     "src-eurlex-pld"
    ],
    "requires_verification": false,
-   "verification_note": "The brief's Annex A gives only 'Dec 2026'. The precise date of 9 December 2026 comes from Art. 2(1) of Directive (EU) 2024/2853 as recorded in the OJ.",
-   "last_verified": "2026-08-27"
+   "verification_note": "The brief's Annex A gives only 'Dec 2026'. 4 Nov 2026 (v2 Session 24): read in the Official Journal text of Directive (EU) 2024/2853 retrieved from the Publications Office's Cellar by CELEX (32024L2853) and its corrigendum 32024L2853R(01) of 7 May 2026: Art. 2(1), as corrected, applies the Directive to products placed on the market or put into service after 8 December 2026, and Art. 21 repeals Directive 85/374/EEC with effect from 9 December 2026, so the Directive applies from 9 December 2026; 'after this date' became 'from this date' on the author's decision (roadmap §8, v2 Session 24, 24.2: R-9).",
+   "last_verified": "2026-11-04"
   },
   {
    "id": "tl-pld-2026-12-09-transposition",

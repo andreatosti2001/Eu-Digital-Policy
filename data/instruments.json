@@ -2120,14 +2120,14 @@
           "id": "pld:art-2",
           "number": "2",
           "heading": "Scope",
-          "summary": "Applies to products placed on the market or put into service after 9 December 2026 (2(1)). It does not apply to free and open-source software developed or supplied outside the course of a commercial activity (2(2)), or to damage from nuclear accidents in so far as liability for it is covered by international conventions ratified by Member States (2(3)).",
+          "summary": "Applies to products placed on the market or put into service after 8 December 2026 (2(1), as corrected on 7 May 2026). It does not apply to free and open-source software developed or supplied outside the course of a commercial activity (2(2)), or to damage from nuclear accidents in so far as liability for it is covered by international conventions ratified by Member States (2(3)).",
           "obligation_on": [],
           "claims": [],
           "sources": [
             "src-eurlex-pld"
           ],
           "requires_verification": false,
-          "verification_note": "Added 29 Oct 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024L2853); number and heading as printed, summary from the Article's own paragraphs."
+          "verification_note": "Added 29 Oct 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024L2853); number and heading as printed, summary from the Article's own paragraphs. 4 Nov 2026 (v2 Session 24): the corrigendum 32024L2853R(01) of 7 May 2026, read that day by CELEX, corrects Art. 2(1) from 'after 9 December 2026' to 'after 8 December 2026'; the summary follows it (roadmap §8, v2 Session 24, 24.2: R-9)."
         },
         {
           "id": "pld:art-4",

@@ -975,7 +975,7 @@
       },
       "outcome": "outcome:possible",
       "rationale": "Public administration entities are within NIS2's sectoral scope, but Member States retain latitude in how far down the administrative hierarchy the Directive is transposed. This is precisely where the transposition patchwork bites hardest.",
-      "obligations": ["nis2:art-21", "nis2:art-23"],
+      "obligations": ["nis2:art-20", "nis2:art-21", "nis2:art-23"],
       "authority": ["nca-*"],
       "dates": ["tl-nis2-2024-10-17-transposition"],
       "exemptions": [
@@ -985,15 +985,24 @@
       "depends_on": ["How the Member State has transposed the public administration sector.", "Whether national security functions are carved out."],
       "claims": ["clm-nis2-transposition-failure"],
       "sources": [
-        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 2(2)(f) and (5)(a); Art. 6 point (35); Annex I, point 10", "for": "scope" },
-        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 21(1) and (2); Art. 23(1) and (4)", "for": "obligation" }
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 2(2)(f) and (5)(a); Art. 3(1)(d) and (2); Art. 6 point (35); Annex I, point 10", "for": "scope" },
+        { "source_id": "src-eurlex-nis2", "supports": "supports:direct", "locator": "Art. 20(1) and (2); Art. 21(1) and (2); Art. 23(1) and (4)", "for": "obligation" }
       ],
       "condition_provisions": {
         "actor": ["nis2:art-2", "nis2:art-6"],
         "activity": ["nis2:art-2"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 6 point (35), 21, 23 and 41 and Annex I, point 10. The Publications Office's metadata lists no act amending the Directive and nine corrigenda, of which only R(04) has an English expression; it corrects Art. 19(1) and touches nothing cited here. NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national (the author's decision of 29 Oct 2026). On the author's decision of 29 Oct 2026 the Art. 2(7) exemption is added; depends_on still covers what Member States may add under Art. 2(8). Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 24): re-read in the Official Journal text of Directive (EU) 2022/2555 retrieved from the Publications Office's Cellar by CELEX (32022L2555): Arts 2, 3, 6, 20, 21, 23 and 41 and Annex I. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Directive and nine corrigenda, of which only R(04) has an English expression; it corrects Art. 19(1) and touches nothing cited here. Public administration entities of central government, and those at regional level that, following a risk-based assessment, provide services the disruption of which could have a significant impact on critical societal or economic activities, are within the Directive regardless of size (Art. 2(2)(f); Annex I, point 10; the entity as defined in Art. 6 point (35)); Member States may extend it to public administration entities at local level (Art. 2(5)(a)). Those of central government are essential entities (Art. 3(1)(d)) and the others important entities (Art. 3(2)). On the author's decisions of 4 Nov 2026, Art. 3(1)(d) and (2) is cited for scope and Art. 20 is added to the obligations: the management bodies approve and oversee the Art. 21 measures, can be held liable, and follow training — the liability without prejudice to national law on the liability rules applicable to public institutions and on the liability of public servants and elected or appointed officials (Art. 20(1) and (2)). NIS2 is a directive: Arts 20, 21 and 23 are addressed to Member States, so the obligations reach entities only through national law, which the dataset does not hold; national measures apply from 18 October 2024 where adopted (Art. 41(1)), and the operative dates are national. The Art. 2(7) exemption is the Directive's text; depends_on still covers what Member States may add under Art. 2(8). First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome and rationale were not changed. The claims were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-nis2", "locator": "Art. 2; Art. 3; Art. 6; Art. 20; Art. 21; Art. 23; Art. 41; Annex I" }
+        ],
+        "queried": ["src-eurlex-nis2"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 24, 24.1: `ap-nis2-03`'s scope reference and Art. 3", "v2 Session 24, 24.1: `ap-nis2-03`'s obligations and Art. 20"]
+      }
     },
 
     {
@@ -1022,9 +1031,18 @@
       "condition_provisions": {
         "actor": ["dora:art-2"]
       },
-      "last_verified": "2026-10-29",
+      "last_verified": "2026-11-04",
       "requires_verification": false,
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2554 retrieved from the Publications Office's Cellar by CELEX (32022R2554): Arts 2, 4, 5, 6, 16, 17, 19, 24, 28 and 64. The Publications Office's metadata lists no act amending the Regulation and nine corrigenda, none with an English expression. On the author's decision of 29 Oct 2026 the Art. 2(3) and (4) and the Art. 16(1) and 24(1) exemptions are added. Conditions, outcome and rationale were not changed. The claims were not re-read. Earlier: Obligations point at DORA Arts 5, 6, 17, 19, 24 and 28, added on 27 Sep 2026 from the Official Journal text (CELEX 32022R2554); application from 17 January 2025 per Art. 64. Earlier: No provisions are recorded for DORA in instruments.json, so this rule cannot yet point at specific articles. The obligation list is empty rather than invented."
+      "verification_note": "4 Nov 2026 (v2 Session 24): re-read in the Official Journal text of Regulation (EU) 2022/2554 retrieved from the Publications Office's Cellar by CELEX (32022R2554): Arts 2, 4, 5, 6, 16, 17, 19, 24, 28 and 64. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Regulation and nine corrigenda, R(01) to R(09), none with an English expression. The financial entities are those of Art. 2(1), points (a) to (t) (Art. 2(2)). The rationale's four areas are the obligations cited: the ICT risk management framework and its governance (Arts 5 and 6), the ICT-related incident management process and the reporting of major ICT-related incidents (Arts 17 and 19), the digital operational resilience testing programme (Art. 24) and the management of ICT third-party risk (Art. 28); the Regulation applies from 17 January 2025 (Art. 64). The exemptions are Art. 2(3) and (4); Art. 16(1), under which the entities it lists maintain a simplified ICT risk management framework instead of Arts 5 to 15; and Art. 24(1), which requires the testing programme of financial entities other than microenterprises. The proportionality depends_on refers to is Art. 4: size, overall risk profile, and the nature, scale and complexity of services, activities and operations. Read against the rule, nothing was found to change. First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome, rationale, obligations and exemptions were not changed. The claims were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-dora", "locator": "Art. 2; Art. 4; Art. 5; Art. 6; Art. 16; Art. 17; Art. 19; Art. 24; Art. 28; Art. 64" }
+        ],
+        "queried": ["src-eurlex-dora"],
+        "outcome": "unchanged",
+        "decisions": []
+      }
     },
     {
       "id": "ap-dora-02",
@@ -1050,9 +1068,18 @@
         "actor": ["dora:art-2", "dora:art-3"],
         "activity": ["dora:art-3"]
       },
-      "last_verified": "2026-10-29",
+      "last_verified": "2026-11-04",
       "requires_verification": false,
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2554 retrieved from the Publications Office's Cellar by CELEX (32022R2554): Arts 2(1)(u), 3 points (19), (21) and (23), 28, 30, 31, 33 and 64. The Publications Office's metadata lists no act amending the Regulation and nine corrigenda, none with an English expression. Art. 28 binds the financial entity, so it reaches the provider only through the contract (Art. 30). Conditions, outcome and rationale were not changed. Earlier: The oversight allocation is now established: under DORA Art. 31(1) the ESAs designate critical ICT third-party service providers through the Joint Committee and appoint as Lead Overseer the ESA responsible for the financial entities holding the largest share of total assets among the provider's users (Official Journal, CELEX 32022R2554, read 27 Sep 2026). Earlier: The allocation of the DORA oversight framework between the three ESAs is not established from a primary source in this build."
+      "verification_note": "4 Nov 2026 (v2 Session 24): re-read in the Official Journal text of Regulation (EU) 2022/2554 retrieved from the Publications Office's Cellar by CELEX (32022R2554): Arts 2, 3, 28, 30, 31, 33 and 64. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Regulation and nine corrigenda, R(01) to R(09), none with an English expression. ICT third-party service providers are within the Regulation (Art. 2(1), point (u)): an undertaking providing ICT services (Art. 3 points (19) and (21)). Art. 28 binds the financial entity, so it reaches the provider through the contract, whose key provisions Art. 30(1) and (2) set out, with Art. 30(3) adding to them for ICT services supporting critical or important functions. A provider designated critical by the ESAs through the Joint Committee under Art. 31(1) and (2) (Art. 3 point (23)) is overseen by its Lead Overseer (Art. 33(1)). Art. 31 also binds such a provider directly: one that is part of a group designates one legal person as a coordination point (Art. 31(4)), and it notifies the financial entities it serves of its designation (Art. 31(5)). Under Art. 31(8), designation does not apply to financial entities providing ICT services to other financial entities, to providers subject to oversight frameworks supporting the tasks of Art. 127(2) TFEU, to ICT intra-group service providers, or to providers serving, solely in one Member State, financial entities active only there. Under Art. 31(7), designation was not to be used until the Commission had adopted the delegated act of Art. 31(6); that act was not read here. The Regulation applies from 17 January 2025 (Art. 64). Read against the rule, nothing was found to change. First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome, rationale and obligations were not changed. The rule cites no claim.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-dora", "locator": "Art. 2; Art. 3; Art. 28; Art. 30; Art. 31; Art. 33; Art. 64" }
+        ],
+        "queried": ["src-eurlex-dora"],
+        "outcome": "unchanged",
+        "decisions": []
+      }
     },
 
     {
@@ -1097,7 +1124,7 @@
         "activity": ["activity:connected-products", "activity:ai-deployment", "activity:ai-development", "activity:product-with-digital-elements"]
       },
       "outcome": "outcome:likely",
-      "rationale": "The revised Product Liability Directive brings software and AI within strict product liability for products placed on the market or put into service after 9 December 2026. This is civil liability before national courts, not an administrative penalty regime — and the proposed AI Liability Directive, which would have covered the fault-based route, was abandoned.",
+      "rationale": "The revised Product Liability Directive brings software and AI within strict product liability for products placed on the market or put into service from 9 December 2026. This is civil liability before national courts, not an administrative penalty regime — and the proposed AI Liability Directive, which would have covered the fault-based route, was abandoned.",
       "obligations": [],
       "authority": ["member-states"],
       "dates": ["tl-pld-2026-12-09-application"],
@@ -1115,8 +1142,17 @@
         "actor": ["pld:art-4", "pld:art-8"],
         "activity": ["pld:art-2", "pld:art-4"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 13, the pilot): brought to the v2 shape. Read that day in the Official Journal text of Directive (EU) 2024/2853 retrieved from the Publications Office's Cellar by CELEX (32024L2853): Arts 1, 2, 4 points (1), (10) and (15), 8, 22 to 24, and recital 13. The exemption is Art. 2(2). Conditions, outcome and rationale were not changed. A deployer of an AI system is liable under Art. 8 only as a manufacturer or as one who substantially modifies a product (Art. 8(2)), so activity:ai-deployment fires only through the actor dimension: reported to the author, not changed. clm-aild-abandoned was not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 24): re-read in the Official Journal text of Directive (EU) 2024/2853 retrieved from the Publications Office's Cellar by CELEX (32024L2853): Arts 1, 2, 4, 8 and 21 to 24, and recital 13. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Directive and two corrigenda: R(01) of 7 May 2026, which has an English expression, and R(02) of 29 Sep 2026, which has none and was not read. R(01), read that day by CELEX (32024L2853R(01)), corrects Art. 2(1) to read 'This Directive shall apply to products placed on the market or put into service after 8 December 2026'; Art. 21 repeals Directive 85/374/EEC with effect from 9 December 2026 and keeps it for products placed on the market or put into service before that date. The Directive therefore covers products placed on the market or put into service from 9 December 2026, and on the author's decision of 4 Nov 2026 the rationale says 'from' where it said 'after'. Software is a product (Art. 4(1)); a developer or producer of software, including AI system providers within the meaning of Regulation (EU) 2024/1689, should be treated as a manufacturer (recital 13; Art. 4(10)). Liability falls on the economic operators of Art. 8; a deployer of an AI system is liable only as a manufacturer or as one who substantially modifies a product (Art. 8(2)), so activity:ai-deployment fires only through the actor dimension, as reported to the author on 29 Oct 2026 and not changed. The exemption is Art. 2(2). Member States bring their measures into force by 9 December 2026 (Art. 22(1)). First brought to the v2 shape on 29 Oct 2026 (v2 Session 13, the pilot). Conditions, outcome and obligations were not changed. clm-pld-covers-software and clm-aild-abandoned were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-pld", "locator": "Art. 1; Art. 2; Art. 4; Art. 8; Art. 21; Art. 22; Art. 23; Art. 24; Recital 13" }
+        ],
+        "queried": ["src-eurlex-pld"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 24, 24.1: `ap-pld-01`'s rationale and the corrigendum to Art. 2(1)"]
+      }
     },
 
     {
@@ -1142,9 +1178,20 @@
       "condition_provisions": {
         "activity": ["eidas2:art-2", "eidas2:art-3"]
       },
-      "last_verified": "2026-10-29",
+      "last_verified": "2026-11-04",
       "requires_verification": false,
-      "verification_note": "Rebuilt on 27 Sep 2026 from the Official Journal texts of Regulation (EU) 2024/1183 (Art. 5a(1) as inserted) and Implementing Regulation (EU) 2024/2981; it replaces a placeholder that stated its own emptiness. Its scope is deliberately narrow: only the Member States' wallet obligation is mapped. 27 Oct 2026: re-read for item 2.2 in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX (32024R1183, 32024R2977, 32024R2981), with the Publications Office's SPARQL metadata (each implementing regulation in force, entry into force 2024-12-24); unchanged. The rationale's sentence 'This dataset maps the framework as adjacent: the brief does not analyse it' was removed when eidas2 became a covered instrument, on the author's decision of 27 Oct 2026. 29 Oct 2026 (v2 Session 13, the pilot): brought to the v2 shape. Read that day in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX: 32024R1183 Art. 1 points (2)(a) and (b), (3)(a), (b), (c) and (j), and (5) (Arts 2(1), 2(4), 3(42), 5a(1), 5a(23) and 5c(6) of Regulation (EU) No 910/2014, as replaced, added and inserted); 32014R0910, the headings of Arts 2 and 3; 32024R2977, its citation and Art. 6; 32024R2981, its citation and Art. 22. The wallet deadline (tl-eidas2-2026-12-24-compliance-deadline) is stored in dates because a compliance deadline is not derived. Conditions, outcome and rationale were not changed."
+      "verification_note": "4 Nov 2026 (v2 Session 24): re-read in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX: Regulation (EU) 2024/1183 (32024R1183), Arts 1 and 2 — Art. 1 in full, points (1) to (53), among them points (2)(a), (3)(j) and (5), which replace Art. 2(1), add Art. 3 point (42) and insert Arts 5a to 5f of Regulation (EU) No 910/2014; Commission Implementing Regulation (EU) 2024/2977 (32024R2977), its citation and Art. 6; Commission Implementing Regulation (EU) 2024/2981 (32024R2981), its citation and Art. 22. The Publications Office's SPARQL endpoint, queried that day: Regulation (EU) 2024/1183, no amending or repealing act and seven corrigenda, R(01) to R(07), of which only R(02) has an English expression; read, it corrects Art. 5a(16)(b) ('unlinkability') and the references to delegated acts in Art. 47, nothing cited here. Implementing Regulation (EU) 2024/2977, one corrigendum with no English expression and one amending act, Commission Implementing Regulation (EU) 2026/1731 of 15 July 2026 (32026R1731), read: its Art. 1 inserts Art. 3a and replaces Art. 4(1), Art. 5(4)(b) and the Annex of 2024/2977, and leaves its citation and Art. 6 as they were. Implementing Regulation (EU) 2024/2981, no amending act and no corrigendum. Under Art. 5a(1), each Member State shall provide at least one European Digital Identity Wallet within 24 months of the date of entry into force of the implementing acts referred to in Art. 5a(23) and Art. 5c(6); 2024/2977, adopted under Art. 5a(23), and 2024/2981, adopted under Art. 5c(6), were both published on 4 Dec 2024 and entered into force on the twentieth day following, 24 December 2024. The wallet deadline (tl-eidas2-2026-12-24-compliance-deadline) is stored in dates because a compliance deadline is not derived. The rule covers the wallet obligation only; the obligations on relying parties (Arts 5b and 5f) are named in depends_on and not mapped. Read against the rule, nothing was found to change. Rebuilt on 27 Sep 2026 and first brought to the v2 shape on 29 Oct 2026 (v2 Session 13, the pilot). Conditions, outcome, rationale and obligations were not changed. clm-eidas2-wallets was not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-eidas2", "locator": "Art. 1; Art. 2" },
+          { "source_id": "src-eurlex-eudi-2024-2977", "locator": "Art. 6" },
+          { "source_id": "src-eurlex-eudi-2024-2981", "locator": "Art. 22" }
+        ],
+        "queried": ["src-eurlex-eidas2", "src-eurlex-eudi-2024-2977", "src-eurlex-eudi-2024-2981"],
+        "outcome": "unchanged",
+        "decisions": []
+      }
     },
 
     {

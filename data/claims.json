@@ -3525,7 +3525,7 @@
     {
       "id": "clm-pld-covers-software",
       "type": "claim-type:law",
-      "statement": "The revised Product Liability Directive brings software and AI within strict product liability, applying to products placed on the market or put into service after 9 December 2026.",
+      "statement": "The revised Product Liability Directive brings software and AI within strict product liability, applying to products placed on the market or put into service from 9 December 2026.",
       "instruments": [
         "pld"
       ],
@@ -3538,14 +3538,14 @@
         {
           "source_id": "src-eurlex-pld",
           "supports": "supports:direct",
-          "locator": "Arts. 2(1), 4(1), recital 13"
+          "locator": "Arts. 2(1), 4(1), 21, recital 13"
         }
       ],
       "legal_basis": [],
       "brief_part": "part-5",
       "published": "2024-11-18",
-      "last_verified": "2026-08-27",
-      "verification_note": "The brief's Annex A gives only 'Dec 2026'. The precise date comes from the Official Journal text."
+      "last_verified": "2026-11-04",
+      "verification_note": "The brief's Annex A gives only 'Dec 2026'. The precise date comes from the Official Journal text. 4 Nov 2026 (v2 Session 24): re-read in the Official Journal text of Directive (EU) 2024/2853 retrieved from the Publications Office's Cellar by CELEX (32024L2853), Arts 2(1), 4(1) and 21 and recital 13, and in its corrigendum 32024L2853R(01) of 7 May 2026, which corrects Art. 2(1) to 'after 8 December 2026'; with Art. 21, which repeals Directive 85/374/EEC with effect from 9 December 2026, the Directive applies to products placed on the market or put into service from 9 December 2026, and 'after 9 December 2026' became 'from 9 December 2026' on the author's decision (roadmap §8, v2 Session 24, 24.2: R-9)."
     },
     {
       "id": "clm-ai-act-art-5-prohibitions",
