@@ -734,6 +734,8 @@ permission.**
 - **At the end of every session**, ask the author whether to open a pull request to `main`,
   and record the branch's disposition in that register. A session whose work is neither
   merged nor closed is a finding for the next session, not background.
+  **Before the final checkpoint, a v2 session writes the next session's prompt** — the rule and
+  its terms are `docs/ROADMAP-v2.md` §8, "A standing rule: the next session's prompt" (4 Nov 2026).
 
 This is the audit's rule ("every session ends with a PR to main") adapted to the standing
 instruction below: a pull request is opened when the author says so, so the obligation is to
