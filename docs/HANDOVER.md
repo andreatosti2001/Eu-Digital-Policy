@@ -1,8 +1,113 @@
 # HANDOVER
 
-**Last updated:** 4 November 2026, at checkpoint 24.1 of v2 Session 24 (the second reading and Phase 4's exit, `docs/PHASE-4-PLAN.md` §3, S24).
+**Last updated:** 4 November 2026, at checkpoint 24.1 and the final checkpoint of v2 Session 24 (the second reading and Phase 4's exit, `docs/PHASE-4-PLAN.md` §3, S24).
 **Branch:** `claude/v2-session-24-exit` (no branch assigned by the environment), cut from `main` at `f44d3f0` (#63 and #64 merged).
-The entries below this session's are unchanged.
+The entries below this s## Branch register — 4 November 2026 (v2 Session 24)
+
+- Branch `claude/v2-session-24-exit` (no branch was assigned by the environment), cut from `main` at `f44d3f0` (#63 and #64
+  merged). Nothing merged in; `origin/main` re-fetched before this entry: still `f44d3f0`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register (left open by the
+  author's decision).
+- The clone was shallow at the start; `git fetch --unshallow` was run before any suite.
+- Disposition: checkpoint 24.1 approved (§8 `c6a5410`); the final checkpoint, whether Phase 4 is concluded, and a pull request are put to the author after this entry.
+
+## v2 Session 24 — final checkpoint (24.2 the exit audit, 24.3 D-5, 24.4 the hand-over and the prompt of Session 25)
+
+Checkpoint 24.1 approved (§8 `c6a5410`).
+
+### 24.2 · The exit audit of Phase 4
+
+**X-1…X-5, measured** (§8 `17c610c`), against `docs/PHASE-4-PLAN.md` §1:
+
+| # | Result | What measures it |
+|---|---|---|
+| X-1 | **met** | §1a, one row per process P-01…P-13, approved in §8 (22.3); every check it names exists and runs where it says |
+| X-2 | **met** | the form in `data/applicability.json`, A-1…A-8 in `tools/attestation-audit.mjs`, `tools/selftest.mjs` AT0–AT15; 25 real closures (20 in S23, 5 in S24), each with its §8 rows |
+| X-3 | **met** | `git diff 40d4dd1..HEAD --stat -- agent/orchestrator agent/implement/decisions agent/production agent/policy/verify tools/thirdparty.mjs` empty; `ALLOWED_RUNTIME_ORIGINS` `[]` (`40d4dd1`: where Phase 4's entry condition was measured) |
+| X-4 | **met by deferral** | D-5 deferred past Phase 4 with its reason (§8 `3e4ea55`) |
+| X-5 | **met** | the final battery below, on a full clone |
+
+**The open findings, each with the destination the author decided** (one question each):
+
+| # | Finding | Destination | §8 |
+|---|---|---|---|
+| R-1 | `agent/integrate/preserve.mjs` checks no rule; fails closed | **left**, with the reason; Phase 5 if an agent may propose rule changes | `b958412` |
+| R-2 | A-4 cannot see a statement on an uncited Article | **maintenance**: `docs/RULE-MAINTENANCE.md` step 1 now says to read rationale, obligations and `depends_on` against the texts (`ee1c9be`) | `65fee3d` |
+| R-3 | the Review Report's PDF page locators (`ap-dma-01`, `-03`) | **maintenance**, at those rules' next reading | `d6831a7` |
+| R-4 | `ap-dma-01` closed with F-18 open | **group (d)**, the evidence session; named in the hand-over and in S25's prompt | `ffd1186` |
+| R-5 | the Data Act's R(07), no English expression (re-queried: still none) | **maintenance**, re-queried at the Data Act rules' next reading | `9ee7283` |
+| R-6 | `ap-ai-act-01`'s `gpai-provider` condition | **Phase 5**, group (b) | `45a08e5` |
+| R-7 | AI Act Art. 2(13) delegated acts by 2 Aug 2027 | **maintenance, dated**: query by 3 Feb 2027 and before 2 Aug 2027 | `bbdfa9e` |
+| R-8 | GDPR Art. 2(2)(a), (b) carried by no rule | **Phase 5** | `b1cf5ab` |
+| R-9 | the PLD's "after 9 December 2026" in four other records | **corrected now** (`96709d8`): claim and event "from", provision summary and source note "after 8 December 2026 (as corrected)" | `823a132` |
+| R-10 | the Treaty headings are labels; the TFEU has no tier-1 source | **the evidence session**, with group (d) | `b1feef4` |
+| R-11 | Implementing Regulation (EU) 2026/1731 recorded nowhere | **left**, with the reason (touches nothing cited; no instrument record to carry it) | `232c191` |
+| R-12 | DORA Art. 31(6) delegated act unread | **maintenance**, at `ap-dora-02`'s next reading | `8d14653` |
+
+R-11 and R-12 were found in 24.1 and numbered here, so that every open finding has a destination.
+
+### 24.3 · D-5
+
+**Deferred past Phase 4, with the reason** (§8 `3e4ea55`): no Phase 4 item needed a person to edit content through a login;
+every change was a commit on the author's word in §8, and the Control Room's OIDC login was untouched. Reopened when a later
+phase first needs that; the two facts of `docs/PHASE-4-SETUP.md` §4 are re-read then (not on 4 Nov 2026). No CMS chosen,
+installed or configured; no origin added.
+
+### 24.4 · The hand-over: the calendar, re-measured on 4 Nov 2026
+
+| Date | What | Measured | Where it goes |
+|---|---|---|---|
+| **3 Feb 2027** | **all 33 rules lapse** (`RULE_STALE` 0 on 2027-02-02, 33 on 2027-02-03) — every closure of Sessions 21, 23 and 24 fell on 4 Nov 2026; the plan's "28" became 33 when this session's five closed that day | `freshness --as-of` | **S25** (GDPR, cross, DSA, DMA: 14) and **S26** (the other 19), both before 3 Feb 2027, on the author's answer "Two sessions (Recommended)" |
+| 2 Dec 2026 – 26 Mar 2027 | statuses meet milestones: ai-act 2 Dec, pld 9 Dec, eidas2 24 Dec, dma 1 Jan, data-act 12 Jan, ehds 26 Mar (`STATUS_PREDATES_MILESTONE`, six, not the plan's four) | `evidence-audit --as-of 2027-03-26` | each reading session re-reads those passed by its date ("In the reading sessions (Recommended)") |
+| **9 Mar 2027** | the limited-autonomy grant expires (`agent/policy/cli.mjs governance`: "expires 2027-03-09T00:00:00Z") | measured | **flagged, not renewed** (a Class D decision) |
+| **26 Mar 2027** | T-12 on `ap-cra-01` (the EHDS's application), still the only one | `evidence-audit --as-of 2027-03-26` | S26 reads `ap-cra-01` before 3 Feb 2027; T-12 then asks a reading after 26 Mar 2027 |
+| before **2 Aug 2027** | R-7: delegated acts under AI Act Art. 2(13) | — | the query, by S26 and again before that date |
+| — | F-18 (R-4) and R-10 | — | group (d)'s evidence session, not yet scheduled |
+
+**The prompt of v2 Session 25**: `docs/prompts/v2-session-25.md` (`9016b47`), in Italian, its provenance carrying the
+author's three answers in the author's words: "S25: the 3 Feb 2027 reading (Recommended)"; "Two sessions (Recommended)"; "In
+the reading sessions (Recommended)". It carries R-3, R-4 and R-8 for its rules, the statuses passed by its date, and, for
+S26's prompt, R-5, R-7, R-12 and `ap-cra-01`'s T-12. It carries the standing rule in its exit criterion, and holds whether or
+not the author declares Phase 4 concluded.
+
+### Counts at the end (4 Nov 2026, `9016b47`, full clone, outputs in the scratchpad) — X-5
+
+`validate` 0 errors · 5 warnings (the five named A-8 cases, at the §12 baseline; `agent/implement/cli.mjs check`
+`at_baseline`, verdict `pass_with_findings`); `i18n-audit` 0 · 0; `design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings
+today, 18 on 2027-03-26), publishable 33 of 33, T-12 only `ap-cra-01`; `freshness` `RULE_STALE` **0 / 0 / 33** today /
+2027-01-28 / 2027-02-03; `seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0 fail · 1 skipped**;
+browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 65 failed safely · 0 succeeded ·
+3 partial · 1 undecidable; schemas check 18 of 18, Control Room boundary and routes exit 0; readiness refuses, **17 of 20**
+(production dispatcher, decision ledger, deploy gate unmeasured), as at the opening; `commit-evidence f44d3f0 HEAD` 34
+commits, 0 without evidence. `git status` empty before and after the battery.
+
+### What was not verified, and why
+
+- **That the law was read**, by any check: the five attestations are declarations (`docs/ATTESTATION-FORM.md` §6).
+- **The claims the five rules cite** were not re-read; each note says so. One claim was re-read and corrected, for R-9.
+- **The two facts of D-5** were not re-read (the author's decision: re-read when D-5 reopens).
+- **TFEU Arts 102, 114 and 173** were read only in their opening lines, for the heading comparison (R-10).
+- **The delegated act of DORA Art. 31(6)** and any act under AI Act Art. 2(13) were not looked for (R-12, R-7).
+- **The corrigenda without an English expression** (NIS2 8, DORA 9, PLD 1, eIDAS2 6 and 2024/2977's one) were not read.
+
+### New findings, not fixed
+
+All of the session's are R-9 … R-12 above, each with its decided destination (R-9 fixed). And the calendar's: **all 33 rules
+lapse on 3 Feb 2027.**
+
+### Checklist
+
+| Item | What was written | How to check it by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 24.0 | §8 scope `5ea0fc5`; Q1 `45571c2`; wording `55a512b` | read the rows; `node --test tools/selftest.mjs` | AT0, F10, X1, Y2–Y6 | the pins asked first |
+| 24.1 | 5 closures `f0fa65f`, `d0fbd29`, `c2b7bd8`, `8d45865`, `6f7542c`; §8 `a12844e`, `d9708e2`, `212b5a7`, `fdb399d`, `402bdd0`, `9ae7f0b`, `3b16381`; report `93e8d28`; approved `c6a5410` | `node tools/attestation-audit.mjs packet <id>` against each `attestation.read`; the OJ texts by CELEX | A-1…A-8 in `validate.mjs`; AT0, AT1, AT9 (`EIDAS2_A8`); F10 (`OLDEST_READ`); Y6 | 5 rules closed in the form; 48 headings |
+| 24.2 | X audit §8 `17c610c`; R-1…R-12 §8 `b958412` … `8d14653`; `ee1c9be` (R-2); `96709d8` (R-9) | `git diff 40d4dd1..HEAD --stat -- …` (X-3); read each R row; the four PLD records | X-5: the battery; `validate`, `seo-audit`, `selftest` on R-9 | X-1…X-5 measured, in §8; R-1…R-12 destined |
+| 24.3 | §8 `3e4ea55` | read the row against `docs/PHASE-4-SETUP.md` §4 | — | D-5 deferred with its reason (X-4) |
+| 24.4 | the calendar above; `docs/prompts/v2-session-25.md` `9016b47` | `freshness --as-of 2027-02-03`; `evidence-audit --as-of 2027-03-26`; `agent/policy/cli.mjs governance`; read the prompt | — | the standing rule: the prompt exists and is approved with the work |
+
+**Whether Phase 4 is concluded is the author's** (`docs/PHASE-4-PLAN.md` §1), asked after this checkpoint.
+
+ession's are unchanged.
 
 ## v2 Session 24 — checkpoint 24.1 (NIS2, DORA, PLD, eIDAS2: five rules closed in the form, 48 headings)
 
