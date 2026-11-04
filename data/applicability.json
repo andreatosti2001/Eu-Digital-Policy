@@ -718,7 +718,7 @@
         "territory": ["territory:non-eu-serving-eu"]
       },
       "outcome": "outcome:likely",
-      "rationale": "The AI Act reaches providers placing systems on the Union market and, on the marketing criterion the brief identifies across the rulebook, providers whose system output is used in the Union irrespective of where they are established.",
+      "rationale": "The AI Act reaches providers placing AI systems or general-purpose AI models on the Union market and, on the marketing criterion the brief identifies across the rulebook, providers and deployers whose system output is used in the Union irrespective of where they are established.",
       "obligations": ["ai-act:art-5", "ai-act:art-53"],
       "authority": ["ai-office", "nca-*"],
       "dates": ["tl-ai-act-2025-02-02-application", "tl-ai-act-2025-08-02-application", "tl-ai-act-2026-12-02-application"],
@@ -735,8 +735,18 @@
         "actor": ["ai-act:art-3"],
         "territory": ["ai-act:art-2-1"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 16): brought to the v2 shape. Read that day in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX: Regulation (EU) 2024/1689 (32024R1689), Arts 2(1)(a) and (c), 3 points (3) and (4), 5, 53 and 113, read as amended by Regulation (EU) 2026/1744 (32026R1744), Art. 1 points (7) (Art. 5(1), first subparagraph, points (ba) and (bb), and Art. 5(1a) and (1b), inserted) and (40)(a) (Art. 113, third paragraph, point (a), replaced); the Omnibus amends neither Art. 2(1) nor Art. 53. The Publications Office's metadata lists that one amending act and four corrigenda of the AI Act, none with an English expression. Art. 2(1)(a) reaches providers placing AI systems or general-purpose AI models on the Union market wherever they are established, and Art. 2(1)(c) third-country providers and deployers of AI systems whose output is used in the Union. On the author's decision of 29 Oct 2026 the dates hold 2 August 2025 (Art. 113, third paragraph, point (b)) and 2 December 2026 (F-8, V2C-10). Conditions, outcome and rationale were not changed."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal texts retrieved from the Publications Office's Cellar by CELEX: Regulation (EU) 2024/1689 (32024R1689), Arts 2, 3 points (3) and (4), 5, 53 and 113, as amended by Regulation (EU) 2026/1744 (32026R1744), Art. 1 points (7) (Art. 5(1), first subparagraph, points (ba) and (bb), and Art. 5(1a) and (1b), inserted) and (40) (Art. 113, third paragraph, point (a), replaced), and Art. 4; the Omnibus amends neither Art. 2(1) nor Art. 53. The Publications Office's SPARQL endpoint, queried that day, lists that one amending act and four corrigenda of the AI Act, none with an English expression, and one corrigendum of Regulation (EU) 2026/1744, without an English expression. On the author's decision of 4 Nov 2026 the rationale names what Art. 2(1) names: providers placing AI systems or general-purpose AI models on the Union market wherever they are established (point (a)), and third-country providers and deployers of AI systems whose output is used in the Union (point (c)); it named only providers and only systems. The dates hold 2 February 2025, 2 August 2025 (Art. 113, third paragraph, point (b)) and 2 December 2026 (point (a), as replaced; F-8, V2C-10). First brought to the v2 shape on 29 Oct 2026 (v2 Session 16). Conditions, outcome, obligations, dates and depends_on were not changed.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-ai-act", "locator": "Art. 2; Art. 3 points (3) and (4); Art. 5; Art. 53; Art. 113" },
+          { "source_id": "src-eurlex-ai-omnibus", "locator": "Art. 1 points (7) and (40); Art. 4" }
+        ],
+        "queried": ["src-eurlex-ai-act", "src-eurlex-ai-omnibus"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 23, 23.3: `ap-ai-act-07`'s rationale"]
+      }
     },
 
     {
