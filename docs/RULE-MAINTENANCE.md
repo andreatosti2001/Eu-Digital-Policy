@@ -45,7 +45,7 @@ prompt or a finding names it, and the calendar is not realigned on one day (road
 |---|---|
 | **Who** | A session working under the author's prompt; the author approves what is to be changed (roadmap §8), and approves the table of Articles read (`docs/PHASE-4-SETUP.md` §1, P-08). |
 | **Trigger** | A prompt of §0 names a rule; or the author asks for the rule to be read. |
-| **Action** | For each instrument the rule cites (`instrument`, `obligations`, `condition_provisions`, each `sources[].locator`): fetch the Official Journal text from the Publications Office's Cellar by CELEX — `https://publications.europa.eu/resource/celex/<CELEX>`, English, with `Accept: application/xhtml+xml` and `Accept-Language: eng` (without the second header Cellar answers HTTP 400: measured 4 Nov 2026, v2 Session 21), then the document the answer lists (the method recorded in `docs/HANDOVER.md`, Sessions 13–18; for the CRA, CELEX 32024R2847, as `ap-cra-01`'s note records). Read each Article the rule cites and each one it should now cite, against the rule's `conditions`, `outcome`, `rationale`, `obligations`, `exemptions`, `depends_on`, `dates` and `sources[].locator`. Write down which Articles were read and from which CELEX. **Cite only the document actually read** (`docs/AI-SAFE-BOUNDARIES.md` §0, 1–2). |
+| **Action** | For each instrument the rule cites (`instrument`, `obligations`, `condition_provisions`, each `sources[].locator`): fetch the Official Journal text from the Publications Office's Cellar by CELEX — `https://publications.europa.eu/resource/celex/<CELEX>`, English, with `Accept: application/xhtml+xml` and `Accept-Language: eng` (without the second header Cellar answers HTTP 400: measured 4 Nov 2026, v2 Session 21), then the document the answer lists (the method recorded in `docs/HANDOVER.md`, Sessions 13–18; for the CRA, CELEX 32024R2847, as `ap-cra-01`'s note records). Read each Article the rule cites and each one it should now cite, against the rule's `conditions`, `outcome`, `rationale`, `obligations`, `exemptions`, `depends_on`, `dates` and `sources[].locator`. Write down which Articles were read and from which CELEX. **Cite only the document actually read** (`docs/AI-SAFE-BOUNDARIES.md` §0, 1–2). A corrigendum's CELEX is fetched with its parentheses percent-encoded, e.g. `32022L2555R%2804%29`; unencoded, Cellar answers 404 (measured 4 Nov 2026). |
 | **Level** | *machine check*: the shape (T-01…T-05, `tools/trigger-audit.mjs`), the application dates the obligations derive (T-10), every reference and provision resolving (`tools/validate.mjs`). *human attestation*: "read on D in the Official Journal text retrieved by CELEX X" — today a `verification_note`, free text. *human authorship*: the rule's content. |
 | **Trace** | `data/applicability.json`: the rule's `last_verified` and `verification_note`; the roadmap §8 rows; the commit. All git-tracked. |
 | **What no check sees** | That the Articles were read at all. `tools/validate.mjs` and `tools/trigger-audit.mjs` check that a locator resolves and that the shape holds, not that the Article says what the rule says (`docs/AUDIT-2026-09-01.md` F-12: no URL in this repository has ever been fetched by any tool here). Whether the rule says what the Article says is the reading, which is the person's. |
@@ -85,6 +85,19 @@ SELECT DISTINCT ?rel ?celex ?date WHERE {
 } ORDER BY ?rel ?celex
 ```
 
+**Which corrigenda have an English expression** — the same kind of text, copied and run by a person, no tool runs it
+(roadmap §8, v2 Session 21). One row per corrigendum of the CELEX, with the number of its English expressions (0 means
+none). Last run 4 Nov 2026 on 32022L2555, 32024R2847, 32024R1689, 32016R0679, 32022R2065 and 32022R1925.
+
+```sparql
+PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
+SELECT ?celex (COUNT(?e) AS ?eng) WHERE {
+  ?w cdm:resource_legal_id_celex "32022L2555"^^<http://www.w3.org/2001/XMLSchema#string> .
+  ?a cdm:resource_legal_corrects_resource_legal ?w ; cdm:resource_legal_id_celex ?celex .
+  OPTIONAL { ?e cdm:expression_belongs_to_work ?a ; cdm:expression_uses_language <http://publications.europa.eu/resource/authority/language/ENG> . }
+} GROUP BY ?celex ORDER BY ?celex
+```
+
 **What the records already hold that T-12 uses.** The edges between instruments are in `data/instruments.json`
 (`relationships`) and the events in `data/timeline.json`. T-12 reads those; it does **not** query Cellar. So a prompt
 fires only for an amendment somebody has already recorded there, and **no prompt fires for one nobody has recorded**.
@@ -113,7 +126,7 @@ two states.
 | **Action** | (1) Read the rule against its Articles (step 1). (2) Ask for amending acts and corrigenda (step 2). (3) Put anything that would change the rule to the author (step 3). (4) **Close the rule — only if every Article it cites was read; otherwise nothing in `data/` changes (step 2, last row) — in one of two ways.** *The rule changes*: the author's answer is written to `data/applicability.json`, with `last_verified` set to the date of the reading and the `verification_note` rewritten to say what was read and what was changed. *The rule does not change*: **no field records "re-read, no change"**; the practice today is a new `last_verified` together with a `verification_note` naming the date, the CELEX read, the Articles read and the metadata queried, as `ap-cra-01`'s own note does (roadmap §8, v2 Session 20, question 4). |
 | **Level** | *machine check*: noticing — T-12 and `RULE_STALE`. *human attestation*: "re-read on D, no change needed", which today has **no form other than a new `last_verified`** (`docs/PHASE-4-SETUP.md` §2.2, P-11). *human authorship*: deciding the rule's new content. |
 | **Trace** | The printed prompt (printed and counted, not stored); then, as P-08. A recorded evidence-audit run, if one is made, is `tools/evidence-audit-runs/evidence-audit.jsonl`: git-ignored, per machine (`docs/EDITORIAL-AUDIT-PATH.md`). |
-| **What no check sees** | **Whether the law was re-read.** T-12 compares event dates to `last_verified`, and `RULE_STALE` ages `last_verified`, so a bare date bump closes both prompts whether or not anything was read — measured in §9 below. **A new `last_verified` without a `verification_note` that names what was read is not a closure; it is a silenced prompt.** The reader of a rule cannot tell the two apart, and neither can any check. |
+| **What no check sees** | **Whether the law was re-read.** T-12 compares event dates to `last_verified`, and `RULE_STALE` ages `last_verified`, so a bare date bump closes both prompts whether or not anything was read — measured in §9 below. **A new `last_verified` without a `verification_note` that names what was read is not a closure; it is a silenced prompt.** The reader of a rule cannot tell the two apart, and neither can any check. A closure moves `last_verified`, and `tools/selftest.mjs` pins the dates of the 29 Oct 2026 reading (F10, X1, X2, Y3–Y6, through `READ_2026_11_04`): run `node tools/selftest.mjs` after each closure, and update the pin only on the author's word (roadmap §8, v2 Session 21). In v2 Session 21 the omission left the branch red for four closures. |
 
 **The structured form of this attestation is the next item, not this one.** `docs/PHASE-4-SETUP.md` §2.2 names it
 (*human attestation* for P-08 and P-11, "0.2 generalised"); this document proposes no field for it.
@@ -149,7 +162,7 @@ puts anything that would change the rule to the author and records the answer in
 unchanged with a note that says what was read (4), regenerates (5), and commits with an `Evidence:` line (6). The
 validators then run as at every change: `node tools/validate.mjs`, `i18n-audit.mjs`, `design-qa.mjs`, `freshness.mjs`,
 `evidence-audit.mjs`, `seo-audit.mjs`, `tools/selftest.mjs`, and the agent suites a change under `agent/` or `tools/`
-requires (`AGENTS.md`). Of those, only step 5 has a check that notices its omission. Steps 1, 2, 3, 4 and 6 are
+requires (`AGENTS.md`). Of those, only step 5 has a check that notices its omission — and `selftest`, which notices a closure, not its omission. Steps 1, 2, 3, 4 and 6 are
 declarations, and the system holds them as prose.
 
 ## 8 · What this document does not establish
