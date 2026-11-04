@@ -367,7 +367,7 @@
         "activity": ["activity:cloud-services"]
       },
       "outcome": "outcome:possible",
-      "rationale": "Cloud computing services sit within the Article 2 list of core platform services, and cloud designation decisions are due in November 2026 with a market investigation running to May 2027. The scope gap the brief identifies is generative AI, not cloud.",
+      "rationale": "Cloud computing services are among the core platform services listed in Article 2, point (2)(i). On 18 November 2025 the Commission opened market investigations into Amazon Web Services and Microsoft Azure, aiming to conclude them within 12 months (a target, not a legal deadline), and on 25 June 2026 it reached the preliminary view that both should be designated; a sector-wide cloud market investigation is to report within 18 months. The scope gap the brief identifies is generative AI, not cloud.",
       "obligations": ["dma:art-2", "dma:art-3"],
       "authority": ["ec"],
       "dates": ["tl-dma-2026-11-01-designation", "tl-dma-2027-05-01-market-investigation"],
@@ -376,13 +376,15 @@
       "claims": ["clm-dma-scope-gap"],
       "sources": [
         { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 1(2); Art. 2 points (2)(i) and (13)", "for": "scope" },
-        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 3(1), (2) and (8)", "for": "obligation" }
+        { "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 3(1), (2) and (8)", "for": "obligation" },
+        { "source_id": "src-ec-dma-cloud-mi-2025", "supports": "supports:direct", "locator": "Next Steps", "for": "rationale" },
+        { "source_id": "src-ec-cloud-gatekeeper-preliminary-2026", "supports": "supports:direct", "locator": "first paragraph", "for": "rationale" }
       ],
       "condition_provisions": {
         "activity": ["dma:art-2"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1(2), 2 points (2)(i) and (13), and 3(1), (2) and (8). The Publications Office's metadata lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression, and it changes Art. 13(8) alone. Art. 2 point (13) defines a cloud computing service by reference to Directive (EU) 2016/1148. Also read that day, through the press corner's documents API: IP/25/2717 and IP/26/1444, the sources of the two events in dates. The November 2026 date is the Commission's target for concluding the AWS and Azure investigations, not a legal deadline, while the rationale says the decisions 'are due' then; no designation decision was found that day: reported to the author, not changed (29 Oct 2026). Conditions, outcome and rationale were not changed. clm-dma-scope-gap was not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 21): re-read in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1(2), 2 points (2)(i) and (13), 3(1), (2) and (8), and 54. The Publications Office's SPARQL endpoint, queried that day, lists no act amending or repealing the Regulation and three corrigenda, of which only R(02) has an English expression; read, it changes Art. 13(8) alone. Art. 2 point (13) defines a cloud computing service by reference to Directive (EU) 2016/1148. Also read that day: IP/25/2717 through the press corner's documents API ('The Commission aims to conclude the market investigations on Microsoft Azure and Amazon Web Services within 12 months'; the sector report 'within 18 months'), the Commission's announcement of 25 June 2026 at its URL (its 'preliminary view that they should be designated'), and the Commission's gatekeepers page, which listed 23 designated core platform services and no cloud computing service. On the author's decision of 4 Nov 2026 (finding F-20) the rationale no longer says the cloud designation decisions 'are due' in November 2026: that month is the Commission's target, not a legal deadline; the rationale now reports the two releases, which the rule cites. Its last sentence is the brief's argument, kept and reported to the author. First brought to the v2 shape on 29 Oct 2026 (v2 Session 15). Conditions, outcome, obligations, dates and depends_on were not changed. clm-dma-scope-gap was not re-read."
     },
 
     {
