@@ -5,7 +5,7 @@ session's work, and is approved with it at the final checkpoint. Scope from docs
 ("The plan to conclude Phase 4"). The author's answers to the four questions put while drafting it, in the author's words:
 the checkpoints, "Three batches (Recommended)"; the stop rule, "Headings first, then batch 3 (Recommended)"; the selftest
 pins, "One growing list, asked at S23's start (Recommended)"; this session's two open findings, "(2) in S23's prompt, (1) to
-S24 (Recommended)". Drawn from docs/PHASE-4-PLAN.md (§1, §1a, §3, §4); docs/ATTESTATION-FORM.md (all of it);
+S24 (Recommended)"; and, the draft shown, "Draft is right (Recommended)". Drawn from docs/PHASE-4-PLAN.md (§1, §1a, §3, §4); docs/ATTESTATION-FORM.md (all of it);
 docs/RULE-MAINTENANCE.md (steps 1–6, with the additions A–F of v2 Session 22); docs/ROADMAP-v2.md §8 (v2 Sessions 21 and
 22, every row); docs/HANDOVER.md (the reports of v2 Session 22). The starting state was measured on the branch of v2
 Session 22 on 4 Nov 2026, full clone. The decisions live in those rows and nowhere else; this file is the instruction
