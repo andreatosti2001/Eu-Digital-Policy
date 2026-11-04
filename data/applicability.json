@@ -391,7 +391,7 @@
         "thresholds": { "monthly_active_eu_end_users_gte": 45000000, "yearly_active_eu_business_users_gte": 10000 }
       },
       "outcome": "outcome:possible",
-      "rationale": "Article 3 designates by quantitative presumption: substantial Union turnover or market capitalisation, at least 45 million monthly active end users and 10,000 yearly active business users, sustained over three financial years. Meeting the thresholds triggers a notification duty, not the obligations themselves.",
+      "rationale": "Article 3 designates by quantitative presumption: substantial Union turnover or market capitalisation with the same core platform service in at least three Member States, at least 45 million monthly active end users and 10,000 yearly active business users, sustained over three financial years. Meeting the thresholds triggers a notification duty, not the obligations themselves.",
       "obligations": ["dma:art-3", "dma:art-2"],
       "authority": ["ec"],
       "dates": [],
@@ -409,8 +409,17 @@
         "monthly_active_eu_end_users_gte": [{ "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 3(2)(b) ('at least 45 million monthly active end users')" }],
         "yearly_active_eu_business_users_gte": [{ "source_id": "src-eurlex-dma", "supports": "supports:direct", "locator": "Art. 3(2)(b) ('at least 10 000 yearly active business users')" }]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1(2), 2 points (1), (2) and (13), and 3, and the Annex. The Publications Office's metadata lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression, and it changes Art. 13(8) alone. Both threshold keys' comparator (_gte) is the text's 'at least' (Art. 3(2)(b)). Art. 3(3) makes meeting the thresholds a duty to notify, and Art. 3(4) makes designation the Commission's act. The DMA does not define a large company, and the taxonomy's actor:cloud-provider is the Data Act's term (the DMA's cloud computing service is Art. 2 point (13)). tl-dma-2026-11-01-designation was removed from dates on the author's decision of 29 Oct 2026: its sources (IP/25/2717 and IP/26/1444, read that day) concern designating AWS and Azure despite their not meeting the thresholds (Arts 3(8) and 17), not the presumption this rule encodes; no date derives from Arts 2 and 3. Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1, 2 and 3. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression; read that day, it changes Art. 13(8) alone. On the author's decision of 4 Nov 2026 the rationale states the limb of Art. 3(2)(a) it had left out: the same core platform service provided in at least three Member States. Both threshold keys' comparator (_gte) is the text's 'at least' (Art. 3(2)(b)). Art. 3(3) makes meeting the thresholds a duty to notify, and Art. 3(4) makes designation the Commission's act. The DMA does not define a large company, and the taxonomy's actor:cloud-provider is the Data Act's term (the DMA's cloud computing service is Art. 2 point (13)). No date derives from Arts 2 and 3 (tl-dma-2026-11-01-designation removed on the author's decision of 29 Oct 2026). First brought to the v2 shape on 29 Oct 2026 (v2 Session 15). Conditions, outcome, obligations and depends_on were not changed. The claims were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-dma", "locator": "Art. 1; Art. 2; Art. 3" }
+        ],
+        "queried": ["src-eurlex-dma"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 23, 23.2: `ap-dma-02`'s rationale"]
+      }
     },
     {
       "id": "ap-dma-03",
