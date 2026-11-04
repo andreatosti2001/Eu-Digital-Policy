@@ -312,7 +312,7 @@
         "actor": ["actor:researcher"]
       },
       "outcome": "outcome:possible",
-      "rationale": "Article 40 gives researchers a route to platform data rather than an obligation. Access to non-public data runs through the Digital Services Coordinator of establishment, not the platform, and is purpose-limited to the detection and understanding of systemic risks. The brief records that route as underperforming in practice.",
+      "rationale": "Article 40 gives researchers a route to platform data rather than an obligation. Access to non-public data runs through the Digital Services Coordinator of establishment, not the platform, and is purpose-limited to research on systemic risks in the Union and on the measures taken to mitigate them. The brief records that route as underperforming in practice.",
       "obligations": ["dsa:art-40"],
       "authority": ["dsc-*", "ec"],
       "dates": ["tl-dsa-2023-08-01-application", "tl-dsa-2025-10-29-delegated-act"],
@@ -330,8 +330,18 @@
       "condition_provisions": {
         "actor": ["dsa:art-40"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 15): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2022/2065 retrieved from the Publications Office's Cellar by CELEX (32022R2065): Arts 33(1) and (6), 40 and 92. The Publications Office's metadata lists no act amending the Regulation and eleven corrigenda, none with an English expression. Also read that day: Commission Delegated Regulation (EU) 2025/2050 (32025R2050, OJ L of 9.10.2025), Arts 1 and 16 — in force on the twentieth day following publication, 29 October 2025; no amending act or corrigendum. The exemption is Art. 33(1) with Art. 40(4) and (12), which address only providers of very large online platforms and search engines. Under Art. 40(8) and (9) the status of vetted researcher is awarded by the Digital Services Coordinator of establishment, an application possibly arriving through the Coordinator of the research organisation's Member State. tl-dsa-2023-08-01-application was added to dates on the author's decision of 29 Oct 2026, derived from dsa:art-40. Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2022/2065 retrieved from the Publications Office's Cellar by CELEX (32022R2065): Arts 33, 40 and 92; and Commission Delegated Regulation (EU) 2025/2050 (32025R2050, OJ L of 9.10.2025), retrieved the same way: Arts 1 and 16 — in force on the twentieth day following publication, 29 October 2025. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the DSA and eleven corrigenda, none with an English expression, and no act amending or correcting the delegated regulation. On the author's decision of 4 Nov 2026 the rationale states both purposes of Art. 40(4) — research on systemic risks in the Union (Art. 34(1)) and on the risk mitigation measures (Art. 35); it named only the first. Access to publicly accessible data (Art. 40(12)) is limited to the first. The exemption is Art. 33(1) with Art. 40(4) and (12), which address only providers of very large online platforms and search engines. Under Art. 40(8) and (9) the status of vetted researcher is awarded by the Digital Services Coordinator of establishment, an application possibly arriving through the Coordinator of the research organisation's Member State. First brought to the v2 shape on 29 Oct 2026 (v2 Session 15). Conditions, outcome, obligations, dates, exemptions and depends_on were not changed. The claims were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-dsa", "locator": "Art. 33; Art. 40; Art. 92" },
+          { "source_id": "src-eurlex-dsa-da-2050", "locator": "Art. 1; Art. 16" }
+        ],
+        "queried": ["src-eurlex-dsa", "src-eurlex-dsa-da-2050"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 23, 23.2: `ap-dsa-05`'s rationale"]
+      }
     },
 
     {
