@@ -816,8 +816,17 @@
         "activity": ["data-act:art-2"],
         "territory": ["data-act:art-1"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2023/2854 retrieved from the Publications Office's Cellar by CELEX (32023R2854): Arts 1(3)(f), 2 points (8) and (30), 25, 29, 31 and 50. The Publications Office's metadata lists no act amending the Regulation and six corrigenda, of which only R(01) has an English expression; it renumbers a point of Art. 48 and touches nothing cited here. Art. 1(3)(f) brings providers of data processing services into scope irrespective of their place of establishment where they provide services to customers in the Union. On the author's decisions of 29 Oct 2026, Art. 29 joins the obligations, the dates hold 12 September 2025, the general date from which Art. 25 applies (Art. 50, second paragraph), and the Art. 31 exemption is added. Conditions, outcome and rationale were not changed."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2023/2854 retrieved from the Publications Office's Cellar by CELEX (32023R2854): Arts 1, 2 points (8) and (30), 25, 29, 31 and 50. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and seven corrigenda, of which only 32023R2854R(01) has an English expression; read that day, it renumbers a point of Art. 48 and touches nothing cited here. Art. 1(3)(f) brings providers of data processing services into scope irrespective of their place of establishment where they provide services to customers in the Union. The dates hold 12 September 2025, the general date from which Art. 25 applies (Art. 50, second paragraph), and 12 January 2027, Art. 29(1)'s (29 Oct 2026). The exemption is Art. 31(1), (2) and (3). Read against the rule, nothing was found to change. First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome, rationale, obligations, dates, exemptions and depends_on were not changed.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-data-act", "locator": "Art. 1; Art. 2 points (8) and (30); Art. 25; Art. 29; Art. 31; Art. 50" }
+        ],
+        "queried": ["src-eurlex-data-act"],
+        "outcome": "unchanged",
+        "decisions": []
+      }
     },
     {
       "id": "ap-data-act-03",
