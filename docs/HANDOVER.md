@@ -1,8 +1,7 @@
 # HANDOVER
 
-**Last updated:** v2 Session 21, checkpoint 21.1 (4 November 2026): the three premises of `docs/RULE-MAINTENANCE.md` §9
-decided by the author and written into the document. **Awaiting the approval of checkpoint 21.1; 21.2 (group (a)) does
-not begin before it.**
+**Last updated:** v2 Session 21, checkpoint 21.2 (4 November 2026): 21.1 approved; group (a) closed on the author's word,
+eight rules re-read from the Official Journal, the DMA's status re-read. **Awaiting the approval of checkpoint 21.2.**
 **Branch:** `claude/v2-session-21-rules` (no branch was assigned by the environment), cut from `main` at `a0082ea`.
 
 ## Branch register — 4 November 2026 (v2 Session 21)
@@ -13,6 +12,77 @@ not begin before it.**
 - The clone was shallow at the start (`--is-shallow-repository` → `true`); `git fetch --unshallow` was run before any
   suite.
 - Disposition: open; recorded at the final checkpoint.
+
+## v2 Session 21 — checkpoint 21.2 (group (a), with the written process)
+
+Checkpoint 21.1 approved (§8 `6423047`). Every legal text below was retrieved **on 4 Nov 2026 from the Publications
+Office's Cellar by CELEX** (English XHTML, `Accept-Language: eng`), every amending act and corrigendum asked of the SPARQL
+endpoint that day with the queries now in `docs/RULE-MAINTENANCE.md` step 2, and every English corrigendum read. Nothing
+from memory or from a search result. Each closure: the §8 row first and committed, then `data/`, `node tools/_footer.mjs`,
+the checks, and a commit with `Evidence:`.
+
+### Per finding: the text read, before → after, the closure
+
+| Finding · record | Read (CELEX, Articles) | Before → after | Closure | §8 · data |
+|---|---|---|---|---|
+| F-02 · `ap-nis2-01` `depends_on` | 32022L2555 Arts 2, 3, 20, 21, 23, 32(6), 41, Annexes I–II; SPARQL: no amending act, 9 corrigenda, only R(04) in English (Art. 19(1)); press release `src-ec-nis2-referral-2026` at its URL | "transposition is materially incomplete … in several they have not yet arrived" → national dates vary; "On 8 July 2026 the Commission reported that most Member States had transposed it, and referred Spain, France, Ireland and the Netherlands …" | changed; only the rule (the same words in NIS2's `status_note` and `instruments.html:105` are new findings) | `b8c9e19` · `a1dd811` |
+| F-04 · `ap-nis2-02` rationale | 32022L2555 Annex I ("SECTORS OF HIGH CRITICALITY", point 8), Arts 2, 3(1)(a), 3(1)(e), 3(2), 6(30)–(31), 20, 21, 23, 41 | "which NIS2 treats as essential" → listed in Annex I, the sectors of high criticality; size decides (Art. 3(1)(a), 3(2), 3(1)(e)) | changed | `f98e0b9` · `c97fed6` |
+| F-03 · `ap-cra-01` rationale | 32024R2847 Arts 2, 3, 13(1), 14, 69, 71; 32025R0327 Arts 104–105; SPARQL: 1 amending act, 8 corrigenda, R(01), R(02), R(04) in English (title, Art. 64(10), Art. 67) | "serious incidents begins on 11 September 2026" → "severe incidents having an impact on the security of the product has applied since 11 September 2026 (Article 14)" | changed (a second point, the tense, named in the question); **T-12 still fires on 26 Mar 2027**, as it should | `dc447dd` · `01a0902` |
+| F-13 · `ap-ai-act-02` rationale | 32024R1689 Arts 2(1)(a), 3 points (3), (9), (63), 53, 111, 113; 32026R1744 Art. 1 (111(2) replaced, 111(4) added; 111(3), 53 untouched); SPARQL: 1 amending act, 4 corrigenda, none in English; `src-ec-gpai-code` at its URL | "owes Article 53 since 2 August 2025" → applies from 2 Aug 2025 (Art. 113(b)); models placed before have until 2 Aug 2027 (Art. 111(3)); a source "Art. 111(3); Art. 113, third paragraph, point (b)" added | changed; no timeline event for 2 Aug 2027 (a finding) | `ac87546` · `1ad8786` |
+| F-14 · `ap-ai-act-06` exemption; `teu:art-4-2`; `rel-ai-act-teu-4-2` | 32024R1689 Arts 2(1)(b), 2(3), 3(4), 5, 27, 113 with 32026R1744 Art. 1 points (7), (13), (40); TEU Art. 4(2) (12016M004) | the exemption's last sentence (the brief's argument) deleted; the two summaries "The structural source …"/"This is the structural source …" → "The brief argues this is the structural source …" | changed; `rel-ai-act-teu-4-2` `last_verified` 2026-11-04 | `8527a93` · `63b8194` |
+| F-17 + F-23 · `ap-gdpr-04` | 32016R0679 Arts 2, 4 points (1), (2), (4), (7), (8), 22, 35; SPARQL: no amending act, 3 corrigenda, only R(02) in English (recital 71, Arts 37, 41–43, 57, 64, 65, 69, 70) | `depends_on` + "Whether the organisation is the controller of the processing: Articles 22(3) and 35(1) bind the controller …"; the note no longer says the AI Act's provisions "belong to Session 16" | F-23(3) changed; **F-23(2) closed without change** (the decision of 29 Oct 2026, pinned by Y3; its premise "not in the dataset" no longer holds, `ai-act:art-3` exists); F-17 changed | `c281224` · `d239f6a` |
+| F-19 · `ap-dsa-03` rationale | 32022R2065 Arts 2(1), 3 points (i), (s), 19, 27, 33(1), (4), 34, 35 (Chapter III, Section 3 holds Arts 19–28); SPARQL: no amending act, 11 corrigenda, none in English | "owes recommender-parameter transparency" → "owes recommender-system transparency (Article 27) unless it is a micro or small enterprise, which Article 19 exempts from that Section" | changed | `dbf1efe` · `2685259` |
+| F-20 · `ap-dma-04` rationale | 32022R1925 Arts 1(2), 2 points (2)(i), (13), 3(1), (2), (8), 54; SPARQL: no amending act, 3 corrigenda, only R(02) in English (Art. 13(8)); IP/25/2717 (press corner documents API); the announcement of 25 June 2026; the gatekeepers page (23 core platform services, no cloud service) | "designation decisions are due in November 2026" → the Commission's 12-month target (not a legal deadline) and its preliminary view of 25 June 2026; the two releases cited as sources | changed; the brief's-argument sentence kept, a new finding | `ec60b87` · `98fcd6d` |
+| DMA status | SPARQL: in force, end of validity 9999-12-31, no amending or repealing act; Art. 54 | `status:applicable` unchanged; `status_as_of` and `last_verified` 2026-11-04 (`validate.mjs:514` pairs them; only the status re-read, as on 21 Oct) | re-read, unchanged; `STATUS_PREDATES_MILESTONE instruments/dma` cleared | `ad37493` · `5387ad3` |
+
+Eight rules re-read and closed, `last_verified` 2026-11-04: `ap-nis2-01`, `ap-nis2-02`, `ap-cra-01`, `ap-ai-act-02`,
+`ap-ai-act-06`, `ap-gdpr-04`, `ap-dsa-03`, `ap-dma-04`. **No finding was left open for an unreadable source**: Cellar and
+the SPARQL endpoint answered throughout. No `claim_type`, asterisk, `reference_gap` or `requires_verification` changed;
+no claim was re-read; no `i18n/` key carries any replaced text (grep, 0 for each).
+
+### A defect the work exposed, and corrected on the author's word
+
+`tools/selftest.mjs` pinned the dates of the 29 Oct 2026 reading (F10, X1, X2, Y5, Y6). I ran `validate` and
+`seo-audit` after each closure **but not `selftest`**, so the branch was red from `a1dd811` to `f622cea` (4 closures;
+clean `main` 124/124, the branch 119/124). Found before F-14 was committed, put to the author ("Update pins exactly",
+§8 `a67e21f`), fixed in `f622cea`: a list `READ_2026_11_04`, exact dates per rule, F10's 28 Jan 2027 count `33 −`
+that list, and X2's planted judicial event moved from 2026-11-02 to 2026-11-10 — it had stopped firing against
+`ap-cra-01`'s new date. Nothing relaxed. Each later closure added its rule to the list in its own commit.
+
+### Where the written process guided, and where it did not
+
+- **Clear:** the order of steps 1–6; one question per finding with the Article quoted; the §8 row before `data/`;
+  step 5 (two generated files per closure, every time); the note's form (`ap-cra-01`'s).
+- **Not clear, corrected in the document** (§8 `3337f7a`, `14c0191`): a corrigendum's CELEX must be percent-encoded
+  (404 otherwise); the English-expression query was nowhere; step 4 did not say that `selftest` pins a closure.
+- **Not clear, not changed:** an instrument's status re-reading has no step — `validate.mjs:514` forces
+  `last_verified` to move with `status_as_of`, a whole-record date for a status-only reading (the 21 Oct precedent
+  says so in prose). Reported here.
+
+### New findings, not corrected
+
+1. NIS2's `status_note` (`data/instruments.json`) and `instruments.html:105` still say transposition is "materially
+   incomplete" (F-02's words).
+2. `ap-dma-04`'s rationale ends with the brief's argument ("The scope gap the brief identifies is generative AI, not
+   cloud.") — F-14's pattern; and `ap-nis2-01`'s rationale calls Art. 32(6) "the provision that actually changes
+   boardroom behaviour", an argument.
+3. No timeline event holds 2 Aug 2027 (AI Act Art. 111(3)).
+4. `tl-dma-2026-11-01-designation` is `scheduled` at month precision; the month is current and no decision is listed.
+5. The source records `src-ec-nis2-referral-2026` and `src-ec-gpai-code` keep `accessed` 2026-10-29 though re-read
+   today (a data change not asked).
+6. DSA Art. 3(i), (s) as actor definitions for `ap-cross-01` (F-23(2)'s DSA half) — outside the eight rules (premise 2).
+
+### Counts (4 Nov 2026, the branch at `14c0191`)
+
+`validate` 0 errors · `i18n-audit` 0/0 · `design-qa` 0/0 · `seo-audit` 0/0 · `og-image --check` exit 0 ·
+`evidence-audit --as-of 2026-11-04` 0 errors, 11 warnings (no `instruments/dma`), publishable 33 of 33 · `--as-of
+2027-03-26` 0 errors, 18 warnings, T-12 on `ap-cra-01` only · `freshness --as-of 2026-11-04` 0 `RULE_STALE`, `--as-of
+2027-01-28` **25** (33 − 8, premise 2), `--as-of 2027-02-02` 25 · 25 suites 1330 pass, 0 fail (`BROWSER_QA_CHROME` on the
+environment's Chromium) · browser suite `--require-browser` 343 pass, 0 fail, 1 undecidable (accessibility) · adversarial
+gate exit 0 · `agent/schemas/cli.mjs check` exit 0 · `.control-room/cli.mjs boundary` 0 errors, `routes` exit 0 ·
+readiness exit 1, 17 of 20 mandatory, the same three blockers as `main` (dispatcher, decision ledger, deploy gate
+unmeasurable), identical to `main`'s report · `commit-evidence a0082ea HEAD` 0 without evidence. Outputs in the
+scratchpad (`run212/`).
 
 ## v2 Session 21 — checkpoint 21.1 (the three premises)
 
