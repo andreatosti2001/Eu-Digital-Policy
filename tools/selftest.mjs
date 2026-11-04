@@ -406,6 +406,34 @@ test('F6 · the prompts are still printed in full — nothing was silenced', () 
 /* v2 Session 21 (4 Nov 2026, docs/ROADMAP-v2.md §8, 21.2): the rules re-read that day, in stages (premise 2),
    each closed on the author's word; the list grows as each rule of group (a) closes, and every other rule keeps 2026-10-29 */
 const READ_2026_11_04 = ['ap-nis2-01', 'ap-nis2-02', 'ap-cra-01', 'ap-ai-act-02', 'ap-ai-act-06', 'ap-gdpr-04', 'ap-dsa-03', 'ap-dma-04'];
+/* v2 Session 23 (docs/ROADMAP-v2.md §8, 23.0 questions 1 and 2): each rule closed in the attestation form,
+   with the date of its reading; one entry is added in the same commit as each closure, on the author's word */
+const READ_V2_23 = Object.freeze({
+  'ap-gdpr-01': '2026-11-04',
+  'ap-gdpr-02': '2026-11-04',
+  'ap-gdpr-03': '2026-11-04',
+  'ap-cross-01': '2026-11-04',
+  'ap-dsa-01': '2026-11-04',
+  'ap-dsa-02': '2026-11-04',
+  'ap-dsa-04': '2026-11-04',
+  'ap-dsa-05': '2026-11-04',
+  'ap-dma-01': '2026-11-04',
+  'ap-dma-02': '2026-11-04',
+  'ap-dma-03': '2026-11-04',
+  'ap-ai-act-01': '2026-11-04',
+  'ap-ai-act-03': '2026-11-04',
+  'ap-ai-act-04': '2026-11-04',
+  'ap-ai-act-05': '2026-11-04',
+  'ap-ai-act-07': '2026-11-04',
+  'ap-data-act-01': '2026-11-04',
+  'ap-data-act-02': '2026-11-04',
+  'ap-data-act-03': '2026-11-04',
+  'ap-data-act-04': '2026-11-04',
+});
+/** The date a rule was last read, as the closures above set it; every other rule keeps 2026-10-29. */
+const dateOf = (id) => READ_V2_23[id] ?? (READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29');
+/** The tree's newest verification date. */
+const NEWEST_READ = ['2026-11-04', ...Object.values(READ_V2_23)].sort().at(-1);
 
 test('F10 · 17.3(b): the applicability rules are aged one by one, at 90 days, and a stale rule is a prompt, never a defect', () => {
   /* v2 Session 17 (29 Oct 2026, docs/ROADMAP-v2.md §8, 17.0 questions 8b and 9; named F10 because
@@ -413,12 +441,13 @@ test('F10 · 17.3(b): the applicability rules are aged one by one, at 90 days, a
   assert.equal(RULE_INTERVAL.days, 90);
   const now = runValidator('freshness.mjs', ['2026-10-29']);
   assert.equal(now.exit, 0);
-  assert.match(now.out, /^ {2}applicability {3}per rule, 33 rules verified 2026-10-29 … 2026-11-04 \(file date 2026-08-27 not used\)$/m);
+  assert.match(now.out, new RegExp(`^ {2}applicability {3}per rule, 33 rules verified 2026-10-29 … ${NEWEST_READ} \\(file date 2026-08-27 not used\\)$`, 'm'));
   assert.doesNotMatch(now.out, /RULE_STALE/);
   const later = runValidator('freshness.mjs', ['2027-01-28']);
   assert.equal(later.exit, 0);
   /* v2 Session 21, premise 2: re-read in stages, so the rules read on 4 Nov 2026 lapse later */
-  assert.equal(later.out.split('\n').filter((l) => l.trim().startsWith('! RULE_STALE ')).length, 33 - READ_2026_11_04.length);
+  assert.equal(later.out.split('\n').filter((l) => l.trim().startsWith('! RULE_STALE ')).length,
+    33 - READ_2026_11_04.length - Object.keys(READ_V2_23).length);
   const dir = dataScratch();
   try {
     const p = join(dir, 'data', 'applicability.json');
@@ -705,9 +734,11 @@ function treeCopy() {
   const dir = scratch('evidence');
   cpSync(join(ROOT, 'data'), join(dir, 'data'), { recursive: true });
   cpSync(join(ROOT, 'index.html'), join(dir, 'index.html'));
+  /* v2 Session 23 (§8, 23.1: two selftest pins the first closure broke): validate.mjs reads §8's titles for A-6 */
+  cpSync(join(ROOT, 'docs', 'ROADMAP-v2.md'), join(dir, 'docs', 'ROADMAP-v2.md'));
   return dir;
 }
-const editJSON = (dir, f, fn) => {
+const editJSON =(dir, f, fn) => {
   const p = join(dir, 'data', f); const d = JSON.parse(readFileSync(p, 'utf8')); fn(d); writeFileSync(p, JSON.stringify(d));
 };
 
@@ -2526,7 +2557,7 @@ test('X1 · 12.2, this tree: the 33 rules read, 0 errors, every rule publishable
   const db = loadDb();
   /* as of the tree's newest verification date (§8, v2 Session 13: the pilot rules were read on
      29 Oct 2026; v2 Session 21 re-read READ_2026_11_04 on 4 Nov 2026), the rule test F1 applies to freshness: nothing date-dependent is reported */
-  const t = triggerAudit(db, '2026-11-04');
+  const t = triggerAudit(db, NEWEST_READ);
   assert.equal(t.total, 33);
   assert.deepEqual(t.errors, []);
   assert.deepEqual(t.warnings, []);
@@ -2543,7 +2574,7 @@ test('X1 · 12.2, this tree: the 33 rules read, 0 errors, every rule publishable
   assert.deepEqual(sept.errors, []);
   /* every rule read on 29 Oct 2026 (v2 Sessions 13 to 17), in file order: all 33 since v2 Session 17 */
   assert.deepEqual(sept.warnings, db.applicability.rules.map((r) => r.id)
-    .map((id) => `VERIFIED_AFTER_AS_OF applicability/${id}: last_verified ${READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29'} is after the audit date 2026-09-27`));
+    .map((id) => `VERIFIED_AFTER_AS_OF applicability/${id}: last_verified ${dateOf(id)} is after the audit date 2026-09-27`));
   const early = triggerAudit(db, '2024-06-01');
   assert.deepEqual(early.errors, []);
   assert.ok(early.warnings.some((w) => /^APPLIES_BEFORE_DATE applicability\/ap-ai-act-01/.test(w)));
@@ -2754,7 +2785,7 @@ test('Y2 · 13.3: the two pilot rules are v2, publishable, resolve to their own 
     assert.equal(t.backlog, undefined, 'no backlog: every rule is held in full');
     assert.ok(t.publishable.includes(id), `${id} is publishable`);
     assert.ok(r.sources.every((s) => typeof s === 'object' && s.supports === 'supports:direct'), `${id}: reference objects, all direct`);
-    assert.equal(r.last_verified, READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29', id);
+    assert.equal(r.last_verified, dateOf(id), id);
     /* every condition names provisions of the rule's own instrument */
     assert.deepEqual(Object.keys(r.condition_provisions).sort(), Object.keys(r.conditions).sort());
     for (const p of Object.values(r.condition_provisions).flat()) assert.equal(ix.provisionOwner.get(p), r.instrument, p);
@@ -2803,7 +2834,7 @@ test('Y3 · 14.1: the GDPR\'s five rules are v2, publishable, resolve to the GDP
     assert.equal(t.backlog, undefined, 'no backlog: every rule is held in full');
     assert.ok(t.publishable.includes(id), `${id} is publishable`);
     assert.equal(r.instrument, 'gdpr');
-    assert.equal(r.last_verified, READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29', id);
+    assert.equal(r.last_verified, dateOf(id), id);
     assert.ok(r.sources.every((s) => typeof s === 'object'), `${id}: reference objects`);
     assert.ok(r.sources.some((s) => s.for === 'scope' && s.source_id === 'src-eurlex-gdpr' && s.supports === 'supports:direct'), `${id}: a direct scope reference to the Regulation`);
     /* question 3: the GDPR's own provisions, also for the actors the AI Act and the DSA define */
@@ -2852,7 +2883,7 @@ test('Y4 · 15.1: the DSA\'s five and the DMA\'s four rules are v2, publishable,
     /* v2 Session 17 (29 Oct 2026, §8): RULES_V1 is gone with the backlog it held */
     assert.equal(t.backlog, undefined, 'no backlog: every rule is held in full');
     assert.ok(t.publishable.includes(id), `${id} is publishable`);
-    assert.equal(r.last_verified, READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29', id);
+    assert.equal(r.last_verified, dateOf(id), id);
     assert.ok(r.sources.every((s) => typeof s === 'object'), `${id}: reference objects`);
     const own = r.instrument === 'dsa' ? 'src-eurlex-dsa' : 'src-eurlex-dma';
     assert.ok(r.sources.some((s) => s.for === 'scope' && s.source_id === own && s.supports === 'supports:direct'), `${id}: a direct scope reference to the Regulation`);
@@ -2902,7 +2933,7 @@ test('Y5 · 16.1: the AI Act\'s seven rules are v2, publishable, read against th
     assert.equal(t.backlog, undefined, 'no backlog: every rule is held in full');
     assert.ok(t.publishable.includes(id), `${id} is publishable`);
     assert.equal(r.instrument, 'ai-act');
-    assert.equal(r.last_verified, READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29', id);
+    assert.equal(r.last_verified, dateOf(id), id);
     assert.ok(r.sources.every((s) => typeof s === 'object'), `${id}: reference objects`);
     assert.ok(r.sources.some((s) => s.for === 'scope' && s.source_id === 'src-eurlex-ai-act' && s.supports === 'supports:direct'), `${id}: a direct scope reference to the Regulation`);
     assert.deepEqual(Object.keys(r.condition_provisions).sort(), Object.keys(r.conditions).filter((d) => d !== 'thresholds').sort());
@@ -2956,17 +2987,21 @@ test('Y6 · 17.1: the Data Act\'s, NIS2\'s, DORA\'s and the CRA\'s ten rules are
   for (const id of RULES_DA_NIS2_DORA_CRA) {
     const r = ruleOf(db, id);
     assert.ok(t.publishable.includes(id), `${id} is publishable`);
-    assert.equal(r.last_verified, READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29', id);
+    assert.equal(r.last_verified, dateOf(id), id);
     assert.deepEqual(Object.keys(r.condition_provisions).sort(), Object.keys(r.conditions).filter((d) => d !== 'thresholds').sort());
     for (const p of Object.values(r.condition_provisions).flat()) assert.equal(ix.provisionOwner.get(p), r.instrument, p);
     for (const k of ['publishable', 'asks', 'modality', 'verification_state']) assert.ok(!(k in r), `${id} stores ${k}`);
   }
   /* the four tables (questions 1a-1d, 4, 5a): every reference as [source, supports, for, locator] */
   const refs = (id) => ruleOf(db, id).sources.map((s) => [s.source_id, s.supports.split(':')[1], s.for, s.locator]);
-  assert.deepEqual(refs("ap-data-act-01"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(f); Art. 2 points (8) and (30)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 25; Art. 29(1)"]]);
+  assert.deepEqual(refs("ap-data-act-01"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(f); Art. 2 points (8) and (30)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 25; Art. 29(1)"],
+    /* v2 Session 23 (§8, 23.3: `ap-data-act-01`'s references) */
+    ["src-eurlex-data-act", "direct", "rationale", "Art. 23"]]);
   assert.deepEqual(refs("ap-data-act-02"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(f); Art. 2 points (8) and (30)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 25; Art. 29(1)"]]);
   assert.deepEqual(refs("ap-data-act-03"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(a); Art. 2 points (5) and (6)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 3(1)"]]);
-  assert.deepEqual(refs("ap-data-act-04"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(a), (c) and (f); Art. 2 points (5), (6), (8), (24), (25) and (26)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 3(1); Art. 25"]]);
+  assert.deepEqual(refs("ap-data-act-04"), [["src-eurlex-data-act", "direct", "scope", "Art. 1(3)(a), (c) and (f); Art. 2 points (5), (6), (8), (24), (25) and (26)"], ["src-eurlex-data-act", "direct", "obligation", "Art. 3(1); Art. 25"],
+    /* v2 Session 23 (§8, 23.3: `ap-data-act-04`'s rationale and its references) */
+    ["src-eurlex-data-act", "direct", "rationale", "Art. 1(2) and (5); Art. 2 points (12), (13) and (14)"]]);
   assert.deepEqual(refs("ap-nis2-01"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(1), (2) and (3); Art. 3(1) and (2); Annexes I and II"], ["src-eurlex-nis2", "direct", "obligation", "Art. 3(4); Art. 20(1) and (2); Art. 21(1) and (2); Art. 23(1) and (4)"], ["src-eurlex-nis2", "direct", "rationale", "Art. 32(6)"], ["src-eurlex-nis2", "direct", "date", "Art. 41(1)"], ["src-ec-nis2-referral-2026", "context", "rationale", "third paragraph"]]);
   assert.deepEqual(refs("ap-nis2-02"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(1) and (2); Art. 3(1) and (2); Art. 6 points (30) and (31); Annex I, point 8"], ["src-eurlex-nis2", "direct", "obligation", "Art. 20(1); Art. 21(1) and (2); Art. 23(1) and (4)"]]);
   assert.deepEqual(refs("ap-nis2-03"), [["src-eurlex-nis2", "direct", "scope", "Art. 2(2)(f) and (5)(a); Art. 6 point (35); Annex I, point 10"], ["src-eurlex-nis2", "direct", "obligation", "Art. 21(1) and (2); Art. 23(1) and (4)"]]);
@@ -3057,16 +3092,19 @@ const attest = (id, fn, roadmap = ROADMAP) => {
 const withCra = (fn = () => {}) => attest('ap-cra-01', (r, db) => { r.attestation = structuredClone(CRA_ATTESTATION); fn(r, db); });
 const codes = (a, code) => a.errors.filter((e) => e.startsWith(`${code} `));
 
-test('AT0 · this tree: the form is silent — no rule carries it, none is dated after FORM_FROM, and validate.mjs is unchanged', () => {
+test('AT0 · this tree: exactly the rules closed in v2 Session 23 carry the form, each passes A-1…A-8, and every rule dated after FORM_FROM carries it', () => {
+  /* v2 Session 23 (§8, 23.0 questions 1 and 2): a closure is dated the day of its reading and always
+     writes the form, so a closure dated FORM_FROM itself, which A-3 does not reach, is held here */
   const db = loadDb();
   const a = attestationAudit(db, ROADMAP);
   assert.deepEqual(a.errors, []);
   assert.deepEqual(a.warnings, []);
-  assert.deepEqual(a.attested, []);
+  assert.deepEqual([...a.attested].sort(), Object.keys(READ_V2_23).sort(), 'the closures of v2 Session 23, and no backfill (plan §2)');
   /* §8, 22.1 question 4: the last day a rule was read without the form. Not moved to excuse a rule. */
   assert.equal(FORM_FROM, '2026-11-04');
-  assert.deepEqual(db.applicability.rules.filter((r) => r.last_verified > FORM_FROM).map((r) => r.id), []);
-  assert.deepEqual(db.applicability.rules.filter((r) => 'attestation' in r).map((r) => r.id), [], 'no backfill (plan §2)');
+  const attested = new Set(a.attested);
+  assert.deepEqual(db.applicability.rules.filter((r) => r.last_verified > FORM_FROM && !attested.has(r.id)).map((r) => r.id), []);
+  assert.deepEqual(db.applicability.rules.filter((r) => 'attestation' in r).map((r) => r.id).sort(), Object.keys(READ_V2_23).sort(), 'no backfill (plan §2)');
   assert.deepEqual([...ATTESTATION_KEYS], ['of', 'read', 'queried', 'outcome', 'decisions']);
   assert.deepEqual([...OUTCOMES], ['changed', 'unchanged']);
   const v = runValidator('validate.mjs');
@@ -3078,7 +3116,8 @@ test('AT1 · the control: ap-cra-01\'s closure of 4 Nov 2026, written in the for
   const a = withCra();
   assert.deepEqual(a.errors, []);
   assert.deepEqual(a.warnings, []);
-  assert.deepEqual(a.attested, ['ap-cra-01']);
+  /* v2 Session 23 (§8, 23.1: two selftest pins the first closure broke): the fixture, and the tree's closures */
+  assert.deepEqual([...a.attested].sort(), ['ap-cra-01', ...Object.keys(READ_V2_23)].sort());
 });
 
 test('AT2 · A-1 fails a misspelt key, an outcome out of vocabulary, an empty read, a dangling source and a text queried but not read', () => {

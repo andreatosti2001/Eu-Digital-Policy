@@ -1,8 +1,316 @@
 # HANDOVER
 
-**Last updated:** 4 November 2026, at the final checkpoint of v2 Session 22 (the structured attestation, `docs/PHASE-4-PLAN.md` §3, S22).
-**Branch:** `claude/session-22-o5cl9k` (assigned by the environment), cut from `main` at `244072f` (#61, the plan, merged).
+**Last updated:** 4 November 2026, at checkpoint 23.3 and the final checkpoint of v2 Session 23 (the first reading in the form, `docs/PHASE-4-PLAN.md` §3, S23).
+**Branch:** `claude/funny-bohr-w74g7e` (assigned by the environment), fast-forwarded to `main` at `9217e62` (#62, Session 22, merged).
 The entries below this session's are unchanged.
+
+## Branch register — 4 November 2026 (v2 Session 23)
+
+- Branch `claude/funny-bohr-w74g7e` (assigned by the environment), fast-forwarded to `main` at `9217e62` (#62, Session 22).
+  Nothing merged in; `origin/main` re-fetched before this entry: still `9217e62`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register (left open by the
+  author's decision).
+- The clone was shallow at the start; `git fetch --unshallow` was run before any suite.
+- Disposition: checkpoint 23.3 approved (§8 `6942ec7`) and the final checkpoint approved (4 Nov 2026, §8 `9fe9ad7`); pushed,
+  and a pull request to `main` opened on the author's instruction ("Push and open the PR (Recommended)"). Nothing is pushed
+  to the branch after the pull request is opened.
+
+## v2 Session 23 — final checkpoint (23.4, the prompt of Session 24; with checkpoint 23.3)
+
+**On the author's instruction** ("go with session 24's prompt redaction"), 23.4 was begun before checkpoint 23.3 was put to
+the author, and the 23.3 battery, then running, was stopped so that nothing would be written to the tree while it ran. One
+battery, run after 23.4, serves both checkpoints; 23.3 is put for approval first, then the final checkpoint.
+
+### 23.4 · The prompt of v2 Session 24
+
+`docs/prompts/v2-session-24.md` (`c2ab200`), in Italian, with the provenance carrying the author's answers in the author's
+words: the checkpoints, "Two: reading, then exit (Recommended)" — 24.1 the reading, then 24.2 the exit audit, 24.3 D-5,
+24.4 the hand-over and the next prompt; the 3 Feb 2027 clustering, "Name it in the hand-over (Recommended)"; Session 23's
+new findings, "Into the exit audit (Recommended)" — R-1 (`preserve.mjs`) to R-8. It carries the standing rule in its exit
+criterion. **A count I put wrongly**: the third question said seven rules rested on uncited Articles; they are five
+(corrected in the prompt before its commit, and in the 23.3 report).
+
+### Counts at the end (4 Nov 2026, `c2ab200`, full clone, outputs in the scratchpad)
+
+`validate` 0 · 0; `i18n-audit` 0 · 0; `design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings today, 18 on
+2027-03-26), publishable 33 of 33, T-12 only `ap-cra-01`; `freshness` `RULE_STALE` **0 / 5 / 33** today / 2027-01-28 /
+2027-02-03 (was 0 / 25 / 33 at the opening); `seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0
+fail · 1 skipped**; browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 65 failed
+safely · 0 succeeded · 3 partial · 1 undecidable; schemas check, Control Room boundary and routes exit 0; readiness
+refuses, 17 of 20 (production dispatcher, decision ledger, deploy gate unmeasured), as at the opening; `commit-evidence
+9217e62 HEAD` 48 commits, 0 without evidence. One battery, run on `c2ab200`, serves checkpoint 23.3 and the final one.
+
+### What was not verified, and why
+
+- **That the law was read**, by any check: the twenty attestations are declarations (`docs/ATTESTATION-FORM.md` §6). What
+  the session read is in each note and in this report; no tool here fetched anything (F-12).
+- **The claims the twenty rules cite** were not re-read; every note says so.
+- **The AI Act's headings** were not re-compared (v2 Session 18 compared them); nor any heading of the 48 of Session 24.
+- **A-3 on the twenty closures**: they are dated `FORM_FROM` itself, so A-3 does not reach them; AT0 does (Q1, Q2).
+- **The proxy reported failed connections to `mtalk.google.com`** during browser runs: Chromium's own background traffic,
+  not a request of the site; the suite's own measure of the site's requests is unaffected (343 · 0 · 1).
+
+### New findings, not fixed (all of the session's, in one place)
+
+R-2 … R-8 of `docs/prompts/v2-session-24.md`, each carried to Session 24's exit audit on the author's decision: A-4 cannot
+see a rationale resting on an uncited Article (five rules); the Review Report's PDF page locators; `ap-dma-01` closed with
+F-18 open; the Data Act's seventh corrigendum; `ap-ai-act-01`'s `gpai-provider` condition (decided 29 Oct 2026, re-noted);
+the AI Act's Art. 2(13) delegated acts; GDPR Art. 2(2)(a) and (b) carried by no rule. And one this report adds: **28 rules
+now lapse on 3 Feb 2027** (named in Session 24's hand-over, 24.4).
+
+### Checklist
+
+| Item | What was written | How to check it by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 23.0 | §8 scope `3573b3d`; Q1 `8db4fad`; Q2 `25fbeae`; pins `f6985bf` | read the rows; `node --test tools/selftest.mjs` | AT0, F10, X1, Y2–Y6 | the pins asked first |
+| 23.1 | 4 closures `430b528`, `de797c7`, `bcaee43`, `38cbe58`; headings `9332d3d`; pins `9168bfc`; §8 `256549d`, `b6cd243`, `72be4f6`, `446b3ac`, `6b7c5d9`; report `fb6e6e3`; approved `9c1dc03` | `node tools/attestation-audit.mjs packet <id>` against each `attestation.read`; the OJ headings of GDPR Arts 58, 60 | A-1…A-8 in `validate.mjs`; AT0 | 4 rules closed in the form; 18 headings |
+| 23.2 | 7 closures `7506a0d`, `94c50a4`, `9818155`, `4003a6e`, `e77d274`, `04db4a6`, `8c120f6`; §8 `44af9e1`, `7776fdc`, `95edfc9`, `9ae3376`, `df0ffb2`; report `3119fe0`; approved `0b67c86` | as above; the DSA's and DMA's headings | A-1…A-8; AT0; the agent suites reading `data/` | 7 rules; 25 headings |
+| 23.3 | 9 closures `d621f5a`, `e4c9c2b`, `a151b0c`, `77e9c8c`, `3c05332`, `643d0a6`, `837426d`, `186dd98`, `ecdb88e`; §8 `974d4ef`, `1cca561`, `8729b64`, `2f0f20e`, `10a0fdc`, `419f7a0`, `60e9a37`; Y6 in the closures' commits; report in this entry | as above; the Omnibus's Art. 1 against each `-ai-act-` note; the Data Act's headings | A-1…A-8; AT0; Y6 | 9 rules; 7 headings |
+| 23.4 | `docs/prompts/v2-session-24.md` `c2ab200` | read it against `docs/PHASE-4-PLAN.md` §3 and this report | — | the standing rule: the prompt exists and is approved with the work |
+
+**All twenty rules of the session are closed in the form** — fourteen changed, six unchanged — and all **50 headings** are
+compared (2 corrected). Nothing fell under the stop rule.
+
+## v2 Session 23 — checkpoint 23.3 (AI Act and Data Act: nine rules closed in the form, 7 headings)
+
+Checkpoint 23.2 approved (§8 `0b67c86`). Every closure dated 4 Nov 2026, the day of its reading (23.0 Q1). **Nothing fell
+under the stop rule**: all of 23.3 was read, so the prompt of Session 24 carries no rule of this session.
+
+Texts read on 4 Nov 2026, fetched from Cellar by CELEX with `Accept-Language: eng`: Regulation (EU) 2024/1689 (32024R1689,
+OJ L 12.7.2024), Regulation (EU) 2026/1744, the AI Omnibus (32026R1744, OJ L 24.7.2026; in force 27 July 2026 under its
+Art. 4), Regulation (EU) 2023/2854 (32023R2854, OJ L 22.12.2023) and its corrigendum 32023R2854R(01) (9.12.2024, the only
+one in English: a renumbered point of Art. 48). Tier 2: the Commission's news item "AI Omnibus enters into force". SPARQL,
+HTTP 200: **AI Act** amended by 32026R1744 alone, four corrigenda none in English; **AI Omnibus** one corrigendum
+(32026R1744R(01), 29.9.2026), not in English; **Data Act** no amending act, **seven** corrigenda (the 29 Oct notes said
+six: R(07) is dated 30.10.2026), only R(01) in English. **The AI Omnibus was queried for every rule that cites it**
+(`-01`, `-04`, `-05`, `-07`), as the paper test of Session 22 showed A-5 requires.
+
+### Per rule
+
+| Rule | Read | Queried | Found, and decided (§8) | Attestation | Commit |
+|---|---|---|---|---|---|
+| `ap-ai-act-01` | AI Act Arts 2, 3 (1), (3), (4), (63), (66), 4, 5, 113; Omnibus Art. 1 points (5), (7), (40), Art. 4 | ai-act, ai-omnibus | "The Article 5 prohibitions … have applied since 2 February 2025" was no longer true of the two the Omnibus added (from 2 Dec 2026), and Art. 4 was recast from 27 July 2026; **both stated** (`974d4ef`) | `changed` | `d621f5a` |
+| `ap-ai-act-03` | AI Act Arts 2, 3 (3), (63)–(65), 51, 52, 55, 111, 113 | ai-act | nothing; the Omnibus amends none of Arts 51, 52, 55 nor Art. 111(3) | `unchanged`, no decision | `e4c9c2b` |
+| `ap-ai-act-04` | AI Act Arts 2, 3 (1), (3), (4), 6, 9, 10, 11, 12, 14, 15, 27, 43, 49, 113, Annex III; Omnibus Art. 1 points (3), (8)–(11), (13), (40), Art. 4; the news item | ai-act, ai-omnibus | the eight duties named are Arts 9–15, 43, 49, only 9 cited; FRIA (Art. 27, an obligation) missing from the list; **a `rationale` reference, FRIA added** (`1cca561`) | `changed` | `a151b0c` |
+| `ap-ai-act-05` | AI Act Arts 2, 3 (3), (4), 25, 113; Omnibus Art. 1 points (4), (12), (40), Art. 4 | ai-act, ai-omnibus | limb (c) of Art. 25(1) concerns a system *not* high-risk that becomes one; **reworded** (`8729b64`) | `changed` | `77e9c8c` |
+| `ap-ai-act-07` | AI Act Arts 2, 3 (3), (4), 5, 53, 113; Omnibus Art. 1 points (7), (40), Art. 4 | ai-act, ai-omnibus | Art. 2(1)(a) and (c) name models and deployers, the rationale did not; **added** (`2f0f20e`) | `changed` | `3c05332` |
+| `ap-data-act-01` | Data Act Arts 1, 2 (8), (30), 23, 25, 29, 31, 50 | data-act | the obstacles sentence is Art. 23, uncited; **a `rationale` reference, Y6 exactly** (`10a0fdc`) | `changed` | `643d0a6` |
+| `ap-data-act-02` | Data Act Arts 1, 2 (8), (30), 25, 29, 31, 50 | data-act | nothing | `unchanged`, no decision | `837426d` |
+| `ap-data-act-03` | Data Act Arts 1, 2 (5), (6), 3, 4, 7, 50 | data-act | Art. 50 says "after 12 September 2026"; Art. 3(1) qualifies direct access "where relevant and technically feasible"; **both fixed** (`419f7a0`) | `changed` | `186dd98` |
+| `ap-data-act-04` | Data Act Arts 1, 2 (5), (6), (8), (12)–(14), (24)–(26), 3, 7, 25, 50 | data-act | the roles and the GDPR's priority rest on uncited Arts 1(2), 1(5), 2 (12)–(14); "wherever" is broader than Art. 1(5)'s "in the event of a conflict"; **a `rationale` reference, "in any conflict", Y6 exactly** (`60e9a37`) | `changed` | `ecdb88e` |
+
+Every attestation passes A-1…A-8 with **0 errors and 0 warnings**. The claims were not re-read, and each note says so.
+
+### The headings
+
+The Data Act's **7 of 7** match the Official Journal (Chapter IV's differs only in the Journal's capitals for chapter
+titles). The AI Act's were compared in v2 Session 18 and were not re-compared. Nothing changed.
+
+### Pins changed on the author's word
+
+Y6 `refs("ap-data-act-01")` and `refs("ap-data-act-04")`, each gaining exactly the new `rationale` entry, in the closure's own
+commit (§8 `10a0fdc`, `60e9a37`). No other pin; `selftest` 140/140 after every closure.
+
+### Where the form and the packet guided, and where they did not
+
+- **The packet does not list an amending act's other points.** It names the Articles the rule cites; that the Omnibus also
+  amends Arts 10, 11, 43 and 111 (relevant to `-03` and `-04`) was found by reading its whole Art. 1. A packet cannot know
+  which amendments matter; the reading did.
+- **A new reference raises A-4's demand.** For `ap-ai-act-04` the rationale reference cites seven more Articles, which then
+  had to be read in full before the attestation could name them; my first pass had read only their opening paragraphs.
+- **The pattern of 23.2 recurred**: three of nine rules (`ai-act-04`, `data-act-01`, `data-act-04`) rested statements on
+  uncited Articles. **Five** rules of the session now carry a `for: "rationale"` reference added today (`ap-dsa-01`, `-02`,
+  `ap-ai-act-04`, `ap-data-act-01`, `-04`). *Correction:* the third question of 23.4, as put to the author, said "Reading
+  found 7 such rules"; the count is five. The answer concerned where the findings go, not their number, and the prompt of
+  Session 24 (R-2) carries five.
+
+### New findings, not fixed
+
+1. **The Data Act has a seventh corrigendum** (R(07), 30 Oct 2026) the 29 Oct notes could not know; not in English, so
+   nothing was read from it. Recorded in each Data Act note.
+2. **`ap-ai-act-01`'s conditions still include `actor:gpai-provider`** while Arts 4 and 5 address providers of AI systems:
+   found on 29 Oct 2026 and decided "not changed", re-noted, not reopened (group (b), Phase 5).
+3. **The Omnibus's Art. 2(13) lets delegated acts limit Arts 9–15 and 17–25 for some Annex I systems by 2 August 2027.**
+   No such act exists; when one is adopted, `ap-ai-act-04` will need re-reading, and no T-12 prompt can fire for an act
+   nobody has recorded (`docs/RULE-MAINTENANCE.md` §2).
+
+### Counts (4 Nov 2026, `ecdb88e`, full clone, outputs in the scratchpad)
+
+`validate` 0 · 0; `i18n-audit` 0 · 0; `design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings today, 18 on
+2027-03-26), publishable 33 of 33, T-12 only `ap-cra-01`; `freshness` `RULE_STALE` **0 / 5 / 33** today / 2027-01-28 /
+2027-02-03 (was 0 / 25 / 33 at the opening); `seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0
+fail · 1 skipped**; browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 65 failed
+safely · 0 succeeded · 3 partial · 1 undecidable; schemas check, Control Room boundary and routes exit 0; readiness
+refuses, 17 of 20 (production dispatcher, decision ledger, deploy gate unmeasured), as at the opening; `commit-evidence
+9217e62 HEAD` 48 commits, 0 without evidence. One battery, run on `c2ab200` (23.3 closed at `ecdb88e`; only the prompt since), serves checkpoint 23.3 and the final one.
+
+**Commits.** §8 `974d4ef`, `1cca561`, `8729b64`, `2f0f20e`, `10a0fdc`, `419f7a0`, `60e9a37`; data `d621f5a`, `e4c9c2b`,
+`a151b0c`, `77e9c8c`, `3c05332`, `643d0a6`, `837426d`, `186dd98`, `ecdb88e`. **All twenty rules of the session closed**
+(4 + 7 + 9): fourteen changed, six unchanged.
+
+**Next, on approval: 23.4** — the prompt of v2 Session 24, its scope asked of the author, the final checkpoint.
+
+## v2 Session 23 — checkpoint 23.2 (DSA and DMA: seven rules closed in the form, 25 headings)
+
+Checkpoint 23.1 approved (§8 `9c1dc03`). Every closure dated 4 Nov 2026, the day of its reading (23.0 Q1).
+
+Texts read on 4 Nov 2026, fetched from Cellar by CELEX with `Accept-Language: eng`: Regulation (EU) 2022/2065 (32022R2065,
+OJ L 277, 27.10.2022), Regulation (EU) 2022/1925 (32022R1925, OJ L 265, 12.10.2022), its corrigendum 32022R1925R(02)
+(10.1.2025, the only one in English: Art. 13(8), "Paragraph 6" → "Paragraph 7"), and Commission Delegated Regulation (EU)
+2025/2050 (32025R2050, OJ L of 9.10.2025). Tier 2: the DMA Review Report COM(2026) 178 final (PDF, 28.4.2026) and
+IP/25/1085 (the press corner's documents API; the DMA site's page is a summary). SPARQL, HTTP 200: **DSA** no amending
+act, eleven corrigenda none in English; **DMA** no amending act, three corrigenda R(01) 2023-05-04, R(02) 2025-01-10,
+R(03) 2026-10-01, only R(02) in English; **2025/2050** nothing.
+
+### Per rule
+
+| Rule | Read | Queried | Found, and decided (§8) | Attestation | Commit |
+|---|---|---|---|---|---|
+| `ap-dsa-01` | DSA Arts 2, 3, 16, 17, 19, 20, 24(3), 25, 26, 27, 28, 30, 33 | dsa | every duty the rationale names is in the text, but Arts 17, 20, 26, 27 were uncited, and Art. 28 (minors), an obligation of the rule, was missing from its list; **a `rationale` reference added, "the protection of minors" added** (`44af9e1`) | `changed` | `7506a0d` |
+| `ap-dsa-02` | DSA Arts 2, 3, 30, 33, 34, 35, 37, 38, 39, 40, 43, 56, 92 | dsa | three statements rest on uncited Arts 37 (audit), 43 (fee), 56(2) (Commission supervision); **a `rationale` reference added**, text unchanged (`7776fdc`) | `changed` | `94c50a4` |
+| `ap-dsa-04` | DSA Arts 2, 3, 16, 29, 30 | dsa | nothing; the interface statement is Art. 30(7) | `unchanged`, no decision | `9818155` |
+| `ap-dsa-05` | DSA Arts 33, 40, 92; 2025/2050 Arts 1, 16 | dsa, dsa-da-2050 | Art. 40(4) has two purposes, the rationale named one; **the mitigation purpose added** (`95edfc9`); 2025/2050 in force 29 Oct 2025, as the date says | `changed` | `4003a6e` |
+| `ap-dma-01` | DMA Arts 1, 2, 3, 5, 6, 7, 13; Review Report p. 14; IP/25/1085 | dma | F-18 ("immediately" against Art. 3(10)'s six months) is assigned to an evidence session with the claim and `part-4.p2`; **closed unchanged, F-18 open, quoted in the note** (`9ae3376`) | `unchanged`, 1 decision | `e77d274` |
+| `ap-dma-02` | DMA Arts 1, 2, 3 | dma | the rationale left out Art. 3(2)(a)'s "same core platform service in at least three Member States"; **the limb added** (`df0ffb2`) | `changed` | `04db4a6` |
+| `ap-dma-03` | DMA Arts 1, 2, 3, 5, 6; Review Report pp. 8, 14 | dma | nothing | `unchanged`, no decision | `8c120f6` |
+
+Every attestation passes A-1…A-8 with **0 errors and 0 warnings**; each tier-2 text the rule cites is named in `read`, so
+A-8 has nothing to warn of. The claims were not re-read, and each note says so.
+
+### The headings
+
+DSA **16 of 16** and DMA **9 of 9** identical to the Official Journal. Nothing to put to the author, nothing changed.
+
+### Where the form and the packet guided, and where they did not
+
+- **Two of the seven rules (`ap-dsa-01`, `-02`) state duties of Articles they did not cite.** A-4 compares what is *cited*
+  with what is *read*, so it could not see this: the reading did. The remedy the author chose, a `for: "rationale"`
+  reference, was tested on a copy against `validate.mjs` and the trigger audit before it was proposed, and the agent suites
+  that read `data/` were run before the first such commit (integrate, detector, depth, proposals/data, architect,
+  editorial, health, improve: all green).
+- **The packet's page locators for the Review Report are PDF pages** (page 8 is printed "7", page 14 is printed "13"); the
+  quotations are where the records say. Recorded as the records had them; not changed.
+- **A closure can carry an open finding.** `ap-dma-01` is attested `unchanged` with F-18 named in its note and in its §8
+  decision; the form has no field for an open finding, and A-6 only matches the decision's title.
+
+### New findings, not fixed
+
+1. **A-4 cannot see a rationale that relies on an uncited Article** (`ap-dsa-01`, `-02` above). Each such case was found
+   only by reading the Articles against the rationale. Whether a check could help is a question for the exit audit; a
+   check would have to read prose.
+2. **The page numbers of `src-ec-dma-review-2026`'s locators are the PDF's, not the printed ones** (above).
+3. **`ap-dma-01` is closed with F-18 open** (above): until the evidence session, its `last_verified` of 4 Nov 2026 says
+   the rule was read, not that it is right in every word.
+
+### Counts (4 Nov 2026, `8c120f6`, full clone, outputs in the scratchpad)
+
+`validate` 0 · 0; `i18n-audit` 0 · 0; `design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings today, 18 on
+2027-03-26), publishable 33 of 33, T-12 only `ap-cra-01`; `freshness` `RULE_STALE` **0 / 14 / 33** today / 2027-01-28 /
+2027-02-03 (was 0 / 21 / 33 at 23.1); `seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0 fail · 1
+skipped**; browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 65 failed safely · 0
+succeeded · 3 partial · 1 undecidable; schemas check, Control Room boundary and routes exit 0; readiness refuses, 17 of 20,
+as at the opening; `commit-evidence 9217e62 HEAD` 29 commits, 0 without evidence.
+
+**Commits.** §8 `44af9e1`, `7776fdc`, `95edfc9`, `9ae3376`, `df0ffb2`; data `7506a0d`, `94c50a4`, `9818155`, `4003a6e`,
+`e77d274`, `04db4a6`, `8c120f6`. **Eleven of the twenty rules closed** (4 + 7).
+
+**Next, on approval: 23.3** — `ap-ai-act-01`, `-03`, `-04`, `-05`, `-07` (with the AI Omnibus queried for `-01`, `-04`,
+`-05`, `-07`), `ap-data-act-01` … `-04`; the Data Act's 7 headings.
+
+## v2 Session 23 — checkpoint 23.1 (GDPR and cross-cutting: four rules closed in the form, 18 headings)
+
+**Opening.** `main` did not yet contain Session 22 at the first fetch; it did at the second (#62, `9217e62`), and every
+precondition of the prompt then held. The clone was shallow; `git fetch --unshallow` before any suite. Unmerged branches:
+only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register. Scope row in §8 first (`3573b3d`), with the author's
+words ("Start Session 23"). **The reconnaissance re-measured every row of the prompt's table and found it exact**: 33 rules,
+25 dated 2026-10-29 and 8 dated 2026-11-04, none attested; `RULE_STALE` 0 / 25 / 33 on 2027-01-27 / 01-28 / 02-03; T-12
+only `ap-cra-01` on 2027-03-26; headings gdpr 18, dsa 16, dma 9, data-act 7; `selftest` 140/140; 25 suites 1349 · 0 · 1
+skipped. Cellar and the SPARQL endpoint both answered HTTP 200 from this environment.
+
+**23.0 · two questions, both decided** (§8). Q1 (`8db4fad`): the session began on 4 Nov 2026, 16:21 UTC — the day of
+`FORM_FROM` itself, where A-3 does not fire — against the prompt's premise that closures fall after it; the author chose
+"close on the day of the reading, and always write the form", `FORM_FROM` unmoved. Q2 (`25fbeae`, code `f6985bf`): the
+pins — `READ_V2_23` (rule → date), `dateOf()`, `NEWEST_READ`; Y2–Y6 and X1's September warnings follow `dateOf()`; F10
+counts 33 − 8 − the closures; X1 audits as of the newest date; AT0 holds that exactly the closures carry the form with 0
+errors and 0 warnings, which covers A-3's gap for closures dated 2026-11-04. Planted: an entry with no closure fails F10,
+X1, Y3 and AT0.
+
+### Per rule: what was read, what was queried, what was decided, the attestation
+
+Texts read on 4 Nov 2026, each fetched from Cellar by CELEX with `Accept-Language: eng`: Regulation (EU) 2016/679
+(32016R0679, OJ L 119, 4.5.2016; all 99 Articles extracted, the cited ones read in full), its corrigendum 32016R0679R(02)
+(the only one with an English expression), Regulation (EU) 2022/2065 (32022R2065, OJ L 277, 27.10.2022); and the EDPB
+Guidelines 3/2025, version 2.0 adopted 17 Sep 2026 (PDF from the EDPB's site). SPARQL (the queries of
+`docs/RULE-MAINTENANCE.md` step 2), HTTP 200: **GDPR** no amending or repealing act, three corrigenda — R(01) 2016-11-22,
+R(02) 2018-05-23, R(03) 2021-03-04 — only R(02) in English; R(02) corrects recital 71 and Arts 37(1)(c), 41, 42, 43, 57,
+64, 65, 69, 70. **DSA** no amending act, eleven corrigenda R(01)…R(11) (the last 2026-10-23), none in English — as v2
+Session 21 found.
+
+| Rule | Read (tier 1, then tier 2) | Queried | Found, and decided (§8) | Attestation | Commit |
+|---|---|---|---|---|---|
+| `ap-gdpr-01` | GDPR Arts 2, 3, 4 points (1), (2), (7), (8), 5, 6, 30, 33, 35 | gdpr | "Any processing … by a controller or processor established in the Union" left out Art. 2(1)'s limit and was narrower than Art. 3(1); **reworded to the Articles** (`256549d`) | `changed`, 1 decision | `430b528` |
+| `ap-gdpr-02` | GDPR Arts 2, 3, 4 (all of it), 5, 6 | gdpr | Art. 3(2) reaches "a controller or processor", the rationale named only the controller; **"or processor" added** (`b6cd243`) | `changed`, 1 decision | `de797c7` |
+| `ap-gdpr-03` | GDPR Arts 2, 4, 6, 35, 37, recital 19 | gdpr | nothing to change; R(02)'s change to Art. 37(1)(c) does not reach Art. 37(1)(a) | `unchanged`, no decision | `bcaee43` |
+| `ap-cross-01` | GDPR Arts 2, 4, 5, 6, 25; DSA Arts 27, 39; EDPB Guidelines v2.0 ¶¶ 7–11, 79–81, 88–89, 93–95 | gdpr, dsa | DSA Art. 39(1), cited for the repository, itself keeps recipients' personal data out of it; the guidelines never mention Art. 39, a repository or a conflict; **rationale kept, Art. 39(1) quoted in the note** (`72be4f6`) | `unchanged`, 1 decision | `38cbe58` |
+
+Every attestation passes A-1…A-8 with **0 errors and 0 warnings** (`tools/validate.mjs`; AT0). Each note names the
+CELEX of every tier-1 text read (A-7). The claims (`clm-one-stop-shop`, `clm-dsa-gdpr-unresolved`) were not re-read, and
+each note says so.
+
+### The headings: the GDPR's 18 against the Official Journal
+
+16 identical. 2 differed and **now carry the exact Official Journal headings** on the author's word (§8 `446b3ac`, data
+`9332d3d`): `gdpr:art-58` "Powers of supervisory authorities" → "Powers"; `gdpr:art-60` "Cooperation between the lead
+authority and other concerned authorities" → "Cooperation between the lead supervisory authority and the other supervisory
+authorities concerned". R(02) touches neither. No translation or pin held them.
+
+### A pin the first closure broke, changed on the author's word
+
+`ap-gdpr-01`'s closure, uncommitted, passed every check but failed 2 of 140 `selftest` tests that Q2 had not named: **Y1**
+runs `validate.mjs` in a scratch copy holding only `data/` and `index.html`, where A-6 cannot read `docs/ROADMAP-v2.md`;
+**AT1** pinned the attested list to its fixture alone. Put to the author (§8 `6b7c5d9`): `treeCopy()` also copies the
+roadmap; AT1 follows `READ_V2_23` as AT0 does. Committed on its own and shown green on the tree before the closure
+(`9168bfc`). Nothing relaxed.
+
+### Where the form and the packet guided, and where they did not
+
+- **The packet listed exactly what A-4 and A-5 then required**, and named the EDPB guidelines as a tier-2 text; A-8 would
+  have warned had `read` left them out.
+- **The packet is Article-level, so it cannot tell a partial reading from a whole one.** I printed Art. 4 only to point
+  (22) at first; `ap-gdpr-02` cites Art. 4 through `condition_provisions`, so the rest was read before "Art. 4" was
+  written in its `read`. Nothing in the form would have caught the omission (`docs/ATTESTATION-FORM.md` §6).
+- **The decision titles are long and carry backticks**; A-6 matched them exactly on the first try because each was copied
+  from the committed row.
+- **The previous notes' reading of recital 18 (`ap-gdpr-01`) and of DSA Arts 3 and 33 (`ap-cross-01`) was not repeated**,
+  because neither is cited; the new notes do not claim them.
+
+### New findings, not fixed
+
+1. **`ap-gdpr-01` lists only Art. 2(2)(c) among the GDPR's exclusions**; Art. 2(2)(a) (outside Union law) and (b) (CFSP)
+   are carried by no rule, and (d) only by `ap-gdpr-03`. Reported, not put as a change: the author's decision was about the
+   rationale.
+2. **The 23.1 closures sit on `FORM_FROM`**, so A-3 alone would not have held them; AT0 does (Q1, Q2). A later closure of
+   the same rules will be after `FORM_FROM` and A-3 will apply.
+3. **The closures were written with a scratch script outside the repository** (a textual edit of one rule's block, then a
+   parse proving that only `rationale`, `last_verified`, `verification_note` and `attestation` changed). No tool was added,
+   as the prompt requires; the proof is per closure and is not kept.
+
+### Counts (4 Nov 2026, `38cbe58`, full clone, outputs in the scratchpad)
+
+`validate` 0 · 0; `i18n-audit` 0 · 0; `design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings today, 18 on 2027-03-26),
+publishable 33 of 33, T-12 only `ap-cra-01`; `freshness` `RULE_STALE` **0 / 21 / 33** today / 2027-01-28 / 2027-02-03 (was
+0 / 25 / 33); `seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0 fail · 1 skipped** (`selftest` 140,
+unchanged in number); browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 69
+attacks, 65 failed safely · 0 succeeded · 3 partial · 1 undecidable; schemas check, Control Room boundary and routes exit 0;
+readiness refuses, **17 of 20** (production dispatcher, decision ledger, deploy gate unmeasured) — as at the opening;
+`commit-evidence 9217e62 HEAD` 15 commits, 0 without evidence.
+
+**Commits.** §8 `3573b3d`, `8db4fad`, `25fbeae`, `256549d`, `b6cd243`, `72be4f6`, `446b3ac`, `6b7c5d9`; tools `f6985bf`,
+`9168bfc`; data `9332d3d`, `430b528`, `de797c7`, `bcaee43`, `38cbe58`.
+
+**Next, on approval: 23.2** — `ap-dsa-01`, `-02`, `-04`, `-05`, `ap-dma-01`, `-02`, `-03`; the DSA's 16 headings and the
+DMA's 9.
+
 
 ## Branch register — 4 November 2026 (v2 Session 22)
 
