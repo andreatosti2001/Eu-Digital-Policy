@@ -44,7 +44,7 @@ unchanged.
 ### 25.4 · The set-up of Phase 5 (after the stop, on the author's request)
 
 After the PR was opened the author asked: "generate the set up for phase 5, acknoledging the sessions required in coherence
-with the previous phases" (§8, "v2 Session 25, 25.4: the set-up of Phase 5", `d79b025`). The roadmap puts Phase 5's scope in
+with the previous phases" (§8, "v2 Session 25, 25.4: the set-up of Phase 5", `c00143a`). The roadmap puts Phase 5's scope in
 "the session after Phase 4's checkpoint", which this is. **Written: `docs/PHASE-5-SETUP.md`, a proposal that decides
 nothing until §8 does**:
 - **The premises.** P-A, what "advanced" means: depth (recommended), breadth, or the findings only. P-B: design before the
@@ -70,9 +70,9 @@ status-document work for after the author's answers.
   author's decision).
 - The clone was shallow at the start; `git fetch --unshallow` was run before anything else.
 - Disposition: the session stopped at 25.0 on the author's decision (§8 `e0b69ce`); pushed, and a pull request to `main`
-  opened on the author's instruction ("Open the PR (Recommended)"). Nothing is pushed to the branch after the pull request
-  is opened — **except, on the author's later request, 25.4** (§8 `d79b025`): the Phase 5 set-up, pushed to this branch,
-  so PR #66 carries it.
+  opened on the author's instruction ("Open the PR (Recommended)"); **merged by the author as #66 (`9542548`)**, at
+  `150990e`. 25.4, the Phase 5 set-up, was written after that on the author's request and is rebased onto `9542548`; it
+  reaches `main` only by a new pull request, put to the author.
 
 ## Branch register — 4 November 2026 (v2 Session 24)
 
