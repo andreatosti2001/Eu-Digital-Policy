@@ -1,7 +1,7 @@
 # HANDOVER
 
-**Last updated:** v2 Session 21, checkpoint 21.2 (4 November 2026): 21.1 approved; group (a) closed on the author's word,
-eight rules re-read from the Official Journal, the DMA's status re-read. **Awaiting the approval of checkpoint 21.2.**
+**Last updated:** v2 Session 21, final checkpoint (4 November 2026): 21.1 and 21.2 approved; 21.3 decided; 21.4, the
+prompt of v2 Session 22, written and confirmed. **Awaiting the approval of the final checkpoint.**
 **Branch:** `claude/v2-session-21-rules` (no branch was assigned by the environment), cut from `main` at `a0082ea`.
 
 ## Branch register — 4 November 2026 (v2 Session 21)
@@ -12,6 +12,67 @@ eight rules re-read from the Official Journal, the DMA's status re-read. **Await
 - The clone was shallow at the start (`--is-shallow-repository` → `true`); `git fetch --unshallow` was run before any
   suite.
 - Disposition: open; recorded at the final checkpoint.
+
+## v2 Session 21 — final checkpoint (21.3 the leftovers, 21.4 the prompt of Session 22)
+
+Checkpoint 21.2 approved (§8 `6368f81`). `origin/main` re-fetched before this entry: still `a0082ea`.
+
+### 21.3 · The leftovers of Sessions 18–20: decisions and commits
+
+| Residue | Re-measured 4 Nov 2026 | Answer | §8 | Change |
+|---|---|---|---|---|
+| The Phase 4 lines | V2-CLOSURE N1 "Phase 4 not started; D-4 open", B5 "… Phase 4 not started"; ROADMAP §4 "Phase 4 opens on the author's word once E-5 is measured."; no check reads them | "Note + reword (Recommended)" | `8c5079d` | `c9b8eef` (V2-CLOSURE notes), `7917a09` (§4) |
+| "EUDigitalPolicy" in this file | the Session 19 table and node; live value "Eu Digital Policy" (`tools/seo.mjs:60`, `index.html`), #56 | "Add the note (Recommended)" | `9a3e7cb` | `6316c33` |
+| S18 (1) · eIDAS2 title | the derived fallback; csa, digital-networks-act, ehds, iea the same words | "Wallets + trust services (Recommended)" | `6f62490` | `89d17f6` — "eIDAS2 — European Digital Identity Wallets, trust services and key dates \| EU Digital Policy" |
+| S18 (2) · headings outside the AI Act | 98 headings, 15 instruments | "Assign to Session 22 (Recommended)" | `a893512` | — (in Session 22's prompt) |
+| S18 (3) · `x-verification` | the seven procedural states equal `PRE_ADOPTION`; no code reads the file | "Close, no change (Recommended)" | `caff960` | — |
+
+**A commit whose message overstates it.** `c9b8eef` says it changes `docs/ROADMAP-v2.md` §4; its replacement failed (the
+sentence also occurs, quoted, in the §8 row `8c5079d`) and the commit holds only the V2-CLOSURE notes. Found at once,
+not rewritten (pushed): `7917a09` makes the §4 change and says so in its message.
+
+### 21.4 · The prompt of v2 Session 22
+
+`docs/prompts/v2-session-22.md` (`4144f55`, `888c938`, `6cd7bc6`, `0b0f0ae`), on this branch, in this pull request, under
+the standing rule of §8 (4 Nov 2026). The author's answers, in its provenance: "25 rules + headings (Recommended)"; "By
+instrument + stop rule (Recommended)"; "Final batch, first to drop (Recommended)"; the draft shown and confirmed ("Draft is
+right (Recommended)"). Scope: the 25 rules lapsing on 28 Jan 2027 and the 98 headings, in three batches by instrument with
+a checkpoint each; a stop rule (what remains goes, named, to Session 23 before 28 Jan 2027; the 25 rule-less headings
+first); the standing rule carried to Session 24. It records no §8 row of its own and opens nothing.
+
+### Not verified, and why
+
+- No claim was re-read (`clm-*` cited by the eight rules): outside group (a).
+- The Commission's gatekeepers page lists no cloud designation on 4 Nov 2026; a page's silence is not proof that no
+  decision exists. Recorded in those words.
+- The browser suite's one undecidable (accessibility) was not investigated; it is not new to this session's changes
+  (none touches markup but the eIDAS2 `<title>`).
+- `data/applicability.json`'s file-level `$last_verified` was not moved: the file was not re-read whole.
+
+### New findings, not corrected (all sessions' lists in one place)
+
+The six of the 21.2 report (NIS2's `status_note` and `instruments.html:105`; the brief's arguments in `ap-dma-04` and
+`ap-nis2-01`; no event for 2 Aug 2027; `tl-dma-2026-11-01-designation` still `scheduled`; two `accessed` dates; DSA
+definitions for `ap-cross-01`); the status re-reading that `validate.mjs:514` couples to a whole-record date; and four
+generic instrument titles (csa, digital-networks-act, ehds, iea). None is in Session 22's scope (its question 1).
+
+### Counts on the final tree (4 Nov 2026, `0b0f0ae`)
+
+`validate` 0 · `i18n-audit` 0/0 · `design-qa` 0/0 · `seo-audit` 0/0 · `og-image --check` current · `evidence-audit
+--as-of 2026-11-04` 0 errors, 11 warnings · `--as-of 2027-03-26` 0 errors, 18 warnings, T-12 on `ap-cra-01` only ·
+`freshness` 2027-01-28 25, 2027-02-03 33 · 25 suites 1330 pass, 0 fail · browser 343 pass, 0 fail, 1 undecidable ·
+gate, schemas, boundary, routes exit 0 · readiness exit 1, 17 of 20 mandatory, as `main` · `commit-evidence a0082ea
+HEAD` 45 commits, 0 without evidence. Outputs in the scratchpad (`runfinal/`).
+
+### The checklist (21.0–21.4)
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **21.0** | §8 scope row `d0742ba`; the reconnaissance in the 21.1 report | read §8's row "The scope of v2 Session 21" | — | met: scope recorded before any other write |
+| **21.1** | §8 `d4732c3`, `3f2fbb0`, `76d37e5`, `1a0880d`, approval `6423047`; `docs/RULE-MAINTENANCE.md` `a0867fa` | read §0, step 2 (the query), step 4, §9 "Decided on 4 Nov 2026" | none reads the document (`grep -rl RULE-MAINTENANCE tools agent`) | met: three premises decided and written |
+| **21.2** | §8 rows `b8c9e19` … `3337f7a`, approval `6368f81`; data `a1dd811`, `c97fed6`, `01a0902`, `1ad8786`, `63b8194`, `d239f6a`, `2685259`, `98fcd6d`, `5387ad3`; `tools/selftest.mjs` `f622cea`; RULE-MAINTENANCE `14c0191` | open `applies.html` for the eight rules; `node tools/evidence-audit.mjs --as-of 2026-11-04` (no dma warning); `node tools/freshness.mjs --as-of 2027-01-28` → 25 | `tools/selftest.mjs` F10, X1, X2, Y3–Y6 (`READ_2026_11_04`); `seo-audit` (generated pages) | met: nine findings and the DMA status closed on the author's word, none left open |
+| **21.3** | §8 `8c5079d`, `9a3e7cb`, `6f62490`, `a893512`, `caff960`; `c9b8eef`, `7917a09`, `6316c33`, `89d17f6` | V2-CLOSURE N1/B5; ROADMAP §4 line 258; this file under the Session 19 node; `instruments/eidas2/index.html` `<title>` | `seo-audit` (title facets, length) | met: every residue decided; (2) assigned to Session 22 |
+| **21.4** | `docs/prompts/v2-session-22.md` `0b0f0ae` | read its provenance (three answers) and exit criterion (the rule for Session 24) | — | met: the prompt exists on this branch, confirmed by the author; approved with the work at this checkpoint |
 
 ## v2 Session 21 — checkpoint 21.2 (group (a), with the written process)
 
