@@ -836,7 +836,7 @@
         "activity": ["activity:connected-products"]
       },
       "outcome": "outcome:applies",
-      "rationale": "From 12 September 2026 connected products must be designed and manufactured so that product and related service data are, by default, easily, securely and directly accessible to the user. This is a design obligation, not a disclosure one: it bites at the point the product is placed on the market.",
+      "rationale": "Connected products placed on the market after 12 September 2026 must be designed and manufactured so that product and related service data are, by default, easily, securely and free of charge accessible to the user — directly, where relevant and technically feasible. This is a design obligation, not a disclosure one: it bites at the point the product is placed on the market.",
       "obligations": ["data-act:art-3-1"],
       "authority": ["nca-*"],
       "dates": ["tl-data-act-2026-09-12-application"],
@@ -856,8 +856,17 @@
         "actor": ["data-act:art-1"],
         "activity": ["data-act:art-2"]
       },
-      "last_verified": "2026-10-29",
-      "verification_note": "29 Oct 2026 (v2 Session 17): brought to the v2 shape. Read that day in the Official Journal text of Regulation (EU) 2023/2854 retrieved from the Publications Office's Cellar by CELEX (32023R2854): Arts 1(3)(a), 2 points (5) and (6), 3(1), 4, 7(1) and 50. The Publications Office's metadata lists no act amending the Regulation and six corrigenda, of which only R(01) has an English expression; it renumbers a point of Art. 48 and touches nothing cited here. The Act defines no 'manufacturer'; Art. 1(3)(a) names manufacturers of connected products and providers of related services. On the author's decisions of 29 Oct 2026 the trade-secret exemption states Art. 4(6) to (9), without the brief's sentence on practitioner doubt that ended it (the rule still cites clm-data-act-trade-secret-tension), and the Art. 7(1) exemption is added. Art. 4 governs access on request where data cannot be directly accessed (Art. 4(1)), while this rule's obligation is Art. 3(1). Conditions, outcome and rationale were not changed. The claims were not re-read."
+      "last_verified": "2026-11-04",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2023/2854 retrieved from the Publications Office's Cellar by CELEX (32023R2854): Arts 1, 2 points (5) and (6), 3, 4, 7 and 50. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and seven corrigenda, of which only 32023R2854R(01) has an English expression; read that day, it renumbers a point of Art. 48 and touches nothing cited here. On the author's decision of 4 Nov 2026 the rationale follows Art. 3(1) and Art. 50: the obligation applies to connected products placed on the market after 12 September 2026, and data are to be accessible directly 'where relevant and technically feasible' — otherwise Art. 4(1) access on request applies; it had said 'From 12 September 2026' and 'directly accessible' without the qualifier. The Act defines no 'manufacturer'; Art. 1(3)(a) names manufacturers of connected products and providers of related services. The trade-secret exemption states Art. 4(6) to (9) and the Art. 7(1) exemption the micro and small enterprises (29 Oct 2026). First brought to the v2 shape on 29 Oct 2026 (v2 Session 17). Conditions, outcome, obligations, dates and exemptions were not changed. The claims were not re-read.",
+      "attestation": {
+        "of": "2026-11-04",
+        "read": [
+          { "source_id": "src-eurlex-data-act", "locator": "Art. 1; Art. 2 points (5) and (6); Art. 3; Art. 4; Art. 7; Art. 50" }
+        ],
+        "queried": ["src-eurlex-data-act"],
+        "outcome": "changed",
+        "decisions": ["v2 Session 23, 23.3: `ap-data-act-03`'s rationale"]
+      }
     },
     {
       "id": "ap-data-act-04",
