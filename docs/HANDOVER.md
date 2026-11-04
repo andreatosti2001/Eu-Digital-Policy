@@ -21,7 +21,7 @@ E-1…E-6 measured, the status lines reworded as approved); 20.2 written and reh
   instruments/dma`; the eIDAS2 page title is still the generic one; `docs/v2-design/status-labels.json` still has
   `x-verification`.
 - Not asked, by default: the branch (a new branch and a pull request, as for the prompts of Sessions 18–20).
-- Disposition: pushed; a pull request to `main` opened, unless the author says otherwise.
+- Disposition: pushed; a pull request to `main` opened on the author's instruction ("Push and open the PR (Recommended)").
 
 ## Branch register — 3 November 2026 (v2 Session 20)
 
