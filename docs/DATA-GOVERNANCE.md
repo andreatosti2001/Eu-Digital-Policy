@@ -142,6 +142,7 @@ patterns to follow (audit F-04, F-14):
 | Footer + `<noscript>` × 7 pages | `tools/_footer.mjs` | `design-qa.mjs` (drift is an error) |
 | Grade counts in `README.md` prose | derived by `gradeTally()` | **nothing** |
 | "As of" date in README / footer | — | **nothing** |
+| The texts and Articles a rule's reading covered: `attestation.read` **and** the rule's `verification_note` in `data/applicability.json` (v2 Session 22, 4 Nov 2026; `docs/ATTESTATION-FORM.md` §2) | neither: the note is the reader's account, published on `applies.html`; the form is the checks' and is not shown (roadmap §8, v2 Session 22, questions 6 and 7) | `tools/attestation-audit.mjs` A-7, at the level of the **text** only: the note must name the CELEX of each tier-1 text in `read`. **Nothing compares the Articles.** No rule carries the form before Session 23 |
 
 **Removed 30 Sep 2026, and guarded against returning:** `index.html`'s inline
 `__CONTENT__` blob (`nav`, `meta`, `nodes`, `search` — copies of the part titles, a
