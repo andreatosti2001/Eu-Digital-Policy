@@ -60,6 +60,7 @@ import {
 } from './source-contract.mjs';
 import {
   attestationAudit, FORM_FROM, ATTESTATION_KEYS, OUTCOMES, segments, unitsOf, parseLocator, provisionArticle, celexOf, roadmapTitles,
+  readingPacket,
 } from './attestation-audit.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
@@ -3228,4 +3229,41 @@ test('AT11 · validate.mjs FAILS on a planted bare date bump, names it, and pass
     assert.equal(green.exit, 0, green.out);
     assert.doesNotMatch(green.out, /\bA-\d /);
   } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('AT12 · the reading packet is exactly what A-4 and A-5 demand, for every one of the 33 rules (22.4 (a))', () => {
+  const db = loadDb();
+  for (const rule of db.applicability.rules) {
+    const p = readingPacket(db, rule.id);
+    const build = (drop = null) => attest(rule.id, (r) => {
+      const read = p.read.map((x) => ({ source_id: x.source_id, articles: x.articles.filter((u) => !(drop && drop[0] === x.source_id && drop[1] === u)) }));
+      for (const a of p.read_any_of) { const t = read.find((x) => x.source_id === a.in_any_of[0]); if (t) t.articles.push(a.article); else read.push({ source_id: a.in_any_of[0], articles: [a.article] }); }
+      r.last_verified = '2027-01-20';
+      r.attestation = { of: '2027-01-20', outcome: 'unchanged', decisions: [], queried: p.query,
+        read: read.filter((x) => x.articles.length).map((x) => ({ source_id: x.source_id, locator: x.articles.join('; ') })) };
+      for (const x of p.tier2) r.attestation.read.push({ source_id: x, locator: 'at its URL' });
+      r.verification_note = p.read.map((x) => x.celex).join(' ');
+    });
+    const whole = build();
+    assert.deepEqual(whole.errors.filter((e) => /^A-[45] /.test(e)), [], `${rule.id}: the packet must satisfy A-4 and A-5`);
+    /* and every Article it lists is one A-4 requires: drop any, and A-4 fires */
+    for (const x of p.read) for (const u of x.articles)
+      assert.ok(build([x.source_id, u]).errors.some((e) => e.startsWith('A-4 ')), `${rule.id}: ${u} of ${x.source_id} is listed but not required`);
+  }
+  assert.deepEqual(readingPacket(db, 'ap-cra-01').read, [{ source_id: 'src-eurlex-cra', celex: '32024R2847', articles: ['Art. 2', 'Art. 3', 'Art. 13', 'Art. 14', 'Art. 69', 'Art. 71'] }]);
+  assert.equal(readingPacket(db, 'ap-nowhere'), null);
+});
+
+test('AT13 · the packet command prints, fetches nothing, writes nothing, and offers no pre-filled attestation', () => {
+  const hash = () => createHash('sha256').update(readdirSync(join(ROOT, 'data')).sort().map((f) => readFileSync(join(ROOT, 'data', f))).join('')).digest('hex');
+  const before = hash();
+  const out = execFileSync(process.execPath, [join(ROOT, 'tools', 'attestation-audit.mjs'), 'packet', 'ap-eidas2-01'], { cwd: ROOT, encoding: 'utf8' });
+  assert.equal(hash(), before);
+  assert.match(out, /READING PACKET {2}ap-eidas2-01/);
+  assert.match(out, /Citation \('in particular Article 5a\(23\) thereof'\)/, 'what A-8 cannot check is named, not skipped');
+  assert.doesNotMatch(out, /[{}]|"of"|"outcome"/, 'no attestation skeleton');
+  const bad = runValidator('attestation-audit.mjs', ['packet', 'ap-nowhere']);
+  assert.equal(bad.exit, 2);
+  const src = readFileSync(join(ROOT, 'tools', 'attestation-audit.mjs'), 'utf8');
+  assert.doesNotMatch(src, /\bfetch\(|https?\.request|node:https?|node:net|writeFile/, 'no network and no write');
 });

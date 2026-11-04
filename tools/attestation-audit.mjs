@@ -262,3 +262,71 @@ export function locatorMeasure(db) {
   }
   return out;
 }
+
+/**
+ * The reading packet (v2 Session 22, 22.4 (a); docs/ROADMAP-v2.md §8): what a closure of one rule must
+ * read, derived from the rule's record — the texts and Articles A-4 will require, the texts A-5 will
+ * require queried, the tier-2 sources it cites, and what A-8 cannot check. It prints NO attestation
+ * skeleton: a form that arrives pre-filled claims a reading before anyone has made it. It reads the
+ * records only; it fetches nothing and writes nothing.
+ */
+export function readingPacket(db, ruleId) {
+  const rule = arr(db.applicability?.rules).find((r) => r.id === ruleId);
+  if (!rule) return null;
+  const sources = new Map(arr(db.sources?.sources).map((s) => [s.id, s]));
+  const provisions = new Map();
+  for (const i of arr(db.instruments?.instruments)) for (const p of arr(i.provisions)) provisions.set(p.id, p);
+  const tier1 = (id) => sources.get(id)?.tier === TIER_1;
+  const texts = new Map();
+  const add = (sid, unit) => { if (!texts.has(sid)) texts.set(sid, new Set()); if (unit) texts.get(sid).add(unit); };
+  const notCheckable = [];
+  const tier2 = new Set();
+  for (const [sid, loc] of [...arr(rule.sources).map((s) => [s.source_id, s.locator]),
+    ...arr(rule.exemptions).flatMap((e) => arr(e?.basis).map((b) => [b.source_id, b.locator]))]) {
+    if (!tier1(sid)) { tier2.add(sid); continue; }
+    const p = parseLocator(loc);
+    add(sid);
+    p.units.forEach((u) => add(sid, u));
+    p.unresolved.forEach((s) => notCheckable.push(`${sid} «${s}»`));
+  }
+  const anyOf = [];
+  for (const id of new Set([...arr(rule.obligations), ...Object.values(rule.condition_provisions ?? {}).flatMap(arr)])) {
+    const p = provisions.get(id);
+    const art = provisionArticle(p?.number);
+    const ts = arr(p?.sources).filter(tier1);
+    if (!art || !ts.length) { notCheckable.push(`provision ${id}${p ? ` ("${p.number}")` : ''}`); continue; }
+    if (ts.length === 1) add(ts[0], art);
+    else if (!ts.some((t) => texts.get(t)?.has(art))) anyOf.push({ provision: id, article: art, in_any_of: ts });
+  }
+  const order = (u) => { const m = u.match(/^(Art|Annex|Recital)\.? (\d+|[IVXLC]+)([a-z]?)/); return m ? [{ Art: 0, Annex: 1, Recital: 2 }[m[1]], /^\d+$/.test(m[2]) ? Number(m[2]) : m[2], m[3]] : [9, u, '']; };
+  const sortUnits = (xs) => [...xs].sort((a, b) => { const x = order(a), y = order(b); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] < y[i] ? -1 : 1; return 0; });
+  return {
+    rule: rule.id,
+    last_verified: rule.last_verified,
+    read: [...texts].map(([source_id, units]) => ({ source_id, celex: celexOf(sources.get(source_id)?.url), articles: sortUnits(units) })),
+    read_any_of: anyOf,
+    query: [...new Set(arr(rule.sources).map((s) => s?.source_id).filter(tier1))],
+    tier2: [...tier2],
+    not_checkable: notCheckable,
+  };
+}
+
+/* The command line: `node tools/attestation-audit.mjs packet <rule-id>`. Reads data/, prints, exits. */
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const [verb, id] = process.argv.slice(2);
+  const { readFileSync, readdirSync } = await import('node:fs');
+  const db = Object.fromEntries(readdirSync('data').filter((f) => f.endsWith('.json'))
+    .map((f) => [f.replace(/\.json$/, ''), JSON.parse(readFileSync(`data/${f}`, 'utf8'))]));
+  if (verb !== 'packet' || !id) { console.error('usage: node tools/attestation-audit.mjs packet <rule-id>'); process.exit(2); }
+  const p = readingPacket(db, id);
+  if (!p) { console.error(`no rule "${id}" in data/applicability.json`); process.exit(2); }
+  const L = [`READING PACKET  ${p.rule}  (last_verified ${p.last_verified}; a closure after ${FORM_FROM} must carry an attestation)`, ''];
+  L.push('Read, in the Official Journal text retrieved by CELEX — every Article below is required by A-4:');
+  for (const r of p.read) L.push(`  ${r.source_id}  ${r.celex ?? '(no CELEX in its URL: A-8)'}  ${r.articles.join('; ') || '(no Article cited)'}`);
+  for (const a of p.read_any_of) L.push(`  ${a.article} in any one of ${a.in_any_of.join(', ')}  (provision ${a.provision})`);
+  L.push('', 'Query for amending acts and corrigenda — required by A-5:', `  ${p.query.join(', ') || '(none)'}`);
+  L.push('', 'Tier-2 sources the rule cites — name them in read if re-read (A-8 warns otherwise):', `  ${p.tier2.join(', ') || '(none)'}`);
+  L.push('', 'What the checks cannot resolve (A-8) — read them all the same:', ...(p.not_checkable.length ? p.not_checkable.map((x) => `  ${x}`) : ['  (nothing)']));
+  L.push('', 'This lists what the record cites. It is not a reading, it fetches nothing, and it writes nothing (docs/ATTESTATION-FORM.md §6).');
+  console.log(L.join('\n'));
+}
