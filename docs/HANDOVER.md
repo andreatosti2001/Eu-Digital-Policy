@@ -10,7 +10,7 @@ The author brought an SEO plan and asked for what was missing to be completed. M
 `WebSite` with `name` and `alternateName` were already in the tree, and `pages.yml` deployed that commit. The plan's other
 premise, that `Organization` with a `logo` governs the favicon, is not what Google's documentation says, so no node was added.
 
-**Changed:** one line in `tools/_footer.mjs` `ICONS` linking `img/icons/icon-192.png`, the generated block in all 32 HTML
+**Changed:** one line in `tools/_footer.mjs` `ICONS` linking `img/icons/icon-192.png`, the generated block in all 31 HTML
 files, and `docs/SEO-OPERATIONS.md` §7a. Decision: §8, "Maintenance, favicon: a size above 48 px linked…".
 
 **Measured:** `validate`, `i18n-audit`, `design-qa`, `freshness`, `seo-audit`, `selftest`, the Pages artifact build and
