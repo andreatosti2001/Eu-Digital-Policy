@@ -669,9 +669,10 @@ function crumbsHtml(route) {
  * The HTML of instruments/<id>/index.html, before the generated blocks
  * (security meta, social meta, notice, index, footer) are applied by
  * tools/_footer.mjs exactly as on every other page.
- * @param shell  { favicon, bootstrap } — copied from instrument.html so the
- *               favicon and the inline theme script (and so its CSP hash)
- *               have one home
+ * @param shell  { bootstrap } — copied from instrument.html so the inline
+ *               theme script (and so its CSP hash) has one home. The icon
+ *               tags are not here: tools/_footer.mjs ICON_TAGS is their one
+ *               home and finish() places them on every page.
  */
 export function instrumentPage(route, { ix, db }, shell) {
   const inst = ix.instrument.get(route.id);
@@ -684,7 +685,6 @@ export function instrumentPage(route, { ix, db }, shell) {
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>${text(route.title)}</title>
 <meta content="${attr(route.description)}" name="description"/>
-${shell.favicon}
 <link href="${r}css/tokens.css" rel="stylesheet"/>
 <link href="${r}style.css" rel="stylesheet"/>
 <link href="${r}css/evidence.css" rel="stylesheet"/>

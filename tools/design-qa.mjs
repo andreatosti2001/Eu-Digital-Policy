@@ -58,7 +58,11 @@ const PAGES = sitePages(ROOT);
 /* A page below the root reaches everything through "../". Links and
    stylesheet paths are compared as site paths, so a page two levels down
    is held to exactly the rules the root pages are. */
-const sitePath = (page, href) => join(dirname(page), href).split('\\').join('/');
+/* A root-absolute href ("/favicon.ico") names a path from the site root,
+   whatever the page's depth. The icon tags are the first internal
+   references written that way (5 Nov 2026); they are held to the same rule
+   as every other link: the file must exist. */
+const sitePath = (page, href) => (href.startsWith('/') ? href.slice(1) : join(dirname(page), href)).split('\\').join('/');
 
 /* Files allowed to declare raw colour. Everything else must go through a
    custom property, or a component will look right in one theme only — the
