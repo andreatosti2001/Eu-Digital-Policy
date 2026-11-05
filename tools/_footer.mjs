@@ -176,6 +176,7 @@ export const ICONS = Object.freeze([
   { rel: 'icon', path: 'img/icons/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
   { rel: 'icon', path: 'img/icons/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
   { rel: 'icon', path: 'img/icons/favicon-48x48.png', sizes: '48x48', type: 'image/png' },
+  { rel: 'icon', path: 'img/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
   { rel: 'apple-touch-icon', path: 'img/icons/apple-touch-icon.png' },
 ]);
 export const iconTags = (root = '') => ICONS.map((i) => `<link rel="${i.rel}" href="${root}${i.path}"`

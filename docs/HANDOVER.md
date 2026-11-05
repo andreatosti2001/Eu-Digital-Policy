@@ -1,8 +1,36 @@
 # HANDOVER
 
-**Last updated:** 5 November 2026, v2 Session 25, item 25.5 (the architecture of sessions), on top of the favicon maintenance session.
-**Branch:** `claude/inspiring-meitner-c7s9le` (assigned by the environment), restarted from `main` `6060bd2` after #67 was merged.
+**Last updated:** 5 November 2026, favicon 192 px maintenance, on top of v2 Session 25, item 25.5 and the favicon maintenance session.
+**Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
+
+## Maintenance — a favicon size above 48 px (5 Nov 2026, unnumbered)
+
+The author brought an SEO plan and asked for what was missing to be completed. Measured on `main` `43a55d0`: the icon tags and
+`WebSite` with `name` and `alternateName` were already in the tree, and `pages.yml` deployed that commit. The plan's other
+premise, that `Organization` with a `logo` governs the favicon, is not what Google's documentation says, so no node was added.
+
+**Changed:** one line in `tools/_footer.mjs` `ICONS` linking `img/icons/icon-192.png`, the generated block in all 31 HTML
+files, and `docs/SEO-OPERATIONS.md` §7a. Decision: §8, "Maintenance, favicon: a size above 48 px linked…".
+
+**Measured:** `validate`, `i18n-audit`, `design-qa`, `freshness`, `seo-audit`, `selftest`, the Pages artifact build and
+`agent/browser/cli.mjs --require-browser` all exit 0.
+
+**What is live is established indirectly.** This environment cannot read the host's binary files, and the Pages artifact
+could not be downloaded. Through the fetch tool, existing images fail one way (`site.png`, `favicon-48x48.png`,
+`apple-touch-icon.png`, `favicon.ico?check=20261105`) and missing files another (three controls). No HTTP status was read, and
+the bare `/favicon.ico` still reported the missing-file form, possibly a stale result. The author should open it in a browser.
+
+**Owner only:** Request indexing on the homepage after the merge, once; the Search Console query review.
+
+**Finding, not fixed:** `qa.yml` is red on `43a55d0`. Step "The release gate, rehearsed" runs `gate --head HEAD` and fails
+`C1-origin` ("workflow is …qa.yml…, not .github/workflows/pages.yml"). The entry below measured that rehearsal locally with
+exit 0; in Actions the same command is judged as CI. It blocks no deploy, since no ruleset requires `qa.yml`.
+
+## Branch register — 5 November 2026 (favicon 192 px)
+
+- Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- Branch `claude/favicon-192-link`: pushed and a pull request to `main` opened at the author's request. Not merged here.
 
 ## v2 Session 25, 25.5 — the architecture of sessions; Post-v2 A–C before Phase 5 (5 Nov 2026)
 

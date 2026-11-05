@@ -221,8 +221,10 @@ here observed what Googlebot did.
 
 - **The files:** `/favicon.ico` (a PNG-in-ICO container holding the author's 16, 32 and 48 px PNGs
   byte for byte) at the root, and under `img/icons/` the 16, 32 and 48 px PNGs, `apple-touch-icon.png`
-  (180 px, opaque), `icon-192.png` and `icon-512.png` (the last two linked from nothing: no manifest,
-  the author's decision of 5 Nov 2026). The artwork is the author's; none of it was redrawn, resized or
+  (180 px, opaque), `icon-192.png` and `icon-512.png`. `icon-192.png` is linked as a `rel="icon"` since
+  5 Nov 2026, because Google's page prefers a favicon larger than 48x48 and the largest linked file was
+  exactly that; `icon-512.png` is linked from nothing, and there is no manifest (the author's decision
+  of 5 Nov 2026). The artwork is the author's; none of it was redrawn, resized or
   recoloured. The original file names were lost on upload, so the names are this repository's.
 - **The tags:** `ICONS` in `tools/_footer.mjs` is their one home, and `finish()` writes them into
   every page as a generated `icons:begin`…`icons:end` block. The hrefs are relative like every other
