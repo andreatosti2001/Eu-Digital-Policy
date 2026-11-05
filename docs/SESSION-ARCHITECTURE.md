@@ -14,7 +14,7 @@ when what it depends on is approved, not on a day. What each session *does* stay
 | Phase 5: S27…S31 | `docs/PHASE-5-SETUP.md` §5.1; `docs/prompts/v2-session-27.md` |
 | Post-v2: PV2-01…PV2-12 | `docs/POST-V2.md` §3 (the blocks, the author's text) and §4.1 (the sessions) |
 | The reading: S25, S26 | `docs/prompts/v2-session-25.md`; `docs/RULE-MAINTENANCE.md` |
-| Stage 1 | `docs/AUDIT-2026-11-04.md` (what #68 did and did not do); roadmap §8, 25.5 question 2 |
+| Stage 1 | `docs/prompts/v2-stage-1-operational-closure.md`; `docs/AUDIT-2026-11-04.md` (what #68 did and did not do); roadmap §8, 25.5 question 2 and the correction after it |
 
 The one place dates still matter is **Track M** (§3): the law's calendar, which no architecture can move.
 
@@ -65,7 +65,7 @@ are the only places they hold a stage back.
 
 | Gate | Opens | Holds when | Decided by |
 |---|---|---|---|
-| **G1** | Stage 2 | Stage 1's session is approved: a reviewer registered and a first signed human decision in the ledger, the deploy gate verified running in GitHub Actions, the owner-only settings of `docs/DEPLOYMENT.md` §3a listed | roadmap §8, 25.5 question 2 |
+| **G1** | Stage 2 | Stage 1's session is approved: a reviewer registered and pinned, a first signed human decision in the ledger, one real change carried through the chain so that the gate shows **C5, C7 and C10 ✓** on `main`, the owner-only settings of `docs/DEPLOYMENT.md` §3a recorded in the author's words | roadmap §8, 25.5 question 2, as corrected (the gate already runs in Actions: runs 76 and 77) |
 | **G2** | Stage 3 | PV2-05 has the author's selection among C's three prototypes; S27 is approved (E5-3 written, the X5-1 table decided); Phase 5 is opened on E5-1…E5-7 | roadmap §8, 25.5 questions 1 and 3; `docs/PHASE-5-SETUP.md` §3 |
 | **G3** | the v2's closing gate | X5-1…X5-7 hold and the author records "Phase 5 concluded" | `docs/PHASE-5-SETUP.md` §4 |
 | **G4** | Stage 4 | the v2 is closed: `docs/V2-CLOSURE.md` re-measured, Track R done, the author's row; `docs/POST-V2.md` §2 for D and E | roadmap §8, 25.5 question 4 |
@@ -79,9 +79,11 @@ G2 and E5-5.
 ### Stage 1 · Consolidation of governance — Phase 4's operational closure
 
 One session. #68 built the release dispatcher, the hash-chained ledger with signed entries and the deploy gate, at the
-author's request, after "Phase 4 concluded"; roadmap §8 (25.5 question 2) records it and amends X-3 by name. **What the
-session finishes** is what #68's report says it did not do: a reviewer registered and a first signed human decision, the
-gate verified running in GitHub Actions, the owner-only settings listed. **What it does not do:** reopen Phase 4, or wire the
+author's request, after "Phase 4 concluded"; roadmap §8 (25.5 question 2) records it and amends X-3 by name. The gate
+already runs in GitHub Actions and passed on runs 76 and 77, with C5, C7 and C10 reported "–" because no human decision
+exists (§8, the correction after question 2). **What the session finishes** is that part: a reviewer registered and pinned,
+a first signed human decision, one real change through the chain so that C5, C7 and C10 pass, the owner-only settings
+recorded. Its prompt: `docs/prompts/v2-stage-1-operational-closure.md`, which also writes PV2-01's. **What it does not do:** reopen Phase 4, or wire the
 production dispatcher (`agent/orchestrator/dispatchers.mjs`), whose activation is a governance decision
 (`docs/PRODUCTION-OPERATING-MODE.md`). Its number is set by its scope row; #68 and #69 ran unnumbered.
 
