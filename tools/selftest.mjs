@@ -1144,33 +1144,20 @@ test('S4e · every page declares an icon that is a file in the repository, not a
   const dir = siteCopy('seo-icon');
   try {
     /* the old inline icon returns on one page, an icon file is missing on another, an icon leaves the site on a third,
-       a fourth loses every icon tag, and a fifth points at a file that is not a PNG */
-    edit(dir, 'index.html', (s) => s.replace('<link rel="icon" href="/favicon.ico" sizes="any"/>', '<link rel="icon" href="data:image/svg+xml,%3Csvg%3E%3C/svg%3E"/>'));
-    edit(dir, 'applies.html', (s) => s.replaceAll('/img/icons/favicon-32x32.png', '/img/icons/missing.png'));
-    edit(dir, 'enforcement.html', (s) => s.replace('href="/favicon.ico"', 'href="https://example.org/favicon.ico"'));
+       a fourth loses every icon tag, a fifth points at a file that is not a PNG, and a sixth loses its prefix */
+    edit(dir, 'index.html', (s) => s.replace('<link rel="icon" href="favicon.ico" sizes="any"/>', '<link rel="icon" href="data:image/svg+xml,%3Csvg%3E%3C/svg%3E"/>'));
+    edit(dir, 'applies.html', (s) => s.replaceAll('img/icons/favicon-32x32.png', 'img/icons/missing.png'));
+    edit(dir, 'enforcement.html', (s) => s.replace('href="favicon.ico"', 'href="https://example.org/favicon.ico"'));
     edit(dir, 'it/index.html', (s) => s.replace(/<!-- icons:begin[\s\S]*?<!-- icons:end -->\n?/, ''));
+    edit(dir, 'instruments/gdpr/index.html', (t) => t.replaceAll('../../favicon.ico', 'favicon.ico'));
     writeFileSync(join(dir, 'img/icons/favicon-16x16.png'), 'not a png');
     const errs = seoAudit(dir).errors.join('\n');
     assert.match(errs, /index\.html: an icon is a data: URI/);
-    assert.match(errs, /applies\.html: icon \/img\/icons\/missing\.png is not a file in the repository/);
+    assert.match(errs, /applies\.html: icon img\/icons\/missing\.png is not a file in the repository/);
     assert.match(errs, /enforcement\.html: icon https:\/\/example\.org\/favicon\.ico leaves the site/);
     assert.match(errs, /it\/index\.html: no <link rel="icon">/);
-    assert.match(errs, /icon \/img\/icons\/favicon-16x16\.png is not the image its extension names/);
-  } finally { rmSync(dir, { recursive: true, force: true }); }
-});
-
-test('S4f · design-qa resolves a root-absolute href from the site root, at any depth, and still fails a missing file', () => {
-  const dir = siteCopy('qa-rootabs');
-  try {
-    cpSync(join(ROOT, 'tools'), join(dir, 'tools'), { recursive: true });
-    cpSync(join(ROOT, 'fonts'), join(dir, 'fonts'), { recursive: true });
-    const run = () => { try { return { code: 0, out: execFileSync(process.execPath, [join(dir, 'tools', 'design-qa.mjs')], { cwd: dir, encoding: 'utf8' }) }; }
-      catch (e) { return { code: e.status, out: String(e.stdout) }; } };
-    assert.equal(run().code, 0, 'the real icon tags, root-absolute on a page one level down, are not findings');
-    edit(dir, 'instruments/gdpr/index.html', (s) => s.replace('<link rel="icon" href="/favicon.ico" sizes="any"/>', '<link rel="icon" href="/img/icons/missing.ico" sizes="any"/>'));
-    const bad = run();
-    assert.equal(bad.code, 1);
-    assert.match(bad.out, /instruments\/gdpr\/index\.html: link to a file that does not exist: \/img\/icons\/missing\.ico/);
+    assert.match(errs, /instruments\/gdpr\/index\.html: icon favicon\.ico is not a file in the repository/);
+    assert.match(errs, /icon img\/icons\/favicon-16x16\.png is not the image its extension names/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 

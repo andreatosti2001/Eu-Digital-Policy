@@ -671,7 +671,7 @@ function crumbsHtml(route) {
  * tools/_footer.mjs exactly as on every other page.
  * @param shell  { bootstrap } — copied from instrument.html so the inline
  *               theme script (and so its CSP hash) has one home. The icon
- *               tags are not here: tools/_footer.mjs ICON_TAGS is their one
+ *               tags are not here: tools/_footer.mjs ICONS is their one
  *               home and finish() places them on every page.
  */
 export function instrumentPage(route, { ix, db }, shell) {

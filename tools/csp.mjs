@@ -35,7 +35,7 @@
                which tools/thirdparty.mjs already enforces in the source.
      rest      img 'self' — since 5 Nov 2026 without data:, which only the
                favicon used, and which is now a file (/favicon.ico and
-               img/icons/, tools/_footer.mjs ICON_TAGS) — fonts
+               img/icons/, tools/_footer.mjs ICONS) — fonts
                'self', no objects, no frames, no workers, base-uri and
                form-action 'self'.
 

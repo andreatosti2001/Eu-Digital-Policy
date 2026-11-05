@@ -224,9 +224,12 @@ here observed what Googlebot did.
   (180 px, opaque), `icon-192.png` and `icon-512.png` (the last two linked from nothing: no manifest,
   the author's decision of 5 Nov 2026). The artwork is the author's; none of it was redrawn, resized or
   recoloured. The original file names were lost on upload, so the names are this repository's.
-- **The tags:** `ICON_TAGS` in `tools/_footer.mjs` is their one home, and `finish()` writes them into
-  every page as a generated `icons:begin`…`icons:end` block. The hrefs are root-absolute, so they
-  resolve from any depth, including `404.html`. Change an icon by changing that list and the files,
+- **The tags:** `ICONS` in `tools/_footer.mjs` is their one home, and `finish()` writes them into
+  every page as a generated `icons:begin`…`icons:end` block. The hrefs are relative like every other
+  internal link, each with its page's own prefix (`favicon.ico`, `../favicon.ico` on an edition, `../../`
+  on an instrument page), and root-absolute on `404.html` alone, which is served at any depth. The
+  browser suite's `deploy:assets` check serves the site under a prefix and fails a root-absolute
+  reference, which is why (the author's decision of 5 Nov 2026, `docs/ROADMAP-v2.md` §8). Change an icon by changing that list and the files,
   then run `node tools/_footer.mjs`.
 - **The check:** `tools/seo-audit.mjs` fails a page with no `rel="icon"`, an icon that is a `data:` URI,
   one that leaves the site, names a file the repository does not hold, or whose bytes are not the image
