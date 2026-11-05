@@ -273,7 +273,15 @@ export function judge(facts) {
     if (!(e.GITHUB_WORKFLOW_REF ?? '').startsWith(`${e.GITHUB_REPOSITORY}/${PUBLISHING_WORKFLOW}@${PUBLISH_REF}`)) problems.push(`workflow is ${e.GITHUB_WORKFLOW_REF}, not ${PUBLISHING_WORKFLOW}@${PUBLISH_REF}`);
     if (!facts.head || e.GITHUB_SHA !== facts.head) problems.push(`the commit being published (${e.GITHUB_SHA?.slice(0, 12)}) is not the commit judged (${facts.head?.slice(0, 12) ?? 'unresolved'})`);
     if (facts.checkout && facts.head && facts.checkout !== facts.head) problems.push('the checkout is not the commit judged');
-    cs.push(c('C1-origin', problems.length ? FAIL : PASS, problems.length ? problems.join('; ') : `${e.GITHUB_REPOSITORY} · ${e.GITHUB_REF} · ${e.GITHUB_EVENT_NAME} · ${PUBLISHING_WORKFLOW}, at ${(facts.head ?? '?').slice(0, 12)}`));
+    // A run without --ci is a rehearsal (qa.yml runs one on every push and pull request). It is not the
+    // publishing run, so "this is not pages.yml on main" is the expected answer there, not a refusal: it
+    // is reported as NOT ESTABLISHED, which never authorises anything. Under --ci the same problems
+    // still block, and pages.yml's own gate step is the one that runs with --ci (workflows.mjs P7).
+    const status = problems.length ? (ci ? FAIL : UNMEASURED) : PASS;
+    const why = problems.length
+      ? (ci ? problems.join('; ') : `rehearsal, not the publishing run — origin not established (${problems.join('; ')}). Only ${PUBLISHING_WORKFLOW}'s own run with --ci can authorise a deployment.`)
+      : `${e.GITHUB_REPOSITORY} · ${e.GITHUB_REF} · ${e.GITHUB_EVENT_NAME} · ${PUBLISHING_WORKFLOW}, at ${(facts.head ?? '?').slice(0, 12)}`;
+    cs.push(c('C1-origin', status, why));
   }
 
   /* C2 history */

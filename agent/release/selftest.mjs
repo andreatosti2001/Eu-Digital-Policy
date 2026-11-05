@@ -574,6 +574,22 @@ test('G3 · outside CI the origin is UNMEASURED: reported locally, blocking in C
   assert.equal(judge(planted({ artifact: null })).ok, false, 'CI without an artifact is a block');
 });
 
+test('G3b · a rehearsal inside another workflow (qa.yml, on a push or a pull request) is not a refusal of its origin — and the same origin under --ci still is', () => {
+  const qaPush = ciEnv({ GITHUB_WORKFLOW_REF: `${EXPECTED_REPOSITORY}/.github/workflows/qa.yml@refs/heads/main` });
+  const qaPr = ciEnv({ GITHUB_EVENT_NAME: 'pull_request', GITHUB_REF: 'refs/pull/9/merge', GITHUB_WORKFLOW_REF: `${EXPECTED_REPOSITORY}/.github/workflows/qa.yml@refs/pull/9/merge` });
+  for (const [name, env] of [['qa.yml on main', qaPush], ['qa.yml on a pull request', qaPr]]) {
+    const rehearsal = judge(planted({ ci: false, env, needs: null, artifact: null }));
+    assert.equal(status(rehearsal, 'C1'), UNMEASURED, name);
+    assert.match(rehearsal.conditions.find((x) => x.id.startsWith('C1')).why, /rehearsal, not the publishing run/, name);
+    assert.equal(rehearsal.ok, true, `${name}: reported, not blocking`);
+    const asCi = judge(planted({ ci: true, env }));
+    assert.equal(asCi.ok, false, `${name} under --ci`); assert.equal(status(asCi, 'C1'), FAIL, `${name} under --ci`);
+  }
+  // The rehearsal still blocks on what it CAN measure: an approval that does not precede its change.
+  const bad = judge(planted({ ci: false, env: qaPr, needs: null, artifact: null, shallow: true }));
+  assert.equal(status(bad, 'C2'), FAIL); assert.equal(bad.ok, false, 'a rehearsal blocks on a failed measurable condition');
+});
+
 test('G4 · a failed or missing upstream gate job, and a shallow or unresolvable history, block', () => {
   for (const bad of ['gate-data', 'gate-boundary', 'gate-browser', 'gate-security']) {
     for (const result of ['failure', 'cancelled', 'skipped']) {
