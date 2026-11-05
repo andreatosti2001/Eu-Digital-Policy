@@ -69,6 +69,18 @@ G1 does not hold.
 `docs/PHASE-5-SETUP.md` or `docs/SESSION-ARCHITECTURE.md`, and still says Phase 4 is open: status-document work for the
 author to decide. The reminder of 13 Jan 2027 still stands.
 
+## Maintenance — the release suite's CI failures, fixed (5 Nov 2026, v2 Session 25)
+
+`qa.yml` "The agent suites" had been red on `main` since #68 (runs 717, `d4f860e`; 722, `6060bd2`) and on #70:
+`agent/release/selftest.mjs` A2, A3 and A12 failed because a CI runner has no git identity and the dispatcher's
+`git commit` (`dispatch.mjs:279`) inherits only the process environment, while the suite lent the fixture identity to its
+own helper alone. With `set -e`, the `.control-room` suite, the contract check and the gate rehearsal never ran in CI since
+#68. Fixed with one line in the suite (`Object.assign(process.env, GIT_ENV)`); no assertion and no production code
+changed. Measured with no git identity: the release suite 45/45 (42/45 before); the whole `qa.yml` loop 1233 pass, 0 fail,
+1 skipped; contracts and gate rehearsal exit 0. Decision: §8, "Maintenance: the release suite's three failures in CI, and
+their fix". Branch `claude/inspiring-meitner-c7s9le`, restarted from `main` `b34bd76` after #70 was merged; a new pull
+request opened on the author's word; nothing pushed after it.
+
 ## Branch register — 5 November 2026 (v2 Session 25, 25.5)
 
 - Branch `claude/inspiring-meitner-c7s9le`, restarted from `main` `6060bd2` after #66 and #67 were merged (its earlier

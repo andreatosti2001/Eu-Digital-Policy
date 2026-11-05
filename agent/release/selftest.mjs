@@ -50,6 +50,7 @@ const tmp = (p = 'release-') => { const d = mkdtempSync(join(tmpdir(), p)); clea
 process.on('exit', () => { for (const d of cleanup) try { rmSync(d, { recursive: true, force: true }); } catch { /* temp */ } });
 
 const GIT_ENV = { GIT_AUTHOR_NAME: 'Fixture', GIT_AUTHOR_EMAIL: 'fixture@example.invalid', GIT_COMMITTER_NAME: 'Fixture', GIT_COMMITTER_EMAIL: 'fixture@example.invalid' };
+Object.assign(process.env, GIT_ENV); /* the dispatcher commits with the caller's identity; a CI runner has none, so the fixture lends it one */
 const git = (cwd, args, env = {}) => execFileSync('git', args, { cwd, encoding: 'utf8', env: { ...process.env, ...GIT_ENV, ...env }, stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 
 /* ------------------------------------------------------------ fixtures */
