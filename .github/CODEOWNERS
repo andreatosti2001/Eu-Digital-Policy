@@ -1,0 +1,16 @@
+# CODEOWNERS — who must review a change to the paths that decide what the site publishes.
+#
+# This file does nothing by itself. It takes effect only together with a branch ruleset on `main`
+# that turns on "Require review from Code Owners" (docs/DEPLOYMENT.md §3a, rows 2 and 3). With a
+# single administrator GitHub will not let that person approve their own pull request, so the
+# ruleset needs either a second reviewer or the owner on its bypass list; the release gate cannot
+# know which was chosen.
+#
+# One owner per path. The paths are the ones docs/DEPLOYMENT.md §3a row 3 names: the workflows
+# (the gate is in pages.yml), the release dispatcher and gate, the decision ledger and reviewer
+# registry, and the allowlist that is the one home of what is published.
+
+/.github/                          @andreatosti2001
+/agent/release/                    @andreatosti2001
+/agent/implement/decisions/        @andreatosti2001
+/tools/pages-artifact.mjs          @andreatosti2001
