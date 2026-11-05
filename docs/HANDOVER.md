@@ -1,8 +1,65 @@
 # HANDOVER
 
-**Last updated:** 4 November 2026, the Phase 4 operational-closure session (release dispatcher, ledger integrity, deploy gate), on top of v2 Session 25.4.
-**Branch:** `claude/gifted-brown-qb5su2` (assigned by the environment), cut from `main` `cb9a76c` (#67 merged).
+**Last updated:** 5 November 2026, the favicon maintenance session (unnumbered), on top of the Phase 4 operational-closure session.
+**Branch:** `claude/wizardly-albattani-l5ahsw` (assigned by the environment), cut from `main` `d4f860e`.
 The entries below this session's are unchanged.
+
+## Favicon made crawlable — unnumbered maintenance session (5 Nov 2026)
+
+*Not a numbered v2 session and not a roadmap item:* `docs/ROADMAP-v2.md` §8 holds no row that numbers this work. The author's
+questions and answers are recorded there as rows dated 5 Nov 2026 ("Maintenance, favicon, …").
+
+**The report:** in Google results the site showed a grey globe. **Measured:** no icon file existed on any branch; every page
+declared its icon only as an inline `data:` URI; `https://eudigitalpolicy.eu/favicon.ico` answered 404. **Read** (Google's page
+"Favicon in Search", last updated 2026-10-27): Googlebot-Image must crawl the favicon file; square, ≥ 8x8, preferably > 48x48;
+BMP, GIF, ICO, PNG, JPEG, PPM, TIFF (not SVG); stable URL; one favicon per site; "not guaranteed". **Inference, not measured:**
+that a `data:` URI is not a crawlable file and is why Google fell back to the globe. The page does not mention `data:` URIs.
+
+**Done (branch only, nothing merged, no PR):**
+- The author's set copied byte for byte into `img/icons/` (16, 32, 48 px, `apple-touch-icon.png` 180 px opaque, `icon-192.png`,
+  `icon-512.png`); the set had **no `.ico`**, so `/favicon.ico` is a PNG-in-ICO container holding the 16, 32 and 48 px PNGs
+  untouched (compared byte for byte). `favicon.ico` joined `PUBLIC_FILES` in `tools/pages-artifact.mjs`; without it the file
+  would not have reached the host. The original file names were lost on upload; the names are this session's.
+- One generated `icons:begin…icons:end` block on all 31 pages, from `ICONS`/`iconTags()` in `tools/_footer.mjs` (the one home;
+  `instrument.html` is no longer the source). Hrefs are relative with each page's `route.root`, `404.html` root-absolute.
+  **The first version was root-absolute and the browser suite's `deploy:assets` refused it** (a project-site layout check;
+  `docs/DEPLOYMENT.md` §8 says every internal link is relative); the author chose relative hrefs, no gate was edited.
+- `img-src 'self' data:` → `img-src 'self'` (`tools/csp.mjs`) on all 31 pages: the favicon was the only `data:` use in the
+  published surface. The Control Room's own CSP is untouched.
+- `tools/seo-audit.mjs` fails a page with no `rel="icon"`, a `data:` icon, one leaving the site, naming a file the repository does
+  not hold, or not the image its extension names; `tools/selftest.mjs` S4e plants six such defects. Run against `origin/main`'s
+  tree the new check reports the `data:` icon on all 31 pages. `siteCopy()` now copies `favicon.ico`.
+- `docs/SEO-OPERATIONS.md` §7a.
+
+**Counts (5 Nov 2026, final tree, one run of each):** validate, i18n-audit, design-qa (0 errors, 0 warnings), seo-audit
+(0, 0), evidence-audit, freshness, `og-image --check` (every social card current), `_footer --check`, `commit-evidence
+origin/main HEAD` exit 0; `node tools/_footer.mjs` writes 30 files after the last change and then 0. 24 agent suites + `.control-room/`
++ `tools/selftest.mjs`: **1396 tests, 1395 pass, 0 fail, 1 skipped** (the `.control-room` one); `schemas check` exit 0. Browser
+suite `--require-browser`: **343 pass · 0 fail · 1 undecidable**, repository byte-identical. In headless Chromium over a local
+server, on `/`, `/instruments/gdpr/`, `/it/` and `/404.html`: five icon link tags in the DOM, no `data:` icon, every icon URL
+200 with `image/vnd.microsoft.icon` or `image/png`, no failed request, no CSP message. `robots.txt` disallows only `/agent/`,
+`/docs/`, `/tools/`; the sitemap lists no icon.
+
+**Not checked, and why:** the live site (nothing is deployed from this branch; this environment cannot see a deployment), Google
+(what Googlebot-Image fetches, and whether or when a favicon appears), and a real browser tab strip — headless Chromium has none, so
+the light and dark views were the real icon files drawn where a tab draws them, not a tab. A `404.html` served at a deep path was
+not requested. One suite failure during the run was this session's own edit to a document while the browser selftest hashed the
+tree; it passed alone.
+
+**Needs a merge to `main`** (the site is published from `main` by `.github/workflows/pages.yml`). **Only the owner can:** after the
+merge, Search Console URL Inspection on `https://eudigitalpolicy.eu/` and "Request indexing" (repeat it, since the homepage will have
+changed). Google decides whether and when the favicon appears (its page says days to weeks); nothing here promises it.
+
+**Left alone, as instructed:** the site-name work (title, WebSite JSON-LD, `og:site_name`, `application-name`), `CNAME`, Pages
+settings, DNS, translations, the og images. No manifest was added (the author's decision); `icon-192.png` and `icon-512.png` are
+linked from nothing.
+
+## Branch register — 5 November 2026 (the favicon session)
+
+- Branch `claude/wizardly-albattani-l5ahsw` (assigned by the environment), cut from `main` `d4f860e`; `origin/main` re-fetched at
+  the start and before this entry, unchanged. Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`,
+  already in the register.
+- Disposition: committed and pushed; **a pull request is the author's to ask for** (AGENTS.md: ask, do not open).
 
 ## Phase 4 operational-closure session — the release chain (4 Nov 2026)
 

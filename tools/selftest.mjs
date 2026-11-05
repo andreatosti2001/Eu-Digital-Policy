@@ -1051,7 +1051,7 @@ import { index as buildIndex } from '../js/data.js';
 function siteCopy(name) {
   const dir = scratch(name);
   for (const f of readdirSync(ROOT).filter((x) => x.endsWith('.html'))) cpSync(join(ROOT, f), join(dir, f));
-  for (const f of ['sitemap.xml', 'robots.txt', 'app.js', 'style.css']) cpSync(join(ROOT, f), join(dir, f));
+  for (const f of ['sitemap.xml', 'robots.txt', 'app.js', 'style.css', 'favicon.ico']) cpSync(join(ROOT, f), join(dir, f));
   for (const d of ['data', 'i18n', 'js', 'img', 'instruments', 'css']) cpSync(join(ROOT, d), join(dir, d), { recursive: true });
   /* the language editions (22 Oct 2026) */
   for (const d of readdirSync(ROOT).filter((x) => /^[a-z]{2}$/.test(x))) cpSync(join(ROOT, d), join(dir, d), { recursive: true });
@@ -1137,6 +1137,27 @@ test('S4d · the WebSite node stands on the homepage only, and every other page 
     assert.match(errs, /applies\.html: WebSite node on a page that is not the homepage/);
     assert.match(errs, /enforcement\.html: page node does not refer to the site by @id/);
     assert.match(errs, /index\.html: WebSite node missing or not the site identity/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('S4e · every page declares an icon that is a file in the repository, not a data: URI', () => {
+  const dir = siteCopy('seo-icon');
+  try {
+    /* the old inline icon returns on one page, an icon file is missing on another, an icon leaves the site on a third,
+       a fourth loses every icon tag, a fifth points at a file that is not a PNG, and a sixth loses its prefix */
+    edit(dir, 'index.html', (s) => s.replace('<link rel="icon" href="favicon.ico" sizes="any"/>', '<link rel="icon" href="data:image/svg+xml,%3Csvg%3E%3C/svg%3E"/>'));
+    edit(dir, 'applies.html', (s) => s.replaceAll('img/icons/favicon-32x32.png', 'img/icons/missing.png'));
+    edit(dir, 'enforcement.html', (s) => s.replace('href="favicon.ico"', 'href="https://example.org/favicon.ico"'));
+    edit(dir, 'it/index.html', (s) => s.replace(/<!-- icons:begin[\s\S]*?<!-- icons:end -->\n?/, ''));
+    edit(dir, 'instruments/gdpr/index.html', (t) => t.replaceAll('../../favicon.ico', 'favicon.ico'));
+    writeFileSync(join(dir, 'img/icons/favicon-16x16.png'), 'not a png');
+    const errs = seoAudit(dir).errors.join('\n');
+    assert.match(errs, /index\.html: an icon is a data: URI/);
+    assert.match(errs, /applies\.html: icon img\/icons\/missing\.png is not a file in the repository/);
+    assert.match(errs, /enforcement\.html: icon https:\/\/example\.org\/favicon\.ico leaves the site/);
+    assert.match(errs, /it\/index\.html: no <link rel="icon">/);
+    assert.match(errs, /instruments\/gdpr\/index\.html: icon favicon\.ico is not a file in the repository/);
+    assert.match(errs, /icon img\/icons\/favicon-16x16\.png is not the image its extension names/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
