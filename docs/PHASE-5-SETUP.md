@@ -1,7 +1,9 @@
 # PHASE 5 SET-UP — "what applies", advanced: the material, an entry condition and an exit that can fail, and the sessions
 
 **Status: APPROVED BY THE AUTHOR ON 4 NOV 2026 (roadmap §8, v2 Session 25, 25.4 questions 1–7; the answers in §7). PHASE 5
-IS PLANNED AND NOT OPENED**: it opens on the author's word against E5-1…E5-7 (§3). Written on 4 Nov 2026 in v2
+IS PLANNED AND NOT OPENED**: it opens on the author's word against E5-1…E5-7 (§3). **Amended on 5 Nov 2026** (roadmap §8,
+25.5 questions 1–4): its sessions are placed in `docs/SESSION-ARCHITECTURE.md` — S27 in Stage 2, beside Post-v2's A and B,
+and S28–S31 in Stage 3, which opens at G2, after Post-v2's C; §5.1 carries the places instead of dates. Written on 4 Nov 2026 in v2
 Session 25 (item 25.4, after the session stopped at 25.0), on `claude/inspiring-meitner-c7s9le`, at the author's request
 ("generate the set up for phase 5, acknoledging the sessions required in coherence with the previous phases"; roadmap §8,
 "v2 Session 25, 25.4: the set-up of Phase 5"). **"Roadmap §8" means that approval record throughout.** It adds no field,
@@ -135,19 +137,21 @@ the sessions outside the phases (§5.2) are part of what it measures.
 
 ## 5 · The sessions
 
-### 5.1 · Phase 5's own, placed against the calendar
+### 5.1 · Phase 5's own, placed in the architecture of sessions
+
+*Amended on 5 Nov 2026 (roadmap §8, v2 Session 25, 25.5 questions 1–4): the sessions are ordered by dependency, not by date, in `docs/SESSION-ARCHITECTURE.md`, which is the one home of their order. The first column gives each session's place there; the scope of each, the entry and exit criteria and the stop rules are unchanged. The column was "When" (Nov–Dec 2026 … before 13 Apr 2027) as approved on 4 Nov 2026 (25.4 question 7).*
 
 Every session ends with the next one's prompt (§8, 4 Nov 2026, the standing rule), and each has a checkpoint per item that
 changes anything outside `docs/`.
 
-| When | Session | Scope | Ends with |
+| Place (`docs/SESSION-ARCHITECTURE.md`) | Session | Scope | Ends with |
 |---|---|---|---|
-| Nov–Dec 2026 | **S27 · Design** (docs only; E5-5 does not apply) | **27.1** P-A…P-C and P-D (§7), if not decided before; **27.2** E5-3 written as a standard, with the planted cases a check would need; **27.3** the X5-1 table proposed: each of the 38 `depends_on` items, 4 threshold keys and 26 exemptions classified by what it rests on (the Article it names), measured with a scratch parser as `docs/ATTESTATION-FORM.md` §4 was, nothing in `data/` changed; M-1…M-6 each with a proposed session; **27.4** a paper test: the questionnaire answered for three or four of the 33 rules' typical cases, showing what changes and that no "no" is produced by an unanswered question | `docs/` only; Phase 5 opened on E5-1…E5-4, or not; the prompt of S25 confirmed unchanged and S28's drafted |
-| 12 Jan–2 Feb 2027 | **S25, S26 · The reading** (maintenance, already prompted) | The 33 rules re-read in the form; the statuses at their milestones. **Not Phase 5**: they change a rule only as maintenance does. S26 writes the prompt of S28, carrying S27's design. | All 33 rules dated in January 2027; E5-5 met |
-| Feb 2027 | **S28 · The standard as a check, and group (b)** | **28.1** E5-3 implemented in `tools/trigger-audit.mjs` (Class C), with `selftest` cases, at ERROR before any new trigger exists; **28.2** M-1, M-2, M-3, M-4, one question each, the Articles read in that session; a rule that changes is a closure in the form | checkpoint after 28.1; final |
-| Feb–Mar 2027 | **S29 · The questionnaire** | The askable items of X5-1 as data in `data/applicability.json` and `data/taxonomy.json`, the matcher's intersections, `applies.html` and `js/applies.js`, the i18n register, the browser checks of X5-3, `$limits` and the notice per X5-5 | checkpoint per batch of instruments |
-| Mar 2027 | **S30 · Derivations and exit** | M-5 (V2C-15), kept (§7 question 5), and only if the map sessions' V2C-13 has run — otherwise named residue; the exit audit X5-1…X5-7; the hand-over (§5.3) | Phase 5 concluded on the author's word, or the named residue |
-| before 13 Apr 2027 | **S31 · Buffer, only if needed** | Whatever S28–S30 could not close, named | |
+| Stage 2, beside PV2-01 and PV2-02; its output an input to C | **S27 · Design** (docs only; E5-5 does not apply) | **27.1** P-A…P-C and P-D (§7), if not decided before; **27.2** E5-3 written as a standard, with the planted cases a check would need; **27.3** the X5-1 table proposed: each of the 38 `depends_on` items, 4 threshold keys and 26 exemptions classified by what it rests on (the Article it names), measured with a scratch parser as `docs/ATTESTATION-FORM.md` §4 was, nothing in `data/` changed; M-1…M-6 each with a proposed session; **27.4** a paper test: the questionnaire answered for three or four of the 33 rules' typical cases, showing what changes and that no "no" is produced by an unanswered question | `docs/` only; S28's prompt drafted; whether Phase 5 opens is decided at G2, after C's selection (25.5 questions 1 and 3) |
+| Track M, before 3 Feb 2027 | **S25, S26 · The reading** (maintenance, already prompted) | The 33 rules re-read in the form; the statuses at their milestones. **Not Phase 5**: they change a rule only as maintenance does. S28's prompt is S27's (27.5). | All 33 rules dated in January 2027; E5-5 met |
+| Stage 3, after G2 and E5-5 | **S28 · The standard as a check, and group (b)** | **28.1** E5-3 implemented in `tools/trigger-audit.mjs` (Class C), with `selftest` cases, at ERROR before any new trigger exists; **28.2** M-1, M-2, M-3, M-4, one question each, the Articles read in that session; a rule that changes is a closure in the form | checkpoint after 28.1; final |
+| Stage 3, after S28; V2C-21 (Track R) before it | **S29 · The questionnaire** | The askable items of X5-1 as data in `data/applicability.json` and `data/taxonomy.json`, the matcher's intersections, `applies.html` and `js/applies.js`, the i18n register, the browser checks of X5-3, `$limits` and the notice per X5-5 | checkpoint per batch of instruments |
+| Stage 3, after S29; V2C-13 (Track R) before its V2C-15 | **S30 · Derivations and exit** | M-5 (V2C-15), kept (§7 question 5), and only if the map sessions' V2C-13 has run — otherwise named residue; the exit audit X5-1…X5-7; the hand-over (§5.3) | Phase 5 concluded on the author's word, or the named residue |
+| Stage 3, only if needed | **S31 · Buffer, only if needed** | Whatever S28–S30 could not close, named | |
 
 **Stop rules.** (1) In S27, the paper test (27.4) goes first, then 27.3 moves to S28's opening; 27.1 and 27.2 never move.
 (2) In S28–S29, a rule whose cited texts were not all read is not closed and its date does not move (§8, v2 Session 21,

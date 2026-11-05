@@ -9,6 +9,9 @@ measured on the branch of v2 Session 25 on 4 Nov 2026, full clone. The decisions
 file is the instruction text that cites them. It records no §8 row of its own and does not open the session: v2 Session
 27 records its scope in §8 as its first write. Written in Italian, as the author's session prompts are. The author may
 change it before use.
+Amended on 5 Nov 2026 (v2 Session 25, 25.5; §8, 25.5 questions 1–4): Session 27 sits in Stage 2 of
+docs/SESSION-ARCHITECTURE.md, beside Post-v2's PV2-01 and PV2-02, and its output is an input to C; Phase 5 opens at G2, after
+C's selection, not at the end of Session 27. The date wording and 27.5 are changed accordingly; nothing else.
 -->
 
 SESSION 27 — Fase 5, il disegno: lo standard dei nuovi trigger (E5-3), la tabella delle disposizioni (X5-1), la prova su
@@ -25,12 +28,14 @@ Verifica che `main` contenga il piano della Fase 5 e questo prompt:
 - `docs/ROADMAP-v2.md` §8 ha le righe «v2 Session 25, 25.4 question 1» … «question 7» e «v2 Session 25, 25.4: the prompt
   of v2 Session 27» (se manca la riga della domanda 7, il piano non è approvato: fermati e chiedi);
 - `docs/prompts/v2-session-25.md` esiste, invariato (la lettura di gennaio);
-- `docs/prompts/v2-session-27.md` esiste.
+- `docs/prompts/v2-session-27.md` esiste;
+- `docs/SESSION-ARCHITECTURE.md` esiste, e §8 ha le righe «v2 Session 25, 25.5 question 1» … «question 4» e una riga che
+  apre lo Stadio 2 (gate G1). **Senza la riga di G1 lo Stadio 2 non è aperto: fermati e chiedi.**
 
 Se manca qualcosa, fermati e segnalalo.
 
-**Rimisura la data, prima di ogni altra cosa.** Questa sessione è il disegno, da fare in novembre–dicembre 2026 (§8, 25.4
-domanda 2). **Se la data di oggi è il 12 gennaio 2027 o dopo**, la finestra della sessione 25 (12 gennaio – 2 febbraio 2027)
+**Rimisura la data, prima di ogni altra cosa.** Questa sessione è il disegno della Fase 5, nello Stadio 2 di
+`docs/SESSION-ARCHITECTURE.md`; non ha una data, ma la Traccia M ha la precedenza. **Se la data di oggi è il 12 gennaio 2027 o dopo**, la finestra della sessione 25 (12 gennaio – 2 febbraio 2027)
 è aperta e le 33 regole scadono il 3 febbraio: dillo all'autore prima di ogni altra cosa, perché la lettura viene prima
 del disegno. **Se è il 3 febbraio 2027 o dopo** e le sessioni 25 e 26 non hanno chiuso le loro letture, le 33 regole sono
 `RULE_STALE`: dillo per primo.
@@ -81,10 +86,10 @@ il prompt della sessione 28.** La numerazione segue `docs/PHASE-5-SETUP.md` §5.
 - **27.4 · La prova su carta** — tre o quattro casi tipici, scelti dall'autore con una domanda, ciascuno attraversato con il
   questionario come la tabella proposta lo renderebbe: quali regole scattano oggi, quali dopo, e la dimostrazione che **nessuna
   domanda lasciata senza risposta produce un «no»** (X5-3). Su carta, in `docs/`; nessun codice.
-- **27.5 · Il prompt della sessione 28 e l'apertura** — il prompt di `docs/prompts/v2-session-28.md` (E5-3 come controllo a
-  ERROR, poi F-05, F-12, F-24, R-8, una domanda ciascuno, dopo le letture delle sessioni 25 e 26: E5-5), sotto la regola
-  permanente di §8; e la domanda all'autore se **aprire la Fase 5** su E5-1…E5-4, misurati (E5-5 vincola solo le modifiche
-  alle regole). **Il checkpoint finale approva insieme il lavoro e il prompt; senza il prompt non si approva.**
+- **27.5 · Il prompt della sessione 28** — il prompt di `docs/prompts/v2-session-28.md` (E5-3 come controllo a ERROR, poi
+  F-05, F-12, F-24, R-8, una domanda ciascuno; la 28 parte dopo il gate G2 — la selezione di C e l'apertura della Fase 5 — e
+  dopo le letture delle sessioni 25 e 26: E5-5), sotto la regola permanente di §8. **La Fase 5 non si apre in questa
+  sessione**: si apre al gate G2, dopo PV2-05 (§8, 25.5 domande 1 e 3). **Il checkpoint finale approva insieme il lavoro e il prompt; senza il prompt non si approva.**
 
 **Regola d'arresto** (`docs/PHASE-5-SETUP.md` §5.1, regola 1): se la sessione si allunga, cade prima 27.4, poi 27.3 passa
 all'apertura della sessione 28, nominata nel suo prompt; **27.2 non si sposta.**
@@ -114,15 +119,14 @@ Misurato il 4 novembre 2026 sul branch della sessione 25, clone completo. **Rimi
   nessuna regola si chiude e nessuna data si muove.
 - Prima di ogni checkpoint: `validate`, `i18n-audit`, `design-qa`, `evidence-audit --as-of <oggi>`, `freshness --as-of
   <oggi>`, `seo-audit`, `node --test tools/selftest.mjs`, `node tools/commit-evidence.mjs <base> HEAD`. **Prima del
-  checkpoint finale, se l'autore apre la Fase 5, anche E5-6 per intero**: le 25 suite, la suite browser con
-  `--require-browser`, il gate avversariale. Non scrivere nell'albero mentre la batteria gira.
+  checkpoint finale, anche le 25 suite**, perché E5-6 si misurerà a G2 su questo albero. Non scrivere nell'albero mentre la batteria gira.
 
 ## Checkpoint
 
 - **27.2:** lo standard, con le risposte dell'autore (righe §8) e i casi piantati; il rapporto in `docs/HANDOVER.md`.
   Attendi l'approvazione, registrata in §8.
 - **Finale (27.3–27.5):** la tabella proposta e le disposizioni decise, per strumento; la prova su carta; il prompt della 28
-  (percorso, commit, risposte dell'autore); la decisione sull'apertura della Fase 5; la checklist. Riscarica `origin/main`
+  (percorso, commit, risposte dell'autore); la checklist. Riscarica `origin/main`
   subito prima dell'ultima scrittura di `docs/HANDOVER.md`. **Senza il prompt della 28 non si chiede l'approvazione.** Poi
   chiedi se aprire una pull request verso `main` e registra la sorte del branch.
 
@@ -158,7 +162,7 @@ Misurato il 4 novembre 2026 sul branch della sessione 25, clone completo. **Rimi
 
 La sessione è completa quando: lo standard E5-3 è scritto in `docs/` con i suoi casi piantati e approvato in §8; la tabella
 X5-1 è proposta e le disposizioni decise per strumento (o, per la regola d'arresto, la tabella è nominata nel prompt della
-28); la prova su carta è fatta (o caduta, nominata); l'autore ha deciso se aprire la Fase 5; i checkpoint sono approvati in
+28); la prova su carta è fatta (o caduta, nominata); il suo esito è consegnato come input a C (PV2-03…05); i checkpoint sono approvati in
 §8; `selftest` passa e nulla fuori da `docs/` è cambiato; **il prompt della sessione 28 esiste su questo branch, porta la
 stessa regola nel suo criterio di uscita, ed è approvato con il lavoro** (regola permanente di §8, 4 nov 2026). Oppure
 l'autore decide di fermarsi: anche allora, **prima di chiudere, si scrive il prompt della sessione successiva** con ciò che
