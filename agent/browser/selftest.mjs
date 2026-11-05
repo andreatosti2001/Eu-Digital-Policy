@@ -21,7 +21,8 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, writeFileSync, mkdtempSync, cpSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, cpSync, rmSync, readdirSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
@@ -387,4 +388,49 @@ test('the deployed-path check FAILS on a root-relative reference', async (t) => 
     if (browser) { try { await browser.close(); } catch { /* not a site defect */ } }
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+/* ------------------------------------------------------------ a launch that fails leaves nothing running
+   5 Nov 2026, Pages run 83: Chromium started on a runner with no usable dbus, never printed its DevTools endpoint,
+   launch() rejected after 30 s and left the child running with its pipes open, so the Node process never exited and the
+   deploy gate's browser job sat until its 20-minute timeout. A stand-in browser that behaves the same way reproduces it. */
+
+const NEVER_PRINTS_AN_ENDPOINT = (pidFile) =>
+  `require('fs').writeFileSync(${JSON.stringify(pidFile)}, String(process.pid)); console.error('dbus: Failed to connect to the bus'); setInterval(() => {}, 1000);`;
+const profiles = () => new Set(readdirSync(tmpdir()).filter((f) => f.startsWith('browser-qa-')));
+
+test('LAUNCH 1 · a browser that never prints its endpoint is rejected, killed, and its profile removed', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'launch-test-'));
+  const pidFile = join(dir, 'pid');
+  const before = profiles();
+  const t0 = Date.now();
+  await assert.rejects(
+    launch({ executable: process.execPath, flags: ['-e', NEVER_PRINTS_AN_ENDPOINT(pidFile), '--'], launchTimeoutMs: 400 }),
+    /did not print a DevTools endpoint/);
+  assert.ok(Date.now() - t0 < 5000, 'it failed in the time it was given, not later');
+  const pid = Number(readFileSync(pidFile, 'utf8'));
+  await new Promise((ok) => setTimeout(ok, 300));
+  assert.throws(() => process.kill(pid, 0), (e) => e.code === 'ESRCH', `the stand-in browser (pid ${pid}) is still running after launch() failed`);
+  assert.deepEqual([...profiles()].filter((f) => !before.has(f)), [], 'the temporary profile was removed');
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test('LAUNCH 2 · the process that called a failed launch() exits by itself, which is what the CI job needs', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'launch-test-'));
+  const script = `import { launch } from ${JSON.stringify(new URL('./cdp.mjs', import.meta.url).href)};
+    try { await launch({ executable: process.execPath, flags: ['-e', ${JSON.stringify(NEVER_PRINTS_AN_ENDPOINT(join(dir, 'pid')))}, '--'], launchTimeoutMs: 400 }); }
+    catch (e) { console.log('failed as expected'); }`;
+  const r = spawnSync(process.execPath, ['--input-type=module', '-e', script], { encoding: 'utf8', timeout: 20000 });
+  rmSync(dir, { recursive: true, force: true });
+  assert.equal(r.error?.code, undefined, 'the process had to be killed: launch() left something running');
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(r.stdout, /failed as expected/);
+});
+
+test('LAUNCH 3 · a browser that exits before printing an endpoint is rejected with its stderr, and nothing is left behind', async () => {
+  const before = profiles();
+  await assert.rejects(
+    launch({ executable: process.execPath, flags: ['-e', "console.error('no display'); process.exit(3)", '--'], launchTimeoutMs: 5000 }),
+    /exited with code 3 before printing a DevTools endpoint[\s\S]*no display/);
+  assert.deepEqual([...profiles()].filter((f) => !before.has(f)), []);
 });

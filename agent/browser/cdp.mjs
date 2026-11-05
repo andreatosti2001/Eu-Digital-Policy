@@ -138,18 +138,32 @@ function openSocket(url) {
 /**
  * Launch a browser and attach to it.
  *
- * @param {{executable:string, flags?:string[], headless?:boolean}} opts
+ * A launch that FAILS leaves nothing behind: the child is killed and its temp
+ * profile removed before the error propagates. Until 5 Nov 2026 it did not, and
+ * a Chromium that started but never printed its DevTools endpoint (a runner
+ * with no usable dbus, seen in Pages run 83) was left running with its pipes
+ * open, so the Node process never exited: the suite printed "THE RUN THREW"
+ * and the job then sat until its 20-minute timeout instead of failing in 30
+ * seconds.
+ *
+ * @param {{executable:string, flags?:string[], launchTimeoutMs?:number}} opts
  * @returns {Promise<Browser>}
  */
-export async function launch({ executable, flags = CHROME_FLAGS }) {
+export async function launch({ executable, flags = CHROME_FLAGS, launchTimeoutMs = LAUNCH_TIMEOUT_MS }) {
   const profile = mkdtempSync(join(tmpdir(), 'browser-qa-'));
   const child = spawn(executable, [...flags, `--user-data-dir=${profile}`, 'about:blank'], {
     stdio: ['ignore', 'pipe', 'pipe'],
   });
 
-  const wsUrl = await new Promise((ok, fail) => {
+  const abandon = () => {
+    try { child.kill('SIGKILL'); } catch { /* already dead */ }
+    try { child.stdout?.destroy(); child.stderr?.destroy(); } catch { /* the pipes are gone with it */ }
+    try { rmSync(profile, { recursive: true, force: true }); } catch { /* a leftover temp profile is not a test result */ }
+  };
+
+  const endpoint = () => new Promise((ok, fail) => {
     let buf = '';
-    const timer = setTimeout(() => fail(new Error(`${executable} did not print a DevTools endpoint within ${LAUNCH_TIMEOUT_MS} ms. stderr so far:\n${buf.slice(-2000)}`)), LAUNCH_TIMEOUT_MS);
+    const timer = setTimeout(() => fail(new Error(`${executable} did not print a DevTools endpoint within ${launchTimeoutMs} ms. stderr so far:\n${buf.slice(-2000)}`)), launchTimeoutMs);
     const onData = (chunk) => {
       buf += String(chunk);
       const m = buf.match(/DevTools listening on (ws:\/\/\S+)/);
@@ -160,7 +174,11 @@ export async function launch({ executable, flags = CHROME_FLAGS }) {
     child.once('exit', (code) => { clearTimeout(timer); fail(new Error(`${executable} exited with code ${code} before printing a DevTools endpoint. stderr:\n${buf.slice(-2000)}`)); });
   });
 
-  const ws = await openSocket(wsUrl);
+  let wsUrl;
+  try { wsUrl = await endpoint(); } catch (e) { abandon(); throw e; }
+
+  let ws;
+  try { ws = await openSocket(wsUrl); } catch (e) { abandon(); throw e; }
   return new Browser({ child, ws, profile, rpc: new Rpc(ws) });
 }
 
