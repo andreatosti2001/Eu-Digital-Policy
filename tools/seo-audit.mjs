@@ -41,6 +41,11 @@ const SHELL_PARENT = Object.fromEntries(Object.entries(childOfFromShell())
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
+/* The first bytes of the two image formats an icon on this site may be, so
+   an icon whose file exists but is not the image its extension names (an
+   HTML error page saved as favicon.ico) is not mistaken for one. */
+const ICON_MAGIC = { png: Buffer.from([0x89, 0x50, 0x4e, 0x47]), ico: Buffer.from([0, 0, 1, 0]) };
+
 /* ---------------------------------------------------------- reading HTML
    Deliberately crawler-shaped: scripts, styles and <noscript> removed
    before text or links are counted, because a crawler that runs no script
@@ -69,6 +74,9 @@ export function read(html) {
     links: [...visible.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)].map((m) => m[1]),
     licences: [...visible.matchAll(/<a\b[^>]*>/g)].map((m) => m[0])
       .filter((a) => /\brel="[^"]*\blicense\b/.test(a)).map((a) => (a.match(/\bhref="([^"]+)"/) || [])[1]),
+    icons: [...html.matchAll(/<link\b[^>]*>/g)].map((m) => m[0])
+      .filter((t) => /\brel="(?:[^"]*\s)?(?:icon|apple-touch-icon)(?:\s[^"]*)?"/.test(t))
+      .map((t) => ({ rel: (t.match(/\brel="([^"]*)"/) || [])[1], href: (t.match(/\bhref="([^"]*)"/) || [])[1] || '' })),
     jsonld: [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]),
     crumbs: [...(visible.match(/<ol class="crumbs">([\s\S]*?)<\/ol>/) || [, ''])[1].matchAll(/<li>([\s\S]*?)<\/li>/g)]
       .map((m) => unesc(m[1].replace(/<[^>]+>/g, '').trim())),
@@ -149,6 +157,20 @@ export function audit(root = ROOT) {
     if (p.tw('title')[0] !== title) err(f, 'twitter:title differs from <title>');
     if (p.tw('description')[0] !== desc) err(f, 'twitter:description differs from the meta description');
     if (p.og('site_name')[0] !== SITE.name) err(f, `og:site_name is not "${SITE.name}"`);
+
+    /* The icon is a file Googlebot-Image can fetch, not a data: URI (5 Nov 2026). Every page declares a
+       rel="icon", and every icon it declares resolves to a file in the repository holding the image its
+       extension names. */
+    if (!p.icons.some((i) => i.rel.split(/\s+/).includes('icon'))) err(f, 'no <link rel="icon">');
+    for (const i of p.icons) {
+      if (/^data:/i.test(i.href)) { err(f, `an icon is a data: URI — not a file a crawler can fetch (${i.href.slice(0, 24)}…)`); continue; }
+      const path = resolveHref(f, i.href);
+      if (path === null) { err(f, `icon ${i.href} leaves the site`); continue; }
+      const file = join(root, path.replace(/[?#].*$/, ''));
+      if (!existsSync(file)) { err(f, `icon ${i.href} is not a file in the repository`); continue; }
+      const want = ICON_MAGIC[file.split('.').pop().toLowerCase()];
+      if (want && !readFileSync(file).subarray(0, want.length).equals(want)) err(f, `icon ${i.href} is not the image its extension names`);
+    }
 
     if (route.indexable) {
       if (title) titles.set(title, [...(titles.get(title) || []), f]);
