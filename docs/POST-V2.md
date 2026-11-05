@@ -9,6 +9,11 @@ deve decidere.
 **Aggiornamento del 4 novembre 2026:** la stima delle sessioni è stata rifatta dall'autore (§4: numerazione
 PV2-01…PV2-12 e previsione di 11 sessioni nello scenario raccomandato). Le parti A–E (§3) non sono cambiate.
 La stima è una **previsione**, non una durata garantita, e non apre il post-v2: lo stato resta «non aperto».
+**Aggiornamento del 5 novembre 2026** (`docs/ROADMAP-v2.md` §8, v2 Session 25, 25.5 domande 1–4): il post-v2 è diviso in
+due stadi dell'architettura delle sessioni (`docs/SESSION-ARCHITECTURE.md`). **A, B e C (PV2-01…05) sono lo Stadio 2,
+prima della Fase 5**, e si aprono sulla parola dell'autore senza che la v2 sia chiusa; **D, E e il final QA (PV2-06…12)
+sono lo Stadio 4**, dopo la Fase 5 e dopo la chiusura della v2, e mantengono le condizioni del §2. Le parti A–E (§3)
+non sono cambiate. Lo stato resta «non aperto» finché l'autore non apre lo Stadio 2 (gate G1).
 **Riferimenti:** `docs/V2-CLOSURE.md`, domanda 6 (e la voce V2C-37); `docs/ROADMAP-v2.md` §8 per ogni decisione
 presa.
 
@@ -31,6 +36,10 @@ una decisione esplicita dell'autore. Quindi, prima di aprire il post-v2:
 - la v2 è chiusa o la sua chiusura è decisa, con i finding aperti classificati (`docs/V2-CLOSURE.md`);
 - il gate finale di chiusura (sessione 11, se necessaria) è registrato in §8;
 - la Fase 3 è chiusa, o l'autore decide che il post-v2 può partire comunque.
+
+*Modificato il 5 novembre 2026 per A, B e C soltanto* (`docs/ROADMAP-v2.md` §8, v2 Session 25, 25.5 domanda 1): PV2-01…05
+non richiedono la chiusura della v2; si aprono con lo Stadio 2 di `docs/SESSION-ARCHITECTURE.md`, al gate G1. Per D, E e
+il final QA (PV2-06…12) le tre condizioni sopra restano come scritte (25.5 domanda 4).
 
 ## 3. Le cinque parti, nell'ordine del piano
 
@@ -171,6 +180,9 @@ sono collegate).
 **PV2-12 non è una sessione ordinaria.** Si attiva solo se PV2-11, o una sessione precedente, rileva problemi che
 non possono essere chiusi nel perimetro assegnato. Non rientra nel conteggio dello scenario raccomandato.
 
+*Dal 5 novembre 2026* le righe PV2-01…05 sono lo Stadio 2 e PV2-06…12 lo Stadio 4 di `docs/SESSION-ARCHITECTURE.md`, che è
+la sede dell'ordine tra queste sessioni e quelle della Fase 5; tra i due stadi stanno la Fase 5 e la chiusura della v2.
+
 L'ordine delle righe è l'ordine di esecuzione previsto: data readiness → selezione frontend → prototipi →
 redesign e visualizzazioni → blog → final QA. L'ordine di PV2-10 non stabilisce una dipendenza di E dalle altre
 parti (vedi §5).
@@ -225,8 +237,10 @@ dall'assenza di regressioni e dalla possibilità del lettore di capire che cosa 
 
 ## 6. Domande aperte per l'autore
 
-1. Il post-v2 si apre, e quando? (`docs/V2-CLOSURE.md`, domanda 6.)
+1. Il post-v2 si apre, e quando? (`docs/V2-CLOSURE.md`, domanda 6.) **Per A–C deciso il 5 novembre 2026**: allo Stadio 2,
+   al gate G1 (`docs/ROADMAP-v2.md` §8, 25.5 domanda 1). Per D–E: dopo la chiusura della v2 (25.5 domanda 4).
 2. La parte A (data readiness) può partire prima della chiusura formale della v2, perché non tocca il contenuto?
+   **Sì, con B e C** (25.5 domanda 1).
 3. Il gate di B richiede la griglia approvata prima della ricerca, come scritto nel piano?
 4. ~~La stima di sessioni va rifatta: chi la fa, e in quale sessione?~~ **Rifatta dall'autore il 4 novembre 2026**
    (§4), come previsione. Resta aperto se e quando registrarla in `docs/ROADMAP-v2.md` §8: l'aggiornamento di

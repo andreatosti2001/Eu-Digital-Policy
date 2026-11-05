@@ -1,8 +1,80 @@
 # HANDOVER
 
-**Last updated:** 5 November 2026, the favicon maintenance session (unnumbered), on top of the Phase 4 operational-closure session.
-**Branch:** `claude/wizardly-albattani-l5ahsw` (assigned by the environment), cut from `main` `d4f860e`.
+**Last updated:** 5 November 2026, v2 Session 25, item 25.5 (the architecture of sessions), on top of the favicon maintenance session.
+**Branch:** `claude/inspiring-meitner-c7s9le` (assigned by the environment), restarted from `main` `6060bd2` after #67 was merged.
 The entries below this session's are unchanged.
+
+## v2 Session 25, 25.5 — the architecture of sessions; Post-v2 A–C before Phase 5 (5 Nov 2026)
+
+**The request** (§8, "v2 Session 25, 25.5: the architecture of sessions…", `44a6261`), in the author's words: "the roadmap
+not in terms of timeline but of architecture of sessions. Moreover, I want to change the workflow architecture to insert
+block A,B,C of post v2 after session 5", with a pasted analysis proposing four stages: Phase 4 closure; Post-v2 A–C; Phase
+5; Post-v2 D–E.
+
+**Measured first, on `main` `6060bd2`:**
+- #67 was merged (`cb9a76c`), so the branch was restarted from `main`.
+- #68, "the Phase 4 operational-closure session", built a release dispatcher, a hash-chained signed ledger and a deploy gate
+  (`0338b0c`, `docs/AUDIT-2026-11-04.md`). It wrote no §8 row, against "Phase 4 concluded" and X-3.
+- Measured here: no `decisions.jsonl`, no `reviewers.json`, no `agent/orchestrator/dispatchers.mjs`.
+- `docs/POST-V2.md` §2 opened Post-v2 only after the v2 closes, and its C is three sessions (PV2-03…05), not one.
+
+**Decided, one question at a time** (§8, 25.5 questions 1–4, `3851c8a`, `1fba50d`, `aa82e61`, `34868c7`; each
+recommendation chosen):
+1. Post-v2 A–C (PV2-01…05) come before Phase 5; `docs/POST-V2.md` §2 is amended for them only.
+2. #68 is recorded as an operational closure the author requested after Phase 4's conclusion, and X-3 is amended by name.
+   Phase 4 stays concluded, and **Stage 1** is one session that finishes it: a reviewer and a first signed human decision,
+   the gate verified in GitHub Actions, the owner-only settings listed.
+3. Session 27, Phase 5's design (docs only), sits inside Stage 2, its output an input to C.
+4. Post-v2 D, E and the QA (PV2-06…12) come after the v2 closes.
+
+**Written:**
+- **`docs/SESSION-ARCHITECTURE.md`**, the one home of the order of the work, with no dates:
+  - four stages, each opened by a gate only the author opens: G1 after Stage 1; G2 at C's selection, S27's approval and
+    Phase 5 opened on E5-1…E5-7; G3 Phase 5 concluded; G4 the v2 closed;
+  - **Track M**: the law's calendar (S25, S26 before 3 Feb 2027, T-12, the statuses, R-7, each next reading round, the
+    grant). A due Track M session pre-empts any stage.
+  - **Track R**: the v2's sessions outside the phases, all due before G4. Three of them feed Stage 3: V2C-21 before S29,
+    V2C-13 before V2C-15, F-18 before any change to `ap-dma-01`.
+- `docs/PHASE-5-SETUP.md`: the status line, and §5.1's "When" column replaced by each session's place.
+- `docs/POST-V2.md`: annotations in Italian to the header, §2, §4.1 and §6 questions 1–2. §3, the author's text, is unchanged.
+- `docs/prompts/v2-session-27.md`: S27 in Stage 2, verifying G1's row; Phase 5 no longer opened at its end; S28's prompt
+  after G2.
+- `docs/ROADMAP-v2.md` §6: a pointer to the architecture.
+
+**What changed in meaning:**
+- Phase 5 opens later than the 4 Nov plan said: at G2, after C, not after S27 alone.
+- Nothing is dated except Track M.
+- No stage is open. **Stage 1 has no session yet and no prompt.** The standing rule is met for S27, whose prompt exists;
+  Stage 1's prompt is the next to write, on the author's word.
+
+**After the author's question "pull #69 was already merged, did you considered it?"**: #69 is in this branch's base
+(`6060bd2` is its merge), its seven §8 rows and its handover entry are intact, and its added `selftest` test is the 141st;
+but the architecture had no place for maintenance the author requests outside the plan. Proposed: Track M extended to it.
+**Not decided** — the author's next answer covered only the two points below.
+
+**A correction, measured** (§8 `6be5d3b`): question 2's row said the gate was "not verified running in GitHub Actions",
+copied from `docs/AUDIT-2026-11-04.md` §F without measuring. The logs of `pages.yml` runs 76 (`d4f860e`) and 77 (`6060bd2`)
+show it ran and passed (C1–C4, C6, C9 ✓; C5, C7, C10 "–": no ledger, no Proposal, no signature; C8 "!": four #69 commits
+reported). Stage 1's target is now the part never exercised: C5, C7, C10 on a real signed decision. G1 and Stage 1 in
+`docs/SESSION-ARCHITECTURE.md` carry it.
+
+**The prompt of Stage 1** (the author's "yse", §8 `6be5d3b`): `docs/prompts/v2-stage-1-operational-closure.md`, in
+Italian — 1.1 measure (readiness, `release status`, the gate's logs, the §3a settings asked one by one); 1.2 the author's
+acts guided (keygen outside the repository, `reviewers.json` by PR, the pin, §3a), checkpoint; 1.3 one real change through
+the chain with the author's signature; 1.4 readiness re-measured and G1 decided; 1.5 PV2-01's prompt. The session never
+handles the private key, never signs, never fakes an approval; if the author's acts are not done it stops at 1.2 and says
+G1 does not hold.
+
+**Not done:** no change to `data/`, `tools/`, `js/`, a page or `agent/`. `AGENTS.md`'s document table does not list
+`docs/PHASE-5-SETUP.md` or `docs/SESSION-ARCHITECTURE.md`, and still says Phase 4 is open: status-document work for the
+author to decide. The reminder of 13 Jan 2027 still stands.
+
+## Branch register — 5 November 2026 (v2 Session 25, 25.5)
+
+- Branch `claude/inspiring-meitner-c7s9le`, restarted from `main` `6060bd2` after #66 and #67 were merged (its earlier
+  history is in `main`). Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- Disposition: on the author's answer ("yse", §8 `6be5d3b`), pushed and a new pull request to `main` opened; `origin/main`
+  re-fetched before this entry. Nothing is pushed to the branch after the pull request is opened.
 
 ## Favicon made crawlable — unnumbered maintenance session (5 Nov 2026)
 
