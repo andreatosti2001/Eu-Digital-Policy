@@ -26,8 +26,9 @@ import { test } from 'node:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import assert from 'node:assert/strict';
+import { generateKeyPairSync } from 'node:crypto';
 
-import { runAllAttacks, he04Verdict } from './attacks.mjs';
+import { runAllAttacks, he04Verdict, controlPlaneRecords, registryHoldsOnlyPublicKeys, REGISTRY_PATH } from './attacks.mjs';
 import { AREAS, OUTCOMES, SEVERITIES, hashTree, cleanup, REPO_ROOT } from './harness.mjs';
 
 /* One pair of runs, shared by every test below. Running the gate
@@ -121,3 +122,56 @@ test('HE-04 decides from what the tree establishes, never from a list of skipped
   assert.ok(!/selftest\.mjs|\/policy\/verify\/|\/browser\//.test(block), 'HE-04 skips no file by path');
 });
 
+
+/* ------------------------------------------------------------ PP-08 and the reviewer registry
+   5 Nov 2026. The registry holds public keys, is tracked by design, and sits in a directory PP-08 treats as private.
+   The exemption is the exact path AND a check of the content, so it cannot become a stale exclusion list. */
+
+const PUB = generateKeyPairSync('ed25519').publicKey.export({ type: 'spki', format: 'pem' });
+const PRIV = generateKeyPairSync('ed25519').privateKey.export({ type: 'pkcs8', format: 'pem' });
+const entry = (over = {}) => ({ reviewer_id: 'rev-x', name: 'X', role: 'r', status: 'active', added_at: '2026-11-05T00:00:00.000Z', public_key_pem: PUB, ...over });
+const registry = (reviewers) => JSON.stringify({ reviewers }, null, 2) + '\n';
+
+test('PP-08 R1 · a registry of public keys is not a leaked record, and the real tree holds only that', () => {
+  const ok = registryHoldsOnlyPublicKeys(registry([entry()]));
+  assert.equal(ok.ok, true, ok.why);
+  const c = controlPlaneRecords([REGISTRY_PATH, 'agent/implement/decisions/README.md'], registry([entry()]));
+  assert.deepEqual(c.records, [], 'the registry and the README are not records');
+  assert.equal(c.registry.ok, true);
+  const real = runA.find((r) => r.id === 'PP-08');
+  assert.notEqual(real.outcome, 'succeeded', real.evidence);
+});
+
+test('PP-08 R2 · the exemption is the exact path: every other file in decisions/ is still a leaked record', () => {
+  for (const f of ['agent/implement/decisions/decisions.jsonl', 'agent/implement/decisions/reviewers.json.bak', 'agent/implement/decisions/other.json', 'agent/implement/decisions/sub/reviewers.json', 'agent/records/x.json']) {
+    const c = controlPlaneRecords([REGISTRY_PATH, f], registry([entry()]));
+    assert.deepEqual(c.records, [f], `${f} is still a record`);
+  }
+});
+
+test('PP-08 R3 · the exemption is content-checked: a registry that holds anything but public keys is a leaked record again', () => {
+  const bad = {
+    'a private key marker': registry([entry({ public_key_pem: PRIV })]),
+    'a private key in another field': registry([entry({ name: PRIV })]),
+    'an extra field': registry([entry({ note: 'hello' })]),
+    'a token': registry([entry({ name: 'ghp_' + 'a'.repeat(36) })]),
+    'a top-level extra field': JSON.stringify({ reviewers: [entry()], secret: 'x' }),
+    'a key that is not a key': registry([entry({ public_key_pem: 'not a key' })]),
+    'not JSON': '{ reviewers: ',
+    'no reviewers array': JSON.stringify({ reviewers: 'x' }),
+    'an empty file': '',
+  };
+  for (const [name, raw] of Object.entries(bad)) {
+    assert.equal(registryHoldsOnlyPublicKeys(raw).ok, false, name);
+    const c = controlPlaneRecords([REGISTRY_PATH], raw);
+    assert.deepEqual(c.records, [REGISTRY_PATH], `${name}: the registry is a record again`);
+  }
+  assert.equal(controlPlaneRecords([REGISTRY_PATH], null).records.length, 1, 'a registry that cannot be read is not exempt');
+});
+
+test('PP-08 R4 · the website gets no exemption and the exemption is not a path list in the attack', () => {
+  const src = readFileSync(join(REPO_ROOT, 'agent/policy/verify/attacks.mjs'), 'utf8');
+  const block = src.slice(src.indexOf("attack('PP-08'"), src.indexOf('/* PP-09'));
+  assert.match(block, /const onWebsite = published\.filter\(isRecordDir\)/, 'the website listing is judged without the exemption');
+  assert.ok(!block.includes('reviewers.json'), 'PP-08 names no file; the one exemption lives in controlPlaneRecords()');
+});

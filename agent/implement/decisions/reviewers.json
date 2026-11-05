@@ -1,0 +1,12 @@
+{
+  "reviewers": [
+    {
+      "reviewer_id": "rev-andrea",
+      "name": "Andrea Tosti",
+      "role": "repository author",
+      "status": "active",
+      "added_at": "2026-11-05T22:38:00.000Z",
+      "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAVE8ISdKFcHhthPebJCPTqyQpVwEw1sRBKStEh/7zx90=\n-----END PUBLIC KEY-----\n"
+    }
+  ]
+}

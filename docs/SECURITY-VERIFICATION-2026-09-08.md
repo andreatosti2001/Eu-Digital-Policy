@@ -304,6 +304,17 @@ wrong reason.**
    not operational records. The check now separates *is a record published* (no) from *is the
    directory inside the published surface* (yes) — and the second is the real finding, at its
    real severity.
+   **5 Nov 2026 — a third case, and this one is an exemption, not a correction.** The first tracked
+   reviewer registry (`agent/implement/decisions/reviewers.json`, public keys, tracked by design so
+   the release gate can read it from git) sits in the directory PP-08 treats as private, so PP-08
+   succeeded (HIGH) against it and would have blocked the deploy gate (`pages.yml`'s `build` needs
+   `gate-security`). The author chose to exempt it rather than move it. The exemption is **the exact
+   path and a check of what the file holds** (`registryHoldsOnlyPublicKeys()` in
+   `agent/policy/verify/attacks.mjs`): only `reviewers` with six known fields per entry, every key a
+   public key, no private-key marker and none of the secret shapes. Put anything else in it and PP-08
+   succeeds again; every other file in `decisions/` is still a leaked record; the website listing gets
+   no exemption. `agent/policy/verify/selftest.mjs` R1–R4 hold each of those, and a private key planted
+   in the real registry was measured to turn the gate red again.
 
 3. **AB-07 reported the design as a CRITICAL breach.** It scanned every agent for a
    deciding or publishing capability and flagged `human`, which carries `may_decide: true`

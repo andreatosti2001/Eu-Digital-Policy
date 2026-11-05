@@ -30,6 +30,7 @@
 
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { createPublicKey } from 'node:crypto';
 
 import { world, attack, safely, succeeded, partial, undecidable, REPO_ROOT, PASSWORD } from './harness.mjs';
 import { ROUTES, PUBLIC_ROUTES } from '../../../.control-room/server.mjs';
@@ -59,6 +60,69 @@ import { CONDITIONS as CONDITIONS_CANON } from '../conditions.mjs';
 import { isThreshold, thresholdProvider, controlRoomHref, THRESHOLD_TRIGGERS, passage } from '../../../js/threshold.js';
 import { autonomyPermits, requiresHumanReview, MANDATORY_AUTONOMY_CONDITIONS, APPROVED_AUTONOMOUS_CATEGORIES } from '../../orchestrator/policy.mjs';
 import { capabilityOf, grantFor, checkOutput, MAY_DECIDE, MAY_IMPLEMENT, AGENT_NAMES } from '../../orchestrator/capabilities.mjs';
+
+/** PP-08's classification, as pure functions so a test can plant a file list
+ *  and a registry text and watch it decide.
+ *
+ *  THE ONE EXEMPTION, AND WHY IT IS NOT A PATH EXCLUSION (5 Nov 2026). Every
+ *  tracked file under agent/implement/decisions/ other than a README is a
+ *  leaked control-plane RECORD, because that directory holds the approval
+ *  ledger, which is private. The reviewer registry is the one file there that
+ *  is public BY DESIGN: it holds public keys, the release gate reads it from
+ *  git, and a registry an agent could write silently would be a registry an
+ *  agent could add itself to. So it is tracked, and PP-08 would otherwise fail
+ *  the whole deploy gate on the very file the release chain needs.
+ *
+ *  The exemption is the exact path AND a check of what the file holds. A
+ *  path that is exempt whatever it contains is the stale exclusion list this
+ *  gate has already had to correct twice (HE-01, HE-04): put a private key, a
+ *  token or an extra field in the registry and it is a leaked record again,
+ *  and this attack succeeds. The author chose this over moving the registry
+ *  (5 Nov 2026). */
+export const REGISTRY_PATH = 'agent/implement/decisions/reviewers.json';
+const REGISTRY_KEYS = ['reviewer_id', 'name', 'role', 'status', 'added_at', 'public_key_pem'];
+const REGISTRY_TOP_KEYS = ['reviewers'];
+
+export function registryHoldsOnlyPublicKeys(raw) {
+  if (typeof raw !== 'string' || !raw.trim()) return { ok: false, why: 'the registry is absent or empty, so nothing establishes that it holds only public keys' };
+  if (/PRIVATE KEY/i.test(raw)) return { ok: false, why: 'it contains a private-key marker' };
+  for (const p of SECRET_PATTERNS) {
+    p.re.lastIndex = 0;
+    if (p.re.test(raw)) { p.re.lastIndex = 0; return { ok: false, why: `it contains ${p.what}` }; }
+    p.re.lastIndex = 0;
+  }
+  let parsed;
+  try { parsed = JSON.parse(raw); } catch (e) { return { ok: false, why: `it does not parse as JSON (${e.message})` }; }
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return { ok: false, why: 'its top level is not an object' };
+  const topExtra = Object.keys(parsed).filter((k) => !REGISTRY_TOP_KEYS.includes(k));
+  if (topExtra.length) return { ok: false, why: `it carries a top-level field other than "reviewers": ${topExtra.join(', ')}` };
+  if (!Array.isArray(parsed.reviewers)) return { ok: false, why: 'it has no "reviewers" array' };
+  for (const r of parsed.reviewers) {
+    if (!r || typeof r !== 'object') return { ok: false, why: 'a reviewer entry is not an object' };
+    const extra = Object.keys(r).filter((k) => !REGISTRY_KEYS.includes(k));
+    if (extra.length) return { ok: false, why: `reviewer ${r.reviewer_id ?? '(unnamed)'} carries a field a public registry does not have: ${extra.join(', ')}` };
+    let key;
+    try { key = createPublicKey(String(r.public_key_pem)); } catch { return { ok: false, why: `reviewer ${r.reviewer_id ?? '(unnamed)'}: public_key_pem is not a public key` }; }
+    if (key.type !== 'public') return { ok: false, why: `reviewer ${r.reviewer_id ?? '(unnamed)'}: the key is not a public key` };
+  }
+  return { ok: true, why: `${parsed.reviewers.length} reviewer(s), each a public key and six known fields, no secret-shaped content` };
+}
+
+/** `files`: the paths a surface lists. `registryRaw`: the text of the registry
+ *  as it stands, or null. Returns the records PP-08 counts as leaked, the
+ *  placeholders (README files), and what the registry exemption did. */
+export function controlPlaneRecords(files, registryRaw) {
+  const isRecordDir = (f) => /^agent\/(records|observability\/runs|health\/history|orchestrator\/state)\//.test(f) || f.startsWith('agent/implement/decisions/');
+  const paths = files.filter(isRecordDir);
+  const registry = paths.includes(REGISTRY_PATH) ? registryHoldsOnlyPublicKeys(registryRaw) : null;
+  const exempt = (f) => f === REGISTRY_PATH && registry?.ok === true;
+  return {
+    paths,
+    records: paths.filter((f) => !f.endsWith('README.md') && !exempt(f)),
+    placeholders: paths.filter((f) => f.endsWith('README.md')),
+    registry,
+  };
+}
 
 const REFUSED = [401, 403, 302, 404, 400, 405, 409, 501];
 
@@ -203,27 +267,32 @@ export async function publicPrivate(w) {
        in either is read by anyone; the attack is tried against both. */
     const published = surface.published ?? [];
     const repository = surface.repository ?? published;
+    /* The WEBSITE gets no exemption at all: the registry is public in the
+       repository by design, and it is never on the published artifact. */
     const isRecordDir = (f) => /^agent\/(records|observability\/runs|health\/history|orchestrator\/state)\//.test(f) || f.startsWith('agent/implement/decisions/');
     const onWebsite = published.filter(isRecordDir);
-    const controlPlanePaths = repository.filter(isRecordDir);
+    const registryRaw = existsSync(join(REPO_ROOT, REGISTRY_PATH)) ? readFileSync(join(REPO_ROOT, REGISTRY_PATH), 'utf8') : null;
+    const classified = controlPlaneRecords(repository, registryRaw);
+    const controlPlanePaths = classified.paths;
     /* A README explaining why a directory is empty is not an
        operational record, and reporting one as a leaked decision
        would be this gate crying wolf — which it did on its first
        run. What matters is whether a RECORD is public, and
        separately whether the DIRECTORY is in a public surface,
        because a record written there tomorrow would be. */
-    const records = controlPlanePaths.filter((f) => !f.endsWith('README.md'));
-    const placeholders = controlPlanePaths.filter((f) => f.endsWith('README.md'));
+    const records = classified.records;
+    const placeholders = classified.placeholders;
+    const registryNote = classified.registry?.ok ? ` ${REGISTRY_PATH} is tracked by design and is not counted: ${classified.registry.why}.` : '';
     const sourcePublic = repository.filter((f) => f.startsWith('agent/') || f.startsWith('docs/'));
     out.push(records.length || onWebsite.some((f) => !f.endsWith('README.md'))
-      ? succeeded(a, `${records.length} control-plane RECORD file(s) are public — ${onWebsite.length ? 'on the website' : 'in the repository on github.com'}: ${records.slice(0, 6).join(', ')}`, { files: records.slice(0, 20), on_website: onWebsite })
+      ? succeeded(a, `${records.length} control-plane RECORD file(s) are public — ${onWebsite.length ? 'on the website' : 'in the repository on github.com'}: ${records.slice(0, 6).join(', ')}${classified.registry && !classified.registry.ok ? ` (${REGISTRY_PATH} is not exempt: ${classified.registry.why})` : ''}`, { files: records.slice(0, 20), on_website: onWebsite })
       : placeholders.length
         ? partial(a,
-          `no operational record is public today — agent/records/, agent/observability/runs/, agent/health/history/, agent/orchestrator/state/ and the decision ledger are all untracked. The website's allowlist refuses agent/ (${onWebsite.length} of those paths on the website), but the repository is public on github.com, and ${placeholders.length} placeholder README(s) show those DIRECTORIES are tracked there (${placeholders.join(', ')}). The ignore rule is what keeps the records out of the repository, and an ignore rule is not a boundary: one \`git add -f\` of agent/implement/decisions/decisions.jsonl publishes the approval ledger on github.com, and nothing here would object. ${sourcePublic.length} file(s) under agent/ and docs/ are public in the repository, none on the website.`,
+          `no operational record is public today — agent/records/, agent/observability/runs/, agent/health/history/, agent/orchestrator/state/ and the decision ledger are all untracked. The website's allowlist refuses agent/ (${onWebsite.length} of those paths on the website), but the repository is public on github.com, and ${placeholders.length} placeholder README(s) show those DIRECTORIES are tracked there (${placeholders.join(', ')}). The ignore rule is what keeps the records out of the repository, and an ignore rule is not a boundary: one \`git add -f\` of agent/implement/decisions/decisions.jsonl publishes the approval ledger on github.com, and nothing here would object. ${sourcePublic.length} file(s) under agent/ and docs/ are public in the repository, none on the website.${registryNote}`,
           { published_directories: placeholders, on_website: onWebsite.length, public_in_repository_control_plane_source: sourcePublic.length, sample: sourcePublic.slice(0, 8), note: 'docs/IMPLEMENTATION-QA.md §6\'s standing finding, re-measured against the allowlist and the public repository (v2 Session 4, B.2)' },
           'high')
         : partial(a,
-        `no trace, decision or operator FILE is public — those directories are untracked — but ${sourcePublic.length} file(s) under agent/ and docs/ are public in the repository on github.com, including the whole agent layer's source. Protocol §10 puts orchestration, approval mechanisms and operational traces in the private control plane, and the SOURCE of all three is public there, though not on the website.`,
+        `no trace, decision or operator FILE is public — those directories are untracked — but ${sourcePublic.length} file(s) under agent/ and docs/ are public in the repository on github.com, including the whole agent layer's source. Protocol §10 puts orchestration, approval mechanisms and operational traces in the private control plane, and the SOURCE of all three is public there, though not on the website.${registryNote}`,
         { public_in_repository_control_plane_source: sourcePublic.length, sample: sourcePublic.slice(0, 8), note: 'docs/IMPLEMENTATION-QA.md §6\'s standing finding, re-measured today rather than quoted' },
         'medium'));
   }
