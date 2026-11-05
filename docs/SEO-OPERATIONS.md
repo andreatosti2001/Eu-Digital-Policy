@@ -207,6 +207,37 @@ The tool pages are not translated and must never carry alternates.
 - **A new instrument page:** complete the record in `data/` (objective, status, dates, evidence),
   run `node tools/_footer.mjs` and `node tools/og-image.mjs`. No route is added by hand.
 
+## 7a. The icon (5 Nov 2026)
+
+Until 5 Nov 2026 every page declared its icon only as an inline `data:` URI. Google's page on favicons
+in Search (read 5 Nov 2026, "Last updated 2026-10-27 UTC") says that Googlebot-Image must be able to
+crawl the favicon file and that its URL must not be blocked by `robots.txt` or by other means; that it
+must be square, at least 8x8 px and preferably larger than 48x48; that it must be BMP, GIF, ICO, PNG,
+JPEG, PPM or TIFF (SVG is not on the list); that the URL must be stable; that Google supports one
+favicon per site; and that "a favicon isn't guaranteed to appear in Google Search results, even if all
+guidelines are met". **That a `data:` URI is not a crawlable file, and that this is why Search showed
+a grey globe, is an inference, not a measurement:** the page does not mention `data:` URIs, and nothing
+here observed what Googlebot did.
+
+- **The files:** `/favicon.ico` (a PNG-in-ICO container holding the author's 16, 32 and 48 px PNGs
+  byte for byte) at the root, and under `img/icons/` the 16, 32 and 48 px PNGs, `apple-touch-icon.png`
+  (180 px, opaque), `icon-192.png` and `icon-512.png` (the last two linked from nothing: no manifest,
+  the author's decision of 5 Nov 2026). The artwork is the author's; none of it was redrawn, resized or
+  recoloured. The original file names were lost on upload, so the names are this repository's.
+- **The tags:** `ICON_TAGS` in `tools/_footer.mjs` is their one home, and `finish()` writes them into
+  every page as a generated `icons:begin`…`icons:end` block. The hrefs are root-absolute, so they
+  resolve from any depth, including `404.html`. Change an icon by changing that list and the files,
+  then run `node tools/_footer.mjs`.
+- **The check:** `tools/seo-audit.mjs` fails a page with no `rel="icon"`, an icon that is a `data:` URI,
+  one that leaves the site, names a file the repository does not hold, or whose bytes are not the image
+  its extension names (`tools/selftest.mjs` S4e). `/favicon.ico` is in `PUBLIC_FILES`
+  (`tools/pages-artifact.mjs`); without that entry it would exist in the repository and not on the host.
+  `robots.txt` disallows only `/agent/`, `/docs/` and `/tools/`, and the sitemap lists no icon.
+- **Only the owner can:** after the merge to `main`, run URL Inspection on `https://eudigitalpolicy.eu/`
+  and "Request indexing" (and again, since the homepage will have changed). Google decides whether and
+  when the favicon appears, which its own page puts at days to weeks. Nothing in this repository
+  promises it.
+
 ## 8. Limits that code cannot remove
 
 - `lastmod` is the newest verification date among the records a page renders. A layout or
