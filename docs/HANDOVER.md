@@ -47,6 +47,24 @@ recommendation chosen):
 - No stage is open. **Stage 1 has no session yet and no prompt.** The standing rule is met for S27, whose prompt exists;
   Stage 1's prompt is the next to write, on the author's word.
 
+**After the author's question "pull #69 was already merged, did you considered it?"**: #69 is in this branch's base
+(`6060bd2` is its merge), its seven §8 rows and its handover entry are intact, and its added `selftest` test is the 141st;
+but the architecture had no place for maintenance the author requests outside the plan. Proposed: Track M extended to it.
+**Not decided** — the author's next answer covered only the two points below.
+
+**A correction, measured** (§8 `6be5d3b`): question 2's row said the gate was "not verified running in GitHub Actions",
+copied from `docs/AUDIT-2026-11-04.md` §F without measuring. The logs of `pages.yml` runs 76 (`d4f860e`) and 77 (`6060bd2`)
+show it ran and passed (C1–C4, C6, C9 ✓; C5, C7, C10 "–": no ledger, no Proposal, no signature; C8 "!": four #69 commits
+reported). Stage 1's target is now the part never exercised: C5, C7, C10 on a real signed decision. G1 and Stage 1 in
+`docs/SESSION-ARCHITECTURE.md` carry it.
+
+**The prompt of Stage 1** (the author's "yse", §8 `6be5d3b`): `docs/prompts/v2-stage-1-operational-closure.md`, in
+Italian — 1.1 measure (readiness, `release status`, the gate's logs, the §3a settings asked one by one); 1.2 the author's
+acts guided (keygen outside the repository, `reviewers.json` by PR, the pin, §3a), checkpoint; 1.3 one real change through
+the chain with the author's signature; 1.4 readiness re-measured and G1 decided; 1.5 PV2-01's prompt. The session never
+handles the private key, never signs, never fakes an approval; if the author's acts are not done it stops at 1.2 and says
+G1 does not hold.
+
 **Not done:** no change to `data/`, `tools/`, `js/`, a page or `agent/`. `AGENTS.md`'s document table does not list
 `docs/PHASE-5-SETUP.md` or `docs/SESSION-ARCHITECTURE.md`, and still says Phase 4 is open: status-document work for the
 author to decide. The reminder of 13 Jan 2027 still stands.
@@ -55,7 +73,8 @@ author to decide. The reminder of 13 Jan 2027 still stands.
 
 - Branch `claude/inspiring-meitner-c7s9le`, restarted from `main` `6060bd2` after #66 and #67 were merged (its earlier
   history is in `main`). Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
-- Disposition: put to the author after this entry.
+- Disposition: on the author's answer ("yse", §8 `6be5d3b`), pushed and a new pull request to `main` opened; `origin/main`
+  re-fetched before this entry. Nothing is pushed to the branch after the pull request is opened.
 
 ## Favicon made crawlable — unnumbered maintenance session (5 Nov 2026)
 
