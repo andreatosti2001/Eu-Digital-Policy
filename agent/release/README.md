@@ -57,7 +57,7 @@ in the returned report; exit code 1 for refused/failed, 0 for rehearsed/dispatch
 
 | | Condition | Blocks when |
 |---|---|---|
-| C1 | origin | repository ≠ `andreatosti2001/Eu-Digital-Policy`, ref ≠ `refs/heads/main`, event ∉ {push, workflow_dispatch}, workflow ≠ `pages.yml@main`, or the checkout is not the commit judged. **Outside Actions: unmeasured**, which blocks in `--ci` |
+| C1 | origin | repository ≠ `andreatosti2001/Eu-Digital-Policy`, ref ≠ `refs/heads/main`, event ∉ {push, workflow_dispatch}, workflow ≠ `pages.yml@main`, or the checkout is not the commit judged. **Without `--ci` — a local run, or `qa.yml`'s rehearsal on a push or pull request — it is unmeasured**, never a pass and never a refusal of the origin; under `--ci` every one of these blocks (5 Nov 2026: before this, the rehearsal in `qa.yml` failed C1 on every run) |
 | C2 | history | shallow clone; the commit that introduced the gate not found or not an ancestor |
 | C3 | publisher | any workflow other than `pages.yml` publishes; `build` does not need every gate job; the gate step is missing or after the upload; `if:`, `continue-on-error`, `\|\| true`, `set +e` on the path; a non-push/dispatch trigger; write permissions anywhere but `deploy` |
 | C4 | upstream | GitHub's own `needs` result shows any gate job not `success` |
