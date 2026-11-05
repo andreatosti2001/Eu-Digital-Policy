@@ -47,7 +47,7 @@ export const PUBLIC_FILES = Object.freeze([
   'index.html', 'instruments.html', 'instrument.html', 'institutions.html',
   'enforcement.html', 'applies.html', 'bibliography.html',
   'methodology.html', 'licence.html', '404.html', 'datasets.html',
-  'app.js', 'style.css', 'sitemap.xml', 'robots.txt', 'CNAME',
+  'app.js', 'style.css', 'sitemap.xml', 'robots.txt', 'CNAME', 'favicon.ico',
 ]);
 /* The language editions' directories come from the register, so a locale
    cannot ship a page the artifact leaves out (22 Oct 2026). */
