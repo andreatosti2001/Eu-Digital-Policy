@@ -294,6 +294,11 @@ This is a vocabulary mapping, not a statement about any instrument. **Not adopte
 
 No session starts on an unrecorded approval of the one before (the brief).
 
+**From Phase 4's operational closure onward, the order of the sessions is an architecture, not a timeline:**
+`docs/SESSION-ARCHITECTURE.md` (5 Nov 2026, §8, v2 Session 25, 25.5) — Stage 1 the operational closure, Stage 2 Post-v2's
+A–C with Phase 5's design, Stage 3 Phase 5, Stage 4 Post-v2's D–E after the v2 closes; Track M (maintenance) and Track R
+(the sessions outside the phases) beside them.
+
 ---
 
 ## 7 · What this roadmap does not establish
