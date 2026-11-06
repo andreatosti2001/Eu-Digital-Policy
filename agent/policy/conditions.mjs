@@ -42,7 +42,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { validate } from '../schemas/validate.mjs';
 import { getContract } from '../schemas/registry.mjs';
-import { REPO_ROOT } from '../schemas/types.mjs';
+import { REPO_ROOT, SYSTEM_ENTITY_KINDS } from '../schemas/types.mjs';
 import { permittedFiles, requiresBrowserQA, NEVER_WRITABLE } from '../implement/scope.mjs';
 import { assessRollback } from './rollback.mjs';
 import { ACTION_CATEGORIES, categoriseProposal, effectiveClass, riskRank } from './categories.mjs';
@@ -139,10 +139,45 @@ export function authoritativeEvidence(proposal, { root = REPO_ROOT } = {}) {
   return sat('authoritative_evidence', `${authoritative.length} of ${real.length} evidence entr(ies) are authoritative (role primary/official, or a tier:1/tier:2 source record).`, { authoritative: authoritative.length, total: real.length });
 }
 
+/**
+ * Does this proposal turn on nothing a Verifier or a conflict scan could
+ * be run over? Stage 1, 6 Nov 2026, the author's authorisation in
+ * docs/ROADMAP-v2.md §8: for a proposal that is `docs/`-only and records no legal
+ * fact, conditions 2 and 3 stay `unknown` but are marked `hard: false`, as
+ * `scope_permitted` already is for "not on the allowlist". They stop blocking
+ * (the route becomes `human_review`, which is a person's to decide) and they can
+ * NEVER reach `automatic`, because the engine routes any unmet condition away from
+ * it. An earlier draft made them `not_applicable`; the adversarial gate's AP-03
+ * ("execute with no verification at all") succeeded against that, because
+ * `not_applicable` counts as met. It is not met here.
+ *
+ * Every clause is read off the record, none is a judgement:
+ *   · an ImplementationProposal, because it is the contract for a change to
+ *     the repository's own files and the only one `categoriseProposal`
+ *     places in `machine_derived_field` by path;
+ *   · every path the policy derives for it is under `docs/`, and none climbs out;
+ *   · every affected entity is a SYSTEM kind, never one of the legal-record kinds;
+ *   · it records no interpretation.
+ * A `data/`, `index.html`, `i18n/`, `js/`, `tools/` or `agent/` path fails the second
+ * clause and the proposal is judged exactly as before.
+ */
+export function docsOnlyNoLegalFact(proposal, { permitted = null } = {}) {
+  if (!proposal || proposal.contract !== 'ImplementationProposal') return false;
+  const paths = permitted ?? permittedFiles(proposal).permitted;
+  if (!paths.length) return false;
+  if (!paths.every((p) => typeof p === 'string' && p.startsWith('docs/') && !p.split('/').includes('..'))) return false;
+  if ((proposal.affected_entities ?? []).some((e) => !SYSTEM_ENTITY_KINDS.includes(e?.kind))) return false;
+  if (((proposal.epistemic ?? {}).interpretation ?? []).length) return false;
+  return true;
+}
+
 /** 2 · verification succeeded. SUPPLIED. */
-export function verificationSucceeded(facts) {
+export function verificationSucceeded(facts, proposal = null, { permitted = null } = {}) {
   const v = facts?.verification;
   if (v === undefined || v === null) {
+    if (proposal && docsOnlyNoLegalFact(proposal, { permitted })) {
+      return unk('verification_succeeded', 'no verification result was supplied, and the proposal changes only files under docs/, names no legal-record entity and records no interpretation, so there is no record a Verifier could be run over. This is not a block a person cannot cure: it is for the person to decide. It is also never enough for automatic execution.', 'a person decides it; an automatic act needs a real verification result, supplied.', { hard: false });
+    }
     return unk('verification_succeeded', 'no verification result was supplied to this evaluation.', 'run agent/verifier/ over the records this proposal turns on and pass the result. An unrun verification is unknown, and unknown does not execute.');
   }
   if (Array.isArray(v.verdicts) && v.verdicts.length) {
@@ -161,13 +196,16 @@ export function verificationSucceeded(facts) {
 }
 
 /** 3 · no unresolved conflict. SUPPLIED, and also read from the record. */
-export function noUnresolvedConflict(proposal, facts) {
+export function noUnresolvedConflict(proposal, facts, { permitted = null } = {}) {
   const own = [...(proposal?.conflicts ?? []), ...(proposal?.contradictions ?? [])];
   if (own.length) {
     return bad('no_unresolved_conflict', `the proposal itself records ${own.length} unresolved conflict(s).`, 'protocol §19 reserves an unresolved contradiction to a human. A machine that picks a side has decided a legal question.', { conflicts: own.length });
   }
   const c = facts?.conflicts;
   if (c === undefined || c === null) {
+    if (docsOnlyNoLegalFact(proposal, { permitted })) {
+      return unk('no_unresolved_conflict', 'no conflict scan was supplied, and the proposal changes only files under docs/, names no legal-record entity and records no interpretation or conflict, so there is no legal question for a conflict to reserve to a person. A person decides it; it is never enough for automatic execution, and the exact-match apply refuses a `current` that no longer occurs once in the file.', 'a person decides it; an automatic act needs a real conflict scan, supplied.', { hard: false });
+    }
     return unk('no_unresolved_conflict', 'no conflict scan was supplied to this evaluation.', 'run the change detector, or pass { conflicts: { found: 0, why: "…" } } from something that actually looked. An unchecked absence of conflict is not an absence of conflict.');
   }
   const n = typeof c.found === 'number' ? c.found : (Array.isArray(c.items) ? c.items.length : null);
@@ -462,8 +500,8 @@ export function evaluateConditions({ proposal, facts = {}, policy }) {
   const permitted = proposal ? permittedFiles(proposal).permitted : [];
   const out = [
     authoritativeEvidence(proposal),
-    verificationSucceeded(facts),
-    noUnresolvedConflict(proposal, facts),
+    verificationSucceeded(facts, proposal, { permitted }),
+    noUnresolvedConflict(proposal, facts, { permitted }),
     provenanceComplete(proposal),
     schemaValidation(proposal),
     validatorsPass(facts),
