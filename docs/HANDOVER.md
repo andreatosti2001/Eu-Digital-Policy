@@ -4,6 +4,45 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## Stage 1 — preparation stopped before the signature (6 Nov 2026)
+
+**Last updated:** 6 November 2026. **Branch:** `claude/kind-maxwell-e31dud`, from `main` `149e9b7`. The entries below are unchanged.
+Scope row: §8, "The scope of Stage 1 (Phase 4's operational closure)"; the stop: §8, "Stage 1, step 2 of the scope…".
+
+**No proposal exists, and none was made.** The scope asked for one small real proposal inside grant `gov-5c5d9d87d8ca4478`, produced by
+its owning agent. Measured on `main` `149e9b7`: `agent/records/` does not exist in a fresh clone; `improve cycle --as-of 2026-11-06`
+(not recorded) gives 244 findings and **0 referable**; `improve reach` shows no producer writes `docs/` and 6 of the 8 granted
+`data/sources.json` fields exist on no record; Agent 5's 11 `annotate` proposals all target `data/enforcement.json`, outside the
+grant. So there is **no proposal id, sha256 or description to record here**, no `lifecycle` output for an id, no dispatch rehearsal,
+and no signing command that names a proposal. Nothing was simulated.
+
+**Measured, 6 Nov 2026:**
+- `release status`: 0 proposals in the record store, ledger empty or absent, 1 reviewer (`rev-andrea`), registry fingerprint
+  `4b4a0efb3e024584545d33de8d59ba39bf72455c315d6a0a5c614766f86bc259`, 14 workflow checks pass. `verify-ledger`: no human decision recorded.
+- `production readiness`: **17 of 20**; blocking `production_dispatcher_wired`, `decision_ledger_present`; `deploy_gate_exists` unmeasurable.
+- `pages.yml` run 86 (`6bfe537`) and run 87 (`149e9b7`): `success`. Release-gate log of both: C1, C2, C3, C4, C6, C9, **C10 ✓**
+  (the pin matches `reviewers.json`); C5 and C7 "–" (no ledger; no commit declares a Proposal); C8 "!" (5 agent-marked commits,
+  reported, not blocking). QA run 768 (`149e9b7`) `success`; QA run 767 `cancelled`.
+- `git branch -r --no-merged origin/main`: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+
+**Declared by the author, not measured:** `docs/DEPLOYMENT.md` §3a rows 1, 2, 4, 5 in order; row 6 (the private key) is the
+author's and was neither read, asked for nor verified. The author has no terminal in this period.
+
+**Found and not fixed (statements a later docs pass should correct):** `agent/implement/decisions/README.md` says `reviewers.json`
+"does not exist yet" (it does, with one reviewer); `AGENTS.md` and `docs/DEPLOYMENT.md` §7 say the gate has not run in GitHub Actions
+(corrected in §8 on 5 Nov 2026, not in those files). Editing them is a `docs/` change that needs its own §8 row.
+
+**What 1.3 needs from the author before it can start:** a decision on where the first real change comes from. Either the grant
+gains a producer (a governance decision, which this session may not take), or the author names a proposal outside the grant
+and signs it as a human decision, or the author approves a `docs/` proposal authored by a session.
+**Expected after a signed decision and the chain run once:** C5 ✓ once `decisions.jsonl` exists on `main`; C7 ✓ once the dispatched
+commit with its `Proposal` trailer is on `main`; **C10 already ✓**. This is an expectation, not a measurement.
+
+## Branch register — 6 November 2026 (Stage 1)
+
+- Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- Branch `claude/kind-maxwell-e31dud`: two commits (the two §8 rows) plus this entry. Pull request opened at the author's scope instruction; not merged.
+
 ## Maintenance — a favicon size above 48 px (5 Nov 2026, unnumbered)
 
 The author brought an SEO plan and asked for what was missing to be completed. Measured on `main` `43a55d0`: the icon tags and
