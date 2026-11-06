@@ -47,6 +47,11 @@ import { verdictFor, blockingFindings, parseValidator, runBrowserCheck, AGENT_SU
 import { openContext, applyOperation, applyProposal, rollback, ApplyRefused, countOccurrences } from './apply.mjs';
 import { validate } from '../schemas/validate.mjs';
 import { REQUIRED_VALIDATORS } from '../schemas/types.mjs';
+import { policyRefusalBefore } from './implementer.mjs';
+import { evaluate as evaluatePolicy } from '../policy/engine.mjs';
+import { DEFAULT_POLICY } from '../policy/categories.mjs';
+import { MEASURED_CONDITIONS } from '../autonomy/cycle.mjs';
+import { NOT_WAIVABLE_BY_APPROVAL } from '../policy/conditions.mjs';
 
 /* ---------------------------------------------------------- fixtures */
 
@@ -957,4 +962,67 @@ test('recordDecision has no override argument', () => {
 test('the four required validators are the four AGENTS.md names', () => {
   assert.deepEqual(REQUIRED_VALIDATORS, ['tools/validate.mjs', 'tools/i18n-audit.mjs', 'tools/design-qa.mjs', 'tools/freshness.mjs']);
   assert.deepEqual(VALIDATORS.map((v) => `tools/${v.name}`), REQUIRED_VALIDATORS);
+});
+
+
+/* ============================================================
+   Stage 1, 6 Nov 2026 — the first policy evaluation, before any change exists
+
+   docs/ROADMAP-v2.md §8. Until now this suite never ran the agent, so the first evaluation (facts: {})
+   refusing EVERY proposal went unseen. These tests drive the function the agent now asks.
+   ============================================================ */
+
+function docsProposal(over = {}) {
+  const p = JSON.parse(JSON.stringify(implementationProposal()), (k, v) => (k === 'simulated' ? false : v));
+  p.proposal_id = 'prop-s1-docs-000000000001';
+  p.agent = 'implement-selftest';
+  p.risk = 'low';
+  p.reason = 'A test fixture under docs/. It asserts nothing about EU law.';
+  p.files = ['docs/IMPLEMENT-SELFTEST-NOTE.md'];
+  p.proposed_change = { summary: 'Write one note under docs/.', operations: [{ op: 'add', target: 'docs/IMPLEMENT-SELFTEST-NOTE.md', current: null, proposed: 'a note', rationale: 'fixture' }], scope_note: 'docs/ only.' };
+  p.affected_entities = [{ kind: 'document', id: null, path: 'docs/IMPLEMENT-SELFTEST-NOTE.md', field: null, note: null }];
+  p.evidence = [{ evidence_id: 'ev-1', kind: 'repository_file', source_id: null, url: null, locator: 'agent/implement/selftest.mjs', title: null, publisher: null, quote: 'exists', retrieved_at: null, checksum: null, supports: 'supports:direct', role: 'primary', simulated: false }];
+  p.epistemic = { fact: [{ field: null, statement: 'agent/implement/selftest.mjs exists.', evidence_refs: ['ev-1'] }], inference: [], interpretation: [], unresolved: [] };
+  p.trace_ref = { trace_id: 'a1'.repeat(16), span_id: 'b2'.repeat(8), run_id: 'c3'.repeat(8) };
+  p.simulated = false;
+  Object.assign(p, over);
+  return p;
+}
+const firstEvaluation = (proposal, actor = { kind: 'implementation_qa', id: 'implementation-qa' }) => evaluatePolicy({
+  actor, action: 'implement.apply', environment: 'local', resource: { kind: 'canonical_data', id: proposal.proposal_id }, proposal, policy: DEFAULT_POLICY, facts: {},
+});
+
+test('S1-f · the first evaluation no longer refuses a sound proposal for measurements that cannot exist yet', () => {
+  const d = firstEvaluation(docsProposal());
+  assert.equal(d.route, 'blocked', 'the engine still reads the unmeasured conditions as blocking: that is the part that does not move');
+  assert.ok(d.unknown.includes('validators_pass') && d.unknown.includes('rollback_mechanical'));
+  const r = policyRefusalBefore(d);
+  assert.equal(r.refused, false, r.why);
+});
+
+test('S1-g · it still refuses what can be judged before the change: a failed hard condition, an unauthorized actor, a proposal with no provenance', () => {
+  const noTrace = policyRefusalBefore(firstEvaluation(docsProposal({ trace_ref: null })));
+  assert.equal(noTrace.refused, true);
+  assert.ok(noTrace.unmet.some((c) => c.condition === 'provenance_complete' && c.verdict === 'failed'), JSON.stringify(noTrace.unmet.map((c) => c.condition)));
+
+  const noEvidence = policyRefusalBefore(firstEvaluation(docsProposal({ evidence: [], epistemic: { fact: [], inference: [], interpretation: [], unresolved: [] } })));
+  assert.equal(noEvidence.refused, true);
+
+  const stranger = policyRefusalBefore(firstEvaluation(docsProposal(), { kind: 'scout', id: 'source-scout' }));
+  assert.equal(stranger.refused, true, 'an actor the capability matrix does not allow is refused before anything is read');
+
+  const dataTarget = policyRefusalBefore(firstEvaluation(docsProposal({
+    files: ['data/claims.json'],
+    proposed_change: { summary: 'x', operations: [{ op: 'modify', target: 'data/claims.json', current: 'a', proposed: 'b', rationale: 'x' }], scope_note: 'x' },
+    affected_entities: [{ kind: 'claim', id: 'cl-014', path: 'data/claims.json', field: null, note: null }],
+  })));
+  assert.equal(dataTarget.unmet.some((c) => c.condition === 'scope_permitted'), false, 'scope_permitted is soft and is waivable by the approval, so it is not what refuses here');
+});
+
+test('S1-h · the measurements stay the runner\'s own list (one home), and every one of them is a hard condition', () => {
+  assert.ok(MEASURED_CONDITIONS.length >= 5);
+  for (const c of MEASURED_CONDITIONS) assert.ok(NOT_WAIVABLE_BY_APPROVAL.includes(c), `${c} is tolerated unknown before the change only because it is measured after it, and a measured condition that is not hard would not need the carve-out`);
+  const src = readFileSync(join(import.meta.dirname, 'implementer.mjs'), 'utf8');
+  assert.ok(src.includes("import { MEASURED_CONDITIONS } from '../autonomy/cycle.mjs'"), 'the list is imported, not restated');
+  assert.ok(/policyAfter\.route === 'blocked'/.test(src), 'the measured evaluation after the apply still blocks and still reverts');
 });
