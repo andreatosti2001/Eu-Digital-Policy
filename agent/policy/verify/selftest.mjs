@@ -28,7 +28,7 @@ import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync } from 'node:crypto';
 
-import { runAllAttacks, he04Verdict, controlPlaneRecords, registryHoldsOnlyPublicKeys, REGISTRY_PATH } from './attacks.mjs';
+import { runAllAttacks, he04Verdict, controlPlaneRecords, registryHoldsOnlyPublicKeys, ledgerHoldsOnlyDecisions, REGISTRY_PATH, LEDGER_PATH } from './attacks.mjs';
 import { AREAS, OUTCOMES, SEVERITIES, hashTree, cleanup, REPO_ROOT } from './harness.mjs';
 
 /* One pair of runs, shared by every test below. Running the gate
@@ -174,4 +174,70 @@ test('PP-08 R4 · the website gets no exemption and the exemption is not a path 
   const block = src.slice(src.indexOf("attack('PP-08'"), src.indexOf('/* PP-09'));
   assert.match(block, /const onWebsite = published\.filter\(isRecordDir\)/, 'the website listing is judged without the exemption');
   assert.ok(!block.includes('reviewers.json'), 'PP-08 names no file; the one exemption lives in controlPlaneRecords()');
+});
+
+/* ------------------------------------------------------------ PP-08 and the approval ledger
+   5 Nov 2026. decisions.jsonl is git-TRACKED by design (the release gate reads it from git) and sits in the directory PP-08
+   treats as private. Same remedy as the registry: the exact path, and only while every line is a decision entry. The
+   entries below are CONSTRUCTED for this suite; none is a decision, and nothing here touches the real ledger. */
+
+const H = (c) => c.repeat(64);
+const decision = (over = {}) => ({
+  ledger_version: 2, seq: 1, prev_entry_sha256: H('0'), approval_id: 'appr-test', proposal_id: 'prop-test', proposal_contract: 'DataProposal',
+  proposal_agent: 'proposal-router', proposal_sha256: H('a'), outcome: 'granted', provenance: 'human', decided_at: '2026-11-06T00:00:00.000Z',
+  decided_by: 'Test Person', decided_role: 'tester', note: 'constructed for the PP-08 suite', what_was_asked: ['check the thing'], risk_if_wrong: 'medium',
+  proposal_snapshot: { contract: 'DataProposal' }, entry_sha256: H('b'), signature: { alg: 'ed25519', key_fingerprint: H('c'), value: 'AAAA' }, ...over,
+});
+const jsonl = (...entries) => entries.map((e) => JSON.stringify(e)).join('\n') + '\n';
+
+test('PP-08 L1 · a ledger of decision entries is not a leaked record; an unsigned and a denied entry are still entries', () => {
+  for (const [name, raw] of [['one signed', jsonl(decision())], ['signed then denied unsigned', jsonl(decision(), decision({ seq: 2, outcome: 'denied', signature: null, entry_sha256: H('d'), prev_entry_sha256: H('b') }))]]) {
+    const v = ledgerHoldsOnlyDecisions(raw);
+    assert.equal(v.ok, true, `${name}: ${v.why}`);
+    assert.deepEqual(controlPlaneRecords([LEDGER_PATH], null, raw).records, [], name);
+  }
+});
+
+test('PP-08 L2 · the exemption is the exact path: any other file in decisions/ is still a leaked record', () => {
+  const raw = jsonl(decision());
+  for (const f of ['agent/implement/decisions/decisions.jsonl.bak', 'agent/implement/decisions/other.jsonl', 'agent/implement/decisions/sub/decisions.jsonl', 'agent/implement/decisions/decisions.json']) {
+    assert.deepEqual(controlPlaneRecords([LEDGER_PATH, f], null, raw).records, [f], `${f} is still a record`);
+  }
+});
+
+test('PP-08 L3 · the exemption is content-checked: a ledger that holds anything but decision entries is a leaked record again', () => {
+  const bad = {
+    'a private key in the note': jsonl(decision({ note: PRIV })),
+    'a token in the note': jsonl(decision({ note: 'ghp_' + 'a'.repeat(36) })),
+    'an extra field': jsonl(decision({ password: 'x' })),
+    'a missing required field': jsonl(decision({ decided_by: '' })),
+    'a legacy version': jsonl(decision({ ledger_version: 1 })),
+    'an outcome that is neither': jsonl(decision({ outcome: 'maybe' })),
+    'an unknown provenance': jsonl(decision({ provenance: 'robot' })),
+    'a hash that is not hex': jsonl(decision({ entry_sha256: 'zz' })),
+    'a signature of another shape': jsonl(decision({ signature: { alg: 'rsa', key_fingerprint: H('c'), value: 'x' } })),
+    'a signature with an extra field': jsonl(decision({ signature: { alg: 'ed25519', key_fingerprint: H('c'), value: 'x', secret: 'y' } })),
+    'a line that is not JSON': '{ not json\n',
+    'a line that is an array': '[1,2,3]\n',
+    'one good line and one bad': jsonl(decision()) + '{ nope\n',
+    'an empty file': '',
+  };
+  for (const [name, raw] of Object.entries(bad)) {
+    assert.equal(ledgerHoldsOnlyDecisions(raw).ok, false, name);
+    assert.deepEqual(controlPlaneRecords([LEDGER_PATH], null, raw).records, [LEDGER_PATH], `${name}: the ledger is a record again`);
+  }
+  assert.equal(controlPlaneRecords([LEDGER_PATH], null, null).records.length, 1, 'a ledger that cannot be read is not exempt');
+});
+
+test('PP-08 L4 · the registry and the ledger are judged separately, and PP-08 itself still names no file', () => {
+  const regOk = JSON.stringify({ reviewers: [{ reviewer_id: 'r', name: 'n', role: 'x', status: 'active', added_at: '2026-11-05T00:00:00.000Z', public_key_pem: PUB }] });
+  const c = controlPlaneRecords([REGISTRY_PATH, LEDGER_PATH], regOk, jsonl(decision({ note: PRIV })));
+  assert.deepEqual(c.records, [LEDGER_PATH], 'a good registry does not vouch for a bad ledger');
+  const d = controlPlaneRecords([REGISTRY_PATH, LEDGER_PATH], '{ bad', jsonl(decision()));
+  assert.deepEqual(d.records, [REGISTRY_PATH], 'a good ledger does not vouch for a bad registry');
+  const src = readFileSync(join(REPO_ROOT, 'agent/policy/verify/attacks.mjs'), 'utf8');
+  const block = src.slice(src.indexOf("attack('PP-08'"), src.indexOf('/* PP-09'));
+  assert.match(block, /const records = classified\.records;/, 'the records PP-08 counts are exactly what controlPlaneRecords() returns, with no filtering of its own');
+  assert.ok(!/records\s*=\s*[^;]*\.filter\(/.test(block) && !/(===|!==)\s*(REGISTRY_PATH|LEDGER_PATH|'agent\/implement\/decisions)/.test(block), 'PP-08 compares no path itself; the exemptions live in controlPlaneRecords()');
+  assert.match(block, /const onWebsite = published\.filter\(isRecordDir\)/, 'the website listing is still judged without any exemption');
 });

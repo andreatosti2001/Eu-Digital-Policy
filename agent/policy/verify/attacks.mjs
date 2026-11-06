@@ -108,19 +108,76 @@ export function registryHoldsOnlyPublicKeys(raw) {
   return { ok: true, why: `${parsed.reviewers.length} reviewer(s), each a public key and six known fields, no secret-shaped content` };
 }
 
+/** THE SECOND EXEMPTION (5 Nov 2026): the approval ledger, by the same rule.
+ *
+ *  agent/implement/decisions/decisions.jsonl is git-TRACKED by design
+ *  (agent/implement/decisions/README.md): a decision is provenance that has to
+ *  survive a clone, and the release gate reads the ledger from git (C5, C6, C7).
+ *  PP-08 counts every tracked non-README file in that directory as a leaked
+ *  record, so the first decision a person committed would have failed this
+ *  attack, the adversarial job, and therefore the deploy. The author chose the
+ *  same remedy as for the registry: the exact path, and only while the file is
+ *  what it claims to be.
+ *
+ *  This is a STRUCTURAL check, not the ledger's verification: the hash chain,
+ *  the signatures and the registry are verifyLedger()'s and the release gate's
+ *  business. What this asks is narrower: is every line a version-2 decision
+ *  entry with only the fields recordDecision() writes, holding no private key
+ *  and no credential shape? A line that is anything else (a pasted token, an
+ *  extra field, text that is not JSON) makes the file a leaked record again. */
+export const LEDGER_PATH = 'agent/implement/decisions/decisions.jsonl';
+const LEDGER_KEYS = ['ledger_version', 'seq', 'prev_entry_sha256', 'approval_id', 'proposal_id', 'proposal_contract', 'proposal_agent', 'proposal_sha256', 'outcome', 'provenance', 'decided_at', 'decided_by', 'decided_role', 'note', 'what_was_asked', 'risk_if_wrong', 'proposal_snapshot', 'entry_sha256', 'signature'];
+const LEDGER_REQUIRED = ['ledger_version', 'seq', 'prev_entry_sha256', 'approval_id', 'proposal_id', 'proposal_sha256', 'outcome', 'provenance', 'decided_at', 'decided_by', 'entry_sha256'];
+const HEX64 = /^[0-9a-f]{64}$/;
+
+export function ledgerHoldsOnlyDecisions(raw) {
+  if (typeof raw !== 'string' || !raw.trim()) return { ok: false, why: 'the ledger is absent or empty, so nothing establishes that it holds only decision entries' };
+  if (/PRIVATE KEY/i.test(raw)) return { ok: false, why: 'it contains a private-key marker' };
+  for (const p of SECRET_PATTERNS) {
+    p.re.lastIndex = 0;
+    if (p.re.test(raw)) { p.re.lastIndex = 0; return { ok: false, why: `it contains ${p.what}` }; }
+    p.re.lastIndex = 0;
+  }
+  const lines = raw.split('\n').filter((l) => l.trim());
+  let n = 0;
+  for (const line of lines) {
+    n += 1;
+    let e;
+    try { e = JSON.parse(line); } catch { return { ok: false, why: `line ${n} is not JSON` }; }
+    if (!e || typeof e !== 'object' || Array.isArray(e)) return { ok: false, why: `line ${n} is not an object` };
+    const extra = Object.keys(e).filter((k) => !LEDGER_KEYS.includes(k));
+    if (extra.length) return { ok: false, why: `line ${n} carries a field a decision entry does not have: ${extra.join(', ')}` };
+    const missing = LEDGER_REQUIRED.filter((k) => e[k] === undefined || e[k] === null || e[k] === '');
+    if (missing.length) return { ok: false, why: `line ${n} lacks ${missing.join(', ')}` };
+    if (e.ledger_version !== 2) return { ok: false, why: `line ${n}: ledger_version is ${JSON.stringify(e.ledger_version)}, not 2` };
+    if (!['granted', 'denied'].includes(e.outcome)) return { ok: false, why: `line ${n}: outcome is neither granted nor denied` };
+    if (!['human', 'simulated'].includes(e.provenance)) return { ok: false, why: `line ${n}: provenance is neither human nor simulated` };
+    if (!HEX64.test(String(e.entry_sha256)) || !HEX64.test(String(e.proposal_sha256)) || !HEX64.test(String(e.prev_entry_sha256))) return { ok: false, why: `line ${n}: a hash is not 64 hex digits` };
+    if (e.signature !== undefined && e.signature !== null) {
+      const sig = e.signature;
+      if (typeof sig !== 'object' || Array.isArray(sig)) return { ok: false, why: `line ${n}: signature is not an object` };
+      const sx = Object.keys(sig).filter((k) => !['alg', 'key_fingerprint', 'value'].includes(k));
+      if (sx.length || sig.alg !== 'ed25519') return { ok: false, why: `line ${n}: signature is not {alg: ed25519, key_fingerprint, value}` };
+    }
+  }
+  return { ok: true, why: `${n} decision entr${n === 1 ? 'y' : 'ies'}, each a version-2 entry with only the fields a decision has, no private key and no secret-shaped content` };
+}
+
 /** `files`: the paths a surface lists. `registryRaw`: the text of the registry
  *  as it stands, or null. Returns the records PP-08 counts as leaked, the
  *  placeholders (README files), and what the registry exemption did. */
-export function controlPlaneRecords(files, registryRaw) {
+export function controlPlaneRecords(files, registryRaw, ledgerRaw = null) {
   const isRecordDir = (f) => /^agent\/(records|observability\/runs|health\/history|orchestrator\/state)\//.test(f) || f.startsWith('agent/implement/decisions/');
   const paths = files.filter(isRecordDir);
   const registry = paths.includes(REGISTRY_PATH) ? registryHoldsOnlyPublicKeys(registryRaw) : null;
-  const exempt = (f) => f === REGISTRY_PATH && registry?.ok === true;
+  const ledger = paths.includes(LEDGER_PATH) ? ledgerHoldsOnlyDecisions(ledgerRaw) : null;
+  const exempt = (f) => (f === REGISTRY_PATH && registry?.ok === true) || (f === LEDGER_PATH && ledger?.ok === true);
   return {
     paths,
     records: paths.filter((f) => !f.endsWith('README.md') && !exempt(f)),
     placeholders: paths.filter((f) => f.endsWith('README.md')),
     registry,
+    ledger,
   };
 }
 
@@ -272,7 +329,8 @@ export async function publicPrivate(w) {
     const isRecordDir = (f) => /^agent\/(records|observability\/runs|health\/history|orchestrator\/state)\//.test(f) || f.startsWith('agent/implement/decisions/');
     const onWebsite = published.filter(isRecordDir);
     const registryRaw = existsSync(join(REPO_ROOT, REGISTRY_PATH)) ? readFileSync(join(REPO_ROOT, REGISTRY_PATH), 'utf8') : null;
-    const classified = controlPlaneRecords(repository, registryRaw);
+    const ledgerRaw = existsSync(join(REPO_ROOT, LEDGER_PATH)) ? readFileSync(join(REPO_ROOT, LEDGER_PATH), 'utf8') : null;
+    const classified = controlPlaneRecords(repository, registryRaw, ledgerRaw);
     const controlPlanePaths = classified.paths;
     /* A README explaining why a directory is empty is not an
        operational record, and reporting one as a leaked decision
@@ -282,10 +340,11 @@ export async function publicPrivate(w) {
        because a record written there tomorrow would be. */
     const records = classified.records;
     const placeholders = classified.placeholders;
-    const registryNote = classified.registry?.ok ? ` ${REGISTRY_PATH} is tracked by design and is not counted: ${classified.registry.why}.` : '';
+    const registryNote = (classified.registry?.ok ? ` ${REGISTRY_PATH} is tracked by design and is not counted: ${classified.registry.why}.` : '')
+      + (classified.ledger?.ok ? ` ${LEDGER_PATH} is tracked by design and is not counted: ${classified.ledger.why}.` : '');
     const sourcePublic = repository.filter((f) => f.startsWith('agent/') || f.startsWith('docs/'));
     out.push(records.length || onWebsite.some((f) => !f.endsWith('README.md'))
-      ? succeeded(a, `${records.length} control-plane RECORD file(s) are public — ${onWebsite.length ? 'on the website' : 'in the repository on github.com'}: ${records.slice(0, 6).join(', ')}${classified.registry && !classified.registry.ok ? ` (${REGISTRY_PATH} is not exempt: ${classified.registry.why})` : ''}`, { files: records.slice(0, 20), on_website: onWebsite })
+      ? succeeded(a, `${records.length} control-plane RECORD file(s) are public — ${onWebsite.length ? 'on the website' : 'in the repository on github.com'}: ${records.slice(0, 6).join(', ')}${classified.registry && !classified.registry.ok ? ` (${REGISTRY_PATH} is not exempt: ${classified.registry.why})` : ''}${classified.ledger && !classified.ledger.ok ? ` (${LEDGER_PATH} is not exempt: ${classified.ledger.why})` : ''}`, { files: records.slice(0, 20), on_website: onWebsite })
       : placeholders.length
         ? partial(a,
           `no operational record is public today — agent/records/, agent/observability/runs/, agent/health/history/, agent/orchestrator/state/ and the decision ledger are all untracked. The website's allowlist refuses agent/ (${onWebsite.length} of those paths on the website), but the repository is public on github.com, and ${placeholders.length} placeholder README(s) show those DIRECTORIES are tracked there (${placeholders.join(', ')}). The ignore rule is what keeps the records out of the repository, and an ignore rule is not a boundary: one \`git add -f\` of agent/implement/decisions/decisions.jsonl publishes the approval ledger on github.com, and nothing here would object. ${sourcePublic.length} file(s) under agent/ and docs/ are public in the repository, none on the website.${registryNote}`,

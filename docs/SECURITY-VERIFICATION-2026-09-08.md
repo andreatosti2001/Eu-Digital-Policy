@@ -315,6 +315,16 @@ wrong reason.**
    succeeds again; every other file in `decisions/` is still a leaked record; the website listing gets
    no exemption. `agent/policy/verify/selftest.mjs` R1–R4 hold each of those, and a private key planted
    in the real registry was measured to turn the gate red again.
+   **Same day, the same remedy for the approval ledger.** `agent/implement/decisions/decisions.jsonl`
+   is git-tracked by design (`agent/implement/decisions/README.md`: a decision is provenance that has to
+   survive a clone, and the release gate reads it from git), and PP-08 would have failed on the first
+   decision a person committed, taking the adversarial job and the deploy with it. The author chose to
+   exempt it the same way: the exact path, and only while every line is a version-2 decision entry
+   (`ledgerHoldsOnlyDecisions()`): the nineteen fields `recordDecision()` writes and no others, a
+   signature that is empty or `{alg: ed25519, key_fingerprint, value}`, no private-key marker, none of the
+   secret shapes. This is a STRUCTURAL check: the chain, the signatures and the registry are still
+   `verifyLedger()`'s and the release gate's. `agent/policy/verify/selftest.mjs` L1–L4 hold it, and a
+   private key planted in a constructed ledger, in a throwaway clone, was measured to turn the gate red.
 
 3. **AB-07 reported the design as a CRITICAL breach.** It scanned every agent for a
    deciding or publishing capability and flagged `human`, which carries `may_decide: true`
