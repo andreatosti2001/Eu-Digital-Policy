@@ -206,16 +206,27 @@ publishes, and CI makes a failure visible, not blocking.
 
 **None of these can be set from the repository, and the gate does not say they are set.** `node agent/release/cli.mjs
 status` lists them as *not measured* for that reason. Status as of 4 Nov 2026 is what the repository can show, which is
-nothing about any of them.
+nothing about any of them. **Rows 1, 2, 4 and 5 now carry the author's report of 6 Nov 2026**: it is the author's word,
+it is not something the tree can show, and the deploy record after the table is the only part of it that a log supports.
 
 | # | Setting | Why the gate needs it | Status |
 |---|---|---|---|
-| 1 | Settings → Pages → Source: **GitHub Actions** (§3.1) | otherwise a push to `main` is published by GitHub's branch build, which no workflow can gate | reported done 24 Oct 2026 (§1b); not re-measured |
-| 2 | **Ruleset on `main`**: require a pull request, **require review by a code owner**, require the `qa.yml` checks, block force pushes and deletions (§3.2) | the gate trusts the merge. Without a required review, C8's commits are unreviewed by construction | **not done** (§1b: "none") |
-| 3 | **`CODEOWNERS`** naming the owner for `/.github/`, `/agent/release/`, `/agent/implement/decisions/`, `/tools/pages-artifact.mjs` | with 2, no change to the gate, the workflows, the ledger or the allowlist merges without the owner | **file added 5 Nov 2026 at the owner's request** (`.github/CODEOWNERS`, in a pull request, not yet on `main` when written); **inert until row 2 is set** — a file nobody enforces protects nothing |
-| 4 | **`github-pages` environment → Deployment branches: `main` only** (§3.3), and **required reviewers** if the owner wants a manual stop before deploy | a `workflow_dispatch` from another ref cannot deploy; C1 checks the ref, this makes GitHub check it first | **not done** |
-| 5 | **Repository variable `RELEASE_REVIEWER_REGISTRY_SHA256`** = the output of `node agent/release/cli.mjs status` ("registry fingerprint") | C10: pins the reviewer registry outside the tree. Unset, any run relying on a signature is refused | **not set** — there is no registry yet |
+| 1 | Settings → Pages → Source: **GitHub Actions** (§3.1) | otherwise a push to `main` is published by GitHub's branch build, which no workflow can gate | reported done 24 Oct 2026 (§1b); **reported in place again by the author on 6 Nov 2026**; the deploy record below is consistent with it; not measurable from the tree |
+| 2 | **Ruleset on `main`**: require a pull request, **require review by a code owner**, require the `qa.yml` checks, block force pushes and deletions (§3.2) | the gate trusts the merge. Without a required review, C8's commits are unreviewed by construction | **reported done by the author on 6 Nov 2026**; "not done" on 24 Oct 2026 (§1b: "none") and on 4 Nov 2026; not measurable from the tree |
+| 3 | **`CODEOWNERS`** naming the owner for `/.github/`, `/agent/release/`, `/agent/implement/decisions/`, `/tools/pages-artifact.mjs` | with 2, no change to the gate, the workflows, the ledger or the allowlist merges without the owner | **file on `main`** (`.github/CODEOWNERS`, added 5 Nov 2026 at the owner's request); **inert unless row 2 is set** — a file nobody enforces protects nothing; row 2 is reported set on 6 Nov 2026 |
+| 4 | **`github-pages` environment → Deployment branches: `main` only** (§3.3), and **required reviewers** if the owner wants a manual stop before deploy | a `workflow_dispatch` from another ref cannot deploy; C1 checks the ref, this makes GitHub check it first | **reported done by the author on 6 Nov 2026** (`main` only; whether required reviewers were added was not said); "not done" on 4 Nov 2026; not measurable from the tree |
+| 5 | **Repository variable `RELEASE_REVIEWER_REGISTRY_SHA256`** = the output of `node agent/release/cli.mjs status` ("registry fingerprint") | C10: pins the reviewer registry outside the tree. Unset, any run relying on a signature is refused | **reported set by the author on 6 Nov 2026**, to the fingerprint `node agent/release/cli.mjs status` printed that day for the one-reviewer registry (`rev-andrea`, added 5 Nov 2026): `4b4a0efb3e024584545d33de8d59ba39bf72455c315d6a0a5c614766f86bc259`; "not set — there is no registry yet" on 4 Nov 2026; whether the stored value equals that fingerprint is not measurable from the tree, and it changes whenever `reviewers.json` does |
 | 6 | Keep the reviewer's **private key** outside the repository and every agent's reach | it is the whole of the approval's authenticity | the owner's |
+
+**The deploy record, 6 Nov 2026.** Run 85 of `pages.yml` (actions/runs/42138109579): a push to `main` by `andreatosti2001`,
+commit `345ac7556d223f63e9285468d86062addd9773ab` (the merge of #77), **success**. Its jobs, as the run page lists them: the
+four gates ("data, markup and evidence", "public / private boundary", "browser regression", "adversarial verification"),
+"Build the artifact, then the release gate", and "Deploy". The log of "Deploy", supplied by the author, shows
+`actions/deploy-pages@v5` creating the Pages deployment for that commit from the `github-pages` artifact of the same run
+and reporting success at `https://eudigitalpolicy.eu/`. That is the record the condition `deploy_gate_exists` names
+("a deployment record showing pages.yml published the live site"). **What it does not show:** that the settings of rows 2, 4
+and 5 are in place, which no log of this run carries; and the condition stays *unmeasurable* in
+`node agent/production/cli.mjs readiness`, because it reads only the tree.
 
 ## 3b. How a person makes the approval the gate checks for
 
