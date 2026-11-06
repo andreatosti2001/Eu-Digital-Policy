@@ -4,6 +4,48 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## Stage 1 — the docs/ proposal is prepared; the signature is the author's (6 Nov 2026)
+
+**Branch:** `claude/kind-maxwell-e31dud`, restarted from `main` `82c9b7c` after #80 was merged. The entry below it is its predecessor and is unchanged.
+**Authority:** §8, "Stage 1, step 2: a `docs/` proposal written by the session, as an exception" (the author's words: "Autorizzo una proposta
+in docs/ scritta dalla sessione, per correggere le affermazioni false già trovate").
+
+**The proposal** (written by the session, `agent` = `stage-1-session-author`, `trace_ref` null: it was not produced inside an agent run):
+
+| | |
+|---|---|
+| Proposal id | `prop-docs-ea57404dc452` (`ImplementationProposal`; ApprovalRequest `appr-docs-ea57404dc452`, state `requested`) |
+| Fingerprint (what a decision binds) | `a1deaf660686063af4261e6c78bcb66259e4699d2d7fbf70f59d3c5b3195c622` — `proposalFingerprint()`, which excludes `trace_ref` and `created_at` |
+| Copy of the records | `docs/stage-1-proposal.jsonl`, 2 lines, sha256 starts `85f8f02d85460ac52a25…`; restoring it into an empty store reproduces the fingerprint above (measured) |
+| Description | Replace the third bullet of `docs/DEPLOYMENT.md` §7 (lines 360–361), which says the release gate has never run in GitHub Actions, with what the logs of `pages.yml` runs 86 (`6bfe537`) and 87 (`149e9b7`) show: C1, C2, C3, C4, C6, C9, C10 satisfied; C5 and C7 not measured; C8 reported. |
+| Risk / class | `low` · `review_required` · one file · `git_revert` rollback |
+| Not in it | `AGENTS.md` and `agent/implement/decisions/README.md` (outside `docs/`, so outside the exception; both still carry the stale statements) |
+
+**Measured:** `lifecycle --proposal prop-docs-ea57404dc452` → `awaiting_human_review`. `implement preflight` → 8 of 10 gates pass; the two that refuse are
+`approved` and `approval_attributable`, i.e. exactly the missing human decision. `release dispatch` (rehearsal, nothing written) → **REFUSED at stage 3 of 9**:
+`intake ✓`, `ledger ✓` (empty), `approval ✗` (pending). Stages 4–9 (preflight, duplicate, isolate, apply, scope, commit) were not reached and are **not measured**.
+
+**What the author does** (a terminal and the private key are needed; the session never touches the key):
+1. `git fetch origin && git checkout -b claude/stage-1-decision origin/main` (the dispatcher cuts its branch from a non-`main` branch).
+2. Restore the record store (git-ignored): `mkdir -p agent/records && cp docs/stage-1-proposal.jsonl agent/records/untraced.jsonl`, then
+   `node agent/release/cli.mjs lifecycle --proposal prop-docs-ea57404dc452` must say `awaiting_human_review`. Read `evidence`, the operation's `current` and `proposed`,
+   `risk`, `rollback_plan` and the five `what_to_check` items of `appr-docs-ea57404dc452` in that file.
+3. Sign: `node agent/implement/cli.mjs decide --proposal prop-docs-ea57404dc452 --grant --by "Andrea Tosti" --role "repository author" --sign-key <path to the private key> --note "<what you checked>"`.
+4. Commit `agent/implement/decisions/decisions.jsonl` **alone, in its own commit, before the change** (C7 needs the grant in the parent of the dispatched commit).
+5. `node agent/release/cli.mjs dispatch --proposal prop-docs-ea57404dc452` (rehearsal, all nine stages should now run), then `… --execute --as-of <date>`; push the `release/…` branch; open the pull request.
+6. Merge it **with a merge commit, not squash**: a squash fuses the decision and the change into one commit and C7 would find no decision in its parent (reading of `gate.mjs` lines 224–225, not yet measured).
+7. Read the gate log of `pages.yml` on the merged commit.
+
+**Expected after that, as an expectation and not a measurement:** C5 satisfied once `decisions.jsonl` is on `main`; C7 satisfied once the dispatched commit with its `Proposal` trailer is; **C10 already satisfied** (runs 86 and 87).
+Within 30 days of the decision, or C7 calls it stale. `production readiness` should then move `decision_ledger_present` from blocking to passing; `production_dispatcher_wired` and `deploy_gate_exists` do not change.
+
+**Declared, not measured:** the settings of §3a rows 1, 2, 4, 5 (the author's report); row 6 (the key) is the author's. The author had no terminal when this was written.
+
+## Branch register — 6 November 2026 (Stage 1, second branch)
+
+- `claude/kind-maxwell-e31dud` was merged as #80 and restarted from `main` `82c9b7c`. Unmerged elsewhere: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- This branch: the §8 exception row, `docs/stage-1-proposal.jsonl` and this entry. Pull request at the author's scope instruction; not merged by the session.
+
 ## Stage 1 — preparation stopped before the signature (6 Nov 2026)
 
 **Last updated:** 6 November 2026. **Branch:** `claude/kind-maxwell-e31dud`, from `main` `149e9b7`. The entries below are unchanged.
