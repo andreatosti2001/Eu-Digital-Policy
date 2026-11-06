@@ -4,6 +4,31 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## Stage 1 — the real dispatch path repaired; the author's decision is signed and waits for it (6 Nov 2026)
+
+**Branch:** `claude/kind-maxwell-e31dud`, from `main` `7250715`. The entry below it is its predecessor; **its restore step (copy to `untraced.jsonl`) is replaced by the one here.**
+
+**What happened.** The author signed `prop-docs-ea57404dc452` on their terminal (decision `appr-docs-ea57404dc452`, ledger verified: 1 entry, chain intact, 1 signed by a registered reviewer, 0 simulated; registry fingerprint `4b4a0efb…` after a CRLF problem on their Windows checkout was corrected locally). `dispatch --execute` then passed intake, ledger, approval, preflight (10 of 10), duplicate and isolate, and was **refused at apply**: Agent 9's first policy evaluation (`facts: {}`) read every measurement of the change as `unknown`, all on `NOT_WAIVABLE_BY_APPROVAL`, so the engine returned `blocked` for every proposal. `agent/release/selftest.mjs` drives the dispatcher with a stub applier, so nothing had run the real path. Rows in §8: "the real dispatch path is blocked…", "targeted change to two policy conditions…", "the autonomy runner stays as it was…", "what was built is not what the two rows above worded".
+
+**What changed, in this pull request** (code, not only docs: it needs the author's review):
+- `agent/implement/implementer.mjs`: `policyRefusalBefore()`; the first evaluation no longer refuses on measurements that cannot exist yet. The evaluation after the apply still blocks and still reverts.
+- `agent/policy/conditions.mjs`: `verification_succeeded` and `no_unresolved_conflict` are `unknown` with `hard: false` for a `docs/`-only proposal that records no legal fact and no conflict. They never reach `automatic`. **The first draft used `not_applicable` and the adversarial gate's AP-03 (CRITICAL) caught it; see §8.**
+- `agent/policy/selftest.mjs`, `agent/implement/selftest.mjs`: new tests and four re-aimed assertions, all named in §8.
+- `docs/stage-1-proposal.jsonl`: the same proposal regenerated inside a real traced run, so `provenance_complete` reads a real `trace_ref` (`f176b8d7…`, in this session's git-ignored trace store). **The fingerprint is unchanged, `a1deaf660686063af4261e6c78bcb66259e4699d2d7fbf70f59d3c5b3195c622`, so the signed decision stays valid.** The first copy had `trace_ref: null`, which the policy refuses.
+
+**Not done, not measured:** the real `--execute` (apply, scope, commit); the browser suite locally; the effect of the first decision on `agent/proposals/governance/` (below).
+
+**Expected, by reading, not measured:** pattern P-07 of `agent/proposals/governance/patterns.mjs` ("Nothing is ever decided") anchors three `now` facts that the first decision falsifies (the ledger file absent, decisions recorded 0, proposals reachable 0). Once `decisions.jsonl` is on `main`, `node agent/proposals/governance/cli.mjs check` should exit 1 and that suite's tests 2d, 7 and 8 should fail in CI, until P-07 is updated. That is the first real decision working as designed, not a defect; it needs its own small pull request after the merge. (The same three tests failed in this session's tree for a different reason: a local `agent/records/` held the proposal. Moved aside, they pass.)
+
+**What the author does next** (PowerShell, one command at a time):
+1. Merge this pull request.
+2. On the local branch that holds the signed decision: `git checkout claude/stage-1-decision`, `git fetch origin`, `git merge origin/main`.
+3. Delete the empty release branch the failed run left: `git branch -d release/prop-docs-ea57404dc452-fedeb4e6`.
+4. Replace the record: `Remove-Item agent\records\untraced.jsonl`, then `Copy-Item docs\stage-1-proposal.jsonl agent\records\stage-1-proposal.jsonl`. Both files would hold the same id otherwise and the old one, with no `trace_ref`, would win.
+5. `node agent/release/cli.mjs lifecycle --proposal prop-docs-ea57404dc452` should now say the proposal is approved; then `dispatch --proposal …` (rehearsal), then `dispatch --proposal … --execute --as-of <date>`.
+6. Push the `release/…` branch, open the pull request, merge it **with a merge commit, not squash**.
+7. Read the `pages.yml` gate log of the merged commit: C5 and C7 should pass (an expectation, not a measurement). C7 calls the decision stale 30 days after it was taken (6 Nov 2026).
+
 ## Stage 1 — the docs/ proposal is prepared; the signature is the author's (6 Nov 2026)
 
 **Branch:** `claude/kind-maxwell-e31dud`, restarted from `main` `82c9b7c` after #80 was merged. The entry below it is its predecessor and is unchanged.

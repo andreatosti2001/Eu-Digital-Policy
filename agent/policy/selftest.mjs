@@ -128,6 +128,24 @@ function cleanFacts(over = {}) {
   };
 }
 
+/** The same proposal aimed at a file that is NOT under docs/. Tests 3, 4 and 22 are about an
+ *  ABSENT verification or conflict scan reading as unknown, and they were written against
+ *  `cleanProposal()`, which is docs/-only. Stage 1 (6 Nov 2026, docs/ROADMAP-v2.md §8) made
+ *  those two conditions `not_applicable` for a docs/-only proposal, so the assertion keeps its
+ *  full strength by being aimed at a proposal outside that narrow case. */
+function nonDocsProposal(over = {}) {
+  return cleanProposal({
+    files: ['tools/policy-selftest-note.mjs'],
+    proposed_change: {
+      summary: 'Write one file under tools/.',
+      operations: [{ op: 'add', target: 'tools/policy-selftest-note.mjs', current: null, proposed: 'a note', rationale: 'A fixture for the policy suite.' }],
+      scope_note: 'tools/ only.',
+    },
+    affected_entities: [{ kind: 'tool', id: null, path: 'tools/policy-selftest-note.mjs', field: null, note: null }],
+    ...over,
+  });
+}
+
 const applyReq = (over = {}) => ({
   actor: { kind: 'implementation_qa', id: 'implementation-qa' },
   action: 'implement.apply',
@@ -233,7 +251,7 @@ test('3 · a failed verification blocks, and an ABSENT one blocks in the same wa
   assert.equal(failed.route, 'blocked');
   assert.equal(verdictOf(failed, 'verification_succeeded'), 'failed');
 
-  const absent = evaluate(applyReq({ facts: cleanFacts({ verification: undefined }) }));
+  const absent = evaluate(applyReq({ proposal: nonDocsProposal(), facts: cleanFacts({ verification: undefined }) }));
   assert.equal(absent.route, 'blocked', 'an unrun verification must not be a passed one');
   assert.equal(verdictOf(absent, 'verification_succeeded'), 'unknown');
 
@@ -254,7 +272,7 @@ test('4 · an unresolved conflict blocks, whether it comes from the scan or from
   const own = evaluate(applyReq({ proposal: cleanProposal({ conflicts: [{ what: 'the record and the source disagree' }] }) }));
   assert.equal(verdictOf(own, 'no_unresolved_conflict'), 'failed');
 
-  const unscanned = evaluate(applyReq({ facts: cleanFacts({ conflicts: undefined }) }));
+  const unscanned = evaluate(applyReq({ proposal: nonDocsProposal(), facts: cleanFacts({ conflicts: undefined }) }));
   assert.equal(verdictOf(unscanned, 'no_unresolved_conflict'), 'unknown', 'an unchecked absence of conflict is not an absence of conflict');
   assert.equal(verdictOf(evaluate(applyReq()), 'no_unresolved_conflict'), 'satisfied');
 });
@@ -726,7 +744,7 @@ test('21 · the twelve conditions are all evaluated, always, and every one of th
 });
 
 test('22 · an absent fact is unknown and unknown never executes', () => {
-  const d = evaluate({ actor: { kind: 'implementation_qa', id: 'a9' }, action: 'implement.apply', environment: 'local', proposal: cleanProposal(), policy: SIMULATION_POLICY });
+  const d = evaluate({ actor: { kind: 'implementation_qa', id: 'a9' }, action: 'implement.apply', environment: 'local', proposal: nonDocsProposal(), policy: SIMULATION_POLICY });
   assert.ok(d.unknown.length >= 3, `supplying no facts must produce unknowns, got ${JSON.stringify(d.unknown)}`);
   assert.equal(d.route, 'blocked');
   assert.equal(d.automatic_execution_permitted, false);
@@ -809,7 +827,11 @@ test('30 · the implementation layer calls the policy, twice, and refuses on a b
   assert.ok(impl.includes("from '../policy/engine.mjs'"), 'SESSION 23: do not implement the policy solely as documentation. The implementation layer must import it.');
   const calls = (impl.match(/evaluatePolicy\(/g) ?? []).length;
   assert.ok(calls >= 2, `the implementer must evaluate the policy before writing and again on the measured facts; found ${calls} call(s)`);
-  assert.ok(/policyBefore\.route === 'blocked'/.test(impl), 'a blocked route before the change must be a refusal');
+  /* Stage 1, 6 Nov 2026: the first evaluation no longer refuses on `route === 'blocked'`, which read every
+     measurement as an unknown and refused EVERY proposal. It refuses through `policyRefusalBefore`, which
+     is exercised behaviourally in agent/implement/selftest.mjs (S1-f…S1-h). This line keeps the source
+     assertion the same shape: the refusal must come from that function, and must still be a refusal. */
+  assert.ok(/policyRefusalBefore\(policyBefore\)/.test(impl) && /if \(refusedBefore\) \{/.test(impl), 'a refusal before the change must come from policyRefusalBefore and must refuse');
   assert.ok(/policyAfter\.route === 'blocked'/.test(impl), 'a blocked route on the measured facts must be a reason to revert');
 
   /* This is a source assertion, and it is weaker than a behavioural
@@ -915,4 +937,94 @@ test('33 · the Orchestrator enforces the policy engine, and cannot permit what 
   assert.ok(refused.policy_engine.failed.length + refused.policy_engine.unknown.length > 0,
     'the engine must report which conditions it refused on. A route with an empty verdict means it was asked about the wrong act.');
   assert.notEqual(refused.policy_engine.route, 'automatic');
+});
+
+
+/* ============================================================
+   Stage 1, 6 Nov 2026 — conditions 2 and 3 for a docs/-only proposal
+
+   The author's authorisation is in docs/ROADMAP-v2.md §8. Every assertion below is paired:
+   what became `not_applicable`, and what did not.
+   ============================================================ */
+
+import { docsOnlyNoLegalFact } from './conditions.mjs';
+
+test('S1-a · a docs/-only proposal that records no legal fact: verification and conflict stay unknown, stop blocking, and are a person\'s to decide', () => {
+  const d = evaluate(applyReq({ facts: cleanFacts({ verification: undefined, conflicts: undefined }) }));
+  for (const name of ['verification_succeeded', 'no_unresolved_conflict']) {
+    const c = d.conditions.find((x) => x.condition === name);
+    assert.equal(c.verdict, 'unknown', `${name} is not met and is not read as met`);
+    assert.equal(c.hard, false, `${name} is marked soft for this case, as scope_permitted is for "not on the allowlist"`);
+  }
+  assert.equal(d.route, 'human_review', `reasons: ${d.why}`);
+  assert.notEqual(d.route, 'automatic');
+  assert.equal(docsOnlyNoLegalFact(cleanProposal()), true);
+});
+
+test('S1-a2 · THE CASE THE FIRST DRAFT FAILED: with the grant in force enabling the category, the same proposal still never reaches automatic (adversarial gate AP-03)', () => {
+  const inForce = policyInForce({ now: '2026-11-06T00:00:00Z' });
+  assert.ok(inForce.policy.enabled_categories.includes('machine_derived_field'), 'the grant in force enables the docs/ category, which is what makes this test mean something');
+  const base = { actor: { kind: 'implementation_qa', id: 'implementation-qa' }, action: 'implement.apply', environment: 'local', resource: { kind: 'report', id: 'docs/POLICY-SELFTEST-NOTE.md' }, proposal: cleanProposal(), policy: inForce.policy };
+  const none = evaluate({ ...base, facts: cleanFacts({ verification: undefined, conflicts: undefined }) });
+  assert.notEqual(none.route, 'automatic', 'no verification at all must never permit automatic execution');
+  assert.equal(none.automatic_execution_permitted, false);
+  const real = evaluate({ ...base, facts: cleanFacts() });
+  assert.equal(real.route, 'automatic', 'while a real verification result and a real scan still do reach automatic: the case is narrower, not closed');
+});
+
+test('S1-b · for that same proposal a SUPPLIED result is read exactly as before: a failed verification and a found conflict still fail', () => {
+  const v = evaluate(applyReq({ facts: cleanFacts({ verification: { succeeded: false, why: 'x' }, conflicts: { found: 2, items: [{ what: 'a' }, { what: 'b' }] } }) }));
+  assert.equal(verdictOf(v, 'verification_succeeded'), 'failed');
+  assert.equal(verdictOf(v, 'no_unresolved_conflict'), 'failed');
+  assert.equal(v.route, 'blocked');
+  const own = evaluate(applyReq({ proposal: cleanProposal({ conflicts: [{ what: 'the record disagrees' }] }), facts: cleanFacts({ conflicts: undefined }) }));
+  assert.equal(verdictOf(own, 'no_unresolved_conflict'), 'failed', 'a conflict the proposal records itself still fails when no scan is supplied');
+});
+
+test('S1-c · nothing outside the narrow case is touched: data/, a page, a locale, a module, tools/, agent/ and a mixed set all stay unknown', () => {
+  const at = (path) => cleanProposal({
+    files: [path],
+    proposed_change: { summary: 'x', operations: [{ op: 'modify', target: path, current: 'a', proposed: 'b', rationale: 'x' }], scope_note: 'x' },
+    affected_entities: [{ kind: 'tool', id: null, path, field: null, note: null }],
+  });
+  for (const path of ['data/sources.json', 'data/claims.json', 'index.html', 'i18n/it.json', 'js/format.js', 'tools/validate.mjs', 'agent/policy/conditions.mjs', 'README.md', 'AGENTS.md', 'css/tokens.css']) {
+    const d = evaluate(applyReq({ proposal: at(path), facts: cleanFacts({ verification: undefined, conflicts: undefined }) }));
+    assert.equal(verdictOf(d, 'verification_succeeded'), 'unknown', `${path}: verification must stay unknown`);
+    assert.equal(verdictOf(d, 'no_unresolved_conflict'), 'unknown', `${path}: conflict must stay unknown`);
+    assert.equal(d.route, 'blocked', path);
+  }
+  const mixed = cleanProposal({
+    files: ['docs/POLICY-SELFTEST-NOTE.md', 'data/sources.json'],
+    proposed_change: { summary: 'x', operations: [
+      { op: 'add', target: 'docs/POLICY-SELFTEST-NOTE.md', current: null, proposed: 'a', rationale: 'x' },
+      { op: 'modify', target: 'data/sources.json', current: 'a', proposed: 'b', rationale: 'x' }], scope_note: 'x' },
+  });
+  assert.equal(docsOnlyNoLegalFact(mixed), false, 'one non-docs/ path is enough to leave the case');
+  assert.equal(verdictOf(evaluate(applyReq({ proposal: mixed, facts: cleanFacts({ verification: undefined, conflicts: undefined }) })), 'verification_succeeded'), 'unknown');
+});
+
+test('S1-d · a docs/ proposal that names a legal-record entity, records an interpretation, or is not an ImplementationProposal leaves the case', () => {
+  const legalKind = cleanProposal({ affected_entities: [{ kind: 'claim', id: 'cl-014', path: 'docs/POLICY-SELFTEST-NOTE.md', field: null, note: null }] });
+  assert.equal(docsOnlyNoLegalFact(legalKind), false);
+  const reading = cleanProposal({ epistemic: { ...cleanProposal().epistemic, interpretation: [{ field: null, statement: 'a reading', held_by: 'x', basis: 'y', contested: false }] } });
+  assert.equal(docsOnlyNoLegalFact(reading), false);
+  const otherContract = cleanProposal({ contract: 'DataProposal' });
+  assert.equal(docsOnlyNoLegalFact(otherContract), false);
+  assert.equal(docsOnlyNoLegalFact(null), false);
+  const climbing = cleanProposal({
+    files: ['docs/../data/claims.json'],
+    proposed_change: { summary: 'x', operations: [{ op: 'modify', target: 'docs/../data/claims.json', current: 'a', proposed: 'b', rationale: 'x' }], scope_note: 'x' },
+    affected_entities: [{ kind: 'tool', id: null, path: 'docs/../data/claims.json', field: null, note: null }],
+  });
+  assert.equal(docsOnlyNoLegalFact(climbing), false, 'a path that climbs out of docs/ is not under docs/');
+});
+
+test('S1-e · the five conditions that are measurements of a change are still `unknown` without facts, and the measured evaluation still blocks without them', () => {
+  const bare = evaluate({ actor: { kind: 'implementation_qa', id: 'a9' }, action: 'implement.apply', environment: 'local', proposal: cleanProposal(), policy: SIMULATION_POLICY });
+  for (const c of ['validators_pass', 'rollback_mechanical']) assert.equal(verdictOf(bare, c), 'unknown', c);
+  assert.equal(bare.route, 'blocked', 'with no measurement the route is still blocked');
+  const measured = evaluate(applyReq({ facts: cleanFacts({ verification: undefined, conflicts: undefined }) }));
+  assert.notEqual(measured.route, 'blocked', measured.why);
+  const failedValidators = evaluate(applyReq({ facts: cleanFacts({ verification: undefined, conflicts: undefined, validators: { verdict: 'fail', blocking_findings: ['tools/validate.mjs: 1 error'] } }) }));
+  assert.equal(failedValidators.route, 'blocked', 'measured validators that fail still block the docs/-only proposal');
 });

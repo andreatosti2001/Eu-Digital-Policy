@@ -50,6 +50,8 @@ import { readAgentRecords, readLedger, surveyProposals } from './ledger.mjs';
 import { changedPaths, enforceScope, touchesLegalRecord, requiresBrowserQA } from './scope.mjs';
 import { openContext, applyProposal, rollback, diffSummary, ApplyRefused } from './apply.mjs';
 import { evaluate as evaluatePolicy } from '../policy/engine.mjs';
+import { NOT_WAIVABLE_BY_APPROVAL } from '../policy/conditions.mjs';
+import { MEASURED_CONDITIONS } from '../autonomy/cycle.mjs';
 import { DEFAULT_POLICY } from '../policy/categories.mjs';
 import {
   runValidators, runAgentSuites, runContractCheck, runBrowserCheck, runBoundaryCheck,
@@ -64,6 +66,40 @@ export const IMPLEMENT_AGENT = 'implementation-qa';
  *  derived, not typed, for the reason every other number here is. */
 export const CONTROL_PLANE_BASELINE_NOTE =
   'docs/IMPLEMENTATION-QA.md §6: the public/private separation does not exist in this repository. The baseline is what the tree exposes today; a rise is a finding.';
+
+/**
+ * What the first policy evaluation may refuse, before any change exists.
+ *
+ * Stage 1, 6 Nov 2026, under the author's authorisation in docs/ROADMAP-v2.md §8.
+ * With `facts: {}` every condition that is a MEASUREMENT of the change (the
+ * validators, the browser run, the rollback context, a verification result, a
+ * conflict scan) reads `unknown`, all five are on NOT_WAIVABLE_BY_APPROVAL, and
+ * the engine then returns `blocked` for EVERY proposal. That was true from
+ * SESSION 18 and went unseen because agent/release/selftest.mjs drives the
+ * dispatcher with a stub applier and this suite never ran the agent. The same
+ * shape was repaired for agent/autonomy/ in SESSION 27 (docs/CONTINUOUS-
+ * IMPROVEMENT.md §4), and this reads it the same way: an actor that is not
+ * authorized, a hard condition that FAILED, or a hard condition that is unknown
+ * and is not one of the measurements taken after the change, refuses here.
+ *
+ * Nothing is dropped. The second evaluation, after the apply and against the
+ * measured facts, still returns `blocked` for an unmet hard condition, and the
+ * change is reverted.
+ *
+ * @param {object} decision the result of `evaluate()` with no facts
+ * @returns {{refused:boolean, why:string, unmet:object[]}}
+ */
+export function policyRefusalBefore(decision) {
+  const unauthorized = decision?.authorization?.allow !== true;
+  const unmet = (decision?.conditions ?? []).filter((c) => NOT_WAIVABLE_BY_APPROVAL.includes(c.condition)
+    && c.hard !== false
+    && (c.verdict === 'failed' || (c.verdict === 'unknown' && !MEASURED_CONDITIONS.includes(c.condition))));
+  const refused = unauthorized || unmet.length > 0;
+  const why = unauthorized
+    ? (decision?.why ?? 'the actor is not authorized for this act')
+    : `${unmet.length} condition(s) that a human approval does not override and that can be judged before the change: ${unmet.map((c) => `${c.condition} (${c.verdict})`).join(', ')}. Protocol §8.`;
+  return { refused, why, unmet };
+}
 
 export class Implementer {
   /**
@@ -270,10 +306,13 @@ export class Implementer {
         },
         risk: policyBefore.route === 'blocked' ? 'low' : 'medium',
       });
-      if (policyBefore.route === 'blocked') {
+      /* THE FIRST EVALUATION ASKS ONLY WHAT CAN BE ANSWERED BEFORE A CHANGE EXISTS;
+         see `policyRefusalBefore` below, and docs/ROADMAP-v2.md §8, 6 Nov 2026. */
+      const { refused: refusedBefore, why: whyBefore } = policyRefusalBefore(policyBefore);
+      if (refusedBefore) {
         span.decide({
           decision: `REFUSE ${item.proposal_id} — the autonomy policy blocks it`,
-          rationale: policyBefore.why,
+          rationale: whyBefore,
           alternatives: [
             { option: 'proceed on the grant alone', why_not: 'protocol §8: human approval does not override provenance, validation, security or scope requirements. A blocked route means an approval would not help.' },
             { option: 'enable the category in the policy', why_not: 'protocol §24: the system must not autonomously rewrite its own governance policy. Enabling one is a governance proposal a human decides.' },
@@ -282,7 +321,7 @@ export class Implementer {
           risk: 'low',
         });
         span.end({ status: 'ok', outputs: { outcome: 'refused', stage: 'policy' } });
-        return { proposal_id: item.proposal_id, contract: item.contract, agent: item.agent, outcome: 'refused', preflight: pre, policy: policyBefore, why: `the autonomy policy blocks this: ${policyBefore.why}` };
+        return { proposal_id: item.proposal_id, contract: item.contract, agent: item.agent, outcome: 'refused', preflight: pre, policy: policyBefore, why: `the autonomy policy blocks this: ${whyBefore}` };
       }
 
       /* --------------------------------------------- the change */
