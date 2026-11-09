@@ -52,8 +52,9 @@ any family but enforcement; F-A1…F-A6 unfixed by scope.
 ## Branch register — 9 November 2026 (PV2-01)
 
 - Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
-- This branch, `claude/pensive-bell-665v9z`: 15 commits before this entry, all `docs/`. Disposition: to be recorded after the author's
-  answer on a pull request.
+- This branch, `claude/pensive-bell-665v9z`: all `docs/`. Final checkpoint approved (§8). Disposition: on the author's answer ("Open a PR
+  to main (Recommended)"), pull request #84 to `main` (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/84), opened and not merged
+  by the session. Merging is the author's.
 
 ## PV2-01 — Post-v2 A, data readiness: checkpoint A.2 (9 Nov 2026)
 
