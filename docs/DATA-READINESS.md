@@ -1,7 +1,8 @@
 # DATA READINESS — Post-v2 block A (PV2-01)
 
-**Status:** A.2 written, awaiting the author's approval in `docs/ROADMAP-v2.md` §8. A.3 (the metric card) and A.4 (the
-metric contract) are not yet written.
+**Status:** A.2 approved (§8, 9 Nov 2026). A.3 (§5, the one metric card) and A.4 (§6, the proposed metric contract)
+written on the author's decisions of §8 and awaiting the final checkpoint of PV2-01. **The contract is proposed, not
+implemented**: no check exists, and D (PV2-08) writes it.
 **What this is:** the audit that `docs/POST-V2.md` §3 A asks for before any dashboard or infographic: an inventory of the
 datasets, and (in later sections) one metric card and a proposed metric contract. **It is a gate, not a design.** Nothing
 here is drawn, and no value is estimated or generated to fill a gap.
@@ -222,5 +223,114 @@ itself without any check noticing (P1).
 
 ---
 
-*A.3 (the card "fines announced, collected and unknown") and A.4 (the proposed metric contract) follow the approval of
-this section. A.5 is the prompt of PV2-02.*
+## 5. A.3 — the card: fines announced, collected and unknown
+
+The one metric the author chose (§8, "A.1 question 2"), written with the three decisions of §8 "A.3 questions 1–3". **It is
+a definition, not a display**: nothing below says how the figure looks, where it sits or what it is drawn with — that is
+C and D. The figures in §5.2 are a measurement of the definition on one commit, kept to show that it computes, and they
+go stale with `data/`.
+
+### 5.1 The card
+
+| Property (`docs/POST-V2.md` §3 A) | The card |
+|---|---|
+| **Question** | Of the enforcement actions this site records, how much money has been announced in fines, what has become of those decisions, and how much is shown to have been collected? |
+| **Operational definition** | Three figures, never shown apart: **announced** — the sum of `fine_eur` over the inputs; **its partition by posture** — the same inputs split by what became of the decision; **collected** — the sum of `fine_eur` over inputs whose payment is demonstrated, or *not determinable* (§5.1, the meaning of the states) |
+| **Records and fields** | `data/enforcement.json`, taken through `js/pipeline.js` `actionsOnly()` (which excludes the recorded inaction, one home). Fields: `fine_eur`, `action_status`, `appeal.status`, `judicial`, `payment_status`, `requires_verification`, `last_verified`, `claims`, `sources`. **Link to the source:** each input's `sources` (tier 1–4, `data/sources.json`) and the claim that states its amount, where one exists (F-A3) |
+| **Formula, denominator, unit** | announced = Σ `fine_eur` over the inputs; each part = Σ over its inputs, and **the parts add back to the total in euros and in records** (§8, A.3 q. 1); collected = Σ over inputs whose payment state is *known*, only if no input's state is *unknown* or *not researched*. Unit: EUR, integer, as recorded. **No denominator**: the card is a sum, not a share. "13 of 20 actions carry a fine" is a count shown beside it, not a rate of anything |
+| **Partition** | by the posture `js/pipeline.js` `procedure()` derives, in this order, each input in exactly one part: **annulled** (`action:annulled`, remitted or not) · **under appeal** (`procedure:appeal`) · **final** (`finality:final`) · **standing, finality not established** (every other input). An empty part is shown as empty (0 records, €0) — a count of records in a known state, not an unknown read as zero, because unknown finality is its own part |
+| **Period and "as of"** | no period: every recorded action, whatever its date. **As of** the inputs' own `last_verified` — the oldest and the newest — never the reader's or the build's date (§8, A.3 q. 3) |
+| **Inclusion / exclusion** | *Included:* every action record with `fine_eur` not null, including annulled and appealed decisions (§8, A.3 q. 1) and unverified records (§8, A.3 q. 2). *Excluded:* the recorded inaction (`actionsOnly()`); records with `fine_eur` null — today all 7 carry `payment:not-applicable`, i.e. no monetary penalty (§2.1); were one ever to carry `null` without it, `aggregate()`'s `announcedUnknownAmount` counts it and the card states it beside the figure |
+| **Zero** | €0 *announced* or in a part means *no input in that part*, a count over known states. **Collected is never €0 by default**: it is a number only when every input's payment state is known |
+| **`null`** | on `fine_eur`: no monetary penalty, when `payment:not-applicable` licenses it, otherwise an amount not recorded (§2.1). On `payment_status` (none today): **not researched** — counted beside, like unknown, never as unpaid (the masthead's rule; the instrument page's differs, F-A1) |
+| **`unknown`** | `payment:unknown` (10 inputs today): collected becomes *not determinable*, and the count is shown. `finality:unknown`: the "standing, finality not established" part |
+| **Not applicable** | `payment:not-payable` (3 inputs today: the 2 annulled decisions and `enf-tiktok-dpc-2025-transfers`) — nothing is payable, so these inputs neither count as collected nor as unknown; they are counted as not payable. `payment:not-applicable` cannot occur on an input: `contradictions()` makes a fine with that state an error unless the decision is annulled |
+| **Unverified** | included, and **counted beside with their names and their amount** (§8, A.3 q. 2): inputs with `requires_verification: true`, and inputs whose linked claims state no amount (F-A3) |
+| **Coverage** | **a selection, not a census**: 20 actions chosen by the brief's argument, not every fine any EU or national authority has imposed. GDPR fines by national DPAs are represented by 6 records; the DLA Piper survey of January 2026 puts the reported GDPR aggregate at €7.1bn (`clm-gdpr-total-fines`), a figure from a different population that is **not comparable** with this sum |
+| **Comparability** | not comparable over time (records are added and re-verified, never snapshotted), nor with trackers that count differently (the prose says so), nor across instruments without the partition (an appeal under the DMA and an appeal under the GDPR are different procedures) |
+| **Updating** | moves only when a record moves. Today the set is 74 days old against its 45-day interval; under `riskClass()` 2 inputs are stale and 7 review-due; the card names them (§8, A.3 q. 3). Only verification work against primary sources clears the notice |
+| **Evidence level and status** | per input, not per figure: the tier of each input's sources, `requires_verification`, and whether a claim states the amount. **The card has no grade of its own**: a grade belongs to a claim (`evidenceGrade()`), and inventing one for a sum would be a second derivation of the evidence model. If the prose ever states the total, it is a `derived` claim with a `derivation` block that `tools/evidence-audit.mjs` re-runs — which is what "a figure the site computes" already means here (`docs/EVIDENCE-MODEL.md` §4) |
+| **Planted cases** | §6, K1–K13, each run on a copy of the tree; K2 is today's tree |
+| **What the card cannot say** | that any money reached a treasury; what a court will decide on the 8 appeals or what the CNPD will decide on remittal; whether the 3 standing decisions will become final; anything about enforcement the site does not record; that a decision is right; that a larger sum means stronger enforcement |
+
+### 5.2 What the definition yields on `06d5640` (a measurement, 9 Nov 2026)
+
+| | |
+|---|---|
+| Announced | **€9,015,990,000** across 13 of 20 recorded actions |
+| — annulled | €761,000,000 · 2 (`enf-amazon-cnpd-2021`, remitted; `enf-openai-garante-2024`) |
+| — under appeal | €6,614,990,000 · 8 |
+| — final | €0 · 0 |
+| — standing, finality not established | €1,640,000,000 · 3 (`enf-temu-ec-2026`, `enf-aliexpress-ec-2026`, `enf-google-ec-2026-dma`) |
+| Collected | **not determinable**: 0 inputs demonstrate payment; 10 cannot settle it (`payment:unknown`); 3 not payable |
+| Resting on an unverified record or on no claim stating the amount | 5 inputs, €2,445,000,000: `enf-meta-dpc-2023-transfers`, `enf-openai-garante-2024`, `enf-apple-ec-2025` (unverified); `enf-meta-dpc-2023-transfers`, `enf-tiktok-dpc-2025-transfers`, `enf-apple-ec-2025`, `enf-meta-ec-2025` (no claim states the amount) |
+| As of | 2026-09-27 … 2026-10-23 |
+| Past their interval (as of 9 Nov 2026) | 9: stale `enf-meta-dpc-2023-transfers`, `enf-tiktok-dpc-2025-transfers`; review-due `enf-uber-ap-2026`, `enf-uber-ap-2024`, `enf-x-ec-2025`, `enf-apple-ec-2025`, `enf-meta-ec-2025`, `enf-google-ec-2025-adtech`, `enf-google-ec-2026-dma` |
+
+**Consequence the author should see now:** the masthead and every instrument page already show "announced" **without its
+partition**, which the decision of A.3 question 1 excludes, and each computes it itself (F-A1). Under the contract below
+the card **cannot be shown on today's tree** (K2). That is not a reason to change `js/` here; it is the first thing D has
+to do before any figure of this card is drawn (§7).
+
+## 6. A.4 — the metric contract, proposed
+
+**A proposal.** Nothing here is implemented, and no check exists. The home of a declaration, once D implements it, is a
+module under `tools/`, enforced by `tools/validate.mjs`, on the precedent of `tools/source-contract.mjs` (§8, "A.4
+question 1"); the module, its name and its wiring are D's (PV2-08). A declaration that fails any property is proposed
+as an **ERROR**, and its figure is not rendered; *not determinable* is not an error, it is one of the figure's states.
+
+**What the contract was tested against.** One card, on one dataset. The contract is written for any metric, but the three
+families the author did not choose (instruments, deadlines, evidence) were not paper-tested, and a property that only one
+family exercises may be missing. That is a stated limit, not a claim of generality.
+
+**How it was tested.** A scratch prototype of the thirteen checks (two scripts in the session's scratchpad, sha256
+prefixes `5d00ea7e139e4579` and `fbd49dba4f2102e9`, **not committed**), run on copies of the tree. K0 is the control: the
+tree with the two second implementations of F-A1 neutralised *in the copy* — what D would do — and it passes all thirteen.
+Each other case was planted in a fresh copy, and **each fails as intended, on the property it targets and on no other**.
+
+| | Property | Exact rule a check applies | Planted case, run | What the check cannot see |
+|---|---|---|---|---|
+| MC-1 | **Question** | a non-empty question that names its population as "the records this site holds" (no metric may read as a census) | K1: "How much has the EU fined?" → ERROR | whether the question is worth asking |
+| MC-2 | **One computing function** | the declaration names one exported function in `js/`; no other module under `js/` computes over the same value field (for a sum: no second `reduce` over it) | **K2: today's tree → ERROR**, `js/masthead.js` and `js/instrument-view.js` | a second implementation that does not name the field (a renamed variable, a generic sum helper) |
+| MC-3 | **Inputs resolve** | the dataset, the collection, the filter that admits inputs (through the dataset's own exclusion function where one exists, e.g. `actionsOnly()`) and every field the declaration reads exist on every record | K3: `payment_status` deleted from one record → ERROR | whether the filter selects the right population |
+| MC-4 | **Value type** | every value entering the formula has the declared type and domain (here: an integer ≥ 0, in EUR); any other value makes the figure *not determinable* and is an ERROR naming the record — **never coerced** | K4: `fine_eur: "unknown"` (which passes `validate.mjs` and `evidence-audit.mjs`, A.2 P2) → ERROR | a well-formed wrong number (200 typed as 2,000) |
+| MC-5 | **Every state mapped** | the declaration maps every value each state field can take — every taxonomy term of its vocabulary, and `null` — to exactly one of *known · known negative · not applicable · unknown · not researched*; a value with no mapping is an ERROR, **never a silent default** | K5: `payment:partially-paid` → ERROR | whether a mapping is semantically right |
+| MC-6 | **Unknown is never zero** | a figure that any input in state *unknown* or *not researched* could change is *not determinable*, and is returned with the count of those inputs; the computing function returns that state itself, not a 0 that a view must reinterpret | K6: collected rendered as €0 with 10 unknown → ERROR | a view that drops the count the function returned |
+| MC-7 | **No escape by "not applicable"** | no property of the contract may be declared not applicable; a *state* may be not applicable only through a taxonomy term the declaration maps, and only where `contradictions()` (or the dataset's equivalent) admits it | K7: `partition: "not_applicable"` → ERROR | a term used wrongly *in a record* — that is the record's check (`contradictions()`), not the contract's |
+| MC-8 | **The partition is total** | where a figure is partitioned, every input is in exactly one part, assigned by one ordered derivation; Σ parts = total in value and in records, exactly | K8: parts computed by independent filters, with an annulled decision also under appeal (a real combination: `enf-supervisory-fee-gc-2025`) → parts add to 14 records and €9,030,990,000 → ERROR | whether the parts are the meaningful ones |
+| MC-9 | **"As of" from the inputs** | the figure carries the oldest and newest `last_verified` of its inputs; the computing function reads no clock; an input with no date makes the "as of" *not determinable* and is an ERROR | K9: `last_verified: null` on one input → ERROR | whether a recorded date is truthful |
+| MC-10 | **Inputs past their interval are named** | the notice lists exactly the inputs that `riskClass()` and `freshnessState()` put at review-due or stale as of an explicit, displayed date — never the reader's clock (F-15) | K10: a notice computed from the dataset's newest date only (the option the author did not choose) → ERROR, 9 inputs omitted | whether the intervals are right (`js/evidence-model.js` `RISK_TTL_DAYS` is their one home) |
+| MC-11 | **Weak evidence counted beside** | the figure is never returned without the number, the names and the value of the inputs that rest on an unverified record (`requires_verification: true`) or that no non-argument claim states | K11: counted from `requires_verification` alone → ERROR, 2 inputs omitted | a claim that states the amount *wrongly* — the string match only finds that it states one (F-A3) |
+| MC-12 | **What it cannot say** | a non-empty list of what the figure does not establish, carried with it | K12: an empty list → ERROR | whether the list is complete |
+| MC-13 | **No composite score** | the formula is one of `sum`, `count`, `share`; a `share` is *not determinable* unless both numerator and denominator are; no weights, and no combination with another metric (BRIEF v2, "Non comprimere problemi eterogenei in un punteggio aggregato") | K13: a weighted score of fines and `knowledge.unresolved_claims` → ERROR | a composite assembled in a view from two compliant figures |
+
+**Rules that are not checks, and bind any metric:**
+
+- **The register is not rewritten.** A metric of this contract is a figure *about the law and its enforcement*, for a
+  reader; the 44 metrics of `agent/health/` are about the *system*, for its operator. Where one counts records the other
+  also counts (here, the 4 unverified enforcement records among `knowledge.unresolved_claims`' 45), the card cites the
+  register's metric and does not redefine it.
+- **No metric targets a `not_a_score` metric.** A card may show that inputs are unverified; it may never present their
+  number as something to reduce, and nothing may be proposed that lowers it by clearing `requires_verification`, attaching
+  a plausible source or stamping `last_verified` in bulk.
+- **A computing function imports the site's derivations** (`procedure()`, `actionsOnly()`, `riskClass()`,
+  `freshnessState()`, `evidenceGrade()`); it never re-implements one (`docs/DATA-GOVERNANCE.md` §1.2). MC-2 is that rule
+  for the metric itself.
+- **No value is generated to complete a figure.** A gap is a state the figure carries, never an interpolation.
+
+## 7. What D inherits (named, not decided)
+
+Each item needs its own row in §8 before anyone acts on it, and none is in this session's scope.
+
+1. **F-A1 → MC-2.** One computing function for the fines figure; the masthead and the instrument page import it. Until
+   then the card cannot be shown, and the masthead's unpartitioned figure is out of step with §8 A.3 q. 1.
+2. **F-A5 → MC-4.** A type and domain check on `fine_eur` in `tools/validate.mjs` (a `tools/` change), independent of
+   the metric contract.
+3. **F-A3 → MC-11.** A way for an enforcement record to say which claim or source states its amount (a `data/` schema
+   change, under `docs/DATA-GOVERNANCE.md` §4 and §7), or the string match stays the contract's limit.
+4. **F-A4.** Verification work on the 9 inputs past their interval — the only thing that clears MC-10's notice.
+5. **F-A6.** The correction of `docs/DATA-GOVERNANCE.md` §5's sentence about `brief.json`.
+
+The three families not chosen (instruments, deadlines, evidence) and the three enforcement metrics not chosen (stage,
+status axes, instrument and authority) can be added later as cards under the same contract; each would be its own
+decision, and its own paper test.
