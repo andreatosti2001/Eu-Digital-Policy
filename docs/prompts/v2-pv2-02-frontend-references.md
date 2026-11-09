@@ -31,8 +31,8 @@ vale per A soltanto. Non decidere, non presumere e non annunciare G1.
 
 Verifica che `main` contenga:
 - `docs/POST-V2.md` (§3 parte B per intero, §4.1 riga PV2-02, §6 con la domanda 3 risposta il 9 novembre 2026);
-- `docs/DATA-READINESS.md` (l'uscita di PV2-01: l'inventario, la scheda delle multe, il contratto delle metriche proposto);
-- `docs/ROADMAP-v2.md` §8 con le righe di PV2-01 (ambito, A.1, approvazione di A.2, A.3, A.4, A.5 domande 1–4) e **l'approvazione del
+- `docs/DATA-READINESS.md` (l'uscita di PV2-01: l'inventario, le quattro schede, il contratto delle metriche proposto);
+- `docs/ROADMAP-v2.md` §8 con le righe di PV2-01 (ambito, A.1, approvazione di A.2, A.3, A.4, A.5 domande 1–4, l'estensione e la sua approvazione) e **l'approvazione del
   checkpoint finale di PV2-01**. Se manca, B non è autorizzato: fermati e chiedi;
 - questo prompt.
 
@@ -54,7 +54,7 @@ Leggi, in quest'ordine, e trattali come vincolanti:
 3. `AGENTS.md`, «Architecture — do not rebuild it»: nessun build step, nessuna dipendenza, nessun framework, nessuna richiesta a terzi;
    `tools/thirdparty.mjs` e `ALLOWED_RUNTIME_ORIGINS` (vuoto). **Un riferimento che richiede un framework o una dipendenza di runtime
    si studia come pattern, non si adotta.**
-4. `docs/DATA-READINESS.md` §5–§7: la scheda delle multe e il contratto MC-1…MC-13. Il criterio «qualità di dashboard, tabelle e
+4. `docs/DATA-READINESS.md` §5–§8: le quattro schede e il contratto MC-1…MC-15. Il criterio «qualità di dashboard, tabelle e
    visualizzazioni» si valuta anche su questo: **un riferimento che mostra un dato mancante come zero, o un totale senza la sua
    partizione, perde su quel criterio**, qualunque sia il suo aspetto.
 5. `docs/DEPLOYMENT.md` (la Content-Security-Policy e ciò che Pages non può inviare): un pattern che la CSP del sito rifiuterebbe va
@@ -102,7 +102,7 @@ Misurato da PV2-01 il 9 novembre 2026 su `main` `06d5640` e sul suo branch. **Ri
 | Fatto | Misura del 9 novembre 2026 |
 |---|---|
 | G1 | **non registrato** in §8; B si apre solo al G1 |
-| Uscita di A | `docs/DATA-READINESS.md`: inventario dei dieci dataset (A.2, approvato), una scheda (multe annunciate, riscosse e sconosciute), il contratto MC-1…MC-13 proposto e non implementato; sei finding F-A1…F-A6 lasciati a D |
+| Uscita di A | `docs/DATA-READINESS.md`: inventario dei dieci dataset (A.2, approvato), quattro schede (multe; strumenti per stato; scadenze nei 12 mesi; claim per grado e famiglia), il contratto MC-1…MC-15 proposto e non implementato; dieci finding F-A1…F-A10 lasciati a D |
 | Rete dell'ambiente di PV2-01 | `design-system.service.gov.uk` e `tabler.io` rispondevano a una richiesta HEAD; **l'ambiente di PV2-02 può essere diverso: misuralo prima di B.2** |
 | Validatori | `validate.mjs` 0 errori · 5 avvertimenti; `evidence-audit.mjs` 0 errori; `tools/selftest.mjs` 141/141 |
 | Concessione di autonomia | scade il 9 marzo 2027: si segnala, non si rinnova |
@@ -140,7 +140,7 @@ Misurato da PV2-01 il 9 novembre 2026 su `main` `06d5640` e sul suo branch. **Ri
 - Non dare punteggio a un candidato non verificato dal vivo; non completare una licenza, una data di manutenzione o un'attività a
   memoria; non giudicare dal solo screenshot o dal numero di stelle.
 - Non committare screenshot, immagini, font, CSS o JS di terzi.
-- Non toccare l'uscita di A: il contratto MC-1…MC-13 è una proposta per D, e i finding F-A1…F-A6 restano dove sono.
+- Non toccare l'uscita di A: il contratto MC-1…MC-15 è una proposta per D, e i finding F-A1…F-A10 restano dove sono.
 - Non toccare lo Stadio 1, non decidere G1, non rinnovare la concessione di autonomia; non aprire S27 né la Fase 5.
 - Non toccare licenza, non affiliazione, assenza di consulenza legale, README. Non riscrivere la storia di `main`; non riscrivere
   un rapporto passato (si annota). Vale in pieno «Cosa NON fare» del brief.

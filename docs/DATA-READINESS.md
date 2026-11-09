@@ -1,7 +1,7 @@
 # DATA READINESS — Post-v2 block A (PV2-01)
 
 **Status:** approved (§8, 9 Nov 2026: A.2, then the final checkpoint). **Extended the same day** (§8, "PV2-01, extended"):
-three more cards, the contract amended and widened to MC-1…MC-15, in §8 below — awaiting the extension's checkpoint. A.3 (§5, the one metric card) and A.4 (§6, the proposed metric contract)
+three more cards, the contract amended and widened to MC-1…MC-15, in §8 below — **approved** (§8, "Checkpoint of the PV2-01 extension"). A.3 (§5, the one metric card) and A.4 (§6, the proposed metric contract)
 written on the author's decisions of §8. **The contract is proposed, not
 implemented**: no check exists, and D (PV2-08) writes it.
 **What this is:** the audit that `docs/POST-V2.md` §3 A asks for before any dashboard or infographic: an inventory of the
