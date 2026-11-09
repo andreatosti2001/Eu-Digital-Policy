@@ -4,6 +4,37 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## PV2-01 extended — cards for instruments, deadlines and evidence (9 Nov 2026)
+
+**Branch:** `claude/pensive-bell-665v9z`, same pull request #84 (not merged); `origin/main` re-fetched before this entry, still `06d5640`.
+**Authority:** §8 "PV2-01, extended" (`a4930f7`), on the author's words after the final checkpoint: "instruments, deadlines, evidence — can we do
+dat as well?". The approval of PV2-01's work and of the PV2-02 prompt stands; this extension has its own checkpoint.
+
+**Decided (§8, each committed when answered):** instruments — the 21 core and adjacent instruments by `legislative_status` (`cba6786`), and
+the masthead's core-only count follows the card in D (`8f05a51`); deadlines — the 12 months after a stated date, by event type, month
+precision apart, a passed `scheduled` event never counted as met (`4993848`); evidence — claims by grade, partitioned by claim family, with
+`gradeTally()` as the one function (`a48cfaf`), and MC-9 amended so that undated inputs are counted beside the figure (`8da9380`).
+
+**Written:** `docs/DATA-READINESS.md` §8 (three cards, each measured on `06d5640` and with planted cases), §6 amended (MC-4 scoped to sums,
+MC-9 amended, **MC-14 precision against the window** and **MC-15 the dataset's caveats travel with the figure** added — the contract is now
+MC-1…MC-15), §7 extended (items 6–9) — `99218a6`. Measured: instruments 21 (applicable 6 · in force 6 · partly applicable 3 · proposal 3 ·
+transposition overdue 2 · pending 1; `eprivacy` rests on neither a `status_basis` nor a milestone); deadlines 12 in 2026-11-09…2027-11-09
+(application 6 · compliance deadline 2 · transposition 1 · month precision 3); evidence 182 (law and fact 131, derived 5, attributed 11,
+argument 35; equal to `gradeTally()`; 1 undated claim). **Three controls pass; fourteen planted cases fail on their target.** On today's
+tree deadlines and evidence pass every property; instruments fails MC-2 (the masthead).
+
+**Findings, recorded, not fixed:** F-A7 the masthead counts instruments by status itself, over core only; F-A8 README limitation 1 carries the
+grade counts of 27 Sep 2026 (20 unresolved; 5 today), the known unguarded second home; F-A9 `tl-dma-2026-11-01-designation` is month
+precision in the as-of month, and `tools/freshness.mjs` and this session's §8 row "deadlines card question 1" both read it on its stored day
+— annotated in `docs/DATA-READINESS.md` §8.2, the row not rewritten; F-A10 the masthead's deadline views read the reader's clock.
+
+**Honest about the prototype:** the first MC-2 scan matched `js/applies.js` and `js/routes.js`, which name the field without counting by it
+(false positives), and was narrowed; planted case I3 first passed because of a bug in the prototype's own loop, fixed, then failed as intended.
+
+**Battery on `99218a6`:** the six validators exit 0; `commit-evidence 06d5640 HEAD` 25 commits, 0 without evidence; the 25 suites and
+`.control-room/`: 1417 tests, 1416 pass, 0 fail, 1 skipped (no IPv6 loopback); `agent/schemas/cli.mjs check` exit 0.
+**Nothing outside `docs/`; nothing estimated, generated or drawn; G1 not decided.** Waiting for the extension's checkpoint, to be recorded in §8.
+
 ## PV2-01 — Post-v2 A, data readiness: final checkpoint (A.3–A.5) (9 Nov 2026)
 
 **Branch:** `claude/pensive-bell-665v9z`, from `main` `06d5640`; `origin/main` re-fetched immediately before this entry, still `06d5640`.
