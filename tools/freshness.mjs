@@ -115,6 +115,29 @@ export const EXPECTED = {
    applicability had no entry in EXPECTED, so no rule was ever flagged. A rule
    past the interval is a staleness prompt like any other: exit 0, raised in
    CI as "Content stale", closed only by reading the rule's Articles again. */
+/* When a dated event has demonstrably passed. data/taxonomy.json
+   date_precision: a month-precision event is "stored as the first of the
+   month. The day is not published" — and a quarter or a year is stored
+   the same way. Such an event has passed only once its WHOLE period has:
+   read on its stored day, the DMA's "November 2026" market-investigation
+   target was reported on 9 Nov 2026 as having fallen due on 1 November,
+   when its own note dates it to within 12 months of 18 November 2025
+   (docs/DATA-READINESS.md F-A9). Returns the last day the event could
+   fall on, as YYYY-MM-DD. Exported so the selftest asserts it directly. */
+export function periodEnd(e) {
+  const iso = String(e && e.date || '').slice(0, 10);
+  const m = /^(\d{4})-(\d{2})-\d{2}$/.exec(iso);
+  if (!m) return iso;
+  const y = Number(m[1]), mo = Number(m[2]);
+  const last = (month) => new Date(Date.UTC(y, month, 0)).toISOString().slice(0, 10); // day 0 of the next month
+  switch (e.date_precision) {
+    case 'precision:month': return last(mo);
+    case 'precision:quarter': return last(Math.ceil(mo / 3) * 3);
+    case 'precision:year': return `${y}-12-31`;
+    default: return iso;
+  }
+}
+
 export const RULE_INTERVAL = { days: 90, why: 'a rule reads its Articles, and an amendment, a new tranche or a judgment changes what it should say' };
 
 /* How long a record whose own text says it will change may go without
@@ -223,9 +246,12 @@ if (isMain) {
      (AUDIT-2026-09-25, open decision I.) */
   const verifiedAt = (e) => [tlVer, e.last_verified].filter((d) => typeof d === 'string').sort().pop() || '0000-00-00';
   const passedSince = arr(tl.events)
-    .filter((e) => e.date > verifiedAt(e) && e.date <= AS_OF);
+    .filter((e) => periodEnd(e) > verifiedAt(e) && periodEnd(e) <= AS_OF);
   if (!passedSince.length) line(`  none between ${tlVer} and ${AS_OF}`);
-  else passedSince.forEach((e) => flag(`${e.date} ${e.instrument} — ${e.event_type} fell due after the last verification: ${String(e.obligation || '').slice(0, 80)}`));
+  else passedSince.forEach((e) => flag(`${e.date === periodEnd(e) ? e.date : e.date + '…' + periodEnd(e)} ${e.instrument} — ${e.event_type} fell due after the last verification: ${String(e.obligation || '').slice(0, 80)}`));
+  /* Begun and not ended: neither passed nor ahead. Printed, never a prompt. */
+  const inPeriod = arr(tl.events).filter((e) => e.date <= AS_OF && periodEnd(e) > AS_OF);
+  inPeriod.forEach((e) => line(`  in its period, day not published: ${e.date}…${periodEnd(e)} ${e.instrument} — ${String(e.obligation || '').slice(0, 62)}`));
 
   const nextUp = arr(tl.events).filter((e) => e.date > AS_OF)
     .sort((a, b) => a.date.localeCompare(b.date)).slice(0, 3);
