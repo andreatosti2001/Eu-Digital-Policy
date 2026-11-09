@@ -1,6 +1,7 @@
 # DATA READINESS — Post-v2 block A (PV2-01)
 
-**Status:** approved (§8, 9 Nov 2026: A.2, then the final checkpoint). A.3 (§5, the one metric card) and A.4 (§6, the proposed metric contract)
+**Status:** approved (§8, 9 Nov 2026: A.2, then the final checkpoint). **Extended the same day** (§8, "PV2-01, extended"):
+three more cards, the contract amended and widened to MC-1…MC-15, in §8 below — awaiting the extension's checkpoint. A.3 (§5, the one metric card) and A.4 (§6, the proposed metric contract)
 written on the author's decisions of §8. **The contract is proposed, not
 implemented**: no check exists, and D (PV2-08) writes it.
 **What this is:** the audit that `docs/POST-V2.md` §3 A asks for before any dashboard or infographic: an inventory of the
@@ -281,7 +282,10 @@ as an **ERROR**, and its figure is not rendered; *not determinable* is not an er
 
 **What the contract was tested against.** One card, on one dataset. The contract is written for any metric, but the three
 families the author did not choose (instruments, deadlines, evidence) were not paper-tested, and a property that only one
-family exercises may be missing. That is a stated limit, not a claim of generality.
+family exercises may be missing. That is a stated limit, not a claim of generality. *Extended on 9 Nov 2026:* the three
+other families were then given cards and paper-tested (§8 below); they found two properties the fines card could not show
+(MC-14, MC-15), one rule too strict (MC-9, amended on the author's decision) and one that does not apply to a count (MC-4).
+The rows below are the contract as amended.
 
 **How it was tested.** A scratch prototype of the thirteen checks (two scripts in the session's scratchpad, sha256
 prefixes `5d00ea7e139e4579` and `fbd49dba4f2102e9`, **not committed**), run on copies of the tree. K0 is the control: the
@@ -293,16 +297,18 @@ Each other case was planted in a fresh copy, and **each fails as intended, on th
 | MC-1 | **Question** | a non-empty question that names its population as "the records this site holds" (no metric may read as a census) | K1: "How much has the EU fined?" → ERROR | whether the question is worth asking |
 | MC-2 | **One computing function** | the declaration names one exported function in `js/`; no other module under `js/` computes over the same value field (for a sum: no second `reduce` over it) | **K2: today's tree → ERROR**, `js/masthead.js` and `js/instrument-view.js` | a second implementation that does not name the field (a renamed variable, a generic sum helper) |
 | MC-3 | **Inputs resolve** | the dataset, the collection, the filter that admits inputs (through the dataset's own exclusion function where one exists, e.g. `actionsOnly()`) and every field the declaration reads exist on every record | K3: `payment_status` deleted from one record → ERROR | whether the filter selects the right population |
-| MC-4 | **Value type** | every value entering the formula has the declared type and domain (here: an integer ≥ 0, in EUR); any other value makes the figure *not determinable* and is an ERROR naming the record — **never coerced** | K4: `fine_eur: "unknown"` (which passes `validate.mjs` and `evidence-audit.mjs`, A.2 P2) → ERROR | a well-formed wrong number (200 typed as 2,000) |
+| MC-4 | **Value type** | every value entering the formula has the declared type and domain (here: an integer ≥ 0, in EUR); any other value makes the figure *not determinable* and is an ERROR naming the record — **never coerced**. A `count` has no value field: the category each input is counted under is MC-5's | K4: `fine_eur: "unknown"` (which passes `validate.mjs` and `evidence-audit.mjs`, A.2 P2) → ERROR | a well-formed wrong number (200 typed as 2,000) |
 | MC-5 | **Every state mapped** | the declaration maps every value each state field can take — every taxonomy term of its vocabulary, and `null` — to exactly one of *known · known negative · not applicable · unknown · not researched*; a value with no mapping is an ERROR, **never a silent default** | K5: `payment:partially-paid` → ERROR | whether a mapping is semantically right |
 | MC-6 | **Unknown is never zero** | a figure that any input in state *unknown* or *not researched* could change is *not determinable*, and is returned with the count of those inputs; the computing function returns that state itself, not a 0 that a view must reinterpret | K6: collected rendered as €0 with 10 unknown → ERROR | a view that drops the count the function returned |
 | MC-7 | **No escape by "not applicable"** | no property of the contract may be declared not applicable; a *state* may be not applicable only through a taxonomy term the declaration maps, and only where `contradictions()` (or the dataset's equivalent) admits it | K7: `partition: "not_applicable"` → ERROR | a term used wrongly *in a record* — that is the record's check (`contradictions()`), not the contract's |
 | MC-8 | **The partition is total** | where a figure is partitioned, every input is in exactly one part, assigned by one ordered derivation; Σ parts = total in value and in records, exactly | K8: parts computed by independent filters, with an annulled decision also under appeal (a real combination: `enf-supervisory-fee-gc-2025`) → parts add to 14 records and €9,030,990,000 → ERROR | whether the parts are the meaningful ones |
-| MC-9 | **"As of" from the inputs** | the figure carries the oldest and newest `last_verified` of its inputs; the computing function reads no clock; an input with no date makes the "as of" *not determinable* and is an ERROR | K9: `last_verified: null` on one input → ERROR | whether a recorded date is truthful |
+| MC-9 | **"As of" from the inputs** | the figure carries the oldest and newest `last_verified` of its dated inputs; the computing function reads no clock; **undated inputs are counted and named beside the figure** (amended on the author's decision, §8 "evidence card question 2"); hiding one is an ERROR | K9 (as first written: `last_verified: null` → ERROR); I5, E3: an undated input hidden → ERROR; D3: a function that reads the clock → ERROR | whether a recorded date is truthful |
 | MC-10 | **Inputs past their interval are named** | the notice lists exactly the inputs that `riskClass()` and `freshnessState()` put at review-due or stale as of an explicit, displayed date — never the reader's clock (F-15) | K10: a notice computed from the dataset's newest date only (the option the author did not choose) → ERROR, 9 inputs omitted | whether the intervals are right (`js/evidence-model.js` `RISK_TTL_DAYS` is their one home) |
 | MC-11 | **Weak evidence counted beside** | the figure is never returned without the number, the names and the value of the inputs that rest on an unverified record (`requires_verification: true`) or that no non-argument claim states | K11: counted from `requires_verification` alone → ERROR, 2 inputs omitted | a claim that states the amount *wrongly* — the string match only finds that it states one (F-A3) |
 | MC-12 | **What it cannot say** | a non-empty list of what the figure does not establish, carried with it | K12: an empty list → ERROR | whether the list is complete |
-| MC-13 | **No composite score** | the formula is one of `sum`, `count`, `share`; a `share` is *not determinable* unless both numerator and denominator are; no weights, and no combination with another metric (BRIEF v2, "Non comprimere problemi eterogenei in un punteggio aggregato") | K13: a weighted score of fines and `knowledge.unresolved_claims` → ERROR | a composite assembled in a view from two compliant figures |
+| MC-13 | **No composite score** | the formula is one of `sum`, `count`, `share`; a `share` is *not determinable* unless both numerator and denominator are; no weights, and no combination with another metric (BRIEF v2, "Non comprimere problemi eterogenei in un punteggio aggregato") | K13: a weighted score of fines and `knowledge.unresolved_claims` → ERROR; E1 | a composite assembled in a view from two compliant figures |
+| MC-14 | **Precision against the window** *(found by the deadlines card)* | an input whose date is coarser than a day is never placed on a day: where a figure has a date window, an input whose period overlaps a window edge — including the as-of month itself — is named as "may fall either side", never counted as passed or as ahead | D4: the month-precision `tl-dma-2026-11-01-designation`, in the as-of month, not named → ERROR | a precision recorded wrongly in the record |
+| MC-15 | **The dataset's caveats travel with the figure** *(found by the instruments card)* | for each field the metric reads, a caveat the dataset's `$note` states about that field is carried into the figure's `cannot_say`, tagged with the field | I4: `legislative_status`'s "deliberately NOT sufficient on its own" left out → ERROR; D5: `date_precision`'s first-of-the-month rule left out → ERROR | a caveat written somewhere other than the `$note`, or one the `$note` states without naming the field |
 
 **Rules that are not checks, and bind any metric:**
 
@@ -330,7 +336,94 @@ Each item needs its own row in §8 before anyone acts on it, and none is in this
    change, under `docs/DATA-GOVERNANCE.md` §4 and §7), or the string match stays the contract's limit.
 4. **F-A4.** Verification work on the 9 inputs past their interval — the only thing that clears MC-10's notice.
 5. **F-A6.** The correction of `docs/DATA-GOVERNANCE.md` §5's sentence about `brief.json`.
+6. **F-A7 → MC-2.** One computing function for instruments by status; the masthead adopts the card's 21 core and adjacent
+   instruments and its comment is corrected (§8, "instruments card question 2"). Until then that card cannot be shown either.
+7. **F-A9 → MC-14.** `tools/freshness.mjs` reads a month-precision event's stored first day as its date; a `tools/` change.
+8. **F-A10.** The masthead's "what falls due next" and its ticker read the reader's clock (F-15); the deadlines card may
+   not, so D computes both from one stated date.
+9. **Verification work** on the inputs each new card names as past their interval (§8.1–§8.3), and on the undated claim.
 
-The three families not chosen (instruments, deadlines, evidence) and the three enforcement metrics not chosen (stage,
-status axes, instrument and authority) can be added later as cards under the same contract; each would be its own
-decision, and its own paper test.
+The three enforcement metrics not chosen (stage, status axes, instrument and authority) can be added later as cards under
+the same contract; each would be its own decision, and its own paper test.
+
+## 8. The extension: instruments, deadlines, evidence (9 Nov 2026)
+
+On the author's request after the final checkpoint ("instruments, deadlines, evidence — can we do dat as well?"), recorded
+in §8 as "PV2-01, extended". Same limits: `docs/` only, nothing estimated, generated or drawn, G1 not decided. Each card was
+computed and its planted cases run with a second scratch prototype outside the repository (sha256 prefixes
+`64937eb480d6f5cd` and `bf2d91c448fc7414`, **not committed**), against the contract as amended in §6. **All three controls
+pass and all fourteen planted cases fail on the property they target.** On today's tree the deadlines and evidence cards
+pass every property; the instruments card fails MC-2 (F-A7). The first version of the scan for MC-2 matched two modules
+that name the field without counting by it (`js/applies.js`, `js/routes.js`) — two false positives — and was narrowed to
+the counting forms before the results above; **a static scan can be wrong in both directions**, which is MC-2's stated
+limit. One planted case (I3) first passed because the prototype's own partition loop did not iterate a multi-part
+assignment; it was the prototype's bug, fixed, and I3 then failed as intended.
+
+### 8.1 Instruments by legislative status
+
+| Property | The card |
+|---|---|
+| **Question** | Of the core and adjacent instruments this site records, how many stand at each legislative status? |
+| **Records and fields** | `data/instruments.json`, `scope_class` ∈ {core, adjacent} (§8, q. 1); `legislative_status`, `status_as_of`, `status_basis`, `milestones`, `last_verified`. Link to the source: `status_basis` (with `supports` and a locator) where present, otherwise the milestones' timeline events and their sources |
+| **Formula, partition** | count; partition by `legislative_status`, each instrument in exactly one taxonomy term; parts add back to 21. No denominator, no share |
+| **As of** | the range of the inputs' `status_as_of` (MC-9). The milestones decide what applies; the card reads the scalar and says so (MC-15) |
+| **Inclusion / exclusion** | the 16 core and 5 adjacent instruments; the 12 referenced and 6 out-of-scope are **named as excluded**, not dropped (§8, q. 1). The masthead's population (core only) gives way in D (§8, q. 2) |
+| **Zero, null, unknown, n/a** | a status with no instrument is an empty part, a count. `legislative_status` is required and taxonomy-checked, so no null or unknown occurs; a term outside the vocabulary is an ERROR (MC-5). Not applicable does not arise |
+| **Unverified, counted beside** | an instrument whose status rests on neither a `status_basis` nor a milestone: **1**, `eprivacy` (in force) |
+| **Updating** | under `riskClass('instrument')`, 3 inputs are review-due or stale as of 9 Nov 2026: `data-act`, `pld`, `cloud-ai-development-act` |
+| **Cannot say** | what applies on a given date (the scalar is "deliberately NOT sufficient on its own" — the `$note`, carried by MC-15); which tranche of a partly applicable instrument applies; what a national transposition has done; anything about the 18 excluded instruments |
+| **Measured on `06d5640`** | 21: applicable 6 (`gdpr`, `dsa`, `dma`, `dora`, `dga`, `iea`) · in force 6 (`ai-omnibus`, `gdpr-procedural`, `eprivacy`, `eidas2`, `csa`, `ehds`) · partly applicable 3 (`ai-act`, `data-act`, `cra`) · proposal 3 (`data-omnibus`, `digital-networks-act`, `cloud-ai-development-act`) · transposition overdue 2 (`nis2`, `cer`) · transposition pending 1 (`pld`); `status_as_of` 2026-08-27 … 2026-11-04 |
+| **Planted** | I0 control passes; I1 today's tree → MC-2 (`js/masthead.js`); I2 a status that is no taxonomy term → MC-5; I3 partly applicable also counted as applicable → MC-8 (24 over 21); I4 the `$note`'s caveat left out → MC-15; I5 an undated input hidden → MC-9 |
+
+### 8.2 Deadlines in the 12 months after a stated date
+
+| Property | The card |
+|---|---|
+| **Question** | Of the dated events this site records, how many fall in the 12 months after a stated date, by event type? |
+| **Records and fields** | `data/timeline.json`: `date`, `date_precision`, `event_type`, `status`, `instrument`, `last_verified`, `requires_verification`, `sources` |
+| **Formula, partition** | count of events with stated date < `date` ≤ stated date + 365 days; partition: month-precision events in a part of their own, every other event by `event_type` (§8, q. 1); parts add back |
+| **As of** | two dates, both displayed: the **stated date** that bounds the window (never the reader's clock, MC-9) and the range of the inputs' `last_verified` |
+| **Inclusion / exclusion** | every event in the window, whatever its instrument's scope. An event past its date and still `scheduled` is named as "passed, outcome not recorded", never as met — **unless its precision puts it in the as-of month, when MC-14 names it "may fall either side"** |
+| **Zero, null, unknown, n/a** | an event type with no event in the window is an empty part, a count of records, **not a statement that nothing falls due**: the timeline records the events the brief tracks, not every deadline in EU law |
+| **Unverified, counted beside** | `requires_verification` on 0 inputs today |
+| **Updating** | under `riskClass('event')` (critical within 60 days), 7 of the 12 are review-due or stale as of 9 Nov 2026 |
+| **Cannot say** | the day of a month-precision event (the `$note`'s first-of-the-month rule, carried by MC-15); whether a passed event happened; whether an obligation applies to a particular reader (that is `applies.html`, and *no rule that fires is not "no obligation"*); deadlines the timeline does not record |
+| **Measured on `06d5640`, stated date 9 Nov 2026** | window 2026-11-09 … 2027-11-09: **12** — application 6 · compliance deadline 2 · transposition 1 · month precision 3 (`tl-dma-2027-01-01-compliance-deadline`, `tl-dma-2027-05-01-market-investigation`, `tl-dma-2027-07-01-compliance-deadline`); inputs' `last_verified` 2026-09-26 … 2026-11-04; in the as-of month, may fall either side: `tl-dma-2026-11-01-designation` |
+| **Planted** | D0 control passes; D1 month-precision events also counted under their type → MC-8 (15 over 12); D2 a passed `scheduled` event counted as met → MC-5; D3 a computing function that reads the clock → MC-9; D4 the as-of-month event not named → MC-14; D5 the `$note`'s caveat left out → MC-15 |
+
+**A correction to an earlier measurement, not a rewrite of it.** §8's row "deadlines card question 1" counts
+`tl-dma-2026-11-01-designation` as "past its date and still `scheduled`", and `tools/freshness.mjs --as-of 2026-11-09`
+prints it as having "fell due after the last verification". Both read its stored day, 1 November. Its precision is the
+month, and its own note dates it to "within 12 months of 18 November 2025": on 9 November 2026 it may still fall in the
+future. Under MC-14 the card names it as "may fall either side"; the row stays as written and is read with this note
+(F-A9).
+
+### 8.3 Evidence: claims by grade, by claim family
+
+| Property | The card |
+|---|---|
+| **Question** | Of the claims this site records, how many carry each evidence grade, with arguments kept apart from law and fact? |
+| **Records and fields** | `data/claims.json` with `data/sources.json` (the tier of each direct source); the grade is `js/format.js` `evidenceGrade()`, its one home |
+| **Computing function** | `gradeTally()` (MC-2): the card's grade counts must equal it, and they do; no other module tallies grades |
+| **Formula, partition** | count; partition by family — law and fact · derived · attributed · argument — then by grade; parts add back to 182. An argument is always "interpretation" (`docs/DATA-GOVERNANCE.md` §3) and **is never shown on the same scale as law and fact** (§8, q. 1) |
+| **As of** | range of the dated claims' `last_verified`; **1 undated claim counted and named beside**, `clm-ep-privacy-defender` (MC-9 as amended, §8 q. 2) |
+| **Zero, null, unknown, n/a** | an empty grade is a count. "Unresolved" is a grade, not an unknown: no directly supporting external source has been located. A claim's `null` `last_verified` is MC-9's case above |
+| **Unverified, counted beside** | met by the partition itself: the 5 unresolved claims are named (`clm-dpc-top-ten-fines`, `clm-alliance-risk-contested-share`, `clm-data-act-non-personal`, `clm-nis2-enforcement-despite-transposition`, `clm-hungary-no-infringement`); all 5 carry partial support only |
+| **Updating** | 10 claims review-due or stale as of 9 Nov 2026 |
+| **Touches the register** | `knowledge.evidence_coverage`, `knowledge.unresolved_claims` and `knowledge.provenance_gaps` (the last two **not_a_score**) count related things; the card cites them and redefines none (§8, q. 1 named why the coverage share was not offered) |
+| **Cannot say** | whether a statement is true; that a source says what the claim says (`supports` is a stored qualifier); anything about an argument's strength |
+| **Measured on `06d5640`** | law and fact 131: primary 68 · official 46 · secondary 13 · unresolved 4; derived 5: derived 5; attributed 11: attributed 10 · unresolved 1; argument 35: interpretation 35. `gradeTally()`: primary 68 · official 46 · interpretation 35 · secondary 13 · attributed 10 · derived 5 · unresolved 5 — equal; `last_verified` 2026-08-27 … 2026-11-04 |
+| **Planted** | E0 control passes; E1 an "evidence strength index" → MC-13; E2 attributed claims also counted with law and fact → MC-8 (193 over 182); E3 the undated claim hidden → MC-9; E4 a second grade tally planted in a module → MC-2 |
+
+### 8.4 Findings of the extension (recorded, not fixed)
+
+- **F-A7 · The masthead counts instruments by status itself, over a different population.** `js/masthead.js`
+  `statusLedger()` and `ticker()` count the 16 core instruments; the card counts 21 (§8, q. 2: the masthead follows in D).
+- **F-A8 · README limitation 1 carries the grade counts of 27 September 2026** ("20 are graded *Unresolved*"; 5 today).
+  It is the unguarded second home `docs/DATA-GOVERNANCE.md` §5 already lists, and the README itself says "the
+  bibliography's live count is the one to trust". The README is not touched by any session; recorded only.
+- **F-A9 · A month-precision event is read on its stored day** by `tools/freshness.mjs` and, in this session, by a §8 row
+  (§8.2 above).
+- **F-A10 · The masthead's deadline views read the reader's clock** (`new Date()` in `ticker()` and the due list), the
+  known F-15; the deadlines card may not.
+
