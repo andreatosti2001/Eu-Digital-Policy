@@ -4,6 +4,14 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## PV2-01 prompt drafted (9 Nov 2026)
+
+**Branch:** `claude/kind-maxwell-e31dud`, restarted from `main` `ba8ddcf` after #82 was merged. **Stage 1 is still open**: the author's signed decision for `prop-docs-ea57404dc452` is on a local branch of the author's Windows computer, not on GitHub, so G1 has not opened and the dispatch has not run. Its entry below is unchanged and is where the next steps are.
+
+**What this adds:** `docs/prompts/v2-pv2-01-data-readiness.md`, the prompt of block A (PV2-01), and the §8 row "Post-v2 A may open before G1, under three limits" (the author's words quoted). It is a `docs/`-only change; nothing in `data/`, `tools/`, `js/`, `i18n/`, a page or `agent/` moved. The author wrote "session 26"; that number is Track M's reading in this repository, so the prompt is named for its work.
+
+**Not done:** B, C, S27 and Phase 5 stay closed behind G1; the prompt of PV2-02 is written by PV2-01 as its last item (standing rule of §8).
+
 ## Stage 1 — the real dispatch path repaired; the author's decision is signed and waits for it (6 Nov 2026)
 
 **Branch:** `claude/kind-maxwell-e31dud`, from `main` `7250715`. The entry below it is its predecessor; **its restore step (copy to `untraced.jsonl`) is replaced by the one here.**
