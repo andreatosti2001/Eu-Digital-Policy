@@ -4,6 +4,40 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## PV2-01 — Post-v2 A, data readiness: checkpoint A.2 (9 Nov 2026)
+
+**Branch:** `claude/pensive-bell-665v9z`, from `main` `06d5640` (after #83); `origin/main` re-fetched before this entry, unchanged.
+**Authority:** §8 "Post-v2 A may open before G1…" (no G1 row exists, so B, C, S27 and Phase 5 stay closed) and "The scope of PV2-01"
+(the author's words: "start session PV2-01"). The date measured 9 Nov 2026: before Track M (12 Jan 2027) and the grant's expiry (9 Mar 2027).
+Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register. The clone was shallow and was unshallowed.
+
+**A.1, decided (§8, two rows, each committed when answered):** enforcement outcomes only, and within them **one card: fines announced,
+collected and unknown**. Not chosen, named: instruments by status, deadlines ahead, the evidence behind the claims; actions by pipeline
+stage, by status axis, by instrument and authority.
+
+**A.2, written:** `docs/DATA-READINESS.md` §1–§4. The ten datasets, each with records counted, fields, readers, writers, what `null`,
+`unknown`, absent, not applicable and unverified mean there, the render-time derivation that is its home, and the nearest health metric.
+Measured with scratch parsers outside the repository that import the site's own derivations read-only; all counts agree with
+`validate.mjs`'s `RECORDS` line and with the prompt's table of 9 Nov 2026. **Six findings, none fixed** (each lies in `js/`, `tools/` or
+`data/`, outside this session's scope):
+- F-A1 the announced-fines sum has three implementations (`aggregate()`, the masthead, the instrument page), with three different rules
+  for "payment unknown"; they agree today (€9,015,990,000 across 13 of 20 actions, unknown 10) and disagree on planted case P1;
+- F-A2 "announced" includes €761M on 2 annulled decisions and €6,614,990,000 on 8 under appeal; €0 is on a decision recorded final;
+- F-A3 4 of 13 fined records (€2.43bn) link no claim stating the amount, and enforcement `sources` carry no `supports` or locator;
+- F-A4 the enforcement set is 74 days old against its 45-day interval; 2 fined records stale, 7 review-due;
+- F-A5 `fine_eur: "unknown"` passes `validate.mjs` and `evidence-audit.mjs` on 9 of 13 fined records, and the sums become strings;
+- F-A6 DATA-GOVERNANCE §5 says no module fetches `brief.json`; `datasets.html` does.
+
+**Planted cases, run on a copy of the tree in the scratchpad** (P0 control, P1–P5): the checks guard a record's internal consistency
+(P3, P4 caught) and not the shape of a value that enters a sum (P2, P5 pass `validate.mjs`; P1 passes both and splits the three sums).
+
+**Battery on this branch, 9 Nov 2026:** `validate` 0 errors · 5 warnings (the pinned `ap-eidas2-01` ones) · 45 unverified; `i18n-audit`
+0/0; `design-qa` 0/0; `evidence-audit --as-of 2026-11-09` 0; `freshness --as-of 2026-11-09` 0 defects, 4 staleness prompts; `seo-audit`
+0/0; `tools/selftest.mjs` 141/141; `commit-evidence 06d5640 HEAD` 0 without evidence. The 25 suites are run before the final checkpoint.
+
+**Nothing outside `docs/` changed; no value was estimated or generated; nothing was drawn.** Waiting for the author's approval of A.2,
+to be recorded in §8, before A.3 (the card), A.4 (the contract) and A.5 (the prompt of PV2-02).
+
 ## PV2-01 prompt drafted (9 Nov 2026)
 
 **Branch:** `claude/kind-maxwell-e31dud`, restarted from `main` `ba8ddcf` after #82 was merged. **Stage 1 is still open**: the author's signed decision for `prop-docs-ea57404dc452` is on a local branch of the author's Windows computer, not on GitHub, so G1 has not opened and the dispatch has not run. Its entry below is unchanged and is where the next steps are.
