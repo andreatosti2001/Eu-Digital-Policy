@@ -33,6 +33,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 import { REPO_ROOT } from '../schemas/types.mjs';
+import { recordDates } from '../../tools/freshness.mjs';
 
 export const DATA_DIR = join(REPO_ROOT, 'data');
 
@@ -167,16 +168,12 @@ function collectAllIds(db) {
 function verificationDatesOf(db) {
   const out = {};
   for (const [name, d] of Object.entries(db)) {
-    const per = [];
-    (function walk(o) {
-      if (Array.isArray(o)) return o.forEach(walk);
-      if (o && typeof o === 'object') {
-        for (const [k, v] of Object.entries(o)) {
-          if (k === 'last_verified' && typeof v === 'string') per.push(v);
-          else walk(v);
-        }
-      }
-    })(d);
+    /* The walk lives in tools/freshness.mjs recordDates(): it is the one
+       reading of "every last_verified in a dataset", and stale.mjs hands
+       these records to the one interval rule there (docs/ROADMAP-v2.md §8,
+       9 Nov 2026). `records` keeps the id each date sits on. */
+    const records = recordDates(d);
+    const per = records.map((r) => r.date);
     const distinct = [...new Set(per)].sort();
     /* A `last_verified` used per-record shows a spread: records get
        re-read on the days somebody read them. A dataset whose 84
@@ -193,6 +190,7 @@ function verificationDatesOf(db) {
        one fact. */
     out[name] = {
       file: d.$last_verified ?? null,
+      records,
       per_record_count: per.length,
       distinct,
       records_per_distinct_date: distinct.length ? Number((per.length / distinct.length).toFixed(1)) : null,
