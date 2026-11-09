@@ -30,8 +30,14 @@ conditions produce one:
 3. **The newest enforcement decision on record is older than the enforcement interval.**
    This asks a different question from condition 2: whether decisions taken since have been
    missed. The interval is `EXPECTED.enforcement`.
-4. **A dataset is past its interval**, meaning its file-level `$last_verified` is older
-   than its entry in `EXPECTED`.
+4. **A dataset is past its interval**, meaning records in it are: a record's own
+   `last_verified` is older than the dataset's entry in `EXPECTED`, and the prompt counts
+   those records and names them. A dataset with no per-record dates (`data/sources.json`) is
+   measured by its file-level `$last_verified`, and the prompt says so. *Changed 9 Nov 2026*
+   (`docs/ROADMAP-v2.md` §8, "which date the dataset interval measures"): this condition read
+   the file-level date, which is deliberately never moved, and so reported the oldest record's
+   age as the age of the whole set. The intervals did not change. The rule has one home,
+   `intervalFinding()` in `tools/freshness.mjs`, which `agent/integrate/stale.mjs` calls.
 
 The numbers live in `tools/freshness.mjs` and nowhere else. `tools/selftest.mjs` F5 asserts
 them, so a change to one shows up in a diff somebody reads. Loosening a threshold to clear

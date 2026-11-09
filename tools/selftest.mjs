@@ -371,6 +371,38 @@ test('F11 · a month-precision event has passed only when its month has — not 
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('F12 · a dataset is past its interval when RECORDS in it are, and the prompt names them; the intervals did not move', () => {
+  /* docs/ROADMAP-v2.md §8, 9 Nov 2026, "which date the dataset interval measures": the file stamp is
+     deliberately never moved, so reading it called the whole enforcement set "74 days old" when one record
+     was. F5 below still pins every interval; this holds the rule to what the author decided. */
+  const dir = dataScratch();
+  try {
+    const p = join(dir, 'data', 'enforcement.json');
+    const d = JSON.parse(readFileSync(p, 'utf8'));
+    d.$last_verified = '2026-01-01';                         /* the file stamp says "very old" ... */
+    for (const r of d.enforcement) r.last_verified = '2031-03-30';   /* ... every record was read on 30 Mar 2031 */
+    writeFileSync(p, JSON.stringify(d, null, 1));
+    const asOf = '2031-04-02';
+    let r = runValidator('freshness.mjs', [asOf], dir);
+    assert.doesNotMatch(r.out, /! enforcement[: ].*interval/, 'a stale FILE STAMP over fresh records is not a prompt: the file is deliberately never re-stamped');
+    /* one record not re-read: the prompt names it, counts it, and nothing else */
+    d.enforcement[3].last_verified = '2031-01-01';
+    writeFileSync(p, JSON.stringify(d, null, 1));
+    r = runValidator('freshness.mjs', [asOf], dir);
+    const lines = r.out.split('\n').filter((l) => /^\s*! enforcement: /.test(l));
+    assert.equal(lines.length, 1);
+    assert.match(lines[0], new RegExp(`1 of ${d.enforcement.length} dated record\\(s\\) past the 45-day interval, the oldest 91 days \\(2031-01-01\\) — ${d.enforcement[3].id} — `));
+    assert.equal(r.exit, 0, 'a staleness prompt still cannot fail a build');
+    /* a dataset with NO per-record dates is still measured by its file stamp, and says so */
+    const sp = join(dir, 'data', 'sources.json');
+    const sd = JSON.parse(readFileSync(sp, 'utf8'));
+    sd.$last_verified = '2030-01-01';
+    writeFileSync(sp, JSON.stringify(sd, null, 1));
+    r = runValidator('freshness.mjs', [asOf], dir);
+    assert.match(r.out, /! sources is \d+ days old, past its 180-day interval .* \(no per-record dates: the file's own date is the only evidence there is\)/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('F5 · the intervals are not widened — the thresholds are asserted, not trusted', () => {
   /* "Increasing a threshold to hide stale data" is a named prohibition.
      A future change to EXPECTED now has to change this line too, in a

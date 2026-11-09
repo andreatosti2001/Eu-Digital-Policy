@@ -651,7 +651,7 @@ export class Integrator {
       }],
       unresolved: [{
         field: null,
-        question: `Has anything moved since ${row.dataset ? this.corpus.verificationDates[row.dataset.replace(/^data\/|\.json$/g, '')]?.file ?? 'the recorded date' : 'the last check'}?`,
+        question: `Has anything moved since ${row.oldest_date ?? (row.dataset ? this.corpus.verificationDates[row.dataset.replace(/^data\/|\.json$/g, '')]?.file ?? 'the recorded date' : 'the last check')}?`,
         missing: 'Somebody opening the sources again. Nothing in this repository has ever fetched a URL as part of a validator, so a stale record and a broken link are equally invisible until a human looks.',
         absence_kind: 'null_not_researched',
         blocks: false,

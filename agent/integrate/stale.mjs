@@ -41,7 +41,7 @@
                         evidence about it
    ============================================================ */
 
-import { EXPECTED } from '../../tools/freshness.mjs';
+import { EXPECTED, intervalFinding, intervalSentence } from '../../tools/freshness.mjs';
 
 export const STALENESS_KINDS = ['dataset_interval', 'recheck_due', 'superseded', 'record_behind'];
 
@@ -74,20 +74,28 @@ export function staleVerification(corpus, { asOf, verifications = [], resolution
 
   /* --- 1 · the dataset is past the interval it promises ---------- */
 
-  for (const [name, expected] of Object.entries(EXPECTED)) {
+  /* THE RULE IS tools/freshness.mjs intervalFinding() AND NOT A COPY OF IT.
+     A dataset is past its interval when RECORDS in it are, and the row
+     names them; only a dataset with no per-record dates is measured by its
+     file stamp (docs/ROADMAP-v2.md §8, 9 Nov 2026). This module used to
+     hold the file-stamp rule itself, which is the second home the header
+     above warns about. */
+  for (const name of Object.keys(EXPECTED)) {
     const dates = corpus.verificationDates[name];
-    if (!dates?.file) continue;
-    const age = daysBetween(dates.file, asOf);
-    if (age === null || age <= expected.days) continue;
+    const found = intervalFinding(name, dates, asOf);
+    if (!found) continue;
     rows.push({
       kind: 'dataset_interval',
       dataset: `data/${name}.json`,
       record_id: null,
       verification_id: null,
-      age_days: age,
-      interval_days: expected.days,
+      age_days: found.age_days,
+      interval_days: found.interval_days,
       as_of: asOf,
-      why: `${name} states ${dates.file} and that is ${age} days before ${asOf}, past its ${expected.days}-day interval — ${expected.why}`,
+      basis: found.basis,
+      oldest_date: found.oldest_date,
+      record_ids: found.ids,
+      why: intervalSentence(found),
       compilation_date_caveat: caveatFor(dates),
     });
   }

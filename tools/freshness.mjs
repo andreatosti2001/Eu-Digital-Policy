@@ -115,6 +115,74 @@ export const EXPECTED = {
    applicability had no entry in EXPECTED, so no rule was ever flagged. A rule
    past the interval is a staleness prompt like any other: exit 0, raised in
    CI as "Content stale", closed only by reading the rule's Articles again. */
+/* ------------------------------------------------------------
+   THE DATASET INTERVAL — one rule, two callers.
+
+   A dataset is past its interval when RECORDS in it are, and the
+   finding names them. It used to read the file's own $last_verified,
+   which is deliberately never moved (the file as a whole is not
+   re-read, e.g. data/enforcement.json $note), so it reported the
+   OLDEST thing as the age of the whole: "enforcement is 74 days old"
+   when the newest record was 17 days old and one record, a closed
+   commitments case, was the 74. (docs/ROADMAP-v2.md §8, 9 Nov 2026,
+   "which date the dataset interval measures".)
+
+   A dataset with no per-record dates (data/sources.json) keeps the
+   file stamp, because it is the only evidence there is, and says so.
+   The intervals themselves are EXPECTED above and did not change:
+   tools/selftest.mjs F5 still pins them. agent/integrate/stale.mjs
+   calls this function instead of holding a second copy of the rule.
+   ------------------------------------------------------------ */
+
+/** Every `last_verified` in a dataset, with the id of the record it sits on. */
+export function recordDates(dataset) {
+  const out = [];
+  (function walk(o, id) {
+    if (Array.isArray(o)) return o.forEach((x) => walk(x, id));
+    if (o && typeof o === 'object') {
+      const here = typeof o.id === 'string' ? o.id : id;
+      for (const [k, v] of Object.entries(o)) {
+        if (k === 'last_verified' && typeof v === 'string') out.push({ id: here ?? null, date: v });
+        else walk(v, here);
+      }
+    }
+  })(dataset, null);
+  return out;
+}
+
+/**
+ * @param {string} name  a key of EXPECTED
+ * @param {{file: string|null, records: {id: string|null, date: string}[]}} dates
+ * @param {string} asOf  YYYY-MM-DD — the clock is an argument, never read
+ * @returns {null | {basis:'records'|'file', dataset, interval_days, why, count, total, oldest_date, age_days, ids}}
+ */
+export function intervalFinding(name, dates, asOf) {
+  const exp = EXPECTED[name];
+  if (!exp || !dates || !asOf) return null;
+  const records = (dates.records || []).filter((r) => typeof r.date === 'string');
+  if (!records.length) {
+    const age = dates.file ? days(dates.file, asOf) : null;
+    if (age == null || age <= exp.days) return null;
+    return { basis: 'file', dataset: name, interval_days: exp.days, why: exp.why, count: null, total: null,
+      oldest_date: dates.file, age_days: age, ids: [] };
+  }
+  const over = records.map((r) => ({ ...r, age: days(r.date, asOf) }))
+    .filter((r) => r.age > exp.days)
+    .sort((a, b) => b.age - a.age || String(a.id).localeCompare(String(b.id)));
+  if (!over.length) return null;
+  return { basis: 'records', dataset: name, interval_days: exp.days, why: exp.why, count: over.length, total: records.length,
+    oldest_date: over[0].date, age_days: over[0].age, ids: [...new Set(over.map((r) => r.id ?? '(no id)'))] };
+}
+
+/** The sentence both callers print, so the two cannot word it differently. */
+export function intervalSentence(f) {
+  if (f.basis === 'file') {
+    return `${f.dataset} is ${f.age_days} days old, past its ${f.interval_days}-day interval — ${f.why} (no per-record dates: the file's own date is the only evidence there is)`;
+  }
+  const shown = f.ids.slice(0, 5).join(', ') + (f.ids.length > 5 ? ` and ${f.ids.length - 5} more` : '');
+  return `${f.dataset}: ${f.count} of ${f.total} dated record(s) past the ${f.interval_days}-day interval, the oldest ${f.age_days} days (${f.oldest_date}) — ${shown} — ${f.why}`;
+}
+
 /* When a dated event has demonstrably passed. data/taxonomy.json
    date_precision: a month-precision event is "stored as the first of the
    month. The day is not published" — and a quarter or a year is stored
@@ -220,8 +288,8 @@ if (isMain) {
         : `${per.length} records across ${uniq.length} distinct dates (${uniq[0]} … ${uniq[uniq.length - 1]})`;
     line(`  ${name.padEnd(15)} file ${String(file).padEnd(12)} ${age == null ? '' : age + 'd old'}`);
     line(`  ${''.padEnd(15)} ${spread}`);
-    const exp = EXPECTED[name];
-    if (exp && age != null && age > exp.days) flag(`${name} is ${age} days old, past its ${exp.days}-day interval — ${exp.why}`);
+    const found = intervalFinding(name, { file, records: recordDates(d) }, AS_OF);
+    if (found) flag(intervalSentence(found));
   }
 
   const uniqAll = [...new Set(allDates)];

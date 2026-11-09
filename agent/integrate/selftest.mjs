@@ -51,7 +51,7 @@ import { deterministicClock, deterministicIds } from '../observability/ids.mjs';
 import { validate } from '../schemas/validate.mjs';
 import { getContract } from '../schemas/registry.mjs';
 import { MemoryRecordStore } from '../scout/store.mjs';
-import { EXPECTED } from '../../tools/freshness.mjs';
+import { EXPECTED, intervalFinding, intervalSentence } from '../../tools/freshness.mjs';
 import { familyOf, evidenceGrade } from '../../js/format.js';
 
 import { loadCorpus, hashDataDir, PROVENANCE_FIELDS, HOME_OF, SELF_SOURCE_ID } from './canonical.mjs';
@@ -442,11 +442,39 @@ test('a dataset past its interval is reported against the stated as-of date', ()
   assert.ok(rows.length > 0, 'every dataset is past its interval by 2030');
   for (const r of rows) {
     assert.equal(r.as_of, '2030-01-01');
-    assert.equal(r.age_days, daysBetween(CORPUS.verificationDates[r.dataset.replace(/^data\/|\.json$/g, '')].file, '2030-01-01'));
+    const dates = CORPUS.verificationDates[r.dataset.replace(/^data\/|\.json$/g, '')];
+    /* RE-AIMED, NOT LOOSENED (docs/ROADMAP-v2.md §8, 9 Nov 2026, "which date the dataset interval
+       measures" and "the scope of the per-record interval change"). This asserted that age_days is the
+       age of the file's own $last_verified — the rule the author changed: a dataset is past its interval
+       when RECORDS in it are, and the row names them; only a dataset with no per-record dates is
+       measured by its file stamp. What is held is the same shape of claim, one level down: the age
+       reported is the age of the date the row says it rests on, and it is the file's when the dataset
+       has no per-record dates. */
+    assert.equal(r.age_days, daysBetween(r.oldest_date, '2030-01-01'));
+    if (r.basis === 'file') assert.equal(r.oldest_date, dates.file);
+    else { assert.ok(r.record_ids.length > 0, `${r.dataset}: a per-record row names the records`); assert.ok(dates.records.some((x) => x.date === r.oldest_date)); }
   }
   const near = staleVerification(CORPUS, { asOf: CORPUS.verificationDates.claims.file });
   assert.equal(near.filter((r) => r.kind === 'dataset_interval').length, 0,
     'and on the day the datasets were compiled, nothing is past its interval');
+});
+
+test('the dataset interval has ONE home: the rows are tools/freshness.mjs intervalFinding(), not a copy of it', () => {
+  for (const asOf of ['2026-11-09', '2027-03-01', '2030-01-01']) {
+    const rows = staleVerification(CORPUS, { asOf }).filter((r) => r.kind === 'dataset_interval');
+    const expected = Object.keys(EXPECTED).map((n) => intervalFinding(n, CORPUS.verificationDates[n], asOf)).filter(Boolean);
+    assert.deepEqual(rows.map((r) => r.why), expected.map(intervalSentence), `as of ${asOf}: the agent and the validator must say the same thing about the same data`);
+    assert.deepEqual(rows.map((r) => r.record_ids), expected.map((f) => f.ids));
+  }
+  /* and the finding is about records: a planted corpus with ONE record past the interval names it, and only it */
+  const dates = { file: '2026-10-30', records: [{ id: 'rec-old', date: '2026-08-01' }, { id: 'rec-new', date: '2026-10-30' }] };
+  const f = intervalFinding('enforcement', dates, '2026-11-09');
+  assert.equal(f.basis, 'records'); assert.deepEqual(f.ids, ['rec-old']); assert.equal(f.count, 1); assert.equal(f.total, 2);
+  /* no per-record dates: the file stamp stays the measure, and the sentence says so */
+  const g = intervalFinding('sources', { file: '2026-01-01', records: [] }, '2026-11-09');
+  assert.equal(g.basis, 'file'); assert.match(intervalSentence(g), /no per-record dates/);
+  /* a dataset whose records are all inside the interval reports nothing, whatever its file stamp says */
+  assert.equal(intervalFinding('enforcement', { file: '2026-01-01', records: [{ id: 'a', date: '2026-11-01' }] }, '2026-11-09'), null);
 });
 
 test('every staleness row about last_verified carries the compilation-date caveat', () => {

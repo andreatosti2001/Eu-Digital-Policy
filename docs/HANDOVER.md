@@ -4,6 +4,17 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## Branch register — 9 November 2026 (after PV2-01's pull requests #84 and #85 were merged)
+
+- `claude/pensive-bell-665v9z` (#84) and `claude/freshness-month-precision` (#85) are merged into `main` (`c548b2d`, `5fedc7e`); both can be deleted.
+- `claude/freshness-per-record-interval`, from `main` `5fedc7e`: the dataset interval of `tools/freshness.mjs` is measured per record, naming the
+  overdue, and `agent/integrate/stale.mjs` calls the same function instead of holding a copy (§8, the two rows of 9 Nov 2026: "which date the
+  dataset interval measures" and "the scope of the per-record interval change"). Pull request #86
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/86), opened and not merged by the session. As of 9 Nov 2026 the report still shows
+  3 staleness prompts; the enforcement one now names `enf-tiktok-ec-2025-commitments`. 1420 tests, 0 failed, 1 skipped (no IPv6 loopback); browser
+  suite 343 pass, 0 fail, 1 undecidable. The README's grade counts (limitation 1) and the masthead's instruments population stay as they were: the
+  first is the author's, the second is D's.
+
 ## PV2-01 extended — cards for instruments, deadlines and evidence (9 Nov 2026)
 
 **Branch:** `claude/pensive-bell-665v9z`, same pull request #84 (not merged); `origin/main` re-fetched before this entry, still `06d5640`.
