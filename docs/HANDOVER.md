@@ -4,6 +4,57 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## PV2-01 — Post-v2 A, data readiness: final checkpoint (A.3–A.5) (9 Nov 2026)
+
+**Branch:** `claude/pensive-bell-665v9z`, from `main` `06d5640`; `origin/main` re-fetched immediately before this entry, still `06d5640`.
+The A.2 entry below is its predecessor (approved, §8 `7eda987`). Files changed by the whole session: `docs/DATA-READINESS.md` (new),
+`docs/prompts/v2-pv2-02-frontend-references.md` (new), `docs/ROADMAP-v2.md` §8 (12 rows), `docs/POST-V2.md` §6 question 3 (a pointer to its
+answer), and this file. **Nothing outside `docs/`; no value estimated or generated; nothing drawn; no tool entered the repository.**
+
+**What was decided (§8, each answer committed when given):** A.3 q. 1 "announced" is the literal total, always partitioned by posture
+(`70594cf`); q. 2 unverified inputs are included and counted beside (`97c83e5`); q. 3 "as of" the inputs' own dates, with a notice naming
+inputs past their interval (`bf2bd07`); A.4 q. 1 a metric's declaration will live in a `tools/` module, on the precedent of
+`tools/source-contract.mjs`, written by D (`396572f`); A.5 q. 1 PV2-02 opens only at G1 (`e176634`); q. 2 B's grid is approved before
+any research — this answers `docs/POST-V2.md` §6 question 3 (`e176634`); q. 3 an unverifiable B candidate is listed, not scored (`9640461`);
+q. 4 B's screenshots are described, not committed (`3d35ca5`).
+
+**What was written:** `docs/DATA-READINESS.md` §5 (the card "fines announced, collected and unknown", every property of `docs/POST-V2.md`
+§3 A, and its measurement on `06d5640`: €9,015,990,000 across 13 of 20 actions — annulled €761M · 2, under appeal €6,614,990,000 · 8,
+final €0 · 0, standing with finality not established €1.64bn · 3; collected **not determinable**, 0 demonstrating, 10 unknown, 3 not
+payable; 5 inputs and €2.445bn on an unverified record or no claim stating the amount; as of 2026-09-27…2026-10-23; 9 inputs past their
+interval); §6 (the contract MC-1…MC-13, each with an exact rule, a planted case K1–K13 run on a copy of the tree with a scratch prototype
+outside the repository, and what the check cannot see; control K0 passes; **today's tree fails MC-2**, F-A1); §7 (what D inherits, none
+decided). `docs/prompts/v2-pv2-02-frontend-references.md` (`b69c244`).
+
+**The consequence to carry:** the masthead and every instrument page already show "announced" without its partition, and compute it
+themselves; under the contract the card cannot be shown until D gives the figure one computing function. Nothing in `js/` was touched.
+
+**Battery on `b69c244`, 9 Nov 2026:** `validate`, `i18n-audit`, `design-qa`, `evidence-audit --as-of 2026-11-09`, `freshness --as-of
+2026-11-09`, `seo-audit` all exit 0 (as at A.2: 0 errors, the 5 pinned warnings, 45 unverified, 4 staleness prompts);
+`commit-evidence 06d5640 HEAD` 15 commits, 0 without evidence; **the 25 suites and `.control-room/`: 1417 tests, 1416 pass, 0 fail,
+1 skipped** (`.control-room` ORIGIN · B.2, "::1 cannot be bound here: EAFNOSUPPORT" — this environment has no IPv6 loopback);
+`agent/schemas/cli.mjs check` exit 0. `agent/records/` absent in this clone, so no governance test was affected. The browser suite was
+not run by hand (it runs in the suite count only as its own selftest).
+
+**Checklist (A.1–A.5):**
+
+| Item | Written | How to verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| A.1 | §8 rows `d71502c`, `43cc5e7` | read the two rows; the author's words are quoted | none (decisions) | the author's metrics chosen |
+| A.2 | `docs/DATA-READINESS.md` §1–§4 (`1bf7279`); approved §8 `7eda987` | re-count with `node -e` per §1; `node tools/validate.mjs` `RECORDS` line | none in the repository (scratch parsers, by scope) | inventory written and approved |
+| A.3 | §5 (`4789890`); decisions `70594cf`, `97c83e5`, `bf2bd07` | import `aggregate()` and `procedure()` from `js/pipeline.js` and re-add the parts | none: the check is D's | the chosen metric has its card |
+| A.4 | §6 (`4789890`); decision `396572f` | read each MC row against its K case | none in the repository; the scratch prototype's run is recorded in §6 | contract proposed with rule, planted case and limit |
+| A.5 | `docs/prompts/v2-pv2-02-frontend-references.md` (`b69c244`); decisions `e176634`, `9640461`, `3d35ca5` | the prompt's provenance quotes the four answers; its exit criterion carries the standing rule | none | the next prompt exists, to be approved with the work |
+
+**Not done, named:** the three families and three enforcement metrics the author did not choose (no cards); the contract is untested on
+any family but enforcement; F-A1…F-A6 unfixed by scope.
+
+## Branch register — 9 November 2026 (PV2-01)
+
+- Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- This branch, `claude/pensive-bell-665v9z`: 15 commits before this entry, all `docs/`. Disposition: to be recorded after the author's
+  answer on a pull request.
+
 ## PV2-01 — Post-v2 A, data readiness: checkpoint A.2 (9 Nov 2026)
 
 **Branch:** `claude/pensive-bell-665v9z`, from `main` `06d5640` (after #83); `origin/main` re-fetched before this entry, unchanged.
