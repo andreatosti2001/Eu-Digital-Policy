@@ -4,6 +4,123 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## PV2-01 extended — cards for instruments, deadlines and evidence (9 Nov 2026)
+
+**Branch:** `claude/pensive-bell-665v9z`, same pull request #84 (not merged); `origin/main` re-fetched before this entry, still `06d5640`.
+**Authority:** §8 "PV2-01, extended" (`a4930f7`), on the author's words after the final checkpoint: "instruments, deadlines, evidence — can we do
+dat as well?". The approval of PV2-01's work and of the PV2-02 prompt stands; this extension has its own checkpoint.
+
+**Decided (§8, each committed when answered):** instruments — the 21 core and adjacent instruments by `legislative_status` (`cba6786`), and
+the masthead's core-only count follows the card in D (`8f05a51`); deadlines — the 12 months after a stated date, by event type, month
+precision apart, a passed `scheduled` event never counted as met (`4993848`); evidence — claims by grade, partitioned by claim family, with
+`gradeTally()` as the one function (`a48cfaf`), and MC-9 amended so that undated inputs are counted beside the figure (`8da9380`).
+
+**Written:** `docs/DATA-READINESS.md` §8 (three cards, each measured on `06d5640` and with planted cases), §6 amended (MC-4 scoped to sums,
+MC-9 amended, **MC-14 precision against the window** and **MC-15 the dataset's caveats travel with the figure** added — the contract is now
+MC-1…MC-15), §7 extended (items 6–9) — `99218a6`. Measured: instruments 21 (applicable 6 · in force 6 · partly applicable 3 · proposal 3 ·
+transposition overdue 2 · pending 1; `eprivacy` rests on neither a `status_basis` nor a milestone); deadlines 12 in 2026-11-09…2027-11-09
+(application 6 · compliance deadline 2 · transposition 1 · month precision 3); evidence 182 (law and fact 131, derived 5, attributed 11,
+argument 35; equal to `gradeTally()`; 1 undated claim). **Three controls pass; fourteen planted cases fail on their target.** On today's
+tree deadlines and evidence pass every property; instruments fails MC-2 (the masthead).
+
+**Findings, recorded, not fixed:** F-A7 the masthead counts instruments by status itself, over core only; F-A8 README limitation 1 carries the
+grade counts of 27 Sep 2026 (20 unresolved; 5 today), the known unguarded second home; F-A9 `tl-dma-2026-11-01-designation` is month
+precision in the as-of month, and `tools/freshness.mjs` and this session's §8 row "deadlines card question 1" both read it on its stored day
+— annotated in `docs/DATA-READINESS.md` §8.2, the row not rewritten; F-A10 the masthead's deadline views read the reader's clock.
+
+**Honest about the prototype:** the first MC-2 scan matched `js/applies.js` and `js/routes.js`, which name the field without counting by it
+(false positives), and was narrowed; planted case I3 first passed because of a bug in the prototype's own loop, fixed, then failed as intended.
+
+**Battery on `99218a6`:** the six validators exit 0; `commit-evidence 06d5640 HEAD` 25 commits, 0 without evidence; the 25 suites and
+`.control-room/`: 1417 tests, 1416 pass, 0 fail, 1 skipped (no IPv6 loopback); `agent/schemas/cli.mjs check` exit 0.
+**Nothing outside `docs/`; nothing estimated, generated or drawn; G1 not decided.** Waiting for the extension's checkpoint, to be recorded in §8.
+
+## PV2-01 — Post-v2 A, data readiness: final checkpoint (A.3–A.5) (9 Nov 2026)
+
+**Branch:** `claude/pensive-bell-665v9z`, from `main` `06d5640`; `origin/main` re-fetched immediately before this entry, still `06d5640`.
+The A.2 entry below is its predecessor (approved, §8 `7eda987`). Files changed by the whole session: `docs/DATA-READINESS.md` (new),
+`docs/prompts/v2-pv2-02-frontend-references.md` (new), `docs/ROADMAP-v2.md` §8 (12 rows), `docs/POST-V2.md` §6 question 3 (a pointer to its
+answer), and this file. **Nothing outside `docs/`; no value estimated or generated; nothing drawn; no tool entered the repository.**
+
+**What was decided (§8, each answer committed when given):** A.3 q. 1 "announced" is the literal total, always partitioned by posture
+(`70594cf`); q. 2 unverified inputs are included and counted beside (`97c83e5`); q. 3 "as of" the inputs' own dates, with a notice naming
+inputs past their interval (`bf2bd07`); A.4 q. 1 a metric's declaration will live in a `tools/` module, on the precedent of
+`tools/source-contract.mjs`, written by D (`396572f`); A.5 q. 1 PV2-02 opens only at G1 (`e176634`); q. 2 B's grid is approved before
+any research — this answers `docs/POST-V2.md` §6 question 3 (`e176634`); q. 3 an unverifiable B candidate is listed, not scored (`9640461`);
+q. 4 B's screenshots are described, not committed (`3d35ca5`).
+
+**What was written:** `docs/DATA-READINESS.md` §5 (the card "fines announced, collected and unknown", every property of `docs/POST-V2.md`
+§3 A, and its measurement on `06d5640`: €9,015,990,000 across 13 of 20 actions — annulled €761M · 2, under appeal €6,614,990,000 · 8,
+final €0 · 0, standing with finality not established €1.64bn · 3; collected **not determinable**, 0 demonstrating, 10 unknown, 3 not
+payable; 5 inputs and €2.445bn on an unverified record or no claim stating the amount; as of 2026-09-27…2026-10-23; 9 inputs past their
+interval); §6 (the contract MC-1…MC-13, each with an exact rule, a planted case K1–K13 run on a copy of the tree with a scratch prototype
+outside the repository, and what the check cannot see; control K0 passes; **today's tree fails MC-2**, F-A1); §7 (what D inherits, none
+decided). `docs/prompts/v2-pv2-02-frontend-references.md` (`b69c244`).
+
+**The consequence to carry:** the masthead and every instrument page already show "announced" without its partition, and compute it
+themselves; under the contract the card cannot be shown until D gives the figure one computing function. Nothing in `js/` was touched.
+
+**Battery on `b69c244`, 9 Nov 2026:** `validate`, `i18n-audit`, `design-qa`, `evidence-audit --as-of 2026-11-09`, `freshness --as-of
+2026-11-09`, `seo-audit` all exit 0 (as at A.2: 0 errors, the 5 pinned warnings, 45 unverified, 4 staleness prompts);
+`commit-evidence 06d5640 HEAD` 15 commits, 0 without evidence; **the 25 suites and `.control-room/`: 1417 tests, 1416 pass, 0 fail,
+1 skipped** (`.control-room` ORIGIN · B.2, "::1 cannot be bound here: EAFNOSUPPORT" — this environment has no IPv6 loopback);
+`agent/schemas/cli.mjs check` exit 0. `agent/records/` absent in this clone, so no governance test was affected. The browser suite was
+not run by hand (it runs in the suite count only as its own selftest).
+
+**Checklist (A.1–A.5):**
+
+| Item | Written | How to verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| A.1 | §8 rows `d71502c`, `43cc5e7` | read the two rows; the author's words are quoted | none (decisions) | the author's metrics chosen |
+| A.2 | `docs/DATA-READINESS.md` §1–§4 (`1bf7279`); approved §8 `7eda987` | re-count with `node -e` per §1; `node tools/validate.mjs` `RECORDS` line | none in the repository (scratch parsers, by scope) | inventory written and approved |
+| A.3 | §5 (`4789890`); decisions `70594cf`, `97c83e5`, `bf2bd07` | import `aggregate()` and `procedure()` from `js/pipeline.js` and re-add the parts | none: the check is D's | the chosen metric has its card |
+| A.4 | §6 (`4789890`); decision `396572f` | read each MC row against its K case | none in the repository; the scratch prototype's run is recorded in §6 | contract proposed with rule, planted case and limit |
+| A.5 | `docs/prompts/v2-pv2-02-frontend-references.md` (`b69c244`); decisions `e176634`, `9640461`, `3d35ca5` | the prompt's provenance quotes the four answers; its exit criterion carries the standing rule | none | the next prompt exists, to be approved with the work |
+
+**Not done, named:** the three families and three enforcement metrics the author did not choose (no cards); the contract is untested on
+any family but enforcement; F-A1…F-A6 unfixed by scope.
+
+## Branch register — 9 November 2026 (PV2-01)
+
+- Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- This branch, `claude/pensive-bell-665v9z`: all `docs/`. Final checkpoint approved (§8). Disposition: on the author's answer ("Open a PR
+  to main (Recommended)"), pull request #84 to `main` (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/84), opened and not merged
+  by the session. Merging is the author's.
+
+## PV2-01 — Post-v2 A, data readiness: checkpoint A.2 (9 Nov 2026)
+
+**Branch:** `claude/pensive-bell-665v9z`, from `main` `06d5640` (after #83); `origin/main` re-fetched before this entry, unchanged.
+**Authority:** §8 "Post-v2 A may open before G1…" (no G1 row exists, so B, C, S27 and Phase 5 stay closed) and "The scope of PV2-01"
+(the author's words: "start session PV2-01"). The date measured 9 Nov 2026: before Track M (12 Jan 2027) and the grant's expiry (9 Mar 2027).
+Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register. The clone was shallow and was unshallowed.
+
+**A.1, decided (§8, two rows, each committed when answered):** enforcement outcomes only, and within them **one card: fines announced,
+collected and unknown**. Not chosen, named: instruments by status, deadlines ahead, the evidence behind the claims; actions by pipeline
+stage, by status axis, by instrument and authority.
+
+**A.2, written:** `docs/DATA-READINESS.md` §1–§4. The ten datasets, each with records counted, fields, readers, writers, what `null`,
+`unknown`, absent, not applicable and unverified mean there, the render-time derivation that is its home, and the nearest health metric.
+Measured with scratch parsers outside the repository that import the site's own derivations read-only; all counts agree with
+`validate.mjs`'s `RECORDS` line and with the prompt's table of 9 Nov 2026. **Six findings, none fixed** (each lies in `js/`, `tools/` or
+`data/`, outside this session's scope):
+- F-A1 the announced-fines sum has three implementations (`aggregate()`, the masthead, the instrument page), with three different rules
+  for "payment unknown"; they agree today (€9,015,990,000 across 13 of 20 actions, unknown 10) and disagree on planted case P1;
+- F-A2 "announced" includes €761M on 2 annulled decisions and €6,614,990,000 on 8 under appeal; €0 is on a decision recorded final;
+- F-A3 4 of 13 fined records (€2.43bn) link no claim stating the amount, and enforcement `sources` carry no `supports` or locator;
+- F-A4 the enforcement set is 74 days old against its 45-day interval; 2 fined records stale, 7 review-due;
+- F-A5 `fine_eur: "unknown"` passes `validate.mjs` and `evidence-audit.mjs` on 9 of 13 fined records, and the sums become strings;
+- F-A6 DATA-GOVERNANCE §5 says no module fetches `brief.json`; `datasets.html` does.
+
+**Planted cases, run on a copy of the tree in the scratchpad** (P0 control, P1–P5): the checks guard a record's internal consistency
+(P3, P4 caught) and not the shape of a value that enters a sum (P2, P5 pass `validate.mjs`; P1 passes both and splits the three sums).
+
+**Battery on this branch, 9 Nov 2026:** `validate` 0 errors · 5 warnings (the pinned `ap-eidas2-01` ones) · 45 unverified; `i18n-audit`
+0/0; `design-qa` 0/0; `evidence-audit --as-of 2026-11-09` 0; `freshness --as-of 2026-11-09` 0 defects, 4 staleness prompts; `seo-audit`
+0/0; `tools/selftest.mjs` 141/141; `commit-evidence 06d5640 HEAD` 0 without evidence. The 25 suites are run before the final checkpoint.
+
+**Nothing outside `docs/` changed; no value was estimated or generated; nothing was drawn.** Waiting for the author's approval of A.2,
+to be recorded in §8, before A.3 (the card), A.4 (the contract) and A.5 (the prompt of PV2-02).
+
 ## PV2-01 prompt drafted (9 Nov 2026)
 
 **Branch:** `claude/kind-maxwell-e31dud`, restarted from `main` `ba8ddcf` after #82 was merged. **Stage 1 is still open**: the author's signed decision for `prop-docs-ea57404dc452` is on a local branch of the author's Windows computer, not on GitHub, so G1 has not opened and the dispatch has not run. Its entry below is unchanged and is where the next steps are.
