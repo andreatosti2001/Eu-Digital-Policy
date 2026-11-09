@@ -1,7 +1,7 @@
 # DATA READINESS — Post-v2 block A (PV2-01)
 
-**Status:** A.2 approved (§8, 9 Nov 2026). A.3 (§5, the one metric card) and A.4 (§6, the proposed metric contract)
-written on the author's decisions of §8 and awaiting the final checkpoint of PV2-01. **The contract is proposed, not
+**Status:** approved (§8, 9 Nov 2026: A.2, then the final checkpoint). A.3 (§5, the one metric card) and A.4 (§6, the proposed metric contract)
+written on the author's decisions of §8. **The contract is proposed, not
 implemented**: no check exists, and D (PV2-08) writes it.
 **What this is:** the audit that `docs/POST-V2.md` §3 A asks for before any dashboard or infographic: an inventory of the
 datasets, and (in later sections) one metric card and a proposed metric contract. **It is a gate, not a design.** Nothing
