@@ -338,9 +338,9 @@ Each item needs its own row in §8 before anyone acts on it, and none is in this
 5. **F-A6.** The correction of `docs/DATA-GOVERNANCE.md` §5's sentence about `brief.json`.
 6. **F-A7 → MC-2.** One computing function for instruments by status; the masthead adopts the card's 21 core and adjacent
    instruments and its comment is corrected (§8, "instruments card question 2"). Until then that card cannot be shown either.
-7. **F-A9 → MC-14.** `tools/freshness.mjs` reads a month-precision event's stored first day as its date; a `tools/` change.
+7. **F-A9 → MC-14.** `tools/freshness.mjs` reads a month-precision event's stored first day as its date; a `tools/` change. *Repaired on 9 Nov 2026 in pull request #85 (§8, "Two of PV2-01's findings repaired").*
 8. **F-A10.** The masthead's "what falls due next" and its ticker read the reader's clock (F-15); the deadlines card may
-   not, so D computes both from one stated date.
+   not, so D computes both from one stated date. *Repaired on 9 Nov 2026 in pull request #85: one stated UTC day, printed; MC-14 on the masthead's list is still D's.*
 9. **Verification work** on the inputs each new card names as past their interval (§8.1–§8.3), and on the undated claim.
 
 The three enforcement metrics not chosen (stage, status axes, instrument and authority) can be added later as cards under
@@ -423,7 +423,7 @@ future. Under MC-14 the card names it as "may fall either side"; the row stays a
   It is the unguarded second home `docs/DATA-GOVERNANCE.md` §5 already lists, and the README itself says "the
   bibliography's live count is the one to trust". The README is not touched by any session; recorded only.
 - **F-A9 · A month-precision event is read on its stored day** by `tools/freshness.mjs` and, in this session, by a §8 row
-  (§8.2 above).
+  (§8.2 above). *Repaired on 9 Nov 2026 in pull request #85 (§8, "Two of PV2-01's findings repaired").*
 - **F-A10 · The masthead's deadline views read the reader's clock** (`new Date()` in `ticker()` and the due list), the
-  known F-15; the deadlines card may not.
+  known F-15; the deadlines card may not. *Repaired on 9 Nov 2026 in pull request #85.*
 
