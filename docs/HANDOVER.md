@@ -44,8 +44,7 @@ GitHub release pages are not readable here); whether USWDS's classic components 
 
 **Battery on `b15f2ba`, 10 Nov 2026:** the six validators exit 0; `commit-evidence origin/main HEAD` 13 commits, 0 without evidence; browser suite
 (`--require-browser`) 343 pass, 0 fail, 1 undecidable (`a11y:bound`, by design); the 25 suites and `.control-room/`: **1420 tests, 1419 pass, 0 fail,
-1 skipped** (no IPv6 loopback in this environment); `agent/schemas/cli.mjs check` exit 0; `origin/main` re-fetched before this line, unchanged
-at `b705f15`'s merge descendants only by the earlier merged PRs (no file of this branch's touched by them).
+1 skipped** (no IPv6 loopback in this environment); `agent/schemas/cli.mjs check` exit 0; `origin/main` re-fetched immediately before this line: still `b705f15`.
 
 ## Branch register — 10 November 2026 (PV2-02)
 
