@@ -210,6 +210,24 @@ by the rule (*Charts.css*).
 - **It was not tested on a real candidate.** The grid is approved before any research by the author's decision, so its anchors have
   only been checked for being decidable *in principle*; rule 9 says what happens when one is not.
 
+## 3b. The sampled pages, named on 10 Nov 2026 **before any criterion was scored** (§1.1, rule 2)
+
+Every URL below answered HTTP 200 on 10 Nov 2026. **E** is the page taken to be the most representative of editorial reading, **D** the one
+carrying the most data. The current site is the baseline and is served locally from `main` (`b705f15`) for measurement.
+
+| Candidate | E (editorial) | D (data) |
+|---|---|---|
+| *Tabler* | `https://tabler.io/docs` | `https://preview.tabler.io/` (the dashboard demo) |
+| *GOV.UK Design System* | `https://design-system.service.gov.uk/get-started/` | `https://design-system.service.gov.uk/components/table/` |
+| *Simple.css* | `https://simplecss.org/` | `https://simplecss.org/demo` |
+| *HTML5 UP — Editorial* | `https://html5up.net/uploads/demos/editorial/` | `https://html5up.net/uploads/demos/editorial/elements.html` |
+| *Tufte CSS* | `https://edwardtufte.github.io/tufte-css/` — the body text | the **same page**, its tables and figures |
+| *USWDS* | `https://designsystem.digital.gov/design-principles/` | `https://designsystem.digital.gov/components/table/` |
+| Baseline: this site | `/index.html` (the brief) | `/enforcement.html` |
+
+*Tufte CSS*'s demonstration is a single page, so its two samples are two regions of it. That is a reading of rule 2 for a one-page demo,
+not a change to it, and the matrix says so where it matters.
+
 ---
 
 *B.2, B.3 and B.4 follow the author's approval of this grid.*
