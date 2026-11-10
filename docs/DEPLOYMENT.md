@@ -357,7 +357,10 @@ working while the custom domain is set; they stop if it is removed.
 - That a deployed page says anything true. The gates check structure, consistency and
   provenance; `docs/VERIFICATION-POLICY.md` §3 still applies.
 - That the settings in §3 and §3a have been applied. Nothing in this repository can read them.
-- That the release gate (§2a) has ever run in GitHub Actions. It is implemented and tested locally; the first push to `main`
-  after it is merged is its first run, and a failure there is a finding about the gate, not about the site.
+- That the release gate (§2a) has exercised every condition. It has run in GitHub Actions: the logs of `pages.yml` runs 86 (`6bfe537`)
+  and 87 (`149e9b7`), read on 6 Nov 2026, show C1, C2, C3, C4, C6, C9 and C10 satisfied, C5 and C7 not measured (no decision ledger
+  and no commit declaring a Proposal) and C8 reported (five agent-marked commits, not blocking). An earlier pair of runs, 76 and 77,
+  is recorded in `docs/ROADMAP-v2.md` §8 (5 Nov 2026). A pass with C5 and C7 unmeasured says nothing about whether an approval is
+  authentic or whether an agent change was decided before it was made.
 - That any approval is authentic. The mechanism (signed, chained, pinned — §3b) exists; no person has used it, and a ledger
   with no entry is the true state.
