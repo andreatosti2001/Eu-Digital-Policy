@@ -1,7 +1,7 @@
 # FRONTEND REFERENCES — Post-v2 block B (PV2-02)
 
-**Status:** B.1 written — **the scoring grid, awaiting the author's approval in `docs/ROADMAP-v2.md` §8. No candidate has been
-researched, opened or scored.** B.2 (the research and the matrix), B.3 (the gallery, the shortlist and three directions) and B.4 (the
+**Status:** B.1 **approved** (§8, "Checkpoint B.1 of PV2-02 approved", 10 Nov 2026): the scoring grid. Next: the candidate list, shown to the
+author before any scoring starts. B.2 (the research and the matrix), B.3 (the gallery, the shortlist and three directions) and B.4 (the
 prompt of PV2-03) do not exist yet.
 **What this is:** the documented search for open-source frontend projects that `docs/POST-V2.md` §3 B asks for, **to study patterns, not to
 adopt a template**. The plan: no framework, library, remote font, third-party script or proprietary image in production; a project is
