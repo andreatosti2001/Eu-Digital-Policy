@@ -1,7 +1,7 @@
 # FRONTEND REFERENCES — Post-v2 block B (PV2-02)
 
-**Status:** B.1 **approved** (§8, "Checkpoint B.1 of PV2-02 approved", 10 Nov 2026): the scoring grid. Next: the candidate list, shown to the
-author before any scoring starts. B.2 (the research and the matrix), B.3 (the gallery, the shortlist and three directions) and B.4 (the
+**Status:** B.1 **approved** (§8, "Checkpoint B.1 of PV2-02 approved", 10 Nov 2026): the scoring grid. The candidate list (§2.1) is written and
+is shown to the author before any scoring starts. B.2 (the research and the matrix), B.3 (the gallery, the shortlist and three directions) and B.4 (the
 prompt of PV2-03) do not exist yet.
 **What this is:** the documented search for open-source frontend projects that `docs/POST-V2.md` §3 B asks for, **to study patterns, not to
 adopt a template**. The plan: no framework, library, remote font, third-party script or proprietary image in production; a project is
@@ -150,6 +150,51 @@ The plan's five open-source projects are researched: *PureDashboard*, *Tabler*, 
 LICENSE file, show a commit within the 12 months before the research date, and have a live demo or a documentation site**. The search
 terms and the date are recorded in the matrix so that the selection can be repeated. An added candidate is marked "added by the session",
 and **the author sees the list of candidates before any scoring starts.** *Kabarza* is not a candidate (§1.1, rule 8).
+
+### 2.1 The list, as read on 10 Nov 2026 — **shown to the author before any scoring starts**
+
+**How this was checked, and its limits.** `github.com` and `api.github.com` are refused (HTTP 403) in the environment this was written in, so
+no repository page, issue or release page was read. What was read instead is each project's **own files**: a shallow, blob-less `git clone`
+of its public repository through the session's git proxy, from which the **date of the last commit** and the **LICENSE file** were read
+(`git log -1`, `git show HEAD:<file>`; nothing was installed, built or run), the repository address taken from the project's own npm
+manifest (not from a search result), and each demo or documentation site requested over HTTPS. **What this cannot show:** that the last
+commit is the last *maintainer action* (an issue reply or a release is not read here, so C6 step 3 may need another source), and that a
+site which answered HTTP 200 shows the pattern a criterion needs (that is B.2's job). Search results were used only to find names.
+
+| Candidate | In the list as | Repository | LICENSE file read | Last commit | Site answering on 10 Nov 2026 | Tests of §2 |
+|---|---|---|---|---|---|---|
+| *Tabler* | plan | `tabler/tabler` | `LICENSE`: "The MIT License (MIT)", © 2018–2026 The Tabler Authors | 2026-11-10 | `tabler.io` 200 | not required (plan) |
+| *GOV.UK Design System / GOV.UK Frontend* | plan | `alphagov/govuk-frontend` | `LICENSE.txt`: "The MIT License (MIT)", © 2017 Crown Copyright (Government Digital Service) | 2026-11-10 | `design-system.service.gov.uk` 200 | not required (plan) |
+| *Simple.css* | plan | `kevquirk/simple.css` | `LICENSE`: "MIT License", © 2020 Simple.css (Kev Quirk) | 2026-05-09 | `simplecss.org` 200 | not required (plan) |
+| *HTML5 UP — Editorial* | plan | none: a downloadable template | `LICENSE.txt` in the download: "Creative Commons Attribution 3.0 Unported"; its `README.txt` credits jQuery, Font Awesome, Responsive Tools and Unsplash images (not included) | not applicable (no repository) | `html5up.net/editorial` 200 | not required (plan) |
+| *Tufte CSS* | **added by the session** | `edwardtufte/tufte-css` | `LICENSE`: "The MIT License (MIT)", © 2014 Dave Liepmann | 2026-06-25 | `edwardtufte.github.io/tufte-css/` 200 | public ✓ · LICENSE ✓ · commit within 12 months ✓ · demo ✓ |
+| *U.S. Web Design System (USWDS)* | **added by the session** | `uswds/uswds` | `LICENSE.md`, which opens "A few parts of this project are not in the public domain" and then names parts under other licences; **to be read in full in B.2, C6 depends on it** | 2026-10-09 | `designsystem.digital.gov` 200 | public ✓ · LICENSE ✓ · commit within 12 months ✓ · demo ✓ |
+
+**Found, and not in the list:**
+
+- *PureDashboard* (the plan's first candidate) — **not located.** Two web searches under the name returned no project of that name, and no
+  repository address for it is known to this session; none is guessed. It stays in the matrix as "not verified on 10 Nov 2026: the name
+  resolves to no project I could find", and is not scored, unless the author gives its address. Search results offered other projects
+  (*pure-admin*, *dashio-template*, *data-dashboard*): they are **not substituted for it**, because a substitute for a named candidate would
+  be a different project under the plan's name.
+- *Charts.css* (CSS-only charts built from HTML tables; MIT, `LICENSE` read) — **fails the added-candidate rule:** its last commit is
+  2025-07-21, about 16 months before the research date, not within 12. Not added. It is named here because it fits C3 and C5 well and
+  the author may want it anyway; that would be a decision, recorded in §8.
+- *Observable Framework* (`observablehq/framework`; ISC, `LICENSE` read; last commit 2026-05-15) — **not admitted today:** the fourth test, a live
+  demo or documentation site, is not verified: `observablehq.com/framework/` answered HTTP 429 (rate-limited) on two requests by two routes.
+  It is a build-step tool, so C5 would score it low; it is a reference for data-app layout. It may be admitted when the site answers.
+
+**Slots.** Two of the five added places are used (*Tufte CSS*, *USWDS*), one candidate is pending (*Observable Framework*), and one was refused
+by the rule (*Charts.css*).
+
+**Search log** (10 Nov 2026, web search, standard mode; results are leads and not evidence):
+
+1. `PureDashboard vanilla JavaScript dashboard no build step GitHub`
+2. `"PureDashboard" github MIT license HTML ES modules dashboard`
+3. `open source CSS-only charts built from HTML tables accessible MIT license` → Charts.css
+4. `open source CSS for long-form editorial articles with sidenotes footnotes citations` → Tufte CSS
+5. `open source design system government data tables status tags timeline accessible open licence` → USWDS
+6. `open source observatory data journalism template static site dashboard filterable tables no framework` → Observable Framework
 
 ## 3. What the grid cannot do
 
