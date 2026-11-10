@@ -39,7 +39,7 @@ is reported as a tie.
    dal numero di stelle".)
 2. **Two sampled pages per candidate**, named in the matrix **before** the criteria are scored: the page most representative of editorial
    reading, and the page carrying the most data (a table, a chart, a dashboard). For a component library, the two component pages that
-   best match. **A criterion's step is the lower of the two samples** (so a candidate cannot be scored on its best page).
+   best match. **A criterion's step is taken as follows** *(rewritten 10 Nov 2026, §8 "grid finding G1", as it had been applied)*: **C2 on the editorial sample E alone**; **C1 and C3 across both samples and the examples the same site documents**; **C4 and C5 the lower of the two samples**, so a candidate cannot be scored on its best page.
 3. **Browser measurements are taken at 1280 px and 390 px wide, in the light and the dark colour scheme where both exist,** in headless
    Chromium, with `prefers-reduced-motion` both unset and set. The matrix records the URL, the date, the viewport and the scheme beside each
    score.
@@ -70,8 +70,8 @@ product-admin job. Four patterns are looked for; each counts only if seen in the
 
 | Step | What is seen |
 |---|---|
-| 0 | Built for another job (a landing page, a generic admin shell); none of P1–P4 is present. |
-| 1 | Exactly one of P1–P4 is present, and the page is organised around something else. |
+| 0 | None of P1–P4 is present. |
+| 1 | Exactly one of P1–P4 is present. *(Steps 0 and 1 reworded 10 Nov 2026, §8 "grid finding G2": the number of patterns decides; the clauses "built for another job" and "organised around something else" are removed.)* |
 | 2 | Two of P1–P4 are present. |
 | 3 | Three or four of P1–P4 are present, **and** a state for "no data" or "not applicable" is visible somewhere in the demo. |
 | 4 | All four are present **and** the demo shows a statement, its source and its status as three distinct things (provenance displayed, not only stated). |
@@ -100,10 +100,14 @@ unknown is never shown as zero (`docs/DATA-READINESS.md` §6, MC-6; not redefine
 | 0 | No table, chart or dashboard component in the demo or its documentation. |
 | 1 | Tables or charts exist only as images, or with no text alternative. |
 | 2 | At least one real HTML table (header cells with scope) **or** one chart with a text alternative. |
-| 3 | **Both:** a table that can be sorted or filtered from the keyboard, **and** a chart whose values can be read without a pointer (tooltips reachable by keyboard, or a data table beside it), with its series distinguishable by more than colour. |
+| 3 | **One of the two** *(changed 10 Nov 2026, §8 "grid finding G3a")*: a table that can be sorted or filtered from the keyboard, **or** a chart whose values can be read without a pointer (tooltips reachable by keyboard, or a data table beside it), its series distinguishable by more than colour. |
 | 4 | Step 3, **and** a missing value is shown differently from zero in at least one table or chart (a dash, "n/a", a pattern, a stated "unknown"), seen in the demo or in a documentation example that renders. |
 
+*Readings fixed 10 Nov 2026 (§8 "grid finding G3b"):* for a simple one-dimensional table, header cells (`th`) are enough and the `scope` attribute is not required; an image of a chart counts as step 2 only if its text alternative gives the values, an `alt` that only describes the chart staying at step 1.
+
 ### 1.5 C4 · Responsive, accessibility and themes (15%)
+
+*"The first 15 controls" are the page's own controls: Tab stops inside a third-party embed (an iframe) are not counted among them and are declared (10 Nov 2026, §8 "grid finding G6").*
 
 Measured in headless Chromium on the sampled pages. The browser suite of this repository (`agent/browser/`, `docs/BROWSER-QA.md`) is the
 model for what is and is not established; **nothing here is a conformance claim** (no screen reader is run, and no contrast over an image
@@ -111,7 +115,7 @@ is computed).
 
 | Step | What is measured |
 |---|---|
-| 0 | The page scrolls horizontally at 390 px **and** there is one theme only. |
+| 0 | The page scrolls horizontally at 390 px, whatever the number of themes. *(Changed 10 Nov 2026, §8 "grid finding G4".)* |
 | 1 | No horizontal scroll at 390 px; one theme; or keyboard focus is invisible on at least one of the first 15 focusable controls. |
 | 2 | No horizontal scroll at 390 px **and** a visible focus indicator on each of the first 15 focusable controls; one theme. |
 | 3 | Step 2, **and** a light and a dark theme (by `prefers-color-scheme` or a toggle) with body contrast of 4.5 : 1 or more in both. |
@@ -132,6 +136,8 @@ what the project ships.
 | 4 | Vanilla HTML, CSS and ES modules readable as shipped; no build step, no runtime dependency, no external font or script — the same constraints as this site. |
 
 ### 1.7 C6 · Licence and maintenance documented (10%)
+
+*For a candidate with no repository, maintenance is "not assessable" and the highest step is 2, reached by a licence read and the licences of its assets read or stated unclear; the matrix says so in a note (10 Nov 2026, §8 "grid finding G5").*
 
 A licence is **read in the project's own file**, with the file named and the date, and so are the licences of its assets. "MIT", as the
 plan says of some candidates, is not a verification.
@@ -256,21 +262,20 @@ for the session's own review and are not committed.
 
 ## 5. The matrix
 
-**Steps (0–4) per criterion and the total out of 100.** `*` marks a score that rests on an anchor gap or an unmeasurable item (§6); its
-note is in the candidate's evidence below. *Not scored:* *PureDashboard* (not located, §2.1), *Charts.css* (refused, §2.1), *Observable
+**Steps (0–4) per criterion and the total out of 100.** *Updated 10 Nov 2026 after the author's decisions on the grid findings (§8, "grid finding G1" … "G7"): Tufte CSS and Tabler lose their asterisk, HTML5 UP's C6 rises from 0 to 2 (total 30.00 → 35.00), and no other score changes.* `†` marks that maintenance was **not assessable** (no repository; G5). *Not scored:* *PureDashboard* (not located, §2.1), *Charts.css* (refused, §2.1), *Observable
 Framework* (not admitted, §2.1), *Kabarza* (§1.1 rule 8).
 
 | Candidate | C1 fit 20% | C2 hierarchy 20% | C3 data 20% | C4 resp./a11y/themes 15% | C5 rebuild 15% | C6 licence 10% | **Total** |
 |---|:-:|:-:|:-:|:-:|:-:|:-:|---:|
 | *Simple.css* | 1 | 2 | 2 | 3 | 4 | 2 | **56.25** |
 | *USWDS* | 1 | 2 | 3 | 2 | 2 | 3 | **52.50** |
-| *Tufte CSS* | 1 | 2 | 1 | 3\* | 4 | 2 | **51.25** |
+| *Tufte CSS* | 1 | 2 | 1 | 3 | 4 | 2 | **51.25** |
 | *GOV.UK Design System* | 1 | 2 | 2 | 2 | 3 | 2 | **48.75** |
-| *Tabler* | 1 | 2 | 2 | 0\* | 1 | 2 | **33.75\*** (37.50 if C4 reached step 1) |
-| *HTML5 UP — Editorial* | 0 | 1 | 2 | 2 | 2 | 0\* | **30.00\*** (35.00 if C6 reached step 2) |
+| *Tabler* | 1 | 2 | 2 | 0 | 1 | 2 | **33.75** |
+| *HTML5 UP — Editorial* | 0 | 1 | 2 | 2 | 2 | 2† | **35.00** |
 | Baseline: this site (unselectable) | not scored | 4 | not scored | 4 | 4 | not scored | **50 of the 50 available** on the three measured |
 
-**The totals do not rank the candidates for this site's job, and they are not a recommendation.** No candidate exceeds step 1 on C1, the
+**The totals do not rank the candidates for this site's job (§8, "grid finding G7": a total is never a ranking), and they are not a recommendation.** No candidate exceeds step 1 on C1, the
 criterion the plan weights first; the order above is largely C4 and C5 (rebuildability and responsiveness, 30% together), which a minimal
 stylesheet reaches and a richer system does not (§6, G7). Read the steps, not the order.
 
@@ -298,7 +303,7 @@ Each line gives the evidence, and **why the next step was not reached**. Dates a
 - **C1 = 1.** P1 present, in full: 10 sidenote, margin-note or footnote elements, 3 `cite`, 4 `blockquote`. P2, P3, P4 absent.
 - **C2 = 2.** 21 px, 84 cpl, 18.8:1 (13.44:1 dark), 11 headings with no skip; 10 secondary elements. Not 3: no distinguished lede; no in-page navigation.
 - **C3 = 1.** No table on the page. Its 5 figures are **raster images with a one-line `alt`** (for example "Exports and Imports to and from Denmark & Norway from 1700 to 1780"): a description of the chart, not its values. Read as "only as images" (step 1), not as "a chart with a text alternative" (step 2), because the values cannot be read (G3).
-- **C4 = 3\*.** No horizontal scroll; light and dark by `prefers-color-scheme`, both above 4.5:1; the first 12 Tab stops are links with a visible outline. **The next 3 are inside a YouTube embed**, whose focus indicator this method cannot see (G6). Not 4: no `<main>` landmark.
+- **C4 = 3.** No horizontal scroll; light and dark by `prefers-color-scheme`, both above 4.5:1. **Re-measured 10 Nov 2026 with the embed's stops excluded (G6):** tabbing 22 times collects 15 controls of the page itself (links and one `code` element), all 15 with a visible focus indicator, and 7 stops inside the YouTube iframe skipped. Not 4: no `<main>` landmark.
 - **C5 = 4.** `tufte.css` is the readable source (the `build` script only minifies it); its fonts are in `et-book/`; no script, no external request from the stylesheet. The demo page embeds a third-party video, which is content, not the stylesheet.
 - **C6 = 2.** `LICENSE` read: MIT, © 2014 Dave Liepmann. Last commit 2026-06-25. The licence of the ET Book font files is **not stated in the repository** (no licence file in `et-book/`; the README credits the font's author). No changelog.
 
@@ -314,7 +319,7 @@ Each line gives the evidence, and **why the next step was not reached**. Dates a
 - **C1 = 1.** P3 present: the preview's table "User | Commit | Date" carries dated rows ("28 Nov 2025"). P1 absent; P2 absent (its labels are metric names, not record states); P4 absent (no sort, no filter).
 - **C2 = 2** (E: `/docs`). 16 px, 88 cpl, 10.37:1, one heading. **The sample is weak:** a docs landing page with 4 paragraphs and 414 characters; the page's base font is 14 px. Not 3: no lede, no secondary level.
 - **C3 = 2.** 5 tables (4 with header cells), and **8 large SVG charts of which 5 carry a role, label or title**. Not 3: no sortable or filterable table, and no data table beside the charts.
-- **C4 = 0\*.** On the data sample the page **scrolls horizontally at 390 px while offering two themes**, which fits neither step 0 (overflow *and* one theme) nor step 1 (no overflow): an anchor gap (G4), scored at the floor. The editorial sample alone would reach step 4 (both themes, 15 of 15 focus, every control named, a main landmark, animation off under reduced motion).
+- **C4 = 0.** On the data sample the page **scrolls horizontally at 390 px while offering two themes**; step 0 is now "scrolls horizontally at 390 px" (G4, decided). The editorial sample alone would reach step 4 (both themes, 15 of 15 focus, every control named, a main landmark, animation off under reduced motion).
 - **C5 = 1.** Ships compiled `tabler*.css` (a CSS framework), runtime JavaScript with `@popperjs/core` as a dependency, and an `ApexCharts` global for charts; built with `build` and `build:assets`. The docs site also loads analytics-style scripts (autocapture, surveys); not part of the pattern.
 - **C6 = 2.** `LICENSE` read: MIT, © 2018–2026 The Tabler Authors. Last commit 2026-11-10; release 1.7.4 published 2026-11-08; `core/CHANGELOG.md` lists 1.7.4, 1.7.3, 1.7.2, 1.7.1. The licences of the flags, payment logos and icons the package ships were **not read in the repository**. Not 3.
 
@@ -324,7 +329,7 @@ Each line gives the evidence, and **why the next step was not reached**. Dates a
 - **C3 = 2.** Two tables with header cells on the elements page; no sort, filter or chart.
 - **C4 = 2.** No horizontal scroll; focus indicator on 15 of 15; **one theme**; no `<main>` landmark, and 4 of the first 15 controls on the editorial page have no accessible name.
 - **C5 = 2.** HTML and CSS readable; behaviour needs **jQuery** (`jquery.min.js`), plus `browser.min.js`, `breakpoints.min.js` and a Font Awesome icon font; the README credits them. The demo page also loads a Cloudflare analytics script (the demo's host, not the template).
-- **C6 = 0\*.** `LICENSE.txt` in the download read: Creative Commons Attribution 3.0 Unported; the `README.txt` names jQuery, Font Awesome, Responsive Tools and Unsplash images (not included). **There is no repository**, so no commit, release or issue can be read: step 2 cannot be reached or refused (G5). Scored at the floor.
+- **C6 = 2†.** `LICENSE.txt` in the download read: Creative Commons Attribution 3.0 Unported; the `README.txt` names jQuery, Font Awesome, Responsive Tools and Unsplash images (not included) without stating their licences. **There is no repository**, so no commit, release or issue can be read: maintenance is **not assessable** and the highest step is 2 (G5, decided). Not 3.
 
 **Baseline: this site** (`/index.html`, `/enforcement.html`, served from `main` `b705f15`) — **measured on three criteria only**; C1, C3 and C6 are not scored because the evidence for them on the author's own site was not gathered by this method.
 - **C2 = 4** (E). 17 px (62% of paragraph text), 88 cpl, 12.75:1 over a page background with a faint gradient on `<body>`, 77 headings with no skip, a standfirst before the detail, and 13 working anchors in the part navigation.
@@ -332,17 +337,17 @@ Each line gives the evidence, and **why the next step was not reached**. Dates a
 - **C5 = 4.** No external host, no framework global, local scripts and stylesheets only.
 - *An observation outside the grid, since C2 is measured on the editorial page:* on the data page `/enforcement.html` the paragraph tier is **12.5 px at about 150 characters per line** (the contrast is 5.54:1), and the long reference list on `/index.html` is also set at 12.5 px. Measured by M1; the author may want to look at it.
 
-## 6. What the grid did when it was tried on real candidates (for the author's decision; **nothing here is applied**)
+## 6. What the grid did when it was tried on real candidates — **all seven decided by the author on 10 Nov 2026** (§8, "grid finding G1" … "G7")
 
-Rule 9 says an anchor found undecidable on a real page is reported and not interpreted, and that changing one needs a new §8 row. These are the seven the application found. The readings used so far are stated, so that the scores above can be re-derived under another.
+Rule 9 says an anchor found undecidable on a real page is reported and not interpreted, and that changing one needs a new §8 row. These are the seven the application found; **each now has its row, and §1 carries the decision where it changed a rule**. The findings below are kept as first written, and each ends with the decision. The readings used so far are stated, so that the scores above can be re-derived under another.
 
-- **G1 · Rule 2 ("the lower of the two samples") conflicts with the grid's own text and cannot apply to two criteria.** §1.3 says C2 is "measured on the sampled editorial page", and C1 and C3 find their evidence on one of the two pages (a citation pattern on the editorial page, a table on the data page), so "the lower" would score every candidate 0 on them. *Applied:* C2 on E; C1 and C3 across both samples and the documented examples (M7); C4 and C5 the lower of the two. *Proposed:* write that into rule 2.
-- **G2 · C1 steps 0 and 1 each carry a second clause ("built for another job"; "organised around something else").** A template built for editorial reading with no pattern (HTML5 UP) and an editorial stylesheet with exactly one (Tufte) fit neither clause. *Applied:* the number of patterns decides; the clause is ignored. *Proposed:* drop the second clauses.
-- **G3 · C3 step 3 needs both a table and a chart.** A system with an excellent table and no chart tops at step 2 (GOV.UK); USWDS reached 3 only because its guidance renders two charts with data tables. Two clauses are also ambiguous: the plan's "header cells with scope" was read as header cells, since no candidate's simple tables use the `scope` attribute apart from GOV.UK and USWDS; and an image with an `alt` meets both step 1 ("only as images") and step 2 ("a chart with a text alternative"), so it was read as step 1 unless the alternative gives the values (Tufte). *Proposed:* let step 3 be met by a table alone *or* a chart alone, each with the keyboard and no-pointer conditions, and say what "with scope" means.
-- **G4 · C4 has no step for "scrolls sideways at 390 px but has two themes".** Step 0 needs overflow *and* one theme; step 1 needs no overflow. *Applied:* the floor, 0 (Tabler). *Proposed:* step 0 is "scrolls horizontally at 390 px".
-- **G5 · C6 has no step for a licensed template with no repository** (HTML5 UP): step 2 needs "a commit within the 12 months". *Applied:* the floor, 0. *Proposed:* say what stands in for a commit where there is no repository, or that such a candidate is not scored on maintenance.
-- **G6 · C4's "first 15 controls" meets controls inside a cross-origin embed** (Tufte's YouTube video): their focus indicator cannot be seen. *Applied:* scored on the 12 measurable stops, flagged. *Proposed:* exclude embeds from the 15, or say they fail.
-- **G7 · The totals reward rebuildability and responsiveness over fit.** C4 and C5 (30%) are reachable by a minimal stylesheet; C1 and C3 (40%) are not reachable by any candidate above step 1 and 3. *Not a change to propose, a reading to take:* use the steps and the evidence, not the order of the totals.
+- **G1 · *(decided: rewritten as applied)* · Rule 2 ("the lower of the two samples") conflicts with the grid's own text and cannot apply to two criteria.** §1.3 says C2 is "measured on the sampled editorial page", and C1 and C3 find their evidence on one of the two pages (a citation pattern on the editorial page, a table on the data page), so "the lower" would score every candidate 0 on them. *Applied:* C2 on E; C1 and C3 across both samples and the documented examples (M7); C4 and C5 the lower of the two. *Proposed:* write that into rule 2.
+- **G2 · *(decided: the number of patterns decides)* · C1 steps 0 and 1 each carry a second clause ("built for another job"; "organised around something else").** A template built for editorial reading with no pattern (HTML5 UP) and an editorial stylesheet with exactly one (Tufte) fit neither clause. *Applied:* the number of patterns decides; the clause is ignored. *Proposed:* drop the second clauses.
+- **G3 · *(decided: G3a one of the two; G3b the readings stand)* · C3 step 3 needs both a table and a chart.** A system with an excellent table and no chart tops at step 2 (GOV.UK); USWDS reached 3 only because its guidance renders two charts with data tables. Two clauses are also ambiguous: the plan's "header cells with scope" was read as header cells, since no candidate's simple tables use the `scope` attribute apart from GOV.UK and USWDS; and an image with an `alt` meets both step 1 ("only as images") and step 2 ("a chart with a text alternative"), so it was read as step 1 unless the alternative gives the values (Tufte). *Proposed:* let step 3 be met by a table alone *or* a chart alone, each with the keyboard and no-pointer conditions, and say what "with scope" means.
+- **G4 · *(decided: step 0 is horizontal scroll)* · C4 has no step for "scrolls sideways at 390 px but has two themes".** Step 0 needs overflow *and* one theme; step 1 needs no overflow. *Applied:* the floor, 0 (Tabler). *Proposed:* step 0 is "scrolls horizontally at 390 px".
+- **G5 · *(decided: maintenance not assessable, C6 at most 2)* · C6 has no step for a licensed template with no repository** (HTML5 UP): step 2 needs "a commit within the 12 months". *Applied:* the floor, 0. *Proposed:* say what stands in for a commit where there is no repository, or that such a candidate is not scored on maintenance.
+- **G6 · *(decided: embedded stops are not counted)* · C4's "first 15 controls" meets controls inside a cross-origin embed** (Tufte's YouTube video): their focus indicator cannot be seen. *Applied:* scored on the 12 measurable stops, flagged. *Proposed:* exclude embeds from the 15, or say they fail.
+- **G7 · *(decided: a total is never a ranking)* · The totals reward rebuildability and responsiveness over fit.** C4 and C5 (30%) are reachable by a minimal stylesheet; C1 and C3 (40%) are not reachable by any candidate above step 1 and 3. *Not a change to propose, a reading to take:* use the steps and the evidence, not the order of the totals.
 
 *Method limits that are not anchors.* M5 and M6: a page with no animation satisfies C4's step 4 trivially, and hover or focus transitions are not measured. M7 extends C1 and C3 to a design system's documented examples, which favours systems that document examples over templates that ship one page.
 
@@ -368,12 +373,14 @@ unknown); a timeline of dated legal events. These are to be designed on the site
 
 ## 8. The shortlist and three directions (B.3), described and not drawn
 
-### 8.1 The shortlist — **a proposal; the grid defines no threshold, so the author decides it**
+### 8.1 The shortlist — **decided by the author on 10 Nov 2026** (§8, "PV2-02: the shortlist of pattern references")
 
-Proposed: **Simple.css, USWDS, Tufte CSS and GOV.UK Design System** — the four highest totals, none resting on a floor-scored anchor gap, all
-verified live with licence read. Proposed out: *Tabler* (a CSS framework with a runtime dependency, C1 at 1, C4 at the floor on an anchor gap;
-kept in the gallery for the card anatomy of its dashboard only) and *HTML5 UP — Editorial* (contrast 3.61:1, a jQuery dependency, no repository,
-C1 at 0). *PureDashboard* is not shortlisted (not verified); *Observable Framework* is not admitted.
+**USWDS, Tufte CSS, GOV.UK Design System and Simple.css**, chosen by the steps and not by the total (G7). Steps C1 / C2 / C3: *USWDS* 1/2/3 · *Simple.css*
+1/2/2 · *GOV.UK* 1/2/2 · *Tabler* 1/2/2 · *Tufte CSS* 1/2/1 · *HTML5 UP* 0/1/2. What each brings: *Tufte CSS* the only margin notes and citations (P1);
+*USWDS* sortable tables, charts with data tables and an in-page list; *GOV.UK* the status tag and a captioned table; *Simple.css* one readable stylesheet.
+*Tabler* (a CSS framework with runtime libraries, C5 at 1) and *HTML5 UP — Editorial* (contrast 3.61:1, a jQuery dependency, no repository, C1 at 0) stay in the
+gallery as descriptions, **outside the shortlist**; *Tabler* is kept for the card anatomy of its dashboard only. *PureDashboard* is not shortlisted (not
+verified); *Observable Framework* is not admitted. The author's visual preferences (§9) are separate, as visual references.
 
 ### 8.2 The three directions (`docs/POST-V2.md` §3 C)
 

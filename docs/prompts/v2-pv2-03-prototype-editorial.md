@@ -29,7 +29,7 @@ is deferred»): ricorda all'autore la data se G1 non è ancora aperto.
 
 Verifica che `main` contenga:
 - `docs/POST-V2.md` (§3 parte C per intero, §4.1 riga PV2-03, §5);
-- `docs/FRONTEND-REFERENCES.md` (l'uscita di PV2-02: la griglia, la matrice, la galleria, la shortlist proposta e le tre direzioni descritte)
+- `docs/FRONTEND-REFERENCES.md` (l'uscita di PV2-02: la griglia, la matrice, la galleria, la shortlist **decisa** e le tre direzioni descritte)
   e `docs/DATA-READINESS.md` (l'uscita di PV2-01: le quattro schede e il contratto MC-1…MC-15);
 - `docs/ROADMAP-v2.md` §8 con le righe di PV2-02 (ambito, la griglia, i sei candidati, l'approvazione del checkpoint finale e le risposte di
   B.4) **e la riga che registra G1**. Se manca una delle due ultime, C non è autorizzato: fermati e chiedi;
@@ -53,7 +53,7 @@ Leggi, in quest'ordine, e trattali come vincolanti:
 3. `AGENTS.md`, «Architecture — do not rebuild it»: nessun build step, nessuna dipendenza, nessun framework, nessuna richiesta a terzi;
    `tools/thirdparty.mjs` e `ALLOWED_RUNTIME_ORIGINS` (vuoto); la Content-Security-Policy (`docs/DEPLOYMENT.md`) e gli script inline con il loro
    hash. **Il prototipo non aggiunge una dipendenza né un font remoto, e non copia codice, asset o immagini di terzi.**
-4. `docs/FRONTEND-REFERENCES.md` per intero, in particolare §5.1 (le prove dietro ogni punteggio), **§6 (i sette rilievi sulla griglia: G1…G7)**,
+4. `docs/FRONTEND-REFERENCES.md` per intero, in particolare §5.1 (le prove dietro ogni punteggio), **§6 (i sette rilievi sulla griglia G1…G7, tutti decisi dall'autore il 10 novembre 2026 e già riportati nel §1)**,
    §7 (la galleria), §8.2 (la direzione 1, Editoriale: che cosa prende, da dove, e che cosa non si ricostruisce senza una dipendenza) e la
    riga «un punto aperto» sui font di Tufte CSS.
    **E il §9, i riferimenti visivi senza punteggio**: l'autore, il 10 novembre 2026, ha scelto come punto di partenza per l'**aspetto** *Open Future
@@ -77,12 +77,12 @@ i test esistenti. Tre checkpoint:
 
 - **C.1 · Le premesse e il perimetro del confronto.** Verifica le righe. Poi, con lo strumento di domande, **una domanda per volta, la
   raccomandazione per prima**: (a) **quali quattro viste concrete** (quale regolamento, quale articolo, se la quarta è la dashboard o la
-  timeline) — scelte che PV2-04 e PV2-05 dovranno ripetere identiche; (b) **la shortlist**: la proposta di `docs/FRONTEND-REFERENCES.md` §8.1
-  (Simple.css, USWDS, Tufte CSS, GOV.UK) è approvata, cambiata o respinta; (c) **il nome della cartella** (§8, «PV2-02, B.4 question 2»: una nuova
+  timeline) — scelte che PV2-04 e PV2-05 dovranno ripetere identiche; (b) **la shortlist è già decisa** (§8, «PV2-02: the shortlist of
+  pattern references»: USWDS, Tufte CSS, GOV.UK, Simple.css) **e non si ripropone**; (c) **il nome della cartella** (§8, «PV2-02, B.4 question 2»: una nuova
   cartella di primo livello non pubblicata, per esempio `prototypes/editorial/`): **si conferma con l'autore prima di scrivervi**. Verifica con
   `node tools/pages-artifact.mjs list` che la cartella scelta non sia nell'elenco, e che `tools/pages-artifact.mjs` non venga toccato.
   **Checkpoint.**
-- **C.2 · I rilievi G1…G7 della griglia.** Se un'ancora della griglia serve a questo lavoro (per esempio C3 per le tabelle, C4 per il tema scuro),
+- **C.2 · La griglia.** I rilievi G1…G7 sono decisi (§8) e il §1 li porta. Se un'ancora della griglia serve a questo lavoro (per esempio C3 per le tabelle, C4 per il tema scuro),
   **non reinterpretarla**: porta la domanda all'autore. Un cambio di ancora o di peso richiede una riga di §8 con le sue parole.
 - **C.3 · L'implementazione.** La direzione Editoriale di `docs/FRONTEND-REFERENCES.md` §8.2: una colonna di lettura di 65–85 caratteri a
   17–21 px, note in margine su schermo largo e in linea su schermo stretto, titoli rigorosamente sequenziali, un elenco «in questa pagina»,
@@ -108,7 +108,7 @@ Misurato da PV2-02 il 10 novembre 2026 su `main` `b705f15` e sul suo branch. **R
 | Fatto | Misura del 10 novembre 2026 |
 |---|---|
 | G1 | **non registrato** in §8; lo Stadio 1 è rinviato al **6 dicembre 2026**; C si apre solo al G1 |
-| Uscita di B | `docs/FRONTEND-REFERENCES.md`: sei candidati verificati dal vivo e punteggiati sulla griglia approvata (Simple.css 56,25 · USWDS 52,5 · Tufte CSS 51,25 · GOV.UK 48,75 · Tabler 33,75\* · HTML5 UP 30\*); sette rilievi G1…G7 sulla griglia; shortlist e tre direzioni **proposte**, non decise |
+| Uscita di B | `docs/FRONTEND-REFERENCES.md`: sei candidati verificati dal vivo e punteggiati sulla griglia approvata (Simple.css 56,25 · USWDS 52,5 · Tufte CSS 51,25 · GOV.UK 48,75 · Tabler 33,75 · HTML5 UP 35,00†); sette rilievi G1…G7 **decisi** e applicati al §1; shortlist **decisa** (USWDS, Tufte CSS, GOV.UK, Simple.css); le tre direzioni sono descritte e non decise |
 | Che cosa nessun candidato mostra | un valore mancante diverso da zero; enunciato, fonte e stato come tre cose; i tre stati; una timeline di eventi giuridici datati — **si progettano sui contenuti del sito** |
 | Baseline | misurata su tre criteri: C2 4 · C4 4 · C5 4; fuori griglia: sulla pagina dei dati il paragrafo è a 12,5 px e circa 150 caratteri per riga |
 | Pubblicazione | l'allowlist di `tools/pages-artifact.mjs` elenca le pagine e le cartelle che caricano; **ogni altra cartella non è pubblicata** |
@@ -135,7 +135,7 @@ Misurato da PV2-02 il 10 novembre 2026 su `main` `b705f15` e sul suo branch. **R
 
 ## Checkpoint
 
-- **C.1:** le quattro viste, la shortlist e il nome della cartella, con le risposte dell'autore (righe §8); il rapporto in `docs/HANDOVER.md`.
+- **C.1:** le quattro viste e il nome della cartella, con le risposte dell'autore (righe §8); il rapporto in `docs/HANDOVER.md`.
   Attendi l'approvazione, registrata in §8. **Prima di quella riga non si scrive nella cartella del prototipo.**
 - **Finale (C.3–C.5):** il prototipo, la sua misura e ciò che questa non vede; il prompt di PV2-04 (percorso, commit, risposte dell'autore); la
   checklist. Riscarica `origin/main` subito prima dell'ultima scrittura di `docs/HANDOVER.md`. **Senza il prompt di PV2-04 non si chiede
@@ -167,7 +167,7 @@ Misurato da PV2-02 il 10 novembre 2026 su `main` `b705f15` e sul suo branch. **R
 
 ## Criterio di uscita e consegna
 
-La sessione è completa quando: G1 è registrato in §8 prima dell'avvio; le quattro viste, la shortlist e la cartella sono decise in §8 con le
+La sessione è completa quando: G1 è registrato in §8 prima dell'avvio; le quattro viste e la cartella sono decise in §8 (la shortlist lo è già) con le
 parole dell'autore; la direzione Editoriale è implementata nella cartella non pubblicata, sulle quattro viste, in desktop e mobile, in tema
 chiaro e scuro, con stati vuoti e dati mancanti; è misurata con le stesse misure di PV2-02 e si dice ciò che la misura non vede; nulla della
 baseline, dei dati, dei modelli, della CSP o di `tools/pages-artifact.mjs` è cambiato e nulla di terzi è entrato nel repository; i checkpoint

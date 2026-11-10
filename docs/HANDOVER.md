@@ -4,6 +4,19 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## PV2-02 addendum — the visual references, the grid findings and the shortlist decided (10 Nov 2026)
+
+**Branch:** `claude/pv2-02-frontend-references` (pull request #87, open, not merged; it was updated by these commits). Only `docs/`.
+**§8 rows of the day, each committed when the author answered:** the visual references (*Our World in Data*, *Open Future*, *AI Act Explorer*, *Economics
+Observatory*, *The Pudding*, described and unscored in `docs/FRONTEND-REFERENCES.md` §9; **the author chose *Open Future* and *Economics Observatory / The
+Pudding***); **all seven grid findings decided** — G1 rule 2 rewritten as applied; G2 C1 decided by the number of patterns; G3a C3 step 3 met by a table *or* a
+chart; G3b the `th` and `alt` readings stand; G4 C4 step 0 is horizontal scroll at 390 px; G5 no repository: maintenance not assessable, C6 at most 2; G6 embedded
+stops are not among the first 15 controls (**re-measured on Tufte: 15 page controls, all with a visible focus indicator, 7 iframe stops skipped**); G7 a total is
+never a ranking — and **the shortlist: USWDS, Tufte CSS, GOV.UK, Simple.css**.
+**What changed in the matrix:** HTML5 UP C6 0 → 2† (total 30.00 → **35.00**); Tufte CSS and Tabler lose their asterisks (51.25 and 33.75, unchanged); no other
+score moved. §1 carries each rule change with its date and row. The prompt of PV2-03 no longer asks the shortlist and says the findings are decided.
+**Not done:** the three directions are not decided; no prototype exists; G1 is not decided; Stage 1 stays deferred to **6 Dec 2026**.
+
 ## PV2-02 — Post-v2 B, frontend references: final checkpoint (B.2–B.4) (10 Nov 2026)
 
 **Branch:** `claude/pv2-02-frontend-references`, from `main` `b705f15`. The B.1 entry below is its predecessor (approved, §8). Stage 1 is deferred to
