@@ -4,6 +4,97 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## PV2-02 addendum — the visual references, the grid findings and the shortlist decided (10 Nov 2026)
+
+**Branch:** `claude/pv2-02-frontend-references` (pull request #87, open, not merged; it was updated by these commits). Only `docs/`.
+**§8 rows of the day, each committed when the author answered:** the visual references (*Our World in Data*, *Open Future*, *AI Act Explorer*, *Economics
+Observatory*, *The Pudding*, described and unscored in `docs/FRONTEND-REFERENCES.md` §9; **the author chose *Open Future* and *Economics Observatory / The
+Pudding***); **all seven grid findings decided** — G1 rule 2 rewritten as applied; G2 C1 decided by the number of patterns; G3a C3 step 3 met by a table *or* a
+chart; G3b the `th` and `alt` readings stand; G4 C4 step 0 is horizontal scroll at 390 px; G5 no repository: maintenance not assessable, C6 at most 2; G6 embedded
+stops are not among the first 15 controls (**re-measured on Tufte: 15 page controls, all with a visible focus indicator, 7 iframe stops skipped**); G7 a total is
+never a ranking — and **the shortlist: USWDS, Tufte CSS, GOV.UK, Simple.css**.
+**What changed in the matrix:** HTML5 UP C6 0 → 2† (total 30.00 → **35.00**); Tufte CSS and Tabler lose their asterisks (51.25 and 33.75, unchanged); no other
+score moved. §1 carries each rule change with its date and row. The prompt of PV2-03 no longer asks the shortlist and says the findings are decided.
+**Not done:** the three directions are not decided; no prototype exists; G1 is not decided; Stage 1 stays deferred to **6 Dec 2026**.
+
+## PV2-02 — Post-v2 B, frontend references: final checkpoint (B.2–B.4) (10 Nov 2026)
+
+**Branch:** `claude/pv2-02-frontend-references`, from `main` `b705f15`. The B.1 entry below is its predecessor (approved, §8). Stage 1 is deferred to
+**6 Dec 2026** (§8); G1 is not decided; C, S27 and Phase 5 stay closed. Files changed by the session: `docs/FRONTEND-REFERENCES.md` (new),
+`docs/prompts/v2-pv2-03-prototype-editorial.md` (new), `docs/ROADMAP-v2.md` §8, `docs/POST-V2.md` §6 question 5 (a pointer), and this file.
+**Nothing outside `docs/`; nothing of a third party was installed, built, run or committed.**
+
+**Decided (§8, each answer committed when given):** B.1 the scale is 0–4 with every step anchored; Kabarza stays a visual reference only, unscored
+(answers `docs/POST-V2.md` §6 question 5); the plan's five open-source projects plus up to five added by a stated rule; the grid approved; the six
+candidates approved (*Tabler*, *GOV.UK*, *Simple.css*, *HTML5 UP — Editorial*, *Tufte CSS*, *USWDS*; *PureDashboard* unscored; *Charts.css* out by
+the 12-month rule; *Observable Framework* only if its docs site answers); B.4 PV2-03 opens at G1, and the prototype lives in a new unpublished folder.
+
+**Written:** `docs/FRONTEND-REFERENCES.md` §2.1 (the list, read from shallow clones of each project's own files — `github.com` and `api.github.com`
+are refused in this environment, git reads through the session proxy work), §3b (the sampled pages, named before scoring), §4 (the method, M1–M8,
+**M1 changed twice before any score was written**), §5 (the matrix and the evidence and the next step not reached for every score), §6 (seven findings
+about the grid, G1…G7, **none applied**), §7 (the gallery), §8 (a proposed shortlist and three directions, described and not drawn).
+Measured totals: Simple.css 56.25 · USWDS 52.50 · Tufte CSS 51.25 · GOV.UK 48.75 · Tabler 33.75\* · HTML5 UP 30.00\*; the baseline reaches the top step on the
+three criteria measured. **No candidate exceeds step 1 on C1**; the order is largely C4 and C5. `docs/prompts/v2-pv2-03-prototype-editorial.md`.
+
+**What the author should look at first:** (1) the seven grid findings, because three of them (G1, G3, G4) change what a score means and need a §8 row
+before the next session reuses the grid; (2) the shortlist, which the grid does not define and which is a proposal; (3) the baseline's data page,
+outside the grid: paragraph text at 12.5 px and about 150 characters per line, and the 12.5 px reference list on the brief.
+
+**Not verified, named:** *PureDashboard* (no project of that name found in two searches, no address known, no substitute); *Observable Framework*
+(docs site HTTP 429 twice); Kabarza's live site (only a showcase listing found, nothing described); the maintainer-action half of C6 (issue replies and
+GitHub release pages are not readable here); whether USWDS's classic components use `lit`; whether USWDS's chart series differ by more than colour.
+
+**Battery on this branch:** see the line below the checklist. **Checklist (B.1–B.4):**
+
+| Item | Written | How to verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| B.1 | `docs/FRONTEND-REFERENCES.md` §1; §8 rows of 10 Nov 2026 (`c8511f3`, `a5423ee`, `a7bf879`, approval `f7111a9`) | read each anchor against §5.1 | none (a grid) | the grid approved before any research |
+| B.2 | §2.1, §3b, §4, §5, §6 (`503bc55`, `fe80531`, `54ddb7c`); the list approved (`de8ee7f`) | re-measure a sampled page with the M1…M8 definitions; read a LICENSE with `git show HEAD:<file>` on a shallow clone | none in the repository (scratch scripts, by scope) | every candidate verified live with licence read and date; the unverified named and unscored |
+| B.3 | §7, §8 (`54ddb7c`) | compare each gallery line with the URL it names | none | gallery, shortlist, three directions, described not drawn |
+| B.4 | `docs/prompts/v2-pv2-03-prototype-editorial.md`; §8 rows `df995f4` and the folder row | the prompt's provenance quotes both answers; its exit criterion carries the standing rule | none | the next prompt exists, to be approved with the work |
+
+**Not done, named:** the three directions are not compared (that is PV2-05); no prototype exists; the grid findings are not applied.
+
+**Battery on `b15f2ba`, 10 Nov 2026:** the six validators exit 0; `commit-evidence origin/main HEAD` 13 commits, 0 without evidence; browser suite
+(`--require-browser`) 343 pass, 0 fail, 1 undecidable (`a11y:bound`, by design); the 25 suites and `.control-room/`: **1420 tests, 1419 pass, 0 fail,
+1 skipped** (no IPv6 loopback in this environment); `agent/schemas/cli.mjs check` exit 0; `origin/main` re-fetched immediately before this line: still `b705f15`.
+
+## Branch register — 10 November 2026 (PV2-02)
+
+- `claude/pv2-02-frontend-references`, from `main` `b705f15`: all `docs/`. Final checkpoint approved (§8). Disposition: on the author's answer ("Open a PR to main
+  (Recommended)"), pull request #87 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/87), opened and not merged by the session. Merging is the author's.
+- Unmerged elsewhere: `origin/claude/stage-1-decision` (Stage 1's: the author's signed decision, 2 ahead of and 43 behind `main`; to be merged and carried
+  through the release chain before **6 Dec 2026**), and the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed).
+
+## PV2-02 — Post-v2 B, frontend references: checkpoint B.1, the grid (10 Nov 2026)
+
+**Branch:** `claude/pv2-02-frontend-references`, from `main` `b705f15` (after #84, #85 and #86). **Stage 1 is deferred** (§8, "Stage 1 is deferred",
+10 Nov 2026): the author's signed decision is on `origin/claude/stage-1-decision`, **not merged**; in a scratch copy of `main` with that line
+applied the ledger verifies (1 entry, chain intact, 1 signed by a registered reviewer, 0 simulated) and the proposal reads as approved, but the
+dispatcher rehearsal was **not run** (blocked in this environment), so the nine stages are unmeasured. **The gate calls a decision stale 30 days
+after it was taken — 6 Dec 2026 — so Stage 1 is carried through before then, or signed again.** G1 is not decided; C, S27 and Phase 5 stay closed.
+**Authority:** §8 "PV2-02 (Post-v2 B) may be run before G1, under A's three limits" and "The scope of PV2-02" (the author's words: "Defer it, and
+open PV2-02 now (Recommended)"). The date measured 10 Nov 2026, before Track M (12 Jan 2027) and the grant's expiry (9 Mar 2027).
+Unmerged at the start: `origin/claude/stage-1-decision` (Stage 1's), and the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, two files
+in the second, unreviewed).
+
+**B.1, decided (§8, each answer committed when given):** the scale is 0–4 with every step anchored (`c8511f3`); Kabarza stays a visual reference
+only, unscored, which answers `docs/POST-V2.md` §6 question 5 (`a5423ee`); the plan's five open-source projects are researched, plus up to five
+added by a stated rule — public, a LICENSE file, a commit within 12 months, a live demo or docs — with the author seeing the list before scoring
+(`a7bf879`). Already decided on 9 Nov 2026: the grid is approved before research; a candidate not verified live is listed, not scored; screenshots
+stay in the scratchpad.
+
+**B.1, written:** `docs/FRONTEND-REFERENCES.md` §1–§3: the six criteria with the plan's weights; for each, five named steps that say what is seen;
+nine rules for every score (evidence only from files and a live demo, two sampled pages named before scoring with the lower step counting,
+measurements at 1280 and 390 px in both schemes, one sentence saying why this step and not the next, no score and no shortlist for a candidate
+not verified live, "not applicable" is not a step, the current site scored as an unselectable baseline, an undecidable anchor reported and not
+interpreted); the candidate rule; and what the grid cannot do, including that **it was not tested on a real candidate**. **No candidate was
+researched, opened or scored.**
+
+**Battery on this branch:** see the final entry; for this checkpoint only `docs/` changed.
+
+**Waiting for the author's approval of the grid, to be recorded in §8, before any candidate is opened.**
+
 ## Branch register — 9 November 2026 (after PV2-01's pull requests #84 and #85 were merged)
 
 - `claude/pensive-bell-665v9z` (#84) and `claude/freshness-month-precision` (#85) are merged into `main` (`c548b2d`, `5fedc7e`); both can be deleted.
