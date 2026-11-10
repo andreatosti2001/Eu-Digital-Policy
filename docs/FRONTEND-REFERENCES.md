@@ -2,7 +2,8 @@
 
 **Status:** B.1 **approved** (§8, "Checkpoint B.1 of PV2-02 approved", 10 Nov 2026): the scoring grid; the six candidates were approved the same
 day. **B.2 and B.3 are written** (§3b–§8: the sampled pages, the method, the matrix with the evidence behind every score, seven findings about
-the grid, the gallery, a proposed shortlist and three directions) and await the final checkpoint. B.4, the prompt of PV2-03, is the last item.
+the grid, the gallery, a proposed shortlist and three directions) and were **approved** with the prompt of PV2-03 (§8, "Final checkpoint of PV2-02 approved", 10 Nov 2026) — as the record of what was found; the
+shortlist (§8.1) and the findings of §6 are still proposals.
 **What this is:** the documented search for open-source frontend projects that `docs/POST-V2.md` §3 B asks for, **to study patterns, not to
 adopt a template**. The plan: no framework, library, remote font, third-party script or proprietary image in production; a project is
 used to study a pattern and, only where its licence allows, for small reuses with attribution.
