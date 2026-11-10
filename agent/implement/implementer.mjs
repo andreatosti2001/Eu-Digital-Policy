@@ -458,7 +458,7 @@ export class Implementer {
     const browser = await runBrowserCheck({ required: browserRequired, quick: this.quick });
     if (browser.check) checks.push(browser.check);
 
-    checks.push(runBoundaryCheck({ root: this.root }));
+    checks.push(runBoundaryCheck({ root: this.root, baselineWarnings: v.baseline.boundary.warnings }));
 
     const verdict = verdictFor(checks);
     const blocking = blockingFindings(checks);

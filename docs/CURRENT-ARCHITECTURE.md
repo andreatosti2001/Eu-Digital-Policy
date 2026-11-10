@@ -440,14 +440,21 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 - `tools/_review10.mjs` — the substantiated half of the external review of 28 Aug 2026.
   Already applied; retained as the audit record.
 
-**Baseline at commit `7248290`** (all four run in this session):
+**Baseline at commit `7248290`** (all four run in this session; the last line was added on 10 Nov 2026 and is explained below the block):
 
 ```
 validate.mjs     0 errors · 5 warnings · 45 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
+agent/implement/boundary.mjs   0 errors · 24 warnings · exit 0
 ```
+
+**The boundary check's line** (`node agent/implement/cli.mjs boundary`) was measured on 10 Nov 2026 on `main` `4e649ef`: 0 errors, and **24 warnings, which are the
+synthetic credentials in the selftests** (`.control-room/selftest.mjs` and the agent suites), classified as test fixtures and named by that command; none is on the website. It
+is the baseline of Agent 9's boundary check, **parsed from here by `agent/implement/baseline.mjs`, which throws if the line is missing**; one more warning, a credential outside a
+fixture, or a control-plane path on the public surface is a finding, and a finding stops `validators_pass` (`docs/ROADMAP-v2.md` §8, 10 Nov 2026, "Stage 1: the second half of the
+dispatch-path repair"). It is not a validator, and `AGENTS.md`'s four are unchanged.
 
 **One movement since, recorded with its reason (AUDIT-2026-09-25 T-19, 2026-09-26).** The
 unverified count went from 106 to 105, and only because verification work was done:
