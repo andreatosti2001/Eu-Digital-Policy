@@ -397,6 +397,31 @@ distinct from zero is in no candidate.
 in direction 2's table-first layout; one set of colour and type tokens for both schemes; the in-page list and the tag from the design systems;
 and *Simple.css*'s discipline (one readable stylesheet) as the constraint for the whole. *Cannot be rebuilt without a dependency:* the same as 1 and 2.
 
+## 9. Addendum (10 Nov 2026): visual references, **unscored**
+
+The author saw the six scored candidates and judged them "tutti bruttini" (§8, "PV2-02 addendum"). The grid has no aesthetic criterion, so nothing
+here is scored and nothing changes in §1–§8. These are **visual references only**, on the footing of Kabarza (§1.1, rule 8): described in words
+from a page opened on 10 Nov 2026 at 1280 px in the light scheme, with the URL; **nothing is copied** (no code, asset, image, font or animation),
+and **no licence was read, because nothing is to be reused** — they say what a strong look *is*, not what may be taken. Screenshots were kept in
+the scratchpad, shown to the author in the session, and are not in the repository. Cookie notices were dismissed by choosing the refusal where
+one was offered. Search results were used only to find names.
+
+| Reference | What was seen | What it is useful as evidence of |
+|---|---|---|
+| *Our World in Data* — `ourworldindata.org`, and a chart page `ourworldindata.org/grapher/life-expectancy` | Home: a deep-navy band with a gold serif headline, a wide search field, rounded topic chips, then a grid of cards that mix a chart thumbnail, an update note and a newsletter box. Chart page: the serif title and a one-line definition above the chart; tabs **Table · Map · Line · Bar** on the same data; a right-hand list of countries with checkboxes, current values and a sort control; a play control under a year slider; a source line with "CC BY", and Download, Share and full-screen buttons. | A serious, data-first identity with an authoritative serif; **a table tab beside the chart** (values readable without a pointer, the thing C3 step 3 asks for); the source and the licence under every figure. |
+| *Open Future — Policy Observatory* — `openfuture.eu/observatory/ai-continent-action-plan/` | A yellow navigation bar, a black wide geometric display face for headings and a text face for reading, an isometric illustration. Each tracked file has a page with **Status: In development** and **Type: Strategy**, an RSS link, a short text, and a **Timeline** of dated developments (the first entry "November 3, 2026"). | The only reference found with **a timeline of dated policy events and a record's status and type shown as labelled facts** — the content of this site, in a strong visual identity. Heavy in colour and display type. |
+| *AI Act Explorer* — `artificialintelligenceact.eu/article/5/` | A white page with a left tree of chapters ("Chapter II, Art. 5, Prohibited AI Practices"), a breadcrumb, the article text with numbered paragraphs and lettered sub-points, **defined terms dotted-underlined**, a line "Comes into force 2 February 2025, according to Article 113(a)", and "Related recitals" as small numbered chips. A cookie control, a feedback card and an "Ask about the EU AI Act" box overlay the page. | The nearest thing to *this site's job* — **reading a legal text with navigation, definitions, dates and cross-references**. Visually plain, not strong; useful for structure, not for look. |
+| *Economics Observatory* — `economicsobservatory.com` | A centred wordmark, a large feature card with a photograph and a coloured edge, smaller cards whose left edge and topic label carry a colour per subject, a teal "Data Hub" tile with Explore, Create and Share, and a chart card with a title and a two-series legend. | A friendly, colour-coded editorial layout with charts inside the card grid; photography-led, which the site does not use. |
+| *The Pudding* — `pudding.cool` | A white page with a hand-lettered wordmark, sticker-like buttons, and a grid of tall cards each on a flat saturated colour (red, ochre, magenta) with a bold display title and a one-line description, numbered and dated. | **A confident, unmistakable identity and an authored feel.** The tone (playful) does not fit a legal brief; kept as evidence that a distinct look is possible, not as a direction. |
+
+**Looked at and not kept:** *OECD.AI Policy Observatory* (`oecd.ai`: a dark band and stock photography, a corporate look) and *DSA Observatory*
+(`dsa-observatory.eu`: a stock-photo hero and a dated layout) — neither is strong. *Reuters Graphics* (`reuters.com/graphics/`) returned a blank
+page in this browser and was **not seen**; it is neither kept nor judged.
+
+**What this adds to §7.** The "Timeline" row of the gallery (§7: "no candidate shows a timeline pattern") has a reference *outside* the six: the Open
+Future observatory page above. **What none of these shows either:** a missing value shown differently from zero, and a statement, its source and its
+status as three things (the OWID source line comes nearest); those are still to be designed on the site's own content, in C.
+
 ---
 
 *B.4, the prompt of PV2-03, is the last item; the final checkpoint approves the work and that prompt together.*
