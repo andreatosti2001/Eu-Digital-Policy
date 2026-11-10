@@ -247,4 +247,5 @@ dall'assenza di regressioni e dalla possibilità del lettore di capire che cosa 
 4. ~~La stima di sessioni va rifatta: chi la fa, e in quale sessione?~~ **Rifatta dall'autore il 4 novembre 2026**
    (§4), come previsione. Resta aperto se e quando registrarla in `docs/ROADMAP-v2.md` §8: l'aggiornamento di
    questo documento non lo fa.
-5. Il Kabarza resta un riferimento visivo esterno, come scritto nel piano?
+5. Il Kabarza resta un riferimento visivo esterno, come scritto nel piano? **Sì, deciso il 10 novembre 2026**: riferimento visivo soltanto, senza punteggio
+   (`docs/ROADMAP-v2.md` §8, «PV2-02, B.1 question 2»).
