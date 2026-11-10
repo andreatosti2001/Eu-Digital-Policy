@@ -48,7 +48,8 @@ GitHub release pages are not readable here); whether USWDS's classic components 
 
 ## Branch register — 10 November 2026 (PV2-02)
 
-- `claude/pv2-02-frontend-references`, from `main` `b705f15`: all `docs/`. Disposition: to be recorded after the author's answer on a pull request.
+- `claude/pv2-02-frontend-references`, from `main` `b705f15`: all `docs/`. Final checkpoint approved (§8). Disposition: on the author's answer ("Open a PR to main
+  (Recommended)"), pull request #87 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/87), opened and not merged by the session. Merging is the author's.
 - Unmerged elsewhere: `origin/claude/stage-1-decision` (Stage 1's: the author's signed decision, 2 ahead of and 43 behind `main`; to be merged and carried
   through the release chain before **6 Dec 2026**), and the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed).
 
