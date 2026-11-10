@@ -38,7 +38,7 @@ import {
   ALLOWED_RUNTIME_ORIGINS, TRACKER_HINTS, NON_FETCHING_URIS,
   foreignOrigin, scanHtml, scanCss, scanJs, scanRuntimeSurface, runtimeSurface,
 } from './thirdparty.mjs';
-import { EXPECTED, RECHECK, RULE_INTERVAL } from './freshness.mjs';
+import { EXPECTED, RECHECK, RULE_INTERVAL, periodEnd } from './freshness.mjs';
 import { dateProblem } from './as-of.mjs';
 import { RECORD_VERSION, QUESTIONS, CHECKED, LIMITS, readRecords } from './evidence-audit-record.mjs';
 import { createHash } from 'node:crypto';
@@ -335,6 +335,71 @@ test('F7 · a passed event re-read after its date is not a prompt; one not re-re
     writeFileSync(p, JSON.stringify(d, null, 1));
     r = runValidator('freshness.mjs', [asOf], dir);
     if (asOf > d.$last_verified) assert.match(r.out, /PLANTED-F7 event/, 'not re-read since: still a prompt');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('F11 · a month-precision event has passed only when its month has — not on the first day it is stored on', () => {
+  /* docs/DATA-READINESS.md F-A9: the DMA's "November 2026" target is stored
+     as 2026-11-01 and was printed on 9 Nov 2026 as having fallen due. */
+  assert.equal(periodEnd({ date: '2026-11-01', date_precision: 'precision:month' }), '2026-11-30');
+  assert.equal(periodEnd({ date: '2027-02-01', date_precision: 'precision:month' }), '2027-02-28');
+  assert.equal(periodEnd({ date: '2028-02-01', date_precision: 'precision:month' }), '2028-02-29');
+  assert.equal(periodEnd({ date: '2026-04-01', date_precision: 'precision:quarter' }), '2026-06-30');
+  assert.equal(periodEnd({ date: '2026-01-01', date_precision: 'precision:year' }), '2026-12-31');
+  assert.equal(periodEnd({ date: '2026-11-01', date_precision: 'precision:day' }), '2026-11-01');
+  assert.equal(periodEnd({ date: '2026-11-01' }), '2026-11-01', 'no precision recorded: read as the day, as before');
+
+  const dir = dataScratch();
+  try {
+    const p = join(dir, 'data', 'timeline.json');
+    const d = JSON.parse(readFileSync(p, 'utf8'));
+    const e = d.events[0];
+    Object.assign(e, { date: '2031-05-01', date_precision: 'precision:month', status: 'scheduled', last_verified: '2031-04-20', obligation: 'PLANTED-F11 month event' });
+    writeFileSync(p, JSON.stringify(d, null, 1));
+    /* inside its month: printed as in its period, never a prompt */
+    let r = runValidator('freshness.mjs', ['2031-05-15'], dir);
+    assert.doesNotMatch(r.out.split('\n').filter((l) => l.trim().startsWith('! ')).join('\n'), /PLANTED-F11/);
+    assert.match(r.out, /in its period, day not published: 2031-05-01…2031-05-31 .*PLANTED-F11/);
+    /* the month over, not re-read since: a prompt, as any passed event */
+    r = runValidator('freshness.mjs', ['2031-06-01'], dir);
+    assert.match(r.out, /! 2031-05-01…2031-05-31 .*fell due after the last verification: PLANTED-F11/);
+    /* the same event at day precision is a prompt from its day, as before */
+    e.date_precision = 'precision:day';
+    writeFileSync(p, JSON.stringify(d, null, 1));
+    r = runValidator('freshness.mjs', ['2031-05-15'], dir);
+    assert.match(r.out, /! 2031-05-01 .*fell due after the last verification: PLANTED-F11/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('F12 · a dataset is past its interval when RECORDS in it are, and the prompt names them; the intervals did not move', () => {
+  /* docs/ROADMAP-v2.md §8, 9 Nov 2026, "which date the dataset interval measures": the file stamp is
+     deliberately never moved, so reading it called the whole enforcement set "74 days old" when one record
+     was. F5 below still pins every interval; this holds the rule to what the author decided. */
+  const dir = dataScratch();
+  try {
+    const p = join(dir, 'data', 'enforcement.json');
+    const d = JSON.parse(readFileSync(p, 'utf8'));
+    d.$last_verified = '2026-01-01';                         /* the file stamp says "very old" ... */
+    for (const r of d.enforcement) r.last_verified = '2031-03-30';   /* ... every record was read on 30 Mar 2031 */
+    writeFileSync(p, JSON.stringify(d, null, 1));
+    const asOf = '2031-04-02';
+    let r = runValidator('freshness.mjs', [asOf], dir);
+    assert.doesNotMatch(r.out, /! enforcement[: ].*interval/, 'a stale FILE STAMP over fresh records is not a prompt: the file is deliberately never re-stamped');
+    /* one record not re-read: the prompt names it, counts it, and nothing else */
+    d.enforcement[3].last_verified = '2031-01-01';
+    writeFileSync(p, JSON.stringify(d, null, 1));
+    r = runValidator('freshness.mjs', [asOf], dir);
+    const lines = r.out.split('\n').filter((l) => /^\s*! enforcement: /.test(l));
+    assert.equal(lines.length, 1);
+    assert.match(lines[0], new RegExp(`1 of ${d.enforcement.length} dated record\\(s\\) past the 45-day interval, the oldest 91 days \\(2031-01-01\\) — ${d.enforcement[3].id} — `));
+    assert.equal(r.exit, 0, 'a staleness prompt still cannot fail a build');
+    /* a dataset with NO per-record dates is still measured by its file stamp, and says so */
+    const sp = join(dir, 'data', 'sources.json');
+    const sd = JSON.parse(readFileSync(sp, 'utf8'));
+    sd.$last_verified = '2030-01-01';
+    writeFileSync(sp, JSON.stringify(sd, null, 1));
+    r = runValidator('freshness.mjs', [asOf], dir);
+    assert.match(r.out, /! sources is \d+ days old, past its 180-day interval .* \(no per-record dates: the file's own date is the only evidence there is\)/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 

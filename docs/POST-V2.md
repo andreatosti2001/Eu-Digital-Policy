@@ -241,8 +241,11 @@ dall'assenza di regressioni e dalla possibilità del lettore di capire che cosa 
    al gate G1 (`docs/ROADMAP-v2.md` §8, 25.5 domanda 1). Per D–E: dopo la chiusura della v2 (25.5 domanda 4).
 2. La parte A (data readiness) può partire prima della chiusura formale della v2, perché non tocca il contenuto?
    **Sì, con B e C** (25.5 domanda 1).
-3. Il gate di B richiede la griglia approvata prima della ricerca, come scritto nel piano?
+3. Il gate di B richiede la griglia approvata prima della ricerca, come scritto nel piano? **Sì, deciso il 9 novembre 2026**:
+   la griglia è il primo checkpoint di PV2-02 e nessun candidato si ricerca prima della sua approvazione (`docs/ROADMAP-v2.md`
+   §8, «PV2-01, A.5 question 2»).
 4. ~~La stima di sessioni va rifatta: chi la fa, e in quale sessione?~~ **Rifatta dall'autore il 4 novembre 2026**
    (§4), come previsione. Resta aperto se e quando registrarla in `docs/ROADMAP-v2.md` §8: l'aggiornamento di
    questo documento non lo fa.
-5. Il Kabarza resta un riferimento visivo esterno, come scritto nel piano?
+5. Il Kabarza resta un riferimento visivo esterno, come scritto nel piano? **Sì, deciso il 10 novembre 2026**: riferimento visivo soltanto, senza punteggio
+   (`docs/ROADMAP-v2.md` §8, «PV2-02, B.1 question 2»).

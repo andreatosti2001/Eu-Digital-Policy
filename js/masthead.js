@@ -62,12 +62,20 @@ const BANDS = [
 
 const DAY = 86400000;
 
-function daysUntil(iso) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const d = new Date(String(iso).slice(0, 10) + 'T00:00:00');
-  if (isNaN(d)) return null;
-  return Math.round((d - today) / DAY);
+/* ONE stated date for every deadline view on this page (F-15;
+   docs/DATA-READINESS.md F-A10). It used to be read three times: the
+   filters took the UTC day and daysUntil() took the reader's LOCAL
+   midnight, so east of UTC, just after midnight, an event dated
+   "yesterday" in UTC passed the filter and printed "in -1 days". It is
+   now taken once, as the UTC calendar day — the same day js/format.js
+   isPast() and js/pipeline.js use — passed to each view, and printed. */
+const statedDay = () => new Date().toISOString().slice(0, 10);
+
+function daysUntil(iso, asOf) {
+  const a = Date.parse(asOf + 'T00:00:00Z');
+  const d = Date.parse(String(iso).slice(0, 10) + 'T00:00:00Z');
+  if (isNaN(a) || isNaN(d)) return null;
+  return Math.round((d - a) / DAY);
 }
 
 /* ---------------------------------------------------------- 1. status bands */
@@ -120,8 +128,8 @@ function statusLedger(ix, instruments) {
 
 /* ---------------------------------------------------------- 2. what falls due */
 
-function nextDue(ix, howMany) {
-  const today = new Date().toISOString().slice(0, 10);
+function nextDue(ix, howMany, asOf) {
+  const today = asOf;
   const upcoming = [...ix.event.values()]
     .filter((e) => String(e.date) >= today)
     .sort((a, b) => String(a.date).localeCompare(String(b.date)))
@@ -135,7 +143,7 @@ function nextDue(ix, howMany) {
 
   const rows = upcoming.map((e) => {
     const inst = ix.instrument.get(e.instrument);
-    const n = daysUntil(e.date);
+    const n = daysUntil(e.date, asOf);
     const away = n == null ? '' : n === 0 ? 'today' : n === 1 ? 'tomorrow' : 'in ' + n + ' days';
     const approx = e.date_precision && e.date_precision !== 'precision:day';
     return '<li class="sop-due-row">' +
@@ -155,6 +163,7 @@ function nextDue(ix, howMany) {
   return '<section class="sop-block sop-due">' +
     '<h2 class="sop-h sop-h-rubric">What falls due next</h2>' +
     '<ol class="sop-due-list">' + rows + '</ol>' +
+    '<p class="sop-foot">Days are counted from ' + esc(F.humanDate(asOf, 'precision:day')) + ' (UTC).</p>' +
     '<a class="sop-more" href="#annex-a">The full compliance calendar →</a>' +
     '</section>';
 }
@@ -200,13 +209,13 @@ function enforcementLine(ix, records) {
    invitation to scroll. It says the same things as the ledger below in the
    space of a sentence. */
 
-function ticker(ix, instruments, records) {
+function ticker(ix, instruments, records, asOf) {
   const core = instruments.filter((i) => i.scope_class === 'scope:core');
   const byStatus = BANDS.map((b) => ({
     b, n: core.filter((i) => i.legislative_status === b.id).length
   })).filter((x) => x.n);
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = asOf;
   const next = [...ix.event.values()]
     .filter((e) => String(e.date) >= today)
     .sort((a, b) => String(a.date).localeCompare(String(b.date)))[0];
@@ -216,7 +225,7 @@ function ticker(ix, instruments, records) {
       '<b>' + n + '</b> ' + esc(b.short.toLowerCase()) + '</span>').join('');
 
   const nextInst = next ? ix.instrument.get(next.instrument) : null;
-  const nd = next ? daysUntil(next.date) : null;
+  const nd = next ? daysUntil(next.date, asOf) : null;
 
   return counts +
     (next
@@ -268,19 +277,20 @@ export async function initMasthead() {
   }
 
   const ix = index(db);
+  const asOf = statedDay();
   const instruments = db.instruments.instruments || [];
   const records = db.enforcement.enforcement || [];
 
   mount.innerHTML =
     statusLedger(ix, instruments) +
-    nextDue(ix, 3) +
+    nextDue(ix, 3, asOf) +
     /* a recorded absence of action is not an action and is counted nowhere */
     enforcementLine(ix, actionsOnly(records)) +
     checkedLine(instruments, [...ix.event.values()], records);
   F.applyGeometry(mount);
 
   const tick = document.querySelector('[data-mount="sop-ticker"]');
-  if (tick) tick.innerHTML = ticker(ix, instruments, records);
+  if (tick) tick.innerHTML = ticker(ix, instruments, records, asOf);
 
   document.dispatchEvent(new CustomEvent('masthead:ready', {
     detail: { instruments: instruments.length, events: ix.event.size, records: records.length }
