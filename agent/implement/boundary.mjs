@@ -390,9 +390,26 @@ export function scanSecrets({ root = REPO_ROOT, files = null } = {}) {
  * publication fact the allowlist decides. Since 24 Oct 2026 the
  * allowlist admits none, so the warning count is the test fixtures
  * alone; a control-plane path admitted tomorrow raises it, and it is
- * named in `new_findings` on every run so it cannot be missed.
+ * named in `new_findings` so it cannot be missed.
+ *
+ * WHAT IS "NEW" (docs/ROADMAP-v2.md §8, 10 Nov 2026, "Stage 1: the
+ * second half of the dispatch-path repair"). The synthetic credentials
+ * in the selftests are NOT new: they are the baseline, counted in
+ * `warnings` against `baselineWarnings` and named in `detail` and in
+ * the excerpt. This function used to list every one of them in
+ * `new_findings` and to compute its baseline as the same expression as
+ * its count, so on a clean tree the QA verdict was always
+ * `pass_with_findings`, `validators_pass` always failed, and the policy
+ * blocked every change. A rise in the count is still a rise, and a
+ * credential outside a fixture, or a control-plane path on the public
+ * surface, is still a named finding.
+ *
+ * `baselineWarnings` is the RECORDED baseline, parsed out of
+ * docs/CURRENT-ARCHITECTURE.md §12 by baseline.mjs. Without it (the
+ * standalone `cli.mjs boundary` report) the baseline is the current
+ * count, as before; the implementer always passes the recorded one.
  */
-export function boundaryCheck({ root = REPO_ROOT } = {}) {
+export function boundaryCheck({ root = REPO_ROOT, baselineWarnings = null } = {}) {
   const secrets = scanSecrets({ root });
   const exposure = controlPlaneExposure({ root });
 
@@ -406,13 +423,13 @@ export function boundaryCheck({ root = REPO_ROOT } = {}) {
     errors: secrets.blocking.length,
     warnings: exposure.exposed.length + secrets.fixtures.length,
     baseline_errors: 0,
-    /* The baseline for exposure is what it is TODAY, so a new
-       control-plane directory shows up as a rise. It is recorded in
-       docs/IMPLEMENTATION-QA.md §6 rather than here, and read from
-       there by the implementer. */
-    baseline_warnings: exposure.exposed.length + secrets.fixtures.length,
+    /* The baseline is RECORDED in docs/CURRENT-ARCHITECTURE.md §12 and
+       parsed from there (agent/implement/baseline.mjs), so a rise is a
+       rise. It was the same expression as `warnings`, which can never
+       rise. */
+    baseline_warnings: baselineWarnings ?? (exposure.exposed.length + secrets.fixtures.length),
     new_findings: [
-      ...secrets.findings.map((f) => `${f.path}:${f.line} — ${f.what} (${f.pattern}) [${f.class}, ${f.severity}], value redacted`),
+      ...secrets.findings.filter((f) => f.class !== 'test_fixture').map((f) => `${f.path}:${f.line} — ${f.what} (${f.pattern}) [${f.class}, ${f.severity}], value redacted`),
       ...exposure.exposed.map((e) => `${e.prefix} is on the public website (${e.files} files): ${e.why}`),
     ],
     output_excerpt: [

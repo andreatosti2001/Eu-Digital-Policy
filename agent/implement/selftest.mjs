@@ -43,7 +43,7 @@ import {
 } from './boundary.mjs';
 import { refusal } from '../../tools/pages-artifact.mjs';
 import { readBaseline, compare, VALIDATORS } from './baseline.mjs';
-import { verdictFor, blockingFindings, parseValidator, runBrowserCheck, AGENT_SUITES } from './checks.mjs';
+import { verdictFor, blockingFindings, parseValidator, runBrowserCheck, runBoundaryCheck, runValidators, AGENT_SUITES } from './checks.mjs';
 import { openContext, applyOperation, applyProposal, rollback, ApplyRefused, countOccurrences } from './apply.mjs';
 import { validate } from '../schemas/validate.mjs';
 import { REQUIRED_VALIDATORS } from '../schemas/types.mjs';
@@ -51,7 +51,7 @@ import { policyRefusalBefore } from './implementer.mjs';
 import { evaluate as evaluatePolicy } from '../policy/engine.mjs';
 import { DEFAULT_POLICY } from '../policy/categories.mjs';
 import { MEASURED_CONDITIONS } from '../autonomy/cycle.mjs';
-import { NOT_WAIVABLE_BY_APPROVAL } from '../policy/conditions.mjs';
+import { NOT_WAIVABLE_BY_APPROVAL, validatorsPass } from '../policy/conditions.mjs';
 
 /* ---------------------------------------------------------- fixtures */
 
@@ -500,9 +500,20 @@ test('R4 · the synthetic credentials in the redaction fixtures are classified, 
   }
   /* They are still counted and still named in the check output —
      deleting them to make the scan clean would be weakening a test
-     to make a check pass. */
+     to make a check pass.
+
+     RE-AIMED, NOT LOOSENED (docs/ROADMAP-v2.md §8, 10 Nov 2026, "Stage 1: the second half of the
+     dispatch-path repair", authorised by the author). This asserted that the fixtures are named in
+     `new_findings`. What it protects is that they are not deleted and not hidden — and that is still
+     asserted, one level over: they are counted in `warnings`, named in `detail` and in the excerpt, and
+     the count is held to the recorded baseline (S1B-a, S1B-c). What changed is only that they are no
+     longer reported as NEW: they are the baseline, and reporting them as new made the QA verdict
+     `pass_with_findings` on every clean tree. */
   const c = boundaryCheck();
-  assert.ok(c.new_findings.some((n) => n.includes('test_fixture')));
+  assert.ok(c.warnings >= s.fixtures.length, 'still counted');
+  assert.equal(c.detail.secrets.fixtures.length, s.fixtures.length, 'still named, in the detail');
+  assert.ok(c.output_excerpt.includes(`${s.fixtures.length} in test fixtures`), 'still named, in the excerpt');
+  assert.ok(!c.new_findings.some((n) => n.includes('test_fixture')), 'but they are the baseline, not new');
 });
 
 /* ============================================================
@@ -1025,4 +1036,92 @@ test('S1-h · the measurements stay the runner\'s own list (one home), and every
   const src = readFileSync(join(import.meta.dirname, 'implementer.mjs'), 'utf8');
   assert.ok(src.includes("import { MEASURED_CONDITIONS } from '../autonomy/cycle.mjs'"), 'the list is imported, not restated');
   assert.ok(/policyAfter\.route === 'blocked'/.test(src), 'the measured evaluation after the apply still blocks and still reverts');
+});
+
+
+/* ============================================================
+   10 Nov 2026 · STAGE 1, THE SECOND HALF OF THE DISPATCH-PATH REPAIR
+   (docs/ROADMAP-v2.md §8, "Stage 1: the second half of the dispatch-path repair")
+
+   The 6 Nov repair let a sound proposal through the policy BEFORE the apply, and its test drove the real
+   Agent 9 in a temporary repository. That repository has none of the selftests' synthetic credentials, so
+   the boundary check was clean there and the verdict `pass`. On the REAL repository the check listed its
+   24 fixture warnings as new findings, with a baseline computed as equal to its own count: the verdict was
+   always `pass_with_findings`, `validators_pass` (not waivable by approval) always failed, and the policy,
+   evaluated on the measured facts after the apply, blocked and reverted every change. These tests run on
+   the real repository, which is what was missing.
+   ============================================================ */
+
+test('S1B-a · the boundary check\'s baseline is RECORDED in §12 and PARSED, and the real tree is exactly at it', () => {
+  const rec = readBaseline().boundary;
+  assert.equal(rec.errors, 0);
+  assert.equal(rec.warnings, boundaryCheck().warnings,
+    'the recorded warnings are the test fixtures that exist today; a new one must be recorded in docs/CURRENT-ARCHITECTURE.md §12 or it is a rise');
+});
+
+test('S1B-b · on the REAL repository the boundary check is at its baseline, names nothing as new, and the verdict is pass', () => {
+  const c = runBoundaryCheck({ baselineWarnings: readBaseline().boundary.warnings });
+  assert.deepEqual(c.new_findings, []);
+  assert.equal(c.warnings, c.baseline_warnings);
+  assert.equal(verdictFor([c]), 'pass');
+});
+
+test('S1B-c · one warning above the recorded baseline is a rise: pass_with_findings, and validators_pass still fails on it', () => {
+  const c = runBoundaryCheck({ baselineWarnings: readBaseline().boundary.warnings - 1 });
+  assert.equal(verdictFor([c]), 'pass_with_findings');
+  assert.equal(validatorsPass({ validators: { verdict: 'pass_with_findings', checks: [], blocking_findings: [] } }).verdict, 'failed',
+    'the policy was not touched: a finding is a human\'s to read');
+});
+
+test('S1B-d · a credential OUTSIDE a fixture is still an error and still named as new', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'bchk-'));
+  try {
+    execFileSync('git', ['init', '-q'], { cwd: dir });
+    mkdirSync(join(dir, 'js'), { recursive: true });
+    writeFileSync(join(dir, 'js', 'leak.js'), 'const t = "ghp_0123456789abcdefghijklmnopqrstuvwxyz";\n');
+    const c = boundaryCheck({ root: dir, baselineWarnings: 0 });
+    assert.equal(c.exit_code, 1);
+    assert.equal(c.errors, 1);
+    assert.equal(c.new_findings.length, 1);
+    assert.match(c.new_findings[0], /js\/leak\.js:1 — a GitHub token/);
+    assert.ok(!c.new_findings[0].includes('0123456789abcdefghijklmnopqrstuvwxyz'), 'the value is never printed');
+    assert.equal(verdictFor([c]), 'fail');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('S1B-e · a NEW fixture-shaped credential is a rise against the recorded baseline, though it is not an error', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'bchk-'));
+  try {
+    execFileSync('git', ['init', '-q'], { cwd: dir });
+    mkdirSync(join(dir, 'agent', 'x'), { recursive: true });
+    writeFileSync(join(dir, 'agent', 'x', 'fixtures.mjs'), 'export const k = "ghp_0123456789abcdefghijklmnopqrstuvwxyz";\n');
+    const c = boundaryCheck({ root: dir, baselineWarnings: 0 });
+    assert.equal(c.errors, 0);
+    assert.equal(c.warnings, 1);
+    assert.deepEqual(c.new_findings, [], 'a fixture is not named as new');
+    assert.equal(verdictFor([c]), 'pass_with_findings', 'but one more than the recorded baseline is a rise, and a rise is a finding');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('S1B-f · a §12 that records no boundary baseline is REFUSED, not guessed', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'bchk-'));
+  try {
+    mkdirSync(join(dir, 'docs'), { recursive: true });
+    const doc = readFileSync(join(import.meta.dirname, '..', '..', 'docs', 'CURRENT-ARCHITECTURE.md'), 'utf8')
+      .split('\n').filter((l) => !l.startsWith('agent/implement/boundary.mjs')).join('\n');
+    writeFileSync(join(dir, 'docs', 'CURRENT-ARCHITECTURE.md'), doc);
+    assert.throws(() => readBaseline({ root: dir }), /records no baseline for the boundary check/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('S1B-g · the implementer passes the RECORDED baseline to the boundary check, and not nothing', () => {
+  const src = readFileSync(join(import.meta.dirname, 'implementer.mjs'), 'utf8');
+  assert.match(src, /runBoundaryCheck\(\{ root: this\.root, baselineWarnings: v\.baseline\.boundary\.warnings \}\)/);
+});
+
+test('S1B-h · the whole QA verdict on the REAL tree: the four validators and the boundary check together are pass, with no blocking finding', () => {
+  const v = runValidators({ asOf: '2026-11-10' });
+  const checks = [...v.checks, runBoundaryCheck({ baselineWarnings: v.baseline.boundary.warnings })];
+  assert.equal(verdictFor(checks), 'pass');
+  assert.deepEqual(blockingFindings(checks), []);
 });

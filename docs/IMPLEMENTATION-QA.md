@@ -270,6 +270,13 @@ so. A failed change that stayed in the working tree would be a change nobody dec
 
 ---
 
+**The boundary check's baseline (10 Nov 2026).** The fifth check, the public/private boundary, has its own baseline: **0 errors and 24 warnings**, the synthetic credentials in the
+selftests, recorded in the same fenced block of `docs/CURRENT-ARCHITECTURE.md` §12 and parsed from there by `baseline.mjs`, which throws when the line is missing. It had been computed
+by the check as equal to its own count, which can never rise, and the check had listed every fixture among its *new* findings, so on the real repository the QA verdict was always
+`pass_with_findings` and the policy blocked every change after the apply (`docs/ROADMAP-v2.md` §8, "Stage 1: the second half of the dispatch-path repair"). Now the fixtures are the baseline,
+counted and named in the check's detail and excerpt; **one more warning, a credential outside a fixture, or a control-plane path on the public surface is a finding**, and a finding is
+`pass_with_findings`. `agent/implement/selftest.mjs` S1B-a…h hold it on the real tree.
+
 ## 8. The eight regression tests SESSION 18 requires
 
 `agent/implement/selftest.mjs`, 54 tests. The eight are labelled `R1`–`R8` in its order.
