@@ -31,6 +31,10 @@ import { fileURLToPath } from 'node:url';
 export const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 export const BASELINE_DOC = 'docs/CURRENT-ARCHITECTURE.md';
 
+/** The line of §12's fenced block that records the boundary check's baseline: the module that
+ *  implements the check, then what it reported when it was recorded. */
+export const BOUNDARY_BASELINE_KEY = 'agent/implement/boundary.mjs';
+
 /** The four, in the order AGENTS.md lists them. */
 export const VALIDATORS = [
   { name: 'validate.mjs', command: 'node tools/validate.mjs', proves: 'data integrity across data/*.json' },
@@ -76,12 +80,21 @@ export function readBaseline({ root = REPO_ROOT } = {}) {
     if (!(v.name in checks)) throw new Error(`${BASELINE_DOC} §12 records no baseline for ${v.name}, and AGENTS.md requires all four to be run`);
   }
 
+  /* The boundary check's own baseline, recorded in the same block and parsed, not retyped. It used to be
+     computed by the check as equal to its own count, which can never rise (docs/ROADMAP-v2.md §8, 10 Nov
+     2026). Missing or unreadable, it throws: a baseline guessed here is inherited by every comparison. */
+  const bnd = checks[BOUNDARY_BASELINE_KEY];
+  if (!bnd || !/\d+\s+warnings?/.test(bnd.note)) {
+    throw new Error(`${BASELINE_DOC} §12 records no baseline for the boundary check (${BOUNDARY_BASELINE_KEY}). Refusing to compute one from the tree being checked: a baseline that is the current count can never be exceeded.`);
+  }
+
   const unverified = block[1].match(/(\d+)\s+unverified/);
   const named = doc.slice(head.index).match(/warnings, recorded so a later session can tell new from pre-existing:\s*([\s\S]*?)\n\n/);
 
   return {
     commit: head[1],
     checks,
+    boundary: { errors: bnd.errors, warnings: bnd.warnings },
     unverified: unverified ? Number(unverified[1]) : null,
     /* The five, by file and line. A count alone cannot tell a NEW
        warning from a MOVED one, and "a new warning is a finding" is

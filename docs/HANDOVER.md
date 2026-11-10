@@ -4,6 +4,25 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## Stage 1 — the dispatch path, second half of the repair (10 Nov 2026)
+
+**Branch:** `claude/qa-boundary-baseline`, from `main` `4e649ef`. **Authority:** §8 "Stage 1: the second half of the dispatch-path repair, authorised" and "…what was built, and the one assertion
+re-aimed" (the author: "Sì, riparazione completa (Recommended)"). The signed decision of 6 Nov 2026 stands; **it goes stale on 6 Dec 2026**.
+**What the author's own run found (10 Nov 2026, Windows, `dispatch --execute`):** intake, ledger, approval, preflight, duplicate and isolate pass; the apply **ran**, Agent 9 applied the edit, the QA
+ran five checks and the verdict was `pass_with_findings`; the policy on the measured facts blocked (`validators_pass` failed, not waivable) and Agent 9 reverted, rollback verified. Trace
+`e4f63a5d8490fc6ba897c41b65833cd9` (on the author's computer). Two things came before it, neither of the repository's making: the author's checkout had **521 tracked files in CRLF** (a clone made
+while Git converted line endings, then `core.autocrlf=false`), which made `baseline.mjs` fail with "no fenced block" — fixed on the author's computer by deleting and re-checking-out the files; and local
+uncommitted edits to `docs/DEPLOYMENT.md` (the proposal's own correction, applied by hand, so the exact-match apply would have found nothing) and to `.github/workflows/qa.yml`, saved by the author on a
+local branch `wip/modifiche-locali-2026-11-10` (the session saw four files named; it was never shown the branch's content or that it exists).
+**The defect:** reproduced on a clean `main` — the boundary check listed its 24 test-fixture warnings among its new findings and computed its baseline as its own count, so the verdict was always `pass_with_findings`
+and no change could pass the chain on the real repository. The 6 Nov test drove the real Agent 9 in a temporary repository with no fixtures, so it could not see it.
+**The repair:** see the §8 row. 67 tests in `agent/implement/selftest.mjs` (59 before, 8 new), the baseline line in `docs/CURRENT-ARCHITECTURE.md` §12.
+**Not measured:** the real dispatch end to end after this change — only the verdict on the real tree (`pass`) and the policy shape on the proposal; `scope_permitted`, `category_allowed` and
+`no_mandatory_human_review` fail in the policy's measured list both before and after, and are not among the conditions an approval cannot override.
+**What the author does next:** merge this pull request (a merge commit); on the Stage 1 branch `git fetch origin` and `git merge origin/main`; confirm `git ls-files --eol` shows no `w/crlf`; retry
+`node agent/release/cli.mjs dispatch --proposal prop-docs-ea57404dc452 --execute --as-of (Get-Date -Format yyyy-MM-dd)`; then the steps of `docs/DEPLOYMENT.md` §3b (push the `release/…` branch, a pull request, a
+**merge commit, not squash**, read the gate log).
+
 ## PV2-02 addendum — the visual references, the grid findings and the shortlist decided (10 Nov 2026)
 
 **Branch:** `claude/pv2-02-frontend-references` (pull request #87, open, not merged; it was updated by these commits). Only `docs/`.
