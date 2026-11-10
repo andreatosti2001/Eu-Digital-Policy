@@ -56,6 +56,10 @@ Leggi, in quest'ordine, e trattali come vincolanti:
 4. `docs/FRONTEND-REFERENCES.md` per intero, in particolare §5.1 (le prove dietro ogni punteggio), **§6 (i sette rilievi sulla griglia: G1…G7)**,
    §7 (la galleria), §8.2 (la direzione 1, Editoriale: che cosa prende, da dove, e che cosa non si ricostruisce senza una dipendenza) e la
    riga «un punto aperto» sui font di Tufte CSS.
+   **E il §9, i riferimenti visivi senza punteggio**: l'autore, il 10 novembre 2026, ha scelto come punto di partenza per l'**aspetto** *Open Future
+   (osservatorio)* ed *Economics Observatory / The Pudding* (§8, «PV2-02 addendum: the author's visual preferences»). Sono riferimenti **soltanto
+   visivi**: non si copia codice, asset, immagine, font o animazione, e le note del §9 restano (il tono di *The Pudding* è giocoso per un testo
+   giuridico; *Economics Observatory* è guidato dalla fotografia, che il sito non usa). I sei candidati con punteggio restano i riferimenti di pattern.
 5. `docs/DATA-READINESS.md` §6: il contratto MC-1…MC-15 è una **proposta** e non è implementato (è di D); ma una vista del prototipo che mostra
    una cifra **non** mostra un dato mancante come zero e **non** somma un valore sconosciuto (regole 5 e 6 di `AGENTS.md`).
 6. `docs/DATA-GOVERNANCE.md` §1.2 e §2: una derivazione non si duplica in una seconda implementazione — il prototipo **importa** `js/format.js`,

@@ -418,6 +418,9 @@ one was offered. Search results were used only to find names.
 (`dsa-observatory.eu`: a stock-photo hero and a dated layout) — neither is strong. *Reuters Graphics* (`reuters.com/graphics/`) returned a blank
 page in this browser and was **not seen**; it is neither kept nor judged.
 
+**The author's choice (§8, "PV2-02 addendum: the author's visual preferences", 10 Nov 2026):** *Open Future (osservatorio)* and *Economics Observatory / The
+Pudding* — as visual references only. *Our World in Data* and *AI Act Explorer* were not chosen; they stay described here.
+
 **What this adds to §7.** The "Timeline" row of the gallery (§7: "no candidate shows a timeline pattern") has a reference *outside* the six: the Open
 Future observatory page above. **What none of these shows either:** a missing value shown differently from zero, and a statement, its source and its
 status as three things (the OWID source line comes nearest); those are still to be designed on the site's own content, in C.
