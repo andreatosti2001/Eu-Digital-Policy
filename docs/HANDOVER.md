@@ -4,6 +4,35 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## PV2-02 — Post-v2 B, frontend references: checkpoint B.1, the grid (10 Nov 2026)
+
+**Branch:** `claude/pv2-02-frontend-references`, from `main` `b705f15` (after #84, #85 and #86). **Stage 1 is deferred** (§8, "Stage 1 is deferred",
+10 Nov 2026): the author's signed decision is on `origin/claude/stage-1-decision`, **not merged**; in a scratch copy of `main` with that line
+applied the ledger verifies (1 entry, chain intact, 1 signed by a registered reviewer, 0 simulated) and the proposal reads as approved, but the
+dispatcher rehearsal was **not run** (blocked in this environment), so the nine stages are unmeasured. **The gate calls a decision stale 30 days
+after it was taken — 6 Dec 2026 — so Stage 1 is carried through before then, or signed again.** G1 is not decided; C, S27 and Phase 5 stay closed.
+**Authority:** §8 "PV2-02 (Post-v2 B) may be run before G1, under A's three limits" and "The scope of PV2-02" (the author's words: "Defer it, and
+open PV2-02 now (Recommended)"). The date measured 10 Nov 2026, before Track M (12 Jan 2027) and the grant's expiry (9 Mar 2027).
+Unmerged at the start: `origin/claude/stage-1-decision` (Stage 1's), and the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, two files
+in the second, unreviewed).
+
+**B.1, decided (§8, each answer committed when given):** the scale is 0–4 with every step anchored (`c8511f3`); Kabarza stays a visual reference
+only, unscored, which answers `docs/POST-V2.md` §6 question 5 (`a5423ee`); the plan's five open-source projects are researched, plus up to five
+added by a stated rule — public, a LICENSE file, a commit within 12 months, a live demo or docs — with the author seeing the list before scoring
+(`a7bf879`). Already decided on 9 Nov 2026: the grid is approved before research; a candidate not verified live is listed, not scored; screenshots
+stay in the scratchpad.
+
+**B.1, written:** `docs/FRONTEND-REFERENCES.md` §1–§3: the six criteria with the plan's weights; for each, five named steps that say what is seen;
+nine rules for every score (evidence only from files and a live demo, two sampled pages named before scoring with the lower step counting,
+measurements at 1280 and 390 px in both schemes, one sentence saying why this step and not the next, no score and no shortlist for a candidate
+not verified live, "not applicable" is not a step, the current site scored as an unselectable baseline, an undecidable anchor reported and not
+interpreted); the candidate rule; and what the grid cannot do, including that **it was not tested on a real candidate**. **No candidate was
+researched, opened or scored.**
+
+**Battery on this branch:** see the final entry; for this checkpoint only `docs/` changed.
+
+**Waiting for the author's approval of the grid, to be recorded in §8, before any candidate is opened.**
+
 ## Branch register — 9 November 2026 (after PV2-01's pull requests #84 and #85 were merged)
 
 - `claude/pensive-bell-665v9z` (#84) and `claude/freshness-month-precision` (#85) are merged into `main` (`c548b2d`, `5fedc7e`); both can be deleted.
