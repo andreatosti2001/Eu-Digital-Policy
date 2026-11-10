@@ -42,6 +42,11 @@ GitHub release pages are not readable here); whether USWDS's classic components 
 
 **Not done, named:** the three directions are not compared (that is PV2-05); no prototype exists; the grid findings are not applied.
 
+**Battery on `b15f2ba`, 10 Nov 2026:** the six validators exit 0; `commit-evidence origin/main HEAD` 13 commits, 0 without evidence; browser suite
+(`--require-browser`) 343 pass, 0 fail, 1 undecidable (`a11y:bound`, by design); the 25 suites and `.control-room/`: **1420 tests, 1419 pass, 0 fail,
+1 skipped** (no IPv6 loopback in this environment); `agent/schemas/cli.mjs check` exit 0; `origin/main` re-fetched before this line, unchanged
+at `b705f15`'s merge descendants only by the earlier merged PRs (no file of this branch's touched by them).
+
 ## Branch register — 10 November 2026 (PV2-02)
 
 - `claude/pv2-02-frontend-references`, from `main` `b705f15`: all `docs/`. Disposition: to be recorded after the author's answer on a pull request.
