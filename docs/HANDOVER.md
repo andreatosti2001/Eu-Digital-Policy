@@ -4,6 +4,13 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## Branch register — 11 November 2026 (the Regulatory Network Explorer in Post-v2)
+
+- `claude/keen-johnson-sxo9jy`, from `main` `124f600`: all `docs/` (`POST-V2.md` §3 C and D, §4.1, §4.2 and §6; `ROADMAP-v2.md` §8, three rows; this line). The author's request and answers are
+  in §8. Disposition: on the author's answer ("Sì, apri la PR (Recommended)"), pull request #94 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/94), opened and not merged by the
+  session. Merging is the author's. `origin/main` re-fetched immediately before this line: still `124f600`.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged. No other section of this file was changed.
+
 ## Stage 1 — concluded (11 Nov 2026)
 
 **Authority:** §8 "Stage 1 concluded: the release gate judged a change that cites a signed human decision…". **The evidence is the log of `pages.yml` run 100** (`main` `4994ad8`, the merge commit of #91): the gate PASSED with C5, C6, C7 and C10 satisfied, C8 reported, and the deploy succeeded. Before that, run 98 on the squash commit `4f0e4af` (#89) failed at C7 and published nothing.
