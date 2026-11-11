@@ -1,8 +1,50 @@
 # HANDOVER
 
-**Last updated:** 11 November 2026, PV2-03 (Post-v2 C, the Editorial prototype), checkpoint C.1.
+**Last updated:** 11 November 2026, PV2-03 (Post-v2 C, the Editorial prototype), final checkpoint.
 **Branch:** `claude/pv2-03-prototype-editorial`, from `main` `07c12ad`.
 The entries below this session's are unchanged.
+
+## PV2-03 — Post-v2 C, the Editorial prototype: final checkpoint (C.2–C.5) (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the PV2-03 rows of 11 Nov 2026 (scope; C.1 questions 1–4 and its approval; "grid C4 step 4";
+"C.5 questions 1 and 2"). Branch `claude/pv2-03-prototype-editorial`, 14 commits on `main` `07c12ad`; `origin/main` re-fetched before this
+entry: still `07c12ad`.
+
+**What was built.** `prototypes/editorial/` (`e782947`, adjusted in `9331ea2`): the four views in HTML, CSS and vanilla ES modules, reading
+`data/` through `js/data.js` and Part V's prose from `index.html` in place, importing `js/format.js`, `js/pipeline.js`, `js/status.js` and
+`js/routes.js`; the relationships as a fixed table; system fonts; the site's CSP with `script-src 'self'`; unpublished. The record of the build
+and its measurement is the new **`docs/PROTOTYPES.md`** (§0 the perimeter all three prototypes share, §1 the Editorial) — read it, not this entry.
+
+**The measurement** (`docs/PROTOTYPES.md` §1.2–§1.5): samples named first (E the article, D the timeline), M1–M8 re-implemented from
+`docs/FRONTEND-REFERENCES.md` §4 in the scratchpad (not committed). Steps **C1 3 · C2 4 · C3 2 · C4 4 · C5 4**, C6 not scored. The first reading
+broke the direction's own spec (87 cpl; record text 15.7–16.3 px); the stylesheet was corrected and both readings kept. C4 was first reported
+undecidable (`ariaSnapshot` vs Chromium's full accessibility tree on two `<summary>` elements); **the author decided M4 is read on the full tree**,
+and a claim this session first wrote — that no PV2-02 score moves under that reading — was unverified and is corrected in the same row
+(`9224d39`): *Simple.css*'s C4 could move and was not re-measured. Nine planted cases pass. Not seen: other browsers and faces (here *Caladea* and
+*Inter*), a screen reader, contrast inside the SVG, the 61,000 px of the stacked table on a phone, languages other than English.
+
+**The prompt of PV2-04:** `docs/prompts/v2-pv2-04-prototype-observatory.md` (`c743945`), with the author's two answers (folder
+`prototypes/observatory/`; the Explorer's core fixed, its extras allowed to shrink).
+
+**Battery on `c743945`, 11 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit --as-of
+2026-11-11` exit 0; `freshness --as-of 2026-11-11` 0 defects, 3 staleness prompts (enforcement, time-based); `tools/selftest.mjs` 143/143;
+`commit-evidence origin/main HEAD` 14 commits, 0 without evidence (none changes a published file); **the 25 suites: 1286 tests, 1285 pass, 0 fail,
+1 skipped** (`.control-room`, no IPv6 loopback); **browser suite (`--require-browser`): 343 pass, 0 fail, 1 undecidable** (`a11y:bound`, by design;
+it does not cover `prototypes/`). `agent/records/` absent. The worker restarted twice during C.5; `git status` was clean both times and nothing was redone.
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| Gate | §8 "G1: Stage 2 is opened" (`79762f7`), the author's "yes to both" | read the row | none (an approval) | G1 recorded before the start |
+| C.1 | §8 questions 1–4 (`b31aa19`…`f7cc074`), approval (`6028ae2`); report `d028e85` | `node tools/pages-artifact.mjs list` does not list `prototypes/` | none | views and folder decided in §8 |
+| C.2 | no anchor changed; §8 "grid C4 step 4" (`6eefa5b`, corrected `9224d39`) | `docs/PROTOTYPES.md` §1.3 | none | grid unchanged but for the author's row |
+| C.3 | `prototypes/editorial/` (`e782947`, `9331ea2`) | `python3 -m http.server 8000`, open `/prototypes/editorial/`; `regulation.html?id=chips-act`; `timeline.html?instrument=chips-act`; the theme button | none in the repository (the scratch smoke test: 24 loads, 0 errors, 0 CSP violations, localhost only) | four views, two widths, two themes, empty and missing states, relationships table |
+| C.4 | `docs/PROTOTYPES.md` §1 (`88bca72`) | re-run M1–M8 from §4's text | none committed — **a gap**: the measurement scripts are not in the repository | measured with PV2-02's measures; what is not seen, said |
+| C.5 | §8 "C.5 questions 1 and 2" (`ba9ae5c`); the prompt (`c743945`) | read the prompt's exit criterion | none | the prompt exists and carries the standing rule |
+| Untouched | — | `git diff origin/main --stat -- index.html '*.html' style.css css js i18n data tools agent .github` is empty | `commit-evidence` | nothing of the baseline changed; nothing of a third party entered |
+
+**Waiting for:** the author's approval of the work and of PV2-04's prompt together, recorded in §8; then the question of a pull request.
 
 ## PV2-03 — Post-v2 C, the Editorial prototype: checkpoint C.1 (11 Nov 2026)
 
