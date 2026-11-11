@@ -166,7 +166,7 @@ function buildChrome(page) {
   });
 
   const brand = el('a', { href: href('index.html'), class: 'chrome-brand', 'aria-label': 'EU Digital Policy — the brief' });
-  brand.append(el('span', { class: 'mark', 'aria-hidden': 'true' }), el('b', { text: 'EU Digital Policy' }));
+  brand.append(el('img', { class: 'mark', src: href('img/icons/favicon-32x32.png'), alt: '', 'aria-hidden': 'true' }), el('b', { text: 'EU Digital Policy' }));
 
   const tools = el('div', { class: 'chrome-tools' }, [search, themeButton()]);
   const inner = el('div', { class: 'chrome-inner' }, [brand, nav, el('div', { class: 'chrome-sp' }), tools]);
