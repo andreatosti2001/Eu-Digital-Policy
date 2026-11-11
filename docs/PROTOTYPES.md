@@ -200,4 +200,163 @@ figures, the nine planted cases and the steps are the prototype's as it now stan
 how the sticky record card and contents list behave on a short laptop screen (measured at 900 px of height only); thirteen Tab stops in the numeral
 column before the page's own content, which the grid's first-15 rule now counts and a reader with a keyboard has to pass (a skip link is the first stop).
 
-*Sections 2 (Policy observatory, PV2-04) and 3 (Hybrid, PV2-05) follow when those sessions write them.*
+## 2 · Direction 2, Policy observatory — PV2-04, 11 Nov 2026 — **a draft**
+
+**Where:** `prototypes/observatory/` (its `README.md` says how to run it). Branch `claude/pv2-04-start-nhgcqx`, from `main` `25c9e79`. The
+direction is `docs/FRONTEND-REFERENCES.md` §8.2, 2, as changed by the author's decisions below. **The author asked that the observatory be
+treated as a draft** (`docs/ROADMAP-v2.md` §8, "PV2-04: the observatory is a draft" and "the tilt and what draft means"): what follows is the
+record of a draft — M1–M8 measured on `75bb346`, the planted cases on `5c1b53d` (the one change between them lifts the tilt limit) — and it
+reaches PV2-05 as one. Nothing here compares it with the Editorial.
+
+### 2.1 How it got here — four versions, each on a §8 row
+
+| Version | What it was | What the author said (§8) |
+|---|---|---|
+| `196b6b5` | Direction 2 as §8.2 writes it: sections left, "On this page" right, a cool chart paper and a night-navy band with brass; the Explorer flat (a force layout in SVG) | "still to fix": the graph, the colours, the density, the esoteric character |
+| `3e9adf1` | The Explorer as a flat astrolabe ring; lighter cards; sections numbered in Roman numerals; three looks (A Astrolabe, B Vellum, C Celestial) behind a switch | "L'explorer deve essere 3d"; the tree's square background; "option A" = **the Editorial's look A** |
+| `34439de` | Look A's palette; the tree off its square; the Explorer **a free 3D network** | sent the Editorial's layout-A screenshots and a photograph of Knwler's explorer |
+| `75bb346`, `5c1b53d` | **The Editorial's layout A whole**; the Explorer in **Knwler's presentation**, still 3D; free rotation | "Treat the osservatorio as a draft"; free rotation |
+
+The intermediate versions stay in the branch's history; none is in the folder.
+
+### 2.2 What was built (as it stands)
+
+- **Four pages and one stylesheet**, the same four views as §0: `index.html`, `regulation.html` (`?id=ai-act`; `?id=chips-act` the empty state),
+  `article.html` (Part V), `timeline.html` (the analytical view, two modes: the timeline, and `?mode=network`, the Explorer; `?instrument=`,
+  `?status=`, `?type=` narrow the timeline; `&focus=<id>` opens the Explorer on an instrument). `observatory.css`.
+- **Modules:** `common.js` (loading through `js/data.js`, the theme, cards, sortable tables, a bar chart, "On this page"), one module per view,
+  and `explorer.js`. **Imported, not rewritten:** `js/data.js`, `js/format.js` (with `js/evidence-model.js`), `js/pipeline.js` (`finesFigure()`,
+  the site's one computing function for fines, `actionsOnly`), `js/routes.js` (`coverage()`, `instrumentHref()`), `js/status.js`; and from the
+  Editorial `common.js` (the two absence tokens, tags, dates, sources, the numeral column), `brief.js` (Part V read in place from
+  `index.html`) and **`relations.js`, unchanged — the relationships table is the same table in both directions**, its rules one home
+  (§1.1). The observatory therefore **depends on `prototypes/editorial/`**.
+- **The page: the Editorial's layout A, whole** (§8, "the layout the author sent"): the brand and the four views in the header, the column of
+  Roman numerals, "On this page" on the left, the portal tree read in place from `#portalTree` with each numeral in its circle and V filled, the
+  warm paper and oxblood; the dark theme is the Editorial's. **This departs from §8.2's direction 2** — a section list on the left and "On this
+  page" on the right (*USWDS*) — on the author's decision; what stays of direction 2 is its content patterns.
+- **Direction 2's patterns kept:** data in front — cards with a label, a value and a change (*Tabler*'s anatomy, rewritten), where the change line
+  appears only where dated records give one, with its window (+18 events occurred in the 12 months to the reading date; fines in actions decided
+  in that window, through `finesFigure()`), the record keeping no earlier reading of a count; tables with a caption, `th scope`, sortable headers
+  (a `<button>` in the `th`, `aria-sort`), a sticky header and a stacked layout below 52rem (*USWDS*, *GOV.UK*); every chart beside its data
+  table (claims by evidence status, instruments by coverage, events by year: solid occurred, hatched scheduled); the timeline as one table,
+  filtered by instrument, status and type; the article with an **evidence ledger** beside the text — each claim numbered once in reading order,
+  with its statement, sources and evidence status as three things and its locators, linked back to the passages that cite it.
+- **What no reference shows, designed here, as in the Editorial:** "not recorded" and "unknown" drawn differently and never as zero; a count of
+  nothing recorded written as such ("none recorded"), never 0; the fines collected shown as not determinable while any payment is unknown.
+- **The Regulatory Network Explorer** (`explorer.js`; `docs/POST-V2.md` §3 C and §3 D, additions of 11 Nov 2026):
+  - nodes are the 39 instruments, edges the 40 records of `relationships` and nothing else; counts from one function (`explorerCounts()`);
+  - type by **three signals**: a colour, a stroke pattern, and a two-letter code drawn on the selection's edges and in the legend; an arrow
+    **only** where `symmetric` is false; two relationships between one pair (AI Act–GDPR) drawn as two curves;
+  - **a network in three dimensions** (§8, "the form of the 3D Explorer"): a force layout in 3D from fixed starting positions (the instruments
+    ordered by id on a Fibonacci sphere), a fixed number of steps, no randomness — the same records give the same picture — projected into SVG
+    by the module, no library; turned freely by dragging, the turn buttons or Shift and an arrow key, upside down included, **never on its
+    own**; nearer instruments larger and darker;
+  - **Knwler's presentation, as a usage reference only** (§8; nothing copied): one stage; the controls floating top left (find, group by,
+    re-layout, zoom, turn, a "How to use it" note); the legend bottom left, which is also the type filter; the tabbed panel at right (Properties,
+    Relations) — for an edge, the one-row table from `relations.js`, stacked, plus the claims' statements; ungrouped, the network inside a circle
+    with **the 8 instruments with no relationship on its rim**;
+  - grouping by `coverage()` or `brief_part` (§8, "PV2-04, C.1 question 1"), each group held in a sphere of its own, never by community detection;
+  - focus on a node's connections; keyboard: Tab into the network, arrow keys move between instruments by their position on the screen, Enter
+    selects, Esc clears, Tab leaves; a selection's relationships are buttons in the Relations tab;
+  - **the accessible alternative** below it: the same table, following the explorer's type filter and selection;
+  - **on a phone** an "ego" view of one instrument and its direct relationships, the panel and the table under it — not the canvas made small.
+- **Rules kept:** the site's CSP on every page with `script-src 'self'`; no inline script, no `style` attribute; `noindex`; no dependency, no graph
+  library, no build step, no third-party code, asset or image; the site's font files used where they are (their licence not read, as in §1.6).
+
+**Choices made in the build, not decided by the author** (each could be revisited at PV2-05): an event whose `obligation` is null shows "none
+recorded" in the timeline table (the Editorial shows nothing, as `js/status.js` does); the Explorer's starting view (turn 0.55, tilt −0.32 rad);
+the rim on the right-hand arc, clear of the floating controls; English only.
+
+### 2.3 The measurement — samples and method fixed before measuring
+
+Samples, as the prompt names them and as §1.2: **E = `article.html`**, **D = `timeline.html`**, measured in **both modes** (D1 the timeline, D2
+`?mode=network`, the Explorer) and the lower taken; the homepage and the two regulation pages for information. Method: M1–M8 as
+`docs/FRONTEND-REFERENCES.md` §4 writes them, **re-implemented again from that text** (PV2-03's scripts are not in the repository either), in
+headless Chromium (Playwright) against `python3 -m http.server`, 11 Nov 2026, in the scratchpad, not committed. **M4 is read on the full
+accessibility tree** (`Accessibility.getPartialAXTree` for each Tab stop), as the author decided (§8, "PV2-03, grid C4 step 4").
+
+| Sample, 1280 px light | Body (M1) | Share | cpl | Contrast light / dark | Headings, skip | Secondary (min) | Contents links |
+|---|---|---|---|---|---|---|---|
+| E `article.html` | 19 px | 65% | 56 | 15.59 / 14.88 | 11, none | 6.75 / 8.27 | 6 of 6 |
+| D1 `timeline.html` | 12.48 px (the footer) | 57% | 94 | 6.75 / 8.68 | 4, none | 6.75 / 8.27 | 2 of 2 |
+| D2 `?mode=network` | 11.2 px (the Explorer's note) | 27% | 39 | 6.75 / 8.68 | 5, none | 6.17 / 7.92 | none (the page has no list: §8, the stage uses the width) |
+| Homepage | 17 px | 46% | 65 | 15.59 / 14.88 | 7, none | 6.75 / 8.27 | 5 of 5 |
+| AI Act page | 17 px | 70% | 82 | 15.59 / 14.88 | 10, none | 6.75 / 8.27 | 8 of 8 |
+| Chips Act page | 17 px | 64% | 81 | 15.59 / 14.88 | 10, none | 6.75 / 8.27 | 8 of 8 |
+
+**M1 does not read D's body.** D's content is in table cells, cards and SVG, none of which M1 counts (it reads `p` elements of 60 characters or
+more); the tier with most such text is the footer on D1 and the Explorer's "How to use it" note on D2. Both readings are kept as measured; C2 is
+read on E alone (§1.1 rule 2), so no step depends on them, and C4's contrast holds on both.
+
+At 390 px: E 18 px and 40 cpl. On every page, width and theme: no horizontal scroll; 24 loads (6 URLs × 2 widths × 2 schemes), 0 console
+errors (a CSP violation would be one), `localhost` only, no framework global. Focus (M3): visible on 15 of 15 stops on every page; names (M4, full tree): 15 of
+15 — the first 15 stops are the skip link, the header and the numeral column, so they never reach the Explorer, whose 39 node buttons were
+checked separately: 39 named. Running animations (M6): 0 with `prefers-reduced-motion` unset and set (nothing moves on its own). Faces loaded
+(`document.fonts`): Fraunces, Literata, IBM Plex Mono. **Keyboard sort and filter** (for C3): on D1, Enter on the "Instrument" header button sorted the table
+(`aria-sort` ascending, first row AI Act; again, descending, first row ViDA); an arrow key on the status filter left "Showing 81 events of 101 for
+occurred".
+
+### 2.4 The steps, with the next one not reached
+
+| C1 | C2 | C3 | C4 | C5 | C6 |
+|:-:|:-:|:-:|:-:|:-:|:-:|
+| **4** | **4** | **4** | **4** | **4** | not scored |
+
+- **C1 = 4.** P1 (long-form with a citation pattern: the article's numbered ledger), P2 (status tags), P3 (the timeline), P4 (a filterable table of
+  records: the timeline's events) are all present; a "no data" state is visible (the Chips Act page, the empty timeline); and the statement, its
+  source and its status are three things (the ledger, the AI Act's claims table). Step 4 is the top of the scale.
+- **C2 = 4** (E). Sequential headings, 19 px, 56 cpl, 15.59 : 1; a secondary level at 6.75 : 1 and a lede before the detail; a working contents
+  list (6 of 6).
+- **C3 = 4.** Real tables with `th scope` (step 2); a table sorted and filtered from the keyboard, and charts whose values are in a table beside
+  them with series told apart by pattern (step 3); a missing value shown differently from zero in tables ("not recorded", "none recorded",
+  "unknown"; step 4).
+- **C4 = 4**, the lower of E and D: no horizontal scroll at 390 px; focus visible 15 of 15; light and dark at ≥ 4.5 : 1 on both samples (D's
+  lowest body reading 6.75 : 1); no running animation either way; 15 of 15 named on the full tree; a `main` landmark.
+- **C5 = 4.** Vanilla HTML, CSS and ES modules as shipped; no build step; no runtime dependency, no graph library; no external font or script; only
+  the page's own origin requested.
+- **C6 not scored**, as for the Editorial (§1.3): nothing of a third party is in the prototype.
+
+Steps, not a total, are what PV2-05 compares (§8, "grid finding G7"). **A draft reaching every step says what the grid measures, not that the
+draft is finished** — §1's first layout reached its steps too and was judged bad.
+
+### 2.5 Planted cases, run in the browser (11 Nov 2026, on `5c1b53d`'s tree)
+
+Each altered what the browser received (`page.route`), never the repository. **23 cases, all passed.**
+1–9: **§1.4's nine, repeated** on this prototype — `claims.json` 500 → the error box, no heading; a claim cited in Part V removed → its ledger entry
+reads "not found in claims.json"; every `fine_eur` null → no "EUR 0", the announced figure "not determinable"; a relationship stripped of claims,
+provisions, sources and verification → every cell "not recorded", no "Checked"; the full table's 80 rows each "Mutual — no direction" or "A → B";
+the Chips Act's row group with "no relationship recorded"; `?instrument=chips-act` → "No dated event is recorded for Chips Act…", no table;
+`?id=no-such-act` → "Instrument not found"; `index.html` 404 → the error box, no prose.
+The Explorer's, as the prompt asks and a few more:
+- E1 the stripped relationship selected → the panel reads "not recorded" for provisions, claims and verification, never "Checked" or "verified";
+- E2 the edges are the 40 records, one each; an arrow exactly on the 31 with `symmetric: false`, none on the 9 mutual; E2b the two AI Act–GDPR
+  relationships are two edges drawn apart; E2c the legend's counts equal the records'; E2d a directed record planted as symmetric loses its arrow
+  (direction is never inferred from the type);
+- E3 every instrument (39 of 39) reached with the arrow keys from the first; E3b each selected with Enter, the panel showing it; E3c Esc clears and
+  Tab leaves the canvas (no trap); E3d every relationship (40 of 40) selected from the keyboard through the panel's Relations tab;
+- E4 the Chips Act stays in the network, labelled "no relationship recorded"; E4b on a phone the ego view, not the canvas, says so, and so does the table;
+- E5 the type filter hides the same relationships in the canvas (29 shown) and the table (58 rows); E5b two loads give the same positions; E5c each
+  grouping keeps all 39, "Not assigned · 24" holding those with no part.
+
+E3's walk drove the keyboard from each instrument in turn by resetting the roving tab stop between presses; the arrow keys themselves were
+pressed, but the walk is the script's, not a reader's. The 3D network turned fully over (18 tilt steps) kept every position finite.
+
+### 2.6 What this measurement does not see
+
+- **Whether the draft reads well.** The grid has no aesthetic criterion; the author judged three versions of this one and asked that it be treated
+  as a draft. Steps at 4 do not answer that.
+- **Depth.** A projection of a 3D network shows depth only by size, shade and turning; two instruments can overlap from one view and not from
+  another. No measure here reads that. Turning is the only way to resolve it, and it is a pointer or key action, so the table and the panel —
+  which carry everything the drawing does — are the reference. Whether 3D helps a reader of 39 instruments, rather than hindering, is not measured.
+- **The Explorer with a screen reader.** None was run; the node buttons' names and the live announcements are read from the tree, not heard.
+  The first 15 Tab stops never reach the Explorer, so M3 and M4 as written do not measure it; its 39 nodes were checked separately.
+- **Contrast inside the SVG** (edges, codes, faded far nodes, the rim) and over the floating panels; M2 measures paragraphs.
+- **M1 on D**: D's body text is tabular and drawn; M1 read small print instead (§2.3).
+- **Performance** on a slow device: the 3D layout runs 360 steps over 39 nodes on each load and each regrouping; it was not timed.
+- **Other browsers and systems** (Chromium only; the faces are files, so they do not change), **languages** (English only), and
+  **`tools/thirdparty.mjs`**, which does not walk `prototypes/` — "no third-party request" is the browser's request log on these URLs plus a
+  static search of the folder (the only URL strings are the SVG namespace).
+- **What §8.2 asked and the layout no longer has**: the right-hand "On this page" and the left section list were replaced by layout A on the
+  author's decision; the measurement scores what is there.
+
+*Section 3 (Hybrid, PV2-05) follows when that session writes it.*

@@ -1,12 +1,93 @@
 # HANDOVER
 
-**Last updated:** 11 November 2026, the author's sessions "P0.1 + P0.4" (dispatcher integrity, release governance) and
-"P0.3 + P0.2" (amount provenance, metric contract), both at their checkpoints in one session.
-**Branch:** `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`. Kept local at first (the author's answer, §8), then **pushed on the
-author's word ("Push") at the end of the session**; no pull request opened, nothing merged, `main` untouched.
-The entries below this session's are unchanged.
+**Last updated:** 11 November 2026, PV2-04 (Post-v2 C, the Policy observatory prototype), at its final checkpoint (C.2–C.5).
+**Branch:** `claude/pv2-04-start-nhgcqx` (assigned by the environment), from `main` `25c9e79`; pushed. Final checkpoint approved (§8);
+pull request #99 opened on the author's answer, not merged by the session.
+The entries below this session's are unchanged; the paragraph that headed this file for the P0 sessions is kept under their
+branch register as it was written.
+
+## Branch register — 11 November 2026 (PV2-04)
+
+- `claude/pv2-04-start-nhgcqx`, from `main` `25c9e79`: `docs/` (`ROADMAP-v2.md` §8, `HANDOVER.md`, `PROTOTYPES.md` §2, the PV2-05 prompt) and
+  the unpublished `prototypes/observatory/`. Both checkpoints approved (§8). Disposition: on the author's answer ("Sì, apri la PR
+  (Recommended)"), pull request #99 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/99), opened and not merged by the session;
+  merging is the author's, with a merge commit. `origin/main` re-fetched before this line: `25c9e79`.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
+
+## PV2-04 — Post-v2 C, the Policy observatory prototype: final checkpoint (C.2–C.5) (11 Nov 2026) — a draft
+
+**Authority:** `docs/ROADMAP-v2.md` §8, PV2-04's rows of 11 Nov 2026 (scope, C.1, and the rows after "Checkpoint C.1 of PV2-04 approved").
+**Record:** `docs/PROTOTYPES.md` §2 — read it, not this entry. **The author asked that the observatory be treated as a draft**; it is recorded
+and handed on as one.
+
+**What happened.** Built (`196b6b5`) as §8.2's direction 2 and shown in screenshots before the checkpoint (PV2-03's lesson): the author judged it
+"still to fix" in four areas. Reworked (`3e9adf1`, an astrolabe explorer, three looks); the author asked for a 3D explorer, no square behind the
+tree, and "option A" = the Editorial's look A (`34439de`); then sent the Editorial's layout-A screenshots and a photograph of Knwler's explorer, and
+decided: **layout A whole** and **Knwler's presentation, still 3D** (`75bb346`); then free rotation and "treat it as a draft" (`5c1b53d`). Every
+turn is a §8 row with the author's words. **Departure recorded:** layout A replaces direction 2's left section list and right "On this page".
+
+**The measurement** (`docs/PROTOTYPES.md` §2.3–§2.6): samples E (article) and D (timeline, both modes) named first; M1–M8 re-implemented in the
+scratchpad, not committed (**a gap**, as in PV2-03); M4 on the full tree. Steps **C1 4 · C2 4 · C3 4 · C4 4 · C5 4**, C6 not scored — with the
+note that a draft reaching the steps is not finished. **23 planted cases pass** (PV2-03's nine and fourteen of the Explorer's). Not seen: whether it
+reads well, depth in a projection, a screen reader, contrast inside the SVG, M1 on D (tabular body), performance, other browsers.
+
+**The prompt of PV2-05:** `docs/prompts/v2-pv2-05-prototype-hybrid-selection.md` (`113280c`), with the author's three C.5 answers (§8 `d357795`:
+`prototypes/hybrid/`; layout A for all three; the Hybrid's extras may shrink, never the comparison or the decision).
+
+**Battery on `113280c`, 11 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit --as-of
+2026-11-11` exit 0 (0 errors, 11 warnings); `freshness --as-of 2026-11-11` 0 defects, 3 staleness prompts; `agent/schemas/cli.mjs check` exit 0;
+`commit-evidence origin/main HEAD` 19 commits, 0 without evidence (none changes a published file); **the 25 suites and `.control-room/`: 1475 tests,
+1474 pass, 0 fail, 1 skipped** (`.control-room`, no IPv6 loopback; `tools/selftest.mjs` 176/176); **browser suite (`--require-browser`): 343 pass,
+0 fail, 1 undecidable** (`a11y:bound`, by design; it does not cover `prototypes/`). `agent/records/` absent. Nothing of the baseline,
+`prototypes/editorial/`, the data, the models, the CSP or `tools/pages-artifact.mjs` changed (`git diff origin/main --stat` over those paths is
+empty). The worker restarted once (after `34439de`); `git status` was clean and nothing was redone; a question left open by the restart was put again.
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| Premises | §8 scope (`b9367e3`); C.1 report `cdd6c34` | read the rows; `node tools/pages-artifact.mjs list` | none | PV2-03's final approval in §8 before the start |
+| C.1 | §8 grouping (`476de10`), approval (`89457d2`) | read the rows | none | the grouping answer in §8 in the author's words |
+| C.2 | no anchor or weight changed | `docs/PROTOTYPES.md` §2.4 | none | grid unchanged |
+| C.3 | `prototypes/observatory/` (`196b6b5` … `5c1b53d`); §8 rows `39eaed4` … `5c1b53d` | `python3 -m http.server 8000`; open `/prototypes/observatory/`, `regulation.html?id=chips-act`, `timeline.html?instrument=chips-act`, `timeline.html?mode=network`; drag the network; the theme button; a 390 px window | none in the repository (scratch planted cases: 23/23) | four views, two widths, two themes, empty and missing states, the Explorer with the table as its alternative — **as a draft** |
+| C.4 | `docs/PROTOTYPES.md` §2 (`20df37c`) | re-run M1–M8 from `docs/FRONTEND-REFERENCES.md` §4 | none committed — **a gap** | measured with the same measures and cases; what is not seen, said |
+| C.5 | §8 C.5 answers (`d357795`); the prompt (`113280c`) | read the prompt's exit criterion | none | the prompt exists and carries the standing rule |
+| Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data tools agent .github prototypes/editorial` is empty | `commit-evidence` | nothing of the baseline changed; nothing of a third party entered |
+
+**Approved** (§8, "Final checkpoint of PV2-04 approved", `01d0c1e`). Pull request #99 opened; see the branch register above.
+**For the next session:** PV2-05 opens once #99 is merged, on its prompt; the observatory reaches it as a draft.
+
+## PV2-04 — Post-v2 C, the Policy observatory prototype: checkpoint C.1 (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of PV2-04" (the author's "Start PV2-04", `b9367e3`) and "PV2-04, C.1 question 1"
+(`476de10`). The prompt is `docs/prompts/v2-pv2-04-prototype-observatory.md` as approved with the reworked Editorial (`db1bdf2`).
+
+**The premises, verified.** §8 holds "G1: Stage 2 is opened", PV2-03's rows (scope, C.1 questions 1–4, its C.1 approval, "grid C4 step 4",
+"C.5 questions 1 and 2"), "Final checkpoint of PV2-03 approved" and "The reworked Editorial approved, look A". `main` `25c9e79` holds
+`prototypes/editorial/` (#97), `docs/PROTOTYPES.md` and the prompt; the P0 sessions inserted before PV2-04 are merged (#98). Date measured
+11 Nov 2026: before Track M (12 Jan 2027) and the grant's expiry (9 Mar 2027). The clone was shallow and was unshallowed.
+`node tools/pages-artifact.mjs list` does not list `prototypes/`; `tools/pages-artifact.mjs` is not touched. Nothing is written in
+`prototypes/observatory/`.
+
+**The grouping, decided** (§8, "PV2-04, C.1 question 1"): a selectable "Group by" — none (default) · coverage (`js/routes.js coverage()`:
+covered 16 · mapped 12 · watched 5 · excluded 6) · part of the brief (`brief_part`, 15 set, 24 in "not assigned"); each laid out
+deterministically, nothing computed. Grouping stays one of the extras the stopping rule allows to shrink.
+
+**The data, re-measured on `25c9e79`** (the prompt's starting table was PV2-03's): 39 instruments, 40 relationships (31 carry
+`requires_verification`, true on none; 9 carry neither it nor `verification_note`; 9 symmetric; `claims` on 11, `provisions` on 12; 10 kinds in
+use); 8 instruments in no relationship (`gdpr-procedural`, `chips-act`, `ai-liability-directive`, `charter`, `vida`, `eaa`, `psd3`, `psr`);
+101 events; **187 claims** (182 in the prompt's table: P0.3 added five); 21 enforcement records.
+
+**Battery on `476de10`, 11 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit` 0/0; `design-qa` 0/0; `evidence-audit --as-of
+2026-11-11` exit 0, 0 errors · 11 warnings; `freshness --as-of 2026-11-11` 0 defects, 3 staleness prompts (time, not this branch);
+`seo-audit` 0/0; `node --test tools/selftest.mjs` **176/176** (143 in the prompt's table: P0.2 and P0.3 added 33);
+`commit-evidence origin/main HEAD` 2 commits, 0 without evidence, neither changes a published file. `agent/records/` absent.
+
+**Waiting for:** the author's approval of C.1, recorded in §8. Then C.2–C.3 begin in `prototypes/observatory/`.
 
 ## Branch register — 11 November 2026 (P0.1 + P0.4, P0.3 + P0.2)
+
+*The file's heading when this entry was written:* **Last updated:** 11 November 2026, the author's sessions "P0.1 + P0.4" (dispatcher integrity, release governance) and "P0.3 + P0.2" (amount provenance, metric contract), both at their checkpoints in one session. **Branch:** `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`. Kept local at first (the author's answer, §8), then **pushed on the author's word ("Push") at the end of the session**; no pull request opened, nothing merged, `main` untouched. The entries below this session's are unchanged.
 
 - `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`: `agent/release/`, `agent/detector/fields.mjs`, `tools/`, `js/` (pipeline,
   masthead, instrument-view, enforcement-page), `data/enforcement.json`, `data/claims.json`, the regenerated `instruments/dma/`,
