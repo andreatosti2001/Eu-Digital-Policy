@@ -1,8 +1,54 @@
 # HANDOVER
 
-**Last updated:** 11 November 2026, PV2-03 (Post-v2 C, the Editorial prototype), final checkpoint.
-**Branch:** `claude/pv2-03-prototype-editorial`, from `main` `07c12ad`.
+**Last updated:** 11 November 2026, the author's session "P0.1 + P0.4" (dispatcher integrity, release governance), checkpoint;
+Session 2 (P0.3 + P0.2) follows in the same session on the author's answer.
+**Branch:** `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`. Commits are **local only** (the author's answer); nothing pushed.
 The entries below this session's are unchanged.
+
+## P0.1 + P0.4 — dispatcher integrity and release governance: checkpoint (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the two rows of 11 Nov 2026 "The scope of the session "P0.1 + P0.4"…" and "P0.4: the
+release review model and C8 strict, decided". **Record:** `docs/AUDIT-2026-11-11.md` — read it, not this entry.
+
+**P0.1 — closed, with technical proof.** The 9/1 discrepancy is **reproduced** on a temporary repository against the dispatcher
+of `ad234aa`: the scope stage subtracted every path dirty before the apply, and `git commit` took the whole index (9 files
+committed, "1 changed file(s)" reported). How the 8 files of #88 reached the author's index is **not reconstructible** from the
+repository (`11313f6` was never pushed); an uncommitted `git merge origin/main` and a manual `git add` leave the same state
+(AUDIT §1.4; the author's reflog would settle it). Repaired in `agent/release/dispatch.mjs` and the new `agent/release/worktree.mjs`:
+a staged index, an unmerged path or a merge/rebase/cherry-pick in progress is refused **before the apply, in a rehearsal too,
+never unstaged**; the produced set is measured against a snapshot (status + sha256), must be permitted and must equal what the
+applier declared; the index is re-read before the commit and the commit after it; the dispatcher's own rollback is verified
+(every hash, HEAD, index) before the branch is deleted, and an unverified one is reported HIGH with the branch kept and the
+person's bytes copied. 13 new tests (group I), 10 of which fail on `ad234aa`; A1, A9, A10, A11 re-aimed and strengthened (AUDIT §3).
+
+**P0.4 — closed on the author's decisions.** Model **A, single reviewer**, documented as such (AUDIT §4.2, §6.1; `docs/DEPLOYMENT.md`
+§2a); **C8 strict not activated** — simulated read-only, it would fail every deploy as the gate stands (AUDIT §5). Measured
+through GitHub this session: one collaborator, `andreatosti2001`, admin; `pages.yml` run 106 on `ad234aa` passed C1–C7, C9, C10
+with C8 warning on the same 6 commits; the pinned registry fingerprint in that run's log equals `reviewers.json`'s. Not changed:
+any GitHub setting, `gate.mjs`, `pages.yml`. **Found, not fixed:** a merge commit's own changes are invisible to C7 and C8
+(AUDIT §5.4) — a proposal for a later session. The first sentence of `docs/DEPLOYMENT.md` §2a ("not yet run by GitHub") is
+stale since run 76; left as it is.
+
+**G1:** the prompt said not to consider it passed; §8 already holds the author's row "G1: Stage 2 is opened". Reported, not
+reconciled: this session neither records nor revokes G1.
+
+**Battery on the working tree before the commit, 11 Nov 2026:** the six validators exit 0 (`validate` 0 errors · 5 warnings);
+`tools/selftest.mjs` 143/143; `agent/schemas/cli.mjs check` exit 0; the 25 suites and `.control-room/`: every suite passes —
+`agent/release/selftest.mjs` 59/59 (46 before) — except that `agent/browser/selftest.mjs` reported **1 failure of 24 in the
+first run** and **24/24 in two re-runs** (no browser file changed; the failing test's name was not captured — a gap, named);
+`.control-room/` 76 pass, 1 skipped (no IPv6 loopback). `origin/main` re-fetched before this entry: still `ad234aa`.
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| P0.1 cause | AUDIT §1 | `git diff --stat fc6f420^1 fc6f420` (8 files) | I2 fails on `ad234aa` | reconstructed or declared not reconstructible: **mechanism reproduced; entry route not reconstructible** |
+| P0.1 index guard | `worktree.mjs inspectIndex`, stage 5a | stage a file, run `dispatch --proposal <id>` | I2, I3 | refused before apply, nothing unstaged |
+| P0.1 commit = produced = permitted = declared | stages 8–9 | — | I1, I4–I10, I13 | the commit holds only produced, authorised, declared paths |
+| P0.1 rollback | `rollBack()` in stage 6; `restorePaths`, `verifyRestored` | — | I11, I12 | verified by hash; unverified → HIGH, branch kept |
+| P0.4 audit | AUDIT §4 | GitHub collaborators page; run 106 log | none (a measurement) | A vs B assessed |
+| P0.4 C8 simulation | AUDIT §5 | scratch script, not committed | none | impact measured read-only |
+| P0.4 decisions | §8 row; AUDIT §6.1; DEPLOYMENT §2a | read the row | none | the author's answers recorded verbatim |
 
 ## PV2-03 — after the final checkpoint: the Editorial reworked and approved in look A (11 Nov 2026)
 

@@ -165,8 +165,12 @@ unmeasured ones, because it cannot authorise anything.
   is the merge. The gate cannot tell that merge from an unreviewed one; branch protection (§3a-2) is the control that can —
   **but since 11 Nov 2026 the ruleset requires no review** (the author's decision, §3a-2): the merge by the author is the whole
   of the approval, and nothing requires a second person.
-  `--strict-unledgered` would make it block, and would block every such change until it goes through the dispatcher. Whether
-  to switch it on is the author's decision and is **not** made here.
+  `--strict-unledgered` would make it block, and would block every such change until it goes through the dispatcher. **On
+  11 Nov 2026 the author decided it stays off** (`docs/ROADMAP-v2.md` §8; simulated in `docs/AUDIT-2026-11-11.md` §5: switched
+  on as the gate stands, it would fail every deploy, because six historical commits stay in the judged range).
+- **This is a single-reviewer model, not independent review** (the author's decision of 11 Nov 2026, D-P0.4-1). One person
+  requests the work, signs the decision, merges and administers the settings and the pin; what that leaves unmitigated is
+  `docs/AUDIT-2026-11-11.md` §4.2.
 - **It is code in the repository it guards.** Whoever can change `agent/release/` and `pages.yml` in one merge can change what
   the gate asks. §3a-2 and §3a-4 are what protect the gate; with no required review (§3a-2, 11 Nov 2026), what stops a pull
   request that changes `reviewers.json` is C10's pin outside the tree (§3a-5), not a second reader.
