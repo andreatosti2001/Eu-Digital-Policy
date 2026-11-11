@@ -9,6 +9,10 @@ when given:
   2. "Explorer core fixed, extras shrink (Recommended)" — what may shrink if the session runs long (same row).
   And, from PV2-03's measurement: "Read the full tree (Recommended)" — M4 is read on the full accessibility tree where ariaSnapshot shows a
   focusable control with no name (§8, "PV2-03, grid C4 step 4").
+  And, after PV2-03's final checkpoint, on the screenshots of the Editorial: "layout orribile"; "Vorrei che ciò che c'è di caratteristico del
+  layout del sito (riferimenti esoterici, estetica professionale ma caratteristica) siano mantenuti. Spero che ciò che mi hai mandato non andrà ad
+  essere il layout finale del sito"; "Albero-portale e numeri romani" (what the prototypes keep); "Ora, su questo branch (Recommended)" (the
+  Editorial reworked in PV2-03). Added to this prompt on 11 Nov 2026, before its approval (§8, the four rows after "Final checkpoint of PV2-03").
 The decisions live in §8 and nowhere else; this file is the instruction text that cites them. It records no §8 row of its own and does not
 open the session: PV2-04 records its scope in §8 as its first write. Written in Italian, as the author's session prompts are. The author
 may change it before use.
@@ -74,6 +78,10 @@ sua alternativa accessibile. Checkpoint:
   con didascalia (*GOV.UK*); **ogni grafico accanto alla sua tabella di dati**; schede con etichetta, valore e variazione (solo l'anatomia di *Tabler*,
   riscritta); «sconosciuto» diverso da zero e «non registrato» diverso da entrambi, come nel §1.1 di `docs/PROTOTYPES.md`; un totale che porta il
   conteggio di ciò che non può rendere conto (`aggregate()`). **Il tema scuro non ha riferimento: si progetta, e si dice.**
+  **Ciò che è caratteristico del sito resta** (§8, 11 nov 2026, le righe dopo il checkpoint finale di PV2-03): **l'albero-portale delle parti**,
+  letto in posto da `#portalTree` di `index.html`, e **la colonna dei numeri romani**, da `data/brief.json`, come nell'Editoriale rifatto
+  (`docs/PROTOTYPES.md` §1.6); l'estetica è professionale ma caratteristica, e la pagina usa tutta la larghezza. Pergamena, oro, i caratteri del
+  sito, il filo essenziale e le etichette mono **non sono richiesti**: la direzione li tiene o li sostituisce, e lo dice.
   **L'Explorer** (`docs/POST-V2.md` §3 C, aggiunta): nodi = strumenti, archi = `relationships` di `data/instruments.json` letto in posto; tipologia
   dell'arco con **più di un segnale visivo**; direzione **solo** dove `symmetric` è `false`; pannello laterale **a schede** (proprietà, relazioni);
   **legenda sempre visibile**; un campo assente è «non registrato». Il disegno della rete è scritto nella cartella, in JavaScript vanilla e SVG o
@@ -102,7 +110,7 @@ Misurato da PV2-03 l'11 novembre 2026 sul suo branch. **Rimisura tutto.**
 | Fatto | Misura dell'11 novembre 2026 |
 |---|---|
 | G1 | **registrato** in §8 l'11 novembre 2026 (lo Stadio 2 è aperto) |
-| Uscita di PV2-03 | `prototypes/editorial/` (quattro viste, tabella delle relazioni fissa); `docs/PROTOTYPES.md` §0–§1; passi C1 3 · C2 4 · C3 2 · C4 4 · C5 4 · C6 non punteggiato |
+| Uscita di PV2-03 | `prototypes/editorial/` (quattro viste, tabella delle relazioni fissa), **rifatto dopo il giudizio dell'autore** (tre colonne, albero-portale, numeri romani); `docs/PROTOTYPES.md` §0–§1 (§1.6 per la versione attuale); passi C1 3 · C2 4 · C3 2 · C4 4 · C5 4 · C6 non punteggiato |
 | Che cosa l'Editoriale non raggiunge | C1 passo 4 e C3 passo 3: nessuna tabella ordinabile o filtrabile da tastiera, per scelta dell'autore — è ciò che la direzione 2 deve provare a portare |
 | Dati | 39 strumenti, 40 relazioni (31 con `requires_verification`, 9 senza), 101 eventi, 182 claims, 21 record di enforcement (20 azioni, 1 inazione) |
 | Validatori | `validate` 0 errori · 5 avvertimenti; `evidence-audit` e `freshness --as-of` exit 0 (3 richiami di freschezza sull'enforcement); `tools/selftest.mjs` 143/143 |
@@ -142,6 +150,10 @@ Misurato da PV2-03 l'11 novembre 2026 sul suo branch. **Rimisura tutto.**
   passato (si annota). Vale in pieno «Cosa NON fare» del brief.
 
 ## Lezioni di PV2-03 (non ripeterle)
+
+- **Un prototipo che passa tutte le misure può essere giudicato brutto**: la prima Editoriale soddisfaceva la griglia ed era una colonna sola a
+  sinistra di uno schermo largo, senza nulla del sito; l'autore la giudicò «orribile». La griglia non ha un criterio estetico: **mostra
+  all'autore gli screenshot prima del checkpoint finale**, non dopo.
 
 - **Una misura può smentire la propria specifica, non la griglia**: in PV2-03 la colonna misurò 87 caratteri, dentro l'ancora di C2 ma fuori dai
   65–85 della direzione; si corresse il prototipo, non la misura, e si tennero entrambi i numeri. Fai lo stesso.
