@@ -4,11 +4,28 @@
 **Branch:** `claude/pv2-03-prototype-editorial`, from `main` `07c12ad`.
 The entries below this session's are unchanged.
 
+## PV2-03 — after the final checkpoint: the Editorial reworked and approved in look A (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the rows of 11 Nov 2026 after "Final checkpoint of PV2-03 approved", ending with "The reworked Editorial
+approved, look A". **The first layout was judged bad by the author** ("layout orribile") once seen in screenshots; the author asked that what is
+characteristic of the site be kept and chose **the portal tree and the column of Roman numerals**; the layout was reworked on this branch (`249a410`:
+three columns, full width, the tree read in place from `index.html`, the numerals from `data/brief.json`, the site's own font files); four looks were
+offered side by side (`9bb865e`), a mix of A and C built (`f7080d0`), and the author settled on **A alone** (`5f97fe0`, files identical to `249a410`).
+Record: `docs/PROTOTYPES.md` §1.6 (§1.1–§1.5 stay as the record of the first layout). The prompt of PV2-04 carries the constraint and the lesson
+(`db1bdf2`; `6415511`'s message announced that change without containing it, and `db1bdf2` says so).
+
+**Battery on `d67639f`, 11 Nov 2026:** validators exit 0 (`validate` 0 errors · 5 warnings); `tools/selftest.mjs` 143/143; `commit-evidence origin/main HEAD`
+31 commits, 0 without evidence (none changes a published file); the 25 suites 1286 tests, 1285 pass, 0 fail, 1 skipped; browser suite 343 pass, 0 fail,
+1 undecidable. Nothing of the baseline changed. `origin/main` re-fetched before this entry: `07c12ad`.
+
+**For the next session:** PV2-04 opens once #97 is merged; its prompt asks it to show the author screenshots **before** its final checkpoint.
+
 ## Branch register — 11 November 2026 (PV2-03)
 
 - `claude/pv2-03-prototype-editorial`, from `main` `07c12ad`: `docs/` (`ROADMAP-v2.md` §8, `HANDOVER.md`, the new `PROTOTYPES.md`, the PV2-04 prompt)
   and the unpublished `prototypes/editorial/`. Disposition: on the author's answer ("Yes, open the PR (Recommended)"), pull request #97
-  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/97), opened and not merged by the session; to be merged with a merge commit.
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/97), opened and not merged by the session; updated with the rework and approved again
+  (look A); to be merged with a merge commit.
   `origin/main` re-fetched before this line: `07c12ad`.
 - The read-only clone this session made first, at `/home/user/andreatosti2001/eu-digital-policy`, is outside the repository and holds nothing of it.
 - Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
