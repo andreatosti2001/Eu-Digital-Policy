@@ -66,12 +66,33 @@ function initTheme() {
   });
 }
 
+/* ---------------------------------------------------------- the look (temporary: three alternatives for the
+   author's choice, §8 "PV2-04: what to fix"; ?look=a|b|c or the switch in the header) */
+
+const LOOK_KEY = 'pv2-04-observatory-look';
+const LOOKS = ['a', 'b', 'c'];
+function initLook() {
+  let v = new URLSearchParams(location.search).get('look');
+  if (!LOOKS.includes(v)) { try { v = localStorage.getItem(LOOK_KEY); } catch (e) { v = null; } }
+  if (!LOOKS.includes(v)) v = 'a';
+  document.documentElement.setAttribute('data-look', v);
+  const sel = document.querySelector('[data-action="look"]');
+  if (!sel || sel.dataset.bound) return;
+  sel.dataset.bound = '1';
+  sel.value = v;
+  sel.addEventListener('change', () => {
+    document.documentElement.setAttribute('data-look', sel.value);
+    try { localStorage.setItem(LOOK_KEY, sel.value); } catch (e) { /* the choice lasts this page */ }
+  });
+}
+
 /* ---------------------------------------------------------- boot */
 
 /** Load the named datasets through js/data.js, index them, render. A failure
  *  is shown in place by js/data.js's renderError; nothing is substituted. */
 export async function boot(names, render, { part } = {}) {
   initTheme();
+  initLook();
   markCurrent();
   const asof = document.getElementById('asof');
   if (asof) asof.textContent = 'Read ' + F.humanDate(TODAY);
@@ -110,7 +131,14 @@ function markCurrent() {
 export function fillOnPage(mount) {
   const box = document.getElementById('onpage');
   if (!box) return;
-  const hs = [...mount.querySelectorAll('h2[id]')].filter((h) => !h.closest('[hidden]'));
+  const hs = [...mount.querySelectorAll('h2[id]')].filter((h) => !h.closest('[hidden]') && !h.closest('.onpage-here'));
+  /* a page may hold the list in a side column of its own (the article's ledger column) */
+  const here = mount.querySelector('.onpage-here');
+  if (here) {
+    box.hidden = true; document.body.classList.add('no-onpage');
+    here.querySelector('ol').innerHTML = hs.map((h) => `<li><a href="#${esc(h.id)}">${esc(h.textContent)}</a></li>`).join('');
+    return;
+  }
   if (hs.length < 3) { box.hidden = true; document.body.classList.add('no-onpage'); return; }
   box.hidden = false;
   box.querySelector('ol').innerHTML = hs.map((h) => `<li><a href="#${esc(h.id)}">${esc(h.textContent)}</a></li>`).join('');

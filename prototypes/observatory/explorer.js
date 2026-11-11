@@ -16,13 +16,15 @@
      from the type.
    - Two relationships between the same pair are two edges, drawn apart.
    - The layout is deterministic — the same records give the same picture:
-     a force layout with fixed starting positions (instruments ordered by id
-     on a circle), a fixed number of steps and no randomness. Grouping, when
-     chosen, is by a field already in the records (coverage() of
-     js/routes.js, or brief_part), never by community detection (roadmap §8,
-     "PV2-04, C.1 question 1").
-   - An instrument with no relationship stays in the network, in a row of its
-     own (or in its group), and says "no relationship recorded".
+     an astrolabe, every instrument on one ring with its name read outward,
+     ordered from the ids by a fixed number of passes, no randomness.
+     Grouping, when chosen, divides the ring into sectors by a field already
+     in the records (coverage() of js/routes.js, or brief_part), never by
+     community detection (roadmap §8, "PV2-04, C.1 question 1").
+   - An instrument with no relationship stays on the ring, in a sector of
+     its own (or in its group), and says "no relationship recorded".
+   - The type's code is drawn on the edges of the selection; colour and the
+     stroke pattern are on every edge, always.
    - A panel field the record does not hold reads "not recorded" — the panel
      shows the relationship through ../editorial/relations.js, the same rules
      as the table, so the rules have one home.
@@ -77,7 +79,7 @@ export function explorerCounts(ix, db) {
     }
     if (mode === 'part') {
       const parts = db.brief?.parts || [];
-      const out = parts.map((p) => ({ key: p.id, label: `${p.kind === 'annex' ? 'Annex' : 'Part'} ${p.roman}`, members: instruments.filter((i) => i.brief_part === p.id) }))
+      const out = parts.map((p) => ({ key: p.id, label: `${p.kind === 'annex' ? 'Annex' : 'Part'} ${p.roman}`, short: p.roman, members: instruments.filter((i) => i.brief_part === p.id) }))
         .filter((g) => g.members.length);
       const known = new Set(parts.map((p) => p.id));
       const unassigned = instruments.filter((i) => !i.brief_part || !known.has(i.brief_part));
@@ -93,149 +95,74 @@ export function explorerCounts(ix, db) {
   };
 }
 
-/* ---------------------------------------------------------- the deterministic layout */
+/* ---------------------------------------------------------- the deterministic layout: an astrolabe
+   Every instrument sits on one ring, its name read outward along its
+   radius, so no two names can collide. The ring is divided into sectors —
+   the groups when a grouping is chosen; otherwise one sector for the
+   instruments in a relationship and one for those with none. Within a
+   sector the order starts from the instruments' ids and is refined by a
+   fixed number of passes that move each instrument toward the mean place of
+   the instruments it is related to (fewer and shorter chords). No
+   randomness: the same records give the same picture. */
 
-function forceLayout(ids, edges, { W, H, centers = null, steps = 420 }) {
-  const n = ids.length;
-  const pos = new Map();
-  const k = Math.sqrt((W * H) / Math.max(1, n)) * (centers ? 0.62 : 1.1);
-  /* fixed start: by id, on a circle (or on a small circle round each group's centre) */
-  const byGroup = new Map();
-  ids.forEach((id, i) => {
-    if (centers) {
-      const c = centers.get(id);
-      if (!byGroup.has(c)) byGroup.set(c, []);
-      byGroup.get(c).push(id);
-    } else {
-      const a = (2 * Math.PI * i) / n;
-      pos.set(id, { x: W / 2 + (W * 0.38) * Math.cos(a), y: H / 2 + (H * 0.38) * Math.sin(a) });
-    }
-  });
-  if (centers) {
-    for (const [c, list] of byGroup) list.forEach((id, i) => {
-      const a = (2 * Math.PI * i) / list.length;
-      const rr = list.length === 1 ? 0 : c.r * 0.5;
-      pos.set(id, { x: c.x + rr * Math.cos(a), y: c.y + rr * Math.sin(a) });
+const RING = 165;
+
+function ringLayout(counts, mode) {
+  const groups = counts.groupsBy(mode) || [
+    { key: '__linked', label: 'In a relationship', members: counts.instruments.filter((i) => counts.touching.get(i.id).length) },
+    { key: '__none', label: 'No relationship', members: counts.isolated },
+  ].filter((g) => g.members.length);
+  const slots = counts.instruments.length + groups.length; // one empty slot between sectors
+  const step = (2 * Math.PI) / slots;
+  const order = groups.map((g) => [...g.members].sort((a, b) => a.id.localeCompare(b.id)).map((i) => i.id));
+  const neighbours = new Map(counts.instruments.map((i) => [i.id, []]));
+  for (const r of counts.rels) { if (r.from === r.to) continue; neighbours.get(r.from)?.push(r.to); neighbours.get(r.to)?.push(r.from); }
+  const angles = new Map();
+  const place = () => {
+    let slot = 0;
+    order.forEach((list) => { for (const id of list) { angles.set(id, -Math.PI / 2 + (slot + 0.5) * step); slot++; } slot++; });
+  };
+  place();
+  for (let pass = 0; pass < 24; pass++) {
+    order.forEach((list, gi) => {
+      const key = new Map(list.map((id, i) => {
+        const ns = neighbours.get(id);
+        if (!ns.length) return [id, i];
+        /* the circular mean of the neighbours' angles, read as a slot inside this sector */
+        let sx = Math.cos(angles.get(id)), sy = Math.sin(angles.get(id));
+        for (const n of ns) { sx += Math.cos(angles.get(n)); sy += Math.sin(angles.get(n)); }
+        const target = Math.atan2(sy, sx);
+        const first = angles.get(list[0]);
+        let d = target - first; while (d < -Math.PI) d += 2 * Math.PI; while (d > Math.PI) d -= 2 * Math.PI;
+        return [id, Math.max(-1, Math.min(list.length, d / step))];
+      }));
+      order[gi] = [...list].sort((a, b) => (key.get(a) - key.get(b)) || a.localeCompare(b));
     });
+    place();
   }
-  const adj = edges.filter((e) => pos.has(e.from) && pos.has(e.to) && e.from !== e.to);
-  for (let s = 0; s < steps; s++) {
-    const t = (centers ? 18 : 40) * (1 - s / steps) + 0.5;
-    const disp = new Map(ids.map((id) => [id, { x: 0, y: 0 }]));
-    for (let i = 0; i < n; i++) {
-      for (let j = i + 1; j < n; j++) {
-        const a = pos.get(ids[i]), b = pos.get(ids[j]);
-        let dx = a.x - b.x, dy = a.y - b.y;
-        let d = Math.hypot(dx, dy);
-        if (d < 0.01) { dx = 0.01 * (i - j); dy = 0.01; d = Math.hypot(dx, dy); }
-        const f = (k * k) / d;
-        const da = disp.get(ids[i]), db = disp.get(ids[j]);
-        da.x += (dx / d) * f; da.y += (dy / d) * f; db.x -= (dx / d) * f; db.y -= (dy / d) * f;
-      }
-    }
-    for (const e of adj) {
-      const a = pos.get(e.from), b = pos.get(e.to);
-      const dx = a.x - b.x, dy = a.y - b.y, d = Math.max(0.01, Math.hypot(dx, dy));
-      const f = (d * d) / k * (centers ? 0.35 : 1);
-      const da = disp.get(e.from), db = disp.get(e.to);
-      da.x -= (dx / d) * f; da.y -= (dy / d) * f; db.x += (dx / d) * f; db.y += (dy / d) * f;
-    }
-    for (const id of ids) {
-      const p = pos.get(id), dd = disp.get(id);
-      if (centers) { const c = centers.get(id); dd.x += (c.x - p.x) * 2.2; dd.y += (c.y - p.y) * 2.2; }
-      else { dd.x += (W / 2 - p.x) * 0.05; dd.y += (H / 2 - p.y) * 0.05; }
-      const m = Math.max(0.01, Math.hypot(dd.x, dd.y));
-      p.x += (dd.x / m) * Math.min(m, t);
-      p.y += (dd.y / m) * Math.min(m, t);
-      if (centers) {
-        const c = centers.get(id);
-        const dx = p.x - c.x, dy = p.y - c.y, d = Math.hypot(dx, dy), lim = Math.max(0, c.r - 26);
-        if (d > lim) { p.x = c.x + (dx / d) * lim; p.y = c.y + (dy / d) * lim; }
-      }
-    }
-  }
-  if (!centers && n) {
-    /* no clamping while the layout settles (it piles nodes on the border);
-       the settled picture is scaled uniformly to fit the box instead */
-    const xs = ids.map((id) => pos.get(id).x), ys = ids.map((id) => pos.get(id).y);
-    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
-    const m = 24, sx = (W - 2 * m - 150) / Math.max(1, x1 - x0), sy = (H - 2 * m) / Math.max(1, y1 - y0);
-    /* each axis filled, the distortion capped at 2.5 so the picture keeps its shape roughly */
-    const lo = Math.min(sx, sy), scx = Math.min(sx, lo * 2.5), scy = Math.min(sy, lo * 2.5);
-    const ox = m + (W - 2 * m - 150 - (x1 - x0) * scx) / 2, oy = m + (H - 2 * m - (y1 - y0) * scy) / 2;
-    for (const id of ids) { const p = pos.get(id); p.x = ox + (p.x - x0) * scx; p.y = oy + (p.y - y0) * scy; }
-  }
-  return pos;
-}
-
-/* A deterministic pass that moves apart two instruments whose name boxes
-   overlap (a name is drawn to the right of its dot), so every name can be
-   read at the default zoom. Positions only move; nothing is added. */
-function separateLabels(ids, pos, nameOf) {
-  const box = (id) => { const p = pos.get(id); const w = 14 + nameOf(id).length * 7.6; return { x0: p.x - 9, x1: p.x + w, y0: p.y - 10, y1: p.y + 10 }; };
-  for (let it = 0; it < 80; it++) {
-    let moved = false;
-    for (let i = 0; i < ids.length; i++) {
-      for (let j = i + 1; j < ids.length; j++) {
-        const a = box(ids[i]), b = box(ids[j]);
-        const ox = Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0), oy = Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0);
-        if (ox <= 0 || oy <= 0) continue;
-        const pa = pos.get(ids[i]), pb = pos.get(ids[j]);
-        const dir = pa.y < pb.y || (pa.y === pb.y && ids[i] < ids[j]) ? -1 : 1;
-        const push = Math.min(oy, 12) / 2 + 0.5;
-        pa.y += dir * push; pb.y -= dir * push;
-        moved = true;
-      }
-    }
-    if (!moved) break;
-  }
-}
-
-function layout(counts, mode) {
-  const W = 760;
-  const groups = counts.groupsBy(mode);
-  const edges = counts.rels;
-  if (!groups) {
-    const linked = counts.instruments.filter((i) => counts.touching.get(i.id).length).map((i) => i.id);
-    const H = 520;
-    const pos = forceLayout(linked, edges, { W, H });
-    separateLabels(linked, pos, (id) => counts.instruments.find((i) => i.id === id)?.short_name || id);
-    /* the instruments with no relationship recorded: a row of their own, kept in the network */
-    const iso = counts.isolated.map((i) => i.id);
-    /* two rows if needed, so each name has room */
-    const perRow = 3;
-    const rowY = H + 64;
-    iso.forEach((id, i) => pos.set(id, { x: 30 + (i % perRow) * ((W + 40) / perRow), y: rowY + Math.floor(i / perRow) * 34 }));
-    const rows = Math.ceil(iso.length / perRow);
-    return { pos, hulls: [], isolatedRow: iso.length ? { y: rowY, n: iso.length } : null, box: { x: -10, y: 0, w: W + 120, h: rowY + rows * 34 + 10 } };
-  }
-  /* each group a labelled box; inside it the instruments in columns, in name
-     order (no force within a group, so every name is legible); boxes packed
-     in rows, in the groups' own order */
-  const pos = new Map(), hulls = [];
-  const COLW = 220, ROWH = 30, PAD = 16, HEAD = 26, GAP = 22, MAXROWS = 8;
-  let x = 0, y = 0, rowH = 0, maxX = 0;
-  for (const g of groups) {
-    const members = [...g.members].sort((a, b) => a.short_name.localeCompare(b.short_name));
-    const cols = Math.max(1, Math.ceil(members.length / MAXROWS));
-    const rows = Math.ceil(members.length / cols);
-    const w = cols * COLW + PAD, h = HEAD + rows * ROWH + PAD / 2;
-    if (x > 0 && x + w > W + 120) { x = 0; y += rowH + GAP; rowH = 0; }
-    hulls.push({ x, y, w, h, label: `${g.label} · ${members.length}` });
-    members.forEach((m, i) => pos.set(m.id, { x: x + PAD + Math.floor(i / rows) * COLW, y: y + HEAD + (i % rows) * ROWH + 10 }));
-    x += w + GAP; rowH = Math.max(rowH, h); maxX = Math.max(maxX, x);
-  }
-  return { pos, hulls, isolatedRow: null, box: { x: -10, y: -10, w: maxX + 10, h: y + rowH + 20 } };
+  const pos = new Map([...angles].map(([id, a]) => [id, { x: RING * Math.cos(a), y: RING * Math.sin(a), a }]));
+  let slot = 0;
+  const sectors = groups.map((g, gi) => {
+    const a0 = -Math.PI / 2 + slot * step, a1 = a0 + order[gi].length * step;
+    slot += order[gi].length + 1;
+    return { label: g.label, short: g.short || null, n: g.members.length, a0, a1 };
+  });
+  const half = RING + 222;
+  return { pos, sectors, box: { x: -half, y: -half, w: 2 * half, h: 2 * half } };
 }
 
 /* ---------------------------------------------------------- drawing */
 
 const NODE_R = 7;
 
-function edgeGeometry(a, b, curve, R1 = NODE_R + 3, R2 = NODE_R + 6) {
+function edgeGeometry(a, b, curve, R1 = NODE_R + 3, R2 = NODE_R + 6, centre = null) {
   const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
   const dx = b.x - a.x, dy = b.y - a.y, d = Math.max(0.01, Math.hypot(dx, dy));
-  const c = { x: mx - (dy / d) * curve * d, y: my + (dx / d) * curve * d };
+  /* on the ring, a chord is bent toward the centre (more for a long one), and two between one pair are drawn apart */
+  const pull = centre ? 0.25 + 0.35 * (d / (2 * RING)) : 0;
+  const c = centre
+    ? { x: mx + (centre.x - mx) * pull - (dy / d) * curve * d * 0.6, y: my + (centre.y - my) * pull + (dx / d) * curve * d * 0.6 }
+    : { x: mx - (dy / d) * curve * d, y: my + (dx / d) * curve * d };
   const u1 = { x: c.x - a.x, y: c.y - a.y }, l1 = Math.max(0.01, Math.hypot(u1.x, u1.y));
   const u2 = { x: b.x - c.x, y: b.y - c.y }, l2 = Math.max(0.01, Math.hypot(u2.x, u2.y));
   const s = { x: a.x + (u1.x / l1) * R1, y: a.y + (u1.y / l1) * R1 };
@@ -291,12 +218,18 @@ function nodeLabel(ix, counts, inst) {
 
 function nodeSvg(ix, counts, inst, p, { labelSide = 'right' } = {}) {
   const cov = coverage(inst) || 'none';
-  const tx = labelSide === 'below' ? 0 : NODE_R + 5;
-  const ty = labelSide === 'below' ? NODE_R + 15 : 4;
-  const anchor = labelSide === 'below' ? 'middle' : 'start';
+  let text;
+  if (labelSide === 'radial') {
+    /* the name read outward along the radius; on the left half turned so it never reads upside down */
+    const deg = (p.a * 180) / Math.PI;
+    const left = Math.cos(p.a) < 0;
+    text = `<text x="${left ? -(NODE_R + 6) : NODE_R + 6}" y="4" text-anchor="${left ? 'end' : 'start'}" transform="rotate(${(left ? deg + 180 : deg).toFixed(2)})">${esc(inst.short_name)}</text>`;
+  } else {
+    const below = labelSide === 'below';
+    text = `<text x="${below ? 0 : NODE_R + 5}" y="${below ? NODE_R + 15 : 4}" text-anchor="${below ? 'middle' : 'start'}">${esc(inst.short_name)}</text>`;
+  }
   return `<g class="node c-${cov}" data-id="${esc(inst.id)}" role="button" tabindex="-1" aria-pressed="false" aria-label="${esc(nodeLabel(ix, counts, inst))}" transform="translate(${p.x.toFixed(1)},${p.y.toFixed(1)})">` +
-    `<circle class="n-ring" r="${NODE_R + 5}"/><circle class="n-dot" r="${NODE_R}"/>` +
-    `<text x="${tx}" y="${ty}" text-anchor="${anchor}">${esc(inst.short_name)}</text></g>`;
+    `<circle class="n-ring" r="${NODE_R + 5}"/><circle class="n-dot" r="${NODE_R}"/>${text}</g>`;
 }
 
 /* ---------------------------------------------------------- the explorer */
@@ -378,20 +311,28 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
   /* ------------------------------------------------ the canvas */
   let L = null;
   function draw() {
-    L = layout(counts, state.group);
+    L = ringLayout(counts, state.group);
     state.base = { ...L.box };
     if (!state.vb) state.vb = { ...L.box };
     const curve = curvatures(counts.rels);
-    const hulls = L.hulls.map((h) => `<rect class="group-hull" x="${h.x}" y="${h.y}" width="${h.w}" height="${h.h}" rx="4"/>` +
-      `<text class="group-label" x="${h.x + 10}" y="${h.y + 17}">${esc(h.label)}</text>`).join('');
-    const iso = L.isolatedRow
-      ? `<line class="isolated-rule" x1="20" x2="${L.box.w - 40}" y1="${L.isolatedRow.y - 34}" y2="${L.isolatedRow.y - 34}"/>` +
-        `<text class="isolated-label" x="20" y="${L.isolatedRow.y - 42}">No relationship recorded · ${L.isolatedRow.n} instruments, kept in the network and the table</text>`
-      : '';
-    const edges = counts.rels.map((r) => edgeSvg(ix, r, edgeGeometry(L.pos.get(r.from), L.pos.get(r.to), curve.get(r)), 'mk')).join('');
-    const nodes = counts.instruments.map((i) => nodeSvg(ix, counts, i, L.pos.get(i.id))).join('');
-    root.querySelector('#ex-svg').innerHTML = `<svg xmlns="${SVGNS}" viewBox="${vbStr()}" role="group" aria-label="Network of ${counts.instruments.length} instruments and ${counts.rels.length} recorded relationships. Use the arrow keys to move between instruments.">` +
-      markers('mk', kindsInUse) + `<g class="hulls">${hulls}${iso}</g><g class="edges">${edges}</g><g class="nodes">${nodes}</g></svg>`;
+    const C = { x: 0, y: 0 };
+    /* the astrolabe: two hairline circles and a tick every 10°, drawing only (aria-hidden) */
+    const ticks = Array.from({ length: 36 }, (_, i) => {
+      const a = (i * Math.PI) / 18, r0 = RING + 198, r1 = RING + (i % 9 === 0 ? 186 : 192);
+      return `<line x1="${(r0 * Math.cos(a)).toFixed(1)}" y1="${(r0 * Math.sin(a)).toFixed(1)}" x2="${(r1 * Math.cos(a)).toFixed(1)}" y2="${(r1 * Math.sin(a)).toFixed(1)}"/>`;
+    }).join('');
+    const arc = (r, a0, a1) => `M${(r * Math.cos(a0)).toFixed(1)},${(r * Math.sin(a0)).toFixed(1)} A${r},${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${(r * Math.cos(a1)).toFixed(1)},${(r * Math.sin(a1)).toFixed(1)}`;
+    const sectors = L.sectors.map((sct, i) => {
+      const mid = (sct.a0 + sct.a1) / 2, r = RING - 22;
+      const lx = r * Math.cos(mid), ly = r * Math.sin(mid);
+      return `<path class="sector-arc" d="${arc(RING - 12, sct.a0 + 0.02, sct.a1 - 0.02)}"/>` +
+        `<text class="group-label" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${Math.abs(Math.cos(mid)) < 0.3 ? 'middle' : Math.cos(mid) > 0 ? 'end' : 'start'}" dominant-baseline="middle">${sct.short ? esc(sct.short) : `${esc(sct.label)} · ${sct.n}`}</text><title>${esc(sct.label)}: ${sct.n}</title>`;
+    }).join('');
+    const deco = `<g class="astro" aria-hidden="true"><circle r="${RING + 198}"/><circle r="${RING}" class="astro-ring"/>${ticks}</g>`;
+    const edges = counts.rels.map((r) => edgeSvg(ix, r, edgeGeometry(L.pos.get(r.from), L.pos.get(r.to), curve.get(r), NODE_R + 3, NODE_R + 6, C), 'mk')).join('');
+    const nodes = counts.instruments.map((i) => nodeSvg(ix, counts, i, L.pos.get(i.id), { labelSide: 'radial' })).join('');
+    root.querySelector('#ex-svg').innerHTML = `<svg xmlns="${SVGNS}" viewBox="${vbStr()}" role="group" aria-label="Network of ${counts.instruments.length} instruments and ${counts.rels.length} recorded relationships, drawn on a ring. Use the arrow keys to move between instruments.">` +
+      markers('mk', kindsInUse) + `${deco}<g class="hulls" aria-hidden="true">${sectors}</g><g class="edges">${edges}</g><g class="nodes">${nodes}</g></svg>`;
     wireCanvas();
     applyFilters();
     applySelection(false);
@@ -512,8 +453,11 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
       n.classList.toggle('dim', !!keepNodes && !keepNodes.has(n.dataset.id));
     }
     for (const g of svg.querySelectorAll('.edge')) {
+      const r = relById.get(g.dataset.rel);
       g.classList.toggle('selected', sel?.type === 'edge' && sel.id === g.dataset.rel);
       g.classList.toggle('dim', !!keepEdges && !keepEdges.has(g.dataset.rel));
+      /* the code is drawn on the selection's own edges */
+      g.classList.toggle('coded', !!sel && (sel.type === 'edge' ? sel.id === r.id : r.from === sel.id || r.to === sel.id));
     }
   }
 
