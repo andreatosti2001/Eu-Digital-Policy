@@ -17,7 +17,7 @@ node agent/release/cli.mjs dispatch --proposal <id>      REHEARSAL: every check,
 node agent/release/cli.mjs dispatch --proposal <id> --execute --as-of YYYY-MM-DD
 node agent/release/cli.mjs gate [--ci] [--head <sha>] [--artifact <dir>] [--needs-env <VAR>]
 node agent/release/cli.mjs keygen --out-dir <dir outside the repo> --reviewer-id <id> --name "<person>" --role "<role>"
-node --test agent/release/selftest.mjs                   45 tests
+node --test agent/release/selftest.mjs                   59 tests (13 of them group I, P0.1)
 ```
 
 **No verb pushes, merges, writes the decision ledger or accepts a waiver.** There is no `--force`, `--skip`,
@@ -27,7 +27,8 @@ node --test agent/release/selftest.mjs                   45 tests
 
 | File | Holds |
 |---|---|
-| `dispatch.mjs` | the dispatcher: nine stages, each logged — intake · ledger · approval · preflight · duplicate · isolate · apply · scope · commit |
+| `dispatch.mjs` | the dispatcher: ten stages, each logged — intake · ledger · approval · preflight · duplicate · index · isolate · apply · scope · commit — and, on any failure after the branch is cut, a verified `rollback` |
+| `worktree.mjs` | what the dispatcher may commit, measured against git: the index check, the snapshot, the produced set, the restore and its verification (P0.1, 11 Nov 2026; `docs/AUDIT-2026-11-11.md` §1–§3) |
 | `gate.mjs` | the deploy gate: `gatherFacts()` reads git and the artifact; `judge()` is a pure function of those facts, ten conditions C1…C10 |
 | `workflows.mjs` | a no-dependency reader of `.github/workflows/*.yml`: is `pages.yml` the only publisher; is the gate in its path |
 | `lifecycle.mjs` | proposed → technically validated → awaiting review → approved → rejected → published → superseded/withdrawn, **derived**, never stored |
@@ -45,10 +46,25 @@ node --test agent/release/selftest.mjs                   45 tests
 5. **duplicate** — `git log --all --grep "Dispatch-Key: <key>"`. The key is `sha256(approval_id : proposal_sha256)`; the
    same approved content cannot be dispatched twice, on any branch, and the second call names the first commit. Derived from
    git, not stored, so a fresh clone has it.
-6. **isolate** — a new `release/<proposal>-<key>` branch, cut from a non-main branch, with a clean approved scope.
+5a. **index** (11 Nov 2026, P0.1) — nothing staged, nothing unmerged, no merge, rebase, cherry-pick or revert in progress.
+   Runs in a rehearsal too. **Refuses and names the paths; never unstages them.** `git commit` takes the whole index: this
+   is how `11313f6` carried 9 files while the scope stage reported 1.
+6. **isolate** — a new `release/<proposal>-<key>` branch, cut from a non-main branch, with a clean approved scope; the tree
+   is **snapshotted** first (every path git reports, its status and the sha256 of its bytes; the person's uncommitted bytes
+   held, up to 32 MiB).
 7. **apply** — Agent 9 (`Implementer`, `apply: true`), handed the *same* record and ledger snapshot checked above.
-8. **scope** — what the applier changed is inside the approved paths. If not: undone one path at a time, branch removed.
-9. **commit** — trailers `Proposal`, `Proposal-SHA256`, `Approval`, `Dispatch-Key`, `Decided-By`, `Evidence`. Not pushed.
+8. **scope** — four lists kept apart: *permitted* (the proposal), *declared* (`result.change.files`), *produced* (every path
+   whose status or bytes differ from the snapshot, including an edit inside a file the person had already changed). Refused
+   when produced is empty, leaves the permitted set, or differs from declared in either direction.
+9. **commit** — only produced paths are staged; the index is re-read and must equal produced; the commit is re-read and must
+   have one parent (the base) and exactly the produced files. Trailers `Proposal`, `Proposal-SHA256`, `Approval`,
+   `Dispatch-Key`, `Decided-By`, `Evidence`. Not pushed.
+
+**rollback** — on any failure after stage 6: every path that differs from the snapshot is restored (from the base, from the
+held bytes, or removed), then **verified** (status, every hash, HEAD, nothing staged) before the branch is deleted and again
+after. Unverified: `severity: "high"`, every path named, the branch **kept**, the person's bytes copied to
+`agent/release/runs/recovery-…`. Distinct from Agent 9's own rollback of the permitted paths, which the report keeps apart
+(`agent_rollback`, `residue_after_agent`). No `reset`, `clean` or `stash`, anywhere (test A11).
 
 A refusal, a duplicate and a failure are each a line in `agent/release/runs/dispatch.jsonl` (git-ignored, per machine) and
 in the returned report; exit code 1 for refused/failed, 0 for rehearsed/dispatched/duplicate.

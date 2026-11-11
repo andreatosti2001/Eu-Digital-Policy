@@ -33,10 +33,22 @@
      4 preflight     Agent 9's ten gates, run again here, not trusted from
                      whenever the proposal was written
      5 duplicate     no commit anywhere carries this approval+proposal key
-     6 isolate       a new branch from a non-main branch with a clean scope
+     5a index        nothing staged, nothing unmerged, no merge/rebase/
+                     cherry-pick in progress (P0.1, 11 Nov 2026) — run in a
+                     rehearsal too, so that a rehearsal never promises a
+                     dispatch the execution would refuse
+     6 isolate       a new branch from a non-main branch with a clean scope;
+                     the tree is snapshotted (status + bytes) before it
      7 apply         Agent 9, handed the very snapshot checked above
-     8 scope         the changed files are inside the approved scope
-     9 commit        trailers: Proposal, Proposal-SHA256, Approval, Dispatch-Key
+     8 scope         what git shows the apply PRODUCED (against the
+                     snapshot, not against "dirty before") is inside the
+                     approved scope AND is exactly what the applier
+                     DECLARED; otherwise the dispatcher's own rollback runs
+                     and is verified against the snapshot
+     9 commit        only the produced paths are staged, the index is
+                     re-read before `git commit`, and the commit is re-read
+                     after it; trailers: Proposal, Proposal-SHA256,
+                     Approval, Dispatch-Key
    Every stage is logged whether it passed or not, to a run log (git-ignored,
    like every agent's) and to the returned report.
 
@@ -46,13 +58,13 @@
 
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { appendFileSync, mkdirSync, rmSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { REPO_ROOT } from '../implement/baseline.mjs';
 import { DECISION_DIR, deriveApproval, readAgentRecords, readLedger } from '../implement/ledger.mjs';
 import { readReviewers, verifyLedger, describeLedger } from '../implement/attestation.mjs';
 import { preflight } from '../implement/preflight.mjs';
-import { changedPaths } from '../implement/scope.mjs';
+import { commitContents, diffSnapshots, inspectIndex, keepForRecovery, restorePaths, snapshot, stagedAgainst, verifyRestored } from './worktree.mjs';
 import { AGENT_NAMES } from '../orchestrator/capabilities.mjs';
 import { RUN_LOG_DIR, TRAILERS } from './policy.mjs';
 
@@ -105,19 +117,10 @@ export function buildCommitMessage({ proposal, proposalId, approval, key, result
   ].filter((l, i, a) => !(l === '' && a[i - 1] === '')).join('\n');
 }
 
-/** Put back exactly the paths a refused change touched: tracked ones from the
- *  index, untracked ones removed. One path at a time, so that an untracked
- *  file cannot make git abort the restore of a tracked one. */
-function undo(paths, cwd) {
-  for (const p of paths) {
-    let tracked = true;
-    try { git(['ls-files', '--error-unmatch', '--', p], cwd); } catch { tracked = false; }
-    try {
-      if (tracked) git(['checkout', '--', p], cwd);
-      else rmSync(join(cwd, p), { force: true });
-    } catch { /* the refusal names the path; a person looks */ }
-  }
-}
+/** The applier's own account of what it changed, as repository paths. */
+export const declaredPaths = (result) => [...new Set((result?.change?.files ?? []).map((f) => String(f?.path ?? '').replace(/^\.?\//, '').trim()).filter(Boolean))].sort();
+
+const sameSet = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
 
 /* ------------------------------------------------------------ the run log */
 
@@ -219,6 +222,15 @@ export async function dispatch({
   }
   stage('duplicate', true, `no commit on any branch carries Dispatch-Key ${key.slice(0, 12)}…`);
 
+  /* 5a ---------------------------------------------------------------- index */
+  /* Before anything is applied, and in a rehearsal too: `git commit` takes
+     the whole index, so anything already staged would ride along with the
+     approved change. Refused by name; never unstaged here. */
+  let idx;
+  try { idx = inspectIndex(root); } catch (e) { return refuse('index', `git could not report the index: ${e.message.split('\n')[0]}`); }
+  if (!idx.ok) return refuse('index', idx.why, { staged: idx.staged, unmerged: idx.unmerged, in_progress: idx.in_progress });
+  stage('index', true, 'nothing staged, nothing unmerged, no merge, rebase, cherry-pick or revert in progress');
+
   const proposal = pre.proposal;
   const evidenceLine = `proposal ${proposalId} (${(proposal.evidence ?? []).length} evidence reference(s)), decision ${approval.decision.approval_id} by ${approval.decision.decided_by}`;
 
@@ -234,56 +246,137 @@ export async function dispatch({
   if (FORBIDDEN_BRANCHES.includes(origin)) {
     return refuse('isolate', `the working tree is on "${origin}". A push to main publishes; no change is dispatched from there. Work from a feature branch.`);
   }
-  const dirty = changedPaths({ cwd: root });
-  const clash = dirty.filter((p) => pre.scope.permitted.includes(p));
+  /* The snapshot the rollback is verified against: every path git reports,
+     its status column and its bytes. The person's uncommitted bytes are
+     held so that they can be put back; past the cap, no dispatch. */
+  let before;
+  try { before = snapshot(root, { keepBytes: true }); } catch (e) { return refuse('isolate', `git could not report the working tree: ${e.message.split('\n')[0]}`); }
+  const clash = [...before.entries.keys()].filter((p) => pre.scope.permitted.includes(p));
   if (clash.length) return refuse('isolate', `${clash.join(', ')} already has uncommitted changes, so there is no clean pre-change state to roll back to.`);
+  if (before.over_cap) return refuse('isolate', `the working tree holds ${before.held_bytes} bytes of uncommitted work, more than the snapshot holds in memory; a rollback over it could not be verified byte for byte. Commit or move that work, then dispatch again.`);
+  const base = before.head;
   const branch = `release/${proposalId.toLowerCase().replace(/[^a-z0-9._-]/g, '-').slice(0, 60)}-${key.slice(0, 8)}`;
   try { git(['checkout', '-b', branch], root); } catch (e) { return refuse('isolate', `could not cut ${branch}: ${e.message.split('\n')[0]}`); }
   report.branch = branch;
-  stage('isolate', true, `branch ${branch} cut from ${origin} at ${git(['rev-parse', '--short', 'HEAD'], root)}`);
+  report.base = base;
+  stage('isolate', true, `branch ${branch} cut from ${origin} at ${base.slice(0, 12)}; snapshot of ${before.entries.size} pre-existing uncommitted path(s) taken`, { preexisting: [...before.entries.keys()] });
 
-  const back = (why) => {
-    /* the applier rolls its own edit back; this only leaves the branch */
-    try { git(['checkout', origin], root); git(['branch', '-D', branch], root); } catch { /* reported by the refusal */ }
-    report.branch = null;
-    return why;
+  /* The dispatcher's own rollback (distinct from Agent 9's, which restores
+     the PERMITTED paths after a failed QA): every path whose state differs
+     from the snapshot is put back, the result is measured, and only a
+     verified tree lets the branch go. An unverified one keeps the branch,
+     names each path and is reported HIGH. */
+  const rollBack = (why) => {
+    const attempt = diffSnapshots(before, snapshot(root));
+    const restored = restorePaths(root, { before, base, paths: attempt });
+    let check = verifyRestored(root, { before, base });
+    let leftBranch = false;
+    if (check.verified) {
+      try { git(['checkout', '-q', origin], root); git(['branch', '-D', branch], root); leftBranch = true; } catch (e) { check = { ...check, verified: false, problems: [...check.problems, `could not leave ${branch}: ${e.message.split('\n')[0]}`] }; }
+      if (leftBranch) {
+        const after = verifyRestored(root, { before, base });
+        const onOrigin = git(['rev-parse', '--abbrev-ref', 'HEAD'], root) === origin;
+        check = { ...after, verified: after.verified && onOrigin, problems: [...after.problems, ...(onOrigin ? [] : [`HEAD is not back on ${origin}`])] };
+      }
+    }
+    report.rollback = {
+      by: 'dispatcher', why, verified: check.verified, attempted: attempt, errors: restored.errors,
+      unrestored: check.differing, staged_after: check.staged, problems: check.problems,
+      how_verified: `every path re-read with \`git status\` and re-hashed against the snapshot taken before ${branch} was cut; HEAD compared with ${base.slice(0, 12)}; the index compared with it`,
+    };
+    if (check.verified) {
+      report.branch = null;
+      stage('rollback', true, `the tree is back to the pre-dispatch snapshot: ${attempt.length} path(s) restored and re-hashed, nothing staged, HEAD ${base.slice(0, 12)}, on ${origin}; ${branch} removed`);
+      return true;
+    }
+    report.severity = 'high';
+    report.recovery = keepForRecovery(join(logDir, `recovery-${Date.now()}`), { before, paths: check.differing });
+    stage('rollback', false, `ROLLBACK NOT VERIFIED — ${check.problems.join(' · ')}${restored.errors.length ? ` · errors: ${restored.errors.map((e) => `${e.path}: ${e.why}`).join('; ')}` : ''}. ${branch} was KEPT for recovery; the person's own bytes for the paths above ${report.recovery.length ? `are copied under ${join(logDir, 'recovery-…')}` : 'were not held (they were clean, or over the cap)'}. Do not dispatch again until a person has looked.`);
+    return false;
+  };
+  const failWith = (why) => {
+    const ok = rollBack(why);
+    return finish('failed', ok ? why : `${why}; ROLLBACK NOT VERIFIED (high severity): ${report.rollback.problems.join(' · ')}`);
   };
 
   /* 7 ----------------------------------------------------------------- apply */
   let result;
   try { result = await applier({ proposalId, asOf, root, records: rec, ledger }); } catch (e) { result = { outcome: 'failed', why: `the applier threw: ${e.message}` }; }
   if (result?.outcome !== 'implemented') {
-    stage('apply', false, `Agent 9 ended "${result?.outcome ?? 'no result'}": ${result?.why ?? result?.preflight?.summary ?? 'see its trace'}${result?.reverted ? '; its edit was rolled back and re-hashed' : ''}`, { agent_outcome: result?.outcome ?? null });
-    back();
-    return finish('failed', `apply: Agent 9 did not implement the proposal (${result?.outcome ?? 'no result'})`);
+    const agentRollback = result?.reverted ? { verified: result.reverted.verified === true, mismatches: result.reverted.mismatches ?? [] } : null;
+    stage('apply', false, `Agent 9 ended "${result?.outcome ?? 'no result'}": ${result?.why ?? result?.preflight?.summary ?? 'see its trace'}${agentRollback ? `; Agent 9's own rollback of the permitted paths ${agentRollback.verified ? 'reports verified' : 'reports NOT verified'}` : ''}`, { agent_outcome: result?.outcome ?? null, agent_rollback: agentRollback });
+    /* Agent 9's rollback covers the permitted paths only. Whatever else
+       differs from the snapshot is the dispatcher's to put back, and it
+       is measured either way. */
+    report.residue_after_agent = diffSnapshots(before, snapshot(root));
+    return failWith(`apply: Agent 9 did not implement the proposal (${result?.outcome ?? 'no result'})`);
   }
-  stage('apply', true, `Agent 9 implemented ${result.change?.files?.length ?? 0} file(s); QA verdict ${result.qa?.verdict ?? 'not reported'}`);
+  const declared = declaredPaths(result);
+  stage('apply', true, `Agent 9 reports ${declared.length} file(s) changed (${declared.join(', ') || 'none'}); QA verdict ${result.qa?.verdict ?? 'not reported'}`, { declared });
 
   /* 8 ------------------------------------------------------------------ scope */
-  /* Only what the APPLIER changed counts: paths already dirty before it ran
-     are somebody else's work, neither this change's nor a violation of it. */
-  const touched = changedPaths({ cwd: root }).filter((p) => !dirty.includes(p));
-  const outside = touched.filter((p) => !pre.scope.permitted.includes(p));
-  if (outside.length || !touched.length) {
-    stage('scope', false, outside.length ? `the working tree changed outside the approved scope: ${outside.join(', ')}` : 'the applier reported success and changed no file');
-    undo(touched, root);
-    back();
-    return finish('failed', outside.length ? 'scope: a file outside the approved scope changed' : 'scope: nothing changed');
+  /* PRODUCED = what git shows changed against the snapshot, including a
+     path that was already dirty and whose bytes or status moved. Before
+     P0.1 this was "dirty now minus dirty before", which hid any change
+     made inside a path the person had already touched or staged. */
+  const produced = diffSnapshots(before, snapshot(root));
+  const permitted = pre.scope.permitted;
+  const outside = produced.filter((p) => !permitted.includes(p));
+  const undeclared = produced.filter((p) => !declared.includes(p));
+  const unobserved = declared.filter((p) => !produced.includes(p));
+  const lists = { permitted, declared, produced };
+  if (!produced.length || outside.length || undeclared.length || unobserved.length) {
+    const why = [
+      !produced.length ? 'the applier reported success and git shows no file changed' : null,
+      outside.length ? `the working tree changed outside the approved scope: ${outside.join(', ')}` : null,
+      undeclared.length ? `git shows ${undeclared.length} changed path(s) the applier did not declare: ${undeclared.join(', ')}` : null,
+      unobserved.length ? `the applier declared ${unobserved.length} path(s) git shows unchanged: ${unobserved.join(', ')}` : null,
+    ].filter(Boolean).join(' · ');
+    stage('scope', false, `${why}. Declared ${declared.length}, produced ${produced.length}, permitted ${permitted.length}: the report and the tree disagree, and the tree is what a commit would carry.`, lists);
+    return failWith(outside.length ? 'scope: a file outside the approved scope changed' : !produced.length ? 'scope: nothing changed' : 'scope: what the applier declared is not what git shows it produced');
   }
-  stage('scope', true, `${touched.length} changed file(s), every one inside the ${pre.scope.permitted.length} approved path(s)`, { files: touched });
+  stage('scope', true, `${produced.length} produced file(s), each permitted and each declared by the applier (${produced.join(', ')})`, lists);
 
   /* 9 ----------------------------------------------------------------- commit */
   const message = buildCommitMessage({ proposal, proposalId, approval, key, result, evidenceLine });
   try {
-    git(['add', '--', ...touched], root);
-    git(['commit', '-m', message], root);
+    /* one path at a time: a path the applier deleted may already be gone
+       from the index (a `git mv`), and `git add` refuses a pathspec that
+       matches nothing */
+    for (const p of produced) {
+      if (existsSync(join(root, p))) git(['add', '--', p], root);
+      else git(['rm', '--cached', '-q', '--ignore-unmatch', '--', p], root);
+    }
+  } catch (e) {
+    stage('commit', false, `git could not stage the produced paths: ${e.message.split('\n')[0]}`);
+    return failWith('commit: git refused to stage');
+  }
+  const staged = stagedAgainst(root, base);
+  if (!sameSet(staged, produced)) {
+    stage('commit', false, `the index is not the produced set — staged ${staged.length} (${staged.join(', ')}), produced ${produced.length} (${produced.join(', ')}). Not committed.`, { staged, produced });
+    return failWith('commit: the index holds something the dispatch did not produce');
+  }
+  try {
+    git(['commit', '-q', '-m', message], root);
     report.commit = git(['rev-parse', 'HEAD'], root);
   } catch (e) {
     stage('commit', false, `git refused the commit: ${e.message.split('\n')[0]}`);
-    back();
-    return finish('failed', 'commit: git refused');
+    return failWith('commit: git refused');
   }
-  stage('commit', true, `committed ${report.commit.slice(0, 12)} on ${branch}; NOT pushed, NOT merged. Open a pull request to publish.`);
-  try { git(['checkout', origin], root); } catch { /* the branch holds the commit either way */ }
+  /* Re-read what was committed. A hook can stage more; a commit can have
+     two parents. Either is a commit the decision did not authorise. */
+  const made = commitContents(root, report.commit);
+  if (made.parents.length !== 1 || made.parents[0] !== base || !sameSet(made.files ?? [], produced)) {
+    const bad = report.commit;
+    report.commit = null;
+    stage('commit', false, `the commit ${bad.slice(0, 12)} is not the produced change: parents ${made.parents.map((p) => p.slice(0, 12)).join(', ') || 'none'} (expected ${base.slice(0, 12)}), files ${(made.files ?? ['(not a one-parent commit)']).join(', ')} (expected ${produced.join(', ')}). It stays readable as ${bad} in the reflog until git expires it.`, { rejected_commit: bad, committed: made.files, produced });
+    report.rejected_commit = bad;
+    /* Back to the base without `reset`: detaching there takes the committed
+       paths back to it, and the ordinary rollback then measures the rest. */
+    try { git(['checkout', '-q', '--detach', base], root); } catch { /* measured by the rollback */ }
+    return failWith('commit: the commit did not contain exactly the produced change');
+  }
+  stage('commit', true, `committed ${report.commit.slice(0, 12)} on ${branch}: one parent (${base.slice(0, 12)}), ${made.files.length} file(s), exactly the produced set; NOT pushed, NOT merged. Open a pull request to publish.`, { files: made.files });
+  try { git(['checkout', '-q', origin], root); } catch { /* the branch holds the commit either way */ }
   return finish('dispatched');
 }
