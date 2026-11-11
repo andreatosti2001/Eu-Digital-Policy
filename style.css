@@ -120,7 +120,7 @@ body{
 .progress-track{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:transparent}
 .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--mech),var(--live));transition:width .1s linear}
 .brand{display:flex;align-items:center;gap:10px;padding:0 16px;border-right:1px solid var(--line);cursor:pointer;background:none;border-top:0;border-bottom:0;border-left:0;color:inherit;font:inherit;text-align:left}
-.brand .mark{width:9px;height:9px;background:var(--mech);flex:none;transform:rotate(45deg)}
+.brand .mark{width:18px;height:18px;object-fit:contain;display:block;background:none;flex:none;transform:none}
 .brand b{font-family:var(--display);font-weight:600;font-size:14.5px;color:var(--paper);display:block;letter-spacing:-.01em}
 .brand span{font-family:var(--mono);font-size:8.8px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-faint);display:block;margin-top:2px}
 .topmid{flex:1;display:flex;align-items:center;gap:10px;padding:0 16px;min-width:0}

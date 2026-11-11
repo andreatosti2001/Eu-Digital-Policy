@@ -195,9 +195,9 @@ body[data-theme="light"]{
   text-decoration:none;color:var(--text-1);flex:none;
   padding:var(--s-2) 0;
 }
-.chrome-brand .mark{width:9px;height:9px;background:var(--mech);transform:rotate(45deg);flex:none}
+.chrome-brand .mark{width:18px;height:18px;object-fit:contain;display:block;background:none;transform:none;flex:none}
 .chrome-brand b{font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:-.01em;white-space:nowrap}
-.chrome-brand:hover .mark{background:var(--live)}
+
 
 .chrome-nav{display:flex;align-items:stretch;gap:0;min-width:0;overflow-x:auto;scrollbar-width:none}
 .chrome-nav::-webkit-scrollbar{display:none}
