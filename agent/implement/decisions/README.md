@@ -2,9 +2,9 @@
 
 `decisions.jsonl` is the **only** place a grant exists. It is git-**tracked** — unlike
 `agent/records/`, which is written by agents and ignored — because a decision is provenance
-that must survive, and git is the only attribution this repository has. **It does not exist yet:
-no proposal in this repository has ever been decided by a person**, and nothing in a test, a
-fixture or a tool has put a line here to make it look otherwise.
+that must survive, and git is the only attribution this repository has. **It holds one entry since 6 Nov 2026**:
+the repository author's signed grant of `prop-docs-ea57404dc452`. No other proposal here has been decided by a person, and
+nothing in a test, a fixture or a tool has put a line here to make it look otherwise.
 
 **Written by exactly two things** (the Control Room's `POST /api/review` is the other):
 
@@ -30,7 +30,7 @@ approval rather than carrying it onto a scope nobody agreed to.
 | `signature` | `{alg:"ed25519", key_fingerprint, value}` over `entry_sha256`, or `null` |
 | `what_was_asked`, `risk_if_wrong` | a quote of what the person was asked to check |
 
-`reviewers.json` — **does not exist yet** — is the registry: `{"reviewers":[{"reviewer_id","name","role","status":"active|revoked","added_at","public_key_pem"}]}`.
+`reviewers.json` — **one reviewer, active, since 5 Nov 2026** — is the registry: `{"reviewers":[{"reviewer_id","name","role","status":"active|revoked","added_at","public_key_pem"}]}`.
 `node agent/release/cli.mjs status` prints its fingerprint, which the owner pins as the repository
 variable `RELEASE_REVIEWER_REGISTRY_SHA256` (`docs/DEPLOYMENT.md` §3a).
 

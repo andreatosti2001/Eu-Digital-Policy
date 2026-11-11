@@ -29,7 +29,8 @@ the way.
 > proposal, §5), and `agent_suites_pass`. Three block. `production_dispatcher_wired` and
 > `decision_ledger_present` fail: no specialist can be dispatched outside the simulation, and
 > no proposal has ever been decided — the first is an activation decision protocol §24 reserves
-> to a person, the second can only be a person's decision. `deploy_gate_exists` is now
+> to a person, the second can only be a person's decision. *(As measured then. A person made the
+> second on 6 Nov 2026: the ledger now holds one entry and `decision_ledger_present` finds it.)* `deploy_gate_exists` is now
 > **unmeasurable** rather than failing: `.github/workflows/pages.yml` gates its own deploy, but
 > whether it is what publishes the site is a repository setting no file records
 > (`docs/DEPLOYMENT.md` §3). That condition's text was the one thing edited in

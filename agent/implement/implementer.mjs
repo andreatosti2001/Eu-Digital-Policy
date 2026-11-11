@@ -18,13 +18,14 @@
    observability event for every stage.
 
    THE THING IT DOES MOST OFTEN IS REFUSE, and that is not a
-   degraded mode. Seventy-one proposals exist across four agents and
-   not one has ever been decided (docs/HANDOVER.md, "Next session").
-   Run today, this agent implements nothing and produces
-   seventy-one refusals, each naming the gate that refused and what
-   would close it. That output is the deliverable. An implementation
-   agent whose first run implemented something would have found an
-   approval that does not exist.
+   degraded mode. When this was written seventy-one proposals existed
+   across four agents and not one had been decided. One has since
+   (6 Nov 2026, prop-docs-ea57404dc452, a person's signed entry in
+   decisions.jsonl); the rest are still undecided, and against them
+   this agent implements nothing and produces refusals, each naming
+   the gate that refused and what would close it. That output is the
+   deliverable. An implementation agent whose first run implemented
+   something would have found an approval that does not exist.
 
    IT REVERTS ITSELF. `docs/AUTONOMY-POLICY.md` Class B's condition
    is that the change is fully reverted if any validator fails. This

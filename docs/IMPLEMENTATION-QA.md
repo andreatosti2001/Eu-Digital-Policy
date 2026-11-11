@@ -303,8 +303,10 @@ counted and named in the check's detail and excerpt; **one more warning, a crede
    built.**
 2. **Nothing has confirmed what the deployed site serves.** §6. The network policy refuses
    the live origin.
-3. **No proposal in this repository has ever been decided.** Thirty-five refusals is a
-   measurement of that, not of a defect in the proposals.
+3. **One proposal in this repository has been decided** (6 Nov 2026, `prop-docs-ea57404dc452`,
+   by the repository author; `agent/implement/decisions/decisions.jsonl`). When SESSION 18 ran,
+   none had, and its thirty-five refusals were a measurement of that, not of a defect in the
+   proposals; every other proposal is still undecided, so the same reading holds for them.
 4. **The workflow is not a deploy gate.** `.github/workflows/qa.yml` makes a failure visible.
    A push to `main` still publishes.
 5. **`GOVERNANCE_PERMITS` is empty**, so no proposal can be automatically actionable under

@@ -362,5 +362,7 @@ working while the custom domain is set; they stop if it is removed.
   and no commit declaring a Proposal) and C8 reported (five agent-marked commits, not blocking). An earlier pair of runs, 76 and 77,
   is recorded in `docs/ROADMAP-v2.md` §8 (5 Nov 2026). A pass with C5 and C7 unmeasured says nothing about whether an approval is
   authentic or whether an agent change was decided before it was made.
-- That any approval is authentic. The mechanism (signed, chained, pinned — §3b) exists; no person has used it, and a ledger
-  with no entry is the true state.
+- That any approval is authentic. The mechanism (signed, chained, pinned — §3b) exists and a person has used it once: the ledger
+  holds one entry, the author's signed grant of `prop-docs-ea57404dc452` (6 Nov 2026), which the gate in run 100 found chained,
+  signed by a registered reviewer and not simulated. That the key is held by the person it names, that the registry is honest and
+  that the person read what they signed are what a signature cannot show.

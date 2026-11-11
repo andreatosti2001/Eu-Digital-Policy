@@ -257,7 +257,7 @@ export const MONTHLY_REVIEWS = Object.freeze([
     cadence: 'monthly',
     runs: 'node agent/proposals/governance/cli.mjs list',
     doc: 'docs/GOVERNANCE-PROPOSALS.md',
-    human_step: 'decide the seven proposals. None has ever been decided, and the module has no write path, no decision home and no automatic class.',
+    human_step: 'decide the seven proposals. None has been decided (the one entry in the decision ledger is for a docs proposal from the release chain, not one of these), and the module has no write path, no decision home and no automatic class.',
   }),
   Object.freeze({
     id: 'control_room_security',

@@ -234,7 +234,7 @@ export const CONTROL_METRICS = [
     calculation: 'Ledger entries whose outcome is "denied", counted against the total number of decisions.',
     frequency: 'per_run',
     interpretation: 'NOT A DEFECT COUNT AND NOT TO BE OPTIMISED. A rejection is the governance system working: a human looked at a proposal and said no. An agent shown this as a number to reduce would learn to propose less, or to propose only what is easy to approve, and both are worse than a high rejection rate. What IS worth reading is the RATIO to grants over time, and whether the same proposal keeps coming back after being refused.',
-    limitations: 'Zero today, and it means nothing has ever been decided at all rather than that nothing has been rejected. Until the ledger holds decisions, this number and a healthy one are indistinguishable.',
+    limitations: 'Zero is a small-sample reading, not a healthy one: the ledger holds a single decision (a grant, 6 Nov 2026), so zero rejections says one proposal was approved and says nothing about how often a person says no. Until the ledger holds more decisions, this number and a healthy one are indistinguishable.',
     visibility: 'private',
     direction: 'not_a_score',
     measure(ctx) {
@@ -248,7 +248,7 @@ export const CONTROL_METRICS = [
           denied: denied.map((d) => ({ proposal_id: d.proposal_id, by: d.decided_by, at: d.decided_at, note: d.note })),
           granted: decisions.filter((d) => d.outcome === 'granted').length,
           note: decisions.length === 0
-            ? 'THE LEDGER IS EMPTY. Zero rejections here means nothing has ever been decided, not that nothing has been rejected. Not one proposal in this repository has been decided in twenty sessions.'
+            ? 'THE LEDGER IS EMPTY. Zero rejections here means nothing has ever been decided, not that nothing has been rejected.'
             : null,
         },
         evidence: [ctx.ledger.path],
@@ -265,7 +265,7 @@ export const CONTROL_METRICS = [
     calculation: 'ChangeRecords with state "reverted", plus rollback observations on the trace whose verified flag is false.',
     frequency: 'per_run',
     interpretation: 'A revert is the system working, not failing: docs/AUTONOMY-POLICY.md Class B requires a full revert if a validator fails, and agent/implement/ applies that to every class. What is a genuine failure is an UNVERIFIED revert — a rollback that ran and did not restore the recorded pre-change hashes — and that is counted separately and is never zero-by-default.',
-    limitations: 'A revert is only recorded if an agent performed it. A human who applied a change by hand and undid it by hand leaves nothing here. Nothing has ever been applied by an agent in this repository, so this metric has never had a non-zero input.',
+    limitations: 'A revert is only recorded if an agent performed it. A human who applied a change by hand and undid it by hand leaves nothing here. The record store is git-ignored and per-machine, so a revert performed on another machine (the author\'s own dispatch run of 10 Nov 2026 applied a change and reverted it) is not counted in a fresh checkout, and a fresh checkout\'s zero says only that this machine has recorded none.',
     visibility: 'private',
     direction: 'lower_is_better',
     measure(ctx) {
@@ -543,7 +543,7 @@ export const CONTROL_METRICS = [
     source: 'agent/records/*.jsonl and agent/implement/decisions/decisions.jsonl, via surveyProposals()',
     calculation: 'Proposals whose deriveApproval state is "pending", counted against the total number of proposals.',
     frequency: 'per_run',
-    interpretation: 'This is the size of the queue between the agent layer and the site. It is NOT a backlog to be cleared: five sessions have now reported that not one proposal has ever been decided, and several of them cannot be implemented even if granted, because their operations deliberately draft no value. A rise means the agents found more; a fall means somebody decided something.',
+    interpretation: 'This is the size of the queue between the agent layer and the site. It is NOT a backlog to be cleared: until 6 Nov 2026 five sessions reported that not one proposal had ever been decided (one has since, and the others remain undecided), and several of them cannot be implemented even if granted, because their operations deliberately draft no value. A rise means the agents found more; a fall means somebody decided something.',
     limitations: 'It counts proposals in THIS machine\'s record store, which is git-ignored. It is a count of what has been produced here, not of everything ever proposed.',
     visibility: 'public',
     public_justification: 'It reveals nothing operational — no path, no trace, no actor, no evidence — and a reader of a site about EU law is entitled to know how much proposed change is sitting in front of a human rather than in the site. It is the count alone; the proposals themselves stay private.',

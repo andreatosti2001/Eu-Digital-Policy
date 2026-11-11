@@ -207,8 +207,9 @@ a REQUEST whatever its `state` says, because agents write that directory. A gran
 lives only in `agent/implement/decisions/`, requires a named human who is not an
 agent, and is bound to the proposal's hash — so editing the proposal afterwards
 voids the approval rather than carrying it onto a wider scope. Run against the
-real store it implements nothing and refuses everything, which is the correct
-result: not one proposal in this repository has ever been decided.
+real store it implements nothing and refuses everything that is undecided,
+which is the correct result: one proposal in this repository has been decided
+(6 Nov 2026, `prop-docs-ea57404dc452`), and every other is still pending.
 `docs/IMPLEMENTATION-QA.md`.
 
 **The *never* list above is unchanged and binds this agent too.** In particular it

@@ -87,16 +87,19 @@ intended agent role in **`docs/SKILL-MAP.md`**. Invoke `project-context` at the 
 session, then load the skills the task actually needs; each one names the sibling that owns
 what it does not.
 
-**A RELEASE CHAIN EXISTS FROM 4 NOV 2026, AND NO PERSON HAS YET USED IT.** `agent/release/` holds a dispatcher that turns a
+**A RELEASE CHAIN EXISTS FROM 4 NOV 2026, AND A PERSON HAS USED IT ONCE.** `agent/release/` holds a dispatcher that turns a
 *decided* proposal into one commit on a `release/…` branch (never pushed, never merged, nothing written without `--execute`), and
 the deploy gate `pages.yml`'s `build` job now runs before it uploads anything (`docs/DEPLOYMENT.md` §2a). The ledger became
 tamper-evident (hash chain, ed25519 signature checked against a registered reviewer, `human`/`simulated` provenance) —
-`agent/implement/attestation.mjs`. What that does **not** change: `agent/implement/decisions/decisions.jsonl` still does not
-exist, because no person has decided a proposal, and **nothing in a test or a tool may put a line there to make it look
-otherwise**; `production_dispatcher_wired` still reports no, because it measures the Orchestrator's
-`agent/orchestrator/dispatchers.mjs`, a different thing the release dispatcher does not create; and the gate has not yet run in
-GitHub Actions. Whether `main` is protected, whether the `github-pages` environment is restricted and whether the reviewer
-registry is pinned are settings the tree cannot show (`docs/DEPLOYMENT.md` §3a). `docs/AUDIT-2026-11-04.md`.
+`agent/implement/attestation.mjs`. **Since 6 Nov 2026 `agent/implement/decisions/decisions.jsonl` exists and holds one entry**:
+the repository author's signed grant of `prop-docs-ea57404dc452`, a one-file change to `docs/DEPLOYMENT.md`. The release gate
+judged a commit citing it in GitHub Actions on 11 Nov 2026 (`pages.yml` run 100: C5, C6, C7 and C10 satisfied; run 98, on a
+squash merge of the same change, failed C7 — `docs/HANDOVER.md`, "Stage 1 — concluded"). Every other proposal here is still
+undecided, and **nothing in a test or a tool may put a line in that ledger to make it look otherwise**; the one entry there was
+made by a person. `production_dispatcher_wired` still reports no, because it measures the Orchestrator's
+`agent/orchestrator/dispatchers.mjs`, a different thing the release dispatcher does not create. Whether `main` is protected, whether
+the `github-pages` environment is restricted and whether the reviewer registry is pinned are settings the tree cannot show
+(`docs/DEPLOYMENT.md` §3a). `docs/AUDIT-2026-11-04.md`.
 
 **The Orchestrator does not replace a specialist.** `agent/orchestrator/` receives events,
 routes them through the ten workflow types, enforces the handoffs and the autonomy boundary,
@@ -123,8 +126,8 @@ that declares it; nothing re-checks a `ChangeRecord`'s files against the approve
 after the dispatch; and two conflict detectors have no ordering constraint and reported one
 relationship backwards. `docs/ORCHESTRATOR.md`.
 
-**NOTHING HAS EVER BEEN DECIDED, AND SESSION 28 MEASURED WHY THAT IS TWO PROBLEMS RATHER THAN
-ONE.** `agent/proposals/governance/` reads the history and reports what a person has had to
+**NOTHING HAD EVER BEEN DECIDED WHEN SESSION 28 RAN, AND IT MEASURED WHY THAT IS TWO PROBLEMS RATHER THAN
+ONE.** (One proposal has been decided since, on 6 Nov 2026; none of the seven governance proposals has, and the paragraph below is the measurement as it stood.) `agent/proposals/governance/` reads the history and reports what a person has had to
 correct more than once: twelve patterns over forty-nine anchors, each anchored to a commit, a
 path, a string in a tracked file or a live measurement, all re-resolved on every push. The
 first finding is about the corpus — **the approval ledger is not empty, it is ABSENT**, so
@@ -639,10 +642,10 @@ patches, not checks. **Do not re-run** the latter two.
   hash. **Two things call it**, and only two: `agent/implement/cli.mjs decide`, and the
   Control Room's `POST /api/review`, which authenticates the caller, authorizes them against
   the proposal's own autonomy class and audits the result before it does. One home for the
-  fact of a decision — do not add a third writer. **Not one
-  proposal in this repository has ever been decided** — seventy-one across four agents by
-  `docs/HANDOVER.md`'s count, thirty-five of them measured in SESSION 18's own run. Agent 9
-  refuses every one by name, and reports which gate refused it.
+  fact of a decision — do not add a third writer. **One
+  proposal in this repository has been decided, on 6 Nov 2026** (`prop-docs-ea57404dc452`; the ledger holds that one entry). Of
+  the seventy-one across four agents by `docs/HANDOVER.md`'s earlier count, thirty-five were measured in SESSION 18's own run,
+  before it, and every other one is still undecided: Agent 9 refuses those by name, and reports which gate refused each.
   `docs/IMPLEMENTATION-QA.md` §3.
 - **The privileged API has no authentication and no authorization — and it is still there.**
   `agent/observability/server.mjs` serves eleven `/api/` endpoints over the whole trace
