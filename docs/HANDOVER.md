@@ -4,6 +4,15 @@
 **Branch:** `claude/pv2-03-prototype-editorial`, from `main` `07c12ad`.
 The entries below this session's are unchanged.
 
+## Branch register — 11 November 2026 (PV2-03)
+
+- `claude/pv2-03-prototype-editorial`, from `main` `07c12ad`: `docs/` (`ROADMAP-v2.md` §8, `HANDOVER.md`, the new `PROTOTYPES.md`, the PV2-04 prompt)
+  and the unpublished `prototypes/editorial/`. Disposition: on the author's answer ("Yes, open the PR (Recommended)"), pull request #97
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/97), opened and not merged by the session; to be merged with a merge commit.
+  `origin/main` re-fetched before this line: `07c12ad`.
+- The read-only clone this session made first, at `/home/user/andreatosti2001/eu-digital-policy`, is outside the repository and holds nothing of it.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
+
 ## PV2-03 — Post-v2 C, the Editorial prototype: final checkpoint (C.2–C.5) (11 Nov 2026)
 
 **Authority:** `docs/ROADMAP-v2.md` §8, the PV2-03 rows of 11 Nov 2026 (scope; C.1 questions 1–4 and its approval; "grid C4 step 4";
