@@ -1,5 +1,9 @@
 # CODEOWNERS — who must review a change to the paths that decide what the site publishes.
 #
+# INERT SINCE 11 NOV 2026: the author removed "Require review from Code Owners" from the ruleset on `main`
+# (docs/DEPLOYMENT.md §3a, rows 2 and 3), so nothing here requires a review. The file is kept, because turning
+# the requirement back on makes it work again. What follows is what it did while the requirement was on.
+#
 # This file does nothing by itself. It takes effect only together with a branch ruleset on `main`
 # that turns on "Require review from Code Owners" (docs/DEPLOYMENT.md §3a, rows 2 and 3). With a
 # single administrator GitHub will not let that person approve their own pull request, so the

@@ -162,11 +162,14 @@ unmeasured ones, because it cannot authorise anything.
 
 - **It does not block agent-attributed commits that cite no Proposal (C8).** Today every change to this site is a session's
   commit on the author's word in `docs/ROADMAP-v2.md` §8, merged by the author in a pull request, and the approval of that path
-  is the merge. The gate cannot tell that merge from an unreviewed one; branch protection (§3a-2) is the control that can.
+  is the merge. The gate cannot tell that merge from an unreviewed one; branch protection (§3a-2) is the control that can —
+  **but since 11 Nov 2026 the ruleset requires no review** (the author's decision, §3a-2): the merge by the author is the whole
+  of the approval, and nothing requires a second person.
   `--strict-unledgered` would make it block, and would block every such change until it goes through the dispatcher. Whether
   to switch it on is the author's decision and is **not** made here.
 - **It is code in the repository it guards.** Whoever can change `agent/release/` and `pages.yml` in one merge can change what
-  the gate asks. §3a-2 and §3a-4 are what protect the gate.
+  the gate asks. §3a-2 and §3a-4 are what protect the gate; with no required review (§3a-2, 11 Nov 2026), what stops a pull
+  request that changes `reviewers.json` is C10's pin outside the tree (§3a-5), not a second reader.
 - **It cannot show a change is true** (§7).
 
 ## 3. Manual repository settings required
@@ -188,6 +191,7 @@ unmeasured ones, because it cannot authorise anything.
      `Production operating mode`. The last two were red by decision until 27 Sep 2026 and could
      not be required then; both are green now (§2).
    - Block force pushes. Restrict deletions.
+   - **Do not** require a review: the author removed "Require review from Code Owners" on 11 Nov 2026 (§3a-2).
 3. **The `github-pages` environment** (created by the first Actions deployment): Settings →
    Environments → github-pages → Deployment branches: **`main` only**.
 
@@ -208,12 +212,13 @@ publishes, and CI makes a failure visible, not blocking.
 status` lists them as *not measured* for that reason. Status as of 4 Nov 2026 is what the repository can show, which is
 nothing about any of them. **Rows 1, 2, 4 and 5 now carry the author's report of 6 Nov 2026**: it is the author's word,
 it is not something the tree can show, and the deploy record after the table is the only part of it that a log supports.
+**Rows 2 and 3 carry a change reported by the author on 11 Nov 2026**: the required code-owner review was removed.
 
 | # | Setting | Why the gate needs it | Status |
 |---|---|---|---|
 | 1 | Settings → Pages → Source: **GitHub Actions** (§3.1) | otherwise a push to `main` is published by GitHub's branch build, which no workflow can gate | reported done 24 Oct 2026 (§1b); **reported in place again by the author on 6 Nov 2026**; the deploy record below is consistent with it; not measurable from the tree |
-| 2 | **Ruleset on `main`**: require a pull request, **require review by a code owner**, require the `qa.yml` checks, block force pushes and deletions (§3.2) | the gate trusts the merge. Without a required review, C8's commits are unreviewed by construction | **reported done by the author on 6 Nov 2026**; "not done" on 24 Oct 2026 (§1b: "none") and on 4 Nov 2026; not measurable from the tree |
-| 3 | **`CODEOWNERS`** naming the owner for `/.github/`, `/agent/release/`, `/agent/implement/decisions/`, `/tools/pages-artifact.mjs` | with 2, no change to the gate, the workflows, the ledger or the allowlist merges without the owner | **file on `main`** (`.github/CODEOWNERS`, added 5 Nov 2026 at the owner's request); **inert unless row 2 is set** — a file nobody enforces protects nothing; row 2 is reported set on 6 Nov 2026 |
+| 2 | **Ruleset on `main`**: require a pull request, require the `qa.yml` checks, block force pushes and deletions (§3.2). **No required review**: "Require review from Code Owners" was in this row until 11 Nov 2026 | the gate trusts the merge. With no required review, C8's commits are unreviewed by construction, and the author's merge is the approval (§2a) | **reported done by the author on 6 Nov 2026, with the code-owner review; the review was reported removed by the author on 11 Nov 2026** (the rest of the ruleset left as it was; `docs/ROADMAP-v2.md` §8). Pull request #94 merged on 11 Nov 2026 with no review recorded on it — consistent with the removal, not proof of it; "not done" on 24 Oct 2026 (§1b: "none") and on 4 Nov 2026; not measurable from the tree |
+| 3 | **`CODEOWNERS`** naming the owner for `/.github/`, `/agent/release/`, `/agent/implement/decisions/`, `/tools/pages-artifact.mjs` | it took effect only with row 2's code-owner review; **it no longer does** | **file on `main`** (`.github/CODEOWNERS`, added 5 Nov 2026 at the owner's request), **kept and now inert**: row 2 no longer requires a code-owner review (11 Nov 2026), so no path above needs the owner's review to merge. The file is not deleted, because turning the requirement back on makes it work again |
 | 4 | **`github-pages` environment → Deployment branches: `main` only** (§3.3), and **required reviewers** if the owner wants a manual stop before deploy | a `workflow_dispatch` from another ref cannot deploy; C1 checks the ref, this makes GitHub check it first | **reported done by the author on 6 Nov 2026** (`main` only; whether required reviewers were added was not said); "not done" on 4 Nov 2026; not measurable from the tree |
 | 5 | **Repository variable `RELEASE_REVIEWER_REGISTRY_SHA256`** = the output of `node agent/release/cli.mjs status` ("registry fingerprint") | C10: pins the reviewer registry outside the tree. Unset, any run relying on a signature is refused | **reported set by the author on 6 Nov 2026**, to the fingerprint `node agent/release/cli.mjs status` printed that day for the one-reviewer registry (`rev-andrea`, added 5 Nov 2026): `4b4a0efb3e024584545d33de8d59ba39bf72455c315d6a0a5c614766f86bc259`; "not set — there is no registry yet" on 4 Nov 2026; whether the stored value equals that fingerprint is not measurable from the tree, and it changes whenever `reviewers.json` does |
 | 6 | Keep the reviewer's **private key** outside the repository and every agent's reach | it is the whole of the approval's authenticity | the owner's |
