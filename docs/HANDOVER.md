@@ -4,6 +4,23 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## Stage 1 — the release PR (#89), a dispatcher scope finding, and P-07 re-aimed (11 Nov 2026)
+
+**Branches:** `release/prop-docs-ea57404dc452-fedeb4e6` (PR #89, the author's decision and the one-file change to `docs/DEPLOYMENT.md`) and `claude/p07-decision-aware` (this session's change, from `main`).
+**Authority:** §8 "Stage 1: the decision makes seven assertions false…" (the author: "si").
+**1. The first release commit was out of scope, and the dispatcher said it was not.** The author's first successful dispatch produced `11313f6` with **9 files** (the repair of #88, `HANDOVER.md`, `ROADMAP-v2.md`
+and `docs/DEPLOYMENT.md`) while the scope stage reported "1 changed file(s), every one inside the approved path(s)". The session's reading, **not confirmed by the author**: the repair files were already in the author's index
+or tree before the dispatch, the scope stage excludes what was changed before the apply, and `git commit` then took the whole index. The unpushed branch was deleted by the author, `origin/main` was merged into
+`claude/stage-1-decision` so the repair was committed history, and the dispatch was re-run: `8913dd4`, one file. **Open finding, not repaired:** the dispatcher should refuse to commit when anything beyond its own
+changed files is staged; the session proposes a guard and has implemented none.
+**2. The release PR's required check failed, for a reason that is not the release.** Seven assertions encoded "no decision exists" (§8 row). Re-aimed, not skipped; the PR #89 branch needs `main` merged in after this
+change lands (the "Update branch" button), then a merge commit, not squash. **Still to read, by the author:** the `pages.yml` log on the merged commit — C5, C6, C7, C10 are expected satisfied and have not been seen.
+**3. Sentences made false by the decision, left for a separate change** (each says no proposal has ever been decided; they are the author's or other sessions' text): `AGENTS.md` (the paragraph at "proposal in this repository has
+ever been decided"), `agent/implement/decisions/README.md`, the header of `agent/implement/implementer.mjs`, `agent/health/control.mjs` (three places), `agent/production/schedule.mjs`, `docs/IMPLEMENTATION-QA.md`
+item 3, `docs/AGENT-ROLES.md`, `docs/PRODUCTION-OPERATING-MODE.md`, and the last bullet of `docs/DEPLOYMENT.md` §7 ("no person has used it, and a ledger with no entry is the true state"). Also `agent/production/readiness.mjs`'s
+`decision_ledger_present` now has a ledger to find; it was never read on this branch.
+**4. G1 is not recorded.** It is the author's, in `docs/ROADMAP-v2.md` §8. The decision of 6 Nov 2026 goes stale on **6 Dec 2026**.
+
 ## Stage 1 — the dispatch path, second half of the repair (10 Nov 2026)
 
 **Branch:** `claude/qa-boundary-baseline`, from `main` `4e649ef`. **Authority:** §8 "Stage 1: the second half of the dispatch-path repair, authorised" and "…what was built, and the one assertion

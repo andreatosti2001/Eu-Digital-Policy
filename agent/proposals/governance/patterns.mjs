@@ -166,17 +166,15 @@ export const PATTERNS = Object.freeze([
   Object.freeze({
     id: 'P-07',
     family: 'implementation_failure',
-    title: 'Nothing is ever decided, and the mechanism explains why',
+    title: 'A decision is rare, and the mechanism that records it does not survive a clone',
     statement:
-      'Not one proposal has been approved, rejected or edited. The ledger is absent rather than empty. And the one command that could write it binds a decision to a proposal held in a git-ignored store, so a decision recorded today reads `void_unknown_proposal` on any other machine until the producing agent is re-run over the same corpus.',
+      'Until the first decision was recorded, no proposal had been approved, rejected or edited, and the ledger was absent rather than empty. A recorded decision is still rare: at most one has ever been written, and the one command that writes it binds a decision to a proposal held in a git-ignored store, so a decision recorded today reads `void_unknown_proposal` on any other machine until the producing agent is re-run over the same corpus.',
     so_what:
-      'A backlog nobody decides is usually read as a backlog nobody has got to. Here it is also a mechanism nobody can use durably. The two are different problems and only one of them is about attention.',
+      'A backlog nobody decides is usually read as a backlog nobody has got to. Here it is also a mechanism nobody can use durably. The two are different problems and only one of them is about attention. This pattern used to say "nothing is ever decided" and anchored that to the ledger being absent; the first signed decision falsified those two anchors, which is what an anchor is for. What it still says is the part a decision did not change, and it carries a deliberate tripwire: when a second decision lands, "rare" has to be judged again by a person rather than left standing.',
     instances: Object.freeze([
-      Object.freeze({ when: 'now', what: 'the ledger file, absent — which is not the same fact as empty and is not reported as one.', anchor: { kind: 'path', path: 'agent/implement/decisions/decisions.jsonl', exists: false } }),
-      Object.freeze({ when: 'now', what: 'decisions recorded, measured through the ledger reader itself.', anchor: { kind: 'measure', measure: 'decisions_recorded', expect: 0 } }),
+      Object.freeze({ when: 'now', what: 'decisions recorded, measured through the ledger reader itself: at most one. This holds with the ledger absent (0) and with one entry (1), and it stops holding at two, which is the point — the claim is "rare", and the number that would end it is named.', anchor: { kind: 'measure', measure: 'decisions_recorded', expect: { at_most: 1 } } }),
       Object.freeze({ when: 'now', what: 'proposals reachable by id for a decision to bind to, in a fresh clone.', anchor: { kind: 'measure', measure: 'proposals_reachable_for_decision', expect: 0 } }),
-      Object.freeze({ when: 'recorded', what: 'the same fact, stated by the canonical entry point.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 'proposal in this repository has ever been decided' } }),
-      Object.freeze({ when: '2026-09-09', what: 'and by the session that ran the whole system against the real corpus and produced 48 proposals.', anchor: { kind: 'contains', path: 'docs/SESSION-25-FIRST-REAL-WORLD-RUN.md', text: 'It did not decide a single proposal' } }),
+      Object.freeze({ when: '2026-09-09', what: 'the session that ran the whole system against the real corpus and produced 48 proposals did not decide one of them.', anchor: { kind: 'contains', path: 'docs/SESSION-25-FIRST-REAL-WORLD-RUN.md', text: 'It did not decide a single proposal' } }),
       Object.freeze({ when: 'recorded', what: 'the review surface itself: a person approving in the Control Room is not shown the twelve mandatory conditions their approval stands over.', anchor: { kind: 'contains', path: 'docs/FIRST-END-TO-END-AUDIT.md', text: 'H-1' } }),
     ]),
   }),
