@@ -1,8 +1,43 @@
 # HANDOVER
 
-**Last updated:** 5 November 2026, favicon 192 px maintenance, on top of v2 Session 25, item 25.5 and the favicon maintenance session.
-**Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
+**Last updated:** 11 November 2026, PV2-03 (Post-v2 C, the Editorial prototype), checkpoint C.1.
+**Branch:** `claude/pv2-03-prototype-editorial`, from `main` `07c12ad`.
 The entries below this session's are unchanged.
+
+## PV2-03 — Post-v2 C, the Editorial prototype: checkpoint C.1 (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the rows "G1: Stage 2 is opened", "The scope of PV2-03" and "PV2-03, C.1 questions 1–4", all of
+11 Nov 2026. Branch `claude/pv2-03-prototype-editorial`, from `main` `07c12ad` (after #96). The prompt is
+`docs/prompts/v2-pv2-03-prototype-editorial.md`.
+
+**The gate.** At the session's start §8 had no G1 row; the session stopped and said so. The gate's measured half was already on
+record (run 100: C5, C7, C10 ✓); the author then approved G1 in chat ("yes to both"), and the G1 row was the session's first write,
+before the scope row. **What the G1 row does not establish:** that the ruleset on `main` is in force now (not stated by the author,
+not measurable from the tree); the dispatcher's scope-stage finding stays open. Date measured 11 Nov 2026: before Track M (12 Jan 2027)
+and the grant's expiry (9 Mar 2027).
+
+**The four views, the same for PV2-04 and PV2-05:**
+
+| View | Content | Read from, in place |
+|---|---|---|
+| Homepage | the brief's opening and its parts | `data/brief.json`, `index.html` |
+| Regulation page | the **AI Act**; empty and missing-data state on the **Chips Act** (0 claims, 0 provisions, 0 milestones, 0 relationships) | `data/instruments.json`, `data/timeline.json`, `data/claims.json` |
+| Article page | **Part V** of the brief, "AI Act: the risk pyramid, the compute threshold, and the delay" (an article = one part of the brief, until block E defines a blog article) | `index.html` `<section id="part-5">`, `data/brief.json` |
+| Analytical view | the **timeline** (101 events: 81 occurred, 20 scheduled; 4 dated to the month), with the relationships table (40 relationships) | `data/timeline.json`, `data/instruments.json` |
+
+**The folder:** `prototypes/editorial/`. Measured: not listed by `node tools/pages-artifact.mjs list`; no validator walks it (they
+read the root's pages, `instruments/<id>/` and two-letter language folders). **Consequence for C.4:** `tools/thirdparty.mjs` does not
+see the prototype either, so "no third-party request" will be measured another way (a browser run that records every request).
+**The shortlist** (USWDS, Tufte CSS, GOV.UK, Simple.css) was not put again. Nothing has been written in `prototypes/`.
+
+**Battery on `f7cc074`, 11 Nov 2026:** `validate` 0 errors, 5 warnings; `i18n-audit` 0/0; `design-qa` 0/0; `evidence-audit --as-of
+2026-11-11` exit 0; `freshness --as-of 2026-11-11` 0 defects, 3 staleness prompts (enforcement: one record 76 days past the 45-day
+interval, 5 provisional records not re-verified in 30 days, newest action 82 days old — time, not a defect of this branch);
+`seo-audit` 0/0; `node --test tools/selftest.mjs` 143/143; `commit-evidence origin/main HEAD`: no commit changes a published file.
+`agent/records/` absent. **A note on the first commit** (`docs: record G1…`): it carries a `Co-Authored-By` trailer naming a model,
+against `AGENTS.md` "Git"; amending a pushed commit was refused by the environment, so it stays, and later commits do not carry it.
+
+**Waiting for:** the author's approval of C.1, recorded in §8. Then C.3 begins in `prototypes/editorial/`.
 
 ## Branch register — 11 November 2026 (the PV2-03 prompt and the Editorial relationships table)
 
