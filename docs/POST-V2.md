@@ -186,8 +186,11 @@ Come ogni prototipo di C, è costruito in HTML, CSS e moduli ES vanilla in una c
 («PV2-02, B.4 question 2»; il nome lo conferma PV2-03), **legge in posto i JSON canonici** e non ne copia né ne ricopia i dati in una seconda forma:
 non si disegna una rete su dati inventati per il prototipo. Mostra anche come si risolvono l'**alternativa accessibile**
 (elenco o tabella), la **tastiera**, il **mobile** — che non è il canvas desktop rimpicciolito — e i **due temi**:
-l'elenco dei requisiti è in D, e qui si decide come ciascun concept li soddisfa, non se li soddisfa. **Come l'Explorer
-entra nel confronto dei tre prototipi, dato che l'Editoriale non lo comprende, non è deciso**: è la domanda 7 del §6.
+l'elenco dei requisiti è in D, e qui si decide come ciascun concept li soddisfa, non se li soddisfa. **Nel confronto a tre**
+(deciso dall'autore l'11 novembre 2026, §6 domanda 7) l'Editoriale non ha l'Explorer ma **mostra le stesse relazioni come
+tabella non interattiva** nella sua vista analitica, così che le tre direzioni portino gli stessi contenuti; l'esperienza
+interattiva si confronta tra i due concept che la comprendono. La tabella è la stessa che l'alternativa accessibile
+richiede (D), non un'altra rappresentazione dei dati.
 
 ### D — Redesign, infografiche e microanimazioni
 
@@ -271,8 +274,7 @@ rimisura, perché i dati si muovono.
   funzione porta alla route dell'applicazione.
 - **Le cifre mostrate.** Un conteggio che l'Explorer mostra (strumenti, relazioni per tipologia, relazioni di uno
   strumento) esce da **una sola funzione** che importa le derivazioni del sito, e «nessuna registrata» è uno stato, non lo
-  zero (`docs/DATA-READINESS.md` §6, MC-2, MC-6). Se all'Explorer serva una scheda di metrica propria è la domanda 8 del
-  §6.
+  zero (`docs/DATA-READINESS.md` §6, MC-2, MC-6). Una scheda di metrica propria per l'Explorer non serve (§6, domanda 8, deciso).
 
 **Vincoli architetturali.**
 
@@ -457,21 +459,20 @@ dall'assenza di regressioni e dalla possibilità del lettore di capire che cosa 
 5. Il Kabarza resta un riferimento visivo esterno, come scritto nel piano? **Sì, deciso il 10 novembre 2026**: riferimento visivo soltanto, senza punteggio
    (`docs/ROADMAP-v2.md` §8, «PV2-02, B.1 question 2»).
 
-**Aggiunte l'11 novembre 2026, per il Regulatory Network Explorer (§3 C e D).** Nessuna è decisa da questa aggiunta:
+**Aggiunte l'11 novembre 2026, per il Regulatory Network Explorer (§3 C e D).** Le domande 6–9 sono state decise dall'autore nella stessa giornata (sotto); questa aggiunta non ne decide altre:
 
-6. **La stima.** Il perimetro dell'Explorer sta in una sessione PV2-08, o ne serve una aggiuntiva? Lo misura PV2-08 come suo
-   primo passo (§4.2); se non sta, la sessione aggiuntiva, il suo posto nella sequenza e la stima nuova sono dell'autore,
-   prima che una sessione li presupponga. Lo stesso vale per il peso aggiunto a PV2-04 e PV2-05.
-7. **Il confronto a tre.** L'Explorer c'è nel Policy observatory e nell'Ibrido, non nell'Editoriale. Come entra nel confronto
-   omogeneo dei tre prototipi che PV2-05 deve produrre? Per esempio: si confrontano i due concept dell'Explorer tra loro e si
-   lascia fuori dal confronto a tre; oppure l'Editoriale mostra le stesse relazioni in una forma non interattiva (l'elenco o
-   la tabella che D chiede comunque), così che le tre direzioni abbiano lo stesso contenuto. Decisione dell'autore. Se la
-   riga di PV2-04 debba rimandare al §3 C è lo stesso punto.
-8. **La data readiness.** Le cifre che l'Explorer mostra (§3 D, «Le cifre mostrate») cadono sotto il contratto delle
-   metriche di A (`docs/DATA-READINESS.md` §6), che PV2-01 ha scritto e provato su quattro schede (multe, strumenti per stato,
-   scadenze, evidenza), nessuna sulle relazioni. Serve una scheda propria per le relazioni, prima di PV2-08, o basta che le
-   cifre mostrate soddisfino il contratto così com'è, senza una scheda?
+6. ~~La stima: il perimetro dell'Explorer sta in una sessione PV2-08?~~ **Deciso dall'autore l'11 novembre 2026: lo decide
+   PV2-08 a inizio sessione**, con il concept in mano (§4.2). Nessuna sessione aggiuntiva è pianificata adesso e nessuna
+   cifra nuova è scritta; se PV2-08 trova che non basta, la sessione aggiuntiva, il suo posto nella sequenza e la stima nuova
+   tornano all'autore, prima che una sessione li presupponga. Lo stesso per il peso aggiunto a PV2-04 e PV2-05.
+7. ~~Il confronto a tre.~~ **Deciso dall'autore l'11 novembre 2026: l'Editoriale mostra le relazioni come tabella non
+   interattiva** (§3 C); l'Explorer interattivo si confronta tra Policy observatory e Ibrido. La riga di PV2-04 non è
+   modificata. **Conseguenza da portare:** la tabella dell'Editoriale è un lavoro di PV2-03, il cui prompt
+   (`docs/prompts/v2-pv2-03-prototype-editorial.md`) non la menziona e non è stato modificato.
+8. ~~La data readiness: serve una scheda per le relazioni?~~ **Deciso dall'autore l'11 novembre 2026: no.** Le cifre che
+   l'Explorer mostra soddisfano il contratto di `docs/DATA-READINESS.md` §6 così com'è (una sola funzione, nessuno zero al
+   posto di «non registrato») e PV2-01 non si riapre.
 9. ~~Il riferimento a Knwler: lo si apre o si lavora dalla descrizione dell'autore?~~ **Aperto e letto l'11 novembre 2026,
-   su scelta dell'autore** (§3 C: che cosa si sa e che cosa no; il testo del file LICENSE resta non letto). Restano aperte
-   due cose per i concept: quali campi dei record raggruppano i nodi, se li raggruppano (§3 C), e se un riuso, di qualunque
-   cosa, sia mai ammesso: richiederebbe la licenza letta (§5).
+   su scelta dell'autore** (§3 C: che cosa si sa e che cosa no; il testo del file LICENSE resta non letto). **Il file LICENSE non si legge
+   adesso** (deciso l'11 novembre 2026): non si riusa nulla, e la licenza si legge solo se un giorno si decide un riuso
+   (§5). Resta aperto per i concept soltanto quali campi dei record raggruppano i nodi, se li raggruppano (§3 C).
