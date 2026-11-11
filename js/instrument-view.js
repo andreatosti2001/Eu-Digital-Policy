@@ -36,7 +36,7 @@ import { label as taxLabel } from './data.js';
 import * as F from './format.js';
 import { authoritiesFor, datesFor, cell, setOverlay, sanctionCeiling } from './dna.js';
 import { provisionApplication, provisionDeadlines } from './regulatory-model.js';
-import { derive, STAGES, actionsOnly, inactionsOnly } from './pipeline.js';
+import { derive, STAGES, actionsOnly, inactionsOnly, finesFigure } from './pipeline.js';
 import { sourceList, gradeChip, freshness } from './evidence-view.js';
 import { interactionsFor } from './interactions.js';
 import { kindText } from './map-model.js';
@@ -478,8 +478,10 @@ function enforcementSection(inst) {
   }
   /* announced is a sum of what was announced; collected is not a sum at all,
      because a record that cannot settle whether money moved is not a zero */
-  const announced = recs.reduce((n, r) => n + (r.fine_eur || 0), 0);
-  const unknownPay = recs.filter((r) => String(r.payment_status || '').endsWith('unknown')).length;
+  /* one computing function (js/pipeline.js finesFigure, MC-2) */
+  const fig = finesFigure(recs);
+  const announced = fig.announced.eur;
+  const unknownPay = fig.collected.unknown.length + fig.collected.not_researched.length + fig.collected.unmapped.length;
 
   const cards = recs
     .slice()
@@ -534,7 +536,7 @@ function enforcementSection(inst) {
 
   return section('enforcement', H.enforcement,
     '<div class="ip-enf-summary">' +
-      '<div class="numstat"><b>' + esc(F.eur(announced)) + '</b> <span>announced across ' + esc(F.plural(recs.length, 'record')) + '</span></div>' +
+      '<div class="numstat"><b>' + esc(announced === null ? 'not determinable' : F.eur(announced)) + '</b> <span>announced across ' + esc(F.plural(recs.length, 'record')) + '</span></div>' +
       '<div class="numstat" data-tone="unknown"><b>unknown</b> <span>demonstrably collected</span></div>' +
       '<p class="ip-enf-caveat">' + unknownPay + ' of ' + F.plural(recs.length, 'record') +
         ' cannot settle whether money moved. That is not zero, and the announced figure is not a total ' +

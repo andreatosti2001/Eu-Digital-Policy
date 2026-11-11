@@ -3464,3 +3464,367 @@ test('AT15 · the notice check: this tree holds all four clauses; each planted f
   /* what could not be read is said, not skipped */
   assert.equal(run(undefined, () => ({ appliesHtml: null, evidenceAuditSrc: null, appliesJsSrc: null })).warnings.length, 3);
 });
+
+/* ============================================================
+   FB · the provenance of an enforcement amount (P0.3, 11 Nov 2026)
+   and MC · the metric contract MC-1…MC-15 (P0.2, 11 Nov 2026)
+
+   tools/fine-basis.mjs and tools/metric-contract.mjs. Every case is
+   planted in a CLONE of the parsed datasets (or, end to end, in a scratch
+   copy of data/), never in the tree. The planted cases are those of
+   docs/DATA-READINESS.md §4 (P1–P5) and §6 (K1–K13), and the twelve of the
+   P0.3 prompt (A.6). Each failing case is asserted to fail on the property
+   it targets.
+   ============================================================ */
+
+import { checkFineBasis, basisIndex, amountsIn, parseAmount } from './fine-basis.mjs';
+import { evaluate, FINES_CARD, PROPERTIES, sumSites, codeOnly, treeAsOf } from './metric-contract.mjs';
+import { finesFigure, PAYMENT_STATES, posturePart } from '../js/pipeline.js';
+
+const loadData = () => Object.fromEntries(readdirSync(join(ROOT, 'data')).filter((f) => f.endsWith('.json'))
+  .map((f) => [f.replace(/\.json$/, ''), JSON.parse(readFileSync(join(ROOT, 'data', f), 'utf8'))]));
+const enfOf = (db, id) => db.enforcement.enforcement.find((r) => r.id === id);
+const fb = (db, id) => checkFineBasis(enfOf(db, id), basisIndex(db));
+const mcOf = (res) => [...new Set(res.findings.map((x) => x.mc))].sort();
+
+test('FB0 · the control: every one of the 13 fined records has an established basis; a record with no fine has none', () => {
+  const db = loadData();
+  const fined = db.enforcement.enforcement.filter((r) => r.fine_eur != null);
+  assert.equal(fined.length, 13);
+  for (const r of fined) assert.equal(fb(db, r.id).state, 'established', `${r.id}: ${fb(db, r.id).problems.join('; ')}`);
+  for (const r of db.enforcement.enforcement.filter((x) => x.fine_eur == null)) assert.equal(fb(db, r.id).state, 'none');
+  /* the four of F-A3 now rest on a fact claim and an official source each */
+  for (const id of ['enf-meta-dpc-2023-transfers', 'enf-tiktok-dpc-2025-transfers', 'enf-apple-ec-2025', 'enf-meta-ec-2025']) {
+    const e = enfOf(db, id).fine_eur_basis.evidence[0];
+    assert.equal(db.claims.claims.find((c) => c.id === e.claim).type, 'claim-type:fact', id);
+    assert.ok(['tier:1', 'tier:2'].includes(db.sources.sources.find((s) => s.id === e.source).tier), id);
+  }
+});
+
+test('FB1 · an amount with no basis at all fails (and a source in the record\'s list is not a basis) — A.6 cases 1 and 9', () => {
+  const db = loadData(); delete enfOf(db, 'enf-temu-ec-2026').fine_eur_basis;
+  const r = fb(db, 'enf-temu-ec-2026');
+  assert.equal(r.state, 'absent'); assert.match(r.problems[0], /no fine_eur_basis/);
+  assert.ok(enfOf(db, 'enf-temu-ec-2026').sources.includes('src-ec-temu-fine-2026'), 'the source is there, and it is still not a basis');
+});
+
+test('FB2 · a source that does not exist, and a real source linked to neither the record nor the claim, fail — A.6 cases 2 and 9', () => {
+  const db = loadData(); const e = enfOf(db, 'enf-temu-ec-2026').fine_eur_basis.evidence[0];
+  e.source = 'src-does-not-exist';
+  assert.match(fb(db, 'enf-temu-ec-2026').problems.join(), /not a source in data\/sources\.json/);
+  e.source = 'src-ec-x-fine-2025';
+  assert.match(fb(db, 'enf-temu-ec-2026').problems.join(), /in neither the record's nor the claim's sources/);
+});
+
+test('FB3 · a missing locator fails — A.6 case 3', () => {
+  const db = loadData(); delete enfOf(db, 'enf-x-ec-2025').fine_eur_basis.evidence[0].locator;
+  assert.match(fb(db, 'enf-x-ec-2025').problems.join(), /locator is missing or empty/);
+});
+
+test('FB4 · an empty or malformed locator fails, and one that does not quote the amount fails — A.6 case 4', () => {
+  for (const [loc, re] of [['   ', /missing or empty/], ['p. 1', /malformed/], ['123456789012345678', /malformed/], ['First paragraph: "The Commission fined X."', /does not occur in the locator/]]) {
+    const db = loadData(); enfOf(db, 'enf-x-ec-2025').fine_eur_basis.evidence[0].locator = loc;
+    assert.match(fb(db, 'enf-x-ec-2025').problems.join(), re, JSON.stringify(loc));
+  }
+});
+
+test('FB5 · a claim that does not exist fails — A.6 case 5', () => {
+  const db = loadData(); enfOf(db, 'enf-x-ec-2025').fine_eur_basis.evidence[0].claim = 'clm-nowhere';
+  assert.match(fb(db, 'enf-x-ec-2025').problems.join(), /"clm-nowhere" is not a claim/);
+});
+
+test('FB6 · an interpretation used as the factual proof of the amount fails — A.6 case 6 (enf-apple-ec-2025\'s state before P0.3)', () => {
+  const db = loadData(); const e = enfOf(db, 'enf-apple-ec-2025').fine_eur_basis.evidence[0];
+  e.claim = 'clm-apple-proactive-enablement';
+  const p = fb(db, 'enf-apple-ec-2025').problems.join();
+  assert.match(p, /claim-type:interpretation: an argument is not a statement of fact/);
+});
+
+test('FB7 · a derived claim used as direct proof fails — A.6 case 7 (the two DPC records\' state before P0.3)', () => {
+  const db = loadData(); enfOf(db, 'enf-meta-dpc-2023-transfers').fine_eur_basis.evidence[0].claim = 'clm-dpc-share-of-fines';
+  assert.match(fb(db, 'enf-meta-dpc-2023-transfers').problems.join(), /claim-type:derived: a derived claim is computed from other values/);
+});
+
+test('FB8 · a linked fact claim that does not state the amount fails — A.6 case 8 (enf-meta-ec-2025\'s state before P0.3)', () => {
+  const db = loadData(); enfOf(db, 'enf-meta-ec-2025').fine_eur_basis.evidence[0].claim = 'clm-meta-pay-or-consent';
+  const p = fb(db, 'enf-meta-ec-2025').problems.join();
+  assert.match(p, /does not state the amount 200000000 EUR in its statement/);
+  assert.doesNotMatch(p, /is claim-type:/, 'it IS a fact claim; the defect is only that it says nothing of the amount');
+});
+
+test('FB9 · a claim linked one way only fails — the record must cite it and it must name the record', () => {
+  const db = loadData(); enfOf(db, 'enf-meta-ec-2025').claims = enfOf(db, 'enf-meta-ec-2025').claims.filter((c) => c !== 'clm-meta-dma-fine');
+  assert.match(fb(db, 'enf-meta-ec-2025').problems.join(), /not among the record's claims/);
+});
+
+test('FB10 · an amount or a currency that does not match the proof fails — A.6 case 10', () => {
+  for (const [as, re] of [['€300 million', /is 300000000 EUR, not fine_eur 200000000/], ['USD 200 million', /does not write one amount in euros/], ['200 million', /does not write one amount in euros/]]) {
+    const db = loadData(); const e = enfOf(db, 'enf-temu-ec-2026').fine_eur_basis.evidence[0];
+    e.as_stated = as; e.locator = `First paragraph: "a fine of ${as} to Temu"`;
+    assert.match(fb(db, 'enf-temu-ec-2026').problems.join(), re, as);
+  }
+  /* and the record's own amount changed under an unchanged proof */
+  const db = loadData(); enfOf(db, 'enf-temu-ec-2026').fine_eur = 250000000;
+  assert.match(fb(db, 'enf-temu-ec-2026').problems.join(), /is 200000000 EUR, not fine_eur 250000000/);
+});
+
+test('FB11 · a source "read" with nothing attesting the reading fails, and a secondary source is not primary proof — A.6 case 11', () => {
+  const db = loadData(); delete enfOf(db, 'enf-temu-ec-2026').fine_eur_basis.evidence[0].read_on;
+  assert.match(fb(db, 'enf-temu-ec-2026').problems.join(), /read_on "" is not a day/);
+  const d2 = loadData(); d2.sources.sources.find((s) => s.id === 'src-ec-temu-fine-2026').url_status = 'url:live';
+  delete enfOf(d2, 'enf-temu-ec-2026').fine_eur_basis.evidence[0].read_on;
+  assert.equal(fb(d2, 'enf-temu-ec-2026').state, 'invalid', 'a live URL is not a reading');
+  const d3 = loadData(); enfOf(d3, 'enf-temu-ec-2026').fine_eur_basis.evidence[0].source = 'src-techpolicypress-temu';
+  assert.match(fb(d3, 'enf-temu-ec-2026').problems.join(), /tier:4: a secondary source is not the proof/);
+});
+
+test('FB12 · a record with no amount is never asked for a basis; a basis on it is refused; a declared gap is a state, not a pass', () => {
+  const db = loadData();
+  assert.equal(fb(db, 'enf-tiktok-ec-2025-commitments').state, 'none');
+  assert.equal(fb(db, 'enf-hungary-commission-none').state, 'none');
+  enfOf(db, 'enf-tiktok-ec-2025-commitments').fine_eur_basis = { evidence: [], gap: 'no amount here, and this sentence is long enough' };
+  assert.match(fb(db, 'enf-tiktok-ec-2025-commitments').problems.join(), /a basis for an amount the record does not state/);
+  const d2 = loadData(); enfOf(d2, 'enf-temu-ec-2026').fine_eur_basis = { evidence: [], gap: 'The press release could not be retrieved from this environment (HTTP 429).' };
+  assert.equal(fb(d2, 'enf-temu-ec-2026').state, 'gap');
+  enfOf(d2, 'enf-temu-ec-2026').fine_eur_basis = { evidence: [], gap: 'short' };
+  assert.equal(fb(d2, 'enf-temu-ec-2026').state, 'invalid');
+  enfOf(d2, 'enf-temu-ec-2026').fine_eur_basis = { evidence: [], gap: null };
+  assert.match(fb(d2, 'enf-temu-ec-2026').problems.join(), /neither evidence nor a gap/);
+});
+
+test('FB13 · the amount parser reads the passages as the authorities wrote them, and refuses what it cannot read', () => {
+  assert.equal(parseAmount('€1.2 billion'), 1_200_000_000);
+  assert.equal(parseAmount('824,990,000 euros'), 824_990_000);
+  assert.equal(parseAmount('746.000.000 euros'), 746_000_000);
+  assert.equal(parseAmount('15 milioni di euro'), 15_000_000);
+  assert.equal(parseAmount('€2.95 billion'), 2_950_000_000);
+  assert.equal(parseAmount('EUR 824,990,000'), 824_990_000);
+  assert.equal(parseAmount('quindici milioni di euro'), null, 'a spelled-out number is not read: fail closed');
+  assert.equal(parseAmount('€500 million and €200 million'), null, 'two amounts are not one');
+  assert.equal(parseAmount('4% of turnover'), null);
+  assert.deepEqual(amountsIn('a turnover of 44.5 billion').map((a) => a.value), [], 'no currency, no amount');
+});
+
+test('FB14 · validate.mjs, end to end: a fine with no basis, and fine_eur "unknown", negative, fractional or a string, each fail by name (F-A5, P2, P5)', () => {
+  const plants = [
+    ['no basis', (r) => { delete r.fine_eur_basis; }, /enf-temu-ec-2026" fine_eur 200000000 has no fine_eur_basis/],
+    ['"unknown"', (r) => { r.fine_eur = 'unknown'; }, /enf-temu-ec-2026" fine_eur "unknown" is not an integer ≥ 0/],
+    ['negative', (r) => { r.fine_eur = -200000000; }, /fine_eur -200000000 is not an integer ≥ 0/],
+    ['fraction', (r) => { r.fine_eur = 200000000.5; }, /fine_eur 200000000\.5 is not an integer/],
+    ['string of digits', (r) => { r.fine_eur = '200000000'; }, /fine_eur "200000000" is not an integer/],
+  ];
+  for (const [name, plant, re] of plants) {
+    const dir = dataScratch();
+    try {
+      edit(dir, 'data/enforcement.json', (t) => { const d = JSON.parse(t); plant(d.enforcement.find((r) => r.id === 'enf-temu-ec-2026')); return JSON.stringify(d, null, 1); });
+      const out = runValidator('validate.mjs', [], dir);
+      assert.equal(out.exit, 1, name); assert.match(out.out, re, name);
+    } finally { rmSync(dir, { recursive: true, force: true }); }
+  }
+});
+
+/* ------------------------------------------------------------ the contract */
+
+const ev = (over = {}, ctx = {}) => evaluate({ ...FINES_CARD, ...over }, { db: ctx.db ?? loadData(), ...ctx });
+
+test('MC0 · the control: the fines card holds MC-1…MC-15 on this tree, and the figure is the one §5.2 measured', async () => {
+  assert.equal(PROPERTIES.length, 15);
+  const r = await ev();
+  assert.deepEqual(r.findings, []); assert.equal(r.publishable, true);
+  const f = r.result;
+  assert.equal(f.announced.eur, 9_015_990_000); assert.equal(f.fined, 13); assert.equal(f.population, 20);
+  assert.deepEqual(Object.fromEntries(Object.entries(f.parts).map(([k, v]) => [k, [v.eur, v.records.length]])),
+    { annulled: [761_000_000, 2], appeal: [6_614_990_000, 8], final: [0, 0], standing: [1_640_000_000, 3] });
+  assert.equal(f.collected.state, 'not_determinable'); assert.equal(f.collected.eur, null); assert.equal(f.collected.unknown.length, 10);
+  assert.deepEqual(f.weak.map((w) => w.id).sort(), ['enf-apple-ec-2025', 'enf-meta-dpc-2023-transfers', 'enf-openai-garante-2024'], 'after P0.3 only the three unverified records rest on weak evidence');
+});
+
+test('MC1 · K1: a question that does not name the site\'s records as its population is refused', async () => {
+  assert.deepEqual(mcOf(await ev({ question: 'How much has the EU fined?' })), ['MC-1']);
+  assert.deepEqual(mcOf(await ev({ question: '' })), ['MC-1']);
+});
+
+test('MC2 · K2: a second sum in a view is found by line; naming the field is not a sum; every consumer imports the one function', async () => {
+  const masthead = readFileSync(join(ROOT, 'js/masthead.js'), 'utf8');
+  const second = masthead.replace('const fig = finesFigure(records);', 'const fig = finesFigure(records);\n  const mine = records.filter((r) => r.fine_eur != null).reduce((a, r) => a + r.fine_eur, 0);');
+  const r = await ev({}, { files: { 'js/masthead.js': second } });
+  assert.deepEqual(mcOf(r), ['MC-2']); assert.match(r.findings[0].message, /js\/masthead\.js:\d+ sums fine_eur itself \(reduce\)/);
+  /* the forms that only NAME the field: a null test, a filter, a formatter, a string, a comment */
+  const naming = "import { finesFigure } from './pipeline.js';\nconst a = (r) => r.fine_eur == null ? 'no fine' : F.eur(r.fine_eur);\nconst n = list.filter((r) => r.fine_eur != null).length;\nconst s = '<b>' + esc(F.eur(rec.fine_eur)) + '</b>';\n// total += r.fine_eur in a comment\nconst t = 'x += r.fine_eur in a string';\n";
+  assert.deepEqual(sumSites(naming, 'fine_eur'), [], 'naming the field is not a second derivation');
+  /* an alias, a += and a plus are real sums */
+  assert.equal(sumSites('const v = r.fine_eur;\nlet t = 0;\nt += v;\n', 'fine_eur').length, 1);
+  assert.equal(sumSites('for (const r of xs) total += r.fine_eur;', 'fine_eur').length, 1);
+  assert.equal(sumSites('const x = a.fine_eur + b.fine_eur;', 'fine_eur').length, 1);
+  /* the stated limit: a generic helper over a mapped list is NOT seen — recorded, so that it is never read as proof of uniqueness */
+  assert.deepEqual(sumSites('const total = sum(records.map((r) => r.fine_eur));', 'fine_eur'), []);
+  /* a consumer that stops importing the function */
+  const iv = readFileSync(join(ROOT, 'js/instrument-view.js'), 'utf8').replace(', finesFigure } from', ' } from');
+  assert.match((await ev({}, { files: { 'js/instrument-view.js': iv } })).findings.map((x) => x.message).join(), /instrument-view\.js does not import finesFigure/);
+  /* the compute module itself may sum in one place only */
+  const pipe = readFileSync(join(ROOT, 'js/pipeline.js'), 'utf8') + '\nexport const again = (xs) => xs.reduce((a, r) => a + r.fine_eur, 0);\n';
+  assert.match((await ev({}, { files: { 'js/pipeline.js': pipe } })).findings.map((x) => x.message).join(), /js\/pipeline\.js sums fine_eur in 2 places/);
+  assert.equal(codeOnly("a = 'x'; // y").includes('y'), false);
+});
+
+test('MC3 · K3: a field the declaration reads, missing from one record, is refused', async () => {
+  const db = loadData(); delete enfOf(db, 'enf-temu-ec-2026').payment_status;
+  const r = await ev({}, { db });
+  assert.ok(mcOf(r).includes('MC-3')); assert.match(r.findings.find((x) => x.mc === 'MC-3').message, /enf-temu-ec-2026 has no field "payment_status"/);
+});
+
+test('MC4 · K4 and P2/P5: "unknown", a negative, a fraction and a malformed number each name the record, and the figure is never coerced', async () => {
+  for (const v of ['unknown', -200000000, 200000000.5, '200,000,000', '2e8']) {
+    const db = loadData(); enfOf(db, 'enf-temu-ec-2026').fine_eur = v;
+    const r = await ev({}, { db });
+    assert.ok(mcOf(r).includes('MC-4'), String(v));
+    assert.match(r.findings.find((x) => x.mc === 'MC-4').message, /record enf-temu-ec-2026: fine_eur .* is not an integer ≥ 0 in EUR; never coerced/, String(v));
+    const fig = finesFigure(db.enforcement.enforcement);
+    assert.equal(fig.announced.state, 'not_determinable'); assert.equal(fig.announced.eur, null, 'no string concatenation, no subtraction');
+    assert.deepEqual(fig.announced.invalid, [{ id: 'enf-temu-ec-2026', value: v }]);
+  }
+});
+
+test('MC5 · K5: a payment state with no mapping, a map missing a taxonomy term, and contradictory states (P4: paid on an annulled decision) are refused', async () => {
+  const db = loadData(); enfOf(db, 'enf-temu-ec-2026').payment_status = 'payment:partially-paid';
+  const r = await ev({}, { db });
+  assert.ok(mcOf(r).includes('MC-5')); assert.match(r.findings.map((x) => x.message).join(), /enf-temu-ec-2026: payment_status "payment:partially-paid" is not mapped/);
+  assert.equal(finesFigure(db.enforcement.enforcement).collected.state, 'not_determinable', 'an unmapped state is never a silent default');
+  const { 'payment:unpaid': _drop, ...partial } = PAYMENT_STATES;
+  assert.match((await ev({}, { exports: { 'js/pipeline.js#PAYMENT_STATES': partial } })).findings.map((x) => x.message).join(), /"payment:unpaid" has no mapping/);
+  const p4 = loadData(); enfOf(p4, 'enf-openai-garante-2024').payment_status = 'payment:paid';
+  assert.match((await ev({}, { db: p4 })).findings.filter((x) => x.mc === 'MC-5').map((x) => x.message).join(), /enf-openai-garante-2024: its states contradict each other .*annulled, yet recorded as paid/);
+});
+
+test('MC6 · K6 and P1: collected is never €0 beside unknowns; payment_status null is "not researched" and counted, the same in every view', async () => {
+  const zero = (records, o) => { const f = finesFigure(records, o); return { ...f, collected: { ...f.collected, state: 'determined', eur: 0 } }; };
+  assert.ok(mcOf(await ev({}, { compute: zero })).includes('MC-6'));
+  const db = loadData(); enfOf(db, 'enf-temu-ec-2026').payment_status = null;
+  const f = finesFigure(db.enforcement.enforcement);
+  assert.deepEqual(f.collected.not_researched, ['enf-temu-ec-2026']); assert.equal(f.collected.unknown.length, 9);
+  assert.equal(f.collected.state, 'not_determinable');
+  /* before P0.2 the three views counted 10 · 10 · 9 here (DATA-READINESS P1); there is now one function */
+  for (const c of FINES_CARD.consumers) assert.doesNotMatch(readFileSync(join(ROOT, c), 'utf8'), /payment_status\s*===\s*'payment:unknown'|endsWith\('unknown'\)\)\.length/, c);
+});
+
+test('MC7 · K7: a property declared not applicable is refused, and so is a "not applicable" state contradictions() does not admit', async () => {
+  assert.ok(mcOf(await ev({ partition: 'not_applicable' })).includes('MC-7'));
+  const db = loadData(); enfOf(db, 'enf-temu-ec-2026').payment_status = 'payment:not-applicable';
+  assert.match((await ev({}, { db })).findings.filter((x) => x.mc === 'MC-7').map((x) => x.message).join(), /enf-temu-ec-2026 is "not applicable" on payment_status while contradictions\(\) says: a fine is recorded but payment is marked not applicable/);
+});
+
+test('MC8 · K8: parts computed by independent filters put a record in two parts and add to more than the total — refused', async () => {
+  const twice = (records, o) => { const f = finesFigure(records, o); const parts = structuredClone(f.parts); for (const id of parts.annulled.records) { parts.appeal.records.push(id); } parts.appeal.eur += parts.annulled.eur; return { ...f, parts }; };
+  const r = await ev({}, { compute: twice });
+  assert.deepEqual(mcOf(r), ['MC-8']);
+  assert.match(r.findings.map((x) => x.message).join(), /enf-amazon-cnpd-2021 is in 2 parts/);
+  assert.match(r.findings.map((x) => x.message).join(), /the parts add to 9776990000, the total is 9015990000/);
+  assert.equal(posturePart(enfOf(loadData(), 'enf-amazon-cnpd-2021')), 'annulled', 'the ordered derivation puts an annulled decision under appeal in one part');
+});
+
+test('MC9 · K9: an undated input hidden is refused; a computing function that reads the clock is refused', async () => {
+  const db = loadData(); enfOf(db, 'enf-temu-ec-2026').last_verified = null;
+  const hide = (records, o) => { const f = finesFigure(records, o); return { ...f, as_of: { ...f.as_of, undated: [] } }; };
+  assert.deepEqual(mcOf(await ev({}, { db, compute: hide })), ['MC-9']);
+  assert.deepEqual(finesFigure(db.enforcement.enforcement).as_of.undated, ['enf-temu-ec-2026'], 'the real function names it');
+  const clock = (records, o) => { const today = new Date(); return finesFigure(records, { asOf: o?.asOf ?? today.toISOString().slice(0, 10) }); };
+  const r = await ev({}, { compute: clock });
+  assert.match(r.findings.map((x) => x.message).join(), /read the clock/);
+});
+
+test('MC10 · K10: a notice computed from the dataset\'s newest date omits inputs past their interval — refused; the real one names exactly riskClass()\'s', async () => {
+  const lazy = (records, o) => { const f = finesFigure(records, o); return { ...f, past_interval: f.past_interval ? [] : null }; };
+  const r = await ev({}, { compute: lazy, asOf: '2026-11-11' });
+  assert.deepEqual(mcOf(r), ['MC-10']); assert.match(r.findings[0].message, /put 9 input\(s\) at review-due or stale/);
+  assert.equal(finesFigure(loadData().enforcement.enforcement, { asOf: '2026-11-11' }).past_interval.length, 9);
+  assert.equal(finesFigure(loadData().enforcement.enforcement).past_interval, null, 'no date given, nothing computed against the reader\'s day');
+  assert.equal(treeAsOf(loadData()) >= '2026-11-11', true);
+});
+
+test('MC11 · K11: weak evidence counted from requires_verification alone omits an amount with no proof — refused; a declared gap is named', async () => {
+  const db = loadData(); enfOf(db, 'enf-temu-ec-2026').fine_eur_basis = { evidence: [], gap: 'The press release returned HTTP 429 and was not read on this day.' };
+  const fromFlag = (records, o) => { const f = finesFigure(records, o); return { ...f, weak: f.weak.filter((w) => w.why.includes('record unverified')) }; };
+  const r = await ev({}, { db, compute: fromFlag });
+  assert.deepEqual(mcOf(r), ['MC-11']); assert.match(r.findings[0].message, /enf-temu-ec-2026/);
+  const real = finesFigure(db.enforcement.enforcement).weak.find((w) => w.id === 'enf-temu-ec-2026');
+  assert.deepEqual([real.entity, real.eur], ['Temu', 200000000], 'named with its entity and its amount');
+  assert.deepEqual((await ev({}, { db })).findings, [], 'the real function names the gap, so the contract holds');
+});
+
+test('MC12 · K12: an empty "cannot say" is refused', async () => {
+  assert.deepEqual(mcOf(await ev({ cannot_say: [] })), ['MC-12']);
+  assert.deepEqual(mcOf(await ev({ cannot_say: [' '] })), ['MC-12']);
+});
+
+test('MC13 · K13 and E1: a weighted score, or anything but sum, count and share, is refused', async () => {
+  assert.ok(mcOf(await ev({ formula: 'weighted', weights: { fines: 0.7, unresolved_claims: 0.3 } })).includes('MC-13'));
+  assert.ok(mcOf(await ev({ score: 'evidence strength index' })).includes('MC-13'));
+  assert.ok(mcOf(await ev({ formula: 'share' })).includes('MC-13'), 'a share names numerator and denominator');
+});
+
+/* MC-14 and MC-15 on the other families of DATA-READINESS §8: the contract
+   can express them. Fixtures only — neither card is declared on the tree. */
+const countDecl = (over) => ({
+  id: 'fixture', question: 'Of the dated events this site records, how many fall in the 12 months after a stated date?',
+  fields: [], value: null, formula: 'count', consumers: [], states: [], partition: null, window: null, cannot_say: ['whether a passed event happened'], caveats: [], ...over,
+});
+const identity = (xs) => xs;
+
+test('MC14 · D4: a month-precision event at the window\'s edge not named "may fall either side" is refused; named, it holds', async () => {
+  const db = loadData();
+  const edge = (events) => events.filter((e) => e.date_precision && e.date_precision !== 'precision:day' && e.date.slice(0, 7) === '2026-11').map((e) => e.id);
+  const decl = countDecl({
+    population: { dataset: 'timeline', collection: 'events', risk_kind: 'event', filter: { module: 'fixture', export: 'all' } },
+    compute: { module: 'fixture', export: 'f' }, window: { from: '2026-11-09', days: 365, either_side_of: edge },
+  });
+  const base = (events, o) => ({ as_of: { oldest: events.map((e) => e.last_verified).filter(Boolean).sort()[0] ?? null, newest: events.map((e) => e.last_verified).filter(Boolean).sort().at(-1) ?? null, undated: events.filter((e) => !e.last_verified).map((e) => e.id) },
+    past_interval: o?.asOf ? events.filter((e) => ['freshness:review-due', 'freshness:stale'].includes(EM.freshnessState(e.last_verified, EM.riskClass('event', e, { asOf: o.asOf }), o.asOf))).map((e) => e.id) : null });
+  assert.ok(edge(db.timeline.events).includes('tl-dma-2026-11-01-designation'), 'the case §8.2 found');
+  const silent = await evaluate(decl, { db, exports: { 'fixture#all': identity }, compute: (ev2, o) => ({ ...base(ev2, o), window: { either_side: [] } }) });
+  assert.deepEqual(mcOf(silent), ['MC-14']);
+  const named = await evaluate(decl, { db, exports: { 'fixture#all': identity }, compute: (ev2, o) => ({ ...base(ev2, o), window: { either_side: edge(ev2) } }) });
+  assert.deepEqual(named.findings, []);
+});
+
+test('MC15 · I4 and the fines card: a $note caveat about a field the figure reads, left out, is refused; a quote that drifted from the $note is refused', async () => {
+  const db = loadData();
+  const decl = countDecl({
+    question: 'Of the core and adjacent instruments this site records, how many stand at each legislative status?',
+    population: { dataset: 'instruments', collection: 'instruments', risk_kind: 'instrument', filter: { module: 'fixture', export: 'all' } },
+    compute: { module: 'fixture', export: 'f' }, fields: ['legislative_status'],
+  });
+  const ins = (xs, o) => ({ as_of: { oldest: xs.map((e) => e.last_verified).filter(Boolean).sort()[0] ?? null, newest: xs.map((e) => e.last_verified).filter(Boolean).sort().at(-1) ?? null, undated: xs.filter((e) => !e.last_verified).map((e) => e.id) },
+    past_interval: o?.asOf ? xs.filter((e) => ['freshness:review-due', 'freshness:stale'].includes(EM.freshnessState(e.last_verified, EM.riskClass('instrument', e, { asOf: o.asOf }), o.asOf))).map((e) => e.id) : null });
+  const left = await evaluate(decl, { db, exports: { 'fixture#all': identity }, compute: ins });
+  assert.ok(mcOf(left).includes('MC-15'), JSON.stringify(left.findings));
+  assert.match(left.findings.find((x) => x.mc === 'MC-15').message, /says of legislative_status/);
+  /* the real fines card: drop one caveat, then let the $note drift */
+  assert.deepEqual(mcOf(await ev({ caveats: FINES_CARD.caveats.filter((c) => c.field !== 'last_verified') })), ['MC-15']);
+  const drift = loadData(); drift.enforcement.$note = drift.enforcement.$note.replace('carry that date in their own last_verified', 'carry their own date');
+  assert.ok(mcOf(await ev({}, { db: drift })).includes('MC-15'));
+});
+
+test('MC16 · P3: an amount planted on the recorded inaction does not enter the figure, and the record\'s own checks refuse it', async () => {
+  const db = loadData(); enfOf(db, 'enf-hungary-commission-none').fine_eur = 1000000;
+  assert.equal(finesFigure(db.enforcement.enforcement).announced.eur, 9_015_990_000, 'actionsOnly() keeps the inaction out');
+  assert.match(fb(db, 'enf-hungary-commission-none').problems.join(), /no fine_eur_basis/);
+  const dir = dataScratch();
+  try {
+    edit(dir, 'data/enforcement.json', (t) => { const d = JSON.parse(t); d.enforcement.find((r) => r.id === 'enf-hungary-commission-none').fine_eur = 1000000; return JSON.stringify(d, null, 1); });
+    const out = runValidator('validate.mjs', [], dir);
+    assert.equal(out.exit, 1); assert.match(out.out, /recorded inaction but carries fine_eur/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('MC17 · validate.mjs runs the contract: a planted census question in a scratch copy fails the build; the tree prints the metric publishable', () => {
+  const out = runValidator('validate.mjs');
+  assert.equal(out.exit, 0, out.out);
+  assert.match(out.out, /METRICS fines-announced-collected-unknown: MC-1…MC-15 hold, publishable/);
+  const dir = dataScratch();
+  try {
+    edit(dir, 'data/enforcement.json', (t) => { const d = JSON.parse(t); d.enforcement.find((r) => r.id === 'enf-temu-ec-2026').fine_eur = 'unknown'; return JSON.stringify(d, null, 1); });
+    const red = runValidator('validate.mjs', [], dir);
+    assert.equal(red.exit, 1); assert.match(red.out, /✗ METRIC MC-4 fines-announced-collected-unknown: record enf-temu-ec-2026/);
+    assert.match(red.out, /NOT publishable/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
