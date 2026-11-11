@@ -435,7 +435,7 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
   }
   function turn(dyaw, dpitch, words) {
     state.yaw += dyaw;
-    state.pitch = Math.max(-1.3, Math.min(1.3, state.pitch + dpitch));
+    state.pitch += dpitch; // free: the network can be turned fully over (§8, "the tilt and what draft means")
     projectAll();
     if (words) say(words);
   }
@@ -508,7 +508,7 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
       const dx = ev.clientX - drag.x, dy = ev.clientY - drag.y;
       if (Math.abs(dx) + Math.abs(dy) > 2) moved = true;
       state.yaw = drag.yaw + dx * 0.008;
-      state.pitch = Math.max(-1.3, Math.min(1.3, drag.pitch - dy * 0.008));
+      state.pitch = drag.pitch - dy * 0.008;
       projectAll();
     });
     const end = () => { drag = null; svg.classList.remove('dragging'); setTimeout(() => { moved = false; }, 0); };
