@@ -6,6 +6,15 @@
 author's word ("Push") at the end of the session**; no pull request opened, nothing merged, `main` untouched.
 The entries below this session's are unchanged.
 
+## Branch register — 11 November 2026 (P0.1 + P0.4, P0.3 + P0.2)
+
+- `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`: `agent/release/`, `agent/detector/fields.mjs`, `tools/`, `js/` (pipeline,
+  masthead, instrument-view, enforcement-page), `data/enforcement.json`, `data/claims.json`, the regenerated `instruments/dma/`,
+  `instruments/gdpr/`, `datasets.html`, `sitemap.xml`, and `docs/`. Both checkpoints approved (§8). Disposition: pushed on the
+  author's word; pull request to `main` opened on the author's answer ("Sì, apri la PR (Recommended)"), not merged by the session;
+  merging is the author's, with a merge commit. `origin/main` re-fetched before this line: `ad234aa`.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed).
+
 ## P0.3 + P0.2 — enforcement amount provenance and the metric contract: checkpoint (11 Nov 2026)
 
 **Authority:** `docs/ROADMAP-v2.md` §8, "A change of plan: P0.3 … and P0.2 … brought forward as P0" (the author's prompt, and
@@ -37,7 +46,7 @@ the suites: all pass, `agent/detector/selftest.mjs` 69/69 once the field was cla
 the sequential battery here as in the P0.1 run, and passed 24/24 in four isolated or loaded re-runs; the failing test's name was
 not captured either time — an intermittent failure, named, not explained. `.control-room/` 76 pass, 1 skipped (no IPv6 loopback).
 
-**Waiting for:** the author's checkpoint of Session 2, recorded in §8; then the question of a pull request (the branch is pushed; no pull request is open).
+**Approved** (§8, "Checkpoint of the session \"P0.3 + P0.2\" approved"). Pull request opened; see the branch register above.
 
 ## P0.1 + P0.4 — dispatcher integrity and release governance: checkpoint (11 Nov 2026)
 
