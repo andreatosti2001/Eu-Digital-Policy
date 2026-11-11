@@ -122,6 +122,34 @@ export function initTheme() {
   });
 }
 
+/* ---------------------------------------------------------- the alternative looks
+   Four looks on one structure, for the author to choose from (roadmap §8,
+   11 Nov 2026, "proponi un set di alternative"): the content, the views and
+   the rules are identical; only the stylesheet's variant block changes.
+   ?v=a|b|c|d in the URL sets it; the choice is remembered in this browser. */
+
+const VARIANT_KEY = 'pv2-03-editorial-variant';
+const VARIANTS = ['a', 'b', 'c', 'd'];
+
+export function initVariant() {
+  let v = new URLSearchParams(location.search).get('v');
+  if (!VARIANTS.includes(v)) { try { v = localStorage.getItem(VARIANT_KEY); } catch (e) { v = null; } }
+  if (!VARIANTS.includes(v)) v = 'a';
+  const apply = (x) => {
+    document.documentElement.dataset.variant = x;
+    for (const b of document.querySelectorAll('button[data-variant]')) b.setAttribute('aria-pressed', String(b.dataset.variant === x));
+  };
+  apply(v);
+  for (const b of document.querySelectorAll('button[data-variant]')) {
+    if (b.dataset.bound) continue;
+    b.dataset.bound = '1';
+    b.addEventListener('click', () => {
+      try { localStorage.setItem(VARIANT_KEY, b.dataset.variant); } catch (e) { /* the choice lasts this page */ }
+      apply(b.dataset.variant);
+    });
+  }
+}
+
 /* ---------------------------------------------------------- boot */
 
 /** Load the named datasets through js/data.js, index them, render. A failure
@@ -143,6 +171,7 @@ export function renderRail(db, current) {
 
 export async function boot(names, render, { part } = {}) {
   initTheme();
+  initVariant();
   const mount = document.getElementById('view');
   if (!names.includes('brief')) names = [...names, 'brief'];
   try {

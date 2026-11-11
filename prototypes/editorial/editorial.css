@@ -345,3 +345,96 @@ ul.plain li { margin-bottom: 0.2rem; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 @media print { .proto, .top, .rail, .theme, .filter, .toc { display: none; } .shell { display: block; } }
 table.rel .nr, table.rel .unk, table.rel .tag { white-space: normal; }
+
+/* ============================================================
+   The alternative looks (roadmap §8, 11 Nov 2026: "proponi un set di
+   alternative"). One structure; each block below changes only tokens and a
+   few placements. A · Carta is the base above.
+   ============================================================ */
+
+.variants { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-left: auto; }
+.variants button { font: 500 0.66rem/1 var(--mono); letter-spacing: 0.06em; color: var(--ink-2); background: transparent; border: 1px solid var(--rule); border-radius: 2px; padding: 0.5em 0.7em; cursor: pointer; }
+.variants button[aria-pressed="true"] { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+.variants + .theme { margin-left: 0; }
+
+/* ---------------------------------------------------------- B · Pergamena: closest to the site today */
+
+:root[data-variant="b"] {
+  --paper: #ece3d0; --paper-2: #e2d6bc; --ink: #241f1a; --ink-2: #594f42; --rule: #c7b48c;
+  --accent: #6f560e; --link: #1f3f7a; --focus: #6f560e;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-variant="b"]:not([data-theme="light"]) { --paper: #19160f; --paper-2: #221e15; --ink: #ede3cd; --ink-2: #bfb398; --rule: #4a4130; --accent: #dcb65e; --link: #a9c0f0; --focus: #dcb65e; }
+}
+:root[data-variant="b"][data-theme="dark"] { --paper: #19160f; --paper-2: #221e15; --ink: #ede3cd; --ink-2: #bfb398; --rule: #4a4130; --accent: #dcb65e; --link: #a9c0f0; --focus: #dcb65e; }
+:root[data-variant="b"] body { background: var(--paper) radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in srgb, var(--paper-2) 30%, #fff 18%), transparent 70%) no-repeat; }
+:root[data-variant="b"] .top { background: transparent; }
+:root[data-variant="b"] .hero { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+:root[data-variant="b"] .hero > div { max-width: 46rem; }
+:root[data-variant="b"] .hero .lede, :root[data-variant="b"] .hero .dek { margin-left: auto; margin-right: auto; }
+:root[data-variant="b"] .tree { max-width: 26rem; order: 2; }
+:root[data-variant="b"] .tree circle { fill: var(--paper); stroke: var(--accent); }
+:root[data-variant="b"] .tree line { stroke: var(--accent); stroke-opacity: 0.45; }
+:root[data-variant="b"] .brand::before { color: #1f3f7a; }
+:root[data-variant="b"] .rail a::after { content: "\00B7"; color: var(--accent); margin-left: 0.25em; }
+
+/* ---------------------------------------------------------- C · Inchiostro: a night band, the tree as a constellation */
+
+:root[data-variant="c"] {
+  --paper: #f4f1ea; --paper-2: #e9e4d8; --ink: #131a2b; --ink-2: #4c5366; --rule: #d3cdbd;
+  --accent: #8a6514; --link: #1f3f7a; --focus: #1f3f7a;
+  --night: #121a2e; --night-ink: #efe7d2; --night-2: #b9b2a0; --gold: #d8b05c;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-variant="c"]:not([data-theme="light"]) { --paper: #0f1424; --paper-2: #161c30; --ink: #e9e3d3; --ink-2: #b1ab9b; --rule: #2e3550; --accent: #d8b05c; --link: #a9c0f0; --focus: #d8b05c; --night: #090d18; }
+}
+:root[data-variant="c"][data-theme="dark"] { --paper: #0f1424; --paper-2: #161c30; --ink: #e9e3d3; --ink-2: #b1ab9b; --rule: #2e3550; --accent: #d8b05c; --link: #a9c0f0; --focus: #d8b05c; --night: #090d18; }
+:root[data-variant="c"] .top { background: var(--night); border-bottom-color: var(--night); }
+:root[data-variant="c"] .top .brand, :root[data-variant="c"] .nav a[aria-current="page"], :root[data-variant="c"] .nav a:hover { color: var(--night-ink); }
+:root[data-variant="c"] .top .nav a { color: var(--night-2); }
+:root[data-variant="c"] .top .brand::before { color: var(--gold); }
+:root[data-variant="c"] .nav a[aria-current="page"] { border-bottom-color: var(--gold); }
+:root[data-variant="c"] .top .variants button, :root[data-variant="c"] .top .theme { color: var(--night-2); border-color: #3a4260; background: transparent; }
+:root[data-variant="c"] .top .variants button[aria-pressed="true"] { color: var(--night); background: var(--gold); border-color: var(--gold); }
+:root[data-variant="c"] .top :focus-visible { outline-color: var(--gold); }
+:root[data-variant="c"] .hero { background: var(--night); color: var(--night-ink); padding: 2.4rem 2.4rem 1.6rem; border-bottom: 0; }
+:root[data-variant="c"] .hero .label, :root[data-variant="c"] .hero .dek { color: var(--night-2); }
+:root[data-variant="c"] .hero h1 em { color: var(--gold); }
+:root[data-variant="c"] .hero :focus-visible { outline-color: var(--gold); }
+:root[data-variant="c"] .tree line { stroke: var(--gold); stroke-opacity: 0.4; }
+:root[data-variant="c"] .tree circle { fill: var(--night); stroke: var(--gold); }
+:root[data-variant="c"] .tree text { fill: var(--night-ink); }
+:root[data-variant="c"] .tree a.here circle { fill: var(--gold); stroke: var(--gold); }
+:root[data-variant="c"] .tree a.here text { fill: var(--night); }
+:root[data-variant="c"] .tree figcaption { color: var(--night-2); }
+:root[data-variant="c"] .rail { background: var(--night); border-right-color: var(--night); }
+:root[data-variant="c"] .rail a { color: var(--night-2); }
+:root[data-variant="c"] .rail a:hover { color: var(--night-ink); }
+:root[data-variant="c"] .rail a[aria-current="page"] { color: var(--gold); border-left-color: var(--gold); }
+:root[data-variant="c"] .rail :focus-visible { outline-color: var(--gold); }
+@media (max-width: 52rem) { :root[data-variant="c"] .rail a[aria-current="page"] { border-bottom-color: var(--gold); } }
+
+/* ---------------------------------------------------------- D · Archivio: sober and institutional */
+
+:root[data-variant="d"] {
+  --display: 'Literata', ui-serif, Georgia, serif;
+  --paper: #ffffff; --paper-2: #f2f2f0; --ink: #111111; --ink-2: #4d4d4d; --rule: #d6d6d6;
+  --accent: #1f4e8c; --link: #1f4e8c; --focus: #1f4e8c;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-variant="d"]:not([data-theme="light"]) { --paper: #121212; --paper-2: #1c1c1c; --ink: #ececec; --ink-2: #b3b3b3; --rule: #353535; --accent: #8fb1e8; --link: #8fb1e8; --focus: #8fb1e8; }
+}
+:root[data-variant="d"][data-theme="dark"] { --paper: #121212; --paper-2: #1c1c1c; --ink: #ececec; --ink-2: #b3b3b3; --rule: #353535; --accent: #8fb1e8; --link: #8fb1e8; --focus: #8fb1e8; }
+:root[data-variant="d"] h1, :root[data-variant="d"] h2, :root[data-variant="d"] h3 { font-weight: 500; letter-spacing: -0.005em; }
+:root[data-variant="d"] .hero h1 { font-size: clamp(2.1rem, 1.5rem + 1.6vw, 3rem); }
+:root[data-variant="d"] .hero h1 em { font-style: italic; color: var(--ink); }
+:root[data-variant="d"] .top { border-bottom: 3px solid var(--ink); }
+:root[data-variant="d"] .head { border-bottom: 3px solid var(--ink); }
+:root[data-variant="d"] .tree { max-width: 15rem; }
+:root[data-variant="d"] .tree circle { stroke: var(--ink); }
+:root[data-variant="d"] .tree a.here circle { fill: var(--accent); stroke: var(--accent); }
+:root[data-variant="d"] .rail a { border: 1px solid var(--rule); width: 2.8rem; margin: 0.12rem 0; padding: 0.5rem 0; }
+:root[data-variant="d"] .rail a[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+:root[data-variant="d"] .figure .n, :root[data-variant="d"] .parts .roman { font-family: var(--mono); font-weight: 500; }
+:root[data-variant="d"] .parts .roman { color: var(--ink-2); font-size: 1.1rem; }
+@media (max-width: 52rem) { :root[data-variant="d"] .rail a { width: auto; margin: 0 0.1rem; padding: 0.5rem 0.55rem; } }
