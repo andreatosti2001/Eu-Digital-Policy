@@ -87,7 +87,7 @@ page and condition; no framework global. 24 page loads (6 URLs × 2 widths × 2 
 
 | C1 | C2 | C3 | C4 | C5 | C6 |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| **3** | **4** | **2** | **3** (or 4 — undecidable, below) | **4** | not scored |
+| **3** | **4** | **2** | **4** | **4** | not scored |
 
 - **C1 = 3.** P1 (long-form with a citation pattern: the article's margin sources), P2 (status tags: legislative, event and evidence status), P3
   (the timeline) are present, and the "no data" state is visible (the Chips Act page). **Not 4:** P4 — a *filterable table* of records — is
@@ -98,12 +98,12 @@ page and condition; no framework global. 24 page loads (6 URLs × 2 widths × 2 
 - **C3 = 2.** Real HTML tables with `th scope` (46 header cells on D). **Not 3:** no table is sorted or filtered from the keyboard, and no chart's
   values are read without a pointer (the article's risk pyramid is a labelled diagram, not a chart of values). The step-4 feature — a missing
   value shown differently from zero — **is present** in the table and everywhere else, but steps are cumulative (M8).
-- **C4 = 3, or 4: reported, not interpreted** (§1.1 rule 9). No horizontal scroll at 390 px, focus visible on 15 of 15, light and dark at 16.99 and
+- **C4 = 4**, after the author's reading of M4 (§8, "PV2-03, grid C4 step 4"; first reported as undecidable under §1.1 rule 9). No horizontal scroll at 390 px, focus visible on 15 of 15, light and dark at 16.99 and
   15.42 : 1 (step 3); no running animation either way and a `main` landmark. Accessible names: D 15 of 15; **E 13 of 15 by M4 as written**
   (`ariaSnapshot`), because the two `<summary>` elements ("What is claimed") come out of it as plain text, while **Chromium's own accessibility
   tree** (`Accessibility.getFullAXTree`) gives both role `DisclosureTriangle` and the name "What is claimed": 15 of 15. The anchor says "in the
-  accessibility tree"; M4 says "read from `ariaSnapshot`". The lower sample decides C4, so it is 3 by M4 and 4 by the tree. **The author's
-  question** (a §8 row is needed either way to settle it for PV2-04 and PV2-05). The native `<details>` was not replaced by a custom widget to
+  accessibility tree"; M4 says "read from `ariaSnapshot`". The lower sample decides C4: 3 by `ariaSnapshot` alone, 4 by the tree. **The author decided that M4 is read on the full tree** where
+  `ariaSnapshot` shows a focusable control with no name, for PV2-04 and PV2-05 too. The native `<details>` was not replaced by a custom widget to
   satisfy the tool.
 - **C5 = 4.** Vanilla HTML, CSS and ES modules as shipped; no build step; no runtime dependency; no external font or script; only the page's own
   origin requested.
