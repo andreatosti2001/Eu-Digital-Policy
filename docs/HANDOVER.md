@@ -4,6 +4,13 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## Stage 1 — concluded (11 Nov 2026)
+
+**Authority:** §8 "Stage 1 concluded: the release gate judged a change that cites a signed human decision…". **The evidence is the log of `pages.yml` run 100** (`main` `4994ad8`, the merge commit of #91): the gate PASSED with C5, C6, C7 and C10 satisfied, C8 reported, and the deploy succeeded. Before that, run 98 on the squash commit `4f0e4af` (#89) failed at C7 and published nothing.
+**What the next session must know.** (1) The decision of 6 Nov 2026 has been used once, for `prop-docs-ea57404dc452`; nothing else is pending under it. (2) `main` was force-pushed once, from `4f0e4af` back to `22ad248`, by the author, with the ruleset disabled for that push; whether the ruleset was re-enabled is **not confirmed to this session** — ask. (3) **A squash merge of a release PR makes the gate fail C7 for good**, because the decision and the change land in one commit whose parent has no ledger and the gate judges every commit since it was introduced. A release PR must be merged with a **merge commit**. Restricting the repository's allowed merge methods would prevent a repeat; that is a setting only the author can change and nothing here changes it. (4) The dispatcher committed files that were already staged although its scope stage said one file; the session's reading (unconfirmed) is that the repair files were in the index before the dispatch. A guard — refuse to commit when anything beyond the dispatcher's own changed files is staged — is proposed, **not built**. (5) C8 still reports 6 agent-marked commits that cite no Proposal; it does not block. (6) **G1 is not recorded**; it is the author's, in §8. (7) The sentences listed in the entry below as false because a decision exists are still false; the last bullet of `docs/DEPLOYMENT.md` §7 is one of them.
+
+*The entry below is superseded in what it called "still to read" (the `pages.yml` log has been read) and by the squash episode above; the rest stands.*
+
 ## Stage 1 — the release PR (#89), a dispatcher scope finding, and P-07 re-aimed (11 Nov 2026)
 
 **Branches:** `release/prop-docs-ea57404dc452-fedeb4e6` (PR #89, the author's decision and the one-file change to `docs/DEPLOYMENT.md`) and `claude/p07-decision-aware` (this session's change, from `main`).
