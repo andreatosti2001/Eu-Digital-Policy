@@ -208,12 +208,24 @@ test('3b · a line that does not parse is reported, never skipped', () => {
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
-test('3c · against the real repository, no proposal has ever been decided', () => {
+test('3c · against the real repository, the corpus reports the ledger as it is: absent is absent, a held entry is counted', () => {
+  /* This test used to assert the state SESSION 28 measured — no decision, ledger absent — and said
+     itself that it was "the thing that says so" when that changed. It changed on the day the first
+     signed decision was recorded. What the test is FOR is that the corpus does not misreport the
+     ledger, in either state, so it now compares the corpus with the file, read independently. */
   const c = decisionCorpus();
-  assert.equal(c.decided, 0, 'this suite asserts the state SESSION 28 measured. If a decision has since been recorded, this test is the thing that says so — update it deliberately.');
-  assert.match(c.statement, /has ever been approved, rejected or edited/);
   const ledger = c.stores.find((s) => s.id === 'approval_ledger');
-  assert.equal(ledger.state, 'absent');
+  const file = join(REPO_ROOT, 'agent/implement/decisions/decisions.jsonl');
+  if (!existsSync(file)) {
+    assert.equal(ledger.state, 'absent', 'no ledger file: it is reported ABSENT, never as empty or as zero');
+    assert.equal(c.decided, 0);
+    assert.match(c.statement, /has ever been approved, rejected or edited/);
+  } else {
+    const lines = readFileSync(file, 'utf8').split('\n').filter((l) => l.trim()).length;
+    assert.equal(ledger.state, lines ? 'holds' : 'empty', 'a ledger file with entries is HELD, one without is EMPTY — and neither is absent');
+    assert.equal(c.decided, lines, 'the corpus counts exactly the entries the file holds');
+    if (lines) assert.match(c.statement, new RegExp(`${lines} decision\\(s\\) are recorded`));
+  }
 });
 
 /* ---------------------------------------------------------- 4 · three anchor states */
@@ -258,9 +270,12 @@ test('4d · a commit that exists with a different subject is refuted, and says w
 });
 
 test('4e · a path anchor can assert an ABSENCE, and that is a different claim', async () => {
+  /* The absent example used to be the real decision ledger. That file now exists on any tree that
+     carries the first decision, and a test that is true on one tree and false on another proves
+     nothing about the resolver. A name absent by construction is true on every tree. */
   const present = await resolveAnchor({ kind: 'path', path: 'AGENTS.md' });
   assert.equal(present.state, 'resolved');
-  const absent = await resolveAnchor({ kind: 'path', path: 'agent/implement/decisions/decisions.jsonl', exists: false });
+  const absent = await resolveAnchor({ kind: 'path', path: 'zq-no-such-file-zq.jsonl', exists: false });
   assert.equal(absent.state, 'resolved');
   assert.match(absent.why, /Absent is not empty/);
   const wrong = await resolveAnchor({ kind: 'path', path: 'AGENTS.md', exists: false });
@@ -442,11 +457,31 @@ test('8b · list names every proposal and says none is decided', () => {
   for (const d of DRAFTS) assert.match(r.out, new RegExp(d.ref));
 });
 
-test('8c · corpus reports the ledger as absent rather than as zero decisions', () => {
+test('8c · corpus keeps absent and empty apart, and reports the real ledger as it is', () => {
   const r = run(['corpus']);
   assert.equal(r.code, 0);
-  assert.match(r.out, /ABSENT/);
-  assert.match(r.out, /Absent is not empty/);
+  const file = join(REPO_ROOT, 'agent/implement/decisions/decisions.jsonl');
+  if (existsSync(file)) {
+    assert.match(r.out, /approval_ledger\s+(HOLDS|EMPTY)/, 'a ledger file is never reported as ABSENT');
+    assert.doesNotMatch(r.out, /approval_ledger\s+ABSENT/);
+  } else {
+    assert.match(r.out, /ABSENT/);
+    assert.match(r.out, /Absent is not empty/);
+  }
+});
+
+test('8c2 · the corpus reads an absent ledger as ABSENT and an empty one as EMPTY, in a tree of its own', () => {
+  /* The branch the real tree no longer exercises, kept hermetic: both states built in a temp dir. */
+  const dir = mkdtempSync(join(tmpdir(), 'gov-ledger-'));
+  try {
+    const store = DECISION_STORES.find((s) => s.id === 'approval_ledger');
+    const absent = readStore(store, { root: dir });
+    assert.equal(absent.state, 'absent');
+    assert.match(absent.why, /Absent is not empty/);
+    mkdirSync(join(dir, 'agent/implement/decisions'), { recursive: true });
+    writeFileSync(join(dir, store.path), '');
+    assert.equal(readStore(store, { root: dir }).state, 'empty');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test('8d · patterns prints all six families, including any that is empty', () => {
