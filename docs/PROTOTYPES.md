@@ -192,6 +192,10 @@ light paper and the oxblood accent for everything read. B, D and the switch were
 the same figures as the table above for E, D and the regulation pages; the homepage's paragraph tier is now on the night band, at 14.04 : 1 light and
 15.63 : 1 dark, 52 cpl at 1280 px; 24 loads clean; 15 of 15 focus visible and named on every page; the nine planted cases pass. Steps unchanged.
 
+**Then A alone** (§8, "The Editorial's look: A alone, superseding the mix of A and C", 11 Nov 2026). Shown the mix (`f7080d0`), the author preferred A
+alone. The night band was removed; the prototype's files are again byte-identical to `249a410`, the version measured in the table above, so those
+figures, the nine planted cases and the steps are the prototype's as it now stands. The mix and the four looks stay in the branch's history.
+
 **What this measurement does not see, beyond §1.5:** whether the site's font files may be reused beyond the published site (their licence was not read);
 how the sticky record card and contents list behave on a short laptop screen (measured at 900 px of height only); thirteen Tab stops in the numeral
 column before the page's own content, which the grid's first-15 rule now counts and a reader with a keyboard has to pass (a skip link is the first stop).
