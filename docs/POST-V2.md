@@ -139,10 +139,18 @@ i gate di pubblicazione, la Content-Security-Policy e i test esistenti.
 nodi, le relazioni giuridiche **già registrate** come archi. Non una figura statica delle relazioni tra regolamenti. Il
 livello di interattività e la presentazione della rete si ispirano all'esperienza di
 [Knwler](https://github.com/Orbifold/knwler), **come riferimento d'uso e non come progetto da adottare**: non se ne
-copiano codice, asset o animazioni; la sua licenza e il suo stack **non sono stati verificati** quando questa specifica è
-stata scritta (la sessione che l'ha scritta non l'ha aperto), e non lo sono diventati per il fatto di essere citati qui. Se una sessione di C vuole
-studiarlo da vicino, vale ciò che il §5 dice di ogni riuso (licenza verificata al momento della scelta) e la posizione dei
-riferimenti visivi di `docs/FRONTEND-REFERENCES.md` §9 (descritti, non punteggiati, niente copiato).
+copiano codice, asset o animazioni, e vale la posizione dei riferimenti visivi di `docs/FRONTEND-REFERENCES.md` §9
+(descritti, non punteggiati, niente copiato; gli screenshot restano fuori dal repository).
+*Che cosa si sa di Knwler, all'11 novembre 2026* (la pagina del repository, letta quel giorno, e una foto dello schermo
+dell'autore dell'esplorazione di un corpus di diritto civile belga): è uno strumento **Python** che **estrae** con un LLM
+entità e relazioni dai documenti, ne raggruppa i nodi con l'algoritmo di Louvain e produce un report HTML autonomo, con
+interruttore chiaro/scuro; il README porta il distintivo MIT, **ma il testo del file LICENSE non è stato letto**. La foto mostra un grafo di migliaia di
+nodi, un pannello con le schede «Properties» e «Relations», i comandi «Group by community», «Layout selected group» e
+«Re-layout graph» e una legenda delle comunità. **Non si sa**, perché la pagina non lo dice, con quale libreria disegni il
+grafo né con quale algoritmo lo disponga. **Due differenze da tenere ferme:** Knwler *genera* le relazioni con un LLM e
+questo sito le *registra* (§3 D: nessun LLM, nessuna relazione inventata); e il suo grafo ha migliaia di nodi, il
+nostro poche decine, per cui si prende l'interazione e non la scala. Il riuso di qualsiasi cosa, se mai, richiede la licenza
+letta al momento della scelta (§5).
 
 **Dove sta.** È una **modalità della vista analitica già prevista** — quella delle quattro viste di C che è «dashboard o
 timeline», qualunque delle due la sessione PV2-03 fissi al suo primo checkpoint (C.1) — **solo nei concept Policy
@@ -161,6 +169,13 @@ quella direzione (PV2-04), l'istanza Ibrida in PV2-05, che ne fa anche il confro
 - un **pannello laterale contestuale** che si aggiorna alla selezione di un nodo o di un arco. Per un **nodo**: le
   informazioni essenziali e il collegamento alla sua pagina. Per un **arco**: tipologia e direzione; sintesi; disposizioni
   interessate; claims e fonti associate, **quando disponibili**; informazioni sulla verifica e sulla provenienza;
+- sul modello dell'esplorazione di Knwler, per scelta dell'autore dell'11 novembre 2026: un pannello **a schede**
+  (le proprietà dello strumento o della relazione separate dalle sue relazioni); un comando che **rimette in ordine il
+  layout**; una **legenda sempre visibile** delle tipologie di relazione, accanto al canvas;
+- un eventuale **raggruppamento dei nodi, solo da campi già presenti nei record** (per esempio `scope_class` o
+  `brief_part`, quest'ultimo assente su 24 strumenti di 39, che andrebbero in un gruppo «non assegnato»), **mai da un
+  algoritmo di rilevamento di comunità**: un raggruppamento calcolato sarebbe un'inferenza, non una relazione registrata.
+  Quali campi e se sia una modalità selezionabile lo propongono i concept, e la scelta è dell'autore;
 - uno **stato per ogni assenza**: una relazione senza claims, senza disposizioni o senza dichiarazione di verifica si
   mostra come «non registrata», mai come vuota in silenzio e mai come «verificata» o «nessuna».
 
@@ -210,6 +225,9 @@ quel perimetro non è compatibile con una sessione, non si taglia: §4.2.
 - un **pannello laterale** con le informazioni contestuali del nodo o dell'arco selezionato;
 - **collegamenti alle pagine normative già presenti** nel sito;
 - una **legenda** per interpretare correttamente le connessioni.
+
+Gli elementi in più che C aggiunge a questa lista (pannello a schede, riordino del layout, raggruppamento da campi dei
+record) entrano nel perimetro di PV2-08 **solo se il concept selezionato li comprende**, e contano nella stima di §4.2.
 
 **Modello dei dati.** La fonte primaria è `data/instruments.json`. I **nodi** sono i record di `instruments`; gli **archi**
 sono i record dell'array `relationships`. Nodi, archi e conteggi si **derivano dai JSON canonici** a ogni rendering, per il
@@ -453,6 +471,7 @@ dall'assenza di regressioni e dalla possibilità del lettore di capire che cosa 
    metriche di A (`docs/DATA-READINESS.md` §6), che PV2-01 ha scritto e provato su quattro schede (multe, strumenti per stato,
    scadenze, evidenza), nessuna sulle relazioni. Serve una scheda propria per le relazioni, prima di PV2-08, o basta che le
    cifre mostrate soddisfino il contratto così com'è, senza una scheda?
-9. **Il riferimento a Knwler.** È un riferimento d'uso, non verificato (§3 C): l'autore vuole che una sessione di C lo apra e
-   ne descriva l'interazione, alla maniera dell'addendum di PV2-02 (`docs/FRONTEND-REFERENCES.md` §9), o si lavora dalla
-   descrizione dell'autore?
+9. ~~Il riferimento a Knwler: lo si apre o si lavora dalla descrizione dell'autore?~~ **Aperto e letto l'11 novembre 2026,
+   su scelta dell'autore** (§3 C: che cosa si sa e che cosa no; il testo del file LICENSE resta non letto). Restano aperte
+   due cose per i concept: quali campi dei record raggruppano i nodi, se li raggruppano (§3 C), e se un riuso, di qualunque
+   cosa, sia mai ammesso: richiederebbe la licenza letta (§5).
