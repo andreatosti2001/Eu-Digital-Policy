@@ -66,33 +66,12 @@ function initTheme() {
   });
 }
 
-/* ---------------------------------------------------------- the look (temporary: three alternatives for the
-   author's choice, §8 "PV2-04: what to fix"; ?look=a|b|c or the switch in the header) */
-
-const LOOK_KEY = 'pv2-04-observatory-look';
-const LOOKS = ['a', 'b', 'c'];
-function initLook() {
-  let v = new URLSearchParams(location.search).get('look');
-  if (!LOOKS.includes(v)) { try { v = localStorage.getItem(LOOK_KEY); } catch (e) { v = null; } }
-  if (!LOOKS.includes(v)) v = 'a';
-  document.documentElement.setAttribute('data-look', v);
-  const sel = document.querySelector('[data-action="look"]');
-  if (!sel || sel.dataset.bound) return;
-  sel.dataset.bound = '1';
-  sel.value = v;
-  sel.addEventListener('change', () => {
-    document.documentElement.setAttribute('data-look', sel.value);
-    try { localStorage.setItem(LOOK_KEY, sel.value); } catch (e) { /* the choice lasts this page */ }
-  });
-}
-
 /* ---------------------------------------------------------- boot */
 
 /** Load the named datasets through js/data.js, index them, render. A failure
  *  is shown in place by js/data.js's renderError; nothing is substituted. */
 export async function boot(names, render, { part } = {}) {
   initTheme();
-  initLook();
   markCurrent();
   const asof = document.getElementById('asof');
   if (asof) asof.textContent = 'Read ' + F.humanDate(TODAY);

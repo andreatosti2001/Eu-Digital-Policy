@@ -16,13 +16,14 @@
      from the type.
    - Two relationships between the same pair are two edges, drawn apart.
    - The layout is deterministic — the same records give the same picture:
-     an astrolabe, every instrument on one ring with its name read outward,
-     ordered from the ids by a fixed number of passes, no randomness.
-     Grouping, when chosen, divides the ring into sectors by a field already
-     in the records (coverage() of js/routes.js, or brief_part), never by
-     community detection (roadmap §8, "PV2-04, C.1 question 1").
-   - An instrument with no relationship stays on the ring, in a sector of
-     its own (or in its group), and says "no relationship recorded".
+     a network in three dimensions, fixed starting positions, a fixed number
+     of steps, no randomness, projected by this module into SVG; the reader
+     turns it, nothing moves on its own (prefers-reduced-motion holds
+     trivially). Grouping, when chosen, pulls each group toward a point of its
+     own by a field already in the records (coverage() of js/routes.js, or
+     brief_part), never by community detection (§8, "PV2-04, C.1 question 1").
+   - An instrument with no relationship stays in the network, in a cluster
+     of its own (or in its group), and says "no relationship recorded".
    - The type's code is drawn on the edges of the selection; colour and the
      stroke pattern are on every edge, always.
    - A panel field the record does not hold reads "not recorded" — the panel
@@ -95,74 +96,120 @@ export function explorerCounts(ix, db) {
   };
 }
 
-/* ---------------------------------------------------------- the deterministic layout: an astrolabe
-   Every instrument sits on one ring, its name read outward along its
-   radius, so no two names can collide. The ring is divided into sectors —
-   the groups when a grouping is chosen; otherwise one sector for the
-   instruments in a relationship and one for those with none. Within a
-   sector the order starts from the instruments' ids and is refined by a
-   fixed number of passes that move each instrument toward the mean place of
-   the instruments it is related to (fewer and shorter chords). No
-   randomness: the same records give the same picture. */
+/* ---------------------------------------------------------- the deterministic layout: a network in three dimensions
+   (roadmap §8, "PV2-04: option A and the form of the 3D Explorer"). A force
+   layout in 3D — related instruments attract, all repel — computed by this
+   module, with no library: the starting positions are fixed (instruments
+   ordered by id on a Fibonacci sphere), the number of steps is fixed and
+   nothing is random, so the same records give the same network. Each group
+   (the chosen grouping; with none, the instruments with no relationship)
+   is pulled toward a fixed point of its own. The prototype projects the
+   network onto the screen itself, in SVG; the reader turns it — nothing
+   ever moves on its own. */
 
-const RING = 165;
+const R3 = 200;
 
-function ringLayout(counts, mode) {
-  const groups = counts.groupsBy(mode) || [
+function fib(i, n, r) {
+  const y = 1 - (2 * (i + 0.5)) / n, rr = Math.sqrt(Math.max(0, 1 - y * y)), t = i * Math.PI * (3 - Math.sqrt(5));
+  return { x: r * rr * Math.cos(t), y: r * y, z: r * rr * Math.sin(t) };
+}
+
+function layout3d(counts, mode) {
+  const chosen = counts.groupsBy(mode);
+  const groups = chosen || [
     { key: '__linked', label: 'In a relationship', members: counts.instruments.filter((i) => counts.touching.get(i.id).length) },
-    { key: '__none', label: 'No relationship', members: counts.isolated },
+    { key: '__none', label: 'No relationship recorded', members: counts.isolated },
   ].filter((g) => g.members.length);
-  const slots = counts.instruments.length + groups.length; // one empty slot between sectors
-  const step = (2 * Math.PI) / slots;
-  const order = groups.map((g) => [...g.members].sort((a, b) => a.id.localeCompare(b.id)).map((i) => i.id));
-  const neighbours = new Map(counts.instruments.map((i) => [i.id, []]));
-  for (const r of counts.rels) { if (r.from === r.to) continue; neighbours.get(r.from)?.push(r.to); neighbours.get(r.to)?.push(r.from); }
-  const angles = new Map();
-  const place = () => {
-    let slot = 0;
-    order.forEach((list) => { for (const id of list) { angles.set(id, -Math.PI / 2 + (slot + 0.5) * step); slot++; } slot++; });
-  };
-  place();
-  for (let pass = 0; pass < 24; pass++) {
-    order.forEach((list, gi) => {
-      const key = new Map(list.map((id, i) => {
-        const ns = neighbours.get(id);
-        if (!ns.length) return [id, i];
-        /* the circular mean of the neighbours' angles, read as a slot inside this sector */
-        let sx = Math.cos(angles.get(id)), sy = Math.sin(angles.get(id));
-        for (const n of ns) { sx += Math.cos(angles.get(n)); sy += Math.sin(angles.get(n)); }
-        const target = Math.atan2(sy, sx);
-        const first = angles.get(list[0]);
-        let d = target - first; while (d < -Math.PI) d += 2 * Math.PI; while (d > Math.PI) d -= 2 * Math.PI;
-        return [id, Math.max(-1, Math.min(list.length, d / step))];
-      }));
-      order[gi] = [...list].sort((a, b) => (key.get(a) - key.get(b)) || a.localeCompare(b));
-    });
-    place();
-  }
-  const pos = new Map([...angles].map(([id, a]) => [id, { x: RING * Math.cos(a), y: RING * Math.sin(a), a }]));
-  let slot = 0;
-  const sectors = groups.map((g, gi) => {
-    const a0 = -Math.PI / 2 + slot * step, a1 = a0 + order[gi].length * step;
-    slot += order[gi].length + 1;
-    return { label: g.label, short: g.short || null, n: g.members.length, a0, a1 };
+  const ids = counts.instruments.map((i) => i.id); // already ordered by id
+  const n = ids.length;
+  const groupOf = new Map();
+  const centres = groups.map((g, gi) => {
+    let c;
+    if (!chosen) c = g.key === '__none' ? { x: 0, y: R3 * 1.1, z: 0 } : { x: 0, y: -R3 * 0.1, z: 0 };
+    else {
+      /* the groups on a spaced grid, alternately nearer and farther, so none hides another from the starting view */
+      const G = groups.length, cols = Math.ceil(Math.sqrt(G * 1.6)), rows = Math.ceil(G / cols);
+      const S = 2.3 * Math.max(...groups.map((x) => 34 + 26 * Math.sqrt(x.members.length)));
+      const col = gi % cols, row = Math.floor(gi / cols);
+      c = { x: (col - (cols - 1) / 2) * S, y: (row - (rows - 1) / 2) * S * 0.85, z: (gi % 2 ? 1 : -1) * S * 0.3, r: 34 + 26 * Math.sqrt(g.members.length) };
+    }
+    for (const m of g.members) groupOf.set(m.id, gi);
+    return c;
   });
-  const half = RING + 222;
-  return { pos, sectors, box: { x: -half, y: -half, w: 2 * half, h: 2 * half } };
+  const pos = new Map(ids.map((id, i) => {
+    if (!chosen) return [id, fib(i, n, R3 * 0.8)];
+    const c = centres[groupOf.get(id)], g = groups[groupOf.get(id)], j = g.members.findIndex((m) => m.id === id);
+    const q = fib(j, g.members.length, c.r * 0.6);
+    return [id, { x: c.x + q.x, y: c.y + q.y, z: c.z + q.z }];
+  }));
+  const edges = counts.rels.filter((r) => r.from !== r.to && pos.has(r.from) && pos.has(r.to));
+  const k = chosen ? 58 : 95, steps = 360, pull = chosen ? 0.05 : 0.02;
+  for (let st = 0; st < steps; st++) {
+    const t = 26 * (1 - st / steps) + 0.4;
+    const disp = new Map(ids.map((id) => [id, { x: 0, y: 0, z: 0 }]));
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+      const a = pos.get(ids[i]), b = pos.get(ids[j]);
+      let dx = a.x - b.x, dy = a.y - b.y, dz = a.z - b.z, d = Math.hypot(dx, dy, dz);
+      if (d < 0.01) { dx = 0.01; dy = 0.01 * (i - j); dz = 0; d = Math.hypot(dx, dy); }
+      const f = (k * k) / d, da = disp.get(ids[i]), db = disp.get(ids[j]);
+      da.x += (dx / d) * f; da.y += (dy / d) * f; da.z += (dz / d) * f;
+      db.x -= (dx / d) * f; db.y -= (dy / d) * f; db.z -= (dz / d) * f;
+    }
+    for (const e of edges) {
+      const a = pos.get(e.from), b = pos.get(e.to);
+      const dx = a.x - b.x, dy = a.y - b.y, dz = a.z - b.z, d = Math.max(0.01, Math.hypot(dx, dy, dz));
+      const f = ((d * d) / k) * (chosen ? 0.5 : 1), da = disp.get(e.from), db = disp.get(e.to);
+      da.x -= (dx / d) * f; da.y -= (dy / d) * f; da.z -= (dz / d) * f;
+      db.x += (dx / d) * f; db.y += (dy / d) * f; db.z += (dz / d) * f;
+    }
+    for (const id of ids) {
+      const p = pos.get(id), dd = disp.get(id), c = centres[groupOf.get(id)];
+      dd.x += (c.x - p.x) * pull * k; dd.y += (c.y - p.y) * pull * k; dd.z += (c.z - p.z) * pull * k;
+      const m = Math.max(0.01, Math.hypot(dd.x, dd.y, dd.z));
+      p.x += (dd.x / m) * Math.min(m, t); p.y += (dd.y / m) * Math.min(m, t); p.z += (dd.z / m) * Math.min(m, t);
+      if (c.r) { /* grouped: each instrument stays inside its group's sphere */
+        const ex = p.x - c.x, ey = p.y - c.y, ez = p.z - c.z, d = Math.hypot(ex, ey, ez);
+        if (d > c.r) { p.x = c.x + (ex / d) * c.r; p.y = c.y + (ey / d) * c.r; p.z = c.z + (ez / d) * c.r; }
+      }
+    }
+  }
+  /* centred on the network's own middle and scaled to a fixed radius */
+  const cx = ids.reduce((a, id) => a + pos.get(id).x, 0) / n, cy = ids.reduce((a, id) => a + pos.get(id).y, 0) / n, cz = ids.reduce((a, id) => a + pos.get(id).z, 0) / n;
+  /* the scale is set by the instruments in a relationship, so a separate cluster cannot shrink the network */
+  const scaleIds = chosen ? ids : ids.filter((id) => counts.touching.get(id).length);
+  const far = Math.max(...scaleIds.map((id) => { const p = pos.get(id); return Math.hypot(p.x - cx, p.y - cy, p.z - cz); }));
+  /* grouped, the clusters keep their own size (scaling to the whole would crush them); ungrouped, scaled to R3 */
+  const sc = chosen ? 1 : R3 / far;
+  for (const id of ids) { const p = pos.get(id); p.x = (p.x - cx) * sc; p.y = (p.y - cy) * sc; p.z = (p.z - cz) * sc; }
+  const labels = groups.map((g) => {
+    const ms = g.members.map((m) => pos.get(m.id));
+    return { label: g.label, short: g.short || null, n: g.members.length,
+      at: { x: ms.reduce((a, p) => a + p.x, 0) / ms.length, y: Math.min(...ms.map((p) => p.y)) - 42, z: ms.reduce((a, p) => a + p.z, 0) / ms.length } };
+  });
+  const ys = ids.map((id) => pos.get(id).y);
+  const xs = ids.map((id) => Math.hypot(pos.get(id).x, pos.get(id).z));
+  const half = Math.max(R3 + 95, Math.max(...ys.map(Math.abs)) + 55, Math.max(...xs) + 120);
+  return { p3: pos, labels, box: { x: -half, y: -half, w: 2 * half, h: 2 * half } };
+}
+
+/* the projection: a rotation (yaw about the vertical, then pitch), then perspective */
+const FOCAL = 900;
+function project(p, yaw, pitch) {
+  const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+  const x1 = p.x * cy + p.z * sy, z1 = -p.x * sy + p.z * cy;
+  const y2 = p.y * cp - z1 * sp, z2 = p.y * sp + z1 * cp;
+  const s = FOCAL / (FOCAL - z2);
+  return { x: x1 * s, y: y2 * s, z: z2, s };
 }
 
 /* ---------------------------------------------------------- drawing */
 
 const NODE_R = 7;
 
-function edgeGeometry(a, b, curve, R1 = NODE_R + 3, R2 = NODE_R + 6, centre = null) {
+function edgeGeometry(a, b, curve, R1 = NODE_R + 3, R2 = NODE_R + 6) {
   const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
   const dx = b.x - a.x, dy = b.y - a.y, d = Math.max(0.01, Math.hypot(dx, dy));
-  /* on the ring, a chord is bent toward the centre (more for a long one), and two between one pair are drawn apart */
-  const pull = centre ? 0.25 + 0.35 * (d / (2 * RING)) : 0;
-  const c = centre
-    ? { x: mx + (centre.x - mx) * pull - (dy / d) * curve * d * 0.6, y: my + (centre.y - my) * pull + (dx / d) * curve * d * 0.6 }
-    : { x: mx - (dy / d) * curve * d, y: my + (dx / d) * curve * d };
+  const c = { x: mx - (dy / d) * curve * d, y: my + (dx / d) * curve * d };
   const u1 = { x: c.x - a.x, y: c.y - a.y }, l1 = Math.max(0.01, Math.hypot(u1.x, u1.y));
   const u2 = { x: b.x - c.x, y: b.y - c.y }, l2 = Math.max(0.01, Math.hypot(u2.x, u2.y));
   const s = { x: a.x + (u1.x / l1) * R1, y: a.y + (u1.y / l1) * R1 };
@@ -218,16 +265,8 @@ function nodeLabel(ix, counts, inst) {
 
 function nodeSvg(ix, counts, inst, p, { labelSide = 'right' } = {}) {
   const cov = coverage(inst) || 'none';
-  let text;
-  if (labelSide === 'radial') {
-    /* the name read outward along the radius; on the left half turned so it never reads upside down */
-    const deg = (p.a * 180) / Math.PI;
-    const left = Math.cos(p.a) < 0;
-    text = `<text x="${left ? -(NODE_R + 6) : NODE_R + 6}" y="4" text-anchor="${left ? 'end' : 'start'}" transform="rotate(${(left ? deg + 180 : deg).toFixed(2)})">${esc(inst.short_name)}</text>`;
-  } else {
-    const below = labelSide === 'below';
-    text = `<text x="${below ? 0 : NODE_R + 5}" y="${below ? NODE_R + 15 : 4}" text-anchor="${below ? 'middle' : 'start'}">${esc(inst.short_name)}</text>`;
-  }
+  const below = labelSide === 'below';
+  const text = `<text x="${below ? 0 : NODE_R + 5}" y="${below ? NODE_R + 15 : 4}" text-anchor="${below ? 'middle' : 'start'}">${esc(inst.short_name)}</text>`;
   return `<g class="node c-${cov}" data-id="${esc(inst.id)}" role="button" tabindex="-1" aria-pressed="false" aria-label="${esc(nodeLabel(ix, counts, inst))}" transform="translate(${p.x.toFixed(1)},${p.y.toFixed(1)})">` +
     `<circle class="n-ring" r="${NODE_R + 5}"/><circle class="n-dot" r="${NODE_R}"/>${text}</g>`;
 }
@@ -244,6 +283,7 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
     neighbourhood: false,
     tab: 'props',
     vb: null, base: null,
+    yaw: 0.55, pitch: -0.32,   // the fixed starting view
     roving: null,
     tableAll: !window.matchMedia('(max-width: 51.99rem)').matches,
   };
@@ -261,16 +301,20 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
           <option value="coverage">Coverage (covered, mapped, watched, excluded)</option>
           <option value="part">Part of the brief</option>
         </select></label>
-        <button type="button" id="ex-relayout">Re-layout and reset view</button>
+        <button type="button" id="ex-relayout">Re-layout, starting view</button>
         <div class="ex-zoom" role="group" aria-label="Zoom">
           <button type="button" data-zoom="in" aria-label="Zoom in">+</button>
           <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
           <button type="button" data-zoom="reset">Fit</button>
+          <button type="button" data-turn="left" aria-label="Turn left">⟲</button>
+          <button type="button" data-turn="right" aria-label="Turn right">⟳</button>
+          <button type="button" data-turn="up" aria-label="Tilt up">⤒</button>
+          <button type="button" data-turn="down" aria-label="Tilt down">⤓</button>
         </div>
         <p class="visually-hidden" id="ex-live" aria-live="polite"></p>
       </div>
       <div class="ex-canvas"><div id="ex-svg"></div>
-        <p class="ex-hint">Keyboard: Tab into the network; arrow keys move between instruments by position; Enter selects; Esc clears; + and − zoom. The relationships of a selection are buttons in the panel's Relations tab, and every relationship is in the table below. Drag the background to pan.</p></div>
+        <p class="ex-hint">Drag the background, use the turn buttons, or Shift and an arrow key to turn the network in three dimensions — nothing moves on its own; nearer instruments are larger and darker. Keyboard: Tab into the network; arrow keys move between instruments as they appear; Enter selects; Esc clears; + and − zoom. The relationships of a selection are buttons in the panel's Relations tab, and every relationship is in the table below.</p></div>
       <div class="ego" id="ex-ego"></div>
       <aside class="ex-panel" id="ex-panel" aria-label="The selection"></aside>
       <div class="ex-legend" id="ex-legend"></div>
@@ -311,31 +355,63 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
   /* ------------------------------------------------ the canvas */
   let L = null;
   function draw() {
-    L = ringLayout(counts, state.group);
+    L = layout3d(counts, state.group);
+    /* the view is fitted to the network as the starting view shows it, with room for the names */
+    {
+      const P = [...L.p3.values()].map((p) => project(p, state.yaw, state.pitch));
+      const G = L.labels.map((g) => project(g.at, state.yaw, state.pitch));
+      const x0 = Math.min(...P.map((q) => q.x), ...G.map((q) => q.x - 60)) - 30, x1 = Math.max(...P.map((q) => q.x), ...G.map((q) => q.x + 60)) + 175;
+      const y0 = Math.min(...P.map((q) => q.y), ...G.map((q) => q.y)) - 30, y1 = Math.max(...P.map((q) => q.y)) + 30;
+      const w = x1 - x0, h = Math.max(y1 - y0, w * 0.62);
+      L.box = { x: x0, y: y0 - (h - (y1 - y0)) / 2, w, h };
+    }
     state.base = { ...L.box };
     if (!state.vb) state.vb = { ...L.box };
-    const curve = curvatures(counts.rels);
-    const C = { x: 0, y: 0 };
-    /* the astrolabe: two hairline circles and a tick every 10°, drawing only (aria-hidden) */
-    const ticks = Array.from({ length: 36 }, (_, i) => {
-      const a = (i * Math.PI) / 18, r0 = RING + 198, r1 = RING + (i % 9 === 0 ? 186 : 192);
-      return `<line x1="${(r0 * Math.cos(a)).toFixed(1)}" y1="${(r0 * Math.sin(a)).toFixed(1)}" x2="${(r1 * Math.cos(a)).toFixed(1)}" y2="${(r1 * Math.sin(a)).toFixed(1)}"/>`;
-    }).join('');
-    const arc = (r, a0, a1) => `M${(r * Math.cos(a0)).toFixed(1)},${(r * Math.sin(a0)).toFixed(1)} A${r},${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${(r * Math.cos(a1)).toFixed(1)},${(r * Math.sin(a1)).toFixed(1)}`;
-    const sectors = L.sectors.map((sct, i) => {
-      const mid = (sct.a0 + sct.a1) / 2, r = RING - 22;
-      const lx = r * Math.cos(mid), ly = r * Math.sin(mid);
-      return `<path class="sector-arc" d="${arc(RING - 12, sct.a0 + 0.02, sct.a1 - 0.02)}"/>` +
-        `<text class="group-label" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${Math.abs(Math.cos(mid)) < 0.3 ? 'middle' : Math.cos(mid) > 0 ? 'end' : 'start'}" dominant-baseline="middle">${sct.short ? esc(sct.short) : `${esc(sct.label)} · ${sct.n}`}</text><title>${esc(sct.label)}: ${sct.n}</title>`;
-    }).join('');
-    const deco = `<g class="astro" aria-hidden="true"><circle r="${RING + 198}"/><circle r="${RING}" class="astro-ring"/>${ticks}</g>`;
-    const edges = counts.rels.map((r) => edgeSvg(ix, r, edgeGeometry(L.pos.get(r.from), L.pos.get(r.to), curve.get(r), NODE_R + 3, NODE_R + 6, C), 'mk')).join('');
-    const nodes = counts.instruments.map((i) => nodeSvg(ix, counts, i, L.pos.get(i.id), { labelSide: 'radial' })).join('');
-    root.querySelector('#ex-svg').innerHTML = `<svg xmlns="${SVGNS}" viewBox="${vbStr()}" role="group" aria-label="Network of ${counts.instruments.length} instruments and ${counts.rels.length} recorded relationships, drawn on a ring. Use the arrow keys to move between instruments.">` +
-      markers('mk', kindsInUse) + `${deco}<g class="hulls" aria-hidden="true">${sectors}</g><g class="edges">${edges}</g><g class="nodes">${nodes}</g></svg>`;
+    L.pos = new Map();
+    const glabels = L.labels.map((g, i) => `<text class="group-label" data-g="${i}" text-anchor="middle">${g.short ? esc(g.short) : esc(g.label)} · ${g.n}<title>${esc(g.label)}: ${g.n}</title></text>`).join('');
+    const edges = counts.rels.map((r) => edgeSvg(ix, r, { d: 'M0,0', mid: { x: 0, y: 0 } }, 'mk')).join('');
+    const nodes = counts.instruments.map((i) => nodeSvg(ix, counts, i, { x: 0, y: 0 })).join('');
+    root.querySelector('#ex-svg').innerHTML = `<svg xmlns="${SVGNS}" viewBox="${vbStr()}" role="group" aria-label="Network of ${counts.instruments.length} instruments and ${counts.rels.length} recorded relationships, in three dimensions. Arrow keys move between instruments; Shift and an arrow key turns the network.">` +
+      markers('mk', kindsInUse) + `<g class="hulls" aria-hidden="true">${glabels}</g><g class="edges">${edges}</g><g class="nodes">${nodes}</g></svg>`;
     wireCanvas();
+    projectAll();
     applyFilters();
     applySelection(false);
+  }
+  /* re-project every node, edge and label for the current rotation; the DOM is kept (focus stays where it is) */
+  const curveOf = curvatures(counts.rels);
+  function projectAll() {
+    const svg = svgEl();
+    if (!svg || !L) return;
+    const P = new Map();
+    let zmin = Infinity, zmax = -Infinity;
+    for (const [id, p] of L.p3) { const q = project(p, state.yaw, state.pitch); P.set(id, q); zmin = Math.min(zmin, q.z); zmax = Math.max(zmax, q.z); }
+    const depth = (z) => (zmax > zmin ? (z - zmin) / (zmax - zmin) : 1); // 0 far … 1 near
+    L.pos = P;
+    for (const g of svg.querySelectorAll('.node')) {
+      const q = P.get(g.dataset.id), dd = depth(q.z);
+      g.setAttribute('transform', `translate(${q.x.toFixed(1)},${q.y.toFixed(1)}) scale(${(0.72 + 0.45 * dd).toFixed(3)})`);
+      g.setAttribute('opacity', (0.42 + 0.58 * dd).toFixed(2));
+    }
+    for (const g of svg.querySelectorAll('.edge')) {
+      const r = relById.get(g.dataset.rel), a = P.get(r.from), b = P.get(r.to);
+      const geo = edgeGeometry(a, b, curveOf.get(r), (NODE_R + 3) * (0.72 + 0.45 * depth(a.z)), (NODE_R + 6) * (0.72 + 0.45 * depth(b.z)));
+      for (const path of g.querySelectorAll('path')) path.setAttribute('d', geo.d);
+      const rect = g.querySelector('.e-badge rect'), text = g.querySelector('.e-badge text');
+      rect.setAttribute('x', (geo.mid.x - 10).toFixed(1)); rect.setAttribute('y', (geo.mid.y - 6.5).toFixed(1));
+      text.setAttribute('x', geo.mid.x.toFixed(1)); text.setAttribute('y', (geo.mid.y + 3).toFixed(1));
+      g.setAttribute('opacity', (0.3 + 0.7 * depth((a.z + b.z) / 2)).toFixed(2));
+    }
+    for (const t of svg.querySelectorAll('.group-label')) {
+      const q = project(L.labels[+t.dataset.g].at, state.yaw, state.pitch);
+      t.setAttribute('x', q.x.toFixed(1)); t.setAttribute('y', q.y.toFixed(1));
+    }
+  }
+  function turn(dyaw, dpitch, words) {
+    state.yaw += dyaw;
+    state.pitch = Math.max(-1.3, Math.min(1.3, state.pitch + dpitch));
+    projectAll();
+    if (words) say(words);
   }
   const vbStr = () => `${state.vb.x.toFixed(1)} ${state.vb.y.toFixed(1)} ${state.vb.w.toFixed(1)} ${state.vb.h.toFixed(1)}`;
   const svgEl = () => root.querySelector('#ex-svg svg');
@@ -366,6 +442,8 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
       const cur = ev.target.closest('.node');
       if (ev.key === '+' || ev.key === '=') { zoom(1.25); ev.preventDefault(); return; }
       if (ev.key === '-' || ev.key === '_') { zoom(0.8); ev.preventDefault(); return; }
+      const turnKeys = { ArrowLeft: [-0.2, 0], ArrowRight: [0.2, 0], ArrowUp: [0, 0.15], ArrowDown: [0, -0.15] };
+      if (ev.shiftKey && turnKeys[ev.key]) { turn(...turnKeys[ev.key], 'Network turned.'); ev.preventDefault(); return; }
       if (!cur) return;
       if (ev.key === 'Enter' || ev.key === ' ') { select({ type: 'node', id: cur.dataset.id }, { focusNode: true }); ev.preventDefault(); return; }
       if (ev.key === 'Escape') { select(null); ev.preventDefault(); return; }
@@ -391,21 +469,21 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
       }
       if (best) focusNode(best.dataset.id);
     });
-    /* pan by dragging the background */
+    /* drag the background to turn the network */
     let drag = null, moved = false;
     svg.addEventListener('pointerdown', (ev) => {
       if (ev.target.closest('.node') || ev.target.closest('.edge') || ev.button !== 0) return;
-      drag = { x: ev.clientX, y: ev.clientY, vb: { ...state.vb } };
+      drag = { x: ev.clientX, y: ev.clientY, yaw: state.yaw, pitch: state.pitch };
       svg.setPointerCapture(ev.pointerId);
       svg.classList.add('dragging');
     });
     svg.addEventListener('pointermove', (ev) => {
       if (!drag) return;
-      const s = state.vb.w / svg.clientWidth;
-      const dx = (ev.clientX - drag.x) * s, dy = (ev.clientY - drag.y) * s;
+      const dx = ev.clientX - drag.x, dy = ev.clientY - drag.y;
       if (Math.abs(dx) + Math.abs(dy) > 2) moved = true;
-      state.vb = { ...drag.vb, x: drag.vb.x - dx, y: drag.vb.y - dy };
-      setVb();
+      state.yaw = drag.yaw + dx * 0.008;
+      state.pitch = Math.max(-1.3, Math.min(1.3, drag.pitch - dy * 0.008));
+      projectAll();
     });
     const end = () => { drag = null; svg.classList.remove('dragging'); setTimeout(() => { moved = false; }, 0); };
     svg.addEventListener('pointerup', end);
@@ -631,7 +709,11 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
     state.group = ev.target.value; state.vb = null; draw();
     say(`Grouped by ${ev.target.selectedOptions[0].textContent.toLowerCase()}.`);
   });
-  root.querySelector('#ex-relayout').addEventListener('click', () => { state.vb = null; draw(); say('Layout recomputed from the records; view reset.'); });
+  root.querySelector('#ex-relayout').addEventListener('click', () => { state.vb = null; state.yaw = 0.55; state.pitch = -0.32; draw(); say('Layout recomputed from the records; the starting view restored.'); });
+  for (const b of root.querySelectorAll('[data-turn]')) b.addEventListener('click', () => {
+    const t = { left: [-0.25, 0], right: [0.25, 0], up: [0, 0.18], down: [0, -0.18] }[b.dataset.turn];
+    turn(t[0], t[1], 'Network turned.');
+  });
   for (const b of root.querySelectorAll('[data-zoom]')) b.addEventListener('click', () => { const z = b.dataset.zoom; if (z === 'in') zoom(1.25); else if (z === 'out') zoom(0.8); else fit(); });
   const find = root.querySelector('#ex-find');
   const doFind = () => {

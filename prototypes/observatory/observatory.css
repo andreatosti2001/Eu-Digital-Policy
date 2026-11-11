@@ -9,14 +9,14 @@
 
    Kept from the site (roadmap §8, 11 Nov 2026): the portal tree of the
    parts — here a star chart — and the column of Roman numerals. The look
-   is the observatory's own: a cool chart paper with a night-navy band and
-   a brass accent; the site's own font files used where they are
-   (../../fonts/), not copied — IBM Plex Mono carries the data and the
-   labels, Literata the prose, Fraunces the headings and the figures. The
-   site's parchment and gold are not kept; the ◆ mark is.
+   is the Editorial's look A, "Carta" (§8, "PV2-04: option A and the form
+   of the 3D Explorer"): the warm light paper and the oxblood accent, the
+   header on the same paper; the site's own font files used where they
+   are (../../fonts/), not copied — IBM Plex Mono for the data and the
+   labels, Literata for the prose, Fraunces for the headings and figures.
 
-   The dark theme ("Night") has no reference: USWDS and GOV.UK offer none.
-   It was designed here, as an observatory at night.
+   The dark theme has no reference: USWDS and GOV.UK offer none. Its
+   values are the Editorial's dark theme, which was designed in PV2-03.
    Unpublished: prototypes/ is not in tools/pages-artifact.mjs's allowlist.
    ============================================================ */
 
@@ -32,30 +32,29 @@
   --text: 'Literata', ui-serif, Georgia, serif;
   --mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
 
-  --bg: #f1f2ee;          /* chart paper */
-  --surface: #fbfbf8;
-  --surface-2: #e6e9e3;
-  --ink: #121b31;
-  --ink-2: #485266;
-  --rule: #c9cfd6;
-  --rule-2: #9aa3b0;
-  --band: #121d36;        /* the night-navy band */
-  --band-ink: #e9ecf2;
-  --band-ink-2: #b4bccb;
-  --accent: #835600;      /* brass */
-  --accent-soft: #f1e3c4;
-  --link: #1b4597;
-  --focus: #1b4597;
+  /* the Editorial's look A, "Carta" (roadmap §8, "PV2-04: option A and the form of the 3D Explorer"):
+     the warm light paper and the oxblood accent of prototypes/editorial/editorial.css */
+  --bg: #f7f4ee;
+  --surface: #fbf9f4;
+  --surface-2: #efeadf;
+  --ink: #1c1b20;
+  --ink-2: #57545e;
+  --rule: #d8d0c0;
+  --rule-2: #a89e8b;
+  --band: #f7f4ee;        /* the header sits on the same paper */
+  --band-ink: #1c1b20;
+  --band-ink-2: #57545e;
+  --accent: #8b2f1f;      /* oxblood */
+  --accent-soft: #f1e1db;
+  --link: #1f3f7a;
+  --focus: #1f3f7a;
 
-  --ok-bg: #dcebdc;   --ok-ink: #1d4d25;
-  --warn-bg: #f4e4c0; --warn-ink: #5a3b00;
-  --crit-bg: #f5d9d3; --crit-ink: #82200f;
-  --info-bg: #dfe5f1; --info-ink: #213c72;
-  --gap-ink: #573a88;
+  --ok-bg: #e0eddf;   --ok-ink: #1e5226;
+  --warn-bg: #f6e7c6; --warn-ink: #5e3d00;
+  --crit-bg: #f6dcd6; --crit-ink: #842015;
+  --info-bg: #e3e8f3; --info-ink: #233f75;
+  --gap-ink: #5a3d8a;
 
-  /* the relationship types: a colour each, never the only signal (the
-     stroke pattern and the two-letter code in the legend and on the edge
-     are the others) */
   --k-amends: #1d5bbf;  --k-repeals: #b0241b;  --k-defers-to: #4f5f73; --k-enables: #157a54;
   --k-overlap: #8a5600; --k-complement: #6a3ca0; --k-conflict: #b8460f; --k-lex-specialis: #0d7585;
   --k-legal-basis: #2f3a4a; --k-carve-out: #9a2a6c; --k-sequence: #5f6300; --k-implements: #3a5a1f;
@@ -64,36 +63,38 @@
   --on-fill: #ffffff; --on-fill-2: #e9e8ee; --mech-ink: #233f75; --crit-ink-2: #842015;
 
   --col: 40rem;
-  --star: #e3b85c; --star-soft: rgba(227, 184, 92, 0.18);
+  --star: #8b2f1f; --star-soft: rgba(139, 47, 31, 0.12);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0b1220; --surface: #111a2c; --surface-2: #18223a; --ink: #e6e9ef; --ink-2: #a9b3c4; --rule: #27334c; --rule-2: #4a5874;
-    --band: #060a14; --band-ink: #e6e9ef; --band-ink-2: #a9b3c4;
-    --accent: #e3b85c; --accent-soft: #33280f; --link: #9fc0ff; --focus: var(--star);
-    --ok-bg: #15301c; --ok-ink: #a6dcb1; --warn-bg: #372a0b; --warn-ink: #f0d08a; --crit-bg: #3f1d17; --crit-ink: #ffb9ab;
-    --info-bg: #1a2742; --info-ink: #bccdf6; --gap-ink: #d0baff;
+    --bg: #141418; --surface: #19191e; --surface-2: #1d1d23; --ink: #ebe7dd; --ink-2: #b6b2a8; --rule: #3a3a42; --rule-2: #5a5a64;
+    --band: #141418; --band-ink: #ebe7dd; --band-ink-2: #b6b2a8;
+    --accent: #e6a48f; --accent-soft: #3a221c; --link: #a9c0f0; --focus: #e6a48f;
+    --ok-bg: #18341f; --ok-ink: #a8deb3; --warn-bg: #3a2d0e; --warn-ink: #f0cf86; --crit-bg: #432019; --crit-ink: #ffb8aa;
+    --info-bg: #1d2943; --info-ink: #bccdf6; --gap-ink: #d2bcff;
     --k-amends: #7fb0ff; --k-repeals: #ff8f84; --k-defers-to: #b3c0d2; --k-enables: #6fd6a5;
     --k-overlap: #e8bb5f; --k-complement: #c4a2ff; --k-conflict: #ffa36b; --k-lex-specialis: #63d0e0;
     --k-legal-basis: #d6dce6; --k-carve-out: #ff9ccf; --k-sequence: #d8dc6a; --k-implements: #a9d38a;
     --fill-1: #d6d4cc; --fill-2: #9b9991; --fill-mech: #24345a; --fill-crit: #4b2620;
     --on-fill: #141418; --on-fill-2: #28282e; --mech-ink: #bccdf6; --crit-ink-2: #ffb8aa;
+    --star: #e6a48f; --star-soft: rgba(230, 164, 143, 0.16);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0b1220; --surface: #111a2c; --surface-2: #18223a; --ink: #e6e9ef; --ink-2: #a9b3c4; --rule: #27334c; --rule-2: #4a5874;
-  --band: #060a14; --band-ink: #e6e9ef; --band-ink-2: #a9b3c4;
-  --accent: #e3b85c; --accent-soft: #33280f; --link: #9fc0ff; --focus: var(--star);
-  --ok-bg: #15301c; --ok-ink: #a6dcb1; --warn-bg: #372a0b; --warn-ink: #f0d08a; --crit-bg: #3f1d17; --crit-ink: #ffb9ab;
-  --info-bg: #1a2742; --info-ink: #bccdf6; --gap-ink: #d0baff;
+    --bg: #141418; --surface: #19191e; --surface-2: #1d1d23; --ink: #ebe7dd; --ink-2: #b6b2a8; --rule: #3a3a42; --rule-2: #5a5a64;
+  --band: #141418; --band-ink: #ebe7dd; --band-ink-2: #b6b2a8;
+  --accent: #e6a48f; --accent-soft: #3a221c; --link: #a9c0f0; --focus: #e6a48f;
+  --ok-bg: #18341f; --ok-ink: #a8deb3; --warn-bg: #3a2d0e; --warn-ink: #f0cf86; --crit-bg: #432019; --crit-ink: #ffb8aa;
+  --info-bg: #1d2943; --info-ink: #bccdf6; --gap-ink: #d2bcff;
   --k-amends: #7fb0ff; --k-repeals: #ff8f84; --k-defers-to: #b3c0d2; --k-enables: #6fd6a5;
   --k-overlap: #e8bb5f; --k-complement: #c4a2ff; --k-conflict: #ffa36b; --k-lex-specialis: #63d0e0;
   --k-legal-basis: #d6dce6; --k-carve-out: #ff9ccf; --k-sequence: #d8dc6a; --k-implements: #a9d38a;
   --fill-1: #d6d4cc; --fill-2: #9b9991; --fill-mech: #24345a; --fill-crit: #4b2620;
   --on-fill: #141418; --on-fill-2: #28282e; --mech-ink: #bccdf6; --crit-ink-2: #ffb8aa;
+  --star: #e6a48f; --star-soft: rgba(230, 164, 143, 0.16);
   color-scheme: dark;
 }
 
@@ -122,28 +123,18 @@ code { font-family: var(--mono); font-size: 0.84em; }
 
 /* ---------------------------------------------------------- the chrome */
 
-.proto { font: 500 0.68rem/1.4 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; background: var(--band); color: var(--band-ink-2); padding: 0.35rem 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-.top { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 1.6rem; padding: 0.85rem 16px; color: var(--band-ink);
-  background:
-    radial-gradient(1px 1px at 12% 30%, rgba(255,255,255,.55) 50%, transparent 51%),
-    radial-gradient(1px 1px at 27% 70%, rgba(255,255,255,.35) 50%, transparent 51%),
-    radial-gradient(1.4px 1.4px at 44% 22%, rgba(255,255,255,.5) 50%, transparent 51%),
-    radial-gradient(1px 1px at 58% 64%, rgba(255,255,255,.3) 50%, transparent 51%),
-    radial-gradient(1px 1px at 71% 35%, rgba(255,255,255,.45) 50%, transparent 51%),
-    radial-gradient(1.4px 1.4px at 86% 58%, rgba(255,255,255,.4) 50%, transparent 51%),
-    radial-gradient(1px 1px at 93% 18%, rgba(255,255,255,.35) 50%, transparent 51%),
-    var(--band); }
+.proto { font: 500 0.7rem/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; background: var(--ink); color: var(--bg); padding: 0.4rem 16px; }
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 1.6rem; padding: 0.8rem 16px; color: var(--band-ink); background: var(--band); border-bottom: 1px solid var(--rule); }
 .brand { color: var(--band-ink); text-decoration: none; display: flex; align-items: baseline; gap: 0.6rem; }
 .brand-name { font: 600 1.1rem/1.1 var(--display); }
 .brand-name::before { content: "\25C6"; color: var(--star); margin-right: 0.45em; font-size: 0.8em; }
 .brand-sub { font: 500 0.7rem/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--band-ink-2); }
 .asof { margin: 0 0 0 auto; font: 400 0.75rem/1 var(--mono); color: var(--band-ink-2); }
-.theme { font: 500 0.74rem/1 var(--mono); letter-spacing: 0.04em; color: var(--band-ink); background: transparent; border: 1px solid var(--band-ink-2); border-radius: 3px; padding: 0.55em 0.9em; cursor: pointer; }
-.top a:focus-visible, .theme:focus-visible { outline-color: var(--star); }
+.theme { font: 500 0.74rem/1 var(--mono); letter-spacing: 0.04em; color: var(--ink); background: var(--surface-2); border: 1px solid var(--rule); border-radius: 3px; padding: 0.55em 0.9em; cursor: pointer; }
 
 /* The shell: [numerals] [sections] [content] [on this page] */
 .shell { display: grid; grid-template-columns: 3.6rem 12rem minmax(0, 1fr) 11.5rem; grid-template-areas: "rail side main onpage"; align-items: start; }
-.rail { grid-area: rail; align-self: stretch; border-right: 1px solid var(--rule); background: var(--surface-2); }
+.rail { grid-area: rail; align-self: stretch; border-right: 1px solid var(--rule); }
 .sidenav { grid-area: side; }
 main { grid-area: main; min-width: 0; padding-bottom: 4rem; }
 .onpage { grid-area: onpage; }
@@ -296,12 +287,12 @@ table.data td a, table.data td code { overflow-wrap: anywhere; }
 .hero { display: grid; gap: 1rem 3rem; align-items: center; }
 @media (min-width: 64rem) { .hero { grid-template-columns: minmax(0, 1.35fr) minmax(15rem, 0.65fr); } }
 .hero h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
-.starchart { margin: 0; max-width: 20rem; width: 100%; justify-self: center; background: var(--band); border-radius: 4px; padding: 1rem 1rem 0.6rem; }
+.starchart { margin: 0; max-width: 21rem; width: 100%; justify-self: center; }
 .starchart svg { width: 100%; height: auto; display: block; }
-.sc-lines line { stroke: var(--star); stroke-opacity: 0.45; stroke-width: 1.4; }
-.star .star-ring { fill: transparent; stroke: #b4bccb; stroke-opacity: 0.5; stroke-width: 1.2; }
-.star .star-core { fill: #e9ecf2; }
-.star text { font: 500 22px var(--mono); fill: #e9ecf2; letter-spacing: 0.04em; }
+.sc-lines line { stroke: var(--rule-2); stroke-width: 1.3; }
+.star .star-ring { fill: var(--bg); stroke: var(--ink-2); stroke-width: 1.2; }
+.star .star-core { fill: var(--ink); }
+.star text { font: 500 22px var(--mono); fill: var(--ink); letter-spacing: 0.04em; }
 .star.annex .star-ring { stroke-dasharray: 4 4; }
 .star.here .star-ring { stroke: var(--star); stroke-opacity: 1; stroke-width: 3; fill: var(--star-soft); }
 .star.here .star-core { fill: var(--star); }
@@ -309,7 +300,7 @@ table.data td a, table.data td code { overflow-wrap: anywhere; }
 .star:hover .star-ring, .star:focus .star-ring { stroke: var(--star); stroke-opacity: 1; stroke-width: 3; }
 .star:focus { outline: none; }
 .star:focus-visible .star-ring { stroke-width: 4; }
-.starchart figcaption { font: 400 0.7rem/1.45 var(--mono); color: #b4bccb; margin-top: 0.4rem; text-align: center; }
+.starchart figcaption { font: 400 0.7rem/1.45 var(--mono); font-style: normal; color: var(--ink-2); margin-top: 0.4rem; text-align: center; }
 
 .ways { list-style: none; padding: 0; margin: 0.6rem 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1rem; }
 .ways a { display: block; height: 100%; border-top: 1px solid var(--rule-2); padding: 0.8rem 0 0.4rem; text-decoration: none; color: var(--ink); }
@@ -445,7 +436,7 @@ dl.terms dd { margin: 0.1rem 0 0; }
 .node.c-mapped circle.n-dot { fill: var(--surface-2); }
 .node.c-watched circle.n-dot, .node.c-excluded circle.n-dot { stroke-dasharray: 3 2.4; }
 .node.c-excluded circle.n-dot { fill: transparent; stroke: var(--ink-2); }
-.node text { font: 500 10.5px var(--mono); fill: var(--ink); paint-order: stroke; stroke: var(--surface); stroke-width: 3.5px; stroke-linejoin: round; }
+.node text { font: 500 11.5px var(--mono); fill: var(--ink); paint-order: stroke; stroke: var(--surface); stroke-width: 3.5px; stroke-linejoin: round; }
 .node.c-excluded text, .node.c-watched text { fill: var(--ink-2); }
 .node circle.n-ring { fill: none; stroke: transparent; stroke-width: 3; }
 .node.selected circle.n-ring { stroke: var(--accent); }
@@ -453,11 +444,8 @@ dl.terms dd { margin: 0.1rem 0 0; }
 .node:focus-visible circle.n-ring { stroke: var(--focus); stroke-dasharray: 3 2; }
 .node.selected:focus-visible circle.n-ring { stroke: var(--accent); stroke-dasharray: none; stroke-width: 4.5; }
 .dim { opacity: 0.14; }
-.astro circle { fill: none; stroke: var(--rule); stroke-width: 1; }
-.astro .astro-ring { stroke: var(--rule-2); stroke-dasharray: 1 3; }
-.astro line { stroke: var(--rule-2); stroke-width: 1; }
-.sector-arc { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0.7; }
-.group-label { font: 500 9.5px var(--mono); fill: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.floor ellipse { fill: var(--surface-2); stroke: var(--rule); stroke-dasharray: 3 4; }
+.group-label { font: 500 11px var(--mono); fill: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
 .isolated-label { font: 500 12px var(--mono); fill: var(--ink-2); letter-spacing: 0.04em; }
 .isolated-rule { stroke: var(--rule-2); stroke-dasharray: 4 3; }
 
@@ -553,19 +541,4 @@ ul.plain li { margin-bottom: 0.2rem; }
 .onpage-here ol { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--rule); }
 .onpage-here a { display: block; padding: 0.25rem 0 0.25rem 0.8rem; color: var(--ink-2); text-decoration: none; }
 .onpage-here a:hover { color: var(--ink); box-shadow: inset 2px 0 0 var(--accent); }
-.look { font: 500 0.74rem/1 var(--mono); color: var(--band-ink); background: transparent; border: 1px solid var(--band-ink-2); border-radius: 3px; padding: 0.45em 0.5em; }
-.look option { color: #111; }
 
-/* ---------------------------------------------------------- alternative looks, for the author's choice (§8, "PV2-04: what to fix").
-   Look A (the base above) is Astrolabe: cool chart paper, night navy, brass. The switch in the header is temporary: it
-   exists so the looks can be compared on the same pages, and goes once one is chosen. */
-/* Look B · Vellum: an engraved star atlas — warm vellum, sepia ink, a verdigris accent; Night is lamp-black with pale verdigris. */
-:root[data-look="b"] { --star: #9fd8c5; --star-soft: rgba(159, 216, 197, 0.18); }
-:root[data-look="b"]:not([data-theme="dark"]) { --bg: #f3eee2; --surface: #faf7ee; --surface-2: #e8e0cf; --ink: #1f1a13; --ink-2: #594f42; --rule: #d6cbb4; --rule-2: #a39780; --band: #1d2620; --band-ink: #efe9da; --band-ink-2: #bcb39f; --accent: #2a6a5c; --accent-soft: #dbe8e1; --link: #1d4c70; --focus: #1d4c70; color-scheme: light; }
-@media (prefers-color-scheme: dark) { :root[data-look="b"]:not([data-theme="light"]) { --bg: #13110d; --surface: #1b1813; --surface-2: #242019; --ink: #ece4d1; --ink-2: #b4a991; --rule: #393329; --rule-2: #5b5343; --band: #0a0907; --band-ink: #ece4d1; --band-ink-2: #b4a991; --accent: #7dc3ae; --accent-soft: #1c2d27; --link: #a9c9e6; --focus: #7dc3ae; color-scheme: dark; } }
-:root[data-look="b"][data-theme="dark"] { --bg: #13110d; --surface: #1b1813; --surface-2: #242019; --ink: #ece4d1; --ink-2: #b4a991; --rule: #393329; --rule-2: #5b5343; --band: #0a0907; --band-ink: #ece4d1; --band-ink-2: #b4a991; --accent: #7dc3ae; --accent-soft: #1c2d27; --link: #a9c9e6; --focus: #7dc3ae; color-scheme: dark; }
-/* Look C · Celestial: indigo and gold — a pale sky by day, a deep indigo night. */
-:root[data-look="c"] { --star: #e9c66a; --star-soft: rgba(233, 198, 106, 0.18); }
-:root[data-look="c"]:not([data-theme="dark"]) { --bg: #f3f4fa; --surface: #fcfcff; --surface-2: #e6e8f4; --ink: #161a3a; --ink-2: #484d70; --rule: #d1d4e8; --rule-2: #9ca1c4; --band: #1b1e4c; --band-ink: #eceaf8; --band-ink-2: #b6b8dc; --accent: #7f5a00; --accent-soft: #f1e5c3; --link: #353aa8; --focus: #353aa8; color-scheme: light; }
-@media (prefers-color-scheme: dark) { :root[data-look="c"]:not([data-theme="light"]) { --bg: #0d0e27; --surface: #14163b; --surface-2: #1c1f49; --ink: #e9e8f6; --ink-2: #aeb1d6; --rule: #2b2e5e; --rule-2: #4b4f8c; --band: #07081b; --band-ink: #e9e8f6; --band-ink-2: #aeb1d6; --accent: #e9c66a; --accent-soft: #2f2a13; --link: #b6baff; --focus: #e9c66a; color-scheme: dark; } }
-:root[data-look="c"][data-theme="dark"] { --bg: #0d0e27; --surface: #14163b; --surface-2: #1c1f49; --ink: #e9e8f6; --ink-2: #aeb1d6; --rule: #2b2e5e; --rule-2: #4b4f8c; --band: #07081b; --band-ink: #e9e8f6; --band-ink-2: #aeb1d6; --accent: #e9c66a; --accent-soft: #2f2a13; --link: #b6baff; --focus: #e9c66a; color-scheme: dark; }
