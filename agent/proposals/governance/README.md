@@ -14,6 +14,11 @@ Full report: **`docs/GOVERNANCE-PROPOSALS.md`**.
 
 ## 1 · The first finding is about the corpus
 
+> **Dated note, 11 Nov 2026.** This section describes what SESSION 28 measured. Since then a first
+> decision has been signed and recorded for one proposal (`prop-docs-ea57404dc452`); where the ledger
+> is on a tree, `corpus.mjs` reports it as held and counts it, and where it is not, as ABSENT. The
+> checks here assert the corpus matches the file, in either state, not that nothing was decided.
+
 **There are no approved, rejected or edited proposals.** `agent/implement/decisions/decisions.jsonl`
 — the only place a grant on a proposal can exist — is not empty. It is **absent**. Of the seventy-one
 proposals AGENTS.md counts across four agents, not one has been decided: nobody has ever run
