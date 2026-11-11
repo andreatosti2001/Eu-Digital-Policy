@@ -1,12 +1,47 @@
 # HANDOVER
 
-**Last updated:** 11 November 2026, the author's sessions "P0.1 + P0.4" (dispatcher integrity, release governance) and
-"P0.3 + P0.2" (amount provenance, metric contract), both at their checkpoints in one session.
-**Branch:** `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`. Kept local at first (the author's answer, §8), then **pushed on the
-author's word ("Push") at the end of the session**; no pull request opened, nothing merged, `main` untouched.
-The entries below this session's are unchanged.
+**Last updated:** 11 November 2026, PV2-04 (Post-v2 C, the Policy observatory prototype), at checkpoint C.1.
+**Branch:** `claude/pv2-04-start-nhgcqx` (assigned by the environment), from `main` `25c9e79`; pushed. No pull request.
+The entries below this session's are unchanged; the paragraph that headed this file for the P0 sessions is kept under their
+branch register as it was written.
+
+## Branch register — 11 November 2026 (PV2-04)
+
+- `claude/pv2-04-start-nhgcqx`, from `main` `25c9e79`: `docs/` only so far (`ROADMAP-v2.md` §8, this file). Disposition: open,
+  at checkpoint C.1. `origin/main` re-fetched before this line: `25c9e79`.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
+
+## PV2-04 — Post-v2 C, the Policy observatory prototype: checkpoint C.1 (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of PV2-04" (the author's "Start PV2-04", `b9367e3`) and "PV2-04, C.1 question 1"
+(`476de10`). The prompt is `docs/prompts/v2-pv2-04-prototype-observatory.md` as approved with the reworked Editorial (`db1bdf2`).
+
+**The premises, verified.** §8 holds "G1: Stage 2 is opened", PV2-03's rows (scope, C.1 questions 1–4, its C.1 approval, "grid C4 step 4",
+"C.5 questions 1 and 2"), "Final checkpoint of PV2-03 approved" and "The reworked Editorial approved, look A". `main` `25c9e79` holds
+`prototypes/editorial/` (#97), `docs/PROTOTYPES.md` and the prompt; the P0 sessions inserted before PV2-04 are merged (#98). Date measured
+11 Nov 2026: before Track M (12 Jan 2027) and the grant's expiry (9 Mar 2027). The clone was shallow and was unshallowed.
+`node tools/pages-artifact.mjs list` does not list `prototypes/`; `tools/pages-artifact.mjs` is not touched. Nothing is written in
+`prototypes/observatory/`.
+
+**The grouping, decided** (§8, "PV2-04, C.1 question 1"): a selectable "Group by" — none (default) · coverage (`js/routes.js coverage()`:
+covered 16 · mapped 12 · watched 5 · excluded 6) · part of the brief (`brief_part`, 15 set, 24 in "not assigned"); each laid out
+deterministically, nothing computed. Grouping stays one of the extras the stopping rule allows to shrink.
+
+**The data, re-measured on `25c9e79`** (the prompt's starting table was PV2-03's): 39 instruments, 40 relationships (31 carry
+`requires_verification`, true on none; 9 carry neither it nor `verification_note`; 9 symmetric; `claims` on 11, `provisions` on 12; 10 kinds in
+use); 8 instruments in no relationship (`gdpr-procedural`, `chips-act`, `ai-liability-directive`, `charter`, `vida`, `eaa`, `psd3`, `psr`);
+101 events; **187 claims** (182 in the prompt's table: P0.3 added five); 21 enforcement records.
+
+**Battery on `476de10`, 11 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit` 0/0; `design-qa` 0/0; `evidence-audit --as-of
+2026-11-11` exit 0, 0 errors · 11 warnings; `freshness --as-of 2026-11-11` 0 defects, 3 staleness prompts (time, not this branch);
+`seo-audit` 0/0; `node --test tools/selftest.mjs` **176/176** (143 in the prompt's table: P0.2 and P0.3 added 33);
+`commit-evidence origin/main HEAD` 2 commits, 0 without evidence, neither changes a published file. `agent/records/` absent.
+
+**Waiting for:** the author's approval of C.1, recorded in §8. Then C.2–C.3 begin in `prototypes/observatory/`.
 
 ## Branch register — 11 November 2026 (P0.1 + P0.4, P0.3 + P0.2)
+
+*The file's heading when this entry was written:* **Last updated:** 11 November 2026, the author's sessions "P0.1 + P0.4" (dispatcher integrity, release governance) and "P0.3 + P0.2" (amount provenance, metric contract), both at their checkpoints in one session. **Branch:** `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`. Kept local at first (the author's answer, §8), then **pushed on the author's word ("Push") at the end of the session**; no pull request opened, nothing merged, `main` untouched. The entries below this session's are unchanged.
 
 - `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`: `agent/release/`, `agent/detector/fields.mjs`, `tools/`, `js/` (pipeline,
   masthead, instrument-view, enforcement-page), `data/enforcement.json`, `data/claims.json`, the regenerated `instruments/dma/`,
