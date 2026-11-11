@@ -89,7 +89,7 @@ shallow clone does not contain, a measurement needing a ref this checkout lacks.
 recorded, and counted neither for nor against. A checker that reported a CI runner's fetch
 depth as a false claim about history would be making exactly the mistake §5's P-02 is about.
 
-**On this tree: 49 anchors · 49 resolved · 0 refuted · 0 unresolvable.**
+**On this tree: 47 anchors · 47 resolved · 0 refuted · 0 unresolvable.** (It was 49 until 11 Nov 2026: P-07 lost the two anchors that asserted the decision ledger was absent and that AGENTS.md said so, when the first signed decision was recorded. See P-07 below.)
 
 The strongest anchors are the measurements, because a finding that cannot go away when it is
 fixed is not a finding. Five of them:
@@ -98,7 +98,7 @@ fixed is not a finding. Five of them:
 |---|---|
 | `contracts_banner_vs_registry` | **drifted** — `agent/schemas/cli.mjs` prints `FOURTEEN CONTRACTS` immediately above a list of **18** |
 | `grant_fields_absent` | **6 of 8** — the grant's field allowlist names six fields that appear on no record in `data/sources.json` |
-| `decisions_recorded` | **0** |
+| `decisions_recorded` | **at most 1** — the anchor is `{ at_most: 1 }`, true with the ledger absent (0) and with one entry (1), and deliberately refuted at two |
 | `proposals_reachable_for_decision` | **0** — nothing in this clone that a decision could bind to |
 | `policy_docs_in_enabled_category` | **8 of 8** — every prose governance document is placed by `categoriseProposal()` in a category the grant enables |
 
@@ -115,7 +115,7 @@ clear it is **reported as refused**, not dropped. Twelve clear it; none was refu
 | **P-04** | repeated correction | A declared count drifts from the thing it counts | 6/6 |
 | **P-05** | implementation failure | Parallel branches build the same thing twice | 5/5 |
 | **P-06** | implementation failure | A lesson written on a branch never becomes a rule | 3/3 |
-| **P-07** | implementation failure | Nothing is ever decided, and the mechanism explains why | 6/6 |
+| **P-07** | implementation failure | A decision is rare, and the mechanism that records it does not survive a clone | 4/4 |
 | **P-08** | repeated rejection reason | Every refusal is the same refusal, and it happens at the first gate | 3/3 |
 | **P-09** | evidence weakness | The corpus cannot say when anything was last checked | 4/4 |
 | **P-10** | UX objection | An interface defect a reader meets is measured, re-measured, and left | 3/3 |
@@ -137,7 +137,14 @@ sibling branch (`e6f2715`). **The mitigation already exists and is the first thi
 says.** What the four have in common is not that a rule was missing. It is that nothing
 *measured* the base and nothing *failed* when it was stale.
 
-**P-07 · nothing is ever decided, and the mechanism explains part of it.** The backlog is
+**P-07 · a decision is rare, and the mechanism that records it does not survive a clone.** This
+pattern was titled "Nothing is ever decided" until 11 Nov 2026, and two of its anchors asserted that
+the ledger was absent and that AGENTS.md said no proposal had ever been decided. The first signed
+decision (`prop-docs-ea57404dc452`) falsified the first; the pattern was re-stated, not left standing,
+and the AGENTS.md anchor was dropped because that sentence is now stale and a pattern should not be
+tied to text that has to change. What remains is the part a decision did not change, with a tripwire:
+`decisions_recorded` must be at most 1, so a second decision refuses the pattern until a person judges
+again whether "rare" still holds. The backlog is
 usually read as attention nobody has spent. It is also a mechanism nobody can use durably:
 `deriveApproval()` resolves a decision against `agent/records/`, which is git-ignored, so a
 decision recorded today reads `void_unknown_proposal` on any other machine until the producing
@@ -365,6 +372,6 @@ failure — and on that run the governance step was `skipped`, which is what §6
 - **`cli.mjs check` cannot see what it cannot reach.** On a shallow CI checkout the commit
   anchors report `unresolvable_here` and the check still exits 0, which is correct and worth
   nothing — which is why the workflow's agents job now checks out with `fetch-depth: 0`.
-- **Nothing here was reviewed by anyone.** Seven proposals, forty-nine anchors and twelve
+- **Nothing here was reviewed by anyone.** Seven proposals, forty-seven anchors and twelve
   readings, produced in one session, by the same session that decided what counted as a
   pattern.

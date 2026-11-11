@@ -68,7 +68,10 @@ test('1 · the run writes into none of the repository\'s real stores', async () 
     const p = join(REPO_ROOT, dir);
     return existsSync(p) ? readdirSync(p).filter((f) => f !== 'README.md' && !f.startsWith('.')).sort() : [];
   };
+  const ledger = join(REPO_ROOT, 'agent/implement/decisions/decisions.jsonl');
+  const ledgerText = () => (existsSync(ledger) ? readFileSync(ledger, 'utf8') : null);
   const before = Object.fromEntries(dirs.map((d) => [d, contentsOf(d)]));
+  const ledgerBefore = ledgerText();
   await theRun();
   for (const dir of dirs) {
     const after = contentsOf(dir);
@@ -77,9 +80,12 @@ test('1 · the run writes into none of the repository\'s real stores', async () 
     assert.deepEqual(added, [], `the simulation added ${added.length} file(s) to ${dir}: ${added.join(', ')}`);
     assert.deepEqual(removed, [], `the simulation removed ${removed.length} file(s) from ${dir}: ${removed.join(', ')}`);
   }
-  const ledger = join(REPO_ROOT, 'agent/implement/decisions/decisions.jsonl');
-  const lines = existsSync(ledger) ? readFileSync(ledger, 'utf8').split('\n').filter(Boolean) : [];
-  assert.equal(lines.length, 0, 'the real decision ledger must still hold no decision. Not one proposal in this repository has ever been decided, and a simulation is not the thing that changes that.');
+  /* This used to assert that the real ledger held NO decision, the state when it was written. The
+     first signed decision made that false on any tree that carries it, and the test was saying
+     something about the ledger's contents when the claim it exists for is about the simulation.
+     So it now compares the ledger with itself: byte for byte, and absent stays absent. That is
+     stricter — it also catches a simulation that rewrote an entry — and true on either tree. */
+  assert.equal(ledgerText(), ledgerBefore, 'the simulation changed the real decision ledger. A simulation is not the thing that decides a proposal, and it must not add, edit or remove an entry — or create the file where there was none.');
 });
 
 test('1 · no dispatcher can write, spawn or fetch', () => {
