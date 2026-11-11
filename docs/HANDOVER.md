@@ -2,7 +2,8 @@
 
 **Last updated:** 11 November 2026, the author's sessions "P0.1 + P0.4" (dispatcher integrity, release governance) and
 "P0.3 + P0.2" (amount provenance, metric contract), both at their checkpoints in one session.
-**Branch:** `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`. Commits are **local only** (the author's answer); nothing pushed.
+**Branch:** `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`. Kept local at first (the author's answer, §8), then **pushed on the
+author's word ("Push") at the end of the session**; no pull request opened, nothing merged, `main` untouched.
 The entries below this session's are unchanged.
 
 ## P0.3 + P0.2 — enforcement amount provenance and the metric contract: checkpoint (11 Nov 2026)
@@ -36,8 +37,7 @@ the suites: all pass, `agent/detector/selftest.mjs` 69/69 once the field was cla
 the sequential battery here as in the P0.1 run, and passed 24/24 in four isolated or loaded re-runs; the failing test's name was
 not captured either time — an intermittent failure, named, not explained. `.control-room/` 76 pass, 1 skipped (no IPv6 loopback).
 
-**Waiting for:** the author's checkpoint of Session 2, recorded in §8; then the question of pushing and of a pull request
-(commits are local, on the author's answer).
+**Waiting for:** the author's checkpoint of Session 2, recorded in §8; then the question of a pull request (the branch is pushed; no pull request is open).
 
 ## P0.1 + P0.4 — dispatcher integrity and release governance: checkpoint (11 Nov 2026)
 
