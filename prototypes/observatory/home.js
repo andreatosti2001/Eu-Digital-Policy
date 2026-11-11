@@ -16,38 +16,37 @@ const NEEDED = ['taxonomy', 'instruments', 'timeline', 'claims', 'sources', 'enf
 
 const partHref = (id) => id === 'part-5' ? 'article.html' : `../../index.html#${encodeURIComponent(id)}`;
 
-/* The portal tree, read in place from index.html (#portalTree): node
-   positions and paths are the site's; the drawing — a star chart, each part a
-   star and each path a line of the constellation — is this prototype's, and
-   each star is a real link. Nothing of the tree is copied into the folder. */
-function starChart(doc, db) {
+/* The portal tree, read in place from index.html (#portalTree): node positions and paths are the site's;
+   the drawing is the Editorial's look A (roadmap §8, "PV2-04: the layout the author sent"): each numeral
+   inside its circle, V — the article — filled, each node a real link, on the page with no background.
+   Nothing of the tree is copied into the folder. */
+function tree(doc, db) {
   const src = doc.getElementById('portalTree');
   if (!src) return `<p class="empty"><b>The portal tree was not found</b> in <code>index.html</code>.</p>`;
   const parts = new Map((db.brief?.parts || []).map((p) => [p.id, p]));
   const lines = [...src.querySelectorAll('line[data-a][data-b]')].map((l) =>
     `<line x1="${+l.getAttribute('x1')}" y1="${+l.getAttribute('y1')}" x2="${+l.getAttribute('x2')}" y2="${+l.getAttribute('y2')}"/>`).join('');
-  const stars = [...src.querySelectorAll('[data-node]')].map((g) => {
+  const pts = [];
+  const nodes = [...src.querySelectorAll('[data-node]')].map((g) => {
     const id = g.getAttribute('data-node');
     const m = (g.getAttribute('transform') || '').match(/translate\(\s*([\d.]+)[ ,]+([\d.]+)\s*\)/);
     if (!m) return '';
     const x = +m[1], y = +m[2];
+    pts.push([x, y]);
     const p = parts.get(id);
     const roman = g.getAttribute('data-roman') || p?.roman || '?';
     const word = (p?.kind || (id.startsWith('annex') ? 'annex' : 'part')) === 'annex' ? 'Annex' : 'Part';
     const name = `${word} ${roman}: ${p?.title || g.getAttribute('data-title') || id}`;
-    const cls = ['star', id.startsWith('annex') ? 'annex' : '', id === 'part-5' ? 'here' : ''].filter(Boolean).join(' ');
-    return `<a class="${cls}" href="${partHref(id)}" aria-label="${esc(name)}"><title>${esc(name)}</title>` +
-      `<circle class="star-ring" cx="${x}" cy="${y}" r="30"/><circle class="star-core" cx="${x}" cy="${y}" r="5"/>` +
-      `<text x="${x}" y="${y + 52}" text-anchor="middle">${esc(roman)}</text></a>`;
+    const cls = [id.startsWith('annex') ? 'annex' : '', id === 'part-5' ? 'here' : ''].filter(Boolean).join(' ');
+    return `<a href="${partHref(id)}" aria-label="${esc(name)}"${cls ? ` class="${cls}"` : ''}><title>${esc(name)}</title>` +
+      `<circle cx="${x}" cy="${y}" r="27"/><text x="${x}" y="${y + 5}" text-anchor="middle">${esc(roman)}</text></a>`;
   }).join('');
-  /* the viewBox is cropped to the stars actually placed, so the chart has no empty sky below it */
-  const pts = [...src.querySelectorAll('[data-node]')].map((g) => (g.getAttribute('transform') || '').match(/translate\(\s*([\d.]+)[ ,]+([\d.]+)\s*\)/)).filter(Boolean).map((m) => [+m[1], +m[2]]);
+  /* the viewBox is cropped to the nodes actually placed */
   const vb = pts.length
-    ? `${Math.min(...pts.map((p) => p[0])) - 45} ${Math.min(...pts.map((p) => p[1])) - 40} ${Math.max(...pts.map((p) => p[0])) - Math.min(...pts.map((p) => p[0])) + 90} ${Math.max(...pts.map((p) => p[1])) - Math.min(...pts.map((p) => p[1])) + 105}`
+    ? `${Math.min(...pts.map((p) => p[0])) - 32} ${Math.min(...pts.map((p) => p[1])) - 32} ${Math.max(...pts.map((p) => p[0])) - Math.min(...pts.map((p) => p[0])) + 64} ${Math.max(...pts.map((p) => p[1])) - Math.min(...pts.map((p) => p[1])) + 64}`
     : (src.getAttribute('viewBox') || src.getAttribute('viewbox') || '0 0 600 882');
-  return `<figure class="starchart"><svg viewBox="${esc(vb)}" role="group" aria-label="The parts of the brief, as the site draws them">
-    <g class="sc-lines">${lines}</g>${stars}</svg>
-    <figcaption>The parts of the brief as the site's portal tree places them. V opens the article; the others open the current site.</figcaption></figure>`;
+  return `<figure class="tree"><svg viewBox="${esc(vb)}" role="group" aria-label="The parts of the brief, as the site draws them">${lines}${nodes}</svg>
+    <figcaption>The parts of the brief, as the site draws them. V opens the article; the others open the current site.</figcaption></figure>`;
 }
 
 function cards(db, ix) {
@@ -167,13 +166,13 @@ boot(NEEDED, async (db, ix, mount) => {
   mount.innerHTML = `
     <header class="head hero">
       <div class="hero-text">
-        <p class="kicker">An observatory of the EU digital acquis</p>
+        <p class="kicker">An analytical brief on the EU digital acquis · the observatory</p>
         <h1>${title}</h1>
         ${stand ? `<p class="lede">${esc(stand)}</p>` : ''}
         ${intro ? `<p class="prose">${esc(intro)}</p>` : ''}
         ${advice ? `<p class="dek">${esc(advice)}</p>` : ''}
       </div>
-      ${starChart(doc, db)}
+      ${tree(doc, db)}
     </header>
     ${section('views', 'Four ways in', `<ul class="ways">
       <li><a href="regulation.html?id=ai-act"><span class="way-k">Regulation</span><strong>The AI Act, as a record</strong><span>Status, dates, provisions, claims, relationships, enforcement.</span></a></li>

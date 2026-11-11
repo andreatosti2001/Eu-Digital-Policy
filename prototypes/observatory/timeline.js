@@ -162,6 +162,7 @@ function timelineMode(db, ix, mount, params) {
 
 function networkMode(db, ix, mount, params) {
   const focus = params.get('focus');
+  mount.classList.add('full'); // the explorer takes the whole width: no in-page list (roadmap §8, Knwler's presentation)
   mount.innerHTML = `
     <header class="head">
       <p class="kicker">Analysis</p>

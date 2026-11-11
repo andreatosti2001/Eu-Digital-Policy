@@ -180,7 +180,7 @@ boot(NEEDED, async (db, ix, mount) => {
         ${threadItems.length ? `<section class="thread" aria-labelledby="in-short"><h2 id="in-short">In short</h2><ul></ul></section>` : ''}
         <div id="${PART}"><div class="part-body"></div></div>
       </div>
-      <aside class="ledger" aria-labelledby="ledger"><nav class="onpage-here" aria-labelledby="onpage-here-h"><h2 id="onpage-here-h">On this page</h2><ol></ol></nav><h2 id="ledger">Evidence ledger</h2><p class="meta" id="ledger-h">Each claim the text cites, numbered once in reading order: what is stated, what it rests on, and how far that evidence carries it.</p><ol id="ledger-list"></ol><div id="ledger-events"></div></aside>
+      <aside class="ledger" aria-labelledby="ledger"><h2 id="ledger">Evidence ledger</h2><p class="meta" id="ledger-h">Each claim the text cites, numbered once in reading order: what is stated, what it rests on, and how far that evidence carries it.</p><ol id="ledger-list"></ol><div id="ledger-events"></div></aside>
     </div>`;
 
   const ul = mount.querySelector('.thread ul');

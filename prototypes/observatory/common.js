@@ -72,7 +72,6 @@ function initTheme() {
  *  is shown in place by js/data.js's renderError; nothing is substituted. */
 export async function boot(names, render, { part } = {}) {
   initTheme();
-  markCurrent();
   const asof = document.getElementById('asof');
   if (asof) asof.textContent = 'Read ' + F.humanDate(TODAY);
   const mount = document.getElementById('view');
@@ -88,39 +87,17 @@ export async function boot(names, render, { part } = {}) {
   }
 }
 
-/** The section list on the left marks the page being read. A view is a
- *  file plus its one defining parameter (the regulation's id, the
- *  analytical view's mode), with the same defaults the views apply. */
-function markCurrent() {
-  const key = (u) => {
-    const file = u.pathname.split('/').pop() || 'index.html';
-    const q = u.searchParams;
-    if (file === 'regulation.html') return file + '?' + (q.get('id') || 'ai-act');
-    if (file === 'timeline.html') return file + '?' + (q.get('mode') === 'network' ? 'network' : 'timeline');
-    return file;
-  };
-  const here = key(new URL(location.href));
-  for (const a of document.querySelectorAll('#sidenav a')) {
-    if (key(new URL(a.href)) === here) a.setAttribute('aria-current', 'page');
-  }
-}
-
-/** "On this page", on the right, built from the headings actually rendered,
- *  so it cannot list a section the page does not have. */
+/** "On this page", on the left as in the Editorial's layout A (roadmap §8), built from the headings
+ *  actually rendered, so it cannot list a section the page does not have. A page marked .full (the
+ *  network explorer) gives its whole width to the content and has no list. */
 export function fillOnPage(mount) {
-  const box = document.getElementById('onpage');
-  if (!box) return;
-  const hs = [...mount.querySelectorAll('h2[id]')].filter((h) => !h.closest('[hidden]') && !h.closest('.onpage-here'));
-  /* a page may hold the list in a side column of its own (the article's ledger column) */
-  const here = mount.querySelector('.onpage-here');
-  if (here) {
-    box.hidden = true; document.body.classList.add('no-onpage');
-    here.querySelector('ol').innerHTML = hs.map((h) => `<li><a href="#${esc(h.id)}">${esc(h.textContent)}</a></li>`).join('');
-    return;
-  }
-  if (hs.length < 3) { box.hidden = true; document.body.classList.add('no-onpage'); return; }
-  box.hidden = false;
-  box.querySelector('ol').innerHTML = hs.map((h) => `<li><a href="#${esc(h.id)}">${esc(h.textContent)}</a></li>`).join('');
+  if (mount.classList.contains('full')) return;
+  const hs = [...mount.querySelectorAll('h2[id]')].filter((h) => !h.closest('[hidden]') && !h.closest('.toc'));
+  if (hs.length < 2) return;
+  const toc = document.createElement('div');
+  toc.className = 'toc';
+  toc.innerHTML = `<nav aria-labelledby="toc-h"><h2 id="toc-h">On this page</h2><ol>${hs.map((h) => `<li><a href="#${esc(h.id)}">${esc(h.textContent)}</a></li>`).join('')}</ol></nav>`;
+  mount.prepend(toc);
 }
 
 export const section = (id, title, body, cls = '') =>

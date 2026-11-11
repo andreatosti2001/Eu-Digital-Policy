@@ -107,7 +107,8 @@ export function explorerCounts(ix, db) {
    network onto the screen itself, in SVG; the reader turns it — nothing
    ever moves on its own. */
 
-const R3 = 200;
+const R3 = 285;
+const RIM = 300; // the circle the ungrouped network sits in
 
 function fib(i, n, r) {
   const y = 1 - (2 * (i + 0.5)) / n, rr = Math.sqrt(Math.max(0, 1 - y * y)), t = i * Math.PI * (3 - Math.sqrt(5));
@@ -179,11 +180,21 @@ function layout3d(counts, mode) {
   const scaleIds = chosen ? ids : ids.filter((id) => counts.touching.get(id).length);
   const far = Math.max(...scaleIds.map((id) => { const p = pos.get(id); return Math.hypot(p.x - cx, p.y - cy, p.z - cz); }));
   /* grouped, the clusters keep their own size (scaling to the whole would crush them); ungrouped, scaled to R3 */
-  const sc = chosen ? 1 : R3 / far;
-  for (const id of ids) { const p = pos.get(id); p.x = (p.x - cx) * sc; p.y = (p.y - cy) * sc; p.z = (p.z - cz) * sc; }
+  /* ungrouped: scaled so that most of the network reaches R3 (the 90th percentile), outliers held inside
+     the circle, so the network fills it; grouped, the clusters keep their own size */
+  let sc = 1;
+  if (!chosen) {
+    const ds = scaleIds.map((id) => { const p = pos.get(id); return Math.hypot(p.x - cx, p.y - cy, p.z - cz); }).sort((a, b) => a - b);
+    sc = R3 / Math.max(1, ds[Math.floor(ds.length * 0.9)] || far);
+  }
+  for (const id of ids) {
+    const p = pos.get(id); p.x = (p.x - cx) * sc; p.y = (p.y - cy) * sc; p.z = (p.z - cz) * sc;
+    const d = Math.hypot(p.x, p.y, p.z), lim = RIM * 0.8;
+    if (!chosen && d > lim) { p.x *= lim / d; p.y *= lim / d; p.z *= lim / d; }
+  }
   const labels = groups.map((g) => {
     const ms = g.members.map((m) => pos.get(m.id));
-    return { label: g.label, short: g.short || null, n: g.members.length,
+    return { key: g.key, label: g.label, short: g.short || null, n: g.members.length,
       at: { x: ms.reduce((a, p) => a + p.x, 0) / ms.length, y: Math.min(...ms.map((p) => p.y)) - 42, z: ms.reduce((a, p) => a + p.z, 0) / ms.length } };
   });
   const ys = ids.map((id) => pos.get(id).y);
@@ -293,31 +304,34 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
 
   root.innerHTML = `
     <div class="explorer">
-      <div class="ex-tools" role="group" aria-label="Explorer controls">
-        <label>Find an instrument<input type="search" id="ex-find" list="ex-names" autocomplete="off" placeholder="e.g. GDPR"></label>
-        <datalist id="ex-names">${counts.instruments.map((i) => `<option value="${esc(i.short_name)}"></option>`).join('')}</datalist>
-        <label class="ex-grp">Group by<select id="ex-group">
-          <option value="none">No grouping</option>
-          <option value="coverage">Coverage (covered, mapped, watched, excluded)</option>
-          <option value="part">Part of the brief</option>
-        </select></label>
-        <button type="button" id="ex-relayout">Re-layout, starting view</button>
-        <div class="ex-zoom" role="group" aria-label="Zoom">
-          <button type="button" data-zoom="in" aria-label="Zoom in">+</button>
-          <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
-          <button type="button" data-zoom="reset">Fit</button>
-          <button type="button" data-turn="left" aria-label="Turn left">⟲</button>
-          <button type="button" data-turn="right" aria-label="Turn right">⟳</button>
-          <button type="button" data-turn="up" aria-label="Tilt up">⤒</button>
-          <button type="button" data-turn="down" aria-label="Tilt down">⤓</button>
+      <div class="stage">
+        <div class="ex-canvas"><div id="ex-svg"></div></div>
+        <div class="ex-tools" role="group" aria-label="Explorer controls">
+          <p class="ex-title">// The EU digital acquis</p>
+          <label>Find an instrument<input type="search" id="ex-find" list="ex-names" autocomplete="off" placeholder="e.g. GDPR"></label>
+          <datalist id="ex-names">${counts.instruments.map((i) => `<option value="${esc(i.short_name)}"></option>`).join('')}</datalist>
+          <label class="ex-grp">Group by<select id="ex-group">
+            <option value="none">No grouping</option>
+            <option value="coverage">Coverage</option>
+            <option value="part">Part of the brief</option>
+          </select></label>
+          <button type="button" id="ex-relayout">Re-layout graph</button>
+          <div class="ex-zoom" role="group" aria-label="Zoom and turn">
+            <button type="button" data-zoom="in" aria-label="Zoom in">+</button>
+            <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
+            <button type="button" data-zoom="reset" aria-label="Fit the whole network">Fit</button>
+            <button type="button" data-turn="left" aria-label="Turn left">⟲</button>
+            <button type="button" data-turn="right" aria-label="Turn right">⟳</button>
+            <button type="button" data-turn="up" aria-label="Tilt up">⤒</button>
+            <button type="button" data-turn="down" aria-label="Tilt down">⤓</button>
+          </div>
+          <details class="ex-keys"><summary>How to use it</summary><p>Drag the background, the turn buttons, or Shift and an arrow key turn the network in three dimensions; nothing moves on its own; nearer instruments are larger and darker. Tab into the network; arrow keys move between instruments as they appear; Enter selects; Esc clears; + and − zoom. A selection's relationships are buttons in the panel's Relations tab; every relationship is in the table below.</p></details>
+          <p class="visually-hidden" id="ex-live" aria-live="polite"></p>
         </div>
-        <p class="visually-hidden" id="ex-live" aria-live="polite"></p>
+        <div class="ex-legend" id="ex-legend"></div>
+        <aside class="ex-panel" id="ex-panel" aria-label="The selection"></aside>
       </div>
-      <div class="ex-canvas"><div id="ex-svg"></div>
-        <p class="ex-hint">Drag the background, use the turn buttons, or Shift and an arrow key to turn the network in three dimensions — nothing moves on its own; nearer instruments are larger and darker. Keyboard: Tab into the network; arrow keys move between instruments as they appear; Enter selects; Esc clears; + and − zoom. The relationships of a selection are buttons in the panel's Relations tab, and every relationship is in the table below.</p></div>
       <div class="ego" id="ex-ego"></div>
-      <aside class="ex-panel" id="ex-panel" aria-label="The selection"></aside>
-      <div class="ex-legend" id="ex-legend"></div>
     </div>`;
 
   /* ------------------------------------------------ the legend: always visible, and the type filter */
@@ -330,8 +344,7 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
           <svg width="52" height="12" aria-hidden="true" class="k-${kk}"><line x1="2" y1="6" x2="50" y2="6" stroke-width="2.2"${dash ? ` stroke-dasharray="${dash}"` : ''}/></svg>
           <span class="code k-${kk}">${esc(kindCode(k))}</span><span>${esc(label(ix, k))}</span><span class="lg-count">${counts.byKind.get(k)}</span></label></li>`;
       }).join('')}</ul>
-      <p class="lg-note"><span id="ex-shown">${shownText()}</span> An arrow runs from → to and is drawn only where the record gives a direction (${counts.directed}); a mutual relationship (${counts.mutual}) has none.
-      ${counts.unused.length ? ` No relationship is recorded of ${counts.unused.length === 1 ? 'one type' : counts.unused.length + ' types'} in the vocabulary: ${counts.unused.map((k) => esc(label(ix, k))).join(', ')}.` : ''}</p>
+      <p class="lg-note"><span id="ex-shown">${shownText()}</span> → only where the record gives a direction (${counts.directed}); none on a mutual one (${counts.mutual}).${counts.unused.length ? ` None recorded: ${counts.unused.map((k) => esc(label(ix, k))).join(', ')}.` : ''}</p>
       <div class="lg-nodes" aria-label="Instruments">
         <span><svg width="16" height="16" aria-hidden="true"><g class="node c-covered"><circle class="n-dot" cx="8" cy="8" r="6"/></g></svg> covered</span>
         <span><svg width="16" height="16" aria-hidden="true"><g class="node c-mapped"><circle class="n-dot" cx="8" cy="8" r="6"/></g></svg> mapped</span>
@@ -356,14 +369,23 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
   let L = null;
   function draw() {
     L = layout3d(counts, state.group);
-    /* the view is fitted to the network as the starting view shows it, with room for the names */
-    {
+    /* ungrouped (Knwler's presentation, §8): the network inside a circle, the instruments with no
+       relationship on its rim, fixed on the screen; grouped: the view fitted to the starting view */
+    L.rim = new Map();
+    if (state.group === 'none') {
+      const iso = counts.isolated;
+      iso.forEach((inst, i) => {
+        const a = Math.PI * (-0.42 + (0.84 * (i + 0.5)) / Math.max(1, iso.length)); // the right-hand arc, clear of the floating controls and legend
+        L.rim.set(inst.id, { x: RIM * Math.cos(a), y: RIM * Math.sin(a), z: 0, s: 1, rim: true });
+      });
+      L.box = { x: -RIM - 300, y: -RIM - 40, w: 2 * RIM + 300 + 210, h: 2 * RIM + 130 };
+    } else {
       const P = [...L.p3.values()].map((p) => project(p, state.yaw, state.pitch));
       const G = L.labels.map((g) => project(g.at, state.yaw, state.pitch));
       const x0 = Math.min(...P.map((q) => q.x), ...G.map((q) => q.x - 60)) - 30, x1 = Math.max(...P.map((q) => q.x), ...G.map((q) => q.x + 60)) + 175;
       const y0 = Math.min(...P.map((q) => q.y), ...G.map((q) => q.y)) - 30, y1 = Math.max(...P.map((q) => q.y)) + 30;
       const w = x1 - x0, h = Math.max(y1 - y0, w * 0.62);
-      L.box = { x: x0, y: y0 - (h - (y1 - y0)) / 2, w, h };
+      L.box = { x: x0 - 260, y: y0 - (h - (y1 - y0)) / 2, w: w + 260, h };
     }
     state.base = { ...L.box };
     if (!state.vb) state.vb = { ...L.box };
@@ -372,7 +394,7 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
     const edges = counts.rels.map((r) => edgeSvg(ix, r, { d: 'M0,0', mid: { x: 0, y: 0 } }, 'mk')).join('');
     const nodes = counts.instruments.map((i) => nodeSvg(ix, counts, i, { x: 0, y: 0 })).join('');
     root.querySelector('#ex-svg').innerHTML = `<svg xmlns="${SVGNS}" viewBox="${vbStr()}" role="group" aria-label="Network of ${counts.instruments.length} instruments and ${counts.rels.length} recorded relationships, in three dimensions. Arrow keys move between instruments; Shift and an arrow key turns the network.">` +
-      markers('mk', kindsInUse) + `<g class="hulls" aria-hidden="true">${glabels}</g><g class="edges">${edges}</g><g class="nodes">${nodes}</g></svg>`;
+      markers('mk', kindsInUse) + (state.group === 'none' ? `<circle class="frame" r="${RIM}" aria-hidden="true"/>` : '') + `<g class="hulls" aria-hidden="true">${glabels}</g><g class="edges">${edges}</g><g class="nodes">${nodes}</g></svg>`;
     wireCanvas();
     projectAll();
     applyFilters();
@@ -385,8 +407,9 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
     if (!svg || !L) return;
     const P = new Map();
     let zmin = Infinity, zmax = -Infinity;
-    for (const [id, p] of L.p3) { const q = project(p, state.yaw, state.pitch); P.set(id, q); zmin = Math.min(zmin, q.z); zmax = Math.max(zmax, q.z); }
+    for (const [id, p] of L.p3) { if (L.rim.has(id)) continue; const q = project(p, state.yaw, state.pitch); P.set(id, q); zmin = Math.min(zmin, q.z); zmax = Math.max(zmax, q.z); }
     const depth = (z) => (zmax > zmin ? (z - zmin) / (zmax - zmin) : 1); // 0 far … 1 near
+    for (const [id, q] of L.rim) P.set(id, { ...q, z: zmax });
     L.pos = P;
     for (const g of svg.querySelectorAll('.node')) {
       const q = P.get(g.dataset.id), dd = depth(q.z);
@@ -403,7 +426,10 @@ export function mountExplorer(root, ix, db, { focus = null, tableMount, onSelect
       g.setAttribute('opacity', (0.3 + 0.7 * depth((a.z + b.z) / 2)).toFixed(2));
     }
     for (const t of svg.querySelectorAll('.group-label')) {
-      const q = project(L.labels[+t.dataset.g].at, state.yaw, state.pitch);
+      const lab = L.labels[+t.dataset.g];
+      if (state.group === 'none' && lab.key === '__none') { t.setAttribute('x', '110'); t.setAttribute('y', String(-RIM - 14)); t.setAttribute('text-anchor', 'start'); continue; }
+      if (state.group === 'none' && lab.key === '__linked') { t.setAttribute('x', '-20'); t.setAttribute('y', String(-RIM - 14)); t.setAttribute('text-anchor', 'end'); continue; }
+      const q = project(lab.at, state.yaw, state.pitch);
       t.setAttribute('x', q.x.toFixed(1)); t.setAttribute('y', q.y.toFixed(1));
     }
   }
