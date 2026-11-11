@@ -27,7 +27,7 @@
 
 import { loadAll, index, label as taxLabel, note as taxNote, renderError } from './data.js';
 import * as F from './format.js';
-import { actionsOnly } from './pipeline.js';
+import { actionsOnly, finesFigure } from './pipeline.js';
 import { href as siteHref } from './routes.js';
 
 const esc = (s) => String(s == null ? '' : s)
@@ -171,30 +171,28 @@ function nextDue(ix, howMany, asOf) {
 /* ---------------------------------------------------------- 3. enforcement */
 
 function enforcementLine(ix, records) {
-  const withFine = records.filter((r) => r.fine_eur != null);
-  const announced = withFine.reduce((a, r) => a + r.fine_eur, 0);
-
-  /* collected is a different fact from imposed, and most records cannot
-     settle it — the figure that would be wrong here is zero */
-  const collected = records.filter((r) =>
-    r.payment_status === 'payment:collected' || r.payment_status === 'payment:paid');
-  const unknownPay = records.filter((r) =>
-    !r.payment_status || r.payment_status === 'payment:unknown').length;
-  const collectedEur = collected.reduce((a, r) => a + (r.fine_eur || 0), 0);
+  /* one computing function (js/pipeline.js finesFigure, MC-2): the sum, the
+     payment states and "unknown is never zero" have one home. This view only
+     words them. Collected is a figure only when every input's payment state
+     is known; otherwise it is unknown, whatever a few records show. */
+  const fig = finesFigure(records);
+  const announced = fig.announced.eur;
+  const unknownPay = fig.collected.unknown.length + fig.collected.not_researched.length + fig.collected.unmapped.length;
+  const collectedKnown = fig.collected.state === 'determined';
 
   /* Set as a sentence with the figures raised out of it, rather than as two
      matching cells under two matching labels. The claim is the point; the
      numbers are evidence inside it. */
   return '<section class="sop-block sop-enf">' +
     '<p class="enf-claim">' +
-      '<span class="ec-fig">' + esc(F.eur(announced)) + '</span> ' +
+      '<span class="ec-fig' + (announced === null ? ' unknown' : '') + '">' + (announced === null ? 'not determinable' : esc(F.eur(announced))) + '</span> ' +
       'has been <span class="ec-word">announced</span> in fines across ' +
-      withFine.length + ' of ' + records.length + ' recorded actions. ' +
+      fig.fined + ' of ' + fig.population + ' recorded actions. ' +
       'What has demonstrably reached a treasury is ' +
-      '<span class="ec-fig' + (collected.length ? '' : ' unknown') + '">' +
-        (collected.length ? esc(F.eur(collectedEur)) : 'unknown') + '</span>.' +
+      '<span class="ec-fig' + (collectedKnown ? '' : ' unknown') + '">' +
+        (collectedKnown ? esc(F.eur(fig.collected.eur)) : 'unknown') + '</span>.' +
     '</p>' +
-    '<p class="enf-gloss">' + unknownPay + ' of ' + records.length +
+    '<p class="enf-gloss">' + unknownPay + ' of ' + fig.population +
       ' records cannot settle whether money moved. That is not zero, and the ' +
       'distance between those two figures is this brief’s subject rather than ' +
       'a rounding error.</p>' +

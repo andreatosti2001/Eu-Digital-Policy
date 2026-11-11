@@ -279,7 +279,8 @@ test('A1 · an approved, signed proposal is REHEARSED: every check runs, nothing
   const before = git(root, ['status', '--porcelain']) + git(root, ['rev-parse', 'HEAD']);
   const r = await dis({ records: recs, ledgerDir: dir, root, applier: async () => { throw new Error('a rehearsal must not apply'); } });
   assert.equal(r.outcome, 'would_dispatch', JSON.stringify(r.stages));
-  assert.deepEqual(r.stages.map((s) => s.stage), ['intake', 'ledger', 'approval', 'preflight', 'duplicate', 'rehearsal']);
+  /* 'index' since P0.1 (11 Nov 2026): a rehearsal checks the index too, so it never promises a dispatch the execution refuses */
+  assert.deepEqual(r.stages.map((s) => s.stage), ['intake', 'ledger', 'approval', 'preflight', 'duplicate', 'index', 'rehearsal']);
   assert.ok(r.stages.every((s) => s.ok));
   assert.match(r.would_commit, /^Proposal: prop-fixture-000000000001$/m);
   assert.equal(git(root, ['status', '--porcelain']) + git(root, ['rev-parse', 'HEAD']), before, 'a rehearsal leaves git byte-identical');
@@ -406,7 +407,9 @@ test('A9 · when Agent 9 does not implement, the branch is removed and nothing i
     assert.equal(r.outcome, 'failed'); assert.equal(r.branch, null);
   }
   const thrown = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: async () => { throw new Error('boom'); } });
-  assert.equal(thrown.outcome, 'failed'); assert.match(thrown.stages.at(-1).why, /boom/);
+  /* since P0.1 the dispatcher's own verified rollback is the last stage; the failing stage is the one that is not ok */
+  assert.equal(thrown.outcome, 'failed'); assert.match(thrown.stages.find((s) => !s.ok).why, /boom/);
+  assert.equal(thrown.stages.at(-1).stage, 'rollback'); assert.equal(thrown.rollback.verified, true);
   assert.equal(git(root, ['branch', '--list', 'release/*']), '');
   assert.equal(git(root, ['rev-parse', 'HEAD']), head);
 });
@@ -416,15 +419,21 @@ test('A10 · a change outside the approved scope is undone and not committed', a
   mkdirSync(join(root, 'data'), { recursive: true });
   const sneaky = async (o) => { writeFileSync(join(o.root, 'data', 'sneak.json'), '{}'); return goodApplier(o); };
   const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: sneaky });
-  assert.equal(r.outcome, 'failed'); assert.equal(r.stages.at(-1).stage, 'scope');
+  /* since P0.1 the dispatcher's own verified rollback is the last stage; the failing stage is the one that is not ok */
+  assert.equal(r.outcome, 'failed'); assert.equal(r.stages.find((s) => !s.ok).stage, 'scope');
+  assert.equal(r.stages.at(-1).stage, 'rollback'); assert.equal(r.rollback.verified, true);
+  assert.equal(existsSync(join(root, 'data', 'sneak.json')), false);
   assert.equal(git(root, ['branch', '--list', 'release/*']), '');
   const none = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: async () => ({ outcome: 'implemented', change: { files: [] } }) });
   assert.equal(none.outcome, 'failed'); assert.match(none.reasons[0], /nothing changed/);
 });
 
 test('A11 · the dispatcher cannot push, merge, approve or write the ledger, and the real applier is Agent 9', () => {
-  const src = readFileSync(join(HERE, 'dispatch.mjs'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
-  for (const forbidden of [/'push'/, /'merge'/, /recordDecision\s*\(/, /appendFileSync\([^)]*decisions/, /'--force'/, /'reset'/]) assert.doesNotMatch(src, forbidden, String(forbidden));
+  /* worktree.mjs since P0.1: the module that stages and restores is held to the same list, plus clean and stash */
+  for (const file of ['dispatch.mjs', 'worktree.mjs']) {
+    const src = readFileSync(join(HERE, file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    for (const forbidden of [/'push'/, /'merge'/, /recordDecision\s*\(/, /appendFileSync\([^)]*decisions/, /'--force'/, /'reset'/, /'clean'/, /'stash'/]) assert.doesNotMatch(src, forbidden, `${file}: ${forbidden}`);
+  }
   assert.equal(typeof implementerApplier, 'function');
 });
 
@@ -460,6 +469,274 @@ test('A12 · lifecycle: the seven states are derived from the proposal, the ledg
   assert.equal(pub.state, 'published');
   assert.match(pub.why, /deployment itself is GitHub's record/);
   assert.equal(findDispatches(run.key, { cwd: root, mainRef: 'main' })[0].on_main, true);
+});
+
+/* ============================================================ I · the index and the rollback (P0.1, 11 Nov 2026)
+
+   The author's first real dispatch committed 9 files (11313f6) while the
+   scope stage reported 1. Reproduced here against the dispatcher as it stood
+   at ad234aa: eight pre-staged paths were subtracted from what the scope
+   stage looked at, and `git commit` took the whole index. Every test below
+   runs in a temporary repository and compares the whole state before and
+   after: every file's hash, the index (`git ls-files -s`), the status, the
+   branch, HEAD and the release branches. */
+
+const sha = (b) => createHash('sha256').update(b).digest('hex');
+function hashTree(root, dir = root, out = {}) {
+  for (const name of readdirSync(dir, { withFileTypes: true })) {
+    if (dir === root && name.name === '.git') continue;
+    const abs = join(dir, name.name);
+    if (name.isDirectory()) hashTree(root, abs, out);
+    else out[abs.slice(root.length + 1)] = sha(readFileSync(abs));
+  }
+  return out;
+}
+function state(root) {
+  return {
+    files: hashTree(root),
+    index: git(root, ['ls-files', '-s']),
+    staged: git(root, ['diff', '--cached', '--name-status']),
+    status: git(root, ['status', '--porcelain=v1', '--untracked-files=all']),
+    branch: git(root, ['rev-parse', '--abbrev-ref', 'HEAD']),
+    head: git(root, ['rev-parse', 'HEAD']),
+    releases: git(root, ['branch', '--list', 'release/*']),
+  };
+}
+/** A repository with tools/example.mjs plus the named tracked files. */
+function repoWith(files = {}) {
+  const d = repo({ branch: 'main' });
+  for (const [p, t] of Object.entries(files)) { mkdirSync(dirname(join(d, p)), { recursive: true }); writeFileSync(join(d, p), t); }
+  git(d, ['add', '-A']); git(d, ['commit', '-q', '-m', 'more files']);
+  git(d, ['checkout', '-q', '-b', 'feature']);
+  return d;
+}
+const NINE = Array.from({ length: 8 }, (_, i) => `docs/f${i}.md`);
+const nineTracked = Object.fromEntries(NINE.map((p, i) => [p, `doc ${i}\n`]));
+/** A proposal whose permitted set is tools/example.mjs plus `extra`. */
+const wider = (extra) => proposal({ files: ['tools/example.mjs', ...extra], affected_entities: ['tools/example.mjs', ...extra].map((p) => ({ kind: 'tool', id: null, path: p, field: null, note: null })) });
+/** An applier that makes the approved edit, then `also(root)`, and declares `declared`. */
+const applierThat = (also, declared = ['tools/example.mjs']) => async (o) => {
+  const r = await goodApplier(o); also?.(o.root);
+  return { ...r, change: { files: declared.map((p) => ({ path: p })) } };
+};
+const filesOf = (root, c) => git(root, ['show', '--name-status', '--no-renames', '--format=', c]).split('\n').filter(Boolean).sort();
+const stageOf = (r, name) => r.stages.find((s) => s.stage === name);
+
+test('I1 · no pre-existing change: one commit, exactly the produced path, and the working branch exactly as it was', async () => {
+  const { recs, dir } = approved(); const root = repo(); const s0 = state(root);
+  const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: goodApplier });
+  assert.equal(r.outcome, 'dispatched', JSON.stringify(r.stages));
+  assert.deepEqual(r.stages.map((s) => s.stage), ['intake', 'ledger', 'approval', 'preflight', 'duplicate', 'index', 'isolate', 'apply', 'scope', 'commit']);
+  assert.deepEqual(stageOf(r, 'scope').produced, ['tools/example.mjs']);
+  assert.deepEqual(stageOf(r, 'scope').declared, ['tools/example.mjs']);
+  assert.deepEqual(stageOf(r, 'scope').permitted, ['tools/example.mjs']);
+  assert.deepEqual(filesOf(root, r.commit), ['M\ttools/example.mjs']);
+  assert.equal(git(root, ['rev-parse', `${r.commit}^`]), s0.head, 'one parent, the base');
+  const s1 = state(root);
+  assert.deepEqual({ ...s1, releases: '' }, { ...s0, releases: '' }, 'files, index, status, branch and HEAD are as before');
+  assert.match(s1.releases, /release\/prop-fixture/);
+});
+
+test('I2 · REGRESSION 11313f6: eight files staged OUTSIDE the scope refuse the dispatch before the apply, in a rehearsal too, and are left staged', async () => {
+  const { recs, dir } = approved(); const root = repo();
+  mkdirSync(join(root, 'docs'), { recursive: true });
+  NINE.forEach((p, i) => writeFileSync(join(root, p), `staged ${i}\n`));
+  git(root, ['add', 'docs']);
+  const s0 = state(root);
+  let called = false;
+  const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: async (o) => { called = true; return goodApplier(o); } });
+  assert.equal(r.outcome, 'refused');
+  assert.equal(r.stages.at(-1).stage, 'index');
+  assert.equal(called, false, 'refused before the apply');
+  assert.deepEqual(r.stages.at(-1).staged.map((x) => x.path), NINE);
+  for (const p of NINE) assert.match(r.reasons[0], new RegExp(p.replace('.', '\\.')));
+  assert.match(r.reasons[0], /Nothing was unstaged/);
+  assert.deepEqual(state(root), s0, 'the person\'s index is untouched — nothing unstaged, no branch');
+  const rehearsal = await dis({ records: recs, ledgerDir: dir, root });
+  assert.equal(rehearsal.outcome, 'refused'); assert.equal(rehearsal.stages.at(-1).stage, 'index');
+});
+
+test('I3 · a staged change INSIDE the scope, and a merge left uncommitted (the other way 8 files reach an index), each refuse before the apply', async () => {
+  const { recs, dir } = approved();
+  const inScope = repo();
+  writeFileSync(join(inScope, 'tools/example.mjs'), 'const OLD = 1; // staged by the person\n');
+  git(inScope, ['add', 'tools/example.mjs']);
+  const s0 = state(inScope);
+  let called = false;
+  const r = await dis({ records: recs, ledgerDir: dir, root: inScope, execute: true, applier: async () => { called = true; return {}; } });
+  assert.equal(r.outcome, 'refused'); assert.equal(r.stages.at(-1).stage, 'index'); assert.equal(called, false);
+  assert.match(r.reasons[0], /tools\/example\.mjs/);
+  assert.deepEqual(state(inScope), s0);
+
+  /* `git merge --no-commit`: the merged paths are staged and MERGE_HEAD exists; a branch switch would drop MERGE_HEAD and keep the paths staged */
+  const m = repoWith(nineTracked);
+  git(m, ['checkout', '-q', '-b', 'upstream']);
+  NINE.forEach((p, i) => writeFileSync(join(m, p), `repaired ${i}\n`));
+  git(m, ['commit', '-q', '-am', 'the repair']);
+  git(m, ['checkout', '-q', 'feature']);
+  git(m, ['merge', '--no-commit', '--no-ff', 'upstream']);
+  const m0 = state(m);
+  const r2 = await dis({ records: recs, ledgerDir: dir, root: m, execute: true, applier: async () => { called = true; return {}; } });
+  assert.equal(r2.outcome, 'refused'); assert.equal(r2.stages.at(-1).stage, 'index'); assert.equal(called, false);
+  assert.match(r2.reasons[0], /MERGE_HEAD/);
+  assert.equal(r2.stages.at(-1).staged.length, 8);
+  assert.deepEqual(state(m), m0, 'the merge is still in progress, exactly as the person left it');
+});
+
+test('I4 · the applier DECLARES 1 file and CHANGES 9: refused at scope whether the 8 are outside or inside the scope, and rolled back', async () => {
+  for (const [label, prop] of [['outside', proposal()], ['inside', wider(NINE)]]) {
+    const { recs, dir } = approved({ props: [prop] }); const root = repoWith(nineTracked); const s0 = state(root);
+    const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: applierThat((rt) => NINE.forEach((p) => writeFileSync(join(rt, p), 'changed\n'))) });
+    assert.equal(r.outcome, 'failed', label); assert.equal(stageOf(r, 'scope').ok, false, label);
+    assert.equal(stageOf(r, 'scope').produced.length, 9, label);
+    assert.deepEqual(stageOf(r, 'scope').declared, ['tools/example.mjs'], label);
+    assert.match(stageOf(r, 'scope').why, label === 'outside' ? /outside the approved scope/ : /did not declare/, label);
+    assert.equal(r.commit, null); assert.equal(r.rollback.verified, true, label);
+    assert.deepEqual(state(root), s0, `${label}: every hash, the index, the branch and HEAD are back`);
+  }
+});
+
+test('I5 · the applier DECLARES 9 files and CHANGES 1: refused — a report git does not bear out is not committed', async () => {
+  const { recs, dir } = approved({ props: [wider(NINE)] }); const root = repoWith(nineTracked); const s0 = state(root);
+  const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: applierThat(null, ['tools/example.mjs', ...NINE]) });
+  assert.equal(r.outcome, 'failed'); assert.equal(stageOf(r, 'scope').ok, false);
+  assert.match(stageOf(r, 'scope').why, /declared 8 path\(s\) git shows unchanged/);
+  assert.deepEqual(stageOf(r, 'scope').produced, ['tools/example.mjs']);
+  assert.equal(r.rollback.verified, true); assert.deepEqual(state(root), s0);
+});
+
+test('I6 · one authorised and one unauthorised file: refused, both put back, nothing committed', async () => {
+  const { recs, dir } = approved(); const root = repoWith({ 'data/x.json': '{"a":1}\n' }); const s0 = state(root);
+  const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: applierThat((rt) => writeFileSync(join(rt, 'data/x.json'), '{"a":2}\n'), ['tools/example.mjs', 'data/x.json']) });
+  assert.equal(r.outcome, 'failed'); assert.match(stageOf(r, 'scope').why, /outside the approved scope: data\/x\.json/);
+  assert.deepEqual(state(root), s0);
+  assert.equal(git(root, ['log', '--all', '--format=%H']).split('\n').length, 2, 'no commit was made anywhere');
+});
+
+test('I7 · an untracked file created outside the scope, undeclared, in a new directory: refused and removed', async () => {
+  const { recs, dir } = approved(); const root = repo(); const s0 = state(root);
+  const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: applierThat((rt) => { mkdirSync(join(rt, 'agent/x'), { recursive: true }); writeFileSync(join(rt, 'agent/x/new.mjs'), 'export {}\n'); }) });
+  assert.equal(r.outcome, 'failed'); assert.match(stageOf(r, 'scope').why, /agent\/x\/new\.mjs/);
+  assert.equal(existsSync(join(root, 'agent/x/new.mjs')), false);
+  assert.deepEqual(state(root), s0);
+});
+
+test('I8 · a deletion: inside the scope and declared it is committed as a deletion; outside the scope it is refused and the file comes back byte for byte', async () => {
+  const del = proposal({ proposed_change: { summary: 'delete tools/gone.mjs', operations: [{ op: 'modify', target: 'tools/example.mjs', current: 'const OLD = 1;', proposed: 'const OLD = 2;', rationale: 'x' }], scope_note: 'n' }, files: ['tools/example.mjs', 'tools/gone.mjs'], affected_entities: [{ kind: 'tool', id: null, path: 'tools/gone.mjs', field: null, note: null }] });
+  const { recs, dir } = approved({ props: [del] }); const root = repoWith({ 'tools/gone.mjs': 'bye\n' }); const s0 = state(root);
+  const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: applierThat((rt) => rmSync(join(rt, 'tools/gone.mjs')), ['tools/example.mjs', 'tools/gone.mjs']) });
+  assert.equal(r.outcome, 'dispatched', JSON.stringify(r.stages.at(-1)));
+  assert.deepEqual(filesOf(root, r.commit), ['D\ttools/gone.mjs', 'M\ttools/example.mjs']);
+  assert.deepEqual({ ...state(root), releases: '' }, { ...s0, releases: '' });
+
+  const { recs: r2, dir: d2 } = approved(); const root2 = repoWith({ 'data/keep.json': '{"k":1}\n' }); const t0 = state(root2);
+  const out = await dis({ records: r2, ledgerDir: d2, root: root2, execute: true, applier: applierThat((rt) => rmSync(join(rt, 'data/keep.json'))) });
+  assert.equal(out.outcome, 'failed'); assert.match(stageOf(out, 'scope').why, /data\/keep\.json/);
+  assert.equal(readFileSync(join(root2, 'data/keep.json'), 'utf8'), '{"k":1}\n');
+  assert.deepEqual(state(root2), t0);
+});
+
+test('I9 · a rename: to a path outside the scope it is refused and undone; inside the scope and declared it is committed as delete + add', async () => {
+  const { recs, dir } = approved(); const root = repo(); const s0 = state(root);
+  const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: async (o) => { await goodApplier(o); git(o.root, ['mv', 'tools/example.mjs', 'tools/renamed.mjs']); return { outcome: 'implemented', change: { files: [{ path: 'tools/example.mjs' }] }, qa: { verdict: 'pass' } }; } });
+  assert.equal(r.outcome, 'failed'); assert.deepEqual(stageOf(r, 'scope').produced, ['tools/example.mjs', 'tools/renamed.mjs']);
+  assert.match(stageOf(r, 'scope').why, /outside the approved scope: tools\/renamed\.mjs/);
+  assert.deepEqual(state(root), s0, 'the old path is back, the new one gone, and the staged rename undone');
+
+  const both = wider(['tools/renamed.mjs']);
+  const { recs: r2, dir: d2 } = approved({ props: [both] }); const root2 = repo(); const t0 = state(root2);
+  const ok = await dis({ records: r2, ledgerDir: d2, root: root2, execute: true, applier: async (o) => { await goodApplier(o); git(o.root, ['mv', 'tools/example.mjs', 'tools/renamed.mjs']); return { outcome: 'implemented', change: { files: [{ path: 'tools/example.mjs' }, { path: 'tools/renamed.mjs' }] }, qa: { verdict: 'pass' } }; } });
+  assert.equal(ok.outcome, 'dispatched', JSON.stringify(ok.stages.filter((s) => !s.ok)));
+  assert.deepEqual(filesOf(root2, ok.commit), ['A\ttools/renamed.mjs', 'D\ttools/example.mjs']);
+  assert.deepEqual({ ...state(root2), releases: '' }, { ...t0, releases: '' });
+});
+
+test('I10 · the person\'s unstaged work outside the scope is neither committed nor disturbed — and an applier edit hidden INSIDE it is now seen', async () => {
+  const { recs, dir } = approved(); const root = repoWith({ 'docs/notes.md': 'mine\n', 'docs/old.md': 'old\n' });
+  writeFileSync(join(root, 'docs/notes.md'), 'mine, edited and not staged\n');
+  rmSync(join(root, 'docs/old.md'));
+  writeFileSync(join(root, 'scratch.txt'), 'an untracked note\n');
+  const s0 = state(root);
+  const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: goodApplier });
+  assert.equal(r.outcome, 'dispatched', JSON.stringify(r.stages.at(-1)));
+  assert.deepEqual(filesOf(root, r.commit), ['M\ttools/example.mjs']);
+  assert.deepEqual(stageOf(r, 'isolate').preexisting.sort(), ['docs/notes.md', 'docs/old.md', 'scratch.txt']);
+  assert.deepEqual({ ...state(root), releases: '' }, { ...s0, releases: '' }, 'the three pre-existing changes are byte-identical and still unstaged');
+
+  /* Before P0.1 a path already dirty was subtracted from the scope check, so an applier could edit inside it unseen. */
+  const { recs: r2, dir: d2 } = approved(); const root2 = repoWith({ 'docs/notes.md': 'mine\n' });
+  writeFileSync(join(root2, 'docs/notes.md'), 'mine, edited\n'); writeFileSync(join(root2, 'scratch.txt'), 'note\n');
+  const t0 = state(root2);
+  const out = await dis({ records: r2, ledgerDir: d2, root: root2, execute: true, applier: applierThat((rt) => { writeFileSync(join(rt, 'docs/notes.md'), 'overwritten by the applier\n'); writeFileSync(join(rt, 'scratch.txt'), 'overwritten\n'); }) });
+  assert.equal(out.outcome, 'failed'); assert.match(stageOf(out, 'scope').why, /docs\/notes\.md, scratch\.txt/);
+  assert.equal(readFileSync(join(root2, 'docs/notes.md'), 'utf8'), 'mine, edited\n', 'the person\'s bytes are back, not the committed version');
+  assert.deepEqual(state(root2), t0);
+});
+
+test('I11 · rollback, normal: Agent 9 reverts its own paths but leaves residue; the dispatcher puts the rest back and every hash returns to the initial state', async () => {
+  const { recs, dir } = approved(); const root = repoWith({ 'data/x.json': '{"a":1}\n' });
+  writeFileSync(join(root, 'scratch.txt'), 'the person\'s\n');
+  const s0 = state(root);
+  const leaky = async (o) => {
+    await goodApplier(o);
+    writeFileSync(join(o.root, 'data/x.json'), '{"a":2}\n'); writeFileSync(join(o.root, 'left.tmp'), 'x');
+    git(o.root, ['checkout', '--', 'tools/example.mjs']); /* Agent 9's own rollback of the permitted path */
+    return { outcome: 'reverted', why: 'validators regressed', reverted: { verified: true, mismatches: [] } };
+  };
+  const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: leaky });
+  assert.equal(r.outcome, 'failed');
+  assert.equal(stageOf(r, 'apply').agent_rollback.verified, true, 'Agent 9\'s rollback is reported as its own');
+  assert.deepEqual(r.residue_after_agent, ['data/x.json', 'left.tmp'], 'and what it left is measured separately');
+  assert.equal(stageOf(r, 'rollback').ok, true); assert.equal(r.rollback.verified, true); assert.equal(r.branch, null);
+  assert.deepEqual(state(root), s0);
+});
+
+test('I12 · rollback, incomplete: the dispatcher does not claim success, names every path, keeps the branch and the person\'s bytes, and reports HIGH', async () => {
+  const { recs, dir } = approved(); const root = repoWith({ 'data/x.json': '{"a":1}\n', 'docs/notes.md': 'committed\n' });
+  writeFileSync(join(root, 'docs/notes.md'), 'the person\'s unstaged edit\n');
+  writeFileSync(join(root, 'scratch.txt'), 'the person\'s own note\n');
+  const s0 = state(root); const logDir = tmp('log-');
+  /* a real failure, not a stub: another git process's lock on the index, taken after the edits */
+  const locking = applierThat((rt) => {
+    writeFileSync(join(rt, 'data/x.json'), '{"a":2}\n'); writeFileSync(join(rt, 'docs/notes.md'), 'clobbered\n'); writeFileSync(join(rt, 'scratch.txt'), 'clobbered\n');
+    writeFileSync(join(rt, '.git', 'index.lock'), '');
+  });
+  const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: locking, logDir });
+  assert.equal(r.outcome, 'failed');
+  assert.equal(r.severity, 'high');
+  assert.equal(r.rollback.verified, false);
+  assert.equal(stageOf(r, 'rollback').ok, false);
+  assert.match(stageOf(r, 'rollback').why, /ROLLBACK NOT VERIFIED/);
+  assert.match(r.reasons[0], /ROLLBACK NOT VERIFIED \(high severity\)/);
+  assert.deepEqual(r.rollback.unrestored, ['data/x.json', 'docs/notes.md', 'tools/example.mjs'], 'every path still wrong is named, and only those');
+  assert.deepEqual(r.rollback.errors.map((e) => e.path), ['data/x.json', 'docs/notes.md', 'tools/example.mjs']);
+  assert.ok(r.rollback.errors.every((e) => /index\.lock/.test(e.why)), 'the cause is reported, not hidden');
+  assert.equal(readFileSync(join(root, 'scratch.txt'), 'utf8'), 'the person\'s own note\n', 'what needed no git was put back');
+  assert.match(r.branch, /^release\//, 'the branch is kept for recovery');
+  assert.equal(git(root, ['rev-parse', '--abbrev-ref', 'HEAD']), r.branch);
+  assert.equal(r.commit, null);
+  const kept = r.recovery.find((p) => p.endsWith(join('docs', 'notes.md')));
+  assert.ok(kept, 'the person\'s unstaged bytes were copied out'); assert.equal(readFileSync(kept, 'utf8'), 'the person\'s unstaged edit\n');
+  assert.equal(JSON.parse(readFileSync(join(logDir, 'dispatch.jsonl'), 'utf8').trim()).severity, 'high', 'and the run log says so');
+  /* recoverable: once the lock is gone a person returns to the starting state with ordinary commands and the copy */
+  rmSync(join(root, '.git', 'index.lock'));
+  git(root, ['checkout', '-q', '--', 'tools/example.mjs', 'data/x.json']); writeFileSync(join(root, 'docs/notes.md'), readFileSync(kept));
+  git(root, ['checkout', '-q', 'feature']); git(root, ['branch', '-D', r.branch]);
+  assert.deepEqual(state(root), s0);
+});
+
+test('I13 · the commit is re-read: a hook that stages one more file makes the commit refused, its branch removed, and the tree verified', async () => {
+  const { recs, dir } = approved(); const root = repo(); const s0 = state(root);
+  const hook = join(root, '.git', 'hooks', 'pre-commit');
+  writeFileSync(hook, '#!/bin/sh\necho hook > extra.txt\ngit add extra.txt\n', { mode: 0o755 });
+  const r = await dis({ records: recs, ledgerDir: dir, root, execute: true, applier: goodApplier });
+  assert.equal(r.outcome, 'failed', JSON.stringify(r.stages));
+  assert.equal(r.commit, null);
+  assert.match(r.rejected_commit, /^[0-9a-f]{40}$/);
+  assert.match(stageOf(r, 'commit').why, /extra\.txt/);
+  assert.equal(r.rollback.verified, true);
+  assert.deepEqual(state(root), s0, 'no release branch carries the rejected commit, so it cannot be mistaken for a dispatch');
+  assert.equal(findDispatches(r.key, { cwd: root }).length, 0);
 });
 
 /* ============================================================ C · the workflows */

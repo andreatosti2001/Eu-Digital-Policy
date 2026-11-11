@@ -10,7 +10,7 @@
 import { loadAll, index, renderError, label as taxLabel, note as taxNote } from './data.js';
 import * as F from './format.js';
 import { instrumentHref } from './routes.js';
-import { STAGES, DERIVATION, derive, depth, aggregate, procedure, isInaction, actionsOnly } from './pipeline.js';
+import { STAGES, DERIVATION, derive, depth, aggregate, procedure, isInaction, actionsOnly, finesFigure } from './pipeline.js';
 import { renderFilterState, syncUrl, readUrl, emptyState } from './filters.js';
 
 /* a note as a reader is shown it (F.readerText, item 10.2) */
@@ -375,8 +375,10 @@ function focusFromHash() {
     if (st) {
       /* the statistics count actions; a recorded inaction is named apart */
       const acts = actionsOnly(RECORDS);
-      const withFine = acts.filter((r) => r.fine_eur != null).length;
-      const unknownPay = acts.filter((r) => !r.payment_status || r.payment_status === 'payment:unknown').length;
+      /* one computing function (js/pipeline.js finesFigure, MC-2) */
+      const fig = finesFigure(acts);
+      const withFine = fig.fined;
+      const unknownPay = fig.collected.unknown.length + fig.collected.not_researched.length + fig.collected.unmapped.length;
       const authorities = new Set(acts.map((r) => r.authority)).size;
       const none = RECORDS.length - acts.length;
       st.innerHTML =

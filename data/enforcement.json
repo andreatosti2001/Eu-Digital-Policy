@@ -2,7 +2,7 @@
  "$schema_version": "1.0.0",
  "$description": "Enforcement actions. Three orthogonal status axes: action_status (what the authority did and whether it stands), payment_status (whether money moved), remedy_status (whether behaviour changed). Nothing in this schema permits 'fine imposed' to imply 'fine collected'.",
  "$last_verified": "2026-08-27",
- "$note": "null means the question has not been researched. 'unknown' means it has been researched and is not publicly determinable. These are different states and must never be rendered alike. No aggregate totals are stored here: any total shown to a user is computed from these records at render time. The pipeline stages shown in the interface are DERIVED from these fields by a documented rule set (js/pipeline.js), not stored, so no stage can be asserted that the record does not support. A stage the record cannot settle is Unknown, and Unknown is never counted as zero. AUDIT-2026-09-25 (2026-09-26): records re-read individually against their sources carry that date in their own last_verified; this file's $last_verified is deliberately unchanged, because the file as a whole was not re-read, and moving it would assert that it was.",
+ "$note": "null means the question has not been researched. 'unknown' means it has been researched and is not publicly determinable. These are different states and must never be rendered alike. No aggregate totals are stored here: any total shown to a user is computed from these records at render time. The pipeline stages shown in the interface are DERIVED from these fields by a documented rule set (js/pipeline.js), not stored, so no stage can be asserted that the record does not support. A stage the record cannot settle is Unknown, and Unknown is never counted as zero. AUDIT-2026-09-25 (2026-09-26): records re-read individually against their sources carry that date in their own last_verified; this file's $last_verified is deliberately unchanged, because the file as a whole was not re-read, and moving it would assert that it was. fine_eur_basis (11 Nov 2026, P0.3) says which fact claim and which tier-1 or tier-2 source state fine_eur, quoting the passage and the day it was read; it is present exactly when fine_eur is not null, and a gap there means the amount is not adequately documented. It records where the amount is stated, not that the decision stands: fine_eur is the amount the authority announced or imposed, and whether it was upheld, annulled or paid is action_status, appeal and payment_status (tools/fine-basis.mjs).",
  "enforcement": [
   {
    "id": "enf-uber-ap-2026",
@@ -18,6 +18,18 @@
    "decision_date": "2026-08-21",
    "action": "Administrative fine for fully automated deactivation of drivers (Art. 22 GDPR) and insufficient information about it",
    "fine_eur": 824990000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-ap-uber-2026",
+      "source": "src-ap-uber-2026",
+      "locator": "First paragraph: \"The Autoriteit Persoonsgegevens (AP), the Dutch data protection authority, imposes a fine of 824,990,000 euros on Uber.\"",
+      "as_stated": "824,990,000 euros",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:imposed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:implemented",
@@ -55,6 +67,18 @@
    "decision_date": "2024-08-26",
    "action": "Administrative fine for transferring European drivers' data to the US without appropriate safeguards (Chapter V GDPR)",
    "fine_eur": 290000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-ap-uber-2024",
+      "source": "src-ap-uber-2024",
+      "locator": "First paragraph: \"The Dutch Data Protection Authority (DPA) imposes a fine of 290 million euros on Uber.\"",
+      "as_stated": "290 million euros",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:imposed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:implemented",
@@ -94,6 +118,18 @@
    "decision_date": "2021-07-15",
    "action": "Administrative fine",
    "fine_eur": 746000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-amazon-annulment",
+      "source": "src-lu-cadm-52757c-judgment",
+      "locator": "Arrêt n° 52757C du rôle, p. 1, the decision under appeal: the CNPD's decision of 15 July 2021 \"lui ayant infligé une amende administrative de 746.000.000 euros\"",
+      "as_stated": "746.000.000 euros",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:annulled",
    "payment_status": "payment:not-payable",
    "remedy_status": "remedy:implemented",
@@ -143,6 +179,18 @@
    "decision_date": "2023-05-12",
    "action": "Administrative fine and order to suspend EU-US transfers (Art. 46(1) GDPR infringed)",
    "fine_eur": 1200000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-dpc-meta-transfers-fine",
+      "source": "src-dpc-meta-transfers-2023",
+      "locator": "Press release of 22 May 2023, the corrective powers recorded by the decision of 12 May 2023: \"an administrative fine in the amount of €1.2 billion\"",
+      "as_stated": "€1.2 billion",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:imposed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",
@@ -150,7 +198,8 @@
    "judicial": null,
    "timeline_events": [],
    "claims": [
-    "clm-dpc-share-of-fines"
+    "clm-dpc-share-of-fines",
+    "clm-dpc-meta-transfers-fine"
    ],
    "sources": [
     "src-dpc-meta-transfers-2023",
@@ -184,6 +233,18 @@
    "decision_date": "2025-04-30",
    "action": "Administrative fines and order to bring China transfers into compliance within six months (Arts. 46(1) and 13(1)(f) GDPR infringed)",
    "fine_eur": 530000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-dpc-tiktok-transfers-fine",
+      "source": "src-dpc-tiktok-transfers-2025",
+      "locator": "Announcement of 2 May 2025: \"The DPC imposes administrative fines totalling €530 million in this Decision\"",
+      "as_stated": "€530 million",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:appealed",
    "payment_status": "payment:not-payable",
    "remedy_status": "remedy:ordered",
@@ -196,7 +257,8 @@
    },
    "timeline_events": [],
    "claims": [
-    "clm-dpc-share-of-fines"
+    "clm-dpc-share-of-fines",
+    "clm-dpc-tiktok-transfers-fine"
    ],
    "sources": [
     "src-dpc-tiktok-transfers-2025",
@@ -229,6 +291,18 @@
    "decision_date": "2024-11-02",
    "action": "Administrative fine",
    "fine_eur": 15000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-openai-fine-voided",
+      "source": "src-garante-openai-2024",
+      "locator": "Comunicato stampa, standfirst: \"OpenAI dovrà realizzare una campagna informativa di sei mesi e pagare una sanzione di 15 milioni di euro.\"",
+      "as_stated": "15 milioni di euro",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:annulled",
    "payment_status": "payment:not-payable",
    "remedy_status": "remedy:none",
@@ -276,6 +350,18 @@
    "decision_date": "2025-12-05",
    "action": "Non-compliance decision and fine; action plan accepted by the Commission on 16 July 2026 (six months to implement, then an independent audit). The acceptance does not replace the decision, which X is challenging.",
    "fine_eur": 120000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-x-fine",
+      "source": "src-ec-x-fine-2025",
+      "locator": "First paragraph: \"The Commission has issued a fine of €120 million to X for breaching its transparency obligations under the Digital Services Act (DSA).\"",
+      "as_stated": "€120 million",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:imposed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",
@@ -328,6 +414,18 @@
    "decision_date": "2026-05-28",
    "action": "Non-compliance decision and fine (risk assessment, Art. 34); action plan due by 28 August 2026 under Art. 75",
    "fine_eur": 200000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-temu-fine",
+      "source": "src-ec-temu-fine-2026",
+      "locator": "First paragraph: \"The European Commission issued a fine of €200 million to Temu under the Digital Services Act (DSA).\"",
+      "as_stated": "€200 million",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:imposed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",
@@ -369,6 +467,18 @@
    "decision_date": "2026-07-20",
    "action": "Non-compliance decision and fine (risk assessment and mitigation, Arts 34 and 35); action plan due by 20 October 2026",
    "fine_eur": 550000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-aliexpress-fine",
+      "source": "src-ec-aliexpress-fine-2026",
+      "locator": "First paragraph: \"The European Commission fined AliExpress €550 million for breaching its obligations under the Digital Services Act (DSA)\"",
+      "as_stated": "€550 million",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:imposed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",
@@ -593,6 +703,18 @@
    "decision_date": "2025-04-23",
    "action": "Non-compliance decision and fine under Art. 5(4)",
    "fine_eur": 500000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-apple-dma-fine",
+      "source": "src-ec-apple-meta-dma-2025",
+      "locator": "Press release of 23 April 2025: \"the Commission has fined Apple and Meta with €500 million and €200 million respectively\" — the first amount is Apple's",
+      "as_stated": "€500 million",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:appealed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",
@@ -601,7 +723,8 @@
    "timeline_events": [],
    "claims": [
     "clm-apple-proactive-enablement",
-    "clm-dma-consumer-benefit-modest"
+    "clm-dma-consumer-benefit-modest",
+    "clm-apple-dma-fine"
    ],
    "sources": [
     "src-ec-apple-meta-dma-2025",
@@ -635,6 +758,18 @@
    "decision_date": "2025-04-23",
    "action": "Non-compliance decision and fine under Art. 5(2)",
    "fine_eur": 200000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-meta-dma-fine",
+      "source": "src-ec-apple-meta-dma-2025",
+      "locator": "Press release of 23 April 2025: \"the Commission has fined Apple and Meta with €500 million and €200 million respectively\" — the second amount is Meta's",
+      "as_stated": "€200 million",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:appealed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",
@@ -642,7 +777,8 @@
    "judicial": null,
    "timeline_events": [],
    "claims": [
-    "clm-meta-pay-or-consent"
+    "clm-meta-pay-or-consent",
+    "clm-meta-dma-fine"
    ],
    "sources": [
     "src-ec-apple-meta-dma-2025",
@@ -765,6 +901,18 @@
    "decision_date": "2025-09-05",
    "action": "Antitrust decision and fine under Article 102 TFEU",
    "fine_eur": 2950000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-google-adtech-fine",
+      "source": "src-ec-google-adtech-2025",
+      "locator": "IP/25/1992 of 5 September 2025, first paragraph: \"The European Commission has fined Google €2.95 billion for breaching EU antitrust rules\"",
+      "as_stated": "€2.95 billion",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:appealed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",
@@ -772,7 +920,8 @@
    "judicial": null,
    "timeline_events": [],
    "claims": [
-    "clm-dma-alongside-102"
+    "clm-dma-alongside-102",
+    "clm-google-adtech-fine"
    ],
    "sources": [
     "src-ec-google-adtech-2025",
@@ -848,6 +997,18 @@
    "decision_date": "2026-07-23",
    "action": "Two non-compliance decisions and fines: EUR 460 million for self-preferencing in Google Search (Art. 6(5)) and EUR 430 million for anti-steering in Google Play (Art. 5(4)); compliance ordered within 60 days.",
    "fine_eur": 890000000,
+   "fine_eur_basis": {
+    "evidence": [
+     {
+      "claim": "clm-google-dma-fine-2026",
+      "source": "src-ec-google-dma-fine-2026",
+      "locator": "Headline: \"Commission fines Google €890 million for breaches of the Digital Markets Act\"; body: \"the Commission issued Google a fine of €460 million and a fine of €430 million respectively\"",
+      "as_stated": "€890 million",
+      "read_on": "2026-11-11"
+     }
+    ],
+    "gap": null
+   },
    "action_status": "action:imposed",
    "payment_status": "payment:unknown",
    "remedy_status": "remedy:ordered",

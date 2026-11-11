@@ -21,6 +21,8 @@
    normal case in this dataset, and saying so is the point.
    ============================================================ */
 
+import { riskClass, freshnessState } from './evidence-model.js';
+
 /* ------------------------------------------------------------
    Recorded inaction (audit of 21 Oct 2026, item 11). A record whose
    record_type is record-type:inaction asserts that NO action exists —
@@ -168,18 +170,14 @@ export function aggregate(records, ix) {
   for (const s of STAGES) out.byStage[s.id] = { reached: 0, notReached: 0, unknown: 0, na: 0 };
 
   for (const rec of records) {
-    if (rec.fine_eur != null) { out.fined++; out.announcedEur += rec.fine_eur; }
+    if (rec.fine_eur != null) out.fined++;
     else if (rec.action_status && rec.payment_status !== 'payment:not-applicable') out.announcedUnknownAmount++;
 
-    const p = rec.payment_status;
-    if (p === 'payment:collected' || p === 'payment:paid') {
-      out.paymentKnown++;
-      if (rec.fine_eur != null) out.paidEur += rec.fine_eur;
-    } else if (p === 'payment:unpaid' || p === 'payment:not-payable' || p === 'payment:not-applicable') {
-      out.paymentKnown++;
-    } else {
-      out.paymentUnknown++;
-    }
+    /* the payment states have one mapping, PAYMENT_STATES below; a value it
+       does not map is counted as unknown here, never as known */
+    const cat = paymentCategory(rec.payment_status);
+    if (cat === 'unknown' || cat === 'not_researched' || cat === 'unmapped') out.paymentUnknown++;
+    else out.paymentKnown++;
 
     for (const st of derive(rec, ix)) {
       const b = out.byStage[st.id];
@@ -189,7 +187,122 @@ export function aggregate(records, ix) {
       else b.unknown++;
     }
   }
+  /* the money, from the one summation in this module (sumFines) */
+  out.announcedEur = sumFines(records.filter((r) => r.fine_eur != null));
+  out.paidEur = sumFines(records.filter((r) => r.fine_eur != null && paymentCategory(r.payment_status) === 'known'));
   return out;
+}
+
+/* ============================================================
+   The fines figure — the one computing function of the metric
+   "fines announced, collected and unknown" (docs/DATA-READINESS.md §5,
+   declared in tools/metric-contract.mjs, checked by tools/validate.mjs).
+   P0.2, 11 Nov 2026: the masthead, each instrument page and the
+   enforcement page used to compute the sum and the "payment unknown"
+   count themselves, with three different rules for "unknown" (F-A1).
+   They now read this.
+
+   PURE. It reads no clock: `asOf` is an argument, and without one the
+   inputs past their interval are not computed rather than computed
+   against the reader's day (MC-9, MC-10). It never coerces: a value that
+   is not an integer ≥ 0 makes the figure not determinable and is named
+   (MC-4). UNKNOWN IS NEVER ZERO: `collected` is a number only when every
+   input's payment state is known (MC-6).
+   ============================================================ */
+
+/** The five categories every payment state maps to, and the mapping — one
+ *  home. A value outside it is `unmapped`, never a silent default (MC-5). */
+export const STATE_CATEGORIES = Object.freeze(['known', 'known_negative', 'not_applicable', 'unknown', 'not_researched']);
+export const PAYMENT_STATES = Object.freeze({
+  'payment:collected': 'known',
+  'payment:paid': 'known',
+  'payment:unpaid': 'known_negative',
+  'payment:not-payable': 'not_applicable',
+  'payment:not-applicable': 'not_applicable',
+  'payment:unknown': 'unknown',
+  null: 'not_researched',
+});
+export function paymentCategory(p) {
+  if (p === null || p === undefined) return PAYMENT_STATES.null;
+  return Object.prototype.hasOwnProperty.call(PAYMENT_STATES, p) ? PAYMENT_STATES[p] : 'unmapped';
+}
+
+/** The one summation of fine_eur in js/. Callers pass only valid amounts. */
+function sumFines(list) {
+  let total = 0;
+  for (const r of list) total += r.fine_eur;
+  return total;
+}
+
+const validAmount = (v) => Number.isInteger(v) && v >= 0;
+
+/** The posture part of an input, in this order, each input in exactly one
+ *  part (MC-8): annulled · under appeal · final · standing, finality not
+ *  established. Derived from procedure(), never re-implemented. */
+export const POSTURE_PARTS = Object.freeze(['annulled', 'appeal', 'final', 'standing']);
+export function posturePart(rec) {
+  const pr = procedure(rec);
+  if (rec.action_status === 'action:annulled') return 'annulled';
+  if (pr.stage === 'procedure:appeal') return 'appeal';
+  if (pr.finality === 'finality:final') return 'final';
+  return 'standing';
+}
+
+/** Is the record's amount established by a fact claim and an official
+ *  source (data field fine_eur_basis, tools/fine-basis.mjs)? Structural
+ *  only: tools/validate.mjs checks that each entry resolves and quotes the
+ *  amount; this reads whether an entry exists and no gap is declared. */
+export const amountEstablished = (rec) => Boolean(rec && rec.fine_eur_basis
+  && Array.isArray(rec.fine_eur_basis.evidence) && rec.fine_eur_basis.evidence.length > 0 && !rec.fine_eur_basis.gap);
+
+/**
+ * @param {object[]} records  enforcement records (inactions are excluded here, through actionsOnly())
+ * @param {{asOf?: string}} [opts]  an explicit ISO day for the interval notice; never the reader's clock
+ */
+export function finesFigure(records, { asOf = null } = {}) {
+  const actions = actionsOnly(records);
+  const invalid = actions.filter((r) => r.fine_eur !== null && r.fine_eur !== undefined && !validAmount(r.fine_eur))
+    .map((r) => ({ id: r.id, value: r.fine_eur }));
+  const bad = new Set(invalid.map((x) => x.id));
+  const inputs = actions.filter((r) => validAmount(r.fine_eur) && !bad.has(r.id));
+  const unrecorded = actions.filter((r) => (r.fine_eur === null || r.fine_eur === undefined)
+    && r.action_status && r.payment_status !== 'payment:not-applicable').map((r) => r.id);
+
+  const announcedDeterminable = invalid.length === 0 && unrecorded.length === 0;
+  const announced = { state: announcedDeterminable ? 'determined' : 'not_determinable',
+    eur: announcedDeterminable ? sumFines(inputs) : null, records: inputs.length,
+    invalid, unrecorded };
+
+  const parts = {};
+  for (const k of POSTURE_PARTS) parts[k] = { eur: 0, records: [] };
+  for (const r of inputs) parts[posturePart(r)].records.push(r.id);
+  for (const k of POSTURE_PARTS) parts[k].eur = sumFines(inputs.filter((r) => parts[k].records.includes(r.id)));
+
+  const byPayment = {};
+  for (const c of [...STATE_CATEGORIES, 'unmapped']) byPayment[c] = [];
+  for (const r of inputs) byPayment[paymentCategory(r.payment_status)].push(r.id);
+  const blocking = [...byPayment.unknown, ...byPayment.not_researched, ...byPayment.unmapped];
+  const collectedDeterminable = announcedDeterminable && blocking.length === 0;
+  const collected = { state: collectedDeterminable ? 'determined' : 'not_determinable',
+    eur: collectedDeterminable ? sumFines(inputs.filter((r) => byPayment.known.includes(r.id))) : null,
+    shown_paid: byPayment.known, unknown: byPayment.unknown, not_researched: byPayment.not_researched,
+    unmapped: byPayment.unmapped, not_payable: byPayment.not_applicable, unpaid: byPayment.known_negative };
+
+  const dated = inputs.filter((r) => r.last_verified).map((r) => r.last_verified).sort();
+  const as_of = { oldest: dated[0] ?? null, newest: dated[dated.length - 1] ?? null,
+    undated: inputs.filter((r) => !r.last_verified).map((r) => r.id) };
+
+  const past_interval = asOf
+    ? inputs.map((r) => ({ id: r.id, state: freshnessState(r.last_verified, riskClass('enforcement', r, { asOf }), asOf) }))
+      .filter((x) => x.state === 'freshness:review-due' || x.state === 'freshness:stale')
+    : null;
+
+  const weak = inputs.filter((r) => r.requires_verification === true || !amountEstablished(r))
+    .map((r) => ({ id: r.id, entity: r.entity, eur: r.fine_eur,
+      why: [r.requires_verification === true ? 'record unverified' : null, amountEstablished(r) ? null : 'no fact claim and official source establish the amount'].filter(Boolean) }));
+
+  return { population: actions.length, fined: inputs.length, announced, parts, collected,
+    as_of, interval_as_of: asOf, past_interval, weak };
 }
 
 /* ============================================================

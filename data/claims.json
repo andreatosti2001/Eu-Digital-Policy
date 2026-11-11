@@ -5689,6 +5689,147 @@
       "published": null,
       "last_verified": "2026-09-27",
       "verification_note": "Registered on 27 Sep 2026 for a statement already in the prose that no claim recorded. Checked that day against the Official Journal text (English, retrieved from the Publications Office's Cellar, CELEX 32022R2065): Article 35(1): \"Such measures may include, where applicable\". The prose's \"the choice of measures left to the provider\" is a fair reading of \"may include\", and is the author's."
+    },
+    {
+      "id": "clm-dpc-meta-transfers-fine",
+      "type": "claim-type:fact",
+      "statement": "On 12 May 2023 the Irish Data Protection Commission adopted a final decision imposing on Meta Platforms Ireland Limited an administrative fine of EUR 1.2 billion for transfers of personal data to the US that infringed Article 46(1) GDPR.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [
+        "dpa-ie"
+      ],
+      "enforcement": [
+        "enf-meta-dpc-2023-transfers"
+      ],
+      "sources": [
+        {
+          "source_id": "src-dpc-meta-transfers-2023",
+          "supports": "supports:direct",
+          "locator": "Press release of 22 May 2023: \"The DPC adopted its final decision in this inquiry on 12 May 2023. The decision records that Meta Ireland infringed Article 46(1) GDPR\"; corrective powers: \"an administrative fine in the amount of €1.2 billion\""
+        }
+      ],
+      "legal_basis": [
+        "gdpr:art-83"
+      ],
+      "brief_part": "part-2",
+      "published": "2023-05-22",
+      "last_verified": "2026-11-11",
+      "verification_note": "Added 11 Nov 2026 (P0.3, docs/DATA-READINESS.md F-A3): the record carried an amount that no fact claim stated. The DPC's press release of 22 May 2023 was read in full that day; this claim states the amount the authority announced and the ground it gives, nothing more. What became of the decision afterwards (appeal, annulment, payment) is the enforcement record's, not this claim's."
+    },
+    {
+      "id": "clm-dpc-tiktok-transfers-fine",
+      "type": "claim-type:fact",
+      "statement": "In a final decision announced on 2 May 2025, the Irish Data Protection Commission imposed administrative fines totalling EUR 530 million on TikTok Technology Limited for infringing Articles 46(1) and 13(1)(f) GDPR in its transfers of EEA users' personal data to China.",
+      "instruments": [
+        "gdpr"
+      ],
+      "provisions": [],
+      "institutions": [
+        "dpa-ie"
+      ],
+      "enforcement": [
+        "enf-tiktok-dpc-2025-transfers"
+      ],
+      "sources": [
+        {
+          "source_id": "src-dpc-tiktok-transfers-2025",
+          "supports": "supports:direct",
+          "locator": "Announcement of 2 May 2025: \"The DPC imposes administrative fines totalling €530 million in this Decision, consisting of a fine of €45 million for its infringement of Article 13(1)(f) GDPR, and a fine of €485 million for its infringement of Article 46(1) GDPR.\""
+        }
+      ],
+      "legal_basis": [
+        "gdpr:art-83"
+      ],
+      "brief_part": "part-2",
+      "published": "2025-05-02",
+      "last_verified": "2026-11-11",
+      "verification_note": "Added 11 Nov 2026 (P0.3, docs/DATA-READINESS.md F-A3): the record carried an amount that no fact claim stated. The DPC's announcement of 2 May 2025 was read in full that day; this claim states the amount the authority announced and the ground it gives, nothing more. What became of the decision afterwards (appeal, annulment, payment) is the enforcement record's, not this claim's."
+    },
+    {
+      "id": "clm-apple-dma-fine",
+      "type": "claim-type:fact",
+      "statement": "On 23 April 2025 the Commission found that Apple breached its anti-steering obligation under the Digital Markets Act and fined it EUR 500 million.",
+      "instruments": [
+        "dma"
+      ],
+      "provisions": [],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [
+        "enf-apple-ec-2025"
+      ],
+      "sources": [
+        {
+          "source_id": "src-ec-apple-meta-dma-2025",
+          "supports": "supports:direct",
+          "locator": "Press release of 23 April 2025: \"the European Commission found that Apple breached its anti-steering obligation under the Digital Markets Act (DMA) … Therefore, the Commission has fined Apple and Meta with €500 million and €200 million respectively.\""
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-4",
+      "published": "2025-04-23",
+      "last_verified": "2026-11-11",
+      "verification_note": "Added 11 Nov 2026 (P0.3, docs/DATA-READINESS.md F-A3): the record carried an amount that no fact claim stated. The Commission's press release of 23 April 2025 (the DMA site's page) was read in full that day; this claim states the amount the authority announced and the ground it gives, nothing more. What became of the decision afterwards (appeal, annulment, payment) is the enforcement record's, not this claim's."
+    },
+    {
+      "id": "clm-meta-dma-fine",
+      "type": "claim-type:fact",
+      "statement": "On 23 April 2025 the Commission found that Meta breached the Digital Markets Act obligation to give consumers the choice of a service that uses less of their personal data, and fined it EUR 200 million.",
+      "instruments": [
+        "dma"
+      ],
+      "provisions": [],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [
+        "enf-meta-ec-2025"
+      ],
+      "sources": [
+        {
+          "source_id": "src-ec-apple-meta-dma-2025",
+          "supports": "supports:direct",
+          "locator": "Press release of 23 April 2025: \"Meta breached the DMA obligation to give consumers the choice of a service that uses less of their personal data. Therefore, the Commission has fined Apple and Meta with €500 million and €200 million respectively.\""
+        }
+      ],
+      "legal_basis": [],
+      "brief_part": "part-4",
+      "published": "2025-04-23",
+      "last_verified": "2026-11-11",
+      "verification_note": "Added 11 Nov 2026 (P0.3, docs/DATA-READINESS.md F-A3): the record carried an amount that no fact claim stated. The Commission's press release of 23 April 2025 (the DMA site's page) was read in full that day; this claim states the amount the authority announced and the ground it gives, nothing more. What became of the decision afterwards (appeal, annulment, payment) is the enforcement record's, not this claim's."
+    },
+    {
+      "id": "clm-google-adtech-fine",
+      "type": "claim-type:fact",
+      "statement": "On 5 September 2025 the Commission fined Google EUR 2.95 billion for breaching EU antitrust rules by favouring its own online display advertising technology services.",
+      "instruments": [
+        "tfeu"
+      ],
+      "provisions": [],
+      "institutions": [
+        "ec"
+      ],
+      "enforcement": [
+        "enf-google-ec-2025-adtech"
+      ],
+      "sources": [
+        {
+          "source_id": "src-ec-google-adtech-2025",
+          "supports": "supports:direct",
+          "locator": "IP/25/1992 of 5 September 2025, first paragraph: \"The European Commission has fined Google €2.95 billion for breaching EU antitrust rules by distorting competition in the advertising technology industry ('adtech'). It did so by favouring its own online display advertising technology services\""
+        }
+      ],
+      "legal_basis": [
+        "tfeu:art-102"
+      ],
+      "brief_part": "part-4",
+      "published": "2025-09-05",
+      "last_verified": "2026-11-11",
+      "verification_note": "Added 11 Nov 2026 (P0.3, docs/DATA-READINESS.md F-A3): the record carried an amount that no fact claim stated. The Commission's press release IP/25/1992 (the source URL redirects to it; read through the press corner's document service) was read in full that day; this claim states the amount the authority announced and the ground it gives, nothing more. What became of the decision afterwards (appeal, annulment, payment) is the enforcement record's, not this claim's."
     }
   ]
 }

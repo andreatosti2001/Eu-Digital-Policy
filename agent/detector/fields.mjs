@@ -129,6 +129,7 @@ export const PROSE_FIELDS = {
     'judicial.outcome': 'What the court held, in words. A COURT_OUTCOME change lands here and nothing checks that the sentence still describes the judgment.',
     'appeal.note': 'The state of an appeal in words, including the parts the status vocabulary cannot express.',
     verification_note: 'What is still open about the action, in words.',
+    'fine_eur_basis.gap': 'Why no fact claim and official source establish the amount, in words (P0.3, tools/fine-basis.mjs). It asserts a state of the evidence; nothing checks the sentence.',
   },
   glossary_term: {
     definition: 'What the term means. A definition that tracks a legal threshold goes false when the threshold moves, and the glossary graph renders it unchanged.',
@@ -206,7 +207,10 @@ export const VALUE_FIELDS = {
   timeline_event: ['id', 'date', 'status', 'last_verified', 'requires_verification'],
   enforcement_action: ['id', 'entity', 'opened', 'decision_date', 'fine_eur', 'last_verified', 'requires_verification',
     'judicial', 'judicial.forum', 'judicial.date', 'judicial.case_ref', 'judicial.remitted',
-    'appeal.lodged_by', 'appeal.forum', 'appeal.lodged_date', 'appeal.case_ref', 'appeal.requires_verification'],
+    'appeal.lodged_by', 'appeal.forum', 'appeal.lodged_date', 'appeal.case_ref', 'appeal.requires_verification',
+    /* P0.3, 11 Nov 2026 (tools/fine-basis.mjs): where the amount is stated — a locator, the amount as
+       written and the day it was read, as a claim's sources.locator and derivation.inputs.*.as_stated */
+    'fine_eur_basis.evidence.locator', 'fine_eur_basis.evidence.as_stated', 'fine_eur_basis.evidence.read_on'],
   glossary_term: ['id', 'term', 'legacy_dom_id', 'new_in_this_build', 'last_verified', 'requires_verification'],
   /* sources.locator, sources.for, exemptions.effect, exemptions.basis.locator
      (v2 Session 13, 29 Oct 2026, docs/ROADMAP-v2.md §8): a v2 rule cites

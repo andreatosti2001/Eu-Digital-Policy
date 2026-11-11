@@ -2,8 +2,8 @@
 
 **Status:** approved (§8, 9 Nov 2026: A.2, then the final checkpoint). **Extended the same day** (§8, "PV2-01, extended"):
 three more cards, the contract amended and widened to MC-1…MC-15, in §8 below — **approved** (§8, "Checkpoint of the PV2-01 extension"). A.3 (§5, the one metric card) and A.4 (§6, the proposed metric contract)
-written on the author's decisions of §8. **The contract is proposed, not
-implemented**: no check exists, and D (PV2-08) writes it.
+written on the author's decisions of §8. **Implemented on 11 Nov 2026 (§9)**, brought forward from D (PV2-08) as P0.2 by the
+author (`docs/ROADMAP-v2.md` §8, "A change of plan: P0.3 … and P0.2 … brought forward"); PV2-08's design work is not done.
 **What this is:** the audit that `docs/POST-V2.md` §3 A asks for before any dashboard or infographic: an inventory of the
 datasets, and (in later sections) one metric card and a proposed metric contract. **It is a gate, not a design.** Nothing
 here is drawn, and no value is estimated or generated to fill a gap.
@@ -426,4 +426,104 @@ future. Under MC-14 the card names it as "may fall either side"; the row stays a
   (§8.2 above). *Repaired on 9 Nov 2026 in pull request #85 (§8, "Two of PV2-01's findings repaired").*
 - **F-A10 · The masthead's deadline views read the reader's clock** (`new Date()` in `ticker()` and the due list), the
   known F-15; the deadlines card may not. *Repaired on 9 Nov 2026 in pull request #85.*
+
+## 9. Implemented: amount provenance (P0.3) and the contract (P0.2), 11 Nov 2026
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the row "A change of plan: P0.3 … and P0.2 … brought forward as P0". **Homes:** the
+rules are code and are not restated here — `tools/fine-basis.mjs` (the provenance of an amount), `tools/metric-contract.mjs`
+(MC-1…MC-15, the declaration of the fines card, `PROPERTIES[].cannot_see`), `js/pipeline.js` `finesFigure()` (the one
+computing function, `PAYMENT_STATES`, `posturePart()`), `data/enforcement.json` `$note` (the field). `tools/validate.mjs` runs
+both and prints `METRICS …`. Tests: `tools/selftest.mjs` FB0–FB14 and MC0–MC17.
+
+### 9.1 P0.3 — what establishes each amount
+
+**Why a field.** The existing model says that a claim concerns a record and where a source supports a claim's whole
+proposition; it cannot say which of a record's claims carries `fine_eur`, or where the amount itself is stated
+(`clm-temu-fine`'s locator quotes the ground of the breach, not the €200 million). F-A3's string search was the only way back,
+and this document called it a limit. Hence `fine_eur_basis`: one fact claim, one tier-1/2 source, the passage quoted, the amount
+as written, the day it was read — or an explicit `gap`. Schema, cardinality, null handling and audit behaviour: the header of
+`tools/fine-basis.mjs`.
+
+**Re-measured on 11 Nov 2026** (the baseline of §3 F-A3 was 9 Nov): 13 records carry an amount. Under the strict rule (a
+`claim-type:fact` that states the amount), **five** lacked one, not four: F-A3's four, and `enf-google-ec-2025-adtech`, whose
+only linked claim, `clm-dma-alongside-102`, is a claim of **law** that the string match had counted. Every source below was
+**read on 11 Nov 2026** (official pages fetched and read; the Commission's adtech release through the press corner's document
+service, IP/25/1992, to which the registered URL redirects; the Luxembourg judgment as a PDF, page counted). Five fact claims
+were added from those readings (`clm-dpc-meta-transfers-fine`, `clm-dpc-tiktok-transfers-fine`, `clm-apple-dma-fine`,
+`clm-meta-dma-fine`, `clm-google-adtech-fine`), each stating the amount and ground the authority gives and nothing about the
+decision's later fate. **No record's `last_verified` or `requires_verification` was changed**: only the amount was checked, not
+the whole record.
+
+| Record | Amount | Fact claim | Source (tier) | As stated in the passage | Action | Record unverified |
+|---|---|---|---|---|---|---|
+| `enf-uber-ap-2026` | €824,990,000 | `clm-ap-uber-2026` | `src-ap-uber-2026` (tier 2) | “824,990,000 euros” | imposed | no |
+| `enf-uber-ap-2024` | €290,000,000 | `clm-ap-uber-2024` | `src-ap-uber-2024` (tier 2) | “290 million euros” | imposed | no |
+| `enf-amazon-cnpd-2021` | €746,000,000 | `clm-amazon-annulment` | `src-lu-cadm-52757c-judgment` (tier 1) | “746.000.000 euros” | annulled | no |
+| `enf-meta-dpc-2023-transfers` | €1,200,000,000 | `clm-dpc-meta-transfers-fine` *(new)* | `src-dpc-meta-transfers-2023` (tier 2) | “€1.2 billion” | imposed | **yes** |
+| `enf-tiktok-dpc-2025-transfers` | €530,000,000 | `clm-dpc-tiktok-transfers-fine` *(new)* | `src-dpc-tiktok-transfers-2025` (tier 2) | “€530 million” | appealed | no |
+| `enf-openai-garante-2024` | €15,000,000 | `clm-openai-fine-voided` | `src-garante-openai-2024` (tier 2) | “15 milioni di euro” | annulled | **yes** |
+| `enf-x-ec-2025` | €120,000,000 | `clm-x-fine` | `src-ec-x-fine-2025` (tier 2) | “€120 million” | imposed | no |
+| `enf-temu-ec-2026` | €200,000,000 | `clm-temu-fine` | `src-ec-temu-fine-2026` (tier 2) | “€200 million” | imposed | no |
+| `enf-aliexpress-ec-2026` | €550,000,000 | `clm-aliexpress-fine` | `src-ec-aliexpress-fine-2026` (tier 2) | “€550 million” | imposed | no |
+| `enf-apple-ec-2025` | €500,000,000 | `clm-apple-dma-fine` *(new)* | `src-ec-apple-meta-dma-2025` (tier 2) | “€500 million” | appealed | **yes** |
+| `enf-meta-ec-2025` | €200,000,000 | `clm-meta-dma-fine` *(new)* | `src-ec-apple-meta-dma-2025` (tier 2) | “€200 million” | appealed | no |
+| `enf-google-ec-2025-adtech` | €2,950,000,000 | `clm-google-adtech-fine` *(new)* | `src-ec-google-adtech-2025` (tier 2) | “€2.95 billion” | appealed | no |
+| `enf-google-ec-2026-dma` | €890,000,000 | `clm-google-dma-fine-2026` | `src-ec-google-dma-fine-2026` (tier 2) | “€890 million” | imposed | no |
+
+The full locator of each is on the record. Limits of the readings: the Commission's Temu page answered HTTP 429 once and was
+read on a second request; the Apple and Meta amounts come from one sentence naming both ("€500 million and €200 million
+respectively"), each locator says which is whose; the Garante's release was read in Italian; every amount is the one the
+authority **announced or imposed**, and whether it stands is `action_status` and `appeal`, kept apart (the `$note`). **No gap
+was needed**: every amount is established. What no check can confirm is that each quotation is in its source as written — a
+reading, attested by `read_on`.
+
+### 9.2 P0.2 — the contract, property by property
+
+| | Implemented as | Planted failing case (test) | Positive case |
+|---|---|---|---|
+| MC-1 | the question names "this site … records/holds" | K1 census question (MC1) | MC0 |
+| MC-2 | one export in `js/pipeline.js`; a lexer that blanks strings, comments, templates and regex literals; sum forms (`reduce`, `+=`, `+`, one level of alias) found by line in every other module; one summation in the compute module; **every consumer imports the function** | K2 a second `reduce` planted in the masthead; an alias; a consumer that stops importing; a second sum in `pipeline.js` (MC2) | naming forms (null test, filter, formatter, string, comment) are not sums (MC2) |
+| MC-3 | dataset, collection, filter export, every declared field on every input | K3 (MC3) | MC0 |
+| MC-4 | integer ≥ 0 in EUR, named per record; the figure `not_determinable`, never coerced; also an ERROR in `validate.mjs` itself (F-A5) | K4/P2/P5: `"unknown"`, negative, fraction, `"200,000,000"`, `"2e8"` (MC4, FB14) | MC0 |
+| MC-5 | `PAYMENT_STATES` covers every `payment:` term and `null`, five categories; a record value outside it is an error and `unmapped` in the figure; contradictory states refused | K5 `payment:partially-paid`; a map missing a term; P4 paid on an annulled decision (MC5) | MC0 |
+| MC-6 | `collected` is a number only when every input's payment state is known; the blocking inputs are returned | K6 €0 beside unknowns; P1 `payment_status: null` counted as not researched, the same in every view (MC6) | MC0 |
+| MC-7 | no property may be "not applicable"; a not-applicable state only where `contradictions()` admits it | K7 (MC7) | MC0 |
+| MC-8 | each input in exactly one part by `posturePart()`; parts add to the total in euros and records | K8 independent filters (MC8) | MC0 |
+| MC-9 | as-of = oldest/newest `last_verified` of the inputs; undated named; the function is **run with a Date that throws** when asked the time | K9 undated hidden; a function that reads the clock (MC9) | MC0 |
+| MC-10 | the notice equals `riskClass()` + `freshnessState()` at an explicit date (the tree's own newest verification date in `validate.mjs`); no date → no notice | K10 (MC10) | MC0 (9 inputs on 11 Nov 2026) |
+| MC-11 | weak = `requires_verification` or a basis not established by `tools/fine-basis.mjs`; named with entity and amount | K11 counted from the flag alone, with a gap planted (MC11) | MC0 (3 inputs, all unverified records) |
+| MC-12 | non-empty `cannot_say` | K12 (MC12) | MC0 |
+| MC-13 | `sum`, `count`, `share` only; no weights/score; a share names both terms | K13/E1 (MC13) | MC0 |
+| MC-14 | a declared window names every coarser-than-a-day input at its edge | D4 on the deadlines fixture (MC14) | MC14 (named) |
+| MC-15 | every `$note` sentence that names a field the figure reads is quoted by a caveat; a quote that drifted from the `$note` fails | I4 on the instruments fixture; the fines card with a caveat dropped; a drifted `$note` (MC15) | MC0 |
+
+**Also:** P3 (an amount on the inaction) stays out of the figure through `actionsOnly()` and fails `validate.mjs` (MC16);
+the contract runs in `validate.mjs` (MC17). **The fines card holds MC-1…MC-15 on this tree**: announced €9,015,990,000 over
+13 of 20 actions (annulled €761,000,000 · 2; under appeal €6,614,990,000 · 8; final €0 · 0; standing €1,640,000,000 · 3);
+collected **not determinable** (10 unknown, 3 not payable); as of 2026-09-27 … 2026-10-23; weak evidence 3 (the unverified
+records, €1,715,000,000); past their interval as of 11 Nov 2026: 9.
+
+**Paper families (§8):** the contract expresses the deadlines card's window (MC-14) and the instruments card's `$note` caveat
+(MC-15) — tested on fixtures. Neither card is declared: the instruments card still fails MC-2 (F-A7), and neither has a
+computing function.
+
+### 9.3 What changed for a reader, and what did not
+
+`js/masthead.js`, `js/instrument-view.js` and `js/enforcement-page.js` no longer compute the sum or the "payment unknown" count:
+each imports `finesFigure()`. On today's data every figure they print is unchanged — measured by running the formulas of `ad234aa` and `finesFigure()` side by side: the masthead (€9,015,990,000 · 13 of 20 · 10 unknown · collected unknown), every instrument page (0 of 7 differ) and the enforcement page's counts (13 · 10). Two
+behaviours differ only where the data would make them differ: "collected" is shown as unknown whenever any input's payment is
+unknown, even if one record shows a payment (MC-6; before, the masthead summed what was paid); and an amount that is not a valid
+number reads "not determinable" instead of a concatenated string. **No view, chart, KPI or redesign was added.**
+
+### 9.4 Still open, named
+
+- **The views show "announced" without its partition** (§5.2, A.3 q. 1). The figure carries it; the masthead and instrument
+  pages do not print it. That is D's (Stage 4), not done here.
+- **F-A7** (instruments by status computed in the masthead) and the instruments card: not declared, MC-2 would fail.
+- **F-A4**: 9 inputs past their interval; only verification work against primary sources clears it.
+- **F-A6, F-A8**: unchanged.
+- **MC-2's limits** are stated in `PROPERTIES` and asserted by a test: a generic helper over a mapped list is not seen. The
+  first version of the lexer did not recognise regex literals and read `js/masthead.js` after its first one as a string — a
+  false negative caught by test MC2 before commit; the import requirement on every consumer is the second half that does not
+  depend on the scan.
 

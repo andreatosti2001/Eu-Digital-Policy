@@ -124,6 +124,12 @@ if (command === 'dispatch') {
     out('\n  NOT PUSHED and NOT MERGED. Push the branch and open a pull request; a person merges it, and');
     out('  pages.yml then runs the gate on the merged commit.');
   }
+  if (r.severity === 'high') {
+    out(`\n  HIGH SEVERITY — the rollback could not be verified. Branch kept: ${r.branch ?? '(none)'}.`);
+    for (const p of r.rollback?.unrestored ?? []) out(`    not restored: ${p}`);
+    for (const p of r.recovery ?? []) out(`    your bytes, copied: ${p}`);
+    out('  Do not dispatch again until a person has looked.');
+  }
   if (r.would_commit) out(`\n  The commit it would make:\n${r.would_commit.split('\n').map((l) => `    | ${l}`).join('\n')}`);
   out(`\n  run log: ${r.logged ? 'written' : 'NOT WRITTEN'} (agent/release/runs/dispatch.jsonl, git-ignored)`);
   out();

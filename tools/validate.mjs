@@ -24,6 +24,8 @@ import { violations as sourceViolations } from './source-contract.mjs';
 import { checkDerivation, claimKind, openBacklog } from '../js/evidence-model.js';
 import { attestationAudit, roadmapAudit } from './attestation-audit.mjs';
 import { noticeAudit } from './notice-audit.mjs';
+import { basisIndex, checkFineBasis } from './fine-basis.mjs';
+import { contractAudit } from './metric-contract.mjs';
 
 const DATA = 'data';
 const errors = [];
@@ -55,6 +57,7 @@ if (errors.length) {
 }
 
 /* ---------- helpers ---------- */
+const BASIS_IX = basisIndex({ claims: db.claims, sources: db.sources });
 const arr = (x) => (Array.isArray(x) ? x : []);
 const WILDCARD = /\*$/;
 
@@ -345,6 +348,19 @@ function checkRefs(ids) {
     } else if (x.action_status == null) {
       err(`ENFORCEMENT "${x.id}" records no action but is not typed record-type:inaction, so it would be counted as an enforcement action`);
     }
+    /* P0.2/P0.3, 11 Nov 2026 (docs/DATA-READINESS.md F-A5, MC-4). An amount
+       enters a sum, so its type is checked where the record is: an integer
+       ≥ 0 in euros, or null. "unknown", a string of digits, a negative or a
+       fraction used to pass every check and turn three sums into string
+       concatenation. Never coerced: the record is named and refused. */
+    if (x.fine_eur !== null && x.fine_eur !== undefined && !(Number.isInteger(x.fine_eur) && x.fine_eur >= 0))
+      err(`ENFORCEMENT "${x.id}" fine_eur ${JSON.stringify(x.fine_eur)} is not an integer ≥ 0 in euros (null where no amount is recorded; "unknown" is never an amount)`);
+    /* and where it is stated (tools/fine-basis.mjs): a fine with no basis, or
+       a basis that does not check, is an error; a declared gap is not. */
+    {
+      const fb = checkFineBasis(x, BASIS_IX);
+      for (const pr of fb.problems) err(`ENFORCEMENT "${x.id}" ${pr}`);
+    }
     // a collected or paid state without an amount cannot be aggregated honestly
     if ((x.payment_status === 'payment:collected' || x.payment_status === 'payment:paid') && x.fine_eur == null)
       warn(`ENFORCEMENT "${x.id}" is marked ${x.payment_status} but records no amount`);
@@ -583,6 +599,7 @@ function report() {
     'taxonomy terms': ids.taxonomy.size,
   };
   console.log('RECORDS ' + Object.entries(counts).map(([k, v]) => `${k}=${v}`).join('  '));
+  console.log(`METRICS ${CONTRACT.metrics.map((m) => `${m.id}: ${m.publishable ? 'MC-1…MC-15 hold, publishable' : `${m.findings.length} finding(s), NOT publishable`}`).join('  ')}`);
 
   console.log(`\nERRORS   ${errors.length}`);
   for (const e of errors) console.log('  ✗ ' + e);
@@ -595,6 +612,12 @@ function report() {
   }
   console.log('');
 }
+
+/* ---------- the metric contract (P0.2, 11 Nov 2026) ----------
+   tools/metric-contract.mjs: MC-1…MC-15 against every declared metric. A
+   failing declaration is an error and its figure is not publishable. */
+const CONTRACT = await contractAudit({ db });
+for (const e of CONTRACT.errors) err(e);
 
 report();
 process.exit(errors.length ? 1 : 0);
