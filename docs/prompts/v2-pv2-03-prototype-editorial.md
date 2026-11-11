@@ -8,6 +8,8 @@ the author's words, each recorded in §8 when given:
      (§8, "PV2-02, B.4 question 1", df995f4).
   2. "A new unpublished folder (Recommended)" — the prototype lives in a new top-level folder the Pages allowlist does not list, such as
      `prototypes/editorial/`, never published; it reads `data/` in place and no baseline file is edited (§8, "PV2-02, B.4 question 2").
+Amended on 11 Nov 2026 (one sentence in C.3 and one clause in the exit criterion: the Editorial shows the relationships as a non-interactive
+table; the author's choice, §8, the row of 11 Nov 2026 on the four open points of the Regulatory Network Explorer; nothing else in this file changed).
 The decisions live in §8 and nowhere else; this file is the instruction text that cites them. It records no §8 row of its own and does not
 open the session: PV2-03 records its scope in §8 as its first write. Written in Italian, as the author's session prompts are. The author
 may change it before use.
@@ -90,6 +92,14 @@ i test esistenti. Tre checkpoint:
   desktop (1280 px) e mobile (390 px), tema chiaro e scuro, **lo stato vuoto e il dato mancante** — «sconosciuto» mostrato diverso da zero, e un
   totale che porta con sé il conteggio di ciò che non può rendere conto (`js/pipeline.js` `aggregate()`). **Il tema scuro non ha un riferimento
   nei candidati** (USWDS e GOV.UK non lo offrono: `docs/FRONTEND-REFERENCES.md` §8.2): si progetta, e si dice che si è progettato.
+  **Aggiunta dell'11 novembre 2026 (§8, la riga di quel giorno sulle quattro scelte dell'autore; `docs/POST-V2.md` §3 C, aggiunta, e §6
+  domanda 7):** l'Editoriale **non ha il Regulatory Network Explorer**, che sta solo nei concept Policy observatory e Ibrido, ma **mostra le
+  stesse relazioni tra gli strumenti come una tabella non interattiva**, nella sua vista analitica (dashboard o timeline), così che le tre direzioni
+  portino gli stessi contenuti. La tabella legge l'array `relationships` di `data/instruments.json` in posto, senza copiarlo, e rispetta il
+  dato come `docs/POST-V2.md` §3 D lo descrive: tipologia dal campo `kind` con l'etichetta della tassonomia; direzione `from` → `to` **solo** dove
+  `symmetric` è `false`; un campo assente (claims, disposizioni, verifica) è «non registrato», mai «verificato» né vuoto in silenzio; uno strumento
+  senza relazioni resta nell'elenco con «nessuna relazione registrata». **Non si costruisce l'Explorer, né un canvas, né un filtro che lo imiti**:
+  è una tabella con intestazioni di colonna (`scope`), leggibile da tastiera, che sta anche su 390 px, in tema chiaro e scuro.
 - **C.4 · La misura.** Con la stessa batteria di misure di `docs/FRONTEND-REFERENCES.md` §4 (M1…M8) — le stesse, **non altre scelte dopo aver visto
   il risultato** — e con `node agent/browser/cli.mjs --require-browser` dove la cartella lo permette. Si registra ciò che la misura non vede.
 - **C.5 · Il prompt della sessione successiva** — `docs/prompts/v2-pv2-04-prototype-observatory.md` (blocco C, seconda direzione, Policy
@@ -169,7 +179,7 @@ Misurato da PV2-02 il 10 novembre 2026 su `main` `b705f15` e sul suo branch. **R
 
 La sessione è completa quando: G1 è registrato in §8 prima dell'avvio; le quattro viste e la cartella sono decise in §8 (la shortlist lo è già) con le
 parole dell'autore; la direzione Editoriale è implementata nella cartella non pubblicata, sulle quattro viste, in desktop e mobile, in tema
-chiaro e scuro, con stati vuoti e dati mancanti; è misurata con le stesse misure di PV2-02 e si dice ciò che la misura non vede; nulla della
+chiaro e scuro, con stati vuoti e dati mancanti, **e con la tabella delle relazioni nella vista analitica** (11 nov 2026); è misurata con le stesse misure di PV2-02 e si dice ciò che la misura non vede; nulla della
 baseline, dei dati, dei modelli, della CSP o di `tools/pages-artifact.mjs` è cambiato e nulla di terzi è entrato nel repository; i checkpoint
 sono approvati in §8; `selftest` e le 25 suite passano; **il prompt di PV2-04 esiste su questo branch, porta la stessa regola nel suo criterio
 di uscita, ed è approvato con il lavoro** (regola permanente di §8, 4 nov 2026). Oppure l'autore decide di fermarsi: anche allora, **prima di
