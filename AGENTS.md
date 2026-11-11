@@ -402,6 +402,12 @@ grant could allowlist eight fields of which six exist on none of the 77 records.
 FETCHED, and no URL here has ever been fetched (AUDIT F-12), so writing one would be a
 fabricated fact about evidence. A record carrying one is refused by name.
 
+**`tools/metric-contract.mjs` is the metric contract MC-1…MC-15, and `tools/fine-basis.mjs` the provenance of an enforcement
+amount** (11 Nov 2026, P0.2 and P0.3; `docs/DATA-READINESS.md` §9). `validate.mjs` runs both: a fine with no `fine_eur_basis`,
+a `fine_eur` that is not an integer ≥ 0, or a declared metric that fails any property is an ERROR, and its figure is not
+publishable. The fines figure has one computing function, `js/pipeline.js finesFigure()`; **do not sum `fine_eur` or count
+payment states anywhere else in `js/`** — MC-2 finds a second sum by line, and every view must import the function.
+
 The agent layer has its own suites, and a change to `agent/` runs these as well:
 
 ```
