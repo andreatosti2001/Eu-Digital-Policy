@@ -4,6 +4,13 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## Branch register — 11 November 2026 (the ruleset's review requirement, documents)
+
+- `claude/keen-johnson-sxo9jy`, restarted from `main` `4b8b423` (its previous pull request, #94, was merged; `pages.yml` run 103 on `4b8b423`: every job, the release gate and the deploy succeeded): `docs/DEPLOYMENT.md`,
+  `.github/CODEOWNERS` (a comment only), `docs/ROADMAP-v2.md` §8 (one row) and this line. Disposition: pull request opened on the author's word ("Fai tu … anche la pr sui doc del ruleset"), not merged by the
+  session; the number is in the pull request list. **The setting itself is the author's and was reported, not measured** (`docs/DEPLOYMENT.md` §3a-2). `origin/main` re-fetched before this line: `4b8b423`.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed).
+
 ## Branch register — 11 November 2026 (the Regulatory Network Explorer in Post-v2)
 
 - `claude/keen-johnson-sxo9jy`, from `main` `124f600`: all `docs/` (`POST-V2.md` §3 C and D, §4.1, §4.2 and §6; `ROADMAP-v2.md` §8, three rows; this line). The author's request and answers are
