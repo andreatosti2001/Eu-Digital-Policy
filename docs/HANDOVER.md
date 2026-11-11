@@ -4,6 +4,12 @@
 **Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
 The entries below this session's are unchanged.
 
+## Branch register — 11 November 2026 (the PV2-03 prompt and the Editorial relationships table)
+
+- `claude/keen-johnson-sxo9jy`, restarted from `main` `49080d7` (its previous pull requests, #94 and #95, were merged): `docs/prompts/v2-pv2-03-prototype-editorial.md` (one sentence, one clause and a provenance note),
+  `docs/ROADMAP-v2.md` §8 (one row) and this line. Disposition: pull request opened on the author's word ("si aggiungila"), not merged by the session. `origin/main` re-fetched before this line: `49080d7`.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed).
+
 ## Branch register — 11 November 2026 (the ruleset's review requirement, documents)
 
 - `claude/keen-johnson-sxo9jy`, restarted from `main` `4b8b423` (its previous pull request, #94, was merged; `pages.yml` run 103 on `4b8b423`: every job, the release gate and the deploy succeeded): `docs/DEPLOYMENT.md`,
