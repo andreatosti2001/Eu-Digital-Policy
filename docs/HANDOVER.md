@@ -1,8 +1,111 @@
 # HANDOVER
 
-**Last updated:** 5 November 2026, favicon 192 px maintenance, on top of v2 Session 25, item 25.5 and the favicon maintenance session.
-**Branch:** `claude/favicon-192-link`, from `main` `43a55d0`.
+**Last updated:** 11 November 2026, PV2-03 (Post-v2 C, the Editorial prototype), final checkpoint.
+**Branch:** `claude/pv2-03-prototype-editorial`, from `main` `07c12ad`.
 The entries below this session's are unchanged.
+
+## PV2-03 — after the final checkpoint: the Editorial reworked and approved in look A (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the rows of 11 Nov 2026 after "Final checkpoint of PV2-03 approved", ending with "The reworked Editorial
+approved, look A". **The first layout was judged bad by the author** ("layout orribile") once seen in screenshots; the author asked that what is
+characteristic of the site be kept and chose **the portal tree and the column of Roman numerals**; the layout was reworked on this branch (`249a410`:
+three columns, full width, the tree read in place from `index.html`, the numerals from `data/brief.json`, the site's own font files); four looks were
+offered side by side (`9bb865e`), a mix of A and C built (`f7080d0`), and the author settled on **A alone** (`5f97fe0`, files identical to `249a410`).
+Record: `docs/PROTOTYPES.md` §1.6 (§1.1–§1.5 stay as the record of the first layout). The prompt of PV2-04 carries the constraint and the lesson
+(`db1bdf2`; `6415511`'s message announced that change without containing it, and `db1bdf2` says so).
+
+**Battery on `d67639f`, 11 Nov 2026:** validators exit 0 (`validate` 0 errors · 5 warnings); `tools/selftest.mjs` 143/143; `commit-evidence origin/main HEAD`
+31 commits, 0 without evidence (none changes a published file); the 25 suites 1286 tests, 1285 pass, 0 fail, 1 skipped; browser suite 343 pass, 0 fail,
+1 undecidable. Nothing of the baseline changed. `origin/main` re-fetched before this entry: `07c12ad`.
+
+**For the next session:** PV2-04 opens once #97 is merged; its prompt asks it to show the author screenshots **before** its final checkpoint.
+
+## Branch register — 11 November 2026 (PV2-03)
+
+- `claude/pv2-03-prototype-editorial`, from `main` `07c12ad`: `docs/` (`ROADMAP-v2.md` §8, `HANDOVER.md`, the new `PROTOTYPES.md`, the PV2-04 prompt)
+  and the unpublished `prototypes/editorial/`. Disposition: on the author's answer ("Yes, open the PR (Recommended)"), pull request #97
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/97), opened and not merged by the session; updated with the rework and approved again
+  (look A); to be merged with a merge commit.
+  `origin/main` re-fetched before this line: `07c12ad`.
+- The read-only clone this session made first, at `/home/user/andreatosti2001/eu-digital-policy`, is outside the repository and holds nothing of it.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
+
+## PV2-03 — Post-v2 C, the Editorial prototype: final checkpoint (C.2–C.5) (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the PV2-03 rows of 11 Nov 2026 (scope; C.1 questions 1–4 and its approval; "grid C4 step 4";
+"C.5 questions 1 and 2"). Branch `claude/pv2-03-prototype-editorial`, 14 commits on `main` `07c12ad`; `origin/main` re-fetched before this
+entry: still `07c12ad`.
+
+**What was built.** `prototypes/editorial/` (`e782947`, adjusted in `9331ea2`): the four views in HTML, CSS and vanilla ES modules, reading
+`data/` through `js/data.js` and Part V's prose from `index.html` in place, importing `js/format.js`, `js/pipeline.js`, `js/status.js` and
+`js/routes.js`; the relationships as a fixed table; system fonts; the site's CSP with `script-src 'self'`; unpublished. The record of the build
+and its measurement is the new **`docs/PROTOTYPES.md`** (§0 the perimeter all three prototypes share, §1 the Editorial) — read it, not this entry.
+
+**The measurement** (`docs/PROTOTYPES.md` §1.2–§1.5): samples named first (E the article, D the timeline), M1–M8 re-implemented from
+`docs/FRONTEND-REFERENCES.md` §4 in the scratchpad (not committed). Steps **C1 3 · C2 4 · C3 2 · C4 4 · C5 4**, C6 not scored. The first reading
+broke the direction's own spec (87 cpl; record text 15.7–16.3 px); the stylesheet was corrected and both readings kept. C4 was first reported
+undecidable (`ariaSnapshot` vs Chromium's full accessibility tree on two `<summary>` elements); **the author decided M4 is read on the full tree**,
+and a claim this session first wrote — that no PV2-02 score moves under that reading — was unverified and is corrected in the same row
+(`9224d39`): *Simple.css*'s C4 could move and was not re-measured. Nine planted cases pass. Not seen: other browsers and faces (here *Caladea* and
+*Inter*), a screen reader, contrast inside the SVG, the 61,000 px of the stacked table on a phone, languages other than English.
+
+**The prompt of PV2-04:** `docs/prompts/v2-pv2-04-prototype-observatory.md` (`c743945`), with the author's two answers (folder
+`prototypes/observatory/`; the Explorer's core fixed, its extras allowed to shrink).
+
+**Battery on `c743945`, 11 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit --as-of
+2026-11-11` exit 0; `freshness --as-of 2026-11-11` 0 defects, 3 staleness prompts (enforcement, time-based); `tools/selftest.mjs` 143/143;
+`commit-evidence origin/main HEAD` 14 commits, 0 without evidence (none changes a published file); **the 25 suites: 1286 tests, 1285 pass, 0 fail,
+1 skipped** (`.control-room`, no IPv6 loopback); **browser suite (`--require-browser`): 343 pass, 0 fail, 1 undecidable** (`a11y:bound`, by design;
+it does not cover `prototypes/`). `agent/records/` absent. The worker restarted twice during C.5; `git status` was clean both times and nothing was redone.
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| Gate | §8 "G1: Stage 2 is opened" (`79762f7`), the author's "yes to both" | read the row | none (an approval) | G1 recorded before the start |
+| C.1 | §8 questions 1–4 (`b31aa19`…`f7cc074`), approval (`6028ae2`); report `d028e85` | `node tools/pages-artifact.mjs list` does not list `prototypes/` | none | views and folder decided in §8 |
+| C.2 | no anchor changed; §8 "grid C4 step 4" (`6eefa5b`, corrected `9224d39`) | `docs/PROTOTYPES.md` §1.3 | none | grid unchanged but for the author's row |
+| C.3 | `prototypes/editorial/` (`e782947`, `9331ea2`) | `python3 -m http.server 8000`, open `/prototypes/editorial/`; `regulation.html?id=chips-act`; `timeline.html?instrument=chips-act`; the theme button | none in the repository (the scratch smoke test: 24 loads, 0 errors, 0 CSP violations, localhost only) | four views, two widths, two themes, empty and missing states, relationships table |
+| C.4 | `docs/PROTOTYPES.md` §1 (`88bca72`) | re-run M1–M8 from §4's text | none committed — **a gap**: the measurement scripts are not in the repository | measured with PV2-02's measures; what is not seen, said |
+| C.5 | §8 "C.5 questions 1 and 2" (`ba9ae5c`); the prompt (`c743945`) | read the prompt's exit criterion | none | the prompt exists and carries the standing rule |
+| Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data tools agent .github` is empty (a plain `'*.html'` would also match `prototypes/`) | `commit-evidence` | nothing of the baseline changed; nothing of a third party entered |
+
+**Waiting for:** the author's approval of the work and of PV2-04's prompt together, recorded in §8; then the question of a pull request.
+
+## PV2-03 — Post-v2 C, the Editorial prototype: checkpoint C.1 (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the rows "G1: Stage 2 is opened", "The scope of PV2-03" and "PV2-03, C.1 questions 1–4", all of
+11 Nov 2026. Branch `claude/pv2-03-prototype-editorial`, from `main` `07c12ad` (after #96). The prompt is
+`docs/prompts/v2-pv2-03-prototype-editorial.md`.
+
+**The gate.** At the session's start §8 had no G1 row; the session stopped and said so. The gate's measured half was already on
+record (run 100: C5, C7, C10 ✓); the author then approved G1 in chat ("yes to both"), and the G1 row was the session's first write,
+before the scope row. **What the G1 row does not establish:** that the ruleset on `main` is in force now (not stated by the author,
+not measurable from the tree); the dispatcher's scope-stage finding stays open. Date measured 11 Nov 2026: before Track M (12 Jan 2027)
+and the grant's expiry (9 Mar 2027).
+
+**The four views, the same for PV2-04 and PV2-05:**
+
+| View | Content | Read from, in place |
+|---|---|---|
+| Homepage | the brief's opening and its parts | `data/brief.json`, `index.html` |
+| Regulation page | the **AI Act**; empty and missing-data state on the **Chips Act** (0 claims, 0 provisions, 0 milestones, 0 relationships) | `data/instruments.json`, `data/timeline.json`, `data/claims.json` |
+| Article page | **Part V** of the brief, "AI Act: the risk pyramid, the compute threshold, and the delay" (an article = one part of the brief, until block E defines a blog article) | `index.html` `<section id="part-5">`, `data/brief.json` |
+| Analytical view | the **timeline** (101 events: 81 occurred, 20 scheduled; 4 dated to the month), with the relationships table (40 relationships) | `data/timeline.json`, `data/instruments.json` |
+
+**The folder:** `prototypes/editorial/`. Measured: not listed by `node tools/pages-artifact.mjs list`; no validator walks it (they
+read the root's pages, `instruments/<id>/` and two-letter language folders). **Consequence for C.4:** `tools/thirdparty.mjs` does not
+see the prototype either, so "no third-party request" will be measured another way (a browser run that records every request).
+**The shortlist** (USWDS, Tufte CSS, GOV.UK, Simple.css) was not put again. Nothing has been written in `prototypes/`.
+
+**Battery on `f7cc074`, 11 Nov 2026:** `validate` 0 errors, 5 warnings; `i18n-audit` 0/0; `design-qa` 0/0; `evidence-audit --as-of
+2026-11-11` exit 0; `freshness --as-of 2026-11-11` 0 defects, 3 staleness prompts (enforcement: one record 76 days past the 45-day
+interval, 5 provisional records not re-verified in 30 days, newest action 82 days old — time, not a defect of this branch);
+`seo-audit` 0/0; `node --test tools/selftest.mjs` 143/143; `commit-evidence origin/main HEAD`: no commit changes a published file.
+`agent/records/` absent. **A note on the first commit** (`docs: record G1…`): it carries a `Co-Authored-By` trailer naming a model,
+against `AGENTS.md` "Git"; amending a pushed commit was refused by the environment, so it stays, and later commits do not carry it.
+
+**Waiting for:** the author's approval of C.1, recorded in §8. Then C.3 begins in `prototypes/editorial/`.
 
 ## Branch register — 11 November 2026 (the PV2-03 prompt and the Editorial relationships table)
 
