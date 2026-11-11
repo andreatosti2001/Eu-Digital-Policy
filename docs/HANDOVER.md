@@ -1,14 +1,17 @@
 # HANDOVER
 
 **Last updated:** 11 November 2026, PV2-04 (Post-v2 C, the Policy observatory prototype), at its final checkpoint (C.2–C.5).
-**Branch:** `claude/pv2-04-start-nhgcqx` (assigned by the environment), from `main` `25c9e79`; pushed. No pull request yet.
+**Branch:** `claude/pv2-04-start-nhgcqx` (assigned by the environment), from `main` `25c9e79`; pushed. Final checkpoint approved (§8);
+pull request #99 opened on the author's answer, not merged by the session.
 The entries below this session's are unchanged; the paragraph that headed this file for the P0 sessions is kept under their
 branch register as it was written.
 
 ## Branch register — 11 November 2026 (PV2-04)
 
 - `claude/pv2-04-start-nhgcqx`, from `main` `25c9e79`: `docs/` (`ROADMAP-v2.md` §8, `HANDOVER.md`, `PROTOTYPES.md` §2, the PV2-05 prompt) and
-  the unpublished `prototypes/observatory/`. Disposition: open, at the final checkpoint. `origin/main` re-fetched before this line: `25c9e79`.
+  the unpublished `prototypes/observatory/`. Both checkpoints approved (§8). Disposition: on the author's answer ("Sì, apri la PR
+  (Recommended)"), pull request #99 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/99), opened and not merged by the session;
+  merging is the author's, with a merge commit. `origin/main` re-fetched before this line: `25c9e79`.
 - Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
 
 ## PV2-04 — Post-v2 C, the Policy observatory prototype: final checkpoint (C.2–C.5) (11 Nov 2026) — a draft
@@ -51,7 +54,8 @@ empty). The worker restarted once (after `34439de`); `git status` was clean and 
 | C.5 | §8 C.5 answers (`d357795`); the prompt (`113280c`) | read the prompt's exit criterion | none | the prompt exists and carries the standing rule |
 | Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data tools agent .github prototypes/editorial` is empty | `commit-evidence` | nothing of the baseline changed; nothing of a third party entered |
 
-**Waiting for:** the author's approval of the work (as a draft) and of PV2-05's prompt together, recorded in §8; then the question of a pull request.
+**Approved** (§8, "Final checkpoint of PV2-04 approved", `01d0c1e`). Pull request #99 opened; see the branch register above.
+**For the next session:** PV2-05 opens once #99 is merged, on its prompt; the observatory reaches it as a draft.
 
 ## PV2-04 — Post-v2 C, the Policy observatory prototype: checkpoint C.1 (11 Nov 2026)
 
