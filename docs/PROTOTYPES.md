@@ -23,7 +23,9 @@ accessible alternative is the same table (`docs/POST-V2.md` §3 C, addition of 1
 ## 1 · Direction 1, Editorial — PV2-03, 11 Nov 2026
 
 **Where:** `prototypes/editorial/` (`README.md` there says how to run it). Branch `claude/pv2-03-prototype-editorial`; built in `e782947`,
-adjusted after the first measurement in `9331ea2`. The direction is `docs/FRONTEND-REFERENCES.md` §8.2, 1.
+adjusted after the first measurement in `9331ea2`, **reworked in `249a410` after the author's judgment** (§1.6). The direction is
+`docs/FRONTEND-REFERENCES.md` §8.2, 1. **§1.1–§1.5 describe and measure the first layout, which the author judged bad ("layout orribile"); they
+stay as the record of it. The prototype as it now stands is §1.6.**
 
 ### 1.1 What was built
 
@@ -138,5 +140,52 @@ Each altered what the browser received, not the repository. Nine cases, all pass
 - **Third parties beyond these pages.** `tools/thirdparty.mjs` does not walk `prototypes/`; the absence of third-party requests is the browser's
   request log on these five URLs plus a static search of the folder (the only URL is the SVG namespace string, never requested).
 - **Readers.** Nothing here says the direction reads well to a person; that is the author's judgment at PV2-05.
+
+### 1.6 The rework of 11 Nov 2026 — the prototype as it now stands
+
+**Why.** The author saw the first layout in screenshots and judged it bad; asked what to keep, the author chose that **the prototypes keep the
+site's portal tree and its column of Roman numerals**, and that the Editorial be reworked now, on this branch (`docs/ROADMAP-v2.md` §8, the three rows
+after "Final checkpoint of PV2-03 approved"). The first layout had put every page in one column at the left of a wide screen, leaving half of it
+empty, and had set aside everything characteristic of the site.
+
+**What changed (`249a410`), and what did not.**
+- **The page uses the whole width.** From 75rem: three columns — a sticky contents list (with, on the timeline, the filter and the counts); the
+  reading column at 37rem; and the margin, which holds the claims' notes in the article and a sticky **record card** (status, kind, CELEX, the part of
+  the brief, scope, amended by, amends, repeals, last verified) on the regulation page. Below 75rem, one column.
+- **The column of Roman numerals** (`renderRail()` in `common.js`), from `data/brief.json`: I–XI, A, B, sticky at the left; V opens the article and is
+  marked on it, the others open the current site; below 52rem it becomes a strip under the header.
+- **The portal tree** beside the homepage's title, **read in place from `index.html`** (`#portalTree`: each node's position, its Roman numeral and the
+  paths between nodes), redrawn by the prototype with each node a real link; V, the article, is filled. Nothing of the tree is copied into the folder.
+- **Type:** the site's own font files, used where they are (`../../fonts/`), not copied — Fraunces for display, Literata for text, IBM Plex Mono for
+  labels. The licence of these files is not stated in `fonts/` and was not read by this session; they are the files the published site already serves.
+  A sober warm paper with an oxblood accent, not the site's parchment and gold (the author did not require those).
+- **The timeline** is a list of compact rows (the date in its own column, then the instrument, the type and status, the obligation), years as rules.
+- **The margin** shows each claim's evidence status and its sources' titles; the statement and the exact locators sit together under "What is claimed,
+  and where", so a long locator no longer stretches the margin. Nothing is shortened.
+- **The relationships table** is fixed-width (`table-layout: fixed`, columns by percentage) and its wrapper scrolls on its own if ever needed; at 1280 px
+  nothing overflows.
+- **Not changed:** the data read, the modules imported, the two absence states, the table's rules, the CSP, `noindex`, the folder's status.
+
+**Re-measured** the same way as §1.2 (samples E and D unchanged; method unchanged), 11 Nov 2026, on `249a410`:
+
+| Sample, 1280 px light | Body (M1) | Share | cpl | Contrast light / dark | Headings, skip | Secondary (min) | Contents links |
+|---|---|---|---|---|---|---|---|
+| E `article.html` | 19 px | 49% | **68** | 15.59 / 14.88 | 9, none | 6.75 / 8.68 | 4 of 4 |
+| D `timeline.html` | 17 px | 90% | 71 | 15.59 / 14.88 | 19, none | 6.75 / 8.68 | 2 of 2 |
+| Homepage | 19 px | 44% | 56 | 15.59 / 14.88 | 18, none | 6.75 / 8.68 | 3 of 3 |
+| AI Act page | 17 px | 94% | 72 | 15.59 / 14.88 | 10, none | 6.75 / 8.68 | 8 of 8 |
+| Chips Act page | 17 px | 47% | 72 | 6.75 / 8.68 (the empty-state text) | 10, none | 6.75 / 8.68 | 8 of 8 |
+
+At 390 px: E 18 px and 45 cpl, D 17 px and 49 cpl. No horizontal scroll on any page, width or theme (24 loads, 0 console errors, 0 CSP violations,
+`localhost` only). Focus visible on 15 of 15 stops on every page; **names 15 of 15 by `ariaSnapshot` alone** — the column of Roman numerals now comes first
+in the Tab order, so the two `<summary>` elements are no longer among the first 15. No running animation either way; a `main` landmark; no framework
+global. Faces actually rendered (`CSS.getPlatformFontsForNode`): Literata, Fraunces, IBM Plex Mono — the same on any system, since they are files.
+The nine planted cases of §1.4 were run again on `249a410`: all pass.
+
+**Steps, unchanged:** C1 3 · C2 4 · C3 2 · C4 4 · C5 4 (no external font: the faces are same-origin files) · C6 not scored. The reasons in §1.3 hold.
+
+**What this measurement does not see, beyond §1.5:** whether the site's font files may be reused beyond the published site (their licence was not read);
+how the sticky record card and contents list behave on a short laptop screen (measured at 900 px of height only); thirteen Tab stops in the numeral
+column before the page's own content, which the grid's first-15 rule now counts and a reader with a keyboard has to pass (a skip link is the first stop).
 
 *Sections 2 (Policy observatory, PV2-04) and 3 (Hybrid, PV2-05) follow when those sessions write them.*

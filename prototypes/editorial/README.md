@@ -30,10 +30,12 @@ then open `http://localhost:8000/prototypes/editorial/`. It must be served over 
 - It imports `js/format.js`, `js/pipeline.js` (`aggregate()`), `js/evidence-model.js` (through `format.js`), `js/status.js` (the status strip in
   the article) and `js/routes.js`; it re-implements no derivation.
 - No dependency, no build step, no remote font, no third-party request, no inline script, no `style` attribute; each page carries the site's
-  Content-Security-Policy with `script-src 'self'`. The type is the reader's own system faces (`editorial.css`, `--serif` and `--sans`), so no
-  font file and no font licence are involved.
+  Content-Security-Policy with `script-src 'self'`. The type is the site's own font files, used where they are (`../../fonts/`: Fraunces,
+  Literata, IBM Plex Mono), not copied; their licence is not stated in `fonts/` and was not read by PV2-03.
+- Kept from the site, on the author's choice (`docs/ROADMAP-v2.md` §8, 11 Nov 2026): the portal tree of the parts, read from `index.html`'s
+  `#portalTree` and redrawn beside the homepage's title, and the column of Roman numerals from `data/brief.json`.
 - "Not recorded" (`null`, never researched) and "unknown" (researched, not determinable) are drawn differently and never as zero; a total
   carries the count of what it cannot account for (`aggregate()`).
 - The relationships are a fixed table, not the Regulatory Network Explorer, which belongs to the other two concepts (§8, 11 Nov 2026).
-- The dark theme has no reference among the scored candidates; it was designed here. The look takes *Open Future* and *Economics Observatory /
-  The Pudding* as visual references only (`docs/FRONTEND-REFERENCES.md` §9): nothing of theirs is copied.
+- The dark theme has no reference among the scored candidates; it was designed here. The first layout, which took its look from *Open Future* and *Economics Observatory / The Pudding*, was judged bad by
+  the author and reworked on 11 Nov 2026 (`docs/PROTOTYPES.md` §1.6).
