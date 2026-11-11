@@ -42,7 +42,7 @@ it does not cover `prototypes/`). `agent/records/` absent. The worker restarted 
 | C.3 | `prototypes/editorial/` (`e782947`, `9331ea2`) | `python3 -m http.server 8000`, open `/prototypes/editorial/`; `regulation.html?id=chips-act`; `timeline.html?instrument=chips-act`; the theme button | none in the repository (the scratch smoke test: 24 loads, 0 errors, 0 CSP violations, localhost only) | four views, two widths, two themes, empty and missing states, relationships table |
 | C.4 | `docs/PROTOTYPES.md` §1 (`88bca72`) | re-run M1–M8 from §4's text | none committed — **a gap**: the measurement scripts are not in the repository | measured with PV2-02's measures; what is not seen, said |
 | C.5 | §8 "C.5 questions 1 and 2" (`ba9ae5c`); the prompt (`c743945`) | read the prompt's exit criterion | none | the prompt exists and carries the standing rule |
-| Untouched | — | `git diff origin/main --stat -- index.html '*.html' style.css css js i18n data tools agent .github` is empty | `commit-evidence` | nothing of the baseline changed; nothing of a third party entered |
+| Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data tools agent .github` is empty (a plain `'*.html'` would also match `prototypes/`) | `commit-evidence` | nothing of the baseline changed; nothing of a third party entered |
 
 **Waiting for:** the author's approval of the work and of PV2-04's prompt together, recorded in §8; then the question of a pull request.
 
