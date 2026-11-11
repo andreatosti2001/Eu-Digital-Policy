@@ -184,6 +184,14 @@ The nine planted cases of §1.4 were run again on `249a410`: all pass.
 
 **Steps, unchanged:** C1 3 · C2 4 · C3 2 · C4 4 · C5 4 (no external font: the faces are same-origin files) · C6 not scored. The reasons in §1.3 hold.
 
+**The look: a mix of A and C** (§8, "The Editorial's look: a mix of A and C", 11 Nov 2026). The author asked for alternatives on this structure; four
+were built as switchable looks (`9bb865e`: A Carta, B Pergamena, C Inchiostro, D Archivio — each loaded at 1280 and 390 px, light and dark, on the four
+views, with no console error, CSP violation or horizontal scroll) and shown side by side. The author chose a mix of A and C: **C's night band** — the
+header, the column of Roman numerals and the homepage's opening on night blue, the portal tree in gold as a constellation — over **A's page** — the warm
+light paper and the oxblood accent for everything read. B, D and the switch were then removed; they stay in the branch's history. Re-measured on the mix:
+the same figures as the table above for E, D and the regulation pages; the homepage's paragraph tier is now on the night band, at 14.04 : 1 light and
+15.63 : 1 dark, 52 cpl at 1280 px; 24 loads clean; 15 of 15 focus visible and named on every page; the nine planted cases pass. Steps unchanged.
+
 **What this measurement does not see, beyond §1.5:** whether the site's font files may be reused beyond the published site (their licence was not read);
 how the sticky record card and contents list behave on a short laptop screen (measured at 900 px of height only); thirteen Tab stops in the numeral
 column before the page's own content, which the grid's first-15 rule now counts and a reader with a keyboard has to pass (a skip link is the first stop).

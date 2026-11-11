@@ -38,4 +38,4 @@ then open `http://localhost:8000/prototypes/editorial/`. It must be served over 
   carries the count of what it cannot account for (`aggregate()`).
 - The relationships are a fixed table, not the Regulatory Network Explorer, which belongs to the other two concepts (§8, 11 Nov 2026).
 - The dark theme has no reference among the scored candidates; it was designed here. The first layout, which took its look from *Open Future* and *Economics Observatory / The Pudding*, was judged bad by
-  the author and reworked on 11 Nov 2026 (`docs/PROTOTYPES.md` §1.6).
+  the author and reworked on 11 Nov 2026; the look is a mix of two alternatives the author chose from four (`docs/PROTOTYPES.md` §1.6).
