@@ -84,13 +84,13 @@ export function provisionText(ix, pid) {
 }
 
 /** A source in its short, reader-facing form, linked where it has a URL. */
-export function sourceShort(ix, ref) {
+export function sourceShort(ix, ref, { locator = true } = {}) {
   const id = typeof ref === 'string' ? ref : ref && ref.source_id;
   const src = ix.source.get(id);
   if (!src) return `<code>${esc(id)}</code> ${notRecorded('source record not found')}`;
   const title = esc(src.title);
   const head = src.url ? `<a href="${esc(src.url)}">${title}</a>` : `${title} <span class="meta">(no public URL located)</span>`;
-  const loc = ref && typeof ref === 'object' && ref.locator ? ` — ${esc(ref.locator)}` : '';
+  const loc = locator && ref && typeof ref === 'object' && ref.locator ? ` — ${esc(ref.locator)}` : '';
   return head + loc;
 }
 
@@ -126,12 +126,29 @@ export function initTheme() {
 
 /** Load the named datasets through js/data.js, index them, render. A failure
  *  is shown in place by js/data.js's renderError, and nothing is substituted. */
-export async function boot(names, render) {
+/** The column of Roman numerals: the parts of the brief, in their order, from
+ *  data/brief.json — kept from the site (roadmap §8, 11 Nov 2026). Part V opens
+ *  the article view; every other part opens in the current site. */
+export function renderRail(db, current) {
+  const rail = document.getElementById('rail');
+  const parts = db.brief?.parts;
+  if (!rail || !has(parts)) return;
+  rail.innerHTML = '<ol>' + parts.map((p) => {
+    const href = p.id === 'part-5' ? 'article.html' : '../../index.html#' + encodeURIComponent(p.id);
+    const word = p.kind === 'annex' ? 'Annex' : 'Part';
+    const name = `${word} ${p.roman || ''}${p.title ? ': ' + p.title : ''}`;
+    return `<li${p.kind === 'annex' && p.roman === 'A' ? ' class="annex"' : ''}><a href="${href}" aria-label="${esc(name)}" title="${esc(name)}"${p.id === current ? ' aria-current="page"' : ''}>${esc(p.roman || '?')}</a></li>`;
+  }).join('') + '</ol>';
+}
+
+export async function boot(names, render, { part } = {}) {
   initTheme();
   const mount = document.getElementById('view');
+  if (!names.includes('brief')) names = [...names, 'brief'];
   try {
     const db = await loadAll(names);
     const ix = index(db);
+    renderRail(db, part);
     await render(db, ix, mount);
   } catch (err) {
     renderError(mount, err, () => boot(names, render));
@@ -143,6 +160,6 @@ export async function boot(names, render) {
 export function fillToc(mount, toc) {
   if (!toc) return;
   const hs = [...mount.querySelectorAll('h2[id]')].filter((h) => !h.closest('.toc') && !h.closest('.thread'));
-  if (hs.length < 2) { toc.remove(); return; }
+  if (hs.length < 2) { toc.querySelector('nav')?.remove(); if (!toc.children.length) toc.remove(); return; }
   toc.querySelector('ol').innerHTML = hs.map((h) => `<li><a href="#${esc(h.id)}">${esc(h.textContent)}</a></li>`).join('');
 }

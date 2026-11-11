@@ -8,7 +8,7 @@
 import { boot, esc, F, label, notRecorded, tag, dateText, instrumentLink, instrumentName, fillToc } from './common.js';
 import { relationsTable } from './relations.js';
 
-const NEEDED = ['taxonomy', 'instruments', 'timeline', 'claims', 'sources'];
+const NEEDED = ['taxonomy', 'instruments', 'timeline', 'claims', 'sources', 'brief'];
 
 function filterForm(ix, events, q) {
   const withEvents = new Set(events.map((e) => e.instrument));
@@ -27,11 +27,11 @@ function eventItem(ix, e) {
   const scheduled = e.status === 'scheduled';
   return `<li id="${esc(e.id)}" class="${scheduled ? 'scheduled' : ''}">
     <span class="when">${dateText(e.date, e.date_precision)}</span>
-    <span class="head">${instrumentLink(ix, e.instrument)} ${e.event_type ? tag(label(ix, e.event_type)) : notRecorded('type not recorded')}
+    <div><span class="head">${instrumentLink(ix, e.instrument)} ${e.event_type ? tag(label(ix, e.event_type)) : notRecorded('type not recorded')}
       ${e.status ? tag(scheduled ? 'Scheduled' : 'Occurred', scheduled ? '' : 'ok') : notRecorded('status not recorded')}
       ${e.requires_verification ? tag('Unverified', 'warn') : ''}</span>
     ${e.obligation ? `<p>${esc(e.obligation)}</p>` : '' /* null on adoption, publication, entry into force: the type above says what happened (as js/status.js does) */}
-    ${e.supersedes ? `<p class="meta">${esc(e.supersedes)}</p>` : ''}
+    ${e.supersedes ? `<p class="meta">${esc(e.supersedes)}</p>` : ''}</div>
   </li>`;
 }
 
@@ -63,17 +63,26 @@ boot(NEEDED, (db, ix, mount) => {
     : `<p class="empty"><b>No dated event is recorded for ${esc(asked)}</b> in <code>data/timeline.json</code>. That is the state of the record, not a statement that nothing has happened or will.${q.instrument && ix.instrument.get(q.instrument) ? ` See <a href="regulation.html?id=${encodeURIComponent(q.instrument)}">the record of ${esc(instrumentName(ix, q.instrument))}</a>.` : ''}</p>`;
 
   mount.innerHTML = `
-    <p class="kicker">The record over time</p>
-    <h1>Timeline</h1>
-    <p class="lede">Every dated legal event the site records — adoption, entry into force, application, deadlines, decisions — and, after it, every relationship recorded between the instruments.</p>
-    <p class="measure">${esc(F.plural(all.length, 'event'))}: ${occurred} occurred, ${scheduled} scheduled${noStatus ? `, ${notRecorded(noStatus + ' with no status')}` : ''}. ${monthOnly ? `${monthOnly} are dated to the month and shown that way: their day is not established.` : ''}</p>
-    <nav class="toc" aria-labelledby="toc-h"><h2 id="toc-h">On this page</h2><ol></ol></nav>
-    <h2 id="events">Dated events</h2>
-    ${filterForm(ix, all, q)}
-    ${listing}
-    <h2 id="relationships">Relationships between instruments</h2>
-    <p class="measure">The same relationships the other directions draw as a network, here as one fixed table. A type is the record's own; a direction appears only where the relationship has one; a field the record does not hold is marked as not recorded.</p>
-    ${relationsTable(ix)}`;
+    <header class="head">
+      <p class="kicker label">The record over time</p>
+      <h1>Timeline</h1>
+      <p class="lede">Every dated legal event the site records — adoption, entry into force, application, deadlines, decisions — and, after it, every relationship recorded between the instruments.</p>
+    </header>
+    <div class="toc">
+      <nav aria-labelledby="toc-h"><h2 id="toc-h">On this page</h2><ol></ol></nav>
+      ${filterForm(ix, all, q)}
+      <div class="summary">
+        <p><b>${all.length}</b>dated events</p>
+        <p><b>${occurred}</b>occurred</p>
+        <p><b>${scheduled}</b>scheduled</p>
+        ${noStatus ? `<p>${notRecorded(noStatus + ' with no status')}</p>` : ''}
+        ${monthOnly ? `<p>${monthOnly} dated to the month: their day is not established, and they are shown that way.</p>` : ''}
+      </div>
+    </div>
+    <section class="wide" aria-labelledby="events"><h2 id="events">Dated events</h2>${listing}</section>
+    <section class="wide" aria-labelledby="relationships"><h2 id="relationships">Relationships between instruments</h2>
+      <p>The same relationships the other directions draw as a network, here as one fixed table. A type is the record's own; a direction appears only where the relationship has one; a field the record does not hold is marked as not recorded.</p>
+      ${relationsTable(ix)}</section>`;
   fillToc(mount, mount.querySelector('.toc'));
   if (location.hash) document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView();
 });

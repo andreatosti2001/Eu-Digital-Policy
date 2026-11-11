@@ -73,13 +73,21 @@ const idsIn = (el, attr) => {
   return [...set];
 };
 
+/* The exact places in each source, kept with the statement so a long locator
+   does not stretch the margin; nothing is shortened. */
+function locators(c) {
+  const with_ = (c.sources || []).filter((s) => s && typeof s === 'object');
+  if (!with_.length) return '';
+  return '<p>' + with_.map((s) => s.locator ? esc(s.locator) : notRecorded('locator not recorded')).join(' · ') + '</p>';
+}
+
 function claimNote(ix, id) {
   const c = ix.claim.get(id);
   if (!c) return `<div class="note"><span class="note-label">Claim</span><code>${esc(id)}</code> ${notRecorded('not found in claims.json')}</div>`;
   return `<div class="note"><span class="note-label">Claim</span><dl>
       <dt>Evidence</dt><dd>${evidenceTag(c)}</dd>
-      <dt>Source</dt><dd>${has(c.sources) ? c.sources.map((s) => sourceShort(ix, s)).join('; ') : notRecorded('no source recorded')}</dd>
-    </dl><details><summary>What is claimed</summary><p>${esc(c.statement)}</p></details></div>`;
+      <dt>Source</dt><dd>${has(c.sources) ? c.sources.map((s) => sourceShort(ix, s, { locator: false })).join('; ') : notRecorded('no source recorded')}</dd>
+    </dl><details><summary>What is claimed, and where</summary><p>${esc(c.statement)}</p>${locators(c)}</details></div>`;
 }
 
 function eventsNote(ix, ids) {
@@ -160,11 +168,13 @@ boot(NEEDED, async (db, ix, mount) => {
   const threadItems = thread ? [...thread.querySelectorAll('li')] : [];
 
   mount.innerHTML = `
-    <p class="kicker">Part ${esc(meta?.roman || 'V')} of the brief · ${meta?.reading_minutes != null ? esc(meta.reading_minutes) + ' min read' : notRecorded('reading time not recorded')}</p>
-    <h1>${title ? esc(title) : notRecorded('title not found')}</h1>
-    ${dek ? `<p class="lede">${esc(dek)}</p>` : ''}
-    <p class="meta">${claims.length ? `${esc(F.plural(claims.length, 'claim'))} rest under this part: ${tallyLine}. Each passage's evidence is in the margin.` : 'No claim is recorded for this part.'}</p>
-    <nav class="toc" aria-labelledby="toc-h"><h2 id="toc-h">On this page</h2><ol></ol></nav>
+    <header class="head">
+      <p class="kicker label">Part ${esc(meta?.roman || 'V')} of the brief · ${meta?.reading_minutes != null ? esc(meta.reading_minutes) + ' min read' : notRecorded('reading time not recorded')}</p>
+      <h1>${title ? esc(title) : notRecorded('title not found')}</h1>
+      ${dek ? `<p class="lede">${esc(dek)}</p>` : ''}
+      <p class="meta">${claims.length ? `${esc(F.plural(claims.length, 'claim'))} rest under this part: ${tallyLine}. Each passage's evidence is in the margin.` : 'No claim is recorded for this part.'}</p>
+    </header>
+    <div class="toc"><nav aria-labelledby="toc-h"><h2 id="toc-h">On this page</h2><ol></ol></nav></div>
     ${threadItems.length ? `<section class="thread" aria-labelledby="in-short"><h2 id="in-short">In short</h2><ul></ul></section>` : ''}
     <div id="${PART}"><div class="part-body"></div></div>`;
 
@@ -181,4 +191,4 @@ boot(NEEDED, async (db, ix, mount) => {
   body.insertAdjacentHTML('beforeend', termsSection(ix, terms) +
     `<p class="meta measure">Read the same part <a href="../../index.html#${PART}">in the current site</a>, or the <a href="regulation.html?id=ai-act">AI Act as a record</a>.</p>`);
   fillToc(mount, mount.querySelector('.toc'));
-});
+}, { part: PART });

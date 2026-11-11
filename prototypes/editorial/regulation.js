@@ -14,7 +14,7 @@ import { instrumentHref, siteRoot } from '../../js/routes.js';
 const NEEDED = ['taxonomy', 'instruments', 'timeline', 'claims', 'sources', 'enforcement', 'brief'];
 const EXAMPLES = [['ai-act', 'AI Act'], ['chips-act', 'Chips Act (the empty state)']];
 
-const section = (id, title, body) => `<h2 id="${id}">${esc(title)}</h2>${body}`;
+const section = (id, title, body, wide = false) => `<section${wide ? ' class="wide"' : ''} aria-labelledby="${id}"><h2 id="${id}">${esc(title)}</h2>${body}</section>`;
 const empty = (what, where) => `<p class="empty"><b>${what}</b>${where ? ' ' + where : ''}</p>`;
 
 function identity(ix, inst, db) {
@@ -25,7 +25,7 @@ function identity(ix, inst, db) {
       ? `<a href="${part.id === 'part-5' ? 'article.html' : '../../index.html#' + esc(part.id)}">Part ${esc(part.roman)} — ${esc(part.title)}</a>`
       : `<code>${esc(inst.brief_part)}</code> ${notRecorded('part not found in brief.json')}`;
   const rel = (ids) => has(ids) ? ids.map((id) => instrumentLink(ix, id)).join(', ') : notRecorded();
-  return `<dl class="facts">
+  return `<aside class="card" aria-label="The record at a glance"><dl class="facts">
     <dt>Status</dt><dd>${statusTag(ix, inst.legislative_status)}${inst.status_as_of ? ` <span class="meta">as of ${esc(F.humanDate(inst.status_as_of))}</span>` : ` ${notRecorded('date of assessment not recorded')}`}</dd>
     <dt>Kind</dt><dd>${inst.kind ? esc(label(ix, inst.kind)) : notRecorded()}</dd>
     <dt>CELEX</dt><dd>${inst.celex ? `<code>${esc(inst.celex)}</code>` : notRecorded()}</dd>
@@ -35,7 +35,7 @@ function identity(ix, inst, db) {
     <dt>Amends</dt><dd>${rel(inst.amends)}</dd>
     <dt>Repeals</dt><dd>${rel(inst.repeals)}</dd>
     <dt>Last verified</dt><dd>${inst.last_verified ? esc(F.humanDate(inst.last_verified)) : notRecorded()}</dd>
-  </dl>`;
+  </dl></aside>`;
 }
 
 function design(ix, inst) {
@@ -65,8 +65,8 @@ function dates(ix, inst) {
   return '<ol class="tl">' + evs.map((e) => e.missing
     ? `<li><code>${esc(e.id)}</code> ${notRecorded('event not found in timeline.json')}</li>`
     : `<li class="${e.status === 'scheduled' ? 'scheduled' : ''}"><span class="when">${dateText(e.date, e.date_precision)}</span>
-        <span class="head">${tag(label(ix, e.event_type))} ${e.status ? tag(e.status === 'scheduled' ? 'Scheduled' : 'Occurred', e.status === 'scheduled' ? '' : 'ok') : notRecorded('status not recorded')}${e.requires_verification ? ' ' + tag('Unverified', 'warn') : ''}</span>
-        ${e.obligation ? `<p>${esc(e.obligation)}</p>` : ''}</li>`).join('') +
+        <div><span class="head">${tag(label(ix, e.event_type))} ${e.status ? tag(e.status === 'scheduled' ? 'Scheduled' : 'Occurred', e.status === 'scheduled' ? '' : 'ok') : notRecorded('status not recorded')}${e.requires_verification ? ' ' + tag('Unverified', 'warn') : ''}</span>
+        ${e.obligation ? `<p>${esc(e.obligation)}</p>` : ''}</div></li>`).join('') +
     `</ol><p class="meta"><a href="timeline.html?instrument=${encodeURIComponent(inst.id)}">These dates on the timeline</a></p>`;
 }
 
@@ -111,20 +111,23 @@ boot(NEEDED, (db, ix, mount) => {
   const inst = ix.instrument.get(id);
   const switcher = `<p class="switch">The same view, two records: ${EXAMPLES.map(([k, n]) => k === (inst && inst.id) ? `<b>${esc(n)}</b>` : `<a href="regulation.html?id=${k}">${esc(n)}</a>`).join(' · ')}</p>`;
   if (!inst) {
-    mount.innerHTML = switcher + `<h1>Instrument not found</h1>` + empty(`No instrument with the id <code>${esc(id)}</code> is recorded`, 'in <code>data/instruments.json</code>. Nothing has been substituted.');
+    mount.innerHTML = `<header class="head">${switcher}<h1>Instrument not found</h1></header>` + empty(`No instrument with the id <code>${esc(id)}</code> is recorded`, 'in <code>data/instruments.json</code>. Nothing has been substituted.');
     return;
   }
   document.title = `${inst.short_name} · Editorial prototype`;
   const statusNote = inst.status_note
-    ? `<p class="measure">${F.readerText(inst.status_note, ix, { href: (p) => siteRoot() + p, instrumentHref: (x) => instrumentHref(x, ix) })}</p>`
+    ? `<p>${F.readerText(inst.status_note, ix, { href: (p) => siteRoot() + p, instrumentHref: (x) => instrumentHref(x, ix) })}</p>`
     : empty('No note on the status is recorded.');
 
-  mount.innerHTML = switcher + `
-    <p class="kicker">${inst.kind ? esc(label(ix, inst.kind)) : 'Instrument'}</p>
-    <h1>${esc(inst.short_name)}</h1>
-    <p class="lede">${inst.full_name ? esc(inst.full_name) : notRecorded('full name not recorded')}</p>
+  mount.innerHTML = `
+    <header class="head">
+      ${switcher}
+      <p class="kicker label">${inst.kind ? esc(label(ix, inst.kind)) : 'Instrument'}</p>
+      <h1>${esc(inst.short_name)}</h1>
+      <p class="lede">${inst.full_name ? esc(inst.full_name) : notRecorded('full name not recorded')}</p>
+    </header>
+    <div class="toc"><nav aria-labelledby="toc-h"><h2 id="toc-h">On this page</h2><ol></ol></nav></div>
     ${identity(ix, inst, db)}
-    <nav class="toc" aria-labelledby="toc-h"><h2 id="toc-h">On this page</h2><ol></ol></nav>
     ${section('status', 'Where it stands', statusNote)}
     ${section('design', 'What it is for', design(ix, inst))}
     ${section('dates', 'Dates', dates(ix, inst))}
@@ -133,7 +136,8 @@ boot(NEEDED, (db, ix, mount) => {
     ${section('relationships', 'Relationships with other instruments',
       ix.relationship.some((r) => r.from === inst.id || r.to === inst.id)
         ? relationsTable(ix, { only: inst.id })
-        : empty('No relationship is recorded', `between ${esc(inst.short_name)} and another instrument in <code>data/instruments.json</code>. It stays listed, with this state, in <a href="timeline.html#relationships">the full table</a>.`))}
+        : empty('No relationship is recorded', `between ${esc(inst.short_name)} and another instrument in <code>data/instruments.json</code>. It stays listed, with this state, in <a href="timeline.html#relationships">the full table</a>.`),
+      ix.relationship.some((r) => r.from === inst.id || r.to === inst.id))}
     ${section('enforcement', 'Enforcement', enforcement(ix, inst, db))}
     ${section('sources', 'Sources of the record', sources(ix, inst))}`;
   fillToc(mount, mount.querySelector('.toc'));
