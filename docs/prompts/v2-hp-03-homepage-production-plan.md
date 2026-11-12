@@ -66,7 +66,9 @@ Il piano risponde, per scritto e con rimandi al codice (file e righe), a queste 
 7. **Le questioni aperte del disegno**, ciascuna come domanda all'autore con la sua risposta in §8: il serpente è un raster (la versione vettoriale
    renderebbe nitido il disegno e il contorno notturno un tratto esatto); la sua inquadratura nel disco è diversa da quella dell'icona del sito, quindi il
    primo fotogramma dell'apertura non è identico al marchio nell'intestazione; l'etichetta *Digital Networks Act* in basso (lasciata com'è); le tracce
-   `__hpFrame` e `__hpLabels` per le registrazioni di revisione (non entrano in produzione).
+   `__hpFrame`, `__hpLabels` e `__hpParallax` per le registrazioni di revisione (non entrano in produzione); **la profondità a strati** (HP-02b: otto gruppi SVG
+   traslati dal mouse, solo con puntatore fine e senza movimento ridotto; misurata e tenuta a 8 unità, §8 «HP-02b»), che il piano deve dire se porta in produzione, con quale
+   costo di misura e quale comportamento per tastiera, touch e lettore di schermo.
 8. **Il rilascio e il ritorno indietro.** In quanti commit, in che ordine, con quale ramo e quale pull request; come si torna indietro (un solo `git revert`
    dei commit del piano deve restituire la homepage pubblicata, e il piano deve dire come lo si verifica); cosa si guarda dopo il deploy
    (`docs/DEPLOYMENT.md`, `docs/SEO-OPERATIONS.md`: canonico, sitemap, indicizzabilità).

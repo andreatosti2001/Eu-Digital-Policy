@@ -381,3 +381,5 @@ adapted to it in `9e19891`).
 reader, other browsers and low-density screens, performance, languages, the serpent's sharpness. **HP-02 (12 Nov 2026) measured it** — the figure's contrast in both themes and both lens states, the opening's timing under CPU throttling, the labels that touch, and the plan for
 the languages — and replaced the icon-derived serpent files with the author's drawing. The results, the method and what was still not measured are in
 `prototypes/homepage/README.md` ("What was checked", "Languages: the plan"); the decisions are the rows "HP-02: …" of `docs/ROADMAP-v2.md` §8. Not duplicated here.
+**HP-02b (12 Nov 2026)** added one experiment, **depth by layers** (the planes of the figure sliding over one another under a mouse, translations only): measured, kept at 8 units on the
+author's answer, recorded in the README ("Depth by layers") and §8 ("HP-02b: …"). Not a decision for production.
