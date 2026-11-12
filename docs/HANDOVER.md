@@ -2,14 +2,14 @@
 
 **Last updated:** 12 November 2026 (UTC), HP-02 (the homepage follow-up: the author's serpent, the figure's contrast, the opening's timing, the plan for the languages), at its close.
 **Branch:** `claude/jolly-hamilton-du9xkp` (assigned by the environment), fast-forwarded to `main` `84bfa89` (#104) at the start; pushed, no history rewritten.
-`origin/main` re-fetched immediately before this write: `84bfa89`, unchanged. Pull request opened on the author's answer ("After recording (Recommended)"), not merged by the session.
+`origin/main` re-fetched immediately before this write: `84bfa89`, unchanged. Pull request #105 opened on the author's answer ("After recording (Recommended)"), not merged by the session.
 The entries below this session's are unchanged; the header HP-01 wrote is kept under its branch register, as written.
 
 ## Branch register — 12 November 2026 (HP-02, the homepage follow-up)
 
 - `claude/jolly-hamilton-du9xkp`, from `main` `84bfa89`: `prototypes/homepage/` (assets, `homepage.js`, `homepage.css`, `README.md`) and `docs/` (`ROADMAP-v2.md` §8, `PROTOTYPES.md` §H,
-  `HANDOVER.md`, `prompts/v2-hp-03-homepage-production-plan.md`). Nothing of the published site changed. Disposition: **a pull request is opened after this entry is pushed**, on the author's
-  answer; merging is the author's.
+  `HANDOVER.md`, `prompts/v2-hp-03-homepage-production-plan.md`). Nothing of the published site changed. Disposition: on the author's answer ("After recording (Recommended)"), pull request #105
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/105), opened and not merged by the session; merging is the author's.
 - Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed), as before. `claude/funny-hamilton-yt9uh0` (HP-01) is merged (#104).
 
 ## HP-02 — the homepage follow-up (12 Nov 2026)
