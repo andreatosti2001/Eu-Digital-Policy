@@ -1,11 +1,62 @@
 # HANDOVER
 
-**Last updated:** 12 November 2026 (UTC), HP-02 (the homepage follow-up: the author's serpent, the figure's contrast, the opening's timing, the plan for the languages), at its close.
-**Branch:** `claude/jolly-hamilton-du9xkp` (assigned by the environment), fast-forwarded to `main` `84bfa89` (#104) at the start; pushed, no history rewritten.
-`origin/main` re-fetched immediately before this write: `84bfa89`, unchanged. Pull request #105 opened on the author's answer ("After recording (Recommended)"), not merged by the session.
-The entries below this session's are unchanged; the header HP-01 wrote is kept under its branch register, as written.
+**Last updated:** 12 November 2026 (UTC), HP-02b (depth by layers in the homepage prototype, an experiment that followed HP-02), at its close.
+**Branch:** `claude/jolly-hamilton-du9xkp` (assigned by the environment). **#105 (HP-02) was merged by the author before this work began**, so `main` `fa7b4cd` (#105, #106) was merged into the
+branch with a merge commit and pushed without forcing; a rebase with a force-push was attempted first and refused by the environment, and nothing had changed. `origin/main` re-fetched
+immediately before this write: `fa7b4cd`, unchanged. Pull request #107 opened on the author's answer, not merged by the session.
+The entries below this session's are unchanged; the header HP-02 wrote is kept under its branch register, as written.
+
+## Branch register — 12 November 2026 (HP-02b, depth by layers)
+
+- `claude/jolly-hamilton-du9xkp`, from `main` `fa7b4cd` (merged in, `eb57b09`): `prototypes/homepage/` (`homepage.js`, `README.md`) and `docs/` (`ROADMAP-v2.md` §8, `PROTOTYPES.md` §H, `HANDOVER.md`,
+  `prompts/v2-hp-03-homepage-production-plan.md`). Nothing of the published site changed. Disposition: on the author's answer ("Sì, dopo la registrazione (Recommended)"), pull request #107
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/107), opened and not merged by the session; merging is the author's. The branch name is the one HP-02 used; #105 is merged, so this is new work on a restarted branch.
+- Merged during the session, not this session's: #105 (HP-02) and #106 (`claude/nifty-mccarthy-aov32e`, the browser suite waits, bounded, for a mount to leave its loading fallback).
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
+
+## HP-02b — depth by layers in the homepage prototype (12 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of HP-02b" and "HP-02b: depth by layers, measured and kept", with the author's words ("bene"; "Stesso branch, commit separati (Recommended)";
+"Tienila così (Recommended)"). **Record:** `prototypes/homepage/README.md`, "Depth by layers" — read it, not this entry.
+
+**What happened.** The author asked whether the tree could be in 3D. Depth only, a rotatable tree and the whole constellation were put; depth only was recommended, with the reasons, and chosen. It was built as
+**translations of eight SVG groups** (the tree at the back, the core ring, then the mapped, watched and excluded rings, 8 units of spread out of 720), moved by a mouse over the figure, still under
+reduced motion, on touch and during the opening. The first measure of the corners **failed the kill criterion the scope row had set**: CRA, *Interoperable Europe Act*, "CORE · 16" and eIDAS2 touched marks on
+other planes. The cause was real (planes slide over one another, and the label pass assumed a flat figure), so `settleLabels()` now asks for a clearance that grows with the planes' depth difference and moves
+"CORE · n" too; after that **every contact left is *Digital Networks Act's***, the one the author chose to leave. Shown to the author as two videos and a corners sheet; kept at 8 units.
+
+**Measured (README, "Depth by layers").** At rest `#hpFig` is identical to `main`'s in both themes. Contrast unchanged (528 readings, 0 failing; lowest text 4.82, lowest graphic 3.27). The movement costs 0 dropped frames
+at 1 × and 1–5 of about 176 at 6 ×; the opening is not slower. **Battery on the committed tree:** `validate`, `i18n-audit`, `design-qa`, `freshness`, `evidence-audit`, `seo-audit` exit 0; `tools/selftest.mjs` **189 / 189**;
+the browser suite **343 pass · 0 fail · 1 undecidable** (`a11y:bound`), the repository byte-identical before and after. **Not run:** the 25 agent suites and `.control-room/` (nothing under `agent/`, `.control-room/`, `js/`, `css/`,
+`data/` or a published page changed). `git diff origin/main --stat` over the published surface is empty.
+
+**Two things to know.** The environment refused a rebase followed by a force-push (the rule in this file's instructions allows it after a merged pull request, the environment's classifier does not): the merge-commit route
+costs a line of history and nothing else. And a pixel comparison of the whole stage against `main` showed a 27-pixel difference at the screen's left edge — the body's gradient, which `main` shows against itself too; the
+comparison that means something is of `#hpFig` alone.
+
+**Left open:** the depth is a translation of the planes: the tie lines (shown on hover) are on depth 1 between the tree at 0 and the core at 2, so at the extremes their ends are off by up to 1 unit — stated in the README, not
+fixed; a real device or pointer, a trackpad, a high-contrast mode are not measured; whether any of this goes to production is HP-03's plan, whose prompt now names the layers and the third review hook (`__hpParallax`).
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| Scope | §8 "The scope of HP-02b" (`92f9733`, `88d3ae8`) | read the row: the author's words, the kill criteria | none | the row is the first write: **met** |
+| The layers | `homepage.js` (`planes`, the ring groups, `stage` listeners; the HP-02b commit) | `python3 -m http.server 8000`, open `/prototypes/homepage/`, move the mouse over the figure; with `prefers-reduced-motion` or on a phone nothing moves | none in the repository (scratch checks only) | translations only, still under reduced motion / touch / opening: **met** |
+| The label clearance | `settleLabels()` (depth-aware `hit`, `planeOf`), "CORE · n" among the movers | `window.__hpLabels`; `window.__hpParallax(1, 1)` then look at the bottom of the figure | none | no label but *Digital Networks Act* touches anything at the centre or any corner: **met** (the five positions, both lens states, 3 px) |
+| Measures | README "Depth by layers"; §8 "HP-02b: depth by layers, measured and kept" | the README's method | none (scratch scripts, not committed) | at rest identical, contrast unchanged, timing not worse: **met** |
+| Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data img tools agent .github prototypes/editorial prototypes/observatory` is empty | the browser suite reports the repository byte-identical | nothing of the published site changed: **met** |
+
+**For the next session:** HP-03, as before, on its prompt (updated to name the layers); PV2-05 (without its homepage view) follows.
 
 ## Branch register — 12 November 2026 (HP-02, the homepage follow-up)
+
+*The header HP-02 wrote, kept as written:*
+
+> **Last updated:** 12 November 2026 (UTC), HP-02 (the homepage follow-up: the author's serpent, the figure's contrast, the opening's timing, the plan for the languages), at its close.
+> **Branch:** `claude/jolly-hamilton-du9xkp` (assigned by the environment), fast-forwarded to `main` `84bfa89` (#104) at the start; pushed, no history rewritten.
+> `origin/main` re-fetched immediately before this write: `84bfa89`, unchanged. Pull request #105 opened on the author's answer ("After recording (Recommended)"), not merged by the session.
+> The entries below this session's are unchanged; the header HP-01 wrote is kept under its branch register, as written.
 
 - `claude/jolly-hamilton-du9xkp`, from `main` `84bfa89`: `prototypes/homepage/` (assets, `homepage.js`, `homepage.css`, `README.md`) and `docs/` (`ROADMAP-v2.md` §8, `PROTOTYPES.md` §H,
   `HANDOVER.md`, `prompts/v2-hp-03-homepage-production-plan.md`). Nothing of the published site changed. Disposition: on the author's answer ("After recording (Recommended)"), pull request #105

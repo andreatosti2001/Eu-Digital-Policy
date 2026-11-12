@@ -29,6 +29,10 @@ HTTP, like the site.
      `js/regulatory-model.js`, the one home of that set and of the status order since MC-2 (#102) — carries its status mark wherever its
      ring puts it (the five adjacent ones on the mapped and watched rings); a plain dot is an instrument the bands do not count;
    - **two lenses**: *Status* and *Falls due next* (dated events in the next 90 days, from `data/timeline.json`, counted in UTC days);
+   - **depth by layers** (HP-02b): the tree at the back, then the core ring, then the mapped, watched and excluded rings, each on its own plane; a mouse moving over
+     the figure slides the planes over one another, up to 8 units from the back plane to the front one. **Translations of eight groups only** — nothing rotates, no node
+     is reprojected, no library (`planes` in `homepage.js`, one constant `DEPTH_MAX`). Still while the opening plays, under `prefers-reduced-motion`, on a touch or
+     pen pointer and on a device without a fine pointer; focus, names and the keyboard are untouched;
    - hover or focus names a part or an instrument and draws the link between them; **one Tab stop**, the arrow keys walk the parts in
      reading order and then the ring clockwise; the same content as a **list** under the figure (open by default on a phone).
 3. **The buttons, the five doors and the state of play**, unchanged: the doors rendered by `js/shell.js`, the bands, the next deadlines,
@@ -114,6 +118,37 @@ alone, the it / fr / es homepage would show an **English figure under an Italian
    an agent writes none. A change under `i18n/` is amber (`docs/AI-SAFE-BOUNDARIES.md` §2); that table does not tier `js/`, and the helper is a new mechanism, so it needs the author's decision.
 
 **The author chose route 1 on 12 Nov 2026** (§8, "HP-02: the languages"): English figure, declared. **Nothing here is a translation and none is wired.**
+
+## Depth by layers (HP-02b, 12 Nov 2026) — an experiment, kept
+
+**What was asked and what was chosen.** The author asked whether the tree could be in 3D. Three kinds were put: depth only; a rotatable tree; the whole constellation in 3D. **Depth
+only** was recommended and chosen (§8, "The scope of HP-02b"): the tree is a flat graph, so turning it shows nothing new, rotation would make the 8 px labels illegible and take the
+contrast with it, and tilted rings would break the label placement and the status marks, which are read by shape. The depth is the order the figure already has.
+
+**How.** `planes` in `homepage.js`: the tree at depth 0, the tie lines at 1, the core ring (its disc, marks and labels) at 2, the mapped ring at 4, the watched at 6, the excluded at 8
+(units of the 720-unit drawing; the pointer's offset is at most 1, so the spread is at most 8). A `pointermove` on the stage (a mouse only, on a device with `(hover: hover) and
+(pointer: fine)`, not under reduced motion, not while the opening plays) sets a target and the planes ease to it at 0.16 per frame; `pointerleave` returns them. Each plane is one
+`transform="translate(…)"` attribute on a group (a `style` attribute would be refused by the CSP). `window.__hpParallax(x, y)` exists for the review recordings only. **One approximation:**
+the tie lines (shown on hover) sit at depth 1 between the tree at 0 and the core at 2, so at the extremes their ends are off their node and their mark by up to 1 unit.
+
+**Measured (same machine, same method as HP-02; `main` `fa7b4cd` is the baseline).**
+
+- **At rest it is the same figure:** a screenshot of `#hpFig` is identical to `main`'s in both themes (three runs each, one hash each).
+- **Labels.** Two things slide over one another on different planes, so the clearance `settleLabels()` demands now grows by the difference of their depths (it was a flat 3 units), and
+  the core ring's own label "CORE · n", which it had not been moving, is now moved. Checked at the centre and the four corners of the parallax, both lens states, with 3 px of
+  clearance: **every contact left involves *Digital Networks Act*** (with the marks beside it or with *EHDS*) — the label the author chose to leave; no other label touches
+  anything at any extreme. Before the depth-aware clearance the corners showed contacts of CRA, *Interoperable Europe Act*, "CORE · 16" and eIDAS2 as well.
+- **Contrast** unchanged: 528 readings, 0 failing, lowest text 4.82 : 1 and lowest graphic 3.27 : 1 at the centre and at two opposite corners (no colour changed and nothing rotates).
+- **Cost of the movement:** 3 s of continuous mouse movement over the figure, three runs, `Emulation.setCPUThrottlingRate`. At 1 ×: **0 dropped frames** of about 180 (main: 0, 1, 0). At 6 ×:
+  1–5 dropped of about 176 (main: 0, 0, 1), worst frame 33 ms, mean 17 ms. No long task.
+- **The opening** is not slower: at 6 × on desktop 13 / 13 / 15 dropped frames against `main`'s 13 / 7 / 12, on mobile 11 / 9 / 9 against 25 / 9 / 8, 0 at 1 ×, 4.0 s in every run.
+- **Pointer, reduced motion, touch** (Playwright): a real mouse moves the planes symmetrically (lower-right is the exact opposite of upper-left); with `prefers-reduced-motion` and on an iPhone
+  profile nothing moves; the planes are back at zero when the pointer leaves the stage.
+
+**The author's decision:** "Tienila così (Recommended)" — kept at 8 units (§8). A stronger depth (14) was put and not chosen; it would grow the planes' relative slide and the label clearance with it,
+and needs another measure of the corners.
+
+**Not measured:** a real device or pointer, a trackpad's finer sampling, the focus ring while a plane moves (it moves with its element), a high-contrast mode.
 
 ## What was checked, 12 Nov 2026
 

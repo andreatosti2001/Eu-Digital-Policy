@@ -293,15 +293,16 @@ async function buildFigure() {
   const ringEls = [];
   for (const r of rings) {
     const list = outer[r.key];
-    const c = svg('circle', { cx: CX, cy: CY, r: r.R, class: 'ring' + (r.dash ? ' dash' : ''), opacity: 0 }, L.rings);
+    const rg = svg('g', { class: 'hp-ring hp-ring-' + r.key }, L.rings);   // one plane per ring, for the depth (HP-02b)
+    const c = svg('circle', { cx: CX, cy: CY, r: r.R, class: 'ring' + (r.dash ? ' dash' : ''), opacity: 0 }, rg);
     const la = rad(-62);
-    const lb = svg('text', { x: CX + r.R * Math.cos(la) + 8, y: CY + r.R * Math.sin(la) - 4, class: 'ring-lb', opacity: 0 }, L.rings);
+    const lb = svg('text', { x: CX + r.R * Math.cos(la) + 8, y: CY + r.R * Math.sin(la) - 4, class: 'ring-lb', opacity: 0 }, rg);
     lb.textContent = `${r.word.toUpperCase()} · ${list.length}`;
     const dots = list.map((inst, k) => {
       const a = rad(r.a0 + k * (360 / Math.max(list.length, 1)));
       const x = CX + r.R * Math.cos(a), y = CY + r.R * Math.sin(a);
       const isCounted = counted.has(inst.id);
-      const g = svg('g', { class: 'dot-g' + (due.has(inst.id) ? ' due' : '') + (isCounted ? ' counted' : ''), opacity: 0 }, L.rings);
+      const g = svg('g', { class: 'dot-g' + (due.has(inst.id) ? ' due' : '') + (isCounted ? ' counted' : ''), opacity: 0 }, rg);
       if (isCounted) { const m = drawMark(g, x, y, 6, shapeOf(statusPart(inst))); m.classList.add('mk-in'); }
       else { const inner = svg('g', { class: 'mk-in' }, g); svg('circle', { cx: x, cy: y, r: 5.5, class: 'dot ' + r.key[0] }, inner); }
       svg('title', {}, g).textContent = `${inst.short_name} — ${r.word.toLowerCase()}` +
@@ -313,7 +314,7 @@ async function buildFigure() {
       }
       return g;
     });
-    ringEls.push({ ...r, c, lb, dots });
+    ringEls.push({ ...r, c, lb, dots, g: rg });
   }
 
   /* the tree, in reading order */
@@ -549,6 +550,12 @@ async function buildFigure() {
      It measures every label and mark in BOTH lens states (the due dates widen a label), then tries small shifts of each core
      and ring label in order of distance and keeps the first that clears everything by MARGIN units. Placement only: nothing here
      reads or writes data. What it moved and what it could not resolve is left in window.__hpLabels, for the review recordings. */
+  const DEPTH_MAX = 8;
+  const planes = [
+    [L.tree, 0], [L.ties, 1], [L.disc, 2], [L.core, 2], [L.labels, 2],
+    ...ringEls.map((r) => [r.g, { mapped: 4, watched: 6, excluded: 8 }[r.key] * DEPTH_MAX / 8]),
+  ];
+  const planeOf = (el) => { const pl = planes.find(([g]) => g.contains(el)); return pl ? pl[1] : 0; };
   function settleLabels() {
     const MARGIN = 3, MAXMOVE = 26, lensOn = fig.classList.contains('lens-due');
     const marks = [...fig.querySelectorAll('a.mk, g.dot-g .mk-in, g.dot-g circle.duering')];
@@ -558,13 +565,14 @@ async function buildFigure() {
       fig.classList.toggle('lens-due', on);
       for (const e of [...marks, ...texts]) {
         const b = e.getBBox(); if (!b.width && !b.height) continue;          // not rendered in this state
-        const o = { x: b.x, y: b.y, r: b.x + b.width, b: b.y + b.height }, u = box.get(e);
-        box.set(e, u ? { x: Math.min(u.x, o.x), y: Math.min(u.y, o.y), r: Math.max(u.r, o.r), b: Math.max(u.b, o.b) } : o);
+        const o = { x: b.x, y: b.y, r: b.x + b.width, b: b.y + b.height, z: planeOf(e) }, u = box.get(e);
+        box.set(e, u ? { x: Math.min(u.x, o.x), y: Math.min(u.y, o.y), r: Math.max(u.r, o.r), b: Math.max(u.b, o.b), z: o.z } : o);
       }
     }
     fig.classList.toggle('lens-due', lensOn);
-    const hit = (a, b) => a.x < b.r + MARGIN && b.x < a.r + MARGIN && a.y < b.b + MARGIN && b.y < a.b + MARGIN;
-    const shifted = (b, dx, dy) => ({ x: b.x + dx, y: b.y + dy, r: b.r + dx, b: b.b + dy });
+    /* two elements on different planes slide over one another by up to the difference of their depths (the pointer's offset is at most 1): the clearance grows by that */
+    const hit = (a, b) => { const m = MARGIN + Math.abs(a.z - b.z); return a.x < b.r + m && b.x < a.r + m && a.y < b.b + m && b.y < a.b + m; };
+    const shifted = (b, dx, dy) => ({ x: b.x + dx, y: b.y + dy, r: b.r + dx, b: b.b + dy, z: b.z });
     const dueOnly = [...fig.querySelectorAll('text.lb.due-only')].map((el) => {
       const gx = +el.getAttribute('x') + 14, gy = +el.getAttribute('y') - 4, d = Math.hypot(gx - CX, gy - CY) || 1;   // the due label sits left of its dot: move it away from the centre
       return { el, own: el.parentNode.querySelector('.mk-in'), max: 34, ax: (gx - CX) / d, ay: (gy - CY) / d };   // beside its own dot, so it may travel a little further
@@ -573,6 +581,7 @@ async function buildFigure() {
       ...dueOnly,
       ...coreEls.map((c) => ({ el: c.lb, own: c.el, ax: Math.cos(rad(c.a)), ay: Math.sin(rad(c.a)) })),
       ...ringEls.map((r) => ({ el: r.lb, own: null, ax: 1, ay: 0 })),
+      { el: coverLb, own: null, ax: 1, ay: 0 },                              // "CORE · n", the core ring's own label
     ];
     const report = { moved: [], unresolved: [] };
     for (const m of movers) {
@@ -599,10 +608,34 @@ async function buildFigure() {
   await document.fonts.ready;
   settleLabels();
 
+  /* ---- depth by layers (HP-02b). The tree at the back, then the core ring, then the mapped, watched and excluded rings, each on its own plane:
+     a pointer moving over the figure slides the planes over one another. TRANSLATIONS of eight groups only - nothing rotates, no node is reprojected,
+     no library. The spread from the back plane to the front one is DEPTH_MAX units of the 720-unit drawing. Still while the opening plays, under
+     prefers-reduced-motion, and on a device without a fine pointer. Nothing here touches focus, names or the keyboard. */
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+  let px = 0, py = 0, aimX = 0, aimY = 0, praf = 0;
+  const paintPlanes = () => { for (const [g, d] of planes) set(g, { transform: `translate(${f2(-px * d)} ${f2(-py * d)})` }); };
+  const stepPlanes = () => {
+    px += (aimX - px) * 0.16; py += (aimY - py) * 0.16;
+    if (Math.hypot(aimX - px, aimY - py) < 0.002) { px = aimX; py = aimY; paintPlanes(); praf = 0; return; }
+    paintPlanes(); praf = requestAnimationFrame(stepPlanes);
+  };
+  const aimPlanes = (x, y) => { aimX = x; aimY = y; if (!praf) praf = requestAnimationFrame(stepPlanes); };
+  let opening = false;
+  const stage = document.querySelector('.hp-stage');
+  stage.addEventListener('pointermove', (e) => {
+    if (opening || e.pointerType !== 'mouse' || !finePointer.matches || reduceMotion()) return;
+    const r = fig.getBoundingClientRect();
+    aimPlanes(Math.max(-1, Math.min(1, (e.clientX - r.left - r.width / 2) / (r.width / 2))), Math.max(-1, Math.min(1, (e.clientY - r.top - r.height / 2) / (r.height / 2))));
+  });
+  stage.addEventListener('pointerleave', () => aimPlanes(0, 0));
+  window.__hpParallax = (x, y) => { px = aimX = x; py = aimY = y; paintPlanes(); };   // for the review recordings only
+
   /* ---- play the opening once, or show the figure as it ends */
   let raf = 0;
-  function finish() { cancelAnimationFrame(raf); raf = 0; frame(END + 1); L.mark.setAttribute('display', 'none'); }
+  function finish() { cancelAnimationFrame(raf); raf = 0; frame(END + 1); L.mark.setAttribute('display', 'none'); opening = false; }
   function play() {
+    opening = true; aimPlanes(0, 0);
     L.mark.removeAttribute('display');
     const t0 = performance.now();
     const skip = () => { if (raf) finish(); };
