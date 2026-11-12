@@ -71,10 +71,35 @@ const undecidable = (id, area, summary, why, data = {}) => ({ id, area, status: 
    1 · every major page loads
    ============================================================ */
 
-export async function checkPageLoads(page, origin, spec) {
+/** How long a mount point may keep the loading fallback after the
+ *  network has gone quiet. `goto()` settles 350 ms after the last
+ *  request STARTS, not when the last body arrives, so a page that
+ *  renders from ten parallel fetches can be read a moment too early
+ *  (docs/BROWSER-QA.md §6.3). The wait is bounded: a mount that still
+ *  holds the fallback after this is reported, exactly as before. */
+export const MOUNT_WAIT_MS = 10_000;
+
+export async function checkPageLoads(page, origin, spec, { mountWaitMs = MOUNT_WAIT_MS } = {}) {
   const url = `${origin}/${spec.file}`;
   const before = page.console.length;
+  const reqBefore = page.requests.length;
+  const resBefore = page.responses.length;
+  const failBefore = page.failedRequests.length;
   await page.goto(url);
+
+  /* Wait until the mount point has left the loading fallback — the same
+     condition the assertion below applies, so this cannot turn a
+     failure into a pass: it only stops the page being read before it
+     could have rendered. A mount point that does not exist ends the
+     wait at once and is reported below as missing. */
+  const t0 = Date.now();
+  const left = await page.waitFor(`(() => {
+    const main = document.querySelector(${JSON.stringify(spec.main)});
+    if (!main) return true;
+    const text = main.textContent.trim();
+    return !${JSON.stringify(FALLBACK_TEXT)}.some((t) => text.startsWith(t));
+  })()`, { timeoutMs: mountWaitMs, everyMs: 50 });
+  const waitedMs = Date.now() - t0;
 
   const state = await page.evaluate(`(() => {
     const main = document.querySelector(${JSON.stringify(spec.main)});
@@ -103,8 +128,24 @@ export async function checkPageLoads(page, origin, spec) {
     results.push(bad(`load:${spec.file}:mount`, area, `${spec.file} has no ${spec.main} in the rendered DOM`));
   } else {
     const stillLoading = FALLBACK_TEXT.some((t) => (state.mainText ?? '').startsWith(t));
+    /* A failure says WHY it is undecided between "slow" and "stalled":
+       how long it waited, which data requests never got an answer,
+       which answered with an error status, which failed in transport,
+       and the console since this navigation. */
+    const dataUrls = page.requests.slice(reqBefore).map((r) => r.url).filter((u) => /\/data\/[^/]+\.json(\?|$)/.test(u));
+    const answered = new Set(page.responses.slice(resBefore).map((r) => r.url));
+    const diagnostics = () => ({
+      text: state.mainText,
+      waitedMs,
+      mountWaitMs,
+      timedOut: !left,
+      unansweredData: dataUrls.filter((u) => !answered.has(u)),
+      errorResponses: page.responses.slice(resBefore).filter((r) => r.status >= 400).slice(0, 8),
+      failedRequests: page.failedRequests.slice(failBefore).slice(0, 8),
+      console: page.console.slice(before).slice(-8),
+    });
     results.push(stillLoading || state.bodyChars < 200
-      ? bad(`load:${spec.file}:mount`, area, `${spec.name} never rendered: ${spec.main} still holds the loading fallback`, { text: state.mainText })
+      ? bad(`load:${spec.file}:mount`, area, `${spec.name} never rendered: ${spec.main} still holds the loading fallback`, diagnostics())
       : ok(`load:${spec.file}:mount`, area, `${spec.name} rendered into ${spec.main}`, { chars: state.bodyChars, children: state.mainChildren }));
   }
 
