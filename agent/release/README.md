@@ -78,9 +78,16 @@ in the returned report; exit code 1 for refused/failed, 0 for rehearsed/dispatch
 | C3 | publisher | any workflow other than `pages.yml` publishes; `build` does not need every gate job; the gate step is missing or after the upload; `if:`, `continue-on-error`, `\|\| true`, `set +e` on the path; a non-push/dispatch trigger; write permissions anywhere but `deploy` |
 | C4 | upstream | GitHub's own `needs` result shows any gate job not `success` |
 | C5 | ledger | any chain, signature, registry, simulated-entry or agent-decider problem |
-| C6 | append-only | any commit changed a decision recorded before it |
-| C7 | agent changes | a commit declaring a `Proposal` has no granted, signed, human decision **preceding it in history**, a mismatched hash/key, a file outside the approved scope, a later denial, an approval older than 30 days or dated after the commit |
-| C8 | unledgered | agent-attributed commits to the published site citing no Proposal — **reported, blocking only with `--strict-unledgered`** |
+| C6 | append-only | any commit changed a decision recorded before it — **a merge, against every parent** |
+| C7 | agent changes | a commit declaring a `Proposal` has no granted, signed, human decision **preceding it in history**, a mismatched hash/key, a file outside the approved scope, a later denial, an approval older than 30 days or dated after the commit; **a merge that declares a `Proposal` and carries content of its own** (a dispatched change is a one-parent commit) |
+| C8 | unledgered | agent-attributed commits to the published site citing no Proposal — a merge counted by **its own content** — **reported, blocking only with `--strict-unledgered`** |
+
+**Merge commits (11 Nov 2026).** A merge is judged by what it changed **itself**: `tools/commit-evidence.mjs mergeOwnFiles()`,
+the files that differ from every parent and from git's own re-merge. A clean merge has none; a conflict resolution or an
+edit made inside an uncommitted merge does. Before, every merge was given no files, so such content was seen by no
+condition (`docs/AUDIT-2026-11-11.md` §5.4). A merge whose own content git cannot establish fails C2. What stays unseen: an
+**unmarked** merge's own content passes C8 exactly as an unmarked one-parent commit does — C8 reads a disclosure. Record:
+`docs/AUDIT-2026-11-11-P1.md` §4.
 | C9 | artifact | any file off the allowlist, any dot path, any file not byte-identical to the commit's own blob, any published file missing, any credential shape |
 | C10 | registry pin | a deploy relying on a signature, with `RELEASE_REVIEWER_REGISTRY_SHA256` unset or not matching `reviewers.json` |
 
