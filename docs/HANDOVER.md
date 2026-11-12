@@ -2,13 +2,13 @@
 
 **Last updated:** 12 November 2026 (UTC), HP-03 (the homepage production plan), at its close.
 **Branch:** `claude/quirky-goldberg-fpoxdz` (assigned by the environment), at `main` `02f9a4e` (#107) from the start; pushed, no history rewritten.
-`origin/main` re-fetched immediately before this write: `02f9a4e`, unchanged. The pull request's disposition is recorded below once the author answers.
+`origin/main` re-fetched immediately before this write: `02f9a4e`, unchanged. Pull request to `main` opened on the author's answer ("Yes, after recording (Recommended)"), not merged by the session.
 The entries below this session's are unchanged; the header HP-02b wrote is kept under its branch register, as written.
 
 ## Branch register — 12 November 2026 (HP-03, the homepage production plan)
 
 - `claude/quirky-goldberg-fpoxdz`, from `main` `02f9a4e`: `docs/` only — `HOMEPAGE-PRODUCTION-PLAN.md` (new), `ROADMAP-v2.md` §8 (five rows), `prompts/v2-hp-04-homepage-production.md`
-  (new), `HANDOVER.md`. Nothing of the published site, of its gates or of `prototypes/` changed. Disposition: *pending the author's answer at the end of the session.*
+  (new), `HANDOVER.md`. Nothing of the published site, of its gates or of `prototypes/` changed. Disposition: on the author's answer ("Yes, after recording (Recommended)"), a pull request to `main`, opened and not merged by the session; merging is the author's, with a merge commit. Final checkpoint approved (§8, "Final checkpoint of HP-03 approved").
 - **Not in this register before, reported at the start and left alone:** `claude/brave-goldberg-gm87jp` — one commit, `7e93f27` (12 Nov 2026, 18:12 UTC), one line of
   `js/datasets-page.js` ("Give the dataset explorer's record search field a name attribute"). Not this session's; unmerged; its owner and disposition are the author's.
 - Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed), as before.
