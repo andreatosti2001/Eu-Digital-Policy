@@ -360,3 +360,23 @@ pressed, but the walk is the script's, not a reader's. The 3D network turned ful
   author's decision; the measurement scores what is there.
 
 *Section 3 (Hybrid, PV2-05) follows when that session writes it.*
+
+## H · The homepage, direction C revised — HP-01, 12 Nov 2026 — outside the three-way comparison
+
+**Where:** `prototypes/homepage/`; its `README.md` is the record — what the page is, how to run it, the opening second by second, the
+decisions behind it, the files, what was checked and what was not. Read it, not this section. Branch `claude/funny-hamilton-yt9uh0`
+(`d1ea89b`, `9e19891`). The decisions are rows of `docs/ROADMAP-v2.md` §8, "HP-01: …", and live there.
+
+**Its place in block C.** It is the **homepage only**, chosen by the author for that view (§8, "HP-01: the homepage direction" and "HP-01:
+the homepage prototype built"), and it **supersedes PV2-05's homepage view only**: §3, when PV2-05 writes it, still covers the Hybrid's
+regulation page, article page and analytical view, and the selection among the three directions for those. Nothing of §0's perimeter changes
+for them.
+
+**What it keeps of the site, unchanged:** the title and standfirst read in place from `index.html`; the ticker, the status bands, the next
+deadlines, the fines and the last-checked line rendered by `js/masthead.js`; the doors by `js/shell.js`; the tree read in place from
+`#portalTree`; the counted set and the status order from `js/regulatory-model.js` (MC-2, #102, merged during the session — the prototype was
+adapted to it in `9e19891`).
+
+**Not measured with M1–M8** (§1.2): the README lists what was checked in the browser and what was not — contrast inside the figure, a screen
+reader, other browsers and low-density screens, performance, languages, the serpent's sharpness. HP-02 measures contrast and timing
+(`docs/prompts/v2-hp-02-homepage-follow-up.md`).
