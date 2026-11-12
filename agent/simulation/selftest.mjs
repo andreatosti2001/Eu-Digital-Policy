@@ -186,6 +186,7 @@ test('4 · a dispatcher that throws fails the workflow rather than being stepped
   const { Tracer } = await import('../observability/tracer.mjs');
   class Mem { constructor() { this.rows = []; } write(r) { this.rows.push(r); return r; } }
   const o = new Orchestrator({
+    allowSimulated: true, /* simulated specialists, by name: V-1 */
     tracer: new Tracer({ service: 'sim-suite', sink: new Mem() }),
     journal: new WorkflowJournal({ memory: true }),
     dispatchers: { ...simulationDispatchers(), 'legal-verifier': brokenDispatcher },

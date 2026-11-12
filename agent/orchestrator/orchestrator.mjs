@@ -81,9 +81,19 @@ export class Orchestrator {
   /**
    * @param {{tracer:object, journal?:WorkflowJournal, dispatchers?:object,
    *          records?:object, ledger?:object, root?:string,
-   *          now?:function}} opts
+   *          now?:function, allowSimulated?:boolean}} opts
+   *
+   * `allowSimulated` (default FALSE, since 11 Nov 2026 — P1 checkpoint,
+   * docs/AUDIT-2026-11-11-P1.md §5; was finding V-1 of
+   * docs/FIRST-END-TO-END-AUDIT.md): whether a record marked
+   * `simulated: true` may be admitted from a dispatcher. Until then it was
+   * hard coded TRUE, so every workflow admitted a fixture and routed it the
+   * whole way to a person. Only a harness that drives the Orchestrator with
+   * fixtures (agent/simulation/, the suites) opts in, by name, and the
+   * workflow record says it did.
    */
-  constructor({ tracer, journal = null, dispatchers = {}, records = null, ledger = null, root = undefined, now = () => new Date().toISOString() } = {}) {
+  constructor({ tracer, journal = null, dispatchers = {}, records = null, ledger = null, root = undefined, now = () => new Date().toISOString(), allowSimulated = false } = {}) {
+    this.allowSimulated = allowSimulated === true;
     this.tracer = tracer;
     this.journal = journal ?? new WorkflowJournal();
     this.dispatchers = dispatchers;
@@ -492,7 +502,7 @@ export class Orchestrator {
     const admitted = [];
     const refusals = [];
     for (const record of offered) {
-      try { receive(record, { allowSimulated: true }); }
+      try { receive(record, { allowSimulated: this.allowSimulated }); }
       catch (e) {
         refusals.push({ code: 'invalid_record', why: `a record from "${stage.agent}" does not satisfy its own contract: ${e.message}`, closes: 'agent/schemas/gateway.mjs validates at the boundary and has no flag that skips it. An invalid record dies here rather than three agents later.' });
         continue;

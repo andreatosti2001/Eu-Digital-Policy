@@ -220,7 +220,7 @@ export async function runCycle({ traceDir = null, quiet = true } = {}) {
   /* ---------------------------------------------- legs 1–5, 7, 8 */
   for (const leg of LEGS.filter((l) => !l.needs_authorization)) {
     const journal = new WorkflowJournal({ dir: world.dirs.journal });
-    const o = new Orchestrator({ tracer, journal, dispatchers, now: () => SIM_NOW, root: REPO_ROOT });
+    const o = new Orchestrator({ tracer, journal, dispatchers, now: () => SIM_NOW, root: REPO_ROOT, allowSimulated: true /* a simulation, by name: V-1 */ });
     const result = await o.handle({ ...leg.event, workflow_type: leg.workflow_type });
     legs.push({ ...leg, result });
     if (!quiet) process.stdout.write(`leg ${leg.leg} ${leg.workflow_type} → ${result.state}\n`);
@@ -310,7 +310,7 @@ function approvalRequestFor(proposal) {
 async function runImplementation(world, tracer, dispatchers, proposal, leg) {
   const journal = new WorkflowJournal({ dir: world.dirs.journal });
   const o = new Orchestrator({
-    tracer, journal, dispatchers, now: () => SIM_NOW, root: REPO_ROOT,
+    tracer, journal, dispatchers, now: () => SIM_NOW, root: REPO_ROOT, allowSimulated: true, /* a simulation, by name: V-1 */
     records: readAgentRecords({ dir: world.dirs.records }),
     ledger: readLedger({ dir: world.dirs.decisions }),
   });
