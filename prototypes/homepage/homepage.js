@@ -4,7 +4,10 @@
    The brief's tree at the centre; around it the sixteen core instruments,
    each beside the part that reads it (brief_part), marked by status;
    beyond them, in three rings, the instruments this site maps, watches or
-   excludes (js/routes.js coverage()). On a first visit the site's own mark
+   excludes (js/routes.js coverage()). Every instrument the masthead's bands
+   count (core and adjacent: js/regulatory-model.js, the one home of that
+   set and of the status order, MC-2) carries its status mark wherever its
+   ring puts it; a plain dot is an instrument the bands do not count. On a first visit the site's own mark
    opens the figure: the icon grows, turning, into the serpent around the
    empty core, its body fades, and its beads close in on the core, where
    the instruments take their place.
@@ -19,6 +22,7 @@
 
 import { loadAll, index, label as taxLabel, renderError } from '../../js/data.js';
 import { coverage, instrumentHref, href } from '../../js/routes.js';
+import { STATUS_ORDER, statusPart, coveredInstruments } from '../../js/regulatory-model.js';
 import { NAV, initShell } from '../../js/shell.js';
 import { initMasthead } from '../../js/masthead.js';
 import { initPalette } from '../../js/palette.js';
@@ -62,7 +66,8 @@ const reduceMotion = () => window.matchMedia && window.matchMedia('(prefers-redu
 
 /* ---------------------------------------------------------- status → shape
    Status is never carried by hue alone (docs/PROJECT-CONTEXT.md, principle 6):
-   each status is a shape. Labels come from the taxonomy, the enum authority. */
+   each status is a shape. Labels come from the taxonomy, the enum authority;
+   the order of the statuses is js/regulatory-model.js STATUS_ORDER. */
 const SHAPE = {
   'status:applicable': 'full',
   'status:partly-applicable': 'half',
@@ -74,7 +79,6 @@ const SHAPE = {
   'status:trilogue': 'dashed', 'status:political-agreement': 'dashed', 'status:stalled': 'dashed',
   'status:amended': 'slash', 'status:repealed': 'slash', 'status:withdrawn': 'slash',
 };
-const STATUS_ORDER = Object.keys(SHAPE);
 const shapeOf = (status) => SHAPE[status] || 'none';
 
 function drawMark(parent, x, y, r, shape) {
@@ -245,8 +249,10 @@ async function buildFigure() {
   const brief = db.brief;
   const tree = readTree(doc, brief);
   const instruments = db.instruments.instruments || [];
-  const core = instruments.filter((i) => i.scope_class === 'scope:core');   // the masthead's own set
+  const core = instruments.filter((i) => i.scope_class === 'scope:core');
   const coreIds = new Set(core.map((i) => i.id));
+  /* the set the bands count (core and adjacent), from its one home */
+  const counted = new Set(coveredInstruments(instruments).map((i) => i.id));
   const outer = { mapped: [], watched: [], excluded: [] };
   for (const i of instruments) {
     if (coreIds.has(i.id)) continue;
@@ -289,10 +295,12 @@ async function buildFigure() {
     const dots = list.map((inst, k) => {
       const a = rad(r.a0 + k * (360 / Math.max(list.length, 1)));
       const x = CX + r.R * Math.cos(a), y = CY + r.R * Math.sin(a);
-      const g = svg('g', { class: 'dot-g' + (due.has(inst.id) ? ' due' : ''), opacity: 0 }, L.rings);
-      const inner = svg('g', { class: 'mk-in' }, g);
-      svg('circle', { cx: x, cy: y, r: 5.5, class: 'dot ' + r.key[0] }, inner);
-      svg('title', {}, g).textContent = `${inst.short_name} — ${r.word.toLowerCase()}`;
+      const isCounted = counted.has(inst.id);
+      const g = svg('g', { class: 'dot-g' + (due.has(inst.id) ? ' due' : '') + (isCounted ? ' counted' : ''), opacity: 0 }, L.rings);
+      if (isCounted) { const m = drawMark(g, x, y, 6, shapeOf(statusPart(inst))); m.classList.add('mk-in'); }
+      else { const inner = svg('g', { class: 'mk-in' }, g); svg('circle', { cx: x, cy: y, r: 5.5, class: 'dot ' + r.key[0] }, inner); }
+      svg('title', {}, g).textContent = `${inst.short_name} — ${r.word.toLowerCase()}` +
+        (isCounted ? ` · ${inst.scope_class === 'scope:adjacent' ? 'adjacent' : 'core'} · ${taxLabel(ix, statusPart(inst)) || 'status not recorded'}` : '');
       if (due.has(inst.id)) {
         svg('circle', { cx: x, cy: y, r: 10.5, class: 'duering' }, g);
         const tx = svg('text', { x: x - 14, y: y + 4, class: 'lb due-only', 'text-anchor': 'end' }, g);
@@ -330,13 +338,13 @@ async function buildFigure() {
   const coreEls = sortedCW.map(({ inst, a }, idx) => {
     const x = CX + RC * Math.cos(rad(a)), y = CY + RC * Math.sin(rad(a));
     const part = partOf.get(inst.brief_part);
-    const statusWord = taxLabel(ix, inst.legislative_status) || 'status not recorded';
+    const statusWord = taxLabel(ix, statusPart(inst)) || 'status not recorded';
     const isDue = due.has(inst.id);
     const link = svg('a', { href: instrumentHref(inst, ix), class: 'mk fx' + (isDue ? ' due' : ''), 'data-inst': inst.id,
       'data-part': part ? part.id : '', opacity: 0, tabindex: -1,
       'aria-label': `${inst.short_name} — ${statusWord} — ${part ? 'analysed in ' + partWord(part) : 'no part of the brief recorded'}` }, L.core);
     svg('circle', { cx: x, cy: y, r: 13, class: 'fr' }, link);
-    drawMark(link, x, y, 8.5, shapeOf(inst.legislative_status));
+    drawMark(link, x, y, 8.5, shapeOf(statusPart(inst)));
     if (isDue) svg('circle', { cx: x, cy: y, r: 14, class: 'duering' }, link);
     const pulse = svg('circle', { cx: x, cy: y, r: 10, class: 'pulse', opacity: 0 }, L.core);
     const co = Math.cos(rad(a)), si = Math.sin(rad(a));
@@ -426,7 +434,8 @@ async function buildFigure() {
   const cap = $('#hpCaption');
   const countBy = (k) => outer[k].length;
   const parts = tree.nodes.filter((n) => n.kind !== 'annex').length, annexes = tree.nodes.length - parts;
-  const defaultCaption = `<p class="hp-cap-default">${parts} parts and ${annexes} annexes of the brief at the centre; around them the ${core.length} core instruments, each beside the part that reads it; further out, ${countBy('mapped')} mapped, ${countBy('watched')} watched and ${countBy('excluded')} excluded.</p>`;
+  const adjacentOut = instruments.filter((i) => counted.has(i.id) && !coreIds.has(i.id)).length;
+  const defaultCaption = `<p class="hp-cap-default">${parts} parts and ${annexes} annexes of the brief at the centre; around them the ${core.length} core instruments, each beside the part that reads it; further out, ${countBy('mapped')} mapped, ${countBy('watched')} watched and ${countBy('excluded')} excluded. The ${adjacentOut} adjacent instruments the bands below also count keep their status mark out there.</p>`;
   cap.innerHTML = defaultCaption;
   function clear() {
     fig.querySelectorAll('.hl').forEach((n) => n.classList.remove('hl'));
@@ -446,7 +455,7 @@ async function buildFigure() {
     c.el.classList.add('hl');
     const part = partOf.get(c.inst.brief_part);
     if (part) { fig.querySelector(`.tn[data-part="${part.id}"]`)?.classList.add('hl'); c.tie?.classList.add('on'); }
-    const st = taxLabel(ix, c.inst.legislative_status) || 'Status not recorded';
+    const st = taxLabel(ix, statusPart(c.inst)) || 'Status not recorded';
     cap.innerHTML = `<p class="hp-cap-k">${esc(st)}</p><p class="hp-cap-t">${esc(c.inst.short_name)}</p>` +
       `<p class="hp-cap-m">${part ? 'Analysed in ' + esc(partWord(part)) : 'No part of the brief recorded'}` +
       `${due.has(id) ? ' · next dated event in ' + esc(dayWord(due.get(id))) : ''}</p>`;
@@ -501,7 +510,7 @@ async function buildFigure() {
   }));
 
   /* ---- the legend: the statuses present among the core instruments, labelled by the taxonomy */
-  const present = [...new Set(core.map((i) => i.legislative_status))]
+  const present = [...new Set(coveredInstruments(instruments).map(statusPart))]
     .sort((a, b) => (STATUS_ORDER.indexOf(a) + 1 || 99) - (STATUS_ORDER.indexOf(b) + 1 || 99));
   const legend = $('#hpLegend');
   for (const s of present) {
@@ -517,7 +526,7 @@ async function buildFigure() {
     if (!coreByPart.has(i.brief_part)) coreByPart.set(i.brief_part, []);
     coreByPart.get(i.brief_part).push(i);
   }
-  const instLi = (i) => `<li><a href="${esc(instrumentHref(i, ix))}">${esc(i.short_name)}</a> <span>${esc(taxLabel(ix, i.legislative_status) || 'status not recorded')}</span></li>`;
+  const instLi = (i) => `<li><a href="${esc(instrumentHref(i, ix))}">${esc(i.short_name)}</a> <span>${esc(taxLabel(ix, statusPart(i)) || 'status not recorded')}</span></li>`;
   const noPart = core.filter((i) => !partOf.has(i.brief_part));
   $('#hpListBody').innerHTML =
     '<ol class="hp-list-parts">' + tree.nodes.map((n) => {
@@ -526,7 +535,7 @@ async function buildFigure() {
         (list.length ? `<ul>${list.map(instLi).join('')}</ul>` : '') + '</li>';
     }).join('') + '</ol>' +
     (noPart.length ? `<p class="hp-k">Core instruments with no part of the brief recorded</p><ul>${noPart.map(instLi).join('')}</ul>` : '') +
-    ['mapped', 'watched', 'excluded'].map((k) => `<p class="hp-k">${k} · ${outer[k].length}</p><p class="hp-list-names">${outer[k].map((i) => esc(i.short_name)).join(' · ')}</p>`).join('');
+    ['mapped', 'watched', 'excluded'].map((k) => `<p class="hp-k">${k} · ${outer[k].length}</p><p class="hp-list-names">${outer[k].map((i) => esc(i.short_name) + (counted.has(i.id) ? ` (adjacent, ${esc(taxLabel(ix, statusPart(i)) || 'status not recorded')})` : '')).join(' · ')}</p>`).join('');
   if (window.matchMedia('(max-width: 640px)').matches) $('#hpList').open = true;
 
   /* ---- play the opening once, or show the figure as it ends */

@@ -21,10 +21,13 @@ HTTP, like the site.
 2. **The figure** (`homepage.js`):
    - **at the centre, the brief's tree**: the thirteen nodes and their paths read in place from `#portalTree` in `index.html`, titles and
      reading times from `data/brief.json`; each node links to its part;
-   - **on the core ring, the core instruments** — the same set the masthead counts (`scope_class` `scope:core`) — each placed beside the
-     part that reads it (`brief_part` in `data/instruments.json`), the ones with no part recorded along the bottom; **status by shape**
-     (filled, half, heavy ring, ring with a dot, dashed …), labelled from `data/taxonomy.json`, never by hue alone;
+   - **on the core ring, the core instruments** (`scope_class` `scope:core`), each placed beside the part that reads it (`brief_part` in
+     `data/instruments.json`), the ones with no part recorded along the bottom; **status by shape** (filled, half, heavy ring, ring with a
+     dot, dashed …), labelled from `data/taxonomy.json`, never by hue alone;
    - **three outer rings**: the other instruments by `coverage()` (`js/routes.js`) — mapped, watched, excluded;
+   - **one rule joins the figure to the bands below**: every instrument the bands count — core and adjacent, `coveredInstruments()` in
+     `js/regulatory-model.js`, the one home of that set and of the status order since MC-2 (#102) — carries its status mark wherever its
+     ring puts it (the five adjacent ones on the mapped and watched rings); a plain dot is an instrument the bands do not count;
    - **two lenses**: *Status* and *Falls due next* (dated events in the next 90 days, from `data/timeline.json`, counted in UTC days);
    - hover or focus names a part or an instrument and draws the link between them; **one Tab stop**, the arrow keys walk the parts in
      reading order and then the ring clockwise; the same content as a **list** under the figure (open by default on a phone).
@@ -56,15 +59,15 @@ and how this prototype relates to PV2-05 (`docs/prompts/v2-pv2-05-prototype-hybr
 | File | What it is |
 |---|---|
 | `index.html` | The page: the site's CSP (`script-src 'self'`, no inline script, no `style` attribute), `noindex`, the site's four stylesheets in the site's order. |
-| `homepage.js` | The figure, its opening, the lenses, the list, the marks on the ticker and bands. Imports `js/data.js`, `js/routes.js`, `js/shell.js`, `js/masthead.js`, `js/palette.js` and `prototypes/editorial/brief.js` unchanged. |
+| `homepage.js` | The figure, its opening, the lenses, the list, the marks on the ticker and bands. Imports `js/data.js`, `js/routes.js`, `js/regulatory-model.js` (`STATUS_ORDER`, `statusPart`, `coveredInstruments`), `js/shell.js`, `js/masthead.js`, `js/palette.js` and `prototypes/editorial/brief.js` unchanged; it counts nothing by status itself. |
 | `homepage.css` | Layout and the figure's styles, in the site's tokens only. |
 | `assets/serpent-body-day.png` · `assets/serpent-body-night.png` · `assets/serpent-beads.json` | **Derived from `img/icons/icon-512.png`** for the opening: the serpent without its gold disc, its beads painted over (Day); the same with the body lifted to `--ink-2` and a fine `--paper-dim` contour, computed at 4096 px and saved at 1024 px (Night); and the geometry of the 22 beads, measured once from the icon. Artwork, not records. |
 
 ## What was checked, 12 Nov 2026
 
 In headless Chromium (Playwright) against `python3 -m http.server`: 1440 × 900 and 390 × 844, Day and Night — no console error, no CSP
-violation, only `localhost` requested, no horizontal scroll; 13 tree nodes, 16 core instruments, 23 outer instruments and 5 status bands,
-as the data gives them. The opening plays on a first visit and not on the next; it ends with the mark removed from the drawing; with reduced
+violation, only `localhost` requested, no horizontal scroll; 13 tree nodes, 16 core instruments, 23 outer instruments (5 of them adjacent,
+with their status mark) and 6 status bands, as the data gives them on `main` `33ee004` (after MC-2). The opening plays on a first visit and not on the next; it ends with the mark removed from the drawing; with reduced
 motion the final state is drawn at once and no animation runs. Keyboard: the figure is one Tab stop, Tab reaches Part I, the arrow keys move
 and the caption follows the focus. The site's validators were run with the prototype in place: `validate`, `i18n-audit`, `design-qa`,
 `freshness`, `evidence-audit`, `seo-audit` all exit 0 with 0 errors, and the warnings (5 and 11) are those of the same commit without the
