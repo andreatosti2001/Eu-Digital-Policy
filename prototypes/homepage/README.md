@@ -61,7 +61,8 @@ and how this prototype relates to PV2-05 (`docs/prompts/v2-pv2-05-prototype-hybr
 | `index.html` | The page: the site's CSP (`script-src 'self'`, no inline script, no `style` attribute), `noindex`, the site's four stylesheets in the site's order. |
 | `homepage.js` | The figure, its opening, the lenses, the list, the marks on the ticker and bands. Imports `js/data.js`, `js/routes.js`, `js/regulatory-model.js` (`STATUS_ORDER`, `statusPart`, `coveredInstruments`), `js/shell.js`, `js/masthead.js`, `js/palette.js` and `prototypes/editorial/brief.js` unchanged; it counts nothing by status itself. |
 | `homepage.css` | Layout and the figure's styles, in the site's tokens only. |
-| `assets/serpent-body-day.png` · `assets/serpent-body-night.png` · `assets/serpent-beads.json` | **Derived from `img/icons/icon-512.png`** for the opening: the serpent without its gold disc, its beads painted over (Day); the same with the body lifted to `--ink-2` and a fine `--paper-dim` contour, computed at 4096 px and saved at 1024 px (Night); and the geometry of the 22 beads, measured once from the icon. Artwork, not records. |
+| `assets/serpent-original.png` | **The author's own drawing of the serpent** (1920 × 1080 raster, transparent outside the gold disc), supplied on 12 Nov 2026 for HP-02. The source of everything below; not edited. |
+| `assets/serpent-mark.png` · `assets/serpent-body-day.png` · `assets/serpent-body-night.png` · `assets/serpent-beads.json` | **Derived from that drawing by `assets/derive-serpent.py`**, by colour and connectivity only, nothing traced or redrawn: the disc's 1000 × 1000 square as drawn (the opening's first frames); the serpent without the gold ground, its beads painted over with its own ink (Day); the same with the body lifted to `--ink-2` and a fine `--paper-dim` contour, computed at 4× (Night); and the geometry of the 22 beads, measured as ellipses from the connected cream components. The three files HP-01 derived from `img/icons/icon-512.png` are replaced; **`img/icons/` is untouched** and the page no longer reads it. Artwork, not records. |
 
 ## What was checked, 12 Nov 2026
 
@@ -81,6 +82,5 @@ prototype.
   non-retina display.
 - **Performance** of the opening on a slow device was not timed.
 - **Languages**: English only; the site's it / fr / es editions are not wired.
-- **Sharpness of the serpent**: it is enlarged from the 512 px icon. A vector drawing of the serpent would make it sharp and would make the
-  Night contour an exact stroke instead of a raster file.
+- **Sharpness of the serpent**: HP-02 replaced the 512 px icon with the author's drawing, which is a **raster** (the serpent spans about 650 × 715 px, against about 380 px in the icon), so it is about 1.7× sharper but is still enlarged on screen, and on a 2× display more than on a 1× one. A vector drawing would make it exact and would make the Night contour a stroke. The author's drawing frames the serpent smaller in its disc than the site icon does (about 65 % of the disc's width, against about 74 %), so the opening's first frame is not pixel-identical to the header's mark.
 - **Not built**: the *Enforcement* and *Relationships* lenses of the earlier design.

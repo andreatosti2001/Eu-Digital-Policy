@@ -369,9 +369,9 @@ async function buildFigure() {
   const coverLb = svg('text', { x: CX + RC * Math.cos(rad(-62)) + 8, y: CY + RC * Math.sin(rad(-62)) - 4, class: 'ring-lb', opacity: 0 }, L.labels);
   coverLb.textContent = `CORE · ${core.length}`;
 
-  /* the mark: the site's icon, the serpent's body, and its beads as shapes */
-  const H = beads.hole_centre, S1 = 512 * (RC + 7) / beads.hole_radius;
-  const icon = svg('image', { href: '../../img/icons/icon-512.png', width: 0, height: 0, opacity: 0 }, L.mark);
+  /* the mark: the author's serpent drawing (the disc, then the body) and its beads as shapes */
+  const H = beads.hole_centre, U = beads.size, S1 = U * (RC + 7) / beads.hole_radius;   // U: the side of the drawing's square, in its own units
+  const icon = svg('image', { href: 'assets/serpent-mark.png', width: 0, height: 0, opacity: 0 }, L.mark);
   const body = svg('image', { href: '', width: 0, height: 0, opacity: 0 }, L.mark);
   const bodyHref = () => (theme() === 'light' ? 'assets/serpent-body-day.png' : 'assets/serpent-body-night.png');
   body.setAttribute('href', bodyHref());
@@ -384,7 +384,7 @@ async function buildFigure() {
     /* the mark grows and turns counter-clockwise, head first, from upside down */
     const ko = outCubic(lin(t, 0.3, 1.0));
     const S = 76 + (S1 - 76) * ko, rot = 180 * (1 - ko);
-    const tr = `translate(${f2(CX)},${f2(CY)}) rotate(${f2(rot)}) translate(${f2(-H[0] * S / 512)},${f2(-H[1] * S / 512)})`;
+    const tr = `translate(${f2(CX)},${f2(CY)}) rotate(${f2(rot)}) translate(${f2(-H[0] * S / U)},${f2(-H[1] * S / U)})`;
     const oA = seg(t, 0, 0.3) * (1 - seg(t, 0.35, 0.85));
     const oB = 0.88 * seg(t, 0.35, 0.85) * (1 - seg(t, 0.85, 1.25));
     set(icon, { width: S, height: S, transform: tr, opacity: oA });
@@ -393,7 +393,7 @@ async function buildFigure() {
     const on = seg(t, 0.35, 0.85), warm = seg(t, 0.9, 1.3), mv = seg(t, 1.1, 2.25), gone = seg(t, 2.0, 2.35);
     const g = gold();
     const col = `rgb(${Math.round(240 + (g[0] - 240) * warm)},${Math.round(224 + (g[1] - 224) * warm)},${Math.round(174 + (g[2] - 174) * warm)})`;
-    const kk = S / 512, th = rad(rot);
+    const kk = S / U, th = rad(rot);
     beads.beads.forEach((b, i) => {
       const ux = (b[0] - H[0]) * kk, uy = (b[1] - H[1]) * kk;
       const x0 = ux * Math.cos(th) - uy * Math.sin(th), y0 = ux * Math.sin(th) + uy * Math.cos(th);
