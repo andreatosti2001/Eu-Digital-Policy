@@ -560,7 +560,7 @@ function structureView(rec, key) {
   draw();
 
   /* search inside the record */
-  const q = el('input', { type: 'search', class: 'dx-find', placeholder: 'Find in this record', 'aria-label': 'Find in this record', autocomplete: 'off' });
+  const q = el('input', { type: 'search', name: 'dx-find', class: 'dx-find', placeholder: 'Find in this record', 'aria-label': 'Find in this record', autocomplete: 'off' });
   const out = el('span', { class: 'dx-find-n', 'aria-live': 'polite' });
   const next = el('button', { type: 'button', class: 'dx-zbtn', text: 'Next', disabled: true });
   let hits = [], at = -1;
