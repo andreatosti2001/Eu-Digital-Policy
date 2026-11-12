@@ -38,7 +38,7 @@ HTTP, like the site.
 
 | Time | What happens |
 |---|---|
-| 0–0.3 s | The site icon appears at the centre, upside down. |
+| 0–0.3 s | The mark — the author's drawing, the serpent in its gold disc (`assets/serpent-mark.png`) — appears at the centre, upside down. |
 | 0.3–1.0 s | It grows and turns 180° counter-clockwise, head first; its gold disc fades. |
 | 0.85–1.25 s | The serpent's body fades as the turn settles; its 22 beads remain and warm to gold. |
 | 0.95–1.9 s | The tree draws itself in reading order inside the ring of beads. |
@@ -51,8 +51,8 @@ HTTP, like the site.
 Direction C of the homepage exploration, revised to stay compatible with the published homepage: the tree stays at the centre, the record
 around it in rings by coverage; the sections below the figure keep their content; the site icon opens the figure, sober; the serpent's body
 fades before its beads; the beads become the core instruments by one contraction (not split across two orbits); the turn is
-counter-clockwise; in Night the serpent keeps a fine light contour. **These decisions are not yet recorded in `docs/ROADMAP-v2.md` §8**,
-and how this prototype relates to PV2-05 (`docs/prompts/v2-pv2-05-prototype-hybrid-selection.md`) is not decided.
+counter-clockwise; in Night the serpent keeps a fine light contour. These decisions are recorded in `docs/ROADMAP-v2.md` §8 ("HP-01: …"), with the author's words, and this prototype **supersedes PV2-05's homepage view only**
+(`docs/prompts/v2-pv2-05-prototype-hybrid-selection.md`, its note of 12 Nov 2026). HP-02's decisions are there too ("HP-02: …").
 
 ## Files
 
@@ -64,9 +64,60 @@ and how this prototype relates to PV2-05 (`docs/prompts/v2-pv2-05-prototype-hybr
 | `assets/serpent-original.png` | **The author's own drawing of the serpent** (1920 × 1080 raster, transparent outside the gold disc), supplied on 12 Nov 2026 for HP-02. The source of everything below; not edited. |
 | `assets/serpent-mark.png` · `assets/serpent-body-day.png` · `assets/serpent-body-night.png` · `assets/serpent-beads.json` | **Derived from that drawing by `assets/derive-serpent.py`**, by colour and connectivity only, nothing traced or redrawn: the disc's 1000 × 1000 square as drawn (the opening's first frames); the serpent without the gold ground, its beads painted over with its own ink (Day); the same with the body lifted to `--ink-2` and a fine `--paper-dim` contour, computed at 4× (Night); and the geometry of the 22 beads, measured as ellipses from the connected cream components. The three files HP-01 derived from `img/icons/icon-512.png` are replaced; **`img/icons/` is untouched** and the page no longer reads it. Artwork, not records. |
 
+## Languages: the plan and the author's answer (HP-02, 12 Nov 2026) — **no translation is written here**
+
+**How the site translates today** (`i18n/locales.json`, `app.js`, `tools/i18n-audit.mjs`): an element carries `data-i18n="key"`; each locale file maps key → string;
+a key a locale lacks falls back to the English held in the DOM and is marked `data-i18n-fallback`; the register declares each gap `pending_translation` or
+`superseded` (`AGENTS.md`: correcting an English string without declaring its key `superseded` leaves the it / fr / es editions asserting the old one). An
+**entity overlay** (`i18n/<code>/data.json`) translates instrument names, statuses and event types. Whether an edition is indexable is derived from
+`i18n/review/<code>.json`, which a person alone writes: **on 12 Nov 2026 all three ledgers hold zero approved strings**, so no edition is indexable today and
+new keys change nothing for search until a person approves them. README limitation 8 already says the chrome and the tool pages are English; the published masthead
+(`js/masthead.js`) carries no `data-i18n`.
+
+**What the figure adds** — every string a reader sees or a screen reader hears, from `index.html` and `homepage.js`:
+
+| # | String (English) | Where | Kind |
+|---|---|---|---|
+| 1 | "Show on the map" | lens group label | static |
+| 2 | "Status" · "where the core rulebook stands" | lens 1 and its sub-label | static |
+| 3 | "Falls due next" · "the next 90 days" | lens 2 and its sub-label | static |
+| 4 | "The marks" | legend heading (its entries are status labels from `data/taxonomy.json`: the entity overlay) | static |
+| 5 | the figure's description (one sentence, the `aria-describedby` text) | figure | static |
+| 6 | "The figure, as a list" | `<summary>` | static |
+| 7 | "Mapped" · "Watched" · "Excluded" | ring labels (upper-cased by script) and list headings | generated |
+| 8 | "CORE · n" | core ring label | generated, number |
+| 9 | "along the bottom of the core: instruments with no part of the brief recorded" | in-figure caption | generated |
+| 10 | "Core instruments with no part of the brief recorded" | list heading | generated |
+| 11 | the default caption: "n parts and n annexes of the brief at the centre; around them the n core instruments, …; further out, n mapped, n watched and n excluded. The n adjacent instruments the bands below also count …" | caption panel | generated, five numbers |
+| 12 | "n min read" · "reading time not recorded" | part caption | generated, number |
+| 13 | "n core instrument(s): …" · "no core instrument …" | part caption | generated, number, **plural** |
+| 14 | "Analysed in Part …" · "No part of the brief recorded" · "Status not recorded" | instrument caption | generated |
+| 15 | "next dated event in n day(s)" | instrument caption | generated, number, **plural** |
+| 16 | "Falls due next · 90 days" · "No dated event recorded in the next 90 days." | lens caption | generated |
+| 17 | "n days" in the lens list; "n d" on a due label | lens caption, figure | generated, number, **plural**, abbreviation |
+| 18 | the mark's accessible name: "<instrument> — <status> — analysed in <part> / no part of the brief recorded" | every core mark | generated (aria) |
+| 19 | the part node's accessible name: "<part>: <title> — n min read" | every tree node | generated (aria) |
+| 20 | the ring dot's `<title>`: "<instrument> — mapped · adjacent · core · <status>" | every outer dot | generated (title) |
+
+Not counted: the prototype's own band ("Replay the opening", the build note), which would not ship; the Day / Night button and the doors, which the site's `js/shell.js`
+already renders; the part titles and reading times, read from `data/brief.json`.
+
+**Why this is more than adding keys.** Rows 7–20 are built in script, with numbers and plurals, and the site's mechanism translates *markup carrying `data-i18n`*: it
+has no function a script can call for a string with a number in it, and nothing in `tools/i18n-audit.mjs` would see an English string inside a template literal. Left
+alone, the it / fr / es homepage would show an **English figure under an Italian, French or Spanish masthead**, and no check would report it. Three honest routes:
+
+1. **English figure, declared.** Nothing enters the register; the figure says so as the chrome does (limitation 8). Cheapest, no new debt, and the first thing a reader
+   of an it / fr / es edition sees is English.
+2. **Static strings only (rows 1–6).** Six keys with `data-i18n`, declared `pending_translation`; rows 7–20 stay English. A figure half in one language: worse than 1.
+3. **Everything.** A small `t(key, params)` helper in a module under `js/` for the generated strings (with a plural rule per language), keys for rows 1–20, declared
+   `pending_translation` until a person writes and approves them. About twenty strings × three languages, **written and approved by a person** (`tools/i18n-review.mjs`);
+   an agent writes none. A change under `i18n/` is amber (`docs/AI-SAFE-BOUNDARIES.md` §2); that table does not tier `js/`, and the helper is a new mechanism, so it needs the author's decision.
+
+**The author chose route 1 on 12 Nov 2026** (§8, "HP-02: the languages"): English figure, declared. **Nothing here is a translation and none is wired.**
+
 ## What was checked, 12 Nov 2026
 
-In headless Chromium (Playwright) against `python3 -m http.server`: 1440 × 900 and 390 × 844, Day and Night — no console error, no CSP
+**HP-01 (the build).** In headless Chromium (Playwright) against `python3 -m http.server`: 1440 × 900 and 390 × 844, Day and Night — no console error, no CSP
 violation, only `localhost` requested, no horizontal scroll; 13 tree nodes, 16 core instruments, 23 outer instruments (5 of them adjacent,
 with their status mark) and 6 status bands, as the data gives them on `main` `33ee004` (after MC-2). The opening plays on a first visit and not on the next; it ends with the mark removed from the drawing; with reduced
 motion the final state is drawn at once and no animation runs. Keyboard: the figure is one Tab stop, Tab reaches Part I, the arrow keys move
@@ -74,13 +125,44 @@ and the caption follows the focus. The site's validators were run with the proto
 `freshness`, `evidence-audit`, `seo-audit` all exit 0 with 0 errors, and the warnings (5 and 11) are those of the same commit without the
 prototype.
 
+**HP-02 (the measures; scripts were scratch work and are not committed — the method is described here so it can be repeated).**
+
+- **Contrast inside the figure.** `docs/FRONTEND-REFERENCES.md` §4 M2 reads a computed `color` over the nearest opaque ancestor background, and an SVG's text and marks are
+  painted with `fill` and `stroke`, so **M2 does not apply to the figure** and was not used. Instead, for each text, shape and mark in the figure and the panels around it:
+  its resolved paint (`fill` or `stroke`, times every ancestor's opacity) against the pixels it covers, sampled with that element hidden (so the body's gradient is
+  measured). 528 element readings across four states (Day / Night × the default and the "Falls due next" lens), at 1440 × 900. Thresholds: 4.5 : 1 for text, 3 : 1 for
+  a graphic. **Before:** the default state passed for text (minimum 4.82), dots, marks and node outlines, and failed for the three rings (1.41 Night / 1.59 Day) and the tree's
+  lines (1.31 / 1.38); the lens failed widely — an opacity of .25–.45 took labels, marks and rings to 1.4–2.6 : 1 — and the Day caption heading in `--live` was 3.84. **Corrected,
+  with the site's tokens only** (`homepage.css`): rings and tree lines to `--paper-faint`; what is not due in the lens is set back by tone (`--paper-faint`) instead of by
+  opacity; Day text that was in `--live` takes `--paper` / `--paper-dim`. A real defect surfaced on the way: a due label on an outer ring (`lb due-only`) was dimmed to 30 %
+  by the rule meant for the labels of instruments not due, in the lens built to show it. **After:** every group passes, the lowest being the Day due ring at 3.27 : 1 (3 needed)
+  and Night text at 4.98. **Cost, visible:** the rings and the tree's lines are now clearly present, where they were a quiet tint — **the author kept it** (§8, "Keep, they pass (Recommended)"). **The Night contour** (the serpent's body is `--ink-2` on `--ink-0`, 1.05 : 1, so the contour is its only edge) was 0.58 screen px wide: its painted pixels
+  averaged 2.59 : 1 at 1 × and 3.07 : 1 at 2 × (peak 3.74 / 4.29). Widened to 1.5 source px (about 1 screen px): **4.61 : 1 at 1 × and 5.35 : 1 at 2 ×**.
+  *Not measured:* hover and focus states (the caption heading was measured in the lens only), the opening's transient frames other than the contour, a high-contrast mode.
+- **Timing of the opening.** Chromium (the pre-installed headless build, software rendering, no GPU) with `Emulation.setCPUThrottlingRate` at 1 ×, 4 × and 6 ×, three runs each, 1440 × 900 and
+  390 × 844 at 2 ×; every `requestAnimationFrame` interval from the first frame of the mark to the mark being hidden; a frame counts as dropped above 25 ms. **The timeline holds:**
+  4.0 s (END 3.4 + 0.6) in every condition, because the animation is driven by the clock, not by frames. **At 1 ×: 0 dropped frames of about 240, worst 16.8 ms, both
+  widths.** At 4 ×: 0–8 dropped on desktop, 2–22 on mobile, worst 33 ms. At 6 ×: 15–37 on desktop, 22–60 on mobile (about 10–30 % of frames), worst 33–67 ms, p95 33 ms —
+  it stutters at about 30 fps. **No long task (> 50 ms) was seen in any run.** The version before HP-02 gave the same counts within the spread (three runs do not resolve
+  differences smaller than that). The cost of a frame's script, measured separately at 6 ×: median **4.3 ms → 2.5 ms**, max 11.6 → 8.3, after `set()` was made to write only
+  what changed (and two per-frame DOM lookups were cached); a frame is 16.7 ms, so script is inside the budget at every speed measured and **the stutter at 6 × is rendering**
+  (two large rotated images and 326 SVG elements in the figure, 165 of them shapes and 35 text, counted on 12 Nov 2026), which the throttle slows and this machine cannot separate. **The author accepted the timing as measured** (§8); a real phone is the step the production plan keeps. The sequence was not changed; the pixel output
+  of the lighter writes was compared against a fresh render at six moments in both themes: identical. *Not measured:* a real phone, a GPU, any browser but Chromium, the page's load time.
+- **Labels that touch.** Boxes of every label and every mark, in both lens states, with 3 px of clearance. Found at the bottom of the core and on the right: the DMA label on a
+  mapped dot, the WATCHED ring label on a dot, the eIDAS2 and Revised PLD due labels on dots and on other labels, and *Digital Networks Act* on *EHDS* and on the Revised PLD mark.
+  `settleLabels()` (new, `homepage.js`) tries nearby positions for core, ring and due labels and keeps the first that clears everything — **capped at 26 units (34 for a due label beside
+  its own dot)**, because a label moved further reads as the name of the next mark along, which an earlier uncapped version did to *EHDS*. **Cleared: DMA, WATCHED, eIDAS2, Revised PLD.
+  Not cleared: *Digital Networks Act*,** which is about 126 units wide at the height of the mapped ring, where two mapped dots leave about 84; the gap between the core marks and
+  the mapped dots is 13 units, less than one line of text, and no phase of the mapped ring changes that, so *Digital Networks Act* still crosses the mark of Revised PLD and touches
+  *EHDS*. **The author chose to leave it and say so** (§8, "HP-02: the measures"); the alternatives put were a leader line with the label below the mapped ring, and a second line.
+  What it moved and what it could not resolve is in `window.__hpLabels`.
+- **Validators** on the tree after these changes: `validate`, `i18n-audit`, `design-qa`, `freshness`, `evidence-audit`, `seo-audit` exit 0; `tools/selftest.mjs` 189 / 189, as on `main`.
+
 ## What was not checked
 
-- **Contrast was not measured** inside the figure (ring labels in `--paper-faint`, dashed dots, the Night contour); it was judged by eye.
 - **No screen reader** was run; names and roles are read from the markup, not heard.
-- **Other browsers and low-density screens**: Chromium only. The Night contour is about 0.7 px on screen and may break up on a
-  non-retina display.
-- **Performance** of the opening on a slow device was not timed.
-- **Languages**: English only; the site's it / fr / es editions are not wired.
-- **Sharpness of the serpent**: HP-02 replaced the 512 px icon with the author's drawing, which is a **raster** (the serpent spans about 650 × 715 px, against about 380 px in the icon), so it is about 1.7× sharper but is still enlarged on screen, and on a 2× display more than on a 1× one. A vector drawing would make it exact and would make the Night contour a stroke. The author's drawing frames the serpent smaller in its disc than the site icon does (about 65 % of the disc's width, against about 74 %), so the opening's first frame is not pixel-identical to the header's mark.
+- **Other browsers**: Chromium only; **no real device**; **no GPU**.
+- **Hover and focus states** for contrast; the opening's transient frames except the Night contour.
+- **Sharpness of the serpent**: HP-02 replaced the 512 px icon with the author's drawing, which is a **raster** (the serpent spans about 650 × 715 px, against about 380 px in the icon), so it is about 1.7× sharper but is still enlarged on screen, and on a 2× display more than on a 1× one. A vector drawing would make it exact and would make the Night contour a stroke. The author's drawing frames the serpent smaller in its disc than the site icon does (about 65 % of the disc's width, against about 74 %), so the opening's first frame is not pixel-identical to the header's mark. The author accepted both (§8, "HP-02: C.1 approved").
+- **Languages**: English only, by the author's decision of 12 Nov 2026 (§8): the figure is declared English in the it / fr / es editions, as the chrome is; the plan above is what a later decision would start from.
 - **Not built**: the *Enforcement* and *Relationships* lenses of the earlier design.
