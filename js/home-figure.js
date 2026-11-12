@@ -223,8 +223,8 @@ const STAGE_HTML =
   '<div class="hp-side hp-lenses">' +
     '<p class="hp-k" id="homeLensLabel">Show on the map</p>' +
     '<div role="radiogroup" aria-labelledby="homeLensLabel">' +
-      '<button type="button" role="radio" aria-checked="true" data-lens="status"><b>Status</b><span>where the core rulebook stands</span></button>' +
-      '<button type="button" role="radio" aria-checked="false" tabindex="-1" data-lens="due"><b>Falls due next</b><span>the next 90 days</span></button>' +
+      '<button type="button" role="radio" aria-checked="true" data-hp-lens="status"><b>Status</b><span>where the core rulebook stands</span></button>' +
+      '<button type="button" role="radio" aria-checked="false" tabindex="-1" data-hp-lens="due"><b>Falls due next</b><span>the next 90 days</span></button>' +
     '</div>' +
     '<p class="hp-k">The marks</p>' +
     '<ul class="hp-legend" data-part="legend"></ul>' +
@@ -510,7 +510,7 @@ export async function initHomeFigure(ix) {
   });
 
   /* ---- lenses */
-  const lensBtns = [...mount.querySelectorAll('[data-lens]')];
+  const lensBtns = [...mount.querySelectorAll('[data-hp-lens]')];
   const lensName = () => (fig.classList.contains('lens-due') ? 'due' : 'status');
   const dueCaption = () => {
     const list = [...due.entries()].sort((a, b) => a[1].n - b[1].n)
@@ -520,15 +520,15 @@ export async function initHomeFigure(ix) {
   };
   function setLens(name) {
     fig.classList.toggle('lens-due', name === 'due');
-    lensBtns.forEach((b) => { const on = b.dataset.lens === name; b.setAttribute('aria-checked', String(on)); b.setAttribute('tabindex', on ? '0' : '-1'); });
+    lensBtns.forEach((b) => { const on = b.dataset.hpLens === name; b.setAttribute('aria-checked', String(on)); b.setAttribute('tabindex', on ? '0' : '-1'); });
     cap.innerHTML = name === 'due' ? dueCaption() : defaultCaption;
   }
-  lensBtns.forEach((b) => b.addEventListener('click', () => setLens(b.dataset.lens)));
+  lensBtns.forEach((b) => b.addEventListener('click', () => setLens(b.dataset.hpLens)));
   lensBtns.forEach((b, k) => b.addEventListener('keydown', (e) => {
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowRight' && e.key !== 'ArrowUp' && e.key !== 'ArrowLeft') return;
     e.preventDefault();
     const n = lensBtns[(k + (e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : lensBtns.length - 1)) % lensBtns.length];
-    n.focus(); setLens(n.dataset.lens);
+    n.focus(); setLens(n.dataset.hpLens);
   }));
 
   /* ---- the legend: the statuses present among the instruments the bands count, labelled by the taxonomy */
