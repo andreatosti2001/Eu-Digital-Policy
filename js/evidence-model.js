@@ -305,6 +305,9 @@ const days = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / DAY);
 const IN_PROCEDURE = /proposal|position|trilogue|agreement|stalled/;
 const CO_LEGISLATORS = new Set(['council', 'ep']);
 
+/** An enforcement record that can still change under a reader: its action is only announced, or an appeal is pending. */
+export const enforcementVolatile = (rec) => Boolean(rec) && (rec.action_status === 'action:announced' || (rec.appeal && rec.appeal.status) === 'appeal:pending');
+
 /**
  * The risk class of one record. `kind` is the dataset: 'claim',
  * 'enforcement', 'event' or 'instrument'. `asOf` is an ISO date and is
@@ -316,8 +319,12 @@ export function riskClass(kind, rec, { asOf, enforcementById, instrumentById } =
   if (kind === 'enforcement') {
     const a = rec.action_status;
     const ap = rec.appeal && rec.appeal.status;
-    if (a === 'action:announced' || ap === 'appeal:pending') return 'risk:critical';
-    if (ap === 'appeal:unknown' || rec.payment_status === 'payment:unknown' || a === 'action:appealed') return 'risk:high';
+    /* Only an action that is merely ANNOUNCED is critical (14 days): a preliminary finding becomes a decision or is dropped,
+       and that can happen any day. A PENDING APPEAL is high (30 days) since 12 Nov 2026 (the author's decision, docs/ROADMAP-v2.md
+       §8, "P1: the pending appeal's review interval"): an action before the General Court runs for years and its register is read
+       by a person. It was critical until then. enforcementVolatile() below keeps the claims' rule exactly as it was. */
+    if (a === 'action:announced') return 'risk:critical';
+    if (ap === 'appeal:pending' || ap === 'appeal:unknown' || rec.payment_status === 'payment:unknown' || a === 'action:appealed') return 'risk:high';
     return 'risk:medium';
   }
   if (kind === 'event') {
@@ -334,7 +341,10 @@ export function riskClass(kind, rec, { asOf, enforcementById, instrumentById } =
   if (!owesVerification(rec)) return 'risk:low';
   const get = getter(enforcementById);
   const linked = (rec.enforcement || []).map(get).filter(Boolean);
-  if (linked.some((e) => riskClass('enforcement', e) === 'risk:critical')) return 'risk:high';
+  /* a claim about a record that can still move inherits `high`. The test is the one this line always meant — announced or
+     under a pending appeal — and not the record's own class, which a decision of 12 Nov 2026 lowered for a pending appeal
+     only: the claims' intervals were not part of that decision and are unchanged (docs/AUDIT-2026-11-11-P1.md §8). */
+  if (linked.some(enforcementVolatile)) return 'risk:high';
   /* a co-legislator's stage on a file still in procedure: a Council
      mandate can form the day after the record was read */
   const inst = getter(instrumentById);

@@ -22,6 +22,8 @@
    not read the clock (AUDIT F-15).
    ============================================================ */
 
+import { riskClass, freshnessState } from './evidence-model.js';
+
 const APPLIES = new Set(['event:application', 'event:compliance-deadline', 'event:transposition']);
 export const PRE_ADOPTION = new Set(['status:proposal', 'status:parliament-position', 'status:council-position',
   'status:trilogue', 'status:political-agreement', 'status:stalled', 'status:withdrawn']);
@@ -121,4 +123,91 @@ export function statusAge(inst, ix, asOf) {
   const passedSince = events(inst, ix).filter((e) => e.date > inst.status_as_of && e.date <= asOf
     && !['event:adoption', 'event:publication'].includes(e.event_type));
   return passedSince.length ? passedSince : null;
+}
+
+/* ============================================================
+   Instruments by legislative status — the ONE computing function.
+
+   F-A7 → MC-2 (docs/DATA-READINESS.md §7 item 6, §8.1). Until 11 Nov 2026
+   js/masthead.js counted instruments by status twice itself (statusLedger()
+   and ticker()), over the 16 core instruments only, and knew 7 of the 16
+   status terms: an instrument at any other term would have been printed as
+   "with no status recorded". The card approved on 9 Nov 2026 counts the core
+   AND adjacent instruments (docs/ROADMAP-v2.md §8, "instruments card
+   question 2": the masthead follows); this is its function, held to the
+   contract by tools/metric-contract.mjs INSTRUMENTS_CARD.
+
+   WHAT IS COUNTED: the instruments whose scope_class is core or adjacent,
+   each in exactly one part, the part being its legislative_status. Every
+   status term of data/taxonomy.json is a part, in STATUS_ORDER, empty or
+   not, so a term an instrument moves to is counted under its own name and
+   never as "no status". A value outside the vocabulary is `unmapped`, in no
+   part — the contract (MC-5, MC-8) and tools/validate.mjs refuse it.
+   WHAT IS NOT: the referenced and out-of-scope instruments, named as
+   `excluded`, not dropped. No denominator, no share, no score.
+   PURE: `asOf` is passed in; without it the interval notice is not
+   computed (MC-9, MC-10). It reads the scalar, which instruments.json's
+   $note says is not sufficient on its own; the card says so (MC-15).
+   ============================================================ */
+
+/** The scopes the figure covers (the author's decision of 9 Nov 2026). */
+export const COVERED_SCOPES = Object.freeze(['scope:core', 'scope:adjacent']);
+export const coveredInstruments = (list) => (list || []).filter((i) => i && COVERED_SCOPES.includes(i.scope_class));
+
+/** Every `status:` term of data/taxonomy.json, in the order the obligations
+ *  bite — the masthead's order for the seven it printed, then the rest of
+ *  the procedure. The contract fails when the taxonomy gains a term this
+ *  list does not hold (MC-5 through STATUS_STATES), so it cannot fall behind
+ *  the vocabulary silently. */
+export const STATUS_ORDER = Object.freeze([
+  'status:applicable', 'status:partly-applicable', 'status:in-force',
+  'status:transposition-pending', 'status:transposition-overdue',
+  'status:published', 'status:adopted', 'status:political-agreement', 'status:trilogue',
+  'status:council-position', 'status:parliament-position',
+  'status:stalled', 'status:proposal',
+  'status:amended', 'status:repealed', 'status:withdrawn',
+]);
+/** Each term is a recorded status (`known`); a missing one was never
+ *  researched. One home; derived from STATUS_ORDER, never a second list. */
+export const STATUS_STATES = Object.freeze(Object.fromEntries([
+  ...STATUS_ORDER.map((t) => [t, 'known']), ['null', 'not_researched'],
+]));
+
+/** The part an instrument belongs to, or null when its status is outside the vocabulary. */
+export const statusPart = (inst) => (inst && STATUS_ORDER.includes(inst.legislative_status) ? inst.legislative_status : null);
+
+/** Whose status rests on nothing the record links: no status_basis and no milestone. */
+export const statusUnsupported = (inst) => !inst.status_basis && !(inst.milestones || []).length;
+
+/**
+ * @param {object[]} instruments  every instrument; the covered ones are selected here
+ * @param {{asOf?: string}} [opts]  an explicit ISO day for the interval notice; never the reader's clock
+ */
+export function instrumentsByStatus(instruments, { asOf = null } = {}) {
+  const all = instruments || [];
+  const inputs = coveredInstruments(all);
+  const parts = {};
+  for (const t of STATUS_ORDER) parts[t] = { records: [] };
+  const unmapped = [];
+  for (const i of inputs) {
+    const p = statusPart(i);
+    if (p) parts[p].records.push(i.id); else unmapped.push({ id: i.id, value: i.legislative_status ?? null });
+  }
+  const by_scope = Object.fromEntries(COVERED_SCOPES.map((s) => [s, inputs.filter((i) => i.scope_class === s).map((i) => i.id)]));
+  const excluded = {};
+  for (const i of all) if (!COVERED_SCOPES.includes(i.scope_class)) (excluded[i.scope_class ?? 'null'] ??= []).push(i.id);
+
+  const dated = inputs.filter((i) => i.status_as_of).map((i) => i.status_as_of).sort();
+  const as_of = { field: 'status_as_of', oldest: dated[0] ?? null, newest: dated[dated.length - 1] ?? null,
+    undated: inputs.filter((i) => !i.status_as_of).map((i) => i.id) };
+
+  const past_interval = asOf
+    ? inputs.map((i) => ({ id: i.id, state: freshnessState(i.last_verified, riskClass('instrument', i, { asOf }), asOf) }))
+      .filter((x) => x.state === 'freshness:review-due' || x.state === 'freshness:stale')
+    : null;
+
+  const weak = inputs.filter(statusUnsupported)
+    .map((i) => ({ id: i.id, name: i.short_name, status: i.legislative_status, why: ['no status_basis and no milestone'] }));
+
+  return { population: inputs.length, by_scope, parts, unmapped, excluded, as_of, interval_as_of: asOf, past_interval, weak };
 }

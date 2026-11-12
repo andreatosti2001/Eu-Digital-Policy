@@ -85,8 +85,8 @@ of the change, and that is a legitimate outcome.
 ## Per-record review by risk (27 September 2026)
 
 The intervals above are one per dataset. A second, per-record layer reads each record by what
-it is about: a pending appeal or a preliminary finding (critical, 14 days), institutional or
-implementation status (high, 30), general claims of fact and law (medium, 90), history and the
+it is about: a preliminary finding (critical, 14 days), a pending appeal, institutional or
+implementation status (high, 30; a pending appeal was critical until 12 Nov 2026, `docs/AUDIT-2026-11-11-P1.md` §8), general claims of fact and law (medium, 90), history and the
 author's own arguments (low, 365). A record is **fresh**, **aging**, **review due** or
 **stale** against its own `last_verified`. The numbers live in `js/evidence-model.js`
 `RISK_TTL_DAYS` and nowhere else; `docs/EVIDENCE-MODEL.md` §8 has the classes.

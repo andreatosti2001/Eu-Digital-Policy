@@ -1112,6 +1112,101 @@ test('G16 · a grant-based (autonomy) commit must name a grant the tracked grant
   assert.equal(status(gateOn(w), 'C7'), FAIL);
 });
 
+/* ---- merge commits: what a merge changes ITSELF is judged (11 Nov 2026, P1; docs/AUDIT-2026-11-11-P1.md §4) ---- */
+
+const LINES = ['{', '"a": 1,', '"b": 2,', '"c": 3,', '"d": 4,', '"e": 5,', '"f": 6,', '"g": 7', '}'].join('\n') + '\n';
+const setLine = (w, rel, from, to) => edit(w, rel, (s) => s.replace(from, to));
+/** main and a side branch from one base, each with its own commit to data/x.json; returns to main */
+function forked(w, { mainEdit = ['"g": 7', '"g": 70'], sideEdit = ['"a": 1,', '"a": 10,'], sideMsg = 'side change\n\nEvidence: a source' } = {}) {
+  writeFileSync(join(w.root, 'data', 'x.json'), LINES); commitAll(w.root, 'lines\n\nEvidence: a source');
+  git(w.root, ['checkout', '-q', '-b', 'side']);
+  setLine(w, 'data/x.json', ...sideEdit); commitAll(w.root, sideMsg);
+  git(w.root, ['checkout', '-q', 'main']);
+  setLine(w, 'data/x.json', ...mainEdit); commitAll(w.root, 'main change\n\nEvidence: a source');
+}
+/** merge `side` without committing, let `during` alter the result, then commit with `message` */
+function mergeWith(w, message, during = () => {}) {
+  try { git(w.root, ['merge', '--no-ff', '--no-commit', 'side']); } catch { /* a conflict: `during` resolves it */ }
+  during();
+  git(w.root, ['add', '-A']); git(w.root, ['commit', '-q', '-m', message]);
+  return git(w.root, ['rev-parse', 'HEAD']);
+}
+const ownOf = (r) => r.record.merges_with_own_content.map((m) => m.files);
+const MARK = '\n\nCo-Authored-By: Claude <noreply@anthropic.com>';
+
+test('G17 · MERGE COMMITS: a clean merge adds nothing of its own; content a merge adds is seen by C6, C7 and C8 — and was invisible before', async () => {
+  const { mergeOwnFiles } = await import('../../tools/commit-evidence.mjs');
+
+  /* 1 · both branches edit the same published file in different places, merged cleanly: no own content.
+         (`git diff-tree --cc` alone would name data/x.json here — the false positive the intersection removes) */
+  const w1 = gateWorld(); forked(w1);
+  const m1 = mergeWith(w1, `Merge side${MARK}`);
+  assert.deepEqual(git(w1.root, ['diff-tree', '--cc', '--name-only', '--no-commit-id', m1]).split('\n').filter(Boolean), ['data/x.json'], 'fixture: --cc alone over-reports');
+  assert.deepEqual(mergeOwnFiles(m1, { cwd: w1.root }), []);
+  const r1 = gateOn(w1);
+  assert.equal(r1.record.merges_judged, 1); assert.deepEqual(ownOf(r1), []); assert.equal(status(r1, 'C8'), PASS); assert.equal(r1.ok, true, JSON.stringify(r1.blocking));
+
+  /* 2 · an agent-marked merge that edits a published file ITSELF (the S5 shape of AUDIT-2026-11-11 §5): C8 sees it */
+  const w2 = gateWorld(); forked(w2);
+  mergeWith(w2, `Merge side${MARK}`, () => { setLine(w2, 'data/x.json', '"d": 4,', '"d": 999,'); writeFileSync(join(w2.root, 'index.html'), '<p>added in the merge</p>\n'); });
+  const r2 = gateOn(w2);
+  assert.deepEqual(ownOf(r2), [['data/x.json', 'index.html']]);
+  assert.equal(status(r2, 'C8'), WARN); assert.equal(r2.record.unledgered_agent_commits, 1); assert.equal(r2.ok, true, 'C8 reports; it does not block (C8 strict stays off: D-P0.4-2)');
+  assert.equal(gateOn(w2, { strict: true }).ok, false, 'under --strict-unledgered the same merge blocks, as a one-parent commit would');
+
+  /* 3 · the same edit in an UNMARKED merge: C8 passes, exactly as an unmarked one-parent commit does (C8 reads a disclosure,
+         AUDIT-2026-11-11 §5 point 3) — but the merge's own content is named in the gate record, never lost */
+  const w3 = gateWorld(); forked(w3);
+  const m3 = mergeWith(w3, 'Merge side', () => setLine(w3, 'data/x.json', '"d": 4,', '"d": 999,'));
+  const r3 = gateOn(w3);
+  assert.equal(status(r3, 'C8'), PASS); assert.deepEqual(r3.record.merges_with_own_content, [{ commit: m3, files: ['data/x.json'] }]);
+
+  /* 4 · conflicts: taken wholesale from one side → nothing of its own; resolved with new text → the file is its own */
+  const w4 = gateWorld(); forked(w4, { mainEdit: ['"d": 4,', '"d": 40,'], sideEdit: ['"d": 4,', '"d": 41,'] });
+  const m4a = mergeWith(w4, 'Merge side, ours', () => git(w4.root, ['checkout', '--ours', '--', 'data/x.json']));
+  assert.deepEqual(mergeOwnFiles(m4a, { cwd: w4.root }), [], 'a side taken wholesale adds no content');
+  const w4b = gateWorld(); forked(w4b, { mainEdit: ['"d": 4,', '"d": 40,'], sideEdit: ['"d": 4,', '"d": 41,'] });
+  const m4b = mergeWith(w4b, 'Merge side, resolved', () => writeFileSync(join(w4b.root, 'data', 'x.json'), LINES.replace('"d": 4,', '"d": 42,')));
+  assert.deepEqual(mergeOwnFiles(m4b, { cwd: w4b.root }), ['data/x.json'], 'a resolution with new text is the merge\'s own');
+
+  /* 5 · C7: a merge declaring a Proposal with content of its own is refused; one with none carries no change */
+  const w5 = gateWorld(); forked(w5);
+  mergeWith(w5, 'Merge side\n\nProposal: prop-fixture-000000000001', () => setLine(w5, 'data/x.json', '"d": 4,', '"d": 999,'));
+  const r5 = gateOn(w5);
+  assert.equal(status(r5, 'C7'), FAIL); assert.match(r5.conditions.find((x) => x.id.startsWith('C7')).why, /merge commit declares Proposal .* one-parent commit/);
+  const w5b = gateWorld(); forked(w5b);
+  mergeWith(w5b, 'Merge side\n\nProposal: prop-fixture-000000000001');
+  assert.notEqual(status(gateOn(w5b), 'C7'), FAIL, 'a merge with nothing of its own is not a change');
+
+  /* 6 · C6: a merge that rewrites the ledger itself breaks append-only against its parents */
+  const w6 = gateWorld();
+  writeFileSync(join(w6.dir, 'decisions.jsonl'), '{"seq":1}\n'); commitAll(w6.root, 'ledger');
+  git(w6.root, ['checkout', '-q', '-b', 'side']); writeFileSync(join(w6.root, 'data', 'x.json'), '{"s":1}\n'); commitAll(w6.root, 'side\n\nEvidence: a source');
+  git(w6.root, ['checkout', '-q', 'main']); writeFileSync(join(w6.root, 'tools.txt'), 'x\n'); commitAll(w6.root, 'main');
+  mergeWith(w6, 'Merge side', () => writeFileSync(join(w6.dir, 'decisions.jsonl'), '{"seq":1,"rewritten":true}\n'));
+  const r6 = gateOn(w6);
+  assert.equal(status(r6, 'C6'), FAIL); assert.match(r6.conditions.find((x) => x.id.startsWith('C6')).why, /a merge, against parent/);
+
+  /* 7 · the old reading, reproduced: a merge was given no files, so cases 2, 5 and 6 passed silently */
+  const old = (w) => { const f = gatherFacts({ root: w.root, head: 'HEAD', since: w.since, env: ciEnv({ GITHUB_SHA: git(w.root, ['rev-parse', 'HEAD']) }), needsJson: needsOk, ci: true });
+    for (const c of f.commits) if (c.merge) c.files = []; f.ledgerHistory = f.ledgerHistory.filter((h) => !h.merge); f.artifact = planted().artifact; return judge(f); };
+  assert.equal(status(old(w2), 'C8'), PASS, 'before: the merge\'s own page edit was unseen');
+  assert.notEqual(status(old(w5), 'C7'), FAIL, 'before: a Proposal on a merge was skipped');
+  assert.equal(status(old(w6), 'C6'), PASS, 'before: a ledger rewritten in a merge was unseen');
+});
+
+test('G18 · a merge whose own content git cannot establish makes the history unmeasured (C2), never empty', () => {
+  const w = gateWorld(); forked(w); mergeWith(w, 'Merge side');
+  const head = git(w.root, ['rev-parse', 'HEAD']);
+  const facts = gatherFacts({ root: w.root, head, since: w.since, env: ciEnv({ GITHUB_SHA: head }), needsJson: needsOk, ci: true });
+  const m = facts.commits.find((c) => c.merge);
+  m.files = null; m.own_error = 'planted: git could not answer';
+  facts.artifact = planted().artifact;
+  const r = judge(facts);
+  assert.equal(status(r, 'C2'), FAIL); assert.match(r.conditions.find((x) => x.id.startsWith('C2')).why, /could not be determined .*planted/);
+  assert.equal(r.ok, false);
+});
+
 /* ============================================================ the CLI as a pipeline sees it */
 
 test('K1 · the CLI exits 1 for a gate that cannot establish its origin in CI, 0 for the workflow audit, 2 for no command, and prints no flag that waives a check', () => {

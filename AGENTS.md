@@ -45,6 +45,7 @@ the evidence it describes.
 | `docs/AUDIT-2026-11-04.md` | The Phase 4 operational-closure audit of 4 Nov 2026: the dispatcher, the decision ledger and the deploy gate measured against the code, what was built, what was tested, what is still a person's or a repository setting, and a 20-point readiness assessment that awards nothing for documentation alone |
 | `agent/release/README.md` | The release dispatcher (`agent/release/dispatch.mjs`) and the deploy gate (`gate.mjs`): the stages in the order they refuse (ten since 11 Nov 2026, with the verified rollback), the ten gate conditions, and what neither is |
 | `docs/AUDIT-2026-11-11.md` | P0.1 and P0.4 (11 Nov 2026): why `11313f6` held 9 files while the scope stage said 1, reproduced and repaired with thirteen tests; the release governance measured — one person is requester, signer, merger and administrator; `--strict-unledgered` simulated (on today it would block every deploy forever); the two decisions put to the author |
+| `docs/AUDIT-2026-11-11-P1.md` | The P1 checkpoint (11–12 Nov 2026): CI and Pages verified on the published commit; F-A4's nine records scanned and **not** re-verified (the register refuses automated reading here); F-A7 closed — one computing function for instruments by status, the instruments card declared; a merge commit's own content made visible to C6/C7/C8; V-1 repaired; automation readiness by level; the decisions left to the author; **§8, F-A4 made lighter to close** — a pending appeal is `high`, the register reading is a sheet |
 | `docs/REGULATORY-IMPACT-MAPPING.md` | What a confirmed change reaches inside this website, and which half of it a machine may act on |
 | `docs/HANDOVER.md` | Previous session's state and the current objective |
 | `docs/AUDIT-2026-09-01.md` | Where the architecture above is **not enforced**, with evidence |
@@ -120,9 +121,10 @@ run changed nothing, and that is a measurement: it fingerprints the working tree
 after, and the suite asserts the difference is empty. It produced **twenty-three findings**,
 and protocol §25's instruction to observe rather than repair is why none is fixed:
 `docs/FIRST-END-TO-END-AUDIT.md`. Four are worth carrying in your head, because they are
-places this system is weaker than its own documents read: the Orchestrator admits a
-`simulated` record into every workflow (`allowSimulated: true`, hard coded at
-`orchestrator.mjs:495`); **the rollback gate has never examined a record** on either type
+places this system is weaker than its own documents read: the Orchestrator admitted a
+`simulated` record into every workflow (`allowSimulated: true`, hard coded — **repaired on
+11 Nov 2026**: the default is now `false` and only the simulation and the suites opt in by
+name, `docs/AUDIT-2026-11-11-P1.md` §5); **the rollback gate has never examined a record** on either type
 that declares it; nothing re-checks a `ChangeRecord`'s files against the approved scope
 after the dispatch; and two conflict detectors have no ordering constraint and reported one
 relationship backwards. `docs/ORCHESTRATOR.md`.
@@ -407,6 +409,13 @@ amount** (11 Nov 2026, P0.2 and P0.3; `docs/DATA-READINESS.md` §9). `validate.m
 a `fine_eur` that is not an integer ≥ 0, or a declared metric that fails any property is an ERROR, and its figure is not
 publishable. The fines figure has one computing function, `js/pipeline.js finesFigure()`; **do not sum `fine_eur` or count
 payment states anywhere else in `js/`** — MC-2 finds a second sum by line, and every view must import the function.
+**A pending appeal is `high` (30 days), not `critical`, since 12 Nov 2026** (the author's decision; only an announced action is `critical`) —
+and **a claim about such a record keeps its `high` interval**: `enforcementVolatile()` in `js/evidence-model.js` is the test, and the decision
+was about records only (`docs/AUDIT-2026-11-11-P1.md` §8). **A court-register reading is a sheet and a declaration**: `node
+tools/register-reading.mjs sheet`, then `check <answers.json>`; no verb writes, and an `attestation` on an enforcement record is audited by
+`validate.mjs`.
+**The same holds for instruments by legislative status since 11 Nov 2026** (F-A7): `js/regulatory-model.js
+instrumentsByStatus()` is the one function and the masthead imports it; MC-2 finds a second COUNT by the field too.
 
 The agent layer has its own suites, and a change to `agent/` runs these as well:
 

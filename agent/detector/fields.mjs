@@ -130,6 +130,7 @@ export const PROSE_FIELDS = {
     'appeal.note': 'The state of an appeal in words, including the parts the status vocabulary cannot express.',
     verification_note: 'What is still open about the action, in words.',
     'fine_eur_basis.gap': 'Why no fact claim and official source establish the amount, in words (P0.3, tools/fine-basis.mjs). It asserts a state of the evidence; nothing checks the sentence.',
+    'attestation.note': 'What a person read in the court register and found changed, in words (12 Nov 2026, tools/register-reading.mjs). It asserts what the register showed; nothing checks the sentence, and it is the reader\'s word.',
   },
   glossary_term: {
     definition: 'What the term means. A definition that tracks a legal threshold goes false when the threshold moves, and the glossary graph renders it unchanged.',
@@ -210,7 +211,10 @@ export const VALUE_FIELDS = {
     'appeal.lodged_by', 'appeal.forum', 'appeal.lodged_date', 'appeal.case_ref', 'appeal.requires_verification',
     /* P0.3, 11 Nov 2026 (tools/fine-basis.mjs): where the amount is stated — a locator, the amount as
        written and the day it was read, as a claim's sources.locator and derivation.inputs.*.as_stated */
-    'fine_eur_basis.evidence.locator', 'fine_eur_basis.evidence.as_stated', 'fine_eur_basis.evidence.read_on'],
+    'fine_eur_basis.evidence.locator', 'fine_eur_basis.evidence.as_stated', 'fine_eur_basis.evidence.read_on',
+    /* 12 Nov 2026 (tools/register-reading.mjs auditReadings): the declaration of a court-register reading — its day (equal to the
+       record's last_verified), the source read and the case numbers read in it, and whether the reading changed the record */
+    'attestation.of', 'attestation.read.source_id', 'attestation.read.locator', 'attestation.outcome'],
   glossary_term: ['id', 'term', 'legacy_dom_id', 'new_in_this_build', 'last_verified', 'requires_verification'],
   /* sources.locator, sources.for, exemptions.effect, exemptions.basis.locator
      (v2 Session 13, 29 Oct 2026, docs/ROADMAP-v2.md §8): a v2 rule cites

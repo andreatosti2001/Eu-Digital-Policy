@@ -3478,7 +3478,8 @@ test('AT15 · the notice check: this tree holds all four clauses; each planted f
    ============================================================ */
 
 import { checkFineBasis, basisIndex, amountsIn, parseAmount } from './fine-basis.mjs';
-import { evaluate, FINES_CARD, PROPERTIES, sumSites, codeOnly, treeAsOf } from './metric-contract.mjs';
+import { evaluate, FINES_CARD, INSTRUMENTS_CARD, METRICS, PROPERTIES, sumSites, countSites, codeOnly, treeAsOf } from './metric-contract.mjs';
+import { instrumentsByStatus, STATUS_ORDER, STATUS_STATES } from '../js/regulatory-model.js';
 import { finesFigure, PAYMENT_STATES, posturePart } from '../js/pipeline.js';
 
 const loadData = () => Object.fromEntries(readdirSync(join(ROOT, 'data')).filter((f) => f.endsWith('.json'))
@@ -3735,8 +3736,10 @@ test('MC9 · K9: an undated input hidden is refused; a computing function that r
 test('MC10 · K10: a notice computed from the dataset\'s newest date omits inputs past their interval — refused; the real one names exactly riskClass()\'s', async () => {
   const lazy = (records, o) => { const f = finesFigure(records, o); return { ...f, past_interval: f.past_interval ? [] : null }; };
   const r = await ev({}, { compute: lazy, asOf: '2026-11-11' });
-  assert.deepEqual(mcOf(r), ['MC-10']); assert.match(r.findings[0].message, /put 9 input\(s\) at review-due or stale/);
-  assert.equal(finesFigure(loadData().enforcement.enforcement, { asOf: '2026-11-11' }).past_interval.length, 9);
+  /* 9 until 12 Nov 2026; 3 since the author lowered a pending appeal from critical (14 days) to high (30): the inputs whose last
+     verification is older than 30 days. The test still asserts what it always did — the notice equals riskClass() + freshnessState(). */
+  assert.deepEqual(mcOf(r), ['MC-10']); assert.match(r.findings[0].message, /put 3 input\(s\) at review-due or stale \(enf-google-ec-2026-dma, enf-meta-dpc-2023-transfers, enf-tiktok-dpc-2025-transfers\)/);
+  assert.equal(finesFigure(loadData().enforcement.enforcement, { asOf: '2026-11-11' }).past_interval.length, 3);
   assert.equal(finesFigure(loadData().enforcement.enforcement).past_interval, null, 'no date given, nothing computed against the reader\'s day');
   assert.equal(treeAsOf(loadData()) >= '2026-11-11', true);
 });
@@ -3763,11 +3766,14 @@ test('MC13 · K13 and E1: a weighted score, or anything but sum, count and share
 });
 
 /* MC-14 and MC-15 on the other families of DATA-READINESS §8: the contract
-   can express them. Fixtures only — neither card is declared on the tree. */
+   can express them. Fixtures only. Since 11 Nov 2026 (P1) a count is held to
+   MC-2's import half too, so the fixture declares one consumer that imports
+   its function — supplied through ctx.files, never written to js/. */
 const countDecl = (over) => ({
   id: 'fixture', question: 'Of the dated events this site records, how many fall in the 12 months after a stated date?',
-  fields: [], value: null, formula: 'count', consumers: [], states: [], partition: null, window: null, cannot_say: ['whether a passed event happened'], caveats: [], ...over,
+  fields: [], value: null, formula: 'count', consumers: ['js/fixture-consumer.js'], states: [], partition: null, window: null, cannot_say: ['whether a passed event happened'], caveats: [], ...over,
 });
+const FIXTURE_CONSUMER = { 'js/fixture-consumer.js': "import { f } from './fixture';\n" };
 const identity = (xs) => xs;
 
 test('MC14 · D4: a month-precision event at the window\'s edge not named "may fall either side" is refused; named, it holds', async () => {
@@ -3780,9 +3786,9 @@ test('MC14 · D4: a month-precision event at the window\'s edge not named "may f
   const base = (events, o) => ({ as_of: { oldest: events.map((e) => e.last_verified).filter(Boolean).sort()[0] ?? null, newest: events.map((e) => e.last_verified).filter(Boolean).sort().at(-1) ?? null, undated: events.filter((e) => !e.last_verified).map((e) => e.id) },
     past_interval: o?.asOf ? events.filter((e) => ['freshness:review-due', 'freshness:stale'].includes(EM.freshnessState(e.last_verified, EM.riskClass('event', e, { asOf: o.asOf }), o.asOf))).map((e) => e.id) : null });
   assert.ok(edge(db.timeline.events).includes('tl-dma-2026-11-01-designation'), 'the case §8.2 found');
-  const silent = await evaluate(decl, { db, exports: { 'fixture#all': identity }, compute: (ev2, o) => ({ ...base(ev2, o), window: { either_side: [] } }) });
+  const silent = await evaluate(decl, { db, files: FIXTURE_CONSUMER, exports: { 'fixture#all': identity }, compute: (ev2, o) => ({ ...base(ev2, o), window: { either_side: [] } }) });
   assert.deepEqual(mcOf(silent), ['MC-14']);
-  const named = await evaluate(decl, { db, exports: { 'fixture#all': identity }, compute: (ev2, o) => ({ ...base(ev2, o), window: { either_side: edge(ev2) } }) });
+  const named = await evaluate(decl, { db, files: FIXTURE_CONSUMER, exports: { 'fixture#all': identity }, compute: (ev2, o) => ({ ...base(ev2, o), window: { either_side: edge(ev2) } }) });
   assert.deepEqual(named.findings, []);
 });
 
@@ -3795,7 +3801,7 @@ test('MC15 · I4 and the fines card: a $note caveat about a field the figure rea
   });
   const ins = (xs, o) => ({ as_of: { oldest: xs.map((e) => e.last_verified).filter(Boolean).sort()[0] ?? null, newest: xs.map((e) => e.last_verified).filter(Boolean).sort().at(-1) ?? null, undated: xs.filter((e) => !e.last_verified).map((e) => e.id) },
     past_interval: o?.asOf ? xs.filter((e) => ['freshness:review-due', 'freshness:stale'].includes(EM.freshnessState(e.last_verified, EM.riskClass('instrument', e, { asOf: o.asOf }), o.asOf))).map((e) => e.id) : null });
-  const left = await evaluate(decl, { db, exports: { 'fixture#all': identity }, compute: ins });
+  const left = await evaluate(decl, { db, files: FIXTURE_CONSUMER, exports: { 'fixture#all': identity }, compute: ins });
   assert.ok(mcOf(left).includes('MC-15'), JSON.stringify(left.findings));
   assert.match(left.findings.find((x) => x.mc === 'MC-15').message, /says of legislative_status/);
   /* the real fines card: drop one caveat, then let the $note drift */
@@ -3827,4 +3833,273 @@ test('MC17 · validate.mjs runs the contract: a planted census question in a scr
     assert.equal(red.exit, 1); assert.match(red.out, /✗ METRIC MC-4 fines-announced-collected-unknown: record enf-temu-ec-2026/);
     assert.match(red.out, /NOT publishable/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+
+/* ============================================================
+   F-A7 → MC-2: the instruments card, declared (11 Nov 2026, P1 checkpoint;
+   docs/AUDIT-2026-11-11-P1.md §3). The figure §8.1 measured, one computing
+   function, and each property refusing its own planted case — I1…I5 of
+   docs/DATA-READINESS.md §8.1 run on the real declaration, not on paper.
+   ============================================================ */
+
+const ei = (over = {}, ctx = {}) => evaluate({ ...INSTRUMENTS_CARD, ...over }, { db: ctx.db ?? loadData(), ...ctx });
+const instIn = (db, id) => db.instruments.instruments.find((i) => i.id === id);
+const OLD_MASTHEAD = "import { label } from './data.js';\n"
+  + "function statusLedger(ix, instruments) {\n  const core = instruments.filter((i) => i.scope_class === 'scope:core');\n  const counted = new Map();\n"
+  + "  for (const i of core) { if (counted.has(i.legislative_status)) counted.get(i.legislative_status).push(i); }\n}\n"
+  + "function ticker(core, b) { return core.filter((i) => i.legislative_status === b.id).length; }\n";
+
+test('MC18 · I0, the control: the instruments card holds MC-1…MC-15 on this tree, and the figure is the one §8.1 measured', async () => {
+  assert.ok(METRICS.includes(INSTRUMENTS_CARD), 'the card is declared, so validate.mjs holds it to the contract');
+  const r = await ei();
+  assert.deepEqual(r.findings, []); assert.equal(r.publishable, true);
+  const f = r.result;
+  assert.equal(f.population, 21);
+  assert.deepEqual(Object.fromEntries(Object.entries(f.by_scope).map(([k, v]) => [k, v.length])), { 'scope:core': 16, 'scope:adjacent': 5 });
+  assert.deepEqual(Object.fromEntries(Object.entries(f.parts).filter(([, p]) => p.records.length).map(([k, p]) => [k, p.records.length])),
+    { 'status:applicable': 6, 'status:partly-applicable': 3, 'status:in-force': 6, 'status:transposition-pending': 1, 'status:transposition-overdue': 2, 'status:proposal': 3 });
+  assert.equal(Object.values(f.parts).reduce((a, p) => a + p.records.length, 0), 21, 'the parts add back to the population');
+  assert.deepEqual(Object.fromEntries(Object.entries(f.excluded).map(([k, v]) => [k, v.length])), { 'scope:referenced': 12, 'scope:out-of-scope': 6 }, 'named as excluded, not dropped');
+  assert.deepEqual(f.weak.map((w) => w.id), ['eprivacy']);
+  assert.deepEqual(instrumentsByStatus(loadData().instruments.instruments, { asOf: '2026-11-09' }).past_interval.map((x) => x.id).sort(), ['cloud-ai-development-act', 'data-act', 'pld'], '§8.1 "Updating", as of 9 Nov 2026');
+  /* every status term of the taxonomy is a part, so the vocabulary and the function cannot drift apart unseen */
+  assert.deepEqual(Object.keys(f.parts), [...STATUS_ORDER]);
+  assert.deepEqual(Object.keys(STATUS_STATES).filter((k) => k !== 'null').sort(), [...STATUS_ORDER].sort());
+});
+
+test('MC19 · I1, REGRESSION F-A7: the masthead counting by status itself is found by line, and a consumer that stops importing is refused', async () => {
+  const r = await ei({}, { files: { 'js/masthead.js': OLD_MASTHEAD } });
+  assert.deepEqual(mcOf(r), ['MC-2']);
+  const msgs = r.findings.map((x) => x.message).join('\n');
+  assert.match(msgs, /js\/masthead\.js:5 counts records by legislative_status itself \(group\)/);
+  assert.match(msgs, /js\/masthead\.js:7 counts records by legislative_status itself \(filter…length\)/);
+  assert.match(msgs, /consumer js\/masthead\.js does not import instrumentsByStatus/);
+  /* the real masthead imports the function and counts nothing itself */
+  const real = readFileSync(join(ROOT, 'js/masthead.js'), 'utf8');
+  assert.deepEqual(countSites(real, 'legislative_status'), []);
+  assert.match(real, /import \{ instrumentsByStatus, STATUS_ORDER \} from '\.\/regulatory-model\.js'/);
+  /* a count planted in ANOTHER module, by an alias, is found too */
+  const other = await ei({}, { files: { 'js/search.js': readFileSync(join(ROOT, 'js/search.js'), 'utf8') + "\nconst tally = {}; for (const i of xs) { const st = i.legislative_status; tally[st]++; }\n" } });
+  assert.deepEqual(mcOf(other), ['MC-2']); assert.match(other.findings[0].message, /js\/search\.js:\d+ counts records by legislative_status itself \(tally\)/);
+  /* reading the field to label, route or compare one record is not a count */
+  assert.deepEqual(countSites("const st = inst.legislative_status;\nconst l = label(ix, inst.legislative_status);\nconst p = xs.filter((i) => i.legislative_status === s);\nconst q = 'x.legislative_status.length';\n", 'legislative_status'), []);
+  /* a partitioned count that names no field cannot be scanned, and is refused for it */
+  assert.ok(mcOf(await ei({ partition: { ...INSTRUMENTS_CARD.partition, field: undefined } })).includes('MC-2'));
+});
+
+test('MC20 · I2 and a status the masthead did not know: a term outside the vocabulary is refused; a term in it is counted under its own name', async () => {
+  /* a status that is no taxonomy term → MC-5 (unmapped) and MC-8 (in no part) */
+  const bad = loadData(); instIn(bad, 'gdpr').legislative_status = 'status:sort-of-applicable';
+  const rb = await ei({}, { db: bad });
+  assert.deepEqual(mcOf(rb), ['MC-5', 'MC-8']); assert.deepEqual(rb.result.unmapped, [{ id: 'gdpr', value: 'status:sort-of-applicable' }]);
+  /* a real term the old masthead's seven bands did not hold: counted, under its name, never "no status recorded" */
+  const moved = loadData(); instIn(moved, 'data-omnibus').legislative_status = 'status:political-agreement';
+  const rm = await ei({}, { db: moved });
+  assert.deepEqual(rm.findings, []); assert.deepEqual(rm.result.parts['status:political-agreement'].records, ['data-omnibus']); assert.deepEqual(rm.result.unmapped, []);
+  /* the taxonomy gains a term the function does not know → MC-5, before any instrument uses it */
+  const grown = loadData();
+  const statusList = (function find(o) { if (Array.isArray(o)) { if (o.some((x) => x && x.id === 'status:proposal')) return o; for (const x of o) { const r = find(x); if (r) return r; } } else if (o && typeof o === 'object') for (const k in o) { const r = find(o[k]); if (r) return r; } return null; })(grown.taxonomy);
+  statusList.push({ id: 'status:provisionally-applied', label: 'Provisionally applied' });
+  const rg = await ei({}, { db: grown });
+  assert.deepEqual(mcOf(rg), ['MC-5']); assert.match(rg.findings[0].message, /status:provisionally-applied" has no mapping/);
+});
+
+test('MC21 · I3, I4, I5 and the rest: a double count, a dropped caveat, a hidden undated input, an unnamed weak input and a clock are each refused on their own property', async () => {
+  const real = (xs, o) => instrumentsByStatus(xs, o);
+  /* I3: partly applicable also counted as applicable → MC-8 (24 over 21) */
+  const twice = (xs, o) => { const f = real(xs, o); f.parts['status:applicable'].records.push(...f.parts['status:partly-applicable'].records); return f; };
+  const r3 = await ei({}, { compute: twice });
+  assert.deepEqual(mcOf(r3), ['MC-8']); assert.match(r3.findings.map((x) => x.message).join(), /in 2 parts/);
+  /* I4: the $note's caveat left out → MC-15 */
+  assert.deepEqual(mcOf(await ei({ caveats: INSTRUMENTS_CARD.caveats.filter((c) => !/is a scalar describing/.test(c.quote)) })), ['MC-15']);
+  /* MC-15's STATED limit (PROPERTIES): the $note's "deliberately NOT sufficient" sentence names `milestones` as a plain
+     word, so dropping that caveat is not seen. The card carries it by declaration; this assertion keeps the limit visible. */
+  assert.deepEqual(mcOf(await ei({ caveats: INSTRUMENTS_CARD.caveats.filter((c) => !/NOT sufficient/.test(c.quote)) })), [], 'a known limit of MC-15, asserted rather than hidden');
+  assert.match(PROPERTIES.find((p) => p.id === 'MC-15').cannot_see, /without naming the field/);
+  /* I5: an undated input hidden → MC-9 */
+  const undated = loadData(); delete instIn(undated, 'pld').status_as_of;
+  const hide = (xs, o) => { const f = real(xs, o); f.as_of.undated = []; return f; };
+  assert.ok(mcOf(await ei({}, { db: undated, compute: hide })).includes('MC-9'));
+  assert.deepEqual((await ei({}, { db: undated })).result.as_of.undated, ['pld'], 'the real function names it');
+  /* MC-11: the unsupported status left unnamed */
+  assert.deepEqual(mcOf(await ei({}, { compute: (xs, o) => ({ ...real(xs, o), weak: [] }) })), ['MC-11']);
+  /* MC-10: the interval computed against no date, or not at all */
+  assert.deepEqual(mcOf(await ei({}, { compute: (xs, o) => ({ ...real(xs, o), past_interval: [] }) })), ['MC-10']);
+  /* MC-9: a function that reads the clock */
+  assert.ok(mcOf(await ei({}, { compute: (xs, o) => real(xs, { asOf: o?.asOf ?? new Date().toISOString().slice(0, 10) }) })).includes('MC-9'));
+  /* MC-1: a census question */
+  assert.deepEqual(mcOf(await ei({ question: 'How many EU digital laws are in force?' })), ['MC-1']);
+});
+
+test('MC22 · validate.mjs prints both declared metrics publishable', () => {
+  const out = runValidator('validate.mjs');
+  assert.equal(out.exit, 0, out.out);
+  assert.match(out.out, /METRICS fines-announced-collected-unknown: MC-1…MC-15 hold, publishable/);
+  assert.match(out.out, /instruments-by-legislative-status: MC-1…MC-15 hold, publishable/);
+});
+
+
+/* ============================================================
+   The pending appeal's review interval (12 Nov 2026, P1 checkpoint; the author's decision, docs/ROADMAP-v2.md §8,
+   "P1: the pending appeal's review interval"; docs/AUDIT-2026-11-11-P1.md §8). One rule changed, one rule held.
+   ============================================================ */
+
+import * as EMRC from '../js/evidence-model.js';
+
+test('RC1 · a pending appeal is HIGH (30 days), only an announced action is CRITICAL (14); the intervals themselves are unchanged', () => {
+  const rc = (rec) => EMRC.riskClass('enforcement', rec, { asOf: '2026-11-12' });
+  const base = { action_status: 'action:imposed', appeal: { status: 'appeal:none' }, payment_status: 'payment:paid' };
+  assert.equal(rc({ ...base, appeal: { status: 'appeal:pending' }, payment_status: 'payment:paid' }), 'risk:high', 'a pending appeal alone is high');
+  assert.equal(rc({ ...base, appeal: { status: 'appeal:pending' }, payment_status: 'payment:unknown' }), 'risk:high');
+  assert.equal(rc({ ...base, action_status: 'action:announced', appeal: null }), 'risk:critical', 'an announced action is still critical');
+  assert.equal(rc({ ...base, action_status: 'action:announced', appeal: { status: 'appeal:pending' } }), 'risk:critical');
+  assert.equal(rc({ ...base, appeal: { status: 'appeal:unknown' } }), 'risk:high');
+  assert.equal(rc(base), 'risk:medium');
+  assert.deepEqual({ ...EMRC.RISK_TTL_DAYS }, { 'risk:critical': 14, 'risk:high': 30, 'risk:medium': 90, 'risk:low': 365 }, 'no interval was widened');
+  /* the real set: no enforcement record is critical today, and none ever came out LOWER than high for having a pending appeal */
+  const enf = loadData().enforcement.enforcement;
+  for (const r of enf.filter((x) => x.appeal?.status === 'appeal:pending')) assert.equal(rc(r), 'risk:high', r.id);
+});
+
+test('RC2 · the claims\' rule is HELD: a claim about a record that is announced or under a pending appeal is still high — the decision was about records, not claims', () => {
+  const db = loadData();
+  const eById = new Map(db.enforcement.enforcement.map((e) => [e.id, e]));
+  const iById = new Map(db.instruments.instruments.map((i) => [i.id, i]));
+  const claimRc = (c) => EMRC.riskClass('claim', c, { asOf: '2026-11-12', enforcementById: eById, instrumentById: iById });
+  const volatile = (c) => (c.enforcement || []).map((i) => eById.get(i)).filter(Boolean).some(EMRC.enforcementVolatile);
+  const owing = db.claims.claims.filter((c) => EMRC.owesVerification(c) && volatile(c));
+  assert.ok(owing.length >= 17, `the 17 claims measured on 12 Nov 2026 (found ${owing.length})`);
+  for (const c of owing) assert.equal(claimRc(c), 'risk:high', c.id);
+  /* the claims past their interval are exactly what they were before the decision */
+  const past = db.claims.claims.filter((c) => EMRC.owesVerification(c) && ['freshness:review-due', 'freshness:stale'].includes(EMRC.freshnessState(c.last_verified, claimRc(c), '2026-11-12')));
+  assert.equal(past.length, 9, 'unchanged by the decision');
+  assert.equal(EMRC.enforcementVolatile({ action_status: 'action:imposed', appeal: { status: 'appeal:none' } }), false);
+  assert.equal(EMRC.enforcementVolatile(null), false);
+});
+
+/* ============================================================
+   RR — the court-register reading (12 Nov 2026, P1 checkpoint; tools/register-reading.mjs, docs/AUDIT-2026-11-11-P1.md §8).
+   A sheet, an answer checked, a declaration audited. The tool writes nothing, and each refusal below is a thing that cannot be
+   true; none of them can refuse a false answer, and RR3 says so.
+   ============================================================ */
+
+import { buildSheet, checkAnswers, auditReadings, casesIn, normaliseCase, PENDING_RE } from './register-reading.mjs';
+import { spawnSync } from 'node:child_process';
+
+const RR_AS_OF = '2026-11-12';
+const rrDb = () => loadData();
+/** a complete, honest-looking answer for the records a register reading covers today */
+const goodAnswer = () => ({
+  read_on: '2026-11-13', read_by: 'The Author', where: 'https://infocuria.curia.europa.eu/',
+  records: {
+    'enf-meta-dpc-2023-transfers': { outcome: 'unchanged', cases: [{ case: 'T-325/23', status_line: 'Affaire pendante' }] },
+    'enf-tiktok-dpc-2025-transfers': { outcome: 'unchanged', cases: [{ case: 'C-1009/26', status_line: 'Affaire pendante' }] },
+  },
+  unattached: [{ case: 'T-638/26', status_line: 'Affaire pendante', subject: 'a decision of 27 January 2026 specifying interoperability' }],
+});
+const rr = (mut, o = {}) => { const a = goodAnswer(); mut?.(a); return checkAnswers(o.db ?? rrDb(), a, { asOf: o.asOf ?? '2026-11-13' }); };
+const rrProblem = (r, re) => assert.ok(r.problems.some((p) => re.test(p)), `expected ${re} in ${JSON.stringify(r.problems)}`);
+
+test('RR1 · the sheet: which records, which cases, what is unattached — derived from the data and from riskClass(), typed nowhere', () => {
+  const sh = buildSheet(rrDb(), RR_AS_OF);
+  const covered = sh.records.filter((r) => r.covered_by_this_form);
+  assert.deepEqual(covered.map((r) => [r.id, r.cases]).sort(), [
+    ['enf-apple-gc-2026-designation', ['T-1079/23', 'T-1080/23', 'T-214/24']],
+    ['enf-meta-dpc-2023-transfers', ['T-325/23']],
+    ['enf-tiktok-dpc-2025-transfers', ['C-1009/26']],
+  ]);
+  assert.ok(sh.records.some((r) => r.id === 'enf-google-ec-2026-dma' && !r.covered_by_this_form), 'no case number on the record: not attestable by a register');
+  assert.deepEqual(sh.unattached.cases, ['T-638/26', 'T-638/26 R', 'T-639/26']);
+  assert.deepEqual(Object.keys(sh.template.records).sort(), covered.map((r) => r.id).sort(), 'the skeleton asks for exactly the covered records');
+  /* the same rule the figure's notice uses: after the 12 Nov 2026 decision the five records within 30 days drop out */
+  assert.equal(sh.records.some((r) => ['enf-x-ec-2025', 'enf-apple-ec-2025', 'enf-uber-ap-2026'].includes(r.id)), false);
+  assert.deepEqual(casesIn('T-114/26; T-120/26 and C-744/25 P (against T-55/24); T-638/26 R'), ['T-114/26', 'T-120/26', 'C-744/25 P', 'T-55/24', 'T-638/26 R']);
+  assert.equal(normaliseCase(' t-114/26 '), null, 'lower case is not a case number; the register writes T-');
+  assert.equal(normaliseCase('T-114/26; T-120/26'), null, 'exactly one');
+  assert.equal(normaliseCase('T‑114/26'), 'T-114/26', 'a non-breaking hyphen, as a register page prints it');
+});
+
+test('RR2 · a complete answer is accepted and PROPOSES — and the proposal satisfies the source contract and auditReadings(), once applied in memory', () => {
+  const r = rr();
+  assert.equal(r.ok, true, JSON.stringify(r.problems));
+  assert.equal(r.proposed.source.id, 'src-curia-register-2026-11-13'); assert.equal(r.proposed.source.accessed, '2026-11-13');
+  assert.match(r.proposed.source.note, /read by The Author on 2026-11-13/); assert.match(r.proposed.source.note, /this session did not fetch the register/);
+  assert.match(r.proposed.source.note, /T-638\/26 \(a decision of 27 January 2026 specifying interoperability\) ‘Affaire pendante’/);
+  assert.deepEqual(r.proposed.attestations['enf-tiktok-dpc-2025-transfers'], { of: '2026-11-13', read: [{ source_id: 'src-curia-register-2026-11-13', locator: 'C-1009/26' }], outcome: 'unchanged' });
+  /* the proposal is not written; apply it to a COPY of the data, as the reviewed commit would, and the audit holds */
+  const db = rrDb(); db.sources.sources.push(r.proposed.source);
+  for (const [id, att] of Object.entries(r.proposed.attestations)) { const rec = enfOf(db, id); rec.attestation = att; rec.last_verified = att.of; }
+  assert.deepEqual(auditReadings(db), []);
+  assert.deepEqual(auditReadings(rrDb()), [], 'and the tree as it is carries no attestation, which is not an error');
+});
+
+test('RR3 · each answer that cannot be true is refused, by name: a verdict for wording, a missing case, "unchanged" over a case that is not pending, a future date', () => {
+  rrProblem(rr((a) => { a.records['enf-meta-dpc-2023-transfers'].cases[0].status_line = 'invariato'; }), /is a verdict, not the register's wording/);
+  rrProblem(rr((a) => { a.records['enf-meta-dpc-2023-transfers'].cases[0].status_line = ''; }), /status_line is empty/);
+  rrProblem(rr((a) => { a.records['enf-x-ec-2025'] = { outcome: 'unchanged', cases: [{ case: 'T-114/26', status_line: 'Affaire pendante' }] }; }), /T-120\/26 is carried by the record and was not answered/);
+  rrProblem(rr((a) => { a.records['enf-meta-dpc-2023-transfers'].cases[0].status_line = 'Affaire clôturée'; }), /"unchanged" over a status line that does not say pending/);
+  rrProblem(rr((a) => { a.read_on = '2026-11-20'; }), /cannot be dated in the future/);
+  rrProblem(rr((a) => { a.read_on = '2026-02-30'; }), /not a calendar day/);
+  rrProblem(rr((a) => { a.read_by = ''; }), /read_by names the person/);
+  rrProblem(rr((a) => { a.where = 'http://example.invalid/'; }), /not an https URL/);
+  rrProblem(rr((a) => { a.records['enf-nope'] = { outcome: 'unchanged', cases: [] }; }), /not an enforcement action of this site/);
+  rrProblem(rr((a) => { a.records['enf-google-ec-2026-dma'] = { outcome: 'unchanged', cases: [] }; }), /no court case number is recorded.*cannot attest it/);
+  rrProblem(rr((a) => { a.records['enf-meta-dpc-2023-transfers'].outcome = 'changed'; }), /needs a note/);
+  rrProblem(rr((a) => { a.records['enf-meta-dpc-2023-transfers'].outcome = 'fine'; }), /not one of unchanged, changed, not_found/);
+  rrProblem(rr((a) => { a.records['enf-meta-dpc-2023-transfers'].cases.push({ case: 'T-325/23', status_line: 'Affaire pendante' }); }), /answered twice/);
+  rrProblem(rr((a) => { a.records['enf-meta-dpc-2023-transfers'].cases[0].case = 'T-325/23 and T-1/24'; }), /not exactly one case number/);
+  rrProblem(rr((a) => { a.surprise = 1; }), /unknown key "surprise"/);
+  rrProblem(rr((a) => { a.records = {}; }), /no record was answered/);
+  rrProblem(rr(null, { db: (() => { const d = rrDb(); d.sources.sources.push({ id: 'src-curia-register-2026-11-13' }); return d; })() }), /already exists/);
+  assert.equal(PENDING_RE.test('Affaire pendante'), true); assert.equal(PENDING_RE.test('Pending'), true); assert.equal(PENDING_RE.test('Affaire clôturée'), false);
+  /* what an unchanged-only answer for an appeal whose status is unknown says: a reading of "pending" is a change */
+  const w = rr((a) => { a.records['enf-apple-gc-2026-designation'] = { outcome: 'unchanged', cases: [{ case: 'T-1079/23', status_line: 'Affaire pendante' }, { case: 'T-1080/23', status_line: 'Affaire pendante' }, { case: 'T-214/24', status_line: 'Affaire pendante' }] }; });
+  assert.equal(w.ok, true); assert.ok(w.warnings.some((x) => /appeal is "unknown"/.test(x)));
+  /* the limit, asserted rather than hidden: an answer that is simply false passes — only the reader's word stands behind it */
+  const lie = rr((a) => { a.records['enf-meta-dpc-2023-transfers'].cases[0].status_line = 'Affaire pendante (invented)'; });
+  assert.equal(lie.ok, true, 'a plausible false answer is accepted: this tool cannot know');
+});
+
+test('RR4 · auditReadings (E1–E5): a declaration whose seal, source, date, case or note does not hold is an error; none at all is not', () => {
+  const ok = rr().proposed;
+  const withAtt = (mut) => { const db = rrDb(); db.sources.sources.push(structuredClone(ok.source)); const rec = enfOf(db, 'enf-tiktok-dpc-2025-transfers'); rec.attestation = structuredClone(ok.attestations['enf-tiktok-dpc-2025-transfers']); rec.last_verified = rec.attestation.of; mut(rec, db); return auditReadings(db); };
+  assert.deepEqual(withAtt(() => {}), []);
+  assert.match(withAtt((r) => { r.last_verified = '2026-11-12'; }).join('\n'), /is not the record's last_verified 2026-11-12: the attestation is the seal/);        /* E2 */
+  assert.match(withAtt((r, db) => { db.sources.sources.at(-1).accessed = '2026-11-12'; }).join('\n'), /was accessed 2026-11-12, not on 2026-11-13/);                     /* E3 */
+  assert.match(withAtt((r) => { r.attestation.read[0].source_id = 'src-nope'; }).join('\n'), /source src-nope does not exist/);                                        /* E3 */
+  assert.match(withAtt((r) => { r.attestation.read[0].locator = 'T-999/26'; }).join('\n'), /names T-999\/26, which the note of src-curia-register-2026-11-13 does not state/); /* E5 */
+  assert.match(withAtt((r) => { r.attestation.outcome = 'changed'; }).join('\n'), /outcome "changed" needs a note/);                                                    /* E4 */
+  assert.match(withAtt((r) => { r.attestation.extra = 1; }).join('\n'), /unknown key\(s\) extra/);                                                                        /* E1 */
+  assert.match(withAtt((r) => { delete r.attestation.read; }).join('\n'), /lacks read/);                                                                                  /* E1 */
+  assert.match(withAtt((r) => { r.attestation.outcome = 'fine'; }).join('\n'), /outcome "fine" is not one of unchanged, changed/);
+  assert.match(withAtt((r) => { r.attestation = 'read'; }).join('\n'), /is not an object/);
+});
+
+test('RR5 · the tool WRITES NOTHING, and validate.mjs runs the audit over a planted bad declaration in a scratch copy', () => {
+  const src = readFileSync(join(ROOT, 'tools/register-reading.mjs'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const verb of ['writeFileSync', 'appendFileSync', 'writeFile(', 'rmSync', 'unlinkSync', 'renameSync', 'mkdirSync', 'copyFileSync', 'execFileSync', 'spawnSync', 'fetch(', 'createWriteStream']) assert.equal(src.includes(verb), false, `register-reading.mjs must not use ${verb}`);
+  const dir = dataScratch();
+  try {
+    edit(dir, 'data/enforcement.json', (t) => { const d = JSON.parse(t); const r = d.enforcement.find((x) => x.id === 'enf-tiktok-dpc-2025-transfers'); r.attestation = { of: '2026-11-13', read: [{ source_id: 'src-curia-register-2026-10-23', locator: 'C-1009/26' }], outcome: 'unchanged' }; return JSON.stringify(d, null, 1); });
+    const red = runValidator('validate.mjs', [], dir);
+    assert.equal(red.exit, 1); assert.match(red.out, /✗ ENFORCEMENT "enf-tiktok-dpc-2025-transfers" attestation of 2026-11-13 is not the record's last_verified/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('RR6 · the CLI: the sheet exits 0 and prints the skeleton; a refused answer exits 1, an accepted one 0 with "nothing written"; no verb exits 2', () => {
+  const cli = join(ROOT, 'tools/register-reading.mjs');
+  const run = (...a) => spawnSync(process.execPath, [cli, ...a], { encoding: 'utf8' });
+  const sheet = run('sheet', '--as-of', RR_AS_OF);
+  assert.equal(sheet.status, 0); assert.match(sheet.stdout, /cases to read: T-325\/23/); assert.match(sheet.stdout, /T-638\/26, T-638\/26 R, T-639\/26/);
+  assert.equal(JSON.parse(run('sheet', '--as-of', RR_AS_OF, '--json').stdout).template.read_on, RR_AS_OF);
+  const dir = mkdtempSync(join(tmpdir(), 'rr-'));
+  try {
+    const good = join(dir, 'good.json'); writeFileSync(good, JSON.stringify(goodAnswer()));
+    const bad = join(dir, 'bad.json'); writeFileSync(bad, JSON.stringify({ ...goodAnswer(), read_by: '' }));
+    const a = run('check', good, '--as-of', '2026-11-13'); assert.equal(a.status, 0, a.stdout + a.stderr); assert.match(a.stdout, /ANSWER ACCEPTED/); assert.match(a.stdout, /Nothing was written/);
+    const b = run('check', bad, '--as-of', '2026-11-13'); assert.equal(b.status, 1); assert.match(b.stdout, /ANSWER REFUSED/);
+    assert.equal(run('check', join(dir, 'missing.json')).status, 2);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+  assert.equal(run().status, 2); assert.equal(run('apply').status, 2, 'there is no verb that writes');
 });
