@@ -60,12 +60,13 @@
 .hp-cap-list{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-family:var(--mono);font-size:11px;color:var(--paper)}
 
 /* ---------- the figure */
-.hp-fig .ring{fill:none;stroke:var(--ink-3);stroke-width:1.2}
+/* the rings and the tree's lines are the figure's structure: --paper-faint, the site's own AA-cleared tertiary tone, reaches 3:1 for a graphic where --ink-3 (1.3-1.6:1) did not (HP-02, measured) */
+.hp-fig .ring{fill:none;stroke:var(--paper-faint);stroke-width:1.2}
 .hp-fig .ring.dash{stroke-dasharray:4 4}
 .hp-fig .ring-lb{font-family:var(--mono);font-size:9px;letter-spacing:.1em;fill:var(--paper-faint)}
 .hp-fig .disc{fill:var(--live);fill-opacity:.06;stroke:var(--paper);stroke-width:1.6}
 body[data-theme="light"] .hp-fig .disc{fill-opacity:.13}
-.hp-fig .tl{stroke:var(--ink-3);stroke-width:1.2;fill:none}
+.hp-fig .tl{stroke:var(--paper-faint);stroke-width:1.2;fill:none}
 .hp-fig .tn-c{fill:var(--ink-0);stroke:var(--paper-dim);stroke-width:1.3}
 .hp-fig .tn.annex .tn-c{stroke-dasharray:3 2}
 .hp-fig .tn-t{font-family:var(--mono);font-size:8px;fill:var(--paper);pointer-events:none}
@@ -103,10 +104,20 @@ body[data-theme="light"] .hp-fig .disc{fill-opacity:.13}
 .hp-fig .lb .dd{fill:var(--live)}
 .hp-fig.lens-due .duering,.hp-fig.lens-due .due-only,.hp-fig.lens-due .lb .dd{display:inline}
 .hp-fig.lens-due .due-only{fill:var(--live)}
-.hp-fig.lens-due .mk:not(.due) .mk-in,.hp-fig.lens-due .dot-g:not(.due) .mk-in{opacity:.25}
-.hp-fig.lens-due .lb:not(.due){opacity:.3}
+.hp-fig.lens-due .mk:not(.due) .mk-in .mk-s,.hp-fig.lens-due .mk:not(.due) .mk-in .mk-crit,
+.hp-fig.lens-due .dot-g:not(.due) .mk-in .mk-s,.hp-fig.lens-due .dot-g:not(.due) .mk-in .mk-crit{fill:var(--paper-faint)}
+.hp-fig.lens-due .mk:not(.due) .mk-in .mk-g,.hp-fig.lens-due .mk:not(.due) .mk-in .mk-slash,
+.hp-fig.lens-due .dot-g:not(.due) .mk-in .mk-g,.hp-fig.lens-due .dot-g:not(.due) .mk-in .mk-slash{stroke:var(--paper-faint)}
+/* what is not due is set back by TONE, not by opacity: an opacity of .25-.45 took the labels, marks and rings to 1.4-2.6:1 (measured);
+   --paper-faint holds 4.5:1 for text and 3:1 for a graphic on both themes. A due label on an outer ring is `lb due-only` and was dimmed
+   by the old `.lb:not(.due)` rule - it is now left alone. */
+.hp-fig.lens-due .lb:not(.due):not(.due-only){fill:var(--paper-faint)}
 .hp-fig.lens-due .lb.due{fill:var(--live)}
-.hp-fig.lens-due .ring,.hp-fig.lens-due .ring-lb,.hp-fig.lens-due .tl,.hp-fig.lens-due .tn{opacity:.45}
+/* --live as TEXT is 3.84:1 on Day (a site-wide token); on Day the due label and the caption heading take --paper and rely on the ring and the weight */
+body[data-theme="light"] .hp-fig.lens-due .lb.due,body[data-theme="light"] .hp-fig.lens-due .due-only,
+body[data-theme="light"] .hp-fig .lb .dd{fill:var(--paper)}
+body[data-theme="light"] .hp-cap-k{color:var(--paper-dim)}
+.hp-fig.lens-due .lb.due,.hp-fig.lens-due .due-only{font-weight:600}
 
 /* the ticker's next deadline, lit once at the end of the opening */
 .sop-ticker .tk-next{transition:box-shadow .35s}

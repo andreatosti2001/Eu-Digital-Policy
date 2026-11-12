@@ -3,7 +3,7 @@
 Colour segmentation and connectivity only: nothing is traced, redrawn or recoloured except the two
 things the opening needs and HP-01 already did on the icon: the beads are painted over with the body's
 own ink (they are drawn by the page as shapes), and the Night variant lifts that ink to --ink-2 and adds
-a fine --paper-dim contour.  Run:  python3 -I derive.py <original.png> <outdir>
+a --paper-dim contour about 1 screen px wide (1.5 source px; 0.85 gave 2.6:1 on a 1x screen, HP-02).  Run:  python3 -I derive.py <original.png> <outdir>
 """
 import json, math, sys
 from collections import deque
@@ -130,7 +130,7 @@ save(rgb, al, f'{OUT}/serpent-mark.png')
 day_rgb, day_a = colour, alpha
 save(day_rgb, day_a, f'{OUT}/serpent-body-day.png')
 
-# --- Night: the body lifted to --ink-2 with a fine --paper-dim contour, computed at 4x and saved at 1x
+# --- Night: the body lifted to --ink-2 with a --paper-dim contour about 1 screen px wide (1.5 source px; 0.85 gave 2.6:1 on a 1x screen, HP-02), computed at 4x and saved at 1x
 K = 4
 big_a = np.array(Image.fromarray((alpha * 255).astype(np.uint8)).resize((N * K, N * K), Image.LANCZOS)).astype(float) / 255
 big_c = np.array(Image.fromarray(colour.round().astype(np.uint8)).resize((N * K, N * K), Image.LANCZOS)).astype(float)
@@ -138,7 +138,7 @@ inkish = (np.sqrt(((big_c - INK) ** 2).sum(-1)) < 30)
 lifted = np.where(inkish[..., None], INK2, big_c)
 lifted[inkish] = INK2
 # contour: a band of width w source px, just outside the silhouette edge, drawn in --paper-dim
-w = 0.85 * K
+w = 1.5 * K
 sil = (big_a > 0.5)
 dil = sil.copy()
 r = int(math.ceil(w))
