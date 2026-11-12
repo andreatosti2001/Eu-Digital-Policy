@@ -11,8 +11,11 @@ branch register as it was written.
 
 - `claude/kind-rubin-qq3vpo`, rebased on `main` `f143c8e`: `js/regulatory-model.js`, `js/masthead.js`, `tools/metric-contract.mjs`,
   `tools/commit-evidence.mjs`, `tools/selftest.mjs`, `agent/release/gate.mjs` and its suite, `agent/orchestrator/orchestrator.mjs` and its
-  suite, `agent/simulation/run.mjs` and its suite, and `docs/`. Disposition: **pushed; whether to open a pull request is the author's
-  to say** (asked at the end of the session). `origin/main` re-fetched before this line: `f143c8e`.
+  suite, `agent/simulation/run.mjs` and its suite, and `docs/`. Disposition: the first four commits (`9e896a0` … `aec8ccb`) were **merged
+  by the author as pull request #102** (`89c0305`, 12 Nov 2026; QA run 993 and Pages run 111 green; the live `js/masthead.js` and
+  `js/regulatory-model.js` equal `main`'s). **The two follow-up commits** (F-A4 made lighter to close, record §8) sit on that merged history,
+  **pushed, no pull request opened** — whether to open one is the author's to say. They were not rebased onto `89c0305`: a force-push was refused
+  and is not needed, since `aec8ccb` is an ancestor of `main` and a pull request would show only those two. `origin/main` re-fetched: `89c0305`.
 - Merged during the session, not this session's: #99 (PV2-04), #100 and #101 (`ui/favicon-brand-mark`, the header favicon — a branch
   absent from this register; reported to the author).
 - Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
