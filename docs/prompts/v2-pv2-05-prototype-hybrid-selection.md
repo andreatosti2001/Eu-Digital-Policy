@@ -18,6 +18,12 @@ may change it before use.
 PV2-05 — Post-v2, blocco C, terzo prototipo e selezione: la direzione Ibrida con la sua istanza del Regulatory Network Explorer, il confronto
 omogeneo dei tre prototipi e dei due concept dell'Explorer, e la decisione esplicita dell'autore, per EU Digital Policy v2.0
 
+> **Nota del 12 novembre 2026 (HP-01), da leggere prima di tutto.** La vista **homepage** di questo prompt è sostituita dal prototipo
+> `prototypes/homepage/`, scelto dall'autore per quella vista (`docs/ROADMAP-v2.md` §8, «HP-01: the homepage prototype built», punto 2:
+> «Supersedes homepage only (Recommended)»). PV2-05 costruisce e confronta solo le altre tre viste — pagina di un regolamento, pagina di un
+> articolo, vista analitica — e la selezione riguarda quelle. **PV2-05 viene dopo HP-02** (`docs/prompts/v2-hp-02-homepage-follow-up.md`;
+> «Homepage follow-up first (Recommended)»). Il resto del prompt vale com'è scritto.
+
 ## Prima di iniziare
 
 Esegui `git status --short --branch`, `git fetch --all --prune` e `git branch -a`. Poi `git rev-parse --is-shallow-repository`: se risponde

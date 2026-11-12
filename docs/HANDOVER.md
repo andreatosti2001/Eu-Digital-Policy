@@ -1,13 +1,67 @@
 # HANDOVER
 
-**Last updated:** 12 November 2026 (UTC), the author's session "P1 Remediation & Automation Readiness", at its checkpoint, and the same
-day's follow-up (F-A4 made lighter to close: options 1, 2 and 4, `docs/AUDIT-2026-11-11-P1.md` §8).
-**Branch:** `claude/kind-rubin-qq3vpo` (assigned by the environment), from `main` `25c9e79`, **rebased on `f143c8e`** when `main` moved
-during the session; pushed. No pull request opened, nothing merged, `main` untouched.
-The entries below this session's are unchanged; the paragraph that headed this file for the P0 sessions is kept under their
-branch register as it was written.
+**Last updated:** 12 November 2026 (UTC), HP-01 (the homepage session: a creative direction, then its prototype), at its close.
+**Branch:** `claude/funny-hamilton-yt9uh0` (assigned by the environment), from `main` `f143c8e`, with `main` `33ee004` **merged in** (`ed44b2e`) when `main` moved
+during the session (#102, #103); pushed, no history rewritten. Pull request #104 opened on the author's answer, not merged by the session.
+The entries below this session's are unchanged; the header the P1 checkpoint wrote is kept under its branch register, as written.
+
+## Branch register — 12 November 2026 (HP-01, the homepage)
+
+- `claude/funny-hamilton-yt9uh0`, from `main` `f143c8e`, with `main` `33ee004` merged in (`ed44b2e`): the unpublished `prototypes/homepage/` (new) and `docs/` (`ROADMAP-v2.md` §8,
+  `PROTOTYPES.md` §H, `HANDOVER.md`, `prompts/v2-hp-02-homepage-follow-up.md`, a note at the head of the PV2-05 prompt). Disposition: on the
+  author's answer ("After recording (Recommended)"), pull request #104
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/104), opened and not merged by the session; merging is the author's.
+  `origin/main` re-fetched before this line: `33ee004`.
+- Merged during the session, not this session's: #102 and #103 (`claude/kind-rubin-qq3vpo`, the P1 checkpoint). #102 changed what the
+  masthead's bands count (MC-2: core and adjacent, 21); the prototype was adapted to it (`9e19891`).
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed), as below. Nothing else is unmerged.
+
+## HP-01 — the homepage: a creative direction, then its prototype (11–12 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the scope row of HP-01 and the four rows "HP-01: …". **Record:** `prototypes/homepage/README.md` and
+`docs/PROTOTYPES.md` §H — read them, not this entry.
+
+**What happened.** The author asked for a creative direction for the homepage before any implementation. The session read the code (the tree is
+a hand-authored SVG in `index.html`, drawn three times there, its edges `brief.json`'s reading graph, hidden below 640 px; the Observatory has no
+entrance of its own) and the prototypes, and put three directions with wireframes: A (the Atlas), B (Crown and Roots, recommended), C (the
+Constellation). The author chose **C, revised to stay compatible with the published homepage**, with an opening that includes the site icon; the
+opening was settled on a dozen rendered videos (§8, "HP-01: the opening"), then tested at night (§8, "HP-01: the serpent at night"). On "Si" the
+prototype was built (`d1ea89b`). **During the session `main` moved**: #102 made `instrumentsByStatus()` the one count of instruments by status and the
+bands now count 21 core and adjacent instruments; `main` was merged into the branch (`ed44b2e`) and the prototype adapted (`9e19891`): the counted set and the status order
+come from `js/regulatory-model.js`, and every counted instrument carries its status mark in the figure.
+
+**Battery on `9e19891`, 12 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit` exit 0 (0
+errors, 11 warnings); `freshness` exit 0 — **identical to `origin/main` `33ee004` measured in a clean worktree**; `tools/selftest.mjs` **189/189**. The
+prototype in Chromium (Playwright, scratchpad, not committed — **a gap**): 1440 and 390 px, Day and Night, no console error, no CSP violation,
+`localhost` only, no horizontal scroll; the opening once and not on the next visit; reduced motion draws the final state; the figure one Tab stop.
+**Not run:** the 25 agent suites, `.control-room/` and the browser suite — nothing under `agent/`, `.control-room/`, `js/`, `css/`, `data/` or the
+published pages changed, and the browser suite does not cover `prototypes/`.
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| Directions | in chat (findings, A/B/C, wireframes); §8 scope row | read the row | none | three directions and a recommendation before any prototype |
+| Decisions | §8, four rows "HP-01: …" | read the rows; each quotes the author | none | every decision in §8 with the author's words |
+| Prototype | `prototypes/homepage/` (`d1ea89b`, `9e19891`) | `python3 -m http.server 8000` (or any static server); open `/prototypes/homepage/`; "Replay the opening"; Day/Night; a 390 px window; Tab into the figure, arrow keys; the "Falls due next" lens | none in the repository (scratch checks only) | the approved figure and opening, two themes, two widths, reduced motion, keyboard |
+| MC-2 | `9e19891` | `grep -n regulatory-model prototypes/homepage/homepage.js` | `tools/selftest.mjs` 189/189 (it does not walk `prototypes/`) | no count by status outside its one home |
+| Record | `docs/PROTOTYPES.md` §H; the prototype's README | read them | none | what was checked and what was not, said |
+| Next prompt | `docs/prompts/v2-hp-02-homepage-follow-up.md`; a note in the PV2-05 prompt | read its exit criterion | none | the prompt exists and carries the standing rule |
+| Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data img tools agent .github prototypes/editorial prototypes/observatory` is empty | none | nothing of the published site changed |
+
+**For the next session:** HP-02, on its prompt; it starts from the author's original serpent artwork, and asks for it first if it has not arrived.
+PV2-05 follows, without its homepage view.
 
 ## Branch register — 12 November 2026 (P1 checkpoint)
+
+*The header the P1 checkpoint wrote, kept as written:*
+
+> **Last updated:** 12 November 2026 (UTC), the author's session "P1 Remediation & Automation Readiness", at its checkpoint, and the same
+> day's follow-up (F-A4 made lighter to close: options 1, 2 and 4, `docs/AUDIT-2026-11-11-P1.md` §8).
+> **Branch:** `claude/kind-rubin-qq3vpo` (assigned by the environment), from `main` `25c9e79`, **rebased on `f143c8e`** when `main` moved
+> during the session; pushed. No pull request opened, nothing merged, `main` untouched.
+> The entries below this session's are unchanged; the paragraph that headed this file for the P0 sessions is kept under their
+> branch register as it was written.
 
 - `claude/kind-rubin-qq3vpo`, rebased on `main` `f143c8e`: `js/regulatory-model.js`, `js/masthead.js`, `tools/metric-contract.mjs`,
   `tools/commit-evidence.mjs`, `tools/selftest.mjs`, `agent/release/gate.mjs` and its suite, `agent/orchestrator/orchestrator.mjs` and its

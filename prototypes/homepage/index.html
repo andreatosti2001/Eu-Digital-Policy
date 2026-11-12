@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
+<meta name="robots" content="noindex, nofollow">
+<title>Homepage prototype — the tree and its constellation | EU Digital Policy</title>
+<link rel="icon" href="../../img/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../../css/tokens.css">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../css/evidence.css">
+<link rel="stylesheet" href="../../css/tools.css">
+<link rel="stylesheet" href="homepage.css">
+<script type="module" src="homepage.js"></script>
+</head>
+<body data-theme="dark" data-root="../../">
+<a class="skip-link" href="#maincontent">Skip to content</a>
+
+<p class="hp-proto">Prototype · homepage · not published
+  <button type="button" class="hp-replay" id="hpReplay">Replay the opening</button></p>
+
+<header class="hp-top">
+  <a class="hp-brand" href="../../index.html"><img src="../../img/icons/favicon-32x32.png" alt="" width="20" height="20"><b>EU Digital Policy</b></a>
+  <nav class="hp-nav" aria-label="Sections of this project"><ul id="hpNav"></ul></nav>
+  <button type="button" class="hp-btn" data-open-search>Search</button>
+  <button type="button" class="hp-btn" id="hpTheme" aria-pressed="true">Night</button>
+</header>
+
+<main id="maincontent">
+<section class="portal hp-portal" aria-labelledby="hpTitle">
+<div class="portal-inner">
+
+  <header class="portal-masthead">
+    <h1 id="hpTitle"></h1>
+    <p class="portal-stand" id="hpStand"></p>
+    <div class="sop-ticker" data-mount="sop-ticker"></div>
+  </header>
+
+  <div class="hp-stage">
+    <div class="hp-side hp-lenses" id="hpLenses">
+      <p class="hp-k" id="hpLensLabel">Show on the map</p>
+      <div role="radiogroup" aria-labelledby="hpLensLabel">
+        <button type="button" role="radio" aria-checked="true" data-lens="status"><b>Status</b><span>where the core rulebook stands</span></button>
+        <button type="button" role="radio" aria-checked="false" tabindex="-1" data-lens="due"><b>Falls due next</b><span>the next 90 days</span></button>
+      </div>
+      <p class="hp-k">The marks</p>
+      <ul class="hp-legend" id="hpLegend"></ul>
+    </div>
+
+    <figure class="hp-figure">
+      <svg id="hpFig" class="hp-fig" viewBox="0 0 720 640" role="group" aria-labelledby="hpFigCap" tabindex="-1"></svg>
+      <figcaption id="hpFigCap" class="hp-sr">The parts and annexes of the brief at the centre, as the tree; around them the core instruments, each beside the part that reads it, marked by status; beyond them the instruments this site maps, watches or excludes. The same content follows as a list.</figcaption>
+    </figure>
+
+    <div class="hp-side hp-caption" id="hpCaption" aria-live="polite"></div>
+  </div>
+
+  <div class="portal-cta">
+    <a class="btn primary" href="../../index.html#part-1">Read the brief</a>
+    <a class="btn" href="../../applies.html">What applies to me?</a>
+    <button class="btn btn-quiet" type="button" data-open-search>Search the record</button>
+  </div>
+
+  <details class="hp-list" id="hpList">
+    <summary>The figure, as a list</summary>
+    <div id="hpListBody"></div>
+  </details>
+
+  <div class="sop" id="stateOfPlay" data-mount="state-of-play">
+    <p class="sop-loading">Reading the current state of play…</p>
+  </div>
+
+</div>
+</section>
+</main>
+
+<footer class="hp-foot">
+  <p>A prototype of the homepage only, built for review: not published, not indexed, not chosen. The title, the standfirst and every figure are read in place from the site's <code>index.html</code> and <code>data/</code>; nothing is copied or typed. The published site remains the reference.</p>
+</footer>
+</body>
+</html>
