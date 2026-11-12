@@ -25,6 +25,7 @@ import { checkDerivation, claimKind, openBacklog } from '../js/evidence-model.js
 import { attestationAudit, roadmapAudit } from './attestation-audit.mjs';
 import { noticeAudit } from './notice-audit.mjs';
 import { basisIndex, checkFineBasis } from './fine-basis.mjs';
+import { auditReadings } from './register-reading.mjs';
 import { contractAudit } from './metric-contract.mjs';
 
 const DATA = 'data';
@@ -618,6 +619,11 @@ function report() {
    failing declaration is an error and its figure is not publishable. */
 const CONTRACT = await contractAudit({ db });
 for (const e of CONTRACT.errors) err(e);
+
+/* ---------- a court-register reading, where a record carries one (12 Nov 2026, P1) ----------
+   tools/register-reading.mjs auditReadings(): E1–E5 over every enforcement record that has an `attestation`. A record with
+   none is not an error — making it mandatory is the author's decision (docs/AUDIT-2026-11-11-P1.md §8, D-P1-5). */
+for (const e of auditReadings(db)) err(e);
 
 report();
 process.exit(errors.length ? 1 : 0);
