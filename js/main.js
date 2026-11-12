@@ -11,6 +11,7 @@ import { initCalendar } from './calendar.js';
 import { initDNA, setOverlay } from './dna.js';
 import { initGlossaryGraph } from './glossary-graph.js';
 import { initMasthead } from './masthead.js';
+import { initHomeFigure } from './home-figure.js';
 import { initPyramid } from './pyramid.js';
 import { initShell } from './shell.js';
 import { initPalette } from './palette.js';
@@ -57,6 +58,9 @@ async function boot() {
      article itself is rendered and neither can block it if it fails. */
   /* the masthead is the first thing a reader sees, so it goes first */
   initMasthead().catch((e) => console.error('[masthead] failed', e));
+  /* the homepage figure enhances the tree the page already carries; it starts after the masthead so that the status marks it adds
+     to the ticker and the bands find them, and if it fails the page is the published one */
+  initHomeFigure(ix).catch((e) => console.error('[home] failed', e));
   /* the palette starts the entity index itself, so it is started once */
   initPalette().catch((e) => console.error('[palette] failed', e));
   initGlossaryGraph().catch((e) => console.error('[glossary] graph failed', e));
