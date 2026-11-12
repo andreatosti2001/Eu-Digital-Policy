@@ -29,7 +29,7 @@ import { tmpdir } from 'node:os';
 import { findBrowser, CANDIDATE_PATHS, BROWSER_ENV_VARS } from './find.mjs';
 import { serveSite, REPO_ROOT, MIME } from './serve.mjs';
 import { runBrowserQA, asQACheck, verdictOf, BASELINE, BROWSER_QA_COMMAND } from './runner.mjs';
-import { PAGES, NAV_FILES, VIEWPORTS, checkDeployedSubpath, DEPLOY_BASE_PATH } from './checks.mjs';
+import { PAGES, NAV_FILES, VIEWPORTS, checkDeployedSubpath, DEPLOY_BASE_PATH, checkPageLoads, MOUNT_WAIT_MS } from './checks.mjs';
 import { CHROME_FLAGS, launch } from './cdp.mjs';
 import { validate } from '../schemas/validate.mjs';
 import { QAResult } from '../schemas/contracts/qa-result.mjs';
@@ -387,6 +387,69 @@ test('the deployed-path check FAILS on a root-relative reference', async (t) => 
   } finally {
     if (browser) { try { await browser.close(); } catch { /* not a site defect */ } }
     rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+/* ------------------------------------------------------------ the mount wait
+   12 Nov 2026: `load:datasets.html:mount` failed once, with no console error, no exception and no CSP refusal. `goto()`
+   returns 350 ms after the last request STARTS, so a data file still arriving after that was read as "never rendered"
+   (docs/BROWSER-QA.md §6.3). `checkPageLoads` now waits, bounded, for the mount to leave the fallback. Two proofs, and the
+   second is the one that matters: the wait fixes the race and weakens nothing. */
+
+const DATASETS_SPEC = PAGES.find((p) => p.file === 'datasets.html');
+
+async function datasetsWithClaimsHeldFor(browser, origin, heldMs, opts) {
+  const page = await browser.newPage();
+  try {
+    await page.send('Fetch.enable', { patterns: [{ urlPattern: '*/data/claims.json' }] });
+    browser.rpc.on('Fetch.requestPaused', (ev, sid) => {
+      if (sid !== page.sessionId) return;
+      if (heldMs === null) return; /* never answered: the request stays paused */
+      setTimeout(() => page.send('Fetch.continueRequest', { requestId: ev.requestId }).catch(() => {}), heldMs);
+    });
+    return await checkPageLoads(page, origin, DATASETS_SPEC, opts);
+  } finally { await page.close(); }
+}
+
+test('MOUNT 1 · a data file that arrives after the network has gone quiet no longer fails the mount check', async (t) => {
+  const found = findBrowser();
+  if (!found.found) { t.skip(`no browser: ${found.reason}`); return; }
+  const site = await serveSite();
+  let browser = null;
+  try {
+    browser = await launch({ executable: found.path });
+    /* 1 s is well past the 350 ms the quiet-wait allows, and inside MOUNT_WAIT_MS */
+    assert.ok(MOUNT_WAIT_MS > 1500);
+    const results = await datasetsWithClaimsHeldFor(browser, site.origin, 1000);
+    const mount = results.find((r) => r.id === 'load:datasets.html:mount');
+    assert.equal(mount.status, 'pass', `a slow file was still read as never rendered: ${JSON.stringify(mount.data)}`);
+    for (const id of ['console:datasets.html', 'exception:datasets.html', 'csp:datasets.html']) {
+      assert.equal(results.find((r) => r.id === id).status, 'pass', `${id} must still be a pass`);
+    }
+  } finally {
+    if (browser) { try { await browser.close(); } catch { /* not a site defect */ } }
+    await site.close();
+  }
+});
+
+test('MOUNT 2 · a data file that is never answered STILL fails the mount check, and the failure says why', async (t) => {
+  const found = findBrowser();
+  if (!found.found) { t.skip(`no browser: ${found.reason}`); return; }
+  const site = await serveSite();
+  let browser = null;
+  try {
+    browser = await launch({ executable: found.path });
+    const results = await datasetsWithClaimsHeldFor(browser, site.origin, null, { mountWaitMs: 1500 });
+    const mount = results.find((r) => r.id === 'load:datasets.html:mount');
+    assert.equal(mount.status, 'fail', 'the wait turned a page that never rendered into a pass — the assertion was weakened');
+    assert.match(mount.summary, /still holds the loading fallback/);
+    assert.equal(mount.data.timedOut, true);
+    assert.ok(mount.data.waitedMs >= 1400, `it gave up after ${mount.data.waitedMs} ms, before its ${mount.data.mountWaitMs} ms`);
+    assert.ok(mount.data.unansweredData.some((u) => u.endsWith('/data/claims.json')),
+      `the diagnostics do not name the stalled request: ${JSON.stringify(mount.data)}`);
+  } finally {
+    if (browser) { try { await browser.close(); } catch { /* not a site defect */ } }
+    await site.close();
   }
 });
 

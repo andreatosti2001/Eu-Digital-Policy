@@ -230,7 +230,15 @@ about the real origin's headers.
    the perceptual ones.
 3. **Network quiet is `settleMs` after the last request**, not Playwright's `networkidle`. A
    renderer slower than 350 ms after its last fetch would be read as not having rendered.
-   No such case exists today; it would show as a mount-point failure, not a silent pass.
+   It happened once, on 12 Nov 2026: `load:datasets.html:mount` failed in a local run with
+   no console error, exception or CSP refusal, while CI on the same tree passed. The cause in
+   that run was not recorded; the mechanism was reproduced by holding one data file for
+   600 ms. `checkPageLoads` now waits, bounded by `MOUNT_WAIT_MS` (10 s), for the mount point
+   to leave the fallback before it applies the same assertion, and a failure records how long
+   it waited, which `data/*.json` requests were never answered, error responses, failed
+   requests and the console (`agent/browser/selftest.mjs` MOUNT 1 and MOUNT 2: a slow file
+   passes, a never-answered one still fails). **Still true:** `goto()` itself is unchanged,
+   and the other `goto` + `evaluate` pairs in `checkDatasets` do not wait.
 4. **No visual regression.** Nothing is screenshotted or compared. A layout that renders
    without horizontal overflow and looks wrong passes every check here.
 5. **The undecidable checks are judgements about what a check can conclude**, written once
