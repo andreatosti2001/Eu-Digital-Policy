@@ -1,6 +1,7 @@
 # HANDOVER
 
-**Last updated:** 12 November 2026 (UTC), the author's session "P1 Remediation & Automation Readiness", at its checkpoint.
+**Last updated:** 12 November 2026 (UTC), the author's session "P1 Remediation & Automation Readiness", at its checkpoint, and the same
+day's follow-up (F-A4 made lighter to close: options 1, 2 and 4, `docs/AUDIT-2026-11-11-P1.md` §8).
 **Branch:** `claude/kind-rubin-qq3vpo` (assigned by the environment), from `main` `25c9e79`, **rebased on `f143c8e`** when `main` moved
 during the session; pushed. No pull request opened, nothing merged, `main` untouched.
 The entries below this session's are unchanged; the paragraph that headed this file for the P0 sessions is kept under their
@@ -29,7 +30,18 @@ merge's own content judged by C2/C6/C7/C8 and reported by `commit-evidence.mjs`;
 work around it (§2). **C8 strict** — off, as decided; documented as an accepted limitation (§4). **Production** — not activated.
 **Decisions put to the author:** D-P1-1…D-P1-4 (§7).
 
-**Battery on `8d4d16f` (the three code commits on `f143c8e`), 12 Nov 2026:** validators exit 0 (`validate` 0 errors · 5 warnings ·
+**Follow-up, 12 Nov 2026 — the author's options 1, 2 and 4 for the human check of F-A4** (record §8). **4:** a pending appeal is `high`
+(30 days), not `critical` (14) — `js/evidence-model.js riskClass()`; the nine fined records past their interval go from 9 to 3, **with no record
+read**; the **claims' interval is held** (17 claims would otherwise have gone 30 → 90 days; found after the question, `enforcementVolatile()`,
+tests RC1, RC2). **1 and 2:** `tools/register-reading.mjs` — `sheet` (the records, their cases derived from the data, the cases no record
+carries: T-638/26, T-638/26 R, T-639/26) and `check <answers.json>` (refuses what cannot be true; prints the source and the `attestation`
+objects it would become; **no verb writes**); the optional `attestation` on an enforcement record, audited by `tools/validate.mjs` (E1–E5).
+**For the next session:** the author fills the sheet from the Court's register (`node tools/register-reading.mjs sheet`); a session then
+re-reads the authority pages the same day, commits the source, the attestations and `last_verified` with an `Evidence:` trailer. **Open for the
+author:** D-P1-5 (make the attestation mandatory), D-P1-6 (the claims' interval).
+
+**Battery on `8d4d16f` (the three code commits on `f143c8e`), 12 Nov 2026 — superseded for `tools/` and `js/evidence-model.js` by the follow-up's own
+battery below:** validators exit 0 (`validate` 0 errors · 5 warnings ·
 `METRICS` both publishable; `freshness --as-of 2026-11-12` exit 0, 3 staleness prompts; `design-qa` 0/0); `agent/schemas/cli.mjs check`
 exit 0; the 25 suites and `.control-room/` **1483 tests, 1482 pass, 0 fail, 1 skipped** (no IPv6 loopback) — 1475 at PV2-04 plus G17,
 G18, MC18–MC22, V1; **browser suite (`--require-browser`) 343 pass, 0 fail, 1 undecidable** (`a11y:bound`, by design) — the baseline.
