@@ -5,6 +5,20 @@
 during the session (#102, #103); pushed, no history rewritten. Pull request #104 opened on the author's answer, not merged by the session.
 The entries below this session's are unchanged; the header the P1 checkpoint wrote is kept under its branch register, as written.
 
+## Branch register — 12 November 2026 (browser QA: `load:datasets.html:mount`)
+
+- `claude/nifty-mccarthy-aov32e`, from `main` `84bfa89`: `agent/browser/checks.mjs`, `agent/browser/selftest.mjs`, `docs/BROWSER-QA.md` §6.3 and this entry.
+  Test code and one doc; no application code. Disposition: on the author's "yea", pull request #106
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/106), opened and not merged by the session; merging is the author's.
+  `origin/main` re-fetched before this line: unchanged (`84bfa89`).
+- **What it is.** A local browser run failed `load:datasets.html:mount` ("still holds the loading fallback") with no console error, exception or CSP
+  refusal; CI's browser job on the same tree passed. `goto()` settles 350 ms after the last request *starts*, so a data file arriving later was read as
+  "never rendered". `checkPageLoads` now waits, bounded by `MOUNT_WAIT_MS` (10 s), then applies the same assertion; a failure records the wait, the
+  unanswered data requests, error responses, failed requests and the console. The mechanism was reproduced (one JSON held 600 ms gives the exact
+  message). **The cause in the author's run was not established** and nothing saved from it shows it. Not changed, and left to the author:
+  `js/data.js load()` has no fetch timeout, and the other `goto` + `evaluate` pairs in `checkDatasets` do not wait.
+  The full browser suite was not re-run (the `pages` area was: 60 pass); the local Chrome was 153, the author's 157.
+
 ## Branch register — 12 November 2026 (HP-01, the homepage)
 
 - `claude/funny-hamilton-yt9uh0`, from `main` `f143c8e`, with `main` `33ee004` merged in (`ed44b2e`): the unpublished `prototypes/homepage/` (new) and `docs/` (`ROADMAP-v2.md` §8,
