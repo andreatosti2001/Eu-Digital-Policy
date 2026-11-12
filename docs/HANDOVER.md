@@ -2,14 +2,15 @@
 
 **Last updated:** 12 November 2026 (UTC), HP-01 (the homepage session: a creative direction, then its prototype), at its close.
 **Branch:** `claude/funny-hamilton-yt9uh0` (assigned by the environment), from `main` `f143c8e`, with `main` `33ee004` **merged in** (`ed44b2e`) when `main` moved
-during the session (#102, #103); pushed, no history rewritten. Pull request to `main` opened on the author's answer, not merged by the session.
+during the session (#102, #103); pushed, no history rewritten. Pull request #104 opened on the author's answer, not merged by the session.
 The entries below this session's are unchanged; the header the P1 checkpoint wrote is kept under its branch register, as written.
 
 ## Branch register — 12 November 2026 (HP-01, the homepage)
 
 - `claude/funny-hamilton-yt9uh0`, from `main` `f143c8e`, with `main` `33ee004` merged in (`ed44b2e`): the unpublished `prototypes/homepage/` (new) and `docs/` (`ROADMAP-v2.md` §8,
   `PROTOTYPES.md` §H, `HANDOVER.md`, `prompts/v2-hp-02-homepage-follow-up.md`, a note at the head of the PV2-05 prompt). Disposition: on the
-  author's answer ("After recording (Recommended)"), a pull request to `main`, opened and not merged by the session; merging is the author's.
+  author's answer ("After recording (Recommended)"), pull request #104
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/104), opened and not merged by the session; merging is the author's.
   `origin/main` re-fetched before this line: `33ee004`.
 - Merged during the session, not this session's: #102 and #103 (`claude/kind-rubin-qq3vpo`, the P1 checkpoint). #102 changed what the
   masthead's bands count (MC-2: core and adjacent, 21); the prototype was adapted to it (`9e19891`).
