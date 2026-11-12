@@ -383,7 +383,9 @@ anything real running.
    detectors have no ordering constraint and reported one relationship backwards; sibling
    records from a single dispatch conflict with each other; and `receive()` is called with
    `allowSimulated: true`, hard coded, so every workflow admits a simulated record.
-   `docs/FIRST-END-TO-END-AUDIT.md` §7, findings V-3, I-1, I-2 and V-1. **None is fixed.**
+   `docs/FIRST-END-TO-END-AUDIT.md` §7, findings V-3, I-1, I-2 and V-1. **V-1 was repaired on 11 Nov
+   2026** (`allowSimulated` is a constructor option, default `false`; test V1; `docs/AUDIT-2026-11-11-P1.md` §5);
+   **V-3, I-1 and I-2 are not fixed.**
 3. **The conflict detector sees six shapes.** Two records can disagree in prose that nothing
    in this repository reads — the validators do not read prose either.
 4. **The provenance gate checks that provenance is internally complete**, not that the

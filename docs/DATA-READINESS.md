@@ -338,6 +338,7 @@ Each item needs its own row in §8 before anyone acts on it, and none is in this
 5. **F-A6.** The correction of `docs/DATA-GOVERNANCE.md` §5's sentence about `brief.json`.
 6. **F-A7 → MC-2.** One computing function for instruments by status; the masthead adopts the card's 21 core and adjacent
    instruments and its comment is corrected (§8, "instruments card question 2"). Until then that card cannot be shown either.
+   *Closed on 11 Nov 2026 (P1 checkpoint, `docs/AUDIT-2026-11-11-P1.md` §3): `js/regulatory-model.js instrumentsByStatus()`; the card declared as `INSTRUMENTS_CARD` and publishable.*
 7. **F-A9 → MC-14.** `tools/freshness.mjs` reads a month-precision event's stored first day as its date; a `tools/` change. *Repaired on 9 Nov 2026 in pull request #85 (§8, "Two of PV2-01's findings repaired").*
 8. **F-A10.** The masthead's "what falls due next" and its ticker read the reader's clock (F-15); the deadlines card may
    not, so D computes both from one stated date. *Repaired on 9 Nov 2026 in pull request #85: one stated UTC day, printed; MC-14 on the masthead's list is still D's.*
@@ -419,6 +420,7 @@ future. Under MC-14 the card names it as "may fall either side"; the row stays a
 
 - **F-A7 · The masthead counts instruments by status itself, over a different population.** `js/masthead.js`
   `statusLedger()` and `ticker()` count the 16 core instruments; the card counts 21 (§8, q. 2: the masthead follows in D).
+  *Closed on 11 Nov 2026 (§7 item 6).*
 - **F-A8 · README limitation 1 carries the grade counts of 27 September 2026** ("20 are graded *Unresolved*"; 5 today).
   It is the unguarded second home `docs/DATA-GOVERNANCE.md` §5 already lists, and the README itself says "the
   bibliography's live count is the one to trust". The README is not touched by any session; recorded only.
@@ -520,7 +522,9 @@ number reads "not determinable" instead of a concatenated string. **No view, cha
 - **The views show "announced" without its partition** (§5.2, A.3 q. 1). The figure carries it; the masthead and instrument
   pages do not print it. That is D's (Stage 4), not done here.
 - **F-A7** (instruments by status computed in the masthead) and the instruments card: not declared, MC-2 would fail.
+  *Closed on 11 Nov 2026 (`docs/AUDIT-2026-11-11-P1.md` §3).*
 - **F-A4**: 9 inputs past their interval; only verification work against primary sources clears it.
+  *Scanned on 11 Nov 2026 and **not** re-verified: no evidence of change, no `last_verified` moved (`docs/AUDIT-2026-11-11-P1.md` §2).*
 - **F-A6, F-A8**: unchanged.
 - **MC-2's limits** are stated in `PROPERTIES` and asserted by a test: a generic helper over a mapped list is not seen. The
   first version of the lexer did not recognise regex literals and read `js/masthead.js` after its first one as a string — a

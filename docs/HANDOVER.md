@@ -1,10 +1,50 @@
 # HANDOVER
 
-**Last updated:** 11 November 2026, PV2-04 (Post-v2 C, the Policy observatory prototype), at its final checkpoint (C.2–C.5).
-**Branch:** `claude/pv2-04-start-nhgcqx` (assigned by the environment), from `main` `25c9e79`; pushed. Final checkpoint approved (§8);
-pull request #99 opened on the author's answer, not merged by the session.
+**Last updated:** 12 November 2026 (UTC), the author's session "P1 Remediation & Automation Readiness", at its checkpoint.
+**Branch:** `claude/kind-rubin-qq3vpo` (assigned by the environment), from `main` `25c9e79`, **rebased on `f143c8e`** when `main` moved
+during the session; pushed. No pull request opened, nothing merged, `main` untouched.
 The entries below this session's are unchanged; the paragraph that headed this file for the P0 sessions is kept under their
 branch register as it was written.
+
+## Branch register — 12 November 2026 (P1 checkpoint)
+
+- `claude/kind-rubin-qq3vpo`, rebased on `main` `f143c8e`: `js/regulatory-model.js`, `js/masthead.js`, `tools/metric-contract.mjs`,
+  `tools/commit-evidence.mjs`, `tools/selftest.mjs`, `agent/release/gate.mjs` and its suite, `agent/orchestrator/orchestrator.mjs` and its
+  suite, `agent/simulation/run.mjs` and its suite, and `docs/`. Disposition: **pushed; whether to open a pull request is the author's
+  to say** (asked at the end of the session). `origin/main` re-fetched before this line: `f143c8e`.
+- Merged during the session, not this session's: #99 (PV2-04), #100 and #101 (`ui/favicon-brand-mark`, the header favicon — a branch
+  absent from this register; reported to the author).
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
+
+## P1 checkpoint — remediation and automation readiness (11–12 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the P1 checkpoint". **Record:** `docs/AUDIT-2026-11-11-P1.md` — read it, not
+this entry.
+
+**Closed:** **F-A7** — `js/regulatory-model.js instrumentsByStatus()`, the masthead its one consumer, at 21 core and adjacent
+instruments; `INSTRUMENTS_CARD` declared and publishable; a count held to MC-2 like a sum (record §3). **Merge commits** — a
+merge's own content judged by C2/C6/C7/C8 and reported by `commit-evidence.mjs`; no verdict on the real history changed (§4).
+**V-1** — simulated records refused by default (§5). **CI/Pages** — the live site is `f143c8e`, 124 of 124 files (§1).
+**Not closed:** **F-A4** — nine records scanned, none re-verified; the register refused automated reading and the session did not
+work around it (§2). **C8 strict** — off, as decided; documented as an accepted limitation (§4). **Production** — not activated.
+**Decisions put to the author:** D-P1-1…D-P1-4 (§7).
+
+**Battery on `8d4d16f` (the three code commits on `f143c8e`), 12 Nov 2026:** validators exit 0 (`validate` 0 errors · 5 warnings ·
+`METRICS` both publishable; `freshness --as-of 2026-11-12` exit 0, 3 staleness prompts; `design-qa` 0/0); `agent/schemas/cli.mjs check`
+exit 0; the 25 suites and `.control-room/` **1483 tests, 1482 pass, 0 fail, 1 skipped** (no IPv6 loopback) — 1475 at PV2-04 plus G17,
+G18, MC18–MC22, V1; **browser suite (`--require-browser`) 343 pass, 0 fail, 1 undecidable** (`a11y:bound`, by design) — the baseline.
+The clone was shallow until `git fetch --unshallow`; before it, eight governance tests failed on an untouched `25c9e79` too (§6.3).
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| CI and Pages | record §1 | runs 990/110; hash the live site against `pages-artifact.mjs build` | Pages gate | the live site is the published commit: **met** |
+| F-A4 | record §2 | read the register for the nine | none (a reading) | each record re-verified or classified: **classified, not re-verified** |
+| F-A7 | `regulatory-model.js`, `metric-contract.mjs` | open the brief's masthead | MC18–MC22 | one function, card publishable: **met** |
+| C7/C8 merges | `gate.mjs`, `commit-evidence.mjs` | `node tools/commit-evidence.mjs <base> <head>` | G17, G18 | a merge's own content seen: **met**; strict unchanged |
+| V-1 | `orchestrator.mjs` | — | V1 | simulated refused by default: **met** |
+| Automation | record §5 | `node agent/production/cli.mjs readiness` | the production suite | production not ready, and says so: **met** |
 
 ## Branch register — 11 November 2026 (PV2-04)
 

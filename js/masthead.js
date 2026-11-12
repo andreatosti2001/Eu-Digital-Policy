@@ -10,8 +10,8 @@
    This renders the current state from the canonical records. Three
    readings, in the order a reader needs them:
 
-     1. Where the core instruments stand — as a band per status, not a
-        single count. The project's first rule is that entry into force
+     1. Where the instruments stand — the core and the adjacent ones, as
+        a band per status, not a single count. The project's first rule is that entry into force
         is not application; a masthead that said "14 in force" would
         contradict the brief on its own front page.
 
@@ -28,14 +28,18 @@
 import { loadAll, index, label as taxLabel, note as taxNote, renderError } from './data.js';
 import * as F from './format.js';
 import { actionsOnly, finesFigure } from './pipeline.js';
+import { instrumentsByStatus, STATUS_ORDER } from './regulatory-model.js';
 import { href as siteHref } from './routes.js';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-/* The bands, in the order the obligations actually bite. Each carries the
-   sentence that keeps it apart from its neighbours — this masthead is also
-   where a first-time reader learns the distinction. */
+/* The words for the bands. WHICH bands exist, their order and every count
+   come from js/regulatory-model.js instrumentsByStatus() (F-A7, MC-2): this
+   module counts nothing. A status with no entry here is still shown, under
+   its taxonomy label and note — never as "no status recorded". Each entry
+   carries the sentence that keeps it apart from its neighbours: this
+   masthead is also where a first-time reader learns the distinction. */
 const BANDS = [
   { id: 'status:applicable',
     short: 'Applicable',
@@ -60,6 +64,12 @@ const BANDS = [
     gloss: 'Published by the Commission. Creates no obligations.' },
 ];
 
+const BAND_TEXT = new Map(BANDS.map((b) => [b.id, b]));
+const bandOf = (ix, id) => BAND_TEXT.get(id) || { id, short: taxLabel(ix, id), gloss: taxNote(ix, id) || '' };
+/** the non-empty parts of the figure, in its own order */
+const liveBands = (ix, fig) => STATUS_ORDER.filter((id) => fig.parts[id].records.length)
+  .map((id) => ({ b: bandOf(ix, id), list: fig.parts[id].records.map((r) => ix.instrument.get(r)).filter(Boolean) }));
+
 const DAY = 86400000;
 
 /* ONE stated date for every deadline view on this page (F-15;
@@ -80,48 +90,46 @@ function daysUntil(iso, asOf) {
 
 /* ---------------------------------------------------------- 1. status bands */
 
-function statusLedger(ix, instruments) {
-  /* the core set is the brief's actual subject; referenced and adjacent
-     instruments are cited, not covered, and counting them would inflate this */
-  const core = instruments.filter((i) => i.scope_class === 'scope:core');
-  const counted = new Map();
-  for (const b of BANDS) counted.set(b.id, []);
-  const unrecorded = [];
-  for (const i of core) {
-    if (counted.has(i.legislative_status)) counted.get(i.legislative_status).push(i);
-    else unrecorded.push(i);
-  }
+function statusLedger(ix, fig) {
+  /* the core and adjacent instruments (the author's decision of 9 Nov 2026,
+     docs/ROADMAP-v2.md §8): the adjacent ones are mapped and profiled here,
+     so they have a status a reader may need; the referenced and out-of-scope
+     ones are cited, not covered, and are not counted */
+  const live = liveBands(ix, fig);
+  const total = fig.population;
+  const core = fig.by_scope['scope:core'].length;
+  const adjacent = fig.by_scope['scope:adjacent'].length;
+  const adjNote = taxNote(ix, 'scope:adjacent');
 
-  const live = BANDS.filter((b) => counted.get(b.id).length);
-  const total = core.length;
-
-  const bar = live.map((b) => {
-    const n = counted.get(b.id).length;
+  const bar = live.map(({ b, list }) => {
+    const n = list.length;
     return '<span class="sop-seg" data-s="' + esc(b.id.split(':').pop()) + '"' +
       ' data-flex="' + n + '"' +
       ' title="' + esc(n + ' — ' + b.short + '. ' + b.gloss) + '"></span>';
   }).join('');
 
-  const rows = live.map((b) => {
-    const list = counted.get(b.id);
+  const rows = live.map(({ b, list }) => {
     return '<li class="sop-band" data-s="' + esc(b.id.split(':').pop()) + '">' +
       '<span class="sb-n">' + list.length + '</span>' +
       '<span class="sb-body">' +
         '<span class="sb-label">' + esc(b.short) + '</span>' +
         '<span class="sb-which">' + list.map((i) =>
-          '<a href="' + esc(siteHref('instruments.html#' + i.id)) + '">' + esc(i.short_name) + '</a>').join('') + '</span>' +
+          '<a href="' + esc(siteHref('instruments.html#' + i.id)) + '"' +
+            (i.scope_class === 'scope:adjacent' ? ' title="' + esc('Adjacent: ' + adjNote) + '"' : '') +
+            '>' + esc(i.short_name) + '</a>').join('') + '</span>' +
         '<span class="sb-gloss">' + esc(b.gloss) + '</span>' +
       '</span></li>';
   }).join('');
 
   return '<section class="sop-block sop-status">' +
-    '<h2 class="sop-h">Where the core rulebook stands</h2>' +
+    '<h2 class="sop-h">Where the rulebook stands</h2>' +
     '<div class="sop-bar" role="img" aria-label="' +
-      esc(live.map((b) => counted.get(b.id).length + ' ' + b.short).join(', ')) + '">' + bar + '</div>' +
+      esc(live.map(({ b, list }) => list.length + ' ' + b.short).join(', ')) + '">' + bar + '</div>' +
     '<ul class="sop-bands">' + rows + '</ul>' +
-    '<p class="sop-foot">' + total + ' core instruments' +
-      (unrecorded.length ? ' · <span class="sop-unknown">' + unrecorded.length +
-        ' with no status recorded</span>' : '') +
+    '<p class="sop-foot">' + total + ' instruments: ' + core + ' core and ' + adjacent + ' adjacent' +
+      ' (' + esc(adjNote.charAt(0).toLowerCase() + adjNote.slice(1).replace(/\.$/, '')) + ')' +
+      (fig.unmapped.length ? ' · <span class="sop-unknown">' + fig.unmapped.length +
+        ' with a status outside the vocabulary</span>' : '') +
       ' · entry into force is not application, and neither is transposition.</p>' +
     '</section>';
 }
@@ -207,11 +215,8 @@ function enforcementLine(ix, records) {
    invitation to scroll. It says the same things as the ledger below in the
    space of a sentence. */
 
-function ticker(ix, instruments, records, asOf) {
-  const core = instruments.filter((i) => i.scope_class === 'scope:core');
-  const byStatus = BANDS.map((b) => ({
-    b, n: core.filter((i) => i.legislative_status === b.id).length
-  })).filter((x) => x.n);
+function ticker(ix, fig, asOf) {
+  const byStatus = liveBands(ix, fig).map(({ b, list }) => ({ b, n: list.length }));
 
   const today = asOf;
   const next = [...ix.event.values()]
@@ -277,10 +282,12 @@ export async function initMasthead() {
   const ix = index(db);
   const asOf = statedDay();
   const instruments = db.instruments.instruments || [];
+  /* the one computing function (F-A7, MC-2): both views below read this */
+  const byStatus = instrumentsByStatus(instruments);
   const records = db.enforcement.enforcement || [];
 
   mount.innerHTML =
-    statusLedger(ix, instruments) +
+    statusLedger(ix, byStatus) +
     nextDue(ix, 3, asOf) +
     /* a recorded absence of action is not an action and is counted nowhere */
     enforcementLine(ix, actionsOnly(records)) +
@@ -288,7 +295,7 @@ export async function initMasthead() {
   F.applyGeometry(mount);
 
   const tick = document.querySelector('[data-mount="sop-ticker"]');
-  if (tick) tick.innerHTML = ticker(ix, instruments, records, asOf);
+  if (tick) tick.innerHTML = ticker(ix, byStatus, asOf);
 
   document.dispatchEvent(new CustomEvent('masthead:ready', {
     detail: { instruments: instruments.length, events: ix.event.size, records: records.length }

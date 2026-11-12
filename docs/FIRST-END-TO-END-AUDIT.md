@@ -372,6 +372,8 @@ Every one names where it was observed.
   system will accept a record marked `simulated: true` and route it the whole
   way to a person. The only thing that stops one is `preflight` gate 2, which
   runs on `IMPLEMENTATION_REQUEST` alone. §4 above is what that costs.
+  *Repaired on 11 Nov 2026 (P1 checkpoint, `docs/AUDIT-2026-11-11-P1.md` §5): `allowSimulated`
+  is a constructor option, default `false`; the simulation and the suites opt in by name.*
 - **V-2 · `high` · The scope gate runs before the dispatch and nothing re-checks
   the output.** In leg 6b the approved `EditorialProposal` is scoped to
   `index.html`. `implementation-qa` returned a `ChangeRecord` declaring a change

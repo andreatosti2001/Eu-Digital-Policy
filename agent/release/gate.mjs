@@ -55,6 +55,7 @@ import { permittedFiles } from '../implement/scope.mjs';
 import { parseReviewers, registryFingerprintOf, verifyLedger } from '../implement/attestation.mjs';
 import { AGENT_NAMES } from '../orchestrator/capabilities.mjs';
 import { refusal, verify as verifyArtifact } from '../../tools/pages-artifact.mjs';
+import { mergeOwnFiles } from '../../tools/commit-evidence.mjs';
 import { auditWorkflows } from './workflows.mjs';
 import { dispatchKey } from './dispatch.mjs';
 import {
@@ -93,14 +94,28 @@ export function gateCutoff(cwd) {
   return shas.length ? shas[shas.length - 1] : null;
 }
 
+/**
+ * Every commit in since..head. For a one-parent commit `files` is what it
+ * changed. For a MERGE, `files` is what the merge changed ITSELF —
+ * tools/commit-evidence.mjs mergeOwnFiles(): content that differs from every
+ * parent and from the merge git would have made unaided (a conflict
+ * resolution, an edit made inside an uncommitted merge). Until 11 Nov 2026 a
+ * merge was given an empty list, so content of its own was seen by no
+ * condition (docs/AUDIT-2026-11-11.md §5.4; docs/AUDIT-2026-11-11-P1.md §4).
+ * A merge whose own content git cannot establish gets `files: null` and
+ * `own_error`, and C2 refuses the range: unmeasured is not empty.
+ */
 export function readCommits({ cwd, since, head }) {
   const out = tryGit(['rev-list', '--reverse', '--topo-order', `${since}..${head}`], cwd);
   if (out === null) return null;
   return out.split('\n').filter(Boolean).map((sha) => {
     const meta = git(['show', '-s', '--format=%P%x1f%ct%x1f%an%x1f%B', sha], cwd).split('\x1f');
     const parents = meta[0].trim().split(' ').filter(Boolean);
-    const files = parents.length > 1 ? [] : git(['show', '--name-only', '--no-renames', '--format=', sha], cwd).split('\n').filter(Boolean);
-    return { sha, parents, committedAt: Number(meta[1]) * 1000, author: meta[2], message: meta.slice(3).join('\x1f'), files };
+    const merge = parents.length > 1;
+    let files; let ownError = null;
+    if (merge) { try { files = mergeOwnFiles(sha, { cwd }); } catch (e) { files = null; ownError = String(e.message ?? e).split('\n')[0]; } }
+    else files = git(['show', '--name-only', '--no-renames', '--format=', sha], cwd).split('\n').filter(Boolean);
+    return { sha, parents, merge, committedAt: Number(meta[1]) * 1000, author: meta[2], message: meta.slice(3).join('\x1f'), files, ...(ownError ? { own_error: ownError } : {}) };
   });
 }
 
@@ -133,12 +148,18 @@ export function gatherFacts({
   facts.ledgerHistory = [];
   for (const c of facts.commits ?? []) {
     const declares = trailer(c.message, TRAILERS.proposal) !== null;
-    const touchesLedger = c.files.includes(LEDGER_PATH);
+    const touchesLedger = (c.files ?? []).includes(LEDGER_PATH);
     if (c.parents.length === 1 && (declares || touchesLedger)) {
       facts.ledgerAtParent[c.sha] = blobAt(c.parents[0], LEDGER_PATH, root);
     }
     if (touchesLedger && c.parents.length === 1) {
       facts.ledgerHistory.push({ sha: c.sha, before: facts.ledgerAtParent[c.sha], after: blobAt(c.sha, LEDGER_PATH, root) });
+    }
+    /* a merge that changes the ledger ITSELF must still extend the ledger of
+       EVERY parent: append-only holds through a merge, not only along a line */
+    if (touchesLedger && c.merge) {
+      const after = blobAt(c.sha, LEDGER_PATH, root);
+      for (const p of c.parents) facts.ledgerHistory.push({ sha: c.sha, merge: true, parent: p, before: blobAt(p, LEDGER_PATH, root), after });
     }
   }
 
@@ -190,9 +211,21 @@ function agentNamesOf() { return [...AGENT_NAMES]; }
 export function judgeAgentChanges(facts, ledgerView) {
   const results = [];
   for (const cm of facts.commits ?? []) {
-    if (cm.parents.length !== 1) continue;
     const proposalId = trailer(cm.message, TRAILERS.proposal);
     if (!proposalId) continue;
+    if (cm.parents.length !== 1) {
+      /* A merge that declares a Proposal. With no content of its own it
+         carries no change: the change it brings in is a one-parent commit,
+         judged on its own above or below. WITH content of its own, that
+         content cannot be bound to the decision — the dispatcher only ever
+         makes one-parent commits (dispatch stage 9 refuses a second parent),
+         so no decision covers what a merge adds. Before 11 Nov 2026 every
+         merge was skipped here, whatever it carried. */
+      if (!cm.files?.length) continue;
+      results.push({ sha: cm.sha, proposal_id: proposalId, files: cm.files, published: cm.files.filter((f) => refusal(f) === null), kind: 'merge',
+        problems: [`a merge commit declares Proposal ${proposalId} and changes ${cm.files.length} file(s) itself (${cm.files.slice(0, 4).join(', ')}): a dispatched change is a one-parent commit, so no decision can cover content a merge adds`] });
+      continue;
+    }
     const published = cm.files.filter((f) => refusal(f) === null);
     const r = { sha: cm.sha, proposal_id: proposalId, files: cm.files, published, problems: [] };
     results.push(r);
@@ -291,6 +324,7 @@ export function judge(facts) {
   if (!facts.since) histProblems.push('the commit that introduced this gate cannot be found (a shallow clone, or the gate file is untracked)');
   else if (!facts.sinceIsAncestor) histProblems.push('the commit that introduced this gate is not an ancestor of the head');
   if (facts.commits === null && !histProblems.length) histProblems.push('git could not list the commits in range');
+  for (const m of (facts.commits ?? []).filter((x) => x.merge && x.files === null)) histProblems.push(`what merge ${m.sha.slice(0, 12)} changed itself could not be determined (${m.own_error ?? 'git gave no answer'}; --remerge-diff needs git ≥ 2.36), so its own content cannot be judged`);
   cs.push(c('C2-history', histProblems.length ? FAIL : PASS, histProblems.length ? histProblems.join('; ') : `${ncommits} commit(s) since the gate was introduced (${(facts.since ?? '?').slice(0, 12)}), clone is complete`));
 
   /* C3 publisher */
@@ -318,7 +352,8 @@ export function judge(facts) {
 
   /* C6 append-only */
   const rewritten = (facts.ledgerHistory ?? []).filter((h) => h.before != null && !(h.after ?? '').startsWith(h.before));
-  cs.push(c('C6-append-only', rewritten.length ? FAIL : PASS, rewritten.length ? `commit(s) ${rewritten.map((h) => h.sha.slice(0, 12)).join(', ')} changed a decision recorded earlier: the ledger at the parent is not a prefix of the ledger at the commit` : `${(facts.ledgerHistory ?? []).length} commit(s) touched the ledger; each only appended`));
+  const touchedLedger = new Set((facts.ledgerHistory ?? []).map((h) => h.sha)).size;
+  cs.push(c('C6-append-only', rewritten.length ? FAIL : PASS, rewritten.length ? `commit(s) ${[...new Set(rewritten.map((h) => `${h.sha.slice(0, 12)}${h.merge ? ` (a merge, against parent ${h.parent.slice(0, 12)})` : ''}`))].join(', ')} changed a decision recorded earlier: the ledger at the parent is not a prefix of the ledger at the commit` : `${touchedLedger} commit(s) touched the ledger; each only appended`));
 
   /* C7 agent changes */
   const changes = judgeAgentChanges(facts, ledgerView);
@@ -329,7 +364,9 @@ export function judge(facts) {
     { changes }));
 
   /* C8 unledgered agent-attributed commits */
-  const unledgered = (facts.commits ?? []).filter((x) => x.parents.length === 1
+  /* a merge counts by what it changed ITSELF (readCommits); its merged-in
+     commits are judged on their own */
+  const unledgered = (facts.commits ?? []).filter((x) => Array.isArray(x.files)
     && !trailer(x.message, TRAILERS.proposal)
     && AGENT_COMMIT_MARKERS.some((re) => re.test(x.message))
     && x.files.some((f) => refusal(f) === null));
@@ -369,6 +406,8 @@ export function judge(facts) {
       ledger_chain_head: ledgerView.chain_head,
       registry_sha256: facts.registryText == null ? null : actual,
       unledgered_agent_commits: unledgered.length,
+      merges_judged: (facts.commits ?? []).filter((x) => x.merge).length,
+      merges_with_own_content: (facts.commits ?? []).filter((x) => x.merge && x.files?.length).map((x) => ({ commit: x.sha, files: x.files })),
     },
   };
 }

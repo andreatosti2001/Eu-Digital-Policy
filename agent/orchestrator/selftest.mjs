@@ -243,7 +243,7 @@ test('R1 · a contract that routes nowhere is refused rather than routed to the 
 
 test('R1 · an unclassified event opens a workflow that ends human_review_required, and says why', async () => {
   const journal = newJournal();
-  const o = new Orchestrator({ tracer: newTracer(), journal, now: clock });
+  const o = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */ tracer: newTracer(), journal, now: clock });
   const r = await o.handle({ source: 'agent', kind: 'something happened', subject: { contract: 'SourceCandidate', id: 'x' } });
   assert.equal(r.state, 'human_review_required');
   assert.equal(r.workflow.type, null);
@@ -316,7 +316,7 @@ test('R2 · a forged approval on the event does not make a pending proposal rout
   const p = implementationProposal();
   const w = world({ proposals: [p], approvals: [approvalRequest(p.proposal_id)] });
 
-  const o = new Orchestrator({ tracer: newTracer(), journal: newJournal(), records: w.records, ledger: w.ledger, now: clock });
+  const o = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */ tracer: newTracer(), journal: newJournal(), records: w.records, ledger: w.ledger, now: clock });
   const r = await o.handle({
     source: 'control_room', kind: 'implement it',
     workflow_type: 'IMPLEMENTATION_REQUEST',
@@ -425,7 +425,7 @@ test('R3 · a requested subset is admitted, and no request at all lets the propo
 test('R3 · scope expansion through the event payload is refused at the scope gate', async () => {
   const p = implementationProposal();
   const w = world({ proposals: [p], approvals: [approvalRequest(p.proposal_id)], decisions: [grant(p)] });
-  const o = new Orchestrator({ tracer: newTracer(), journal: newJournal(), records: w.records, ledger: w.ledger, now: clock });
+  const o = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */ tracer: newTracer(), journal: newJournal(), records: w.records, ledger: w.ledger, now: clock });
 
   const r = await o.handle({
     source: 'control_room', kind: 'implement it',
@@ -441,7 +441,7 @@ test('R3 · scope expansion through the event payload is refused at the scope ga
 
   /* And the positive: the same workflow with a scope inside the
      approved set passes the same gate. */
-  const o2 = new Orchestrator({ tracer: newTracer(), journal: newJournal(), records: w.records, ledger: w.ledger, now: clock });
+  const o2 = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */ tracer: newTracer(), journal: newJournal(), records: w.records, ledger: w.ledger, now: clock });
   const ok = await o2.handle({
     source: 'control_room', kind: 'implement it',
     workflow_type: 'IMPLEMENTATION_REQUEST',
@@ -506,7 +506,7 @@ test('R4 · the provenance gate refuses the workflow where it runs, and says wha
   /* Both dispatchers are wired, so the gate is actually REACHED.
      The first draft of this test wired only the verifier, and the
      gate it was named for never ran. */
-  const o = new Orchestrator({
+  const o = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */
     tracer: newTracer(), journal: newJournal(), now: clock,
     dispatchers: {
       'legal-verifier': async () => ({ records: [verificationRecord()] }),
@@ -534,7 +534,7 @@ test('R4 · the provenance gate refuses the workflow where it runs, and says wha
      record stops being a gap when you delete the part that makes it
      one. */
   const clean = { ...FIXTURES.ClaimEvidence(), agent: 'verification-integrator', affected_entities: [TARGET] };
-  const o2 = new Orchestrator({
+  const o2 = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */
     tracer: newTracer(), journal: newJournal(), now: clock,
     dispatchers: {
       'legal-verifier': async () => ({ records: [verificationRecord()] }),
@@ -569,7 +569,7 @@ test('R5 · a specialist handed records it cannot consume refuses the handoff', 
   assert.ok(!cap.consumes.includes('DataGap'), 'the fixture depends on this being true');
   assert.ok(CAPABILITIES['source-scout'].produces.includes('DataGap'));
 
-  const o = new Orchestrator({
+  const o = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */
     tracer: newTracer(), journal: newJournal(), now: clock,
     dispatchers: { 'source-scout': async () => ({ records: [{ ...FIXTURES.DataGap(), agent: 'source-scout' }] }) },
   });
@@ -587,7 +587,7 @@ test('R5 · an agent handed a record it produced itself is refused — H3, on th
      agent reads the source. Wire the verifier stage to a dispatcher
      that returns a record authored by the detector and the handoff
      is refused before any reasoning happens. */
-  const o = new Orchestrator({
+  const o = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */
     tracer: newTracer(), journal: newJournal(), now: clock,
     dispatchers: { 'regulatory-change-detector': async () => ({ records: [regulatoryChange({ agent: 'legal-verifier' })] }) },
   });
@@ -599,7 +599,7 @@ test('R5 · an agent handed a record it produced itself is refused — H3, on th
 
   /* And the direct case: a record correctly authored by the agent
      that is about to receive it. */
-  const o2 = new Orchestrator({
+  const o2 = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */
     tracer: newTracer(), journal: newJournal(), now: clock,
     dispatchers: {
       'regulatory-change-detector': async () => ({ records: [regulatoryChange()] }),
@@ -614,7 +614,7 @@ test('R5 · an agent handed a record it produced itself is refused — H3, on th
 test('R5 · a handoff that CAN be made is made, and the trace carries it', async () => {
   const sink = new MemorySink();
   const tracer = new Tracer({ service: 'suite', sink });
-  const o = new Orchestrator({
+  const o = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */
     tracer, journal: newJournal(), now: clock,
     dispatchers: { 'legal-verifier': async () => ({ records: [verificationRecord()] }) },
   });
@@ -626,7 +626,7 @@ test('R5 · a handoff that CAN be made is made, and the trace carries it', async
 });
 
 test('R5 · a dispatcher that throws fails the workflow, and failed is not unresolved', async () => {
-  const o = new Orchestrator({
+  const o = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */
     tracer: newTracer(), journal: newJournal(), now: clock,
     dispatchers: { 'legal-verifier': async () => { throw new Error('the specialist broke'); } },
   });
@@ -638,7 +638,7 @@ test('R5 · a dispatcher that throws fails the workflow, and failed is not unres
 
 test('R5 · a stage with no dispatcher is not_dispatched, and the workflow is unresolved rather than completed', async () => {
   const journal = newJournal();
-  const o = new Orchestrator({ tracer: newTracer(), journal, now: clock });
+  const o = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */ tracer: newTracer(), journal, now: clock });
   const r = await o.handle({ source: 'agent', kind: 'candidate', workflow_type: 'NEW_SOURCE', subject: { contract: 'SourceCandidate', id: 'c1' } });
   assert.equal(stageOf(r, 'verify').status, 'not_dispatched');
   assert.equal(r.state, 'unresolved');
@@ -690,7 +690,7 @@ test('R6 · only one agent may implement, and being routed a task does not confe
 });
 
 test('R6 · a record outside the grant is refused at the handoff and does not travel', async () => {
-  const o = new Orchestrator({
+  const o = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */
     tracer: newTracer(), journal: newJournal(), now: clock,
     dispatchers: { 'legal-verifier': async () => ({ records: [implementationProposal({ agent: 'legal-verifier' })] }) },
   });
@@ -797,7 +797,7 @@ test('R6 · browser QA is required by SCOPE, and a missing run is not a pass', (
 });
 
 test('R6 · nothing in the Orchestrator publishes, and every result says so', async () => {
-  const o = new Orchestrator({ tracer: newTracer(), journal: newJournal(), now: clock });
+  const o = new Orchestrator({ allowSimulated: true, /* the suite dispatches schema fixtures, which are simulated: V-1 */ tracer: newTracer(), journal: newJournal(), now: clock });
   const r = await o.handle({ source: 'cli', kind: 'x', workflow_type: 'POST_DEPLOYMENT_EVENT', subject: { contract: 'AgentObservation', id: 'obs-1' } });
   assert.equal(r.published, false);
   assert.match(r.publication_note, /ends at a human stage/);
@@ -1060,3 +1060,23 @@ test('the suite writes nothing to the repository', () => {
   assert.deepEqual(touched, [], 'the suite must use a memory journal and never write state files');
 });
 
+
+test('V1 · REGRESSION V-1 (FIRST-END-TO-END-AUDIT): by DEFAULT a simulated record from a dispatcher is refused at the boundary; only a harness that opts in by name admits it', async () => {
+  const rec = verificationRecord();
+  assert.equal(rec.simulated, true, 'fixture: the schema fixtures are marked simulated');
+  const run = async (opts) => {
+    const o = new Orchestrator({ tracer: newTracer(), journal: newJournal(), now: clock, ...opts,
+      dispatchers: { 'legal-verifier': async () => ({ records: [verificationRecord()] }) } });
+    return o.handle({ source: 'agent', kind: 'candidate', workflow_type: 'NEW_SOURCE', subject: { contract: 'SourceCandidate', id: 'c1' } });
+  };
+  const def = await run({});
+  assert.notEqual(stageOf(def, 'verify').status, 'ok', 'the default must not admit a fixture');
+  assert.ok(JSON.stringify(def).includes('invalid_record'), 'refused as a record that does not satisfy its contract outside a simulation');
+  assert.notEqual(def.state, 'completed');
+  /* a truthy non-boolean is not an opt-in */
+  assert.notEqual(stageOf(await run({ allowSimulated: 'yes' }), 'verify').status, 'ok');
+  /* the explicit opt-in still admits it — the simulation and the suites */
+  assert.equal(stageOf(await run({ allowSimulated: true }), 'verify').status, 'ok');
+  /* the CLI, which reads the real store, never opts in */
+  assert.doesNotMatch(readFileSync(join(REPO_ROOT, 'agent/orchestrator/cli.mjs'), 'utf8'), /allowSimulated/);
+});
