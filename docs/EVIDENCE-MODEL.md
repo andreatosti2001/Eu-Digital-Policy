@@ -152,8 +152,8 @@ It is closed by verification work against primary sources, never by editing the 
 
 | Risk | Review within | Records |
 |---|---|---|
-| critical | 14 days | a pending appeal or preliminary finding; a scheduled event within 60 days |
-| high | 30 days | institutional status, transposition, open enforcement, unknown payment; a fact claim about what the Council or Parliament has done on a file still in procedure (since 28 Oct 2026, `docs/AUDIT-2026-10-28.md` F-3) |
+| critical | 14 days | a preliminary finding (an action only announced); a scheduled event within 60 days |
+| high | 30 days | a pending appeal (critical until 12 Nov 2026: the author's decision, `docs/AUDIT-2026-11-11-P1.md` §8 — **for the enforcement record only; a claim about a record still announced or under a pending appeal is `high` as before**); institutional status, transposition, open enforcement, unknown payment; a fact claim about what the Council or Parliament has done on a file still in procedure (since 28 Oct 2026, `docs/AUDIT-2026-10-28.md` F-3) |
 | medium | 90 days | general claims of fact and law |
 | low | 365 days | historical events, the author's own arguments |
 
