@@ -1,12 +1,71 @@
 # HANDOVER
 
-**Last updated:** 12 November 2026 (UTC), HP-02b (depth by layers in the homepage prototype, an experiment that followed HP-02), at its close.
-**Branch:** `claude/jolly-hamilton-du9xkp` (assigned by the environment). **#105 (HP-02) was merged by the author before this work began**, so `main` `fa7b4cd` (#105, #106) was merged into the
-branch with a merge commit and pushed without forcing; a rebase with a force-push was attempted first and refused by the environment, and nothing had changed. `origin/main` re-fetched
-immediately before this write: `fa7b4cd`, unchanged. Pull request #107 opened on the author's answer, not merged by the session.
-The entries below this session's are unchanged; the header HP-02 wrote is kept under its branch register, as written.
+**Last updated:** 12 November 2026 (UTC), HP-03 (the homepage production plan), at its close.
+**Branch:** `claude/quirky-goldberg-fpoxdz` (assigned by the environment), at `main` `02f9a4e` (#107) from the start; pushed, no history rewritten.
+`origin/main` re-fetched immediately before this write: `02f9a4e`, unchanged. Pull request to `main` opened on the author's answer ("Yes, after recording (Recommended)"), not merged by the session.
+The entries below this session's are unchanged; the header HP-02b wrote is kept under its branch register, as written.
+
+## Branch register — 12 November 2026 (HP-03, the homepage production plan)
+
+- `claude/quirky-goldberg-fpoxdz`, from `main` `02f9a4e`: `docs/` only — `HOMEPAGE-PRODUCTION-PLAN.md` (new), `ROADMAP-v2.md` §8 (five rows), `prompts/v2-hp-04-homepage-production.md`
+  (new), `HANDOVER.md`. Nothing of the published site, of its gates or of `prototypes/` changed. Disposition: on the author's answer ("Yes, after recording (Recommended)"), a pull request to `main`, opened and not merged by the session; merging is the author's, with a merge commit. Final checkpoint approved (§8, "Final checkpoint of HP-03 approved").
+- **Not in this register before, reported at the start and left alone:** `claude/brave-goldberg-gm87jp` — one commit, `7e93f27` (12 Nov 2026, 18:12 UTC), one line of
+  `js/datasets-page.js` ("Give the dataset explorer's record search field a name attribute"). Not this session's; unmerged; its owner and disposition are the author's.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed), as before.
+
+## HP-03 — the homepage production plan (12 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the rows "The scope of HP-03", "HP-03: C.1 approved", "HP-03: the open questions" and "HP-03: the next session", each with the author's
+words. **Record:** `docs/HOMEPAGE-PRODUCTION-PLAN.md` — read it, not this entry. It is a proposal, approved only by the §8 rows that cite it.
+
+**What happened.** The prerequisites checked out (the four HP-02 rows, `prototypes/homepage/` on `main`, the date before the Track M window). The scope row was the first write. The tree
+was measured, then C.1 put the plan's index and its three largest decisions: the figure **enhances** `#portalTree`, whose markup stays byte for byte; the route is **a §8 row naming the
+action (Class D) and a pull request the author merges**, no dispatcher; **the first release has no depth by layers**. The plan was written, its four open questions asked and answered
+(the parts read lit, no veil; `lang="en"` and the line "This figure is in English." in the editions, with words for README limitation 8 to be proposed; an iPhone, ≤ 10 % of frames over 25 ms;
+the status shapes on the masthead ship). The next session is HP-04, the plan executed.
+
+**Found while measuring, and now in the plan (not fixed: nothing of the site changed):**
+- **The lens would misstate a precision.** `tl-dma-2027-01-01-compliance-deadline` is dated to the month and 50 days away; the prototype prints "DMA · 50 d" where the masthead writes "≈"
+  (`js/masthead.js:156`). The plan requires the "≈".
+- **The next dated event is computed four times** (`js/masthead.js:141`, `:222`; `homepage.js:213`, `:270`); the plan makes it one function.
+- **Two fetches outside `js/data.js`** in the prototype (`homepage.js:236`, `prototypes/editorial/brief.js`); in production neither is needed.
+- **The images (391 109 bytes) load on every visit** in the prototype, even when the opening does not play; the plan loads them only for the opening.
+- **`design-qa` has never read the prototype** (it reads `css/` and `js/`); moved there, it will.
+- `docs/AUTONOMY-POLICY.md` Class D names "Redesigning the website"; no document tiers a new module under `js/` more precisely (plan §4).
+
+**Battery on the committed tree (`3caf907`), quiet:** `validate`, `i18n-audit`, `design-qa`, `freshness`, `evidence-audit`, `seo-audit` exit 0 (warnings 5, 0, 0, —, 11, 0, as on `main`);
+`tools/selftest.mjs` **189 / 189**; the browser suite **343 pass · 0 fail · 1 undecidable** (`a11y:bound`), the repository byte-identical before and after. **Not run:** the 25 agent suites
+and `.control-room/` (nothing under `agent/`, `.control-room/`, `js/`, `css/`, `data/` or a page changed). `git diff origin/main --stat` over the published surface and `prototypes/` is empty.
+
+**One thing to know that cost a run.** `node agent/browser/cli.mjs --help` is not a help flag: it ran the whole suite, and `| head` hid the result. The run that counts is the full one above.
+
+**Checklist**
+
+| # | Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|---|
+| — | Scope | §8 "The scope of HP-03" (`6e25c38`) | read the row: "Start HP-03" | none | the first write: **met** |
+| C.1 | Index and three decisions | §8 "HP-03: C.1 approved" (`df4412c`) | read the row against the plan's §1, §4, §7 | none | approved before the rest was written: **met** |
+| 1 | What changes, file by file | plan §1 | each cited line in `homepage.js`, `index.html`, `style.css`, `app.js` | none | file by file, with what does not ship and how a crawler reads it: **met** |
+| 2 | The contract | plan §2 | `countSites()` over `homepage.js`; `grep -n "fetch(" prototypes/homepage/homepage.js`; `tools/_footer.mjs:267–289` | MC-2 in `validate.mjs` will hold the module once it is in `js/` | **met** |
+| 3 | The languages | plan §3; §8 "HP-03: the open questions" (`3a34308`) | `tools/editions.mjs` reads only `data-i18n`; `tools/i18n-audit.mjs:52–56` | none today (`home:edition-note` proposed) | words and place decided, nothing in `i18n/`: **met** |
+| 4 | Gates, class, signer | plan §4 | `docs/AUTONOMY-POLICY.md` Class D; `docs/DEPLOYMENT.md` §2a, §3a | the release gate C1–C10 at deploy | per step: **met**; §3a settings stay the author's word |
+| 5 | What tests do not see | plan §5 | `agent/browser/checks.mjs:45–56` (no `prototypes/`), `tools/design-qa.mjs:171`, `:185` | none yet: twelve `home:*` checks proposed for HP-04 | each with what it would not prove: **met** |
+| 6 | The real phone | plan §6; §8 "HP-03: the open questions" | read the steps | none (a person's measure) | device, measure, threshold, remedy: **met**; the measure itself is HP-04's |
+| 7 | Open design questions | plan §7 | each row cites its §8 row | none | every one answered in §8: **met** |
+| 8 | Release and rollback | plan §8 | `git revert -m 1` and the diff it names | none | commits, order, revert, post-deploy: **met** |
+| — | Next prompt | `docs/prompts/v2-hp-04-homepage-production.md` (`3caf907`); §8 "HP-03: the next session" | its exit criterion carries the standing rule | none | exists on the branch: **met**; approved with the work when the author merges |
+| — | Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data img tools agent .github prototypes` is empty | the browser suite reports the repository byte-identical | nothing of the site changed: **met** |
+
+**For the next session:** HP-04, on its prompt — the plan executed, after a §8 row authorizing the action. PV2-05 (without its homepage view) follows.
 
 ## Branch register — 12 November 2026 (HP-02b, depth by layers)
+
+*The header HP-02b wrote, kept as written:*
+
+> **Last updated:** 12 November 2026 (UTC), HP-02b (depth by layers in the homepage prototype, an experiment that followed HP-02), at its close.
+> **Branch:** `claude/jolly-hamilton-du9xkp` (assigned by the environment). **#105 (HP-02) was merged by the author before this work began**, so `main` `fa7b4cd` (#105, #106) was merged into the
+> branch with a merge commit and pushed without forcing; a rebase with a force-push was attempted first and refused by the environment, and nothing had changed. `origin/main` re-fetched
+> immediately before this write: `fa7b4cd`, unchanged. Pull request #107 opened on the author's answer, not merged by the session.
 
 - `claude/jolly-hamilton-du9xkp`, from `main` `fa7b4cd` (merged in, `eb57b09`): `prototypes/homepage/` (`homepage.js`, `README.md`) and `docs/` (`ROADMAP-v2.md` §8, `PROTOTYPES.md` §H, `HANDOVER.md`,
   `prompts/v2-hp-03-homepage-production-plan.md`). Nothing of the published site changed. Disposition: on the author's answer ("Sì, dopo la registrazione (Recommended)"), pull request #107
