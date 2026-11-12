@@ -3478,7 +3478,8 @@ test('AT15 · the notice check: this tree holds all four clauses; each planted f
    ============================================================ */
 
 import { checkFineBasis, basisIndex, amountsIn, parseAmount } from './fine-basis.mjs';
-import { evaluate, FINES_CARD, PROPERTIES, sumSites, codeOnly, treeAsOf } from './metric-contract.mjs';
+import { evaluate, FINES_CARD, INSTRUMENTS_CARD, METRICS, PROPERTIES, sumSites, countSites, codeOnly, treeAsOf } from './metric-contract.mjs';
+import { instrumentsByStatus, STATUS_ORDER, STATUS_STATES } from '../js/regulatory-model.js';
 import { finesFigure, PAYMENT_STATES, posturePart } from '../js/pipeline.js';
 
 const loadData = () => Object.fromEntries(readdirSync(join(ROOT, 'data')).filter((f) => f.endsWith('.json'))
@@ -3763,11 +3764,14 @@ test('MC13 · K13 and E1: a weighted score, or anything but sum, count and share
 });
 
 /* MC-14 and MC-15 on the other families of DATA-READINESS §8: the contract
-   can express them. Fixtures only — neither card is declared on the tree. */
+   can express them. Fixtures only. Since 11 Nov 2026 (P1) a count is held to
+   MC-2's import half too, so the fixture declares one consumer that imports
+   its function — supplied through ctx.files, never written to js/. */
 const countDecl = (over) => ({
   id: 'fixture', question: 'Of the dated events this site records, how many fall in the 12 months after a stated date?',
-  fields: [], value: null, formula: 'count', consumers: [], states: [], partition: null, window: null, cannot_say: ['whether a passed event happened'], caveats: [], ...over,
+  fields: [], value: null, formula: 'count', consumers: ['js/fixture-consumer.js'], states: [], partition: null, window: null, cannot_say: ['whether a passed event happened'], caveats: [], ...over,
 });
+const FIXTURE_CONSUMER = { 'js/fixture-consumer.js': "import { f } from './fixture';\n" };
 const identity = (xs) => xs;
 
 test('MC14 · D4: a month-precision event at the window\'s edge not named "may fall either side" is refused; named, it holds', async () => {
@@ -3780,9 +3784,9 @@ test('MC14 · D4: a month-precision event at the window\'s edge not named "may f
   const base = (events, o) => ({ as_of: { oldest: events.map((e) => e.last_verified).filter(Boolean).sort()[0] ?? null, newest: events.map((e) => e.last_verified).filter(Boolean).sort().at(-1) ?? null, undated: events.filter((e) => !e.last_verified).map((e) => e.id) },
     past_interval: o?.asOf ? events.filter((e) => ['freshness:review-due', 'freshness:stale'].includes(EM.freshnessState(e.last_verified, EM.riskClass('event', e, { asOf: o.asOf }), o.asOf))).map((e) => e.id) : null });
   assert.ok(edge(db.timeline.events).includes('tl-dma-2026-11-01-designation'), 'the case §8.2 found');
-  const silent = await evaluate(decl, { db, exports: { 'fixture#all': identity }, compute: (ev2, o) => ({ ...base(ev2, o), window: { either_side: [] } }) });
+  const silent = await evaluate(decl, { db, files: FIXTURE_CONSUMER, exports: { 'fixture#all': identity }, compute: (ev2, o) => ({ ...base(ev2, o), window: { either_side: [] } }) });
   assert.deepEqual(mcOf(silent), ['MC-14']);
-  const named = await evaluate(decl, { db, exports: { 'fixture#all': identity }, compute: (ev2, o) => ({ ...base(ev2, o), window: { either_side: edge(ev2) } }) });
+  const named = await evaluate(decl, { db, files: FIXTURE_CONSUMER, exports: { 'fixture#all': identity }, compute: (ev2, o) => ({ ...base(ev2, o), window: { either_side: edge(ev2) } }) });
   assert.deepEqual(named.findings, []);
 });
 
@@ -3795,7 +3799,7 @@ test('MC15 · I4 and the fines card: a $note caveat about a field the figure rea
   });
   const ins = (xs, o) => ({ as_of: { oldest: xs.map((e) => e.last_verified).filter(Boolean).sort()[0] ?? null, newest: xs.map((e) => e.last_verified).filter(Boolean).sort().at(-1) ?? null, undated: xs.filter((e) => !e.last_verified).map((e) => e.id) },
     past_interval: o?.asOf ? xs.filter((e) => ['freshness:review-due', 'freshness:stale'].includes(EM.freshnessState(e.last_verified, EM.riskClass('instrument', e, { asOf: o.asOf }), o.asOf))).map((e) => e.id) : null });
-  const left = await evaluate(decl, { db, exports: { 'fixture#all': identity }, compute: ins });
+  const left = await evaluate(decl, { db, files: FIXTURE_CONSUMER, exports: { 'fixture#all': identity }, compute: ins });
   assert.ok(mcOf(left).includes('MC-15'), JSON.stringify(left.findings));
   assert.match(left.findings.find((x) => x.mc === 'MC-15').message, /says of legislative_status/);
   /* the real fines card: drop one caveat, then let the $note drift */
@@ -3827,4 +3831,108 @@ test('MC17 · validate.mjs runs the contract: a planted census question in a scr
     assert.equal(red.exit, 1); assert.match(red.out, /✗ METRIC MC-4 fines-announced-collected-unknown: record enf-temu-ec-2026/);
     assert.match(red.out, /NOT publishable/);
   } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+
+/* ============================================================
+   F-A7 → MC-2: the instruments card, declared (11 Nov 2026, P1 checkpoint;
+   docs/AUDIT-2026-11-11-P1.md §3). The figure §8.1 measured, one computing
+   function, and each property refusing its own planted case — I1…I5 of
+   docs/DATA-READINESS.md §8.1 run on the real declaration, not on paper.
+   ============================================================ */
+
+const ei = (over = {}, ctx = {}) => evaluate({ ...INSTRUMENTS_CARD, ...over }, { db: ctx.db ?? loadData(), ...ctx });
+const instIn = (db, id) => db.instruments.instruments.find((i) => i.id === id);
+const OLD_MASTHEAD = "import { label } from './data.js';\n"
+  + "function statusLedger(ix, instruments) {\n  const core = instruments.filter((i) => i.scope_class === 'scope:core');\n  const counted = new Map();\n"
+  + "  for (const i of core) { if (counted.has(i.legislative_status)) counted.get(i.legislative_status).push(i); }\n}\n"
+  + "function ticker(core, b) { return core.filter((i) => i.legislative_status === b.id).length; }\n";
+
+test('MC18 · I0, the control: the instruments card holds MC-1…MC-15 on this tree, and the figure is the one §8.1 measured', async () => {
+  assert.ok(METRICS.includes(INSTRUMENTS_CARD), 'the card is declared, so validate.mjs holds it to the contract');
+  const r = await ei();
+  assert.deepEqual(r.findings, []); assert.equal(r.publishable, true);
+  const f = r.result;
+  assert.equal(f.population, 21);
+  assert.deepEqual(Object.fromEntries(Object.entries(f.by_scope).map(([k, v]) => [k, v.length])), { 'scope:core': 16, 'scope:adjacent': 5 });
+  assert.deepEqual(Object.fromEntries(Object.entries(f.parts).filter(([, p]) => p.records.length).map(([k, p]) => [k, p.records.length])),
+    { 'status:applicable': 6, 'status:partly-applicable': 3, 'status:in-force': 6, 'status:transposition-pending': 1, 'status:transposition-overdue': 2, 'status:proposal': 3 });
+  assert.equal(Object.values(f.parts).reduce((a, p) => a + p.records.length, 0), 21, 'the parts add back to the population');
+  assert.deepEqual(Object.fromEntries(Object.entries(f.excluded).map(([k, v]) => [k, v.length])), { 'scope:referenced': 12, 'scope:out-of-scope': 6 }, 'named as excluded, not dropped');
+  assert.deepEqual(f.weak.map((w) => w.id), ['eprivacy']);
+  assert.deepEqual(instrumentsByStatus(loadData().instruments.instruments, { asOf: '2026-11-09' }).past_interval.map((x) => x.id).sort(), ['cloud-ai-development-act', 'data-act', 'pld'], '§8.1 "Updating", as of 9 Nov 2026');
+  /* every status term of the taxonomy is a part, so the vocabulary and the function cannot drift apart unseen */
+  assert.deepEqual(Object.keys(f.parts), [...STATUS_ORDER]);
+  assert.deepEqual(Object.keys(STATUS_STATES).filter((k) => k !== 'null').sort(), [...STATUS_ORDER].sort());
+});
+
+test('MC19 · I1, REGRESSION F-A7: the masthead counting by status itself is found by line, and a consumer that stops importing is refused', async () => {
+  const r = await ei({}, { files: { 'js/masthead.js': OLD_MASTHEAD } });
+  assert.deepEqual(mcOf(r), ['MC-2']);
+  const msgs = r.findings.map((x) => x.message).join('\n');
+  assert.match(msgs, /js\/masthead\.js:5 counts records by legislative_status itself \(group\)/);
+  assert.match(msgs, /js\/masthead\.js:7 counts records by legislative_status itself \(filter…length\)/);
+  assert.match(msgs, /consumer js\/masthead\.js does not import instrumentsByStatus/);
+  /* the real masthead imports the function and counts nothing itself */
+  const real = readFileSync(join(ROOT, 'js/masthead.js'), 'utf8');
+  assert.deepEqual(countSites(real, 'legislative_status'), []);
+  assert.match(real, /import \{ instrumentsByStatus, STATUS_ORDER \} from '\.\/regulatory-model\.js'/);
+  /* a count planted in ANOTHER module, by an alias, is found too */
+  const other = await ei({}, { files: { 'js/search.js': readFileSync(join(ROOT, 'js/search.js'), 'utf8') + "\nconst tally = {}; for (const i of xs) { const st = i.legislative_status; tally[st]++; }\n" } });
+  assert.deepEqual(mcOf(other), ['MC-2']); assert.match(other.findings[0].message, /js\/search\.js:\d+ counts records by legislative_status itself \(tally\)/);
+  /* reading the field to label, route or compare one record is not a count */
+  assert.deepEqual(countSites("const st = inst.legislative_status;\nconst l = label(ix, inst.legislative_status);\nconst p = xs.filter((i) => i.legislative_status === s);\nconst q = 'x.legislative_status.length';\n", 'legislative_status'), []);
+  /* a partitioned count that names no field cannot be scanned, and is refused for it */
+  assert.ok(mcOf(await ei({ partition: { ...INSTRUMENTS_CARD.partition, field: undefined } })).includes('MC-2'));
+});
+
+test('MC20 · I2 and a status the masthead did not know: a term outside the vocabulary is refused; a term in it is counted under its own name', async () => {
+  /* a status that is no taxonomy term → MC-5 (unmapped) and MC-8 (in no part) */
+  const bad = loadData(); instIn(bad, 'gdpr').legislative_status = 'status:sort-of-applicable';
+  const rb = await ei({}, { db: bad });
+  assert.deepEqual(mcOf(rb), ['MC-5', 'MC-8']); assert.deepEqual(rb.result.unmapped, [{ id: 'gdpr', value: 'status:sort-of-applicable' }]);
+  /* a real term the old masthead's seven bands did not hold: counted, under its name, never "no status recorded" */
+  const moved = loadData(); instIn(moved, 'data-omnibus').legislative_status = 'status:political-agreement';
+  const rm = await ei({}, { db: moved });
+  assert.deepEqual(rm.findings, []); assert.deepEqual(rm.result.parts['status:political-agreement'].records, ['data-omnibus']); assert.deepEqual(rm.result.unmapped, []);
+  /* the taxonomy gains a term the function does not know → MC-5, before any instrument uses it */
+  const grown = loadData();
+  const statusList = (function find(o) { if (Array.isArray(o)) { if (o.some((x) => x && x.id === 'status:proposal')) return o; for (const x of o) { const r = find(x); if (r) return r; } } else if (o && typeof o === 'object') for (const k in o) { const r = find(o[k]); if (r) return r; } return null; })(grown.taxonomy);
+  statusList.push({ id: 'status:provisionally-applied', label: 'Provisionally applied' });
+  const rg = await ei({}, { db: grown });
+  assert.deepEqual(mcOf(rg), ['MC-5']); assert.match(rg.findings[0].message, /status:provisionally-applied" has no mapping/);
+});
+
+test('MC21 · I3, I4, I5 and the rest: a double count, a dropped caveat, a hidden undated input, an unnamed weak input and a clock are each refused on their own property', async () => {
+  const real = (xs, o) => instrumentsByStatus(xs, o);
+  /* I3: partly applicable also counted as applicable → MC-8 (24 over 21) */
+  const twice = (xs, o) => { const f = real(xs, o); f.parts['status:applicable'].records.push(...f.parts['status:partly-applicable'].records); return f; };
+  const r3 = await ei({}, { compute: twice });
+  assert.deepEqual(mcOf(r3), ['MC-8']); assert.match(r3.findings.map((x) => x.message).join(), /in 2 parts/);
+  /* I4: the $note's caveat left out → MC-15 */
+  assert.deepEqual(mcOf(await ei({ caveats: INSTRUMENTS_CARD.caveats.filter((c) => !/is a scalar describing/.test(c.quote)) })), ['MC-15']);
+  /* MC-15's STATED limit (PROPERTIES): the $note's "deliberately NOT sufficient" sentence names `milestones` as a plain
+     word, so dropping that caveat is not seen. The card carries it by declaration; this assertion keeps the limit visible. */
+  assert.deepEqual(mcOf(await ei({ caveats: INSTRUMENTS_CARD.caveats.filter((c) => !/NOT sufficient/.test(c.quote)) })), [], 'a known limit of MC-15, asserted rather than hidden');
+  assert.match(PROPERTIES.find((p) => p.id === 'MC-15').cannot_see, /without naming the field/);
+  /* I5: an undated input hidden → MC-9 */
+  const undated = loadData(); delete instIn(undated, 'pld').status_as_of;
+  const hide = (xs, o) => { const f = real(xs, o); f.as_of.undated = []; return f; };
+  assert.ok(mcOf(await ei({}, { db: undated, compute: hide })).includes('MC-9'));
+  assert.deepEqual((await ei({}, { db: undated })).result.as_of.undated, ['pld'], 'the real function names it');
+  /* MC-11: the unsupported status left unnamed */
+  assert.deepEqual(mcOf(await ei({}, { compute: (xs, o) => ({ ...real(xs, o), weak: [] }) })), ['MC-11']);
+  /* MC-10: the interval computed against no date, or not at all */
+  assert.deepEqual(mcOf(await ei({}, { compute: (xs, o) => ({ ...real(xs, o), past_interval: [] }) })), ['MC-10']);
+  /* MC-9: a function that reads the clock */
+  assert.ok(mcOf(await ei({}, { compute: (xs, o) => real(xs, { asOf: o?.asOf ?? new Date().toISOString().slice(0, 10) }) })).includes('MC-9'));
+  /* MC-1: a census question */
+  assert.deepEqual(mcOf(await ei({ question: 'How many EU digital laws are in force?' })), ['MC-1']);
+});
+
+test('MC22 · validate.mjs prints both declared metrics publishable', () => {
+  const out = runValidator('validate.mjs');
+  assert.equal(out.exit, 0, out.out);
+  assert.match(out.out, /METRICS fines-announced-collected-unknown: MC-1…MC-15 hold, publishable/);
+  assert.match(out.out, /instruments-by-legislative-status: MC-1…MC-15 hold, publishable/);
 });

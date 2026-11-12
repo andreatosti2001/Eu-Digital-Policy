@@ -11,11 +11,18 @@
    ERROR whose figure is not publishable. "Not determinable" is not an error:
    it is one of a figure's states.
 
-   WHAT IS DECLARED HERE. One metric: the enforcement fines card (§5). The
-   three families paper-tested in §8 (instruments, deadlines, evidence) are
-   not declared: the instruments card fails MC-2 on today's tree (F-A7) and
-   none has a computing function. tools/selftest.mjs declares a deadlines-
-   and an instruments-shaped fixture to show MC-14 and MC-15 can express them.
+   WHAT IS DECLARED HERE. Two metrics: the enforcement fines card (§5) and,
+   since the P1 checkpoint of 11 Nov 2026, the instruments card (§8.1, F-A7:
+   js/regulatory-model.js instrumentsByStatus() is its one computing
+   function and js/masthead.js imports it — docs/AUDIT-2026-11-11-P1.md §3).
+   The deadlines and evidence cards (§8.2, §8.3) are not declared: neither
+   has a computing function under this contract. tools/selftest.mjs declares
+   a deadlines-shaped fixture to show MC-14 can express it.
+
+   A COUNT is held to the same fifteen properties as a sum. MC-2 scans for a
+   second COUNT by the partition field (countSites) and requires every
+   consumer to import the function, for every formula — until 11 Nov 2026
+   both halves ran only for a sum, so a count was held to neither.
 
    WHAT THE CHECKS CANNOT SEE is said per property in PROPERTIES[].cannot_see
    — §6's last column — and is not repeated in prose elsewhere.
@@ -25,6 +32,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { basisIndex, checkFineBasis } from './fine-basis.mjs';
+import { STATUS_ORDER } from '../js/regulatory-model.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const ROOT = join(HERE, '..');
@@ -34,7 +42,7 @@ export const FORMULAS = Object.freeze(['sum', 'count', 'share']);
 
 export const PROPERTIES = Object.freeze([
   { id: 'MC-1', name: 'Question', cannot_see: 'whether the question is worth asking' },
-  { id: 'MC-2', name: 'One computing function', cannot_see: 'a second implementation that does not name the field (a generic sum helper over a mapped list), or one the lexer misreads (a `/` taken for a division or a regex): a static scan can be wrong in both directions, which is why every consumer must also import the one function' },
+  { id: 'MC-2', name: 'One computing function', cannot_see: 'a second implementation that does not name the field (a generic sum helper over a mapped list; for a count, a group-by helper that takes the field as a string, or a count spread over two statements), or one the lexer misreads (a `/` taken for a division or a regex): a static scan can be wrong in both directions, which is why every consumer must also import the one function — for a count and a sum alike' },
   { id: 'MC-3', name: 'Inputs resolve', cannot_see: 'whether the filter selects the right population' },
   { id: 'MC-4', name: 'Value type', cannot_see: 'a well-formed wrong number (200 typed as 2,000)' },
   { id: 'MC-5', name: 'Every state mapped', cannot_see: 'whether a mapping is semantically right' },
@@ -84,7 +92,38 @@ export const FINES_CARD = Object.freeze({
   ],
 });
 
-export const METRICS = Object.freeze([FINES_CARD]);
+/** docs/DATA-READINESS.md §8.1, approved 9 Nov 2026 with the population of
+ *  "instruments card question 2" (core and adjacent; the masthead follows). */
+export const INSTRUMENTS_CARD = Object.freeze({
+  id: 'instruments-by-legislative-status',
+  question: 'Of the core and adjacent instruments this site records, how many stand at each legislative status?',
+  population: { dataset: 'instruments', collection: 'instruments', risk_kind: 'instrument', filter: { module: 'js/regulatory-model.js', export: 'coveredInstruments' } },
+  fields: ['scope_class', 'legislative_status', 'status_as_of', 'milestones', 'last_verified', 'short_name'],
+  optional_fields: ['status_basis'],
+  formula: 'count',
+  compute: { module: 'js/regulatory-model.js', export: 'instrumentsByStatus' },
+  consumers: ['js/masthead.js'],
+  states: [{ field: 'legislative_status', vocabulary: 'status', map: { module: 'js/regulatory-model.js', export: 'STATUS_STATES' } }],
+  partition: { parts: [...STATUS_ORDER], field: 'legislative_status', by: { module: 'js/regulatory-model.js', export: 'statusPart' } },
+  as_of_field: 'status_as_of',
+  window: null,
+  weak_evidence: { rule: { module: 'js/regulatory-model.js', export: 'statusUnsupported' } },
+  cannot_say: [
+    'what applies on a given date: the status is one scalar, and the milestones decide what applies and when',
+    'which tranche of a partly applicable instrument applies',
+    'what a national transposition has done, Member State by Member State',
+    'anything about the referenced and out-of-scope instruments, which are named as excluded and not counted',
+    'that a status still holds after its status_as_of',
+    'anything about EU digital law the site does not record: the instruments are those the brief maps, not a census of the acquis',
+  ],
+  caveats: [
+    { field: 'legislative_status', quote: 'legislative_status is a scalar describing position in the legislative process' },
+    { field: 'legislative_status', quote: 'It is deliberately NOT sufficient on its own: for staggered instruments the milestones array is authoritative about what actually applies and when' },
+    { field: 'last_verified', quote: 'records re-read individually against their sources carry that date in their own last_verified' },
+  ],
+});
+
+export const METRICS = Object.freeze([FINES_CARD, INSTRUMENTS_CARD]);
 
 /* ============================================================ helpers */
 
@@ -188,6 +227,36 @@ export function sumSites(src, field) {
   return sites.sort((a, b) => a.line - b.line);
 }
 
+/**
+ * Places in a module's CODE that COUNT records by `field` — MC-2 for a
+ * count, the counterpart of sumSites(): a `.filter(` whose callback reads
+ * the field and whose result is measured with `.length`; a grouping that
+ * pushes into a bucket keyed by the field (`m.get(x.field).push(`,
+ * `o[x.field].push(`); a tally keyed by it (`o[x.field]++`, `+= 1`,
+ * `= (…) + 1`). Reading the field to label, compare, route or render one
+ * record is not a count and is not reported. One level of alias is
+ * followed. A heuristic over text: PROPERTIES MC-2 says what it cannot see.
+ */
+export function countSites(src, field) {
+  const code = codeOnly(src);
+  const sites = [];
+  const fieldRe = `\\.${field}\\b`;
+  const aliases = [...code.matchAll(new RegExp(`\\b(?:const|let|var)\\s+([A-Za-z_$][\\w$]*)\\s*=\\s*[^;\\n]*?${fieldRe}`, 'g'))].map((m) => m[1]);
+  const refSrc = `${fieldRe}${aliases.length ? `|\\b(?:${aliases.join('|')})\\b` : ''}`;
+  const ref = new RegExp(refSrc);
+  const add = (idx, form) => { const ln = lineOf(code, idx); if (!sites.some((x) => x.line === ln)) sites.push({ line: ln, form }); };
+  for (const m of code.matchAll(/\.filter\s*\(/g)) {
+    const open = m.index + m[0].length - 1;
+    const body = balanced(code, open);
+    if (!ref.test(body)) continue;
+    const after = code.slice(open + body.length + 2, open + body.length + 2 + 12);
+    if (/^\s*\.length\b/.test(after)) add(m.index, 'filter…length');
+  }
+  for (const m of code.matchAll(new RegExp(`(?:\\.get\\s*\\(|\\[)[^)\\]\\n]*(?:${refSrc})[^)\\]\\n]*[)\\]]\\s*\\.push\\s*\\(`, 'g'))) add(m.index, 'group');
+  for (const m of code.matchAll(new RegExp(`\\[[^\\]\\n]*(?:${refSrc})[^\\]\\n]*\\]\\s*(?:\\+\\+|\\+=\\s*1\\b|=\\s*\\([^;\\n]*\\)\\s*\\+\\s*1\\b)`, 'g'))) add(m.index, 'tally');
+  return sites.sort((a, b) => a.line - b.line);
+}
+
 function jsFiles(root) {
   const dir = join(root, 'js');
   return readdirSync(dir).filter((f) => f.endsWith('.js')).map((f) => `js/${f}`).sort();
@@ -283,6 +352,9 @@ export async function evaluate(decl, ctx) {
   for (const r of inputs) for (const fld of [...decl.fields, decl.value?.field].filter(Boolean)) {
     if (!Object.prototype.hasOwnProperty.call(r, fld)) f('MC-3', `record ${r.id} has no field "${fld}"`);
   }
+  /* an optional field (status_basis exists on some instruments only) is read where present; it must be
+     declared, so MC-15 still holds its caveats to the figure, and it may not also be a required field */
+  for (const fld of decl.optional_fields ?? []) if (decl.fields.includes(fld)) f('MC-3', `"${fld}" is declared both required and optional`);
 
   /* MC-4 */
   const vf = decl.value?.field;
@@ -323,14 +395,24 @@ export async function evaluate(decl, ctx) {
   /* MC-2: one computing function, imported by every consumer, and no second sum */
   const comp = ctx.compute ? { value: ctx.compute } : await load(root, decl.compute ?? {}, ctx);
   if (comp.error || typeof comp.value !== 'function') { f('MC-2', `the computing function: ${comp.error ?? 'not a function'}`); return finish(); }
-  if (vf && decl.formula === 'sum') {
+  /* the field a second implementation would compute over: the summed value, or the field a count partitions by */
+  const scanField = decl.formula === 'sum' ? vf : decl.formula === 'count' ? decl.partition?.field : null;
+  /* a partitioned count names its field; an unpartitioned count has no field to scan for, and is held by the import half alone */
+  if (decl.formula === 'count' && decl.partition && !scanField) f('MC-2', 'a partitioned count names the field it partitions by (partition.field), so a second count by it can be found');
+  if (scanField) {
     const files = ctx.files ? [...new Set([...jsFiles(root), ...Object.keys(ctx.files).filter((p) => p.startsWith('js/'))])] : jsFiles(root);
+    const scan = decl.formula === 'sum' ? sumSites : countSites;
+    const verb = decl.formula === 'sum' ? 'sums' : 'counts records by';
     for (const path of files) {
       const s = src(path); if (s == null) continue;
-      const sites = sumSites(s, vf);
-      if (path === decl.compute.module) { if (sites.length > 1) f('MC-2', `${path} sums ${vf} in ${sites.length} places (lines ${sites.map((x) => x.line).join(', ')}); the module holds one summation`); }
-      else for (const x of sites) f('MC-2', `${path}:${x.line} sums ${vf} itself (${x.form}) — a second implementation of ${decl.compute.export}()`);
+      const sites = scan(s, scanField);
+      if (path === decl.compute.module) { if (sites.length > 1) f('MC-2', `${path} ${verb} ${scanField} in ${sites.length} places (lines ${sites.map((x) => x.line).join(', ')}); the module holds one`); }
+      else for (const x of sites) f('MC-2', `${path}:${x.line} ${verb} ${scanField} itself (${x.form}) — a second implementation of ${decl.compute.export}()`);
     }
+  }
+  /* every consumer imports the function, whatever the formula: the half of MC-2 that does not depend on a scan */
+  {
+    if (!(decl.consumers ?? []).length) f('MC-2', 'no consumer is declared: a figure nobody imports is not the figure a page shows');
     for (const c of decl.consumers ?? []) {
       const s = src(c);
       if (s == null) { f('MC-2', `consumer ${c} does not exist`); continue; }
@@ -381,7 +463,8 @@ export async function evaluate(decl, ctx) {
     for (const r of valid) if (!seen.has(r.id)) f('MC-8', `input ${r.id} is in no part`);
     const sumEur = Object.values(parts).reduce((a, p) => a + (p.eur ?? 0), 0);
     const sumRec = Object.values(parts).reduce((a, p) => a + (p.records?.length ?? 0), 0);
-    if (res?.announced?.state === 'determined' && sumEur !== res.announced.eur) f('MC-8', `the parts add to ${sumEur}, the total is ${res.announced.eur}`);
+    if (decl.formula === 'sum' && res?.announced?.state === 'determined' && sumEur !== res.announced.eur) f('MC-8', `the parts add to ${sumEur}, the total is ${res.announced.eur}`);
+    if (decl.formula === 'count' && res?.population !== valid.length) f('MC-8', `the figure reports a population of ${res?.population}, the inputs are ${valid.length}`);
     if (sumRec !== valid.length) f('MC-8', `the parts hold ${sumRec} records, the inputs are ${valid.length}`);
     const by = await load(root, decl.partition.by ?? {}, ctx);
     if (by.error) f('MC-8', `the ordered derivation: ${by.error}`);
@@ -389,8 +472,10 @@ export async function evaluate(decl, ctx) {
   }
 
   /* MC-9 */
-  const dated = valid.filter((r) => r.last_verified).map((r) => r.last_verified).sort();
-  const undated = valid.filter((r) => !r.last_verified);
+  const af = decl.as_of_field ?? 'last_verified';
+  if (decl.as_of_field && ![...decl.fields, ...(decl.optional_fields ?? [])].includes(af)) f('MC-9', `the "as of" field ${af} is not a declared field`);
+  const dated = valid.filter((r) => r[af]).map((r) => r[af]).sort();
+  const undated = valid.filter((r) => !r[af]);
   const ao = res?.as_of ?? {};
   if (ao.oldest !== (dated[0] ?? null) || ao.newest !== (dated[dated.length - 1] ?? null)) f('MC-9', `"as of" is ${ao.oldest} … ${ao.newest}; the inputs say ${dated[0]} … ${dated[dated.length - 1]}`);
   if (!same(ao.undated ?? [], undated)) f('MC-9', `${undated.length} undated input(s) (${ids(undated).join(', ') || 'none'}) are not all counted and named beside the figure`);
@@ -404,7 +489,16 @@ export async function evaluate(decl, ctx) {
   }
 
   /* MC-11 */
-  if (decl.weak_evidence) {
+  if (decl.weak_evidence?.rule) {
+    const rule = await load(root, decl.weak_evidence.rule, ctx);
+    if (rule.error || typeof rule.value !== 'function') f('MC-11', `the weak-evidence rule: ${rule.error ?? 'not a function'}`);
+    else {
+      const want = valid.filter((r) => rule.value(r));
+      const got = res?.weak ?? [];
+      if (!same(got, want)) f('MC-11', `${want.length} input(s) rest on weak evidence by ${decl.weak_evidence.rule.export}() (${ids(want).join(', ') || 'none'}); the figure names ${got.length} (${ids(got).join(', ') || 'none'})`);
+      for (const w of got) if (!w.name) f('MC-11', `${w.id} is named without its name`);
+    }
+  } else if (decl.weak_evidence) {
     const bix = basisIndex({ claims: db.claims, sources: db.sources });
     const want = valid.filter((r) => r[decl.weak_evidence.unverified_field] === true || checkFineBasis(r, bix).state !== 'established');
     const got = res?.weak ?? [];
@@ -422,7 +516,7 @@ export async function evaluate(decl, ctx) {
   const note = db[decl.population.dataset]?.$note ?? '';
   const caveats = decl.caveats ?? [];
   for (const cv of caveats) if (!String(note).includes(cv.quote)) f('MC-15', `the caveat quoted for ${cv.field} is no longer in the dataset's $note: "${cv.quote.slice(0, 80)}…"`);
-  for (const fld of [...new Set([...decl.fields, vf].filter(Boolean))]) {
+  for (const fld of [...new Set([...decl.fields, ...(decl.optional_fields ?? []), vf].filter(Boolean))]) {
     for (const sent of sentences(note).filter((x) => names(x, fld))) {
       if (!caveats.some((cv) => cv.field === fld && sent.includes(cv.quote))) f('MC-15', `the $note says of ${fld}: "${sent.slice(0, 100)}…", and the figure does not carry it`);
     }
