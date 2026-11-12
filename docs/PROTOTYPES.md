@@ -378,5 +378,6 @@ deadlines, the fines and the last-checked line rendered by `js/masthead.js`; the
 adapted to it in `9e19891`).
 
 **Not measured with M1–M8** (§1.2): the README lists what was checked in the browser and what was not — contrast inside the figure, a screen
-reader, other browsers and low-density screens, performance, languages, the serpent's sharpness. HP-02 measures contrast and timing
-(`docs/prompts/v2-hp-02-homepage-follow-up.md`).
+reader, other browsers and low-density screens, performance, languages, the serpent's sharpness. **HP-02 (12 Nov 2026) measured it** — the figure's contrast in both themes and both lens states, the opening's timing under CPU throttling, the labels that touch, and the plan for
+the languages — and replaced the icon-derived serpent files with the author's drawing. The results, the method and what was still not measured are in
+`prototypes/homepage/README.md` ("What was checked", "Languages: the plan"); the decisions are the rows "HP-02: …" of `docs/ROADMAP-v2.md` §8. Not duplicated here.

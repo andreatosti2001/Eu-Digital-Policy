@@ -1,11 +1,68 @@
 # HANDOVER
 
-**Last updated:** 12 November 2026 (UTC), HP-01 (the homepage session: a creative direction, then its prototype), at its close.
-**Branch:** `claude/funny-hamilton-yt9uh0` (assigned by the environment), from `main` `f143c8e`, with `main` `33ee004` **merged in** (`ed44b2e`) when `main` moved
-during the session (#102, #103); pushed, no history rewritten. Pull request #104 opened on the author's answer, not merged by the session.
-The entries below this session's are unchanged; the header the P1 checkpoint wrote is kept under its branch register, as written.
+**Last updated:** 12 November 2026 (UTC), HP-02 (the homepage follow-up: the author's serpent, the figure's contrast, the opening's timing, the plan for the languages), at its close.
+**Branch:** `claude/jolly-hamilton-du9xkp` (assigned by the environment), fast-forwarded to `main` `84bfa89` (#104) at the start; pushed, no history rewritten.
+`origin/main` re-fetched immediately before this write: `84bfa89`, unchanged. Pull request #105 opened on the author's answer ("After recording (Recommended)"), not merged by the session.
+The entries below this session's are unchanged; the header HP-01 wrote is kept under its branch register, as written.
+
+## Branch register — 12 November 2026 (HP-02, the homepage follow-up)
+
+- `claude/jolly-hamilton-du9xkp`, from `main` `84bfa89`: `prototypes/homepage/` (assets, `homepage.js`, `homepage.css`, `README.md`) and `docs/` (`ROADMAP-v2.md` §8, `PROTOTYPES.md` §H,
+  `HANDOVER.md`, `prompts/v2-hp-03-homepage-production-plan.md`). Nothing of the published site changed. Disposition: on the author's answer ("After recording (Recommended)"), pull request #105
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/105), opened and not merged by the session; merging is the author's.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed), as before. `claude/funny-hamilton-yt9uh0` (HP-01) is merged (#104).
+
+## HP-02 — the homepage follow-up (12 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the rows "The scope of HP-02", "HP-02: C.1 approved", "HP-02: the measures", "HP-02: the languages" and "HP-02: the next session", each with the
+author's words. **Record:** `prototypes/homepage/README.md` ("What was checked", "Languages: the plan") and `docs/PROTOTYPES.md` §H — read them, not this entry.
+
+**What happened.** The serpent's original was not in the repository, on any branch, in history or in the session's upload folders; the author supplied it in the conversation after two
+attempts (the first was the 512 px icon itself, byte-identical to `img/icons/icon-512.png`). It is a **1920 × 1080 raster**, not a vector. It was integrated by colour and connectivity only
+(`assets/derive-serpent.py`, deterministic: re-running it on the original reproduces all four derived files byte for byte, checked on the pushed tree), shown as before/after videos and stills (C.1), and approved with two
+decisions: the raster is the source, and its own framing stays. Then the measures (contrast, timing), the labels that touch, the plan for the languages, and the next prompt.
+
+**Measured, 12 Nov 2026** (method and figures in the README): contrast — 528 element readings, 4 states, **0 failing after the corrections** (before: the rings, the tree's lines, the whole
+"Falls due next" lens and the Night contour failed); timing — 4.0 s everywhere, 0 dropped frames at 1 ×, 10–30 % at 6 ×, the cost is rendering not script (frame script 4.3 → 2.5 ms median),
+no long task; labels — four of five collisions cleared, *Digital Networks Act* structurally not. **Battery on the pushed tree:** `validate`, `i18n-audit`, `design-qa`, `freshness`,
+`evidence-audit`, `seo-audit` exit 0; `tools/selftest.mjs` **189 / 189**; the browser suite **343 pass · 0 fail · 1 undecidable** (`a11y:bound`, declared on every run) with the repository
+byte-identical before and after. **Not run:** the 25 agent suites and `.control-room/` — nothing under `agent/`, `.control-room/`, `js/`, `css/`, `data/` or a published page changed.
+`git diff origin/main --stat` over the published surface (list below) is empty.
+
+**Two things to know that cost a run.** A browser-suite run started while a file was being edited reported "the repository changed during this run" and exited 1 — the suite's own guard,
+correct; the result that counts is the rerun on a quiet tree. And three throttled runs per condition do not resolve small differences in dropped frames: what separated an improvement
+from noise was timing the frame's script on its own.
+
+**Decisions of this session, all in §8:** the raster is the source; the drawing is framed as drawn (the first frame of the opening is not pixel-identical to the header's mark);
+C.1 approved; rings and tree lines kept in `--paper-faint`; *Digital Networks Act*'s label left and stated; the opening's timing at 6 × accepted as measured (revisit on a real phone);
+the figure is English in the it / fr / es editions and is declared English; the next session is the homepage production plan.
+
+**Left open, for the next session:** where and how the English figure is declared in the editions (a sentence in the chrome? `docs/`?); `js/` is not tiered by `docs/AI-SAFE-BOUNDARIES.md`'s
+table — the production plan has to find where the documents place it; `homepage.js` imports `prototypes/editorial/brief.js`, a dependency that cannot ship; no screen reader has been used;
+a real-phone timing; a vector serpent if one ever exists; the `__hpFrame` and `__hpLabels` review hooks must not ship.
+
+**Checklist**
+
+| # | Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|---|
+| 1 | The author's serpent | `assets/serpent-original.png` (unedited), `serpent-mark.png`, `serpent-body-day.png`, `serpent-body-night.png`, `serpent-beads.json`, `derive-serpent.py` (`ce37402`, contour `d6422b5`); §8 "HP-02: C.1 approved" (`6a871d8`) | `python3 -m http.server 8000`, open `/prototypes/homepage/?intro=1`, both themes; `python3 -I prototypes/homepage/assets/derive-serpent.py prototypes/homepage/assets/serpent-original.png <empty dir>` reproduces all four derived files (`cmp`) | none in the repository (scratch checks only) | the author's drawing in, the icon-derived files gone, `img/icons/` untouched: **met** |
+| 2 | Contrast in the figure | `homepage.css`, `assets/derive-serpent.py` (contour width) (`d6422b5`); README "What was checked"; §8 "HP-02: the measures" | the README's method, in a browser: resolved `fill`/`stroke` × ancestor opacity against the pixels behind each element; or by eye in both themes and the lens | none (scratch script, described, not committed) | measured in Day and Night, corrected with the site's tokens only: **met** — the lowest graphic 3.27 : 1, the lowest text 4.82 : 1; hover and focus states **not** measured |
+| 3 | Timing of the opening | `homepage.js` `set()` and two cached lookups (`d6422b5`); README "Timing of the opening"; §8 "HP-02: the measures" | CPU throttle 1 ×, 4 ×, 6 × in DevTools, Replay the opening; the frame-interval method is in the README | none | measured under throttling: **met**; the opening was **not** changed; a real phone **not** measured |
+| 4 | The languages (a plan) | README "Languages: the plan" (20 rows); §8 "HP-02: the languages" | read the 20 rows against `homepage.js` and `index.html`; `grep -n data-i18n js/masthead.js` is empty | none | the plan and the author's answer in §8, no translation written: **met** |
+| 5 | The minor fixes | `settleLabels()` in `homepage.js` (`d6422b5`); README "Labels that touch" and the corrected state of the README | `window.__hpLabels` in the console; the lens "Falls due next" at the bottom of the core | none | the touching labels fixed or stated: **partly met** — *Digital Networks Act* stays (the author: "Leave it, say so"); the README's stale sentences corrected |
+| — | Next prompt | `docs/prompts/v2-hp-03-homepage-production-plan.md` (`c51fbea`) | read its exit criterion: the standing rule is there | none | exists on the branch, carries the rule: **met**; approved with the work when the author merges |
+| — | Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data img tools agent .github prototypes/editorial prototypes/observatory` is empty | the browser suite reports the repository byte-identical | nothing of the published site changed: **met** |
+
+**For the next session:** HP-03, on its prompt — the homepage production plan, a plan and not an implementation. PV2-05 (without its homepage view) follows.
 
 ## Branch register — 12 November 2026 (HP-01, the homepage)
+
+*The header HP-01 wrote, kept as written:*
+
+> **Last updated:** 12 November 2026 (UTC), HP-01 (the homepage session: a creative direction, then its prototype), at its close.
+> **Branch:** `claude/funny-hamilton-yt9uh0` (assigned by the environment), from `main` `f143c8e`, with `main` `33ee004` **merged in** (`ed44b2e`) when `main` moved
+> during the session (#102, #103); pushed, no history rewritten. Pull request #104 opened on the author's answer, not merged by the session.
+> The entries below this session's are unchanged; the header the P1 checkpoint wrote is kept under its branch register, as written.
 
 - `claude/funny-hamilton-yt9uh0`, from `main` `f143c8e`, with `main` `33ee004` merged in (`ed44b2e`): the unpublished `prototypes/homepage/` (new) and `docs/` (`ROADMAP-v2.md` §8,
   `PROTOTYPES.md` §H, `HANDOVER.md`, `prompts/v2-hp-02-homepage-follow-up.md`, a note at the head of the PV2-05 prompt). Disposition: on the

@@ -56,7 +56,12 @@ function svg(tag, attrs = {}, parent) {
   if (parent) parent.appendChild(n);
   return n;
 }
-function set(n, attrs) { for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, typeof v === 'number' ? f2(v) : v); }
+/* writes only what changed: most elements are still for most of the opening, and a write that changes nothing still costs a style invalidation (HP-02, timing under CPU throttling) */
+const lastSet = new WeakMap();
+function set(n, attrs) {
+  let m = lastSet.get(n); if (!m) lastSet.set(n, m = {});
+  for (const [k, v] of Object.entries(attrs)) { const val = typeof v === 'number' ? f2(v) : v; if (m[k] !== val) { m[k] = val; n.setAttribute(k, val); } }
+}
 const store = {
   get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* private mode */ } },
@@ -369,9 +374,9 @@ async function buildFigure() {
   const coverLb = svg('text', { x: CX + RC * Math.cos(rad(-62)) + 8, y: CY + RC * Math.sin(rad(-62)) - 4, class: 'ring-lb', opacity: 0 }, L.labels);
   coverLb.textContent = `CORE · ${core.length}`;
 
-  /* the mark: the site's icon, the serpent's body, and its beads as shapes */
-  const H = beads.hole_centre, S1 = 512 * (RC + 7) / beads.hole_radius;
-  const icon = svg('image', { href: '../../img/icons/icon-512.png', width: 0, height: 0, opacity: 0 }, L.mark);
+  /* the mark: the author's serpent drawing (the disc, then the body) and its beads as shapes */
+  const H = beads.hole_centre, U = beads.size, S1 = U * (RC + 7) / beads.hole_radius;   // U: the side of the drawing's square, in its own units
+  const icon = svg('image', { href: 'assets/serpent-mark.png', width: 0, height: 0, opacity: 0 }, L.mark);
   const body = svg('image', { href: '', width: 0, height: 0, opacity: 0 }, L.mark);
   const bodyHref = () => (theme() === 'light' ? 'assets/serpent-body-day.png' : 'assets/serpent-body-night.png');
   body.setAttribute('href', bodyHref());
@@ -379,12 +384,14 @@ async function buildFigure() {
   const beadEls = beads.beads.map(() => svg('ellipse', { rx: 0, ry: 0, opacity: 0, class: 'bead' }, L.mark));
 
   /* ---- one frame of the opening */
+  let tkNext = null, sideOp = null;
+  const sidePanels = [...document.querySelectorAll('.hp-side')];
   const gold = () => (theme() === 'light' ? [184, 145, 58] : [217, 169, 60]);
   function frame(t) {
     /* the mark grows and turns counter-clockwise, head first, from upside down */
     const ko = outCubic(lin(t, 0.3, 1.0));
     const S = 76 + (S1 - 76) * ko, rot = 180 * (1 - ko);
-    const tr = `translate(${f2(CX)},${f2(CY)}) rotate(${f2(rot)}) translate(${f2(-H[0] * S / 512)},${f2(-H[1] * S / 512)})`;
+    const tr = `translate(${f2(CX)},${f2(CY)}) rotate(${f2(rot)}) translate(${f2(-H[0] * S / U)},${f2(-H[1] * S / U)})`;
     const oA = seg(t, 0, 0.3) * (1 - seg(t, 0.35, 0.85));
     const oB = 0.88 * seg(t, 0.35, 0.85) * (1 - seg(t, 0.85, 1.25));
     set(icon, { width: S, height: S, transform: tr, opacity: oA });
@@ -393,14 +400,14 @@ async function buildFigure() {
     const on = seg(t, 0.35, 0.85), warm = seg(t, 0.9, 1.3), mv = seg(t, 1.1, 2.25), gone = seg(t, 2.0, 2.35);
     const g = gold();
     const col = `rgb(${Math.round(240 + (g[0] - 240) * warm)},${Math.round(224 + (g[1] - 224) * warm)},${Math.round(174 + (g[2] - 174) * warm)})`;
-    const kk = S / 512, th = rad(rot);
+    const kk = S / U, th = rad(rot);
     beads.beads.forEach((b, i) => {
       const ux = (b[0] - H[0]) * kk, uy = (b[1] - H[1]) * kk;
       const x0 = ux * Math.cos(th) - uy * Math.sin(th), y0 = ux * Math.sin(th) + uy * Math.cos(th);
       const r0 = Math.hypot(x0, y0), a = Math.atan2(y0, x0), r = r0 + (RC - r0) * mv, sz = kk * (1 - 0.3 * mv);
       const X = CX + r * Math.cos(a), Y = CY + r * Math.sin(a);
       set(beadEls[i], { cx: X, cy: Y, rx: b[2] * sz, ry: b[3] * sz, transform: `rotate(${f2(b[4] + rot)} ${f2(X)} ${f2(Y)})`, opacity: on * (1 - gone) });
-      beadEls[i].setAttribute('fill', col);
+      if (beadEls[i].__fill !== col) { beadEls[i].__fill = col; beadEls[i].setAttribute('fill', col); }
     });
     /* the tree, drawn in reading order */
     for (const l of treeLines) set(l.el, { 'stroke-dashoffset': 1 - lin(t, l.st, l.st + 0.25) });
@@ -418,7 +425,7 @@ async function buildFigure() {
       r.dots.forEach((d) => set(d, { opacity: seg(t, r.d, r.d + 0.4) }));
     }
     /* one link back to the ticker's next deadline, once */
-    const tk = $('.sop-ticker .tk-next');
+    const tk = tkNext || (tkNext = $('.sop-ticker .tk-next'));
     if (tk) tk.classList.toggle('hp-lit', t >= 2.75 && t < 3.6);
     const qq = lin(t, 2.75, 3.35);
     for (const c of coreEls) {
@@ -427,7 +434,7 @@ async function buildFigure() {
     }
     /* the panels settle in last */
     const settle = seg(t, 2.6, 3.0);
-    for (const p of document.querySelectorAll('.hp-side')) p.style.opacity = String(settle);
+    const so = String(settle); if (so !== sideOp) { sideOp = so; for (const p of sidePanels) p.style.opacity = so; }
   }
 
   /* ---- interactions: hover and focus name a part or an instrument */
@@ -537,6 +544,60 @@ async function buildFigure() {
     (noPart.length ? `<p class="hp-k">Core instruments with no part of the brief recorded</p><ul>${noPart.map(instLi).join('')}</ul>` : '') +
     ['mapped', 'watched', 'excluded'].map((k) => `<p class="hp-k">${k} · ${outer[k].length}</p><p class="hp-list-names">${outer[k].map((i) => esc(i.short_name) + (counted.has(i.id) ? ` (adjacent, ${esc(taxLabel(ix, statusPart(i)) || 'status not recorded')})` : '')).join(' · ')}</p>`).join('');
   if (window.matchMedia('(max-width: 640px)').matches) $('#hpList').open = true;
+
+  /* ---- labels: a greedy pass that moves a label which would sit on a mark or on another label (HP-02).
+     It measures every label and mark in BOTH lens states (the due dates widen a label), then tries small shifts of each core
+     and ring label in order of distance and keeps the first that clears everything by MARGIN units. Placement only: nothing here
+     reads or writes data. What it moved and what it could not resolve is left in window.__hpLabels, for the review recordings. */
+  function settleLabels() {
+    const MARGIN = 3, MAXMOVE = 26, lensOn = fig.classList.contains('lens-due');
+    const marks = [...fig.querySelectorAll('a.mk, g.dot-g .mk-in, g.dot-g circle.duering')];
+    const texts = [...fig.querySelectorAll('text.lb, text.ring-lb, text.cap')];
+    const box = new Map();
+    for (const on of [false, true]) {
+      fig.classList.toggle('lens-due', on);
+      for (const e of [...marks, ...texts]) {
+        const b = e.getBBox(); if (!b.width && !b.height) continue;          // not rendered in this state
+        const o = { x: b.x, y: b.y, r: b.x + b.width, b: b.y + b.height }, u = box.get(e);
+        box.set(e, u ? { x: Math.min(u.x, o.x), y: Math.min(u.y, o.y), r: Math.max(u.r, o.r), b: Math.max(u.b, o.b) } : o);
+      }
+    }
+    fig.classList.toggle('lens-due', lensOn);
+    const hit = (a, b) => a.x < b.r + MARGIN && b.x < a.r + MARGIN && a.y < b.b + MARGIN && b.y < a.b + MARGIN;
+    const shifted = (b, dx, dy) => ({ x: b.x + dx, y: b.y + dy, r: b.r + dx, b: b.b + dy });
+    const dueOnly = [...fig.querySelectorAll('text.lb.due-only')].map((el) => {
+      const gx = +el.getAttribute('x') + 14, gy = +el.getAttribute('y') - 4, d = Math.hypot(gx - CX, gy - CY) || 1;   // the due label sits left of its dot: move it away from the centre
+      return { el, own: el.parentNode.querySelector('.mk-in'), max: 34, ax: (gx - CX) / d, ay: (gy - CY) / d };   // beside its own dot, so it may travel a little further
+    });
+    const movers = [
+      ...dueOnly,
+      ...coreEls.map((c) => ({ el: c.lb, own: c.el, ax: Math.cos(rad(c.a)), ay: Math.sin(rad(c.a)) })),
+      ...ringEls.map((r) => ({ el: r.lb, own: null, ax: 1, ay: 0 })),
+    ];
+    const report = { moved: [], unresolved: [] };
+    for (const m of movers) {
+      const b0 = box.get(m.el); if (!b0) continue;
+      const tx = -m.ay, ty = m.ax;                                         // the tangent
+      const cands = [];
+      const hw = (b0.r - b0.x) / 2 + 4;                                   // half the label: start or end it at its own mark instead of centring on it
+      for (const r of [0, 6, 12, 18, 24, 32]) for (const t of [0, 8, -8, 16, -16, 24, -24, 36, -36, hw, -hw]) cands.push([m.ax * r + tx * t, m.ay * r + ty * t]);
+      /* a label stays within MAXMOVE of where it was: further, it reads as the name of the NEXT mark along, which is worse than touching */
+      cands.sort((p, q) => Math.hypot(...p) - Math.hypot(...q));
+      while (cands.length && Math.hypot(...cands[cands.length - 1]) > (m.max || MAXMOVE)) cands.pop();
+      const others = [...marks.filter((e) => e !== m.own).map((e) => box.get(e)), ...texts.filter((e) => e !== m.el).map((e) => box.get(e))].filter(Boolean);
+      const ok = ([dx, dy]) => { const c = shifted(b0, dx, dy); return !others.some((o) => hit(c, o)); };
+      const pick = cands.find(ok);
+      const name = (m.el.textContent || '').trim().slice(0, 28);
+      if (!pick) { report.unresolved.push(name); continue; }
+      if (pick[0] || pick[1]) {
+        m.el.setAttribute('x', String(+m.el.getAttribute('x') + pick[0])); m.el.setAttribute('y', String(+m.el.getAttribute('y') + pick[1]));
+        box.set(m.el, shifted(b0, pick[0], pick[1])); report.moved.push([name, Math.round(pick[0] * 10) / 10, Math.round(pick[1] * 10) / 10]);
+      }
+    }
+    window.__hpLabels = report;
+  }
+  await document.fonts.ready;
+  settleLabels();
 
   /* ---- play the opening once, or show the figure as it ends */
   let raf = 0;
