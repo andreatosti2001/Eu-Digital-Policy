@@ -3,14 +3,14 @@
 **Last updated:** 12 November 2026 (UTC), HP-02b (depth by layers in the homepage prototype, an experiment that followed HP-02), at its close.
 **Branch:** `claude/jolly-hamilton-du9xkp` (assigned by the environment). **#105 (HP-02) was merged by the author before this work began**, so `main` `fa7b4cd` (#105, #106) was merged into the
 branch with a merge commit and pushed without forcing; a rebase with a force-push was attempted first and refused by the environment, and nothing had changed. `origin/main` re-fetched
-immediately before this write: `fa7b4cd`, unchanged. A new pull request is for the author to say.
+immediately before this write: `fa7b4cd`, unchanged. Pull request #107 opened on the author's answer, not merged by the session.
 The entries below this session's are unchanged; the header HP-02 wrote is kept under its branch register, as written.
 
 ## Branch register — 12 November 2026 (HP-02b, depth by layers)
 
 - `claude/jolly-hamilton-du9xkp`, from `main` `fa7b4cd` (merged in, `eb57b09`): `prototypes/homepage/` (`homepage.js`, `README.md`) and `docs/` (`ROADMAP-v2.md` §8, `PROTOTYPES.md` §H, `HANDOVER.md`,
-  `prompts/v2-hp-03-homepage-production-plan.md`). Nothing of the published site changed. Disposition: **pushed; a pull request to `main` is asked of the author at the close** (see the
-  end of this entry). The branch name is the one HP-02 used; #105 is merged, so this is new work on a restarted branch.
+  `prompts/v2-hp-03-homepage-production-plan.md`). Nothing of the published site changed. Disposition: on the author's answer ("Sì, dopo la registrazione (Recommended)"), pull request #107
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/107), opened and not merged by the session; merging is the author's. The branch name is the one HP-02 used; #105 is merged, so this is new work on a restarted branch.
 - Merged during the session, not this session's: #105 (HP-02) and #106 (`claude/nifty-mccarthy-aov32e`, the browser suite waits, bounded, for a mount to leave its loading fallback).
 - Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
 
