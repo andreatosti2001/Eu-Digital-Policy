@@ -382,11 +382,28 @@ var treeModal = treeScrim ? makeModal(treeScrim, {
   label: 'Contents',
   isOpen: function(){ return treeScrim.classList.contains('show'); },
   show: function(){ treeScrim.classList.add('show'); },
-  hide: function(){ treeScrim.classList.remove('show'); },
+  hide: function(){ treeScrim.classList.remove('show'); markTree(null); },
   focus: function(){ return treeCloseBtn; },
   opener: function(){ return openTreeBtn; }
 }) : null;
-function openTree(){ if (treeModal) treeModal.open(); }
+/* openTree(part): `part`, when it is a part's id, is MARKED in the panel's own
+   tree and list — the part a phone reader tapped on the homepage figure (§8,
+   13 Nov 2026, "The mobile tree opens the Contents panel"). Called as a click
+   listener it receives an event, which marks nothing. The mark is a heavier
+   ring and border plus aria-current, not a hue alone, and it is cleared whenever the
+   panel hides (the close button, the scrim, Esc). */
+var treeMarked = [];
+function markTree(part){
+  treeMarked.forEach(function(n){ n.classList.remove('marked'); n.removeAttribute('aria-current'); });
+  treeMarked = [];
+  if (!treeScrim || typeof part !== 'string') return;
+  treeScrim.querySelectorAll('[data-node="' + part.replace(/[^a-z0-9-]/gi, '') + '"]').forEach(function(n){
+    n.classList.add('marked');
+    if (n.classList.contains('tree-listitem')) n.setAttribute('aria-current', 'true');
+    treeMarked.push(n);
+  });
+}
+function openTree(part){ if (!treeModal) return; markTree(part); treeModal.open(); }
 function closeTree(){ if (treeModal) treeModal.close(); }
 if (openTreeBtn) openTreeBtn.addEventListener('click', openTree);
 
@@ -468,6 +485,50 @@ function highlightNode(id, on){
     if (!el) return;
     e.preventDefault(); closeTree(); jumpTo(el.dataset.node);
   });
+})();
+
+/* The site's pages, under the contents (§8, 13 Nov 2026, "The mobile tree
+   opens the Contents panel"). The list has ONE home: the Site index that
+   tools/_footer.mjs generates at the foot of the page, in each edition's own
+   paths. Its two columns ("Sections", "About this site") are COPIED here when
+   the page loads — no second list in the markup, no new string — and the
+   instrument and editions columns are left in the footer. No Site index, no copy.
+   The Site index comes AFTER this script in the markup, so the copy waits for
+   the document to be parsed. */
+(function pagesInPanel(){
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', pagesInPanel); return; }
+  var list = treeScrim && treeScrim.querySelector('.tree-panel-list');
+  var index = document.querySelector('.site-index');
+  if (!list || !index) return;
+  /* the columns BEFORE the instrument column: "Sections" and "About this site", the two
+     authorized; the editions column ("The brief in") comes after .si-wide and is not copied */
+  var cols = [];
+  for (var c = index.querySelector('.si-col'); c && !c.classList.contains('si-wide'); c = c.nextElementSibling)
+    if (c.classList.contains('si-col')) cols.push(c);
+  if (!cols.length) return;
+  var nav = document.createElement('nav');
+  nav.className = 'tree-panel-pages';
+  nav.setAttribute('aria-label', index.getAttribute('aria-label') || 'Site index');
+  cols.forEach(function(c){ nav.appendChild(c.cloneNode(true)); });
+  list.appendChild(nav);
+})();
+
+/* On a phone the homepage figure's tree has no labels and nodes too small to
+   aim at, so below 640px a tap on it opens the Contents panel instead of
+   jumping, with the tapped part marked; one more tap reads it. Above 640px the
+   figure's own links are untouched. Capture phase, so the figure's anchor never
+   navigates first. The figure is js/home-figure.js (#homeFig .hp-tree). */
+(function phoneTreeOpensContents(){
+  if (!treeScrim || !window.matchMedia) return;
+  var PHONE = window.matchMedia('(max-width: 640px)');
+  document.addEventListener('click', function(e){
+    if (!PHONE.matches) return;
+    var tree = e.target && e.target.closest ? e.target.closest('#homeFig .hp-tree') : null;
+    if (!tree) return;
+    var node = e.target.closest('.tn[data-part]');
+    e.preventDefault(); e.stopPropagation();
+    openTree(node ? node.getAttribute('data-part') : null);
+  }, true);
 })();
 
 /* ================= the small-screen controls sheet =================

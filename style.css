@@ -189,11 +189,17 @@ body{
 .tree-panel-sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--paper-faint);margin:0 0 14px;padding:0 12px;text-transform:uppercase}
 .tree-listitem{display:grid;grid-template-columns:28px 1fr 24px;align-items:baseline;gap:10px;width:100%;
   background:none;border:0;border-left:2px solid transparent;padding:9px 12px;text-align:left;color:var(--paper-dim);cursor:pointer}
-.tree-listitem:hover,.tree-listitem.hl{background:rgba(217,169,60,.09);border-left-color:var(--mech);color:var(--paper)}
+.tree-listitem:hover,.tree-listitem.hl,.tree-listitem.marked{background:rgba(217,169,60,.09);border-left-color:var(--mech);color:var(--paper)}
 .tli-roman{font-family:var(--mono);font-size:10.5px;color:var(--paper-faint)}
-.tree-listitem:hover .tli-roman,.tree-listitem.hl .tli-roman{color:var(--mech)}
+.tree-listitem:hover .tli-roman,.tree-listitem.hl .tli-roman,.tree-listitem.marked .tli-roman{color:var(--mech)}
 .tli-title{font-family:var(--body);font-size:13.5px;line-height:1.3}
 .tli-mins{font-family:var(--mono);font-size:8.5px;color:var(--paper-faint);text-align:right}
+/* the part a phone reader tapped on the homepage figure: a heavier ring and border, not a hue alone */
+.tree-node.marked .tree-node-circle{fill:var(--mech-dim);stroke:var(--mech);stroke-width:2.6}
+.tree-node.marked .tree-node-roman{fill:var(--paper)}
+.tree-listitem.marked{border-left-width:4px}
+/* the site's pages under the contents: the Site index's two columns, copied by app.js */
+.tree-panel-pages{margin:22px 12px 0;padding-top:16px;border-top:1px solid var(--line);display:grid;gap:14px}
 .tree-close{position:absolute;top:20px;right:max(20px,calc(50vw - 490px));background:var(--ink-1);border:1px solid var(--line);
   color:var(--paper-dim);width:34px;height:34px;cursor:pointer;font-size:16px}
 .tree-close:hover{border-color:var(--live);color:var(--paper)}
