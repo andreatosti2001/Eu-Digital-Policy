@@ -7,7 +7,7 @@
 ## Branch register — 13 November 2026 (PV2-05)
 
 - `claude/pv2-05-start-jrurwd`, from `main` `a6b609d`: `docs/` (`ROADMAP-v2.md` §8, `HANDOVER.md`, `PROTOTYPES.md` §3, the dated note in
-  `docs/prompts/v2-session-27.md`) and the unpublished `prototypes/hybrid/`. Disposition: on the author's answer ("Yes, open the PR (Recommended)"), a pull request to `main`, opened by the session and
+  `docs/prompts/v2-session-27.md`) and the unpublished `prototypes/hybrid/`. Disposition: on the author's answer ("Yes, open the PR (Recommended)"), pull request #111 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/111), opened by the session and
   not merged by it; merging is the author's, with a merge commit.
 - Reported at the start, all already in this register and left alone: `claude/brave-goldberg-gm87jp` (one commit, `7e93f27`); the scout
   digests of 2 and 9 Nov 2026. `origin/main` re-fetched before this line: `a6b609d`.
