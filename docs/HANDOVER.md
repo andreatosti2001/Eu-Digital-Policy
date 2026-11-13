@@ -1,14 +1,14 @@
 # HANDOVER
 
 **Last updated:** 13 November 2026 (UTC), after v2 Session 27: the mobile tree opens the Contents panel (Class D, authorized), at its close.
-**Branch:** `claude/mobile-tree-contents`, from `claude/eager-euler-05ukz9` `52a1b2a` (so that its §8 rows do not conflict with #112's). `origin/main` re-fetched immediately before this write: `3627de6`, unchanged.
-**Read first:** **merge #112 first**, then this branch's pull request. Below 640 px a tap on the homepage figure's tree now opens the Contents panel with the part marked, and the panel lists the site's pages at every width. The entries below are unchanged.
+**Branch:** `claude/mobile-tree-contents`, from `claude/eager-euler-05ukz9` `52a1b2a` (so that its §8 rows do not conflict with #112's). `origin/main` re-fetched immediately before this write: **`9eaa961`, #112 merged by the author with a merge commit** while this work ran; this branch is `main` plus its own three commits. (The first version of this header, `e390370`, said `3627de6`, unchanged: the fetch it reported was read before the merge landed.)
+**Read first:** this branch's pull request is the one open item. Below 640 px a tap on the homepage figure's tree now opens the Contents panel with the part marked, and the panel lists the site's pages at every width. The entries below are unchanged.
 
 ## Branch register — 13 November 2026 (the mobile tree)
 
 - `claude/mobile-tree-contents`, from `claude/eager-euler-05ukz9` `52a1b2a`: its own pull request to `main`, opened by the session and not
-  merged by it; it carries #112's commits until #112 is merged. Merging is the author's, with a merge commit.
-- `claude/eager-euler-05ukz9`: pull request #112, as registered below.
+  merged by it; three commits of its own on `main` `9eaa961`. Merging is the author's, with a merge commit.
+- `claude/eager-euler-05ukz9`: **merged** (#112, `9eaa961`); nothing unmerged on it.
 
 ## The mobile tree opens the Contents panel, with the site's pages (13 Nov 2026)
 
