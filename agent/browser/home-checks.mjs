@@ -23,6 +23,9 @@
      home:no-hooks            none of the three review hooks of the prototype
      home:labels              no label on a label or a mark (one named exception)
      home:svg-contrast        text 4.5 : 1, graphics 3 : 1, against the pixels
+     home:phone-tree-contents below 640px the tree opens the Contents panel,
+                              the part marked, the Site index's pages beneath
+                              (§8, 13 Nov 2026; a synthetic click, not a finger)
 
    NONE of them is a timing measure (that is a person's, on a phone:
    plan §6), a screen-reader reading (a declared manual protocol), or M2
@@ -387,5 +390,33 @@ export async function checkHome(browser, origin, { root = REPO_ROOT } = {}) {
       }
     } finally { await page.close(); }
   }
+  /* ---- on a phone the figure's tree opens the Contents panel, with the part marked and the pages beneath
+     (§8, 13 Nov 2026, "The mobile tree opens the Contents panel"); above 640px the node still jumps */
+  {
+    const probe = (part) => `(() => {
+      const n = document.querySelector('#homeFig .tn[data-part="${part}"]'); const y0 = scrollY;
+      n.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+      const scrim = document.getElementById('treeScrim');
+      const cols = []; for (let c = document.querySelector('.site-index .si-col'); c && !c.classList.contains('si-wide'); c = c.nextElementSibling) cols.push(c);
+      const idx = cols.flatMap((c) => [...c.querySelectorAll('a')]).map((a) => a.getAttribute('href'));
+      const labels = [...document.querySelectorAll('#treeScrim .tree-panel-pages .si-label')].map((l) => l.textContent);
+      const panel = [...document.querySelectorAll('#treeScrim .tree-panel-pages a')].map((a) => a.getAttribute('href'));
+      const r = { open: scrim.classList.contains('show'), hash: location.hash, moved: scrollY !== y0,
+        markedList: [...scrim.querySelectorAll('.tree-listitem.marked')].map((x) => x.dataset.node + ':' + x.getAttribute('aria-current')),
+        markedNodes: [...scrim.querySelectorAll('.tree-node.marked')].map((x) => x.dataset.node),
+        pagesSame: idx.length > 0 && JSON.stringify(idx) === JSON.stringify(panel) && JSON.stringify(labels) === '["Sections","About this site"]', pages: panel.length, labels };
+      if (r.open) document.getElementById('treeClose').click();
+      r.marksAfterClose = document.querySelectorAll('#treeScrim .marked').length;
+      return r; })()`;
+    const phone = await withPage(browser, origin, { seen: true, viewport: { width: 390, height: 844, mobile: true } }, (p) => p.evaluate(probe('part-3')));
+    const it = await withPage(browser, origin, { path: '/it/', seen: true, viewport: { width: 390, height: 844, mobile: true } }, (p) => p.evaluate(probe('part-3')));
+    const desk = await withPage(browser, origin, { seen: true }, (p) => p.evaluate(probe('part-3')));
+    const phoneOk = (r) => r.open && r.hash === '' && JSON.stringify(r.markedList) === '["part-3:true"]' && JSON.stringify(r.markedNodes) === '["part-3"]'
+      && r.pagesSame && r.marksAfterClose === 0;
+    out.push(phoneOk(phone) && phoneOk(it) && !desk.open && desk.hash === '#part-3' && desk.pagesSame
+      ? ok('home:phone-tree-contents', `at 390 × 844 (/ and /it/) a tap on part III of the figure's tree opens the Contents panel without jumping, marks III in the panel's tree and list (aria-current), lists the Site index's two columns, "Sections" and "About this site" (${phone.pages} links, the edition's own paths, nothing else), and leaves no mark after closing; at 1440 × 900 the same tap jumps to #part-3 and the panel stays shut — a synthetic click, not a finger: it does not measure the target's size or a touch gesture`, { phone, it, desk })
+      : bad('home:phone-tree-contents', `390: open ${phone.open}, hash "${phone.hash}", list ${JSON.stringify(phone.markedList)}, nodes ${JSON.stringify(phone.markedNodes)}, pages same ${phone.pagesSame}, marks after close ${phone.marksAfterClose}; /it/: open ${it.open}, pages same ${it.pagesSame}; 1440: open ${desk.open}, hash "${desk.hash}"`, { phone, it, desk }));
+  }
+
   return out;
 }
