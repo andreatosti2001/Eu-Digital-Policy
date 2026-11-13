@@ -580,3 +580,124 @@ left 1, evaluated 1) · dora 5 (askable 2, stays 1, left 2) · cra 3 (existing 1
 | # | Rule (outcome) | Item | Rests on, per the records | Proposed | Provision · reason · E5-3 (b) |
 |---|---|---|---|---|---|
 | 67 | `ap-eidas2-01` (possible) | depends_on: Whether the organisation provides or relies on a European Digital Identity Wallet — the obligations on relying parties and trust service … | none named | **stays a dependency** | the record: the obligations on relying parties and trust service providers "are not mapped here" (V2C-21) |
+
+## 11 · The paper test (v2 Session 27, 27.4)
+
+*Written on 13 Nov 2026 in v2 Session 27. The four cases are the author's (§8, "v2 Session 27, 27.4: the cases of the paper test").
+**On paper**: no code entered the repository. To keep the trace free of hand errors it was computed in the session's scratchpad
+with the scratch matcher of §9.4, on a copy of the 33 rules transformed as the decided table says (§10.7: each askable item a
+yes/no question the rule lists as `yes`; an asked threshold such a question in place of its key; the restatements of §10.3; the
+six evaluated exemptions with a `when`). The copy was never written to `data/`; the questions' names below are the trace's, not
+proposals for the page. **The outcome goes to block D**, not to C (the prompt's note of 13 Nov 2026; §11.4).*
+
+**Reading the tables.** *Today*: the case's three answers on today's records and matcher. Then, under the decided table, every
+new question **unanswered** (or "don't know", which is the same state), every new question answered **yes**, every new question
+answered **no**. Only the rules that fire in some column are listed. Outcome words are the records' (`applies`, `likely`,
+`possible`), not the page's.
+
+### 11.1 · The four cases
+
+**Case 1 · An EU-established AI deployer** — `actor:ai-deployer`; `activity:ai-deployment`, `activity:processing-personal-data`;
+`territory:eu-established`.
+
+| Rule | Today | Unanswered | Yes | No | What changes it |
+|---|---|---|---|---|---|
+| `ap-gdpr-01` | applies | applies | applies | applies | item 1 evaluated: removed only on an explicit "household" answer |
+| `ap-gdpr-04` | likely | **possible** | likely | does not fire | item 8 asked; item 7 by the existing activity answer; item 9 stays, so not restated (§10.3) |
+| `ap-ai-act-01` | applies | applies | applies | applies | nothing (items 28 left) |
+| `ap-ai-act-04` | possible | possible | likely | does not fire | the high-risk route asked; restated one step up |
+| `ap-ai-act-05` | possible | possible | likely | does not fire | the high-risk route and Art. 25 asked; restated one step up; two downgrades end at the floor |
+
+NOT DETERMINED, in every column: the same twelve core instruments (dsa, dma, data-act, nis2, cer, dora, cra, ai-omnibus, eidas2,
+csa, ehds, iea).
+
+**Case 2 · A non-EU cloud provider serving the EU** — `actor:cloud-provider`; `activity:cloud-services`,
+`activity:processing-personal-data`; `territory:non-eu-serving-eu`.
+
+| Rule | Today | Unanswered | Yes | No | What changes it |
+|---|---|---|---|---|---|
+| `ap-gdpr-02` | likely | likely | **applies** | does not fire | item 3 asked; restated one step up |
+| `ap-dma-02` | possible | possible | likely | does not fire | items 22–26 asked (the thresholds become a question); restated |
+| `ap-dma-04` | possible | possible | possible | possible | item 27 stays |
+| `ap-data-act-01` | applies | applies | applies | applies | item 41 stays, 42 left |
+| `ap-data-act-02` | likely | likely | likely | likely | item 43 is M-1, Session 28's |
+| `ap-nis2-02` | likely | likely | likely | likely | items 51, 52 stay; 53 left |
+| `ap-dora-02` | possible | possible | likely | does not fire | items 60, 61 asked; restated |
+
+NOT DETERMINED: today and unanswered, the same nine (dsa, ai-act, cer, cra, ai-omnibus, eidas2, csa, ehds, iea); **with every new
+question answered no, gdpr and dora join them** — the reader's explicit answers removed the only rules that covered them.
+
+**Case 3 · A public authority deploying AI** — `actor:public-authority`; `activity:ai-deployment`,
+`activity:processing-personal-data`; `territory:eu-established`.
+
+| Rule | Today | Unanswered | Yes | No | What changes it |
+|---|---|---|---|---|---|
+| `ap-gdpr-01` | applies | applies | applies | applies | item 1 evaluated |
+| `ap-gdpr-03` | applies | applies | applies | applies | items 4, 5 (`excludes`) and 6 (`narrows`) evaluated |
+| `ap-ai-act-06` | applies | applies | applies | applies | item 38 stays, 39 left |
+
+The evaluated exemptions on `ap-gdpr-03`, each on an explicit answer: **the Union-entity answer** (`actor:union-entity`, beside
+`actor:public-authority`) — the rule does not fire, removed by the Art. 2(3) exemption; **the law-enforcement answer** — does not
+fire, removed by Art. 2(2)(d); **the court answer** — fires, `applies`, the Art. 37(1)(a) exemption shown as met; **"don't know"** —
+fires, `applies`, no exemption applied or shown. NOT DETERMINED: the same twelve as case 1 in every column. **Not exercised**: item 56
+(NIS2 Art. 2(7)) — `ap-nis2-03` needs `activity:critical-infrastructure-operation`, which this case does not answer.
+
+**Case 4 · A VLOP** — `actor:vlop`; `activity:online-platform-activity`, `activity:recommender-systems`;
+`territory:eu-established`.
+
+| Rule | Today | Unanswered | Yes | No | What changes it |
+|---|---|---|---|---|---|
+| `ap-dsa-01` | applies | applies | applies | applies | items 10 left |
+| `ap-dsa-02` | likely | **possible** | **applies** | does not fire | designation and the 45 million figure asked; already `applies`, not restated (today's `likely` is the threshold's downgrade) |
+| `ap-dsa-03` | possible | possible | likely | does not fire | the same two questions; restated |
+| `ap-dma-02` | possible | possible | likely | does not fire | fires through `actor:online-platform`, the VLOP term's parent |
+| `ap-cross-01` | applies | applies | applies | applies | item 68 stays |
+
+NOT DETERMINED: today and unanswered, the same eleven (ai-act, data-act, nis2, cer, dora, cra, ai-omnibus, eidas2, csa, ehds, iea);
+with every new question answered no, **dma joins them**.
+
+### 11.2 · X5-3 on paper: no unanswered question produces a "no"
+
+- **In every case, with every new question unanswered, the same rules fire as today and NOT DETERMINED is the same list.** No
+  rule stops firing, and none reads `unlikely` (the one `unlikely` rule, `ap-dma-03`, fires in none of the four).
+- **Exhaustively over the four cases**: from each case with every new question answered yes, every subset of its answers — the
+  three Phase 3 answers and the new ones — was removed in turn, for every one of the 33 rules: **17,301,372 evaluations, 0 in which
+  a rule that fired stopped firing, 0 in which an absence read `unlikely`.**
+- **A smaller result comes only from an explicit answer**: a "no" to an asked question, or an answer that meets an evaluated
+  `excludes`. Then the rule does not fire, and an instrument with no other rule is NOT DETERMINED — absence of a rule, never
+  "not applicable" (cases 2 and 4).
+
+### 11.3 · What the paper test showed
+
+- **Unanswered reads as today where every item is asked and the rule was restated** (`ap-gdpr-02`, `ap-ai-act-04`, `ap-ai-act-05`,
+  `ap-dma-02`, `ap-dora-02`, `ap-dsa-03`), and **one step lower where it was not** (`ap-gdpr-04`, partial; `ap-dsa-02`, already
+  `applies`) — as §10.3 and §8 27.2 question 4b said it would.
+- **`ap-dsa-02` reads higher than today when answered yes** (`applies`, against today's `likely`): today's `likely` is the
+  unasked threshold's downgrade, and the threshold is now asked.
+- **An explicit "no" can put an instrument into NOT DETERMINED** (gdpr and dora in case 2, dma in case 4). That is the rule of the
+  site — absence of a rule is absence of knowledge — but the page then says the same thing for "no rule covers you" and "the rule
+  that would have covered you was excluded by your answer". **Named for Session 29's wording**, not decided here.
+- **One evaluated item was not exercised** (item 56): no chosen case reaches `ap-nis2-03`.
+
+### 11.4 · Input to block D (PV2-06…PV2-09)
+
+The questionnaire is designed here and built in Session 29 against the selected direction — the Hybrid (§8, "PV2-05, C.5: the
+author's explicit decision"); C's prototypes did not include `applies.html` (`docs/SESSION-ARCHITECTURE.md`, 25.5 question 3).
+What D's design system and views (PV2-06, PV2-07) would need to hold for it, from this design and nothing else:
+
+1. **An unanswered question and "don't know" as a visible state of their own**, never styled as "no".
+2. **The reason a result is less confident**, per question left unanswered — today's downgrade sentences, more of them.
+3. **NOT DETERMINED distinct from "not applicable"**, and able to say whether no rule covers the reader or the reader's own
+   answer excluded the rule (§11.3).
+4. **An exemption shown as met on the reader's answer** (an evaluated `narrows`), and **a rule removed by the reader's answer**
+   (an evaluated `excludes`), each naming the Article it rests on.
+5. **Room for 13 to 15 new yes/no questions and six new answers** (§10.4), beside the three existing questions.
+6. **Status never by hue alone** (`docs/PROJECT-CONTEXT.md` §3, principle 6), for every state above.
+
+### 11.5 · What the paper test does not establish
+
+- **That the trace is the matcher Session 29 will build.** It is a scratch copy of `evaluate()` extended as §9.2 (d) states.
+- **The page**: wording, order, the rendering of each state (X5-3's browser checks).
+- **That the restatements are right.** Each is a rule change, read and closed in the form in Session 29, after the readings of
+  Sessions 25 and 26 (E5-5).
+- **Anything about the law.** No Article was read; the outcomes are the records' own, transformed as the decided table says.
