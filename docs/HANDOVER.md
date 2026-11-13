@@ -6,7 +6,7 @@
 
 ## Branch register — 13 November 2026 (v2 Session 27)
 
-- `claude/eager-euler-05ukz9`, from `main` `3627de6`: `docs/` only (`ROADMAP-v2.md` §8, `PHASE-5-SETUP.md` §9–§11, `prompts/v2-session-28.md`, `HANDOVER.md`). Disposition: on the author's answer ("Yes, open the PR (Recommended)"), a pull request to `main`, opened by the session and not merged by it; merging is the author's, with a merge commit. Final checkpoint approved (§8).
+- `claude/eager-euler-05ukz9`, from `main` `3627de6`: `docs/` only (`ROADMAP-v2.md` §8, `PHASE-5-SETUP.md` §9–§11, `prompts/v2-session-28.md`, `HANDOVER.md`). Disposition: on the author's answer ("Yes, open the PR (Recommended)"), pull request #112 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/112), opened by the session and not merged by it; merging is the author's, with a merge commit. Final checkpoint approved (§8).
 - Reported at the start, all already in this register and left alone: `claude/brave-goldberg-gm87jp` (one commit, `7e93f27`); the scout
   digests of 2 and 9 Nov 2026. `origin/main` re-fetched before this line: `3627de6`.
 
