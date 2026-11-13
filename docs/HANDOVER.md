@@ -1,8 +1,53 @@
 # HANDOVER
 
-**Last updated:** 13 November 2026 (UTC), v2 Session 27 (Phase 5, the design), at its final checkpoint.
-**Branch:** `claude/eager-euler-05ukz9` (assigned by the environment), from `main` `3627de6` (#111). `origin/main` re-fetched immediately before this write: `3627de6`, unchanged.
-**Read first:** **E5-3 is written and approved** (`docs/PHASE-5-SETUP.md` §9), **the X5-1 table is decided** (§10, every instrument as proposed), **the paper test is done** (§11, its outcome to block D) and **Session 28's prompt is drafted** (`docs/prompts/v2-session-28.md`); the final checkpoint is **approved** (§8, "Final checkpoint of v2 Session 27 approved"). **After the approval, G2 was opened and Phase 5 with it** (E5-5 failing and stated: Session 28 waits for the readings), and the next session is V2C-21, its prompt drafted. `docs/` only. The entries below this session's are unchanged.
+**Last updated:** 13 November 2026 (UTC), after v2 Session 27: the mobile tree opens the Contents panel (Class D, authorized), at its close.
+**Branch:** `claude/mobile-tree-contents`, from `claude/eager-euler-05ukz9` `52a1b2a` (so that its §8 rows do not conflict with #112's). `origin/main` re-fetched immediately before this write: `3627de6`, unchanged.
+**Read first:** **merge #112 first**, then this branch's pull request. Below 640 px a tap on the homepage figure's tree now opens the Contents panel with the part marked, and the panel lists the site's pages at every width. The entries below are unchanged.
+
+## Branch register — 13 November 2026 (the mobile tree)
+
+- `claude/mobile-tree-contents`, from `claude/eager-euler-05ukz9` `52a1b2a`: its own pull request to `main`, opened by the session and not
+  merged by it; it carries #112's commits until #112 is merged. Merging is the author's, with a merge commit.
+- `claude/eager-euler-05ukz9`: pull request #112, as registered below.
+
+## The mobile tree opens the Contents panel, with the site's pages (13 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The mobile tree opens the Contents panel, and the panel lists the site's pages: the authorization and
+the scope" (`cc6f290`): **Class D**, `docs/AUTONOMY-POLICY.md` prohibited action 19, authorized by the author by name in four answers, after a
+phone screenshot of the Contents panel and the request «se ci clicchi apri questo con sotto anche le altre pagine possibili».
+
+**What changed** (`0fed543`): `app.js` — below 640 px a tap on `#homeFig .hp-tree` (capture phase) opens the Contents panel instead of jumping,
+the tapped part marked in the panel's tree and list (`.marked`, `aria-current`, cleared whenever the panel hides); at every width the panel
+copies the Site index's columns before the instrument column ("Sections", "About this site") once the document is parsed — one home, no new
+string. `style.css` — the mark (heavier ring and border, not hue alone) and the pages block. `agent/browser/home-checks.mjs` — the check
+`home:phone-tree-contents`; `agent/browser/selftest.mjs` HOME 2 — a fifth planted defect. `docs/BROWSER-QA.md`. **Not changed:**
+`js/home-figure.js`, `index.html` and the editions, `i18n/`, the data, the CSP.
+
+**Found, and what was done about each:**
+- **The first version copied no page**: `app.js` runs before the Site index in the markup. Found by the new check on the real site (0 links);
+  the copy now waits for the document to be parsed.
+- **HOME 2 could not have caught that**: it asserts only that the check fails on its planted defect, not that it passes on the real tree — the
+  full browser run does that. Reported, not changed.
+- **The first fix copied a third column**, "The brief in" (the editions), seen in a phone screenshot; the copy now stops at the instrument
+  column, and the check pins the two labels.
+- **The suites create an empty `agent/records/`** (gitignored) on every run; removed after each battery, nothing in it.
+
+**Not established:** a finger on a real phone (the check is a synthetic click: no target size, no touch); any browser but Chromium; the
+live site (nothing deployed before the merge).
+
+**Battery on `0fed543`:** validators exit 0 (`validate` 0 errors · 5 warnings; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit` and
+`freshness --as-of 2026-11-13` exit 0); `commit-evidence origin/main HEAD` 24 commits, 0 without evidence; the 25 suites and `.control-room/`
+1495 tests, 1494 pass, 0 fail, 1 skipped; **browser suite (`--require-browser`) 361 pass, 0 fail, 1 undecidable** (`a11y:bound`, by design;
+360 before plus `home:phone-tree-contents`).
+
+**Checklist**
+
+| # | Item | Written | Verify by hand | Automatic test | Exit |
+|---|---|---|---|---|---|
+| 1 | Authorization and scope | §8 `cc6f290` | read the row: the author's words and four answers | none | before any published file: **met** |
+| 2 | Tap opens the panel, part marked | `app.js` `0fed543` | on a phone (or a 390 px window): tap a node of the homepage tree; the panel opens with it marked; close; tap again in the panel to read | `home:phone-tree-contents`; HOME 2 | **met** |
+| 3 | Pages under the contents | `app.js`, `style.css` `0fed543` | open Contents at any width: "Sections" and "About this site" under the list; on `/it/` the links are `../…` | `home:phone-tree-contents` | **met** |
+| 4 | Desktop unchanged | — | at a wide window a tap on the figure's tree still jumps | `home:phone-tree-contents` (1440 × 900) | **met** |
 
 ## Branch register — 13 November 2026 (v2 Session 27)
 
