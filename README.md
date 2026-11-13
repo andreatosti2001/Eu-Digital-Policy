@@ -450,7 +450,10 @@ what it cannot support:
    names, statuses and event types on every page, so a reader who chose
    Italian on the brief sees those labels in Italian elsewhere too — but the
    chrome and the tool pages' own text are not translated, and the chrome says
-   so rather than pretending otherwise.
+   so rather than pretending otherwise. The homepage figure is English in every
+   edition, including `/it/`, `/fr/` and `/es/`: its labels, captions, list and the
+   text that describes it are not translated, it is marked `lang="en"`, and each
+   edition says so in one English line under it.
 9. **Security is verified in tests, not in operation.** The site's controls — the
    Content-Security-Policy, no third-party requests, the allowlisted deploy artifact — are
    implemented in code and verified in tests; what the live host sends was measured on the dates
