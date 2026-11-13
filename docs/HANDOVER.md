@@ -2,13 +2,13 @@
 
 **Last updated:** 13 November 2026 (UTC), PV2-05 (Post-v2 C, the Hybrid prototype and the selection), at its final checkpoint.
 **Branch:** `claude/pv2-05-start-jrurwd` (assigned by the environment), from `main` `a6b609d` (#110). `origin/main` re-fetched immediately before this write: `a6b609d`, unchanged.
-**Read first:** **C is selected — the Hybrid to D, the combination (the Hybrid's layout with the observatory's 3D network) to PV2-08** (§8). Nothing of it is on the published site. The final checkpoint is **waiting for the author's approval**. The entries below this session's are unchanged.
+**Read first:** **C is selected — the Hybrid to D, the combination (the Hybrid's layout with the observatory's 3D network) to PV2-08** (§8). Nothing of it is on the published site. The final checkpoint is **approved** (§8, "Final checkpoint of PV2-05 approved"). The entries below this session's are unchanged.
 
 ## Branch register — 13 November 2026 (PV2-05)
 
 - `claude/pv2-05-start-jrurwd`, from `main` `a6b609d`: `docs/` (`ROADMAP-v2.md` §8, `HANDOVER.md`, `PROTOTYPES.md` §3, the dated note in
-  `docs/prompts/v2-session-27.md`) and the unpublished `prototypes/hybrid/`. Disposition: **to be asked at the final checkpoint** — a pull request
-  to `main`, merged by the author with a merge commit.
+  `docs/prompts/v2-session-27.md`) and the unpublished `prototypes/hybrid/`. Disposition: on the author's answer ("Yes, open the PR (Recommended)"), a pull request to `main`, opened by the session and
+  not merged by it; merging is the author's, with a merge commit.
 - Reported at the start, all already in this register and left alone: `claude/brave-goldberg-gm87jp` (one commit, `7e93f27`); the scout
   digests of 2 and 9 Nov 2026. `origin/main` re-fetched before this line: `a6b609d`.
 
@@ -58,7 +58,7 @@ undecidable** (`a11y:bound`, by design; it does not cover `prototypes/`). `agent
 | C.3 | The Hybrid | `prototypes/hybrid/` `a5eca14`, then the combination `6fdc311`; §8 `2acdca7`, `9746e9a` | `python3 -m http.server 8000`; open `/prototypes/hybrid/`, `regulation.html?id=chips-act`, `timeline.html?instrument=chips-act`, `timeline.html?mode=network`; "Enlarge the network"; a 390 px window; the theme | none in the repository (scratch planted cases: 27/27 on `a5eca14`, 29/29 on `6fdc311`) | three views, two widths, two themes, empty and missing states, the explorer with the table as its alternative: **met** |
 | C.4 | The measurement | `docs/PROTOTYPES.md` §3 `0eae5e3`, §3.6 `6fdc311` | re-run M1–M8 from `docs/FRONTEND-REFERENCES.md` §4 | none committed — **a gap**, as in PV2-03 and PV2-04 | same measures and cases; what is not seen, said: **met** |
 | C.5 | The comparison and the decision | §8 `2271205`, `9746e9a`, `812ec07` | read "PV2-05, C.5: the author's explicit decision" | none | shown view by view; the author's decision in §8 in the author's words: **met** |
-| C.6 | The next prompt | `docs/prompts/v2-session-27.md` (dated note), §8 "PV2-05: the next session" `254c55c` | the note under the title; the exit criterion's standing rule (line near «il prompt della sessione successiva») | none | exists on this branch, carries the rule; approved with the work: **to be approved** |
+| C.6 | The next prompt | `docs/prompts/v2-session-27.md` (dated note), §8 "PV2-05: the next session" `254c55c` | the note under the title; the exit criterion's standing rule (line near «il prompt della sessione successiva») | none | exists on this branch, carries the rule; approved with the work: **met** |
 | — | Untouched | — | `git diff origin/main --stat -- prototypes/editorial prototypes/observatory prototypes/homepage data js css tools index.html it fr es instruments i18n agent .github style.css app.js` is empty | `commit-evidence` | nothing of the baseline, the other prototypes, the data, the models, the CSP or `tools/pages-artifact.mjs` changed; nothing of a third party entered: **met** |
 
 **For the next session:** **v2 Session 27**, on `docs/prompts/v2-session-27.md` with its PV2-05 note — S27's outcome goes to block D. G2 is not open.
