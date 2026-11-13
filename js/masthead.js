@@ -79,7 +79,18 @@ const DAY = 86400000;
    "yesterday" in UTC passed the filter and printed "in -1 days". It is
    now taken once, as the UTC calendar day — the same day js/format.js
    isPast() and js/pipeline.js use — passed to each view, and printed. */
-const statedDay = () => new Date().toISOString().slice(0, 10);
+export const statedDay = () => new Date().toISOString().slice(0, 10);
+
+/* THE NEXT DATED EVENTS, ONE COMPUTING FUNCTION (HP-04; docs/HOMEPAGE-PRODUCTION-PLAN.md §2).
+   "Falls due next" and the ticker's "next" used to filter and sort the timeline
+   each in its own copy, and the homepage figure (js/home-figure.js) must draw its
+   gold mark under the very event the ticker names. Every view that asks which
+   dated event comes next calls this, with the day statedDay() gave it. */
+export function upcomingEvents(ix, asOf) {
+  return [...ix.event.values()]
+    .filter((e) => String(e.date) >= asOf)
+    .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+}
 
 function daysUntil(iso, asOf) {
   const a = Date.parse(asOf + 'T00:00:00Z');
@@ -137,11 +148,7 @@ function statusLedger(ix, fig) {
 /* ---------------------------------------------------------- 2. what falls due */
 
 function nextDue(ix, howMany, asOf) {
-  const today = asOf;
-  const upcoming = [...ix.event.values()]
-    .filter((e) => String(e.date) >= today)
-    .sort((a, b) => String(a.date).localeCompare(String(b.date)))
-    .slice(0, howMany);
+  const upcoming = upcomingEvents(ix, asOf).slice(0, howMany);
 
   if (!upcoming.length) {
     return '<section class="sop-block sop-due">' +
@@ -218,10 +225,7 @@ function enforcementLine(ix, records) {
 function ticker(ix, fig, asOf) {
   const byStatus = liveBands(ix, fig).map(({ b, list }) => ({ b, n: list.length }));
 
-  const today = asOf;
-  const next = [...ix.event.values()]
-    .filter((e) => String(e.date) >= today)
-    .sort((a, b) => String(a.date).localeCompare(String(b.date)))[0];
+  const next = upcomingEvents(ix, asOf)[0];
 
   const counts = byStatus.map(({ b, n }) =>
     '<span class="tk-item" data-s="' + esc(b.id.split(':').pop()) + '">' +

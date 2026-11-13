@@ -57,6 +57,11 @@ async function boot() {
      article itself is rendered and neither can block it if it fails. */
   /* the masthead is the first thing a reader sees, so it goes first */
   initMasthead().catch((e) => console.error('[masthead] failed', e));
+  /* the homepage figure enhances the tree the page already carries, and it is optional: it is imported DYNAMICALLY, because a static
+     import that cannot be fetched or parsed would fail this whole module before any view started, and no try/catch can reach that.
+     It starts after the masthead so that the status marks it adds to the ticker and the bands find them; if it fails, to load or to
+     run, the page is the published one (docs/HOMEPAGE-PRODUCTION-PLAN.md §1). */
+  import('./home-figure.js').then((m) => m.initHomeFigure(ix)).catch((e) => console.error('[home] failed', e));
   /* the palette starts the entity index itself, so it is started once */
   initPalette().catch((e) => console.error('[palette] failed', e));
   initGlossaryGraph().catch((e) => console.error('[glossary] graph failed', e));

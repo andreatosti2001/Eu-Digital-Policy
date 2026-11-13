@@ -38,6 +38,7 @@ import {
   checkLanguageSwitching, checkViewports, checkKeyboard, checkDialogs,
   checkNoThirdParty, checkAccessibility, checkContrast, checkReducedMotion, checkThreshold, checkDeployedSubpath,
 } from './checks.mjs';
+import { checkHome } from './home-checks.mjs';
 
 export const BROWSER_QA_COMMAND = 'node agent/browser/cli.mjs';
 export const BROWSER_QA_NAME = 'agent/browser (browser regression suite)';
@@ -139,6 +140,8 @@ export async function runBrowserQA({ only = null, pages = PAGES, quick = false, 
       finally { await langPage.close(); }
     }
     if (wants('threshold')) results.push(...await checkThreshold(page, site.origin));
+    /* HP-04: the homepage figure, each scenario in its own isolated context (the opening is remembered in localStorage) */
+    if (wants('home')) results.push(...await checkHome(browser, site.origin, { root }));
     if (wants('keyboard')) results.push(...await checkKeyboard(page, site.origin));
     if (wants('dialogs')) results.push(...await checkDialogs(page, site.origin));
     if (wants('responsive')) results.push(...await checkViewports(page, site.origin, { pages: quick ? pages.slice(0, 2) : pages }));

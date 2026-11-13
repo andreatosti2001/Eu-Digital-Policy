@@ -1546,7 +1546,7 @@ export async function checkAccessibility(page, origin, { pages = PAGES } = {}) {
      27 Sep 2026, when checkContrast began computing ratios: what is still
      not established is named, and nothing more is claimed. */
   out.push(undecidable('a11y:bound', 'accessibility',
-    'no screen reader was run, no pixels were compared, and contrast was computed only for text over solid colours',
+    'no screen reader was run, no pixels were compared outside the homepage figure (home:svg-contrast reads those behind its own SVG), and contrast was computed only for text over solid colours elsewhere',
     'This suite reads the DOM, the computed styles and — since 27 Sep 2026 — the accessibility tree of a headless Chromium: every operable control is checked for an accessible name at 1280px and 390px, and the main and navigation landmarks are read from the tree. That is what a screen reader is handed, not what one does with it: reading order, verbosity and how a live region is announced are outside it. checkContrast computes WCAG 2.x contrast from computed colours, not from rendered pixels: text over an image or a gradient other than the page background is counted as not measured, and anti-aliasing, font rendering and a reader\'s own settings are outside it. README limitation 7 stands in its narrowed form, and docs/UX-AUDIT.md §7 lists the open questions a static read could not settle.'));
 
   return out;
