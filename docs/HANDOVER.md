@@ -1,8 +1,73 @@
 # HANDOVER
 
-**Last updated:** 13 November 2026 (UTC), PV2-05 (Post-v2 C, the Hybrid prototype and the selection), at its final checkpoint.
-**Branch:** `claude/pv2-05-start-jrurwd` (assigned by the environment), from `main` `a6b609d` (#110). `origin/main` re-fetched immediately before this write: `a6b609d`, unchanged.
-**Read first:** **C is selected — the Hybrid to D, the combination (the Hybrid's layout with the observatory's 3D network) to PV2-08** (§8). Nothing of it is on the published site. The final checkpoint is **approved** (§8, "Final checkpoint of PV2-05 approved"). The entries below this session's are unchanged.
+**Last updated:** 13 November 2026 (UTC), v2 Session 27 (Phase 5, the design), at checkpoint 27.2.
+**Branch:** `claude/eager-euler-05ukz9` (assigned by the environment), from `main` `3627de6` (#111). `origin/main` re-fetched immediately before this write: `3627de6`, unchanged.
+**Read first:** **the standard E5-3 is written and proposed** — `docs/PHASE-5-SETUP.md` §9 — and waits for the author's approval of checkpoint 27.2, recorded in roadmap §8. **Phase 5 is planned and not opened; G2 is not open.** `docs/` only: nothing in `data/`, `tools/`, `js/`, `i18n/`, a page or `agent/` changed. The entries below this session's are unchanged.
+
+## Branch register — 13 November 2026 (v2 Session 27)
+
+- `claude/eager-euler-05ukz9`, from `main` `3627de6`: `docs/` only (`ROADMAP-v2.md` §8, `PHASE-5-SETUP.md` §9, `HANDOVER.md`). Disposition: asked at the final checkpoint.
+- Reported at the start, all already in this register and left alone: `claude/brave-goldberg-gm87jp` (one commit, `7e93f27`); the scout
+  digests of 2 and 9 Nov 2026. `origin/main` re-fetched before this line: `3627de6`.
+
+## v2 Session 27 — Phase 5, the design: checkpoint 27.2 (13 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of v2 Session 27 (Phase 5, the design)" (the author's "start session 27 v2", `25c3087`) and
+"v2 Session 27, 27.2 question 1" (`c98998e`), "question 2" (`a668e00`), "question 3" (`e46e369`), "question 4" (`fdc6f6f`), "question 4b"
+(`164ff6f`). Prompt: `docs/prompts/v2-session-27.md` with its PV2-05 note (C is selected; the paper test's outcome goes to block D).
+**Record:** `docs/PHASE-5-SETUP.md` §9 (`3b1d80a`) — read it, not this entry.
+
+**27.1, the premises, verified — no question.** `main` `3627de6` holds `docs/PHASE-5-SETUP.md` ("APPROVED BY THE AUTHOR ON 4 NOV 2026 … PHASE 5
+IS PLANNED AND NOT OPENED", the answers in §7: P-A depth, P-B design before and changes after, P-C from 27, P-D no agent proposals), §8's
+"v2 Session 25, 25.4 question 1" … "question 7" and "25.4: the prompt of v2 Session 27", `docs/prompts/v2-session-25.md`, this session's
+prompt, `docs/SESSION-ARCHITECTURE.md` with §8's "25.5 question 1" … "question 4" and "G1: Stage 2 is opened". Date measured 13 Nov 2026:
+before 12 Jan 2027 (Track M; Session 25's window not open) and 9 Mar 2027 (the grant's expiry — **flagged, not renewed**). The clone was
+shallow and was unshallowed before any suite. `git branch -r --no-merged origin/main`: only branches already in the register.
+
+**The starting state, re-measured** (scratch parser outside the repository): **identical to 4 Nov 2026** — 33 rules, all `last_verified`
+2026-11-04, 25 with `attestation`; actor 44 terms, activity 22, territory 3; outcomes applies 13, likely 9, possible 10, unlikely 1 (the 19
+likely + possible all with `depends_on`); 38 `depends_on` items on 25 rules (14 rules with one, 9 with two, 2 with three); 4 threshold keys
+on 3 rules; 26 exemptions on 20 rules, 10 `excludes` and 16 `narrows`, none evaluated. `freshness --as-of 2027-02-03`: 33 `RULE_STALE`, as
+expected (the readings of Sessions 25 and 26 not done).
+
+**27.2, the standard, in five answers** (§8): (1) written in `docs/PHASE-5-SETUP.md`, §9, with the table as §10 and the paper test as §11;
+(2) the citation clause binds **new triggers only** — new dimensions, thresholds, evaluated exemptions, told apart by field and name, no
+list; (3) an evaluated `excludes` removes the rule **on an explicit answer only**, an evaluated `narrows` never changes the result; (4) one
+mechanism: an unanswered question or "don't know" **downgrades one step and the rule fires**, a rule whose dependency becomes askable is
+restated one step up; (4b) it stands for multi-item rules.
+
+**What §9 says:** four clauses — (a) a new question resolves to a provision; (b) every answer that can change an outcome cites a tier-1 text
+`for: scope`, direct, at its Article; (c) an evaluated exemption has a tier-1 direct basis, an evaluable effect and a `when` of explicit
+answers; (d) six properties of the matcher, run over the records, that make an absence unable to narrow a result — each with the exact rule,
+its planted cases and what the check cannot see. **19 of 19 planted cases as intended** against a scratch prototype (§9.4).
+
+**Found, and what was done about each:**
+- **My example for question 4 was simplified** (`ap-gdpr-04` has three `depends_on` items, not one). Said to the author after the answer,
+  recorded in the row's text, and put as question 4b; the answer stands.
+- **6 provisions of the Phase 3 dimensions on 5 rules would fail clause (b)** (`ap-gdpr-02`, `ap-gdpr-03`, `ap-dsa-02`, `ap-ai-act-05`,
+  `ap-eidas2-01`): **recorded and named for Session 28** (§9.5), not closed.
+- **`ap-dma-01`'s `excludes` (SMEs) rests directly only on a tier-2 Commission report**: under (c) it cannot be evaluated as it stands.
+- **The first prototype missed a `narrows` that downgrades on an explicit answer**; property (6) added, then 19 of 19.
+- **The real matcher cannot be called by a Node check** (`js/applies.js` boots against `document` on import; `evaluate()` reads the
+  module-level `IX`), and **`tools/validate.mjs` refuses a new dimension in `condition_provisions` and a `when` key**: both named for
+  Sessions 28 and 29 (§9.6).
+
+**Not established:** anything about the law (no Article read); the page (X5-3, Session 29); that the scratch prototype is the check
+(Session 28 re-measures).
+
+**Battery on `3b1d80a`, 13 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit --as-of
+2026-11-13` exit 0; `freshness --as-of 2026-11-13` exit 0, 0 defects, 3 staleness prompts (time, not this branch); `node --test
+tools/selftest.mjs` **189/189**; `commit-evidence origin/main HEAD` 7 commits, none changes a published file; `git diff origin/main --stat`:
+`docs/PHASE-5-SETUP.md`, `docs/ROADMAP-v2.md` only. `agent/records/` absent.
+
+**Waiting for:** the author's approval of checkpoint 27.2, recorded in §8. Then 27.3 (the X5-1 table, one question per instrument).
+
+> The header PV2-05 wrote, kept as written:
+>
+> **Last updated:** 13 November 2026 (UTC), PV2-05 (Post-v2 C, the Hybrid prototype and the selection), at its final checkpoint.
+> **Branch:** `claude/pv2-05-start-jrurwd` (assigned by the environment), from `main` `a6b609d` (#110). `origin/main` re-fetched immediately before this write: `a6b609d`, unchanged.
+> **Read first:** **C is selected — the Hybrid to D, the combination (the Hybrid's layout with the observatory's 3D network) to PV2-08** (§8). Nothing of it is on the published site. The final checkpoint is **approved** (§8, "Final checkpoint of PV2-05 approved"). The entries below this session's are unchanged.
+>
 
 ## Branch register — 13 November 2026 (PV2-05)
 
