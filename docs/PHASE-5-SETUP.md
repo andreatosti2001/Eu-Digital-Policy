@@ -241,3 +241,144 @@ S27's to write, E5-5 waits for Sessions 25 and 26, E5-6 is measured at the openi
 - **That five sessions suffice.** The count assumes S27–S30 each close what they name; S31 exists because it is an estimate.
 - **That any `depends_on` item can be asked.** 27.3 measures that; this document only counts them.
 - **That the v2 closes when Phase 5 does** (§4).
+
+## 9 · E5-3, the standard a new trigger meets (v2 Session 27, 27.2)
+
+*Written on 13 Nov 2026 in v2 Session 27, on `claude/eager-euler-05ukz9`, from `main` `3627de6`. **Proposed at checkpoint 27.2**;
+it becomes E5-3's "section of this document approved in §8" only by a roadmap §8 row. The choices in it are the author's, each a
+§8 row of 13 Nov 2026: "v2 Session 27, 27.2 question 1" (it is written here), "question 2" (the citation clause binds new triggers
+only), "question 3" (an evaluated `excludes` removes, an evaluated `narrows` shows), "question 4" and "question 4b" (one
+mechanism: an unanswered question downgrades one step; a rule whose dependency becomes askable is restated one step up). It adds
+no field, check or rule to the repository: **Session 28 implements it** (28.1, at ERROR, before any new trigger exists).*
+
+The standard is Phase 3's, carried to what Phase 5 adds. Phase 3 made a rule publishable when every dimension it uses names the
+provision that defines it (T-03), every exemption has a structural basis (T-04) and every threshold a basis (T-05). Phase 5 makes
+askable what the rules already say they turn on (P-A); each thing it makes askable is a **new trigger**, and a new trigger meets
+the four clauses below before it is published (`docs/BRIEF-v2.md`: «Non pubblicare "what applies to me" prima che i trigger siano
+verificati con lo stesso rigore delle claim»).
+
+### 9.1 · What a new trigger is, told apart by field and by name (no list)
+
+| Term | What it is in the records | Today |
+|---|---|---|
+| **Phase 3 dimension** | `conditions.actor`, `conditions.activity`, `conditions.territory` | 28, 27 and 4 rules; under T-03 as they are (§8, 27.2 question 2) |
+| **New dimension** | any other key of `conditions` except `thresholds`; its terms a taxonomy family of the same name (`taxonomy.<d>`); its provisions `condition_provisions.<d>` | none |
+| **Threshold** | a key of `conditions.thresholds`, with `threshold_basis` (T-05) | 4 keys on 3 rules; none asked — the matcher downgrades |
+| **Evaluated exemption** | an exemption object carrying `when`: `{ <dimension>: [terms] }`, the explicit answers that meet it (the key's name is proposed here; Session 28's check reads it) | none: all 26 are printed |
+| **Explicit answer** | a term the reader selected for a question | — |
+| **"Don't know"** | a state of the page equal to no answer; **never a taxonomy term, never a condition term, never in a `when`** | — |
+
+### 9.2 · The four clauses
+
+Each clause gives the rule a check applies, the planted case that makes it fail, and what the check cannot see. The planted
+cases were run on 13 Nov 2026 against a scratch prototype outside the repository (§9.4).
+
+**(a) Every new question resolves to a provision.** *Rule:* for every rule and every new dimension `d` it uses — `taxonomy.<d>`
+exists, every term in `conditions.<d>` is one of its terms, and no condition term is "don't know"; and T-03 as it stands —
+`condition_provisions.<d>` non-empty, each id a provision of the rule's instrument or of one an edge connects to it. T-03 already
+reads every key of `conditions`, so its half of the clause needs no new code. *Planted:* `role` on `ap-gdpr-04` with no taxonomy
+family (fails (a)); with the family and no `condition_provisions.role` (fails T-03); "don't know" written as a condition term
+(fails (a)). *Cannot see:* that the provision defines what the question asks — it sees an id that resolves, not a meaning; that
+the question's words on the page (`js/applies.js`, `i18n/`) ask what the term means.
+
+**(b) Every answer that can change an outcome cites a tier-1 source, with `supports` and a locator.** *Rule:* for every new
+dimension `d`, every provision in `condition_provisions.<d>` is placed in a tier-1 text (`provisionArticle()` of
+`tools/attestation-audit.mjs`, the provision's tier-1 `sources`) **and** its Article is among the units of the locator of a
+`sources[]` reference that is `for: "scope"`, `supports:direct`, on that tier-1 text, with a structural locator (`parseLocator()`,
+`structural()`); a provision that cannot be placed fails. For **every** threshold key, `threshold_basis[k]` holds a reference
+that is `supports:direct`, tier-1 and structural (4 of 4 pass today, so the clause reads every threshold and needs no marker of
+which are asked). For an evaluated exemption, see (c). The three Phase 3 dimensions are outside this clause (§8, 27.2 question 2;
+§9.5). *Planted:* `role` on `ap-gdpr-04` resting on `gdpr:art-22`, which the rule cites only `for: obligation` (fails); the
+positive control, `role` resting on `gdpr:art-4`, which its scope reference names (passes); `ap-dsa-02`'s threshold basis reduced
+to a tier-2 reference (fails). *Cannot see:* paragraphs and points — Article level only, as A-4 (`docs/ATTESTATION-FORM.md` §5,
+item 3); that the Article says what the answer implies; that the text was read (A-4's limit, §6 of that document).
+
+**(c) An evaluated exemption has the basis T-04 requires, on a tier-1 text, and acts only on an explicit answer.** *Rule:* an
+exemption with `when` — T-04 holds (a text of at least ten characters; a direct reference with a structural locator); at least
+one basis reference is `supports:direct`, **tier-1** and structural; `effect` is `excludes` or `narrows` (`reinstates`, used by no
+rule today, is not evaluable until the author decides it); `when` names at least one dimension, each a question the
+questionnaire asks (a Phase 3 dimension or a new one with its taxonomy family), each with at least one term of that dimension and
+none "don't know". *Planted:* `ap-dma-01`'s `excludes` (SMEs) evaluated — its direct basis is a tier-2 Commission report, the
+DMA cited only `partial` (fails); a `reinstates` evaluated (fails); a `when` term outside the vocabulary (fails); an empty `when`
+(fails, and (d) also fails: an empty `when` is met by every selection). *Cannot see:* that the `when` terms are the ones the
+exemption's text describes; that the basis Article carries the exemption.
+
+**(d) An unanswered question never narrows an outcome; NOT DETERMINED stays what no rule covers.** The matcher, as decided
+(§8, 27.2 questions 3, 4, 4b): a question the rule constrains and the reader leaves unanswered, or answers "don't know",
+**downgrades the outcome one step and the rule fires** (applies → likely → possible, never to unlikely), as the three Phase 3
+questions do today; a threshold is unasked and downgrades, as today; an evaluated `excludes` removes the rule **only** when every
+dimension of its `when` is explicitly answered with one of its terms; an evaluated `narrows` **never** changes whether the rule
+fires or its outcome — on an explicit answer it is shown as met. *Rule*, a property of the matcher run over the records, for every
+rule: (1) it fires on the empty selection, and not as `unlikely` unless stored so; (2) from a selection built from the rule's own
+first term per dimension (and, in turn, each evaluated exemption's first `when` term), removing any subset of the answers — or
+replacing them with "don't know" — never turns a firing rule into one that does not fire, (3) never yields `unlikely`, (4) never
+yields a more confident outcome than with the answers, and (5) never applies an exemption, or shows a `narrows` as met, on an
+unanswered question; (6) an evaluated `narrows`, on a selection that meets it, gives the same firing and outcome as the rule
+without it. NOT DETERMINED follows: an instrument is listed as not determined when no rule for it fires (`run()`, for core
+instruments), and by (2) an absence of answers only makes more rules fire, never fewer. *Planted:* a matcher that drops a rule on
+an unanswered question; one that applies an `excludes` whose question is unanswered; a downgrade table that reaches `unlikely`;
+"don't know" read as an answer; a matcher more confident when a question is unanswered; a `narrows` shown as met on an unanswered
+question; a `narrows` that downgrades on an explicit answer — **each fails**. *Cannot see:* the rendered page — whether "don't
+know" is offered, whether an unanswered question reads as unanswered, whether NOT DETERMINED is printed (X5-3's browser checks,
+Session 29); selections beyond the ones it builds (one term per dimension, the rule's own); an answered threshold, which no
+matcher compares yet; **the real matcher, until Session 28 can call it** (§9.6).
+
+### 9.3 · What the reader sees, under the standard
+
+| Reader's answers to the questions a rule constrains | Result |
+|---|---|
+| all answered, each meeting the rule | the rule's stored outcome |
+| any answered with a term the rule does not list | the rule does not fire for this reader (an explicit answer; the instrument is then NOT DETERMINED if no other rule for it fires) |
+| k unanswered or "don't know" | the stored outcome, k steps down, never below `possible`; the rule fires |
+| an evaluated `excludes` met by explicit answers | the rule does not fire (the one new way to a smaller result, §8 27.2 question 3) |
+| an evaluated `narrows` met by explicit answers | outcome unchanged; the exemption shown as met on the reader's answer |
+
+A rule whose dependency becomes askable is **restated one step up, as a closure in the form** (`docs/ATTESTATION-FORM.md` §7,
+`outcome: "changed"`), so that unanswered it reads as today; a rule with k items made askable reads up to k steps lower than
+today when none is answered, and a rule stored `applies` reads one step lower (§8, 27.2 question 4b). Which items become askable is
+the X5-1 table's (§10).
+
+### 9.4 · The planted cases, run against a scratch prototype (13 Nov 2026, `main` `3627de6`)
+
+*A script in the session's scratchpad, never in the repository, as `docs/ATTESTATION-FORM.md` §4 was measured: (a)–(c) over the
+records, (d) over a copy of `js/applies.js` `evaluate()` extended as §9.2 (d) states, and `tools/trigger-audit.mjs` itself for
+T-03. Session 28 re-measures with the real check.*
+
+| Case | Result |
+|---|---|
+| Today's tree, today's matcher | 0 findings |
+| Positive controls: `role` on `ap-gdpr-04` resting on Art. 4 (cited for scope) with an evaluated `excludes` on `ap-gdpr-03` [1] (Union institutions); an evaluated `narrows` on `ap-gdpr-03` [2] (courts) | 0 findings each |
+| (a) no taxonomy family · no provision · "don't know" as a term | (a) · T-03 · (a) |
+| (b) a provision cited only for obligation · a threshold basis on a tier-2 text | (b) · (b) |
+| (c) a tier-2 basis evaluated · `reinstates` evaluated · a term outside the vocabulary · an empty `when` | (c) · (c) · (c) · (c) and (d) |
+| (d) drops on unanswered · `excludes` on unanswered · downgrade to `unlikely` · "don't know" as an answer · more confident when unanswered · `narrows` met on unanswered · `narrows` that downgrades | (d), each |
+
+**19 of 19 as intended.** The last (d) case was not seen by the first version of the prototype — a `narrows` that downgrades on
+an explicit answer passes properties (1)–(5); property (6) was added in this session for it.
+
+### 9.5 · A finding, named for Session 28 (§8, 27.2 question 2)
+
+Measured on 13 Nov 2026: 6 of the 90 provisions of the Phase 3 dimensions, on 5 rules, would fail (b) if it bound them — `ap-gdpr-02`
+activity `gdpr:art-4`; `ap-gdpr-03` actor `gdpr:art-37` (cited for obligation only); `ap-dsa-02` activity `dsa:art-30`;
+`ap-ai-act-05` actor `ai-act:art-25` (cited for obligation only); `ap-eidas2-01` activity `eidas2:art-2` and `eidas2:art-3`
+(Articles of Regulation (EU) No 910/2014, which the parser cannot place; A-8's case). **Recorded, not closed, not a backlog**:
+Session 28 decides what, if anything, follows; a change to any of them is a rule change, after the readings (E5-5).
+
+### 9.6 · What Session 28 needs outside `tools/trigger-audit.mjs`
+
+- **(d) needs the real matcher callable from Node.** `js/applies.js` runs its `boot()` against `document` on import, and
+  `evaluate()` reads the module-level `IX`; a check that imports it fails, and one that copies it tests a copy (as §9.4 does).
+  The matcher's pure part needs a home a check can import, with the taxonomy passed in — a change to `js/`, put to the author in
+  Session 28 with its own §8 row.
+- **`tools/validate.mjs` refuses what a new trigger writes**: `RULE_DIMENSIONS` admits only actor, activity and territory in
+  `condition_provisions`, and `RULE_EXEMPTION_KEYS` has no `when`. Extending them is Session 29's, with the first new trigger;
+  Session 28's check must not wait for it (its planted cases mutate a copy of the records).
+
+### 9.7 · What this standard does not establish
+
+- **That any item can be asked.** That is the X5-1 table's (§10), item by item.
+- **That a passing trigger is right.** Each clause names what it cannot see; the reading of the Article is the session's, in the
+  form (A-1…A-8), and the form is a declaration (`docs/ATTESTATION-FORM.md` §6).
+- **The page.** The questionnaire's words, its "don't know", its rendering of an unanswered question and of NOT DETERMINED are
+  X5-3's, Session 29's browser checks.
+- **Anything about the law.** No Article was read for this section; every count is a measurement of `data/` on 13 Nov 2026.
