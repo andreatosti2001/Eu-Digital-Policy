@@ -1,8 +1,34 @@
 # HANDOVER
 
-**Last updated:** 13 November 2026 (UTC), HP-04 (the homepage in production: the plan executed), at its close.
-**Branch:** `claude/nice-babbage-8pohzh` (assigned by the environment). Its pull request, #109, was **merged by the author with a merge commit** (`519281e`, 11:13 UTC) **before this entry was written**; the branch was then restarted from `origin/main` `519281e` (nothing unmerged on it) and carries only this closing documentation. `origin/main` re-fetched immediately before this write: `519281e`, unchanged. A pull request for these docs is the author's to ask for.
-**Read first:** the figure is **live-deployed but its real-phone measure was never made** (§8, "HP-04: C.2 not performed"). The entries below this session's are unchanged.
+**Last updated:** 13 November 2026 (UTC), PV2-05 (Post-v2 C, the Hybrid prototype and the selection), at checkpoint C.1.
+**Branch:** `claude/pv2-05-start-jrurwd` (assigned by the environment), from `main` `a6b609d` (#110). `origin/main` re-fetched before this write: `a6b609d`, unchanged.
+**Read first:** C.1 is **waiting for the author's approval**; nothing is written in `prototypes/hybrid/` until a §8 row approves it. The entries below this session's are unchanged.
+
+## Branch register — 13 November 2026 (PV2-05)
+
+- `claude/pv2-05-start-jrurwd`, from `main` `a6b609d`: `docs/` only so far (`ROADMAP-v2.md` §8, this file). Disposition: to be asked at the final checkpoint.
+- Reported at the start, all already in the register below and left alone: `claude/brave-goldberg-gm87jp` (one commit, `7e93f27`); the scout digests of 2 and 9 Nov 2026.
+
+## PV2-05 — Post-v2 C, the Hybrid prototype and the selection: checkpoint C.1 (13 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of PV2-05" (the author's "Start pv2-05", `d45a8bd`), "PV2-05, C.1 question 1" (`d3be3af`) and "PV2-05, C.1 question 2" (`e1329b1`). Prompt: `docs/prompts/v2-pv2-05-prototype-hybrid-selection.md` with its notes of 12 and 13 Nov 2026 — **the homepage view is out** (in production since HP-04): three views are built and compared.
+
+**The premises, verified.** §8 holds "G1: Stage 2 is opened", PV2-03's rows to "The reworked Editorial approved, look A", PV2-04's rows to "PV2-04, C.5 questions 1–3" and **"Final checkpoint of PV2-04 approved"**, and HP-04's "C.2 not performed" and "the next session". `main` `a6b609d` holds `prototypes/editorial/`, `prototypes/observatory/`, `docs/PROTOTYPES.md` §2 and the prompt. Date measured 13 Nov 2026: before Track M (12 Jan 2027) and the grant's expiry (9 Mar 2027). The clone was shallow and was unshallowed. `node tools/pages-artifact.mjs list` does not list `prototypes/`; `tools/pages-artifact.mjs` is not touched. The worker restarted twice during C.1; `git status` was clean each time and nothing was redone.
+
+**The two answers** (§8): (1) the Hybrid's Explorer is **flat and table-led** — the relationships table leads, the map beside it is 2D SVG with the instruments on concentric rings by `coverage()` (covered inside, then mapped, watched, excluded), placed by `brief_part` then id, nothing moving or rotating; (2) C.5 runs **view by view** — the three prototypes side by side per view at 1280 light, 1280 dark and 390 px with that view's measures, then the steps C1…C6, then the two Explorers on five interactions, then the decision.
+
+**The data, re-measured on `a6b609d`:** 39 instruments, 40 relationships (9 symmetric), 8 instruments in none (`gdpr-procedural`, `chips-act`, `ai-liability-directive`, `charter`, `vida`, `eaa`, `psd3`, `psr`), `brief_part` null on 24, 10 kinds in use; 101 events; 187 claims; 21 enforcement records — as in PV2-04's table.
+
+**Battery on `e1329b1`, 13 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit` 0/0; `design-qa` 0/0; `evidence-audit --as-of 2026-11-13` exit 0, 0 errors; `freshness --as-of 2026-11-13` exit 0, 0 defects, 3 staleness prompts (time, not this branch); `seo-audit` 0/0; `node --test tools/selftest.mjs` **189/189**; `commit-evidence origin/main HEAD` 3 commits, none changes a published file. `agent/records/` absent.
+
+**Waiting for:** the author's approval of C.1, recorded in §8. Then C.2–C.3 begin in `prototypes/hybrid/`.
+
+> The header HP-04 wrote, kept as written:
+>
+> **Last updated:** 13 November 2026 (UTC), HP-04 (the homepage in production: the plan executed), at its close.
+> **Branch:** `claude/nice-babbage-8pohzh` (assigned by the environment). Its pull request, #109, was **merged by the author with a merge commit** (`519281e`, 11:13 UTC) **before this entry was written**; the branch was then restarted from `origin/main` `519281e` (nothing unmerged on it) and carries only this closing documentation. `origin/main` re-fetched immediately before this write: `519281e`, unchanged. A pull request for these docs is the author's to ask for.
+> **Read first:** the figure is **live-deployed but its real-phone measure was never made** (§8, "HP-04: C.2 not performed"). The entries below this session's are unchanged.
+>
 
 ## Branch register — 13 November 2026 (HP-04, the homepage in production)
 
