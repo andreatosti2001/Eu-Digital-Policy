@@ -24,6 +24,12 @@ omogeneo dei tre prototipi e dei due concept dell'Explorer, e la decisione espli
 > articolo, vista analitica — e la selezione riguarda quelle. **PV2-05 viene dopo HP-02** (`docs/prompts/v2-hp-02-homepage-follow-up.md`;
 > «Homepage follow-up first (Recommended)»). Il resto del prompt vale com'è scritto.
 
+> **Nota del 13 novembre 2026 (HP-04), da leggere dopo quella di HP-01.** La **homepage è in produzione**: HP-04 ha messo la figura su `index.html`
+> (pull request #109, `main` `519281e`; `docs/PROTOTYPES.md` §H; `docs/ROADMAP-v2.md` §8, «HP-04: …»). PV2-05 **non la tocca e non la
+> confronta**: la sua selezione riguarda le sole altre tre viste. **La misura su iPhone (C.2) non è stata fatta** (§8, «C.2 not performed»): se
+> PV2-05 deve dire qualcosa sulla fluidità di un'animazione su telefono, la fonte è HP-02 (Chromium con CPU rallentata), **non** un telefono.
+> Il resto del prompt vale com'è scritto.
+
 ## Prima di iniziare
 
 Esegui `git status --short --branch`, `git fetch --all --prune` e `git branch -a`. Poi `git rev-parse --is-shallow-repository`: se risponde

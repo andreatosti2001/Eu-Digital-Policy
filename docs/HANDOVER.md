@@ -1,9 +1,55 @@
 # HANDOVER
 
-**Last updated:** 12 November 2026 (UTC), HP-03 (the homepage production plan), at its close.
-**Branch:** `claude/quirky-goldberg-fpoxdz` (assigned by the environment), at `main` `02f9a4e` (#107) from the start; pushed, no history rewritten.
-`origin/main` re-fetched immediately before this write: `02f9a4e`, unchanged. Pull request to `main` opened on the author's answer ("Yes, after recording (Recommended)"), not merged by the session.
-The entries below this session's are unchanged; the header HP-02b wrote is kept under its branch register, as written.
+**Last updated:** 13 November 2026 (UTC), HP-04 (the homepage in production: the plan executed), at its close.
+**Branch:** `claude/nice-babbage-8pohzh` (assigned by the environment). Its pull request, #109, was **merged by the author with a merge commit** (`519281e`, 11:13 UTC) **before this entry was written**; the branch was then restarted from `origin/main` `519281e` (nothing unmerged on it) and carries only this closing documentation. `origin/main` re-fetched immediately before this write: `519281e`, unchanged. A pull request for these docs is the author's to ask for.
+**Read first:** the figure is **live-deployed but its real-phone measure was never made** (§8, "HP-04: C.2 not performed"). The entries below this session's are unchanged.
+
+## Branch register — 13 November 2026 (HP-04, the homepage in production)
+
+- `claude/nice-babbage-8pohzh`: **merged** (#109, `519281e`; ten commits, every published-file commit carrying an `Evidence:` trailer after a rewrite the author chose, §8). Restarted from `main`; this session's closing commit (§8 rows, the PV2-05 note, this entry) is the only thing on it. Disposition: **to be asked** — a pull request to `main`, merged by the author with a merge commit.
+- `claude/brave-goldberg-gm87jp` — still one commit, `7e93f27`, one line of `js/datasets-page.js`; **still not in this register's owner's hands**: unmerged, not this session's, left alone.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed), as before.
+- Local only, never pushed: `backup-hp04-pre-evidence` (the pre-rewrite tip `be2c4c2`); deletable.
+
+## HP-04 — the homepage in production (13 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of HP-04", "HP-04: the authorization of the redesign" (Class D, in the author's words), "HP-04: C.1 approved", "HP-04: the words that add the figure to README limitation 8", "HP-04: what commit 5 found", "HP-04: the `Evidence:` trailers…", "HP-04: C.2 not performed…" and "HP-04: the next session". **Record of the design:** `docs/HOMEPAGE-PRODUCTION-PLAN.md`; of what entered: `prototypes/homepage/README.md` ("HP-04"); of the checks: `docs/BROWSER-QA.md`.
+
+**What happened.** Scope row first, then the Class D authorization asked by name. Commits in the plan's order: images and generated bead geometry; `masthead.js`'s `upcomingEvents`/`statedDay` (masthead identical before and after on seven clocks, with a planted off-by-one shown detected); the figure and its styles; the wiring and the regenerated editions (exactly `it/ fr/ es/`, `index.html`, `js/main.js`); the `home:*` checks with planted-defect proofs; the docs. C.1 approved. The iPhone measure (C.2) was **bypassed on the author's word** and the pull request merged; Pages run 118 deployed it.
+
+**Found, and what was done about each:**
+- **A static `import` in `js/main.js` made a missing `home-figure.js` stop the whole page boot** (the masthead never rendered) — found by `home:masthead-marks`. Changed to a dynamic `import()`; the plan's "one import and one call" no longer reads literally (§8, not an approval).
+- **`agent/detector/selftest.mjs` test 47** demands a `MODULE_SURFACE` entry per `js/` module: two added (`home-figure.js` surface `other`, `home-serpent.js` `null`), approved at C.1.
+- **Six of my commits lacked the `Evidence:` trailer** the author's rule of 27 Sep 2026 requires; only the pull-request run of `qa.yml` judges `base..head`, which is why push runs were green. Rewritten with the author's consent (force-with-lease, own branch); `tools/commit-evidence.mjs origin/main HEAD` exits 0.
+- **The ticker prints "N days" for a month-precision event with no "≈"** (`js/masthead.js`, "January 2027 DMA today" on 1 Jan 2027); the figure marks it. **Left**, reported at C.1.
+- **`js/masthead.js` `isApprox`-style predicate exists twice** (the ledger's `approx` and the figure's `isApprox`): not exported, to keep commit 2's measured scope. A candidate for one export.
+- **The runner's and `a11y:bound`'s "no pixels were compared" now name `home:svg-contrast`**; `agent/production/` still prints the old sentence about the threshold affordance, which is unchanged.
+
+**Open — nothing here is closed:**
+1. **No real-phone timing exists** (§8). The plan's threshold is unmet and unmeasured. If the author wants it made after the fact: `docs/HOMEPAGE-PRODUCTION-PLAN.md` §6, an iPhone 15 Pro on iOS 26.2 is the device the author named.
+2. **`qa.yml` run 1044, "Browser regression suite": `agent/browser/selftest.mjs` test 18 failed once** on the merge commit (30.1 s, the suite's command timeout); the same job's full run read 361 / 360 pass / 0 fail, and the quick run reads 169 checks here three times. **Not re-run, not explained.** If it recurs it is a finding; the first thing to read is its log.
+3. **Post-deploy items of the plan's §8** that need the live site or Search Console were **not done**: the rendered `/` and `/it/`, the canonical, `noindex` on the editions, `sitemap.xml` 26 URLs, "URL Inspection → Test live URL" and "Request indexing" for `/` (the owner's), the Pages report a week later.
+4. **Not established, as the plan said it would not be:** a screen reader (the declared manual protocol of plan §5 was not run), any browser but Chromium, widths other than 1440 × 900 for the labels, a reader's liking of the opening.
+
+**Battery on the branch tip before the merge (`be2c4c2`, content-identical to `ecd9e7e`):** `validate`, `i18n-audit`, `design-qa`, `freshness`, `evidence-audit`, `seo-audit` exit 0 (warnings as on `main`: 5, 0, 0, —, 11, 0); `tools/selftest.mjs` **189 / 189**; the 25 agent suites and `.control-room/` pass (`agent/browser` now **28 / 28**, `agent/detector` 69 / 69); the browser suite **360 pass · 0 fail · 1 undecidable** (`a11y:bound`) — 343 + the 17 `home:*`. On the pull request, all 16 check runs were green. After the merge: see Open 2.
+
+**Checklist**
+
+| # | Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|---|
+| — | Scope; Class D authorization | §8 "The scope of HP-04", "HP-04: the authorization of the redesign" | read both rows: the words "start hp-04" and "Authorize (Recommended)" | none | both in §8 before any file outside `docs/`: **met** |
+| 1 | Images, bead geometry | `7233a6f`; `img/home/`, `js/home-serpent.js`, `derive-serpent.py` | `python3 -I prototypes/homepage/assets/derive-serpent.py prototypes/homepage/assets/serpent-original.png <dir> <module>`; `cmp` each | `pages-artifact.mjs verify`; `design-qa` | byte for byte: **met** |
+| 2 | `masthead.js` export | `22ecb07` | render `index.html` under a fixed clock before/after; compare `outerHTML` | `home:masthead-marks` (the module-less masthead) | masthead identical, said with a measure: **met** |
+| 3 | The figure and its styles | `eea54b3`; `js/home-figure.js`, `css/home.css`, `agent/detector/impact.mjs` | `grep -n "fetch(" js/home-*.js` is empty; `design-qa` | `design-qa`, MC-2 in `validate.mjs`, detector test 47 | not loaded by any page at that commit: **met** |
+| 4 | The wiring | `40051fc`, `3c70d41`, `4f70266` | `git status --porcelain` after `_footer.mjs`; `#portalTree` identical to `main`'s | `home:figure`, `home:no-script`, `home:module-failure` | only `index.html`, `it/ fr/ es/`, `js/main.js`: **met** |
+| 5 | The `home:*` checks | `ac78039`; `agent/browser/home-checks.mjs`, `runner.mjs`, `selftest.mjs` | `node agent/browser/cli.mjs --only home` | `agent/browser/selftest.mjs` HOME 1, HOME 2 (four planted defects) | each with what it does not prove: **met** |
+| 6 | The iPhone measure | §8 "HP-04: C.2 not performed" | — | none (a person's measure) | **NOT MET: bypassed on the author's word; nothing measured** |
+| 7 | Docs | `5bdf10e`, this commit; README limitation 8, `CURRENT-ARCHITECTURE.md` §4/§5/§9, `BROWSER-QA.md`, `PROTOTYPES.md` §H, the prototype's README | read the one sentence added to README limitation 8 | `evidence-audit`, `design-qa` | README words only on approval: **met** |
+| — | Evidence trailers | §8 "HP-04: the `Evidence:` trailers…" | `node tools/commit-evidence.mjs <base> <head>` | `qa.yml`, `pages.yml` | **met** (after the rewrite) |
+| — | Next prompt | `docs/prompts/v2-pv2-05-prototype-hybrid-selection.md` (dated note added); §8 "HP-04: the next session" | its exit criterion carries the standing rule (line near "il prompt della sessione successiva esiste su questo branch") | none | exists on this branch, carries the rule: **met**; approved with the work when the author merges |
+| — | Deployed and checked live | `pages.yml` run 118 | open `/` and `/it/` | none from here | **NOT MET: the live page was not fetched; Open 3** |
+
+**For the next session:** PV2-05 on its prompt — **without the homepage view** (the figure is in production; §8, "HP-04: the next session").
 
 ## Branch register — 12 November 2026 (HP-03, the homepage production plan)
 
