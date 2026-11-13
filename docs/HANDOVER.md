@@ -1,14 +1,68 @@
 # HANDOVER
 
-**Last updated:** 13 November 2026 (UTC), v2 Session 27 (Phase 5, the design), at checkpoint 27.2.
+**Last updated:** 13 November 2026 (UTC), v2 Session 27 (Phase 5, the design), at its final checkpoint.
 **Branch:** `claude/eager-euler-05ukz9` (assigned by the environment), from `main` `3627de6` (#111). `origin/main` re-fetched immediately before this write: `3627de6`, unchanged.
-**Read first:** **the standard E5-3 is written and proposed** — `docs/PHASE-5-SETUP.md` §9 — and waits for the author's approval of checkpoint 27.2, recorded in roadmap §8. **Phase 5 is planned and not opened; G2 is not open.** `docs/` only: nothing in `data/`, `tools/`, `js/`, `i18n/`, a page or `agent/` changed. The entries below this session's are unchanged.
+**Read first:** **E5-3 is written and approved** (`docs/PHASE-5-SETUP.md` §9), **the X5-1 table is decided** (§10, every instrument as proposed), **the paper test is done** (§11, its outcome to block D) and **Session 28's prompt is drafted** (`docs/prompts/v2-session-28.md`); the final checkpoint waits for the author's approval in §8. **Phase 5 is planned and not opened; G2 is not open.** `docs/` only. The entries below this session's are unchanged.
 
 ## Branch register — 13 November 2026 (v2 Session 27)
 
-- `claude/eager-euler-05ukz9`, from `main` `3627de6`: `docs/` only (`ROADMAP-v2.md` §8, `PHASE-5-SETUP.md` §9, `HANDOVER.md`). Disposition: asked at the final checkpoint.
+- `claude/eager-euler-05ukz9`, from `main` `3627de6`: `docs/` only (`ROADMAP-v2.md` §8, `PHASE-5-SETUP.md` §9–§11, `prompts/v2-session-28.md`, `HANDOVER.md`). Disposition: asked at the final checkpoint.
 - Reported at the start, all already in this register and left alone: `claude/brave-goldberg-gm87jp` (one commit, `7e93f27`); the scout
   digests of 2 and 9 Nov 2026. `origin/main` re-fetched before this line: `3627de6`.
+
+## v2 Session 27 — Phase 5, the design: final checkpoint (27.3–27.5) (13 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the rows of v2 Session 27 after "Checkpoint 27.2 … approved" (`62d19a7`): the ten "27.3: the X5-1
+dispositions for …" rows (`faed082`, `dec0da9`, `306d3e1`), "27.4: the cases of the paper test" (`9214224`) and "27.5: the prompt of v2
+Session 28" (`a09c222`). **Record:** `docs/PHASE-5-SETUP.md` §10 and §11 — read them, not this entry.
+
+**27.3, the X5-1 table.** All 68 items (38 `depends_on`, 4 threshold keys, 26 exemptions) classified from the records by a scratch script
+outside the repository, against stated criteria (§10.1), each with what it rests on and its E5-3 (b) status; put to the author **one question
+per instrument**, ten questions: **every instrument as proposed**. Askable 22, askable by an existing question 2, evaluated 6, stays a stated
+dependency 16, left 20, to Session 28 2. Nothing in `data/` changed; no Article read.
+
+**27.4, the paper test.** Four cases chosen by the author (after asking "what do you suggest?"; two adjusted by tracing which rules fire):
+an EU AI deployer, a non-EU cloud provider, a public authority deploying AI, a VLOP. Today and under the decided table, unanswered / yes / no
+(§11.1). **No unanswered question produces a "no"**: the same rules fire and NOT DETERMINED is the same list as today in every case, and
+an exhaustive sweep (17,301,372 evaluations) found 0 rules that stopped firing and 0 absences read as `unlikely` (§11.2). The input to block D
+is §11.4.
+
+**27.5, the prompt of Session 28.** `docs/prompts/v2-session-28.md`, in Italian: it starts after G2 and E5-5; 28.1 E5-3 as a check at ERROR
+with a `selftest` case for each of §9.4's nineteen; 28.2 M-1 (with item 40), M-2, M-3, M-4 and §9.5's finding; 28.3 the prompt of Session 29.
+Its exit criterion carries the standing rule.
+
+**Found, and what was done about each:**
+- **An explicit "no" can put an instrument into NOT DETERMINED** (cases 2 and 4): right by the site's rule, but the page says the same for
+  "no rule covers you" and "your answer excluded the rule". **Named for Session 29's wording** (§11.3; D input 3).
+- **Item 56 (NIS2 Art. 2(7)) was not exercised** by any chosen case.
+- **`ap-dsa-02` answered yes reads higher than today** (`applies` against `likely`): today's `likely` is the unasked threshold's downgrade.
+- **Four askable items need a scope reference before E5-3 (b) passes** (items 8, 36, 37, 60): rule changes in Session 29 (§10.4).
+- **I named the one `unlikely` rule before checking it** in §11.2; checked after writing (`ap-dma-03`, `actor:sme`) and it was right. Two typos
+  in §11 corrected (`343bc50`).
+- **`agent/records/` appeared during the battery** — an empty, gitignored directory a suite created; nothing in it, nothing committed;
+  removed by the session.
+
+**Not established:** anything about the law; the page; that the scratch matcher is the one Session 29 builds; that the restatements are right.
+
+**Battery on `a09c222`, 13 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit --as-of
+2026-11-13` exit 0 (11 warnings, as at the start); `freshness --as-of 2026-11-13` exit 0, 0 defects, 3 staleness prompts (time, not this branch);
+`agent/schemas/cli.mjs check` exit 0; `commit-evidence origin/main HEAD` 17 commits, 0 without evidence, none changes a published file; **the 25
+suites and `.control-room/`: 1495 tests, 1494 pass, 0 fail, 1 skipped** (`.control-room`, as before; `tools/selftest.mjs` 189/189). **The browser
+suite was not run**: nothing outside `docs/` changed, and the prompt asks for the 25 suites. `agent/records/` absent after removal.
+
+**Checklist**
+
+| # | Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|---|
+| 27.1 | The premises | §8 scope `25c3087` | read the scope row; `docs/PHASE-5-SETUP.md` §7 and §8's 25.4 and 25.5 rows exist | none | rows present, verified with no question: **met** |
+| 27.2 | E5-3 | `docs/PHASE-5-SETUP.md` §9 `3b1d80a`; §8 q1 `c98998e`, q2 `a668e00`, q3 `e46e369`, q4 `fdc6f6f`, q4b `164ff6f`; approval `62d19a7` | read §9.2: each clause has a rule, planted cases, what it cannot see | **none in the repository** — the scratch prototype (19/19) is not committed; the check is Session 28's | written with its planted cases and approved in §8: **met** |
+| 27.3 | The X5-1 table | §10 `379e8ee`, decided `306d3e1`; §8 `faed082`, `dec0da9`, `306d3e1` | §10.7 has rows 1–68; §10.2 sums to 68 | none | dispositions decided per instrument: **met**; approved with this checkpoint |
+| 27.4 | The paper test | §11 `b09223d`, `343bc50`; §8 `9214224` | read §11.1–§11.2 | none (computed in the scratchpad) | done; no unanswered question produces a "no"; outcome to D (§11.4): **met** |
+| 27.5 | Session 28's prompt | `docs/prompts/v2-session-28.md`, §8 `a09c222` | its exit criterion carries the standing rule (line near «il prompt della sessione 29 esiste su questo branch») | none | exists on this branch, carries the rule: **met**; approved with the work |
+| — | Untouched | — | `git diff origin/main --stat -- data tools js i18n agent css index.html it fr es instruments prototypes .github style.css app.js README.md LICENSE` is empty | `commit-evidence` | nothing outside `docs/` changed: **met** |
+
+**For the next session:** in time, **v2 Session 25** (the reading, 12 Jan–2 Feb 2027) and Session 26; by dependency, Post-v2 D on the Hybrid.
+**v2 Session 28** runs only after G2 (a row opening Phase 5) and E5-5. **Waiting for:** the author's approval of the final checkpoint.
 
 ## v2 Session 27 — Phase 5, the design: checkpoint 27.2 (13 Nov 2026)
 
