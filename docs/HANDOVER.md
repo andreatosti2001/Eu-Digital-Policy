@@ -6,8 +6,8 @@
 
 ## Branch register — 13 November 2026 (the mobile tree)
 
-- `claude/mobile-tree-contents`, from `claude/eager-euler-05ukz9` `52a1b2a`: its own pull request to `main`, opened by the session and not
-  merged by it; three commits of its own on `main` `9eaa961`. Merging is the author's, with a merge commit.
+- `claude/mobile-tree-contents`, from `claude/eager-euler-05ukz9` `52a1b2a`: pull request #113 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/113), opened by the session and not
+  merged by it; its own commits on `main` `9eaa961`. Merging is the author's, with a merge commit.
 - `claude/eager-euler-05ukz9`: **merged** (#112, `9eaa961`); nothing unmerged on it.
 
 ## The mobile tree opens the Contents panel, with the site's pages (13 Nov 2026)
