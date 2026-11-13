@@ -604,7 +604,7 @@ answered **no**. Only the rules that fire in some column are listed. Outcome wor
 |---|---|---|---|---|---|
 | `ap-gdpr-01` | applies | applies | applies | applies | item 1 evaluated: removed only on an explicit "household" answer |
 | `ap-gdpr-04` | likely | **possible** | likely | does not fire | item 8 asked; item 7 by the existing activity answer; item 9 stays, so not restated (§10.3) |
-| `ap-ai-act-01` | applies | applies | applies | applies | nothing (items 28 left) |
+| `ap-ai-act-01` | applies | applies | applies | applies | nothing (item 28 left) |
 | `ap-ai-act-04` | possible | possible | likely | does not fire | the high-risk route asked; restated one step up |
 | `ap-ai-act-05` | possible | possible | likely | does not fire | the high-risk route and Art. 25 asked; restated one step up; two downgrades end at the floor |
 
@@ -647,7 +647,7 @@ fires, `applies`, no exemption applied or shown. NOT DETERMINED: the same twelve
 
 | Rule | Today | Unanswered | Yes | No | What changes it |
 |---|---|---|---|---|---|
-| `ap-dsa-01` | applies | applies | applies | applies | items 10 left |
+| `ap-dsa-01` | applies | applies | applies | applies | item 10 left |
 | `ap-dsa-02` | likely | **possible** | **applies** | does not fire | designation and the 45 million figure asked; already `applies`, not restated (today's `likely` is the threshold's downgrade) |
 | `ap-dsa-03` | possible | possible | likely | does not fire | the same two questions; restated |
 | `ap-dma-02` | possible | possible | likely | does not fire | fires through `actor:online-platform`, the VLOP term's parent |
