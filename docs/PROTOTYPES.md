@@ -2,7 +2,7 @@
 
 The record of block C (`docs/POST-V2.md` §3 C): three directions built on **the same content, the same four views and the same conditions**,
 each measured by the same battery (`docs/FRONTEND-REFERENCES.md` §4, M1–M8, and the grid of its §1). One section per direction, added by the
-session that builds it. **Nothing here selects a direction or compares them**: that is PV2-05's, with the author's explicit decision. The current
+session that builds it. **Nothing here selects a direction or compares them**: that is PV2-05's, with the author's explicit decision, recorded in `docs/ROADMAP-v2.md` §8. The current
 site stays the baseline. The decisions cited are rows of `docs/ROADMAP-v2.md` §8; they live there and are not copied here.
 
 ## 0 · The common perimeter (decided at PV2-03's C.1, 11 Nov 2026)
@@ -359,7 +359,135 @@ pressed, but the walk is the script's, not a reader's. The 3D network turned ful
 - **What §8.2 asked and the layout no longer has**: the right-hand "On this page" and the left section list were replaced by layout A on the
   author's decision; the measurement scores what is there.
 
-*Section 3 (Hybrid, PV2-05) follows when that session writes it.*
+## 3 · Direction 3, Hybrid — PV2-05, 13 Nov 2026 — three views, without the homepage
+
+**Where:** `prototypes/hybrid/` (its `README.md` says how to run it). Branch `claude/pv2-05-start-jrurwd`, from `main` `a6b609d`; built in
+`a5eca14`. The direction is `docs/FRONTEND-REFERENCES.md` §8.2, 3, on the Editorial's layout A whole (`docs/ROADMAP-v2.md` §8, "PV2-04, C.5
+questions 1–3"). **Three views, not four:** the homepage is in production since HP-04 and outside the comparison (§8, "HP-04: the next session";
+§H below). The author saw six screenshots of `a5eca14` and sent it to the measurement as built (§8, "PV2-05: the author's first look"). Nothing
+here compares it with the other two: that is C.5's, and it is recorded in §8.
+
+### 3.1 What was built
+
+- **Four pages, one stylesheet, three modules of its own.** `regulation.html` loads **the observatory's** view module (`../observatory/regulation.js`)
+  whole; `article.html` loads **the Editorial's** (`../editorial/article.js`) whole; `timeline.html` imports **the observatory's** timeline mode
+  whole and, with `?mode=network`, mounts **the Hybrid's explorer** (`explorer.js`). `index.html` is a landing page that reads no data. `hybrid.js`
+  only renames the other prototypes' name in the document title. *Why:* direction 3 is direction 1's article and direction 2's tool pages
+  under one set of tokens, and the three share layout A; rewriting those modules here would have been a second home of each. So the
+  Hybrid's **own** contribution, and what C.5 compares as its own, is: **`hybrid.css`** — one stylesheet, one token set for both themes, the
+  observatory's chrome, tables, cards and charts with the Editorial's margin notes fitted to it — and **the explorer**.
+- **The explorer, flat and table-led** (§8, "PV2-05, C.1 question 1"). The relationships table (`../editorial/relations.js`, unchanged) is the
+  reading surface: on a wide screen the selection panel and the table fill the left column and the map is kept in view beside them; each row
+  group carries its instrument's number and "Show on the map", each row a button that selects it on the map. The map is **2D SVG**: the
+  instruments on **concentric rings by `coverage()`** — covered 16 inside, then mapped 12, watched 5, excluded 6 — placed by the order of the
+  brief's parts and then by id; nothing about a node's place comes from the relationships, and **nothing moves or turns**. Each node carries
+  its **row-group number** (the table's alphabetical order); **names** are drawn for the selection and its direct neighbours, and on hover or
+  focus — at about 470 px, 39 names on four rings cover each other. The core is the observatory's: nodes the 39 instruments and edges the 40
+  records of `relationships`; the counts from **`explorerCounts()` of `../observatory/explorer.js`, imported** (one counting function for both
+  concepts); type by colour, stroke pattern and a two-letter code; an arrow only where `symmetric` is false; the two AI Act–GDPR relationships
+  drawn apart; the tabbed panel; the legend always visible, which is the type filter; focus on a node's or an edge's direct connections; the
+  8 instruments with no relationship on their rings, saying so. Keyboard: ← → along a ring, ↑ ↓ between rings, Home and End, Enter, Esc, Tab out.
+  **On a phone**, an ego view of one instrument and its direct relationships, named, then the legend, the panel and the table for it.
+- **Shrunk under the stopping rule** (§8, "PV2-04, C.5 questions 1–3"; the core is untouched): **zoom and pan** and **re-layout** are not built;
+  **search** is an instrument picker (by number and name), not a free-text field; **grouping** is the rings, not a selectable "Group by".
+- **Rules kept:** the site's CSP on every page with `script-src 'self'`; no inline script, no `style` attribute; `noindex`; no dependency, no
+  graph library, no build step, no third-party code, asset or image; the site's font files used where they are (their licence not read, as in §1.6).
+
+**Choices made in the build, not decided by the author** (each could be revisited): the numbered nodes and names on selection; the rings'
+radii; the chords bent toward the centre; the panel above the table rather than beside the map; the type codes and stroke patterns kept
+identical to the observatory's (that module does not export them, and this session may not change it), so the two concepts differ in hierarchy
+and layout and not in a code; **the theme choice is stored per module** — the article page under the Editorial's key, the others under the
+observatory's — so a choice made on one is not carried to the other (with "system", all follow the system); English only.
+
+### 3.2 The measurement — samples and method fixed before measuring
+
+Samples, named before any number was read, as §1.2 and §2.3: **E = `article.html`**, **D = `timeline.html`** in both modes (D1 the timeline,
+D2 `?mode=network`) and the lower taken; the two regulation pages for information. Method: M1–M8 as `docs/FRONTEND-REFERENCES.md` §4 writes
+them, **re-implemented again from that text** (PV2-03's and PV2-04's scripts are not in the repository), in headless Chromium (Playwright)
+against `python3 -m http.server`, 13 Nov 2026, in the scratchpad, not committed. M4 on the full accessibility tree
+(`Accessibility.getPartialAXTree` per Tab stop), as decided (§8, "PV2-03, grid C4 step 4").
+
+**The script was calibrated on the other two prototypes first.** It reproduces §1.6's and §2.3's body size, share, contrast, secondary
+contrast, heading counts and contents links exactly; **its cpl reads lower than the published figures** (the observatory's E 49 against 56; the
+Editorial's E 60 against 68), because it divides a paragraph's characters by its rendered lines. The figures below are this script's, so the
+three directions are compared on **one** reading of cpl; the published ones in §1–§2 are kept as written.
+
+| Sample, 1280 px light | Body (M1) | Share | cpl | Contrast light / dark | Headings, skip | Secondary (min) light / dark | Contents links |
+|---|---|---|---|---|---|---|---|
+| E `article.html` | 19 px | 52% | 56 | 15.59 / 14.88 | 9, none | 6.75 / 8.27 | 4 of 4 |
+| D1 `timeline.html` | 12.48 px (the footer) | 69% | 91 | 6.75 / 8.68 | 4, none | 6.17 / 7.92 | 2 of 2 |
+| D2 `?mode=network` | 12.48 px (the footer) | 52% | 91 | 6.75 / 8.68 | 5, none | 6.17 / 7.92 | none (the explorer lays out its own columns) |
+| AI Act page | 17 px | 62% | 77 | 15.59 / 14.88 | 10, none | 6.17 / 7.92 | 8 of 8 |
+| Chips Act page | 17 px | 56% | 69 | 15.59 / 14.88 | 10, none | 6.75 / 8.27 | 8 of 8 |
+
+**M1 does not read D's body**, as in §2.3: D's content is table cells and SVG; the tier it reads is the footer (the Hybrid's footer is longer than
+the observatory's, hence the share). C2 is read on E alone; no step depends on D's M1.
+
+At 390 px: E 18 px and 38 cpl. On every page, width and theme (24 loads, 6 URLs × 2 widths × 2 schemes, plus the landing page): no horizontal
+scroll, 0 console errors, `localhost` only, no framework global. Focus (M3): visible on 15 of 15 stops on every sampled page; names (M4, full
+tree): 15 of 15 — the first 15 stops reach the picker and the panel on D2 but not the map, whose **39 node buttons were checked separately: 39
+named**. Running animations (M6): 0 with `prefers-reduced-motion` unset and set. Faces loaded: Fraunces, Literata, IBM Plex Mono. Keyboard sort
+and filter on D1 (for C3): Enter on the "Instrument" header sorted ascending (first row AI Act); an arrow key on the status filter left
+"Showing 81 events of 101 for occurred".
+
+### 3.3 The steps, with the next one not reached
+
+| C1 | C2 | C3 | C4 | C5 | C6 |
+|:-:|:-:|:-:|:-:|:-:|:-:|
+| **4** | **4** | **4** | **4** | **4** | not scored |
+
+- **C1 = 4.** P1 (long-form with a citation pattern: the Editorial's margin notes), P2 (status tags), P3 (the timeline), P4 (a filterable table:
+  the timeline's events) present; a "no data" state visible (the Chips Act); statement, source and status as three things (the margin notes).
+- **C2 = 4** (E). Sequential headings, 19 px, 56 cpl by this script, 15.59 : 1; a secondary level at 6.75 : 1 and a lede before the detail; a
+  working contents list (4 of 4).
+- **C3 = 4.** Real tables with `th scope`; a table sorted and filtered from the keyboard, and the chart of events by year with its values in the
+  table beside it (step 3); a missing value shown differently from zero (step 4).
+- **C4 = 4**, the lower of E and D: no horizontal scroll at 390 px; focus visible 15 of 15; light and dark ≥ 4.5 : 1 on both samples (D's lowest
+  reading 6.75 : 1, its secondary 6.17 : 1); no running animation; 15 of 15 named on the full tree; a `main` landmark.
+- **C5 = 4.** Vanilla HTML, CSS and ES modules as shipped; no build step, no runtime dependency, no graph library, no external font or script.
+- **C6 not scored**, as for the other two.
+
+**What the steps cannot separate.** The Hybrid's article *is* the Editorial's module and its regulation page and timeline *are* the
+observatory's, so on those views the steps measure modules already measured in §1 and §2, under another stylesheet. Steps, not a total, are
+what C.5 compares (§8, "grid finding G7"); where the three are all at 4, the grid has nothing left to say and the difference is the author's eye.
+
+### 3.4 Planted cases, run in the browser (13 Nov 2026, on `a5eca14`'s tree)
+
+Each altered what the browser received (`page.route`), never the repository. **27 cases, all passed.**
+1–9: **§1.4's nine, repeated** — `claims.json` 500 → the error box, no heading; `clm-ai-act-product-safety` removed → its note reads "not found in
+claims.json"; every `fine_eur` null → **on the GDPR page** (the Hybrid has no homepage) no "EUR 0", the amount said to be not established; the
+AI Act–GDPR relationship stripped of claims, provisions, sources and verification → every cell "not recorded", no "Checked"; the full table's 80
+rows each "Mutual — no direction" or "A → B"; the Chips Act's row group "no relationship recorded"; `?instrument=chips-act` → "No dated event is
+recorded for Chips Act…", no table; `?id=no-such-act` → "Instrument not found"; `index.html` 404 → the error box, no prose.
+The explorer's, §2.5's adapted to rings, and one of its own:
+- E1 the stripped relationship selected from its table row → the panel reads "not recorded", never "Checked" or "verified";
+- E2 the edges are the 40 records, one each; arrows exactly on the 31 with `symmetric: false`; E2b the two AI Act–GDPR relationships drawn apart;
+  E2c the legend's counts equal the records'; E2d a directed record planted as symmetric loses its arrow; 39 of 39 node buttons named;
+- E3 every instrument (39 of 39) reached with the arrow keys from the first; E3b each selected with Enter; E3c Esc clears and Tab leaves the map;
+  E3d every relationship (40 of 40) selected from the keyboard through the panel's Relations tab;
+- E4 the Chips Act stays on its ring, labelled "no relationship recorded"; E4b on a phone the map gives way to the ego view, which says so, and so
+  does the table;
+- E5 the type filter hides the same relationships in the map (29 shown) and the table (58 rows); E5b two loads give the same positions; E5c every
+  instrument sits on the ring of its `coverage()` (39, none off);
+- **E6 (new):** every one of the table's 80 keyed rows selects a relationship whose two ends are the row's instrument and its "With" — the
+  keys are added after `relations.js` renders, matched by its own order, and a group whose count does not match is left unkeyed rather than keyed wrongly;
+- C3 on D1: keyboard sort and filter, as in §3.2.
+
+E3's walk is the script's — it focuses each instrument and presses the four arrow keys — not a reader's.
+
+### 3.5 What this measurement does not see
+
+- **Whether it reads well.** The grid has no aesthetic criterion; all three directions reach step 4 on C2–C5. The author's eye decides.
+- **Whether numbers help or hinder.** A reader of the map must match a node's number with the table, or select it, to learn its name; whether
+  that is a cost or a discipline is not measured.
+- **The explorer with a screen reader.** None was run. The first 15 Tab stops do not reach the map; its 39 nodes were checked separately.
+- **Contrast inside the SVG** (the edges, the numbers in the nodes, the names over the chords) and in the panel's buttons; M2 measures paragraphs.
+- **M1 on D** (tabular and drawn); **cpl** by this script, not the published one (§3.2).
+- **Performance** on a slow device (the map is computed once per load and on a filter; not timed); **other browsers and systems** (Chromium only);
+  **languages** (English only); **`tools/thirdparty.mjs`**, which does not walk `prototypes/` — "no third-party request" is the request log plus a
+  static search of the folder (the only URL strings: the SVG namespace, and `localhost` in the README).
+- **The theme across pages** (§3.1): not carried between the article and the other pages unless left on "system".
+
 
 ## H · The homepage, direction C revised — HP-01, 12 Nov 2026 — outside the three-way comparison
 
