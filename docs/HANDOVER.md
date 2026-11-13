@@ -1,13 +1,67 @@
 # HANDOVER
 
-**Last updated:** 13 November 2026 (UTC), PV2-05 (Post-v2 C, the Hybrid prototype and the selection), at checkpoint C.1.
-**Branch:** `claude/pv2-05-start-jrurwd` (assigned by the environment), from `main` `a6b609d` (#110). `origin/main` re-fetched before this write: `a6b609d`, unchanged.
-**Read first:** C.1 is **waiting for the author's approval**; nothing is written in `prototypes/hybrid/` until a §8 row approves it. The entries below this session's are unchanged.
+**Last updated:** 13 November 2026 (UTC), PV2-05 (Post-v2 C, the Hybrid prototype and the selection), at its final checkpoint.
+**Branch:** `claude/pv2-05-start-jrurwd` (assigned by the environment), from `main` `a6b609d` (#110). `origin/main` re-fetched immediately before this write: `a6b609d`, unchanged.
+**Read first:** **C is selected — the Hybrid to D, the combination (the Hybrid's layout with the observatory's 3D network) to PV2-08** (§8). Nothing of it is on the published site. The final checkpoint is **waiting for the author's approval**. The entries below this session's are unchanged.
 
 ## Branch register — 13 November 2026 (PV2-05)
 
-- `claude/pv2-05-start-jrurwd`, from `main` `a6b609d`: `docs/` only so far (`ROADMAP-v2.md` §8, this file). Disposition: to be asked at the final checkpoint.
-- Reported at the start, all already in the register below and left alone: `claude/brave-goldberg-gm87jp` (one commit, `7e93f27`); the scout digests of 2 and 9 Nov 2026.
+- `claude/pv2-05-start-jrurwd`, from `main` `a6b609d`: `docs/` (`ROADMAP-v2.md` §8, `HANDOVER.md`, `PROTOTYPES.md` §3, the dated note in
+  `docs/prompts/v2-session-27.md`) and the unpublished `prototypes/hybrid/`. Disposition: **to be asked at the final checkpoint** — a pull request
+  to `main`, merged by the author with a merge commit.
+- Reported at the start, all already in this register and left alone: `claude/brave-goldberg-gm87jp` (one commit, `7e93f27`); the scout
+  digests of 2 and 9 Nov 2026. `origin/main` re-fetched before this line: `a6b609d`.
+
+## PV2-05 — Post-v2 C, the Hybrid prototype and the selection: final checkpoint (C.2–C.6) (13 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, PV2-05's rows of 13 Nov 2026 (scope, C.1 questions 1–2, "Checkpoint C.1 of PV2-05 approved", "the
+author's first look", the three C.5 rows, "PV2-05: the next session"). **Record:** `docs/PROTOTYPES.md` §3 — read it, not this entry.
+**Without the homepage view** (in production since HP-04).
+
+**What happened.** C.1: the Hybrid explorer flat and table-led; the comparison view by view; approved. C.3: `prototypes/hybrid/` (`a5eca14`)
+— the Editorial's article module and the observatory's regulation and timeline modules loaded **whole** (one home each), one stylesheet, and a
+flat explorer (rings by `coverage()`, numbered nodes keyed to the table); shown in screenshots, sent to C.4 as built. C.4: measured and 27
+planted cases (§3.2–§3.5). C.5: the three directions view by view and the two explorers on five interactions, no recommendation; the author
+answered with a combination — **the Hybrid's layout with the observatory's 3D network in its box, and "enlarge"** — had it built now
+(`6fdc311`, §3.6: re-measured, 29 planted cases) and made it **final: the Hybrid to D, the combination to PV2-08**. C.6: the next session is
+**S27**, its prompt carrying a dated note (C selected; S27's outcome goes to D).
+
+**Found, and what was done about each:**
+- **The observatory's legend filter hides nothing in its canvas**: the filter sets `.off`, `observatory.css` has no rule for it (11 of 11
+  "Defers to" edges still drawn); PV2-04's E5 counted the class. **Recorded, not repaired** (the author's answer); the Hybrid carries the rule.
+- **This session's cpl reads lower than PV2-03's and PV2-04's published figures** (characters ÷ rendered lines): the three were compared on
+  this script's reading; §1–§2 are not rewritten.
+- **In the Hybrid's box** the label "GDPR Procedural Regulation" runs past the edge, and grouped by part 1 of 39 instruments starts outside it.
+- **The theme choice is stored per module** in the Hybrid (the article under the Editorial's key, the rest under the observatory's).
+- **The Hybrid depends on both other prototype folders**; removing either breaks it.
+
+**Shrunk under the stopping rule:** in the flat explorer (`a5eca14`) zoom and pan, re-layout, free-text search and a selectable grouping; the
+combination restored all of them, being the observatory's module. Nothing of the core was shrunk.
+
+**Not established:** a screen reader; contrast inside the SVG; performance on a slow device; other browsers; languages; whether any direction
+reads well — the author's eye, recorded in §8. **This decision does not open G2.**
+
+**Battery on `254c55c`, 13 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit --as-of
+2026-11-13` exit 0; `freshness --as-of 2026-11-13` 0 defects, 3 staleness prompts (time, not this branch); `agent/schemas/cli.mjs check` 18 of 18;
+`commit-evidence origin/main HEAD` 13 commits, none changes a published file; **the 25 suites and `.control-room/`: 1495 tests, 1494 pass, 0 fail,
+1 skipped** (`.control-room`, no IPv6 loopback; `tools/selftest.mjs` 189/189); **browser suite (`--require-browser`): 360 pass, 0 fail, 1
+undecidable** (`a11y:bound`, by design; it does not cover `prototypes/`). `agent/records/` absent. The worker restarted several times; after each,
+`git status` was clean and nothing was redone; the local HTTP server was restarted twice.
+
+**Checklist**
+
+| # | Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|---|
+| — | Premises | §8 scope `d45a8bd`; C.1 report `2f0b1b2` | read the rows; `node tools/pages-artifact.mjs list` does not list `prototypes/` | none | PV2-04's final approval in §8 before the start: **met** |
+| C.1 | The Hybrid explorer; the comparison's form | §8 `d3be3af`, `e1329b1`; approval `3a86a74` | read the rows | none | answers in §8 in the author's words: **met** |
+| C.2 | The grid | no anchor or weight changed | `docs/PROTOTYPES.md` §3.3 | none | grid unchanged: **met** |
+| C.3 | The Hybrid | `prototypes/hybrid/` `a5eca14`, then the combination `6fdc311`; §8 `2acdca7`, `9746e9a` | `python3 -m http.server 8000`; open `/prototypes/hybrid/`, `regulation.html?id=chips-act`, `timeline.html?instrument=chips-act`, `timeline.html?mode=network`; "Enlarge the network"; a 390 px window; the theme | none in the repository (scratch planted cases: 27/27 on `a5eca14`, 29/29 on `6fdc311`) | three views, two widths, two themes, empty and missing states, the explorer with the table as its alternative: **met** |
+| C.4 | The measurement | `docs/PROTOTYPES.md` §3 `0eae5e3`, §3.6 `6fdc311` | re-run M1–M8 from `docs/FRONTEND-REFERENCES.md` §4 | none committed — **a gap**, as in PV2-03 and PV2-04 | same measures and cases; what is not seen, said: **met** |
+| C.5 | The comparison and the decision | §8 `2271205`, `9746e9a`, `812ec07` | read "PV2-05, C.5: the author's explicit decision" | none | shown view by view; the author's decision in §8 in the author's words: **met** |
+| C.6 | The next prompt | `docs/prompts/v2-session-27.md` (dated note), §8 "PV2-05: the next session" `254c55c` | the note under the title; the exit criterion's standing rule (line near «il prompt della sessione successiva») | none | exists on this branch, carries the rule; approved with the work: **to be approved** |
+| — | Untouched | — | `git diff origin/main --stat -- prototypes/editorial prototypes/observatory prototypes/homepage data js css tools index.html it fr es instruments i18n agent .github style.css app.js` is empty | `commit-evidence` | nothing of the baseline, the other prototypes, the data, the models, the CSP or `tools/pages-artifact.mjs` changed; nothing of a third party entered: **met** |
+
+**For the next session:** **v2 Session 27**, on `docs/prompts/v2-session-27.md` with its PV2-05 note — S27's outcome goes to block D. G2 is not open.
 
 ## PV2-05 — Post-v2 C, the Hybrid prototype and the selection: checkpoint C.1 (13 Nov 2026)
 
