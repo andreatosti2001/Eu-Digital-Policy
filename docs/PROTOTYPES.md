@@ -423,7 +423,7 @@ three directions are compared on **one** reading of cpl; the published ones in �
 **M1 does not read D's body**, as in §2.3: D's content is table cells and SVG; the tier it reads is the footer (the Hybrid's footer is longer than
 the observatory's, hence the share). C2 is read on E alone; no step depends on D's M1.
 
-At 390 px: E 18 px and 38 cpl. On every page, width and theme (24 loads, 6 URLs × 2 widths × 2 schemes, plus the landing page): no horizontal
+At 390 px: E 18 px and 38 cpl. On every page, width and theme (24 loads: 6 URLs, the landing page among them, × 2 widths × 2 schemes): no horizontal
 scroll, 0 console errors, `localhost` only, no framework global. Focus (M3): visible on 15 of 15 stops on every sampled page; names (M4, full
 tree): 15 of 15 — the first 15 stops reach the picker and the panel on D2 but not the map, whose **39 node buttons were checked separately: 39
 named**. Running animations (M6): 0 with `prefers-reduced-motion` unset and set. Faces loaded: Fraunces, Literata, IBM Plex Mono. Keyboard sort
@@ -488,6 +488,39 @@ E3's walk is the script's — it focuses each instrument and presses the four ar
   static search of the folder (the only URL strings: the SVG namespace, and `localhost` in the README).
 - **The theme across pages** (§3.1): not carried between the article and the other pages unless left on "system".
 
+
+### 3.6 After the comparison — the combination the author asked for (13 Nov 2026)
+
+**Why.** Shown the three directions view by view and the two explorers on five interactions (§8, "PV2-05, C.5: the author's answer"), the author
+kept **the Hybrid's layout** and asked for **the observatory's 3D network in its map box**, with an option to enlarge it, "come in observatory 3D";
+asked, the author chose to have it built now and judged on screenshots, and "enlarge" as a full-width stage in the page (§8, "the combination
+built now"). §3.1–§3.5 stay as the record of the Hybrid as measured (`a5eca14`).
+
+**What changed** (`prototypes/hybrid/explorer.js`, `timeline.js`, `hybrid.css`, the README; nothing outside the folder): the network is the
+observatory's `mountExplorer()`, imported and run unchanged; the Hybrid's module only arranges what it renders — panel and table on the left,
+the stage in the right-hand box with its controls above and its legend below, the drawing's reserved side margins cropped by CSS — and keys the
+table to the network. "Enlarge the network" gives the observatory's full-width stage with the panel inside it; the button or Esc returns.
+
+**Measured again where it changed** (D2; the other samples are unchanged): M1 12.48 px (the footer), contrast 6.75 / 8.68, secondary 6.17 /
+7.92, 5 headings without a skip; focus 15 of 15, names 15 of 15 on the full tree, 39 of 39 node buttons named; no horizontal scroll at 390 px; no
+running animation; 0 console errors, `localhost` only. **Steps unchanged: C1 4 · C2 4 · C3 4 · C4 4 · C5 4**, C6 not scored.
+
+**Planted cases, again** (on the combination, `page.route` only): **29 of 29 pass** — §1.4's nine (the full table's 80 rows, the stripped
+relationship in the table and, selected from its row, in the panel); E2 (40 edges, 31 arrows, the legend's counts, the AI Act–GDPR pair apart, a
+planted symmetric record losing its arrow; 39 of 39 named); E3 in the box (39 of 39 by the arrow keys, Enter selecting each with the panel in the
+left column, Esc and Tab, 40 of 40 relationships from the Relations tab); E4 (the Chips Act in the network; the phone's ego view and table);
+E5 (two loads identical; both groupings keep 39, "Not assigned · 24"); and the combination's own — **H1** enlarge and back (stage 1133 px with
+the panel inside; Esc returns it to the left column), **H2** the 80 table rows keyed to the right relationship, **H3** the box shows 39 of 39
+instruments at the starting view, **H4** the type filter: 29 of 40 edges *drawn* and 58 table rows.
+
+**A finding in the observatory, not repaired there.** In `prototypes/observatory/`, unticking a type in the legend leaves its edges **drawn**: the
+filter sets the class `off`, and `observatory.css` has no rule for it (measured 13 Nov 2026: "Defers to" unticked, 11 edges marked `off`, 11
+still drawn). §2.5's E5 ("29 shown") counted the class, not what is drawn. Per the prompt the observatory is not touched without a §8 row; the
+Hybrid's stylesheet carries the rule, and H4 checks the computed display.
+
+**What this does not see, beyond §3.5:** in the box, the label "GDPR Procedural Regulation" runs past the right edge at the starting view, and
+grouped by part 1 of 39 instruments starts outside it (the crop is computed for the ungrouped drawing; "Fit", zoom out or "Enlarge" show it);
+whether the 3D network reads well in a box about 440 px wide; §2.6's limits of the 3D network (depth in a projection, performance) all apply.
 
 ## H · The homepage, direction C revised — HP-01, 12 Nov 2026 — outside the three-way comparison
 

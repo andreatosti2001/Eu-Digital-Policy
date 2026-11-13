@@ -17,12 +17,12 @@
 
    Where the rules come from: the tokens, the chrome, the tags and the two
    absences, cards, tables, charts, the regulation page, the timeline's modes
-   and filters, the explorer's drawing and panel, and the relationships table
-   are those of prototypes/observatory/observatory.css; the article's
+   and filters, the explorer's stage, drawing and panel, and the relationships
+   table are those of prototypes/observatory/observatory.css; the article's
    margin — notes beside each passage — is that of
    prototypes/editorial/editorial.css, fitted to this page grid; the Hybrid's
-   own are the explorer's two columns, the rings, the numbered nodes and the
-   table's keys to the map (§ "the Hybrid explorer" below). Each prototype
+   own are the explorer's two columns, the box and its enlargement, and the
+   table's keys to the network (§ "the Hybrid explorer" below). Each prototype
    keeps its own sheet: this one changes neither of theirs.
    Unpublished: prototypes/ is not in tools/pages-artifact.mjs's allowlist.
    ============================================================ */
@@ -437,67 +437,104 @@ marker path { stroke: none; }
 .ex-panel table.rel td[data-label="With"] { display: none; }
 
 
-/* ---------------------------------------------------------- the Hybrid explorer: the table leads, the map beside it
-   (roadmap §8, "PV2-05, C.1 question 1"). From 75rem two columns — the selection and the table on the left, the
-   map and the legend on the right, kept in view while the table scrolls; below 75rem one column; below 52rem the
-   map gives way to the ego view (the phone is not the map made small). */
+/* ---------------------------------------------------------- the Hybrid explorer: the table leads, the observatory's 3D network beside it
+   (roadmap §8, "PV2-05, C.5: the author's answer" and "the combination built now"). The network is the observatory's
+   module; its stage rules below are observatory.css's. From 75rem two columns — the selection panel and the table on
+   the left, the network's box on the right, kept in view while the table scrolls; enlarged (.hx--wide), the stage runs
+   across the full width with the panel back inside it, as in the observatory. Below 52rem the observatory's phone
+   arrangement: the ego view, not the canvas made small. */
+
+.explorer { margin: 0.8rem 0 1.4rem; }
+.stage { position: relative; height: clamp(36rem, 84vh, 54rem); background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+.ex-canvas { position: absolute; top: 0; bottom: 0; left: 0; right: 22rem; }
+.ex-canvas > div, .ex-canvas svg { width: 100%; height: 100%; }
+.ex-canvas svg { display: block; touch-action: none; cursor: grab; user-select: none; }
+.ex-canvas svg.dragging { cursor: grabbing; }
+.frame { fill: none; stroke: var(--rule-2); stroke-width: 1; stroke-dasharray: 2 5; }
+.ex-tools, .ex-legend { position: absolute; left: 12px; z-index: 3; width: 17.5rem; background: var(--bg); border: 1px solid var(--rule-2); border-radius: 3px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); font-family: var(--mono); font-size: 0.76rem; }
+.ex-tools { top: 12px; padding: 0.6rem 0.7rem 0.5rem; display: flex; flex-direction: column; gap: 0.45rem; }
+.ex-title { font: 600 0.72rem/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; margin: 0; color: var(--ink); }
+.ex-tools label { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.64rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.ex-tools select, .ex-tools input, .ex-tools button { max-width: 100%; font: 500 0.74rem var(--mono); padding: 0.38em 0.5em; border: 1px solid var(--rule-2); border-radius: 2px; background: var(--surface); color: var(--ink); min-height: 2rem; text-transform: none; letter-spacing: 0.02em; }
+.ex-tools button { cursor: pointer; text-align: left; }
+#ex-relayout { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.68rem; }
+.ex-zoom { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.ex-zoom button { text-align: center; min-width: 2rem; }
+.ex-keys summary { cursor: pointer; color: var(--ink-2); font-size: 0.7rem; }
+.ex-keys p { margin: 0.3rem 0 0; font-size: 0.7rem; line-height: 1.5; color: var(--ink-2); }
+.ex-legend { bottom: 12px; max-height: 44%; overflow-y: auto; padding: 0.6rem 0.7rem; }
+.ex-panel { position: absolute; top: 0; right: 0; bottom: 0; width: 22rem; z-index: 3; overflow-y: auto; background: var(--bg); border-left: 1px solid var(--rule-2); padding: 0.8rem 0.9rem 1rem; font-size: 0.92rem; }
+.floor ellipse { fill: var(--surface-2); stroke: var(--rule); stroke-dasharray: 3 4; }
+.group-label { font: 500 11px var(--mono); fill: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.isolated-label { font: 500 12px var(--mono); fill: var(--ink-2); letter-spacing: 0.04em; }
+.isolated-rule { stroke: var(--rule-2); stroke-dasharray: 4 3; }
+.edge.off { display: none; } /* a type the legend hides is not drawn (observatory.css has no rule for .off: docs/PROTOTYPES.md §3.6) */
+
+/* the ego view: a phone is not the canvas made small */
+.ego { display: none; }
+@media (max-width: 51.99rem) {
+  .explorer { display: flex; flex-direction: column; gap: 0.8rem; }
+  .stage { display: contents; }
+  .ex-canvas { display: none; }
+  .ex-tools, .ex-legend, .ex-panel { position: static; width: auto; max-height: none; box-shadow: none; }
+  .ex-tools { order: 1; }
+  .explorer > .ego { order: 2; display: block; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+  .ex-panel { order: 3; border: 1px solid var(--rule-2); border-radius: 3px; }
+  .ex-legend { order: 4; }
+  .ego svg { display: block; width: 100%; height: auto; }
+  .ex-tools .ex-zoom, .ex-tools .ex-grp, .ex-tools #ex-relayout { display: none; }
+}
 
 .hx { display: grid; gap: 1.2rem 2.2rem; align-items: start; margin: 0.6rem 0 1.4rem; }
 .hx-main, .hx-side { min-width: 0; }
 @media (min-width: 75rem) {
-  .hx { grid-template-columns: minmax(0, 1.25fr) minmax(27rem, 0.75fr); }
+  .hx { grid-template-columns: minmax(0, 1.2fr) minmax(27rem, 0.8fr); }
   .hx-side { position: sticky; top: 0.8rem; }
 }
-.hx-pick { display: flex; flex-wrap: wrap; gap: 0.4rem 0.8rem; align-items: center; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 0.6rem 0.8rem; font-family: var(--mono); font-size: 0.8rem; }
-.hx-pick label { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
-.hx-pick select { font: 400 0.84rem var(--mono); padding: 0.42em 0.55em; border: 1px solid var(--rule-2); border-radius: 2px; background: var(--bg); color: var(--ink); min-height: 2.2rem; max-width: 100%; }
-.hx-panel { position: static; margin: 0.8rem 0 0; border: 1px solid var(--rule-2); border-top: 3px solid var(--accent); border-radius: 3px; background: var(--surface); padding: 0.8rem 0.9rem 0.9rem; font-size: 0.92rem; }
+.hx-bar { margin: 0 0 0.5rem; display: flex; justify-content: flex-end; }
+.hx-enlarge { font: 500 0.74rem var(--mono); }
+.hx-panel { position: static; width: auto; margin: 0; border: 1px solid var(--rule-2); border-top: 3px solid var(--accent); border-radius: 3px; background: var(--surface); padding: 0.8rem 0.9rem 0.9rem; font-size: 0.92rem; overflow: visible; }
 .hx-panel .facts { grid-template-columns: minmax(7rem, max-content) minmax(0, 1fr); gap: 0.25rem 1rem; }
 .hx-panel .facts dt { margin-top: 0; }
-.hx-panel .p-iso summary { cursor: pointer; font: 500 0.76rem var(--mono); color: var(--ink-2); margin-top: 0.4rem; }
 .hx-table h2 { margin-top: 1.6rem; }
-.hx-num { display: inline-block; min-width: 1.7rem; margin-right: 0.5rem; padding: 0.05rem 0.3rem; font: 500 0.78rem/1.3 var(--mono); text-align: center; color: var(--bg); background: var(--ink); border-radius: 999px; vertical-align: 0.12em; }
 .hx-show, .hx-pick-rel { font: 500 0.68rem/1.2 var(--mono); letter-spacing: 0.02em; margin-left: 0.5rem; padding: 0.3em 0.5em; border: 1px solid var(--rule-2); border-radius: 2px; background: var(--bg); color: var(--ink); cursor: pointer; vertical-align: 0.1em; }
-.hx-pick-rel { display: inline-flex; gap: 0.3rem; align-items: center; margin: 0.35rem 0 0; }
-.hx-pick-rel .code { min-width: 1.6rem; }
+.hx-pick-rel { display: inline-block; margin: 0.35rem 0 0; }
 table.rel tr.picked > td { background: var(--accent-soft); }
-/* in the explorer's column the table is narrower than on a page of its own: words are hyphenated, never cut anywhere */
+/* in the left column the table is narrower than on a page of its own: words are hyphenated, never cut anywhere */
 .hx table.rel { font-size: 0.86rem; overflow-wrap: break-word; hyphens: auto; }
 .hx table.rel thead th { hyphens: auto; overflow-wrap: normal; letter-spacing: 0.04em; }
 .hx table.rel thead th:nth-child(1) { width: 13%; } .hx table.rel thead th:nth-child(2) { width: 11%; } .hx table.rel thead th:nth-child(3) { width: 12%; }
 .hx table.rel thead th:nth-child(4) { width: 27%; } .hx table.rel thead th:nth-child(5) { width: 11%; } .hx table.rel thead th:nth-child(6) { width: 15%; } .hx table.rel thead th:nth-child(7) { width: 11%; }
 .hx table.rel td a, .hx table.rel td code { overflow-wrap: anywhere; }
 
-.hx-map { margin: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 0.4rem; }
-.hx-map svg { display: block; width: 100%; height: auto; max-height: calc(100vh - 16rem); }
-.hx-map figcaption { font: 400 0.7rem/1.45 var(--mono); color: var(--ink-2); font-style: normal; margin: 0.3rem 0.4rem 0.2rem; }
-.ring { fill: none; stroke: var(--rule-2); stroke-width: 1; stroke-dasharray: 2 5; }
-.node text.n-num { font: 600 10px var(--mono); fill: var(--bg); stroke: none; paint-order: normal; }
-.node.c-mapped text.n-num, .node.c-watched text.n-num, .node.c-excluded text.n-num, .node.c-none text.n-num { fill: var(--ink); }
-.node text.n-name { display: none; font: 600 11px var(--mono); fill: var(--ink); paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
-.node.named text.n-name { display: inline; }
-.node:hover text.n-name, .node:focus-visible text.n-name { display: inline; }
-.node.isolated circle.n-dot { stroke-dasharray: 1.5 2.5; }
-.edge.off { display: none; }
-.hx-legend { position: static; width: auto; margin-top: 0.8rem; padding: 0.6rem 0.7rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; font-family: var(--mono); font-size: 0.74rem; box-shadow: none; }
-@media (min-width: 75rem) { .hx-legend ul { columns: 2; column-gap: 1rem; } .hx-legend li { break-inside: avoid; } }
-.hx-legend li label { grid-template-columns: auto 2.8rem 1.9rem minmax(0, 1fr) auto; }
-.hx-legend svg { width: 2.8rem; }
-.lg-rings { margin: 0.2rem 0 0.4rem; padding-left: 1.2rem; }
-.lg-rings li { margin: 0.1rem 0; }
-.lg-rings .meta { font-size: 0.68rem; }
+/* the box: the stage's controls as a bar above the canvas, its legend below it, its panel in the left column */
+@media (min-width: 52rem) {
+  .hx3d:not(.hx--wide) .explorer { margin: 0; }
+  .hx3d:not(.hx--wide) .stage { height: auto; display: flex; flex-direction: column; overflow: visible; }
+  .hx3d:not(.hx--wide) .ex-tools { position: static; width: auto; order: 1; flex-direction: row; flex-wrap: wrap; align-items: end; box-shadow: none; border: 0; border-bottom: 1px solid var(--rule); border-radius: 4px 4px 0 0; background: var(--surface-2); }
+  .hx3d:not(.hx--wide) .ex-tools .ex-title, .hx3d:not(.hx--wide) .ex-keys { flex-basis: 100%; }
+  .hx3d:not(.hx--wide) .ex-tools label { flex: 1 1 9rem; }
+  /* the observatory's drawing keeps ~300 units on its left and ~210 on its right free for its floating controls and panel
+     (its viewBox, 1110 × 730 ungrouped); in the box those sit outside the canvas, so the box shows the drawing's
+     830 units from x = -330: the drawing is made 1110/830 as wide as the canvas and shifted left by 270/830. Nothing in
+     the module changes; zooming, turning and grouping work on the whole drawing as before. */
+  .hx3d:not(.hx--wide) .ex-canvas { position: relative; inset: auto; order: 2; height: auto; aspect-ratio: 830 / 730; overflow: hidden; }
+  .hx3d:not(.hx--wide) .ex-canvas > div { width: 133.73%; height: 100%; margin-left: -32.53%; }
+  .hx3d:not(.hx--wide) .ex-legend { position: static; width: auto; max-height: none; order: 3; box-shadow: none; border: 0; border-top: 1px solid var(--rule); border-radius: 0 0 4px 4px; background: var(--surface); }
+}
+@media (min-width: 75rem) { .hx3d:not(.hx--wide) .ex-legend ul { columns: 2; column-gap: 1rem; } .hx3d:not(.hx--wide) .ex-legend li { break-inside: avoid; } }
 
-.hx-ego { display: none; }
-.hx-ego svg { display: block; width: 100%; height: auto; }
+/* enlarged: the observatory's stage across the full width, the table below it */
+.hx--wide { grid-template-columns: minmax(0, 1fr) !important; }
+.hx--wide .hx-side { order: 1; position: static; }
+.hx--wide .hx-main { order: 2; }
+
+/* the phone: the stage's parts in a column (observatory.css), the panel and the table after them */
 @media (max-width: 51.99rem) {
-  /* on a phone: the picker, the ego view, the legend, the panel, then the table */
   .hx { display: flex; flex-direction: column; gap: 0.8rem; }
   .hx-main, .hx-side { display: contents; }
-  .hx-pick { order: 1; } .hx-ego { order: 2; } .hx-legend { order: 3; margin-top: 0; } .hx-panel { order: 4; margin-top: 0; } .hx-table { order: 5; }
-  .hx-side .hx-map { display: none; }
-  .hx-ego { display: block; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 0.4rem 0.6rem; }
-  .hx-ego .count-line { margin: 0.2rem 0 0.3rem; }
-  .hx-panel .facts { grid-template-columns: 1fr; }
+  .hx-side .explorer { order: 1; } .hx-panel-slot { order: 2; } .hx-table { order: 3; }
+  .hx-bar { display: none; }
 }
 
 /* the landing page of the folder: no column of numerals */

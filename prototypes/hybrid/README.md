@@ -20,44 +20,41 @@ HTTP, like the site.
 | Regulation page | `regulation.html?id=ai-act` | **the observatory's** view module, `../observatory/regulation.js`, loaded whole: cards and captioned sortable tables (direction 2's table-first layout). **Empty state:** `regulation.html?id=chips-act` |
 | Article page | `article.html` | **the Editorial's** view module, `../editorial/article.js`, loaded whole: Part V read from `../../index.html` in one reading column, each passage's claims in the margin (direction 1's column) |
 | Analytical view | `timeline.html` | the timeline: **the observatory's** timeline mode, `../observatory/timeline.js`, imported whole; `?instrument=chips-act` is its empty state |
-| Analytical view, network | `timeline.html?mode=network` | **the Hybrid's own** Regulatory Network Explorer, `explorer.js` (`&focus=<id>` opens it on an instrument) |
+| Analytical view, network | `timeline.html?mode=network` | the Regulatory Network Explorer: the Hybrid's table-led layout around **the observatory's 3D network** (`explorer.js`; `&focus=<id>` opens it on an instrument) |
 | — | `index.html` | a landing page for the folder; it is not a homepage view and reads no data |
 
 **Why whole modules.** Direction 3 *is* the Editorial's article and the observatory's tool pages under one set of tokens (§8.2, 3), and the
 three prototypes share layout A (§8, "PV2-04, C.5 questions 1–3"). Rewriting those modules here would have made a second home of each; the
-Hybrid loads them instead, so **what is the Hybrid's own** is: the one stylesheet (`hybrid.css`), the explorer (`explorer.js`), the
+Hybrid loads them instead, so **what is the Hybrid's own** is: the one stylesheet (`hybrid.css`), the explorer's layout (`explorer.js`), the
 analytical view's switch between the two (`timeline.js`), and `hybrid.js`, which only renames "Editorial prototype" / "Observatory
 prototype" to "Hybrid prototype" in the document title.
 
-## The explorer — flat, and led by the table
+## The explorer — the table leads, the observatory's 3D network beside it
 
-As decided (§8, "PV2-05, C.1 question 1"):
-- **The relationships table leads.** It is `../editorial/relations.js`, imported unchanged (one set of rules for the three directions), and it
-  is the reading surface: on a wide screen the selection panel and the table fill the left column, and the map sits beside them, kept in
-  view. Each row group carries its instrument's number and a "Show on the map" button; each relationship row, in its summary cell, a button
-  that selects it on the map. The table follows the type filter and the selection.
-- **The map is 2D SVG**: the instruments on **concentric rings by `coverage()`** of `js/routes.js` — covered inside, then mapped, watched,
-  excluded — placed on each ring by the order of the brief's parts (`brief_part`; those with none after) and then by id. Nothing about a node's
-  place comes from the relationships; **nothing moves and nothing turns**. Each node carries **the number of its row group in the table**
-  (alphabetical); **names** are drawn for the selection and its direct neighbours, and on hover or focus. *Why numbers:* at the width a
-  table-led layout leaves the map (about 470 px at 1280), the 39 names cannot be drawn on four rings without covering each other.
-- **The same core as the observatory's:** nodes are the 39 instruments and edges the 40 records of `relationships`, nothing else; the
-  counts come from **`explorerCounts()` of `../observatory/explorer.js`, imported** — one counting function for both concepts; type by
-  colour, stroke pattern and a two-letter code; an arrow **only** where `symmetric` is false; two relationships between one pair drawn apart;
-  a tabbed panel (Properties, Relations), a field the record lacks reading "not recorded"; the legend always visible, and it is the type
-  filter; focus on a node's or an edge's direct connections; an instrument with no relationship keeps its place and says so.
-- **Keyboard:** Tab reaches the picker, the panel, the table's buttons and the map; on the map ← and → move along a ring, ↑ outward and ↓
-  inward to the nearest instrument, Home and End to the first and last by number, Enter selects, Esc clears, Tab leaves.
-- **On a phone** (below 52rem) the map gives way to an **ego view** — the chosen instrument and its direct relationships, named — followed
-  by the legend, the panel and the table for that instrument: not the map made small.
-- **Shrunk under the stopping rule** (§8, "PV2-04, C.5 questions 1–3"): **zoom and pan** and **re-layout** are not built (a ring layout
-  fixed by the records has nothing to re-lay out, and the map fits its box); **search** is the instrument picker, by number and name, not a
-  free-text field; the **grouping** is the rings themselves, not a selectable "Group by".
+**As it now stands** (§8, "PV2-05, C.5: the author's answer" and "the combination built now"): the author kept the Hybrid's layout and asked
+for the observatory's 3D network in its map box, with an option to enlarge it.
+- **The network is the observatory's**, `mountExplorer()` of `../observatory/explorer.js`, imported and run **unchanged**: its records,
+  counting function, 3D layout, controls, legend, tabbed panel, keyboard, phone ego view and table. `explorer.js` here only **arranges** what it
+  renders, inside the same root: the selection panel and the relationships table in the left column (the table leads), the 3D stage in the
+  right-hand box — its controls as a bar above the canvas, its legend below it.
+- **Enlarge:** "Enlarge the network" turns the box into a full-width stage with the panel back inside it — the observatory's arrangement — and
+  the table below; the same button, or Esc outside the canvas, shrinks it back.
+- **The box shows the middle of the drawing.** The observatory's drawing keeps room on its left and right for its floating controls and panel;
+  in the box those sit outside the canvas, so the stylesheet crops that room away (CSS only). At the starting view the box shows 39 of 39
+  instruments, the label "GDPR Procedural Regulation" running past its edge; grouped by part, 38 of 39 — "Fit", zoom out or "Enlarge" show the rest.
+- **The table is keyed to the network:** each row group carries "Show in the network", each relationship row "Select in the network", matched
+  to the records in `relations.js`'s own order and left unkeyed rather than keyed wrongly when a count does not match. The observatory's module
+  re-renders the table on every selection and filter; each rendering is keyed again.
+- **A type the legend hides is not drawn.** `observatory.css` has no rule for the class its filter sets, so in the observatory a hidden type stays
+  drawn; `hybrid.css` carries the rule (`docs/PROTOTYPES.md` §3.6).
+
+**The flat explorer it replaced** — rings by `coverage()`, numbered nodes keyed to the table, nothing turning — is what `docs/PROTOTYPES.md` §3.1–§3.5
+measured, at `a5eca14`; it stays in the branch's history.
 
 ## What it reads, imports and does not do
 
 - Every dataset through `js/data.js`, in place; the brief's prose from `index.html` through `../editorial/brief.js`. Nothing is copied.
-- It **depends on both other prototype folders** (their view modules, `common.js`, `relations.js`, `explorer.js`'s `explorerCounts`) and changes
+- It **depends on both other prototype folders** (their view modules, `common.js`, `relations.js`, the observatory's `explorer.js`) and changes
   neither. Removing either breaks this one.
 - No dependency, no graph library, no build step, no remote font, no third-party request, no inline script, no `style` attribute; each page
   carries the site's Content-Security-Policy with `script-src 'self'`. The type is the site's own font files, used where they are
