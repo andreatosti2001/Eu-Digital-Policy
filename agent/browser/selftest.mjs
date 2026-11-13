@@ -30,6 +30,8 @@ import { findBrowser, CANDIDATE_PATHS, BROWSER_ENV_VARS } from './find.mjs';
 import { serveSite, REPO_ROOT, MIME } from './serve.mjs';
 import { runBrowserQA, asQACheck, verdictOf, BASELINE, BROWSER_QA_COMMAND } from './runner.mjs';
 import { PAGES, NAV_FILES, VIEWPORTS, checkDeployedSubpath, DEPLOY_BASE_PATH, checkPageLoads, MOUNT_WAIT_MS } from './checks.mjs';
+import { checkHome, decodePng, contrastRatio } from './home-checks.mjs';
+import { deflateSync } from 'node:zlib';
 import { CHROME_FLAGS, launch } from './cdp.mjs';
 import { validate } from '../schemas/validate.mjs';
 import { QAResult } from '../schemas/contracts/qa-result.mjs';
@@ -496,4 +498,67 @@ test('LAUNCH 3 · a browser that exits before printing an endpoint is rejected w
     launch({ executable: process.execPath, flags: ['-e', "console.error('no display'); process.exit(3)", '--'], launchTimeoutMs: 5000 }),
     /exited with code 3 before printing a DevTools endpoint[\s\S]*no display/);
   assert.deepEqual([...profiles()].filter((f) => !before.has(f)), []);
+});
+
+/* ------------------------------------------------------------ the homepage figure's checks (HP-04)
+   A check that has never failed has not been shown able to. Two proofs: the arithmetic the contrast reading stands on, and a scratch
+   copy of the site with four defects planted — each one a thing a later session could do by accident — in which exactly those four
+   checks must fail while the checks the plants do not touch must still pass. */
+
+test('HOME 1 · contrastRatio is WCAG\'s, and decodePng reads every PNG filter', () => {
+  assert.ok(Math.abs(contrastRatio([0, 0, 0], [255, 255, 255]) - 21) < 1e-9);
+  assert.equal(contrastRatio([10, 20, 30], [10, 20, 30]), 1);
+  assert.ok(contrastRatio([119, 119, 119], [255, 255, 255]) > 4.4 && contrastRatio([119, 119, 119], [255, 255, 255]) < 4.6, '#777 on white is 4.48 : 1');
+
+  /* a 5 x 5 RGBA image, one row per filter type, encoded here and decoded by the module */
+  const W = 5, H = 5, bpp = 4, stride = W * bpp;
+  const px = Buffer.alloc(H * stride);
+  for (let i = 0; i < px.length; i++) px[i] = (i * 37 + (i >> 3) * 11) & 255;
+  const rows = [];
+  for (let y = 0; y < H; y++) {
+    const f = y % 5, row = Buffer.alloc(stride + 1); row[0] = f;
+    for (let x = 0; x < stride; x++) {
+      const cur = px[y * stride + x], a = x >= bpp ? px[y * stride + x - bpp] : 0, b = y ? px[(y - 1) * stride + x] : 0, c = x >= bpp && y ? px[(y - 1) * stride + x - bpp] : 0;
+      let pred = 0;
+      if (f === 1) pred = a; else if (f === 2) pred = b; else if (f === 3) pred = (a + b) >> 1;
+      else if (f === 4) { const pp = a + b - c, pa = Math.abs(pp - a), pb = Math.abs(pp - b), pc = Math.abs(pp - c); pred = pa <= pb && pa <= pc ? a : pb <= pc ? b : c; }
+      row[x + 1] = (cur - pred) & 255;
+    }
+    rows.push(row);
+  }
+  const chunk = (type, body) => { const len = Buffer.alloc(4); len.writeUInt32BE(body.length); return Buffer.concat([len, Buffer.from(type, 'latin1'), body, Buffer.alloc(4)]); };
+  const ihdr = Buffer.alloc(13); ihdr.writeUInt32BE(W, 0); ihdr.writeUInt32BE(H, 4); ihdr[8] = 8; ihdr[9] = 6;
+  const png = Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), chunk('IHDR', ihdr), chunk('IDAT', deflateSync(Buffer.concat(rows))), chunk('IEND', Buffer.alloc(0))]);
+  const img = decodePng(png);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) assert.deepEqual(img.px(x, y), [px[y * stride + x * 4], px[y * stride + x * 4 + 1], px[y * stride + x * 4 + 2]], `pixel ${x},${y} (filter ${y % 5})`);
+});
+
+test('HOME 2 · the homepage checks pass on the real site and FAIL on four planted defects', async (t) => {
+  const found = findBrowser();
+  if (!found.found) { t.skip(`no browser: ${found.reason}`); return; }
+  const dir = mkdtempSync(join(tmpdir(), 'home-'));
+  let browser = null, site = null;
+  try {
+    cpSync(REPO_ROOT, dir, { recursive: true, filter: (src) => !/(^|\/)(\.git|node_modules|runs|records|drafts)$/.test(src) });
+    const plant = (file, from, to) => { const p = join(dir, file), src = readFileSync(p, 'utf8'); assert.ok(src.includes(from), `${file} no longer holds the text this plant rewrites: ${from}`); writeFileSync(p, src.split(from).join(to)); };
+    plant('js/home-figure.js', "const reduceMotion =", "window.__hpFrame = () => {};\nconst reduceMotion =");          // a review hook comes back
+    plant('js/home-figure.js', "'≈ '", "''");                                                                    // a month-precision count loses its "≈"
+    plant('js/home-figure.js', "else { store.set(INTRO_KEY, '1'); play(); }", "else { play(); }");               // the opening is never remembered
+    plant('css/home.css', ".hp-fig .ring-lb{font-family:var(--mono);font-size:9px;letter-spacing:.1em;fill:var(--paper-faint)}", ".hp-fig .ring-lb{font-family:var(--mono);font-size:9px;letter-spacing:.1em;fill:var(--ink-3)}");   // a label below 4.5 : 1
+
+    browser = await launch({ executable: found.path });
+    site = await serveSite({ root: dir });
+    const results = await checkHome(browser, site.origin, { root: dir });
+    const by = Object.fromEntries(results.map((r) => [r.id, r]));
+    for (const id of ['home:no-hooks', 'home:approx', 'home:opening-once', 'home:svg-contrast:night:status']) {
+      assert.equal(by[id].status, 'fail', `${id} did not fail on its planted defect — it cannot catch what it is for`);
+    }
+    for (const id of ['home:figure', 'home:no-script', 'home:module-failure', 'home:edition-note', 'home:visited', 'home:masthead-marks']) {
+      assert.equal(by[id].status, 'pass', `${id} failed on a tree whose only defects are the four planted ones: ${by[id].summary}`);
+    }
+  } finally {
+    if (site) await site.close();
+    if (browser) { try { await browser.close(); } catch { /* not a site defect */ } }
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

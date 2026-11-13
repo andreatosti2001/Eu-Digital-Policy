@@ -109,7 +109,7 @@ if (json) {
     out(run.treeUnchanged
       ? '  The repository is byte-identical to before this run. Nothing was written; no page was changed.'
       : `  THE REPOSITORY CHANGED DURING THIS RUN: ${(run.changedPaths ?? []).join(', ')}. This suite has no code path that writes anywhere — treat the result as suspect.`);
-    out('  No contrast was computed, no screen reader was run, and no pixels were compared. README limitation 7 stands.');
+    out('  No screen reader was run. Contrast was computed from computed colours over solid backgrounds; the only pixels compared are those behind the homepage figure\'s own SVG (home:svg-contrast, Chromium). README limitation 7 stands.');
     out();
   }
 }
