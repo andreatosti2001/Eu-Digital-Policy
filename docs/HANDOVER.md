@@ -2,7 +2,7 @@
 
 **Last updated:** 13 November 2026 (UTC), v2 Session 27 (Phase 5, the design), at its final checkpoint.
 **Branch:** `claude/eager-euler-05ukz9` (assigned by the environment), from `main` `3627de6` (#111). `origin/main` re-fetched immediately before this write: `3627de6`, unchanged.
-**Read first:** **E5-3 is written and approved** (`docs/PHASE-5-SETUP.md` §9), **the X5-1 table is decided** (§10, every instrument as proposed), **the paper test is done** (§11, its outcome to block D) and **Session 28's prompt is drafted** (`docs/prompts/v2-session-28.md`); the final checkpoint is **approved** (§8, "Final checkpoint of v2 Session 27 approved"). **Phase 5 is planned and not opened; G2 is not open.** `docs/` only. The entries below this session's are unchanged.
+**Read first:** **E5-3 is written and approved** (`docs/PHASE-5-SETUP.md` §9), **the X5-1 table is decided** (§10, every instrument as proposed), **the paper test is done** (§11, its outcome to block D) and **Session 28's prompt is drafted** (`docs/prompts/v2-session-28.md`); the final checkpoint is **approved** (§8, "Final checkpoint of v2 Session 27 approved"). **After the approval, G2 was opened and Phase 5 with it** (E5-5 failing and stated: Session 28 waits for the readings), and the next session is V2C-21, its prompt drafted. `docs/` only. The entries below this session's are unchanged.
 
 ## Branch register — 13 November 2026 (v2 Session 27)
 
@@ -61,8 +61,10 @@ suite was not run**: nothing outside `docs/` changed, and the prompt asks for th
 | 27.5 | Session 28's prompt | `docs/prompts/v2-session-28.md`, §8 `a09c222` | its exit criterion carries the standing rule (line near «il prompt della sessione 29 esiste su questo branch») | none | exists on this branch, carries the rule: **met**; approved with the work |
 | — | Untouched | — | `git diff origin/main --stat -- data tools js i18n agent css index.html it fr es instruments prototypes .github style.css app.js README.md LICENSE` is empty | `commit-evidence` | nothing outside `docs/` changed: **met** |
 
-**For the next session:** in time, **v2 Session 25** (the reading, 12 Jan–2 Feb 2027) and Session 26; by dependency, Post-v2 D on the Hybrid.
-**v2 Session 28** runs only after G2 (a row opening Phase 5) and E5-5. **Waiting for:** the author's approval of the final checkpoint.
+**For the next session:** **the V2C-21 session** (Track R, `eidas2`'s regulated actors), on `docs/prompts/v2-v2c-21-eidas2-actors.md`, before
+12 Jan 2027 (§8, "The next session … V2C-21", "The prompt of the V2C-21 session"); then **v2 Session 25** (12 Jan–2 Feb 2027) and Session 26.
+**G2 is open and Phase 5 is opened** (§8, "G2: Stage 3 is opened, and with it Phase 5"), with E5-5 failing and stated: **v2 Session 28**
+runs only after the readings. The final checkpoint is **approved** (§8).
 
 ## v2 Session 27 — Phase 5, the design: checkpoint 27.2 (13 Nov 2026)
 
