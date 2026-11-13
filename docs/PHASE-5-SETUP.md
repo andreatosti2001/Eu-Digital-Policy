@@ -388,7 +388,9 @@ Session 28 decides what, if anything, follows; a change to any of them is a rule
 *Written on 13 Nov 2026 in v2 Session 27 (§8, "v2 Session 27, 27.2 question 1": the table here). **Proposed**: the dispositions
 are the author's, one question per instrument, each a roadmap §8 row ("v2 Session 27, 27.3: …"). **Not a reading**: it classifies
 what the records say, item by item; no Article was read for it, no rule is closed and no date moves. Measured on `main` `3627de6`
-with scratch scripts outside the repository (§9.4's way); **nothing in `data/` changed**.*
+with scratch scripts outside the repository (§9.4's way); **nothing in `data/` changed**. **Decided on 13 Nov 2026, every
+instrument as proposed** (§8, "v2 Session 27, 27.3: the X5-1 dispositions for the GDPR" … "for eIDAS 2, and with it the table
+decided"); the table is approved with the session's final checkpoint.*
 
 X5-1 asks for a recorded disposition for every `depends_on` item, threshold key and exemption that P-A brings in. There are
 **68**: 38 `depends_on` items on 25 rules, 4 threshold keys on 3, 26 exemptions on 20. Numbered 1–68 in the records' order.
