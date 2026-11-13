@@ -11,11 +11,24 @@ file is the instruction text that cites them. It records no §8 row of its own a
 change it before use.
 Amended on 5 Nov 2026 (v2 Session 25, 25.5; §8, 25.5 questions 1–4): Session 27 sits in Stage 2 of
 docs/SESSION-ARCHITECTURE.md, beside Post-v2's PV2-01 and PV2-02, and its output is an input to C; Phase 5 opens at G2, after
-C's selection, not at the end of Session 27. The date wording and 27.5 are changed accordingly; nothing else.
+C's selection, not at the end of Session 27. The date wording and 27.5 are changed accordingly; nothing else.Noted on 13 Nov 2026 (PV2-05, C.6; §8, "PV2-05, C.5: the author's explicit decision"): C is selected before Session 27 ran;
+the author's answers to PV2-05's two C.6 questions, in the author's words: "S27, with a dated note (Recommended)" and "Input
+to block D (Recommended)". The note below the title records them; the body is not rewritten.
 -->
 
 SESSION 27 — Fase 5, il disegno: lo standard dei nuovi trigger (E5-3), la tabella delle disposizioni (X5-1), la prova su
 carta e il prompt della sessione 28, per EU Digital Policy v2.0
+
+> **Nota del 13 novembre 2026 (PV2-05), da leggere prima di tutto.** Il blocco C è **selezionato** prima che questa sessione
+> sia stata eseguita (`docs/ROADMAP-v2.md` §8, «PV2-05, C.5: the author's explicit decision — the Hybrid to D, the combination
+> to PV2-08»): la direzione **Ibrida** va in D; il concept dell'Explorer per PV2-08 è la **combinazione** — il layout Ibrido
+> guidato dalla tabella, con la rete 3D dell'Osservatorio nel riquadro e l'opzione di allargamento (`prototypes/hybrid/` a
+> `6fdc311`; `docs/PROTOTYPES.md` §3.6). Di conseguenza, **dove questo prompt dice che l'esito della prova su carta è
+> «consegnato come input a C (PV2-03…05)», si legge: consegnato come input a D (PV2-06…PV2-09)**, che costruiscono sull'Ibrida;
+> la selezione di C resta com'è e non si riapre (risposta dell'autore: «Input to block D (Recommended)»). **G2 non è aperto**:
+> la selezione di C ne soddisfa una delle tre condizioni; restano questa sessione approvata e la Fase 5 aperta su
+> E5-1…E5-7 (`docs/SESSION-ARCHITECTURE.md` §2). Lo stato di partenza qui sotto è del 4 novembre 2026: **rimisuralo**, perché da
+> allora sono passate G1, PV2-01…PV2-05, HP-01…HP-04 e le sessioni P0 e P1. Il resto del prompt vale com'è scritto.
 
 ## Prima di iniziare
 
