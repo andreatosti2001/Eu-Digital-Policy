@@ -1,8 +1,65 @@
 # HANDOVER
 
-**Last updated:** 13 November 2026 (UTC), after v2 Session 27: the mobile tree opens the Contents panel (Class D, authorized), at its close.
-**Branch:** `claude/mobile-tree-contents`, from `claude/eager-euler-05ukz9` `52a1b2a` (so that its §8 rows do not conflict with #112's). `origin/main` re-fetched immediately before this write: **`9eaa961`, #112 merged by the author with a merge commit** while this work ran; this branch is `main` plus its own three commits. (The first version of this header, `e390370`, said `3627de6`, unchanged: the fetch it reported was read before the merge landed.)
-**Read first:** this branch's pull request is the one open item. Below 640 px a tap on the homepage figure's tree now opens the Contents panel with the part marked, and the panel lists the site's pages at every width. The entries below are unchanged.
+**Last updated:** 14 November 2026 (UTC), after the V2C-21 session (Track R: `eidas2`'s regulated actors), at its final checkpoint.
+**Branch:** `claude/sweet-newton-58i6p3`, from `main` `d67fb93` (#113 merged). `origin/main` re-fetched immediately before this write: `d67fb93`, unchanged; this branch is `main` plus its own commits.
+**Read first:** "Who it binds" on the eIDAS2 page now names the eight parties the Regulation's Articles bind, read in the Official Journal texts on 13 Nov 2026. The next session is V2C-21b (`docs/prompts/v2-v2c-21b-eidas2-provisions.md`), before 12 Jan 2027. The entries below are unchanged.
+
+## Branch register — 14 November 2026 (V2C-21)
+
+- `claude/sweet-newton-58i6p3`, from `main` `d67fb93`: `docs/` (`ROADMAP-v2.md` §8, `V2C-21-READING.md`, `prompts/v2-v2c-21b-eidas2-provisions.md`,
+  this file) and `data/instruments.json` (`eidas2.dna.regulated_actor` only), `data/taxonomy.json` (three terms added), and what
+  `tools/_footer.mjs` regenerated (`instruments/eidas2/index.html`, `datasets.html`). Disposition: on the author's answer ("Yes, open the PR
+  (Recommended)"), pull request #114 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/114), opened by the session and not merged by it;
+  merging is the author's, with a merge commit. The final checkpoint is approved (§8, 14 Nov 2026).
+- Reported at the start, all already in this register and left alone: `claude/brave-goldberg-gm87jp` (one commit, `7e93f27`); the scout
+  digests of 2 and 9 Nov 2026. Nothing else is unmerged.
+
+## V2C-21 — `eidas2`'s regulated actors, read against the Articles (13–14 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the V2C-21 session" (`0a28b52`, the author's words "Start V2C-21 session"), and the
+rows "V2C-21, V.2: …" (`4a5eb37`, `681ddd5`) and "V2C-21, V.4: …" (`4b98209`). **Record:** `docs/V2C-21-READING.md` — read it, not this entry.
+
+**V.1, the reading** (`4957b0d`). Regulation (EU) 2024/1183 and Regulation (EU) No 910/2014 retrieved from Cellar by CELEX on 13 Nov 2026
+(`Accept-Language: eng`), with the SPARQL endpoint: two amending acts (NIS2, whose Art. 42 — read — deleted Art. 19 from 18 Oct 2024; and
+2024/1183) and twenty corrigenda, of which one has an English text (32024R1183R(02), read: it changes no addressee). Thirteen addressees
+noted with their locators (§3, A1–A13).
+
+**V.2, the decisions** (seven rows, all as recommended; one after "What do you suggest?"): `member-state`, `vlop`, `trust-service-provider`
+stay; `public-authority` stays rebased on Arts 45f(8), 46a, 46b (not 5f(1), whose addressee is the Member State); `large-company` exits;
+added: `relying-party`, `wallet-provider`, `web-browser-provider` (new terms) and `gatekeeper` (existing). The eID-means issuer is a declared
+limit. The reading lives in the new terms' notes and the reading notes; `last_verified` stays 2026-10-27.
+
+**V.3, the writing** (`61dd1a7`, with `Evidence:`). **V.4, the prompt** (`docs/prompts/v2-v2c-21b-eidas2-provisions.md`): provisions that
+anchor each actor to an Article on the page, and `eidas2:art-5f.obligation_on` corrected.
+
+**Found, and what was done about each:**
+- **A premise of the prompt did not hold**: no instrument has a record-level `verification_note`; put to the author, who chose the term
+  notes and `docs/`.
+- **`eidas2:art-5f.obligation_on` is inexact** (`public-authority` for 5f(1), `large-company` for 5f(2)): a provision field, outside the
+  prompt's files; named for V2C-21b, not written.
+- **Six of the eight actors are bound by no provision shown on the page** (only `art-5a` and `art-5f` carry `obligation_on`): the
+  reason for V2C-21b.
+- **A comparison of mine proved nothing at first**: a filter matched no line of `evidence-audit`'s output, so "identical" was vacuous;
+  redone on the full output against a worktree of `main`: 44 lines each, identical.
+- **The suites created an empty `agent/records/`**; removed, nothing in it.
+
+**Not established:** a consolidated version (none used); the other-language corrigenda; the implementing acts; whether a reader takes
+"Relying party" or "Public authority" as the Regulation means them (the terms' notes say it; the page shows the labels).
+
+**Battery on `ea32bad`** (the data and notes as committed): `validate` 0 errors · 5 warnings (the A-8 of `ap-eidas2-01`, as at the start);
+`i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit --as-of 2026-11-14` 0 errors, 11 warnings, output identical to `main`;
+`freshness --as-of 2026-11-14` exit 0, 0 defects, 3 staleness prompts (as at the start); `selftest` 189/189; `commit-evidence origin/main
+HEAD`: the one commit touching published files names its evidence; the 25 suites and `.control-room/` 1495 tests, 1494 pass, 0 fail,
+1 skipped; `agent/schemas/cli.mjs check` exit 0; **browser suite (`--require-browser`) 361 pass, 0 fail, 1 undecidable** (`a11y:bound`, by design).
+
+**Checklist**
+
+| # | Item | Written | Verify by hand | Automatic test | Exit |
+|---|---|---|---|---|---|
+| V.1 | The reading | `docs/V2C-21-READING.md` §1–§5, `4957b0d` | fetch `http://publications.europa.eu/resource/celex/32024R1183` (Accept `application/xhtml+xml`, Accept-Language `eng`) and read Arts 5b, 5f, 12b, 45(1a) | none (a reading) | **met** |
+| V.2 | The decisions | §8, `0a28b52`, `4a5eb37`, `681ddd5` | read the seven rows: the author's words, the options not chosen | none | **met** |
+| V.3 | The data | `61dd1a7`: `eidas2.dna.regulated_actor`, three terms | `python3 -m http.server 8000`, open `/instruments/eidas2/` and `/instrument.html?id=eidas2`: "Who it binds" lists eight | `validate.mjs` resolves every term; `seo-audit` the regenerated page; browser suite | **met** |
+| V.4 | The next prompt | `docs/prompts/v2-v2c-21b-eidas2-provisions.md`; §8 `4b98209` | read its exit criterion: it carries the standing rule | none | **met**, approved with the work at this checkpoint |
 
 ## Branch register — 13 November 2026 (the mobile tree)
 
