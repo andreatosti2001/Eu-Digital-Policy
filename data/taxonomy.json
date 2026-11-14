@@ -310,6 +310,27 @@
       "definition_ref": null,
       "parent": null,
       "note": "Digital Networks Act proposal: a provider of public electronic communications networks or of publicly available electronic communications services, as COM(2026) 16 would define them (Art. 2, points (1), (3) and (11); Art. 9(2)), read 28 Oct 2026. A proposal's definition, not law. Added 28 Oct 2026 for item 2.6."
+    },
+    {
+      "id": "actor:relying-party",
+      "label": "Relying party",
+      "definition_ref": null,
+      "parent": null,
+      "note": "eIDAS: 'relying party' as defined in Art. 3, point (6), of Regulation (EU) No 910/2014, as replaced by Regulation (EU) 2024/1183 Art. 1 point (3)(c), read 13 Nov 2026: a natural or legal person that relies upon electronic identification, European Digital Identity Wallets or other electronic identification means, or upon a trust service. One that intends to rely upon wallets must register, request only the data registered, identify itself to the user and not refuse pseudonyms where identification is not required; an intermediary acting on its behalf is deemed a relying party (Art. 5b(1), (3), (8)–(10), as inserted by Art. 1 point (5)). Private relying parties required to use strong user authentication, except micro and small enterprises, must accept the wallet on the user's voluntary request (Art. 5f(2)). Added 13 Nov 2026 for V2C-21."
+    },
+    {
+      "id": "actor:wallet-provider",
+      "label": "Provider of a European Digital Identity Wallet",
+      "definition_ref": null,
+      "parent": null,
+      "note": "eIDAS: a wallet is provided directly by a Member State, under a mandate from it, or independently of it but recognised by it (Art. 5a(2) of Regulation (EU) No 910/2014, as inserted by Regulation (EU) 2024/1183 Art. 1 point (5), read 13 Nov 2026). Its provider must let users request support and report problems (5a(10)), must not collect or combine data beyond what the wallet needs (5a(14)), is bound by Art. 24(2), points (b) and (d) to (h), mutatis mutandis (5a(20)), and is supervised in the Member State where it is established (Art. 46a(3), inserted by Art. 1 point (47)). The Regulation does not define the provider in Art. 3. Added 13 Nov 2026 for V2C-21."
+    },
+    {
+      "id": "actor:web-browser-provider",
+      "label": "Web-browser provider",
+      "definition_ref": null,
+      "parent": null,
+      "note": "eIDAS: providers of web-browsers must recognise qualified certificates for website authentication, display the attested identity data in a user-friendly manner and ensure support and interoperability with them, except micro and small enterprises during their first five years as providers of web-browsing services (Art. 45(1a) of Regulation (EU) No 910/2014, as replaced by Regulation (EU) 2024/1183 Art. 1 point (44)); they must take no measure contrary to those duties and must notify any precautionary measure (Art. 45a(1)–(3), inserted by Art. 1 point (45)). Read 13 Nov 2026. Added 13 Nov 2026 for V2C-21."
     }
   ],
   "activity": [

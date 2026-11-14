@@ -2334,10 +2334,13 @@
       "dna": {
         "regulated_actor": [
           "actor:member-state",
-          "actor:public-authority",
-          "actor:large-company",
+          "actor:wallet-provider",
+          "actor:relying-party",
           "actor:vlop",
-          "actor:trust-service-provider"
+          "actor:gatekeeper",
+          "actor:trust-service-provider",
+          "actor:web-browser-provider",
+          "actor:public-authority"
         ],
         "protected_party": [],
         "objective": "Secure electronic identification and trust services across the internal market, extended by the European Digital Identity Wallets each Member State must provide and recognise.",
