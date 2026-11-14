@@ -2347,7 +2347,12 @@
         "risk_logic": null,
         "obligation_anchor": [
           "eidas2:art-5a",
-          "eidas2:art-5f"
+          "eidas2:art-5b",
+          "eidas2:art-5f",
+          "eidas2:art-12b",
+          "eidas2:art-19a",
+          "eidas2:art-45",
+          "eidas2:art-45f"
         ],
         "enforcement_mechanism": null,
         "sanction_ceiling": {
@@ -2392,9 +2397,10 @@
           "id": "eidas2:art-5a",
           "number": "5a (of Regulation (EU) No 910/2014, as inserted)",
           "heading": "European Digital Identity Wallets",
-          "summary": "Each Member State must provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts referred to in Art. 5a(23) and Art. 5c(6).",
+          "summary": "Each Member State must provide at least one European Digital Identity Wallet within 24 months of the entry into force of the implementing acts referred to in Art. 5a(23) and Art. 5c(6) (5a(1)); a wallet is provided directly by a Member State, under a mandate from one, or independently of one but recognised by it (5a(2)). Providers of European Digital Identity Wallets must ensure that users can easily request technical support and report technical problems or other incidents (5a(10)); must neither collect information about the use of the wallet that is not necessary for providing wallet services, nor combine person identification data or other personal data with personal data from other services offered by the provider or from third-party services not necessary for them, unless the user has expressly requested otherwise, and must keep the personal data relating to the wallet logically separate (5a(14)); and Art. 24(2), points (b) and (d) to (h), apply to them mutatis mutandis (5a(20)).",
           "obligation_on": [
-            "actor:member-state"
+            "actor:member-state",
+            "actor:wallet-provider"
           ],
           "claims": [
             "clm-eidas2-wallets"
@@ -2403,16 +2409,31 @@
             "src-eurlex-eidas2"
           ],
           "requires_verification": false,
-          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1183); heading and summary follow the Article's own paragraphs."
+          "verification_note": "Added 27 Sep 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1183); heading and summary follow the Article's own paragraphs. Extended 14 Nov 2026 from the same text read again that day (Regulation (EU) 2024/1183, Art. 1 point (5), Art. 5a(1), (2), (10), (14), (20)): the summary now includes the duties of providers of European Digital Identity Wallets, and obligation_on lists actor:wallet-provider for them (docs/V2C-21b-READING.md). Not read in a consolidated version."
+        },
+        {
+          "id": "eidas2:art-5b",
+          "number": "5b (of Regulation (EU) No 910/2014, as inserted)",
+          "heading": "European Digital Identity Wallet-Relying Parties",
+          "summary": "A relying party that intends to rely upon European Digital Identity Wallets for the provision of public or private services by means of digital interaction must register in the Member State where it is established, providing at least the information needed to authenticate to wallets, its contact details and the intended use of wallets, including the data it will request from users (5b(1), (2)). Relying parties must not request users to provide data other than that indicated at registration (5b(3)), must inform Member States without delay of changes to it (5b(6)), must identify themselves to the user (5b(8)), are responsible for authenticating and validating the data requested from wallets and must not refuse the use of pseudonyms where Union or national law does not require the user to be identified (5b(9)); an intermediary acting on a relying party's behalf is deemed a relying party (5b(10)). Member States make the registration information publicly available online and provide a common mechanism for identifying and authenticating relying parties (5b(5), (7)).",
+          "obligation_on": [
+            "actor:relying-party"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-eidas2"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 14 Nov 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1183): Regulation (EU) 2024/1183, Art. 1 point (5), Art. 5b(1) to (10); heading and summary follow the Article's own paragraphs. The Article's paragraph 4 (without prejudice to specific-service law) and paragraph 11 (the Commission's implementing acts) are not summarised. Not read in a consolidated version. The corrigenda to Regulation (EU) 2024/1183 other than 32024R1183R(02) have no English text in Cellar and were not read."
         },
         {
           "id": "eidas2:art-5f",
           "number": "5f (of Regulation (EU) No 910/2014, as inserted)",
           "heading": "Cross-border reliance on European Digital Identity Wallets",
-          "summary": "Public-sector online services that require electronic identification must also accept the wallet (5f(1)). Private relying parties required by Union or national law, or by contract, to use strong user authentication for online identification — except microenterprises and small enterprises — must also accept it, no later than 36 months from the entry into force of the implementing acts under Arts 5a(23) and 5c(6) and only upon the user's voluntary request (5f(2)). Very large online platforms that require user authentication must accept and facilitate it at the user's voluntary request (5f(3)).",
+          "summary": "Where Member States require electronic identification and authentication to access an online service provided by a public sector body, they must also accept European Digital Identity Wallets (5f(1)). Private relying parties that provide services, with the exception of microenterprises and small enterprises, and that are required by Union or national law, or by contractual obligation, to use strong user authentication for online identification must also accept wallets, no later than 36 months from the entry into force of the implementing acts under Arts 5a(23) and 5c(6) and only upon the user's voluntary request (5f(2)); the size test is an exemption, so medium-sized enterprises are covered. Providers of very large online platforms that require user authentication for access to online services must also accept and facilitate the use of wallets, only upon the user's voluntary request and for the minimum data necessary (5f(3)).",
           "obligation_on": [
-            "actor:large-company",
-            "actor:public-authority",
+            "actor:member-state",
+            "actor:relying-party",
             "actor:vlop"
           ],
           "claims": [
@@ -2422,7 +2443,69 @@
             "src-eurlex-eidas2"
           ],
           "requires_verification": false,
-          "verification_note": "Added 14 Oct 2026 from the Official Journal text read that day on EUR-Lex (ELI reg/2024/1183/oj); heading and summary follow the Article's own paragraphs. obligation_on lists large companies because medium-sized enterprises are covered but micro and small ones are not, and the taxonomy has no 'medium enterprise' actor; read the summary, not the actor list, for the size test."
+          "verification_note": "Added 14 Oct 2026 from the Official Journal text read that day on EUR-Lex (ELI reg/2024/1183/oj); heading and summary follow the Article's own paragraphs. Corrected 14 Nov 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1183, Art. 1 point (5), Art. 5f(1) to (3)): the addressee of 5f(1) is the Member State, not the public authority, and 5f(2) binds private relying parties of every size above small, not 'large companies'; obligation_on now lists actor:member-state, actor:relying-party and actor:vlop (docs/V2C-21b-READING.md). 5f(2)'s size test is an exemption for microenterprises and small enterprises, so read the summary for it. Paragraphs 4 and 5 (the Commission) are not summarised."
+        },
+        {
+          "id": "eidas2:art-12b",
+          "number": "12b (of Regulation (EU) No 910/2014, as inserted)",
+          "heading": "Access to hardware and software features",
+          "summary": "Where providers of European Digital Identity Wallets and issuers of notified electronic identification means that act in a commercial or professional capacity, and use core platform services as defined in Art. 2, point (2), of Regulation (EU) 2022/1925 to provide wallet services and electronic identification means to end-users, are business users as defined in Art. 2, point (21), of that Regulation, gatekeepers must in particular allow them effective interoperability with, and, for the purposes of interoperability, access to, the same operating system, hardware or software features, free of charge and regardless of whether those features are part of the operating system, are available to or are used by the gatekeeper itself. The Article is without prejudice to Art. 5a(14).",
+          "obligation_on": [
+            "actor:gatekeeper"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-eidas2"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 14 Nov 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1183): Regulation (EU) 2024/1183, Art. 1 point (13), Art. 12b; the Article has one paragraph and the summary follows it. Not read in a consolidated version. The corrigenda to Regulation (EU) 2024/1183 other than 32024R1183R(02) have no English text in Cellar and were not read. The definitions in Regulation (EU) 2022/1925 are cited as the Article cites them, not read here."
+        },
+        {
+          "id": "eidas2:art-19a",
+          "number": "19a (of Regulation (EU) No 910/2014, as inserted)",
+          "heading": "Requirements for non-qualified trust service providers",
+          "summary": "A non-qualified trust service provider providing non-qualified trust services must have appropriate policies and take corresponding measures to manage legal, business, operational and other direct or indirect risks to the service, including at least measures on registration and onboarding procedures, procedural or administrative checks and the management and implementation of trust services, notwithstanding Art. 21 of Directive (EU) 2022/2555 (19a(1)(a)); and must notify the supervisory body, the identifiable affected individuals, the public if it is of public interest and, where applicable, other competent authorities, of any security breach or disruption that has a significant impact on the service or the personal data in it, without undue delay and in any case no later than 24 hours after becoming aware (19a(1)(b)). Qualified trust service providers are bound by Art. 24(2), not by this Article.",
+          "obligation_on": [
+            "actor:trust-service-provider"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-eidas2"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 14 Nov 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1183): Regulation (EU) 2024/1183, Art. 1 point (18), Art. 19a(1); paragraph 2 (the Commission's list of standards by 21 May 2025) is not summarised. The last sentence of the summary is the reading's statement that Art. 24(2), points (fa) and (fb) (Art. 1 point (21)), bind qualified providers; Art. 24 has no provision record here. Not read in a consolidated version. The corrigenda to Regulation (EU) 2024/1183 other than 32024R1183R(02) have no English text in Cellar and were not read. Art. 19 of Regulation (EU) No 910/2014 was deleted from 18 Oct 2024 by Directive (EU) 2022/2555, Art. 42, read on 13 Nov 2026 and not re-read."
+        },
+        {
+          "id": "eidas2:art-45",
+          "number": "45 (of Regulation (EU) No 910/2014, as replaced)",
+          "heading": "Requirements for qualified certificates for website authentication",
+          "summary": "Qualified certificates for website authentication must meet the requirements of Annex IV (45(1)). They must be recognised by providers of web-browsers, who must ensure that the identity data attested in the certificate and additional attested attributes are displayed in a user-friendly manner and must ensure support and interoperability with those certificates; microenterprises and small enterprises are excepted during the first five years of operating as providers of web-browsing services (45(1a)). Qualified certificates for website authentication are not subject to any mandatory requirements other than those of paragraph 1 (45(1b)).",
+          "obligation_on": [
+            "actor:web-browser-provider"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-eidas2",
+            "src-eurlex-eidas"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 14 Nov 2026 from the Official Journal texts retrieved that day from the Publications Office's Cellar: Art. 45 as replaced by Regulation (EU) 2024/1183, Art. 1 point (44), paragraphs 1, 1a and 1b (CELEX 32024R1183); the number is the original Article's (CELEX 32014R0910). Paragraph 2 (the Commission's list of standards by 21 May 2025) is not summarised. Art. 45a (precautionary measures by web-browser providers) has no provision record here. Not read in a consolidated version. The corrigenda to Regulation (EU) 2024/1183 other than 32024R1183R(02) have no English text in Cellar and were not read."
+        },
+        {
+          "id": "eidas2:art-45f",
+          "number": "45f (of Regulation (EU) No 910/2014, as inserted)",
+          "heading": "Requirements for electronic attestation of attributes issued by or on behalf of a public sector body responsible for an authentic source",
+          "summary": "Public sector bodies issuing electronic attestations of attributes under this Article must provide an interface with European Digital Identity Wallets provided in accordance with Art. 5a (45f(8)). The Member State where such bodies are established must ensure that they meet a level of reliability and trustworthiness equivalent to qualified trust service providers under Art. 24 (45f(2)), and must notify them to the Commission with a conformity assessment report (45f(3)). An attestation issued by or on behalf of such a body must meet Annex VII and the conditions of paragraph 1, including a qualified certificate supporting the body's qualified electronic signature or seal (45f(1)); once revoked it loses its validity and its status is not reverted (45f(4)). 'Public sector body' in this Regulation includes a private entity mandated by a public authority to provide public services, when acting under that mandate (Art. 3, point (7)).",
+          "obligation_on": [
+            "actor:public-authority",
+            "actor:member-state"
+          ],
+          "claims": [],
+          "sources": [
+            "src-eurlex-eidas2"
+          ],
+          "requires_verification": false,
+          "verification_note": "Added 14 Nov 2026 from the Official Journal text retrieved that day from the Publications Office's Cellar (CELEX 32024R1183): Regulation (EU) 2024/1183, Art. 1 point (46), Art. 45f(1) to (4) and (8), and Art. 1 point (3), Art. 3 points (7) and (46); paragraphs 5 to 7 (presumption of compliance and the Commission's implementing acts) are not summarised. obligation_on lists actor:public-authority for the public sector bodies of paragraph 8 and actor:member-state for paragraphs 2 and 3; read the summary for the definition: 'public sector body' is wider than a public authority, and the taxonomy has no actor for the mandated private entity. Not read in a consolidated version. The corrigenda to Regulation (EU) 2024/1183 other than 32024R1183R(02) have no English text in Cellar and were not read."
         }
       ],
       "claims": [],
