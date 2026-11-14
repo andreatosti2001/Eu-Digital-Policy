@@ -1,8 +1,20 @@
 # HANDOVER
 
-**Last updated:** 14 November 2026 (UTC), after the V2C-21 session (Track R: `eidas2`'s regulated actors), at its final checkpoint.
-**Branch:** `claude/sweet-newton-58i6p3`, from `main` `d67fb93` (#113 merged). `origin/main` re-fetched immediately before this write: `d67fb93`, unchanged; this branch is `main` plus its own commits.
-**Read first:** "Who it binds" on the eIDAS2 page now names the eight parties the Regulation's Articles bind, read in the Official Journal texts on 13 Nov 2026. The next session is V2C-21b (`docs/prompts/v2-v2c-21b-eidas2-provisions.md`), before 12 Jan 2027. The entries below are unchanged.
+**Last updated:** 14 November 2026 (UTC), after the V2C-21b session (Track R: the provisions of `eidas2`), at its final checkpoint.
+**Branch:** `claude/confident-johnson-yeffcv`, from `main` `5bb6d1a` (#114 merged) plus `claude/sweet-newton-58i6p3`'s two prompt commits. `origin/main` re-fetched immediately before this write: `5bb6d1a`, unchanged.
+**Read first:** every one of the eight parties in "Who it binds" on the eIDAS2 page is now anchored to a provision read in the Official Journal on 14 Nov 2026. **The next session is V2C-12** (`docs/prompts/v2-v2c-12-v1-relationships.md`), approved only with this work.
+
+## V2C-21b — `eidas2`'s provisions (14 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the V2C-21b session" (the author's words "Start V2C-21b"), the four "W.2" rows and the "W.4" row. **Record:** `docs/V2C-21b-READING.md` (read it, not this entry).
+
+- **W.1** (`b9ef3c2`): both OJ texts re-retrieved, byte-identical to 13 Nov; SPARQL set unchanged; **ten corrigenda have no English text and were not read**.
+- **W.2** (`fa21331`): five new provisions (`art-5b`, `12b`, `19a`, `45`, `45f`), `art-5a` extended, `art-5f` corrected, all anchored.
+- **W.3** (`352b863`): `data/instruments.json` (`eidas2` only) and the regenerated page. Rule, status, dates, `last_verified`, `dna.regulated_actor` and the A-8 warnings untouched.
+- **W.4:** the prompt of V2C-12.
+- **One finding against V2C-21:** 46a and 46b bind the Member State, not a public authority, so `actor:public-authority` rests on 45f(8) alone (annotated in the reading notes).
+- **Battery:** see the reading notes §4; all as at the start, browser 361/0/1. `agent/records/` absent after the batteries.
+- **Branch register:** `claude/confident-johnson-yeffcv`, disposition pending the author's answer on a pull request to `main`. `claude/sweet-newton-58i6p3` (merged as #114, two later prompt commits brought in here) and `claude/brave-goldberg-gm87jp` and the two scout digests are unchanged and not this session's.
 
 ## Branch register — 14 November 2026 (V2C-21)
 

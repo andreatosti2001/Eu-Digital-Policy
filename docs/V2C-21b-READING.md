@@ -90,6 +90,29 @@ Each new provision's `sources` is `src-eurlex-eidas2`; `src-eurlex-eidas` is add
 Regulation (none of the five is). Each carries a `verification_note` saying what was read and when. No `claims` entry is
 written: a claim is a separate record (the prompt names none).
 
-## 4. The decisions
+## 4. The decisions, and what was written
 
-*(filled in §8 of `docs/ROADMAP-v2.md` with the author's words; this file records what was written after them.)*
+The decisions are `docs/ROADMAP-v2.md` §8, the rows "V2C-21b, W.2: …" of 14 Nov 2026, in the author's words: **five provisions, one
+per gap; `art-5a` extended; `art-5f` corrected (`obligation_on` and summary); all in `dna.obligation_anchor`.** Written in `352b863`
+(`data/instruments.json`, the `eidas2` record only, and `instruments/eidas2/index.html` from `node tools/_footer.mjs`):
+
+| Provision | Written | Actor anchored |
+|---|---|---|
+| `eidas2:art-5b` | new | `actor:relying-party` |
+| `eidas2:art-12b` | new | `actor:gatekeeper` |
+| `eidas2:art-19a` | new | `actor:trust-service-provider` |
+| `eidas2:art-45` | new | `actor:web-browser-provider` |
+| `eidas2:art-45f` | new | `actor:public-authority`, `actor:member-state` |
+| `eidas2:art-5a` | summary, `obligation_on`, note extended | adds `actor:wallet-provider` |
+| `eidas2:art-5f` | summary, `obligation_on`, note corrected | `actor:member-state`, `actor:relying-party`, `actor:vlop` |
+
+**Every actor of `eidas2.dna.regulated_actor` is now bound on the page by a provision read against its Article.** Not written:
+`art-24`, `45a`, `45g`, `46a`, `46b`. **Limits that remain:** ten corrigenda have no English text and were not read (§1); the
+summaries are of the Official Journal text, not a consolidated version; `art-19a` anchors non-qualified providers only (qualified
+ones are bound by Art. 24(2), which has no record). **An annotation on V2C-21's decision** (its text is not rewritten): `actor:public-authority`
+was decided "rebased on Arts 45f(8), 46a, 46b"; §2 above finds that 46a and 46b bind the Member State, so the anchor is 45f only.
+
+**Measured after the write:** `validate` 0 errors, 5 warnings (the same five, full output diffed against the base: only the
+provision count changed, 113 to 118); `i18n-audit` 0/0; `design-qa` 0/0; `evidence-audit` 0 errors, 11 warnings (unchanged;
+provisions 118); `freshness` exit 0; `seo-audit` 0/0; `selftest` 189/189; the 25 suites and `.control-room/` 1495 tests, 1494
+pass, 0 fail, 1 skipped; browser 361 pass, 0 fail, 1 undecidable; `commit-evidence` 0 commits without evidence.
