@@ -96,3 +96,33 @@ not. The term column is the existing `data/taxonomy.json` term that says it, or 
   provider or trust service provider.
 - **No instrument record has a record-level `verification_note`** (measured across all of `data/instruments.json`): the
   prompt's V.3 premise that `eidas2`'s is "rewritten" does not hold, and where the reading is recorded is put to the author.
+
+## 6. What the author decided, and what was written
+
+The decisions are `docs/ROADMAP-v2.md` §8, the rows "V2C-21, V.2: …" of 13 and 14 Nov 2026, in the author's words. Written
+in `61dd1a7`:
+
+| Actor | Decision | Rests on |
+|---|---|---|
+| `actor:member-state` | stays | A1 |
+| `actor:wallet-provider` | **added, new term** | A2 |
+| `actor:relying-party` | **added, new term**; replaces `actor:large-company` | A3, A4 |
+| `actor:vlop` | stays | A5 |
+| `actor:gatekeeper` | **added**, existing term | A6 |
+| `actor:trust-service-provider` | stays | A7 |
+| `actor:web-browser-provider` | **added, new term** | A8 |
+| `actor:public-authority` | stays, **rebased** on Arts 45f(8), 46a, 46b, not 5f(1) | A9, A10 |
+| `actor:large-company` | **exits** | A4 |
+
+**Declared limits — bound, and not in "Who it binds":** the issuer of a notified electronic identification means and the
+party operating the authentication (A11; the author's decision of 14 Nov 2026); conformity assessment bodies, which no Article
+read binds directly (A12); the Commission and the Cooperation Group, outside the actor vocabulary (A13).
+
+**Where the reading lives** (the author's decision, 14 Nov 2026): the three new terms' notes in `data/taxonomy.json` cite their
+Articles; every actor's Articles and the limits are in this file. No field was added to the record. **`last_verified` stays
+2026-10-27**: the status, `status_as_of` and milestones were not re-read and are Session 25's.
+
+**Unchanged:** `ap-eidas2-01` and every rule; `eidas2`'s status, `status_as_of`, milestones and timeline; the provisions,
+including `eidas2:art-5f.obligation_on` (§5); the A-8 warnings; `i18n/` (taxonomy labels have no translation overlay and fall
+back to English, so no key is added). **Named for a later session:** provisions for Arts 5b, 12b, 45, 45f and 46a with
+`obligation_on`, so that "Who it binds" is anchored to Articles shown on the page; and `eidas2:art-5f.obligation_on` (§5).
