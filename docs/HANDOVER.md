@@ -8,7 +8,9 @@
 
 - `claude/sweet-newton-58i6p3`, from `main` `d67fb93`: `docs/` (`ROADMAP-v2.md` §8, `V2C-21-READING.md`, `prompts/v2-v2c-21b-eidas2-provisions.md`,
   this file) and `data/instruments.json` (`eidas2.dna.regulated_actor` only), `data/taxonomy.json` (three terms added), and what
-  `tools/_footer.mjs` regenerated (`instruments/eidas2/index.html`, `datasets.html`). Disposition: put to the author at the final checkpoint.
+  `tools/_footer.mjs` regenerated (`instruments/eidas2/index.html`, `datasets.html`). Disposition: on the author's answer ("Yes, open the PR
+  (Recommended)"), pull request #114 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/114), opened by the session and not merged by it;
+  merging is the author's, with a merge commit. The final checkpoint is approved (§8, 14 Nov 2026).
 - Reported at the start, all already in this register and left alone: `claude/brave-goldberg-gm87jp` (one commit, `7e93f27`); the scout
   digests of 2 and 9 Nov 2026. Nothing else is unmerged.
 
