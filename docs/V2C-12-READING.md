@@ -291,4 +291,5 @@ anywhere in this table is in `rel-data-act-cloud-ai-act`, and only if the author
    in the §4 table; the note states the proposal's contrary wording in full.
 4. *`rel-tfeu-114-acquis`*: **"Remove the edge (Recommended)"**.
 
-— decisions 5 onward (the `gdpr.legal_basis` finding; the flip; W12) pending —
+5. *`gdpr.legal_basis`* (§3.1): **"Carry it to the next session (Recommended)"** — not touched here.
+6. *The flip*: **"No flip; leave to V2C-13 (Recommended)"** — W12 is edited only to shrink `B3_STILL_V1` and pin the migrated edges.
