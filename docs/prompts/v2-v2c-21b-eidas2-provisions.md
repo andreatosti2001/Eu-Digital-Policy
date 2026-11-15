@@ -61,6 +61,25 @@ Misurato il 14 novembre 2026 sul branch di V2C-21. **Rimisura tutto.**
 | `eidas2.last_verified` | 2026-10-27, lasciato invariato dall'autore il 14 nov 2026 |
 | Validatori | `validate.mjs` 0 errori · 5 avvertimenti (A-8 di `ap-eidas2-01`); `selftest` 189/189; le 25 suite e `.control-room/` 1495 test, 0 falliti; browser 361 pass, 1 undecidable |
 
+## Dove si colloca questa sessione (prima del blocco D)
+
+**L'ordine ha una sola casa: `docs/SESSION-ARCHITECTURE.md` §1–§3. Non copiarlo qui; leggilo e rimisuralo.** Ciò che segue è
+solo ciò che riguarda questa sessione, **misurato il 14 novembre 2026** (aggiunto su richiesta dell'autore, §8, riga «V2C-21b:
+dove si colloca…»).
+
+- **Il blocco D è PV2-06…PV2-09** (Stadio 4), che si apre solo al **G4**: la v2 chiusa, `docs/V2-CLOSURE.md` rimisurato, la
+  Traccia R conclusa, la riga dell'autore in §8.
+- **V2C-21b è della Traccia R** (dati per il lettore, dopo V2C-21), che deve essere conclusa **prima del G4**. **Non è un
+  gate e non compare nell'architettura**: è un seguito di V2C-21 proposto nella sua nota (`docs/V2C-21-READING.md` §5–§6), e se
+  sia un prerequisito del G4 è una decisione dell'autore, non di questa sessione. Chiedigliela se la sessione deve dirlo.
+- **Ciò che V2C-21 e V2C-21b servono nello Stadio 3**: V2C-21 viene «prima di S29», perché il questionario offra gli attori di
+  `eidas2` (`docs/SESSION-ARCHITECTURE.md` §3, Stadio 3). Questa sessione non tocca la regola né il questionario.
+- **Ciò che resta prima del G4**, dalla stessa fonte e **da rimisurare, perché l'architettura è del 5 novembre**: la Traccia M
+  (S25 dal 12 gennaio 2027, S26, entrambe prima del 3 febbraio 2027, che chiudono E5-5); lo Stadio 3 (S28, S29, S30, S31 se
+  serve, poi il G3); e il resto della Traccia R (V2C-12; F-18, F-27, V2C-66; V2C-14, V2C-20; V2C-13 e poi V2C-03…05,
+  V2C-16…19, F-29; V2C-11). Prima di scrivere W.4, **verifica in §8 quali di queste righe sono già state eseguite**: l'elenco
+  qui non è una misura.
+
 ## Obiettivo della sessione
 
 **Che ogni attore di «Who it binds» di `eidas2` sia vincolato, nella pagina, da una disposizione letta nell'Articolo.** Tre punti:
@@ -82,7 +101,9 @@ Misurato il 14 novembre 2026 sul branch di V2C-21. **Rimisura tutto.**
   porta la riga `Evidence:`.
 - **W.4 · Il prompt della sessione successiva** — per tempo e dipendenza: la **sessione 25** (sul suo prompt, invariato) se la
   finestra del 12 gennaio 2027 è vicina; altrimenti ciò che l'autore sceglie nella Traccia R (V2C-13, la sessione di evidenza
-  F-18, V2C-12). **Il checkpoint finale approva insieme il lavoro e il prompt; senza il prompt non si approva.**
+  F-18, V2C-12), **scelto tra le righe che «Dove si colloca questa sessione» indica come ancora da eseguire e che §8 non
+  mostra già eseguite**; V2C-13 prima di S30, F-18 prima di ogni modifica di `ap-dma-01`. **Il checkpoint finale approva
+  insieme il lavoro e il prompt; senza il prompt non si approva.**
 
 **Regola d'arresto**: se la rilettura non si completa, **nulla si scrive in `data/`**: la sessione consegna le note in `docs/` e
 il prompt della successiva, con il punto nominato come aperto. Nessuna disposizione si scrive su una lettura parziale.
