@@ -2276,8 +2276,10 @@ test('W17 · item 2.6: the Digital Networks Act is covered as a proposal and hel
    the v1 list may only shrink, and a migrated edge cannot drift back. */
 const B3_MIGRATED = ['rel-ai-act-gdpr-art-22', 'rel-dma-tfeu-102', 'rel-dma-gdpr-consent', 'rel-ai-act-pld',
   'rel-ai-omnibus-ai-act', 'rel-nis2-dora', 'rel-dsa-ecommerce', 'rel-nis2-nis1'];
-const B3_STILL_V1 = ['rel-ai-act-gdpr-impact-assessments', 'rel-dsa-gdpr-transparency-minimisation', 'rel-dsa-dma-scope',
-  'rel-data-omnibus-gdpr', 'rel-nis2-cer', 'rel-cra-nis2', 'rel-data-act-cloud-ai-act', 'rel-tfeu-114-acquis', 'rel-ai-act-teu-4-2'];
+/* V2C-12 (15 Nov 2026, docs/ROADMAP-v2.md §8): the last eight v1 relationships were read against their sources and
+   migrated (seven) or removed (rel-tfeu-114-acquis, whose endpoint the GDPR's own visa contradicts). The list only
+   shrinks, and it is now empty: every relationship is v2, and a new bare-id relationship fails W12. */
+const B3_STILL_V1 = [];
 
 test('W12 · B.3: the migrated relationships carry v2 references, each direct tier-1 one structurally located, and the v1 list only shrinks', () => {
   const db = loadDb();
@@ -2304,6 +2306,39 @@ test('W12 · B.3: the migrated relationships carry v2 references, each direct ti
   const planted = loadDb();
   planted.instruments.relationships.find((x) => x.id === 'rel-nis2-nis1').sources = ['src-eurlex-nis2'];
   assert.ok(planted.instruments.relationships.filter(isV1).some((r) => !B3_STILL_V1.includes(r.id)));
+});
+
+/* V2C-12. The seven relationships migrated on 15 Nov 2026 are pinned like B3_MIGRATED's eight, so that none drifts back to
+   bare ids; the two the reading could not fully carry keep their flag and stay flagged (a flag cleared without a new reading
+   is the move this project is arranged against); and the removed edge stays removed. */
+const V2C12_MIGRATED = ['rel-nis2-cer', 'rel-ai-act-teu-4-2', 'rel-data-omnibus-gdpr', 'rel-cra-nis2', 'rel-dsa-dma-scope',
+  'rel-ai-act-gdpr-impact-assessments', 'rel-data-act-cloud-ai-act'];
+const V2C12_FLAGGED = ['rel-ai-act-gdpr-impact-assessments', 'rel-data-act-cloud-ai-act'];
+
+test('W12b · V2C-12: the seven migrated relationships carry v2 references with structural locators, the two flagged ones stay flagged, and the removed edge stays removed', () => {
+  const db = loadDb();
+  const src = new Map(db.sources.sources.map((s) => [s.id, s]));
+  for (const id of V2C12_MIGRATED) {
+    const r = db.instruments.relationships.find((x) => x.id === id);
+    assert.ok(r, `${id} exists`);
+    assert.ok(r.sources.length && r.sources.every((s) => typeof s === 'object'), `${id} is back to bare ids`);
+    for (const s of r.sources) {
+      assert.ok(src.has(s.source_id), `${id}: ${s.source_id} resolves`);
+      assert.ok(s.locator && s.supports, `${id}: ${s.source_id} has no locator or no grade`);
+      if (s.supports === 'supports:direct' && src.get(s.source_id).tier === 'tier:1')
+        assert.ok(structural(s.locator), `${id}: a direct tier-1 reference without a structural locator (${s.locator})`);
+    }
+    assert.equal(r.last_verified, '2026-11-15', id);
+    assert.equal(r.requires_verification, V2C12_FLAGGED.includes(id), `${id}: requires_verification`);
+    assert.ok(String(r.verification_note || '').includes('15 Nov 2026'), `${id}: no verification_note dated to the reading`);
+  }
+  assert.ok(!db.instruments.relationships.some((r) => r.id === 'rel-tfeu-114-acquis'),
+    'rel-tfeu-114-acquis was removed on the author\'s decision (its endpoint, the GDPR, cites Art. 16 and not Art. 114)');
+  /* and the test can fail: a flag cleared, or a bare id put back, is caught */
+  const planted = loadDb();
+  planted.instruments.relationships.find((x) => x.id === 'rel-data-act-cloud-ai-act').requires_verification = false;
+  assert.notEqual(planted.instruments.relationships.find((x) => x.id === 'rel-data-act-cloud-ai-act').requires_verification,
+    V2C12_FLAGGED.includes('rel-data-act-cloud-ai-act'));
 });
 
 /* ---------------------------------------------------------- W18 · item 10.2

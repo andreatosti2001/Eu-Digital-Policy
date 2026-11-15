@@ -453,7 +453,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session; the last line was added on 10 Nov 2026 and is explained below the block):
 
 ```
-validate.mjs     0 errors · 5 warnings · 45 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 5 warnings · 47 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -508,6 +508,8 @@ the corpus being more honest, not less.
 - 47 → 47 (14 Oct 2026): the October 2026 evidence update (`docs/AUDIT-2026-10-14.md`) added six claims and four timeline events, every one read that day against its source, and moved no record into or out of the unverified set. One record changed how it is listed there: `clm-ai-act-standards-not-ready` went from "unverified" to "no external direct source", because recital 40 of Regulation (EU) 2026/1744 now partially supports its premise.
 - 47 → 46 (21 Oct 2026): `clm-x-legal-basis-fragility` (Part III objection 3) was REMOVED, not verified. It was attributed to "practitioner analysis" whose only source was the brief itself; the Official Journal summaries of X's actions (T-114/26, T-120/26) raise no Art. 25(2) plea, and searches on 21 Oct 2026 found no analysis making the argument, so on the audit's instruction (item 8) the objection, its claim and its three references were deleted and the box now has three objections in all four languages. The other Phase 1 changes of that day (`docs/AUDIT-2026-10-21.md`) added records read that day against their sources and moved none into or out of the unverified set.
 - 46 → 45 (21 Oct 2026): `clm-eprivacy-miscounted-fines` no longer says the two French ePrivacy decisions "are frequently miscounted as GDPR fines", which nothing showed; it says what the CNIL's own releases state (Art. 82 of the French Data Protection Act; the one-stop-shop not applying) and that they should therefore not be counted as GDPR fines. With that scope the two CNIL references are direct and the brief no longer cites itself, so the claim leaves the unverified set by re-scoping to its evidence. Its `reference_gap` is still set, for a person to clear (Annex B p1, all four languages).
+
+- 45 → 47 (15 Nov 2026, V2C-12; `docs/V2C-12-READING.md`): **a rise, and the honest direction.** Two relationships were migrated to the v2 shape on a reading that found part of what they say carried by no text, and were therefore migrated WITH `requires_verification: true` rather than without it: `rel-ai-act-gdpr-impact-assessments` ("regulators themselves acknowledge" the duplication — no text read says so; AI Act Art. 27(4) says the assessment "shall complement" the DPIA) and `rel-data-act-cloud-ai-act` (stored as a "conflict"; the proposal's own memorandum says it is consistent with the Data Act and that the Data Act "is thus an enabler for the proposal"). Neither was in the validator's count before: both were bare-id v1 edges carrying no flag. The other six migrated relationships and the removed edge (`rel-tfeu-114-acquis`) move nothing in this count.
 
 The other numbers on this block are unchanged.
 
