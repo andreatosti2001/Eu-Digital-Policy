@@ -4147,9 +4147,25 @@
         "clm-three-impact-assessments"
       ],
       "sources": [
-        "src-brief-original"
+        {
+          "source_id": "src-eurlex-ai-act",
+          "supports": "supports:direct",
+          "locator": "Art. 27(1) and (4)"
+        },
+        {
+          "source_id": "src-eurlex-gdpr",
+          "supports": "supports:direct",
+          "locator": "Art. 35(1)"
+        },
+        {
+          "source_id": "src-eurlex-dsa",
+          "supports": "supports:partial",
+          "locator": "Art. 34(1), point (b)"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-11-15",
+      "requires_verification": true,
+      "verification_note": "Migrated to the v2 shape on 15 Nov 2026 (V2C-12), on the author's decision. Read that day in the texts retrieved from the Publications Office's Cellar by CELEX, not at the EUR-Lex URLs. (CELEX 32024R1689, 32016R0679, 32022R2065.) AI Act Art. 27(4): where an obligation of Art. 27 is already met through the data protection impact assessment under GDPR Art. 35, the fundamental rights impact assessment \"shall complement\" it; GDPR Art. 35(1) and AI Act Art. 27(1) set out the two duties (different addressees: controllers; certain deployers of high-risk AI systems). DSA Art. 34(1) is a third assessment duty, of providers of very large online platforms and search engines, whose scope includes the protection of personal data (point (b)); no text read links it to Art. 35 GDPR or Art. 27 AI Act. WHAT NO TEXT READ CARRIES: that \"regulators themselves acknowledge\" the three duties are duplicated (the one acknowledgement found, Art. 27(4), is the legislator's, concerns two of the three, and says \"complement\"), and that an organisation running all three duplicates work. Both stay what clm-three-impact-assessments says they are: not sourced. No corrigendum to any of these acts was looked up. docs/V2C-12-READING.md §2.6."
     },
     {
       "id": "rel-dsa-gdpr-transparency-minimisation",
@@ -4186,10 +4202,20 @@
       ],
       "claims": [],
       "sources": [
-        "src-eurlex-dsa",
-        "src-eurlex-dma"
+        {
+          "source_id": "src-eurlex-dsa",
+          "supports": "supports:partial",
+          "locator": "Art. 33(1) and (4); Art. 34(1)"
+        },
+        {
+          "source_id": "src-eurlex-dma",
+          "supports": "supports:partial",
+          "locator": "Art. 1(1); Art. 3(1), (2) and (4)"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-11-15",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 15 Nov 2026 (V2C-12), on the author's decision. Read that day in the texts retrieved from the Publications Office's Cellar by CELEX, not at the EUR-Lex URLs. (CELEX 32022R2065, 32022R1925.) DSA Art. 33(1) and (4): designation of very large online platforms and search engines by Commission decision, at 45 million average monthly active recipients; Art. 34(1): the providers assess systemic risks in the Union. DMA Art. 1(1): contestable and fair markets where gatekeepers are present; Art. 3(1), (2), (4): designation of undertakings as gatekeepers on three qualitative criteria with quantitative presumptions (including 45 million monthly active end users and 10 000 yearly active business users). Both references are partial because \"designation under one does not imply designation under the other\" is the site's inference from two independent criteria: neither text makes designation under the other a condition, and no provision in either states the non-implication or refers to the other's designation. DMA recital (12) applies the DMA without prejudice to \"a Regulation on a single market for digital services\" (the DSA, unnamed). No corrigendum to any of these acts was looked up. docs/V2C-12-READING.md §2.1."
     },
     {
       "id": "rel-dma-tfeu-102",
@@ -4306,9 +4332,15 @@
         "clm-omnibus-four-gdpr-reforms"
       ],
       "sources": [
-        "src-eurlex-data-omnibus-837"
+        {
+          "source_id": "src-eurlex-data-omnibus-837",
+          "supports": "supports:direct",
+          "locator": "Art. 3 (amendments to Regulation (EU) 2016/679): point 1(a) (Art. 4(1), added sentences); point 10 (new Art. 41a); point 15 (new Arts 88a and 88c)"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-11-15",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 15 Nov 2026 (V2C-12), on the author's decision. Read that day in the texts retrieved from the Publications Office's Cellar by CELEX, not at the EUR-Lex URLs. (COM(2025) 837 final, the PDF of the act, Cellar 52025PC0837.) Art. 3, point 1(a) adds to Art. 4(1) that information shall not be personal for a given entity where that entity cannot identify the natural person; point 10 inserts Art. 41a (implementing acts on means and criteria for deciding whether pseudonymised data is no longer personal data for certain entities); point 15 inserts Art. 88a (storing or accessing personal data in terminal equipment only with consent, with exceptions) and Art. 88c (legitimate interests for the development and operation of an AI system or model, under conditions). The same locator and reading as clm-omnibus-four-gdpr-reforms. That none of this is law is a statement of status, which this edit does not re-measure; a proposal's text is the Commission's, not what the co-legislators may adopt. No corrigendum to any of these acts was looked up. docs/V2C-12-READING.md §2.5."
     },
     {
       "id": "rel-nis2-cer",
@@ -4317,13 +4349,25 @@
       "kind": "rel-kind:complement",
       "symmetric": true,
       "summary": "Companion directives sharing a transposition deadline: NIS2 on cyber resilience, CER on the physical and organisational resilience of critical entities.",
-      "provisions": [],
+      "provisions": [
+        "nis2:art-2"
+      ],
       "claims": [],
       "sources": [
-        "src-eurlex-nis2",
-        "src-eurlex-cer"
+        {
+          "source_id": "src-eurlex-nis2",
+          "supports": "supports:direct",
+          "locator": "Art. 2(3); Art. 41(1)"
+        },
+        {
+          "source_id": "src-eurlex-cer",
+          "supports": "supports:direct",
+          "locator": "Art. 1(2); Art. 26(1)"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-11-15",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 15 Nov 2026 (V2C-12), on the author's decision. Read that day in the texts retrieved from the Publications Office's Cellar by CELEX, not at the EUR-Lex URLs. (CELEX 32022L2555, 32022L2557.) NIS 2 Art. 41(1) and CER Art. 26(1) carry the same two dates: measures adopted and published by 17 October 2024, applied from 18 October 2024. NIS 2 Art. 2(3) applies that Directive to entities identified as critical entities under Directive (EU) 2022/2557; CER Art. 1(2) says that Directive does not apply to matters covered by Directive (EU) 2022/2555, without prejudice to its Art. 8, and requires the two to be implemented in a coordinated manner. \"Physical and organisational\" is the site's gloss on CER's \"resilience\". No corrigendum to any of these acts was looked up. docs/V2C-12-READING.md §2.2."
     },
     {
       "id": "rel-nis2-dora",
@@ -4360,10 +4404,20 @@
       "provisions": [],
       "claims": [],
       "sources": [
-        "src-eurlex-cra",
-        "src-eurlex-nis2"
+        {
+          "source_id": "src-eurlex-cra",
+          "supports": "supports:direct",
+          "locator": "Art. 1, points (a) and (b); recitals (24) and (125)"
+        },
+        {
+          "source_id": "src-eurlex-nis2",
+          "supports": "supports:partial",
+          "locator": "Art. 1(1) and (2), point (b); Art. 21(2), point (d)"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-11-15",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 15 Nov 2026 (V2C-12), on the author's decision. Read that day in the texts retrieved from the Publications Office's Cellar by CELEX, not at the EUR-Lex URLs. (CELEX 32024R2847, 32022L2555.) CRA Art. 1(a)-(b): rules for making products with digital elements available on the market to ensure their cybersecurity, and essential cybersecurity requirements for their design, development and production. NIS 2 Art. 1(2)(b) and Art. 21: cybersecurity risk-management measures and reporting obligations for entities; Art. 21(2)(d): supply chain security. The CRA links itself to NIS 2: recital (24) (NIS 2 aims at the cybersecurity of services provided by essential and important entities; the CRA facilitates digital infrastructure providers' compliance with its supply chain requirements) and recital (125) (the CRA facilitates compliance of entities within NIS 2 that use products with digital elements). The NIS 2 reference is partial: \"the entities that operate them\" is the site's paraphrase; the CRA's own words are entities that use such products. No corrigendum to any of these acts was looked up. docs/V2C-12-READING.md §2.3."
     },
     {
       "id": "rel-data-act-cloud-ai-act",
@@ -4379,9 +4433,25 @@
         "clm-sovereignty-vs-interoperability"
       ],
       "sources": [
-        "src-brief-original"
+        {
+          "source_id": "src-council-cloud-ai-act-2026",
+          "supports": "supports:context",
+          "locator": "COM(2026) 502 final, explanatory memorandum, \"Consistency with existing policy provisions in the policy area\"; Art. 16 (Union cloud computing sovereignty framework; its criteria are in Annex II, which this transmission does not reproduce)"
+        },
+        {
+          "source_id": "src-eurlex-data-act",
+          "supports": "supports:partial",
+          "locator": "Art. 23; Art. 25(2)"
+        },
+        {
+          "source_id": "src-brief-original",
+          "supports": "supports:direct",
+          "locator": "Part X"
+        }
       ],
-      "last_verified": "2026-08-27"
+      "last_verified": "2026-11-15",
+      "requires_verification": true,
+      "verification_note": "Migrated to the v2 shape on 15 Nov 2026 (V2C-12), on the author's decision. Read that day in the texts retrieved from the Publications Office's Cellar by CELEX, not at the EUR-Lex URLs. (COM(2026) 502 final: the body and memorandum from the Council transmission ST 10104/26 and, for the Annexes, which that transmission does not hold, Cellar's manifestation of 52026PC0502; CELEX 32023R2854.) The kind and the summary are the author's critique (clm-sovereignty-vs-interoperability) and are not changed. What is carried: Annex II of the proposal makes recognition at Union assurance levels 1-4 depend on criteria including infrastructure and assets located in the Union (point 1.1(b), subject to the public sector body requiring otherwise) and customer data remaining exclusively within the Union (points 1.1(c), 2.1(c), 3.1(c), 4.1(c)), with Union-citizen personnel at levels 3-4 and no third-country control: \"localised\" is read. The Data Act mandates switching and portability (Art. 23; Art. 25(2): a 30-day transitional period, a notice period of at most two months, an exhaustive specification of exportable data); its interoperability rules are in Chapter VIII (Arts 33-36), which was not read beyond what is cited. WHAT THE ONE PRIMARY TEXT THAT SPEAKS TO THE RELATIONSHIP SAYS, IN FULL, AND IT IS THE OPPOSITE OF \"CONFLICT\": the memorandum states that \"The proposal is consistent with the rules on switching between data processing services introduced by the Data Act\", that the Data Act \"opens the path towards a possible reduction of dependencies on non-EU providers but does not build the road towards a more sovereign and trusted EU cloud computing sector\", that \"Its cloud switching and interoperability provisions, however, make it possible for users to embrace European cloud computing services more strongly\", and that \"The Data Act is thus an enabler for the proposal\"; its section 1.5.3 says the proposal \"builds on and complements\" provisions of the Data Act. Whether a tension in effect exists (for example between the localisation criteria and a customer's freedom to switch to a provider outside the Union) is an analytical question no text read asserts or refutes. A proposal's text is the Commission's, not what the co-legislators may adopt. No corrigendum to any of these acts was looked up. docs/V2C-12-READING.md §2.7."
     },
     {
       "id": "rel-dsa-ecommerce",
@@ -4424,24 +4494,6 @@
       "verification_note": "Migrated to the v2 shape on 27 Oct 2026 (v2 Session 5, B.3): NIS2 Art. 44 re-read on 27 Oct 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX (32022L2555)."
     },
     {
-      "id": "rel-tfeu-114-acquis",
-      "from": "tfeu",
-      "to": "gdpr",
-      "kind": "rel-kind:legal-basis",
-      "symmetric": false,
-      "summary": "Almost the entire digital rulebook rests on the internal-market harmonisation competence rather than on a speech, safety or morality competence. That choice shapes each instrument's form.",
-      "provisions": [
-        "tfeu:art-114"
-      ],
-      "claims": [
-        "clm-art-114-shapes-everything"
-      ],
-      "sources": [
-        "src-brief-original"
-      ],
-      "last_verified": "2026-08-27"
-    },
-    {
       "id": "rel-ai-act-teu-4-2",
       "from": "teu",
       "to": "ai-act",
@@ -4457,9 +4509,25 @@
         "clm-enforcement-asymmetry"
       ],
       "sources": [
-        "src-brief-original"
+        {
+          "source_id": "src-eurlex-teu-art-4",
+          "supports": "supports:direct",
+          "locator": "Art. 4(2), third sentence"
+        },
+        {
+          "source_id": "src-eurlex-ai-act",
+          "supports": "supports:direct",
+          "locator": "Art. 2(3), second subparagraph; recital (24)"
+        },
+        {
+          "source_id": "src-brief-original",
+          "supports": "supports:direct",
+          "locator": "Part XI"
+        }
       ],
-      "last_verified": "2026-11-04"
+      "last_verified": "2026-11-15",
+      "requires_verification": false,
+      "verification_note": "Migrated to the v2 shape on 15 Nov 2026 (V2C-12), on the author's decision. Read that day in the texts retrieved from the Publications Office's Cellar by CELEX, not at the EUR-Lex URLs. (CELEX 12016M004, 32024R1689.) TEU Art. 4(2), third sentence: national security remains the sole responsibility of each Member State. AI Act Art. 2(3), second subparagraph: the Regulation does not apply to AI systems placed on the market, put into service or used, with or without modification, exclusively for military, defence or national security purposes; recital (24) justifies the national security exclusion by Art. 4(2) TEU. The sentence that begins \"The brief argues\" is the brief's argument (clm-enforcement-asymmetry, a critique) and rests on the brief alone: no text read states it. No corrigendum to any of these acts was looked up. docs/V2C-12-READING.md §2.4."
     },
     {
       "id": "rel-dsa-avmsd-defers",
