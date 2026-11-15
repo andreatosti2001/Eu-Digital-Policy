@@ -281,4 +281,14 @@ anywhere in this table is in `rel-data-act-cloud-ai-act`, and only if the author
 
 *(Recorded here and in `docs/ROADMAP-v2.md` §8, each in the author's words, committed at once.)*
 
-— none yet —
+**15 Nov 2026, W.2 — four decisions, each in `docs/ROADMAP-v2.md` §8 with the author's words (committed at once):**
+
+1. *The five relationships the text supports* (§2.1–2.5): **"Migrate all five as tabulated (Recommended)"** — `rel-nis2-cer`,
+   `rel-ai-act-teu-4-2`, `rel-data-omnibus-gdpr`, `rel-cra-nis2`, `rel-dsa-dma-scope`, as in the §4 table.
+2. *`rel-ai-act-gdpr-impact-assessments`*: **"Migrate and flag (Recommended)"** — `requires_verification: true`, the note naming
+   the part no text carries.
+3. *`rel-data-act-cloud-ai-act`*: **"Downgrade: keep, flag, cite both (Recommended)"** — kind and summary stay; sources and flag as
+   in the §4 table; the note states the proposal's contrary wording in full.
+4. *`rel-tfeu-114-acquis`*: **"Remove the edge (Recommended)"**.
+
+— decisions 5 onward (the `gdpr.legal_basis` finding; the flip; W12) pending —
