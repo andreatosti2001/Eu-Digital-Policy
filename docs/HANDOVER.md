@@ -14,7 +14,7 @@
 - **W.4:** the prompt of V2C-12.
 - **One finding against V2C-21:** 46a and 46b bind the Member State, not a public authority, so `actor:public-authority` rests on 45f(8) alone (annotated in the reading notes).
 - **Battery:** see the reading notes §4; all as at the start, browser 361/0/1. `agent/records/` absent after the batteries.
-- **Branch register:** `claude/confident-johnson-yeffcv`, disposition pending the author's answer on a pull request to `main`. `claude/sweet-newton-58i6p3` (merged as #114, two later prompt commits brought in here) and `claude/brave-goldberg-gm87jp` and the two scout digests are unchanged and not this session's.
+- **Branch register:** `claude/confident-johnson-yeffcv`, disposition: on the author's answer ("Yes, open the PR (Recommended)"), a pull request to `main`, opened by the session and merged by the author with a merge commit. The final checkpoint is approved (§8, 14 Nov 2026). `claude/sweet-newton-58i6p3` (merged as #114, two later prompt commits brought in here) and `claude/brave-goldberg-gm87jp` and the two scout digests are unchanged and not this session's.
 
 ## Branch register — 14 November 2026 (V2C-21)
 
