@@ -30,9 +30,13 @@
  *   M-13  `enables`: a direct reference whose source is among the TO node's
  *         sources; `defers-to`: among the FROM node's.
  *   M-14  `symmetric: true` only on an analytical kind.
- *   M-15  the instrument arrays (amends, repeals, amended_by,
- *         proposes_to_amend) agree with the relationships: BACKLOG
- *         `edge-second-home`, until the arrays are derived (design §1.4).
+ *   M-15  no instrument carries `amends`, `repeals`, `amended_by` or
+ *         `proposes_to_amend`: an edge has one home, the relationships. An
+ *         ERROR since V2C-03…05 (16 Nov 2026, docs/ROADMAP-v2.md §8,
+ *         decisions 4, 5 and 9): the arrays were derived from the
+ *         relationships and deleted, so the key's presence is the finding,
+ *         empty or not. Until then it was BACKLOG `edge-second-home`, which
+ *         counted their disagreements (5 on 16 Nov 2026, all data-omnibus).
  *
  * M-11 and M-13 are ERROR for every edge but the one in
  * TEXTUAL_PARTIAL_BACKLOG, which is BACKLOG `edge-textual-partial` (the
@@ -75,18 +79,9 @@ export function edgeBasis(kind, ix) {
   return EDGE_BASES.includes(b) ? b : null;
 }
 
-/** The (actor, target, kind) pairs the instrument arrays assert. `proposes_to_amend`
- *  is an amendment and cannot say "repeal": that is part of why the arrays are a second home. */
-export function arrayPairs(instruments) {
-  const out = [];
-  for (const i of instruments) {
-    for (const t of arr(i.amends)) out.push({ from: i.id, to: t, kind: 'amends', where: `${i.id}.amends` });
-    for (const t of arr(i.repeals)) out.push({ from: i.id, to: t, kind: 'repeals', where: `${i.id}.repeals` });
-    for (const t of arr(i.amended_by)) out.push({ from: t, to: i.id, kind: 'amends', where: `${i.id}.amended_by` });
-    for (const t of arr(i.proposes_to_amend)) out.push({ from: i.id, to: t, kind: 'amends', where: `${i.id}.proposes_to_amend` });
-  }
-  return out;
-}
+/** The four instrument fields that were a second home of the amends and repeals edges
+ *  (docs/V2-DATA-DESIGN.md §1.4). Deleted on 16 Nov 2026; M-15 keeps them out. */
+export const ARRAY_FIELDS = Object.freeze(['amends', 'repeals', 'amended_by', 'proposes_to_amend']);
 
 /**
  * @param db    the datasets, as js/data.js loadAll() returns them
@@ -96,7 +91,7 @@ export function arrayPairs(instruments) {
 export function mapAudit(db, asOf) {
   const errors = [];
   const warnings = [];
-  const backlog = { 'edge-analytical-no-claim': [], 'edge-textual-partial': [], 'edge-second-home': [] };
+  const backlog = { 'edge-analytical-no-claim': [], 'edge-textual-partial': [] };
   const ix = index(db);
   const rels = arr(db.instruments?.relationships);
   const instruments = arr(db.instruments?.instruments);
@@ -163,19 +158,11 @@ export function mapAudit(db, asOf) {
     if (r.symmetric === true && basis && basis !== 'analytical') errors.push(`M-14 ${w}: symmetric: true on ${r.kind}, a ${basis} kind — only an analytical edge reads the same from both ends`);
   }
 
-  /* M-15 · the arrays are a second home of the amends and repeals edges */
-  const edgePairs = rels.filter((r) => r.kind === 'rel-kind:amends' || r.kind === 'rel-kind:repeals')
-    .map((r) => ({ id: r.id, from: r.from, to: r.to, kind: r.kind.split(':')[1] }));
-  const arrays = arrayPairs(instruments);
-  for (const a of arrays) {
-    const same = edgePairs.find((e) => e.from === a.from && e.to === a.to);
-    if (!same) backlog['edge-second-home'].push(`${a.where} → ${a.to}: no relationship between ${a.from} and ${a.to}`);
-    else if (same.kind !== a.kind) backlog['edge-second-home'].push(`${a.where} → ${a.to}: the array says ${a.kind}, ${same.id} says ${same.kind}`);
-  }
-  for (const e of edgePairs) {
-    if (!arrays.some((a) => a.from === e.from && a.to === e.to && a.kind === e.kind))
-      backlog['edge-second-home'].push(`${e.id}: ${e.kind} ${e.to}, and no instrument array says ${e.kind}`);
-  }
+  /* M-15 · the arrays are derived from the relationships, and deleted: their presence is the finding */
+  for (const i of instruments)
+    for (const f of ARRAY_FIELDS)
+      if (Object.prototype.hasOwnProperty.call(i, f))
+        errors.push(`M-15 instruments/${i.id}: carries \`${f}\` — an edge has one home, the relationships; the arrays were deleted on 16 Nov 2026 (docs/ROADMAP-v2.md §8, V2C-03…05)`);
 
   return { errors, warnings, backlog, edges: rels.length, by_kind: byKind, by_basis: byBasis, unclassified };
 }

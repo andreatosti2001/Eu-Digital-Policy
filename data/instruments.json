@@ -25,9 +25,6 @@
         "tl-gdpr-2016-05-24-entry-into-force",
         "tl-gdpr-2018-05-25-application"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -337,11 +334,6 @@
         "tl-dsa-2024-02-17-application",
         "tl-dsa-2025-10-29-delegated-act"
       ],
-      "amended_by": [],
-      "amends": [
-        "ecommerce-directive"
-      ],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -641,9 +633,6 @@
         "tl-dma-2027-01-01-compliance-deadline",
         "tl-dma-2027-07-01-compliance-deadline"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -842,11 +831,6 @@
         "tl-ai-act-2028-08-02-application",
         "tl-ai-act-2030-08-02-application"
       ],
-      "amended_by": [
-        "ai-omnibus"
-      ],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -1139,9 +1123,6 @@
         "tl-data-act-2027-01-12-application",
         "tl-data-act-2027-09-12-application"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -1317,11 +1298,6 @@
         "tl-nis2-2024-10-17-transposition",
         "tl-nis2-2024-11-28-enforcement",
         "tl-nis2-2026-07-08-judicial"
-      ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [
-        "nis1"
       ],
       "transposition": {
         "deadline": "tl-nis2-2024-10-17-transposition",
@@ -1499,9 +1475,6 @@
         "tl-cer-2023-01-16-entry-into-force",
         "tl-cer-2024-10-17-transposition"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": {
         "deadline": "tl-cer-2024-10-17-transposition",
         "state": {
@@ -1575,9 +1548,6 @@
         "tl-dora-2023-01-16-entry-into-force",
         "tl-dora-2025-01-17-application"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -1768,11 +1738,6 @@
         "tl-cra-2026-09-11-reporting-deadline",
         "tl-cra-2027-12-11-application"
       ],
-      "amended_by": [
-        "ehds"
-      ],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -1934,11 +1899,6 @@
         "tl-ai-omnibus-2025-11-19-proposal",
         "tl-ai-omnibus-2026-07-27-entry-into-force"
       ],
-      "amended_by": [],
-      "amends": [
-        "ai-act"
-      ],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -1998,16 +1958,6 @@
       "milestones": [
         "tl-data-omnibus-2025-11-19-proposal"
       ],
-      "amended_by": [],
-      "amends": [],
-      "proposes_to_amend": [
-        "gdpr",
-        "eprivacy",
-        "data-act",
-        "dga",
-        "nis2"
-      ],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -2080,9 +2030,6 @@
         "tl-pld-2026-12-09-application",
         "tl-pld-2026-12-09-transposition"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": {
         "deadline": "tl-pld-2026-12-09-transposition",
         "state": {},
@@ -2190,9 +2137,6 @@
         "tl-gdpr-procedural-2026-01-01-entry-into-force",
         "tl-gdpr-procedural-2027-04-02-application"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -2224,9 +2168,6 @@
         "tl-dga-2022-06-23-entry-into-force",
         "tl-dga-2023-09-24-application"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -2283,9 +2224,6 @@
       "status_as_of": "2026-09-27",
       "status_note": "In force since its publication on 31 July 2002 (Art. 20; OJ L 201, 31.7.2002); transposition was due before 31 October 2003 (Art. 17(1)). Amended by Directive 2009/136/EC, as the Court of Justice's judgments cite it (e.g. C-623/17, operative part); the amending directive itself was not read here. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force.",
       "milestones": [],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -2325,11 +2263,6 @@
         "tl-eidas2-2026-12-24-compliance-deadline",
         "tl-eidas2-2027-12-24-compliance-deadline"
       ],
-      "amended_by": [],
-      "amends": [
-        "eidas"
-      ],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -2572,9 +2505,6 @@
       "milestones": [
         "tl-csa-2025-02-04-entry-into-force"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -2698,11 +2628,6 @@
         "tl-ehds-2029-03-26-application",
         "tl-ehds-2031-03-26-application"
       ],
-      "amended_by": [],
-      "amends": [
-        "cra"
-      ],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -2848,9 +2773,6 @@
         "tl-iea-2024-07-12-application",
         "tl-iea-2025-01-12-application"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -2999,12 +2921,6 @@
       "milestones": [
         "tl-digital-networks-act-2026-01-21-proposal"
       ],
-      "amended_by": [],
-      "amends": [],
-      "proposes_to_amend": [
-        "eprivacy"
-      ],
-      "repeals": [],
       "transposition": null,
       "dna": {
         "regulated_actor": [
@@ -3132,11 +3048,6 @@
         }
       ],
       "milestones": [],
-      "amended_by": [
-        "eidas2"
-      ],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3166,9 +3077,6 @@
       "milestones": [
         "tl-cloud-ai-act-2026-06-03-proposal"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3201,11 +3109,6 @@
       "status_as_of": "2026-08-27",
       "status_note": "Its liability core was replaced by the DSA.",
       "milestones": [],
-      "amended_by": [
-        "dsa"
-      ],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3231,9 +3134,6 @@
       "status_as_of": "2026-08-27",
       "status_note": "Repealed by NIS2.",
       "milestones": [],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3257,9 +3157,6 @@
       "status_as_of": "2026-09-27",
       "status_note": "In force since 21 September 2023, the third day after publication (Art. 41; OJ L 229, 18.9.2023), with no separate application date. Legal basis Art. 173(3) and Art. 114 TFEU. Read on 27 Sep 2026 in the Official Journal text retrieved from the Publications Office's Cellar; the Publications Office's metadata records the instrument as in force.",
       "milestones": [],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3286,9 +3183,6 @@
       "status_as_of": "2026-10-21",
       "status_note": "Abandoned, leaving a gap in the fault-based liability route. Must never be presented as law. Re-evaluated 21 Oct 2026 (audit item 9): the proposal COM(2022) 496 (CELEX 52022PC0496) carries an end of validity of 6 October 2025 in the Publications Office's metadata (Cellar SPARQL, read 21 Oct 2026), the date of the withdrawal published in the Official Journal (C/2025/5423, src-oj-aild-withdrawal-2025). Status unchanged: withdrawn.",
       "milestones": [],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3314,9 +3208,6 @@
       "legislative_status": "status:in-force",
       "status_as_of": "2026-08-27",
       "milestones": [],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3341,9 +3232,6 @@
       "legislative_status": "status:in-force",
       "status_as_of": "2026-08-27",
       "milestones": [],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [
@@ -3406,9 +3294,6 @@
       "legislative_status": "status:in-force",
       "status_as_of": "2026-08-27",
       "milestones": [],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [
@@ -3461,9 +3346,6 @@
       "milestones": [
         "tl-vida-2025-04-14-entry-into-force"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3524,9 +3406,6 @@
       "milestones": [
         "tl-avmsd-2010-05-05-entry-into-force"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3594,9 +3473,6 @@
       "milestones": [
         "tl-copyright-dsm-2019-06-06-entry-into-force"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3658,9 +3534,6 @@
         "tl-gpsr-2023-06-12-entry-into-force",
         "tl-gpsr-2024-12-13-application"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3716,9 +3589,6 @@
       "milestones": [
         "tl-eaa-2019-06-27-entry-into-force"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3775,9 +3645,6 @@
         "tl-p2b-2019-07-31-entry-into-force",
         "tl-p2b-2020-07-12-application"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3849,9 +3716,6 @@
         "tl-ttpa-2024-04-09-entry-into-force",
         "tl-ttpa-2025-10-10-application"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3910,9 +3774,6 @@
         "tl-mica-2023-06-29-entry-into-force",
         "tl-mica-2024-12-30-application"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -3982,9 +3843,6 @@
       "milestones": [
         "tl-psd3-2023-06-28-proposal"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -4055,9 +3913,6 @@
       "milestones": [
         "tl-psr-2023-06-28-proposal"
       ],
-      "amended_by": [],
-      "amends": [],
-      "repeals": [],
       "transposition": null,
       "dna": null,
       "provisions": [],
@@ -4662,7 +4517,7 @@
       "to": "p2b",
       "kind": "rel-kind:repeals",
       "symmetric": false,
-      "summary": "PROPOSED: the Digital Omnibus would repeal the P2B Regulation from its own date of application, keeping four provisions until 31 December 2032.",
+      "summary": "PROPOSED: the Digital Omnibus would repeal the P2B Regulation from its own date of application; six items of it — Art. 2 points (1), (2) and (5), and Arts 4, 11 and 15 — would continue to apply until 31 December 2032.",
       "provisions": [],
       "claims": [],
       "sources": [
@@ -4672,9 +4527,9 @@
           "locator": "Art. 10(1)–(2)"
         }
       ],
-      "last_verified": "2026-10-27",
+      "last_verified": "2026-11-16",
       "requires_verification": false,
-      "verification_note": "Read on 25 Oct 2026, and re-read on 27 Oct 2026, in the proposal's English PDF retrieved from the Publications Office's Cellar (the CELEX record's DOC_1). Derived modality: proposed."
+      "verification_note": "Read on 25 Oct 2026, and re-read on 27 Oct 2026, in the proposal's English PDF retrieved from the Publications Office's Cellar (the CELEX record's DOC_1). Derived modality: proposed. Re-read on 16 Nov 2026 (V2C-03…05): Art. 10(2) lists six items in four Articles, and the summary, which said \"four provisions\", was reworded to them on the author's decision (docs/ROADMAP-v2.md §8, 16 Nov 2026)."
     },
     {
       "id": "rel-data-omnibus-dga-repeals",
@@ -4694,7 +4549,7 @@
       ],
       "last_verified": "2026-10-27",
       "requires_verification": false,
-      "verification_note": "Derived modality: proposed. This edge contradicts data-omnibus.proposes_to_amend, which lists dga as amended: see docs/V2-DATA-DESIGN.md §7, finding F-2."
+      "verification_note": "Derived modality: proposed. This edge contradicts data-omnibus.proposes_to_amend, which lists dga as amended: see docs/V2-DATA-DESIGN.md §7, finding F-2. Update 16 Nov 2026 (V2C-03…05): the contradicting entry in data-omnibus.proposes_to_amend was removed, and the arrays were deleted altogether; Art. 10(3)(a) repeals Regulation 2022/868 and no article amends it."
     },
     {
       "id": "rel-data-omnibus-data-act-amends",
@@ -4714,7 +4569,107 @@
       ],
       "last_verified": "2026-10-27",
       "requires_verification": false,
-      "verification_note": "Already asserted by data-omnibus.proposes_to_amend; this is the relationship that array lacked (finding F-1). With rel-data-omnibus-dga-repeals it is what makes the DGA's transition toward the Data Act derivable."
+      "verification_note": "Already asserted by data-omnibus.proposes_to_amend; this is the relationship that array lacked (finding F-1). With rel-data-omnibus-dga-repeals it is what makes the DGA's transition toward the Data Act derivable. Update 16 Nov 2026 (V2C-03…05): the instrument arrays were deleted, so the relationship is now the only home of this fact."
+    },
+    {
+      "id": "rel-data-omnibus-eprivacy-amends",
+      "from": "data-omnibus",
+      "to": "eprivacy",
+      "kind": "rel-kind:amends",
+      "symmetric": false,
+      "summary": "PROPOSED: the Digital Omnibus would amend the ePrivacy Directive: delete its Art. 4, and add to Art. 5(3) a subparagraph disapplying that paragraph where the subscriber or user is a natural person and the information stored or accessed constitutes or leads to the processing of personal data.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-data-omnibus-837",
+          "supports": "supports:direct",
+          "locator": "Art. 5 (amendments to Directive 2002/58/EC): point 1 (Art. 4 deleted); point 2 (Art. 5(3), added subparagraph)"
+        }
+      ],
+      "last_verified": "2026-11-16",
+      "requires_verification": false,
+      "verification_note": "Read on 16 Nov 2026 (V2C-03…05, on the author's decision of that day) in the proposal's English PDF retrieved from the Publications Office's Cellar by CELEX 52025PC0837 (DOC_1, SHA-256 0d954aa0795001f0cc178be3d17421630ddd83ad1fb17972d9b709483fcfc8c2; docs/V2C-03-05-READING.md §1–2). The memorandum says Art. 4 is \"repealed\"; the operative text says it \"is deleted\". An amendment of the Directive, not a repeal of it. Derived modality: proposed."
+    },
+    {
+      "id": "rel-data-omnibus-nis2-amends",
+      "from": "data-omnibus",
+      "to": "nis2",
+      "kind": "rel-kind:amends",
+      "symmetric": false,
+      "summary": "PROPOSED: the Digital Omnibus would amend NIS 2: add Art. 23a (a single-entry point for incident reporting, developed and maintained by ENISA), amend Art. 23 and replace Art. 30(1), so that notifications go via that point.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-data-omnibus-837",
+          "supports": "supports:direct",
+          "locator": "Art. 6 (amendments to Directive (EU) 2022/2555): point 1 (new Art. 23a); point 2 (Art. 23); point 3 (Art. 30(1))"
+        }
+      ],
+      "last_verified": "2026-11-16",
+      "requires_verification": false,
+      "verification_note": "Read on 16 Nov 2026 (V2C-03…05, on the author's decision of that day) in the proposal's English PDF retrieved from the Publications Office's Cellar by CELEX 52025PC0837 (DOC_1, SHA-256 0d954aa0795001f0cc178be3d17421630ddd83ad1fb17972d9b709483fcfc8c2; docs/V2C-03-05-READING.md §1–2).  Derived modality: proposed."
+    },
+    {
+      "id": "rel-data-omnibus-cer-amends",
+      "from": "data-omnibus",
+      "to": "cer",
+      "kind": "rel-kind:amends",
+      "symmetric": false,
+      "summary": "PROPOSED: the Digital Omnibus would amend the CER Directive: Art. 15(1) is changed so that critical entities notify incidents via the single-entry point established under Art. 23a of NIS 2, and a sub-paragraph on implementing acts is added to Art. 15(2).",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-data-omnibus-837",
+          "supports": "supports:direct",
+          "locator": "Art. 9 (amendments to Directive (EU) 2022/2557): Art. 15(1), first sentence; Art. 15(2), added sub-paragraph"
+        }
+      ],
+      "last_verified": "2026-11-16",
+      "requires_verification": false,
+      "verification_note": "Read on 16 Nov 2026 (V2C-03…05, on the author's decision of that day) in the proposal's English PDF retrieved from the Publications Office's Cellar by CELEX 52025PC0837 (DOC_1, SHA-256 0d954aa0795001f0cc178be3d17421630ddd83ad1fb17972d9b709483fcfc8c2; docs/V2C-03-05-READING.md §1–2).  Derived modality: proposed."
+    },
+    {
+      "id": "rel-data-omnibus-eidas-amends",
+      "from": "data-omnibus",
+      "to": "eidas",
+      "kind": "rel-kind:amends",
+      "symmetric": false,
+      "summary": "PROPOSED: the Digital Omnibus would amend the eIDAS Regulation (910/2014): new Arts 19a(1a), 24(2a) and 45a(3a) provide that certain notifications are made through the single-entry point under Art. 23a of NIS 2.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-data-omnibus-837",
+          "supports": "supports:direct",
+          "locator": "Art. 7 (amendment of Regulation (EU) 910/2014): points 1 to 3 (Arts 19a(1a), 24(2a), 45a(3a))"
+        }
+      ],
+      "last_verified": "2026-11-16",
+      "requires_verification": false,
+      "verification_note": "Read on 16 Nov 2026 (V2C-03…05, on the author's decision of that day) in the proposal's English PDF retrieved from the Publications Office's Cellar by CELEX 52025PC0837 (DOC_1, SHA-256 0d954aa0795001f0cc178be3d17421630ddd83ad1fb17972d9b709483fcfc8c2; docs/V2C-03-05-READING.md §1–2). The proposal's title does not name Regulation 910/2014; its Art. 7 amends it. Derived modality: proposed."
+    },
+    {
+      "id": "rel-data-omnibus-dora-amends",
+      "from": "data-omnibus",
+      "to": "dora",
+      "kind": "rel-kind:amends",
+      "symmetric": false,
+      "summary": "PROPOSED: the Digital Omnibus would amend DORA: the first subparagraphs of Art. 19(1) and Art. 19(2) are replaced so that major ICT-related incident reports and voluntary cyber-threat notifications go via the single-entry point under Art. 23a of NIS 2.",
+      "provisions": [],
+      "claims": [],
+      "sources": [
+        {
+          "source_id": "src-eurlex-data-omnibus-837",
+          "supports": "supports:direct",
+          "locator": "Art. 8 (amendments to Regulation (EU) 2022/2554): point 1 (Art. 19(1)); point 2 (Art. 19(2))"
+        }
+      ],
+      "last_verified": "2026-11-16",
+      "requires_verification": false,
+      "verification_note": "Read on 16 Nov 2026 (V2C-03…05, on the author's decision of that day) in the proposal's English PDF retrieved from the Publications Office's Cellar by CELEX 52025PC0837 (DOC_1, SHA-256 0d954aa0795001f0cc178be3d17421630ddd83ad1fb17972d9b709483fcfc8c2; docs/V2C-03-05-READING.md §1–2). The proposal's title does not name Regulation 2022/2554; its Art. 8 amends it. Derived modality: proposed."
     },
     {
       "id": "rel-eidas2-gdpr-defers",
