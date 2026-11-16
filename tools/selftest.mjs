@@ -45,6 +45,8 @@ import { createHash } from 'node:crypto';
 import { readBaseline } from '../agent/implement/baseline.mjs';
 import { audit, passages, datesIn, DERIVED_FIELDS, rankingProblems } from './evidence-audit.mjs';
 import { registerAudit, structural, SCOPE_DECISION_BACKLOG, STATUS_BASIS_BACKLOG } from './register-audit.mjs';
+import { HOLDER } from '../js/map-model.js';
+import { mapAudit, edgeBasis, EDGE_BASES, ANALYTICAL_NO_CLAIM_BACKLOG, TEXTUAL_PARTIAL_BACKLOG } from './map-audit.mjs';
 import { coverage, notCovered } from '../js/routes.js';
 import { cspProblems, securityMeta, inlineScripts } from './csp.mjs';
 import { openBacklog } from '../js/evidence-model.js';
@@ -2838,7 +2840,9 @@ test('X3 · 12.2: evidence-audit.mjs reports TRIGGERS in text, --json and --mark
 test('X4 · 12.2: the record says what the run now reads, in the words the author approved, and no longer that it reads nothing of the rules', () => {
   assert.ok(!LIMITS.some((l) => /reports nothing about data\/applicability\.json/.test(l)));
   assert.ok(LIMITS.includes("It reads the rules behind applies.html (data/applicability.json) for their structure and evidence: references and locators, the provision behind each condition, exemptions, thresholds and dates. It opens no source and runs no questionnaire, so a rule it reports as publishable meets the claims' standard of evidence; that is not a finding that the rule states the law correctly (docs/ROADMAP-v2.md §4, Phase 3; D-2)."));
-  assert.deepEqual(CHECKED.map((c) => c.section), ['claims', 'remediation', 'prose', 'sources', 'freshness', 'enforcement', 'regulatory', 'register', 'triggers']);
+  assert.deepEqual(CHECKED.map((c) => c.section), ['claims', 'remediation', 'prose', 'sources', 'freshness', 'enforcement', 'regulatory', 'register', 'triggers', 'map']);
+  /* V2C-13 (16 Nov 2026): the list gains `map`, the section tools/map-audit.mjs adds. The assertion pins the list of sections, not what any of them finds, and a new
+     section is the world changing; no section is removed and no check is loosened. */
 });
 
 /* ---------------------------------------------------------------------------
@@ -4137,4 +4141,216 @@ test('RR6 · the CLI: the sheet exits 0 and prints the skeleton; a refused answe
     assert.equal(run('check', join(dir, 'missing.json')).status, 2);
   } finally { rmSync(dir, { recursive: true, force: true }); }
   assert.equal(run().status, 2); assert.equal(run('apply').status, 2, 'there is no verb that writes');
+});
+
+/* ---------------------------------------------------------------------------
+   V2C-13 (16 Nov 2026, docs/ROADMAP-v2.md §8, decisions 1-4): the map's edges
+   are checked — tools/map-audit.mjs (M-08…M-15) and tools/validate.mjs (M-16).
+   Every rule is shown to fire on a planted edge, each in its own copy of the
+   data: a check that cannot be seen to fail checks nothing. The two backlog
+   lists are frozen and only shrink, and these tests hold them to "still true".
+   --------------------------------------------------------------------------- */
+
+const MAP_AS_OF = '2026-11-16';
+const relOf = (db, id) => db.instruments.relationships.find((r) => r.id === id);
+const mapOf = (db, asOf = MAP_AS_OF) => mapAudit(db, asOf);
+const SRC_NOTE = 'an edge of this kind, planted by tools/selftest.mjs and never written to data/';
+/* an edge planted into a copy of the data: valid unless the case spoils it */
+const plant = (db, over = {}) => {
+  const r = {
+    id: 'rel-planted-edge', from: 'gdpr', to: 'ai-act', kind: 'rel-kind:amends', symmetric: false,
+    summary: `A planted ${SRC_NOTE}.`, provisions: [], claims: [],
+    sources: [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 22(1)' }],
+    last_verified: '2026-11-15', ...over,
+  };
+  db.instruments.relationships.push(r);
+  return r;
+};
+const only = (res, code) => res.errors.filter((e) => e.startsWith(code));
+
+test('MP1 · this tree: 39 edges, all classified, 0 errors and 0 warnings; the backlog is the frozen one and the lists are still true', () => {
+  const db = loadDb();
+  const r = mapOf(db);
+  assert.deepEqual(r.errors, []);
+  assert.deepEqual(r.warnings, []);
+  assert.equal(r.edges, db.instruments.relationships.length);
+  assert.deepEqual(r.unclassified, [], 'every kind in use carries a basis');
+  assert.equal(Object.values(r.by_basis).reduce((a, b) => a + b, 0), r.edges);
+  /* decision 3: `edge-v1-sources` is not a backlog any more — a bare id is an ERROR */
+  assert.equal(r.backlog['edge-v1-sources'], undefined);
+  assert.deepEqual(r.backlog['edge-analytical-no-claim'], [...ANALYTICAL_NO_CLAIM_BACKLOG]);
+  assert.deepEqual(r.backlog['edge-textual-partial'], [...TEXTUAL_PARTIAL_BACKLOG]);
+  /* the lists only shrink: each id exists and is still what it is excused for. If one is
+     fixed, the list loses the id in the same commit (a one-line change) and this holds. */
+  for (const id of ANALYTICAL_NO_CLAIM_BACKLOG) {
+    const e = relOf(db, id);
+    assert.ok(e, `${id} exists`);
+    assert.equal(edgeBasis(e.kind, buildIndex(db)), 'analytical', `${id} is analytical`);
+    assert.deepEqual(e.claims, [], `${id} now has a claim — remove it from ANALYTICAL_NO_CLAIM_BACKLOG`);
+  }
+  for (const id of TEXTUAL_PARTIAL_BACKLOG) {
+    const e = relOf(db, id);
+    assert.ok(e, `${id} exists`);
+    assert.ok(!e.sources.some((x) => x.supports === 'supports:direct'), `${id} now has a direct reference — remove it from TEXTUAL_PARTIAL_BACKLOG`);
+  }
+  /* M-15 is reported, never failing, and it is the arrays' second home: 5 entries on 16 Nov 2026, never more without a finding */
+  assert.ok(r.backlog['edge-second-home'].length <= 5, `the second home grew: ${r.backlog['edge-second-home'].join(' | ')}`);
+  assert.ok(r.backlog['edge-second-home'].every((x) => /data-omnibus/.test(x)));
+});
+
+test('MP2 · decision 1: every relationship_kind term carries the basis the author classified, and nothing else about the terms moved', () => {
+  const db = loadDb();
+  const want = { textual: ['amends', 'repeals', 'implements', 'legal-basis', 'carve-out', 'lex-specialis', 'enables', 'defers-to'],
+    analytical: ['overlap', 'complement', 'sequence', 'conflict'] };
+  assert.deepEqual([...EDGE_BASES], ['textual', 'analytical']);
+  assert.equal(db.taxonomy.relationship_kind.length, 12);
+  for (const t of db.taxonomy.relationship_kind) {
+    const bare = t.id.split(':')[1];
+    assert.equal(t.basis, want.textual.includes(bare) ? 'textual' : want.analytical.includes(bare) ? 'analytical' : undefined, `${t.id}: basis`);
+    assert.deepEqual(Object.keys(t).filter((k) => !['id', 'label', 'basis', 'note'].includes(k)), [], `${t.id}: no key but id, label, basis, note`);
+  }
+  /* the label of every term is what it was: the property was added and nothing renamed */
+  assert.deepEqual(db.taxonomy.relationship_kind.map((t) => t.id).sort(), Object.keys(HOLDER).sort());
+});
+
+test('MP3 · M-08 and M-09: a bare id, a bad supports, a tier-1 direct reference with no structural locator, no sources, a short summary and a missing date each fire; a date after as-of only warns', () => {
+  const fire = (over, code, re) => {
+    const db = loadDb(); plant(db, over);
+    const r = only(mapOf(db), code);
+    assert.ok(r.some((e) => re.test(e) && /relationships\/rel-planted-edge/.test(e)), `${code} ${re}: ${JSON.stringify(r)}`);
+  };
+  fire({ sources: ['src-eurlex-gdpr'] }, 'M-08', /bare source id "src-eurlex-gdpr"/);
+  fire({ sources: [{ source_id: 'src-eurlex-gdpr', supports: 'supports:strong', locator: 'Art. 22(1)' }] }, 'M-08', /supports "supports:strong"/);
+  fire({ sources: [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'the Regulation' }] }, 'M-08', /no structural locator/);
+  fire({ sources: [] }, 'M-08', /no sources/);
+  fire({ summary: 'too short' }, 'M-09', /no summary of at least 20 characters/);
+  fire({ last_verified: null }, 'M-09', /last_verified missing/);
+  /* a tier-2 or partial reference needs no structural locator: only a direct reference to a tier-1 text does */
+  const ok = loadDb(); plant(ok, { sources: [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 22(1)' }] });
+  assert.deepEqual(mapOf(ok).errors, []);
+  /* the date after as-of is a property of the date asked: a WARNING, never an ERROR */
+  const late = loadDb(); plant(late, { last_verified: '2026-12-01' });
+  const lr = mapOf(late);
+  assert.deepEqual(lr.errors, []);
+  assert.ok(lr.warnings.some((w) => /^VERIFIED_AFTER_AS_OF relationships\/rel-planted-edge: last_verified 2026-12-01 is after the audit date 2026-11-16$/.test(w)));
+  /* and the real edges, as of a date before they were read, warn and never fail */
+  assert.deepEqual(mapOf(loadDb(), '2026-10-01').errors, []);
+  assert.ok(mapOf(loadDb(), '2026-10-01').warnings.length > 0);
+});
+
+test('MP4 · M-10: an analytical edge with no claim is an ERROR unless it is one of the three named; a claim clears it', () => {
+  const db = loadDb(); plant(db, { id: 'rel-planted-overlap', kind: 'rel-kind:overlap', symmetric: true });
+  const r = mapOf(db);
+  assert.ok(only(r, 'M-10').some((e) => /relationships\/rel-planted-overlap: an analytical edge \(rel-kind:overlap\) with no claim/.test(e)));
+  assert.ok(!r.backlog['edge-analytical-no-claim'].includes('rel-planted-overlap'), 'a new edge is never admitted to the backlog');
+  const withClaim = loadDb(); plant(withClaim, { id: 'rel-planted-overlap', kind: 'rel-kind:overlap', symmetric: true, claims: ['clm-art-22-predates-ai-act'] });
+  assert.deepEqual(only(mapOf(withClaim), 'M-10'), []);
+  /* the three named stay BACKLOG, and an edge that is not analytical is not asked for a claim */
+  assert.deepEqual(only(mapOf(loadDb()), 'M-10'), []);
+  assert.deepEqual(only((() => { const d = loadDb(); plant(d); return mapOf(d); })(), 'M-10'), []);
+});
+
+test('MP5 · M-11 and M-13: a textual edge with no direct reference, or an enables / defers-to whose direct reference is in the wrong act, is an ERROR; the one named edge is BACKLOG', () => {
+  /* M-11 on an amends edge — not only enables and defers-to */
+  const a = loadDb(); plant(a, { sources: [{ source_id: 'src-eurlex-gdpr', supports: 'supports:partial', locator: 'Art. 22(1)' }] });
+  assert.ok(only(mapOf(a), 'M-11').some((e) => /relationships\/rel-planted-edge: a textual edge \(rel-kind:amends\)/.test(e)));
+  /* M-11 and M-13 on a new defers-to edge resting only on a partial reference */
+  const d = loadDb(); plant(d, { id: 'rel-planted-defers', kind: 'rel-kind:defers-to', from: 'dsa', to: 'gdpr', sources: [{ source_id: 'src-eurlex-dsa', supports: 'supports:partial', locator: 'Art. 2(4)' }] });
+  const dr = mapOf(d);
+  assert.ok(only(dr, 'M-11').some((e) => /rel-planted-defers/.test(e)));
+  assert.ok(only(dr, 'M-13').some((e) => /rel-planted-defers: defers-to with no direct reference among the sources of dsa/.test(e)));
+  assert.ok(!dr.backlog['edge-textual-partial'].includes('rel-planted-defers'));
+  /* M-13 alone: a direct, structural reference — but to a source that is not the stating act's */
+  const e = loadDb(); const r = relOf(e, 'rel-nis2-csa-enables');
+  r.sources = [{ source_id: 'src-eurlex-gdpr', supports: 'supports:direct', locator: 'Art. 22(1)' }];
+  const er = mapOf(e);
+  assert.deepEqual(only(er, 'M-11'), [], 'M-11 is met');
+  assert.ok(only(er, 'M-13').some((x) => /rel-nis2-csa-enables: enables with no direct reference among the sources of csa/.test(x)));
+  /* the stating act is the dependent one for enables and the deferring one for defers-to */
+  const f = loadDb(); const g = relOf(f, 'rel-dsa-avmsd-defers');
+  g.sources = [{ source_id: 'src-eurlex-dma', supports: 'supports:direct', locator: 'Art. 1(1)' }];
+  assert.ok(only(mapOf(f), 'M-13').some((x) => /rel-dsa-avmsd-defers: defers-to with no direct reference among the sources of dsa/.test(x)));
+  /* the named edge is BACKLOG and not an error; take away its listing and it is both */
+  const dbN = loadDb(); const named = mapOf(dbN);
+  assert.deepEqual(only(named, 'M-11').concat(only(named, 'M-13')), []);
+  assert.deepEqual(named.backlog['edge-textual-partial'], ['rel-dsa-copyright-dsm-defers']);
+  const renamed = loadDb(); relOf(renamed, 'rel-dsa-copyright-dsm-defers').id = 'rel-dsa-copyright-dsm-defers-2';
+  const rr = mapOf(renamed);
+  assert.ok(only(rr, 'M-11').some((x) => /rel-dsa-copyright-dsm-defers-2/.test(x)) && only(rr, 'M-13').some((x) => /rel-dsa-copyright-dsm-defers-2/.test(x)));
+});
+
+test('MP6 · M-12, M-14, M-15: a withdrawn stating act is a DEAD_EDGE warning; symmetry on a textual kind is an ERROR; an array that disagrees is counted and never fails', () => {
+  /* M-12: which end states the edge depends on the kind — `to` for enables, `from` for amends */
+  const w1 = loadDb(); relOf(w1, 'rel-nis2-csa-enables'); instOf(w1, 'csa').legislative_status = 'status:withdrawn';
+  assert.ok(mapOf(w1).warnings.some((x) => /^DEAD_EDGE relationships\/rel-nis2-csa-enables: csa is withdrawn/.test(x)));
+  assert.deepEqual(mapOf(w1).errors, [], 'a dead edge is a warning');
+  const w2 = loadDb(); instOf(w2, 'nis2').legislative_status = 'status:withdrawn';
+  assert.ok(!mapOf(w2).warnings.some((x) => /rel-nis2-csa-enables/.test(x)), 'the enabling act is not the stating one');
+  const w3 = loadDb(); instOf(w3, 'ai-omnibus').legislative_status = 'status:withdrawn';
+  assert.ok(mapOf(w3).warnings.some((x) => /^DEAD_EDGE relationships\/rel-ai-omnibus-ai-act: ai-omnibus is withdrawn/.test(x)));
+  /* M-14 */
+  const s = loadDb(); plant(s, { symmetric: true });
+  assert.ok(only(mapOf(s), 'M-14').some((x) => /relationships\/rel-planted-edge: symmetric: true on rel-kind:amends, a textual kind/.test(x)));
+  const s2 = loadDb(); plant(s2, { id: 'rel-planted-overlap', kind: 'rel-kind:overlap', symmetric: true, claims: ['clm-art-22-predates-ai-act'] });
+  assert.deepEqual(only(mapOf(s2), 'M-14'), [], 'an analytical edge may be symmetric');
+  /* M-15: a new disagreement is counted, in both directions, and the run does not fail */
+  const m = loadDb(); const before = mapOf(m).backlog['edge-second-home'].length;
+  instOf(m, 'gdpr').amends = ['ai-act'];
+  plant(m, { id: 'rel-planted-repeal', kind: 'rel-kind:repeals', from: 'dsa', to: 'dma' });
+  const mr = mapOf(m);
+  assert.equal(mr.backlog['edge-second-home'].length, before + 2);
+  assert.ok(mr.backlog['edge-second-home'].some((x) => /^gdpr\.amends → ai-act: no relationship between gdpr and ai-act$/.test(x)));
+  assert.ok(mr.backlog['edge-second-home'].some((x) => /^rel-planted-repeal: repeals dma, and no instrument array says repeals$/.test(x)));
+  assert.deepEqual(only(mr, 'M-15'), []);
+});
+
+test('MP7 · a kind with no basis cannot be classified: M-10, M-11 and M-14 skip it and the report counts it — and M-16 names the term, in validate.mjs, on a planted copy', () => {
+  const db = loadDb();
+  delete db.taxonomy.relationship_kind.find((t) => t.id === 'rel-kind:overlap').basis;
+  const r = mapOf(db);
+  assert.equal(r.by_basis.unclassified, 3);
+  assert.equal(r.unclassified.length, 3);
+  assert.deepEqual(r.errors, [], 'an unclassifiable edge is not a silent pass and not a second error: M-16 is where it is named');
+  const dir = treeCopy();
+  try {
+    assert.equal(runValidator('validate.mjs', [], dir).exit, 0, 'the unplanted copy is clean');
+    const p = join(dir, 'data', 'taxonomy.json'); const t = JSON.parse(readFileSync(p, 'utf8'));
+    delete t.relationship_kind.find((x) => x.id === 'rel-kind:amends').basis;
+    writeFileSync(p, JSON.stringify(t));
+    const red = runValidator('validate.mjs', [], dir);
+    assert.equal(red.exit, 1);
+    assert.match(red.out, /✗ M-16 taxonomy\/relationship_kind rel-kind:amends: basis undefined is none of textual, analytical/);
+    t.relationship_kind.find((x) => x.id === 'rel-kind:amends').basis = 'both';
+    writeFileSync(p, JSON.stringify(t));
+    assert.match(runValidator('validate.mjs', [], dir).out, /✗ M-16 taxonomy\/relationship_kind rel-kind:amends: basis "both" is none of textual, analytical/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('MP8 · evidence-audit.mjs prints MAP in text, --json and --markdown, exits 0 on this tree, and FAILS on a planted bare id', () => {
+  const out = runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF]);
+  assert.equal(out.exit, 0, 'the backlog never fails the run');
+  assert.match(out.out, /^MAP {13}39 edges · analytical 10 · textual 29$/m);
+  assert.match(out.out, /^ {2}BACKLOG edge-analytical-no-claim 3: rel-dsa-dma-scope; rel-nis2-cer; rel-cra-nis2$/m);
+  assert.match(out.out, /^ {2}BACKLOG edge-textual-partial 1: rel-dsa-copyright-dsm-defers$/m);
+  assert.match(out.out, /^ {2}BACKLOG edge-second-home \d+:/m);
+  assert.doesNotMatch(out.out, /BACKLOG edge-v1-sources/);
+  const json = JSON.parse(runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF, '--json']).out);
+  assert.equal(json.map.edges, 39);
+  assert.deepEqual(json.map.by_basis, { analytical: 10, textual: 29 });
+  assert.deepEqual(json.map.unclassified, []);
+  const md = runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF, '--markdown']).out;
+  assert.match(md, /\| Map edges \| 39 · analytical 10 · textual 29 \|/);
+  assert.match(md, /\| Backlog — edge-textual-partial \| 1 \|/);
+  const dir = treeCopy();
+  try {
+    editJSON(dir, 'instruments.json', (d) => { d.relationships.find((r) => r.id === 'rel-nis2-nis1').sources = ['src-eurlex-nis2']; });
+    const r = runValidator('evidence-audit.mjs', ['--root', dir, '--as-of', MAP_AS_OF]);
+    assert.equal(r.exit, 1);
+    assert.match(r.out, /M-08 relationships\/rel-nis2-nis1: bare source id "src-eurlex-nis2"/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('MP9 · map-audit.mjs reads, reports and writes nothing: no write, no network, no clock', () => {
+  const src = readFileSync(join(ROOT, 'tools/map-audit.mjs'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const verb of ['writeFileSync', 'appendFileSync', 'rmSync', 'unlinkSync', 'renameSync', 'mkdirSync', 'execFileSync', 'spawnSync', 'fetch(', 'Date.now', 'new Date(', 'process.env']) assert.equal(src.includes(verb), false, `map-audit.mjs must not use ${verb}`);
 });
