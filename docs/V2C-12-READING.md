@@ -326,7 +326,7 @@ the honest direction.
 | `i18n-audit`, `design-qa`, `seo-audit`, `evidence-audit --as-of 2026-11-15` | exit 0 | identical output, exit 0 |
 | `freshness --as-of 2026-11-15` | 98 records, 7 distinct dates (…2026-11-04) | 97 records, 8 distinct dates (…2026-11-15), exit 0 |
 | `node --test tools/selftest.mjs` | 189/189 | **190/190** (W12b added) |
-| the 24 agent suites and `.control-room/` | — | all pass; `agent/health` had one failure, the test that pins §12's unverified count to 45 (see §6), repaired by recording 47 and passing 57/57; `.control-room/` 76 pass, 1 skipped. Together with `tools/selftest.mjs`: **1496 tests, 1495 pass, 1 skipped** |
+| the 24 agent suites and `.control-room/` | — | **corrected 16 Nov 2026: the first run reported all passing but `agent/implement` R6 also pins §12's count (45) and was not re-run after §12 moved; CI caught it; `db20231` moves the pin and all suites were re-run, all exit 0.** `agent/health` had one failure, the test that pins §12's unverified count to 45 (see §6), repaired by recording 47 and passing 57/57; `.control-room/` 76 pass, 1 skipped. Together with `tools/selftest.mjs`: **1496 tests, 1495 pass, 1 skipped** |
 | `node agent/schemas/cli.mjs check` | — | exit 0 |
 | browser suite (`--require-browser`) | 361 pass, 1 undecidable | **361 pass, 0 fail, 1 undecidable** (`a11y:bound`, deliberate) |
 | `node tools/commit-evidence.mjs 92117b4 HEAD` | — | 0 commits without evidence |
