@@ -64,6 +64,7 @@ export const CHECKED = [
   { section: 'regulatory', what: 'scalar status against the milestones, and provision-level application dates' },
   { section: 'register', what: 'the exclusion register and the watchlist: scope decisions, coverage against the pages, the external referral, status bases, watched events (M-03…M-07, R-01)' },
   { section: 'triggers', what: 'the applicability rules behind applies.html: reference objects, a direct scope reference with a structural locator, the provision behind each condition, exemptions and thresholds with their basis, what an uncertain outcome turns on, dates, no rule that applies a text that binds nobody, and whether the law a rule cites changed after it was read (T-01…T-12)' },
+  { section: 'map', what: 'the dependency map\'s edges, the relationships of data/instruments.json: reference objects and their locators, a summary and a date, a claim behind an analytical edge, a direct reference behind a textual one and in the right act\'s sources, dead edges, symmetry, and the instrument arrays against the edges (M-08…M-15; M-16 is validate.mjs)' },
 ];
 
 /** What a recorded run does not establish. Stated on every record, so

@@ -1,8 +1,20 @@
 # HANDOVER
 
-**Last updated:** 15 November 2026 (UTC), after the V2C-12 session (Track R: the eight v1 relationships), at its final checkpoint.
-**Branch:** `claude/upbeat-thompson-yewfls`, from `main` `92117b4` (#115 merged). `origin/main` re-fetched immediately before this write: `92117b4`, unchanged since the start of the session.
-**Read first:** every relationship in `data/instruments.json` is now in the v2 shape (39; the v1 list is empty and W12 holds it so). Two of the eight were found to say something no text carries: one is flagged, one removed. **The next session is V2C-13** (`docs/prompts/v2-v2c-13-map-checks.md`), approved only with this work.
+**Last updated:** 16 November 2026 (UTC), after the V2C-13 session (Track R: the map checks M-08…M-16), at its final checkpoint.
+**Branch:** `claude/amazing-pascal-95wq2o`, from `main` `00e1534` (#116 merged). `origin/main` re-fetched immediately before this write: `00e1534`, unchanged since the start of the session.
+**Read first:** the map's edges are now checked — `tools/map-audit.mjs` (M-08…M-15), M-16 in `tools/validate.mjs`, a MAP section in the evidence audit — and every `relationship_kind` term carries `basis`. 0 errors on the 39 edges; three named backlogs that only shrink. **The next session is V2C-03…05** (`docs/prompts/v2-v2c-03-05-arrays.md`), approved only with this work.
+
+## V2C-13 — the map checks (16 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the V2C-13 session" (the author's words "Start V2C-13"), decisions 1–7 and the "W.4" row. **Record:** `docs/V2C-13-MAP-CHECKS.md` (the measurement, the proposal, §5 what was written).
+
+- **W.1/W.2** (`420854a`, `dd20ec4`, `7222f15`): M-08…M-16 measured on the 39 relationships before anything was asked: 0 red except M-10 (3), M-11 and M-13 (the same one edge, `rel-dsa-copyright-dsm-defers`, `supports:partial` by construction), M-15 (5 entries, 4 pairs, all `data-omnibus`), M-16 (12 of 12 terms lack `basis`). Seven decisions, each in §8 with the author's words: `basis` as classified; M-11/M-13 ERROR with that edge a named BACKLOG; `edge-v1-sources` flipped to ERROR and `edge-analytical-no-claim` kept as a frozen BACKLOG of three; the rest as designed; M-11 ERROR for all textual kinds (stricter than the design); `basis` registered as prose in the field register; the three open points of V2C-12 carried, none treated.
+- **W.3** (`914e089`, `1ac2d6e`, and the register commit): `data/taxonomy.json` (`basis` only), `tools/map-audit.mjs`, `tools/validate.mjs` (M-16), `tools/evidence-audit.mjs` + `tools/evidence-audit-record.mjs` (MAP section), `tools/selftest.mjs` (MP1…MP9, each rule fired by a planted edge; four mutations of the module caught), `agent/detector/fields.mjs` (one entry). No relationship, status, date, `last_verified` or rule changed.
+- **W.4:** the prompt of V2C-03…05.
+- **Found, outside the writable files, and asked:** the 25-suite run failed `agent/detector/selftest.mjs` on the unclassified `taxonomy_term.basis`. Run `validate` alone and it would have passed. **A data change needs the 25 suites, not the validators.**
+- **Found, not fixed:** the arrays' second home (M-15, 5 entries); the three analytical edges with no claim; `gdpr.legal_basis` against the GDPR's visa; the Annex II of COM(2026) 502 with no source record; the V2C-12 partial readings (all in the next prompt).
+- **Battery:** `validate`, `i18n-audit`, `design-qa`, `seo-audit`, `freshness` byte-identical to the base; `evidence-audit` the five MAP lines more; `selftest` 199/199; 25 suites and `.control-room/` 1306 tests (before the register fix: 1304 pass, 1 fail, 1 skipped; **final tree: 1305 pass, 0 fail, 1 skipped**, every step of the battery exit 0, the schemas check exit 0); browser 361 pass, 0 fail, 1 undecidable; `commit-evidence` names the one published-file commit (`914e089`). A suite left an empty `agent/records/` behind, as the lesson says one can: removed before closing.
+- **Branch register:** `claude/amazing-pascal-95wq2o`, disposition: on the author's answer ("Yes"), pull request #117 to `main`, opened by the session and to be merged by the author with a merge commit. **Reported at the start of the session, in no register and no document:** `origin/scout/digest-digest-2026-11-16T15-54-39Z` (a Source Scout digest of 16 Nov 2026, not this session's, no disposition decided); and `origin/claude/confident-johnson-yeffcv` carries one commit, `1224046` (the §8 row of 15 Nov 2026 on the order of V2C-12 and Sessions 25 and 26), that `main` does not contain — registered here, not merged, the author decides. `claude/brave-goldberg-gm87jp` and the two earlier scout digests are as recorded.
 
 ## V2C-12 — the eight v1 relationships (15 Nov 2026)
 

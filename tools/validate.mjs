@@ -27,6 +27,7 @@ import { noticeAudit } from './notice-audit.mjs';
 import { basisIndex, checkFineBasis } from './fine-basis.mjs';
 import { auditReadings } from './register-reading.mjs';
 import { contractAudit } from './metric-contract.mjs';
+import { EDGE_BASES } from './map-audit.mjs';
 
 const DATA = 'data';
 const errors = [];
@@ -271,6 +272,11 @@ function checkRefs(ids) {
       else checkRef(w, s);
     }
   }
+  /* M-16 (V2C-13, 16 Nov 2026; docs/V2-DATA-DESIGN.md §1.5): every relationship_kind term says what kind of
+     evidence an edge of that kind needs — the textual/analytical split tools/map-audit.mjs M-10, M-11 and M-14
+     read. One home for the fact, in the vocabulary that owns the kinds. */
+  for (const t of arr(db.taxonomy?.relationship_kind))
+    if (!EDGE_BASES.includes(t.basis)) err(`M-16 taxonomy/relationship_kind ${t.id}: basis ${JSON.stringify(t.basis)} is none of ${EDGE_BASES.join(', ')}`);
   for (const x of arr(db.institutions?.institutions)) {
     const w = `institutions/${x.id}`;
     checkOne(w, 'taxonomy', x.type);

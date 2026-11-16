@@ -28,6 +28,11 @@
  *                    for the 33 rules that predated them was flipped to
  *                    ERROR on 29 Oct 2026, 33 of 33 publishable (v2
  *                    Session 17, docs/ROADMAP-v2.md §8, 17.0 question 7)
+ *  10. MAP           the dependency map's edges — the relationships of
+ *                    data/instruments.json — held to the claims' standard
+ *                    (V2C-13, 16 Nov 2026): M-08 … M-15 (tools/map-audit.mjs).
+ *                    M-16, the `basis` of every relationship_kind term, is
+ *                    tools/validate.mjs's
  *
  * Every number is DERIVED from the data on each run through the same
  * modules the website uses (js/evidence-model.js, js/format.js,
@@ -72,6 +77,7 @@ import { readArgs, refusalText, today, EXIT_UNREADABLE } from './as-of.mjs';
 import { RECORD_VERSION, CHECKED, LIMITS, storeDir, storePath } from './evidence-audit-record.mjs';
 import { registerAudit } from './register-audit.mjs';
 import { triggerAudit } from './trigger-audit.mjs';
+import { mapAudit } from './map-audit.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const IS_MAIN = Boolean(process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url));
@@ -430,6 +436,11 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
   for (const e of trig.errors) err(e);
   for (const w of trig.warnings) warn(w);
 
+  /* ---- 9. the map: the relationships, as edges ---- */
+  const mapA = mapAudit(db, asOf);
+  for (const e of mapA.errors) err(e);
+  for (const w of mapA.warnings) warn(w);
+
   const lifecycle = instruments.filter((i) => {
     const t = new Set(arr(i.milestones).map((m) => ix.event.get(m)).filter(Boolean).map((e) => e.event_type));
     return t.has('event:adoption') && t.has('event:publication') && t.has('event:entry-into-force');
@@ -505,6 +516,13 @@ export function audit({ root = ROOT, asOf = AS_OF } = {}) {
       by_outcome: trig.by_outcome,
       publishable: trig.publishable,
     },
+    map: {
+      edges: mapA.edges,
+      by_kind: mapA.by_kind,
+      by_basis: mapA.by_basis,
+      unclassified: mapA.unclassified,
+      backlog: mapA.backlog,
+    },
     errors,
     warnings,
   };
@@ -559,7 +577,7 @@ function commitOf(root) {
  */
 export function recordEntry(r, { root = ROOT, argv = [], now = () => new Date().toISOString() } = {}) {
   const dataFiles = readdirSync(join(root, 'data')).filter((f) => f.endsWith('.json')).sort();
-  const rules = ['tools/evidence-audit.mjs', 'tools/register-audit.mjs', 'tools/trigger-audit.mjs', 'js/evidence-model.js', 'js/format.js', 'js/pipeline.js', 'js/regulatory-model.js'];
+  const rules = ['tools/evidence-audit.mjs', 'tools/register-audit.mjs', 'tools/trigger-audit.mjs', 'tools/map-audit.mjs', 'js/evidence-model.js', 'js/map-model.js', 'js/format.js', 'js/pipeline.js', 'js/regulatory-model.js'];
   return {
     record_version: RECORD_VERSION,
     tool: 'tools/evidence-audit.mjs',
@@ -588,6 +606,7 @@ export function recordEntry(r, { root = ROOT, argv = [], now = () => new Date().
       enforcement: { by_finality: r.enforcement.by_finality, contradictions: r.enforcement.contradictions },
       regulatory: { provision_application: r.regulatory.provision_application },
       triggers: { total: r.triggers.total, publishable: r.triggers.publishable.length },
+      map: { edges: r.map.edges, by_basis: r.map.by_basis, backlog: Object.fromEntries(Object.entries(r.map.backlog).map(([c, v]) => [c, v.length])) },
     },
     limits: LIMITS,
   };
@@ -622,6 +641,9 @@ function text(r) {
   for (const [code, ids] of Object.entries(r.register.backlog)) L.push(`  BACKLOG ${code} ${ids.length}: ${ids.join(', ') || 'none'}`);
   L.push(`TRIGGERS        ${r.triggers.total} rules · ${kv(r.triggers.by_outcome)}`);
   L.push(`  publishable   ${r.triggers.publishable.length} of ${r.triggers.total}${r.triggers.publishable.length ? ': ' + r.triggers.publishable.join(', ') : ''}`);
+  L.push(`MAP             ${r.map.edges} edges · ${kv(r.map.by_basis)}`);
+  L.push(`  by kind       ${kv(r.map.by_kind)}`);
+  for (const [code, ids] of Object.entries(r.map.backlog)) L.push(`  BACKLOG ${code} ${ids.length}: ${ids.join('; ') || 'none'}`);
   L.push('');
   L.push(`WARNINGS ${r.warnings.length}`);
   for (const w of r.warnings) L.push('  ! ' + w);
@@ -660,6 +682,8 @@ function markdown(r) {
     ...Object.entries(r.register.backlog).map(([code, ids]) => row(`Backlog — ${code}`, ids.length)),
     row('Applicability rules', `${r.triggers.total} · ${kv(r.triggers.by_outcome)}`),
     row('… publishable at the claims\' standard', `${r.triggers.publishable.length} of ${r.triggers.total}`),
+    row('Map edges', `${r.map.edges} · ${kv(r.map.by_basis)}`),
+    ...Object.entries(r.map.backlog).map(([code, ids]) => row(`Backlog — ${code}`, ids.length)),
     row('Errors / warnings', `${r.errors.length} / ${r.warnings.length}`),
     '',
     '_Derived on this run from `data/` and `index.html` by the modules the site itself uses. Not a score: the backlog is closed by verification work, not by a passing check._',

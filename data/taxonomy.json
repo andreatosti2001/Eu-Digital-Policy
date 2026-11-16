@@ -1019,53 +1019,65 @@
     {
       "id": "rel-kind:overlap",
       "label": "Overlaps with",
+      "basis": "analytical",
       "note": "Both instruments reach the same conduct."
     },
     {
       "id": "rel-kind:complement",
-      "label": "Complements"
+      "label": "Complements",
+      "basis": "analytical"
     },
     {
       "id": "rel-kind:sequence",
       "label": "Sequences with",
+      "basis": "analytical",
       "note": "One applies before or feeds into the other."
     },
     {
       "id": "rel-kind:conflict",
-      "label": "In tension with"
+      "label": "In tension with",
+      "basis": "analytical"
     },
     {
       "id": "rel-kind:carve-out",
-      "label": "Carves out from"
+      "label": "Carves out from",
+      "basis": "textual"
     },
     {
       "id": "rel-kind:amends",
-      "label": "Amends"
+      "label": "Amends",
+      "basis": "textual"
     },
     {
       "id": "rel-kind:repeals",
-      "label": "Repeals"
+      "label": "Repeals",
+      "basis": "textual"
     },
     {
       "id": "rel-kind:implements",
-      "label": "Implements or specifies"
+      "label": "Implements or specifies",
+      "basis": "textual"
     },
     {
       "id": "rel-kind:lex-specialis",
-      "label": "Is lex specialis to"
+      "label": "Is lex specialis to",
+      "basis": "textual"
     },
     {
       "id": "rel-kind:legal-basis",
-      "label": "Is the legal basis for"
+      "label": "Is the legal basis for",
+      "basis": "textual"
     },
     {
       "id": "rel-kind:enables",
       "label": "Enables",
+      "basis": "textual",
       "note": "The other instrument's provisions operate through definitions, bodies, means or populations this instrument establishes, and say so. Recorded only on an express reference in the DEPENDENT instrument's text; the locator is in that text. Direction: from = the enabling instrument. Added 27 Oct 2026 (docs/V2-DATA-DESIGN.md §1.4)."
     },
     {
       "id": "rel-kind:defers-to",
       "label": "Defers to",
+      "basis": "textual",
       "note": "This instrument leaves a matter to the other: a without-prejudice clause, a 'shall not affect' clause or an express reference sending the reader there. The locator is in the DEFERRING instrument's text (from). Added 27 Oct 2026 (docs/V2-DATA-DESIGN.md §1.4)."
     }
   ],

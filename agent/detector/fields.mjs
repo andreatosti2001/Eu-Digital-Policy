@@ -159,6 +159,7 @@ export const PROSE_FIELDS = {
   },
   taxonomy_term: {
     note: 'The disambiguating sentence — what this term means as against the one next to it. `data/taxonomy.json` is the enum authority for every other dataset, so a note that has gone wrong is wrong everywhere the term is used.',
+    basis: 'On a relationship_kind term: textual or analytical, which decides what evidence every edge of that kind must carry (a direct reference in the law, or a claim). Registered as prose on the author\'s decision of 16 Nov 2026 (docs/ROADMAP-v2.md §8, V2C-13, decision 6): changing it moves what thirty-odd edges need, nothing proves it right, so no agent acts on it unattended. tools/validate.mjs M-16 checks only that it is one of the two words.',
   },
 };
 
