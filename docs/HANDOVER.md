@@ -1,8 +1,20 @@
 # HANDOVER
 
-**Last updated:** 16 November 2026 (UTC), after the V2C-13 session (Track R: the map checks M-08…M-16), at its final checkpoint.
-**Branch:** `claude/amazing-pascal-95wq2o`, from `main` `00e1534` (#116 merged). `origin/main` re-fetched immediately before this write: `00e1534`, unchanged since the start of the session.
+**Last updated:** 16 November 2026 (UTC), after the V2C-03…05 session (Track R: COM(2025) 837 and the instrument arrays), at its final checkpoint.
+**Branch:** `claude/friendly-pasteur-mtqo8h`, from `main` `8b5bc6e` (#117 merged). `origin/main` re-fetched immediately before this write: `8b5bc6e`, unchanged since the start of the session.
 **Read first:** the map's edges are now checked — `tools/map-audit.mjs` (M-08…M-15), M-16 in `tools/validate.mjs`, a MAP section in the evidence audit — and every `relationship_kind` term carries `basis`. 0 errors on the 39 edges; three named backlogs that only shrink. **The next session is V2C-03…05** (`docs/prompts/v2-v2c-03-05-arrays.md`), approved only with this work.
+
+## V2C-03…05 — COM(2025) 837 and the instrument arrays (16 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the V2C-03…05 session" ("As the prompt states"), decisions 1–9, "W.3" and "W.4". **Record:** `docs/V2C-03-05-READING.md`.
+
+- **W.1** (`7b73832`): COM(2025) 837 and its Annexes read from Cellar by CELEX, SHA-256 per document (the body's hash equals V2C-12's). **Findings against the data:** the title names seven acts amended, the articles amend nine (Art. 7 eIDAS, Art. 8 DORA are not in the title); the proposal repeals `dga` (it does not amend it); the arrays' `eprivacy` and `nis2` entries are true amendments with no edge.
+- **W.2:** nine decisions in §8 with the author's words: five edges added; the `dga` entry removed; arrays derived and deleted; M-15 flipped to ERROR; P2B summary reworded; GDPR Art. 33 named and left; `eidas2` only the array keys; every key deleted (**measured: the keys were on all 39 instruments, 28 only as empty `[]`, not on 11**).
+- **W.3** (`da5343e`): `data/instruments.json` (five edges, P2B summary, two notes annotated, 4 keys × 39 records deleted), `tools/map-audit.mjs` (M-15 ERROR, `ARRAY_FIELDS`), `tools/selftest.mjs` (MP1, MP6, MP8, V1: 13 proposed edges), pages regenerated. 44 edges, 34 textual.
+- **W.4:** the prompt of V2C-17…19 (`docs/prompts/v2-v2c-17-19-map-nodes.md`).
+- **Found, not fixed:** GDPR Art. 33 on `rel-data-omnibus-gdpr`; the memorandum and Art. 10(2) describe the P2B derogation differently; the three V2C-12 open points; `agent/architect/lenses.mjs` and `prototypes/observatory`, `prototypes/editorial` still mention the arrays (not changed; the lens now finds none).
+- **Battery:** `validate`/`i18n-audit`/`design-qa`/`seo-audit` 0 errors; `evidence-audit` and `freshness` differ from the base only in the edge and date counts; `selftest` 199/199; 25 suites and `.control-room/` 0 failed (1 skip); browser exit 0; `commit-evidence` 0. The browser suite exceeds the 120 s foreground limit: run it in the background.
+- **Branch register:** `claude/friendly-pasteur-mtqo8h`, disposition: asked of the author at the end of the session. `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv` and the three scout digests are as recorded, unmerged, not this session's.
 
 ## V2C-13 — the map checks (16 Nov 2026)
 
