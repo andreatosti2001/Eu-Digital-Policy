@@ -14,7 +14,7 @@
 - **W.4:** the prompt of V2C-17…19 (`docs/prompts/v2-v2c-17-19-map-nodes.md`).
 - **Found, not fixed:** GDPR Art. 33 on `rel-data-omnibus-gdpr`; the memorandum and Art. 10(2) describe the P2B derogation differently; the three V2C-12 open points; `agent/architect/lenses.mjs` and `prototypes/observatory`, `prototypes/editorial` still mention the arrays (not changed; the lens now finds none).
 - **Battery:** `validate`/`i18n-audit`/`design-qa`/`seo-audit` 0 errors; `evidence-audit` and `freshness` differ from the base only in the edge and date counts; `selftest` 199/199; 25 suites and `.control-room/` 0 failed (1 skip); browser exit 0; `commit-evidence` 0. The browser suite exceeds the 120 s foreground limit: run it in the background.
-- **Branch register:** `claude/friendly-pasteur-mtqo8h`, disposition: asked of the author at the end of the session. `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv` and the three scout digests are as recorded, unmerged, not this session's.
+- **Branch register:** `claude/friendly-pasteur-mtqo8h`, disposition: the final checkpoint is approved (§8, 16 Nov 2026); on the author's answer ("Approve both, open the PR"), a pull request to `main`, opened by the session and merged by the author with a merge commit. `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv` and the three scout digests are as recorded, unmerged, not this session's.
 
 ## V2C-13 — the map checks (16 Nov 2026)
 
