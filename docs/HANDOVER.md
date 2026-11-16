@@ -1,8 +1,20 @@
 # HANDOVER
 
-**Last updated:** 14 November 2026 (UTC), after the V2C-21b session (Track R: the provisions of `eidas2`), at its final checkpoint.
-**Branch:** `claude/confident-johnson-yeffcv`, from `main` `5bb6d1a` (#114 merged) plus `claude/sweet-newton-58i6p3`'s two prompt commits. `origin/main` re-fetched immediately before this write: `5bb6d1a`, unchanged.
-**Read first:** every one of the eight parties in "Who it binds" on the eIDAS2 page is now anchored to a provision read in the Official Journal on 14 Nov 2026. **The next session is V2C-12** (`docs/prompts/v2-v2c-12-v1-relationships.md`), approved only with this work.
+**Last updated:** 15 November 2026 (UTC), after the V2C-12 session (Track R: the eight v1 relationships), at its final checkpoint.
+**Branch:** `claude/upbeat-thompson-yewfls`, from `main` `92117b4` (#115 merged). `origin/main` re-fetched immediately before this write: `92117b4`, unchanged since the start of the session.
+**Read first:** every relationship in `data/instruments.json` is now in the v2 shape (39; the v1 list is empty and W12 holds it so). Two of the eight were found to say something no text carries: one is flagged, one removed. **The next session is V2C-13** (`docs/prompts/v2-v2c-13-map-checks.md`), approved only with this work.
+
+## V2C-12 — the eight v1 relationships (15 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the V2C-12 session" (the author's words "Start V2C-12"), the six "W.2" rows (decisions 1–6) and the "W.4" row. **Record:** `docs/V2C-12-READING.md` (read it, not this entry).
+
+- **W.1** (`4a472a8`): eight texts, two proposals and the proposal's Annexes retrieved from Cellar, SHA-256 per document; each relationship read against its sources. **Three findings against the data:** `rel-tfeu-114-acquis` points Art. 114 at the GDPR, whose visa cites Art. 16 only; `rel-data-act-cloud-ai-act` is stored as a conflict while the proposal's own memorandum says it is consistent with the Data Act and that the Data Act "is thus an enabler for the proposal" (Annex II does require Union-located infrastructure and data, so the localisation half is read); `rel-ai-act-gdpr-impact-assessments` rests partly on a sentence ("regulators acknowledge the duplication") that no text read carries.
+- **W.2** (`9cfe2a5`, `b5527e7`): six decisions, each in §8 with the author's words: migrate the five supported edges; migrate-and-flag the impact-assessment edge; downgrade (keep, flag, cite both) the cloud/Data Act edge; remove the TFEU edge; carry `gdpr.legal_basis` to the next session; no flip, left to V2C-13.
+- **W.3** (`01de1f0`, `9c90e1d`): `data/instruments.json` (`relationships` only) and the regenerated pages; W12 shrunk to `[]` and W12b added; `docs/CURRENT-ARCHITECTURE.md` §12 45 → 47 (the two flags). No summary, kind, status, date, claim or validator changed.
+- **W.4:** the prompt of V2C-13.
+- **Found, not fixed, not in scope:** `gdpr.legal_basis` is `["tfeu:art-114"]` against the GDPR's own visa (carried to V2C-13, decision 5).
+- **Battery:** see the reading notes §7: validate 0 errors / 47 unverified; selftest 190/190; 25 suites and `.control-room/` 1496 tests with the existing skip; browser 361/0/1. **Correction after CI (16 Nov 2026):** the §12 count is pinned in TWO suites, `agent/health` and `agent/implement` (R6); the session re-ran only the first after moving §12 to 47, so CI failed `agent/implement` on 45 !== 47 (`db20231` moves the pin, as the test says to, with §12, and every suite was then re-run: all exit 0). The lesson: after changing a recorded baseline, re-run EVERY suite, not the one that failed. `agent/records/` absent after the batteries.
+- **Branch register:** `claude/upbeat-thompson-yewfls`, disposition: the final checkpoint is approved (§8, 15 Nov 2026); on the author's answer ("Yes, open the PR"), a pull request to `main`, opened by the session and merged by the author with a merge commit. `claude/confident-johnson-yeffcv` (PR #115 merged), `claude/brave-goldberg-gm87jp` and `scout/digest-digest-2026-11-02T16-04-07Z` are as recorded. **`origin/scout/digest-digest-2026-11-09T16-29-04Z`** (one Source Scout commit, `89a08b8`, 9 Nov 2026) was in no register and no document: reported to the author at the start of the session and registered here as the scout's digest, not this session's, no disposition decided.
 
 ## V2C-21b — `eidas2`'s provisions (14 Nov 2026)
 
