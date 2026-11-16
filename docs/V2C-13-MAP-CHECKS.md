@@ -80,3 +80,13 @@ changes and W12 is not touched.
 
 That any of the 39 relationships is true: the checks measure what an edge *carries*, not whether it is right. That the arrays' second home
 is closed (M-15 reports it). The map view stays unpublished (`docs/ROADMAP-v2.md` §8, 27 Oct 2026, A.0).
+
+## 5. What was written, and the battery (16 Nov 2026)
+
+Authority: `docs/ROADMAP-v2.md` §8, the scope row and the decisions 1–7 and the W.4 row of 16 Nov 2026, each with the author's words.
+
+- **Data** (`914e089`): `data/taxonomy.json`, `basis` on the twelve `relationship_kind` terms (4 analytical, 8 textual). Nothing else in `data/` changed; `node tools/_footer.mjs` wrote 0 files; the `unverified` count is unchanged (§12 not touched).
+- **Tools** (`1ac2d6e`): `tools/map-audit.mjs` (M-08…M-15, pure), M-16 in `tools/validate.mjs`, the MAP section of `tools/evidence-audit.mjs` (text, `--json`, `--markdown`) and the record's `CHECKED`. `tools/selftest.mjs`: nine tests (MP1…MP9), one planted edge per rule; the one existing assertion changed (X4's list of sections gains `map`) is the world changing, quoted at the assertion. Four mutations of the module were each caught.
+- **Agent register** (decision 6): `agent/detector/fields.mjs` registers `taxonomy_term.basis` as prose, on the author's word, because `agent/detector/selftest.mjs` failed on an unclassified field. This is the finding of the 25-suite run: **a data change can break a suite outside the files a session may write**, and it was asked, not worked around.
+- **On this tree, as of 16 Nov 2026:** 0 errors, 0 warnings in MAP; BACKLOG `edge-analytical-no-claim` 3, `edge-textual-partial` 1, `edge-second-home` 5; `edge-v1-sources` is an ERROR (0 bare ids). Whole-output comparison with the base: `validate`, `i18n-audit`, `design-qa`, `seo-audit`, `freshness` byte-identical; `evidence-audit` differs by the five MAP lines.
+- **Not done, by decision or by the stop rule:** no relationship changed; the three analytical edges and `rel-dsa-copyright-dsm-defers` are named, not touched; the arrays are not derived (V2C-03…05, the next session); the three points of V2C-12 are carried (decision 7); the map view stays unpublished.
