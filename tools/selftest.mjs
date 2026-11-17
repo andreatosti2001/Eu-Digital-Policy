@@ -485,7 +485,7 @@ const READ_V2_23 = Object.freeze({
   'ap-dsa-02': '2026-11-04',
   'ap-dsa-04': '2026-11-04',
   'ap-dsa-05': '2026-11-04',
-  'ap-dma-01': '2026-11-04',
+  'ap-dma-01': '2026-11-17', /* F-18 (§8, 17 Nov 2026, decisions 1 to 7): re-read and changed, the work being its attestation */
   'ap-dma-02': '2026-11-04',
   'ap-dma-03': '2026-11-04',
   'ap-ai-act-01': '2026-11-04',
@@ -510,6 +510,12 @@ const dateOf = (id) => READ_V2_23[id] ?? (READ_2026_11_04.includes(id) ? '2026-1
 const NEWEST_READ = ['2026-11-04', ...Object.values(READ_V2_23)].sort().at(-1);
 /* v2 Session 24 (§8, 24.1: `ap-eidas2-01`'s five A-8 warnings and the pins that hold them): the five cases
    docs/ATTESTATION-FORM.md §5 point 1 foresaw, named exactly; any other warning, or a sixth, still fails */
+/* F-18 (§8, 17 Nov 2026, decision 7): the two cases of `ap-dma-01`, whose `attestation.read` lists only what was read on 17 Nov 2026 —
+   the Review Report and IP/25/1085 were read on 4 Nov and not again; named exactly, as ap-eidas2-01's are */
+const DMA01_A8 = Object.freeze([
+  'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-01: the rule cites src-ec-apple-meta-dma-2025 (not tier-1) in sources, and attestation.read does not name it',
+  'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-01: the rule cites src-ec-dma-review-2026 (not tier-1) in exemption, and attestation.read does not name it',
+]);
 const EIDAS2_A8 = Object.freeze([
   "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2977 «Citation ('in particular Article 5a(23) thereof')» names no Article, Annex or Recital the check can read",
   "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2981 «Citation ('in particular Article 5c(6) thereof')» names no Article, Annex or Recital the check can read",
@@ -517,6 +523,8 @@ const EIDAS2_A8 = Object.freeze([
   'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-2 ("2 (of Regulation (EU) No 910/2014, as amended)") cannot be placed in a tier-1 text',
   'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-3 ("3 (of Regulation (EU) No 910/2014, as amended)") cannot be placed in a tier-1 text',
 ]);
+/** Every A-8 warning the tree carries, in the order the audit prints them (rules in file order: ap-dma-01 before ap-eidas2-01). */
+const TREE_A8 = Object.freeze([...DMA01_A8, ...EIDAS2_A8]);
 
 test('F10 · 17.3(b): the applicability rules are aged one by one, at 90 days, and a stale rule is a prompt, never a defect', () => {
   /* v2 Session 17 (29 Oct 2026, docs/ROADMAP-v2.md §8, 17.0 questions 8b and 9; named F10 because
@@ -1698,6 +1706,10 @@ test('A8 · an edition is offered to search engines exactly when its review is c
   const dir = siteCopy('editions');
   const regenerate = async () => { const { files } = await generateSite(dir); for (const [f, s] of files) { mkdirSync(join(dir, f, '..'), { recursive: true }); writeFileSync(join(dir, f), s); } };
   try {
+    /* F-18 (§8, 17 Nov 2026, decision 4): the Italian strings part-4.p2 and part-4.p4 are withdrawn as `superseded`, so the real
+       Italian edition cannot be reviewed complete until they are translated. This test is about the rule (an edition is offered exactly
+       when its review is complete), so the scratch copy gives those keys a placeholder text before the review is recorded. */
+    edit(dir, 'i18n/it.json', (x) => { const o = JSON.parse(x); o['part-4.p2'] = 'placeholder'; o['part-4.p4'] = 'placeholder'; return JSON.stringify(o); });
     /* a complete Italian review, recorded in the scratch copy as a person would */
     const st = E.reviewState('it', { root: dir, englishTitle: home.title, englishDescription: home.description });
     const ledger = { locale: 'it', entries: Object.fromEntries(st.keys.map((k) => [k.key, { fingerprint: k.fp, reviewed_by: 'A Reviewer', reviewed_on: '2026-10-22' }])) };
@@ -2595,13 +2607,17 @@ test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with i
   assert.deepEqual(Object.keys(MM.HOLDER).sort(), db.taxonomy.relationship_kind.map((t) => t.id).sort());
   assert.equal(MM.modality({ kind: 'rel-kind:unheard-of', from: 'gdpr', to: 'dsa' }, ix), null);
 
-  /* the rule, measured on this tree: the 8 edges §8 named, and the 5 V2C-03…05 wrote on 16 Nov 2026 (data-omnibus amends
-     eprivacy, nis2, cer, eidas, dora), and no other */
+  /* the rule, measured on this tree: the 8 edges §8 named, the 5 V2C-03…05 wrote on 16 Nov 2026 (data-omnibus amends
+     eprivacy, nis2, cer, eidas, dora), and the 5 V2C-17…19 wrote on 17 Nov 2026 (the DNA repeals eecc, berec-regulation,
+     rspp-decision and amends open-internet-regulation, radio-spectrum-decision), and no other */
   const proposed = db.instruments.relationships.filter((r) => MM.modality(r, ix) === 'proposed').map((r) => r.id).sort();
   assert.deepEqual(proposed, ['rel-data-act-cloud-ai-act', 'rel-data-omnibus-cer-amends', 'rel-data-omnibus-data-act-amends',
     'rel-data-omnibus-dga-repeals', 'rel-data-omnibus-dora-amends', 'rel-data-omnibus-eidas-amends',
     'rel-data-omnibus-eprivacy-amends', 'rel-data-omnibus-gdpr', 'rel-data-omnibus-nis2-amends', 'rel-data-omnibus-p2b-repeals',
-    'rel-digital-networks-act-eprivacy-amends', 'rel-digital-networks-act-gdpr-defers', 'rel-digital-networks-act-nis2-defers']);
+    'rel-digital-networks-act-berec-regulation-repeals', 'rel-digital-networks-act-eecc-repeals',
+    'rel-digital-networks-act-eprivacy-amends', 'rel-digital-networks-act-gdpr-defers', 'rel-digital-networks-act-nis2-defers',
+    'rel-digital-networks-act-open-internet-regulation-amends', 'rel-digital-networks-act-radio-spectrum-decision-amends',
+    'rel-digital-networks-act-rspp-decision-repeals']);
   assert.ok(db.instruments.relationships.every((r) => MM.modality(r, ix) !== null), 'every edge has a modality');
 
   /* derived, never stored: no edge carries it, and it follows the holder's status */
@@ -2620,7 +2636,7 @@ test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with i
      pages and the brief's Part IX overview all draw interactionBlock) */
   const cards = db.instruments.relationships.map((r) => interactionBlock(r, ix, r.from, '')).join('');
   assert.deepEqual(await presentTenseEdges(cards, ix), []);
-  assert.equal((cards.match(/data-modality="proposed"/g) || []).length, 13);
+  assert.equal((cards.match(/data-modality="proposed"/g) || []).length, 18);
   /* every instrument view, generated or rendered on request */
   const views = [];
   for (const inst of new Set(ix.instrument.values())) {
@@ -2645,7 +2661,7 @@ test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with i
   const caught = await presentTenseEdges(before, ix, 'digital-networks-act');
   assert.ok(caught.some((m) => /^card rel-digital-networks-act-eprivacy-amends/.test(m)), caught.join('\n'));
   assert.ok(caught.some((m) => /^related rel-digital-networks-act-eprivacy-amends/.test(m)), caught.join('\n'));
-  assert.equal(caught.length, 6, 'three cards and three Related entries');
+  assert.equal(caught.length, 10, 'five cards and five Related entries: the DNA\'s three "amends" (eprivacy, open-internet-regulation, radio-spectrum-decision) and two "defers to" (gdpr, nis2); its three "repeals" are not switched off here');
 });
 
 /* ---------------------------------------------------------------------------
@@ -3244,7 +3260,7 @@ test('AT0 · this tree: exactly the rules closed in the form (v2 Sessions 23–2
   const db = loadDb();
   const a = attestationAudit(db, ROADMAP);
   assert.deepEqual(a.errors, []);
-  assert.deepEqual(a.warnings, [...EIDAS2_A8], 'exactly the five A-8 cases of ap-eidas2-01 (§8, 24.1)');
+  assert.deepEqual(a.warnings, [...TREE_A8], 'exactly the five A-8 cases of ap-eidas2-01 (§8, 24.1) and the two of ap-dma-01 (§8, F-18 decision 7)');
   assert.deepEqual([...a.attested].sort(), Object.keys(READ_V2_23).sort(), 'the closures in the form (v2 Sessions 23–24), and no backfill (plan §2)');
   /* §8, 22.1 question 4: the last day a rule was read without the form. Not moved to excuse a rule. */
   assert.equal(FORM_FROM, '2026-11-04');
@@ -3256,13 +3272,13 @@ test('AT0 · this tree: exactly the rules closed in the form (v2 Sessions 23–2
   const v = runValidator('validate.mjs');
   assert.equal(v.exit, 0);
   assert.doesNotMatch(v.out, /\bA-\d /);
-  assert.deepEqual(v.out.split('\n').filter((l) => /ATTESTATION_NOT_CHECKABLE/.test(l)).map((l) => l.trim().replace(/^! /, '')), [...EIDAS2_A8]);
+  assert.deepEqual(v.out.split('\n').filter((l) => /ATTESTATION_NOT_CHECKABLE/.test(l)).map((l) => l.trim().replace(/^! /, '')), [...TREE_A8]);
 });
 
 test('AT1 · the control: ap-cra-01\'s closure of 4 Nov 2026, written in the form, passes every check', () => {
   const a = withCra();
   assert.deepEqual(a.errors, []);
-  assert.deepEqual(a.warnings, [...EIDAS2_A8], 'the tree\'s five A-8 cases (§8, 24.1), and nothing from the fixture');
+  assert.deepEqual(a.warnings, [...TREE_A8], 'the tree\'s seven A-8 cases (§8, 24.1 and F-18 decision 7), and nothing from the fixture');
   /* v2 Session 23 (§8, 23.1: two selftest pins the first closure broke): the fixture, and the tree's closures */
   assert.deepEqual([...a.attested].sort(), ['ap-cra-01', ...Object.keys(READ_V2_23)].sort());
 });
@@ -3368,6 +3384,7 @@ test('AT9 · A-8 names what the check cannot resolve, as WARNINGs, and skips not
   });
   assert.deepEqual(a.errors, []);
   assert.deepEqual(a.warnings, [
+    ...DMA01_A8,
     "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2977 «Citation ('in particular Article 5a(23) thereof')» names no Article, Annex or Recital the check can read",
     "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2981 «Citation ('in particular Article 5c(6) thereof')» names no Article, Annex or Recital the check can read",
     'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-5a ("5a (of Regulation (EU) No 910/2014, as inserted)") cannot be placed in a tier-1 text',
@@ -3379,6 +3396,8 @@ test('AT9 · A-8 names what the check cannot resolve, as WARNINGs, and skips not
     read: [{ source_id: 'src-eurlex-dma', locator: 'Art. 1; Art. 2; Art. 3' }] }; });
   assert.deepEqual(t2.errors, []);
   assert.deepEqual(t2.warnings, [
+    /* the tree's own (§8, F-18 decision 7), first in file order */
+    ...DMA01_A8,
     'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-04: the rule cites src-ec-dma-cloud-mi-2025 (not tier-1) in sources, and attestation.read does not name it',
     'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-04: the rule cites src-ec-cloud-gatekeeper-preliminary-2026 (not tier-1) in sources, and attestation.read does not name it',
     /* the tree's own (§8, 24.1) */
@@ -3901,7 +3920,7 @@ test('MC18 · I0, the control: the instruments card holds MC-1…MC-15 on this t
   assert.deepEqual(Object.fromEntries(Object.entries(f.parts).filter(([, p]) => p.records.length).map(([k, p]) => [k, p.records.length])),
     { 'status:applicable': 6, 'status:partly-applicable': 3, 'status:in-force': 6, 'status:transposition-pending': 1, 'status:transposition-overdue': 2, 'status:proposal': 3 });
   assert.equal(Object.values(f.parts).reduce((a, p) => a + p.records.length, 0), 21, 'the parts add back to the population');
-  assert.deepEqual(Object.fromEntries(Object.entries(f.excluded).map(([k, v]) => [k, v.length])), { 'scope:referenced': 12, 'scope:out-of-scope': 6 }, 'named as excluded, not dropped');
+  assert.deepEqual(Object.fromEntries(Object.entries(f.excluded).map(([k, v]) => [k, v.length])), { 'scope:referenced': 17, 'scope:out-of-scope': 6 }, 'named as excluded, not dropped');
   assert.deepEqual(f.weak.map((w) => w.id), ['eprivacy']);
   assert.deepEqual(instrumentsByStatus(loadData().instruments.instruments, { asOf: '2026-11-09' }).past_interval.map((x) => x.id).sort(), ['cloud-ai-development-act', 'data-act', 'pld'], '§8.1 "Updating", as of 9 Nov 2026');
   /* every status term of the taxonomy is a part, so the vocabulary and the function cannot drift apart unseen */
@@ -4153,7 +4172,7 @@ test('RR6 · the CLI: the sheet exits 0 and prints the skeleton; a refused answe
    lists are frozen and only shrink, and these tests hold them to "still true".
    --------------------------------------------------------------------------- */
 
-const MAP_AS_OF = '2026-11-16';
+const MAP_AS_OF = '2026-11-17';
 const relOf = (db, id) => db.instruments.relationships.find((r) => r.id === id);
 const mapOf = (db, asOf = MAP_AS_OF) => mapAudit(db, asOf);
 const SRC_NOTE = 'an edge of this kind, planted by tools/selftest.mjs and never written to data/';
@@ -4170,7 +4189,7 @@ const plant = (db, over = {}) => {
 };
 const only = (res, code) => res.errors.filter((e) => e.startsWith(code));
 
-test('MP1 · this tree: 44 edges, all classified, 0 errors and 0 warnings; the backlog is the frozen one and the lists are still true', () => {
+test('MP1 · this tree: 53 edges, all classified, 0 errors and 0 warnings; the backlog is the frozen one and the lists are still true', () => {
   const db = loadDb();
   const r = mapOf(db);
   assert.deepEqual(r.errors, []);
@@ -4240,7 +4259,7 @@ test('MP3 · M-08 and M-09: a bare id, a bad supports, a tier-1 direct reference
   const late = loadDb(); plant(late, { last_verified: '2026-12-01' });
   const lr = mapOf(late);
   assert.deepEqual(lr.errors, []);
-  assert.ok(lr.warnings.some((w) => /^VERIFIED_AFTER_AS_OF relationships\/rel-planted-edge: last_verified 2026-12-01 is after the audit date 2026-11-16$/.test(w)));
+  assert.ok(lr.warnings.some((w) => /^VERIFIED_AFTER_AS_OF relationships\/rel-planted-edge: last_verified 2026-12-01 is after the audit date 2026-11-17$/.test(w)));
   /* and the real edges, as of a date before they were read, warn and never fail */
   assert.deepEqual(mapOf(loadDb(), '2026-10-01').errors, []);
   assert.ok(mapOf(loadDb(), '2026-10-01').warnings.length > 0);
@@ -4337,17 +4356,17 @@ test('MP7 · a kind with no basis cannot be classified: M-10, M-11 and M-14 skip
 test('MP8 · evidence-audit.mjs prints MAP in text, --json and --markdown, exits 0 on this tree, and FAILS on a planted bare id', () => {
   const out = runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF]);
   assert.equal(out.exit, 0, 'the backlog never fails the run');
-  assert.match(out.out, /^MAP {13}44 edges · analytical 10 · textual 34$/m);
+  assert.match(out.out, /^MAP {13}53 edges · analytical 10 · textual 43$/m);
   assert.match(out.out, /^ {2}BACKLOG edge-analytical-no-claim 3: rel-dsa-dma-scope; rel-nis2-cer; rel-cra-nis2$/m);
   assert.match(out.out, /^ {2}BACKLOG edge-textual-partial 1: rel-dsa-copyright-dsm-defers$/m);
   assert.doesNotMatch(out.out, /BACKLOG edge-second-home/);
   assert.doesNotMatch(out.out, /BACKLOG edge-v1-sources/);
   const json = JSON.parse(runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF, '--json']).out);
-  assert.equal(json.map.edges, 44);
-  assert.deepEqual(json.map.by_basis, { analytical: 10, textual: 34 });
+  assert.equal(json.map.edges, 53);
+  assert.deepEqual(json.map.by_basis, { analytical: 10, textual: 43 });
   assert.deepEqual(json.map.unclassified, []);
   const md = runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF, '--markdown']).out;
-  assert.match(md, /\| Map edges \| 44 · analytical 10 · textual 34 \|/);
+  assert.match(md, /\| Map edges \| 53 · analytical 10 · textual 43 \|/);
   assert.match(md, /\| Backlog — edge-textual-partial \| 1 \|/);
   const dir = treeCopy();
   try {
@@ -4361,4 +4380,54 @@ test('MP8 · evidence-audit.mjs prints MAP in text, --json and --markdown, exits
 test('MP9 · map-audit.mjs reads, reports and writes nothing: no write, no network, no clock', () => {
   const src = readFileSync(join(ROOT, 'tools/map-audit.mjs'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   for (const verb of ['writeFileSync', 'appendFileSync', 'rmSync', 'unlinkSync', 'renameSync', 'mkdirSync', 'execFileSync', 'spawnSync', 'fetch(', 'Date.now', 'new Date(', 'process.env']) assert.equal(src.includes(verb), false, `map-audit.mjs must not use ${verb}`);
+});
+
+/* The facts V2C-17…19 wrote, as one function over a database, so the test can run it on the real tree (it must pass) and on a
+   bent copy (it must throw): a control that cannot fail is not a control. */
+const v2c1719 = (db) => {
+  const want = [
+    ['rel-digital-networks-act-eecc-repeals', 'digital-networks-act', 'eecc', 'rel-kind:repeals', 'src-eurlex-dna-proposal', 'Art. 209'],
+    ['rel-digital-networks-act-berec-regulation-repeals', 'digital-networks-act', 'berec-regulation', 'rel-kind:repeals', 'src-eurlex-dna-proposal', 'Art. 209'],
+    ['rel-digital-networks-act-rspp-decision-repeals', 'digital-networks-act', 'rspp-decision', 'rel-kind:repeals', 'src-eurlex-dna-proposal', 'Art. 209'],
+    ['rel-digital-networks-act-open-internet-regulation-amends', 'digital-networks-act', 'open-internet-regulation', 'rel-kind:amends', 'src-eurlex-dna-proposal', 'Art. 206'],
+    ['rel-digital-networks-act-radio-spectrum-decision-amends', 'digital-networks-act', 'radio-spectrum-decision', 'rel-kind:amends', 'src-eurlex-dna-proposal', 'Art. 208'],
+    ['rel-nis2-eecc-amends', 'nis2', 'eecc', 'rel-kind:amends', 'src-eurlex-nis2', 'Art. 43'],
+    ['rel-nis2-eidas-amends', 'nis2', 'eidas', 'rel-kind:amends', 'src-eurlex-nis2', 'Art. 42'],
+    ['rel-ttpa-avmsd-defers', 'ttpa', 'avmsd', 'rel-kind:defers-to', 'src-eurlex-ttpa', 'Art. 2(3)(f)'],
+    ['rel-ttpa-p2b-defers', 'ttpa', 'p2b', 'rel-kind:defers-to', 'src-eurlex-ttpa', 'Art. 2(3)(h)'],
+  ];
+  for (const [id, from, to, kind, src, loc] of want) {
+    const e = relOf(db, id);
+    assert.ok(e, `${id} exists`);
+    assert.deepEqual([e.from, e.to, e.kind], [from, to, kind], `${id}: ends and kind`);
+    assert.deepEqual(e.sources.map((x) => [x.source_id, x.supports, x.locator]), [[src, 'supports:direct', loc]], `${id}: one direct reference, to the Article`);
+  }
+  /* the five acts are referenced instances, in force, each with a direct status reference to an Article */
+  for (const [id, celex] of [['eecc', '32018L1972'], ['berec-regulation', '32018R1971'], ['rspp-decision', '32012D0243'],
+    ['open-internet-regulation', '32015R2120'], ['radio-spectrum-decision', '32002D0676']]) {
+    const i = instOf(db, id);
+    assert.equal(i.celex, celex);
+    assert.equal(i.scope_class, 'scope:referenced');
+    assert.equal(i.legislative_status, 'status:in-force');
+    assert.ok(i.status_basis.some((b) => b.supports === 'supports:direct' && /^Art\. /.test(b.locator)), `${id}: status rests on a read Article`);
+  }
+  assert.equal(instOf(db, 'rspp-decision').kind, 'kind:decision');
+  assert.equal(instOf(db, 'radio-spectrum-decision').kind, 'kind:decision');
+};
+
+test('MP10 · V2C-17…19: the nine edges and the five instruments are what the texts read on 17 Nov 2026 say, and a change to any of them fails', () => {
+  v2c1719(loadDb());
+  const bend = [
+    (d) => { relOf(d, 'rel-digital-networks-act-eecc-repeals').kind = 'rel-kind:amends'; },
+    (d) => { relOf(d, 'rel-nis2-eidas-amends').sources[0].locator = 'Art. 41'; },
+    (d) => { relOf(d, 'rel-ttpa-p2b-defers').sources[0].supports = 'supports:partial'; },
+    (d) => { d.instruments.relationships = d.instruments.relationships.filter((r) => r.id !== 'rel-ttpa-avmsd-defers'); },
+    (d) => { instOf(d, 'open-internet-regulation').scope_class = 'scope:core'; },
+    (d) => { instOf(d, 'eecc').status_basis = instOf(d, 'eecc').status_basis.filter((b) => b.supports !== 'supports:direct'); },
+    (d) => { instOf(d, 'radio-spectrum-decision').kind = 'kind:implementing-decision'; },
+  ];
+  for (const [n, f] of bend.entries()) {
+    const d = loadDb(); f(d);
+    assert.throws(() => v2c1719(d), `bend ${n} is caught`);
+  }
 });

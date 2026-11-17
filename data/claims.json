@@ -2551,7 +2551,7 @@
     {
       "id": "clm-dma-ex-ante",
       "type": "claim-type:law",
-      "statement": "The DMA is ex ante regulation: once an undertaking is designated, a list of prohibitions and obligations applies immediately, with no requirement to demonstrate anticompetitive effect in the individual case.",
+      "statement": "The DMA is ex ante regulation: once an undertaking is designated, a list of prohibitions and obligations must be complied with within six months after the core platform service is listed in the designation decision, with no requirement to demonstrate anticompetitive effect in the individual case.",
       "instruments": [
         "dma"
       ],
@@ -2576,8 +2576,8 @@
       ],
       "brief_part": "part-4",
       "published": "2022-10-12",
-      "last_verified": "2026-08-27",
-      "verification_note": null
+      "last_verified": "2026-11-17",
+      "verification_note": "Corrected on 17 Nov 2026 (F-18), on the author's decision 2 of that date (docs/ROADMAP-v2.md §8). The statement said the obligations apply 'immediately'. Art. 3(10) of Regulation (EU) 2022/1925, read that day in the Official Journal text retrieved from the Publications Office's Cellar by CELEX 32022R1925 (SHA-256 in docs/F-18-READING.md §1), reads: 'The gatekeeper shall comply with the obligations laid down in Articles 5, 6 and 7 within 6 months after a core platform service has been listed in the designation decision pursuant to paragraph 9 of this Article.' Arts 11(1) and 15(1) also use the six months. Type, provisions and sources unchanged. What the statement says of 'no requirement to demonstrate anticompetitive effect in the individual case' was not re-tested beyond Arts 3(10) and 5(1), which state no condition of effects."
     },
     {
       "id": "clm-dma-designation",

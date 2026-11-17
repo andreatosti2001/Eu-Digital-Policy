@@ -540,6 +540,11 @@
       "label": "Delegated regulation"
     },
     {
+      "id": "kind:decision",
+      "label": "Decision",
+      "note": "A Decision of the European Parliament and of the Council. Not an implementing decision, which is the Commission's."
+    },
+    {
       "id": "kind:implementing-decision",
       "label": "Implementing decision"
     },

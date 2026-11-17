@@ -1,8 +1,32 @@
 # HANDOVER
 
-**Last updated:** 16 November 2026 (UTC), after the V2C-03…05 session (Track R: COM(2025) 837 and the instrument arrays), at its final checkpoint.
-**Branch:** `claude/friendly-pasteur-mtqo8h`, from `main` `8b5bc6e` (#117 merged). `origin/main` re-fetched immediately before this write: `8b5bc6e`, unchanged since the start of the session.
-**Read first:** the map's edges are now checked — `tools/map-audit.mjs` (M-08…M-15), M-16 in `tools/validate.mjs`, a MAP section in the evidence audit — and every `relationship_kind` term carries `basis`. 0 errors on the 39 edges; three named backlogs that only shrink. **The next session is V2C-03…05** (`docs/prompts/v2-v2c-03-05-arrays.md`), approved only with this work.
+**Last updated:** 17 November 2026 (UTC), after the F-18 session (Track R: DMA Art. 3(10) against «immediately»), at its final checkpoint, on the branch of V2C-17…19.
+**Branch:** `claude/cool-goodall-dr0emd`, from `main` `83295cb` (#118 merged). **`main` does not yet contain V2C-17…19 or F-18**: both sit on this branch, no PR opened (the author chose to work on it).
+**Read first:** F-18 is closed for `ap-dma-01`, `clm-dma-ex-ante` and the English `part-4.p2`; the Italian, French and Spanish strings are withdrawn, not rewritten. **The next session is the rules-maintenance session, group (a)** (`docs/prompts/v2-rules-maintenance-group-a.md`): F-02, F-03, F-04, F-13, F-14, F-17, F-19, F-20, F-23; 32 rules lapse on 3 Feb 2027, `ap-dma-01` on 16 Feb.
+
+## F-18 — «immediately» against DMA Art. 3(10) (17 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the F-18 session", decisions 1–8, "W.3: `tools/selftest.mjs`" and the W.4 row. **Record:** `docs/F-18-READING.md`.
+
+- **W.1** (`704a2e0`): Regulation (EU) 2022/1925 read from Cellar. Art. 3(10) gives six months after the listing; Arts 5, 6, 7 state no moment; Arts 11(1) and 15(1) use the same six months; the text uses «immediately» only for data access and national notices. **Found beyond F-18:** `clm-dma-ex-ante` cites Art. 3 itself as direct support; the Italian `part-4.p4` says «immediatamente applicabili» where English says "self-executing" and French/Spanish «d'application directe».
+- **W.2:** six decisions in §8 with the author's words (rationale, claim, English brief, overlays withdrawn, dates left, the work is the attestation).
+- **W.3** (`fe1ab0d`, then the baseline commit): see `docs/F-18-READING.md` §7. **Four checks found things I would not have**: A-4, A-8, seven selftest pins, and `agent/implement` S1B-h against the §12 baseline.
+- **W.4:** the prompt of the rules-maintenance session.
+- **Found, not fixed:** the self-executing wording; the corrigenda texts of the DMA; two sources of the rule not re-read; the withdrawn translations (no review is possible until they exist).
+- **Branch register:** `claude/cool-goodall-dr0emd`, disposition at the final checkpoint. The scout digests, `claude/brave-goldberg-gm87jp` and `claude/confident-johnson-yeffcv` are as recorded, not this session's.
+
+## V2C-17…19 — the DNA's acts, NIS 2 → eIDAS, the Political Advertising edges (17 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the V2C-17…19 session" ("As the prompt states"), decisions 1–8, and the W.4 rows. **Record:** `docs/V2C-17-19-READING.md`.
+
+- **W.1** (`5ad9922`): COM(2026) 16, NIS 2 and Regulation 2024/900 read from Cellar, SHA-256 per document. **Findings against the prompt and the data:** the DNA *repeals* three of the acts the prompt lists (Art. 209: 2018/1972, 2018/1971, 243/2012) and *amends* the others (Art. 206: 2015/2120; Art. 208: 676/2002; Art. 207, ePrivacy, already an edge, confirmed); NIS 2 Art. 42 amends 910/2014 and **Art. 43 amends 2018/1972** (not in the prompt); TTPA Art. 2(3)(f) and (h) name the AVMSD and P2B, both already nodes, and the same Article names seven more acts.
+- **W.2:** eight decisions in §8 with the author's words: five instances; nine edges (five DNA, two NIS 2, two TTPA); the other seven acts of Art. 2(3) left; the five carried open points not treated; the term `kind:decision` added.
+- **W.3** (`c269d47`): `data/` (five instruments, five sources, nine edges, one taxonomy term), `tools/selftest.mjs`, pages regenerated. 44 instruments, 53 edges. `unverified` 47 unchanged.
+- **W.4:** the prompt of F-18.
+- **Found by a check, not by me:** M-07 raised five errors (a `status:in-force` instance needs a direct, structural status reference); fixed by reading the Articles. Decision 676/2002's XHTML answers 404 but its HTML is retrievable: a 404 on one format is not "no text".
+- **Found, not fixed:** see the reading notes §2 F1–F5 and the prompt's open points (6).
+- **Battery:** all as at the start except the counts the records change; `selftest` 200/200; 23 suites and `.control-room/` exit 0; schemas and browser exit 0; `commit-evidence` 0.
+- **Branch register:** `claude/cool-goodall-dr0emd`, disposition: at the final checkpoint, on the author's answer. The scout digests, `claude/brave-goldberg-gm87jp` and `claude/confident-johnson-yeffcv` are as recorded, not this session's.
 
 ## V2C-03…05 — COM(2025) 837 and the instrument arrays (16 Nov 2026)
 
