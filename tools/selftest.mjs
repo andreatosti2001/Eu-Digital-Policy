@@ -2595,11 +2595,13 @@ test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with i
   assert.deepEqual(Object.keys(MM.HOLDER).sort(), db.taxonomy.relationship_kind.map((t) => t.id).sort());
   assert.equal(MM.modality({ kind: 'rel-kind:unheard-of', from: 'gdpr', to: 'dsa' }, ix), null);
 
-  /* the rule, measured on this tree: the 8 edges §8 names, and no other */
+  /* the rule, measured on this tree: the 8 edges §8 named, and the 5 V2C-03…05 wrote on 16 Nov 2026 (data-omnibus amends
+     eprivacy, nis2, cer, eidas, dora), and no other */
   const proposed = db.instruments.relationships.filter((r) => MM.modality(r, ix) === 'proposed').map((r) => r.id).sort();
-  assert.deepEqual(proposed, ['rel-data-act-cloud-ai-act', 'rel-data-omnibus-data-act-amends', 'rel-data-omnibus-dga-repeals',
-    'rel-data-omnibus-gdpr', 'rel-data-omnibus-p2b-repeals', 'rel-digital-networks-act-eprivacy-amends',
-    'rel-digital-networks-act-gdpr-defers', 'rel-digital-networks-act-nis2-defers']);
+  assert.deepEqual(proposed, ['rel-data-act-cloud-ai-act', 'rel-data-omnibus-cer-amends', 'rel-data-omnibus-data-act-amends',
+    'rel-data-omnibus-dga-repeals', 'rel-data-omnibus-dora-amends', 'rel-data-omnibus-eidas-amends',
+    'rel-data-omnibus-eprivacy-amends', 'rel-data-omnibus-gdpr', 'rel-data-omnibus-nis2-amends', 'rel-data-omnibus-p2b-repeals',
+    'rel-digital-networks-act-eprivacy-amends', 'rel-digital-networks-act-gdpr-defers', 'rel-digital-networks-act-nis2-defers']);
   assert.ok(db.instruments.relationships.every((r) => MM.modality(r, ix) !== null), 'every edge has a modality');
 
   /* derived, never stored: no edge carries it, and it follows the holder's status */
@@ -2618,7 +2620,7 @@ test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with i
      pages and the brief's Part IX overview all draw interactionBlock) */
   const cards = db.instruments.relationships.map((r) => interactionBlock(r, ix, r.from, '')).join('');
   assert.deepEqual(await presentTenseEdges(cards, ix), []);
-  assert.equal((cards.match(/data-modality="proposed"/g) || []).length, 8);
+  assert.equal((cards.match(/data-modality="proposed"/g) || []).length, 13);
   /* every instrument view, generated or rendered on request */
   const views = [];
   for (const inst of new Set(ix.instrument.values())) {
@@ -4168,7 +4170,7 @@ const plant = (db, over = {}) => {
 };
 const only = (res, code) => res.errors.filter((e) => e.startsWith(code));
 
-test('MP1 · this tree: 39 edges, all classified, 0 errors and 0 warnings; the backlog is the frozen one and the lists are still true', () => {
+test('MP1 · this tree: 44 edges, all classified, 0 errors and 0 warnings; the backlog is the frozen one and the lists are still true', () => {
   const db = loadDb();
   const r = mapOf(db);
   assert.deepEqual(r.errors, []);
@@ -4193,9 +4195,15 @@ test('MP1 · this tree: 39 edges, all classified, 0 errors and 0 warnings; the b
     assert.ok(e, `${id} exists`);
     assert.ok(!e.sources.some((x) => x.supports === 'supports:direct'), `${id} now has a direct reference — remove it from TEXTUAL_PARTIAL_BACKLOG`);
   }
-  /* M-15 is reported, never failing, and it is the arrays' second home: 5 entries on 16 Nov 2026, never more without a finding */
-  assert.ok(r.backlog['edge-second-home'].length <= 5, `the second home grew: ${r.backlog['edge-second-home'].join(' | ')}`);
-  assert.ok(r.backlog['edge-second-home'].every((x) => /data-omnibus/.test(x)));
+  /* M-15 is an ERROR since V2C-03…05: the arrays are gone from every record, and there is no backlog for them */
+  assert.equal(r.backlog['edge-second-home'], undefined, 'edge-second-home is not a backlog any more: a carried array is an ERROR');
+  for (const i of db.instruments.instruments) for (const f of ['amends', 'repeals', 'amended_by', 'proposes_to_amend'])
+    assert.ok(!(f in i), `instruments/${i.id} carries ${f}`);
+  /* the five edges V2C-03…05 wrote, each read in COM(2025) 837 and each its own relationship */
+  for (const to of ['eprivacy', 'nis2', 'cer', 'eidas', 'dora']) {
+    const e = relOf(db, `rel-data-omnibus-${to}-amends`);
+    assert.ok(e && e.from === 'data-omnibus' && e.to === to && e.kind === 'rel-kind:amends', `rel-data-omnibus-${to}-amends`);
+  }
 });
 
 test('MP2 · decision 1: every relationship_kind term carries the basis the author classified, and nothing else about the terms moved', () => {
@@ -4279,7 +4287,7 @@ test('MP5 · M-11 and M-13: a textual edge with no direct reference, or an enabl
   assert.ok(only(rr, 'M-11').some((x) => /rel-dsa-copyright-dsm-defers-2/.test(x)) && only(rr, 'M-13').some((x) => /rel-dsa-copyright-dsm-defers-2/.test(x)));
 });
 
-test('MP6 · M-12, M-14, M-15: a withdrawn stating act is a DEAD_EDGE warning; symmetry on a textual kind is an ERROR; an array that disagrees is counted and never fails', () => {
+test('MP6 · M-12, M-14, M-15: a withdrawn stating act is a DEAD_EDGE warning; symmetry on a textual kind is an ERROR; an instrument that carries any of the four arrays is an ERROR, empty or not', () => {
   /* M-12: which end states the edge depends on the kind — `to` for enables, `from` for amends */
   const w1 = loadDb(); relOf(w1, 'rel-nis2-csa-enables'); instOf(w1, 'csa').legislative_status = 'status:withdrawn';
   assert.ok(mapOf(w1).warnings.some((x) => /^DEAD_EDGE relationships\/rel-nis2-csa-enables: csa is withdrawn/.test(x)));
@@ -4293,15 +4301,15 @@ test('MP6 · M-12, M-14, M-15: a withdrawn stating act is a DEAD_EDGE warning; s
   assert.ok(only(mapOf(s), 'M-14').some((x) => /relationships\/rel-planted-edge: symmetric: true on rel-kind:amends, a textual kind/.test(x)));
   const s2 = loadDb(); plant(s2, { id: 'rel-planted-overlap', kind: 'rel-kind:overlap', symmetric: true, claims: ['clm-art-22-predates-ai-act'] });
   assert.deepEqual(only(mapOf(s2), 'M-14'), [], 'an analytical edge may be symmetric');
-  /* M-15: a new disagreement is counted, in both directions, and the run does not fail */
-  const m = loadDb(); const before = mapOf(m).backlog['edge-second-home'].length;
-  instOf(m, 'gdpr').amends = ['ai-act'];
-  plant(m, { id: 'rel-planted-repeal', kind: 'rel-kind:repeals', from: 'dsa', to: 'dma' });
-  const mr = mapOf(m);
-  assert.equal(mr.backlog['edge-second-home'].length, before + 2);
-  assert.ok(mr.backlog['edge-second-home'].some((x) => /^gdpr\.amends → ai-act: no relationship between gdpr and ai-act$/.test(x)));
-  assert.ok(mr.backlog['edge-second-home'].some((x) => /^rel-planted-repeal: repeals dma, and no instrument array says repeals$/.test(x)));
-  assert.deepEqual(only(mr, 'M-15'), []);
+  /* M-15: the presence of any of the four keys is an ERROR, empty or not, on any record — this tree has none */
+  assert.deepEqual(only(mapOf(loadDb()), 'M-15'), []);
+  for (const f of ['amends', 'repeals', 'amended_by', 'proposes_to_amend']) {
+    const m = loadDb(); instOf(m, 'gdpr')[f] = [];
+    assert.deepEqual(only(mapOf(m), 'M-15'), [`M-15 instruments/gdpr: carries \`${f}\` — an edge has one home, the relationships; the arrays were deleted on 16 Nov 2026 (docs/ROADMAP-v2.md §8, V2C-03…05)`], `an empty ${f} is still the second home`);
+  }
+  const m2 = loadDb(); instOf(m2, 'eidas2').amends = ['eidas']; instOf(m2, 'dsa').proposes_to_amend = ['dma'];
+  assert.equal(only(mapOf(m2), 'M-15').length, 2, 'two carriers, two errors, one per key');
+  assert.equal(mapOf(m2).backlog['edge-second-home'], undefined);
 });
 
 test('MP7 · a kind with no basis cannot be classified: M-10, M-11 and M-14 skip it and the report counts it — and M-16 names the term, in validate.mjs, on a planted copy', () => {
@@ -4329,17 +4337,17 @@ test('MP7 · a kind with no basis cannot be classified: M-10, M-11 and M-14 skip
 test('MP8 · evidence-audit.mjs prints MAP in text, --json and --markdown, exits 0 on this tree, and FAILS on a planted bare id', () => {
   const out = runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF]);
   assert.equal(out.exit, 0, 'the backlog never fails the run');
-  assert.match(out.out, /^MAP {13}39 edges · analytical 10 · textual 29$/m);
+  assert.match(out.out, /^MAP {13}44 edges · analytical 10 · textual 34$/m);
   assert.match(out.out, /^ {2}BACKLOG edge-analytical-no-claim 3: rel-dsa-dma-scope; rel-nis2-cer; rel-cra-nis2$/m);
   assert.match(out.out, /^ {2}BACKLOG edge-textual-partial 1: rel-dsa-copyright-dsm-defers$/m);
-  assert.match(out.out, /^ {2}BACKLOG edge-second-home \d+:/m);
+  assert.doesNotMatch(out.out, /BACKLOG edge-second-home/);
   assert.doesNotMatch(out.out, /BACKLOG edge-v1-sources/);
   const json = JSON.parse(runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF, '--json']).out);
-  assert.equal(json.map.edges, 39);
-  assert.deepEqual(json.map.by_basis, { analytical: 10, textual: 29 });
+  assert.equal(json.map.edges, 44);
+  assert.deepEqual(json.map.by_basis, { analytical: 10, textual: 34 });
   assert.deepEqual(json.map.unclassified, []);
   const md = runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF, '--markdown']).out;
-  assert.match(md, /\| Map edges \| 39 · analytical 10 · textual 29 \|/);
+  assert.match(md, /\| Map edges \| 44 · analytical 10 · textual 34 \|/);
   assert.match(md, /\| Backlog — edge-textual-partial \| 1 \|/);
   const dir = treeCopy();
   try {
