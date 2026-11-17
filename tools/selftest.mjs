@@ -2595,13 +2595,17 @@ test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with i
   assert.deepEqual(Object.keys(MM.HOLDER).sort(), db.taxonomy.relationship_kind.map((t) => t.id).sort());
   assert.equal(MM.modality({ kind: 'rel-kind:unheard-of', from: 'gdpr', to: 'dsa' }, ix), null);
 
-  /* the rule, measured on this tree: the 8 edges §8 named, and the 5 V2C-03…05 wrote on 16 Nov 2026 (data-omnibus amends
-     eprivacy, nis2, cer, eidas, dora), and no other */
+  /* the rule, measured on this tree: the 8 edges §8 named, the 5 V2C-03…05 wrote on 16 Nov 2026 (data-omnibus amends
+     eprivacy, nis2, cer, eidas, dora), and the 5 V2C-17…19 wrote on 17 Nov 2026 (the DNA repeals eecc, berec-regulation,
+     rspp-decision and amends open-internet-regulation, radio-spectrum-decision), and no other */
   const proposed = db.instruments.relationships.filter((r) => MM.modality(r, ix) === 'proposed').map((r) => r.id).sort();
   assert.deepEqual(proposed, ['rel-data-act-cloud-ai-act', 'rel-data-omnibus-cer-amends', 'rel-data-omnibus-data-act-amends',
     'rel-data-omnibus-dga-repeals', 'rel-data-omnibus-dora-amends', 'rel-data-omnibus-eidas-amends',
     'rel-data-omnibus-eprivacy-amends', 'rel-data-omnibus-gdpr', 'rel-data-omnibus-nis2-amends', 'rel-data-omnibus-p2b-repeals',
-    'rel-digital-networks-act-eprivacy-amends', 'rel-digital-networks-act-gdpr-defers', 'rel-digital-networks-act-nis2-defers']);
+    'rel-digital-networks-act-berec-regulation-repeals', 'rel-digital-networks-act-eecc-repeals',
+    'rel-digital-networks-act-eprivacy-amends', 'rel-digital-networks-act-gdpr-defers', 'rel-digital-networks-act-nis2-defers',
+    'rel-digital-networks-act-open-internet-regulation-amends', 'rel-digital-networks-act-radio-spectrum-decision-amends',
+    'rel-digital-networks-act-rspp-decision-repeals']);
   assert.ok(db.instruments.relationships.every((r) => MM.modality(r, ix) !== null), 'every edge has a modality');
 
   /* derived, never stored: no edge carries it, and it follows the holder's status */
@@ -2620,7 +2624,7 @@ test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with i
      pages and the brief's Part IX overview all draw interactionBlock) */
   const cards = db.instruments.relationships.map((r) => interactionBlock(r, ix, r.from, '')).join('');
   assert.deepEqual(await presentTenseEdges(cards, ix), []);
-  assert.equal((cards.match(/data-modality="proposed"/g) || []).length, 13);
+  assert.equal((cards.match(/data-modality="proposed"/g) || []).length, 18);
   /* every instrument view, generated or rendered on request */
   const views = [];
   for (const inst of new Set(ix.instrument.values())) {
@@ -2645,7 +2649,7 @@ test('V1 · 12.1: no edge whose derived modality is "proposed" is printed with i
   const caught = await presentTenseEdges(before, ix, 'digital-networks-act');
   assert.ok(caught.some((m) => /^card rel-digital-networks-act-eprivacy-amends/.test(m)), caught.join('\n'));
   assert.ok(caught.some((m) => /^related rel-digital-networks-act-eprivacy-amends/.test(m)), caught.join('\n'));
-  assert.equal(caught.length, 6, 'three cards and three Related entries');
+  assert.equal(caught.length, 10, 'five cards and five Related entries: the DNA\'s three "amends" (eprivacy, open-internet-regulation, radio-spectrum-decision) and two "defers to" (gdpr, nis2); its three "repeals" are not switched off here');
 });
 
 /* ---------------------------------------------------------------------------
@@ -3901,7 +3905,7 @@ test('MC18 · I0, the control: the instruments card holds MC-1…MC-15 on this t
   assert.deepEqual(Object.fromEntries(Object.entries(f.parts).filter(([, p]) => p.records.length).map(([k, p]) => [k, p.records.length])),
     { 'status:applicable': 6, 'status:partly-applicable': 3, 'status:in-force': 6, 'status:transposition-pending': 1, 'status:transposition-overdue': 2, 'status:proposal': 3 });
   assert.equal(Object.values(f.parts).reduce((a, p) => a + p.records.length, 0), 21, 'the parts add back to the population');
-  assert.deepEqual(Object.fromEntries(Object.entries(f.excluded).map(([k, v]) => [k, v.length])), { 'scope:referenced': 12, 'scope:out-of-scope': 6 }, 'named as excluded, not dropped');
+  assert.deepEqual(Object.fromEntries(Object.entries(f.excluded).map(([k, v]) => [k, v.length])), { 'scope:referenced': 17, 'scope:out-of-scope': 6 }, 'named as excluded, not dropped');
   assert.deepEqual(f.weak.map((w) => w.id), ['eprivacy']);
   assert.deepEqual(instrumentsByStatus(loadData().instruments.instruments, { asOf: '2026-11-09' }).past_interval.map((x) => x.id).sort(), ['cloud-ai-development-act', 'data-act', 'pld'], '§8.1 "Updating", as of 9 Nov 2026');
   /* every status term of the taxonomy is a part, so the vocabulary and the function cannot drift apart unseen */
@@ -4153,7 +4157,7 @@ test('RR6 · the CLI: the sheet exits 0 and prints the skeleton; a refused answe
    lists are frozen and only shrink, and these tests hold them to "still true".
    --------------------------------------------------------------------------- */
 
-const MAP_AS_OF = '2026-11-16';
+const MAP_AS_OF = '2026-11-17';
 const relOf = (db, id) => db.instruments.relationships.find((r) => r.id === id);
 const mapOf = (db, asOf = MAP_AS_OF) => mapAudit(db, asOf);
 const SRC_NOTE = 'an edge of this kind, planted by tools/selftest.mjs and never written to data/';
@@ -4170,7 +4174,7 @@ const plant = (db, over = {}) => {
 };
 const only = (res, code) => res.errors.filter((e) => e.startsWith(code));
 
-test('MP1 · this tree: 44 edges, all classified, 0 errors and 0 warnings; the backlog is the frozen one and the lists are still true', () => {
+test('MP1 · this tree: 53 edges, all classified, 0 errors and 0 warnings; the backlog is the frozen one and the lists are still true', () => {
   const db = loadDb();
   const r = mapOf(db);
   assert.deepEqual(r.errors, []);
@@ -4240,7 +4244,7 @@ test('MP3 · M-08 and M-09: a bare id, a bad supports, a tier-1 direct reference
   const late = loadDb(); plant(late, { last_verified: '2026-12-01' });
   const lr = mapOf(late);
   assert.deepEqual(lr.errors, []);
-  assert.ok(lr.warnings.some((w) => /^VERIFIED_AFTER_AS_OF relationships\/rel-planted-edge: last_verified 2026-12-01 is after the audit date 2026-11-16$/.test(w)));
+  assert.ok(lr.warnings.some((w) => /^VERIFIED_AFTER_AS_OF relationships\/rel-planted-edge: last_verified 2026-12-01 is after the audit date 2026-11-17$/.test(w)));
   /* and the real edges, as of a date before they were read, warn and never fail */
   assert.deepEqual(mapOf(loadDb(), '2026-10-01').errors, []);
   assert.ok(mapOf(loadDb(), '2026-10-01').warnings.length > 0);
@@ -4337,17 +4341,17 @@ test('MP7 · a kind with no basis cannot be classified: M-10, M-11 and M-14 skip
 test('MP8 · evidence-audit.mjs prints MAP in text, --json and --markdown, exits 0 on this tree, and FAILS on a planted bare id', () => {
   const out = runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF]);
   assert.equal(out.exit, 0, 'the backlog never fails the run');
-  assert.match(out.out, /^MAP {13}44 edges · analytical 10 · textual 34$/m);
+  assert.match(out.out, /^MAP {13}53 edges · analytical 10 · textual 43$/m);
   assert.match(out.out, /^ {2}BACKLOG edge-analytical-no-claim 3: rel-dsa-dma-scope; rel-nis2-cer; rel-cra-nis2$/m);
   assert.match(out.out, /^ {2}BACKLOG edge-textual-partial 1: rel-dsa-copyright-dsm-defers$/m);
   assert.doesNotMatch(out.out, /BACKLOG edge-second-home/);
   assert.doesNotMatch(out.out, /BACKLOG edge-v1-sources/);
   const json = JSON.parse(runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF, '--json']).out);
-  assert.equal(json.map.edges, 44);
-  assert.deepEqual(json.map.by_basis, { analytical: 10, textual: 34 });
+  assert.equal(json.map.edges, 53);
+  assert.deepEqual(json.map.by_basis, { analytical: 10, textual: 43 });
   assert.deepEqual(json.map.unclassified, []);
   const md = runValidator('evidence-audit.mjs', ['--as-of', MAP_AS_OF, '--markdown']).out;
-  assert.match(md, /\| Map edges \| 44 · analytical 10 · textual 34 \|/);
+  assert.match(md, /\| Map edges \| 53 · analytical 10 · textual 43 \|/);
   assert.match(md, /\| Backlog — edge-textual-partial \| 1 \|/);
   const dir = treeCopy();
   try {
@@ -4361,4 +4365,54 @@ test('MP8 · evidence-audit.mjs prints MAP in text, --json and --markdown, exits
 test('MP9 · map-audit.mjs reads, reports and writes nothing: no write, no network, no clock', () => {
   const src = readFileSync(join(ROOT, 'tools/map-audit.mjs'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   for (const verb of ['writeFileSync', 'appendFileSync', 'rmSync', 'unlinkSync', 'renameSync', 'mkdirSync', 'execFileSync', 'spawnSync', 'fetch(', 'Date.now', 'new Date(', 'process.env']) assert.equal(src.includes(verb), false, `map-audit.mjs must not use ${verb}`);
+});
+
+/* The facts V2C-17…19 wrote, as one function over a database, so the test can run it on the real tree (it must pass) and on a
+   bent copy (it must throw): a control that cannot fail is not a control. */
+const v2c1719 = (db) => {
+  const want = [
+    ['rel-digital-networks-act-eecc-repeals', 'digital-networks-act', 'eecc', 'rel-kind:repeals', 'src-eurlex-dna-proposal', 'Art. 209'],
+    ['rel-digital-networks-act-berec-regulation-repeals', 'digital-networks-act', 'berec-regulation', 'rel-kind:repeals', 'src-eurlex-dna-proposal', 'Art. 209'],
+    ['rel-digital-networks-act-rspp-decision-repeals', 'digital-networks-act', 'rspp-decision', 'rel-kind:repeals', 'src-eurlex-dna-proposal', 'Art. 209'],
+    ['rel-digital-networks-act-open-internet-regulation-amends', 'digital-networks-act', 'open-internet-regulation', 'rel-kind:amends', 'src-eurlex-dna-proposal', 'Art. 206'],
+    ['rel-digital-networks-act-radio-spectrum-decision-amends', 'digital-networks-act', 'radio-spectrum-decision', 'rel-kind:amends', 'src-eurlex-dna-proposal', 'Art. 208'],
+    ['rel-nis2-eecc-amends', 'nis2', 'eecc', 'rel-kind:amends', 'src-eurlex-nis2', 'Art. 43'],
+    ['rel-nis2-eidas-amends', 'nis2', 'eidas', 'rel-kind:amends', 'src-eurlex-nis2', 'Art. 42'],
+    ['rel-ttpa-avmsd-defers', 'ttpa', 'avmsd', 'rel-kind:defers-to', 'src-eurlex-ttpa', 'Art. 2(3)(f)'],
+    ['rel-ttpa-p2b-defers', 'ttpa', 'p2b', 'rel-kind:defers-to', 'src-eurlex-ttpa', 'Art. 2(3)(h)'],
+  ];
+  for (const [id, from, to, kind, src, loc] of want) {
+    const e = relOf(db, id);
+    assert.ok(e, `${id} exists`);
+    assert.deepEqual([e.from, e.to, e.kind], [from, to, kind], `${id}: ends and kind`);
+    assert.deepEqual(e.sources.map((x) => [x.source_id, x.supports, x.locator]), [[src, 'supports:direct', loc]], `${id}: one direct reference, to the Article`);
+  }
+  /* the five acts are referenced instances, in force, each with a direct status reference to an Article */
+  for (const [id, celex] of [['eecc', '32018L1972'], ['berec-regulation', '32018R1971'], ['rspp-decision', '32012D0243'],
+    ['open-internet-regulation', '32015R2120'], ['radio-spectrum-decision', '32002D0676']]) {
+    const i = instOf(db, id);
+    assert.equal(i.celex, celex);
+    assert.equal(i.scope_class, 'scope:referenced');
+    assert.equal(i.legislative_status, 'status:in-force');
+    assert.ok(i.status_basis.some((b) => b.supports === 'supports:direct' && /^Art\. /.test(b.locator)), `${id}: status rests on a read Article`);
+  }
+  assert.equal(instOf(db, 'rspp-decision').kind, 'kind:decision');
+  assert.equal(instOf(db, 'radio-spectrum-decision').kind, 'kind:decision');
+};
+
+test('MP10 · V2C-17…19: the nine edges and the five instruments are what the texts read on 17 Nov 2026 say, and a change to any of them fails', () => {
+  v2c1719(loadDb());
+  const bend = [
+    (d) => { relOf(d, 'rel-digital-networks-act-eecc-repeals').kind = 'rel-kind:amends'; },
+    (d) => { relOf(d, 'rel-nis2-eidas-amends').sources[0].locator = 'Art. 41'; },
+    (d) => { relOf(d, 'rel-ttpa-p2b-defers').sources[0].supports = 'supports:partial'; },
+    (d) => { d.instruments.relationships = d.instruments.relationships.filter((r) => r.id !== 'rel-ttpa-avmsd-defers'); },
+    (d) => { instOf(d, 'open-internet-regulation').scope_class = 'scope:core'; },
+    (d) => { instOf(d, 'eecc').status_basis = instOf(d, 'eecc').status_basis.filter((b) => b.supports !== 'supports:direct'); },
+    (d) => { instOf(d, 'radio-spectrum-decision').kind = 'kind:implementing-decision'; },
+  ];
+  for (const [n, f] of bend.entries()) {
+    const d = loadDb(); f(d);
+    assert.throws(() => v2c1719(d), `bend ${n} is caught`);
+  }
 });
