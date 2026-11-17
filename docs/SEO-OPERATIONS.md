@@ -197,6 +197,15 @@ The tool pages are not translated and must never carry alternates.
   until then read as an application date), the enforcement count, and the objective up to its
   colon, dropped rather than truncated when the whole would pass `MAX_DESC`. Every value is read
   from the record; a regime with no recorded ceiling says "enforcement", never a figure.
+  **Reordered on 17 Nov 2026** (Search Console, 20 Oct–16 Nov 2026, the author's screenshots: 3.94K
+  impressions, 38 clicks, CTR 1%; the head queries were the instruments' own names — "nis2
+  directive" 141 impressions, "cyber resilience act" 75, "digital markets act" 74, "eu data act"
+  64, all 0 clicks): the name and act number lead, then the status with the date it was assessed,
+  then who it binds (a proposal: who it would affect) and the fine ceiling, the enforcement count
+  and the objective. The "in short: who it binds …, what it requires, key dates and …" lead is gone:
+  it listed sections and pushed the status past ~155 characters on every page. Same fields, same
+  values; a regime with no recorded ceiling now simply states none. `tools/selftest.mjs` S9 holds
+  the order. Whether CTR moves is for the next Search Console snapshot to show.
 - **Section headings and "In short"** (`js/instrument-view.js` `headings()`, `inShort()`): each
   section is headed by the reader's question ("When does the DMA apply? Key dates"), in the
   conditional for a proposal; the box under the head restates six fields the sections render in

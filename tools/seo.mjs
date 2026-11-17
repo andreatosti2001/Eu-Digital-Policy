@@ -238,21 +238,34 @@ const lowerLead = (s) => /^[A-Z](?![A-Z0-9])/.test(s) && !/^[A-Z][a-z]* [A-Z][a-
    drew 830 impressions and 6 clicks in three months. Every value is still
    read from the record: the actors through the taxonomy, the ceiling from
    dna.sanction_ceiling (left out, never guessed, where the record holds no
-   figure), the status with the date it was assessed, then the objective. */
+   figure), the status with the date it was assessed, then the objective.
+
+   17 Nov 2026: the facts lead and the promises go. Search Console for
+   20 Oct–16 Nov 2026 (the author's screenshots): 3.94K impressions, 38
+   clicks, CTR 1%, the head queries being the instruments' own names
+   ("nis2 directive" 141 impressions, "cyber resilience act" 75, "digital
+   markets act" 74, "eu data act" 64, all 0 clicks). Measured on the
+   generated pages that day, the first ~155 characters were spent on
+   "in short: who it binds …, what it requires, key dates and …" — a list
+   of what the page covers — and the status, the one fact a searcher
+   cannot read off EUR-Lex's own result, fell past the cut on every
+   instrument page. Now: the name and act number, the status with the
+   date it was assessed, then who it binds and the fine ceiling, then the
+   enforcement count and the objective. Same values from the same fields;
+   only the order and the connecting words changed. Whether CTR moves is
+   for Search Console to say — nothing here can measure it. */
 function instrumentDescription(inst, ix, db) {
   const num = actNumber(inst);
   const name = displayName(inst);
+  const proposal = inst.kind === 'kind:proposal';
   /* up to three actors by name; a longer list (DSA, AI Act) names two and
      counts the rest, so it does not spend the snippet; the page names all */
   const actors = (inst.dna.regulated_actor || []).map((a) => lowerLead(taxLabel(ix, a)));
   const who = !actors.length ? ''
-    : actors.length > 3 ? ` (${actors.slice(0, 2).join(', ')} and ${actors.length - 2} more)` : ` (${joinFacets(actors)})`;
+    : actors.length > 3 ? `${actors.slice(0, 2).join(', ')} and ${actors.length - 2} more` : joinFacets(actors);
   const s = inst.dna.sanction_ceiling || {};
   const ceiling = [s.pct_global_turnover != null ? s.pct_global_turnover + '% of global turnover' : null,
     s.fixed_eur != null ? F.eur(s.fixed_eur) : null].filter(Boolean).join(' / ');
-  const what = inst.kind === 'kind:proposal'
-    ? `who it would affect${who}, what it would change and where it stands`
-    : `who it binds${who}, what it requires, key dates and ${ceiling ? `fines of up to ${ceiling}` : 'enforcement'}`;
   /* "applicable as of 19 August 2026" read as the date it became applicable;
      it is the date the status was assessed, so it says so */
   const status = `${taxLabel(ix, inst.legislative_status)} (status as of ${F.humanDate(inst.status_as_of)})`;
@@ -261,9 +274,13 @@ function instrumentDescription(inst, ix, db) {
   /* the objective up to its colon: where a record has one, what follows it
      is the elaboration the page carries in full */
   const obj = String(inst.dna.objective).split(/:\s/)[0].trim().replace(/\.?$/, '.');
-  const head = `${name} in short: ${what}. ` +
-    (num && !name.includes(num) ? `${num}, ${lowerLead(status)}` : status) +
-    (enf ? `; ${plural(enf, 'enforcement record')}` : '') + '.';
+  /* a proposal binds nobody yet, and no ceiling is stated for one */
+  const reach = proposal
+    ? (who ? `Would affect ${who}.` : '')
+    : [who ? `Binds ${who}` : '', ceiling ? `fines of up to ${ceiling}` : ''].filter(Boolean).join('; ');
+  const head = (num && !name.includes(num) ? `${name}, ${num}: ${lowerLead(status)}.` : `${name}: ${lowerLead(status)}.`) +
+    (reach ? ' ' + reach[0].toUpperCase() + reach.slice(1).replace(/\.?$/, '.') : '') +
+    (enf ? ` ${plural(enf, 'enforcement record')}.` : '');
   /* the aim only while the whole stays inside what tools/seo-audit.mjs
      accepts without a warning (MAX_DESC, 420) */
   return (head + ` Aim: ${obj}`).length <= 420 ? head + ` Aim: ${obj}` : head;
