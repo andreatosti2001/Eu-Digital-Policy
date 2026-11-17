@@ -453,7 +453,7 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 **Baseline at commit `7248290`** (all four run in this session; the last line was added on 10 Nov 2026 and is explained below the block):
 
 ```
-validate.mjs     0 errors · 5 warnings · 47 unverified/requires-verification · exit 0
+validate.mjs     0 errors · 7 warnings · 47 unverified/requires-verification · exit 0
 design-qa.mjs    0 errors · 0 warnings · exit 0
 i18n-audit.mjs   0 errors · 0 warnings
 freshness.mjs    reports only · exit 0
@@ -522,6 +522,13 @@ of `src-eurlex-eudi-2024-2977`; the same on the "Citation ('in particular Articl
 `src-eurlex-eudi-2024-2981`; and on the provisions `eidas2:art-5a`, `eidas2:art-2` and `eidas2:art-3`, Articles of
 Regulation (EU) No 910/2014 recorded under the amending Regulation's source. `tools/selftest.mjs` pins exactly these
 five (`EIDAS2_A8`, in AT0, AT1 and AT9); any other `validate.mjs` warning, or a sixth, is a finding, as it always was.
+
+**`validate.mjs` warnings, 5 → 7 (17 Nov 2026, F-18, roadmap §8 "F-18, W.3, decisions 7 and 8").** `ap-dma-01` was re-attested on
+17 Nov 2026 and its `attestation.read` names only what was read that day (Regulation (EU) 2022/1925); A-8 therefore names, as two
+more `ATTESTATION_NOT_CHECKABLE applicability/ap-dma-01` warnings, `src-ec-dma-review-2026` (in the exemption) and
+`src-ec-apple-meta-dma-2025` (in sources), which the rule cites, which are not tier-1, and which were read on 4 Nov 2026 and not
+again. Neither is a defect: each is a statement of what was not re-read. `tools/selftest.mjs` pins them (`DMA01_A8`, in AT0, AT1
+and AT9); any other warning is a finding, as it always was. The `unverified` count is unchanged (47).
 
 **Unchanged in SESSION 30, and that is the point of recording it.** All four still report
 exactly these numbers. `freshness.mjs` reached `exit 0` by the exit code answering a question

@@ -1,8 +1,19 @@
 # HANDOVER
 
-**Last updated:** 17 November 2026 (UTC), after the V2C-17…19 session (Track R: the DNA's acts, NIS 2 → eIDAS, the Political Advertising edges), at its final checkpoint.
-**Branch:** `claude/cool-goodall-dr0emd`, from `main` `83295cb` (#118 merged).
-**Read first:** the map now has 44 instances and 53 edges (43 textual). **The next session is F-18** (`docs/prompts/v2-f-18-dma-immediately.md`), approved only with this work: DMA Art. 3(10) against «immediately» in `ap-dma-01`, `clm-dma-ex-ante` and `part-4.p2`; the 33 rules lapse together on 28 Jan 2027 and `ap-dma-01` is due by 3 Feb 2027.
+**Last updated:** 17 November 2026 (UTC), after the F-18 session (Track R: DMA Art. 3(10) against «immediately»), at its final checkpoint, on the branch of V2C-17…19.
+**Branch:** `claude/cool-goodall-dr0emd`, from `main` `83295cb` (#118 merged). **`main` does not yet contain V2C-17…19 or F-18**: both sit on this branch, no PR opened (the author chose to work on it).
+**Read first:** F-18 is closed for `ap-dma-01`, `clm-dma-ex-ante` and the English `part-4.p2`; the Italian, French and Spanish strings are withdrawn, not rewritten. **The next session is the rules-maintenance session, group (a)** (`docs/prompts/v2-rules-maintenance-group-a.md`): F-02, F-03, F-04, F-13, F-14, F-17, F-19, F-20, F-23; 32 rules lapse on 3 Feb 2027, `ap-dma-01` on 16 Feb.
+
+## F-18 — «immediately» against DMA Art. 3(10) (17 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the F-18 session", decisions 1–8, "W.3: `tools/selftest.mjs`" and the W.4 row. **Record:** `docs/F-18-READING.md`.
+
+- **W.1** (`704a2e0`): Regulation (EU) 2022/1925 read from Cellar. Art. 3(10) gives six months after the listing; Arts 5, 6, 7 state no moment; Arts 11(1) and 15(1) use the same six months; the text uses «immediately» only for data access and national notices. **Found beyond F-18:** `clm-dma-ex-ante` cites Art. 3 itself as direct support; the Italian `part-4.p4` says «immediatamente applicabili» where English says "self-executing" and French/Spanish «d'application directe».
+- **W.2:** six decisions in §8 with the author's words (rationale, claim, English brief, overlays withdrawn, dates left, the work is the attestation).
+- **W.3** (`fe1ab0d`, then the baseline commit): see `docs/F-18-READING.md` §7. **Four checks found things I would not have**: A-4, A-8, seven selftest pins, and `agent/implement` S1B-h against the §12 baseline.
+- **W.4:** the prompt of the rules-maintenance session.
+- **Found, not fixed:** the self-executing wording; the corrigenda texts of the DMA; two sources of the rule not re-read; the withdrawn translations (no review is possible until they exist).
+- **Branch register:** `claude/cool-goodall-dr0emd`, disposition at the final checkpoint. The scout digests, `claude/brave-goldberg-gm87jp` and `claude/confident-johnson-yeffcv` are as recorded, not this session's.
 
 ## V2C-17…19 — the DNA's acts, NIS 2 → eIDAS, the Political Advertising edges (17 Nov 2026)
 

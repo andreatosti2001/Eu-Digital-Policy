@@ -89,3 +89,29 @@ corrigendum; the two Commission sources of the timeline event; consolidated law;
 | Q4 | the three overlays of `part-4.p2` and the Italian `part-4.p4` (rows 4–5) | (A) correct the English; **withdraw** the four overlay strings as `superseded` (the page falls back to English until a translation is authored); (B) correct the English and write the four strings (unreviewed; the session is not a reviewer); (C) leave overlays | **A** (a translation I write is not a reviewed translation; a withdrawn one is declared) |
 | Q5 | `ap-dma-01.dates` (row 7) | (A) add `tl-dma-2024-03-07-compliance` to the rule's dates; (B) leave | **B** — the event rests on two Commission sources not re-read here and the rule is about the Article; a date added to a rule on sources not re-read is the pattern the prompt forbids |
 | Q6 | the attestation of `ap-dma-01` | the work is its attestation (steps 1–6 of `docs/RULE-MAINTENANCE.md`: `last_verified` 17 Nov 2026, `outcome` `changed`, A-1…A-8 clean) / no re-attestation, keep `last_verified` 4 Nov | the work is the attestation, **only if Q1 is A or C** |
+
+## 7. What was written (W.3), and what the checks found
+
+On the author's decisions 1 to 8 of 17 Nov 2026 (`docs/ROADMAP-v2.md` §8), commit `fe1ab0d`: `data/applicability.json` (`ap-dma-01`: the
+rationale, `last_verified` 17 Nov 2026, the `verification_note`, the attestation — `outcome` `changed`, read Arts 1, 2, 3, 5, 6, 7,
+11(1), 13, 15(1), 54; `dates` unchanged); `data/claims.json` (`clm-dma-ex-ante`: the statement, `last_verified`, a
+`verification_note`; type, provisions and sources unchanged); `index.html` (the English `part-4.p2`); `i18n/` (the it, fr, es
+`part-4.p2` and the it `part-4.p4` withdrawn as `superseded`; `locales.json` counts and declarations); `tools/selftest.mjs` (the pinned
+dates and the A-8 lists; A8's scratch copy); generated pages regenerated. Arts 1, 2(1) and 13 were read in addition to what F-18 named
+because A-4 requires the attestation to cover every Article the rule cites; they agree with what the rule cites of them.
+
+**Found by the checks, not by me, and what was done:** (1) A-4 on the first attestation (it omitted Arts 1, 2, 13): the Articles were
+read, not the check loosened; (2) A-8: the two non-tier-1 sources the rule cites were read on 4 Nov and not again — decision 7: not
+claimed, two named warnings accepted; (3) seven tests of `tools/selftest.mjs` pinned what the data was — §8 row before the file was
+touched; (4) the 25-suite run, not the validators, found `agent/implement` S1B-h: `validate` at 7 warnings against the 5 recorded in
+`docs/CURRENT-ARCHITECTURE.md` §12 — decision 8: the baseline moves 5 → 7, with a paragraph naming the two cases. **A baseline
+changed by a data decision needs the 25 suites, not the validators** (the V2C-13 lesson, again).
+
+**Measured after:** `validate` 0 errors, 7 warnings, `unverified` 47 unchanged; `i18n-audit`, `design-qa`, `seo-audit` 0;
+`selftest` 200/200; `freshness`: 32 rules lapse on 3 Feb 2027 and `ap-dma-01` on 16 Feb (an earlier "28 Jan" in the F-18 prompt and
+the §8 scope row was true of the tree of 3 Nov; it is not now).
+
+**Not established, carried to the next prompt:** the self-executing character of Art. 5; the corrigenda texts; the two Commission
+sources of the timeline event; the two not-re-read sources of the rule; any translation of the corrected sentences (withdrawn, not
+written); consolidated law; case law.
+
