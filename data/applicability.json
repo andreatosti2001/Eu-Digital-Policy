@@ -351,7 +351,7 @@
         "actor": ["actor:gatekeeper"]
       },
       "outcome": "outcome:applies",
-      "rationale": "Designation is the switch. Once an undertaking is designated for a core platform service, the Article 5 prohibitions apply immediately and self-executingly, with no requirement to demonstrate anticompetitive effect in the individual case.",
+      "rationale": "Designation is the switch. Once an undertaking is designated for a core platform service, the Article 5 prohibitions must be complied with within six months after the core platform service is listed in the designation decision (Art. 3(10)), and apply self-executingly, with no requirement to demonstrate anticompetitive effect in the individual case.",
       "obligations": ["dma:art-5", "dma:art-6", "dma:art-7", "dma:art-13"],
       "authority": ["ec"],
       "dates": ["tl-dma-2023-05-01-application"],
@@ -369,18 +369,16 @@
       "condition_provisions": {
         "actor": ["dma:art-2", "dma:art-3"]
       },
-      "last_verified": "2026-11-04",
-      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1, 2, 3, 5, 6, 7 and 13. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression; read that day, it changes Art. 13(8) alone ('Paragraph 6' becomes 'Paragraph 7'). Also read that day: the Review Report COM(2026) 178 final (PDF at the URL the source records), Section 5, page 14, 'The DMA applies only to designated gatekeepers and does not impose direct obligations on SMEs' — the exemption's direct basis; the DMA's text addresses gatekeepers without naming SMEs, hence partial; and IP/25/1085 through the press corner's documents API, which names no article of the DMA, kept as context. Finding F-18 stays open, on the author's decision of 4 Nov 2026, for the evidence session to which it is assigned with clm-dma-ex-ante and the brief's part-4.p2: the rationale says the Article 5 prohibitions apply 'immediately', while Art. 3(10) reads 'The gatekeeper shall comply with the obligations laid down in Articles 5, 6 and 7 within 6 months after a core platform service has been listed in the designation decision', and IP/25/1085 calls March 2024 the time 'when the DMA obligations became legally binding'. Read against the rule, nothing else was found to change. First brought to the v2 shape on 29 Oct 2026 (v2 Session 15). Conditions, outcome, rationale, obligations, exemptions and depends_on were not changed. The claims were not re-read.",
+      "last_verified": "2026-11-17",
+      "verification_note": "4 Nov 2026 (v2 Session 23): re-read in the Official Journal text of Regulation (EU) 2022/1925 retrieved from the Publications Office's Cellar by CELEX (32022R1925): Arts 1, 2, 3, 5, 6, 7 and 13. The Publications Office's SPARQL endpoint, queried that day, lists no act amending the Regulation and three corrigenda, of which only 32022R1925R(02) has an English expression; read that day, it changes Art. 13(8) alone ('Paragraph 6' becomes 'Paragraph 7'). Also read that day: the Review Report COM(2026) 178 final (PDF at the URL the source records), Section 5, page 14, 'The DMA applies only to designated gatekeepers and does not impose direct obligations on SMEs' — the exemption's direct basis; the DMA's text addresses gatekeepers without naming SMEs, hence partial; and IP/25/1085 through the press corner's documents API, which names no article of the DMA, kept as context. Finding F-18 (the rationale said the Article 5 prohibitions apply 'immediately') was left open on 4 Nov 2026 for its evidence session and was closed on 17 Nov 2026, below. As it stood on 4 Nov: while Art. 3(10) reads 'The gatekeeper shall comply with the obligations laid down in Articles 5, 6 and 7 within 6 months after a core platform service has been listed in the designation decision', and IP/25/1085 calls March 2024 the time 'when the DMA obligations became legally binding'. Read against the rule, nothing else was found to change. First brought to the v2 shape on 29 Oct 2026 (v2 Session 15). Conditions, outcome, rationale, obligations, exemptions and depends_on were not changed. The claims were not re-read. F-18, closed on 17 Nov 2026 (docs/F-18-READING.md), on the author's decisions 1, 5 and 6 of that date (docs/ROADMAP-v2.md §8): Art. 3(10) of Regulation (EU) 2022/1925 re-read in the Official Journal text retrieved from Cellar by CELEX 32022R1925 (SHA-256 in the reading notes §1), with Arts 1, 2(1), 3(9), 5(1), 6(1), 7(1), 11(1), 13, 15(1) and 54 (Arts 1, 2(1) and 13 agree with what the rule cites of them and were not otherwise re-examined); the Publications Office's SPARQL endpoint, queried that day, lists no amending act and three corrigenda (R(01), R(02), R(03)), none of whose texts was retrievable in English that day (R(02) is recorded as changing Art. 13(8) alone, not re-read). The rationale now says the Article 5 prohibitions must be complied with within six months after the core platform service is listed in the designation decision (Art. 3(10)). The sentence's 'self-executingly' and 'no requirement to demonstrate anticompetitive effect' were not re-tested. `dates` unchanged by decision (tl-dma-2024-03-07-compliance rests on two Commission sources not re-read). The Review Report and IP/25/1085 were not re-read that day.",
       "attestation": {
-        "of": "2026-11-04",
+        "of": "2026-11-17",
         "read": [
-          { "source_id": "src-eurlex-dma", "locator": "Art. 1; Art. 2; Art. 3; Art. 5; Art. 6; Art. 7; Art. 13" },
-          { "source_id": "src-ec-dma-review-2026", "locator": "Section 5 (Conclusions), page 14" },
-          { "source_id": "src-ec-apple-meta-dma-2025", "locator": "IP/25/1085" }
+          { "source_id": "src-eurlex-dma", "locator": "Art. 1; Art. 2; Art. 3; Art. 5; Art. 6; Art. 7; Art. 11(1); Art. 13; Art. 15(1); Art. 54" }
         ],
         "queried": ["src-eurlex-dma"],
-        "outcome": "unchanged",
-        "decisions": ["v2 Session 23, 23.2: `ap-dma-01` and F-18"]
+        "outcome": "changed",
+        "decisions": ["F-18, W.2, decision 1 (Q1): `ap-dma-01.rationale`", "F-18, W.2, decision 6 (Q6): the attestation of `ap-dma-01`"]
       }
     },
     {

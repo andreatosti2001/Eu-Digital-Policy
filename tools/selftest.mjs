@@ -485,7 +485,7 @@ const READ_V2_23 = Object.freeze({
   'ap-dsa-02': '2026-11-04',
   'ap-dsa-04': '2026-11-04',
   'ap-dsa-05': '2026-11-04',
-  'ap-dma-01': '2026-11-04',
+  'ap-dma-01': '2026-11-17', /* F-18 (§8, 17 Nov 2026, decisions 1 to 7): re-read and changed, the work being its attestation */
   'ap-dma-02': '2026-11-04',
   'ap-dma-03': '2026-11-04',
   'ap-ai-act-01': '2026-11-04',
@@ -510,6 +510,12 @@ const dateOf = (id) => READ_V2_23[id] ?? (READ_2026_11_04.includes(id) ? '2026-1
 const NEWEST_READ = ['2026-11-04', ...Object.values(READ_V2_23)].sort().at(-1);
 /* v2 Session 24 (§8, 24.1: `ap-eidas2-01`'s five A-8 warnings and the pins that hold them): the five cases
    docs/ATTESTATION-FORM.md §5 point 1 foresaw, named exactly; any other warning, or a sixth, still fails */
+/* F-18 (§8, 17 Nov 2026, decision 7): the two cases of `ap-dma-01`, whose `attestation.read` lists only what was read on 17 Nov 2026 —
+   the Review Report and IP/25/1085 were read on 4 Nov and not again; named exactly, as ap-eidas2-01's are */
+const DMA01_A8 = Object.freeze([
+  'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-01: the rule cites src-ec-apple-meta-dma-2025 (not tier-1) in sources, and attestation.read does not name it',
+  'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-01: the rule cites src-ec-dma-review-2026 (not tier-1) in exemption, and attestation.read does not name it',
+]);
 const EIDAS2_A8 = Object.freeze([
   "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2977 «Citation ('in particular Article 5a(23) thereof')» names no Article, Annex or Recital the check can read",
   "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2981 «Citation ('in particular Article 5c(6) thereof')» names no Article, Annex or Recital the check can read",
@@ -517,6 +523,8 @@ const EIDAS2_A8 = Object.freeze([
   'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-2 ("2 (of Regulation (EU) No 910/2014, as amended)") cannot be placed in a tier-1 text',
   'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-3 ("3 (of Regulation (EU) No 910/2014, as amended)") cannot be placed in a tier-1 text',
 ]);
+/** Every A-8 warning the tree carries, in the order the audit prints them (rules in file order: ap-dma-01 before ap-eidas2-01). */
+const TREE_A8 = Object.freeze([...DMA01_A8, ...EIDAS2_A8]);
 
 test('F10 · 17.3(b): the applicability rules are aged one by one, at 90 days, and a stale rule is a prompt, never a defect', () => {
   /* v2 Session 17 (29 Oct 2026, docs/ROADMAP-v2.md §8, 17.0 questions 8b and 9; named F10 because
@@ -1698,6 +1706,10 @@ test('A8 · an edition is offered to search engines exactly when its review is c
   const dir = siteCopy('editions');
   const regenerate = async () => { const { files } = await generateSite(dir); for (const [f, s] of files) { mkdirSync(join(dir, f, '..'), { recursive: true }); writeFileSync(join(dir, f), s); } };
   try {
+    /* F-18 (§8, 17 Nov 2026, decision 4): the Italian strings part-4.p2 and part-4.p4 are withdrawn as `superseded`, so the real
+       Italian edition cannot be reviewed complete until they are translated. This test is about the rule (an edition is offered exactly
+       when its review is complete), so the scratch copy gives those keys a placeholder text before the review is recorded. */
+    edit(dir, 'i18n/it.json', (x) => { const o = JSON.parse(x); o['part-4.p2'] = 'placeholder'; o['part-4.p4'] = 'placeholder'; return JSON.stringify(o); });
     /* a complete Italian review, recorded in the scratch copy as a person would */
     const st = E.reviewState('it', { root: dir, englishTitle: home.title, englishDescription: home.description });
     const ledger = { locale: 'it', entries: Object.fromEntries(st.keys.map((k) => [k.key, { fingerprint: k.fp, reviewed_by: 'A Reviewer', reviewed_on: '2026-10-22' }])) };
@@ -3248,7 +3260,7 @@ test('AT0 · this tree: exactly the rules closed in the form (v2 Sessions 23–2
   const db = loadDb();
   const a = attestationAudit(db, ROADMAP);
   assert.deepEqual(a.errors, []);
-  assert.deepEqual(a.warnings, [...EIDAS2_A8], 'exactly the five A-8 cases of ap-eidas2-01 (§8, 24.1)');
+  assert.deepEqual(a.warnings, [...TREE_A8], 'exactly the five A-8 cases of ap-eidas2-01 (§8, 24.1) and the two of ap-dma-01 (§8, F-18 decision 7)');
   assert.deepEqual([...a.attested].sort(), Object.keys(READ_V2_23).sort(), 'the closures in the form (v2 Sessions 23–24), and no backfill (plan §2)');
   /* §8, 22.1 question 4: the last day a rule was read without the form. Not moved to excuse a rule. */
   assert.equal(FORM_FROM, '2026-11-04');
@@ -3260,13 +3272,13 @@ test('AT0 · this tree: exactly the rules closed in the form (v2 Sessions 23–2
   const v = runValidator('validate.mjs');
   assert.equal(v.exit, 0);
   assert.doesNotMatch(v.out, /\bA-\d /);
-  assert.deepEqual(v.out.split('\n').filter((l) => /ATTESTATION_NOT_CHECKABLE/.test(l)).map((l) => l.trim().replace(/^! /, '')), [...EIDAS2_A8]);
+  assert.deepEqual(v.out.split('\n').filter((l) => /ATTESTATION_NOT_CHECKABLE/.test(l)).map((l) => l.trim().replace(/^! /, '')), [...TREE_A8]);
 });
 
 test('AT1 · the control: ap-cra-01\'s closure of 4 Nov 2026, written in the form, passes every check', () => {
   const a = withCra();
   assert.deepEqual(a.errors, []);
-  assert.deepEqual(a.warnings, [...EIDAS2_A8], 'the tree\'s five A-8 cases (§8, 24.1), and nothing from the fixture');
+  assert.deepEqual(a.warnings, [...TREE_A8], 'the tree\'s seven A-8 cases (§8, 24.1 and F-18 decision 7), and nothing from the fixture');
   /* v2 Session 23 (§8, 23.1: two selftest pins the first closure broke): the fixture, and the tree's closures */
   assert.deepEqual([...a.attested].sort(), ['ap-cra-01', ...Object.keys(READ_V2_23)].sort());
 });
@@ -3372,6 +3384,7 @@ test('AT9 · A-8 names what the check cannot resolve, as WARNINGs, and skips not
   });
   assert.deepEqual(a.errors, []);
   assert.deepEqual(a.warnings, [
+    ...DMA01_A8,
     "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2977 «Citation ('in particular Article 5a(23) thereof')» names no Article, Annex or Recital the check can read",
     "ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: sources src-eurlex-eudi-2024-2981 «Citation ('in particular Article 5c(6) thereof')» names no Article, Annex or Recital the check can read",
     'ATTESTATION_NOT_CHECKABLE applicability/ap-eidas2-01: provision eidas2:art-5a ("5a (of Regulation (EU) No 910/2014, as inserted)") cannot be placed in a tier-1 text',
@@ -3383,6 +3396,8 @@ test('AT9 · A-8 names what the check cannot resolve, as WARNINGs, and skips not
     read: [{ source_id: 'src-eurlex-dma', locator: 'Art. 1; Art. 2; Art. 3' }] }; });
   assert.deepEqual(t2.errors, []);
   assert.deepEqual(t2.warnings, [
+    /* the tree's own (§8, F-18 decision 7), first in file order */
+    ...DMA01_A8,
     'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-04: the rule cites src-ec-dma-cloud-mi-2025 (not tier-1) in sources, and attestation.read does not name it',
     'ATTESTATION_NOT_CHECKABLE applicability/ap-dma-04: the rule cites src-ec-cloud-gatekeeper-preliminary-2026 (not tier-1) in sources, and attestation.read does not name it',
     /* the tree's own (§8, 24.1) */
