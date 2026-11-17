@@ -4431,3 +4431,20 @@ test('MP10 · V2C-17…19: the nine edges and the five instruments are what the 
     assert.throws(() => v2c1719(d), `bend ${n} is caught`);
   }
 });
+
+test('S9 · an instrument description leads with its status and the date it was assessed (17 Nov 2026)', () => {
+  /* The order is the change: Search Console showed the head queries are the
+     instruments' own names, and the status — the fact a searcher cannot read
+     off EUR-Lex's own result — fell past the ~155 characters a result shows.
+     This holds the order, not the CTR: nothing here can measure that. */
+  const dirs = readdirSync(join(ROOT, 'instruments'), { withFileTypes: true }).filter((d) => d.isDirectory());
+  assert.ok(dirs.length > 0, 'no instrument pages');
+  for (const d of dirs) {
+    const page = readFileSync(join(ROOT, 'instruments', d.name, 'index.html'), 'utf8');
+    const desc = page.match(/<meta content="([^"]*)" name="description"/)[1];
+    const at = desc.indexOf('(status as of ');
+    assert.ok(at >= 0, `${d.name}: no "status as of" in the description`);
+    assert.ok(at + '(status as of 30 September 2026)'.length <= 155, `${d.name}: the status ends past 155 characters`);
+    assert.doesNotMatch(desc, / in short: who it /, `${d.name}: the old list-of-sections lead is back`);
+  }
+});

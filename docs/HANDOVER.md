@@ -4,6 +4,15 @@
 **Branch:** `claude/cool-goodall-dr0emd`, from `main` `83295cb` (#118 merged). **`main` does not yet contain V2C-17…19 or F-18**: both sit on this branch, no PR opened (the author chose to work on it).
 **Read first:** F-18 is closed for `ap-dma-01`, `clm-dma-ex-ante` and the English `part-4.p2`; the Italian, French and Spanish strings are withdrawn, not rewritten. **The next session is the rules-maintenance session, group (a)** (`docs/prompts/v2-rules-maintenance-group-a.md`): F-02, F-03, F-04, F-13, F-14, F-17, F-19, F-20, F-23; 32 rules lapse on 3 Feb 2027, `ap-dma-01` on 16 Feb.
 
+## SEO — instrument descriptions lead with status and date (17 Nov 2026)
+
+**Authority:** the author's answers in the session of 17 Nov 2026 (Search Console screenshots for 20 Oct–16 Nov 2026; "Si" to opening the PR). **Record:** `docs/SEO-OPERATIONS.md` §7, "Reordered on 17 Nov 2026".
+
+- `tools/seo.mjs instrumentDescription()` reordered; 17 instrument pages regenerated; `tools/selftest.mjs` S9 added (201/201).
+- **Battery:** validators 0 errors (warnings identical to the base); browser suite exit 0; agent suites pass except `agent/proposals/governance` 6 failures, identical on the unchanged base, because the session's clone was shallow and that suite reads history.
+- **Not changed:** titles (they already lead with the query term); `MAX_TITLE`/`MAX_DESC`. **Not known:** average position per query — not in the screenshots, so whether the head queries are on page 1 is undetermined.
+- **Branch register:** `seo/snippets-2026-11`, disposition: on the author's answer ("Si"), a pull request to `main`, opened by the session, to be merged by the author.
+
 ## F-18 — «immediately» against DMA Art. 3(10) (17 Nov 2026)
 
 **Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the F-18 session", decisions 1–8, "W.3: `tools/selftest.mjs`" and the W.4 row. **Record:** `docs/F-18-READING.md`.
