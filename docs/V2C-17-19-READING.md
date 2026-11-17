@@ -15,11 +15,11 @@ Commission's document), **not a consolidated version**: no amendment made after 
 | COM(2026) 16 final, its Annexes | same, `DOC_2` | 44 602 | `040e2da79e2b1a84dc083b0e3c8e30d71f02acebb0949367e17d460c26ec0456` |
 | Directive (EU) 2022/2555 (NIS 2) | `celex/32022L2555` | 702 913 | `6ee66d5c419d9a056fb98d94083cacf9b818803bd6b416435718e0d4919cb589` |
 | Regulation (EU) 2024/900 (political advertising) | `celex/32024R0900` | 370 804 | `ae0a5e8fca438c320dcd9838c114b5abb8ea70292e3608d4f0e0e1eb83993302` |
-| Directive (EU) 2018/1972 (EECC), Art. 1 only read | `celex/32018L1972` | 1 556 085 | `87e2dae5b83700e6f40ff105b8ee5d5395cc778ad92d4a046a44cbde3d011eb3` |
-| Regulation (EU) 2018/1971 (BEREC), Art. 1 and title read | `celex/32018R1971` | 292 929 | `2072375b2e49aca56b10d4627bc42d0c2a8cbc512e886fa6cd410ca85e676382` |
-| Decision No 243/2012/EU, Art. 1 and title read | `celex/32012D0243` | 120 148 | `d1a63ee9eb70a153d86eae4d0914800fafce3d9b3ead0e78756faf9254fbc801` |
-| Regulation (EU) 2015/2120, Art. 1 and title read | `celex/32015R2120` | 165 618 | `6be7c7dee2051a82790baab17498a450bf43b032bcd48206bb5731a8923bc3e2` |
-| Decision No 676/2002/EC | `celex/32002D0676` | — | **no text**: the XHTML request answers HTTP 404; the title was read from the metadata only (§2) |
+| Directive (EU) 2018/1972 (EECC); title, Art. 1 and Art. 126 read | `celex/32018L1972` | 1 556 085 | `87e2dae5b83700e6f40ff105b8ee5d5395cc778ad92d4a046a44cbde3d011eb3` |
+| Regulation (EU) 2018/1971 (BEREC); title, Art. 1 and Art. 52 read | `celex/32018R1971` | 292 929 | `2072375b2e49aca56b10d4627bc42d0c2a8cbc512e886fa6cd410ca85e676382` |
+| Decision No 243/2012/EU; title, Art. 1 and Art. 16 read | `celex/32012D0243` | 120 148 | `d1a63ee9eb70a153d86eae4d0914800fafce3d9b3ead0e78756faf9254fbc801` |
+| Regulation (EU) 2015/2120; title, Art. 1 and Art. 10 read | `celex/32015R2120` | 165 618 | `6be7c7dee2051a82790baab17498a450bf43b032bcd48206bb5731a8923bc3e2` |
+| Decision No 676/2002/EC; title, Arts 1, 3, 4 and 11 read | `celex/32002D0676`, `Accept: text/html` (the XHTML request answers HTTP 404, as it did in the first attempt) | 31 106 | `c2c9e2dd0c840a25b4bc246eceabc215d8bc69d57248265ed7613d9e1739d394` |
 
 The five acts' status was read from the Publications Office's SPARQL endpoint the same day (`resource_legal_in-force`,
 `date_entry-into-force`, `date_end-of-validity`): all five are recorded **in force**, with end of validity `9999-12-31` (open);
@@ -46,8 +46,7 @@ communications networks, electronic communications services, associated faciliti
 terminal equipment" — the `dna.objective` of the DNA record repeats it closely (its own Art. 1 was not re-read here); **2018/1971** "establishes [BEREC] and the
 [BEREC Office]"; **243/2012** "establishes a multiannual radio spectrum policy programme for the strategic planning and harmonisation of
 the use of spectrum"; **2015/2120** "establishes common rules to safeguard equal and non-discriminatory treatment of traffic in the
-provision of internet access services" and "sets up a … pricing mechanism for Union-wide regulated roaming"; **676/2002** (title,
-metadata only) "on a regulatory framework for radio spectrum policy in the European Community (Radio Spectrum Decision)".
+provision of internet access services" and "sets up a … pricing mechanism for Union-wide regulated roaming"; **676/2002** (title) "on a regulatory framework for radio spectrum policy in the European Community (Radio Spectrum Decision)".
 
 **Findings against the data, none fixed:**
 
@@ -61,9 +60,9 @@ metadata only) "on a regulatory framework for radio spectrum policy in the Europ
   node. The prompt did not name this; it is put to the author as a separate decision (§5, Q3).
 - **F3.** Art. 199(1) says the Commission "shall be assisted by the Communications Committee established by Directive (EU) 2018/1972"
   — the Directive that Art. 209 repeals. Stated as found; no reading of its effect is offered.
-- **F4.** The five acts' own articles were read for Art. 1 only. **Not read:** their remaining articles, any amendment after
+- **F4.** Of the five acts, only the title, Art. 1 and the entry-into-force Article were read (676/2002 also Arts 3 and 4, which confirm that Art. 4 has paragraphs 1 to 4, so a new paragraph 2a falls between the mandates to the CEPT and the Commission's decision on their results — a positional fact, not a reading of effect). Entry into force agrees with the metadata for all five: Art. 126 and Art. 52 (third day after 17.12.2018 = 20.12.2018), Art. 16 (20th day after 21.3.2012 = 10.4.2012), Art. 10(1) (third day after 26.11.2015 = 29.11.2015), Art. 11 (the day of publication, 24.4.2002). **Not read:** the remaining articles of the five, any amendment after
   publication (2015/2120's amendments are named in the DNA's own footnotes — Regulation (EU) 2018/1971 and Regulation (EU) 2024/1309 —
-  but neither text was read for what it amended), 243/2012's own duration provision (not located), and 676/2002's text (404).
+  but neither text was read for what it amended), and 243/2012's own duration provision (not located).
 
 ## 3. V2C-18 — NIS 2 and Regulation 910/2014
 
@@ -105,6 +104,6 @@ instrument needs its `status_basis`, `milestones` or an empty list, and a `statu
 
 ## 6. What was not established
 
-A consolidated reading of any of the five acts; 676/2002's text; the five acts' articles other than Art. 1; any amendment of 2015/2120
+A consolidated reading of any of the five acts; the five acts' articles other than those named in §1; any amendment of 2015/2120
 or 2018/1972 other than NIS 2 Art. 43 and the DNA's; the Council's or Parliament's position on the DNA (the proposal is not law and no
 status of it changed here); corrigenda (none searched); other-language texts.
