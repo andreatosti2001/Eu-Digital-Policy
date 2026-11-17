@@ -14,7 +14,7 @@
 - **W.3** (`0e7e85d`): `data/instruments.json`, `instruments.html`, `data/applicability.json` (`ap-dma-04` rationale and note), `instruments/dma` and `instruments/nis2` regenerated. `unverified` 47 unchanged. Validators' output identical to the base; `selftest` 200/200; 26 suites exit 0 (1505 tests); browser exit 0; `commit-evidence` and `implement check` pass.
 - **W.4:** the prompt of group (b).
 - **Found, not fixed:** F-13's missing event for 2 Aug 2027 (decided: leave); the prompt's open points (named in the reading notes §5); `index.html` does not say «materially incomplete» though the page claimed the brief did.
-- **Branch register:** `claude/laughing-tesla-ydv2ro`, disposition: at the final checkpoint, on the author's answer. `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv` and the three scout digests are as recorded, unmerged, not this session's.
+- **Branch register:** `claude/laughing-tesla-ydv2ro`, disposition: the final checkpoint is approved (§8, 17 Nov 2026); on the author's answer («Approve, open the PR»), a pull request to `main`, opened by the session and merged by the author with a merge commit. `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv` and the three scout digests are as recorded, unmerged, not this session's.
 
 ## F-18 — «immediately» against DMA Art. 3(10) (17 Nov 2026)
 
