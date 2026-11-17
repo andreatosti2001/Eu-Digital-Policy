@@ -1,8 +1,21 @@
 # HANDOVER
 
-**Last updated:** 16 November 2026 (UTC), after the V2C-03…05 session (Track R: COM(2025) 837 and the instrument arrays), at its final checkpoint.
-**Branch:** `claude/friendly-pasteur-mtqo8h`, from `main` `8b5bc6e` (#117 merged). `origin/main` re-fetched immediately before this write: `8b5bc6e`, unchanged since the start of the session.
-**Read first:** the map's edges are now checked — `tools/map-audit.mjs` (M-08…M-15), M-16 in `tools/validate.mjs`, a MAP section in the evidence audit — and every `relationship_kind` term carries `basis`. 0 errors on the 39 edges; three named backlogs that only shrink. **The next session is V2C-03…05** (`docs/prompts/v2-v2c-03-05-arrays.md`), approved only with this work.
+**Last updated:** 17 November 2026 (UTC), after the V2C-17…19 session (Track R: the DNA's acts, NIS 2 → eIDAS, the Political Advertising edges), at its final checkpoint.
+**Branch:** `claude/cool-goodall-dr0emd`, from `main` `83295cb` (#118 merged).
+**Read first:** the map now has 44 instances and 53 edges (43 textual). **The next session is F-18** (`docs/prompts/v2-f-18-dma-immediately.md`), approved only with this work: DMA Art. 3(10) against «immediately» in `ap-dma-01`, `clm-dma-ex-ante` and `part-4.p2`; the 33 rules lapse together on 28 Jan 2027 and `ap-dma-01` is due by 3 Feb 2027.
+
+## V2C-17…19 — the DNA's acts, NIS 2 → eIDAS, the Political Advertising edges (17 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the V2C-17…19 session" ("As the prompt states"), decisions 1–8, and the W.4 rows. **Record:** `docs/V2C-17-19-READING.md`.
+
+- **W.1** (`5ad9922`): COM(2026) 16, NIS 2 and Regulation 2024/900 read from Cellar, SHA-256 per document. **Findings against the prompt and the data:** the DNA *repeals* three of the acts the prompt lists (Art. 209: 2018/1972, 2018/1971, 243/2012) and *amends* the others (Art. 206: 2015/2120; Art. 208: 676/2002; Art. 207, ePrivacy, already an edge, confirmed); NIS 2 Art. 42 amends 910/2014 and **Art. 43 amends 2018/1972** (not in the prompt); TTPA Art. 2(3)(f) and (h) name the AVMSD and P2B, both already nodes, and the same Article names seven more acts.
+- **W.2:** eight decisions in §8 with the author's words: five instances; nine edges (five DNA, two NIS 2, two TTPA); the other seven acts of Art. 2(3) left; the five carried open points not treated; the term `kind:decision` added.
+- **W.3** (`c269d47`): `data/` (five instruments, five sources, nine edges, one taxonomy term), `tools/selftest.mjs`, pages regenerated. 44 instruments, 53 edges. `unverified` 47 unchanged.
+- **W.4:** the prompt of F-18.
+- **Found by a check, not by me:** M-07 raised five errors (a `status:in-force` instance needs a direct, structural status reference); fixed by reading the Articles. Decision 676/2002's XHTML answers 404 but its HTML is retrievable: a 404 on one format is not "no text".
+- **Found, not fixed:** see the reading notes §2 F1–F5 and the prompt's open points (6).
+- **Battery:** all as at the start except the counts the records change; `selftest` 200/200; 23 suites and `.control-room/` exit 0; schemas and browser exit 0; `commit-evidence` 0.
+- **Branch register:** `claude/cool-goodall-dr0emd`, disposition: at the final checkpoint, on the author's answer. The scout digests, `claude/brave-goldberg-gm87jp` and `claude/confident-johnson-yeffcv` are as recorded, not this session's.
 
 ## V2C-03…05 — COM(2025) 837 and the instrument arrays (16 Nov 2026)
 

@@ -107,3 +107,20 @@ instrument needs its `status_basis`, `milestones` or an empty list, and a `statu
 A consolidated reading of any of the five acts; the five acts' articles other than those named in §1; any amendment of 2015/2120
 or 2018/1972 other than NIS 2 Art. 43 and the DNA's; the Council's or Parliament's position on the DNA (the proposal is not law and no
 status of it changed here); corrigenda (none searched); other-language texts.
+
+## 7. What was written (W.3)
+
+On the author's decisions 1 to 8 of 17 Nov 2026 (`docs/ROADMAP-v2.md` §8), commit `c269d47`: `data/instruments.json` (five referenced
+instruments — `eecc`, `berec-regulation`, `rspp-decision`, `open-internet-regulation`, `radio-spectrum-decision` — each in force with
+a direct status reference to its entry-into-force Article; nine edges: five from `digital-networks-act`, two from `nis2`, two from
+`ttpa`); `data/sources.json` (five source records; the notes of `src-eurlex-dna-proposal`, `src-eurlex-nis2` and `src-eurlex-ttpa`
+extended); `data/taxonomy.json` (the term `kind:decision`); `tools/selftest.mjs` (the pinned counts; MP10); generated pages
+regenerated. **Found by the checks, and what was done:** `validate` rejected `kind:decision` (asked: decision 8); the evidence audit
+raised five M-07 errors because the instruments' status rested on the metadata alone (repaired by reading each Article, not by
+loosening the rule); four selftest tests pinned the old counts (decision recorded in §8 before the file was touched). **Battery:**
+`validate` 0 errors, `unverified` 47 unchanged (so §12 of `docs/CURRENT-ARCHITECTURE.md` is not touched); `i18n-audit`, `design-qa`,
+`seo-audit` 0; `evidence-audit` and `freshness` differ from the base only in the counts the new records change; `selftest` 200/200;
+the 23 suites and `.control-room/` exit 0 (one existing skip); `agent/schemas/cli.mjs check` exit 0; browser exit 0; `commit-evidence`
+0 (the one published-file commit names its evidence). Not touched: `eidas2`, `ap-eidas2-01`, `data/applicability.json`, any
+status or date of a record not re-read.
+
