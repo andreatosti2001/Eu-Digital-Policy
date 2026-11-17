@@ -1,8 +1,20 @@
 # HANDOVER
 
-**Last updated:** 17 November 2026 (UTC), after the F-18 session (Track R: DMA Art. 3(10) against «immediately»), at its final checkpoint, on the branch of V2C-17…19.
-**Branch:** `claude/cool-goodall-dr0emd`, from `main` `83295cb` (#118 merged). **`main` does not yet contain V2C-17…19 or F-18**: both sit on this branch, no PR opened (the author chose to work on it).
-**Read first:** F-18 is closed for `ap-dma-01`, `clm-dma-ex-ante` and the English `part-4.p2`; the Italian, French and Spanish strings are withdrawn, not rewritten. **The next session is the rules-maintenance session, group (a)** (`docs/prompts/v2-rules-maintenance-group-a.md`): F-02, F-03, F-04, F-13, F-14, F-17, F-19, F-20, F-23; 32 rules lapse on 3 Feb 2027, `ap-dma-01` on 16 Feb.
+**Last updated:** 17 November 2026 (UTC), after the rules-maintenance session, group (a) (Track R), at its final checkpoint, on `claude/laughing-tesla-ydv2ro`, from `main` `3da0f22` (#121: V2C-17…19 and F-18 are in `main`).
+**Branch:** `claude/laughing-tesla-ydv2ro`, no PR opened (the author is asked at the final checkpoint).
+**Read first:** **Group (a)'s nine findings were already closed on 4 Nov 2026 (v2 Session 21); the prompt's premise was the 3 Nov tree.** This session re-measured them, read three residues from Cellar and the Commission's pages, and changed three things on the author's decisions: `nis2`'s `status_note` and `instruments.html` line 112 no longer say «materially incomplete» (the sources say «While most complied …»), and `ap-dma-04`'s last sentence is attributed to the brief. **No rule was re-attested and no `last_verified` moved.** **The next session is the rules-maintenance session, group (b)** (`docs/prompts/v2-rules-maintenance-group-b.md`): 32 rules lapse on 3 Feb 2027, `ap-dma-01` on 16 Feb.
+
+## Rules maintenance, group (a) — the nine findings, re-measured (17 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the rules-maintenance session (group (a))", "Rules maintenance, group (a): the premise", decisions 1–3 and the W.4 row. **Record:** `docs/RULES-MAINTENANCE-A-READING.md`.
+
+- **Premise:** F-02, F-03, F-04, F-13, F-14, F-17, F-19, F-20 and F-23 were each closed on 4 Nov 2026 (§8 rows 21.2; checkpoint 21.2 «Group (a) is closed»). The author chose «Residues only».
+- **W.1** (`eb8c02f`): AI Act, Regulation 2026/1744, DMA and NIS2 read from Cellar, the two Commission news items and INF/26/1376 from the Commission, SHA-256 per document (the DMA's is F-18's). **Not re-run: the SPARQL query for amending acts and corrigenda**; the 4 Nov results stand and are declared as such.
+- **W.2:** three decisions in §8 with the author's words: reword F-02's words in `nis2` and on the page; leave the 2 Aug 2027 timeline event; attribute `ap-dma-04`'s last sentence to the brief.
+- **W.3** (`0e7e85d`): `data/instruments.json`, `instruments.html`, `data/applicability.json` (`ap-dma-04` rationale and note), `instruments/dma` and `instruments/nis2` regenerated. `unverified` 47 unchanged. Validators' output identical to the base; `selftest` 200/200; 26 suites exit 0 (1505 tests); browser exit 0; `commit-evidence` and `implement check` pass.
+- **W.4:** the prompt of group (b).
+- **Found, not fixed:** F-13's missing event for 2 Aug 2027 (decided: leave); the prompt's open points (named in the reading notes §5); `index.html` does not say «materially incomplete» though the page claimed the brief did.
+- **Branch register:** `claude/laughing-tesla-ydv2ro`, disposition: at the final checkpoint, on the author's answer. `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv` and the three scout digests are as recorded, unmerged, not this session's.
 
 ## F-18 — «immediately» against DMA Art. 3(10) (17 Nov 2026)
 
