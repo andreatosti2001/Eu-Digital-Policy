@@ -15,7 +15,7 @@
 - **Partial readings, declared:** some Articles (GDPR 5, 6; DSA 17, 20, 25–28, 34, 35, 37–39; AI Act 9–12, 14, 15, 43, 49; Data Act 25) were read as title and opening paragraphs only — stated in each rule's note. The gatekeepers page rendered 3.8 kB. Claims the rules cite were not re-read.
 - **W.4:** `docs/prompts/v2-track-m-eidas2-milestone.md`, chosen by the author («Track M: eidas2, 24 Dec milestone»).
 - **Found, not fixed:** the 53 unreadable corrigenda; the five evaluative sentences; no designation decision of AWS/Azure found on 18 Nov (`tl-dma-2026-11-01-designation` still `scheduled`); the group (a) residues.
-- **Branch register:** `claude/amazing-mccarthy-doan3m`, disposition at the final checkpoint, on the author's answer. `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv` and the three scout digests are as recorded, unmerged, not this session's.
+- **Branch register:** `claude/amazing-mccarthy-doan3m`, disposition: the final checkpoint is approved (§8, 18 Nov 2026); on the author's answer («Approve both, open the PR»), a pull request to `main`, opened by the session and merged by the author with a merge commit. `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv` and the three scout digests are as recorded, unmerged, not this session's.
 
 ## Rules maintenance, group (a) — the nine findings, re-measured (17 Nov 2026)
 
