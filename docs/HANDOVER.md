@@ -1,8 +1,21 @@
 # HANDOVER
 
-**Last updated:** 17 November 2026 (UTC), after the rules-maintenance session, group (a) (Track R), at its final checkpoint, on `claude/laughing-tesla-ydv2ro`, from `main` `3da0f22` (#121: V2C-17…19 and F-18 are in `main`).
-**Branch:** `claude/laughing-tesla-ydv2ro`, no PR opened (the author is asked at the final checkpoint).
-**Read first:** **Group (a)'s nine findings were already closed on 4 Nov 2026 (v2 Session 21); the prompt's premise was the 3 Nov tree.** This session re-measured them, read three residues from Cellar and the Commission's pages, and changed three things on the author's decisions: `nis2`'s `status_note` and `instruments.html` line 112 no longer say «materially incomplete» (the sources say «While most complied …»), and `ap-dma-04`'s last sentence is attributed to the brief. **No rule was re-attested and no `last_verified` moved.** **The next session is the rules-maintenance session, group (b)** (`docs/prompts/v2-rules-maintenance-group-b.md`): 32 rules lapse on 3 Feb 2027, `ap-dma-01` on 16 Feb.
+**Last updated:** 18 November 2026 (UTC), after the rules-maintenance session, group (b) (Track R), at its final checkpoint, on `claude/amazing-mccarthy-doan3m`, from `main` `2f5c1ef` (#123: group (a) and the group (b) prompt are in `main`).
+**Branch:** `claude/amazing-mccarthy-doan3m`, no PR opened (the author is asked at the final checkpoint).
+**Read first:** **31 rules were re-read from Cellar on 18 Nov 2026 and re-attested** (`last_verified` 2026-11-18; the 33rd, `ap-eidas2-01`, is Track M's by the author's decision). 26 of them are unchanged in meaning; five carry a wording change decided one at a time in §8 (decisions 2 to 5). `freshness --as-of 2027-02-03` now names only `ap-eidas2-01`. The next session is Track M (`docs/prompts/v2-track-m-eidas2-milestone.md`). Everything below is group (b)'s record, then the earlier sessions'.
+
+
+## Rules maintenance, group (b) — 31 rules re-attested (18 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, 18 Nov 2026, "The scope of the rules-maintenance session (group (b))", decisions 1–7 and the W.4 row. **Record:** `docs/RULES-MAINTENANCE-B-READING.md`.
+
+- **W.1** (`4214b7a`): 13 Official Journal texts read from Cellar by CELEX, seven Commission/EDPB documents, SHA-256 per document (the AI Act, Omnibus, DMA and NIS2 hashes equal 17 Nov's). SPARQL re-run on every CELEX: no new amending act; one new corrigendum, PLD `R(03)` (11 Nov 2026). **53 corrigenda have no English expression (HTTP 404 in XHTML and HTML) and were not read**, PLD R(02) and R(03) among them.
+- **W.2:** seven decisions in §8 with the author's words: re-attest the 24 clean rules with corrigenda declared; reword `ap-ai-act-06` (Art. 5(1)(c), (f)), `ap-data-act-01` («all»), `ap-dsa-04` («check» → best efforts), delete `ap-data-act-04`'s «predominantly …» clause; cite recital 23 for `ap-gdpr-02`; carry the evaluative sentences unchanged and named; move the `tools/selftest.mjs` pins.
+- **W.3** (`4702bde`): `data/applicability.json` (31 rules, `last_verified` 2026-11-18 and `attestation`), `tools/selftest.mjs` (pins to 2026-11-18; `ap-cra-01`'s 4 Nov state is now rebuilt by `asOf4Nov()` for the planted tests), seven instrument pages and `sitemap.xml` regenerated. `validate`, `i18n-audit`, `design-qa`, `seo-audit` output identical to the base; `unverified` 47 unchanged; all 26 suites and `tools/selftest.mjs` (201) pass; browser suite 361 pass, 0 fail, 1 undecidable (`a11y:bound`).
+- **Partial readings, declared:** some Articles (GDPR 5, 6; DSA 17, 20, 25–28, 34, 35, 37–39; AI Act 9–12, 14, 15, 43, 49; Data Act 25) were read as title and opening paragraphs only — stated in each rule's note. The gatekeepers page rendered 3.8 kB. Claims the rules cite were not re-read.
+- **W.4:** `docs/prompts/v2-track-m-eidas2-milestone.md`, chosen by the author («Track M: eidas2, 24 Dec milestone»).
+- **Found, not fixed:** the 53 unreadable corrigenda; the five evaluative sentences; no designation decision of AWS/Azure found on 18 Nov (`tl-dma-2026-11-01-designation` still `scheduled`); the group (a) residues.
+- **Branch register:** `claude/amazing-mccarthy-doan3m`, disposition at the final checkpoint, on the author's answer. `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv` and the three scout digests are as recorded, unmerged, not this session's.
 
 ## Rules maintenance, group (a) — the nine findings, re-measured (17 Nov 2026)
 
