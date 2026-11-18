@@ -472,37 +472,46 @@ test('F6 · the prompts are still printed in full — nothing was silenced', () 
 
 /* v2 Session 21 (4 Nov 2026, docs/ROADMAP-v2.md §8, 21.2): the rules re-read that day, in stages (premise 2),
    each closed on the author's word; the list grows as each rule of group (a) closes, and every other rule keeps 2026-10-29 */
-const READ_2026_11_04 = ['ap-nis2-01', 'ap-nis2-02', 'ap-cra-01', 'ap-ai-act-02', 'ap-ai-act-06', 'ap-gdpr-04', 'ap-dsa-03', 'ap-dma-04'];
+const READ_2026_11_04 = [];
+/* Rules maintenance (b) (§8, 18 Nov 2026, decision 7): the 31 rules re-attested on 18 Nov 2026 move to READ_V2_23 with that date; the eight of 4 Nov are among them */
 /* v2 Session 23 (docs/ROADMAP-v2.md §8, 23.0 questions 1 and 2) and v2 Session 24 (24.0 question 1): each rule
    closed in the attestation form, with the date of its reading — the one list of the closures in the form; one entry
    is added in the same commit as each closure, on the author's word */
 const READ_V2_23 = Object.freeze({
-  'ap-gdpr-01': '2026-11-04',
-  'ap-gdpr-02': '2026-11-04',
-  'ap-gdpr-03': '2026-11-04',
-  'ap-cross-01': '2026-11-04',
-  'ap-dsa-01': '2026-11-04',
-  'ap-dsa-02': '2026-11-04',
-  'ap-dsa-04': '2026-11-04',
-  'ap-dsa-05': '2026-11-04',
+  'ap-gdpr-01': '2026-11-18',
+  'ap-gdpr-02': '2026-11-18',
+  'ap-gdpr-03': '2026-11-18',
+  'ap-cross-01': '2026-11-18',
+  'ap-dsa-01': '2026-11-18',
+  'ap-dsa-02': '2026-11-18',
+  'ap-dsa-04': '2026-11-18',
+  'ap-dsa-05': '2026-11-18',
   'ap-dma-01': '2026-11-17', /* F-18 (§8, 17 Nov 2026, decisions 1 to 7): re-read and changed, the work being its attestation */
-  'ap-dma-02': '2026-11-04',
-  'ap-dma-03': '2026-11-04',
-  'ap-ai-act-01': '2026-11-04',
-  'ap-ai-act-03': '2026-11-04',
-  'ap-ai-act-04': '2026-11-04',
-  'ap-ai-act-05': '2026-11-04',
-  'ap-ai-act-07': '2026-11-04',
-  'ap-data-act-01': '2026-11-04',
-  'ap-data-act-02': '2026-11-04',
-  'ap-data-act-03': '2026-11-04',
-  'ap-data-act-04': '2026-11-04',
+  'ap-dma-02': '2026-11-18',
+  'ap-dma-03': '2026-11-18',
+  'ap-ai-act-01': '2026-11-18',
+  'ap-ai-act-03': '2026-11-18',
+  'ap-ai-act-04': '2026-11-18',
+  'ap-ai-act-05': '2026-11-18',
+  'ap-ai-act-07': '2026-11-18',
+  'ap-data-act-01': '2026-11-18',
+  'ap-data-act-02': '2026-11-18',
+  'ap-data-act-03': '2026-11-18',
+  'ap-data-act-04': '2026-11-18',
   /* v2 Session 24 (§8, 24.0 question 1) */
-  'ap-nis2-03': '2026-11-04',
-  'ap-dora-01': '2026-11-04',
-  'ap-dora-02': '2026-11-04',
-  'ap-pld-01': '2026-11-04',
+  'ap-nis2-03': '2026-11-18',
+  'ap-dora-01': '2026-11-18',
+  'ap-dora-02': '2026-11-18',
+  'ap-pld-01': '2026-11-18',
   'ap-eidas2-01': '2026-11-04',
+  'ap-nis2-01': '2026-11-18',
+  'ap-nis2-02': '2026-11-18',
+  'ap-cra-01': '2026-11-18',
+  'ap-ai-act-02': '2026-11-18',
+  'ap-ai-act-06': '2026-11-18',
+  'ap-gdpr-04': '2026-11-18',
+  'ap-dsa-03': '2026-11-18',
+  'ap-dma-04': '2026-11-18',
 });
 /** The date a rule was last read, as the closures above set it; every other rule keeps 2026-10-29. */
 const dateOf = (id) => READ_V2_23[id] ?? (READ_2026_11_04.includes(id) ? '2026-11-04' : '2026-10-29');
@@ -2806,7 +2815,7 @@ test('X2 · 12.2: every ERROR rule fires on a planted defect, and a v2 rule that
   /* T-12 (v2 Session 17, §8 17.0 question 8a): the law a rule cites moved after it was read. A WARNING */
   const law = (t) => t.warnings.filter((w) => /^LAW_CHANGED_SINCE_VERIFIED /.test(w));
   const real = triggerAudit(loadDb(), '2027-03-26');
-  assert.deepEqual(law(real), ['LAW_CHANGED_SINCE_VERIFIED applicability/ap-cra-01: cites cra, amended by ehds (rel-ehds-cra-amends), whose tl-ehds-2027-03-26-application (2027-03-26) is after last_verified 2026-11-04']);
+  assert.deepEqual(law(real), ['LAW_CHANGED_SINCE_VERIFIED applicability/ap-cra-01: cites cra, amended by ehds (rel-ehds-cra-amends), whose tl-ehds-2027-03-26-application (2027-03-26) is after last_verified 2026-11-18']);
   assert.deepEqual(law(triggerAudit(loadDb(), '2026-10-29')), []);
   const omni = plant((db) => { ruleOf(db, 'ap-ai-act-01').last_verified = '2026-07-01'; }, '2026-10-29');
   assert.deepEqual(law(omni), ['LAW_CHANGED_SINCE_VERIFIED applicability/ap-ai-act-01: cites ai-act, amended by ai-omnibus (rel-ai-omnibus-ai-act), whose tl-ai-omnibus-2026-07-27-entry-into-force (2026-07-27) is after last_verified 2026-07-01']);
@@ -2817,11 +2826,11 @@ test('X2 · 12.2: every ERROR rule fires on a planted defect, and a v2 rule that
     db.timeline.events.push({ id: 'tl-planted-omnibus-eif', date: '2026-10-28', date_precision: 'precision:day', event_type: 'event:entry-into-force', instrument: 'data-omnibus', provisions: [] });
   }, '2026-10-29');
   assert.deepEqual(law(proposed), []);
-  /* a judicial event of the cited instrument does (moved after ap-cra-01's re-reading of 4 Nov 2026, v2 Session 21, so it still fires) */
+  /* a judicial event of the cited instrument does (dated after ap-cra-01's re-attestation of 18 Nov 2026, rules maintenance (b), so it fires) */
   const judged = plant((db) => {
-    db.timeline.events.push({ id: 'tl-planted-cra-judicial', date: '2026-11-10', date_precision: 'precision:day', event_type: 'event:judicial', instrument: 'cra', provisions: [] });
-  }, '2026-11-11');
-  assert.deepEqual(law(judged), ['LAW_CHANGED_SINCE_VERIFIED applicability/ap-cra-01: cites cra, whose tl-planted-cra-judicial (judicial, 2026-11-10) is after last_verified 2026-11-04']);
+    db.timeline.events.push({ id: 'tl-planted-cra-judicial', date: '2026-11-20', date_precision: 'precision:day', event_type: 'event:judicial', instrument: 'cra', provisions: [] });
+  }, '2026-11-21');
+  assert.deepEqual(law(judged), ['LAW_CHANGED_SINCE_VERIFIED applicability/ap-cra-01: cites cra, whose tl-planted-cra-judicial (judicial, 2026-11-20) is after last_verified 2026-11-18']);
 });
 
 test('X3 · 12.2: evidence-audit.mjs reports TRIGGERS in text, --json and --markdown, FAILS on a planted rule defect, and refuses a stored derived field on a rule', () => {
@@ -3244,10 +3253,15 @@ const CRA_ATTESTATION = Object.freeze({
   outcome: 'changed',
   decisions: ["v2 Session 21, 21.2 F-03: `ap-cra-01`'s rationale"],
 });
+/* ap-cra-01 as it stood on 4 Nov 2026 (rules maintenance (b), docs/ROADMAP-v2.md §8, 18 Nov 2026, decision 7): the planted tests below describe
+   that state — no attestation, last_verified 2026-11-04, the 4 Nov note — which the re-attestation of 18 Nov moved on the real record. The 4 Nov note is
+   what follows the first ' Earlier: ' of the 18 Nov note. */
+const asOf4Nov = (r) => { delete r.attestation; r.last_verified = '2026-11-04'; r.verification_note = r.verification_note.split(' Earlier: ').slice(1).join(' Earlier: '); };
 /** The tree with one rule changed by `fn(rule, db)`, audited. */
 const attest = (id, fn, roadmap = ROADMAP) => {
   const db = loadDb();
   const r = ruleOf(db, id);
+  if (id === 'ap-cra-01') asOf4Nov(r);
   fn(r, db);
   return attestationAudit(db, roadmap);
 };
@@ -3280,7 +3294,7 @@ test('AT1 · the control: ap-cra-01\'s closure of 4 Nov 2026, written in the for
   assert.deepEqual(a.errors, []);
   assert.deepEqual(a.warnings, [...TREE_A8], 'the tree\'s seven A-8 cases (§8, 24.1 and F-18 decision 7), and nothing from the fixture');
   /* v2 Session 23 (§8, 23.1: two selftest pins the first closure broke): the fixture, and the tree's closures */
-  assert.deepEqual([...a.attested].sort(), ['ap-cra-01', ...Object.keys(READ_V2_23)].sort());
+  assert.deepEqual([...a.attested].sort(), Object.keys(READ_V2_23).sort());
 });
 
 test('AT2 · A-1 fails a misspelt key, an outcome out of vocabulary, an empty read, a dangling source and a text queried but not read', () => {
@@ -3430,7 +3444,7 @@ test('AT11 · validate.mjs FAILS on a planted bare date bump, names it, and pass
     mkdirSync(join(dir, 'docs'));
     cpSync(join(ROOT, 'docs', 'ROADMAP-v2.md'), join(dir, 'docs', 'ROADMAP-v2.md'));
     const bump = (fn) => edit(dir, 'data/applicability.json', (t) => { const d = JSON.parse(t); fn(d.applicability ?? d, d); return JSON.stringify(d, null, 2); });
-    bump((d) => { d.rules.find((r) => r.id === 'ap-cra-01').last_verified = '2027-03-26'; });
+    bump((d) => { const r = d.rules.find((x) => x.id === 'ap-cra-01'); asOf4Nov(r); r.last_verified = '2027-03-26'; });
     const red = runValidator('validate.mjs', [], dir);
     assert.equal(red.exit, 1);
     assert.match(red.out, /✗ A-3 applicability\/ap-cra-01: last_verified 2027-03-26 is after 2026-11-04 and the rule carries no attestation/);
