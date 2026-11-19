@@ -63,7 +63,7 @@ async function openHome(browser, origin, {
 } = {}) {
   const page = await browser.newPage();
   const seed = `try { localStorage.setItem('eupolicy:theme', ${JSON.stringify(theme)});
-    ${seen ? "localStorage.setItem('eupolicy:home-intro-seen', '1');" : ''}
+    ${seen ? "localStorage.setItem('eupolicy:home-intro-seen-v2', '1');" : ''}
     ${progress ? `if (localStorage.getItem('eupolicy:progress') === null) localStorage.setItem('eupolicy:progress', ${JSON.stringify(JSON.stringify(progress))});` : ''} } catch (e) {}`;
   await page.send('Page.addScriptToEvaluateOnNewDocument', { source: seed });
   if (clock) await page.send('Page.addScriptToEvaluateOnNewDocument', { source: clockShim(clock) });
@@ -231,6 +231,32 @@ export async function checkHome(browser, origin, { root = REPO_ROOT } = {}) {
           ? ok(id, `the gold mark of the opening is under ${pulse.name}, the instrument of the ticker's next deadline ("${tk.trim()}") — that the date itself is right is data/'s business`, { instrument: pulse.inst })
           : bad(id, `the gold mark is under ${pulse.name} (${pulse.inst}); the ticker's next deadline is ${tk.trim()} (${nextEvent.instrument})`, { pulse, ticker: tk, next: nextEvent.instrument }));
       }
+    } finally { await page.close(); }
+  }
+
+  /* ---- the opening waits for the reader (19 Nov 2026): on a phone the figure is below the fold, and the opening used to run
+     there unseen and then mark itself seen. It must not start, nor write its key, until the figure is on screen; and the touch
+     that begins a scroll (a pointerdown) must not end it. */
+  {
+    const id = 'home:opening-waits-in-view';
+    const page = await openHome(browser, origin, { seen: false, viewport: { width: 390, height: 844, mobile: true } });
+    try {
+      const state = `(() => { const im = [...document.querySelectorAll('#homeFig .hp-mark image')].map((n) => parseFloat(n.getAttribute('opacity')) || 0);
+        const r = document.getElementById('homeFig').getBoundingClientRect();
+        const vis = Math.min(innerHeight, r.bottom) - Math.max(0, r.top);
+        return { below: vis < Math.min(0.6 * r.height, 0.85 * innerHeight) - 1, shown: Math.max(0, ...im), images: im.length,
+          seen: localStorage.getItem('eupolicy:home-intro-seen-v2') }; })()`;
+      await sleep(1500);
+      const before = await page.evaluate(state);
+      await page.evaluate(`window.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); document.getElementById('homeFig').scrollIntoView({ block: 'center' })`);
+      await sleep(700);
+      const after = await page.evaluate(state);
+      const r = { before, after };
+      out.push(!before.below
+        ? undecidable(id, 'at 390 × 844 most of the figure was already on screen on load', 'the layout changed: there is no below-the-fold opening to wait for', r)
+        : before.shown === 0 && before.seen === null && before.images > 0 && after.shown > 0.05 && after.seen === '1'
+          ? ok(id, 'at 390 × 844, on a first visit, the opening holds its first frame and writes no key while the figure is below the fold for 1.5 s; a pointerdown then a scroll to the figure starts it (the serpent drawn, the key written) instead of ending it', r)
+          : bad(id, `at 390 × 844: before the scroll, picture opacity ${before.shown} and key ${before.seen}; after it, picture opacity ${after.shown} and key ${after.seen}`, r));
     } finally { await page.close(); }
   }
 
