@@ -533,7 +533,7 @@ test('HOME 1 · contrastRatio is WCAG\'s, and decodePng reads every PNG filter',
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) assert.deepEqual(img.px(x, y), [px[y * stride + x * 4], px[y * stride + x * 4 + 1], px[y * stride + x * 4 + 2]], `pixel ${x},${y} (filter ${y % 5})`);
 });
 
-test('HOME 2 · the homepage checks pass on the real site and FAIL on five planted defects', async (t) => {
+test('HOME 2 · the homepage checks pass on the real site and FAIL on six planted defects', async (t) => {
   const found = findBrowser();
   if (!found.found) { t.skip(`no browser: ${found.reason}`); return; }
   const dir = mkdtempSync(join(tmpdir(), 'home-'));
@@ -543,7 +543,8 @@ test('HOME 2 · the homepage checks pass on the real site and FAIL on five plant
     const plant = (file, from, to) => { const p = join(dir, file), src = readFileSync(p, 'utf8'); assert.ok(src.includes(from), `${file} no longer holds the text this plant rewrites: ${from}`); writeFileSync(p, src.split(from).join(to)); };
     plant('js/home-figure.js', "const reduceMotion =", "window.__hpFrame = () => {};\nconst reduceMotion =");          // a review hook comes back
     plant('js/home-figure.js', "'≈ '", "''");                                                                    // a month-precision count loses its "≈"
-    plant('js/home-figure.js', "else { store.set(INTRO_KEY, '1'); play(); }", "else { play(); }");               // the opening is never remembered
+    plant('js/home-figure.js', "      store.set(INTRO_KEY, '1');\n", "");                                       // the opening is never remembered
+    plant('js/home-figure.js', "if (!('IntersectionObserver' in window))", "if (true)");                       // the opening starts on load again, below the fold on a phone
     plant('css/home.css', ".hp-fig .ring-lb{font-family:var(--mono);font-size:9px;letter-spacing:.1em;fill:var(--paper-faint)}", ".hp-fig .ring-lb{font-family:var(--mono);font-size:9px;letter-spacing:.1em;fill:var(--ink-3)}");   // a label below 4.5 : 1
     plant('app.js', "    if (!PHONE.matches) return;\n", "    return;\n");                                             // the phone's tree jumps again instead of opening the contents
 
@@ -551,11 +552,11 @@ test('HOME 2 · the homepage checks pass on the real site and FAIL on five plant
     site = await serveSite({ root: dir });
     const results = await checkHome(browser, site.origin, { root: dir });
     const by = Object.fromEntries(results.map((r) => [r.id, r]));
-    for (const id of ['home:no-hooks', 'home:approx', 'home:opening-once', 'home:svg-contrast:night:status', 'home:phone-tree-contents']) {
+    for (const id of ['home:no-hooks', 'home:approx', 'home:opening-once', 'home:svg-contrast:night:status', 'home:phone-tree-contents', 'home:opening-waits-in-view']) {
       assert.equal(by[id].status, 'fail', `${id} did not fail on its planted defect — it cannot catch what it is for`);
     }
     for (const id of ['home:figure', 'home:no-script', 'home:module-failure', 'home:edition-note', 'home:visited', 'home:masthead-marks']) {
-      assert.equal(by[id].status, 'pass', `${id} failed on a tree whose only defects are the five planted ones: ${by[id].summary}`);
+      assert.equal(by[id].status, 'pass', `${id} failed on a tree whose only defects are the six planted ones: ${by[id].summary}`);
     }
   } finally {
     if (site) await site.close();

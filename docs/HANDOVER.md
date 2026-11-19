@@ -1,9 +1,19 @@
 # HANDOVER
 
-**Last updated:** 18 November 2026 (UTC), after the rules-maintenance session, group (b) (Track R), at its final checkpoint, on `claude/amazing-mccarthy-doan3m`, from `main` `2f5c1ef` (#123: group (a) and the group (b) prompt are in `main`).
-**Branch:** `claude/amazing-mccarthy-doan3m`, no PR opened (the author is asked at the final checkpoint).
+**Last updated:** 19 November 2026 (UTC), after the serpent-opening fix, on `claude/fix-serpent-opening`, from `main` `d168897`. The entry before it: 18 November 2026, the rules-maintenance session, group (b), on `claude/amazing-mccarthy-doan3m`.
+**Branch:** `claude/fix-serpent-opening`, pushed; whether to open a pull request is the author's answer.
 **Read first:** **31 rules were re-read from Cellar on 18 Nov 2026 and re-attested** (`last_verified` 2026-11-18; the 33rd, `ap-eidas2-01`, is Track M's by the author's decision). 26 of them are unchanged in meaning; five carry a wording change decided one at a time in §8 (decisions 2 to 5). `freshness --as-of 2027-02-03` now names only `ap-eidas2-01`. The next session is Track M (`docs/prompts/v2-track-m-eidas2-milestone.md`). Everything below is group (b)'s record, then the earlier sessions'.
 
+
+## The serpent's opening was not seen — fixed (19 Nov 2026)
+
+**Authority:** the author's report of 19 Nov 2026 («assenza dell'animazione del serpente sia in modalità mobile sia in modalità computer») and request to fix it. **No data, no claim and no page of law was touched.**
+
+- **Measured before the fix** (headless Chromium, `main` `d168897`): the opening *ran*, but started as soon as the figure was built, wherever it was. At 390 × 844 the figure's top is at ~694 px, so the serpent played below the fold; at 1440 × 900 its lower half was cut. The serpent itself is on screen ~1.3 s. `pointerdown` ended it, so the touch that began a scroll on a phone ended it at once. A background tab ran its clock without frames. And `eupolicy:home-intro-seen` was written *before* it played, so each of these withheld it for good.
+- **Changed** (`js/home-figure.js`): the opening holds its first frame until the figure is on screen (60 % of it, or 85 % of the viewport) and the tab is in front; the key is written only when it starts; a click (not a `pointerdown`) or a non-scrolling key ends it; the key is renamed `eupolicy:home-intro-seen-v2`, so every reader holding the old one gets one opening. **Not changed:** its timing, its drawing, once-per-browser, reduced motion (the final state at once), the images loaded only when it plays.
+- **Checks:** `agent/browser/home-checks.mjs` seeds the new key and adds `home:opening-waits-in-view`; `agent/browser/selftest.mjs` HOME 2 plants a sixth defect it must catch. `validate`, `design-qa`, `i18n-audit`, `csp`, `metric-contract` exit 0; `tools/selftest.mjs` 201/201; browser suite exit 0 (`--only home` 19 pass); `agent/browser/selftest.mjs` 28/28.
+- **Not measured:** a real phone, a finger, Safari or Firefox.
+- **Branch register:** `claude/fix-serpent-opening`, disposition: the author's answer. `git branch -r --no-merged origin/main` was empty at the start.
 
 ## Rules maintenance, group (b) — 31 rules re-attested (18 Nov 2026)
 

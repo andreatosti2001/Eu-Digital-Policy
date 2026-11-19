@@ -39,7 +39,12 @@ import { upcomingEvents, statedDay } from './masthead.js';
 import { SERPENT } from './home-serpent.js';
 
 const SVGNS = 'http://www.w3.org/2000/svg';
-const INTRO_KEY = 'eupolicy:home-intro-seen';
+/* "-v2" (19 Nov 2026): until then the key was written the moment the opening started, wherever the figure was. On a phone the
+   figure sits below the fold, so the opening ran unseen and the key then withheld it for good; on a 900 px desktop the
+   serpent was cut in half. Every reader holding the old key was marked as having seen an opening most never saw: the new
+   name gives each of them one opening, now played where it can be seen (play() below). */
+const INTRO_KEY = 'eupolicy:home-intro-seen-v2';
+const IN_VIEW = 0.6;                             // the share of the figure on screen before the opening may start
 const PROGRESS_KEY = 'eupolicy:progress';          // app.js DONE_KEY: the parts already read
 
 /* ---------------------------------------------------------- geometry (viewBox 720 × 640) */
@@ -654,34 +659,60 @@ export async function initHomeFigure(ix) {
   };
 
   /* ---- play the opening once, or show the figure as it ends */
-  let raf = 0, stopWatching = null, stopSkip = null;
+  let raf = 0, started = false;
+  const cleanups = [];
   function finish() {
     cancelAnimationFrame(raf); raf = 0;
-    if (stopWatching) { stopWatching(); stopWatching = null; }
-    if (stopSkip) { stopSkip(); stopSkip = null; }
+    while (cleanups.length) cleanups.pop()();
     frame(END + 1);
     L.mark.replaceChildren(); mark = null;                  // the pictures leave with the opening
     stage.classList.remove('hp-opening'); openingOn = false;
   }
+  /* The opening is set at its first frame, then WAITS until the reader can see it: the figure on screen (most of it, or as
+     much as the viewport holds) and the tab in front. Started on load, it ran below the fold on a phone, half cut on a
+     desktop, and in a background tab its clock ran on without frames, so it was over before it was ever drawn. Only an
+     opening that starts writes INTRO_KEY: a reader who never scrolled to the figure keeps theirs for the next visit. */
   function play() {
     mark = buildMark();
     openingOn = true; stage.classList.add('hp-opening');
     /* the body picture follows the site's theme while it is on screen: the toggle sets body[data-theme] and dispatches nothing */
     const obs = new MutationObserver(() => { if (mark) mark.body.setAttribute('href', bodyHref()); });
     obs.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
-    stopWatching = () => obs.disconnect();
-    const skip = () => { if (raf) finish(); };
-    window.addEventListener('keydown', skip); window.addEventListener('pointerdown', skip);
-    stopSkip = () => { window.removeEventListener('keydown', skip); window.removeEventListener('pointerdown', skip); };
-    const t0 = performance.now();
+    cleanups.push(() => obs.disconnect());
+    /* a deliberate act ends the opening: a click or tap (a finger that scrolls fires no click), or a key that is not
+       one of scrolling. pointerdown, used before, fired on the touch that began a scroll, which ended the opening at once. */
+    const SCROLL_KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ', 'Home', 'End', 'Shift', 'Control', 'Alt', 'Meta']);
+    const skip = (e) => { if (e.type === 'keydown' && SCROLL_KEYS.has(e.key)) return; if (mark) finish(); };
+    window.addEventListener('keydown', skip); window.addEventListener('click', skip, true);
+    cleanups.push(() => { window.removeEventListener('keydown', skip); window.removeEventListener('click', skip, true); });
+
+    let t0 = null;
     const step = (now) => {
+      if (t0 == null) t0 = now;                             // the clock starts at the first frame actually drawn
       const t = (now - t0) / 1000;
       if (t >= END + 0.6) { finish(); return; }
       frame(t);
       raf = requestAnimationFrame(step);
     };
+    const start = () => {
+      if (started || !mark) return;
+      started = true;
+      store.set(INTRO_KEY, '1');
+      raf = requestAnimationFrame(step);
+    };
     frame(0);
-    raf = requestAnimationFrame(step);
+
+    if (!('IntersectionObserver' in window)) { start(); return; }
+    let inView = false;
+    const tryStart = () => { if (inView && document.visibilityState === 'visible') start(); };
+    const io = new IntersectionObserver(([en]) => {
+      const need = Math.min(IN_VIEW * en.boundingClientRect.height, 0.85 * window.innerHeight);
+      inView = en.isIntersecting && en.intersectionRect.height >= need - 1;
+      tryStart();
+    }, { threshold: Array.from({ length: 21 }, (_, k) => k / 20) });
+    io.observe(fig);
+    document.addEventListener('visibilitychange', tryStart);
+    cleanups.push(() => { io.disconnect(); document.removeEventListener('visibilitychange', tryStart); });
   }
 
   try {
@@ -690,7 +721,7 @@ export async function initHomeFigure(ix) {
     catch (e) { console.error('[home] label placement failed', e); }   // the figure stands, its labels as first placed
     stage.classList.remove('hp-settling');
     if (reduceMotion() || store.get(INTRO_KEY)) finish();
-    else { store.set(INTRO_KEY, '1'); play(); }
+    else play();
     built = true;
     decorate();                                                         // the masthead's marks, if the masthead is already there
   } catch (e) {
