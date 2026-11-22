@@ -105,7 +105,7 @@ export const PATTERNS = Object.freeze([
       'A check that passes for the wrong reason is worse than a missing check: it is a missing check that reports as coverage. Every instance was found by a person reading the assertion, not by anything running it.',
     instances: Object.freeze([
       Object.freeze({ when: '2026-09-08', what: 'the Control Room session-forgery test built its third forgery by replacing the token\'s last character with "A" — which is not a forgery when the token already ends in "A". 3 of 40 logins do. It failed with a message that reads as a session breach and was not one.', anchor: { kind: 'commit', sha: '6e2f9dab889ffdcac2bc9ddcc6c742f43953e95e', subject: 'passed for the wrong reason' } }),
-      Object.freeze({ when: 'recorded', what: 'the phrase, used by the handover about its own assertions — the simulation\'s byte-identical-tree test, the autonomy suite\'s skip on `main`, the credential scan going green because files were not yet committed, and the session-forgery test above.', anchor: { kind: 'contains', path: 'docs/HANDOVER.md', text: 'wrong reason', min: 4 } }),
+      Object.freeze({ when: 'recorded', what: 'the phrase, used by the handover about its own assertions — the simulation\'s byte-identical-tree test, the autonomy suite\'s skip on `main`, the credential scan going green because files were not yet committed, and the session-forgery test above.', anchor: { kind: 'contains', path: 'docs/archive/HANDOVER-to-2026-11-13.md', text: 'wrong reason', min: 4 } }),
       Object.freeze({ when: 'standing', what: 'the assertion that has caught the suite list growing six times is itself the only structural defence recorded against this, and it defends one list.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 'caught the suite list growing' } }),
     ]),
   }),
@@ -124,7 +124,7 @@ export const PATTERNS = Object.freeze([
       Object.freeze({ when: '2026-09-08', what: 'protocol §20 was asserted to name four low-risk categories. It names five, and the fifth was missing until two independently written lists were merged and disagreed.', anchor: { kind: 'commit', sha: '542dfa81b3a366a0a4425307c3dd7b3ea2b388a0', subject: 'record what was mis-reported' } }),
       Object.freeze({ when: 'recorded', what: '`MODULE_SURFACE` must name every module in `js/` and did not name `threshold.js` until a session added it.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 'MODULE_SURFACE' } }),
       Object.freeze({ when: 'recorded', what: 'audit F-08: the README hardcodes derived counts while asserting it cannot drift.', anchor: { kind: 'contains', path: 'docs/AUDIT-2026-09-01.md', text: 'F-08' } }),
-      Object.freeze({ when: 'now', what: 'and one more, found by re-running the checks for this session rather than by looking for it: the handover records the boundary scan at 225 files under agent/, and every SESSION 26 commit holds 226. A hand-written count, one out, in the paragraph that exists to let a later session detect drift.', anchor: { kind: 'contains', path: 'docs/HANDOVER.md', text: 'at 225 files where SESSION' } }),
+      Object.freeze({ when: 'now', what: 'and one more, found by re-running the checks for this session rather than by looking for it: the handover records the boundary scan at 225 files under agent/, and every SESSION 26 commit holds 226. A hand-written count, one out, in the paragraph that exists to let a later session detect drift.', anchor: { kind: 'contains', path: 'docs/archive/HANDOVER-to-2026-11-13.md', text: 'at 225 files where SESSION' } }),
     ]),
   }),
 
@@ -144,7 +144,7 @@ export const PATTERNS = Object.freeze([
       /* Was a `now` measure expecting at least one unmerged branch. On 27 Sep 2026 it measured 0 — the author merged PR #3 and deleted the rest on
          26 September — so the anchor was refuted by the repository getting better, and the suite's rule is that a refuted anchor is corrected,
          not left standing. The pattern is about what the branching model produced; the register that recorded it is the durable evidence. */
-      Object.freeze({ when: '2026-09-26', what: 'the branch register, recorded: twenty-three remote branches already in `main` and never deleted, and six more holding work `main` did not have, before the author closed them.', anchor: { kind: 'contains', path: 'docs/HANDOVER.md', text: 'Branch register — AUDIT-2026-09-25 T-40' } }),
+      Object.freeze({ when: '2026-09-26', what: 'the branch register, recorded: twenty-three remote branches already in `main` and never deleted, and six more holding work `main` did not have, before the author closed them.', anchor: { kind: 'contains', path: 'docs/archive/HANDOVER-to-2026-11-13.md', text: 'Branch register — AUDIT-2026-09-25 T-40' } }),
     ]),
   }),
 
@@ -159,7 +159,7 @@ export const PATTERNS = Object.freeze([
     instances: Object.freeze([
       Object.freeze({ when: '2026-09-03', what: 'the end-of-session re-fetch rule — "re-fetch and diff docs/HANDOVER.md against origin/main immediately before the final write or any merge" — was written on claude/foundation-verification-audit-40ozpo, with the collision that prompted it recorded in the audit it belonged to, and the branch was never merged.', anchor: { kind: 'contains', path: 'docs/AUDIT-2026-09-03.md', text: 'Correction, same day' } }),
       Object.freeze({ when: '2026-09-26', what: 'carried forward by hand into AGENTS.md and the git-workflow skill, twenty-three days later, by the branch audit rather than by any session\'s own handover.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 're-fetch and diff against it again' } }),
-      Object.freeze({ when: '2026-09-26', what: 'the branches that held what `main` did not, closed by the author the same day — recorded, because a count taken now reads 0 and says nothing about how the lesson was lost.', anchor: { kind: 'contains', path: 'docs/HANDOVER.md', text: 'Deleted by the author, 26 September 2026' } }),
+      Object.freeze({ when: '2026-09-26', what: 'the branches that held what `main` did not, closed by the author the same day — recorded, because a count taken now reads 0 and says nothing about how the lesson was lost.', anchor: { kind: 'contains', path: 'docs/archive/HANDOVER-to-2026-11-13.md', text: 'Deleted by the author, 26 September 2026' } }),
     ]),
   }),
 
@@ -188,7 +188,7 @@ export const PATTERNS = Object.freeze([
     so_what:
       'The refusals are machine refusals, not human ones, and they cluster at the earliest gate. That means the later gates — rollback, scope, verification — have almost never been exercised against real work, and a session reading "refused" learns nothing about them.',
     instances: Object.freeze([
-      Object.freeze({ when: '2026-09-09', what: 'the first real autonomy run: 0 merged, 0 reverted, 14 refused, each by four independent gates.', anchor: { kind: 'contains', path: 'docs/HANDOVER.md', text: '0 merged · 0 reverted · 14' } }),
+      Object.freeze({ when: '2026-09-09', what: 'the first real autonomy run: 0 merged, 0 reverted, 14 refused, each by four independent gates.', anchor: { kind: 'contains', path: 'docs/archive/HANDOVER-to-2026-11-13.md', text: '0 merged · 0 reverted · 14' } }),
       Object.freeze({ when: '2026-09-09', what: 'the gap router\'s refusals, named rather than dropped.', anchor: { kind: 'contains', path: 'docs/SESSION-25-FIRST-REAL-WORLD-RUN.md', text: 'NOT PROPOSABLE HERE' } }),
       Object.freeze({ when: 'recorded', what: 'and the reason the clustering matters: the rollback gate has never examined a record on either workflow type that declares it.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 'the rollback gate has never examined a record' } }),
     ]),
