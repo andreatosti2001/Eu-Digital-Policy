@@ -1,0 +1,10604 @@
+# HANDOVER — archive, from the start of the project to 13 November 2026
+
+Moved here unchanged from `docs/HANDOVER.md` on 22 Nov 2026 (the author's decision that day, `docs/ROADMAP-v2.md` §8, "Rebalancing the sessions"). Nothing below was edited; it is the text that stood in `docs/HANDOVER.md` from line 419 to its end at `a61b99d`. The live handover is `docs/HANDOVER.md`.
+
+---
+
+> The header HP-04 wrote, kept as written:
+>
+> **Last updated:** 13 November 2026 (UTC), HP-04 (the homepage in production: the plan executed), at its close.
+> **Branch:** `claude/nice-babbage-8pohzh` (assigned by the environment). Its pull request, #109, was **merged by the author with a merge commit** (`519281e`, 11:13 UTC) **before this entry was written**; the branch was then restarted from `origin/main` `519281e` (nothing unmerged on it) and carries only this closing documentation. `origin/main` re-fetched immediately before this write: `519281e`, unchanged. A pull request for these docs is the author's to ask for.
+> **Read first:** the figure is **live-deployed but its real-phone measure was never made** (§8, "HP-04: C.2 not performed"). The entries below this session's are unchanged.
+>
+
+## Branch register — 13 November 2026 (HP-04, the homepage in production)
+
+- `claude/nice-babbage-8pohzh`: **merged** (#109, `519281e`; ten commits, every published-file commit carrying an `Evidence:` trailer after a rewrite the author chose, §8). Restarted from `main`; this session's closing commit (§8 rows, the PV2-05 note, this entry) is the only thing on it. Disposition: **to be asked** — a pull request to `main`, merged by the author with a merge commit.
+- `claude/brave-goldberg-gm87jp` — still one commit, `7e93f27`, one line of `js/datasets-page.js`; **still not in this register's owner's hands**: unmerged, not this session's, left alone.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed), as before.
+- Local only, never pushed: `backup-hp04-pre-evidence` (the pre-rewrite tip `be2c4c2`); deletable.
+
+## HP-04 — the homepage in production (13 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of HP-04", "HP-04: the authorization of the redesign" (Class D, in the author's words), "HP-04: C.1 approved", "HP-04: the words that add the figure to README limitation 8", "HP-04: what commit 5 found", "HP-04: the `Evidence:` trailers…", "HP-04: C.2 not performed…" and "HP-04: the next session". **Record of the design:** `docs/HOMEPAGE-PRODUCTION-PLAN.md`; of what entered: `prototypes/homepage/README.md` ("HP-04"); of the checks: `docs/BROWSER-QA.md`.
+
+**What happened.** Scope row first, then the Class D authorization asked by name. Commits in the plan's order: images and generated bead geometry; `masthead.js`'s `upcomingEvents`/`statedDay` (masthead identical before and after on seven clocks, with a planted off-by-one shown detected); the figure and its styles; the wiring and the regenerated editions (exactly `it/ fr/ es/`, `index.html`, `js/main.js`); the `home:*` checks with planted-defect proofs; the docs. C.1 approved. The iPhone measure (C.2) was **bypassed on the author's word** and the pull request merged; Pages run 118 deployed it.
+
+**Found, and what was done about each:**
+- **A static `import` in `js/main.js` made a missing `home-figure.js` stop the whole page boot** (the masthead never rendered) — found by `home:masthead-marks`. Changed to a dynamic `import()`; the plan's "one import and one call" no longer reads literally (§8, not an approval).
+- **`agent/detector/selftest.mjs` test 47** demands a `MODULE_SURFACE` entry per `js/` module: two added (`home-figure.js` surface `other`, `home-serpent.js` `null`), approved at C.1.
+- **Six of my commits lacked the `Evidence:` trailer** the author's rule of 27 Sep 2026 requires; only the pull-request run of `qa.yml` judges `base..head`, which is why push runs were green. Rewritten with the author's consent (force-with-lease, own branch); `tools/commit-evidence.mjs origin/main HEAD` exits 0.
+- **The ticker prints "N days" for a month-precision event with no "≈"** (`js/masthead.js`, "January 2027 DMA today" on 1 Jan 2027); the figure marks it. **Left**, reported at C.1.
+- **`js/masthead.js` `isApprox`-style predicate exists twice** (the ledger's `approx` and the figure's `isApprox`): not exported, to keep commit 2's measured scope. A candidate for one export.
+- **The runner's and `a11y:bound`'s "no pixels were compared" now name `home:svg-contrast`**; `agent/production/` still prints the old sentence about the threshold affordance, which is unchanged.
+
+**Open — nothing here is closed:**
+1. **No real-phone timing exists** (§8). The plan's threshold is unmet and unmeasured. If the author wants it made after the fact: `docs/HOMEPAGE-PRODUCTION-PLAN.md` §6, an iPhone 15 Pro on iOS 26.2 is the device the author named.
+2. **`qa.yml` run 1044, "Browser regression suite": `agent/browser/selftest.mjs` test 18 failed once** on the merge commit (30.1 s, the suite's command timeout); the same job's full run read 361 / 360 pass / 0 fail, and the quick run reads 169 checks here three times. **Not re-run, not explained.** If it recurs it is a finding; the first thing to read is its log.
+3. **Post-deploy items of the plan's §8** that need the live site or Search Console were **not done**: the rendered `/` and `/it/`, the canonical, `noindex` on the editions, `sitemap.xml` 26 URLs, "URL Inspection → Test live URL" and "Request indexing" for `/` (the owner's), the Pages report a week later.
+4. **Not established, as the plan said it would not be:** a screen reader (the declared manual protocol of plan §5 was not run), any browser but Chromium, widths other than 1440 × 900 for the labels, a reader's liking of the opening.
+
+**Battery on the branch tip before the merge (`be2c4c2`, content-identical to `ecd9e7e`):** `validate`, `i18n-audit`, `design-qa`, `freshness`, `evidence-audit`, `seo-audit` exit 0 (warnings as on `main`: 5, 0, 0, —, 11, 0); `tools/selftest.mjs` **189 / 189**; the 25 agent suites and `.control-room/` pass (`agent/browser` now **28 / 28**, `agent/detector` 69 / 69); the browser suite **360 pass · 0 fail · 1 undecidable** (`a11y:bound`) — 343 + the 17 `home:*`. On the pull request, all 16 check runs were green. After the merge: see Open 2.
+
+**Checklist**
+
+| # | Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|---|
+| — | Scope; Class D authorization | §8 "The scope of HP-04", "HP-04: the authorization of the redesign" | read both rows: the words "start hp-04" and "Authorize (Recommended)" | none | both in §8 before any file outside `docs/`: **met** |
+| 1 | Images, bead geometry | `7233a6f`; `img/home/`, `js/home-serpent.js`, `derive-serpent.py` | `python3 -I prototypes/homepage/assets/derive-serpent.py prototypes/homepage/assets/serpent-original.png <dir> <module>`; `cmp` each | `pages-artifact.mjs verify`; `design-qa` | byte for byte: **met** |
+| 2 | `masthead.js` export | `22ecb07` | render `index.html` under a fixed clock before/after; compare `outerHTML` | `home:masthead-marks` (the module-less masthead) | masthead identical, said with a measure: **met** |
+| 3 | The figure and its styles | `eea54b3`; `js/home-figure.js`, `css/home.css`, `agent/detector/impact.mjs` | `grep -n "fetch(" js/home-*.js` is empty; `design-qa` | `design-qa`, MC-2 in `validate.mjs`, detector test 47 | not loaded by any page at that commit: **met** |
+| 4 | The wiring | `40051fc`, `3c70d41`, `4f70266` | `git status --porcelain` after `_footer.mjs`; `#portalTree` identical to `main`'s | `home:figure`, `home:no-script`, `home:module-failure` | only `index.html`, `it/ fr/ es/`, `js/main.js`: **met** |
+| 5 | The `home:*` checks | `ac78039`; `agent/browser/home-checks.mjs`, `runner.mjs`, `selftest.mjs` | `node agent/browser/cli.mjs --only home` | `agent/browser/selftest.mjs` HOME 1, HOME 2 (four planted defects) | each with what it does not prove: **met** |
+| 6 | The iPhone measure | §8 "HP-04: C.2 not performed" | — | none (a person's measure) | **NOT MET: bypassed on the author's word; nothing measured** |
+| 7 | Docs | `5bdf10e`, this commit; README limitation 8, `CURRENT-ARCHITECTURE.md` §4/§5/§9, `BROWSER-QA.md`, `PROTOTYPES.md` §H, the prototype's README | read the one sentence added to README limitation 8 | `evidence-audit`, `design-qa` | README words only on approval: **met** |
+| — | Evidence trailers | §8 "HP-04: the `Evidence:` trailers…" | `node tools/commit-evidence.mjs <base> <head>` | `qa.yml`, `pages.yml` | **met** (after the rewrite) |
+| — | Next prompt | `docs/prompts/v2-pv2-05-prototype-hybrid-selection.md` (dated note added); §8 "HP-04: the next session" | its exit criterion carries the standing rule (line near "il prompt della sessione successiva esiste su questo branch") | none | exists on this branch, carries the rule: **met**; approved with the work when the author merges |
+| — | Deployed and checked live | `pages.yml` run 118 | open `/` and `/it/` | none from here | **NOT MET: the live page was not fetched; Open 3** |
+
+**For the next session:** PV2-05 on its prompt — **without the homepage view** (the figure is in production; §8, "HP-04: the next session").
+
+## Branch register — 12 November 2026 (HP-03, the homepage production plan)
+
+- `claude/quirky-goldberg-fpoxdz`, from `main` `02f9a4e`: `docs/` only — `HOMEPAGE-PRODUCTION-PLAN.md` (new), `ROADMAP-v2.md` §8 (five rows), `prompts/v2-hp-04-homepage-production.md`
+  (new), `HANDOVER.md`. Nothing of the published site, of its gates or of `prototypes/` changed. Disposition: on the author's answer ("Yes, after recording (Recommended)"), a pull request to `main`, opened and not merged by the session; merging is the author's, with a merge commit. Final checkpoint approved (§8, "Final checkpoint of HP-03 approved").
+- **Not in this register before, reported at the start and left alone:** `claude/brave-goldberg-gm87jp` — one commit, `7e93f27` (12 Nov 2026, 18:12 UTC), one line of
+  `js/datasets-page.js` ("Give the dataset explorer's record search field a name attribute"). Not this session's; unmerged; its owner and disposition are the author's.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed), as before.
+
+## HP-03 — the homepage production plan (12 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the rows "The scope of HP-03", "HP-03: C.1 approved", "HP-03: the open questions" and "HP-03: the next session", each with the author's
+words. **Record:** `docs/HOMEPAGE-PRODUCTION-PLAN.md` — read it, not this entry. It is a proposal, approved only by the §8 rows that cite it.
+
+**What happened.** The prerequisites checked out (the four HP-02 rows, `prototypes/homepage/` on `main`, the date before the Track M window). The scope row was the first write. The tree
+was measured, then C.1 put the plan's index and its three largest decisions: the figure **enhances** `#portalTree`, whose markup stays byte for byte; the route is **a §8 row naming the
+action (Class D) and a pull request the author merges**, no dispatcher; **the first release has no depth by layers**. The plan was written, its four open questions asked and answered
+(the parts read lit, no veil; `lang="en"` and the line "This figure is in English." in the editions, with words for README limitation 8 to be proposed; an iPhone, ≤ 10 % of frames over 25 ms;
+the status shapes on the masthead ship). The next session is HP-04, the plan executed.
+
+**Found while measuring, and now in the plan (not fixed: nothing of the site changed):**
+- **The lens would misstate a precision.** `tl-dma-2027-01-01-compliance-deadline` is dated to the month and 50 days away; the prototype prints "DMA · 50 d" where the masthead writes "≈"
+  (`js/masthead.js:156`). The plan requires the "≈".
+- **The next dated event is computed four times** (`js/masthead.js:141`, `:222`; `homepage.js:213`, `:270`); the plan makes it one function.
+- **Two fetches outside `js/data.js`** in the prototype (`homepage.js:236`, `prototypes/editorial/brief.js`); in production neither is needed.
+- **The images (391 109 bytes) load on every visit** in the prototype, even when the opening does not play; the plan loads them only for the opening.
+- **`design-qa` has never read the prototype** (it reads `css/` and `js/`); moved there, it will.
+- `docs/AUTONOMY-POLICY.md` Class D names "Redesigning the website"; no document tiers a new module under `js/` more precisely (plan §4).
+
+**Battery on the committed tree (`3caf907`), quiet:** `validate`, `i18n-audit`, `design-qa`, `freshness`, `evidence-audit`, `seo-audit` exit 0 (warnings 5, 0, 0, —, 11, 0, as on `main`);
+`tools/selftest.mjs` **189 / 189**; the browser suite **343 pass · 0 fail · 1 undecidable** (`a11y:bound`), the repository byte-identical before and after. **Not run:** the 25 agent suites
+and `.control-room/` (nothing under `agent/`, `.control-room/`, `js/`, `css/`, `data/` or a page changed). `git diff origin/main --stat` over the published surface and `prototypes/` is empty.
+
+**One thing to know that cost a run.** `node agent/browser/cli.mjs --help` is not a help flag: it ran the whole suite, and `| head` hid the result. The run that counts is the full one above.
+
+**Checklist**
+
+| # | Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|---|
+| — | Scope | §8 "The scope of HP-03" (`6e25c38`) | read the row: "Start HP-03" | none | the first write: **met** |
+| C.1 | Index and three decisions | §8 "HP-03: C.1 approved" (`df4412c`) | read the row against the plan's §1, §4, §7 | none | approved before the rest was written: **met** |
+| 1 | What changes, file by file | plan §1 | each cited line in `homepage.js`, `index.html`, `style.css`, `app.js` | none | file by file, with what does not ship and how a crawler reads it: **met** |
+| 2 | The contract | plan §2 | `countSites()` over `homepage.js`; `grep -n "fetch(" prototypes/homepage/homepage.js`; `tools/_footer.mjs:267–289` | MC-2 in `validate.mjs` will hold the module once it is in `js/` | **met** |
+| 3 | The languages | plan §3; §8 "HP-03: the open questions" (`3a34308`) | `tools/editions.mjs` reads only `data-i18n`; `tools/i18n-audit.mjs:52–56` | none today (`home:edition-note` proposed) | words and place decided, nothing in `i18n/`: **met** |
+| 4 | Gates, class, signer | plan §4 | `docs/AUTONOMY-POLICY.md` Class D; `docs/DEPLOYMENT.md` §2a, §3a | the release gate C1–C10 at deploy | per step: **met**; §3a settings stay the author's word |
+| 5 | What tests do not see | plan §5 | `agent/browser/checks.mjs:45–56` (no `prototypes/`), `tools/design-qa.mjs:171`, `:185` | none yet: twelve `home:*` checks proposed for HP-04 | each with what it would not prove: **met** |
+| 6 | The real phone | plan §6; §8 "HP-03: the open questions" | read the steps | none (a person's measure) | device, measure, threshold, remedy: **met**; the measure itself is HP-04's |
+| 7 | Open design questions | plan §7 | each row cites its §8 row | none | every one answered in §8: **met** |
+| 8 | Release and rollback | plan §8 | `git revert -m 1` and the diff it names | none | commits, order, revert, post-deploy: **met** |
+| — | Next prompt | `docs/prompts/v2-hp-04-homepage-production.md` (`3caf907`); §8 "HP-03: the next session" | its exit criterion carries the standing rule | none | exists on the branch: **met**; approved with the work when the author merges |
+| — | Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data img tools agent .github prototypes` is empty | the browser suite reports the repository byte-identical | nothing of the site changed: **met** |
+
+**For the next session:** HP-04, on its prompt — the plan executed, after a §8 row authorizing the action. PV2-05 (without its homepage view) follows.
+
+## Branch register — 12 November 2026 (HP-02b, depth by layers)
+
+*The header HP-02b wrote, kept as written:*
+
+> **Last updated:** 12 November 2026 (UTC), HP-02b (depth by layers in the homepage prototype, an experiment that followed HP-02), at its close.
+> **Branch:** `claude/jolly-hamilton-du9xkp` (assigned by the environment). **#105 (HP-02) was merged by the author before this work began**, so `main` `fa7b4cd` (#105, #106) was merged into the
+> branch with a merge commit and pushed without forcing; a rebase with a force-push was attempted first and refused by the environment, and nothing had changed. `origin/main` re-fetched
+> immediately before this write: `fa7b4cd`, unchanged. Pull request #107 opened on the author's answer, not merged by the session.
+
+- `claude/jolly-hamilton-du9xkp`, from `main` `fa7b4cd` (merged in, `eb57b09`): `prototypes/homepage/` (`homepage.js`, `README.md`) and `docs/` (`ROADMAP-v2.md` §8, `PROTOTYPES.md` §H, `HANDOVER.md`,
+  `prompts/v2-hp-03-homepage-production-plan.md`). Nothing of the published site changed. Disposition: on the author's answer ("Sì, dopo la registrazione (Recommended)"), pull request #107
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/107), opened and not merged by the session; merging is the author's. The branch name is the one HP-02 used; #105 is merged, so this is new work on a restarted branch.
+- Merged during the session, not this session's: #105 (HP-02) and #106 (`claude/nifty-mccarthy-aov32e`, the browser suite waits, bounded, for a mount to leave its loading fallback).
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
+
+## HP-02b — depth by layers in the homepage prototype (12 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of HP-02b" and "HP-02b: depth by layers, measured and kept", with the author's words ("bene"; "Stesso branch, commit separati (Recommended)";
+"Tienila così (Recommended)"). **Record:** `prototypes/homepage/README.md`, "Depth by layers" — read it, not this entry.
+
+**What happened.** The author asked whether the tree could be in 3D. Depth only, a rotatable tree and the whole constellation were put; depth only was recommended, with the reasons, and chosen. It was built as
+**translations of eight SVG groups** (the tree at the back, the core ring, then the mapped, watched and excluded rings, 8 units of spread out of 720), moved by a mouse over the figure, still under
+reduced motion, on touch and during the opening. The first measure of the corners **failed the kill criterion the scope row had set**: CRA, *Interoperable Europe Act*, "CORE · 16" and eIDAS2 touched marks on
+other planes. The cause was real (planes slide over one another, and the label pass assumed a flat figure), so `settleLabels()` now asks for a clearance that grows with the planes' depth difference and moves
+"CORE · n" too; after that **every contact left is *Digital Networks Act's***, the one the author chose to leave. Shown to the author as two videos and a corners sheet; kept at 8 units.
+
+**Measured (README, "Depth by layers").** At rest `#hpFig` is identical to `main`'s in both themes. Contrast unchanged (528 readings, 0 failing; lowest text 4.82, lowest graphic 3.27). The movement costs 0 dropped frames
+at 1 × and 1–5 of about 176 at 6 ×; the opening is not slower. **Battery on the committed tree:** `validate`, `i18n-audit`, `design-qa`, `freshness`, `evidence-audit`, `seo-audit` exit 0; `tools/selftest.mjs` **189 / 189**;
+the browser suite **343 pass · 0 fail · 1 undecidable** (`a11y:bound`), the repository byte-identical before and after. **Not run:** the 25 agent suites and `.control-room/` (nothing under `agent/`, `.control-room/`, `js/`, `css/`,
+`data/` or a published page changed). `git diff origin/main --stat` over the published surface is empty.
+
+**Two things to know.** The environment refused a rebase followed by a force-push (the rule in this file's instructions allows it after a merged pull request, the environment's classifier does not): the merge-commit route
+costs a line of history and nothing else. And a pixel comparison of the whole stage against `main` showed a 27-pixel difference at the screen's left edge — the body's gradient, which `main` shows against itself too; the
+comparison that means something is of `#hpFig` alone.
+
+**Left open:** the depth is a translation of the planes: the tie lines (shown on hover) are on depth 1 between the tree at 0 and the core at 2, so at the extremes their ends are off by up to 1 unit — stated in the README, not
+fixed; a real device or pointer, a trackpad, a high-contrast mode are not measured; whether any of this goes to production is HP-03's plan, whose prompt now names the layers and the third review hook (`__hpParallax`).
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| Scope | §8 "The scope of HP-02b" (`92f9733`, `88d3ae8`) | read the row: the author's words, the kill criteria | none | the row is the first write: **met** |
+| The layers | `homepage.js` (`planes`, the ring groups, `stage` listeners; the HP-02b commit) | `python3 -m http.server 8000`, open `/prototypes/homepage/`, move the mouse over the figure; with `prefers-reduced-motion` or on a phone nothing moves | none in the repository (scratch checks only) | translations only, still under reduced motion / touch / opening: **met** |
+| The label clearance | `settleLabels()` (depth-aware `hit`, `planeOf`), "CORE · n" among the movers | `window.__hpLabels`; `window.__hpParallax(1, 1)` then look at the bottom of the figure | none | no label but *Digital Networks Act* touches anything at the centre or any corner: **met** (the five positions, both lens states, 3 px) |
+| Measures | README "Depth by layers"; §8 "HP-02b: depth by layers, measured and kept" | the README's method | none (scratch scripts, not committed) | at rest identical, contrast unchanged, timing not worse: **met** |
+| Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data img tools agent .github prototypes/editorial prototypes/observatory` is empty | the browser suite reports the repository byte-identical | nothing of the published site changed: **met** |
+
+**For the next session:** HP-03, as before, on its prompt (updated to name the layers); PV2-05 (without its homepage view) follows.
+
+## Branch register — 12 November 2026 (HP-02, the homepage follow-up)
+
+*The header HP-02 wrote, kept as written:*
+
+> **Last updated:** 12 November 2026 (UTC), HP-02 (the homepage follow-up: the author's serpent, the figure's contrast, the opening's timing, the plan for the languages), at its close.
+> **Branch:** `claude/jolly-hamilton-du9xkp` (assigned by the environment), fast-forwarded to `main` `84bfa89` (#104) at the start; pushed, no history rewritten.
+> `origin/main` re-fetched immediately before this write: `84bfa89`, unchanged. Pull request #105 opened on the author's answer ("After recording (Recommended)"), not merged by the session.
+> The entries below this session's are unchanged; the header HP-01 wrote is kept under its branch register, as written.
+
+- `claude/jolly-hamilton-du9xkp`, from `main` `84bfa89`: `prototypes/homepage/` (assets, `homepage.js`, `homepage.css`, `README.md`) and `docs/` (`ROADMAP-v2.md` §8, `PROTOTYPES.md` §H,
+  `HANDOVER.md`, `prompts/v2-hp-03-homepage-production-plan.md`). Nothing of the published site changed. Disposition: on the author's answer ("After recording (Recommended)"), pull request #105
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/105), opened and not merged by the session; merging is the author's.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed), as before. `claude/funny-hamilton-yt9uh0` (HP-01) is merged (#104).
+
+## HP-02 — the homepage follow-up (12 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the rows "The scope of HP-02", "HP-02: C.1 approved", "HP-02: the measures", "HP-02: the languages" and "HP-02: the next session", each with the
+author's words. **Record:** `prototypes/homepage/README.md` ("What was checked", "Languages: the plan") and `docs/PROTOTYPES.md` §H — read them, not this entry.
+
+**What happened.** The serpent's original was not in the repository, on any branch, in history or in the session's upload folders; the author supplied it in the conversation after two
+attempts (the first was the 512 px icon itself, byte-identical to `img/icons/icon-512.png`). It is a **1920 × 1080 raster**, not a vector. It was integrated by colour and connectivity only
+(`assets/derive-serpent.py`, deterministic: re-running it on the original reproduces all four derived files byte for byte, checked on the pushed tree), shown as before/after videos and stills (C.1), and approved with two
+decisions: the raster is the source, and its own framing stays. Then the measures (contrast, timing), the labels that touch, the plan for the languages, and the next prompt.
+
+**Measured, 12 Nov 2026** (method and figures in the README): contrast — 528 element readings, 4 states, **0 failing after the corrections** (before: the rings, the tree's lines, the whole
+"Falls due next" lens and the Night contour failed); timing — 4.0 s everywhere, 0 dropped frames at 1 ×, 10–30 % at 6 ×, the cost is rendering not script (frame script 4.3 → 2.5 ms median),
+no long task; labels — four of five collisions cleared, *Digital Networks Act* structurally not. **Battery on the pushed tree:** `validate`, `i18n-audit`, `design-qa`, `freshness`,
+`evidence-audit`, `seo-audit` exit 0; `tools/selftest.mjs` **189 / 189**; the browser suite **343 pass · 0 fail · 1 undecidable** (`a11y:bound`, declared on every run) with the repository
+byte-identical before and after. **Not run:** the 25 agent suites and `.control-room/` — nothing under `agent/`, `.control-room/`, `js/`, `css/`, `data/` or a published page changed.
+`git diff origin/main --stat` over the published surface (list below) is empty.
+
+**Two things to know that cost a run.** A browser-suite run started while a file was being edited reported "the repository changed during this run" and exited 1 — the suite's own guard,
+correct; the result that counts is the rerun on a quiet tree. And three throttled runs per condition do not resolve small differences in dropped frames: what separated an improvement
+from noise was timing the frame's script on its own.
+
+**Decisions of this session, all in §8:** the raster is the source; the drawing is framed as drawn (the first frame of the opening is not pixel-identical to the header's mark);
+C.1 approved; rings and tree lines kept in `--paper-faint`; *Digital Networks Act*'s label left and stated; the opening's timing at 6 × accepted as measured (revisit on a real phone);
+the figure is English in the it / fr / es editions and is declared English; the next session is the homepage production plan.
+
+**Left open, for the next session:** where and how the English figure is declared in the editions (a sentence in the chrome? `docs/`?); `js/` is not tiered by `docs/AI-SAFE-BOUNDARIES.md`'s
+table — the production plan has to find where the documents place it; `homepage.js` imports `prototypes/editorial/brief.js`, a dependency that cannot ship; no screen reader has been used;
+a real-phone timing; a vector serpent if one ever exists; the `__hpFrame` and `__hpLabels` review hooks must not ship.
+
+**Checklist**
+
+| # | Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|---|
+| 1 | The author's serpent | `assets/serpent-original.png` (unedited), `serpent-mark.png`, `serpent-body-day.png`, `serpent-body-night.png`, `serpent-beads.json`, `derive-serpent.py` (`ce37402`, contour `d6422b5`); §8 "HP-02: C.1 approved" (`6a871d8`) | `python3 -m http.server 8000`, open `/prototypes/homepage/?intro=1`, both themes; `python3 -I prototypes/homepage/assets/derive-serpent.py prototypes/homepage/assets/serpent-original.png <empty dir>` reproduces all four derived files (`cmp`) | none in the repository (scratch checks only) | the author's drawing in, the icon-derived files gone, `img/icons/` untouched: **met** |
+| 2 | Contrast in the figure | `homepage.css`, `assets/derive-serpent.py` (contour width) (`d6422b5`); README "What was checked"; §8 "HP-02: the measures" | the README's method, in a browser: resolved `fill`/`stroke` × ancestor opacity against the pixels behind each element; or by eye in both themes and the lens | none (scratch script, described, not committed) | measured in Day and Night, corrected with the site's tokens only: **met** — the lowest graphic 3.27 : 1, the lowest text 4.82 : 1; hover and focus states **not** measured |
+| 3 | Timing of the opening | `homepage.js` `set()` and two cached lookups (`d6422b5`); README "Timing of the opening"; §8 "HP-02: the measures" | CPU throttle 1 ×, 4 ×, 6 × in DevTools, Replay the opening; the frame-interval method is in the README | none | measured under throttling: **met**; the opening was **not** changed; a real phone **not** measured |
+| 4 | The languages (a plan) | README "Languages: the plan" (20 rows); §8 "HP-02: the languages" | read the 20 rows against `homepage.js` and `index.html`; `grep -n data-i18n js/masthead.js` is empty | none | the plan and the author's answer in §8, no translation written: **met** |
+| 5 | The minor fixes | `settleLabels()` in `homepage.js` (`d6422b5`); README "Labels that touch" and the corrected state of the README | `window.__hpLabels` in the console; the lens "Falls due next" at the bottom of the core | none | the touching labels fixed or stated: **partly met** — *Digital Networks Act* stays (the author: "Leave it, say so"); the README's stale sentences corrected |
+| — | Next prompt | `docs/prompts/v2-hp-03-homepage-production-plan.md` (`c51fbea`) | read its exit criterion: the standing rule is there | none | exists on the branch, carries the rule: **met**; approved with the work when the author merges |
+| — | Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data img tools agent .github prototypes/editorial prototypes/observatory` is empty | the browser suite reports the repository byte-identical | nothing of the published site changed: **met** |
+
+**For the next session:** HP-03, on its prompt — the homepage production plan, a plan and not an implementation. PV2-05 (without its homepage view) follows.
+
+## Branch register — 12 November 2026 (browser QA: `load:datasets.html:mount`)
+
+- `claude/nifty-mccarthy-aov32e`, from `main` `84bfa89`: `agent/browser/checks.mjs`, `agent/browser/selftest.mjs`, `docs/BROWSER-QA.md` §6.3 and this entry.
+  Test code and one doc; no application code. Disposition: on the author's "yea", pull request #106
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/106), opened and not merged by the session; merging is the author's.
+  `origin/main` re-fetched before this line: unchanged (`84bfa89`).
+- **What it is.** A local browser run failed `load:datasets.html:mount` ("still holds the loading fallback") with no console error, exception or CSP
+  refusal; CI's browser job on the same tree passed. `goto()` settles 350 ms after the last request *starts*, so a data file arriving later was read as
+  "never rendered". `checkPageLoads` now waits, bounded by `MOUNT_WAIT_MS` (10 s), then applies the same assertion; a failure records the wait, the
+  unanswered data requests, error responses, failed requests and the console. The mechanism was reproduced (one JSON held 600 ms gives the exact
+  message). **The cause in the author's run was not established** and nothing saved from it shows it. Not changed, and left to the author:
+  `js/data.js load()` has no fetch timeout, and the other `goto` + `evaluate` pairs in `checkDatasets` do not wait.
+  The full browser suite was not re-run (the `pages` area was: 60 pass); the local Chrome was 153, the author's 157.
+
+## Branch register — 12 November 2026 (HP-01, the homepage)
+
+*The header HP-01 wrote, kept as written:*
+
+> **Last updated:** 12 November 2026 (UTC), HP-01 (the homepage session: a creative direction, then its prototype), at its close.
+> **Branch:** `claude/funny-hamilton-yt9uh0` (assigned by the environment), from `main` `f143c8e`, with `main` `33ee004` **merged in** (`ed44b2e`) when `main` moved
+> during the session (#102, #103); pushed, no history rewritten. Pull request #104 opened on the author's answer, not merged by the session.
+> The entries below this session's are unchanged; the header the P1 checkpoint wrote is kept under its branch register, as written.
+
+- `claude/funny-hamilton-yt9uh0`, from `main` `f143c8e`, with `main` `33ee004` merged in (`ed44b2e`): the unpublished `prototypes/homepage/` (new) and `docs/` (`ROADMAP-v2.md` §8,
+  `PROTOTYPES.md` §H, `HANDOVER.md`, `prompts/v2-hp-02-homepage-follow-up.md`, a note at the head of the PV2-05 prompt). Disposition: on the
+  author's answer ("After recording (Recommended)"), pull request #104
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/104), opened and not merged by the session; merging is the author's.
+  `origin/main` re-fetched before this line: `33ee004`.
+- Merged during the session, not this session's: #102 and #103 (`claude/kind-rubin-qq3vpo`, the P1 checkpoint). #102 changed what the
+  masthead's bands count (MC-2: core and adjacent, 21); the prototype was adapted to it (`9e19891`).
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed), as below. Nothing else is unmerged.
+
+## HP-01 — the homepage: a creative direction, then its prototype (11–12 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the scope row of HP-01 and the four rows "HP-01: …". **Record:** `prototypes/homepage/README.md` and
+`docs/PROTOTYPES.md` §H — read them, not this entry.
+
+**What happened.** The author asked for a creative direction for the homepage before any implementation. The session read the code (the tree is
+a hand-authored SVG in `index.html`, drawn three times there, its edges `brief.json`'s reading graph, hidden below 640 px; the Observatory has no
+entrance of its own) and the prototypes, and put three directions with wireframes: A (the Atlas), B (Crown and Roots, recommended), C (the
+Constellation). The author chose **C, revised to stay compatible with the published homepage**, with an opening that includes the site icon; the
+opening was settled on a dozen rendered videos (§8, "HP-01: the opening"), then tested at night (§8, "HP-01: the serpent at night"). On "Si" the
+prototype was built (`d1ea89b`). **During the session `main` moved**: #102 made `instrumentsByStatus()` the one count of instruments by status and the
+bands now count 21 core and adjacent instruments; `main` was merged into the branch (`ed44b2e`) and the prototype adapted (`9e19891`): the counted set and the status order
+come from `js/regulatory-model.js`, and every counted instrument carries its status mark in the figure.
+
+**Battery on `9e19891`, 12 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit` exit 0 (0
+errors, 11 warnings); `freshness` exit 0 — **identical to `origin/main` `33ee004` measured in a clean worktree**; `tools/selftest.mjs` **189/189**. The
+prototype in Chromium (Playwright, scratchpad, not committed — **a gap**): 1440 and 390 px, Day and Night, no console error, no CSP violation,
+`localhost` only, no horizontal scroll; the opening once and not on the next visit; reduced motion draws the final state; the figure one Tab stop.
+**Not run:** the 25 agent suites, `.control-room/` and the browser suite — nothing under `agent/`, `.control-room/`, `js/`, `css/`, `data/` or the
+published pages changed, and the browser suite does not cover `prototypes/`.
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| Directions | in chat (findings, A/B/C, wireframes); §8 scope row | read the row | none | three directions and a recommendation before any prototype |
+| Decisions | §8, four rows "HP-01: …" | read the rows; each quotes the author | none | every decision in §8 with the author's words |
+| Prototype | `prototypes/homepage/` (`d1ea89b`, `9e19891`) | `python3 -m http.server 8000` (or any static server); open `/prototypes/homepage/`; "Replay the opening"; Day/Night; a 390 px window; Tab into the figure, arrow keys; the "Falls due next" lens | none in the repository (scratch checks only) | the approved figure and opening, two themes, two widths, reduced motion, keyboard |
+| MC-2 | `9e19891` | `grep -n regulatory-model prototypes/homepage/homepage.js` | `tools/selftest.mjs` 189/189 (it does not walk `prototypes/`) | no count by status outside its one home |
+| Record | `docs/PROTOTYPES.md` §H; the prototype's README | read them | none | what was checked and what was not, said |
+| Next prompt | `docs/prompts/v2-hp-02-homepage-follow-up.md`; a note in the PV2-05 prompt | read its exit criterion | none | the prompt exists and carries the standing rule |
+| Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data img tools agent .github prototypes/editorial prototypes/observatory` is empty | none | nothing of the published site changed |
+
+**For the next session:** HP-02, on its prompt; it starts from the author's original serpent artwork, and asks for it first if it has not arrived.
+PV2-05 follows, without its homepage view.
+
+## Branch register — 12 November 2026 (P1 checkpoint)
+
+*The header the P1 checkpoint wrote, kept as written:*
+
+> **Last updated:** 12 November 2026 (UTC), the author's session "P1 Remediation & Automation Readiness", at its checkpoint, and the same
+> day's follow-up (F-A4 made lighter to close: options 1, 2 and 4, `docs/AUDIT-2026-11-11-P1.md` §8).
+> **Branch:** `claude/kind-rubin-qq3vpo` (assigned by the environment), from `main` `25c9e79`, **rebased on `f143c8e`** when `main` moved
+> during the session; pushed. No pull request opened, nothing merged, `main` untouched.
+> The entries below this session's are unchanged; the paragraph that headed this file for the P0 sessions is kept under their
+> branch register as it was written.
+
+- `claude/kind-rubin-qq3vpo`, rebased on `main` `f143c8e`: `js/regulatory-model.js`, `js/masthead.js`, `tools/metric-contract.mjs`,
+  `tools/commit-evidence.mjs`, `tools/selftest.mjs`, `agent/release/gate.mjs` and its suite, `agent/orchestrator/orchestrator.mjs` and its
+  suite, `agent/simulation/run.mjs` and its suite, and `docs/`. Disposition: the first four commits (`9e896a0` … `aec8ccb`) were **merged
+  by the author as pull request #102** (`89c0305`, 12 Nov 2026; QA run 993 and Pages run 111 green; the live `js/masthead.js` and
+  `js/regulatory-model.js` equal `main`'s). **The two follow-up commits** (F-A4 made lighter to close, record §8) sit on that merged history,
+  **pushed, no pull request opened** — whether to open one is the author's to say. They were not rebased onto `89c0305`: a force-push was refused
+  and is not needed, since `aec8ccb` is an ancestor of `main` and a pull request would show only those two. `origin/main` re-fetched: `89c0305`.
+- Merged during the session, not this session's: #99 (PV2-04), #100 and #101 (`ui/favicon-brand-mark`, the header favicon — a branch
+  absent from this register; reported to the author).
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
+
+## P1 checkpoint — remediation and automation readiness (11–12 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of the P1 checkpoint". **Record:** `docs/AUDIT-2026-11-11-P1.md` — read it, not
+this entry.
+
+**Closed:** **F-A7** — `js/regulatory-model.js instrumentsByStatus()`, the masthead its one consumer, at 21 core and adjacent
+instruments; `INSTRUMENTS_CARD` declared and publishable; a count held to MC-2 like a sum (record §3). **Merge commits** — a
+merge's own content judged by C2/C6/C7/C8 and reported by `commit-evidence.mjs`; no verdict on the real history changed (§4).
+**V-1** — simulated records refused by default (§5). **CI/Pages** — the live site is `f143c8e`, 124 of 124 files (§1).
+**Not closed:** **F-A4** — nine records scanned, none re-verified; the register refused automated reading and the session did not
+work around it (§2). **C8 strict** — off, as decided; documented as an accepted limitation (§4). **Production** — not activated.
+**Decisions put to the author:** D-P1-1…D-P1-4 (§7).
+
+**Follow-up, 12 Nov 2026 — the author's options 1, 2 and 4 for the human check of F-A4** (record §8). **4:** a pending appeal is `high`
+(30 days), not `critical` (14) — `js/evidence-model.js riskClass()`; the nine fined records past their interval go from 9 to 3, **with no record
+read**; the **claims' interval is held** (17 claims would otherwise have gone 30 → 90 days; found after the question, `enforcementVolatile()`,
+tests RC1, RC2). **1 and 2:** `tools/register-reading.mjs` — `sheet` (the records, their cases derived from the data, the cases no record
+carries: T-638/26, T-638/26 R, T-639/26) and `check <answers.json>` (refuses what cannot be true; prints the source and the `attestation`
+objects it would become; **no verb writes**); the optional `attestation` on an enforcement record, audited by `tools/validate.mjs` (E1–E5).
+**For the next session:** the author fills the sheet from the Court's register (`node tools/register-reading.mjs sheet`); a session then
+re-reads the authority pages the same day, commits the source, the attestations and `last_verified` with an `Evidence:` trailer. **Open for the
+author:** D-P1-5 (make the attestation mandatory), D-P1-6 (the claims' interval).
+
+**Battery on `8d4d16f` (the three code commits on `f143c8e`), 12 Nov 2026 — superseded for `tools/` and `js/evidence-model.js` by the follow-up's own
+battery below:** validators exit 0 (`validate` 0 errors · 5 warnings ·
+`METRICS` both publishable; `freshness --as-of 2026-11-12` exit 0, 3 staleness prompts; `design-qa` 0/0); `agent/schemas/cli.mjs check`
+exit 0; the 25 suites and `.control-room/` **1483 tests, 1482 pass, 0 fail, 1 skipped** (no IPv6 loopback) — 1475 at PV2-04 plus G17,
+G18, MC18–MC22, V1; **browser suite (`--require-browser`) 343 pass, 0 fail, 1 undecidable** (`a11y:bound`, by design) — the baseline.
+The clone was shallow until `git fetch --unshallow`; before it, eight governance tests failed on an untouched `25c9e79` too (§6.3).
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| CI and Pages | record §1 | runs 990/110; hash the live site against `pages-artifact.mjs build` | Pages gate | the live site is the published commit: **met** |
+| F-A4 | record §2 | read the register for the nine | none (a reading) | each record re-verified or classified: **classified, not re-verified** |
+| F-A7 | `regulatory-model.js`, `metric-contract.mjs` | open the brief's masthead | MC18–MC22 | one function, card publishable: **met** |
+| C7/C8 merges | `gate.mjs`, `commit-evidence.mjs` | `node tools/commit-evidence.mjs <base> <head>` | G17, G18 | a merge's own content seen: **met**; strict unchanged |
+| V-1 | `orchestrator.mjs` | — | V1 | simulated refused by default: **met** |
+| Automation | record §5 | `node agent/production/cli.mjs readiness` | the production suite | production not ready, and says so: **met** |
+
+## Branch register — 11 November 2026 (PV2-04)
+
+- `claude/pv2-04-start-nhgcqx`, from `main` `25c9e79`: `docs/` (`ROADMAP-v2.md` §8, `HANDOVER.md`, `PROTOTYPES.md` §2, the PV2-05 prompt) and
+  the unpublished `prototypes/observatory/`. Both checkpoints approved (§8). Disposition: on the author's answer ("Sì, apri la PR
+  (Recommended)"), pull request #99 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/99), opened and not merged by the session;
+  merging is the author's, with a merge commit. `origin/main` re-fetched before this line: `25c9e79`.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
+
+## PV2-04 — Post-v2 C, the Policy observatory prototype: final checkpoint (C.2–C.5) (11 Nov 2026) — a draft
+
+**Authority:** `docs/ROADMAP-v2.md` §8, PV2-04's rows of 11 Nov 2026 (scope, C.1, and the rows after "Checkpoint C.1 of PV2-04 approved").
+**Record:** `docs/PROTOTYPES.md` §2 — read it, not this entry. **The author asked that the observatory be treated as a draft**; it is recorded
+and handed on as one.
+
+**What happened.** Built (`196b6b5`) as §8.2's direction 2 and shown in screenshots before the checkpoint (PV2-03's lesson): the author judged it
+"still to fix" in four areas. Reworked (`3e9adf1`, an astrolabe explorer, three looks); the author asked for a 3D explorer, no square behind the
+tree, and "option A" = the Editorial's look A (`34439de`); then sent the Editorial's layout-A screenshots and a photograph of Knwler's explorer, and
+decided: **layout A whole** and **Knwler's presentation, still 3D** (`75bb346`); then free rotation and "treat it as a draft" (`5c1b53d`). Every
+turn is a §8 row with the author's words. **Departure recorded:** layout A replaces direction 2's left section list and right "On this page".
+
+**The measurement** (`docs/PROTOTYPES.md` §2.3–§2.6): samples E (article) and D (timeline, both modes) named first; M1–M8 re-implemented in the
+scratchpad, not committed (**a gap**, as in PV2-03); M4 on the full tree. Steps **C1 4 · C2 4 · C3 4 · C4 4 · C5 4**, C6 not scored — with the
+note that a draft reaching the steps is not finished. **23 planted cases pass** (PV2-03's nine and fourteen of the Explorer's). Not seen: whether it
+reads well, depth in a projection, a screen reader, contrast inside the SVG, M1 on D (tabular body), performance, other browsers.
+
+**The prompt of PV2-05:** `docs/prompts/v2-pv2-05-prototype-hybrid-selection.md` (`113280c`), with the author's three C.5 answers (§8 `d357795`:
+`prototypes/hybrid/`; layout A for all three; the Hybrid's extras may shrink, never the comparison or the decision).
+
+**Battery on `113280c`, 11 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit --as-of
+2026-11-11` exit 0 (0 errors, 11 warnings); `freshness --as-of 2026-11-11` 0 defects, 3 staleness prompts; `agent/schemas/cli.mjs check` exit 0;
+`commit-evidence origin/main HEAD` 19 commits, 0 without evidence (none changes a published file); **the 25 suites and `.control-room/`: 1475 tests,
+1474 pass, 0 fail, 1 skipped** (`.control-room`, no IPv6 loopback; `tools/selftest.mjs` 176/176); **browser suite (`--require-browser`): 343 pass,
+0 fail, 1 undecidable** (`a11y:bound`, by design; it does not cover `prototypes/`). `agent/records/` absent. Nothing of the baseline,
+`prototypes/editorial/`, the data, the models, the CSP or `tools/pages-artifact.mjs` changed (`git diff origin/main --stat` over those paths is
+empty). The worker restarted once (after `34439de`); `git status` was clean and nothing was redone; a question left open by the restart was put again.
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| Premises | §8 scope (`b9367e3`); C.1 report `cdd6c34` | read the rows; `node tools/pages-artifact.mjs list` | none | PV2-03's final approval in §8 before the start |
+| C.1 | §8 grouping (`476de10`), approval (`89457d2`) | read the rows | none | the grouping answer in §8 in the author's words |
+| C.2 | no anchor or weight changed | `docs/PROTOTYPES.md` §2.4 | none | grid unchanged |
+| C.3 | `prototypes/observatory/` (`196b6b5` … `5c1b53d`); §8 rows `39eaed4` … `5c1b53d` | `python3 -m http.server 8000`; open `/prototypes/observatory/`, `regulation.html?id=chips-act`, `timeline.html?instrument=chips-act`, `timeline.html?mode=network`; drag the network; the theme button; a 390 px window | none in the repository (scratch planted cases: 23/23) | four views, two widths, two themes, empty and missing states, the Explorer with the table as its alternative — **as a draft** |
+| C.4 | `docs/PROTOTYPES.md` §2 (`20df37c`) | re-run M1–M8 from `docs/FRONTEND-REFERENCES.md` §4 | none committed — **a gap** | measured with the same measures and cases; what is not seen, said |
+| C.5 | §8 C.5 answers (`d357795`); the prompt (`113280c`) | read the prompt's exit criterion | none | the prompt exists and carries the standing rule |
+| Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data tools agent .github prototypes/editorial` is empty | `commit-evidence` | nothing of the baseline changed; nothing of a third party entered |
+
+**Approved** (§8, "Final checkpoint of PV2-04 approved", `01d0c1e`). Pull request #99 opened; see the branch register above.
+**For the next session:** PV2-05 opens once #99 is merged, on its prompt; the observatory reaches it as a draft.
+
+## PV2-04 — Post-v2 C, the Policy observatory prototype: checkpoint C.1 (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "The scope of PV2-04" (the author's "Start PV2-04", `b9367e3`) and "PV2-04, C.1 question 1"
+(`476de10`). The prompt is `docs/prompts/v2-pv2-04-prototype-observatory.md` as approved with the reworked Editorial (`db1bdf2`).
+
+**The premises, verified.** §8 holds "G1: Stage 2 is opened", PV2-03's rows (scope, C.1 questions 1–4, its C.1 approval, "grid C4 step 4",
+"C.5 questions 1 and 2"), "Final checkpoint of PV2-03 approved" and "The reworked Editorial approved, look A". `main` `25c9e79` holds
+`prototypes/editorial/` (#97), `docs/PROTOTYPES.md` and the prompt; the P0 sessions inserted before PV2-04 are merged (#98). Date measured
+11 Nov 2026: before Track M (12 Jan 2027) and the grant's expiry (9 Mar 2027). The clone was shallow and was unshallowed.
+`node tools/pages-artifact.mjs list` does not list `prototypes/`; `tools/pages-artifact.mjs` is not touched. Nothing is written in
+`prototypes/observatory/`.
+
+**The grouping, decided** (§8, "PV2-04, C.1 question 1"): a selectable "Group by" — none (default) · coverage (`js/routes.js coverage()`:
+covered 16 · mapped 12 · watched 5 · excluded 6) · part of the brief (`brief_part`, 15 set, 24 in "not assigned"); each laid out
+deterministically, nothing computed. Grouping stays one of the extras the stopping rule allows to shrink.
+
+**The data, re-measured on `25c9e79`** (the prompt's starting table was PV2-03's): 39 instruments, 40 relationships (31 carry
+`requires_verification`, true on none; 9 carry neither it nor `verification_note`; 9 symmetric; `claims` on 11, `provisions` on 12; 10 kinds in
+use); 8 instruments in no relationship (`gdpr-procedural`, `chips-act`, `ai-liability-directive`, `charter`, `vida`, `eaa`, `psd3`, `psr`);
+101 events; **187 claims** (182 in the prompt's table: P0.3 added five); 21 enforcement records.
+
+**Battery on `476de10`, 11 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit` 0/0; `design-qa` 0/0; `evidence-audit --as-of
+2026-11-11` exit 0, 0 errors · 11 warnings; `freshness --as-of 2026-11-11` 0 defects, 3 staleness prompts (time, not this branch);
+`seo-audit` 0/0; `node --test tools/selftest.mjs` **176/176** (143 in the prompt's table: P0.2 and P0.3 added 33);
+`commit-evidence origin/main HEAD` 2 commits, 0 without evidence, neither changes a published file. `agent/records/` absent.
+
+**Waiting for:** the author's approval of C.1, recorded in §8. Then C.2–C.3 begin in `prototypes/observatory/`.
+
+## Branch register — 11 November 2026 (P0.1 + P0.4, P0.3 + P0.2)
+
+*The file's heading when this entry was written:* **Last updated:** 11 November 2026, the author's sessions "P0.1 + P0.4" (dispatcher integrity, release governance) and "P0.3 + P0.2" (amount provenance, metric contract), both at their checkpoints in one session. **Branch:** `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`. Kept local at first (the author's answer, §8), then **pushed on the author's word ("Push") at the end of the session**; no pull request opened, nothing merged, `main` untouched. The entries below this session's are unchanged.
+
+- `claude/sleepy-keller-u3igd5`, from `main` `ad234aa`: `agent/release/`, `agent/detector/fields.mjs`, `tools/`, `js/` (pipeline,
+  masthead, instrument-view, enforcement-page), `data/enforcement.json`, `data/claims.json`, the regenerated `instruments/dma/`,
+  `instruments/gdpr/`, `datasets.html`, `sitemap.xml`, and `docs/`. Both checkpoints approved (§8). Disposition: pushed on the
+  author's word; pull request to `main` opened on the author's answer ("Sì, apri la PR (Recommended)"), not merged by the session;
+  merging is the author's, with a merge commit. `origin/main` re-fetched before this line: `ad234aa`.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed).
+
+## P0.3 + P0.2 — enforcement amount provenance and the metric contract: checkpoint (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, "A change of plan: P0.3 … and P0.2 … brought forward as P0" (the author's prompt, and
+"Sì, procedi"). **Record:** `docs/DATA-READINESS.md` §9 — read it, not this entry. PV2-08 is **not** done; no view was built.
+
+**P0.3 — closed.** All 13 amounts were re-read on 11 Nov 2026 in their official sources (authority releases, the Luxembourg
+judgment); each record now carries `fine_eur_basis` (fact claim, tier-1/2 source, quoted passage, amount as stated, day read),
+checked by `tools/fine-basis.mjs` from `validate.mjs`. Five fact claims added (F-A3's four, plus `enf-google-ec-2025-adtech`,
+whose only claim was a claim of **law** — missed by the 9 Nov string search). No gap needed; no record's `last_verified` or
+`requires_verification` touched. 15 tests (FB0–FB14), A.6's twelve cases among them.
+
+**P0.2 — closed.** `tools/metric-contract.mjs` implements MC-1…MC-15 and declares the fines card; `validate.mjs` runs it
+(`METRICS … publishable`). One computing function, `js/pipeline.js finesFigure()`; the masthead, the instrument pages and the
+enforcement page import it (F-A1 closed: four rules for "payment unknown" became one). Figures printed today are unchanged,
+measured side by side. 18 tests (MC0–MC17): K1–K13, P1–P5, MC-2's false positives and stated limit, MC-14/MC-15 on fixtures of
+the deadlines and instruments families. **Found and fixed before commit:** MC-2's first lexer read everything after a regex
+literal as a string (a false negative on `js/masthead.js`). `agent/detector/fields.mjs` classifies the new field (its suite
+failed until it did — the assertion doing its job).
+
+**Open:** the views still print "announced" without its partition (D); F-A7, F-A4, F-A6, F-A8 (`docs/DATA-READINESS.md` §9.4).
+Regenerated by `tools/_footer.mjs`: `instruments/dma/`, `instruments/gdpr/`, `datasets.html`, `sitemap.xml` (dates derived from
+the new claims' verification).
+
+**Battery on the working tree before the commit, 11 Nov 2026:** the six validators exit 0 (`validate` 0 errors · 5 warnings ·
+`METRICS fines-announced-collected-unknown: MC-1…MC-15 hold, publishable`; `evidence-audit` and `freshness --as-of 2026-11-11`
+exit 0; `seo-audit` 0/0 after `_footer.mjs`); `tools/selftest.mjs` **176/176** (143 before); `agent/schemas/cli.mjs check` exit 0;
+the suites: all pass, `agent/detector/selftest.mjs` 69/69 once the field was classified; **browser suite (`--require-browser`):
+343 pass, 0 fail, 1 undecidable** (`a11y:bound`, by design) — the baseline. `agent/browser/selftest.mjs` failed **1 of 24** inside
+the sequential battery here as in the P0.1 run, and passed 24/24 in four isolated or loaded re-runs; the failing test's name was
+not captured either time — an intermittent failure, named, not explained. `.control-room/` 76 pass, 1 skipped (no IPv6 loopback).
+
+**Approved** (§8, "Checkpoint of the session \"P0.3 + P0.2\" approved"). Pull request opened; see the branch register above.
+
+## P0.1 + P0.4 — dispatcher integrity and release governance: checkpoint (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the two rows of 11 Nov 2026 "The scope of the session "P0.1 + P0.4"…" and "P0.4: the
+release review model and C8 strict, decided". **Record:** `docs/AUDIT-2026-11-11.md` — read it, not this entry.
+
+**P0.1 — closed, with technical proof.** The 9/1 discrepancy is **reproduced** on a temporary repository against the dispatcher
+of `ad234aa`: the scope stage subtracted every path dirty before the apply, and `git commit` took the whole index (9 files
+committed, "1 changed file(s)" reported). How the 8 files of #88 reached the author's index is **not reconstructible** from the
+repository (`11313f6` was never pushed); an uncommitted `git merge origin/main` and a manual `git add` leave the same state
+(AUDIT §1.4; the author's reflog would settle it). Repaired in `agent/release/dispatch.mjs` and the new `agent/release/worktree.mjs`:
+a staged index, an unmerged path or a merge/rebase/cherry-pick in progress is refused **before the apply, in a rehearsal too,
+never unstaged**; the produced set is measured against a snapshot (status + sha256), must be permitted and must equal what the
+applier declared; the index is re-read before the commit and the commit after it; the dispatcher's own rollback is verified
+(every hash, HEAD, index) before the branch is deleted, and an unverified one is reported HIGH with the branch kept and the
+person's bytes copied. 13 new tests (group I), 10 of which fail on `ad234aa`; A1, A9, A10, A11 re-aimed and strengthened (AUDIT §3).
+
+**P0.4 — closed on the author's decisions.** Model **A, single reviewer**, documented as such (AUDIT §4.2, §6.1; `docs/DEPLOYMENT.md`
+§2a); **C8 strict not activated** — simulated read-only, it would fail every deploy as the gate stands (AUDIT §5). Measured
+through GitHub this session: one collaborator, `andreatosti2001`, admin; `pages.yml` run 106 on `ad234aa` passed C1–C7, C9, C10
+with C8 warning on the same 6 commits; the pinned registry fingerprint in that run's log equals `reviewers.json`'s. Not changed:
+any GitHub setting, `gate.mjs`, `pages.yml`. **Found, not fixed:** a merge commit's own changes are invisible to C7 and C8
+(AUDIT §5.4) — a proposal for a later session. The first sentence of `docs/DEPLOYMENT.md` §2a ("not yet run by GitHub") is
+stale since run 76; left as it is.
+
+**G1:** the prompt said not to consider it passed; §8 already holds the author's row "G1: Stage 2 is opened". Reported, not
+reconciled: this session neither records nor revokes G1.
+
+**Battery on the working tree before the commit, 11 Nov 2026:** the six validators exit 0 (`validate` 0 errors · 5 warnings);
+`tools/selftest.mjs` 143/143; `agent/schemas/cli.mjs check` exit 0; the 25 suites and `.control-room/`: every suite passes —
+`agent/release/selftest.mjs` 59/59 (46 before) — except that `agent/browser/selftest.mjs` reported **1 failure of 24 in the
+first run** and **24/24 in two re-runs** (no browser file changed; the failing test's name was not captured — a gap, named);
+`.control-room/` 76 pass, 1 skipped (no IPv6 loopback). `origin/main` re-fetched before this entry: still `ad234aa`.
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| P0.1 cause | AUDIT §1 | `git diff --stat fc6f420^1 fc6f420` (8 files) | I2 fails on `ad234aa` | reconstructed or declared not reconstructible: **mechanism reproduced; entry route not reconstructible** |
+| P0.1 index guard | `worktree.mjs inspectIndex`, stage 5a | stage a file, run `dispatch --proposal <id>` | I2, I3 | refused before apply, nothing unstaged |
+| P0.1 commit = produced = permitted = declared | stages 8–9 | — | I1, I4–I10, I13 | the commit holds only produced, authorised, declared paths |
+| P0.1 rollback | `rollBack()` in stage 6; `restorePaths`, `verifyRestored` | — | I11, I12 | verified by hash; unverified → HIGH, branch kept |
+| P0.4 audit | AUDIT §4 | GitHub collaborators page; run 106 log | none (a measurement) | A vs B assessed |
+| P0.4 C8 simulation | AUDIT §5 | scratch script, not committed | none | impact measured read-only |
+| P0.4 decisions | §8 row; AUDIT §6.1; DEPLOYMENT §2a | read the row | none | the author's answers recorded verbatim |
+
+## PV2-03 — after the final checkpoint: the Editorial reworked and approved in look A (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the rows of 11 Nov 2026 after "Final checkpoint of PV2-03 approved", ending with "The reworked Editorial
+approved, look A". **The first layout was judged bad by the author** ("layout orribile") once seen in screenshots; the author asked that what is
+characteristic of the site be kept and chose **the portal tree and the column of Roman numerals**; the layout was reworked on this branch (`249a410`:
+three columns, full width, the tree read in place from `index.html`, the numerals from `data/brief.json`, the site's own font files); four looks were
+offered side by side (`9bb865e`), a mix of A and C built (`f7080d0`), and the author settled on **A alone** (`5f97fe0`, files identical to `249a410`).
+Record: `docs/PROTOTYPES.md` §1.6 (§1.1–§1.5 stay as the record of the first layout). The prompt of PV2-04 carries the constraint and the lesson
+(`db1bdf2`; `6415511`'s message announced that change without containing it, and `db1bdf2` says so).
+
+**Battery on `d67639f`, 11 Nov 2026:** validators exit 0 (`validate` 0 errors · 5 warnings); `tools/selftest.mjs` 143/143; `commit-evidence origin/main HEAD`
+31 commits, 0 without evidence (none changes a published file); the 25 suites 1286 tests, 1285 pass, 0 fail, 1 skipped; browser suite 343 pass, 0 fail,
+1 undecidable. Nothing of the baseline changed. `origin/main` re-fetched before this entry: `07c12ad`.
+
+**For the next session:** PV2-04 opens once #97 is merged; its prompt asks it to show the author screenshots **before** its final checkpoint.
+
+## Branch register — 11 November 2026 (PV2-03)
+
+- `claude/pv2-03-prototype-editorial`, from `main` `07c12ad`: `docs/` (`ROADMAP-v2.md` §8, `HANDOVER.md`, the new `PROTOTYPES.md`, the PV2-04 prompt)
+  and the unpublished `prototypes/editorial/`. Disposition: on the author's answer ("Yes, open the PR (Recommended)"), pull request #97
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/97), opened and not merged by the session; updated with the rework and approved again
+  (look A); to be merged with a merge commit.
+  `origin/main` re-fetched before this line: `07c12ad`.
+- The read-only clone this session made first, at `/home/user/andreatosti2001/eu-digital-policy`, is outside the repository and holds nothing of it.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged.
+
+## PV2-03 — Post-v2 C, the Editorial prototype: final checkpoint (C.2–C.5) (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the PV2-03 rows of 11 Nov 2026 (scope; C.1 questions 1–4 and its approval; "grid C4 step 4";
+"C.5 questions 1 and 2"). Branch `claude/pv2-03-prototype-editorial`, 14 commits on `main` `07c12ad`; `origin/main` re-fetched before this
+entry: still `07c12ad`.
+
+**What was built.** `prototypes/editorial/` (`e782947`, adjusted in `9331ea2`): the four views in HTML, CSS and vanilla ES modules, reading
+`data/` through `js/data.js` and Part V's prose from `index.html` in place, importing `js/format.js`, `js/pipeline.js`, `js/status.js` and
+`js/routes.js`; the relationships as a fixed table; system fonts; the site's CSP with `script-src 'self'`; unpublished. The record of the build
+and its measurement is the new **`docs/PROTOTYPES.md`** (§0 the perimeter all three prototypes share, §1 the Editorial) — read it, not this entry.
+
+**The measurement** (`docs/PROTOTYPES.md` §1.2–§1.5): samples named first (E the article, D the timeline), M1–M8 re-implemented from
+`docs/FRONTEND-REFERENCES.md` §4 in the scratchpad (not committed). Steps **C1 3 · C2 4 · C3 2 · C4 4 · C5 4**, C6 not scored. The first reading
+broke the direction's own spec (87 cpl; record text 15.7–16.3 px); the stylesheet was corrected and both readings kept. C4 was first reported
+undecidable (`ariaSnapshot` vs Chromium's full accessibility tree on two `<summary>` elements); **the author decided M4 is read on the full tree**,
+and a claim this session first wrote — that no PV2-02 score moves under that reading — was unverified and is corrected in the same row
+(`9224d39`): *Simple.css*'s C4 could move and was not re-measured. Nine planted cases pass. Not seen: other browsers and faces (here *Caladea* and
+*Inter*), a screen reader, contrast inside the SVG, the 61,000 px of the stacked table on a phone, languages other than English.
+
+**The prompt of PV2-04:** `docs/prompts/v2-pv2-04-prototype-observatory.md` (`c743945`), with the author's two answers (folder
+`prototypes/observatory/`; the Explorer's core fixed, its extras allowed to shrink).
+
+**Battery on `c743945`, 11 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit --as-of
+2026-11-11` exit 0; `freshness --as-of 2026-11-11` 0 defects, 3 staleness prompts (enforcement, time-based); `tools/selftest.mjs` 143/143;
+`commit-evidence origin/main HEAD` 14 commits, 0 without evidence (none changes a published file); **the 25 suites: 1286 tests, 1285 pass, 0 fail,
+1 skipped** (`.control-room`, no IPv6 loopback); **browser suite (`--require-browser`): 343 pass, 0 fail, 1 undecidable** (`a11y:bound`, by design;
+it does not cover `prototypes/`). `agent/records/` absent. The worker restarted twice during C.5; `git status` was clean both times and nothing was redone.
+
+**Checklist**
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| Gate | §8 "G1: Stage 2 is opened" (`79762f7`), the author's "yes to both" | read the row | none (an approval) | G1 recorded before the start |
+| C.1 | §8 questions 1–4 (`b31aa19`…`f7cc074`), approval (`6028ae2`); report `d028e85` | `node tools/pages-artifact.mjs list` does not list `prototypes/` | none | views and folder decided in §8 |
+| C.2 | no anchor changed; §8 "grid C4 step 4" (`6eefa5b`, corrected `9224d39`) | `docs/PROTOTYPES.md` §1.3 | none | grid unchanged but for the author's row |
+| C.3 | `prototypes/editorial/` (`e782947`, `9331ea2`) | `python3 -m http.server 8000`, open `/prototypes/editorial/`; `regulation.html?id=chips-act`; `timeline.html?instrument=chips-act`; the theme button | none in the repository (the scratch smoke test: 24 loads, 0 errors, 0 CSP violations, localhost only) | four views, two widths, two themes, empty and missing states, relationships table |
+| C.4 | `docs/PROTOTYPES.md` §1 (`88bca72`) | re-run M1–M8 from §4's text | none committed — **a gap**: the measurement scripts are not in the repository | measured with PV2-02's measures; what is not seen, said |
+| C.5 | §8 "C.5 questions 1 and 2" (`ba9ae5c`); the prompt (`c743945`) | read the prompt's exit criterion | none | the prompt exists and carries the standing rule |
+| Untouched | — | `git diff origin/main --stat -- ':(glob)*.html' ':(glob)instruments/**' ':(glob)it/**' ':(glob)fr/**' ':(glob)es/**' style.css app.js css js i18n data tools agent .github` is empty (a plain `'*.html'` would also match `prototypes/`) | `commit-evidence` | nothing of the baseline changed; nothing of a third party entered |
+
+**Waiting for:** the author's approval of the work and of PV2-04's prompt together, recorded in §8; then the question of a pull request.
+
+## PV2-03 — Post-v2 C, the Editorial prototype: checkpoint C.1 (11 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the rows "G1: Stage 2 is opened", "The scope of PV2-03" and "PV2-03, C.1 questions 1–4", all of
+11 Nov 2026. Branch `claude/pv2-03-prototype-editorial`, from `main` `07c12ad` (after #96). The prompt is
+`docs/prompts/v2-pv2-03-prototype-editorial.md`.
+
+**The gate.** At the session's start §8 had no G1 row; the session stopped and said so. The gate's measured half was already on
+record (run 100: C5, C7, C10 ✓); the author then approved G1 in chat ("yes to both"), and the G1 row was the session's first write,
+before the scope row. **What the G1 row does not establish:** that the ruleset on `main` is in force now (not stated by the author,
+not measurable from the tree); the dispatcher's scope-stage finding stays open. Date measured 11 Nov 2026: before Track M (12 Jan 2027)
+and the grant's expiry (9 Mar 2027).
+
+**The four views, the same for PV2-04 and PV2-05:**
+
+| View | Content | Read from, in place |
+|---|---|---|
+| Homepage | the brief's opening and its parts | `data/brief.json`, `index.html` |
+| Regulation page | the **AI Act**; empty and missing-data state on the **Chips Act** (0 claims, 0 provisions, 0 milestones, 0 relationships) | `data/instruments.json`, `data/timeline.json`, `data/claims.json` |
+| Article page | **Part V** of the brief, "AI Act: the risk pyramid, the compute threshold, and the delay" (an article = one part of the brief, until block E defines a blog article) | `index.html` `<section id="part-5">`, `data/brief.json` |
+| Analytical view | the **timeline** (101 events: 81 occurred, 20 scheduled; 4 dated to the month), with the relationships table (40 relationships) | `data/timeline.json`, `data/instruments.json` |
+
+**The folder:** `prototypes/editorial/`. Measured: not listed by `node tools/pages-artifact.mjs list`; no validator walks it (they
+read the root's pages, `instruments/<id>/` and two-letter language folders). **Consequence for C.4:** `tools/thirdparty.mjs` does not
+see the prototype either, so "no third-party request" will be measured another way (a browser run that records every request).
+**The shortlist** (USWDS, Tufte CSS, GOV.UK, Simple.css) was not put again. Nothing has been written in `prototypes/`.
+
+**Battery on `f7cc074`, 11 Nov 2026:** `validate` 0 errors, 5 warnings; `i18n-audit` 0/0; `design-qa` 0/0; `evidence-audit --as-of
+2026-11-11` exit 0; `freshness --as-of 2026-11-11` 0 defects, 3 staleness prompts (enforcement: one record 76 days past the 45-day
+interval, 5 provisional records not re-verified in 30 days, newest action 82 days old — time, not a defect of this branch);
+`seo-audit` 0/0; `node --test tools/selftest.mjs` 143/143; `commit-evidence origin/main HEAD`: no commit changes a published file.
+`agent/records/` absent. **A note on the first commit** (`docs: record G1…`): it carries a `Co-Authored-By` trailer naming a model,
+against `AGENTS.md` "Git"; amending a pushed commit was refused by the environment, so it stays, and later commits do not carry it.
+
+**Waiting for:** the author's approval of C.1, recorded in §8. Then C.3 begins in `prototypes/editorial/`.
+
+## Branch register — 11 November 2026 (the PV2-03 prompt and the Editorial relationships table)
+
+- `claude/keen-johnson-sxo9jy`, restarted from `main` `49080d7` (its previous pull requests, #94 and #95, were merged): `docs/prompts/v2-pv2-03-prototype-editorial.md` (one sentence, one clause and a provenance note),
+  `docs/ROADMAP-v2.md` §8 (one row) and this line. Disposition: pull request opened on the author's word ("si aggiungila"), not merged by the session. `origin/main` re-fetched before this line: `49080d7`.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed).
+
+## Branch register — 11 November 2026 (the ruleset's review requirement, documents)
+
+- `claude/keen-johnson-sxo9jy`, restarted from `main` `4b8b423` (its previous pull request, #94, was merged; `pages.yml` run 103 on `4b8b423`: every job, the release gate and the deploy succeeded): `docs/DEPLOYMENT.md`,
+  `.github/CODEOWNERS` (a comment only), `docs/ROADMAP-v2.md` §8 (one row) and this line. Disposition: pull request opened on the author's word ("Fai tu … anche la pr sui doc del ruleset"), not merged by the
+  session; the number is in the pull request list. **The setting itself is the author's and was reported, not measured** (`docs/DEPLOYMENT.md` §3a-2). `origin/main` re-fetched before this line: `4b8b423`.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed).
+
+## Branch register — 11 November 2026 (the Regulatory Network Explorer in Post-v2)
+
+- `claude/keen-johnson-sxo9jy`, from `main` `124f600`: all `docs/` (`POST-V2.md` §3 C and D, §4.1, §4.2 and §6; `ROADMAP-v2.md` §8, three rows; this line). The author's request and answers are
+  in §8. Disposition: on the author's answer ("Sì, apri la PR (Recommended)"), pull request #94 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/94), opened and not merged by the
+  session. Merging is the author's. `origin/main` re-fetched immediately before this line: still `124f600`.
+- Unmerged elsewhere: the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed). Nothing else is unmerged. No other section of this file was changed.
+
+## Stage 1 — concluded (11 Nov 2026)
+
+**Authority:** §8 "Stage 1 concluded: the release gate judged a change that cites a signed human decision…". **The evidence is the log of `pages.yml` run 100** (`main` `4994ad8`, the merge commit of #91): the gate PASSED with C5, C6, C7 and C10 satisfied, C8 reported, and the deploy succeeded. Before that, run 98 on the squash commit `4f0e4af` (#89) failed at C7 and published nothing.
+**What the next session must know.** (1) The decision of 6 Nov 2026 has been used once, for `prop-docs-ea57404dc452`; nothing else is pending under it. (2) `main` was force-pushed once, from `4f0e4af` back to `22ad248`, by the author, with the ruleset disabled for that push; whether the ruleset was re-enabled is **not confirmed to this session** — ask. (3) **A squash merge of a release PR makes the gate fail C7 for good**, because the decision and the change land in one commit whose parent has no ledger and the gate judges every commit since it was introduced. A release PR must be merged with a **merge commit**. Restricting the repository's allowed merge methods would prevent a repeat; that is a setting only the author can change and nothing here changes it. (4) The dispatcher committed files that were already staged although its scope stage said one file; the session's reading (unconfirmed) is that the repair files were in the index before the dispatch. A guard — refuse to commit when anything beyond the dispatcher's own changed files is staged — is proposed, **not built**. (5) C8 still reports 6 agent-marked commits that cite no Proposal; it does not block. (6) **G1 is not recorded**; it is the author's, in §8. (7) The sentences listed in the entry below as false because a decision exists are still false; the last bullet of `docs/DEPLOYMENT.md` §7 is one of them. **Corrected on the branch `claude/amazing-gauss-06qkcg` (11 Nov 2026, awaiting the author's approval): `AGENTS.md` (three places), `agent/implement/decisions/README.md`, `agent/implement/implementer.mjs`, `agent/health/control.mjs` (four strings), `agent/production/schedule.mjs`, `docs/IMPLEMENTATION-QA.md` item 3, `docs/AGENT-ROLES.md`, `docs/PRODUCTION-OPERATING-MODE.md` (a dated note) and `docs/DEPLOYMENT.md` §7. Left as they are, deliberately: the SESSION 28/29 measurements and the history paragraphs, which were true on their dates; `agent/proposals/governance/` strings (the seven governance proposals are in fact undecided); `agent/production/readiness.mjs`, whose absent-ledger message now fires only when the ledger is absent. Five failures in the governance and autonomy suites exist on the unchanged tree too and are not touched.**
+
+*The entry below is superseded in what it called "still to read" (the `pages.yml` log has been read) and by the squash episode above; the rest stands.*
+
+## Stage 1 — the release PR (#89), a dispatcher scope finding, and P-07 re-aimed (11 Nov 2026)
+
+**Branches:** `release/prop-docs-ea57404dc452-fedeb4e6` (PR #89, the author's decision and the one-file change to `docs/DEPLOYMENT.md`) and `claude/p07-decision-aware` (this session's change, from `main`).
+**Authority:** §8 "Stage 1: the decision makes seven assertions false…" (the author: "si").
+**1. The first release commit was out of scope, and the dispatcher said it was not.** The author's first successful dispatch produced `11313f6` with **9 files** (the repair of #88, `HANDOVER.md`, `ROADMAP-v2.md`
+and `docs/DEPLOYMENT.md`) while the scope stage reported "1 changed file(s), every one inside the approved path(s)". The session's reading, **not confirmed by the author**: the repair files were already in the author's index
+or tree before the dispatch, the scope stage excludes what was changed before the apply, and `git commit` then took the whole index. The unpushed branch was deleted by the author, `origin/main` was merged into
+`claude/stage-1-decision` so the repair was committed history, and the dispatch was re-run: `8913dd4`, one file. **Open finding, not repaired:** the dispatcher should refuse to commit when anything beyond its own
+changed files is staged; the session proposes a guard and has implemented none.
+**2. The release PR's required check failed, for a reason that is not the release.** Seven assertions encoded "no decision exists" (§8 row). Re-aimed, not skipped; the PR #89 branch needs `main` merged in after this
+change lands (the "Update branch" button), then a merge commit, not squash. **Still to read, by the author:** the `pages.yml` log on the merged commit — C5, C6, C7, C10 are expected satisfied and have not been seen.
+**3. Sentences made false by the decision, left for a separate change** (each says no proposal has ever been decided; they are the author's or other sessions' text): `AGENTS.md` (the paragraph at "proposal in this repository has
+ever been decided"), `agent/implement/decisions/README.md`, the header of `agent/implement/implementer.mjs`, `agent/health/control.mjs` (three places), `agent/production/schedule.mjs`, `docs/IMPLEMENTATION-QA.md`
+item 3, `docs/AGENT-ROLES.md`, `docs/PRODUCTION-OPERATING-MODE.md`, and the last bullet of `docs/DEPLOYMENT.md` §7 ("no person has used it, and a ledger with no entry is the true state"). Also `agent/production/readiness.mjs`'s
+`decision_ledger_present` now has a ledger to find; it was never read on this branch.
+**4. G1 is not recorded.** It is the author's, in `docs/ROADMAP-v2.md` §8. The decision of 6 Nov 2026 goes stale on **6 Dec 2026**.
+
+## Stage 1 — the dispatch path, second half of the repair (10 Nov 2026)
+
+**Branch:** `claude/qa-boundary-baseline`, from `main` `4e649ef`. **Authority:** §8 "Stage 1: the second half of the dispatch-path repair, authorised" and "…what was built, and the one assertion
+re-aimed" (the author: "Sì, riparazione completa (Recommended)"). The signed decision of 6 Nov 2026 stands; **it goes stale on 6 Dec 2026**.
+**What the author's own run found (10 Nov 2026, Windows, `dispatch --execute`):** intake, ledger, approval, preflight, duplicate and isolate pass; the apply **ran**, Agent 9 applied the edit, the QA
+ran five checks and the verdict was `pass_with_findings`; the policy on the measured facts blocked (`validators_pass` failed, not waivable) and Agent 9 reverted, rollback verified. Trace
+`e4f63a5d8490fc6ba897c41b65833cd9` (on the author's computer). Two things came before it, neither of the repository's making: the author's checkout had **521 tracked files in CRLF** (a clone made
+while Git converted line endings, then `core.autocrlf=false`), which made `baseline.mjs` fail with "no fenced block" — fixed on the author's computer by deleting and re-checking-out the files; and local
+uncommitted edits to `docs/DEPLOYMENT.md` (the proposal's own correction, applied by hand, so the exact-match apply would have found nothing) and to `.github/workflows/qa.yml`, saved by the author on a
+local branch `wip/modifiche-locali-2026-11-10` (the session saw four files named; it was never shown the branch's content or that it exists).
+**The defect:** reproduced on a clean `main` — the boundary check listed its 24 test-fixture warnings among its new findings and computed its baseline as its own count, so the verdict was always `pass_with_findings`
+and no change could pass the chain on the real repository. The 6 Nov test drove the real Agent 9 in a temporary repository with no fixtures, so it could not see it.
+**The repair:** see the §8 row. 67 tests in `agent/implement/selftest.mjs` (59 before, 8 new), the baseline line in `docs/CURRENT-ARCHITECTURE.md` §12.
+**Not measured:** the real dispatch end to end after this change — only the verdict on the real tree (`pass`) and the policy shape on the proposal; `scope_permitted`, `category_allowed` and
+`no_mandatory_human_review` fail in the policy's measured list both before and after, and are not among the conditions an approval cannot override.
+**What the author does next:** merge this pull request (a merge commit); on the Stage 1 branch `git fetch origin` and `git merge origin/main`; confirm `git ls-files --eol` shows no `w/crlf`; retry
+`node agent/release/cli.mjs dispatch --proposal prop-docs-ea57404dc452 --execute --as-of (Get-Date -Format yyyy-MM-dd)`; then the steps of `docs/DEPLOYMENT.md` §3b (push the `release/…` branch, a pull request, a
+**merge commit, not squash**, read the gate log).
+
+## PV2-02 addendum — the visual references, the grid findings and the shortlist decided (10 Nov 2026)
+
+**Branch:** `claude/pv2-02-frontend-references` (pull request #87, open, not merged; it was updated by these commits). Only `docs/`.
+**§8 rows of the day, each committed when the author answered:** the visual references (*Our World in Data*, *Open Future*, *AI Act Explorer*, *Economics
+Observatory*, *The Pudding*, described and unscored in `docs/FRONTEND-REFERENCES.md` §9; **the author chose *Open Future* and *Economics Observatory / The
+Pudding***); **all seven grid findings decided** — G1 rule 2 rewritten as applied; G2 C1 decided by the number of patterns; G3a C3 step 3 met by a table *or* a
+chart; G3b the `th` and `alt` readings stand; G4 C4 step 0 is horizontal scroll at 390 px; G5 no repository: maintenance not assessable, C6 at most 2; G6 embedded
+stops are not among the first 15 controls (**re-measured on Tufte: 15 page controls, all with a visible focus indicator, 7 iframe stops skipped**); G7 a total is
+never a ranking — and **the shortlist: USWDS, Tufte CSS, GOV.UK, Simple.css**.
+**What changed in the matrix:** HTML5 UP C6 0 → 2† (total 30.00 → **35.00**); Tufte CSS and Tabler lose their asterisks (51.25 and 33.75, unchanged); no other
+score moved. §1 carries each rule change with its date and row. The prompt of PV2-03 no longer asks the shortlist and says the findings are decided.
+**Not done:** the three directions are not decided; no prototype exists; G1 is not decided; Stage 1 stays deferred to **6 Dec 2026**.
+
+## PV2-02 — Post-v2 B, frontend references: final checkpoint (B.2–B.4) (10 Nov 2026)
+
+**Branch:** `claude/pv2-02-frontend-references`, from `main` `b705f15`. The B.1 entry below is its predecessor (approved, §8). Stage 1 is deferred to
+**6 Dec 2026** (§8); G1 is not decided; C, S27 and Phase 5 stay closed. Files changed by the session: `docs/FRONTEND-REFERENCES.md` (new),
+`docs/prompts/v2-pv2-03-prototype-editorial.md` (new), `docs/ROADMAP-v2.md` §8, `docs/POST-V2.md` §6 question 5 (a pointer), and this file.
+**Nothing outside `docs/`; nothing of a third party was installed, built, run or committed.**
+
+**Decided (§8, each answer committed when given):** B.1 the scale is 0–4 with every step anchored; Kabarza stays a visual reference only, unscored
+(answers `docs/POST-V2.md` §6 question 5); the plan's five open-source projects plus up to five added by a stated rule; the grid approved; the six
+candidates approved (*Tabler*, *GOV.UK*, *Simple.css*, *HTML5 UP — Editorial*, *Tufte CSS*, *USWDS*; *PureDashboard* unscored; *Charts.css* out by
+the 12-month rule; *Observable Framework* only if its docs site answers); B.4 PV2-03 opens at G1, and the prototype lives in a new unpublished folder.
+
+**Written:** `docs/FRONTEND-REFERENCES.md` §2.1 (the list, read from shallow clones of each project's own files — `github.com` and `api.github.com`
+are refused in this environment, git reads through the session proxy work), §3b (the sampled pages, named before scoring), §4 (the method, M1–M8,
+**M1 changed twice before any score was written**), §5 (the matrix and the evidence and the next step not reached for every score), §6 (seven findings
+about the grid, G1…G7, **none applied**), §7 (the gallery), §8 (a proposed shortlist and three directions, described and not drawn).
+Measured totals: Simple.css 56.25 · USWDS 52.50 · Tufte CSS 51.25 · GOV.UK 48.75 · Tabler 33.75\* · HTML5 UP 30.00\*; the baseline reaches the top step on the
+three criteria measured. **No candidate exceeds step 1 on C1**; the order is largely C4 and C5. `docs/prompts/v2-pv2-03-prototype-editorial.md`.
+
+**What the author should look at first:** (1) the seven grid findings, because three of them (G1, G3, G4) change what a score means and need a §8 row
+before the next session reuses the grid; (2) the shortlist, which the grid does not define and which is a proposal; (3) the baseline's data page,
+outside the grid: paragraph text at 12.5 px and about 150 characters per line, and the 12.5 px reference list on the brief.
+
+**Not verified, named:** *PureDashboard* (no project of that name found in two searches, no address known, no substitute); *Observable Framework*
+(docs site HTTP 429 twice); Kabarza's live site (only a showcase listing found, nothing described); the maintainer-action half of C6 (issue replies and
+GitHub release pages are not readable here); whether USWDS's classic components use `lit`; whether USWDS's chart series differ by more than colour.
+
+**Battery on this branch:** see the line below the checklist. **Checklist (B.1–B.4):**
+
+| Item | Written | How to verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| B.1 | `docs/FRONTEND-REFERENCES.md` §1; §8 rows of 10 Nov 2026 (`c8511f3`, `a5423ee`, `a7bf879`, approval `f7111a9`) | read each anchor against §5.1 | none (a grid) | the grid approved before any research |
+| B.2 | §2.1, §3b, §4, §5, §6 (`503bc55`, `fe80531`, `54ddb7c`); the list approved (`de8ee7f`) | re-measure a sampled page with the M1…M8 definitions; read a LICENSE with `git show HEAD:<file>` on a shallow clone | none in the repository (scratch scripts, by scope) | every candidate verified live with licence read and date; the unverified named and unscored |
+| B.3 | §7, §8 (`54ddb7c`) | compare each gallery line with the URL it names | none | gallery, shortlist, three directions, described not drawn |
+| B.4 | `docs/prompts/v2-pv2-03-prototype-editorial.md`; §8 rows `df995f4` and the folder row | the prompt's provenance quotes both answers; its exit criterion carries the standing rule | none | the next prompt exists, to be approved with the work |
+
+**Not done, named:** the three directions are not compared (that is PV2-05); no prototype exists; the grid findings are not applied.
+
+**Battery on `b15f2ba`, 10 Nov 2026:** the six validators exit 0; `commit-evidence origin/main HEAD` 13 commits, 0 without evidence; browser suite
+(`--require-browser`) 343 pass, 0 fail, 1 undecidable (`a11y:bound`, by design); the 25 suites and `.control-room/`: **1420 tests, 1419 pass, 0 fail,
+1 skipped** (no IPv6 loopback in this environment); `agent/schemas/cli.mjs check` exit 0; `origin/main` re-fetched immediately before this line: still `b705f15`.
+
+## Branch register — 10 November 2026 (PV2-02)
+
+- `claude/pv2-02-frontend-references`, from `main` `b705f15`: all `docs/`. Final checkpoint approved (§8). Disposition: on the author's answer ("Open a PR to main
+  (Recommended)"), pull request #87 (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/87), opened and not merged by the session. Merging is the author's.
+- Unmerged elsewhere: `origin/claude/stage-1-decision` (Stage 1's: the author's signed decision, 2 ahead of and 43 behind `main`; to be merged and carried
+  through the release chain before **6 Dec 2026**), and the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, unreviewed).
+
+## PV2-02 — Post-v2 B, frontend references: checkpoint B.1, the grid (10 Nov 2026)
+
+**Branch:** `claude/pv2-02-frontend-references`, from `main` `b705f15` (after #84, #85 and #86). **Stage 1 is deferred** (§8, "Stage 1 is deferred",
+10 Nov 2026): the author's signed decision is on `origin/claude/stage-1-decision`, **not merged**; in a scratch copy of `main` with that line
+applied the ledger verifies (1 entry, chain intact, 1 signed by a registered reviewer, 0 simulated) and the proposal reads as approved, but the
+dispatcher rehearsal was **not run** (blocked in this environment), so the nine stages are unmeasured. **The gate calls a decision stale 30 days
+after it was taken — 6 Dec 2026 — so Stage 1 is carried through before then, or signed again.** G1 is not decided; C, S27 and Phase 5 stay closed.
+**Authority:** §8 "PV2-02 (Post-v2 B) may be run before G1, under A's three limits" and "The scope of PV2-02" (the author's words: "Defer it, and
+open PV2-02 now (Recommended)"). The date measured 10 Nov 2026, before Track M (12 Jan 2027) and the grant's expiry (9 Mar 2027).
+Unmerged at the start: `origin/claude/stage-1-decision` (Stage 1's), and the scout digests of 2 and 9 Nov 2026 (`agent/scout/digests/`, two files
+in the second, unreviewed).
+
+**B.1, decided (§8, each answer committed when given):** the scale is 0–4 with every step anchored (`c8511f3`); Kabarza stays a visual reference
+only, unscored, which answers `docs/POST-V2.md` §6 question 5 (`a5423ee`); the plan's five open-source projects are researched, plus up to five
+added by a stated rule — public, a LICENSE file, a commit within 12 months, a live demo or docs — with the author seeing the list before scoring
+(`a7bf879`). Already decided on 9 Nov 2026: the grid is approved before research; a candidate not verified live is listed, not scored; screenshots
+stay in the scratchpad.
+
+**B.1, written:** `docs/FRONTEND-REFERENCES.md` §1–§3: the six criteria with the plan's weights; for each, five named steps that say what is seen;
+nine rules for every score (evidence only from files and a live demo, two sampled pages named before scoring with the lower step counting,
+measurements at 1280 and 390 px in both schemes, one sentence saying why this step and not the next, no score and no shortlist for a candidate
+not verified live, "not applicable" is not a step, the current site scored as an unselectable baseline, an undecidable anchor reported and not
+interpreted); the candidate rule; and what the grid cannot do, including that **it was not tested on a real candidate**. **No candidate was
+researched, opened or scored.**
+
+**Battery on this branch:** see the final entry; for this checkpoint only `docs/` changed.
+
+**Waiting for the author's approval of the grid, to be recorded in §8, before any candidate is opened.**
+
+## Branch register — 9 November 2026 (after PV2-01's pull requests #84 and #85 were merged)
+
+- `claude/pensive-bell-665v9z` (#84) and `claude/freshness-month-precision` (#85) are merged into `main` (`c548b2d`, `5fedc7e`); both can be deleted.
+- `claude/freshness-per-record-interval`, from `main` `5fedc7e`: the dataset interval of `tools/freshness.mjs` is measured per record, naming the
+  overdue, and `agent/integrate/stale.mjs` calls the same function instead of holding a copy (§8, the two rows of 9 Nov 2026: "which date the
+  dataset interval measures" and "the scope of the per-record interval change"). Pull request #86
+  (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/86), opened and not merged by the session. As of 9 Nov 2026 the report still shows
+  3 staleness prompts; the enforcement one now names `enf-tiktok-ec-2025-commitments`. 1420 tests, 0 failed, 1 skipped (no IPv6 loopback); browser
+  suite 343 pass, 0 fail, 1 undecidable. The README's grade counts (limitation 1) and the masthead's instruments population stay as they were: the
+  first is the author's, the second is D's.
+
+## PV2-01 extended — cards for instruments, deadlines and evidence (9 Nov 2026)
+
+**Branch:** `claude/pensive-bell-665v9z`, same pull request #84 (not merged); `origin/main` re-fetched before this entry, still `06d5640`.
+**Authority:** §8 "PV2-01, extended" (`a4930f7`), on the author's words after the final checkpoint: "instruments, deadlines, evidence — can we do
+dat as well?". The approval of PV2-01's work and of the PV2-02 prompt stands; this extension has its own checkpoint.
+
+**Decided (§8, each committed when answered):** instruments — the 21 core and adjacent instruments by `legislative_status` (`cba6786`), and
+the masthead's core-only count follows the card in D (`8f05a51`); deadlines — the 12 months after a stated date, by event type, month
+precision apart, a passed `scheduled` event never counted as met (`4993848`); evidence — claims by grade, partitioned by claim family, with
+`gradeTally()` as the one function (`a48cfaf`), and MC-9 amended so that undated inputs are counted beside the figure (`8da9380`).
+
+**Written:** `docs/DATA-READINESS.md` §8 (three cards, each measured on `06d5640` and with planted cases), §6 amended (MC-4 scoped to sums,
+MC-9 amended, **MC-14 precision against the window** and **MC-15 the dataset's caveats travel with the figure** added — the contract is now
+MC-1…MC-15), §7 extended (items 6–9) — `99218a6`. Measured: instruments 21 (applicable 6 · in force 6 · partly applicable 3 · proposal 3 ·
+transposition overdue 2 · pending 1; `eprivacy` rests on neither a `status_basis` nor a milestone); deadlines 12 in 2026-11-09…2027-11-09
+(application 6 · compliance deadline 2 · transposition 1 · month precision 3); evidence 182 (law and fact 131, derived 5, attributed 11,
+argument 35; equal to `gradeTally()`; 1 undated claim). **Three controls pass; fourteen planted cases fail on their target.** On today's
+tree deadlines and evidence pass every property; instruments fails MC-2 (the masthead).
+
+**Findings, recorded, not fixed:** F-A7 the masthead counts instruments by status itself, over core only; F-A8 README limitation 1 carries the
+grade counts of 27 Sep 2026 (20 unresolved; 5 today), the known unguarded second home; F-A9 `tl-dma-2026-11-01-designation` is month
+precision in the as-of month, and `tools/freshness.mjs` and this session's §8 row "deadlines card question 1" both read it on its stored day
+— annotated in `docs/DATA-READINESS.md` §8.2, the row not rewritten; F-A10 the masthead's deadline views read the reader's clock.
+
+**Honest about the prototype:** the first MC-2 scan matched `js/applies.js` and `js/routes.js`, which name the field without counting by it
+(false positives), and was narrowed; planted case I3 first passed because of a bug in the prototype's own loop, fixed, then failed as intended.
+
+**Battery on `99218a6`:** the six validators exit 0; `commit-evidence 06d5640 HEAD` 25 commits, 0 without evidence; the 25 suites and
+`.control-room/`: 1417 tests, 1416 pass, 0 fail, 1 skipped (no IPv6 loopback); `agent/schemas/cli.mjs check` exit 0.
+**Nothing outside `docs/`; nothing estimated, generated or drawn; G1 not decided.** Waiting for the extension's checkpoint, to be recorded in §8.
+
+## PV2-01 — Post-v2 A, data readiness: final checkpoint (A.3–A.5) (9 Nov 2026)
+
+**Branch:** `claude/pensive-bell-665v9z`, from `main` `06d5640`; `origin/main` re-fetched immediately before this entry, still `06d5640`.
+The A.2 entry below is its predecessor (approved, §8 `7eda987`). Files changed by the whole session: `docs/DATA-READINESS.md` (new),
+`docs/prompts/v2-pv2-02-frontend-references.md` (new), `docs/ROADMAP-v2.md` §8 (12 rows), `docs/POST-V2.md` §6 question 3 (a pointer to its
+answer), and this file. **Nothing outside `docs/`; no value estimated or generated; nothing drawn; no tool entered the repository.**
+
+**What was decided (§8, each answer committed when given):** A.3 q. 1 "announced" is the literal total, always partitioned by posture
+(`70594cf`); q. 2 unverified inputs are included and counted beside (`97c83e5`); q. 3 "as of" the inputs' own dates, with a notice naming
+inputs past their interval (`bf2bd07`); A.4 q. 1 a metric's declaration will live in a `tools/` module, on the precedent of
+`tools/source-contract.mjs`, written by D (`396572f`); A.5 q. 1 PV2-02 opens only at G1 (`e176634`); q. 2 B's grid is approved before
+any research — this answers `docs/POST-V2.md` §6 question 3 (`e176634`); q. 3 an unverifiable B candidate is listed, not scored (`9640461`);
+q. 4 B's screenshots are described, not committed (`3d35ca5`).
+
+**What was written:** `docs/DATA-READINESS.md` §5 (the card "fines announced, collected and unknown", every property of `docs/POST-V2.md`
+§3 A, and its measurement on `06d5640`: €9,015,990,000 across 13 of 20 actions — annulled €761M · 2, under appeal €6,614,990,000 · 8,
+final €0 · 0, standing with finality not established €1.64bn · 3; collected **not determinable**, 0 demonstrating, 10 unknown, 3 not
+payable; 5 inputs and €2.445bn on an unverified record or no claim stating the amount; as of 2026-09-27…2026-10-23; 9 inputs past their
+interval); §6 (the contract MC-1…MC-13, each with an exact rule, a planted case K1–K13 run on a copy of the tree with a scratch prototype
+outside the repository, and what the check cannot see; control K0 passes; **today's tree fails MC-2**, F-A1); §7 (what D inherits, none
+decided). `docs/prompts/v2-pv2-02-frontend-references.md` (`b69c244`).
+
+**The consequence to carry:** the masthead and every instrument page already show "announced" without its partition, and compute it
+themselves; under the contract the card cannot be shown until D gives the figure one computing function. Nothing in `js/` was touched.
+
+**Battery on `b69c244`, 9 Nov 2026:** `validate`, `i18n-audit`, `design-qa`, `evidence-audit --as-of 2026-11-09`, `freshness --as-of
+2026-11-09`, `seo-audit` all exit 0 (as at A.2: 0 errors, the 5 pinned warnings, 45 unverified, 4 staleness prompts);
+`commit-evidence 06d5640 HEAD` 15 commits, 0 without evidence; **the 25 suites and `.control-room/`: 1417 tests, 1416 pass, 0 fail,
+1 skipped** (`.control-room` ORIGIN · B.2, "::1 cannot be bound here: EAFNOSUPPORT" — this environment has no IPv6 loopback);
+`agent/schemas/cli.mjs check` exit 0. `agent/records/` absent in this clone, so no governance test was affected. The browser suite was
+not run by hand (it runs in the suite count only as its own selftest).
+
+**Checklist (A.1–A.5):**
+
+| Item | Written | How to verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| A.1 | §8 rows `d71502c`, `43cc5e7` | read the two rows; the author's words are quoted | none (decisions) | the author's metrics chosen |
+| A.2 | `docs/DATA-READINESS.md` §1–§4 (`1bf7279`); approved §8 `7eda987` | re-count with `node -e` per §1; `node tools/validate.mjs` `RECORDS` line | none in the repository (scratch parsers, by scope) | inventory written and approved |
+| A.3 | §5 (`4789890`); decisions `70594cf`, `97c83e5`, `bf2bd07` | import `aggregate()` and `procedure()` from `js/pipeline.js` and re-add the parts | none: the check is D's | the chosen metric has its card |
+| A.4 | §6 (`4789890`); decision `396572f` | read each MC row against its K case | none in the repository; the scratch prototype's run is recorded in §6 | contract proposed with rule, planted case and limit |
+| A.5 | `docs/prompts/v2-pv2-02-frontend-references.md` (`b69c244`); decisions `e176634`, `9640461`, `3d35ca5` | the prompt's provenance quotes the four answers; its exit criterion carries the standing rule | none | the next prompt exists, to be approved with the work |
+
+**Not done, named:** the three families and three enforcement metrics the author did not choose (no cards); the contract is untested on
+any family but enforcement; F-A1…F-A6 unfixed by scope.
+
+## Branch register — 9 November 2026 (PV2-01)
+
+- Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- This branch, `claude/pensive-bell-665v9z`: all `docs/`. Final checkpoint approved (§8). Disposition: on the author's answer ("Open a PR
+  to main (Recommended)"), pull request #84 to `main` (https://github.com/andreatosti2001/Eu-Digital-Policy/pull/84), opened and not merged
+  by the session. Merging is the author's.
+
+## PV2-01 — Post-v2 A, data readiness: checkpoint A.2 (9 Nov 2026)
+
+**Branch:** `claude/pensive-bell-665v9z`, from `main` `06d5640` (after #83); `origin/main` re-fetched before this entry, unchanged.
+**Authority:** §8 "Post-v2 A may open before G1…" (no G1 row exists, so B, C, S27 and Phase 5 stay closed) and "The scope of PV2-01"
+(the author's words: "start session PV2-01"). The date measured 9 Nov 2026: before Track M (12 Jan 2027) and the grant's expiry (9 Mar 2027).
+Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register. The clone was shallow and was unshallowed.
+
+**A.1, decided (§8, two rows, each committed when answered):** enforcement outcomes only, and within them **one card: fines announced,
+collected and unknown**. Not chosen, named: instruments by status, deadlines ahead, the evidence behind the claims; actions by pipeline
+stage, by status axis, by instrument and authority.
+
+**A.2, written:** `docs/DATA-READINESS.md` §1–§4. The ten datasets, each with records counted, fields, readers, writers, what `null`,
+`unknown`, absent, not applicable and unverified mean there, the render-time derivation that is its home, and the nearest health metric.
+Measured with scratch parsers outside the repository that import the site's own derivations read-only; all counts agree with
+`validate.mjs`'s `RECORDS` line and with the prompt's table of 9 Nov 2026. **Six findings, none fixed** (each lies in `js/`, `tools/` or
+`data/`, outside this session's scope):
+- F-A1 the announced-fines sum has three implementations (`aggregate()`, the masthead, the instrument page), with three different rules
+  for "payment unknown"; they agree today (€9,015,990,000 across 13 of 20 actions, unknown 10) and disagree on planted case P1;
+- F-A2 "announced" includes €761M on 2 annulled decisions and €6,614,990,000 on 8 under appeal; €0 is on a decision recorded final;
+- F-A3 4 of 13 fined records (€2.43bn) link no claim stating the amount, and enforcement `sources` carry no `supports` or locator;
+- F-A4 the enforcement set is 74 days old against its 45-day interval; 2 fined records stale, 7 review-due;
+- F-A5 `fine_eur: "unknown"` passes `validate.mjs` and `evidence-audit.mjs` on 9 of 13 fined records, and the sums become strings;
+- F-A6 DATA-GOVERNANCE §5 says no module fetches `brief.json`; `datasets.html` does.
+
+**Planted cases, run on a copy of the tree in the scratchpad** (P0 control, P1–P5): the checks guard a record's internal consistency
+(P3, P4 caught) and not the shape of a value that enters a sum (P2, P5 pass `validate.mjs`; P1 passes both and splits the three sums).
+
+**Battery on this branch, 9 Nov 2026:** `validate` 0 errors · 5 warnings (the pinned `ap-eidas2-01` ones) · 45 unverified; `i18n-audit`
+0/0; `design-qa` 0/0; `evidence-audit --as-of 2026-11-09` 0; `freshness --as-of 2026-11-09` 0 defects, 4 staleness prompts; `seo-audit`
+0/0; `tools/selftest.mjs` 141/141; `commit-evidence 06d5640 HEAD` 0 without evidence. The 25 suites are run before the final checkpoint.
+
+**Nothing outside `docs/` changed; no value was estimated or generated; nothing was drawn.** Waiting for the author's approval of A.2,
+to be recorded in §8, before A.3 (the card), A.4 (the contract) and A.5 (the prompt of PV2-02).
+
+## PV2-01 prompt drafted (9 Nov 2026)
+
+**Branch:** `claude/kind-maxwell-e31dud`, restarted from `main` `ba8ddcf` after #82 was merged. **Stage 1 is still open**: the author's signed decision for `prop-docs-ea57404dc452` is on a local branch of the author's Windows computer, not on GitHub, so G1 has not opened and the dispatch has not run. Its entry below is unchanged and is where the next steps are.
+
+**What this adds:** `docs/prompts/v2-pv2-01-data-readiness.md`, the prompt of block A (PV2-01), and the §8 row "Post-v2 A may open before G1, under three limits" (the author's words quoted). It is a `docs/`-only change; nothing in `data/`, `tools/`, `js/`, `i18n/`, a page or `agent/` moved. The author wrote "session 26"; that number is Track M's reading in this repository, so the prompt is named for its work.
+
+**Not done:** B, C, S27 and Phase 5 stay closed behind G1; the prompt of PV2-02 is written by PV2-01 as its last item (standing rule of §8).
+
+## Stage 1 — the real dispatch path repaired; the author's decision is signed and waits for it (6 Nov 2026)
+
+**Branch:** `claude/kind-maxwell-e31dud`, from `main` `7250715`. The entry below it is its predecessor; **its restore step (copy to `untraced.jsonl`) is replaced by the one here.**
+
+**What happened.** The author signed `prop-docs-ea57404dc452` on their terminal (decision `appr-docs-ea57404dc452`, ledger verified: 1 entry, chain intact, 1 signed by a registered reviewer, 0 simulated; registry fingerprint `4b4a0efb…` after a CRLF problem on their Windows checkout was corrected locally). `dispatch --execute` then passed intake, ledger, approval, preflight (10 of 10), duplicate and isolate, and was **refused at apply**: Agent 9's first policy evaluation (`facts: {}`) read every measurement of the change as `unknown`, all on `NOT_WAIVABLE_BY_APPROVAL`, so the engine returned `blocked` for every proposal. `agent/release/selftest.mjs` drives the dispatcher with a stub applier, so nothing had run the real path. Rows in §8: "the real dispatch path is blocked…", "targeted change to two policy conditions…", "the autonomy runner stays as it was…", "what was built is not what the two rows above worded".
+
+**What changed, in this pull request** (code, not only docs: it needs the author's review):
+- `agent/implement/implementer.mjs`: `policyRefusalBefore()`; the first evaluation no longer refuses on measurements that cannot exist yet. The evaluation after the apply still blocks and still reverts.
+- `agent/policy/conditions.mjs`: `verification_succeeded` and `no_unresolved_conflict` are `unknown` with `hard: false` for a `docs/`-only proposal that records no legal fact and no conflict. They never reach `automatic`. **The first draft used `not_applicable` and the adversarial gate's AP-03 (CRITICAL) caught it; see §8.**
+- `agent/policy/selftest.mjs`, `agent/implement/selftest.mjs`: new tests and four re-aimed assertions, all named in §8.
+- `docs/stage-1-proposal.jsonl`: the same proposal regenerated inside a real traced run, so `provenance_complete` reads a real `trace_ref` (`f176b8d7…`, in this session's git-ignored trace store). **The fingerprint is unchanged, `a1deaf660686063af4261e6c78bcb66259e4699d2d7fbf70f59d3c5b3195c622`, so the signed decision stays valid.** The first copy had `trace_ref: null`, which the policy refuses.
+
+**Not done, not measured:** the real `--execute` (apply, scope, commit); the browser suite locally; the effect of the first decision on `agent/proposals/governance/` (below).
+
+**Expected, by reading, not measured:** pattern P-07 of `agent/proposals/governance/patterns.mjs` ("Nothing is ever decided") anchors three `now` facts that the first decision falsifies (the ledger file absent, decisions recorded 0, proposals reachable 0). Once `decisions.jsonl` is on `main`, `node agent/proposals/governance/cli.mjs check` should exit 1 and that suite's tests 2d, 7 and 8 should fail in CI, until P-07 is updated. That is the first real decision working as designed, not a defect; it needs its own small pull request after the merge. (The same three tests failed in this session's tree for a different reason: a local `agent/records/` held the proposal. Moved aside, they pass.)
+
+**What the author does next** (PowerShell, one command at a time):
+1. Merge this pull request.
+2. On the local branch that holds the signed decision: `git checkout claude/stage-1-decision`, `git fetch origin`, `git merge origin/main`.
+3. Delete the empty release branch the failed run left: `git branch -d release/prop-docs-ea57404dc452-fedeb4e6`.
+4. Replace the record: `Remove-Item agent\records\untraced.jsonl`, then `Copy-Item docs\stage-1-proposal.jsonl agent\records\stage-1-proposal.jsonl`. Both files would hold the same id otherwise and the old one, with no `trace_ref`, would win.
+5. `node agent/release/cli.mjs lifecycle --proposal prop-docs-ea57404dc452` should now say the proposal is approved; then `dispatch --proposal …` (rehearsal), then `dispatch --proposal … --execute --as-of <date>`.
+6. Push the `release/…` branch, open the pull request, merge it **with a merge commit, not squash**.
+7. Read the `pages.yml` gate log of the merged commit: C5 and C7 should pass (an expectation, not a measurement). C7 calls the decision stale 30 days after it was taken (6 Nov 2026).
+
+## Stage 1 — the docs/ proposal is prepared; the signature is the author's (6 Nov 2026)
+
+**Branch:** `claude/kind-maxwell-e31dud`, restarted from `main` `82c9b7c` after #80 was merged. The entry below it is its predecessor and is unchanged.
+**Authority:** §8, "Stage 1, step 2: a `docs/` proposal written by the session, as an exception" (the author's words: "Autorizzo una proposta
+in docs/ scritta dalla sessione, per correggere le affermazioni false già trovate").
+
+**The proposal** (written by the session, `agent` = `stage-1-session-author`, `trace_ref` null: it was not produced inside an agent run):
+
+| | |
+|---|---|
+| Proposal id | `prop-docs-ea57404dc452` (`ImplementationProposal`; ApprovalRequest `appr-docs-ea57404dc452`, state `requested`) |
+| Fingerprint (what a decision binds) | `a1deaf660686063af4261e6c78bcb66259e4699d2d7fbf70f59d3c5b3195c622` — `proposalFingerprint()`, which excludes `trace_ref` and `created_at` |
+| Copy of the records | `docs/stage-1-proposal.jsonl`, 2 lines, sha256 starts `85f8f02d85460ac52a25…`; restoring it into an empty store reproduces the fingerprint above (measured) |
+| Description | Replace the third bullet of `docs/DEPLOYMENT.md` §7 (lines 360–361), which says the release gate has never run in GitHub Actions, with what the logs of `pages.yml` runs 86 (`6bfe537`) and 87 (`149e9b7`) show: C1, C2, C3, C4, C6, C9, C10 satisfied; C5 and C7 not measured; C8 reported. |
+| Risk / class | `low` · `review_required` · one file · `git_revert` rollback |
+| Not in it | `AGENTS.md` and `agent/implement/decisions/README.md` (outside `docs/`, so outside the exception; both still carry the stale statements) |
+
+**Measured:** `lifecycle --proposal prop-docs-ea57404dc452` → `awaiting_human_review`. `implement preflight` → 8 of 10 gates pass; the two that refuse are
+`approved` and `approval_attributable`, i.e. exactly the missing human decision. `release dispatch` (rehearsal, nothing written) → **REFUSED at stage 3 of 9**:
+`intake ✓`, `ledger ✓` (empty), `approval ✗` (pending). Stages 4–9 (preflight, duplicate, isolate, apply, scope, commit) were not reached and are **not measured**.
+
+**What the author does** (a terminal and the private key are needed; the session never touches the key):
+1. `git fetch origin && git checkout -b claude/stage-1-decision origin/main` (the dispatcher cuts its branch from a non-`main` branch).
+2. Restore the record store (git-ignored): `mkdir -p agent/records && cp docs/stage-1-proposal.jsonl agent/records/untraced.jsonl`, then
+   `node agent/release/cli.mjs lifecycle --proposal prop-docs-ea57404dc452` must say `awaiting_human_review`. Read `evidence`, the operation's `current` and `proposed`,
+   `risk`, `rollback_plan` and the five `what_to_check` items of `appr-docs-ea57404dc452` in that file.
+3. Sign: `node agent/implement/cli.mjs decide --proposal prop-docs-ea57404dc452 --grant --by "Andrea Tosti" --role "repository author" --sign-key <path to the private key> --note "<what you checked>"`.
+4. Commit `agent/implement/decisions/decisions.jsonl` **alone, in its own commit, before the change** (C7 needs the grant in the parent of the dispatched commit).
+5. `node agent/release/cli.mjs dispatch --proposal prop-docs-ea57404dc452` (rehearsal, all nine stages should now run), then `… --execute --as-of <date>`; push the `release/…` branch; open the pull request.
+6. Merge it **with a merge commit, not squash**: a squash fuses the decision and the change into one commit and C7 would find no decision in its parent (reading of `gate.mjs` lines 224–225, not yet measured).
+7. Read the gate log of `pages.yml` on the merged commit.
+
+**Expected after that, as an expectation and not a measurement:** C5 satisfied once `decisions.jsonl` is on `main`; C7 satisfied once the dispatched commit with its `Proposal` trailer is; **C10 already satisfied** (runs 86 and 87).
+Within 30 days of the decision, or C7 calls it stale. `production readiness` should then move `decision_ledger_present` from blocking to passing; `production_dispatcher_wired` and `deploy_gate_exists` do not change.
+
+**Declared, not measured:** the settings of §3a rows 1, 2, 4, 5 (the author's report); row 6 (the key) is the author's. The author had no terminal when this was written.
+
+## Branch register — 6 November 2026 (Stage 1, second branch)
+
+- `claude/kind-maxwell-e31dud` was merged as #80 and restarted from `main` `82c9b7c`. Unmerged elsewhere: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- This branch: the §8 exception row, `docs/stage-1-proposal.jsonl` and this entry. Pull request at the author's scope instruction; not merged by the session.
+
+## Stage 1 — preparation stopped before the signature (6 Nov 2026)
+
+**Last updated:** 6 November 2026. **Branch:** `claude/kind-maxwell-e31dud`, from `main` `149e9b7`. The entries below are unchanged.
+Scope row: §8, "The scope of Stage 1 (Phase 4's operational closure)"; the stop: §8, "Stage 1, step 2 of the scope…".
+
+**No proposal exists, and none was made.** The scope asked for one small real proposal inside grant `gov-5c5d9d87d8ca4478`, produced by
+its owning agent. Measured on `main` `149e9b7`: `agent/records/` does not exist in a fresh clone; `improve cycle --as-of 2026-11-06`
+(not recorded) gives 244 findings and **0 referable**; `improve reach` shows no producer writes `docs/` and 6 of the 8 granted
+`data/sources.json` fields exist on no record; Agent 5's 11 `annotate` proposals all target `data/enforcement.json`, outside the
+grant. So there is **no proposal id, sha256 or description to record here**, no `lifecycle` output for an id, no dispatch rehearsal,
+and no signing command that names a proposal. Nothing was simulated.
+
+**Measured, 6 Nov 2026:**
+- `release status`: 0 proposals in the record store, ledger empty or absent, 1 reviewer (`rev-andrea`), registry fingerprint
+  `4b4a0efb3e024584545d33de8d59ba39bf72455c315d6a0a5c614766f86bc259`, 14 workflow checks pass. `verify-ledger`: no human decision recorded.
+- `production readiness`: **17 of 20**; blocking `production_dispatcher_wired`, `decision_ledger_present`; `deploy_gate_exists` unmeasurable.
+- `pages.yml` run 86 (`6bfe537`) and run 87 (`149e9b7`): `success`. Release-gate log of both: C1, C2, C3, C4, C6, C9, **C10 ✓**
+  (the pin matches `reviewers.json`); C5 and C7 "–" (no ledger; no commit declares a Proposal); C8 "!" (5 agent-marked commits,
+  reported, not blocking). QA run 768 (`149e9b7`) `success`; QA run 767 `cancelled`.
+- `git branch -r --no-merged origin/main`: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+
+**Declared by the author, not measured:** `docs/DEPLOYMENT.md` §3a rows 1, 2, 4, 5 in order; row 6 (the private key) is the
+author's and was neither read, asked for nor verified. The author has no terminal in this period.
+
+**Found and not fixed (statements a later docs pass should correct):** `agent/implement/decisions/README.md` says `reviewers.json`
+"does not exist yet" (it does, with one reviewer); `AGENTS.md` and `docs/DEPLOYMENT.md` §7 say the gate has not run in GitHub Actions
+(corrected in §8 on 5 Nov 2026, not in those files). Editing them is a `docs/` change that needs its own §8 row.
+
+**What 1.3 needs from the author before it can start:** a decision on where the first real change comes from. Either the grant
+gains a producer (a governance decision, which this session may not take), or the author names a proposal outside the grant
+and signs it as a human decision, or the author approves a `docs/` proposal authored by a session.
+**Expected after a signed decision and the chain run once:** C5 ✓ once `decisions.jsonl` exists on `main`; C7 ✓ once the dispatched
+commit with its `Proposal` trailer is on `main`; **C10 already ✓**. This is an expectation, not a measurement.
+
+## Branch register — 6 November 2026 (Stage 1)
+
+- Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- Branch `claude/kind-maxwell-e31dud`: two commits (the two §8 rows) plus this entry. Pull request opened at the author's scope instruction; not merged.
+
+## Maintenance — a favicon size above 48 px (5 Nov 2026, unnumbered)
+
+The author brought an SEO plan and asked for what was missing to be completed. Measured on `main` `43a55d0`: the icon tags and
+`WebSite` with `name` and `alternateName` were already in the tree, and `pages.yml` deployed that commit. The plan's other
+premise, that `Organization` with a `logo` governs the favicon, is not what Google's documentation says, so no node was added.
+
+**Changed:** one line in `tools/_footer.mjs` `ICONS` linking `img/icons/icon-192.png`, the generated block in all 31 HTML
+files, and `docs/SEO-OPERATIONS.md` §7a. Decision: §8, "Maintenance, favicon: a size above 48 px linked…".
+
+**Measured:** `validate`, `i18n-audit`, `design-qa`, `freshness`, `seo-audit`, `selftest`, the Pages artifact build and
+`agent/browser/cli.mjs --require-browser` all exit 0.
+
+**What is live is established indirectly.** This environment cannot read the host's binary files, and the Pages artifact
+could not be downloaded. Through the fetch tool, existing images fail one way (`site.png`, `favicon-48x48.png`,
+`apple-touch-icon.png`, `favicon.ico?check=20261105`) and missing files another (three controls). No HTTP status was read, and
+the bare `/favicon.ico` still reported the missing-file form, possibly a stale result. The author should open it in a browser.
+
+**Owner only:** Request indexing on the homepage after the merge, once; the Search Console query review.
+
+**Finding, not fixed:** `qa.yml` is red on `43a55d0`. Step "The release gate, rehearsed" runs `gate --head HEAD` and fails
+`C1-origin` ("workflow is …qa.yml…, not .github/workflows/pages.yml"). The entry below measured that rehearsal locally with
+exit 0; in Actions the same command is judged as CI. It blocks no deploy, since no ruleset requires `qa.yml`.
+
+## Branch register — 5 November 2026 (favicon 192 px)
+
+- Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- Branch `claude/favicon-192-link`: pushed and a pull request to `main` opened at the author's request. Not merged here.
+
+## v2 Session 25, 25.5 — the architecture of sessions; Post-v2 A–C before Phase 5 (5 Nov 2026)
+
+**The request** (§8, "v2 Session 25, 25.5: the architecture of sessions…", `44a6261`), in the author's words: "the roadmap
+not in terms of timeline but of architecture of sessions. Moreover, I want to change the workflow architecture to insert
+block A,B,C of post v2 after session 5", with a pasted analysis proposing four stages: Phase 4 closure; Post-v2 A–C; Phase
+5; Post-v2 D–E.
+
+**Measured first, on `main` `6060bd2`:**
+- #67 was merged (`cb9a76c`), so the branch was restarted from `main`.
+- #68, "the Phase 4 operational-closure session", built a release dispatcher, a hash-chained signed ledger and a deploy gate
+  (`0338b0c`, `docs/AUDIT-2026-11-04.md`). It wrote no §8 row, against "Phase 4 concluded" and X-3.
+- Measured here: no `decisions.jsonl`, no `reviewers.json`, no `agent/orchestrator/dispatchers.mjs`.
+- `docs/POST-V2.md` §2 opened Post-v2 only after the v2 closes, and its C is three sessions (PV2-03…05), not one.
+
+**Decided, one question at a time** (§8, 25.5 questions 1–4, `3851c8a`, `1fba50d`, `aa82e61`, `34868c7`; each
+recommendation chosen):
+1. Post-v2 A–C (PV2-01…05) come before Phase 5; `docs/POST-V2.md` §2 is amended for them only.
+2. #68 is recorded as an operational closure the author requested after Phase 4's conclusion, and X-3 is amended by name.
+   Phase 4 stays concluded, and **Stage 1** is one session that finishes it: a reviewer and a first signed human decision,
+   the gate verified in GitHub Actions, the owner-only settings listed.
+3. Session 27, Phase 5's design (docs only), sits inside Stage 2, its output an input to C.
+4. Post-v2 D, E and the QA (PV2-06…12) come after the v2 closes.
+
+**Written:**
+- **`docs/SESSION-ARCHITECTURE.md`**, the one home of the order of the work, with no dates:
+  - four stages, each opened by a gate only the author opens: G1 after Stage 1; G2 at C's selection, S27's approval and
+    Phase 5 opened on E5-1…E5-7; G3 Phase 5 concluded; G4 the v2 closed;
+  - **Track M**: the law's calendar (S25, S26 before 3 Feb 2027, T-12, the statuses, R-7, each next reading round, the
+    grant). A due Track M session pre-empts any stage.
+  - **Track R**: the v2's sessions outside the phases, all due before G4. Three of them feed Stage 3: V2C-21 before S29,
+    V2C-13 before V2C-15, F-18 before any change to `ap-dma-01`.
+- `docs/PHASE-5-SETUP.md`: the status line, and §5.1's "When" column replaced by each session's place.
+- `docs/POST-V2.md`: annotations in Italian to the header, §2, §4.1 and §6 questions 1–2. §3, the author's text, is unchanged.
+- `docs/prompts/v2-session-27.md`: S27 in Stage 2, verifying G1's row; Phase 5 no longer opened at its end; S28's prompt
+  after G2.
+- `docs/ROADMAP-v2.md` §6: a pointer to the architecture.
+
+**What changed in meaning:**
+- Phase 5 opens later than the 4 Nov plan said: at G2, after C, not after S27 alone.
+- Nothing is dated except Track M.
+- No stage is open. **Stage 1 has no session yet and no prompt.** The standing rule is met for S27, whose prompt exists;
+  Stage 1's prompt is the next to write, on the author's word.
+
+**After the author's question "pull #69 was already merged, did you considered it?"**: #69 is in this branch's base
+(`6060bd2` is its merge), its seven §8 rows and its handover entry are intact, and its added `selftest` test is the 141st;
+but the architecture had no place for maintenance the author requests outside the plan. Proposed: Track M extended to it.
+**Not decided** — the author's next answer covered only the two points below.
+
+**A correction, measured** (§8 `6be5d3b`): question 2's row said the gate was "not verified running in GitHub Actions",
+copied from `docs/AUDIT-2026-11-04.md` §F without measuring. The logs of `pages.yml` runs 76 (`d4f860e`) and 77 (`6060bd2`)
+show it ran and passed (C1–C4, C6, C9 ✓; C5, C7, C10 "–": no ledger, no Proposal, no signature; C8 "!": four #69 commits
+reported). Stage 1's target is now the part never exercised: C5, C7, C10 on a real signed decision. G1 and Stage 1 in
+`docs/SESSION-ARCHITECTURE.md` carry it.
+
+**The prompt of Stage 1** (the author's "yse", §8 `6be5d3b`): `docs/prompts/v2-stage-1-operational-closure.md`, in
+Italian — 1.1 measure (readiness, `release status`, the gate's logs, the §3a settings asked one by one); 1.2 the author's
+acts guided (keygen outside the repository, `reviewers.json` by PR, the pin, §3a), checkpoint; 1.3 one real change through
+the chain with the author's signature; 1.4 readiness re-measured and G1 decided; 1.5 PV2-01's prompt. The session never
+handles the private key, never signs, never fakes an approval; if the author's acts are not done it stops at 1.2 and says
+G1 does not hold.
+
+**Not done:** no change to `data/`, `tools/`, `js/`, a page or `agent/`. `AGENTS.md`'s document table does not list
+`docs/PHASE-5-SETUP.md` or `docs/SESSION-ARCHITECTURE.md`, and still says Phase 4 is open: status-document work for the
+author to decide. The reminder of 13 Jan 2027 still stands.
+
+## Maintenance — the release suite's CI failures, fixed (5 Nov 2026, v2 Session 25)
+
+`qa.yml` "The agent suites" had been red on `main` since #68 (runs 717, `d4f860e`; 722, `6060bd2`) and on #70:
+`agent/release/selftest.mjs` A2, A3 and A12 failed because a CI runner has no git identity and the dispatcher's
+`git commit` (`dispatch.mjs:279`) inherits only the process environment, while the suite lent the fixture identity to its
+own helper alone. With `set -e`, the `.control-room` suite, the contract check and the gate rehearsal never ran in CI since
+#68. Fixed with one line in the suite (`Object.assign(process.env, GIT_ENV)`); no assertion and no production code
+changed. Measured with no git identity: the release suite 45/45 (42/45 before); the whole `qa.yml` loop 1233 pass, 0 fail,
+1 skipped; contracts and gate rehearsal exit 0. Decision: §8, "Maintenance: the release suite's three failures in CI, and
+their fix". Branch `claude/inspiring-meitner-c7s9le`, restarted from `main` `b34bd76` after #70 was merged; a new pull
+request opened on the author's word; nothing pushed after it.
+
+## Branch register — 5 November 2026 (v2 Session 25, 25.5)
+
+- Branch `claude/inspiring-meitner-c7s9le`, restarted from `main` `6060bd2` after #66 and #67 were merged (its earlier
+  history is in `main`). Unmerged at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- Disposition: on the author's answer ("yse", §8 `6be5d3b`), pushed and a new pull request to `main` opened; `origin/main`
+  re-fetched before this entry. Nothing is pushed to the branch after the pull request is opened.
+
+## Favicon made crawlable — unnumbered maintenance session (5 Nov 2026)
+
+*Not a numbered v2 session and not a roadmap item:* `docs/ROADMAP-v2.md` §8 holds no row that numbers this work. The author's
+questions and answers are recorded there as rows dated 5 Nov 2026 ("Maintenance, favicon, …").
+
+**The report:** in Google results the site showed a grey globe. **Measured:** no icon file existed on any branch; every page
+declared its icon only as an inline `data:` URI; `https://eudigitalpolicy.eu/favicon.ico` answered 404. **Read** (Google's page
+"Favicon in Search", last updated 2026-10-27): Googlebot-Image must crawl the favicon file; square, ≥ 8x8, preferably > 48x48;
+BMP, GIF, ICO, PNG, JPEG, PPM, TIFF (not SVG); stable URL; one favicon per site; "not guaranteed". **Inference, not measured:**
+that a `data:` URI is not a crawlable file and is why Google fell back to the globe. The page does not mention `data:` URIs.
+
+**Done (branch only, nothing merged, no PR):**
+- The author's set copied byte for byte into `img/icons/` (16, 32, 48 px, `apple-touch-icon.png` 180 px opaque, `icon-192.png`,
+  `icon-512.png`); the set had **no `.ico`**, so `/favicon.ico` is a PNG-in-ICO container holding the 16, 32 and 48 px PNGs
+  untouched (compared byte for byte). `favicon.ico` joined `PUBLIC_FILES` in `tools/pages-artifact.mjs`; without it the file
+  would not have reached the host. The original file names were lost on upload; the names are this session's.
+- One generated `icons:begin…icons:end` block on all 31 pages, from `ICONS`/`iconTags()` in `tools/_footer.mjs` (the one home;
+  `instrument.html` is no longer the source). Hrefs are relative with each page's `route.root`, `404.html` root-absolute.
+  **The first version was root-absolute and the browser suite's `deploy:assets` refused it** (a project-site layout check;
+  `docs/DEPLOYMENT.md` §8 says every internal link is relative); the author chose relative hrefs, no gate was edited.
+- `img-src 'self' data:` → `img-src 'self'` (`tools/csp.mjs`) on all 31 pages: the favicon was the only `data:` use in the
+  published surface. The Control Room's own CSP is untouched.
+- `tools/seo-audit.mjs` fails a page with no `rel="icon"`, a `data:` icon, one leaving the site, naming a file the repository does
+  not hold, or not the image its extension names; `tools/selftest.mjs` S4e plants six such defects. Run against `origin/main`'s
+  tree the new check reports the `data:` icon on all 31 pages. `siteCopy()` now copies `favicon.ico`.
+- `docs/SEO-OPERATIONS.md` §7a.
+
+**Counts (5 Nov 2026, final tree, one run of each):** validate, i18n-audit, design-qa (0 errors, 0 warnings), seo-audit
+(0, 0), evidence-audit, freshness, `og-image --check` (every social card current), `_footer --check`, `commit-evidence
+origin/main HEAD` exit 0; `node tools/_footer.mjs` writes 30 files after the last change and then 0. 24 agent suites + `.control-room/`
++ `tools/selftest.mjs`: **1396 tests, 1395 pass, 0 fail, 1 skipped** (the `.control-room` one); `schemas check` exit 0. Browser
+suite `--require-browser`: **343 pass · 0 fail · 1 undecidable**, repository byte-identical. In headless Chromium over a local
+server, on `/`, `/instruments/gdpr/`, `/it/` and `/404.html`: five icon link tags in the DOM, no `data:` icon, every icon URL
+200 with `image/vnd.microsoft.icon` or `image/png`, no failed request, no CSP message. `robots.txt` disallows only `/agent/`,
+`/docs/`, `/tools/`; the sitemap lists no icon.
+
+**Not checked, and why:** the live site (nothing is deployed from this branch; this environment cannot see a deployment), Google
+(what Googlebot-Image fetches, and whether or when a favicon appears), and a real browser tab strip — headless Chromium has none, so
+the light and dark views were the real icon files drawn where a tab draws them, not a tab. A `404.html` served at a deep path was
+not requested. One suite failure during the run was this session's own edit to a document while the browser selftest hashed the
+tree; it passed alone.
+
+**Needs a merge to `main`** (the site is published from `main` by `.github/workflows/pages.yml`). **Only the owner can:** after the
+merge, Search Console URL Inspection on `https://eudigitalpolicy.eu/` and "Request indexing" (repeat it, since the homepage will have
+changed). Google decides whether and when the favicon appears (its page says days to weeks); nothing here promises it.
+
+**Left alone, as instructed:** the site-name work (title, WebSite JSON-LD, `og:site_name`, `application-name`), `CNAME`, Pages
+settings, DNS, translations, the og images. No manifest was added (the author's decision); `icon-192.png` and `icon-512.png` are
+linked from nothing.
+
+## Branch register — 5 November 2026 (the favicon session)
+
+- Branch `claude/wizardly-albattani-l5ahsw` (assigned by the environment), cut from `main` `d4f860e`; `origin/main` re-fetched at
+  the start and before this entry, unchanged. Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`,
+  already in the register.
+- Disposition: committed and pushed; **a pull request is the author's to ask for** (AGENTS.md: ask, do not open).
+
+## Phase 4 operational-closure session — the release chain (4 Nov 2026)
+
+*Not a numbered v2 session and not a roadmap row.* It answers a standing brief from the author to close three findings of the
+readiness checklist (`agent/production/cli.mjs readiness`: **17 of 20 mandatory conditions, three blocking** — the production
+dispatcher, the absent decision ledger, the unmeasurable deploy gate). The report is `docs/AUDIT-2026-11-04.md`; this entry is
+the hand-over.
+
+**The brief's premise did not match the repository, and the repository was believed.** The brief said S22.1 approved, S22.2
+started, S23 and S24 outstanding. `main` at `cb9a76c` has S22, S23 and S24 closed (33 rules, `last_verified` 2026-11-04, 25 with the
+attestation form, the 8 without it being Session 21's), "Phase 4 concluded" in §8 on the author's word, Session 25 deferred to
+12 Jan–2 Feb 2027 and Phase 5's plan approved. Nothing was reopened or renumbered. What the brief calls Phase 4's three findings are
+not roadmap items: they are the readiness checklist's, and `docs/PHASE-4-SETUP.md` §3 / X-3 **left them** ("activation is a
+governance decision"). They were built here because the author asked for them in terms.
+
+**Built (all tested; none yet run by GitHub; none an approval):**
+- `agent/implement/attestation.mjs` + `ledger.mjs`: ledger version 2 — hash chain, ed25519 signature against `reviewers.json`,
+  `human`/`simulated` provenance, `decided_role`; `verifyLedger()`; `recordDecision` refuses to append to a ledger that does not
+  verify; `decide --sign-key --role`. `deriveApproval` gained `void_simulated`.
+- `agent/release/`: `dispatch.mjs` (nine stages, rehearsal by default, never pushes or merges), `gate.mjs` (ten conditions),
+  `workflows.mjs`, `lifecycle.mjs`, `policy.mjs`, `cli.mjs`, `selftest.mjs` (45 tests), `README.md`.
+- `.github/workflows/pages.yml`: `build` checks out the full history and runs `agent/release/cli.mjs gate --ci …` after building
+  `_site` and before uploading it. `qa.yml`: the new suite, `workflows`, `verify-ledger`, and the gate rehearsed.
+- `agent/implement/implementer.mjs`: optional `records`/`ledger` injection (the dispatcher hands Agent 9 the snapshot it
+  verified). `checks.mjs`: the suite joins `AGENT_SUITES` (25); `implement/selftest.mjs` R6 asserts 25 — the eleventh time that
+  assertion has moved with the list, for the stated reason.
+- Docs: `docs/DEPLOYMENT.md` §2a, §3a, §3b; `agent/implement/decisions/README.md`; `docs/IMPLEMENTATION-QA.md` §3; `AGENTS.md`.
+
+**Found by the suite while building it, and fixed:** a refused change that left an *untracked* file made `git checkout --`
+abort and leave the tracked edit in the tree, so the next dispatch was refused as dirty; and a scope check that counted the
+user's own earlier uncommitted work as a violation. Both are in test A10.
+
+**Not done, and why it is a person's or another session's:**
+1. **No authentic human approval exists, and none was made.** `decisions.jsonl` and `reviewers.json` do not exist.
+   `readiness` still reports `decision_ledger_present` failing, correctly. What the owner does: `docs/DEPLOYMENT.md` §3b.
+2. **`production_dispatcher_wired` is unchanged.** It measures `agent/orchestrator/dispatchers.mjs`; the release dispatcher is
+   a different thing and was not given that name. Wiring the Orchestrator's seam to real specialists is a governance decision.
+3. **The gate has never run in GitHub Actions.** The first push to `main` after the merge is its first run. Expected: C1 pass,
+   C3 pass, C4 pass, C5/C7/C10 not applicable, C8 *warn* wherever a session's commit carries an agent marker (`Claude-Session`, `Co-Authored-By: …Claude`), C9 pass. If it
+   blocks a legitimate deploy, that is a finding about the gate.
+4. **External settings (§3a):** ruleset with required review, `CODEOWNERS`, the `github-pages` environment's branch rule, the
+   pinned registry variable. None is set, and none can be from the tree.
+5. **Agent 9 was exercised through a stub in the dispatcher's tests.** The real `Implementer` path runs the validators and
+   suites (minutes) and no real proposal exists to run it on. It is wired and rehearsal-tested, not run end to end.
+6. **The Control Room writes unsigned decisions**, which the gate refuses. Having it sign puts a key on a server; left to the author.
+7. **`--strict-unledgered`** (C8 blocking) is off. Switching it on blocks every session-authored change until it goes through
+   the dispatcher; the author's decision.
+8. **X-3 (`docs/PHASE-4-PLAN.md`):** this session changed `agent/implement/decisions/README.md` and the `agent/implement/`
+   code X-3 lists as "unchanged, or only what a §8 row approved". **No §8 row was written** — the author's word is the row — so
+   the diff `git diff 40d4dd1..HEAD --stat -- agent/implement/decisions` is no longer empty and says so.
+
+**Counts (4 Nov 2026, full clone, one run of each):** the four validators and `evidence-audit`, `seo-audit`, `_footer --check`,
+the §12 baseline, both boundary checks, the artifact build and the contracts check exit 0; `tools/selftest.mjs` 140; 25 suites
+and `.control-room/` **1394 pass · 0 fail** (1349 on Session 24's tree + the 45 new); adversarial gate exit 0; browser `--require-browser` 343 · 0 · 1 undecidable; `readiness` still **17 of 20**, the same three blocking. Measured on a fresh full clone of `0338b0c`.
+
+## Branch register — 4 November 2026 (the operational-closure session)
+
+- Branch `claude/gifted-brown-qb5su2` (assigned by the environment), cut from `main` `cb9a76c`. `origin/main` re-fetched at the
+  start. Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register.
+- Disposition: committed and pushed; **a pull request is the author's to ask for** (AGENTS.md: ask, do not open).
+
+## v2 Session 25 — stopped at 25.0: the reading deferred (4 Nov 2026)
+
+**What was measured, read-only, on a full clone** (the clone was shallow; `git fetch --unshallow` was run first): `main` at
+`aac3830` holds Session 24 as the prompt requires — 33 rules, all `last_verified` 2026-11-04, 25 with `attestation`, the 8
+without it being Session 21's; `tools/selftest.mjs` has `READ_V2_23` (25 entries), `EIDAS2_A8` (five) and `OLDEST_READ`;
+§8 holds the rows to Session 24's final checkpoint and "Phase 4 concluded"; `docs/prompts/v2-session-25.md` exists.
+`node tools/validate.mjs` 0 errors · 5 warnings (the five `ATTESTATION_NOT_CHECKABLE` of `ap-eidas2-01`, the §12 baseline) ·
+45 unverified; `freshness --as-of` 2026-11-04 / 2027-02-02 / 2027-02-03: `RULE_STALE` 0 / 0 / 33, exit 0 each;
+`evidence-audit --as-of 2026-11-04` exit 0, **0 `STATUS_PREDATES_MILESTONE`**; `--as-of 2027-03-26` exit 0, six (dma,
+ai-act, data-act, pld, eidas2, ehds) and T-12 on `ap-cra-01` only. Cellar and the SPARQL endpoint answered from this
+environment (one probe each; no reading was made).
+
+**The finding put to the author.** The session began on 4 Nov 2026 at 22:11 UTC — the day of `FORM_FROM` and the day all 33
+rules were last read (11 of this round's 14 by Session 23; `ap-gdpr-04`, `ap-dsa-03` and `ap-dma-04` by Session 21). The
+prompt assumes a session after `FORM_FROM`. A closure today is dated 2026-11-04 (§8, 23.0 question 1), so the 14 would still
+lapse on 3 Feb 2027 and the reading would move no date; and with no milestone passed, 25.2 had nothing to read.
+
+**Decided** (§8, "v2 Session 25, 25.0 question 1", `e0b69ce`): **defer the reading.** Nothing in `data/` changed. The prompt
+`docs/prompts/v2-session-25.md` is kept as written and is run **between 12 Jan and 2 Feb 2027**, when the readings move the
+14 rules' dates past 3 Feb 2027 and 25.2 covers five of the six statuses (ehds's milestone, 26 Mar 2027, falls after).
+
+**What did not happen, and stays open.** No rule read or closed; no `tools/selftest.mjs` pin changed (the prompt's pin
+question was not reached); R-3, R-4 (F-18) and R-8 keep their decided destinations; no status re-read; the prompt of
+Session 26 was not written, because the session that writes it is the deferred Session 25 itself (its 25.3). **All 33
+rules still lapse on 3 Feb 2027**; the autonomy grant still expires on 9 Mar 2027 (flagged, not renewed); T-12 on
+`ap-cra-01` still fires on 26 Mar 2027.
+
+**Writes:** §8 `b7802bd` (the scope of v2 Session 25) and `e0b69ce` (25.0 question 1); this entry. No file of the published
+surface changed, so no battery was run beyond the reconnaissance above, and no commit needs an `Evidence:` line.
+
+**A repair to this file, named.** From `1925258` (Session 24's final hand-over write) until this entry, line 5 of the header
+read "The entries below this s## Branch register — …": the sentence "…this session's are unchanged." was cut and the next
+heading spliced onto it, so `## Branch register — 4 November 2026 (v2 Session 24)` did not render as a heading. The text
+lost was those words and a blank line, nothing else (`git diff 93e8d28 1925258 -- docs/HANDOVER.md` removes two lines: the
+old "Last updated" line and that sentence). Restored in the header above and below; Session 24's entries are otherwise
+unchanged.
+
+### 25.4 · The set-up of Phase 5 (after the stop, on the author's request)
+
+After the PR was opened the author asked: "generate the set up for phase 5, acknoledging the sessions required in coherence
+with the previous phases" (§8, "v2 Session 25, 25.4: the set-up of Phase 5", `c00143a`). The roadmap puts Phase 5's scope in
+"the session after Phase 4's checkpoint", which this is. **Written: `docs/PHASE-5-SETUP.md`, a proposal that decides
+nothing until §8 does**:
+- **The premises.** P-A, what "advanced" means: depth (recommended), breadth, or the findings only. P-B: design before the
+  reading of 3 Feb 2027, changes after it. P-C: Phase 5 sessions numbered 27 onward.
+- **The material, measured.** M-1…M-7: F-05, F-12 = R-6, F-24, R-8, V2C-15, R-1 (conditional), and the unasked facts
+  (38 `depends_on` items on 25 rules, 4 threshold keys on 3 rules, 26 exemptions on 20 rules, none evaluated).
+- **What Phase 5 extends, uses or leaves**, one row per component.
+- **The gates.** Entry condition E5-1…E5-7 and exit criteria X5-1…X5-7, each able to fail.
+- **The sessions.** S27 design (Nov–Dec 2026); S25 and S26 the reading (Jan 2027, unchanged); S28 the standard as a check
+  and group (b); S29 the questionnaire; S30 derivations and exit; S31 a buffer before 13 Apr 2027. The sessions outside
+  the phases are placed beside Phase 5.
+- **Seven questions for the author.**
+
+**The seven questions were put one at a time and answered on 4 Nov 2026** (§8, 25.4 questions 1–7, `24809f6` … `fa880aa`),
+each recommendation chosen: depth; design before, changes after; Sessions 27 onward; no agent rule proposals (M-6 closed);
+V2C-15 kept after V2C-13; E5-1…E5-7 and X5-1…X5-7 as drafted; the sessions as drafted. **The plan is approved and Phase 5 is
+not opened**: it opens on the author's word against E5-1…E5-7; E5-3 is Session 27's to write and E5-5 waits for Sessions 25
+and 26. The document's status line, M-6, Session 30's row and §7 now carry the answers. Validators 0 errors (`validate.mjs`
+5 warnings, the baseline), `tools/selftest.mjs` 140/140.
+**The prompt of v2 Session 27** (Phase 5's design, Nov–Dec 2026) was drafted on the author's answer ("Draft S27's prompt
+now (Recommended)", §8 `d68e419`): `docs/prompts/v2-session-27.md`, in Italian — 27.1 the premises verified, 27.2 the
+standard E5-3 with planted cases (checkpoint), 27.3 the X5-1 table by scratch measurement and decided per instrument, 27.4
+the paper test, 27.5 S28's prompt and whether Phase 5 opens; `docs/` only; stop rule 27.4, then 27.3. **The calendar**:
+S27 in Nov–Dec 2026; S25 (prompt kept) and S26 in 12 Jan–2 Feb 2027, before the 33 rules lapse on 3 Feb 2027; the reminder
+scheduled for 13 Jan 2027 still stands. `AGENTS.md`'s document table does not list the new file; that, with the status lines still saying Phase 4 is open, is
+status-document work for after the author's answers.
+
+## Branch register — 4 November 2026 (v2 Session 25)
+
+- Branch `claude/inspiring-meitner-c7s9le` (assigned by the environment), at `main` `aac3830`. Nothing merged in;
+  `origin/main` re-fetched before this entry: still `aac3830`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register (left open by the
+  author's decision).
+- The clone was shallow at the start; `git fetch --unshallow` was run before anything else.
+- Disposition: the session stopped at 25.0 on the author's decision (§8 `e0b69ce`); pushed, and a pull request to `main`
+  opened on the author's instruction ("Open the PR (Recommended)"); **merged by the author as #66 (`9542548`)**, at
+  `150990e`. 25.4, the Phase 5 set-up, its seven decisions and the prompt of Session 27, was written after that on the
+  author's request and is rebased onto `9542548`; `origin/main` re-fetched before this entry: still `9542548`. Pushed, and
+  a new pull request to `main` opened on the author's instruction ("Open a new PR (Recommended)"); nothing is pushed to the
+  branch after it is opened.
+
+## Branch register — 4 November 2026 (v2 Session 24)
+
+- Branch `claude/v2-session-24-exit` (no branch was assigned by the environment), cut from `main` at `f44d3f0` (#63 and #64
+  merged). Nothing merged in; `origin/main` re-fetched before this entry: still `f44d3f0`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register (left open by the
+  author's decision).
+- The clone was shallow at the start; `git fetch --unshallow` was run before any suite.
+- Disposition: checkpoint 24.1 approved (§8 `c6a5410`) and the final checkpoint approved (§8 `c1d59f3`); **Phase 4 concluded** on the author's word (§8, "Phase 4 concluded"); pushed, and a pull request to `main` opened on the author's instruction ("Push and open the PR (Recommended)"). Nothing is pushed to the branch after the pull request is opened.
+
+## v2 Session 24 — final checkpoint (24.2 the exit audit, 24.3 D-5, 24.4 the hand-over and the prompt of Session 25)
+
+Checkpoint 24.1 approved (§8 `c6a5410`).
+
+### 24.2 · The exit audit of Phase 4
+
+**X-1…X-5, measured** (§8 `17c610c`), against `docs/PHASE-4-PLAN.md` §1:
+
+| # | Result | What measures it |
+|---|---|---|
+| X-1 | **met** | §1a, one row per process P-01…P-13, approved in §8 (22.3); every check it names exists and runs where it says |
+| X-2 | **met** | the form in `data/applicability.json`, A-1…A-8 in `tools/attestation-audit.mjs`, `tools/selftest.mjs` AT0–AT15; 25 real closures (20 in S23, 5 in S24), each with its §8 rows |
+| X-3 | **met** | `git diff 40d4dd1..HEAD --stat -- agent/orchestrator agent/implement/decisions agent/production agent/policy/verify tools/thirdparty.mjs` empty; `ALLOWED_RUNTIME_ORIGINS` `[]` (`40d4dd1`: where Phase 4's entry condition was measured) |
+| X-4 | **met by deferral** | D-5 deferred past Phase 4 with its reason (§8 `3e4ea55`) |
+| X-5 | **met** | the final battery below, on a full clone |
+
+**The open findings, each with the destination the author decided** (one question each):
+
+| # | Finding | Destination | §8 |
+|---|---|---|---|
+| R-1 | `agent/integrate/preserve.mjs` checks no rule; fails closed | **left**, with the reason; Phase 5 if an agent may propose rule changes | `b958412` |
+| R-2 | A-4 cannot see a statement on an uncited Article | **maintenance**: `docs/RULE-MAINTENANCE.md` step 1 now says to read rationale, obligations and `depends_on` against the texts (`ee1c9be`) | `65fee3d` |
+| R-3 | the Review Report's PDF page locators (`ap-dma-01`, `-03`) | **maintenance**, at those rules' next reading | `d6831a7` |
+| R-4 | `ap-dma-01` closed with F-18 open | **group (d)**, the evidence session; named in the hand-over and in S25's prompt | `ffd1186` |
+| R-5 | the Data Act's R(07), no English expression (re-queried: still none) | **maintenance**, re-queried at the Data Act rules' next reading | `9ee7283` |
+| R-6 | `ap-ai-act-01`'s `gpai-provider` condition | **Phase 5**, group (b) | `45a08e5` |
+| R-7 | AI Act Art. 2(13) delegated acts by 2 Aug 2027 | **maintenance, dated**: query by 3 Feb 2027 and before 2 Aug 2027 | `bbdfa9e` |
+| R-8 | GDPR Art. 2(2)(a), (b) carried by no rule | **Phase 5** | `b1cf5ab` |
+| R-9 | the PLD's "after 9 December 2026" in four other records | **corrected now** (`96709d8`): claim and event "from", provision summary and source note "after 8 December 2026 (as corrected)" | `823a132` |
+| R-10 | the Treaty headings are labels; the TFEU has no tier-1 source | **the evidence session**, with group (d) | `b1feef4` |
+| R-11 | Implementing Regulation (EU) 2026/1731 recorded nowhere | **left**, with the reason (touches nothing cited; no instrument record to carry it) | `232c191` |
+| R-12 | DORA Art. 31(6) delegated act unread | **maintenance**, at `ap-dora-02`'s next reading | `8d14653` |
+
+R-11 and R-12 were found in 24.1 and numbered here, so that every open finding has a destination.
+
+### 24.3 · D-5
+
+**Deferred past Phase 4, with the reason** (§8 `3e4ea55`): no Phase 4 item needed a person to edit content through a login;
+every change was a commit on the author's word in §8, and the Control Room's OIDC login was untouched. Reopened when a later
+phase first needs that; the two facts of `docs/PHASE-4-SETUP.md` §4 are re-read then (not on 4 Nov 2026). No CMS chosen,
+installed or configured; no origin added.
+
+### 24.4 · The hand-over: the calendar, re-measured on 4 Nov 2026
+
+| Date | What | Measured | Where it goes |
+|---|---|---|---|
+| **3 Feb 2027** | **all 33 rules lapse** (`RULE_STALE` 0 on 2027-02-02, 33 on 2027-02-03) — every closure of Sessions 21, 23 and 24 fell on 4 Nov 2026; the plan's "28" became 33 when this session's five closed that day | `freshness --as-of` | **S25** (GDPR, cross, DSA, DMA: 14) and **S26** (the other 19), both before 3 Feb 2027, on the author's answer "Two sessions (Recommended)" |
+| 2 Dec 2026 – 26 Mar 2027 | statuses meet milestones: ai-act 2 Dec, pld 9 Dec, eidas2 24 Dec, dma 1 Jan, data-act 12 Jan, ehds 26 Mar (`STATUS_PREDATES_MILESTONE`, six, not the plan's four) | `evidence-audit --as-of 2027-03-26` | each reading session re-reads those passed by its date ("In the reading sessions (Recommended)") |
+| **9 Mar 2027** | the limited-autonomy grant expires (`agent/policy/cli.mjs governance`: "expires 2027-03-09T00:00:00Z") | measured | **flagged, not renewed** (a Class D decision) |
+| **26 Mar 2027** | T-12 on `ap-cra-01` (the EHDS's application), still the only one | `evidence-audit --as-of 2027-03-26` | S26 reads `ap-cra-01` before 3 Feb 2027; T-12 then asks a reading after 26 Mar 2027 |
+| before **2 Aug 2027** | R-7: delegated acts under AI Act Art. 2(13) | — | the query, by S26 and again before that date |
+| — | F-18 (R-4) and R-10 | — | group (d)'s evidence session, not yet scheduled |
+
+**The prompt of v2 Session 25**: `docs/prompts/v2-session-25.md` (`9016b47`), in Italian, its provenance carrying the
+author's three answers in the author's words: "S25: the 3 Feb 2027 reading (Recommended)"; "Two sessions (Recommended)"; "In
+the reading sessions (Recommended)". It carries R-3, R-4 and R-8 for its rules, the statuses passed by its date, and, for
+S26's prompt, R-5, R-7, R-12 and `ap-cra-01`'s T-12. It carries the standing rule in its exit criterion, and holds whether or
+not the author declares Phase 4 concluded.
+
+### Counts at the end (4 Nov 2026, `9016b47`, full clone, outputs in the scratchpad) — X-5
+
+`validate` 0 errors · 5 warnings (the five named A-8 cases, at the §12 baseline; `agent/implement/cli.mjs check`
+`at_baseline`, verdict `pass_with_findings`); `i18n-audit` 0 · 0; `design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings
+today, 18 on 2027-03-26), publishable 33 of 33, T-12 only `ap-cra-01`; `freshness` `RULE_STALE` **0 / 0 / 33** today /
+2027-01-28 / 2027-02-03; `seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0 fail · 1 skipped**;
+browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 65 failed safely · 0 succeeded ·
+3 partial · 1 undecidable; schemas check 18 of 18, Control Room boundary and routes exit 0; readiness refuses, **17 of 20**
+(production dispatcher, decision ledger, deploy gate unmeasured), as at the opening; `commit-evidence f44d3f0 HEAD` 34
+commits, 0 without evidence. `git status` empty before and after the battery.
+
+### What was not verified, and why
+
+- **That the law was read**, by any check: the five attestations are declarations (`docs/ATTESTATION-FORM.md` §6).
+- **The claims the five rules cite** were not re-read; each note says so. One claim was re-read and corrected, for R-9.
+- **The two facts of D-5** were not re-read (the author's decision: re-read when D-5 reopens).
+- **TFEU Arts 102, 114 and 173** were read only in their opening lines, for the heading comparison (R-10).
+- **The delegated act of DORA Art. 31(6)** and any act under AI Act Art. 2(13) were not looked for (R-12, R-7).
+- **The corrigenda without an English expression** (NIS2 8, DORA 9, PLD 1, eIDAS2 6 and 2024/2977's one) were not read.
+
+### New findings, not fixed
+
+All of the session's are R-9 … R-12 above, each with its decided destination (R-9 fixed). And the calendar's: **all 33 rules
+lapse on 3 Feb 2027.**
+
+### Checklist
+
+| Item | What was written | How to check it by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 24.0 | §8 scope `5ea0fc5`; Q1 `45571c2`; wording `55a512b` | read the rows; `node --test tools/selftest.mjs` | AT0, F10, X1, Y2–Y6 | the pins asked first |
+| 24.1 | 5 closures `f0fa65f`, `d0fbd29`, `c2b7bd8`, `8d45865`, `6f7542c`; §8 `a12844e`, `d9708e2`, `212b5a7`, `fdb399d`, `402bdd0`, `9ae7f0b`, `3b16381`; report `93e8d28`; approved `c6a5410` | `node tools/attestation-audit.mjs packet <id>` against each `attestation.read`; the OJ texts by CELEX | A-1…A-8 in `validate.mjs`; AT0, AT1, AT9 (`EIDAS2_A8`); F10 (`OLDEST_READ`); Y6 | 5 rules closed in the form; 48 headings |
+| 24.2 | X audit §8 `17c610c`; R-1…R-12 §8 `b958412` … `8d14653`; `ee1c9be` (R-2); `96709d8` (R-9) | `git diff 40d4dd1..HEAD --stat -- …` (X-3); read each R row; the four PLD records | X-5: the battery; `validate`, `seo-audit`, `selftest` on R-9 | X-1…X-5 measured, in §8; R-1…R-12 destined |
+| 24.3 | §8 `3e4ea55` | read the row against `docs/PHASE-4-SETUP.md` §4 | — | D-5 deferred with its reason (X-4) |
+| 24.4 | the calendar above; `docs/prompts/v2-session-25.md` `9016b47` | `freshness --as-of 2027-02-03`; `evidence-audit --as-of 2027-03-26`; `agent/policy/cli.mjs governance`; read the prompt | — | the standing rule: the prompt exists and is approved with the work |
+
+**Whether Phase 4 is concluded is the author's** (`docs/PHASE-4-PLAN.md` §1), asked after this checkpoint.
+
+ession's are unchanged.
+
+## v2 Session 24 — checkpoint 24.1 (NIS2, DORA, PLD, eIDAS2: five rules closed in the form, 48 headings)
+
+**Opening.** `main` at `f44d3f0` held Session 23 (20 rules attested, `READ_V2_23` with 20 entries, the §8 rows to its
+final checkpoint, `docs/prompts/v2-session-24.md`). The clone was shallow; `git fetch --unshallow` before any suite. Unmerged
+branches: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register. No branch was assigned by the
+environment; the session works on `claude/v2-session-24-exit`, cut from `main` at `f44d3f0`. Scope row in §8 first
+(`5ea0fc5`), with the author's words ("Start session 24"). **The reconnaissance re-measured the prompt's table and found it
+exact**: 33 rules, 28 dated 2026-11-04 (20 attested) and 5 dated 2026-10-29; `RULE_STALE` 0 / 5 / 5 / 33 on 2027-01-27 /
+01-28 / 02-02 / 02-03; T-12 only `ap-cra-01` on 2027-03-26; `validate` 0 · 0; `selftest` 140/140; the five packets as the
+prompt lists them (`ap-eidas2-01` with its five A-8 items); headings nis2 7, dora 9, pld 3, eidas2 4, cra 7, ehds 4, iea 4,
+csa 3, digital-networks-act 3, tfeu 3, teu 1. The 25 suites were not run at the opening; they ran in this checkpoint's
+battery. Cellar and the SPARQL endpoint both answered HTTP 200. **The session began on 4 Nov 2026, 18:44 UTC — the day of
+`FORM_FROM`** — so 23.0 question 1 governs: every closure is dated 2026-11-04 and carries the form.
+
+**24.0 · one question** (§8 `45571c2`, code `55a512b`): the five closures extend `READ_V2_23`, now the one list of the
+closures in the form; only its comment and AT0's title and message changed.
+
+### Per rule
+
+Texts read on 4 Nov 2026, fetched from Cellar by CELEX with `Accept-Language: eng`. SPARQL (the two queries of
+`docs/RULE-MAINTENANCE.md` step 2), HTTP 200 for every text.
+
+| Rule | Read | Queried, and what came back | Found, and decided (§8) | Attestation | Commit |
+|---|---|---|---|---|---|
+| `ap-nis2-03` | NIS2 (32022L2555) Arts 2, 3, 6, 20, 21, 23, 41, Annex I | nis2: no amending act; 9 corrigenda, only R(04) in English (Art. 19(1) only, read) | Arts 21 and 23 bind "essential and important entities", which Art. 3(1)(d) and (2) define for public administration — uncited; **Art. 3 cited in scope** (`a12844e`). Art. 20 (management bodies) reaches these entities, with a caveat for public institutions' liability, and was not among the obligations; **`nis2:art-20` added, caveat in the note** (`d9708e2`). Y6 changed exactly for the two references | `changed`, 2 decisions | `f0fa65f` |
+| `ap-dora-01` | DORA (32022R2554) Arts 2, 4, 5, 6, 16, 17, 19, 24, 28, 64 | dora: no amending act; 9 corrigenda, none in English | nothing; `depends_on`'s proportionality is Art. 4, uncited and not read by A-4, recorded in the note | `unchanged`, no decision | `d0fbd29` |
+| `ap-dora-02` | DORA Arts 2, 3, 28, 30, 31, 33, 64 | as above | nothing; Art. 31's direct duties of a critical provider (31(4), (5)) and its exclusions (31(8)) recorded in the note; the delegated act of Art. 31(6) not read | `unchanged`, no decision | `c2b7bd8` |
+| `ap-pld-01` | PLD (32024L2853) Arts 1, 2, 4, 8, 21–24, recital 13; corrigendum 32024L2853R(01) | pld: no amending act; **2 corrigenda**, R(01) of 7 May 2026 in English, R(02) of 29 Sep 2026 not — **the 29 Oct note recorded no metadata query** | **R(01) corrects Art. 2(1) to "after 8 December 2026"**; with Art. 21 (85/374/EEC repealed with effect from 9 December 2026) the Directive covers products from 9 December 2026 inclusive; the rationale said "after 9 December 2026"; **"from 9 December 2026"** (`212b5a7`). The same words in four other records: **R-9**, to the exit audit (`fdb399d`) | `changed`, 1 decision | `8d45865` |
+| `ap-eidas2-01` | 2024/1183 (32024R1183) Arts 1 (points (1)–(53), in full) and 2; 2024/2977 (32024R2977) citation, Art. 6; 2024/2981 (32024R2981) citation, Art. 22; 32024R1183R(02); 32026R1731 | eidas2: no amending act, **7 corrigenda**, only R(02) in English (Art. 5a(16)(b) and Art. 47, nothing cited); **2024/2977 amended by Implementing Regulation (EU) 2026/1731** (15 Jul 2026; Art. 3a inserted, Arts 4(1), 5(4)(b) and the Annex replaced; citation and Art. 6 untouched) and 1 corrigendum, not in English; 2024/2981 nothing | nothing in the rule; the five A-8 warnings the design foresaw, put to the author: **closed, the five pinned exactly** (`402bdd0`); F10's lower date derived, **`OLDEST_READ`** (`9ae7f0b`) | `unchanged`, no decision | `6f7542c` |
+
+Four attestations pass A-1…A-8 with **0 errors and 0 warnings**; `ap-eidas2-01`'s passes with **0 errors and the five
+named A-8 warnings**, which `tools/selftest.mjs` `EIDAS2_A8` pins in AT0, AT1 and AT9, and which
+`docs/CURRENT-ARCHITECTURE.md` §12 now records by name (`validate.mjs` 0 errors · 5 warnings). The claims were not re-read,
+and each note says so.
+
+### The headings: 48
+
+**44 identical** to the text read: NIS2 7, DORA 9, PLD 3, eIDAS2 4 (Arts 2 and 3 in 32014R0910; Arts 5a and 5f as inserted
+by 32024R1183 Art. 1 point (5)), CRA 7 (Chapter IV, Arts 35–51, differing only in the Journal's capitals), EHDS 4, IEA 4,
+CSA 3, and the Digital Networks Act's 3 in the proposal COM(2026) 16 final (`52026PC0016`, whose CELEX answers HTTP 300 with
+two documents; the act document was read), which has no Official Journal text. **The four Treaty provisions have no
+heading in the Official Journal** (12016E102, 12016E114, 12016E173, 12016M004 print only "Article 102 (ex Article 82
+TEC)" etc.); their labels in `data/instruments.json` are editorial, and none misstates its Article. **Kept; carried as R-10**
+(`3b16381`). Nothing changed in `data/` for a heading.
+
+### Pins changed on the author's word
+
+`READ_V2_23` gained the five rules, each in its closure's commit (`55a512b` the wording). Y6 `refs("ap-nis2-03")`, exactly
+the two entries (`f0fa65f`). `EIDAS2_A8` in AT0 (its warnings and its check of `validate.mjs`'s output), AT1 and AT9's
+second case; `OLDEST_READ` in F10 (`6f7542c`). Nothing relaxed: a sixth warning, or a different one, fails AT0.
+**`selftest` caught both pins before any commit**, as Session 23's lesson said it would: the eIDAS2 closure, uncommitted,
+failed F10, AT0, AT1 and AT9, and was committed only with the answers.
+
+### Where the form and the packet guided, and where they did not
+
+- **The packet does not ask what amends a text the rule cites only for a date.** It named 2024/2977 for A-5; SPARQL then
+  returned an amending act, 2026/1731, that no record in `data/` holds. It touches nothing the rule cites; no T-12 can fire
+  for it (`docs/RULE-MAINTENANCE.md` §2).
+- **A-5 caught what the 29 Oct note had not done.** The PLD's note recorded no metadata query; the query required by A-5
+  found the corrigendum to Art. 2(1). The form's first use on a rule whose last reading skipped P-09 found a substantive
+  correction.
+- **The pattern of Session 23 recurred, at a different place**: `ap-nis2-03`'s obligations rested on an uncited Art. 3 (the
+  link from scope to "essential and important entities"), and omitted Art. 20 — not the rationale, so R-2's `for:
+  "rationale"` remedy was not the one chosen.
+- **A-8 on `ap-eidas2-01` is exactly as the design foresaw**, and a closure there could not meet AT0's 0 warnings: the pin
+  was put to the author, not loosened.
+- **Closing the last rule dated 2026-10-29 broke a literal in F10.** All 33 rules now carry 2026-11-04.
+
+### New findings, not fixed
+
+1. **R-9** — "after 9 December 2026" in `clm-pld-covers-software`, the `pld:art-2` summary, `src-eurlex-pld`'s note and
+   `tl-pld-2026-12-09-application`'s text (to the exit audit, §8 `fdb399d`).
+2. **R-10** — the four Treaty headings are editorial labels; the TFEU instrument has no tier-1 source (§8 `3b16381`).
+3. **Implementing Regulation (EU) 2026/1731 amends 2024/2977 (and 2024/2979, 2024/2980, 2024/2982) and is recorded nowhere in
+   `data/`.** It touches no Article any rule cites.
+4. **All 33 rules now lapse on 3 Feb 2027** (`RULE_STALE` 0 on 2027-01-28, 33 on 2027-02-03): the prompt's "28" became 33
+   when the five closed on the day of `FORM_FROM`. For the hand-over (24.4).
+5. **`ap-dora-02` depends on the delegated act of DORA Art. 31(6)**, which Art. 31(7) makes a condition of any designation;
+   that act was not read and is not in `data/`.
+
+### Counts (4 Nov 2026, `3b16381`, full clone, outputs in the scratchpad)
+
+`validate` 0 errors · **5 warnings** (the five named A-8 cases of `ap-eidas2-01`, at the §12 baseline as recorded in this
+checkpoint; `agent/implement/cli.mjs check` reports `at_baseline`, verdict `pass_with_findings`); `i18n-audit` 0 · 0;
+`design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings today, 18 on 2027-03-26), publishable 33 of 33, T-12 only
+`ap-cra-01`; `freshness` `RULE_STALE` **0 / 0 / 33** today / 2027-01-28 / 2027-02-03 (was 0 / 5 / 33 at the opening);
+`seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0 fail · 1 skipped** (`selftest` 140, unchanged in
+number); browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 69 attacks, 65 failed
+safely · 0 succeeded · 3 partial · 1 undecidable; schemas check 18 of 18, Control Room boundary and routes exit 0;
+readiness refuses, **17 of 20** (production dispatcher, decision ledger, deploy gate unmeasured), as at the opening;
+`commit-evidence f44d3f0 HEAD` 15 commits, 0 without evidence. `git status` empty before and after the battery.
+
+**Commits.** §8 `5ea0fc5`, `45571c2`, `a12844e`, `d9708e2`, `212b5a7`, `fdb399d`, `402bdd0`, `9ae7f0b`, `3b16381`; tools
+`55a512b`; data `f0fa65f`, `d0fbd29`, `c2b7bd8`, `8d45865`, `6f7542c`. **All five rules of the session closed** in the
+form — two changed, three unchanged — and **all 48 headings compared**. Nothing fell under the stop rule.
+
+**Next, on approval: 24.2** — the exit audit against X-1…X-5, and R-1…R-10 each put to the author with a proposed
+destination; then 24.3 (D-5) and 24.4 (the hand-over and the next prompt).
+
+## Branch register — 4 November 2026 (v2 Session 23)
+
+- Branch `claude/funny-bohr-w74g7e` (assigned by the environment), fast-forwarded to `main` at `9217e62` (#62, Session 22).
+  Nothing merged in; `origin/main` re-fetched before this entry: still `9217e62`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register (left open by the
+  author's decision).
+- The clone was shallow at the start; `git fetch --unshallow` was run before any suite.
+- Disposition: checkpoint 23.3 approved (§8 `6942ec7`) and the final checkpoint approved (4 Nov 2026, §8 `9fe9ad7`); pushed,
+  and a pull request to `main` opened on the author's instruction ("Push and open the PR (Recommended)"). Nothing is pushed
+  to the branch after the pull request is opened.
+
+## v2 Session 23 — final checkpoint (23.4, the prompt of Session 24; with checkpoint 23.3)
+
+**On the author's instruction** ("go with session 24's prompt redaction"), 23.4 was begun before checkpoint 23.3 was put to
+the author, and the 23.3 battery, then running, was stopped so that nothing would be written to the tree while it ran. One
+battery, run after 23.4, serves both checkpoints; 23.3 is put for approval first, then the final checkpoint.
+
+### 23.4 · The prompt of v2 Session 24
+
+`docs/prompts/v2-session-24.md` (`c2ab200`), in Italian, with the provenance carrying the author's answers in the author's
+words: the checkpoints, "Two: reading, then exit (Recommended)" — 24.1 the reading, then 24.2 the exit audit, 24.3 D-5,
+24.4 the hand-over and the next prompt; the 3 Feb 2027 clustering, "Name it in the hand-over (Recommended)"; Session 23's
+new findings, "Into the exit audit (Recommended)" — R-1 (`preserve.mjs`) to R-8. It carries the standing rule in its exit
+criterion. **A count I put wrongly**: the third question said seven rules rested on uncited Articles; they are five
+(corrected in the prompt before its commit, and in the 23.3 report).
+
+### Counts at the end (4 Nov 2026, `c2ab200`, full clone, outputs in the scratchpad)
+
+`validate` 0 · 0; `i18n-audit` 0 · 0; `design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings today, 18 on
+2027-03-26), publishable 33 of 33, T-12 only `ap-cra-01`; `freshness` `RULE_STALE` **0 / 5 / 33** today / 2027-01-28 /
+2027-02-03 (was 0 / 25 / 33 at the opening); `seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0
+fail · 1 skipped**; browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 65 failed
+safely · 0 succeeded · 3 partial · 1 undecidable; schemas check, Control Room boundary and routes exit 0; readiness
+refuses, 17 of 20 (production dispatcher, decision ledger, deploy gate unmeasured), as at the opening; `commit-evidence
+9217e62 HEAD` 48 commits, 0 without evidence. One battery, run on `c2ab200`, serves checkpoint 23.3 and the final one.
+
+### What was not verified, and why
+
+- **That the law was read**, by any check: the twenty attestations are declarations (`docs/ATTESTATION-FORM.md` §6). What
+  the session read is in each note and in this report; no tool here fetched anything (F-12).
+- **The claims the twenty rules cite** were not re-read; every note says so.
+- **The AI Act's headings** were not re-compared (v2 Session 18 compared them); nor any heading of the 48 of Session 24.
+- **A-3 on the twenty closures**: they are dated `FORM_FROM` itself, so A-3 does not reach them; AT0 does (Q1, Q2).
+- **The proxy reported failed connections to `mtalk.google.com`** during browser runs: Chromium's own background traffic,
+  not a request of the site; the suite's own measure of the site's requests is unaffected (343 · 0 · 1).
+
+### New findings, not fixed (all of the session's, in one place)
+
+R-2 … R-8 of `docs/prompts/v2-session-24.md`, each carried to Session 24's exit audit on the author's decision: A-4 cannot
+see a rationale resting on an uncited Article (five rules); the Review Report's PDF page locators; `ap-dma-01` closed with
+F-18 open; the Data Act's seventh corrigendum; `ap-ai-act-01`'s `gpai-provider` condition (decided 29 Oct 2026, re-noted);
+the AI Act's Art. 2(13) delegated acts; GDPR Art. 2(2)(a) and (b) carried by no rule. And one this report adds: **28 rules
+now lapse on 3 Feb 2027** (named in Session 24's hand-over, 24.4).
+
+### Checklist
+
+| Item | What was written | How to check it by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 23.0 | §8 scope `3573b3d`; Q1 `8db4fad`; Q2 `25fbeae`; pins `f6985bf` | read the rows; `node --test tools/selftest.mjs` | AT0, F10, X1, Y2–Y6 | the pins asked first |
+| 23.1 | 4 closures `430b528`, `de797c7`, `bcaee43`, `38cbe58`; headings `9332d3d`; pins `9168bfc`; §8 `256549d`, `b6cd243`, `72be4f6`, `446b3ac`, `6b7c5d9`; report `fb6e6e3`; approved `9c1dc03` | `node tools/attestation-audit.mjs packet <id>` against each `attestation.read`; the OJ headings of GDPR Arts 58, 60 | A-1…A-8 in `validate.mjs`; AT0 | 4 rules closed in the form; 18 headings |
+| 23.2 | 7 closures `7506a0d`, `94c50a4`, `9818155`, `4003a6e`, `e77d274`, `04db4a6`, `8c120f6`; §8 `44af9e1`, `7776fdc`, `95edfc9`, `9ae3376`, `df0ffb2`; report `3119fe0`; approved `0b67c86` | as above; the DSA's and DMA's headings | A-1…A-8; AT0; the agent suites reading `data/` | 7 rules; 25 headings |
+| 23.3 | 9 closures `d621f5a`, `e4c9c2b`, `a151b0c`, `77e9c8c`, `3c05332`, `643d0a6`, `837426d`, `186dd98`, `ecdb88e`; §8 `974d4ef`, `1cca561`, `8729b64`, `2f0f20e`, `10a0fdc`, `419f7a0`, `60e9a37`; Y6 in the closures' commits; report in this entry | as above; the Omnibus's Art. 1 against each `-ai-act-` note; the Data Act's headings | A-1…A-8; AT0; Y6 | 9 rules; 7 headings |
+| 23.4 | `docs/prompts/v2-session-24.md` `c2ab200` | read it against `docs/PHASE-4-PLAN.md` §3 and this report | — | the standing rule: the prompt exists and is approved with the work |
+
+**All twenty rules of the session are closed in the form** — fourteen changed, six unchanged — and all **50 headings** are
+compared (2 corrected). Nothing fell under the stop rule.
+
+## v2 Session 23 — checkpoint 23.3 (AI Act and Data Act: nine rules closed in the form, 7 headings)
+
+Checkpoint 23.2 approved (§8 `0b67c86`). Every closure dated 4 Nov 2026, the day of its reading (23.0 Q1). **Nothing fell
+under the stop rule**: all of 23.3 was read, so the prompt of Session 24 carries no rule of this session.
+
+Texts read on 4 Nov 2026, fetched from Cellar by CELEX with `Accept-Language: eng`: Regulation (EU) 2024/1689 (32024R1689,
+OJ L 12.7.2024), Regulation (EU) 2026/1744, the AI Omnibus (32026R1744, OJ L 24.7.2026; in force 27 July 2026 under its
+Art. 4), Regulation (EU) 2023/2854 (32023R2854, OJ L 22.12.2023) and its corrigendum 32023R2854R(01) (9.12.2024, the only
+one in English: a renumbered point of Art. 48). Tier 2: the Commission's news item "AI Omnibus enters into force". SPARQL,
+HTTP 200: **AI Act** amended by 32026R1744 alone, four corrigenda none in English; **AI Omnibus** one corrigendum
+(32026R1744R(01), 29.9.2026), not in English; **Data Act** no amending act, **seven** corrigenda (the 29 Oct notes said
+six: R(07) is dated 30.10.2026), only R(01) in English. **The AI Omnibus was queried for every rule that cites it**
+(`-01`, `-04`, `-05`, `-07`), as the paper test of Session 22 showed A-5 requires.
+
+### Per rule
+
+| Rule | Read | Queried | Found, and decided (§8) | Attestation | Commit |
+|---|---|---|---|---|---|
+| `ap-ai-act-01` | AI Act Arts 2, 3 (1), (3), (4), (63), (66), 4, 5, 113; Omnibus Art. 1 points (5), (7), (40), Art. 4 | ai-act, ai-omnibus | "The Article 5 prohibitions … have applied since 2 February 2025" was no longer true of the two the Omnibus added (from 2 Dec 2026), and Art. 4 was recast from 27 July 2026; **both stated** (`974d4ef`) | `changed` | `d621f5a` |
+| `ap-ai-act-03` | AI Act Arts 2, 3 (3), (63)–(65), 51, 52, 55, 111, 113 | ai-act | nothing; the Omnibus amends none of Arts 51, 52, 55 nor Art. 111(3) | `unchanged`, no decision | `e4c9c2b` |
+| `ap-ai-act-04` | AI Act Arts 2, 3 (1), (3), (4), 6, 9, 10, 11, 12, 14, 15, 27, 43, 49, 113, Annex III; Omnibus Art. 1 points (3), (8)–(11), (13), (40), Art. 4; the news item | ai-act, ai-omnibus | the eight duties named are Arts 9–15, 43, 49, only 9 cited; FRIA (Art. 27, an obligation) missing from the list; **a `rationale` reference, FRIA added** (`1cca561`) | `changed` | `a151b0c` |
+| `ap-ai-act-05` | AI Act Arts 2, 3 (3), (4), 25, 113; Omnibus Art. 1 points (4), (12), (40), Art. 4 | ai-act, ai-omnibus | limb (c) of Art. 25(1) concerns a system *not* high-risk that becomes one; **reworded** (`8729b64`) | `changed` | `77e9c8c` |
+| `ap-ai-act-07` | AI Act Arts 2, 3 (3), (4), 5, 53, 113; Omnibus Art. 1 points (7), (40), Art. 4 | ai-act, ai-omnibus | Art. 2(1)(a) and (c) name models and deployers, the rationale did not; **added** (`2f0f20e`) | `changed` | `3c05332` |
+| `ap-data-act-01` | Data Act Arts 1, 2 (8), (30), 23, 25, 29, 31, 50 | data-act | the obstacles sentence is Art. 23, uncited; **a `rationale` reference, Y6 exactly** (`10a0fdc`) | `changed` | `643d0a6` |
+| `ap-data-act-02` | Data Act Arts 1, 2 (8), (30), 25, 29, 31, 50 | data-act | nothing | `unchanged`, no decision | `837426d` |
+| `ap-data-act-03` | Data Act Arts 1, 2 (5), (6), 3, 4, 7, 50 | data-act | Art. 50 says "after 12 September 2026"; Art. 3(1) qualifies direct access "where relevant and technically feasible"; **both fixed** (`419f7a0`) | `changed` | `186dd98` |
+| `ap-data-act-04` | Data Act Arts 1, 2 (5), (6), (8), (12)–(14), (24)–(26), 3, 7, 25, 50 | data-act | the roles and the GDPR's priority rest on uncited Arts 1(2), 1(5), 2 (12)–(14); "wherever" is broader than Art. 1(5)'s "in the event of a conflict"; **a `rationale` reference, "in any conflict", Y6 exactly** (`60e9a37`) | `changed` | `ecdb88e` |
+
+Every attestation passes A-1…A-8 with **0 errors and 0 warnings**. The claims were not re-read, and each note says so.
+
+### The headings
+
+The Data Act's **7 of 7** match the Official Journal (Chapter IV's differs only in the Journal's capitals for chapter
+titles). The AI Act's were compared in v2 Session 18 and were not re-compared. Nothing changed.
+
+### Pins changed on the author's word
+
+Y6 `refs("ap-data-act-01")` and `refs("ap-data-act-04")`, each gaining exactly the new `rationale` entry, in the closure's own
+commit (§8 `10a0fdc`, `60e9a37`). No other pin; `selftest` 140/140 after every closure.
+
+### Where the form and the packet guided, and where they did not
+
+- **The packet does not list an amending act's other points.** It names the Articles the rule cites; that the Omnibus also
+  amends Arts 10, 11, 43 and 111 (relevant to `-03` and `-04`) was found by reading its whole Art. 1. A packet cannot know
+  which amendments matter; the reading did.
+- **A new reference raises A-4's demand.** For `ap-ai-act-04` the rationale reference cites seven more Articles, which then
+  had to be read in full before the attestation could name them; my first pass had read only their opening paragraphs.
+- **The pattern of 23.2 recurred**: three of nine rules (`ai-act-04`, `data-act-01`, `data-act-04`) rested statements on
+  uncited Articles. **Five** rules of the session now carry a `for: "rationale"` reference added today (`ap-dsa-01`, `-02`,
+  `ap-ai-act-04`, `ap-data-act-01`, `-04`). *Correction:* the third question of 23.4, as put to the author, said "Reading
+  found 7 such rules"; the count is five. The answer concerned where the findings go, not their number, and the prompt of
+  Session 24 (R-2) carries five.
+
+### New findings, not fixed
+
+1. **The Data Act has a seventh corrigendum** (R(07), 30 Oct 2026) the 29 Oct notes could not know; not in English, so
+   nothing was read from it. Recorded in each Data Act note.
+2. **`ap-ai-act-01`'s conditions still include `actor:gpai-provider`** while Arts 4 and 5 address providers of AI systems:
+   found on 29 Oct 2026 and decided "not changed", re-noted, not reopened (group (b), Phase 5).
+3. **The Omnibus's Art. 2(13) lets delegated acts limit Arts 9–15 and 17–25 for some Annex I systems by 2 August 2027.**
+   No such act exists; when one is adopted, `ap-ai-act-04` will need re-reading, and no T-12 prompt can fire for an act
+   nobody has recorded (`docs/RULE-MAINTENANCE.md` §2).
+
+### Counts (4 Nov 2026, `ecdb88e`, full clone, outputs in the scratchpad)
+
+`validate` 0 · 0; `i18n-audit` 0 · 0; `design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings today, 18 on
+2027-03-26), publishable 33 of 33, T-12 only `ap-cra-01`; `freshness` `RULE_STALE` **0 / 5 / 33** today / 2027-01-28 /
+2027-02-03 (was 0 / 25 / 33 at the opening); `seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0
+fail · 1 skipped**; browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 65 failed
+safely · 0 succeeded · 3 partial · 1 undecidable; schemas check, Control Room boundary and routes exit 0; readiness
+refuses, 17 of 20 (production dispatcher, decision ledger, deploy gate unmeasured), as at the opening; `commit-evidence
+9217e62 HEAD` 48 commits, 0 without evidence. One battery, run on `c2ab200` (23.3 closed at `ecdb88e`; only the prompt since), serves checkpoint 23.3 and the final one.
+
+**Commits.** §8 `974d4ef`, `1cca561`, `8729b64`, `2f0f20e`, `10a0fdc`, `419f7a0`, `60e9a37`; data `d621f5a`, `e4c9c2b`,
+`a151b0c`, `77e9c8c`, `3c05332`, `643d0a6`, `837426d`, `186dd98`, `ecdb88e`. **All twenty rules of the session closed**
+(4 + 7 + 9): fourteen changed, six unchanged.
+
+**Next, on approval: 23.4** — the prompt of v2 Session 24, its scope asked of the author, the final checkpoint.
+
+## v2 Session 23 — checkpoint 23.2 (DSA and DMA: seven rules closed in the form, 25 headings)
+
+Checkpoint 23.1 approved (§8 `9c1dc03`). Every closure dated 4 Nov 2026, the day of its reading (23.0 Q1).
+
+Texts read on 4 Nov 2026, fetched from Cellar by CELEX with `Accept-Language: eng`: Regulation (EU) 2022/2065 (32022R2065,
+OJ L 277, 27.10.2022), Regulation (EU) 2022/1925 (32022R1925, OJ L 265, 12.10.2022), its corrigendum 32022R1925R(02)
+(10.1.2025, the only one in English: Art. 13(8), "Paragraph 6" → "Paragraph 7"), and Commission Delegated Regulation (EU)
+2025/2050 (32025R2050, OJ L of 9.10.2025). Tier 2: the DMA Review Report COM(2026) 178 final (PDF, 28.4.2026) and
+IP/25/1085 (the press corner's documents API; the DMA site's page is a summary). SPARQL, HTTP 200: **DSA** no amending
+act, eleven corrigenda none in English; **DMA** no amending act, three corrigenda R(01) 2023-05-04, R(02) 2025-01-10,
+R(03) 2026-10-01, only R(02) in English; **2025/2050** nothing.
+
+### Per rule
+
+| Rule | Read | Queried | Found, and decided (§8) | Attestation | Commit |
+|---|---|---|---|---|---|
+| `ap-dsa-01` | DSA Arts 2, 3, 16, 17, 19, 20, 24(3), 25, 26, 27, 28, 30, 33 | dsa | every duty the rationale names is in the text, but Arts 17, 20, 26, 27 were uncited, and Art. 28 (minors), an obligation of the rule, was missing from its list; **a `rationale` reference added, "the protection of minors" added** (`44af9e1`) | `changed` | `7506a0d` |
+| `ap-dsa-02` | DSA Arts 2, 3, 30, 33, 34, 35, 37, 38, 39, 40, 43, 56, 92 | dsa | three statements rest on uncited Arts 37 (audit), 43 (fee), 56(2) (Commission supervision); **a `rationale` reference added**, text unchanged (`7776fdc`) | `changed` | `94c50a4` |
+| `ap-dsa-04` | DSA Arts 2, 3, 16, 29, 30 | dsa | nothing; the interface statement is Art. 30(7) | `unchanged`, no decision | `9818155` |
+| `ap-dsa-05` | DSA Arts 33, 40, 92; 2025/2050 Arts 1, 16 | dsa, dsa-da-2050 | Art. 40(4) has two purposes, the rationale named one; **the mitigation purpose added** (`95edfc9`); 2025/2050 in force 29 Oct 2025, as the date says | `changed` | `4003a6e` |
+| `ap-dma-01` | DMA Arts 1, 2, 3, 5, 6, 7, 13; Review Report p. 14; IP/25/1085 | dma | F-18 ("immediately" against Art. 3(10)'s six months) is assigned to an evidence session with the claim and `part-4.p2`; **closed unchanged, F-18 open, quoted in the note** (`9ae3376`) | `unchanged`, 1 decision | `e77d274` |
+| `ap-dma-02` | DMA Arts 1, 2, 3 | dma | the rationale left out Art. 3(2)(a)'s "same core platform service in at least three Member States"; **the limb added** (`df0ffb2`) | `changed` | `04db4a6` |
+| `ap-dma-03` | DMA Arts 1, 2, 3, 5, 6; Review Report pp. 8, 14 | dma | nothing | `unchanged`, no decision | `8c120f6` |
+
+Every attestation passes A-1…A-8 with **0 errors and 0 warnings**; each tier-2 text the rule cites is named in `read`, so
+A-8 has nothing to warn of. The claims were not re-read, and each note says so.
+
+### The headings
+
+DSA **16 of 16** and DMA **9 of 9** identical to the Official Journal. Nothing to put to the author, nothing changed.
+
+### Where the form and the packet guided, and where they did not
+
+- **Two of the seven rules (`ap-dsa-01`, `-02`) state duties of Articles they did not cite.** A-4 compares what is *cited*
+  with what is *read*, so it could not see this: the reading did. The remedy the author chose, a `for: "rationale"`
+  reference, was tested on a copy against `validate.mjs` and the trigger audit before it was proposed, and the agent suites
+  that read `data/` were run before the first such commit (integrate, detector, depth, proposals/data, architect,
+  editorial, health, improve: all green).
+- **The packet's page locators for the Review Report are PDF pages** (page 8 is printed "7", page 14 is printed "13"); the
+  quotations are where the records say. Recorded as the records had them; not changed.
+- **A closure can carry an open finding.** `ap-dma-01` is attested `unchanged` with F-18 named in its note and in its §8
+  decision; the form has no field for an open finding, and A-6 only matches the decision's title.
+
+### New findings, not fixed
+
+1. **A-4 cannot see a rationale that relies on an uncited Article** (`ap-dsa-01`, `-02` above). Each such case was found
+   only by reading the Articles against the rationale. Whether a check could help is a question for the exit audit; a
+   check would have to read prose.
+2. **The page numbers of `src-ec-dma-review-2026`'s locators are the PDF's, not the printed ones** (above).
+3. **`ap-dma-01` is closed with F-18 open** (above): until the evidence session, its `last_verified` of 4 Nov 2026 says
+   the rule was read, not that it is right in every word.
+
+### Counts (4 Nov 2026, `8c120f6`, full clone, outputs in the scratchpad)
+
+`validate` 0 · 0; `i18n-audit` 0 · 0; `design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings today, 18 on
+2027-03-26), publishable 33 of 33, T-12 only `ap-cra-01`; `freshness` `RULE_STALE` **0 / 14 / 33** today / 2027-01-28 /
+2027-02-03 (was 0 / 21 / 33 at 23.1); `seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0 fail · 1
+skipped**; browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 65 failed safely · 0
+succeeded · 3 partial · 1 undecidable; schemas check, Control Room boundary and routes exit 0; readiness refuses, 17 of 20,
+as at the opening; `commit-evidence 9217e62 HEAD` 29 commits, 0 without evidence.
+
+**Commits.** §8 `44af9e1`, `7776fdc`, `95edfc9`, `9ae3376`, `df0ffb2`; data `7506a0d`, `94c50a4`, `9818155`, `4003a6e`,
+`e77d274`, `04db4a6`, `8c120f6`. **Eleven of the twenty rules closed** (4 + 7).
+
+**Next, on approval: 23.3** — `ap-ai-act-01`, `-03`, `-04`, `-05`, `-07` (with the AI Omnibus queried for `-01`, `-04`,
+`-05`, `-07`), `ap-data-act-01` … `-04`; the Data Act's 7 headings.
+
+## v2 Session 23 — checkpoint 23.1 (GDPR and cross-cutting: four rules closed in the form, 18 headings)
+
+**Opening.** `main` did not yet contain Session 22 at the first fetch; it did at the second (#62, `9217e62`), and every
+precondition of the prompt then held. The clone was shallow; `git fetch --unshallow` before any suite. Unmerged branches:
+only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register. Scope row in §8 first (`3573b3d`), with the author's
+words ("Start Session 23"). **The reconnaissance re-measured every row of the prompt's table and found it exact**: 33 rules,
+25 dated 2026-10-29 and 8 dated 2026-11-04, none attested; `RULE_STALE` 0 / 25 / 33 on 2027-01-27 / 01-28 / 02-03; T-12
+only `ap-cra-01` on 2027-03-26; headings gdpr 18, dsa 16, dma 9, data-act 7; `selftest` 140/140; 25 suites 1349 · 0 · 1
+skipped. Cellar and the SPARQL endpoint both answered HTTP 200 from this environment.
+
+**23.0 · two questions, both decided** (§8). Q1 (`8db4fad`): the session began on 4 Nov 2026, 16:21 UTC — the day of
+`FORM_FROM` itself, where A-3 does not fire — against the prompt's premise that closures fall after it; the author chose
+"close on the day of the reading, and always write the form", `FORM_FROM` unmoved. Q2 (`25fbeae`, code `f6985bf`): the
+pins — `READ_V2_23` (rule → date), `dateOf()`, `NEWEST_READ`; Y2–Y6 and X1's September warnings follow `dateOf()`; F10
+counts 33 − 8 − the closures; X1 audits as of the newest date; AT0 holds that exactly the closures carry the form with 0
+errors and 0 warnings, which covers A-3's gap for closures dated 2026-11-04. Planted: an entry with no closure fails F10,
+X1, Y3 and AT0.
+
+### Per rule: what was read, what was queried, what was decided, the attestation
+
+Texts read on 4 Nov 2026, each fetched from Cellar by CELEX with `Accept-Language: eng`: Regulation (EU) 2016/679
+(32016R0679, OJ L 119, 4.5.2016; all 99 Articles extracted, the cited ones read in full), its corrigendum 32016R0679R(02)
+(the only one with an English expression), Regulation (EU) 2022/2065 (32022R2065, OJ L 277, 27.10.2022); and the EDPB
+Guidelines 3/2025, version 2.0 adopted 17 Sep 2026 (PDF from the EDPB's site). SPARQL (the queries of
+`docs/RULE-MAINTENANCE.md` step 2), HTTP 200: **GDPR** no amending or repealing act, three corrigenda — R(01) 2016-11-22,
+R(02) 2018-05-23, R(03) 2021-03-04 — only R(02) in English; R(02) corrects recital 71 and Arts 37(1)(c), 41, 42, 43, 57,
+64, 65, 69, 70. **DSA** no amending act, eleven corrigenda R(01)…R(11) (the last 2026-10-23), none in English — as v2
+Session 21 found.
+
+| Rule | Read (tier 1, then tier 2) | Queried | Found, and decided (§8) | Attestation | Commit |
+|---|---|---|---|---|---|
+| `ap-gdpr-01` | GDPR Arts 2, 3, 4 points (1), (2), (7), (8), 5, 6, 30, 33, 35 | gdpr | "Any processing … by a controller or processor established in the Union" left out Art. 2(1)'s limit and was narrower than Art. 3(1); **reworded to the Articles** (`256549d`) | `changed`, 1 decision | `430b528` |
+| `ap-gdpr-02` | GDPR Arts 2, 3, 4 (all of it), 5, 6 | gdpr | Art. 3(2) reaches "a controller or processor", the rationale named only the controller; **"or processor" added** (`b6cd243`) | `changed`, 1 decision | `de797c7` |
+| `ap-gdpr-03` | GDPR Arts 2, 4, 6, 35, 37, recital 19 | gdpr | nothing to change; R(02)'s change to Art. 37(1)(c) does not reach Art. 37(1)(a) | `unchanged`, no decision | `bcaee43` |
+| `ap-cross-01` | GDPR Arts 2, 4, 5, 6, 25; DSA Arts 27, 39; EDPB Guidelines v2.0 ¶¶ 7–11, 79–81, 88–89, 93–95 | gdpr, dsa | DSA Art. 39(1), cited for the repository, itself keeps recipients' personal data out of it; the guidelines never mention Art. 39, a repository or a conflict; **rationale kept, Art. 39(1) quoted in the note** (`72be4f6`) | `unchanged`, 1 decision | `38cbe58` |
+
+Every attestation passes A-1…A-8 with **0 errors and 0 warnings** (`tools/validate.mjs`; AT0). Each note names the
+CELEX of every tier-1 text read (A-7). The claims (`clm-one-stop-shop`, `clm-dsa-gdpr-unresolved`) were not re-read, and
+each note says so.
+
+### The headings: the GDPR's 18 against the Official Journal
+
+16 identical. 2 differed and **now carry the exact Official Journal headings** on the author's word (§8 `446b3ac`, data
+`9332d3d`): `gdpr:art-58` "Powers of supervisory authorities" → "Powers"; `gdpr:art-60` "Cooperation between the lead
+authority and other concerned authorities" → "Cooperation between the lead supervisory authority and the other supervisory
+authorities concerned". R(02) touches neither. No translation or pin held them.
+
+### A pin the first closure broke, changed on the author's word
+
+`ap-gdpr-01`'s closure, uncommitted, passed every check but failed 2 of 140 `selftest` tests that Q2 had not named: **Y1**
+runs `validate.mjs` in a scratch copy holding only `data/` and `index.html`, where A-6 cannot read `docs/ROADMAP-v2.md`;
+**AT1** pinned the attested list to its fixture alone. Put to the author (§8 `6b7c5d9`): `treeCopy()` also copies the
+roadmap; AT1 follows `READ_V2_23` as AT0 does. Committed on its own and shown green on the tree before the closure
+(`9168bfc`). Nothing relaxed.
+
+### Where the form and the packet guided, and where they did not
+
+- **The packet listed exactly what A-4 and A-5 then required**, and named the EDPB guidelines as a tier-2 text; A-8 would
+  have warned had `read` left them out.
+- **The packet is Article-level, so it cannot tell a partial reading from a whole one.** I printed Art. 4 only to point
+  (22) at first; `ap-gdpr-02` cites Art. 4 through `condition_provisions`, so the rest was read before "Art. 4" was
+  written in its `read`. Nothing in the form would have caught the omission (`docs/ATTESTATION-FORM.md` §6).
+- **The decision titles are long and carry backticks**; A-6 matched them exactly on the first try because each was copied
+  from the committed row.
+- **The previous notes' reading of recital 18 (`ap-gdpr-01`) and of DSA Arts 3 and 33 (`ap-cross-01`) was not repeated**,
+  because neither is cited; the new notes do not claim them.
+
+### New findings, not fixed
+
+1. **`ap-gdpr-01` lists only Art. 2(2)(c) among the GDPR's exclusions**; Art. 2(2)(a) (outside Union law) and (b) (CFSP)
+   are carried by no rule, and (d) only by `ap-gdpr-03`. Reported, not put as a change: the author's decision was about the
+   rationale.
+2. **The 23.1 closures sit on `FORM_FROM`**, so A-3 alone would not have held them; AT0 does (Q1, Q2). A later closure of
+   the same rules will be after `FORM_FROM` and A-3 will apply.
+3. **The closures were written with a scratch script outside the repository** (a textual edit of one rule's block, then a
+   parse proving that only `rationale`, `last_verified`, `verification_note` and `attestation` changed). No tool was added,
+   as the prompt requires; the proof is per closure and is not kept.
+
+### Counts (4 Nov 2026, `38cbe58`, full clone, outputs in the scratchpad)
+
+`validate` 0 · 0; `i18n-audit` 0 · 0; `design-qa` 0 · 0; `evidence-audit` 0 errors (11 warnings today, 18 on 2027-03-26),
+publishable 33 of 33, T-12 only `ap-cra-01`; `freshness` `RULE_STALE` **0 / 21 / 33** today / 2027-01-28 / 2027-02-03 (was
+0 / 25 / 33); `seo-audit` 0 · 0; `og-image --check` current. **25 suites 1349 pass · 0 fail · 1 skipped** (`selftest` 140,
+unchanged in number); browser `--require-browser` 343 · 0 · 1 undecidable, byte-identical tree; adversarial gate 69
+attacks, 65 failed safely · 0 succeeded · 3 partial · 1 undecidable; schemas check, Control Room boundary and routes exit 0;
+readiness refuses, **17 of 20** (production dispatcher, decision ledger, deploy gate unmeasured) — as at the opening;
+`commit-evidence 9217e62 HEAD` 15 commits, 0 without evidence.
+
+**Commits.** §8 `3573b3d`, `8db4fad`, `25fbeae`, `256549d`, `b6cd243`, `72be4f6`, `446b3ac`, `6b7c5d9`; tools `f6985bf`,
+`9168bfc`; data `9332d3d`, `430b528`, `de797c7`, `bcaee43`, `38cbe58`.
+
+**Next, on approval: 23.2** — `ap-dsa-01`, `-02`, `-04`, `-05`, `ap-dma-01`, `-02`, `-03`; the DSA's 16 headings and the
+DMA's 9.
+
+
+## Branch register — 4 November 2026 (v2 Session 22)
+
+- Branch `claude/session-22-o5cl9k` (assigned by the environment), cut from `main` at `244072f` (#61, the plan). Nothing
+  merged in; `origin/main` re-fetched before this entry: still `244072f`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the register (left open by the
+  author's decision).
+- The clone was shallow at the start; `git fetch --unshallow` was run before any suite.
+- Disposition: final checkpoint approved (4 Nov 2026, §8 `2429442`); pushed, and a pull request to `main` opened on the
+  author's instruction ("Push and open the PR (Recommended)"). Nothing is pushed to the branch after the pull request is
+  opened.
+
+## v2 Session 22 — final checkpoint (22.3 the X-1 table, 22.4 the optional items, 22.5 the prompt of Session 23)
+
+Checkpoint 22.2 approved (§8 `acb5e6e`).
+
+### 22.3 · The X-1 table
+
+`docs/PHASE-4-PLAN.md` §1a (`d747037`), thirteen rows, approved in one question (§8 `56a4eae`, "Approve all 13 rows
+(Recommended)"); each named check measured to exist. **X-1 is met.** P-10 and P-07 were then amended by their own §8 rows
+when 22.4 built their checks (`da2d241`, `ababee3`): machine check — P-01, P-03, P-04 (running it stays manual), P-05, P-06,
+P-07, P-10 (titles), P-12, P-13; structured attestation — P-02, P-08, P-09 (the asking only), P-11.
+
+### 22.4 · The optional items — all three built
+
+| Item | §8 | Code | Tests | What it cannot do |
+|---|---|---|---|---|
+| (a) reading packet: `node tools/attestation-audit.mjs packet <rule-id>` | `01705da` | `14c41b3` | AT12 (for all 33 rules the packet is exactly what A-4 and A-5 demand: drop any listed Article and A-4 fires), AT13 (writes nothing, no skeleton, no network) | read anything; it lists what the record cites |
+| (b) §8 title check, `roadmapAudit()`, run by `validate.mjs` | `d9f5530` | `bc761a0` | AT14 (an untitled row, a title twice, a vanished frozen row; end to end through `validate.mjs`). The §8 row said "two planted tests": it is one test with four planted cases and an end-to-end run | check that the author said what a row says; three old untitled rows are frozen (`SECTION8_UNTITLED`, only shrinks) |
+| (c) notice check, `tools/notice-audit.mjs` N-0…N-4, run by `validate.mjs` | `4d85a6b`, Y1 `076f6cd` | `bf34bc8` | AT15 (each clause's falsehood planted; the text pin; unreadable inputs warned) | the wording (D-2), the fifth sentence, the translations |
+
+**A pin changed, on the author's word** (§8 `076f6cd`): `tools/selftest.mjs` Y1's fixture carried `locator: null` and
+expected `validate.mjs` to pass; N-1 refuses it. The fixture got a locator and one assertion was added (a null locator
+fails N-1). Nothing relaxed. N-1 closes a real gap: the notice's "for every source … where in it" was enforced nowhere.
+
+### 22.5 · The prompt of v2 Session 23
+
+`docs/prompts/v2-session-23.md` (`d010375`, `aeb19be`), on this branch, in this pull request, under the standing rule of §8
+(4 Nov 2026). The author's answers, in its provenance: "Three batches (Recommended)"; "Headings first, then batch 3
+(Recommended)"; "One growing list, asked at S23's start (Recommended)"; "(2) in S23's prompt, (1) to S24 (Recommended)";
+the draft shown, "Draft is right (Recommended)". Scope: 20 rules in three batches (4 + 7 + 9) with the 50 headings (gdpr 18,
+dsa 16, dma 9, data-act 7); the pins as its first question; the AI Omnibus queried for `ap-ai-act-01`, `-04`, `-05`, `-07`
+(A-5). It records no §8 row of its own and opens nothing.
+
+### Counts at the end (full clone, outputs in the scratchpad)
+
+Every validator's output byte-identical to the opening's (`validate` 0 errors 0 warnings, `i18n-audit`, `design-qa`,
+`evidence-audit` today and 2027-03-26, `freshness` today, 2027-01-27, 2027-01-28, 2027-02-03, `seo-audit`, `og-image
+--check`, `_footer --check`). `tools/selftest.mjs` 124 → **140**. 25 suites 1330 → **1349 pass**, 0 fail, 1 skipped
+(tools +16, detector +2, integrate +1). Browser 343 · 0 · 1 undecidable, tree unchanged during the run. Adversarial gate
+65 · 0 · 3 · 1. Schemas check, Control Room boundary and routes exit 0. Readiness refuses, 17 of 20, as at the opening
+(X-3: nothing Phase 4 leaves was touched). `node tools/commit-evidence.mjs 244072f HEAD`: no commit changes a published file.
+
+**A side effect, stated:** `validate.mjs` run on a copy of `data/` alone (as several selftest cases do) now prints four WARNINGs — `ROADMAP_NOT_READ` and three `NOTICE_NOT_READ` — because the roadmap, `applies.html` and two modules are absent there. On the repository it prints none.
+
+### What was not verified, and why
+
+- **That the law was read** — not this session's work, and no tool here can (F-12). No rule was read or closed.
+- **The form on a real closure** — X-2's last clause is Session 23's; the form was tested on paper and on fixtures only.
+- **The checks in CI** — they run inside `validate.mjs`, which `qa.yml` and `pages.yml` run; not observed in a CI run from
+  this session.
+
+### New findings, not fixed
+
+1. `agent/integrate/preserve.mjs` checks no applicability rule (`canonicalOf()` returns `null`) — to Session 24's exit audit
+   (§8 Q11; S23 prompt).
+2. A-5 requires a cited amending act to be queried (the AI Omnibus): a working fact, carried in Session 23's prompt.
+3. `agent/detector/impact.mjs` `routeOf()` matches the last dotted segment of a field path, so a nested provenance field
+   (`sources.locator`, `attestation.of`) is not routed `human_only` by name — pre-existing; stated in §8 Q11 and held by a test.
+4. The autonomy grant expires on 9 Mar 2027 (flagged, not renewed).
+
+### Checklist
+
+| Item | Written | Verify by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **22.0** | §8 scope `40b3013`; the reconnaissance and locator measure in the 22.1 report | `grep -n "The scope of v2 Session 22" docs/ROADMAP-v2.md` | — | scope recorded before any other write |
+| **22.1** | `docs/ATTESTATION-FORM.md` `b5fcf19`; §8 Q1–Q8 `2b0a6b5`…`824f748`; checkpoint `394d60c` | read the document; §5's paper test | (the design; held by 22.2's tests) | X-2, the design half |
+| **22.2** | `tools/attestation-audit.mjs` `2038250`; detector `2bb00b8`; integrate `118f79b`; docs `1a84857`, `8302bd0`; §8 Q9–Q12; checkpoint `acb5e6e` | `node tools/validate.mjs`; plant a bare date bump on a copy | `tools/selftest.mjs` AT0–AT11; `agent/detector/selftest.mjs` (2); `agent/integrate/selftest.mjs` (1) | X-2: the form with its offline checks |
+| **22.3** | `docs/PHASE-4-PLAN.md` §1a `d747037`; §8 `56a4eae` | read §1a: thirteen rows | — | **X-1 met** |
+| **22.4** | (a) `14c41b3`; (b) `bc761a0`; (c) `bf34bc8`; §8 rows; Y1 | `node tools/attestation-audit.mjs packet ap-cra-01` | AT12–AT15; Y1 | P-07 and P-10 now machine checks |
+| **22.5** | `docs/prompts/v2-session-23.md` `d010375`, `aeb19be` | read it | — | the standing rule: the next prompt exists |
+
+## v2 Session 22 — checkpoint 22.2 (the implementation of the attestation form)
+
+Checkpoint 22.1 approved (§8 `394d60c`). Class C; every change after its §8 row.
+
+**The consumers, found before anything changed** (4 Nov 2026: the 62 modules that read `data/applicability.json`, and
+every reader of `verification_note`). Two needed a change, and two docs: `agent/detector/fields.mjs` (its suite fails on
+any unregistered field of a real record, so Session 23's first closure would have broken it); `agent/integrate/canonical.mjs`
+`PROVENANCE_FIELDS`; `docs/v2-design/applicability-rule.schema.json`; `docs/DATA-GOVERNANCE.md` §5. Read and left unchanged,
+none reading the new key: `js/applies.js` (Q6), `tools/freshness.mjs`, `tools/seo.mjs`, `tools/trigger-audit.mjs`,
+`tools/evidence-audit.mjs` `DERIVED_FIELDS`, `tools/_refsweep.mjs` (claims only, a one-shot), `agent/policy/governance.mjs`
+(no grant can name `data/applicability.json`). §8 Q10 (`e57de10`).
+
+**A premise I stated wrongly, corrected before it was built on** (§8 Q11, `81b669a`). Q10 (b) said listing `attestation`
+in `PROVENANCE_FIELDS` would make `agent/integrate/preserve.mjs` refuse its removal. Measured while implementing: `canonicalOf()`
+resolves no applicability rule, so `preserve.mjs` checks no rule at all; and `agent/detector/impact.mjs` `routeOf()` matches
+only the last dotted segment. The author chose "add it, state its limit". **New finding, not fixed: `preserve.mjs` checks no
+applicability rule** — held as measured by a test in `agent/integrate/selftest.mjs` that fails if that changes.
+
+**The checks** (§8 Q9, `1d5d489`): `tools/attestation-audit.mjs`, pure, no network, no clock, no write; `tools/validate.mjs`
+reports it. Each with the planted case that fails it, in `tools/selftest.mjs`:
+
+| Check | Planted case (test) | Severity |
+|---|---|---|
+| A-1 shape | `reads` for `read`; `outcome: "re-read"`; `read: []`; `src-nowhere`; a text queried not read; a string (AT2) | ERROR |
+| A-2 seal | `last_verified` 2027-03-26, attestation of 2026-11-04 left in place (AT3) | ERROR |
+| A-3 gap | the bare date bump of `docs/RULE-MAINTENANCE.md` §9; boundary: 2026-11-04 passes, 2026-11-05 fails (AT4); and end to end, `validate.mjs` exits 1 on a copy of `data/` and 0 once attested (AT11) | ERROR |
+| A-4 completeness | Art. 71 dropped (sources), Art. 69 (exemption), Art. 14 (provision); Article level holds Art. 13(4) by Art. 13(1); Art. 71 read in the wrong text (AT5) | ERROR |
+| A-5 queried | `queried: []`; the paper test's `ap-ai-act-06` (AT6) | ERROR |
+| A-6 §8 | an unmatched title; "changed" with none; a title twice; no roadmap; "unchanged" with none passes (AT7) | ERROR |
+| A-7 CELEX in note | a note naming neither CELEX; the CELEX from a CELEX URL, an ELI, a corrigendum, none (AT8) | ERROR |
+| A-8 not checkable | `ap-eidas2-01` attested over all it cites: 0 ERROR, exactly 5 WARNING; a tier-2 source unnamed (AT9) | WARNING |
+
+AT0: the real tree is silent and `validate.mjs` passes; `FORM_FROM` is pinned to 2026-11-04 and no rule carries the form
+(no backfill). AT1: `ap-cra-01`'s closure written in the form passes (a fixture; no record carries it). AT10: the parser.
+**Each check was also broken on purpose** (A-2, A-3, A-5, A-6, A-7, one at a time, in place, restored): each turned its own
+test red.
+
+**The real parser re-measured 22.1's figures exactly**: 113 tier-1 locators, 216 segments, 214 resolved, 32 of 33 rules;
+136 provision references, 133 placed, 3 not (`eidas2:art-2`, `-3`, `-5a`).
+
+**Pins.** No existing `tools/selftest.mjs` pin changed: 124 → 136 tests, 12 added. Detector 2 tests added, integrate 1.
+
+**Commits.** §8 rows Q9 `1d5d489`, Q10 `e57de10`, Q11 `81b669a`, Q12 `5b9df59`; code `2038250` (tools), `2bb00b8`
+(detector), `118f79b` (integrate); docs `1a84857` (schema, DATA-GOVERNANCE), `8302bd0` (`docs/RULE-MAINTENANCE.md`, Q12
+A–F). No published file changed (`node tools/commit-evidence.mjs 244072f HEAD`: every commit "changes no published file"), so
+no `_footer.mjs` run and no `Evidence:` trailer was needed.
+
+**Counts after the change** (full clone, saved in the scratchpad): every validator's output byte-identical to the
+opening's (`validate`, `i18n-audit`, `design-qa`, `evidence-audit` today and 2027-03-26, `freshness` today, 2027-01-28,
+2027-02-03, `seo-audit`); 25 suites **1345 pass**, 0 fail, 1 skipped (1330 + 15); browser 343 · 0 · 1 undecidable;
+adversarial gate 65 · 0 · 3 · 1; schemas check, Control Room boundary and routes exit 0; readiness refuses, 17 of 20, as at
+the opening.
+
+**What the implementation does not do:** read anything (F-12); touch `data/`, a page, `js/` or an i18n string; backfill a
+note; change `agent/policy/`; make `preserve.mjs` check rules.
+
+## v2 Session 22 — checkpoint 22.1 (the design of the attestation form)
+
+**Opening.** `main` held Session 21, the plan and this session's prompt (`docs/PHASE-4-PLAN.md` §1, §3, §5; the §8 row
+approving the plan; `docs/RULE-MAINTENANCE.md`'s three premises and three corrections; `READ_2026_11_04` with eight rules in
+`tools/selftest.mjs`; `docs/prompts/v2-session-22.md`). The clone was shallow (`true`); `git fetch --unshallow` was run
+before any suite. `git branch -r --no-merged origin/main`: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, in the
+register. Scope recorded in §8 as the first write (`40b3013`, "Start session 22").
+
+**The reconnaissance re-measured the prompt's table; every row holds** (4 Nov 2026, `244072f`, full clone): 33 rules,
+`last_verified` 2026-10-29 × 25 and 2026-11-04 × 8; `freshness --as-of 2027-01-27` 0 `RULE_STALE`, `2027-01-28` 25,
+`2027-02-03` 33; `evidence-audit --as-of 2027-03-26` T-12 on `ap-cra-01` only; `selftest` 124/124; the 25 suites 1330
+pass, 0 fail, 1 skipped (in `.control-room/selftest.mjs`); browser 343 pass, 0 fail, 1 undecidable; validators 0 errors;
+`seo-audit`, `og-image --check`, `_footer --check` clean; adversarial gate 65 failed safely · 0 succeeded · 3 partial · 1
+undecidable; readiness refuses, 17 of 20 mandatory (`production_dispatcher_wired`, `decision_ledger_present`, and
+`deploy_gate_exists` unmeasurable from the tree). Outputs kept in the session's scratchpad, not committed.
+
+**The locator measurement, before any check was promised** (plan §5, second risk; put in question 1): 113 locators on tier-1
+texts, 216 segments, **214 resolve** to an Article, Annex or Recital; the 2 that do not are `ap-eidas2-01`'s "Citation
+(…)" segments; 10 locators on tier-2 sources name sections, not Articles; **32 of 33 rules** resolve fully. Provisions:
+136 references, 124 direct, 9 by leading number or with two tier-1 texts, 3 (`eidas2:art-2`, `-3`, `-5a`) Articles of
+Regulation (EU) No 910/2014 that a check can only name. Detail: `docs/ATTESTATION-FORM.md` §4.
+
+**The author's eight answers** (§8, each committed at once): Q1 fields `read` + `queried` + `outcome` (`2b0a6b5`); Q2
+the seal `of`, checked equal to `last_verified` (`08b07f7`); Q3 changed/unchanged + §8 titles (`596ce47`); Q4 required
+after 2026-11-04, ERROR (`a86ccb0`); Q5 completeness at Article level and `queried`, ERROR, unresolvable named as WARNING
+(`cad9054`); Q6 not shown on `applies.html` (`c705afa`); Q7 — a premise no question named: the note keeps the reader's
+account, the doubling declared in `docs/DATA-GOVERNANCE.md`, a CELEX check (`faf7e5c`); Q8 the document's text approved as
+committed (`824f748`).
+
+**The document.** `docs/ATTESTATION-FORM.md` (`b5fcf19`), new — before: nothing. §1 the shape; §2 the couplings; §3
+checks A-1…A-8 with the case that fails each; §4 the measurements; §5 the paper test; §6 what it cannot see; §7 how a
+closure uses it; §8 what it does not establish.
+
+**The paper test** (§5 of the document; a scratch prototype outside the repository, nothing in `data/` changed): the eight
+closures of 4 Nov 2026 written as attestations from their own notes and §8 rows. **Seven pass; `ap-ai-act-06` fails
+A-5**: it cites `src-eurlex-ai-omnibus` in `sources[]`, and on 4 Nov 2026 only the AI Act was queried (§8 F-14 row).
+Not reopened: Q5 decided it, and Q8 confirmed A-5 for amending acts. Six planted defects are each caught (bare date bump →
+A-3; stale seal → A-2; Art. 32(6) dropped → A-4; a title not in §8 → A-6; a note without its CELEX → A-7, twice;
+`ap-eidas2-01` → 0 ERROR, 5 WARNING under A-8).
+
+**What the form does not see** (document §6): that the law was read (F-12) — the form is a declaration; what SPARQL
+returned; whether the note's Articles match the form's; what a §8 row says; whether "unchanged" is true; paragraphs and
+points; tier-2 content; `ap-eidas2-01`'s five unresolvable citations.
+
+**Not done in 22.1, by design:** no field, check, command or `data/` change; no rule read or closed; no backfill.
+
+**Next:** checkpoint 22.1 is put to the author; 22.2 (the implementation) begins only after its approval is in §8.
+
+## Branch register — 4 November 2026 (the Phase 4 plan)
+
+- Branch `claude/v2-phase-4-plan`, cut from `main` at `959e08d` (#60 merged). It carries `docs/PHASE-4-PLAN.md`, the revised
+  `docs/prompts/v2-session-22.md` (the version of #60 is in git history, `0b0f0ae`), one pointer row in `AGENTS.md`, this
+  entry, and — once the author approves — one §8 row. Docs only; no `data/`, `tools/` or generated file changes.
+- Requested on 4 Nov 2026 ("I want you to conceive the sessions needed to conclude phase 4 efficiently and effectively");
+  four answers: "Attestation first (Recommended)"; "In data/ (Recommended)"; "Reading packet, §8 well-formed check (P-10),
+  Notice check (P-07)"; "Follow-up PR after #60 (Recommended)". "Go ahead" after #60 merged.
+- **Two numbers in the proposal as first put to the author were wrong and are corrected in the plan:** S23 reads **20**
+  rules (4 + 4 + 3 + 5 + 4), not 17, and checks **50** headings, not 41. The 25 rules (20 + 5) and the 98 headings
+  (50 + 23 + 25) add up.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z` (in the register below).
+- Approved on 4 Nov 2026 ("Approve (Recommended)"; §8 row "The plan to conclude Phase 4"). Disposition: pushed, and a pull
+  request to `main` opened on the author's instruction (see below). Nothing is pushed after it is opened.
+
+## Branch register — 4 November 2026 (v2 Session 21)
+
+- Branch `claude/v2-session-21-rules`, cut from `main` at `a0082ea` (#59, the prompt, merged). Nothing merged in.
+- Unmerged branches at the start (`git branch -r --no-merged origin/main`): only
+  `origin/scout/digest-digest-2026-11-02T16-04-07Z`, already in the register (left open by the author's decision).
+- The clone was shallow at the start (`--is-shallow-repository` → `true`); `git fetch --unshallow` was run before any
+  suite.
+- Disposition: final checkpoint approved (4 Nov 2026, §8 `d2a338a`); pushed, and a pull request to `main` opened on the
+  author's instruction ("Push and open the PR (Recommended)"). Nothing is pushed to the branch after the pull request is
+  opened.
+
+## v2 Session 21 — final checkpoint (21.3 the leftovers, 21.4 the prompt of Session 22)
+
+Checkpoint 21.2 approved (§8 `6368f81`). `origin/main` re-fetched before this entry: still `a0082ea`.
+
+### 21.3 · The leftovers of Sessions 18–20: decisions and commits
+
+| Residue | Re-measured 4 Nov 2026 | Answer | §8 | Change |
+|---|---|---|---|---|
+| The Phase 4 lines | V2-CLOSURE N1 "Phase 4 not started; D-4 open", B5 "… Phase 4 not started"; ROADMAP §4 "Phase 4 opens on the author's word once E-5 is measured."; no check reads them | "Note + reword (Recommended)" | `8c5079d` | `c9b8eef` (V2-CLOSURE notes), `7917a09` (§4) |
+| "EUDigitalPolicy" in this file | the Session 19 table and node; live value "Eu Digital Policy" (`tools/seo.mjs:60`, `index.html`), #56 | "Add the note (Recommended)" | `9a3e7cb` | `6316c33` |
+| S18 (1) · eIDAS2 title | the derived fallback; csa, digital-networks-act, ehds, iea the same words | "Wallets + trust services (Recommended)" | `6f62490` | `89d17f6` — "eIDAS2 — European Digital Identity Wallets, trust services and key dates \| EU Digital Policy" |
+| S18 (2) · headings outside the AI Act | 98 headings, 15 instruments | "Assign to Session 22 (Recommended)" | `a893512` | — (in Session 22's prompt) |
+| S18 (3) · `x-verification` | the seven procedural states equal `PRE_ADOPTION`; no code reads the file | "Close, no change (Recommended)" | `caff960` | — |
+
+**A commit whose message overstates it.** `c9b8eef` says it changes `docs/ROADMAP-v2.md` §4; its replacement failed (the
+sentence also occurs, quoted, in the §8 row `8c5079d`) and the commit holds only the V2-CLOSURE notes. Found at once,
+not rewritten (pushed): `7917a09` makes the §4 change and says so in its message.
+
+### 21.4 · The prompt of v2 Session 22
+
+`docs/prompts/v2-session-22.md` (`4144f55`, `888c938`, `6cd7bc6`, `0b0f0ae`), on this branch, in this pull request, under
+the standing rule of §8 (4 Nov 2026). The author's answers, in its provenance: "25 rules + headings (Recommended)"; "By
+instrument + stop rule (Recommended)"; "Final batch, first to drop (Recommended)"; the draft shown and confirmed ("Draft is
+right (Recommended)"). Scope: the 25 rules lapsing on 28 Jan 2027 and the 98 headings, in three batches by instrument with
+a checkpoint each; a stop rule (what remains goes, named, to Session 23 before 28 Jan 2027; the 25 rule-less headings
+first); the standing rule carried to Session 24. It records no §8 row of its own and opens nothing.
+
+### Not verified, and why
+
+- No claim was re-read (`clm-*` cited by the eight rules): outside group (a).
+- The Commission's gatekeepers page lists no cloud designation on 4 Nov 2026; a page's silence is not proof that no
+  decision exists. Recorded in those words.
+- The browser suite's one undecidable (accessibility) was not investigated; it is not new to this session's changes
+  (none touches markup but the eIDAS2 `<title>`).
+- `data/applicability.json`'s file-level `$last_verified` was not moved: the file was not re-read whole.
+
+### New findings, not corrected (all sessions' lists in one place)
+
+The six of the 21.2 report (NIS2's `status_note` and `instruments.html:105`; the brief's arguments in `ap-dma-04` and
+`ap-nis2-01`; no event for 2 Aug 2027; `tl-dma-2026-11-01-designation` still `scheduled`; two `accessed` dates; DSA
+definitions for `ap-cross-01`); the status re-reading that `validate.mjs:514` couples to a whole-record date; and four
+generic instrument titles (csa, digital-networks-act, ehds, iea). None is in Session 22's scope (its question 1).
+
+### Counts on the final tree (4 Nov 2026, `0b0f0ae`)
+
+`validate` 0 · `i18n-audit` 0/0 · `design-qa` 0/0 · `seo-audit` 0/0 · `og-image --check` current · `evidence-audit
+--as-of 2026-11-04` 0 errors, 11 warnings · `--as-of 2027-03-26` 0 errors, 18 warnings, T-12 on `ap-cra-01` only ·
+`freshness` 2027-01-28 25, 2027-02-03 33 · 25 suites 1330 pass, 0 fail · browser 343 pass, 0 fail, 1 undecidable ·
+gate, schemas, boundary, routes exit 0 · readiness exit 1, 17 of 20 mandatory, as `main` · `commit-evidence a0082ea
+HEAD` 45 commits, 0 without evidence. Outputs in the scratchpad (`runfinal/`).
+
+### The checklist (21.0–21.4)
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **21.0** | §8 scope row `d0742ba`; the reconnaissance in the 21.1 report | read §8's row "The scope of v2 Session 21" | — | met: scope recorded before any other write |
+| **21.1** | §8 `d4732c3`, `3f2fbb0`, `76d37e5`, `1a0880d`, approval `6423047`; `docs/RULE-MAINTENANCE.md` `a0867fa` | read §0, step 2 (the query), step 4, §9 "Decided on 4 Nov 2026" | none reads the document (`grep -rl RULE-MAINTENANCE tools agent`) | met: three premises decided and written |
+| **21.2** | §8 rows `b8c9e19` … `3337f7a`, approval `6368f81`; data `a1dd811`, `c97fed6`, `01a0902`, `1ad8786`, `63b8194`, `d239f6a`, `2685259`, `98fcd6d`, `5387ad3`; `tools/selftest.mjs` `f622cea`; RULE-MAINTENANCE `14c0191` | open `applies.html` for the eight rules; `node tools/evidence-audit.mjs --as-of 2026-11-04` (no dma warning); `node tools/freshness.mjs --as-of 2027-01-28` → 25 | `tools/selftest.mjs` F10, X1, X2, Y3–Y6 (`READ_2026_11_04`); `seo-audit` (generated pages) | met: nine findings and the DMA status closed on the author's word, none left open |
+| **21.3** | §8 `8c5079d`, `9a3e7cb`, `6f62490`, `a893512`, `caff960`; `c9b8eef`, `7917a09`, `6316c33`, `89d17f6` | V2-CLOSURE N1/B5; ROADMAP §4 line 258; this file under the Session 19 node; `instruments/eidas2/index.html` `<title>` | `seo-audit` (title facets, length) | met: every residue decided; (2) assigned to Session 22 |
+| **21.4** | `docs/prompts/v2-session-22.md` `0b0f0ae` | read its provenance (three answers) and exit criterion (the rule for Session 24) | — | met: the prompt exists on this branch, confirmed by the author; approved with the work at this checkpoint |
+
+## v2 Session 21 — checkpoint 21.2 (group (a), with the written process)
+
+Checkpoint 21.1 approved (§8 `6423047`). Every legal text below was retrieved **on 4 Nov 2026 from the Publications
+Office's Cellar by CELEX** (English XHTML, `Accept-Language: eng`), every amending act and corrigendum asked of the SPARQL
+endpoint that day with the queries now in `docs/RULE-MAINTENANCE.md` step 2, and every English corrigendum read. Nothing
+from memory or from a search result. Each closure: the §8 row first and committed, then `data/`, `node tools/_footer.mjs`,
+the checks, and a commit with `Evidence:`.
+
+### Per finding: the text read, before → after, the closure
+
+| Finding · record | Read (CELEX, Articles) | Before → after | Closure | §8 · data |
+|---|---|---|---|---|
+| F-02 · `ap-nis2-01` `depends_on` | 32022L2555 Arts 2, 3, 20, 21, 23, 32(6), 41, Annexes I–II; SPARQL: no amending act, 9 corrigenda, only R(04) in English (Art. 19(1)); press release `src-ec-nis2-referral-2026` at its URL | "transposition is materially incomplete … in several they have not yet arrived" → national dates vary; "On 8 July 2026 the Commission reported that most Member States had transposed it, and referred Spain, France, Ireland and the Netherlands …" | changed; only the rule (the same words in NIS2's `status_note` and `instruments.html:105` are new findings) | `b8c9e19` · `a1dd811` |
+| F-04 · `ap-nis2-02` rationale | 32022L2555 Annex I ("SECTORS OF HIGH CRITICALITY", point 8), Arts 2, 3(1)(a), 3(1)(e), 3(2), 6(30)–(31), 20, 21, 23, 41 | "which NIS2 treats as essential" → listed in Annex I, the sectors of high criticality; size decides (Art. 3(1)(a), 3(2), 3(1)(e)) | changed | `f98e0b9` · `c97fed6` |
+| F-03 · `ap-cra-01` rationale | 32024R2847 Arts 2, 3, 13(1), 14, 69, 71; 32025R0327 Arts 104–105; SPARQL: 1 amending act, 8 corrigenda, R(01), R(02), R(04) in English (title, Art. 64(10), Art. 67) | "serious incidents begins on 11 September 2026" → "severe incidents having an impact on the security of the product has applied since 11 September 2026 (Article 14)" | changed (a second point, the tense, named in the question); **T-12 still fires on 26 Mar 2027**, as it should | `dc447dd` · `01a0902` |
+| F-13 · `ap-ai-act-02` rationale | 32024R1689 Arts 2(1)(a), 3 points (3), (9), (63), 53, 111, 113; 32026R1744 Art. 1 (111(2) replaced, 111(4) added; 111(3), 53 untouched); SPARQL: 1 amending act, 4 corrigenda, none in English; `src-ec-gpai-code` at its URL | "owes Article 53 since 2 August 2025" → applies from 2 Aug 2025 (Art. 113(b)); models placed before have until 2 Aug 2027 (Art. 111(3)); a source "Art. 111(3); Art. 113, third paragraph, point (b)" added | changed; no timeline event for 2 Aug 2027 (a finding) | `ac87546` · `1ad8786` |
+| F-14 · `ap-ai-act-06` exemption; `teu:art-4-2`; `rel-ai-act-teu-4-2` | 32024R1689 Arts 2(1)(b), 2(3), 3(4), 5, 27, 113 with 32026R1744 Art. 1 points (7), (13), (40); TEU Art. 4(2) (12016M004) | the exemption's last sentence (the brief's argument) deleted; the two summaries "The structural source …"/"This is the structural source …" → "The brief argues this is the structural source …" | changed; `rel-ai-act-teu-4-2` `last_verified` 2026-11-04 | `8527a93` · `63b8194` |
+| F-17 + F-23 · `ap-gdpr-04` | 32016R0679 Arts 2, 4 points (1), (2), (4), (7), (8), 22, 35; SPARQL: no amending act, 3 corrigenda, only R(02) in English (recital 71, Arts 37, 41–43, 57, 64, 65, 69, 70) | `depends_on` + "Whether the organisation is the controller of the processing: Articles 22(3) and 35(1) bind the controller …"; the note no longer says the AI Act's provisions "belong to Session 16" | F-23(3) changed; **F-23(2) closed without change** (the decision of 29 Oct 2026, pinned by Y3; its premise "not in the dataset" no longer holds, `ai-act:art-3` exists); F-17 changed | `c281224` · `d239f6a` |
+| F-19 · `ap-dsa-03` rationale | 32022R2065 Arts 2(1), 3 points (i), (s), 19, 27, 33(1), (4), 34, 35 (Chapter III, Section 3 holds Arts 19–28); SPARQL: no amending act, 11 corrigenda, none in English | "owes recommender-parameter transparency" → "owes recommender-system transparency (Article 27) unless it is a micro or small enterprise, which Article 19 exempts from that Section" | changed | `dbf1efe` · `2685259` |
+| F-20 · `ap-dma-04` rationale | 32022R1925 Arts 1(2), 2 points (2)(i), (13), 3(1), (2), (8), 54; SPARQL: no amending act, 3 corrigenda, only R(02) in English (Art. 13(8)); IP/25/2717 (press corner documents API); the announcement of 25 June 2026; the gatekeepers page (23 core platform services, no cloud service) | "designation decisions are due in November 2026" → the Commission's 12-month target (not a legal deadline) and its preliminary view of 25 June 2026; the two releases cited as sources | changed; the brief's-argument sentence kept, a new finding | `ec60b87` · `98fcd6d` |
+| DMA status | SPARQL: in force, end of validity 9999-12-31, no amending or repealing act; Art. 54 | `status:applicable` unchanged; `status_as_of` and `last_verified` 2026-11-04 (`validate.mjs:514` pairs them; only the status re-read, as on 21 Oct) | re-read, unchanged; `STATUS_PREDATES_MILESTONE instruments/dma` cleared | `ad37493` · `5387ad3` |
+
+Eight rules re-read and closed, `last_verified` 2026-11-04: `ap-nis2-01`, `ap-nis2-02`, `ap-cra-01`, `ap-ai-act-02`,
+`ap-ai-act-06`, `ap-gdpr-04`, `ap-dsa-03`, `ap-dma-04`. **No finding was left open for an unreadable source**: Cellar and
+the SPARQL endpoint answered throughout. No `claim_type`, asterisk, `reference_gap` or `requires_verification` changed;
+no claim was re-read; no `i18n/` key carries any replaced text (grep, 0 for each).
+
+### A defect the work exposed, and corrected on the author's word
+
+`tools/selftest.mjs` pinned the dates of the 29 Oct 2026 reading (F10, X1, X2, Y5, Y6). I ran `validate` and
+`seo-audit` after each closure **but not `selftest`**, so the branch was red from `a1dd811` to `f622cea` (4 closures;
+clean `main` 124/124, the branch 119/124). Found before F-14 was committed, put to the author ("Update pins exactly",
+§8 `a67e21f`), fixed in `f622cea`: a list `READ_2026_11_04`, exact dates per rule, F10's 28 Jan 2027 count `33 −`
+that list, and X2's planted judicial event moved from 2026-11-02 to 2026-11-10 — it had stopped firing against
+`ap-cra-01`'s new date. Nothing relaxed. Each later closure added its rule to the list in its own commit.
+
+### Where the written process guided, and where it did not
+
+- **Clear:** the order of steps 1–6; one question per finding with the Article quoted; the §8 row before `data/`;
+  step 5 (two generated files per closure, every time); the note's form (`ap-cra-01`'s).
+- **Not clear, corrected in the document** (§8 `3337f7a`, `14c0191`): a corrigendum's CELEX must be percent-encoded
+  (404 otherwise); the English-expression query was nowhere; step 4 did not say that `selftest` pins a closure.
+- **Not clear, not changed:** an instrument's status re-reading has no step — `validate.mjs:514` forces
+  `last_verified` to move with `status_as_of`, a whole-record date for a status-only reading (the 21 Oct precedent
+  says so in prose). Reported here.
+
+### New findings, not corrected
+
+1. NIS2's `status_note` (`data/instruments.json`) and `instruments.html:105` still say transposition is "materially
+   incomplete" (F-02's words).
+2. `ap-dma-04`'s rationale ends with the brief's argument ("The scope gap the brief identifies is generative AI, not
+   cloud.") — F-14's pattern; and `ap-nis2-01`'s rationale calls Art. 32(6) "the provision that actually changes
+   boardroom behaviour", an argument.
+3. No timeline event holds 2 Aug 2027 (AI Act Art. 111(3)).
+4. `tl-dma-2026-11-01-designation` is `scheduled` at month precision; the month is current and no decision is listed.
+5. The source records `src-ec-nis2-referral-2026` and `src-ec-gpai-code` keep `accessed` 2026-10-29 though re-read
+   today (a data change not asked).
+6. DSA Art. 3(i), (s) as actor definitions for `ap-cross-01` (F-23(2)'s DSA half) — outside the eight rules (premise 2).
+
+### Counts (4 Nov 2026, the branch at `14c0191`)
+
+`validate` 0 errors · `i18n-audit` 0/0 · `design-qa` 0/0 · `seo-audit` 0/0 · `og-image --check` exit 0 ·
+`evidence-audit --as-of 2026-11-04` 0 errors, 11 warnings (no `instruments/dma`), publishable 33 of 33 · `--as-of
+2027-03-26` 0 errors, 18 warnings, T-12 on `ap-cra-01` only · `freshness --as-of 2026-11-04` 0 `RULE_STALE`, `--as-of
+2027-01-28` **25** (33 − 8, premise 2), `--as-of 2027-02-02` 25 · 25 suites 1330 pass, 0 fail (`BROWSER_QA_CHROME` on the
+environment's Chromium) · browser suite `--require-browser` 343 pass, 0 fail, 1 undecidable (accessibility) · adversarial
+gate exit 0 · `agent/schemas/cli.mjs check` exit 0 · `.control-room/cli.mjs boundary` 0 errors, `routes` exit 0 ·
+readiness exit 1, 17 of 20 mandatory, the same three blockers as `main` (dispatcher, decision ledger, deploy gate
+unmeasurable), identical to `main`'s report · `commit-evidence a0082ea HEAD` 0 without evidence. Outputs in the
+scratchpad (`run212/`).
+
+## v2 Session 21 — checkpoint 21.1 (the three premises)
+
+### The reconnaissance (read only, full clone, `main` at `a0082ea`)
+
+Every row of the prompt's table re-measured on 4 Nov 2026 and found as stated: 33 rules, all `last_verified` 2026-10-29;
+`freshness --as-of 2027-01-27` 0 `RULE_STALE`, `--as-of 2027-01-28` 33; `evidence-audit --as-of 2027-03-26` names T-12 on
+`ap-cra-01` only (and six `STATUS_PREDATES_MILESTONE`: dma, ai-act, data-act, pld, eidas2, ehds); `evidence-audit --as-of
+2026-11-04` one, `instruments/dma` ("since then 2026-11-01 designation"); publishable 33 of 33. The stale Phase 4 lines
+(`docs/V2-CLOSURE.md` N1, B5; `docs/ROADMAP-v2.md` §4); "EUDigitalPolicy" in this file's Session 19 report; the eIDAS2
+title still "eIDAS2 — key provisions and key dates | EU Digital Policy"; `x-verification` once in
+`docs/v2-design/status-labels.json`. Outputs: the session's scratchpad (`recon/`).
+
+**One premise of the table was inexact, and is now explained.** Cellar answered HTTP 400 again, as in Session 20. The
+cause: a request without `Accept-Language: eng`. With it, `http://publications.europa.eu/resource/celex/32016R0679`
+answers 303 then 200, and the Official Journal text of Regulation (EU) 2016/679 was retrieved (806 864 bytes) and read.
+The SPARQL endpoint answered 200.
+
+### What the author decided (`docs/ROADMAP-v2.md` §8) and the commits
+
+| Item | Answer | §8 | Change |
+|---|---|---|---|
+| Scope | "Start session 21" | `d0742ba` | — |
+| Premise 1 · `last_verified` on a reading not made | "Date stays; record in §8 (Recommended)" | `d4732c3` | `a0867fa` |
+| Premise 2 · one day or in stages | "In stages (Recommended)" | `3f2fbb0` | `a0867fa` |
+| Premise 3 · the SPARQL query text | "In RULE-MAINTENANCE §2 (Recommended)" | `76d37e5` | `a0867fa` |
+| Q4 · the document's seven changes | "Approve all seven (Recommended)" | `1a0880d` | `a0867fa` |
+
+### The document, before and after (`a0867fa`)
+
+1. §0: added "**The rules are re-read in stages**, each when a prompt or a finding names it, and the calendar is not
+   realigned on one day (roadmap §8, v2 Session 21, premise 2)."
+2. Step 1: "with `Accept: application/xhtml+xml`" → "with `Accept: application/xhtml+xml` and `Accept-Language: eng`
+   (without the second header Cellar answers HTTP 400: measured 4 Nov 2026, v2 Session 21)". **A correction the use
+   showed, not a premise**; named as such in the question.
+3. Step 2, trace: "**The queries themselves are not kept**, and neither is any answer" → "The query text is kept below
+   this table (…, premise 3); **no answer is kept**".
+4. Step 2, what no check sees: "say so in the note and leave the rule's `last_verified` where it is" → "**nothing in
+   `data/` changes**: `last_verified` stays where it is and the published `verification_note` does not record the
+   failure; the roadmap §8 row and the `docs/HANDOVER.md` report say what could not be read, and the prompt or finding
+   stays open (…, premise 1)".
+5. Step 2: a new paragraph, the query as a fenced text block, "no tool … runs it; it is not a command and not a check",
+   last run 4 Nov 2026 with its result for 32016R0679 (three corrigenda, no amending or repealing act).
+6. Step 4: "(4) **Close the rule in one of two ways.**" → "(4) **Close the rule — only if every Article it cites was
+   read; otherwise nothing in `data/` changes (step 2, last row) — in one of two ways.**"
+7. §9: a dated paragraph "Decided on 4 Nov 2026" mapping items 2–4 to the premises and giving the cause of the 400; the
+   account of the rehearsal is not rewritten.
+
+No check reads the document (`grep -rl RULE-MAINTENANCE tools agent .control-room .github`: none). `node
+tools/validate.mjs` exit 0. Nothing outside `docs/` changed; no field, check or command.
+
+### What 21.2 inherits
+
+Eight rules to read (premise 2): `ap-nis2-01`, `ap-cra-01`, `ap-nis2-02`, `ap-ai-act-02`, `ap-ai-act-06`, `ap-gdpr-04`,
+`ap-dsa-03`, `ap-dma-04`, and the actors' definitions of F-23; the DMA's status with F-20. A rule whose cited texts are
+not all read keeps its date (premise 1). Under staging, the other 25 rules lapse on 28 Jan 2027 and are a later session's.
+
+
+## Branch register — 4 November 2026 (the prompt of v2 Session 21)
+
+- Branch `claude/v2-session-21-prompt`, cut from `main` at `3bae4fa` (#58 merged). It carries
+  `docs/prompts/v2-session-21.md`, this entry, one §8 row (`docs/ROADMAP-v2.md`, "A standing rule: the next session's
+  prompt is a precondition of closing a session's work") and a two-line pointer to it in `AGENTS.md`.
+- Drafted on the author's request of 4 Nov 2026 ("Write session 21 prompts, including the commitment to write the next
+  session's prompt as a precondition to closing the session's work"), after four questions, answered: the scope,
+  "Assumptions first, then group (a) (Recommended)"; the commitment, "Last item, before the final checkpoint
+  (Recommended)"; its record, "§8 row + prompt + AGENTS.md pointer (Recommended)"; Session 20's leftovers, all four
+  ("Stale 'Phase 4 not open' lines", "STATUS_PREDATES_MILESTONE dma", "'EUDigitalPolicy' in HANDOVER", "Session 18's
+  three open findings"). The commitment is the §8 row; the other answers shape the prompt and are not §8 rows.
+- Measured while drafting, on `3bae4fa`, full clone: `freshness --as-of 2027-01-27` 0 `RULE_STALE`, `--as-of 2027-01-28`
+  33; `evidence-audit --as-of 2027-03-26` reports T-12 on `ap-cra-01` only; today `STATUS_PREDATES_MILESTONE
+  instruments/dma`; the eIDAS2 page title is still the generic one; `docs/v2-design/status-labels.json` still has
+  `x-verification`.
+- Not asked, by default: the branch (a new branch and a pull request, as for the prompts of Sessions 18–20).
+- Disposition: pushed; a pull request to `main` opened on the author's instruction ("Push and open the PR (Recommended)").
+
+## Branch register — 3 November 2026 (v2 Session 20)
+
+- Branch `claude/v2-session-20-phase-4`, cut from `main` at `40d4dd1` (#57, the prompt, merged). Nothing was merged in;
+  `origin/main` re-fetched before this entry: still `40d4dd1`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, already in the register below
+  (left open by the author's decision). The prompt's own branch is merged.
+- The clone was shallow at the start (`git rev-parse --is-shallow-repository` → `true`); `git fetch --unshallow` was run
+  before any suite.
+- Disposition: final checkpoint approved (4 Nov 2026); pushed, and a pull request to `main` opened on the author's
+  instruction ("Push and open the PR (Recommended)"). Nothing is pushed to the branch after the pull request is opened.
+
+## v2 Session 20 — final checkpoint (20.2: item 4.1, the rule-maintenance process)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8) and the commits
+
+| Item | Answer | §8 | Change |
+|---|---|---|---|
+| 20.1 checkpoint | "Approve (Recommended)" | `c98e32a` | — |
+| Q3 · name and structure | "RULE-MAINTENANCE.md, as proposed (Recommended)" | `1c403dd` | `1e1c917` |
+| Q4 · the closure without a change | "Describe today's practice, no new field (Recommended)" | `b643ca4` | `1e1c917` |
+| Q5 · where the rehearsal's account lives | "In the document, HANDOVER points to it (Recommended)" | `d7a997c` | `1e1c917` |
+
+`node tools/commit-evidence.mjs 40d4dd1 HEAD`: every commit "changes no published file".
+
+### The document and the rehearsal
+
+`docs/RULE-MAINTENANCE.md` (227 lines): the two prompts that start it (§0), then P-08 → P-13 as steps 1–6, each with
+who · trigger · action · level · trace · what no check sees, the order in one paragraph (§7), what it does not establish
+(§8), and the rehearsal's account (§9). **The account is in the document; this report only points to it.** Run: `node
+tools/evidence-audit.mjs --as-of 2027-03-26` and `node tools/freshness.mjs --as-of 2027-03-26`, both exit 0; T-12 names
+`ap-cra-01` only; `ap-cra-01` is one of 33 `RULE_STALE` that day.
+
+What the walk measured on a **scratch copy outside the repository** (real `data/` unchanged): setting `ap-cra-01`'s
+`last_verified` to 2027-03-26 and nothing else takes T-12 from 1 to 0 and `RULE_STALE` from 33 to 32 — **a bare date bump
+silences both prompts** — and makes two generated files stale (`sitemap.xml`, `instruments/cra/index.html`) so that
+`seo-audit.mjs` reports 8 errors until `node tools/_footer.mjs` is run. The control copy without the date change: every
+generated file current, 0 errors. Neither fact was in the sources; both are in the document.
+
+Not done, as the document says: no re-reading of the CRA or the EHDS, no rule or data file changed, no Cellar or SPARQL
+request, steps 3 and 6 not exercised on a real change. **No step of the document was shown wrong and none was
+corrected.** One unrelated probe of Cellar from this environment answered HTTP 400; not investigated.
+
+### Assumptions the author is asked to confirm (document §9)
+
+(1) When a reading could not be made (Cellar unreachable) the document says to leave `last_verified` where it is. That is
+drawn from "a silenced prompt is not a closure", not from a decision. (2) Whether the 33 rules are re-read on one day or
+over several is unstated. (3) The SPARQL query text is kept nowhere; the document gives the endpoint and the kinds of
+question only.
+
+### Counts, as of 2026-11-03, full clone, this tree (`1e1c917`)
+
+`validate`, `i18n-audit`, `design-qa`, `seo-audit` 0 errors; `evidence-audit` 0 errors; `freshness` exit 0; `tools/selftest.mjs`
+124 of 124; the 25 suites **1331 tests, 1330 pass, 0 fail, 1 skipped** (the Control Room's `::1` test), as before the
+document; browser suite `--require-browser` 343 pass · 0 fail · 1 undecidable; adversarial gate 65 failed safely · 0
+succeeded · 3 partial · 1 undecidable; schemas, Control Room `boundary` and `routes` exit 0. **Readiness was run on the
+tree at checkpoint 20.1 (refused, 17 of 20 mandatory conditions pass) and not re-read to its end after the document was
+added.** `git diff --stat origin/main`: `AGENTS.md`, `docs/HANDOVER.md`, `docs/PHASE-4-SETUP.md`, `docs/ROADMAP-v2.md`,
+`docs/RULE-MAINTENANCE.md` — nothing outside `docs/` but `AGENTS.md`.
+
+### Findings, none corrected
+
+The two stale lines of 20.1 (V2-CLOSURE N1/B5; ROADMAP §4's Phase 4 bullet) stand, as decided. Still true: "EUDigitalPolicy"
+in the Session 19 report and the prompt's register entry; the three open findings of Session 18 were not re-measured. New:
+`docs/RULE-MAINTENANCE.md` is not listed in `AGENTS.md`'s reading table (the author's decision, question 3) and so is
+reachable only from this report and the roadmap row; `evidence-audit` carries `STATUS_PREDATES_MILESTONE instruments/dma`
+as of today.
+
+### The checklist (20.0–20.2)
+
+| Point | Written | By hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 20.0 Q3–Q5 | §8 rows `1c403dd`, `b643ca4`, `d7a997c` | `grep -n "v2 Session 20" docs/ROADMAP-v2.md` | — | every question answered, in the author's words |
+| 20.2 | `1e1c917`: `docs/RULE-MAINTENANCE.md` | read §1–§6: each step names level and trace; rerun the two `--as-of 2027-03-26` commands; `git diff -- data` empty | none reads the document | the document exists, every step names level and trace, one rehearsal on `ap-cra-01`, no rule changed |
+| 20.2 report | this section | read it against §8 | — | the author's approval, then the PR question |
+
+## v2 Session 20 — checkpoint 20.1 (the opening of Phase 4)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8) and the commits
+
+| Item | Answer | §8 | Change |
+|---|---|---|---|
+| Scope | "Start session 20" | `b5cd376` | — |
+| Q1 · open Phase 4 | "Open Phase 4 (Recommended)" | `abf501f` | — |
+| Q2 · the status lines (S1–S3, before and after shown) | "Write S1–S3 as drafted (Recommended)" | `4510d1a` | `9937232` |
+
+### E-1…E-6, measured on 3 Nov 2026, full clone, `main` at `40d4dd1` (outputs kept in the session scratchpad)
+
+| # | Result | By |
+|---|---|---|
+| E-1 | met | §8 "17.5.0 question 1" ("Close on rules") |
+| E-2 | met | §8 question 6; `grep -n "Tier [ABC]" docs/PHASE-4-SETUP.md` finds only the brief's quoted words (header, §2.1) |
+| E-3 | met in §8 (questions 6, 8a). The document still said "pending D-4" and "does not choose": reworded under Q2 | §8; `grep -n -i pending docs/PHASE-4-SETUP.md` before and after |
+| E-4 | met (deferred, with the reason) | §8 question 7 |
+| E-5 | met | `validate`, `i18n-audit`, `design-qa`, `seo-audit` 0 errors (0 warnings on the last three); `evidence-audit --as-of 2026-11-03` 0 errors, 12 warnings; `freshness --as-of 2026-11-03` exit 0, 0 defects, 4 staleness prompts; `og-image --check` current; `tools/selftest.mjs` 124 of 124; **25 suites, 1331 tests, 1330 pass, 0 fail, 1 skipped** (the Control Room's `::1` test); browser suite `--require-browser` 343 pass · 0 fail · 1 undecidable; adversarial gate 65 failed safely · 0 succeeded · 3 partial · 1 undecidable; `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0 |
+| E-6 | a property of item 4.1 | nothing outside `docs/` and `AGENTS.md` has changed: `git diff --stat origin/main` = `AGENTS.md`, `docs/PHASE-4-SETUP.md`, `docs/ROADMAP-v2.md` |
+
+Readiness, reported and not a criterion: `refused`, 17 of 20 mandatory conditions pass; the three that do not are
+`production_dispatcher_wired`, `decision_ledger_present` and `deploy_gate_exists` (unmeasurable from the tree).
+The readiness run prints 24 suites and 1254 tests: that is the 1331 above less the Control Room's 77, which accounts for
+the figure (session 19 left a one-test difference with session 18's 1253 unexplained; this session did not re-measure
+session 18's base).
+
+The prompt's table, re-measured: the 33 rules all carry `last_verified` 2026-10-29; `freshness --as-of 2027-01-27` 0
+`RULE_STALE`, `--as-of 2027-01-28` 33; `evidence-audit --as-of 2027-03-26` reports `LAW_CHANGED_SINCE_VERIFIED
+applicability/ap-cra-01` and no other rule (18 warnings that day, 12 today, as `docs/PHASE-3-AUDIT.md` §5 records).
+
+### Not verified, and findings (none corrected)
+
+- Stale after the opening and **left as written, by the author's answer**: `docs/V2-CLOSURE.md` rows N1 and B5 ("Phase 4
+  not started; D-4 open") and `docs/ROADMAP-v2.md` §4's Phase 4 bullet ("Phase 4 opens on the author's word once E-5 is
+  measured").
+- Still true and left out by the prompt: "EUDigitalPolicy" in the session 19 report below (lines 53, 59) and in the
+  prompt's register entry; the three open findings of session 18 were **not re-measured** at this checkpoint.
+- `evidence-audit` today carries `STATUS_PREDATES_MILESTONE instruments/dma` (status as of 2026-10-21, designation
+  milestone 2026-11-01): a prompt for a status re-read, not a rule, and not touched.
+- No screen reader, no browser but Chromium; the live site was not checked and nothing was pushed.
+
+### The checklist (20.0 questions 1–2, 20.1)
+
+| Point | Written | By hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 20.0 Q1–Q2 | §8 rows `abf501f`, `4510d1a` | `grep -n "v2 Session 20" docs/ROADMAP-v2.md` | — | Phase 4 opened by a §8 row in the author's words |
+| 20.1 | `9937232`; this report | `git diff --stat origin/main`; rerun the commands in the E-5 row | the suites listed | E-1…E-6 measured |
+| 20.2 | written after this checkpoint: see the final checkpoint above | — | — | — |
+
+## Branch register — 3 November 2026 (the prompt of v2 Session 20)
+
+- Branch `claude/v2-session-20-prompt`, cut from `main` at `943467d` (#56 merged). It carries one file,
+  `docs/prompts/v2-session-20.md`, and this entry.
+- Drafted on the author's request of 3 Nov 2026 ("What's up for session 20?" → "Yes"), after four questions, answered:
+  the scope, "Open Phase 4 + item 4.1 (Recommended)"; the checkpoints, "Open Phase 4, then 4.1 (Recommended)"; group (a)
+  of v2 Session 17.5 question 4, "Session 21, using 4.1 (Recommended)"; the branch, "New branch + PR (Recommended)".
+  These answers shape the prompt; they are not §8 rows. The session records its own scope in §8 as its first write.
+- Measured while drafting, on `943467d`: `freshness --as-of 2027-01-27` 0 `RULE_STALE`, `--as-of 2027-01-28` 33;
+  `evidence-audit --as-of 2027-03-26` reports T-12 on `ap-cra-01` only.
+- Found while drafting, not fixed: `claude/session-19-alternate-name` (#56, merged) has no entry in this register, and
+  the session 19 report above still says "EUDigitalPolicy" where #56 made it "Eu Digital Policy". The prompt leaves both
+  out of Session 20.
+- Disposition: pushed; a pull request to `main` opened on the author's instruction.
+
+## Branch register — 3 November 2026 (v2 Session 19)
+
+- Branch `claude/session-19-jwjgnu` (assigned by the environment), cut from `main` at `1c645ce`. Nothing was merged in;
+  `origin/main` re-fetched before this entry: still `1c645ce`.
+- Unmerged branches at the start: only `origin/scout/digest-digest-2026-11-02T16-04-07Z`, already in the register below.
+- Disposition: checkpoint approved; pushed, and a pull request to `main` opened on the author's instruction of 3 Nov 2026
+  ("Open the PR (Recommended)"). Nothing is pushed to the branch after the pull request is opened.
+
+## v2 Session 19 — checkpoint (19.1: the site name)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8) and the commits
+
+| Item | Answer | §8 | Change |
+|---|---|---|---|
+| Scope | "start session 19" | `857657c` | — |
+| Q1 · homepage `<title>` | "EU Digital Policy \| The European Legal Framework for the Digital World (Recommended)" | `cdccc7c` | `9ddeb4b` |
+| Q2a · `alternateName` | "Add SITE.tagline, card unchanged (Recommended)" | `ebc310c` | `9ddeb4b` |
+| Q2b · WebSite on the homepage only | "Homepage full, subpages @id only (Recommended)"; the audit assertion shown before and after, "Write as shown" | `ebc310c` | `9ddeb4b` |
+| Q3 · `application-name` | "Every generated page (Recommended)" | `80e7749` | `9ddeb4b` |
+| Q4 · it/fr/es titles | 'Separator only, " \| " (Recommended)' | `80e7749` | `9ddeb4b` |
+
+`de2eb47` is the regeneration (`node tools/_footer.mjs`, 31 files; a second run wrote 0). `node tools/commit-evidence.mjs
+1c645ce HEAD`: both commits name their evidence. An early question of mine offered Phase 4 as the scope; it was
+superseded by the prompt (which puts Phase 4 out of scope) and is recorded nowhere in §8.
+
+### Before and after
+
+| Where | Before | After |
+|---|---|---|
+| Homepage `<title>`, `og:title`, WebPage `name` | EU Digital Policy — The European Legal Framework for the Digital World | EU Digital Policy \| The European Legal Framework for the Digital World |
+| it / fr / es `<title>` | EU Digital Policy — Il quadro… / Le cadre… / El marco… | the same words, " — " → " \| " |
+| WebSite `alternateName` | "The European Legal Framework for the Digital World" | ["EUDigitalPolicy", "eudigitalpolicy.eu"] |
+| WebSite node | on all 26 generated pages | `index.html` only; every other page's WebPage keeps `isPartOf {"@id": "https://eudigitalpolicy.eu/#site"}` |
+| `<meta name="application-name">` | absent | "EU Digital Policy" on every generated page |
+| `SITE.tagline` | — | the former `alternateName`; `tools/og-image.mjs` reads it, so the social card is unchanged (`og-image --check`: every card current) |
+
+The homepage WebSite node, whole: `{"@type":"WebSite","@id":"https://eudigitalpolicy.eu/#site","name":"EU Digital
+Policy","alternateName":["EUDigitalPolicy","eudigitalpolicy.eu"],"url":"https://eudigitalpolicy.eu/","inLanguage":"en",
+"author":{"@type":"Person","name":"Andrea Tosti"},"license":"https://creativecommons.org/licenses/by/4.0/"}`.
+
+*Note, 4 Nov 2026 (v2 Session 21): the `alternateName` above is what 19.1 wrote. After the checkpoint the author
+corrected it (roadmap §8, "v2 Session 19, after the checkpoint: the WebSite `alternateName`"), and #56 (`d74f587`,
+merged `943467d`) made it `["Eu Digital Policy", "eudigitalpolicy.eu"]`: `tools/seo.mjs:60` and `index.html`, measured
+4 Nov 2026. The report is not rewritten.*
+
+### Files modified (the request's point 5)
+
+Generator and checks: `tools/seo.mjs`, `tools/seo-audit.mjs` (the assertion, on the author's word), `tools/og-image.mjs`,
+`tools/selftest.mjs` (S4b's planted author defect moved from `applies.html`, which no longer has a node that names the
+author, to `index.html`; new S4d plants a WebSite node on a subpage, a wrong `isPartOf` and a string `alternateName`).
+Data: `i18n/locales.json` (three edition titles). Generated, by `_footer.mjs` only: the ten hand-written pages,
+`instruments/*/index.html` (17), `it/`, `fr/`, `es/` `index.html`. Not touched: `CNAME`, Pages settings, DNS, README,
+translations (no key was declared `superseded`; no translation of `edition.title` changes).
+
+### Already true, re-measured on 3 Nov 2026
+
+`http://eudigitalpolicy.eu/`, `http://www…` and `https://www…` each answer 301 to `https://eudigitalpolicy.eu/`, the
+homepage 200 (not in the repo: Pages and the owner's settings). `robots.txt` names the sitemap; the first `<loc>` is
+`https://eudigitalpolicy.eu/`. `og:site_name` "EU Digital Policy" and the homepage canonical were already there. The
+name is spelled "EU Digital Policy" with no variant on any page.
+
+### Counts, as of 2026-11-03, full clone, this tree (`de2eb47`)
+
+`validate` 0 errors; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit` 0 errors; `freshness` exit 0;
+`tools/selftest.mjs` 124 of 124 (123 before: S4d added); the agent suites passing (the readiness run prints 24 suites,
+1254 tests; session 18 reported 1253 and I did not re-measure the base, so that one-test difference is **not explained
+here**); Control Room 1 skipped (`::1`), 0 fail; browser suite `--require-browser` 343 pass · 0 fail · 1 undecidable;
+adversarial gate 65 failed safely · 0 succeeded · 3 partial · 1 undecidable; schemas, boundary, routes exit 0. Every
+JSON-LD block of the 32 pages parses (`JSON.parse`, 0 errors). The readiness figure was started and not read to its end.
+Counts were taken on this tree only, not on a separate worktree of the base.
+
+### Seen in a browser
+
+`/`, `/instruments/gdpr/` and `/applies.html`, light and dark, 1280px and 390px (12 views): no console error, no overflow;
+the rendered `<title>`, `application-name`, `og:site_name` and the number of WebSite nodes read from the DOM.
+
+### What the repository cannot do, and the merge
+
+**Yes, this needs merging to `main`:** the site is published from `main` by `.github/workflows/pages.yml`
+(`docs/DEPLOYMENT.md`). After that, requesting indexing of the homepage in Search Console is the owner's. The name Google
+shows is Google's choice and changes only when it re-crawls the homepage; nothing here promises it.
+
+### Not verified, and new findings
+
+No screen reader, no browser but Chromium; the live site is not checked (nothing pushed or deployed). A WebSite node
+that subpages only reference by `@id` is a dangling reference inside each page's own graph; it resolves only if a
+consumer joins pages, which is the author's chosen design, not a defect I can measure. `.control-room/cli.mjs:253` prints
+the tagline as a literal and was left alone.
+
+### The checklist (19.0–19.2)
+
+| Point | Written | By hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 19.0 | §8 rows `857657c`…`80e7749` | `grep -n "v2 Session 19" docs/ROADMAP-v2.md` | — | every question answered |
+| 19.1 | `9ddeb4b`, `de2eb47` | `view-source` of `/`; `node tools/seo-audit.mjs` | `tools/selftest.mjs` S4b, S4d | each point as approved or already true |
+| 19.2 | this report | read it against §8 | — | author's approval, then the PR question |
+
+
+## Branch register — 3 November 2026 (v2 Session 18)
+
+- Branch `claude/v2-session-18-maintenance` (the prompt's name; the environment assigned none), cut from `main` at
+  `97e53d7` (#52, this session's prompt, merged). Nothing was merged in.
+- The clone was shallow at the start (`git rev-parse --is-shallow-repository` → `true`); `git fetch --unshallow` was
+  run before any suite.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: **only
+  `origin/scout/digest-digest-2026-11-02T16-04-07Z`**, already in the register below and left open by the author's
+  decision. `claude/v2-session-18-prompt` is merged (#52). Merged but not deleted, as before:
+  `claude/fix-browser-brief-prose-check`, `claude/fix-og-site-name-2026-11-03`, `claude/nifty-ride-kc0p4x`,
+  `claude/v2-session-17-5-prompt`, `claude/v2-session-18-prompt`.
+- `origin/main` re-fetched immediately before this entry: still `97e53d7`; the only unmerged remote branch is still
+  `origin/scout/digest-digest-2026-11-02T16-04-07Z`.
+- Disposition: both checkpoints approved (`4f9cc27`, `f38586b`); pushed, and a pull request to `main` opened on the
+  author's instruction of 3 Nov 2026 ("Push + open PR (Recommended)"). Nothing is pushed to the branch after the
+  pull request is opened.
+
+## v2 Session 18 — final checkpoint (18.2: group (c) and V2C-28…V2C-36)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words), and the commits
+
+| Item | Answer | §8 | Change |
+|---|---|---|---|
+| Checkpoint 18.1 | "Approve, start 18.2 (Recommended)" | `4f9cc27` | — |
+| F-06 · NIS2 actor notes (law) | "Write both notes (Recommended)" | `2d2bd46` | `f5c40bd` |
+| F-15 · AI Act Art. 50 heading (law) | "Exact OJ heading (Recommended)" | `aa19ff6` | `6be1b5a` |
+| A defect F-15 exposed · AI Act Art. 55 heading | "Fix now, own commit (Recommended)" | `9b27b93` | `a9277a4` |
+| V2C-29 + V2C-30 · `tools/seo.mjs` | "Both as shown (Recommended)" | `c9939c8` | `87ec7f3` |
+| V2C-28, V2C-31, V2C-32 · presentation | "All three as shown (Recommended)" | `f034277` | `554f80b`, `122172a`, `fc39228` |
+| F-16 + V2C-33 · plurals, and S2 | "Strings + S2 as shown (Recommended)" | `26d7e2c` | `a133fc3` |
+| F-28, F-30, V2C-36 · code | "All three as shown (Recommended)" | `ad7b5d6` | `343dd69`, `ce69b60`, `d245288` |
+| F-21 | "No change, close (Recommended)" | `0a9f3d4` | — (closed, reason in §8) |
+| F-10 | "No change, close (Recommended)" | `38da72d` | — (closed, reason in §8) |
+| V2C-34 + V2C-35 · texts in notes | "All 27 as in the table (Recommended)" | `8eed736` | `e36f892`, `ca947c6` |
+
+`node tools/commit-evidence.mjs 97e53d7 HEAD`: exit 0, every commit that changes a published file names its evidence.
+
+### The two legal readings (18.2's "Legge? sì")
+
+Both read on 3 Nov 2026 in the Official Journal text retrieved from the Publications Office's Cellar by CELEX
+(`https://publications.europa.eu/resource/celex/<CELEX>`, English), with amending acts and corrigenda checked in Cellar's
+SPARQL. **Cellar was reachable in this environment** (it was not in some earlier sessions).
+
+- **F-06**, Directive (EU) 2022/2555, Art. 3(1) and (2), OJ L 333, 27.12.2022, p. 80. No amending act recorded; nine
+  corrigenda exist, of which only `32022L2555R(04)` (22.12.2023) is in English, and it corrects Art. 19(1) only.
+  Art. 3(2) makes any Annex I **or** II entity that is not essential an important entity, so "NIS2 Annex II." was wrong
+  in substance.
+- **F-15**, Regulation (EU) 2024/1689, Art. 50. The one amending act Cellar records, Regulation (EU) 2026/1744
+  (32026R1744), replaces Art. 50(7) only (Art. 1 point (20)); the "Article 50" at its Art. 2 point (6) amends
+  Regulation (EU) 2018/1139. No English corrigendum of 32024R1689 is in Cellar.
+- **Comparing every AI Act heading** in `data/instruments.json` with the same text: 12 match, Arts 50 and 55 did not
+  (Art. 55: "Obligations for…" → the OJ's "Obligations of…"); 32026R1744 does not mention Article 55.
+
+### What a reader sees, before and after
+
+| Item | Where | Before | After |
+|---|---|---|---|
+| F-06 | search palette, actor "Essential entity" | NIS2 Annex I. | NIS2 Art. 3(1), read 3 Nov 2026: an entity of a type in Annex I that exceeds the ceilings for medium-sized enterprises (point (a)); qualified trust service providers, top-level domain name registries and DNS service providers, regardless of size (point (b)); and the entities points (c) to (g) list, including those a Member State identifies as essential. |
+| F-06 | search palette, actor "Important entity" | NIS2 Annex II. | NIS2 Art. 3(2), read 3 Nov 2026: an entity of a type in Annex I or II that does not qualify as an essential entity under Art. 3(1), including entities a Member State identifies as important. |
+| F-15 | AI Act page, Art. 50 | Transparency obligations | Transparency obligations for providers and deployers of certain AI systems |
+| Art. 55 | AI Act page, Art. 55 | Obligations for providers of general-purpose AI models with systemic risk | Obligations of providers of general-purpose AI models with systemic risk |
+| V2C-29 | EHDS `<title>` | EHDS — key provisions and key dates \| EU Digital Policy | European Health Data Space (EHDS) — key provisions and key dates \| EU Digital Policy |
+| V2C-30 | descriptions of CSA, DNA, EHDS, eIDAS2, IEA (meta, og, twitter, JSON-LD) | … who it binds (member State, … | … who it binds (Member State, … |
+| V2C-28 | `instrument.html?id=p2b`, "Read it at the source" link | `rgb(0, 0, 238)`: 7.15:1 light, 1.98:1 dark | `--mech`: 5.75:1 light, 6.73:1 dark |
+| V2C-31 | bibliography, 31 of 226 undated entries | … read 23 October 2026.”. https://… | … read 23 October 2026.” https://… |
+| V2C-32 | instrument pages, record line | the date on its own line at 390px | the date inline in the sentence |
+| F-16 | evidence "Last verified" | 1 days ago | 1 day ago |
+| V2C-33 | CRA, eIDAS2, PLD pages | 1 rule in the dataset turn on this instrument | 1 rule in the dataset turns on this instrument |
+| V2C-34, V2C-35 | 27 notes (sources, claims, enforcement, timeline, the Data Omnibus status note) | e.g. "Cited because EUR-Lex returns HTTP 202 with no body in this environment." | e.g. "Cited because EUR-Lex returns HTTP 202 with no body to this site's requests." — every row in §8 (`8eed736`) as an exact substitution |
+
+Nothing a reader sees changes for F-28, F-30 and V2C-36 (code and a comment), F-21 and F-10 (closed, no change).
+it/fr/es: no translation of any changed string existed, so nothing was declared `superseded` and nothing was written.
+
+### Checks changed, each on the author's word
+
+- `tools/selftest.mjs` N1 (18.1) — the pinned notice text, its header comment and one message.
+- `tools/selftest.mjs` S2 — its list of clock-bound strings gains "day ago" (strengthening only).
+- `tools/register-audit.mjs` — `PROCEDURAL_STATES` derived from `PRE_ADOPTION`; output byte-identical before and after.
+
+### Counts, before (`97e53d7`) and after (`ca947c6`), full clone, separate worktrees, as of 2026-11-03
+
+**Identical on every line**: `validate` 0 errors, 0 warnings, 45 unverified; `i18n-audit`, `design-qa`, `seo-audit`
+0/0; `evidence-audit` 0 errors, 12 warnings, publishable 33 of 33; `freshness` 0 defects, 4 staleness prompts;
+`og-image --check` exit 0; `tools/selftest.mjs` 123 of 123; the 24 agent suites 1253 of 1253; Control Room 76 · 1
+skipped (`::1`); browser suite 343 · 0 · 1; adversarial gate 65 failed safely · 0 succeeded · 3 partial · 1
+undecidable; schemas, `.control-room` boundary and routes exit 0; readiness 17 of 20, refuses, as before. Nothing moved
+because nothing in 18.2 changes a rule, a claim's grade, a source or a gate. Every `_footer.mjs` second run wrote 0.
+
+### Seen in a browser
+
+16 pages (applies, instrument for p2b, AI Act, GDPR, CRA, EHDS and the Data Omnibus, bibliography, enforcement,
+datasets, index, methodology, instruments, and the generated AI Act, EHDS and Data Omnibus pages) in Chromium, light
+and dark, 1280px and 390px: 64 views, no console error, no horizontal overflow. The new actor notes in the search
+palette; the V2C-28 contrast and the V2C-32 line measured as above.
+
+### Not verified, and a correction to one question
+
+- No screen reader, no browser but Chromium; the live site is not checked (nothing pushed or deployed).
+- F-16's "1 day ago" was checked by evaluating `F.plural` in Node; no record is exactly one day old today.
+- **A misstatement in a question, corrected in §8**: V2C-29's question called EHDS "the only one of 17 whose lead is a
+  bare acronym"; eIDAS2 (also a generic fallback), GDPR and DORA lead with one too.
+- F-10's premise ("nothing reads it") and V2C-35's count (14) were inexact; both re-measured and stated in §8.
+
+### New findings, not fixed
+
+1. **eIDAS2's page title** is the same generic fallback as EHDS's was: "eIDAS2 — key provisions and key dates".
+2. **Headings of instruments other than the AI Act** were not compared with the Official Journal; Art. 55 shows the
+   AI Act had a second mismatch the finding did not name, so the others may too.
+3. **`docs/v2-design/status-labels.json`** also lists the procedural states (its `x-verification`); F-28 joined the two
+   code homes and did not touch the design record.
+
+### The checklist (18.0–18.4)
+
+| Point | What was written | How to check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| 18.0 | §8 rows, one per answer, each committed at once | `grep -n "v2 Session 18" docs/ROADMAP-v2.md` | — | every item decided in §8 |
+| 18.1 | `70061e9`; report above | `/applies.html`, "Read this before you read a result" | `tools/selftest.mjs` N1 | the notice written, N1 updated, checkpoint approved (`4f9cc27`) |
+| 18.2 | the commits in the first table | the before/after table; `git show <commit>` | S2; `seo-audit` facets; browser suite; validators | each finding corrected as approved or closed with its reason |
+| 18.3 | — | re-run the commands in "Counts"; `node tools/commit-evidence.mjs 97e53d7 HEAD` | CI `qa.yml` | counts identical, Evidence on every published change |
+| 18.4 | this report; V2C-28…V2C-36 closed (`a2217a8`); PHASE-3-AUDIT §4 marked (`287dbe0`) | read it against §8 | — | final checkpoint approved (`f38586b`) |
+
+## v2 Session 18 — checkpoint 18.1 (the D-2 notice)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 18 | "Start session 18" | `7cffa35` |
+| 18.0 Q1 · `tools/selftest.mjs` N1 (a premise 17.5 Q3 did not name) | "Update N1 as shown (Recommended)" | `67235e1` |
+| 18.0 Q2 · the notice | "Write it as shown (Recommended)" | `c5bc544` |
+
+The change: `70061e9` — `applies.html:82` and `tools/selftest.mjs` N1 in one commit, with an `Evidence:` line
+(`node tools/commit-evidence.mjs 97e53d7 HEAD`: exit 0, "changes 1 published file(s) and names its evidence").
+
+### What a reader sees, before and after (`applies.html`, `data-i18n="applies.notice"`)
+
+- Before: "**These rules are not yet verified to the standard the site's claims are.** Each rule cites its sources by
+  identifier only: unlike a claim, it does not say what each source supports or where in it the rule is found, and the
+  evidence audit that checks every claim does not yet check these rules. Read a result as a pointer to the law, not as
+  a verified reading of it."
+- After: "**These rules are checked to the standard the site's claims are.** Each rule says, for every source it
+  cites, what that source supports and where in it the rule is found; each condition names the provision that defines
+  it; and the evidence audit that checks every claim checks these rules too. Each rule shows the date it was last read
+  against its Articles, and a change in the law after that date reaches a rule only when a person reads it again. Read
+  a result as a pointer to the law, not as a verified reading of it."
+- The it, fr and es editions: unchanged — `applies.notice` stays `pending_translation` in `i18n/locales.json` and
+  they show the English. No translation of the key existed (`grep -c '"applies.notice"' i18n/{it,fr,es}.json` → 0
+  each), so none was declared `superseded`, and none was written.
+
+### Counts, before (`97e53d7`) and after (`70061e9`), each in its own worktree of a full clone, as of 2026-11-03
+
+Identical on every line; nothing moved, which is what a one-paragraph text change with its pinning test should do.
+`validate` 0 errors, 0 warnings, 45 unverified; `i18n-audit`, `design-qa`, `seo-audit` 0/0; `evidence-audit` 0 errors,
+12 warnings, publishable 33 of 33; `freshness` 0 defects, 4 staleness prompts (exit 0); `og-image --check` exit 0;
+`tools/selftest.mjs` 123 of 123 (with the old N1 and the new text: 122 of 123, measured in a throwaway worktree, which
+is why both went in one commit); the 24 agent suites 1253 of 1253; Control Room 76 · 1 skipped (`::1`, unchanged as a
+skip); browser suite `--require-browser` 343 pass · 0 fail · 1 undecidable (`a11y:bound`); adversarial gate 65 failed
+safely · 0 succeeded · 3 partial · 1 undecidable; `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and
+`routes` exit 0; readiness 17 of 20 mandatory conditions, refuses (exit 1), as before. `node tools/_footer.mjs`: 0
+files written on the first run and 0 on the second.
+
+### Seen in a browser
+
+`applies.html` served over HTTP and opened in the environment's Chromium (Playwright), light and dark, 1280px and
+390px: the notice renders the new text with the first sentence bold, no console error, no horizontal overflow in any
+of the four.
+
+### Not verified
+
+No screen reader and no browser but Chromium. The live site is not checked: nothing is pushed or deployed.
+
+### How to check by hand
+
+1. `git show 70061e9` — two files, the approved text in both, the trailer at the end.
+2. `node --test tools/selftest.mjs` → 123 pass; revert `applies.html` alone and N1 fails.
+3. `python3 -m http.server 8000`, open `/applies.html`, read "Read this before you read a result".
+
+## Branch register — 3 November 2026 (the prompt of v2 Session 18)
+
+- Branch `claude/v2-session-18-prompt`, cut from `main` at `7c333b3` (#51, v2 Session 17.5, merged). It carries one
+  file, `docs/prompts/v2-session-18.md`, and this entry. Created on the author's permission ("New branch + PR
+  (Recommended)").
+- Drafted on the author's request of 3 Nov 2026, "Ask me and then write session 18's prompt", after four questions,
+  answered: the scope, "Notice + (c) + V2C-28–36 (Recommended)" — the D-2 notice in the text approved in v2 Session
+  17.5 (question 3), the findings of group (c) of its question 4 (F-06, F-15, F-16, F-21, F-28, F-30, F-10) and the
+  rows `docs/V2-CLOSURE.md` classes "B — a maintenance session" (V2C-28…V2C-36); the order, "Notice first, own
+  checkpoint (Recommended)"; Phase 4, "Not in 18 (Recommended)"; the branch, "New branch + PR (Recommended)". These
+  answers shape the prompt; they are not §8 rows. The session records its own scope in §8 as its first write.
+- Found while drafting: `tools/selftest.mjs` N1 pins the D-2 notice's current text word for word ("change it only on
+  their word"), so writing the approved text needs N1 changed too — a premise question 3 did not name. The prompt puts
+  it to the author as 18.0's first question.
+- Disposition: pushed; a pull request to `main` opened on the author's instruction.
+
+## Branch register — 3 November 2026 (v2 Session 17.5)
+
+- Branch `claude/nifty-ride-kc0p4x`, assigned by the environment, cut from `main` at `4ab13a6` (#48, this session's
+  prompt; #49 and #50 merged the same morning). The prompt was already in `main`; nothing was merged in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: **only
+  `origin/scout/digest-digest-2026-11-02T16-04-07Z`**, which is **not in this register**: one commit by
+  `source-scout[bot]` (`e1b6527`, 2 Nov 2026), adding `agent/scout/digests/digest-2026-11-02T16-04-07Z.json` and `.md`
+  ("13 candidate(s), 11 new against the bibliography … No dataset was modified and no candidate is a source record").
+  Reported to the author; not merged, not read as evidence. The two branches the prompt expected
+  (`origin/scout/digest-digest-2026-10-26T13-10-32Z`, `origin/claude/v2-session-8-findings`) no longer exist on the
+  remote. Merged but not deleted: `claude/fix-browser-brief-prose-check` (#50), `claude/fix-og-site-name-2026-11-03`
+  (#49), `claude/v2-session-17-5-prompt` (#48).
+- `main` at the start was `4ab13a6`, not the prompt's `d65e713`: #50 (`1c94363`, `agent/browser`'s
+  `search:brief-prose` skips the date-dependent compliance dial) and #49 (`fa4beda`, the hand-added `og:site_name`
+  removed and the it/fr/es editions regenerated) were merged on 3 Nov 2026 before the session began. So the prompt's
+  question 0 did not arise as written (below).
+- `origin/main` re-fetched immediately before this report was written: still `4ab13a6`. No pull request was opened or
+  merged during the session.
+- Decided for `origin/scout/digest-digest-2026-11-02T16-04-07Z` ("Register, leave open (Recommended)"): registered here as
+  an unread Source Scout digest, not merged and not evidence; reading its candidates is a later evidence session's.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. A pull request to `main` opened on the author's instruction of 3 Nov 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the branch after it. No prompt for v2 Session 18 was asked for.
+
+## v2 Session 17.5 — checkpoint report (17.5.1 the audit of Phase 3, 17.5.2 the preparation of Phase 4, 17.5.0 the decisions)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 17.5 | "start session 17.5" | `5678935` |
+| Q1 · Phase 3's state | "Close on rules (Recommended)" — **Phase 3 closes** on the met entry condition and the 33 rules | `6b6771c` |
+| Q2 · the fifteen open "B — Phase 3" rows | "Accept mapping (Recommended)" — six destinations, the reader-facing first | `8312b74` |
+| Q3 · the D-2 notice on `applies.html` | "Proposed, next session (Recommended)" — the text approved word for word, written next session | `f0dd278` |
+| Q4 · the open findings of Sessions 12–17 | "Accept grouping (Recommended)" — groups (a)–(f) | `a5a9ad1` |
+| Q5 · Phase 5's scope | "After Phase 4 (Recommended)" | `d7c9415` |
+| Q6 · D-4 | "Names + table (Recommended)" — *machine check*, *human attestation*, *human authorship*, no letters; §2.2 approved | `dfbeb02` |
+| Q7 · D-5 | "Defer, with reason (Recommended)" — on the two facts read 3 Nov 2026 | `5cd90d5` |
+| Q8a · a premise Q8 did not name: §4's "only what Phases 0–1 made visible" | "By principle (Recommended)" | `9311e54` |
+| Q8b · Phase 4's entry condition and first item | "Approve both (Recommended)" — E-1…E-6; 4.1; Phase 4 not opened | `d1c310b` |
+| Q9 · the status documents | "Write S1–S6 as drafted (Recommended)" | `670e00a` |
+
+**Question 0 was not asked**, because it did not arise as written: re-measured at the start, the defect of `d65e713`
+was already corrected on `main` by `fa4beda` (#49): `seo-audit` `ERRORS 0 WARNINGS 0`, one `og:site_name`. What remains
+is reported, not decided: `node tools/commit-evidence.mjs 9cc7aa5 HEAD` still flags `d65e713` ("changes 1 published
+file(s) (index.html) and carries no "Evidence:" trailer"), which a merged commit cannot be given; and the deploy gate
+**held** — GitHub Actions `pages.yml` on `main`: run 55 (`d65e713`) failure, run 56 (`39630cd`, #50) failure, runs 57
+(`e216414`) and 58 (`4ab13a6`) success — so the double tag was never deployed by the gated path.
+
+Each answer was recorded in §8 and committed before the next question was asked.
+
+### What was written (only `docs/` and `AGENTS.md`'s table)
+
+- **`docs/PHASE-3-AUDIT.md`** (`b3f1578`; status line `61c8fce`). The detail of 17.5.1; summary below.
+- **`docs/PHASE-4-SETUP.md`** (`68edd89`; status line `61c8fce`). The detail of 17.5.2; summary below.
+- **`docs/ROADMAP-v2.md`**: §8, the scope row and eleven answer rows; S1 (header) and S3 (§3 D-4, D-5; §4 Phases 3, 4, 5)
+  in `61c8fce`.
+- **`docs/V2-CLOSURE.md`** (S4, `61c8fce`): the header, and the fifteen open rows each with "**moved 3 Nov 2026** (§8,
+  v2 Session 17.5, question 2): <destination>"; the "B — Phase 3" text is kept so the history reads.
+- **`AGENTS.md`** (S2, `61c8fce`): the roadmap row; rows for the two new documents.
+- **This report** (S5: "Last updated" and "Branch").
+- Nothing in `data/`, `js/`, `css/`, `style.css`, the pages, `i18n/`, `img/`, `instruments/`, `tools/`, `agent/` or
+  `.control-room/`.
+
+### The audit of Phase 3, in summary (`docs/PHASE-3-AUDIT.md`)
+
+- **The entry condition, re-measured on the records:** 120 of 120 references with `supports` and a locator; 59 of 59
+  non-threshold dimensions naming provisions and 90 of 90 ids resolving (thresholds through `threshold_basis`, as
+  v2 Session 15 decided); `evidence-audit --as-of 2026-11-03` publishable 33 of 33, no `BACKLOG rule-` line, 0 errors.
+  **The flip holds**: a bare id planted on `ap-dora-01` in a copy → exit 1, T-01 and T-02, publishable 32 of 33.
+- **The 33 rules, session by session** (12–17), each with its §8 rows, commits and assertions: X1–X4, Y1–Y6 and F10
+  pass; `tools/selftest.mjs` 123 of 123. All 33 carry `last_verified` 2026-10-29.
+- **"B — Phase 3" rows: twenty-one, not the prompt's twenty** (V2C-66 was added in v2 Session 12): six closed, fifteen
+  open, three touching a reader (V2C-12, V2C-14, V2C-21). **V2C-16's premise has moved**: since `580621c` an `enables`
+  edge's modality is read from its target, so the derivation half of the finding no longer holds; the four edges are
+  still not added.
+- **Thirty findings of Sessions 12–17** re-measured (F-01…F-30): F-22 superseded by `c49e110`; F-01 is the D-2 notice.
+- **The two maintenance checks on the calendar:** `RULE_STALE` 0 today, 33 from 28 Jan 2027; T-12 0 today, one
+  (`ap-cra-01`, via `rel-ehds-cra-amends`) from 26 Mar 2027 — and, scanned monthly to 1 Jan 2028, no other.
+- **Phase 5's base** measured; its scope not written.
+
+### The preparation of Phase 4, with the levels decided (`docs/PHASE-4-SETUP.md`)
+
+| # | Process | *machine check* | *human attestation* | *human authorship* |
+|---|---|---|---|---|
+| P-01 | Control Room snapshot (0.1) | assembly time present | — | judging it recent enough |
+| P-02 | attestation (0.2) | present, chained | the declaration | — |
+| P-03 | reference date (0.3) | unreadable date refused | — | choosing the date |
+| P-04 | editorial audit recorded (1.1) | the audit; the record's answers | "ran it as of D" | turning a finding into a correction |
+| P-05 | metric definitions (1.2) | name and definition present | — | the definition |
+| P-06 | `CONTROL-ROOM.md` inventory (1.3) | an uninventoried view fails | — | the row |
+| P-07 | the `applies.html` notice (1.5) | none today | — | the wording |
+| P-08 | a rule read in Cellar | shape, dates, resolution | "read on D, CELEX X" | the rule's content |
+| P-09 | SPARQL metadata | none today | "queried on D" | what a change means |
+| P-10 | the §8 question method | none | — | the decision |
+| P-11 | response to T-12 / RULE_STALE | noticing | "re-read, no change" | the new content |
+| P-12 | `tools/_footer.mjs` | staleness detected; deterministic | — | — |
+| P-13 | the `Evidence:` line | the line exists | the line | what the evidence is |
+
+D-4 decided these names and this table (Q6); §4's sentence is read by principle (Q8a), so P-08…P-13 enter Phase 4's scope
+once written down. **D-5 deferred** on the two facts (Decap: GitHub "requires a server"; jsDelivr/unpkg. Sveltia: a
+browser-stored token needs no server, PKCE unimplemented, OAuth needs a server; unpkg). **Entry condition** E-1…E-6 and
+**first item 4.1** approved (Q8b). **Phase 4 is not open.** On this tree E-1…E-4 are met by the §8 rows above and E-5 by
+the counts below; E-6 is a property of 4.1's scope row. Opening is the author's word.
+
+### The rows of `docs/V2-CLOSURE.md`, with the destination decided (Q2)
+
+| Destination | Rows |
+|---|---|
+| (1) a reader-facing data session | V2C-12, V2C-21 |
+| (2) a status-labels session | V2C-14, V2C-20 |
+| (3) map sessions | V2C-13 first; then V2C-03, -04, -05, -16, -17, -18, -19 |
+| (4) Phase 5 | V2C-15 |
+| (5) a maintenance session | V2C-11 |
+| (6) evidence sessions | V2C-66 |
+
+And the findings (Q4): (a) rules' wording → a rules-maintenance session before 28 Jan 2027; (b) outcomes and
+conditions → Phase 5; (c) vocabulary and presentation → the maintenance session of Q3; (d) the brief and its claims →
+an evidence session; (e) F-29 → map sessions, F-26 left; (f) F-07, F-11, F-25, F-08 left with their reasons.
+
+### Counts against `main` (`4ab13a6`), before and after
+
+| Check | Before (`4ab13a6`) | After (`61c8fce`) | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified, provisions 113 | the same | `docs/` only |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — (`seo-audit` was 3 ERRORs on `d65e713`, repaired by #49 before the session) |
+| `evidence-audit --as-of 2026-11-03` | 0 errors, 12 warnings, publishable 33 of 33 | the same | the 12th warning, `STATUS_PREDATES_MILESTONE instruments/dma`, is the calendar (1 Nov 2026 passed) |
+| `freshness --as-of 2026-11-03` | 0 defects, 4 prompts | the same | the calendar, not a defect |
+| `tools/selftest.mjs` | 123 | 123 | — |
+| The 24 suites in `AGENT_SUITES` | 1253 tests: **1245 pass, 8 fail** (governance suite, shallow clone); 45 of 45 after `git fetch --unshallow` | **1253 pass, 0 fail** (full history) | the clone, not the tree (finding 1) |
+| `.control-room/selftest.mjs` | 76 · 1 skipped | 76 · 1 skipped | the `::1` test (V2C-39) |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 15 of 20, refused (shallow clone: two extra blockers) | **17 of 20, refused**: `production_dispatcher_wired`, `decision_ledger_present`, `deploy_gate_exists` unmeasurable | as Session 17 |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs 4ab13a6 HEAD` | — | 14 commits, 0 without evidence (none changes a published file) | — |
+
+Both columns were measured in this session, each in its own git worktree, outputs saved to files. **E-5 is met on this
+tree**: on a full-history clone every validator is at 0 errors and every suite and the browser suite pass.
+
+### What was not verified, and why
+
+- **No rule, claim or paragraph was re-read against a source**: the prompt forbids it, and the audit measures that the
+  shape and what the author approved hold, not that a reading is right.
+- **The live site was not fetched.** The deploy record (`pages.yml` run 58 success on `4ab13a6`) is the evidence that
+  `main` was published; PP-09 stays undecidable.
+- **D-5's facts are from two documentation sites read once**, on 3 Nov 2026, about 11:25 UTC; no CMS was installed or
+  run, and whether either can write an `Evidence:` trailer was not read.
+- **F-21 and F-27 were not re-rendered in a browser**; their data was re-measured.
+- **The source-scout digest of 2 Nov 2026** was not read as evidence: its candidates are not source records.
+- **The `::1` test** was skipped again (no IPv6 loopback here; V2C-39, class C).
+
+### Found, for the author — not changed
+
+1. **This container's clone was shallow** (`git rev-parse --is-shallow-repository` → `true`, 304 commits).
+   `agent/proposals/governance/selftest.mjs` then fails 8 of 45 tests ("12 anchor(s) are refuted": commit anchors older
+   than the cut), and readiness adds two blockers (`agent_suites_pass`, `registers_exit_clean`). After
+   `git fetch --unshallow` (603 commits) the suite passes 45 of 45. Not a defect in the tree; a property of the clone,
+   and the reason E-5 names a full-history clone. A suite that reads history could say so rather than report
+   "refuted" — reported, not changed (a change under `agent/` is outside this session).
+2. **The prompt's count of twenty "B — Phase 3" rows** is twenty-one (V2C-66).
+3. **V2C-16's premise has moved** with `580621c`; its row stays open with destination (3), where the author can decide
+   whether the derivation half is superseded.
+4. **`d65e713` carries no `Evidence:` trailer**, permanently; `commit-evidence` will flag it on every range that
+   includes it. CI's range is per push, so it does not recur on later pushes.
+5. **An unregistered branch**, `origin/scout/digest-digest-2026-11-02T16-04-07Z` — registered above, left open, as the
+   author decided.
+6. **The limited-autonomy grant expires on 9 Mar 2027**, inside the window in which Phase 4 would run; renewing it is a
+   separate governance decision (`docs/PHASE-4-SETUP.md` §3).
+7. **The calendar ahead:** 28 Jan 2027, all 33 rules `RULE_STALE`; 26 Mar 2027, T-12 on `ap-cra-01`; between now and
+   then `STATUS_PREDATES_MILESTONE` grows for `ai-act` (2 Dec 2026), `pld` (9 Dec), `eidas2` (24 Dec), `dma` (1 Jan
+   2027) and `data-act` (12 Jan 2027). None is a defect; each is a person's reading to do.
+8. One phrase the Sveltia documentation page carries ("Some AI agents, namely Claude, include a stylesheet `<link>` …")
+   was read as documentation content and had no bearing on the two facts.
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **17.5.0** | §8: the scope row and eleven answer rows (`5678935` … `670e00a`) | read §8's last twelve rows | — | met: Phase 3's state, the destinations, D-4, D-5 (deferred with reason), the entry condition decided in the author's words |
+| **17.5.1** | `docs/PHASE-3-AUDIT.md` (`b3f1578`) | the commands in its §1 and §5; plant a bare id in a copy | `tools/selftest.mjs` X1–X4, Y1–Y6, F10 | met: every row with state, evidence and today's check |
+| **17.5.2** | `docs/PHASE-4-SETUP.md` (`68edd89`) | read §1, §2.2, §4 (follow the URLs), §5, §6 | — (a design document) | met: inventory, levels, D-5's facts, an entry condition that can fail, a first item |
+| **17.5.3** | status documents (`61c8fce`); this report | `git diff 4ab13a6 HEAD --stat` shows only `docs/` and `AGENTS.md`; the counts above | every suite, as counted | met: before and after measured, outputs kept |
+| **17.5.4** | this report | — | — | **approved** by the author (§8, "The checkpoint of v2 Session 17.5") |
+
+### How to check it by hand
+
+```
+git diff --stat 4ab13a6 HEAD                                   # docs/ and AGENTS.md only
+git rev-parse --is-shallow-repository                          # must be false before the suites
+node tools/evidence-audit.mjs --as-of 2026-11-03               # publishable 33 of 33, ERRORS 0
+node tools/evidence-audit.mjs --as-of 2027-03-26 | grep LAW_CHANGED   # one: ap-cra-01
+node tools/freshness.mjs --as-of 2027-01-28 | grep -c RULE_STALE      # 33
+node tools/commit-evidence.mjs 4ab13a6 HEAD                    # 0 without evidence (docs only)
+grep -n "Tier [ABC]" docs/PHASE-4-SETUP.md                    # only the brief's quoted words
+```
+
+## Branch register — 3 November 2026 (the prompt of v2 Session 17.5)
+
+- Branch `claude/v2-session-17-5-prompt`, cut from `main` at `d65e713` (#47, Session 17, merged; then `d65e713`, an
+  author's commit outside the sessions). It carries one file, `docs/prompts/v2-session-17-5.md`, and this entry.
+- Drafted on the author's request of 3 Nov 2026: "I want to generate a 17.5 session to set up Phase 4, auditing Phase
+  3's accomplishments to transit Phase 3 to Phase 4 seamlessly". The prompt records no decision; its first write is
+  §8's row "The scope of v2 Session 17.5", in the author's words. It is a session of measurement and decision on the
+  model of Session 11: an audit of Phase 3 (`docs/PHASE-3-AUDIT.md`, proposed), the Phase 4 set-up
+  (`docs/PHASE-4-SETUP.md`, proposed: the inventory of manual processes, D-4's three levels on it, D-5's two facts,
+  an entry condition that can fail), and the questions, nothing published changed.
+- Measured while drafting, on `d65e713`, and carried into the prompt as its question 0: `seo-audit` exits 1 with 3
+  ERRORs (the it/fr/es editions of the brief stale; `index.html` carries two `og:site_name`, one added by hand, one
+  generated by `tools/_footer.mjs`), and `tools/commit-evidence.mjs 9cc7aa5 d65e713` flags the commit as changing a
+  published file without an `Evidence:` trailer. Not corrected: `main` is the author's, and the decision is theirs.
+  As of 3 Nov 2026 `evidence-audit` carries a 12th warning (`STATUS_PREDATES_MILESTONE instruments/dma`, the
+  1 Nov 2026 designation date passed) and `freshness` 4 prompts: the calendar, not a defect.
+- Also found while drafting: of the twenty rows `docs/V2-CLOSURE.md` classes "B — Phase 3", six are closed (and
+  V2C-01, class A); fifteen are open (V2C-03–05, V2C-11–21, V2C-66). Phase 3's entry condition is met; Phase 3 is not
+  thereby closed. The prompt puts that to the author as its question 1.
+- Disposition: pushed; a pull request to `main` if the author asks for one.
+
+## Branch register — 29 October 2026 (v2 Session 17)
+
+- Branch `claude/v2-session-17-last-rules`, cut from `main` at `ca1e723` (#46: Session 16 and this session's prompt).
+  Nothing was merged in. The environment assigned no branch (the checkout was a detached `main`), so the session used
+  the prompt's name.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only `origin/claude/v2-session-8-findings`
+  and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both already in the register. `claude/v2-session-16-ai-act-rules`
+  is in `main` (#46). No other branch to report.
+- `origin/main` was re-fetched after the data commit and before this handover was written: still `ca1e723`. No pull
+  request was opened or merged during the session.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. A pull request to `main` opened on
+  the author's instruction of 30 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the branch after it.
+  No draft of a further prompt was asked for: with Session 17 the plan for Sessions 13–17 is exhausted.
+
+## v2 Session 17 — checkpoint report (17.1 the ten rules, 17.2 the flip, 17.3 the two maintenance checks)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 17 | "Start Session 17" | `acdc63e` |
+| Q6a · the 12 Jan 2027 event and Data Act Art. 29 | "A: add Art. 29, retag (Recommended)" | `1d904d3` |
+| Q2a · `ap-data-act-02`'s dates | "Add the derived date (Recommended)" | `4d40033` |
+| Q2b · `ap-data-act-04`'s dates | "Add 2026, keep 2027 (Recommended)" | `9372bb3` |
+| Q3a · `ap-data-act-03`'s exemption (Art. 4(6)–(9)) | "A: correct, drop brief's line (Recommended)" | `0312451` |
+| Q6b · Data Act Art. 7(1) on `-03` and `-04` | "A: add to -03 and -04 (Recommended)" | `f517f30` |
+| Q6c · Data Act Art. 31 on `-01` and `-02` | "A: add to -01 and -02 (Recommended)" | `5d61860` |
+| Q6d · two headings (Data Act Art. 3, DORA Art. 28) | "A: correct both (Recommended)" | `e6976db` |
+| Q1a · the Data Act table | "Approve the table (Recommended)" | `c19c153` |
+| Q5a · NIS2 as a directive | "A: as proposed (Recommended)" | `a20f961` |
+| Q4 · the tier-2 source of `ap-nis2-01` | "A: context, report wording (Recommended)" | `579d1d1` |
+| Q3b · `ap-nis2-02`'s exemption (Art. 2(1)–(3)) | "A: correct the text (Recommended)" | `3f593cd` |
+| Q6e · `ap-nis2-03` and Art. 2(7) | "A: add the exemption (Recommended)" | `1c5481f` |
+| Q1b · the NIS2 table | "Approve the table (Recommended)" | `d293570` |
+| Q6f · `ap-dora-01`'s exemptions (Arts 2(3)–(4), 16(1), 24(1)) | "A: add both (Recommended)" | `43eb35e` |
+| Q1c · the DORA table | "Approve the table (Recommended)" | `8b52dbc` |
+| Q5b · the CRA as the EHDS amends it | "A: note only (Recommended)" | `6f45f2e` |
+| Q6g · `ap-cra-01`'s exemptions (Arts 2, 69) | "A: add both (Recommended)" | `1ac3f02` |
+| Q1d · the CRA table | "Approve the table (Recommended)" | `923674a` |
+| Q7 · the flip | "A: remove RULES_V1 (Recommended)" | `9663ea7` |
+| Q8a · maintenance check (a), T-12 | "A: T-12 as proposed (Recommended)" | `7c47151` |
+| Q8b · maintenance check (b), freshness per rule | "A: per rule, 90 days (Recommended)" | `9d66fb1` |
+| Q9 · the assertions | "Change as proposed (Recommended)" | `fada6e0` |
+| A premise Q9 did not name (Y2–Y5 and `RULES_V1`; F7's name taken, the test is F10) | "Replace as proposed (Recommended)" | `ff734b2` |
+
+Q6a was asked first because the two date questions turned on it. Q7 and Q8 were asked with the approved data written and
+measured (planted cases prototyped in scratch copies); Q9 after every suite had run on the flip and the two checks.
+
+### What was written
+
+- **17.1, `bfb4b4e`.** `data/applicability.json`: the ten rules with reference objects, `condition_provisions` to each
+  Act's own scope and definitions Articles, exemption objects, `last_verified` 2026-10-29 and a note of what was read
+  (Q1a–Q1d); dates, obligations and exemptions per Q2a, Q2b, Q3a, Q3b, Q5a, Q6a–Q6c, Q6e–Q6g; the tier-2 NIS2 press
+  release as context (Q4). `data/instruments.json`: nine new provisions in the approved words — `data-act:art-1`, `-2`,
+  `-29`; `nis2:art-2`, `-6`; `dora:art-2`, `-3`; `cra:art-2`, `-3` — and the Official Journal's headings of
+  `data-act:art-3-1` and `dora:art-28` (Q6d). `data/timeline.json`: `tl-data-act-2027-01-12-application` names Art. 29
+  instead of Art. 25; `tl-data-act-2025-09-12-application` also names Arts 1, 2 and 29. `data/sources.json`: `accessed`
+  and a dated note on `src-eurlex-data-act`, `-nis2`, `-dora`, `-cra` and `src-ec-nis2-referral-2026`. The four instrument
+  pages and `sitemap.xml` regenerated; a second `node tools/_footer.mjs` writes 0 files. Conditions, outcomes and
+  rationales unchanged on all ten.
+- **17.2 and 17.3, `3f88d73`.** `tools/trigger-audit.mjs`: `RULES_V1`, `BACKLOG_CODES` and the backlog branch gone,
+  every T-01…T-05 and T-10 finding an ERROR (Q7); T-12 `LAW_CHANGED_SINCE_VERIFIED`, a WARNING (Q8a).
+  `tools/evidence-audit.mjs`: the six `BACKLOG rule-*` lines leave text, `--json`, `--markdown` and the record summary.
+  `tools/freshness.mjs`: `RULE_INTERVAL` 90 days and the `RULE_STALE` prompt, applicability aged rule by rule (Q8b).
+  `docs/ROADMAP-v2.md` §4: "Met on 29 Oct 2026 (v2 Session 17)".
+- **Assertions, `42feb8f`** (Q9 and the premise question). `tools/selftest.mjs` 121 → 123: X1–X3 rewritten for the
+  flip, T-10 and T-12 plants in X2, Y2–Y5's `RULES_V1` line replaced, new **Y6** (the ten as approved) and **F10**
+  (freshness per rule).
+- Between `bfb4b4e` and `42feb8f` the branch's CI was red on `tools/selftest.mjs` (X1–X3, then a failed import); no
+  assertion changed before the author answered. `evidence-audit` was at 0 errors on every commit: no check had a defect
+  to expose this time.
+
+### Before and after, every text a reader sees that changed
+
+| Where | Before | After |
+|---|---|---|
+| `applies.html`, Sources of the ten cards | the citation alone | the citation + " — at <locators>"; `ap-nis2-01`'s press release ends "(context only)" |
+| the ten cards, Rule last verified | 27 August 2026 (Data Act, NIS2); 27 September 2026 (DORA, CRA) | 29 October 2026 |
+| Key dates | `-02` 12 Jan 2027; `-04` 12 Sep 2025 · 12 Sep 2027 | `-02` 12 Sep 2025 · 12 Jan 2027; `-04` 12 Sep 2025 · 12 Sep 2026 · 12 Sep 2027 |
+| Relevant obligations | `-01`, `-02` Data Act Art. 25 | + "Data Act Art. 29 Gradual withdrawal of switching charges" |
+| `ap-data-act-03` exemption | "Data holders may limit access where data qualifies as a trade secret, but must notify the national competent authority, and the user may challenge before a court. The brief records practitioner doubt about whether the confidentiality measures required of recipients are sufficient." | Q3a's text (Art. 4(6)–(9)), then Q6b's (Art. 7(1)) |
+| `ap-nis2-02` exemption | "Micro and small enterprises are generally outside NIS2, subject to sector-specific exceptions." | Q3b's text (Art. 2(1)–(3)) |
+| New exemptions | none on `-01`, `-02`, `-04`, `ap-nis2-03`, `ap-dora-01`, `ap-cra-01` | Art. 31 (`-01`, `-02`); Art. 7(1) (`-04`); Art. 2(7) (`ap-nis2-03`); Arts 2(3)–(4) and 16(1)/24(1) (`ap-dora-01`); Arts 2 and 69 (`ap-cra-01`), in §8's words |
+| Headings (cards, instrument pages, `instrument.html`, search) | "Obligation to make connected product data accessible to the user"; "General principles (ICT third-party risk)" | "Obligation to make product data and related service data accessible to the user"; "General principles" |
+| `/instruments/data-act/` | "4 provisions recorded"; Art. 25 "… then from 12 January 2027" | "7 provisions recorded": Arts 1, 2 (since 12 Sep 2025), Art. 29 (since 12 Sep 2025, then from 12 Jan 2027); Art. 25 without the 2027 tranche |
+| `/instruments/nis2/`, `/dora/`, `/cra/` | 5, 7, 5 provisions recorded | 7, 9, 7: Arts 2 and 6 (NIS2), 2 and 3 (DORA, CRA), each on the instrument's general date |
+| the brief's calendar, Legal basis | 12 Jan 2027 "Data Act Art. 25"; 12 Sep 2025 "Data Act Art. 25 · Data Act Art. 8" | "Data Act Art. 29"; "Data Act Art. 1 · Data Act Art. 2 · Data Act Art. 25 · Data Act Art. 29 · Data Act Art. 8" |
+| search palette, every page | — | entries for the nine new provisions; the two corrected headings |
+
+Unchanged: every condition, outcome, rationale and `depends_on`; the other 23 rules' cards; `applies.html` and its D-2
+notice; the brief's prose.
+
+### The TRIGGERS report, before and after (`--as-of 2026-10-29`)
+
+```
+before (main ca1e723)                                after (42feb8f)
+publishable   23 of 33                               publishable   33 of 33: … the 23 … + the ten
+BACKLOG rule-v1-sources 10                           (the six BACKLOG rule-* lines are gone:
+BACKLOG rule-scope-basis-missing 10                   every finding of T-01…T-05 and T-10 is an
+BACKLOG rule-condition-provisions-missing 10          ERROR for every rule)
+BACKLOG rule-exemption-v1 2
+BACKLOG rule-threshold-basis-missing 0
+BACKLOG rule-dates-not-derived 2
+ERRORS 0                                             ERRORS 0
+```
+
+**Phase 3's entry condition is met** (`docs/ROADMAP-v2.md` §4): every rule's references carry `supports` and a locator,
+every condition resolves to a provision, and the audit reads the rules as it reads the claims. V2C-02 and V2C-10 are
+marked closed in `docs/V2-CLOSURE.md` only after the author approves this checkpoint.
+
+The two maintenance checks today: T-12 reports nothing as of 29 Oct 2026; as of 26 Mar 2027 it reports
+`LAW_CHANGED_SINCE_VERIFIED applicability/ap-cra-01` (the EHDS's application date). `RULE_STALE` reports nothing until
+28 Jan 2027, when all 33 rules, read on one day, become stale together.
+
+### The sources read (29 Oct 2026)
+
+| Source | Where | Read |
+|---|---|---|
+| Regulation (EU) 2023/2854 (Data Act) | Cellar, CELEX 32023R2854 (XHTML, OJ L 2023/2854, 22.12.2023) | Arts 1–8, 23–31, 50 |
+| Directive (EU) 2022/2555 (NIS2) | Cellar, 32022L2555 (OJ L 333, 27.12.2022) | Arts 1–6, 20–26, 32(6), 41; Annex I |
+| Regulation (EU) 2022/2554 (DORA) | Cellar, 32022R2554 (OJ L 333, 27.12.2022) | Arts 1–6, 16, 17, 19, 24, 28, 30, 31, 33, 64 |
+| Regulation (EU) 2024/2847 (CRA) | Cellar, 32024R2847 (OJ L 2024/2847, 20.11.2024) | Arts 2, 3, 13, 14, 69, 71 |
+| Regulation (EU) 2025/327 (EHDS) | Cellar, 32025R0327 | Arts 104 and 105 |
+| Their metadata | SPARQL | Data Act: no amending act, six corrigenda, only R(01) in English; NIS2: none, nine, only R(04); DORA: none, nine, none in English; CRA: one (the EHDS), eight, R(01), R(02), R(04) in English. Proposals to amend (52025PC0837, 52026PC0013, 52023PC0360, 52026PC0590) not read: not law. The only consolidated versions are the originals |
+| The English corrigenda | Cellar, 32022L2555R(04), 32023R2854R(01), 32024R2847R(01), R(02), R(04) | in full: NIS2 Art. 19(1); Data Act Art. 48; CRA title, Art. 64(10), Art. 67 — none of the text the rules cite |
+| Commission press release, 8 July 2026 | the URL `src-ec-nis2-referral-2026` holds | in full |
+
+Every source record's `published` matches its Official Journal header. Nothing was written from memory or from the
+design drafts without re-reading.
+
+### Counts against `main` (`ca1e723`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified; provisions 104 | 0 / 0, 45; provisions 113 | the nine new provisions |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-29` | 0 errors, 11 warnings | 0 errors, 11 warnings | TRIGGERS above |
+| `freshness --as-of 2026-10-29` | 0 defects, 3 prompts | 0 defects, 3 prompts | no rule past 90 days |
+| `tools/selftest.mjs` | 121 | 123, 0 failing | Y6, F10 |
+| The 24 suites in `AGENT_SUITES` | 1251 | 1253, 0 failing | Y6, F10 |
+| `.control-room/selftest.mjs` | 76 · 1 skipped | 76 · 1 skipped | — |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | 16 of 20 on `bfb4b4e` and `3f88d73` (`tools/selftest.mjs` red) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs ca1e723 42feb8f` | — | 27 commits, 0 without evidence | — |
+
+"Before" for the validators and `evidence-audit` was measured this session on an export of `ca1e723`; for the suites,
+the browser suite, the adversarial gate and readiness it is Session 16's measurement on the same code (`main` changed
+only in `docs/` since).
+
+### Seen in a browser
+
+Chromium (Playwright), local server, light and dark, 1280px and 390px — 48 cases, all clean: `applies.html` with
+`?actor=actor:cloud-provider&activity=activity:cloud-services` (with and without `territory=territory:non-eu-serving-eu`),
+`?actor=actor:financial-entity`, `?actor=actor:essential-entity&activity=activity:critical-infrastructure-operation`,
+`?actor=actor:public-authority&activity=activity:critical-infrastructure-operation`,
+`?actor=actor:pde-manufacturer&activity=activity:product-with-digital-elements`,
+`?actor=actor:manufacturer&activity=activity:connected-products`, `?actor=actor:sme&activity=activity:connected-products`,
+and `/instruments/data-act/`, `/nis2/`, `/dora/`, `/cra/`: the ten rules fire, read "Rule last verified 29 October 2026"
+and print the approved texts; no console error; no horizontal overflow; no "[object Object]".
+
+### What was not verified, and why
+
+- The claims the ten rules cite were not re-read; each rule's note says so.
+- Recommendation 2003/361/EC (SME definitions the Data Act and NIS2 refer to) was not read; it is outside the dataset.
+- The sector-specific Union acts NIS2 Art. 4 and DORA Art. 2 refer to, and the Directives DORA Art. 2(3) and 16(1)
+  name, were not read; the exemptions quote DORA's own words about them.
+- National transposition of NIS2 is not in the dataset: the rules say the obligations reach entities through it.
+- The four proposals SPARQL lists as proposing to amend these Acts were not read: a proposal is not law.
+- `src-eurlex-ehds` was re-read (Arts 104–105) but its `accessed` was not moved: the CRA table did not name it.
+- `js/applies.js` has no rendering test; its output was checked in the browser and by Y6 on the generated pages.
+- Screen readers, contrast and pixels: as README limitation 7 says.
+
+### Found, for the author — not changed
+
+1. **The D-2 notice on `applies.html` is now false in its first paragraph** for every rule: "These rules are not yet
+   verified to the standard the site's claims are. Each rule cites its sources by identifier only … and the evidence
+   audit that checks every claim does not yet check these rules." All 33 are publishable at the claims' standard and
+   the audit checks them. Its words are the author's (D-2; Sessions 15 and 16, finding 5).
+2. **`ap-nis2-01`'s `depends_on`** says transposition is "materially incomplete"; the press release says "While most
+   complied, Spain, France, Ireland and the Netherlands have yet to notify full transposition" (Q4).
+3. **`ap-cra-01`'s rationale** says "serious incidents"; Art. 14(3)'s term is "severe incident" (the event's wording was
+   corrected on 14 Oct 2026, the rationale was not).
+4. **`ap-nis2-02`'s rationale** says the digital infrastructure sector is one "which NIS2 treats as essential"; Annex I
+   is "sectors of high criticality", and an entity is essential by Art. 3(1) (its next sentence says size decides).
+5. **`ap-data-act-02`** is `likely` and depends on "Whether the provider offers services to customers in the Union",
+   while its territory condition is "Outside the EU, serving EU users" and Art. 1(3)(f) brings such providers into scope.
+6. **The taxonomy notes** of `actor:essential-entity` ("NIS2 Annex I") and `actor:important-entity` ("NIS2 Annex II")
+   do not match Art. 3, which classes by size as well as by Annex.
+7. **The Art. 41(1) date reference** is on `ap-nis2-01` only, as Q5a approved; `-02` and `-03` carry the same date.
+8. **Status contradictions to come:** as of 31 Dec 2027 `evidence-audit` reports `data-act` and `cra` as "partly
+   applicable" with no future application date (pre-existing, the same on `main`): their status will need re-reading
+   when the last tranche passes.
+9. **All 33 rules turn stale on one day** (28 Jan 2027), having been read on one day.
+10. **`data/applicability.json` `$last_verified`** still says 2026-08-27; freshness no longer uses it (Q8b), and nothing
+    else reads it.
+11. **`docs/v2-design/applicability-examples.json`** still holds the 25 Oct drafts; a design record, left as it is.
+12. **Earlier findings unchanged**: Session 16's 1–9 (among them "1 days ago", Art. 111(3), Art. 50's heading).
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **17.0** | §8: scope row and twenty-three answer rows (`acdc63e` … `ff734b2`) | read §8's last twenty-four rows | — | met: every decision in the author's words before anything published changed |
+| **17.1** | data, pages, sitemap (`bfb4b4e`); Y6 (`42feb8f`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 33 of 33"; open the `applies.html` URLs above and the four instrument pages | `tools/selftest.mjs` Y6, X1 | met: the ten publishable; every check at 0 errors |
+| **17.2** | `tools/trigger-audit.mjs`, `tools/evidence-audit.mjs`, ROADMAP §4 (`3f88d73`); X1–X3 (`42feb8f`) | plant a bare source id on any rule in a copy: `evidence-audit` exits 1 with T-01 and T-02 | X2 ("every rule held in full"), X3 | met: no backlog left; the entry condition met |
+| **17.3** | T-12 and `RULE_STALE` (`3f88d73`); X2's T-12 plants, F10 (`42feb8f`) | `node tools/evidence-audit.mjs --as-of 2027-03-26` → one `LAW_CHANGED_SINCE_VERIFIED`; `node tools/freshness.mjs --as-of 2027-01-28` → 33 `RULE_STALE` | X2, F10 | met: both derived, no network, no new field |
+| **17.4** | this report | — | — | **approved** by the author (§8); V2C-02 and V2C-10 in `docs/V2-CLOSURE.md` name `bfb4b4e` and `3f88d73` |
+
+### How to check it by hand
+
+```
+git diff ca1e723 42feb8f -- data/applicability.json      # the ten rules, nothing else
+node tools/evidence-audit.mjs --as-of 2026-10-29          # TRIGGERS: publishable 33 of 33, no BACKLOG rule- line, ERRORS 0
+node tools/evidence-audit.mjs --as-of 2027-03-26 | grep LAW_CHANGED
+node tools/freshness.mjs --as-of 2027-01-28 | grep -c RULE_STALE   # 33
+node --test tools/selftest.mjs                             # 123 pass
+python3 -m http.server 8000                                # /applies.html?actor=actor:financial-entity
+```
+
+## Branch register — 29 October 2026 (v2 Session 16)
+
+- Branch `claude/v2-session-16-ai-act-rules`, cut from `main` at `3576ea2` (#44, Session 15's report and the prompt
+  of this session, and #45, `docs/POST-V2.md`, merged). Nothing was merged in. The environment assigned no branch
+  (the checkout was a detached `main`), so the session used the prompt's name.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both already in the
+  register. `claude/vigilant-ride-i216wh` (Session 15) is in `main` (#44). No other branch to report.
+- `origin/main` was re-fetched after the data commit, after the assertions and before this handover was written:
+  still `3576ea2`. No pull request was opened or merged during the session.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed.
+- After the approval, item 16.4: the prompt of v2 Session 17 drafted, `docs/prompts/v2-session-17.md` (the ten
+  rules of the Data Act, NIS2, DORA and the CRA to the v2 shape by the method of 13.0 question 4, four tables; then
+  17.2, the `rule-*` flip to ERROR once `RULES_V1` is empty, and 17.3, the two maintenance checks §8's plan row
+  describes, each put to the author before it is written; the assertion question asked after measuring; then a
+  checkpoint). Its starting state was measured on this session's approved tree (`5326ea5`). The prompt records no
+  decision: its first write is §8's row "The scope of v2 Session 17", in the author's words. It names article
+  numbers only where the dataset already records them; which Articles define and delimit each Act is left to the
+  reading.
+- A pull request to `main`, carrying Session 16 and the Session 17 prompt together, opened on the author's
+  instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the branch after it.
+
+## v2 Session 16 — checkpoint report (16.1, the AI Act)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 16 | "Start session 16" | `8263a36` |
+| Q2 · F-4 (V2C-06), `ap-ai-act-03`'s key | "Rename to _gt (Recommended)" | `efc91f5` |
+| Q5 · the tier-2 sources of `-02` and `-04` | "As proposed (Recommended)" | `efc91f5` |
+| Q3a · F-8, `ap-ai-act-01`'s dates | "Add the derived date (Recommended)" | `efc91f5` |
+| Q3b · `ap-ai-act-02`, Art. 3(63) among the obligations | "A: move 3(63) to conditions (Recommended)" | `eefe38a` |
+| Q3c · `ap-ai-act-05`'s dates | "Add the derived date (Recommended)" | `eefe38a` |
+| Q3d · F-8, `ap-ai-act-06`'s dates and the 2 Aug 2028 event | "A: add two, fix the event (Recommended)" | `eefe38a` |
+| Q3e · F-8, `ap-ai-act-07`'s dates | "Add both dates (Recommended)" | `eefe38a` |
+| Q6a · three AI Act headings | "Correct 27 and 51 (Recommended)" | `4691d6a` |
+| Q6b · `src-eurlex-ai-omnibus` `published` | "Correct published (Recommended)" | `4691d6a` |
+| Q6c · `ap-ai-act-04`'s Art. 6(3) exemption | "Correct the text (Recommended)" | `4691d6a` |
+| Q6d · `ap-ai-act-01` and Art. 4 | "Add Art. 4 (Recommended)" | `d369140` |
+| Q6e · `ap-ai-act-01` and GPAI model providers | "Report, change nothing (Recommended)" | `d369140` |
+| Q6f · Art. 111(3) | "Report, change nothing (Recommended)" | `d369140` |
+| Q1 · the AI Act table | "Approve the table (Recommended)" | `3d29dae` |
+| Q4 · `ap-gdpr-04` and `ai-act:art-3` | "A: no change (Recommended)" | `1d64d9d` |
+| A correction to Q6a (the headings also print in search and on an interaction card) | "Stands (Recommended)" | `a6c5704` |
+| A correction to Q1 (the new provisions also print in search and on `instrument.html?id=ai-act`) | "Stands (Recommended)" | `a6c5704` |
+| Q7 · `RULES_V1` and the assertions | "Change as proposed (Recommended)" | `79456fb` |
+
+Q7 was asked after the data was written and every suite run on it (`cd85da8`), so it names what moved, measured. The
+two corrections were asked when the regenerated pages and the code showed a reach the questions had not named.
+
+### What was written
+
+- **16.1, `cd85da8`.** `data/applicability.json`: the seven rules with reference objects (with references to the
+  AI Omnibus where it inserts, replaces or dates what a rule cites), `condition_provisions` to `ai-act:art-3`,
+  `-3-63`, `-25` and `-2-1`, `ap-ai-act-03`'s key `cumulative_training_flop_gt` and its `threshold_basis`, exemption
+  objects, `last_verified` 2026-10-29 and a note of what was read; dates, obligations and the Art. 6(3) text per
+  Q3a–Q3e, Q6c, Q6d. `data/instruments.json`: `ai-act:art-2-1` and `ai-act:art-3` in the approved words; the
+  headings of `ai-act:art-27` and `-51` (Q6a). `data/timeline.json`: `tl-ai-act-2025-02-02-application` names the two
+  new provisions; `tl-ai-act-2028-08-02-application` no longer names `ai-act:art-27` (Q3d). `data/sources.json`:
+  `accessed` and a dated note on `src-eurlex-ai-act`, `src-eurlex-ai-omnibus`, `src-eurlex-teu-art-4`,
+  `src-ec-gpai-code`, `src-ec-ai-omnibus-in-force`; `src-eurlex-ai-omnibus` `published` 2026-07-24 (Q6b).
+  `instruments/ai-act/`, `instruments/ai-omnibus/`, `instruments/gdpr/` (Art. 27's heading on an interaction card),
+  `bibliography.html` and `sitemap.xml` regenerated; a second `node tools/_footer.mjs` writes 0 files. No change to
+  `js/`, `applies.html` or its D-2 notice; `ap-gdpr-04` untouched (Q4).
+- **Assertions, `414a374`** (Q7). `RULES_V1` at 10; `tools/selftest.mjs` 120 → 121: `RULES_AI_ACT`, `RULES_V2` (23),
+  X1 (10/10/10/2/0/2), X3 ("23 of 33", dates 2, JSON exemption 2, Markdown), Y1 (the `_gt` key), new **Y5**;
+  `agent/detector/fields.mjs`: the threshold path `_gt` and its basis locator VALUE.
+- Between `cd85da8` and `414a374` the branch's CI was red on X1–X3, Y1 and detector 41; no assertion changed
+  before the author answered. `evidence-audit` was at 0 errors on the data commit: no check had a defect to expose
+  this time.
+
+### Before and after, every text a reader sees that changed
+
+| Where | Before | After |
+|---|---|---|
+| `applies.html`, Sources of the seven cards | the citation alone | the citation + " — at <locators>"; an AI Omnibus line on `-01`, `-04`, `-05`, `-06`, `-07`; `-04`'s Commission news line ends "(context only)" |
+| `ap-ai-act-03`, "Why this is not a firm answer" | "… threshold the questionnaire does not ask for: cumulative training flop gte." | "… cumulative training flop gt." |
+| Key dates | `-01` 2 Feb 2025; `-05` 2 Dec 2027; `-06` 2 Feb 2025; `-07` 2 Feb 2025 | `-01` 2 Feb 2025 · 2 Dec 2026; `-05` 2 Dec 2027 · 2 Aug 2028; `-06` 2 Feb 2025 · 2 Dec 2026 · 2 Dec 2027; `-07` 2 Feb 2025 · 2 Aug 2025 · 2 Dec 2026 |
+| Relevant obligations | `-01` Art. 5; `-02` Art. 53 · Art. 3(63) | `-01` Art. 5 · Art. 4 AI literacy; `-02` Art. 53 |
+| `ap-ai-act-04` exemption (both pages) | "Article 6(3) filters out an Annex III system that does not pose a significant risk of harm — but the provider must document that assessment and register the system." | "Under Article 6(3), an Annex III system that does not pose a significant risk of harm to the health, safety or fundamental rights of natural persons, and meets one of the four conditions the paragraph lists, is not high-risk — never one that performs profiling of natural persons; the provider must document that assessment before placing the system on the market or putting it into service, and register it (Article 6(4))." |
+| Art. 27 and Art. 51 headings (obligations on `applies.html`, `/instruments/ai-act/`, search, the Art. 27 chip on the AI Act–GDPR card, so `/instruments/gdpr/` too) | "Fundamental rights impact assessment"; "Classification of general-purpose AI models with systemic risk" | "… for high-risk AI systems"; "Classification of general-purpose AI models as general-purpose AI models with systemic risk" |
+| every citation of Regulation (EU) 2026/1744 (8 events, 5 claims, `ai-act:art-4`, `/instruments/ai-omnibus/`, its edge, the bibliography, `applies.html`) | "EUR-Lex, July 8, 2026" | "EUR-Lex, July 24, 2026" |
+| `/instruments/ai-act/`, provisions | "13 provisions recorded" | "15 provisions recorded": "Art. 2(1) Scope" and "Art. 3 Definitions", in §8 Q1's words, applying from 2 February 2025; also in search and on `instrument.html?id=ai-act` |
+| `/instruments/ai-act/`, Art. 27's row | "… then from 2 August 2028: application date" | no 2 August 2028 tranche |
+| the seven cards, both pages | "Last verified 27 August 2026" | "29 October 2026" |
+
+Unchanged: every rationale, outcome and condition (but `-03`'s key); every `depends_on`; the other 26 rules' cards;
+`applies.html` and its D-2 notice; the brief.
+
+### The TRIGGERS report, before and after (`--as-of 2026-10-29`)
+
+```
+before (main 3576ea2)                                after (414a374)
+publishable   16 of 33                               publishable   23 of 33: … the 16 … + ap-ai-act-01…07
+BACKLOG rule-v1-sources 17                           BACKLOG rule-v1-sources 10
+BACKLOG rule-scope-basis-missing 17                  BACKLOG rule-scope-basis-missing 10
+BACKLOG rule-condition-provisions-missing 17         BACKLOG rule-condition-provisions-missing 10
+BACKLOG rule-exemption-v1 6                          BACKLOG rule-exemption-v1 2
+BACKLOG rule-threshold-basis-missing 1               BACKLOG rule-threshold-basis-missing 0
+BACKLOG rule-dates-not-derived 7                     BACKLOG rule-dates-not-derived 2
+ERRORS 0                                             ERRORS 0
+```
+
+**Phase 3's entry condition is still not met**: 10 rules remain (Session 17: the Data Act, NIS2, DORA, the CRA).
+
+### The sources read (29 Oct 2026)
+
+| Source | Where | Read |
+|---|---|---|
+| Regulation (EU) 2024/1689 (AI Act) | Cellar, CELEX 32024R1689 (XHTML, OJ L 2024/1689, 12.7.2024) | Arts 2–6, 9, 25–27, 50–55, 111, 113; Annex III's eight headings |
+| Regulation (EU) 2026/1744 (AI Omnibus) | Cellar, CELEX 32026R1744 (XHTML, OJ L 2026/1744, 24.7.2026) | Art. 1 in full (points (1)–(43)), Art. 4, recital 65 |
+| Their metadata | SPARQL | the AI Act: one amending act (32026R1744), four corrigenda R(01)–R(04), none in English; a proposal to amend, 52025PC1023, not read; the Omnibus: one corrigendum, R(01), German only |
+| The consolidated AI Act | Cellar, 02024R1689-20260727 (English, no legal effect) | Arts 51(2), 111(4), 113(a): it agrees |
+| TEU, Art. 4 | Cellar, 12016M004 | Art. 4(2) |
+| "General-Purpose AI Code of Practice"; "AI Omnibus enters into force" | the URLs the records hold | the sections cited in Q5 |
+
+Nothing was written from memory or from the design drafts without re-reading.
+
+### Counts against `main` (`3576ea2`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified; provisions 102 | 0 / 0, 45; provisions 104 | `ai-act:art-2-1`, `ai-act:art-3` |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-29` | 0 errors, 11 warnings | 0 errors, 11 warnings | TRIGGERS above |
+| `freshness --as-of 2026-10-29` | 0 defects, 3 prompts | 0 defects, 3 prompts | — |
+| `tools/selftest.mjs` | 120 | 121, 0 failing | Y5 |
+| The 24 suites in `AGENT_SUITES` | 1250 | 1251, 0 failing | Y5 |
+| `.control-room/selftest.mjs` | 76 · 1 skipped | 76 · 1 skipped | — |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | 16 of 20 on `cd85da8` (two suites red) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs 3576ea2 414a374` | — | 11 commits, 0 without evidence | — |
+
+### Seen in a browser
+
+Chromium (Playwright), local server, light and dark, 1280px and 390px: `applies.html` with
+`?actor=actor:gpai-provider&activity=activity:gpai-provision`, `?actor=actor:public-authority&activity=activity:ai-deployment`,
+`?actor=actor:ai-provider&territory=territory:non-eu-serving-eu`, `?actor=actor:ai-provider&activity=activity:ai-development`,
+`?actor=actor:sme&activity=activity:ai-deployment`, and `/instruments/ai-act/`, `/instruments/gdpr/`,
+`/instruments/ai-omnibus/`: the seven rules fire and read as in the table above; no console error; no horizontal
+overflow; no "[object Object]"; the old Art. 6(3) sentence nowhere.
+
+### What was not verified, and why
+
+- The claims the seven rules cite were not re-read; each rule's note says so.
+- Recommendation 2003/361/EC (the SME definition the Omnibus's Art. 3 point (14a) refers to) was not read; it is
+  outside the dataset, and `ap-ai-act-05`'s note says so.
+- The 2 Dec 2026 event's two secondary sources (Hunton, NicFab) were not re-read; the event rests on the Omnibus,
+  re-read.
+- The proposal 52025PC1023, which SPARQL lists as proposing to amend the AI Act, was not read: a proposal is not law.
+- `js/applies.js` has no rendering test; its output was checked in the browser and by Y5 on the generated pages.
+- Screen readers, contrast and pixels: as README limitation 7 says.
+
+### Found, for the author — not changed
+
+1. **`ap-ai-act-01` and GPAI model providers (Q6e):** Arts 4 and 5 address providers and deployers of AI systems; a
+   provider that only places a GPAI model on the market is not by that alone addressed, while the conditions include
+   `actor:gpai-provider` and `activity:gpai-provision`.
+2. **Art. 111(3) (Q6f):** GPAI models placed on the market before 2 Aug 2025 have until 2 Aug 2027; no event holds it,
+   and `ap-ai-act-02`'s rationale ("owes Article 53 since 2 August 2025") does not say so.
+3. **`ap-ai-act-06`'s exemption** ends with the brief's argument ("The brief argues this carve-out is …") in an
+   exemption's place; the same words are on the edge `rel-ai-act-teu-4-2` and on `teu:art-4-2`.
+4. **Art. 50's heading** (Q6a) is still "Transparency obligations"; the Official Journal prints "Transparency
+   obligations for providers and deployers of certain AI systems". No rule cites it.
+5. **The new provisions' dates:** linked to the 2 Feb 2025 event (Chapter I) as approved, so they read "Applies from
+   2 February 2025", not the general fallback Session 15 found on the DSA's definitions.
+6. **"1 days ago"** (pre-existing, `js/evidence-view.js:132`): the evidence line prints "1 days ago", without a
+   singular, and counted a record checked earlier the same UTC day as one day old in the browser.
+7. **The D-2 notice on `applies.html`** still says the rules cite "by identifier only" and that the evidence audit
+   does not check them; 23 of 33 now carry locators (Session 15's finding 5, unchanged).
+8. **`docs/v2-design/applicability-examples.json`** still holds the 25 Oct drafts of the AI Act rules, with the `_gte`
+   key; a design record, left as it is.
+9. **`ap-gdpr-04`'s note** still says the AI Act's provisions "belong to Session 16"; Q4 left it as a dated statement.
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **16.0** | §8: scope row and eighteen answer rows (`8263a36` … `79456fb`) | read §8's last nineteen rows | — | met: every decision in the author's words before anything published changed |
+| **16.1** | data, pages, sitemap, bibliography (`cd85da8`); `RULES_V1`, X1–X3, Y1, Y5, `fields.mjs` (`414a374`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 23 of 33"; open the `applies.html` URLs above and `/instruments/ai-act/` | `tools/selftest.mjs` X1–X3, Y1, Y5; `agent/detector` 41 | met: the seven publishable; every check at 0 errors |
+| **16.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
+| **16.3** | this report; V2C-06's and V2C-10's rows in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); both rows name `cd85da8` |
+| **16.4** | `docs/prompts/v2-session-17.md` (`02dffad`); this register entry | read the prompt against §8's plan row and Sessions 13–16's rows; its measured state against `node tools/evidence-audit.mjs --as-of 2026-10-29` | — | met: the prompt records no decision |
+
+### How to check it by hand
+
+```
+git diff 3576ea2 414a374 -- data/applicability.json   # the seven AI Act rules, nothing else
+node tools/evidence-audit.mjs --as-of 2026-10-29       # TRIGGERS: publishable 23 of 33, ERRORS 0
+node --test tools/selftest.mjs                          # 121 pass
+python3 -m http.server 8000                             # /applies.html?actor=actor:public-authority&activity=activity:ai-deployment
+```
+
+## Branch register — 29 October 2026 (v2 Session 15)
+
+- Branch `claude/vigilant-ride-i216wh`, cut from `main` at `e77ee28` (#42, Session 14 and the prompt of this
+  session, merged). Nothing was merged in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both already in
+  the register. `claude/zen-hamilton-rtgv1j` (Session 14) is in `main`. No other branch to report.
+- **Found at the final re-fetch, before this handover was written:** `origin/main` had moved from `e77ee28` to
+  `11103a0`, "Merge pull request #43 from andreatosti2001/claude/vigilant-ride-i216wh". The pull request was
+  opened and merged by the author's account at 13:35 UTC on 29 Oct 2026, with this branch's head `7f346d3`
+  (every commit of the session up to the assertions), **before the checkpoint below was put to the author**.
+  All 16 checks on `7f346d3` passed. The session opened no pull request. So the data of 15.1 is in `main`, and
+  — `pages.yml` deploying every push to `main` — very probably on the published site, ahead of the checkpoint's
+  approval. Reported, not reconciled: whether that merge was meant is the author's to say.
+- The branch was then fast-forwarded to `origin/main` (`11103a0`), its head being an ancestor; this handover
+  is committed on top of it. A merged pull request carries no new work, so this commit reaches `main` only
+  through a new pull request, if the author opens one.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. After the approval, item
+  15.4: the prompt of v2 Session 16 drafted, `docs/prompts/v2-session-16.md` (the seven AI Act rules to the v2
+  shape, read in the text as the AI Omnibus amends it, by the method of 13.0 question 4; F-4 / V2C-06 and F-8 /
+  V2C-10 among the questions beyond the shape; the assertion question asked after measuring; then a
+  checkpoint, then item 16.4, the draft of the Session 17 prompt). Its starting state was measured on this
+  session's approved tree (`d57bf0b`). The prompt records no decision: its first write is §8's row "The scope
+  of v2 Session 16", in the author's words. It is on this branch, re-aligned to `main` after #43 (the one
+  branch the environment assigns).
+- A second pull request to `main`, carrying the report, the approval and the Session 16 prompt (all under
+  `docs/`), opened on the author's instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is
+  pushed to the branch after it.
+
+## v2 Session 15 — checkpoint report (15.1, the DSA and the DMA)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 15 | "start session 15" | `f825d75` |
+| Q1a · the DSA table | "Approve the table (Recommended)" | `6d53600` |
+| Q2a · F-7 (V2C-09), `ap-dsa-01` | "Correct the text (Recommended)" | `6d53600` |
+| Q2b · F-6 (V2C-08), `ap-dsa-04` | "Correct the text (Recommended)" | `9256ed6` |
+| Q3a · `ap-dsa-02`'s dates: Arts 38, 39 on the 25 Aug 2023 event | "A: name Arts 38, 39 on the event (Recommended)" | `a3daa63` |
+| Q3b · `ap-dsa-05`'s dates | "Add the derived date (Recommended)" | `243bea0` |
+| Q6a · `src-eurlex-dsa-da-2050` | "Correct both (Recommended)" | `864cdf7` |
+| A correction to Q6a (the citation prints `published` everywhere) | "Stands (Recommended)" | `7981aec` |
+| Q6b · `ap-dsa-03` and Art. 27 | "A: report, change nothing (Recommended)" | `62c0330` |
+| Q4 · `ap-dma-03`, `ap-dma-01`'s tier-2 sources | "As proposed (Recommended)" | `a0ca17e` |
+| Q6c · `ap-dma-01` and "immediately" | "A: report, change nothing (Recommended)" | `8ef3f16` |
+| Q3c · `ap-dma-03`'s dates | "Add the derived date (Recommended)" | `0a51f92` |
+| Q3d · `ap-dma-02`'s date | "A: remove the date (Recommended)" | `0a51f92` |
+| Q3e · `ap-dma-04`'s dates | "Keep, report 'due' (Recommended)" | `0a51f92` |
+| Q6d · two DMA headings | "Correct both headings (Recommended)" | `0a51f92` |
+| Q1b · the DMA table | "Approve the table (Recommended)" | `8fe8fb4` |
+| Q5 · `ap-cross-01` | "(1) Add the DSA reference (Recommended)", "(2) Add a depends_on (Recommended)" | `dcc352a` |
+| T-03 and thresholds (a defect in a check, exposed by the data) | "Fix T-03 as proposed (Recommended)" | `52d5713` |
+| Q7 · `RULES_V1` and the assertions | "Change as proposed (Recommended)" | `1f0867a` |
+| A suite premise Q7 did not name (X3's dates backlog) | "Change to 7 (Recommended)" | `07cd90d` |
+
+Q7 was asked after the data was written and every suite run on it (`ef4a86b`), so it names what moved,
+measured; the one line it missed (X3's dates backlog) was asked separately before it changed.
+
+### What was written
+
+- **15.1, `c49e110`.** `data/applicability.json`: the nine rules with reference objects, `condition_provisions`
+  to `dsa:art-3`, `-30`, `-33`, `-40` and `dma:art-2`, `-3`, `threshold_basis` on `ap-dsa-02` and `ap-dma-02`,
+  exemption objects, `last_verified` 2026-10-29 and a note of what was read; F-7 and F-6 corrected (Q2a, Q2b);
+  dates per Q3b–Q3d; `ap-dma-03` carried by the DMA (Q4); `ap-cross-01` gains a DSA reference and a
+  `depends_on` (Q5). `data/instruments.json`: `dsa:art-3`, `dsa:art-19`, `dsa:art-29` in the approved words;
+  `dma:art-6` and `dma:art-38` take the Official Journal's headings (Q6d). `data/timeline.json`:
+  `tl-dsa-2023-08-01-application` names `dsa:art-38` and `dsa:art-39` (Q3a). `data/sources.json`: `accessed`
+  and a dated note on `src-eurlex-dsa`, `src-eurlex-dma`, `src-ec-apple-meta-dma-2025`, `src-ec-dma-review-2026`;
+  `src-eurlex-dsa-da-2050` `published` 2025-10-09 and its note corrected (Q6a). `instruments/dsa/`,
+  `instruments/dma/`, `bibliography.html` and `sitemap.xml` regenerated; a second `node tools/_footer.mjs`
+  writes 0 files. No change to `js/`, `applies.html` or its D-2 notice.
+- **T-03, `ef4a86b`.** `tools/trigger-audit.mjs` T-03 no longer reads `thresholds` as a dimension (T-05 covers
+  it); `tools/selftest.mjs` X2 plants a threshold with its basis and asserts no T-03 finding (shown failing on
+  the planted rule before the fix).
+- **Assertions, `7f346d3`** (Q7). `RULES_V1` at 17; `tools/selftest.mjs` 119 → 120: `RULES_DSA_DMA`,
+  `RULES_V2` (16), X1 (17/17/17/6/1/7), X3 ("16 of 33", JSON 6, Markdown, dates 7), Y3 (`ap-cross-01`'s
+  `depends_on`), new **Y4**; `agent/detector/fields.mjs`: three `threshold_basis.<key>.locator` paths VALUE.
+- Between `c49e110` and `7f346d3` the branch's CI was red: `evidence-audit` on the two T-03 errors until
+  `ef4a86b`, then X1–X3, Y3 and detector 41 until `7f346d3`; no assertion changed before the author answered.
+
+### Before and after, every text a reader sees that changed
+
+| Where | Before | After |
+|---|---|---|
+| `applies.html`, Sources of the nine cards | the citation alone | the citation + " — at <locators>" (e.g. `ap-dsa-02`: "— at Art. 2(1); Art. 3 points (i), (p) and (s); Art. 33(1) and (4); Art. 34; Art. 35; Art. 38; Art. 39; Art. 40") |
+| `ap-dma-01`, IP/25/1085 line | the citation alone | "… — at IP/25/1085 (context only)" |
+| `ap-dma-03`, Sources | the Review Report alone | the DMA "— at Art. 1(2); Art. 2 points (1) and (21); Art. 3(1) and (2); Art. 5(4) and (6); Art. 6(10)", then the Review Report "— at Section 4 ('Costs and benefits'), page 8; Section 5 (Conclusions), page 14" |
+| `ap-dsa-01` exemption (both pages) | "Micro and small enterprises are exempt from the Section 3 online-platform obligations unless designated as a VLOP." | "Under Article 19, providers of online platforms that are micro or small enterprises — and, for twelve months after losing that status, those that were — are exempt from the Section 3 online-platform obligations, except Article 24(3), unless designated as a very large online platform." |
+| `ap-dsa-04` exemption (both pages) | "Micro and small enterprises are exempt from the online-platform section unless designated as a VLOP." | "Under Article 29, providers of online platforms allowing consumers to conclude distance contracts with traders that are micro or small enterprises — and, for twelve months after losing that status, those that were — are exempt from the Section 4 marketplace obligations, unless designated as a very large online platform." |
+| `ap-dsa-05` Key dates | 29 October 2025 | 25 August 2023 · 29 October 2025 |
+| `ap-dma-02` Key dates | November 2026 (Designation decision) | none |
+| `ap-dma-03` Key dates | none | 2 May 2023 |
+| `ap-cross-01` | no Depends on; GDPR and EDPB lines | Depends on "Whether the recommender system processes personal data (EDPB Guidelines 3/2025, paragraph 88)."; a DSA line "— at Art. 27(1); Art. 39(1)" |
+| the nine cards, both pages, and `ap-cross-01` | "Last verified 27 August 2026" (`ap-cross-01`: already 29 October 2026) | "29 October 2026" |
+| `/instruments/dsa/`, provisions | "13 provisions recorded" | "16 provisions recorded": Art. 3 "Definitions", Arts 19 and 29 "Exclusion for micro and small enterprises", in §8 Q1a's words |
+| `/instruments/dsa/`, Arts 38 and 39 | "Applies from 17 February 2024 — the instrument's general date" | "Applies from 25 August 2023 — a date set for named provisions" |
+| `/instruments/dma/`, Arts 6 and 38 (and Art. 6 among `ap-dma-01`'s and `ap-dma-03`'s obligations on `applies.html`) | "Obligations susceptible of further specification"; "Cooperation and coordination with national competent authorities" | "Obligations for gatekeepers susceptible of being further specified under Article 8"; "… enforcing competition rules" |
+| every citation of Delegated Regulation (EU) 2025/2050 (`applies.html`, `/instruments/dsa/`, the timeline, the claim, `bibliography.html`) | "EUR-Lex, July 1, 2025" | "EUR-Lex, October 9, 2025" |
+
+Unchanged: every rationale, outcome and condition; every other date and `depends_on`; the other 24 rules'
+cards; `applies.html` and its D-2 notice; the brief.
+
+### The TRIGGERS report, before and after (`--as-of 2026-10-29`)
+
+```
+before (main e77ee28)                                after (7f346d3)
+publishable   7 of 33                                publishable   16 of 33: ap-gdpr-01…04, ap-dsa-01…05,
+                                                       ap-dma-01…04, ap-pld-01, ap-eidas2-01, ap-cross-01
+BACKLOG rule-v1-sources 26                           BACKLOG rule-v1-sources 17
+BACKLOG rule-scope-basis-missing 26                  BACKLOG rule-scope-basis-missing 17
+BACKLOG rule-condition-provisions-missing 26         BACKLOG rule-condition-provisions-missing 17
+BACKLOG rule-exemption-v1 11                         BACKLOG rule-exemption-v1 6
+BACKLOG rule-threshold-basis-missing 3               BACKLOG rule-threshold-basis-missing 1
+BACKLOG rule-dates-not-derived 10                    BACKLOG rule-dates-not-derived 7
+ERRORS 0                                             ERRORS 0
+```
+
+**Phase 3's entry condition is still not met**: 17 rules remain (Sessions 16–17).
+
+### The sources read (29 Oct 2026)
+
+| Source | Where | Read |
+|---|---|---|
+| Regulation (EU) 2022/2065 (DSA) | Cellar, CELEX 32022R2065 (XHTML, OJ L 277, 27.10.2022) | Arts 2, 3, 16, 19, 24–30, 33–35, 38–40, 49, 56, 74 (headings), 92, 93; the Section headings of Chapters III and IV |
+| Its metadata | SPARQL, amends/corrects/repeals 32022R2065 | no amending act; eleven corrigenda, R(01)–R(11), none with an English expression (languages listed by SPARQL) |
+| Regulation (EU) 2022/1925 (DMA) | Cellar, CELEX 32022R1925 (XHTML, OJ L 265, 12.10.2022) | Arts 1–3, 5–7, 13, 21, 54, the Annex; every Article heading |
+| Its corrigenda | SPARQL; Cellar 32022R1925R(02) (English, OJ L 2025/90024 of 10.1.2025) | no amending act; three corrigenda, only R(02) in English: Art. 13(8) |
+| Delegated Regulation (EU) 2025/2050 | Cellar, CELEX 32025R2050 (OJ L 2025/2050 of 9.10.2025) | title, Arts 1, 3 (heading), 16; SPARQL: no amending act or corrigendum |
+| DMA Review Report, COM(2026) 178 final | PDF at the URL the record holds (14 pages) | Section 4 "Costs and benefits", page 8; Section 5, page 14 |
+| IP/25/1085, IP/25/2717, IP/26/1444 | press corner documents API | in full |
+| Press reports on the AWS/Azure designation | web search | for Q3e only: no designation decision reported; nothing written from it |
+
+Nothing was written from memory or from the design drafts without re-reading.
+
+### Counts against `main` (`e77ee28`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified; provisions 99 | 0 / 0, 45; provisions 102 | `dsa:art-3`, `-19`, `-29` |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-29` | 0 errors, 11 warnings | 0 errors, 11 warnings | TRIGGERS above; 2 errors on `c49e110` (T-03) |
+| `freshness --as-of 2026-10-29` | 0 defects, 3 prompts | 0 defects, 3 prompts | — |
+| `tools/selftest.mjs` | 119 | 120, 0 failing | Y4 |
+| The 24 suites in `AGENT_SUITES` | 1249 | 1250, 0 failing | Y4 |
+| `.control-room/selftest.mjs` | 76 · 1 skipped | 76 · 1 skipped | — |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | 16 of 20 on `ef4a86b` (two suites red) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs e77ee28 7f346d3` | — | 19 commits, 0 without evidence | — |
+
+### Seen in a browser
+
+Chromium (Playwright), local server, light and dark, 1280px and 390px: `applies.html` with
+`?actor=actor:online-platform&activity=activity:online-platform-activity`, `?actor=actor:vlop&activity=activity:recommender-systems`,
+`?activity=activity:marketplace-activity`, `?actor=actor:researcher`, `?actor=actor:gatekeeper`,
+`?actor=actor:large-company&activity=activity:recommender-systems`, `?actor=actor:sme`, `?activity=activity:cloud-services`, and
+`/instruments/dsa/`, `/instruments/dma/`: the nine rules and `ap-cross-01` fire and read as in the table above; no
+console error; no horizontal overflow; no "[object Object]"; the two old exemption sentences nowhere.
+
+### What was not verified, and why
+
+- The claims the nine rules cite were not re-read; each rule's note says so.
+- The EDPB Guidelines 3/2025 were not re-read; Q5's `depends_on` cites paragraph 88 as Session 14 read it that day.
+- Recommendation 2003/361/EC (SME, micro and small enterprises) and Directive (EU) 2016/1148 (the DMA's cloud
+  definition) were not read; neither is in the dataset, and the notes say so.
+- The source records of IP/25/2717 and IP/26/1444 were read against but not updated (`accessed` unchanged): no
+  question covered them.
+- `js/applies.js` has no rendering test; its output was checked in the browser and by Y4 on the generated pages.
+- Screen readers, contrast and pixels: as README limitation 7 says.
+
+### Found, for the author — not changed
+
+1. **PR #43 merged before the checkpoint** (branch register above): Session 15's data is in `main`, and very
+   probably published, ahead of this checkpoint's approval.
+2. **"Immediately" (Q6c).** DMA Art. 3(10) gives six months; `ap-dma-01`'s rationale, `clm-dma-ex-ante` and the
+   brief's `part-4.p2` (with its it/fr/es overlays) say the obligations apply immediately. One correction, for a
+   later session.
+3. **`ap-dsa-03` and Art. 27 (Q6b):** the rationale's recommender-parameter transparency does not bind micro and
+   small platforms (Art. 19).
+4. **`ap-dma-04`'s "due" (Q3e):** November 2026 is a Commission target, not a deadline.
+5. **The D-2 notice on `applies.html`** still says the rules cite "by identifier only" and that the evidence audit
+   does not check them; 16 of 33 now carry locators and the audit reads all 33. The notice is outside this session
+   (the prompt forbids touching it); its wording is the author's to revisit.
+6. **The new provisions' derived dates:** `/instruments/dsa/` prints "Applies from 17 February 2024 — the
+   instrument's general date" for Arts 3, 19 and 29, as it does for `gdpr:art-2` and `-4`; for a definition
+   article that is the derivation's general fallback, not a statement read in the text.
+7. **`docs/v2-design/applicability-examples.json`** still holds the 25 Oct drafts of `ap-dsa-01`, `-02`, `-04`;
+   a design record, left as it is.
+8. Two worker restarts happened (after Q2b and after Q7); no decision was lost, each being in §8 first.
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **15.0** | §8: scope row and twenty answer rows (`f825d75` … `07cd90d`) | read §8's last twenty-one rows | — | met: every decision in the author's words before anything published changed |
+| **15.1** | data, pages, sitemap, bibliography (`c49e110`); T-03 (`ef4a86b`); `RULES_V1`, X1–X3, Y3, Y4, `fields.mjs` (`7f346d3`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 16 of 33"; open the `applies.html` URLs above and `/instruments/dsa/`, `/instruments/dma/` | `tools/selftest.mjs` X1–X3, Y3, Y4; `agent/detector` 41 | met: the nine publishable; every check at 0 errors |
+| **15.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
+| **15.3** | this report; V2C-08's and V2C-09's rows in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); both rows name `c49e110` |
+| **15.4** | `docs/prompts/v2-session-16.md`; this register entry | read the prompt against §8's plan row and Session 15's rows; its measured state against `node tools/evidence-audit.mjs --as-of 2026-10-29` | — | met: the prompt records no decision |
+
+### How to check it by hand
+
+```
+git diff e77ee28 7f346d3 -- data/applicability.json   # the nine rules and ap-cross-01, nothing else
+node tools/evidence-audit.mjs --as-of 2026-10-29       # TRIGGERS: publishable 16 of 33, ERRORS 0
+node --test tools/selftest.mjs                          # 120 pass
+python3 -m http.server 8000                             # /applies.html?actor=actor:vlop&activity=activity:recommender-systems
+```
+
+## Branch register — 29 October 2026 (v2 Session 14)
+
+- Branch `claude/zen-hamilton-rtgv1j`, cut from `main` at `a229336` (#41, the prompt of this session,
+  merged). Nothing was merged in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
+  already in the register. No other branch to report; `claude/v2-session-14-prompt` is in `main`.
+- `origin/main` was re-fetched before this handover was written: still `a229336`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed. No pull request opened yet.
+- After the approval, item 14.4: the prompt of v2 Session 15 drafted, `docs/prompts/v2-session-15.md` (the
+  nine DSA and DMA rules to the v2 shape by the method of 13.0 question 4, F-6 / V2C-08 and F-7 / V2C-09
+  among the questions beyond the shape, the two `ap-cross-01` findings Session 14 handed on, the assertion
+  question asked after measuring; then a checkpoint, then item 15.4, the draft of the Session 16 prompt). Its
+  starting state was measured on this session's approved tree (`8c1b1a3`). The prompt records no decision:
+  its first write is §8's row "The scope of v2 Session 15", in the author's words.
+- A pull request to `main`, carrying Session 14 and the Session 15 prompt together, opened on the author's
+  instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the branch after it.
+
+## v2 Session 14 — checkpoint report (14.1, the GDPR)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 14 | "start session 14" | `54dd192` |
+| Q3 · the conditions another Act defines (asked first: Q1's table depends on it) | "A: GDPR's own (Recommended)" | `f0a5f8a` |
+| Q1 · the GDPR table | "Approve the table (Recommended)" | `b9b22ae` |
+| Q2 · F-5 (V2C-07), the courts exception | "Rule + Art. 37 summary (Recommended)" | `4187acb` |
+| Q4a · `ap-gdpr-01`, the Art. 30(5) exemption | "Correct the text (Recommended)" | `2e5d2a5` |
+| Q4b · `ap-gdpr-03`, the Union's own institutions (Art. 2(3)) | "Add an exemption (Recommended)" | `f00783f` |
+| Q4c · `ap-cross-01`, EDPB ¶88 and the advertisement repository | "Report, change nothing (Recommended)" | `2552a12` |
+| Q5 · `RULES_V1` and the assertions that pin it | "Change as proposed (Recommended)" | `f5483e4` |
+
+Q5 was asked after the data was written and every suite run on it (`14af4b7`), so it names every assertion
+that moved, measured rather than predicted.
+
+### What was written
+
+- **14.1, `14af4b7`.** `data/applicability.json`: the five rules with reference objects, `condition_provisions`
+  to `gdpr:art-2`, `-3`, `-4`, `-37` (no AI Act or DSA provision: Q3), exemption objects, `last_verified`
+  2026-10-29 and a note of what was read; `ap-gdpr-01`'s Art. 30(5) text reworded (Q4a); `ap-gdpr-03` gains
+  the Union-institutions (Q4b) and courts (Q2) exemptions. `data/instruments.json`: `gdpr:art-2` "Material
+  scope" and `gdpr:art-4` "Definitions" in the approved words; `gdpr:art-37`'s summary states the courts
+  exception, with a dated line in its note. `data/sources.json`: `accessed` 2026-10-29 and a dated note on
+  `src-eurlex-gdpr` and `src-edpb-guidelines-3-2025`. `instruments/gdpr/` and `sitemap.xml` regenerated; a
+  second `node tools/_footer.mjs` writes 0 files. No change to `js/`, `applies.html` or its D-2 notice.
+- **Assertions, `7df6524`** (Q5). `tools/trigger-audit.mjs`: the five leave `RULES_V1` (26 remain).
+  `tools/selftest.mjs` 118 → 119: `RULES_V2` = the pilot's two + the five; X1 (26/26/26/11/3/10; publishable
+  exactly the 7; the 27 Sep warnings the 7 rules'), X2 (the "added rule" clones `RULES_V1[0]`), X3 ("7 of
+  33"), Y2 (the pilot's own two), new **Y3** (the five as approved, the GDPR page included).
+  `agent/detector/fields.mjs`: `exemptions.outside_dataset` VALUE; `agent/detector` test 43 repaired
+  (the v1 case on a planted copy, the v2 case on `ap-gdpr-03`'s three objects).
+- Between `14af4b7` and `7df6524` the branch's CI was red on exactly those five tests (X1–X3, detector 41
+  and 43): the data commit was pushed before Q5 was answered, so that no assertion changed unasked.
+
+### Before and after, every text a reader sees that changed
+
+| Where | Before | After |
+|---|---|---|
+| `applies.html`, Sources of the five GDPR cards | the citation alone | the citation + " — at <locators>" (e.g. `ap-gdpr-01`: "— at Art. 2(1); Art. 3(1); Art. 4 points (1), (2), (7) and (8); Art. 5; Art. 6; Art. 30; Art. 33; Art. 35") |
+| `applies.html`, `ap-cross-01`, EDPB line | the citation alone | "… — at Version 2.0, paragraphs 7–11 (section 1.1), 80 (section 2.4.4) and 93–95 (section 2.5) (supports in part)" |
+| `ap-gdpr-01` exemption 2 (`applies.html`, `/instruments/gdpr/`) | "Article 30(5) narrows the records obligation for organisations under 250 employees, but does not remove it where processing is not occasional or involves special categories." | "Under Article 30(5), an enterprise or organisation employing fewer than 250 persons need not keep records of processing activities, unless its processing is likely to result in a risk to the rights and freedoms of data subjects, is not occasional, or includes special categories of data or personal data relating to criminal convictions and offences." |
+| `ap-gdpr-03` exemptions | the Law Enforcement Directive line only | + "Processing by the Union's own institutions, bodies, offices and agencies is governed by a separate Union regulation rather than the GDPR — an instrument outside this dataset." + "Courts acting in their judicial capacity are excepted from the obligation to designate a data protection officer that Article 37(1)(a) places on public authorities and bodies." |
+| `/instruments/gdpr/`, provisions | "16 provisions recorded" | "18 provisions recorded": Art. 2 "Material scope" and Art. 4 "Definitions", in §8 Q1's words |
+| `/instruments/gdpr/`, Art. 37 | "Mandatory where processing is carried out by a public authority or body, and in the other cases the Article specifies." | "Mandatory where processing is carried out by a public authority or body, except for courts acting in their judicial capacity, and in the other cases the Article specifies." |
+| the five cards, both pages | "Last verified 27 August 2026" | "29 October 2026" |
+
+Unchanged: every rationale, outcome, condition, obligation, date and `depends_on`; the other 28 rules' cards;
+`applies.html` and its D-2 notice; the brief.
+
+### The TRIGGERS report, before and after (`--as-of 2026-10-29`)
+
+```
+before (main a229336)                                after (7df6524)
+publishable   2 of 33: ap-pld-01, ap-eidas2-01       publishable   7 of 33: ap-gdpr-01, ap-gdpr-02, ap-gdpr-03,
+                                                       ap-gdpr-04, ap-pld-01, ap-eidas2-01, ap-cross-01
+BACKLOG rule-v1-sources 31                           BACKLOG rule-v1-sources 26
+BACKLOG rule-scope-basis-missing 31                  BACKLOG rule-scope-basis-missing 26
+BACKLOG rule-condition-provisions-missing 31         BACKLOG rule-condition-provisions-missing 26
+BACKLOG rule-exemption-v1 13                         BACKLOG rule-exemption-v1 11
+BACKLOG rule-threshold-basis-missing 3               BACKLOG rule-threshold-basis-missing 3
+BACKLOG rule-dates-not-derived 10                    BACKLOG rule-dates-not-derived 10
+ERRORS 0                                             ERRORS 0
+```
+
+**Phase 3's entry condition is still not met**: 26 rules remain (Sessions 15–17).
+
+### The sources read (29 Oct 2026)
+
+| Source | Where | Read |
+|---|---|---|
+| Regulation (EU) 2016/679 | Cellar, CELEX 32016R0679 (XHTML, OJ L 119, 4.5.2016) | Arts 1–6, 22, 25, 30, 33, 35, 37; recitals 18, 19 |
+| Its corrigendum of 23 May 2018 | Cellar, 32016R0679R(02) (English; R(01) and R(03) answered 404 to a request for English) | in full: recital 71, Arts 37(1)(c), 41, 42, 43, 57, 64, 65, 69, 70 — none of the text the rules cite |
+| The Publications Office's metadata | SPARQL, amends/corrects 32016R0679 | no amending act; three corrigenda |
+| EDPB Guidelines 3/2025, version 2.0 (17 Sep 2026) | PDF linked from the EDPB page the source records | paragraphs 7–11, 79–99 |
+| Regulation (EU) 2024/1689 (AI Act) | Cellar, 32024R1689 (as published; the AI Omnibus's amendments not read) | Art. 3 points (1)–(5) — for Q3 only, nothing written |
+| Regulation (EU) 2022/2065 (DSA) | Cellar, 32022R2065 | Art. 3 points (h), (i), (s); Art. 33(1)–(4) — for Q3 only, nothing written |
+
+Nothing was written from memory or from the design drafts without re-reading.
+
+### Counts against `main` (`a229336`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified; provisions 97 | 0 / 0, 45; provisions 99 | `gdpr:art-2`, `gdpr:art-4` |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-29` | 0 errors, 11 warnings | 0 errors, 11 warnings | TRIGGERS above |
+| `freshness --as-of 2026-10-29` | 0 defects, 3 prompts | 0 defects, 3 prompts | — |
+| `tools/selftest.mjs` | 118 | 119, 0 failing | Y3 |
+| The 24 suites in `AGENT_SUITES` | 1248 | 1249, 0 failing | Y3; detector 41 and 43 failed on `14af4b7` and pass after `7df6524` |
+| `.control-room/selftest.mjs` | 76 · 1 skipped | 76 · 1 skipped | — |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | 16 of 20 on `14af4b7` (two suites red) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs origin/main HEAD` | — | 10 commits, 0 without evidence | — |
+
+### Seen in a browser
+
+Chromium (Playwright), local server, both themes, 1280px and 390px: `applies.html` with
+`?activity=activity:processing-personal-data&territory=territory:eu-established` (fires 01, 03, 04), `…&territory=territory:non-eu-serving-eu`
+(02), `?actor=actor:public-authority&activity=activity:processing-personal-data` (03), `?actor=actor:ai-deployer&activity=activity:ai-deployment` (04),
+`?actor=actor:vlop&activity=activity:recommender-systems` (cross-01), and `/instruments/gdpr/`: the cards read as in the table above; no
+console error; no horizontal overflow; no "[object Object]"; the old Art. 30(5) sentence nowhere.
+
+### What was not verified, and why
+
+- The claims the five rules cite (`clm-one-stop-shop`, `clm-art-22-predates-ai-act`,
+  `clm-three-impact-assessments`, `clm-dsa-gdpr-unresolved`) were not re-read; each rule's note says so.
+- The act that today governs the Union's institutions (Art. 2(3) names Regulation (EC) No 45/2001) was not
+  read, so the Q4b exemption names none.
+- The AI Act's Art. 3 was read as published, not against the AI Omnibus's amendments; nothing was written from it.
+- `js/applies.js` has no rendering test; its output was checked in the browser and by Y3 on the generated GDPR page.
+- Screen readers, contrast and pixels: as README limitation 7 says.
+
+### Found, for the author — not changed
+
+1. **`ap-cross-01` (Q4c).** EDPB ¶88: a recommender system may involve no personal data, yet the rule answers
+   "applies" with no `depends_on`; and the rationale's "advertisement repository" (DSA Art. 39) has no source
+   on the rule (hence the EDPB reference's "(supports in part)"). For Session 15, with the DSA's references.
+2. **The actors' definitions (Q3).** AI Act Art. 3(3)–(4) and DSA Art. 3(i), (s) are not in the dataset; the
+   two rules resolve through the GDPR's Art. 4. Sessions 15 and 16 inherit the choice.
+3. **`ap-gdpr-04` and the controller role.** Art. 22 binds the controller; an AI provider is one only for its
+   own processing. The rule's `depends_on` does not name the role. Not asked; reported here.
+4. **`docs/v2-design/applicability-examples.json`** still holds the 25 Oct drafts of three of these rules
+   (e.g. the old Art. 30(5) text). It is a design record, not data; left as it is.
+5. A worker restart happened once (after Q5's suite run); no decision was lost, each being in §8 first.
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **14.0** | §8: scope row and seven answer rows (`54dd192` … `f5483e4`) | read §8's last eight rows | — | met: every decision in the author's words before anything published changed |
+| **14.1** | data, GDPR page, sitemap (`14af4b7`); `RULES_V1`, X1–X3, Y2, Y3, `fields.mjs`, detector 43 (`7df6524`) | `node tools/evidence-audit.mjs --as-of 2026-10-29` → "publishable 7 of 33"; open the five `applies.html` URLs above and `/instruments/gdpr/` | `tools/selftest.mjs` X1, X3, Y3; `agent/detector` 41, 43 | met: the five publishable; every check at 0 errors |
+| **14.2** | all checks run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: readiness back at its baseline |
+| **14.3** | this report; V2C-07's row in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); V2C-07's row names `14af4b7` |
+| **14.4** | `docs/prompts/v2-session-15.md`; this register entry | read the prompt against §8's plan row and Session 14's rows; its measured state against `node tools/evidence-audit.mjs --as-of 2026-10-29` | — | met: the prompt records no decision |
+
+### How to check it by hand
+
+```
+git diff a229336 -- data/applicability.json       # the five rules, nothing else
+node tools/evidence-audit.mjs --as-of 2026-10-29  # TRIGGERS: publishable 7 of 33, ERRORS 0
+node --test tools/selftest.mjs                     # 119 pass
+python3 -m http.server 8000                        # /applies.html?actor=actor:public-authority&activity=activity:processing-personal-data
+```
+
+## Branch register — 29 October 2026 (v2 Session 13)
+
+- Branch `claude/v2-session-13-rules-pilot`, cut from `main` at `d073134` (#38 and #39 merged). The prompt's
+  branch, `claude/v2-session-13-prompt`, was already in `main` as #39, so nothing was merged in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
+  already in the register. No other branch to report.
+- `origin/main` was re-fetched before this handover was written: still `d073134`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve (Recommended)"); pushed, with a pull request to `main`
+  opened on the author's instruction of 29 Oct 2026 ("Open PR to main (Recommended)"). Nothing is pushed to the
+  branch after the pull request is opened.
+- After that, on 29 Oct 2026: #40 was merged into `main` (`d9a3939`), with all 16 checks green on its head
+  (`984ea7d`). On the author's request ("draft session 14's prompt"), the prompt of v2 Session 14 was drafted:
+  `docs/prompts/v2-session-14.md` (the five GDPR rules to the v2 shape by the method of 13.0 question 4,
+  F-5 / V2C-07 among the questions beyond the shape, then a checkpoint, then — on the author's request
+  ("include the drafting of session 15 at the end of the session") — item 14.4, the draft of the Session 15
+  prompt, measured on Session 14's approved tree). It is on
+  `claude/v2-session-14-prompt`, cut from `main` at `d9a3939`. The prompt records no decision: its first write
+  is §8's row "The scope of v2 Session 14", in the author's words. A pull request to `main` was opened on the author's instruction
+  ("yes", 29 Oct 2026); nothing is pushed to the branch after it.
+
+## v2 Session 13 — checkpoint report (13.1 V2C-67, 13.2 the validator, 13.3 the pilot)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 13 | "Start session 13"; "13.1 → 13.2 → 13.3 (Recommended)" | `f7bcb79` |
+| Q1 · the words of Part IX | "A, retranslate (Recommended)" | `acde365` |
+| Q2 · what the validator checks, and where | "Split as proposed (Recommended)" | `7b6848e` |
+| Q3a · what `applies.html` prints from a v2 rule | "(a) + (b) (Recommended)" | `517838f` |
+| Q3b · pilot rule `ap-eidas2-01` | "Approve, with the date (Recommended)" | `6c03bdc` |
+| Q3c · pilot rule `ap-pld-01` | "Approve, with exemption (Recommended)" | `1176f87` |
+| Q4 · the method for Sessions 14–17 | "A: table + separate (Recommended)" | `7ba7f41` |
+| Q5 · `RULES_V1` and its assertions | "Change as proposed (Recommended)" | `eda3ba6` |
+| A correction to Q3a (the words for a non-direct reference) | "Part notes' words (Recommended)" | `248cb67` |
+| X1's audit date (a premise Q5 did not name) | "Audit as of 29 Oct (Recommended)" | `51073b3` |
+| The field class of the five v2 rule paths (a premise in `agent/detector/`) | "As proposed (Recommended)" | `22e93d6` |
+
+Two of these rows correct this session's own questions: Q2 said "five checks" and listed four (the four are
+what was approved), and Q3a misquoted the part notes' words. Both are recorded in their rows.
+
+### What was written
+
+- **13.1, `ff5b066`.** `index.html` `part-9.p8` and its it/fr/es overlays in the approved words;
+  `data-claim` + `clm-data-omnibus-council-mandate` `clm-data-omnibus-parliament-stage`; a dated line in each
+  locale's note (`i18n/locales.json`) and in `clm-consolidation-contested`'s note (`last_verified`
+  unchanged); test P1 + the four old wordings, planted, and `part-9.p8` must cite the mandate. Three
+  edition pages regenerated; a second `node tools/_footer.mjs` writes 0 files.
+- **13.2, `296b7e3`.** `tools/validate.mjs` §3a, `checkRuleV2()`: the four approved checks, each error naming
+  the field. `tools/trigger-audit.mjs` stops reporting resolution and vocabulary (T-02's "does not resolve",
+  T-03's "is not a provision", T-04's effect), still marking such a rule not publishable. **No rule changed
+  in that commit**: validate 0 errors, publishable 0 of 33.
+- **13.3, `a4ba2f3`, `92ffe80`.** `data/applicability.json`: the two rules in the approved shape;
+  `data/instruments.json`: `eidas2:art-2`, `eidas2:art-3`, `pld:art-2`, `pld:art-4`, `pld:art-8`;
+  `data/sources.json`: `accessed` 2026-10-29 and a dated note on the five sources read. `js/applies.js`
+  (sources with locators, grouped per source; exemption objects print their text) and
+  `js/instrument-view.js` (exemption objects). `tools/trigger-audit.mjs`: 31 rules remain in `RULES_V1`.
+  Two pages and `sitemap.xml` regenerated; a second run writes 0. `agent/detector/fields.mjs`: the five
+  new paths classified as decided.
+- **Tests.** `tools/selftest.mjs` 116 → 118: **Y1** (every new `validate.mjs` error planted, each in its own
+  copy, 23 plants; a correct v2 rule validates; the v1 message unchanged), **Y2** (the pilot: v2,
+  publishable, condition provisions of the rule's own instrument, nothing derived stored, the approved
+  values, the generated pages print the exemption and never "[object Object]"). **Assertions changed,
+  each with an approved premise**: X1 (audited as of 29 Oct; backlog 31/31/31/13/3/10; publishable exactly
+  the two; a literal frozen baseline of the 33, `RULES_2026_10_28`, so the shrink check keeps its teeth;
+  the two in no backlog; the 27 Sep warnings now the two pilot rules'), X2 (the unresolved reference: no
+  trigger-audit error, not publishable), X3 ("2 of 33").
+
+### Before and after, every text changed
+
+| Where | Before | After |
+|---|---|---|
+| `part-9.p8`, English | "…the Council has yet to agree a mandate on the Commission's own GDPR reforms, while…" | "…the Council agreed its negotiating mandate on the Data Omnibus, which carries the Commission's own GDPR reforms, only on 21 October 2026, after successive Presidency texts had failed to win one, and Parliament had no position as at 28 October 2026, while…" |
+| `part-9.p8`, it / fr / es | "il Consiglio non ha ancora concordato un mandato…" / "le Conseil n'a toujours pas arrêté de mandat…" / "el Consejo aún no ha acordado un mandato…" | the three texts of §8, question 1 |
+| `applies.html`, card `ap-eidas2-01` | Sources: two citations, no locator; no Key dates | Sources: three lines with " — at <locator>" (the 1183 line carries three locators); Key dates "24 December 2026 · Compliance deadline"; "Rule last verified 29 October 2026" |
+| `applies.html`, card `ap-pld-01` | Sources: one citation; no Exemptions; last verified 27 August 2026 | Sources: one line, " — at Art. 2(1); Art. 4 points (1), (10) and (15); Art. 8(1) and (2); Recital 13 (…)"; Exemptions: "Free and open-source software developed or supplied outside the course of a commercial activity is outside the Directive."; last verified 29 October 2026 |
+| `/instruments/pld/` | "No provisions recorded…"; rule card without exemptions | "3 provisions recorded": Arts 2, 4, 8 in the approved words; the card's "Exemptions:" line; verified 29 October |
+| `/instruments/eidas2/` | 2 provisions | 4: Arts 2 and 3 (of Regulation (EU) No 910/2014, as amended) before 5a and 5f |
+
+`applies.html` and its D-2 notice, the other 31 rules' cards, and every other paragraph of the brief:
+unchanged.
+
+### The TRIGGERS report, before and after
+
+```
+before (main d073134, --as-of 2026-10-29)          after (--as-of 2026-10-29)
+publishable   0 of 33                               publishable   2 of 33: ap-pld-01, ap-eidas2-01
+BACKLOG rule-v1-sources 33                          BACKLOG rule-v1-sources 31
+BACKLOG rule-scope-basis-missing 33                 BACKLOG rule-scope-basis-missing 31
+BACKLOG rule-condition-provisions-missing 33        BACKLOG rule-condition-provisions-missing 31
+BACKLOG rule-exemption-v1 13                        BACKLOG rule-exemption-v1 13
+BACKLOG rule-threshold-basis-missing 3              BACKLOG rule-threshold-basis-missing 3
+BACKLOG rule-dates-not-derived 10                   BACKLOG rule-dates-not-derived 10
+ERRORS 0                                            ERRORS 0
+```
+
+**Phase 3's entry condition is still not met**: 31 rules remain (Sessions 14–17, by the method of Q4).
+
+### The sources read (29 Oct 2026)
+
+| Source | Where | Read |
+|---|---|---|
+| ST 14756/26 | Council register, PDF | cover page: dated 22 Oct 2026, outcome of proceedings, mandate "as agreed by the Permanent Representatives Committee at its meeting on 21 October 2026" |
+| 2025/0360(COD) | Legislative Observatory | "Awaiting committee decision"; key events only 19/11/2025 and 19/01/2026 |
+| Directive (EU) 2024/2853 | Cellar, CELEX 32024L2853 (XHTML) | Arts 1, 2, 4 points (1), (10), (15), 8, 22–24; recital 13 |
+| Regulation (EU) 2024/1183 | Cellar, CELEX 32024R1183 | Art. 1 points (1), (2)(a)–(b), (3)(a)–(c), (j), (5) (5a(1), 5a(23), 5c(6), 5f(2)); Art. 2 |
+| Regulation (EU) No 910/2014 | Cellar, CELEX 32014R0910 | headings of Arts 2 and 3 |
+| Implementing Regulations (EU) 2024/2977, 2024/2981 | Cellar, CELEX 32024R2977, 32024R2981 | citations; Arts 6 and 22 |
+
+Nothing was written from memory: every value added to `data/` is one of these readings.
+
+### Counts against `main` (`d073134`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified; provisions 92 | 0 / 0, 45; provisions 97 | five provisions added |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-29` | 0 errors, 11 warnings | 0 errors, 11 warnings | TRIGGERS above |
+| `freshness --as-of 2026-10-29` | 0 defects, 3 prompts | 0 defects, 3 prompts | — |
+| `tools/selftest.mjs` | 116 | 118, 0 failing | Y1, Y2 |
+| The 24 suites in `AGENT_SUITES` | 1246 | 1248, 0 failing | the two above; `agent/detector` test 41 failed once on the five unclassified paths and passes after `92ffe80` |
+| `.control-room/selftest.mjs` | 77: 76 · 1 skipped | 76 · 1 skipped | — |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | with `BROWSER_QA_CHROME`; 16 of 20 on the run before `92ffe80` (the detector suite) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs origin/main HEAD` | — | 0 commits without evidence | — |
+
+### Seen in a browser
+
+Chromium (Playwright), local server: `applies.html?actor=actor:ai-provider&activity=activity:ai-deployment`
+(fires `ap-pld-01`), `applies.html?activity=activity:digital-identity` (fires `ap-eidas2-01`) and
+`/instruments/pld/`, in both themes, at 1280px and 390px: the cards read as in the table above; no console
+error; no horizontal overflow; no "[object Object]" anywhere.
+
+### What was not verified, and why
+
+- `clm-aild-abandoned` (cited by `ap-pld-01`) was not re-read; the rule's note says so.
+- `js/applies.js` cannot be imported by a Node test (it boots against `document` on import), so its
+  rendering is checked in the browser and by Y2's source assertions, not by a rendering test; the browser
+  suite has no check of a v2 rule card.
+- The translations of `part-9.p8` are AI-assisted and not reviewed by a native speaker (README limitation 5).
+- Screen readers, contrast and pixels: as README limitation 7 says.
+
+### Found, for the author — not changed
+
+1. **`ap-pld-01` and `activity:ai-deployment`.** Under Art. 8 a deployer of an AI system is liable only as
+   a manufacturer or a substantial modifier (8(2)); the rule fires for it only through the actor dimension.
+   Conditions unchanged (§8, Q3c).
+2. **An id that reads two ways.** `eidas2:art-2` and `eidas2:art-3` are Articles of Regulation (EU)
+   No 910/2014 as amended, filed under `eidas2` as 5a and 5f already were; Art. 2 of Regulation (EU)
+   2024/1183 itself is its entry-into-force clause. The `number` field disambiguates; a later session
+   filing an Article of 2024/1183 itself would collide.
+3. **The selection URL `applies.html?actor=…&activity=…`** restores a selection silently; useful for
+   checking a rule by hand.
+4. **Two of this session's own questions were wrong in a detail** (Q2's count, Q3a's quoted words), each
+   corrected in its §8 row. Measuring before asking still holds as the lesson.
+5. A worker restart happened twice; no decision was lost, because each was in §8 before the next write.
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **13.0** | §8: scope row and ten answer rows (`f7bcb79` … `22e93d6`) | read §8's last eleven rows | — | met: every decision in the author's words before anything published changed |
+| **13.1** | `index.html`, three overlays, `i18n/locales.json`, `data/claims.json`, three edition pages, P1 (`ff5b066`) | open `/#part-9` and `/it/`, `/fr/`, `/es/`: the new sentence; `grep -c "has yet to agree" index.html` → 0 | `tools/selftest.mjs` P1 | met |
+| **13.2** | `tools/validate.mjs`, `tools/trigger-audit.mjs`, Y1, X2 (`296b7e3`) | on a copy, give a rule `"sources": [{"source_id": "src-x", "supports": "supports:direct", "locator": "Art. 1"}]`: `RULE "…" sources[0]: DANGLING source ref "src-x"` | Y1 (23 plants), X2 | met: v1 validates as before; every v2 defect named by field |
+| **13.3** | data, `js/`, two pages, `RULES_V1`, X1, X3, Y2, `agent/detector/fields.mjs` (`a4ba2f3`, `92ffe80`) | `node tools/evidence-audit.mjs --as-of 2026-10-29`: "publishable 2 of 33"; open the two `applies.html` URLs above | X1, X3, Y2; `agent/detector` test 41 | met for the pilot; the method for 14–17 decided (Q4) |
+| **13.4** | all checks re-run before and after, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: 0 errors everywhere; readiness at its baseline |
+| **13.5** | this report; V2C-67's row in `docs/V2-CLOSURE.md` | — | — | **approved** by the author (§8); V2C-67's row names `ff5b066` |
+
+### How to check it by hand
+
+```
+git diff d073134 -- data/applicability.json      # the two rules, nothing else
+node tools/evidence-audit.mjs --as-of 2026-10-29 # TRIGGERS: publishable 2 of 33, ERRORS 0
+node --test tools/selftest.mjs                    # 118 pass
+python3 -m http.server 8000                       # /applies.html?activity=activity:digital-identity
+```
+
+## Branch register — 28 October 2026 (v2 Session 12)
+
+- Branch `claude/v2-session-12-phase-3-open`, cut from `main` at `bca554e` (#35, #36 and #37 merged). The
+  prompt's branch, `claude/v2-session-12-prompt`, was already in `main` as #37, so nothing was merged in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
+  already in the register. No other branch to report.
+- `origin/main` was re-fetched before this handover was written: still `bca554e`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve, incl. RULES_V1 (Recommended)"); pushed, with a
+  pull request to `main` opened on the author's instruction of 28 Oct 2026 ("Open PR to main
+  (Recommended)"). Nothing is pushed to the branch after the pull request is opened.
+- After that, on 28–29 Oct 2026: the author asked how to meet Phase 3's entry condition, whether it fits
+  one session, what Session 17 would give and whether the rules would be maintained as the provisions
+  change. The answers became §8's row "The plan for meeting Phase 3's entry condition, and the maintenance
+  of the rules" (Sessions 13–17, with two maintenance checks in Session 17). On the author's request
+  ("draft session 13 and merge it"; then "farò un pull unico"), the prompt of v2 Session 13 was drafted:
+  `docs/prompts/v2-session-13.md` (V2C-67, `validate.mjs` taught the v2 rule shape, a pilot on
+  `ap-eidas2-01` and `ap-pld-01`, then a checkpoint). It is on `claude/v2-session-13-prompt`, cut from
+  this branch at `99091e5`. #38 was merged meanwhile (`39e5cea`), so the prompt's pull request carries only
+  §8's plan row, the prompt and this entry; the author merges it. The prompt records no decision: its first write is §8's row "The scope
+  of v2 Session 13", in the author's words.
+
+## v2 Session 12 — checkpoint report (12.1 V2C-01, 12.2 the triggers)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+| Row of §8 | Answer | Commit |
+|---|---|---|
+| The scope of v2 Session 12 | "Start session 12"; "12.1 then 12.2 (Recommended)" | `725b0cb` |
+| Q1 · the modality rule | "Locator holder per kind"; the holder table "Approve as drafted (Recommended)" | `294ee82` |
+| Q2 · the words for a proposed edge | "\"Proposed:\" + label (Recommended)" | `5616aac` |
+| Q3 · where the derivation lives | "New js/map-model.js (Recommended)" | `fd75e0a` |
+| Q4 · the perimeter of 12.2 | "Triggers only (Recommended)" — M-08…M-16 to a later Phase 3 session | `8b9795a` |
+| Q5 · the severities | "Approve as proposed (Recommended)" — incl. T-07's date half and T-11 as WARNING | `c76f9b2` |
+| Q6 · the 2.6 flip not made | "Re-date: after the work (Recommended)" | `681e725` |
+| Part IX's mandate sentence (found) | "Log it; fix next session (Recommended)" | `8340020` |
+| The record's LIMITS and CHECKED; a suite premise | "As drafted + register (Recommended)"; "Assert against CHECKED (Recommended)" | `9894cf9` |
+
+### What was written
+
+- **12.1, `580621c`.** `js/map-model.js` (new): `HOLDER` (the 12 kinds), `modality(r, ix)`,
+  `kindText()`. `js/regulatory-model.js` exports `PRE_ADOPTION` (its one home; the duplicate in
+  `tools/register-audit.mjs` `PROCEDURAL_STATES` is reported, not touched). `js/interactions.js` (the card
+  head, and `data-modality="proposed"` on the card) and `js/instrument-view.js` (the "Related" list)
+  read it. `agent/detector/impact.mjs` `MODULE_SURFACE` names the new module (the register must name every
+  module in `js/`). Five generated pages regenerated; a second `node tools/_footer.mjs` writes 0 files.
+  **No change to `data/`**; summaries untouched.
+- **12.2, `f0c88d7`, `9894cf9`.** `tools/trigger-audit.mjs` (new, pure, `asOf` passed in): T-01…T-11.
+  `tools/evidence-audit.mjs`: section 9 TRIGGERS in text, `--json`, `--markdown`; the derived-field scan
+  extended to the rules; `DERIVED_FIELDS` + `publishable`, `asks`, `modality`, `verification_state`; the
+  run record names the two audit modules among its rules. `tools/evidence-audit-record.mjs`: LIMITS and
+  CHECKED in the approved words. `.control-room/selftest.mjs`: the view's sections asserted equal to
+  `CHECKED` instead of pinned at 7. **A rule added after the 33 is held to every check in full**
+  (`RULES_V1`, the frozen list, on the precedent of `register-audit.mjs`): the roadmap's "adding rules
+  waits until the existing 33 pass", made mechanical — **put to the author for approval with this
+  checkpoint**, because the questions did not name it.
+- **Docs, `b7bb914`.** `docs/V2-DATA-DESIGN.md` §1.4 and `docs/v2-design/map.schema.json` `x-derived`
+  (the modality rule); §4.3 (the flip, re-dated). `docs/V2-CLOSURE.md`: V2C-66 (B) and V2C-67 (A)
+  added, with a dated note under §2.3; **V2C-01's row is not changed** until the author approves.
+- **Tests.** `tools/selftest.mjs` 111 → 116: **V1** (12.1: the holder table covers the taxonomy's 12
+  kinds; the 8 proposed edges; derived, following the holder's status; every card, every instrument
+  view, every static and generated page and the three editions; the rule switched off is caught, 6 of
+  6), **X1** (this tree: 0 errors, the backlog pinned so it can only shrink, the date halves warnings),
+  **X2** (every ERROR rule planted: T-02 ×3, T-03 ×2, T-04, T-05, T-06, T-07, T-08, T-09; a clean v2 rule
+  is publishable; a 34th rule is held in full), **X3** (the CLI in three formats; exit 1 on a planted
+  defect; a stored `publishable` refused), **X4** (the approved LIMITS sentence; CHECKED's nine sections).
+
+### Before and after, every text changed
+
+| Where | Before | After |
+|---|---|---|
+| Card head, 8 proposed edges (instrument pages, `instrument.html?id=`, not-covered pages, Part IX overview in 4 editions) | "Digital Networks Act — Amends → ePrivacy"; "… Defers to → GDPR / NIS2"; "Data Omnibus — Amends → GDPR / Data Act"; "… Repeals → P2B Regulation / DGA"; "Cloud and AI Development Act — In tension with → Data Act" | "… — Proposed: amends → …", "Proposed: defers to", "Proposed: repeals", "Proposed: in tension with" (shown in the head's small capitals) |
+| "Related" list, both ends of the 8 | "ePrivacy · Amends", "Data Omnibus · Amends", "Digital Networks Act · Defers to", … | "ePrivacy · Proposed: amends", "Data Omnibus · Proposed: amends", "Digital Networks Act · Proposed: defers to", … |
+| Generated pages | — | 5 changed: gdpr, data-act, nis2, data-omnibus, digital-networks-act (12 card heads, 12 Related entries) |
+| Record LIMITS (Control Room, run records) | "It reports nothing about data/applicability.json, the rules behind applies.html (docs/ROADMAP-v2.md §2, D-2)." | the sentence approved in §8 |
+| Record CHECKED | 7 sections | + `register`, + `triggers` |
+
+Part IX's group headings ("Amends 4"), the kind notes, the summaries, `applies.html` and its D-2 notice:
+unchanged. No locale key involved (the labels come from the taxonomy, rendered in English on every edition).
+
+### The TRIGGERS report today (`node tools/evidence-audit.mjs --as-of 2026-10-28`)
+
+```
+TRIGGERS        33 rules · applies 13 · likely 9 · possible 10 · unlikely 1
+  publishable   0 of 33
+  BACKLOG rule-v1-sources 33
+  BACKLOG rule-scope-basis-missing 33
+  BACKLOG rule-condition-provisions-missing 33
+  BACKLOG rule-exemption-v1 13
+  BACKLOG rule-threshold-basis-missing 3: ap-dsa-02, ap-dma-02, ap-ai-act-03 (4 keys)
+  BACKLOG rule-dates-not-derived 10: ap-dsa-02, ap-dsa-05, ap-dma-03, ap-ai-act-01, ap-ai-act-02,
+          ap-ai-act-05, ap-ai-act-06, ap-ai-act-07, ap-data-act-02, ap-data-act-04
+ERROR rules T-02…T-09: 0 · WARNING (VERIFIED_AFTER_AS_OF, RULE_ON_WATCHED, APPLIES_BEFORE_DATE): 0
+```
+
+As of 27 Sep 2026 (the date test H1 audits at) one warning appears, `VERIFIED_AFTER_AS_OF
+applicability/ap-eidas2-01`; as of 1 Jun 2024 `APPLIES_BEFORE_DATE` fires on six rules. Neither changes
+the exit code. **The design's F-8 count of 11 was not reproduced**: measured as every application event
+`provisionApplication()` gives a rule's obligations, later tranches included, absent from its `dates`,
+it is 10. The design's method is not recorded, so the difference is not explained.
+
+### Counts against `main` (`bca554e`), before and after
+
+| Check | Before | After | Why |
+|---|---|---|---|
+| `validate` | 0 / 0, 45 unverified | 0 / 0, 45 | — |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0 / 0 | 0 / 0 | — |
+| `evidence-audit --as-of 2026-10-28` | 0 errors, 11 warnings | 0 errors, 11 warnings; + TRIGGERS | the new section; no new warning |
+| `freshness --as-of 2026-10-28` | 0 defects, 3 prompts | 0 defects, 3 prompts | — |
+| `tools/selftest.mjs` | 111 | 116, 0 failing | V1, X1–X4 |
+| The 24 suites in `AGENT_SUITES` | 1241 | 1246, 0 failing | the five above |
+| `.control-room/selftest.mjs` | — | 77: 76 pass, 1 skipped, 0 fail | two assertions now against `CHECKED` |
+| Browser suite, `--require-browser` | 343 · 0 · 1 | 343 · 0 · 1 | — |
+| Adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | — |
+| Production readiness | 17 of 20, refused | 17 of 20, refused | with `BROWSER_QA_CHROME` set; without it `browser_suite_pass` blocks too (15 of 20) |
+| `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes`, `tools/og-image.mjs --check` | exit 0 | exit 0 | — |
+| `tools/commit-evidence.mjs origin/main HEAD` | — | 12 commits, 0 without evidence | — |
+
+### Seen in a browser
+
+Chromium (Playwright), local server: the DNA, the Data Omnibus, `instrument.html?id=eprivacy`, the GDPR
+and `instrument.html?id=p2b`, in both themes, at 1280px and 390px. Every proposed card and every
+"Related" entry reads "Proposed: …"; no console error; no horizontal overflow. The P2B notice shows the
+card ("Data Omnibus — Proposed: repeals → P2B Regulation") and has no "Related" list, as before.
+
+### What was not verified, and why
+
+- No source was opened: nothing in this session states a new legal fact, and no rule was corrected.
+- Screen readers, contrast and pixels: as README limitation 7 says.
+- Why the design's F-8 measured 11 (above).
+- `validate.mjs` does not yet know the v2 rule fields (`condition_provisions`, `threshold_basis`, object
+  sources): the first v2 rule written into `data/` may need it to accept them. Not tested, because no
+  v2 rule exists.
+
+### Found, for the author — not changed
+
+1. **V2C-67 (A)**, Part IX's mandate sentence, in four languages: logged, fixed next session.
+2. **V2C-66 (B)**, the 2.6 flip not made: re-dated.
+3. **`evidence-audit.mjs`'s exit code already turns on `--as-of`**, before this session: on `main`, as
+   of 1 Jun 2024, it reports 13 ERRORs (status contradictions measured against the date asked) and exits
+   1. SESSION 30's rule says an ERROR is a defect on every date. The new rules add none.
+4. **A proposal's claim graded "Primary law".** `clm-omnibus-four-gdpr-reforms`, a claim about
+   COM(2025) 837, carries the grade chip "PRIMARY LAW" on the Data Omnibus card, because its source is
+   tier 1. Item 2.6 changed the source chip ("Tier 1 · legislative proposal") but not the claim's
+   grade label. Measured by source title: 1 claim. The grading rules are red-tier; not touched.
+5. **The pre-adoption set has two homes**: `js/regulatory-model.js` `PRE_ADOPTION` and
+   `tools/register-audit.mjs` `PROCEDURAL_STATES` (Q3: reported, not touched).
+6. **M-11 and M-13 would fire today** on `rel-dsa-copyright-dsm-defers` (partial by construction), and
+   M-16 has no `basis` field to read (Q4): for the session that implements the map checks.
+7. **The interaction module's header** still says "Seventeen edges are recorded" (there are 40); a
+   comment, not shown to a reader.
+8. A session lesson repeated: a `pkill -f` with a string in its own command line killed the shell once
+   (no file affected; the local server it was meant to stop was stopped with it).
+
+### The verification checklist
+
+| Item | Written | Check by hand | Automatic test | Exit criterion |
+|---|---|---|---|---|
+| **12.0** | §8: scope row and nine answer rows (`725b0cb` … `9894cf9`) | read §8's last eleven rows | — | every decision in the author's words before anything published changed |
+| **12.1** | `js/map-model.js`, `js/interactions.js`, `js/instrument-view.js`, `js/regulatory-model.js`, 5 pages (`580621c`) | open `/instruments/digital-networks-act/`: "Proposed: amends → ePrivacy"; Related "ePrivacy · Proposed: amends"; `git diff bca554e -- data/` is empty | `tools/selftest.mjs` V1 | met: no proposed edge printed in the present tense; derived, not stored; second generator run writes 0 |
+| **12.2** | `tools/trigger-audit.mjs`, `tools/evidence-audit.mjs`, `tools/evidence-audit-record.mjs`, `.control-room/selftest.mjs` (`f0c88d7`, `9894cf9`) | `node tools/evidence-audit.mjs --as-of 2026-10-28` shows TRIGGERS and exits 0; plant `"depends_on": []` on a `possible` rule in a copy and it exits 1 | X1–X4; `.control-room/selftest.mjs` | met for the triggers; **Phase 3's entry condition is still not met** (0 of 33 publishable) — that is the work the check now measures |
+| **12.3** | all checks re-run, outputs saved | the commands of the table above | the 25 suites, the browser suite | met: 0 errors everywhere; readiness unchanged |
+| **12.4** | this report; V2-CLOSURE V2C-66, V2C-67 (`a2edc18`) | — | — | **approved** by the author (§8); V2C-01's row names `580621c` |
+
+### How to check it by hand
+
+```
+git diff bca554e -- data/                         # empty: nothing stored
+node tools/evidence-audit.mjs --as-of 2026-10-28  # TRIGGERS, ERRORS 0
+node --test tools/selftest.mjs                     # 116 pass
+python3 -m http.server 8000                        # /instruments/data-omnibus/, /instrument.html?id=p2b
+```
+
+## Branch register — 28 October 2026 (Session 11.5)
+
+- Branch `claude/p0-data-integrity-2026-10-28`, cut from `main` at `8aae4a3` (#35 merged).
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
+  already in the register. No other branch to report.
+- `origin/main` was re-fetched before this handover was written: still `8aae4a3`.
+- Disposition: pushed; **no pull request opened**. Whether to open one to `main` is the author's
+  question, asked at the end of the session. Until it merges, production still says the Council has no
+  mandate on the Data Omnibus.
+
+## Session 11.5 — the P0 data-integrity audit (28 Oct 2026)
+
+The full register is `docs/AUDIT-2026-10-28.md`. In short:
+
+- **F-1, confirmed and fixed.** Coreper agreed the Council's negotiating mandate on the Data Omnibus on
+  21 Oct 2026. The record is ST 14756/26, an outcome of proceedings dated 22 Oct, read on the Council's
+  register. The site said there was none: Part VIII's chip and bullet, undated, and the paragraph,
+  dated 21 Oct, in four languages; the instrument's status note; one claim. A test (O4) pinned the
+  false chip. Corrected in the data, the prose and the overlays, and regenerated.
+  `legislative_status` stays `status:proposal`.
+- **F-2, disproved.** The bibliography's 206 and 208 are the counts of 22 and 24 Oct. The static
+  fallback has equalled `data/sources.json` at every commit, and production equals the tree.
+- **F-3, fixed.** Fact claims about the Council's or Parliament's stage on a file still in procedure
+  now get the 30-day "institutional status" interval their policy already named, instead of 90 days.
+  `clm-data-omnibus-stalled` is now review due and was **not** stamped.
+- **F-4, open for the author.** `status:council-position` cannot be shown: the masthead would count
+  a core instrument as "no status recorded". Leave the scalar, or extend the displays first.
+- Validators unchanged at baseline; `tools/selftest.mjs` 111/111 (P1–P3 new, O4 corrected); the 24
+  suites 1241 tests, 0 failing.
+
+## Branch register — 28 October 2026 (v2 Session 11)
+
+- Branch `claude/v2-session-11-closing-gate`, cut from `main` at `17768c1` (#33 and #34 merged). The
+  prompt's branch, `claude/v2-session-11-prompt`, was already in `main` as #34, so nothing was merged
+  in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`: only
+  `origin/claude/v2-session-8-findings` and `origin/scout/digest-digest-2026-10-26T13-10-32Z`, both
+  already in the register. No other branch to report.
+- `origin/main` was re-fetched before this handover was written: still `17768c1`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve the checkpoint"); pushed, with a pull
+  request to `main` opened on the author's instruction of 28 Oct 2026 ("Open PR to main"). Nothing is
+  pushed to the branch after the pull request is opened.
+- After that, on 28 Oct 2026: #35 was merged (`8aae4a3`), then #36, Session 11.5 (`a53c2c2`). On the
+  author's request ("Inizierei la fase 3"; then "Scrivi il prompt della S12 (Recommended)"), the prompt
+  of v2 Session 12 was drafted: the opening of Phase 3, V2C-01 first, then the extension of
+  `tools/evidence-audit.mjs` to the applicability rules, then a checkpoint. It is kept as
+  `docs/prompts/v2-session-12.md` on `claude/v2-session-12-prompt`, cut from `main` at `a53c2c2`. The
+  prompt records no decision: its first write is §8's row "The scope of v2 Session 12", in the
+  author's words. **A finding the Session 11 inventory missed**, carried in the prompt for the author:
+  `docs/V2-DATA-DESIGN.md` §4.3 flips `scope-decision-missing` and `status-basis-missing` from BACKLOG to
+  ERROR "at the end of item 2.6"; item 2.6 is closed and both were still BACKLOG on 28 Oct 2026 (11 and
+  23). #36 also closed V2C-22 (the Coreper outcome of 21 Oct 2026, ST 14756/26).
+
+## v2 Session 11 — checkpoint report (the closing gate of v2)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope** (the session's first write, `5fec457`): the closing gate only, 11.1 and 11.2 in
+  `docs/V2-CLOSURE.md`, then the questions of 11.0, then the checkpoint; only `docs/` written, nothing
+  published changed. The author first answered "Gate, measurement only", then asked for the question
+  again and answered "Closing gate only (Recommended)"; the row records both.
+- **The seven questions** (`166bf44`), all as recommended:
+  1. **The v2 stays open, and Phase 3 is next.** Post-v2 waits until after it.
+  2. **The classes as proposed**: A 1, B 39, C 5, D 0, E 20.
+  3. **V2C-01 stays A** (an edge from a proposal labelled in the present tense) and is fixed at its
+     root, the derived modality, as **the first item of Phase 3**, before the check extension; **V2C-06
+     and V2C-08** (F-4, F-6 on `applies.html`) stay B, Phase 3, recorded as meeting the A criterion.
+  4. **No class D**; the README is unchanged.
+  5. **D-4 and D-5 stay open**, tied to Phase 4.
+  6. **Post-v2 is not opened**; it opens after the v2 closure is recorded.
+  7. **S1–S3 written verbatim** (`48f7cec`): the roadmap's status paragraph, the `AGENTS.md` row for
+     the roadmap and a new row for `docs/V2-CLOSURE.md`, the status line of `docs/V2-DATA-DESIGN.md`.
+     V2C-44 (the deploy gate "to be confirmed") is left for a later documentation pass.
+
+### What was written
+
+| Commit | File | Change |
+|---|---|---|
+| `5fec457` | `docs/ROADMAP-v2.md` §8 | the scope row |
+| `1d41c13` | `docs/V2-CLOSURE.md` | 11.1, the comparison; 11.2, the inventory |
+| `80adfd6` | `docs/V2-CLOSURE.md` §3.1 | the exact before and after for question 7 |
+| `166bf44` | `docs/ROADMAP-v2.md` §8 | the seven answers |
+| `48f7cec` | `docs/ROADMAP-v2.md`, `AGENTS.md`, `docs/V2-DATA-DESIGN.md`, `docs/V2-CLOSURE.md` | S1–S3; the decision marked in `docs/V2-CLOSURE.md` |
+| this commit | `docs/HANDOVER.md` | this report |
+
+**No published file changed**: nothing under `data/`, `js/`, `css/`, `style.css`, the pages, `i18n/`,
+`img/`, `tools/`, `agent/` or `.control-room/`. `AGENTS.md` is outside `docs/`; it was written only
+with the text approved for question 7, and the five suites that read it were re-run (374 · 0).
+
+### The comparison, in short (the detail is `docs/V2-CLOSURE.md` §1)
+
+- **Executed**: Phases 0, 1 and 2 (items 0.1–2.6), each closed at a checkpoint in §8, and Session
+  10's maintenance. **Every exit criterion of 0.1–2.6 re-run today passes**: each named test is `ok` in
+  this session's run (SNAPSHOT 0.1, ATTEST 0.2, D1–D4, EDITORIAL 1.1, METRICS 1.2, INVENTORY 1.3, N1,
+  W1–W18).
+- **Not started**: Phases 3, 4, 5 and the finance chapter. **Phase 3's entry condition is not met**:
+  0 of 33 rules with `supports` and a locator; 0 of 101 condition values resolving to a provision ID
+  (the 77 obligations do resolve); `evidence-audit.mjs` checks no rule.
+- **The brief**: the five principles are checkable and hold, with two halves not executed (the map's
+  edges, P4/N5); the nine "do not" rules are respected, one by a departure the author decided (D-2,
+  `applies.html` kept with a notice); of the decisions already taken, the inclusions, the finance
+  condition, `stratum` and the sequence to Phase 2 are executed, while **the status labels (D-3) and
+  the map's audit by `evidence-audit.mjs` are decided and not implemented** (Phase 3).
+- **Checkpoint discipline**: every session's first write has the previous checkpoint commit as an
+  ancestor. From Session 5 to 9 several decision rows were committed in the same commit as the change
+  they authorise; the order then rests on the author's quoted words, not on git.
+
+### The findings, with the class the author decided (`docs/V2-CLOSURE.md` §2)
+
+| Class | Count | What |
+|---|---|---|
+| **A** | 1 | V2C-01: an edge from a proposal in the present tense ("Amends", "Repeals"; the DNA's "Related" list with no qualifier). Fixed first in Phase 3 |
+| **B** | 39 | Phase 3: 20 (V2C-02–21: the entry condition, F-1…F-8, R-01, the 8 v1 edges, the map audit, the labels, `stratum`, modality, the DNA's acts, `nis2 → eidas`, the TTPA edges, the procedural event type, eIDAS2's actors). Evidence, data depth, translation: 4 (V2C-24–27). Maintenance: 9 (V2C-28–36). Post-v2 D: 1 (V2C-37). Phase 4: 3 (V2C-40, 41, 43). Status documents: 2 (V2C-44, 45; V2C-45 written in this session) |
+| **C** | 5 | V2C-22 (the Coreper of 21 Oct 2026, Council site), V2C-23 (the AI Omnibus page, 403), V2C-38 (other browsers, devices, screen reader), V2C-39 (the `::1` test, IPv6 runner), V2C-42 (the Pages setting) |
+| **D** | 0 | — |
+| **E** | 20 | V2C-46–65, each with the commit that closed it |
+
+**Corrections to earlier reports, measured in this session:**
+- "member State" is on **5** generated pages (CSA, DNA, EHDS, eIDAS2, IEA), not 3 (Session 9).
+- The undated source's `.”.` is in **31** bibliography entries, not only the OEIL procedure files
+  (Session 9).
+- The verification date's line break reaches the GDPR page too: the `<b>` inside `.fresh` renders
+  `display: block`, so it predates Phase 2 (Session 9 had it unmeasured).
+- The notice's "Read it at the source" link is the default blue in **both** themes; dark, about 2.0:1
+  (Session 8 said the dark theme).
+- F-1 has 2 unmatched entries left, not 4: `data-act` and `dga` gained edges in item 2.1.
+- The deploy gate: GitHub Actions shows the legacy "pages build and deployment" last running on
+  24 Oct 2026 (#14), and `pages.yml` deploying every push to `main` since, the last for #34. That is a
+  deployment record; the Pages setting itself was not read (V2C-42).
+
+### Counts against `main` (`17768c1`), before and after
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| records (instruments / relationships / sources / claims / events / terms) | 39 / 40 / 225 / 181 / 101 / 312 | unchanged | no data change |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | |
+| `evidence-audit --as-of 2026-10-28` | 0 errors · 11 warnings · covered 16 · mapped 12 · watched 5 · excluded 6 | unchanged | |
+| `freshness --as-of 2026-10-28` | 0 defects · 3 prompts | unchanged | the same date as Session 10's close; the prompts are the enforcement set's age (V2C-24) |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | |
+| all 25 suites | 1314 pass + 1 skipped (`::1`) | **1314 pass + 1 skipped (`::1`, EAFNOSUPPORT), 0 failures** | no test added or changed. The skip is not a pass |
+| browser suite (`--require-browser`) | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable (`a11y:bound`) | the first "before" run exited 1 because `docs/V2-CLOSURE.md` was written while it ran; it was re-run on a still tree |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | |
+| `readiness` | refuses, 17 of 20 | refuses, 17 of 20 | blocking: `production_dispatcher_wired`, `decision_ledger_present`; unmeasurable: `deploy_gate_exists` |
+| instrument pages · indexable routes | 17 · 26 | 17 · 26 | |
+
+Other checks, before and after: `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and
+`routes` exit 0; `tools/og-image.mjs --check` passes; `tools/commit-evidence.mjs origin/main HEAD`:
+5 commits, 0 without evidence, each "changes no published file".
+`BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`. No agent CLI that writes was
+run; `agent/records/` does not exist in this checkout.
+
+### What was not verified, and why
+
+- **No source was re-read.** This was a measurement session; V2C-22 and V2C-23 need network this
+  environment did not reach in Sessions 5 and 8, and were not retried.
+- **The Pages setting** (V2C-42): only the Actions history was read.
+- **The `::1` test** (V2C-39): skipped again (EAFNOSUPPORT).
+- **Other browsers, devices, screen readers** (V2C-38): only Chromium 153.
+- **The count of 11 rules in F-8** was not re-derived; the three AI Act rules it names were.
+- **V2C-26** (`agent/depth`'s `missing_competence`): not re-run, to keep `agent/records/` empty.
+
+### The verification checklist
+
+**11.0 · Questions to the author.**
+- *Written:* `docs/ROADMAP-v2.md` §8, the scope row (`5fec457`) and the row of the seven answers
+  (`166bf44`); S1–S3 (`48f7cec`).
+- *Verify:* `git log --oneline 17768c1..` shows `5fec457` first; read the last two rows of §8 and
+  `docs/V2-CLOSURE.md` §3.1, and compare S1–S3 with `git show 48f7cec`.
+- *Automatic:* none.
+- *Criterion:* every answer recorded in the author's words; nothing unapproved written.
+
+**11.1 · The comparison.**
+- *Written:* `docs/V2-CLOSURE.md` §1 (`1d41c13`).
+- *Verify:* re-run any row's "Today" command; for Phase 3, `python3` over `data/applicability.json`
+  (every `sources` entry is a string; no condition value is a provision id) and
+  `grep -n applicability tools/evidence-audit-record.mjs`.
+- *Automatic:* the tests named in §1.4, all in the 25 suites.
+- *Criterion:* every row measured today, not copied; no phase not executed marked complete.
+
+**11.2 · The inventory.**
+- *Written:* `docs/V2-CLOSURE.md` §2.
+- *Verify:* for any open row, its "Measured today" cell; for any E row, `git show` its commit.
+- *Automatic:* none for the inventory itself.
+- *Criterion:* every finding of the named records, with origin, law or not, and a class; closed ones
+  not reported as open.
+
+**11.3 · Write and verify.**
+- *Written:* only `docs/` and `AGENTS.md` (question 7).
+- *Verify:* `git diff --stat 17768c1..` lists only `AGENTS.md` and `docs/`.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, before and after;
+  `commit-evidence` 0.
+- *Criterion:* nothing published changed; no gate, validator, test, CSP, CSRF, Origin, OIDC or
+  publication limit lowered.
+
+**11.4 · Checkpoint.**
+- *Written:* this report.
+- *Criterion:* the author's approval, recorded in §8. **Approved** on 28 Oct 2026; pull request
+  opened on the author's instruction.
+
+### How to check it by hand
+
+1. `git diff --stat 17768c1..HEAD`: `AGENTS.md`, `docs/HANDOVER.md`, `docs/ROADMAP-v2.md`,
+   `docs/V2-CLOSURE.md`, `docs/V2-DATA-DESIGN.md`, and nothing else.
+2. `python3 -m http.server 8000`; open `/instruments/digital-networks-act/` and read the "Related" list:
+   "ePrivacy / Amends" (V2C-01). Open `/instrument.html?id=p2b` in the dark theme: the source link is
+   blue on near-black (V2C-28).
+3. `node tools/evidence-audit.mjs --as-of 2026-10-28` and `node agent/production/cli.mjs readiness`:
+   the figures above.
+
+## Branch register — 28 October 2026 (v2 Session 10)
+
+- Branch `claude/v2-session-10-frontend`, cut from `main` at `c982724` (#31 and #32 merged). The
+  prompt's branch, `claude/v2-session-10-prompt`, was already in `main` as #32, so nothing was merged
+  in.
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`:
+  - `origin/claude/v2-session-8-findings`: `2b5d71d` only, whose content #31 carries (Session 9's
+    register);
+  - `origin/scout/digest-digest-2026-10-26T13-10-32Z` (already in the register).
+  `origin/claude/new-session-o9uopd`, which the prompt expected, is no longer unmerged.
+- `origin/main` was re-fetched before this handover was written: still `c982724`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Approve the checkpoint"); pushed, with a pull
+  request to `main` opened on the author's instruction of 28 Oct 2026 ("Open PR to main"). Nothing is
+  pushed to the branch after the pull request is opened.
+- After that, on 28 Oct 2026: #33 was merged (`7cb47cf`), and the prompt of v2 Session 11 (the closing
+  gate of v2: the comparison with `docs/ROADMAP-v2.md`, the open findings classified, the author's
+  decision on the perimeter) was drafted on the author's request ("Write session 11"). It is kept as
+  `docs/prompts/v2-session-11.md` on `claude/v2-session-11-prompt`, cut from `main` at `7cb47cf`. The
+  prompt records no decision: its first write is §8's row "The scope of v2 Session 11", in the
+  author's words.
+
+## v2 Session 10 — checkpoint report (items 10.1 and 10.2)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope** (the session's first write, `3e0e869`): items 10.1 and 10.2 only; a presentation
+  session in which no data changes meaning; Session 11, Phase 3 and post-v2 out.
+- **10.1** (`7cbfd4e`), all four as proposed: one `scrollbar-color` on `html`
+  (`var(--paper-faint) transparent`), with the day palette also declared on `:root` when `body`
+  carries it; a scroll shadow on `.chrome-nav` and `.subnav`, whose bars stay hidden; a thin bar on
+  `.spine` in every engine; the hide rules of the dead `.tool-top`/`.bib-top` strip deleted.
+- **10.2, the rule and how** (`7cbfd4e`): what counts as an internal reference and what does not; the
+  perimeter of eight renderers (R1–R8); the data stays as written and one function in `js/format.js`
+  cleans the text at render time; W18 holds it.
+- **10.2, every text** (`ede6497`), one question per group, all as recommended: R1 (the relation-kind
+  note, with "Direction: from = …" and "(from)" dropped by the interaction box), R2 (status notes),
+  R3 (source notes), R4 (claim notes), R5–R7 (enforcement, institutions, search), R8 (the
+  bibliography's own copy, word for word, with two links). No locale key to declare. The presentation
+  findings of Sessions 8 and 9 stay open.
+
+### What was written
+
+| Commit | File | Change |
+|---|---|---|
+| `947803f` | `js/format.js` | `readerText()`, the filter (unwired until approved) |
+| `d7d737b`, `8876649` | `style.css`, `css/tokens.css`, `css/tools.css` | 10.1 as decided; `8876649` tunes the shadow's covers (values only) after the browser showed a faint band at rest |
+| `90c7f92` | `js/format.js` (`internalRefs()`), `js/interactions.js`, `js/instrument-view.js`, `js/status.js`, `js/evidence.js`, `js/bibliography.js`, `js/enforcement-page.js`, `js/institutions-page.js`, `js/search.js`, `bibliography.html`, `tools/selftest.mjs` | the eight renderers print notes through `readerText()`; each instrument page's claim card carries its id as an anchor; R8's copy; W18 |
+| | generated | the 17 instrument pages (`node tools/_footer.mjs`; a second run writes 0 files). No OG card changed (`og-image --check` passes) |
+| `77b9058` | `css/tokens.css` | the link style for the note containers (below, "checks changed") |
+| this commit | `docs/HANDOVER.md`, `docs/v2-design/session-10-before-after.md` | this report; the before/after table |
+| `3e0e869`, `7cbfd4e`, `ede6497` | `docs/ROADMAP-v2.md` §8 | four rows |
+
+**No file under `data/` changed, and no fact, date, status, relationship, claim, source or judgement
+changed.** The provenance stays in the notes, where the maintainers and the checks read it.
+`js/search.js` was changed only for R7, on the author's decision; nothing there prepares the Evidence
+Navigator.
+
+### The checks changed, and why
+
+- **W18**, new in `tools/selftest.mjs`. It runs every note a renderer of the perimeter prints (taxonomy
+  notes of the relation kinds and actor/sector/activity/territory terms; status notes; relationship,
+  source, claim and enforcement notes; appeal notes; competence notes) through `readerText()`, and
+  fails on anything `internalRefs()` still finds. It reads the visible text of every static and
+  generated page and of the three editions (the datasets explorer excepted, by the rule). It pins the
+  approved R1 texts word for word, three R2 outputs and R8's copy, asserts the data still carries the
+  references (so the provenance is not lost), plants a `docs/` path, a claim id and a commit, and
+  asserts that case numbers, Council documents, a court URL and an agenda item are not findings.
+  **Measured to fail** with each control off, and restored after each run:
+  - `readerText()` made a pass-through: W18 fails on the fields;
+  - the pages generated with it off: 56 leaks on the instrument pages;
+  - the R1 rule removed from `js/interactions.js`: W18 fails on the pinned kind notes.
+- **No existing test's premise changed.** No selftest, browser check, `prose-homes` or `design-qa`
+  rule read any of the texts changed. The one check the work tripped is below.
+- **A regression of this session, caught by the browser suite and fixed at its root (`77b9058`).** The
+  links `readerText()` makes landed in containers that had only held plain text and had no link rule.
+  They fell back to the browser's blue: `a11y:contrast:dark:enforcement.html` 1.85:1 and
+  `:bibliography.html` 1.98:1, 2 failures. Those containers now take the site's existing link
+  convention (`--mech`, underlined, `--live` on hover), and the suite is back to 343 · 0 · 1. No
+  check was changed.
+
+### Item 10.2: the inventory, and before and after
+
+Measured in Chromium over every page, every instrument's generated page and `instrument.html?id`
+(39), the 175 evidence panels the brief opens, search, the SEO metadata, JSON-LD, the OG cards' inputs
+and the it/fr/es editions.
+
+| Renderer | Field | Records | Shown on |
+|---|---|---|---|
+| R1 interaction box | taxonomy `relationship_kind` note | 2 | 26 cards on 12 instrument pages; `instrument.html`; the brief and its three editions |
+| R2 status note | `instruments[].status_note` | 13 (+ ttpa, psd3, not printed today) | instrument page head; the brief's status strips; the evidence panel |
+| R3 source note | `sources[].note` | 25 | the bibliography |
+| R4 claim note | `claims[].verification_note` | 86 of 181 | the evidence panel |
+| R5 enforcement | `verification_note`, `appeal.note` | 11 | `enforcement.html` |
+| R6 institutions | `competences[].note` | 3 | `institutions.html` |
+| R7 search | taxonomy actor notes | 6 | the search palette |
+| R8 page copy | `bibliography.html` | 1 | the bibliography |
+
+Clean before the work: the SEO metadata, JSON-LD, the OG cards (drawn from name, title, kind and CELEX).
+Outside the rule: the datasets explorer (the raw records, by design); a record's own handle ("Claim ID
+clm-…", "enf-… · verified"); URLs, case numbers, Council documents, CELEX numbers; the methodology and
+licence pages' repository links. Not printed by any renderer today, and filtered anyway where the
+renderer is in the perimeter: the relationships' notes (printed only when an edge requires
+verification).
+
+**Every changed sentence, before and after, is in `docs/v2-design/session-10-before-after.md`**
+(148 records). By kind:
+
+| Before | After | Where |
+|---|---|---|
+| "(docs/V2-DATA-DESIGN.md §1.4)", "(docs/AUDIT-2026-10-14.md §1 F)" | dropped | R1 (26 cards), R2 (CRA) |
+| "Direction: from = the enabling instrument." / "(from)" | dropped | R1 (9 / 17 cards) |
+| "(audit item 9)", "(audit items 9 and 10)", "(audit item 10)", "(audit items 2 and 12)", "(audit item N)" | dropped | R2 (11 instruments), R4, R5 |
+| "(audit T-NN)", "(audits T-22, T-27)" | dropped | R3, R4, R5 |
+| "for B.3 (v2 Session 5)", "for item 2.x" | dropped | R3 (16), R4, R7 (6) |
+| "(commit 282a782)" | dropped | R2 (Data Act) |
+| `last_verified`, `status_as_of`, `legislative_status`, `action_status`, `amended_by`, … | "the verification date", "the status date", "the legislative status", "the action status", "amended by", … | R2, R4, R5 |
+| `status:in-force`, `status:stalled`, `remedy:ordered`, `record-type:inaction`, `actor:data-holder` | ‘In force’, ‘Stalled’, ‘Remedy ordered’, ‘Recorded inaction’, ‘Data holder’ | R2, R5, R7 |
+| `clm-…` beside an Article or a Council document | dropped: "(Art. 5a(1))", "(ST 13112/26)" | R2 (eIDAS2 ×2, Data Omnibus ×2), R4 |
+| `clm-…` with no citation beside it | "(see the claim)", a link to the claim on its instrument page; in the evidence panel "claim n", a button opening it | R2 (Data Omnibus ×3), R4, R5 (Apple) |
+| `src-…` in a sentence | "⟨publisher, year⟩", a link to the bibliography entry; dropped where the sentence names the document; "a former record" for an id that no longer exists | R2, R3, R6 |
+| `enf-…` | "the enforcement record", a link; dropped where the sentence names the decision | R4, R5 |
+| `tools/evidence-audit.mjs`, `instruments.json`, `enforcement.json` | "the site's evidence audit", "the instruments dataset", "the enforcement dataset" | R4 |
+| R8: "computed from `data/*.json`" / "(`tools/validate.mjs`)" | "computed from ⟨the site's datasets⟩" / ", in ⟨the site's data validator⟩" | the bibliography |
+
+Two corrections to what was put to the author, neither changing a text:
+- **R3's question said source notes are printed "in the bibliography and in the evidence panel's source
+  list".** They are printed in the bibliography only: `js/evidence-view.js` cites a source without its
+  note.
+- **The footnote numbers in the review file were an approximation** (from the order of `data-claim` in
+  the markup). The panel numbers them at run time: the two Dutch fines read "claim 38" and "claim 39",
+  not 34 and 35. The committed table writes "claim [n]".
+
+### Counts against `main` (`c982724`)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| records (instruments / relationships / sources / claims / events / terms) | 39 / 40 / 225 / 181 / 101 / 312 | unchanged | no data change |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | |
+| `evidence-audit --as-of 2026-10-28` | 0 errors · 11 warnings · covered 16 · mapped 12 · watched 5 · excluded 6 | unchanged | |
+| `freshness --as-of 2026-10-28` | 0 defects · 3 prompts | unchanged | the calendar |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | |
+| matches of the browser scan's patterns (datasets explorer and "Claim ID" handles excluded) | 797, 457 of them in the evidence panels | 20 (19 distinct) | the filter; every match left is an exempt kind: the Council's agenda "Item 1", hex segments of URLs, each enforcement record's own handle. The 797 also counted some of those |
+| static pages: `docs/V2-DATA-DESIGN.md §1.4` / `clm-` / `commit` | 26 / 7 / 1 | 0 / 0 / 0 | |
+| `tools/selftest.mjs` | 107 | 108 | W18 |
+| all 25 suites | 1313 pass + 1 skipped | **1314 pass + 1 skipped (`::1`), 0 failures** | W18. The skip is the `::1` test, not run in this container: a skip is not a pass |
+| browser suite (`--require-browser`) | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable (`a11y:bound`) | 341 · 2 · 1 before `77b9058` |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | |
+| instrument pages · indexable routes | 17 · 26 | 17 · 26 | |
+
+Other checks: `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0;
+`tools/og-image.mjs --check` passes; `tools/commit-evidence.mjs origin/main HEAD`: 0 commits without
+evidence. `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`. No agent CLI that
+writes was run, and `agent/records/` was empty before the last run of the suites.
+
+### Seen in a browser, and what was not verified
+
+Chromium 153 (Playwright), with classic scrollbars shown (headless hides them by default).
+- The home page, `instruments.html`, the bibliography, the GDPR, DNA, eIDAS2 and Data Omnibus pages at
+  1280px and 390px in both themes: the page's bar reads `--paper-faint` on `html` in each theme
+  (#978C7E dark, #5B5053 day). No horizontal overflow, no console error.
+- `.chrome-nav` at 390px, in both themes, at the start, in the middle and at the end of the strip: a
+  shadow shows only on a side where links are hidden. The subnav behaves the same. Tab reaches the
+  last link of each strip and the strip scrolls it into view.
+- `.spine` at 1280×360: it overflows and shows a 10px thin bar in the theme's ink. At 200% zoom of a
+  1280×720 screen (a 640×360 viewport) the spine is hidden by its existing breakpoint, so the bar is
+  only ever seen on wide, short windows.
+- The evidence panel: a claim note's "claim 38" button opens Note 38 in place. The Data Omnibus page's
+  three "see the claim" links land on cards that exist.
+- Contrast: thumb on track ≥ 5.3:1 in both themes (computed from the tokens), and the links in the
+  notes pass the browser suite's contrast check in both themes.
+- `prefers-reduced-motion`: nothing added moves; the scroll shadow is static backgrounds.
+
+**Not verified:** Firefox and Safari/WebKit (Safari keeps its native bar; whether it honours
+`scrollbar-color` was not measured); real touch devices, where scrollbars overlay and the shadow is the
+only signal; screen readers; Windows forced-colours; pixels.
+
+### Found, for the author — not changed
+
+1. **Leftovers outside the rule**, in claim notes (R4): a provision id ("No tfeu:art-16 provision is
+   modelled") and bare instrument ids ("eidas2 removed from instruments", "ehds added to
+   instruments"). Approved as leftovers, unchanged.
+2. **Un-numbered audit references stay**: "(audit, facts hidden in interpretation)", "21 Oct 2026
+   (audit): …". They name no code, so the rule leaves them.
+3. **Some outputs read stiffly**: "The verification date 21 Oct 2026: the status was re-read that day"
+   (Data Omnibus); "this environment" in source notes. Approved as listed.
+4. **The dead `.tool-top`/`.bib-top` block** in `css/tools.css` keeps its fade and layout rules (only
+   the hide rules went, as decided), and `js/shell.js` still queries those headers.
+5. **The spine's thin bar narrows the rail by 10px** when it shows; the dots sit close to it.
+6. **No hover state on a scrollbar** (`scrollbar-color` has none), as decided.
+
+**Still open from Session 9** (unchanged): the edge kind in the present tense ("Amends", "Defers to")
+for a proposal; the modality derived from the `from` node (`docs/V2-DATA-DESIGN.md` §1.4) and the four
+`enables` candidates; the acts the DNA would repeal or amend not modelled; "member State" in the
+generated descriptions; the undated source's `.”.`; the verification date breaking its line; no event
+type for a procedural step.
+
+**Still open from Session 8** (unchanged): the colour of the notice's "Read it at the source" link in
+the dark theme; the EHDS page's `<title>`; `data-omnibus`'s status note, to be re-verified against the
+outcome of the Coreper meeting of 21 Oct 2026 (only its identifiers changed here, at render time);
+`nis2 → eidas` not modelled.
+
+**Still open** (unchanged): `src-ec-ai-omnibus-in-force` (403); the `::1` test (skipped again here); the
+8 v1 relationships and the `edge-v1-sources` flip; R-01 and the eight findings of
+`docs/V2-DATA-DESIGN.md` §7 (Phase 3); the Session 5 findings of the roadmap's §3.
+
+### The verification checklist
+
+**10.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, four rows (`3e0e869`, `7cbfd4e`, `ede6497`).
+- *Verify:* `git log --oneline c982724..` shows `3e0e869` first, and `7cbfd4e` and `ede6497` before
+  `d7d737b` and `90c7f92`.
+- *Automatic:* none.
+- *Criterion:* every reader-facing text decided before it was written; nothing published changed
+  before the scope row.
+
+**10.1 · Scrollbars.**
+- *Changed:* `style.css`, `css/tokens.css`, `css/tools.css` (`d7d737b`, `8876649`).
+- *Verify:* open any page in the dark theme: the page's bar is dark-on-dark. Narrow the window below
+  ~1000px on an instrument page: a shadow appears at the nav strip's right edge, moves to both sides
+  as you scroll, and leaves the right at the end. Make the brief's window short (below ~410px): the
+  left rail shows a thin bar.
+- *Automatic:* `design-qa` 0/0; the browser suite's contrast checks. No test asserts the scrollbar
+  itself.
+- *Criterion:* existing tokens only; no inline style or script; no CSP exception; nothing hidden
+  globally; a continuity signal on every hidden strip.
+
+**10.2 · Internal references.**
+- *Changed:* `js/format.js` and seven renderers, `bibliography.html`, the 17 generated pages
+  (`947803f`, `90c7f92`, `77b9058`).
+- *Verify:* open `/instruments/eidas2/`: the status note ends its two duties "(Art. 5a(1))" and
+  "(Art. 5f(2))". Open the GDPR page's interactions: no "docs/". In the brief, open the footnote of
+  "Eight of the ten largest GDPR fines": its note says "claim 38", and the button opens Note 38. Open
+  the bibliography's Data quality lede.
+- *Automatic:* `node --test --test-name-pattern=W18 tools/selftest.mjs`.
+- *Criterion:* no internal reference in a text a reader sees; the data and its provenance unchanged.
+
+**10.3 · Write and verify.**
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as above;
+  `commit-evidence` 0.
+- *Criterion:* 0 errors everywhere; no gate, validator, test, CSP, CSRF, Origin, OIDC or publication
+  limit lowered.
+
+**10.4 · Checkpoint.**
+- *Changed:* this report.
+- *Criterion:* the author's approval, recorded in §8. **Approved** on 28 Oct 2026; pull request
+  opened on the author's instruction.
+
+### How to check it by hand
+
+1. `node --test --test-name-pattern=W18 tools/selftest.mjs`.
+2. To see it hold, add "(commit 1234abc)" to `eidas2`'s `status_note` in `data/instruments.json`: W18
+   still passes (the filter drops it). Then make `readerText()` return its input in `js/format.js`:
+   W18 fails. Restore both files.
+3. `python3 -m http.server 8000`; open `/instruments/data-omnibus/` in both themes at 390px and
+   desktop width; read the status note; follow a "see the claim" link; scroll the top nav strip.
+4. `node agent/browser/cli.mjs --require-browser`: 343 · 0 · 1.
+
+## Branch register — 28 October 2026 (v2 Session 9)
+
+- Branch `claude/intelligent-bell-wuhder`, the one the environment assigned, cut from `main` at
+  `cabe21b` (#28 and #29 merged). `c756f0f` (the prompt of this session, and the register entry that
+  carries the content of `2b5d71d`), on `claude/new-session-o9uopd` and not on `main`, was merged into
+  it (`8bd9e68`) on the author's decision ("Start Session 9 + merge c756f0f (Recommended)").
+- Unmerged branches at the start, `git branch -r --no-merged origin/main`:
+  - `origin/claude/new-session-o9uopd`: `c756f0f` only, now carried by this branch;
+  - `origin/claude/v2-session-8-findings`: `2b5d71d` only, whose content `c756f0f` carries;
+  - `origin/scout/digest-digest-2026-10-26T13-10-32Z` (already in the register).
+- `origin/main` was re-fetched before this handover was written: still `cabe21b`.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8, "Yes"); pushed, with a pull request to `main` opened
+  on the author's instruction of 28 Oct 2026 ("Open PR; Phase 2 closed"). Nothing is pushed to the
+  branch after the pull request is opened.
+- After that, on 28 Oct 2026: the prompt of v2 Session 10 (items 10.1 and 10.2: scrollbars, and the
+  internal references shown to a reader) was drafted on the author's request ("Do it"). It is kept as
+  `docs/prompts/v2-session-10.md` on `claude/v2-session-10-prompt`, cut from this branch at `480a83c`
+  so that #31 stays untouched; once #31 is merged, its pull request would show only the prompt. The
+  prompt records no decision: its first write is §8's row "The scope of v2 Session 10", in the
+  author's words.
+
+## v2 Session 9 — checkpoint report (item 2.6, the Digital Networks Act)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope** (first write of the session, `89311c1`): item 2.6 only, then the checkpoint; Phase 3
+  and Session 10 are not in this session.
+- **Item 2.6** (`139c15a`), asked one question at a time before anything was written to `data/`.
+  Thirteen answers, all as recommended:
+  - *criterion*: `crit:object-infrastructure` + `crit:horizontal` + `crit:readable`, on Art. 1(1)–(2),
+    Art. 9(2), Art. 93(1) and the procedure's first key event. `crit:horizontal` was put to the author
+    as the contestable clause: Art. 1(2) names "the electronic communications sector". The reading
+    taken: the rights would reach every end-user, whatever their sector, and the networks regulated
+    include those carrying information society services;
+  - *id and name*: `digital-networks-act`, not the draft's `dna`, which collides with the `dna` field
+    of every record (294 occurrences of the word in 27 files; the locale keys `<id>.dna.*`; the
+    detector's field paths; the `dna:` namespace). `short_name` "Digital Networks Act", alias
+    `com-2026-16`, no `dna` alias, nothing in `KNOWN_AS`;
+  - *status*: `status:proposal`, the status note word for word ("NOT LAW. …"), `status_basis` the
+    procedure file's key events and stage (tier 2, S-03);
+  - *edges*: three, all from the proposal — `amends` ePrivacy (Art. 207), `defers-to` GDPR
+    (Art. 93(4)), `defers-to` NIS2 (Art. 5(2); Art. 8(3)). Any one of them meets the page gate's
+    `context` criterion. No `enables` edge into the proposal (finding 2 below); no node for the acts it
+    would repeal or amend outside the dataset (finding 3);
+  - *dates*: the proposal event only. No event for the referral, the EESC opinion or the draft report
+    (the taxonomy has no type for them; the status note names them), and none of the proposal's own
+    bracketed dates;
+  - `dna.objective` draft A;
+  - *provisions and fields*: Arts 5, 9 and 93, each "Proposed, not law"; the new term
+    `actor:electronic-communications-provider`; `regulated_actor` [that term, `actor:member-state`];
+    `obligation_anchor` empty; `implementation_model` "Would be directly applicable: a proposed
+    Regulation (Art. 210, last paragraph)"; `sanction_ceiling` with null amounts and the note
+    (Art. 196(5); Art. 43(3)); the four other analytical fields `null`;
+  - *display*, for `kind:proposal` only: the provisions table reads "Would bind" and "Would apply",
+    its date cell "no date: a proposal is not law"; search offers no obligation from a proposal's
+    article;
+  - *sources*: `src-eurlex-dna-proposal` (tier 1) and `src-oeil-2026-0013` (tier 2), notes word for
+    word;
+  - *the reason* of the scope decision, word for word.
+- **Two display defects the new record exposed** (`13b536f`), each asked before it was fixed:
+  `tools/seo.mjs` `actNumber()` (the description called the proposal "Regulation (EU) 2015/2120") and
+  `js/format.js` `tierWord()` (a Commission proposal labelled "primary law").
+
+### What was written
+
+| Commit | Record or file | Change |
+|---|---|---|
+| `53f51e6` | `digital-networks-act` | new; `kind:proposal`; `scope:core`; `brief_part` `null`; `status:proposal`, `status_as_of` 2026-10-28; the status note; `status_basis` (OEIL key events and stage, direct; the proposal's title and metadata, partial); `scope_decision` (included; three clauses; three references, all direct; `approved_on` 2026-10-28); `proposes_to_amend` [`eprivacy`]; `dna` as decided; `legal_basis` empty (not asked; Art. 114 TFEU is cited by the proposal) |
+| | `digital-networks-act:art-5`, `:art-9`, `:art-93` | three provisions, each "Proposed, not law", `obligation_on` the new provider term |
+| | `rel-digital-networks-act-eprivacy-amends`, `-gdpr-defers`, `-nis2-defers` | new, v2 shape, direct, every locator in the proposal; every summary opens "Proposed:" |
+| | `tl-digital-networks-act-2026-01-21-proposal` | new; `event:proposal`; `obligation` `null` |
+| | `actor:electronic-communications-provider` | new taxonomy term; nothing renamed |
+| | `src-eurlex-dna-proposal`, `src-oeil-2026-0013` | new; each note says what was read and what was not |
+| | `js/instrument-view.js`, `js/search.js` (`bindingActors`), `tools/seo.mjs` (`actNumber`), `js/format.js` (`tierWord`) | the proposal-only display fixes |
+| | `tools/selftest.mjs` | W17, new (below) |
+| | generated | `instruments/digital-networks-act/` (new); the GDPR and NIS2 pages (the edges from the other end); the data-omnibus and Data Act pages (`tierWord`); the `<noscript>` index on every page; `instruments.html`; `bibliography.html`; `datasets.html`; `sitemap.xml`; `img/og/digital-networks-act.png` and its manifest entry. The tool re-rendered the other cards; they were restored, because their inputs did not change (`og-image.mjs --check` passes) |
+| `89311c1`, `139c15a`, `13b536f`, this commit | `docs/ROADMAP-v2.md` §8 | three rows; this report |
+
+Not added:
+- no claim (the brief does not name the DNA) and no applicability rule;
+- no institution edge: no competent authority is recorded, and the page says "not established";
+- no entry in `tools/seo.mjs`'s title table, `KNOWN_AS` or `PAGE_PUBLISHED`;
+- no record for Directive (EU) 2018/1972, Regulation (EU) 2018/1971, Decision No 243/2012/EU,
+  Regulation (EU) 2015/2120 or Decision No 676/2002/EC;
+- no `enables` edge from `eidas`, `nis2`, `gdpr` or `iea`.
+
+**No locale key was touched.** The fields written are data, which the editions do not carry, and the
+strings changed in code ("Would bind", "Would apply", "no date: a proposal is not law", "Tier 1 ·
+legislative proposal") have no locale key: the translations hold only the home and portal strings. No
+key needs declaring `superseded` or `pending_translation`; `i18n-audit` is 0/0.
+
+### The checks changed, and why
+
+No validator, gate or check was loosened or extended. Four renderers changed, each for `kind:proposal`
+only, each on the author's decision:
+- `js/instrument-view.js`: the provisions table's columns ("Would bind", "Would apply") and its date
+  cell. A proposal's provision passed through `provisionApplication()` would have read "no
+  application date recorded for this article", as though a date were still to be found.
+- `js/search.js`: `bindingActors()`. Search built an "obligation" entry ("a provision that binds
+  somebody") from every provision's `obligation_on`, so it would have offered "Electronic
+  communications provider — Digital Networks Act Art. 9" as an obligation.
+- `tools/seo.mjs` `actNumber()`: the first act number in the title was the proposal's identity; the
+  DNA's title names Regulation (EU) 2015/2120 first.
+- `js/format.js` `tierWord()`: "Tier 1 · primary law" on a Commission proposal (true of COM(2025) 837
+  on `main` already). The tier stays tier 1, which the taxonomy defines to include legislative
+  documents; only the word changes, keyed on the CELEX (sector 5, type PC).
+
+**W17**, a new test on W15's model:
+- it asserts that the DNA is covered, sits in no backlog and passes as written; that it is a
+  `kind:proposal` with `status:proposal` and no contradiction; that its one milestone is the proposal;
+  that its three edges run from it, direct, structurally located in the proposal, each summary saying
+  "Proposed:"; and that no edge runs into it;
+- it plants the loss of the status basis (M-07), of the decision (M-04), of all three edges (M-05) and
+  of the objective (M-05), and a post-adoption state (`status:in-force`, `status:applicable`,
+  `status:adopted`) on the proposal, which `statusContradictions()` reports as "counts it as law" and
+  M-07 refuses (a tier-2 procedure file cannot carry an adopted state). Each one fails;
+- it asserts that any one edge alone still gives context;
+- it reads the generated page: "Would bind" / "Would apply", no "Binds", one "no date: a proposal is
+  not law" per provision, no "Applies since/from"; the IEA page keeps "Binds";
+- it asserts `bindingActors()` offers nothing from the DNA's articles and the IEA's unchanged, and
+  that `buildIndex()` asks it; `actNumber()` gives "COM(2026) 16", "COM(2025) 837" and "Regulation
+  (EU) 2024/903"; the description does not name 2015/2120; `tierWord()` reads "legislative proposal"
+  for the four proposal sources and "primary law" for the IEA's, and the page holds no "primary law".
+
+Measured: W17 fails with each of nine controls disabled in turn — the proposal rule of
+`statusContradictions()`; M-07; M-04's missing-decision line; M-05; the provisions-table fix; the
+date-cell fix; `bindingActors()`'s proposal branch; `actNumber()`'s proposal branch; `tierWord()`'s
+proposal branch (the page regenerated where the control is a renderer). Every file was restored and
+the pages regenerated (`_footer` then wrote 0 files).
+
+**A lesson-8 check: no existing test's premise changed.** The new edges end at GDPR and NIS2. W15
+counts only the IEA's edges and W11 plants over `eidas2`'s; both pass unchanged.
+
+No agent CLI was run, and `agent/records/` stayed empty.
+
+### Facts read on 28 Oct 2026, and facts left `null`
+
+- **Read** (no fact from a web search):
+  - COM(2026) 16, from Cellar by CELEX `52026PC0016` (English XHTML, `DOC_1`, the act; HTTP 300 with
+    two manifestations, then 200):
+    - Arts 1–5, 9, 43, 93, 95, 99, 106, 107, 115, 196 and 206–210;
+    - every other Article that names Regulation (EU) 2016/679, Directive (EU) 2022/2555, Regulation
+      (EU) No 910/2014, Regulation (EU) 2024/903 or Directive 2002/58/EC (also Arts 2, 7, 8, 11(3)
+      and 77);
+    - the citation of Art. 114 TFEU, and the first section of the explanatory memorandum.
+  - The enacting terms were searched, without a hit, for the DSA, the DMA, the Data Act, the AI Act,
+    the CRA, the CSA, the EHDS, the DGA, DORA, Regulation (EU) 2024/1183, the e-Commerce Directive and
+    the CER Directive.
+  - The Publications Office's SPARQL metadata:
+    - the work: document date 2026-01-21; resource type PROP_REG; based on the TFEU; proposes to
+      amend 32002L0058, 32002D0676, 32012D0243, 32015R2120, 32018L1972 and 32018R1971;
+    - the dossier: 2026/0013/COD, OLP, `PROP_PENDING`; pending 1, adopted 0, withdrawn 0,
+      not-adopted 0;
+    - its 28 events: the Commission's adoption (21 Jan), the EP referral (27 Apr, ITRE), the EESC
+      opinion (17 Jun, EESC 2026-00515), the ITRE draft report (20 Oct), and 24 Council entries
+      (the question put to the author said 25; the count is 24)
+      (working party, one Coreper of 27 May, one Council of 9 Jun), all sent by `CONSIL:FilePlanning`.
+      Planning entries; none establishes a position.
+  - The Legislative Observatory, 2026/0013(COD): "Awaiting committee decision"; ITRE, rapporteur
+    Michał Kobosko (Renew), appointed 26 Feb 2026; IMCO and LIBE for opinion; BUDG declined; the key
+    events and documents as the source note lists them.
+- **Not read**:
+  - the recitals, the rest of the explanatory memorandum, the other Articles, the Annexes (`DOC_2`)
+    and the financial statement;
+  - the ITRE draft report PE791.994, the EESC opinion, the national parliaments' contributions;
+  - the acts the proposal would repeal or amend (so no node for them);
+  - the Council's documents (ST 8523/26, ST 9359/26, ST 9685/26, ST 9799/26), named in the planning
+    entries only.
+- **Left `null` or empty**: `protected_party`, `risk_logic`, `enforcement_mechanism`,
+  `territorial_scope`; the sanction amounts; `legal_basis` (not asked); `obligation_anchor`.
+- **Text-extraction note**: in the XHTML some Article headings are split by the converter ("Art icle
+  6"), so the Article index was built from the headings that parse; every Article cited above was
+  read in the text itself.
+
+### Exit criteria of item 2.6, and Phase 2
+
+- The criterion held, decided on the proposal's own text, with the contestable clause put to the
+  author: **met**.
+- The status label is what the sources establish on the date checked (roadmap §4): `status:proposal`
+  on 28 Oct 2026, from the procedure file and the metadata: **met**.
+- Every fact read from a retrieved primary source; `sources.json` records only for documents read;
+  prose approved word for word before writing; `_footer` re-run; locale keys declared (none): **met**.
+- No page presents the proposal as law (below): **met**, as far as the browser review reached.
+- **Phase 2** (items 2.0–2.6): with this item every listed inclusion has been taken. Whether Phase 2
+  is closed is **put to the author**, not stated here; Phase 3 does not start in this session.
+
+### Counts against `main` (`cabe21b`)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / provisions / relationships | 38 / 89 / 37 | 39 / 92 / 40 | the DNA; three provisions; three edges |
+| sources / timeline events / claims / taxonomy terms | 223 / 100 / 181 / 311 | 225 / 101 / 181 / 312 | two sources; the proposal event; one actor term |
+| coverage covered / mapped / watched / excluded | 15 / 12 / 5 / 6 | 16 / 12 / 5 / 6 | the DNA |
+| v1 relationships | 8 | 8 | the new edges are v2 |
+| instrument pages · indexable routes | 16 · 25 | 17 · 26 | `instruments/digital-networks-act/` |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit --as-of 2026-10-28` errors / warnings | 0 / 11 | 0 / 11 | unchanged (the same eleven) |
+| `freshness --as-of 2026-10-28` | 0 defects / 3 prompts | 0 / 3 | unchanged |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged |
+| `tools/selftest.mjs` | 106 | 107 | W17 |
+| all 25 suites | 1312 pass + 1 skipped | **1313 pass + 1 skipped (`::1`), 0 failures (1314)** | W17. The skip is the `::1` test |
+| browser suite (`--require-browser`) | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable (`a11y:bound`) | |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+
+Other checks:
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+- `tools/og-image.mjs --check` passes.
+- `tools/commit-evidence.mjs origin/main HEAD`: 0 commits without evidence. `53f51e6` names its
+  evidence; the others change no published file or are the merge.
+- `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+### The page, opened in a browser
+
+`/instruments/digital-networks-act/` was opened in Chromium (Playwright) at 1280px and 390px, in the
+dark and the light theme. There was no console error and no horizontal overflow in any of the four.
+The GDPR and NIS2 pages were opened the same way, with the same result. The page shows:
+- the kicker "Proposal · not law · creates no obligations · CELEX 52026PC0016", the full title, and
+  "Official text: COM(2026) 16 final — …", labelled "Tier 1 · legislative proposal";
+- Status "Proposal, as of 28 October 2026"; "Next date: nothing further recorded"; "Competent
+  authority: not established in this dataset"; "Sanction ceiling: no amount recorded"; the status
+  note, opening "NOT LAW.";
+- "In short": the objective in the conditional; "Would bind: Electronic communications provider ·
+  Member State"; "Would protect: not established"; "Core provisions: not established"; "Key dates:
+  Legislative proposal 21 January 2026"; the sanction note, opening "Proposed, not law.";
+- headings in the conditional ("What does the Digital Networks Act propose?", "Where does … stand?",
+  "Who would … affect?", "What would … change?", "How would … be enforced?");
+- one dated event, the proposal; "No rules recorded", worded as absence of knowledge;
+- three provisions under "Would bind" and "Would apply", each "Proposed, not law." and "no date: a
+  proposal is not law";
+- no enforcement recorded, no claims; three interactions, each summary opening "Proposed:", each with
+  its locator;
+- the GDPR and NIS2 pages show the `defers-to` edge from the other end, with "Proposed:" and the
+  proposal's source labelled "Tier 1 · legislative proposal".
+
+Nothing on these pages gives the proposal a date of entry into force or application, a sanction
+amount, or an obligation stated as binding.
+
+### Found, for the author — not changed
+
+1. **An edge's kind reads in the present tense.** The interaction cards and the "Related" list say
+   "Digital Networks Act — Amends → ePrivacy" and "Defers to"; only the summary says "Proposed:". The
+   design's derived modality (`docs/V2-DATA-DESIGN.md` §1.4) is not rendered anywhere. The
+   data-omnibus edges ("Repeals", "Amends") already read this way.
+2. **The modality derivation would misread an edge into a proposal.** §1.4 derives modality from the
+   `from` node's status. An `enables` edge from an act in force to a proposal (from `eidas`: Arts
+   106(2), 107(2)–(3); from `nis2`: Arts 4, 5(1), 8(1); from `gdpr`: Art. 2, points (49)–(50); from
+   `iea`: Art. 11(3)) would therefore derive as "law". Nothing derives modality yet, so no page shows
+   it; none of these edges was added.
+3. **The acts the proposal would replace are not nodes.** Directive (EU) 2018/1972 (the European
+   Electronic Communications Code), Regulation (EU) 2018/1971 (BEREC) and Decision No 243/2012/EU
+   (Art. 209), Regulation (EU) 2015/2120 (Art. 206) and Decision No 676/2002/EC (Art. 208). The page
+   names them only in the title.
+4. **"member State"** in the generated descriptions: `lowerLead()` lowercases the first letter of an
+   actor label. It is on the DNA, CSA and IEA pages' meta, og and twitter descriptions.
+5. **An undated source's bibliography entry ends `.”.`**: the OEIL procedure files, the new one
+   included.
+6. **"Last verified on 28 October 2026 ;"**: in the browser, the evidence section's verification date
+   breaks onto its own line, with the semicolon after it. Seen on the DNA page; the static HTML (here
+   and on the IEA page) is inline, so it comes from the client-side render and very probably reaches
+   every instrument page, which was not measured. Display only; not introduced by this item.
+7. **No event type for a procedural step** (committee referral, draft report, EESC opinion). The
+   status note carries them; the timeline cannot.
+
+**Still open from Session 8** (unchanged):
+- the colour of the notice's "Read it at the source" link in the dark theme;
+- the EHDS page's `<title>` ("EHDS — …");
+- `data-omnibus`'s status note, to be re-verified against the outcome of the Coreper meeting of
+  21 Oct 2026;
+- `nis2 → eidas` not modelled.
+
+**Still open** (unchanged):
+- (g) the internal references shown to a reader (Session 10's item 10.2). The `defers-to` note
+  "(docs/V2-DATA-DESIGN.md §1.4)" is now printed on the DNA page's two `defers-to` cards and on the
+  new rows of the GDPR and NIS2 pages;
+- `src-ec-ai-omnibus-in-force` (403);
+- the `::1` test: skipped again in this container, so not run. A skip is not a pass;
+- the 8 remaining v1 edges and the `edge-v1-sources` flip;
+- R-01 and the eight findings of `docs/V2-DATA-DESIGN.md` §7 (Phase 3).
+
+### The verification checklist
+
+**9.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, rows "The scope of v2 Session 9" (`89311c1`) and "Item 2.6: the
+  inclusion of `digital-networks-act`" (`139c15a`), both before `53f51e6`; "Item 2.6: two display
+  defects" (`13b536f`).
+- *Verify:* read the three rows; `git log --oneline cabe21b..` shows the first two before the data
+  commit.
+- *Automatic:* none.
+- *Criterion:* every editorial field and every reader-facing text was decided word for word before
+  `data/` was touched; `approved_on` carries the date of the row.
+
+**9.1 · Sources read first.**
+- *Changed:* `data/sources.json` (two new sources).
+- *Verify:*
+  - fetch `http://publications.europa.eu/resource/celex/52026PC0016` with Accept
+    `application/xhtml+xml`, then the `DOC_1` it lists; read Arts 1, 5, 9, 43(3), 93, 196, 206–210;
+  - query the SPARQL endpoint for the dossier `…/cellar/7e717699-f6af-11f0-b9bc-01aa75ed71a1`
+    (`dossier_pending-proposal` 1) and its events (`event_legal_part_of_dossier`, with
+    `sender_transmission`);
+  - open the Legislative Observatory file 2026/0013(COD): "Awaiting committee decision".
+- *Automatic:* none. No check reads a source (AUDIT F-12).
+- *Criterion:* no fact from a search result, a snippet or memory.
+
+**9.2 · Written in one home.**
+- *Changed:* `data/instruments.json` (the record, three edges); `data/timeline.json` (one event);
+  `data/taxonomy.json` (one term); `data/sources.json`; the four renderers; `tools/selftest.mjs` W17;
+  the regenerated pages and `img/og/digital-networks-act.png`.
+- *Verify:* `/instruments/digital-networks-act/`, `/instruments/gdpr/`, `/instruments/nis2/`,
+  `/instruments/data-omnibus/` (its official text now "Tier 1 · legislative proposal").
+- *Automatic:* `tools/selftest.mjs` W17; S1 (generated files current); `seo-audit` 0/0;
+  `evidence-audit` 0 errors, with `statusContradictions()` and M-04/M-05/M-07.
+- *Criterion:* M-04, M-05, M-07 and the pre-adoption rule at 0 errors, held in full; dates only in
+  `timeline.json`; no proposed date as an event; no title in `data/`; no internal identifier in a
+  reader-facing field written here.
+
+**9.3 · Checkpoint.**
+- *Changed:* this report.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run above.
+- *Criterion:* the author's approval, recorded in §8; the closure of Phase 2 is the author's to decide.
+- **Approved** on 28 Oct 2026 (§8, "The checkpoint of v2 Session 9 = item 2.6"), and Phase 2 closed;
+  pull request opened on the author's instruction.
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-28`: REGISTER reads "covered 16 · mapped 12 ·
+   watched 5 · excluded 6".
+2. `python3 -m http.server 8000`, then open `/instruments/digital-networks-act/` in both themes, at
+   desktop and phone width; check the head, "In short", the provisions table and the interactions.
+   Open `/instruments/gdpr/` and `/instruments/nis2/` for the edges.
+3. `node --test --test-name-pattern="W17" tools/selftest.mjs`.
+4. To see a check hold, set `legislative_status` of `digital-networks-act` to `status:in-force` in
+   `data/instruments.json`: `evidence-audit` then reports the M-07 error and the status contradiction
+   ("counts it as law"). Restore the file afterwards.
+
+## Branch register — 28 October 2026 (v2 Session 8, after the item 2.5 checkpoint)
+
+- Branch `claude/v2-session-8-findings`, cut from `claude/new-session-o9uopd` at `58671c2`, not from
+  `main`: the fixes regenerate pages that already carry the IEA (the `<noscript>` index, the sitemap),
+  and a branch from `main` would conflict on every page. Once #28 is merged, its pull request shows only
+  its own commits.
+- `origin/main` was re-fetched before this handover was written: still `3cc0473`; #28 not yet merged.
+- Disposition: approved (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the
+  author's instruction of 28 Oct 2026 ("Approve and open the PR").
+- After that, on 28 Oct 2026:
+  - #28 (`claude/new-session-o9uopd`, item 2.5) was merged into `main` with a merge commit, `2513a09`.
+    #29 then held only its own commits and merged without conflict.
+  - #29 (`claude/v2-session-8-findings`) was merged as `cabe21b`. A register commit pushed to the
+    branch seconds after the merge, `2b5d71d`, did not reach `main`. On the author's decision ("Si"),
+    its content goes in with this entry rather than in a pull request of its own.
+  - The prompt of v2 Session 9 (item 2.6, the Digital Networks Act) was drafted on the author's request
+    ("mandami session 9's prompt"). It is kept as `docs/prompts/v2-session-9.md` on
+    `claude/new-session-o9uopd`, restarted from `main` at `cabe21b`. The prompt records no decision: its
+    first write is §8's row "The scope of v2 Session 9", in the author's words.
+
+## v2 Session 8, part 2 — open findings resolved on the author's request
+
+The Session 8 prompt excluded the open findings of Sessions 5–7. After the item 2.5 checkpoint the
+author asked to be asked which of them this session could resolve ("Vorrei che mi chiedessi le
+questioni aperte risolvibili in questa sessione"). Every decision below is in `docs/ROADMAP-v2.md` §8,
+in the author's words, recorded before the change it governs.
+
+### What the author decided, and what was written
+
+| Item | Decision (§8) | Commit | Change |
+|---|---|---|---|
+| scope | (a)–(f), (h)–(k); not (g) | `85754b3` | §8 row |
+| (a) sanction ceiling | A, renderer | `4558712` | `js/dna.js sanctionCeiling()`: an amount; "no amount recorded" with the record's note; "not established". The page head, "In short" and the comparison table read it. The renderer never says "none" by itself; the FAQ structured data is unchanged |
+| (b) tranche date | B1 | `4558712` | a provision dated by an event that names it carries "a date set for named provisions: what it covers is under Key dates →" |
+| (c) institutions | approved | `4558712` | the Binds column shows `obligation_on_institution` (CSA Arts 14 and 21; one other record) |
+| (d) "not covered" notice | approved | `4558712` | `instrument.html?id=…` lists the record's relationships with `interactionsFor()`, in a `<div>` (`1d8a305`); nothing when there are none (the DGA shows 2, the EAA none) |
+| (e) badge spacing | CSS | `4558712` | `.badge + .fresh{margin-left:var(--s-2)}`: 8px measured |
+| (f) EHDS name | approved | `bb2176e` | `KNOWN_AS.ehds` "European Health Data Space": the `<h1>`, the index, the descriptions and `img/og/ehds.png`. The `<title>` is unchanged: `tools/seo.mjs` derives it from `short_name` |
+| (h) Apple/Meta note | approved | `19f63c1` | `src-ec-apple-meta-dma-2025`: the note no longer attributes Arts 5(4) and 5(2) to a release that names no article; re-read recorded; `accessed` 2026-10-28 |
+| (i) DSA–GDPR edge | A | `19f63c1` | `rel-dsa-gdpr-transparency-minimisation`: summary rewritten on Guidelines 3/2025 v2; `provisions` `dsa:art-16`; v2 reference, `supports:partial`, located; `last_verified` 2026-10-28; it leaves the v1 list. The `conflict` reading and its claim are the author's and unchanged |
+| (j) "stalled in Council" | J-A | `19f63c1` | removed from `rel-data-omnibus-gdpr`; `clm-data-omnibus-stalled` off the edge, kept on the instrument; `last_verified` unchanged |
+| (k) Regulation (EU) No 910/2014 | K1 + its texts | `98c9ade` | node `eidas` (`scope:referenced`, no page), `src-eurlex-eidas`, `rel-eidas2-eidas-amends` with the arrays, `rel-eidas-ehds-enables` |
+| W11 | approved | `98c9ade` | its plant removed "the one relationship that gives it context"; `eidas2` now has two |
+
+### Checks and tests
+
+- **W16**, new: it pins the three sanction states and holds the page head and "In short" to them on
+  every instrument page. Measured failing with the old wording planted back into a generated page.
+- **W11**, changed:
+  - the plant now removes every edge of `eidas2` and still expects M-05;
+  - a new assertion records that removing the GDPR edge alone no longer removes its context;
+  - no assertion was removed;
+  - measured failing with M-05 disabled, then restored.
+- No check was changed. No locale key carries any string changed here, so none needed declaring.
+- No agent CLI was run; `agent/records/` stayed empty.
+
+### Facts read on 28 Oct 2026
+
+- **(h)**: the DMA portal page of 23 April 2025, and IP/25/1085 in full through the press corner's
+  documents API. Neither names an article of the DMA.
+- **(i)**: EDPB Guidelines 3/2025 v2 (adopted 17 September 2026), the PDF from the EDPB's site:
+  - the table of contents;
+  - ¶¶1–11 (¶6: Art. 40 DSA and political advertising are outside their scope);
+  - ¶¶53–59 and 79–81 (Art. 26 DSA).
+  The source record itself was not changed.
+- **(j)**:
+  - the Legislative Observatory, 2025/0360(COD): "Awaiting committee decision", ITRE–LIBE;
+  - the Publications Office's dossier metadata for COM(2025) 837: pending, not adopted, not withdrawn,
+    with Council and Coreper deliberations from December 2025 to October 2026. Coreper events typed
+    "Adoption of negotiating mandate" are recorded for 7, 11 and 21 October 2026, and one of 26 June
+    is marked cancelled. They are the Council's planning entries (sender `CONSIL:FilePlanning`) and do
+    not establish an outcome. The Council's site answered 403.
+- **(k)**:
+  - Regulation (EU) No 910/2014: Arts 6 and 52 (2014 text);
+  - Regulation (EU) 2024/1183 Art. 1, points (1), (2), (3)(a), (6) and (47), including Art. 46b;
+  - Regulation (EU) 2025/327: Arts 2(1)(f), 12, 16(1)–(2), 19(2)(m) and 92(8);
+  - SPARQL metadata for 32014R0910: in force; 2014-09-17 and 2016-07-01; amended by 32022L2555 and
+    32024R1183; consolidations to 2024-10-18; corrigenda R(01)–R(13), none read.
+- **Not read**:
+  - the NIS2 Article that amends Regulation (EU) No 910/2014 (no `nis2 → eidas` edge);
+  - the 910/2014 Regulation's implementing acts, so `eidas` is `status:in-force`, not `applicable`;
+  - the Council documents ST 14532/26 and ST 14633/26.
+
+### Counts against this branch's base (`claude/new-session-o9uopd`, the item 2.5 close)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / provisions / relationships | 37 / 89 / 35 | 38 / 89 / 37 | `eidas`; two edges |
+| sources / events / claims / terms | 222 / 100 / 181 / 311 | 223 / 100 / 181 / 311 | `src-eurlex-eidas` |
+| coverage covered / mapped / watched / excluded | 15 / 11 / 5 / 6 | 15 / 12 / 5 / 6 | `eidas` is mapped |
+| instrument pages · indexable routes | 16 · 25 | 16 · 25 | `eidas` has no page |
+| v1 relationships | 9 | 8 | `rel-dsa-gdpr-transparency-minimisation` migrated |
+| `validate` / `evidence-audit` / `freshness` | 0/0 (45) · 0 err, 11 warn · 0 defects, 3 prompts | the same | |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | |
+| `tools/selftest.mjs` | 105 | 106 | W16 |
+| all 25 suites | 1311 + 1 skipped | **1312 pass + 1 skipped (`::1`), 0 failures**, on `98c9ade` | W16 |
+| browser suite | 343 · 0 · 1 | 343 · 0 · 1, on `1d8a305`. The first run on `98c9ade` read 342 · 1 · 1: `not-covered:watched` finds no `<section>` in the notice, and (d)'s block was one. It became a `<div>` (§8, `1d8a305`), with the check unchanged. After that commit, `agent/browser` (21/21), `agent/ux` (73), `tools/selftest.mjs` (106) and `design-qa` were re-run | |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | |
+
+Also: `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0;
+`og-image.mjs --check` passes; `commit-evidence`: 0 commits without evidence.
+
+### Seen in a browser
+
+All in Chromium at 1280px dark and 390px light, with no console error and no overflow:
+- `/instruments/iea/` and `/instruments/csa/`: "no amount recorded" in the head and in "In short",
+  the tranche line, and "European Commission" and "ENISA" in Binds;
+- `instrument.html?id=dga`: two relationships under the notice;
+- `instrument.html?id=eaa`: none;
+- `instrument.html?id=eidas`: noindex, no page;
+- `/instruments/ehds/` and `/instruments/eidas2/`: the new edges.
+
+### Found, for the author — not changed
+
+1. **The "Read it at the source" link on the "not covered" notice** is in the browser's default blue
+   in the dark theme. It predates this work.
+2. **The EHDS page `<title>`** still reads "EHDS — …": the derived title uses `short_name`. Changing
+   it means touching `tools/seo.mjs`'s derived title, or a curated `INSTRUMENT_TITLE` entry.
+3. **`data-omnibus`'s status note** says the 21 October Coreper outcome had not been published. The
+   metadata now carry a "negotiating mandate" planning entry for that date, and the outcome could not
+   be read from here. It needs re-checking against a Council source.
+4. **`nis2 → eidas`** (NIS2 amends Regulation (EU) No 910/2014 per the metadata) is not modelled.
+
+**Still open** (unchanged):
+- (g), the internal references shown to a reader: Session 10's item 10.2;
+- `src-ec-ai-omnibus-in-force` (403);
+- the `::1` test, skipped again;
+- the remaining 8 v1 edges and the `edge-v1-sources` flip;
+- R-01 and `docs/V2-DATA-DESIGN.md` §7 (Phase 3).
+
+### Verification checklist
+
+- **Decisions:** four §8 rows (`85754b3`, `f61da1e`, `19f63c1`, `98c9ade`). Read them in order. The
+  scope and display rows precede their commits; the (h)–(j) and (k) rows were written before the
+  data and are committed with it.
+- **Display (a)–(e):**
+  - *Changed:* `js/dna.js`, `js/instrument-view.js`, `js/instrument-page.js`, `css/tokens.css`, and
+    the generated pages.
+  - *Verify:* open `/instruments/csa/`, `/instruments/iea/` and `instrument.html?id=dga`.
+  - *Automatic:* W16, `design-qa`, the browser suite.
+- **(f):**
+  - *Changed:* `js/routes.js`, the pages and `img/og/ehds.png`.
+  - *Verify:* the `<h1>` of `/instruments/ehds/`.
+  - *Automatic:* `seo-audit` checks that `KNOWN_AS` matches an alias.
+- **(h)–(j):**
+  - *Changed:* `data/sources.json` and `data/instruments.json`.
+  - *Verify:* re-read the three sources at their URLs.
+  - *Automatic:* W12, which lets the v1 list only shrink.
+- **(k):**
+  - *Changed:* `data/instruments.json`, `data/sources.json` and `tools/selftest.mjs` W11.
+  - *Verify:* `node tools/evidence-audit.mjs --as-of 2026-10-28` reads "mapped 12", and
+    `instrument.html?id=eidas` shows the record.
+  - *Automatic:* W11, M-07 (`status_basis`) and M-15.
+- **Checkpoint:** approved on 28 Oct 2026 (§8, "The checkpoint of v2 Session 8, part 2"); pull request
+  opened on the author's instruction.
+
+## Branch register — 28 October 2026 (v2 Session 8)
+
+- At the start, `main` was `3cc0473`, the merge of #27. It holds #26 (`21d6ada`), §8's three Session 7
+  rows up to "The checkpoint of v2 Session 7 = item 2.4", and `docs/prompts/v2-session-6.md`, `-7.md`
+  and `-8.md`.
+- `git branch -r --no-merged origin/main` listed only
+  `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
+- `origin/main` was re-fetched before this handover was written: still `3cc0473`.
+- This session's branch: `claude/new-session-o9uopd`. Disposition: item 2.5 approved
+  (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the author's
+  instruction of 28 Oct 2026 ("Approvo e apri la PR").
+
+## v2 Session 8 — checkpoint report (item 2.5, the Interoperable Europe Act)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope** (first write of the session, `11236e5`): item 2.5 only.
+- **Item 2.5** (`5c86aa6`), asked one question at a time before anything was written to `data/`.
+  Eight answers, all as recommended:
+  - *criterion*: `crit:object-infrastructure` + `crit:horizontal`. The addressees are Union entities
+    and public sector bodies, defined by function and not by sector (Art. 1(2)). Not
+    `crit:sector-instance`, so M-04's edge rule does not apply;
+  - *edges*: `iea → gdpr` `defers-to` and `nis2 → iea` `enables`. Either one alone meets the page
+    gate's `context` criterion. Not `dga → iea` and not `iea → eaa`;
+  - `status:applicable`, with the status note as proposed. The page shows "Applicable";
+  - three events (E1–E3);
+  - `dna.objective` draft A;
+  - the other `dna` fields: four provisions and two new taxonomy terms;
+  - a new source, `src-eurlex-iea`;
+  - the name: `short_name` "Interoperable Europe Act", nothing in `KNOWN_AS`.
+
+### What was written
+
+| Commit | Record or file | Change |
+|---|---|---|
+| `0047586` | `iea` | new; `scope:core`; `brief_part` `null`; `status:applicable`, `status_as_of` 2026-10-28; `status_note` (no internal identifier); `status_basis` Art. 23(1)–(2) + metadata; `scope_decision` (included; `crit:object-infrastructure`, `crit:horizontal`; two direct structural references; `approved_on` 2026-10-28); `dna` as decided; `legal_basis` empty |
+| | `iea:art-3`, `iea:art-4`, `iea:art-17`, `iea:art-18` | four provisions; `obligation_on` union-entity + public-sector-body, the same, member-state, union-entity |
+| | `rel-iea-gdpr-defers`, `rel-nis2-iea-enables` | new, v2 shape, direct; every locator is in the IEA |
+| | `tl-iea-2024-04-11-entry-into-force`, `tl-iea-2024-07-12-application`, `tl-iea-2025-01-12-application` | new; the tranche is tagged with `iea:art-3` and `iea:art-17`, and its text says Art. 3(5) is outside it |
+| | `actor:union-entity`, `actor:public-sector-body` | new taxonomy terms; nothing renamed |
+| | `src-eurlex-iea` | new; its note says what was read and what was not |
+| | `tools/selftest.mjs` | W15, new (below) |
+| | generated | `instruments/iea/` (new); the GDPR and NIS2 pages (the edges from the other end); `instruments.html`; the `<noscript>` index on every page; `sitemap.xml`; `img/og/iea.png` and its manifest entry. The tool re-rendered the other cards; they were restored, because their inputs did not change (`og-image.mjs --check` passes) |
+| `11236e5`, `5c86aa6`, this commit | `docs/ROADMAP-v2.md` §8 | two rows; this report |
+
+Not added:
+- no claim (the brief does not name the IEA) and no applicability rule;
+- no institution edge: no competent authority is recorded, and the page says "not established";
+- no entry in `tools/seo.mjs`, `KNOWN_AS` or `PAGE_PUBLISHED`;
+- no record for any other act: Regulation (EU) 2018/1725, Directive (EU) 2019/1024, Regulation (EU)
+  No 1025/2012 and the accessibility Directives are cited by the IEA and are not instruments here.
+
+**No locale key was touched.** The fields written are data, which the editions do not carry, so no
+key needs declaring `superseded` or `pending_translation`; `i18n-audit` is 0/0.
+
+**Checks.** No check was changed or extended. W15 is a new test on W14's model:
+- it asserts that `iea` is covered, sits in no backlog, and that both edges are v2, direct, and
+  located in the IEA;
+- it asserts that "applicable" holds against `statusContradictions()`, and that Art. 3 dates from
+  2025-01-12 and Art. 4 from 2024-07-12;
+- it plants the loss of the status basis (M-07), of the decision (M-04), of both edges (M-05) and of
+  the objective (M-05), and each one fails;
+- it asserts that either edge alone still gives context;
+- it plants a future application date, which `statusContradictions()` reports.
+
+Measured: with the error line of M-04 (no decision), M-05 (no page) or M-07 (no status basis)
+disabled in `tools/register-audit.mjs`, W15 fails, each time on that plant. The file was restored
+(no diff).
+
+No latent defect surfaced in a check: `agent/depth` and `agent/proposals/data` pass unchanged. No
+agent CLI was run, and `agent/records/` stayed empty.
+
+### Facts read on 28 Oct 2026, and facts left `null`
+
+- **Read**:
+  - Regulation (EU) 2024/903, the Official Journal text, from Cellar by CELEX `32024R0903` (XHTML,
+    HTTP 200):
+    - the enacting terms in full (Arts 1–23);
+    - the Annex;
+    - recitals 1–13, 41–43 and 56.
+  - The Publications Office's SPARQL metadata:
+    - in force; dates recorded 2024-04-11, 2024-07-12, 2025-01-12; deadline 2028-01-12; end of
+      validity 9999-12-31;
+    - based on Art. 172 TFEU;
+    - no amending act; it amends nothing; no consolidated version; no corrigendum (no `R(..)`
+      expression exists, so there was no language to ask about).
+  - Searched the text in full for penalties, fines, sanctions and infringements. No Article sets any;
+    the only mention is recital 41, on the EDPS.
+  - Searched for the instruments in the dataset:
+    - GDPR (Arts 8(1)(d), 11(4), 12(6)(c), (e), (f)) and NIS2 (Art. 2(3)): edges proposed;
+    - DGA (Art. 2(7); Art. 15(5)(s)) and EAA (Art. 5(1)): proposed, not added;
+    - ePrivacy: recital 11 only;
+    - no reference to Regulation (EU) No 910/2014, to 2024/1183, to the Data Act or to the AI Act.
+- **Not read**:
+  - the other recitals;
+  - the acts recorded as based on it (Regulation (EU) 2025/1420, COM(2025) 860, SWD(2025) 975 and a
+    Parliament text, 52026IP0022);
+  - the texts the IEA borrows definitions from (Directive (EU) 2022/2555 Art. 6(1); Directive (EU)
+    2019/1024 Art. 2(1); Regulation (EU) 2022/868 Art. 2(1)); the edge and the term notes say so;
+  - GDPR Art. 36, beyond the IEA's own reference to it.
+- **Left `null` or empty, and shown on the page as "not established"**:
+  - `risk_logic`, `enforcement_mechanism`, `protected_party`, `territorial_scope`;
+  - the sanction ceiling's amounts, with the note that the Regulation sets none;
+  - the competent authority: national competent authorities (Art. 17) and the Interoperable Europe
+    Board (Art. 15) are not in `institutions.json`, and none was proposed.
+- **Not recorded**:
+  - Art. 172 TFEU as `legal_basis`: the TFEU record has no such provision;
+  - the institutions' deadlines (Art. 3(5) Board guidelines and Art. 12(10) implementing acts) and the
+    report of 2028-01-12 and every four years after it (Art. 20(5));
+  - `sectors` on the three events (`sector:public-administration` exists and was not proposed).
+- No fact was taken from a search result or from model knowledge. The design draft of 25 Oct 2026
+  (`docs/v2-design/map-examples.json`) was not copied. Of its statements:
+  - its status (applicable) and its three dates survived the re-reading;
+  - its scope reason did not: "public-sector counterpart of the rulebook's private-sector duties" is
+    not in the text;
+  - its event list did not: it had no tranche event, because no provision existed;
+  - its GDPR edge's locator now also cites Art. 12(6)(e)–(f).
+
+### Exit criteria of item 2.5 (`docs/ROADMAP-v2.md` §4)
+
+- *Every fact read from a retrieved primary source*: **pass** (above).
+- *`sources.json` records only from documents read*: **pass**. One new record, from the text read.
+- *Prose and claims to the author*: **pass**. Every text written was in an approved question; no
+  claim was created or changed.
+- *`node tools/_footer.mjs` re-run*: **pass**. Committed with the data; a second run writes 0 files.
+- *Affected locale keys declared*: **n/a**, none touched.
+- *M-04, M-05, M-07 held in full*: **pass**. `iea` is in no backlog, and W15 shows each one failing.
+- *The page says nothing the records do not carry*: **pass**, with the display observations under
+  "Found" below.
+- *No relationship added to complete the page*: **pass**. Two edges were approved, each on its own
+  text; two more were read, put to the author, and not added.
+
+### Counts against the baseline (v2 Session 7's closing figures, re-measured at the start)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / provisions / relationships | 36 / 85 / 33 | 37 / 89 / 35 | `iea`; its four provisions; two edges |
+| sources / timeline events / claims / taxonomy terms | 221 / 97 / 181 / 309 | 222 / 100 / 181 / 311 | `src-eurlex-iea`; three events; two actor terms |
+| coverage covered / mapped / watched / excluded | 14 / 11 / 5 / 6 | 15 / 11 / 5 / 6 | `iea` |
+| backlog `status-basis-missing` / `scope-decision-missing` | 23 / 11 | 23 / 11 | a new record joins no backlog |
+| instrument pages · indexable routes | 15 · 24 | 16 · 25 | `instruments/iea/` |
+| instruments.html "thinner records" | 7 | 7 | `iea` has a page |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit --as-of 2026-10-28` errors / warnings | 0 / 11 | 0 / 11 | unchanged |
+| `freshness --as-of 2026-10-28` | 0 defects / 3 prompts | 0 / 3 | unchanged |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged |
+| `tools/selftest.mjs` | 104 | 105 | W15 |
+| all 25 suites | 1310 pass + 1 skipped | **1311 pass + 1 skipped, 0 failures (1312)** | W15. The skip is the `::1` test, as in Sessions 5–7 |
+| browser suite (`--require-browser`) | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable | |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+
+Other checks:
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+- `tools/og-image.mjs --check` passes.
+- `tools/commit-evidence.mjs origin/main HEAD`: 0 commits without evidence. `0047586` names its
+  evidence; the others change no published file.
+- `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+### The page, opened in a browser
+
+`/instruments/iea/` was opened in Chromium (Playwright) at 1280px dark and at 390px light. There was no
+console error and no horizontal overflow at either width. The GDPR and NIS2 pages were opened the same
+way. The IEA page shows:
+- Status: "Applicable, as of 28 Oct 2026", with the status note, which gives both application dates
+  and says both have passed. The header reads "Next date: nothing further recorded".
+- "In short":
+  - the objective;
+  - "Union entity · Public sector body · Member State";
+  - Arts 3 and 4;
+  - the three dates;
+  - the sanction note;
+  - "not established" for the protected party.
+- Three dated events, each with its Art. 23 text.
+- "No rules recorded", worded as absence of knowledge.
+- Four provisions: Arts 3 and 17 "Applies since 12 January 2025", Arts 4 and 18 since 12 July 2024
+  (the general date).
+- No enforcement recorded, no claims, and "Competent authority: not established in this dataset".
+- Two interactions, each with its locator.
+- "No Part of the brief covers this instrument directly".
+
+Nothing on the page says the Act binds a private party. The GDPR and NIS2 pages show their edge from
+the other end.
+
+### Found, for the author — not changed
+
+1. **The sanction ceiling, worded two ways, now reads against itself.** The header says "Sanction
+   ceiling: none recorded". "In short" says "not established", followed by the note "None: no Article
+   of the Regulation sets fines or penalties". For an act whose text was read in full and sets none,
+   "not established" understates what was checked. This is Session 6's open finding (the CSA reads the
+   same), not fixed here.
+2. **Art. 3's date carries no qualifier.** The provisions table shows Art. 3 "Applies since
+   12 January 2025". Art. 3(5), the Board's guidelines, is not part of that tranche, and only the
+   event text says so. It is the same renderer limit as Session 7's finding 1.
+3. **The internal reference reaches two more pages.** The `defers-to` and `enables` notes end "Added
+   27 Oct 2026 (docs/V2-DATA-DESIGN.md §1.4)". They are printed on `/instruments/iea/` and on the new
+   rows of the GDPR and NIS2 pages. This is Session 10's item 10.2.
+4. **The status badge touches the "as of" text** on every instrument page with a status badge: no gap
+   between the badge's border and "as of" (measured on the IEA, GDPR, DSA and EHDS pages). This is
+   display only, predates this item, and is not fixed.
+5. **The Commission's and the Board's duties are not shown.** No `obligation_on_institution` was
+   proposed (Session 6's finding: the page would not show it anyway).
+
+**Still open from Session 7** (unchanged):
+- the tranche dates without their categories in the provisions table (point 2 above);
+- Regulation (EU) No 910/2014 not modelled (no `eidas2 → ehds` edge). The IEA does not raise it: its
+  enacting terms cite no eIDAS act;
+- the internal reference in the `enables` and `defers-to` notes (point 3 above);
+- the DGA's "not covered" notice showing no relationships;
+- the EHDS's common name not in `KNOWN_AS`.
+
+**Still open from Session 6** (unchanged):
+- the sanction ceiling worded two ways (point 1 above);
+- `obligation_on_institution` not displayed.
+
+**Still open from Session 5** (the roadmap's §3; none touched):
+1. `rel-dsa-gdpr-transparency-minimisation`: its summary no longer matches EDPB Guidelines 3/2025 v2.
+2. `rel-data-omnibus-gdpr`: "stalled in Council" is unsupported and not re-read.
+3. The 4 brief-only and 3 claimless analytical edges stay v1; the `edge-v1-sources` flip stays
+   deferred.
+4. The article attribution in `src-ec-apple-meta-dma-2025`'s note.
+5. `src-ec-ai-omnibus-in-force`: not re-read (403).
+6. The `::1` test: skipped again in this container, so not run. A skip is not a pass.
+7. R-01's P2B gap and the eight findings of `docs/V2-DATA-DESIGN.md` §7 (Phase 3).
+8. The internal identifiers shown to a reader (Session 10).
+
+### The verification checklist
+
+**8.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, two rows (`11236e5`, `5c86aa6`), both before `0047586`.
+- *Verify:* read "The scope of v2 Session 8" and "Item 2.5: the inclusion of `iea`".
+  `git log --oneline 3cc0473..` shows both before the data commit.
+- *Automatic:* none.
+- *Criterion:* every editorial field was decided before `data/` was touched, and `approved_on`
+  carries the date of the row.
+
+**8.1 · Sources read first.**
+- *Changed:* `data/sources.json` (`src-eurlex-iea`, new).
+- *Verify:*
+  - fetch `http://publications.europa.eu/resource/celex/32024R0903` with Accept
+    `application/xhtml+xml`;
+  - read Art. 1, Art. 2 points (3), (5)–(7), Arts 3, 4, 11(4), 12(6), 17, 18 and 23;
+  - search the text for "penalt" and "fine";
+  - query the SPARQL endpoint for `resource_legal_date_entry-into-force` (three dates), and for
+    incoming `amends` or `corrects` relations (none).
+- *Automatic:* none. No check reads a source (AUDIT F-12).
+- *Criterion:* no fact from a search result or memory.
+
+**8.2 · Written in one home.**
+- *Changed:*
+  - `data/instruments.json`: `iea`, two edges;
+  - `data/timeline.json`: three events;
+  - `data/taxonomy.json`: two terms;
+  - `data/sources.json`: one source;
+  - `tools/selftest.mjs`: W15;
+  - the regenerated pages and `img/og/iea.png`.
+- *Verify:* `/instruments/iea/`, `/instruments/gdpr/`, `/instruments/nis2/`.
+- *Automatic:*
+  - `tools/selftest.mjs` W15;
+  - S1 (generated files current);
+  - `seo-audit` 0/0;
+  - `evidence-audit` 0 errors, with `statusContradictions()` for `applicable`.
+- *Criterion:*
+  - M-04, M-05 and M-07 at 0 errors, held in full;
+  - dates only in `timeline.json`;
+  - no title in `data/`;
+  - no internal identifier in a reader-facing field written here.
+
+**8.3 · Checkpoint.**
+- *Changed:* this report.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run above.
+- *Criterion:* the author's approval, recorded in §8. Item 2.6 does not start before it.
+- **Approved** on 28 Oct 2026 (§8, "The checkpoint of v2 Session 8 = item 2.5"); pull request opened
+  on the author's instruction.
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-28`: REGISTER reads "covered 15 · mapped 11".
+2. `python3 -m http.server 8000`, then open `/instruments/iea/` in both themes, at desktop and phone
+   width. Also open `/instruments/gdpr/` and `/instruments/nis2/` for the edges. `/instruments.html`
+   lists the Act with "Applicable".
+3. `node --test --test-name-pattern="W15" tools/selftest.mjs`.
+4. To see a check hold, delete `status_basis` from `iea` in `data/instruments.json`. `evidence-audit`
+   then reports `M-07 instruments/iea: …`. Restore the file afterwards.
+
+## Branch register — 28 October 2026 (v2 Session 7)
+
+- At the start, `main` was `fdc7727`, the merge of #24. §8 carried the three Session 6 rows, up to
+  "The checkpoint of v2 Session 6 = item 2.3", and `docs/prompts/v2-session-6.md`.
+- `git branch -r --no-merged origin/main` listed two branches:
+  - `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched;
+  - `origin/claude/v2-session-7-prompt` (`9226a1e`: the prompt and its register entry, above). It was
+    reported to the author and merged into this branch on the author's answer ("Solo 2.4, unisci il
+    prompt").
+- `origin/main` was re-fetched before this handover was written: it had moved to `8c60abb`, the
+  merge of #25, which is that same prompt branch. It was merged into this branch (`8c1c480`), with
+  no content this branch did not already hold.
+- This session's branch: `claude/new-session-6evq51`. Disposition: item 2.4 approved
+  (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the author's
+  instruction of 28 Oct 2026 ("Approvo e apri la PR"); merged as #26 (`21d6ada`).
+- After the merge, on 28 Oct 2026: the prompt of v2 Session 8 (item 2.5, the Interoperable Europe
+  Act) was drafted on the author's request ("Manda session 8 md") and kept as
+  `docs/prompts/v2-session-8.md` on `claude/new-session-6evq51`, restarted from `main` at `21d6ada`.
+  Pull request to `main` opened on the author's instruction ("Si"). The prompt records no decision: its first write
+  is §8's row "The scope of v2 Session 8", in the author's words.
+
+## v2 Session 7 — checkpoint report (item 2.4, the European Health Data Space)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope** (first write of the session, `96d9b19`): item 2.4 only; the prompt branch merged.
+- **Item 2.4**, asked one question at a time before anything was written to `data/`; eleven answers,
+  ten as recommended:
+  - *criterion*: `crit:object-data` + `crit:sector-instance`. `crit:horizontal` does not hold (the
+    rules are those of the health and care sectors), so the inclusion itself rests on an edge to a
+    covered instrument;
+  - *edges*: `gdpr → ehds` `enables`, knowing it is what shows the sector instance and meets the
+    gate's `context` criterion; `ehds → cra` `amends`, with the `amends` / `amended_by` arrays filled;
+    `eidas2 → ehds` **not** added (open finding below);
+  - *more edges*, **not** as recommended (the recommendation was none): `ehds → data-act`
+    `defers-to`, `ehds → ai-act` `defers-to`, `dga → ehds` `enables`;
+  - `status:in-force`, with the status note as proposed;
+  - four events (E1–E4);
+  - `dna.objective` draft B;
+  - the other `dna` fields, four provisions and two new taxonomy terms;
+  - `clm-ehds-dates` tied to `ehds`, its false sentence replaced;
+  - `src-eurlex-ehds` re-read, `src-ec-ehds-page` not used, the scope decision as proposed.
+
+### What was written
+
+| Commit | Record or file | Change |
+|---|---|---|
+| `fb015c6` | `ehds` | new; `scope:core`; `brief_part` `null`; `status:in-force`, `status_as_of` 2026-10-28; `status_note` (no internal identifier); `status_basis` Art. 105 + metadata; `scope_decision` (included; `crit:object-data`, `crit:sector-instance`; two direct structural references; `approved_on` 2026-10-28); `dna` as decided; `amends` `cra`; `legal_basis` `tfeu:art-114` |
+| | `ehds:art-3`, `ehds:art-26`, `ehds:art-60`, `ehds:art-64` | four provisions; `obligation_on` member-state, manufacturer, health-data-holder, none |
+| | `cra` | `amended_by` `ehds`; nothing else |
+| | `rel-gdpr-ehds-enables`, `rel-ehds-cra-amends`, `rel-ehds-data-act-defers`, `rel-ehds-ai-act-defers`, `rel-dga-ehds-enables` | new, v2 shape, direct, every locator in the EHDS |
+| | `tl-ehds-2025-03-25-entry-into-force`, `tl-ehds-2027-03-26-application`, `tl-ehds-2029-03-26-application`, `tl-ehds-2031-03-26-application` | new; the two tranches tagged with the provisions they govern |
+| | `actor:health-data-holder`, `actor:health-data-user` | new taxonomy terms; nothing renamed |
+| | `clm-ehds-dates` | `instruments` `ehds`; the sentence "The instrument is not modelled in data/instruments.json." replaced; `last_verified` 2026-10-28; statement unchanged |
+| | `src-eurlex-ehds` | `accessed` 2026-10-28; the note says what was read and what was not |
+| | `tools/register-audit.mjs` | **a check extended**: M-04 now also requires, for a decision citing `crit:sector-instance`, an edge to a covered instrument resting on a direct structural reference (below) |
+| | `tools/selftest.mjs` | W14, new; W1 audits the tree as of its own newest decision date (below) |
+| | generated | `instruments/ehds/` (new); the GDPR, CRA, Data Act and AI Act pages (the edges from the other end); `instruments.html`; the `<noscript>` index on every page; `sitemap.xml`; `img/og/ehds.png` and its manifest entry. The tool re-rendered the other fifteen cards; they were restored, because their inputs did not change (`og-image.mjs --check` passes) |
+| `601fe44` | `agent/depth/detectors.mjs`, `depth.mjs` | a latent id collision the new record exposed (below) |
+| `96d9b19`, this commit | `docs/ROADMAP-v2.md` §8 | two rows; this report |
+
+Not added:
+- no new claim and no new source;
+- no applicability rule and no institution edge;
+- no entry in `tools/seo.mjs`, `KNOWN_AS` or `PAGE_PUBLISHED`. The page is headed "EHDS"; a common
+  name ("European Health Data Space") in `KNOWN_AS` was not proposed and is the author's to decide.
+
+**No locale key was touched.** The fields written are data, which the editions do not carry, so no
+key needs declaring `superseded` or `pending_translation`; `i18n-audit` is 0/0.
+
+**Three changes to checks, each with a test that fails without it:**
+1. **M-04 and `crit:sector-instance`.** §5 defines the clause as "shown by an edge to it", and no
+   check held it. W14 showed the gap: with every edge from `ehds` to a covered instrument removed and
+   the edge to the watched DGA kept, the page gate's `context` criterion still passed and nothing
+   failed. M-04 now reports it. W14 asserts that case fails on the new rule and **not** on M-05, and
+   it fails again with the new rule disabled (measured). Only `ehds` cites the clause, so no other
+   record is affected.
+2. **W1's date.** W1 asserted "this tree" clean as of a fixed 2026-10-27. The new decision is dated
+   28 Oct, so that date produces a `VERIFIED_AFTER_AS_OF` warning, which W4 says belongs to the date
+   asked and not to the tree. W1 now audits as of the tree's newest decision date and asserts that
+   date is at least 2026-10-28. The assertions themselves are unchanged.
+3. **`agent/depth` ids.** For an act with a sanction ceiling and no enforcement role at all, the
+   detector reports two findings, "as different findings rather than averaged into one", and both
+   derived one id. `ehds` is the first such act; `agent/depth` and `agent/proposals/data` failed
+   "two findings share an id". The minter's own error names the fix, a discriminator. It is passed
+   only when no role is held. Measured on the same tree against the code before the fix, **no
+   existing gap id changes**: `ai-act`'s and `nis2`'s fines findings and `eidas2`'s and `pld`'s
+   general findings keep theirs. That matters, because `agent/improve/cycles/cycles.jsonl` is tracked
+   and records ids. No test was changed.
+
+### Facts read on 28 Oct 2026, and facts left `null`
+
+- **Read**:
+  - Regulation (EU) 2025/327, the Official Journal text, from Cellar by CELEX `32025R0327` (XHTML):
+    - Arts 1–4, 12, 14, 16, 19, 21–22, 26–27, 30, 55, 60–61, 63–65 and 99;
+    - Arts 102–104, Art. 104 in full;
+    - Art. 105 in full;
+    - the chapter boundaries.
+  - The Publications Office's SPARQL metadata:
+    - in force; entry into force 2025-03-25; no end of validity;
+    - dates recorded: 2027-03-26, 2029-03-26, 2031-03-26, 2035-03-26;
+    - it amends `32011L0024` and `32024R2847`; the only consolidated version is the original.
+  - Regulation (EU) 2024/2847, Arts 13(4), 31(3) and 32, to compare what Art. 104 replaces.
+  - Regulation (EU) 2024/1183, Art. 1 points (3)(a) and (6), for the eIDAS question.
+- **Not read**:
+  - the three corrigenda, `32025R0327R(01)` (French, Croatian, Latvian) and `R(02)`, `R(03)`
+    (Hungarian). The metadata lists no English expression for any of them, so the English text is
+    not shown to be corrected;
+  - Arts 5–11, 13, 15, 17–18, 20, 23–25, 28–29, 31–54, 56–59, 62, 66–98, 100–101 beyond their
+    headings, and the Annexes;
+  - the implementing and delegated acts the Regulation calls for.
+- **Left `null` or empty, and shown on the page as "not established"**:
+  - `risk_logic`, `enforcement_mechanism`, `protected_party`, `territorial_scope`.
+  - No competent authority. `institutions.json` has none for the EHDS (digital health authorities,
+    Art. 19; health data access bodies, Art. 55; GDPR supervisory authorities, Arts 22 and 65), and
+    none was researched or proposed.
+- **Not recorded**:
+  - Art. 16 TFEU, the second legal basis: the dataset's TFEU record has no such provision.
+  - Directive 2011/24/EU in `amends`: it is not an instrument in the dataset. The status note names
+    it (Art. 103).
+  - The 2035 date (Art. 75(5) only), the 2027 deadlines (implementing acts, Art. 99 notification,
+    Art. 19(1) designation) and the evaluations (Art. 102).
+  - Read and not proposed as edges: `ehds → eprivacy` (Art. 1(3)); `ehds → gdpr` `defers-to`
+    (Art. 1(3)), beside the `enables` edge; Art. 27(2) on high-risk AI systems.
+- No fact was taken from a search result or from model knowledge. The design draft of 25 Oct 2026
+  (`docs/v2-design/map-examples.json`) was not copied. Three of its statements did not survive the
+  re-reading:
+  - its scope reason ("borrows eIDAS identification … amends the CRA");
+  - its eIDAS edge's "as amended": the EHDS cites Regulation (EU) No 910/2014 by its 2014 reference;
+  - its CRA summary, written on point (1) alone.
+
+### Exit criteria of item 2.4 (`docs/ROADMAP-v2.md` §4)
+
+- *Every fact read from a retrieved primary source*: **pass** (above).
+- *`sources.json` records only from documents read*: **pass**. No new record; one updated after
+  re-reading.
+- *Prose and claims to the author*: **pass**. Every text written was in an approved question; one
+  claim was changed, as approved, and none created.
+- *`node tools/_footer.mjs` re-run*: **pass**. Committed with the data; a second run writes 0 files.
+- *Affected locale keys declared*: **n/a**, none touched.
+- *M-04, M-05, M-07 held in full*: **pass**. `ehds` is in no backlog; W14 shows each one failing,
+  including the new sector-instance rule.
+- *The page says nothing the records do not carry*: **pass**, with the display observations under
+  "Found" below.
+
+### Counts against the baseline (v2 Session 6's closing re-run, re-measured at the start)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / provisions / relationships | 35 / 81 / 28 | 36 / 85 / 33 | `ehds`; its four provisions; five edges |
+| sources / timeline events / claims / taxonomy terms | 221 / 93 / 181 / 307 | 221 / 97 / 181 / 309 | four events; two actor terms |
+| coverage covered / mapped / watched / excluded | 13 / 11 / 5 / 6 | 14 / 11 / 5 / 6 | `ehds` |
+| backlog `status-basis-missing` / `scope-decision-missing` | 23 / 11 | 23 / 11 | a new record joins no backlog |
+| instrument pages · indexable routes | 14 · 23 | 15 · 24 | `instruments/ehds/` |
+| instruments.html "thinner records" | 7 | 7 | `ehds` has a page |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit --as-of 2026-10-28` errors / warnings | 0 / 11 | 0 / 11 | unchanged. As of 2026-10-27 the after-tree reads 0 / 12: `VERIFIED_AFTER_AS_OF` for `ehds`, dated the day after |
+| `freshness` | 0 defects / 2 prompts (as of 10-27) | 0 / 2 (as of 10-27); 0 / 3 (as of 10-28) | the third prompt is the calendar: the same before-tree also reads 3 as of 10-28 |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged |
+| `tools/selftest.mjs` | 103 | 104 | W14 |
+| all 25 suites | 1309 + 1 skipped | **1310 pass + 1 skipped, 0 failures (1311)** | W14. The skip is the `::1` test, as in Sessions 5 and 6 |
+| browser suite (`--require-browser`) | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable | unchanged (`a11y:bound`) |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+
+Other checks:
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+- `tools/og-image.mjs --check` passes.
+- `tools/commit-evidence.mjs origin/main HEAD`: 0 commits without evidence. `fb015c6` names its
+  evidence; the others change no published file or are merges.
+- `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+**One failure on the way, and its cause.** A first re-run had `agent/proposals/governance` at 42 + 3
+failures (P-07: "76 proposal(s) are reachable … expects 0"). The cause was this session's own
+`node agent/depth/cli.mjs` run, made to identify a gap id: it wrote 76 records into the git-ignored
+`agent/records/`, which is empty on a fresh clone. The file, created at 10:04 that day and holding
+only `data-depth` records, was deleted. The suite then passed 45/45. Nothing in the tree was the
+cause.
+
+### The page, opened in a browser
+
+`/instruments/ehds/` was opened in Chromium (Playwright) at 1280px dark and 390px light. There was no
+console error and no horizontal overflow at either width. The GDPR, CRA, Data Act and AI Act pages were
+opened the same way. The page shows:
+- Status: in force, as of 28 Oct 2026, and the status note. The header's next date is 26 March 2027,
+  "Application date". Nothing says the Regulation applies today.
+- "In short":
+  - the objective;
+  - "Member State · Manufacturer · Health data holder · Health data user";
+  - Arts 3, 26 and 60;
+  - the four dates;
+  - "4% of global turnover / EUR 20m", with the two-tier note;
+  - "not established" for the protected party.
+- Four dated events, each with its Art. 105 text.
+- "No rules recorded", worded as absence of knowledge.
+- Four provisions, with their application dates.
+- No enforcement recorded.
+- One claim, graded primary law.
+- Five interactions, each with its locator.
+- "No Part of the brief covers this instrument directly".
+
+Each other page shows its edge from the other end.
+
+### Found, for the author — not changed
+
+1. **The tranche dates in the provisions table carry no qualifier.** Arts 3 and 26 show "Applies
+   from 26 March 2029, then from 26 March 2031". The event text says the 2029 date covers only the
+   categories of Art. 14(1)(a)–(c) and the 2031 date covers (d)–(f), but the table does not repeat
+   that. It is how the renderer shows any tranche, and the AI Act reads the same. It is not a data
+   question, but a reader of the table alone could take 2029 as the date for all of Art. 3.
+2. **eIDAS, not modelled** (the author's decision). The EHDS cites Regulation (EU) No 910/2014:
+   - Art. 2(1)(f) borrows its Art. 3 points (1)–(2), which Regulation (EU) 2024/1183 replaced;
+   - Arts 12 and 16(1) rely on Art. 6, which 2024/1183 did not amend.
+   The question is whether to model the 910/2014 Regulation as a node. It is open, and no node was
+   created.
+3. **The internal reference now reaches more pages.** The `rel-kind:enables` and `defers-to` notes
+   end "Added 27 Oct 2026 (docs/V2-DATA-DESIGN.md §1.4)". The interactions box prints them, now also
+   on `/instruments/ehds/` and on the new rows of the GDPR, Data Act and AI Act pages. This is
+   Session 10's item 10.2, not fixed here.
+4. **The DGA's "not covered" notice shows no relationships.** `instrument.html?id=dga` renders the
+   notice only, so `rel-dga-ehds-enables` is visible from the EHDS page alone. The DGA's existing
+   edges are rendered the same way.
+5. **Not this item's**: the `missing_competence` findings for `ehds` (a ceiling and no institution
+   named) are what `agent/depth` now reports for it, as it does for `eidas2` and `pld`.
+
+**Still open from Session 6** (unchanged):
+- the `enables` note's internal reference (point 3 above);
+- the sanction ceiling worded two ways, on the CSA and eIDAS2 pages. The EHDS, with a figure, reads
+  the same in both places;
+- `obligation_on_institution` not displayed.
+
+**Still open from Session 5** (the roadmap's §3; none touched):
+1. `rel-dsa-gdpr-transparency-minimisation`: its summary no longer matches EDPB Guidelines 3/2025 v2.
+2. `rel-data-omnibus-gdpr`: "stalled in Council" is unsupported and not re-read.
+3. The 4 brief-only and 3 claimless analytical edges stay v1; the `edge-v1-sources` flip stays
+   deferred.
+4. The article attribution in `src-ec-apple-meta-dma-2025`'s note.
+5. `src-ec-ai-omnibus-in-force`: not re-read (403).
+6. The `::1` test: skipped again in this container, so not run. A skip is not a pass.
+7. R-01's P2B gap and the eight findings of `docs/V2-DATA-DESIGN.md` §7 (Phase 3). F-1 did not
+   grow: the new `amends` edge has its arrays filled.
+8. The internal identifiers shown to a reader (Session 10).
+
+### The verification checklist
+
+**7.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, two rows (`96d9b19`, `fb015c6`).
+- *Verify:* read "The scope of v2 Session 7" and "Item 2.4: the inclusion of `ehds`".
+- *Automatic:* none.
+- *Criterion:* every editorial field was decided before `data/` was touched, and `approved_on`
+  carries the date of the row.
+
+**7.1 · Sources read first.**
+- *Changed:* `data/sources.json` (`src-eurlex-ehds`: `accessed`, note).
+- *Verify:*
+  - fetch `http://publications.europa.eu/resource/celex/32025R0327` with Accept
+    `application/xhtml+xml`;
+  - read Art. 1(1)–(2), Art. 2(1)(a), (c) and (f), Art. 22, Art. 64, Art. 104 and Art. 105;
+  - query the SPARQL endpoint for `resource_legal_date_entry-into-force` (2025-03-25) and for the
+    corrigenda's languages.
+- *Automatic:* none. No check reads a source (AUDIT F-12).
+- *Criterion:* no fact from a search result or memory.
+
+**7.2 · Written in one home.**
+- *Changed:*
+  - `data/instruments.json`: `ehds`, `cra.amended_by`, five edges;
+  - `data/timeline.json`: four events;
+  - `data/taxonomy.json`: two terms;
+  - `data/claims.json`: `clm-ehds-dates`;
+  - `tools/register-audit.mjs`, `tools/selftest.mjs`;
+  - `agent/depth/`;
+  - the regenerated pages and `img/og/ehds.png`.
+- *Verify:* `/instruments/ehds/`, and `/instruments/gdpr/`, `/cra/`, `/data-act/`, `/ai-act/`.
+- *Automatic:*
+  - `tools/selftest.mjs` W14 (and W1);
+  - S1 (generated files current);
+  - `seo-audit` 0/0;
+  - `agent/depth` "every gap id is distinct";
+  - `agent/proposals/data` "every … data gap id in a run is distinct".
+- *Criterion:*
+  - M-04 (with the sector-instance rule), M-05 and M-07 at 0 errors, held in full;
+  - dates only in `timeline.json`;
+  - no title in `data/`;
+  - no internal identifier in a reader-facing field written here.
+
+**7.3 · Checkpoint.**
+- *Changed:* this report.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run above.
+- *Criterion:* the author's approval, recorded in §8. Item 2.5 does not start before it.
+- **Approved** on 28 Oct 2026 (§8, "The checkpoint of v2 Session 7 = item 2.4"); pull request opened
+  on the author's instruction.
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-28`: REGISTER reads "covered 14 · mapped 11".
+2. `python3 -m http.server 8000`, then open `/instruments/ehds/` in both themes, at desktop and phone
+   width, and `/instruments/gdpr/` for the edge that holds the criterion. `/instruments.html` lists
+   the EHDS.
+3. `node --test --test-name-pattern="W1 |W14" tools/selftest.mjs`.
+4. To see the new rule fail, delete from `data/instruments.json` the four edges between `ehds` and
+   GDPR, CRA, Data Act and AI Act, keeping the DGA's. `evidence-audit` then reports
+   `M-04 instruments/ehds: crit:sector-instance …` and no M-05. Restore the file afterwards.
+
+## Branch register — 27 October 2026 (v2 Session 6)
+
+## Branch register — 27 October 2026 (v2 Session 6)
+
+- At the start, `main` was `59dc88c`, the merge of #23. §8 carried every Session 5 row, including
+  "The Part B checkpoint of v2 Session 5".
+- `git branch -r --no-merged origin/main` listed only
+  `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
+- `origin/main` was re-fetched before this handover was written: still `59dc88c`.
+- This session's branch: `claude/v2-session-6-csa`. Disposition: item 2.3 approved
+  (`docs/ROADMAP-v2.md` §8); pushed, with a pull request to `main` opened on the author's
+  instruction of 27 Oct 2026 ("Si"); merged as #24 (`fdc7727`).
+- After the merge, on 28 Oct 2026: the prompt of v2 Session 7 (item 2.4, the EHDS) was drafted and,
+  on the author's instruction ("Si"), kept as `docs/prompts/v2-session-7.md` on branch
+  `claude/v2-session-7-prompt`, with a pull request to `main`. It records no decision: the prompt's
+  first write is §8's row "The scope of v2 Session 7", in the author's words.
+
+## v2 Session 6 — checkpoint report (item 2.3, the Cyber Solidarity Act)
+
+### What the author decided (`docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **The scope**: the author's roadmap after v2 Session 5, which covers sessions 6–16, is kept as
+  `docs/prompts/v2-session-6.md`. Session 6 is **item 2.3 only**, ending at a checkpoint.
+- **Item 2.3, asked before anything was written to `data/`**, in seven answers, all as recommended:
+  - `status:in-force`, not `status:applicable`;
+  - `dna.objective` draft A;
+  - `rel-nis2-csa-enables` added. The author knew it is also what meets the gate's `context`
+    criterion;
+  - the factual `dna` fields as proposed, with the analytical ones `null`;
+  - the scope decision, status note, status basis and source as proposed;
+  - only the entry-into-force event, not the Art. 25(1) evaluation date;
+  - the roadmap recorded in §8 and in `docs/prompts/`.
+
+### What was written — commit `f75c0f4`
+
+| Record | Change |
+|---|---|
+| `csa` | new; `scope:core`; `brief_part` `null`; `status:in-force`, `status_as_of` 2026-10-27; `status_note` (no internal identifier); `status_basis` Art. 26 + metadata; `scope_decision` (included; `crit:object-security`, `crit:horizontal`; two direct structural references; `approved_on` 2026-10-27); `dna` as decided; `legal_basis` `tfeu:art-173` |
+| `csa:art-3`, `csa:art-14`, `csa:art-21` | three provisions, one per mechanism of Art. 1(1); `obligation_on` empty (participation in the Alert System is voluntary); `obligation_on_institution` `ec` (Art. 14) and `enisa` (Art. 21) |
+| `rel-nis2-csa-enables` | new, v2 shape; direct; "Art. 2, points (3)–(7), (9), (10), (12) and (16)". The locator is in the dependent act |
+| `tl-csa-2025-02-04-entry-into-force` | new |
+| `src-eurlex-csa` | new, tier 1, Cellar; the note says what was read and what was not |
+| `tools/selftest.mjs` | W13: removing the status basis, the decision, the edge or the objective each fails (M-07, M-04, M-05 ×2). It also checks that the edge is v2, direct and structural, and located in the CSA |
+| generated | `instruments/csa/` (new); `instruments.html`; the `<noscript>` index on every page; the NIS2 and GDPR pages (the edge from the other end and the related list); `sitemap.xml`; `img/og/csa.png` and its manifest entry. The tool re-rendered the other fourteen cards; they were restored, because their inputs did not change (`og-image.mjs --check` passes) |
+| `docs/ROADMAP-v2.md` §8, `docs/prompts/v2-session-6.md` | two rows; the prompt |
+
+Not added:
+- no claim;
+- no taxonomy term;
+- no applicability rule;
+- no institution edge;
+- no entry in `tools/seo.mjs`, `KNOWN_AS` or `PAGE_PUBLISHED`.
+
+**No locale key was touched.** The fields written are data, which the editions do not carry, so no
+key needs declaring `superseded` or `pending_translation`; `i18n-audit` is 0/0.
+
+### Facts read on 27 Oct 2026, and facts left `null`
+
+- **Read**:
+  - Regulation (EU) 2025/38, the Official Journal text, retrieved from Cellar by CELEX `32025R0038`
+    (XHTML). Read in full: Arts 1–21 and 23–26. Of Art. 22 (the amendments to Regulation (EU)
+    2021/694), only the opening.
+  - The Publications Office's SPARQL metadata: in force, entry into force 2025-02-04, no end of
+    validity, no amending act; the only consolidated version is the original.
+  - The corrigenda:
+    - OJ L 2025/90063: a reference in the Annex;
+    - OJ L 2025/90886: Art. 22, point (3)(b);
+    - neither touches an Article cited in the records.
+- **Not read**:
+  - corrigendum `32025R0038R(02)`: Cellar returned no English text;
+  - the Council implementing decisions and the Commission documents that the metadata lists as
+    based on, or citing, the Act (`32025D1458`, `32026D1354`, `32026D1725` and others);
+  - whether ENISA has issued the interoperability guidelines due "by 5 February 2026" (Art. 6(4)).
+    For that reason no event was proposed for it.
+- **Left `null` or empty, and shown on the page as "not established"**:
+  - `risk_logic`, `enforcement_mechanism`, `protected_party`, `territorial_scope`;
+  - `obligation_anchor`;
+  - the sanction amounts. The note says the text sets no fines or penalties: the whole OJ text was
+    searched for "penalt", "fines" and "sanction", with no match.
+  - No competent authority: `institutions.json` has none for the CSA, and none was researched.
+- **Not recorded**:
+  - Art. 322(1)(a) TFEU, the second legal basis. The dataset's TFEU record has no such provision,
+    and adding one was not proposed.
+  - Regulation (EU) 2021/694 in `amends`, because it is not an instrument in the dataset. The
+    status note names it.
+- No fact was taken from a search result or from model knowledge. The design draft of 25 Oct 2026
+  (`docs/v2-design/map-examples.json`) was not copied: every field was re-read in the text.
+
+### Exit criteria of item 2.3 (`docs/ROADMAP-v2.md` §4)
+
+- *Every fact read from a retrieved primary source* — **pass** (above).
+- *`sources.json` records only from documents read* — **pass**: one new record, for the text read.
+- *Prose and claims to the author* — **pass**: every text written was in the approved block; no
+  claim was created.
+- *`node tools/_footer.mjs` re-run* — **pass**: committed with the data; a second run writes 0 files.
+- *Affected locale keys declared* — **n/a**: none touched.
+- *M-04, M-05, M-07 held in full* — **pass**: `csa` is in no backlog; W13 shows each one failing.
+- *The page says nothing the records do not carry* — **pass**, with the two display observations
+  under "Found" below.
+
+### Counts against the baseline (v2 Session 5's closing re-run)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / provisions / relationships | 34 / 78 / 27 | 35 / 81 / 28 | `csa`; its three provisions; `rel-nis2-csa-enables` |
+| sources / timeline events / claims / taxonomy terms | 220 / 92 / 181 / 307 | 221 / 93 / 181 / 307 | `src-eurlex-csa`; the entry-into-force event |
+| coverage covered / mapped / watched / excluded | 12 / 11 / 5 / 6 | 13 / 11 / 5 / 6 | `csa` |
+| backlog `status-basis-missing` / `scope-decision-missing` | 23 / 11 | 23 / 11 | a new record joins no backlog |
+| instrument pages · indexable routes | 13 · 22 | 14 · 23 | `instruments/csa/` |
+| instruments.html "thinner records" | 7 | 7 | `csa` has a page |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit --as-of 2026-10-27` errors / warnings | 0 / 11 | 0 / 11 | unchanged |
+| `freshness --as-of 2026-10-27` | 0 defects / 2 prompts | 0 / 2 | unchanged |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged |
+| `tools/selftest.mjs` | 102 | 103 | W13 |
+| all 25 suites | 1309 + 1 skipped | **1309 pass + 1 skipped, 0 failures (1310)** | W13; the skip is the `::1` test, as in Session 5 |
+| browser suite | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable | unchanged (`a11y:bound`) |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+
+The provisions "before" figure (78) was counted on `data/instruments.json` at `59dc88c`; Session 5's
+report did not record it.
+
+Other checks:
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+- `tools/og-image.mjs --check` passes.
+- `tools/commit-evidence.mjs origin/main HEAD`: 0 commits without evidence.
+- `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+### The page, opened in a browser
+
+`/instruments/csa/` was opened in Chromium (Playwright) at 1280px dark and 390px light. There was no
+console error and, at 390px, no horizontal overflow. The page shows:
+- Status: in force, as of 27 Oct 2026, and the status note.
+- "In short":
+  - the objective;
+  - "Member State · Public authority";
+  - "not established" for the protected party, the core obligations and the sanction ceiling, with
+    the note;
+  - entry into force on 4 February 2025.
+- One dated event.
+- "No rules recorded", worded as absence of knowledge.
+- Three provisions.
+- No enforcement recorded.
+- "No claims attached".
+- One interaction, "NIS2 enables Cyber Solidarity Act", with its locator.
+- "No Part of the brief covers this instrument directly".
+
+`/instruments/nis2/` shows the same edge from the other end.
+
+### Found, for the author — not changed
+
+1. **The internal reference reaches two more pages.** The `rel-kind:enables` taxonomy note ends
+   "Added 27 Oct 2026 (docs/V2-DATA-DESIGN.md §1.4)". The interactions box prints it, now also on
+   `/instruments/csa/` and on NIS2's new row. This is Session 10's item 10.2, foreseen when the edge
+   was approved; it is not fixed here.
+2. **The sanction ceiling reads two ways on one page.** The header strip says "none recorded"; "In
+   short" says "not established", followed by the note that the text sets no penalties. This is
+   the renderer's wording for null amounts, and eIDAS2 reads the same. It is not a data question.
+3. **`obligation_on_institution` is not displayed.** The provisions table shows "not recorded"
+   under "Binds" for Arts 14 and 21, although the records name the Commission and ENISA.
+   `dma:art-53`, the one other provision with the field, renders the same way: checked on
+   `/instruments/dma/`. This is a renderer gap, not changed.
+
+**Still open from Session 5** (the roadmap's §3; none touched):
+1. `rel-dsa-gdpr-transparency-minimisation`: its summary and provisions no longer match EDPB
+   Guidelines 3/2025 v2. The revision is the author's.
+2. `rel-data-omnibus-gdpr`: "stalled in Council" is carried by no source on the edge, and has not
+   been re-read.
+3. The 4 brief-only and 3 claimless analytical edges stay v1; the `edge-v1-sources` flip stays
+   deferred.
+4. The article attribution in `src-ec-apple-meta-dma-2025`'s note.
+5. `src-ec-ai-omnibus-in-force`: not re-read (403).
+6. The `::1` test: skipped again in this container, so not run. A skip is not a pass.
+7. R-01's P2B gap and the eight findings of `docs/V2-DATA-DESIGN.md` §7 belong to Phase 3.
+8. The internal identifiers shown to a reader (`eidas2.status_note`; the `defers-to` and `enables`
+   notes). These are Session 10's.
+
+### The verification checklist
+
+**6.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, two rows.
+- *Verify:* read "The scope of v2 Session 6" and "Item 2.3: the inclusion of `csa`".
+- *Criterion:* every editorial field was decided before `data/` was touched.
+
+**6.1 · Sources read first.**
+- *Changed:* `data/sources.json` (`src-eurlex-csa`).
+- *Verify:*
+  - fetch `http://publications.europa.eu/resource/celex/32025R0038` with Accept
+    `application/xhtml+xml`;
+  - read Art. 1(1), Art. 2 points (3)–(16), Art. 26;
+  - query the SPARQL endpoint for `resource_legal_date_entry-into-force` (2025-02-04).
+- *Automatic:* none. No check reads a source (AUDIT F-12).
+
+**6.2 · Written in one home.**
+- *Changed:*
+  - `data/instruments.json`: `csa` and `rel-nis2-csa-enables`;
+  - `data/timeline.json`: one event;
+  - the regenerated pages;
+  - `img/og/csa.png`.
+- *Verify:* `/instruments/csa/` and `/instruments/nis2/`.
+- *Automatic:*
+  - `tools/selftest.mjs` W13;
+  - S1 (generated files current);
+  - `seo-audit` 0/0.
+- *Criterion:*
+  - M-04, M-05 and M-07 at 0 errors, held in full;
+  - the date lives only in `timeline.json`;
+  - no title in `data/`.
+
+**6.3 · Checkpoint.**
+- *Changed:* this report.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run above.
+- *Criterion:* the author's approval, recorded in §8. Item 2.4 does not start before it.
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-27`: REGISTER reads "covered 13 · mapped 11".
+2. `python3 -m http.server 8000`, then open `/instruments/csa/` in both themes, at desktop and phone
+   width, and `/instruments/nis2/` for the edge from the other end. `/instruments.html` lists the
+   Cyber Solidarity Act.
+3. `node --test --test-name-pattern=W13 tools/selftest.mjs`.
+
+## Branch register — 27 October 2026 (v2 Session 5)
+
+- At the start, `main` contained #21 (`b304114`) and §8's row "The scope of v2 Session 5" (#22,
+  `64aa696`).
+- `git branch -r --no-merged origin/main` listed only
+  `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
+- This session's branch: `claude/new-session-9ud5l5`. Disposition: Parts A and B approved (`docs/ROADMAP-v2.md` §8); pull request #23 to `main`, opened on the author's instruction of 27 Oct 2026 ("Sì, apri la PR").
+
+## v2 Session 5 — Part B checkpoint report (B.1–B.3)
+
+The author approved the Part A checkpoint (`docs/ROADMAP-v2.md` §8). With it, the internal references
+the report found stay an open finding, unchanged.
+
+### B.1 · PP-09's stale text — commit `bd2c318`
+
+- `agent/policy/verify/attacks.mjs` PP-09 said nothing had ever fetched the deployed site.
+- Its reason now cites `docs/DEPLOYMENT.md`'s dated measurements:
+  - §1, 27 Sep 2026, on `github.io`;
+  - §1a, 23 Oct 2026, on `eudigitalpolicy.eu`;
+  - §1b, 24 Oct 2026, after the switch to GitHub Actions.
+- It says those readings were taken by hand, not by the gate, and that `agent/records/` was never
+  requested by name. `would_need` names the custom domain.
+- **The outcome is unchanged**: undecidable, high. The gate performs no network I/O, so dated readings
+  do not tell it what the origin serves on the day it runs. No outcome change was proposed.
+- **`agent/policy/` was edited** — a never-automatic path. This is the one file.
+- The gate reads 65 · 0 · 3 · 1 before and after. `agent/policy/verify` passes 9/9 and
+  `agent/policy` 36/36.
+
+### B.2 · The OIDC redirect URI and the `::1` origin — commit `dd3c1fe`
+
+- **One home:** `.control-room/config.mjs serverOrigin(cfg, port)`. It returns the configured public
+  origin, or the bind host and port, with an IPv6 host bracketed (`http://[::1]:7802`).
+- `server.mjs selfOrigin()` asks it with the port actually listening.
+- The `OidcProvider` is handed the server's `selfOrigin`, so `redirectUri()` reads the same value.
+  With no server, it falls back to `serverOrigin(cfg)`.
+- **Not loosened:**
+  - the Origin comparison is the same exact match;
+  - the CSRF check is unchanged;
+  - state, nonce and PKCE are untouched, and the three existing OIDC tests pass.
+- **Tests** in `.control-room/selftest.mjs`; the first two were reproduced failing before the fix,
+  with `'http://::1:7802/auth/callback'` and `'http://127.0.0.1:0/auth/callback'`:
+  - "ORIGIN · B.2 · one home …" (pure);
+  - "OIDC · B.2 · with port 0, the redirect URI … carries the port actually listening": a real
+    server, a stub IdP, and the `Location` of `GET /auth/login`;
+  - "ORIGIN · B.2 · bound to ::1 …": the bracketed origin passes, while the unbracketed one, the
+    `127.0.0.1` one and a foreign one are refused.
+- **That third test did not run here.** This container cannot bind `::1` (`EAFNOSUPPORT`), so it
+  reports itself SKIPPED with that reason. It runs wherever IPv6 loopback exists. Whether the GitHub
+  runner has IPv6 loopback was not measured.
+
+### B.3 · The migration of the readable relationships — commit `f90212f`
+
+- **Measured 27 Oct 2026:**
+  - 13 of the 17 v1 relationships cite only tier-1 or tier-2 sources;
+  - 3 of those 13 are the claimless analytical edges, which leaves the prompt's 10;
+  - 4 edges rest only on `src-brief-original`.
+- **Re-read that day:**
+  - through Cellar by CELEX: 32016R0679, 32024R1689, 32024L2853, 32026R1744, 32022R2554, 32022L2555,
+    32022R2065, 32022R1925 and 52025PC0837 (the last as the PDF of `DOC_1`);
+  - through the Commission press corner's documents API: IP/25/1992 and IP/25/1085;
+  - from the EDPB's site: Guidelines 3/2025 v2 (PDF, adopted 17 Sep 2026).
+- **Migrated (8), on the author's decisions:**
+
+  | Relationship | References |
+  |---|---|
+  | `rel-ai-act-gdpr-art-22` | GDPR Art. 22(1), Art. 99(2) direct · AI Act Art. 6 partial |
+  | `rel-ai-act-pld` | PLD Art. 4 point (1), recital 13 partial (analytical) |
+  | `rel-nis2-dora` | DORA recital 16, Art. 1(2) direct · NIS2 Art. 4 partial |
+  | `rel-dsa-ecommerce` | DSA Art. 89(1)–(2) direct |
+  | `rel-nis2-nis1` | NIS2 Art. 44 direct |
+  | `rel-dma-tfeu-102` | **+ DMA Art. 1(6) direct** · IP/25/1992 partial |
+  | `rel-dma-gdpr-consent` | **+ DMA Art. 5(2) direct** · IP/25/1085 partial (the release text retrieved that day names no article) |
+  | `rel-ai-omnibus-ai-act` | Regulation (EU) 2026/1744 Art. 1, point (40) direct. `src-ec-ai-omnibus-in-force` **left the edge**: it answered 403 and was not re-read. It stays on `clm-ai-act-delay-scope` |
+
+- **Stay v1 (2), on the author's decisions:**
+  - `rel-dsa-gdpr-transparency-minimisation`: **the source no longer carries the summary.** EDPB
+    Guidelines 3/2025 v2 ¶6 put Art. 40 DSA researcher access outside their scope, and treat
+    advertising transparency under Art. 26 (¶79–80), with Art. 39 named only in ¶118. The summary
+    and `provisions` (`dsa:art-39`, `dsa:art-40`) are the author's to revise; nothing was changed.
+  - `rel-data-omnibus-gdpr`: "stalled in Council" is carried by no source on the edge, and the
+    Council stage was not re-read.
+- **Backlog unchanged:** the 4 brief-only edges and the 3 claimless analytical edges. The
+  `edge-v1-sources` flip was not done. v1 edges: **17 → 9**.
+- Every migrated edge has `last_verified` 2026-10-27 and a note saying what was read and through
+  which channel. No `summary` was changed.
+- **Sources** re-read: `accessed` is 2026-10-27 and the note names the channel, for `src-eurlex-gdpr`,
+  `-ai-act`, `-pld`, `-ai-omnibus`, `-nis2`, `-dma`, `src-ec-google-adtech-2025` and
+  `src-ec-apple-meta-dma-2025`. The last two are tier 2, read through the press corner, and the
+  Google URL now redirects to IP/25/1992. `src-edpb-guidelines-3-2025` was read but not changed:
+  its finding is the v1 decision above.
+- **No edge check exists in code** (M-08 to M-14 are D1's, not implemented). `tools/selftest.mjs` W12
+  therefore pins the data:
+  - the 8 migrated edges stay v2;
+  - each direct tier-1 reference is structurally located;
+  - each textual edge has a direct reference;
+  - the remaining v1 edges are the 9 named;
+  - a planted relapse is caught.
+
+### Re-run on the final tree
+
+- Validators, unchanged from the Part A checkpoint:
+  - `validate`: 0/0, 45 unverified;
+  - `i18n-audit`, `design-qa`, `seo-audit`: 0/0;
+  - `evidence-audit --as-of 2026-10-27`: 0 errors, 11 warnings; REGISTER "covered 12 · mapped 11 ·
+    watched 5 · excluded 6";
+  - `freshness --as-of 2026-10-27`: 0 defects, 2 prompts.
+- Suites: all 25 pass, **1309 tests**, 0 failures, 1 skipped (the `::1` test, as above), with
+  `BROWSER_QA_CHROME` set. That is 1305 at the Part A checkpoint: `.control-room/` 74 → 77 (B.2) and
+  `tools/` 101 → 102 (W12).
+- Browser suite: 343 pass · 0 fail · 1 undecidable (`a11y:bound`).
+- Adversarial gate: 65 · 0 · 3 · 1, unchanged.
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+- `tools/commit-evidence.mjs origin/main HEAD`: 5 commits, 0 without evidence.
+- `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+### Found, for the author — not changed
+
+1. `rel-dsa-gdpr-transparency-minimisation`: its summary and provisions no longer match its one
+   source (above).
+2. `src-ec-apple-meta-dma-2025`'s note attributes "under Art. 5(2)" and "under Art. 5(4)" to IP/25/1085.
+   The release text retrieved on 27 Oct 2026 names no article, so the attribution may come from a part
+   of the page not in that text. Not changed.
+3. `src-ec-ai-omnibus-in-force` could not be re-read (403). It still supports `clm-ai-act-delay-scope`
+   as last read on 27 Aug 2026.
+4. Still open from Part A: internal identifiers shown to a reader (`eidas2.status_note`; the
+   `defers-to`/`enables` taxonomy notes).
+
+## v2 Session 5 — the verification checklist
+
+**A.0 · Questions before writing.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, one row with the author's four answers.
+- *Verify:* read the row "Four questions on item 2.2".
+- *Automatic:* none (decisions).
+- *Criterion:* gate, page fields and stale texts decided before `data/` was touched.
+
+**A.1 · The promotion, in one block.**
+- *Changed:* §8 row "Item 2.2: the promotion of `eidas2`".
+- *Verify:* `scope_decision.approved_on` is 2026-10-27, with no DRAFT.
+- *Automatic:* `tools/selftest.mjs` W3 (M-04 on any decision) and W11.
+- *Criterion:* approved by the author before writing.
+
+**A.2 · Sources read first.**
+- *Changed:* the notes of the three sources, two claims, two events and the rule.
+- *Verify:* fetch `http://publications.europa.eu/resource/celex/32024R1183` (Accept
+  `application/xhtml+xml`) and read Art. 1 point (2)(b) and Art. 2.
+- *Automatic:* none reads a source (AUDIT F-12).
+- *Criterion:* every fact re-read; nothing from a search or from memory.
+
+**A.3 · Written in one home.**
+- *Changed:* `data/instruments.json` (`eidas2`, `rel-eidas2-gdpr-defers`), `timeline.json` (1),
+  `taxonomy.json` (1), `claims.json`, `applicability.json`, `sources.json`;
+  `tools/register-audit.mjs`; regenerated pages; `img/og/eidas2.png`.
+- *Verify:* `/instruments/eidas2/`.
+- *Automatic:* `tools/selftest.mjs` W11 (M-04, M-05, M-07 held in full), S1 (generated files
+  current) and W1 (backlog 23).
+- *Criterion:* M-04, M-05 and M-07 at 0 errors; dates only in `timeline.json`; no title in `data/`.
+
+**A.4 · Checkpoint A.**
+- *Changed:* `docs/HANDOVER.md`.
+- *Verify:* the report above.
+- *Automatic:* every validator, the 25 suites, the browser suite and the gate, as re-run.
+- *Criterion:* approved (§8).
+
+**B.1 · PP-09.**
+- *Changed:* `agent/policy/verify/attacks.mjs` (PP-09 only).
+- *Verify:* `node agent/policy/verify/cli.mjs` and read PP-09.
+- *Automatic:* `agent/policy/verify/selftest.mjs` (the gate reproducible; outcome counts unchanged).
+- *Criterion:* the text cites the dated measurements, and the outcome is what they support.
+
+**B.2 · Origin and redirect URI.**
+- *Changed:* `.control-room/config.mjs`, `authn.mjs`, `server.mjs`, `selftest.mjs`.
+- *Verify:* run `CONTROL_ROOM_PORT=0 CONTROL_ROOM_AUTH_PROVIDER=oidc …` against an IdP, then open
+  `/auth/login`. `redirect_uri` carries the real port. On a host with IPv6, also check
+  `CONTROL_ROOM_HOST=::1`.
+- *Automatic:* `.control-room/selftest.mjs` "ORIGIN · B.2" ×2 and "OIDC · B.2"; the `::1` test is
+  skipped here.
+- *Criterion:* one home for the origin; the Origin, CSRF, state and nonce checks are not loosened.
+
+**B.3 · Relationships.**
+- *Changed:* `data/instruments.json` (8 relationships), `data/sources.json` (8 notes),
+  regenerated pages.
+- *Verify:* `/instruments/nis2/` (Art. 44, recital 16) and `/instruments/dma/` (Art. 1(6), Art. 5(2))
+  show the locators.
+- *Automatic:* `tools/selftest.mjs` W12.
+- *Criterion:* every migrated edge re-read; the two that no longer hold stay v1, with the reason; the
+  flip is not done.
+
+## v2 Session 5 — Part A checkpoint report (item 2.2)
+
+### What the author decided (each in `docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **A.0, before anything was written to `data/`** (measured that day: `eidas2` failed the page gate's
+  `explanation` and `context` only):
+  - *context*: one edge, `eidas2 → gdpr` `defers-to`, on Art. 1 point (2)(b) of Regulation (EU)
+    2024/1183, inserting Art. 2(4) into Regulation (EU) No 910/2014 ("without prejudice to Regulation
+    (EU) 2016/679"). Three more edges read the same day were offered and **not** added: `dsa → eidas2`
+    `enables` (Art. 5f(3)), `dma → eidas2` `enables` (Art. 12b), `eidas2 → nis2` `defers-to`
+    (Art. 16(1)). `brief_part` stays `null`: the brief names eIDAS2 only in Part I's box "Also in the
+    rulebook: what the six regimes leave out";
+  - *dna.objective*: draft A;
+  - *the other fields*: factual ones read now, analytical ones `null`;
+  - *two stale texts*: corrections proposed in A.1.
+- **A.1, in one block — approved as a whole**, with one addition: `actor:trust-service-provider`.
+
+### What was written — commit `061c226`
+
+| Record | Change |
+|---|---|
+| `eidas2` | `scope:adjacent` → `scope:core`; `scope_decision` (included; `crit:object-infrastructure`, `crit:horizontal`; three references, two direct structural); `status_basis` (Art. 2 + Publications Office metadata); `status_as_of` and `last_verified` 2026-10-27; the re-reading sentence of `status_note` replaced; `dna` (objective, `implementation_model`, `obligation_anchor`, `regulated_actor`, `sanction_ceiling` note; four fields `null`); milestone added |
+| `rel-eidas2-gdpr-defers` | new, v2 shape, direct structural locator |
+| `tl-eidas2-2024-05-20-entry-into-force` | new |
+| `actor:trust-service-provider` | new taxonomy term; nothing renamed |
+| `ap-eidas2-01` | rationale: "This dataset maps the framework as adjacent: the brief does not analyse it, and" removed; `last_verified` 2026-10-27 |
+| `clm-also-in-the-rulebook` | `eidas2` removed from `instruments` (the claim is about the cyber package alone) |
+| `clm-eidas2-wallets`, `clm-eidas2-private-acceptance`, the two deadline events | re-read; `last_verified` 2026-10-27; notes say what was read |
+| `src-eurlex-eidas2`, `src-eurlex-eudi-2024-2981`, `src-eurlex-eudi-2024-2977` | `accessed` 2026-10-27; notes say what was read; 2977's says it was read through Cellar, not at its EUR-Lex URL |
+| `tools/register-audit.mjs` | `eidas2` leaves `STATUS_BASIS_BACKLOG` (24 → 23): M-07 holds it in full |
+| `tools/selftest.mjs` | W11: removing its status basis, its decision, its edge or its objective each fails (M-07, M-04, M-05 ×2); W1's frozen length 24 → 23 |
+| generated | `instruments/eidas2/` (new), `instruments.html`, the `<noscript>` index on every page, `sitemap.xml`, `img/og/eidas2.png`. The tool also re-rendered the other twelve cards; they were restored, because their inputs did not change |
+
+Nothing was added to `tools/seo.mjs` or to `KNOWN_AS`: the title is derived ("eIDAS2 — key provisions and key dates"), and with no `PAGE_PUBLISHED` entry the page states no `datePublished`. **No locale key was touched**: the fields written are data, which the editions do not carry; `i18n-audit` 0/0.
+
+### Facts re-read on 27 Oct 2026, and facts left `null`
+
+- **Read** (Cellar by CELEX, XHTML; Publications Office SPARQL):
+  - 32024R1183: Art. 1 points (1) (Art. 1, subject matter), (2)(a)–(b) (Art. 2(1), Art. 2(4)),
+    (5) (Arts 5a(1), 5f(1)–(3)), (13) (Art. 12b), (15) (Art. 16(1)–(2)); Art. 2; the OJ header
+    (30.4.2024). SPARQL: in force, entry into force 2024-05-20.
+  - 32024R2977 and 32024R2981: the citations (Arts 5a(23), 5c(6)) and the final articles; OJ L of
+    4.12.2024. SPARQL: both in force, entry into force 2024-12-24.
+  - Every fact already in the record, the two claims, the two events and the rule was confirmed;
+    none changed.
+- **Left `null`, declared on the page as "not established":** `risk_logic`,
+  `enforcement_mechanism`, `protected_party`, `territorial_scope`; the sanction amounts (Art. 16(2)
+  sets a floor for the national maximum, not a ceiling — said in the note). No competent authority:
+  `institutions.json` has none for eIDAS2, and none was researched.
+- **Not read:** the definition of "trust service provider" in Art. 3 of Regulation (EU) No 910/2014
+  (the new term's note cites Art. 2(1) only); any other implementing act.
+- No fact was taken from a search result or from model knowledge.
+
+### Exit criteria of item 2.2
+
+- *Every fact read from a retrieved primary source* — **pass** (above).
+- *`sources.json` records only from documents read* — **pass**: no new source; three updated after
+  re-reading.
+- *Prose and claims to the author* — **pass**: every text written was in the A.1 block, approved;
+  no claim was created; one claim's tag was removed on approval.
+- *`node tools/_footer.mjs` re-run* — **pass**: committed with the data; `seo-audit` 0/0.
+- *Affected locale keys declared* — **n/a**: none touched.
+- *M-04, M-05, M-07 at 0 errors, held in full* — **pass**: `eidas2` is in no backlog; W11 shows each
+  failing.
+- *The page says nothing the records do not carry* — **pass**, opened in Chromium (below).
+
+### Counts against the baseline (v2 Session 4's closing re-run)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| relationships (`validate`) | 26 | 27 | `rel-eidas2-gdpr-defers` |
+| timeline events / taxonomy terms | 91 / 306 | 92 / 307 | the entry-into-force event; `actor:trust-service-provider` |
+| instruments / sources / claims | 34 / 220 / 181 | unchanged | — |
+| coverage covered / mapped | 11 / 12 | 12 / 11 | `eidas2` |
+| backlog `status-basis-missing` / `scope-decision-missing` | 24 / 11 | 23 / 11 | `eidas2` has its basis; it was never in the second |
+| instrument pages · indexable routes | 12 · 21 | 13 · 22 | `instruments/eidas2/` |
+| instruments.html "thinner records" | 8 | 7 | `eidas2` has a page |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit --as-of 2026-10-27` errors / warnings | 0 / 11 | 0 / 11 | unchanged |
+| `freshness --as-of 2026-10-27` | 0 defects / 2 prompts | 0 / 2 | unchanged |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged |
+| `tools/selftest.mjs` | 100 | 101 | W11 |
+| all 25 suites | 1304 | 1305, 0 failures | W11. Without `BROWSER_QA_CHROME`: 1304 pass and 1 skipped; with it, `agent/browser` is 21/21 |
+| browser suite | 343 · 0 · 1 undecidable | 343 · 0 · 1 undecidable | unchanged (`a11y:bound`) |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+
+`agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0;
+`tools/commit-evidence.mjs origin/main HEAD`: `061c226` names its evidence.
+`BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+
+### The page, opened in a browser
+
+`/instruments/eidas2/`, opened in Chromium (Playwright) with no console error, shows:
+
+- Status: in force, as of 27 Oct 2026.
+- "In short":
+  - the objective;
+  - five actors;
+  - Arts 5a and 5f;
+  - entry into force on 20 May 2024, and the next deadline;
+  - "not established" for the protected party and for the sanction ceiling, with the Art. 16(2) note.
+- Three dated events, one rule and two provisions.
+- No enforcement recorded.
+- Two claims, both graded primary law.
+- One interaction, "eIDAS2 defers to GDPR", with its locator.
+- "No Part of the brief covers this instrument directly".
+
+`/instruments/gdpr/` shows the same edge from the other end.
+
+### Found, for the author — not changed
+
+1. **Internal identifiers shown to a reader.**
+   - `eidas2.status_note` names `clm-eidas2-wallets` and `clm-eidas2-private-acceptance`. That text
+     is unchanged and predates this session.
+   - The interactions box prints the taxonomy note of `rel-kind:defers-to`, which ends "Added 27 Oct
+     2026 (docs/V2-DATA-DESIGN.md §1.4)". It has appeared since item 2.1 on every page with a
+     `defers-to` or `enables` edge: DSA, DORA, GDPR and now eIDAS2.
+2. **`regulated_actor` mixes two populations.** One is the addressees of the wallet duties, taken
+   from the provisions; the other is trust service providers, taken from the scope article. Both were
+   read in the text, but the list is not exhaustive.
+3. **Two grammar slips on every instrument page**, not introduced by this item: "1 rule in the
+   dataset turn on this instrument" and "· 1 days ago".
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-27`: REGISTER reads "covered 12 · mapped 11";
+   `status-basis-missing` is 23, without `eidas2`.
+2. `python3 -m http.server 8000`, then open `/instruments/eidas2/` and `/instruments/gdpr/` (the edge
+   from both ends). `/instruments.html`: eIDAS2 is in the list, with seven thinner records.
+3. Fetch `http://publications.europa.eu/resource/celex/32024R1183` with Accept
+   `application/xhtml+xml` and read Art. 1 point (2)(b): the sentence the edge rests on.
+4. `node --test --test-name-pattern=W11 tools/selftest.mjs`.
+
+## Branch register — 27 October 2026 (v2 Session 4)
+
+- At the start, `docs/ROADMAP-v2.md` §8's row "The scope of v2 Session 4" was **not on `main`**: it
+  was `7f82f62`, committed on `claude/eloquent-hamilton-7p6t2u` after #19 was merged. The session
+  stopped and said so; the author merged it as #20 (`34a2ee0`), and the session started from there.
+- `git branch -r --no-merged origin/main` then listed only
+  `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the registers below and untouched.
+- This session's branch: `claude/new-session-e7w8sp`. Disposition: pull request #21, opened on the
+  author's instruction of 27 Oct 2026 ("Sì, apri la PR") and merged as `b304114`. The branch then
+  carries one more commit (the scope and prompt of v2 Session 5); no pull request for it unless the
+  author asks.
+
+## Next — v2 Session 5 (decided 27 Oct 2026, `docs/ROADMAP-v2.md` §8)
+
+Pull request #21 was merged as `b304114`. The prompt is `docs/prompts/v2-session-5.md`. In order:
+1. **Item 2.2, the promotion of `eidas2`**, then a checkpoint. Measured on `main`: the page gate
+   would refuse `eidas2` a page today (no `dna.objective`, no `brief_part`, no relationship), so
+   M-05 would fail on promotion; the prompt puts that to the author before anything is written.
+2. **PP-09's stale text** (`agent/policy/`, never automatic).
+3. **The OIDC redirect URI and the unbracketed `::1` origin** in `.control-room/`.
+4. **The 10 readable relationships migrated to v2**; the other 7 stay in the backlog and the
+   `edge-v1-sources` flip stays deferred.
+
+Still for Phase 3: R-01's P2B gap, the eight findings of `docs/V2-DATA-DESIGN.md` §7, and the
+`data-omnibus` correction left in `docs/v2-design/register-watchlist.proposed.json`.
+
+## v2 Session 4 — Part B checkpoint report (B.1–B.3)
+
+The author approved the Part A checkpoint (`docs/ROADMAP-v2.md` §8, commit `76fa900`), and with it:
+R-01's P2B gap deferred to Phase 3; the internal references removed from three public texts (done in
+`76fa900`); no relationship added for TTPA Art. 2(3)(f) and (h).
+
+### B.1 · The ninth README limitation — commit `c886fdb`
+
+- Inserted as item 9 of "Known limitations", **word for word** from `docs/AUDIT-2026-10-24.md` §5
+  (checked by script: identical once the quote marks are removed).
+- Every fact it cites was checked first and still holds: HSTS not sent on the custom domain
+  (`docs/DEPLOYMENT.md` §1a, §4); the Control Room never deployed, OIDC only against a local stub,
+  nothing penetration-tested (`docs/CONTROL-ROOM.md` §11 items 1, 2, 6).
+- "Eight limitations" became "nine" where the count is stated: `AGENTS.md` (twice),
+  `docs/AI-SAFE-BOUNDARIES.md` §0, a comment in `agent/ux/boundary.mjs`.
+
+### B.2 · The publication model, corrected as a check — commit `1d0d897`
+
+- `tools/pages-artifact.mjs refusal()` is the one home of what the website publishes;
+  `agent/implement/boundary.mjs publicSurface()` asks it, and every other check reads
+  `publicSurface()`.
+- **Two surfaces, measured:** the website (106 tracked files the allowlist admits) and the
+  repository (all 506 tracked files — **public on github.com**, read through the GitHub API on
+  27 Oct 2026). Refused paths are listed by reason: `agent` 261, `docs` 62, `tools` 24, `.agents` 25,
+  `.control-room` 20, and eight more.
+- **The secret scan reads the whole repository** (487 text files, was 435): no check was weakened.
+- **Verdicts, before → after, approved by the author before the commit:**
+
+  | Verdict | Before | After |
+  |---|---|---|
+  | health `control_plane.control_room_assets_published` | 1 (`docs/CONTROL-ROOM.md`) | 0 (it is in the repository, not on the site; reported apart) |
+  | `agent/implement` boundary errors / warnings | 0 / 13 | 0 / 20 (exposure 2 → 0; fixture credential shapes 11 → 20, `.control-room/selftest.mjs` now read) |
+  | health `secrets_in_public_assets` | 0 (11 in fixtures) | 0 (20 in fixtures) |
+  | adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 — PP-08 still partial/high, its reason rewritten for both surfaces |
+  | production readiness | refused | refused — no condition moved because of B.2 |
+  | `.control-room` boundary | 0 errors | 0 errors — text only |
+
+- **`agent/policy/` was edited** (a never-automatic path): `agent/policy/verify/attacks.mjs`, PP-08,
+  and one phrase of PP-09 ("inferred from Jekyll's documented default" → "from the allowlist").
+- **Four tests that asserted the Jekyll model were rewritten**, each now asserting the allowlist
+  model and what would make an empty result vacuous: `agent/implement/selftest.mjs` R5 (×2),
+  `agent/health/selftest.mjs` "SECURITY · the health RECORD is not published…",
+  `.control-room/selftest.mjs` "THE REPOSITORY · …".
+- Text with the same stale model corrected beyond the prompt's list: `agent/production/readiness.mjs`
+  and `schedule.mjs`, `agent/simulation/threshold.mjs`, `docs/IMPLEMENTATION-QA.md` §6 (marked
+  superseded, the SESSION 18 text kept).
+- **Left open, by the author's decision:** PP-09 still says the deployed site has never been fetched,
+  while `docs/DEPLOYMENT.md` §1 measured it on 27 Sep and 23 Oct 2026. Its outcome is undecidable.
+
+### B.3 · The port-0 Origin defect — commit `dc3a030`
+
+- `.control-room/server.mjs` `selfOrigin()`: the configured public origin, or the loopback host and
+  the port **actually listening** (`server.address().port`). The exact-match comparison and the CSRF
+  check are unchanged.
+- Two paired tests in `.control-room/selftest.mjs` ("ORIGIN · B.3"), both reproduced failing before
+  the fix: the server's real Origin now passes; a foreign Origin, the old `:0` origin, `localhost`
+  and the next port are refused, and a POST with the right Origin and no CSRF token is still refused.
+- **Found, not fixed (outside B.3):** `.control-room/authn.mjs redirectUri()` builds the OIDC
+  redirect URI from `cfg.port` the same way, so with port 0 and the OIDC provider it would be wrong;
+  and with `CONTROL_ROOM_HOST=::1` neither origin is bracketed (`http://::1:7802`), which no browser
+  sends either.
+
+### Re-run on the final tree
+
+- Validators: `validate` 0/0, 45 unverified; `i18n-audit` 0/0; `design-qa` 0/0;
+  `evidence-audit --as-of 2026-10-27` 0 errors, 11 warnings; `freshness --as-of 2026-10-27` 0 defects,
+  2 prompts; `seo-audit` 0/0 — identical to the start of the session.
+- Suites: all 25 pass, **1304 tests**, 0 failures (1292 at the start: `tools/` 90 → 100,
+  `.control-room/` 72 → 74). Browser suite 343 pass · 0 fail · 1 undecidable (`a11y:bound`), with
+  `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`.
+- Adversarial gate 65 · 0 · 3 · 1. `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary`
+  and `routes` exit 0. `tools/commit-evidence.mjs origin/main HEAD`: every commit that changes a
+  published file names its evidence.
+
+## v2 Session 4 — the verification checklist
+
+**A.1 · Entry-by-entry review.**
+- *Changed:* `docs/ROADMAP-v2.md` §8, one row per entry and per decision, in the author's words.
+- *Verify:* read the §8 rows dated 27 Oct 2026; each record in `data/instruments.json` carries
+  `scope_decision.approved_on` 2026-10-27 and no `DRAFT`.
+- *Automatic:* `tools/selftest.mjs` W3 (an unapproved or DRAFT decision is an M-04 error).
+- *Criterion:* every entry approved, refused or deferred in writing — all ten approved.
+
+**A.2 · Facts re-read before writing.**
+- *Changed:* the record notes and source notes say what was read on 27 Oct 2026; one unsupported
+  phrase removed (PSR); fields not researched stay `null`.
+- *Verify:* open any new source's URL (Cellar, CELEX) and its locator, e.g. `src-eurlex-gpsr`, Art. 52.
+- *Automatic:* none reads a source — no check here touches the network (AUDIT F-12). M-04 and M-07
+  check that a direct structural reference exists.
+- *Criterion:* "a status no source has been read for is null" — every status was read.
+
+**A.3 · Written in one home.**
+- *Changed:* `data/instruments.json` (10 records, `dga.scope_decision`, 9 relationships),
+  `data/sources.json` (12 + 5 updated), `data/timeline.json` (14), `data/taxonomy.json` (11 terms);
+  `docs/v2-design/register-watchlist.proposed.json` keeps only the `data-omnibus` block;
+  `tools/register-audit.mjs` (new), `tools/evidence-audit.mjs`, `tools/validate.mjs`,
+  `agent/detector/fields.mjs`; `js/routes.js coverage()`, `js/search.js`, `js/calendar.js`,
+  `js/instrument-page.js`, `js/interactions.js`, `tools/seo.mjs`; regenerated pages.
+- *Verify:* §"How to check it by hand" in the Part A report above.
+- *Automatic:* `tools/selftest.mjs` W1–W10; `agent/browser` `not-covered:excluded`, `:watched`,
+  `:calendar`, `:search`; `agent/detector` "the field register classifies every field".
+- *Criterion:* item 2.1's exit criteria — all met except the `edge-v1-sources` flip, deferred by the
+  author.
+
+**A.4 · Part A checkpoint.** Report in this file; approved by the author (§8, `76fa900`).
+
+**B.1 · Ninth limitation.** *Changed:* `README.md`. *Verify:* compare item 9 with
+`docs/AUDIT-2026-10-24.md` §5. *Automatic:* none (a reading). *Criterion:* inserted verbatim, every
+cited fact still true.
+
+**B.2 · Publication model.** *Changed:* listed above. *Verify:* `node agent/implement/cli.mjs boundary`
+prints the two surfaces; `node agent/policy/verify/cli.mjs` shows PP-08's new reason. *Automatic:*
+`agent/implement/selftest.mjs` R5, `agent/health/selftest.mjs` SECURITY, `.control-room/selftest.mjs`
+THE REPOSITORY. *Criterion:* one home, every moved verdict reported and approved, no check weakened.
+
+**B.3 · Port 0.** *Changed:* `.control-room/server.mjs`. *Verify:* `CONTROL_ROOM_PORT=0 node
+.control-room/cli.mjs serve`, log in from a browser and press Approve: no "cross-origin request".
+*Automatic:* `.control-room/selftest.mjs` "ORIGIN · B.3" ×2. *Criterion:* fixed without loosening the
+Origin or CSRF check.
+
+## v2 Session 4 — Part A checkpoint report (item 2.1)
+
+### What the author decided (each in `docs/ROADMAP-v2.md` §8, in the author's words)
+
+- **A.0, before anything was written to `data/`:**
+  - the 17 existing relationships are **not** migrated, and the flip of `edge-v1-sources` and
+    `edge-analytical-no-claim` to ERROR is **deferred** with them. Measured that day: 10 of the 17
+    cite only tier-1/2 sources and need a locator; 4 rest only on `src-brief-original`; 3 analytical
+    edges have no claim;
+  - the public views read **one derived filter**, `coverage()` in `js/routes.js`.
+- **A.1, entry by entry — all ten approved, none refused, none deferred:**
+
+  | Record | List | Approved | Corrections from the re-reading, approved with it |
+  |---|---|---|---|
+  | `vida` | register | yes | `status_note` states Art. 6(4)–(5); Art. 3 point (1) (new Art. 28a) cited for "deemed suppliers" |
+  | `avmsd` | register | yes, **A-4 decided** (2010/13/EU as amended) | Directive 2018/1808 Art. 1(23) read and cited for "video-sharing platforms" |
+  | `copyright-dsm` | register | yes, **A-2 decided** (Directive 2019/790) | reason gains "(Art. 17)"; Art. 17 cited |
+  | `gpsr` | register | yes | source note lists every DSA article GPSR Art. 22 refers to |
+  | `eaa` | register | yes | `full_name` is the exact title, without "(European Accessibility Act)" |
+  | `ttpa` | register | yes | none |
+  | `p2b` | watchlist | yes | none (procedure 2025/0360(COD): "Awaiting committee decision") |
+  | `mica` | watchlist | yes | none |
+  | `psd3` | watchlist | yes | Art. 1(1) of COM(2023) 366 added, so M-04 holds |
+  | `psr` | watchlist | yes | reason without "including fraud prevention" (no source read establishes it); Art. 1(1) of COM(2023) 367 added |
+
+  - `dga` (instrument update): approved, with DGA Art. 1(1) added to its decision's sources.
+  - `data-omnibus` (instrument update, `proposes_to_amend` −dga +cer): **not applied**. It is
+    findings F-2 and F-3 of `docs/V2-DATA-DESIGN.md` §7, which are Phase 3's (Q-5). It is the one block
+    left in `docs/v2-design/register-watchlist.proposed.json`.
+  - The four source updates: approved.
+- **During implementation:** the "not covered" notice's wording (draft A); M-04's date test as a
+  WARNING (`VERIFIED_AFTER_AS_OF`), because an ERROR in `evidence-audit.mjs` is a defect on every date.
+
+### Facts re-read on 27 Oct 2026, and facts left `null`
+
+- **Re-read, every one confirmed** (Cellar by CELEX for the texts, the Publications Office's SPARQL
+  endpoint for in-force flags and dates, the Legislative Observatory for the three procedures): the
+  title, entry into force, application and transposition articles of the eight acts; DSA Art. 2(4);
+  DORA Art. 2(1)(f); COM(2025) 837 Arts 1, 9, 10 and 11; the stage and key events of 2023/0209(COD),
+  2023/0210(COD) and 2025/0360(COD); the Commission's political-advertising page.
+- **Read for the first time that day:** ViDA Art. 6(4)–(5) and Art. 3(1); Directive 2018/1808 Arts 1(23),
+  2(1) and 3; Copyright DSM Art. 17; GPSR Art. 22 in full; DGA Art. 1(1); Art. 1(1) of both payment
+  proposals.
+- **One fact in a draft was not established by any source and was removed:** "including fraud
+  prevention" (PSR).
+- **Left `null`, with the reason in the record:** `transposition`, `dna` and `legal_basis` on all ten
+  (not researched); other amendments to the AVMSD; Regulation (EU) 2025/517 (identified, not read);
+  MiCA Art. 149(4) derogations (not itemised); the Council documents for PSD3 and PSR.
+- No fact was taken from a search result or from model knowledge.
+
+### Exit criteria of item 2.1 (`docs/ROADMAP-v2.md` §4)
+
+- *The seven regimes are records with their reason, measured against the criterion* — **pass**: six
+  in the register, P2B on the watchlist, each with `scope_decision.criterion` and an approved reason.
+  The four conditional inclusions (MiCA, PSD3, PSR, DGA) are on the watchlist with the finance-chapter
+  condition; the finance chapter was not opened.
+- *None becomes a page* — **pass**: 12 instrument pages before and after; M-05 is 0 and fails on a
+  planted record (W5).
+- *A status no source has been read for is null* — **pass**: every status written was read that day;
+  none is a guess.
+- *The checks of §6.3 arrive with the records, each with a planted failure* — **pass**: M-03, M-04,
+  M-05, M-06, M-07, R-01 in `tools/register-audit.mjs`; `tools/selftest.mjs` W1–W10.
+- *Design §4.3: `edge-v1-sources` flips to ERROR at the end of 2.1* — **not met, deferred by the
+  author** (A.0). The map view stays unpublished.
+
+### Counts against the baseline (`docs/CURRENT-ARCHITECTURE.md` §12 and v2 Session 3's re-run)
+
+| Measure | Before | After | Why |
+|---|---|---|---|
+| instruments / relationships | 24 / 17 | 34 / 26 | the ten records; nine v2 relationships |
+| sources / timeline events | 208 / 77 | 220 / 91 | twelve sources, fourteen events |
+| taxonomy terms | 295 | 306 | `rel-kind:enables`, `rel-kind:defers-to`, nine `crit:*` |
+| `validate` errors / warnings / unverified | 0 / 0 / 45 | 0 / 0 / 45 | unchanged |
+| `evidence-audit` errors / warnings | 0 / 11 | 0 / 11 | unchanged; new REGISTER section: backlog `scope-decision-missing` 11, `status-basis-missing` 24 |
+| `freshness` defects / prompts | 0 / 2 | 0 / 2 | unchanged |
+| `i18n-audit`, `design-qa`, `seo-audit` | 0/0 | 0/0 | unchanged; no locale key was touched |
+| `tools/selftest.mjs` | 90 | 100 | W1–W10 |
+| all 25 suites | 1292 | 1302 | the ten above; `agent/detector` 67 unchanged (the field register now classifies `scope_decision.*`, `status_basis.locator`, `relationships[].sources.locator`) |
+| browser suite | 339 pass · 1 undecidable | 343 pass · 1 undecidable | `not-covered:excluded`, `:watched`, `:calendar`, `:search` |
+| adversarial gate | 65 · 0 · 3 · 1 | 65 · 0 · 3 · 1 | unchanged |
+| instruments.html "thinner records" | 9 | 8 | the DGA is watched, so it left that list |
+
+`BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome` for the browser suite.
+`agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` exit 0.
+
+### What changes on screen
+
+- `instrument.html?id=<excluded or watched>` shows the approved notice (name, register or watchlist,
+  the reopening event, "Why.", "Read it at the source:", the two dates), noindex, not the full view.
+- The static list on `instruments.html`, search and the calendar leave those records out.
+- The interaction views gain the nine relationships, and every v2 reference shows its locator
+  (`js/interactions.js` used to drop an object reference silently).
+- Bibliography and Datasets count the new records; they are views of the data as such.
+
+### Found, for the author — not changed
+
+1. **R-01 cannot fire for P2B as designed.** It looks for the trigger among the watched record's own
+   milestones; P2B's trigger, adoption of COM(2025) 837, would be a milestone of `data-omnibus`.
+2. **Two notices show internal references** to a reader: MiCA's `watch_for.description` cites
+   "docs/ROADMAP-v2.md §4", and the P2B and DGA reasons cite "(Q-1)" and "(Q-6)". All are approved text,
+   shown verbatim.
+3. **Political Advertising Regulation Art. 2(3)(f) and (h)** also name the AVMSD and P2B: two
+   `defers-to` edges nobody proposed, not added.
+
+### How to check it by hand
+
+1. `node tools/evidence-audit.mjs --as-of 2026-10-27`: the REGISTER section lists 6 and 5 records and
+   the two backlogs.
+2. `python3 -m http.server 8000`, then open `/instrument.html?id=vida` and `/instrument.html?id=mica`:
+   the notice. `/instruments.html`: the thinner-records list names eight instruments and none of the
+   eleven. Search "ViDA" or "MiCA": no instrument result. Annex A's Instrument filter: none of them.
+3. `/instruments/dsa/`: "DSA defers to AVMSD", with "Art. 2(4)(a)" beside the source.
+
+## Branch register — 27 October 2026 (v2 Session 3)
+
+- `git branch -r --no-merged origin/main` lists two branches:
+  - this session's `claude/eloquent-hamilton-7p6t2u`. Disposition: pull request to `main`, opened
+    on the author's instruction of 27 Oct 2026 ("approvo e apri pull request"); not merged.
+  - `origin/scout/digest-digest-2026-10-26T13-10-32Z`, already in the 27 Oct register entry below
+    and untouched.
+- **The author approved the Phase 1 checkpoint** on 27 Oct 2026 (`docs/ROADMAP-v2.md` §8). Items
+  2–4 of "Still open" below remain open, except the pull request.
+- **Rewritten once, before review.** The pull request's QA run failed `tools/commit-evidence.mjs`.
+  The F1.5 commit `2967f06` changed two published files (`applies.html`, `i18n/locales.json`)
+  without the `Evidence:` trailer the rule requires. It was re-made as `d12b6ce` with the trailer,
+  and the two commits after it were replayed: `6919acf` became `e6eb186`, and `7d6ca3b` became
+  `2650cf4`. The tree is unchanged except for the hashes cited in `docs/`. This is a branch this
+  session created; `main` was not touched.
+- **Phase 2 has not started.**
+
+## Next — v2 Session 4 (decided 27 Oct 2026, `docs/ROADMAP-v2.md` §8)
+
+Pull request #19 was merged as `0456808`, and Phases 0 and 1 are on `main`. The author has set
+Session 4 to do the following, in this order:
+1. **The entry-by-entry review, then item 2.1.**
+   - The author reviews the 10 records of `docs/v2-design/register-watchlist.proposed.json`.
+   - `data/` receives only what the author approves, each fact re-read from a retrieved primary
+     source.
+   - Then a checkpoint. Item 2.2 is not in Session 4.
+2. **The ninth README limitation**, verbatim from `docs/AUDIT-2026-10-24.md` §5 (accepted as
+   written).
+3. **The publication model, corrected as a check** against `tools/pages-artifact.mjs`.
+   - It covers `publicSurface()`, PP-08, `agent/health/security.mjs` and the hazards in `AGENTS.md`.
+   - Every verdict that moves is reported before and after.
+   - The session stops and asks before a verdict changes.
+4. **The port-0 Origin defect**, fixed without loosening the Origin or CSRF check.
+
+## v2 Session 3 — Phase 1 checkpoint report, and the verification checklist
+
+**The author approved:**
+- the Phase 0 checkpoint (`docs/ROADMAP-v2.md` §8, `9d51dc8`);
+- the wording of the `applies.html` notice: Draft A (§8, item 1.5).
+
+**The Phase 1 checkpoint itself** is recorded in `docs/AUDIT-2026-10-24.md` §1.5, one row per
+P0/P1 item with its commit. Its row in roadmap §8 waits for the author's words, because §8 is
+"filled in only with the author's words".
+
+**Phase 2 does not start.** Item 2.1 waits for the author's approval of the Phase 1 checkpoint and
+of the reasons in `docs/v2-design/register-watchlist.proposed.json`.
+
+### Re-run on the final tree
+
+**Validators — identical to the session's baseline:**
+- `validate` 0/0, 45 unverified;
+- `i18n-audit` 0/0;
+- `design-qa` 0/0;
+- `freshness --as-of 2026-10-27`: 0 defects, 2 prompts;
+- `evidence-audit --as-of 2026-10-27`: 0 errors, 11 warnings;
+- `seo-audit` 0/0.
+
+**Suites:**
+- All 25 suites pass: 1292 tests, 0 failures, 0 skipped, with
+  `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`. The baseline had 82 in
+  `tools/` and 57 in `.control-room/`; they are now 90 and 72.
+- Browser suite: 339 pass · 0 fail · 1 undecidable (`a11y:bound`, deliberate).
+- Adversarial gate: 65 failed safely · 0 succeeded · 3 partial · 1 undecidable, unchanged.
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` all exit 0.
+
+### How to start a Control Room for the manual checks below
+
+```
+export CONTROL_ROOM_STATE_DIR=$(mktemp -d)        # keep the trial out of .control-room/state/
+node .control-room/cli.mjs provision --subject you@example.org --role administrator --by "you"   # asks a password on stdin
+node .control-room/cli.mjs serve                   # http://127.0.0.1:7802
+```
+
+Use a fixed port, not `CONTROL_ROOM_PORT=0`. *(Fixed in v2 Session 4, B.3: the Origin check now reads the listening port.)* That was a pre-existing defect: with port 0
+the server expects the Origin `http://127.0.0.1:0` and refuses a real browser's POSTs.
+
+The review queue is empty on a fresh clone. To see one proposal, the suite's fixture can be written
+to a temporary `CONTROL_ROOM_RECORDS_DIR`, as `.control-room/selftest.mjs` `world()` does.
+
+### The checklist — one entry per item
+
+**F0.1 · Snapshot time and state** — commit `7a2346e`, `docs/` in `31db1a4`.
+- *Changed:*
+  - `.control-room/server.mjs`: `assembled_at` on every view payload and on `/api/proposal`;
+  - `.control-room/views.mjs`: `HEALTH_RUN_FIELDS`, and `websiteHealth()` takes `historyDir`;
+  - `ui/app.html`: the tab "Live system" became "Agent activity";
+  - `ui/app.js`: `snapshotBar()`, `show()`, `load(view, {refresh})` and the health run fields;
+  - `ui/app.css`.
+- *Verify by hand:*
+  1. Open any tab: it shows "Snapshot taken at … (server time, UTC)" and "Refresh this view".
+  2. Leave the tab and come back: the time does not change. Press Refresh: it does.
+  3. Stop the server and press Refresh: the old snapshot stays, with "The last refresh failed: …".
+     Checked so in Chromium during this session.
+  4. On Website health with a recorded run (`node agent/health/cli.mjs --as-of D`): Reference date,
+     Run recorded at and Commit analysed are three separate rows.
+- *Automatic:* `.control-room/selftest.mjs`:
+  - "SNAPSHOT · 0.1 · every view payload carries the ISO time the server assembled it";
+  - "… Website health shows reference date, run recorded at and commit analysed as three fields";
+  - "… "Live system" is no label, and the one refresh is manual — no timer anywhere in ui/".
+  - The failed-refresh behaviour is asserted in the source, not in a browser.
+- *Satisfies:* roadmap 0.1, all three exit criteria.
+
+**F0.2 · Attestation** — commit `cd3cd22`.
+- *Changed:*
+  - `.control-room/decide.mjs`: `ATTESTATION_SECTIONS`, `ATTESTATION_STATEMENT`,
+    `attestationProblem()`, gate 7 in `decide()`, and the Sources panel data in `reviewQueue()`;
+  - `.control-room/audit.mjs`: the `attestation` field, `REQUIRED_FIELDS`, and the write-time
+    refusal;
+  - `.control-room/server.mjs`: the accepted fields of the review body;
+  - `.control-room/views.mjs`: `reviewQueueView()`;
+  - `ui/app.js`: the fieldset and the Sources panel;
+  - `agent/policy/verify/attacks.mjs` (AZ-01, AZ-03, AZ-07) and `agent/simulation/run.mjs`.
+- *Verify by hand:*
+  1. In the Review queue, press Approve with no box ticked: refused, and the refusal names
+     `attestation`.
+  2. Tick two boxes and approve: granted.
+  3. In the Audit trail tab (or `node .control-room/cli.mjs audit --verify`) the
+     `proposal.approved` entry carries `attestation.examined`, and the chain verifies.
+- *Automatic:* `.control-room/selftest.mjs`, the four "ATTEST · 0.2" tests and test 10 (the
+  byte-identical tree).
+- *Satisfies:* roadmap 0.2, all four exit criteria.
+
+**F0.3 · Dates the tools cannot read** — commit `2606f3e`.
+- *Changed:* `tools/as-of.mjs` (new: `readArgs`, `dateProblem`, `refusalText`), and the argument
+  parsing in `tools/freshness.mjs` and `tools/evidence-audit.mjs`.
+- *Verify by hand:*
+  - `node tools/freshness.mjs --as-of 2026-10-24` and `node tools/freshness.mjs 2026-10-24` print
+    the same report;
+  - `node tools/freshness.mjs --as-of banana; echo $?` gives 2;
+  - so do `node tools/evidence-audit.mjs --as-of banana` and
+    `node tools/evidence-audit.mjs 2026-10-24`.
+- *Automatic:* `tools/selftest.mjs` D1–D4; F1–F9 unchanged.
+- *Satisfies:* roadmap 0.3.
+
+**F0.4 · `docs/CONTROL-ROOM.md` §5–§6** — commit `31db1a4`.
+- *Verify by hand:* read §5 and §6 against the interface.
+- *Automatic:* none for the text of §6. Item 1.3's inventory assertion now covers §5's views and
+  routes.
+- *Satisfies:* roadmap 0.4.
+
+**F1.1 · Editorial-audit path** — commit `76e24f8`.
+- *Changed:*
+  - `tools/evidence-audit-record.mjs` (new; reads only);
+  - `tools/evidence-audit.mjs`: `--record`, `recordEntry()`, `commitOf()`;
+  - `tools/evidence-audit-runs/README.md` and `.gitignore`;
+  - `.control-room/config.mjs`: `editorial_audit_dir`;
+  - `.control-room/authz.mjs`: `editorial:read`;
+  - `.control-room/views.mjs`: `editorialAuditView()`;
+  - `.control-room/server.mjs`: `GET /api/editorial-audit`;
+  - `ui/`: the "Editorial audit" tab and `renderEditorial()`;
+  - `docs/EDITORIAL-AUDIT-PATH.md` (new), and a row in `AGENTS.md`.
+- *Verify by hand:*
+  1. On a fresh clone the Editorial audit tab says "no editorial audit has been recorded" and gives
+     the command.
+  2. Run `node tools/evidence-audit.mjs --as-of 2026-10-27 --record`, then Refresh: the latest run
+     answers the five questions in order. With uncommitted changes, the commit row lists them.
+  3. `git status` does not show the store.
+- *Automatic:*
+  - `tools/selftest.mjs` R1–R3;
+  - `.control-room/selftest.mjs`, the three "EDITORIAL · 1.1" tests (no recorded run; a recorded
+    run with every answer; no route that runs anything).
+- *Satisfies:* roadmap 1.1, all three exit criteria.
+
+**F1.2 · Readable metrics** — commit `8962210`.
+- *Changed:*
+  - `.control-room/views.mjs`: `VISIBILITY_LABEL`, `METRIC_DETAIL_FIELDS`, and the enriched
+    readings;
+  - `ui/app.js`: `metricCell()` and `visibilityPill()`, plus the register shown when no run is
+    recorded.
+- *Verify by hand:*
+  - on Website health each metric shows its name, ID and definition, and "Source, calculation,
+    frequency, interpretation, limitations" opens;
+  - the visibility pill reads "public-safe" or "private", never "public".
+- *Automatic:* `.control-room/selftest.mjs`, the two "METRICS · 1.2" tests.
+- *Satisfies:* roadmap 1.2.
+
+**F1.3 · Document matches interface** — commit `f9d9f26`.
+- *Changed:*
+  - `docs/CONTROL-ROOM.md`: the status line, the roles table in §4, the §5 inventory, §7, §10, and
+    two named additions to §12;
+  - `.control-room/README.md`, `AGENTS.md`:34, the `authz.mjs` comment, and
+    `config.example.env`.
+- *Verify by hand:* add `<button data-view="x" class="tab">X</button>` to `ui/app.html` and run the
+  suite. "INVENTORY · 1.3 · docs/CONTROL-ROOM.md names every view…" fails, naming the tab.
+- *Automatic:* `.control-room/selftest.mjs`, the three "INVENTORY · 1.3" tests: alignment; failure
+  on a planted tab, a renamed tab, a dropped row and a wrong permission; §4 against
+  `ROLE_PERMISSIONS`.
+- *Satisfies:* roadmap 1.3.
+
+**F1.4 · Security wording** — commit `721a26b`.
+- *Changed:* `README.md` (outside the limitations), `docs/CONTROL-ROOM.md` §0, §1, §3, §10, §11.3
+  and §12, `docs/DEPLOYMENT.md` §5, `AGENTS.md`, and `.control-room/README.md`.
+- *Verify by hand:* read `docs/AUDIT-2026-10-24.md` §5, which lists all 26 occurrences examined
+  and what was done with each.
+- *Automatic:* none. The sweep is a reading; no check holds wording.
+- **Not complete, by design:**
+  - the proposed ninth README limitation is the author's to accept;
+  - two findings were left for the author: the stale "whole tree is published" model in
+    `AGENTS.md`, and the same model in the checks — `publicSurface()`, PP-08,
+    `agent/health/security.mjs`.
+- *Satisfies:* roadmap 1.4.
+
+**F1.5 · `applies.html` notice** — commit `d12b6ce`; its test is in the checkpoint commit.
+- *Changed:* `applies.html`, the first paragraph of the caveat box, `data-i18n="applies.notice"`;
+  `i18n/locales.json`, where the key is `pending_translation` in it, fr and es, `it` is no longer
+  complete, and the notes say why.
+- *Verify by hand:* open `/applies.html`: the notice is the first thing under "Read this before you
+  read a result".
+- *Automatic:* `tools/selftest.mjs` N1 pins the approved text and its declarations; `i18n-audit`
+  fails if the key is undeclared.
+- *Satisfies:* roadmap 1.5 and D-2.
+
+### Still open, for the author
+
+1. ~~Approve the Phase 1 checkpoint.~~ Approved 27 Oct 2026 (roadmap §8).
+2. The proposed ninth README limitation (`docs/AUDIT-2026-10-24.md` §5).
+3. The two §5 findings: the stale publication model in `AGENTS.md` and in the checks.
+4. ~~Whether to open a pull request for this branch.~~ Opened on the author's instruction.
+
+## (previous header) v2 Session 3 — Phase 0, stopped at its checkpoint
+
+**Branch:** `claude/eloquent-hamilton-7p6t2u`. **Stopped at the Phase 0 checkpoint**, which the
+author approved on 27 Oct 2026 (above).
+
+## v2 Session 3 — Phase 0 checkpoint report
+
+**Asked** (in Italian): implement Phase 0 (audit P0: 0.1–0.4), stop at the checkpoint with a report
+of every exit criterion, wait for the author's explicit approval, then Phase 1 (1.1–1.5).
+Pre-condition checked: #18 is on `main` and `docs/BRIEF-v2.md` exists.
+
+**Commits** (on `claude/eloquent-hamilton-7p6t2u`):
+- `2606f3e` — 0.3, the date argument;
+- `7a2346e` — 0.1, snapshot time and the three health dates;
+- `cd3cd22` — 0.2, the attestation;
+- the commit carrying this entry — 0.4, `docs/CONTROL-ROOM.md` §5 and §6.
+
+### Exit criteria, one by one (`docs/ROADMAP-v2.md` §4)
+
+**0.1 · Snapshot time and state — all three pass.**
+- *Every view payload carries an ISO assembly time* — **pass**. `server.mjs` stamps `assembled_at`
+  on all seven views and on `/api/proposal`. `.control-room/selftest.mjs` "SNAPSHOT · 0.1 · every
+  view payload…" walks every `GET /api/*` route except `/api/session`, so a route added later is
+  covered by default.
+- *The health payload's three fields are distinct, and no label in `ui/` presents `as_of` as a run
+  date* — **pass**. Labels come from `views.mjs HEALTH_RUN_FIELDS`: Reference date, Run recorded at,
+  Commit analysed. The client never names `as_of`. Test "SNAPSHOT · 0.1 · Website health shows…".
+- *"Live system" no longer appears as a label* — **pass**. The tab is now **Agent activity**; the
+  route `/api/live`, the permission `live:read` and the view id are unchanged. Test "SNAPSHOT · 0.1 ·
+  "Live system" is no label…" also asserts no timer anywhere in `ui/`.
+- **Also delivered:**
+  - "Snapshot taken at …" above every view;
+  - one manual refresh per view, a `GET` of the same route; a visited tab keeps its snapshot;
+  - a failed refresh keeps the earlier snapshot, with its own time and the error.
+- **How the last point was checked:** the suite checks it in the source only. It was also checked
+  in a real browser (Chromium, Playwright, scratch script, not committed): the server was stopped
+  and Refresh pressed, and the queue stayed on screen with its time and "The last refresh failed:
+  Failed to fetch".
+
+**0.2 · Attestation of evidence review — all four pass.**
+- *A decision without an attestation is refused, naming the field* — **pass**. 400 `no_attestation`
+  / `bad_attestation`, `detail.field: "attestation"`, nothing written to the ledger, every refusal
+  audited. Test "ATTEST · 0.2 · approving or rejecting without an attestation…".
+- *An unknown field is still refused* — **pass**. `parseStrictJson` is unchanged; `attestation` was
+  added to the accepted list (`server.mjs`). Test "ATTEST · 0.2 · an unknown field is still refused…".
+- *The attestation appears in the trail entry and the chain verifies* — **pass**. It sits in the
+  decision's own entry (D-9), under the same hash as `actor_id`, `ts` and `proposal_sha256`, and it is
+  not in the ledger. Editing it on disk breaks `verifyChain()`, and the trail refuses an
+  approved/rejected entry without one. Test "ATTEST · 0.2 · the attestation is in the decision's own
+  trail entry…".
+- *After a decision, the tree is byte-identical except the ledger* — **pass**. Existing test 10,
+  unchanged except that its approval now carries an attestation.
+- **The wording:** "a declaration, not proof of reading", on screen and in the recorded statement.
+  Nothing records which panels were opened (asserted).
+
+**0.3 · A date the tools cannot read — both pass.**
+- *New self-tests plant an invalid date in each tool and assert exit 2* — **pass**:
+  - `tools/selftest.mjs` D3 (freshness: `--as-of banana`, `banana`, `2026-02-30`, a bare `--as-of`,
+    two dates, an unknown flag);
+  - D4 (evidence-audit: `--as-of banana`, `2026-02-30`, a bare `--as-of`, `--as-of --json`, a
+    positional date);
+  - D1 (the parser itself).
+- *The audit's own command produces the same report as the positional form* — **pass**. D2:
+  `freshness.mjs --as-of 2026-10-24` is byte-identical to `freshness.mjs 2026-10-24`, with 2 prompts.
+  Before this session it reported 0 prompts.
+- *F1–F6 not broken* — **pass**. F1–F9 unchanged and passing.
+
+**0.4 · `docs/CONTROL-ROOM.md` true about 0.1–0.2 — done; no automatic check (by design: that check
+is item 1.3).**
+- §5: snapshot, Agent activity, the three health dates, the Sources panel.
+- §6: eight gates, gate 7 the attestation.
+- **Deliberately not touched, for 1.3:**
+  - the "SESSION 21" status line;
+  - §7's list of entry fields, which does not yet name `attestation`;
+  - §10's "55 tests" (it is 64);
+  - `AGENTS.md:34`, which still says "the seven approval gates".
+
+### Validators and suites, re-run on the final Phase 0 tree
+
+**Validators — identical to this session's baseline:**
+- `validate` 0 errors · 0 warnings · 45 unverified;
+- `i18n-audit` 0/0;
+- `design-qa` 0/0;
+- `freshness --as-of 2026-10-27`: 0 defects, 2 staleness prompts, exit 0;
+- `evidence-audit --as-of 2026-10-27`: 0 errors, 11 warnings;
+- `seo-audit` 0/0.
+
+**Suites:**
+- All 25 suites: 1280 tests, 0 failures. The baseline had 82 in `tools/` and 57 in `.control-room/`;
+  they are now 86 and 64.
+- One test was skipped in the default run: `agent/browser` "the deployed-path check…", because no
+  Chromium was on `PATH`. With `BROWSER_QA_CHROME=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`
+  that suite is 21/21. `node agent/browser/cli.mjs` is 339 pass · 0 fail · 1 undecidable (the
+  deliberate `a11y:bound`).
+- `agent/schemas/cli.mjs check`, `.control-room/cli.mjs boundary` and `routes` all exit 0.
+
+**The adversarial gate** (`node agent/policy/verify/cli.mjs`): 65 failed safely · 0 succeeded ·
+3 partial · 1 undecidable. Its report is identical to the one on the tree before 0.2.
+
+### What the author should know first
+
+1. **A finding about the adversarial gate. Without a fix, three attacks would have passed for the
+   wrong reason, and its summary would not have shown it.**
+   - Once 0.2 landed, AZ-01's paired positive, AZ-03 (approve over a denial) and AZ-07 (replay) were
+     refused for *lacking an attestation*, not by the defence each names.
+   - The summary line was unchanged even so. I compared it against the pre-change tree with
+     `git stash`.
+   - **Fixed:** the setup decisions that must succeed now carry an attestation, in
+     `agent/policy/verify/attacks.mjs` and in `agent/simulation/run.mjs`. Each attack again reaches
+     its defence: 200; then `state_denied`; then a 409 replay with 1 grant.
+   - `agent/policy/` is on the never-automatic path list, so this edit is named here for your review.
+2. **My interpretations, each yours to overrule:**
+   - (a) an attestation must name **at least one** section, not all five;
+   - (b) an attestation sent with *request changes* is refused (400 `attestation_not_applicable`),
+     not ignored;
+   - (c) a visited tab shows its held snapshot, and only Refresh fetches again;
+   - (d) `evidence-audit.mjs` now refuses **every** unrecognised argument with exit 2, not only a bad
+     date. A positional date used to be silently ignored, the mirror of the freshness bug;
+   - (e) the tab label **"Agent activity"** is my wording.
+3. **Not fixed, pre-existing:** a Control Room configured with `port: 0` expects the Origin
+   `http://127.0.0.1:0`, so a real browser's POSTs are refused as cross-origin.
+   - The suite never sees it, because Node's `fetch` sends no Origin header.
+   - Found while checking the UI in a browser. Not in Phase 0's scope.
+4. **Branch register:**
+   - `git branch -r --no-merged origin/main` lists only `origin/scout/digest-digest-2026-10-26T13-10-32Z`,
+     already reported in the 27 Oct register entry and untouched;
+   - this branch is pushed, with no pull request (none was asked for).
+
+**Next:** the author approves (or corrects) this checkpoint. The approval is recorded in
+`docs/ROADMAP-v2.md` §8, and only then does Phase 1 (1.1–1.5) start in this session.
+
+## (previous header) v2 Session 2 — 25–27 October 2026
+
+**Branch:** `claude/v2-session-2-schemas`, cut from `main` at `933515a` (the merge of #17),
+documentation only. Merged as #18 (`51efe8e`).
+
+## v2 Session 2 — the data design for v2.0 (item 2.0, brought forward)
+
+**Asked** (in Italian): produce D1–D6 — the dependency-map schema, the applicability-trigger schema,
+the status labels, the `evidence-audit.mjs` extension plan, the methodological note, the exclusion
+register and watchlist — and a coherence matrix. No production code, no UI, no
+`docs/CONTROL-ROOM.md`.
+
+**What the author decided first** (four questions at the start, recorded in `docs/ROADMAP-v2.md` §8):
+- The roadmap is approved. Item 2.0 is brought forward to this session; Phase 0 moves to Session 3 and
+  Phase 1 to Session 4. Items 2.1–2.6, which write data, still wait for the Phase 1 checkpoint (read
+  conservatively).
+- D-3, D-6, and the trigger as the existing applicability rule: all as recommended.
+- `stratum`: dropped, derived instead (option (c)).
+- The brief: not available when the design was drafted, so every brief-dependent point was an
+  assumption. **The author pasted it on 27 Oct 2026**, and the design was then checked against it
+  (`docs/V2-DATA-DESIGN.md` §0.1):
+  - A-1, A-3 and A-5 confirmed, with two corrections the brief required: the seven regimes go in the
+    register *or* the watchlist; and PSD3/PSR reopen only if the finance chapter is opened, not on
+    adoption;
+  - node verification added: the brief says an unverifiable node is removed or downgraded;
+  - the map is not published while any edge lacks locators ("an unverified map is worse than no map").
+  The audit PDF attached with it is word for word `docs/AUDIT-2026-10-24.md` §1.
+
+**What exists now** — design only; `data/`, `js/`, `tools/`, pages and locales are untouched:
+- `docs/V2-DATA-DESIGN.md`: the reasons, every validation rule (M-, T-, S-, R-), the D4 plan, the
+  proposed inclusion criterion (D-7), the coherence matrix and eight findings.
+- `docs/v2-design/`: three schemas (map, applicability rule, status labels) and three record files
+  (map examples; applicability examples; the register and watchlist as proposed records).
+- `docs/METHODOLOGY-NOTE-v2.md`: D5, final text, to ship in the same commit as the map.
+- `docs/ROADMAP-v2.md`: §8 approval row, the decided rows of §3, the session numbering of §4 and §6.
+
+**What the author should know first:**
+- **Every legal fact in the new files was read on 25 Oct 2026**, from Cellar (Official Journal texts and
+  proposals, by CELEX), the Publications Office's SPARQL metadata and the Legislative Observatory.
+  EUR-Lex returns empty pages to this environment; Cellar and OEIL do not. That is worth knowing for
+  every later evidence session.
+- **All 17 existing relationships derive as `unverified`** under the v2 rule (bare source IDs, no
+  locator). That is the data's state made visible, not a regression.
+- **None of the 33 applicability rules is publishable at the v2 standard** (v1 sources). What
+  applies.html does about it: D-2, decided 27 Oct 2026 — kept, with a notice in Phase 1.
+- **Eight findings in existing data, none fixed** (`docs/V2-DATA-DESIGN.md` §7). Most consequential:
+  - F-2: `data-omnibus.proposes_to_amend` lists the DGA, which COM(2025) 837 Art. 10(3)(a) would
+    *repeal*;
+  - F-3: it omits the CER Directive, which Art. 9 amends;
+  - F-4: `ap-ai-act-03`'s `_gte` key against AI Act Art. 51(2)'s "greater than";
+  - F-8: 11 rules' dates omit application events of their own obligations.
+- **Decided by the author on 27 Oct 2026** (ROADMAP-v2 §8):
+  - D-1: the brief is committed as `docs/BRIEF-v2.md`, pointed to from `AGENTS.md`;
+  - D-7: the inclusion criterion is approved;
+  - D-2: `applies.html` stays, with a notice added in Phase 1 (item 1.5);
+  - P2B: watchlist, watching COM(2025) 837;
+  - the six states outside the brief's labels: no label;
+  - the DGA: the finance-chapter condition applies to it too;
+  - the eight findings: corrected in Phase 3;
+  - the D6 reasons: drafts, which the author reviews entry by entry before item 2.1.
+- **Still open:** D-4 (the tier names) and D-5 (the CMS login); A-2 and A-4 (which acts "copyright" and
+  "AVMSD" mean), which the brief does not settle.
+
+**Validators** before and after: unchanged — `validate` 0/0, `i18n-audit` 0/0, `design-qa` 0/0,
+`evidence-audit` 0 errors / 11 warnings, `freshness` (positional date) 0 defects, `seo-audit` 0/0.
+None of them reads `docs/`.
+
+**Next:** v2 Session 3 = Phase 0 (0.1–0.4), then a checkpoint **inside** the session (report,
+validators and suites re-run, the author's explicit approval), then Phase 1 (1.1–1.5) — decided on
+27 Oct 2026 (ROADMAP-v2 §8). Before it starts, pull request #18 must be merged, or the brief and the
+Session 2 schemas are not on `main`. What the author settled for it:
+- 0.1: `as_of`, `recorded_at` and the commit analysed, shown apart; no `auto_checked_at`; no
+  `verified_at` beside `last_verified`.
+- 0.2: the attestation is required to approve **and** to deny; it uses a fixed list of sections and
+  goes in the decision's trail entry (D-9).
+- 0.3 (D-10): `--as-of YYYY-MM-DD` in both tools, exit 2 on a date that does not parse. It is also the
+  prerequisite of every date check in `docs/V2-DATA-DESIGN.md` §4.
+- 1.1: as planned — `--record` and a read-only Editorial audit view; nothing executes from the UI.
+- 1.3: with the assertion that fails on a view the inventory does not name.
+- 1.4: the security-wording sweep, listing every occurrence.
+- 1.5 (D-2): the session drafts the notice for `applies.html` and waits for the author's wording.
+
+Nothing from the Session 2 design (D1–D6) is implemented in Session 3. Item 2.1 (the register and
+watchlist into `data/`) waits for the Phase 1 checkpoint and the author's approval of the D6 reasons.
+
+## Branch register — 27 October 2026 (v2 Session 2)
+
+`git branch -r --no-merged origin/main` lists one branch: `origin/scout/digest-digest-2026-10-26T13-10-32Z`,
+the weekly Source Scout digest of 26 Oct 2026 (two files under `agent/scout/digests/`; candidates
+about the DMA, GDPR enforcement and ENISA, none touching this session's records). It is in no register
+entry, is reported to the author, and was not touched. `claude/v2-session-2-schemas` is this session's;
+its disposition: pushed and opened as pull request #18 on the author's instruction of 27 Oct 2026; not merged.
+
+## (previous header) v2 Session 1 — 25 October 2026
+
+**Branch:** `claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e` (the merge of #16),
+documentation only. Merged as #17 (`933515a`).
+
+## v2 Session 1 — ROADMAP v2.0 and the audit of 24 October 2026
+
+**Asked** (in Italian): the author supplied the BRIEF v2.0 ("Contratto tra sessioni", binding on every
+v2 session), then the Control Room content audit of 24 Oct 2026 as a PDF, then approved producing the
+roadmap and recording the audit.
+
+**What exists now.**
+- `docs/AUDIT-2026-10-24.md`: the audit verbatim (Italian) and its six findings checked against the
+  code at `5f3859e`. All six are confirmed.
+- `docs/ROADMAP-v2.md`: Phases 0–5, ten decisions D-1…D-10 for the author, exit criteria. **Proposed,
+  not approved**; its §8 approval record is empty.
+- Two rows in `AGENTS.md`'s reading table.
+- No code, data, page or locale was touched.
+
+**What the author should know first.**
+- **The audit's own freshness command gives a false all-clear.**
+  - `node tools/freshness.mjs --as-of 2026-10-24` takes `--as-of` as the date and reports 0 prompts,
+    exit 0.
+  - `node tools/freshness.mjs 2026-10-24` reports 2.
+  - `evidence-audit.mjs` fails the other way on a bad date (all stale, exit 1).
+  - Not fixed: it is roadmap item 0.3 (D-10).
+- **Finding A's remedy, as worded, would breach `docs/CONTROL-ROOM.md` §12** (no route that executes;
+  `PROHIBITED_ROUTE_WORDS`). Roadmap 1.1 reaches the audit's goal by recording the run from the machine
+  and having the Control Room read it.
+- **The brief collides with the repository in four places**, each a decision, none taken:
+  - D-2: `applies.html` is already published, with 33 rules whose source references carry no
+    `supports` qualifier or locator, and which `evidence-audit.mjs` does not read.
+  - D-3: six status labels over sixteen taxonomy states; the draft mapping is in §5.
+  - D-4: "Tier A/B/C" vs the autonomy classes A/B/C/D.
+  - D-5: a git-based CMS with OAuth vs "no serverless" and the empty runtime-origin allowlist.
+- **The brief itself is not in the repository** (D-1).
+
+**Decided by the author on 25 Oct 2026, recorded in `docs/ROADMAP-v2.md` §8:**
+- **D-9:** the attestation goes in the Control Room trail.
+- **D-10:** item 0.3 is in Phase 0.
+
+The roadmap as a whole is **not yet approved**. D-1…D-8 are open.
+
+**Pull request #17** was opened on the author's say-so. It is not merged.
+
+**Next:** v2 Session 2 = Phase 0, only after the author approves the roadmap and that approval is
+recorded in its §8.
+
+## Branch register — 25 October 2026 (v2 Session 1)
+
+At the start `git branch -r --no-merged origin/main` listed nothing. Thirteen remote branches besides
+`main` are all already merged and not deleted. `claude/roadmap-v2-2026-10-25` is this session's; its
+disposition: pushed and opened as pull request #17 on the author's instruction of 25 Oct 2026; not merged.
+
+## (previous header) Annex B — the author's updated text, 24 October 2026
+
+**Last updated:** Annex B replaced with the author's text · 24 October 2026
+**Branch:** `claude/annex-b-2026-10-24`, cut from `main` at `74d2341` (the merge of #15). Not pushed
+until the author says so.
+
+**Asked** (in Italian): "modifica annex B con questo aggiornato", with the full Italian text pasted.
+
+**What changed.** `annex-b.p2` to `p9` were replaced and a tenth paragraph added: the supplied
+research-tooling note is two paragraphs, so its second half is the new key `annex-b.p10`, placed after
+`p7` in `index.html` (as `part-1.p10` and `p11` precedent). `p1` is unchanged (its glossary link on
+"sportello unico" is kept). What the new text says that the old did not:
+- the date on a record is a date *associated with* the record, not proof of a fresh check; the
+  freshness system flags priorities and certifies nothing; individual verification is incomplete;
+- Claude Opus 5 **and 5.5**; ChatGPT (GPT-5.6 Luna), Mistral Large 4 and DeepSeek-V4.1-Flash-1017 as
+  critical reviewers, "not final authorities on the correctness of the results";
+- the Source Scout is "the documented operational component", and the wider design is **not** a fully
+  operational end-to-end multi-agent system; the September runs fetched real pages, 21 September gave
+  six candidates and none was promoted;
+- the closing checks "do not equal a guarantee of absolute correctness".
+
+**Which text is whose.** The Italian is the author's, verbatim (apart from the markup the page needs:
+the bold lead-ins, the methodology link). **The English was written from it by the assistant**, so it is
+a translation going the other way, and the author should read it: `index.html`, `annex-b.p2` to `p10`.
+`annex-b.p5` renders "ChatGPT, con GPT-5.6 Luna" as "ChatGPT (GPT-5.6 Luna)".
+
+**Checked against the repository, not assumed:** the Scout runs weekly (`source-scout.yml`, cron
+Monday 06:17); on 21 Sep 2026 it made 17 retrieval attempts and produced 6 candidates (`digest-2026-09-21`,
+`docs/SOURCE-SCOUT.md`); no candidate was promoted into `data/sources.json`; it never opens `data/*.json`
+for writing. **Not checkable here:** the model names and versions, which are the author's own account of
+the tools used. **One date to consider:** "As of 26 September 2026" is now a month old. Two Scout digests
+since (12 and 19 Oct) were merged as candidates only; nothing found contradicts the sentence.
+
+**French and Spanish.** Their eight Annex B paragraphs (`p2` to `p9`) described the old text, so they
+are withdrawn as `superseded` and `p10` is `pending_translation` (`i18n/locales.json`, which says
+so in each locale's note): those paragraphs show in English with the EN marker until someone
+retranslates them. I did not translate the author's disclosure into two more languages unasked.
+`it/` carries the author's Italian; **no review was recorded** (`record` is a person's), and all three
+editions remain `noindex`. The three review sheets were regenerated (431 strings each).
+
+**Checks:** validate, i18n-audit, design-qa, seo-audit, evidence-audit 0 errors (prose: 0 unclassified);
+freshness 0 defects; `tools/selftest.mjs` 82/82; 25 suites 1269 pass 0 fail; browser suite 339/0/1;
+gate 0 succeeded / 3 partial / 1 undecidable. Rendered in Chromium: English and Italian show ten
+paragraphs in order with their links; French shows the English fallback, marked.
+
+**Also settled today:** the Pages switch holds (`docs/DEPLOYMENT.md` §1b): the merge of #15 started no
+"pages build and deployment" run.
+
+## (previous header) The deployment settings — 24 October 2026
+
+**Last updated:** the deployment settings, as the author reported them · 24 October 2026
+**Branch:** `claude/deploy-settings-2026-10-24`, cut from `main` at `9891958` (the merge of #14),
+documentation and workflow comments only. Not pushed until the author says so.
+
+- **Pull request #14 was merged** by the author (`9891958`, 09:02:56 UTC). The branch build published
+  it first, at 09:03:57, and `docs/HANDOVER.md` and `AGENTS.md` answered **200** on the live site;
+  `pages.yml` run 22 replaced it at 09:07:16 and every private path is 404 again (measured).
+- **Pages source:** the author switched it to "GitHub Actions" on 24 Oct. Unconfirmed: the merge
+  above went through the branch build. **On the next push to `main`, check that no "pages build and
+  deployment" run appears** and that `/docs/` never answers 200.
+- **Rulesets:** none (the author's screenshot). Nothing requires QA before a merge.
+- **HSTS: not sent** — hstspreload.org's check, with github.com as the control. Remedy is a hosting
+  decision for the author (`docs/DEPLOYMENT.md` §4).
+- Recorded in `docs/DEPLOYMENT.md` §1a, §1b, §3, §4; pointers in `AGENTS.md`,
+  `docs/AI-SAFE-BOUNDARIES.md`, both skills, and the comments of `pages.yml` and `qa.yml`.
+
+## (previous header) The audit snapshot of 23 October 2026 — rechecked and worked
+
+**Last updated:** the audit snapshot of 23 October 2026, rechecked · 23 October 2026
+**Branch:** `claude/audit-2026-10-23`, cut from `main` at `c5b2ad7`; pushed on the author's say-so
+(QA run 246 green, the browser job on the image's own Chromium) and opened as a pull request on the
+author's decision of 24 Oct 2026. Not merged; no setting changed.
+
+The register is `docs/AUDIT-2026-10-23.md`. In one paragraph each:
+
+- **QA's red browser job had a root cause, not a flake.** The log was readable: `apt-get install
+  chromium-browser` replaced the runner image's own Chromium with a snap wrapper, the snap store
+  answered 408, an `||` fallback hid it, `--version` exited 3. Both workflows now use the image's
+  browser, chosen only if it runs. Not yet seen on a real runner: that needs a push.
+- **Eight enforcement records rechecked.** Four re-read in full and re-dated (`enf-uber-ap-2026`,
+  `enf-uber-ap-2024`, `enf-apple-ec-2025`, `enf-meta-ec-2025`). Four left unchanged with the reason:
+  **two proposals the author decided on 24 Oct 2026 and that are now recorded** (the adtech appeal,
+  T-794/25, with the case-number conflict AT.40670 / AT.40760 stated and unresolved; the
+  supervisory-fee outcome now carries "from the date the judgments become final") **and two gaps** ([2026] IEHC 323 unidentified; courts.ie judgments offline since 21 Oct). Two candidates are
+  not added: T-638/26 and T-639/26 (Google, 28 Sep 2026) and the Booking.com DSA opening.
+- **Two publishers deploy every push to `main`**, the ungated branch build first; the skills that said
+  "no CI, no deploy gate" now point to `docs/DEPLOYMENT.md` §1a.
+- **The observability viewer binds loopback only, enforced**, and refuses a non-loopback `Host`.
+- **Dialogs:** `app.js` and `js/threshold.js` now inert the whole background and the passage traps Tab;
+  `js/dialog.js` lifts inert for a dialog opened over another. **Language note** keeps "· UI EN" on
+  phones. **`brief_part`** absent and `null` read differently. **No colour-only state was confirmed.**
+- **HSTS could not be measured from here** (the proxy hides it on hosts that send it).
+- **Asked of the author on 24 Oct, not remembered:** whether the Pages source is "GitHub Actions",
+  whether a ruleset requires QA on `main`, and an HSTS reading from an ordinary network. All three
+  stay open; `docs/DEPLOYMENT.md` §1a and §3 say how to check each.
+
+**Local state:** `agent/records/` and `agent/observability/runs/`, which this session's `agent/ux/` and
+health-monitor runs created, were moved to the session scratchpad rather than deleted; with them in
+the tree the governance suite fails three tests by design.
+
+## (previous header) Dataset explorer: full screen and layout direction — 22 October 2026
+
+**Last updated:** dataset explorer — full screen and layout direction · 22 October 2026
+**Branch:** `claude/datasets-explorer`, restarted from `origin/main` at `cfe3607` after pull request
+#13 merged (the procedure for a merged branch). Merged into `main` with `--no-ff` (`8f03a13`) on
+the author's instruction of 22 Oct 2026 ("Ok, merge"), no pull request; not deleted.
+
+**Asked** (in Italian): the graphs viewable full screen and "rotatable — moving between vertical
+and horizontal is enough, not necessarily a full rotation". Read as a layout-direction switch, the
+way JSON Crack offers one; dragging to pan already existed.
+
+**What changed.** Both graphs (Structure, References) gain `↔ Horizontal` / `↕ Vertical` and
+`Full screen` beside the zoom controls; `F` on the canvas toggles full screen. Vertical is the same
+layout with the axes swapped (`js/json-graph.js` `layout(graph, m, orientation)`, `edgePath()`); the
+References view puts the records naming this one above and the ones it names below, as a grid of
+four. The direction is in the address (`o=vertical`) and travels with every reference followed.
+Switching it redraws in place, so it does not leave full screen. What goes full screen is `<main>`,
+not the viewer: `<main>` survives a render, so following a reference stays full screen, and only the
+record heading and the graph are shown. Without the Fullscreen API (Safari on iPhone) `<main>` is
+fixed over the window, page scroll locked, Escape or the button closes it.
+
+**Found on the way, fixed before commit:** in full screen the canvas first stayed at its 200px
+minimum — `.dx-layout` aligns its columns to the top, so the graph's column never stretched.
+
+**Files:** `js/json-graph.js`, `js/datasets-page.js`, `css/tools.css` (tokens only),
+`tools/selftest.mjs` (J6 now both directions over every record; J7 the reference graph in both;
+J8 new), `agent/browser/checks.mjs` (`datasets:direction`, `datasets:fullscreen` with a real CDP
+click, `datasets:fullscreen-fallback` with the API removed), `docs/CURRENT-ARCHITECTURE.md` §3.
+
+**Tests — run, not asserted (22 Oct 2026, on `cfe3607` + this change):** validate, i18n-audit,
+design-qa, seo-audit, evidence-audit 0 errors; freshness 0 defects; `_footer.mjs --check` current;
+`tools/selftest.mjs` 82/82; every agent suite passing; baseline check `pass_with_findings`; boundary
+clean; browser suite 331 pass, 0 fail, 1 undecidable (the screen-reader bound, as before).
+
+**Not established:** Escape leaving the browser's own full screen is browser behaviour and cannot be
+driven in headless Chromium (the button and `F` were tested); no real iPhone or trackpad was used —
+the fallback was tested by removing the API in Chromium.
+
+*(previous header)* **Last updated:** audit of 21 October 2026 and the dataset explorer, merged · 22 October 2026
+**Branches:** both merged to `main` on 22 Oct 2026: `claude/audit-2026-10-21` (pull request #12,
+`29f92c9`) and `claude/datasets-explorer` (another session; its own section below; pull request #13,
+`1d973d8`). See the branch register below.
+
+## Audit of 21 October 2026 — implemented on `claude/audit-2026-10-21`
+
+**Asked:** the author's external audit "eudigitalpolicy.eu audit fixes" — 26 items in three phases and
+an evidence-audit list. **The full register of what was checked, what changed and what was not done is
+`docs/AUDIT-2026-10-21.md`.** One commit (or two) per item, each naming the item and its evidence.
+
+**What the author should know first:**
+- **Part VIII does not report the Coreper of 21 October.** No outcome had been published when it was
+  checked; the brief says so, dated. Replace `clm-data-omnibus-coreper-21-october` the moment one is.
+- **ST 13886/26 is a LIMITE Council document read in Agence Europe's copy**, recorded tier:2 with that
+  provenance in its note; only its cover facts are used. Confirm or downgrade the tier.
+- **Items 20 and 22 are built; the review itself is yours.** `it/`, `fr/`, `es/` exist as
+  generated pages and the language menu goes there, but each stays `noindex` with no `hreflang`
+  until every one of its 430 strings is recorded as reviewed by a person. To review Italian:
+  `node tools/i18n-review.mjs sheet it`, tick `docs/i18n-review/it.md`, then
+  `node tools/i18n-review.mjs record it --by "Your Name"` and `node tools/_footer.mjs`, and commit
+  (`docs/SEO-OPERATIONS.md` §6). An agent never runs `record` (`docs/AI-SAFE-BOUNDARIES.md` §3).
+- **Item 26 was not done**: versioned filenames need a build step, and GitHub Pages fixes
+  `max-age=600`, so the gain is small.
+- **Item 24 kept the three robots.txt lines**, documented: they stop being superfluous only when
+  Settings → Pages → Source is "GitHub Actions".
+- Annexes B and C are **one annex now**: 13 parts, `data/brief.json` and both trees changed.
+- New checks: `last_verified ≥ status_as_of` and recorded inaction in `validate.mjs`; rankings of
+  "largest to date" claims in `evidence-audit.mjs`; self-test A1–A6.
+- Five things the suites pinned moved with the change, each with its reason: R6's unverified baseline
+  (47 → 46 → 45, §12), the detector's field register (`ranking.*`), the editorial agent's box labels
+  (SYNTHESIS) and root-page count (10), the health suite's Annex C assertions, and the detector's
+  `NOT_ANALYTICAL` (404.html).
+- Seen in passing, not acted on: the Commission opened DSA proceedings against Booking.com on
+  21 Oct 2026 (IP/26/2223); the language menu is not reachable at 390px (pre-existing).
+
+**Measured at the end** (22 Oct 2026, UTC): validators 0 errors (evidence-audit 11 warnings, as
+before); 1255 tests passing; contracts 18/18; commit-evidence exit 0; browser suite 291 · 0 · 1
+undecidable (`a11y:bound`), as before.
+
+## Dataset explorer — 22 October 2026
+
+**Asked:** evaluate JSON Crack and build an interactive JSON explorer for the site's data —
+audit and proposal first, then implementation once approved. **Decided with the author before
+any edit:** no JSON Crack, but a custom explorer "provided that it can visualize json content as
+json crack or even more graphical"; a JSON Crack-style canvas with a tree as the accessible
+fallback; the page a child of Evidence; indexed.
+
+**Why not JSON Crack** (Apache-2.0, so not a licence question): the hosted widget is a
+third-party iframe the CSP refuses (`frame-src 'none'`) and `tools/thirdparty.mjs` forbids
+(`ALLOWED_RUNTIME_ORIGINS` empty, Class D); `jsoncrack-react` 1.0.3 needs React ≥ 18, four
+further packages and a bundler (red under AI-SAFE-BOUNDARIES §3). And a generic viewer draws
+nesting only: here a claim does not contain its source, it holds the source's id as a string, so
+the edges that matter would have been invisible — and a raw claim shows no grade, because the
+grade is never stored. `docs/CURRENT-ARCHITECTURE.md` §3 records the design.
+
+**What it does:** `datasets.html` — one file, then one record. Four views: Structure (cards and
+nesting lines, pan, ctrl/⌘-wheel or pinch zoom, keyboard pan and zoom, fit, find-in-record),
+References (the records this one names on the right, those naming it on the left, edges labelled
+by field), Tree, Raw JSON. A searchable record list; the file's own `$description`/`$note`; links
+to the raw file and, where a page gives the record an anchor, to that page. Addresses are
+`?d=&c=&r=&v=`, so Back works and a record can be linked.
+
+**What it refuses to say:** a string is a reference only when it is EXACTLY an id in a loaded
+file (960 today, none ambiguous); an id held twice resolves to nothing; the field is named and
+the meaning of the link is not stated. `null` reads as the word, a string in quotes; a field a
+record lacks is not drawn. The only derived fact is a claim's grade, from `gradeChip()`,
+labelled as computed. The file header's `$last_verified` is shown beside the newest per-record
+`last_verified`, named, because the header is one stamp for the file (AUDIT-2026-09-01 F-13).
+No jurisdictions view: there is no jurisdictions dataset, and none was implied.
+
+**Files.** New: `datasets.html`, `js/json-graph.js` (pure model and layout),
+`js/datasets-page.js`. Changed: `js/shell.js` (`CHILD_OF`), `css/tools.css` (tokens only),
+`bibliography.html` (one link), `tools/_footer.mjs` (page list, generated no-JS file index,
+`childOfFromShell()`), `tools/seo.mjs` (route, `datasetsIndex()`, the structured-data breadcrumb
+now carries the parent the page draws), `tools/seo-audit.mjs` (compares against the shell's
+crumb, not a two-level assumption), `tools/pages-artifact.mjs` (allowlist), `tools/design-qa.mjs`
+(DATASETS = `data/*.json`), `tools/selftest.mjs` (J1–J7), `agent/browser/checks.mjs` + `runner.mjs`
+(the page in PAGES and SEO_PAGES; `checkDatasets`, 12 checks), `agent/detector/impact.mjs` (the two
+modules classified), `agent/detector/detector.mjs` (below),
+`agent/proposals/editorial/selftest.mjs` (ten pages), every generated page (site-index link),
+`sitemap.xml`, `docs/CURRENT-ARCHITECTURE.md`, `docs/AI-SAFE-BOUNDARIES.md`. No `data/` file.
+
+**Two things the change exposed, fixed:** (1) the detector's analytical-page note joined one
+identical explanation per page, and a tenth page pushed it past the contract's 4,000 characters,
+so five of six fixture changes lost their ImpactAssessment; it now keeps each distinct
+explanation once (the pages stay listed in `pages`). Any new page would have tripped it. (2) the
+structured-data breadcrumb assumed every top page sits directly under home; a page with a
+`CHILD_OF` parent now gets the parent, read from `js/shell.js`.
+
+**A documented fact changed:** "`brief.json` is loaded by nothing" is no longer true — the
+explorer loads it and shows it raw. No view renders it, and it holds no copy of the brief's text,
+but Annex C's dek, shown nowhere in the brief, is now visible in the explorer's view of that file.
+CURRENT-ARCHITECTURE §5/§7/§8/§9 and AI-SAFE-BOUNDARIES §4 now say so.
+
+**Tests — run, not asserted (22 Oct 2026):** `validate` 0 errors · `i18n-audit` 0/0 · `design-qa`
+0/0 · `freshness` 0 defects, 3 staleness prompts (as at baseline) · `seo-audit` 0 · `evidence-audit`
+0 · `_footer.mjs --check` current · `tools/selftest.mjs` 73/73 (J1–J7 new) · all 22 agent suites +
+schemas + browser selftest pass · `agent/implement/cli.mjs check` pass_with_findings (baseline) ·
+both boundary scans and `pages-artifact.mjs build` clean · every other CI command exits as on
+`main` · browser suite 328 pass, 0 fail, 1 undecidable (baseline 291/0/1; the undecidable is the same). Browser `checkDatasets` covers render, the derived grade
+against `format.js`, following a reference and Back, a reference clicked in the SVG, list and
+in-record search, every view, an unknown record, the anchors the "shown on the site" links target,
+390px, and — via CDP Fetch interception — `glossary.json` served malformed and `brief.json` as a
+404, with the other eight files still usable.
+
+**Limitations, stated:** the canvas is a mouse/touch surface; keyboard users get pan and zoom
+keys, focusable reference links in the SVG, and the Tree view and reference lists as the full
+alternative — no screen reader was run. Large records open at reading size on the first card
+rather than fitted (GDPR is 80 cards). The Structure graph stops at 240 cards and says where; no
+record is near it today. The References view draws 24 per side and lists the rest. Taxonomy terms
+are labelled, not drawn. The deployed site was not loaded in this session; everything above ran
+against a local server.
+
+**For the author:** merge `claude/datasets-explorer` if you want it live; nothing else is needed.
+
+## P1 — licence, methodology, structured data, custom domain — 21 October 2026
+
+*(previous header)* **Branches:** `claude/p1-licence-geo` (cut from `origin/main` at `05707f5`) and
+`claude/p1-custom-domain` (stacked on it). The first merged into `main` with `--no-ff` on the
+author's instruction of 21 Oct 2026 ("Fai merge solo di claude p1-licence"), no pull request; the
+second merged into `main` with `--no-ff` the same day, once `eudigitalpolicy.eu` resolved (A,
+AAAA, `www` CNAME and the GitHub challenge TXT read back through dns.google on 21 Oct 2026).
+
+**Asked** (in Italian): a `CNAME` for a placeholder domain `eu-digital-policy.eu` and the Jekyll
+`url`/`baseurl`; a CC BY 4.0 `LICENSE`, a licence page and a methodology page; a licence line in
+every footer; `Article` (author Andrea Tosti, dates, title) and `FAQPage` JSON-LD on the DMA pages,
+from the "In short" box or "3–4 invented questions if there are none".
+
+**Decided with the author before any edit:** the new pages and the footer line in English (the site
+is `lang="en"`); the licence over **everything** original, code included (the EU texts and the
+typefaces excluded); Article + FAQPage on **all twelve** instrument pages, from one code path.
+**The licence is the author's decision of 21 Oct 2026**, which is what AGENTS.md rule 8 reserved to
+them; rule 8 now forbids changing it.
+
+**Not done, and why:**
+- **No Jekyll config.** There is no `_config.yml`; the site is static HTML generated by
+  `tools/_footer.mjs`, and the origin is one constant, `BASE`.
+- **No invented FAQ.** Questions are the page's own H2s; answers are the "In short" box's text,
+  derived from `data/`. A row the record does not establish ("not established") is left out of the
+  FAQ rather than offered as an answer. The prompt's sample answers were not used (not from `data/`).
+  Note: Google shows FAQ rich results only for authoritative government and health sites since
+  2023, so the value here is to parsers and answer engines, not a rich result.
+- **The domain, later the same day:** the author registered `eudigitalpolicy.eu` (Porkbun), and
+  `CNAME`, `BASE` and the live-site links on `claude/p1-custom-domain` now name it instead of the
+  placeholder. It resolved the same evening and the branch was merged. **Still the author's:**
+  Settings → Pages → Custom domain shows `eudigitalpolicy.eu` and **Enforce HTTPS** once the
+  certificate is issued; verify the domain at github.com/settings/pages; Search Console.
+- **The CNAME is not on the mergeable branch.** `eu-digital-policy.eu` did not resolve on 21 Oct
+  2026 (DNS answered for github.com from the same container). Pages serves `main` from the branch,
+  so a `CNAME` reaching `main` would redirect the live site to a host that does not answer. The
+  switch is on `claude/p1-custom-domain`, to merge only after the domain is registered and its DNS
+  points at GitHub Pages.
+
+**What changed (`claude/p1-licence-geo`):** `LICENSE` — the CC BY 4.0 legal code, verbatim from
+creativecommons.org (sha256 `9ba9550a…`), no preamble so GitHub detects it; scope in README and
+`licence.html`. `tools/_footer.mjs` — `AUTHOR`, `LICENCE`; the footer's reuse paragraph and ©
+line (the non-affiliation and advice paragraphs byte-identical). `tools/seo.mjs` — `SITE.author`,
+`SITE.licence`, `PAGE_PUBLISHED` (all twelve pages first written by `176e4b4`, 27 Sep 2026), two
+new top pages, an "About this site" index column, and JSON-LD: `license`/`author` on WebSite;
+Article (headline = `<h1>`, `dateModified` = the sitemap's `lastmod`, never before publication)
+and the page node as `FAQPage` on instrument pages. `js/instrument-view.js` — `shortRows()` is the
+one derivation behind the box and `instrumentFaq()`; the box's bytes did not change.
+`tools/seo-audit.mjs` — author, licence and dates left `LD_FORBIDDEN` and are held to the page:
+licence = the declared one and linked `rel="license"`, author named in the page, dates ISO, the
+Article's headline the `<h1>`, the FAQ exactly the route model's and every question and answer
+sentence in the crawlable text (selftest S4b plants each). `methodology.html`, `licence.html` —
+new, generated regions by the generator, prose checked against README and `data/taxonomy.json`
+(limitations quoted, not softened). `css/tools.css` — `.doc-body`, `.cc-badge` (text, not CC's
+button image, which would be a third-party request), link style in the footer. Docs that stated
+"no licence" as current fact: README, AGENTS rule 8, AI-SAFE-BOUNDARIES, PROJECT-CONTEXT §7,
+SOURCE-POLICY, DISCOVERABILITY §9, CURRENT-ARCHITECTURE, VERIFICATION-POLICY.
+
+**Three things the change exposed, fixed:** (1) `agent/ux/proposals.mjs` chose `review_required`
+without consulting `RED_TARGETS`, so the first finding citing `licence.html` made the contract
+throw; it now reads the same list. (2) The browser suite found the footer's new link in the
+browser's default blue — 1.98:1 in the dark theme, on every page; the footer had never held a link.
+(3) `licence.html` scrolled at 320px on the legal-code URL. The two pages are now in the browser
+suite's `PAGES` and `SEO_PAGES`. `agent/proposals/editorial/selftest.mjs` asserts nine root pages.
+
+**For the author:** (a) register the domain and set DNS (below), then merge
+`claude/p1-custom-domain` and set the custom domain in Settings → Pages; (b) add the new property in
+Search Console and resubmit the sitemap; (c) the citable data snapshot (DISCOVERABILITY §9) is no
+longer blocked; (d) `fonts/` carries no licence files for the three typefaces — not changed here.
+
+**`robots.txt`, later the same evening** (author: "Sisi"), on `claude/robots-txt`: generated by
+`tools/_footer.mjs` from `tools/seo.mjs robotsTxt()` — all crawlers allowed, `/agent/`, `/docs/`,
+`/tools/` disallowed, `Sitemap: https://eudigitalpolicy.eu/sitemap.xml`; in the deploy allowlist;
+`seo-audit.mjs` fails a wrong sitemap or a rule over an indexable route (selftest S4c). Merged into
+`main` with `--no-ff` on the author's instruction ("Fai merge"), not deleted.
+
+## Branch register — 22 October 2026 (audit)
+
+At the start `git branch -r --no-merged origin/main` listed nothing. During the session one branch
+appeared, `claude/datasets-explorer` (another session, 22 Oct, a dataset explorer), which also added a
+root page. Dispositions, all 22 Oct 2026, all on the author's instruction:
+
+- **`claude/audit-2026-10-21`** → pull request **#12**, merged by the author (`29f92c9`).
+- **`claude/datasets-explorer`** → `main` merged into it first (`89fccef`), seven conflicts resolved:
+  both branches had added one root page each (`404.html`, `datasets.html`) to `tools/seo.mjs`,
+  `tools/_footer.mjs`, `tools/pages-artifact.mjs` and the editorial suite's page count (now 11), both
+  appended tests to `tools/selftest.mjs`, and both rewrote `brief.json`'s row in CURRENT-ARCHITECTURE
+  §7 (13 parts) and the top of this file. Measured on the merged tree: validators 0 errors, 1262
+  tests, browser suite 328 · 0 · 1 undecidable. Then pull request **#13**, merged (`1d973d8`) on the
+  author's instruction, on the push run's full green for that commit; the pull-request run's browser
+  tests had passed and only its upload step was still running. No review of #13 beyond its CI.
+
+Afterwards `git branch -r --no-merged origin/main` lists nothing.
+
+## Branch register — 21 October 2026 (P1)
+
+At the start `git branch -r --no-merged origin/main` listed nothing besides `main`'s own history.
+Both are in `main` (merged `--no-ff`, not deleted). `claude/p1-custom-domain` waited until DNS
+answered, because merging it before would have taken the site offline.
+
+## DMA click-through pass — 21 October 2026
+
+*(previous header)* **Branch:** `claude/seo-dma-ctr`, cut from `origin/main` at `6a2357f` (PR #11's merge). Pushed
+to `main` by fast-forward on the author's explicit instruction ("Push to main"), with no pull
+request; `main` had not moved since the branch was cut. Then, on the author's decisions of the
+same day, directly on `main`: `claude/amazing-einstein-yrsu79` (the Apple appeal recheck, below)
+and the two October Scout digests merged with `--no-ff`, and the `<h1>` changed (below).
+
+**Asked:** Search Console showed 830 impressions and 6 clicks (CTR 0.7%) over three months, on
+"digital markets act", "dma third-party obligations", "compliance", "summary"; rename cryptic URLs
+(`…/Eu-Digital-Policy//instrumlsa/` was cited), rewrite DMA titles and descriptions (supplied in
+Italian), add a TL;DR box under the H1, turn H2s into questions, add contextual links.
+
+**Decided with the author before any edit:** English metadata, because the page is `lang="en"`,
+the queries are English and no locale is indexed (`docs/SEO-OPERATIONS.md` §6); one strengthened
+DMA page rather than three new ones, because the strategy forbids a page written for a query.
+
+**Not done, and why:** no URL was renamed. `instrumlsa` exists nowhere in the tree or in any
+branch's history, `instruments/dma/` already earns the impressions and Pages cannot send a 301,
+and instrument IDs are never renamed. The supplied TL;DR snippet's inline `style` would be blocked
+by every page's CSP (`style-src 'self'`); the box uses a class instead.
+
+**What changed:** `tools/seo.mjs` — the DMA title ("gatekeeper obligations, compliance deadlines
+and fines") and the description template for all twelve instrument pages (§7 of
+`docs/SEO-OPERATIONS.md`); `js/instrument-view.js` — question headings and the derived "In short"
+box on every instrument page; `css/tools.css` — its style, tokens only; `index.html` Part IV and
+the three overlays — two links to `instruments/dma/#sec-provisions` and `#sec-enforcement`, the
+same words wrapped in all four languages, no text changed (the overlays replace `innerHTML`, so a
+link in the English alone would vanish in it/fr/es); `instruments/*/index.html` regenerated.
+No fact was authored: every value the box and the descriptions show is read from `data/`.
+
+**Measured at the end** (21 Oct 2026, UTC): validate, i18n-audit, design-qa, seo-audit 0 errors /
+0 warnings (the first draft of the template produced three over-length warnings, closed by
+capping the actor list and the objective, not by raising `MAX_DESC`); evidence-audit 0 errors;
+freshness 0 defects, 3 staleness prompts (as before); 25 suites, **1245 tests, all passing**;
+contract check 18/18; browser suite **241 pass · 0 fail · 1 undecidable** (`a11y:bound`). The DMA
+page was captured at 1280px in both themes and at 390px: no console error.
+
+**The `<h1>`, decided by the author afterwards:** each instrument page is headed by
+`displayName()` — "Digital Markets Act (DMA)" — wherever the record's aliases back a common name
+(eight pages; CER, Data Act, DORA and NIS2 keep the short name). `displayName()` moved to
+`js/routes.js` so the renderer and the route model's expected `h1` read one function; the
+"Known as the …" line is dropped where the heading already carries the name. Re-measured on
+`main` after every merge: validators 0 errors / 0 warnings; 25 suites, 1244 passing and 1
+skipped (`agent/autonomy` test 28, which skips on `main` by design); governance check exit 0;
+browser suite 241 · 0 · 1 undecidable; GDPR's heading checked at 390px, no overflow.
+
+**One commit on `main` breaks the evidence rule, and was left as it is.** `55ac136` (the handover
+commit after the `<h1>` change) also carries `instruments.html`: the generator rewrote its
+JSON-LD instrument names through `displayName()`, and the `<h1>` commit `14a184a` staged
+`instruments/` but not that file. `55ac136` has no `Evidence:` trailer, so
+`tools/commit-evidence.mjs 22a217c 55ac136` exits 1, and the `commit-evidence` step of that push's
+CI run is expected to be red, which in `qa.yml` skips the steps after it in that job. The
+content is right: the file is the generator's output from `data/`, and every validator passes on
+it. The evidence `55ac136` should have named is `14a184a`'s (the author's H1 decision of 21 Oct
+2026; names from `KNOWN_AS` and the records' aliases). The author decided not to rewrite `main`
+to add the trailer. Later pushes are judged on their own range only, so this does not recur. The
+lesson: after `node tools/_footer.mjs`, stage everything it reports writing (`git status`),
+not only `instruments/`.
+
+**For the author:** (a) in Search Console, request indexing for `instruments/dma/` once deployed
+and compare CTR per query after four weeks; (b) send the exact Search Console URL behind
+"instrumlsa" if it is still reported; (c) the Apple appeal record's open question, below.
+
+## Branch register — 21 October 2026
+
+At the start `git branch -r --no-merged origin/main` listed three branches besides this one:
+the Scout digests of 12 and 19 Oct 2026, and `claude/amazing-einstein-yrsu79`, recorded as merged
+on 27 Sep (PR #4) but carrying one later commit (`ad7dd2d`, the Apple appeal recheck). **All three
+were merged into `main` on the author's decision** — the digests as candidates only, unverified,
+as the September digests were (`1c903a7`); the recheck after the author approved its data change,
+with the handover conflict resolved by keeping both entries. `claude/seo-dma-ctr` is in `main`.
+None of the four branches was deleted.
+
+## (previous header) The Apple appeal recheck — 15 October 2026
+
+**Last updated:** the Apple appeal recheck · 15 October 2026
+**Branch:** `claude/amazing-einstein-yrsu79`, restarted from `origin/main` at `6a2357f` (PR #11's
+merge) for this recheck; not opened as a pull request.
+
+**Asked:** the October recheck the author approved on 27 Sep 2026 (a Routine). `main` re-fetched
+before this write: `6a2357f`. Unverified count unchanged at **47**.
+
+- **Register, read 15 Oct 2026** (InfoCuria's search service; index held lodgings to 7 Oct 2026
+  and a closure dated 14 Oct 2026): T-1079/23, T-1080/23 and T-214/24 are closed on 8 July 2026,
+  joined, with **no appeal linked**; no case with Apple as a party was lodged after 8 July 2026.
+- **Recorded:** only the dated observation in `enf-apple-gc-2026-designation` `appeal.note`. It
+  stays `appeal:unknown`. If notified on the day of delivery, the appeal period (Statute Art. 56,
+  two months; Rules of Procedure Art. 51, ten days for distance) ended on 18 September 2026. The
+  register does not show the notification date, so `appeal:not-lodged` is not recorded.
+- **For the author:** to close this record as not appealed, establish the notification date. The
+  Commission or Apple can state it, and a later register read can confirm it. Or decide that the
+  register's silence, three weeks past the earliest possible deadline, is enough.
+
+## (previous header) The October 2026 evidence update — 14 October 2026
+
+**Last updated:** the October 2026 evidence update · 14 October 2026 (reference date)
+**Branch:** `claude/eu-digital-policy-audit-um86no`, cut from `origin/main` at `e37f23b`. Opened
+as pull request #11 on the author's instruction; not yet merged.
+
+**Asked:** an evidence-quality audit and controlled implementation against a research brief
+(Digital Omnibus, AI Act and Regulation (EU) 2026/1744, DSA enforcement, the DMA and Google,
+eIDAS, CRA, NIS2/Italy, Gigabit Infrastructure Act, GDPR fine totals, EU–US transfers, new
+initiatives, other figures), reference date 14 October 2026, with the brief treated as a list of
+things to check rather than a source. **The register of what was checked, corrected, left
+unresolved and found on the way is `docs/AUDIT-2026-10-14.md`.** Read it before this summary.
+
+**The network reached the sources this time.** EUR-Lex (with retries past its HTTP 202
+challenge), the Commission, the press corner's API, Parliament's Legislative Observatory, ACN,
+DLA Piper and Agence Europe all answered; every source added or re-read was fetched and read on
+14 Oct 2026. Not reached: the CMS Enforcement Tracker (403), and no Council record of the
+October Coreper meetings was located.
+
+**What changed, by area** (records and keys are listed in the audit document):
+- Data Omnibus: the Coreper II vote planned for 11 Oct 2026 did not happen (Agence Europe, tier 4,
+  graded secondary and said so in the prose); Parliament's stage from OEIL; status note, chip
+  and Part VIII rewritten; no amendment count published, because none was verified.
+- AI Act: every date re-read against the OJ text of 2026/1744 and found right; the Part V chip now
+  carries Aug 2028 as well as Dec 2027; recital 40 anchors the standards premise of a critique.
+- DSA: X's action plan (16 Jul 2026) recorded without disturbing the decision or the appeals;
+  "first non-compliance decision" now sourced to the Commission; Meta/TikTok opening dates; the
+  TikTok minors and addictive-design findings recorded as one proceeding (the brief said
+  otherwise; IP/26/1679 is explicit).
+- DMA: the 16 July 2026 Google specification decisions (Arts 6(7), 6(11)) as two claims, two
+  month-precision compliance dates, and a sentence in Part IV; the gatekeeper count is now dated.
+- eIDAS: wallet deadline stated as 24 Dec 2026; Art. 5f(2) private acceptance from 24 Dec 2027,
+  with its three qualifications, as a claim, a provision, two calendar events and Part I's box.
+- CRA: Art. 14 vs Art. 24(3) vs general application; "severe", not "serious", incidents.
+- GDPR totals: the headline chip and sentence name DLA Piper, its cut-off and what it counts;
+  Alliance Risk's 40% is no longer read as a share of DLA Piper's total.
+- **Two pre-existing temporal errors the brief did not name, both fixed:** every CRA article was
+  derived as applying from 11 June 2026, and Data Act Art. 8 from 12 September 2027, because a
+  provision-less tranche was being read as the general application date. `statusContradictions()`
+  now refuses that shape, and a proposal carrying a status that counts it as law.
+- The masthead's verification line never rendered (it targeted `.portal-head`, which no page has);
+  it now gives the range of per-record verification dates and says what the range does not mean.
+
+**Translations:** 14 strings and 2 calendar obligations retranslated (it/fr/es), AI-assisted and
+not reviewed by a native speaker; recorded in `i18n/locales.json`. Four new calendar events fall
+back to English, marked EN.
+
+**Measured at the end** (14–15 Oct 2026, UTC): validate, i18n-audit, design-qa, seo-audit
+0 errors / 0 warnings; evidence-audit 0 errors, the same 11 warnings as on `e37f23b`; freshness
+0 defects, 3 staleness prompts (as before); 25 suites, **1245 tests, all passing** (1237 + eight
+new in `tools/selftest.mjs`, O1–O8); schemas and governance checks exit 0; browser suite
+**241 pass · 0 fail · 1 undecidable** (`a11y:bound`, as before). The changed passages were also
+captured at 1280px and 390px: no horizontal overflow, no console error.
+
+**Not done, deliberately:** nothing was added for the Gigabit Infrastructure Act, the DPF,
+the Digital Networks Act, the Digital Fairness Act or the EU KIDS ACT, which the site does not
+cover; their status as read is in the audit document §3 for the author's decision. The DMA's
+"not established" provisions (audit §4) need DMA Art. 54 read before they are tagged.
+`docs/CURRENT-ARCHITECTURE.md` §12's unverified count is unchanged at 47.
+
+**For the author:** (a) review the audit document and the per-area commits; (b) decide whether
+any §3 item belongs on the site; (c) re-check AliExpress's action plan after 20 Oct 2026 and the
+Data Omnibus before any further Council meeting; (d) the scout branch below.
+
+## Branch register — 14 October 2026
+
+`git branch -r --no-merged origin/main` lists
+only `origin/scout/digest-digest-2026-10-12T15-34-12Z`, which is in no register entry and is
+reported to the author: a Source Scout digest, two files under `agent/scout/digests/`, read only
+as far as its summary (among its candidates are the Commission's Google specification page,
+which this update read directly, and ENISA's CRA reporting-platform launch, which it did not).
+This session's branch, `claude/eu-digital-policy-audit-um86no`, is pushed and open as pull request #11. The
+scout branch named on 6 Oct (`…2026-10-05T14-47-50Z`) is no longer listed.
+
+## (previous header) The brief rewritten to the author's editorial standard — 6 October 2026
+
+**Last updated:** the brief rewritten to the author's editorial standard · 6 October 2026
+**Branch:** `claude/editorial-standard`, cut from `origin/main` at `fbd173e` (PR #8's merge).
+**Merged as pull request #9** (`4d9279f`, 6 Oct 2026). This follow-up on the same branch,
+restarted from `4d9279f`, corrects the register below, which was written before the merge.
+
+**Asked:** the author supplied a style guide for the brief's prose (serious European policy
+analysis edited by a human, between Bruegel, the FT and The Economist; precision before style;
+fact, then interpretation, then implication; criticism from evidence rather than adjectives;
+informative titles; a list of constructions that make prose read as generated). Then: rewrite
+the whole brief to it, in order, retranslate, and leave the standard recorded.
+
+**Where the standard lives.** One home: Part A of
+`.agents/skills/legal-editorial/references/house-register.md`. The file's previous content is
+Part B, unchanged except that the em-dash convention now points at Part A's rationing and one
+quoted example follows the rewritten sentence. The hedging table is untouched and still
+outranks style. `legal-editorial/SKILL.md` has a procedure for a **style rewrite on the
+author's instruction** (one section or the whole brief, committed section by section; claim set
+compared; per-key parity of markup, numbers, months and asterisks in every language; every
+changed key retranslated or superseded; titles changed in all six homes). Without that
+instruction the standard governs new prose only; `docs/AI-SAFE-BOUNDARIES.md` §2 is unchanged.
+
+**What changed.** 111 English strings across all fourteen sections, one commit per section,
+then one commit for titles. Every element, `data-claim`, `data-record`, `data-prose` and
+`data-i18n` attribute is where it was; no element was added, removed or split, so no claim
+record, prose registration or locale key moved. Before writing, a script refused any key whose
+inline markup, digits, English month names or asterisks differed from the previous version in
+any of the four languages. What the edits did: em dashes 202 → 38 (most of the rest are list
+bullets), sentences with two or more 42 → 3, "not … but" 7 → 3; "not a technicality", "the
+mechanism working as designed", "the real output", "That proviso is doing real work" and
+similar replaced by direct statements; the second-person instruction in Part IX and the word
+"simply" in Part XI (both barred by Part B) removed. Titles: Part II "its enforcement gap"
+(was "the cracks in it") and its dek and subheading drop "pathology"; Part VI "reallocating
+control over machine data" (was "prising open the machine economy"); the em dashes leave the
+titles of Parts VII and XI, whose portal copies already had the comma form. `data/brief.json`
+changed only in those titles and that dek.
+
+**A translation error fixed in passing.** The it/fr/es translations of `part-1.p10` said the
+GPAI Code was finalised after "four drafts"; the English and `clm-gpai-code-four-drafts` say
+"three drafts and a final text". The retranslation follows the English.
+
+**Translations.** 110 strings changed in each of it, fr and es (one translation already
+matched). Recorded in each locale's note in `i18n/locales.json`; nothing superseded or
+pending. Like the 27 Sep 2026 translations they are AI-assisted and **not reviewed by a native
+speaker**. README limitation 5 describes the 27 Sep batch only; extending it is the author's
+call, because that section is reserved to the author.
+
+**Measured at the end:** validate, i18n-audit, design-qa, seo-audit 0 errors / 0 warnings;
+evidence-audit 0 errors, 11 warnings (the same 11 as on `fbd173e`); 25 suites, **1237 tests,
+all passing**; schemas check exit 0; browser suite **241 pass · 0 fail · 1 undecidable**
+(`a11y:bound`, as before).
+
+**Not done, deliberately:** README limitation 5 (above). Part X's portal label reads "build at
+once?" where its heading reads "at the same time?"; that drift predates this session and was
+left alone. Title deks other than Part II's were not changed. No claim statement in
+`data/claims.json` was edited: the prose was rewritten to keep asserting what each statement
+says, and statements are data, outside a style pass.
+
+**For the author:** (a) read the per-section commits (`git log fbd173e..45324ae`) and revert
+any section whose voice is no longer yours; (b) decide on README limitation 5; (c) the scout
+branch below.
+
+## Branch register — 6 October 2026
+
+`git branch -r --no-merged origin/main` lists only
+`origin/scout/digest-digest-2026-10-05T14-47-50Z`, which is in no register entry and was
+reported to the author rather than inspected further. This session's branch,
+`claude/editorial-standard`, was merged as PR #9 and restarted from `4d9279f` for this
+correction.
+
+## The brief's text, single-sourced — 30 September 2026 (previous header)
+
+**Branch:** `claude/brief-single-source`, cut from `origin/main` at `cc1f7d0` (PR #5's merge).
+**Merged as pull request #6** (`d4065c6`, 1 Oct 2026). A follow-up on the same branch, restarted
+from `d4065c6`, records the evidence the main commit omitted (below).
+
+**Asked:** remove the duplication between `index.html`'s markup and `window.__CONTENT__` /
+the structured layer by establishing one canonical source — not by synchronising copies — and
+add a structural regression check. This lifts the standing "do not fix the `__CONTENT__` drift
+on your own initiative": it was done on the author's instruction.
+
+**Diagnosis, measured before any change.** `app.js` was the only reader of the blob and read
+only `nav` (pagers, resume bar) and `search` (prose search). `meta` and `nodes` were read by
+nothing. `search[].text` was **stale**: no Annex C, ~9 KB of current prose missing; in a
+browser, three Parts' own last paragraphs could not be found by searching for them.
+`data/brief.json` `meta` was read by nothing, lay outside the file's own `$description`, and
+kept the "six regulations" miscount. The visible standfirst (`portal.p1`) differed from both.
+The markup is where every edit had actually landed. Full table: `docs/CURRENT-ARCHITECTURE.md` §8.
+
+**What changed:**
+- `index.html` — the blob is deleted; the page has no inline script and its CSP is
+  `script-src 'self'` (regenerated by `tools/_footer.mjs`).
+- `app.js` — builds `BRIEF` (id, numeral, title, dek, prose) from the `section.part` markup at
+  load; the search provider, pagers, resume bar and the portal's "Read the brief" crossing
+  (which hardcoded Part I's title) read it. Annex C is now listed and searchable.
+- `data/brief.json` — `meta` removed (title, subtitle, standfirst, dateline, note, howto; none
+  rendered). **The dateline T-33 set ("State of play as of 26 September 2026") is therefore
+  held nowhere; it was already shown nowhere** — see "For the author".
+- Regression protection: `tools/prose-homes.mjs` + `design-qa.mjs` (no script, inline or
+  module, holds a page's own text — detected by content, not by name); `validate.mjs` §4(g)
+  (`brief.json` holds only `parts` and `reading_graph`); `tools/selftest.mjs` C1–C4 plant each
+  shape; browser `checkBriefIndex` (4 checks; against the old tree three fail).
+- Agent layer, so nothing misreports the new state: `health` `knowledge.duplicate_facts` now
+  counts `brief.json` titles/deks against the markup headings (and script copies); `editorial`
+  no longer reports the blob's absence as a divergence and its review guidance no longer says to
+  sweep a blob; `detector` caveats; tests in `architect`, `health`, `editorial`, `detector`, and
+  `tools` I1 updated to the new state, with planted cases where an assertion would otherwise go
+  vacuous.
+- Docs: `CURRENT-ARCHITECTURE` §4/§8/§9/§12, `AGENTS.md`, `AI-SAFE-BOUNDARIES`,
+  `DATA-GOVERNANCE` §4–5, `VERIFICATION-POLICY`, `AGENT-ROLES`, `BROWSER-QA`, `CHANGE-DETECTOR`,
+  `REGULATORY-IMPACT-MAPPING`, `EDITORIAL-AGENT`, a status line on AUDIT F-04, five skills.
+
+**Measured at the end:** validate, i18n-audit, design-qa, evidence-audit, seo-audit 0 errors /
+0 warnings; freshness 0 defects (1 staleness prompt, calendar-only, as before); 25 suites pass,
+**1237 tests** (1233 + C1–C4); schemas and governance checks exit 0; browser suite **241 pass ·
+0 fail · 1 undecidable** (`a11y:bound`, as before; 237 + 4). No legal fact in `data/` changed:
+the only data edit removes unrendered text.
+
+**Not done, deliberately (remaining debt):**
+1. **Part titles and deks still have two homes** — `brief.json` `parts[]` and the markup
+   (heading, tree list and SVG, spine `title`). Annex C's dek exists only in `brief.json`.
+   Smallest fix: generate those markup regions from `brief.json` in `tools/_footer.mjs`. A
+   change to how the brief is authored — the author's call.
+2. `EditorialProposal.content_blob_checked` / `content_blob_divergence` and `PROSE_HOMES`'
+   `content_blob` (`agent/schemas/`) are now vacuous. Retiring them is a contract change.
+3. Rationale strings in `agent/policy/categories.mjs`, `governance.mjs` and
+   `agent/orchestrator/policy.mjs` still say `index.html` carries "the inlined `__CONTENT__`
+   copy". `agent/policy/` is reserved to a person; no rule changes with the wording.
+4. The markup's system map still uses `aiact`/`dataact` (DATA-GOVERNANCE §4).
+5. `agent/proposals/governance/patterns.mjs` P-11 states the duplication in the present tense;
+   its anchors still resolve.
+
+**The missing `Evidence:` trailer — recorded here, because `main` is not rewritten.**
+`081ca54`, the commit of this change that touches `app.js`, `data/brief.json` and `index.html`,
+was merged without the trailer `tools/commit-evidence.mjs` requires (the session did not run that
+check before pushing). On the push of `d4065c6` the check failed in QA and in the Pages gate, and
+every later step of the validators job was skipped; the site was still published, because the
+Pages source is still the branch (`docs/DEPLOYMENT.md` §3). The evidence that commit rests on:
+measured on `cc1f7d0` before any change — in Chromium, `window.__CONTENT__.search` against the
+rendered `.part-body` text (Annex C absent, ~9 KB of current prose missing, the closing paragraphs
+of three Parts unfindable by search); `tools/prose-homes.mjs` finds 112 copied blocks on that tree
+and 0 after; `docs/CURRENT-ARCHITECTURE.md` §8 holds the table. No legal fact changed:
+`data/brief.json` lost only its unrendered `meta` block. The check judges each push's own range,
+so the next push to `main` is judged on its own commits; no check was changed to get past it.
+
+**For the author:** (a) the brief shows no dateline anywhere; if it should, it belongs in the
+markup under an i18n key. (b) Decide on item 1 above. (c) Merge the follow-up — it changes
+only `docs/`, and its push re-runs the validator steps the failure skipped on `main`.
+
+## Branch register — 30 September 2026
+
+`git branch -r --no-merged origin/main` lists nothing. This session's branch,
+`claude/brief-single-source`, was merged as PR #6 and restarted from `d4065c6` for the
+evidence follow-up.
+
+## SEO, indexing and discoverability — 27 September 2026 (night)
+
+**Asked:** a production-grade SEO, indexing and discoverability audit and implementation that
+sits on top of the evidence architecture without weakening it. Audit first
+(`docs/SEO-AUDIT-2026-09-27.md`, committed before any change, measured raw vs rendered in
+Chromium), then the change, then the tests.
+
+**The defect that mattered:** 21 instrument URLs were one HTML file whose canonical, title, `<h1>`
+and structured data were right only after JavaScript, and whose raw HTML was a loading stub linked
+from nowhere.
+
+**What changed:**
+- `js/instrument-view.js` — the instrument renderer, split out of `instrument-page.js`, pure.
+  `tools/_footer.mjs` calls it in Node (no clock) to write `instruments/<id>/index.html` for the
+  12 instruments that pass the gate in `js/routes.js` (seven criteria, all derived from the
+  record). The browser re-renders the same view with today's date.
+- `instrument.html?id=…` forwards to the page (fragment kept); thin records render with
+  `noindex`; no id forwards to the list now generated into `instruments.html`.
+- `tools/seo.mjs` — the route model: titles, descriptions (derived; one curated facet phrase per
+  instrument, checked against the page text), canonical, OG/Twitter, JSON-LD (WebSite, WebPage /
+  CollectionPage, BreadcrumbList, `Legislation` from the record — no author, date, licence or
+  legal force), sitemap with `lastmod` = newest verification date rendered. Site name "EU Digital
+  Policy", editorial title as alternate.
+- A static site index before every footer; `js/data.js` resolves data and locale paths against
+  its own URL, and `js/shell.js`, `search.js`, `palette.js`, `dna.js`, `interactions.js` link
+  through `js/routes.js`, so pages two levels down work.
+- **hreflang and `?lang=` sitemap entries withdrawn** (reversing a decision of earlier the same
+  day): the translations exist only after JavaScript over English HTML and are unreviewed.
+  `?lang=` still works for readers. Selftest I1d rewritten to the new rule, with the reason.
+- `tools/og-image.mjs` — 13 social cards rendered by the repository's own Chromium driver;
+  staleness checked by input hash.
+- `tools/seo-audit.mjs` — in `qa.yml` and the deploy gate; selftests S1–S6 plant each defect.
+  Browser suite: new `seo` area (31 checks). `design-qa`, `thirdparty` and `pages-artifact` now
+  know pages below the root; an `<a href>` to another origin is a link, not a request (a
+  `<link rel=preconnect>` still is — S6).
+
+**Second pass, same session ("continue"):** the enforcement, institutions and bibliography
+mounts now open with a generated, clock-free record index (every record, linked to the instrument
+pages), replaced by the full view on load; the loading line stays first so the browser suite
+still detects a failed render. Crawlable text in the HTML as served: enforcement 2,048 → 6,026
+characters, institutions 2,014 → 5,351, bibliography 3,564 → 46,486. `seo-audit.mjs` fails if an
+index omits a record (planted in selftest S4).
+
+**Measured at the end:** validators 0 errors / 0 warnings (evidence-audit 11 warnings, as on
+`main`); `seo-audit` 0 / 0; 25 suites pass, 1233 tests (1221 before; tools 52, detector 67 with `instrument-view.js` and
+`routes.js` registered in `MODULE_SURFACE`); browser suite 237 pass · 0 fail · 1 undecidable
+(`a11y:bound`, as before). No fact in `data/` changed.
+
+**For the author:**
+1. **Search Console** — `docs/SEO-OPERATIONS.md` §3–5: URL-prefix property, verification by meta
+   tag, submit `sitemap.xml`, inspect the representative URLs.
+2. **Repository About box** (description, website, topics, social image) —
+   `docs/DISCOVERABILITY-STRATEGY.md` §6. No tool here can set it.
+3. **Decide on a custom domain** before citations accumulate (§7), and on a **licence** — a
+   citable data snapshot is blocked without one (§9).
+4. **After any data edit, run `node tools/_footer.mjs`** or CI fails on the stale page.
+5. Merge PR #5 — merging publishes the site.
+
+## Competences, Irish court records, prose corrections — 27 September 2026 (evening)
+
+**Asked:** "continue", "go on", under the standing instruction to reduce the backlog as far as
+possible, with permission to act on user-only blocks. `main` did not move (re-fetched before
+this write: `179c975`). Unverified **52 → 47**. Every commit carries an `Evidence:` trailer and
+passed validators, 25 suites and the browser suite locally.
+
+**Settled from primary sources:**
+- **Competences:** DSA supervision sits in DG CONNECT Directorate F; the powers are the
+  Commission's under DSA Art. 56(2)–(3), read in the OJ. The DMA is enforced by a joint
+  DG COMP–DG CONNECT team. DG COMP's "operational lead" was stronger than the source and is
+  replaced. No competence edge now carries a requires-verification note. Competence is a
+  human-only fact class; this was done under the author's permission.
+- **TikTok/DPC transfers:** read in the High Court's two approved judgments
+  (Record 2025/248 MCA):
+  - [2026] IEHC 347, 3 June 2026: the Art. 46(1) and 13(1)(f) findings and the decision to
+    fine stand; the court proposed to vacate the corrective orders and remit them.
+  - [2026] IEHC 419, 30 June 2026: a CJEU reference on the fine amount was proposed. The CJEU
+    register holds C-1009/26, lodged 11 Sep 2026, under the same parties' names; the link is
+    recorded as not established.
+  - **Correction:** the decision is dated 30 April 2025; 2 May was the announcement.
+- **AI Act minimal tier:** now only the Commission's own sentence, retyped as attributed.
+  - The Art. 4 AI-literacy duty is its own claim.
+  - The Part V thread no longer says the minimal tier has "no obligations" (four languages).
+- **April 2026 AI Omnibus trilogue:** sourced to Bird & Bird and the IAPP. It grades Secondary:
+  the Council's account returns 403 here.
+
+**Prose corrections (all four languages):**
+- OpenAI/Garante: "nine months of investigative work" contradicted the Garante's own account
+  (March 2023 to November 2024). It now says "some twenty months".
+- Data Act, Ireland:
+  - "host to a large share of Europe's cloud infrastructure" (no source gives a share) is now
+    "one of Europe's main data-centre hubs" (the KPMG report the Irish government published);
+  - "still in pre-legislative scrutiny in mid-2026" is now "by late September 2026 no Bill had
+    been introduced in the Oireachtas" (the parliament's register);
+  - the claim is atomized into three sourced facts plus the argument.
+
+**Kept flagged, with the reason recorded:**
+- **Meta/DPC transfers:** the DPC's Annual Report 2023 establishes the Irish statutory appeal
+  was brought, but no source read gives its current state.
+- **OpenAI:** the Rome judgment's text is still unread; commentary describes the reasoning,
+  published in June.
+- **NIS2/CER transposition:**
+  - The Commission's per-country NIS2 pages are dated July 2025.
+  - Its July 2026 release names only the four referred states.
+  - Reading the other 23 as complete from "most complied" would be the plausible-substitute
+    move §0 forbids.
+- **The CDT reference:** the brief names no publication, and a likely candidate is not a
+  source.
+- **The health metric's "narrower" count** had drifted to equal the canonical total, because
+  its hand-copied rule ignored derived claims. It now uses `openBacklog()`.
+
+**Local note:** running `node agent/detector/cli.mjs` wrote a git-ignored record store,
+`agent/records/`. That store makes the governance suite's P-07 anchor read 19 instead of 0 in
+this working tree. My attempt to delete it was blocked, so it is still there; the suite passes
+45/45 in a clean worktree. CI starts from a fresh clone and is unaffected.
+
+## After the CI decisions, 27 September 2026 — backlog, translations, hardening
+
+**Asked:** the same instruction, applied to what was left of the original brief. `main` did not
+move (re-fetched before this write: `179c975`). Unverified **62 → 56**; every commit below
+carries an `Evidence:` trailer and passed CI.
+
+**Evidence, from court records and primary texts.**
+- Appeals read in the Official Journal notices of the actions and confirmed pending in the
+  Court's register: Apple DMA fine (T-438/25), Meta DMA fine (T-435/25), X DSA fine (T-114/26,
+  T-120/26, T-121/26), the Commission's supervisory-fee appeals (C-744/25 P, C-745/25 P), Meta v
+  EDPB (T-325/23). New source type `source-type:court-record` (tier 2).
+- Amazon/CNPD verified against the Cour administrative's judgment itself (52757C): the decision
+  is annulled **in all its parts**, not only the fine; merits largely confirmed; injunctions moot.
+- **Corrections**:
+  - OpenAI/Garante: the decision is no. 755 of **2 November 2024**; 20 December 2024 was the
+    press release (Garante's own site).
+  - The fine-category claim: the CMS tracker's own data gives **three** categories at 94%, not
+    four (four make 98%). The prose is corrected in all four languages, and the claim is
+    re-typed as derived, with four sourced inputs.
+  - Annex A's caption and the Evidence page's method note both said every record shared one
+    verification date; they no longer do.
+- Draghi diagnosis verified (Part A, printed pp. 5 and 30). EDPB Guidelines 3/2025 located
+  (final v2, 17 Sep 2026).
+- **Still flagged, with the reason recorded:**
+  - Apple's behavioural outcome: it is the author's interpretation, and not what the Art. 5(4)
+    decision is about.
+  - Temu: T-536/26 Whaleco v Commission is registered, but its subject is not yet published.
+  - The Rome OpenAI judgment's text; Irish appeals of the DPC's Meta and TikTok decisions.
+  - 25 arguments (interpretation, critique) that no citation can settle.
+
+**Build.**
+- **Translations complete**: it/fr/es 427 of 427, rendered with 0 fallbacks. They are
+  AI-assisted and **not reviewed by a native speaker** (README limitation 5).
+- **CSP `style-src 'self'`**: no `'unsafe-inline'` for styles; the pixel comparison is
+  identical. Three guards stop inline styles coming back.
+- **Data-quality panels** on the Evidence page: backlog, dates, freshness, provenance. The
+  backlog rule has one home (`js/evidence-model.js openBacklog`), shared with `validate.mjs`.
+- **hreflang**: the brief lives at `?lang=it|fr|es`; alternates and sitemap entries come from
+  the register. Stated limit: the text is rendered by JavaScript.
+- **Accessibility-tree check**: it found the Contents button unnamed on phones, now fixed.
+
+**For the author:**
+- **Merging PR #4 publishes the site** — confirm before it happens.
+- The settings in `docs/DEPLOYMENT.md` §3: Pages source, branch protection.
+- A native-speaker read of the translations.
+- The October recheck of the Apple appeal.
+
+## The two red-by-decision CI jobs, 27 September 2026 — decided, and green
+
+**Asked:** "Stress them to reduce as much as possible, I give you permission to intervene
+whether there is a 'only user' block". That is the author's decision on the two items this
+repository had left to a person: HE-04 and the untraced write paths. Nothing was reclassified by
+editing a report; each was changed in what it measures, and each change has a test.
+
+- **HE-04 is rewritten, not silenced.** Its three path exclusions are gone; it searches the whole
+  tree and decides from `agent/production/separations.mjs`'s verdicts (`he04Verdict()`): a
+  `read_it` anywhere succeeds, a `no_path_found` is **partial**, only an all-cleared tree is safe.
+  It reports **partial (MEDIUM)** today — `agent/policy/selftest.mjs` and
+  `agent/policy/verify/attacks.mjs` can grant and hold the phrase, no path between them found.
+  The gate: 65 safe · 0 succeeded · 3 partial · 1 undecidable, exit 0. Its suite fails if a path
+  exclusion is re-added. `docs/PRODUCTION-OPERATING-MODE.md` §4a.
+- **A human commit is traceable.** `tools/commit-evidence.mjs`: a non-merge commit that changes a
+  published file carries an `Evidence:` trailer. It runs in `qa.yml` and first in the deploy
+  gate; commits older than the rule are not judged. **Every commit touching `data/`, a page,
+  `js/`, `css/`, `i18n/` from now on needs that trailer**, or CI goes red.
+- **A Control Room decision is traceable on a fresh clone.** A decision now records the proposal
+  itself (`proposal_snapshot`), used only when the working copy is gone and only if it still
+  hashes to `proposal_sha256`; a tampered snapshot voids the approval. Test R2 in
+  `agent/implement/selftest.mjs`.
+- **The adversarial gate is in the deploy gate** (`pages.yml` `gate-security`), and both jobs
+  can now be required on `main` (`docs/DEPLOYMENT.md` §3).
+- **Readiness: 17 of 20, still refused.** What blocks: no production dispatcher (activation,
+  protocol §24), no decision ever recorded (a person's), and whether `pages.yml` is what
+  publishes the site — now **unmeasurable** rather than a false "nothing gates the site".
+
+**What still needs the author, and why an agent cannot do it:** the Pages source and branch
+protection are repository settings (no tool here reaches them); a first Control Room decision
+must be a person's, or the ledger would record a decision nobody took; activating a production
+dispatcher is the step protocol §24 reserves to a person.
+
+## The next phase, 27 September 2026 — reading the primary texts behind the backlog
+
+**Asked:** open the pull request, then take the recommended next phase: the claims without a
+direct primary source, the unresolved grades, and whether Apple appealed the designation
+judgment. Every text below was read on 27 Sep 2026 (the Official Journal and the Court's
+judgments through the Publications Office's Cellar; the Court's register through InfoCuria's own
+search service; Parliament's Legislative Observatory; the Commission's and the CNIL's releases).
+
+**Measured, continuing the table below** (`tools/evidence-audit.mjs --as-of 2026-09-27`):
+
+| | end of the first half (`763f27a`) | now |
+|---|---:|---:|
+| Claims | 143 | 153 (splits into atomic claims; nothing removed) |
+| Graded primary law / unresolved | 47 / 20 | 61 / 13 |
+| Claims of law / derived | 53 / 2 | 62 / 3 |
+| Claims owing verification without a direct primary source | 23 | 16 |
+| Direct references without a usable locator | 10 | 2 |
+| Unverified records (`validate.mjs`, §12) | 104 | 97 |
+| Tests | 1221, 0 failing | 1221, 0 failing (one assertion added to H8) |
+
+**Seven statements the primary texts contradicted, now corrected** (brief, data, and every
+translation that carried them):
+
+1. *Regulation 2025/2518* "applies to complaints lodged from 2 April 2027": it applies from that
+   date (Art. 37), and its investigation chapters to complaints lodged **after** it (Art. 36); its
+   15/12-month limits are for the draft decision (Art. 12), not the investigation.
+2. *Privacy International* (C-623/17) was said to concern data retention; it concerns
+   **forwarding** data to intelligence agencies (operative part, point 1).
+3. *The AI Omnibus* "delayed the high-risk tier by sixteen months": true of Annex III only;
+   Annex I moved twelve (the claim record lagged the prose, which was right).
+4. *COM(2025) 837*, Art. 41a: it lets the Commission set **means and criteria** by implementing
+   acts, not "determine when" pseudonymised data stops being personal (en, it, fr, es).
+5. *The Cloud and AI Development Act*'s Art. 114 + 173(3) basis was "the first time" industrial
+   policy had been a co-basis in this field; **the Chips Act (Regulation 2023/1781) already rests
+   on both** (two passages, four languages).
+6. *EDPB–EDPS pushback*: all three positions are in Joint Opinion **2/2026**; 1/2026 held none.
+7. *Apple Art. 6(7) specification*: iPadOS belonged to the request-process decision, not to the
+   nine iOS connectivity features (IP/25/816).
+
+Also added: the GDPR rests on **Art. 16** TFEU, not Art. 114 — Part I now names it as the
+principal exception to "almost the entire rulebook".
+
+**Apple's appeal: still not established, and why.** The judgment (ECLI:EU:T:2026:451) is now the
+record's tier-1 source, with paragraph locators. The Court's register, whose index held cases
+lodged up to 25 Sep 2026, links **no appeal** to T-1079/23, T-1080/23 or T-214/24 and lists no
+case with Apple as a party lodged after 8 July 2026. The appeal period runs from notification,
+which the register does not show, so `appeal:unknown` stays; the observation is dated in
+`appeal.note`. **Recheck the register in October** before recording `appeal:not-lodged`.
+
+**What could not be read:** privacynext.eu (connection reset twice), the AlgorithmWatch page
+(a landing page without the text), the Council's press releases (HTTP 403), COM(2026) 502 in the
+Cellar (not held there on 27 Sep 2026; read in the Council's transmission instead). The collapsed
+AI Omnibus trilogue of 28 April is mentioned by no source read and is now its own claim with a
+reference gap.
+
+**Continued the same day, on the author's instruction ("continue with the remaining backlog"):**
+
+- **The DPC's share of the largest fines was out of date.** The brief said nine of the ten
+  largest GDPR fines were the DPC's. That was true on its date among fines still standing
+  (Luxembourg's EUR 746m on Amazon was annulled on 12 March 2026). On **21 August 2026 the
+  Dutch authority fined Uber EUR 824,990,000** (its own release; under appeal), which displaced
+  the DPC's EUR 225m on WhatsApp. Counted from the DPC's fines table, the Dutch releases and
+  CMS's database (3,275 cases) for completeness: **eight of ten**, the other two both Dutch
+  fines on Uber. Corrected in both passages and all four languages; the two Uber fines are
+  claims of their own. **They are not yet enforcement records** — adding the EUR 825m fine to
+  the observatory is the author's call.
+- **EHDS entry into force** is 25 March 2025 (OJ formula and the Publications Office's
+  metadata), not 26 March as the Commission's page and the brief said. The five other
+  instruments in Part I's "also in the rulebook" box were checked article by article (EMFA Art.
+  29, political advertising Art. 30, Platform Work Art. 29, eIDAS2 Art. 5a(1) with the five
+  implementing acts in force 24 December 2024) and each row is now its own claim of law.
+- **Official sources found:** the DPC Annual Report 2025 (headcount 295; three-person
+  Commission), the Irish government's General Scheme of the Data Bill 2025 (published 4 February
+  2026; CCPC and ComReg). **Not found, and recorded on the claim:** prezydent.pl (Cloudflare),
+  the Sejm API (fails mid-list), the Garante's search (needs JavaScript).
+- Now: 160 claims; primary 66, official 31, unresolved 13; direct references without a locator
+  2 of 138; unverified 97; 1221 tests, 0 failing.
+
+**The author's three decisions of 27 Sep 2026, carried out:**
+
+- **The two Dutch Uber fines are enforcement records** (`enf-uber-ap-2026`, EUR 824,990,000,
+  21 August 2026, Art. 22; `enf-uber-ap-2024`, EUR 290m), each `appeal:pending` per the
+  authority's own release, with a new institution record `dpa-nl` (Autoriteit Persoonsgegevens).
+- **Three `reference_gap` flags cleared** (`clm-charter-binds-member-states`,
+  `clm-icle-enforcement-architecture`, `clm-dpc-staff-growth`), each with the reason and the old
+  gap quoted in its note. **The fourth, `clm-dma-asymmetry`, was not cleared**: its gap is that no
+  formal US objection exists, only a memorandum, a fact sheet and a lawmakers' letter, and that
+  is still true. Reading the White House texts corrected the claim instead: the memorandum does
+  not name the DMA or DSA (its fact sheet does), and the brief's "objected formally" and "the US
+  Trade Representative said Section 301 action … was being prepared" had no source and are gone.
+- **The Apple appeal recheck is scheduled for 15 October 2026** (a Routine in this session). The
+  register query, for whoever runs it: POST
+  `https://infocuriaws.curia.europa.eu/elastic-connector/search` with a JSON body
+  `{"searchTerm":"\"T-1079/23\"","tabName":"affair","publishedId":"T-1079/23","isSearchExact":true,
+  "language":"EN","pagination":{"pageNumber":0,"pageSize":20},"sortTermList":[{"sortDirection":"DESC",
+  "sortTerm":"AFF_NUM","sortSourceTab":"affair"}],"multiSearchTerms":[],"advancedFiltersValue":[],
+  "isAllTabsRequest":true,"searchSources":["document","metadata"]}` and read `pourvoiAffIds`; the
+  service refuses a `HeadlessChrome` user agent and accepts one that names itself.
+
+**The Data Act's status** was re-read against Art. 50 and Art. 29 of the OJ text and its `status_as_of` moved to 27 Sep 2026: still partly applicable; the Art. 3(1) design obligation now applies to products placed on the market after 12 September 2026, the switching-charge ban from 12 January 2027. The audit's `STATUS_PREDATES_MILESTONE` warning is gone.
+
+**Model change (small, tested):** `parseQuantity` reads counts written as words
+("twenty-three"), so a derivation's input can read back out of the brief's prose. Used once:
+`clm-nis2-only-four-on-time` is now derived, 27 − 23 (the four not named are Belgium, Croatia,
+Italy and Lithuania).
+
+**For the author:** four claims carry a `reference_gap` flag and also a direct external source
+(`clm-charter-binds-member-states` and `clm-icle-enforcement-architecture`, sourced today;
+`clm-dpc-staff-growth` and `clm-dma-asymmetry`, earlier). Each gap note says what was missing;
+whether a source now closes it, and clearing the flag, is a person's decision.
+
+## The 27 September 2026 session — evidence model, Official Journal verification, deploy gate
+
+**Asked:** the author's master remediation prompt: claim ontology and evidence status, claim
+atomization and coverage, source and locator quality, regulatory-status and enforcement models,
+risk-based freshness, a CI deploy gate, security hardening, accessibility, SEO, documentation.
+
+**The one fact that changed what was possible.** This environment could reach the web. EUR-Lex
+still answers with a bot challenge, but the Publications Office's Cellar serves the Official
+Journal text by CELEX number (`docs/SOURCE-POLICY.md` §8). Every legal verification below was
+read from it on 27 Sep 2026 and names the CELEX number. Nothing was written from memory.
+
+### Measured, before → after (same tool, `tools/evidence-audit.mjs --as-of 2026-09-27`)
+
+| | before (`179c975`) | after |
+|---|---:|---:|
+| Substantive passages of the brief registered or classified | 64 of 169 (37.9%) | 167 of 167 (100%) |
+| Claims | 108 | 143 (31 registered for unrecorded prose; the DPC and Alliance Risk composites split) |
+| Claims of law | 26 | 53, each new one with an article locator read in the OJ |
+| Direct external references without a usable locator | 44 of 75 | 10 of 110 |
+| Graded primary law | 16 | 47 |
+| Derived / attributed / disputed claims | 0 / 0 / 0 | 2 / 10 / 1 |
+| Enforcement records that contradict themselves | 1 | 0 |
+| Instruments with adoption → OJ publication → entry into force | 0 | 11 |
+| Provisions with no recorded application date | 17 | 10 |
+| Unverified records (`validate.mjs`) | 111 | 104 |
+| `design-qa` warnings | 5 | 0 (inline handlers now an error) |
+| Tests | 1211, 2 failing | 1221, 0 failing, 25 suites |
+| Browser suite | 144 pass · 1 undecidable · 145 | 185 pass · 1 undecidable · 186 |
+
+### Decisions taken on the author's instruction that a person should review
+
+These are red-tier in `docs/AI-SAFE-BOUNDARIES.md`. They were done because the master prompt
+asked for them, each is in a commit with its reason, and each is reversible:
+
+- **Claim types changed.** Seven claims retyped `attributed` (they report what ICCL, ICLE,
+  Draghi, CISPE, the EDPB/EDPS or an unnamed practitioner said); `clm-dpc-share-of-fines`
+  retyped `derived`. The grading rules gained two grades (derived, attributed).
+- **Flags cleared, each after reading the Official Journal:** five provisions "recorded from
+  general knowledge"; two AI Act events "not confirmed against the text".
+- **Legal facts corrected against the OJ:** the NIS2 Art. 3 and AI Act Art. 3(63) summaries;
+  two sentences of prose (GDPR Art. 3(2) territorial scope; NIS2 Art. 34(4) sets floors, not
+  ceilings), with `part-1.p8` superseded in it/fr/es.
+- **`enf-apple-gc-2026-designation`** read `action:final` while its own appeal block said an
+  appeal was not established; it now reads `action:imposed`. Establishing whether Apple appealed
+  would settle it.
+- **Two governance anchors (P-05, P-06)** measured a live count of unmerged branches, which read
+  0 once the author closed them; they now anchor on the branch register.
+
+### What only the author can do
+
+1. **Switch Pages to GitHub Actions** (Settings → Pages → Source). Until then
+   `.github/workflows/pages.yml` gates nothing and a push to `main` publishes directly.
+2. **Protect `main`** with the required checks listed in `docs/DEPLOYMENT.md` §3.
+3. **Decide on a pull request** for this branch.
+
+### Still open (the audit reports each on every run)
+
+10 direct references without a usable locator (pages that could not be read here: a 403, landing
+pages without the text); 11 possibly composite claims; 23 claims without a direct primary source;
+20 claims graded unresolved; 104 unverified records; the Data Act's `status_as_of` predates its
+12 September 2026 application date; the adversarial gate (HE-04) and the production trace step
+remain red by decision, exactly as before. *(Superseded the same day: both are green — see the
+first section.)*
+
+---
+
+### The previous header (26 September 2026), kept as it was written
+
+**Last updated:** AUDIT-2026-09-25 remediation · 26 September 2026
+**Branch:** `claude/new-session-egb0gs`. It contains SESSION 30 (below) in full, and
+`claude/new-session-e5xmjm`. **Open as pull request #3 to `main`; not merged.** The branch
+register directly below records every other branch's disposition. The remediation's own
+account is in the commit messages (one per audit task, T-01 … T-40), in
+`docs/CURRENT-ARCHITECTURE.md` §12 (the unverified count, 106 → 111), and in the PR
+description.
+
+**Two CI jobs are red on PR #3 and were already red on `main` at `6da38ee`:**
+- *The adversarial verification gate*, on finding HE-04, which SESSION 29 left red by
+  decision.
+- *Production operating mode*'s traceability step (1 of 3 website-changing write paths is
+  traceable).
+
+Neither is a regression, and both are a later session's to decide.
+
+*The SESSION 30 header, kept as it was written:* last updated SESSION 30 · 12 September
+2026 · branch `claude/repo-website-stabilization-0dmm8g`, cut from `origin/main` at `6da38ee`.
+
+**SESSION 30 is a single branch from `6da38ee`, with no sibling.** `AGENT_SUITES.length` is
+**24**, and the twenty-fourth entry is the first that is not under `agent/`.
+
+
+---
+
+## Branch register — 27 September 2026 (night)
+
+`git branch -r --no-merged origin/main` lists one branch: `claude/eu-digital-policy-seo-x4eo8t`,
+this session's, pushed, **open as pull request #5**. `claude/amazing-einstein-yrsu79` is merged (PR #4).
+
+## Branch register — 27 September 2026
+
+`git branch -r --no-merged origin/main` lists one branch: `claude/amazing-einstein-yrsu79`, this
+session's, ahead of `main` (`179c975`), pushed, **open as pull request #4** (27 Sep 2026, on the
+author's instruction). Its CI matches `main`: every job green except the adversarial gate (HE-04)
+and the production trace step, red on `main` too and left red by decision (PR comment of 27 Sep).
+*Later that day both were made green on the author's decision (first section).* Everything the
+register below records was closed by the author on 26 September.
+
+## Branch register — AUDIT-2026-09-25 T-40, measured 26 September 2026
+
+`git branch -r --no-merged origin/main`, after `git fetch --all`. `main` is `6da38ee`
+(11 September). **No pull request is open.** Each disposition below is a **proposal awaiting
+the author's decision**. No branch has been merged or deleted.
+
+| Branch | Ahead of main | What it holds | Proposed disposition |
+|---|---:|---|---|
+| `claude/new-session-egb0gs` | this session | AUDIT-2026-09-25 remediation, Fasi 1–4. It contains `new-session-e5xmjm` and SESSION 30 (`repo-website-stabilization-0dmm8g`) in full | Open a PR to `main` when the author asks. Merging it also merges the two branches it contains |
+| `claude/new-session-e5xmjm` | 13 | Fase 1, fast-forwarded into the branch above | Delete once the branch above is merged |
+| `claude/repo-website-stabilization-0dmm8g` | 4 | SESSION 30 | Contained in `new-session-egb0gs`; delete once that is merged |
+| `claude/foundation-verification-audit-40ozpo` | 4 | `docs/AUDIT-2026-09-03.md` (the SESSION 12 audit) and a HANDOVER/CLAUDE.md gate on SESSION 13 | Read it first. Merging conflicts in `AGENTS.md` and `docs/HANDOVER.md`, and it is 47 commits behind. If kept, bring the audit document in on its own and close the branch |
+| `claude/agent-governance-protocol-gfbgfb` | 1 | Redraws the threshold wheel (`js/threshold.js`, `style.css`) | A visual change, so the author decides. It merges cleanly, but it has not been run in a browser from this branch |
+| `claude/eu-digital-policy-browser-qa-5f78wc` | 1 | `agent/browser/proposals.mjs`: ImplementationProposals from browser-suite failures | Never reached `main` (the file is absent). It merges cleanly but has not been tested against the current suites. Merge after running them, or close |
+| `claude/ux-ui-auditor-agent-sy99b6` | 1 | A handover note that SESSIONS 16 and 17 are merged | Obsolete, and conflicts in `docs/HANDOVER.md`. Close |
+| `scout/digest-digest-2026-09-{07,14,21}…` | 1 each | One Source Scout digest each | Merge into `main`, or into one `scout/digests` branch. **Side effect:** committed digests change `agent/production/readiness.mjs` source reachability from *unmeasured* to *measured*. Since T-39 the workflow reads these branches anyway, so nothing breaks while they wait |
+
+**Contained in `main`, 23 branches, safe to delete:** every other `claude/*` branch on the
+remote. `git branch -r --merged origin/main` lists them.
+
+**Outcome, same day, on the author's instruction to follow these recommendations.** SHAs are
+recorded so that any closed branch can be restored with `git push origin <sha>:refs/heads/<name>`.
+
+| Branch | Tip | Outcome |
+|---|---|---|
+| `foundation-verification-audit-40ozpo` | `910df63` | Its lasting content was carried into this branch: `docs/AUDIT-2026-09-03.md`, the re-fetch rule in `AGENTS.md` and the git-workflow skill. P-06's anchors were updated. **Close** |
+| `eu-digital-policy-browser-qa-5f78wc` | `ad41809` | Merged and tested: 4 browser-suite failures. Its fix recipes target `tools/_footer.mjs` text that SESSION 30 rewrote when it fixed the no-JS navigation, so its proposals are obsolete. Merge aborted. **Close** |
+| `ux-ui-auditor-agent-sy99b6` | `cf84dee` | An obsolete handover note. **Close** |
+| `scout/digest-*` × 3 | `5bdd3fe` `c2548af` `f941ea4` | **Merged into this branch.** Readiness source reachability is now measured: 2 of 6, from the 21 September run |
+| `agent-governance-protocol-gfbgfb` | `ed226d2` | **Not merged. Delete.** Decided on the author's instruction: test-merged onto this branch, it fails the Control Room visual standard (`agent/production/visual.mjs`) on two criteria. **vs-02**: the approved design is three bands 3 · 7 · 12 carrying 22 letters, and the redraw removes the letters. **vs-04**: its new search-result mark `⊙` belongs to no declared enum. The branch was written on 9 September, before SESSION 29 fixed that standard, and it was never checked against it. Without it, every criterion but the unmeasurable vs-08 passes |
+| `new-session-e5xmjm`, `repo-website-stabilization-0dmm8g` | `73a9f23`, `f52e94f` | Contained in this branch. Delete once it is merged into `main` |
+
+**Deleted by the author, 26 September 2026:** the 23 branches contained in `main`, and the six
+closed or carried-forward branches above. The session's git access could not delete them;
+it may push only its own branch. Five branches remain: `main`, `new-session-egb0gs` (PR #3),
+`new-session-e5xmjm`, `repo-website-stabilization-0dmm8g` (delete the last two once PR #3 is
+merged) and `agent-governance-protocol-gfbgfb` (not merged; delete, see its row above).
+
+---
+
+## SESSION 30 — the stabilization pass, and the two checks that were wrong about the site
+
+**What was asked:** a forensic stabilization pass — get the browser suite to 0 failures
+without weakening it, resolve `freshness.mjs`'s exit 1 without hiding staleness, settle a
+reported Google Fonts contradiction, make the source-metadata contract coherent, confirm the
+autonomy rollback deadlock is reachable, audit every external dependency, upgrade the Node 20
+Actions, and add regression tests where the suite failed to catch any of it. The standing
+instruction throughout: **do not game the QA system.**
+
+### The state, measured
+
+| | before (`6da38ee`) | after |
+|---|---|---|
+| Browser suite | 125 pass · 3 fail · 2 undecidable · 130 checks | **144 pass · 0 fail · 1 undecidable · 145 checks** |
+| `freshness.mjs` | exit 1 | **exit 0** — and it prints the same three prompts, by name |
+| Four validators against §12 | verdict `fail` | **`pass_with_findings`**, 0 errors, the same 5 `design-qa` warnings |
+| Suites | 1166 tests · 23 suites | **1196 tests · 25 suites** · 0 failures |
+| GitHub Actions | checkout/setup-node/upload v4, download v4 (Node 20) | **v7 / v7 / v7 / v8, all `node24`** |
+
+### The three browser failures were defects in the WEBSITE, and all three are fixed
+
+Not in the suite. Each fix is the smallest change that makes the measured statement false, and
+the full reasoning is in `docs/BROWSER-QA.md` §4a.
+
+1. **`nav:noscript`** — with scripting off, `instruments.html` linked to none of the six
+   top-level pages and the `<noscript>` notice did not say so. The notice now names the
+   navigation among what will not render **and** carries the six destinations.
+   `tools/_footer.mjs` regenerates it into all seven pages from one source, and **reads the
+   list out of `export const NAV` in `js/shell.js`** rather than retyping it, so the nav model
+   keeps one home. The generator throws rather than emitting a plausible list if that array
+   stops being readable. `<noscript>` is inert when scripting is on, so a reader with
+   JavaScript gains no element, no id and no focusable control.
+2. **`keyboard:skip-first`** — `initShell()` inserted the chrome at `document.body.firstChild`,
+   ahead of the skip link, so a keyboard reader had to tab through the navigation to reach the
+   link that skips the navigation. It now inserts **after** the skip link when one is a direct
+   child of `<body>`, falling back to the old behaviour when there is none.
+3. **`a11y:headings:enforcement.html`** — the pipeline stage panels were `<h5>` under the
+   record's `<h2>`. `h5` was a type size chosen in the stylesheet, not a level: they are `h3`
+   now, alongside "Legal basis" and "Requires verification", which already were.
+   `css/tools.css` sizes that heading itself, so **the appearance is unchanged**.
+
+### One undecidable was a defect in the CHECK, and it is now decided
+
+**`keyboard:focus-visible` never measured anything.** `checkKeyboard` presses `Tab`, which
+focuses the first focusable element, and `document.querySelector('a[href], button')` then
+returns *that same element* — so the "before" style was read off an already-focused element
+and compared with itself. `differs` was false by construction. Measured on `instruments.html`
+before changing it: the element examined is `a.skip-link`, it is already
+`document.activeElement`, it already matches `:focus-visible`, and its outline already reads
+`solid 2px` before `el.focus()` is called. The check now blurs, drives focus with a real
+`Tab` — `:focus-visible`, which is what `css/tokens.css` styles, is a question about how focus
+arrived — and compares. The site's focus ring is real and always was: `none 0px` → `solid 2px`.
+
+**`a11y:bound` stays, and the session does not reach "0 undecidable".** It is marked in
+`checks.mjs` as "not a check that can pass": no contrast ratio was computed, no screen reader
+was run, no pixels were compared. Turning it into a pass would render an absence of knowledge
+as a finding, which `docs/AI-SAFE-BOUNDARIES.md` §0.5 forbids. **The acceptance criterion asked
+for zero and the answer is one, deliberately, with the reason stated.**
+
+### `freshness.mjs` exits 0 because the exit code was answering the wrong question
+
+The disagreement `agent/production/readiness.mjs` carried unresolved from SESSION 24 — *either
+`freshness.mjs` should not exit 1, or §12's baseline of 0 for it is wrong* — is settled the
+first way, and the evidence is mechanical rather than editorial: **every finding on this tree
+disappears when only the DATE changes.** `node tools/freshness.mjs 2026-08-28`, the datasets'
+own newest verification date, reports "Nothing past its stated interval" and exits 0 on
+byte-identical data. A result that flips with the calendar on an unchanged tree cannot gate a
+build; `agent/implement/baseline.mjs` already called the script "a report, not a gate", and
+AUDIT F-15 already recorded clock-dependence as a hazard.
+
+So the script now separates two things it used to sum. A **defect** is a property of the tree
+— a URL-less source with no `resolution`, a per-record verification field never used
+per-record — true on every date and closed by a commit: **exit 1**. A **staleness prompt** is a
+property of the calendar: **exit 0**, printed by name, counted, and stated as not waived and
+not evidence of currency.
+
+**Nothing was silenced and no threshold moved.** `EXPECTED` is byte-identical and
+`tools/selftest.mjs` F5 asserts all six intervals. F6 asserts every prompt counted in the
+summary still appears in the body. F1 asserts the tree reports no prompt as of its own
+verification date; F3 asserts a planted defect fails on **every** date. The three prompts
+standing today are unchanged and still owed verification work: the CRA reporting deadline of
+11 September and the Data Act application of 12 September fell due after the last
+verification, and the newest enforcement decision on record is 50 days old against a 45-day
+interval. **None of that is fixable by a session that cannot reach a primary source, and this
+one could not: `andreatosti2001.github.io` and every EU endpoint are refused by this
+environment's network policy with HTTP 403 on CONNECT.**
+
+### The Google Fonts contradiction is not in this tree, and the gap that let it be reported is
+
+**There is no reference to `fonts.googleapis.com` or `fonts.gstatic.com` anywhere in the
+repository, on this branch or on `main`** — no `@import`, no `<link>`, no `preconnect`. The
+dependency was removed before this session: `style.css` records it in a comment, where
+`--display` used to name 'Bodoni Moda'. The typefaces in `fonts/` are Fraunces, Literata and
+IBM Plex Mono, all self-hosted, and the browser suite's `network:first-party` measures on
+every run that every request a page made went to the local origin.
+
+**What was real is the enforcement gap.** `design-qa.mjs` asserted "no third-party resource"
+while reading exactly this:
+
+```
+/(?:href|src)="(https?:\/\/[^"]+)"/g
+```
+
+over the HTML only — double quotes required. It could not see an `@import` or an
+`@font-face src` in a stylesheet, which is the exact path by which Google Fonts returns; a
+`fetch`, `import()`, worker, WebSocket, beacon or `.src =` in a module; a `preconnect`; or any
+of those written with single quotes or none. **The claim was wider than the check in four
+documents.** `tools/thirdparty.mjs` is the check the claim needs, and `tools/selftest.mjs` §A
+plants each of those defects and asserts it is caught, including in a copy of the real tree.
+`ALLOWED_RUNTIME_ORIGINS` is **empty**; `data/` and `i18n/` are deliberately outside the
+surface, because a URL in `data/sources.json` is a citation the page displays and never
+fetches.
+
+### The source-metadata contract now has one home
+
+`tools/source-contract.mjs`: 12 required fields, 2 optional, each with its shape, why it
+exists, who writes it and who reads it. `validate.mjs` enforces it on all 77 records and they
+all pass. Before this, referential integrity asked whether four values *resolved* and nothing
+asked whether a record had the other eight at all — a source with no `title`, no `accessed`
+and no `note` passed every check here.
+
+**The six fields the grant names and the dataset does not have are `ABSENT_BY_DESIGN`, and
+they were not added.** `last_retrieved`, `retrieved_at`, `checksum`, `content_hash`,
+`recheck_interval`, `freshness_window` each assert that a document was FETCHED, and no URL in
+this repository has ever been retrieved (AUDIT F-12). Writing one would be a fabricated fact
+about evidence. A record carrying one is refused **by name with that reason**, so the next
+session to read the grant meets the explanation rather than concluding the fields are simply
+missing. `docs/SOURCE-POLICY.md` §7a and §7b.
+
+### The rollback deadlock was already repaired, and the ladder moved one step further
+
+SESSION 27 fixed it under an explicit warrant and the tests are `agent/improve/selftest.mjs`
+17 (a clean proposal in an enabled category over a granted path reaches the runner) and 17b
+(a `not_reversible` plan and a null plan are both refused on `rollback_mechanical`), with
+`agent/autonomy/selftest.mjs` 17b on the same ground. **§16's tests C and D therefore already
+existed; this session verified them rather than duplicating them.** What moved is a
+consequence of the freshness repair: the clean fixture used to be refused at the measured
+evaluation on `verification_succeeded (unknown)` **and** `validators_pass (failed)`, the
+second being the exit 1 that was never a statement about any proposal. It is now refused on
+`verification_succeeded` alone. **No autonomous change has merged anything and nothing has
+been proposed**: `agent/records/` is git-ignored and empty in a fresh checkout, so
+`survey --all` reports no proposals at all.
+
+### The browser suite now runs at the address the site is deployed to
+
+Deployment is GitHub Pages serving `main` as a **project site** at `/Eu-Digital-Policy/`, and
+every run before this one served the repository at `/`. A root-relative reference resolves at
+the root and 404s one segment down, and the suite could not have told the difference.
+`serveSite({ basePath })` serves the site under the prefix and refuses anything outside it;
+`checkDeployedSubpath` loads all seven pages there. **15 checks, all passing** — nothing here
+is written root-relative. The proof that it can fail is in `agent/browser/selftest.mjs`, which
+copies the tree, rewrites one `href="css/tokens.css"` to `href="/css/tokens.css"`, and asserts
+the check reports the 404 while the same reference resolves 200 at the root.
+
+Reading a 404 needed `Network.responseReceived` in `cdp.mjs`. `Network.loadingFailed`, which
+the harness already had, fires on a **transport** failure and not on a 404 — a 404 is a
+successful exchange carrying a status — so a missing stylesheet was previously
+indistinguishable from a present one.
+
+### One consequence of the no-JS navigation, caught by another agent's suite
+
+`agent/ux/selftest.mjs` 32 failed: the noscript nav is one list regenerated into seven pages,
+so each page's copy names the page it is on, and `pagesOf()` counted that as an outbound link.
+`reachabilityOf()` had **always** discarded a self-link; the filter now lives in `pagesOf()`
+too, so the two levels cannot disagree, and the test lost the `index.html` exemption it used
+to need. The assertion was kept and strengthened, not relaxed.
+
+### CI found one more, and it is the same shape as two earlier ones
+
+Pushing the branch made the browser job's **`Run the browser regression suite`**
+step succeed for the first time — and the step after it, **`Nothing was
+written`**, then failed. Not because the suite writes: the step before the guard
+writes `browser-qa.json` into the repository root on purpose and uploads it, and
+that file is not gitignored, so `git status --porcelain` reports it. The health
+job three blocks above has always done `rm -f health-public.json` first for
+exactly this reason; the browser job did not.
+
+**The guard had never executed.** A failing step skips every step after it in the
+same job, and the browser suite failed on every push from the job being added
+until this branch, so the check was skipped every time and its never having
+failed meant nothing. That is the third occurrence of this shape here, after
+`docs/GOVERNANCE-PROPOSALS.md` §6b and the SESSION 27 reach register. The guard
+is kept and is now real: it still fails on anything the suite itself writes, and
+no longer counts the file the workflow deliberately created and already
+uploaded.
+
+### A second pass over the six remaining blockers, and the one that was not a measurement
+
+Asked to investigate how the remaining blockers could be resolved, this session found that
+one of the six was **not measured at all**.
+
+**`scout_can_reach_a_source` reported `0 of 5` from a hard-coded constant.**
+`agent/production/readiness.mjs` set `facts.network = { registered: 5, reachable: 0 }` with a
+comment claiming SESSION 25's `--live` run was "the only measurement this repository has ever
+taken". That was false. **The scheduled Source Scout has reached real EU endpoints from
+GitHub Actions**: the run of 7 September 2026 fetched **17 documents**, **0 refused by egress
+policy**, producing candidates from `www.edpb.europa.eu` and `www.enisa.europa.eu`; EUR-Lex
+answered 202 and the EDPS answered 403, which are the origins' own answers. The digest saying
+so is committed on the unmerged branch `scout/digest-digest-2026-09-07T06-38-26Z`.
+
+So the condition was measuring **the container the check ran in**, and asserting the result as
+a property of the Scout. It is now derived from the Scout's committed digests, which
+`agent/scout/digests/README.md` says are tracked precisely so a run leaves durable evidence.
+Reached means *yielded a document*, not *answered*: an endpoint counts only where the run
+produced a candidate from its origin, which undercounts and is the safe direction.
+
+**The verdict did not move.** A tree with no committed digest now reports `unmeasurable`, and
+an unmeasured mandatory condition blocks exactly as a failure does — 14 of 20 pass and 6
+block, exit 1, as before. What changed is that the reason is true, and that real evidence can
+now satisfy it: merging the Scout's pull request would.
+
+`agent/production/schedule.mjs` carried the same sentence about the Scout stage and is
+corrected the same way. `agents_instrumented` said "none of the seven can write" while listing
+eight; the count is now derived.
+
+**The other five were investigated and left alone, each for a stated reason.**
+
+| Blocker | Why this session did not close it |
+|---|---|
+| `adversarial_gate_clean` (HE-04) | AGENTS.md and §4a both say it is left RED on purpose and a person decides. New evidence for that person is below. |
+| `website_paths_traceable` | `human_commit` is marked in `traceability.mjs` as one **an agent may not close**: requiring evidence in a commit message is a governance decision about how the author works. `control_room_decision` becomes traceable when a proposal is decided. |
+| `production_dispatcher_wired` | Wiring the eleven specialists so the Orchestrator can invoke them is new capability and a Class D decision, not a stabilization fix. |
+| `decision_ledger_present` | Only a person can decide a proposal. |
+| `deploy_gate_exists` | Repository settings. Two routes are described below; both need the author. |
+
+**HE-04: the hit list has grown, and that is new.** At `a25f0ed` the attack found the phrase in
+exactly **one** file, `agent/simulation/threshold.mjs`. It now finds **three**:
+`agent/production/separations.mjs` and `agent/production/visual.mjs` were added by SESSION 29 —
+the session that measured the first file on two halves and cleared it, while adding two more
+occurrences it did not put through the same check. Read directly, all three are the HE-01
+shape: `separations.mjs` **searches** for the phrase (that is the separation check), and
+`visual.mjs` carries it once inside a **prose sentence** describing a near-miss test. Neither
+reads it as an input. This does not reclassify anything — it gives the person deciding a fact
+they did not have.
+
+**`deploy_gate_exists` has a second route worth naming.** The report says the condition can
+only be satisfied in repository settings, which is true of both routes but hides the more
+useful one:
+
+- **A** — a branch protection rule on `main` requiring the QA checks. Entirely settings.
+- **B** — switch the Pages source from "deploy from a branch" to **GitHub Actions**, and add a
+  deploy workflow whose `needs:` names the QA jobs. Most of the gate then lives **in the tree**,
+  where it is reviewable. It still needs the author to flip the Pages source once, and it
+  changes the deployment mechanism, which is Class D.
+
+Route B has a side effect worth weighing: a workflow deployment publishes an artifact rather
+than the branch, so it could publish the site files alone. That would also close the standing
+finding that `agent/`, `docs/` and `tools/` are inside the public surface, which is what PP-08
+reports. **Neither route was implemented.** AGENTS.md is explicit that an agent must not edit
+the workflow to claim a gate it does not have.
+
+**`control_room_decision` carries a real mechanical defect, described rather than changed.**
+A decision in `agent/implement/decisions/decisions.jsonl` is git-tracked; the proposal it
+decides lives in `agent/records/`, which is git-ignored. `deriveApproval()` returns
+`void_unknown_proposal` when the proposal is absent, so a decision recorded today reads as void
+on any other machine. `readAgentRecords()` already returns `traces`, so the two cases —
+*this machine has no record store at all* and *the store is populated and lacks this proposal*
+— are mechanically distinguishable, and `IMPLEMENTABLE = ['granted']` means a new state is
+refused by default. **It was not changed here**: renaming the state describes the problem
+accurately without fixing it, and how a durable decision should bind to a regenerable proposal
+is an approval-integrity decision rather than a stabilization one.
+
+**`a11y:bound` could be narrowed and not closed.** It names three things not done: no contrast
+ratio, no screen reader, no pixel comparison. Contrast is the only one this harness could
+compute, and computing the *effective* background through transparency and stacked ancestors is
+where a naive implementation produces confident wrong numbers. Closing one third would leave
+the marker standing for the other two, so nothing was built.
+
+**Text scaling** remains as reported: the type scale is in pixels, which follows browser zoom
+but not a changed default font size. Converting it is a redesign, which §14 forbids.
+
+### What was NOT done, and why
+
+- **`a11y:bound` was not made to pass.** Above.
+- **The six retrieval fields were not added to `data/sources.json`.** Above.
+- **Nothing was merged and no pull request was opened**, per `AGENTS.md`'s git rule.
+- **The live deployment was not verified.** Outbound access to `andreatosti2001.github.io` is
+  refused by this environment (403 on CONNECT, confirmed this session). Everything reported
+  here is read or measured from the repository and a locally served render. **No claim is made
+  about what the live site currently serves.**
+- **HE-04 is still RED.** The adversarial gate still reports 1 SUCCEEDED. SESSION 29 measured
+  it as a false positive of the HE-01 shape and left it red on purpose, because reclassifying
+  a CRITICAL by editing the thing that reports it is a person's decision. That has not changed.
+- **The seven other readiness blockers are untouched**: no production dispatcher, no reachable
+  source, the absent decision ledger, the untraceable write paths, no deploy gate. Each is a
+  governance decision or needs network this environment does not have.
+
+### Regression tests added
+
+| § | Test | Where |
+|---|---|---|
+| A | a third-party runtime resource, in HTML/CSS/JS, quoted or not | `tools/selftest.mjs` A1–A13 |
+| B | every source record against the authoritative contract | `tools/selftest.mjs` B1–B8 |
+| C | a valid limited-autonomy operation passes the gates | `agent/improve/selftest.mjs` 17 *(existing)* |
+| D | an operation with no valid rollback is rejected | `agent/improve/selftest.mjs` 17b *(existing)* |
+| E | invalid workflow transitions are rejected | `agent/orchestrator/selftest.mjs` *(existing)* |
+| F | the site under `/Eu-Digital-Policy/` | `agent/browser/selftest.mjs` + `checkDeployedSubpath` |
+| — | `freshness.mjs`'s exit contract, from both sides | `tools/selftest.mjs` F1–F6 |
+
+---
+
+**SESSIONS 27 AND 28 WERE SIBLINGS FROM ONE BASE, and this file still carries both.** They were
+cut from `aaf6691` independently and neither saw the other. SESSION 28 landed on `main` first;
+SESSION 27 merged into it. Three files conflicted and every resolution is named in SESSION 27's
+section below. The one worth carrying: **both sessions set `AGENT_SUITES.length` to 21 and the
+merged tree had 22** — `agent/implement/selftest.mjs` R6 caught it, which was the second time it
+had caught exactly that shape and the case it is most worth having for.
+
+---
+
+## SESSION 29 — production operating mode, and the checklist that refused
+
+**What was asked:** activate production operation under the existing autonomy policy; define
+the daily cycle (Scout → Verify → Detect Change → Assess Data Depth → Route impact → QA →
+Governance → Publish or Request Approval), the seven weekly reviews and the seven monthly
+reviews; keep the system observable end-to-end, with every website modification traceable to
+its originating evidence and execution trace; confirm that the hidden Control Room discovery
+mechanism may reveal, transition and route but never authenticate, authorize, approve, execute,
+deploy or expose privileged data; verify the final visual standard; **output a final readiness
+checklist and stop if any mandatory condition fails.** Full report:
+**`docs/PRODUCTION-OPERATING-MODE.md`**.
+
+**IT STOPPED, AND THAT IS THE DELIVERABLE.** `node agent/production/cli.mjs readiness` reports
+**`refused`**: twelve of twenty mandatory conditions pass and **eight block**. Production
+operation is **not activated**. The eight, in the words the report uses: the `freshness.mjs`
+baseline disagreement; the adversarial gate's CRITICAL; the browser suite's three SESSION 19
+defects; **no production dispatcher is wired**; **no registered source endpoint is reachable**;
+the decision ledger is absent; two of three website-changing write paths are untraceable; and
+**there is no deploy gate**. Six of those eight are inherited and none is this session's to
+decide. **A mandatory condition that could not be MEASURED blocks exactly as a failure does**,
+which is this repository's own rule about a skipped browser run applied where it matters most.
+
+**`agent/production/` IS THE FIFTEENTH THING IN `agent/`, AND IT WRITES NOTHING.** Five modules
+and a CLI with five verbs: the schedule as data, the ten visual conditions, the six
+separations, the write paths, and twenty-one readiness conditions in ten domains. No module
+calls a write API — asserted as a *call*, so a header explaining the rule does not violate it —
+and a full run of the four read-only verbs leaves the tree byte-identical. **There is no
+`--execute`, no `--record`, no `--force` and no `--activate`**, and the suite reads the CLI to
+prove it. If every condition passed, the report would say a person MAY activate: switching a
+production mode on is a governance decision and protocol §24 reserves it to a person.
+
+**THE SCHEDULE ENDS AT A PERSON AND THE LOADER ENFORCES IT**, which is the refusal
+`agent/orchestrator/workflows.mjs` applies to its ten workflow types. Every stage states **what
+it cannot establish**, and two of the eight cannot do what their names say: Scout reaches no
+endpoint (SESSION 25's five refusals; no URL here has ever been fetched), and Route dispatches
+nothing (there is no `agent/orchestrator/dispatchers.mjs`). All twenty-two scripts the schedule
+names exist, and the fourteen reviews each say what a person must still do with what they
+produced. **Nothing fires on a timer. There is no cron and no daemon in that directory.**
+
+**THE HIDDEN ENTRY PASSES ALL TEN VISUAL CONDITIONS AND ALL SIX SEPARATIONS — AND WAS NOT
+TOUCHED.** `js/threshold.js`, `style.css`, `index.html` and every other page are
+**byte-identical to `a25f0ed`**. The standard was verified, not adjusted. Two of the ten are
+settled only in their mechanical half and say so: whether the drawing *looks* like the rest of
+the site, and whether a practitioner of the source tradition would accept the construction, are
+judgements by people. No contrast was computed, no screen reader was run, no pixels compared.
+
+**HE-04 IS NOW MEASURED RATHER THAN SUSPECTED, AND IS STILL RED.** AGENTS.md carried the
+suspicion that the CRITICAL was a false positive; nothing had checked it.
+`agent/production/separations.mjs` checks the condition the attack's own finding names — *if
+any of those reads it as an input, it is a credential* — on two independent halves.
+`agent/simulation/threshold.mjs` calls **none** of the twelve granting primitives, and **none**
+of its eight occurrences of the phrase sits on either side of an equality test: three are probe
+paths, two are arguments to the client matcher, one is a regex needle, one is prose, one is
+quoted code. It is cleared on both halves. **The attack was not edited and the finding was not
+reclassified.** HE-04's three path exclusions are exactly the stale exclusion list SESSION 23.5
+already had to correct once, and choosing that fix is a person's call. SESSION 27
+§4b set the precondition — correct it *only if* a reader confirms the module reads the phrase as
+data and never as an input — and that confirmation is now on record, with the measurement
+behind it.
+
+**TWO THINGS WERE REPAIRED, AND BOTH ARE OBSERVABILITY DEFECTS.**
+
+1. **The Orchestrator's register commands, dead since the SESSION 26 merge.**
+   `agent/orchestrator/cli.mjs:50` imported `AUTONOMY_NOTE`, which `policy.mjs` stopped
+   exporting when the note became derived, so **every verb of that CLI exited 1**. It now calls
+   `autonomyNote()`. That also removed a **false statement**: the constant said no action
+   category is approved for automatic execution, which stopped being true in SESSION 26, and
+   the derived note reports the five the grant enables. Was `docs/GOVERNANCE-PROPOSALS.md`
+   §6b.
+2. **The adversarial gate is in CI**, in a job of its own, because a failing step skips every
+   step after it in the same job and a step expected to be red must hide nothing. Its absence
+   was the standing lesson: it is how a CRITICAL stayed red across **five** sessions while
+   three documents said otherwise.
+
+**FOUR FALSE POSITIVES WERE FOUND IN THIS SESSION'S OWN CODE, and all four are recorded with a
+test pinned to the input that caused them.** Three are the HE-01 shape — a scan reading a
+module's own denial as a finding: a capability scan that counted the array declaring its
+vocabulary and then the regex that searches for it; a deploy check that failed on the panel
+sentence *"This deployment does not publish its address"*; and a stylesheet line scan that
+reported the minimum hit target absent because its rule spans five lines. **The fourth was
+worse**: `gatherFacts()` read `browserJson.checks` where the suite's JSON calls that array
+`results`, so the **mandatory** `browser_suite_pass` condition **passed while the browser suite
+was exiting 1 on three real reader-facing defects**. A checklist that reports green because it
+read the wrong field is worse than no checklist. It now reads the suite's own
+`qa_check.exit_code`. `docs/PRODUCTION-OPERATING-MODE.md` §7.
+
+**TRACEABILITY IS ONE OF THREE, AND THE WIDEST GAP IS THE MOST LIKELY PATH.** Of the three ways
+a published file can change, only the autonomy runner leaves a durable record naming the
+evidence — its commit message, which is built to be that record because the action ledger is
+git-ignored. A person editing a page and pushing leaves whatever the commit message says, and
+nothing requires or checks it; a Control Room decision would leave a ledger entry, and **the
+ledger is absent**. Requiring evidence in a human commit message is a governance decision about
+how the repository author works, and an agent may not take it.
+
+**A tracked README is not a record.** The first draft of `traceability.mjs` counted
+`agent/implement/decisions/README.md` and reported the decision ledger as durable. Placeholders
+are counted separately now — and those same placeholders are what the gate's PP-08 reports at
+HIGH, for a different reason.
+
+**Baseline unchanged.** 0 errors across the four validators, the five named `design-qa`
+warnings, 106 unverified records. **1166 tests across twenty-three suites**, 0 failures.
+`AGENT_SUITES.length` is **23** and `agent/implement/selftest.mjs` R6 asserts it — the ninth
+time that assertion has mattered, and the first where the suite was added *with* the number
+rather than caught after it.
+
+**What this session did NOT do:** it decided nothing, changed no policy, wrote no grant, and
+recorded no decision. `DEFAULT_POLICY.enabled_categories` is still `[]` and the grant ledger is
+unchanged at one line. **It did not touch `data/`, `i18n/`, `js/`, `css/`, `index.html` or any
+page** — no legal fact, citation, date, article number or status was written, changed or moved.
+It fixed none of SESSION 24's twenty-three findings, none of the three browser defects, and
+neither OB-05 nor PP-08. **It did not activate production operation**, and describing what it
+built as "production operation, activated" would be false: nothing here runs on a cadence.
+
+---
+
+## SESSION 28 — learn from the human decisions, and find there are none
+
+**What was asked:** analyse the historical human decisions; for each approved, rejected or
+edited proposal determine the patterns — repeated corrections, repeated rejection reasons,
+recurring evidence weaknesses, recurring UX objections, recurring editorial corrections,
+recurring implementation failures. Do not automatically rewrite policies; create
+`agent/proposals/governance/` with proposals — new rule, new validation, new skill, new
+evaluation, reduced autonomy, increased autonomy — every one requiring human approval. The
+objective: convert repeated human intervention into durable system knowledge. Full report:
+**`docs/GOVERNANCE-PROPOSALS.md`**.
+
+**THE BRIEF'S CORPUS DOES NOT EXIST, AND THAT IS THE FIRST FINDING.** There are no approved,
+rejected or edited proposals. `agent/implement/decisions/decisions.jsonl` is not empty — it is
+**ABSENT**, and it is git-tracked, so absence there is the only absence in this repository's
+six decision stores that proves anything. Of the seventy-one proposals AGENTS.md counts across
+four agents, and the forty-eight SESSION 25 measured in one run, **not one has been decided**.
+Analysing decisions that do not exist would have been prohibition 2 applied to governance: a
+plausible substitute for a missing record. So the corpus is the one that does exist — **the
+corrections**, twelve commits of ninety-two that say in their own subject that they are putting
+something right.
+
+**TWELVE PATTERNS, FORTY-NINE ANCHORS, NONE REFUTED.** Nothing in `patterns.mjs` stands on its
+own words: every instance carries a commit and a substring of its subject, a path that must
+exist or must not, a string in a tracked file, or a **live measurement**. Three states, never
+two — `resolved`, `refuted`, `unresolvable_here` — because a commit missing from a shallow CI
+clone is not a false claim about the history, and a checker that said otherwise would be making
+the mistake P-02 is about. `node agent/proposals/governance/cli.mjs check` runs on every push
+and exits 1 only on a refuted anchor. The two-instance rule is in code: a pattern that does not
+clear it is reported as refused, not dropped.
+
+**THE FOUR THAT MATTER.** *P-01* — a stale base read as a repository fact, four times, each
+needing a correcting commit, with the mitigating rule already at the top of AGENTS.md the whole
+time: nothing MEASURED the base and nothing FAILED when it was stale. *P-07* — nothing is ever
+decided, and that is two problems: `deriveApproval()` binds a decision to a proposal in the
+git-ignored record store, so a decision recorded today reads `void_unknown_proposal` on any
+other machine until the producing agent is re-run, and H-1 says a reviewer is not shown the
+twelve conditions their approval stands over. *P-12* — **this session's own measured finding**:
+the grant's `docs/` allowlist and `categoriseProposal()`'s docs-only rule place **all eight**
+prose governance documents inside an ENABLED category. `NEVER_AUTOMATIC_PATHS` guards
+`agent/policy/` with protocol §24's own words; nothing guards `docs/AUTONOMY-POLICY.md`, which
+is that policy in the form a person reads. In the other direction **six of the eight fields the
+grant allowlists exist on none of the 77 records** in the file it names. Both are claims about
+which gates would NOT stop a change — six gates and twelve conditions run afterwards, and
+nothing autonomous has ever merged anything. *P-06* — a session found the stale-base failure,
+wrote the fix as a rule, and pushed it to a branch that was never merged: the rule is **on no
+document on `main`**, and six remote branches currently hold work `main` does not.
+
+**SEVEN PROPOSALS, ALL SIX KINDS, NONE DECIDED AND NONE IMPLEMENTED.** GP-01 check every
+declared count against the thing it counts · GP-02 state what was measured, where, and whose
+conclusion it is · GP-03 a session-reporting skill · GP-04 measure the decision backlog and
+whether a decision would survive a clone · GP-05 take the prose governance documents out of the
+automatic path · GP-06 let a measured count be written back by the run that measured it ·
+GP-07 report the work that is on a branch and not in `main`. **Every one states the case
+against itself**, and GP-06 — the only one that makes the system looser — says to read that
+first. Six of the seven derive `human_only`; GP-03 comes out `review_required` because
+`.agents/skills/` is on none of the never-automatic lists, which is an observation and not a
+recommendation.
+
+**NOTHING IN `agent/proposals/governance/` WRITES, AND IT IS PROVED TWICE.** No module calls a
+write API — asserted as a *call* rather than a mention, so the header explaining the rule does
+not violate it — and a full run leaves the working tree byte-identical. Neither `recordDecision`
+nor `recordGrant` is imported anywhere in the directory, and the CLI has no `decide`, `apply`,
+`grant` or `record` verb, which the suite checks by reading it. The records are deliberately
+**not** on the inter-agent bus and carry `contract: null`: a nineteenth contract would have put
+a governance record on the agent-to-agent bus and changed the gate every other record passes.
+GP-04 names what that costs rather than hiding it.
+
+**TWO LIVE DRIFTS FOUND, NEITHER FIXED, BOTH ANCHORED.** `agent/schemas/cli.mjs:28` prints
+`FOURTEEN CONTRACTS` immediately above a list of eighteen. And the SESSION 26 paragraph below
+records the boundary scan at 225 files under `agent/` where every SESSION 26 commit holds
+**226** — a hand-written count, one out, in the paragraph that exists so a later session can
+detect drift. Both are left standing as the worked examples GP-01 exists for: a validation
+proposed with no live instance is one nobody can evaluate. If GP-01 is refused, both words
+should be spent anyway.
+
+**P-01 FIRED ON THIS SESSION, AT THE MERGE, AND IT IS RECORDED RATHER THAN TIDIED AWAY.**
+Immediately before merging, `git log main..origin/main` reported local `main` **three commits
+behind** — at `4fe1952`, with the whole of SESSION 26 missing. Merging into it would have
+reverted the limited-autonomy activation. It was reset to `origin/main` rather than merged
+into, exactly as `aed63a7` did. **Fifth time the trap has caught a session, and the first time
+it caught the session writing the pattern about it.** The rule was read and the rule is not
+what caught it; the check was. `docs/GOVERNANCE-PROPOSALS.md` §6a.
+
+**A REGISTER COMMAND ON `main` HAS BEEN FAILING SINCE SESSION 26, AND IT IS NOT THIS
+SESSION'S AND NOT REPAIRED.** `node agent/orchestrator/cli.mjs workflows` and `capabilities`
+exit 1 with *"The requested module './policy.mjs' does not provide an export named
+'AUTONOMY_NOTE'"* — SESSION 26 made that note derived and `agent/orchestrator/cli.mjs:50`
+still imports the constant it replaced. Verified pre-existing: the same import is at
+`aaf6691`, and `git diff aaf6691 HEAD -- agent/orchestrator/` is empty. **No suite runs these
+CLIs**, so only CI sees it, and a failing step skips every step after it in the same job —
+which skipped this session's own governance check on its first run. The check has been moved
+ahead of the registers; the register itself is left for a person, because
+`agent/orchestrator/` is outside this brief and what the register should now print is a
+judgement about what it asserts. It is the cheapest concrete thing SESSION 29 could fix.
+`docs/GOVERNANCE-PROPOSALS.md` §6b.
+
+**One existing assertion changed, and it is the recurring one.**
+`agent/implement/selftest.mjs` R6, `AGENT_SUITES.length` 20 → 21. **Seventh catch**, and the
+first time the thing it caught was a suite whose subject is that assertion's own failure mode.
+No other existing assertion was touched, and no test was deleted, skipped or relaxed.
+
+**Everything was re-run after `git add`, not before.** **1081 tests across twenty-two suites, 0
+failures, 0 skipped**, measured on this session's branch (1036 across twenty-one before; the
+governance suite adds 45). On `main` `agent/autonomy/selftest.mjs` test 28 skips itself,
+because the cycle refuses to run there, so the figure on `main` is 1080 with one skipped.
+18/18 contracts satisfiable. The four validators at the `docs/CURRENT-ARCHITECTURE.md` §12
+baseline: `validate.mjs` 0 errors, `i18n-audit.mjs` 0 errors 0 warnings, `design-qa.mjs` 0
+errors and the same five warnings by file and line, 106 unverified records.
+`agent/implement/cli.mjs boundary` at **0 blocking / 13 warnings**, unchanged, with `agent/ is
+inside the public surface` at **233 files** — 226 on `origin/main` plus this session's seven.
+`.control-room/cli.mjs boundary` at 0 errors, 22 routes, 8 public, 0 production controls,
+unchanged. The browser suite in a real Chromium: **125 pass · 3 fail · 2 undecidable**, the same
+three SESSION 19 defects, untouched. `freshness.mjs` still exits 1 on the same "1 item(s) need
+attention" SESSIONS 24, 25 and 26 all recorded; it is not this session's regression and it is
+not fixed.
+
+**CI'S OWN CONCLUSION, NOT THE LOCAL EXIT CODES.** Run 34482119556 on `main` at `d10b413`
+reports overall **`failure`**, three of six jobs red: `freshness.mjs` on the same pre-existing
+item, the browser suite on the same three SESSION 19 defects, and the Orchestrator's registers
+on the SESSION 26 breakage above. **None is new and none is this session's.** The governance
+evidence step reports **success** — it runs in CI now that it precedes the broken register; on
+the merge commit's run it was `skipped`. `docs/GOVERNANCE-PROPOSALS.md` §6c.
+
+**WHAT THIS SESSION DID NOT DO.** It decided nothing and changed no policy:
+`DEFAULT_POLICY.enabled_categories` is still `[]`, the grant ledger is unchanged at one line,
+`agent/policy/` was not edited, and the approval ledger is as absent after as before. It fixed
+none of the twelve patterns, including the three whose fix it wrote out in full. It touched no
+dataset, no locale, no module under `js/` and no page — **no legal fact was written, changed or
+moved**. And it **did not merge SESSION 27**: `claude/continuous-improvement-loop-vpd2u1` holds
+`agent/improve/`, a repaired autonomy gate ladder and two further findings, is not in `main`,
+and is one of the six branches P-06 counts. This session cites none of its documents as
+evidence, because a document on an unmerged branch is not something a reader of `main` can
+check. **Merging it is a decision for the repository author**, and the next session should
+expect a conflict in `docs/HANDOVER.md`, in AGENTS.md's suite list and test totals, and in
+`agent/implement/selftest.mjs` R6 — every one of them a count, which is the conflict shape
+`e6f2715` predicted.
+
+**What SESSION 29 inherits.** Seven governance proposals in front of a person, added to a
+queue from which nothing has ever been taken. That is the honest description of this session's
+contribution and it is P-07 restated: seven more pending records do not convert repeated
+intervention into durable knowledge — a person deciding them does. The cheapest three to
+decide are GP-01, GP-02 and GP-07, each of which would have caught a failure this repository
+has already had more than once; the one to read hardest before deciding is GP-06, and its own
+entry argues for refusing it.
+
+---
+
+## SESSION 27 — the continuous improvement loop, and what it found
+
+**What was built:** `agent/improve/`, eight files, thirty-one tests. Eight observers run in one
+process against one corpus position with one as-of date; the pass is compared with the last
+recorded one; every record is routed to a desk; the whole thing ends at a person. Full report:
+**`docs/CONTINUOUS-IMPROVEMENT.md`**.
+
+**THE FINDING THAT MATTERS: the autonomy gate ladder was unpassable. It is now repaired, under
+an explicit warrant from the repository author.** Take an `ImplementationProposal` with nothing
+wrong with it — one file under `docs/`, a path the grant names and `machine_derived_field`,
+which the grant enables; real evidence, no interpretation, no blocking question, `low` risk, a
+rollback plan. Under the real policy in force, five of the six gates passed and
+`policy_route_pre` refused. It had **two independent locks on the same door**, and the second
+was invisible until the first was picked.
+
+**Lock 1.** `rollback_mechanical` reads a change context — the branch, the base commit and the
+per-file pre-change hashes `agent/implement/apply.mjs openContext()` records in **step 2**;
+gate 3 runs **before step 1**. Four of its six elements were therefore `unknown` for every
+proposal ever written. `assessRollback()` has always distinguished `unknown` (not established)
+from `absent` (established missing); `rollbackMechanical()` collapsed both into `failed`, which
+is this repository's §0.3 error.
+
+**Lock 2.** Gate 3's third clause read `route !== 'blocked'`. There are two ways the engine
+returns `blocked` — an unauthorized actor, or an unmet condition on `NOT_WAIVABLE_BY_APPROVAL`
+— and **every measured condition is on that list**, so the clause was unsatisfiable before a
+run *independently of lock 1*. Fixing only the rollback condition moved the refusal from clause
+1 to clause 3 and changed nothing a caller could see: the gate then reported "0 condition(s)
+fail and 0 non-measurement condition(s) are unknown" **and failed anyway**.
+
+**So `docs/LIMITED-AUTONOMY.md` §7.1 was true and was not the binding constraint.** "Nothing
+produces a proposal in an enabled category" is a fact about producers. The permitting half was
+**unreachable**. That is consistent with SESSION 26's §6, which shows gate 3 refusing with "4 of
+six rollback elements absent" among five reasons — four other gates refused each of the fourteen
+too, so this reason was never the one that mattered and nothing was in a position to notice.
+
+**THE WARRANT.** `docs/AUTONOMY-POLICY.md` reserves a governance-layer change to a person, and
+this session reported the finding and did not repair it. The repository author then gave the
+warrant, on 9 September 2026, in these words: *"Changing what a gate proves is Class C work / I
+give u the warrant"*. It is quoted in `docs/CONTINUOUS-IMPROVEMENT.md` §4a and **not** recorded
+as a governance grant — a grant is read at runtime by `policyInForce()` and needs a ledger; this
+is code, which `git blame` attributes. Nothing was enabled by it: no grant was written or
+widened, `DEFAULT_POLICY.enabled_categories` is still `[]`, and no proposal was merged.
+
+**NO CHECK WAS WEAKENED, and that is asserted rather than claimed.** An element established
+missing still fails, and that check runs first — `not_reversible`, a context on `main`, and
+nothing supplied at all all still FAIL. An unauthorized actor is still refused, and gate 3's new
+clause is the only thing there that catches it: the engine returns `conditions: []` for one, so
+clauses 1 and 2 both count zero and both pass. Step 6 still re-evaluates every condition with
+`facts.context` from the real run and merges only on route `automatic`.
+
+**WHAT IT NOW DOES.** All six gates pass; the cycle reaches the measured evaluation;
+`outcome: rehearsed` where it was `refused`; `would_merge: false` on
+`verification_succeeded (unknown)` and `validators_pass (failed)`. **The refusal moved from a
+structural impossibility to two real measurements**, the second being `freshness.mjs`'s
+pre-existing exit 1. **No autonomous change has merged anything and this session did not make
+one.**
+
+**A THIRD FINDING, NOT THIS SESSION'S AND NOT REPAIRED: the adversarial gate has been red since
+SESSION 24.** `node agent/policy/verify/cli.mjs` reports **65 failed safely · 1 SUCCEEDED · 2
+partial · 1 undecidable**. `AGENTS.md` and `docs/SECURITY-VERIFICATION-2026-09-08.md` both said
+0 succeeded. HE-04 (CRITICAL) finds the trigger phrase in `agent/simulation/threshold.mjs`.
+Measured at `aaf6691` in a clean worktree, so it predates this session entirely. The module uses
+the phrase as a **probe** — the line the attack hits is the separation check that searches
+Control Room source to prove the phrase is absent from it — so this is very probably the HE-01
+shape SESSION 23.5 corrected once, with an exclusion list that went stale when SESSION 24 added
+a fourth legitimate prober. Left red deliberately: a CRITICAL suppressed is worse than a
+CRITICAL explained, and the gate's own posture is that a remediation is a later session's to
+decide. **The standing lesson is that the gate is not in CI.**
+`docs/CONTINUOUS-IMPROVEMENT.md` §4b.
+
+**A SECOND FINDING, measured rather than inferred: six of the eight fields the grant allowlists
+have never existed in `data/sources.json`.** `last_retrieved`, `retrieved_at`, `checksum`,
+`content_hash`, `recheck_interval` and `freshness_window` appear nowhere in the file — not on a
+record, not in `$description`, not in `$note`. Only `url` and `url_status` are there, on all 77
+records. So `retrieval_metadata` has no surface to write to at all. This is not a defect: a
+permission over nothing is inert, and §7.6 already says absence is the safe direction for the
+opposite case. It is **not repaired**, and repairing it would be the failure it looks like a fix
+for — adding `checksum` to `data/sources.json` is a schema decision about the legal record taken
+to make an autonomy demonstration possible. `node agent/improve/cli.mjs reach` measures it on
+every push. `docs/CONTINUOUS-IMPROVEMENT.md` §5.
+
+**THE ONE RULE THE LOOP TURNS ON.** An observer that did not run is not an observer that found
+nothing. A finding absent this cycle was either fixed or its observer did not run, and the
+finding lists cannot tell those apart — so movement is per observer, and an observer that did
+not run in BOTH cycles yields `undetermined` for everything it owns. Never `resolved`, never
+counted as an improvement. Tests 5 to 8 are that case from four directions, including the
+mirror image: an observer absent from the PREVIOUS cycle makes nothing new. A first cycle
+reports nothing new at all.
+
+**THE CYCLE LEDGER IS TRACKED, AND IT IS THE ONLY RUN STORE HERE THAT IS.** Every other one is
+ignored and argues for it in `.gitignore`; the argument is good and this is the exception,
+because a loop whose memory does not survive a clone is not a loop. The precedent is the grant
+ledger and the decision ledger, not the health history. What pays for it is a rule: a signal
+classified `private` by `agent/health/model.mjs` is withheld with the reason recorded, the
+health monitor's own `collectLeaks()` runs over the serialised entry against the real private
+metric register, and a path under `.control-room/` is a **refusal to write** rather than a
+redaction. Nothing records without `--record`, for the reason
+`agent/health/history.mjs writePublic()` gives about publishing.
+
+**THE FIRST RECORDED CYCLE.** `cycle-9f20d795beea`, trace
+`dbd43f16b2f34bf1fa0d2e7e3183f522`. 8 of 8 observers ran, **210 findings** — depth 57,
+data-proposals 49, editorial 44, architect 40, ux 20. Triage: **0 referable to the autonomy
+runner · 66 to a person · 144 proposing no act.** All 66 are refused by a category no policy may
+ever automate: `legal_interpretation` 30, `architecture_change` 16, `substantive_data_change`
+13, `taxonomy_change` 5, `schema_change` 2. `triage.blocked_only_by_prerun_condition` is 0 and
+that zero means "no proposal got that far", not "the blocker is gone" — nothing in the real
+corpus is refused later than the category gate, which is why the finding above needed a
+well-formed fixture to surface.
+
+**Six existing assertions changed, and every one is named.**
+
+| | |
+|---|---|
+| `agent/implement/selftest.mjs` R6 | `AGENT_SUITES.length` 20 → 21. **Seventh catch.** The loop reads every other agent's output and routes it. |
+| `agent/policy/selftest.mjs` 7 | the pre-run `rollback_mechanical` verdict `failed` → `unknown`. The route is still asserted `blocked` **first**, and the three cases the test is named for all still FAIL. Element-level assertions added so it cannot regress into "everything is unknown". |
+| `agent/autonomy/selftest.mjs` 17 | `MEASURED_CONDITIONS` four → five, asserted exactly. |
+| `agent/autonomy/selftest.mjs` 17b | **new** — gate 3 tolerates an unmeasured rollback; the measured evaluation still refuses one that is genuinely not mechanical, and one on `main`. |
+| `agent/autonomy/selftest.mjs` 17c | **new** — an unauthorized actor is still refused at gate 3, with the empty condition list planted explicitly. |
+| `agent/autonomy/selftest.mjs` 28 | ran a proposal whose simulated evidence is refused at gate 2, and accepted `refused` OR `rehearsed` — so it could never tell "correctly refused" from "the ladder cannot be passed". It now runs a clean fixture and asserts every gate passes. |
+
+`agent/improve/` also **lost** code: the triage's special case for the pre-run condition, and
+the signal that counted it. The case no longer arises, and code describing a world that has
+changed is worse than no code. An assertion replaces it.
+
+No other existing assertion was touched, and no test was deleted, skipped or relaxed.
+
+**Everything was re-run after `git add`, not before.** **1069 tests across twenty-two suites, 0
+failures**, measured on this session's branch (1036 across twenty-one before; the loop adds 31
+and the gate repair adds 2).
+18/18 contracts satisfiable. The four validators: `validate.mjs` 0 errors, `i18n-audit.mjs` 0
+errors 0 warnings, `design-qa.mjs` 0 errors and the same five warnings by file and line, 106
+unverified records. `agent/implement/cli.mjs boundary` at **0 blocking / 13 warnings**,
+unchanged, with `agent/ is inside the public surface` at **236 files** where SESSION 26 recorded
+225 — this session's eleven files being counted. `.control-room/cli.mjs boundary` at 0 errors,
+22 routes, 8 public, 0 production controls, unchanged. The browser suite in a real Chromium:
+**125 pass · 3 fail · 2 undecidable**, the same three SESSION 19 defects, untouched.
+
+**THE LOOP MADE ITS FIRST REAL COMPARISON.** A second cycle, `cycle-df155e5eac10`, recorded
+after the repair at `fa67b3ab`: **0 new · 210 persisting · 0 resolved · 0 undetermined**, all
+eight observers comparable. Two passes an hour apart at different commits over an unchanged
+corpus produced the same 210 findings under the same 210 ids — which is the reproducibility the
+content-derived ids buy, and the thing eleven separate CLIs could not do.
+`docs/CONTINUOUS-IMPROVEMENT.md` §6b.
+
+**`freshness.mjs` still exits 1** on the same "1 item(s) need attention" SESSIONS 24, 25 and 26
+all recorded. It is not this session's regression and it is not fixed. It is the sole reason
+`validators.at_baseline` reads false in the recorded cycle.
+
+**Nothing in `data/`, `i18n/`, `js/`, `css/` or any page was changed**, and
+`agent/improve/selftest.mjs` test 20 runs two real cycles and asserts it from outside.
+
+**SESSION 28's OWN CHECK CAUGHT A REAL ERROR OF SESSION 27's AT THIS MERGE, AND IT IS RECORDED
+RATHER THAN EDITED AWAY.** `node agent/proposals/governance/cli.mjs check` came back **2
+anchors REFUTED** on the merged tree, both naming strings that should be in `docs/HANDOVER.md`
+and were not: `"at 225 files where SESSION"` (P-04) and `"0 merged · 0 reverted · 14"` (P-08).
+
+The cause was SESSION 27's, not the merge's. Commit `b1b819a` rewrote this file with an
+over-broad text replacement whose end anchor was the SESSION 25 header — **so it deleted the
+entire SESSION 26 section, 113 lines, in passing.** It was not noticed because the staged diff
+read `251 +++++----------` and that was taken for the session's own section being rewritten.
+The section is restored here from `fa67b3a`, verbatim, and the check now reports **49 resolved
+· 0 refuted**.
+
+A second slip of the same family happened at this merge and is recorded for the same reason:
+the merge commit shipped with two unfilled `__MERGED_TOTAL__` placeholders in `AGENTS.md`,
+because the measured figures were written into the working tree **after** `git add` and the
+commit took the staged copy. `AGENTS.md` already says to run the suites after `git add`, not
+before; the sibling rule is to commit what you staged, or stage again. Corrected in the
+following commit rather than amended away.
+
+Three things worth carrying from the deleted section. **A `--stat` line is not a review** — `AGENTS.md` says to
+read the full `git diff` before committing, and a large deletion count on a file you are also
+adding to is exactly what that instruction is for. **The evidence anchors worked as designed**:
+SESSION 28 built them to refuse a pattern citing something the tree contradicts, and the first
+thing they caught was a sibling session deleting the evidence. And **it was caught at the
+merge, by the other session's tool** — neither session's own suite would have noticed, because
+no validator here reads prose.
+
+**THE MERGE WITH SESSION 28, AND EVERY RESOLUTION NAMED.** SESSION 28 landed on `main` first;
+this branch merged it in. Three files conflicted.
+
+| | |
+|---|---|
+| `agent/implement/selftest.mjs` R6 | **Both sessions set `AGENT_SUITES.length` to 21**, each correctly about its own tree. The merged tree has 22. This is the second time this assertion has caught that exact shape — the first was the SESSION 22/23 merge — and it is the case it is most worth having for. The membership list now also names `agent/proposals/governance/selftest.mjs` explicitly, which SESSION 28 had not added. |
+| `AGENTS.md` | Three hunks. The test count keeps both sessions' figures and says neither is the total; the R6 paragraph records 27 and 28 as **one occasion rather than two**; the commands section is a pure addition on both sides and keeps both. |
+| `docs/HANDOVER.md` | Both prepended a session. Both are kept, newest first, with a merged header. |
+
+`agent/implement/checks.mjs` and `.github/workflows/qa.yml` auto-merged correctly — both suite
+lists hold all 22 entries — and were verified by reading rather than assumed.
+
+**CI ON THE MERGE CAUGHT A FALSE CLAIM OF SESSION 27's, AND IT IS FIXED.** Run 34606107588 on
+`main` at `376bfb9`: **three of six jobs red**, the same three SESSION 28 recorded — the
+validators on `freshness.mjs`, the browser suite on the three SESSION 19 defects, and the agent
+suites on the Orchestrator's registers. None is new. But the third has a consequence that *was*
+new: a failing step skips every step after it in the same job, and SESSION 27 had registered
+**"What limited autonomy can reach" after the broken register**, so it was skipped and never
+ran. `AGENTS.md` and `docs/CONTINUOUS-IMPROVEMENT.md` §5 both said `reach` "runs on every push",
+and that was false for as long as nobody read the job. Both register steps are moved ahead of
+the break — which is what SESSION 28 did with the governance step, for the same reason and one
+session earlier. **"Every agent suite" passed**, so all 22 suites are green in CI.
+
+**Two things SESSION 28 reported that this merge did not touch and did not repair.**
+`node agent/orchestrator/cli.mjs workflows` and `capabilities` exit 1 on `main` and have since
+the SESSION 26 merge, because `cli.mjs:50` imports `AUTONOMY_NOTE` which `policy.mjs` stopped
+exporting when the note became derived. And the seven governance proposals are in front of a
+person in a queue from which nothing has ever been taken. Both are SESSION 29's.
+
+**What SESSION 29 inherits from SESSION 27.** The gate ladder is passable and **nothing has passed it**.
+`freshness.mjs` exiting 1 makes `validators_pass` fail for every run in this tree, so nothing
+can merge here until that pre-existing item is dealt with — that is now the binding constraint,
+and it is small and concrete where the previous one was a structural impossibility. HE-04 is
+red and its remediation is a decision; the adversarial gate is not in CI. The loop has one
+recorded cycle, taken before the repair; the second is where it starts being worth something.
+
+---
+
+## SESSION 26 — limited autonomy, activated
+
+**What was asked:** enable automatic implementation for explicitly approved low-risk
+categories only; for every automatic change create an isolated branch, implement, run the
+validators, run browser tests where applicable, record a full observation trace, merge only if
+all policy conditions pass, and retain rollback information; do not let substantive legal
+content auto-merge; report every autonomous action in the Control Room. Full report:
+**`docs/LIMITED-AUTONOMY.md`**.
+
+**The governance decision has a home, and it is not the policy object.** SESSION 23 left every
+category off because filling `DEFAULT_POLICY.enabled_categories` is a governance change
+protocol §24 forbids the system making to itself. SESSION 26 is that decision arriving from
+the repository author, and it is recorded as a **grant** in
+`agent/policy/governance/grants.jsonl` — git-tracked like the decision ledger, because an
+authorization has to be attributable — naming a person, a date, an authority quoted from the
+brief, and an expiry of 9 March 2027. **`DEFAULT_POLICY.enabled_categories` is still `[]`, and
+four suites still assert it at their original strength.** That is the BASE; the policy in
+force is derived from the ledger by `policyInForce()`. Appending five strings to a frozen
+array would have been a fact with no author and a second home for one fact.
+
+**What the grant enables, and it is narrower than the brief allowed.** The five protocol §20
+categories, over exactly two paths — `data/sources.json` and `docs/` — and, on the first,
+exactly eight bookkeeping fields. The path allowlist is the real narrowing and the FIELD
+allowlist is what keeps substantive legal content out of an enabled category: `tier`, `role`,
+`supports`, `last_verified`, `verification_note`, `requires_verification`, `reference_gap`,
+`gap_note`, `title`, `publisher`, `type` and `celex` are on a never-automatic list no grant
+may name. Risk ceiling `low`, environments `local` and `ci`, **never `production`**. Every one
+of those refusals runs again on every READ, and `agent/autonomy/selftest.mjs` test 7 writes a
+forged line straight into a ledger file and asserts nothing it names is honoured.
+
+**What a grant bought: exactly two of `preflight`'s ten gates.** `approved` and
+`approval_attributable`, and nothing else — SESSION 18's own header already said "an
+authorized human OR an explicitly permitted autonomy policy" and left the second half unbuilt.
+`preflight` is not modified and not weakened. `agent/autonomy/` adds six gates in front of it,
+all evaluated always, and the seven steps behind it.
+
+**THE FIRST REAL RUN REFUSED ALL FOURTEEN PROPOSALS, EACH BY FOUR INDEPENDENT GATES.** Data
+Depth and the Gap Proposals router ran against the real corpus (57 gaps, 14 `DataProposal`s);
+`node agent/autonomy/cli.mjs run --as-of 2026-09-09` reports **0 merged · 0 reverted · 14
+refused**, real trace `44b4813604b011a1a490761191704ad8`. Thirteen derived
+`substantive_data_change` and one `taxonomy_change` — none is one of the five enabled. The
+field gate fired on a real proposal whose operation target named `verification_note`, which is
+the record of what was and was not established. Nothing in `data/`, `i18n/`, `js/`, `css/` or
+any page was changed, and all fourteen ledger lines record `wrote_files: false`.
+
+**What it did NOT do, and this is the limitation to carry.** **No autonomous change has ever
+merged anything.** The gate ladder and the rehearsal path run against real proposals, and the
+git mechanics of steps 1 and 6 are driven against a real temporary repository created with
+`git init` (`agent/autonomy/selftest.mjs` tests 34–37: main is refused, an unrelated dirty
+file is not swept into an autonomous commit, the merge is `--no-ff` with two parents and
+`main` does not move, and `abandon` is idempotent and does not discard work it never touched).
+The full seven steps have never run end to end with `--execute` against a proposal that
+passed, because **nothing in this repository currently produces a proposal in one of the five
+enabled categories** — and manufacturing one to demonstrate the mechanism would be a fixture
+dressed as work.
+
+**Three existing assertions changed, all because the world changed, and each is named here so
+a reader can disagree.**
+
+| | |
+|---|---|
+| `agent/orchestrator/selftest.mjs` R6 | Read "no action category is approved for automatic execution" and asserted `category_allowed` refused `source_metadata_maintenance`. A person has since granted that category. The replacement keeps all three original claims and adds two: a category no policy may EVER automate is refused **even under a hand-made policy object whose enabled list names it**, and the granted category satisfies that one condition while the act as a whole is still refused. The second of those caught a real weakness — the condition was a plain `includes()` and would have passed such a policy, leaving the engine as the only thing between a forged policy object and a legal interpretation. `agent/orchestrator/policy.mjs` now reads `automatable` first. |
+| `agent/policy/selftest.mjs` 33 | Asserted the Orchestrator asks the engine about `DEFAULT_POLICY`. It now asks about the policy IN FORCE, because an Orchestrator enforcing a weaker policy than the implementation layer is exactly the drift that test exists to prevent. The replacement asserts the in-force id **and** that it begins with the base id, so a grant extends the base rather than replacing it. |
+| `agent/implement/selftest.mjs` R6 | `AGENT_SUITES.length` 19 → 20. Sixth catch. |
+
+**`agent/orchestrator/policy.mjs`'s `AUTONOMY_NOTE` became a false statement and is now
+derived.** It said "No action category is approved for automatic execution in this
+repository", which was true when written. `autonomyNote()` reads the ledger;
+`AUTONOMY_BASE_NOTE` keeps the base statement.
+
+**A fourth assertion changed, and it is the SESSION 19 shape — a check that passed for the
+wrong reason.** `agent/simulation/selftest.mjs` test 1b's own comment said "the assertion is
+that THIS run added nothing", and its code asserted that `agent/records/`,
+`agent/observability/runs/`, `agent/orchestrator/state/` and `.control-room/state/` were
+EMPTY. Those are different claims. `agent/records/` is git-ignored run state that any agent
+run populates, so the test passed in a fresh clone and in CI and failed the moment this
+session ran Data Depth first to give the autonomy layer something to refuse. It now
+snapshots, runs, and compares — which is **stricter**: the old form could not have caught a
+simulation writing into a directory that already held a file. This is a change to a check,
+which is Class C, and it is recorded here so a reader can disagree with it.
+
+**Two CI omissions were fixed rather than only reported**, and the fix is named because it is
+a change to a gate: `.github/workflows/qa.yml` ran seventeen suites while `AGENT_SUITES`
+listed nineteen — `agent/simulation/selftest.mjs` had never been in CI. Both it and
+`agent/autonomy/selftest.mjs` are in now, plus a register step printing what limited autonomy
+is switched on to do on every push.
+
+**Everything was re-run after `git add`, not before.** **1036 tests across twenty-one suites,
+0 failures, measured on this session's branch.** On `main` the figure is 1035 with one
+skipped: `agent/autonomy/selftest.mjs` test 28 rehearses the real cycle, and the cycle
+refuses to run on `main`, so the test skips itself rather than passing for the wrong reason.
+That is the assertion being honest about where it can and cannot establish anything. (998 across twenty before; the autonomy suite adds 38, and three earlier tests
+gained assertions rather than counts — the orchestrator's R6 split into three claims). 18/18 contracts
+satisfiable. The four validators at the `docs/CURRENT-ARCHITECTURE.md` §12 baseline: 0 errors
+on `validate.mjs` and `i18n-audit.mjs`, 0 errors and the same five `design-qa` warnings by
+file and line, 106 unverified records. `agent/implement/cli.mjs boundary` at **0 blocking / 13
+warnings**, unchanged, with `agent/ is inside the public surface` at 225 files where SESSION
+23.5 recorded 204 — this session's files being counted. `.control-room/cli.mjs boundary` at 0
+errors, **22 routes** (21 before, the new one being `GET /api/autonomy`), 8 public, 0
+production controls. The browser suite in a real Chromium: **125 pass · 3 fail · 2
+undecidable**, the same three SESSION 19 defects, untouched.
+
+**`freshness.mjs` still exits 1** on the same "1 item(s) need attention" SESSIONS 24 and 25
+both recorded, so `agent/implement/cli.mjs check` reports verdict `fail` for that reason and
+that reason alone. It is not this session's regression and it is not fixed.
+
+**What SESSION 27 inherits.** Limited autonomy is on and has merged nothing. The gap between
+those two facts is the whole of the next objective: either an agent that produces a proposal
+in one of the five enabled categories, or a person handing one to `--execute` by hand. Until
+then the honest statement is that the permitting half is proved against fixtures and the
+refusing half against the real corpus. Also inherited: `agent/policy/` is on the
+never-automatic path list on purpose, so widening the grant is Class C work in front of a
+person, not something the system can do to itself.
+
+---
+
+## SESSION 25 — the first controlled real-world run
+
+**What was asked:** run the whole pipeline OBSERVE + PROPOSE ONLY against the small, already
+-registered set of real EU sources (`agent/scout/authorities.mjs`), through discovery,
+verification, change detection, gap identification, affected-page and editorial/UX implications,
+Control Room discovery impact, QA simulation and the full trace, ending in a prioritized human
+review queue. Full report: **`docs/SESSION-25-FIRST-REAL-WORLD-RUN.md`**.
+
+**What happened at the network boundary, and it is the headline finding.** `agent/scout/cli.mjs
+--live` attempted all five registered endpoints (EUR-Lex, the Commission's digital-strategy
+site, EDPB, EDPS, ENISA) for the first time this project has ever asked it to. **All five were
+refused by this environment's own egress policy** — confirmed independently with `curl` and
+`WebFetch` against the same hostnames, neither of which is part of this repository. The Scout
+recorded five `retrieval_blocked` gaps, real trace `3431281084fa9129b4689b82cb7043e8`, and
+invented nothing. **This turns U-23.5-01 and AUDIT F-12 — "the deployed origin has never been
+fetched, the network policy refuses it" — from an inference into a measurement**, for the first
+time. Verification, integration and live-path change detection chained off that trace and
+correctly found nothing to do (§3 of the report) rather than falling back to the mock corpus.
+
+**What ran against the real corpus and real pages, and found real findings.** Data Depth (57
+gaps), the Knowledge Architect (20 findings, all eight questions answered yes), the Gap
+Proposals router (14 `DataProposal`s + 22 refused-and-named), Editorial (22
+`editorial_recommendation`s over 387 real prose blocks), UX/UI (10 findings, 1 critical), and a
+real-Chromium Browser QA run (125 pass · 3 fail · 2 undecidable — the same three SESSION 19
+defects, unchanged). **48 proposals now sit in the record store, 0 decided, 0 routable to
+implementation** — `agent/orchestrator/cli.mjs survey` refuses every one by the same four
+`preflight` gates, which is those gates working as designed on records nobody has approved.
+
+**The hidden Control Room entry was evaluated as instructed and found one relevant finding.**
+`js/threshold.js` implements the modal/dialog contract independently of `js/dialog.js` and
+`app.js` — an accessibility-consistency finding (`prop-ux-two-implementations-a364f0ff9dd6`),
+explicitly **not** a security finding. Nothing else in this run's records touches search
+behavior, hidden-entry detection, animation, Control Room login routing, the public/private
+boundary, or a privileged interface. `docs/SESSION-25-FIRST-REAL-WORLD-RUN.md` §6.
+
+**What it changed:** nothing in `data/`, `i18n/`, `js/`, `css/` or any page.
+`git status --porcelain` was empty throughout, checked before this document was written. The
+four validators are at the recorded baseline (0 errors, 106 unverified, 5 `design-qa`
+warnings), both boundary checks are unchanged (0 blocking / 13 and 0 / 0), and
+`agent/implement/decisions/decisions.jsonl` remains empty. A curated, prioritized review queue —
+not all 48, by instruction — is in the report's closing section, ready for a human decision.
+
+**CI on this push (`cdfe375`) reports `failure`, and that is not this session's regression.**
+Checked against the actual GitHub Actions run rather than left to local exit codes: two of six
+jobs fail — `freshness.mjs` exiting 1 on the same "1 item(s) need attention" reported above, and
+the browser suite failing on the same three pre-existing defects already named. The immediately
+preceding push, SESSION 24's `341ff39`, fails CI in the identical two jobs at the identical
+steps. `AGENTS.md` already says this workflow "is not a deploy gate." Report:
+`docs/SESSION-25-FIRST-REAL-WORLD-RUN.md` §7.
+
+**The one thing SESSION 26 inherits that is new:** the network boundary in §2 of the report is
+now a measured fact about *this* environment rather than a documented default. It will
+reproduce identically on a rerun here. Advancing step 1 needs either a different network policy
+or a person retrieving one document by hand and handing its text to the Verifier via
+`--records`.
+
+---
+
+## SESSION 24 — the first end-to-end run, in simulation
+
+**What was asked:** run one complete simulated cycle across the whole agent graph, produce
+an end-to-end trace, simulate the hidden Control Room discovery flow as a separate
+UX/security path, define the intended visual sequence without implementing it, and then
+identify what is missing, ambiguous, redundant, unvalidated, misrouted or insecure —
+**without fixing any of it.**
+
+**What was built:** `agent/simulation/`, nine files, twenty tests. It wires twelve
+**simulated** specialists into the real Orchestrator and walks eight of the ten workflow
+types once, with a real `.control-room/` process on the authorization leg — a real login, a
+real authorization refusal for the wrong role, a real fingerprint check, a real CSRF
+refusal, and one real ledger line written into a temporary decision directory.
+
+**What ran for real:** the event intake and its stripping, classification, the capability
+register and every grant, every handoff check, H3, the contract gateway, all six conflict
+detectors, the provenance and rollback gates, the twelve autonomy conditions, the journal,
+the tracer, `preflight`'s ten gates, the ledger, and the Control Room's seven decision gates.
+
+**What was simulated:** the eleven specialists' domain reasoning. **No source was read, no
+page was opened by a specialist, no dataset was examined, no sentence was judged.** A green
+leg means the machinery routed a fixture.
+
+**What it changed:** nothing, measured. `agent/simulation/world.mjs` fingerprints all 362
+files in the working tree before and after; test 1 asserts the difference is empty and that
+the real decision ledger still holds zero lines. **Not one proposal in this repository has
+ever been decided, and this run did not change that.**
+
+**What it found: twenty-three findings, none fixed.** `docs/FIRST-END-TO-END-AUDIT.md`. The
+four to carry:
+
+| | |
+|---|---|
+| **V-1** | `orchestrator.mjs:495` calls `receive(record, { allowSimulated: true })`, hard coded. **Every workflow admits a simulated record** and routes it to a person. Only `preflight` gate 2 stops one, and that runs on `IMPLEMENTATION_REQUEST` alone. |
+| **V-3** | **The rollback gate has never examined a record.** On `IMPLEMENTATION_REQUEST` every stage before it is a gate, so it receives `[]` and passes; on `QA_FAILURE` it receives a `QAResult`, which has no `proposed_change` and is skipped. The trace reads *"0 rollback plan(s), each naming a method, steps and a verification"*. |
+| **V-2** | **Nothing re-checks a `ChangeRecord`'s files against the approved scope after the dispatch.** Leg 6 approved a proposal scoped to `index.html` and admitted a `ChangeRecord` declaring a change to `tools/simulated-check.mjs`. `apply.mjs` still enforces the permitted set against git, so the site is protected — the Orchestrator's own record of what happened is not. |
+| **I-1 / I-2** | Two conflict detectors have **no ordering constraint and no sibling exclusion**. Leg 1's trace names the upstream agent as the downstream one; leg 2 refused a workflow because one agent's proposal "softened" the blocking question in the `ApprovalRequest` it returned in the same call. |
+
+**The discovery flow.** All six separations were measured and hold: the animation is separate
+from authentication, authorization, approval, orchestration, execution and deployment.
+`js/threshold.js` imports nothing at all. The real browser suite ran the nine threshold
+checks in a real Chromium and all nine pass — including that opening the passage issues **no
+network request of any kind**, and that the wheel draws 3 rings and 22 letters.
+
+**The visual sequence** is declared as data in `agent/simulation/threshold.mjs`
+(`VISUAL_SEQUENCE`), so intended-versus-actual is a comparison a machine performs. Three of
+six phases do not match, and **one of the three must stay unmatched**: the brief's phase 6
+("reveal CONTROL ROOM followed by the normal authentication interface") must never be
+implemented as a login form on the published page. That would be a credential prompt in the
+public tree. The refusal is written into the specification's own `must_not`, and
+`selftest.mjs` test 6 asserts no page in the repository carries a `type="password"` field.
+
+**The suite list grew to nineteen**, which `agent/implement/selftest.mjs` R6 caught for the
+fifth time. **998 tests across twenty suites**, all passing. The four validators are at the
+`docs/CURRENT-ARCHITECTURE.md` §12 baseline: 0 errors, 106 unverified, 5 design-qa warnings.
+The browser suite is at its recorded state: the same three known failures (issues 25, 27 and
+28) and two undecidable, none of them touched.
+
+**Nothing in `data/`, `i18n/`, `js/`, `css/` or any page was changed, and no finding was
+repaired.** Protocol §25 asks this session to observe and document rather than silently
+repair, and a suite that pinned a defect would turn it into a requirement.
+
+---
+
+## SESSIONS 22, 23 and 23.5 — carried forward
+
+**Branch:** `claude/agent-governance-protocol-gfbgfb`, cut from `origin/main` at `c43b7a9`,
+with `claude/agent-governance-protocol-tx6mu1` (SESSION 22) merged into it. **Merged into
+`main` at `8f1b411`.**
+
+**WHAT THIS BRANCH NOW CARRIES.** Three sessions, on one tree:
+
+- **SESSION 22** — the Master Orchestrator, `agent/orchestrator/`. It was written on a
+  sibling branch cut from the same base and had never been merged. **An earlier version of
+  this handover said it had never been built. That was wrong**, and the correction is kept
+  below rather than edited away.
+- **SESSION 23** — the executable autonomy and authorization policy, `agent/policy/`.
+- **SESSION 23.5** — the adversarial verification gate, `agent/policy/verify/`.
+
+**THE AUTONOMY POLICY NOW HAS ONE HOME, AND IT IS `agent/policy/`.** The two branches had
+each implemented protocol §18's twelve mandatory conditions, §19's triggers, the §20 low-risk
+categories and an empty approved-category list. That is a second home for one fact. The merge
+resolved it in the direction protocol §14 states — the Orchestrator's responsibilities are
+workflow state, routing, handoffs, conflict detection and **policy enforcement**, not policy
+definition — so `agent/orchestrator/policy.mjs` now re-exports:
+
+| Was a literal in the Orchestrator | Is now a view onto |
+|---|---|
+| `MANDATORY_AUTONOMY_CONDITIONS` | `agent/policy/conditions.mjs` `CONDITIONS` |
+| `LOW_RISK_CATEGORIES` | `agent/policy/categories.mjs` `AUTOMATABLE_CATEGORIES` |
+| `APPROVED_AUTONOMOUS_CATEGORIES` | `DEFAULT_POLICY.enabled_categories` — still empty |
+
+**The two lists had already drifted, which makes the argument without anyone having to
+make it.** SESSION 22 had all five of protocol §20's low-risk categories; SESSION 23 had four,
+because `governed_metadata_maintenance` had been missed. The fifth is now in
+`ACTION_CATEGORIES`, and the test that asserted "protocol §20 names four" — which was simply
+wrong — asserts five and says why. Seven of the twelve conditions were spelled differently on
+the two sides; `agent/policy/`'s spellings win because they are what `evaluate()` returns and
+what the verification gate attacks. Four test names in SESSION 22's suite were renamed with
+them, and **every assertion keeps exactly the strength it had.**
+`agent/policy/selftest.mjs` test 32 is the drift check `docs/DATA-GOVERNANCE.md` §5 requires,
+and gate attack AB-10 is the same check from the outside.
+
+**SESSION 23's OTHER HALF IS NOW DONE.** Its brief says "the implementation layer **and
+Orchestrator** must enforce it mechanically". Only the implementation layer did, because the
+Orchestrator was not in the tree. `autonomyPermits()` now calls `agent/policy/engine.mjs` as
+well and `permitted` requires both to agree. **The first version of that wiring was wrong in
+an instructive way**: it asked the engine about the Orchestrator's own act of *enforcing* the
+policy, which is a read, so `evaluate()` routed straight to `automatic` having checked nothing
+and came back permitted. Policy test 33 now asserts the engine reported *which* conditions it
+refused on, because a refusal with an empty verdict is a refusal that did not look.
+
+**A CORRECTION TO THIS SESSION'S OWN REPORTING, AND IT MATTERS.** SESSION 23.5's commit said
+"909 tests across eighteen suites, 0 failures". **`agent/implement/selftest.mjs` R4 was RED on
+this branch as pushed, and on SESSION 22's branch as pushed, independently.** The suites were
+run before staging, and `publicSurface()` reads *tracked* files — so the credential scan could
+not see files that were not yet committed, and R4 went green for the wrong reason. Verified
+after the fact in clean worktrees at `e6f2715` and `74e9a4a`: both report `54 pass · 1 fail`.
+**Run the suites after `git add`, not before.**
+
+Both blocking hits are fixed at source, and none of them by touching a pattern:
+
+- `docs/HANDOVER.md` no longer reproduces the test passphrase literal. `docs/` is inside the
+  published surface, and R4 caught SESSION 21's draft handover for exactly this.
+- `agent/policy/verify/harness.mjs` is classified as the test fixture it is —
+  `TEST_FIXTURE_PATHS` gains it. Classification is not suppression: the hit is still found,
+  reported and counted, at warning severity beside the other ten. **This is a change to a
+  check, which is Class C**, and it is recorded here so a reader can disagree with it.
+- `agent/orchestrator/approval.mjs` had two call sites writing object syntax whose key and
+  value were the same privileged account name, which the `default-credentials` pattern reads
+  as a credential pair. The call sites changed; **the pattern did not.** Narrowing it to
+  exclude a same-word pair would blind it to the exact pair protocol §11 names as forbidden.
+  The over-firing is recorded as a finding in
+  `docs/SECURITY-VERIFICATION-2026-09-08.md` instead.
+
+**Everything was re-run on the merged tree, after staging this time.** Nineteen suites
+(**978 pass, 0 fail**), the contract check (18/18 satisfiable), the four validators at the
+`docs/CURRENT-ARCHITECTURE.md` §12 baseline (0 errors, 106 unverified, the same five
+`design-qa` warnings), the browser suite (125 pass, the same three pre-existing defects), both
+boundary checks, and the verification gate.
+
+**The boundary check reports 0 blocking / 13 warnings**, where SESSION 21 recorded 11. Two
+were added: this session's test passphrase in `agent/policy/selftest.mjs`, and the same
+constant in `agent/policy/verify/harness.mjs`. `agent/ is inside the public surface` moved
+from 180 files to 204, which is SESSIONS 22, 23 and 23.5 being counted.
+
+**THE ONE-OFF TEST FAILURE WAS FOUND, IDENTIFIED AND FIXED — AND IT WAS NOT A FLAKE.**
+An earlier version of this handover recorded a `.control-room/selftest.mjs` failure that had
+been seen once and never reproduced, with its name uncaptured. It reappeared while merging to
+`main`, and this is what it was:
+
+```
+15 · a session is a server-side record; nothing a client can write becomes one
+    a forged cookie was accepted: cr_session=...   200 !== 401
+```
+
+That message reads as a session-forgery breach. **It was not one.** The test builds six
+client-side forgeries, and the third is the real session token with its last character
+replaced by `A`:
+
+```js
+`cr_session=${real.cookie.split('=')[1].slice(0, -1)}A`   // "one character changed"
+```
+
+**Whenever the real token already ends in `A`, that is not a forgery — it is the real
+cookie**, and the server returned 200 because it was correctly accepting its own valid
+session. Measured rather than assumed: 3 of 40 logins produced a token ending in `A`.
+`.control-room/selftest.mjs` now replaces the final character with one that differs from it,
+so the assertion is meaningful on every run instead of on most of them.
+
+**The evidence that it is fixed is the construction, not the runs.** Eighteen consecutive
+runs pass, and eighteen runs would not settle it on their own: at a 7.5% failure rate, an
+unfixed test survives eighteen runs about a quarter of the time. What settles it is that
+`mutateLastChar()` returns `'B'` when the last character is `'A'` and `'A'` otherwise, so the
+mutated token can no longer equal the original for any input.
+
+Two things worth carrying forward. **The Control Room was never wrong here** — no session
+forgery was ever possible, and the other five forgeries and the four spoofed identity headers
+were refused on every run including the failing ones. And **the earlier handover's refusal to
+call it a flake was right**: it was a real defect with a probabilistic trigger, and calling it
+noise would have left a security assertion silently passing for the wrong reason about once in
+every thirteen runs.
+
+---
+
+## Current milestone
+
+**SESSION 22 — complete and merged into this branch.** The Master Orchestrator,
+`agent/orchestrator/`. The reference document is **`docs/ORCHESTRATOR.md`**.
+
+**SESSION 23 — complete.** The executable autonomy and authorization policy,
+`agent/policy/`, which is now the **one home** for the policy vocabulary. The reference
+document is **`docs/AUTONOMY-AUTHORIZATION-POLICY.md`**.
+
+**SESSION 23.5 — complete.** The adversarial verification gate, `agent/policy/verify/`:
+**69 attacks, 66 failed safely, 0 succeeded, 2 partial, 1 undecidable.** The report is
+**`docs/SECURITY-VERIFICATION-2026-09-08.md`**. **Two findings stand and neither was
+fixed.**
+
+---
+
+# SESSION 23 — the policy, executable
+
+## What was built
+
+Five modules and a CLI under `agent/policy/`, answering the question none of the three
+existing layers could: *may this specific act happen without a person?*
+`docs/AUTONOMY-POLICY.md` is a document, `agent/implement/preflight.mjs` checks a
+proposal's paperwork, `.control-room/authz.mjs` decides whether a person may press
+approve — and protocol §18's twelve mandatory conditions had no home at all.
+
+| File | What it owns |
+|---|---|
+| `categories.mjs` | 18 action categories, the policy object, the derivation of a category from a proposal |
+| `actors.mjs` | 84 rows: actor × action × resource × environment × path × risk |
+| `conditions.mjs` | the twelve mandatory conditions and the human-review triggers |
+| `rollback.mjs` | six elements, not a boolean |
+| `engine.mjs` | `evaluate()` → a route; `mayExecute()` → whether it may happen now |
+| `cli.mjs` | `policy` · `matrix` · `categories` · `evaluate --proposal <id>` |
+
+## The four things this session is arranged around
+
+**1 · NOTHING IS SWITCHED ON, AND THAT IS THE DELIVERABLE.**
+`DEFAULT_POLICY.enabled_categories` is `[]` and so is the path allowlist. No act in this
+repository can reach the automatic route, and tests 1b and 29 assert it stays that way.
+The prompt is explicit — "Do NOT enable automatic production merge in this session" — and
+filling either list is a governance change protocol §24 forbids the system making to
+itself. The suite proves the permitting half against `SIMULATION_POLICY`, a fixture
+marked `simulated: true` enabling one category over `docs/`, and then proves the
+identical act refused under the shipped policy. **A suite that could only ever see a
+refusal cannot tell "correctly refused" from "broken"** — the failure
+`.control-room/selftest.mjs` was arranged against, and the reason test 1 exists.
+
+**2 · THREE ROUTES, AND `blocked` IS NOT A SOFTER `human_review`.** `blocked` means an
+approval would not help, which is protocol §8 as code: approval "does not override
+provenance requirements; validation requirements; security requirements; scope
+restrictions; mandatory policy conditions". A proposal with missing provenance is not
+waiting for a reviewer; it is waiting for the agent that owns it.
+
+**3 · UNKNOWN BLOCKS.** Three verdicts, not two. Eight of the twelve conditions are read
+off the proposal and **cannot be supplied**; four are measurements that default to
+`unknown`, and `unknown` refuses exactly as a failure does. The project's own §0.3 rule,
+applied where getting it wrong would let a machine write to a website about EU law. What
+is NOT closed, and is said in the module header rather than discovered later: within one
+process a caller can supply a false fact.
+
+**4 · IT IS ENFORCED, NOT DESCRIBED.** `agent/implement/implementer.mjs` calls the engine
+twice per proposal — before a line is written, and again on the measured validators,
+browser suite and git scope enforcement. A `blocked` route is a refusal in the first
+case and a reason to revert in the second. Tests 30 and 31 assert both call sites exist
+and that the suite runs in CI.
+
+## The hidden Control Room entry
+
+`js/threshold.js`. Typing `thirty-two paths` into the search palette offers one extra
+result; choosing it draws a wheel — three concentric bands divided 3 · 7 · 12,
+twenty-two Hebrew letters, fine lines in the site's own ink — and offers a link to a
+login page.
+
+It authenticates nothing, authorizes nothing, and holds no credential, no endpoint and
+no privileged state. **The phrase is not a credential**: it is in a file served to every
+reader, protocol §10 says obscurity is not a control, and anybody who finds it meets the
+same login. It reads its target from `<meta name="eu-control-room">` and **never invents
+one**; no published page declares that tag, so on the live site the passage ends at a
+statement rather than a navigation. **Do not add the meta tag, or a server route that
+reads the phrase, without deciding to.**
+
+The wheel is not decoration: the Sefer Yetzirah tradition's twenty-two letters are an
+**enum authority**, a closed vocabulary from which everything else is composed, which is
+what `data/taxonomy.json` is to every other dataset here.
+
+Nine new browser checks measure it in a real Chromium, including that opening it issues
+**no network request at all**. One of them, `threshold:no-globals`, is measured against
+a blank document in the same browser — the naive form reported `sessionStorage` and
+`credentialless`, which are Chromium's own, as defects in the site.
+
+## Two existing assertions changed, and why
+
+Both because the world changed, not because they were inconvenient:
+
+- `agent/implement/selftest.mjs` R6 asserted `AGENT_SUITES.length === 15`. There are
+  seventeen now — the policy suite and the verification gate. The assertion is kept and
+  updated, because a suite silently dropped from that list stops gating changes and
+  nothing else would notice.
+- `agent/detector/impact.mjs` `MODULE_SURFACE` must name every module in `js/` and did
+  not name `threshold.js`. It does now, classified `surface: null` — chrome, reached only
+  through the palette, rendering no record.
+
+## A defect the suite found in the policy itself
+
+`agent/policy/selftest.mjs` test 5 caught it, and it is the kind of thing this whole
+layer exists to catch. A condition's `data` object carrying a key named `verdict`
+**overwrote the condition's own verdict**, turning `failed` into a word the engine
+matched as neither satisfied nor unmet — so an act that should have been blocked
+evaluated as **`automatic`**. It is fixed, the validator run's own verdict is now
+reported under `run_verdict`, and `evaluateConditions()` throws on any verdict outside
+the four it defines so it cannot recur elsewhere.
+
+---
+
+# SESSION 23.5 — the verification gate
+
+## What was built
+
+`agent/policy/verify/` — a catalogue of **65 attacks across seven areas**, each carried
+out against something real: a Control Room running on an ephemeral loopback port, the
+tracked tree as git reports it, or the policy and ledger modules themselves.
+
+```
+node agent/policy/verify/cli.mjs                the report
+node agent/policy/verify/cli.mjs --json         the whole record
+node --test agent/policy/verify/selftest.mjs    is the gate reproducible
+```
+
+**Result: 61 failed safely · 0 succeeded · 2 partial · 2 undecidable.** The repository
+was byte-identical afterwards, measured by hashing the tree around the run.
+
+## Four outcomes, not two
+
+`failed_safely` · `succeeded` · `partial` · `undecidable`. **An `undecidable` is not a
+pass.** Two of the boundaries the prompt names cannot be tested here at all, and a gate
+with only pass and fail would have had to call them passed.
+
+## The two findings, NEITHER FIXED
+
+**F-23.5-01 (HIGH) — the control-plane directories are inside the published surface.**
+188 files under `agent/` are published. No operational record is published today, but two
+tracked placeholder READMEs prove the directories are in the deployment, and the only
+thing keeping the records out is a `.gitignore` rule. **An ignore rule is not a
+boundary**: one `git add -f agent/implement/decisions/decisions.jsonl` publishes the
+approval ledger. Pre-existing — `docs/IMPLEMENTATION-QA.md` §6 — and re-measured rather
+than quoted.
+
+**F-23.5-02 (HIGH) — `agent/observability/server.mjs` authenticates nothing.** Eleven
+`/api/` routes over the whole trace store, protected only by a `host` **default**. The
+gate confirmed the module is unchanged and **did not re-run the measurement**, and says
+so rather than reporting a number it did not take.
+
+## The two undecidables
+
+**U-23.5-01 — the deployed origin has never been fetched.** The network policy refuses
+it. So the publication boundary, F-23.5-01 included, is **inferred** from Jekyll's
+documented default and from reading the tree.
+
+**U-23.5-02 — the Master Orchestrator is not in this working tree.** It exists on
+`claude/agent-governance-protocol-tx6mu1`; this branch does not carry it, so the gate had
+nothing to attack. The report records the correction rather than editing it away.
+
+## Two defects in the gate itself, found and corrected before the report
+
+Recorded in `docs/SECURITY-VERIFICATION-2026-09-08.md` §7 because a verification whose
+own errors are invisible is not a verification. Both are the SESSION 19 shape — a check
+that fails for the wrong reason:
+
+1. **HE-01 cried CRITICAL over a sentence.** It substring-matched forbidden words over
+   the whole of `js/threshold.js`, whose own header says *"It holds no token, no session,
+   no credential"* — so `token` matched. It now strips comments and keeps string
+   literals, because a credential would be one.
+2. **PP-08 reported two READMEs as leaked decisions.** It now separates *is a record
+   published* (no) from *is the directory inside the published surface* (yes), and the
+   second is the real finding.
+
+## What the gate does not establish
+
+Fully in `docs/SECURITY-VERIFICATION-2026-09-08.md` §8. The one to carry: **this is an
+automated gate written by the same session that built what it attacks.** It is
+independent of the implementation — separate module, separate vocabulary, attacks rather
+than assertions — and it is **not** independent of the author. Nothing here has been
+penetration-tested by a person.
+
+## Files changed, SESSIONS 23 and 23.5
+
+**New:** `agent/policy/` (`categories.mjs`, `actors.mjs`, `conditions.mjs`,
+`rollback.mjs`, `engine.mjs`, `cli.mjs`, `selftest.mjs`, `README.md`),
+`agent/policy/verify/` (`harness.mjs`, `attacks.mjs`, `cli.mjs`, `selftest.mjs`),
+`js/threshold.js`, `docs/AUTONOMY-AUTHORIZATION-POLICY.md`,
+`docs/SECURITY-VERIFICATION-2026-09-08.md`.
+
+**Modified:** `agent/implement/implementer.mjs` (the two policy call sites),
+`agent/implement/checks.mjs` and `.github/workflows/qa.yml` (the two new suites),
+`agent/implement/selftest.mjs` (the suite count), `agent/detector/impact.mjs`
+(`threshold.js` classified), `agent/browser/checks.mjs` and `agent/browser/runner.mjs`
+(the nine threshold checks), `js/palette.js` (nine lines), `style.css` (the threshold
+block, appended), `AGENTS.md`.
+
+**Not modified:** `data/`, `i18n/`, `css/`, `fonts/`, `tools/`, every `.html` page,
+`app.js`, `README.md`, `CLAUDE.md`, `.control-room/`.
+
+## Next session
+
+**SESSION 24 — the end-to-end simulation.** Protocol §25 puts it next, and this branch is the
+first tree on which it could run: the Orchestrator, the policy it enforces, the implementation
+layer and the Control Room are all present together for the first time.
+
+Four things it inherits.
+
+- **No dispatcher is wired.** A workflow run today reports `not_dispatched` and ends
+  `unresolved`. That is SESSION 22's own statement of where it stopped, and §25 says the first
+  complete cycle runs in simulation and **must not modify production**.
+- **`agent/policy/` is the home for the autonomy policy.** Do not re-implement a condition, a
+  trigger or a category inside the Orchestrator, the simulation, or anywhere else.
+  `agent/policy/selftest.mjs` test 32 and gate attack AB-10 will both notice.
+- **SESSION 23.5's two findings must not be silently repaired.** The prompt says so and so
+  does `docs/SECURITY-VERIFICATION-2026-09-08.md`. They are decisions for the repository
+  author.
+- **Run the suites after `git add`, not before.** This session reported a green R4 that was
+  red, because the credential scan reads tracked files and its own were not yet staged.
+
+### Exact next objective
+
+Run the simulation of protocol §25 — Scout → Verifier → Detector → Data Depth → Knowledge
+Architect → Editorial → UX → Implementation/QA → Orchestrator → Observability — in simulation
+mode, modifying nothing, and **document the defects it exposes rather than repairing them**.
+
+---
+
+
+**SESSION 22 — complete.** The Master Orchestrator, `agent/orchestrator/`. The
+reference document is **`docs/ORCHESTRATOR.md`**; this file is the handover only.
+
+---
+
+# SESSION 22 — the Master Orchestrator
+
+## What was built
+
+The twelfth thing in `agent/`, and the first whose subject is the other eleven. Nine
+modules, a CLI, a suite, and one read-only view in the Control Room.
+
+Zero dependencies, no build step, no `package.json` — `node:fs`, `node:crypto`,
+`node:path`, the same constraints as the rest of the repository.
+
+| File | What it owns |
+|---|---|
+| `capabilities.mjs` | the capability register for all fourteen actors, and `grantFor()` |
+| `workflows.mjs` | the ten workflow types as data, the five end states, `classify()` |
+| `state.mjs` | the workflow state machine and the append-only journal it is replayed from |
+| `events.mjs` | intake: the whitelist, and the fields stripped and named at the door |
+| `approval.mjs` | the eight routing checks, re-derived from the decision ledger |
+| `conflict.mjs` | six conflict shapes, and no resolver |
+| `policy.mjs` | the ten human-review triggers, protocol §18's twelve conditions, the provenance and rollback gates |
+| `orchestrator.mjs` | the Orchestrator |
+| `cli.mjs` · `selftest.mjs` · `README.md` · `state/README.md` | |
+
+## The five things this session is arranged around
+
+**1 · A GRANT IS AN INTERSECTION, NEVER A UNION.** SESSION 22 names three ways an
+agent must not gain permission: because another agent asked, because the
+Orchestrator routed a task, or because somebody clicked a button. All three have the
+same shape — authority arriving with the REQUEST rather than being held by the
+ACTOR. So `grantFor()` returns what is in BOTH the agent's registered capability and
+the stage's declared need. A stage asking for more produces an **empty grant** and a
+refusal naming the difference, not a grant covering the stage's need. Nothing in the
+module reads an argument about permission: there is no `extra`, no `also`, no
+`permissions`, and `checkOutput` has no `force`.
+
+The register is **frozen all the way down**. A shallow freeze left `produces` a
+mutable array, and `CAPABILITIES['legal-verifier'].produces.push('UXProposal')`
+widened an agent at runtime — the suite planted that push, it succeeded, and the
+fix was a deep freeze. That is the suite finding a real defect rather than
+confirming a design.
+
+**2 · APPROVAL IS RE-DERIVED, AND THE FORGERY IS NAMED RATHER THAN IGNORED.**
+`events.mjs` strips every approval-shaped field at intake — `approved`,
+`authorized`, `granted`, `decided_by`, `outcome`, `approval_id`, `permitted_files`,
+`roles`, `force`, `skip_checks`, `deploy`, `git_ref` and twenty more — and reports
+each one on the event AND on the trace. Silently ignoring them would look identical
+to not having checked, which is the reasoning `agent/implement/ledger.mjs` already
+established about agent-written approval claims, applied one layer up. An **unknown**
+field is refused outright with its name.
+
+`approval.mjs` then performs the eight checks the session names, five of them
+**lifted from `agent/implement/preflight.mjs` rather than re-derived** so a gate
+tightened there tightens this too. It does not reimplement `deriveApproval()`.
+
+**3 · THE EIGHTH CHECK IS THE ONE NOTHING ELSE PERFORMS.** Implementation scope must
+match approved scope. `preflight` derives the permitted set from the proposal and
+`apply.mjs` enforces it afterwards against git; neither compares the set against
+WHAT WAS ASKED FOR, because nothing was previously in a position to ask. A routing
+request naming a file the proposal does not is **refused with the difference named**
+— never intersected down to the permitted set and run anyway, which would let a
+caller learn the permitted set by asking for the whole tree and reading what came
+back.
+
+**4 · THE CONFLICT DETECTOR HAS NO RESOLVER.** H7: a contradiction is never resolved
+by seniority, recency or convenience. So there is no `resolve()`, no
+`preferMostRecent()`, no confidence comparison and no tie-break, and the suite
+asserts those exports do not exist. The temptation is specific: a verifier's
+`contradicted` beside a proposal that asserts the value anyway has an obvious
+answer, and taking it would be an agent deciding a question about EU law by rule of
+thumb.
+
+**5 · THE AUTONOMY ANSWER IS ALWAYS NO, AND ALL TWELVE CONDITIONS ARE STILL
+EVALUATED.** `APPROVED_AUTONOMOUS_CATEGORIES` is empty, because no governance
+decision in this repository has approved one and §24 forbids the system from taking
+that decision itself. That could have been a single early `return false`, and
+deliberately is not: the interesting fact is not "autonomy is off", it is WHICH
+conditions a given piece of work would have failed. A system that only ever prints
+"not permitted" teaches nobody anything, and the first session that enables a
+category would be enabling it blind.
+
+## Two things the suite corrected in the design
+
+Both were wrong in code and right in the suite, and both are named here so a reader
+can disagree.
+
+**`same_agent_forbidden` named AGENTS, and the rule fired when the design was
+HONOURED.** Written as agent-name pairs — `['regulatory-change-detector',
+'legal-verifier']` — the H3 check refused the verifier stage precisely because the
+detector had just run, which is the intended sequence, not a collision. The pairs
+now name **STAGES** (`['detect', 'verify']`), which is what H3 actually says:
+whoever runs `detect` may not also run `verify`. The load check refuses a pair
+naming a stage the workflow does not have, and the suite asserts the two stages in
+every pair are assigned to different agents today. A **second** check now carries
+the real case: an agent handed a record it produced itself is refused before any
+reasoning happens.
+
+**`legal-verifier` could not consume a `RegulatoryChange`, which made `LEGAL_CHANGE`
+unroutable.** The capability register said the verifier consumes `SourceCandidate`
+only, so the handoff from `detect` to `verify` was refused as broken on every run of
+that workflow type. `RegulatoryChange` was added to its `consumes`. That is the
+register being corrected by the thing that uses it, rather than the workflow being
+bent around the register.
+
+## What is genuinely proved, and how
+
+**65 tests in a new suite**, arranged as the six regressions the session names —
+R1 incorrect routing, R2 forged approval, R3 scope expansion, R4 missing provenance,
+R5 failed handoff, R6 unauthorized execution — plus the state machine, the
+conflicts, the human-review triggers and the registers.
+
+Two shapes it is arranged to avoid:
+
+- **A test that passes because nothing happened.** Every refusal is paired with a
+  positive proving the same path works when it should. Three of these failed in
+  draft for exactly that reason: the R4 provenance test wired only the verifier, so
+  the gate it was named for never ran.
+- **A test asserting the shape somebody wrote.** The end-state assertions read the
+  JOURNAL, because that is what the Control Room and a later session read, and an
+  in-memory field can be right while the persisted record is wrong.
+
+**Every fixture is about a file called `tools/example.mjs` that exists only in the
+suite.** Nothing in it asserts anything about EU law. The records that must not be
+`simulated` — because `preflight` refuses a simulated record as unactionable — are
+safe to write only because their subject is a fixture path.
+
+**Three fixtures the suite got wrong, and the contracts said so.** A hand-built
+`VerificationRecord` did not satisfy its contract, so every test using it was
+passing for the wrong reason — the gate refused it as *invalid* and the test read
+that as the refusal it was looking for. They are now built from
+`agent/schemas/fixtures.mjs`. A `RegulatoryChange` about a `tool` was refused
+because a regulatory change is about the legal record. And the positive half of the
+provenance test tried to use a `DataGap` with its blocking question deleted, which
+is asserting that a record stops being a gap when you remove the part that makes it
+one; it uses a `ClaimEvidence` now.
+
+## The Control Room exposure
+
+One route: `GET /api/workflows`, behind a new `workflows:read` permission that every
+role holding `live:read` also holds. **There is no route that starts a workflow,
+retries a stage, dispatches an agent or reopens a terminal one, and the absence is
+the control** — not a check inside a route, because a check can be moved. The
+Control Room does not import the `Orchestrator` class or the event intake, and two
+new tests assert both: a server that could construct one could run one.
+
+## Files changed
+
+**New — `agent/orchestrator/`, 12 files:** `capabilities.mjs`, `workflows.mjs`,
+`state.mjs`, `events.mjs`, `approval.mjs`, `conflict.mjs`, `policy.mjs`,
+`orchestrator.mjs`, `cli.mjs`, `selftest.mjs`, `README.md`, `state/README.md`.
+
+**New — `docs/ORCHESTRATOR.md`**, the reference document.
+
+| File | What |
+|---|---|
+| `.control-room/authz.mjs` | `workflows:read`, granted to every role that holds `live:read`; `visibleActions().workflows` |
+| `.control-room/views.mjs` | `workflowsView()` — the journal, the three registers, and `no_console` |
+| `.control-room/server.mjs` | one route, `GET /api/workflows` |
+| `.control-room/ui/app.html` · `ui/app.js` | the Workflows tab and its renderer |
+| `.control-room/selftest.mjs` | tests 10c and 10d — the window-not-console assertions |
+| `agent/implement/checks.mjs` | the orchestrator suite joins `AGENT_SUITES` |
+| `agent/implement/selftest.mjs` | **one existing assertion changed** — see below |
+| `.github/workflows/qa.yml` | the suite, the three register commands, and one more line in "what this workflow does not prove" |
+| `.gitignore` | `agent/orchestrator/state/*`, README negated back in |
+| `AGENTS.md` | the read list, the suite list, the test count, the Orchestrator paragraph, and the untracked-directories hazard |
+| `docs/AGENT-ROLES.md` | §9 — the role is now filled, and three of its *never* items are mechanical rather than remembered |
+
+**Not modified:** `data/`, `js/`, `css/`, `i18n/`, `fonts/`, `tools/`, every page,
+`style.css`, `app.js`, `README.md`, `CLAUDE.md`.
+
+## The one existing assertion that changed
+
+`agent/implement/selftest.mjs` R6 asserts `AGENT_SUITES.length`. It was 15 and is
+now 16, because the orchestrator suite joined the list. **The assertion caught the
+change**, which is what it is for — its own comment says it had already caught the
+list growing once, in SESSION 20, and this is the second time. Nothing was weakened:
+the membership check was extended to name `agent/orchestrator/selftest.mjs`
+explicitly as well.
+
+No other existing assertion was touched, and no test was deleted, skipped or
+relaxed.
+
+## Tests and validators — run, not asserted
+
+**934 across seventeen suites, 0 failures** (867 across sixteen before; SESSION 22
+adds 65 in the new suite and 2 to `.control-room/selftest.mjs` — 867 + 67 = 934). No
+existing suite's test COUNT changed; one existing ASSERTION did, and it is named
+above. 18/18 contracts satisfiable by their fixture.
+
+The four validators are at the `docs/CURRENT-ARCHITECTURE.md` §12 baseline: **0
+errors, 0 warnings on `validate.mjs` and `i18n-audit.mjs`, 0 errors and the same
+five `design-qa` warnings by file and line, 106 unverified records.**
+`node agent/implement/cli.mjs check` reports `at_baseline` on all four.
+
+Both boundary checks: `agent/implement/cli.mjs boundary` at **0 blocking / 11
+warnings**, and `.control-room/cli.mjs boundary` at **0 errors**, 21 routes, 8
+public, 0 production controls.
+
+The browser suite ran against a real Chromium: **116 pass · 3 fail · 2 undecidable
+across 121 checks**. The three failures are the ones SESSION 19 found and nobody has
+fixed — issues 25, 27 and 28 — and this session did not touch the interface.
+
+The health monitor ran: 44 metrics, three domains, no overall score, repository
+byte-identical afterwards.
+
+The orchestrator suite writes nothing to the repository: it uses a memory journal
+throughout, and one test checks `git status --porcelain` from outside for anything
+under `agent/orchestrator/state/`.
+
+## What was run against the real stores, and what it found
+
+`node agent/orchestrator/cli.mjs survey` reads the real record store and the real
+decision ledger. On this machine it reports **no proposal in the record store** —
+`agent/records/` is git-ignored run state, so a fresh clone and a CI runner have
+none. The CLI says that in those words rather than printing "0 proposals", because
+those are different facts.
+
+One demonstration workflow was opened, with a memory journal, against a proposal id
+that does not exist. It ended `human_review_required` with **ten of the twelve
+mandatory autonomy conditions failing** and the three routing checks that do not
+depend on later stages refusing by name. Nothing was published and nothing was
+written.
+
+## Known limitations
+
+Every one is in `docs/ORCHESTRATOR.md` §13 in full. The four worth carrying at the
+front:
+
+1. **No specialist has ever been dispatched by the Orchestrator.** Every end-to-end
+   path in the suite is driven by a fixture dispatcher. §12.
+2. **The capability register is a boundary at the handoff, not process isolation.**
+   Nothing stops a module calling `writeFileSync`; this repository has no sandbox
+   and the module says so rather than implying a stronger control.
+3. **The journal is neither tamper-evident nor private.** `readJournal()` reports a
+   sequence gap and cannot prevent one; the directory is git-ignored, and one
+   `git add -f` undoes that.
+4. **The conflict detector sees six shapes.** Two records can disagree in prose that
+   nothing in this repository reads.
+
+## Next session
+
+**SESSION 23 — the autonomy and authorization policy**, then 23.5, the security and
+control-plane verification that gates the end-to-end simulation. Three things it
+inherits:
+
+- **`APPROVED_AUTONOMOUS_CATEGORIES` is empty and must stay empty until a person
+  fills it.** Protocol §24 reserves the decision; an agent appending to that array
+  would be taking it. The five categories §20 names are already written down beside
+  it, so the decision has somewhere to land.
+- **The twelve mandatory conditions are already evaluated and reported on every
+  run.** Turning a category on means deciding which of the twelve a given category
+  can satisfy, not building the check.
+- **The dispatch seam is where SESSION 24's simulation attaches.** A dispatcher
+  receives the grant, the event and the records handed to it — never the workflow,
+  the journal or the ledger — and its output is validated against its contract and
+  then against its grant before it travels.
+
+---
+
+# SESSION 21 — the Control Room
+
+*(the previous milestone, kept for its findings and its refusals. The reference
+document is `docs/CONTROL-ROOM.md`.)*
+
+## What was built
+
+A **server**, not a page, at `.control-room/`: 20 routes, 8 of them public and all 8
+part of the login surface, every other one authenticating and then authorizing
+server-side before it answers. Three views — live system, review queue, website
+health — plus an audit trail view and a read-only access view. One state-changing
+action in the whole system: approve, reject, request changes.
+
+Zero dependencies, no build step, no `package.json`. `node:http`, `node:crypto`
+and the global `fetch`, the same constraints as the rest of the repository.
+
+## The four things this session is arranged around
+
+**1 · THE ONE PUBLICATION BOUNDARY THIS REPOSITORY HAS.** SESSION 18 established
+that there is no public/private separation here: GitHub Pages serves `main` at the
+repository root with no `_config.yml`, no `.nojekyll` and no exclude list, so
+`agent/`, `docs/` and the approval ledger are published beside `index.html`, and
+`agent/implement/boundary.mjs` says in its own header that a Control Room page
+added to this tree "would be public the moment it was pushed."
+
+The exception, which that module already models and already calls "a real
+boundary, and it is the only one this repository has", is Jekyll's documented
+default: a path whose segments begin with `.` or `_` is not served. It is why
+`.agents/` has never appeared in the published surface and `agent/` always has.
+So the Control Room is `.control-room/`, and `node .control-room/cli.mjs boundary`
+checks on every push — over the real tree, not by assertion — that it is still
+outside.
+
+**No `_config.yml` was added.** Adding one would change how the live site is
+processed, on a production website with no deploy gate, to solve a problem the
+existing exclusion already solves. That is a Class D change to the deployment and
+it is not this session's to make.
+
+**2 · THE DOT PREFIX IS NOT A SECURITY CONTROL, AND NOTHING RELIES ON IT BEING
+ONE.** Protocol §10 is explicit that a hidden route, a hidden link, `robots.txt`,
+a frontend check and an unlisted page are not security mechanisms. Every
+privileged request is authenticated and then authorized whether or not anybody
+finds the server; `.control-room/state/` is git-ignored as well; and the suite
+proves the request boundary against a **running server over real HTTP**, not by
+calling functions. The publication boundary is why a mistake in the request
+boundary would not already have published an audit trail — it is the second line,
+not the first.
+
+**3 · A DEFAULT IS NOT A CONTROL — SESSION 20's FINDING, TURNED INTO REFUSALS.**
+The health monitor measured `agent/observability/server.mjs` and found nine of
+eleven privileged routes answering an unauthenticated request, its only protection
+being that `host` DEFAULTS to loopback. So every dangerous configuration here is a
+**refusal to start**, not a default somebody can override: the development
+provider in production; the development provider off loopback in any environment
+(two independent refusals, so changing one variable does not get round it); any
+non-loopback bind outside production; production without an https origin; OIDC
+without an issuer or client id; an insecure issuer in production; an idle timeout
+that could never fire; and **an empty operator registry**.
+
+**4 · APPROVAL IS AN AUTHORIZATION, NOT AN IMPLEMENTATION.** Approving writes one
+line, to `agent/implement/decisions/decisions.jsonl`, through the same
+`recordDecision` the CLI calls — one home for the fact of a decision. It changes
+no dataset, no page, no stylesheet, no locale; it runs no validator, no build, no
+deployment; it touches no git. `git_ref` on the audit entry is `null` at decision
+time **by design**: a value there would mean the approval published something.
+Test 10 hashes the whole repository before and after a real approval and asserts
+nothing changed.
+
+## What is genuinely proved, and how
+
+Sixteen numbered proofs, each against a running server where the claim is about a
+request. Two shapes the suite is arranged to avoid:
+
+- **A test that passes for the wrong reason.** Every negative asserts the status
+  AND the reason, and each is paired with a positive proving the same path works
+  for somebody who is allowed. An authorization test that only ever sees 403
+  cannot tell "correctly refused" from "broken", and three of these tests failed
+  in draft for exactly that reason — `fetch` follows redirects by default, so
+  `GET /` "answered 200" while actually serving the login page.
+- **A test weakened to make a check pass.** The eight synthetic credentials in the
+  suite exist to prove the secret scan fires; `boundary.mjs` names the file as one
+  of its **two** exemptions — named files, not a directory, so a real key added
+  beside them is still found.
+
+**One of the eight was reshaped, and it is worth knowing why.** The planted Slack
+token was written in the exact `digits-digits-alnum24` shape a real one has, and
+**GitHub's push protection refused the push** — which is a scanner above this
+repository's own doing its job, on a value that was synthetic but indistinguishable
+from a live one at a glance. It now carries an obviously-not-a-token string after the
+`xoxb-` prefix — still matched by `SECRET_PATTERNS`' `slack-token` pattern, which is
+what the test is for, and the assertion fails if that ever stops being true. The
+literal is deliberately **not** reproduced here: `docs/` IS in the published surface,
+and `agent/implement/selftest.mjs` R4 caught the first draft of this paragraph for
+exactly that reason — a credential shape in a published file is an error whether or
+not it is synthetic. The other seven were not touched, and none of them may be deleted
+to make a check clean.
+
+The OIDC provider is exercised against a local stub with a **real RSA key pair**:
+a genuine login succeeds, and a forged signature, `alg: none`, HS256, a wrong
+issuer, a wrong audience, an expired token and a wrong nonce are each refused by
+name. That is a real test of the verification path. It is **not** a test against a
+real identity provider, and `docs/CONTROL-ROOM.md` §11 says so first rather than
+in a footnote.
+
+## Two existing assertions were changed, and why
+
+Both in `agent/health/selftest.mjs`, and both because **the world changed**, not
+because they were inconvenient. Named here so a reader can disagree:
+
+- `control_plane.control_room_availability` asserted `not_applicable` with the
+  reason "there is no Control Room. SESSION 21 builds it." There is one now, so
+  that reading became a metric asserting the absence of a thing this session
+  built. It is `unmeasurable` — nothing here measures whether an instance is
+  running — and the new assertion is **stricter**: it requires the metric to say
+  that 100% would read as "checked and up", and that a bare reachability probe
+  would be worse than none, because a Control Room that is up and answering
+  everybody is worse than one that is down.
+- `control_plane.authn_authz_failures` asserted `unmeasurable` because "there is
+  no login". There is one now, and it logs its decisions, so the metric counts
+  refusals from the Control Room audit trail — split into failed logins and
+  authorization denials, because **a denial is the authorization layer working**
+  and a total invites reading that as a problem. What did **not** change is the
+  refusal to report an absent trail as zero: the trail is git-ignored per-machine
+  state, so a CI runner and a fresh clone have none, and the new test asserts both
+  halves.
+
+One metric's IMPLEMENTATION was also brought into line with its own definition.
+`control_plane.privileged_endpoints_exposed` is defined as routes "whose only
+protection against public reachability is a default that a caller can override",
+and it was counting every interface whose bind host is a parameter. Until this
+session nothing in the repository had authentication, so the two could not come
+apart. They can now: an interface that authenticates and authorizes is not
+protected BY the default. The signal lists were not touched, the planted-failure
+tests still fire, and the observability viewer is still counted — the finding
+against it is unchanged.
+
+## Files changed
+
+**New — `.control-room/`, 20 files:** `config.mjs`, `identity.mjs`, `authn.mjs`,
+`authz.mjs`, `audit.mjs`, `decide.mjs`, `views.mjs`, `server.mjs`, `boundary.mjs`,
+`cli.mjs`, `selftest.mjs`, `README.md`, `config.example.env`, `state/README.md`,
+and `ui/` (login and app: two pages, two stylesheets, two scripts).
+
+**New — `docs/CONTROL-ROOM.md`**, the reference document.
+
+**Modified, all of it control-plane:**
+
+| File | What |
+|---|---|
+| `agent/health/security.mjs` | `.control-room/server.mjs` registered in `PRIVILEGED_INTERFACES`; `privileged_endpoints_exposed` brought into line with its definition; `why_zero` on the approval-action metric now names both callers of `recordDecision` |
+| `agent/health/control.mjs` | the two metrics above |
+| `agent/health/gather.mjs` | `readControlRoomAudit()` — reads the trail **by path, not by import**, so the monitor cannot be prevented from running by the thing it measures |
+| `agent/health/selftest.mjs` | the two changed assertions, and `control_room_audit` in `fakeCtx` |
+| `agent/implement/boundary.mjs` | `.control-room/` added to `CONTROL_PLANE_DIRS` — it reports as excluded by the deployment, which is the first control-plane directory that has ever done so |
+| `.github/workflows/qa.yml` | the suite, the Control Room boundary check, the route table, and two more lines in "what this workflow does not prove" |
+| `.gitignore` | `.control-room/state/*`, README negated back in |
+| `AGENTS.md` | the read list, the suite list, and three hazards that were no longer accurate |
+
+**Not modified:** `data/`, `js/`, `css/`, `i18n/`, `fonts/`, `tools/`, every page,
+`style.css`, `app.js`, `README.md`, `CLAUDE.md`.
+
+## Tests
+
+**867 across sixteen suites, 0 failures** (812 across fifteen before). 55 are new;
+no existing test count changed. 18/18 contracts satisfiable by their fixture. The
+four validators are at the `docs/CURRENT-ARCHITECTURE.md` §12 baseline: 0 errors,
+106 unverified, the same five `design-qa` warnings by file and line, and the
+boundary check at 0 blocking / 11 warnings.
+
+The Control Room suite writes nothing to the repository: temporary state, record
+and ledger directories per test, verified from outside by `git status` afterwards.
+
+## A discrepancy found and NOT reconciled
+
+`docs/CURRENT-ARCHITECTURE.md` §13 still says "**No CI.** There is no `.github/`
+directory, no workflow". `.github/workflows/qa.yml` has existed since SESSION 19,
+and `AGENTS.md` says "There is now CI." The two disagree. It is reported here
+rather than edited, because AGENTS.md's rule is to stop and report a conflict
+between the documentation and the code rather than reconciling it silently, and
+because §13 is not this session's section. The same paragraph's other claims —
+Pages serving `main` from the root, no `_config.yml`, no `.nojekyll` — were
+re-read against the tree and are **still true**, which matters because the
+Control Room's placement depends on them.
+
+## Known limitations
+
+Every one of these is in `docs/CONTROL-ROOM.md` §11 in full. The four worth
+carrying at the front:
+
+1. **No real identity provider has ever been contacted**, and this environment's
+   network policy means none could. Refresh tokens, back-channel logout, token
+   revocation and `end_session` are not implemented.
+2. **No deployed Control Room has ever been reached.** The suite starts one on an
+   ephemeral loopback port. `control_plane.control_room_availability` reports
+   `unmeasurable` for exactly this reason.
+3. **The publication boundary is inferred, not confirmed.** It follows from Pages'
+   documented default and from reading the tree; the deployed origin has never
+   been fetched (the same limitation as AUDIT F-12, one layer down).
+4. **Nothing here has been penetration-tested**, there is no rate limiting and no
+   account lockout. Under OIDC both belong to the identity provider; under the
+   local provider they are absent, which is one more reason it may not serve
+   production.
+
+## Next session
+
+SESSION 22 — the Master Orchestrator. Two things it inherits:
+
+- **The Control Room is not a command console, and §14 of the protocol says the
+  Orchestrator must not treat a UI action as unconditional authority.** What the
+  Control Room produces is a governed event: a line in the decision ledger, bound
+  to a proposal hash, attributable to an authenticated actor. The Orchestrator
+  re-derives it — `deriveApproval()` already does, and already discards
+  agent-written approval claims by name.
+- **`decide.mjs` runs the Implementation Agent's own gates before granting**, so a
+  proposal that cannot be implemented cannot be approved. If the Orchestrator
+  grows a path that bypasses `preflight()`, that property is gone.
+
+---
+
+# SESSION 20 — the Website Health Monitor
+
+*(the previous milestone, kept for its findings and its refusals. The reference
+document is `docs/HEALTH-MONITOR.md`.)*
+
+## What was built
+
+The eleventh agent, and the first whose subject is the SYSTEM rather than any part of it:
+the site a reader loads, the corpus that site argues from, and the machinery that produced
+both. `docs/AGENT-ROLES.md` §10 has described the Observability role since SESSION 01;
+`agent/observability/` gave it a trace model, and this gives it the numbers.
+
+**Forty-four metrics across three domains that are never summed.** 10 public website, 10
+knowledge, 24 control plane — the last including the seven security-boundary checks, filed
+there because that is what they protect.
+
+## The three refusals this session is built around
+
+**1 · THERE IS NO OVERALL SCORE.** `agent/health/model.mjs` exports `overallScore()`, and it
+**throws**, with the reasoning, at the exact place somebody would reach for one. The three
+domains fail differently: a broken link costs a reader a click, a false statement about EU
+law costs them a decision they cannot take back, and an unaudited approval costs the system
+its provenance and is invisible to every reader. A mean says none of that and invites raising
+the number by improving the cheapest domain. The refusal is also recorded as a decision on
+every run's trace, with the three alternatives that were not taken, so it can be seen to have
+held rather than taken on trust.
+
+**2 · `unmeasurable` IS NEVER ZERO.** Three states — `measured`, `unmeasurable`,
+`not_applicable` — and an unmeasurable carries a **null** value, a `why`, and what would be
+needed. Two metrics can never be measured here and reporting either as 0 would be the exact
+substitution `AI-SAFE-BOUNDARIES` §0.3 and §0.4 prohibit:
+
+- **Deployment failures.** No telemetry, and nothing has ever fetched the deployed origin —
+  the network policy refuses it.
+- **Authentication failures.** A 0 would read as "no failed logins" when the truth is "there
+  is no login". The metric points at the MISSING CONTROL instead, which is where a missing
+  control belongs.
+- **Control Room availability** is `not_applicable`: SESSION 21 builds it, and neither 0% nor
+  100% would be true. `agent/observability/server.mjs` is a development viewer, and calling
+  it a Control Room would overstate both what exists and what is protected.
+
+Six more public-website metrics report unmeasurable whenever the browser suite did not run. A
+report saying "0 console errors" because nobody opened a page would be the worst line this
+monitor could produce.
+
+**3 · A LOWER NUMBER IS NOT AUTOMATICALLY HEALTHIER.** Five metrics carry
+`direction: 'not_a_score'`, and `defineMetric` **throws** if one is re-labelled — the
+unverified count, the provenance gaps, the verification gaps, the blocking open questions and
+the rejected proposals. Every cheap route down is a prohibited action under
+`AUTONOMY-POLICY.md`: clearing `requires_verification`, attaching a plausible substitute,
+bulk-stamping `last_verified`, removing a `blocks` flag. **A rise in the first four is usually
+good news** — it normally means somebody examined a record nobody had examined. The CLI marks
+them `=` rather than `!`, `summarise()` counts them apart from findings, and `movement()`
+reports them in a list that never says "improved".
+
+## Every metric declares eight things, and the model refuses one that does not
+
+Name, definition, source, calculation, update frequency, interpretation, limitations, and
+public-or-private — all mandatory, all checked at definition time, so SESSION 20's
+requirement is a gate rather than a convention. `limitations` is never empty and the suite
+asserts it is longer than a fragment: a metric that cannot say what it fails to see is a
+number somebody will quote out of context.
+
+`node agent/health/cli.mjs --metrics` prints the whole register and runs nothing.
+
+## What it found
+
+**PUBLIC WEBSITE** — 9 measured, 1 unmeasurable. Three findings, all already known: 3 browser
+regressions, 2 accessibility failures, 1 navigation failure — issues 25, 27 and 28.
+
+**KNOWLEDGE** — 10 measured. Evidence coverage 76.9% of 91 claims. 106 unresolved records,
+matching §12 exactly. **15 facts stored in two places with no drift check, one already
+drifted** — the `__CONTENT__` hazard AGENTS.md has recorded since SESSION 00, now MEASURED
+rather than recalled. 1 contradictory record: issue 18, `rel-kind:complement`. 6 fact-typed
+claims whose evidence cannot carry a fact.
+
+**CONTROL PLANE** — 0 agent failures, 0 policy violations, 0 self-approved decisions, 0
+misclassified proposals, **0 changes ever applied to the legal record by an agent.**
+
+## The security finding
+
+`agent/observability/server.mjs` serves **eleven `/api/` endpoints** over the whole trace
+store — agent inputs and outputs, decisions, approvals, provenance — and performs **no
+authentication and no authorization on any of them**. Its only control is that `host`
+DEFAULTS to `127.0.0.1`.
+
+**A default is not a control.** `serve({ host })` accepts any value; a caller passing
+`0.0.0.0` exposes the entire store with nothing in the request path to object. The monitor
+does not infer this: it starts the server on an ephemeral loopback port and asks each route
+with no `Authorization` header and no cookie. **Nine of the eleven return data**, two of them
+tens of kilobytes. Nothing returns 401, because nothing asks.
+
+That is defensible for a local development viewer, which is what its own header says it is.
+It is recorded because **SESSION 21 builds a Control Room**, and one that reused this server
+would inherit a privileged API whose only protection is a default somebody can override.
+
+### The false positive that shaped the check
+
+The first draft of `AUTHZ_SIGNALS` counted a bare `403` and reported the server as HAVING
+server-side authorization — on the strength of `json(res, { error: 'forbidden' }, 403)` for a
+path resolving outside the viewer directory. **That is a path check.** It refuses a traversal
+and makes no decision about who the caller is, and counting it turned the largest finding in
+the file into a pass. A status code is not a control. The suite now plants exactly that
+server and asserts `has_authz` is false.
+
+## A correction to SESSION 18
+
+`publicSurface()` walked the filesystem. Publication is **GitHub Pages serving `main`**, and
+`main` carries **tracked files only** — a git-ignored run artifact has never been in a commit
+and is not published. The walk reported `agent/records/`, `agent/observability/runs/` and this
+session's own health history as PUBLISHED, which is a false alarm, and a security check that
+cries wolf about three directories on every run is one people learn to ignore.
+
+It now reads `git ls-files`, reports untracked files separately, distinguishes "excluded by
+the deployment" from "absent because nobody committed it", and falls back to the walk **saying
+so** when git cannot be consulted — overstating the surface is the safe direction.
+
+**`agent/health/selftest.mjs` found this** by asserting the health record was not in the
+published surface, and finding it there.
+
+## Public and private
+
+`publicSubset()` is a **whitelist**. Three deliberate acts are needed before anything
+operational reaches a public view: set `visibility`, write a `public_justification`, and pass
+the definition gate — which refuses a control-plane metric marked public without one. The
+rejected alternative was a `redact()` stripping known-sensitive fields; its failure mode is a
+new private metric nobody adds to the deny list, public by default. The whitelist's failure
+mode is a public metric left private: a report nobody sees rather than a leak.
+
+**22 publishable, 22 withheld, 0 leaked.** Only two control-plane metrics are public —
+proposals awaiting a human, and changes an agent has applied to the site (0, and a reader of a
+site about EU law is entitled to know it). `publicReading()` drops `detail` and `evidence`
+WHOLESALE rather than filtering named keys, and the suite checks for leaks over the SERIALISED
+view rather than the structure, because a structural check verifies the shape somebody wrote.
+
+## The historical record
+
+`agent/health/history/health.jsonl`, append-only, **git-ignored** — and that is a boundary
+decision, not a convention: it holds private control-plane data, and this repository publishes
+its whole tree. A `.gitignore` entry is not a security boundary and `agent/health/` says so
+rather than pretending otherwise.
+
+`movement()` compares against the previous entry with one rule doing most of the work: **a
+metric is compared only where both entries measured it.** Comparing a run that had a browser
+against one that did not would report six improvements or six regressions depending on which
+way round they fell, and both would be fabrications.
+
+## Files changed
+
+```
+agent/health/model.mjs            (new — the metric contract, three states, the score refusal)
+agent/health/gather.mjs           (new — the evidence once, and the loopback probe)
+agent/health/public.mjs           (new — 10 metrics)
+agent/health/knowledge.mjs        (new — 10 metrics)
+agent/health/control.mjs          (new — 17 metrics)
+agent/health/security.mjs         (new — 7 checks, and the route/auth analysis)
+agent/health/metrics.mjs          (new — the registry and the public subset)
+agent/health/history.mjs          (new — the historical record and movement)
+agent/health/monitor.mjs          (new — Agent 10)
+agent/health/cli.mjs              (new)
+agent/health/selftest.mjs         (new — 55 tests)
+agent/health/README.md · agent/health/history/README.md   (new)
+docs/HEALTH-MONITOR.md            (new — the reference document)
+
+agent/implement/boundary.mjs      (publicSurface reads git ls-files — the correction above)
+agent/implement/checks.mjs        (the health suite joins AGENT_SUITES)
+agent/implement/selftest.mjs      (R5 sharpened for the new surface model)
+agent/observability/server.mjs    (a `quiet` option, for the probe)
+agent/observability/query.mjs     (healthState, into loadTrace)
+agent/observability/cli.mjs       (the `health` command)
+.github/workflows/qa.yml          (the health job)
+.gitignore                        (agent/health/history/, with the reason)
+AGENTS.md · docs/AGENT-ROLES.md · docs/HANDOVER.md
+```
+
+**Not touched:** every `data/*.json`, every page, everything under `js/`, `css/`, `i18n/` and
+`fonts/`, all four validators in `tools/`, `style.css`, `app.js`, `README.md`, `CLAUDE.md`,
+and every contract in `agent/schemas/`.
+
+## Tests
+
+| Command | Result |
+|---|---|
+| `node --test agent/health/selftest.mjs` | **55 pass · 0 fail** (new) |
+| `node --test agent/implement/selftest.mjs` | **55 pass · 0 fail** (54 before; R5 gained a test for the corrected surface model) |
+| `node --test agent/schemas/selftest.mjs` | 139 — unchanged |
+| `node --test agent/ux/selftest.mjs` | 73 — unchanged |
+| `node --test agent/detector/selftest.mjs` | 66 — unchanged |
+| `node --test agent/integrate/selftest.mjs` | 64 — unchanged |
+| `node --test agent/proposals/editorial/selftest.mjs` | 61 — unchanged |
+| `node --test agent/architect/selftest.mjs` | 52 — unchanged |
+| `node --test agent/proposals/data/selftest.mjs` | 50 — unchanged |
+| `node --test agent/verifier/selftest.mjs` | 45 — unchanged |
+| `node --test agent/depth/selftest.mjs` | 43 — unchanged |
+| `node --test agent/observability/selftest.mjs` | 40 — unchanged |
+| `node --test agent/scout/selftest.mjs` | 32 — unchanged |
+| `node --test agent/browser/selftest.mjs` | 19 — unchanged |
+| `node --test agent/scout/schedule/selftest.mjs` | 18 — unchanged |
+| `node agent/schemas/cli.mjs check` | **18/18** satisfiable, exit 0 |
+| `node tools/validate.mjs` | **0 errors, 0 warnings, 106 unverified** — matches §12 exactly |
+| `node tools/i18n-audit.mjs` | 0 errors, 0 warnings — matches |
+| `node tools/design-qa.mjs` | 0 errors, **5 warnings** — the same five as §12, by file and line |
+| `node tools/freshness.mjs 2026-09-03` | "Nothing past its stated interval" |
+| `node agent/observability/cli.mjs validate` | 0 invalid records from this session's real runs |
+
+**812 tests across fifteen suites, all passing** (756 before this session).
+
+The extra test beyond 756 + 55 is in `agent/implement/selftest.mjs`: R5 gained a check that
+the published surface is what git tracks rather than what is on the machine, which is the
+correction described under "A correction to SESSION 18" above.
+
+Also run as live verification: `node agent/health/cli.mjs --as-of 2026-09-03` (44 metrics),
+`--metrics`, `--public`, `--history`, `--no-browser`, and
+`node agent/observability/cli.mjs health --readings`.
+
+## Known limitations
+
+1. **The monitor measures what this repository can see, which is less than what matters.**
+   Nothing has fetched the deployed site, no URL has been retrieved, no source document
+   opened, no screen reader run, no contrast computed.
+2. **Nine metrics report `unmeasurable` in a typical run.** That is the honest state, not a
+   gap in the work — but a reader skimming the numbers must read the coverage line, and the
+   history stores it for exactly that reason.
+3. **The knowledge metrics check the SHAPE of evidence, not what a source says.** A claim
+   typed as a fact with a tier:1 source that does not support it passes every check here.
+4. **The security checks read source and match signals.** A mechanism they do not recognise
+   reads as absent — a false positive, the safe direction, and one the suite tests for by
+   planting a server that DOES authenticate.
+5. **`PRIVILEGED_INTERFACES` is an allowlist.** A new server nobody registers is not checked.
+6. **`incomplete_entities` overstates and `duplicate_facts` understates**, each for a reason
+   stated in its own `limitations`.
+
+## Unresolved issues, carried forward
+
+SESSION 19's 1–31 stand unless noted.
+
+2. **No deploy gate — PARTIALLY MOVED.** The validators now run in CI on every
+   push (`.github/workflows/qa.yml`, SESSION 18), so a failure is **visible**.
+   There is still nothing between a push to `main` and the live site: making the
+   workflow blocking needs a branch protection rule, which is repository
+   configuration outside this tree and outside any agent's reach.
+5. **106 records carry an unverified note.** No session since SESSION 07 has
+   moved it; this one does not either.
+7. The Source Scout workflow has still never executed on GitHub Actions.
+12. `GOVERNANCE_PERMITS` is empty and nothing in `docs/` opens it.
+15. Fourteen gap-router proposals exist and nothing decides them.
+16. Twenty architecture proposals exist and nothing decides them.
+18. `rel-kind:complement` is stored as both symmetric and asymmetric. Still the
+    cheapest real decision on the list.
+19. Twenty-two editorial recommendations exist and nothing decides them.
+20. The markup and `data/claims.json` disagree about what two passages are.
+21. Nineteen sentences read as settled over claims graded Unresolved.
+23. **New: ten UX findings and five testable proposals exist and nothing decides
+    them.** Each is behind a pending approval. **They are proposals, not a work
+    order**, and five of them are `human_only` because they change what a reader
+    sees on a site with no deploy gate.
+24. **New: nine components draw a status this agent could not establish is
+    legible without colour.** Not a defect and not a clearance — an open
+    question, and the only thing that closes it is somebody opening the page.
+    `node agent/ux/cli.mjs --as-of <date> --open` lists them with the bytes.
+25. **The site has no navigation in its markup, and the `<noscript>` notice does
+    not say so — NOW MEASURED.** SESSION 17 established it by reading the source;
+    SESSION 19 loaded `instruments.html` with scripting disabled and confirmed it
+    links to none of the six top-level pages. Still not fixed: Class C interface
+    work needing a proposal and a decision.
+26. **New: `index.html` has no pre-paint theme bootstrap.** The six tool pages
+    carry one inline; the brief consults `prefers-color-scheme` in `app.js`
+    instead. Noticed while narrowing question 2's false positive and NOT filed
+    as a finding — no lens establishes what it costs a reader, and filing it
+    would have been an observation dressed as a measurement. Recorded here so the
+    next session can decide whether it is one.
+
+27. **New: the skip link is the tenth focusable element in the RENDERED page.**
+    Every page carries `<a class="skip-link">` as the first element in `<body>`
+    and `design-qa.mjs` confirms it resolves — but `js/shell.js:258` inserts the
+    chrome at `document.body.firstChild`, ahead of it. A keyboard reader must tab
+    through the whole navigation to reach the link that skips the navigation.
+    Invisible to every validator here, because the markup is correct.
+    `node agent/browser/cli.mjs --only keyboard`.
+
+28. **New: `enforcement.html` jumps h2 → h5 in its rendered outline.** Each
+    pipeline stage renders as an `<h5>` directly under the `<h2>` naming the
+    company. `design-qa.mjs` checks heading order in the markup, where those
+    headings do not exist — `js/enforcement-page.js` creates them.
+
+29. **New: the whole repository is inside the public deployment.** GitHub Pages
+    serves `main` at the repository root with no `_config.yml`, no `.nojekyll`
+    and no exclude list, so `agent/`, `docs/` and the approval ledger are
+    published alongside `index.html`. **A Control Room page added in SESSION 21
+    would be public the moment it was pushed.** This is an INFERENCE from GitHub
+    Pages' documented default — nothing here has ever fetched the deployed site,
+    and the network policy refuses that origin.
+    `node agent/implement/cli.mjs boundary`.
+
+30. **New: the approval ledger is not authentication.** Anybody who can write to
+    the working tree can write a grant. It gives one hashed home, git
+    attribution, and a refusal of the four forgeries that do not need write
+    access — and no more than that. Protocol §11 and §13 want an authenticated
+    actor and server-side enforcement, which a static site cannot host.
+    `docs/IMPLEMENTATION-QA.md` §9.
+
+32. **New: the privileged API has no authentication and no authorization.**
+    `agent/observability/server.mjs` serves eleven `/api/` endpoints over the
+    whole trace store and checks nothing; its only control is a bind host that
+    DEFAULTS to loopback, and a default is not a control. Measured, not inferred:
+    the health monitor starts it on an ephemeral loopback port and finds **nine of
+    the eleven return data to a request with no credential**. Defensible for a
+    development viewer; **SESSION 21's Control Room must not inherit it.**
+    `node agent/health/cli.mjs --as-of <date> --detail`, `docs/HEALTH-MONITOR.md` §6.
+
+33. **New: 15 facts are stored in two places with no drift check, and one has
+    already drifted.** The fourteen part titles and the standfirst exist in both
+    `data/brief.json` and the `__CONTENT__` blob inlined at `index.html:361`, and
+    `meta.standfirst` disagrees between them. AGENTS.md has carried this as a
+    hazard since SESSION 00; it is now MEASURED rather than recalled, by
+    `knowledge.duplicate_facts`. Still not fixed, and still not a work order.
+
+34. **New: 6 fact-typed claims have evidence that cannot carry a fact** — no
+    source, `supports:context` only, or the self-reference placeholder. A claim
+    typed as a fact renders as law on the site.
+    `knowledge.unsupported_factual_statements`.
+
+35. **New: `.gitignore` is doing the work of a publication boundary for three
+    directories.** `agent/records/`, `agent/observability/runs/` and
+    `agent/health/history/` all hold control-plane data and are absent from the
+    deployment only because nobody committed them. One `git add -f` undoes it and
+    nothing in this repository would object. Distinct from issue 29, which is
+    about there being no exclusion mechanism at all.
+
+31. **Two UX proposals now assert something that is no longer true.**
+    `agent/ux/proposals.mjs` writes "this repository has no browser harness and
+    no dependency budget for one" into the open question on every browser test it
+    proposes. SESSION 19 built one, with no dependency budget spent. The sentence
+    was accurate when written and is not now. **Not edited here** — rewriting
+    another agent's recipe to change what its records assert is exactly the
+    scope-widening Agent 9 exists to refuse, and it is Agent 8's own file. It
+    needs a one-line change in `agent/ux/proposals.mjs` and a re-run.
+
+## Next session
+
+**A — decide something.** Unchanged and now four sessions old. Seventy-one proposals across
+four agents, not one decided. SESSION 18 built somewhere for a decision to land:
+
+```
+node agent/implement/cli.mjs queue --why
+node agent/observability/cli.mjs implement --refusals
+node agent/implement/cli.mjs decide --proposal <id> --grant --by "<your name>"
+node agent/implement/cli.mjs run --as-of <date> --proposal <id>            # rehearse
+node agent/implement/cli.mjs run --as-of <date> --proposal <id> --apply
+```
+
+Most proposals fail three gates besides `approved`, and two of those cannot be closed by a
+decision at all. Issue 18 remains the cheapest real decision: one field, five records, one
+word — and `knowledge.contradictory_records` now reports it on every health run.
+
+**B — dispatch the Source Scout workflow on a real runner.** Unchanged since SESSION 06.
+
+**C — the applied half.** Half-closed since SESSION 18: `ChangeRecord` is produced whenever
+something is applied, and nothing has been applied because nothing has been approved.
+`WebsiteChange` is still produced by nothing.
+
+**D — do the manual pass.** The perceptual open questions — contrast, screen readers, what a
+layout looks like — need a person. `.agents/skills/ux-audit/references/manual-checks.md`.
+
+**E — fix the three defects the browser found**, or decide not to. Issues 25, 27, 28.
+
+**F — new, and it is SESSION 21's problem before it is anybody's: do not let the Control Room
+inherit the unauthenticated API.** Issue 32. `agent/observability/server.mjs` has eleven
+privileged routes, no authentication, no authorization, and a bind host that is a parameter
+with a loopback default. Nine of them answer an unauthenticated request today. A Control Room
+built on it would be the failure protocol §11–§13 describes, and the health monitor would
+report it on every run — which is not the same as preventing it.
+
+### Exact next objective
+
+**F**, then **A**.
+
+F is SESSION 21's own subject and the monitor has already written the acceptance criteria: a
+Control Room is done when `control_plane.privileged_routes_without_auth` and
+`control_plane.privileged_routes_without_authz` reach 0, when
+`control_plane.privileged_responses_without_authorization` reaches 0, and when
+`control_plane.control_room_availability` stops being `not_applicable` **without**
+`control_plane.control_room_assets_published` rising above 0. Run
+
+```
+node agent/health/cli.mjs --as-of <date> --detail
+node agent/health/cli.mjs --as-of <date> --series control_plane.privileged_routes_without_auth
+```
+
+before and after. The second command is why the history exists.
+
+A is unchanged and needs no code. Start with the cheapest decision on the list and watch the
+whole chain run.
+
+The full chain, every step carrying `parent_run_id`:
+
+```
+node agent/verifier/cli.mjs             --records <trace-id>
+node agent/integrate/cli.mjs            --records <trace-id> --as-of <date>
+node agent/detector/cli.mjs             --records <trace-id> --as-of <date>
+node agent/depth/cli.mjs                --as-of <date> --changes <trace-id>
+node agent/proposals/data/cli.mjs       --as-of <date> --gaps <depth-trace-id> --refusals
+node agent/architect/cli.mjs            --as-of <date> --gaps <depth-trace-id> --aside
+node agent/proposals/editorial/cli.mjs  --as-of <date> --changes <detector-trace-id> --no-change
+node agent/ux/cli.mjs                   --as-of <date> --propose --open
+node agent/browser/cli.mjs
+node agent/implement/cli.mjs            run --as-of <date>
+node agent/health/cli.mjs               --as-of <date>
+node agent/observability/cli.mjs        health --readings
+```
+
+## Anything the next agent must know
+
+**SESSION 24's, first:**
+
+- **A simulated pass is not evidence.** Every leg of `agent/simulation/` is driven by a
+  fixture dispatcher. If you find yourself citing a green leg as proof that the Scout
+  works, the Verifier works, or the site is correct, you are citing the machinery having
+  routed a fixture.
+- **A simulated `QAResult` is indistinguishable from a measured one downstream.** That is
+  finding A-4 and M-4, and it is the reason the browser dispatcher is the one to distrust
+  most. The real browser suite was run for the discovery path only.
+- **The twenty-three findings are not a work order.** Protocol §25 asked SESSION 24 to
+  observe rather than repair, and every one of them is a change to `agent/` that needs its
+  own reasoning. Several are load-bearing in ways a quick fix would break: `allowSimulated:
+  true` (V-1) is what lets every existing suite drive the Orchestrator with fixtures, so
+  removing it breaks nineteen suites before it fixes anything.
+- **`agent/simulation/selftest.mjs` asserts the DISCIPLINE, not the findings.** It asserts
+  that the tree is byte-identical, that no dispatcher can write, that every fixture is
+  marked, that nothing was published, and that three visual phases do not match. It does
+  **not** assert V-1, V-2, V-3, I-1 or I-2 — pinning a defect turns it into a requirement.
+- **The count of three mismatched visual phases IS asserted.** If you implement phase 2 or
+  phase 5, `selftest.mjs` test 6 fails and you come here and say so. That is the assertion
+  doing its job, the same way R6 does.
+- **The one unmarked record in the whole harness is `unmarkedControlFixture()`**, and it
+  exists because `preflight` gate 2 refuses a simulated proposal. It lives in a `mkdtemp`
+  record store, it is never offered to `data/`, and its reason is finding V-1 in the audit
+  rather than a convenience in the code.
+
+**SESSION 21's:**
+
+- **`git fetch --all` before comparing anything, and compare against
+  `origin/main`.** Local `main` on this machine is 52 commits behind. The trap in
+  AGENTS.md has now caught something in three separate sessions.
+- **An approval is an authorization for a scope, and nothing else happens.** If
+  you find yourself expecting the site to change because somebody clicked
+  Approve, read `docs/CONTROL-ROOM.md` §6: the Implementation Agent re-derives the
+  authorization from the ledger through its own ten gates, and no proposal in this
+  repository has ever been decided.
+- **A decision is bound to the proposal's fingerprint.** Editing a proposal after
+  it was approved VOIDS the approval — deliberately, because it is what stops
+  approving something small and then widening it. The fix is a fresh decision
+  against the scope the proposal now has, never a re-hash.
+- **Roles are re-read from the registry on every request**, not taken from the
+  session. `roles_at_login` exists for the audit trail and is never used for a
+  decision. If you cache the actor, you have removed that property.
+- **The Control Room audit trail is private per-machine state.** It is git-ignored
+  and does not travel with a checkout, which is why
+  `control_plane.authn_authz_failures` reports `unmeasurable` in CI rather than 0.
+  A 0 there would read as "nobody was turned away".
+- **The suite proves the boundary behaves as specified.** It proves nothing about
+  whether a proposal a human approved through it was a good idea — which is the
+  whole reason the human is there. `docs/CONTROL-ROOM.md` §11 has the rest.
+
+Carried forward:
+
+- **`agent/ux/` opens no page, and every record says so in a blocking open
+  question.** If you are tempted to soften that — to write "screen readers
+  announce this as…", to fill in a contrast ratio from a comment in
+  `css/tokens.css`, to describe how something looks — you are making this
+  project's own honesty worse than whatever you found. `boundary.mjs` refuses
+  the phrasing and the suite proves the refusal fires.
+- **An open question is a deliverable, and there are more of them than
+  findings.** Deleting one to shorten a report turns "could not be settled
+  without opening a page" into "nothing there".
+- **A count is not a quote.** Two lenses filed a composed sentence behind a real
+  `file:line` and the suite's byte-check caught both. `measurement` is the kind
+  for a count, and the locator says what was counted over.
+- **The three false positives above are why the checks are shaped as they are.**
+  Tokenised class matching, both attribute syntaxes, and "mixed is undecidable"
+  each exist because a draft without them reported a defect that was not there.
+- **The hypothesis is the one thing in this directory that is not derived**, and
+  it is typed as a contested interpretation for that reason. A recipe per lens is
+  where it lives; a finding whose lens has no recipe is refused rather than
+  improvised.
+- **`asOf` is an argument, everywhere.** Unchanged.
+- **An `ApprovalRequest` you find in `agent/records/` is a REQUEST.** Agents write
+  that directory. If you are tempted to read one whose `state` says `granted` and
+  act on it, that state was written by an agent, and `agent/implement/ledger.mjs`
+  discards it and says so. A grant lives in `agent/implement/decisions/` and
+  requires a named human.
+- **A grant is bound to the proposal's hash.** Editing a proposal after it was
+  approved VOIDS the approval. That is deliberate — it is what stops approving
+  something small and then widening it — and the fix is a fresh decision against
+  the scope the proposal now has, never a re-hash.
+- **A skipped browser run is never a pass.** `agent/browser/cli.mjs` exits 2 when
+  it found no browser, and `agent/implement/` treats a required-but-skipped run as
+  a blocking finding. If you find yourself making either of those exit 0 to get a
+  green pipeline, you are building the thing the exit code exists to prevent.
+- **The eight synthetic credentials in the redaction fixtures are load-bearing.**
+  A suite that proves redaction works has to contain something to redact. Do not
+  delete them to make `boundary` clean — that is weakening a test to make a check
+  pass — and do not allow-list the files, which would hide a real key added to one
+  of them later. They are classified and counted.
+- **The baseline in `agent/implement/baseline.mjs` is PARSED out of
+  `docs/CURRENT-ARCHITECTURE.md` §12.** If you change the numbers there, this
+  follows automatically. If you restructure the fenced block so it cannot be read,
+  `readBaseline()` throws — on purpose. Do not add a fallback default.
+- **A number is not a verdict, and five of them must never be optimised.** The unverified
+  count, the provenance gaps, the verification gaps, the blocking open questions and the
+  rejected proposals are marked `not_a_score`. If you find yourself trying to move one of
+  them, read `docs/HEALTH-MONITOR.md` §4 first: every cheap route down is a prohibited
+  action, and a RISE in the first four usually means somebody did real work.
+- **`unmeasurable` is not zero, and the monitor will not let you write it as one.** Nine
+  metrics report it in a typical run. If you are tempted to make one return 0 so the report
+  looks cleaner, you are proposing to report an absence of instrumentation as an absence of
+  problems.
+- **There is no overall health score and there must not be one.**
+  `agent/health/model.mjs overallScore()` throws on purpose. The three domains fail
+  differently and a mean says none of it.
+- Before declaring anything done: the fifteen `--test` suites,
+  `agent/schemas/cli.mjs check`, then the four validators in `tools/`, compared
+  against the `docs/CURRENT-ARCHITECTURE.md` §12 baseline — and
+  `node agent/browser/cli.mjs` if you touched a page, a stylesheet, a module or a
+  locale.
+
+## Anything the next agent must NOT change
+
+**SESSION 29's, first:**
+
+- **Do not make a mandatory readiness condition non-blocking when it is `unmeasurable`.** That
+  rule is what makes `--quick` useless for a real report, and relaxing it turns "we did not
+  look" into "nothing was wrong". `agent/production/selftest.mjs` asserts it over every
+  mandatory condition, one at a time.
+- **Do not give `agent/production/` a verb that writes, records, decides or activates.** The
+  absence of the verb is the control; a check inside one can be moved. The suite reads the CLI
+  and refuses `decide`, `apply`, `grant`, `record`, `activate`, `deploy` and `publish` by name,
+  and `--execute`, `--force` and `--record` as flags.
+- **Do not add a readiness score.** `assessActivation()` returns `overall_score: null` for the
+  reason `agent/health/model.mjs overallScore()` throws: ten domains that fail differently do
+  not have a mean, and one number on a checklist invites somebody to move the number.
+- **Do not pin a readiness condition's real-world verdict in the suite.** The refusal is driven
+  with synthetic facts on purpose. Asserting "the adversarial gate is red" or "no dispatcher is
+  wired" makes a defect a requirement and its repair a test failure.
+- **Do not silence a classifier by excluding a file path.** `separations.mjs` classifies and
+  reports every file, and the suite asserts that it names neither `selftest.mjs` nor
+  `policy/verify` in its executable code. HE-04's three path exclusions are the failure mode
+  this is arranged against.
+- **Do not delete the `no_path_found` verdict.** Collapsing three states into two forces either
+  "cleared" over a file that can grant, or "uncleared" over the policy suite and the adversarial
+  gate for doing their job. A path not found is not a path proven absent.
+- **Do not remove the `fixture` position, the comment mask, the string mask or the regex mask.**
+  Each exists because a draft without it reported a module's own denial as a security finding,
+  and each has a test pinned to the exact input.
+- **Do not change the hidden entry to make a visual criterion pass.** All ten pass on a tree
+  where `js/threshold.js` and `style.css` are byte-identical to `a25f0ed`. If a criterion ever
+  fails, the question is whether the criterion or the module is wrong, and both answers are a
+  person's.
+- **Do not edit `agent/policy/verify/attacks.mjs` HE-04 on your own initiative.** It is red, it
+  is very probably a false positive, and SESSION 29 measured why. Correcting it means editing a
+  CRITICAL attack, and the proposed fix is the stale exclusion list SESSION 23.5 already had to
+  correct once.
+- **Do not make `.github/workflows/qa.yml`'s `security` job pass by narrowing what it runs.**
+  The job exists to make a red thing visible. A green tick bought by running less is the thing
+  its own five-session history is about.
+
+Carried forward, still binding. **SESSION 24's:**
+
+- **Do not implement the brief's phase 6 literally.** "Reveal CONTROL ROOM followed by the
+  normal authentication interface" must never become a login form on a published page. A
+  credential prompt in the public tree is a phishing surface and a second home for a login
+  that `.control-room/` already serves behind its own origin. The refusal is written into
+  `VISUAL_SEQUENCE` phase 6's `must_not`, and `agent/simulation/selftest.mjs` test 6
+  asserts no `.html` file here carries a `type="password"` field. Do not delete either.
+- **Do not give a simulation dispatcher the ability to write, spawn or fetch.** Test 1
+  reads `dispatchers.mjs` and refuses the eight primitives by name. A dispatcher that could
+  write is a simulation that could change production.
+- **Do not delete the tree fingerprint.** "This run changed nothing" is the only claim the
+  harness makes about production, and it is a measurement. An assurance in its place would
+  be worth nothing.
+- **Do not turn a finding into an assertion.** `agent/simulation/selftest.mjs` deliberately
+  asserts none of the twenty-three. Pinning one makes the defect a requirement and the fix
+  a test failure.
+- **Do not clear the `simulated` mark on anything but the one control fixture**, and do not
+  move that fixture out of `mkdtemp`. It is the one place in this repository where a record
+  claims not to be simulated when it is, it is in the open with its reason, and it never
+  touches the tree.
+- **Do not describe SESSION 24's run as an end-to-end execution of the agents.** It is an
+  end-to-end execution of the ROUTING. `docs/ORCHESTRATOR.md` §13 now says so in the same
+  words, and softening it would make the strongest claim in that document false.
+
+**SESSION 21's:**
+
+- **Do not put a Control Room page in the published tree.** Not under `docs/`, not
+  at the root, not as an `admin.html`. The dot prefix is the only publication
+  boundary this repository has, and a page outside it is public the moment it is
+  pushed — linked or not. If a future session needs a broader boundary, that is a
+  `_config.yml` exclude list, which changes how the live site is processed and is
+  a Class D deployment change, not a convenience.
+- **Do not add a default account, a seeded administrator, or a "first run"
+  bootstrap that creates one.** The refusal to start with an empty registry is the
+  feature. Protocol §11 forbids `"admin"` / `"admin"` or any equivalent from
+  existing at all, so none may be created either.
+- **Do not let the interface become the authority.** `visibleActions()` is
+  cosmetic and says so in its own header. Every privileged request is authorized
+  server-side, and test 5 sends the request a hidden button would have prevented.
+- **Do not add a route that can deploy, delete, apply, publish or execute.**
+  `PROHIBITED_ROUTE_WORDS` and test 10b make that a failing check rather than a
+  discussion, and `server.mjs` deliberately imports nothing that could write to
+  the tree — no `child_process`, no `writeFileSync`, not the applier.
+- **Do not add a second writer of a grant.** `recordDecision` has exactly two
+  callers and one home. A third would put the fact of a decision in two places.
+- **Do not make `request_changes` a ledger state.** It is a review annotation, it
+  leaves `deriveApproval()` reporting `pending`, and that is what is true.
+- **Do not relax `DECIDABLE_STATES`.** Approving over a denial through the same
+  endpoint makes the denial advisory.
+- **Do not remove the strict unknown-field check on the review body.** Silently
+  ignoring an unexpected field is safe today and stops being safe the first time
+  somebody adds a field with that name. It is what makes "scope cannot be expanded
+  through request manipulation" a refusal rather than a hope.
+- **Do not let the local development provider out of loopback development.** Both
+  refusals are load-bearing; removing either leaves the other looking sufficient.
+- **Do not delete the eight planted credentials in `.control-room/selftest.mjs`,**
+  and do not allow-list a directory in `.control-room/boundary.mjs` — the two
+  exemptions are named FILES, so a real key added beside them is still found.
+- **Do not commit `.control-room/state/`.**
+- **Do not "fix" `agent/observability/server.mjs` by bolting a token onto it.** It
+  is a local development viewer and its own header says so; the finding against it
+  stands, unchanged, and merging it with the Control Room would give a development
+  tool a security model nobody tests.
+
+Everything from before, still binding:
+
+- Do not rebuild the site. No framework, no bundler, no build step, no
+  dependency, no service worker, no server-side rendering.
+- **Do not act on a UX proposal because it exists.** Fifteen records are
+  outstanding, five of them `human_only` changes to what a reader sees, on a site
+  where a push to `main` publishes and there is no deploy gate. They are
+  proposals, not a work order.
+- **Do not fix the three defects the browser found on your own initiative.**
+  Issues 25, 27 and 28 are real, reproducible and reader-facing, and every one of
+  them is Class C interface work: a proposal, then a human decision. A measured
+  defect is not an authorisation.
+- **Do not make `.github/workflows/qa.yml` a deploy gate by editing the workflow.**
+  It cannot be one from inside this tree — blocking needs a branch protection
+  rule, which is repository configuration. A workflow that CLAIMED to gate
+  deployment would be worse than one that says plainly it does not.
+- **Do not delete an `unmeasurable`, a `not_a_score` label, or the `overallScore()` throw.**
+  Each is load-bearing, each makes a report longer and less satisfying, and each exists
+  because the shorter version would be a lie.
+- **Do not commit `agent/health/history/`.** It holds private control-plane data and this
+  repository publishes its whole tree.
+- **Do not add a `package.json`.** `agent/browser/` exists to prove the browser
+  suite did not need one. Adding it later to "simplify" that code would spend the
+  Class D budget the whole design avoided.
+- Do not fix the `__CONTENT__` / `brief.json` drift on your own initiative. It
+  now has THREE reports — an architecture finding, an editorial finding, and this
+  session's measurement of what it costs — and three reports are no more a work
+  order than one.
+  *(30 Sep 2026: done on the author's instruction — the blob and `brief.json`'s `meta`
+  are removed. The part titles/deks second home is still not an agent's to close.)*
+- **Do not add an entry to `APPROVED_AUTONOMOUS_CATEGORIES`.** It is empty because no
+  governance decision in this repository has approved an autonomous action category,
+  and protocol §24 reserves that decision to a person. An agent appending to it would
+  be taking the decision the protocol exists to withhold — not implementing one.
+- **Do not give `agent/orchestrator/conflict.mjs` a resolver.** H7: a contradiction is
+  never resolved by seniority, recency or convenience. The suite asserts that
+  `resolve`, `preferMostRecent` and `tieBreak` are not exported, and the reason it
+  can is that none of them exists.
+- **Do not make a grant a union.** `grantFor()` returns the intersection of what the
+  agent holds and what the stage asks for. A union lets any workflow author widen any
+  agent by writing a more ambitious stage, which is one of the three leaks SESSION 22
+  names by hand.
+- **Do not add a Control Room route that starts, retries, dispatches or resumes a
+  workflow.** The absence of the route is the control; a check inside one can be
+  moved. §14 is explicit that a Control Room action creates a governed event and the
+  Orchestrator decides independently whether it is permitted.
+- **Do not let a workflow type end anywhere but a human stage**, and do not remove the
+  load check in `workflows.mjs` that refuses one which does. Five types may complete
+  without a person ONLY when they proposed nothing at all.
+- **Do not narrow a scope request down to the permitted set.** A request naming a path
+  the proposal does not is refused with the difference named. Narrowing it would let a
+  caller discover the permitted set by asking for the whole tree and reading what came
+  back.
+- Do not modify `data/*.json` or any page in a session not scoped for that work.
+- Do not touch the footer's non-affiliation or no-legal-advice text, `TIER_GRADE`
+  in `js/format.js`, the derivation rules in `js/pipeline.js`, or `BASE` in
+  `tools/_footer.mjs`.
+- Do not declare a licence. Do not soften the README's known limitations or the
+  unverified-record count. Do not re-run `tools/_refsweep.mjs` or
+  `tools/_review10.mjs`.
+- **Do not let a UX finding carry a drafted value.** The contract refuses it, the
+  suite asserts it over every record, and SESSION 16's brief says the agent does
+  not redesign the site. Loosening it is the one change in `agent/ux/` that
+  cannot be made safely.
+- **Do not let a proposal invent a design token.** Two checks exist because
+  either alone could be edited away: `agent/ux/tokens.mjs` reads the stylesheets,
+  and the contract requires an open question for any token added.
+- **Do not remove the `measurement` evidence kind from this agent's output** by
+  making every extract a `repository_file`. A count filed as a quote is a
+  fabrication with a checkable-looking locator.
+- **Do not turn an open question into a finding** to make the audit look more
+  decisive, and do not turn one into a clearance. Nine components are neither
+  legible nor illegible on this evidence, and saying either would be inventing a
+  result.
+- Do not reimplement `evidenceGrade` or `familyOf` in the agent layer.
+- Do not add `retrieved_document` to `MINTABLE_EVIDENCE`.
+- Do not add an id store, and do not change the id shapes in
+  `agent/observability/ids.mjs`.
+- Do not relax the contract gateway's rejection of anything malformed or
+  `simulated`.
+- Do not move `degraded` into a stored field. Do not move redaction to the read
+  path, and do not raise `MAX_STRING`.
+- Do not add an entry to `GOVERNANCE_PERMITS` without the repository owner naming
+  the document that grants it.
+- Do not relax the rule that `create_taxonomy_term` is `human_only`, and do not
+  let `agent/architect/` propose a taxonomy term.
