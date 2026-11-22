@@ -1,9 +1,31 @@
 # HANDOVER
 
-**Last updated:** 19 November 2026 (UTC), after the serpent-opening fix, on `claude/fix-serpent-opening`, from `main` `d168897`. The entry before it: 18 November 2026, the rules-maintenance session, group (b), on `claude/amazing-mccarthy-doan3m`.
-**Branch:** `claude/fix-serpent-opening`, pushed; whether to open a pull request is the author's answer.
-**Read first:** **31 rules were re-read from Cellar on 18 Nov 2026 and re-attested** (`last_verified` 2026-11-18; the 33rd, `ap-eidas2-01`, is Track M's by the author's decision). 26 of them are unchanged in meaning; five carry a wording change decided one at a time in §8 (decisions 2 to 5). `freshness --as-of 2027-02-03` now names only `ap-eidas2-01`. The next session is Track M (`docs/prompts/v2-track-m-eidas2-milestone.md`). Everything below is group (b)'s record, then the earlier sessions'.
+**Last updated:** 22 November 2026 (UTC), the rebalancing session, on `claude/rebalance-housekeeping`, from `main` `a61b99d`. The entry before it: 19 November 2026, the serpent-opening fix.
+**Branch:** `claude/rebalance-housekeeping`, pushed; a pull request to `main` is opened on the author's request, to be merged by the author.
+**Read first:** **every other session now ships a change a reader can see** (§8, 22 Nov 2026, "Rebalancing the sessions"). **Entries before 13 Nov 2026 (HP-04 and older) are in `docs/archive/HANDOVER-to-2026-11-13.md`, unchanged.** The next session is still Track M (`docs/prompts/v2-track-m-eidas2-milestone.md`, the 24 Dec 2026 milestone); three more prompts wait after it (below).
 
+## Rebalancing the sessions — archive, branches, the page without scripting, three prompts (22 Nov 2026)
+
+**Authority:** the author's list of six items and four answers in chat, 22 Nov 2026; `docs/ROADMAP-v2.md` §8, the four rows of that date.
+
+- **Measured first** (`a61b99d`): 648 non-merge commits since 1 Nov 2026, 538 of them touching no published file; `docs/HANDOVER.md` 871 kB.
+- **Archive:** this file's text from line 419 to its end (HP-04 of 13 Nov 2026 and older) moved byte for byte to `docs/archive/HANDOVER-to-2026-11-13.md`; the five anchors in `agent/proposals/governance/patterns.mjs` that quote it now name the archive. 871 kB → 54 kB.
+- **Without scripting** (`css/tools.css`, one `@media (scripting:none)` block): the notice moved below the fixed header; the header's controls, the spine's reset, "Open the contents", "Search the record", the compliance dial and the five placeholders hidden for that reader only. Measured in headless Chromium with script execution disabled, 1440 and 390 px, on `index.html`, `it/index.html`, `instruments.html`, `applies.html`, `bibliography.html`: placeholders 3/1/1/5 → 0, inert header controls → 0. **Not measured:** a real phone, Safari, Firefox; no browser check was added for it (a candidate for `agent/browser/checks.mjs`).
+- **Prompts written** (not sessions opened): `docs/prompts/v2-visible-network-map.md` (the Regulatory Network Explorer in production, §8 "The Hybrid's first piece"), `docs/prompts/v2-track-m-rules-round-2027-02.md` (the rules round before 16–17 Feb 2027, corrigenda read in Italian or French), `docs/prompts/v2-visible-coverage.md` (instrument pages, glossary, the Italian edition's review by the author). **Their order is not decided.** Proposed, on the alternation rule: Track M `eidas2` (prompt of 18 Nov) → network map → rules round → coverage.
+- **Battery** (on this branch, before the final write): `validate`, `i18n-audit`, `design-qa`, `freshness`, `evidence-audit`, `seo-audit` output identical to `a61b99d`; `csp`, `thirdparty`, `metric-contract` exit 0; the 26 suites 1506 pass, 0 fail, 1 skipped (`tools/selftest.mjs` 201/201); browser suite 362 pass, 0 fail, 1 undecidable; `commit-evidence` 0 without evidence.
+- **Branch register.**
+  - `scout/digest-digest-2026-11-02T16-04-07Z`, `…-11-09T16-29-04Z`, `…-11-16T15-54-39Z`: **merged into this branch**, as every earlier digest was (`ff3aa04`, `2f1fe88`, `1c903a7`), because the Scout counts "new against earlier digests" from the committed ones. The author had answered "close digests"; the session found the practice after the question and merged instead — **the author's to confirm at the pull request**.
+  - `claude/brave-goldberg-gm87jp` (`7e93f27`): its one-line change is in `main` as `ed536d6` (§8, 17 Nov 2026). Nothing to merge.
+  - `claude/confident-johnson-yeffcv` (`12240467ddbe3364f6c3adf4fab591bc76fe0098`): recorded as superseded by the author on 17 Nov 2026 (§8); not merged.
+  - **Not deleted:** the session's attempt to delete the 23 remote branches already in `main` and the two above was refused by this environment's permission policy. The author can delete them on GitHub, or with `git push origin --delete <branch>`: `claude/amazing-mccarthy-doan3m`, `claude/amazing-pascal-95wq2o`, `claude/cool-goodall-dr0emd`, `claude/eager-euler-05ukz9`, `claude/fix-serpent-opening`, `claude/friendly-pasteur-mtqo8h`, `claude/funny-hamilton-yt9uh0`, `claude/jolly-hamilton-du9xkp`, `claude/keen-johnson-sxo9jy`, `claude/kind-rubin-qq3vpo`, `claude/laughing-tesla-ydv2ro`, `claude/mobile-tree-contents`, `claude/nice-babbage-8pohzh`, `claude/nifty-mccarthy-aov32e`, `claude/pv2-03-prototype-editorial`, `claude/pv2-04-start-nhgcqx`, `claude/pv2-05-start-jrurwd`, `claude/quirky-goldberg-fpoxdz`, `claude/sleepy-keller-u3igd5`, `claude/sweet-newton-58i6p3`, `claude/upbeat-thompson-yewfls`, `seo/snippets-2026-11`, `ui/favicon-brand-mark`, `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv`; and the three digest branches once this branch is merged.
+  - `claude/rebalance-housekeeping`: disposition, a pull request to `main` on the author's request.
+- **Answered in chat, not decided:** the SEO of the language editions already switches on by itself when a person has reviewed every string (`docs/SEO-OPERATIONS.md` §6); 0 of 431 are reviewed in each of it, fr, es. The coverage prompt carries the Italian review as the author's step.
+
+> The header the serpent-opening fix wrote, kept as written:
+>
+> **Last updated:** 19 November 2026 (UTC), after the serpent-opening fix, on `claude/fix-serpent-opening`, from `main` `d168897`. The entry before it: 18 November 2026, the rules-maintenance session, group (b), on `claude/amazing-mccarthy-doan3m`.
+> **Branch:** `claude/fix-serpent-opening`, pushed; whether to open a pull request is the author's answer.
+> **Read first:** **31 rules were re-read from Cellar on 18 Nov 2026 and re-attested** (`last_verified` 2026-11-18; the 33rd, `ap-eidas2-01`, is Track M's by the author's decision). 26 of them are unchanged in meaning; five carry a wording change decided one at a time in §8 (decisions 2 to 5). `freshness --as-of 2027-02-03` now names only `ap-eidas2-01`. The next session is Track M (`docs/prompts/v2-track-m-eidas2-milestone.md`). Everything below is group (b)'s record, then the earlier sessions'.
 
 ## The serpent's opening was not seen — fixed (19 Nov 2026)
 
@@ -415,5 +437,3 @@ undecidable** (`a11y:bound`, by design; it does not cover `prototypes/`). `agent
 **Battery on `e1329b1`, 13 Nov 2026:** `validate` 0 errors · 5 warnings; `i18n-audit` 0/0; `design-qa` 0/0; `evidence-audit --as-of 2026-11-13` exit 0, 0 errors; `freshness --as-of 2026-11-13` exit 0, 0 defects, 3 staleness prompts (time, not this branch); `seo-audit` 0/0; `node --test tools/selftest.mjs` **189/189**; `commit-evidence origin/main HEAD` 3 commits, none changes a published file. `agent/records/` absent.
 
 **Waiting for:** the author's approval of C.1, recorded in §8. Then C.2–C.3 begin in `prototypes/hybrid/`.
-
-> The header HP-04 wrote, kept as written:

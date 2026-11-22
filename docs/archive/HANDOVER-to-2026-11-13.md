@@ -1,9 +1,10 @@
 # HANDOVER — archive, from the start of the project to 13 November 2026
 
-Moved here unchanged from `docs/HANDOVER.md` on 22 Nov 2026 (the author's decision that day, `docs/ROADMAP-v2.md` §8, "Rebalancing the sessions"). Nothing below was edited; it is the text that stood in `docs/HANDOVER.md` from line 420 to its end at `a61b99d`. The live handover is `docs/HANDOVER.md`.
+Moved here unchanged from `docs/HANDOVER.md` on 22 Nov 2026 (the author's decision that day, `docs/ROADMAP-v2.md` §8, "Rebalancing the sessions"). Nothing below was edited; it is the text that stood in `docs/HANDOVER.md` from line 419 to its end at `a61b99d`. The live handover is `docs/HANDOVER.md`.
 
 ---
 
+> The header HP-04 wrote, kept as written:
 >
 > **Last updated:** 13 November 2026 (UTC), HP-04 (the homepage in production: the plan executed), at its close.
 > **Branch:** `claude/nice-babbage-8pohzh` (assigned by the environment). Its pull request, #109, was **merged by the author with a merge commit** (`519281e`, 11:13 UTC) **before this entry was written**; the branch was then restarted from `origin/main` `519281e` (nothing unmerged on it) and carries only this closing documentation. `origin/main` re-fetched immediately before this write: `519281e`, unchanged. A pull request for these docs is the author's to ask for.
