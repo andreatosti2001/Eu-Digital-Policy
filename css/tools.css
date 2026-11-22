@@ -1198,6 +1198,32 @@ body[data-theme="light"]{
 
 @media print{ .noscript-note{display:none} }
 
+/* With scripting off (22 Nov 2026). Measured in headless Chromium with
+   script execution disabled, at 1440 and 390 px: the brief's fixed header
+   covered the notice's first line; its controls (contents, reading lens,
+   language, theme, glossary, search) were drawn and did nothing; and
+   "Reading the current state of play…", "Loading the comparison…",
+   "Loading the rule set…" and "Counting…" stayed on screen for good, as did
+   the empty compliance dial and its arrows. None of that is content: each
+   is a control or a placeholder a module replaces. They are hidden here,
+   for this reader only, and the notice above already names what does not
+   appear. Nothing is hidden that a script would not have replaced. */
+@media (scripting:none){
+  body:has(> header.top) .noscript-note{margin-top:calc(56px + var(--s-5))}
+  .top .topmid,
+  .spine-foot,
+  [data-action="open-tree"],
+  [data-action="open-search"],
+  .portal-cta .btn[data-action="open-search"],
+  .portal-scrollhint,
+  .rota,
+  .sop-loading,
+  .mount-fallback,
+  .ap-empty,
+  .bib-empty,
+  p:has(> #bibSelf){display:none}
+}
+
 /* The site index before the footer (tools/_footer.mjs, from tools/seo.mjs).
    Plain links to the six destinations and to every instrument page, in the
    markup of every page, so the site's structure is followable without the
