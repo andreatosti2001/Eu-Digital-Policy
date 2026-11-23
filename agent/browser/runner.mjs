@@ -39,6 +39,7 @@ import {
   checkNoThirdParty, checkAccessibility, checkContrast, checkReducedMotion, checkThreshold, checkDeployedSubpath,
 } from './checks.mjs';
 import { checkHome } from './home-checks.mjs';
+import { checkNetwork } from './network-checks.mjs';
 
 export const BROWSER_QA_COMMAND = 'node agent/browser/cli.mjs';
 export const BROWSER_QA_NAME = 'agent/browser (browser regression suite)';
@@ -122,6 +123,7 @@ export async function runBrowserQA({ only = null, pages = PAGES, quick = false, 
     if (wants('comparison')) results.push(...await checkComparison(page, site.origin));
     if (wants('evidence')) results.push(...await checkEvidence(page, site.origin));
     if (wants('datasets')) results.push(...await checkDatasets(browser, site.origin));
+    if (wants('netmap')) results.push(...await checkNetwork(browser, site.origin));
     if (wants('applicability')) results.push(...await checkApplicability(page, site.origin));
     if (wants('instrument')) results.push(...await checkInstrumentView(page, site.origin));
     if (wants('instrument')) results.push(...await checkNotCovered(page, site.origin, { root }));

@@ -1584,3 +1584,174 @@ html.dx-locked,html.dx-locked body{overflow:hidden}
   .dx-view{flex:1 1 auto}
   .dx-notes{padding:var(--s-3) var(--s-4)}
 }
+
+/* ============================================================
+   THE NETWORK OF THE INSTRUMENTS — network.html (js/network-page.js)
+   The Regulatory Network Explorer chosen on 13 Nov 2026 (the Hybrid's
+   layout with the observatory's 3D network in its box,
+   docs/PROTOTYPES.md §3.6), restated on the site's own tokens by the
+   network-map session (docs/ROADMAP-v2.md §8, 23 Nov 2026). No colour is
+   declared here: a type's colour is its family's pigment (textual: lapis,
+   deferral: gold, analytical: cinnabar), and the type itself is carried by
+   the stroke pattern and the two-letter code as well, never by hue alone.
+   ============================================================ */
+.tool-shell.nx-shell{max-width:var(--w-wide)}
+.nx{display:grid;gap:var(--s-5) var(--s-7);align-items:start;margin:var(--s-4) 0 var(--s-6)}
+.nx-main,.nx-side{min-width:0}
+@media (min-width:75rem){
+  .nx{grid-template-columns:minmax(0,1.15fr) minmax(27rem,.85fr)}
+  .nx-side{position:sticky;top:calc(var(--chrome-h) + var(--s-3))}
+}
+.nx-bar{margin:0 0 var(--s-2);display:flex;justify-content:flex-end}
+.nx-enlarge,.nx-all,.nx-pick,.nx-tools select,.nx-tools input,.nx-tools button,.nx-panel .p-actions a,.nx-panel .p-actions button{
+  font-family:var(--mono);font-size:var(--t-meta);letter-spacing:.02em;
+  min-height:var(--hit-coarse);padding:var(--s-1) var(--s-3);
+  border:var(--border-std);border-radius:var(--r-1);
+  background:var(--surface-interactive);color:var(--text-1);cursor:pointer;text-decoration:none;
+  display:inline-flex;align-items:center;max-width:100%;
+}
+.nx-enlarge:hover,.nx-all:hover,.nx-pick:hover,.nx-tools button:hover,.nx-panel .p-actions a:hover,.nx-panel .p-actions button:hover{background:var(--surface-interactive-hover);border-color:var(--mech)}
+.nx-enlarge[aria-pressed="true"],.nx-panel .p-actions button[aria-pressed="true"]{border-color:var(--live)}
+.nx-caption{font-size:var(--t-meta);color:var(--text-3);margin:0 0 var(--s-3);max-width:var(--w-text)}
+.nx-nr{font-family:var(--mono);font-size:.85em;color:var(--text-3);border:1px dotted var(--text-3);padding:0 .35em;border-radius:var(--r-1)}
+
+/* the stage: the canvas, its controls, its legend */
+.nx-explorer{margin:0}
+.nx-stage{position:relative;height:clamp(36rem,84vh,54rem);background:var(--surface-raised);border:var(--border-std);border-radius:var(--r-1);overflow:hidden}
+.nx-canvas{position:absolute;top:0;bottom:0;left:0;right:22rem}
+.nx-canvas > div,.nx-canvas svg{width:100%;height:100%}
+.nx-canvas svg{display:block;touch-action:none;cursor:grab;user-select:none}
+.nx-canvas svg.dragging{cursor:grabbing}
+.nx-tools,.nx-legend{position:absolute;left:var(--s-3);z-index:3;width:17.5rem;background:var(--surface-page);border:var(--border-std);border-radius:var(--r-1);font-family:var(--mono);font-size:var(--t-meta);color:var(--text-2)}
+.nx-tools{top:var(--s-3);padding:var(--s-3);display:flex;flex-direction:column;gap:var(--s-2)}
+.nx-tools label{display:flex;flex-direction:column;gap:var(--s-1);font-size:var(--t-micro);letter-spacing:var(--tr-micro);text-transform:uppercase;color:var(--text-3)}
+.nx-tools input,.nx-tools select{text-transform:none;background:var(--surface-raised);cursor:auto}
+.nx-tools select{cursor:pointer}
+.nx-zoom{display:flex;flex-wrap:wrap;gap:var(--s-1)}
+.nx-zoom button{justify-content:center;min-width:var(--hit-coarse)}
+.nx-keys summary{cursor:pointer;color:var(--text-3);min-height:var(--hit);display:flex;align-items:center}
+.nx-keys p{margin:var(--s-1) 0 0;line-height:1.5;color:var(--text-3)}
+.nx-legend{bottom:var(--s-3);max-height:44%;overflow-y:auto;padding:var(--s-3)}
+.nx-legend h3,.nx-panel h3{font-family:var(--mono);font-weight:500;font-size:var(--t-micro);letter-spacing:var(--tr-micro);text-transform:uppercase;color:var(--text-3);margin:0 0 var(--s-2)}
+.nx-legend ul{list-style:none;margin:0;padding:0}
+.nx-legend li label{display:grid;grid-template-columns:auto 2.6rem 2.1rem minmax(0,1fr) auto;gap:var(--s-2);align-items:center;padding:2px 0;cursor:pointer;min-height:var(--hit)}
+.nx-legend input{margin:0;width:15px;height:15px;accent-color:var(--live)}
+.nx-legend svg{width:2.6rem}
+.nx-legend svg line{stroke:currentColor}
+.nx-legend .lg-count{color:var(--text-3);font-variant-numeric:tabular-nums}
+.nx-legend .lg-note{color:var(--text-3);margin:var(--s-2) 0 0;line-height:1.45}
+.nx-legend .lg-proposed svg{vertical-align:-1px;margin-right:var(--s-1)}
+.nx-legend .lg-nodes{display:flex;flex-wrap:wrap;gap:var(--s-1) var(--s-4);margin:var(--s-2) 0 0;padding-top:var(--s-2);border-top:var(--border-hair)}
+.nx-legend .lg-nodes svg{width:16px;display:inline-block;vertical-align:-3px}
+.nx-panel{position:absolute;top:0;right:0;bottom:0;width:22rem;z-index:3;overflow-y:auto;background:var(--surface-page);border-left:var(--border-std);padding:var(--s-4);font-size:var(--t-body-sm)}
+.frame{fill:none;stroke:var(--line);stroke-width:1;stroke-dasharray:2 5}
+.group-label{font:500 11px var(--mono);fill:var(--live-text);letter-spacing:.08em;text-transform:uppercase;paint-order:stroke;stroke:var(--surface-raised);stroke-width:4px;stroke-linejoin:round}
+
+/* the type's family: its pigment for the line, the arrow and the code */
+.f-textual{color:var(--mech)}
+.f-deferral{color:var(--live-text)}
+.f-analytical{color:var(--crit-text)}
+.f-unknown{color:var(--text-3)}
+.nx-code{display:inline-block;min-width:2.1rem;text-align:center;font:500 var(--t-micro)/1.6 var(--mono);border:1px solid currentColor;border-radius:var(--r-1);background:var(--surface-raised)}
+.nx-code.proposed{border-style:dashed}
+
+/* the drawing */
+.edge{color:var(--text-3)}
+.edge.f-textual{color:var(--mech)}
+.edge.f-deferral{color:var(--live-text)}
+.edge.f-analytical{color:var(--crit-text)}
+.edge path.e-line,.edge line.e-line{fill:none;stroke:currentColor;stroke-width:1.8}
+.edge path.e-hit{fill:none;stroke:transparent;stroke-width:12;cursor:pointer;pointer-events:stroke}
+.edge .e-badge{display:none}
+.edge.coded .e-badge,.nx-ego .edge .e-badge{display:inline}
+.edge .e-badge rect{fill:var(--surface-raised);stroke:currentColor;stroke-width:1}
+.edge .e-badge text{font:500 9px var(--mono);text-anchor:middle;fill:currentColor}
+/* proposed: not the law — faint, thin, its code in a dashed box (and "Proposed: …" in every word that names it) */
+.edge.proposed path.e-line,.edge.proposed line.e-line{stroke-width:1.1;stroke-opacity:.55}
+.edge.proposed .e-badge rect{stroke-dasharray:2 1.5}
+.edge.selected path.e-line{stroke-width:3.6;stroke-opacity:1}
+.edge.selected .e-badge rect{stroke-width:2}
+.edge.off{display:none}
+.nx-mk path{fill:currentColor;stroke:none}
+.nx-mk.f-textual{color:var(--mech)}
+.nx-mk.f-deferral{color:var(--live-text)}
+.nx-mk.f-analytical{color:var(--crit-text)}
+.node{cursor:pointer}
+.node circle.n-dot{fill:var(--surface-raised);stroke:var(--text-1);stroke-width:1.6}
+.node.c-covered circle.n-dot{fill:var(--text-1)}
+.node.c-mapped circle.n-dot{fill:var(--surface-high)}
+.node.c-watched circle.n-dot,.node.c-excluded circle.n-dot{stroke-dasharray:3 2.4}
+.node.c-excluded circle.n-dot{fill:transparent;stroke:var(--text-3)}
+.node text{font:500 11.5px var(--mono);fill:var(--text-1);paint-order:stroke;stroke:var(--surface-raised);stroke-width:3.5px;stroke-linejoin:round}
+.node.c-excluded text,.node.c-watched text{fill:var(--text-3)}
+.node circle.n-ring{fill:none;stroke:transparent;stroke-width:3}
+.node.selected circle.n-ring{stroke:var(--live)}
+.node:focus{outline:none}
+.node:focus-visible circle.n-ring{stroke:var(--live);stroke-dasharray:3 2}
+.node.selected:focus-visible circle.n-ring{stroke-dasharray:none;stroke-width:4.5}
+.nx .dim{opacity:.14}
+
+/* the panel */
+.nx-tabs{display:flex;border-bottom:var(--border-std);margin:var(--s-1) 0 var(--s-3)}
+.nx-tabs [role="tab"]{font-family:var(--mono);font-size:var(--t-meta);padding:var(--s-2) var(--s-3);min-height:var(--hit-coarse);background:transparent;color:var(--text-3);border:1px solid transparent;border-bottom:0;margin-bottom:-1px;border-radius:var(--r-1) var(--r-1) 0 0;cursor:pointer}
+.nx-tabs [role="tab"][aria-selected="true"]{color:var(--text-1);background:var(--surface-page);border-color:var(--line);box-shadow:inset 0 3px 0 var(--live)}
+.nx-panel .p-kicker{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--tr-micro);text-transform:uppercase;color:var(--live-text);margin:0}
+.nx-panel .p-title{font-family:var(--display);font-size:var(--t-h3);line-height:1.2;color:var(--text-1);margin:var(--s-1) 0}
+.nx-panel .p-sub{color:var(--text-2);font-size:var(--t-meta);margin:0 0 var(--s-2)}
+.nx-panel .p-meta{color:var(--text-3);font-size:var(--t-meta)}
+.nx-facts{display:grid;grid-template-columns:minmax(7rem,max-content) minmax(0,1fr);gap:var(--s-1) var(--s-4);margin:var(--s-2) 0 0;font-size:var(--t-meta)}
+.nx-facts dt{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--tr-micro);text-transform:uppercase;color:var(--text-3);padding-top:2px}
+.nx-facts dd{margin:0;color:var(--text-1)}
+.nx-panel ul.rels{list-style:none;padding:0;margin:0}
+.nx-panel ul.rels li{border-top:var(--border-hair);padding:var(--s-1) 0}
+.nx-panel ul.rels button{all:unset;cursor:pointer;display:grid;grid-template-columns:2.4rem minmax(0,1fr);gap:var(--s-2);align-items:start;width:100%;min-height:var(--hit);font-size:var(--t-meta);color:var(--text-1)}
+.nx-panel ul.rels button:focus-visible{outline:var(--focus-ring);outline-offset:var(--focus-offset)}
+.nx-panel ul.rels button:hover .r-text{text-decoration:underline}
+.nx-panel .p-actions{display:flex;flex-wrap:wrap;gap:var(--s-2);margin:var(--s-3) 0 var(--s-1)}
+.nx-block .ix-edge{margin:var(--s-3) 0 0;padding:var(--s-3)}
+
+/* the list beside the network: the site's own relationship blocks, keyed to it */
+.nx-table h2{font-family:var(--display);font-weight:400;font-size:var(--t-h3);color:var(--text-1);margin:var(--s-5) 0 var(--s-3)}
+.nx-row{margin-bottom:var(--s-3)}
+.nx-row .ix-edge{margin-bottom:0}
+.nx-row-act{margin:0;padding:var(--s-1) var(--s-4) var(--s-2);background:var(--surface-raised);border-left:2px solid var(--line)}
+.nx-row.picked .ix-edge,.nx-row.picked .nx-row-act{border-left-color:var(--live);background:var(--surface-high)}
+.nx-isolated{list-style:none;padding:0;margin:0 0 var(--s-2);display:flex;flex-wrap:wrap;gap:var(--s-2) var(--s-4)}
+.nx-isolated li{display:flex;align-items:center;gap:var(--s-2)}
+.nx-pick{min-height:var(--hit);font-size:var(--t-micro)}
+
+/* the box: from 52rem, not enlarged — controls as a bar above the canvas, the legend below it, the panel in the left column */
+@media (min-width:52rem){
+  .nx:not(.nx--wide) .nx-stage{height:auto;display:flex;flex-direction:column;overflow:visible}
+  .nx:not(.nx--wide) .nx-tools{position:static;width:auto;order:1;flex-direction:row;flex-wrap:wrap;align-items:end;border:0;border-bottom:var(--border-std);border-radius:var(--r-1) var(--r-1) 0 0;background:var(--surface-high)}
+  .nx:not(.nx--wide) .nx-tools .nx-keys{flex-basis:100%}
+  .nx:not(.nx--wide) .nx-tools label{flex:1 1 9rem}
+  .nx:not(.nx--wide) .nx-canvas{position:relative;inset:auto;order:2;aspect-ratio:900 / 690}
+  .nx:not(.nx--wide) .nx-legend{position:static;width:auto;max-height:none;order:3;border:0;border-top:var(--border-std);border-radius:0 0 var(--r-1) var(--r-1);background:var(--surface-raised)}
+  .nx:not(.nx--wide) .nx-panel{position:static;width:auto;border:var(--border-std);border-top:3px solid var(--live);border-radius:var(--r-1);background:var(--surface-raised);overflow:visible}
+}
+@media (min-width:75rem){ .nx:not(.nx--wide) .nx-legend ul{columns:2;column-gap:var(--s-4)} .nx:not(.nx--wide) .nx-legend li{break-inside:avoid} }
+/* enlarged: the stage across the full width, the list below it */
+.nx--wide{grid-template-columns:minmax(0,1fr)!important}
+.nx--wide .nx-side{order:1;position:static}
+.nx--wide .nx-main{order:2}
+/* the phone: the ego view, not the canvas made small; then the panel and the list */
+.nx-ego{display:none}
+@media (max-width:51.99rem){
+  .nx{display:flex;flex-direction:column;gap:var(--s-3)}
+  .nx-main,.nx-side{display:contents}
+  .nx-side .nx-explorer{order:1}
+  .nx-panel-slot{order:2}
+  .nx-table{order:3}
+  .nx-bar{display:none}
+  .nx-explorer{display:flex;flex-direction:column;gap:var(--s-3)}
+  .nx-stage{display:contents}
+  .nx-canvas{display:none}
+  .nx-tools,.nx-legend,.nx-panel{position:static;width:auto;max-height:none}
+  .nx-tools{order:1}
+  .nx-explorer > .nx-ego{order:2;display:block;background:var(--surface-raised);border:var(--border-std);border-radius:var(--r-1);padding:var(--s-2)}
+  .nx-legend{order:3}
+  .nx-panel{border:var(--border-std);border-radius:var(--r-1)}
+  .nx-ego svg{display:block;width:100%;height:auto}
+  .nx-tools .nx-zoom,.nx-tools .nx-grp{display:none}
+}

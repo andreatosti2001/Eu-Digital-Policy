@@ -42,7 +42,7 @@ export const NAV = [
 ];
 
 /* pages that are not top-level destinations, and which parent they sit under */
-const CHILD_OF = { instrument: 'instruments', datasets: 'evidence' };
+const CHILD_OF = { instrument: 'instruments', datasets: 'evidence', network: 'instruments' };
 
 export function currentPage() {
   const b = document.body.dataset.page;
