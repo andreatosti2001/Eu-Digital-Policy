@@ -162,11 +162,11 @@ export const TOP_PAGES = Object.freeze([
   },
   {
     /* 23 Nov 2026 (docs/ROADMAP-v2.md §8, network map, N.1 decision 3): served and
-       linked from every page, and kept out of search — noindex, no canonical, not in
-       the sitemap — until it has been measured on a real phone. A later session
-       switches it on by removing `noindex` here and nothing else. */
-    file: 'network.html', path: 'network.html', schema: null, noindex: true,
-    reason: 'the network of the instruments: published and linked, noindex until measured on a real phone (docs/ROADMAP-v2.md §8, 23 Nov 2026)',
+       linked from every page, noindex until it had been measured on a real phone.
+       Indexable since the trials session of 23 Nov 2026 (§8, network-map trials,
+       T.3), on the author's test on an iPhone 15 Pro in Safari; `schema` is the
+       type the generator already emitted, declared so the route and the page agree. */
+    file: 'network.html', path: 'network.html', schema: 'WebPage',
     title: 'The network of the instruments: every recorded relationship in EU digital law' + BRAND,
     description: 'The instruments of the EU digital rulebook this site names, and every relationship recorded between them — amends, repeals, defers to, overlaps, conflicts — drawn as a network you can turn, filter and read, beside the same relationships as a list with their sources.',
     records: ['instruments'],
