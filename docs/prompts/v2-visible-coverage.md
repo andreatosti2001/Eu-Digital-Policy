@@ -57,3 +57,29 @@ mentre gira).
 Non scrivere una traduzione né approvarla. Non allentare il criterio che decide se un istrumento ha una pagina per fargliela avere. Non
 aggiungere una fonte senza averla letta. Non rinominare un ID. Non abbassare gate, validator o test. Non toccare licenza, non affiliazione,
 assenza di consulenza legale, README. Vale «Cosa NON fare» del brief.
+
+## Criterio di uscita e consegna (aggiunto il 23 novembre 2026)
+
+*Aggiunto dalla sessione di prove sulla mappa della rete, su `claude/tender-darwin-3xclpy`, quando l'autore ha scelto questa sessione come la
+successiva (`docs/ROADMAP-v2.md` §8, 23 nov 2026, «Network-map trials, T.4: the next session»). Il resto del prompt è come scritto il 22
+novembre. Nulla è stato letto da un testo giuridico per questa aggiunta.*
+
+**Rimisurato il 23 novembre 2026** sul branch delle prove (da `main` `a1de8a0`): le cifre del «punto di partenza» sono invariate — 44 record di
+istrumento, 17 con una pagina sotto `instruments/`, gli stessi 27 senza; 15 termini nel glossario; it 0/431 riviste (2 non tradotte), fr ed es
+0/431 (10 non tradotte ciascuna), tutte `noindex`. Da quella sessione `network.html` è indicizzabile (§8, T.3): una pagina d'istrumento nuova
+non la cambia, perché la mappa disegna tutti i 44 record a prescindere dalla pagina. **Rimisura tutto prima di scrivere.**
+
+Completa quando: le pagine nuove esistono solo per i record che la lettura regge, generate da `tools/_footer.mjs`, e ciò che non si è letto è
+dichiarato; le decisioni C.1–C.4 sono in §8 con le parole dell'autore; validatori, `selftest`, le 25 suite, `.control-room/` e il browser passano
+e ogni avvertimento nuovo è spiegato; **il prompt della sessione successiva esiste sul branch, porta questa stessa regola nel suo criterio di
+uscita ed è approvato con il lavoro; senza il prompt non si approva.** Oppure l'autore decide di fermarsi: anche allora si scrive il prompt
+della successiva.
+
+**La Traccia M ha la precedenza alle sue tappe** (`docs/SESSION-ARCHITECTURE.md` §1). Rimisura la data prima di iniziare: dal 25 dicembre 2026
+`evidence-audit` stampa `STATUS_PREDATES_MILESTONE` per `eidas2` (e prima per `ai-act` e `pld`); gli stati alle tappe sono della sessione 25,
+25.2, con la questione N1 (`docs/prompts/v2-session-25.md`, aggiunta del 23 novembre 2026). Se la finestra della 25 (dal 12 gennaio 2027) si apre
+mentre questa sessione è in corso, dillo all'autore. `ap-eidas2-01` scade il 21 febbraio 2027; `ap-dma-01` il 16 febbraio; le altre 30 regole il
+17 febbraio (`docs/prompts/v2-track-m-rules-round-2027-02.md`). Un istrumento scelto in C.1 che ha una regola in scadenza o una tappa vicina si
+dice all'autore: la Traccia M non si anticipa da qui.
+
+Prima di chiudere, la checklist C.1–C.5: cosa è stato scritto (file, righe di §8, commit), come verificarlo a mano, se esiste un test e dove.
