@@ -38,7 +38,7 @@ Leggi: `docs/BRIEF-v2.md` «Cosa NON fare»; `docs/AI-SAFE-BOUNDARIES.md` §0 e 
 - `network.html` è pubblicata, collegata da `instruments.html` e dall'indice del sito, **`noindex`, senza canonical, fuori dal sitemap**
   (§8, N.1 decisione 3): `tools/seo.mjs`, voce `network.html`, `noindex: true`.
 - Misurato in Chromium headless (Chrome for Testing 153) a 1440 e 390 px, chiaro e scuro: 23 controlli `netmap:*` passano; `NETMAP 2`
-  mostra che otto falliscono su sette difetti piantati. **Non misurato: un telefono vero, un dito, Safari, Firefox, un lettore di schermo,
+  mostra che otto falliscono su sette difetti piantati. **Non misurato in quella prova: un telefono vero, un dito, Safari, Firefox, un lettore di schermo,
   il contrasto dentro l'SVG sui pixel, le prestazioni su un dispositivo lento.**
 - **Prova reale già effettuata dall'autore dopo il merge della PR #128 (23 novembre 2026):**
   - Dispositivo: iPhone 15 Pro.
