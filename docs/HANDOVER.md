@@ -1,7 +1,7 @@
 # HANDOVER
 
 **Last updated:** 23 November 2026 (UTC), the network-map trials session, on `claude/tender-darwin-3xclpy`, from `main` `a1de8a0`. The entry before it: 23 November 2026, the network-map session.
-**Branch:** `claude/tender-darwin-3xclpy`, pushed; whether to open a pull request is the author's answer at the final checkpoint.
+**Branch:** `claude/tender-darwin-3xclpy`, pushed; final checkpoint approved, a pull request to `main` opened on the author's request, to be merged by the author.
 **Read first:** **`network.html` is indexable** (§8, T.3): canonical, `WebPage` structured data, in `sitemap.xml`, on the author's test on an iPhone 15 Pro in Safari («funziona tutto»; iOS and Safari versions not specified). **Not measured: Firefox or any other phone browser, Android, a screen reader, SVG contrast on pixels, a slow device.** The next session is coverage (`docs/prompts/v2-visible-coverage.md`, with an exit criterion added on 23 Nov 2026).
 
 ## The network-map trials — the author's phone test recorded; `network.html` indexable (23 Nov 2026)
@@ -14,7 +14,7 @@
 - **T.4:** the next session is coverage, on `docs/prompts/v2-visible-coverage.md` of 22 Nov 2026, with an exit criterion added (the standing rule, Track M's precedence, the starting figures re-measured: unchanged — 27 instruments without a page, 15 glossary terms, it/fr/es 0/431 reviewed).
 - **A count discrepancy, named:** `agent/browser/network-checks.mjs` has **22** distinct `netmap:*` checks and every run reports 22; the network-map entry below and the §8 rows of 23 Nov 2026 say 23. Those records are left as written.
 - **Battery** (nothing written during any run): `validate`, `i18n-audit`, `design-qa`, `csp`, `thirdparty`, `metric-contract`, `evidence-audit --as-of 2026-11-23`, `freshness --as-of 2026-11-23` output identical to `a1de8a0`; `seo-audit` differs only by 26 → 27 indexable and the `network.html` noindex line gone, 0 errors, 0 warnings; `_footer.mjs --check` current; 26 suites on `2122dd3` 1508 pass, 0 fail, 1 skipped (`tools/selftest.mjs` 201/201); browser on `7f55a2d` (Chrome for Testing 153.0.8010.12) 407 pass, 0 fail, 1 undecidable (`a11y:bound`), `netmap` 22/22, the tree unchanged; `commit-evidence a1de8a0 HEAD` 0 without evidence.
-- **Branch register:** `claude/tender-darwin-3xclpy`, disposition: the author's answer at the final checkpoint. `git branch -r --no-merged origin/main` (re-fetched before this write; `origin/main` still `a1de8a0`): `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv`, both registered; no unregistered branch.
+- **Branch register:** `claude/tender-darwin-3xclpy`, disposition: the final checkpoint is approved (§8, 23 Nov 2026); on the author's answer («Approve both, open the PR»), a pull request to `main`, opened by the session, to be merged by the author. `git branch -r --no-merged origin/main` (re-fetched before this write; `origin/main` still `a1de8a0`): `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv`, both registered; no unregistered branch.
 
 > The header the network-map session wrote, kept as written:
 >
