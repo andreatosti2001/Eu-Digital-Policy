@@ -1,7 +1,7 @@
 # HANDOVER
 
 **Last updated:** 23 November 2026 (UTC), the network-map session, on `claude/dazzling-mendel-yor1kd`, from `main` `764ba77`. The entry before it: 23 November 2026, the Track M session (`eidas2` milestone).
-**Branch:** `claude/dazzling-mendel-yor1kd`, pushed; whether to open a pull request is the author's answer at the final checkpoint.
+**Branch:** `claude/dazzling-mendel-yor1kd`, pushed; final checkpoint approved, a pull request to `main` opened on the author's request, to be merged by the author.
 **Read first:** **`network.html` — the network of the instruments — is built and in this branch**, the first piece of the Hybrid for the published site: the map alone, the full combination of `prototypes/hybrid/` (`6fdc311`), on the existing data, **`noindex` until measured on a real phone**. A relationship whose stating act is not adopted reads «Proposed: …» and is drawn faint (18 of 53 on 23 Nov 2026). **Not measured: a real phone, Safari, Firefox, a screen reader.** The next session is trials on a phone (`docs/prompts/v2-trials-network-map-phone.md`).
 
 ## The network map — `network.html` in production (23 Nov 2026)
@@ -16,7 +16,7 @@
 - **Not measured:** a real phone, a finger, Safari, Firefox, a screen reader, contrast inside the SVG against its pixels, performance on a slow device; whether the 3D network reads well in its box. The phone measurement is the author's after the merge (§8, N.3).
 - **Found, not fixed:** `js/interactions.js` `KIND_ORDER` has no place for `defers-to` and `enables`, so their 19 relationships are grouped under "Other" in the brief's overview and on the network page's list (pre-existing; not this session's scope). The prototype's observatory still leaves a filtered type drawn (`docs/PROTOTYPES.md` §3.6); the production page carries the rule and `netmap:filter` checks the computed display.
 - **Battery** (on `ee9a05e`, nothing written during it): `validate`, `csp`, `thirdparty`, `evidence-audit`, `metric-contract`, `freshness` output identical to `764ba77`; `i18n-audit`, `design-qa`, `seo-audit` differ only in the page and module counts and the `noindex` route of `network.html`; `_footer.mjs --check` current; `agent/implement/cli.mjs check --as-of 2026-11-23` verdict pass; 26 suites 1508 pass, 0 fail, 1 skipped (1506 + NETMAP 1 and 2; `tools/selftest.mjs` 201/201); browser 407 pass, 0 fail, 1 undecidable (`a11y:bound`), the repository byte-identical during the run; `commit-evidence` 0 without evidence.
-- **Branch register:** `claude/dazzling-mendel-yor1kd`, disposition: the author's answer at the final checkpoint. `git branch -r --no-merged origin/main` (re-fetched before this write; `origin/main` still `764ba77`): `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv`, both registered; no unregistered branch.
+- **Branch register:** `claude/dazzling-mendel-yor1kd`, disposition: the final checkpoint is approved (§8, 23 Nov 2026); on the author's answer («Approve both, open the PR»), a pull request to `main`, opened by the session and merged by the author with a merge commit. `git branch -r --no-merged origin/main` (re-fetched before this write; `origin/main` still `764ba77`): `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv`, both registered; no unregistered branch.
 
 > The header the Track M session wrote, kept as written:
 >
