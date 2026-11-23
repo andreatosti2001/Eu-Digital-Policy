@@ -119,8 +119,9 @@ test('every page at the repository root is read', () => {
   const pages = readdirSync(REPO_ROOT).filter((f) => f.endsWith('.html')).sort();
   assert.deepEqual(PROSE.pages, pages);
   /* nine since 21 Oct 2026 (methodology.html and licence.html), ten the same
-     day with 404.html (audit item 23), eleven since 22 Oct 2026 with datasets.html */
-  assert.equal(pages.length, 11, 'the site has eleven pages and the reader must see all of them');
+     day with 404.html (audit item 23), eleven since 22 Oct 2026 with datasets.html,
+     twelve since 23 Nov 2026 with network.html (docs/ROADMAP-v2.md §8, network map) */
+  assert.equal(pages.length, 12, 'the site has twelve pages and the reader must see all of them');
 });
 
 test('the tag scanner leaves no close tag unmatched on any page', () => {

@@ -1613,6 +1613,9 @@ html.dx-locked,html.dx-locked body{overflow:hidden}
 .nx-enlarge:hover,.nx-all:hover,.nx-pick:hover,.nx-tools button:hover,.nx-panel .p-actions a:hover,.nx-panel .p-actions button:hover{background:var(--surface-interactive-hover);border-color:var(--mech)}
 .nx-enlarge[aria-pressed="true"],.nx-panel .p-actions button[aria-pressed="true"]{border-color:var(--live)}
 .nx-caption{font-size:var(--t-meta);color:var(--text-3);margin:0 0 var(--s-3);max-width:var(--w-text)}
+/* links the page adds outside the site's own link rules: the lede of instruments.html, the panel's part, the list of instruments with none */
+.tool-head .lede a,.nx-facts a,.nx-isolated a{color:var(--mech);text-decoration:underline;text-underline-offset:2px}
+.tool-head .lede a:hover,.nx-facts a:hover,.nx-isolated a:hover{color:var(--live)}
 .nx-nr{font-family:var(--mono);font-size:.85em;color:var(--text-3);border:1px dotted var(--text-3);padding:0 .35em;border-radius:var(--r-1)}
 
 /* the stage: the canvas, its controls, its legend */
