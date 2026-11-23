@@ -40,6 +40,7 @@ import { datesFor, authoritiesFor } from '../js/dna.js';
 import { actionsOnly } from '../js/pipeline.js';
 import { editionLocales, reviewState } from './editions.mjs';
 import { renderInstrument, instrumentListItem, instrumentFaq } from '../js/instrument-view.js';
+import { interactionsOverview } from '../js/interactions.js';
 import * as F from '../js/format.js';
 import { DATASETS as FILES, describe, countText } from '../js/json-graph.js';
 import { BASE, AUTHOR, LICENCE, navFromShell, childOfFromShell } from './_footer.mjs';
@@ -158,6 +159,17 @@ export const TOP_PAGES = Object.freeze([
     title: 'Datasets: the records behind this analysis of EU digital law' + BRAND,
     description: 'Explore the JSON files every page of EU Digital Policy is rendered from — instruments, institutions, enforcement, claims, sources, timeline and more — one record at a time, as a graph, a tree or raw JSON, with every reference between records made explicit.',
     records: ['taxonomy', 'instruments', 'institutions', 'sources', 'claims', 'timeline', 'enforcement', 'applicability', 'glossary'],
+  },
+  {
+    /* 23 Nov 2026 (docs/ROADMAP-v2.md §8, network map, N.1 decision 3): served and
+       linked from every page, and kept out of search — noindex, no canonical, not in
+       the sitemap — until it has been measured on a real phone. A later session
+       switches it on by removing `noindex` here and nothing else. */
+    file: 'network.html', path: 'network.html', schema: null, noindex: true,
+    reason: 'the network of the instruments: published and linked, noindex until measured on a real phone (docs/ROADMAP-v2.md §8, 23 Nov 2026)',
+    title: 'The network of the instruments: every recorded relationship in EU digital law' + BRAND,
+    description: 'The instruments of the EU digital rulebook this site names, and every relationship recorded between them — amends, repeals, defers to, overlaps, conflicts — drawn as a network you can turn, filter and read, beside the same relationships as a list with their sources.',
+    records: ['instruments'],
   },
   {
     file: 'licence.html', path: 'licence.html', schema: 'WebPage',
@@ -363,9 +375,11 @@ export function buildRoutes(db, root = ROOT) {
     routes.push({
       kind: p.compat ? 'compat' : (p.file === 'index.html' ? 'home' : 'directory'),
       file: p.file, root: p.root || '', url,
-      canonical: p.compat ? null : url,
-      indexable: !p.compat,
-      reason: p.compat ? (p.reason || 'compatibility route: forwards to an instrument page, or renders a thin record with noindex') : null,
+      canonical: p.compat || p.noindex ? null : url,
+      indexable: !p.compat && !p.noindex,
+      noindex: !!p.noindex,
+      reason: p.compat ? (p.reason || 'compatibility route: forwards to an instrument page, or renders a thin record with noindex')
+        : p.noindex ? p.reason : null,
       title: p.title, description: p.description, schema: p.schema,
       h1: null,
       breadcrumb: p.file === 'index.html' ? [] : [home, ...parentOf(p.file), { name: crumb || p.title, url }],
@@ -461,6 +475,8 @@ export function socialMeta(route, ctx) {
   if (route.canonical) lines.push(`<link href="${route.canonical}" rel="canonical"/>`);
   /* a language edition nobody has reviewed yet is served, and kept out of search */
   if (route.kind === 'language' && !route.indexable) lines.push('<meta content="noindex" name="robots"/>');
+  /* a page served and linked but kept out of search until a decision switches it on */
+  if (route.noindex) lines.push('<meta content="noindex" name="robots"/>');
   for (const a of route.indexable ? route.alternates || [] : []) lines.push(`<link href="${a.href}" hreflang="${a.lang}" rel="alternate"/>`);
   lines.push(
     `<meta content="${attr(route.title)}" property="og:title"/>`,
@@ -614,6 +630,7 @@ export const ABOUT_PAGES = Object.freeze([
   { file: 'methodology.html', label: 'Methodology' },
   { file: 'licence.html', label: 'Licence and reuse' },
   { file: 'datasets.html', label: 'Datasets' },
+  { file: 'network.html', label: 'Network of the instruments' },
 ]);
 export function siteIndex(routes, ix, nav, root) {
   const insts = routes.filter((r) => r.kind === 'instrument').map((r) => ix.instrument.get(r.id));
@@ -801,6 +818,25 @@ ${list.map((s) => `<li id="${attr(s.id)}">${F.citeHTML(s, ix, 'bibliography')}</
   });
   return `<p class="bib-empty">Loading the bibliography, with its filters and the uses of each source. Until it arrives — or without JavaScript — this is every source, ${all.length} in all, by tier:</p>
 ${blocks.join('\n')}`;
+}
+
+/* The network page's list for a reader without JavaScript (23 Nov 2026): every
+   relationship in js/interactions.js's own block — the one the brief, the instrument
+   pages and the page's list under the network render, so it reads one way everywhere —
+   and the instruments with none. The script replaces it with the network and the
+   same list, keyed to it. */
+export function networkIndex(ix) {
+  const insts = [...new Set(ix.instrument.values())];
+  const touched = new Set((ix.relationship || []).flatMap((r) => [r.from, r.to]));
+  const none = insts.filter((i) => !touched.has(i.id)).sort((a, b) => a.short_name.localeCompare(b.short_name));
+  return `<p class="mount-fallback">Loading the network. Until it arrives — or without JavaScript — this is every relationship it draws, as recorded:</p>
+<h2>The relationships, as recorded</h2>
+${interactionsOverview(ix, { level: 3, root: '' })}
+${none.length ? `<h3 class="ix-group">No relationship recorded<span class="ix-count">${none.length}</span></h3>
+<ul class="nx-isolated">
+${none.map((i) => `<li><a href="${attr(R.instrumentHref(i, ix, ''))}">${text(i.short_name)}</a></li>`).join('\n')}
+</ul>
+<p class="nx-caption">An instrument listed here appears in no relationship in the records. That is not a finding that it relates to nothing.</p>` : ''}`;
 }
 
 /* The explorer's files, each linked as it is served. Counts only: what a

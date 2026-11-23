@@ -262,7 +262,14 @@ export function affectedPages(datasets, { root = REPO_ROOT } = {}) {
   for (const path of datasets ?? []) {
     const name = String(path).replace(/^data\//, '').replace(/\.json$/, '');
     const pages = datasetToPages.get(name);
-    if (pages) { for (const p of pages) out.add(p); continue; }
+    if (pages) {
+      for (const p of pages) out.add(p);
+      /* 23 Nov 2026: network.html reads brief.json for the parts' ids and numerals only. The
+         second home is still the titles and deks, which no page renders from here: said in
+         either case, so a page that loads the file cannot make the warning disappear. */
+      if (name === 'brief') caveats.push(`data/brief.json is loaded by ${pages.join(', ')} for the parts' ids, kinds and numerals only, never a title or dek. index.html shows the part titles and deks written in its own markup, and app.js builds the contents and search index from that markup. A part title or dek changed in brief.json must be changed in the markup too — nothing keeps the two in step (CURRENT-ARCHITECTURE §8) — and this detector does not claim it is.`);
+      continue;
+    }
     caveats.push(name === 'brief'
       ? 'data/brief.json is loaded by no module, so a change to it reaches no page by itself. index.html shows the part titles and deks written in its own markup, and app.js builds the contents and search index from that markup (the inlined __CONTENT__ copy was removed on 30 Sep 2026). A part title or dek changed in brief.json must be changed in the markup too — nothing keeps the two in step (CURRENT-ARCHITECTURE §8) — and this detector does not claim it is.'
       : `No module loads data/${name}.json, so no page was found for it. That is either a dataset nothing renders or a gap in this map — it is reported rather than resolved.`);

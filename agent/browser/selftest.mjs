@@ -31,6 +31,7 @@ import { serveSite, REPO_ROOT, MIME } from './serve.mjs';
 import { runBrowserQA, asQACheck, verdictOf, BASELINE, BROWSER_QA_COMMAND } from './runner.mjs';
 import { PAGES, NAV_FILES, VIEWPORTS, checkDeployedSubpath, DEPLOY_BASE_PATH, checkPageLoads, MOUNT_WAIT_MS } from './checks.mjs';
 import { checkHome, decodePng, contrastRatio } from './home-checks.mjs';
+import { checkNetwork } from './network-checks.mjs';
 import { deflateSync } from 'node:zlib';
 import { CHROME_FLAGS, launch } from './cdp.mjs';
 import { validate } from '../schemas/validate.mjs';
@@ -557,6 +558,65 @@ test('HOME 2 · the homepage checks pass on the real site and FAIL on six plante
     }
     for (const id of ['home:figure', 'home:no-script', 'home:module-failure', 'home:edition-note', 'home:visited', 'home:masthead-marks']) {
       assert.equal(by[id].status, 'pass', `${id} failed on a tree whose only defects are the six planted ones: ${by[id].summary}`);
+    }
+  } finally {
+    if (site) await site.close();
+    if (browser) { try { await browser.close(); } catch { /* not a site defect */ } }
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+/* ============================================================
+   NETMAP · network.html (the network-map session, 23 Nov 2026). The
+   checks pass on the real site, and each essential one FAILS on a tree
+   where its property is planted missing — docs/POST-V2.md §3 D asks for
+   exactly that of the explorer's own tests: an edge or a direction the
+   records do not hold, a proposal read as law, a filter that hides
+   nothing, an instrument dropped, no list without JavaScript, the canvas
+   shrunk onto a phone.
+   ============================================================ */
+
+test('NETMAP 1 · every network check passes on the real site', async (t) => {
+  const found = findBrowser();
+  if (!found.found) { t.skip(`no browser: ${found.reason}`); return; }
+  let browser = null, site = null;
+  try {
+    browser = await launch({ executable: found.path });
+    site = await serveSite({ root: REPO_ROOT });
+    const results = await checkNetwork(browser, site.origin);
+    assert.ok(results.length >= 22, `only ${results.length} network checks ran`);
+    for (const r of results) assert.equal(r.status, 'pass', `${r.id}: ${r.summary}`);
+  } finally {
+    if (site) await site.close();
+    if (browser) { try { await browser.close(); } catch { /* not a site defect */ } }
+  }
+});
+
+test('NETMAP 2 · the network checks FAIL on seven planted defects', async (t) => {
+  const found = findBrowser();
+  if (!found.found) { t.skip(`no browser: ${found.reason}`); return; }
+  const dir = mkdtempSync(join(tmpdir(), 'netmap-'));
+  let browser = null, site = null;
+  try {
+    cpSync(REPO_ROOT, dir, { recursive: true, filter: (src) => !/(^|\/)(\.git|node_modules|runs|records|drafts)$/.test(src) });
+    const plant = (file, from, to) => { const p = join(dir, file), src = readFileSync(p, 'utf8'); assert.ok(src.includes(from), `${file} no longer holds the text this plant rewrites: ${from}`); writeFileSync(p, src.split(from).join(to)); };
+    plant('js/network-page.js', "const arrow = r.symmetric === false ?", "const arrow = true ?");                                         // a direction the record does not give
+    plant('js/network-page.js', "const kindWords = (ix, r) => kindText(r, ix, label(ix, r.kind) || kindKey(r.kind));", "const kindWords = (ix, r) => label(ix, r.kind) || kindKey(r.kind);"); // a proposal read as law
+    plant('css/tools.css', ".edge.off{display:none}", ".edge.off{}");                                                                  // the filter hides nothing (the observatory's defect)
+    plant('js/network-page.js', "const edges = counts.rels.map((r) => edgeSvg(", "const edges = [...counts.rels, counts.rels[0]].map((r) => edgeSvg("); // an edge no record holds
+    plant('js/network-page.js', "const nodes = counts.instruments.map((i) => nodeSvg(", "const nodes = counts.instruments.filter((i) => counts.touching.get(i.id).length).map((i) => nodeSvg("); // the instruments with no relationship dropped
+    plant('network.html', '<article class="ix-edge"', '<article class="ix-gone"');                                                       // no list without JavaScript
+    plant('css/tools.css', "  .nx-canvas{display:none}\n", "  .nx-canvas{display:block}\n");                                         // the canvas shrunk onto a phone
+
+    browser = await launch({ executable: found.path });
+    site = await serveSite({ root: dir });
+    const results = await checkNetwork(browser, site.origin);
+    const by = Object.fromEntries(results.map((r) => [r.id, r]));
+    for (const id of ['netmap:arrows', 'netmap:planted-symmetric', 'netmap:proposed', 'netmap:filter', 'netmap:render', 'netmap:isolated', 'netmap:no-script', 'netmap:phone']) {
+      assert.equal(by[id]?.status, 'fail', `${id} did not fail on its planted defect — it cannot catch what it is for`);
+    }
+    for (const id of ['netmap:legend', 'netmap:pair', 'netmap:enlarge', 'netmap:deterministic', 'netmap:reduced-motion', 'netmap:planted-error', 'netmap:first-party']) {
+      assert.equal(by[id]?.status, 'pass', `${id} failed on a tree whose only defects are the planted ones: ${by[id]?.summary}`);
     }
   } finally {
     if (site) await site.close();

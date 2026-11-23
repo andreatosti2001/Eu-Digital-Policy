@@ -174,8 +174,21 @@ export function interactionsFor(instrumentId, ix, root = siteRoot()) {
 
 /* ------------------------------------------------------- the brief mount */
 
-function overview(ix) {
-  const rels = (ix.relationship || []).slice().sort((a, b) =>
+/**
+ * The relationships grouped by kind, strongest first — the brief's overview,
+ * and (since 23 Nov 2026) the list on network.html and the list
+ * tools/_footer.mjs writes into that page for a reader without JavaScript.
+ * One builder, so a relationship reads one way wherever it is listed.
+ * @param {object} ix  the built index
+ * @param {object} [opts]
+ * @param {object[]} [opts.rels]   the relationships to list (default: all of them)
+ * @param {boolean} [opts.lede]    the paragraph that counts them (default: yes)
+ * @param {number}  [opts.level]   the heading level of a kind's group (default 4, the brief's)
+ * @param {function} [opts.wrap]   (record, blockHtml) → html, to key a block to something
+ * @param {string} [opts.root]     path from the page to the site root
+ */
+export function interactionsOverview(ix, { rels: only = null, lede = true, level = 4, wrap = null, root = siteRoot() } = {}) {
+  const rels = (only || ix.relationship || []).slice().sort((a, b) =>
     kindRank(a.kind) - kindRank(b.kind) ||
     String(a.from).localeCompare(String(b.from)));
 
@@ -186,6 +199,8 @@ function overview(ix) {
   const touched = new Set();
   for (const r of rels) { touched.add(r.from); touched.add(r.to); }
   const unverified = rels.filter((r) => r.requires_verification).length;
+  const h = 'h' + level;
+  const block = (r) => (wrap ? wrap(r, interactionBlock(r, ix, undefined, root)) : interactionBlock(r, ix, undefined, root));
 
   /* Grouped by kind so the reader meets the conflicts first and the
      housekeeping last, rather than an alphabetical soup. */
@@ -194,17 +209,18 @@ function overview(ix) {
     const inK = rels.filter((r) => r.kind === k);
     if (!inK.length) continue;
     groups.push(
-      '<h4 class="ix-group">' + esc(taxLabel(ix, k) || k) +
-        '<span class="ix-count">' + inK.length + '</span></h4>' +
-      inK.map((r) => interactionBlock(r, ix)).join('')
+      '<' + h + ' class="ix-group">' + esc(taxLabel(ix, k) || k) +
+        '<span class="ix-count">' + inK.length + '</span></' + h + '>' +
+      inK.map(block).join('')
     );
   }
   const rest = rels.filter((r) => kindRank(r.kind) === KIND_ORDER.length);
   if (rest.length) {
-    groups.push('<h4 class="ix-group">Other<span class="ix-count">' + rest.length + '</span></h4>' +
-      rest.map((r) => interactionBlock(r, ix)).join(''));
+    groups.push('<' + h + ' class="ix-group">Other<span class="ix-count">' + rest.length + '</span></' + h + '>' +
+      rest.map(block).join(''));
   }
 
+  if (!lede) return '<div class="ix-list">' + groups.join('') + '</div>';
   return '<div class="ix-lede">' +
       '<p><b>' + rels.length + ' interactions recorded, touching ' + touched.size + ' of the ' +
       /* the index maps aliases onto the same object, so counting keys would
@@ -238,7 +254,7 @@ export async function initInteractions(ix) {
 
   let html;
   try {
-    html = overview(scope);
+    html = interactionsOverview(scope);
   } catch (e) {
     for (const m of mounts) renderError(m, e, () => initInteractions(ix));
     return;

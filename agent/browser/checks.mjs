@@ -54,6 +54,7 @@ export const PAGES = [
   { file: 'methodology.html', name: 'the methodology', main: '#maincontent' },
   { file: 'licence.html', name: 'the licence and reuse page', main: '#maincontent' },
   { file: 'datasets.html', name: 'the dataset explorer', main: '#dxMain' },
+  { file: 'network.html', name: 'the network of the instruments', main: '#nxMain' },
 ];
 
 /** A page is "rendered" when its mount point no longer holds the
