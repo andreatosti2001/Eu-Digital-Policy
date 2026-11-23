@@ -210,3 +210,20 @@ prompt della sessione successiva** con ciò che resta, e ciò che resta va letto
 Prima di chiudere, produci la checklist di verifica: per ciascun punto (25.0–25.3) cosa è stato scritto (file, righe di §8,
 commit), come verificarlo a mano, se esiste un test automatico e dove, quale criterio di uscita soddisfa. Se un punto non è
 completo, dichiaralo.
+
+## Aggiunta del 23 novembre 2026 — N1 per 25.2 (`eidas2`)
+
+*Aggiunta dalla sessione Traccia M (`eidas2`), su `claude/sweet-lamport-fhdex7`, per la decisione dell'autore (`docs/ROADMAP-v2.md` §8,
+23 nov 2026, «Track M (eidas2), M.2 decision 2: N1, where it goes»). Il resto del prompt è come scritto il 5 novembre 2026; le sue premesse sulle
+regole sono superate dal gruppo (b) (18 nov 2026: 31 regole riattestate) e dalla Traccia M (23 nov 2026: `ap-eidas2-01` riattestata): **rimisura
+tutto** prima di iniziare.*
+
+**N1.** L'art. 5a(1) del Regolamento (UE) n. 910/2014 conta 24 mesi «from the date of entry into force of the implementing acts referred to in
+paragraph 23 of this Article and in Article 5c(6)». I cinque atti di esecuzione del 28 novembre 2024 (2024/2977, 2979, 2980, 2982 sotto
+l'art. 5a(23); 2024/2981 sotto l'art. 5c(6)) sono entrati in vigore il 24 dicembre 2024. **Il Regolamento di esecuzione (UE) 2026/1731**,
+adottato anch'esso «in particular» sotto l'art. 5a(23), modifica 2024/2977, 2979, 2980 e 2982 ed è entrato in vigore l'11 agosto 2026: nessun
+testo letto il 23 novembre 2026 dice se sposta la data da cui conta l'art. 5a(1). I Regolamenti di esecuzione (UE) 2025/846 (considerando 11 e
+ultimo articolo) e 2025/848 si applicano dal 24 dicembre 2026. Le letture, gli hash e ciò che non è stato letto sono in
+`docs/TRACK-M-EIDAS2-READING.md` (§2–§4). **In 25.2, per `eidas2`**: rileggere lo stato e `tl-eidas2-2026-12-24-compliance-deadline` dopo il
+24 dicembre 2026, con N1 posta all'autore come domanda, cercando un testo che la risolva (non da memoria); se nessun testo la risolve, si
+dichiara. `ap-eidas2-01` non si riapre per N1 senza una decisione dell'autore in §8.

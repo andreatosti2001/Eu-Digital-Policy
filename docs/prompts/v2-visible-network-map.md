@@ -64,3 +64,21 @@ Non toccare `data/`. Non aggiungere, togliere o riclassificare un arco. Non pubb
 introdurre una libreria, un font o una richiesta esterna (`ALLOWED_RUNTIME_ORIGINS` resta vuoto). Non abbassare gate, validator o test. Non
 toccare licenza, non affiliazione, assenza di consulenza legale, README. Non riscrivere la storia di `main` né forzare un push. Vale «Cosa NON
 fare» del brief.
+
+## Criterio di uscita e consegna (aggiunto il 23 novembre 2026)
+
+*Aggiunto dalla sessione Traccia M (`eidas2`), su `claude/sweet-lamport-fhdex7`, quando l'autore ha scelto questa sessione come la successiva
+(`docs/ROADMAP-v2.md` §8, 23 nov 2026, «Track M (eidas2), M.4: the next session»). Il resto del prompt è come scritto il 22 novembre.*
+
+Completa quando: la mappa è pubblicata come l'autore l'ha decisa in §8, senza un dato o un arco nuovo; N.3 è misurato e ciò che non è stato
+misurato è scritto; validatori, `selftest`, le 25 suite, `.control-room/` e il browser passano e ogni avvertimento nuovo è spiegato; **il
+prompt della sessione successiva esiste sul branch, porta questa stessa regola nel suo criterio di uscita ed è approvato con il lavoro; senza il
+prompt non si approva.** Oppure l'autore decide di fermarsi: anche allora si scrive il prompt della successiva.
+
+**La Traccia M ha la precedenza alle sue tappe** (`docs/SESSION-ARCHITECTURE.md` §1). Rimisura la data prima di iniziare: dal 25 dicembre 2026
+`evidence-audit` stampa `STATUS_PREDATES_MILESTONE` per `eidas2` (e prima per `ai-act` e `pld`); gli stati alle tappe sono della sessione 25,
+25.2, con la questione N1 (`docs/prompts/v2-session-25.md`, aggiunta del 23 novembre 2026). Se la finestra della 25 (dal 12 gennaio 2027) si apre
+mentre questa sessione è in corso, dillo all'autore. `ap-eidas2-01` scade il 21 febbraio 2027; `ap-dma-01` il 16 febbraio; le altre 30 regole il
+17 febbraio (`docs/prompts/v2-track-m-rules-round-2027-02.md`).
+
+Prima di chiudere, la checklist N.1–N.4: cosa è stato scritto (file, righe di §8, commit), come verificarlo a mano, se esiste un test e dove.
