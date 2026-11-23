@@ -4,7 +4,10 @@ Provenance: drafted on 23 Nov 2026 in the network-map session, on `claude/dazzli
 a trials session that records the author's measurement on a real phone and decides the page's indexing. Drawn from docs/HANDOVER.md (the
 network-map entry), docs/ROADMAP-v2.md §8 (the rows of 23 Nov 2026), agent/browser/network-checks.mjs and docs/prompts/v2-visible-network-map.md.
 **Nothing was read from any legal text for this prompt**, and no instrument, edge or status is asserted here. It records no §8 row of its
-own: the session records its scope as its first write. Written in Italian, as the author's session prompts are. The author may change it
+own: the session records its scope as its first write.
+Amended on 23 Nov 2026 at the author's request, after PR #128 was merged: the author's own test on a real phone (iPhone 15 Pro,
+Safari) is recorded under «Il punto di partenza» as already done, and T.1 now registers it rather than asking for it; T.3 (indexing) stays
+open and is still the author's. Written in Italian, as the author's session prompts are. The author may change it
 before use.
 -->
 
@@ -37,16 +40,29 @@ Leggi: `docs/BRIEF-v2.md` «Cosa NON fare»; `docs/AI-SAFE-BOUNDARIES.md` §0 e 
 - Misurato in Chromium headless (Chrome for Testing 153) a 1440 e 390 px, chiaro e scuro: 23 controlli `netmap:*` passano; `NETMAP 2`
   mostra che otto falliscono su sette difetti piantati. **Non misurato: un telefono vero, un dito, Safari, Firefox, un lettore di schermo,
   il contrasto dentro l'SVG sui pixel, le prestazioni su un dispositivo lento.**
+- **Prova reale già effettuata dall'autore dopo il merge della PR #128 (23 novembre 2026):**
+  - Dispositivo: iPhone 15 Pro.
+  - Browser: Safari.
+  - Versione iOS: non specificata.
+  - Versione Safari: non specificata.
+  - Esito riferito dall'autore: «funziona tutto».
+  - Problemi riscontrati: nessuno segnalato.
+
+  Questa è una verifica su dispositivo reale riferita dall'autore. Non chiedere di
+  ripetere la prova generale. Non inferire versioni del sistema o del browser e
+  non estendere il risultato ad altri dispositivi, browser o tecnologie assistive.
 - I dati misurati quel giorno: 44 strumenti, 53 relazioni, 18 «proposed» per `js/map-model.js`, 8 strumenti senza relazione. Sono un
   riferimento, non valori da scrivere: i controlli li ricavano da `data/` a ogni esecuzione.
 
 ## Obiettivo
 
-- **T.1 · La misura dell'autore.** Chiedi all'autore di aprire `https://eudigitalpolicy.eu/network.html` sul proprio telefono e di
-  riferire: modello, sistema, browser e versione; se la vista ego appare al posto della rete; se toccare uno strumento lo centra e toccare
-  una linea apre la relazione; se il pannello, la legenda (il filtro) e l'elenco si leggono; se la pagina scorre di lato; tema chiaro e
-  scuro; se qualcosa è lento. Se ha Safari o Firefox su un computer, le stesse domande a 1440 px, più «Enlarge the network» ed Esc.
-  **Scrivi le sue parole, non una sintesi che le migliori.** Ciò che l'autore non misura resta «non misurato».
+- **T.1 · La misura dell'autore (già raccolta).** La prova su iPhone 15 Pro con
+  Safari è già stata effettuata dopo il merge della PR #128. Registra in §8
+  l'esito riferito dall'autore («funziona tutto»), il dispositivo e il browser;
+  indica come non specificate le rispettive versioni di sistema e browser.
+  Non chiedere all'autore di ripetere la prova. Se emergono anomalie specifiche
+  dai controlli tecnici, chiedi soltanto le informazioni aggiuntive necessarie
+  per riprodurle.
 - **T.2 · Ciò che la misura trova.** Ogni difetto riferito si riproduce, se possibile, in `agent/browser/` (un controllo che fallisce
   prima della correzione e passa dopo), poi si corregge nella pagina, nel modulo o nel foglio di stile. **Nessun dato nuovo, nessun arco
   nuovo, nessuna stringa riscritta in `data/`.** Un difetto che non si riproduce in Chromium si scrive come tale, con il dispositivo.
