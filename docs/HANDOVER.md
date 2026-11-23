@@ -1,8 +1,26 @@
 # HANDOVER
 
-**Last updated:** 22 November 2026 (UTC), the rebalancing session, on `claude/rebalance-housekeeping`, from `main` `a61b99d`. The entry before it: 19 November 2026, the serpent-opening fix.
-**Branch:** `claude/rebalance-housekeeping`, pushed; a pull request to `main` is opened on the author's request, to be merged by the author.
-**Read first:** **every other session now ships a change a reader can see** (§8, 22 Nov 2026, "Rebalancing the sessions"). **Entries before 13 Nov 2026 (HP-04 and older) are in `docs/archive/HANDOVER-to-2026-11-13.md`, unchanged.** The next session is still Track M (`docs/prompts/v2-track-m-eidas2-milestone.md`, the 24 Dec 2026 milestone); three more prompts wait after it (below).
+**Last updated:** 23 November 2026 (UTC), the Track M session (`eidas2` milestone), on `claude/sweet-lamport-fhdex7`, from `main` `e514129`. The entry before it: 22 November 2026, the rebalancing session.
+**Branch:** `claude/sweet-lamport-fhdex7`, pushed; whether to open a pull request is the author's answer at the final checkpoint.
+**Read first:** **`ap-eidas2-01` was re-read from Cellar on 23 Nov 2026 and re-attested unchanged** (`last_verified` 2026-11-23; it lapses on 21 Feb 2027); `freshness --as-of 2027-02-03` now names no rule. **N1** — whether Implementing Regulation (EU) 2026/1731, adopted under Art. 5a(23) and in force since 11 Aug 2026, moves the date of Art. 5a(1) — is named, not decided, and goes to Session 25, 25.2. **The next session is the network map** (`docs/prompts/v2-visible-network-map.md`).
+
+## Track M — the `eidas2` milestone: `ap-eidas2-01` re-attested; N1 named (23 Nov 2026)
+
+**Authority:** `docs/ROADMAP-v2.md` §8, the six rows of 23 Nov 2026 (scope; corrigenda; M.2 decisions 1–3; M.4), in the author's words.
+
+- **Scope:** the rule only; `eidas2`'s status, `status_as_of`, milestones and timeline untouched — Session 25's (25.2), after 24 Dec 2026.
+- **Read** (`docs/TRACK-M-EIDAS2-READING.md`, hashes in §2): 2024/1183 Art. 1 points (1)–(5) and Art. 2 (identical bytes to 13 Nov); 910/2014 Arts 2–3; the five implementing acts of 28 Nov 2024 (citations, final Articles); 2026/1731; 2025/846, 2025/848, 2026/1730 (citations, last Articles). SPARQL as on 4 and 13 Nov. **Corrigenda in French or Italian** (§8, 22 and 23 Nov): 2024/1183 R(03), R(06) (FR), 910/2014 R(06) (IT), R(11) (FR) — none touches what the rule cites. **Unreadable** (404 in IT and FR, XHTML/HTML/PDF): 2024/1183 R(01), R(04), R(05), R(07); 2024/2977 R(01) (Irish only).
+- **Written:** `data/applicability.json` (`ap-eidas2-01`: `last_verified`, `verification_note`, `attestation` with `outcome: "unchanged"`; no word of the rule changed), `tools/selftest.mjs` (the one pin, §8 decision 3), `instruments/eidas2/index.html` and `sitemap.xml` regenerated — commit `15587a9`, with `Evidence:`. The five A-8 warnings stay, named.
+- **Prompts:** `docs/prompts/v2-visible-network-map.md` gains an exit criterion (the standing rule; Track M's precedence); `docs/prompts/v2-session-25.md` gains the N1 addendum for 25.2.
+- **Battery** (before the final write): `validate`, `i18n-audit`, `design-qa`, `seo-audit`, `evidence-audit --as-of 2026-11-23` and `--as-of 2027-02-03` output identical to the base; `freshness` differs only in the rules' date range and, at 2027-02-03, by the `ap-eidas2-01` prompt gone (15 → 14 staleness prompts); `csp`, `thirdparty`, `metric-contract`, `agent/implement/cli.mjs check` exit 0; 26 suites 1506 pass, 0 fail, 1 skipped (`tools/selftest.mjs` 201/201); browser 362 pass, 0 fail, 1 undecidable; `commit-evidence` 0 without evidence.
+- **Residues, named and not touched:** group (b)'s corrigenda without an English expression (to the rules round of Feb 2027); the evaluative sentences (`ap-nis2-01`, `ap-gdpr-04`, `ap-ai-act-04`, `-05`, `ap-data-act-01`); the 2 Aug 2027 residue; group (a)'s open points; the statuses at milestones (ai-act 2 Dec, pld 9 Dec, eidas2 24 Dec 2026). The grant expires 9 Mar 2027 (flagged, not renewed).
+- **Branch register:** unchanged from 22 Nov; no unregistered branch (`git branch -r --no-merged origin/main`: `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv`, both registered).
+
+> The header the rebalancing session wrote, kept as written:
+>
+> **Last updated:** 22 November 2026 (UTC), the rebalancing session, on `claude/rebalance-housekeeping`, from `main` `a61b99d`. The entry before it: 19 November 2026, the serpent-opening fix.
+> **Branch:** `claude/rebalance-housekeeping`, pushed; a pull request to `main` is opened on the author's request, to be merged by the author.
+> **Read first:** **every other session now ships a change a reader can see** (§8, 22 Nov 2026, "Rebalancing the sessions"). **Entries before 13 Nov 2026 (HP-04 and older) are in `docs/archive/HANDOVER-to-2026-11-13.md`, unchanged.** The next session is still Track M (`docs/prompts/v2-track-m-eidas2-milestone.md`, the 24 Dec 2026 milestone); three more prompts wait after it (below).
 
 ## Rebalancing the sessions — archive, branches, the page without scripting, three prompts (22 Nov 2026)
 
