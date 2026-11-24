@@ -1625,6 +1625,7 @@ html.dx-locked,html.dx-locked body{overflow:hidden}
 .nx-canvas > div,.nx-canvas svg{width:100%;height:100%}
 .nx-canvas svg{display:block;touch-action:none;cursor:grab;user-select:none}
 .nx-canvas svg.dragging{cursor:grabbing}
+.nx-canvas svg.panning{cursor:move}
 .nx-tools,.nx-legend{position:absolute;left:var(--s-3);z-index:3;width:17.5rem;background:var(--surface-page);border:var(--border-std);border-radius:var(--r-1);font-family:var(--mono);font-size:var(--t-meta);color:var(--text-2)}
 .nx-tools{top:var(--s-3);padding:var(--s-3);display:flex;flex-direction:column;gap:var(--s-2)}
 .nx-tools label{display:flex;flex-direction:column;gap:var(--s-1);font-size:var(--t-micro);letter-spacing:var(--tr-micro);text-transform:uppercase;color:var(--text-3)}
@@ -1644,6 +1645,9 @@ html.dx-locked,html.dx-locked body{overflow:hidden}
 .nx-legend .lg-count{color:var(--text-3);font-variant-numeric:tabular-nums}
 .nx-legend .lg-note{color:var(--text-3);margin:var(--s-2) 0 0;line-height:1.45}
 .nx-legend .lg-proposed svg{vertical-align:-1px;margin-right:var(--s-1)}
+.nx-legend .lg-unused{margin:var(--s-2) 0 0;color:var(--text-3);font-size:var(--t-micro)}
+.nx-legend .lg-unused summary{cursor:pointer;min-height:var(--hit);display:flex;align-items:center}
+.nx-legend .lg-unused p{margin:0 0 var(--s-1);line-height:1.45}
 .nx-legend .lg-nodes{display:flex;flex-wrap:wrap;gap:var(--s-1) var(--s-4);margin:var(--s-2) 0 0;padding-top:var(--s-2);border-top:var(--border-hair)}
 .nx-legend .lg-nodes svg{width:16px;display:inline-block;vertical-align:-3px}
 .nx-panel{position:absolute;top:0;right:0;bottom:0;width:22rem;z-index:3;overflow-y:auto;background:var(--surface-page);border-left:var(--border-std);padding:var(--s-4);font-size:var(--t-body-sm)}
@@ -1734,8 +1738,20 @@ html.dx-locked,html.dx-locked body{overflow:hidden}
   .nx:not(.nx--wide) .nx-panel{position:static;width:auto;border:var(--border-std);border-top:3px solid var(--live);border-radius:var(--r-1);background:var(--surface-raised);overflow:visible}
 }
 @media (min-width:75rem){ .nx:not(.nx--wide) .nx-legend ul{columns:2;column-gap:var(--s-4)} .nx:not(.nx--wide) .nx-legend li{break-inside:avoid} }
-/* enlarged: the stage across the full width, the list below it */
+/* enlarged: the stage across the full width, the list below it; the controls and the legend keep a column of their own on the left
+   (the canvas starts after it) and the panel the one on the right, so nothing is drawn over the map (24 Nov 2026) */
 .nx--wide{grid-template-columns:minmax(0,1fr)!important}
+.nx--wide .nx-canvas{left:calc(17.5rem + var(--s-3) * 2)}
+/* under 75rem the left column and the panel would leave the canvas too narrow: the box's own stacked arrangement, the panel last */
+@media (min-width:52rem) and (max-width:74.99rem){
+  .nx--wide .nx-stage{height:auto;display:flex;flex-direction:column;overflow:visible}
+  .nx--wide .nx-tools{position:static;width:auto;order:1;flex-direction:row;flex-wrap:wrap;align-items:end;border:0;border-bottom:var(--border-std);border-radius:var(--r-1) var(--r-1) 0 0;background:var(--surface-high)}
+  .nx--wide .nx-tools .nx-keys{flex-basis:100%}
+  .nx--wide .nx-tools label{flex:1 1 9rem}
+  .nx--wide .nx-canvas{position:relative;inset:auto;order:2;aspect-ratio:900 / 690}
+  .nx--wide .nx-legend{position:static;width:auto;max-height:none;order:3;border:0;border-top:var(--border-std);border-radius:0;background:var(--surface-raised)}
+  .nx--wide .nx-panel{position:static;width:auto;order:4;border:0;border-top:3px solid var(--live);overflow:visible}
+}
 .nx--wide .nx-side{order:1;position:static}
 .nx--wide .nx-main{order:2}
 /* the phone: the ego view, not the canvas made small; then the panel and the list */
