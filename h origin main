@@ -1,0 +1,44 @@
+[33mcommit 8a6dbb6c2e389b435fda367f30066c3d204b16b2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Andrea Tosti <andreatosti20001@gmail.com>
+Date:   Tue Nov 24 21:19:01 2026 +0100
+
+    i18n: review of the Italian edition
+    
+    Evidence: Italian edition read string by string by the author
+
+ 404.html                                    |    2 [32m+[m[31m-[m
+ applies.html                                |    2 [32m+[m[31m-[m
+ bibliography.html                           |    2 [32m+[m[31m-[m
+ datasets.html                               |    2 [32m+[m[31m-[m
+ docs/i18n-review/it.md                      |  938 [32m++++++[m[31m------[m
+ enforcement.html                            |    2 [32m+[m[31m-[m
+ es/index.html                               |    2 [32m+[m[31m-[m
+ fr/index.html                               |    2 [32m+[m[31m-[m
+ i18n/review/it.json                         | 2158 [32m++++++++++++++++++++++++++[m[31m-[m
+ index.html                                  |    5 [32m+[m[31m-[m
+ institutions.html                           |    2 [32m+[m[31m-[m
+ instrument.html                             |    2 [32m+[m[31m-[m
+ instruments.html                            |    2 [32m+[m[31m-[m
+ instruments/ai-act/index.html               |    2 [32m+[m[31m-[m
+ instruments/ai-omnibus/index.html           |    2 [32m+[m[31m-[m
+ instruments/cer/index.html                  |    2 [32m+[m[31m-[m
+ instruments/cra/index.html                  |    2 [32m+[m[31m-[m
+ instruments/csa/index.html                  |    2 [32m+[m[31m-[m
+ instruments/data-act/index.html             |    2 [32m+[m[31m-[m
+ instruments/data-omnibus/index.html         |    2 [32m+[m[31m-[m
+ instruments/digital-networks-act/index.html |    2 [32m+[m[31m-[m
+ instruments/dma/index.html                  |    2 [32m+[m[31m-[m
+ instruments/dora/index.html                 |    2 [32m+[m[31m-[m
+ instruments/dsa/index.html                  |    2 [32m+[m[31m-[m
+ instruments/ehds/index.html                 |    2 [32m+[m[31m-[m
+ instruments/eidas2/index.html               |    2 [32m+[m[31m-[m
+ instruments/gdpr/index.html                 |    2 [32m+[m[31m-[m
+ instruments/iea/index.html                  |    2 [32m+[m[31m-[m
+ instruments/nis2/index.html                 |    2 [32m+[m[31m-[m
+ instruments/pld/index.html                  |    2 [32m+[m[31m-[m
+ it/index.html                               |    9 [32m+[m[31m-[m
+ licence.html                                |    2 [32m+[m[31m-[m
+ methodology.html                            |    2 [32m+[m[31m-[m
+ network.html                                |    2 [32m+[m[31m-[m
+ sitemap.xml                                 |    1 [32m+[m
+ 35 files changed, 2668 insertions(+), 503 deletions(-)
