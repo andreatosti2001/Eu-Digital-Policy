@@ -1076,7 +1076,7 @@ test('I1c · the Evidence page and the build count the same backlog', () => {
   assert.doesNotMatch(readFileSync(join(ROOT, 'tools', 'validate.mjs'), 'utf8'), /function unverifiedReport\(\)\s*\{/, 'validate.mjs keeps no copy of its own');
 });
 
-test('I1d · languages: no alternate is advertised for a translation no person has reviewed', () => {
+test('I1d · languages: no alternate is advertised for a translation no person has fully reviewed', async () => {
   /* Until 27 Sep 2026 this asserted the opposite: hreflang alternates at
      ?lang=it|fr|es, in the sitemap too. docs/SEO-AUDIT-2026-09-27.md A5
      measured why that was wrong — the raw HTML at every ?lang= address is
@@ -1086,10 +1086,22 @@ test('I1d · languages: no alternate is advertised for a translation no person h
      alternate until a pre-rendered, reviewed page exists; the address keeps
      working for readers. docs/SEO-OPERATIONS.md §6.
      22 Oct 2026: the pre-rendered pages exist (/it/, /fr/, /es/), so the rule
-     is now the review: on this tree no edition is reviewed and no page names
-     an alternate; A8 holds the reviewed case. */
+     is now the review: a page names an alternate only for an edition whose
+     review is complete. 24 Nov 2026: the Italian review was recorded
+     (431/431), so this no longer assumes that no edition is reviewed: it
+     derives which are, from the same function the generator uses, and
+     asserts nothing else is advertised. A8 holds both cases in a scratch copy. */
+  const E = await import('./editions.mjs');
+  const { TOP_PAGES } = await import('./seo.mjs');
+  const homePage = TOP_PAGES.find((p) => p.file === 'index.html');
+  const reviewed = E.editionLocales(ROOT)
+    .filter((l) => E.reviewState(l.code, { root: ROOT, englishTitle: homePage.title, englishDescription: homePage.description }).complete)
+    .map((l) => l.code);
+  const allowed = new Set(['en', 'x-default', ...reviewed]);
   for (const f of sitePages(ROOT)) {
-    assert.doesNotMatch(readFileSync(join(ROOT, f), 'utf8'), /<link [^>]*hreflang=/, `${f} advertises an alternate language`);
+    for (const m of readFileSync(join(ROOT, f), 'utf8').matchAll(/<link [^>]*hreflang="([^"]+)"/g)) {
+      assert.ok(allowed.has(m[1]), `${f} advertises an alternate for "${m[1]}", an edition no person has fully reviewed`);
+    }
   }
   assert.doesNotMatch(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8'), /\?lang=/, 'a ?lang= address is in the sitemap');
   const app = readFileSync(join(ROOT, 'app.js'), 'utf8');
@@ -1664,6 +1676,8 @@ test('A7 · a translation approval names exact text, goes stale by itself, and o
   try {
     cpSync(join(ROOT, 'i18n'), join(dir, 'i18n'), { recursive: true });
     writeFileSync(join(dir, 'index.html'), readFileSync(join(ROOT, 'index.html'), 'utf8'));
+    /* the scratch copy starts with an empty ledger: the real one holds a person's approvals (Italian, 24 Nov 2026) */
+    writeFileSync(E.ledgerPath('it', dir), JSON.stringify({ locale: 'it', entries: {} }));
     const head = { root: dir, englishTitle: 'T', englishDescription: 'D' };
     const st = E.reviewState('it', head);
     assert.equal(st.counts.reviewed, 0, 'nothing is reviewed until a person records it');
@@ -1701,25 +1715,32 @@ test('A8 · an edition is offered to search engines exactly when its review is c
   const E = await import('./editions.mjs');
   const { TOP_PAGES } = await import('./seo.mjs');
   const home = TOP_PAGES.find((p) => p.file === 'index.html');
-  /* this tree: nothing reviewed, so every edition is generated, noindex, unlisted */
+  /* this tree: each edition is in the state its review derives. An edition whose review is complete is offered; every other is
+     generated, noindex, unlisted. (Until 24 Nov 2026 none was reviewed and this asserted noindex for all three.) */
+  const live = (c) => E.reviewState(c, { root: ROOT, englishTitle: home.title, englishDescription: home.description }).complete;
+  const sitemap = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
   for (const c of ['it', 'fr', 'es']) {
     const html = readFileSync(join(ROOT, c, 'index.html'), 'utf8');
     assert.match(html, new RegExp(`<html lang="${c}"`));
-    assert.match(html, /<meta content="noindex" name="robots"\/>/);
-    assert.doesNotMatch(html, /hreflang=|rel="canonical"/);
     assert.match(html, /<body [^>]*data-root="\.\.\/"/);
+    if (live(c)) {
+      assert.match(html, new RegExp(`<link href="${BASE}${c}/" rel="canonical"/>`), `${c} is reviewed: it has its canonical`);
+      assert.doesNotMatch(html, /name="robots"/, `${c} is reviewed: it is not noindex`);
+      assert.ok(html.includes(`hreflang="${c}"`), `${c} is reviewed: it names itself`);
+    } else {
+      assert.match(html, /<meta content="noindex" name="robots"\/>/);
+      assert.doesNotMatch(html, /hreflang=|rel="canonical"/);
+    }
+    assert.equal(sitemap.includes(`/${c}/</loc>`), live(c), `${c} is in the sitemap exactly when it is reviewed`);
   }
-  assert.doesNotMatch(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8'), /\/it\//);
-  assert.doesNotMatch(readFileSync(join(ROOT, 'index.html'), 'utf8'), /hreflang=/);
+  assert.equal(/hreflang=/.test(readFileSync(join(ROOT, 'index.html'), 'utf8')), ['it', 'fr', 'es'].some(live),
+    'the English brief carries alternates exactly when an edition is reviewed');
 
   const dir = siteCopy('editions');
   const regenerate = async () => { const { files } = await generateSite(dir); for (const [f, s] of files) { mkdirSync(join(dir, f, '..'), { recursive: true }); writeFileSync(join(dir, f), s); } };
   try {
-    /* F-18 (§8, 17 Nov 2026, decision 4): the Italian strings part-4.p2 and part-4.p4 are withdrawn as `superseded`, so the real
-       Italian edition cannot be reviewed complete until they are translated. This test is about the rule (an edition is offered exactly
-       when its review is complete), so the scratch copy gives those keys a placeholder text before the review is recorded. */
-    edit(dir, 'i18n/it.json', (x) => { const o = JSON.parse(x); o['part-4.p2'] = 'placeholder'; o['part-4.p4'] = 'placeholder'; return JSON.stringify(o); });
-    /* a complete Italian review, recorded in the scratch copy as a person would */
+    /* a complete Italian review, recorded in the scratch copy as a person would. (Until 24 Nov 2026 part-4.p2 and part-4.p4 were
+       withdrawn as superseded (F-18) and this copy gave them a placeholder so the review could be complete; they are translated now.) */
     const st = E.reviewState('it', { root: dir, englishTitle: home.title, englishDescription: home.description });
     const ledger = { locale: 'it', entries: Object.fromEntries(st.keys.map((k) => [k.key, { fingerprint: k.fp, reviewed_by: 'A Reviewer', reviewed_on: '2026-10-22' }])) };
     writeFileSync(E.ledgerPath('it', dir), JSON.stringify(ledger));
