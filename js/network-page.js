@@ -150,7 +150,7 @@ export function mountNetwork(root, ix, db, { focus = null } = {}) {
                 <button type="button" data-turn="down" aria-label="Tilt down">⤓</button>
                 <button type="button" id="nx-restart">Starting view</button>
               </div>
-              <details class="nx-keys"><summary>How to use it</summary><p>Drag the background, the turn buttons, or Shift and an arrow key turn the network in three dimensions; nothing moves on its own; nearer instruments are larger and darker. Tab into the network; the arrow keys move between instruments as they appear; Enter selects; Esc clears; + and − zoom. A selection's relationships are buttons in the panel's Relations tab; every relationship is in the list beside the network.</p></details>
+              <details class="nx-keys"><summary>How to use it</summary><p>Drag the background, the turn buttons, or Shift and an arrow key turn the network in three dimensions; nothing moves on its own; nearer instruments are larger and darker. Shift and drag the background moves the view, and a double-click on an instrument or on a place in the background brings it to the centre; Alt and an arrow key move the view from the keyboard; Fit and Starting view bring it back. Tab into the network; the arrow keys move between instruments as they appear; Enter selects; Esc clears; + and − zoom. A selection's relationships are buttons in the panel's Relations tab; every relationship is in the list beside the network.</p></details>
               <p class="sr-only" id="nx-live" aria-live="polite"></p>
             </div>
             <div class="nx-canvas"><div id="nx-svg"></div></div>
@@ -181,7 +181,7 @@ export function mountNetwork(root, ix, db, { focus = null } = {}) {
           <svg width="52" height="12" aria-hidden="true" class="f-${kindFamily(k)}"><line x1="2" y1="6" x2="50" y2="6" stroke-width="2.2"${dash ? ` stroke-dasharray="${dash}"` : ''}/></svg>
           <span class="nx-code f-${kindFamily(k)}">${esc(kindCode(k))}</span><span>${esc(label(ix, k) || kk)}</span><span class="lg-count">${counts.byKind.get(k)}</span></label></li>`;
       }).join('')}</ul>
-      <p class="lg-note"><span id="nx-shown">${shownText()}</span> An arrow only where the record gives a direction (${counts.directed}); none on a mutual one (${counts.mutual})${counts.undirected ? `; ${counts.undirected} with neither, said in words` : ''}.${counts.unused.length ? ` None recorded: ${counts.unused.map((k) => esc(label(ix, k))).join(', ')}.` : ''}</p>
+      <p class="lg-note"><span id="nx-shown">${shownText()}</span> An arrow only where the record gives a direction (${counts.directed}); none on a mutual one (${counts.mutual})${counts.undirected ? `; ${counts.undirected} with neither, said in words` : ''}.</p>
       <p class="lg-note lg-proposed"><svg width="40" height="12" aria-hidden="true" class="f-textual"><g class="edge proposed"><line class="e-line" x1="2" y1="6" x2="38" y2="6"/></g></svg>
         <b>Proposed</b> (${proposedCount}): the act that would state it is not adopted, so it is not the law — drawn faint and thin, its code in a dashed box, its type read "Proposed: …". Derived from the instruments' status, never stored.</p>
       <div class="lg-nodes" aria-label="Instruments">
@@ -189,7 +189,9 @@ export function mountNetwork(root, ix, db, { focus = null } = {}) {
         <span><svg width="16" height="16" aria-hidden="true"><g class="node c-mapped"><circle class="n-dot" cx="8" cy="8" r="6"/></g></svg> mapped</span>
         <span><svg width="16" height="16" aria-hidden="true"><g class="node c-watched"><circle class="n-dot" cx="8" cy="8" r="6"/></g></svg> watched (dashed)</span>
         <span><svg width="16" height="16" aria-hidden="true"><g class="node c-excluded"><circle class="n-dot" cx="8" cy="8" r="6"/></g></svg> excluded (dashed, hollow)</span>
-      </div>`;
+      </div>${counts.unused.length ? `
+      <details class="lg-unused"><summary>${counts.unused.length} ${counts.unused.length === 1 ? 'type' : 'types'} with no relationship recorded</summary>
+        <p>No relationship of ${counts.unused.length === 1 ? 'this type is' : 'these types is'} recorded: ${counts.unused.map((k) => esc(label(ix, k))).join(', ')}. That is the state of the record.</p></details>` : ''}`;
     for (const cb of box.querySelectorAll('input[data-kind]')) {
       cb.addEventListener('change', () => {
         if (cb.checked) state.hidden.delete(cb.dataset.kind); else state.hidden.add(cb.dataset.kind);
@@ -289,6 +291,15 @@ export function mountNetwork(root, ix, db, { focus = null } = {}) {
     say(`Zoom ${Math.round((state.base.w / w) * 100)}%.`);
   }
   function fit() { state.vb = { ...state.base }; setVb(); say('Whole network in view.'); }
+  /* centre the view on a point of the drawing (user units); the centre stays inside the starting frame, so the network cannot be lost.
+     Nothing animates: the view is there at once. */
+  function centreOn(cx, cy) {
+    const b = state.base, v = state.vb;
+    const x = Math.min(b.x + b.w, Math.max(b.x, cx)), y = Math.min(b.y + b.h, Math.max(b.y, cy));
+    state.vb = { x: x - v.w / 2, y: y - v.h / 2, w: v.w, h: v.h };
+    setVb();
+  }
+  function panBy(dx, dy) { const v = state.vb; centreOn(v.x + v.w / 2 + dx, v.y + v.h / 2 + dy); }
 
   function wireCanvas() {
     const svg = svgEl();
@@ -305,6 +316,8 @@ export function mountNetwork(root, ix, db, { focus = null } = {}) {
       const cur = ev.target.closest('.node');
       if (ev.key === '+' || ev.key === '=') { zoom(1.25); ev.preventDefault(); return; }
       if (ev.key === '-' || ev.key === '_') { zoom(0.8); ev.preventDefault(); return; }
+      const panKeys = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+      if (ev.altKey && panKeys[ev.key]) { panBy(panKeys[ev.key][0] * state.vb.w * 0.1, panKeys[ev.key][1] * state.vb.h * 0.1); say('View moved.'); ev.preventDefault(); return; }
       const turnKeys = { ArrowLeft: [-0.2, 0], ArrowRight: [0.2, 0], ArrowUp: [0, 0.15], ArrowDown: [0, -0.15] };
       if (ev.shiftKey && turnKeys[ev.key]) { turn(...turnKeys[ev.key], 'Network turned.'); ev.preventDefault(); return; }
       if (!cur) return;
@@ -328,22 +341,37 @@ export function mountNetwork(root, ix, db, { focus = null } = {}) {
       }
       if (best) focusNode(best.dataset.id);
     });
-    /* drag the background to turn the network */
+    /* drag the background to turn the network; Shift and drag moves the view instead */
     svg.addEventListener('pointerdown', (ev) => {
       if (ev.target.closest('.node') || ev.target.closest('.edge') || ev.button !== 0) return;
-      drag = { x: ev.clientX, y: ev.clientY, yaw: state.yaw, pitch: state.pitch };
+      drag = { x: ev.clientX, y: ev.clientY, yaw: state.yaw, pitch: state.pitch, pan: ev.shiftKey, vb: { ...state.vb } };
       svg.setPointerCapture(ev.pointerId);
-      svg.classList.add('dragging');
+      svg.classList.add(drag.pan ? 'panning' : 'dragging');
     });
     svg.addEventListener('pointermove', (ev) => {
       if (!drag) return;
       const dx = ev.clientX - drag.x, dy = ev.clientY - drag.y;
       if (Math.abs(dx) + Math.abs(dy) > 2) moved = true;
+      if (drag.pan) {
+        const k = svg.getScreenCTM()?.a || 1; // screen pixels per drawing unit, whatever the fit
+        const v = drag.vb;
+        centreOn(v.x + v.w / 2 - dx / k, v.y + v.h / 2 - dy / k);
+        return;
+      }
       state.yaw = drag.yaw + dx * 0.008;
       state.pitch = drag.pitch - dy * 0.008;
       projectAll();
     });
-    const end = () => { drag = null; svg.classList.remove('dragging'); setTimeout(() => { moved = false; }, 0); };
+    /* double-click an instrument, or a place in the background, to bring it to the centre */
+    svg.addEventListener('dblclick', (ev) => {
+      const n = ev.target.closest('.node');
+      const m = svg.getScreenCTM();
+      if (!n && !m) return;
+      const at = n ? L.pos.get(n.dataset.id) : new DOMPoint(ev.clientX, ev.clientY).matrixTransform(m.inverse());
+      centreOn(at.x, at.y);
+      say(n ? `Centred on ${byId(n.dataset.id)?.short_name || n.dataset.id}.` : 'View centred.');
+    });
+    const end = () => { drag = null; svg.classList.remove('dragging', 'panning'); setTimeout(() => { moved = false; }, 0); };
     svg.addEventListener('pointerup', end);
     svg.addEventListener('pointercancel', end);
   }

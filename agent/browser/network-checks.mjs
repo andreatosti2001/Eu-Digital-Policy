@@ -23,6 +23,10 @@
      netmap:filter        a type unticked is not drawn and leaves the list
      netmap:deterministic two loads give the same picture
      netmap:enlarge       enlarge and back, by the button and by Esc
+     netmap:centre        Shift and drag moves the view and not the sphere, a plain drag turns the
+                           sphere and not the view, a double-click centres, Fit restores (24 Nov 2026)
+     netmap:enlarged-clear enlarged, the controls, the legend and the panel sit beside
+                           the canvas, none over it (24 Nov 2026)
      netmap:in-box        every instrument inside the box at the starting view
      netmap:phone         390 px: the ego view, not the canvas; no sideways scroll
      netmap:themes        both themes render; no sideways scroll at 1440 or 390
@@ -252,6 +256,84 @@ export async function checkNetwork(browser, origin) {
     out.push(enl.wide.w > enl.w0 * 1.5 && enl.wide.panelIn && enl.wide.pressed === 'true' && enl.back.panelOut && enl.back.pressed === 'false'
       ? ok('netmap:enlarge', AREA, `enlarged: the stage ${Math.round(enl.wide.w)} px with the panel inside it; Esc returns it to the left column`, enl)
       : bad('netmap:enlarge', AREA, 'enlarging, or returning with Esc, did not happen', enl));
+
+    /* enlarged: the controls, the legend and the panel are beside the canvas, never over it
+       (24 Nov 2026: the author's screenshot showed the controls and the legend drawn on the
+       left of the map's pane). At 1440 px, and at 1000 px where the stacked arrangement applies. */
+    const CLEAR = `(() => {
+      const b = document.querySelector('.nx-enlarge'); b.click();
+      const r = (sel) => { const e = document.querySelector(sel); if (!e) return null; const q = e.getBoundingClientRect(); return { l: q.left, t: q.top, r: q.right, b: q.bottom }; };
+      const c = r('.nx-canvas');
+      const over = (q) => !!q && q.l < c.r - 0.5 && q.r > c.l + 0.5 && q.t < c.b - 0.5 && q.b > c.t + 0.5;
+      const parts = { tools: r('.nx-stage .nx-tools'), legend: r('.nx-stage .nx-legend'), panel: r('.nx-stage #nx-panel') };
+      const res = { canvasW: Math.round(c.r - c.l), present: Object.entries(parts).filter(([, q]) => q).map(([k]) => k), covering: Object.entries(parts).filter(([, q]) => over(q)).map(([k]) => k), scrollsSideways: document.documentElement.scrollWidth > innerWidth + 1 };
+      document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      return res;
+    })()`;
+    const clear = [{ w: 1440, ...await page.evaluate(CLEAR) }];
+    {
+      const mid = await openPage(browser, origin, { viewport: { width: 1000, height: 800 } });
+      try {
+        await mid.waitFor(`!!document.querySelector('#nx-svg svg')`, { timeoutMs: 8000 });
+        clear.push({ w: 1000, ...await mid.evaluate(CLEAR) });
+      } finally { await closeP(mid); }
+    }
+    out.push(clear.every((x) => x.present.length === 3 && !x.covering.length && x.canvasW > 400 && !x.scrollsSideways)
+      ? ok('netmap:enlarged-clear', AREA, `enlarged, at 1440 and 1000 px: the controls, the legend and the panel sit beside the canvas (${clear.map((x) => x.canvasW).join(' and ')} px wide), none over it`, { clear })
+      : bad('netmap:enlarged-clear', AREA, `enlarged: ${clear.filter((x) => x.covering.length).map((x) => x.covering.join(', ') + ' at ' + x.w + ' px').join('; ') || 'a part missing, or the canvas too narrow'}`, { clear }));
+
+    /* the pointer centres the view (24 Nov 2026): Shift and drag moves the view and leaves the sphere
+       where it is; a plain drag turns the sphere and leaves the view; a double-click on an empty place
+       brings that place to the centre; Fit brings the whole network back */
+    await page.evaluate(`document.querySelector('#nx-svg svg').scrollIntoView({ block: 'center' })`);
+    await sleep(200);
+    const SNAP = `(() => {
+      const svg = document.querySelector('#nx-svg svg');
+      const vb = svg.getAttribute('viewBox').split(' ').map(Number);
+      return { vb, tr: [...svg.querySelectorAll('.node')].map((n) => n.getAttribute('transform')).join('|'), k: svg.getScreenCTM().a };
+    })()`;
+    const spot = await page.evaluate(`(() => {
+      const svg = document.querySelector('#nx-svg svg'), c = svg.getBoundingClientRect();
+      for (let fy = 0.08; fy < 0.95; fy += 0.07) for (let fx = 0.08; fx < 0.95; fx += 0.07) {
+        const x = c.left + c.width * fx, y = c.top + c.height * fy, t = document.elementFromPoint(x, y);
+        if (t && svg.contains(t) && !t.closest('.node,.edge')) return { x, y };
+      }
+      return null;
+    })()`);
+    const mouse = (type, x, y, extra = {}) => page.send('Input.dispatchMouseEvent', { type, x, y, button: 'left', ...extra });
+    const dragFrom = async (x0, y0, dx, dy, modifiers) => {
+      await mouse('mouseMoved', x0, y0, { button: 'none' });
+      await mouse('mousePressed', x0, y0, { buttons: 1, clickCount: 1, modifiers });
+      for (let i = 1; i <= 4; i++) await mouse('mouseMoved', x0 + dx * i / 4, y0 + dy * i / 4, { buttons: 1, modifiers });
+      await mouse('mouseReleased', x0 + dx, y0 + dy, { buttons: 0, clickCount: 1, modifiers });
+      await sleep(80);
+    };
+    let centre = { spot };
+    if (spot) {
+      const a = await page.evaluate(SNAP);
+      await dragFrom(spot.x, spot.y, 60, 40, 8); // Shift
+      const b = await page.evaluate(SNAP);
+      await dragFrom(spot.x, spot.y, 50, 0, 0); // plain
+      const c = await page.evaluate(SNAP);
+      await page.evaluate(`document.querySelector('[data-zoom="reset"]').click()`);
+      const d = await page.evaluate(SNAP);
+      const want = await page.evaluate(`(() => { const svg = document.querySelector('#nx-svg svg'); const p = new DOMPoint(${spot.x}, ${spot.y}).matrixTransform(svg.getScreenCTM().inverse()); return { x: p.x, y: p.y }; })()`);
+      for (const n of [1, 2]) { await mouse('mousePressed', spot.x, spot.y, { buttons: 1, clickCount: n }); await mouse('mouseReleased', spot.x, spot.y, { buttons: 0, clickCount: n }); }
+      await sleep(80);
+      const e = await page.evaluate(SNAP);
+      const near = (u, v, tol) => Math.abs(u - v) <= tol;
+      centre = {
+        spot,
+        shiftMovesView: near(b.vb[0], a.vb[0] - 60 / a.k, 1.5) && near(b.vb[1], a.vb[1] - 40 / a.k, 1.5) && near(b.vb[2], a.vb[2], 0.2) && b.tr === a.tr,
+        plainTurnsSphere: c.tr !== b.tr && c.vb.every((v, i) => near(v, b.vb[i], 0.2)),
+        fitRestores: d.vb.every((v, i) => near(v, a.vb[i], 0.2)),
+        dblclickCentres: near(e.vb[0] + e.vb[2] / 2, want.x, 1.5) && near(e.vb[1] + e.vb[3] / 2, want.y, 1.5),
+        a: a.vb, b: b.vb, e: e.vb, want,
+      };
+    }
+    out.push(spot && centre.shiftMovesView && centre.plainTurnsSphere && centre.fitRestores && centre.dblclickCentres
+      ? ok('netmap:centre', AREA, 'Shift and drag moves the view and not the sphere; a plain drag turns the sphere and not the view; Fit restores; a double-click on an empty place brings it to the centre', centre)
+      : bad('netmap:centre', AREA, spot ? 'the pointer does not move or centre the view as it should (see data)' : 'no empty place in the canvas to measure from', centre));
 
     /* every instrument inside the box at the starting view */
     await page.goto(origin + '/network.html');

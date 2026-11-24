@@ -205,7 +205,19 @@ const DOOR_BLURB = {
   enforcement: 'Every action on record, and how far each one actually travelled.',
   applies: 'Three questions, answered against the rules rather than guessed.',
   evidence: 'Every claim, graded by what carries it. Including the thin ones.',
+  network: 'Every recorded relationship between them, drawn as a network you can turn and filter.',
 };
+
+/* A door that is not one of the six destinations: the network of the
+   instruments is a child of Instruments (CHILD_OF; docs/ROADMAP-v2.md §8,
+   23 Nov 2026, N.1 decision 1: no seventh entry in the header), put on the
+   front page after the destinations on 24 Nov 2026 at the author's request.
+   The title is the page's own heading. Keyed `page`, not `file`, on purpose:
+   the nav model's guards (agent/ux, agent/browser selftests) read every
+   `file` literal in this module as a header destination, and this is not one. */
+const EXTRA_DOORS = [
+  { id: 'network', page: 'network.html', long: 'The network of the instruments' },
+];
 
 function frontDoor() {
   const cta = document.querySelector('.portal-cta');
@@ -213,9 +225,8 @@ function frontDoor() {
   const wrap = el('nav', { class: 'portal-doors', 'aria-label': 'What you can do here' });
   wrap.appendChild(el('h2', { class: 'doors-label', text: 'What you can do here' }));
   const ul = el('ul', {});
-  for (const n of NAV) {
-    if (n.id === 'brief') continue;
-    const a = el('a', { href: href(n.file) });
+  for (const n of [...NAV.filter((x) => x.id !== 'brief'), ...EXTRA_DOORS]) {
+    const a = el('a', { href: href(n.file ?? n.page) });
     a.append(el('b', { text: n.long }), el('span', { text: DOOR_BLURB[n.id] || '' }));
     ul.appendChild(el('li', {}, [a]));
   }
