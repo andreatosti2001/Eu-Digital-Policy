@@ -1,5 +1,2161 @@
 {
  "$description": "Translation review of the it edition. One entry per approved string: the sha256 fingerprint of the key, the English and the translation exactly as a person read them (tools/editions.mjs fingerprint), who approved them and when. Written ONLY by `node tools/i18n-review.mjs record it --by \"<name>\"`, run by that person; an agent never writes here (docs/AI-SAFE-BOUNDARIES.md §3). Whether a string is reviewed is derived by recomputing the fingerprint, so an approval of text that has since changed does not count.",
  "locale": "it",
- "entries": {}
+ "entries": {
+  "contents.h31": {
+   "fingerprint": "41405e4bd7ae2d8a70f2310375e637b63c528c173c686acda14caad2d2268fca",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.p1": {
+   "fingerprint": "678e984ce13327ad835f6148902667f3be31fbdeb259483e3f76b9d121a8b1b9",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span1": {
+   "fingerprint": "37a8508e12168cee4de3d6a6b6258358c7a84b07d7e6cbc9d0ff66a178aaf9e5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span2": {
+   "fingerprint": "f2ecc250ac0c9c367ea9e6fc85d5079954660c0bf521846022c7766cdb89f97e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span3": {
+   "fingerprint": "f76c2a9607ca5ca70bdb1b58147153df370ba23f39dcd18ceaa18943148a71cc",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span4": {
+   "fingerprint": "61099973ae564743ea22603c418fb2da9900ee658704fc954ee68811e40bdd11",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span5": {
+   "fingerprint": "c17c924f394c81cd26954f3a6bbef95aef874b3a602d3cbad67fd134432eff5b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span6": {
+   "fingerprint": "1d60b8451a3fc867a4d10ecf7b12be5e44259834f1c2df26a88d7eff1b8fb57c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span7": {
+   "fingerprint": "4f9fb022687fa74c380ed1452e5944bd663f5b2a83b0b151b3eb1121bc7253ce",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span8": {
+   "fingerprint": "11d555cea2418fa04eb138876905f77e986a0d12b0ce9f56e257eb04e5ef1b4d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span9": {
+   "fingerprint": "1a271339049c463da33f461e09fd5f8fe5fe9a1bdb0a7e796a2325b4bb00c2a6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span10": {
+   "fingerprint": "2f779e696be5b221f9f38e88ea2d2e31624cafa0999a9881a7b7962a7a3e97e1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span11": {
+   "fingerprint": "5af087112e4d7f1d9317dd35ba9c97b683e63e876ef3fcfece87f6601a626c0d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span12": {
+   "fingerprint": "a49dceeea9e1569bba529ef22005261b550479f072134995ee049630c56e4c61",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "contents.span13": {
+   "fingerprint": "acef2e2e5e3aa0ea43ed7d224fba660c953b2929ec7c1f4cf36359b0a5316a42",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "portal.h11": {
+   "fingerprint": "6bcf6d3c59d465ef8ecabb0bc3c7d6ab7218ad09c02581d0293304a97919e4de",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "portal.p1": {
+   "fingerprint": "5ef733fa0eda0561f2b7ad81681d01182833337be06949281b77733a24bed1bf",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "portal.p2": {
+   "fingerprint": "3d352bee78cce8fdc3e9dbe763972d85f8a21a58f0b90d80b6b699ff9e247761",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "portal.span2": {
+   "fingerprint": "358cc87dcc8927b3e3199c21330c8c15d783f91a5fe4fef898ea2b3e6ba2d050",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "portal.cta1": {
+   "fingerprint": "4299680b44b286db668fa8222987f82728b21785446706ed3bf5c854443810cb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "portal.cta2": {
+   "fingerprint": "e7783533155061019b335939004f6d6d7f31135021fdae094cbf05a37090890a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "portal.cta3": {
+   "fingerprint": "5008fe3b7cbdd3056520f9dc4aeea1e8151dd52c02339bf05a8083a4ac166004",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "portal.span3": {
+   "fingerprint": "68e74f42e147a178836dfb238267620d5b17bc8636f6d333575fe193cf81e0e7",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span1": {
+   "fingerprint": "865096fbf00723d6dfd03012ed54be870ffc23525e95b63e630690699c890fd7",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.h21": {
+   "fingerprint": "54e115ea398190d64d8b30faec230b7e331b2b55c1bef1560b760e2dfeba8116",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.p1": {
+   "fingerprint": "1bbdd5c2c4c76e013be2dc547bb01883d899e7373e50a85608b5f719f452fc9e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.p2": {
+   "fingerprint": "75eda959f74588b0bca045f4b573e5a831bf3dce422ddc58cc837a4bce10bfc8",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span2": {
+   "fingerprint": "8c7f9e710160fb728c9e05b7114d4e8209e551a2e8e0895be0145aa45b4047f4",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span3": {
+   "fingerprint": "b14c438d460cb45ed4224db8d249594d9970e4f2a02a7c6753eb11f44ccf8c52",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span4": {
+   "fingerprint": "4ff1d702a743fcad75647851abc612527deb525b21f8b9b186eab5142f73d7cf",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span5": {
+   "fingerprint": "12fd86c1c3551047e28857a678bd0a63d1d817ce3eff4b47cf4806e2a4db1907",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span6": {
+   "fingerprint": "836212d24c296ba6c5719c46ece5b578d09aab88c62715fe01604d9fecfad11b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span7": {
+   "fingerprint": "bf4053c4db0cd2195b205e9c5ab719dd74cd7d748944133b5a5787ce721ced63",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span8": {
+   "fingerprint": "94ab75904736083304979dfbbdf7ccdebf34f9de3ba2ec840d32ef6ed8453103",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span9": {
+   "fingerprint": "3e3823df5ad95261f1a72179cebecee91d5c093c493615f8e6a38669250501d6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span10": {
+   "fingerprint": "6ffedb839de656027e28f3f825dec1d1086d35930ce03a175202c5a28a60d1b8",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span11": {
+   "fingerprint": "1b505c9b9c5c75e9e9fd77747da515704e144715d9c2e42bd34d6df65a98456e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span12": {
+   "fingerprint": "664bb0011333d02c4b4c2236a634a237224c06099e5a3bd74e97312b9c3e078e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "hero.span13": {
+   "fingerprint": "f160369efe34499903aad5ed08b288f18954e72006b46e594c87735fb8d2c678",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "guide.p1": {
+   "fingerprint": "3347dbb82fd9bfe891a05ba00c460bc7f716ae1c2b49c66f9cbd94becb9ef821",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.span1": {
+   "fingerprint": "1213fd42a4fff70b7674aeabcae88522099e645926443dcffd6ed5f24972a5f1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.h21": {
+   "fingerprint": "27b643db5a4ee77ee7a303d97ba91c1f5a1f410f96078764ac97021373bb8f7f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.p1": {
+   "fingerprint": "a3e83fd761ba1c596925b41a971db4f4c1a9fbd096577acc073ada2b98027822",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.span2": {
+   "fingerprint": "41102973c9f4166a28161db5b56797ecb04eab2ee74628c4f37bbc09c0925158",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.span3": {
+   "fingerprint": "b688c8b1ec451951e2a4dec6f6b5c9c3ae8ae92dea96f0fe8f9c1e0d694070ae",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.span4": {
+   "fingerprint": "b2d7f9bdc56a17d598e86b1daac5778e74e5d8a4b07d3461f6c99a2a5f58d318",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.span5": {
+   "fingerprint": "5d426cbd6980d35bc6001f0468a65efc57bd75cd28a3b5e6b046a00a7ef1691a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.li1": {
+   "fingerprint": "6a3b1c2447e62bece7faa76cadf7ebc0a2e04694f8400e470394f8dafe8f4ee6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.li2": {
+   "fingerprint": "8a22f8cc2e12ce30625f4f5d7595ca89d005cebe5433c919ded4018d99c1e4ad",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.li3": {
+   "fingerprint": "caf2c37ec26ab2b420c8f79f8b4b82bb3ca7c9d9c86c1cb97fcf7cc8409e45e9",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.li4": {
+   "fingerprint": "24f1754db337d0c0647218467a8360fe271b1a7398a326b7c037539701dfbb54",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.p2": {
+   "fingerprint": "5975cfd2372225d9f5cbb329a02620f2f1bab9c1da5f8ea9b19fd367d21a86d7",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.h31": {
+   "fingerprint": "76d50953bd315038138781958793c6976a05410e8c68c3c6e752ec1e12f676b3",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.p3": {
+   "fingerprint": "2db775bab7c4a5ddbf556e2a2c689b791c609078e7636fb33f6a8ebeb0439557",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.p4": {
+   "fingerprint": "bdb593e4697ab118699fa2f45129ee76e8a2a977bd72faec0584a255ceeb426b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.h32": {
+   "fingerprint": "f174ed6eff0f57746b75c494645752defd63339a368d7140d0dc80fa81e4e31d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.p5": {
+   "fingerprint": "280a48a267ad409a7058cc8c8ab6cc7f8cbbc4c7ce21834a3d5fef5235d3aa91",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.figcaption1": {
+   "fingerprint": "2afd889bdb06e29f30740ea6b9ab8ac1b31faca6bd2162660bfcd0d804e6695d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.h33": {
+   "fingerprint": "20efd7b41f6af894a033d1c6c1b46d94c1380ce8582caca49d5d87b5f7e89820",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.p6": {
+   "fingerprint": "ec21eb7b3b268c51f0013ff22749f4467624b7f0b06c630dae445be30ecfe0af",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.p7": {
+   "fingerprint": "5e392dc0d2b6c5ec33eea5715cc05987d37a13723625af31929f98b09ae048fd",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.p8": {
+   "fingerprint": "88198808e951ea301098e325f9d6d41e4ae6ca018a9b31a499e49dbcdbfaf2e5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.p9": {
+   "fingerprint": "5469907d09b25ec27c1de6b1d51c29358011f11f3cddd5fd25c06d7d4dff3f9b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.summary1": {
+   "fingerprint": "192cd2fedcce647eda28ca88f653254852377fa0f100e28fca678e71c6a5d823",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.p10": {
+   "fingerprint": "a56c9db26875e93c8428eba5d588adbd5198544da4e58b0a6d98fb48f83ee0e5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.p11": {
+   "fingerprint": "8852e398cda652ae593353b11f18e6f748af8149d398021d924402acf4d62a5d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.span6": {
+   "fingerprint": "bf785d26a47e6d87d8b46ac647dbfe3a563b7c58f5314c49158eeeda89de657a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.h41": {
+   "fingerprint": "8987d5944d2d735abf4079e4e5715bd52715d927177dc71c0d8b50c3c57135cd",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.div1": {
+   "fingerprint": "62814bb83662de1057cd1595142850c2a4331abc06fc773f0153f263c2d10629",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.span8": {
+   "fingerprint": "2b05e9a87340c20cdf291a74953184884ad09ae1de26e12a87f30a5644e2d29c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.h42": {
+   "fingerprint": "48549b3011d1f4e8f5df407ef7c34b08329f427e165a11f122fde2c55fef497b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.div2": {
+   "fingerprint": "6b03ba04938eaa47ef16d5c0c3a1319266be47148f9ed780291f823da04a0d65",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-1.span7": {
+   "fingerprint": "6098b91c038ee0c57bc055ad6de7f84ac7e009c36431b6bbc0ffceae390c8a9d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.span1": {
+   "fingerprint": "b8afa73d1f147dd0a9807b83749b260693b776fa512966893d7fd2fa25206ccc",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.h21": {
+   "fingerprint": "57a8240058828f7e326f9b3ba8fcb6df0aae7afce8dd98b056318d7a4ddd6b4d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.p1": {
+   "fingerprint": "9887224d54b6e1d1036d3f6691d85828f0adcd0cc621a2106699fbb7264f50e8",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.span2": {
+   "fingerprint": "1aadd4b11c294647e2dd014be06f09576d23ab7c13ccd32e8fc729acdb135913",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.span3": {
+   "fingerprint": "e63ef12c011167c72a8936f98c44a99c32429f02b7dde0c6db886ecb35bccefb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.span4": {
+   "fingerprint": "35d8fd322fd86b4a7933a31b7953b7fd4924b64cf93b4eae17614a4985b51be7",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.span5": {
+   "fingerprint": "c75e505b62f50a2afd04b666adba88f8bbafc88ef438a1b9e05d63e208e8f7c2",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.li1": {
+   "fingerprint": "670b69c270fd88c61812e9f32023d92e5d8e98923e595a4c96221197abdb9ae6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.li2": {
+   "fingerprint": "0a1493b8444f60f65f90d5af921179b640ba638b07d64d549e96b104fbc43d58",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.li3": {
+   "fingerprint": "3b400fd591b501ceff18300ad4d60ebcfa1d6f701d4d7f0232dc7b4187e5c908",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.li4": {
+   "fingerprint": "4731e4e75f7cb71ec652ce7e5ae6e175979b27a2e2352bd727e258e41f43d4f8",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.p2": {
+   "fingerprint": "9a8f996bfc9250bb14be9aef09bf4af0d7aacb95be666c3588f33f203ec319de",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.h31": {
+   "fingerprint": "ec38bbf0e9d4e7e0b8908c59bd794c50f165aabaaccb3325f31ca5bc4987e7aa",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.p3": {
+   "fingerprint": "a0cc50b008a0a17cd6cbf23dc739225a7ec043e78396a7d67fcda33a16f00a28",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.p4": {
+   "fingerprint": "a5389b3fb4f0ca3d5bf0bd6a589e183bc7089bbf1c38b129c5f45a0c34844d37",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.h32": {
+   "fingerprint": "1376d00444072df8f06016f976f99a5d56ba5674cc6eba3772e19a5ebe04343c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.p5": {
+   "fingerprint": "6eae02be57a792a464d1f9bc93ae7bd7ae118c271c47bc7da262b2262c06b098",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.h33": {
+   "fingerprint": "95721c7b0475b18c2d1c3a97b5f5b489c0f88dabdfafb87154c88e3ba3621fcb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.p6": {
+   "fingerprint": "1fb7d6a5ece45d398f35e999d13dd5e72f7a4f4c0db23a8850a9436c7d416eae",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.p7": {
+   "fingerprint": "847867f58827a3e01be1fe1dd5b3ce9541f7f669f7bed28f8b539fbe6e74605d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.span6": {
+   "fingerprint": "b15ae0bcb8f6eb892da0fff964d0e7d671de52b57ac731b06f27d78dd3fb82fd",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.h41": {
+   "fingerprint": "f0ab79e6d4bb1ea12c45457478b2a2dabf6b39c06496038c77842499d503e839",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.div1": {
+   "fingerprint": "1949d4f60bbc3649467d1ad50ad404a7780a5c0e8324f9514aeecfea0e05c8ae",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.p8": {
+   "fingerprint": "28e37c5a6722140cb19130b544f41e2b40f6a92384fe63f4e28fde508b824789",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.h42": {
+   "fingerprint": "f3208c9a060bf586de62213274225afcc6a8205a926e6d54cd3fee84778b20ff",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-2.div2": {
+   "fingerprint": "c6090234f0da3cb08aaa36054c63806323645515edf502dec87f238b9ce01578",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.span1": {
+   "fingerprint": "299f9db11eab7d5bd2cedcb2178a016840a8ab50bf7d32a1dcc029ad84305a79",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.h21": {
+   "fingerprint": "201ae5f1853806b72fd558589437a1b86ff8dcdd3b56939b6adb1cbbba3798ec",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.p1": {
+   "fingerprint": "df6e12c131179fb335a56cc631a37d8edc6a5e611736114fc188b8b3fd6be644",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.span2": {
+   "fingerprint": "45b0eb017bd400bbed42f52d3138dfa00c4d51348ee937b0265ff171241a6851",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.span3": {
+   "fingerprint": "95123567b0f0abff03fbf524bcec7733eae7cfef07accd0f0fa4a68fca80da8c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.span4": {
+   "fingerprint": "25fcb6ebe844584bc59ccf99642f472c945c80c2322bebd595433139f8e9bc4b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.span5": {
+   "fingerprint": "4d7d9e5db6ae5eb9f1bf50ceb49bd8a9542e018f3aba662a158b3e998b98b2a7",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.li1": {
+   "fingerprint": "edb9c97afb114becc2391394a050f14f38af4a4277fb62b94c95715dcdf32c3f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.li2": {
+   "fingerprint": "e93faec8d6c496cf879ddaf582456e0ed40cc56f09f7c28de8d2835948979f84",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.li3": {
+   "fingerprint": "a3b00958e3ed4f0ecf91a341d2014d05ae1a9eb3c09d11901fa31ce923b7b8f3",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.li4": {
+   "fingerprint": "b2eb65d5cc3ddd90a876dd70a2a1e65c790e62e716cc99821aac66f061f6e0dc",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.li5": {
+   "fingerprint": "8656e9eae3dca44934753eb0c6d69ccb3bbe565f376ac013d662ee2245a04eff",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.p2": {
+   "fingerprint": "352e122b7f52c1274c365b184c99ceb7d7a5aecde518556cecef879a03ae7bef",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.h31": {
+   "fingerprint": "ca70689bd1b477d3453a3481f836767cceb24ab509fb47bc79a682f04e8b22ae",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.p3": {
+   "fingerprint": "cf0eb8247b5534007ff145bf44024adc8c5a8b774c0fb04af8558e5c80aa099a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.figcaption1": {
+   "fingerprint": "26400b06792e598e74b9265aee9cabf5eb0e9240f5e861981311c218732e61a0",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.th1": {
+   "fingerprint": "958dab6f463e51bc3d39c977e84105be4e8a70ccf6e83526aa0898b2221f5e9a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.th2": {
+   "fingerprint": "adf270b521830f7ffc37889eff29de455a40abb3d9a3249542d410d4d7a21496",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.th3": {
+   "fingerprint": "d7cf57d93c9718a4db7caec8e85dbb13465252723f06641a4131d374f2bcb413",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td1": {
+   "fingerprint": "2cd47221207e6849ffc6adcded55614b4ca35d034fa0d1aa15b5541d1f20b9bb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td2": {
+   "fingerprint": "511a7714007940eeba9086338b52d3f11214e83351a0d91e15fe0a5f2b4093af",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td3": {
+   "fingerprint": "a9b142bd8d6885838b7760f3c037c363d099df0e8e2ac78ba57c647803bce158",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td4": {
+   "fingerprint": "6977b145ce11cb9d85923e73c9b9a743ec03eb481412ae0486a929fd9f3b4f71",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td5": {
+   "fingerprint": "2bc5c1b82672e17b0fe3478fe57179da0dc5bb4dac731f7473500496c3545e71",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td6": {
+   "fingerprint": "b8df5b9abfaf98d880feb1b3382c1fd2c060eaed13ac0688bfd79c8784ce4d21",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td7": {
+   "fingerprint": "8b1495d2c2b2a084aedf167db2d29ed3eac447991b659188d6d1fc737c2c3bd1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td8": {
+   "fingerprint": "0c9d68494a4c305f01a9dab9c0a0b7c85c36d240e450a914628619cac6307a65",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td9": {
+   "fingerprint": "112535ad729bfdc652651e1b14a79d1c52e2caf25f7afb2ddbe351253bec6903",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td10": {
+   "fingerprint": "2f959967861b1160ec1e7fff7dbb0e990e4ee0627aeaca2518581d8602f5e556",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td11": {
+   "fingerprint": "dca7ec5dd8c917f09a205975b660ea9c86332bf3dcba3197e99b4a5d3d7f58dc",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td12": {
+   "fingerprint": "15f3efa05a7692e2b3a9d1d6d3c0769d774126e1728e865f3035f3db9b6ad299",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.p20": {
+   "fingerprint": "4570185222cd5ffc2ce34a897d717d211bace4c1c52e183034d797986384684b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.h32": {
+   "fingerprint": "76f0c949c37cf39d17186b261c342d34154858197b1d55544602d72304ca6252",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.h41": {
+   "fingerprint": "7259b98920da84de90cf630e9e304c0b795d74d03c1d26a47b0280ef141b8cc7",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.p4": {
+   "fingerprint": "33afac10169564a355ba23d589864fe26249863436806d31a2ee14f7d6d34f17",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.h42": {
+   "fingerprint": "c1a6a7b7079d6af816f4a0be7686efdff1925f2e816f9d0b0216151f1aa18119",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.p5": {
+   "fingerprint": "a1ff131993a1fcfd4dd19a5d835b1f553c70466585faa12f2c238035805b10fc",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.p6": {
+   "fingerprint": "8c65a5554830751ad339cdf67963219d5f6ece07293c24fd7123f3cc2d43c358",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.h43": {
+   "fingerprint": "89496c3f1c50af5648818fc1260a380a9c93472502cf3cf5b87afd29f51b831f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.p7": {
+   "fingerprint": "98f9ad806b00f0e3c95ad076134e221e3a63ffae78e45c1a390a25a7c017b211",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.span6": {
+   "fingerprint": "5b06731bc7f5b10ff05b702727538294157deae383423dd023f72edc76fd3ecb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.h44": {
+   "fingerprint": "9165ed010cf9c6aa44ffab982387d8cc829597febf6c3a580e4fc75d5a9ca35d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.div1": {
+   "fingerprint": "538ec71c8d8a9f88311a52e3245935e5d6b3fb18bc5dccc7e332fdc5e864126b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.h33": {
+   "fingerprint": "72ff8ea9190d81d52fbed7e0dc5acb2948da0ffeb093904cdb1303f747a815e1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.figcaption2": {
+   "fingerprint": "93782c6fbd291ddb70187132d746f29c29a5d581925775cfad14325a1ecb2823",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.th4": {
+   "fingerprint": "7cf0fd361915766ccfb4bb8f9c365a6b04f5f4101f0c741a84314b19e1005d4b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.th5": {
+   "fingerprint": "67750f97a688f91fbaa9aeead0e27774b4b1ffcb662bdd91e23b8f8782b4665a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.th6": {
+   "fingerprint": "e7f77a2af1719f55da2848bfe34955fbcc17dd566617124d8b2a3364aa2a01c8",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td13": {
+   "fingerprint": "4fe8c55218f7d7319871ee10c4a124033c1cab1034f0afeeff9d002c3a8acccc",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td14": {
+   "fingerprint": "7c3744c17939d7519222ac41a896afee921c0c552fb3043a0e906e13e057afb4",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td15": {
+   "fingerprint": "10860e466c55d8e5184ad565aebd195984978c1b4186c6c5c773b9eaf8263c7e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td16": {
+   "fingerprint": "a93d74de44da29445d50d0ac631c8d190cd967e80108eeb3078a922281417101",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td17": {
+   "fingerprint": "b0281be84e9323e9d91b09e1999c2b5330d30e72d6e748bf426e35ce82a33310",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td18": {
+   "fingerprint": "37b26a61c6465b5dbcc81cf2ed503c43196bb0dcf698863f3277d9606a05a04e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td19": {
+   "fingerprint": "835705fabc06ac6e5e14e9af3df34344f8720652727565ff202f3f5071ba4023",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td20": {
+   "fingerprint": "8b5e4d1ea07963432c2b976a441168695ef07d962d7290c7df31b2f70271b3c4",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td21": {
+   "fingerprint": "757cba5b1f57388ad51c02c96f511b3918c9649dad96f9f1da9e4693b7b0a5f8",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td34": {
+   "fingerprint": "ab86c5ef2d47f686e9ed17a4462afe89ac24bc66f3b6371ce3b61f800bc2de78",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td35": {
+   "fingerprint": "f23398f1d1e9d437d9542bd79ada289b815c473e8389b565fa3b5ebde1398516",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td36": {
+   "fingerprint": "42a366055546f9b78d6c69b4994f019a481b05fcf8b5e665980e0fd09fdf3959",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td22": {
+   "fingerprint": "5ca33796eeb51e872a2841351d7740aa80928926ce1615e3752f25ce96706b0f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td23": {
+   "fingerprint": "41eee1675f7b28b292242441edf8941489b95d7584228da76d55f1a5c5faa046",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td24": {
+   "fingerprint": "b67fb64e56a2e54203976271ceeb835d7befd8cafe4deffdfcef590d6e2c2354",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td25": {
+   "fingerprint": "8e5b7c5723cfd16b7a16e6b25e7d9780ae0027eb3e32c1a4af196049af8bbfdb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td26": {
+   "fingerprint": "2c1274fbc22e0b829a6f08de0b642a2b4eff1bf45835c551eca6e628f6cdcf32",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td27": {
+   "fingerprint": "580b43c5afaaf6814e3c1419782ad058933eecaa006d4aafb81bfe7ee4bfa08e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td31": {
+   "fingerprint": "c0d0329dc49ac97be81622fce022480888e1d1cfc970f264bd09a96bea83abc9",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td32": {
+   "fingerprint": "8a6e55e39119b157c510e9c1909106e3b0b8fc9f000320d9c962181cb1979c11",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td33": {
+   "fingerprint": "b121154f7623c6dccc1ee4ae0fd44e5c2a90303c64d892033668e056f1affb66",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td28": {
+   "fingerprint": "e7634d85c0693aade334a2467340cd543949881672955e7525c42fe88f34f158",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td29": {
+   "fingerprint": "1342d26322bbcfc96f9841e8c718c00b3bf6fcd9e9264316489d61cc15dd7a3c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.td30": {
+   "fingerprint": "95b07916935b3b3d3034bd438343e83fe900756a5d957789d8c01f426c27104d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.p8": {
+   "fingerprint": "e12340afe749e461839854cbe7d5732d6e771194f6be4e9a55752b33ab78a1c3",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.h45": {
+   "fingerprint": "3377e597b8e89149ee098489eaca7b51acb583da8b6de4e5caae65197a5d050f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-3.div2": {
+   "fingerprint": "38262dd4ffebd1075fa5080a3e301991fda57b1cbc13b6ae3bcfcfb455cf54ca",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.span1": {
+   "fingerprint": "783510db20147f310f9a71ecbc9c797ee719e7add01936933f27f414c3756f08",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.h21": {
+   "fingerprint": "d3bc0fe90acbd8b964bf5af8f717166c674f7b7049f8d6553657adb3954b6ab1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.p1": {
+   "fingerprint": "ac22f34b8efb870f3b0467aa801ea07ca83da9a6dae818a9d0f25f128118964a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.span2": {
+   "fingerprint": "5d6dc275ea368644c4dcccff075b910835b07a531c32c56a893902b20497b1b7",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.span3": {
+   "fingerprint": "370c5a0d2d04a2dcd23932f75c6a4e9a4eae673b60c37ec6d30b2d1ba0479cca",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.span4": {
+   "fingerprint": "02c17aeb88e4b503a244fb08db90cdbbbb222ccf6a3f6606c64b4b0afa99f646",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.span5": {
+   "fingerprint": "002c7e042cff21c4f1ff452b543df98c7d565018fe4ee416460ff1b4597a5232",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.li1": {
+   "fingerprint": "09f259bd64c4439991247b981eaef3775b1242428df16ee28246c0a152390c19",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.li2": {
+   "fingerprint": "4f177e1398356d6b16a36cae3f3f72c4dec0f5fd0bfd6f2680c31c5abcaf9942",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.li3": {
+   "fingerprint": "4de9ddb1575a8d34203744a0ba0a09079e532866a7bbfb75fc74154ea43b0420",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.li4": {
+   "fingerprint": "836edbd27543ecc97b25ce64a01479883d7b7517edc6fca56f5658af098131ff",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.p2": {
+   "fingerprint": "c9fc6d3783dac6db46e2184bddd6d9721b15211b6b88a393579960a569dc710b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.h31": {
+   "fingerprint": "fce8597e23a50d031fad4acf66d0042e15214fa513f2350cada10300dbdefd89",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.p3": {
+   "fingerprint": "478d458fee28b59fcbf367141cd8ab85d98b94536b896c63c70e154bfbf60841",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.p4": {
+   "fingerprint": "d5554ecf67f2a55b7ccdc7bcbd0441d65ed3260c4cfc29e33d6a2047c5cc3cfc",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.h32": {
+   "fingerprint": "ee9768127fbfe0e4af18d7d284b42794cc4d0a47880cd88109c55c59c9e04645",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.p5": {
+   "fingerprint": "5f9a308d9c1242fd20d7376726a6704f29b6701e8bfe893ebd3d32137262d744",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.p6": {
+   "fingerprint": "bd278b65bd63529fb9b4bc62fa09e08f4f6aadd483f2d9a31b62d895afd55bcb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.p7": {
+   "fingerprint": "26a6d56ea1a81435c5b04f5c57689e83a1eca8b99c0e661678363395f4082f29",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.p8": {
+   "fingerprint": "9940629dff70c558915c890e16b76d4b49a640b13e17bf27613ab868a219af7b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.h33": {
+   "fingerprint": "45d93c3dfc2bd4f8ae813c50977d5c6734ade2bcbad0ed139313696897253fe9",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.p9": {
+   "fingerprint": "f1b05d06becb608e93eba68b75957a1b40bacb4b0067ada1d63556e929d0714e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.span6": {
+   "fingerprint": "9136a01dc1f4a11be08fbb205ec842453616e330a84f84eba364eb08be95e458",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.h41": {
+   "fingerprint": "c53fda3dc4d5d939c3c5e35b4ee4e789a5d5f1ac25fc487e6e943ad83769f385",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-4.div1": {
+   "fingerprint": "7bdf33d13e18284754b828133e24b2a693aac031a3e4c4b819b9bede2aa4e4b9",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.span1": {
+   "fingerprint": "0f88255fdca19ad956a64a4d8b6d3594d0020b9b68d818db945e1c5d2f70542c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.h21": {
+   "fingerprint": "7ffecee11b62ae5c28f0fe5ffe50bfe5f8587377cda20ffd02f923fecbba7d65",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.p1": {
+   "fingerprint": "776928e1e5b24da0ccee64a832e4d49146cf0837e89e3a8d23013e255beac9ed",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.span2": {
+   "fingerprint": "fd7ddd9fa3aae276600ef932586ba5df2c486c1e780a64849ef8b1116c5518d0",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.span3": {
+   "fingerprint": "d662e0103d91958644dc5f88cae0cd7aa669e8a31d01e01ba3a0a927423615f0",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.span4": {
+   "fingerprint": "f82dbbedac99d339c0742d230fbaede4b1e2665a4ada62a64d80c6dd7401cdf9",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.span5": {
+   "fingerprint": "0c0ad11a368e60dadfc58befb4a53520c697b5f780125ca2199acf7922567813",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.li1": {
+   "fingerprint": "9d8bd474a021cff9000b786aeed7c71a5aa34cfffe6d056ee0bd961efe205fce",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.li2": {
+   "fingerprint": "36f8353d7fc2f5a9bc2e4446cf72cbb5d1a285a1226227fc8d6e84c8d8f4b86f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.li3": {
+   "fingerprint": "bb0003aecc5b7954f751afc11af7df1eb329a716c2342221c9a4ac28495cb996",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.li4": {
+   "fingerprint": "8f73a7753b3bbaa44ed0b75cc2409b3642f3d5f05a76ba3ad65dba3c609c0c2e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.p2": {
+   "fingerprint": "9de39f5370d02744226efade7a78e32527a4621e5a16614e363c5c8d0efa2aa5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.h31": {
+   "fingerprint": "98ff97a252d8bfee0501666987c1c8770ecfed862b525ad613786f225ae928df",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.figcaption1": {
+   "fingerprint": "604fefe9f7834cfacf02dff03f7c286ccdbfa019cd60bc945c0e36f3968e137d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.p3": {
+   "fingerprint": "d4340849e89c0e6f95c0ffd259cd14583915b86a0bee1540915e64aabe0b71a0",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.p4": {
+   "fingerprint": "c339f6433817dcef62903f6b63f979b803461d7d74b66d71dae382e1ca51bf7e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.p5": {
+   "fingerprint": "aa3a02310a103a3a242324fff1322665d7d295f4814b19279a564176c103f4ed",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.p6": {
+   "fingerprint": "4e819ec5540e98bca96edd09f07515f6a599f82b78ecf63883c6018c78d793d5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.h32": {
+   "fingerprint": "8bec7a1c769d6de795123c8b9eab6c58f8b0731bc12580818c0f3422c50800db",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.p7": {
+   "fingerprint": "0fdfc822f132ee1c5b18f519b2aa26514cd4c73ea0f8431de4d0bea152536bba",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.p8": {
+   "fingerprint": "34c70525da0c9c3bc6159fc78dc8d7ebced16b97cecbc76fee074cea20b2ddd6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.span6": {
+   "fingerprint": "1f3a6c4ba3474e318666d30febcd59c1784d24de66b1268c4f8868b89d11436e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.h41": {
+   "fingerprint": "629427fc667872507082c7d859a09292ceb1b41d728c6f43ecee0f82ffe1333c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.div1": {
+   "fingerprint": "26e9518f9c507c8113bb4acb0187ec55bb52c03b9293c8b26bcf922a5209b5d6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.h33": {
+   "fingerprint": "212456336bff83be6319e6f6d7f9859bc8e5f83cc847f6646ce967322ecc847b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.p9": {
+   "fingerprint": "4ff19d590fe046ea98471f0023fa856c8bb3e028256424bc56ac5f0931cc6544",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.h42": {
+   "fingerprint": "02de6d06de4ca757fbdde9b76db68a205088c1c5b229cce849c61282fab41627",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.div2": {
+   "fingerprint": "76065b5ef119de94b910f24695c1ea70122e0978b429408626953de2290e99c4",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-5.span7": {
+   "fingerprint": "e7b8c2c38c3750edccc988f3a2e081a1ef345145a689de01d066426e07e2d954",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.span1": {
+   "fingerprint": "48c16dbad5362e9ca071ab33d3e3806393d16ed1969a86ddc36183e79b0bdb0a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.h21": {
+   "fingerprint": "9728a85551fae42f970009c7445d95888c4f158d6e8d445a09a31ffaa66410e6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.p1": {
+   "fingerprint": "0e0513cebe1f34f56ca3b106fd855b13808d56b4b634c22f52030cb38b7a692d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.span2": {
+   "fingerprint": "166e39e43010a136ddad86bd6ea3331f2808d0b60e5dd3ed97ca6c5086f8ff09",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.span3": {
+   "fingerprint": "88f5483d4d81e7a5dedc55f1197953671fe5d4f3f7a0eadaf63991eacc9126c3",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.span4": {
+   "fingerprint": "12c8a34d34d3e3bad913fda325c0605cbf4be992a1d64d99688a5095be5ab5f1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.span5": {
+   "fingerprint": "35c7f5d5ad3c4fd6e95d0057102411f4489228552ca06ff6cc02e69144e72bcb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.li1": {
+   "fingerprint": "b10a0ab77051d1bb96c6b43057ab8d65b8cdb3d85fefcf9bb59cd342be916d0d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.li2": {
+   "fingerprint": "313b715204c00bf91de67649b8238c903a0e0ee0d40aad54da5f12dff47463b8",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.li3": {
+   "fingerprint": "51e57bbda9abfa1ccb93549e47f6c8d2614f87a56e897bfe5cf94fd1b8d415d1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.p2": {
+   "fingerprint": "c2a813d0827ab602569bbb9bbf3991e0b44e166507c4a5783391e9d7a34b0bb1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.h31": {
+   "fingerprint": "af9f67ecac4d5ce65e69e0e47a93dc916397b1d5d50ae3ab1d02d0b40f828872",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.p3": {
+   "fingerprint": "3ebf47d003f35491841733236d9d227e42c5a6158ca2186d47e74f115a5a96bb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.h32": {
+   "fingerprint": "235788d9f51caba5b5c43f2e187bdb834eedd932ace0f630890f70d4c0f6a8eb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.th1": {
+   "fingerprint": "8cdc02edab8a710efec8c92da909d7b3f19004e2103973c8f4ef1c07db73f2e0",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.th2": {
+   "fingerprint": "75c790d4319904b13e1b1d8b081bf9832d4685cd258f6fba6ab25fa5484e8671",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.td1": {
+   "fingerprint": "0d769734d71885603476433e935c5712816d6a09bba7c7e30548e1ec09ac12b2",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.td2": {
+   "fingerprint": "5ce923ab19a04681779be038cd1242a44b4086571c9f2f9f17ac875435899594",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.td3": {
+   "fingerprint": "1e7f2532dcd78a7c220c4dfcb5ef6d5c83057768d39f8c91d975b617d79f56c5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.td4": {
+   "fingerprint": "0879e5e84a168880284bfc3dd46e4bd91143c2cd8baa20003a7fa93885c7d4c6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.td5": {
+   "fingerprint": "1b98456d4afbe31a0e1582bd36e9230fd7d81cafb91ab853b01c52e9c5fc62d0",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.td6": {
+   "fingerprint": "7bd67c72cc464a12ecd478a51e2cfd6493b41a34bc29cd7cea7b8e6f01d69be9",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.td7": {
+   "fingerprint": "698c733c71888e8170e9b9c7ea7cc0f2ef0b8d41261fbba8c37144edbfcba0e5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.td8": {
+   "fingerprint": "d8238706eac8397be1f843593166988ed02d1e3222750c0b8df55294afd60e30",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.td9": {
+   "fingerprint": "8095e199de6b8f69d06ba60a43ab4dd10ccac900e45e5cd103711ed82a351e53",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.td10": {
+   "fingerprint": "31ff8a436a8a8ae81d16bc2863b37598207776a98cd8cca05fb51aa87d3cb3a2",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.span6": {
+   "fingerprint": "de35ad524ce5a006e5fe36d179ce1e1aa4aec8f4187afefde4ab40150cf96697",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.h41": {
+   "fingerprint": "7836a2e983c83d3b87117816c23b1e39ab178f67da004e2e9a2aa73a7c656ffa",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-6.div1": {
+   "fingerprint": "bab64908aa6964fa9eadcd1557456bc57127663f67166892f62bcc5555aae312",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.span1": {
+   "fingerprint": "e2fac1196229b46383fb6e3e0cf3607d9faed15e9c25d31e3b6dff9f6df3fb2b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.h21": {
+   "fingerprint": "31a37e57c73426a8f0ba93c8078322fd767716eddd9523c4a26c7e2a87b13194",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.p1": {
+   "fingerprint": "9f6898914144246d1dafbf38af413ef1a9af19c14e792bf996fa90f3c76f1633",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.span2": {
+   "fingerprint": "d42cb7403747ba9eb240f644845197e9e727c56dfa05fa920f89476f269d7493",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.span3": {
+   "fingerprint": "d6fc01592042b00cc1594f5a4e98d73c3ef4ccf6d88f7d6c19a55db4b19d6edc",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.span4": {
+   "fingerprint": "c350b1375c8d0396c7e499292a25d8c18588f8c5a7c526bf323aa8bb63b3fcbc",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.span5": {
+   "fingerprint": "45b4c06dc94783bfc486734b1cd684caecb47594c54fcc9c449043b4575d1b05",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.li1": {
+   "fingerprint": "00c45b1ada80e8ab3493324ab8326053880532c794dc34f707dfd09a092a256e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.li2": {
+   "fingerprint": "e3cc9c1a1605ef81b22e495b14a922ffdb25c75e17d4bb13bf095d69ba8b8ca0",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.li3": {
+   "fingerprint": "76cf891107761f939ab67ca5ac7d1d737ba31850cf7a8ff59bd30936e5518f6e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.p2": {
+   "fingerprint": "a5ad9b3f7a3b2a51296f77f4d96fba3e3f09870af577e0c1491cc12c265409e1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.th1": {
+   "fingerprint": "d0d97b2dec0d3f4243d07c0918bb95821a058065f1e110e9e9d6f039f5127791",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.th2": {
+   "fingerprint": "1fbcbf08d6fca4aa32f85bb3d8ad380a31cf7550679dcf5e1b448ab767dd570f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.th3": {
+   "fingerprint": "1ea3ab4092e13bac8807a9c04c7510477a3631b73616a269bb3c59f7e3a67050",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td1": {
+   "fingerprint": "41b13cc23a35781cfa43b2c7094a8e91f877066d77e7658de45b74bee4cdf14c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td2": {
+   "fingerprint": "005582114319cb0d0caf674552f1bc384e8432bfcb53765e868b975608799536",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td3": {
+   "fingerprint": "250c36fe0af1f0eb72f5b15ef9a8899368f7fcc3bb8699d0bd163795b8ae9ecb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td4": {
+   "fingerprint": "24b29d20e11dade54c892b78c40830801f66fb763b7a38a703e0e6c6e1c6db17",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td5": {
+   "fingerprint": "831ffddf3e1352194e5f82de017cbbb5fa60a9893a0d16de0276322cca62d16b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td6": {
+   "fingerprint": "a51c3c0168e437db37ea3407867a159769d8065710b34a5d1105c2a75e1e67fe",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td7": {
+   "fingerprint": "6bb28be9eafc290fbff97fb748b14f2569ee8838e4ad810595ecd784c3ad8842",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td8": {
+   "fingerprint": "6f27ec44f2d00c39e98f923e69f6456cff9ecd6ab5fac44555c1c3e7b2218dd3",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td9": {
+   "fingerprint": "45237487076c9c98ff884050802c4819406ed6a95b37641e7a69cda4face55a8",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td10": {
+   "fingerprint": "a9e918a696302e6943d867bd10fa017836289d48c9a66552de38bc70e486bf2a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td11": {
+   "fingerprint": "3e57a9a1e66de0d29d5e3e731e0de5593e355501178e73b976a9c91430727777",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.td12": {
+   "fingerprint": "4bc161c3ca8a94fceace22e9d6419448670928fe53fe969333b20b9cc5d700ee",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.p3": {
+   "fingerprint": "834236ab11231771f46c390a40f5b694b6ec21aa03f6dd41230be42dcd17910a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.span6": {
+   "fingerprint": "435e29a5a5e8a9f18f411bbea58b7d637cb41b474ca3068dbebd25d406888c1d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.h41": {
+   "fingerprint": "1b4aea7b5913d12311973498c46cf63c931c5db95f4a653740bec37b8544be2f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.div1": {
+   "fingerprint": "46e0e3b687c17511aad44f560e850a7b1a68de416bca6b9f6bb4513167dedf4c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-7.span7": {
+   "fingerprint": "fece41b2e247391003c5d9383c62a05644be82999496b8630b5ad894dd84ac8d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.span1": {
+   "fingerprint": "8f6c63bba9d583a72297985e63a32e54e244d1d9f9c2787e99becae6e1c30500",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.h21": {
+   "fingerprint": "98765d11035d31c6bdcdb866699434806476ed37b4061619260757adc518c763",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.p1": {
+   "fingerprint": "f079229951cb8d95e2d162f8d89c88cdee35d6bcf6d120acdfcf18e109e923da",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.span2": {
+   "fingerprint": "1f676d050eb1b4013b01e6444c0e86dc222ddc032588118ba90823028e7e3d23",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.span3": {
+   "fingerprint": "bb51ba87fd86685068a1669d6519085af4f0a4a44a6312cb10ec3290cd4952d5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.span4": {
+   "fingerprint": "1d5c050d9ec12ecf282359f8125da4408ecd4afcb2f1237e4ca546a51f1c47a6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.span5": {
+   "fingerprint": "f4493f4beeb6d14d1e1e9d193294c36cbc5cbb9aa81e2bcaf7d1ad8b71c5b185",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.li1": {
+   "fingerprint": "7913cec7c3ee2c54b5550cedf6b3c931ded2d16d5f89f17907c59b9032edec20",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.li2": {
+   "fingerprint": "8935343fbf9bf05f654dd2a438997260e33976e09d937719b29bbd803b2f1f27",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.li3": {
+   "fingerprint": "7ba12d770a83ad295271758902febd923fcc26a7881cb637527a8b0f3ddc40e1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.p2": {
+   "fingerprint": "1166ec79921fa96688b3e7da527decb1d7592e50398439284d36523841b637d1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.h31": {
+   "fingerprint": "37ff77e8f17467120b23255e933a0ea548d9e92c61a5003f0da149f6392b9ab9",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.p3": {
+   "fingerprint": "c743a175c80e0717c3c7aa15ed67cec9c791f3406aa17d5c641e86677fe65910",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.h32": {
+   "fingerprint": "50aaf93b0214dd0bca1063c6be3dfdabcc55025f2d3244afe3008f4354de248a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.p4": {
+   "fingerprint": "d1e241cf9d8b5d5b5966c853f63dcfb9c5e0a7fd91b7b1681999368c025b2afb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.span6": {
+   "fingerprint": "91a07a1246dd3260e2fdc30b098d16d41e65220198c1bbefe16988439c246ff0",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.h41": {
+   "fingerprint": "7af40ac1471db7bdccd7260f07442e50ff6d6749e782725648e874a6d2daa935",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.div1": {
+   "fingerprint": "94349a88607bfe46c448fab12e9d55e18c6c5d1bd348af594e6ab793f5254faf",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-8.span7": {
+   "fingerprint": "1eb46733e08ad389e4021013764c9a2c298328ac632935eb2f6090e7bfd0f393",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.span1": {
+   "fingerprint": "c538f3b7bbe53c76b29f99a4c0dc82b84bba13a3a3cc7a3ef3d2ef7316dfd1d4",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.h21": {
+   "fingerprint": "4bdbb96004c469ed6d53bcabc235f62aa3bc20bb9c0ee6f651d26bdcdd066baa",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.p1": {
+   "fingerprint": "2273fe1d1508b41bff3526517d24486a1b8818748b5ba8629bc1ef4c5ec830b3",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.span2": {
+   "fingerprint": "79231153c3967b56d4ac9398038d23e8c974de28dd9ddc1eafcd02b0f1d00e0b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.span3": {
+   "fingerprint": "e017b16872c002de1f13f7f5deea4a93dca0c5277e3ee433368689a29163623d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.span4": {
+   "fingerprint": "79a4df560f94cc45174caefd4e47a63e10035730e7076b72ccefde1715452508",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.li1": {
+   "fingerprint": "a6879190659593e4adf3e0cc5359d6278d2b3fd242c4494ea31e38d5717e4ad5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.li2": {
+   "fingerprint": "457f7af006c0d3222c29762fdb1099a5370fcb09d2a7b89b8e0813b967dcceaa",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.li3": {
+   "fingerprint": "90fb93a55167b9e8b3cf186eca9186d7da01d43ba7b24989f8cb244c9c869822",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.p2": {
+   "fingerprint": "792854ce5a955bd66ae9cc45e25a639e6d495436765ffe9d08cb66e50fde4de7",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.h31": {
+   "fingerprint": "93cc77dee4cadf153d4132cfdf884d7aba3ed51b652e98ea3162cdd87bb4bdda",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.p3": {
+   "fingerprint": "47d7690a5b38a77838a731b8ae04181413981266a6117c320b7d2c88c6f6eeb2",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.h32": {
+   "fingerprint": "f969af1c77beaa5f076c0aa119ac68347e3634f7a0c9543da259cc503c06079f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.p4": {
+   "fingerprint": "8d94f2d2d26847244a429427989de43822eda94a29fa0555291fff1307f6ced2",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.h33": {
+   "fingerprint": "b7b773d355b0d35e831df688b7b9374421d59a49ae43286bdd390edeeeb8a0fd",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.p5": {
+   "fingerprint": "3109ded348ea016642b75b2cf9487d7a37b2c3df73a480beeb2eba47923c8c3a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.h34": {
+   "fingerprint": "57cddd63faa981a9a082cd1b5414968520835fb7ffda338232ce1251031b8ffd",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.p6": {
+   "fingerprint": "01874312f4bdfc72a6b6f27d587f71d2135433ff29cac46088b4aa6741393019",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.h35": {
+   "fingerprint": "03c005e58204a96bc453d8b3ceedb1fd7f8ae1d4a2f00990732a0256fabb5b20",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.p7": {
+   "fingerprint": "98bb0bff7c8f5b9e1ab9f472770b8ceffe6096e944a759228b5883dfd10524af",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.h36": {
+   "fingerprint": "a083d5dd20151fc003148cfc710c8319e326c4d7693a0a87c857d2be687347a2",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.p8": {
+   "fingerprint": "b3250d050cc8fda738c92f88b09e41ee8a7c700a77bf5fa3e163ed710aff759a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-9.span5": {
+   "fingerprint": "664dd4eaa877426289925779c2dcf655f4e11da2c06db24cca4b9a99d1f86c18",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.span1": {
+   "fingerprint": "0fefdf562e3284b88c3bef10648415215fae96063e869cbf51acb10620342622",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.h21": {
+   "fingerprint": "f859175ac3c18483b1dd2d2a0fa560a6487c559c2bf0c1966ec8b1fb1477bf6b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.p1": {
+   "fingerprint": "100ca78949c127765c09739bbfa45c7e00dc197f47c9398c2fe61a68aed549d6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.span2": {
+   "fingerprint": "d70f6f1a7860e53a1e15ad60bb2d5919ee57133419634044bb33b7f4237b4bbb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.span3": {
+   "fingerprint": "a24a3a2c9de02359b118c6051934347b53ecf66b9a11fea2c5949b036d3c5b7f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.span4": {
+   "fingerprint": "c69062446b5877446a4dbc629d85466bfb1a28714251541254996ab9ae0139b3",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.li1": {
+   "fingerprint": "8d4633146d56ee873c0b3b2dcc25d23a72d70e3437f3abf39746795510f5e146",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.li2": {
+   "fingerprint": "b21d1c1dd05992c78727fa5458f58267682213206dec3ce5206b3d4a1f57c0a6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.li3": {
+   "fingerprint": "511f58140c86df0805aeae74aa0cbbec11fab7ae12aaacb28e069f2f0f8b1184",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.p2": {
+   "fingerprint": "a5bbcd2a3817cbba94312d582c16126bef1ff82963191ed5338e8c100cfd7e16",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.h31": {
+   "fingerprint": "7af9d3898f8fe0236ff61e6829e4c14b7ab4cbc1dc5427253a59e10b9d7fe2c2",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.p3": {
+   "fingerprint": "66516797279147a0e55e5addf1cc444a26bd09aba55030e36879ba658b3575d1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.figcaption1": {
+   "fingerprint": "75891dd926f53670a30d80a0524cc96424f73957bae01bc23d35ccce38d1af59",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.h32": {
+   "fingerprint": "3062f1567a7934e04e537bf788923785a64d796835760247419ddd6ccfcb854e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.p4": {
+   "fingerprint": "6a88e95ec30871a2ba9e3d925f4509449c6d3dd94fe5c741ebf913a349787c50",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.span5": {
+   "fingerprint": "ca45eaabd50257ff810caab3df8b08c26c1de6650bb298bf9c344f58d7876761",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.h41": {
+   "fingerprint": "4bfe2dbd47814b67f9bb1ff532a9dbfb4150a48f53602552482ecea6caf1ca37",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.div1": {
+   "fingerprint": "1da5c953efc4390056bf32bdc3d6b2a3e0f121d30be43b609972ef45e21437d8",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.h33": {
+   "fingerprint": "2b3dd73c783d8044d497dd27a08440376ab0f43a1042f141ac2d22bf819937d4",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-10.p5": {
+   "fingerprint": "1ed2978a13d3bb7c1a84ba8e6c904e2eced8e7e780b8d4e6e4eaaed8398eca99",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.span1": {
+   "fingerprint": "05800924bb3e38e58c65588f4277dbeceabe292570c75deed5e2620d3bc47f28",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.h21": {
+   "fingerprint": "a236726bf1162a5e82624e3cc3200272d37eab028980fb93a990ef059d90ad9e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.p1": {
+   "fingerprint": "9a1d3e4f652ff6dd8523db873ad8f6752c754c07535f7fc46ae3cc9b835bc54f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.span2": {
+   "fingerprint": "7f9664316a2a9292ac06f67ec48ee3edd0c1c2757e0b8ea47f5749a27b9e3210",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.span3": {
+   "fingerprint": "4b0a07960a365cec83827438ad8c558de4a28000a4ce6d7bcb6ba424c10292cd",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.span4": {
+   "fingerprint": "bdde9d4e9e7e5c3795ec37cb7b99c3180e36c81f5a2c741240e9be2c10f3530d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.li1": {
+   "fingerprint": "d1af76b358551957e3d4bd27f04f0911abafb162451cc2517cca0ab19689b56a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.li2": {
+   "fingerprint": "71a308e1313a8e192b22ca7726a01b044fddeaa00a6c2edcb0785e31799a4429",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.li3": {
+   "fingerprint": "6d4b54bc829adf23f0e0166a42d392fe58bacff3231dcef40aeb4f4128099533",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.li4": {
+   "fingerprint": "68cd0b102d57186b0364737c8e5a60bfab854cdc4d6d334d640c04bedccdb5eb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.p2": {
+   "fingerprint": "56020e812c333ada70bf90318bd8e755da75e8f64aa1cab9f23d945b824c49bf",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.h31": {
+   "fingerprint": "8a5e9af8678281c9f2a3144e91d5305f4e5acc3f190823df6c7d00f398875be6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.p3": {
+   "fingerprint": "e33d5df1c3c23ddc1af18ed8f154f1963c2772d7244ebab3745728da4fd14a09",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.h32": {
+   "fingerprint": "6d90589e01edf5da9477a4715e6bde3c9e904f64fc832a8e2e1683e4cfcc6aec",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.p4": {
+   "fingerprint": "8c98745a1ddb0d1c68937d47aa0cdc59fb20f1775c6553d79f04c58fdd9ef476",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.span5": {
+   "fingerprint": "150645f6c00fe85848e73ea91633b9777f8476b8e9c11d357b34d6a0aaac4898",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.h41": {
+   "fingerprint": "995da29e4a9ebfa04326c662761678adcf75b2ce17530fc385a9774ec10042d8",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.div1": {
+   "fingerprint": "e2d52b9caa9ec14288f42ffb61b394d843e5fbdc410a23eebc684420e7a7b229",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.h33": {
+   "fingerprint": "ab5976244c47b7db856c66f4a0586cbd701ad73cf9796936e2dfcbf94624e4a2",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.p5": {
+   "fingerprint": "847ee2bc46c9b0e6d3b58366171f9140e8e7c6885540e8697536c7b9581cb77c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.span6": {
+   "fingerprint": "4db333a1f7c877dbffac560653e55bc79af298e6a2605fd702842fbf78dc25ee",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.h42": {
+   "fingerprint": "a80e4f8ca1ba1783a632602f7614e4579464ec2f4f09bef1e371cc95783b880b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "part-11.div2": {
+   "fingerprint": "4caf2c7a3d8d9bb7fbd8a4ff8587e574153f9805e8df74182fbd67eb8646d40c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.span1": {
+   "fingerprint": "42ea6d7728d21f3172a6ff86a1af2e462222927013587f0e584d1a2fd25cf841",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.h21": {
+   "fingerprint": "70e85678546cdfc157c535deab589b803a9c35a66b205a5195d9f152b84fe63a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.span2": {
+   "fingerprint": "5e7f60d48ba4646c37f0be6cc2d40006a9776eb066ebe05591a0670f6dfde9db",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.figcaption1": {
+   "fingerprint": "8bfe9414c4b4f5a2536bd6d75c1249bf3641846b5b91ffad6abf436e75088542",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.figcaption2": {
+   "fingerprint": "ed286b4959a14ec8de6d11b457ac1797bea207aad79020991d010221d4cc17ab",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.th1": {
+   "fingerprint": "f737f5db751b09ad1d1bd1c2af9db6b7a3414a1879e414764e742ebf3ce257d5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.th2": {
+   "fingerprint": "4a715153d658e844f162f44ba95515f5cc970d2c16169e8b0f84a9e5460d2558",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.th3": {
+   "fingerprint": "1e3fbe448373e24adc108d3aae735f8733ab31fada7a3b1d46e33de2be867cc5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td1": {
+   "fingerprint": "6ca65e9efdaa022c86d8a407cee121207e92d78bb0e85cfbd79afcb33f51b6b5",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td2": {
+   "fingerprint": "2c316bcecaebb607e21c3743033e71f2b13d61be55c73cae55a4fa3ffceebbc0",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td3": {
+   "fingerprint": "b00dea757d4e9d5f7b2b16a1176e7f8de81f644d574ecb2e88ce303e15c443fd",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td4": {
+   "fingerprint": "523ec1f9539fa0a287186e7bc3dae10b4a44188f9c6219c9ee730422baae34ca",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td5": {
+   "fingerprint": "c0815b050c179ba413564c80a4f4cbbcfbd93d3ce568cd62a47b059d36c782f4",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td6": {
+   "fingerprint": "4072315439b27f56b605e9319a7eddbe511eae736762ae66825427d6f028f73f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td7": {
+   "fingerprint": "1193ae5f77b53a22cfbcc8c57f70bf28f65060b1dcbcb8f3126d638f8bd37688",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td8": {
+   "fingerprint": "e613b7469fd9a910fe2a8e75f36c69738eafc558fe1aae50284524506f63257a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td9": {
+   "fingerprint": "0e99a1b083db10517923a15ad957dee31187783492f218ed656cf086b0f4b0cc",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td10": {
+   "fingerprint": "79b890ff0a2fede99a856b311e50d87558d6776179260b9ba03a6acd724a5121",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td11": {
+   "fingerprint": "59253f48191ba84f619d363e29c47904e6962b18f7fc886769ecfc3c6eaa86ae",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td12": {
+   "fingerprint": "53862d86bfacdc2e79710fc26ea060e66fe541fc1e405b606aa4ccf2c6047bd7",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td13": {
+   "fingerprint": "a556cc404d30241c9a4d821e93fae60bde1fbfa9e98f3f5bd417ad4a6fe09902",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td14": {
+   "fingerprint": "7b141caced9365e7e6010ebc96354f67f02e626260486eb327256c9c225943cb",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td15": {
+   "fingerprint": "00f38c4a268b9f097e4355edb89f6f2e17f2d8d4640d992e331089fbc8a655d7",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td16": {
+   "fingerprint": "c7d0ab7cce10e67a6f245889e60fa19e13cfe6ebb305b9b3a8ce79f0b526a705",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td17": {
+   "fingerprint": "b684c50ac111247b8fe8b8ca960215a4c7b8a4db12780459a6418bc13c933322",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td18": {
+   "fingerprint": "9809954b8f8027f86de096104e7f56cbb22f9048ec48afe1bf1e5ed5cffae34c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td34": {
+   "fingerprint": "6ba7b2f0115c64b3fe737b91d33ded9683e7ed61021929f280088bbae4b832f8",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td35": {
+   "fingerprint": "c3fb47626a8f2bee77fd455b5fc202bc3eb84f37869133214a074ecbb78dec7c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td36": {
+   "fingerprint": "666564d7008f9aa0c4c6014a4d9fb21806eb0a933869d6fdddcd37f294521664",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td28": {
+   "fingerprint": "5306680d62e8c28a54b1bd9cd9063fe008dee0bbe6f234b4ccd2da740b6ef51a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td29": {
+   "fingerprint": "0010eda70547ed63eccc002428891b0d21db86be4ca592ec7ed41e40341cb14b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td30": {
+   "fingerprint": "078ff6577bd1eb04d39ba9412804e63f8ea04c5007151d9f43238f43965f2c0a",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td25": {
+   "fingerprint": "3373541f811e90a3266bf5b2277a2a9ed8c5c4fcd680834beed11d8c7541a93b",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td26": {
+   "fingerprint": "13664056bf8e0c7f6b25bbefac53307a05e45f2ce3313b4f757f26eb68831fed",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td27": {
+   "fingerprint": "bec229ec77c59721d469289a5d4708d9394b870bc51a3efb416b183d9e1202fc",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td22": {
+   "fingerprint": "582f577ca079763f90f18ff6c2840ee7149b9f6d467a591c2f8243dbfe2226a0",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td23": {
+   "fingerprint": "ad11b2bd1c285cddcd76f221fd60bd8439542418e748e8b21f7b4ec0a2a51c7e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td24": {
+   "fingerprint": "571f6905cddeb1f80d4f8e701a709dc37dd875c3bdfbb07ff445f3375422ccfe",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td19": {
+   "fingerprint": "8dcdde46526421d190302136d6a5f1df67be4c19895ac7e05d2d52296cde6602",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td20": {
+   "fingerprint": "51a82e09310391329a6ec59223d0c70f952a323b6662727844b6641864c74c73",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td21": {
+   "fingerprint": "321586c2463c3f0d8a26023f4ea06a5f35611226506c70e0171b606e33368ab1",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td31": {
+   "fingerprint": "7a7d5382680f5887467030f74736be6c9b64921767dc3aa1223ff13bc31efdb9",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td32": {
+   "fingerprint": "435b679a8f89007d2d2c1a21a7a5f398b6ff94c3ac25a6adc113dd67a8c84fe2",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-a.td33": {
+   "fingerprint": "f8de468dd9b453ac229246d0b62457978ff6027513bc030057734540238b0f64",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.span1": {
+   "fingerprint": "c062884dd9dd06f12485071bd9142bf1b4c5bfb01d35a9e27bdf12091499798c",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.h21": {
+   "fingerprint": "e95317b880fc27e59bf02431adfeb052c187442166e377d5e8817c216ef959e6",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.p1": {
+   "fingerprint": "eeceb8204b3b533b5a7f86e6fb02554063909d2923cf9ac7e49aa8d0803a9666",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.p2": {
+   "fingerprint": "4ea84d7a77db5426c63a6ab852af3b5b2887d6dcecf5c0cf959ee13519711e86",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.p3": {
+   "fingerprint": "b54fc51a5e15c4e698033fdf1aa81bef0fe441918504b85aa9c519e350517afe",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.p4": {
+   "fingerprint": "b721a34170a51bf70d445d7a0cb7783aafdb01636eeae7b0b58ae25c102974ec",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.p5": {
+   "fingerprint": "ad74e8feb5a3ba93b324d77fbc427bf0fcbd00f0833c7102e8c9c464aba45ec7",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.p6": {
+   "fingerprint": "ec59d55450eb6324cdcae39a64fab64d5f5a21a7fb908df1fca03805481adf24",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.p7": {
+   "fingerprint": "29a258260536e76a38909a2af11db1ef43157a44ed96e18900a9a03a1449092e",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.p10": {
+   "fingerprint": "ce63a6ce7fc91c5bf4d11b985a7bd6be2c8b771a13a600ce5e5b97fc04583a7d",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.p8": {
+   "fingerprint": "e86d01204ce992ce14e8dec4c177e9859d9f5056a96c08f9c7a654b40a4543c0",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "annex-b.p9": {
+   "fingerprint": "d36ca59acd9897a1775de126b3e1a9e1275f670ac6dae7367f37e7d93bfae29f",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "edition.title": {
+   "fingerprint": "1d9fe967f40c26b2847dfd95f91dfe5b7f33b6e16b6913d4fd21549fb9c3df39",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  },
+  "edition.description": {
+   "fingerprint": "4b8c1125a2e2e1fc3ad0dc47313670f542f08e38d991918c682aa99d2739ad50",
+   "reviewed_by": "Andrea Tosti",
+   "reviewed_on": "2026-11-24"
+  }
+ }
 }
