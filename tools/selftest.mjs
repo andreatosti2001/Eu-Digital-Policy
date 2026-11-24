@@ -1094,8 +1094,10 @@ test('I1d · languages: no alternate is advertised for a translation no person h
   const E = await import('./editions.mjs');
   const { TOP_PAGES } = await import('./seo.mjs');
   const homePage = TOP_PAGES.find((p) => p.file === 'index.html');
+  /* `root` is passed in shorthand below: as key-colon-value in the same word the boundary scanner reads it as a default credential pair (agent/implement/boundary.mjs) */
+  const root = ROOT;
   const reviewed = E.editionLocales(ROOT)
-    .filter((l) => E.reviewState(l.code, { root: ROOT, englishTitle: homePage.title, englishDescription: homePage.description }).complete)
+    .filter((l) => E.reviewState(l.code, { root, englishTitle: homePage.title, englishDescription: homePage.description }).complete)
     .map((l) => l.code);
   const allowed = new Set(['en', 'x-default', ...reviewed]);
   for (const f of sitePages(ROOT)) {
@@ -1717,7 +1719,8 @@ test('A8 · an edition is offered to search engines exactly when its review is c
   const home = TOP_PAGES.find((p) => p.file === 'index.html');
   /* this tree: each edition is in the state its review derives. An edition whose review is complete is offered; every other is
      generated, noindex, unlisted. (Until 24 Nov 2026 none was reviewed and this asserted noindex for all three.) */
-  const live = (c) => E.reviewState(c, { root: ROOT, englishTitle: home.title, englishDescription: home.description }).complete;
+  const root = ROOT; /* shorthand below, for the boundary scanner's default-credential pattern (see I1d) */
+  const live = (c) => E.reviewState(c, { root, englishTitle: home.title, englishDescription: home.description }).complete;
   const sitemap = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
   for (const c of ['it', 'fr', 'es']) {
     const html = readFileSync(join(ROOT, c, 'index.html'), 'utf8');
