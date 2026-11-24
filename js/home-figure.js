@@ -568,7 +568,6 @@ export async function initHomeFigure(ix) {
     (noPart.length ? `<p class="hp-k">Core instruments with no part of the brief recorded</p><ul>${noPart.map(instLi).join('')}</ul>` : '') +
     ['mapped', 'watched', 'excluded'].map((k) => `<p class="hp-k">${k} · ${outer[k].length}</p><p class="hp-list-names">${outer[k].map((i) => esc(i.short_name) + (counted.has(i.id) ? ` (adjacent, ${esc(taxLabel(ix, statusPart(i)) || 'status not recorded')})` : '')).join(' · ')}</p>`).join('') +
     '</div>';
-  if (window.matchMedia('(max-width: 640px)').matches) list.open = true;
   const cta = portal && portal.querySelector('.portal-cta');
   (cta || mount).after(list);
   toRemove.push(list);
