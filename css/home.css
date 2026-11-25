@@ -120,6 +120,12 @@ body[data-theme="light"] .hp-cap-k{color:var(--paper-dim)}
 .hp-list-parts ul span,.hp-list > div > ul span{color:var(--paper-faint)}
 .hp-list .hp-k{margin:14px 0 6px;color:var(--paper-faint)}
 .hp-list-names{margin:0;font-family:var(--mono);font-size:11px}
+/* On a phone the list is not shown (the author, 24 Nov 2026): it was a screenful of text under the figure. It stays in the page,
+   closed and clipped to a pixel rather than display:none, so a screen reader still finds "The figure, as a list" and the figure's
+   tree and marks keep their alternative; it is drawn again, in place, while focus is inside it. The same 640px as js/home-figure.js. */
+@media (max-width: 640px){
+  .hp-list:not(:focus-within){position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+}
 .hp-edition-note{margin:0 0 10px;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--paper-faint)}
 
 /* ---------- narrow screens: the figure without its labels, the list open beneath */
