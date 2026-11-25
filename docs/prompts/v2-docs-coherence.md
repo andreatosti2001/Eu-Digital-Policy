@@ -6,10 +6,13 @@ di chatgpt su come programmarlo, dimmi che ne pensi») and the session answered 
 and **is not in the repository**: this prompt carries what the next session needs from it, and the measurements below were made by this
 session on `685dd22`, not taken from the proposal. **Nothing was read from any legal text for this prompt.** It records no §8 row of its own.
 Written in Italian. The author may change it before use.
+Updated the same day with the author's four answers (§8, the four rows of 25 Nov 2026 «The documentation simplification programme, …»):
+this is **D1**, the first of six sessions of `docs/DOCS-SIMPLIFICATION-PLAN.md`; the questions already answered are removed from D.3, and
+D.4 now writes D2's prompt.
 -->
 
-SESSIONE MANUTENZIONE — la documentazione, prima parte: la verità dei documenti (D.1), la mappa delle dipendenze (D.2), le decisioni
-dell'autore (D.3)
+SESSIONE D1 (programma di semplificazione della documentazione) — la verità dei documenti (D.1), la mappa delle dipendenze (D.2), le
+decisioni dell'autore (D.3)
 
 ## Prima di iniziare
 
@@ -20,7 +23,8 @@ Lavora sul branch assegnato dall'ambiente. **Come prima scrittura**, registra in
 le parole con cui l'autore avvia questa sessione; se il prompt arriva senza parole dell'autore, chiediglielo con lo strumento di domande.
 Senza quella riga non si scrive nulla.
 
-Leggi, e trattali come vincolanti: `docs/BRIEF-v2.md` «Cosa NON fare»; `docs/AI-SAFE-BOUNDARIES.md` §0 e §3 (il livello rosso: tra gli altri
+Leggi, e trattali come vincolanti: **`docs/DOCS-SIMPLIFICATION-PLAN.md` per intero** (il programma D1…D6, le decisioni dell'autore del 25
+novembre, le regole di §4 valide per ogni sessione del programma); `docs/BRIEF-v2.md` «Cosa NON fare»; `docs/AI-SAFE-BOUNDARIES.md` §0 e §3 (il livello rosso: tra gli altri
 la sezione «Known limitations» del README e la registrazione di una revisione di traduzione); `docs/DATA-GOVERNANCE.md` (una sola casa per
 ogni fatto, la derivazione prima della copia); `docs/SESSION-ARCHITECTURE.md` §1 (la Traccia M ha la precedenza alle sue tappe);
 `docs/ROADMAP-v2.md` §8, le righe del 22 novembre 2026 (l'alternanza delle sessioni; l'archivio di `docs/HANDOVER.md`, il precedente di questa
@@ -54,8 +58,9 @@ spostamenti. Qui **nessun file si sposta, si rinomina, si fonde o si cancella.**
   (`node tools/i18n-review.mjs sheet it`, un agente può farlo) e verifica che dica 0 stringhe da rivedere.
 - **`docs/HANDOVER.md` è fermo al 24 novembre** e non registra il lavoro del 24–25 novembre: PR #133 (revisione IT/FR: correzioni e 14
   stringhe tradotte), #135 (la revisione italiana dell'autore e i tre test che presupponevano «nessuna edizione revisionata»), #136 (titolo e
-  descrizione di `/it/` accorciati e riapprovati), #137 (l'elenco della figura nascosto su telefono). Leggi i messaggi di commit e le
-  descrizioni delle PR: sono la fonte.
+  descrizione di `/it/` accorciati e riapprovati), #137 (l'elenco della figura nascosto su telefono), e la PR che ha portato su `main` questo
+  prompt, `docs/DOCS-SIMPLIFICATION-PLAN.md` e le quattro righe di §8 del 25 novembre. Leggi i messaggi di commit e le descrizioni delle PR:
+  sono la fonte.
 - Il branch `scout/digest-digest-2026-11-23T18-18-06Z` non è in alcun registro.
 
 **Le dipendenze già note** (non solo percorsi: **frasi esatte**):
@@ -80,24 +85,22 @@ spostamenti. Qui **nessun file si sposta, si rinomina, si fonde o si cancella.**
   legge (codice, workflow, skill, prompt, test), quali sue frasi sono citate (ancore, pin dei test), quali sezioni sono analizzate (la §12),
   la dimensione, e una proposta (non una decisione) di **ciclo di vita** (attivo, storico, superato, chiuso) e di **autorità** (normativo,
   canonico, riferimento). Nessun file spostato. Ciò che lo script non sa classificare si dice.
-- **D.3 · Le decisioni all'autore**, una domanda per decisione, raccomandazione per prima, risposte in §8 con le sue parole:
-  1. `AGENTS.md`: ridurlo a un ingresso operativo, e quanto; dove vanno le regole che escono; come si aggiornano le 9 ancore.
+- **D.3 · Le decisioni all'autore.** Già decise il 25 novembre (§8, non si richiedono): programma continuo D1…D6 con l'alternanza sospesa
+  solo per esse; chiusura **entro il 10 gennaio 2027**; si spostano **solo i record chiusi**, in D6; la proposta di ChatGPT è riassunta nel
+  piano, §0. Restano le quattro domande di `docs/DOCS-SIMPLIFICATION-PLAN.md` §3, una per decisione, raccomandazione per prima, risposte in
+  §8 con le parole dell'autore:
+  1. `AGENTS.md`: a che cosa si riduce, e dove vanno le regole che escono (le 9 ancore si aggiornano in D4, nello stesso commit).
   2. La skill `project-context`: una lettura a livelli (i vincoli sempre; le specifiche per dominio quando il compito le chiede) oppure com'è.
-  3. Uno stato corrente: un `docs/CURRENT-STATE.md` **generato** da uno strumento (come `_footer.mjs` genera le pagine), uno scritto a mano,
-     oppure nessuno e l'intestazione di `HANDOVER.md` come oggi. **Uno scritto a mano è una seconda casa** (`docs/DATA-GOVERNANCE.md`): dillo.
-  4. `HANDOVER.md`: spostare in archivio le voci più vecchie (il precedente del 22 novembre) ora o nella sessione successiva.
-  5. Un controllo della documentazione: uno strumento nuovo, l'estensione di uno esistente (`validate`, `prose-homes`, il controllo di
-     governance), oppure nessuno. Che cosa deve controllare: link, percorsi, **frasi citate**, intestazioni di stato.
-  6. Il calendario: proposta di chiudere la riorganizzazione **entro il 20 dicembre 2026** e di non toccare la documentazione durante le
-     sessioni di lettura della Traccia M.
-  Nulla di D.3 si implementa in questa sessione oltre a ciò che l'autore decide qui e che non sposta file.
-- **D.4 · Il prompt della sessione successiva** (per l'alternanza del 22 novembre, dopo una sessione di manutenzione ne viene una visibile; il
-  candidato già scritto è `docs/prompts/v2-visible-coverage-reading.md`: il 24 novembre 2026, dall'ambiente della sessione di revisione delle
-  traduzioni, `https://publications.europa.eu/resource/celex/<CELEX>` con `Accept: application/xhtml+xml` ha risposto 200; rimisuralo). Il
-  checkpoint finale approva insieme il lavoro e il prompt.
+  3. Uno stato corrente: un `docs/CURRENT-STATE.md` **generato** da uno strumento (come `_footer.mjs` genera le pagine), oppure nessuno e
+     l'intestazione di `HANDOVER.md` come oggi. **Non scritto a mano**: sarebbe una seconda casa (`docs/DATA-GOVERNANCE.md`).
+  4. Il controllo della documentazione (D3): uno strumento nuovo o l'estensione di uno esistente (`validate`, `prose-homes`, il controllo di
+     governance), e che cosa controlla: link, percorsi, **frasi citate**, intestazioni di stato, conteggi.
+  Nulla di D.3 si implementa in questa sessione: si implementa nelle sessioni D3–D5.
+- **D.4 · Il prompt di D2** (`docs/DOCS-SIMPLIFICATION-PLAN.md` §2: autorità e catalogo), sul branch, con le risposte di D.3 che lo
+  riguardano. Il checkpoint finale approva insieme il lavoro e il prompt.
 
-**Regola d'arresto**: se la sessione si allunga, cadono nell'ordine le domande 5 e 6 di D.3, poi le 3 e 4, ciascuna nominata nel prompt
-successivo; D.1 e D.2 non cadono. Un controllo rosso si nomina e si decide; non si abbassa.
+**Regola d'arresto**: se la sessione si allunga, cadono nell'ordine le domande 4 e 3 di D.3, ciascuna nominata nel prompt di D2; D.1 e D.2 non
+cadono. Un controllo rosso si nomina e si decide; non si abbassa.
 
 ## Scrivere e verificare
 
@@ -134,6 +137,9 @@ Completa quando:
   senza il prompt non si approva.**
 
 Oppure l'autore decide di fermarsi: anche allora si scrive il prompt della successiva.
+
+**Il calendario del programma**: D6 chiude entro il 10 gennaio 2027 (§8, 25 nov 2026). Se una sessione del programma è in corso il 10
+gennaio, si ferma a un checkpoint, ciò che resta va nel suo prompt e il programma riprende dopo il giro delle regole di febbraio 2027.
 
 **La Traccia M ha la precedenza alle sue tappe.** Rimisura la data prima di iniziare:
 - `evidence-audit --as-of <oggi>` stampa `STATUS_PREDATES_MILESTONE` dopo le tappe di `ai-act` (2 dic 2026), `pld` (9 dic) ed `eidas2`
