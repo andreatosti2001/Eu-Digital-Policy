@@ -1,6 +1,6 @@
 # Italian edition — translation review
 
-Generated 2026-11-24 by `node tools/i18n-review.mjs sheet it`. State when generated: **429 reviewed · 2 stale · 0 unreviewed · 0 untranslated** of 431 strings. The Italian edition is offered to search engines only when all 431 are reviewed.
+Generated 2026-11-26 by `node tools/i18n-review.mjs sheet it`. State when generated: **431 reviewed · 0 stale · 0 unreviewed · 0 untranslated** of 431 strings. The Italian edition is offered to search engines only when all 431 are reviewed.
 
 **How to review.** For each string below:
 
@@ -10,18 +10,4 @@ Generated 2026-11-24 by `node tools/i18n-review.mjs sheet it`. State when genera
 4. When done, run `node tools/i18n-review.mjs record it --by "Your Name"`. Only ticked strings whose fingerprint still matches are recorded, and the command says which were not.
 
 Stale strings were approved before and have changed since; they come first. ⚠ marks a translation whose links, glossary buttons or nested markup differ from the English.
-
-## Changed since approval
-
-### `edition.title`
-
-- **EN** EU Digital Policy | The European Legal Framework for the Digital World
-- **IT** EU Digital Policy | Il quadro giuridico del mondo digitale
-- [x] approve `edition.title` · `fp:b12fdca1b3d2`
-
-### `edition.description`
-
-- **EN** An evidence-graded analysis of the EU digital rulebook — GDPR, DSA, DMA, AI Act, Data Act and the cyber layer: structure, key provisions, compliance consequences and the case against each.
-- **IT** Analisi del corpus digitale dell’UE, graduata secondo le fonti: GDPR, DSA, DMA, AI Act, Data Act e strato cyber. Disposizioni, conformità e obiezioni.
-- [x] approve `edition.description` · `fp:8af8cebd3d83`
 
