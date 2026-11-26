@@ -334,10 +334,7 @@ patches, not checks. **Do not re-run** the latter two.
   `seo-audit.mjs` and CI fail on the stale page. Never edit a file under `instruments/` by hand,
   and never store in `data/` anything to make a page read better: titles live in `tools/seo.mjs`.
 - **An edited inline script is a blocked script.** Inline event handlers are an error. → `docs/DEPLOYMENT.md`.
-- **The validators do not read prose.** A false statement in `index.html` passes every check
-  in this repository. `agent/proposals/editorial/` is the first thing here that reads a
-  sentence at all, and it is **not a check**: it runs only when somebody runs it, it produces
-  proposals in front of a human, and it can only find what it can quote.
+- **The validators do not read prose.** → `docs/VERIFICATION-POLICY.md`.
 - **`agent/ux/` has never opened a page, and `agent/browser/` now does.** Agent 8 reads the
   markup, the stylesheets and the modules and audits the interface from them; every record it
   writes says so as a blocking open question quoting README limitation 7, and that has not
@@ -360,19 +357,11 @@ patches, not checks. **Do not re-run** the latter two.
   but Chromium — `a11y:bound` says so on every run and is the one remaining `undecidable`,
   deliberately: it is a statement of what the suite did not establish, and a green tick in its
   place would be the thing this repository is arranged against.
-- **A passing validator proves less than it looks.** `design-qa.mjs` harvests CSS token
-  declarations out of JavaScript by regex, so a `--foo:` in any JS string or comment
-  silences a real error. `freshness.mjs` prints a `SOURCE REACHABILITY` heading but performs
-  no network I/O — **no URL here has ever been fetched**. `validate.mjs` carries one check
-  that can never fire and treats every wildcard reference as resolving. Detail and evidence:
-  `docs/AUDIT-2026-09-01.md` F-10, F-11, F-12.
+- **A passing validator proves less than it looks.** → `docs/VERIFICATION-POLICY.md`.
 - **Derived output depends on the reader's clock.** `isPast` compares against
   `new Date().toISOString()` in UTC, so pipeline stages, the calendar and the status strips
   change with when and where a page is opened. Date every report (F-15).
-- **`git blame` answers nothing.** The pre-SESSION 00 history is 47 bulk uploads and
-  deletions with no message that explains a change, so the rollback path a destructive script
-  assumes does not exist. Your commits are the first real provenance this repository has
-  (F-06).
+- **`git blame` answers nothing.** → `docs/VERIFICATION-POLICY.md`.
 - **An `ApprovalRequest` in `agent/records/` is a request, not a grant.** Agents write that
   directory, and it is git-ignored. A grant exists only in
   `agent/implement/decisions/decisions.jsonl`, through `agent/implement/ledger.mjs

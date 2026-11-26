@@ -203,7 +203,7 @@ export const PATTERNS = Object.freeze([
     so_what:
       'This is the evidence weakness every other one reduces to. It is also the one thing on this list that no rule, validation or skill can fix — it needs documents retrieved and read, which is work, not governance.',
     instances: Object.freeze([
-      Object.freeze({ when: 'recorded', what: 'the freshness validator prints a reachability heading and performs no network I/O.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 'no URL here has ever been fetched' } }),
+      Object.freeze({ when: 'recorded', what: 'the freshness validator prints a reachability heading and performs no network I/O.', anchor: { kind: 'contains', path: 'docs/VERIFICATION-POLICY.md', text: 'no URL here has ever been fetched' } }),
       Object.freeze({ when: '2026-09-09', what: 'the live run: not one claim in this build could be verified against a live source, because not one registered source could be reached.', anchor: { kind: 'contains', path: 'docs/SESSION-25-FIRST-REAL-WORLD-RUN.md', text: 'could not verify a single claim' } }),
       Object.freeze({ when: 'recorded', what: 'audit F-13: `last_verified` is a batch stamp wearing a per-record name.', anchor: { kind: 'contains', path: 'docs/AUDIT-2026-09-01.md', text: 'F-13' } }),
       Object.freeze({ when: 'now', what: 'and the shape of the hole, measured: six of the eight retrieval fields the governance grant allowlists exist on no record in the file the grant names.', anchor: { kind: 'measure', measure: 'grant_fields_absent', expect: { at_least: 1 } } }),
