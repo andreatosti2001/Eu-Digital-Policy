@@ -313,10 +313,7 @@ that decides.
 
 **`node agent/orchestrator/cli.mjs workflows`, `capabilities` and `policy` exited 1 from the SESSION 26 merge until SESSION 29** → `docs/PRODUCTION-OPERATING-MODE.md` §6 · `docs/GOVERNANCE-PROPOSALS.md` §6b.
 
-**There is no overall health score.** `agent/health/model.mjs overallScore()` throws, with the
-reasoning. Five metrics are marked `not_a_score` because the only legitimate way to move them
-is verification work the monitor cannot see, and every cheap route down is a prohibited
-action. `docs/HEALTH-MONITOR.md`.
+**There is no overall health score.** → `docs/HEALTH-MONITOR.md`.
 
 `tools/_footer.mjs`, `_refsweep.mjs` and `_review10.mjs` are generators and applied one-shot
 patches, not checks. **Do not re-run** the latter two.
@@ -374,30 +371,9 @@ patches, not checks. **Do not re-run** the latter two.
   the seventy-one across four agents by `docs/HANDOVER.md`'s earlier count, thirty-five were measured in SESSION 18's own run,
   before it, and every other one is still undecided: Agent 9 refuses those by name, and reports which gate refused each.
   `docs/IMPLEMENTATION-QA.md` §3.
-- **The privileged API has no authentication and no authorization — and it is still there.**
-  `agent/observability/server.mjs` serves eleven `/api/` endpoints over the whole trace
-  store — agent inputs and outputs, decisions, approvals, provenance — and checks nothing.
-  Until 23 Oct 2026 its only control was that `host` DEFAULTED to `127.0.0.1`, and
-  `serve({ host })` accepted any value. **Since then the bind is enforced**: any address but
-  `127.0.0.1` or `::1` throws, and a request whose `Host` header is not loopback (DNS
-  rebinding) gets 403 — `agent/observability/selftest.mjs` "VIEWER". It still checks no
-  credential, so measured rather than inferred — the health monitor starts it on an ephemeral
-  loopback port and finds **nine of the eleven routes return data to a request with no
-  credential** — to any process on the machine. Defensible for a local development viewer,
-  which is what it is. **SESSION 21's Control Room did not inherit it**: `.control-room/server.mjs` is
-  a separate server that authenticates and then authorizes every privileged request, and the
-  finding above stands unchanged against the viewer. Do not point a Control Room at the
-  viewer's routes, and do not "fix" the viewer by bolting a token onto it — they exist for
-  different purposes, and merging them would give a development tool a security model nobody
-  tests. `docs/HEALTH-MONITOR.md` §6 · `docs/CONTROL-ROOM.md` §1.
+- **The privileged API has no authentication and no authorization — and it is still there.** Do not point a Control Room at the viewer's routes, and do not "fix" the viewer by bolting a token onto it — they exist for different purposes, and merging them would give a development tool a security model nobody tests. → `docs/HEALTH-MONITOR.md` §6.
 
-- **A lower number is not automatically healthier, and five metrics say so in their own
-  definition.** The 111 unverified records, the provenance gaps, the verification gaps, the
-  blocking open questions and the rejected proposals are marked `not_a_score`:
-  `agent/health/model.mjs` refuses to let any of them be re-labelled as a defect count,
-  because every cheap route down — clearing `requires_verification`, attaching a plausible
-  substitute, bulk-stamping `last_verified`, removing a `blocks` flag — is a prohibited
-  action rather than an improvement. **A rise in the first four is usually good news.**
+- **A lower number is not automatically healthier, and five metrics say so in their own definition.** → `docs/HEALTH-MONITOR.md`.
 
 - **There are two public surfaces, and only one is the website.** **Do not read that as "the Control Room is safe because nobody can find it."** → `docs/DEPLOYMENT.md` §1b, §2.
 - **The public site now has one affordance that is not about EU law.** Typing
