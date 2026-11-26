@@ -89,8 +89,9 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `docs/POST-V2.md` | decisions | plan | active | canonical | the plan after the v2 (Stages 2 and 4) |  |
 | `docs/PRODUCTION-OPERATING-MODE.md` | agents | spec | active | reference | points to `agent/production/`: the daily cycle and the readiness checklist |  |
 | `docs/PROJECT-CONTEXT.md` | docs | spec | active | reference | what the project is; the seven principles (snapshot of `7248290`) | a snapshot (the plan §2): the principles hold, the figures are of `7248290` |
-| `docs/prompts/v2-docs-authority-catalogue.md` | docs | prompt | active | canonical | the session's instructions | scope «The scope of the documentation session D2»; this session |
-| `docs/prompts/v2-docs-check.md` | docs | prompt | active | canonical | the session's instructions | no scope row: D3, written by D2 (D2.4), not yet run |
+| `docs/prompts/v2-docs-agents-entry.md` | docs | prompt | active | canonical | the session's instructions | no scope row: D4, written by D3 (D3.4), not yet run |
+| `docs/prompts/v2-docs-authority-catalogue.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D2» → closed by «Final checkpoint of the documentation session D2» |
+| `docs/prompts/v2-docs-check.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D3» → closed by «Final checkpoint of the documentation session D3» |
 | `docs/prompts/v2-docs-coherence.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D1» → closed by «Final checkpoint of the documentation session D1» |
 | `docs/prompts/v2-f-18-dma-immediately.md` | rules | prompt | closed | canonical | the session's instructions | scope «The scope of the F-18 session» → closed by «Final checkpoint of the F-18 session» |
 | `docs/prompts/v2-hp-02-homepage-follow-up.md` | frontend | prompt | closed | canonical | the session's instructions | scope «The scope of HP-02 (the homepage follow-up)» → closed by «HP-02: the next session» |
@@ -199,11 +200,11 @@ names documents, not what is true in them: where a reference document disagrees 
 
 Recounted from the table, not written to be believed; D3's check derives them again and fails if they differ.
 
-- **documents:** 143
-- **domain:** agents 26 · control-room 4 · decisions 20 · docs 14 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
-- **kind:** account 1 · archive 1 · audit 15 · catalogue 2 · design 3 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 51 · reading 10 · run 5 · spec 28
-- **lifecycle:** active 62 · closed 79 · historical 1 · uncertain 1
-- **authority:** canonical 100 · normative 15 · reference 28
+- **documents:** 144
+- **domain:** agents 26 · control-room 4 · decisions 20 · docs 15 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
+- **kind:** account 1 · archive 1 · audit 15 · catalogue 2 · design 3 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 52 · reading 10 · run 5 · spec 28
+- **lifecycle:** active 61 · closed 81 · historical 1 · uncertain 1
+- **authority:** canonical 101 · normative 15 · reference 28
 
 ## 5 · What this catalogue does not establish
 

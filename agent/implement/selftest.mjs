@@ -740,9 +740,17 @@ test('R6 · this suite is in the list the agent runs for a change under agent/ o
      deploy gate pages.yml runs before it uploads anything — the second
      thing here, after the autonomy runner, that sits on the path to
      publication — and a suite for them that nothing ran would be a gate
-     on the gate. It is 25. */
-  assert.equal(AGENT_SUITES.length, 25,
-    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24), the limited-autonomy runner (26), the continuous improvement loop (27), the governance proposals (28), the production operating mode (29), the validators\' own suite (30) and the release chain (4 Nov 2026)');
+     on the gate. It is 25.
+
+     DOCUMENTATION SESSION D3 (26 Nov 2026) is the TWELFTH, and like
+     SESSION 29 it was added WITH its suite: tools/docs-check.mjs, the
+     documentation check the author decided on (docs/ROADMAP-v2.md §8,
+     «D1, D.3 question 4»), whose selftest the author placed here in its
+     own file («D3, D3.1: where the check's selftest lives»). A check of
+     the documents that code and anchors read, with nothing testing it,
+     would be a gate on nothing. It is 26. */
+  assert.equal(AGENT_SUITES.length, 26,
+    'twelve suites before SESSION 18, plus browser, implement (18/19), health (20), the orchestrator (22), the policy (23), the verification gate (23.5), the simulation harness (24), the limited-autonomy runner (26), the continuous improvement loop (27), the governance proposals (28), the production operating mode (29), the validators\' own suite (30), the release chain (4 Nov 2026) and the documentation check (D3, 26 Nov 2026)');
   assert.ok(AGENT_SUITES.includes('tools/selftest.mjs'),
     'the four validators are this project\'s test suite; a change to one of them must run the suite that tests it');
 });

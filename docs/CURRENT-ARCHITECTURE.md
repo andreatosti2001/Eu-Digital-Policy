@@ -443,6 +443,15 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 | `tools/prose-homes.mjs` | The invariant that a page's text has one home, its markup: `proseCopies()` looks for every hand-written block of ≥ 6 words in the page's own inline scripts and in every module the site ships, whatever the copy is called. States what is not a second home (generated regions, `instruments/`, JSON-LD, comments, labels) and why. `design-qa.mjs` runs it; `tools/selftest.mjs` C1–C4 plant each shape. |
 | `tools/source-contract.mjs` | The one contract a `data/sources.json` record satisfies — 12 required fields, 2 optional, each with its shape, why it exists, who writes it and who reads it — and `ABSENT_BY_DESIGN`, the six retrieval-bookkeeping fields the governance grant allowlists and this dataset deliberately does not have. |
 
+**The documentation check: `tools/docs-check.mjs`** (documentation session D3, 26 Nov 2026; the author's decision,
+`docs/ROADMAP-v2.md` §8, «D1, D.3 question 4»). Not a validator and not in the baseline below: it checks the documents
+against their own rules — the catalogue `docs/README.md` against the perimeter, each standard header against the
+catalogue, a cited §8 title or `main` commit against §8 and the history, internal links, the `docs/…` paths named in
+code, workflows, skills and prompts, the anchors of `agent/proposals/governance/patterns.mjs` (imported) and the pins
+it lists, and the catalogue's totals. It exits 1 on an error and prints its warnings by name; which is which is the
+author's (§8, «Checkpoint D3.1 of the documentation session D3: the design of the check»). Its suite is
+`tools/docs-check-selftest.mjs`, in `AGENT_SUITES`. `.github/workflows/qa.yml` runs both in the validators job.
+
 **Two generators / one-shot patches — run only when the thing they own changes:**
 
 - `tools/_footer.mjs` — rewrites the legal footer, the no-JS notice and the social metadata
