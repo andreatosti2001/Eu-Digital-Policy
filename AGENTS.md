@@ -95,24 +95,7 @@ what it does not.
 
 **SESSION 24 ran the first end-to-end cycle, in simulation, and fixed nothing it found.** → `docs/ORCHESTRATOR.md`.
 
-**NOTHING HAD EVER BEEN DECIDED WHEN SESSION 28 RAN, AND IT MEASURED WHY THAT IS TWO PROBLEMS RATHER THAN
-ONE.** (One proposal has been decided since, on 6 Nov 2026; none of the seven governance proposals has, and the paragraph below is the measurement as it stood.) `agent/proposals/governance/` reads the history and reports what a person has had to
-correct more than once: twelve patterns over forty-nine anchors, each anchored to a commit, a
-path, a string in a tracked file or a live measurement, all re-resolved on every push. The
-first finding is about the corpus — **the approval ledger is not empty, it is ABSENT**, so
-there are no approved, rejected or edited proposals to analyse and the corpus is the
-corrections instead. The second is mechanical: `deriveApproval()` binds a decision to a
-proposal held in the git-ignored record store, so a decision recorded today reads
-`void_unknown_proposal` on any other machine until the producing agent is re-run. **Two
-findings are this session's own and are measured rather than inherited**: the grant's `docs/`
-allowlist and `categoriseProposal()`'s docs-only rule place all eight prose governance
-documents inside an ENABLED category — `NEVER_AUTOMATIC_PATHS` guards `agent/policy/`, and
-nothing guards `docs/AUTONOMY-POLICY.md`, which is the same policy in the form a person reads
-— and six of the eight fields the grant allowlists exist on none of the 77 records in
-`data/sources.json`. Both are claims about which gates would NOT stop a change, not claims
-that one would merge. **Seven governance proposals exist and none is decided**; the module has
-no write path, no decision home and no `automatic` class, and its suite proves the first by
-hashing the tree around a full run. `docs/GOVERNANCE-PROPOSALS.md`.
+**NOTHING HAD EVER BEEN DECIDED WHEN SESSION 28 RAN, AND IT MEASURED WHY THAT IS TWO PROBLEMS RATHER THAN ONE.** → `docs/GOVERNANCE-PROPOSALS.md`.
 
 **PRODUCTION OPERATION IS NOT ACTIVATED, AND THE REFUSAL IS MEASURED.** SESSION 29 built
 `agent/production/` — the daily cycle's eight stages, the seven weekly and seven monthly
