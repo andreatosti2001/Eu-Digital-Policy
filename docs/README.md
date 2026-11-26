@@ -92,7 +92,8 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `docs/PRODUCTION-OPERATING-MODE.md` | agents | spec | active | reference | points to `agent/production/`: the daily cycle and the readiness checklist |  |
 | `docs/PROJECT-CONTEXT.md` | docs | spec | active | reference | what the project is; the seven principles (snapshot of `7248290`) | a snapshot (the plan §2): the principles hold, the figures are of `7248290` |
 | `docs/prompts/v2-docs-agents-entry.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D4» → closed by «Final checkpoint of the documentation session D4» |
-| `docs/prompts/v2-docs-handover.md` | docs | prompt | active | canonical | the session's instructions | no scope row: D5, written by D4 (D4.4), not yet run |
+| `docs/prompts/v2-docs-handover.md` | docs | prompt | active | canonical | the session's instructions | scope «The scope of the documentation session D5» (this session) |
+| `docs/prompts/v2-docs-records.md` | docs | prompt | active | canonical | the session's instructions | no scope row: D6, written by D5 (D5.3), not yet run |
 | `docs/prompts/v2-docs-authority-catalogue.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D2» → closed by «Final checkpoint of the documentation session D2» |
 | `docs/prompts/v2-docs-check.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D3» → closed by «Final checkpoint of the documentation session D3» |
 | `docs/prompts/v2-docs-coherence.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D1» → closed by «Final checkpoint of the documentation session D1» |
@@ -203,11 +204,11 @@ names documents, not what is true in them: where a reference document disagrees 
 
 Recounted from the table, not written to be believed; D3's check derives them again and fails if they differ.
 
-- **documents:** 147
-- **domain:** agents 26 · control-room 4 · decisions 21 · docs 17 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
-- **kind:** account 1 · archive 2 · audit 15 · catalogue 2 · design 4 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 53 · reading 10 · run 5 · spec 28
-- **lifecycle:** active 61 · closed 83 · historical 2 · uncertain 1
-- **authority:** canonical 104 · normative 15 · reference 28
+- **documents:** 148
+- **domain:** agents 26 · control-room 4 · decisions 21 · docs 18 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
+- **kind:** account 1 · archive 2 · audit 15 · catalogue 2 · design 4 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 54 · reading 10 · run 5 · spec 28
+- **lifecycle:** active 62 · closed 83 · historical 2 · uncertain 1
+- **authority:** canonical 105 · normative 15 · reference 28
 
 ## 5 · What this catalogue does not establish
 
