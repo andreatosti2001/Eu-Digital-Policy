@@ -3,7 +3,7 @@
 **Lifecycle:** active · **Authority:** canonical · **Home of:** the previous sessions' state and the branch register · **Catalogue:** `docs/README.md`
 
 **Last updated:** 26 November 2026 (UTC), documentation session D2, on `claude/friendly-brahmagupta-lxuqd7`, from `main` `f6834f5` (#139 merged). The entry before it: 26 November 2026, documentation session D1.
-**Branch:** `claude/friendly-brahmagupta-lxuqd7`, pushed; final checkpoint asked of the author (the disposition is in §8, «Final checkpoint of the documentation session D2»).
+**Branch:** `claude/friendly-brahmagupta-lxuqd7`, pushed; final checkpoint approved (§8, 26 Nov 2026), a pull request to `main` opened by the session on the author's answer, to be merged by the author.
 **Read first:** **D2 classified the documentation.** `docs/DOCUMENTATION-ARCHITECTURE.md` holds the rules (four lifecycles, three authorities, kinds, domains, reading levels, the header), approved by the author; `docs/README.md` is the catalogue — 143 documents, each with domain, kind, lifecycle, authority and its home, the reading lists by domain that D4's skill will use, and **two left uncertain** (`V2-DATA-DESIGN`, `METHODOLOGY-NOTE-v2`); 82 documents of `docs/` carry the one-line header. **`docs/BRIEF-v2.md` carries none** (the author's verbatim text: on the author's word, D3 asks). **The next session is D3** (`docs/prompts/v2-docs-check.md`, `tools/docs-check.mjs`). Track M pre-empts: the `ai-act` milestone is 2 Dec 2026.
 
 > The header documentation session D1 wrote, kept as written:
@@ -30,7 +30,7 @@
 - **Found, not fixed:** `docs/V2-DATA-DESIGN.md`'s status line says the map audit, the status labels and the triggers are not implemented, while Phase 3 is closed — not measured here; `docs/METHODOLOGY-NOTE-v2.md` is not on `methodology.html` though the map shipped. No other new finding.
 - **Not done:** nothing moved, renamed, merged or deleted; `AGENTS.md` untouched; no file under `data/` or `i18n/`, no published page (`commit-evidence f6834f5 HEAD`: no published file); the browser regression suite (`agent/browser/cli.mjs`) not run, since no published file changed.
 - **Battery** (on `3abf54f`, nothing written during any run): `validate`, `i18n-audit`, `design-qa`, `seo-audit`, `evidence-audit --as-of 2026-11-26`, `freshness --as-of 2026-11-26` output identical to `f6834f5`; `_footer.mjs --check` current; governance and `agent/schemas` checks exit 0; `agent/implement/cli.mjs boundary` 0 blocking, 24 warnings (the baseline); 26 suites 1508 pass, 0 fail, 1 skipped.
-- **Branch register:** `claude/friendly-brahmagupta-lxuqd7`, disposition: the author's at the final checkpoint. `git branch -r --no-merged origin/main` (`origin/main` `f6834f5`): `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv`, `scout/digest-digest-2026-11-23T18-18-06Z`, all three registered; no unregistered branch.
+- **Branch register:** `claude/friendly-brahmagupta-lxuqd7`, disposition: final checkpoint approved («Approve, open the PR (Recommended)»); a pull request to `main` opened by the session, to be merged by the author. `git branch -r --no-merged origin/main` (`origin/main` `f6834f5`): `claude/brave-goldberg-gm87jp`, `claude/confident-johnson-yeffcv`, `scout/digest-digest-2026-11-23T18-18-06Z`, all three registered; no unregistered branch.
 
 ## Documentation session D1 — the documents' truth, the dependency map, the author's four decisions (26 Nov 2026)
 
