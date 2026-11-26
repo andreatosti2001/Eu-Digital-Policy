@@ -334,18 +334,7 @@ patches, not checks. **Do not re-run** the latter two.
   `new Date().toISOString()` in UTC, so pipeline stages, the calendar and the status strips
   change with when and where a page is opened. Date every report (F-15).
 - **`git blame` answers nothing.** → `docs/VERIFICATION-POLICY.md`.
-- **An `ApprovalRequest` in `agent/records/` is a request, not a grant.** Agents write that
-  directory, and it is git-ignored. A grant exists only in
-  `agent/implement/decisions/decisions.jsonl`, through `agent/implement/ledger.mjs
-  recordDecision`, which requires a named human and binds the decision to the proposal's
-  hash. **Two things call it**, and only two: `agent/implement/cli.mjs decide`, and the
-  Control Room's `POST /api/review`, which authenticates the caller, authorizes them against
-  the proposal's own autonomy class and audits the result before it does. One home for the
-  fact of a decision — do not add a third writer. **One
-  proposal in this repository has been decided, on 6 Nov 2026** (`prop-docs-ea57404dc452`; the ledger holds that one entry). Of
-  the seventy-one across four agents by `docs/HANDOVER.md`'s earlier count, thirty-five were measured in SESSION 18's own run,
-  before it, and every other one is still undecided: Agent 9 refuses those by name, and reports which gate refused each.
-  `docs/IMPLEMENTATION-QA.md` §3.
+- **An `ApprovalRequest` in `agent/records/` is a request, not a grant.** One home for the fact of a decision — do not add a third writer. → `docs/IMPLEMENTATION-QA.md` §3.
 - **The privileged API has no authentication and no authorization — and it is still there.** Do not point a Control Room at the viewer's routes, and do not "fix" the viewer by bolting a token onto it — they exist for different purposes, and merging them would give a development tool a security model nobody tests. → `docs/HEALTH-MONITOR.md` §6.
 
 - **A lower number is not automatically healthier, and five metrics say so in their own definition.** → `docs/HEALTH-MONITOR.md`.
