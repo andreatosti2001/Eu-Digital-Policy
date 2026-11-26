@@ -52,10 +52,15 @@ l'intestazione); `docs/README.md` §1 (le righe di `docs/HANDOVER.md` e dell'arc
   senza che il rilievo resti visibile (il piano §5 punto 12).
 - **`tools/docs-check.mjs`** è in CI: 0 errori; 4 avvertimenti (`agent/schemas/types.mjs:673`, `tools/commit-evidence.mjs:140`, due prompt),
   lasciati all'autore; 64 percorsi di fixture contati; 31 test nel selftest. Un avvertimento nuovo è un rilievo.
-- **Da D4, per l'autore e non per D5** (`docs/AGENTS-ENTRY-MOVES.md` §3a): `repositoryCaveats()` in `.control-room/views.mjs` non ha
-  chiamanti dalla sessione 21; H03 e H14, spostati alla lettera in `docs/DEPLOYMENT.md`, non concordano sul deploy gate;
-  `docs/AI-SAFE-BOUNDARIES.md` §4 porta quattro avvertenze che hanno un'altra casa; l'ancora «\_\_CONTENT\_\_» ha un `what` che nomina il
-  punto d'ingresso. **Della mappa di D4 non resta nulla da fare**: le 40 unità sono spostate.
+- **Da D4, decisi dall'autore per una sessione successiva e non per D5** (`docs/AGENTS-ENTRY-MOVES.md` §3a; §8, le righe «After D4: …» del
+  26 nov 2026): **collegare `repositoryCaveats()`** di `.control-room/views.mjs`, senza chiamanti dalla sessione 21, a una vista della
+  Control Room, con un test; **le note datate sul deploy gate** — H03 in `docs/DEPLOYMENT.md`, il suo §3 punto 1 e
+  `docs/AI-SAFE-BOUNDARIES.md` §4 dicono «non confermato», mentre il §1b registra lo switch confermato il 24 ott 2026 (`74d2341`) —, ogni
+  testo con le sue parole e una nota che cita §1b, quella in `docs/AI-SAFE-BOUNDARIES.md` su una riga di §8 sua; **`docs/AI-SAFE-BOUNDARIES.md`
+  §4 ridotto a puntatori**, su una riga di §8 con le parole dell'autore scritta prima. Il corpo perso di «The verification gate is not a
+  test suite.» resta un puntatore (deciso). L'ancora «\_\_CONTENT\_\_» ha un `what` che nomina il punto d'ingresso. D5 li nomina, nel suo
+  passaggio di consegne e nel prompt di D6, se nessuna sessione li ha chiusi; **non li fa**. **Della mappa di D4 non resta nulla da fare**: le
+  40 unità sono spostate.
 
 ## La decisione dell'autore (§8, 26 nov 2026; non si richiede)
 
