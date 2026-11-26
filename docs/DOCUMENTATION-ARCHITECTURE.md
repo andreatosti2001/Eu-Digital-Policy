@@ -2,9 +2,10 @@
 
 **Lifecycle:** active · **Authority:** normative · **Home of:** the rules that classify the documentation · **Catalogue:** `docs/README.md`
 
-**Status: PROPOSED IN DOCUMENTATION SESSION D2 (26 Nov 2026), FOR THE AUTHOR'S APPROVAL AT CHECKPOINT D2.1** (`docs/ROADMAP-v2.md`
-§8, «The scope of the documentation session D2»; the prompt `docs/prompts/v2-docs-authority-catalogue.md`, D2.1). Until a §8 row approves
-it, these rules are a proposal and nothing is classified by them. Written on `claude/friendly-brahmagupta-lxuqd7`, from `main` `f6834f5`.
+**Status: APPROVED BY THE AUTHOR ON 26 NOV 2026** (`docs/ROADMAP-v2.md` §8, «Checkpoint D2.1 of the documentation session D2: the rules
+of classification»; the prompts' header: «D2, D2.3: whether the prompts under `docs/prompts/` carry the standard header», catalogue only).
+Written in documentation session D2 (§8, «The scope of the documentation session D2»; the prompt `docs/prompts/v2-docs-authority-catalogue.md`,
+D2.1), on `claude/friendly-brahmagupta-lxuqd7`, from `main` `f6834f5`.
 
 **What this file is the home of:** the vocabulary every document in the perimeter is classified with — lifecycle, authority, kind, domain,
 reading level — the criterion that assigns each value, who decides it, and the form of the header that states it. **What it is not the
