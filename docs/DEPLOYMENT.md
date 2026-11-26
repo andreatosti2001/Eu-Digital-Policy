@@ -377,3 +377,71 @@ working while the custom domain is set; they stop if it is removed.
   holds one entry, the author's signed grant of `prop-docs-ea57404dc452` (6 Nov 2026), which the gate in run 100 found chained,
   signed by a registered reviewer and not simulated. That the key is held by the person it names, that the registry is honest and
   that the person read what they signed are what a signature cannot show.
+
+## Moved from `AGENTS.md` (26 Nov 2026, D4)
+
+> **Moved verbatim from `AGENTS.md`** at `064488c` (lines 92–104; 488–494; 597–605; 611–614; 691–713) on 26 Nov 2026 by documentation session D4, on the
+> author's row «Checkpoint D4.1 of the documentation session D4: the map of the moves out of `AGENTS.md`» (`docs/ROADMAP-v2.md` §8;
+> `docs/AGENTS-ENTRY-MOVES.md`, units N1, V8, H03, H05, H14). Kept as `AGENTS.md` carried it: «above» and «below» in it refer to
+> that file, and each dated claim is as of its own date. `AGENTS.md` keeps one line for each, pointing here.
+
+**A RELEASE CHAIN EXISTS FROM 4 NOV 2026, AND A PERSON HAS USED IT ONCE.** `agent/release/` holds a dispatcher that turns a
+*decided* proposal into one commit on a `release/…` branch (never pushed, never merged, nothing written without `--execute`), and
+the deploy gate `pages.yml`'s `build` job now runs before it uploads anything (`docs/DEPLOYMENT.md` §2a). The ledger became
+tamper-evident (hash chain, ed25519 signature checked against a registered reviewer, `human`/`simulated` provenance) —
+`agent/implement/attestation.mjs`. **Since 6 Nov 2026 `agent/implement/decisions/decisions.jsonl` exists and holds one entry**:
+the repository author's signed grant of `prop-docs-ea57404dc452`, a one-file change to `docs/DEPLOYMENT.md`. The release gate
+judged a commit citing it in GitHub Actions on 11 Nov 2026 (`pages.yml` run 100: C5, C6, C7 and C10 satisfied; run 98, on a
+squash merge of the same change, failed C7 — `docs/HANDOVER.md`, "Stage 1 — concluded"). Every other proposal here is still
+undecided, and **nothing in a test or a tool may put a line in that ledger to make it look otherwise**; the one entry there was
+made by a person. `production_dispatcher_wired` still reports no, because it measures the Orchestrator's
+`agent/orchestrator/dispatchers.mjs`, a different thing the release dispatcher does not create. Whether `main` is protected, whether
+the `github-pages` environment is restricted and whether the reviewer registry is pinned are settings the tree cannot show
+(`docs/DEPLOYMENT.md` §3a). `docs/AUDIT-2026-11-04.md`.
+
+**There is CI, and a deploy gate whose setting was switched on 24 Oct 2026.** `.github/workflows/qa.yml` runs all
+four validators against the recorded baseline, the evidence audit, every agent suite, the
+contract check, the public/private boundary check and the browser suite, on every push.
+`.github/workflows/pages.yml` is the deploy gate; it takes effect when the owner sets the
+Pages source to "GitHub Actions" — done by the author on 24 Oct 2026, to be confirmed on the
+next push to `main` — and nothing requires the QA checks: no ruleset exists
+(`docs/DEPLOYMENT.md` §1b, §3).
+
+- **The deploy gate exists and was switched on 24 Oct 2026, unconfirmed.** `.github/workflows/pages.yml` deploys
+  only after the site checks pass, from an allowlisted artifact — but only once the owner sets
+  Settings → Pages → Source to "GitHub Actions". Until then a push to `main` still publishes
+  directly and a CI failure is **visible, not blocking**. `docs/DEPLOYMENT.md` §3 lists the
+  settings. **Measured 23 Oct 2026 (§1a): both publish on every push** — the ungated branch
+  build first, then `pages.yml`'s gated artifact replaces it about four minutes later if every
+  gate passes. The author switched the source on 24 Oct 2026; the merge of #14 that day was still
+  published ungated first (§1b), so the next push to `main` confirms whether it holds. Run the
+  validators by hand as well.
+
+- **An edited inline script is a blocked script.** Every page carries a Content-Security-Policy
+  whose `script-src` hashes that page's inline scripts (the theme bootstrap; the brief has
+  none). Edit one and re-run `node tools/_footer.mjs`, or the browser refuses to run it;
+  `design-qa.mjs` fails the page until you do. Inline event handlers are an error.
+
+- **There are two public surfaces, and only one is the website.** Since 24 Oct 2026 the site is
+  published only by `.github/workflows/pages.yml`, from an artifact built from the allowlist in
+  `tools/pages-artifact.mjs` (`docs/DEPLOYMENT.md` §1b, §2). That list is the one home of "what
+  is published": it admits the pages and the directories they load, and refuses `agent/`,
+  `docs/`, `tools/` and every dot path by name. `agent/implement/boundary.mjs publicSurface()`,
+  the health monitor, the adversarial gate's PP-08 and `.control-room/boundary.mjs` read it
+  (v2 Session 4, B.2). **The repository is the second surface:** it is public on github.com,
+  so `agent/`, `docs/`, the Control Room's source and anything ever committed are readable there,
+  and the secret scan reads every tracked file for that reason. Until 24 Oct 2026 the site was
+  GitHub Pages serving the whole tree through Jekyll, and the dot prefix was its one exclusion;
+  that model is gone. `node agent/implement/cli.mjs boundary` reports both surfaces on demand.
+
+  **The allowlist is a publication boundary, not a security control.** `.control-room/` is
+  refused by it, and `node .control-room/cli.mjs boundary` checks on every push that it still
+  is. **Do not read that as "the Control Room is safe because nobody can find it."** Protocol
+  §10 and `docs/CONTROL-ROOM.md` §1 both say the opposite, and every privileged request there is
+  authenticated and authorized regardless.
+
+  What is merely UNTRACKED is kept out of the public REPOSITORY by an ignore rule alone:
+  `agent/records/`, `agent/observability/runs/`, `agent/health/history/`,
+  `agent/orchestrator/state/` and `.control-room/state/` have never been in a commit, and that
+  is an **ignore rule, not a boundary** — one `git add -f` puts them on github.com and nothing
+  here would object; the website's allowlist would still refuse them.

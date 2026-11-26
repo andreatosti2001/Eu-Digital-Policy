@@ -89,19 +89,7 @@ intended agent role in **`docs/SKILL-MAP.md`**. Invoke `project-context` at the 
 session, then load the skills the task actually needs; each one names the sibling that owns
 what it does not.
 
-**A RELEASE CHAIN EXISTS FROM 4 NOV 2026, AND A PERSON HAS USED IT ONCE.** `agent/release/` holds a dispatcher that turns a
-*decided* proposal into one commit on a `release/…` branch (never pushed, never merged, nothing written without `--execute`), and
-the deploy gate `pages.yml`'s `build` job now runs before it uploads anything (`docs/DEPLOYMENT.md` §2a). The ledger became
-tamper-evident (hash chain, ed25519 signature checked against a registered reviewer, `human`/`simulated` provenance) —
-`agent/implement/attestation.mjs`. **Since 6 Nov 2026 `agent/implement/decisions/decisions.jsonl` exists and holds one entry**:
-the repository author's signed grant of `prop-docs-ea57404dc452`, a one-file change to `docs/DEPLOYMENT.md`. The release gate
-judged a commit citing it in GitHub Actions on 11 Nov 2026 (`pages.yml` run 100: C5, C6, C7 and C10 satisfied; run 98, on a
-squash merge of the same change, failed C7 — `docs/HANDOVER.md`, "Stage 1 — concluded"). Every other proposal here is still
-undecided, and **nothing in a test or a tool may put a line in that ledger to make it look otherwise**; the one entry there was
-made by a person. `production_dispatcher_wired` still reports no, because it measures the Orchestrator's
-`agent/orchestrator/dispatchers.mjs`, a different thing the release dispatcher does not create. Whether `main` is protected, whether
-the `github-pages` environment is restricted and whether the reviewer registry is pinned are settings the tree cannot show
-(`docs/DEPLOYMENT.md` §3a). `docs/AUDIT-2026-11-04.md`.
+**A RELEASE CHAIN EXISTS FROM 4 NOV 2026, AND A PERSON HAS USED IT ONCE.** Every other proposal here is still undecided, and **nothing in a test or a tool may put a line in that ledger to make it look otherwise**; the one entry there was made by a person. → `docs/DEPLOYMENT.md` §2a.
 
 **The Orchestrator does not replace a specialist.** `agent/orchestrator/` receives events,
 routes them through the ten workflow types, enforces the handoffs and the autonomy boundary,
@@ -485,13 +473,7 @@ session repaired two of them. It asserts twenty-four suites (twenty-five countin
 SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
 changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
 
-**There is CI, and a deploy gate whose setting was switched on 24 Oct 2026.** `.github/workflows/qa.yml` runs all
-four validators against the recorded baseline, the evidence audit, every agent suite, the
-contract check, the public/private boundary check and the browser suite, on every push.
-`.github/workflows/pages.yml` is the deploy gate; it takes effect when the owner sets the
-Pages source to "GitHub Actions" — done by the author on 24 Oct 2026, to be confirmed on the
-next push to `main` — and nothing requires the QA checks: no ruleset exists
-(`docs/DEPLOYMENT.md` §1b, §3).
+**There is CI, and a deploy gate whose setting was switched on 24 Oct 2026.** → `docs/DEPLOYMENT.md` §1b, §3.
 
 The browser suite opens the site in a real browser and is the first thing here that ever has:
 
@@ -594,24 +576,13 @@ patches, not checks. **Do not re-run** the latter two.
 - **Superseded translations.** Correcting an English string without declaring its key
   `superseded` in `i18n/locales.json` leaves the it/fr/es editions asserting the thing you
   just corrected. This has already happened once.
-- **The deploy gate exists and was switched on 24 Oct 2026, unconfirmed.** `.github/workflows/pages.yml` deploys
-  only after the site checks pass, from an allowlisted artifact — but only once the owner sets
-  Settings → Pages → Source to "GitHub Actions". Until then a push to `main` still publishes
-  directly and a CI failure is **visible, not blocking**. `docs/DEPLOYMENT.md` §3 lists the
-  settings. **Measured 23 Oct 2026 (§1a): both publish on every push** — the ungated branch
-  build first, then `pages.yml`'s gated artifact replaces it about four minutes later if every
-  gate passes. The author switched the source on 24 Oct 2026; the merge of #14 that day was still
-  published ungated first (§1b), so the next push to `main` confirms whether it holds. Run the
-  validators by hand as well.
+- **The deploy gate exists and was switched on 24 Oct 2026, unconfirmed.** → `docs/DEPLOYMENT.md` §3.
 - **A data change needs a regeneration.** Since 27 Sep 2026 each substantive instrument has a
   pre-rendered page at `instruments/<id>/`, generated from `data/` by `node tools/_footer.mjs`
   (`docs/SEO-OPERATIONS.md`). After editing `data/`, re-run it and commit what it writes, or
   `seo-audit.mjs` and CI fail on the stale page. Never edit a file under `instruments/` by hand,
   and never store in `data/` anything to make a page read better: titles live in `tools/seo.mjs`.
-- **An edited inline script is a blocked script.** Every page carries a Content-Security-Policy
-  whose `script-src` hashes that page's inline scripts (the theme bootstrap; the brief has
-  none). Edit one and re-run `node tools/_footer.mjs`, or the browser refuses to run it;
-  `design-qa.mjs` fails the page until you do. Inline event handlers are an error.
+- **An edited inline script is a blocked script.** Inline event handlers are an error. → `docs/DEPLOYMENT.md`.
 - **The validators do not read prose.** A false statement in `index.html` passes every check
   in this repository. `agent/proposals/editorial/` is the first thing here that reads a
   sentence at all, and it is **not a check**: it runs only when somebody runs it, it produces
@@ -688,29 +659,7 @@ patches, not checks. **Do not re-run** the latter two.
   substitute, bulk-stamping `last_verified`, removing a `blocks` flag — is a prohibited
   action rather than an improvement. **A rise in the first four is usually good news.**
 
-- **There are two public surfaces, and only one is the website.** Since 24 Oct 2026 the site is
-  published only by `.github/workflows/pages.yml`, from an artifact built from the allowlist in
-  `tools/pages-artifact.mjs` (`docs/DEPLOYMENT.md` §1b, §2). That list is the one home of "what
-  is published": it admits the pages and the directories they load, and refuses `agent/`,
-  `docs/`, `tools/` and every dot path by name. `agent/implement/boundary.mjs publicSurface()`,
-  the health monitor, the adversarial gate's PP-08 and `.control-room/boundary.mjs` read it
-  (v2 Session 4, B.2). **The repository is the second surface:** it is public on github.com,
-  so `agent/`, `docs/`, the Control Room's source and anything ever committed are readable there,
-  and the secret scan reads every tracked file for that reason. Until 24 Oct 2026 the site was
-  GitHub Pages serving the whole tree through Jekyll, and the dot prefix was its one exclusion;
-  that model is gone. `node agent/implement/cli.mjs boundary` reports both surfaces on demand.
-
-  **The allowlist is a publication boundary, not a security control.** `.control-room/` is
-  refused by it, and `node .control-room/cli.mjs boundary` checks on every push that it still
-  is. **Do not read that as "the Control Room is safe because nobody can find it."** Protocol
-  §10 and `docs/CONTROL-ROOM.md` §1 both say the opposite, and every privileged request there is
-  authenticated and authorized regardless.
-
-  What is merely UNTRACKED is kept out of the public REPOSITORY by an ignore rule alone:
-  `agent/records/`, `agent/observability/runs/`, `agent/health/history/`,
-  `agent/orchestrator/state/` and `.control-room/state/` have never been in a commit, and that
-  is an **ignore rule, not a boundary** — one `git add -f` puts them on github.com and nothing
-  here would object; the website's allowlist would still refuse them.
+- **There are two public surfaces, and only one is the website.** **Do not read that as "the Control Room is safe because nobody can find it."** → `docs/DEPLOYMENT.md` §1b, §2.
 - **The public site now has one affordance that is not about EU law.** Typing
   `thirty-two paths` into the search palette offers a passage to a private control plane:
   `js/threshold.js`, styled at the end of `style.css`, drawn as an original Sefer
