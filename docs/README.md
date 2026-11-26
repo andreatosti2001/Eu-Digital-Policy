@@ -94,7 +94,7 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `docs/PROJECT-CONTEXT.md` | docs | spec | active | reference | what the project is; the seven principles (snapshot of `7248290`) | a snapshot (the plan §2): the principles hold, the figures are of `7248290` |
 | `docs/prompts/v2-docs-agents-entry.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D4» → closed by «Final checkpoint of the documentation session D4» |
 | `docs/prompts/v2-docs-handover.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D5» → closed by «Final checkpoint of the documentation session D5» |
-| `docs/prompts/v2-docs-records.md` | docs | prompt | active | canonical | the session's instructions | no scope row: D6, written by D5 (D5.3), not yet run |
+| `docs/prompts/v2-docs-records.md` | docs | prompt | active | canonical | the session's instructions | scope «The scope of the documentation session D6» (this session) |
 | `docs/prompts/v2-docs-authority-catalogue.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D2» → closed by «Final checkpoint of the documentation session D2» |
 | `docs/prompts/v2-docs-check.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D3» → closed by «Final checkpoint of the documentation session D3» |
 | `docs/prompts/v2-docs-coherence.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D1» → closed by «Final checkpoint of the documentation session D1» |
