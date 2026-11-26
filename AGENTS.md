@@ -195,34 +195,11 @@ them and how each was closed). `tools/evidence-audit.mjs` must report 0 errors: 
 substantive passage of the brief registered or classified. **A new warning is a finding, not
 noise.**
 
-**`freshness.mjs`'s exit code changed in SESSION 30 and its report did not.** It exits 1 on a
-**defect** — a property of the tree, true on every date, closed by a commit: a URL-less source
-with no `resolution`, a per-record verification field never used per-record. It exits 0 on a
-**staleness prompt** — a property of the calendar, which the same tree does not produce when
-audited as of the date it records, and which no commit makes permanently false. The prompts
-are still printed by name and counted; they are closed by verification work against primary
-sources and by nothing else, and **exit 0 is not evidence of currency**. The old rule made the
-result a function of the reader's clock (AUDIT F-15), which is how CI carried a red step no
-commit could close from SESSION 24 to SESSION 29 while `agent/implement/baseline.mjs` called
-the script "a report, not a gate". `tools/selftest.mjs` holds the split to that rule: F1
-asserts this tree reports NO prompt as of its own newest verification date, F3 that a planted
-defect fails on every date, F5 that the intervals were not widened, F6 that every counted
-prompt still appears in the body.
+**`freshness.mjs`'s exit code changed in SESSION 30 and its report did not.** The prompts are still printed by name and counted; they are closed by verification work against primary sources and by nothing else, and **exit 0 is not evidence of currency**. → `docs/CURRENT-ARCHITECTURE.md` §12.
 
-**The four validators now have a suite of their own**, because two of SESSION 30's findings
-were defects in a CHECK rather than in the thing checked. `tools/selftest.mjs` plants a Google
-Fonts `@import`, a remote `fetch`, a `preconnect`, a missing required field and a `checksum`
-on a source record, and asserts each is caught. It is in `AGENT_SUITES`: a change under
-`tools/` runs it.
+**The four validators now have a suite of their own** → `docs/CURRENT-ARCHITECTURE.md` §12.
 
-**`tools/thirdparty.mjs` is what makes "no third-party requests" true of the repository rather
-than of the README.** `design-qa.mjs`'s old check read `href="…"` and `src="…"` in the HTML —
-double quotes only — so an `@import` or an `@font-face src` in a stylesheet was invisible to
-it, which is the exact path by which a Google Fonts dependency returns. The scan now covers
-the pages, the stylesheets and the modules, in every position a browser fetches from.
-`ALLOWED_RUNTIME_ORIGINS` is **empty**; an external runtime dependency is a Class D decision
-and goes there with its reason and who decided it. `data/` and `i18n/` are deliberately out of
-the surface: a URL in `data/sources.json` is a citation the page displays and never fetches.
+**`tools/thirdparty.mjs` is what makes "no third-party requests" true of the repository rather than of the README.** `ALLOWED_RUNTIME_ORIGINS` is **empty**; an external runtime dependency is a Class D decision and goes there with its reason and who decided it. → `docs/CURRENT-ARCHITECTURE.md` §12.
 
 **`tools/source-contract.mjs` is the one contract a source record satisfies** — 12 required
 fields, 2 optional, each with its shape, why it exists, who writes it and who reads it —
@@ -278,41 +255,9 @@ node --test tools/selftest.mjs                 # SESSION 30, the four validators
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**On 4 Nov 2026 the same 26 suites (the 25 `AGENT_SUITES` and `.control-room/`) pass 1394 tests**, 45 of them the release chain's
-own; the figures below are the history of how the count grew.
+**On 4 Nov 2026 the same 26 suites (the 25 `AGENT_SUITES` and `.control-room/`) pass 1394 tests** → `docs/CURRENT-ARCHITECTURE.md` §12.
 
-**1196 tests across the twenty-five suites**, all passing on SESSION 30's tree — 25 rather
-than 24 because `tools/selftest.mjs` is the first entry in `AGENT_SUITES` that is not under
-`agent/`, and it belongs there because that list is what runs for a change under `agent/` OR
-`tools/`. It was **1166 across twenty-three** on SESSION 29's tree — 1165 with
-one skipped when the working tree is on `main`, because `agent/autonomy/selftest.mjs` test 28
-rehearses the real cycle and the cycle refuses to run there. It was 1114 across twenty-two on
-the merged tree of SESSIONS 27 and 28. **Neither session's own figure is the total**: SESSION 27 measured 1069 and SESSION 28
-measured 1081, on sibling branches cut from the same base, and each was right about its own
-tree (1036 across twenty-one after SESSION 26; 998 across twenty after SESSION 24; 978 across
-nineteen after SESSION 23.5; 934 after SESSION 22 on its own branch; 909 after SESSION 23.5 on
-its own; 867 after SESSION 21; 812 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before
-them). SESSIONS 22, 23 and 23.5 were merged, so none of those middle figures is a total on its
-own either.
-
-**`agent/implement/selftest.mjs` R6 has now caught the suite list growing seven times** —
-SESSION 20, SESSION 22, SESSION 23, the merge where the two branches had each updated the
-same assertion to a different number, SESSION 24, whose simulation harness would otherwise
-have landed without ever gating a change under `agent/`, and SESSION 26, where it mattered
-most: the autonomy runner is the first thing here that can write a file without a person, and
-a suite for it that nothing ran would have been a gate on nothing; and SESSIONS 27 and 28,
-which are **one occasion rather than two** — sibling branches from one base, each setting the
-number to 21, neither right about the merged tree. That is the second time this assertion has
-caught exactly that shape, and it is the case it is most worth having for. That is the
-assertion doing its job. SESSION 29 is the ninth and is the one it was designed for rather
-than one it caught: the production operating mode was added WITH its suite in the list.
-SESSION 30 is the TENTH and is the first entry that is not under `agent/`: for thirty sessions
-the four validators that ARE this project's test suite had no suite of their own, and that
-session repaired two of them. It asserts twenty-four suites (twenty-five counting
-`.control-room/`, which the list excludes by prefix). SESSION 23 also changed `agent/detector/impact.mjs`'s
-`MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`;
-SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
-changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
+**`agent/implement/selftest.mjs` R6 has now caught the suite list growing seven times** → `docs/CURRENT-ARCHITECTURE.md` §12.
 
 **There is CI, and a deploy gate whose setting was switched on 24 Oct 2026.** → `docs/DEPLOYMENT.md` §1b, §3.
 
@@ -396,16 +341,7 @@ patches, not checks. **Do not re-run** the latter two.
 
 ## Known hazards
 
-- **The brief's text has one home: the markup of `index.html`.** Until 30 Sep 2026 it had a
-  second, the `__CONTENT__` blob — 67 KB inlined in the page, generated by nothing, read by
-  `app.js` for its pagers and search, and stale (no Annex C, ~9 KB of current prose missing).
-  It was deleted, not synchronised: `app.js` now reads the Parts from the markup, and
-  `data/brief.json` lost its unread `meta` block. **Do not bring a copy back under any name**
-  — `design-qa.mjs` fails a script that holds a page's text (`tools/prose-homes.mjs`),
-  `validate.mjs` fails a `brief.json` key other than `parts`/`reading_graph`, and the browser
-  suite's `search:brief-*` checks fail a stale index. **One second home remains:** part titles
-  and deks sit in `brief.json` and in the markup's headings, tree and spine; change both
-  until one is generated from the other. `docs/CURRENT-ARCHITECTURE.md` §8.
+- **The brief's text has one home: the markup of `index.html`.** **Do not bring a copy back under any name** — `design-qa.mjs` fails a script that holds a page's text (`tools/prose-homes.mjs`), `validate.mjs` fails a `brief.json` key other than `parts`/`reading_graph`, and the browser suite's `search:brief-*` checks fail a stale index. → `docs/CURRENT-ARCHITECTURE.md` §8.
 - **Superseded translations.** Correcting an English string without declaring its key
   `superseded` in `i18n/locales.json` leaves the it/fr/es editions asserting the thing you
   just corrected. This has already happened once.
