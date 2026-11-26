@@ -28,6 +28,7 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 |---|---|---|---|---|---|---|
 | `AGENTS.md` | docs | entry | active | normative | the agents' entry point and its rules | reduced to an entry point in D4 (§8, «D1, D.3 question 1…») |
 | `CLAUDE.md` | docs | entry | active | normative | points to `AGENTS.md` |  |
+| `docs/AGENTS-ENTRY-MOVES.md` | docs | design | active | canonical | the moves out of `AGENTS.md` in D4 (D4.1) | written in D4 (§8, «The scope of the documentation session D4»); closed when §8 records D4's moves done |
 | `docs/AGENT-CONTRACTS.md` | agents | policy | active | normative | the eighteen contracts |  |
 | `docs/AGENT-ROLES.md` | agents | policy | active | normative | the ten agent roles |  |
 | `docs/AGENT-RUNBOOK.md` | agents | spec | active | reference | how the Scout is scheduled and run |  |
@@ -200,11 +201,11 @@ names documents, not what is true in them: where a reference document disagrees 
 
 Recounted from the table, not written to be believed; D3's check derives them again and fails if they differ.
 
-- **documents:** 144
-- **domain:** agents 26 · control-room 4 · decisions 20 · docs 15 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
-- **kind:** account 1 · archive 1 · audit 15 · catalogue 2 · design 3 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 52 · reading 10 · run 5 · spec 28
-- **lifecycle:** active 61 · closed 81 · historical 1 · uncertain 1
-- **authority:** canonical 101 · normative 15 · reference 28
+- **documents:** 145
+- **domain:** agents 26 · control-room 4 · decisions 20 · docs 16 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
+- **kind:** account 1 · archive 1 · audit 15 · catalogue 2 · design 4 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 52 · reading 10 · run 5 · spec 28
+- **lifecycle:** active 62 · closed 81 · historical 1 · uncertain 1
+- **authority:** canonical 102 · normative 15 · reference 28
 
 ## 5 · What this catalogue does not establish
 
