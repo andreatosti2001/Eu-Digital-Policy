@@ -201,14 +201,7 @@ noise.**
 
 **`tools/thirdparty.mjs` is what makes "no third-party requests" true of the repository rather than of the README.** `ALLOWED_RUNTIME_ORIGINS` is **empty**; an external runtime dependency is a Class D decision and goes there with its reason and who decided it. → `docs/CURRENT-ARCHITECTURE.md` §12.
 
-**`tools/source-contract.mjs` is the one contract a source record satisfies** — 12 required
-fields, 2 optional, each with its shape, why it exists, who writes it and who reads it —
-and `validate.mjs` enforces it. Before SESSION 30 the validator asked whether four values
-RESOLVED and never whether a record had the other eight at all, which is how the governance
-grant could allowlist eight fields of which six exist on none of the 77 records.
-**Those six are `ABSENT_BY_DESIGN` and are not a TODO**: every one asserts a document was
-FETCHED, and no URL here has ever been fetched (AUDIT F-12), so writing one would be a
-fabricated fact about evidence. A record carrying one is refused by name.
+**`tools/source-contract.mjs` is the one contract a source record satisfies** **Those six are `ABSENT_BY_DESIGN` and are not a TODO**: every one asserts a document was FETCHED, and no URL here has ever been fetched (AUDIT F-12), so writing one would be a fabricated fact about evidence. → `docs/SOURCE-POLICY.md`.
 
 **`tools/metric-contract.mjs` is the metric contract MC-1…MC-15, and `tools/fine-basis.mjs` the provenance of an enforcement
 amount** (11 Nov 2026, P0.2 and P0.3; `docs/DATA-READINESS.md` §9). `validate.mjs` runs both: a fine with no `fine_eur_basis`,

@@ -235,3 +235,19 @@ claims were upgraded that way on 27 Sep 2026; the remediation backlog lists the 
 **A claim of law citing the legal text needs an article.** Direct support from a tier-1
 legislative source without an article, recital or annex locator is an error in
 `tools/evidence-audit.mjs`. `docs/EVIDENCE-MODEL.md` §3 grades locators.
+
+## Moved from `AGENTS.md` (26 Nov 2026, D4)
+
+> **Moved verbatim from `AGENTS.md`** at `064488c` (lines 398–405) on 26 Nov 2026 by documentation session D4, on the
+> author's row «Checkpoint D4.1 of the documentation session D4: the map of the moves out of `AGENTS.md`» (`docs/ROADMAP-v2.md` §8;
+> `docs/AGENTS-ENTRY-MOVES.md`, units V4). Kept as `AGENTS.md` carried it: «above» and «below» in it refer to
+> that file, and each dated claim is as of its own date. `AGENTS.md` keeps one line for each, pointing here.
+
+**`tools/source-contract.mjs` is the one contract a source record satisfies** — 12 required
+fields, 2 optional, each with its shape, why it exists, who writes it and who reads it —
+and `validate.mjs` enforces it. Before SESSION 30 the validator asked whether four values
+RESOLVED and never whether a record had the other eight at all, which is how the governance
+grant could allowlist eight fields of which six exist on none of the 77 records.
+**Those six are `ABSENT_BY_DESIGN` and are not a TODO**: every one asserts a document was
+FETCHED, and no URL here has ever been fetched (AUDIT F-12), so writing one would be a
+fabricated fact about evidence. A record carrying one is refused by name.
