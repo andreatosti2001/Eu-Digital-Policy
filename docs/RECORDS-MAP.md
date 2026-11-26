@@ -7,6 +7,10 @@
 by a script kept outside the repository. **Nothing has moved.** This is the map the prompt puts to the author before anything moves; what
 moves, and where, is the author's (§8, the rows of D6.1). A snapshot: its figures hold for `e3b7e28` and are not kept current.
 
+**26 Nov 2026, D6.1 (a dated note; the paragraph above stays as written): the author decided that nothing moves** (§8, «D6, D6.1
+question 1: whether, and where, the closed records move»). The answers to questions 2–4 are recorded there, for the case that a later
+session reopens the move; none applies now. The «proposed path» column of §3 is therefore no one's plan.
+
 ---
 
 ## 0 · What it found

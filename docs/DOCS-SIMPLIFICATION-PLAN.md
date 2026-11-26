@@ -70,6 +70,12 @@ precedente sia stata approvata»), and writes the next one's prompt (the standin
 | **D6 · Records and the final measure** | Executed prompts, readings and audits moved to an archive path, every reference (Markdown, code, workflows, skills, prompts, anchors, pins) updated in the same commit; §5 measured and reported | move a policy or a specification | `docs/prompts/v2-docs-records.md` (written by D5) |
 | (D7 · Buffer) | Only a check that D6 could not close inside its scope | — | written by D6 if needed |
 
+**26 Nov 2026, D6 (a dated note; the row above stays as written):** **nothing moves.** D6.1 measured every one of the 79 closed records
+cited by a home no session may rewrite — §8, the archive of `docs/HANDOVER.md`, `data/`, published files, the ledger — so the row's «every
+reference … updated in the same commit» could not hold for any of them (`docs/RECORDS-MAP.md`), and the author decided that they stay at
+their paths (`docs/ROADMAP-v2.md` §8, «D6, D6.1 question 1: whether, and where, the closed records move»). D6 measures §5 and writes the
+next session's prompt.
+
 ## 3 · The questions left for D1
 
 1. `AGENTS.md`: to what it is reduced, and where the rules that leave it go.
