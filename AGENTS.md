@@ -103,63 +103,11 @@ what it does not.
 
 **LIMITED AUTONOMY IS SWITCHED ON, AND WHAT THAT MEANS IS NARROW.** **Ask that, never `DEFAULT_POLICY`, when the question is "what may happen now".** → `docs/LIMITED-AUTONOMY.md`.
 
-**SESSION 27 FOUND THE GATE LADDER UNPASSABLE, AND REPAIRED IT UNDER AN EXPLICIT WARRANT.**
-Take a proposal with nothing wrong with it, in a category the grant enables over a path the
-grant names: five of the six autonomy gates passed and `policy_route_pre` refused, for **two**
-structural reasons. `rollback_mechanical` reported `failed` about a change context that
-`agent/implement/apply.mjs openContext()` only produces in **step 2**, while gate 3 runs
-**before step 1**; and the gate's third clause asked `route !== 'blocked'`, which is
-unsatisfiable before a run because **every measured condition is on
-`NOT_WAIVABLE_BY_APPROVAL`**. So `docs/LIMITED-AUTONOMY.md` §7.1's "nothing produces a proposal
-in an enabled category" was true and was **not the binding constraint**: the permitting half
-was unreachable.
+**SESSION 27 FOUND THE GATE LADDER UNPASSABLE, AND REPAIRED IT UNDER AN EXPLICIT WARRANT.** → `docs/CONTINUOUS-IMPROVEMENT.md` §4.
 
-Both are fixed, and **no check was weakened**: an element `assessRollback()` reports as
-`absent` — established missing — still fails, an unauthorized actor is still refused (the case
-clauses 1 and 2 were blind to, because the engine returns an empty condition list for it), and
-step 6 still re-evaluates every condition on the measured facts and merges only on route
-`automatic`. **The ladder is now passable and nothing has passed it**: a clean fixture reaches
-the measured evaluation and is refused there on `verification_succeeded (unknown)` and, until
-SESSION 30, on `validators_pass (failed)` — the latter being `freshness.mjs`'s pre-existing
-exit 1, which was never a statement about any proposal. **SESSION 30 removed that second
-refusal by repairing what the exit code MEANS, not by waiving the condition**: the validators
-now return `pass_with_findings` against §12's baseline, so `validators_pass` is satisfied on
-the measured facts. `verification_succeeded` is still `unknown` and still refuses, and the
-other gates are unchanged. **No autonomous change has merged anything, and nothing has even
-been proposed**: `agent/records/` is git-ignored and empty in a fresh checkout, so
-`node agent/autonomy/cli.mjs survey --all` reports no proposals at all — which is not the same
-fact as nothing being eligible. `docs/CONTINUOUS-IMPROVEMENT.md` §4, with the warrant quoted
-in §4a and the five changed assertions named in §4.4.
+**THE ADVERSARIAL GATE WAS RED FROM SESSION 24 TO 27 SEP 2026** → `docs/CONTINUOUS-IMPROVEMENT.md` §4b.
 
-**THE ADVERSARIAL GATE WAS RED FROM SESSION 24 TO 27 SEP 2026** (green since HE-04's rewrite,
-above, and now also in the deploy gate). The record of how it stayed red:
-`node agent/policy/verify/cli.mjs` reports **1 SUCCEEDED** — HE-04, CRITICAL, the trigger phrase
-found in `agent/simulation/threshold.mjs`. Measured at `aaf6691` in a clean worktree, so it is
-not this session's. The module uses the phrase as a **probe** — the line the attack hits is the
-separation check that searches Control Room source to prove the phrase is absent from it — so
-this is very probably the HE-01 shape SESSION 23.5 already corrected once, with a stale
-exclusion list. **It is not repaired**, and SESSION 29 measured it rather than
-repeating the suspicion: `agent/simulation/threshold.mjs` calls none of the twelve granting
-primitives and none of its eight occurrences of the phrase sits where a credential check
-would, so the file is cleared on both halves and HE-04 is a false positive of the HE-01
-shape. It is still left RED, because reclassifying a CRITICAL by editing the attack that
-reports it is a person's decision. **The gate is now in CI** — `.github/workflows/qa.yml`
-job `security`, in a job of its own so that a step expected to be red hides nothing. Its
-absence was how a CRITICAL stayed red across five sessions.
-`docs/CONTINUOUS-IMPROVEMENT.md` §4b · `docs/PRODUCTION-OPERATING-MODE.md` §4a.
-
-**THE LOOP IS `agent/improve/`, AND IT CHANGES NOTHING.** Eight observers in one process
-against one corpus position with one as-of date; five produce identified findings and three
-produce counts, and the two are never mixed because a count has no identity to follow. Its one
-governing rule is that **an observer that did not run is not an observer that found nothing** —
-movement is computed per observer, and anything owned by an observer that did not run in BOTH
-cycles is `undetermined`, never `resolved`. Its triage is **not** the gate ladder: it answers a
-weaker question, and `eligible` means only "worth handing to the runner". Its cycle ledger,
-`agent/improve/cycles/cycles.jsonl`, is **the one run store here that is git-tracked**, because
-a loop whose memory does not survive a clone is not a loop — and it carries only public
-readings, enforced by a refusal to write rather than by a convention. First recorded cycle: 210
-findings, 0 referable, 66 to a person, 144 proposing no act.
-`docs/CONTINUOUS-IMPROVEMENT.md`.
+**THE LOOP IS `agent/improve/`, AND IT CHANGES NOTHING.** → `docs/CONTINUOUS-IMPROVEMENT.md`.
 
 **`agent/autonomy/` is the runner, and a grant replaces exactly two gates.** → `docs/LIMITED-AUTONOMY.md` §6, §7.
 
@@ -567,17 +515,7 @@ patches, not checks. **Do not re-run** the latter two.
   interface" must NOT be implemented as a login form on the published page, because that
   would be a credential prompt in the public tree. `docs/FIRST-END-TO-END-AUDIT.md` §6.
 
-- **Every run store here is git-ignored EXCEPT one, and the exception is deliberate.**
-  `agent/improve/cycles/cycles.jsonl` is tracked, because a loop whose memory does not survive
-  a clone is not a loop: every other store is per-machine, so cross-session movement would
-  otherwise be a comparison against the previous session's PROSE in `docs/HANDOVER.md` — a
-  second home for those facts, which has already drifted once (`docs/LIMITED-AUTONOMY.md` §7c).
-  The precedent is the grant ledger and the decision ledger, not the health history. What pays
-  for it is a rule rather than a promise: a signal classified `private` by
-  `agent/health/model.mjs` is withheld and the withholding is recorded, the health monitor's
-  own `collectLeaks()` runs over the serialised entry against the real private metric register,
-  and a path under `.control-room/` anywhere in an entry is a **refusal to write**, not a
-  redaction. Nothing records without `--record`.
+- **Every run store here is git-ignored EXCEPT one, and the exception is deliberate.** → `docs/CONTINUOUS-IMPROVEMENT.md`.
 
 - **The autonomy layer's action ledger is git-ignored, and the COMMIT is the durable record.** → `docs/LIMITED-AUTONOMY.md`.
 
