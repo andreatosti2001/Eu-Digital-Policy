@@ -191,12 +191,14 @@ Two rules in that file exist because both have already shipped as bugs:
 |---|---|
 | `index.html` | The brief. Eleven Parts and two Annexes, the evidence apparatus, the reading tools. |
 | `instruments.html` | The Regulatory DNA comparison — any set of instruments, any dimensions. |
-| `instruments/<id>/` | One instrument end to end: status, dates, applicability, provisions, enforcement, evidence, how it interacts with other instruments, related entities. Pre-rendered from the data for the twelve instruments whose records pass the indexability gate in `js/routes.js`; the browser re-renders the same view with today's date. |
+| `instruments/<id>/` | One instrument end to end: status, dates, applicability, provisions, enforcement, evidence, how it interacts with other instruments, related entities. Pre-rendered from the data for each instrument whose record passes the indexability gate in `js/routes.js`; the browser re-renders the same view with today's date. |
 | `instrument.html?id=…` | The address every instrument had until 27 Sep 2026. It forwards to `instruments/<id>/`; a record too thin for a page of its own is rendered here and marked `noindex`. |
 | `institutions.html` | Who does what, by body and by competence. |
 | `enforcement.html` | The enforcement observatory, with the derived pipeline per record. |
 | `applies.html` | The applicability engine. |
 | `bibliography.html` | Every source, tiered, with the live grade tally. |
+| `network.html` | The network of the instruments: every instrument as a point and every recorded relationship as a line, beside the same relationships as a list with their sources. |
+| `datasets.html` | The dataset explorer: every file in `data/`, one record at a time. Read-only. |
 
 The chrome — navigation, breadcrumbs, theme, search — is rendered by
 `js/shell.js` on every page from one nav model. It is not written into the
@@ -413,11 +415,11 @@ what it cannot support:
    of the ten largest fines") that no source states.
 2. **Verification dates are a compilation date.** The field is per-record;
    the practice is not yet. `tools/freshness.mjs` says so explicitly.
-3. **Three sources carry no URL** — down from twelve after the reference
-   sweep of 28 August 2026. Two of the three are cases where the brief refers
-   to an organisation's work without naming a publication, so there is nothing
-   to link to; the third is the brief's own self-reference, which is not a
-   source at all. They are listed by `tools/freshness.mjs` under the reason
+3. **Two sources carry no URL** (measured 26 November 2026; three when this
+   was first written, twelve before the reference sweep of 28 August 2026).
+   One is a case where the brief refers to an organisation's work without
+   naming a publication, so there is nothing to link to; the other is the
+   brief's own self-reference, which is not a source at all. They are listed by `tools/freshness.mjs` under the reason
    each link is missing.
 4. **Enforcement figures are indicative of magnitude, not audited**, and the
    trackers behind the cumulative GDPR totals disagree with each other.
@@ -432,6 +434,12 @@ what it cannot support:
    *Update, 22 October 2026:* the review now has a record —
    `node tools/i18n-review.mjs status` reports it per string, and it reads
    0 of 430 reviewed in each language.
+   *Update, 24 November 2026:* the Italian edition is reviewed — 431 of 431
+   strings read by the author and recorded in `i18n/review/it.json` — so
+   `/it/` is offered to search engines. French and Spanish read 0 of 431
+   reviewed (Spanish has 10 strings untranslated) and stay `noindex`. A later
+   change to an English string makes its Italian approval stale, and `/it/`
+   leaves search until it is read again.
 6. This is not legal advice, and the applicability engine asks three questions
    where a lawyer would ask fifty.
 7. **No screen reader has been run against this.** Dialog semantics, focus

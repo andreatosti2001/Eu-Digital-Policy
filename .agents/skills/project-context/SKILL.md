@@ -29,7 +29,7 @@ after a long gap or after context has been summarised.
      the brief's text that remains.
    - `docs/AI-SAFE-BOUNDARIES.md` — the green/amber/red tiers and the absolute prohibitions.
    - `docs/HANDOVER.md` — the previous session's state and the current objective.
-   - `README.md` — the author's own account, including the eight known limitations.
+   - `README.md` — the author's own account, including its «Known limitations» section.
 
 2. **Verify the handover against the code.** The repository is the source of truth. If
    `HANDOVER.md` describes something the code does not do, **stop and report the

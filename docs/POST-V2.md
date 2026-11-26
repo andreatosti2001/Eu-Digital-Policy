@@ -1,6 +1,6 @@
-# POST-V2 — il piano successivo alla v2, non ancora aperto
+# POST-V2 — il piano successivo alla v2
 
-**Stato:** non aperto. Nessuna sessione è stata avviata e nessuna decisione è stata presa.
+**Stato** (corretto il 26 novembre 2026, sessione di documentazione D1, da `docs/ROADMAP-v2.md` §8): **lo Stadio 2 (A, B, C) è aperto e le sue cinque sessioni sono state approvate; lo Stadio 4 (D, E, final QA) non è aperto.** PV2-01 e PV2-02 sono state eseguite prima di G1 sulle righe del 9 e del 10 novembre 2026 («Post-v2 A may open before G1…», «PV2-02 (Post-v2 B) may be run before G1…»); G1 ha aperto lo Stadio 2 l'11 novembre 2026 («G1: Stage 2 is opened»); i checkpoint finali di PV2-01…PV2-05 sono approvati (9, 10, 11, 11 e 13 novembre 2026). Nessuna riga di §8 registra G3 o G4. Un'eccezione decisa dall'autore: il primo pezzo dell'Ibrido, la mappa della rete (in PV2-08, Stadio 4), è andato in produzione prima della chiusura della v2 («The Hybrid's first piece in production», 22 novembre 2026). *Il titolo diceva «non ancora aperto» e questa riga «non aperto. Nessuna sessione è stata avviata e nessuna decisione è stata presa.».*
 **Fonte:** `docs/prompts/v2-session-6.md`, sezione «Passaggio al lavoro post-v2» (righe 149–270). È il
 roadmap scritto dall'autore, incollato come prompt della sessione 6 il 27 ottobre 2026 e conservato per sua
 decisione di quel giorno. Questo documento lo riporta senza cambiarne il contenuto (§3), e aggiunge solo le

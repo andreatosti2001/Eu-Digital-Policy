@@ -15,7 +15,7 @@ when what it depends on is approved, not on a day. What each session *does* stay
 | Post-v2: PV2-01…PV2-12 | `docs/POST-V2.md` §3 (the blocks, the author's text) and §4.1 (the sessions) |
 | The reading: S25, S26 | `docs/prompts/v2-session-25.md`; `docs/RULE-MAINTENANCE.md` |
 | Stage 1 | `docs/prompts/v2-stage-1-operational-closure.md`; `docs/AUDIT-2026-11-04.md` (what #68 did and did not do); roadmap §8, 25.5 question 2 and the correction after it |
-| Track D: D1…D6 (added 25 Nov 2026) | `docs/DOCS-SIMPLIFICATION-PLAN.md`; `docs/prompts/v2-docs-coherence.md` (D1) |
+| Track D: D1…D6 (added 25 Nov 2026) | `docs/DOCS-SIMPLIFICATION-PLAN.md`; `docs/prompts/v2-docs-coherence.md` (D1); `docs/prompts/v2-docs-authority-catalogue.md` (D2) |
 
 The one place dates still matter is **Track M** (§3): the law's calendar, which no architecture can move.
 
