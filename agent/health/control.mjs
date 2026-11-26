@@ -45,7 +45,7 @@ function noRuns(ctx) {
   return ctx.traces.length === 0
     ? unmeasurable(
       'the trace store holds no runs. agent/observability/runs/ is git-ignored, so a fresh checkout starts empty — this is an absence of OBSERVATION, not an absence of failures.',
-      'run any agent, then re-run the monitor. docs/HANDOVER.md "Exact next objective" lists the chain.',
+      'run any agent, then re-run the monitor. docs/archive/HANDOVER-to-2026-11-13.md "Exact next objective" lists the chain.',
     )
     : null;
 }
