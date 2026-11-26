@@ -79,6 +79,9 @@ concludes it (the precedent: `docs/PHASE-4-SETUP.md` and `docs/PHASE-4-PLAN.md`,
   handing over the next session's prompt. A prompt with a scope row and no such row is `active`; a prompt with no scope row is `active`
   (not yet run). The catalogue cites the row.
 - **a reading, an audit, a run**: the session that wrote it has its closing row in §8, by the same test.
+- **a record whose session no row of §8 records** (written before §8 began on 25 Oct 2026, or without a scope or closing row): closed
+  once it is on `main`; the catalogue cites the commit on `main`'s first-parent line that added it (the author's decision, §8, «D2, D2.2
+  question 1: the dated records whose session no row of this section closes»).
 - **a plan or a design**: §8 records its work concluded, or its last item approved and implemented.
 
 ## 4 · Generated files
@@ -103,7 +106,8 @@ One line, **directly under the document's title, followed by a blank line**, wit
 - `**Home of:** <what>` names what the document is the home of. A document that is not a home and only points to one writes
   `**Points to:** <path or §8 row>` instead.
 - A snapshot adds `· **Snapshot of:** \`<commit>\`` after the home field.
-- A `closed` or `superseded` document adds `· **Closed by:** <§8 row title>` or `· **Superseded by:** <path>`.
+- A `closed` or `superseded` document adds `· **Closed by:** <§8 row title>` (or, under §3's last clause, `` on `main` `<commit>` ``) or
+  `· **Superseded by:** <path>`.
 - A value that is not decided is written `uncertain`, never guessed (§6).
 
 **It is added, never substituted.** No existing sentence is changed, moved or removed to make room for it: the governance anchors are
