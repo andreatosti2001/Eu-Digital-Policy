@@ -95,6 +95,7 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `docs/prompts/v2-docs-agents-entry.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D4» → closed by «Final checkpoint of the documentation session D4» |
 | `docs/prompts/v2-docs-handover.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D5» → closed by «Final checkpoint of the documentation session D5» |
 | `docs/prompts/v2-docs-records.md` | docs | prompt | active | canonical | the session's instructions | scope «The scope of the documentation session D6» (this session) |
+| `docs/prompts/v2-docs-buffer.md` | docs | prompt | active | canonical | the session's instructions | no scope row: D7, written by D6 (D6.4), not yet run |
 | `docs/prompts/v2-docs-authority-catalogue.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D2» → closed by «Final checkpoint of the documentation session D2» |
 | `docs/prompts/v2-docs-check.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D3» → closed by «Final checkpoint of the documentation session D3» |
 | `docs/prompts/v2-docs-coherence.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D1» → closed by «Final checkpoint of the documentation session D1» |
@@ -205,11 +206,11 @@ names documents, not what is true in them: where a reference document disagrees 
 
 Recounted from the table, not written to be believed; D3's check derives them again and fails if they differ.
 
-- **documents:** 149
-- **domain:** agents 26 · control-room 4 · decisions 21 · docs 19 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
-- **kind:** account 1 · archive 2 · audit 15 · catalogue 2 · design 5 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 54 · reading 10 · run 5 · spec 28
-- **lifecycle:** active 62 · closed 84 · historical 2 · uncertain 1
-- **authority:** canonical 106 · normative 15 · reference 28
+- **documents:** 150
+- **domain:** agents 26 · control-room 4 · decisions 21 · docs 20 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
+- **kind:** account 1 · archive 2 · audit 15 · catalogue 2 · design 5 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 55 · reading 10 · run 5 · spec 28
+- **lifecycle:** active 63 · closed 84 · historical 2 · uncertain 1
+- **authority:** canonical 107 · normative 15 · reference 28
 
 ## 5 · What this catalogue does not establish
 

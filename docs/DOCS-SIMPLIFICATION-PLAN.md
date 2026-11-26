@@ -68,7 +68,7 @@ precedente sia stata approvata»), and writes the next one's prompt (the standin
 | **D4 · `AGENTS.md` and the skill** | `AGENTS.md` reduced as the author decided, each rule that leaves it moved to its own home in the same commit, the 9 anchors updated in that commit; `project-context` reading by levels (the binding constraints always, the domain documents when the task needs them), with its tests | change a rule's meaning; drop a rule | `docs/prompts/v2-docs-agents-entry.md` (written by D3) |
 | **D5 · State and handover** | If decided in D1, a generated current state with its CI check; `docs/HANDOVER.md` reduced by moving closed entries to `docs/archive/` byte for byte, anchors updated in the same commit (the precedent of 22 Nov 2026) | write a state by hand | `docs/prompts/v2-docs-handover.md` (written by D4) |
 | **D6 · Records and the final measure** | Executed prompts, readings and audits moved to an archive path, every reference (Markdown, code, workflows, skills, prompts, anchors, pins) updated in the same commit; §5 measured and reported | move a policy or a specification | `docs/prompts/v2-docs-records.md` (written by D5) |
-| (D7 · Buffer) | Only a check that D6 could not close inside its scope | — | written by D6 if needed |
+| (D7 · Buffer) | Only a check that D6 could not close inside its scope | — | `docs/prompts/v2-docs-buffer.md` (written by D6) |
 
 **26 Nov 2026, D6 (a dated note; the row above stays as written):** **nothing moves.** D6.1 measured every one of the 79 closed records
 cited by a home no session may rewrite — §8, the archive of `docs/HANDOVER.md`, `data/`, published files, the ledger — so the row's «every
