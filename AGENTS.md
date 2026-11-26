@@ -332,28 +332,7 @@ patches, not checks. **Do not re-run** the latter two.
   and never store in `data/` anything to make a page read better: titles live in `tools/seo.mjs`.
 - **An edited inline script is a blocked script.** Inline event handlers are an error. → `docs/DEPLOYMENT.md`.
 - **The validators do not read prose.** → `docs/VERIFICATION-POLICY.md`.
-- **`agent/ux/` has never opened a page, and `agent/browser/` now does.** Agent 8 reads the
-  markup, the stylesheets and the modules and audits the interface from them; every record it
-  writes says so as a blocking open question quoting README limitation 7, and that has not
-  changed. SESSION 19's browser suite closes some of its twelve open questions by measurement
-  and **found three defects none of the four validators can see**: with scripting off the
-  site has no navigation and the `<noscript>` notice does not say so; the skip link is the
-  tenth focusable element in the rendered page because `js/shell.js` inserted the chrome
-  ahead of it; and `enforcement.html` jumps h2 → h5 in its rendered outline. **All three are
-  fixed in SESSION 30, under an explicit instruction to repair them at root cause**, and each
-  was a defect in the WEBSITE rather than in the check: the `<noscript>` notice now names the
-  navigation among what will not render and carries the six destinations, read out of
-  `js/shell.js`'s `NAV` by `tools/_footer.mjs` so the nav model keeps one home; `initShell()`
-  inserts the chrome AFTER the skip link instead of at `document.body.firstChild`; and the
-  pipeline stage panels are `h3`, which is their real level under the record's `h2`, with
-  `css/tools.css` unchanged in appearance because it sized that heading itself. A fourth was a
-  defect in the CHECK: `keyboard:focus-visible` reported `undecidable` on every run because it
-  read its "before" style off the element its own preceding `Tab` had already focused, so it
-  compared a focus ring with itself. It now blurs, tabs, and measures — and passes.
-  `docs/BROWSER-QA.md` §4. Still not closed: contrast, screen readers, pixels, any browser
-  but Chromium — `a11y:bound` says so on every run and is the one remaining `undecidable`,
-  deliberately: it is a statement of what the suite did not establish, and a green tick in its
-  place would be the thing this repository is arranged against.
+- **`agent/ux/` has never opened a page, and `agent/browser/` now does.** → `docs/BROWSER-QA.md` §4.
 - **A passing validator proves less than it looks.** → `docs/VERIFICATION-POLICY.md`.
 - **Derived output depends on the reader's clock.** `isPast` compares against
   `new Date().toISOString()` in UTC, so pipeline stages, the calendar and the status strips
