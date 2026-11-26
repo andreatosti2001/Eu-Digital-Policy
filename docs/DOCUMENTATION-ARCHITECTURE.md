@@ -160,6 +160,8 @@ A document has **one** domain, the one whose task most needs it; the catalogue's
 | **by domain** | the documents the catalogue lists for the task's domain | `docs/README.md` §2 |
 | **on request** | records (prompts, readings, audits, runs), the archive, generated sheets, snapshots | read when a task, a prompt or a §8 row cites them |
 
+**The header of `docs/HANDOVER.md` holds only the current session's own text** (the author's decision, §8, 26 Nov 2026, «D7, D7.2 question 1: what the header of `docs/HANDOVER.md` keeps»; written here by «D7, D7.2 question 2: where that rule is written»). It is read at every start, so it does not carry earlier sessions' headers: **the session that writes the header moves the header it replaces, byte for byte, to the end of `docs/archive/HANDOVER-headers.md`, preceded by one line naming the session that wrote it and the session that replaced it, in the same commit.** That file is read on request, like the rest of the archive.
+
 ## 8 · What this document does not establish
 
 That any document's classification is right: the catalogue proposes each one, and the author decides. That a document is true: D1 measured
