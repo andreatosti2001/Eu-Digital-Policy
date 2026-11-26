@@ -54,7 +54,7 @@ regole di ogni sessione; §6, il rischio «A reduced `AGENTS.md` loses a rule si
 - **`CLAUDE.md`** (31 righe, `entry`, `normative`) elenca sei documenti da leggere in ordine e poi la skill: con la lettura per livelli quel
   elenco diventa una seconda casa dell'ordine di lettura. `docs/SKILL-MAP.md` dice che la skill porta «the reading order».
 - **`tools/docs-check.mjs` è in CI** (D3): 0 errori; 4 avvertimenti, tutti percorsi `docs/…` non trovati e lasciati all'autore
-  (`agent/schemas/types.mjs:673`, `tools/commit-evidence.mjs:140`, due prompt); 56 percorsi di fixture contati. Un avvertimento nuovo è un
+  (`agent/schemas/types.mjs:673`, `tools/commit-evidence.mjs:140`, due prompt); 64 percorsi di fixture contati (56 delle suite, 8 del selftest di `docs-check`). Un avvertimento nuovo è un
   rilievo.
 
 ## Le decisioni dell'autore (§8, 26 nov 2026; non si richiedono)
