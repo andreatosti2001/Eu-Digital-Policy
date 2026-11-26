@@ -20,7 +20,10 @@ statement exists as a record in `data/claims.json`, typed, sourced, and graded b
 sources can actually carry — with the grade *derived at render time* so it cannot drift from
 the evidence it describes.
 
-## Read these first, in this order
+## The documents, and what each gives you
+
+An index, not a reading order: what a session reads, and when, is the skill `project-context`'s, by level — always the
+binding constraints, then what `docs/README.md` §2 lists for the task's domain, then records only when something cites them.
 
 | Document | What it gives you |
 |---|---|

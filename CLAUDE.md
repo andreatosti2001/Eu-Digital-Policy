@@ -7,16 +7,11 @@ This file deliberately holds no rules of its own. This project's first principle
 per fact*: duplicating the instructions here would create the second copy that the whole
 architecture — and `tools/validate.mjs` §4 — exists to prevent.
 
-Start every session by reading, in order:
-
-1. `AGENTS.md`
-2. `docs/PROJECT-CONTEXT.md`
-3. `docs/CURRENT-ARCHITECTURE.md`
-4. `docs/AI-SAFE-BOUNDARIES.md`
-5. `docs/HANDOVER.md`
-6. `docs/AUDIT-2026-09-01.md` — where the architecture above is not enforced
-
-Then invoke the `project-context` skill in `.agents/skills/`.
+Start every session by reading `AGENTS.md`, then invoke the `project-context` skill in
+`.agents/skills/`. The skill says what else to read, by level — always the binding
+constraints, then the documents the catalogue lists for the task's domain, then records only
+when something cites them. This file carries no reading list of its own: the skill and the
+catalogue are its home, and a list here would be the second copy.
 
 `AGENTS.md` links the five operating policies in `docs/` — autonomy classes, agent
 contracts, data governance, source policy, verification policy. Read the one your task

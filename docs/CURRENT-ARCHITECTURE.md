@@ -448,7 +448,8 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 against their own rules — the catalogue `docs/README.md` against the perimeter, each standard header against the
 catalogue, a cited §8 title or `main` commit against §8 and the history, internal links, the `docs/…` paths named in
 code, workflows, skills and prompts, the anchors of `agent/proposals/governance/patterns.mjs` (imported) and the pins
-it lists, and the catalogue's totals. It exits 1 on an error and prints its warnings by name; which is which is the
+it lists, the catalogue's totals, and — since D4 — that the skill `project-context` reads by level and that `CLAUDE.md` and
+`docs/SKILL-MAP.md` point to it (§8, «D4, D4.1: where the skill's tests live»). It exits 1 on an error and prints its warnings by name; which is which is the
 author's (§8, «Checkpoint D3.1 of the documentation session D3: the design of the check»). Its suite is
 `tools/docs-check-selftest.mjs`, in `AGENT_SUITES`. `.github/workflows/qa.yml` runs both in the validators job.
 
