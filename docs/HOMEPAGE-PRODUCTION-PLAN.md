@@ -1,5 +1,7 @@
 # HOMEPAGE PRODUCTION PLAN
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** the homepage plan, as of 12 Nov 2026 · **Closed by:** «HP-04: the next session» · **Catalogue:** `docs/README.md`
+
 **A proposal.** It is approved only by the row of `docs/ROADMAP-v2.md` §8 that cites it; until then it changes nothing and
 authorizes nothing. Written by HP-03 on 12 Nov 2026 (prompt `docs/prompts/v2-hp-03-homepage-production-plan.md`), on branch
 `claude/quirky-goldberg-fpoxdz`, from `main` `02f9a4e`. **Every number below was read from that tree on that day**; the

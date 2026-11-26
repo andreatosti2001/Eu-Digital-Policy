@@ -1,5 +1,7 @@
 # Rules maintenance, group (b) — the reading notes
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** rules maintenance group (b), 18 Nov 2026 · **Closed by:** «Final checkpoint of the rules-maintenance session, group (b)» · **Catalogue:** `docs/README.md`
+
 **Session:** Track R, rules maintenance, group (b) (`docs/prompts/v2-rules-maintenance-group-b.md`; scope `docs/ROADMAP-v2.md` §8, 18 Nov 2026,
 "The scope of the rules-maintenance session (group (b))": all instruments in stages, `ap-eidas2-01` left to Track M). **Read on 18 Nov 2026**, in this
 environment, from the Publications Office's Cellar by CELEX with `Accept: application/xhtml+xml` and `Accept-Language: eng`, text extracted by stripping

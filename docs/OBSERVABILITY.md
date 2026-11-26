@@ -1,5 +1,7 @@
 # Observability
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of the trace model · **Catalogue:** `docs/README.md`
+
 The instrumentation layer for the agents this project has not built yet.
 
 Nothing here is wired into the website. `agent/observability/` is a

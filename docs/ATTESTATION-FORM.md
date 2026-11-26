@@ -1,5 +1,7 @@
 # ATTESTATION FORM — the structured human attestation of a rule's reading (P-08, P-11)
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** the attestation's design (22.1), as of 4 Nov 2026 · **Closed by:** «The final checkpoint of v2 Session 22 = 22.3, 22.4 and 22.5, with the prompt of v2 Session 23» · **Catalogue:** `docs/README.md`
+
 **Status: A DESIGN, DOCS ONLY; IT IMPLEMENTS NOTHING.** Item 22.1 of v2 Session 22 (4 Nov 2026), on
 `claude/session-22-o5cl9k`, under `docs/PHASE-4-PLAN.md` (exit criterion X-2) and the session's prompt
 (`docs/prompts/v2-session-22.md`). Every choice below is the author's, answered one question at a time and recorded in

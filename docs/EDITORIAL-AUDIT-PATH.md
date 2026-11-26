@@ -1,5 +1,7 @@
 # The editorial-audit path
 
+**Lifecycle:** active · **Authority:** reference · **Home of:** how an editorial audit is run, recorded and read · **Catalogue:** `docs/README.md`
+
 **Status:** v2 Session 3, 27 Oct 2026. Roadmap v2 item 1.1; `docs/AUDIT-2026-10-24.md` finding A.
 
 The audit of 24 Oct 2026 found no way to start an editorial audit from the Control Room, and asked

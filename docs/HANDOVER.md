@@ -1,5 +1,7 @@
 # HANDOVER
 
+**Lifecycle:** active · **Authority:** canonical · **Home of:** the previous sessions' state and the branch register · **Catalogue:** `docs/README.md`
+
 **Last updated:** 26 November 2026 (UTC), documentation session D1, on `claude/intelligent-rubin-8pykrj`, from `main` `36d57d7` (#138 merged). The entry before it: 24–25 November 2026, the translation-review session (recorded by D1).
 **Branch:** `claude/intelligent-rubin-8pykrj`, pushed; final checkpoint approved (§8, 26 Nov 2026), a pull request to `main` opened by the session on the author's answer, to be merged by the author.
 **Read first:** **Track D has started.** D1 corrected the documents that contradicted `main` or §8 (each with its source; four texts on the author's words), wrote the 24–25 Nov entry below, and produced `docs/DOCS-DEPENDENCY-MAP.md` (who reads each document; the 29 anchored sentences; the eight files that read six documents' text). The author decided the four questions of the plan §3 (§8, 26 Nov 2026): `AGENTS.md` becomes an entry point (D4), the skill reads by levels (D4), **no generated state** (D5 only shortens this file), the check is a new `tools/docs-check.mjs` in CI (D3). **The next session is D2** (`docs/prompts/v2-docs-authority-catalogue.md`). Track M pre-empts: the `ai-act` milestone is 2 Dec 2026.

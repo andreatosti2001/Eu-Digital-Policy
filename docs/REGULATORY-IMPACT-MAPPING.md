@@ -1,5 +1,7 @@
 # Regulatory impact mapping
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of Agent 3's impact map · **Catalogue:** `docs/README.md`
+
 **Status:** built in SESSION 10, on top of Agent 3 (`docs/CHANGE-DETECTOR.md`).
 **Nothing in production changed.** `data/`, every page, `js/`, `css/`, `i18n/` and `fonts/`
 are byte-identical, and the whole of `tools/` is untouched.

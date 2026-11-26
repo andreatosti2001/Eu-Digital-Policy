@@ -1,5 +1,7 @@
 # DOCUMENTATION SIMPLIFICATION — the programme D1…D6
 
+**Lifecycle:** active · **Authority:** canonical · **Home of:** the documentation programme D1…D6 · **Catalogue:** `docs/README.md`
+
 **Status: THE FOUR DECISIONS BELOW ARE THE AUTHOR'S** (`docs/ROADMAP-v2.md` §8, the four rows of 25 Nov 2026 «The documentation
 simplification programme, …»). **This text is proposed with them and is approved, or not, by the author at the merge of its pull request.**
 Written on 25 Nov 2026 in the translation-review session (24–25 Nov 2026, unnumbered: no §8 row gave it a scope, which is stated here

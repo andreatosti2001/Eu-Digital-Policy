@@ -1,5 +1,7 @@
 # GOVERNANCE PROPOSALS — what keeps happening, and seven requests about it
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** the decision corpus measured; seven proposals (SESSION 28) · **Closed by:** on `main` `1f47b85` · **Catalogue:** `docs/README.md`
+
 **SESSION 28 · 10 September 2026 · branch `claude/learn-human-decisions-9c5q3m`, cut from
 `origin/main` at the SESSION 26 merge (`aaf6691`).**
 

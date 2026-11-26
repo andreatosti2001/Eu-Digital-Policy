@@ -1,5 +1,7 @@
 # Source policy
 
+**Lifecycle:** active · **Authority:** normative · **Home of:** what may be cited · **Catalogue:** `docs/README.md`
+
 **Status:** binding. Governs what may be cited, what a citation is allowed to
 support, and the absolute prohibition on inventing legal facts. Expands
 `AI-SAFE-BOUNDARIES.md` §0.1–§0.2 and §3; where they differ, the stricter

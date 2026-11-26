@@ -1,5 +1,7 @@
 # Autonomy policy
 
+**Lifecycle:** active · **Authority:** normative · **Home of:** the four autonomy classes · **Catalogue:** `docs/README.md`
+
 **Status:** binding. Defines the four autonomy classes, what is prohibited
 outright, and the rollback requirement.
 

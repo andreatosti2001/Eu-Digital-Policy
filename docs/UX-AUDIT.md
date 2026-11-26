@@ -1,5 +1,7 @@
 # The UX/UI Audit Agent
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of Agent 8 · **Catalogue:** `docs/README.md`
+
 **Agent 8** · `agent/ux/` · SESSIONS 16 and 17 · reference document
 
 > The session brief calls this **Agent 7**. Agent 7 is the Editorial Agent, built in

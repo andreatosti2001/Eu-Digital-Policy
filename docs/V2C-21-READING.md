@@ -1,5 +1,7 @@
 # V2C-21 — who Regulation (EU) No 910/2014, as amended, binds: the reading notes
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** V2C-21, 14 Nov 2026 · **Closed by:** «Final checkpoint of the V2C-21 session approved: `eidas2`'s regulated actors and the prompt of V2C-21b» · **Catalogue:** `docs/README.md`
+
 **Session:** V2C-21, Track R (`docs/prompts/v2-v2c-21-eidas2-actors.md`; scope `docs/ROADMAP-v2.md` §8, "The scope of the
 V2C-21 session"). **Read on 13 Nov 2026**, in this environment, from the Publications Office's Cellar by CELEX with
 `Accept: application/xhtml+xml` and `Accept-Language: eng`. These notes are the reading (V.1). **They change nothing in

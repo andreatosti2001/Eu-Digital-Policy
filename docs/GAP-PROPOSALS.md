@@ -1,5 +1,7 @@
 # GAP PROPOSALS
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of Agent 5 · **Catalogue:** `docs/README.md`
+
 **Agent 5, built in SESSION 12.** What each identified knowledge gap can honestly become —
 and, for most of them, why the answer is not a proposal.
 

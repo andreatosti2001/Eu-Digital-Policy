@@ -1,5 +1,7 @@
 # The Editorial Agent
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of Agent 7 · **Catalogue:** `docs/README.md`
+
 **Status:** built in SESSIONS 14 and 15, on top of Agent 3 (`docs/CHANGE-DETECTOR.md`) and the
 impact map (`docs/REGULATORY-IMPACT-MAPPING.md`).
 **Nothing in production changed.** `data/`, all seven pages, `js/`, `css/`, `i18n/` and `fonts/`

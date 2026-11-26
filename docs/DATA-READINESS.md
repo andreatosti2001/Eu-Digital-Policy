@@ -1,5 +1,7 @@
 # DATA READINESS — Post-v2 block A (PV2-01)
 
+**Lifecycle:** active · **Authority:** canonical · **Home of:** the dataset inventory and the metric contract MC-1…MC-15 · **Catalogue:** `docs/README.md`
+
 **Status:** approved (§8, 9 Nov 2026: A.2, then the final checkpoint). **Extended the same day** (§8, "PV2-01, extended"):
 three more cards, the contract amended and widened to MC-1…MC-15, in §8 below — **approved** (§8, "Checkpoint of the PV2-01 extension"). A.3 (§5, the one metric card) and A.4 (§6, the proposed metric contract)
 written on the author's decisions of §8. **Implemented on 11 Nov 2026 (§9)**, brought forward from D (PV2-08) as P0.2 by the

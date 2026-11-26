@@ -1,5 +1,7 @@
 # The continuous improvement loop
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** `agent/improve/`: the improvement loop and its first run · **Catalogue:** `docs/README.md`
+
 **Session:** 27 · 9 September 2026
 **Status:** binding. `agent/improve/` is the mechanism; this document describes it and reports
 what its first run found. Where the two disagree, the code governs and the disagreement is a

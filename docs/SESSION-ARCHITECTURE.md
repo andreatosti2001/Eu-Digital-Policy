@@ -1,5 +1,7 @@
 # SESSION ARCHITECTURE — the stages, what each depends on, and the gates between them
 
+**Lifecycle:** active · **Authority:** canonical · **Home of:** the order of the work · **Catalogue:** `docs/README.md`
+
 **Status: DECIDED BY THE AUTHOR ON 5 NOV 2026** (`docs/ROADMAP-v2.md` §8, v2 Session 25, 25.5, the scope row and questions
 1–4). Written on 5 Nov 2026 in v2 Session 25 (item 25.5), on `claude/inspiring-meitner-c7s9le`, from `main` `6060bd2`, at
 the author's request: "the roadmap not in terms of timeline but of architecture of sessions", with Post-v2's blocks A, B

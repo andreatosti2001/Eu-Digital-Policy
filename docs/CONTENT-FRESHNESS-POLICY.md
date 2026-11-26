@@ -1,5 +1,7 @@
 # Content freshness policy
 
+**Lifecycle:** active · **Authority:** normative · **Home of:** when content is stale · **Catalogue:** `docs/README.md`
+
 **Status:** binding. It sets out when the site's content is to be called *stale*, and what
 happens next. Written for AUDIT-2026-09-25, T-23.
 **Read with:** `docs/VERIFICATION-POLICY.md`, which defines what verification is. This

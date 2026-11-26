@@ -1,5 +1,7 @@
 # Implementation and QA — Agent 9
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of Agent 9 · **Catalogue:** `docs/README.md`
+
 **SESSION 18.** `agent/implement/`.
 **Status:** operational, and it has implemented nothing. That is the correct result and §5
 explains why.

@@ -1,5 +1,7 @@
 # DISCOVERABILITY AND REACHABILITY STRATEGY
 
+**Lifecycle:** active · **Authority:** canonical · **Home of:** who the site is for and which questions it answers · **Catalogue:** `docs/README.md`
+
 **Written:** 27 September 2026. **Operational detail:** `docs/SEO-OPERATIONS.md`. **The state
 this starts from:** `docs/SEO-AUDIT-2026-09-27.md`.
 

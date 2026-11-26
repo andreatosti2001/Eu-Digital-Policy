@@ -1,5 +1,7 @@
 # Knowledge architecture — Agent 6
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of Agent 6 · **Catalogue:** `docs/README.md`
+
 **What it is.** `agent/architect/` asks whether the information model can
 represent what this corpus is already trying to say. It answers eight questions
 of the taxonomy, the entities, the relationships, the canonical datasets, the

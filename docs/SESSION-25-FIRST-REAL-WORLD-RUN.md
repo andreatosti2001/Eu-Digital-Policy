@@ -1,5 +1,7 @@
 # SESSION 25 — the first controlled real-world run
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** the first real-world run (SESSION 25) · **Closed by:** on `main` `cdfe375` · **Catalogue:** `docs/README.md`
+
 **Ran:** 9 September 2026 · branch `claude/first-controlled-real-world-run-wyz3k2`, cut from
 `origin/main` at the SESSION 24 merge.
 

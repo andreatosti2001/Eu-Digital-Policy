@@ -1,5 +1,7 @@
 # AI-SAFE BOUNDARIES
 
+**Lifecycle:** active · **Authority:** normative · **Home of:** the tiers and the absolute prohibitions · **Catalogue:** `docs/README.md`
+
 **Status:** written in SESSION 00. Governs any AI agent working in this repository.
 **Read with:** `docs/PROJECT-CONTEXT.md` (why) and `docs/CURRENT-ARCHITECTURE.md` (what).
 

@@ -1,5 +1,7 @@
 # Agent contracts
 
+**Lifecycle:** active · **Authority:** normative · **Home of:** the eighteen contracts · **Catalogue:** `docs/README.md`
+
 The interface between the agents this project has not built yet.
 
 Nothing here is wired into the website. `agent/schemas/` is a development

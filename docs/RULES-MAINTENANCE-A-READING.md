@@ -1,5 +1,7 @@
 # Rules maintenance, group (a) — the reading notes
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** rules maintenance group (a), 17 Nov 2026 · **Closed by:** «Final checkpoint of the rules-maintenance session, group (a)» · **Catalogue:** `docs/README.md`
+
 **Session:** Track R, rules maintenance, group (a) (`docs/prompts/v2-rules-maintenance-group-a.md`; scope and premise `docs/ROADMAP-v2.md` §8,
 17 Nov 2026, "The scope of the rules-maintenance session (group (a))" and "Rules maintenance, group (a): the premise"). **Read on 17 Nov 2026**,
 in this environment, from the Publications Office's Cellar by CELEX with `Accept: application/xhtml+xml` and `Accept-Language: eng`, text

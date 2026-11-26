@@ -1,5 +1,7 @@
 # The Master Orchestrator
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of the Orchestrator · **Catalogue:** `docs/README.md`
+
 **Status:** the reference document for `agent/orchestrator/`. SESSION 22.
 **Reference for:** the ten workflow types, the five end states, the capability register,
 the eight routing checks, conflict detection, human-review routing, and the boundary

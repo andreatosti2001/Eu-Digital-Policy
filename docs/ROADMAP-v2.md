@@ -1,5 +1,7 @@
 # ROADMAP v2.0
 
+**Lifecycle:** active · **Authority:** canonical · **Home of:** the v2 plan; §8 every decision · **Catalogue:** `docs/README.md`
+
 **Status: APPROVED by the author on 25 Oct 2026 (§8)**, with item 2.0 brought forward to v2 Session 2. Written in v2 Session 1, 25 Oct 2026, on
 `claude/roadmap-v2-2026-10-25`, cut from `main` at `5f3859e`. **As of 3 Nov 2026: Phases 0, 1, 2
 and 3 are executed, each closed at a checkpoint in §8 (Phase 3 on its met entry condition and the 33

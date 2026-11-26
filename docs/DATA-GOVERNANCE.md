@@ -1,5 +1,7 @@
 # Data governance
 
+**Lifecycle:** active · **Authority:** normative · **Home of:** one home per fact; derivation over storage · **Catalogue:** `docs/README.md`
+
 **Status:** binding. Derived from the code and data in this repository as it
 stood on 1 September 2026, and from `README.md`. It codifies the architecture
 that already exists; it does not propose a new one.
