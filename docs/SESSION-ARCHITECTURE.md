@@ -15,6 +15,7 @@ when what it depends on is approved, not on a day. What each session *does* stay
 | Post-v2: PV2-01…PV2-12 | `docs/POST-V2.md` §3 (the blocks, the author's text) and §4.1 (the sessions) |
 | The reading: S25, S26 | `docs/prompts/v2-session-25.md`; `docs/RULE-MAINTENANCE.md` |
 | Stage 1 | `docs/prompts/v2-stage-1-operational-closure.md`; `docs/AUDIT-2026-11-04.md` (what #68 did and did not do); roadmap §8, 25.5 question 2 and the correction after it |
+| Track D: D1…D6 (added 25 Nov 2026) | `docs/DOCS-SIMPLIFICATION-PLAN.md`; `docs/prompts/v2-docs-coherence.md` (D1) |
 
 The one place dates still matter is **Track M** (§3): the law's calendar, which no architecture can move.
 
@@ -126,6 +127,14 @@ Decided in v2 Session 17.5 (roadmap §8, questions 2 and 4) and v2 Session 24 (R
 D-3), map sessions (V2C-13 first, then V2C-03…05, V2C-16…19, F-29), a maintenance session (V2C-11). They run beside Stages
 2 and 3, wherever they fit; three of them feed Stage 3 (above); **all are done before G4**, because the v2 cannot be
 closed with them open (`docs/V2-CLOSURE.md`).
+
+### Track D · Documentation — the simplification programme (added 25 Nov 2026)
+
+Six maintenance sessions, **D1 → D2 → D3 → D4 → D5 → D6** (and a buffer D7 only if needed), as `docs/DOCS-SIMPLIFICATION-PLAN.md` §2
+describes them; decided by the author in roadmap §8, the four rows of 25 Nov 2026. They run one after another, **by 10 Jan 2027**, with the
+alternation of 22 Nov 2026 suspended for them only. Not a stage and not in the diagram of §1: it has **no arrow into any stage**, it changes
+no rule, no data and no published page, and **Track M pre-empts it** as it pre-empts everything else. If it is not closed by 10 Jan 2027 it
+stops at a checkpoint and resumes after the rules round of February 2027.
 
 ## 4 · What this changes against the plans of 4 Nov 2026
 
