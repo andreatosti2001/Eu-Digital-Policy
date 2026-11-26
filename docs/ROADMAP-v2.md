@@ -5,7 +5,7 @@
 and 3 are executed, each closed at a checkpoint in §8 (Phase 3 on its met entry condition and the 33
 rules, its open rows moved to named destinations); Phase 4 was opened by the author on 3 Nov 2026 on
 its met entry condition (§8, v2 Session 20, question 1), its first item, 4.1, not yet written; Phase 5
-is not started. The v2 is open** (§8, v2 Sessions 17.5 and 20; `docs/PHASE-3-AUDIT.md`, `docs/PHASE-4-SETUP.md`).
+is not started. The v2 is open** (§8, v2 Sessions 17.5 and 20; `docs/PHASE-3-AUDIT.md`, `docs/PHASE-4-SETUP.md`). **Since then (§8, added 26 Nov 2026 by documentation session D1): item 4.1 was written and approved on 4 Nov 2026 («The final checkpoint of v2 Session 20 = item 20.2»); Phase 4 was concluded on 4 Nov 2026 («Phase 4 concluded»); Phase 5 was opened on 13 Nov 2026 with G2, E5-5 failing and stated («G2: Stage 3 is opened, and with it Phase 5»). No row closes the v2.**
 Nothing is implemented without the author's approval, recorded in §8, by the author's word, and
 nowhere else.
 
