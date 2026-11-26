@@ -325,11 +325,7 @@ patches, not checks. **Do not re-run** the latter two.
   `superseded` in `i18n/locales.json` leaves the it/fr/es editions asserting the thing you
   just corrected. This has already happened once.
 - **The deploy gate exists and was switched on 24 Oct 2026, unconfirmed.** → `docs/DEPLOYMENT.md` §3.
-- **A data change needs a regeneration.** Since 27 Sep 2026 each substantive instrument has a
-  pre-rendered page at `instruments/<id>/`, generated from `data/` by `node tools/_footer.mjs`
-  (`docs/SEO-OPERATIONS.md`). After editing `data/`, re-run it and commit what it writes, or
-  `seo-audit.mjs` and CI fail on the stale page. Never edit a file under `instruments/` by hand,
-  and never store in `data/` anything to make a page read better: titles live in `tools/seo.mjs`.
+- **A data change needs a regeneration.** Never edit a file under `instruments/` by hand, and never store in `data/` anything to make a page read better: titles live in `tools/seo.mjs`. → `docs/SEO-OPERATIONS.md`.
 - **An edited inline script is a blocked script.** Inline event handlers are an error. → `docs/DEPLOYMENT.md`.
 - **The validators do not read prose.** → `docs/VERIFICATION-POLICY.md`.
 - **`agent/ux/` has never opened a page, and `agent/browser/` now does.** → `docs/BROWSER-QA.md` §4.
