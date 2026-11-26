@@ -103,7 +103,7 @@ const isScanned = (f) => (CODE_EXT.test(f) && !/^(data|i18n|instruments)\//.test
   || (/^\.agents\/skills\/.+\.md$/.test(f)) || (/^docs\/prompts\/[^/]+\.md$/.test(f));
 
 /** A test file: a path it names may be a fixture planted to be absent (PATH-FIXTURE). */
-const IS_TEST = (f) => /(^|\/)(selftest|attacks)\.mjs$|\.test\.mjs$/.test(f);
+const IS_TEST = (f) => /(^|[/-])(selftest|attacks)\.mjs$|\.test\.mjs$/.test(f);
 
 /* ---------------------------------------------------------------- reading the tree */
 

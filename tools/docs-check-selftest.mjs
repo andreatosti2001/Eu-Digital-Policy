@@ -264,6 +264,7 @@ test('DC4 · a docs/ path not found: in code a WARNING (PATH), in a prompt a WAR
   failsWith(f, 'PATH', /tools\/planted\.mjs.*PLANTED-SPEC/);
   failsWith(f, 'PATH-PROMPT', /PLANTED-NEXT/);
   failsWith(f, 'PATH-FIXTURE', /planted-fixture/);
+  failsWith(await planted(({ write }) => write('tools/planted-selftest.mjs', "const f = 'docs/planted-fixture.md';\n")), 'PATH-FIXTURE', /planted-selftest/);
   assert.deepEqual(codes(f, 'error'), [], 'none of the three fails the step');
 });
 
