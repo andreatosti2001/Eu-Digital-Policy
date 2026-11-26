@@ -203,18 +203,7 @@ noise.**
 
 **`tools/source-contract.mjs` is the one contract a source record satisfies** **Those six are `ABSENT_BY_DESIGN` and are not a TODO**: every one asserts a document was FETCHED, and no URL here has ever been fetched (AUDIT F-12), so writing one would be a fabricated fact about evidence. → `docs/SOURCE-POLICY.md`.
 
-**`tools/metric-contract.mjs` is the metric contract MC-1…MC-15, and `tools/fine-basis.mjs` the provenance of an enforcement
-amount** (11 Nov 2026, P0.2 and P0.3; `docs/DATA-READINESS.md` §9). `validate.mjs` runs both: a fine with no `fine_eur_basis`,
-a `fine_eur` that is not an integer ≥ 0, or a declared metric that fails any property is an ERROR, and its figure is not
-publishable. The fines figure has one computing function, `js/pipeline.js finesFigure()`; **do not sum `fine_eur` or count
-payment states anywhere else in `js/`** — MC-2 finds a second sum by line, and every view must import the function.
-**A pending appeal is `high` (30 days), not `critical`, since 12 Nov 2026** (the author's decision; only an announced action is `critical`) —
-and **a claim about such a record keeps its `high` interval**: `enforcementVolatile()` in `js/evidence-model.js` is the test, and the decision
-was about records only (`docs/AUDIT-2026-11-11-P1.md` §8). **A court-register reading is a sheet and a declaration**: `node
-tools/register-reading.mjs sheet`, then `check <answers.json>`; no verb writes, and an `attestation` on an enforcement record is audited by
-`validate.mjs`.
-**The same holds for instruments by legislative status since 11 Nov 2026** (F-A7): `js/regulatory-model.js
-instrumentsByStatus()` is the one function and the masthead imports it; MC-2 finds a second COUNT by the field too.
+**`tools/metric-contract.mjs` is the metric contract MC-1…MC-15, and `tools/fine-basis.mjs` the provenance of an enforcement amount** The fines figure has one computing function, `js/pipeline.js finesFigure()`; **do not sum `fine_eur` or count payment states anywhere else in `js/`** — MC-2 finds a second sum by line, and every view must import the function. → `docs/DATA-READINESS.md` §9.
 
 The agent layer has its own suites, and a change to `agent/` runs these as well:
 
