@@ -1,5 +1,7 @@
 # PROJECT CONTEXT
 
+**Lifecycle:** active · **Authority:** reference · **Home of:** what the project is; the seven principles · **Snapshot of:** `7248290` · **Catalogue:** `docs/README.md`
+
 **Project:** The European Legal Framework for the Digital World
 **Repository:** https://github.com/andreatosti2001/Eu-Digital-Policy
 **Public site:** https://eudigitalpolicy.eu/

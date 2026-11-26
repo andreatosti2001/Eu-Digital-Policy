@@ -1,5 +1,7 @@
 # The first end-to-end run — SESSION 24
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** the simulated end-to-end cycle (SESSION 24) · **Closed by:** on `main` `341ff39` · **Catalogue:** `docs/README.md`
+
 **Status:** the observation record for the first complete cycle this system has
 ever run. SESSION 24.
 **Date of the run:** 2026-09-09. Every derived figure below is dated because

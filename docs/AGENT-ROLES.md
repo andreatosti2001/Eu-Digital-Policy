@@ -1,5 +1,7 @@
 # Agent contracts
 
+**Lifecycle:** active · **Authority:** normative · **Home of:** the ten agent roles · **Catalogue:** `docs/README.md`
+
 **Status:** binding. Defines ten roles, what each owns, what each may never do,
 and the rules for passing work between them.
 

@@ -1,5 +1,7 @@
 # Verification policy
 
+**Lifecycle:** active · **Authority:** normative · **Home of:** what each validator proves and does not · **Catalogue:** `docs/README.md`
+
 **Status:** binding. Governs what counts as verification, what the validators
 do and do not prove, and what reproducibility means here.
 

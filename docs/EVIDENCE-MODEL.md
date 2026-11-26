@@ -1,5 +1,7 @@
 # THE EVIDENCE MODEL
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** `js/evidence-model.js` and the evidence audit · **Catalogue:** `docs/README.md`
+
 **Written:** 27 September 2026. **Code:** `js/evidence-model.js` (the model),
 `js/format.js` (grades), `js/regulatory-model.js` (dates by provision), `js/pipeline.js`
 (enforcement procedure), `tools/evidence-audit.mjs` (the check). **Vocabularies:**

@@ -1,5 +1,7 @@
 # SKILL MAP
 
+**Lifecycle:** active · **Authority:** reference · **Home of:** the skills in `.agents/skills/` · **Catalogue:** `docs/README.md`
+
 **Status:** written in SESSION 03. Describes `.agents/skills/` as at this commit.
 **Read with:** `AGENTS.md` (the contract), `docs/AI-SAFE-BOUNDARIES.md` (the tiers),
 `docs/OBSERVABILITY.md` (the instrumentation layer).

@@ -1,5 +1,7 @@
 # V2 CLOSURE — the closing gate of v2.0, measured
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** the v2 measured against the brief, 28 Oct 2026 · **Closed by:** «The checkpoint of v2 Session 11 = the closing gate of v2» · **Catalogue:** `docs/README.md`
+
 **Status: MEASURED, AND DECIDED BY THE AUTHOR ON 28 OCT 2026** (`docs/ROADMAP-v2.md` §8, "The closing
 gate of v2"): **the v2 stays open, and Phase 3 is next**; every class proposed in §2 is decided as
 proposed; V2C-01 stays class A and is fixed first in Phase 3. Written in v2 Session 11, 28 Oct 2026, on

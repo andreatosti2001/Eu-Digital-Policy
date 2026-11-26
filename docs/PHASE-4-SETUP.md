@@ -1,5 +1,7 @@
 # PHASE 4 SET-UP — the manual processes, the three levels, the login, and an entry condition that can fail
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** Phase 4's set-up, as of 3 Nov 2026 · **Closed by:** «Phase 4 concluded» · **Catalogue:** `docs/README.md`
+
 **Status: A DESIGN DOCUMENT; IT IMPLEMENTS NOTHING. DECIDED BY THE AUTHOR ON 3 NOV 2026 (§8, v2 Session 17.5).** Written in v2 Session 17.5,
 3 Nov 2026, on `claude/nifty-ride-kc0p4x`, on the author's scope (`docs/ROADMAP-v2.md` §8, "The scope of v2 Session
 17.5"). The name of this file is the prompt's proposal. **Phase 4 was opened by the author on 3 Nov 2026 (§8, v2 Session 20, question 1)**; its first item, 4.1 (§6), was written in v2 Session 20 as `docs/RULE-MAINTENANCE.md` (§8, «The final checkpoint of v2 Session 20», 4 Nov 2026), and **Phase 4 was concluded on 4 Nov 2026** (§8, «Phase 4 concluded»). *(Corrected on 26 Nov 2026, documentation session D1; the sentence read «its first item, 4.1 (§6), is not yet written».)* D-4 is decided (the three names and §2.2 as drafted); D-5 is deferred

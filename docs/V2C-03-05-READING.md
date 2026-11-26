@@ -1,5 +1,7 @@
 # V2C-03…05 — COM(2025) 837 read against the instrument arrays: the reading notes
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** V2C-03…05, 16 Nov 2026 · **Closed by:** «Final checkpoint of the V2C-03…05 session» · **Catalogue:** `docs/README.md`
+
 **Session:** V2C-03…05, Track R (`docs/prompts/v2-v2c-03-05-arrays.md`; scope `docs/ROADMAP-v2.md` §8, "The scope of the V2C-03…05
 session"). **Read on 16 Nov 2026**, in this environment, from the Publications Office's Cellar by CELEX (`52025PC0837`) with
 `Accept: application/pdf` and `Accept-Language: eng`, text extracted with `pdftotext -layout`. These notes are W.1. **They change

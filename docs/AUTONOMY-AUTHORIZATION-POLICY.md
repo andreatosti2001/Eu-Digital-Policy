@@ -1,5 +1,7 @@
 # The autonomy and authorization policy
 
+**Lifecycle:** active · **Authority:** normative · **Home of:** the executable policy (`agent/policy/` governs) · **Catalogue:** `docs/README.md`
+
 **Status:** binding, and **executable**. `agent/policy/` is the policy; this document
 describes it. Where the two disagree, the code governs and the disagreement is a defect in
 this file.

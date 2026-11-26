@@ -1,5 +1,7 @@
 # Post-v2 C — the three prototypes, built and measured
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** Post-v2 C: the three prototypes measured · **Closed by:** «Final checkpoint of PV2-05 approved: C.2–C.6, the decision and the prompt of S27» · **Catalogue:** `docs/README.md`
+
 The record of block C (`docs/POST-V2.md` §3 C): three directions built on **the same content, the same four views and the same conditions**,
 each measured by the same battery (`docs/FRONTEND-REFERENCES.md` §4, M1–M8, and the grid of its §1). One section per direction, added by the
 session that builds it. **Nothing here selects a direction or compares them**: that is PV2-05's, with the author's explicit decision, recorded in `docs/ROADMAP-v2.md` §8. The current

@@ -1,5 +1,7 @@
 # Methodological note, v2 — the map, the register, the watchlist (D5)
 
+**Lifecycle:** uncertain · **Authority:** canonical · **Home of:** the methodology section for the map, register and watchlist · **Catalogue:** `docs/README.md`
+
 **Status: final text, for the author's editorial review.** Written in v2 Session 2, 27 Oct 2026. It is
 the section `methodology.html` gains when Phase 3 ships the dependency map. It goes after "Dates, status
 and competence" and before "How the records are kept honest".

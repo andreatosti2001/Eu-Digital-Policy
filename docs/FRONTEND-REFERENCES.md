@@ -1,5 +1,7 @@
 # FRONTEND REFERENCES — Post-v2 block B (PV2-02)
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** PV2-02: the frontend references, 10 Nov 2026 · **Closed by:** «Final checkpoint of PV2-02 approved: B.2–B.4 and the prompt of PV2-03» · **Catalogue:** `docs/README.md`
+
 **Status:** B.1 **approved** (§8, "Checkpoint B.1 of PV2-02 approved", 10 Nov 2026): the scoring grid; the six candidates were approved the same
 day. **B.2 and B.3 are written** (§3b–§8: the sampled pages, the method, the matrix with the evidence behind every score, seven findings about
 the grid, the gallery, a proposed shortlist and three directions) and were **approved** with the prompt of PV2-03 (§8, "Final checkpoint of PV2-02 approved", 10 Nov 2026) — as the record of what was found; the

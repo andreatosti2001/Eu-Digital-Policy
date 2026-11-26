@@ -1,5 +1,7 @@
 # PHASE 5 SET-UP — "what applies", advanced: the material, an entry condition and an exit that can fail, and the sessions
 
+**Lifecycle:** active · **Authority:** canonical · **Home of:** Phase 5: entry, exit, sessions · **Catalogue:** `docs/README.md`
+
 **Status: APPROVED BY THE AUTHOR ON 4 NOV 2026 (roadmap §8, v2 Session 25, 25.4 questions 1–7; the answers in §7). PHASE 5
 IS PLANNED AND NOT OPENED**: it opens on the author's word against E5-1…E5-7 (§3). **Amended on 5 Nov 2026** (roadmap §8,
 25.5 questions 1–4): its sessions are placed in `docs/SESSION-ARCHITECTURE.md` — S27 in Stage 2, beside Post-v2's A and B,

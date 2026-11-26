@@ -1,5 +1,7 @@
 # The Website Health Monitor — Agent 10
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of Agent 10 · **Catalogue:** `docs/README.md`
+
 **SESSION 20.** `agent/health/`.
 **Status:** operational. 44 metrics across three domains, measured separately and never summed.
 **Read with:** `docs/BROWSER-QA.md` (where six public-website metrics come from),

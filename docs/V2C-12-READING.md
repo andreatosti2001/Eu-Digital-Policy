@@ -1,5 +1,7 @@
 # V2C-12 — the eight v1 relationships of `data/instruments.json`, read against their sources: the reading notes
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** V2C-12, 15 Nov 2026 · **Closed by:** «Final checkpoint of the V2C-12 session» · **Catalogue:** `docs/README.md`
+
 **Session:** V2C-12, Track R (`docs/prompts/v2-v2c-12-v1-relationships.md`; scope `docs/ROADMAP-v2.md` §8, "The scope of the
 V2C-12 session"). **Read on 15 Nov 2026**, in this environment, from the Publications Office's Cellar by CELEX with
 `Accept: application/xhtml+xml` and `Accept-Language: eng` (the two proposals as PDF/HTML manifestations, §1). These notes are

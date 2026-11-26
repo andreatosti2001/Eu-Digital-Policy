@@ -1,5 +1,7 @@
 # The Regulatory Change Detector
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of Agent 3 · **Catalogue:** `docs/README.md`
+
 **Status:** reference. Agent 3 — what it detects, how it classifies, and what it
 refuses to say.
 **Built:** SESSION 09, 2 September 2026.

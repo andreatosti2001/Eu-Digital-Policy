@@ -1,5 +1,7 @@
 # AGENT RUNBOOK
 
+**Lifecycle:** active · **Authority:** reference · **Home of:** how the Scout is scheduled and run · **Catalogue:** `docs/README.md`
+
 **Status:** rewritten in the SESSION 06 follow-up (2 September 2026) to describe the system
 that actually runs today. The version before this one documented a Scout implementation that
 had been retired during the SESSION 00–06 reconciliation, kept only as design reference. That

@@ -1,5 +1,7 @@
 # SEO OPERATIONS
 
+**Lifecycle:** active · **Authority:** reference · **Home of:** what the repository controls in search, and the owner's steps · **Catalogue:** `docs/README.md`
+
 **Written:** 27 September 2026. **Read with:** `docs/SEO-AUDIT-2026-09-27.md` (the state before),
 `docs/DISCOVERABILITY-STRATEGY.md` (why), `docs/DEPLOYMENT.md` (how the site is published).
 

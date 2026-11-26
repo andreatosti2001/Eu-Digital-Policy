@@ -1,5 +1,7 @@
 # Browser QA
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** `agent/browser/` · **Catalogue:** `docs/README.md`
+
 **SESSION 19.** The repository's own browser regression suite: `agent/browser/`.
 **Status:** operational. Runs locally and in GitHub Actions.
 **Read with:** `docs/IMPLEMENTATION-QA.md` (which makes it a gate) and `docs/UX-AUDIT.md`

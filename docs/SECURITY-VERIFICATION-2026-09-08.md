@@ -1,5 +1,7 @@
 # Security verification — SESSION 23.5
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** the adversarial gate of 8 Sep 2026 · **Closed by:** on `main` `8f1b411` · **Catalogue:** `docs/README.md`
+
 **The gate:** control plane security and autonomy boundaries, verified adversarially before the
 end-to-end simulation.
 **Run:** 8 September 2026, `node agent/policy/verify/cli.mjs`.

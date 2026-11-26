@@ -1,5 +1,7 @@
 # PRODUCTION OPERATING MODE
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** `agent/production/`: the daily cycle and the readiness checklist · **Catalogue:** `docs/README.md`
+
 **SESSION 29.** Activate production operation under the existing autonomy policy; define the
 daily cycle, the weekly reviews and the monthly reviews; keep the system observable
 end-to-end; verify the Control Room discovery boundary and the final visual standard; **output

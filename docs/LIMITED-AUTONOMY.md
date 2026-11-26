@@ -1,5 +1,7 @@
 # Limited autonomy, activated
 
+**Lifecycle:** active · **Authority:** normative · **Home of:** the grant ledger, allowlists and gates (the code governs) · **Catalogue:** `docs/README.md`
+
 **Session:** 26 · 9 September 2026
 **Status:** binding. `agent/policy/governance.mjs` and `agent/autonomy/` are the mechanism;
 this document describes it. Where the two disagree, the code governs and the disagreement is

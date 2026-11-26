@@ -1,5 +1,7 @@
 # Track M (eidas2 milestone) — the reading notes for `ap-eidas2-01`
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** Track M, `eidas2`, 23 Nov 2026 · **Closed by:** «Final checkpoint of the Track M session (eidas2 milestone)» · **Catalogue:** `docs/README.md`
+
 **Session:** Track M, the `eidas2` milestone of 24 Dec 2026 (`docs/prompts/v2-track-m-eidas2-milestone.md`; scope `docs/ROADMAP-v2.md` §8,
 23 Nov 2026, "The scope of the Track M session (eidas2 milestone)": the rule only, `eidas2`'s status and milestones to Session 25; and
 "Track M (eidas2), the corrigenda without an English expression": read in Italian or French). **Read on 23 Nov 2026**, in this environment,

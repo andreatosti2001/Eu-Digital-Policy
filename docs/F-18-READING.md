@@ -1,5 +1,7 @@
 # F-18 — «immediately» against DMA Art. 3(10): the reading notes
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** F-18 against DMA Art. 3(10), 17 Nov 2026 · **Closed by:** «Final checkpoint of the F-18 session» · **Catalogue:** `docs/README.md`
+
 **Session:** F-18, Track R, evidence (`docs/prompts/v2-f-18-dma-immediately.md`; scope `docs/ROADMAP-v2.md` §8, "The scope of the F-18
 session"). **Read on 17 Nov 2026**, in this environment, from the Publications Office's Cellar by CELEX with
 `Accept: application/xhtml+xml` and `Accept-Language: eng`, text extracted by stripping the markup. These notes are W.1 and the W.2

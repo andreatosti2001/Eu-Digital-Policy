@@ -1,3 +1,5 @@
+**Lifecycle:** active · **Authority:** normative · **Home of:** the BRIEF v2.0, the author's contract between sessions · **Catalogue:** `docs/README.md`
+
 <!--
 Provenance: the BRIEF v2.0, the author's document, committed on the author's decision of 27 Oct 2026
 (D-1, docs/ROADMAP-v2.md §8). Text below the rule is verbatim, in Italian, as the author pasted it in

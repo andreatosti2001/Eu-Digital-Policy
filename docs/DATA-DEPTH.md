@@ -1,5 +1,7 @@
 # DATA DEPTH
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of Agent 4 · **Catalogue:** `docs/README.md`
+
 **Agent 4, built in SESSION 11.** What important legal and regulatory knowledge is missing
 from the current structured representation.
 

@@ -1,5 +1,7 @@
 # The Source Scout
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of Agent 1 · **Catalogue:** `docs/README.md`
+
 Agent 1. The first agent this project has actually built.
 
 It answers one question — *what has been published that bears on the

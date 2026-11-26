@@ -1,5 +1,7 @@
 # DOCUMENTATION DEPENDENCY MAP — who reads each document, and which of its sentences code depends on
 
+**Lifecycle:** active · **Authority:** reference · **Home of:** who reads each document; the anchored sentences · **Snapshot of:** `5232941` · **Catalogue:** `docs/README.md`
+
 **Status: A MEASUREMENT AND A PROPOSAL; IT DECIDES NOTHING AND MOVES NOTHING.** Written in documentation session D1 (26 Nov 2026,
 `docs/DOCS-SIMPLIFICATION-PLAN.md` §2; scope: `docs/ROADMAP-v2.md` §8, «The scope of the documentation session D1»), on
 `claude/intelligent-rubin-8pykrj`, measured on `5232941`. **A snapshot:** the script that produced §A–§C was kept outside the

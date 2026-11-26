@@ -1,5 +1,7 @@
 # The Control Room
 
+**Lifecycle:** active · **Authority:** normative · **Home of:** what `.control-room/` is; §12, what it may never do · **Catalogue:** `docs/README.md`
+
 **Status:** binding. The reference document for `.control-room/` — the private control plane
 for *The European Legal Framework for the Digital World*. Written in SESSION 21. Realigned with the
 interface in v2 Session 3 (27 Oct 2026, `docs/ROADMAP-v2.md` items 0.4 and 1.3). §5 is now an

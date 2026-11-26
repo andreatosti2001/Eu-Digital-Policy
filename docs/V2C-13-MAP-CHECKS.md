@@ -1,5 +1,7 @@
 # V2C-13 — the map checks M-08…M-16: measurement and proposal
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** V2C-13, the map checks, 16 Nov 2026 · **Closed by:** «V2C-13, W.4: the next session» · **Catalogue:** `docs/README.md`
+
 Session V2C-13 (Track R), 16 Nov 2026. Scope: `docs/ROADMAP-v2.md` §8, "The scope of the V2C-13 session". Prompt:
 `docs/prompts/v2-v2c-13-map-checks.md`. Design: `docs/V2-DATA-DESIGN.md` §1.4, §1.5, §4. **Nothing in `tools/` or `data/` was written
 to produce this document**: the measurement below was made by a throwaway script outside the tree that applies each rule, as §1.5

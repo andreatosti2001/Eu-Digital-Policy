@@ -1,5 +1,7 @@
 # PHASE 3 AUDIT — what Phase 3 produced, measured on 3 November 2026
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** Phase 3 measured, 3 Nov 2026 · **Closed by:** «The checkpoint of v2 Session 17.5 = items 17.5.1, 17.5.2 and 17.5.0» · **Catalogue:** `docs/README.md`
+
 **Status: MEASURED; DECIDED BY THE AUTHOR ON 3 NOV 2026 (§8, v2 Session 17.5).** Written in v2 Session 17.5, 3 Nov 2026, on
 `claude/nifty-ride-kc0p4x`, cut from `main` at `4ab13a6`, on the author's scope (`docs/ROADMAP-v2.md` §8, "The
 scope of v2 Session 17.5"). The name of this file is the prompt's proposal; the author may change it.

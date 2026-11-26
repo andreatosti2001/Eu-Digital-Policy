@@ -1,5 +1,7 @@
 # DEPLOYMENT, THE GATE, AND THE SECURITY BOUNDARY
 
+**Lifecycle:** active · **Authority:** reference · **Home of:** the deploy gate and the owner's settings (`agent/release/` governs) · **Catalogue:** `docs/README.md`
+
 **Written:** 27 September 2026, with the measurements below taken that day from this
 environment, which — unlike earlier sessions' — could reach the deployed site.
 

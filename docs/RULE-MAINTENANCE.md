@@ -1,5 +1,7 @@
 # RULE MAINTENANCE — the manual process, written down before anything in it is automated
 
+**Lifecycle:** active · **Authority:** canonical · **Home of:** the manual process of rule maintenance · **Catalogue:** `docs/README.md`
+
 **Status: A DESCRIPTION OF WHAT A PERSON DOES; IT IMPLEMENTS NOTHING.** Item 4.1 of Phase 4, written in v2 Session 20
 (3 Nov 2026) on `claude/v2-session-20-phase-4`, as the author decided (`docs/ROADMAP-v2.md` §8, v2 Session 20, questions 1,
 3, 4 and 5; first item and exit: `docs/PHASE-4-SETUP.md` §6). **"Roadmap §8" means that approval record throughout; this

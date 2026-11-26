@@ -1,5 +1,7 @@
 # CURRENT ARCHITECTURE
 
+**Lifecycle:** active · **Authority:** canonical · **Home of:** the architecture; §12 the validator baseline · **Catalogue:** `docs/README.md`
+
 **Status:** written in SESSION 00 (reconnaissance). Describes commit `7248290` on `main`.
 **Method:** read from the repository, not from the previous README's description of it.
 Where the two disagree, this document says so.

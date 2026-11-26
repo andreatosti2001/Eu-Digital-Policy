@@ -1,5 +1,7 @@
 # The Legal Verifier
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of Agent 2 · **Catalogue:** `docs/README.md`
+
 Agent 2. It answers one question — *what does this document actually establish?* —
 and it is allowed to answer "not enough to say" and "two authorities disagree",
 because those are frequently the true answers.

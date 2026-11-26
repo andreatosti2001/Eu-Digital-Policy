@@ -1,5 +1,7 @@
 # v2 Session 10 · item 10.2 — every displayed note, before and after
 
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** v2 Session 10, 10.2: every note before and after, 28 Oct 2026 · **Closed by:** «The checkpoint of v2 Session 10 = items 10.1 and 10.2» · **Catalogue:** `docs/README.md`
+
 Generated on 28 Oct 2026 from `data/` through `js/format.js` `readerText()`, the render-time filter approved in `docs/ROADMAP-v2.md` §8 (rows of 28 Oct 2026, item 10.2). **Nothing in `data/` changed**: these are the texts a reader is shown. Only the sentences that change are listed (− before, + after); the rest of each note is printed as written. `⟨label → target⟩` is a link; `claim [n]` is a footnote button in the brief that opens claim n in the evidence panel, numbered at run time in the brief’s order. R1 also drops the kind note’s “Direction: from = …” sentence and “(from)” (the interaction box, not the filter). R8, the bibliography page’s own copy, is in the report.
 
 ## R1 — interaction box: the relation-kind note (instrument pages, `instrument.html`, the brief and its it/fr/es editions) — 2 records

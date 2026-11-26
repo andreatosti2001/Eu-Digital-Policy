@@ -1,5 +1,7 @@
 # Verification integration
 
+**Lifecycle:** active · **Authority:** reference · **Points to:** the code of the integration adapter · **Catalogue:** `docs/README.md`
+
 **Status:** reference. The adapter between `VerificationRecord`s and the
 canonical datasets — what it does, what it refuses, and what it cannot do.
 **Built:** SESSION 08, 2 September 2026.
