@@ -1,6 +1,6 @@
 # PHASE 4 — the plan to conclude it: exit criteria that can fail, and the sessions
 
-**Status: A PROPOSAL, PUT TO THE AUTHOR; IT DECIDES NOTHING UNTIL ROADMAP §8 SAYS SO.** Drafted on 4 Nov 2026, after v2
+**Status: APPROVED BY THE AUTHOR ON 4 NOV 2026** (§8, «The plan to conclude Phase 4»), **AND PHASE 4 WAS CONCLUDED THE SAME DAY** (§8, «Phase 4 concluded»). *(Corrected on 26 Nov 2026, documentation session D1; the line read «A PROPOSAL, PUT TO THE AUTHOR; IT DECIDES NOTHING UNTIL ROADMAP §8 SAYS SO».)* Drafted on 4 Nov 2026, after v2
 Session 21 was merged (#60), on `claude/v2-phase-4-plan`, at the author's request ("I want you to conceive the sessions
 needed to conclude phase 4 efficiently and effectively"). The author's four answers to the questions put with the
 proposal are in §6; the approval is the §8 row that cites this file. **"Roadmap §8" means that approval record

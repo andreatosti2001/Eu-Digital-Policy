@@ -2,7 +2,7 @@
 
 **Status: A DESIGN DOCUMENT; IT IMPLEMENTS NOTHING. DECIDED BY THE AUTHOR ON 3 NOV 2026 (§8, v2 Session 17.5).** Written in v2 Session 17.5,
 3 Nov 2026, on `claude/nifty-ride-kc0p4x`, on the author's scope (`docs/ROADMAP-v2.md` §8, "The scope of v2 Session
-17.5"). The name of this file is the prompt's proposal. **Phase 4 was opened by the author on 3 Nov 2026 (§8, v2 Session 20, question 1)**; its first item, 4.1 (§6), is not yet written. D-4 is decided (the three names and §2.2 as drafted); D-5 is deferred
+17.5"). The name of this file is the prompt's proposal. **Phase 4 was opened by the author on 3 Nov 2026 (§8, v2 Session 20, question 1)**; its first item, 4.1 (§6), was written in v2 Session 20 as `docs/RULE-MAINTENANCE.md` (§8, «The final checkpoint of v2 Session 20», 4 Nov 2026), and **Phase 4 was concluded on 4 Nov 2026** (§8, «Phase 4 concluded»). *(Corrected on 26 Nov 2026, documentation session D1; the sentence read «its first item, 4.1 (§6), is not yet written».)* D-4 is decided (the three names and §2.2 as drafted); D-5 is deferred
 on §4's facts; §0 is read by principle; the entry condition (§5) and the first item (§6) are approved.
 
 **What governs it.** The brief (`docs/BRIEF-v2.md`): «Non aggiungere la Tier A/B/C come primo intervento. Prima di
