@@ -101,22 +101,7 @@ what it does not.
 
 **THE HIDDEN ENTRY PASSES ALL TEN VISUAL CONDITIONS AND ALL SIX SEPARATIONS, AND WAS NOT TOUCHED.** → `docs/PRODUCTION-OPERATING-MODE.md` §4a.
 
-**LIMITED AUTONOMY IS SWITCHED ON, AND WHAT THAT MEANS IS NARROW.** SESSION 26 recorded the
-first governance grant this repository has ever had: `agent/policy/governance/grants.jsonl`,
-git-tracked, naming the repository author, dated, expiring 9 March 2027, enabling the five
-protocol §20 low-risk categories over exactly two paths — `data/sources.json` and `docs/` —
-and, on the first of those, exactly eight bookkeeping fields.
-**`DEFAULT_POLICY.enabled_categories` is still `[]` and four suites still assert it.** That is
-not a contradiction: it is the BASE — what the policy permits when nobody has decided
-anything — and the policy in force is DERIVED from the grant ledger by
-`agent/policy/governance.mjs policyInForce()`. **Ask that, never `DEFAULT_POLICY`, when the
-question is "what may happen now".** A grant may never name a §19 category, a path outside
-the two eligible ones, a never-automatic field (`tier`, `role`, `supports`, `last_verified`,
-`verification_note`, `requires_verification`, `reference_gap` and five more), a risk above
-`low`, `production`, or no expiry — and every one of those refusals runs again on every READ,
-so a line written around `recordGrant` is not honoured either. `agent/policy/` is itself on
-the never-automatic path list, so **no grant can widen the rules that admitted it**.
-`docs/LIMITED-AUTONOMY.md`.
+**LIMITED AUTONOMY IS SWITCHED ON, AND WHAT THAT MEANS IS NARROW.** **Ask that, never `DEFAULT_POLICY`, when the question is "what may happen now".** → `docs/LIMITED-AUTONOMY.md`.
 
 **SESSION 27 FOUND THE GATE LADDER UNPASSABLE, AND REPAIRED IT UNDER AN EXPLICIT WARRANT.**
 Take a proposal with nothing wrong with it, in a category the grant enables over a path the
@@ -176,15 +161,7 @@ readings, enforced by a refusal to write rather than by a convention. First reco
 findings, 0 referable, 66 to a person, 144 proposing no act.
 `docs/CONTINUOUS-IMPROVEMENT.md`.
 
-**`agent/autonomy/` is the runner, and a grant replaces exactly two gates.**
-`agent/implement/preflight.mjs`'s `approved` and `approval_attributable`, and nothing else;
-the other eight must pass unchanged. The cycle is seven steps — a real isolated branch, the
-exact-match apply, the four validators, the browser suite where it is required, the full
-trace, a `--no-ff` merge into the WORKING branch only if every mandatory condition holds on
-the MEASURED facts, and retained rollback information. The default writes nothing: `run`
-without `--execute` rehearses. **Its first real run refused all fourteen proposals in the
-store, each by four independent gates**, and no autonomous change has ever merged anything.
-`docs/LIMITED-AUTONOMY.md` §6 and §7.
+**`agent/autonomy/` is the runner, and a grant replaces exactly two gates.** → `docs/LIMITED-AUTONOMY.md` §6, §7.
 
 **The autonomy policy has ONE home, and it is `agent/policy/`.** Do not re-implement a condition or a trigger there. → `docs/ORCHESTRATOR.md`.
 
@@ -602,14 +579,7 @@ patches, not checks. **Do not re-run** the latter two.
   and a path under `.control-room/` anywhere in an entry is a **refusal to write**, not a
   redaction. Nothing records without `--record`.
 
-- **The autonomy layer's action ledger is git-ignored, and the COMMIT is the durable record.**
-  `agent/autonomy/actions/actions.jsonl` holds one line per attempt — merged, reverted and
-  refused alike — with the branch, the base commit and the per-file pre-change hashes. It is
-  per-machine run state, so a fresh clone and a CI runner have none, and that is not the same
-  fact as no autonomous action having been taken. What survives a clone is the commit an
-  autonomous change made, whose message names the grant, the person who wrote it, the base
-  commit and the exact restore command. **The grant ledger is the opposite and is TRACKED**:
-  an authorization has to be attributable.
+- **The autonomy layer's action ledger is git-ignored, and the COMMIT is the durable record.** → `docs/LIMITED-AUTONOMY.md`.
 
 - **Your base may be stale.** Run `git fetch --all && git branch -a` before concluding
   anything about what this repository contains. An earlier session reported four existing
