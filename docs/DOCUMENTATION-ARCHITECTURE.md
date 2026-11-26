@@ -110,6 +110,9 @@ One line, **directly under the document's title, followed by a blank line**, wit
   `· **Superseded by:** <path>`.
 - A value that is not decided is written `uncertain`, never guessed (§6).
 
+**One exception of place**, the author's (§8, «After D2: the standard header on `docs/BRIEF-v2.md`»): the brief carries it **above its
+provenance comment**, because its title lies inside the verbatim text.
+
 **It is added, never substituted.** No existing sentence is changed, moved or removed to make room for it: the governance anchors are
 `contains` matches on exact sentences, and the code that reads a document's text looks for a heading or a fixed line that the header does
 not touch (`docs/DOCS-DEPENDENCY-MAP.md` §0: `## 5. Dataset dependency map` and `**Baseline at commit` in

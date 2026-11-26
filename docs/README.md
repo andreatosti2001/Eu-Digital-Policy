@@ -46,7 +46,7 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `docs/AUDIT-2026-11-11.md` | decisions | audit | closed | canonical | P0.1 and P0.4, 11 Nov 2026 | Checkpoint of the session "P0.1 + P0.4" approved |
 | `docs/AUTONOMY-AUTHORIZATION-POLICY.md` | agents | policy | active | normative | the executable policy (`agent/policy/` governs) |  |
 | `docs/AUTONOMY-POLICY.md` | agents | policy | active | normative | the four autonomy classes |  |
-| `docs/BRIEF-v2.md` | decisions | policy | active | normative | the BRIEF v2.0, binding on every v2 session |  |
+| `docs/BRIEF-v2.md` | decisions | policy | active | normative | the BRIEF v2.0, binding on every v2 session | its header sits above the provenance comment, outside the verbatim text («After D2: the standard header on `docs/BRIEF-v2.md`») |
 | `docs/BROWSER-QA.md` | frontend | spec | active | reference | points to `agent/browser/` |  |
 | `docs/CHANGE-DETECTOR.md` | agents | spec | active | reference | points to the code of Agent 3 |  |
 | `docs/CONTENT-FRESHNESS-POLICY.md` | evidence | policy | active | normative | when content is stale |  |
@@ -158,7 +158,7 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `docs/TRACK-M-EIDAS2-READING.md` | rules | reading | closed | canonical | Track M, `eidas2`, 23 Nov 2026 | Final checkpoint of the Track M session (eidas2 milestone) |
 | `docs/UX-AUDIT.md` | agents | spec | active | reference | points to the code of Agent 8 |  |
 | `docs/V2-CLOSURE.md` | decisions | audit | closed | canonical | the v2 measured against the brief, 28 Oct 2026 | The checkpoint of v2 Session 11 = the closing gate of v2 |
-| `docs/V2-DATA-DESIGN.md` | evidence | design | uncertain | canonical | the v2 data design (map, triggers, labels, registers) | its header says parts are Phase 3's and not implemented; Phase 3 is closed (§8, 3 Nov 2026); which parts were built was not measured |
+| `docs/V2-DATA-DESIGN.md` | evidence | design | active | canonical | the v2 data design (map, triggers, labels, registers) | §1, §2 and §4 built, §3 (status labels) open for the status-labels session; measured, with a dated note, by «After D2: the lifecycle of `docs/V2-DATA-DESIGN.md`, measured» |
 | `docs/v2-design/session-10-before-after.md` | evidence | run | closed | canonical | v2 Session 10, 10.2: every note before and after, 28 Oct 2026 | The checkpoint of v2 Session 10 = items 10.1 and 10.2 |
 | `docs/V2C-03-05-READING.md` | evidence | reading | closed | canonical | V2C-03…05, 16 Nov 2026 | Final checkpoint of the V2C-03…05 session |
 | `docs/V2C-12-READING.md` | evidence | reading | closed | canonical | V2C-12, 15 Nov 2026 | Final checkpoint of the V2C-12 session |
@@ -193,7 +193,6 @@ names documents, not what is true in them: where a reference document disagrees 
 
 | Document | What is uncertain | Why, and who decides |
 |---|---|---|
-| `docs/V2-DATA-DESIGN.md` | lifecycle | its header says the map audit, the status labels and the triggers are Phase 3's and not implemented; Phase 3 is closed (§8, 3 Nov 2026). Which parts were built was **not measured** by D2: a measurement for a later session (`tools/map-audit.mjs`, `tools/trigger-audit.mjs` and `data/taxonomy.json` against its §2–§4), then the author's decision. |
 | `docs/METHODOLOGY-NOTE-v2.md` | lifecycle | written to ship with the dependency map; `network.html` shipped on 23 Nov 2026 and `methodology.html` does not carry it. Left uncertain by the author (§8, «D2, D2.2 question 4: the lifecycle of `docs/METHODOLOGY-NOTE-v2.md`»): an editorial decision for a later visible session. |
 
 ## 4 · Totals, derived from §1
@@ -203,7 +202,7 @@ Recounted from the table, not written to be believed; D3's check derives them ag
 - **documents:** 143
 - **domain:** agents 26 · control-room 4 · decisions 20 · docs 14 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
 - **kind:** account 1 · archive 1 · audit 15 · catalogue 2 · design 3 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 51 · reading 10 · run 5 · spec 28
-- **lifecycle:** active 61 · closed 79 · historical 1 · uncertain 2
+- **lifecycle:** active 62 · closed 79 · historical 1 · uncertain 1
 - **authority:** canonical 100 · normative 15 · reference 28
 
 ## 5 · What this catalogue does not establish

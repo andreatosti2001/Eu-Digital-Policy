@@ -1,6 +1,6 @@
 # V2 DATA DESIGN — schemas and technical structure
 
-**Lifecycle:** uncertain · **Authority:** canonical · **Home of:** the v2 data design (map, triggers, labels, registers) · **Catalogue:** `docs/README.md`
+**Lifecycle:** active · **Authority:** canonical · **Home of:** the v2 data design (map, triggers, labels, registers) · **Catalogue:** `docs/README.md`
 
 **Status: APPROVED (`docs/ROADMAP-v2.md` §8: D-3, D-6, D-7, D-8 and the trigger model, 25–27 Oct 2026), implemented in part** — item 2.1, below; the map audit (§4), the status labels (§3) and the triggers (§2) are Phase 3's and are not implemented. Written in v2 Session 2, 25–27 Oct 2026, on `claude/v2-session-2-schemas`, cut
 from `main` at `933515a`. It is design only:
@@ -9,6 +9,12 @@ from `main` at `933515a`. It is design only:
 
 It is roadmap item 2.0, brought forward by the author's decision of 25 Oct 2026 (`docs/ROADMAP-v2.md` §8).
 Phase 3 implements what is approved here.
+
+**Measured on 26 Nov 2026** (after documentation session D2, read-only on `7d5fbdc`; `docs/ROADMAP-v2.md` §8, «After D2: the lifecycle of
+`docs/V2-DATA-DESIGN.md`, measured»). The status line above is kept as written and is stale in part: **§1 the map is built** (`network.html`;
+`tools/map-audit.mjs` and `tools/register-audit.mjs` carry M-03…M-16; M-02 is not found under its own id), **§2 the triggers are built**
+(`tools/trigger-audit.mjs`, T-01…T-11) and **§4 is built** (R-01 included). **§3, the six status labels, is not built**: no `label:` term in
+`data/taxonomy.json`, no S-04, S-05 or S-06 check; it waits for the status-labels session of `docs/SESSION-ARCHITECTURE.md` (V2C-14, V2C-20).
 
 **Item 2.1 implemented, 27 Oct 2026 (v2 Session 4).** What this design proposed for the register and
 the watchlist is now in `data/`, as the author approved it entry by entry (`docs/ROADMAP-v2.md` §8):
