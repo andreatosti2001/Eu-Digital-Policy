@@ -31,21 +31,21 @@ import {
 import { PATTERNS } from '../agent/proposals/governance/patterns.mjs';
 import { AGENT_SUITES } from '../agent/implement/checks.mjs';
 
-const ROOT = REPO_ROOT;
+const REPO = REPO_ROOT;
 const git = (cwd, ...args) => execFileSync('git', ['-c', 'user.name=docs-check selftest', '-c', 'user.email=selftest@example.invalid', '-c', 'init.defaultBranch=main', ...args], { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 
 /* ---------------------------------------------------------------- the scratch tree */
 
 const anchorPaths = [...new Set(PATTERNS.flatMap((p) => (p.instances ?? []).map((i) => i.anchor)).filter((a) => a && (a.kind === 'contains' || a.kind === 'path')).map((a) => a.path))];
-const SOURCES = [...new Set([...perimeter(trackedFiles(ROOT)), ...PINS.map((p) => p.reader), ...anchorPaths])];
+const SOURCES = [...new Set([...perimeter(trackedFiles(REPO)), ...PINS.map((p) => p.reader), ...anchorPaths])];
 
 const PRISTINE = mkdtempSync(join(tmpdir(), 'docs-check-pristine-'));
-for (const f of SOURCES) { mkdirSync(join(PRISTINE, dirname(f)), { recursive: true }); cpSync(join(ROOT, f), join(PRISTINE, f)); }
+for (const f of SOURCES) { mkdirSync(join(PRISTINE, dirname(f)), { recursive: true }); cpSync(join(REPO, f), join(PRISTINE, f)); }
 /* What the copied documents point or link to, outside the copy: a file is copied, a directory is made empty.
    Found by the check itself, so a target a later document adds is followed without editing this suite. */
 for (const f of (await docsCheck({ root: PRISTINE })).findings.filter((x) => x.code === 'POINTS' || x.code === 'LINK')) {
   const target = f.code === 'POINTS' ? f.message.match(/names `([^`]+)`/)[1] : f.message.match(/resolves to `([^`]+)`/)[1];
-  const from = join(ROOT, target);
+  const from = join(REPO, target);
   if (!existsSync(from)) continue; /* broken in the repository too: DC0 on the repository says so */
   if (statSync(from).isDirectory()) mkdirSync(join(PRISTINE, target), { recursive: true });
   else { mkdirSync(join(PRISTINE, dirname(target)), { recursive: true }); cpSync(from, join(PRISTINE, target)); }
@@ -87,9 +87,9 @@ test('DC0 · the pristine scratch copy is clean: 0 errors, and its commits are u
 });
 
 test('DC0 · the repository: 0 errors, every check measured something, and the check wrote nothing', async () => {
-  const before = git(ROOT, 'status', '--porcelain');
-  const { findings, measured } = await docsCheck({ root: ROOT });
-  assert.equal(git(ROOT, 'status', '--porcelain'), before, 'docs-check changed the working tree');
+  const before = git(REPO, 'status', '--porcelain');
+  const { findings, measured } = await docsCheck({ root: REPO });
+  assert.equal(git(REPO, 'status', '--porcelain'), before, 'docs-check changed the working tree');
   assert.deepEqual(errorsOf(findings), [], errorsOf(findings).map((f) => `${f.code} ${f.file}:${f.line} ${f.message}`).join('\n'));
   for (const k of ['perimeter', 'catalogue_rows', 'headers', 'closed_by', 'catalogue_citations', 'paths', 'anchors', 'pins']) assert.ok(measured[k] > 0, `${k} measured nothing`);
   assert.equal(measured.perimeter, measured.catalogue_rows);
@@ -97,7 +97,7 @@ test('DC0 · the repository: 0 errors, every check measured something, and the c
 });
 
 test('DC0 · every code the tool can emit has a severity, and the errors are the author\'s list', () => {
-  const src = readFileSync(join(ROOT, 'tools/docs-check.mjs'), 'utf8');
+  const src = readFileSync(join(REPO, 'tools/docs-check.mjs'), 'utf8');
   const emitted = [...new Set([...src.matchAll(/add\('([A-Z-]+)'/g)].map((m) => m[1]))];
   const pathCodes = ['PATH', 'PATH-PROMPT', 'PATH-FIXTURE']; /* emitted through one ternary */
   for (const c of [...emitted, ...pathCodes]) assert.ok(SEVERITY[c], `${c} has no severity`);
@@ -106,7 +106,7 @@ test('DC0 · every code the tool can emit has a severity, and the errors are the
 });
 
 test('DC0 · the anchors are imported, not copied: no anchor text is written in the tool', () => {
-  const src = readFileSync(join(ROOT, 'tools/docs-check.mjs'), 'utf8');
+  const src = readFileSync(join(REPO, 'tools/docs-check.mjs'), 'utf8');
   assert.match(src, /from '\.\.\/agent\/proposals\/governance\/patterns\.mjs'/);
   for (const p of PATTERNS) for (const i of p.instances ?? []) {
     if (i.anchor?.kind === 'contains' && i.anchor.text.length >= 12) assert.ok(!src.includes(i.anchor.text), `the tool holds a copy of the anchor «${i.anchor.text}»`);
@@ -115,7 +115,7 @@ test('DC0 · the anchors are imported, not copied: no anchor text is written in 
 
 test('DC0 · the suite is in AGENT_SUITES, so a change under tools/ runs it; the check and the suite run in CI', () => {
   assert.ok(AGENT_SUITES.includes('tools/docs-check-selftest.mjs'));
-  const ci = readFileSync(join(ROOT, '.github', 'workflows', 'qa.yml'), 'utf8');
+  const ci = readFileSync(join(REPO, '.github', 'workflows', 'qa.yml'), 'utf8');
   assert.match(ci, /run: node tools\/docs-check\.mjs\n/, 'the check is a step of its own, which fails on an error');
   assert.match(ci, /run: node --test tools\/docs-check-selftest\.mjs\n/);
 });
@@ -140,7 +140,7 @@ test('DC1 · the table or the rules cannot be read (CAT-PARSE, CAT-RULES)', asyn
 });
 
 test('DC1 · the vocabulary is read from the rules, so a value the rules add is admitted', async () => {
-  const v = vocabulary(readFileSync(join(ROOT, RULES_DOC), 'utf8'));
+  const v = vocabulary(readFileSync(join(REPO, RULES_DOC), 'utf8'));
   assert.deepEqual(v.lifecycle, ['active', 'closed', 'superseded', 'historical', 'uncertain']);
   assert.ok(v.domain.includes('i18n') && v.domain.length === 9 && v.kind.length === 14, JSON.stringify(v));
   const r = row(HEADERED);
@@ -180,7 +180,7 @@ test('DC2 · the one exception of place: the brief\'s header on line 1 passes, a
 test('DC2 · the header parser and the form, as units', () => {
   const f = parseHeader('**Lifecycle:** closed · **Authority:** canonical · **Home of:** x · **Closed by:** «T» · **Catalogue:** `docs/README.md`');
   assert.deepEqual(f.map((x) => x.name), ['Lifecycle', 'Authority', 'Home of', 'Closed by', 'Catalogue']);
-  const v = vocabulary(readFileSync(join(ROOT, RULES_DOC), 'utf8'));
+  const v = vocabulary(readFileSync(join(REPO, RULES_DOC), 'utf8'));
   assert.deepEqual(headerFormProblems(f, v), []);
   assert.match(headerFormProblems(parseHeader('**Lifecycle:** closed · **Authority:** canonical · **Home of:** x · **Catalogue:** `docs/README.md`'), v).join(), /closed document without «Closed by»/);
   assert.match(headerFormProblems(parseHeader('**Lifecycle:** active · **Authority:** canonical · **Home of:** x · **Closed by:** «T» · **Snapshot of:** `abc1234` · **Catalogue:** `docs/README.md`'), v).join(), /out of order|Closed by» on a document/);
