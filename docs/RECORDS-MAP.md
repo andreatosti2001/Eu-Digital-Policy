@@ -1,6 +1,6 @@
 # THE CLOSED RECORDS — the map before any move (D6.1)
 
-**Lifecycle:** active · **Authority:** canonical · **Home of:** the map of the closed records and of every reference to them, measured in D6 (D6.1) · **Snapshot of:** `e3b7e28` · **Catalogue:** `docs/README.md`
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** the map of the closed records and of every reference to them, measured in D6 (D6.1) · **Snapshot of:** `e3b7e28` · **Closed by:** «Final checkpoint of the documentation session D6» · **Catalogue:** `docs/README.md`
 
 **Written in documentation session D6** (26 Nov 2026; `docs/ROADMAP-v2.md` §8, «The scope of the documentation session D6»; the prompt
 `docs/prompts/v2-docs-records.md`, D6.1), on `claude/zen-brahmagupta-btc1tx`, measured on `e3b7e28` (`main` `c47b535` with D6's scope row),

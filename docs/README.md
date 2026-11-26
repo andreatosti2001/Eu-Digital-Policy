@@ -29,7 +29,7 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `AGENTS.md` | docs | entry | active | normative | the agents' entry point and its rules | reduced to an entry point in D4 (§8, «D1, D.3 question 1…») |
 | `CLAUDE.md` | docs | entry | active | normative | points to `AGENTS.md` |  |
 | `docs/AGENTS-ENTRY-MOVES.md` | docs | design | closed | canonical | the moves out of `AGENTS.md` in D4 (D4.1), as of 26 Nov 2026 | Final checkpoint of the documentation session D4 |
-| `docs/RECORDS-MAP.md` | docs | design | active | canonical | the map of the closed records and their references in D6 (D6.1), a snapshot of `e3b7e28` | written under «The scope of the documentation session D6»; put to the author at D6.1 |
+| `docs/RECORDS-MAP.md` | docs | design | closed | canonical | the map of the closed records and their references in D6 (D6.1), a snapshot of `e3b7e28` | Final checkpoint of the documentation session D6 |
 | `docs/AGENT-CONTRACTS.md` | agents | policy | active | normative | the eighteen contracts |  |
 | `docs/AGENT-ROLES.md` | agents | policy | active | normative | the ten agent roles |  |
 | `docs/AGENT-RUNBOOK.md` | agents | spec | active | reference | how the Scout is scheduled and run |  |
@@ -94,7 +94,7 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `docs/PROJECT-CONTEXT.md` | docs | spec | active | reference | what the project is; the seven principles (snapshot of `7248290`) | a snapshot (the plan §2): the principles hold, the figures are of `7248290` |
 | `docs/prompts/v2-docs-agents-entry.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D4» → closed by «Final checkpoint of the documentation session D4» |
 | `docs/prompts/v2-docs-handover.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D5» → closed by «Final checkpoint of the documentation session D5» |
-| `docs/prompts/v2-docs-records.md` | docs | prompt | active | canonical | the session's instructions | scope «The scope of the documentation session D6» (this session) |
+| `docs/prompts/v2-docs-records.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D6» → closed by «Final checkpoint of the documentation session D6» |
 | `docs/prompts/v2-docs-buffer.md` | docs | prompt | active | canonical | the session's instructions | no scope row: D7, written by D6 (D6.4), not yet run |
 | `docs/prompts/v2-docs-authority-catalogue.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D2» → closed by «Final checkpoint of the documentation session D2» |
 | `docs/prompts/v2-docs-check.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D3» → closed by «Final checkpoint of the documentation session D3» |
@@ -209,7 +209,7 @@ Recounted from the table, not written to be believed; D3's check derives them ag
 - **documents:** 150
 - **domain:** agents 26 · control-room 4 · decisions 21 · docs 20 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
 - **kind:** account 1 · archive 2 · audit 15 · catalogue 2 · design 5 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 55 · reading 10 · run 5 · spec 28
-- **lifecycle:** active 63 · closed 84 · historical 2 · uncertain 1
+- **lifecycle:** active 61 · closed 86 · historical 2 · uncertain 1
 - **authority:** canonical 107 · normative 15 · reference 28
 
 ## 5 · What this catalogue does not establish
