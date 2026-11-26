@@ -69,7 +69,7 @@ if (command === 'queue') {
   out();
   if (!survey.length) {
     out('  No proposals. agent/records/ is git-ignored and empty in a fresh checkout: run the');
-    out('  producing agents first. The chain is in docs/HANDOVER.md, "Exact next objective".');
+    out('  producing agents first. The chain is in docs/archive/HANDOVER-to-2026-11-13.md, "Exact next objective".');
     out();
     out(`  The approval ledger at ${ledgerPath()} holds ${ledger.decisions.length} decision(s).`);
     out();
@@ -261,7 +261,7 @@ if (command === 'run') {
     out('  Nothing in the queue.');
     out();
     out('  agent/records/ is git-ignored, so a fresh checkout starts empty. Run the producing');
-    out('  agents first — docs/HANDOVER.md, "Exact next objective" — then run this again.');
+    out('  agents first — docs/archive/HANDOVER-to-2026-11-13.md, "Exact next objective" — then run this again.');
     out();
     out(`  trace ${r.trace_id}`);
     out();
