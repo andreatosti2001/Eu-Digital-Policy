@@ -190,7 +190,7 @@ export const PATTERNS = Object.freeze([
     instances: Object.freeze([
       Object.freeze({ when: '2026-09-09', what: 'the first real autonomy run: 0 merged, 0 reverted, 14 refused, each by four independent gates.', anchor: { kind: 'contains', path: 'docs/archive/HANDOVER-to-2026-11-13.md', text: '0 merged · 0 reverted · 14' } }),
       Object.freeze({ when: '2026-09-09', what: 'the gap router\'s refusals, named rather than dropped.', anchor: { kind: 'contains', path: 'docs/SESSION-25-FIRST-REAL-WORLD-RUN.md', text: 'NOT PROPOSABLE HERE' } }),
-      Object.freeze({ when: 'recorded', what: 'and the reason the clustering matters: the rollback gate has never examined a record on either workflow type that declares it.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 'the rollback gate has never examined a record' } }),
+      Object.freeze({ when: 'recorded', what: 'and the reason the clustering matters: the rollback gate has never examined a record on either workflow type that declares it.', anchor: { kind: 'contains', path: 'docs/ORCHESTRATOR.md', text: 'the rollback gate has never examined a record' } }),
     ]),
   }),
 
