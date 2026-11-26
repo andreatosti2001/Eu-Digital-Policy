@@ -113,7 +113,7 @@ what it does not.
 
 **The autonomy policy has ONE home, and it is `agent/policy/`.** Do not re-implement a condition or a trigger there. → `docs/ORCHESTRATOR.md`.
 
-**The verification gate is not a test suite.** 
+**The verification gate is not a test suite.** → `docs/SECURITY-VERIFICATION-2026-09-08.md` §2.
 **The Control Room is not an agent.** `.control-room/` is the private administrative interface
 a PERSON uses — observe, review, decide. It is behind a dot prefix because that is the one
 publication boundary this repository has, and behind server-side authentication and
@@ -321,18 +321,14 @@ patches, not checks. **Do not re-run** the latter two.
 ## Known hazards
 
 - **The brief's text has one home: the markup of `index.html`.** **Do not bring a copy back under any name** — `design-qa.mjs` fails a script that holds a page's text (`tools/prose-homes.mjs`), `validate.mjs` fails a `brief.json` key other than `parts`/`reading_graph`, and the browser suite's `search:brief-*` checks fail a stale index. → `docs/CURRENT-ARCHITECTURE.md` §8.
-- **Superseded translations.** Correcting an English string without declaring its key
-  `superseded` in `i18n/locales.json` leaves the it/fr/es editions asserting the thing you
-  just corrected. This has already happened once.
+- **Superseded translations.** → `docs/DATA-GOVERNANCE.md` §6.
 - **The deploy gate exists and was switched on 24 Oct 2026, unconfirmed.** → `docs/DEPLOYMENT.md` §3.
 - **A data change needs a regeneration.** Never edit a file under `instruments/` by hand, and never store in `data/` anything to make a page read better: titles live in `tools/seo.mjs`. → `docs/SEO-OPERATIONS.md`.
 - **An edited inline script is a blocked script.** Inline event handlers are an error. → `docs/DEPLOYMENT.md`.
 - **The validators do not read prose.** → `docs/VERIFICATION-POLICY.md`.
 - **`agent/ux/` has never opened a page, and `agent/browser/` now does.** → `docs/BROWSER-QA.md` §4.
 - **A passing validator proves less than it looks.** → `docs/VERIFICATION-POLICY.md`.
-- **Derived output depends on the reader's clock.** `isPast` compares against
-  `new Date().toISOString()` in UTC, so pipeline stages, the calendar and the status strips
-  change with when and where a page is opened. Date every report (F-15).
+- **Derived output depends on the reader's clock.** → `docs/VERIFICATION-POLICY.md` §4.
 - **`git blame` answers nothing.** → `docs/VERIFICATION-POLICY.md`.
 - **An `ApprovalRequest` in `agent/records/` is a request, not a grant.** One home for the fact of a decision — do not add a third writer. → `docs/IMPLEMENTATION-QA.md` §3.
 - **The privileged API has no authentication and no authorization — and it is still there.** Do not point a Control Room at the viewer's routes, and do not "fix" the viewer by bolting a token onto it — they exist for different purposes, and merging them would give a development tool a security model nobody tests. → `docs/HEALTH-MONITOR.md` §6.
