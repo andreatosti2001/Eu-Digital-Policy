@@ -1,6 +1,6 @@
 # AGENTS.md AS AN ENTRY POINT — the map of the moves (D4.1)
 
-**Lifecycle:** active · **Authority:** canonical · **Home of:** the moves out of `AGENTS.md` in D4, and what each leaves behind · **Catalogue:** `docs/README.md`
+**Lifecycle:** closed · **Authority:** canonical · **Home of:** the moves out of `AGENTS.md` in D4, and what each leaves behind · **Closed by:** «Final checkpoint of the documentation session D4» · **Catalogue:** `docs/README.md`
 
 **Status: A MEASUREMENT AND A PROPOSAL. IT MOVES NOTHING.** Written in documentation session D4 (26 Nov 2026,
 `docs/DOCS-SIMPLIFICATION-PLAN.md` §2; scope: `docs/ROADMAP-v2.md` §8, «The scope of the documentation session D4»), on
