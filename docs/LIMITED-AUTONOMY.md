@@ -293,3 +293,46 @@ person's decision.
 by every role that holds `live:read`. There is no route that records a grant, revokes one,
 triggers a run or rolls one back, and **the absence is the control**: an interface that could
 switch autonomy on is an interface a bug in that server could switch autonomy on through.
+
+## Moved from `AGENTS.md` (26 Nov 2026, D4)
+
+> **Moved verbatim from `AGENTS.md`** at `064488c` (lines 193–208; 268–276; 748–755) on 26 Nov 2026 by documentation session D4, on the
+> author's row «Checkpoint D4.1 of the documentation session D4: the map of the moves out of `AGENTS.md`» (`docs/ROADMAP-v2.md` §8;
+> `docs/AGENTS-ENTRY-MOVES.md`, units N7, N11, H17). Kept as `AGENTS.md` carried it: «above» and «below» in it refer to
+> that file, and each dated claim is as of its own date. `AGENTS.md` keeps one line for each, pointing here.
+
+**LIMITED AUTONOMY IS SWITCHED ON, AND WHAT THAT MEANS IS NARROW.** SESSION 26 recorded the
+first governance grant this repository has ever had: `agent/policy/governance/grants.jsonl`,
+git-tracked, naming the repository author, dated, expiring 9 March 2027, enabling the five
+protocol §20 low-risk categories over exactly two paths — `data/sources.json` and `docs/` —
+and, on the first of those, exactly eight bookkeeping fields.
+**`DEFAULT_POLICY.enabled_categories` is still `[]` and four suites still assert it.** That is
+not a contradiction: it is the BASE — what the policy permits when nobody has decided
+anything — and the policy in force is DERIVED from the grant ledger by
+`agent/policy/governance.mjs policyInForce()`. **Ask that, never `DEFAULT_POLICY`, when the
+question is "what may happen now".** A grant may never name a §19 category, a path outside
+the two eligible ones, a never-automatic field (`tier`, `role`, `supports`, `last_verified`,
+`verification_note`, `requires_verification`, `reference_gap` and five more), a risk above
+`low`, `production`, or no expiry — and every one of those refusals runs again on every READ,
+so a line written around `recordGrant` is not honoured either. `agent/policy/` is itself on
+the never-automatic path list, so **no grant can widen the rules that admitted it**.
+`docs/LIMITED-AUTONOMY.md`.
+
+**`agent/autonomy/` is the runner, and a grant replaces exactly two gates.**
+`agent/implement/preflight.mjs`'s `approved` and `approval_attributable`, and nothing else;
+the other eight must pass unchanged. The cycle is seven steps — a real isolated branch, the
+exact-match apply, the four validators, the browser suite where it is required, the full
+trace, a `--no-ff` merge into the WORKING branch only if every mandatory condition holds on
+the MEASURED facts, and retained rollback information. The default writes nothing: `run`
+without `--execute` rehearses. **Its first real run refused all fourteen proposals in the
+store, each by four independent gates**, and no autonomous change has ever merged anything.
+`docs/LIMITED-AUTONOMY.md` §6 and §7.
+
+- **The autonomy layer's action ledger is git-ignored, and the COMMIT is the durable record.**
+  `agent/autonomy/actions/actions.jsonl` holds one line per attempt — merged, reverted and
+  refused alike — with the branch, the base commit and the per-file pre-change hashes. It is
+  per-machine run state, so a fresh clone and a CI runner have none, and that is not the same
+  fact as no autonomous action having been taken. What survives a clone is the commit an
+  autonomous change made, whose message names the grant, the person who wrote it, the base
+  commit and the exact restore command. **The grant ledger is the opposite and is TRACKED**:
+  an authorization has to be attributable.

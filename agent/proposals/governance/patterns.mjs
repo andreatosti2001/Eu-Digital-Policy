@@ -106,7 +106,7 @@ export const PATTERNS = Object.freeze([
     instances: Object.freeze([
       Object.freeze({ when: '2026-09-08', what: 'the Control Room session-forgery test built its third forgery by replacing the token\'s last character with "A" — which is not a forgery when the token already ends in "A". 3 of 40 logins do. It failed with a message that reads as a session breach and was not one.', anchor: { kind: 'commit', sha: '6e2f9dab889ffdcac2bc9ddcc6c742f43953e95e', subject: 'passed for the wrong reason' } }),
       Object.freeze({ when: 'recorded', what: 'the phrase, used by the handover about its own assertions — the simulation\'s byte-identical-tree test, the autonomy suite\'s skip on `main`, the credential scan going green because files were not yet committed, and the session-forgery test above.', anchor: { kind: 'contains', path: 'docs/archive/HANDOVER-to-2026-11-13.md', text: 'wrong reason', min: 4 } }),
-      Object.freeze({ when: 'standing', what: 'the assertion that has caught the suite list growing six times is itself the only structural defence recorded against this, and it defends one list.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 'caught the suite list growing' } }),
+      Object.freeze({ when: 'standing', what: 'the assertion that has caught the suite list growing six times is itself the only structural defence recorded against this, and it defends one list.', anchor: { kind: 'contains', path: 'docs/CURRENT-ARCHITECTURE.md', text: 'caught the suite list growing' } }),
     ]),
   }),
 
@@ -120,9 +120,9 @@ export const PATTERNS = Object.freeze([
       'Every instance was caught by a person or by one assertion that happens to guard one list. Nothing checks a count against its subject anywhere else, and a count is the cheapest thing in this repository to check mechanically.',
     instances: Object.freeze([
       Object.freeze({ when: 'now', what: 'the contracts banner against the registry — measured on every run of this module, so it stops being evidence the moment somebody fixes it.', anchor: { kind: 'measure', measure: 'contracts_banner_vs_registry', expect: 'drifted' } }),
-      Object.freeze({ when: 'six times', what: '`agent/implement/selftest.mjs` R6 asserts the length of the suite list, and has caught it growing six times — including once where a merge left two branches asserting different numbers for the same fact.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 'caught the suite list growing' } }),
+      Object.freeze({ when: 'six times', what: '`agent/implement/selftest.mjs` R6 asserts the length of the suite list, and has caught it growing six times — including once where a merge left two branches asserting different numbers for the same fact.', anchor: { kind: 'contains', path: 'docs/CURRENT-ARCHITECTURE.md', text: 'caught the suite list growing' } }),
       Object.freeze({ when: '2026-09-08', what: 'protocol §20 was asserted to name four low-risk categories. It names five, and the fifth was missing until two independently written lists were merged and disagreed.', anchor: { kind: 'commit', sha: '542dfa81b3a366a0a4425307c3dd7b3ea2b388a0', subject: 'record what was mis-reported' } }),
-      Object.freeze({ when: 'recorded', what: '`MODULE_SURFACE` must name every module in `js/` and did not name `threshold.js` until a session added it.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 'MODULE_SURFACE' } }),
+      Object.freeze({ when: 'recorded', what: '`MODULE_SURFACE` must name every module in `js/` and did not name `threshold.js` until a session added it.', anchor: { kind: 'contains', path: 'docs/CURRENT-ARCHITECTURE.md', text: 'MODULE_SURFACE' } }),
       Object.freeze({ when: 'recorded', what: 'audit F-08: the README hardcodes derived counts while asserting it cannot drift.', anchor: { kind: 'contains', path: 'docs/AUDIT-2026-09-01.md', text: 'F-08' } }),
       Object.freeze({ when: 'now', what: 'and one more, found by re-running the checks for this session rather than by looking for it: the handover records the boundary scan at 225 files under agent/, and every SESSION 26 commit holds 226. A hand-written count, one out, in the paragraph that exists to let a later session detect drift.', anchor: { kind: 'contains', path: 'docs/archive/HANDOVER-to-2026-11-13.md', text: 'at 225 files where SESSION' } }),
     ]),
@@ -190,7 +190,7 @@ export const PATTERNS = Object.freeze([
     instances: Object.freeze([
       Object.freeze({ when: '2026-09-09', what: 'the first real autonomy run: 0 merged, 0 reverted, 14 refused, each by four independent gates.', anchor: { kind: 'contains', path: 'docs/archive/HANDOVER-to-2026-11-13.md', text: '0 merged · 0 reverted · 14' } }),
       Object.freeze({ when: '2026-09-09', what: 'the gap router\'s refusals, named rather than dropped.', anchor: { kind: 'contains', path: 'docs/SESSION-25-FIRST-REAL-WORLD-RUN.md', text: 'NOT PROPOSABLE HERE' } }),
-      Object.freeze({ when: 'recorded', what: 'and the reason the clustering matters: the rollback gate has never examined a record on either workflow type that declares it.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 'the rollback gate has never examined a record' } }),
+      Object.freeze({ when: 'recorded', what: 'and the reason the clustering matters: the rollback gate has never examined a record on either workflow type that declares it.', anchor: { kind: 'contains', path: 'docs/ORCHESTRATOR.md', text: 'the rollback gate has never examined a record' } }),
     ]),
   }),
 
@@ -203,7 +203,7 @@ export const PATTERNS = Object.freeze([
     so_what:
       'This is the evidence weakness every other one reduces to. It is also the one thing on this list that no rule, validation or skill can fix — it needs documents retrieved and read, which is work, not governance.',
     instances: Object.freeze([
-      Object.freeze({ when: 'recorded', what: 'the freshness validator prints a reachability heading and performs no network I/O.', anchor: { kind: 'contains', path: 'AGENTS.md', text: 'no URL here has ever been fetched' } }),
+      Object.freeze({ when: 'recorded', what: 'the freshness validator prints a reachability heading and performs no network I/O.', anchor: { kind: 'contains', path: 'docs/VERIFICATION-POLICY.md', text: 'no URL here has ever been fetched' } }),
       Object.freeze({ when: '2026-09-09', what: 'the live run: not one claim in this build could be verified against a live source, because not one registered source could be reached.', anchor: { kind: 'contains', path: 'docs/SESSION-25-FIRST-REAL-WORLD-RUN.md', text: 'could not verify a single claim' } }),
       Object.freeze({ when: 'recorded', what: 'audit F-13: `last_verified` is a batch stamp wearing a per-record name.', anchor: { kind: 'contains', path: 'docs/AUDIT-2026-09-01.md', text: 'F-13' } }),
       Object.freeze({ when: 'now', what: 'and the shape of the hole, measured: six of the eight retrieval fields the governance grant allowlists exist on no record in the file the grant names.', anchor: { kind: 'measure', measure: 'grant_fields_absent', expect: { at_least: 1 } } }),
@@ -234,7 +234,7 @@ export const PATTERNS = Object.freeze([
     so_what:
       'Every editorial finding this repository has produced is downstream of this: an agent that reads a sentence cannot tell which of the two copies it is reading, and the one it is least likely to read is the one that ships.',
     instances: Object.freeze([
-      Object.freeze({ when: 'recorded', what: 'the hazard, in the canonical entry point.', anchor: { kind: 'contains', path: 'AGENTS.md', text: '__CONTENT__' } }),
+      Object.freeze({ when: 'recorded', what: 'the hazard, in the canonical entry point.', anchor: { kind: 'contains', path: 'docs/CURRENT-ARCHITECTURE.md', text: '__CONTENT__' } }),
       Object.freeze({ when: 'recorded', what: 'audit F-04: a second, unvalidated copy of the brief\'s facts, with its own ID namespace.', anchor: { kind: 'contains', path: 'docs/AUDIT-2026-09-01.md', text: 'F-04' } }),
       Object.freeze({ when: '2026-09-09', what: 'located precisely, and ranked the highest-confidence editorial finding of the real-world run.', anchor: { kind: 'contains', path: 'docs/SESSION-25-FIRST-REAL-WORLD-RUN.md', text: 'meta.standfirst' } }),
       Object.freeze({ when: 'recorded', what: 'and its sibling: correcting an English string without declaring the key superseded leaves three locales asserting the thing that was corrected. F-05.', anchor: { kind: 'contains', path: 'docs/AUDIT-2026-09-01.md', text: 'F-05' } }),

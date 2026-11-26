@@ -18,7 +18,7 @@ specific to one assistant: Claude Code discovers them by path, and any agent rea
 
 | Skill | Owns | Files beyond `SKILL.md` |
 |---|---|---|
-| `project-context` | Loading the mandatory context at session start; the reading order | — |
+| `project-context` | Loading the mandatory context at session start, by level: always the binding constraints; by domain, what `docs/README.md` §2 lists; on request, records | — |
 | `autonomy-governance` | May an agent act, propose, or must it stop; escalation and approval | `references/escalation-record.md` |
 | `repository-audit` | What is *actually* implemented, as against what is documented | — |
 | `eu-legal-research` | Retrieving the document — which register is authoritative for which fact | `references/source-registers.md` |

@@ -401,3 +401,45 @@ anything real running.
    the handoff rather than process isolation. §6.
 8. **No governance decision has enabled any autonomous action category**, so the autonomy
    path has never returned `permitted` for anything real. §9.
+
+## Moved from `AGENTS.md` (26 Nov 2026, D4)
+
+> **Moved verbatim from `AGENTS.md`** at `064488c` (lines 106–112; 114–130; 278–285) on 26 Nov 2026 by documentation session D4, on the
+> author's row «Checkpoint D4.1 of the documentation session D4: the map of the moves out of `AGENTS.md`» (`docs/ROADMAP-v2.md` §8;
+> `docs/AGENTS-ENTRY-MOVES.md`, units N2, N3, N12). Kept as `AGENTS.md` carried it: «above» and «below» in it refer to
+> that file, and each dated claim is as of its own date. `AGENTS.md` keeps one line for each, pointing here.
+
+**The Orchestrator does not replace a specialist.** `agent/orchestrator/` receives events,
+routes them through the ten workflow types, enforces the handoffs and the autonomy boundary,
+and stops at a person — every one of the ten types ends at a human stage and the module
+refuses to load one that does not. It performs no legal, editorial or evidential reasoning:
+every gate it runs is mechanical, and it refuses a record rather than repairing one. **No
+production dispatcher is wired**, so a run outside the simulation reports `not_dispatched`
+and ends `unresolved`.
+
+**SESSION 24 ran the first end-to-end cycle, in simulation, and fixed nothing it found.**
+`agent/simulation/` wires twelve SIMULATED specialists into the real Orchestrator and walks
+eight of the ten workflow types once, with a real Control Room process on the authorization
+leg. Everything in `agent/orchestrator/`, `agent/policy/`, `agent/schemas/` and
+`.control-room/` ran for real; **the eleven specialists' domain reasoning did not**, so a
+green leg means the machinery routed a fixture — not that anything about EU law is true. The
+run changed nothing, and that is a measurement: it fingerprints the working tree before and
+after, and the suite asserts the difference is empty. It produced **twenty-three findings**,
+and protocol §25's instruction to observe rather than repair is why none is fixed:
+`docs/FIRST-END-TO-END-AUDIT.md`. Four are worth carrying in your head, because they are
+places this system is weaker than its own documents read: the Orchestrator admitted a
+`simulated` record into every workflow (`allowSimulated: true`, hard coded — **repaired on
+11 Nov 2026**: the default is now `false` and only the simulation and the suites opt in by
+name, `docs/AUDIT-2026-11-11-P1.md` §5); **the rollback gate has never examined a record** on either type
+that declares it; nothing re-checks a `ChangeRecord`'s files against the approved scope
+after the dispatch; and two conflict detectors have no ordering constraint and reported one
+relationship backwards. `docs/ORCHESTRATOR.md`.
+
+**The autonomy policy has ONE home, and it is `agent/policy/`.** SESSIONS 22 and 23 were
+written on sibling branches from the same base and each implemented protocol §18's mandatory
+conditions and §19's human-review triggers. That was a second home for one fact, which this
+project's first principle forbids. The merge resolved it in the direction protocol §14 states:
+the Orchestrator's responsibilities are workflow state, routing, handoffs, conflict detection
+and **policy enforcement** — not policy definition. So `agent/orchestrator/policy.mjs` now
+delegates to `agent/policy/engine.mjs` and keeps only what is genuinely the Orchestrator's.
+Do not re-implement a condition or a trigger there.

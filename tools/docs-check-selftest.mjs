@@ -14,7 +14,8 @@
    §8, «D1, D.3 question 4: the documentation check» and «Checkpoint D3.1
    of the documentation session D3: the design of the check» (which codes
    are errors), and «D3, D3.1: where the check's selftest lives» (here, in
-   AGENT_SUITES).
+   AGENT_SUITES); and, for check (7), «D4, D4.1: where the skill's tests
+   live» (a new check of the tool, an error).
    ============================================================ */
 
 import { test } from 'node:test';
@@ -27,6 +28,7 @@ import { dirname, join } from 'node:path';
 import {
   docsCheck, docsPaths, markdownLinks, mainFirstParent, parseHeader, headerFormProblems, vocabulary, catalogueRows,
   trackedFiles, perimeter, PINS, SEVERITY, REPO_ROOT, RULES_DOC, CATALOGUE_DOC, ROADMAP_DOC, HEADER_ABOVE_PROVENANCE,
+  SKILL_DOC, SKILL_MAP_DOC, alwaysLevel, domainLists,
 } from './docs-check.mjs';
 import { PATTERNS } from '../agent/proposals/governance/patterns.mjs';
 import { AGENT_SUITES } from '../agent/implement/checks.mjs';
@@ -37,14 +39,14 @@ const git = (cwd, ...args) => execFileSync('git', ['-c', 'user.name=docs-check s
 /* ---------------------------------------------------------------- the scratch tree */
 
 const anchorPaths = [...new Set(PATTERNS.flatMap((p) => (p.instances ?? []).map((i) => i.anchor)).filter((a) => a && (a.kind === 'contains' || a.kind === 'path')).map((a) => a.path))];
-const SOURCES = [...new Set([...perimeter(trackedFiles(REPO)), ...PINS.map((p) => p.reader), ...anchorPaths])];
+const SOURCES = [...new Set([...perimeter(trackedFiles(REPO)), ...PINS.map((p) => p.reader), ...anchorPaths, SKILL_DOC])];
 
 const PRISTINE = mkdtempSync(join(tmpdir(), 'docs-check-pristine-'));
 for (const f of SOURCES) { mkdirSync(join(PRISTINE, dirname(f)), { recursive: true }); cpSync(join(REPO, f), join(PRISTINE, f)); }
 /* What the copied documents point or link to, outside the copy: a file is copied, a directory is made empty.
    Found by the check itself, so a target a later document adds is followed without editing this suite. */
-for (const f of (await docsCheck({ root: PRISTINE })).findings.filter((x) => x.code === 'POINTS' || x.code === 'LINK')) {
-  const target = f.code === 'POINTS' ? f.message.match(/names `([^`]+)`/)[1] : f.message.match(/resolves to `([^`]+)`/)[1];
+for (const f of (await docsCheck({ root: PRISTINE })).findings.filter((x) => ['POINTS', 'LINK', 'SKILL-PATH'].includes(x.code))) {
+  const target = f.code === 'LINK' ? f.message.match(/resolves to `([^`]+)`/)[1] : f.message.match(/names `([^`]+)`/)[1];
   const from = join(REPO, target);
   if (!existsSync(from)) continue; /* broken in the repository too: DC0 on the repository says so */
   if (statSync(from).isDirectory()) mkdirSync(join(PRISTINE, target), { recursive: true });
@@ -91,7 +93,7 @@ test('DC0 · the repository: 0 errors, every check measured something, and the c
   const { findings, measured } = await docsCheck({ root: REPO });
   assert.equal(git(REPO, 'status', '--porcelain'), before, 'docs-check changed the working tree');
   assert.deepEqual(errorsOf(findings), [], errorsOf(findings).map((f) => `${f.code} ${f.file}:${f.line} ${f.message}`).join('\n'));
-  for (const k of ['perimeter', 'catalogue_rows', 'headers', 'closed_by', 'catalogue_citations', 'paths', 'anchors', 'pins']) assert.ok(measured[k] > 0, `${k} measured nothing`);
+  for (const k of ['perimeter', 'catalogue_rows', 'headers', 'closed_by', 'catalogue_citations', 'paths', 'anchors', 'pins', 'skill_always']) assert.ok(measured[k] > 0, `${k} measured nothing`);
   assert.equal(measured.perimeter, measured.catalogue_rows);
   assert.equal(measured.anchors, anchorPaths.length ? PATTERNS.flatMap((p) => p.instances ?? []).filter((i) => ['contains', 'path'].includes(i.anchor?.kind)).length : 0);
 });
@@ -306,3 +308,41 @@ test('DC6 · a total of docs/README.md §4 that is not the table\'s fails (TOTAL
 });
 
 test.after(() => rmSync(PRISTINE, { recursive: true, force: true }));
+
+/* ---------------------------------------------------------------- (7) the skill project-context, by level */
+
+test('DC7 · the levels are read from their homes: «always» from the rules §7, the domain lists from the catalogue §2', () => {
+  const always = alwaysLevel(readFileSync(join(PRISTINE, RULES_DOC), 'utf8'));
+  assert.deepEqual(always.map((i) => i.path), ['docs/AI-SAFE-BOUNDARIES.md', 'docs/HANDOVER.md', 'AGENTS.md']);
+  assert.equal(always[0].sections, '§0 and §3');
+  const lists = domainLists(readFileSync(join(PRISTINE, CATALOGUE_DOC), 'utf8'));
+  assert.ok(lists.length >= 9 && lists.every((l) => l.reads.length >= 1), 'every domain row lists at least one document');
+});
+
+test('DC7 · an item of the «always» level the skill does not name fails (SKILL-ALWAYS), and one the rules add is required', async () => {
+  failsWith(await planted(({ edit }) => edit(SKILL_DOC, (t) => t.replaceAll('`docs/AI-SAFE-BOUNDARIES.md` §0 and §3', '`docs/AI-SAFE-BOUNDARIES.md` §0'))), 'SKILL-ALWAYS', /AI-SAFE-BOUNDARIES\.md` §0 and §3/);
+  failsWith(await planted(({ edit }) => edit(SKILL_DOC, (t) => t.replaceAll('`docs/HANDOVER.md`', 'the handover'))), 'SKILL-ALWAYS', /HANDOVER/);
+  failsWith(await planted(({ edit }) => edit(RULES_DOC, (t) => t.replace('the rules of `AGENTS.md` |', 'the rules of `AGENTS.md`; `docs/SOURCE-POLICY.md` |'))), 'SKILL-ALWAYS', /SOURCE-POLICY/);
+});
+
+test('DC7 · a skill that does not read the catalogue §2, or copies a domain\'s list from it, fails (SKILL-DOMAIN, SKILL-COPY)', async () => {
+  failsWith(await planted(({ edit }) => edit(SKILL_DOC, (t) => t.replaceAll('`docs/README.md` §2', 'the catalogue'))), 'SKILL-DOMAIN');
+  failsWith(await planted(({ edit }) => edit(SKILL_DOC, (t) => `${t}\n- evidence: \`docs/DATA-GOVERNANCE.md\`, \`docs/SOURCE-POLICY.md\`\n`)), 'SKILL-COPY', /«evidence»/);
+});
+
+test('DC7 · a path the skill names that does not exist fails (SKILL-PATH); a command in a fenced block is not a path it names', async () => {
+  failsWith(await planted(({ edit }) => edit(SKILL_DOC, (t) => `${t}\nRead \`docs/NO-SUCH-LEVEL.md\`.\n`)), 'SKILL-PATH', /NO-SUCH-LEVEL/);
+  const fenced = await planted(({ edit }) => edit(SKILL_DOC, (t) => `${t}\n\`\`\`\nnode \`tools/no-such.mjs\`\n\`\`\`\n`));
+  assert.ok(!fenced.some((f) => f.code === 'SKILL-PATH'), 'a fenced block is a command, not a reading');
+});
+
+test('DC7 · CLAUDE.md with a reading list, or not sending a session to the skill, and a skill map that does not point to §2, fail (SKILL-ENTRY)', async () => {
+  failsWith(await planted(({ edit }) => edit('CLAUDE.md', (t) => `${t}\n1. \`docs/PROJECT-CONTEXT.md\`\n`)), 'SKILL-ENTRY', /CLAUDE\.md .*PROJECT-CONTEXT/);
+  failsWith(await planted(({ edit }) => edit('CLAUDE.md', (t) => t.replaceAll('`project-context`', 'the skill'))), 'SKILL-ENTRY', /CLAUDE\.md/);
+  failsWith(await planted(({ edit }) => edit(SKILL_MAP_DOC, (t) => t.replace(/^(\| `project-context` \|.*)`docs\/README\.md` §2/m, '$1the catalogue'))), 'SKILL-ENTRY', /SKILL-MAP/);
+});
+
+test('DC7 · the skill gone, or the «always» row gone from the rules, fails (SKILL-READ)', async () => {
+  failsWith(await planted(({ dir }) => rmSync(join(dir, SKILL_DOC))), 'SKILL-READ', /project-context/);
+  failsWith(await planted(({ edit }) => edit(RULES_DOC, (t) => t.replace('| **always** |', '| **sometimes** |'))), 'SKILL-READ', /always/);
+});

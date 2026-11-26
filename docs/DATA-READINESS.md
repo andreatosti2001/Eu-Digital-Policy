@@ -533,3 +533,22 @@ number reads "not determinable" instead of a concatenated string. **No view, cha
   false negative caught by test MC2 before commit; the import requirement on every consumer is the second half that does not
   depend on the scan.
 
+## Moved from `AGENTS.md` (26 Nov 2026, D4)
+
+> **Moved verbatim from `AGENTS.md`** at `064488c` (lines 407–418) on 26 Nov 2026 by documentation session D4, on the
+> author's row «Checkpoint D4.1 of the documentation session D4: the map of the moves out of `AGENTS.md`» (`docs/ROADMAP-v2.md` §8;
+> `docs/AGENTS-ENTRY-MOVES.md`, units V5). Kept as `AGENTS.md` carried it: «above» and «below» in it refer to
+> that file, and each dated claim is as of its own date. `AGENTS.md` keeps one line for each, pointing here.
+
+**`tools/metric-contract.mjs` is the metric contract MC-1…MC-15, and `tools/fine-basis.mjs` the provenance of an enforcement
+amount** (11 Nov 2026, P0.2 and P0.3; `docs/DATA-READINESS.md` §9). `validate.mjs` runs both: a fine with no `fine_eur_basis`,
+a `fine_eur` that is not an integer ≥ 0, or a declared metric that fails any property is an ERROR, and its figure is not
+publishable. The fines figure has one computing function, `js/pipeline.js finesFigure()`; **do not sum `fine_eur` or count
+payment states anywhere else in `js/`** — MC-2 finds a second sum by line, and every view must import the function.
+**A pending appeal is `high` (30 days), not `critical`, since 12 Nov 2026** (the author's decision; only an announced action is `critical`) —
+and **a claim about such a record keeps its `high` interval**: `enforcementVolatile()` in `js/evidence-model.js` is the test, and the decision
+was about records only (`docs/AUDIT-2026-11-11-P1.md` §8). **A court-register reading is a sheet and a declaration**: `node
+tools/register-reading.mjs sheet`, then `check <answers.json>`; no verb writes, and an `attestation` on an enforcement record is audited by
+`validate.mjs`.
+**The same holds for instruments by legislative status since 11 Nov 2026** (F-A7): `js/regulatory-model.js
+instrumentsByStatus()` is the one function and the masthead imports it; MC-2 finds a second COUNT by the field too.

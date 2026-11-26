@@ -181,3 +181,27 @@ card is current with the data. Selftests S1–S6 and S4b plant each defect and a
 **Does not prove:** that a page is indexed, ranked, cited or summarised correctly by any search
 system (only Search Console can say what Google did); that a derived description is a good
 description; or anything about whether the records a page renders are true.
+
+## Moved from `AGENTS.md` (26 Nov 2026, D4)
+
+> **Moved verbatim from `AGENTS.md`** at `064488c` (lines 615–618; 641–646; 650–653) on 26 Nov 2026 by documentation session D4, on the
+> author's row «Checkpoint D4.1 of the documentation session D4: the map of the moves out of `AGENTS.md`» (`docs/ROADMAP-v2.md` §8;
+> `docs/AGENTS-ENTRY-MOVES.md`, units H06, H08, H10). Kept as `AGENTS.md` carried it: «above» and «below» in it refer to
+> that file, and each dated claim is as of its own date. `AGENTS.md` keeps one line for each, pointing here.
+
+- **The validators do not read prose.** A false statement in `index.html` passes every check
+  in this repository. `agent/proposals/editorial/` is the first thing here that reads a
+  sentence at all, and it is **not a check**: it runs only when somebody runs it, it produces
+  proposals in front of a human, and it can only find what it can quote.
+
+- **A passing validator proves less than it looks.** `design-qa.mjs` harvests CSS token
+  declarations out of JavaScript by regex, so a `--foo:` in any JS string or comment
+  silences a real error. `freshness.mjs` prints a `SOURCE REACHABILITY` heading but performs
+  no network I/O — **no URL here has ever been fetched**. `validate.mjs` carries one check
+  that can never fire and treats every wildcard reference as resolving. Detail and evidence:
+  `docs/AUDIT-2026-09-01.md` F-10, F-11, F-12.
+
+- **`git blame` answers nothing.** The pre-SESSION 00 history is 47 bulk uploads and
+  deletions with no message that explains a change, so the rollback path a destructive script
+  assumes does not exist. Your commits are the first real provenance this repository has
+  (F-06).

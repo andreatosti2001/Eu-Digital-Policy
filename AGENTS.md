@@ -20,7 +20,10 @@ statement exists as a record in `data/claims.json`, typed, sourced, and graded b
 sources can actually carry — with the grade *derived at render time* so it cannot drift from
 the evidence it describes.
 
-## Read these first, in this order
+## The documents, and what each gives you
+
+An index, not a reading order: what a session reads, and when, is the skill `project-context`'s, by level — always the
+binding constraints, then what `docs/README.md` §2 lists for the task's domain, then records only when something cites them.
 
 | Document | What it gives you |
 |---|---|
@@ -89,202 +92,31 @@ intended agent role in **`docs/SKILL-MAP.md`**. Invoke `project-context` at the 
 session, then load the skills the task actually needs; each one names the sibling that owns
 what it does not.
 
-**A RELEASE CHAIN EXISTS FROM 4 NOV 2026, AND A PERSON HAS USED IT ONCE.** `agent/release/` holds a dispatcher that turns a
-*decided* proposal into one commit on a `release/…` branch (never pushed, never merged, nothing written without `--execute`), and
-the deploy gate `pages.yml`'s `build` job now runs before it uploads anything (`docs/DEPLOYMENT.md` §2a). The ledger became
-tamper-evident (hash chain, ed25519 signature checked against a registered reviewer, `human`/`simulated` provenance) —
-`agent/implement/attestation.mjs`. **Since 6 Nov 2026 `agent/implement/decisions/decisions.jsonl` exists and holds one entry**:
-the repository author's signed grant of `prop-docs-ea57404dc452`, a one-file change to `docs/DEPLOYMENT.md`. The release gate
-judged a commit citing it in GitHub Actions on 11 Nov 2026 (`pages.yml` run 100: C5, C6, C7 and C10 satisfied; run 98, on a
-squash merge of the same change, failed C7 — `docs/HANDOVER.md`, "Stage 1 — concluded"). Every other proposal here is still
-undecided, and **nothing in a test or a tool may put a line in that ledger to make it look otherwise**; the one entry there was
-made by a person. `production_dispatcher_wired` still reports no, because it measures the Orchestrator's
-`agent/orchestrator/dispatchers.mjs`, a different thing the release dispatcher does not create. Whether `main` is protected, whether
-the `github-pages` environment is restricted and whether the reviewer registry is pinned are settings the tree cannot show
-(`docs/DEPLOYMENT.md` §3a). `docs/AUDIT-2026-11-04.md`.
+**A RELEASE CHAIN EXISTS FROM 4 NOV 2026, AND A PERSON HAS USED IT ONCE.** Every other proposal here is still undecided, and **nothing in a test or a tool may put a line in that ledger to make it look otherwise**; the one entry there was made by a person. → `docs/DEPLOYMENT.md` §2a.
 
-**The Orchestrator does not replace a specialist.** `agent/orchestrator/` receives events,
-routes them through the ten workflow types, enforces the handoffs and the autonomy boundary,
-and stops at a person — every one of the ten types ends at a human stage and the module
-refuses to load one that does not. It performs no legal, editorial or evidential reasoning:
-every gate it runs is mechanical, and it refuses a record rather than repairing one. **No
-production dispatcher is wired**, so a run outside the simulation reports `not_dispatched`
-and ends `unresolved`.
+**The Orchestrator does not replace a specialist.** → `docs/ORCHESTRATOR.md`.
 
-**SESSION 24 ran the first end-to-end cycle, in simulation, and fixed nothing it found.**
-`agent/simulation/` wires twelve SIMULATED specialists into the real Orchestrator and walks
-eight of the ten workflow types once, with a real Control Room process on the authorization
-leg. Everything in `agent/orchestrator/`, `agent/policy/`, `agent/schemas/` and
-`.control-room/` ran for real; **the eleven specialists' domain reasoning did not**, so a
-green leg means the machinery routed a fixture — not that anything about EU law is true. The
-run changed nothing, and that is a measurement: it fingerprints the working tree before and
-after, and the suite asserts the difference is empty. It produced **twenty-three findings**,
-and protocol §25's instruction to observe rather than repair is why none is fixed:
-`docs/FIRST-END-TO-END-AUDIT.md`. Four are worth carrying in your head, because they are
-places this system is weaker than its own documents read: the Orchestrator admitted a
-`simulated` record into every workflow (`allowSimulated: true`, hard coded — **repaired on
-11 Nov 2026**: the default is now `false` and only the simulation and the suites opt in by
-name, `docs/AUDIT-2026-11-11-P1.md` §5); **the rollback gate has never examined a record** on either type
-that declares it; nothing re-checks a `ChangeRecord`'s files against the approved scope
-after the dispatch; and two conflict detectors have no ordering constraint and reported one
-relationship backwards. `docs/ORCHESTRATOR.md`.
+**SESSION 24 ran the first end-to-end cycle, in simulation, and fixed nothing it found.** → `docs/ORCHESTRATOR.md`.
 
-**NOTHING HAD EVER BEEN DECIDED WHEN SESSION 28 RAN, AND IT MEASURED WHY THAT IS TWO PROBLEMS RATHER THAN
-ONE.** (One proposal has been decided since, on 6 Nov 2026; none of the seven governance proposals has, and the paragraph below is the measurement as it stood.) `agent/proposals/governance/` reads the history and reports what a person has had to
-correct more than once: twelve patterns over forty-nine anchors, each anchored to a commit, a
-path, a string in a tracked file or a live measurement, all re-resolved on every push. The
-first finding is about the corpus — **the approval ledger is not empty, it is ABSENT**, so
-there are no approved, rejected or edited proposals to analyse and the corpus is the
-corrections instead. The second is mechanical: `deriveApproval()` binds a decision to a
-proposal held in the git-ignored record store, so a decision recorded today reads
-`void_unknown_proposal` on any other machine until the producing agent is re-run. **Two
-findings are this session's own and are measured rather than inherited**: the grant's `docs/`
-allowlist and `categoriseProposal()`'s docs-only rule place all eight prose governance
-documents inside an ENABLED category — `NEVER_AUTOMATIC_PATHS` guards `agent/policy/`, and
-nothing guards `docs/AUTONOMY-POLICY.md`, which is the same policy in the form a person reads
-— and six of the eight fields the grant allowlists exist on none of the 77 records in
-`data/sources.json`. Both are claims about which gates would NOT stop a change, not claims
-that one would merge. **Seven governance proposals exist and none is decided**; the module has
-no write path, no decision home and no `automatic` class, and its suite proves the first by
-hashing the tree around a full run. `docs/GOVERNANCE-PROPOSALS.md`.
+**NOTHING HAD EVER BEEN DECIDED WHEN SESSION 28 RAN, AND IT MEASURED WHY THAT IS TWO PROBLEMS RATHER THAN ONE.** → `docs/GOVERNANCE-PROPOSALS.md`.
 
-**PRODUCTION OPERATION IS NOT ACTIVATED, AND THE REFUSAL IS MEASURED.** SESSION 29 built
-`agent/production/` — the daily cycle's eight stages, the seven weekly and seven monthly
-reviews as data, the ten conditions of the final visual standard, the six separations the
-hidden entry must hold, every path by which the website can change — and a readiness
-checklist of twenty-one conditions in ten domains. `node agent/production/cli.mjs readiness`
-reports **`refused`**. **A
-mandatory condition that could not be MEASURED blocks exactly as a failure does**, because in
-production there is nobody reading "skipped". SESSION 29 measured twelve of twenty passing and
-eight blocking: the `freshness.mjs` baseline disagreement, the adversarial gate's CRITICAL,
-the browser suite's three SESSION 19 defects, no production dispatcher, no reachable source,
-the absent decision ledger, two of three website-changing write paths untraceable, and no
-deploy gate. **On SESSION 30's tree it is fourteen and six, and it still refuses**: the first
-two of the eight are closed — `validators_at_baseline` passes because `freshness.mjs`'s exit
-code now reports defects in the tree rather than the passage of time, and `browser_suite_pass`
-passes because the three defects are fixed in the website. **The remaining six are unchanged
-and none is this repository's to close by editing a check**: the adversarial CRITICAL is left
-red on purpose, and the other five need a governance decision or network this environment does
-not have. **On 27 Sep 2026 it is seventeen and three**: HE-04 was rewritten on the author's
-decision, all three write paths are traceable, and the suites pass. What still blocks is a
-production dispatcher (an activation decision), a first recorded decision (a person's), and
-whether `pages.yml` is what publishes the site (a repository setting, unmeasurable from the
-tree). **Nothing in that directory
-writes and no verb there can activate anything**: switching a production mode on is a
-governance decision and protocol §24 reserves it to a person.
-`docs/PRODUCTION-OPERATING-MODE.md`.
+**PRODUCTION OPERATION IS NOT ACTIVATED, AND THE REFUSAL IS MEASURED.** → `docs/PRODUCTION-OPERATING-MODE.md`.
 
-**THE HIDDEN ENTRY PASSES ALL TEN VISUAL CONDITIONS AND ALL SIX SEPARATIONS, AND WAS NOT
-TOUCHED.** `js/threshold.js`, `style.css` and every page are byte-identical to `a25f0ed`: the
-standard was verified, not adjusted. And **HE-04 is now measured rather than suspected**. The
-attack's own finding names the condition it could not check — *if any of those reads it as an
-input, it is a credential* — and `agent/production/separations.mjs` checks it on two
-independent halves: where each occurrence sits, and whether the file holding it calls any of
-twelve granting primitives. `agent/simulation/threshold.mjs` is **cleared on both**: none of
-its eight occurrences sits where a credential check would, and it can grant nothing.
-**HE-04 was left RED on purpose until a person decided, and on 27 Sep 2026 the author did.**
-Reclassifying a CRITICAL by editing the thing that reports it is the move this architecture is
-arranged against, and HE-04's three path exclusions were exactly the stale exclusion list
-SESSION 23.5 had to correct once. The rewrite removed the exclusions and made HE-04 decide from
-the separation verdicts (`he04Verdict()`): a `read_it` anywhere succeeds, a `no_path_found` is
-partial, only an all-cleared tree is safe. It now reports **partial (MEDIUM)**, and its suite
-fails if a path exclusion is re-added. `docs/PRODUCTION-OPERATING-MODE.md` §4a.
+**THE HIDDEN ENTRY PASSES ALL TEN VISUAL CONDITIONS AND ALL SIX SEPARATIONS, AND WAS NOT TOUCHED.** → `docs/PRODUCTION-OPERATING-MODE.md` §4a.
 
-**LIMITED AUTONOMY IS SWITCHED ON, AND WHAT THAT MEANS IS NARROW.** SESSION 26 recorded the
-first governance grant this repository has ever had: `agent/policy/governance/grants.jsonl`,
-git-tracked, naming the repository author, dated, expiring 9 March 2027, enabling the five
-protocol §20 low-risk categories over exactly two paths — `data/sources.json` and `docs/` —
-and, on the first of those, exactly eight bookkeeping fields.
-**`DEFAULT_POLICY.enabled_categories` is still `[]` and four suites still assert it.** That is
-not a contradiction: it is the BASE — what the policy permits when nobody has decided
-anything — and the policy in force is DERIVED from the grant ledger by
-`agent/policy/governance.mjs policyInForce()`. **Ask that, never `DEFAULT_POLICY`, when the
-question is "what may happen now".** A grant may never name a §19 category, a path outside
-the two eligible ones, a never-automatic field (`tier`, `role`, `supports`, `last_verified`,
-`verification_note`, `requires_verification`, `reference_gap` and five more), a risk above
-`low`, `production`, or no expiry — and every one of those refusals runs again on every READ,
-so a line written around `recordGrant` is not honoured either. `agent/policy/` is itself on
-the never-automatic path list, so **no grant can widen the rules that admitted it**.
-`docs/LIMITED-AUTONOMY.md`.
+**LIMITED AUTONOMY IS SWITCHED ON, AND WHAT THAT MEANS IS NARROW.** **Ask that, never `DEFAULT_POLICY`, when the question is "what may happen now".** → `docs/LIMITED-AUTONOMY.md`.
 
-**SESSION 27 FOUND THE GATE LADDER UNPASSABLE, AND REPAIRED IT UNDER AN EXPLICIT WARRANT.**
-Take a proposal with nothing wrong with it, in a category the grant enables over a path the
-grant names: five of the six autonomy gates passed and `policy_route_pre` refused, for **two**
-structural reasons. `rollback_mechanical` reported `failed` about a change context that
-`agent/implement/apply.mjs openContext()` only produces in **step 2**, while gate 3 runs
-**before step 1**; and the gate's third clause asked `route !== 'blocked'`, which is
-unsatisfiable before a run because **every measured condition is on
-`NOT_WAIVABLE_BY_APPROVAL`**. So `docs/LIMITED-AUTONOMY.md` §7.1's "nothing produces a proposal
-in an enabled category" was true and was **not the binding constraint**: the permitting half
-was unreachable.
+**SESSION 27 FOUND THE GATE LADDER UNPASSABLE, AND REPAIRED IT UNDER AN EXPLICIT WARRANT.** → `docs/CONTINUOUS-IMPROVEMENT.md` §4.
 
-Both are fixed, and **no check was weakened**: an element `assessRollback()` reports as
-`absent` — established missing — still fails, an unauthorized actor is still refused (the case
-clauses 1 and 2 were blind to, because the engine returns an empty condition list for it), and
-step 6 still re-evaluates every condition on the measured facts and merges only on route
-`automatic`. **The ladder is now passable and nothing has passed it**: a clean fixture reaches
-the measured evaluation and is refused there on `verification_succeeded (unknown)` and, until
-SESSION 30, on `validators_pass (failed)` — the latter being `freshness.mjs`'s pre-existing
-exit 1, which was never a statement about any proposal. **SESSION 30 removed that second
-refusal by repairing what the exit code MEANS, not by waiving the condition**: the validators
-now return `pass_with_findings` against §12's baseline, so `validators_pass` is satisfied on
-the measured facts. `verification_succeeded` is still `unknown` and still refuses, and the
-other gates are unchanged. **No autonomous change has merged anything, and nothing has even
-been proposed**: `agent/records/` is git-ignored and empty in a fresh checkout, so
-`node agent/autonomy/cli.mjs survey --all` reports no proposals at all — which is not the same
-fact as nothing being eligible. `docs/CONTINUOUS-IMPROVEMENT.md` §4, with the warrant quoted
-in §4a and the five changed assertions named in §4.4.
+**THE ADVERSARIAL GATE WAS RED FROM SESSION 24 TO 27 SEP 2026** → `docs/CONTINUOUS-IMPROVEMENT.md` §4b.
 
-**THE ADVERSARIAL GATE WAS RED FROM SESSION 24 TO 27 SEP 2026** (green since HE-04's rewrite,
-above, and now also in the deploy gate). The record of how it stayed red:
-`node agent/policy/verify/cli.mjs` reports **1 SUCCEEDED** — HE-04, CRITICAL, the trigger phrase
-found in `agent/simulation/threshold.mjs`. Measured at `aaf6691` in a clean worktree, so it is
-not this session's. The module uses the phrase as a **probe** — the line the attack hits is the
-separation check that searches Control Room source to prove the phrase is absent from it — so
-this is very probably the HE-01 shape SESSION 23.5 already corrected once, with a stale
-exclusion list. **It is not repaired**, and SESSION 29 measured it rather than
-repeating the suspicion: `agent/simulation/threshold.mjs` calls none of the twelve granting
-primitives and none of its eight occurrences of the phrase sits where a credential check
-would, so the file is cleared on both halves and HE-04 is a false positive of the HE-01
-shape. It is still left RED, because reclassifying a CRITICAL by editing the attack that
-reports it is a person's decision. **The gate is now in CI** — `.github/workflows/qa.yml`
-job `security`, in a job of its own so that a step expected to be red hides nothing. Its
-absence was how a CRITICAL stayed red across five sessions.
-`docs/CONTINUOUS-IMPROVEMENT.md` §4b · `docs/PRODUCTION-OPERATING-MODE.md` §4a.
+**THE LOOP IS `agent/improve/`, AND IT CHANGES NOTHING.** → `docs/CONTINUOUS-IMPROVEMENT.md`.
 
-**THE LOOP IS `agent/improve/`, AND IT CHANGES NOTHING.** Eight observers in one process
-against one corpus position with one as-of date; five produce identified findings and three
-produce counts, and the two are never mixed because a count has no identity to follow. Its one
-governing rule is that **an observer that did not run is not an observer that found nothing** —
-movement is computed per observer, and anything owned by an observer that did not run in BOTH
-cycles is `undetermined`, never `resolved`. Its triage is **not** the gate ladder: it answers a
-weaker question, and `eligible` means only "worth handing to the runner". Its cycle ledger,
-`agent/improve/cycles/cycles.jsonl`, is **the one run store here that is git-tracked**, because
-a loop whose memory does not survive a clone is not a loop — and it carries only public
-readings, enforced by a refusal to write rather than by a convention. First recorded cycle: 210
-findings, 0 referable, 66 to a person, 144 proposing no act.
-`docs/CONTINUOUS-IMPROVEMENT.md`.
+**`agent/autonomy/` is the runner, and a grant replaces exactly two gates.** → `docs/LIMITED-AUTONOMY.md` §6, §7.
 
-**`agent/autonomy/` is the runner, and a grant replaces exactly two gates.**
-`agent/implement/preflight.mjs`'s `approved` and `approval_attributable`, and nothing else;
-the other eight must pass unchanged. The cycle is seven steps — a real isolated branch, the
-exact-match apply, the four validators, the browser suite where it is required, the full
-trace, a `--no-ff` merge into the WORKING branch only if every mandatory condition holds on
-the MEASURED facts, and retained rollback information. The default writes nothing: `run`
-without `--execute` rehearses. **Its first real run refused all fourteen proposals in the
-store, each by four independent gates**, and no autonomous change has ever merged anything.
-`docs/LIMITED-AUTONOMY.md` §6 and §7.
+**The autonomy policy has ONE home, and it is `agent/policy/`.** Do not re-implement a condition or a trigger there. → `docs/ORCHESTRATOR.md`.
 
-**The autonomy policy has ONE home, and it is `agent/policy/`.** SESSIONS 22 and 23 were
-written on sibling branches from the same base and each implemented protocol §18's mandatory
-conditions and §19's human-review triggers. That was a second home for one fact, which this
-project's first principle forbids. The merge resolved it in the direction protocol §14 states:
-the Orchestrator's responsibilities are workflow state, routing, handoffs, conflict detection
-and **policy enforcement** — not policy definition. So `agent/orchestrator/policy.mjs` now
-delegates to `agent/policy/engine.mjs` and keeps only what is genuinely the Orchestrator's.
-Do not re-implement a condition or a trigger there.
-
-**The verification gate is not a test suite.** 
+**The verification gate is not a test suite.** → `docs/SECURITY-VERIFICATION-2026-09-08.md` §2.
 **The Control Room is not an agent.** `.control-room/` is the private administrative interface
 a PERSON uses — observe, review, decide. It is behind a dot prefix because that is the one
 publication boundary this repository has, and behind server-side authentication and
@@ -366,56 +198,15 @@ them and how each was closed). `tools/evidence-audit.mjs` must report 0 errors: 
 substantive passage of the brief registered or classified. **A new warning is a finding, not
 noise.**
 
-**`freshness.mjs`'s exit code changed in SESSION 30 and its report did not.** It exits 1 on a
-**defect** — a property of the tree, true on every date, closed by a commit: a URL-less source
-with no `resolution`, a per-record verification field never used per-record. It exits 0 on a
-**staleness prompt** — a property of the calendar, which the same tree does not produce when
-audited as of the date it records, and which no commit makes permanently false. The prompts
-are still printed by name and counted; they are closed by verification work against primary
-sources and by nothing else, and **exit 0 is not evidence of currency**. The old rule made the
-result a function of the reader's clock (AUDIT F-15), which is how CI carried a red step no
-commit could close from SESSION 24 to SESSION 29 while `agent/implement/baseline.mjs` called
-the script "a report, not a gate". `tools/selftest.mjs` holds the split to that rule: F1
-asserts this tree reports NO prompt as of its own newest verification date, F3 that a planted
-defect fails on every date, F5 that the intervals were not widened, F6 that every counted
-prompt still appears in the body.
+**`freshness.mjs`'s exit code changed in SESSION 30 and its report did not.** The prompts are still printed by name and counted; they are closed by verification work against primary sources and by nothing else, and **exit 0 is not evidence of currency**. → `docs/CURRENT-ARCHITECTURE.md` §12.
 
-**The four validators now have a suite of their own**, because two of SESSION 30's findings
-were defects in a CHECK rather than in the thing checked. `tools/selftest.mjs` plants a Google
-Fonts `@import`, a remote `fetch`, a `preconnect`, a missing required field and a `checksum`
-on a source record, and asserts each is caught. It is in `AGENT_SUITES`: a change under
-`tools/` runs it.
+**The four validators now have a suite of their own** → `docs/CURRENT-ARCHITECTURE.md` §12.
 
-**`tools/thirdparty.mjs` is what makes "no third-party requests" true of the repository rather
-than of the README.** `design-qa.mjs`'s old check read `href="…"` and `src="…"` in the HTML —
-double quotes only — so an `@import` or an `@font-face src` in a stylesheet was invisible to
-it, which is the exact path by which a Google Fonts dependency returns. The scan now covers
-the pages, the stylesheets and the modules, in every position a browser fetches from.
-`ALLOWED_RUNTIME_ORIGINS` is **empty**; an external runtime dependency is a Class D decision
-and goes there with its reason and who decided it. `data/` and `i18n/` are deliberately out of
-the surface: a URL in `data/sources.json` is a citation the page displays and never fetches.
+**`tools/thirdparty.mjs` is what makes "no third-party requests" true of the repository rather than of the README.** `ALLOWED_RUNTIME_ORIGINS` is **empty**; an external runtime dependency is a Class D decision and goes there with its reason and who decided it. → `docs/CURRENT-ARCHITECTURE.md` §12.
 
-**`tools/source-contract.mjs` is the one contract a source record satisfies** — 12 required
-fields, 2 optional, each with its shape, why it exists, who writes it and who reads it —
-and `validate.mjs` enforces it. Before SESSION 30 the validator asked whether four values
-RESOLVED and never whether a record had the other eight at all, which is how the governance
-grant could allowlist eight fields of which six exist on none of the 77 records.
-**Those six are `ABSENT_BY_DESIGN` and are not a TODO**: every one asserts a document was
-FETCHED, and no URL here has ever been fetched (AUDIT F-12), so writing one would be a
-fabricated fact about evidence. A record carrying one is refused by name.
+**`tools/source-contract.mjs` is the one contract a source record satisfies** **Those six are `ABSENT_BY_DESIGN` and are not a TODO**: every one asserts a document was FETCHED, and no URL here has ever been fetched (AUDIT F-12), so writing one would be a fabricated fact about evidence. → `docs/SOURCE-POLICY.md`.
 
-**`tools/metric-contract.mjs` is the metric contract MC-1…MC-15, and `tools/fine-basis.mjs` the provenance of an enforcement
-amount** (11 Nov 2026, P0.2 and P0.3; `docs/DATA-READINESS.md` §9). `validate.mjs` runs both: a fine with no `fine_eur_basis`,
-a `fine_eur` that is not an integer ≥ 0, or a declared metric that fails any property is an ERROR, and its figure is not
-publishable. The fines figure has one computing function, `js/pipeline.js finesFigure()`; **do not sum `fine_eur` or count
-payment states anywhere else in `js/`** — MC-2 finds a second sum by line, and every view must import the function.
-**A pending appeal is `high` (30 days), not `critical`, since 12 Nov 2026** (the author's decision; only an announced action is `critical`) —
-and **a claim about such a record keeps its `high` interval**: `enforcementVolatile()` in `js/evidence-model.js` is the test, and the decision
-was about records only (`docs/AUDIT-2026-11-11-P1.md` §8). **A court-register reading is a sheet and a declaration**: `node
-tools/register-reading.mjs sheet`, then `check <answers.json>`; no verb writes, and an `attestation` on an enforcement record is audited by
-`validate.mjs`.
-**The same holds for instruments by legislative status since 11 Nov 2026** (F-A7): `js/regulatory-model.js
-instrumentsByStatus()` is the one function and the masthead imports it; MC-2 finds a second COUNT by the field too.
+**`tools/metric-contract.mjs` is the metric contract MC-1…MC-15, and `tools/fine-basis.mjs` the provenance of an enforcement amount** The fines figure has one computing function, `js/pipeline.js finesFigure()`; **do not sum `fine_eur` or count payment states anywhere else in `js/`** — MC-2 finds a second sum by line, and every view must import the function. → `docs/DATA-READINESS.md` §9.
 
 The agent layer has its own suites, and a change to `agent/` runs these as well:
 
@@ -449,49 +240,11 @@ node --test tools/selftest.mjs                 # SESSION 30, the four validators
 node agent/schemas/cli.mjs check               # every contract satisfiable by its fixture
 ```
 
-**On 4 Nov 2026 the same 26 suites (the 25 `AGENT_SUITES` and `.control-room/`) pass 1394 tests**, 45 of them the release chain's
-own; the figures below are the history of how the count grew.
+**On 4 Nov 2026 the same 26 suites (the 25 `AGENT_SUITES` and `.control-room/`) pass 1394 tests** → `docs/CURRENT-ARCHITECTURE.md` §12.
 
-**1196 tests across the twenty-five suites**, all passing on SESSION 30's tree — 25 rather
-than 24 because `tools/selftest.mjs` is the first entry in `AGENT_SUITES` that is not under
-`agent/`, and it belongs there because that list is what runs for a change under `agent/` OR
-`tools/`. It was **1166 across twenty-three** on SESSION 29's tree — 1165 with
-one skipped when the working tree is on `main`, because `agent/autonomy/selftest.mjs` test 28
-rehearses the real cycle and the cycle refuses to run there. It was 1114 across twenty-two on
-the merged tree of SESSIONS 27 and 28. **Neither session's own figure is the total**: SESSION 27 measured 1069 and SESSION 28
-measured 1081, on sibling branches cut from the same base, and each was right about its own
-tree (1036 across twenty-one after SESSION 26; 998 across twenty after SESSION 24; 978 across
-nineteen after SESSION 23.5; 934 after SESSION 22 on its own branch; 909 after SESSION 23.5 on
-its own; 867 after SESSION 21; 812 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before
-them). SESSIONS 22, 23 and 23.5 were merged, so none of those middle figures is a total on its
-own either.
+**`agent/implement/selftest.mjs` R6 has now caught the suite list growing seven times** → `docs/CURRENT-ARCHITECTURE.md` §12.
 
-**`agent/implement/selftest.mjs` R6 has now caught the suite list growing seven times** —
-SESSION 20, SESSION 22, SESSION 23, the merge where the two branches had each updated the
-same assertion to a different number, SESSION 24, whose simulation harness would otherwise
-have landed without ever gating a change under `agent/`, and SESSION 26, where it mattered
-most: the autonomy runner is the first thing here that can write a file without a person, and
-a suite for it that nothing ran would have been a gate on nothing; and SESSIONS 27 and 28,
-which are **one occasion rather than two** — sibling branches from one base, each setting the
-number to 21, neither right about the merged tree. That is the second time this assertion has
-caught exactly that shape, and it is the case it is most worth having for. That is the
-assertion doing its job. SESSION 29 is the ninth and is the one it was designed for rather
-than one it caught: the production operating mode was added WITH its suite in the list.
-SESSION 30 is the TENTH and is the first entry that is not under `agent/`: for thirty sessions
-the four validators that ARE this project's test suite had no suite of their own, and that
-session repaired two of them. It asserts twenty-four suites (twenty-five counting
-`.control-room/`, which the list excludes by prefix). SESSION 23 also changed `agent/detector/impact.mjs`'s
-`MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`;
-SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
-changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
-
-**There is CI, and a deploy gate whose setting was switched on 24 Oct 2026.** `.github/workflows/qa.yml` runs all
-four validators against the recorded baseline, the evidence audit, every agent suite, the
-contract check, the public/private boundary check and the browser suite, on every push.
-`.github/workflows/pages.yml` is the deploy gate; it takes effect when the owner sets the
-Pages source to "GitHub Actions" — done by the author on 24 Oct 2026, to be confirmed on the
-next push to `main` — and nothing requires the QA checks: no ruleset exists
-(`docs/DEPLOYMENT.md` §1b, §3).
+**There is CI, and a deploy gate whose setting was switched on 24 Oct 2026.** → `docs/DEPLOYMENT.md` §1b, §3.
 
 The browser suite opens the site in a real browser and is the first thing here that ever has:
 
@@ -561,198 +314,36 @@ node agent/proposals/governance/cli.mjs check      exit 1 only on an anchor this
 `check` and `corpus` run on every push. Neither writes anything, and there is no verb here
 that decides.
 
-**`node agent/orchestrator/cli.mjs workflows`, `capabilities` and `policy` exited 1 from the
-SESSION 26 merge until SESSION 29**, because `agent/orchestrator/cli.mjs:50` imported
-`AUTONOMY_NOTE`, which `policy.mjs` stopped exporting when the note became derived. **Repaired:**
-the CLI calls `autonomyNote()`. That fixed a false statement as well as a broken command — the
-constant said no action category is approved for automatic execution, which stopped being true
-in SESSION 26, and the derived note reports the five the grant enables. No suite runs these
-CLIs, so only CI saw it, and a failing step skips every step after it in the same job — which
-is why the governance step above is still registered ahead of the registers. It costs nothing
-and the next break will not hide them. Was `docs/GOVERNANCE-PROPOSALS.md` §6b.
+**`node agent/orchestrator/cli.mjs workflows`, `capabilities` and `policy` exited 1 from the SESSION 26 merge until SESSION 29** → `docs/PRODUCTION-OPERATING-MODE.md` §6 · `docs/GOVERNANCE-PROPOSALS.md` §6b.
 
-**There is no overall health score.** `agent/health/model.mjs overallScore()` throws, with the
-reasoning. Five metrics are marked `not_a_score` because the only legitimate way to move them
-is verification work the monitor cannot see, and every cheap route down is a prohibited
-action. `docs/HEALTH-MONITOR.md`.
+**There is no overall health score.** → `docs/HEALTH-MONITOR.md`.
 
 `tools/_footer.mjs`, `_refsweep.mjs` and `_review10.mjs` are generators and applied one-shot
 patches, not checks. **Do not re-run** the latter two.
 
 ## Known hazards
 
-- **The brief's text has one home: the markup of `index.html`.** Until 30 Sep 2026 it had a
-  second, the `__CONTENT__` blob — 67 KB inlined in the page, generated by nothing, read by
-  `app.js` for its pagers and search, and stale (no Annex C, ~9 KB of current prose missing).
-  It was deleted, not synchronised: `app.js` now reads the Parts from the markup, and
-  `data/brief.json` lost its unread `meta` block. **Do not bring a copy back under any name**
-  — `design-qa.mjs` fails a script that holds a page's text (`tools/prose-homes.mjs`),
-  `validate.mjs` fails a `brief.json` key other than `parts`/`reading_graph`, and the browser
-  suite's `search:brief-*` checks fail a stale index. **One second home remains:** part titles
-  and deks sit in `brief.json` and in the markup's headings, tree and spine; change both
-  until one is generated from the other. `docs/CURRENT-ARCHITECTURE.md` §8.
-- **Superseded translations.** Correcting an English string without declaring its key
-  `superseded` in `i18n/locales.json` leaves the it/fr/es editions asserting the thing you
-  just corrected. This has already happened once.
-- **The deploy gate exists and was switched on 24 Oct 2026, unconfirmed.** `.github/workflows/pages.yml` deploys
-  only after the site checks pass, from an allowlisted artifact — but only once the owner sets
-  Settings → Pages → Source to "GitHub Actions". Until then a push to `main` still publishes
-  directly and a CI failure is **visible, not blocking**. `docs/DEPLOYMENT.md` §3 lists the
-  settings. **Measured 23 Oct 2026 (§1a): both publish on every push** — the ungated branch
-  build first, then `pages.yml`'s gated artifact replaces it about four minutes later if every
-  gate passes. The author switched the source on 24 Oct 2026; the merge of #14 that day was still
-  published ungated first (§1b), so the next push to `main` confirms whether it holds. Run the
-  validators by hand as well.
-- **A data change needs a regeneration.** Since 27 Sep 2026 each substantive instrument has a
-  pre-rendered page at `instruments/<id>/`, generated from `data/` by `node tools/_footer.mjs`
-  (`docs/SEO-OPERATIONS.md`). After editing `data/`, re-run it and commit what it writes, or
-  `seo-audit.mjs` and CI fail on the stale page. Never edit a file under `instruments/` by hand,
-  and never store in `data/` anything to make a page read better: titles live in `tools/seo.mjs`.
-- **An edited inline script is a blocked script.** Every page carries a Content-Security-Policy
-  whose `script-src` hashes that page's inline scripts (the theme bootstrap; the brief has
-  none). Edit one and re-run `node tools/_footer.mjs`, or the browser refuses to run it;
-  `design-qa.mjs` fails the page until you do. Inline event handlers are an error.
-- **The validators do not read prose.** A false statement in `index.html` passes every check
-  in this repository. `agent/proposals/editorial/` is the first thing here that reads a
-  sentence at all, and it is **not a check**: it runs only when somebody runs it, it produces
-  proposals in front of a human, and it can only find what it can quote.
-- **`agent/ux/` has never opened a page, and `agent/browser/` now does.** Agent 8 reads the
-  markup, the stylesheets and the modules and audits the interface from them; every record it
-  writes says so as a blocking open question quoting README limitation 7, and that has not
-  changed. SESSION 19's browser suite closes some of its twelve open questions by measurement
-  and **found three defects none of the four validators can see**: with scripting off the
-  site has no navigation and the `<noscript>` notice does not say so; the skip link is the
-  tenth focusable element in the rendered page because `js/shell.js` inserted the chrome
-  ahead of it; and `enforcement.html` jumps h2 → h5 in its rendered outline. **All three are
-  fixed in SESSION 30, under an explicit instruction to repair them at root cause**, and each
-  was a defect in the WEBSITE rather than in the check: the `<noscript>` notice now names the
-  navigation among what will not render and carries the six destinations, read out of
-  `js/shell.js`'s `NAV` by `tools/_footer.mjs` so the nav model keeps one home; `initShell()`
-  inserts the chrome AFTER the skip link instead of at `document.body.firstChild`; and the
-  pipeline stage panels are `h3`, which is their real level under the record's `h2`, with
-  `css/tools.css` unchanged in appearance because it sized that heading itself. A fourth was a
-  defect in the CHECK: `keyboard:focus-visible` reported `undecidable` on every run because it
-  read its "before" style off the element its own preceding `Tab` had already focused, so it
-  compared a focus ring with itself. It now blurs, tabs, and measures — and passes.
-  `docs/BROWSER-QA.md` §4. Still not closed: contrast, screen readers, pixels, any browser
-  but Chromium — `a11y:bound` says so on every run and is the one remaining `undecidable`,
-  deliberately: it is a statement of what the suite did not establish, and a green tick in its
-  place would be the thing this repository is arranged against.
-- **A passing validator proves less than it looks.** `design-qa.mjs` harvests CSS token
-  declarations out of JavaScript by regex, so a `--foo:` in any JS string or comment
-  silences a real error. `freshness.mjs` prints a `SOURCE REACHABILITY` heading but performs
-  no network I/O — **no URL here has ever been fetched**. `validate.mjs` carries one check
-  that can never fire and treats every wildcard reference as resolving. Detail and evidence:
-  `docs/AUDIT-2026-09-01.md` F-10, F-11, F-12.
-- **Derived output depends on the reader's clock.** `isPast` compares against
-  `new Date().toISOString()` in UTC, so pipeline stages, the calendar and the status strips
-  change with when and where a page is opened. Date every report (F-15).
-- **`git blame` answers nothing.** The pre-SESSION 00 history is 47 bulk uploads and
-  deletions with no message that explains a change, so the rollback path a destructive script
-  assumes does not exist. Your commits are the first real provenance this repository has
-  (F-06).
-- **An `ApprovalRequest` in `agent/records/` is a request, not a grant.** Agents write that
-  directory, and it is git-ignored. A grant exists only in
-  `agent/implement/decisions/decisions.jsonl`, through `agent/implement/ledger.mjs
-  recordDecision`, which requires a named human and binds the decision to the proposal's
-  hash. **Two things call it**, and only two: `agent/implement/cli.mjs decide`, and the
-  Control Room's `POST /api/review`, which authenticates the caller, authorizes them against
-  the proposal's own autonomy class and audits the result before it does. One home for the
-  fact of a decision — do not add a third writer. **One
-  proposal in this repository has been decided, on 6 Nov 2026** (`prop-docs-ea57404dc452`; the ledger holds that one entry). Of
-  the seventy-one across four agents by `docs/HANDOVER.md`'s earlier count, thirty-five were measured in SESSION 18's own run,
-  before it, and every other one is still undecided: Agent 9 refuses those by name, and reports which gate refused each.
-  `docs/IMPLEMENTATION-QA.md` §3.
-- **The privileged API has no authentication and no authorization — and it is still there.**
-  `agent/observability/server.mjs` serves eleven `/api/` endpoints over the whole trace
-  store — agent inputs and outputs, decisions, approvals, provenance — and checks nothing.
-  Until 23 Oct 2026 its only control was that `host` DEFAULTED to `127.0.0.1`, and
-  `serve({ host })` accepted any value. **Since then the bind is enforced**: any address but
-  `127.0.0.1` or `::1` throws, and a request whose `Host` header is not loopback (DNS
-  rebinding) gets 403 — `agent/observability/selftest.mjs` "VIEWER". It still checks no
-  credential, so measured rather than inferred — the health monitor starts it on an ephemeral
-  loopback port and finds **nine of the eleven routes return data to a request with no
-  credential** — to any process on the machine. Defensible for a local development viewer,
-  which is what it is. **SESSION 21's Control Room did not inherit it**: `.control-room/server.mjs` is
-  a separate server that authenticates and then authorizes every privileged request, and the
-  finding above stands unchanged against the viewer. Do not point a Control Room at the
-  viewer's routes, and do not "fix" the viewer by bolting a token onto it — they exist for
-  different purposes, and merging them would give a development tool a security model nobody
-  tests. `docs/HEALTH-MONITOR.md` §6 · `docs/CONTROL-ROOM.md` §1.
+- **The brief's text has one home: the markup of `index.html`.** **Do not bring a copy back under any name** — `design-qa.mjs` fails a script that holds a page's text (`tools/prose-homes.mjs`), `validate.mjs` fails a `brief.json` key other than `parts`/`reading_graph`, and the browser suite's `search:brief-*` checks fail a stale index. → `docs/CURRENT-ARCHITECTURE.md` §8.
+- **Superseded translations.** → `docs/DATA-GOVERNANCE.md` §6.
+- **The deploy gate exists and was switched on 24 Oct 2026, unconfirmed.** → `docs/DEPLOYMENT.md` §3.
+- **A data change needs a regeneration.** Never edit a file under `instruments/` by hand, and never store in `data/` anything to make a page read better: titles live in `tools/seo.mjs`. → `docs/SEO-OPERATIONS.md`.
+- **An edited inline script is a blocked script.** Inline event handlers are an error. → `docs/DEPLOYMENT.md`.
+- **The validators do not read prose.** → `docs/VERIFICATION-POLICY.md`.
+- **`agent/ux/` has never opened a page, and `agent/browser/` now does.** → `docs/BROWSER-QA.md` §4.
+- **A passing validator proves less than it looks.** → `docs/VERIFICATION-POLICY.md`.
+- **Derived output depends on the reader's clock.** → `docs/VERIFICATION-POLICY.md` §4.
+- **`git blame` answers nothing.** → `docs/VERIFICATION-POLICY.md`.
+- **An `ApprovalRequest` in `agent/records/` is a request, not a grant.** One home for the fact of a decision — do not add a third writer. → `docs/IMPLEMENTATION-QA.md` §3.
+- **The privileged API has no authentication and no authorization — and it is still there.** Do not point a Control Room at the viewer's routes, and do not "fix" the viewer by bolting a token onto it — they exist for different purposes, and merging them would give a development tool a security model nobody tests. → `docs/HEALTH-MONITOR.md` §6.
 
-- **A lower number is not automatically healthier, and five metrics say so in their own
-  definition.** The 111 unverified records, the provenance gaps, the verification gaps, the
-  blocking open questions and the rejected proposals are marked `not_a_score`:
-  `agent/health/model.mjs` refuses to let any of them be re-labelled as a defect count,
-  because every cheap route down — clearing `requires_verification`, attaching a plausible
-  substitute, bulk-stamping `last_verified`, removing a `blocks` flag — is a prohibited
-  action rather than an improvement. **A rise in the first four is usually good news.**
+- **A lower number is not automatically healthier, and five metrics say so in their own definition.** → `docs/HEALTH-MONITOR.md`.
 
-- **There are two public surfaces, and only one is the website.** Since 24 Oct 2026 the site is
-  published only by `.github/workflows/pages.yml`, from an artifact built from the allowlist in
-  `tools/pages-artifact.mjs` (`docs/DEPLOYMENT.md` §1b, §2). That list is the one home of "what
-  is published": it admits the pages and the directories they load, and refuses `agent/`,
-  `docs/`, `tools/` and every dot path by name. `agent/implement/boundary.mjs publicSurface()`,
-  the health monitor, the adversarial gate's PP-08 and `.control-room/boundary.mjs` read it
-  (v2 Session 4, B.2). **The repository is the second surface:** it is public on github.com,
-  so `agent/`, `docs/`, the Control Room's source and anything ever committed are readable there,
-  and the secret scan reads every tracked file for that reason. Until 24 Oct 2026 the site was
-  GitHub Pages serving the whole tree through Jekyll, and the dot prefix was its one exclusion;
-  that model is gone. `node agent/implement/cli.mjs boundary` reports both surfaces on demand.
+- **There are two public surfaces, and only one is the website.** **Do not read that as "the Control Room is safe because nobody can find it."** → `docs/DEPLOYMENT.md` §1b, §2.
+- **The public site now has one affordance that is not about EU law.** Do not add the meta tag, or a server route that reads the phrase, without deciding to. → `docs/AUTONOMY-AUTHORIZATION-POLICY.md`.
 
-  **The allowlist is a publication boundary, not a security control.** `.control-room/` is
-  refused by it, and `node .control-room/cli.mjs boundary` checks on every push that it still
-  is. **Do not read that as "the Control Room is safe because nobody can find it."** Protocol
-  §10 and `docs/CONTROL-ROOM.md` §1 both say the opposite, and every privileged request there is
-  authenticated and authorized regardless.
+- **Every run store here is git-ignored EXCEPT one, and the exception is deliberate.** → `docs/CONTINUOUS-IMPROVEMENT.md`.
 
-  What is merely UNTRACKED is kept out of the public REPOSITORY by an ignore rule alone:
-  `agent/records/`, `agent/observability/runs/`, `agent/health/history/`,
-  `agent/orchestrator/state/` and `.control-room/state/` have never been in a commit, and that
-  is an **ignore rule, not a boundary** — one `git add -f` puts them on github.com and nothing
-  here would object; the website's allowlist would still refuse them.
-- **The public site now has one affordance that is not about EU law.** Typing
-  `thirty-two paths` into the search palette offers a passage to a private control plane:
-  `js/threshold.js`, styled at the end of `style.css`, drawn as an original Sefer
-  Yetzirah-style wheel. It authenticates nothing, authorizes nothing and holds no credential,
-  no endpoint and no privileged state — `agent/policy/selftest.mjs` tests 18–20 assert that
-  string by string, and `agent/browser/checks.mjs checkThreshold` measures nine properties of
-  it in a real browser, including that opening it issues **no network request at all**. The
-  phrase is **not a credential**: it is in a file served to every reader, protocol §10 says
-  obscurity is not a control, and anyone who finds it meets the same login. It reads its
-  target from `<meta name="eu-control-room">` and **never invents one**; no page here declares
-  it, so on the published site the passage ends at a statement. Do not add the meta tag, or a
-  server route that reads the phrase, without deciding to.
-
-  **SESSION 24 simulated the discovery flow as a separate UX/security path and measured all
-  six separations**: the animation is separate from authentication, authorization, approval,
-  orchestration, execution and deployment, and `js/threshold.js` imports nothing at all, so
-  it can reach no other module. It also compared the code against an intended six-phase
-  visual sequence and found **three phases that do not match**. One of the three is
-  deliberate and must stay: "reveal CONTROL ROOM followed by the normal authentication
-  interface" must NOT be implemented as a login form on the published page, because that
-  would be a credential prompt in the public tree. `docs/FIRST-END-TO-END-AUDIT.md` §6.
-
-- **Every run store here is git-ignored EXCEPT one, and the exception is deliberate.**
-  `agent/improve/cycles/cycles.jsonl` is tracked, because a loop whose memory does not survive
-  a clone is not a loop: every other store is per-machine, so cross-session movement would
-  otherwise be a comparison against the previous session's PROSE in `docs/HANDOVER.md` — a
-  second home for those facts, which has already drifted once (`docs/LIMITED-AUTONOMY.md` §7c).
-  The precedent is the grant ledger and the decision ledger, not the health history. What pays
-  for it is a rule rather than a promise: a signal classified `private` by
-  `agent/health/model.mjs` is withheld and the withholding is recorded, the health monitor's
-  own `collectLeaks()` runs over the serialised entry against the real private metric register,
-  and a path under `.control-room/` anywhere in an entry is a **refusal to write**, not a
-  redaction. Nothing records without `--record`.
-
-- **The autonomy layer's action ledger is git-ignored, and the COMMIT is the durable record.**
-  `agent/autonomy/actions/actions.jsonl` holds one line per attempt — merged, reverted and
-  refused alike — with the branch, the base commit and the per-file pre-change hashes. It is
-  per-machine run state, so a fresh clone and a CI runner have none, and that is not the same
-  fact as no autonomous action having been taken. What survives a clone is the commit an
-  autonomous change made, whose message names the grant, the person who wrote it, the base
-  commit and the exact restore command. **The grant ledger is the opposite and is TRACKED**:
-  an authorization has to be attributable.
+- **The autonomy layer's action ledger is git-ignored, and the COMMIT is the durable record.** → `docs/LIMITED-AUTONOMY.md`.
 
 - **Your base may be stale.** Run `git fetch --all && git branch -a` before concluding
   anything about what this repository contains. An earlier session reported four existing

@@ -1,6 +1,6 @@
 ---
 name: project-context
-description: Load the mandatory context for the Eu-Digital-Policy repository before doing any work. Use at the start of every session, before reading implementation files or making any change.
+description: Load the mandatory context for the Eu-Digital-Policy repository before doing any work, by reading level — always the binding constraints, then the documents the catalogue lists for the task's domain, then records only on request. Use at the start of every session, before reading implementation files or making any change.
 ---
 
 # project-context
@@ -15,6 +15,10 @@ This repository has strict invariants that are not obvious from the code, and a 
 audience that may act on what the site says about EU law. Starting work without loading the
 context is how a session ships a false statement or a silent architectural regression.
 
+It reads **by level** (the author's decision, `docs/ROADMAP-v2.md` §8, «D1, D.3 question 2»;
+the levels are `docs/DOCUMENTATION-ARCHITECTURE.md` §7): what binds every session, always;
+what the task's domain needs, from the catalogue; records, only when something cites them.
+
 ## When to invoke
 
 At the start of **every** session, before anything else. Also whenever a session resumes
@@ -22,20 +26,27 @@ after a long gap or after context has been summarised.
 
 ## Procedure
 
-1. **Read, in this order:**
-   - `docs/PROJECT-CONTEXT.md` — what the project is and the seven governing principles.
-   - `docs/CURRENT-ARCHITECTURE.md` — the rendering model, dependency map, derivation layer,
-     tooling baseline, and §8 — the removed `__CONTENT__` bypass and the one second home of
-     the brief's text that remains.
-   - `docs/AI-SAFE-BOUNDARIES.md` — the green/amber/red tiers and the absolute prohibitions.
-   - `docs/HANDOVER.md` — the previous session's state and the current objective.
-   - `README.md` — the author's own account, including its «Known limitations» section.
+1. **Always — whatever the task:**
+   - `docs/AI-SAFE-BOUNDARIES.md` §0 and §3 — the absolute prohibitions and the red tier.
+   - the header of `docs/HANDOVER.md` — everything above its first `## ` entry: the current
+     state, the branch, and what the next session is.
+   - the rules of `AGENTS.md` — «The rules that matter most» and «When to stop and ask».
 
-2. **Verify the handover against the code.** The repository is the source of truth. If
-   `HANDOVER.md` describes something the code does not do, **stop and report the
+2. **By domain — what the task touches.** Name the task's domain (or domains) from the table
+   in `docs/DOCUMENTATION-ARCHITECTURE.md` §7, then open `docs/README.md` §2 and read what its
+   row lists for that domain: the second column always, the third when the task touches what
+   it names. **Read the list there; do not copy it here or anywhere** — the catalogue is its
+   one home, and a list copied into a skill goes stale the day a document is added.
+
+3. **On request — nothing else by default.** Records (prompts, readings, audits, runs), the
+   archive, generated sheets and snapshots are read when the task, its prompt or a §8 row
+   cites them, and not before. `docs/HANDOVER.md` beyond its header is a record of this kind.
+
+4. **Verify the handover against the code.** The repository is the source of truth. If
+   `docs/HANDOVER.md` describes something the code does not do, **stop and report the
    discrepancy** rather than reconciling it silently.
 
-3. **Establish the baseline** before changing anything:
+5. **Establish the baseline** before changing anything:
    ```
    node tools/validate.mjs
    node tools/i18n-audit.mjs
@@ -46,10 +57,10 @@ after a long gap or after context has been summarised.
    ```
    Record the output. Every later claim about regressions is measured against it.
 
-4. **Read the `$description` and `$note`** of any dataset you intend to touch before
+6. **Read the `$description` and `$note`** of any dataset you intend to touch before
    touching it. The non-obvious invariant lives in the `$note`.
 
-5. **Load the skill you need, not all of them.** `docs/SKILL-MAP.md` lists the library, what
+7. **Load the skill you need, not all of them.** `docs/SKILL-MAP.md` lists the library, what
    each skill owns, and which agent role uses which. Each skill is narrow on purpose: it
    states its own scope boundary and names the sibling that owns what it does not.
 
@@ -64,4 +75,12 @@ after a long gap or after context has been summarised.
 
 ## Refusal conditions
 
-Do not proceed if the context documents are missing or contradict the code. Report first.
+Do not proceed if a document of the «always» level is missing or contradicts the code, or if
+`docs/README.md` §2 has no row for the task's domain. Report first.
+
+## Its tests
+
+`tools/docs-check.mjs`, the `SKILL` checks (errors; the author's decision, §8, «D4, D4.1: where
+the skill's tests live»): this file names every item of the «always» level and `docs/README.md`
+§2, copies no domain's list, names only paths that exist; `CLAUDE.md` and `docs/SKILL-MAP.md`
+point to it rather than carry a reading list of their own.

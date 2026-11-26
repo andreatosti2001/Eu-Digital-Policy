@@ -448,7 +448,8 @@ source record, and asserts each is caught. It is in `AGENT_SUITES`, so a change 
 against their own rules — the catalogue `docs/README.md` against the perimeter, each standard header against the
 catalogue, a cited §8 title or `main` commit against §8 and the history, internal links, the `docs/…` paths named in
 code, workflows, skills and prompts, the anchors of `agent/proposals/governance/patterns.mjs` (imported) and the pins
-it lists, and the catalogue's totals. It exits 1 on an error and prints its warnings by name; which is which is the
+it lists, the catalogue's totals, and — since D4 — that the skill `project-context` reads by level and that `CLAUDE.md` and
+`docs/SKILL-MAP.md` point to it (§8, «D4, D4.1: where the skill's tests live»). It exits 1 on an error and prints its warnings by name; which is which is the
 author's (§8, «Checkpoint D3.1 of the documentation session D3: the design of the check»). Its suite is
 `tools/docs-check-selftest.mjs`, in `AGENT_SUITES`. `.github/workflows/qa.yml` runs both in the validators job.
 
@@ -598,3 +599,86 @@ enforcement and regulatory contradictions; exit 1 on a defect. `docs/EVIDENCE-MO
 `andreatosti2001.github.io` was refused by that environment's network policy. *On 27 Sep 2026
 it was reachable, and was inspected:* the live pages are byte-identical to `main`, `.control-room/`
 and `.agents/` return 404, and `agent/`, `docs/` and `tools/` are served. `docs/DEPLOYMENT.md` §1.
+
+## Moved from `AGENTS.md` (26 Nov 2026, D4)
+
+> **Moved verbatim from `AGENTS.md`** at `064488c` (lines 369–381; 383–387; 389–396; 452–467; 469–486; 584–593) on 26 Nov 2026 by documentation session D4, on the
+> author's row «Checkpoint D4.1 of the documentation session D4: the map of the moves out of `AGENTS.md`» (`docs/ROADMAP-v2.md` §8;
+> `docs/AGENTS-ENTRY-MOVES.md`, units V1, V2, V3, V6, V7, H01). Kept as `AGENTS.md` carried it: «above» and «below» in it refer to
+> that file, and each dated claim is as of its own date. `AGENTS.md` keeps one line for each, pointing here.
+
+**`freshness.mjs`'s exit code changed in SESSION 30 and its report did not.** It exits 1 on a
+**defect** — a property of the tree, true on every date, closed by a commit: a URL-less source
+with no `resolution`, a per-record verification field never used per-record. It exits 0 on a
+**staleness prompt** — a property of the calendar, which the same tree does not produce when
+audited as of the date it records, and which no commit makes permanently false. The prompts
+are still printed by name and counted; they are closed by verification work against primary
+sources and by nothing else, and **exit 0 is not evidence of currency**. The old rule made the
+result a function of the reader's clock (AUDIT F-15), which is how CI carried a red step no
+commit could close from SESSION 24 to SESSION 29 while `agent/implement/baseline.mjs` called
+the script "a report, not a gate". `tools/selftest.mjs` holds the split to that rule: F1
+asserts this tree reports NO prompt as of its own newest verification date, F3 that a planted
+defect fails on every date, F5 that the intervals were not widened, F6 that every counted
+prompt still appears in the body.
+
+**The four validators now have a suite of their own**, because two of SESSION 30's findings
+were defects in a CHECK rather than in the thing checked. `tools/selftest.mjs` plants a Google
+Fonts `@import`, a remote `fetch`, a `preconnect`, a missing required field and a `checksum`
+on a source record, and asserts each is caught. It is in `AGENT_SUITES`: a change under
+`tools/` runs it.
+
+**`tools/thirdparty.mjs` is what makes "no third-party requests" true of the repository rather
+than of the README.** `design-qa.mjs`'s old check read `href="…"` and `src="…"` in the HTML —
+double quotes only — so an `@import` or an `@font-face src` in a stylesheet was invisible to
+it, which is the exact path by which a Google Fonts dependency returns. The scan now covers
+the pages, the stylesheets and the modules, in every position a browser fetches from.
+`ALLOWED_RUNTIME_ORIGINS` is **empty**; an external runtime dependency is a Class D decision
+and goes there with its reason and who decided it. `data/` and `i18n/` are deliberately out of
+the surface: a URL in `data/sources.json` is a citation the page displays and never fetches.
+
+**On 4 Nov 2026 the same 26 suites (the 25 `AGENT_SUITES` and `.control-room/`) pass 1394 tests**, 45 of them the release chain's
+own; the figures below are the history of how the count grew.
+
+**1196 tests across the twenty-five suites**, all passing on SESSION 30's tree — 25 rather
+than 24 because `tools/selftest.mjs` is the first entry in `AGENT_SUITES` that is not under
+`agent/`, and it belongs there because that list is what runs for a change under `agent/` OR
+`tools/`. It was **1166 across twenty-three** on SESSION 29's tree — 1165 with
+one skipped when the working tree is on `main`, because `agent/autonomy/selftest.mjs` test 28
+rehearses the real cycle and the cycle refuses to run there. It was 1114 across twenty-two on
+the merged tree of SESSIONS 27 and 28. **Neither session's own figure is the total**: SESSION 27 measured 1069 and SESSION 28
+measured 1081, on sibling branches cut from the same base, and each was right about its own
+tree (1036 across twenty-one after SESSION 26; 998 across twenty after SESSION 24; 978 across
+nineteen after SESSION 23.5; 934 after SESSION 22 on its own branch; 909 after SESSION 23.5 on
+its own; 867 after SESSION 21; 812 after SESSION 20; 756 after SESSIONS 18 and 19; 683 before
+them). SESSIONS 22, 23 and 23.5 were merged, so none of those middle figures is a total on its
+own either.
+
+**`agent/implement/selftest.mjs` R6 has now caught the suite list growing seven times** —
+SESSION 20, SESSION 22, SESSION 23, the merge where the two branches had each updated the
+same assertion to a different number, SESSION 24, whose simulation harness would otherwise
+have landed without ever gating a change under `agent/`, and SESSION 26, where it mattered
+most: the autonomy runner is the first thing here that can write a file without a person, and
+a suite for it that nothing ran would have been a gate on nothing; and SESSIONS 27 and 28,
+which are **one occasion rather than two** — sibling branches from one base, each setting the
+number to 21, neither right about the merged tree. That is the second time this assertion has
+caught exactly that shape, and it is the case it is most worth having for. That is the
+assertion doing its job. SESSION 29 is the ninth and is the one it was designed for rather
+than one it caught: the production operating mode was added WITH its suite in the list.
+SESSION 30 is the TENTH and is the first entry that is not under `agent/`: for thirty sessions
+the four validators that ARE this project's test suite had no suite of their own, and that
+session repaired two of them. It asserts twenty-four suites (twenty-five counting
+`.control-room/`, which the list excludes by prefix). SESSION 23 also changed `agent/detector/impact.mjs`'s
+`MODULE_SURFACE`, which must name every module in `js/` and did not yet name `threshold.js`;
+SESSION 21 changed two in `agent/health/selftest.mjs`. Every one of them is the world having
+changed rather than a test being inconvenient, and `docs/HANDOVER.md` names them all.
+
+- **The brief's text has one home: the markup of `index.html`.** Until 30 Sep 2026 it had a
+  second, the `__CONTENT__` blob — 67 KB inlined in the page, generated by nothing, read by
+  `app.js` for its pagers and search, and stale (no Annex C, ~9 KB of current prose missing).
+  It was deleted, not synchronised: `app.js` now reads the Parts from the markup, and
+  `data/brief.json` lost its unread `meta` block. **Do not bring a copy back under any name**
+  — `design-qa.mjs` fails a script that holds a page's text (`tools/prose-homes.mjs`),
+  `validate.mjs` fails a `brief.json` key other than `parts`/`reading_graph`, and the browser
+  suite's `search:brief-*` checks fail a stale index. **One second home remains:** part titles
+  and deks sit in `brief.json` and in the markup's headings, tree and spine; change both
+  until one is generated from the other. `docs/CURRENT-ARCHITECTURE.md` §8.

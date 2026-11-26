@@ -13,7 +13,7 @@
    docs/DOCUMENTATION-ARCHITECTURE.md's, read from it at run time; each
    document's classification is the catalogue's (docs/README.md §1).
 
-   Six checks, one family of codes each:
+   Seven checks, one family of codes each:
 
      CAT     (1) the catalogue covers every document of the perimeter and
                  no other, once, in the fixed columns and the vocabulary
@@ -32,6 +32,12 @@
                  every pin below (a literal or a reader a document's text
                  is read by, confirmed in the code) still exists
      TOTAL   (6) docs/README.md §4's totals equal the table's
+     SKILL   (7) the skill project-context reads by level (D4; §8, «D4, D4.1:
+                 where the skill's tests live»): it names every item of the
+                 «always» level, read from docs/DOCUMENTATION-ARCHITECTURE.md
+                 §7; it names docs/README.md §2 and copies no domain's list
+                 from it; every path it names exists; CLAUDE.md and
+                 docs/SKILL-MAP.md point to it and carry no reading list
 
    It writes nothing. It reads the tree it is pointed at (--root, default
    the repository), so its selftest (tools/docs-check-selftest.mjs, in
@@ -62,6 +68,8 @@ export const RULES_DOC = 'docs/DOCUMENTATION-ARCHITECTURE.md';
 export const CATALOGUE_DOC = 'docs/README.md';
 export const ROADMAP_DOC = 'docs/ROADMAP-v2.md';
 export const ROOT_DOCS = Object.freeze(['AGENTS.md', 'CLAUDE.md', 'README.md']);
+export const SKILL_DOC = '.agents/skills/project-context/SKILL.md';
+export const SKILL_MAP_DOC = 'docs/SKILL-MAP.md';
 
 /** The one exception of place (§8, «After D2: the standard header on `docs/BRIEF-v2.md`»): the header sits
  *  on the first line, above the provenance comment, because the brief's title is inside the verbatim text. */
@@ -194,6 +202,41 @@ export function vocabulary(rulesText) {
   const domain = firstColumn('## 7 ');
   if (!lifecycle || !authority || !kind || !domain) return null;
   return { lifecycle: [...lifecycle, 'uncertain'], authority: [...authority, 'uncertain'], kind, domain };
+}
+
+/**
+ * The «always» reading level, read from its home, docs/DOCUMENTATION-ARCHITECTURE.md §7: one item per
+ * `;`-separated part of the row's second cell, as { path, sections } — `docs/AI-SAFE-BOUNDARIES.md` §0 and §3
+ * gives { path: 'docs/AI-SAFE-BOUNDARIES.md', sections: '§0 and §3' }. Null where the row is gone.
+ */
+export function alwaysLevel(rulesText) {
+  const s = rulesText == null ? null : section(rulesText, '## 7 ');
+  const line = s?.lines.find((l) => /^\|\s*\*\*always\*\*\s*\|/.test(l));
+  if (!line) return null;
+  const items = cells(line)[1].split(';').map((part) => part.match(/`([^`]+)`(?:\s+(§[^;]*))?/))
+    .filter(Boolean).map((m) => ({ path: m[1], sections: (m[2] ?? '').trim() }));
+  return items.length ? items : null;
+}
+
+/** docs/README.md §2: per domain, the documents its «A task here reads» column names. Null where §2 is gone. */
+export function domainLists(catText) {
+  const s = catText == null ? null : section(catText, '## 2 ');
+  if (!s) return null;
+  const out = s.lines.filter((l) => /^\| `[a-z0-9-]+` \|/.test(l)).map((l) => {
+    const c = cells(l);
+    return { domain: unquote(c[0]), reads: [...new Set([...c[1].matchAll(/`([^`]+\.md)`/g)].map((m) => m[1]))] };
+  });
+  return out.length ? out : null;
+}
+
+/** The repository paths a text names in inline code outside fenced blocks: a file with an extension, at the root or under a directory. */
+const REPO_PATH = /^(?:\.?[A-Za-z0-9_-]+\/)*[A-Za-z0-9_.-]+\.(?:md|mjs|js|json|ya?ml)$/;
+export function namedPaths(text) {
+  const out = [];
+  for (const { n, line } of proseLines(text)) {
+    for (const m of line.matchAll(/`([^`\s]+)`/g)) if (REPO_PATH.test(m[1])) out.push({ n, path: m[1] });
+  }
+  return out;
 }
 
 /* ---------------------------------------------------------------- the catalogue */
@@ -504,6 +547,35 @@ export async function docsCheck({ root = REPO_ROOT, severity = SEVERITY } = {}) 
   }
   measured.pins = PINS.length;
 
+  /* (7) the skill project-context, by level */
+  {
+    const skill = read(root, SKILL_DOC);
+    const always = alwaysLevel(read(root, RULES_DOC));
+    const lists = domainLists(catText);
+    if (skill == null) add('SKILL-READ', SKILL_DOC, null, 'is gone: no session is told what to read');
+    if (!always) add('SKILL-READ', RULES_DOC, null, '§7 has no «always» row the skill can be checked against');
+    if (!lists) add('SKILL-READ', CATALOGUE_DOC, null, '§2 «What a task reads, by domain» could not be read');
+    if (skill != null) {
+      for (const item of always ?? []) {
+        const want = item.sections ? `\`${item.path}\` ${item.sections}` : `\`${item.path}\``;
+        if (!skill.includes(want)) add('SKILL-ALWAYS', SKILL_DOC, null, `does not name «${want}», which ${RULES_DOC} §7 puts in the «always» level`);
+      }
+      measured.skill_always = always?.length ?? 0;
+      if (!skill.includes(`\`${CATALOGUE_DOC}\` §2`)) add('SKILL-DOMAIN', SKILL_DOC, null, `does not name \`${CATALOGUE_DOC}\` §2, where the «by domain» level is read`);
+      const named = new Set(namedPaths(skill).map((x) => x.path));
+      for (const { domain, reads } of lists ?? []) {
+        const copied = reads.filter((r) => named.has(r));
+        if (copied.length >= 2) add('SKILL-COPY', SKILL_DOC, null, `names ${copied.length} of the documents ${CATALOGUE_DOC} §2 lists for «${domain}» (${copied.join(', ')}): a copy of the list, which has one home`);
+      }
+      for (const { n, path } of namedPaths(skill)) if (!exists(root, path)) add('SKILL-PATH', SKILL_DOC, n, `names \`${path}\`, which does not exist`);
+    }
+    const claude = read(root, 'CLAUDE.md');
+    if (claude == null || !claude.includes('`AGENTS.md`') || !claude.includes('`project-context`')) add('SKILL-ENTRY', 'CLAUDE.md', null, 'does not send a session to `AGENTS.md` and the skill `project-context`');
+    else for (const { n, path } of docsPaths(claude)) add('SKILL-ENTRY', 'CLAUDE.md', n, `names \`${path}\`: a reading list here is a second home of what the skill reads`);
+    const mapRow = (read(root, SKILL_MAP_DOC) ?? '').split('\n').find((l) => l.startsWith('| `project-context` |'));
+    if (!mapRow || !mapRow.includes(`\`${CATALOGUE_DOC}\` §2`)) add('SKILL-ENTRY', SKILL_MAP_DOC, null, `its \`project-context\` row does not name \`${CATALOGUE_DOC}\` §2, where the skill reads the «by domain» level`);
+  }
+
   /* (6) the totals of docs/README.md §4 */
   if (cat && catText != null) {
     const s = section(catText, '## 4 ');
@@ -539,6 +611,8 @@ export const SEVERITY = Object.freeze({
   'CLOSED-ROADMAP': 'error', 'CLOSED-TITLE': 'error', 'CLOSED-COMMIT': 'error', 'CLOSED-UNDETERMINED': 'warning',
   LINK: 'error', POINTS: 'error', PATH: 'warning', 'PATH-PROMPT': 'warning', 'PATH-FIXTURE': 'count',
   ANCHOR: 'error', PIN: 'error', TOTAL: 'error',
+  /* (7), the author's decision (§8, «D4, D4.1: where the skill's tests live»): a new check, an error */
+  'SKILL-READ': 'error', 'SKILL-ALWAYS': 'error', 'SKILL-DOMAIN': 'error', 'SKILL-COPY': 'error', 'SKILL-PATH': 'error', 'SKILL-ENTRY': 'error',
 });
 
 /* ---------------------------------------------------------------- the command */

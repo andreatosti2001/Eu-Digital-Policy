@@ -319,3 +319,32 @@ that the document's own subject is not overstating what a mechanism establishes.
    ceiling; nothing here independently assesses whether the number is right.
 6. **The 84-row matrix has been exercised by a test suite and by nothing else.** No component
    other than `agent/implement/` calls `evaluate()` today.
+
+## Moved from `AGENTS.md` (26 Nov 2026, D4)
+
+> **Moved verbatim from `AGENTS.md`** at `064488c` (lines 714–734) on 26 Nov 2026 by documentation session D4, on the
+> author's row «Checkpoint D4.1 of the documentation session D4: the map of the moves out of `AGENTS.md`» (`docs/ROADMAP-v2.md` §8;
+> `docs/AGENTS-ENTRY-MOVES.md`, units H15). Kept as `AGENTS.md` carried it: «above» and «below» in it refer to
+> that file, and each dated claim is as of its own date. `AGENTS.md` keeps one line for each, pointing here.
+
+- **The public site now has one affordance that is not about EU law.** Typing
+  `thirty-two paths` into the search palette offers a passage to a private control plane:
+  `js/threshold.js`, styled at the end of `style.css`, drawn as an original Sefer
+  Yetzirah-style wheel. It authenticates nothing, authorizes nothing and holds no credential,
+  no endpoint and no privileged state — `agent/policy/selftest.mjs` tests 18–20 assert that
+  string by string, and `agent/browser/checks.mjs checkThreshold` measures nine properties of
+  it in a real browser, including that opening it issues **no network request at all**. The
+  phrase is **not a credential**: it is in a file served to every reader, protocol §10 says
+  obscurity is not a control, and anyone who finds it meets the same login. It reads its
+  target from `<meta name="eu-control-room">` and **never invents one**; no page here declares
+  it, so on the published site the passage ends at a statement. Do not add the meta tag, or a
+  server route that reads the phrase, without deciding to.
+
+  **SESSION 24 simulated the discovery flow as a separate UX/security path and measured all
+  six separations**: the animation is separate from authentication, authorization, approval,
+  orchestration, execution and deployment, and `js/threshold.js` imports nothing at all, so
+  it can reach no other module. It also compared the code against an intended six-phase
+  visual sequence and found **three phases that do not match**. One of the three is
+  deliberate and must stay: "reveal CONTROL ROOM followed by the normal authentication
+  interface" must NOT be implemented as a login form on the published page, because that
+  would be a credential prompt in the public tree. `docs/FIRST-END-TO-END-AUDIT.md` §6.

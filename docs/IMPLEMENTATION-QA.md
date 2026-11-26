@@ -316,3 +316,23 @@ counted and named in the check's detail and excerpt; **one more warning, a crede
    would need a second, separate path to honour a permit; it does not have one, and inventing
    one before a permit exists would be building a door into a wall nobody has decided to put
    an opening in.
+
+## Moved from `AGENTS.md` (26 Nov 2026, D4)
+
+> **Moved verbatim from `AGENTS.md`** at `064488c` (lines 654–665) on 26 Nov 2026 by documentation session D4, on the
+> author's row «Checkpoint D4.1 of the documentation session D4: the map of the moves out of `AGENTS.md`» (`docs/ROADMAP-v2.md` §8;
+> `docs/AGENTS-ENTRY-MOVES.md`, units H11). Kept as `AGENTS.md` carried it: «above» and «below» in it refer to
+> that file, and each dated claim is as of its own date. `AGENTS.md` keeps one line for each, pointing here.
+
+- **An `ApprovalRequest` in `agent/records/` is a request, not a grant.** Agents write that
+  directory, and it is git-ignored. A grant exists only in
+  `agent/implement/decisions/decisions.jsonl`, through `agent/implement/ledger.mjs
+  recordDecision`, which requires a named human and binds the decision to the proposal's
+  hash. **Two things call it**, and only two: `agent/implement/cli.mjs decide`, and the
+  Control Room's `POST /api/review`, which authenticates the caller, authorizes them against
+  the proposal's own autonomy class and audits the result before it does. One home for the
+  fact of a decision — do not add a third writer. **One
+  proposal in this repository has been decided, on 6 Nov 2026** (`prop-docs-ea57404dc452`; the ledger holds that one entry). Of
+  the seventy-one across four agents by `docs/HANDOVER.md`'s earlier count, thirty-five were measured in SESSION 18's own run,
+  before it, and every other one is still undecided: Agent 9 refuses those by name, and reports which gate refused each.
+  `docs/IMPLEMENTATION-QA.md` §3.

@@ -274,3 +274,16 @@ here observed what Googlebot did.
   address to the domain.
 - No validator here can see how a search engine *ranks* or *summarises* a page. `seo-audit.mjs`
   proves consistency of what the site declares; nothing else.
+
+## Moved from `AGENTS.md` (26 Nov 2026, D4)
+
+> **Moved verbatim from `AGENTS.md`** at `064488c` (lines 606–610) on 26 Nov 2026 by documentation session D4, on the
+> author's row «Checkpoint D4.1 of the documentation session D4: the map of the moves out of `AGENTS.md`» (`docs/ROADMAP-v2.md` §8;
+> `docs/AGENTS-ENTRY-MOVES.md`, units H04). Kept as `AGENTS.md` carried it: «above» and «below» in it refer to
+> that file, and each dated claim is as of its own date. `AGENTS.md` keeps one line for each, pointing here.
+
+- **A data change needs a regeneration.** Since 27 Sep 2026 each substantive instrument has a
+  pre-rendered page at `instruments/<id>/`, generated from `data/` by `node tools/_footer.mjs`
+  (`docs/SEO-OPERATIONS.md`). After editing `data/`, re-run it and commit what it writes, or
+  `seo-audit.mjs` and CI fail on the stale page. Never edit a file under `instruments/` by hand,
+  and never store in `data/` anything to make a page read better: titles live in `tools/seo.mjs`.
