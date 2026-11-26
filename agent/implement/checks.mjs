@@ -74,6 +74,10 @@ export const AGENT_SUITES = [
      finding that moves with the calendar. A repair to a validator with
      no suite behind it is a gate on nothing. */
   'tools/selftest.mjs',
+  /* Documentation session D3 (26 Nov 2026): the documentation check's own
+     suite, in its own file by the author's decision (docs/ROADMAP-v2.md §8,
+     «D3, D3.1: where the check's selftest lives»). */
+  'tools/docs-check-selftest.mjs',
 ];
 
 /** Run a command, capturing everything, never throwing. A checker

@@ -141,6 +141,24 @@ jobs:
       - name: tools/selftest.mjs — the validators' own suite
         run: node --test tools/selftest.mjs
 
+      # Documentation session D3 (26 Nov 2026), the author's decision
+      # (docs/ROADMAP-v2.md §8, «D1, D.3 question 4»): the documentation
+      # check. The catalogue covers every document, the standard headers
+      # agree with it, a «Closed by» names a real §8 row or a commit on
+      # main's first-parent line (this job fetches the whole history), the
+      # internal links resolve, the anchored and pinned sentences that code
+      # reads still exist, and the catalogue's totals are its table's. It
+      # fails on an ERROR; a docs/ path not found in code, a workflow or a
+      # prompt is a WARNING, printed by name, and the step stays green
+      # (§8, «Checkpoint D3.1 of the documentation session D3»). It is not
+      # one of the four validators and has no baseline in §12: an error is
+      # a failure on every commit, and its warnings are findings.
+      - name: docs-check.mjs — the documentation check
+        run: node tools/docs-check.mjs
+
+      - name: tools/docs-check-selftest.mjs — the documentation check's own suite
+        run: node --test tools/docs-check-selftest.mjs
+
       # The comparison the four validators cannot make themselves:
       # against the recorded baseline in docs/CURRENT-ARCHITECTURE.md
       # §12. A new warning is a finding, not noise.
@@ -646,6 +664,9 @@ jobs:
             echo "- **No check establishes that a sentence is true.** \`evidence-audit.mjs\` checks that every"
             echo "  passage of the brief is registered as a claim or classified, and that a claim's"
             echo "  arithmetic and dates agree with its records. A false statement can still pass."
+            echo "- **A green documentation check is not a true document.** \`tools/docs-check.mjs\` checks that the"
+            echo "  catalogue, the headers, the cited §8 rows, the links and the sentences code reads agree with"
+            echo "  each other; not that what a document says is so, nor that a classification is right."
             echo "- **CI fetches no URL.** \`freshness.mjs\` performs no network I/O (AUDIT F-12). Sources re-read by"
             echo "  hand record the date they were read; nothing here re-reads them."
             echo "- **No contrast was computed and no screen reader was run.** README limitation 7."

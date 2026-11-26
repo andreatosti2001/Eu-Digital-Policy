@@ -34,13 +34,15 @@
      TOTAL   (6) docs/README.md §4's totals equal the table's
 
    It writes nothing. It reads the tree it is pointed at (--root, default
-   the repository), so its selftest plants each failure in a scratch tree
-   and never in the repository. What it does not establish: that a
+   the repository), so its selftest (tools/docs-check-selftest.mjs, in
+   AGENT_SUITES; .github/workflows/qa.yml runs both) plants each failure
+   in a scratch tree and never in the repository. What it does not establish: that a
    document is true, that a classification is right, or that an external
    URL answers — it follows no http(s) link.
 
-   Usage: node tools/docs-check.mjs [--root <dir>] [--json]
-   Exit:  1 if any ERROR, else 0. WARNINGs are findings, printed by name.
+   Usage: node tools/docs-check.mjs [--root <dir>] [--json] [--all]
+   Exit:  1 if any ERROR, else 0. WARNINGs are findings, printed by name; COUNTs are
+          printed as a number (--all lists them). SEVERITY, below, is the author's.
    ============================================================ */
 
 import { execFileSync } from 'node:child_process';
@@ -218,11 +220,15 @@ export function catalogueRows(catText) {
 /* ---------------------------------------------------------------- the header */
 
 const HEADER_START = /^\*\*Lifecycle:\*\* /;
+/** A line that is a header, or meant to be one: it opens with the first field, or it is a line of bold fields
+ *  that ends with the «Catalogue» field. The second form is how a header with its fields out of order is found
+ *  (and failed by its form) rather than missed. */
+const IS_HEADER = (line) => HEADER_START.test(line) || /^\*\*[A-Za-z ]+:\*\* .* · \*\*Catalogue:\*\* /.test(line);
 const FIELD = /^\*\*([A-Za-z ]+):\*\* ([\s\S]*)$/;
 
 /** A header line parsed into its fields, in order: [{ name, value }], or null if it is not one. */
 export function parseHeader(line) {
-  if (!HEADER_START.test(line)) return null;
+  if (!IS_HEADER(line)) return null;
   return line.split(' · **').map((part, i) => {
     const m = (i ? `**${part}` : part).match(FIELD);
     return m ? { name: m[1], value: m[2].trim() } : { name: null, value: part };
@@ -305,8 +311,8 @@ export function markdownLinks(text) {
 const DOCS_PATH = /(?<![\w./-])docs\/[A-Za-z0-9_][A-Za-z0-9._/*<>{}$-]*/g;
 
 /**
- * `docs/…` paths named in a text: [{ n, path }]. A template (`<code>`, `*`, `${…}`) is not a path; a name
- * broken across two comment lines at a hyphen (`docs/CONTINUOUS-` / `IMPROVEMENT.md`) is joined first.
+ * `docs/…` paths named in a text: [{ n, path }]. A template (`<code>`, `*`, `${…}`) is not a path; a file
+ * name broken across two comment lines at a hyphen is joined with the first word of the next line first.
  */
 export function docsPaths(text) {
   const out = [];
@@ -336,7 +342,7 @@ const exists = (root, p) => existsSync(join(root, p));
  */
 export async function docsCheck({ root = REPO_ROOT, severity = SEVERITY } = {}) {
   const findings = [];
-  const add = (code, file, line, message) => findings.push({ code, severity: severity[code] ?? 'warning', file, line, message });
+  const add = (code, file, line, message) => findings.push({ code, severity: severity[code] ?? 'error', file, line, message });
   const files = trackedFiles(root);
   const fileSet = new Set(files);
   const docs = perimeter(files);
@@ -387,7 +393,7 @@ export async function docsCheck({ root = REPO_ROOT, severity = SEVERITY } = {}) 
     if (text == null) continue;
     const row = byPath.get(d);
     const mustCarry = d.startsWith('docs/') && !d.startsWith('docs/archive/') && !(row && NO_HEADER_KINDS.includes(row.kind));
-    const found = proseLines(text).filter(({ line }) => HEADER_START.test(line));
+    const found = proseLines(text).filter(({ line }) => IS_HEADER(line));
     if (!mustCarry) {
       for (const h of found) add('HDR-FORBIDDEN', d, h.n, `carries a standard header, and ${ROOT_DOCS.includes(d) ? 'a root document' : `a ${row?.kind ?? 'document of its kind'}`} carries none (${RULES_DOC} §5)`);
       continue;
@@ -521,27 +527,38 @@ export async function docsCheck({ root = REPO_ROOT, severity = SEVERITY } = {}) 
 }
 
 /**
- * What is an ERROR (the step fails) and what a WARNING (a finding, printed). Proposed in D3.1 from the
- * measurement on `main`, decided by the author (docs/ROADMAP-v2.md §8). Until then every code is a warning.
+ * What is an ERROR (the step fails), a WARNING (a finding, printed by name, the step stays green) and a COUNT
+ * (printed as a number; listed with --all). The author's decision on the D3.1 measurement (docs/ROADMAP-v2.md
+ * §8, «Checkpoint D3.1 of the documentation session D3: the design of the check»): every check that measured 0
+ * on `main` is an error; a `docs/…` path not found in code, a workflow or a prompt, and a commit a shallow clone
+ * cannot place, are warnings; the paths test files plant to be absent are counted.
  */
-export const SEVERITY = Object.freeze({});
+export const SEVERITY = Object.freeze({
+  'CAT-RULES': 'error', 'CAT-PARSE': 'error', 'CAT-COLUMNS': 'error', 'CAT-DUP': 'error', 'CAT-EXTRA': 'error', 'CAT-MISSING': 'error', 'CAT-VOCAB': 'error',
+  'HDR-MISSING': 'error', 'HDR-MANY': 'error', 'HDR-PLACE': 'error', 'HDR-FORM': 'error', 'HDR-MISMATCH': 'error', 'HDR-FORBIDDEN': 'error',
+  'CLOSED-ROADMAP': 'error', 'CLOSED-TITLE': 'error', 'CLOSED-COMMIT': 'error', 'CLOSED-UNDETERMINED': 'warning',
+  LINK: 'error', POINTS: 'error', PATH: 'warning', 'PATH-PROMPT': 'warning', 'PATH-FIXTURE': 'count',
+  ANCHOR: 'error', PIN: 'error', TOTAL: 'error',
+});
 
 /* ---------------------------------------------------------------- the command */
 
-function format({ findings, measured }) {
+function format({ findings, measured }, { all = false } = {}) {
   const out = [];
   const errors = findings.filter((f) => f.severity === 'error');
-  const warnings = findings.filter((f) => f.severity !== 'error');
+  const warnings = findings.filter((f) => f.severity === 'warning');
+  const counted = findings.filter((f) => f.severity === 'count');
   out.push('DOCS-CHECK  the documentation check (tools/docs-check.mjs)');
   out.push(`MEASURED   ${Object.entries(measured).map(([k, v]) => `${k} ${v}`).join(' · ')}`);
   const byCode = new Map();
   for (const f of findings) byCode.set(f.code, (byCode.get(f.code) ?? 0) + 1);
   out.push(`BY CODE    ${byCode.size ? [...byCode].sort().map(([c, n]) => `${c} ${n}`).join(' · ') : 'none'}`);
-  for (const [label, list] of [['ERROR', errors], ['WARNING', warnings]]) {
+  for (const [label, list] of [['ERROR', errors], ['WARNING', warnings], ...(all ? [['COUNTED', counted]] : [])]) {
     for (const f of list) out.push(`${label.padEnd(8)} ${f.code} ${f.file}${f.line ? `:${f.line}` : ''} — ${f.message}`);
   }
   out.push(`ERRORS   ${errors.length}`);
   out.push(`WARNINGS ${warnings.length}`);
+  out.push(`COUNTED  ${counted.length}${counted.length && !all ? ' (paths test files plant to be absent; --all lists them)' : ''}`);
   out.push('Not established: that a document is true, that a classification is right, that an external URL answers.');
   return out.join('\n');
 }
@@ -553,6 +570,6 @@ if (isMain) {
   const root = at >= 0 ? resolve(args[at + 1]) : REPO_ROOT;
   const result = await docsCheck({ root });
   if (args.includes('--json')) console.log(JSON.stringify(result, null, 2));
-  else console.log(format(result));
+  else console.log(format(result, { all: args.includes('--all') }));
   process.exit(result.findings.some((f) => f.severity === 'error') ? 1 : 0);
 }
