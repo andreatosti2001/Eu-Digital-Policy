@@ -90,7 +90,7 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `docs/PRODUCTION-OPERATING-MODE.md` | agents | spec | active | reference | points to `agent/production/`: the daily cycle and the readiness checklist |  |
 | `docs/PROJECT-CONTEXT.md` | docs | spec | active | reference | what the project is; the seven principles (snapshot of `7248290`) | a snapshot (the plan §2): the principles hold, the figures are of `7248290` |
 | `docs/prompts/v2-docs-authority-catalogue.md` | docs | prompt | active | canonical | the session's instructions | scope «The scope of the documentation session D2»; this session |
-| `docs/prompts/v2-docs-check.md` | docs | prompt | active | canonical | the session's instructions | no scope row: D3, written by D2 (D2.4), not yet run |
+| `docs/prompts/v2-docs-check.md` | docs | prompt | active | canonical | the session's instructions | scope «The scope of the documentation session D3»; this session |
 | `docs/prompts/v2-docs-coherence.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D1» → closed by «Final checkpoint of the documentation session D1» |
 | `docs/prompts/v2-f-18-dma-immediately.md` | rules | prompt | closed | canonical | the session's instructions | scope «The scope of the F-18 session» → closed by «Final checkpoint of the F-18 session» |
 | `docs/prompts/v2-hp-02-homepage-follow-up.md` | frontend | prompt | closed | canonical | the session's instructions | scope «The scope of HP-02 (the homepage follow-up)» → closed by «HP-02: the next session» |
