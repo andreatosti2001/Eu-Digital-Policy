@@ -343,3 +343,52 @@ this one did, briefly, in exactly the way the whole module exists to prevent.
   run on a cadence, and describing it as "production operation, activated" would be false.
 - **Nothing here was reviewed by anyone.** Twenty-one conditions, ten domains and a refusal,
   produced in one session by the session that decided what counted as a condition.
+
+## Moved from `AGENTS.md` (26 Nov 2026, D4)
+
+> **Moved verbatim from `AGENTS.md`** at `064488c` (lines 151–175; 177–191) on 26 Nov 2026 by documentation session D4, on the
+> author's row «Checkpoint D4.1 of the documentation session D4: the map of the moves out of `AGENTS.md`» (`docs/ROADMAP-v2.md` §8;
+> `docs/AGENTS-ENTRY-MOVES.md`, units N5, N6). Kept as `AGENTS.md` carried it: «above» and «below» in it refer to
+> that file, and each dated claim is as of its own date. `AGENTS.md` keeps one line for each, pointing here.
+
+**PRODUCTION OPERATION IS NOT ACTIVATED, AND THE REFUSAL IS MEASURED.** SESSION 29 built
+`agent/production/` — the daily cycle's eight stages, the seven weekly and seven monthly
+reviews as data, the ten conditions of the final visual standard, the six separations the
+hidden entry must hold, every path by which the website can change — and a readiness
+checklist of twenty-one conditions in ten domains. `node agent/production/cli.mjs readiness`
+reports **`refused`**. **A
+mandatory condition that could not be MEASURED blocks exactly as a failure does**, because in
+production there is nobody reading "skipped". SESSION 29 measured twelve of twenty passing and
+eight blocking: the `freshness.mjs` baseline disagreement, the adversarial gate's CRITICAL,
+the browser suite's three SESSION 19 defects, no production dispatcher, no reachable source,
+the absent decision ledger, two of three website-changing write paths untraceable, and no
+deploy gate. **On SESSION 30's tree it is fourteen and six, and it still refuses**: the first
+two of the eight are closed — `validators_at_baseline` passes because `freshness.mjs`'s exit
+code now reports defects in the tree rather than the passage of time, and `browser_suite_pass`
+passes because the three defects are fixed in the website. **The remaining six are unchanged
+and none is this repository's to close by editing a check**: the adversarial CRITICAL is left
+red on purpose, and the other five need a governance decision or network this environment does
+not have. **On 27 Sep 2026 it is seventeen and three**: HE-04 was rewritten on the author's
+decision, all three write paths are traceable, and the suites pass. What still blocks is a
+production dispatcher (an activation decision), a first recorded decision (a person's), and
+whether `pages.yml` is what publishes the site (a repository setting, unmeasurable from the
+tree). **Nothing in that directory
+writes and no verb there can activate anything**: switching a production mode on is a
+governance decision and protocol §24 reserves it to a person.
+`docs/PRODUCTION-OPERATING-MODE.md`.
+
+**THE HIDDEN ENTRY PASSES ALL TEN VISUAL CONDITIONS AND ALL SIX SEPARATIONS, AND WAS NOT
+TOUCHED.** `js/threshold.js`, `style.css` and every page are byte-identical to `a25f0ed`: the
+standard was verified, not adjusted. And **HE-04 is now measured rather than suspected**. The
+attack's own finding names the condition it could not check — *if any of those reads it as an
+input, it is a credential* — and `agent/production/separations.mjs` checks it on two
+independent halves: where each occurrence sits, and whether the file holding it calls any of
+twelve granting primitives. `agent/simulation/threshold.mjs` is **cleared on both**: none of
+its eight occurrences sits where a credential check would, and it can grant nothing.
+**HE-04 was left RED on purpose until a person decided, and on 27 Sep 2026 the author did.**
+Reclassifying a CRITICAL by editing the thing that reports it is the move this architecture is
+arranged against, and HE-04's three path exclusions were exactly the stale exclusion list
+SESSION 23.5 had to correct once. The rewrite removed the exclusions and made HE-04 decide from
+the separation verdicts (`he04Verdict()`): a `read_it` anywhere succeeds, a `no_path_found` is
+partial, only an all-cleared tree is safe. It now reports **partial (MEDIUM)**, and its suite
+fails if a path exclusion is re-added. `docs/PRODUCTION-OPERATING-MODE.md` §4a.

@@ -97,47 +97,9 @@ what it does not.
 
 **NOTHING HAD EVER BEEN DECIDED WHEN SESSION 28 RAN, AND IT MEASURED WHY THAT IS TWO PROBLEMS RATHER THAN ONE.** → `docs/GOVERNANCE-PROPOSALS.md`.
 
-**PRODUCTION OPERATION IS NOT ACTIVATED, AND THE REFUSAL IS MEASURED.** SESSION 29 built
-`agent/production/` — the daily cycle's eight stages, the seven weekly and seven monthly
-reviews as data, the ten conditions of the final visual standard, the six separations the
-hidden entry must hold, every path by which the website can change — and a readiness
-checklist of twenty-one conditions in ten domains. `node agent/production/cli.mjs readiness`
-reports **`refused`**. **A
-mandatory condition that could not be MEASURED blocks exactly as a failure does**, because in
-production there is nobody reading "skipped". SESSION 29 measured twelve of twenty passing and
-eight blocking: the `freshness.mjs` baseline disagreement, the adversarial gate's CRITICAL,
-the browser suite's three SESSION 19 defects, no production dispatcher, no reachable source,
-the absent decision ledger, two of three website-changing write paths untraceable, and no
-deploy gate. **On SESSION 30's tree it is fourteen and six, and it still refuses**: the first
-two of the eight are closed — `validators_at_baseline` passes because `freshness.mjs`'s exit
-code now reports defects in the tree rather than the passage of time, and `browser_suite_pass`
-passes because the three defects are fixed in the website. **The remaining six are unchanged
-and none is this repository's to close by editing a check**: the adversarial CRITICAL is left
-red on purpose, and the other five need a governance decision or network this environment does
-not have. **On 27 Sep 2026 it is seventeen and three**: HE-04 was rewritten on the author's
-decision, all three write paths are traceable, and the suites pass. What still blocks is a
-production dispatcher (an activation decision), a first recorded decision (a person's), and
-whether `pages.yml` is what publishes the site (a repository setting, unmeasurable from the
-tree). **Nothing in that directory
-writes and no verb there can activate anything**: switching a production mode on is a
-governance decision and protocol §24 reserves it to a person.
-`docs/PRODUCTION-OPERATING-MODE.md`.
+**PRODUCTION OPERATION IS NOT ACTIVATED, AND THE REFUSAL IS MEASURED.** → `docs/PRODUCTION-OPERATING-MODE.md`.
 
-**THE HIDDEN ENTRY PASSES ALL TEN VISUAL CONDITIONS AND ALL SIX SEPARATIONS, AND WAS NOT
-TOUCHED.** `js/threshold.js`, `style.css` and every page are byte-identical to `a25f0ed`: the
-standard was verified, not adjusted. And **HE-04 is now measured rather than suspected**. The
-attack's own finding names the condition it could not check — *if any of those reads it as an
-input, it is a credential* — and `agent/production/separations.mjs` checks it on two
-independent halves: where each occurrence sits, and whether the file holding it calls any of
-twelve granting primitives. `agent/simulation/threshold.mjs` is **cleared on both**: none of
-its eight occurrences sits where a credential check would, and it can grant nothing.
-**HE-04 was left RED on purpose until a person decided, and on 27 Sep 2026 the author did.**
-Reclassifying a CRITICAL by editing the thing that reports it is the move this architecture is
-arranged against, and HE-04's three path exclusions were exactly the stale exclusion list
-SESSION 23.5 had to correct once. The rewrite removed the exclusions and made HE-04 decide from
-the separation verdicts (`he04Verdict()`): a `read_it` anywhere succeeds, a `no_path_found` is
-partial, only an all-cleared tree is safe. It now reports **partial (MEDIUM)**, and its suite
-fails if a path exclusion is re-added. `docs/PRODUCTION-OPERATING-MODE.md` §4a.
+**THE HIDDEN ENTRY PASSES ALL TEN VISUAL CONDITIONS AND ALL SIX SEPARATIONS, AND WAS NOT TOUCHED.** → `docs/PRODUCTION-OPERATING-MODE.md` §4a.
 
 **LIMITED AUTONOMY IS SWITCHED ON, AND WHAT THAT MEANS IS NARROW.** SESSION 26 recorded the
 first governance grant this repository has ever had: `agent/policy/governance/grants.jsonl`,
@@ -497,15 +459,7 @@ node agent/proposals/governance/cli.mjs check      exit 1 only on an anchor this
 `check` and `corpus` run on every push. Neither writes anything, and there is no verb here
 that decides.
 
-**`node agent/orchestrator/cli.mjs workflows`, `capabilities` and `policy` exited 1 from the
-SESSION 26 merge until SESSION 29**, because `agent/orchestrator/cli.mjs:50` imported
-`AUTONOMY_NOTE`, which `policy.mjs` stopped exporting when the note became derived. **Repaired:**
-the CLI calls `autonomyNote()`. That fixed a false statement as well as a broken command — the
-constant said no action category is approved for automatic execution, which stopped being true
-in SESSION 26, and the derived note reports the five the grant enables. No suite runs these
-CLIs, so only CI saw it, and a failing step skips every step after it in the same job — which
-is why the governance step above is still registered ahead of the registers. It costs nothing
-and the next break will not hide them. Was `docs/GOVERNANCE-PROPOSALS.md` §6b.
+**`node agent/orchestrator/cli.mjs workflows`, `capabilities` and `policy` exited 1 from the SESSION 26 merge until SESSION 29** → `docs/PRODUCTION-OPERATING-MODE.md` §6 · `docs/GOVERNANCE-PROPOSALS.md` §6b.
 
 **There is no overall health score.** `agent/health/model.mjs overallScore()` throws, with the
 reasoning. Five metrics are marked `not_a_score` because the only legitimate way to move them
