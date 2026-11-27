@@ -96,7 +96,7 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `docs/prompts/v2-docs-agents-entry.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D4» → closed by «Final checkpoint of the documentation session D4» |
 | `docs/prompts/v2-docs-handover.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D5» → closed by «Final checkpoint of the documentation session D5» |
 | `docs/prompts/v2-docs-records.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D6» → closed by «Final checkpoint of the documentation session D6» |
-| `docs/prompts/v2-docs-buffer.md` | docs | prompt | active | canonical | the session's instructions | no scope row: D7, written by D6 (D6.4), not yet run |
+| `docs/prompts/v2-docs-buffer.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D7» → closed by «Final checkpoint of the documentation session D7» |
 | `docs/prompts/v2-docs-authority-catalogue.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D2» → closed by «Final checkpoint of the documentation session D2» |
 | `docs/prompts/v2-docs-check.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D3» → closed by «Final checkpoint of the documentation session D3» |
 | `docs/prompts/v2-docs-coherence.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D1» → closed by «Final checkpoint of the documentation session D1» |
@@ -210,7 +210,7 @@ Recounted from the table, not written to be believed; D3's check derives them ag
 - **documents:** 151
 - **domain:** agents 26 · control-room 4 · decisions 22 · docs 20 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
 - **kind:** account 1 · archive 3 · audit 15 · catalogue 2 · design 5 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 55 · reading 10 · run 5 · spec 28
-- **lifecycle:** active 61 · closed 86 · historical 3 · uncertain 1
+- **lifecycle:** active 60 · closed 87 · historical 3 · uncertain 1
 - **authority:** canonical 108 · normative 15 · reference 28
 
 ## 5 · What this catalogue does not establish
