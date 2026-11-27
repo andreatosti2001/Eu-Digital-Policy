@@ -12,6 +12,8 @@ Session 25 (item 25.4, after the session stopped at 25.0), on `claude/inspiring-
 check, rule or command, and is read by no tool. It is `docs/PHASE-4-SETUP.md` and `docs/PHASE-4-PLAN.md` in one file:
 Phase 5's material has been assigned to it since 3 Nov 2026, so its set-up and its plan can be proposed together, and each
 part is approved separately (§7).
+**26 Nov 2026, documentation session D7 (a dated note; the status above stays as written):** **Phase 5 is open.** It was opened on 13 Nov 2026 with G2, E5-5 failing and stated (`docs/ROADMAP-v2.md` §8, «G2: Stage 3 is opened, and with it Phase 5»): that row measured E5-1…E5-7 (§3) — E5-1 to E5-4 and E5-6 hold, E5-5 fails until Sessions 25 and 26 have closed their readings, E5-7 is each item's own scope row — so §3's column «Fails today?» is as of 4 Nov 2026. Session 28 starts only once `freshness --as-of 2027-02-03` reports 0 `RULE_STALE`. Phase 4 was concluded on 4 Nov 2026 («Phase 4 concluded»), as «Why now» says. No row of §8 concludes Phase 5. Post-v2's status: the note under §5.2's table.
+
 
 **Why now.** `docs/ROADMAP-v2.md` §4: Phase 5's scope "is written in the session after Phase 4's checkpoint". Roadmap §8,
 v2 Session 17.5, 17.5.0 question 5: "against what Phases 3 and 4 measured; the material assigned to it accumulates until
@@ -175,6 +177,8 @@ sequence stays coherent:
 | **Map sessions** | V2C-13 (M-08…M-16) first, then V2C-03…05, V2C-16…19, F-29 | **M-5 (V2C-15) reads the edge kinds**; if kept, after V2C-13 |
 | **A maintenance session** | V2C-11 (R-01 for P2B) | none |
 | **Post-v2** (`docs/POST-V2.md`) | redesign, infographics, animations, blog | not opened; after the v2 |
+**26 Nov 2026, documentation session D7 (a dated note; the row above stays as written):** Post-v2's A, B and C were opened and run before Phase 5 opened — A and B before G1 (`docs/ROADMAP-v2.md` §8, «Post-v2 A may open before G1, under three limits, …» and «PV2-02 (Post-v2 B) may be run before G1, under A's three limits, …», 9 and 10 Nov 2026), C after it («G1: Stage 2 is opened», 11 Nov 2026) — and the final checkpoints of PV2-01…PV2-05 are approved («Final checkpoint of PV2-01 approved: …» … «Final checkpoint of PV2-05 approved: …», 9–13 Nov 2026). D and E are not opened: no row of §8 records G3 or G4. One exception, the author's: the Hybrid's first piece, the network map (in PV2-08, Stage 4), went to production before the v2 closes («The Hybrid's first piece in production», 22 Nov 2026). The status of Post-v2 is `docs/POST-V2.md`'s, corrected by D1; this row stated it as of 4 Nov 2026.
+
 
 ### 5.3 · The calendar Phase 5 answers to
 

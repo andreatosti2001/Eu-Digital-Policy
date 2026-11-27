@@ -34,6 +34,7 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `docs/AGENT-ROLES.md` | agents | policy | active | normative | the ten agent roles |  |
 | `docs/AGENT-RUNBOOK.md` | agents | spec | active | reference | how the Scout is scheduled and run |  |
 | `docs/AI-SAFE-BOUNDARIES.md` | evidence | policy | active | normative | the tiers and the absolute prohibitions | §0 and §3 are read always |
+| `docs/archive/HANDOVER-headers.md` | decisions | archive | historical | canonical | the superseded headers of `docs/HANDOVER.md` | moved byte for byte on 26 Nov 2026 («D7, D7.2 question 1: what the header of `docs/HANDOVER.md` keeps»); receives each superseded header under `docs/DOCUMENTATION-ARCHITECTURE.md` §7; carries no header |
 | `docs/archive/HANDOVER-2026-11-13-to-2026-11-26.md` | decisions | archive | historical | canonical | the handover entries of 13–26 Nov 2026, before D4's | moved byte for byte on 26 Nov 2026 («D5, D5.1 question 3: the new archive file's name»); carries no header |
 | `docs/archive/HANDOVER-to-2026-11-13.md` | decisions | archive | historical | canonical | the handover entries to 13 Nov 2026 | moved byte for byte on 22 Nov 2026; carries no header |
 | `docs/ATTESTATION-FORM.md` | decisions | design | closed | canonical | the attestation's design (22.1), as of 4 Nov 2026 | The final checkpoint of v2 Session 22 = 22.3, 22.4 and 22.5, with the prompt of v2 Session 23 |
@@ -95,7 +96,7 @@ Columns, fixed for a tool (D3, `tools/docs-check.mjs`): **document**; **domain**
 | `docs/prompts/v2-docs-agents-entry.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D4» → closed by «Final checkpoint of the documentation session D4» |
 | `docs/prompts/v2-docs-handover.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D5» → closed by «Final checkpoint of the documentation session D5» |
 | `docs/prompts/v2-docs-records.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D6» → closed by «Final checkpoint of the documentation session D6» |
-| `docs/prompts/v2-docs-buffer.md` | docs | prompt | active | canonical | the session's instructions | no scope row: D7, written by D6 (D6.4), not yet run |
+| `docs/prompts/v2-docs-buffer.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D7» → closed by «Final checkpoint of the documentation session D7» |
 | `docs/prompts/v2-docs-authority-catalogue.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D2» → closed by «Final checkpoint of the documentation session D2» |
 | `docs/prompts/v2-docs-check.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D3» → closed by «Final checkpoint of the documentation session D3» |
 | `docs/prompts/v2-docs-coherence.md` | docs | prompt | closed | canonical | the session's instructions | scope «The scope of the documentation session D1» → closed by «Final checkpoint of the documentation session D1» |
@@ -206,11 +207,11 @@ names documents, not what is true in them: where a reference document disagrees 
 
 Recounted from the table, not written to be believed; D3's check derives them again and fails if they differ.
 
-- **documents:** 150
-- **domain:** agents 26 · control-room 4 · decisions 21 · docs 20 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
-- **kind:** account 1 · archive 2 · audit 15 · catalogue 2 · design 5 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 55 · reading 10 · run 5 · spec 28
-- **lifecycle:** active 61 · closed 86 · historical 2 · uncertain 1
-- **authority:** canonical 107 · normative 15 · reference 28
+- **documents:** 151
+- **domain:** agents 26 · control-room 4 · decisions 22 · docs 20 · evidence 40 · frontend 15 · i18n 3 · publishing 5 · rules 16
+- **kind:** account 1 · archive 3 · audit 15 · catalogue 2 · design 5 · entry 2 · generated 3 · handover 1 · plan 9 · policy 12 · prompt 55 · reading 10 · run 5 · spec 28
+- **lifecycle:** active 60 · closed 87 · historical 3 · uncertain 1
+- **authority:** canonical 108 · normative 15 · reference 28
 
 ## 5 · What this catalogue does not establish
 
